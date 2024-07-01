@@ -3084,24 +3084,11 @@ $lang["write_access_to"]='Dostop za pisanje do';
 $lang["error-invalid_name"]='Neveljavno ime';
 $lang["inactive_entry_matched"]='Neaktivni vnos ustreza za';
 $lang["user_group"]='uporabniška skupina';
-$lang["all__emailbulk"]='<br /><br />
-[besedilo]<br /><br />
-[besedilo_noga]';
-$lang["all__emailcollection"]='<br />
-[oduporabnika] [lang_emailcollectionmessage] <br /><br /> 
-[lang_sporočilo] : [sporočilo]<br /><br /> 
-[lang_kliknitezapogledzbirke] [seznam]';
 $lang["all__emailcollectionexternal"]='<br />
 [fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[welcome]<br /><br /> 
-[nove_podrobnosti_prijave]<br /><br /> 
-[uporabniško_ime] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[besedilo_podpis]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -3114,44 +3101,11 @@ $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [user
 <a href="[url]">[url]</a><br /><br />
 <a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
 [text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='<br />
-[lang_userresourcesapproved]
-[seznam] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[besedilo_podnožja]';
-$lang["all__emailnotifyresourcessubmitted"]='<br />
-[lang_userresourcessubmitted]
-[seznam] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[besedilo_podnožja]';
-$lang["all__emailnotifyresourcesunsubmitted"]='<br />
-[lang_userresourcesunsubmitted]
-[seznam] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[besedilo_podnožja]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
-
-[besedilo_noga]';
 $lang["all__emailresearchrequestcomplete"]='<br />
 [lang_researchrequestcompletemessage] <br /><br /> 
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailresource"]='<br />
-[fromusername] [lang_vamposlalvir]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_kliknitezaviditeresurs]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='<br />
-[lang_username] : [username] <br />
-[seznam] <br />
-[podrobnosti]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["upgrade_script"]='Skript za nadgradnjo';
 $lang["upgrade_026_notification"]='Aktualizacija je zastarala nekatere možnosti konfiguracije, ki jih vaš %entity% prepisuje.
@@ -3224,3 +3178,43 @@ $lang["action_unset_no_file"]='Označi kot manjkajočo datoteko';
 $lang["completed_set_no_file"]='Viro označen kot brez datoteke';
 $lang["completed_unset_no_file"]='Označeno kot manjkajoča datoteka';
 $lang["map_esridelorme"]='DeLorme';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='<br />
+[lang_researchrequestassignedmessage]<br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[welcome]<br /><br /> 
+[lang_newlogindetails]<br /><br /> 
+[lang_username] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';

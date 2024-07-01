@@ -2110,8 +2110,6 @@ $lang["user_preferences__introtext_new"]='Silakan masukkan kata sandi di bawah i
 $lang["user_request__introtext"]='Silakan lengkapi formulir di bawah ini untuk meminta akun pengguna.';
 $lang["view__storyextract"]='Ekstrak cerita:';
 $lang["notify_resource_change_email_subject"]='Sebuah sumber daya telah dimodifikasi';
-$lang["notify_resource_change_email"]='Sebuah sumber daya yang telah Anda unduh dalam [jumlah hari] hari terakhir telah dimodifikasi. Klik tautan di bawah ini untuk melihat sumber daya.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='Sumber daya yang telah Anda unduh dalam [hari] hari terakhir telah dimodifikasi.';
 $lang["passwordresetemail"]='Silakan klik tautan di bawah ini untuk mereset kata sandi Anda.';
 $lang["password_reset_email_html"]='Nama pengguna: [username]<br /><br />Silakan klik tautan di bawah ini untuk mereset kata sandi Anda.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Silakan klik tautan di bawah ini untuk mengatur kata sandi baru untuk akun Anda.';
@@ -2573,10 +2571,6 @@ $lang["error_check_config"]='Silakan periksa opsi konfigurasi %%CONFIG_OPTION%%'
 $lang["useaspreviewimage"]='Gunakan sebagai gambar pratinjau';
 $lang["filechecksum"]='Checksum berkas';
 $lang["system_notification"]='%%APPLICATION_NAME%% - pemberitahuan sistem';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[pesan]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tulisan_footer]';
 $lang["error_edit_filter_invalid"]='Filter edit tidak dikonfigurasi dengan benar untuk grup pengguna ini. Silakan hubungi administrator Anda';
 $lang["error_search_filter_invalid"]='Filter pencarian tidak dikonfigurasi dengan benar untuk grup pengguna ini. Silakan hubungi administrator Anda';
 $lang["action_lock"]='Kunci';
@@ -2754,20 +2748,9 @@ $lang["megabyte-symbol-binary"]='Megabita (MiB)';
 $lang["terabyte-symbol-binary"]='Tebibait (TiB)';
 $lang["ref-title"]='Silakan terjemahkan: %ref - %title';
 $lang["user_group"]='Grup pengguna';
-$lang["all__emailbulk"]='Tolong terjemahkan: <br /><br />
-[teks]<br /><br />
-[kaki_teks]';
 $lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='Mohon terjemahkan: <br />
-[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list] 
-
-Dari: [fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
-[Pesan] : [message]<br /><br /> 
-[Klik tautan untuk melihat koleksi] [list]';
 $lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
 $lang["all__emaillogindetails"]='Selamat datang <br /><br />
 Detail login baru <br /><br />
@@ -2827,12 +2810,7 @@ Permintaan penelitian telah selesai. Silakan klik tautan di bawah ini untuk meli
 <a href="[url]">[url]</a>
 
 [text_footer]';
-$lang["all__emailresource"]='Mohon diterjemahkan: <br />
-[dariusername] [lang_hasemailedyouaresource]<br /><br />
-[pesan]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[nameresource] - [url]</a><br /><br />
-[teks_footer]';
+
 $lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
 [list] <br />
 [details]<br /><br />
@@ -2896,21 +2874,8 @@ $lang["centimetre-short"]='cm';
 $lang["terabyte-symbol"]='TB';
 $lang["collectiontypes_separator"]=',';
 $lang["iiif"]='IIIF';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[ringkasan_integritas_berkas_gagal] <br /><br /> 
-[pencarian_gagal_integritas_berkas] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[teks_footer]';
 $lang["error-edit_noaccess_related_resources"]='Tidak dapat menghubungkan sumber daya. Tidak ada akses ke:';
 $lang["csv_export_filename"]='ekspor_metadata_%%SEARCH%%_%%TIME%%';
-$lang["upload_share_email_template"]='[dari_nama] [teks_email_bagikan_upload] [namaplikasi]<br /><br /> 
-[pesan] : [pesan]<br /><br />
-[kliklink_email_bagikan_upload]<br />
-<br />
-[tautan]
-<br />
-<br />
-[tekskata_sandi]';
 $lang["all__emailnotifyuploadsharenew"]='<br />
 [lang_notify_upload_share_new]
 <br />
@@ -2953,3 +2918,23 @@ $lang["minute-abbreviated"]='MM';
 $lang["field_ref_and_name"]='%ref% - %name%';
 $lang["gigabyte-symbol-binary"]='GiB';
 $lang["email_and_screen"]='Email dan layar';
+$lang["notify_resource_change_email"]='Sebuah sumber daya yang Anda unduh dalam [days] hari terakhir telah dimodifikasi. Klik tautan di bawah ini untuk melihat sumber daya tersebut.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='Sebuah sumber daya yang Anda unduh dalam [days] hari terakhir telah diubah.';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';
+
+$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

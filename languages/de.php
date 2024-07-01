@@ -2333,9 +2333,6 @@ $lang["terms__upload_terms"]='Ihre Bedingungen und Konditionen für Uploads werd
 $lang["user_preferences__introtext"]='Geben Sie unten ein neues Passwort ein, um Ihr Passwort zu ändern.';
 $lang["user_preferences__introtext_new"]='Bitte geben Sie unten ein Passwort ein.';
 $lang["notify_resource_change_email_subject"]='Eine Ressource wurde geändert';
-$lang["notify_resource_change_email"]='Ein Ressource, die Sie in den letzten [Tagen] Tagen heruntergeladen haben, wurde geändert. Klicken Sie auf den untenstehenden Link, um die Ressource anzuzeigen.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='Eine Ressource, die Sie in den letzten [Tagen] Tagen heruntergeladen haben, wurde geändert.';
-$lang["passwordresetemail"]='Bitte klicken Sie auf den unten stehenden Link, um Ihr Passwort zurückzusetzen.';
 $lang["password_reset_email_html"]='Benutzername: [username]<br /><br />Bitte klicken Sie auf den unten stehenden Link, um Ihr Passwort zurückzusetzen.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Bitte klicken Sie auf den unten stehenden Link, um ein neues Passwort für Ihr Konto festzulegen.';
 $lang["passwordresetexternalauth"]='Ihr Konto ist nicht von ResourceSpace authentifiziert. Bitte kontaktieren Sie Ihren Systemadministrator für Anweisungen zur Anmeldung';
@@ -2784,10 +2781,6 @@ $lang["error_check_config"]='Bitte überprüfen Sie die Konfigurationsoption %%C
 $lang["useaspreviewimage"]='Verwenden als Vorschau-Bild';
 $lang["filechecksum"]='Datei-Prüfsumme';
 $lang["system_notification"]='%%APPLICATION_NAME%% - Systembenachrichtigung';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[Nachricht]<br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["error_edit_filter_invalid"]='Der Bearbeitungsfilter ist für diese Benutzergruppe nicht korrekt konfiguriert. Bitte kontaktieren Sie Ihren Administrator';
 $lang["error_search_filter_invalid"]='Der Suchfilter ist für diese Benutzergruppe nicht korrekt konfiguriert. Bitte kontaktieren Sie Ihren Administrator';
 $lang["action_lock"]='Sperren';
@@ -2956,17 +2949,7 @@ $lang["all__emailcollection"]='<br />
 [fromusername] [lang_emailcollectionmessage] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='<br />
-[vonbenutzername] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_nachricht] : [nachricht]<br /><br /> 
-[lang_klickenumsammlunganzusehen] [liste]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[willkommen]<br /><br /> 
-[lang_neueanmeldedetails]<br /><br /> 
-[lang_benutzername] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_fußzeile]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -3004,17 +2987,6 @@ $lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailresource"]='<br />
-[fromusername] [lang_hatIhnenEineRessourceGesendet]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_klickenUmRessourceAnzusehen]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_benutzername] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_klickenumsressourcenzusehen] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["dash"]='Armaturenbrett';
 $lang["last"]='Letzte';
@@ -3072,15 +3044,6 @@ $lang["date_format_error"]='Fehler: %row% \'%date%\' in [%field%] ungültiger Ei
 $lang["error-edit_noaccess_related_resources"]='Ressourcen können nicht verknüpft werden. Kein Zugriff auf:';
 $lang["job_text"]='Aufgabe';
 $lang["csv_export_filename"]='metadata_export_%%SEARCH%%_%%TIME%%';
-$lang["upload_share_email_template"]='<br />
-[von_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
-[lang_message] : [nachricht]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passworttext]';
 $lang["all__emailnotifyuploadsharenew"]='<br />
 [lang_notify_upload_share_new]
 <br />
@@ -3118,3 +3081,26 @@ $lang["action_unset_no_file"]='Als Datei fehlt markieren';
 $lang["completed_set_no_file"]='Ressource als dateilos markiert';
 $lang["completed_unset_no_file"]='Ressource als Datei fehlt markiert';
 $lang["map_esridelorme"]='DeLorme';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='<br />
+[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["notify_resource_change_email"]='Eine Ressource, die Sie in den letzten [days] Tagen heruntergeladen haben, wurde geändert. Klicken Sie auf den untenstehenden Link, um die Ressource anzusehen.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='Eine Ressource, die Sie in den letzten [days] Tagen heruntergeladen haben, wurde geändert.';
+$lang["passwordresetemail"]='Bitte klicken Sie auf den untenstehenden Link, um Ihr Passwort zurückzusetzen.';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

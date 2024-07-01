@@ -1356,7 +1356,6 @@ $lang["requestsenttext"]='Sua solicitação de recurso foi enviada para aprovaç
 $lang["requestupdated"]='Sua solicitação de recurso foi atualizada';
 $lang["requestassignedtouser"]='Sua solicitação de recurso foi atribuída a % para aprovação.';
 $lang["requestapprovedmail"]='Sua solicitação foi aprovada. Clique no link abaixo para visualizar e baixar os recursos solicitados.';
-$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[mensagem]<br/>[expira]<br/><br/>Clique no link abaixo para visualizar e baixar os recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["requestdeclinedmail"]='Desculpe, seu pedido pelos recursos na coleção abaixo foi recusado.';
 $lang["requestdeclined_email"]='[img_headerlogo]<br/><br/>[message]<br/><br/>Clique no link abaixo para visualizar os recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["resourceexpirymail"]='Os seguintes recursos expiraram:';
@@ -2120,8 +2119,6 @@ $lang["user_preferences__introtext_new"]='Por favor, digite uma senha abaixo.';
 $lang["user_request__introtext"]='Por favor, preencha o formulário abaixo para solicitar uma conta de usuário.';
 $lang["view__storyextract"]='Extrato da história:';
 $lang["notify_resource_change_email_subject"]='Um recurso foi modificado';
-$lang["notify_resource_change_email"]='Um recurso que você baixou nos últimos [dias] dias foi modificado. Clique no link abaixo para visualizar o recurso.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='Um recurso que você baixou nos últimos [dias] dias foi modificado.';
 $lang["passwordresetemail"]='Por favor, clique no link abaixo para redefinir sua senha.';
 $lang["password_reset_email_html"]='Nome de usuário: [username]<br /><br />Por favor, clique no link abaixo para redefinir sua senha.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Por favor, clique no link abaixo para definir uma nova senha para sua conta.';
@@ -2586,10 +2583,6 @@ $lang["error_check_config"]='Por favor, verifique a opção de configuração %%
 $lang["useaspreviewimage"]='Usar como imagem de pré-visualização';
 $lang["filechecksum"]='Checksum do arquivo';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notificação do sistema';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[mensagem]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["error_edit_filter_invalid"]='O filtro de edição não está configurado corretamente para este grupo de usuários. Por favor, entre em contato com o seu administrador';
 $lang["error_search_filter_invalid"]='O filtro de busca não está configurado corretamente para este grupo de usuários. Por favor, entre em contato com o seu administrador';
 $lang["action_lock"]='Bloquear';
@@ -2719,7 +2712,6 @@ $lang["field-fileextension"]='%EXTENSION';
 $lang["fileextension-inside-brackets"]='[%EXTENSION]';
 $lang["fileextension"]='%EXTENSION';
 $lang["log-rtchange"]='Tipo de recurso editado';
-$lang["log-missinglang"]='[tipo] (idioma ausente)';
 $lang["log-NOFIL"]='Marcado como sem arquivo';
 $lang["log-FIL"]='Marcado como tendo arquivo';
 $lang["log-EDT"]='Recurso editado';
@@ -2784,12 +2776,6 @@ $lang["all__emailcollectionexternal"]='<br />
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[bem-vindo]<br /><br /> 
-[lang_novosdetalhesdologin]<br /><br /> 
-[lang_nomeusuario] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_rodape]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -2814,19 +2800,6 @@ $lang["all__emailnotifyresourcessubmitted"]='<br />
 [lang_viewalluserpending] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='<br />
-[lang_userresourcesunsubmitted]
-[lista] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]<br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestcomplete"]='<br />
-[mensagem_completapesquisapedido] <br /><br /> 
-[cliquelinkvercolecao] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[rodape_texto]';
 $lang["all__emailresource"]='<br />
 [fromusername] [lang_hasemailedyouaresource]<br /><br />
 [message]<br /><br />
@@ -2938,3 +2911,26 @@ $lang["action_set_no_file"]='Marcar como sem arquivo';
 $lang["action_unset_no_file"]='Marcar como arquivo ausente';
 $lang["completed_set_no_file"]='Recurso marcado como sem arquivo';
 $lang["completed_unset_no_file"]='Recurso marcado como arquivo ausente';
+$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Clique no link abaixo para visualizar e baixar os recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["all__emailresearchrequestassigned"]='<br />
+[lang_researchrequestassignedmessage]<br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["notify_resource_change_email"]='Um recurso que você baixou nos últimos [days] dias foi modificado. Clique no link abaixo para visualizar o recurso.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='Um recurso que você baixou nos últimos [days] dias foi modificado.';
+$lang["log-missinglang"]='[type] (idioma ausente)';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[bem-vindo]<br /><br /> 
+[lang_newlogindetails]<br /><br /> 
+[lang_username] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

@@ -2990,3 +2990,4 @@ $lang["action_unset_no_file"]='标记为文件丢失';
 $lang["completed_set_no_file"]='资源标记为无文件';
 $lang["completed_unset_no_file"]='资源标记为文件丢失';
 $lang["map_esri_group"]='ESRI';
+$lang["map_esridelorme"]='DeLorme';

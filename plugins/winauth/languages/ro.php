@@ -9,5 +9,5 @@ $lang["winauth_use_win_login"]='Conectați-vă folosind autentificarea Windows';
 $lang["winauth_nouser"]='Contul tău nu este activat în sistem. Te rugăm să aplici pentru un cont sau să contactezi administratorul tău';
 $lang["winauth_prefer_normal"]='Preferați autentificările standard ResourceSpace. Dacă aceasta este adevărată, atunci utilizatorii vor fi redirecționați implicit către pagina de autentificare, unde va exista opțiunea de a utiliza Autentificarea Windows';
 $lang["winauth_test"]='Test';
-$lang["winauth_user_info"]='Sunteți autentificat ca: [nume_utilizator]';
 $lang["winauth_not_logged_in"]='Nu sunteți autentificat sau serverul web nu a fost configurat corect';
+$lang["winauth_user_info"]='Ești autentificat ca: [username]';

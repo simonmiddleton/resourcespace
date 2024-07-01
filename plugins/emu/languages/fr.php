@@ -34,3 +34,4 @@ $lang["emu_no_resource"]='Identifiant de ressource non spécifié !';
 $lang["emu_upload_nodata"]='Aucune donnée EMu trouvée pour cet IRN :';
 $lang["emu_nodata_returned"]='Aucune donnée EMu trouvée pour l\'IRN spécifié.';
 $lang["emu_createdfromemu"]='Créé à partir du plugin EMU';
+$lang["emu_upload_emu_field_label"]='EMu IRN';

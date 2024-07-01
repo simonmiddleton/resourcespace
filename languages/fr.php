@@ -2071,9 +2071,6 @@ $lang["terms__upload_terms"]='Vos termes et conditions pour les téléchargement
 $lang["user_preferences__introtext"]='Entrez un nouveau mot de passe ci-dessous pour changer votre mot de passe.';
 $lang["user_preferences__introtext_new"]='Veuillez entrer un mot de passe ci-dessous.';
 $lang["notify_resource_change_email_subject"]='Une ressource a été modifiée';
-$lang["notify_resource_change_email"]='Une ressource que vous avez téléchargée dans les [jours] derniers jours a été modifiée. Cliquez sur le lien ci-dessous pour afficher la ressource.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='Une ressource que vous avez téléchargée dans les [jours] derniers jours a été modifiée.';
-$lang["passwordresetemail"]='Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe.';
 $lang["password_reset_email_html"]='Nom d\'utilisateur : [username]<br /><br />Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Veuillez cliquer sur le lien ci-dessous pour définir un nouveau mot de passe pour votre compte.';
 $lang["passwordresetexternalauth"]='Votre compte n\'est pas authentifié par ResourceSpace. Veuillez contacter votre administrateur système pour obtenir les instructions de connexion';
@@ -2747,24 +2744,11 @@ $lang["resourcetypes_separator"]=', ';
 $lang["collectiontypes_separator"]=',';
 $lang["user_group"]='groupe d\'utilisateurs';
 $lang["admin_resource_type_field_reorder_information"]='Pour modifier l\'ordre d\'affichage, réorganisez les lignes du tableau en les faisant glisser et déposer.';
-$lang["all__emailbulk"]='<br /><br />
-[texte]<br /><br />
-[pied_de_page_texte]';
-$lang["all__emailcollection"]='<br />
-[deusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]';
 $lang["all__emailcollectionexternal"]='<br />
 [de fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[bienvenue]<br /><br /> 
-[nouveaux_détails_de_connexion]<br /><br /> 
-[nom_d\'utilisateur] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[texte_de_pied_de_page]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -2783,36 +2767,11 @@ $lang["all__emailnotifyresourcesapproved"]='<br />
 [lang_viewcontributedsubittedl] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='<br />
-[lang_userresourcessubmitted]
-[liste] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[texte_pied_de_page]';
-$lang["all__emailnotifyresourcesunsubmitted"]='<br />
-[lang_userresourcesunsubmitted]
-[liste] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]<br /><br />
-[texte_pieddepage]';
 $lang["all__emailresearchrequestcomplete"]='<br />
 [lang_researchrequestcompletemessage] <br /><br /> 
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailresource"]='<br />
-[fromusername] [lang_vousaenvoyéunressource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_cliquezpourvoirleressource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_nom_utilisateur] : [username] <br />
-[liste] <br />
-[détails]<br /><br />
-[lang_cliquezpourvoirleressource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["dash"]='Tableau de bord';
 $lang["last"]='Dernier';
@@ -2920,3 +2879,36 @@ $lang["action_unset_no_file"]='Marquer comme fichier manquant';
 $lang["completed_set_no_file"]='Ressource marquée comme n\'ayant pas de fichier';
 $lang["completed_unset_no_file"]='Ressource marquée comme fichier manquant';
 $lang["map_stamen_group"]='Stamen';
+$lang["all__emailcollection"]='<br />
+[de fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["notify_resource_change_email"]='Une ressource que vous avez téléchargée au cours des [days] derniers jours a été modifiée. Cliquez sur le lien ci-dessous pour voir la ressource.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["passwordresetemail"]='Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe.';
+$lang["map_esridelorme"]='DeLorme';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+
+[text_footer]';
+$lang["map_tf_group"]='Thunderforest';
+$lang["notify_resource_change_notification"]='Une ressource que vous avez téléchargée au cours des [days] derniers jours a été modifiée.';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

@@ -2019,8 +2019,6 @@ $lang["user_preferences__introtext_new"]='Vă rugăm să introduceți o parolă 
 $lang["user_request__introtext"]='Vă rugăm să completați formularul de mai jos pentru a solicita un cont de utilizator.';
 $lang["view__storyextract"]='Fragment din poveste:';
 $lang["notify_resource_change_email_subject"]='Un resurs a fost modificat';
-$lang["notify_resource_change_email"]='Un resursă pe care ați descărcat-o în ultimele [zile] zile a fost modificată. Apăsați pe link-ul de mai jos pentru a vizualiza resursa.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='Un resurs pe care l-ați descărcat în ultimele [zile] zile a fost modificat.';
 $lang["passwordresetemail"]='Vă rugăm să dați clic pe link-ul de mai jos pentru a vă reseta parola.';
 $lang["password_reset_email_html"]='Nume de utilizator: [username]<br /><br />Vă rugăm să faceți clic pe link-ul de mai jos pentru a vă reseta parola.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Vă rugăm să faceți clic pe link-ul de mai jos pentru a seta o nouă parolă pentru contul dumneavoastră.';
@@ -2487,10 +2485,6 @@ $lang["error_check_config"]='Vă rugăm să verificați opțiunea de configurare
 $lang["useaspreviewimage"]='Folosește ca imagine de previzualizare';
 $lang["filechecksum"]='Suma de verificare a fișierului';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notificare de sistem';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[mesaj]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_subsol]';
 $lang["error_edit_filter_invalid"]='Filtrul de editare nu este configurat corect pentru acest grup de utilizatori. Vă rugăm să contactați administratorul';
 $lang["error_search_filter_invalid"]='Filtrul de căutare nu este configurat corect pentru acest grup de utilizatori. Vă rugăm să contactați administratorul dumneavoastră';
 $lang["action_lock"]='Blocați';
@@ -2695,21 +2689,7 @@ $lang["user_group"]='grup de utilizatori';
 $lang["all__emailbulk"]='<br /><br />
 [text]<br /><br />
 [text_footer]';
-$lang["all__emailcollection"]='<br />
-[de la utilizator] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [mesaj]<br /><br /> 
-[lang_clicklinkviewcollection] [listă]';
-$lang["all__emailcollectionexternal"]='<br />
-[de la utilizator] [lang_emailcollectionmessageexternal] <br /><br /> 
-[mesaj] : [message]<br /><br /> 
-[faceți clic pe link pentru a vizualiza colecția] [list]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[bun venit]<br /><br /> 
-[detalii_noi_autentificare]<br /><br /> 
-[nume_utilizator] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -2862,3 +2842,13 @@ $lang["action_set_no_file"]='Marchează ca neavând fișier';
 $lang["action_unset_no_file"]='Marchează ca fișier lipsă';
 $lang["completed_set_no_file"]='Resursa marcată ca neavând fișier';
 $lang["completed_unset_no_file"]='Resursa marcată ca fișier lipsă';
+$lang["notify_resource_change_email"]='O resursă pe care ai descărcat-o în ultimele [days] zile a fost modificată. Fă clic pe linkul de mai jos pentru a vizualiza resursa.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='O resursă pe care ai descărcat-o în ultimele [days] zile a fost modificată.';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

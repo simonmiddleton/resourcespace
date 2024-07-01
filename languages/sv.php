@@ -1996,7 +1996,6 @@ $lang["collectionlog-EEU"]='Redigerad extern uppladdning';
 $lang["collectionlog-XK"]='Borttagen extern åtkomstnyckel';
 $lang["disabled"]='Inaktiverad';
 $lang["list_file_extension"]='Förlängning';
-$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[meddelande]<br/>[utgår]<br/><br/>Klicka på länken nedan för att se och ladda ner begärda resurser.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["requestdeclined_email"]='[img_headerlogo]<br/><br/>[message]<br/><br/>Klicka på länken nedan för att visa begärda resurser.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["resource_expiry_x_days"]='En resurs som du tidigare har laddat ner går ut om %X dag(ar)';
 $lang["plugins-search-results-header"]='Resultat av sökning efter tillägg';
@@ -2295,8 +2294,6 @@ $lang["terms__upload_terms"]='Dina villkor för uppladdningar skrivs här.';
 $lang["user_preferences__introtext"]='Ange ett nytt lösenord nedan för att ändra ditt lösenord.';
 $lang["user_preferences__introtext_new"]='Var god ange ett lösenord nedan.';
 $lang["notify_resource_change_email_subject"]='En resurs har modifierats';
-$lang["notify_resource_change_email"]='En resurs som du laddade ner för [dagar] dagar sedan har ändrats. Klicka på länken nedan för att visa resursen.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='En resurs som du laddade ner för [dagar] dagar sedan har ändrats.';
 $lang["passwordresetemail"]='Vänligen klicka på länken nedan för att återställa ditt lösenord.';
 $lang["password_reset_email_html"]='Användarnamn: [username]<br /><br />Klicka på länken nedan för att återställa ditt lösenord.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Klicka på länken nedan för att ange ett nytt lösenord för ditt konto.';
@@ -2755,10 +2752,6 @@ $lang["error_check_config"]='Vänligen kontrollera konfigurationsalternativet %%
 $lang["useaspreviewimage"]='Använd som förhandsvisningsbild';
 $lang["filechecksum"]='Fil checksumma';
 $lang["system_notification"]='%%APPLICATION_NAME%% - systemnotifiering';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[meddelande]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["error_edit_filter_invalid"]='Redigeringsfiltret är inte korrekt konfigurerat för denna användargrupp. Vänligen kontakta din administratör';
 $lang["error_search_filter_invalid"]='Sökfiltret är inte korrekt konfigurerat för denna användargrupp. Vänligen kontakta din administratör';
 $lang["action_lock"]='Lås';
@@ -2925,33 +2918,7 @@ $lang["user_group"]='användargrupp';
 $lang["all__emailbulk"]='<br /><br />
 [text]<br /><br />
 [text_footer]';
-$lang["all__emailcollection"]='<br />
-[från användarnamn] [lang_emailcollectionmessage] <br /><br /> 
-[lang_meddelande] : [meddelande]<br /><br /> 
-[lang_klickalänkenförattsekollektionen] [lista]';
-$lang["all__emailcollectionexternal"]='<br />
-[från användarnamn] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_meddelande] : [meddelande]<br /><br /> 
-[lang_klickalänkenförattvisasamlingen] [lista]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[välkommen]<br /><br /> 
-[lang_nyainloggningsuppgifter]<br /><br /> 
-[lang_användarnamn] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[användarnamn] ([användarens fullständiga namn] - [användarens e-post])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[namn]<br /><br />
-[lang_descriptionofproject]:[beskrivning]<br /><br />
-[lang_deadline]:[deadline]<br /><br />
-[lang_contacttelephone]:[kontakt]<br /><br />
-[lang_finaluse]: [slutanvändning]<br /><br />
-[lang_shaperequired]: [form]<br /><br />
-[lang_noresourcesrequired]: [antalresurser]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
 $lang["all__emailnotifyresourcesapproved"]='<br />
 [lang_userresourcesapproved]
 [list] <br />
@@ -2975,12 +2942,6 @@ $lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage
 $lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='<br />
-[fromusername] [lang_har_mailat_dig_en_resurs]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_klicka_för_att_se_resursen]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
 $lang["all__emailresourcerequest"]='[lang_användarnamn] : [username] <br />
 [list] <br />
@@ -3088,3 +3049,42 @@ $lang["action_unset_no_file"]='Markera som fil saknas';
 $lang["completed_set_no_file"]='Resurs markerad som utan fil';
 $lang["completed_unset_no_file"]='Resurs markerad som fil saknas';
 $lang["php"]='PHP';
+$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Klicka på länken nedan för att visa och ladda ner de begärda resurserna.<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["all__emailresource"]='<br />
+[fromusername] har skickat en resurs till dig<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+Klicka för att visa resursen<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["notify_resource_change_email"]='En resurs som du laddade ner för [days] dagar sedan har ändrats. Klicka på länken nedan för att visa resursen.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='En resurs som du laddade ner för [days] dagar sedan har ändrats.';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailnewresearchrequestwaiting"]='[användarnamn] ([användarens fullständiga namn] - [användarens e-post])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[välkommen]<br /><br /> 
+[lang_newlogindetails]<br /><br /> 
+[lang_användarnamn] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

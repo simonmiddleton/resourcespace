@@ -1824,8 +1824,6 @@ $lang["collectionlog-XK"]='Poistettu ulkoinen käyttöavain';
 $lang["expires-date"]='Vanhenee: %date%';
 $lang["disabled"]='Poistettu käytöstä';
 $lang["list_file_extension"]='Laajennus';
-$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[viesti]<br/>[vanhenee]<br/><br/>Klikkaa alla olevaa linkkiä nähdäksesi ja ladataksesi pyydettyjä resursseja.<br/><br/><a href=\'[url]\'>[url]</a>';
-$lang["requestdeclined_email"]='[img_headerlogo]<br/><br/>[message]<br/><br/>Klikkaa alla olevaa linkkiä nähdäksesi pyydettyjä resursseja.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["resource_expiry_x_days"]='Aiemmin ladattu resurssi vanhenee %X päivän kuluttua';
 $lang["diskerror"]='Kiintiö ylitetty';
 $lang["plugins-search-results-header"]='Pluginien hakutulokset';
@@ -2721,10 +2719,6 @@ $lang["error_check_config"]='Tarkista asetuskohdan %%CONFIG_OPTION%% asetukset, 
 $lang["useaspreviewimage"]='Käytä esikatselukuvana';
 $lang["filechecksum"]='Tiedoston tarkistussumma';
 $lang["system_notification"]='%%APPLICATION_NAME%% - järjestelmän ilmoitus';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[viesti]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[teksti_alatunniste]';
 $lang["error_edit_filter_invalid"]='Muokkaussuodatin ei ole oikein määritetty tälle käyttäjäryhmälle. Ota yhteyttä järjestelmänvalvojaan';
 $lang["error_search_filter_invalid"]='Hakusuodattimen suodattimet eivät ole oikein määritetty tämän käyttäjäryhmän osalta. Ota yhteyttä järjestelmänvalvojaan';
 $lang["action_lock"]='Lukitus';
@@ -2891,24 +2885,10 @@ $lang["gigabyte-symbol-binary"]='GiB';
 $lang["terabyte-symbol-binary"]='TiB';
 $lang["comments_in-response-to-on"]='päällä';
 $lang["user_group"]='käyttäjäryhmä';
-$lang["all__emailbulk"]='<br /><br />
-[teksti]<br /><br />
-[teksti_alaosa]';
 $lang["all__emailcollection"]='<br />
 [fromusername] [lang_emailcollectionmessage] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='<br />
-[käyttäjänimi] [kokoelman ulkoinen viesti] <br /><br /> 
-[viesti] : [message]<br /><br /> 
-[napsauta linkkiä nähdäksesi kokoelman] [list]';
-$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[tervetuloa]<br /><br /> 
-[uudet kirjautumistiedot]<br /><br /> 
-[käyttäjänimi] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[teksti_alatunniste]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -2926,18 +2906,6 @@ $lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
 [lang_viewcontributedsubittedl] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='<br />
-[käyttäjän lähettämät resurssit]
-[lista] <br />
-[näytä kaikki käyttäjän odottavat] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[tekstin alatunniste]';
-$lang["all__emailnotifyresourcesunsubmitted"]='<br />
-[käyttäjänresurssitlähettämättömät]
-[lista] <br />
-[näytäkaikkikäyttäjänodottavat] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[teksti_alatunniste]';
 $lang["all__emailresearchrequestassigned"]='<br />
 [tutkimuspyyntöön on osoitettu viesti]<br /><br />
 [tekstin alatunniste]';
@@ -2951,11 +2919,6 @@ $lang["all__emailresource"]='<br />
 <a href="[url]">[embed_thumbnail]</a><br /><br />
 [lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
-$lang["all__emailresourcerequest"]='[käyttäjänimi] : [username] <br />
-[lista] <br />
-[yksityiskohdat]<br /><br />
-[napsauta nähdäksesi resurssin] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["team_research__introtext"]='Järjestä ja hallinnoi \'Tutkimuspyyntöjä\'. <br /><br />Valitse \'muokkaa tutkimusta\' tarkistaaksesi pyynnön tiedot ja osoittaaksesi tutkimuksen tiimin jäsenelle. On mahdollista perustaa tutkimuspyyntö aiempaan kokoelmaan syöttämällä kokoelman tunnus \'muokkaa\' -näyttöön. <br /><br />Kun tutkimuspyyntö on osoitettu, valitse \'muokkaa kokoelmaa\' lisätäksesi tutkimuspyynnön \'Oletuskokoelma\' -paneeliin. Käyttämällä vakiotyökaluja on sitten mahdollista lisätä resursseja tutkimukseen. <br /><br />Kun tutkimus on valmis, valitse \'muokkaa tutkimusta\', muuta tila valmiiksi ja sähköposti lähetetään automaattisesti käyttäjälle, joka pyysi tutkimusta. Sähköposti sisältää linkin tutkimukseen ja se lisätään myös automaattisesti heidän \'Oletuskokoelma\' -paneeliinsa.';
 $lang["dash"]='Kojelauta';
@@ -3002,11 +2965,6 @@ $lang["job_status_error"]='Tapahtui virhe';
 $lang["filter_is_in"]='ON';
 $lang["file_integrity_fail_latest"]='Näytä viimeisimmät tiedostojen eheysvirheet';
 $lang["file_integrity_fail_all"]='Näytä kaikki resurssit, joilla on tiedoston eheyden virheitä';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[tiedoston_eheys_yhteenveto_epäonnistui] <br /><br /> 
-[tiedoston_eheys_epäonnistui_haku] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[teksti_alatunniste]';
 $lang["error-edit_noaccess_related_resources"]='Ei voida yhdistää resursseja. Ei pääsyä:';
 $lang["csv_export_filename"]='metadata_vienti_%%SEARCH%%_%%TIME%%';
 $lang["upload_share_email_template"]='<br />
@@ -3018,12 +2976,6 @@ $lang["upload_share_email_template"]='<br />
 <br />
 <br />
 [passwordtext]';
-$lang["all__emailnotifyuploadsharenew"]='<br />
-[lang_notify_upload_share_new]
-<br />
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[tekstin_alaosa]';
 $lang["share_expired_icon_title"]='Vanhentunut';
 $lang["error_invalid_date_format"]='"%%VALUE%%" on virheellinen päivämäärä. Kaikkien tämän kentän arvojen on oltava muodossa VVVV-KK-PP';
 $lang["related_resource_create"]='Luo uusi liittyvä resurssi';
@@ -3056,3 +3008,37 @@ $lang["completed_set_no_file"]='Resurssi merkitty tiedostottomaksi';
 $lang["completed_unset_no_file"]='Resurssi merkitty tiedosto puuttuvaksi';
 $lang["map_tf_group"]='Thunderforest';
 $lang["themes__manage"]='Järjestä ja muokkaa verkossa saatavilla olevia esittelykokoelmia. Esittelykokoelmat ovat erityisesti mainostettuja kokoelmia. <br /><br /> <strong>1 Uuden merkinnän luominen esittelykokoelman alle - rakenna kokoelma</strong><br /> Valitse <strong>Omat kokoelmat</strong> päävalikosta ja luo uusi <strong>julkinen</strong> kokoelma. Muista sisällyttää esittelykokoelman nimi asetusten aikana. Käytä olemassa olevaa esittelykokoelman nimeä ryhmitelläksesi kokoelman nykyisen esittelykokoelman alle (varmista, että kirjoitat sen täsmälleen samalla tavalla), tai valitse uusi nimi luodaksesi täysin uuden esittelykokoelman. Älä koskaan salli käyttäjien lisätä/poistaa resursseja esittelykokoelmista. <br /> <br /><strong>2 Olemassa olevan merkinnän sisällön muokkaaminen esittelykokoelman alla</strong><br /> Valitse <strong>muokkaa kokoelmaa</strong>. Tämän kokoelman kohteet näkyvät <strong>Omat kokoelmat</strong> -paneelissa näytön alareunassa. Käytä vakiotyökaluja resurssien muokkaamiseen, poistamiseen tai lisäämiseen. <br /> <br /><strong>3 Esittelykokoelman nimen muuttaminen tai kokoelman siirtäminen toisen esittelykokoelman alle</strong><br /> Valitse <strong>muokkaa ominaisuuksia</strong> ja muokkaa esittelykokoelman kategoriaa tai kokoelman nimeä. Käytä olemassa olevaa esittelykokoelman nimeä ryhmitelläksesi kokoelman nykyisen esittelykokoelman alle (varmista, että kirjoitat sen täsmälleen samalla tavalla), tai valitse uusi nimi luodaksesi täysin uuden esittelykokoelman. <br /> <br /><strong>4 Kokoelman poistaminen esittelykokoelmasta</strong><br /> Valitse <strong>muokkaa ominaisuuksia</strong> ja poista sanat esittelykokoelman kategoria -laatikosta.';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Napsauta alla olevaa linkkiä nähdäksesi ja ladataksesi pyydetyt resurssit.<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["requestdeclined_email"]='[img_headerlogo]<br/><br/>[message]<br/><br/>Napsauta alla olevaa linkkiä nähdäksesi pyydetyt resurssit.<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] on lähettänyt sinulle viestin kokoelmasta <br /><br /> 
+Viesti: [message]<br /><br /> 
+Napsauta linkkiä nähdäksesi kokoelman: [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

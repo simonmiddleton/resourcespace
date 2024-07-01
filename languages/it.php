@@ -2526,10 +2526,6 @@ $lang["error_check_config"]='Si prega di controllare l\'opzione di configurazion
 $lang["useaspreviewimage"]='Usa come immagine di anteprima';
 $lang["filechecksum"]='Checksum del file';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notifica di sistema';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[messaggio]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[testo_footer]';
 $lang["error_edit_filter_invalid"]='Il filtro di modifica non è configurato correttamente per questo gruppo di utenti. Si prega di contattare l\'amministratore';
 $lang["error_search_filter_invalid"]='Il filtro di ricerca non è configurato correttamente per questo gruppo di utenti. Si prega di contattare l\'amministratore';
 $lang["action_lock"]='Blocca';
@@ -2721,24 +2717,7 @@ $lang["resourcetypes_separator"]=', ';
 $lang["collectiontypes_separator"]=', ';
 $lang["merge_filename_title_spacer"]='Spaziatore';
 $lang["user_group"]='gruppo utente';
-$lang["all__emailbulk"]='<br /><br />
-[testo]<br /><br />
-[testo_footer]';
-$lang["all__emailcollection"]='<br />
-[dausername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_messaggio] : [messaggio]<br /><br /> 
-[lang_cliccalinkpervederecollezione] [lista]';
-$lang["all__emailcollectionexternal"]='<br />
-[dausername] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_messaggio] : [messaggio]<br /><br /> 
-[lang_cliccalinkpervederecollezione] [elenco]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[benvenuto]<br /><br /> 
-[lang_nuovidettaglidilogin]<br /><br /> 
-[lang_nomeutente] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[testo_footer]';
 $lang["all__emailnewresearchrequestwaiting"]='<br />
 [username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
@@ -2752,43 +2731,6 @@ $lang["all__emailnewresearchrequestwaiting"]='<br />
 <a href="[url]">[url]</a><br /><br />
 <a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
 [text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='<br />
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[testo_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='<br />
-[lang_userresourcessubmitted]
-[elenco] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[testo_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='<br />
-[lang_userresourcesunsubmitted]
-[elenco] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[testo_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
-
-[testo_piede]';
-$lang["all__emailresearchrequestcomplete"]='<br />
-[lang_researchrequestcompletemessage] <br /><br /> 
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[testo_footer]';
-$lang["all__emailresource"]='<br />
-[dausername] [lang_tihaimandatounaricorsa]<br /><br />
-[messaggio]<br /><br />
-<a href="[url]">[incorpora_miniatura]</a><br /><br />
-[lang_cliccapervedereilrisorsa]<br /><a href="[url]">[nomerisorsa] - [url]</a><br /><br />
-[testo_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[lista] <br />
-[dettagli]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["collection_email__introtext"]='Si prega di completare il modulo sottostante.<br />I destinatari riceveranno un\'email o un messaggio di sistema contenente link alle collezioni piuttosto che allegati di file, in modo che possano scegliere e scaricare le risorse appropriate.';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["team_research__introtext"]='Organizza e gestisci le \'Richieste di Ricerca\'. <br /><br />Scegli \'modifica ricerca\' per rivedere i dettagli della richiesta e assegnare la ricerca a un membro del team. È possibile basare una richiesta di ricerca su una collezione precedente inserendo l\'ID della collezione nella schermata \'modifica\'. <br /><br />Una volta assegnata la richiesta di ricerca, scegli \'modifica collezione\' per aggiungere la richiesta di ricerca al pannello \'Collezione Predefinita\'. Utilizzando gli strumenti standard, è quindi possibile aggiungere risorse alla ricerca. <br /><br />Una volta completata la ricerca, scegli \'modifica ricerca\', cambia lo stato in completato e un\'email viene automaticamente inviata all\'utente che ha richiesto la ricerca. L\'email contiene un link alla ricerca ed è anche automaticamente aggiunta al loro pannello \'Collezione Predefinita\'.';
@@ -2842,11 +2784,6 @@ $lang["job_status_error"]='Si è verificato un errore';
 $lang["filter_is_in"]='È';
 $lang["file_integrity_fail_latest"]='Visualizza gli ultimi errori di integrità dei file';
 $lang["file_integrity_fail_all"]='Visualizza tutte le risorse con errori di integrità dei file';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[testo_footer]';
 $lang["error-edit_noaccess_related_resources"]='Impossibile collegare le risorse. Nessun accesso a:';
 $lang["csv_export_filename"]='esportazione_metadati_%%SEARCH%%_%%TIME%%';
 $lang["upload_share_email_users"]='E-mail agli utenti<br><br>Digita ogni indirizzo e-mail, separato da una virgola';
@@ -2859,12 +2796,6 @@ Clicca sul link per visualizzare il file<br />
 <br />
 <br />
 [passwordtext]';
-$lang["all__emailnotifyuploadsharenew"]='<br />
-[lang_notify_upload_share_new]
-<br />
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[testo_footer]';
 $lang["share_expired_icon_title"]='Scaduto';
 $lang["error_invalid_date_format"]='"%%VALUE%%" non è una data valida. Tutti i valori in questo campo devono essere formattati come YYYY-MM-DD';
 $lang["related_resource_create"]='Crea nuova risorsa correlata';
@@ -2896,3 +2827,32 @@ $lang["action_unset_no_file"]='Segna come file mancante';
 $lang["completed_set_no_file"]='Risorsa contrassegnata come senza file';
 $lang["completed_unset_no_file"]='Risorsa contrassegnata come file mancante';
 $lang["themes__manage"]='Organizza e modifica le collezioni in evidenza disponibili online. Le collezioni in evidenza sono collezioni promosse in modo speciale. <br /><br /> <strong>1 Per creare una nuova voce sotto una collezione in evidenza - crea una collezione</strong><br /> Scegli <strong>Le Mie Collezioni</strong> dal menu principale in alto e crea una nuova collezione <strong>pubblica</strong>. Ricorda di includere un nome per la collezione in evidenza durante la configurazione. Usa un nome di collezione in evidenza esistente per raggruppare la collezione sotto una collezione in evidenza attuale (assicurati di scriverlo esattamente allo stesso modo), oppure scegli un nuovo titolo per creare una nuova collezione in evidenza. Non permettere mai agli utenti di aggiungere/rimuovere risorse dalle collezioni in evidenza. <br /> <br /><strong>2 Per modificare il contenuto di una voce esistente sotto una collezione in evidenza </strong><br /> Scegli <strong>modifica collezione</strong>. Gli elementi in quella collezione appariranno nel pannello <strong>Le Mie Collezioni</strong> in fondo allo schermo. Usa gli strumenti standard per modificare, rimuovere o aggiungere risorse. <br /> <br /><strong>3 Per modificare il nome di una collezione in evidenza o spostare una collezione per apparire sotto una diversa collezione in evidenza</strong><br /> Scegli <strong>modifica proprietà</strong> e modifica la categoria della collezione in evidenza o il nome della collezione. Usa un nome di collezione in evidenza esistente per raggruppare la collezione sotto una collezione in evidenza attuale (assicurati di scriverlo esattamente allo stesso modo), oppure scegli un nuovo titolo per creare una nuova collezione in evidenza. <br /> <br /><strong>4 Per rimuovere una collezione da una collezione in evidenza </strong><br /> Scegli <strong>modifica proprietà</strong> e cancella le parole nella casella della categoria della collezione in evidenza.';
+$lang["map_esridelorme"]='DeLorme';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='<br />
+[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

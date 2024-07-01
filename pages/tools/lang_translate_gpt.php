@@ -56,6 +56,15 @@ $plugins=scandir("../../plugins"); array_shift($plugins);array_shift($plugins); 
 $plugins[]=""; // Add an extra row to signify the base languages (not in a plugin)
 $plugins=array_reverse($plugins);
 
+$bad_params=0;
+$calamity=0;
+$calamities=[];
+$bad_params_list=[];
+
+// Things that do not translate
+$ignore=["map_hydda_group", "_dupe", "hour-abbreviated", "map_tf_group", "map_esridelorme", "posixldapauth_rdn", "to-page", "emu_upload_emu_field_label", "all__emailcollectionexternal", "upload_share_email_template", "all__emaillogindetails", "all__emailnotifyresourcessubmitted", "all__emailresourcerequest", "all__emailbulk", "all__emailresource", "system_notification_email", "all__emailcollection", "all__emailnotifyresourcesunsubmitted", "all__emailresearchrequestassigned", "all__emailnotifyuploadsharenew"
+];
+  
 foreach ($plugins as $plugin)
     {
     $plugin_path="";
@@ -68,10 +77,14 @@ foreach ($plugins as $plugin)
     include $basefile; 
     $lang_en=$lang;
 
+    // Fetch a list of valid parameters using en.php as the base
+    $base=file_get_contents($basefile);
+    preg_match_all("/\[([a-zA-Z0-9_]*)\]/",$base,$params_correct);
+
     foreach ($languages as $language=>$lang_name)
         {
         if (in_array($language,array("en","en-US"))) {continue;}
-        
+
         // Process a language
         $lang=array();$langfile="../../" . $plugin_path . "languages/" . $language . ".php";
 
@@ -89,6 +102,7 @@ foreach ($plugins as $plugin)
             {
             if (!is_string($lang_en[$mkey])) {continue;}
             if (strlen(trim($lang_en[$mkey]))<=1) {continue;}
+            if (in_array($mkey,$ignore)) {continue;}
                 
             $count++;
             echo $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey (" . $lang_en[$mkey] . ") for language $language\n\n";flush();ob_flush();
@@ -96,17 +110,36 @@ foreach ($plugins as $plugin)
             $messages=array();
             $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads.
  Where the context is unclear, make a best guess. Don't add the period character at the start or end of the translation if one isn't at the start or end of the value being translated.
-Text within square brackets or percent signs indicates a system parameter that must not itself be translated.
+Text within square brackets ([example]) or percent signs (%%EXAMPLE%%) indicates a system parameter that MUST NOT itself be translated so for example '[list]' must remain '[list]' even if translating to Swedish.
 In the event that you cannot provide a translation, return the word CALAMITY. Do not output anything that is not either a valid translation or the word CALAMITY.");
             $messages[]=array("role"=>"user","content"=>"Please translate: " . $lang_en[$mkey]);
             
             $result=generateChatCompletions($openai_key,"gpt-4o",0,2048,$messages);
     echo "\n";print_r($result);echo "\n\n";
+
+            // Check there are no bad parameters in the results by comparing with the master list.
+            preg_match_all("/\[([a-zA-Z0-9_]*)\]/",$result,$params);
+            $wrong=array_diff($params[0],$params_correct[0]);
+            if (count($wrong)>0)
+                {
+                echo "Bad parameters were generated: ";print_r($wrong);$bad_params++;
+                $bad_params_list[]=$mkey;
+                continue;
+                }
+
             // Append it to the appropriate file.
             if (is_string($result) && strlen($result)>0 && strpos(strtolower($result),"calamity")===false && strpos(strtolower($result),"[error]")===false)
                 {
                 $f=fopen($langfile,"a");fwrite($f,"\n\$lang[\"" . $mkey . "\"]=" . var_export($result,true) . ";");fclose($f);
                 }
+            else   
+                {
+                $calamity++;$calamities[]=$mkey;
+                }
             }
         }
     }
+echo "\n\nTranslations that contained bad parameters and were skipped=$bad_params\nCould not translate=$calamity\n\n";
+
+//var_dump(array_unique($calamities));
+//var_dump(array_unique($bad_params_list));

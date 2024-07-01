@@ -1289,10 +1289,6 @@ $lang["requestsent"]='La teva sol·licitud de recurs ha estat enviada per a apro
 $lang["requestsenttext"]='La teva sol·licitud de recurs ha estat enviada per a la seva aprovació i serà revisada en breu.';
 $lang["requestupdated"]='La teva sol·licitud de recurs ha estat actualitzada';
 $lang["requestassignedtouser"]='La teva sol·licitud de recurs ha estat assignada a % per a la seva aprovació.';
-$lang["requestapprovedmail"]='La teva sol·licitud ha estat aprovada. Fes clic a l\'enllaç de sota per veure i descarregar els recursos sol·licitats.';
-$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[missatge]<br/>[caduca]<br/><br/>Feu clic a l\'enllaç següent per veure i descarregar els recursos sol·licitats.<br/><br/><a href=\'[url]\'>[url]</a>';
-$lang["requestdeclinedmail"]='Ho sentim, la teva sol·licitud dels recursos de la col·lecció següent ha estat denegada.';
-$lang["requestdeclined_email"]='[img_headerlogo]<br/><br/>[missatge]<br/><br/>Feu clic a l\'enllaç següent per veure els recursos sol·licitats.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["resourceexpirymail"]='Els recursos següents han caducat:';
 $lang["resource_expiry_x_days"]='Un recurs que has descarregat anteriorment caduca en %X dia/dies';
 $lang["resourceexpiry"]='Caducitat del recurs';
@@ -2044,8 +2040,6 @@ $lang["user_preferences__introtext"]='Introduïu una nova contrasenya a continua
 $lang["user_preferences__introtext_new"]='Si us plau, introdueix una contrasenya a continuació.';
 $lang["user_request__introtext"]='Si us plau, ompliu el formulari següent per sol·licitar un compte d\'usuari.';
 $lang["notify_resource_change_email_subject"]='S\'ha modificat un recurs';
-$lang["notify_resource_change_email"]='Un recurs que vas descarregar fa [dies] dies ha estat modificat. Fes clic a l\'enllaç de sota per veure el recurs.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='Un recurs que vas descarregar en els últims [dies] dies ha estat modificat.';
 $lang["passwordresetemail"]='Si us plau, feu clic a l\'enllaç següent per restablir la vostra contrasenya.';
 $lang["password_reset_email_html"]='Nom d\'usuari: [username]<br /><br />Si us plau, feu clic a l\'enllaç següent per restablir la vostra contrasenya.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Si us plau, feu clic a l\'enllaç següent per establir una nova contrasenya per al vostre compte.';
@@ -2506,10 +2500,6 @@ $lang["error_server_missing_module"]='El servidor no té el programari necessari
 $lang["error_check_config"]='Si us plau, comprova l\'opció de configuració %%CONFIG_OPTION%%';
 $lang["useaspreviewimage"]='Utilitza com a imatge de previsualització';
 $lang["filechecksum"]='Suma de verificació del fitxer';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[missatge]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_peu]';
 $lang["error_edit_filter_invalid"]='El filtre d\'edició no està configurat correctament per a aquest grup d\'usuaris. Si us plau, contacteu amb l\'administrador';
 $lang["error_search_filter_invalid"]='El filtre de cerca no està configurat correctament per a aquest grup d\'usuaris. Si us plau, contacteu amb l\'administrador';
 $lang["action_lock"]='Bloquejar';
@@ -2661,7 +2651,6 @@ $lang["fileextension-inside-brackets"]='[%EXTENSIÓ]';
 $lang["fileextension"]='%EXTENSIÓ';
 $lang["log-o"]='Canviat contribuït per';
 $lang["log-rtchange"]='Tipus de recurs editat';
-$lang["log-missinglang"]='[tipus] (falta idioma)';
 $lang["log-NOFIL"]='Marcat com a sense fitxer';
 $lang["log-FIL"]='Marcat com a que té fitxer';
 $lang["log-EDT"]='Recurs editat';
@@ -2735,12 +2724,6 @@ $lang["all__emailcollectionexternal"]='<br />
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[benvingut]<br /><br /> 
-[nous_detalls_d\'inici_de_sessió]<br /><br /> 
-[nom_d\'usuari] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_peu_de_pàgina]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -2752,24 +2735,6 @@ $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [user
 [lang_noresourcesrequired]: [noresources]<br /><br />
 <a href="[url]">[url]</a><br /><br />
 <a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='<br />
-[lang_userresourcesapproved]
-[llista] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='<br />
-[lang_userresourcessubmitted]
-[llista] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='<br />
-[lang_userresourcesunsubmitted]
-[llista] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
 [text_footer]';
 $lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
 
@@ -2784,11 +2749,6 @@ $lang["all__emailresource"]='<br />
 <a href="[url]">[embed_thumbnail]</a><br /><br />
 [lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[llista] <br />
-[detalls]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["dash"]='Quadre de comandament';
 $lang["last"]='Últim';
 $lang["upgrade_script"]='Script d\'actualització';
@@ -2838,11 +2798,6 @@ $lang["job_status_error"]='S\'ha produït un error';
 $lang["filter_is_in"]='ÉS';
 $lang["file_integrity_fail_latest"]='Veure els últims errors d\'integritat dels fitxers';
 $lang["file_integrity_fail_all"]='Veure tots els recursos amb errors d\'integritat de fitxers';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[resum_integritat_fitxer_fallida] <br /><br /> 
-[cerca_fallida_integritat_fitxer] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["error-edit_noaccess_related_resources"]='No es poden relacionar els recursos. No hi ha accés a:';
 $lang["csv_export_filename"]='exportació_de_metadades_%%SEARCH%%_%%TIME%%';
 $lang["upload_share_email_template"]='<br />
@@ -2894,3 +2849,32 @@ $lang["completed_unset_no_file"]='Recurs marcat com a fitxer desaparegut';
 $lang["hour-abbreviated"]='HH';
 $lang["map_esridelorme"]='DeLorme';
 $lang["filter_and"]='I';
+$lang["log-missinglang"]='[type] (idioma faltant)';
+$lang["requestapprovedmail"]='La teva sol·licitud ha estat aprovada. Fes clic a l\'enllaç següent per veure i descarregar els recursos sol·licitats.';
+$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Feu clic a l\'enllaç següent per veure i descarregar els recursos sol·licitats.<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["requestdeclinedmail"]='Ho sentim, la teva sol·licitud per als recursos de la col·lecció següent ha estat rebutjada.';
+$lang["requestdeclined_email"]='[img_headerlogo]<br/><br/>[message]<br/><br/>Feu clic a l\'enllaç següent per veure els recursos sol·licitats.<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_email"]='Un recurs que vas descarregar fa [days] dies ha estat modificat. Fes clic a l\'enllaç següent per veure el recurs.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='Un recurs que vas descarregar fa [days] dies ha estat modificat.';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
+[list]
+[lang_viewcontributedsubittedl]
+
+<a href="[url]">[url]</a>
+
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

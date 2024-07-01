@@ -1380,7 +1380,6 @@ $lang["requestsenttext"]='Su solicitud de recurso ha sido enviada para su aproba
 $lang["requestupdated"]='Su solicitud de recurso ha sido actualizada';
 $lang["requestassignedtouser"]='Su solicitud de recurso ha sido asignada a % para su aprobación.';
 $lang["requestapprovedmail"]='Su solicitud ha sido aprobada. Haga clic en el enlace de abajo para ver y descargar los recursos solicitados.';
-$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[mensaje]<br/>[caduca]<br/><br/>Haz clic en el enlace de abajo para ver y descargar los recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["requestdeclinedmail"]='Lo siento, su solicitud de los recursos en la siguiente colección ha sido rechazada.';
 $lang["requestdeclined_email"]='[img_headerlogo]<br/><br/>[message]<br/><br/>Haz clic en el enlace de abajo para ver los recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["resourceexpirymail"]='Los siguientes recursos han caducado:';
@@ -2536,10 +2535,6 @@ $lang["error_check_config"]='Por favor, comprueba la opción de configuración %
 $lang["useaspreviewimage"]='Usar como imagen de vista previa';
 $lang["filechecksum"]='Suma de verificación del archivo';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notificación del sistema';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[mensaje]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["error_edit_filter_invalid"]='El filtro de edición no está configurado correctamente para este grupo de usuarios. Por favor, contacte a su administrador';
 $lang["error_search_filter_invalid"]='El filtro de búsqueda no está configurado correctamente para este grupo de usuarios. Por favor, contacte a su administrador';
 $lang["action_lock"]='Bloquear';
@@ -2669,7 +2664,6 @@ $lang["fileextension-inside-brackets"]='[%EXTENSION]';
 $lang["fileextension"]='%EXTENSION';
 $lang["remove_custom_access_no_users_found"]='No se encontraron usuarios o grupos con acceso personalizado.';
 $lang["log-rtchange"]='Tipo de recurso editado';
-$lang["log-missinglang"]='[tipo] (falta idioma)';
 $lang["log-NOFIL"]='Marcado como sin archivo';
 $lang["log-FIL"]='Marcado como teniendo archivo';
 $lang["log-EDT"]='Recurso editado';
@@ -2739,17 +2733,7 @@ $lang["all__emailcollection"]='<br />
 [fromusername] [lang_emailcollectionmessage] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='<br />
-[deusername] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_message] : [mensaje]<br /><br /> 
-[lang_clicklinkviewcollection] [lista]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[bienvenido]<br /><br /> 
-[nuevos_detalles_de_inicio_de_sesión]<br /><br /> 
-[nombre_de_usuario] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[texto_pie_de_página]';
 $lang["all__emailnewresearchrequestwaiting"]='<br />
 [username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
@@ -2787,12 +2771,6 @@ $lang["all__emailresearchrequestcomplete"]='<br />
 [lang_researchrequestcompletemessage] <br /><br /> 
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='<br />
-[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[mensaje]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
 $lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
 [list] <br />
@@ -2848,11 +2826,6 @@ $lang["job_status_error"]='Ocurrió un error';
 $lang["filter_is_in"]='ES';
 $lang["file_integrity_fail_latest"]='Ver los últimos fallos de integridad de archivos';
 $lang["file_integrity_fail_all"]='Ver todos los recursos con fallos de integridad de archivos';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[resumen_integridad_archivo_fallido] <br /><br /> 
-[búsqueda_fallo_integridad_archivo] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["error-edit_noaccess_related_resources"]='No se pueden relacionar los recursos. Sin acceso a:';
 $lang["csv_export_filename"]='exportación_de_metadatos_%%SEARCH%%_%%TIME%%';
 $lang["upload_share_email_template"]='<br />
@@ -2902,3 +2875,14 @@ $lang["action_unset_no_file"]='Marcar como archivo faltante';
 $lang["completed_set_no_file"]='Recurso marcado como sin archivo';
 $lang["completed_unset_no_file"]='Recurso marcado como archivo faltante';
 $lang["map_esridelorme"]='DeLorme';
+$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Haga clic en el enlace a continuación para ver y descargar los recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["log-missinglang"]='[type] (idioma faltante)';

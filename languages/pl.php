@@ -2620,10 +2620,6 @@ $lang["error_check_config"]='Proszę sprawdzić opcję konfiguracji %%CONFIG_OPT
 $lang["useaspreviewimage"]='Użyj jako obraz podglądu';
 $lang["filechecksum"]='Suma kontrolna pliku';
 $lang["system_notification"]='%%APPLICATION_NAME%% - powiadomienie systemowe';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[wiadomość]<br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[tekst_stopki]';
 $lang["error_edit_filter_invalid"]='Filtr edycji nie jest poprawnie skonfigurowany dla tej grupy użytkowników. Skontaktuj się z administratorem';
 $lang["error_search_filter_invalid"]='Filtr wyszukiwania nie jest poprawnie skonfigurowany dla tej grupy użytkowników. Prosimy skontaktować się z administratorem';
 $lang["action_lock"]='Zamek';
@@ -2815,24 +2811,6 @@ $lang["resourcetypes_separator"]=', ';
 $lang["collectiontypes_separator"]=', ';
 $lang["user_group"]='grupa użytkowników';
 $lang["admin_report_create"]='Utwórz raport o nazwie...';
-$lang["all__emailbulk"]='<br /><br />
-[tekst]<br /><br />
-[tekst_stopka]';
-$lang["all__emailcollection"]='<br />
-[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='<br />
-[fromusername] wysłał(a) Ci wiadomość dotyczącą kolekcji <br /><br /> 
-Wiadomość : [message]<br /><br /> 
-Kliknij link, aby zobaczyć kolekcję: [list]';
-$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[witaj]<br /><br /> 
-[lang_nowe_szczegóły_logowania]<br /><br /> 
-[lang_nazwa_użytkownika] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_stopka]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -2857,13 +2835,6 @@ $lang["all__emailnotifyresourcessubmitted"]='<br />
 [lang_viewalluserpending] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[lista]
-[lang_viewalluserpending]
-
-<a href="[url]">[url]</a>
-
-[text_footer]';
 $lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
 
 [text_footer]';
@@ -2877,11 +2848,6 @@ $lang["all__emailresource"]='<br />
 <a href="[url]">[embed_thumbnail]</a><br /><br />
 [lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[lista] <br />
-[szczegóły]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["themes__manage"]='Organizuj i edytuj wyróżnione kolekcje dostępne online. Wyróżnione kolekcje to specjalnie promowane kolekcje. <br /><br /> <strong>1 Aby utworzyć nowy wpis w wyróżnionej kolekcji - zbuduj kolekcję</strong><br /> Wybierz <strong>Moje Kolekcje</strong> z głównego menu u góry i utwórz nową <strong>publiczną</strong> kolekcję. Pamiętaj, aby podczas konfiguracji uwzględnić nazwę wyróżnionej kolekcji. Użyj istniejącej nazwy wyróżnionej kolekcji, aby pogrupować kolekcję pod obecną wyróżnioną kolekcją (upewnij się, że wpisujesz ją dokładnie tak samo), lub wybierz nowy tytuł, aby utworzyć zupełnie nową wyróżnioną kolekcję. Nigdy nie pozwalaj użytkownikom na dodawanie/usuwanie zasobów z wyróżnionych kolekcji. <br /> <br /><strong>2 Aby edytować zawartość istniejącego wpisu w wyróżnionej kolekcji</strong><br /> Wybierz <strong>edytuj kolekcję</strong>. Elementy w tej kolekcji pojawią się w panelu <strong>Moje Kolekcje</strong> na dole ekranu. Użyj standardowych narzędzi do edycji, usuwania lub dodawania zasobów. <br /> <br /><strong>3 Aby zmienić nazwę wyróżnionej kolekcji lub przenieść kolekcję, aby pojawiła się pod inną wyróżnioną kolekcją</strong><br /> Wybierz <strong>edytuj właściwości</strong> i edytuj kategorię wyróżnionej kolekcji lub nazwę kolekcji. Użyj istniejącej nazwy wyróżnionej kolekcji, aby pogrupować kolekcję pod obecną wyróżnioną kolekcją (upewnij się, że wpisujesz ją dokładnie tak samo), lub wybierz nowy tytuł, aby utworzyć zupełnie nową wyróżnioną kolekcję. <br /> <br /><strong>4 Aby usunąć kolekcję z wyróżnionej kolekcji</strong><br /> Wybierz <strong>edytuj właściwości</strong> i usuń słowa w polu kategorii wyróżnionej kolekcji.';
 $lang["dash"]='Pulpit';
@@ -2986,3 +2952,30 @@ $lang["action_set_no_file"]='Oznacz jako nieposiadający pliku';
 $lang["action_unset_no_file"]='Oznacz jako brakujący plik';
 $lang["completed_set_no_file"]='Zasób oznaczony jako nieposiadający pliku';
 $lang["completed_unset_no_file"]='Zasób oznaczony jako brakujący plik';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] wysłał(a) Ci wiadomość dotyczącą kolekcji <br /><br /> 
+Wiadomość : [message]<br /><br /> 
+Kliknij link, aby zobaczyć kolekcję: [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';

@@ -2077,8 +2077,6 @@ $lang["user_preferences__introtext_new"]='Voer hieronder een wachtwoord in.';
 $lang["user_request__introtext"]='Vul het onderstaande formulier in om een gebruikersaccount aan te vragen.';
 $lang["view__storyextract"]='Verhaalfragment:';
 $lang["notify_resource_change_email_subject"]='Een resource is gewijzigd';
-$lang["notify_resource_change_email"]='Een bronbestand dat je [dagen] dagen geleden hebt gedownload is gewijzigd. Klik op onderstaande link om de bron te bekijken.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='Een bronbestand dat je [dagen] dagen geleden hebt gedownload is gewijzigd.';
 $lang["passwordresetemail"]='Klik op onderstaande link om uw wachtwoord opnieuw in te stellen.';
 $lang["password_reset_email_html"]='Gebruikersnaam: [username]<br /><br />Klik op onderstaande link om uw wachtwoord opnieuw in te stellen.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Klik op de onderstaande link om een nieuw wachtwoord in te stellen voor jouw account.';
@@ -2547,10 +2545,6 @@ $lang["error_check_config"]='Controleer alstublieft de configuratieoptie %%CONFI
 $lang["useaspreviewimage"]='Gebruik als voorbeeldweergave afbeelding';
 $lang["filechecksum"]='Bestandscontrolegetal';
 $lang["system_notification"]='%%APPLICATION_NAME%% - systeemmelding';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[bericht]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_footer]';
 $lang["error_edit_filter_invalid"]='De bewerkingsfilter is niet correct geconfigureerd voor deze gebruikersgroep. Neem contact op met uw beheerder';
 $lang["error_search_filter_invalid"]='Het zoekfilter is niet correct geconfigureerd voor deze gebruikersgroep. Neem contact op met uw beheerder';
 $lang["action_lock"]='Vergrendelen';
@@ -2733,73 +2727,17 @@ $lang["ref-title"]='%ref - %titel';
 $lang["resourcetypes_separator"]=',';
 $lang["collectiontypes_separator"]=', ';
 $lang["user_group"]='gebruikersgroep';
-$lang["all__emailbulk"]='<br /><br />
-[tekst]<br /><br />
-[tekst_voettekst]';
-$lang["all__emailcollection"]='<br />
-[vangebruikersnaam] [lang_emailcollectiebericht] <br /><br /> 
-[lang_bericht] : [bericht]<br /><br /> 
-[lang_kliklinkbekijkcollectie] [lijst]';
-$lang["all__emailcollectionexternal"]='<br />
-[vangebruikersnaam] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_bericht] : [bericht]<br /><br /> 
-[lang_kliklinkbekijkcollectie] [lijst]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[welkom]<br /><br /> 
-[lang_nieuweinloggegevens]<br /><br /> 
-[lang_gebruikersnaam] : [gebruikersnaam] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_voettekst]';
-$lang["all__emailnewresearchrequestwaiting"]='[gebruikersnaam] ([gebruikersvolledige naam] - [gebruikersemail])
-[lang_heeftonderzoeksverzoekgeplaatst]<br /><br />
-[lang_naamvanhetproject]:[naam]<br /><br />
-[lang_beschrijvingvanhetproject]:[beschrijving]<br /><br />
-[lang_deadline]:[deadline]<br /><br />
-[lang_contacttelefoon]:[contact]<br /><br />
-[lang_eindgebruik]: [eindgebruik]<br /><br />
-[lang_vormvereist]: [vorm]<br /><br />
-[lang_aantalvereistebronnen]: [aantalbronnen]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
 $lang["all__emailnotifyresourcesapproved"]='<br />
 [lang_userresourcesapproved]
 [list] <br />
 [lang_viewcontributedsubittedl] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[lijst]
-[lang_viewalluserpending]
-
-<a href="[url]">[url]</a>
-
-[tekst_voettekst]';
-$lang["all__emailnotifyresourcesunsubmitted"]='<br />
-[lang_userresourcesunsubmitted]
-[lijst] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
-
-[tekst_voettekst]';
 $lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailresource"]='<br />
-[vangebruikersnaam] heeft u een bron gemaild<br /><br />
-[bericht]<br /><br />
-<a href="[url]">[ingesloten_thumbnail]</a><br /><br />
-klik om de bron te bekijken<br /><a href="[url]">[bronnaam] - [url]</a><br /><br />
-[tekst_voettekst]';
-$lang["all__emailresourcerequest"]='[lang_gebruikersnaam] : [username] <br />
-[lijst] <br />
-[details]<br /><br />
-[lang_klikomresourcewebbekijken] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["team_research__introtext"]='Organiseer en beheer \'Onderzoeksverzoeken\'. <br /><br />Kies \'onderzoek bewerken\' om de details van het verzoek te bekijken en het onderzoek aan een teamlid toe te wijzen. Het is mogelijk om een onderzoeksverzoek te baseren op een eerdere collectie door de collectie-ID in te voeren op het \'bewerken\' scherm. <br /><br />Zodra het onderzoeksverzoek is toegewezen, kies \'collectie bewerken\' om het onderzoeksverzoek toe te voegen aan het \'Standaard collectie\' paneel. Met behulp van de standaardtools is het dan mogelijk om bronnen aan het onderzoek toe te voegen. <br /><br />Zodra het onderzoek is voltooid, kies \'onderzoek bewerken\', verander de status naar voltooid en er wordt automatisch een e-mail gestuurd naar de gebruiker die het onderzoek heeft aangevraagd. De e-mail bevat een link naar het onderzoek en het wordt ook automatisch toegevoegd aan hun \'Standaard Collectie\' paneel.';
 $lang["themes__manage"]='Organiseer en bewerk de uitgelichte collecties die online beschikbaar zijn. Uitgelichte collecties zijn speciaal gepromote collecties. <br /><br /> <strong>1 Om een nieuwe vermelding onder een uitgelichte collectie te maken - maak een collectie</strong><br /> Kies <strong>Mijn Collecties</strong> uit het hoofdmenu bovenaan en stel een gloednieuwe <strong>publieke</strong> collectie in. Vergeet niet een naam voor de uitgelichte collectie op te geven tijdens het instellen. Gebruik een bestaande naam van een uitgelichte collectie om de collectie onder een huidige uitgelichte collectie te groeperen (zorg ervoor dat je deze exact hetzelfde typt), of kies een nieuwe titel om een gloednieuwe uitgelichte collectie te maken. Sta gebruikers nooit toe om bronnen toe te voegen of te verwijderen uit uitgelichte collecties. <br /> <br /><strong>2 Om de inhoud van een bestaande vermelding onder een uitgelichte collectie te bewerken</strong><br /> Kies <strong>collectie bewerken</strong>. De items in die collectie verschijnen in het <strong>Mijn Collecties</strong> paneel onderaan het scherm. Gebruik de standaardtools om bronnen te bewerken, te verwijderen of toe te voegen. <br /> <br /><strong>3 Om een naam van een uitgelichte collectie te wijzigen of een collectie te verplaatsen om onder een andere uitgelichte collectie te verschijnen</strong><br /> Kies <strong>eigenschappen bewerken</strong> en bewerk de categorie van de uitgelichte collectie of de naam van de collectie. Gebruik een bestaande naam van een uitgelichte collectie om de collectie onder een huidige uitgelichte collectie te groeperen (zorg ervoor dat je deze exact hetzelfde typt), of kies een nieuwe titel om een gloednieuwe uitgelichte collectie te maken. <br /> <br /><strong>4 Om een collectie uit een uitgelichte collectie te verwijderen</strong><br /> Kies <strong>eigenschappen bewerken</strong> en verwijder de woorden in het vak van de categorie van de uitgelichte collectie.';
@@ -2900,3 +2838,49 @@ $lang["action_unset_no_file"]='Markeren als bestand ontbreekt';
 $lang["completed_set_no_file"]='Resource gemarkeerd als geen bestand hebbend';
 $lang["completed_unset_no_file"]='Resource gemarkeerd als bestand ontbreekt';
 $lang["map_tf_group"]='Thunderforest';
+$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["notify_resource_change_email"]='Een bron die je in de afgelopen [days] dagen hebt gedownload, is gewijzigd. Klik op de onderstaande link om de bron te bekijken.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='Een bron die je in de afgelopen [days] dagen hebt gedownload, is gewijzigd.';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+
+[text_footer]';
+$lang["all__emailnewresearchrequestwaiting"]='<br />
+[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';

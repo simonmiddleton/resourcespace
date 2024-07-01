@@ -2479,10 +2479,6 @@ $lang["error_check_config"]='Molimo provjerite konfiguracijsku opciju %%CONFIG_O
 $lang["useaspreviewimage"]='Koristi kao slika pregleda';
 $lang["filechecksum"]='Provjera kontrolne sume datoteke';
 $lang["system_notification"]='%%APPLICATION_NAME%% - obavijest sustava';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[poruka]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_podnožja]';
 $lang["error_edit_filter_invalid"]='Filter za uređivanje nije ispravno konfiguriran za ovu korisničku grupu. Molimo kontaktirajte svog administratora';
 $lang["error_search_filter_invalid"]='Filter za pretraživanje nije ispravno konfiguriran za ovu grupu korisnika. Molimo kontaktirajte svog administratora';
 $lang["action_lock"]='Zaključaj';
@@ -2676,43 +2672,11 @@ $lang["resourcetypes_separator"]=',';
 $lang["collectiontypes_separator"]=',';
 $lang["user_group"]='korisnička grupa';
 $lang["fieldtitle-tick_to_delete_size"]='Označite za brisanje ove veličine';
-$lang["all__emailbulk"]='<br /><br />
-[tekst]<br /><br />
-[tekst_podnožje]';
-$lang["all__emailcollection"]='<br />
-[odkorisnickoime] [lang_emailcollectionmessage] <br /><br /> 
-[lang_poruka] : [poruka]<br /><br /> 
-[lang_kliknitepovezavidi] [popis]';
 $lang["all__emailcollectionexternal"]='<br />
 [fromusername] vam je poslao poruku o zbirci <br /><br /> 
 Poruka: [message]<br /><br /> 
 Kliknite na poveznicu za pregled zbirke: [list]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[dobrodošli]<br /><br /> 
-[novi_podaci_za_prijavu]<br /><br /> 
-[korisničko_ime] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_podnožja]';
-$lang["all__emailnewresearchrequestwaiting"]='<br />
-[korisničko ime] ([puno ime korisnika] - [email korisnika])
-[lang_haspostedresearchrequest]<br /><br />
-[naziv projekta]:[name]<br /><br />
-[opis projekta]:[description]<br /><br />
-[rok]:[deadline]<br /><br />
-[kontakt telefon]:[contact]<br /><br />
-[konačna upotreba]: [finaluse]<br /><br />
-[potreban oblik]: [shape]<br /><br />
-[broj potrebnih resursa]: [noresources]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='<br />
-[Korisnički resursi odobreni]
-[popis] <br />
-[Pogledaj pridonijete resurse] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[tekst_podnožje]';
 $lang["all__emailnotifyresourcessubmitted"]='<br />
 [lang_userresourcessubmitted]
 [list] <br />
@@ -2725,12 +2689,6 @@ $lang["all__emailresearchrequestassigned"]='<br />
 $lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='<br />
-[fromusername] [lang_vamjeposlaoresurs]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_kliknitezapregledresursa]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
 $lang["all__emailresourcerequest"]='<br />
 [lang_username] : [username] <br />
@@ -2842,10 +2800,50 @@ $lang["completed_set_no_file"]='Resurs označen kao da nema datoteku';
 $lang["completed_unset_no_file"]='Resurs označen kao datoteka nedostaje';
 $lang["hour-abbreviated"]='HH';
 $lang["map_esridelorme"]='DeLorme';
-$lang["all__emailnotifyresourcesunsubmitted"]='<br />
-[korisnički_resursi_neposlani]
-[popis] <br />
-[pogledaj_sve_korisničke_načekanju] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[tekst_podnožje]';
 $lang["themes__manage"]='Organizirajte i uredite istaknute kolekcije dostupne online. Istaknute kolekcije su posebno promovirane kolekcije. <br /><br /> <strong>1 Za stvaranje novog unosa pod Istaknutom kolekcijom - izgradite kolekciju</strong><br /> Odaberite <strong>Moje kolekcije</strong> iz glavnog gornjeg izbornika i postavite potpuno novu <strong>javnu</strong> kolekciju. Ne zaboravite uključiti naziv istaknute kolekcije tijekom postavljanja. Koristite postojeći naziv istaknute kolekcije za grupiranje kolekcije pod trenutnom istaknutom kolekcijom (pazite da ga upišete točno), ili odaberite novi naslov za stvaranje potpuno nove istaknute kolekcije. Nikada ne dopustite korisnicima da dodaju/uklanjaju resurse iz istaknutih kolekcija. <br /> <br /><strong>2 Za uređivanje sadržaja postojećeg unosa pod istaknutom kolekcijom</strong><br /> Odaberite <strong>uredi kolekciju</strong>. Stavke u toj kolekciji će se pojaviti u panelu <strong>Moje kolekcije</strong> na dnu ekrana. Koristite standardne alate za uređivanje, uklanjanje ili dodavanje resursa. <br /> <br /><strong>3 Za promjenu naziva istaknute kolekcije ili premještanje kolekcije da se pojavi pod drugom istaknutom kolekcijom</strong><br /> Odaberite <strong>uredi svojstva</strong> i uredite kategoriju istaknute kolekcije ili naziv kolekcije. Koristite postojeći naziv istaknute kolekcije za grupiranje kolekcije pod trenutnom istaknutom kolekcijom (pazite da ga upišete točno), ili odaberite novi naslov za stvaranje potpuno nove istaknute kolekcije. <br /> <br /><strong>4 Za uklanjanje kolekcije iz istaknute kolekcije</strong><br /> Odaberite <strong>uredi svojstva</strong> i izbrišite riječi u polju kategorije istaknute kolekcije.';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["map_tf_group"]='Thunderforest';
+$lang["all__emailnewresearchrequestwaiting"]='<br />
+[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[dobrodošli]<br /><br /> 
+[lang_noviprijavničkidetalji]<br /><br /> 
+[korisničko ime] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';

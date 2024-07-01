@@ -34,3 +34,4 @@ $lang["emu_upload_nodata"]='Tidak ditemukan data EMu untuk IRN ini:';
 $lang["emu_nodata_returned"]='Tidak ditemukan data EMu untuk IRN yang ditentukan.';
 $lang["emu_createdfromemu"]='Dibuat dari plugin EMU';
 $lang["emu_test_mode"]='Mode uji - Tetapkan ke benar dan skrip akan berjalan tetapi tidak memperbarui sumber daya';
+$lang["emu_upload_emu_field_label"]='EMu IRN';

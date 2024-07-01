@@ -2213,8 +2213,6 @@ $lang["user_preferences__introtext_new"]='Vennligst skriv inn et passord nedenfo
 $lang["user_request__introtext"]='Vennligst fyll ut skjemaet nedenfor for å be om en brukerkonto.';
 $lang["view__storyextract"]='Historieutdrag:';
 $lang["notify_resource_change_email_subject"]='En ressurs har blitt endret';
-$lang["notify_resource_change_email"]='En ressurs som du lastet ned for [dager] dager siden har blitt endret. Klikk på lenken nedenfor for å se ressursen.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='En ressurs som du lastet ned for [dager] dager siden har blitt endret.';
 $lang["passwordresetemail"]='Vennligst klikk på lenken nedenfor for å tilbakestille passordet ditt.';
 $lang["password_reset_email_html"]='Brukernavn: [username]<br /><br />Klikk på lenken nedenfor for å tilbakestille passordet ditt.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Vennligst klikk på lenken nedenfor for å sette en ny passord for din konto.';
@@ -2680,10 +2678,6 @@ $lang["error_check_config"]='Vennligst sjekk konfigurasjonsalternativet %%CONFIG
 $lang["useaspreviewimage"]='Bruk som forhåndsvisningsbilde';
 $lang["filechecksum"]='Fil sjekksum';
 $lang["system_notification"]='%%APPLICATION_NAME%% - systemvarsling';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[melding]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_footer]';
 $lang["error_edit_filter_invalid"]='Redigeringsfilteret er ikke riktig konfigurert for denne brukergruppen. Vennligst kontakt administratoren din';
 $lang["error_search_filter_invalid"]='Søkefilteret er ikke riktig konfigurert for denne brukergruppen. Vennligst kontakt administratoren din';
 $lang["action_lock"]='Lås';
@@ -2863,9 +2857,6 @@ $lang["resourcetypes_separator"]=', ';
 $lang["collectiontypes_separator"]=',';
 $lang["user_group"]='brukergruppe';
 $lang["admin_resource_type_field_migrate_data"]='Migrer fritekstdata til faste listealternativer';
-$lang["all__emailbulk"]='<br /><br />
-[tekst]<br /><br />
-[tekst_bunntekst]';
 $lang["all__emailcollection"]='<br />
 [fromusername] [lang_emailcollectionmessage] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
@@ -2875,25 +2866,6 @@ $lang["all__emailcollectionexternal"]='<br />
 Melding: [message]<br /><br /> 
 Klikk på lenken for å se samlingen: [list]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[velkommen]<br /><br /> 
-[nye_påloggingsdetaljer]<br /><br /> 
-[brukernavn] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_bunntekst]';
-$lang["all__emailnewresearchrequestwaiting"]='<br />
-[brukernavn] ([brukerfulltnavn] - [brukeremail])
-[lang_harpostetforskningsforespørsel]<br /><br />
-[lang_prosjektnavn]:[navn]<br /><br />
-[lang_prosjektbeskrivelse]:[beskrivelse]<br /><br />
-[lang_frist]:[frist]<br /><br />
-[lang_kontakttelefon]:[kontakt]<br /><br />
-[lang_endeligbruk]: [endeligbruk]<br /><br />
-[lang_formkreves]: [form]<br /><br />
-[lang_antallressurserkreves]: [antallressurser]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[tekst_bunntekst]';
 $lang["all__emailnotifyresourcesapproved"]='<br />
 [lang_userresourcesapproved]
 [list] <br />
@@ -2912,26 +2884,6 @@ $lang["all__emailnotifyresourcesunsubmitted"]='<br />
 [lang_viewalluserpending] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
-
-[tekst_bunntekst]';
-$lang["all__emailresearchrequestcomplete"]='<br />
-[lang_researchrequestcompletemessage] <br /><br /> 
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='<br />
-[fromusername] har sendt deg en ressurs<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-Klikk for å se ressursen<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='<br />
-[lang_username] : [username] <br />
-[liste] <br />
-[deltaljer]<br /><br />
-[lang_klikkforåseressurs] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["team_research__introtext"]='Organiser og administrer \'Forskningsforespørsler\'. <br /><br />Velg \'rediger forskning\' for å gjennomgå forespørselsdetaljene og tildele forskningen til et teammedlem. Det er mulig å basere en forskningsforespørsel på en tidligere samling ved å skrive inn samlings-ID-en i \'rediger\'-skjermen. <br /><br />Når forskningsforespørselen er tildelt, velg \'rediger samling\' for å legge forskningsforespørselen til \'Standard samling\'-panelet. Ved å bruke standardverktøyene er det da mulig å legge til ressurser til forskningen. <br /><br />Når forskningen er fullført, velg \'rediger forskning\', endre status til fullført og en e-post sendes automatisk til brukeren som ba om forskningen. E-posten inneholder en lenke til forskningen og den legges også automatisk til deres \'Standard samling\'-panel.';
 $lang["dash"]='Dashbord';
@@ -3034,3 +2986,51 @@ $lang["completed_set_no_file"]='Ressurs merket som uten fil';
 $lang["completed_unset_no_file"]='Ressurs merket som fil mangler';
 $lang["php"]='PHP';
 $lang["themes__manage"]='Organiser og rediger de utvalgte samlingene som er tilgjengelige online. Utvalgte samlinger er spesielt promoterte samlinger. <br /><br /> <strong>1 For å opprette en ny oppføring under en utvalgt samling - bygg en samling</strong><br /> Velg <strong>Mine Samlinger</strong> fra hovedmenyen øverst og opprett en helt ny <strong>offentlig</strong> samling. Husk å inkludere et navn på den utvalgte samlingen under oppsettet. Bruk et eksisterende navn på en utvalgt samling for å gruppere samlingen under en nåværende utvalgt samling (sørg for at du skriver det nøyaktig det samme), eller velg en ny tittel for å opprette en helt ny utvalgt samling. Tillat aldri brukere å legge til/fjerne ressurser fra utvalgte samlinger. <br /> <br /><strong>2 For å redigere innholdet i en eksisterende oppføring under en utvalgt samling</strong><br /> Velg <strong>rediger samling</strong>. Elementene i den samlingen vil vises i <strong>Mine Samlinger</strong> panelet nederst på skjermen. Bruk de vanlige verktøyene for å redigere, fjerne eller legge til ressurser. <br /> <br /><strong>3 For å endre navnet på en utvalgt samling eller flytte en samling til å vises under en annen utvalgt samling</strong><br /> Velg <strong>rediger egenskaper</strong> og rediger kategorien for utvalgt samling eller samlingsnavnet. Bruk et eksisterende navn på en utvalgt samling for å gruppere samlingen under en nåværende utvalgt samling (sørg for at du skriver det nøyaktig det samme), eller velg en ny tittel for å opprette en helt ny utvalgt samling. <br /> <br /><strong>4 For å fjerne en samling fra en utvalgt samling</strong><br /> Velg <strong>rediger egenskaper</strong> og slett ordene i kategoriboksen for utvalgt samling.';
+$lang["all__emailresearchrequestcomplete"]='<br />
+[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["notify_resource_change_email"]='En ressurs som du lastet ned for [days] dager siden har blitt endret. Klikk på lenken nedenfor for å se ressursen.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='En ressurs som du lastet ned for [days] dager siden har blitt endret.';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+
+[text_footer]';
+$lang["system_notification_email"]='[img_headerlogo]<br />
+[message]<br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='<br />
+[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]
+
+[lang_nameofproject]:[name]
+
+[lang_descriptionofproject]:[description]
+
+[lang_deadline]:[deadline]
+
+[lang_contacttelephone]:[contact]
+
+[lang_finaluse]: [finaluse]
+
+[lang_shaperequired]: [shape]
+
+[lang_noresourcesrequired]: [noresources]
+
+<a href="[url]">[url]</a>
+
+<a href="[teamresearchurl]">[teamresearchurl]</a>
+
+[text_footer]';

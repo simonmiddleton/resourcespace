@@ -1310,7 +1310,6 @@ $lang["requestsenttext"]='Sua solicitação de recurso foi enviada para aprovaç
 $lang["requestupdated"]='Sua solicitação de recurso foi atualizada';
 $lang["requestassignedtouser"]='Sua solicitação de recurso foi atribuída a % para aprovação.';
 $lang["requestapprovedmail"]='Sua solicitação foi aprovada. Clique no link abaixo para visualizar e baixar os recursos solicitados.';
-$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[mensagem]<br/>[expira]<br/><br/>Clique no link abaixo para visualizar e baixar os recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["requestdeclinedmail"]='Desculpe, seu pedido para os recursos na coleção abaixo foi recusado.';
 $lang["requestdeclined_email"]='[img_headerlogo]<br/><br/>[message]<br/><br/>Clique no link abaixo para visualizar os recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["resourceexpirymail"]='Os seguintes recursos expiraram:';
@@ -2066,8 +2065,6 @@ $lang["user_preferences__introtext_new"]='Por favor, insira uma senha abaixo.';
 $lang["user_request__introtext"]='Por favor, preencha o formulário abaixo para solicitar uma conta de usuário.';
 $lang["view__storyextract"]='Extrato da história:';
 $lang["notify_resource_change_email_subject"]='Um recurso foi modificado';
-$lang["notify_resource_change_email"]='Um recurso que você baixou nos últimos [dias] dias foi modificado. Clique no link abaixo para visualizar o recurso.<br /><br /><a href=\'[url]\'>[url]</a>';
-$lang["notify_resource_change_notification"]='Um recurso que você baixou nos últimos [dias] dias foi modificado.';
 $lang["passwordresetemail"]='Por favor, clique no link abaixo para redefinir sua senha.';
 $lang["password_reset_email_html"]='Nome de usuário: [username]<br /><br />Por favor, clique no link abaixo para redefinir sua senha.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Por favor, clique no link abaixo para definir uma nova senha para sua conta.';
@@ -2529,10 +2526,6 @@ $lang["error_check_config"]='Por favor, verifique a opção de configuração %%
 $lang["useaspreviewimage"]='Usar como imagem de pré-visualização';
 $lang["filechecksum"]='Checksum do arquivo';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notificação do sistema';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[mensagem]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[texto_rodape]';
 $lang["error_edit_filter_invalid"]='O filtro de edição não está configurado corretamente para este grupo de usuários. Por favor, entre em contato com o seu administrador';
 $lang["error_search_filter_invalid"]='O filtro de pesquisa não está configurado corretamente para este grupo de usuários. Por favor, entre em contato com o seu administrador';
 $lang["action_lock"]='Bloquear';
@@ -2729,17 +2722,7 @@ $lang["all__emailcollection"]='<br />
 [fromusername] [lang_emailcollectionmessage] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='<br />
-[deusername] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_mensagem] : [mensagem]<br /><br /> 
-[lang_clicarnolinkparavisualizarcolecao] [lista]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[bem-vindo]<br /><br /> 
-[novos_detalhes_de_login]<br /><br /> 
-[nome_de_usuário] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[rodapé_texto]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -2773,22 +2756,6 @@ $lang["all__emailnotifyresourcesunsubmitted"]='<br />
 $lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]<br /><br />
 [mensagem_de_pedido_de_pesquisa_atribuída]<br /><br />
 [text_footer]';
-$lang["all__emailresearchrequestcomplete"]='<br />
-[mensagem_completapedidopesquisa] <br /><br /> 
-[cliquelinkvisualizarcolecao] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[rodape_texto]';
-$lang["all__emailresource"]='<br />
-[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[mensagem]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[lista] <br />
-[detalhes]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["resource_request__introtext"]='Sua solicitação está quase completa. Por favor, inclua o motivo da sua solicitação para que possamos responder de forma eficiente.';
 $lang["team_research__introtext"]='Organize e gerencie \'Solicitações de Pesquisa\'. <br /><br />Escolha \'editar pesquisa\' para revisar os detalhes da solicitação e atribuir a pesquisa a um membro da equipe. É possível basear uma solicitação de pesquisa em uma coleção anterior inserindo o ID da coleção na tela de \'editar\'. <br /><br />Uma vez que a solicitação de pesquisa é atribuída, escolha \'editar coleção\' para adicionar a solicitação de pesquisa ao painel \'Coleção Padrão\'. Usando as ferramentas padrão, é então possível adicionar recursos à pesquisa. <br /><br />Uma vez que a pesquisa esteja completa, escolha \'editar pesquisa\', mude o status para completo e um e-mail é automaticamente enviado ao usuário que solicitou a pesquisa. O e-mail contém um link para a pesquisa e ela também é automaticamente adicionada ao painel \'Coleção Padrão\' do usuário.';
@@ -2895,3 +2862,33 @@ $lang["action_set_no_file"]='Marcar como sem arquivo';
 $lang["action_unset_no_file"]='Marcar como arquivo ausente';
 $lang["completed_set_no_file"]='Recurso marcado como sem arquivo';
 $lang["completed_unset_no_file"]='Recurso marcado como arquivo ausente';
+$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Clique no link abaixo para visualizar e baixar os recursos solicitados.<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["map_esridelorme"]='DeLorme';
+$lang["notify_resource_change_email"]='Um recurso que você baixou nos últimos [days] dias foi modificado. Clique no link abaixo para visualizar o recurso.<br /><br /><a href=\'[url]\'>[url]</a>';
+$lang["notify_resource_change_notification"]='Um recurso que você baixou nos últimos [days] dias foi modificado.';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='<br />
+[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["all__emaillogindetails"]='<br />
+[bem-vindo]<br /><br /> 
+[lang_newlogindetails]<br /><br /> 
+[lang_username] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';

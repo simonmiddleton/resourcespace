@@ -2510,10 +2510,6 @@ $lang["error_check_config"]='Por favor, verifique la opción de configuración %
 $lang["useaspreviewimage"]='Usar como imagen de vista previa';
 $lang["filechecksum"]='Checksum del archivo';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notificación del sistema';
-$lang["system_notification_email"]='[img_headerlogo]<br />
-[mensaje]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[texto_pie_de_pagina]';
 $lang["error_edit_filter_invalid"]='El filtro de edición no está configurado correctamente para este grupo de usuarios. Por favor, contacte a su administrador';
 $lang["error_search_filter_invalid"]='El filtro de búsqueda no está configurado correctamente para este grupo de usuarios. Por favor, contacte a su administrador';
 $lang["action_lock"]='Bloquear';
@@ -2702,12 +2698,6 @@ $lang["all__emailcollectionexternal"]='<br />
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
 $lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='<br />
-[bienvenido]<br /><br /> 
-[nuevos_detalles_de_inicio_de_sesión]<br /><br /> 
-[nombre_de_usuario] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[texto_pie_de_página]';
 $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
 [lang_haspostedresearchrequest]<br /><br />
 [lang_nameofproject]:[name]<br /><br />
@@ -2744,12 +2734,6 @@ $lang["all__emailresearchrequestcomplete"]='<br />
 [lang_researchrequestcompletemessage] <br /><br /> 
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='<br />
-[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[mensaje]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
 $lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
 [list] <br />
