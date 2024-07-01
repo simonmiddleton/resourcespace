@@ -2850,3 +2850,5 @@ $lang["system_notification_email"]='[img_headerlogo]<br />
 [message]<br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["error_upload_duplicate_file"]='Încărcare fișier duplicat, fișierul se potrivește cu resursele: [resources]';
+$lang["oj-creation-success"]='Lucrarea offline [jobnumber] a fost creată. Veți fi notificat când va fi finalizată';

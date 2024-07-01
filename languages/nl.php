@@ -2882,3 +2882,4 @@ $lang["all__emailresource"]='<br />
 <a href="[url]">[embed_thumbnail]</a><br /><br />
 [lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
+$lang["csv_export_filename"]='metadata_export_[search]_[time]';

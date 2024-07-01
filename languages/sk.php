@@ -3216,3 +3216,5 @@ $lang["all__emailcollection"]='<br />
 [fromusername] [lang_emailcollectionmessage] <br /><br /> 
 [lang_message] : [message]<br /><br /> 
 [lang_clicklinkviewcollection] [list]';
+$lang["download_limit_summary"]='Prenesli ste [downloaded]/[limit] virov.';
+$lang["download_limit_request_text"]='Dosežen limit prenosa: [downloaded]/[limit]';

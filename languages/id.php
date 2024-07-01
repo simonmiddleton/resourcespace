@@ -2936,3 +2936,4 @@ $lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
 [lang_file_integrity_fail_search] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["oj-creation-success"]='Pekerjaan offline [jobnumber] dibuat. Anda akan diberitahu ketika selesai';

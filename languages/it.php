@@ -2854,3 +2854,4 @@ $lang["all__emailnotifyresourcessubmitted"]='<br />
 [lang_viewalluserpending] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["oj-creation-success"]='Lavoro offline [jobnumber] creato. Sarai avvisato quando sarà completato';

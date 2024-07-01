@@ -2909,3 +2909,5 @@ $lang["all__emailnotifyresourcesunsubmitted"]='<br />
 [lang_viewalluserpending] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["error_upload_duplicate_file"]='Téléversement de fichier en double, le fichier correspond aux ressources : [resources]';
+$lang["oj-creation-success"]='Travail hors ligne [jobnumber] créé. Vous serez informé lorsqu\'il sera terminé';

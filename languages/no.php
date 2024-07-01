@@ -3032,3 +3032,4 @@ $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [user
 <a href="[teamresearchurl]">[teamresearchurl]</a>
 
 [text_footer]';
+$lang["csv_export_filename"]='metadata_export_[search]_[time]';

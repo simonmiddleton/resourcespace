@@ -3088,3 +3088,4 @@ $lang["all__emaillogindetails"]='<br />
 [lang_användarnamn] : [username] <br /><br />
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["csv_export_filename"]='metadata_export_[search]_[time]';

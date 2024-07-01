@@ -2840,3 +2840,5 @@ $lang["system_notification_email"]='[img_headerlogo]<br />
 [message]<br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["error_upload_duplicate_file"]='Duplikat filupload, fil matcher ressourcer: [resources]';
+$lang["csv_export_filename"]='metadata_export_[search]_[time]';

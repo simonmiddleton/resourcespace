@@ -2884,3 +2884,4 @@ $lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
 $lang["log-missinglang"]='[type] (idioma faltante)';
+$lang["email_actions_truncated"]='Solo se muestran aquí las 1000 acciones más recientes. Tienes [total] acciones. Inicia sesión en [application_name] para verlas todas.';
