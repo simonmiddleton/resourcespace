@@ -229,6 +229,7 @@ $languages["el"]="Ελληνικά"; # Greek
 $languages["es"]="Español"; # Spanish
 $languages["es-AR"]="Español (Argentina)";
 $languages["fr"]="Français"; # French
+$languages["hi"]="आधुनिक मानक हिन्दी"; # Hindi
 $languages["hr"]="Hrvatski"; # Croatian
 $languages["it"]="Italiano"; # Italian
 $languages["jp"]="日本語"; # Japanese

@@ -166,7 +166,7 @@ class ResourceSpaceUserNotification
             if(substr($text,0,5) == "lang_")
                 {
                 $langkey = substr($text,5);
-                $text = str_replace('%applicationname%', $GLOBALS['applicationname'], $lang[$langkey]);
+                $text = str_replace('[applicationname]', $GLOBALS['applicationname'], $lang[$langkey]);
                 }
             if(substr($text,0,5) == "i18n_")
                 {
