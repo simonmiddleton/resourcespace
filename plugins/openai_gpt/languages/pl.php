@@ -13,4 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='Przyrostek podpowiedzi uzupełnienia (do
 $lang["openai_gpt_temperature"]='Próbkowanie temperatury między 0 a 1 (wyższe wartości oznaczają, że model podejmie większe ryzyko)';
 $lang["openai_gpt_max_tokens"]='Maksymalna liczba tokenów';
 $lang["openai_gpt_advanced"]='OSTRZEŻENIE - Ta sekcja służy wyłącznie do celów testowych i nie powinna być zmieniana na żywych systemach. Zmiana jakiejkolwiek opcji wtyczki tutaj wpłynie na zachowanie wszystkich pól metadanych, które zostały skonfigurowane. Zmieniaj ostrożnie!';
-$lang["openai_gpt_system_message"]='Początkowy tekst wiadomości systemowej. Miejsca %%IN_TYPE%% i %%OUT_TYPE%% zostaną zastąpione przez \'text\' lub \'json\' w zależności od typów pól źródłowych/docelowych';
+$lang["openai_gpt_system_message"]='Początkowy tekst wiadomości systemowej. Miejsca [in_type] i [out_type] zostaną zastąpione przez \'text\' lub \'json\' w zależności od typów pól źródłowych/docelowych';

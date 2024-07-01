@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='API-kall fra følgende brukergrupper kan o
 $lang["rse_version_log_not_found"]='Loggoppføring ikke funnet';
 $lang["rse_version_revert_state"]='Tilbakestill tilstand';
 $lang["rse_version_rstate_changes"]='Gjenoppretter tilstand for samling #%COLLECTION ved å spille av hendelser opp til, men ikke inkludert valgt post.';
-$lang["rse_version_invalid_time"]='Å gå tilbake til en tid før %%DATE%% støttes ikke';
+$lang["rse_version_invalid_time"]='Å gå tilbake til en tid før [date] støttes ikke';

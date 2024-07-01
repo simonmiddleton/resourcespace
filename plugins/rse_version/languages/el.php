@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='Οι κλήσεις του API από τι
 $lang["rse_version_log_not_found"]='Η καταχώριση καταγραφής δεν βρέθηκε';
 $lang["rse_version_revert_state"]='Επαναφορά κατάστασης';
 $lang["rse_version_rstate_changes"]='Επαναφορά κατάστασης για τη συλλογή #%COLLECTION επαναλαμβάνοντας τα γεγονότα μέχρι, αλλά όχι συμπεριλαμβανομένης της επιλεγμένης εγγραφής.';
-$lang["rse_version_invalid_time"]='Η επαναφορά σε μια προηγούμενη ημερομηνία πριν από την %%DATE%% δεν υποστηρίζεται';
+$lang["rse_version_invalid_time"]='Η επαναφορά σε μια προηγούμενη ημερομηνία πριν από την [date] δεν υποστηρίζεται';

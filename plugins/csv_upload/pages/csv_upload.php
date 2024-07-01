@@ -739,7 +739,7 @@ switch($csvstep)
         if(count($messages) > 1000)
             {
             $messages = array_slice($messages,0,1000);
-            echo "<p>" . str_replace("%%LOG_URL%%",$prelog_url,$lang["csv_upload_full_messages_link"]) . "</p>";
+            echo "<p>" . str_replace("[log_url]",$prelog_url,$lang["csv_upload_full_messages_link"]) . "</p>";
             }
         ?>
         <div class="BasicsBox">
@@ -820,7 +820,7 @@ switch($csvstep)
                 );
             if($csvjob)
                 {
-                echo str_replace("%%JOBREF%%", $csvjob, $lang["csv_upload_oj_created"]);
+                echo str_replace("[jobref]", $csvjob, $lang["csv_upload_oj_created"]);
                 }
             elseif(is_string($csvjob))
                 {
@@ -845,7 +845,7 @@ switch($csvstep)
             if(count($messages) > 1000)
                 {
                 $messages = array_slice($messages,0,1000);
-                echo "<p>" . str_replace("%%LOG_URL%%",$log_url,$lang["csv_upload_full_messages_link"]) . "</p>";
+                echo "<p>" . str_replace("[log_url]",$log_url,$lang["csv_upload_full_messages_link"]) . "</p>";
                 }
             ?>
             <div class="BasicsBox">

@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='يمكن لمجموعات المستخدم
 $lang["rse_version_log_not_found"]='الإدخال في السجل غير موجود';
 $lang["rse_version_revert_state"]='إرجاع الحالة';
 $lang["rse_version_rstate_changes"]='إعادة الحالة السابقة للمجموعة #%COLLECTION عن طريق إعادة تشغيل الأحداث حتى ولكن دون تضمين السجل المحدد.';
-$lang["rse_version_invalid_time"]='لا يتم دعم العودة إلى وقت سابق لـ %%DATE%%';
+$lang["rse_version_invalid_time"]='لا يتم دعم العودة إلى وقت سابق لـ [date]';

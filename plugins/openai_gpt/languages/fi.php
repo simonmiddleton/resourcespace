@@ -13,4 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='Valmistumisilmoituksen liite (palauttaa 
 $lang["openai_gpt_temperature"]='Näytteenotto lämpötila välillä 0 ja 1 (korkeammat arvot tarkoittavat sitä, että malli ottaa enemmän riskejä)';
 $lang["openai_gpt_max_tokens"]='Maksimi merkkiavaimet';
 $lang["openai_gpt_advanced"]='VAROITUS - Tämä osio on tarkoitettu vain testaustarkoituksiin eikä sitä tulisi muuttaa tuotantojärjestelmissä. Tämän osion plugin-asetusten muuttaminen vaikuttaa kaikkien määritettyjen metatietokenttien käyttäytymiseen. Muuta varoen!';
-$lang["openai_gpt_system_message"]='Alkuperäinen järjestelmäviestin teksti. Paikkamerkit %%IN_TYPE%% ja %%OUT_TYPE%% korvataan \'text\' tai \'json\' riippuen lähde/kohdekentän tyypeistä';
+$lang["openai_gpt_system_message"]='Alkuperäinen järjestelmäviestin teksti. Paikkamerkit [in_type] ja [out_type] korvataan \'text\' tai \'json\' riippuen lähde/kohdekentän tyypeistä';

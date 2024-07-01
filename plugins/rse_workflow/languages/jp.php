@@ -3,7 +3,7 @@
 
 $lang["rse_workflow_configuration"]='ワークフローの設定';
 $lang["rse_workflow_summary"]='このプラグインを使用すると、追加のアーカイブ（ワークフロー）ステータスを作成し、ステータス間の移動を説明するアクションを定義できます。 <br><br>';
-$lang["rse_workflow_introduction"]='ワークフローの状態とアクションを修正するには、管理者から「ワークフローアクションの管理」と「ワークフロー状態の管理」を使用してください。管理者に移動するには、%%HEREをクリックしてください。';
+$lang["rse_workflow_introduction"]='ワークフローの状態とアクションを修正するには、管理者から「ワークフローアクションの管理」と「ワークフロー状態の管理」を使用してください。管理者に移動するには、[link_param]をクリックしてください。';
 $lang["rse_workflow_user_info"]='これらのアクションにより、このリソースのワークフローのステータスが変更され、他のユーザーに対してアクションがトリガーされる可能性があります。';
 $lang["rse_workflow_actions_heading"]='ワークフローアクション';
 $lang["rse_workflow_manage_workflow"]='ワークフロー';

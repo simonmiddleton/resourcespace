@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Configurare flux de lucru';
 $lang["rse_workflow_summary"]='Acest plugin vă permite să creați stări suplimentare de arhivă (flux de lucru), precum și să definiți acțiuni pentru a descrie mișcarea între stări. <br><br>';
-$lang["rse_workflow_introduction"]='Pentru a modifica stările și acțiunile fluxului de lucru, utilizați opțiunile "Gestionare acțiuni flux de lucru" și "Gestionare stări flux de lucru" din panoul de administrare. Apăsați %%AICI pentru a accesa panoul de administrare';
 $lang["rse_workflow_user_info"]='Aceste acțiuni vor schimba starea fluxului de lucru a acestui resursă și pot declanșa acțiuni pentru alți utilizatori.';
 $lang["rse_workflow_actions_heading"]='Acțiuni de flux de lucru';
 $lang["rse_workflow_manage_workflow"]='Flux de lucru';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Note:';
 $lang["rse_workflow_email_from"]='Adresa de email de la care se vor trimite notificări (se va folosi %EMAILFROM% dacă este necompletată):';
 $lang["rse_workflow_bcc_admin"]='Notificați administratorii de sistem când contributorul este notificat';
 $lang["rse_workflow_state_notify_help"]='Utilizatorii vor vedea resursele în această stare apărând ca acțiuni, în loc să primească notificări simple';
+$lang["rse_workflow_introduction"]='Pentru a modifica stările și acțiunile fluxului de lucru, utilizați \'Gestionați acțiunile fluxului de lucru\' și \'Gestionați stările fluxului de lucru\' din Admin. Faceți clic pe [link_param] pentru a merge la Admin';

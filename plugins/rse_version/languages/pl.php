@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='Wywołania API przez następujące grupy u
 $lang["rse_version_log_not_found"]='Nie znaleziono wpisu dziennika';
 $lang["rse_version_revert_state"]='Przywróć stan';
 $lang["rse_version_rstate_changes"]='Przywracanie stanu dla kolekcji #%COLLECTION poprzez odtworzenie zdarzeń aż do, ale bez wybranego rekordu.';
-$lang["rse_version_invalid_time"]='Powrót do czasu przed %%DATE%% nie jest obsługiwany';
+$lang["rse_version_invalid_time"]='Powrót do czasu przed [date] nie jest obsługiwany';

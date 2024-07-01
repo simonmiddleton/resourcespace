@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Konfiguracija radnog tijeka';
 $lang["rse_workflow_summary"]='Ovaj dodatak omogućuje vam stvaranje dodatnih arhivskih (tokova rada) stanja, kao i definiranje radnji za opisivanje kretanja između stanja. <br><br>';
-$lang["rse_workflow_introduction"]='Za izmjenu stanja i akcija radnog tijeka koristite \'Upravljanje akcijama radnog tijeka\' i \'Upravljanje stanjima radnog tijeka\' u Administraciji. Kliknite %%OVDJE da biste otišli na Administraciju';
 $lang["rse_workflow_user_info"]='Ove akcije će promijeniti status radnog tijeka ovog resursa i mogu pokrenuti akcije za druge korisnike.';
 $lang["rse_workflow_actions_heading"]='Radnje tijeka rada';
 $lang["rse_workflow_manage_workflow"]='Tok rada';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Bilješke:';
 $lang["rse_workflow_email_from"]='Adresa e-pošte za slanje obavijesti (koristit će se %EMAILFROM% ako je prazno):';
 $lang["rse_workflow_bcc_admin"]='Obavijestite sistemskog administratora kada se obavijesti suradnik';
 $lang["rse_workflow_state_notify_help"]='Korisnici će vidjeti resurse u ovom stanju kao radnje, umjesto da primaju jednostavne obavijesti';
+$lang["rse_workflow_introduction"]='Za izmjenu stanja i radnji tijeka rada, koristite \'Upravljanje radnjama tijeka rada\' i \'Upravljanje stanjima tijeka rada\' iz Admin. Kliknite [link_param] za odlazak na Admin';

@@ -21,8 +21,8 @@ if ($generateall) {
         {
         $par = 1;
         # Find out the Pixel Aspect Ratio
-        $shell_exec_cmd = $ffmpeg_fullpath . " -i %%FILE%% 2>&1";
-        $shell_exec_params = ["%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename')];
+        $shell_exec_cmd = $ffmpeg_fullpath . " -i [file] 2>&1";
+        $shell_exec_params = ["[file]" => new CommandPlaceholderArg($file, 'is_safe_basename')];
 
         if (isset($ffmpeg_command_prefix)) {
             $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
@@ -89,11 +89,11 @@ if ($generateall) {
         $ffmpeg_preview_options = $ffmpeg_preview_gif_options;
         }
 
-    $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -loglevel error -i %%FILE%% " . $ffmpeg_preview_options . " -t %%SECONDS%% -s %%HEIGHT%%x%%WIDTH%%  %%TARGETFILE%%";
+    $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -loglevel error -i [file] " . $ffmpeg_preview_options . " -t [seconds] -s %%HEIGHT%%x%%WIDTH%%  %%TARGETFILE%%";
 
     $shell_exec_params = [
-        "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
-        "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
+        "[file]" => new CommandPlaceholderArg($file, 'is_safe_basename'),
+        "[seconds]" => (int) $ffmpeg_preview_seconds,
         "%%HEIGHT%%" => (int) $height,
         "%%WIDTH%%" => (int) $width,
         "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
@@ -129,9 +129,9 @@ if ($generateall) {
         if ($width % 2){$width++;}
         if ($height % 2) {$height++;}
 
-        $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -loglevel error -i %%FILE%% -s %%WIDTH%%x%%HEIGHT%%  %%TARGETFILE%% -f image2 -vframes 1 -ss %%SNAPSHOTTIME%% %%TARGETFILE%%";
+        $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -loglevel error -i [file] -s %%WIDTH%%x%%HEIGHT%%  %%TARGETFILE%% -f image2 -vframes 1 -ss %%SNAPSHOTTIME%% %%TARGETFILE%%";
         $shell_exec_params = [
-            "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
+            "[file]" => new CommandPlaceholderArg($file, 'is_safe_basename'),
             "%%WIDTH%%" => (int) $width,
             "%%HEIGHT%%" => (int) $height,
             "%%SNAPSHOTTIME%%" => (int) $snapshottime,
@@ -179,9 +179,9 @@ if ($generateall) {
                 $apath = get_resource_path($ref,true,"",true,$ffmpeg_alternatives[$n]["extension"],-1,1,false,"",$aref);
 
                 # Process the video
-                $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -loglevel error -i %%FILE%% " . $ffmpeg_alternatives[$n]["params"] . " %%TARGETFILE%%";
+                $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -loglevel error -i [file] " . $ffmpeg_alternatives[$n]["params"] . " %%TARGETFILE%%";
                 $shell_exec_params = [
-                    "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
+                    "[file]" => new CommandPlaceholderArg($file, 'is_safe_basename'),
                     "%%WIDTH%%" => (int) $width,
                     "%%HEIGHT%%" => (int) $height,
                     "%%SNAPSHOTTIME%%" => (int) $snapshottime,

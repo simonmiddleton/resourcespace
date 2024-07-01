@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Workflow configuratie';
 $lang["rse_workflow_summary"]='Dit plugin stelt je in staat om extra archief (workflow) statussen te creëren, evenals het definiëren van acties om de beweging tussen de statussen te beschrijven. <br><br>';
-$lang["rse_workflow_introduction"]='Om workflowstaten en -acties aan te passen, gebruik \'Beheer workflowacties\' en \'Beheer workflowstaten\' in het beheerdersgedeelte. Klik %%HIER om naar het beheerdersgedeelte te gaan';
 $lang["rse_workflow_user_info"]='Deze acties zullen de workflowstatus van deze bron wijzigen en kunnen acties voor andere gebruikers activeren.';
 $lang["rse_workflow_actions_heading"]='Workflow-acties';
 $lang["rse_workflow_manage_workflow"]='Workflow: Werkstroom';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Notities:';
 $lang["rse_workflow_email_from"]='E-mailadres om meldingen van te verzenden (zal %EMAILFROM% gebruiken indien leeg):';
 $lang["rse_workflow_bcc_admin"]='Waarschuw systeembeheerders wanneer de bijdrager op de hoogte wordt gesteld';
 $lang["rse_workflow_state_notify_help"]='Gebruikers zullen bronnen in deze staat zien verschijnen als acties, in plaats van eenvoudige meldingen te ontvangen';
+$lang["rse_workflow_introduction"]='Om workflow-statussen en acties te wijzigen, gebruik \'Beheer workflow-acties\' en \'Beheer workflow-statussen\' vanuit Beheer. Klik op [link_param] om naar Beheer te gaan';

@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Configuração de fluxo de trabalho';
 $lang["rse_workflow_summary"]='Este plugin permite criar estados adicionais de arquivo (fluxo de trabalho), bem como definir ações para descrever o movimento entre os estados.   <br><br>';
-$lang["rse_workflow_introduction"]='Para alterar os estados e ações do fluxo de trabalho, utilize \'Gerenciar ações do fluxo de trabalho\' e \'Gerenciar estados do fluxo de trabalho\' no painel de Administração. Clique em %%AQUI para ir para a Administração';
 $lang["rse_workflow_user_info"]='Essas ações irão alterar o status do fluxo de trabalho deste recurso e podem acionar ações para outros usuários.';
 $lang["rse_workflow_actions_heading"]='Ações de fluxo de trabalho';
 $lang["rse_workflow_manage_workflow"]='Fluxo de trabalho';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Notas:';
 $lang["rse_workflow_email_from"]='Endereço de e-mail para enviar notificações (usará %EMAILFROM% se estiver em branco):';
 $lang["rse_workflow_bcc_admin"]='Notificar os administradores do sistema quando o contribuidor for notificado';
 $lang["rse_workflow_state_notify_help"]='Os usuários verão os recursos neste estado aparecendo como ações, em vez de receber notificações simples';
+$lang["rse_workflow_introduction"]='Para alterar estados e ações do fluxo de trabalho, use \'Gerenciar ações do fluxo de trabalho\' e \'Gerenciar estados do fluxo de trabalho\' no Admin. Clique em [link_param] para ir ao Admin';

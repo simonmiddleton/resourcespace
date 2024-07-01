@@ -41,7 +41,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
         
         $return_json = in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES);
         $outtype = $return_json ? $openai_gpt_message_output_json : $openai_gpt_message_output_text;
-        $system_message = str_replace(["%%IN_TYPE%%","%%OUT_TYPE%%"],["image",$outtype],$openai_gpt_system_message);
+        $system_message = str_replace(["[in_type]","[out_type]"],["image",$outtype],$openai_gpt_system_message);
        
         $messages = [];
         $messages[] = ["role"=>"system","content"=>$system_message];
@@ -98,7 +98,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
             $intype = $send_as_json ? $openai_gpt_message_input_JSON : $openai_gpt_message_text; 
             $outtype = $return_json ? $openai_gpt_message_output_json : $openai_gpt_message_output_text;
 
-            $system_message = str_replace(["%%IN_TYPE%%","%%OUT_TYPE%%"],[$intype,$outtype],$openai_gpt_system_message);
+            $system_message = str_replace(["[in_type]","[out_type]"],[$intype,$outtype],$openai_gpt_system_message);
 
             $messages = [];
             $messages[] = ["role"=>"system","content"=>$system_message];

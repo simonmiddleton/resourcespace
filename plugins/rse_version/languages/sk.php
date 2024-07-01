@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='API volania od nasledujúcich skupín pou�
 $lang["rse_version_log_not_found"]='Záznam v protokole nenájdený';
 $lang["rse_version_revert_state"]='Obnoviť stav';
 $lang["rse_version_rstate_changes"]='Vrátenie stavu pre kolekciu #%COLLECTION opätovným prehrávaním udalostí až po, ale bez zahrnutia vybraného záznamu.';
-$lang["rse_version_invalid_time"]='Vrátenie sa do času pred %%DATE%% nie je podporované';
+$lang["rse_version_invalid_time"]='Vrátenie sa do času pred [date] nie je podporované';

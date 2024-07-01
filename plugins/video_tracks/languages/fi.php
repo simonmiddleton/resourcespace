@@ -31,4 +31,4 @@ $lang["video_tracks_transcode_now_or_notify_me_label"]='Valitse aloittaaksesi tr
 $lang["video_tracks_transcode_now_label"]='Muunna koodaus nyt';
 $lang["video_tracks_select_generate_opt"]='Valitse luontivaihtoehto';
 $lang["video_tracks_save_alt_not_perm"]='Ei voida tallentaa vaihtoehtoa ilman lupaa';
-$lang["video_tracks_upgrade_msg_deprecated_output_format"]='TÄRKEÄÄ! Video Tracks -lisäosa on poistanut käytöstä tulostusmuotojen asetukset. Ne voidaan asettaa vain config.php-tiedostossa. Lisäosa ei toimi odotetulla tavalla, ennen kuin määritysasetus on kopioitu. Kopioi seuraava:- %nl%####%nl%%output_formats_config%####%nl%';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='TÄRKEÄÄ! Video Tracks -lisäosa on poistanut käytöstä tulostusmuotojen asetukset. Ne voidaan asettaa vain config.php-tiedostossa. Lisäosa ei toimi odotetulla tavalla, ennen kuin määritysasetus on kopioitu. Kopioi seuraava:- %nl%####%nl%[output_formats_config]%####%nl%';

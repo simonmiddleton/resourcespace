@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Workflow-Konfiguration';
 $lang["rse_workflow_summary"]='Dieses Plugin ermöglicht es Ihnen, zusätzliche Archivzustände (Workflows) zu erstellen und Aktionen zu definieren, um die Bewegung zwischen den Zuständen zu beschreiben. <br><br>';
-$lang["rse_workflow_introduction"]='Um Workflow-Status und -Aktionen zu ändern, verwenden Sie "Workflow-Aktionen verwalten" und "Workflow-Status verwalten" im Admin-Bereich. Klicken Sie %%HIER, um zum Admin-Bereich zu gelangen';
 $lang["rse_workflow_user_info"]='Diese Aktionen ändern den Workflow-Status dieser Ressource und können Aktionen für andere Benutzer auslösen.';
 $lang["rse_workflow_actions_heading"]='Workflow-Aktionen';
 $lang["rse_workflow_manage_workflow"]='Arbeitsablauf';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Notizen:';
 $lang["rse_workflow_email_from"]='E-Mail-Adresse, von der Benachrichtigungen gesendet werden (wird %EMAILFROM% verwenden, wenn leer):';
 $lang["rse_workflow_bcc_admin"]='Benachrichtige Systemadministratoren, wenn der Beitragende benachrichtigt wird';
 $lang["rse_workflow_state_notify_help"]='Benutzer werden Ressourcen in diesem Zustand als Aktionen sehen, anstatt einfache Benachrichtigungen zu erhalten';
+$lang["rse_workflow_introduction"]='Um Workflow-Zustände und -Aktionen zu ändern, verwenden Sie \'Workflow-Aktionen verwalten\' und \'Workflow-Zustände verwalten\' im Admin-Bereich. Klicken Sie auf [link_param], um zum Admin-Bereich zu gelangen';

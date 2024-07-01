@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='以下用户组的 API 调用可以在替�
 $lang["rse_version_log_not_found"]='日志条目未找到。';
 $lang["rse_version_revert_state"]='回滚状态';
 $lang["rse_version_rstate_changes"]='回滚 #%COLLECTION 集合的状态，通过重放事件直到但不包括所选记录。';
-$lang["rse_version_invalid_time"]='回滚到 %%DATE%% 之前的时间不受支持。';
+$lang["rse_version_invalid_time"]='回滚到 [date] 之前的时间不受支持。';

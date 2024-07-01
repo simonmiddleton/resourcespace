@@ -25,7 +25,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
     if(!file_exists($filename))
         {
-        array_push ($messages,str_replace("%%FILE%%", $filename,$lang["csv_upload_error_file_missing"]));
+        array_push ($messages,str_replace("[file]", $filename,$lang["csv_upload_error_file_missing"]));
         }
 
     $flagpath="";
@@ -939,7 +939,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         }
 
     array_push($messages,"Info: data successfully " . ($processcsv ? "processed" : "validated"));
-    $find = array("[time]","%%HOURS%%","%%MINUTES%%","%%SECONDS%%");
+    $find = array("[time]","[hours]","[minutes]","[seconds]");
     $secondselapsed = microtime(true) - $processing_start_time;
     $hours = floor($secondselapsed/(60*60));
     $minutes = floor(($secondselapsed - $hours*60*60)/60);

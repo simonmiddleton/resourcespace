@@ -21,7 +21,7 @@ if(!in_array($plugin_name, $plugins))
 
 <div>
 <?php
-echo str_replace("%%HERE","<a href=\"" . $baseurl . "\pages/team/team_home.php\" onclick=\"CentralSpaceLoad(this,true)\">here</a>",$lang['rse_workflow_introduction']);
+echo str_replace("[link_param]","<a href=\"" . $baseurl . "\pages/team/team_home.php\" onclick=\"CentralSpaceLoad(this,true)\">here</a>",$lang['rse_workflow_introduction']);
 
 ?>
 

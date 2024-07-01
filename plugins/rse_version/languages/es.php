@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='Las llamadas de API por los siguientes gru
 $lang["rse_version_log_not_found"]='Entrada de registro no encontrada';
 $lang["rse_version_revert_state"]='Revertir estado';
 $lang["rse_version_rstate_changes"]='Revirtiendo el estado de la colección #%COLLECTION mediante la reproducción de eventos hasta, pero sin incluir el registro seleccionado.';
-$lang["rse_version_invalid_time"]='Revertir a un momento anterior a %%DATE%% no es compatible';
+$lang["rse_version_invalid_time"]='Revertir a un momento anterior a [date] no es compatible';

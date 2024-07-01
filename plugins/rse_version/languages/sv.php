@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='API-anrop från följande användargrupper
 $lang["rse_version_log_not_found"]='Loggenhet hittades inte';
 $lang["rse_version_revert_state"]='Återgå till tidigare tillstånd';
 $lang["rse_version_rstate_changes"]='Återställer tillståndet för samlingen #%COLLECTION genom att spela upp händelser fram till, men inte inklusive det valda registret.';
-$lang["rse_version_invalid_time"]='Att återgå till en tid före %%DATE%% stöds inte';
+$lang["rse_version_invalid_time"]='Att återgå till en tid före [date] stöds inte';

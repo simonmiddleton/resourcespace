@@ -31,4 +31,4 @@ $lang["video_tracks_transcode_now_or_notify_me_label"]='Zaznacz, aby rozpocząć
 $lang["video_tracks_transcode_now_label"]='Transkoduj teraz';
 $lang["video_tracks_select_generate_opt"]='Proszę wybrać opcję generowania';
 $lang["video_tracks_save_alt_not_perm"]='Nie można zapisać alternatywy bez uprawnień';
-$lang["video_tracks_upgrade_msg_deprecated_output_format"]='WAŻNE! Wtyczka Video Tracks wycofała ustawienia formatów wyjściowych. Mogą być one ustawione tylko w config.php. Wtyczka nie będzie działać zgodnie z przeznaczeniem, dopóki opcja konfiguracji nie zostanie skopiowana. Proszę skopiować następujące:- %nl%####%nl%%output_formats_config%####%nl%';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='WAŻNE! Wtyczka Video Tracks wycofała ustawienia formatów wyjściowych. Mogą być one ustawione tylko w config.php. Wtyczka nie będzie działać zgodnie z przeznaczeniem, dopóki opcja konfiguracji nie zostanie skopiowana. Proszę skopiować następujące:- %nl%####%nl%[output_formats_config]%####%nl%';

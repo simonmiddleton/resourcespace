@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='工作流配置';
 $lang["rse_workflow_summary"]='此插件允许您创建额外的归档（工作流）状态，并定义描述状态之间移动的操作。';
-$lang["rse_workflow_introduction"]='要修改工作流状态和操作，请使用管理员的“管理工作流操作”和“管理工作流状态”。单击%%此处%%进入管理员界面。';
 $lang["rse_workflow_user_info"]='这些操作将更改此资源的工作流状态，并可能触发其他用户的操作。';
 $lang["rse_workflow_actions_heading"]='工作流程操作';
 $lang["rse_workflow_manage_workflow"]='工作流程';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='注释：';
 $lang["rse_workflow_email_from"]='发送通知的电子邮件地址（如果为空将使用％EMAILFROM％）：';
 $lang["rse_workflow_bcc_admin"]='当通知贡献者时，通知系统管理员。';
 $lang["rse_workflow_state_notify_help"]='用户将看到处于此状态的资源显示为操作，而不是接收简单的通知';
+$lang["rse_workflow_introduction"]='要修改工作流状态和操作，请使用“管理工作流操作”和“管理工作流状态”从管理员。点击[这里]进入管理员';

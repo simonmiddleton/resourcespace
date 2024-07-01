@@ -82,7 +82,7 @@ function HookRse_versionAllSave_resource_data_multi_extra_modes($ref,$field,$exi
             $revert_min_time = get_sysvar("fixed_list_revert_enabled");
             if($revert_min_time  > $revert_date)
                 {
-                $errors[$field["ref"]] = str_replace("%%DATE%%",$revert_min_time,$lang["rse_version_invalid_time"]);
+                $errors[$field["ref"]] = str_replace("[date]",$revert_min_time,$lang["rse_version_invalid_time"]);
                 return false;
                 }
             }

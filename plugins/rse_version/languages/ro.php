@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='Apelurile API efectuate de următoarele gr
 $lang["rse_version_log_not_found"]='Înregistrarea jurnalului nu a fost găsită';
 $lang["rse_version_revert_state"]='Revenire la starea anterioară';
 $lang["rse_version_rstate_changes"]='Revenirea stării pentru colecția #%COLLECTION prin reluarea evenimentelor până la, dar fără a include înregistrarea selectată.';
-$lang["rse_version_invalid_time"]='Revenirea la o dată anterioară de %%DATE%% nu este suportată';
+$lang["rse_version_invalid_time"]='Revenirea la o dată anterioară de [date] nu este suportată';

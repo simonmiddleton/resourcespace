@@ -267,8 +267,8 @@ $lang["uploadresourcebatch"]="Överför material";
 $lang["uploadinprogress"]="Överföring och skapande av förhandsgranskningar pågår";
 $lang["donotmoveaway"]="OBS! Lämna inte den här sidan innan överföringen har slutförts";
 $lang["pleaseselectfiles"]="Välj en eller flera filer att överföra.";
-$lang["previewstatus"]="Skapat förhandsgranskningar för material %file% av %filestotal%."; # %file%, %filestotal% will be replaced, e.g. Created previews for resource 2 of 2.
-$lang["uploadedstatus"]="Överfört material %file% av %filestotal% – %path%"; # %file%, %filestotal% and %path% will be replaced, e.g. Resource 2 of 2 uploaded - pub/pictures/astro-images/JUPITER9.JPG
+$lang["previewstatus"]="Skapat förhandsgranskningar för material [file] av %filestotal%."; # [file], %filestotal% will be replaced, e.g. Created previews for resource 2 of 2.
+$lang["uploadedstatus"]="Överfört material [file] av %filestotal% – %path%"; # [file], %filestotal% and %path% will be replaced, e.g. Resource 2 of 2 uploaded - pub/pictures/astro-images/JUPITER9.JPG
 $lang["upload_failed_for_path"]="Överföringen misslyckades för %path%"; # %path% will be replaced, e.g. Upload failed for abc123.jpg
 $lang["uploadcomplete"]="Överföringen är slutförd";
 $lang["upload_summary"]="Sammanfattning av överföringen";
@@ -1505,7 +1505,6 @@ $lang["zipcomplete"]="Filhämtningen bör ha påbörjats. Du kan lämna den här
 
 $lang["starttypingkeyword"]="Ange nyckelord…";
 $lang["createnewentryfor"]="Skapa nytt nyckelord: ";
-$lang["confirmcreatenewentryfor"]="Vill du skapa en ny post i nyckelordslistan för ’%%’?";
  
 $lang["editresourcepreviews"]="Redigera materialens förhandsgranskningar";
 $lang["can_assign_resource_requests"]="Kan tilldela andra användare begäranden av material";

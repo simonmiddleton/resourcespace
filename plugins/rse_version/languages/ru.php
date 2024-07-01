@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='Вызовы API следующих гру
 $lang["rse_version_log_not_found"]='Запись журнала не найдена';
 $lang["rse_version_revert_state"]='Откатить состояние';
 $lang["rse_version_rstate_changes"]='Откат состояния для коллекции #%COLLECTION путем повторного воспроизведения событий до, но не включая выбранную запись.';
-$lang["rse_version_invalid_time"]='Откат к времени до %%DATE%% не поддерживается';
+$lang["rse_version_invalid_time"]='Откат к времени до [date] не поддерживается';

@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Konfiguracja przepływu pracy';
 $lang["rse_workflow_summary"]='Ten plugin umożliwia tworzenie dodatkowych stanów archiwum (workflow), a także definiowanie działań opisujących przemieszczanie się między stanami.  <br><br>';
-$lang["rse_workflow_introduction"]='Aby zmienić stany i akcje przepływu pracy, użyj "Zarządzaj akcjami przepływu pracy" i "Zarządzaj stanami przepływu pracy" w panelu administratora. Kliknij %%TUTAJ, aby przejść do panelu administratora';
 $lang["rse_workflow_user_info"]='Te działania zmienią status przepływu pracy dla tego zasobu i mogą wywołać działania dla innych użytkowników.';
 $lang["rse_workflow_actions_heading"]='Akcje przepływu pracy';
 $lang["rse_workflow_manage_workflow"]='Przepływ pracy';
@@ -54,3 +53,4 @@ $lang["rse_workflow_email_from"]='Adres e-mail do wysyłania powiadomień (będz
 $lang["rse_workflow_bcc_admin"]='Powiadom administratorów systemu, gdy zostanie powiadomiony współtwórca';
 $lang["rse_workflow_state_not_editable"]='Ten stan archiwum nie jest edytowalny, jest to stan wymagany przez system, został ustawiony w pliku config.php lub nie istnieje';
 $lang["rse_workflow_state_notify_help"]='Użytkownicy zobaczą zasoby w tym stanie jako działania, zamiast otrzymywać proste powiadomienia';
+$lang["rse_workflow_introduction"]='Aby zmienić stany i działania przepływu pracy, użyj opcji \'Zarządzaj działaniami przepływu pracy\' i \'Zarządzaj stanami przepływu pracy\' w Admin. Kliknij [link_param], aby przejść do Admin';

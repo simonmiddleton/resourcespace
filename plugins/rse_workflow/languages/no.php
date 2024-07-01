@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Arbeidsflytkonfigurasjon';
 $lang["rse_workflow_summary"]='Dette tillegget lar deg opprette ekstra arkiv (arbeidsflyt) tilstander, samt definere handlinger for å beskrive bevegelsen mellom tilstandene. <br><br>';
-$lang["rse_workflow_introduction"]='For å endre arbeidsflyttilstander og handlinger, bruk \'Administrer arbeidsflytthandlinger\' og \'Administrer arbeidsflytttilstander\' fra Admin. Klikk %%HER for å gå til Admin';
 $lang["rse_workflow_user_info"]='Disse handlingene vil endre arbeidsflytstatusen til denne ressursen og kan utløse handlinger for andre brukere.';
 $lang["rse_workflow_actions_heading"]='Arbeidsflyt-handlinger';
 $lang["rse_workflow_manage_workflow"]='Arbeidsflyt';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Notater:';
 $lang["rse_workflow_email_from"]='E-postadresse å sende varsler fra (vil bruke %EMAILFROM% hvis tom):';
 $lang["rse_workflow_bcc_admin"]='Varsle systemadministratorer når bidragsyteren blir varslet';
 $lang["rse_workflow_state_notify_help"]='Brukere vil se ressurser i denne tilstanden som handlinger, i stedet for å motta enkle varsler';
+$lang["rse_workflow_introduction"]='For å endre arbeidsflyttilstander og handlinger, bruk \'Administrer arbeidsflythandlinger\' og \'Administrer arbeidsflyttilstander\' fra Admin. Klikk [link_param] for å gå til Admin';

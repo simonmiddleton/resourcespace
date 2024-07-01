@@ -1971,8 +1971,8 @@ function create_previews_using_im(
                             }
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = "{$convert_fullpath} %%FILE%% %%WMFILE%% -flatten %%WMPOSITION%% %%WM_SCALED_DIMS%% %%TARGETDIMENSIONSWM%% %%WMTARGET%%";
-                        $cmdparams["%%FILE%%"] = new CommandPlaceholderArg($file,"is_safe_basename");
+                        $runcommand = "{$convert_fullpath} [file] %%WMFILE%% -flatten %%WMPOSITION%% %%WM_SCALED_DIMS%% %%TARGETDIMENSIONSWM%% %%WMTARGET%%";
+                        $cmdparams["[file]"] = new CommandPlaceholderArg($file,"is_safe_basename");
                         $cmdparams["%%WM_SCALED_DIMS%%"] = new CommandPlaceholderArg(
                             (int)$wm_scaled_width . "x" . (int)$wm_scaled_height . "+0+0",
                             [CommandPlaceholderArg::class, 'alwaysValid']
@@ -2919,8 +2919,8 @@ function get_image_orientation($file)
         return 0;
     }
 
-    $cmd = $exiftool_fullpath . ' -s -s -s -orientation %%FILE%%';
-    $orientation = run_command($cmd, false, ['%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
+    $cmd = $exiftool_fullpath . ' -s -s -s -orientation [file]';
+    $orientation = run_command($cmd, false, ['[file]' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
     $orientation = str_replace('Rotate', '', $orientation);
 
     if (strpos($orientation, 'CCW')) {
@@ -4206,17 +4206,17 @@ function create_image_alternatives(int $ref, array $params, $force = false)
         ) {
             // Use the new imagemagick command syntax (file then parameters)
             // Note that $source_params can't be set as a run_command() parameter or the whole thing will be escaped
-            $command = $convert_fullpath . $source_params . " %%FILE%% ";
+            $command = $convert_fullpath . $source_params . " [file] ";
             $command .= ($extension == 'psd') ? '[0] ' .
                 (!in_array(strtolower($extension), $GLOBALS["preview_keep_alpha_extensions"]) ? $alphaoff : "")
                  : '';
             $command .= $source_profile . ' ' . $alternate_config['params'] . " %%APATH%%";
         } else {
             // Use the old imagemagick command syntax (parameters then file)
-            $command = $convert_fullpath . $source_profile . ' ' . $alternate_config['params'] . ' %%FILE%% %%APATH%%';
+            $command = $convert_fullpath . $source_profile . ' ' . $alternate_config['params'] . ' [file] %%APATH%%';
         }
         $cmdparams = [
-            '%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+            '[file]' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
             '%%APATH%%' => new CommandPlaceholderArg($apath, 'is_valid_rs_path'),
         ];
         $output = run_command($command, false, $cmdparams);

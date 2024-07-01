@@ -31,4 +31,4 @@ $lang["video_tracks_transcode_now_or_notify_me_label"]='Označite za pokretanje 
 $lang["video_tracks_transcode_now_label"]='Transkodiraj sada';
 $lang["video_tracks_select_generate_opt"]='Molimo odaberite opciju generiranja';
 $lang["video_tracks_save_alt_not_perm"]='Nije moguće spremiti alternativu bez dopuštenja';
-$lang["video_tracks_upgrade_msg_deprecated_output_format"]='VAŽNO! Postavke izlaznih formata za dodatak Video Tracks su zastarjele. Mogu se postaviti samo u config.php. Dodatak neće raditi kako je predviđeno dok se opcija konfiguracije ne kopira. Molimo kopirajte sljedeće:- %nl%####%nl%%output_formats_config%####%nl%';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='VAŽNO! Postavke izlaznih formata za dodatak Video Tracks su zastarjele. Mogu se postaviti samo u config.php. Dodatak neće raditi kako je predviđeno dok se opcija konfiguracije ne kopira. Molimo kopirajte sljedeće:- %nl%####%nl%[output_formats_config]%####%nl%';

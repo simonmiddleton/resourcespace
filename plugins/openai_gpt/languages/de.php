@@ -13,4 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='Abschluss-Prompt-Suffix (um Text für Te
 $lang["openai_gpt_temperature"]='Temperatur der Stichprobenahme zwischen 0 und 1 (höhere Werte bedeuten, dass das Modell mehr Risiken eingeht)';
 $lang["openai_gpt_max_tokens"]='Maximale Anzahl von Tokens';
 $lang["openai_gpt_advanced"]='WARNUNG - Dieser Abschnitt dient nur zu Testzwecken und sollte auf Live-Systemen nicht geändert werden. Eine Änderung der Plugin-Optionen hier wird das Verhalten aller konfigurierten Metadatenfelder beeinflussen. Ändern Sie mit Vorsicht!';
-$lang["openai_gpt_system_message"]='Anfängliche Systemnachrichtentext. Platzhalter %%IN_TYPE%% und %%OUT_TYPE%% werden durch \'text\' oder \'json\' ersetzt, je nach Quell-/Zielfeldtypen';
+$lang["openai_gpt_system_message"]='Anfängliche Systemnachrichtentext. Platzhalter [in_type] und [out_type] werden durch \'text\' oder \'json\' ersetzt, je nach Quell-/Zielfeldtypen';

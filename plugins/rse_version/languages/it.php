@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='Le chiamate API effettuate dai seguenti gr
 $lang["rse_version_log_not_found"]='Voce di registro non trovata';
 $lang["rse_version_revert_state"]='Ripristina stato';
 $lang["rse_version_rstate_changes"]='Ripristino dello stato della collezione #%COLLECTION mediante la riproduzione degli eventi fino al record selezionato escluso.';
-$lang["rse_version_invalid_time"]='Tornare indietro ad un momento precedente al %%DATE%% non è supportato';
+$lang["rse_version_invalid_time"]='Tornare indietro ad un momento precedente al [date] non è supportato';

@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Configuració del flux de treball';
 $lang["rse_workflow_summary"]='Aquest connector et permet crear estats addicionals d\'arxiu (flux de treball), així com definir accions per descriure el moviment entre estats.   <br><br>';
-$lang["rse_workflow_introduction"]='Per modificar els estats i accions del flux de treball, utilitzeu \'Gestionar accions del flux de treball\' i \'Gestionar estats del flux de treball\' des de l\'administrador. Feu clic %%AQUÍ per anar a l\'administrador';
 $lang["rse_workflow_user_info"]='Aquestes accions canviaran l\'estat del flux de treball d\'aquest recurs i poden activar accions per altres usuaris.';
 $lang["rse_workflow_actions_heading"]='Accions de flux de treball';
 $lang["rse_workflow_manage_workflow"]='Flux de treball';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Notes: Notes';
 $lang["rse_workflow_email_from"]='Adreça de correu electrònic per enviar notificacions (s\'utilitzarà %EMAILFROM% si està en blanc):';
 $lang["rse_workflow_bcc_admin"]='Notificar als administradors del sistema quan es notifiqui el contribuent';
 $lang["rse_workflow_state_notify_help"]='Els usuaris veuran els recursos en aquest estat apareixent com a accions, en lloc de rebre notificacions simples';
+$lang["rse_workflow_introduction"]='Per modificar els estats i les accions del flux de treball, utilitza \'Gestiona les accions del flux de treball\' i \'Gestiona els estats del flux de treball\' des d\'Admin. Fes clic [aquí] per anar a Admin';

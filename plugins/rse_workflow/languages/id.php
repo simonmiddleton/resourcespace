@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Konfigurasi Alur Kerja';
 $lang["rse_workflow_summary"]='Plugin ini memungkinkan Anda untuk membuat status arsip (alur kerja) tambahan, serta mendefinisikan tindakan untuk menggambarkan perpindahan antar status. <br><br>';
-$lang["rse_workflow_introduction"]='Untuk mengubah status dan tindakan alur kerja, gunakan \'Kelola tindakan alur kerja\' dan \'Kelola status Alur Kerja\' dari Admin. Klik %%DI SINI untuk menuju ke Admin';
 $lang["rse_workflow_user_info"]='Tindakan-tindakan ini akan mengubah status alur kerja dari sumber daya ini dan dapat memicu tindakan-tindakan untuk pengguna lain.';
 $lang["rse_workflow_actions_heading"]='Tindakan Alur Kerja';
 $lang["rse_workflow_manage_workflow"]='Alur Kerja';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Catatan:';
 $lang["rse_workflow_email_from"]='Alamat email untuk mengirim pemberitahuan (akan menggunakan %EMAILFROM% jika kosong):';
 $lang["rse_workflow_bcc_admin"]='Memberitahu administrator sistem ketika kontributor diberitahu';
 $lang["rse_workflow_state_notify_help"]='Pengguna akan melihat sumber daya dalam keadaan ini muncul sebagai tindakan, daripada menerima pemberitahuan sederhana';
+$lang["rse_workflow_introduction"]='Untuk mengubah status dan tindakan alur kerja, gunakan \'Kelola tindakan alur kerja\' dan \'Kelola status alur kerja\' dari Admin. Klik [di sini] untuk pergi ke Admin';

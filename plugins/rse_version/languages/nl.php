@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='API-oproepen van de volgende gebruikersgro
 $lang["rse_version_log_not_found"]='Logboekitem niet gevonden';
 $lang["rse_version_revert_state"]='Terugdraaien van status';
 $lang["rse_version_rstate_changes"]='Het terugdraaien van de status voor collectie #%COLLECTION door het opnieuw afspelen van gebeurtenissen tot, maar exclusief het geselecteerde record.';
-$lang["rse_version_invalid_time"]='Teruggaan naar een tijdstip voor %%DATE%% wordt niet ondersteund';
+$lang["rse_version_invalid_time"]='Teruggaan naar een tijdstip voor [date] wordt niet ondersteund';

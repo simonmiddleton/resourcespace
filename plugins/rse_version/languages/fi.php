@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='Seuraavien käyttäjäryhmien API-kutsut v
 $lang["rse_version_log_not_found"]='Lokitietuetta ei löytynyt';
 $lang["rse_version_revert_state"]='Palauta tila';
 $lang["rse_version_rstate_changes"]='Palautetaan kokoelman #%COLLECTION tila toistamalla tapahtumat valittuun tietueeseen asti, mutta ei sisällytetä sitä.';
-$lang["rse_version_invalid_time"]='Paluu aikaan ennen %%DATE%% ei ole tuettu';
+$lang["rse_version_invalid_time"]='Paluu aikaan ennen [date] ei ole tuettu';

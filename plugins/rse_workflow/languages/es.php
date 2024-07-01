@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Configuración de flujo de trabajo';
 $lang["rse_workflow_summary"]='Este plugin te permite crear estados adicionales de archivo (flujo de trabajo), así como definir acciones para describir el movimiento entre estados.  <br><br>';
-$lang["rse_workflow_introduction"]='Para modificar los estados y acciones del flujo de trabajo, utiliza las opciones \'Administrar acciones de flujo de trabajo\' y \'Administrar estados de flujo de trabajo\' desde el panel de Administración. Haz clic en %%AQUÍ para ir a Administración';
 $lang["rse_workflow_user_info"]='Estas acciones cambiarán el estado del flujo de trabajo de este recurso y pueden activar acciones para otros usuarios.';
 $lang["rse_workflow_actions_heading"]='Acciones de flujo de trabajo';
 $lang["rse_workflow_manage_workflow"]='Flujo de trabajo';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Notas:';
 $lang["rse_workflow_email_from"]='Dirección de correo electrónico para enviar notificaciones (se usará %EMAILFROM% si está vacío):';
 $lang["rse_workflow_bcc_admin"]='Notificar a los administradores del sistema cuando se notifique al contribuyente';
 $lang["rse_workflow_state_notify_help"]='Los usuarios verán los recursos en este estado apareciendo como acciones, en lugar de recibir notificaciones simples';
+$lang["rse_workflow_introduction"]='Para modificar los estados y acciones del flujo de trabajo, utiliza \'Gestionar acciones del flujo de trabajo\' y \'Gestionar estados del flujo de trabajo\' desde Admin. Haz clic [aquí] para ir a Admin';

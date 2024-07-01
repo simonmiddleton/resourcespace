@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Arbetsflödeskonfiguration';
 $lang["rse_workflow_summary"]='Detta tillägg gör det möjligt för dig att skapa ytterligare arkiv (arbetsflödes) tillstånd, samt definiera åtgärder för att beskriva rörelsen mellan tillstånden. <br><br>';
-$lang["rse_workflow_introduction"]='För att ändra arbetsflödesstatusar och åtgärder, använd \'Hantera arbetsflödesåtgärder\' och \'Hantera arbetsflödesstatusar\' från Admin. Klicka %%HÄR för att gå till Admin';
 $lang["rse_workflow_user_info"]='Dessa åtgärder kommer att ändra arbetsflödesstatusen för denna resurs och kan utlösa åtgärder för andra användare.';
 $lang["rse_workflow_actions_heading"]='Arbetsflödesåtgärder';
 $lang["rse_workflow_manage_workflow"]='Arbetsflöde';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Anteckningar:';
 $lang["rse_workflow_email_from"]='E-postadress att skicka notifieringar från (kommer att använda %EMAILFROM% om tom):';
 $lang["rse_workflow_bcc_admin"]='Meddela systemadministratörerna när bidragsgivaren har meddelats';
 $lang["rse_workflow_state_notify_help"]='Användare kommer att se resurser i detta tillstånd som åtgärder, snarare än att få enkla aviseringar';
+$lang["rse_workflow_introduction"]='För att ändra arbetsflödesstatusar och åtgärder, använd \'Hantera arbetsflödesåtgärder\' och \'Hantera arbetsflödesstatusar\' från Admin. Klicka [här] för att gå till Admin';

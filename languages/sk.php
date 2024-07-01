@@ -311,8 +311,8 @@ $lang["uploadresourcebatch"]="Nahrajte dávku zdrojov";
 $lang["uploadinprogress"]="Prebieha nahrávanie a tvorba ukážky";
 $lang["donotmoveaway"]="DÔLEŽITÉ: Neodchádzajte z tejto stránky, pokiaľ sa nahrávanie nedokončí";
 $lang["pleaseselectfiles"]="Vyberte jeden alebo viac súborov na odovzdanie.";
-$lang["previewstatus"]="Boli vytvorené ukážky pre %file% z %filestotal% zdrojov."; # %file%, %filestotal% will be replaced, e.g. Created previews for resource 2 of 2.
-$lang["uploadedstatus"]="Nahraných %file% z %filestotal% súborov - %path%"; # %file%, %filestotal% and %path% will be replaced, e.g. Resource 2 of 2 uploaded - pub/pictures/astro-images/JUPITER9.JPG
+$lang["previewstatus"]="Boli vytvorené ukážky pre [file] z %filestotal% zdrojov."; # [file], %filestotal% will be replaced, e.g. Created previews for resource 2 of 2.
+$lang["uploadedstatus"]="Nahraných [file] z %filestotal% súborov - %path%"; # [file], %filestotal% and %path% will be replaced, e.g. Resource 2 of 2 uploaded - pub/pictures/astro-images/JUPITER9.JPG
 $lang["upload_failed_for_path"]="Nahrávanie %path% zlyhalo"; # %path% will be replaced, e.g. Upload failed for abc123.jpg
 $lang["uploadcomplete"]="Nahrávanie bolo dokončené";
 $lang["upload_summary"]="Zhrnutie";
@@ -1738,7 +1738,6 @@ $lang["zipcomplete"]="Bolo zahájené sťahovanie archívu ZIP. Môžete opusti�
 
 $lang["starttypingkeyword"]="Začanite písať kľúčové slovo...";
 $lang["createnewentryfor"]="Vytvoriť nový záznam pre";
-$lang["confirmcreatenewentryfor"]="Naozaj chcete vytvoriť novú položku zoznamu kľúčových slov pre '%%'?";
 $lang["noentryexists"]="Neexistuje žiadny záznam o";
 
 $lang["editresourcepreviews"]="Upraviť ukážky zdrojov";

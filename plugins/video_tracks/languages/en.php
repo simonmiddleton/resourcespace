@@ -23,7 +23,7 @@ $lang["video_tracks_save_alternative"] = "Alternative file";
 $lang["video_tracks_generate"] = "Generate";
 $lang["video_tracks_process_size_limit"] = "Maximum size of resource file that will be processed immediately (MB). Larger files will be processed offline and the user notified upon completion";
 $lang["video_tracks_offline_notice"]="Your request has been queued. You will be notified when the new file has been generated";
-$lang['video_tracks_upgrade_msg_deprecated_output_format'] = "IMPORTANT! The Video Tracks plugin has deprecated the output formats settings. They can only be set in config.php. The plugin will not work as intended until the configuration option has been copied over. Please copy the following:- %nl%####%nl%%output_formats_config%####%nl%";
+$lang['video_tracks_upgrade_msg_deprecated_output_format'] = "IMPORTANT! The Video Tracks plugin has deprecated the output formats settings. They can only be set in config.php. The plugin will not work as intended until the configuration option has been copied over. Please copy the following:- %nl%####%nl%[output_formats_config]%####%nl%";
 
 // Labels:
 $lang['video_tracks_generate_label'] = 'Generate';

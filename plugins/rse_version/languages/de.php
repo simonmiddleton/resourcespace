@@ -16,4 +16,4 @@ $lang["rse_version_override_groups"]='API-Aufrufe durch die folgenden Benutzergr
 $lang["rse_version_log_not_found"]='Protokolleintrag nicht gefunden';
 $lang["rse_version_revert_state"]='Zurücksetzen des Status';
 $lang["rse_version_rstate_changes"]='Rückgängigmachen des Zustands für die Sammlung #%COLLECTION durch Wiedergabe von Ereignissen bis zum, aber ohne das ausgewählte Datensatz einzuschließen.';
-$lang["rse_version_invalid_time"]='Die Rückkehr zu einem Zeitpunkt vor dem %%DATE%% wird nicht unterstützt';
+$lang["rse_version_invalid_time"]='Die Rückkehr zu einem Zeitpunkt vor dem [date] wird nicht unterstützt';

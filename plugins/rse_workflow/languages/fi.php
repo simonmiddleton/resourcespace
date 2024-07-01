@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Työnkulun määritys';
 $lang["rse_workflow_summary"]='Tämä liitännäinen mahdollistaa lisäarkistotilojen (työnkulku) luomisen sekä toimintojen määrittämisen tilojen välisen liikkeen kuvaamiseksi.  <br><br>';
-$lang["rse_workflow_introduction"]='Muokataksesi työnkulun tiloja ja toimintoja, käytä \'Hallitse työnkulun toimintoja\' ja \'Hallitse työnkulun tiloja\' -toimintoja ylläpitäjänäkymästä. Klikkaa %%TÄNNE siirtyäksesi ylläpitäjänäkymään';
 $lang["rse_workflow_user_info"]='Nämä toimet muuttavat tämän resurssin työnkulun tilaa ja saattavat käynnistää toimintoja muille käyttäjille.';
 $lang["rse_workflow_actions_heading"]='Työnkulun toiminnot';
 $lang["rse_workflow_manage_workflow"]='Työnkulku';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Muistiinpanot:';
 $lang["rse_workflow_email_from"]='Lähetysosoite ilmoitusten lähettämiseen (käyttää %EMAILFROM%-osoitetta, jos tyhjä):';
 $lang["rse_workflow_bcc_admin"]='Ilmoita järjestelmänvalvojille, kun tekijälle ilmoitetaan';
 $lang["rse_workflow_state_notify_help"]='Käyttäjät näkevät tässä tilassa olevat resurssit toimintoina, sen sijaan että saisivat yksinkertaisia ilmoituksia';
+$lang["rse_workflow_introduction"]='Muokataksesi työnkulun tiloja ja toimintoja, käytä \'Hallitse työnkulun toimintoja\' ja \'Hallitse työnkulun tiloja\' kohdasta Ylläpito. Napsauta [tästä] siirtyäksesi Ylläpitoon';

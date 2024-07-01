@@ -3,7 +3,6 @@
 
 $lang["rse_workflow_configuration"]='Konfigurácia pracovného postupu';
 $lang["rse_workflow_summary"]='Tento plugin vám umožňuje vytvárať ďalšie stavy archívu (tok práce), ako aj definovať akcie na popis pohybu medzi stavmi. <br><br>';
-$lang["rse_workflow_introduction"]='Preložitev: Za spreminjanje stanj in dejanj delovnih tokov uporabite možnosti \'Upravljanje dejanj delovnih tokov\' in \'Upravljanje stanj delovnih tokov\' v skrbniškem delu. Kliknite %%TU za dostop do skrbniškega dela';
 $lang["rse_workflow_user_info"]='Tieto akcie zmenia stav pracovného postupu tohto zdroja a môžu spustiť akcie pre iných používateľov.';
 $lang["rse_workflow_actions_heading"]='Akcie toku práce';
 $lang["rse_workflow_manage_workflow"]='Tok práce';
@@ -54,3 +53,4 @@ $lang["rse_workflow_more_notes_title"]='Poznámky:';
 $lang["rse_workflow_email_from"]='E-mailová adresa pre odosielanie upozornení (použije sa %EMAILFROM%, ak je prázdna):';
 $lang["rse_workflow_bcc_admin"]='Upozorniť systémových administrátorov, keď je upozornený prispievateľ';
 $lang["rse_workflow_state_notify_help"]='Uporabniki bodo videli vire v tem stanju kot dejanja, namesto da bi prejemali preprosta obvestila';
+$lang["rse_workflow_introduction"]='Če želite spremeniti stanja in dejanja delovnega toka, uporabite \'Upravljanje dejanj delovnega toka\' in \'Upravljanje stanj delovnega toka\' v sklopu Skrbnik. Kliknite [link_param], da odprete Skrbnik';

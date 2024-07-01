@@ -52,5 +52,5 @@ $lang["rse_workflow_link_close"]='Luk';
 $lang["rse_workflow_more_notes_title"]='Noter:';
 $lang["rse_workflow_email_from"]='E-mailadresse til at sende notifikationer fra (vil bruge %EMAILFROM%, hvis tom):';
 $lang["rse_workflow_bcc_admin"]='Underret systemadministratorer, når bidragyderen er underrettet';
-$lang["rse_workflow_introduction"]='For at ændre arbejdsgangstilstande og handlinger, skal du bruge \'Administrer arbejdsgangshandlinger\' og \'Administrer arbejdsgangstilstande\' fra Admin. Klik %%HER for at gå til Admin';
 $lang["rse_workflow_state_notify_help"]='Brugere vil se ressourcer i denne tilstand som handlinger, i stedet for at modtage simple meddelelser';
+$lang["rse_workflow_introduction"]='For at ændre arbejdsgangstilstande og handlinger, brug \'Administrer arbejdsgangshandlinger\' og \'Administrer arbejdsgangstilstande\' fra Admin. Klik [link_param] for at gå til Admin';
