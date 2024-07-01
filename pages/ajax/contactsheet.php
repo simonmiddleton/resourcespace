@@ -11,6 +11,7 @@ require_once '../../lib/html2pdf/vendor/autoload.php';
 use Spipu\Html2Pdf\Html2Pdf;
 use Spipu\Html2Pdf\Exception\Html2PdfException;
 use Spipu\Html2Pdf\Exception\ExceptionFormatter;
+use Montala\ResourceSpace\CommandPlaceholderArg;
 
 
 $collection        = getval('c', 0,true);
@@ -349,19 +350,32 @@ if ($preview && isset($imagemagick_path))
     putenv("MAGICK_HOME={$imagemagick_path}");
     $ghostscript_fullpath = get_utility_path('ghostscript');
     $convert_fullpath = get_utility_path('im-convert');
-    
-    if(!$convert_fullpath)
-        {
+
+    if(!$convert_fullpath) {
         exit("Could not find ImageMagick 'convert' utility at location '{$imagemagick_path}'");
-        }
+    }
 
-    $previewpage_escaped = escapeshellarg($previewpage);
-    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage={$previewpage_escaped} -o -r100 -dLastPage={$previewpage_escaped} -sOutputFile=" . escapeshellarg($contact_sheet_rip) . ' ' . escapeshellarg($PDF_filename) . (($config_windows) ? '':' 2>&1');
-    run_command($command);
+    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage=%%PREVIEWPAGE%% -o -r100 -dLastPage=%%PREVIEWPAGE%% -sOutputFile=%%CONTACT_SHEET_RIP%% %%PDF_FILENAME%%"
+        . (($config_windows) ? '' : ' 2>&1');
+    $cmdparams = [
+        '%%PREVIEWPAGE%%' => $previewpage,
+        '%%CONTACT_SHEET_RIP%%' => new CommandPlaceholderArg($contact_sheet_rip, 'is_safe_basename'),
+        '%%PDF_FILENAME%%' => new CommandPlaceholderArg($PDF_filename, 'is_safe_basename'),
+    ];
+    run_command($command, false, $cmdparams);
 
-    $command = "{$convert_fullpath} -resize {$contact_sheet_preview_size} -quality 90 -colorspace {$imagemagick_colorspace} \"{$contact_sheet_rip}\" \"$contact_sheet_preview_img\"" . (($config_windows) ? '' : ' 2>&1');
-    run_command($command);
-
+    $command = "{$convert_fullpath} -resize %%CONTACT_SHEET_PREVIEW_SIZE%% -quality 90 -colorspace %%IMAGEMAGICK_COLORSPACE%% %%CONTACT_SHEET_RIP%% %%CONTACT_SHEET_PREVIEW_IMG%%"
+    . (($config_windows) ? '' : ' 2>&1');
+    $cmdparams = [
+        '%%CONTACT_SHEET_PREVIEW_SIZE%%' => new CommandPlaceholderArg(
+            $contact_sheet_preview_size,
+            'is_valid_contact_sheet_preview_size'
+        ),
+        '%%IMAGEMAGICK_COLORSPACE%%' => $imagemagick_colorspace,
+        '%%CONTACT_SHEET_RIP%%' => new CommandPlaceholderArg($contact_sheet_rip, 'is_safe_basename'),
+        '%%CONTACT_SHEET_PREVIEW_IMG%%' => new CommandPlaceholderArg($contact_sheet_preview_img, 'is_safe_basename'),
+    ];
+    run_command($command, false, $cmdparams);
     exit();
     }
 
