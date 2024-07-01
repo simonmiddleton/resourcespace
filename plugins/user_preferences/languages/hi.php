@@ -1,0 +1,8 @@
+<?php
+
+
+$lang["user_preferences_configuration"]='उपयोगकर्ता प्राथमिकताओं के लिए विन्यास';
+$lang["user_preferences_change_username"]='खाता नाम बदलने की अनुमति दें';
+$lang["user_preferences_change_email"]='ई-मेल पता बदलने की अनुमति दें';
+$lang["user_preferences_change_name"]='उपयोगकर्ता का नाम बदलने की अनुमति दें';
+$lang["changeyourpassword"]='मेरा पासवर्ड और उपयोगकर्ता विवरण बदलें';
