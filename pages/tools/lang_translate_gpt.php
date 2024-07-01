@@ -62,8 +62,7 @@ $calamities=[];
 $bad_params_list=[];
 
 // Things that do not translate
-$ignore=["map_hydda_group", "_dupe", "hour-abbreviated", "map_tf_group", "map_esridelorme", "posixldapauth_rdn", "to-page", "emu_upload_emu_field_label", "all__emailcollectionexternal", "upload_share_email_template", "all__emaillogindetails", "all__emailnotifyresourcessubmitted", "all__emailresourcerequest", "all__emailbulk", "all__emailresource", "system_notification_email", "all__emailcollection", "all__emailnotifyresourcesunsubmitted", "all__emailresearchrequestassigned", "all__emailnotifyuploadsharenew"
-];
+$ignore=["map_hydda_group", "_dupe", "hour-abbreviated", "map_tf_group", "map_esridelorme", "posixldapauth_rdn", "to-page", "emu_upload_emu_field_label", "all__emailcollectionexternal", "upload_share_email_template", "all__emaillogindetails", "all__emailnotifyresourcessubmitted", "all__emailresourcerequest", "all__emailbulk", "all__emailresource", "system_notification_email", "all__emailcollection", "all__emailnotifyresourcesunsubmitted", "all__emailresearchrequestassigned", "all__emailnotifyuploadsharenew", "email_link_expires_date", "map_esri_group"];
   
 foreach ($plugins as $plugin)
     {
@@ -110,7 +109,7 @@ foreach ($plugins as $plugin)
             $messages=array();
             $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads.
  Where the context is unclear, make a best guess. Don't add the period character at the start or end of the translation if one isn't at the start or end of the value being translated.
-Text within square brackets ([example]) or percent signs (%%EXAMPLE%%) indicates a system parameter that MUST NOT itself be translated so for example '[list]' must remain '[list]' even if translating to Swedish.
+Text within square brackets indicates a system parameter that MUST NOT itself be translated so for example '[list]' must remain '[list]' even if translating to Swedish.
 In the event that you cannot provide a translation, return the word CALAMITY. Do not output anything that is not either a valid translation or the word CALAMITY.");
             $messages[]=array("role"=>"user","content"=>"Please translate: " . $lang_en[$mkey]);
             

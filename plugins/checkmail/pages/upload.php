@@ -19,7 +19,7 @@ include "../../../include/header.php";
 if ($userinfo['email']==""){error_alert($lang['pleasesetupemailaddress']);}
 
 global $applicationname;
-$message = str_replace('%applicationname%', $applicationname, $lang["uploadviaemail-intro"]);
+$message = str_replace('[applicationname]', $applicationname, $lang["uploadviaemail-intro"]);
 $message=str_replace("[fromaddress]",$userinfo['email'], $message);
 $message=str_replace("[toaddress]",$checkmail_email,$message);
 

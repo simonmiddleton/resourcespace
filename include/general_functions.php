@@ -1225,10 +1225,10 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     switch(substr($placeholder,5))
                         {
                         case "emailcollectionmessageexternal":
-                            $setvalues[$placeholder] = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessageexternal"]);
+                            $setvalues[$placeholder] = str_replace('[applicationname]', $applicationname, $lang["emailcollectionmessageexternal"]);
                             break;
                         case "emailcollectionmessage":
-                            $setvalues[$placeholder] = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessage"]);
+                            $setvalues[$placeholder] = str_replace('[applicationname]', $applicationname, $lang["emailcollectionmessage"]);
                             break;
                         default:
                             $setvalues[$placeholder] = $lang[substr($placeholder,5)];

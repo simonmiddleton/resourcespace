@@ -2100,13 +2100,13 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
     if ($fromusername==""){$fromusername=$applicationname;}
 
-    $externalmessage = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessageexternal"]);
+    $externalmessage = str_replace('[applicationname]', $applicationname, $lang["emailcollectionmessageexternal"]);
     $internalmessage = "lang_emailcollectionmessage";
 
     $viewlinktext="lang_clicklinkviewcollection";
     if ($themeshare) // Change the text if sharing a theme category
         {
-        $externalmessage    = str_replace('%applicationname%', $applicationname, $lang["emailthemecollectionmessageexternal"]);
+        $externalmessage    = str_replace('[applicationname]', $applicationname, $lang["emailthemecollectionmessageexternal"]);
         $internalmessage    = "lang_emailthememessage";
         $viewlinktext       = "lang_clicklinkviewcollections";
         }
@@ -5193,6 +5193,7 @@ function collection_download_process_archive_command($collection_download_tar, &
         debug("collection_download tar command: tar -cv -C " . $usertempdir . " . ");
         $cmdtempdir = escapeshellarg($usertempdir);
         passthru("find " . $cmdtempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $cmdtempdir . " -T -");
+        
         return true;
         }
     elseif ($archiver)
