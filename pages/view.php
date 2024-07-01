@@ -151,6 +151,12 @@ if($use_mp3_player)
     if(file_exists($mp3realpath))
         {
         $mp3path = get_resource_path($ref, false, $hide_real_filepath ? 'videojs' : '', false, 'mp3');
+        if (!$hide_real_filepath && $resource['file_extension'] == 'mp3' && $resource['file_path'] != '')
+            {
+            # Path to download.php returned as file stored in $syncdir. We're getting the mp3 as a preview rather than an original file.
+            # Modify the url as downloading the original could be blocked by permissions.
+            $mp3path = str_replace('size=', 'size=videojs', $mp3path);
+            }
         }
 
     if(resource_has_access_denied_by_RT_size($resource['resource_type'], ''))
