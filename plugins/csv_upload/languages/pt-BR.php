@@ -56,7 +56,7 @@ $lang["csv_upload_oj_created"]='Tarefa de upload de CSV criada com ID de tarefa 
 $lang["csv_upload_oj_complete"]='Carregamento de arquivo CSV concluído. Clique no link para visualizar o arquivo de log completo';
 $lang["csv_upload_oj_failed"]='Falha no envio de arquivo CSV';
 $lang["csv_upload_processing_x_meta_columns"]='Processando %count colunas de metadados';
-$lang["csv_upload_processing_complete"]='Processamento concluído em %%TIME%% (%%HOURS%% horas, %%MINUTES%% minutos, %%SECONDS%% segundos)';
+$lang["csv_upload_processing_complete"]='Processamento concluído em [time] (%%HOURS%% horas, %%MINUTES%% minutos, %%SECONDS%% segundos)';
 $lang["csv_upload_error_in_progress"]='Processamento abortado - este arquivo CSV já está sendo processado';
 $lang["csv_upload_error_file_missing"]='Erro - arquivo CSV ausente: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Mostrando apenas as primeiras 1000 linhas, para baixar o arquivo de log completo, clique <a href=\'%%LOG_URL%%\' target=\'_blank\'>aqui</a>';

@@ -191,7 +191,7 @@ include "../../include/header.php";
             $page_def[] = config_add_boolean_select('user_pref_new_action_emails', $lang['user_pref_new_action_emails'], $enable_disable_options, 300, '', true);
             }
         $page_def[] = config_add_boolean_select('user_pref_daily_digest', $lang['user_pref_daily_digest'], $enable_disable_options, 300, '', true);
-        $page_def[] = config_add_boolean_select('user_pref_inactive_digest', str_replace("%%DAYS%%",(string)(int)$inactive_message_auto_digest_period,$lang['user_pref_inactive_digest']), $enable_disable_options, 300, '', true);
+        $page_def[] = config_add_boolean_select('user_pref_inactive_digest', str_replace("[days]",(string)(int)$inactive_message_auto_digest_period,$lang['user_pref_inactive_digest']), $enable_disable_options, 300, '', true);
         $page_def[] = config_add_boolean_select('user_pref_daily_digest_mark_read', $lang['user_pref_daily_digest_mark_read'], $enable_disable_options, 300, '', true);
         $page_def[] = config_add_html('</div>');
         }

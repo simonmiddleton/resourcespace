@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSVアップロードジョブがジョブID # %
 $lang["csv_upload_oj_complete"]='CSVアップロードジョブが完了しました。完全なログファイルを表示するには、リンクをクリックしてください。';
 $lang["csv_upload_oj_failed"]='CSVアップロードジョブが失敗しました。';
 $lang["csv_upload_processing_x_meta_columns"]='%count 個のメタデータ列を処理しています。';
-$lang["csv_upload_processing_complete"]='処理が完了しました。時間は %%TIME%% で、そのうち %%HOURS%% 時間、 %%MINUTES%% 分、 %%SECONDS%% 秒かかりました。';
+$lang["csv_upload_processing_complete"]='処理が完了しました。時間は [time] で、そのうち %%HOURS%% 時間、 %%MINUTES%% 分、 %%SECONDS%% 秒かかりました。';
 $lang["csv_upload_error_in_progress"]='処理が中止されました - このCSVファイルは既に処理中です。';
 $lang["csv_upload_error_file_missing"]='エラー - CSVファイルが見つかりません：%%FILE%%';
 $lang["csv_upload_full_messages_link"]='最初の1000行のみ表示しています。完全なログファイルをダウンロードするには<a href=\'%%LOG_URL%%\' target=\'_blank\'>ここをクリック</a>してください。';

@@ -82,7 +82,7 @@ $sharefltr = array(
 if(getval("purge_expired",'') != '' && enforcePostRequest(true))
     {
     $deleted = purge_expired_shares($sharefltr);
-    $messages[] = str_replace("%%DELETEDCOUNT%%",$deleted,$lang["shares_purged_message"]);
+    $messages[] = str_replace("[deleted_count]",$deleted,$lang["shares_purged_message"]);
     }
 
 $shares = get_external_shares($sharefltr);

@@ -710,7 +710,7 @@ function message_send_unread_emails()
 
                 if ($actions_truncated)
                     {
-                    $message .= escape(str_replace(array('%%TOTAL%%', '%%APPLICATIONNAME%%'), array($action_count, $applicationname), $lang['email_actions_truncated'])) . "<br />";
+                    $message .= escape(str_replace(array('[total]', '[application_name]'), array($action_count, $applicationname), $lang['email_actions_truncated'])) . "<br />";
                     }
 
                 $message .= "<style>.InfoTable td {padding:5px; margin: 0px;border: 1px solid #000;}</style><table class='InfoTable'>";
@@ -830,7 +830,7 @@ function system_notification($message, $url="")
     $admin_notify_emails = array();
     $admin_notify_users = array();
     $notify_users=get_notification_users("SYSTEM_ADMIN");
-    $subject = str_replace("%%APPLICATION_NAME%%", $applicationname, $lang["system_notification"]);
+    $subject = str_replace("[application_name]", $applicationname, $lang["system_notification"]);
     foreach($notify_users as $notify_user)
         {
         get_config_option($notify_user['ref'],'user_pref_system_management_notifications', $send_message);

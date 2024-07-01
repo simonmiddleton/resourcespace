@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSV-uploadtaak aangemaakt met taak-ID # %%JOBREF
 $lang["csv_upload_oj_complete"]='CSV upload taak voltooid. Klik op de link om het volledige logbestand te bekijken';
 $lang["csv_upload_oj_failed"]='CSV upload taak mislukt';
 $lang["csv_upload_processing_x_meta_columns"]='Verwerken van %count metadatakolommen';
-$lang["csv_upload_processing_complete"]='Verwerking voltooid om %%TIME%% (%%HOURS%% uur, %%MINUTES%% minuten, %%SECONDS%% seconden)';
+$lang["csv_upload_processing_complete"]='Verwerking voltooid om [time] (%%HOURS%% uur, %%MINUTES%% minuten, %%SECONDS%% seconden)';
 $lang["csv_upload_error_in_progress"]='Verwerking afgebroken - dit CSV-bestand wordt al verwerkt';
 $lang["csv_upload_error_file_missing"]='Fout - CSV-bestand ontbreekt: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Alleen de eerste 1000 regels worden weergegeven. Klik <a href=\'%%LOG_URL%%\' target=\'_blank\'>hier</a> om het volledige logbestand te downloaden';

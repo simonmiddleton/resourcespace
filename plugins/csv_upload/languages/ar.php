@@ -56,7 +56,7 @@ $lang["csv_upload_oj_created"]='تم إنشاء مهمة تحميل CSV برقم
 $lang["csv_upload_oj_complete"]='اكتملت مهمة تحميل ملف CSV. انقر على الرابط لعرض ملف السجل الكامل';
 $lang["csv_upload_oj_failed"]='فشلت عملية تحميل ملف CSV';
 $lang["csv_upload_processing_x_meta_columns"]='معالجة %count أعمدة البيانات الوصفية';
-$lang["csv_upload_processing_complete"]='تم الانتهاء من المعالجة في %%TIME%% (%%HOURS%% ساعات، %%MINUTES%% دقائق، %%SECONDS%% ثواني)';
+$lang["csv_upload_processing_complete"]='تم الانتهاء من المعالجة في [time] (%%HOURS%% ساعات، %%MINUTES%% دقائق، %%SECONDS%% ثواني)';
 $lang["csv_upload_error_in_progress"]='تم إلغاء المعالجة - يتم معالجة ملف CSV هذا بالفعل';
 $lang["csv_upload_error_file_missing"]='خطأ - ملف CSV مفقود: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='عرض أول 1000 سطر فقط، لتحميل ملف السجل الكامل يرجى النقر <a href=\'%%LOG_URL%%\' target=\'_blank\'>هنا</a>';

@@ -46,7 +46,7 @@ if($resultcount == 0)
 if($submitted && $resultcount > 0)
     {
 
-    $findstrings = array("%%SEARCH%%","%%TIME%%");
+    $findstrings = array("[search]","[time]");
     $replacestrings = array(safe_file_name($search),date("Ymd-H:i",time()));
     $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
 
@@ -73,7 +73,7 @@ if($submitted && $resultcount > 0)
             }
         else
             {
-            $message = str_replace('%%JOBNUMBER%%', $jobadded, $lang['oj-creation-success']);
+            $message = str_replace('[jobnumber]', $jobadded, $lang['oj-creation-success']);
             }
         }
     else
@@ -137,7 +137,7 @@ elseif (isset($message))
             <?php 
             if($offline_job_queue)
                 {
-                echo "<input type='checkbox' id='process_offline' name='process_offline' value='1' " . ($resultcount > $metadata_export_offline_limit ? "onclick='styledalert(\"" .  escape($lang["csvExportResultsMetadata"])  . "\",\"" . escape(str_replace("%%RESOURCE_COUNT%%",$metadata_export_offline_limit,$lang['csv_export_offline_only'])) . "\");return false;' checked" : ($submitted && !$offline ? "" : " checked ")) . ">";
+                echo "<input type='checkbox' id='process_offline' name='process_offline' value='1' " . ($resultcount > $metadata_export_offline_limit ? "onclick='styledalert(\"" .  escape($lang["csvExportResultsMetadata"])  . "\",\"" . escape(str_replace("[resource_count]",$metadata_export_offline_limit,$lang['csv_export_offline_only'])) . "\");return false;' checked" : ($submitted && !$offline ? "" : " checked ")) . ">";
                 }
             else
                 {

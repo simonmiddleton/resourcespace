@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSV učitavanje posla kreirano s ID-om posla # %
 $lang["csv_upload_oj_complete"]='CSV prijenos posla je završen. Kliknite na poveznicu kako biste vidjeli cjelokupnu datoteku zapisa';
 $lang["csv_upload_oj_failed"]='Neuspjeh CSV upload zadatka';
 $lang["csv_upload_processing_x_meta_columns"]='Obrada %count stupaca metapodataka';
-$lang["csv_upload_processing_complete"]='Obrada završena u %%TIME%% (%%HOURS%% sati, %%MINUTES%% minuta, %%SECONDS%% sekundi)';
+$lang["csv_upload_processing_complete"]='Obrada završena u [time] (%%HOURS%% sati, %%MINUTES%% minuta, %%SECONDS%% sekundi)';
 $lang["csv_upload_error_in_progress"]='Obrada prekinuta - ovaj CSV datoteka se već obrađuje';
 $lang["csv_upload_error_file_missing"]='Greška - CSV datoteka nedostaje: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Prikazujem samo prvih 1000 linija, za preuzimanje cijelog datotečnog zapisa kliknite <a href=\'%%LOG_URL%%\' target=\'_blank\'>ovdje</a>';

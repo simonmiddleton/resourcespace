@@ -592,7 +592,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
                             echo '"' . escape($extension) . '",';
                         } ?>];
                     if (file_path != "" && valid_extensions.includes(ext)) return true;
-                    alert(<?php echo '"' . escape(str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension'])) .'"'?>);
+                    alert(<?php echo '"' . escape(str_replace('[extensions]', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension'])) .'"'?>);
                     return false;
                     }
                 </script>
@@ -1827,7 +1827,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
         {
         // Don't delete invalid nodes immediately in case of accidental/inadvertent change - just show a link to the cleanup page
         $cleanup_url = generateURL($baseurl . "/pages/tools/cleanup_invalid_nodes.php",["cleanupfield"=>$ref, "cleanuprestype"=>implode(",",$remove_data_restypes)]);
-        $onload_message= ["title" => $lang["cleanup_invalid_nodes"],"text" => str_replace("%%CLEANUP_LINK%%","<br/><a href='" . $cleanup_url . "' target='_blank'>" . $lang["cleanup_invalid_nodes"] . "</a>",$lang["information_field_restype_deselect_cleanup"])];
+        $onload_message= ["title" => $lang["cleanup_invalid_nodes"],"text" => str_replace("[cleanup_link]","<br/><a href='" . $cleanup_url . "' target='_blank'>" . $lang["cleanup_invalid_nodes"] . "</a>",$lang["information_field_restype_deselect_cleanup"])];
         }
     
     hook('afterresourcetypefieldeditsave');

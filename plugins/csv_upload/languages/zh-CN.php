@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSV上传作业已创建，作业ID为# %%JOBREF
 $lang["csv_upload_oj_complete"]='CSV上传任务已完成。点击链接查看完整的日志文件。';
 $lang["csv_upload_oj_failed"]='CSV上传作业失败。';
 $lang["csv_upload_processing_x_meta_columns"]='处理 %count 个元数据列';
-$lang["csv_upload_processing_complete"]='处理完成于 %%TIME%% (%%HOURS%% 小时, %%MINUTES%% 分钟, %%SECONDS%% 秒)。';
+$lang["csv_upload_processing_complete"]='处理完成于 [time] (%%HOURS%% 小时, %%MINUTES%% 分钟, %%SECONDS%% 秒)。';
 $lang["csv_upload_error_in_progress"]='处理中止 - 此 CSV 文件已在处理中。';
 $lang["csv_upload_error_file_missing"]='错误 - CSV文件丢失：%%FILE%%。';
 $lang["csv_upload_full_messages_link"]='仅显示前1000行，若需下载完整的日志文件，请点击<a href=\'%%LOG_URL%%\' target=\'_blank\'>此处</a>。';

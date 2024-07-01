@@ -1428,7 +1428,7 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
     if (count($duplicates) > 0)
         {
         return ajax_response_fail(ajax_build_message(
-            str_replace('%%RESOURCES%%', implode(', ', $duplicates), $GLOBALS['lang']['error_upload_duplicate_file'])
+            str_replace('[resources]', implode(', ', $duplicates), $GLOBALS['lang']['error_upload_duplicate_file'])
         ));
         }   
 

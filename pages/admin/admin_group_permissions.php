@@ -288,7 +288,7 @@ if (in_array("XE",$permissions))
         {
         foreach ($rtypes as $rtype)
             {
-            DrawOption("XE-" . $rtype["ref"], str_replace("%%RESOURCETYPE%%","'" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'",$lang["can_edit_resource_type"]));
+            DrawOption("XE-" . $rtype["ref"], str_replace("[resourcetype]","'" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'",$lang["can_edit_resource_type"]));
             }
         }
 
@@ -310,7 +310,7 @@ foreach ($additional_archive_states as $additional_archive_state)
     }
 for ($n=0;$n<=($custom_access?3:2);$n++)
     {
-    DrawOption("ea" . $n,  str_replace(array("%STATE"),array($lang["access" . $n]),$lang["edit_access_to_access"]), true);
+    DrawOption("ea" . $n,  str_replace(array("[state]"),array($lang["access" . $n]),$lang["edit_access_to_access"]), true);
     }
 
 DrawOption("c", $lang["can_create_resources_and_upload_files-admins"]);

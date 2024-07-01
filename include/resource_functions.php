@@ -1702,7 +1702,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             else
                                 {
                                 debug(" - Unable to find previous node for '" . $oldnodename . "'");
-                                $save_warnings[] = ["Resource" => $ref,"Field" => $fields[$n]['title'],"Message"=>str_replace("%%VALUE%%",$oldnodename,$lang["error_invalid_revert_option"])];
+                                $save_warnings[] = ["Resource" => $ref,"Field" => $fields[$n]['title'],"Message"=>str_replace("[value]",$oldnodename,$lang["error_invalid_revert_option"])];
                                 }
                             }
                         }
@@ -1905,7 +1905,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             }
                         else
                             {
-                            $save_warnings[] = ["Resource" => $ref,"Field" => $fields[$n]['title'],"Message"=>str_replace("%%VALUE%%",$oldnodename,$lang["error_invalid_revert_date"])];
+                            $save_warnings[] = ["Resource" => $ref,"Field" => $fields[$n]['title'],"Message"=>str_replace("[value]",$oldnodename,$lang["error_invalid_revert_date"])];
                             debug(" - Invalid previous date " . $oldnodename . "'");
                             }
                         }
@@ -8880,7 +8880,7 @@ function get_resource_lock_message($lockuser)
         {
         $lock_user_data = get_user($lockuser);
         $lock_username = $lock_user_data["fullname"] != "" ? $lock_user_data["fullname"] : $lock_user_data["username"];
-        return str_replace("%%USER%%", $lock_username, $lang["status_locked_by"]);
+        return str_replace("[user]", $lock_username, $lang["status_locked_by"]);
         }
     else
         {

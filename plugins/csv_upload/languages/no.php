@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSV-opplastingsjobb opprettet med jobb-ID # %%JO
 $lang["csv_upload_oj_complete"]='CSV-opplastingsjobb fullført. Klikk på lenken for å se hele loggfilen';
 $lang["csv_upload_oj_failed"]='CSV-opplastingsjobb mislyktes';
 $lang["csv_upload_processing_x_meta_columns"]='Behandler %count metadatakolonner';
-$lang["csv_upload_processing_complete"]='Behandling fullført kl. %%TIME%% (%%HOURS%% timer, %%MINUTES%% minutter, %%SECONDS%% sekunder)';
+$lang["csv_upload_processing_complete"]='Behandling fullført kl. [time] (%%HOURS%% timer, %%MINUTES%% minutter, %%SECONDS%% sekunder)';
 $lang["csv_upload_error_in_progress"]='Behandling avbrutt - denne CSV-filen blir allerede behandlet';
 $lang["csv_upload_error_file_missing"]='Feil - CSV-fil mangler: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Viser kun de første 1000 linjene. For å laste ned hele loggfilen, klikk <a href=\'%%LOG_URL%%\' target=\'_blank\'>her</a>';

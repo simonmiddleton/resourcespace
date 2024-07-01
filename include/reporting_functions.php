@@ -544,7 +544,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             $title = $report["name"] . ": " . str_replace("?",$report["period"],$lang["lastndays"]);
             if(!empty($reportfiles))
                 {
-                $output = str_replace("%%REPORTTITLE%%", $title, $lang["report_periodic_email_report_attached"]);
+                $output = str_replace("[report_title]", $title, $lang["report_periodic_email_report_attached"]);
                 }
 
             $unsubscribe_url = generateURL($baseurl,["ur"=>$report["ref"],"u"=>$user["ref"]]);

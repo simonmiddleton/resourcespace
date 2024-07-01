@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='S\'ha creat una tasca de càrrega de CSV amb l\'
 $lang["csv_upload_oj_complete"]='Càrrega de fitxers CSV completa. Feu clic al link per veure el registre complet';
 $lang["csv_upload_oj_failed"]='La càrrega de treball de pujada de CSV ha fallat';
 $lang["csv_upload_processing_x_meta_columns"]='Processant %count columnes de metadades';
-$lang["csv_upload_processing_complete"]='Processament completat a les %%TIME%% (%%HOURS%% hores, %%MINUTES%% minuts, %%SECONDS%% segons)';
+$lang["csv_upload_processing_complete"]='Processament completat a les [time] (%%HOURS%% hores, %%MINUTES%% minuts, %%SECONDS%% segons)';
 $lang["csv_upload_error_in_progress"]='Processament avortat - aquest fitxer CSV ja està sent processat';
 $lang["csv_upload_error_file_missing"]='Error - Fitxer CSV absent: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Mostrant només les primeres 1000 línies, per descarregar el fitxer de registre complet feu clic <a href=\'%%LOG_URL%%\' target=\'_blank\'>aquí</a>';

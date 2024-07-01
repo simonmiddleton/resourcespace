@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='Pekerjaan unggah CSV telah dibuat dengan ID peke
 $lang["csv_upload_oj_complete"]='Pekerjaan unggah CSV selesai. Klik tautan untuk melihat file log lengkap';
 $lang["csv_upload_oj_failed"]='Gagal mengunggah pekerjaan CSV';
 $lang["csv_upload_processing_x_meta_columns"]='Memproses %count kolom metadata';
-$lang["csv_upload_processing_complete"]='Pemrosesan selesai pada %%TIME%% (%%HOURS%% jam, %%MINUTES%% menit, %%SECONDS%% detik)';
+$lang["csv_upload_processing_complete"]='Pemrosesan selesai pada [time] (%%HOURS%% jam, %%MINUTES%% menit, %%SECONDS%% detik)';
 $lang["csv_upload_error_in_progress"]='Pemrosesan dibatalkan - file CSV ini sedang diproses';
 $lang["csv_upload_error_file_missing"]='Galat - Berkas CSV hilang: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Menampilkan hanya 1000 baris pertama, untuk mengunduh file log lengkap silakan klik <a href=\'%%LOG_URL%%\' target=\'_blank\'>di sini</a>';

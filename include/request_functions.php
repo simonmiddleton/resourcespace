@@ -892,7 +892,7 @@ function email_resource_request($ref,$details)
         if($download_limit_check >= $user_dl_limit)
             {
             $detailstext->prepend_text("<br />");
-            $detailstext->prepend_text("lang_download_limit_request_text",["%%DOWNLOADED%%","%%LIMIT%%"],[$download_limit_check,$user_dl_limit]);
+            $detailstext->prepend_text("lang_download_limit_request_text",["[downloaded]","[limit]"],[$download_limit_check,$user_dl_limit]);
             }
         }
 

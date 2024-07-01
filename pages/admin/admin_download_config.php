@@ -5,19 +5,19 @@ include_once '../../include/config_functions.php';
 
 if(!extension_loaded("zip"))
     {
-    $error = str_replace("%%MODULE%%","php-zip",$lang["error_server_missing_module"]);
+    $error = str_replace("[module]","php-zip",$lang["error_server_missing_module"]);
     }
 elseif(!$offline_job_queue)
     {
-    $error = str_replace("%%CONFIG_OPTION%%","\$offline_job_queue",$lang["error_check_config"]);
+    $error = str_replace("[config_option]","\$offline_job_queue",$lang["error_check_config"]);
     }
 elseif(!isset($mysql_bin_path))
     {
-    $error = str_replace("%%CONFIG_OPTION%%","\$mysql_bin_path",$lang["error_check_config"]);
+    $error = str_replace("[config_option]","\$mysql_bin_path",$lang["error_check_config"]);
     }
 elseif(!$system_download_config)
     {
-    $error = str_replace("%%CONFIG_OPTION%%","\$system_download_config",$lang["error_check_config"]);
+    $error = str_replace("[config_option]","\$system_download_config",$lang["error_check_config"]);
     }
 
 $export = getval("export","") != "";
@@ -44,7 +44,7 @@ if (!isset($error) && $export!="" && enforcePostRequest(false))
         }
     else
         {
-        $message = str_replace("%%JOBNUMBER%%",$jobadded,$lang["oj-creation-success"]); 
+        $message = str_replace("[jobnumber]",$jobadded,$lang["oj-creation-success"]); 
         }
     }
 

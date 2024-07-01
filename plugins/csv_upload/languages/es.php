@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='Se ha creado un trabajo de carga CSV con el ID d
 $lang["csv_upload_oj_complete"]='Carga de trabajo de subida de CSV completada. Haga clic en el enlace para ver el archivo de registro completo';
 $lang["csv_upload_oj_failed"]='La carga de trabajo de subida de CSV ha fallado';
 $lang["csv_upload_processing_x_meta_columns"]='Procesando %count columnas de metadatos';
-$lang["csv_upload_processing_complete"]='Procesamiento completado en %%TIME%% (%%HOURS%% horas, %%MINUTES%% minutos, %%SECONDS%% segundos)';
+$lang["csv_upload_processing_complete"]='Procesamiento completado en [time] (%%HOURS%% horas, %%MINUTES%% minutos, %%SECONDS%% segundos)';
 $lang["csv_upload_error_in_progress"]='Procesamiento abortado - este archivo CSV ya está siendo procesado';
 $lang["csv_upload_error_file_missing"]='Error - Falta el archivo CSV: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Mostrando solo las primeras 1000 líneas, para descargar el archivo de registro completo, haga clic <a href=\'%%LOG_URL%%\' target=\'_blank\'>aquí</a>';

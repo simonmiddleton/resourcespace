@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSV-Upload-Job mit der Job-ID # %%JOBREF%% wurde
 $lang["csv_upload_oj_complete"]='CSV-Upload-Job abgeschlossen. Klicken Sie auf den Link, um die vollständige Protokolldatei anzuzeigen';
 $lang["csv_upload_oj_failed"]='CSV-Upload-Job fehlgeschlagen';
 $lang["csv_upload_processing_x_meta_columns"]='Verarbeite %count Metadatenspalten';
-$lang["csv_upload_processing_complete"]='Verarbeitung abgeschlossen um %%TIME%% (%%HOURS%% Stunden, %%MINUTES%% Minuten, %%SECONDS%% Sekunden)';
+$lang["csv_upload_processing_complete"]='Verarbeitung abgeschlossen um [time] (%%HOURS%% Stunden, %%MINUTES%% Minuten, %%SECONDS%% Sekunden)';
 $lang["csv_upload_error_in_progress"]='Verarbeitung abgebrochen - Diese CSV-Datei wird bereits verarbeitet';
 $lang["csv_upload_error_file_missing"]='Fehler - CSV-Datei fehlt: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Es werden nur die ersten 1000 Zeilen angezeigt. Um die vollständige Protokolldatei herunterzuladen, klicken Sie bitte <a href=\'%%LOG_URL%%\' target=\'_blank\'>hier</a>';

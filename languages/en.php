@@ -178,7 +178,7 @@ $lang["information-push_metadata"]="If set, the metadata for this resource will 
 $lang["property-query"]="Query";
 
 $lang["information-id"]="Note: 'Id' below MUST be set to a three character unique code.";
-$lang["information_field_restype_deselect_cleanup"]="To remove existing field data from the deselected resource types, click on the following link %%CLEANUP_LINK%%"; 
+$lang["information_field_restype_deselect_cleanup"]="To remove existing field data from the deselected resource types, click on the following link [cleanup_link]"; 
 $lang["property-id"]="Id";
 $lang["property-width"]="Width";
 $lang["property-height"]="Height";
@@ -1695,7 +1695,7 @@ $lang['report_periodic_email_option_all_users'] = 'all users';
 $lang['report_periodic_email_option_selected_user_groups'] = 'selected user group(s)';
 $lang['report_periodic_email_unsubscribe_title'] = 'Unsubscribe from periodic emails';
 $lang['report_periodic_email_unsubscribe_confirmation'] = 'Please confirm you would like to unsubscribe';
-$lang['report_periodic_email_report_attached'] = 'The report \'%%REPORTTITLE%%\' is attached.';
+$lang['report_periodic_email_report_attached'] = 'The report \'[report_title]\' is attached.';
 $lang['report-select-required']="Please select a report";
 
 #Column headers (for the default reports)
@@ -1746,7 +1746,7 @@ $lang['write_access_to'] = 'Write access to ';
 $lang["nowriteaccesstohomeanim"]=" not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
 $lang["blockedbrowsingoffilestore"]="Blocked browsing of 'filestore' directory";
 $lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable. Please remove 'Indexes' from Apache 'Options' list or disable the 'autoindex' module from Apache.";
-$lang["php_extension_not_enabled"]="PHP extension %%EXTENSION%% is not enabled";
+$lang["php_extension_not_enabled"]="PHP extension [extension] is not enabled";
 $lang["execution_failed"]="Unexpected output when executing %command command. Output was '%output'.";  # %command and %output will be replaced, e.g. Execution failed; unexpected output when executing convert command. Output was '[stdout]'.
 $lang["exif_extension"]="EXIF extension";
 $lang["archiver_utility"]="Archiver utility";
@@ -1814,9 +1814,9 @@ $lang["restricted_access_only_to_resource_type"]="Restricted access only to reso
 $lang["restricted_upload_for_resource_of_type"]="Restricted upload for resource of type";
 $lang["deny_edit_resource_type"]="Deny edit access to resource of type";
 $lang["deny_edit_all_resource_types"]="Deny edit access to all resource types except those specified by \"ALLOW edit access to resources of the given resource type\" permissions";
-$lang["can_edit_resource_type"]="Can edit resources of type %%RESOURCETYPE%%. Ignored if \"DENY edit access to given resource type\" permission is not present";
+$lang["can_edit_resource_type"]="Can edit resources of type [resourcetype]. Ignored if \"DENY edit access to given resource type\" permission is not present";
 $lang["edit_access_to_workflow_state"]="Edit access to workflow state";
-$lang["edit_access_to_access"]="Edit access to access state '%STATE'";
+$lang["edit_access_to_access"]="Edit access to access state '[state]'";
 $lang["can_create_resources_and_upload_files-admins"]="Can create resources / upload files<br>(admin users; resources go to 'Active' state)";
 $lang["can_create_resources_and_upload_files-general_users"]="Can create resources / upload files<br>(normal users; resources go to 'Pending Submission' state via My Contributions)";
 $lang["can_delete_resources"]="Can delete resources<br>(to which the user has write access)";
@@ -1971,7 +1971,6 @@ $lang["zipcomplete"]="Your Zip file download should have started. You may leave 
 
 $lang["starttypingkeyword"]="Start typing keyword...";
 $lang["createnewentryfor"]="Create new entry for";
-$lang["confirmcreatenewentryfor"]="Are you sure you wish to create a new keyword list entry for '%%'?";
 $lang["noentryexists"]="No entry exists for";
 $lang['inactive_entry_matched'] = 'Inactive entry matched for';
 
@@ -2198,8 +2197,8 @@ $lang['group_download_limit_title'] = "Resource download limit. Set to 0 for no 
 $lang['group_download_limit_period'] = "Download limit period (limit in last X days). Set to 0 for absolute download limit";
 $lang['download_limit_error'] = "Your download limit has been reached.";
 $lang['download_limit_collection_error'] = "This collection download would exceed your download limit.";
-$lang['download_limit_summary'] = "You have downloaded %%DOWNLOADED%%/%%LIMIT%% resources.";
-$lang['download_limit_request_text'] = "Download limit reached: %%DOWNLOADED%%/%%LIMIT%%";
+$lang['download_limit_summary'] = "You have downloaded [downloaded]/[limit] resources.";
+$lang['download_limit_request_text'] = "Download limit reached: [downloaded]/[limit]";
 
 # User group management edit
 $lang['page-title_user_group_management_edit'] = "Edit user group";
@@ -2246,7 +2245,7 @@ $lang["resource_type_field_new"]    = "New metadata field";
 ##########################################################################################
 
 $lang["admin_advanced_field_properties"]="Advanced field properties";
-$lang["admin_delete_field_confirm"]="There are %%AFFECTEDRESOURCES%% resource(s) with data in this field. Some of the affected resource IDs are listed below. The metadata associated with this field will be lost if you continue. Are you sure you want to proceed with deletion?";
+$lang["admin_delete_field_confirm"]="There are [affected_resources] resource(s) with data in this field. Some of the affected resource IDs are listed below. The metadata associated with this field will be lost if you continue. Are you sure you want to proceed with deletion?";
 $lang["admin_delete_field_error"]="Unable to delete field. Please contact your system administrator. This field is used for the following configuration options:-";
 $lang["admin_delete_field_error_scopes"] = "Unable to delete field. Please contact your system administrator. This field is still used in these scopes: ";
 $lang["admin_resource_type_create"]="Create resource type called...";
@@ -2288,7 +2287,7 @@ $lang["property-groups"]="Groups";
 $lang["property-user_group"]="User group";
 $lang["property-user_group_parent"]="Parent user group";
 $lang["property-user_group_remove_parent"]="(remove parent)";
-$lang["resource_type_delete_confirmation"]="There are %%RESOURCECOUNT%% resource(s) of this type.";
+$lang["resource_type_delete_confirmation"]="There are [resource_count] resource(s) of this type.";
 $lang["resource_type_delete_assoc_rtf_confirm"] = "There are %COUNT metadata field(s) associated with this resource type.";
 $lang["resource_type_delete_select_new"]="Please select the resource type that these will be switched to.";
 $lang["resourcetype-global_field"]="Global";
@@ -2303,7 +2302,7 @@ $lang['admin_field_deleted'] = "Deleted field";
 $lang['action-move-up'] = 'Move up';
 $lang['action-move-down'] = 'Move down';
 $lang['action-move-to'] = 'Move to';
-$lang['delete_user_group_checkbox_alert_message'] = 'Please note this action will also delete all content text that was relevant to this user group. There are %%RECORDSCOUNT%% records found in Manage Content.';
+$lang['delete_user_group_checkbox_alert_message'] = 'Please note this action will also delete all content text that was relevant to this user group. There are [recordscount] records found in Manage Content.';
 
 
 
@@ -2559,7 +2558,7 @@ $lang['userpreference_high_contrast_mode'] = 'Higher contrast mode';
 /* System Config */
 $lang['systemconfig'] = 'Configuration';
 $lang['systemconfig_customfont_label'] = 'Custom font file';
-$lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: %%EXTENSIONS%%";
+$lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: [extensions]";
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
 $lang['watermark_header'] = 'Watermark';
@@ -2813,7 +2812,7 @@ $lang["actions_type_userrequest"] = "Account request";
 $lang["actions_add_editable_to_collection"] = "Add all editable resources to collection";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
 $lang["actions_view_editable_as_resultset"]="View resources to review as a result set";
-$lang['email_actions_truncated'] = "Only the most recent 1000 actions are shown here. You have %%TOTAL%% actions. Login to %%APPLICATIONNAME%% to view them all.";
+$lang['email_actions_truncated'] = "Only the most recent 1000 actions are shown here. You have [total] actions. Login to [application_name] to view them all.";
 
 
 $lang["refinemetadata"]="Refine metadata";
@@ -2846,10 +2845,10 @@ $lang["error_multiple_preview_tools"] = "Please disable the current preview tool
 $lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
 $lang["error_upload_replace_file_fail"] = "Failed to replace resource file";
 $lang["error_upload_replace_file_fail_invalid_collection"] = "Failed to replace resource file. Collection reference supplied is invalid.";
-$lang["error_upload_replace_no_matching_file"] = "No valid resource to replace found with filename %%FILENAME%%";
-$lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resources found with filename %%FILENAME%%";
-$lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";
-$lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %%RESOURCES%%";
+$lang["error_upload_replace_no_matching_file"] = "No valid resource to replace found with filename [filename]";
+$lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resources found with filename [filename]";
+$lang["error_upload_invalid_file"] = "Invalid file type: [filetype]";
+$lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: [resources]";
 $lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
 $lang["error_fail_save"] = "Unable to save";
 
@@ -2894,7 +2893,7 @@ $lang["oj-collection-download-failure-text"] = "Unable to prepare collection arc
 $lang["oj-batch-replace-local-success-text"] = "Batch replace has successfully replaced %TOTALRESOURCES resources";
 $lang["oj-batch-replace-local-failure-text"] = "Batch replace failed. Please check logs for errors";
 $lang["oj-creation-failure-text"]            = "An error occurred. Failed to create offline job";
-$lang["oj-creation-success"]                 = "Offline job %%JOBNUMBER%% created. You will be notified when it has completed";
+$lang["oj-creation-success"]                 = "Offline job [jobnumber] created. You will be notified when it has completed";
 $lang["job_priority_immediate"] = "Urgent job";
 $lang["job_priority_user"] = "User job";
 $lang["job_priority_system"] = "System job";
@@ -2904,7 +2903,7 @@ $lang["job_status_error"] = "An error occurred";
 
 $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";
 $lang["email_digest_disable"]       = "You can disable these notifications by logging in and adjusting your user preferences at the link below:-";
-$lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread notifications if not logged on for more than %%DAYS%% days?";
+$lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread notifications if not logged on for more than [days] days?";
 $lang["edit_copy_from_field"]       = "Copy data from field";
 
 $lang['home_page'] = "Home page";
@@ -2991,11 +2990,11 @@ $lang["date_format_error"]                  = "Error: %row% '%date%' in [%field%
 $lang["invalid_date_error"]                 = "Error: %row% '%date%' in [%field%] is not a valid date";
 $lang["invalid_date_error2"]                = "Error: invalid date value: '%date%'. Please use format: 'yyyy-mm-dd hh:mm:ss' (time is optional)";
 $lang["invalid_date_generic"]               = "You have entered an invalid date";
-$lang["error_server_missing_module"]        = "The server is missing the required software: %%MODULE%%. Please contact your system administrator";
-$lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";
+$lang["error_server_missing_module"]        = "The server is missing the required software: [module]. Please contact your system administrator";
+$lang["error_check_config"]                 = "Please check config option [config_option]";
 $lang["useaspreviewimage"]                  = "Use as preview image";
 $lang["filechecksum"]                       = "File checksum";
-$lang["system_notification"]                = "%%APPLICATION_NAME%% - system notification";
+$lang["system_notification"]                = "[application_name] - system notification";
 $lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["error_edit_filter_invalid"]          = "The edit filter is not correctly configured for this user group. Please contact your administrator";
 $lang["error_search_filter_invalid"]        = "The search filter is not correctly configured for this user group. Please contact your administrator";
@@ -3003,9 +3002,9 @@ $lang["action_lock"]                        = "Lock";
 $lang["action_unlock"]                      = "Unlock";
 $lang["status_locked"]                      = "Locked";
 $lang["status_unlocked"]                    = "Unlocked";
-$lang["status_locked_by"]                   = "Locked by %%USER%%";
+$lang["status_locked_by"]                   = "Locked by [user]";
 $lang["status_locked_self"]                 = "You have locked this resource";
-$lang["error_locked_by_user"]               = "Resource is locked by %%USER%%";
+$lang["error_locked_by_user"]               = "Resource is locked by [user]";
 $lang["error_locked_other_user"]            = "Resource is locked by another user";
 $lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
 $lang["error-edit_noaccess_related_resources"] = "Unable to relate resources. No access to: ";
@@ -3040,10 +3039,10 @@ $lang["job_boost"]                          = "Boost job";
 $lang["job_priority"]                       = "Priority";
 
 $lang['csv_export_offline_option']          = "Generate CSV file offline? This should be used for large result sets. You will be notified via a ResourceSpace message once the CSV is available";
-$lang["csv_export_filename"]                = "metadata_export_%%SEARCH%%_%%TIME%%";
+$lang["csv_export_filename"]                = "metadata_export_[search]_[time]";
 $lang["csv_export_file_ready"]              = "Your CSV export is ready";
 $lang["offline_processing_disabled"]        = "Offline job processing is not configured on this system. To enable this please contact your system administrator";
-$lang['csv_export_offline_only']            = "Offline processing must be used when exporting data for more than %%RESOURCE_COUNT%% resources";
+$lang['csv_export_offline_only']            = "Offline processing must be used when exporting data for more than [resource_count] resources";
 
 $lang["setup_google_vision_settings"]       = "Google Vision settings";
 $lang["setup_google_vision_enable"]         = "Enable Google Vision plugin?";
@@ -3079,7 +3078,7 @@ $lang["all__emailnotifyuploadsharenew"]     = "<br />\n[lang_notify_upload_share
 $lang["my_shares"]                          = "My shares";
 $lang["manage_shares_title"]                = "External shares";
 $lang["share_purge_text"]                   = "Delete expired shares";
-$lang["shares_purged_message"]              = "Deleted %%DELETEDCOUNT%% shares";
+$lang["shares_purged_message"]              = "Deleted [deleted_count] shares";
 $lang["share_confirm_purge"]                = "Are you sure you want to delete all expired shares?";
 $lang["external_shares_view_existing"]      = "View existing upload shares for this collection.";
 $lang["share_user"]                         = "Shared by";
@@ -3092,7 +3091,7 @@ $lang["log-reference"]                      = "Log entry";
 $lang["log_column"]                         = "Log data";
 $lang["log_value"]                          = "Value";
 $lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
-$lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on %%PATH%%";
+$lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on [path]";
 $lang["share_expired_icon_title"]           = "Expired";
 
 $lang["new_message"]                        ="New message";
@@ -3111,9 +3110,9 @@ $lang["code_sign_required"]                 = "Inline code signing";
 $lang["code_sign_required_warning"]         = "Warning: Inline code has been changed and the updated code has not been signed using the command line utility. Macros performed on metadata may not complete as expected.";
 $lang["search_full_text"]                   = "Search all text (full text search)";
 
-$lang["error_invalid_revert_option"]        = "The previously stored value '%%VALUE%%' could not be found in the current options. Please check if the name of this option has changed and manually update the resource if required.";
-$lang["error_invalid_revert_date"]          = "The previously stored date '%%VALUE%%' is invalid. Please update the resource manually if required.";
-$lang["error_invalid_date_format"]          = "\"%%VALUE%%\" is an invalid date. All values in this field must be formatted as YYYY-MM-DD";
+$lang["error_invalid_revert_option"]        = "The previously stored value '[value]' could not be found in the current options. Please check if the name of this option has changed and manually update the resource if required.";
+$lang["error_invalid_revert_date"]          = "The previously stored date '[value]' is invalid. Please update the resource manually if required.";
+$lang["error_invalid_date_format"]          = "\"[value]\" is an invalid date. All values in this field must be formatted as YYYY-MM-DD";
 $lang["batch_edit_save_warning_message"]    = "Errors were encountered while editing the following resources-";
 $lang["batch_edit_save_warning_alert"]      = "Some errors were encountered performing this operation. Please refer to your messages for more detail";
 $lang["related_resource_create"]            = "Create new related resource";

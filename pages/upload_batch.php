@@ -31,7 +31,7 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']) && isset($_SERVER['HTTP_UPPY_AUTH_TOKEN
                     {
                     debug("upload_batch - invalid file extension received. File name: '" . $upfilename . "'");
                     http_response_code(401);
-                    $result["message"] = str_replace("%%FILETYPE%%",$upfilename,$lang["error_upload_invalid_file"]);
+                    $result["message"] = str_replace("[filetype]",$upfilename,$lang["error_upload_invalid_file"]);
                     $result["error"] = 112;
                     die(json_encode($result));
                     }
@@ -500,7 +500,7 @@ if ($processupload)
         {
         debug("upload_batch - unable to locate file received from user " . $username . ",  file path " . $upfilepath . ",  filename " . $upfilename);
         $result["status"] = false;
-        $result["message"] = str_replace("%%FILETYPE%%",$upfilename,$lang["error_upload_invalid_file"]);
+        $result["message"] = str_replace("[filetype]",$upfilename,$lang["error_upload_invalid_file"]);
         $result["error"] = 110;
         die(json_encode($result));
         }
@@ -512,7 +512,7 @@ if ($processupload)
         {
         debug("upload_batch - invalid file extension received from user " . $username . ",  filename " . $upfilename);
         $result["status"] = false;
-        $result["message"] = str_replace("%%FILETYPE%%",$upfilename,$lang["error_upload_invalid_file"]);
+        $result["message"] = str_replace("[filetype]",$upfilename,$lang["error_upload_invalid_file"]);
         $result["error"] = 105;
         unlink($upfilepath);
         die(json_encode($result));
@@ -535,7 +535,7 @@ if ($processupload)
             {
             debug("upload_batch - invalid file received from user " . $username . ",  filename " . $upfilename . ", mime type: " . $filemime);
             $result["status"] = false;
-            $result["message"] = str_replace("%%FILETYPE%%", $upfilename . " (" . $filemime . ")",$lang["error_upload_invalid_file"]);
+            $result["message"] = str_replace("[filetype]", $upfilename . " (" . $filemime . ")",$lang["error_upload_invalid_file"]);
             $result["error"] = 105;
             unlink($upfilepath);
             die(json_encode($result));
@@ -566,7 +566,7 @@ if ($processupload)
         {
         debug("upload_batch ERROR- duplicate file matches resources" . implode(",",$duplicates));
         $result["status"] = false;
-        $result["message"] = str_replace("%%RESOURCES%%",implode(",",$duplicates),$lang["error_upload_duplicate_file"]);
+        $result["message"] = str_replace("[resources]",implode(",",$duplicates),$lang["error_upload_duplicate_file"]);
         $result["error"] = 108;
         unlink($upfilepath);
         die(json_encode($result));
@@ -903,7 +903,7 @@ if ($processupload)
                     $target_resourceDebug_message2 = "Target resource not found - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE FOUND - should have been: " . (count($target_resourceDebug)>0 ? json_encode($target_resourceDebug): "NONE"))  . " . Replace in resources: " . json_encode($replace_resources);
                     debug($target_resourceDebug_message2);
                     $result["status"] = false;
-                    $result["message"] = str_replace("%%FILENAME%%",$origuploadedfilename,$lang["error_upload_replace_no_matching_file"]);
+                    $result["message"] = str_replace("[filename]",$origuploadedfilename,$lang["error_upload_replace_no_matching_file"]);
                     $result["error"] = 106;
                     }
                 else
@@ -935,7 +935,7 @@ if ($processupload)
                         {
                         // Multiple resources found with the same filename
                         $result["status"] = false;
-                        $result["message"] = str_replace("%%FILENAME%%",$origuploadedfilename,$lang["error_upload_replace_multiple_matching_files"]);
+                        $result["message"] = str_replace("[filename]",$origuploadedfilename,$lang["error_upload_replace_multiple_matching_files"]);
                         $result["error"] = 107;
                         $result["id"] = $resourcelist;
                         }
@@ -983,7 +983,7 @@ if ($processupload)
                         // No resource found with the same filename
                         debug("batch_replace upload: No valid resource id for filename " . $origuploadedfilename);
                         $result["status"] = false;
-                        $result["message"] = str_replace("%%FILENAME%%",$origuploadedfilename,$lang["error_upload_replace_no_matching_file"]);
+                        $result["message"] = str_replace("[filename]",$origuploadedfilename,$lang["error_upload_replace_no_matching_file"]);
                         $result["error"] = 106;
                         }
                     }

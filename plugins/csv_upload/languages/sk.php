@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSV nahrávací úloha vytvorená s ID úlohy # 
 $lang["csv_upload_oj_complete"]='CSV nahrávanie úlohy dokončené. Kliknite na odkaz pre zobrazenie celého protokolu';
 $lang["csv_upload_oj_failed"]='Zlyhalo nahrávanie CSV súboru';
 $lang["csv_upload_processing_x_meta_columns"]='Spracovanie %count stĺpcov metadát';
-$lang["csv_upload_processing_complete"]='Spracovanie dokončené o %%TIME%% (%%HOURS%% hodín, %%MINUTES%% minút, %%SECONDS%% sekúnd)';
+$lang["csv_upload_processing_complete"]='Spracovanie dokončené o [time] (%%HOURS%% hodín, %%MINUTES%% minút, %%SECONDS%% sekúnd)';
 $lang["csv_upload_error_in_progress"]='Spracovanie zrušené - tento súbor CSV sa už spracováva';
 $lang["csv_upload_error_file_missing"]='Chyba - chýba CSV súbor: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Zobrazujem iba prvých 1000 riadkov. Pre stiahnutie celého súboru s protokolom kliknite <a href=\'%%LOG_URL%%\' target=\'_blank\'>sem</a>';

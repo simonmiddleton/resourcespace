@@ -161,7 +161,7 @@ if(isset($user_dl_limit) && intval($user_dl_limit) > 0)
     if($download_limit_check + count($result) > $user_dl_limit)
         {
         $dlsummary = $download_limit_check . "/" . $user_dl_limit;
-        $errormessage = $lang["download_limit_collection_error"] . " " . str_replace(array("%%DOWNLOADED%%","%%LIMIT%%"),array($download_limit_check,$user_dl_limit),$lang['download_limit_summary']);
+        $errormessage = $lang["download_limit_collection_error"] . " " . str_replace(array("[downloaded]","[limit]"),array($download_limit_check,$user_dl_limit),$lang['download_limit_summary']);
         if(getval("ajax","") != "")
             {
             error_alert(escape($errormessage), true,200);

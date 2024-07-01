@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='Caricamento CSV creato con ID lavoro # %%JOBREF%
 $lang["csv_upload_oj_complete"]='Caricamento CSV completato. Clicca sul link per visualizzare il file di registro completo';
 $lang["csv_upload_oj_failed"]='Caricamento CSV non riuscito';
 $lang["csv_upload_processing_x_meta_columns"]='Elaborazione di %count colonne di metadati';
-$lang["csv_upload_processing_complete"]='Elaborazione completata alle %%TIME%% (%%HOURS%% ore, %%MINUTES%% minuti, %%SECONDS%% secondi)';
+$lang["csv_upload_processing_complete"]='Elaborazione completata alle [time] (%%HOURS%% ore, %%MINUTES%% minuti, %%SECONDS%% secondi)';
 $lang["csv_upload_error_in_progress"]='Elaborazione annullata - questo file CSV è già in fase di elaborazione';
 $lang["csv_upload_error_file_missing"]='Errore - File CSV mancante: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Mostrando solo le prime 1000 righe, per scaricare l\'intero file di registro clicca <a href=\'%%LOG_URL%%\' target=\'_blank\'>qui</a>';

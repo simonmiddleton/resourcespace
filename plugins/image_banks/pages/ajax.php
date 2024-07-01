@@ -48,7 +48,7 @@ if($original_file_url !== "")
         ajax_send_response(
             400,
             ajax_response_fail(
-                ajax_build_message(str_replace("%%FILETYPE%%",$uploaded_extension,$GLOBALS['lang']["error_upload_invalid_file"]))
+                ajax_build_message(str_replace("[filetype]",$uploaded_extension,$GLOBALS['lang']["error_upload_invalid_file"]))
             )
         );
         }

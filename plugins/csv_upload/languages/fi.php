@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSV-tiedoston lataustehtävä luotu tehtävänum
 $lang["csv_upload_oj_complete"]='CSV-tiedoston lataustehtävä on valmis. Klikkaa linkkiä nähdäksesi koko lokitiedoston';
 $lang["csv_upload_oj_failed"]='CSV-tiedoston lataus epäonnistui';
 $lang["csv_upload_processing_x_meta_columns"]='Käsitellään %count metatietosaraketta';
-$lang["csv_upload_processing_complete"]='Käsittely valmistui %%TIME%% (%%HOURS%% tuntia, %%MINUTES%% minuuttia, %%SECONDS%% sekuntia)';
+$lang["csv_upload_processing_complete"]='Käsittely valmistui [time] (%%HOURS%% tuntia, %%MINUTES%% minuuttia, %%SECONDS%% sekuntia)';
 $lang["csv_upload_error_in_progress"]='Käsittely keskeytetty - tätä CSV-tiedostoa käsitellään jo';
 $lang["csv_upload_error_file_missing"]='Virhe - CSV-tiedostoa ei löydy: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Näytetään vain ensimmäiset 1000 riviä. Lataa koko lokitiedosto napsauttamalla <a href=\'%%LOG_URL%%\' target=\'_blank\'>tästä</a>';

@@ -18,7 +18,7 @@ elseif(!$valid_date && $GLOBALS['use_native_input_for_date_field'])
     {
     include '0.php';
     ?>
-    <input class="button" type="button" value="?" onclick="styledalert('','<?php echo escape(str_replace('%%VALUE%%', $value, $lang['error_invalid_date_format'])); ?>')"></input>
+    <input class="button" type="button" value="?" onclick="styledalert('','<?php echo escape(str_replace('[value]', $value, $lang['error_invalid_date_format'])); ?>')"></input>
     <?php
     }
 else

@@ -939,7 +939,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         }
 
     array_push($messages,"Info: data successfully " . ($processcsv ? "processed" : "validated"));
-    $find = array("%%TIME%%","%%HOURS%%","%%MINUTES%%","%%SECONDS%%");
+    $find = array("[time]","%%HOURS%%","%%MINUTES%%","%%SECONDS%%");
     $secondselapsed = microtime(true) - $processing_start_time;
     $hours = floor($secondselapsed/(60*60));
     $minutes = floor(($secondselapsed - $hours*60*60)/60);

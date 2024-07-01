@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='Jobul de încărcare CSV a fost creat cu ID-ul d
 $lang["csv_upload_oj_complete"]='Încărcarea fișierului CSV s-a încheiat. Apăsați pe link pentru a vizualiza fișierul complet de jurnal';
 $lang["csv_upload_oj_failed"]='Încărcarea fișierului CSV a eșuat';
 $lang["csv_upload_processing_x_meta_columns"]='Procesarea a %count coloane de metadate';
-$lang["csv_upload_processing_complete"]='Procesarea s-a încheiat la %%TIME%% (%%HOURS%% ore, %%MINUTES%% minute, %%SECONDS%% secunde)';
+$lang["csv_upload_processing_complete"]='Procesarea s-a încheiat la [time] (%%HOURS%% ore, %%MINUTES%% minute, %%SECONDS%% secunde)';
 $lang["csv_upload_error_in_progress"]='Procesarea a fost anulată - acest fișier CSV este deja în curs de procesare';
 $lang["csv_upload_error_file_missing"]='Eroare - Fișierul CSV lipsește: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Afișare doar a primelor 1000 de linii, pentru a descărca fișierul complet de jurnal, faceți clic <a href=\'%%LOG_URL%%\' target=\'_blank\'>aici</a>';

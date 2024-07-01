@@ -36,7 +36,7 @@ else
 $randstring = md5(json_encode($job_data));
 $csvfile = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . $randstring . $scramble_key) . ".csv";
 
-$findstrings = array("%%SEARCH%%","%%TIME%%");
+$findstrings = array("[search]","[time]");
 $replacestrings = array(safe_file_name("TEST"),date("Ymd-H:i",time()));
 $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
 

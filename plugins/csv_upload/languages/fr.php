@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='Tâche de téléchargement CSV créée avec l\'I
 $lang["csv_upload_oj_complete"]='Tâche d\'importation CSV terminée. Cliquez sur le lien pour afficher le fichier journal complet';
 $lang["csv_upload_oj_failed"]='Le téléchargement du fichier CSV a échoué';
 $lang["csv_upload_processing_x_meta_columns"]='Traitement de %count colonnes de métadonnées';
-$lang["csv_upload_processing_complete"]='Traitement terminé à %%TIME%% (%%HOURS%% heures, %%MINUTES%% minutes, %%SECONDS%% secondes)';
+$lang["csv_upload_processing_complete"]='Traitement terminé à [time] (%%HOURS%% heures, %%MINUTES%% minutes, %%SECONDS%% secondes)';
 $lang["csv_upload_error_in_progress"]='Traitement annulé - ce fichier CSV est déjà en cours de traitement';
 $lang["csv_upload_error_file_missing"]='Erreur - Fichier CSV manquant : %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Affichage des 1000 premières lignes seulement, pour télécharger le fichier journal complet, veuillez cliquer <a href=\'%%LOG_URL%%\' target=\'_blank\'>ici</a>';

@@ -482,7 +482,7 @@ include "../../include/header.php";
     jQuery('#delete_user_group').click(function () {
         <?php
         $language_specific_results = ps_value('SELECT count(*) AS `value` FROM site_text WHERE specific_to_group = ?', array("i",$ref), 0);
-        $alert_message = str_replace('%%RECORDSCOUNT%%', $language_specific_results, $lang["delete_user_group_checkbox_alert_message"]);
+        $alert_message = str_replace('[recordscount]', $language_specific_results, $lang["delete_user_group_checkbox_alert_message"]);
         ?>
 
         if(<?php echo $language_specific_results; ?> > 0 && jQuery('#delete_user_group').is(':checked'))

@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='Δημιουργήθηκε έργο μεταφό
 $lang["csv_upload_oj_complete"]='Η εργασία ανεβάσματος CSV ολοκληρώθηκε. Κάντε κλικ στο σύνδεσμο για να δείτε το πλήρες αρχείο καταγραφής';
 $lang["csv_upload_oj_failed"]='Η εργασία ανεβάσματος CSV απέτυχε';
 $lang["csv_upload_processing_x_meta_columns"]='Επεξεργασία %count στηλών μεταδεδομένων';
-$lang["csv_upload_processing_complete"]='Η επεξεργασία ολοκληρώθηκε στις %%TIME%% (%%HOURS%% ώρες, %%MINUTES%% λεπτά, %%SECONDS%% δευτερόλεπτα)';
+$lang["csv_upload_processing_complete"]='Η επεξεργασία ολοκληρώθηκε στις [time] (%%HOURS%% ώρες, %%MINUTES%% λεπτά, %%SECONDS%% δευτερόλεπτα)';
 $lang["csv_upload_error_in_progress"]='Η επεξεργασία διακόπηκε - αυτό το αρχείο CSV επεξεργάζεται ήδη';
 $lang["csv_upload_error_file_missing"]='Σφάλμα - Λείπει το αρχείο CSV: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Εμφάνιση μόνο των πρώτων 1000 γραμμών, για να κατεβάσετε το πλήρες αρχείο καταγραφής παρακαλούμε κάντε κλικ <a href=\'%%LOG_URL%%\' target=\'_blank\'>εδώ</a>';

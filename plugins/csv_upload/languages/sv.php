@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='CSV-uppladdningsjobb skapat med jobb-ID # %%JOBR
 $lang["csv_upload_oj_complete"]='CSV-uppladdningsjobbet är klart. Klicka på länken för att visa hela loggfilen';
 $lang["csv_upload_oj_failed"]='CSV-uppladdningsjobbet misslyckades';
 $lang["csv_upload_processing_x_meta_columns"]='Bearbetar %count metadatakolumner';
-$lang["csv_upload_processing_complete"]='Bearbetning slutförd vid %%TIME%% (%%HOURS%% timmar, %%MINUTES%% minuter, %%SECONDS%% sekunder)';
+$lang["csv_upload_processing_complete"]='Bearbetning slutförd vid [time] (%%HOURS%% timmar, %%MINUTES%% minuter, %%SECONDS%% sekunder)';
 $lang["csv_upload_error_in_progress"]='Bearbetning avbruten - denna CSV-fil bearbetas redan';
 $lang["csv_upload_error_file_missing"]='Fel - CSV-fil saknas: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Visar endast de första 1000 raderna, för att ladda ner hela loggfilen klicka <a href=\'%%LOG_URL%%\' target=\'_blank\'>här</a>';

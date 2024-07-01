@@ -172,7 +172,7 @@ if($actions_required)
     <?php
     if($confirm_delete)
         {
-        echo escape(str_replace("%%RESOURCECOUNT%%",count($affectedresources),$lang["resource_type_delete_confirmation"])) . "<br />";
+        echo escape(str_replace("[resource_count]",count($affectedresources),$lang["resource_type_delete_confirmation"])) . "<br />";
         ?>
         <input type="hidden" name="prereq_action" value="move_affected_resources">
         <?php

@@ -57,7 +57,7 @@ $lang["csv_upload_oj_created"]='Utworzono zadanie przesyłania pliku CSV o ident
 $lang["csv_upload_oj_complete"]='Zadanie przesyłania pliku CSV zostało zakończone. Kliknij link, aby wyświetlić pełny plik dziennika';
 $lang["csv_upload_oj_failed"]='Niepowodzenie zadania przesyłania pliku CSV';
 $lang["csv_upload_processing_x_meta_columns"]='Przetwarzanie %count kolumn metadanych';
-$lang["csv_upload_processing_complete"]='Przetwarzanie zakończone o %%TIME%% (%%HOURS%% godzin, %%MINUTES%% minut, %%SECONDS%% sekund)';
+$lang["csv_upload_processing_complete"]='Przetwarzanie zakończone o [time] (%%HOURS%% godzin, %%MINUTES%% minut, %%SECONDS%% sekund)';
 $lang["csv_upload_error_in_progress"]='Przetwarzanie przerwane - ten plik CSV jest już przetwarzany';
 $lang["csv_upload_error_file_missing"]='Błąd - brak pliku CSV: %%FILE%%';
 $lang["csv_upload_full_messages_link"]='Wyświetlanie tylko pierwszych 1000 linii, aby pobrać pełny plik dziennika, kliknij <a href=\'%%LOG_URL%%\' target=\'_blank\'>tutaj</a>';

@@ -41,7 +41,7 @@ if ($width == 0 && $height == 0)
 $ext = getval('ext', getDefaultOutputFormat());
 if(is_banned_extension($ext))
     {
-    $error_extension = str_replace('%%FILETYPE%%',$ext,$lang['error_upload_invalid_file']);
+    $error_extension = str_replace('[filetype]',$ext,$lang['error_upload_invalid_file']);
     error_alert($error_extension, true);
     exit();
     }
