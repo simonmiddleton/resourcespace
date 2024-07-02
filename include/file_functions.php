@@ -386,7 +386,7 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
     }
 
     if ($source_path_not_real) {
-        if (!(preg_match('/^[a-zA-Z0-9_\-[:space:]\/:]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($checkname))
+        if (!(preg_match('/^(?!\.)(?!.*\.$)(?!.*\.\.)[a-zA-Z0-9_\-[:space:]\/:.]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($checkname))
         ) {
             return false;
         }
