@@ -2626,3 +2626,7 @@ input[type="text"]#iconpicker-input {
     overflow-y: scroll;
     max-height: 150px;
 }
+
+.cke_notification_warning {
+    display: none;
+}
