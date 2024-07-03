@@ -89,13 +89,13 @@ if ($generateall) {
         $ffmpeg_preview_options = $ffmpeg_preview_gif_options;
         }
 
-    $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -loglevel error -i [file] " . $ffmpeg_preview_options . " -t [seconds] -s %%HEIGHT%%x%%WIDTH%%  %%TARGETFILE%%";
+    $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -loglevel error -i [file] " . $ffmpeg_preview_options . " -t [seconds] -s %%WIDTH%%x%%HEIGHT%% %%TARGETFILE%%";
 
     $shell_exec_params = [
         "[file]" => new CommandPlaceholderArg($file, 'is_safe_basename'),
         "[seconds]" => (int) $ffmpeg_preview_seconds,
-        "%%HEIGHT%%" => (int) $height,
         "%%WIDTH%%" => (int) $width,
+        "%%HEIGHT%%" => (int) $height,
         "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
     ];
 
