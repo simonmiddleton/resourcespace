@@ -412,7 +412,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                     if (!is_numeric($setstatus)) {
                         
-                        if (array_key_exists(strtolower($setstatus), $archivestates)) {
+                        if (isset($archivestates[strtolower($setstatus)])) {
                             $setstatus = $archivestates[strtolower($setstatus)];
                         }
 
@@ -437,7 +437,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                     if (!is_numeric($setaccess)) {
                         
-                        if (array_key_exists(strtolower($setaccess), $accessstates)) {
+                        if (isset($accessstates[strtolower($setaccess)])) {
                             $setaccess = $accessstates[strtolower($setaccess)];
                         }
 
@@ -449,10 +449,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                         }
                     }
                     
-                    // Run the check again as there might not de a default set
+                    // Run the check again as there might not be a default set
                     if (!checkperm('rws' . $setaccess) && is_numeric($setaccess) && in_array($setaccess, $accessstates)) {
 
-                        $chunks = array_chunk($resourcerefs, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+                        $chunks = db_chunk_id_list($resourcerefs);
                         foreach ($chunks as $resource_batch) {
 
                             // Get old access for logging purposes
@@ -484,7 +484,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $setstatus = $line[$csv_set_options["status_column"]];
                 if (!in_array($setstatus,$archivestates))
                     {
-                    if (array_key_exists(strtolower($setstatus), $archivestates)) {
+                    if (isset($archivestates[strtolower($setstatus)])) {
                         $setstatus = $archivestates[strtolower($setstatus)];
                     }
                         
@@ -508,7 +508,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $setaccess = $line[$csv_set_options["access_column"]];
                 if (!is_numeric($setaccess))
                     {
-                    if (array_key_exists(strtolower($setaccess), $accessstates)) {
+                    if (isset($accessstates[strtolower($setaccess)])) {
                         $setaccess = $accessstates[strtolower($setaccess)];
                     }
 

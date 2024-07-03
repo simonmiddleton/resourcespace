@@ -338,7 +338,7 @@ switch($csvstep)
 
                 <div class="Question" id="resource_type_default_question">
                     <label for="resource_type_default"><?php echo escape($lang["csv_upload_resource_type_default"]); ?></label>
-                    <select id="resource_type_default" name="resource_type_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
+                    <select id="resource_type_default" name="resource_type_default" class="stdwidth" onchange="hide_override(this)">
                             <option value="0"><?php echo escape($lang["select"]); ?></option>
                             <?php   
                             foreach ($resource_types as $resource_type)
@@ -367,7 +367,7 @@ switch($csvstep)
 
                 <div class="Question" id="status_default_question">
                     <label for="status_default"><?php echo escape($lang["csv_upload_workflow_default"]); ?></label>
-                    <select id="status_default" name="status_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
+                    <select id="status_default" name="status_default" class="stdwidth" onchange="hide_override(this)">
                             <option value="0"><?php echo escape($lang["select"]); ?></option>
                             <?php   
                             $workflow_states = get_editable_states($userref);
@@ -406,7 +406,7 @@ switch($csvstep)
 
                 <div class="Question" id="access_default_question">
                     <label for="access_default"><?php echo escape($lang["csv_upload_access_default"]); ?></label>
-                    <select id="access_default" name="access_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
+                    <select id="access_default" name="access_default" class="stdwidth" onchange="hide_override(this)">
                             <option value="0"><?php echo escape($lang["select"]); ?></option>
                             <?php   
                              // Get applicable access options - custom access omitted as can be added by batch editing later
@@ -546,7 +546,7 @@ switch($csvstep)
 
                 <div class="Question" id="status_default_question">
                     <label for="status_default"><?php echo escape($lang["csv_upload_workflow_default"]); ?></label>
-                    <select id="status_default" name="status_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
+                    <select id="status_default" name="status_default" class="stdwidth" onchange="hide_override(this)">
                             <option value=""><?php echo escape($lang["select"]); ?></option>
                             <?php   
                             $workflow_states = get_editable_states($userref);
@@ -585,7 +585,7 @@ switch($csvstep)
 
                 <div class="Question" id="access_default_question">
                     <label for="access_default"><?php echo escape($lang["csv_upload_access_default"]); ?></label>
-                    <select id="access_default" name="access_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
+                    <select id="access_default" name="access_default" class="stdwidth" onchange="hide_override(this)">
                             <option value=""><?php echo escape($lang["select"]); ?></option>
                             <?php   
                              // Get applicable access options - custom access omitted as can be added by batch editing later
@@ -609,6 +609,19 @@ switch($csvstep)
             </form>
             <?php
             }
+            ?>
+            <script>
+                function hide_override(dropdown) {
+                    if (dropdown.options[dropdown.selectedIndex].value=='default') { 
+                        jQuery('.override').hide();
+                        jQuery('.override').attr('disabled','disabled'); 
+                    } else { 
+                        jQuery('.override').removeAttr('disabled');
+                        jQuery('.override').show(); 
+                    }
+                }
+            </script>
+            <?php
         break;
     case 3:
         // Map metadata

@@ -42,8 +42,10 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
 
     $csv_field_headers["resource_type"] = $lang["resourcetype"];
     $csv_field_headers["status"] = $lang['status'];
-    $alldata ? $csv_field_headers["access"] = $lang['access'] : '';
     $csv_field_headers["created_by"] = $lang["contributedby"];
+    if ($alldata) {
+        $csv_field_headers["access"] = $lang['access'];
+    }
     if($file_checksums && $alldata)
         {
         $csv_field_headers["file_checksum"] = $lang["filechecksum"];
