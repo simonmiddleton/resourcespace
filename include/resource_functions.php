@@ -7651,11 +7651,11 @@ function filter_check($filterid,$nodes)
         // or if filter not matched and RS_FILTER_ALL
         if($rulemet)
             {
-            if($filtercondition == RS_FILTER_ANY)
+            if($filtercondition === RS_FILTER_ANY)
                 {
                 return true;
                 }
-            elseif($filtercondition == RS_FILTER_NONE)
+            elseif($filtercondition === RS_FILTER_NONE)
                 {
                 return false;
                 }
@@ -7663,7 +7663,7 @@ function filter_check($filterid,$nodes)
             }
         else
             {
-            if($filtercondition == RS_FILTER_ALL)
+            if($filtercondition === RS_FILTER_ALL)
                 {
                 return false;
                 }
@@ -7672,10 +7672,12 @@ function filter_check($filterid,$nodes)
         // Need to check subsequent rules if RS_FILTER_ALL and filter rule met
         }
 
-    if($filtercondition == RS_FILTER_ALL && $filtersfailed == 0 && $filtersok == count($filterrules))
-        {
+    if (
+        ($filtercondition == RS_FILTER_ALL && $filtersfailed == 0 && $filtersok == count($filterrules))
+        || ($filtercondition == RS_FILTER_NONE && $filtersfailed == count($filterrules) && $filtersok == 0)
+    ) {
         return true;
-        }
+    }
 
     return false;
     }
