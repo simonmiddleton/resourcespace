@@ -209,13 +209,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 {
                 if (isset($file_path))
                     {
-                    $cmd = "{$exiftool_fullpath} -filetype -s -s -s [path]";
-                    $file_type_by_exiftool = run_command($cmd, false, ["[path]" => new CommandPlaceholderArg($file_path, 'is_valid_rs_path')]);
+                    $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
+                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($file_path, 'is_valid_rs_path')]);
                     }
                 else
                     {
-                    $cmd = "{$exiftool_fullpath} -filetype -s -s -s [path]";
-                    $file_type_by_exiftool = run_command($cmd, false, ["[path]" => new CommandPlaceholderArg($processfile['tmp_name'], 'is_valid_rs_path')]);
+                    $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
+                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($processfile['tmp_name'], 'is_valid_rs_path')]);
                     }
 
                 if (strlen($file_type_by_exiftool) > 0)
@@ -1685,7 +1685,7 @@ function create_previews_using_im(
 
             # Find the target path
             $path=get_resource_path($ref,true,$ps[$n]["id"],($imagemagick_mpr ? true : false),"jpg",-1,1,false,"",$alternative);
-            $cmdparams["[path]"] = new CommandPlaceholderArg($path, 'is_valid_rs_path');
+            $cmdparams["%%PATH%%"] = new CommandPlaceholderArg($path, 'is_valid_rs_path');
             if ($imagemagick_mpr)
                 {
                 $mpr_parts['targetpath']=$path;
@@ -1839,7 +1839,7 @@ function create_previews_using_im(
                             $cmdparams["%%CROPDIMENSIONS%%"] = (int)$cropw . "x" . (int)$croph . "+" . (int)$cropx . "+" . (int)$cropy;
                             }
 
-                        $runcommand .= " -resize %%TARGETDIMENSIONS%% " . $addcheckbdafter . " [path] ";
+                        $runcommand .= " -resize %%TARGETDIMENSIONS%% " . $addcheckbdafter . " %%PATH%% ";
                         $cmdparams["%%TARGETDIMENSIONS%%"] = new CommandPlaceholderArg(
                             (int)$tw . "x" . (int)$th
                             . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
@@ -1901,7 +1901,7 @@ function create_previews_using_im(
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
                     if (in_array($extension,array("png","gif","tif","tiff")) )
                         {
-                        $runcommand = $convert_fullpath . ' [path] ' . $profile . " " . $flatten . ' -quality %%QUALITY%% -tile %%WMFILE%% -draw %%REC_DIMENSIONS%% %%WMTARGET%%';
+                        $runcommand = $convert_fullpath . ' %%PATH%% ' . $profile . " " . $flatten . ' -quality %%QUALITY%% -tile %%WMFILE%% -draw %%REC_DIMENSIONS%% %%WMTARGET%%';
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -1971,8 +1971,8 @@ function create_previews_using_im(
                             }
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = "{$convert_fullpath} [file] %%WMFILE%% -flatten %%WMPOSITION%% %%WM_SCALED_DIMS%% %%TARGETDIMENSIONSWM%% %%WMTARGET%%";
-                        $cmdparams["[file]"] = new CommandPlaceholderArg($file,"is_safe_basename");
+                        $runcommand = "{$convert_fullpath} %%FILE%% %%WMFILE%% -flatten %%WMPOSITION%% %%WM_SCALED_DIMS%% %%TARGETDIMENSIONSWM%% %%WMTARGET%%";
+                        $cmdparams["%%FILE%%"] = new CommandPlaceholderArg($file,"is_safe_basename");
                         $cmdparams["%%WM_SCALED_DIMS%%"] = new CommandPlaceholderArg(
                             (int)$wm_scaled_width . "x" . (int)$wm_scaled_height . "+0+0",
                             [CommandPlaceholderArg::class, 'alwaysValid']
@@ -2655,10 +2655,10 @@ function extract_indd_pages($filename)
     $exiftool_fullpath = get_utility_path('exiftool');
     if ($exiftool_fullpath)
         {
-        $cmd = $exiftool_fullpath . ' -b -j -pageimage [filename]';
+        $cmd = $exiftool_fullpath . ' -b -j -pageimage %%FILENAME%%';
         $array = run_command($cmd,
             false,
-            ["[filename]" => new CommandPlaceholderArg($filename,"is_safe_basename")],
+            ["%%FILENAME%%" => new CommandPlaceholderArg($filename,"is_safe_basename")],
         );
         $array = json_decode($array);
         if (isset($array[0]->PageImage))
@@ -2817,9 +2817,9 @@ function extract_text($ref,$extension,$path="")
             debug("ERROR: Antiword executable not found at '$antiword_path'");
             return false;
         }
-        $text = run_command("{$command} -m UTF-8 [path]",
+        $text = run_command("{$command} -m UTF-8 %%PATH%%",
             false,
-            ["[path]" => new CommandPlaceholderArg($path,"is_valid_rs_path")],
+            ["%%PATH%%" => new CommandPlaceholderArg($path,"is_valid_rs_path")],
         );
     }
 
@@ -2828,9 +2828,9 @@ function extract_text($ref,$extension,$path="")
         // DOCX files are zip files and the content is in word/document.xml.
         // Extract this then remove tags.
         $element = strtolower($extension) == "xlsx" ? "xl/sharedStrings.xml" : "word/document.xml";
-        $cmd = "unzip -p [path] %%ELEMENT%%";
+        $cmd = "unzip -p %%PATH%% %%ELEMENT%%";
         $args = [
-            '[path]' => new CommandPlaceholderArg($path, 'is_valid_rs_path'),
+            '%%PATH%%' => new CommandPlaceholderArg($path, 'is_valid_rs_path'),
             '%%ELEMENT%%' => new CommandPlaceholderArg($element,[CommandPlaceholderArg::class, 'alwaysValid']),
         ];
         $text = run_command($cmd, false, $args);
@@ -2845,8 +2845,8 @@ function extract_text($ref,$extension,$path="")
     if ($extension=="odt"||$extension=="ods"||$extension=="odp") {
         # ODT files are zip files and the content is in content.xml.
         # We extract this then remove tags.
-        $cmd = "unzip -p [path] \"content.xml\"";
-        $text = run_command($cmd, false, ['[path]' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
+        $cmd = "unzip -p %%PATH%% \"content.xml\"";
+        $text = run_command($cmd, false, ['%%PATH%%' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
 
         # Remove tags, but add newlines as appropriate (without this, separate text blocks are joined together with no spaces).
         $text=str_replace("<","\n<",$text);
@@ -2861,8 +2861,8 @@ function extract_text($ref,$extension,$path="")
             debug("ERROR: pdftotext executable not found at '$pdftotext_path'");
             return false;
         }
-        $cmd = "{$command} -enc UTF-8 [path] -";
-        $text = run_command($cmd, false, ['[path]' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
+        $cmd = "{$command} -enc UTF-8 %%PATH%% -";
+        $text = run_command($cmd, false, ['%%PATH%%' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
     }
 
     # HTML extraction
@@ -2879,8 +2879,8 @@ function extract_text($ref,$extension,$path="")
 
     if ($extension == "zip") {
         # Zip files - map the field
-        $cmd="unzip -l [path]";
-        $text = run_command($cmd, false, ['[path]' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
+        $cmd="unzip -l %%PATH%%";
+        $text = run_command($cmd, false, ['%%PATH%%' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
     }
 
     hook("textextraction", "all", array($extension,$path));
@@ -2919,8 +2919,8 @@ function get_image_orientation($file)
         return 0;
     }
 
-    $cmd = $exiftool_fullpath . ' -s -s -s -orientation [file]';
-    $orientation = run_command($cmd, false, ['[file]' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
+    $cmd = $exiftool_fullpath . ' -s -s -s -orientation %%FILE%%';
+    $orientation = run_command($cmd, false, ['%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
     $orientation = str_replace('Rotate', '', $orientation);
 
     if (strpos($orientation, 'CCW')) {
@@ -4206,17 +4206,17 @@ function create_image_alternatives(int $ref, array $params, $force = false)
         ) {
             // Use the new imagemagick command syntax (file then parameters)
             // Note that $source_params can't be set as a run_command() parameter or the whole thing will be escaped
-            $command = $convert_fullpath . $source_params . " [file] ";
+            $command = $convert_fullpath . $source_params . " %%FILE%% ";
             $command .= ($extension == 'psd') ? '[0] ' .
                 (!in_array(strtolower($extension), $GLOBALS["preview_keep_alpha_extensions"]) ? $alphaoff : "")
                  : '';
             $command .= $source_profile . ' ' . $alternate_config['params'] . " %%APATH%%";
         } else {
             // Use the old imagemagick command syntax (parameters then file)
-            $command = $convert_fullpath . $source_profile . ' ' . $alternate_config['params'] . ' [file] %%APATH%%';
+            $command = $convert_fullpath . $source_profile . ' ' . $alternate_config['params'] . ' %%FILE%% %%APATH%%';
         }
         $cmdparams = [
-            '[file]' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+            '%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
             '%%APATH%%' => new CommandPlaceholderArg($apath, 'is_valid_rs_path'),
         ];
         $output = run_command($command, false, $cmdparams);

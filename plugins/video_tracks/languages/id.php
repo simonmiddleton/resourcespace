@@ -31,4 +31,4 @@ $lang["video_tracks_transcode_now_or_notify_me_label"]='Centang untuk memulai tr
 $lang["video_tracks_transcode_now_label"]='Silakan transkode sekarang';
 $lang["video_tracks_select_generate_opt"]='Silakan pilih opsi generate';
 $lang["video_tracks_save_alt_not_perm"]='Tidak dapat menyimpan alternatif tanpa izin';
-$lang["video_tracks_upgrade_msg_deprecated_output_format"]='PENTING! Plugin Video Tracks telah menghentikan pengaturan format output. Mereka hanya dapat diatur di config.php. Plugin tidak akan berfungsi sebagaimana mestinya sampai opsi konfigurasi disalin. Silakan salin yang berikut ini:- %nl%####%nl%[output_formats_config]%####%nl%';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='PENTING! Plugin Video Tracks telah menghentikan pengaturan format output. Mereka hanya dapat diatur di config.php. Plugin tidak akan berfungsi sebagaimana mestinya sampai opsi konfigurasi disalin. Silakan salin yang berikut ini:- %nl%####%nl%[output_formats_config]####%nl%';

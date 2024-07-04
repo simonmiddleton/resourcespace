@@ -2991,5 +2991,4 @@ $lang["all__comments_policy"]='من فضلك ترجم';
 $lang["edit__batch"]='من فضلك ترجم';
 $lang["team_content__introtext"]='من فضلك ترجم';
 
-$lang["field_ref_and_name"]='%ref% - %name%  
-';
+$lang["field_ref_and_name"]='%ref% - %name%';
