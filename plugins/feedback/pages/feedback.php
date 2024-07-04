@@ -2,6 +2,15 @@
 include "../../../include/boot.php";
 include_once "../include/feedback_functions.php";
 
+if (array_key_exists("user",$_COOKIE)) {
+    # Check to see if this user is logged in.
+    $session_hash = $_COOKIE["user"];
+    $loggedin = ps_value("SELECT count(*) value FROM user WHERE session = ? and approved = 1 and timestampdiff(second, last_active, now()) < (30*60)", array("s", $session_hash), 0);
+    if ($loggedin > 0 || $session_hash == "|") { // Also checks for dummy cookie used in external authentication   
+        # User is logged in. Proceed to full authentication.
+        include "../../../include/authenticate.php";
+    }
+}
 
 # Make a folder for this
 if(!is_dir($storagedir . "/feedback"))
@@ -14,19 +23,6 @@ if(!is_dir($storagedir . "/feedback"))
 $config               = get_feedback_config(__DIR__ . '/../config/config.php');
 $feedback_questions   = $config['questions'];
 $feedback_prompt_text = $config['prompt_text'];
-
-
-if (array_key_exists("user",$_COOKIE))
-    {
-    # Check to see if this user is logged in.
-    $session_hash=$_COOKIE["user"];
-    $loggedin = ps_value("SELECT count(*) value FROM user WHERE session = ? and approved = 1 and timestampdiff(second, last_active, now()) < (30*60)", array("s", $session_hash), 0);
-    if ($loggedin>0 || $session_hash=="|") // Also checks for dummy cookie used in external authentication
-        {
-        # User is logged in. Proceed to full authentication.
-        include "../../../include/authenticate.php";
-        }
-    }
 
 if (!isset($userref))
     {
