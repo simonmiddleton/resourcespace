@@ -2,6 +2,8 @@
 # Resource functions
 # Functions to create, edit and index resources
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 $GLOBALS['get_resource_path_fpcache'] = array();
 /**
 * Get resource path/ resource URL/ download URL for this resource
@@ -6097,34 +6099,30 @@ function get_page_count($resource,$alternative=-1)
         $file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alternative);
         }
 
-    if (file_exists($file))
-        {
+    if (file_exists($file)) {
         # locate exiftool
         $exiftool_fullpath = get_utility_path("exiftool");
-        if ($exiftool_fullpath==false)
-            {
+        
+        $cmdparams = [
+            '[FILE]' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+        ];
+        if ($exiftool_fullpath == false) {
             # Try with ImageMagick instead
-            $command = get_utility_path("im-identify") . ' -format %n ' . escapeshellarg($file);
-            $pages = trim(run_command($command));
-            }
-        else
-            {
-            $command = $exiftool_fullpath;
-            $command= escapeshellarg($command) . " -sss -pagecount " . escapeshellarg($file);
-            $output=run_command($command);
-            $pages=str_replace("Page Count","",$output);
-            $pages=str_replace(":","",$pages);
-            $pages=trim($pages);
-            }
-        if (!is_numeric($pages))
-            {
+            $command = get_utility_path("im-identify") . ' -format %n [FILE]';
+            $pages = trim(run_command($command, false, $cmdparams));
+        } else {
+            $command = $exiftool_fullpath . " -sss -pagecount [FILE]";
+            $output = run_command($command, false, $cmdparams);
+            $pages = str_replace("Page Count","",$output);
+            $pages = str_replace(":","",$pages);
+            $pages = trim($pages);
+        }
+        if (!is_numeric($pages)) {
             $pages = 1; // default to 1 page if we didn't get anything back
-            }
         }
-    else
-        {
+    } else {
         $pages = 1;
-        }
+    }
 
     if ($alternative!=-1)
         {
