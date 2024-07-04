@@ -2163,7 +2163,7 @@ function get_dash_search_data($link='', $promimg=0)
                     $searchdata["images"][$imagecount]["thumb_width"] = $results[$n]["thumb_width"];
                     $searchdata["images"][$imagecount]["thumb_height"] = $results[$n]["thumb_height"];
                     $searchdata["images"][$imagecount]["url"] = get_resource_path($results[$n]["ref"],false,"pre",false,"jpg",-1,1,$use_watermark);
-                    $searchdata["images"][$imagecount]["title"] = $results[$n]["field".$view_title_field] ?? $lang["resource-1"] . " " . $results[$n]["ref"];
+                    $searchdata["images"][$imagecount]["title"] = escape($results[$n]["field".$view_title_field] ?? $lang["resource-1"] . " " . $results[$n]["ref"]);
                     $imagecount++;
                     }
                 }
