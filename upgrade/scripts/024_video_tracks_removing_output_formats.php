@@ -21,7 +21,7 @@ if (
     $msg = str_replace(
         [
             '%nl%',
-            '[output_formats_config]%'
+            '[output_formats_config]'
         ],
         [
             PHP_EOL,

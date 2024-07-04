@@ -31,4 +31,4 @@ $lang["video_tracks_transcode_now_or_notify_me_label"]='Markera för att starta 
 $lang["video_tracks_transcode_now_label"]='Omkoda nu';
 $lang["video_tracks_select_generate_opt"]='Vänligen välj ett genereringsalternativ';
 $lang["video_tracks_save_alt_not_perm"]='Kan inte spara alternativ utan tillstånd';
-$lang["video_tracks_upgrade_msg_deprecated_output_format"]='VIKTIGT! Video Tracks-pluginet har avvecklat inställningarna för utdataformat. De kan endast ställas in i config.php. Pluginet kommer inte att fungera som avsett förrän konfigurationsalternativet har kopierats över. Vänligen kopiera följande:- %nl%####%nl%[output_formats_config]%####%nl%';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='VIKTIGT! Video Tracks-pluginet har avvecklat inställningarna för utdataformat. De kan endast ställas in i config.php. Pluginet kommer inte att fungera som avsett förrän konfigurationsalternativet har kopierats över. Vänligen kopiera följande:- %nl%####%nl%[output_formats_config]####%nl%';

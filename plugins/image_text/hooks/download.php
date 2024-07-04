@@ -71,13 +71,13 @@ function HookImage_textDownloadModifydownloadfile()
 
     $newdlfile = get_temp_dir() . "/" . $ref . "_image_text_result_" . uniqid() . "." . $ext;
     if($image_text_banner_position == "bottom") {
-        $convertcommand = $convert_fullpath . " [path] %%TMPOLFILE%% -append %%NEWDLFILE%%";
+        $convertcommand = $convert_fullpath . " %%PATH%% %%TMPOLFILE%% -append %%NEWDLFILE%%";
     } else {
-        $convertcommand = $convert_fullpath . " %%TMPOLFILE%% [path] -append %%NEWDLFILE%%";
+        $convertcommand = $convert_fullpath . " %%TMPOLFILE%% %%PATH%% -append %%NEWDLFILE%%";
     }
 
     $convertparams = [
-        "[path]" => new CommandPlaceholderArg($path, 'is_valid_rs_path'),
+        "%%PATH%%" => new CommandPlaceholderArg($path, 'is_valid_rs_path'),
         "%%TMPOLFILE%%" => new CommandPlaceholderArg($tmpolfile, 'is_safe_basename'),
         "%%NEWDLFILE%%" => new CommandPlaceholderArg($newdlfile, 'is_safe_basename'),
     ];

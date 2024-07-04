@@ -139,6 +139,3 @@ In the event that you cannot provide a translation, return the word CALAMITY. Do
         }
     }
 echo "\n\nTranslations that contained bad parameters and were skipped=$bad_params\nCould not translate=$calamity\n\n";
-
-//var_dump(array_unique($calamities));
-//var_dump(array_unique($bad_params_list));
