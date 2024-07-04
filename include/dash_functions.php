@@ -2044,7 +2044,7 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
                         var size = height < TILE_HEIGHT ? ' height="100%"' : ' width="100%"';
                         }
 
-                    return '<img src="' + resource.url + '"' + size + ' class="thmbs_tile_img AbsoluteTopLeft">';
+                    return '<img alt="' + resource.title + '" src="' + resource.url + '"' + size + ' class="thmbs_tile_img AbsoluteTopLeft">';
                     });
                 }
             else if(TILE_STYLE === 'multi')
@@ -2058,7 +2058,7 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
                         let style = 'left: ' + (space * 1.5) + 'px;'
                             + ' transform: rotate(' + (20 - (index * 12)) + 'deg);';
 
-                        return '<img src="' + resource.url + '" style="' + style + '">';
+                        return '<img alt="' + resource.title + '" src="' + resource.url + '" style="' + style + '">';
                         })
                     // images will be prepended to the tile container so reverse the order so that the layout ends up as 
                     // expected (from left to right, each preview on top of the previous one)
@@ -2113,7 +2113,7 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
  */
 function get_dash_search_data($link='', $promimg=0)
     {    
-    global $search_all_workflow_states;
+    global $search_all_workflow_states, $view_title_field, $lang;
 
     $searchdata = [];
     $searchdata["count"] = 0;
@@ -2163,6 +2163,7 @@ function get_dash_search_data($link='', $promimg=0)
                     $searchdata["images"][$imagecount]["thumb_width"] = $results[$n]["thumb_width"];
                     $searchdata["images"][$imagecount]["thumb_height"] = $results[$n]["thumb_height"];
                     $searchdata["images"][$imagecount]["url"] = get_resource_path($results[$n]["ref"],false,"pre",false,"jpg",-1,1,$use_watermark);
+                    $searchdata["images"][$imagecount]["title"] = $results[$n]["field".$view_title_field] ?? $lang["resource-1"] . " " . $results[$n]["ref"];
                     $imagecount++;
                     }
                 }
