@@ -3,6 +3,8 @@ include '../../../include/boot.php';
 include '../../../include/authenticate.php'; 
 include_once '../../../include/image_processing.php';
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 $ref=getval("ref","");
 
 # Decide which size we are looking for
@@ -42,30 +44,30 @@ if (getval("method","")!="" && enforcePostRequest(false))
     foreach ($rs as $r)
         {
         # For each range
-        $s=explode(":",$r);
-        $from=$s[0];
-        $to=$s[1];
+        $s = explode(":",$r);
+        $from = (int) $s[0];
+        $to = (int) $s[1];
 
-        if (getval("method","")=="alternativefile")
-            {
-            $aref=add_alternative_file($ref,$lang["pages"] . " " . $from . " - " . $to,"","","pdf");
-            
+        if (getval("method","") == "alternativefile") {
+            $aref = add_alternative_file($ref,$lang["pages"] . " " . $from . " - " . $to,"","","pdf");
             $copy_path=get_resource_path($ref,true,"",true,"pdf",-1,1,false,"",$aref);
-            }
-        else
-            {
+        } else {
             # Create a new resource based upon the metadata/type of the current resource.
             $copy=copy_resource($ref, -1,$lang["createdfromsplittingpdf"]);
-                
             # Find out the path to the original file.
             $copy_path=get_resource_path($copy,true,"",true,"pdf");
-            }       
-            
+        }
+
         # Extract this one page to a new resource.
         $ghostscript_fullpath = get_utility_path("ghostscript");
-        $gscommand = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=" . escapeshellarg($copy_path) . "  -dFirstPage=" . escapeshellarg($from) . " -dLastPage=" . escapeshellarg($to) . " " . escapeshellarg($file);
-        $output = run_command($gscommand);
-
+        $gscommand = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=[COPY_PATH] -dFirstPage=[FROM_PAGE] -dLastPage=[TO_PAGE] [FILE]";
+        $cmdparams = [
+            "[COPY_PATH]" => new CommandPlaceholderArg($copy_path, 'is_valid_rs_path'),
+            "[FROM_PAGE]" => $from,
+            "[TO_PAGE]" => $to,
+            "[FILE]" => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+        ];
+        $output = run_command($gscommand, false, $cmdparams);
 
         if (getval("method","")=="alternativefile")
             {
