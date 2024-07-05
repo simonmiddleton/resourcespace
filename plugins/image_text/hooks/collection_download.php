@@ -1,5 +1,6 @@
 <?php
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
 function HookImage_textCollection_downloadReplaceuseoriginal()
     {
     global $usergroup, $image_text_override_groups, $lang;
@@ -46,35 +47,45 @@ function HookImage_textCollection_downloadModifydownloadfile()
         {
         $p=$image_text_saved_file;
         return true;
-        }   
-                    
+        }
+
     # Locate imagemagick.
     $identify_fullpath = get_utility_path("im-identify");
     if ($identify_fullpath==false) {exit("Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.");}
         
     # Get image's dimensions.
-    $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($p);
-    $identoutput=run_command($identcommand);
+    $identcommand = $identify_fullpath . ' -format %wx%h [FILE]';
+    $cmdparams =  ["[FILE]" => new CommandPlaceholderArg($p, 'is_valid_rs_path')];
+    $identoutput =run_command($identcommand, false, $cmdparams);
+
     preg_match('/^([0-9]+)x([0-9]+)$/ims',$identoutput,$smatches);
     if ((@list(,$width,$height) = $smatches)===false) { return false; }
-        
+
     $olheight=floor($height * $image_text_height_proportion);
     if($olheight<$image_text_min_height && intval($image_text_min_height)!=0){$olheight=$image_text_min_height;}
     if($olheight>$image_text_max_height && intval($image_text_max_height)!=0){$olheight=$image_text_max_height;}
-                
-        
+
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
     if ($convert_fullpath==false) {exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");}
-    
-    
+
     $tmpolfile= get_temp_dir() . "/" . $result[$n]["ref"] . "_image_text_" . $userref . "." . $pextension;
-    $createolcommand = $convert_fullpath . ' -background "#000" -fill white -gravity ' . escapeshellarg($image_text_position) . ' -font ' . escapeshellarg($image_text_font) . ' -size ' . escapeshellarg($width  . 'x' . $olheight) . ' caption:' . escapeshellarg($overlaytext) .  ' ' . escapeshellarg($tmpolfile);
-    run_command($createolcommand);
-    
+
+
+    $createolcommand = $convert_fullpath . ' -background [BACKCOLOUR] -fill white -gravity [POSITION] -font [FONT] -size [WIDTHxHEIGHT] caption:[CAPTION] [TMPOLFILE]';
+    $cmdparams =  [
+        "[BACKCOLOUR]" => "#000",
+        "[FILE]" => new CommandPlaceholderArg($p, 'is_valid_rs_path'),
+        "[POSITION]" => new CommandPlaceholderArg($image_text_position,fn($val): bool => in_array($val, ["east","west","center"])),
+        "[FONT]" => $image_text_font,
+        "[WIDTHxHEIGHT]" => (int) $width . "x" . (int) $olheight,
+        "[CAPTION]" => new CommandPlaceholderArg($overlaytext, 'is_string'),
+        "[TMPOLFILE]" => $tmpolfile,
+    ];
+    run_command($createolcommand, false, $cmdparams);
+
     $newdlfile = get_temp_dir() . "/" . $result[$n]["ref"] . "_image_text_result_" . $userref . "." . $pextension;
-    
-    
+
     if($image_text_banner_position=="bottom")
         {$convertcommand = $convert_fullpath . " " . escapeshellarg($p) .  ' ' . escapeshellarg($tmpolfile) . ' -append ' . escapeshellarg($newdlfile);}
     else
