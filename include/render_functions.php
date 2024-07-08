@@ -4962,7 +4962,7 @@ function render_featured_collection(array $ctx, array $fc)
     ?>
     <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" 
          class="<?php echo implode(" ", $html_container_class); ?>" 
-         alt="<?php echo escape($alt_string) ?? '' ?>"
+         alt="<?php echo escape($alt_string ?? '') ?>"
          style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?> >
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
             <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
