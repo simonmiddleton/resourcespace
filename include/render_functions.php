@@ -4872,7 +4872,7 @@ function render_featured_collection(array $ctx, array $fc)
         return;
         }
 
-    global $baseurl_short, $lang, $k, $flag_new_themes, $flag_new_themes_age;
+    global $baseurl_short, $lang, $k, $flag_new_themes, $flag_new_themes_age, $view_title_field;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
@@ -4926,13 +4926,22 @@ function render_featured_collection(array $ctx, array $fc)
 
 
     $theme_images = (isset($ctx["images"]) ? $ctx["images"] : array());
+    $theme_images = array_map(
+        function($theme_image) use ($view_title_field, $lang){
+            $ref = $theme_image['ref'];
+            $resource_data = get_resource_data($ref);
+            $theme_image['alt_text'] = $resource_data['field' . $view_title_field] ?? $lang['resource-1'] . ' ' . $ref;
+            return $theme_image;
+        }
+    , $theme_images);
     if(!empty($theme_images))
         {
         $html_container_class[] = "FeaturedSimpleTileImage";
 
         if(count($theme_images) == 1)
             {
-            $theme_image_path = $theme_images[0];
+            $alt_string = $theme_images[0]['alt_text'];
+            $theme_image_path = $theme_images[0]["path"];
             $html_container_style[] = "background: url({$theme_image_path});";
             $html_container_style[] = "background-size: cover;";
             $theme_images = array();
@@ -4951,7 +4960,10 @@ function render_featured_collection(array $ctx, array $fc)
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>
-    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?>>
+    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" 
+         class="<?php echo implode(" ", $html_container_class); ?>" 
+         alt="<?php echo escape($alt_string) ?? '' ?>"
+         style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?> >
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
             <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
             <?php
@@ -4964,7 +4976,10 @@ function render_featured_collection(array $ctx, array $fc)
                     "transform: rotate(" . (20 - ($i * 12)) . "deg);"
                 );
                 ?>
-                <img src="<?php echo $theme_image; ?>" class="TileGroupImageBase" style="<?php echo implode(" ", $style); ?>">
+                <img src="<?php echo $theme_image['path']; ?>" 
+                     alt="<?php echo escape($theme_image['alt_text']); ?>" 
+                     class="TileGroupImageBase" 
+                     style="<?php echo implode(" ", $style); ?>" >
                 <?php
                 }
                 ?>
