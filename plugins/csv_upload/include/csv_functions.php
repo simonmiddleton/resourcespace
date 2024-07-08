@@ -343,17 +343,17 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     $error_count++;
                     continue;
                     }
-                $matchsearch = "\"" . $match_field["name"] . ":" . $match_val . "\"";
-                $allmatches = do_search($matchsearch,'','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
-                
-                if(!is_array($allmatches))
+
+                $allmatches = get_csv_line_matching_resources($match_field['ref'], $match_val);
+
+                if(count($allmatches) === 0)
                     {
                     // May be trying to match on file path in which case see if we can match with forward slashes rather than backslashes
-                    $matchsearch = "\"" . $match_field["name"] . ":" . str_replace("\\","/",$match_val) . "\"";
-                    $allmatches = do_search($matchsearch,'','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
+                    $matchsearch = str_replace("\\", "/", $match_val);
+                    $allmatches = get_csv_line_matching_resources($match_field['ref'], $matchsearch);
                     }
 
-                if(!is_array($allmatches))
+                if(count($allmatches) === 0)
                     {
                     $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . $line_count;
                     csv_upload_log($logfile,$logtext);
@@ -364,12 +364,12 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 
                 if(isset($replaceresources))
                     {
-                    $validmatches = array_values(array_intersect(array_column($allmatches,"ref"),$replaceresources));
+                    $validmatches = array_values(array_intersect($allmatches, $replaceresources));
                     }
                 else
                     {
                     // No collection specified, search has only returned editable resources 
-                    $validmatches = array_column($allmatches,"ref");
+                    $validmatches = $allmatches;
                     }
 
                 if(count($validmatches) == 0)
@@ -1026,3 +1026,26 @@ function csv_upload_log($logfile,$logtext)
     fwrite($logfile, $logtext . "\n"); 
     }
 
+/**
+ * Return the resources with the csv value found in the specified field.
+ *
+ * @param   int     $field       Resource type field ref - the field for csv upload to match on.
+ * @param   string  $csv_value   The value from the csv to match.
+ * 
+ * @return  array   Array of resources which have the csv value in the given field.
+ */
+function get_csv_line_matching_resources(int $field, string $csv_value) : array
+    {
+    $matched_nodes = get_nodes($field, null, false, null, null, $csv_value, false, false, true);
+    $allmatches = array();
+    for ($n = 0; $n < count($matched_nodes); $n++)
+        {
+        $node_search_result = do_search(NODE_TOKEN_PREFIX . $matched_nodes[$n]['ref'], '', 'ref', '', -1, 'asc', false, 0, false, false, '', false, false, true, true);
+        if (is_array($node_search_result) && count($node_search_result) > 0)
+            {
+            $allmatches = array_merge($allmatches, $node_search_result);
+            }
+        }
+    $allmatches = array_column($allmatches, "ref");
+    return $allmatches;
+    }
