@@ -285,11 +285,13 @@ function get_node($ref, array &$returned_node, $cache = true)
 * @param  string   $name                        Filter by name of node
 * @param  boolean  $use_count                   Show how many resources use a particular node in the node properties
 * @param  boolean  $order_by_translated_name    Flag to order by translated names rather then the order_by column
+* @param  boolean  $exact_match                 When $name is supplied, match the exact name only instead of returning
+*                                               matches containing the $name string.
 * 
 * @return array
 */
 function get_nodes($resource_type_field = null, $parent = null, $recursive = false, $offset = null, $rows = null, $name = '', 
-    $use_count = false, $order_by_translated_name = false)
+    $use_count = false, $order_by_translated_name = false, $exact_match = false)
     {
     global $FIXED_LIST_FIELD_TYPES;
     debug_function_call("get_nodes", func_get_args());
@@ -333,8 +335,16 @@ function get_nodes($resource_type_field = null, $parent = null, $recursive = fal
     $filter_by_name = '';
     if('' != $name)
         {
-        $filter_by_name = " AND `name` LIKE ?";
-        $parameters[]="s";$parameters[]="%" . $name . "%";
+        if ($exact_match)
+            {
+            $filter_by_name = " AND `name` = ?";
+            $parameters[] = "s"; $parameters[] = $name;
+            }
+        else
+            {
+            $filter_by_name = " AND `name` LIKE ?";
+            $parameters[]="s";$parameters[]="%" . $name . "%";
+            }
         }
 
     // Option to include a usage count alongside each node
