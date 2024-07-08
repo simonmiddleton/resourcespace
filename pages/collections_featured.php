@@ -323,9 +323,9 @@ if($themes_show_background_image && !$full_width)
 
         if(isset($bg_fc_images) && is_array($bg_fc_images) && !empty($bg_fc_images))
             {
-            if(strpos($bg_fc_images[0], '/gfx/') === false)
+            if(isset($bg_fc_images[0]["path"]) && strpos($bg_fc_images[0]["path"], '/gfx/') === false)
                 {
-                $background_image_url = $bg_fc_images[0]; # get_fc_imgs_ctx is limiting to 1 so we know we have this
+                $background_image_url = $bg_fc_images[0]["path"]; # get_fc_imgs_ctx is limiting to 1 so we know we have this
                 }
 
             // Reset slideshow files as we want to use the featured collection image
