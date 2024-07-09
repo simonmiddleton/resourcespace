@@ -67,6 +67,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
         }
 
 
+
     if ( count($s)==2  && $valid_coords == true) 
         {    
         $mapzoom=getval('map-zoom','');        
@@ -79,12 +80,15 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
                 ps_query("update resource set geo_lat= ?,geo_long= ?,mapzoom=null where ref=?", ['d', $s[0], 'd', $s[1],'i', $ref]);    
             }
         hook("savelocationextras");
+        if($resource["geo_lat"] != "" && $resource["geo_long"] != "") {
+            $old_location = $resource["geo_lat"] . ", " . $resource["geo_long"];
+        }
         resource_log(
             $ref,
-            LOG_CODE_TRANSFORMED,
+            LOG_CODE_EDITED_RESOURCE,
             null,
             "Edited Location",
-            $resource["geo_lat"] . ", " . $resource["geo_long"],
+            $old_location??"",
             $lat . ", " . $lng
         );
         }
@@ -95,7 +99,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
         hook("removelocationextras");
         resource_log(
             $ref,
-            LOG_CODE_TRANSFORMED,
+            LOG_CODE_EDITED_RESOURCE,
             null,
             "Removed Location",
             $resource["geo_lat"] . ", " . $resource["geo_long"],
