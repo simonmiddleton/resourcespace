@@ -53,7 +53,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
                 ["type" => "image_url",
                     "image_url" => [
                     "url" => "data:image/jpeg;base64, " . $file_data_base64,
-                    "detail" => "high"
+                    "detail" => "low"
                     ]
                 ]
             ]
