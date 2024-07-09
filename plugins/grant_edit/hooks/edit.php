@@ -2,135 +2,163 @@
 
 function HookGrant_editEditeditbeforeheader()
     {
-    global $ref, $baseurl, $usergroup, $grant_edit_groups, $collection;
-    
+    global $ref, $usergroup, $grant_edit_groups, $collection, $lang, $items;
+
     // Do we have access to do any of this, or is it a template
-    if(!in_array($usergroup, $grant_edit_groups) || $ref<0){return;}
-        
+    if (!in_array($usergroup, $grant_edit_groups) || $ref<0) {
+        return false;
+    }
+
     // Check for Ajax POST to delete users
     $grant_edit_action=getval("grant_edit_action","");
-    if($grant_edit_action!="")
-        {
-        if($grant_edit_action=="delete")
-            {
+    if ($grant_edit_action!="") {
+        if ($grant_edit_action=="delete") {
             $remove_user=getval("remove_user","",true);
             $remove_group = getval("remove_group", "", true);
-            if ($remove_user != ""){
-                ps_query("delete from grant_edit where resource = ? and user = ?", array("i",$ref,"i",$remove_user));
+            if ($remove_user != "") {
+                ps_query(
+                    "DELETE FROM grant_edit WHERE resource = ? AND user = ?",
+                    ["i",$ref,"i",$remove_user]
+                );
                 exit ("SUCCESS");
             }
-            if ($remove_group != ""){
-                ps_query("DELETE FROM grant_edit WHERE resource = ? AND usergroup = ?", ['i', $ref, 'i', $remove_group]);
+            if ($remove_group != "") {
+                ps_query(
+                    "DELETE FROM grant_edit WHERE resource = ? AND usergroup = ?",
+                    ['i', $ref, 'i', $remove_group]
+                );
                 exit ("SUCCESS");
             }
-            }
-        exit("FAILED");
         }
-    
+        exit("FAILED");
+    }
+
     # If 'users' is specified (i.e. access is private) then rebuild users list
-    
     $users=getval("users",false);
-    if ($users!=false)
-        {
-        
+    if ($users!=false) {
         # Build a new list and insert
         $smart_groups = resolve_userlist_groups_smart($users);
         $users = resolve_userlist_groups($users);
         $ulist = array_unique(trim_array(explode(",",$users)));
-        $urefs = ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist,"s"));
-        
+        $urefs = ps_array(
+            "SELECT ref value FROM user WHERE username IN (" . ps_param_insert(count($ulist)) . ")",
+            ps_param_fill($ulist,"s")
+        );
+        $resources_added = [];
+
         $grant_edit_expiry=getval("grant_edit_expiry","");
-        if (count($urefs)>0)
-            {
-            if ((int)$collection > 0)
-                {
-                global $items;                          
-                foreach ($items as $collection_resource)
-                    {
+        if (count($urefs)>0) {
+            if ((int)$collection > 0 || count($items??[])>1) {
+                foreach ($items as $collection_resource) {
                     $parameters = array();
                     $insertvalue = array();
-                    foreach ($urefs as $uref)
-                        {
+                    foreach ($urefs as $uref) {
                         $insertvalue[] = "(? ,? ,?)";
                         $expiry = ($grant_edit_expiry == "") ? null : $grant_edit_expiry;
                         $parameters = array_merge($parameters, array("i",$collection_resource,"i",$uref,"s",$expiry));
-                        }
-                    ps_query("delete from grant_edit where resource = ? and user in (" . ps_param_insert(count($urefs)) . ")", array_merge(array("i",$collection_resource), ps_param_fill($urefs,"i")));
-                    ps_query("insert into grant_edit(resource,user,expiry) values " . implode(",", $insertvalue), $parameters);
-                    #log this
-                    global $lang;
-                    resource_log($collection_resource,'s',"","Grant Edit -  " . $users . " - " . $lang['expires'] . ": " . (($grant_edit_expiry!="")?nicedate($grant_edit_expiry):$lang['never']));
+                    }
+                    ps_query(
+                        "DELETE FROM grant_edit WHERE resource = ? AND user IN (" . ps_param_insert(count($urefs)) . ")",
+                        array_merge(["i",$collection_resource], ps_param_fill($urefs,"i"))
+                    );
+                    ps_query(
+                        "INSERT INTO grant_edit(resource,user,expiry) VALUES " . implode(",", $insertvalue),
+                        $parameters
+                    );
+                    if(!in_array($collection_resource,$resources_added)) {
+                    $resources_added[]=$collection_resource;
                     }
                 }
-            else
-                {
+            } else {
                 $parameters = array();
-                foreach ($urefs as $uref)
-                    {
+                foreach ($urefs as $uref) {
                     $insertvalue[] = "(? ,? ,?)";
                     $expiry = ($grant_edit_expiry == "") ? null : $grant_edit_expiry;
                     $parameters = array_merge($parameters, array("i",$ref,"i",$uref,"s",$expiry));
-                    }
-                ps_query("delete from grant_edit where resource = ? and user in (" . ps_param_insert(count($urefs)) . ")", array_merge(array("i",$ref), ps_param_fill($urefs,"i")));
-                ps_query("insert into grant_edit(resource,user,expiry) values " . implode(",", $insertvalue), $parameters);
-                #log this
-                global $lang;
-                }                   
-            }
-            if ($smart_groups !== '') {
-                $groups = explode(',', $smart_groups);
-                if ((int)$collection > 0){
-                    global $items; 
-                } else {
-                    $items = [$ref];
                 }
-                foreach ($items as $resource){
-                    $insert_string = [];
-                    $params = [];
-                    foreach ($groups as $group){
-                        $insert_string[] = '(?, ?, ?)';
-                        $params = array_merge($params, ['i', $resource, 'i', trim($group), 's', ($grant_edit_expiry == '' ? null : $grant_edit_expiry)]); 
-                    }
-                    ps_query('DELETE FROM grant_edit WHERE resource = ? AND usergroup IN (' . ps_param_insert(count($groups)) . ')', array_merge(['i', $resource], ps_param_fill($groups, 'i')));
-                    ps_query('INSERT INTO grant_edit (resource, usergroup, expiry) VALUES ' . implode(',', $insert_string), $params);
-                    global $lang;
+                ps_query(
+                    "DELETE FROM grant_edit WHERE resource = ? AND user IN (" . ps_param_insert(count($urefs)) . ")",
+                    array_merge(["i",$ref], ps_param_fill($urefs,"i"))
+                );
+                ps_query(
+                    "INSERT INTO grant_edit(resource,user,expiry) VALUES " . implode(",", $insertvalue),
+                    $parameters
+                );
+
+                if(!in_array($ref,$resources_added)) {
+                $resources_added[]=$ref;
                 }
-            }
-            if ($smart_groups !== '' || count($uref) > 0){
-                resource_log($resource,'s',"","Grant Edit -  " . $users . " - " . $lang['expires'] . ": " . (($grant_edit_expiry!="")?nicedate($grant_edit_expiry):$lang['never']));
             }
         }
-    
-    
-    
+        if ($smart_groups !== '') {
+            $groups = explode(',', $smart_groups);
+            if ((int)$collection > 0){
+                $resources = $items;
+            } else {
+                $resources = [$ref];
+            }
+            foreach ($resources as $resource){
+                $insert_string = [];
+                $params = [];
+                foreach ($groups as $group){
+                    $insert_string[] = '(?, ?, ?)';
+                    $params = array_merge(
+                        $params,
+                        ['i', $resource, 'i', trim($group), 's', ($grant_edit_expiry == '' ? null : $grant_edit_expiry)]
+                    );
+                }
+                ps_query(
+                    'DELETE FROM grant_edit WHERE resource = ? AND usergroup IN (' . ps_param_insert(count($groups)) . ')',
+                    array_merge(['i', $resource], ps_param_fill($groups, 'i'))
+                );
+                ps_query(
+                    'INSERT INTO grant_edit (resource, usergroup, expiry) VALUES ' . implode(',', $insert_string),
+                    $params
+                );
+
+                if(!in_array($resource,$resources_added)) {
+                    $resources_added[]=$resource;
+                }
+            }
+        }
+
+        foreach ($resources_added as $resource) {
+            $expiry = ($grant_edit_expiry!="")?nicedate($grant_edit_expiry):$lang['never'];
+            resource_log($resource,'s',"","Grant Edit -  " . $users . " - " . $lang['expires'] . ": " . $expiry);
+        }
+    }
+
     return true;
     }
 
+/**
+ * Needed to prevent user changing the archive stat otherwise a user with temporary edit access to an active resource
+ * could change it from active to pending submission
+ *
+ * @return bool
+ */
 function HookGrant_editEditEditstatushide()
     {
-    // Needed to prevent user changing the archive state, otherwise a user with temporary edit access to an active resource could change it from active to pending submission
     global $status, $resource;
     if(!checkperm("e" . $resource["archive"]))
         {return true;}
     return false;
     }
-    
-
 
 function HookGrant_editEditAppendcustomfields()
     {
     global $ref,$lang,$baseurl,$grant_editusers, $multiple, $usergroup, $grant_edit_groups, $collapsible_sections;
     global $sharing_userlists;
-    
+
     // Do we have access to see this?
     if(!in_array($usergroup, $grant_edit_groups) || $ref<0){return;}
-    
+
     $grant_editusers  = ps_query("SELECT ea.user, u.fullname, u.username, ea.expiry FROM grant_edit ea LEFT JOIN user u ON u.ref = ea.user WHERE ea.resource = ? AND ea.user IS NOT NULL AND (ea.expiry IS NULL OR ea.expiry >= NOW()) ORDER BY expiry, u.username", array("i",$ref));
     $grant_editgroups = ps_query('SELECT u.ref, u.name, ea.expiry FROM grant_edit ea LEFT JOIN usergroup u on u.ref = ea.usergroup WHERE ea.usergroup IS NOT NULL AND ea.resource = ? AND (ea.expiry is NULL OR ea.expiry >= NOW()) ORDER BY expiry', ['i', $ref]);
     ?>
     <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>><?php echo escape($lang["grant_edit_title"]); ?></h2>
     <?php
-   
+
     if ($multiple)
         { ?>
         <div class="Question" id="editmultiple_grant_edit">
@@ -138,11 +166,11 @@ function HookGrant_editEditAppendcustomfields()
             <label id="editthis_grant_edit_label" for="editthisenhancedaccess>"><?php echo escape($lang["grant_edit_title"]); ?></label>
         </div><?php
         }
-    
+
     if(count($grant_editusers)>0 && !$multiple)
         {
-        ?>  
-        
+        ?>
+
         <div class="Question" id="question_grant_edit" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
             <label><?php echo escape($lang["grant_edit_list"]); ?></label>
             <table cellpadding=3 cellspacing=3 class="ListviewStyle">
@@ -159,8 +187,8 @@ function HookGrant_editEditAppendcustomfields()
 						<td><a href='#' onclick='if (confirm(\"" . $lang['grant_edit_delete_user'] . " " . (($grant_edituser['fullname']!="")?$grant_edituser['fullname']:$grant_edituser['username']) . "\")){remove_grant_edit(" . $grant_edituser['user'] . ");}'>&gt;&nbsp;" . $lang['action-delete']  . "</a></td>
 					  </tr>
 					";
-                }       
-            ?> 
+                }
+            ?>
             </table>
         </div>
         <script>
@@ -189,13 +217,13 @@ function HookGrant_editEditAppendcustomfields()
                     },
             });
             }
-        
+
         </script>
         <?php
         }
     if (count($grant_editgroups) > 0 && !$multiple){
-        ?>  
-        
+        ?>
+
         <div class="Question" id="question_grant_edit" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
             <label><?php echo escape($lang["grant_edit_group_list"]); ?></label>
             <table cellpadding=3 cellspacing=3 class="ListviewStyle">
@@ -212,8 +240,8 @@ function HookGrant_editEditAppendcustomfields()
 						<td><a href='#' onclick='if (confirm(\"" . escape($lang['grant_edit_delete_user']) . " " . escape($grant_editgroup['name']) . "\")){remove_grant_edit_group(" . (int) $grant_editgroup['ref'] . ");}'>&gt;&nbsp;" . escape($lang['action-delete'])  . "</a></td>
 					  </tr>
 					";
-                }       
-            ?> 
+                }
+            ?>
             </table>
         </div>
         <script>
@@ -242,11 +270,11 @@ function HookGrant_editEditAppendcustomfields()
                     },
             });
             }
-        
+
         </script>
         <?php
     }
-    
+
     $sharing_userlists=false;
     ?>
     <div id="grant_edit_fields" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
@@ -254,7 +282,7 @@ function HookGrant_editEditAppendcustomfields()
             <label for="users"><?php echo escape($lang["grant_edit_add"]); ?></label><?php include "../include/user_select.php"; ?>
             <div class="clearerleft"> </div>
         </div>
-                
+
         <div class="Question">
             <label><?php echo escape($lang["grant_edit_date"]); ?></label>
             <select name="grant_edit_expiry" class="stdwidth">
@@ -270,8 +298,8 @@ function HookGrant_editEditAppendcustomfields()
             <div class="clearerleft"> </div>
         </div>
     </div>
-    
-    <?php	
+
+    <?php
     return false;
     }
-    
+
