@@ -219,10 +219,18 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
         ?>>
     <div class="clearerleft"> </div>
 </div>
+<?php
+$account_expires_datepart = form_value_display($user,"account_expires");
+// If no error, discard the time part
+if (!isset($error)) {
+    $account_expires_datepart = substr($account_expires_datepart,0,10);
+}
+?>
+<div class="Question"><label><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]; ?></label>
+        <input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo $account_expires_datepart; ?>"><div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]; ?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
-
-<div class="Question"><label><?php echo escape($lang["ipaddressrestriction"])?><br/><?php echo escape($lang["wildcardpermittedeg"])?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["ipaddressrestriction"])?><br/><?php echo escape($lang["wildcardpermittedeg"])?> 194.128.*</label>
+        <input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
 
 <?php
 if (is_numeric($user['search_filter_o_id']) && $user['search_filter_o_id'] > 0)
