@@ -1,7 +1,8 @@
 <?php
 // OpenAI key from https://openai.com/api/
-$openai_gpt_api_key = "";
-$openai_gpt_model = "gpt-4-vision-preview";
+global $openai_gpt_api_key,$openai_gpt_model;
+$openai_gpt_api_key = $openai_gpt_api_key ?? "";
+$openai_gpt_model = $openai_gpt_model ?? "gpt-4o";
 $openai_gpt_fallback_model = "gpt-3.5-turbo";
 $openai_gpt_system_message = "You are a formal API required to extract or convert information from the data provided. For the provided [in_type] input, you will respond with [out_type]";
 
