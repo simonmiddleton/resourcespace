@@ -2481,28 +2481,42 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         }
 
     # Update location?
-    if (($postvals["editlocation"] ?? "") != "" || ($postvals["editmaplocation"] ?? "") != "")
-        {
+    if (($postvals["editlocation"] ?? "") != "" || ($postvals["editmaplocation"] ?? "") != "") {
         $location=explode(",",$postvals["location"]);
-        if (count($list)>0)
-            {
-            if (count($location)==2)
-                {
+        if (count($list)>0) {
+            $list_data = get_resource_data_batch($list);
+            $log_location = "";
+            if (count($location)==2) {
                 $geo_lat=(float)$location[0];
                 $geo_long=(float)$location[1];
-                ps_query("UPDATE resource SET geo_lat = ?,geo_long = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",array_merge(["d",$geo_lat,"d",$geo_long],ps_param_fill($list,"i")));
-                }
-            elseif (($postvals["location"] ?? "") == "")
-                {
-                ps_query("UPDATE resource SET geo_lat=NULL,geo_long=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
-                }
+                $log_location = $geo_lat . ", " . $geo_long;
+                ps_query(
+                    "UPDATE resource SET geo_lat = ?,geo_long = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",
+                    array_merge(["d",$geo_lat,"d",$geo_long],ps_param_fill($list,"i"))
+                );
+            } elseif (($postvals["location"] ?? "") == "") {
+                ps_query(
+                    "UPDATE resource SET geo_lat=NULL,geo_long=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",
+                    ps_param_fill($list,"i")
+                );
+            }
 
-            foreach ($list as $ref)
-                {
+            foreach ($list as $ref) {
                 $successfully_edited_resources[] = $ref;
-                }
+                if($list_data[$ref]["geo_lat"] != "" && $list_data[$ref]["geo_long"] != "") {
+                    $old_location = $list_data[$ref]["geo_lat"] . ", " . $list_data[$ref]["geo_long"];
+                    }
+                resource_log(
+                    $ref,
+                    LOG_CODE_EDITED_RESOURCE,
+                    null,
+                    $log_location!=""?"Edited Location":"Removed Location",
+                    $old_location??"",
+                    $log_location
+                );
             }
         }
+    }
 
     # Update mapzoom?
     if (($postvals["editmapzoom"] ?? "") != "")
