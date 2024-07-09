@@ -680,6 +680,7 @@ function save_user($ref)
         $suggest                = getval('suggest', '');
         $emailresetlink         = getval('emailresetlink', '');
         $approved               = getval('approved', 0, true);
+        $expires                = getval('account_expires', '');
 
         # Username or e-mail address already exists?
         $c = ps_value("SELECT count(*) value FROM user WHERE ref <> ? AND (username = ? OR email = ?)", array("i", $ref, "s", $username, "s", $email), 0);
@@ -708,8 +709,11 @@ function save_user($ref)
                 }
             }
 
-        # Get valid expiry date
-        $expires = getval("account_expires","");
+        # Validate expiry date
+        if ($expires != "" && preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0) {
+            return str_replace('[value]', $expires, $lang['error_invalid_date_format']);
+        }
+        
         if($expires == "" || strtotime($expires)==false)
             {
             $expires = null;
