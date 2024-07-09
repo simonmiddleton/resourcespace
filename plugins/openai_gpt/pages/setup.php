@@ -18,7 +18,12 @@ if(trim($openai_gpt_model) == "text-davinci-003")
     }
 
 // Build configuration variable descriptions
-$page_def[] = config_add_text_input("openai_gpt_api_key",$lang["openai_gpt_api_key"]);
+if (!(isset($openai_gpt_hide_api_key) && $openai_gpt_hide_api_key))
+	{
+ 	// Allow key to be hidden from UI via config
+	$page_def[] = config_add_text_input("openai_gpt_api_key",$lang["openai_gpt_api_key"]);
+	}
+
 $page_def[] = config_add_section_header($lang["plugin_category_advanced"]);
 $page_def[] = config_add_html("<div class='Question'><strong>" . escape($lang["openai_gpt_advanced"]) . "</strong><div class='clearerleft'></div></div>");
 $page_def[] = config_add_text_input("openai_gpt_model",$lang["openai_gpt_model"]);
