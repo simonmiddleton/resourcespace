@@ -222,17 +222,19 @@ $languages["en-US"]="American English";
 $languages["ar"]="العربية";
 $languages["id"]="Bahasa Indonesia"; # Indonesian
 $languages["ca"]="Català"; # Catalan
-$languages["zh-CN"]="简体字"; # Simplified Chinese
+$languages["cs"]="čeština"; # Czech
 $languages["da"]="Dansk"; # Danish
 $languages["de"]="Deutsch"; # German
 $languages["el"]="Ελληνικά"; # Greek
 $languages["es"]="Español"; # Spanish
 $languages["es-AR"]="Español (Argentina)";
+$languages["fi"]="Suomi"; # Finnish
 $languages["fr"]="Français"; # French
 $languages["hi"]="आधुनिक मानक हिन्दी"; # Hindi
 $languages["hr"]="Hrvatski"; # Croatian
 $languages["it"]="Italiano"; # Italian
 $languages["jp"]="日本語"; # Japanese
+$languages["ko"]="한국어"; # Korean
 $languages["nl"]="Nederlands"; # Dutch
 $languages["no"]="Norsk"; # Norwegian
 $languages["pl"]="Polski"; # Polish
@@ -241,8 +243,10 @@ $languages["pt-BR"]="Português do Brasil"; # Brazilian Portuguese
 $languages["ro"]="Limba română"; # Romanian
 $languages["ru"]="Русский язык"; # Russian
 $languages["sk"]="Slovenčina"; # Slovak
-$languages["fi"]="Suomi"; # Finnish
 $languages["sv"]="Svenska"; # Swedish
+$languages["tr"]="Türkçe"; # Turkish
+$languages["zh-CN"]="简体字"; # Simplified Chinese
+
 
 # Disable language selection options (Includes Browser Detection for language)
 $disable_languages=false;

@@ -97,7 +97,6 @@ $lang["viewcontributedpr"]="Vedi i miei upload - Pending Resource Team Review";
 $lang["viewcontributedsubittedl"]="Vedi i miei upload - Live";
 
 # Collections
-$lang["editcollection"]="Edita le collezioni"; # This $lang was accidently defined twice. If you need $lang["editcollection"]="Edita collezioni" as the translation was at the first occurrence, it's possible to add a new $lang to the system.
 $lang["access"]="Accesso";
 $lang["private"]="Privato";
 $lang["public"]="Pubblico";
@@ -2855,3 +2854,4 @@ $lang["all__emailnotifyresourcessubmitted"]='<br />
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
 $lang["oj-creation-success"]='Lavoro offline [jobnumber] creato. Sarai avvisato quando sarà completato';
+$lang["editcollection"]='Modifica collezione';

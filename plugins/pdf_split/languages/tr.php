@@ -1,0 +1,13 @@
+<?php
+
+
+$lang["splitpdf"]='PDF\'yi Böl';
+$lang["splitpdf_pleaseselectrange"]='Lütfen yeni dosya(lar)a ayırmak istediğiniz sayfa aralığını seçin.';
+$lang["addrange"]='Aralık ekle';
+$lang["removerange"]='Aralığı kaldır';
+$lang["range"]='Aralık';
+$lang["pages"]='sayfalar';
+$lang["outofrange"]='Aralık dışında';
+$lang["invalidrange"]='Geçersiz aralık';
+$lang["splitpdf_createnewresource"]='Her aralık için yeni bir kaynak oluştur';
+$lang["splitpdf_createnewalternativefile"]='Bu kaynak için her aralık için yeni bir alternatif dosya oluştur';

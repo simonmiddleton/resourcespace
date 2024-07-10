@@ -2,6 +2,8 @@
 include "../../include/boot.php";
 command_line_only();
 
+$restrict=$argv[1] ?? false;
+
 function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens = 2048, $messages=array(), $uid="") {
     // Set the endpoint URL
     $endpoint = "https://api.openai.com/v1/chat/completions";
@@ -83,6 +85,7 @@ foreach ($plugins as $plugin)
     foreach ($languages as $language=>$lang_name)
         {
         if (in_array($language,array("en","en-US"))) {continue;}
+	if ($restrict!==false && $restrict!=$language) {continue;}
 
         // Process a language
         $lang=array();$langfile="../../" . $plugin_path . "languages/" . $language . ".php";

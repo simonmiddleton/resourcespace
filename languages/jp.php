@@ -392,7 +392,6 @@ $lang["backtouser"]="ユーザログインへ戻る";
 $lang["termsandconditions"]="使用条件";
 $lang["iaccept"]="同意";
 $lang["contributedby"]="投稿者:";
-$lang["format"]="フォーマット"; # This $lang was accidently defined twice. If you need $lang["format"]="書式" as the translation was at the first occurrence, it's possible to add a new $lang to the system.
 
 # Pager
 $lang["next"]="次へ";
@@ -2920,3 +2919,4 @@ $lang["action_unset_no_file"]='ファイルが見つからないとマーク';
 $lang["completed_set_no_file"]='リソースがファイルなしとしてマークされました';
 $lang["completed_unset_no_file"]='リソースがファイル欠落としてマークされました';
 $lang["map_stamen_group"]='ステイメン';
+$lang["format"]='形式';
