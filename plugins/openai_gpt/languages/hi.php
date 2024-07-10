@@ -8,6 +8,6 @@ $lang["openai_gpt_model"]='उपयोग करने के लिए API म
 $lang["openai_gpt_temperature"]='0 और 1 के बीच नमूना तापमान (उच्च मान का मतलब है कि मॉडल अधिक जोखिम उठाएगा)';
 $lang["openai_gpt_max_tokens"]='अधिकतम टोकन';
 $lang["openai_gpt_advanced"]='चेतावनी - यह अनुभाग केवल परीक्षण उद्देश्यों के लिए है और इसे लाइव सिस्टम पर नहीं बदला जाना चाहिए। यहां किसी भी प्लगइन विकल्प को बदलने से उन सभी मेटाडेटा फ़ील्ड्स के व्यवहार पर प्रभाव पड़ेगा जिन्हें कॉन्फ़िगर किया गया है। सावधानी से परिवर्तन करें!';
-$lang["openai_gpt_system_message"]='प्रारंभिक सिस्टम संदेश पाठ। प्लेसहोल्डर [in_type] और [out_type] को स्रोत/लक्ष्य फ़ील्ड प्रकारों के आधार पर \'text\' या \'json\' से बदला जाएगा';
+$lang["openai_gpt_system_message"]='प्रारंभिक सिस्टम संदेश पाठ। प्लेसहोल्डर %%IN_TYPE%% और %%OUT_TYPE%% को स्रोत/लक्ष्य फ़ील्ड प्रकारों के आधार पर \'text\' या \'json\' से बदला जाएगा';
 $lang["openai_gpt_intro"]='मौजूदा डेटा को एक अनुकूलन योग्य प्रॉम्प्ट के साथ OpenAI API को पास करके उत्पन्न मेटाडेटा जोड़ता है। अधिक विस्तृत जानकारी के लिए <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> देखें।';
 $lang["openai_gpt_api_key"]='ओपनएआई एपीआई कुंजी। अपनी एपीआई कुंजी <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a> से प्राप्त करें';

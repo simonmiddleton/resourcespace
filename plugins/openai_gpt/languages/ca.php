@@ -11,6 +11,6 @@ $lang["openai_gpt_temperature"]='Mostra de temperatura entre 0 i 1 (valors més 
 $lang["openai_gpt_max_tokens"]='Màxim de tokens';
 $lang["openai_gpt_advanced"]='ATENCIÓ - Aquesta secció és només per a propòsits de prova i no s\'hauria de modificar en sistemes en viu. El canvi de qualsevol opció del connector aquí afectarà el comportament de tots els camps de metadades que s\'hagin configurat. Altereu amb precaució!';
 $lang["openai_gpt_prompt_return_json"]='Sufix de la indicació de finalització (per retornar JSON per als camps de llista fixa)';
-$lang["openai_gpt_system_message"]='Text inicial del sistema. Els espais reservats [in_type] i [out_type] seran substituïts per \'text\' o \'json\' depenent dels tipus de camp d\'origen/destinació';
+$lang["openai_gpt_system_message"]='Text inicial del sistema. Els espais reservats %%IN_TYPE%% i %%OUT_TYPE%% seran substituïts per \'text\' o \'json\' depenent dels tipus de camp d\'origen/destinació';
 $lang["openai_gpt_intro"]='Afegeix metadades generades passant dades existents a l\'API d\'OpenAI amb un missatge personalitzable. Consulteu <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> per obtenir informació més detallada.';
 $lang["openai_gpt_api_key"]='Clau API d\'OpenAI. Obteniu la vostra clau API des de <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
