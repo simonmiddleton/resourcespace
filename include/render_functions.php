@@ -5814,7 +5814,8 @@ function render_antispam_question()
 
     $capimage = imagecreate($width, $height);
     $textcolor = imagecolorallocate($capimage, 34, 34, 34);
-    $green = ImageColorAllocate($capimage, 121, 188, 65); 
+    $green = ImageColorAllocate($capimage, 121, 188, 65);
+    imagecolorallocate($capimage, 245, 245, 245);
     ImageRectangle($capimage,0,0,$width-1,$height-1,$green); 
     imageline($capimage, 0, $height/2, $width, $height/2, $green); 
     imageline($capimage, $width*4/5, 2, $width*4/5, $height, $green);
