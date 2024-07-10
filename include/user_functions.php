@@ -248,11 +248,11 @@ function setup_user(array $userdata)
     override_rs_variables_by_eval($GLOBALS, $config_options);
 
     // Set default workflow states to show actions for, if not manually set by user
-    get_config_option($userref,'actions_notify_states', $user_actions_notify_states, '');
+    get_config_option($userref,'actions_notify_states', $user_actions_notify_states, false);
 
     // Check if user has already explicitly asked not to see these
     get_config_option($userref,'actions_resource_review', $legacy_resource_review, true); // Deprecated option
-    if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
+    if($user_actions_notify_states === false && $legacy_resource_review)
         {
         $default_notify_states = get_default_notify_states();
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
