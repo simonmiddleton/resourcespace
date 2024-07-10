@@ -121,6 +121,17 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         return '';
     }
 
+    // Pad out a date time value so that it can pass through strtotime if time part is incomplete 
+    if ($time && strlen($date) < 16) {
+        $date_parts = explode(' ', $date);
+        $time_parts = explode(':', $date_parts[1] ?? '');
+        $time_parts = [
+            $time_parts[0] ?? '' ?: '00', 
+            $time_parts[1] ?? '' ?: '00'
+        ];
+        $date = $date_parts[0] . ' ' . implode(':', $time_parts);
+    }
+
     $date_timestamp = strtotime($date); 
     if ($date_timestamp === false) {
         return '';
