@@ -11,6 +11,6 @@ $lang["openai_gpt_prompt_return_text"]='Sufixo de prompt de conclusão (para ret
 $lang["openai_gpt_temperature"]='Amostragem de temperatura entre 0 e 1 (valores mais altos significam que o modelo assumirá mais riscos)';
 $lang["openai_gpt_max_tokens"]='Máximo de tokens';
 $lang["openai_gpt_advanced"]='AVISO - Esta seção destina-se apenas a fins de teste e não deve ser alterada em sistemas ao vivo. A alteração de qualquer uma das opções do plugin aqui afetará o comportamento de todos os campos de metadados que foram configurados. Altere com cautela!';
-$lang["openai_gpt_system_message"]='Texto inicial da mensagem do sistema. Os espaços reservados [in_type] e [out_type] serão substituídos por \'texto\' ou \'json\' dependendo dos tipos de campo de origem/destino';
+$lang["openai_gpt_system_message"]='Texto inicial da mensagem do sistema. Os espaços reservados %%IN_TYPE%% e %%OUT_TYPE%% serão substituídos por \'texto\' ou \'json\' dependendo dos tipos de campo de origem/destino';
 $lang["openai_gpt_intro"]='Adiciona metadados gerados ao passar dados existentes para a API OpenAI com um prompt personalizável. Consulte <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> para mais informações detalhadas.';
 $lang["openai_gpt_api_key"]='Chave de API do OpenAI. Obtenha sua chave de API em <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
