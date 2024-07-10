@@ -2000,12 +2000,12 @@ function display_field($n, $field, $newtab=false,$modal=false)
           {
           ?>
           <div class="Question" class="stdwidth" style="display:none;" id="displayexisting_<?php echo (int) $n; ?>" data-rtfid="<?php echo (int) $field['ref']; ?>">
-            <label></label>
+            <div class="questionSpacer"></div>
             <p><?php echo escape($lang["edit_multiple_existing_values"]) . ':'; ?></p>
-            <label></label>
+            <div class="questionSpacer"></div>
             <div>
               <div class="displayexisting_options" id="displayexisting_options_<?php echo (int) $n; ?>" data-questionid="<?php echo (int) $n; ?>"></div>
-              <label></label>
+              <div class="questionSpacer"></div>
               <input type="button" id="displayexisting_options_more_<?php echo (int) $n; ?>" style="display:none;" value="+ <?php echo escape($lang["edit_multiple_show_more"]); ?>" onclick="showMoreSelectedOptions(<?php echo (int) $n; ?>);">
               </div>
           </div>
@@ -2030,7 +2030,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         {
         ?>
         <div id="ActionPrompt_<?php echo (int) $n; ?>">
-          <label></label>
+          <div class="questionSpacer"></div>
           <p id="ActionPromptText_<?php echo (int) $n; ?>"></p>
        </div>
      <?php
