@@ -103,7 +103,11 @@ if (!hook("renderresultthumb"))
 
             <?php 
             // Render preview image
-            $usesize = $display == "xlthumbs" ? ($GLOBALS['retina_mode'] ? "scr" : "pre") : ($GLOBALS['retina_mode'] ? "pre" : "thm");
+            if ($display == "xlthumbs") { 
+                $usesize = $GLOBALS['retina_mode'] && resource_download_allowed($result[$n]['ref'], 'scr', $result[$n]['resource_type']) ? "scr" : "pre"; 
+            } else {
+                $usesize = $GLOBALS['retina_mode'] ? "pre" : "thm";
+            }
             $arrsizes = array_unique([$usesize,"pre","thm"]);
 
             $thumbnail = get_resource_preview($result[$n],$arrsizes,$access,$watermark);
