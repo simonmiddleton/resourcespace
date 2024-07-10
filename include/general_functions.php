@@ -130,7 +130,6 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
             $time_parts[1] ?? '' ?: '00'
         ];
         $date = $date_parts[0] . ' ' . implode(':', $time_parts);
-        die($date);
     }
 
     $date_timestamp = strtotime($date); 
