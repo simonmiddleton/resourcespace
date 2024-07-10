@@ -65,3 +65,4 @@ $lang["csv_upload_process_offline_quick"]='Doğrulamayı atla ve CSV dosyasını
 $lang["csv_upload_force_offline"]='Bu büyük CSV\'nin işlenmesi uzun sürebilir, bu nedenle çevrimdışı olarak çalıştırılacaktır. İşlem tamamlandığında size bir ResourceSpace mesajı ile bildirilecektir.';
 $lang["csv_upload_recommend_offline"]='Bu büyük CSV\'nin işlenmesi çok uzun sürebilir. Büyük CSV\'leri işlemeniz gerekiyorsa çevrimdışı işler etkinleştirmenizi öneririz.';
 $lang["csv_upload_createdfromcsvupload"]='CSV Yükleme eklentisinden oluşturuldu';
+$lang["csv_upload_create_new_notes"]='Yeni kaynaklar oluşturmak için gerekli seçenekleri seçin';

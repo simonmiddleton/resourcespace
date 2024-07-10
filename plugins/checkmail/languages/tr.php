@@ -33,3 +33,8 @@ $lang["yourresourcehasbeenuploaded"]='Kaynağınız yüklendi';
 $lang["yourresourceshavebeenuploaded"]='Kaynaklarınız yüklendi';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), kimlik numarası [user-ref] ve e-posta adresi [user-email] olan kullanıcının e-posta ile yükleme yapmasına izin verilmiyor (izinleri "c" veya "d" veya checkmail ayar sayfasındaki engellenen kullanıcıları kontrol edin). Kaydedildiği tarih: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Check Mail eklentisinden oluşturuldu';
+$lang["checkmail_cronhelp"]='Bu eklenti, yükleme amacıyla dosya almak için ayrılmış bir e-posta hesabına sistemin giriş yapabilmesi için özel bir kurulum gerektirir.<br /><br />Hesapta IMAP\'in etkinleştirildiğinden emin olun. Gmail hesabı kullanıyorsanız, IMAP\'i Ayarlar->POP/IMAP->IMAP\'i Etkinleştir bölümünden etkinleştirin.<br /><br />
+İlk kurulumda, nasıl çalıştığını anlamak için komut satırında plugins/checkmail/pages/cron_check_email.php dosyasını manuel olarak çalıştırmanız en faydalı yöntem olabilir.
+Bağlantıyı doğru bir şekilde kurduktan ve betiğin nasıl çalıştığını anladıktan sonra, her bir veya iki dakikada bir çalıştırmak için bir cron işi ayarlamanız gerekecektir.<br />Bu işlem posta kutusunu tarayacak ve her çalıştırmada bir okunmamış e-postayı okuyacaktır.<br /><br />
+Her iki dakikada bir çalışan bir cron işi örneği:<br />
+*/2 * * * * cd /var/www/resourcespace/plugins/checkmail/pages; php ./cron_check_email.php >> /var/log/cron.log 2>&1<br /><br />';

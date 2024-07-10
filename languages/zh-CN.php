@@ -2986,3 +2986,4 @@ $lang["setup-err_baseurl"]='基本URL是必填字段。';
 $lang["setup-err_baseurlverify"]='基本URL似乎不正确（无法加载license.txt）。';
 $lang["setup-err_path"]='无法验证位置';
 $lang["setup-emailerr"]='不是有效的电子邮件地址。';
+$lang["setup-checkstoragewrite"]='写入存储目录的访问权限:';

@@ -10,3 +10,4 @@ $lang["openai_gpt_temperature"]='Vzorkovací teplota mezi 0 a 1 (vyšší hodnot
 $lang["openai_gpt_max_tokens"]='Maximální počet tokenů';
 $lang["openai_gpt_advanced"]='UPOZORNĚNÍ - Tato sekce je určena pouze pro testovací účely a neměla by být měněna na živých systémech. Změna jakýchkoli možností pluginu zde ovlivní chování všech konfigurovaných polí metadat. Měňte s opatrností!';
 $lang["openai_gpt_system_message"]='Počáteční text systémové zprávy. Zástupné symboly %%IN_TYPE%% a %%OUT_TYPE%% budou nahrazeny \'text\' nebo \'json\' v závislosti na typech zdrojového/cílového pole';
+$lang["property-openai_gpt_prompt"]='GPT výzva';

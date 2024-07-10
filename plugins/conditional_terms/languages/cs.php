@@ -1,0 +1,8 @@
+<?php
+
+
+$lang["conditional_terms_title"]='Podmíněné podmínky - konfigurace';
+$lang["conditional_terms_description"]='Tento plugin vám umožňuje nastavit podmínku pro zobrazení podmínek stahování. Pokud má zdroj nastavenou specifikovanou hodnotu pro pole, stránka s podmínkami se zobrazí před stahováním';
+$lang["conditional_terms_field"]='Pole metadat';
+$lang["conditional_terms_value"]='Hodnota';
+$lang["conditional_terms_plugin_misconfigured"]='Plugin podmíněných podmínek je nesprávně nakonfigurován';

@@ -40,3 +40,4 @@ $lang["falcon_link_share_user"]='Falcon kullanımı için oluşturulan paylaşı
 $lang["falcon_link_log_publish"]='Falcon aracılığıyla paylaşılan kaynak';
 $lang["falcon_link_log_archive"]='Falcon aracılığıyla arşivlenen kaynak';
 $lang["falcon_link_error_falcon_check_tags"]='Lütfen açıklamanın ve etiketlerin boş olmadığını kontrol edin';
+$lang["falcon_link_text_field"]='Şahin şablon metin alanı';

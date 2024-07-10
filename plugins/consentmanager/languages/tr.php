@@ -23,3 +23,4 @@ $lang["telephone"]='Telefon';
 $lang["notes"]='Notlar';
 $lang["confirmdeleteconsentfile"]='Bu dosyayı SİLMEK istediğinizden emin misiniz? Bu işlem geri alınamaz.';
 $lang["consent_manager_mediums"]='Onay kullanım ortamları';
+$lang["consent_manager_access"]='Onay verilerini yönet (zaten "Sistem Kurulum alanına erişebilir" izni ile etkinleştirilmemişse)';

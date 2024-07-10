@@ -35,3 +35,4 @@ $lang["vimeo_publish_resource_published"]='Zdroj byl publikován na Vimeo. Můž
 $lang["vimeo_publish_account_options"]='Možnosti účtu Vimeo';
 $lang["vimeo_publish_allow_user_accounts"]='Povolit uživatelům publikovat na jejich vlastní účty Vimeo. Pokud je nastaveno na nepravda, musí být níže nakonfigurován přístup k jednomu účtu Vimeo';
 $lang["vimeo_publish_set_account"]='Nastavit účet Vimeo';
+$lang["vimeo_publish_callback_url"]='URL zpětného volání';

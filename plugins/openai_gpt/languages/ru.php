@@ -13,3 +13,4 @@ $lang["openai_gpt_advanced"]='ПРЕДУПРЕЖДЕНИЕ - Этот разде
 $lang["openai_gpt_system_message"]='Начальный текст системного сообщения. Заполнители %%IN_TYPE%% и %%OUT_TYPE%% будут заменены на \'text\' или \'json\' в зависимости от типов исходного/целевого поля';
 $lang["openai_gpt_intro"]='Добавляет метаданные, сгенерированные путем передачи существующих данных в OpenAI API с настраиваемым запросом. Обратитесь к <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> для получения более подробной информации.';
 $lang["openai_gpt_api_key"]='Ключ API OpenAI. Получите свой ключ API на <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["property-openai_gpt_prompt"]='Подсказка GPT';

@@ -79,3 +79,4 @@ $lang["simplesaml_single_logout_url"]='URL pro jediné odhlášení';
 $lang["simplesaml_start_url"]='Spustit/Přihlásit se URL';
 $lang["simplesaml_existing_config"]='Postupujte podle pokynů v databázi znalostí pro migraci vaší stávající konfigurace SAML';
 $lang["simplesaml_test_site_url"]='URL testovacího webu SimpleSAML';
+$lang["simplesaml_authorisation_login_error"]='Nemáte přístup k této aplikaci! Kontaktujte prosím správce svého účtu!';
