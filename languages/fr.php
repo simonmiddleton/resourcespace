@@ -97,7 +97,7 @@ $lang["viewcontributedpr"]="Voir mes contributions - Révision des soumissions e
 $lang["viewcontributedsubittedl"]="Voir mes contributions - En ligne";
 
 # Collections
-$lang["editcollection"]="Modifier une collection"; # This $lang was accidently defined twice. If you need $lang["editcollection"]="Modifier la collection" as the translation was at the first occurrence, it's possible to add a new $lang to the system.
+$lang["editcollection"]="Modifier une collection"; 
 $lang["access"]="Accès";
 $lang["private"]="Privé";
 $lang["public"]="Public";

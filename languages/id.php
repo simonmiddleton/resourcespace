@@ -96,7 +96,7 @@ $lang["viewcontributedpr"]="Lihat Tambahan Saya - Menunggu Tinjauan Regu Aset";
 $lang["viewcontributedsubittedl"]="Lihat Tambahan Saya - Langsung";
 
 # Collections
-$lang["editcollection"]="Merubah Koleksi"; # This $lang was accidently defined twice. If you need $lang["editcollection"]="Ubah Koleksi" as the translation was at the first occurrence, it's possible to add a new $lang to the system.
+$lang["editcollection"]="Merubah Koleksi";
 $lang["access"]="Akses";
 $lang["private"]="Pribadi";
 $lang["public"]="Publik";
@@ -390,7 +390,6 @@ $lang["backtouser"]="Kembali ke login pengguna";
 $lang["termsandconditions"]="Terminologi dan Persyaratab";
 $lang["iaccept"]="Saya terima";
 $lang["contributedby"]="Kontribusi oleh";
-$lang["format"]="Bentuk"; # This $lang was accidently defined twice. If you need $lang["format"]="Format" as the translation was at the first occurrence, it's possible to add a new $lang to the system.
 
 # Pager
 $lang["next"]="Lanjutan";
@@ -1279,7 +1278,6 @@ $lang["phpextensions"]='Ekstensi PHP';
 $lang["php-config-file"]='Konfigurasi PHP: \'%phpinifile\'';
 $lang["setup-mysqltestfailed"]='Gagal uji (tidak dapat memverifikasi MySQL)';
 $lang["setup-admin_fullname"]='Nama lengkap admin';
-$lang["setup-admin_email"]='Sure, the translation for "Admin e-mail" in Bahasa Indonesia is "E-mail Admin"';
 $lang["setup-admin_username"]='Nama pengguna admin';
 $lang["setup-admin_password"]='Kata sandi admin';
 $lang["setup-mysql_read_only_password"]='Kata sandi hanya-baca MySQL';
@@ -1885,7 +1883,6 @@ $lang["comments_anonymous-user"]='Anonim';
 $lang["comments_submit-button-label"]='Kirim';
 $lang["comments_body-placeholder"]='Tambahkan komentar. Gunakan @(nama_pengguna) untuk menandai orang.';
 $lang["comments_fullname-placeholder"]='Nama Anda (wajib diisi)';
-$lang["comments_email-placeholder"]='Sure, the translation for "Your E-mail (required)" in Bahasa Indonesia is "Surel Anda (wajib)"';
 $lang["comments_website-url-placeholder"]='Situs web';
 $lang["comments_flag-this-comment"]='Bendera';
 $lang["comments_flag-reason-placeholder"]='Alasan untuk menandai komentar';
@@ -2350,7 +2347,6 @@ $lang["email_daily_digest_text"]='Ini adalah ringkasan pesan yang belum Anda bac
 $lang["email_daily_digest_actions"]='Anda memiliki tindakan yang belum selesai sebagai berikut.';
 $lang["user_pref_daily_digest_mark_read"]='Tandai pesan sebagai sudah dibaca setelah saya menerima email ringkasan';
 $lang["user_pref_email_and_user_notifications"]='Kirimkan saya email selain pemberitahuan sistem';
-$lang["notification_email_subject"]='Sure! The translation for "Notification email" in Bahasa Indonesia is "Email pemberitahuan"';
 $lang["mymessages_introtext"]='Anda dapat mengonfigurasi pesan mana yang muncul di sini dengan mengubah preferensi pengguna Anda';
 $lang["login_slideshow_image_notes"]='Gambar ini hanya akan digunakan sebagai latar belakang halaman login saja';
 $lang["pixel_height"]='Tinggi piksel';
@@ -2937,3 +2933,7 @@ $lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
 $lang["oj-creation-success"]='Pekerjaan offline [jobnumber] dibuat. Anda akan diberitahu ketika selesai';
+$lang["format"]='Format';
+$lang["setup-admin_email"]='E-mail Admin';
+$lang["comments_email-placeholder"]='Email Anda (wajib)';
+$lang["notification_email_subject"]='Email notifikasi';
