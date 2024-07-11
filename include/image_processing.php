@@ -3899,10 +3899,12 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     )
         {
         # Apply resize ('>' means: never enlarge)
-        $command .= ' -resize %resize_dimensions>';
+        $command .= ' -resize %resize_dimensions';
+        $resize_width = (int) $actions['resize']['width'];
+        $resize_height = (int) $actions['resize']['height'];
         $cmd_args['%resize_dimensions'] = new CommandPlaceholderArg(
-            $actions['resize']['width'] . ($actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : ''),
-            fn($val): bool => preg_match('/^\d+x?\d*$/', $val)
+            $resize_width . ($resize_height > 0 ? "x{$resize_height}" : '') . '>',
+            [CommandPlaceholderArg::class, 'alwaysValid']
         );
         }
 
