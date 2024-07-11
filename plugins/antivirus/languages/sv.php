@@ -10,3 +10,5 @@ $lang["antivirus_action_quarantine"]='Flytta till karantän';
 $lang["antivirus_deleting_file"]='Raderar resurs [%resource_id%] och alla tillhörande filer!';
 $lang["antivirus_moving_file"]='Flyttar resursen [%resource_id%] till arkiveringsstatusen [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Antivirus-sökväg inte inställd!';
+$lang["plugin-antivirus-title"]='Antivirus';
+$lang["plugin-antivirus-desc"]='[Avancerade] Antivirusfunktioner genom att integrera med de flesta kända antivirusmotorer som kan köras via kommandorad';

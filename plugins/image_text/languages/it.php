@@ -16,3 +16,5 @@ $lang["image_text_position"]='Posizione del testo nel banner.';
 $lang["image_text_banner_position"]='Posizione del banner rispetto all\'immagine.';
 $lang["image_text_font"]='Il carattere da utilizzare deve essere supportato dalla versione di ImageMagick installata';
 $lang["image_text_noim"]='Questo plugin richiede l\'installazione di Imagemagick.';
+$lang["plugin-image_text-title"]='Testo dell\'immagine';
+$lang["plugin-image_text-desc"]='Consente di aggiungere i dati del campo all\'immagine durante il download';

@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='自動的な移行はありません。';
 $lang["embedslideshow_directlink"]='埋め込まれていない直接URL';
 $lang["embedslideshow_directlinkopen"]='直接リンクを開く（新しいページ）';
 $lang["embedslideshow_dynamic_size"]='プレイヤーサイズに基づくプレビューのダイナミックリサイズ？';
+$lang["plugin-embedslideshow-title"]='スライドショーを埋め込む';
+$lang["plugin-embedslideshow-desc"]='リモートサイトで埋め込み可能なコレクションスライドショーのHTMLを生成する機能を提供します';

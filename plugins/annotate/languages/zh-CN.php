@@ -27,3 +27,5 @@ $lang["annotate_pdf_output"]='PDF 输出选项（实验性）';
 $lang["annotate_pdf_output_only_annotated"]='仅在 PDF 输出中包含已注释的资源。';
 $lang["annotate_admin_edit_access"]='编辑其他用户的注释的能力';
 $lang["annotate_ref_not_supplied"]='未提供参考。';
+$lang["plugin-annotate-title"]='注释';
+$lang["plugin-annotate-desc"]='启用创建jquery图像注释';

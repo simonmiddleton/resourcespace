@@ -24,3 +24,5 @@ $lang["notes"]='Notizen';
 $lang["confirmdeleteconsentfile"]='Sind Sie sicher, dass Sie diese Datei LÖSCHEN möchten? Dies kann nicht rückgängig gemacht werden.';
 $lang["consent_manager_mediums"]='Einwilligung zur Nutzung von Medien';
 $lang["consent_manager_access"]='Verwalten Sie Zustimmungsdaten (sofern nicht bereits über die Berechtigung "Zugriff auf den System-Setup-Bereich" aktiviert)';
+$lang["plugin-consentmanager-title"]='Einwilligungsmanager';
+$lang["plugin-consentmanager-desc"]='Fügt die Möglichkeit hinzu, die Zustimmung von Personen zu verwalten, die in Ihren Mediendateien dargestellt sind';

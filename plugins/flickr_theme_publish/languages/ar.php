@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='الوقت بين إرسال تحدي
 $lang["flickr_api_key"]='مفتاح واجهة برمجة تطبيقات Flickr';
 $lang["flickr_api_secret"]='سر API لـ Flickr';
 $lang["flickr_warn_no_title_access"]='النشر غير مسموح بدون الوصول إلى حقل العنوان (المعرف #%id). يرجى الاتصال بالمسؤول!';
+$lang["plugin-flickr_theme_publish-title"]='نشر Flickr';
+$lang["plugin-flickr_theme_publish-desc"]='ينشر الموارد المحددة ضمن المواضيع المختارة على Flickr.';

@@ -9,3 +9,5 @@ $lang["new_content_rss_feed"]='Ny indhold RSS-feed';
 $lang["subject"]='Emne';
 $lang["rss_feed_for_search_filter"]='Opret RSS-feed til denne forespørgsel';
 $lang["filtered_resource_update_for"]='Filtreret ressourceopdatering til søgning [%search%]';
+$lang["plugin-rss2-title"]='RSS-feed';
+$lang["plugin-rss2-desc"]='Muliggør den godkendte generering af RSS-feeds af nyt indhold, inklusive konfigurerbare felter.';

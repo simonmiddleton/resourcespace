@@ -32,3 +32,5 @@ $lang["video_tracks_generate_label"]='Generer';
 $lang["video_tracks_select_generate_opt"]='Vælg venligst en genereringsmulighed';
 $lang["video_tracks_save_alt_not_perm"]='Kan ikke gemme alternativ uden tilladelse';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='VIGTIGT! Video Tracks plugin har udfaset indstillingerne for outputformater. De kan kun indstilles i config.php. Plugin vil ikke fungere som forventet, før konfigurationsindstillingen er kopieret over. Venligst kopier følgende:- %nl%####%nl%[output_formats_config]####%nl%';
+$lang["plugin-video_tracks-title"]='Videospor';
+$lang["plugin-video_tracks-desc"]='[Tilføjet] Tilføj understøttelse af forskellige lyd- og undertekstmuligheder for videoressourcer';

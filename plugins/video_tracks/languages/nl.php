@@ -32,3 +32,5 @@ $lang["video_tracks_transcode_now_label"]='Nu transcoderen';
 $lang["video_tracks_select_generate_opt"]='Kies een genereeroptie alstublieft';
 $lang["video_tracks_save_alt_not_perm"]='Kan alternatief niet opslaan zonder toestemming';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='BELANGRIJK! De Video Tracks plugin heeft de uitvoerformaten-instellingen verouderd. Ze kunnen alleen worden ingesteld in config.php. De plugin zal niet correct werken totdat de configuratieoptie is overgenomen. Kopieer alstublieft het volgende:- %nl%####%nl%[output_formats_config]####%nl%';
+$lang["plugin-video_tracks-title"]='Videotracks';
+$lang["plugin-video_tracks-desc"]='[Geavanceerd] Ondersteuning toevoegen voor verschillende audio- en ondertitelingsopties voor videoresources';

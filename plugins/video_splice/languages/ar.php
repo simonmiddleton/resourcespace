@@ -45,3 +45,5 @@ $lang["video_splice_createdfromvideosplice"]='تم إنشاؤه باستخدام
 $lang["video-trim_output"]='إخراج';
 $lang["action-splice"]='دمج';
 $lang["video_splice_error_invalid_action"]='خطأ: إجراء غير صالح';
+$lang["plugin-video_splice-title"]='دمج الفيديو';
+$lang["plugin-video_splice-desc"]='يضيف إمكانية تقليم الفيديو ودمجه';

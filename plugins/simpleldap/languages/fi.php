@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='Luotu SimpleLDAP-liitännäisellä.';
 $lang["simpleldap_usermatchcomment"]='Päivitetty LDAP-käyttäjäksi SimpleLDAP:n avulla.';
 $lang["origin_simpleldap"]='Yksinkertainen LDAP-liitännäinen';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Älä tarkista palvelimen FQDN:ää sertifikaatin CN:tä vastaan';
+$lang["plugin-simpleldap-title"]='Yksinkertainen LDAP';
+$lang["plugin-simpleldap-desc"]='[Edistynyt] Yksinkertaisempi ldap-todennuksen toteutus, kohdistettu Active Directoryyn mutta tukee myös Oracle-hakemistoa';

@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='Plik CSV musi mieć wiersz nagłówka';
 $lang["csv_user_import_condition3"]='Kolumny, które będą zawierać wartości zawierające <b>przecinki (,)</b>, upewnij się, że sformatujesz je jako typ <b>tekstowy</b>, aby nie musieć dodawać cudzysłowów (""). Przy zapisywaniu pliku .csv, upewnij się, że zaznaczysz opcję cytowania komórek typu tekstowego';
 $lang["csv_user_import_condition4"]='Dozwolone kolumny: *nazwa użytkownika, *adres e-mail, hasło, pełna nazwa, wygaśnięcie konta, komentarze, ograniczenie adresów IP, język. Uwaga: pola obowiązkowe są oznaczone gwiazdką (*)';
 $lang["csv_user_import_condition5"]='Język użytkownika zostanie automatycznie ustawiony na wartość domyślną określoną w opcji konfiguracyjnej "$defaultlanguage", jeśli kolumna "lang" nie zostanie znaleziona lub nie będzie miała wartości';
+$lang["plugin-csv_user_import-title"]='Import użytkowników CSV';
+$lang["plugin-csv_user_import-desc"]='[Zaawansowane] Umożliwia importowanie grupy użytkowników na podstawie wstępnie sformatowanego pliku CSV';

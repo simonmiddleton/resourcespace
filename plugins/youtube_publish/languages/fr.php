@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Catégorie';
 $lang["youtube_publish_category_error"]='Erreur lors de la récupération des catégories YouTube : -';
 $lang["youtube_chunk_size"]='Taille des morceaux à utiliser lors du téléchargement sur YouTube (Mo)';
 $lang["youtube_publish_add_anchor"]='Ajouter des balises d\'ancre à l\'URL lors de l\'enregistrement dans le champ de métadonnées d\'URL de YouTube ?';
+$lang["plugin-youtube_publish-title"]='Publier sur YouTube';
+$lang["plugin-youtube_publish-desc"]='Publie la ressource vidéo sur le compte YouTube configuré.';

@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Föreslagen redigering';
 $lang["actions_propose_changes"]='Visa mig användarföreslagna ändringar i min handlingslista';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Dina föreslagna ändringar har granskats.<br/>[changesummary]<br/>Klicka nedan för att granska ändringarna<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Föreslagna ändringar har skickats in.<br/>[changesummary]<br/>Klicka nedan för att granska ändringarna<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Föreslå ändringar';
+$lang["plugin-propose_changes-desc"]='Lägger till alternativ för att tillåta användare att föreslå metadataändringar utan redigeringsåtkomst';

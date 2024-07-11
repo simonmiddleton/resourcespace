@@ -75,3 +75,5 @@ $lang["transform_update_preview"]='Aktualizovať náhľad';
 $lang["transform_preset_sizes"]='Vyberte preddefinovanú cieľovú veľkosť';
 $lang["error_crop_invalid"]='Prosím, vyberte oblasť obrázka';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Orodja za slike (pretvorba)';
+$lang["plugin-transform-desc"]='Omogoča ustvarjanje obrezanih in pomanjšanih alternativnih slik (jCrop s podporo za mobilne naprave)';

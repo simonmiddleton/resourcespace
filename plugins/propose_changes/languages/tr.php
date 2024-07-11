@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Önerilen düzenleme';
 $lang["actions_propose_changes"]='Bana kullanıcı tarafından önerilen değişiklikleri eylem listemde göster';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Önerilen değişiklikleriniz incelendi.<br/>[changesummary]<br/>Değişiklikleri gözden geçirmek için aşağıya tıklayın<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Önerilen değişiklikler gönderildi.<br/>[changesummary]<br/>Değişiklikleri gözden geçirmek için aşağıya tıklayın<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Değişiklik Öner';
+$lang["plugin-propose_changes-desc"]='Kullanıcıların düzenleme erişimi olmadan meta veri değişiklikleri önermesine izin verme seçeneği ekler';

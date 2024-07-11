@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Kan de configuratie van providers (voo
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Ongeldig configuratieformaat voor \'%PROVIDER\' (provider) instantie';
 $lang["image_banks_error_bad_url_scheme"]='Ongeldig URL-schema gevonden voor \'%PROVIDER\' (provider) instantie';
 $lang["image_banks_error_unexpected_response"]='Sorry, een onverwachte reactie ontvangen van de provider. Neem contact op met uw systeembeheerder voor verder onderzoek (zie debuglog).';
+$lang["plugin-image_banks-title"]='Beeldbanken';
+$lang["plugin-image_banks-desc"]='Stelt gebruikers in staat om een externe Beeldbank te selecteren om door te zoeken. Gebruikers kunnen vervolgens nieuwe bronnen downloaden of aanmaken op basis van de teruggegeven resultaten.';

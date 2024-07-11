@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='표준 ResourceSpace 로그인을 선호합니�
 $lang["winauth_test"]='테스트';
 $lang["winauth_user_info"]='[username]으로 로그인되었습니다';
 $lang["winauth_not_logged_in"]='로그인하지 않았거나 웹 서버가 올바르게 구성되지 않았습니다';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[고급] Windows 통합 인증';

@@ -12,3 +12,5 @@ $lang["news_body"]='Содержимое тела';
 $lang["news_nonewmessages"]='Новых сообщений нет';
 $lang["title"]='Последние новости...';
 $lang["title-too-long"]='Поле заголовка длиннее, чем допустимо 50 символов';
+$lang["plugin-news-title"]='Новости';
+$lang["plugin-news-desc"]='Добавляет новости на главную страницу';

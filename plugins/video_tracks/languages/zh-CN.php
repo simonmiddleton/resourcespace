@@ -32,3 +32,5 @@ $lang["video_tracks_transcode_now_label"]='立即转码';
 $lang["video_tracks_select_generate_opt"]='请选择生成选项';
 $lang["video_tracks_save_alt_not_perm"]='没有权限无法保存替代品';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='重要！视频轨道插件已弃用输出格式设置。它们只能在 config.php 中设置。在将配置选项复制过来之前，插件将无法正常工作。请复制以下内容：- %nl%####%nl%[output_formats_config]####%nl%';
+$lang["plugin-video_tracks-title"]='视频轨道';
+$lang["plugin-video_tracks-desc"]='[高级] 为视频资源添加不同音频和字幕选项的支持';

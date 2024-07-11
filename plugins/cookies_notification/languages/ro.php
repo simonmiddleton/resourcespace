@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"]='Permiteți 
 $lang["cookies_notification_cookies_use_title"]='Utilizare cookie-uri';
 $lang["cookies_notification_cookies_use_error_msg"]='Ați decis să nu permiteți utilizarea cookie-urilor de către ResourceSpace. Am fost nevoiți să vă deconectăm deoarece ResourceSpace necesită cookie-uri pentru a funcționa corect.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"]='Trebuie să acceptați utilizarea cookie-urilor înainte de a accesa sistemul.';
+$lang["plugin-cookies_notification-title"]='Notificare privind cookie-urile';
+$lang["plugin-cookies_notification-desc"]='Adaugă capacitatea de a notifica utilizatorii despre modul în care ResourceSpace poate folosi cookie-uri pentru a urmări activitatea utilizatorilor prin afișarea unui mesaj în antet';

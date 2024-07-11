@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='Google Vision yalnızca İngilizce ana
 $lang["google_vision_translation_api_key"]='Geçerli bir Google API anahtarı girerek Vision anahtar kelimelerinin çevirisini çeviri API\'si aracılığıyla etkinleştirin';
 $lang["google_vision_translation_languages"]='Virgülle ayrılmış dil kodları listesi, örn. "no,es"';
 $lang["google_vision_translation_keep_english"]='Orijinal İngilizce anahtar kelimeleri sakla?';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Görüntü tanıma yeteneği. Yüklenen görüntüleri Google Cloud Vision API\'ye iletir ve önerilen meta verileri ayarlar.';

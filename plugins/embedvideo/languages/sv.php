@@ -12,3 +12,5 @@ $lang["specify_resourcetype"]="Ange materialtypen som verktyget <b>Bädda in</b>
 $lang["video_resourcetype"]="Videomaterialtyp";
 
 $lang["embedvideo_share"]='Bädda in video';
+$lang["plugin-embedvideo-title"]='Bädda in video';
+$lang["plugin-embedvideo-desc"]='Ger en funktion för att generera HTML för inbäddningsbar video på externa webbplatser.';

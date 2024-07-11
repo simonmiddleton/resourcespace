@@ -47,3 +47,5 @@ $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% fehlgeschl
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP-Suche erfolgreich, aber 0 Gruppen gefunden.';
 $lang["posixldapauth_test"]='Test';
 $lang["posixldapauth_rdn"]='RDN';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP-Autorisierung';
+$lang["plugin-posixldapauth-desc"]='[VERALTET] LDAP-Plugin für AD & LDAP. Verwenden Sie simpleldap für die AD-Integration.';

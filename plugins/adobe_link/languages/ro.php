@@ -12,3 +12,5 @@ $lang["adobe_link_import_successful"]='Fișierul este importat';
 $lang["adobe_link_upload_document"]='Salvează';
 $lang["adobe_link_saving"]='Salvare în curs de efectuare...';
 $lang["adobe_link_saving_wait"]='Fișierul este salvat, vă rugăm să așteptați mesajul de confirmare. Este posibil să fie necesar să reîmprospătați pagina pentru a actualiza imaginea de previzualizare.';
+$lang["plugin-adobe_link-title"]='Link Adobe';
+$lang["plugin-adobe_link-desc"]='[Avansat] Permite importul fișierelor Adobe din ResourceSpace în Adobe CC';

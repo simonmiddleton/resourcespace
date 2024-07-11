@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='Opcja wyjścia PDF (eksperymentalna)';
 $lang["annotate_pdf_output_only_annotated"]='Tylko uwzględnij zasoby z adnotacjami w wyniku PDF';
 $lang["annotate_admin_edit_access"]='Możliwość edycji adnotacji innych użytkowników';
 $lang["annotate_ref_not_supplied"]='Odwołanie nie zostało dostarczone';
+$lang["plugin-annotate-title"]='Adnotuj';
+$lang["plugin-annotate-desc"]='Umożliwia tworzenie adnotacji obrazów za pomocą jquery';

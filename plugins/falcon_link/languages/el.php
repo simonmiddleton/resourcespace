@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Κείμενο χρήστη για τις κο�
 $lang["falcon_link_log_publish"]='Κοινόχρηστος πόρος μέσω του Falcon';
 $lang["falcon_link_log_archive"]='Αρχειοθετημένος πόρος μέσω του Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Παρακαλώ ελέγξτε ότι η περιγραφή και οι ετικέτες δεν είναι κενές';
+$lang["plugin-falcon_link-title"]='Σύνδεσμος Falcon';
+$lang["plugin-falcon_link-desc"]='[Προηγμένο] Δημοσίευση πόρων στο Falcon.io';

@@ -28,3 +28,5 @@ $lang["selectlicence"]='Por favor, seleccione un ID de licencia';
 $lang["confirmdeletelicensefile"]='¿Estás seguro de que deseas ELIMINAR este archivo? Esta acción no se puede deshacer.';
 $lang["license_manager_mediums"]='Medios de uso de licencia';
 $lang["license_manager_access"]='Administrar datos de licencia (donde no estén habilitados mediante el permiso "Puede acceder al área de configuración del sistema")';
+$lang["plugin-licensemanager-title"]='Administrador de Licencias';
+$lang["plugin-licensemanager-desc"]='Agrega la capacidad de gestionar licencias de recursos';

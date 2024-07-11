@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Κείμενο / HTML:';
 $lang["feedback_options-comma_separated"]='Επιλογές: (χωρισμένες με κόμμα)';
 $lang["feedback_add_new_field"]='Προσθήκη Νέου Πεδίου';
 $lang["feedback_back_to_plugin_manager"]='Επιστροφή στον Διαχειριστή Προσθέτων (Plugin Manager)';
+$lang["plugin-feedback-title"]='Ανατροφοδότηση';
+$lang["plugin-feedback-desc"]='Προσθέτει μια γενική λειτουργία ανατροφοδότησης χρήστη με διαμορφώσιμες ερωτήσεις.';

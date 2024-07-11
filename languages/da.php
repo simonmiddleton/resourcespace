@@ -2842,3 +2842,10 @@ $lang["system_notification_email"]='[img_headerlogo]<br />
 [text_footer]';
 $lang["error_upload_duplicate_file"]='Duplikat filupload, fil matcher ressourcer: [resources]';
 $lang["csv_export_filename"]='metadata_export_[search]_[time]';
+$lang["plugin-category-asset-processing"]='Ressourcebehandling';
+$lang["plugin-category-authentication"]='Godkendelse';
+$lang["plugin-category-collaboration"]='Samarbejde';
+$lang["plugin-category-integrations"]='Integrationer';
+$lang["plugin-category-system"]='System';
+$lang["plugin-category-user-interface"]='Brugergrænseflade';
+$lang["plugin-category-workflow-and-access"]='Workflow og adgang';

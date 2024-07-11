@@ -23,3 +23,5 @@ $lang["enable"]='Activer';
 $lang["checknow"]='Vérifier maintenant';
 $lang["columnheader-enabled"]='Activé';
 $lang["columnheader-last-found"]='Dernière trouvée';
+$lang["plugin-rse_search_notifications-title"]='Notifications de recherche';
+$lang["plugin-rse_search_notifications-desc"]='Notifier l\'utilisateur lorsque des modifications surviennent dans une recherche enregistrée';

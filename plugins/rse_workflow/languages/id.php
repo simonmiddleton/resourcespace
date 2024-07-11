@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='Alamat email untuk mengirim pemberitahuan (aka
 $lang["rse_workflow_bcc_admin"]='Memberitahu administrator sistem ketika kontributor diberitahu';
 $lang["rse_workflow_state_notify_help"]='Pengguna akan melihat sumber daya dalam keadaan ini muncul sebagai tindakan, daripada menerima pemberitahuan sederhana';
 $lang["rse_workflow_introduction"]='Untuk mengubah status dan tindakan alur kerja, gunakan \'Kelola tindakan alur kerja\' dan \'Kelola status alur kerja\' dari Admin. Klik [di sini] untuk pergi ke Admin';
+$lang["plugin-rse_workflow-title"]='Alur Kerja Lanjutan';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Alur Kerja';

@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='Čas mezi kontrolními pings (ms)';
 $lang["flickr_api_key"]='Flickr API klíč';
 $lang["flickr_api_secret"]='Flickr API tajemství';
 $lang["flickr_warn_no_title_access"]='Publikování není povoleno bez přístupu k poli s názvem (ID #%id). Kontaktujte prosím administrátora!';
+$lang["plugin-flickr_theme_publish-title"]='Publikování na Flickr';
+$lang["plugin-flickr_theme_publish-desc"]='Publikuje vybrané zdroje v rámci vybraných témat na Flickr.';

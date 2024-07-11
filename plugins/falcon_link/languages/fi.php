@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Käyttäjän teksti näytettäväksi jakamisill
 $lang["falcon_link_log_publish"]='Jaettu resurssi Falconin kautta';
 $lang["falcon_link_log_archive"]='Arkistoitu resurssi Falconin kautta';
 $lang["falcon_link_error_falcon_check_tags"]='Tarkista, että kuvaus ja tunnisteet eivät ole tyhjiä';
+$lang["plugin-falcon_link-title"]='Falcon Link';
+$lang["plugin-falcon_link-desc"]='[Edistynyt] Julkaise resurssit Falcon.io-palveluun';

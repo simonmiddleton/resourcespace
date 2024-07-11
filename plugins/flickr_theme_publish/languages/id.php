@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='Waktu antara ping kemajuan (ms)';
 $lang["flickr_api_key"]='Kunci API Flickr';
 $lang["flickr_api_secret"]='Kunci API rahasia Flickr';
 $lang["flickr_warn_no_title_access"]='Penerbitan tidak diizinkan tanpa akses ke bidang judul (ID #%id). Silakan hubungi administrator!';
+$lang["plugin-flickr_theme_publish-title"]='Penerbitan Flickr';
+$lang["plugin-flickr_theme_publish-desc"]='Mempublikasikan sumber daya yang dipilih dalam tema yang dipilih ke Flickr.';

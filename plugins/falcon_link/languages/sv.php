@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Användartext som visas för delningar som skap
 $lang["falcon_link_log_publish"]='Delad resurs via Falcon';
 $lang["falcon_link_log_archive"]='Arkiverad resurs via Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Vänligen kontrollera att beskrivningen och taggarna inte är tomma';
+$lang["plugin-falcon_link-title"]='Falconlänk';
+$lang["plugin-falcon_link-desc"]='[Avancerad] Publicera resurser till Falcon.io';

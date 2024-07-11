@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='Kelvollinen resurssi on joko poistettu
 $lang["video_splice_createdfromvideosplice"]='Luotu Video Splice -liitännäisellä';
 $lang["video-trim_output"]='Tuloste';
 $lang["video_splice_error_invalid_action"]='Virhe: Virheellinen toiminto';
+$lang["plugin-video_splice-title"]='Videon yhdistäminen';
+$lang["plugin-video_splice-desc"]='Lisää videon leikkaus- ja yhdistämisominaisuuden';

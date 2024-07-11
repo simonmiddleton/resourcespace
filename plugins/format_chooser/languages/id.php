@@ -14,3 +14,5 @@ $lang["downloadformat"]='Format unduhan';
 $lang["are_available-2"]='akan diubah';
 $lang["are_available-1"]='akan diubah';
 $lang["are_available-0"]='akan diubah';
+$lang["plugin-format_chooser-title"]='Pemilih Format';
+$lang["plugin-format_chooser-desc"]='Memungkinkan Anda memilih format berbeda saat mengunduh file yang dihasilkan secara instan.';

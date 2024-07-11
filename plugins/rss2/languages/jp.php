@@ -9,3 +9,5 @@ $lang["subject"]='件名';
 $lang["rss_feed_for_search_filter"]='このクエリのためのRSSフィードを作成する。';
 $lang["filtered_resource_update_for"]='検索 [%search%] のためのフィルターされたリソースの更新';
 $lang["rss_ttl"]='RSS TTL:';
+$lang["plugin-rss2-title"]='RSSフィード';
+$lang["plugin-rss2-desc"]='新しいコンテンツのRSSフィードを認証生成し、設定可能なフィールドを含めることができます。';

@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Gemarkeerd voor herstel uit a
 $lang["offline_archive_resource_log_restore_removed"]='Geannuleerde herstelling van archief';
 $lang["offline_archive_resource_log_restore_request"]='Aangevraagde herstel van archief';
 $lang["offline_archive_resource_restore"]='Herstellen van bronnen';
+$lang["plugin-offline_archive-title"]='Offline Archief';
+$lang["plugin-offline_archive-desc"]='Maakt het mogelijk om gearchiveerde bestanden naar een offline locatie te verplaatsen';

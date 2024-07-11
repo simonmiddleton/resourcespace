@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='Valjani resurs je ili uklonjen ili dod
 $lang["video_splice_createdfromvideosplice"]='Stvoreno pomoću dodatka Video Splice';
 $lang["video-trim_output"]='Izlaz';
 $lang["video_splice_error_invalid_action"]='Pogreška: Nevažeća radnja';
+$lang["plugin-video_splice-title"]='Video Spajanje';
+$lang["plugin-video_splice-desc"]='Dodaje mogućnost obrezivanja i spajanja videozapisa';

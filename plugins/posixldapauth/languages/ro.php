@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Nu s-a putut realiza co
 $lang["posixldapauth_unable_to_search_ldap_server"]='Imposibil de căutat serverul LDAP.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% a eșuat, vă rugăm să verificați setările.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Căutarea LDAP a fost realizată cu succes, dar nu s-au găsit grupuri.';
+$lang["plugin-posixldapauth-title"]='Autorizare POSIX LDAP';
+$lang["plugin-posixldapauth-desc"]='[DEPRECATED] Plugin LDAP pentru AD și LDAP. Utilizați simpleldap pentru integrarea AD.';

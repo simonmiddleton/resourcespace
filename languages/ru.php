@@ -2880,3 +2880,10 @@ $lang["all__emailcollectionexternal"]='<br />
 [отпользователя] [lang_emailcollectionmessageexternal] <br /><br /> 
 [lang_сообщение] : [сообщение]<br /><br /> 
 [lang_нажмитессылкудляпросмотраколлекции] [список]';
+$lang["plugin-category-asset-processing"]='Обработка активов';
+$lang["plugin-category-authentication"]='Аутентификация';
+$lang["plugin-category-collaboration"]='Сотрудничество';
+$lang["plugin-category-integrations"]='Интеграции';
+$lang["plugin-category-system"]='Система';
+$lang["plugin-category-user-interface"]='Пользовательский интерфейс';
+$lang["plugin-category-workflow-and-access"]='Рабочий процесс и доступ';

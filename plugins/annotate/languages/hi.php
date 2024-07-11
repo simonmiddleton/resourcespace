@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='पीडीएफ आउटपुट विकल
 $lang["annotate_pdf_output_only_annotated"]='केवल एनोटेटेड संसाधनों को पीडीएफ आउटपुट में शामिल करें';
 $lang["annotate_admin_edit_access"]='अन्य उपयोगकर्ताओं की टिप्पणियों को संपादित करने की क्षमता';
 $lang["annotate_ref_not_supplied"]='संदर्भ प्रदान नहीं किया गया';
+$lang["plugin-annotate-title"]='टिप्पणी करें';
+$lang["plugin-annotate-desc"]='जेक्वेरी छवि एनोटेशन बनाने की अनुमति देता है';

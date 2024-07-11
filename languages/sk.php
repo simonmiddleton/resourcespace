@@ -3217,3 +3217,10 @@ $lang["all__emailcollection"]='<br />
 [lang_clicklinkviewcollection] [list]';
 $lang["download_limit_summary"]='Prenesli ste [downloaded]/[limit] virov.';
 $lang["download_limit_request_text"]='Dosežen limit prenosa: [downloaded]/[limit]';
+$lang["plugin-category-asset-processing"]='Obdelava sredstev';
+$lang["plugin-category-authentication"]='Overjanje';
+$lang["plugin-category-collaboration"]='Sodelovanje';
+$lang["plugin-category-integrations"]='Integracije';
+$lang["plugin-category-system"]='Sistem';
+$lang["plugin-category-user-interface"]='Uporabniški vmesnik';
+$lang["plugin-category-workflow-and-access"]='Potek dela in dostop';

@@ -12,3 +12,5 @@ $lang["edit_usage"]='Editare utilizare';
 $lang["delete_usage"]='Ștergeți utilizarea';
 $lang["resource_usage_configuration"]='Configurarea utilizării resurselor';
 $lang["resource_usage_mediums"]='Listă de opțiuni de utilizare disponibile (separate prin virgulă)';
+$lang["plugin-resource_usage-title"]='Utilizare resursă';
+$lang["plugin-resource_usage-desc"]='[Avansat] Adaugă capacitatea de a înregistra utilizarea resurselor prin pagina de vizualizare a resurselor';

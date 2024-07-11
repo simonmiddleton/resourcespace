@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='LDAP 서버에 연결�
 $lang["posixldapauth_unable_to_search_ldap_server"]='LDAP 서버를 검색할 수 없습니다.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% 실패, 설정을 확인해 주세요.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP 검색 성공, 그러나 0개의 그룹이 발견되었습니다.';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP 권한 부여';
+$lang["plugin-posixldapauth-desc"]='[사용되지 않음] AD 및 LDAP용 LDAP 플러그인. AD 통합에는 simpleldap을 사용하세요.';

@@ -16,3 +16,5 @@ $lang["image_text_position"]='Posició del text en la pancarta.';
 $lang["image_text_banner_position"]='Posició de la pancarta en relació amb la imatge.';
 $lang["image_text_font"]='Tipus de lletra a utilitzar, ha de ser compatible amb la versió d\'ImageMagick instal·lada';
 $lang["image_text_noim"]='Aquest connector necessita que Imagemagick estigui instal·lat.';
+$lang["plugin-image_text-title"]='Text de la imatge';
+$lang["plugin-image_text-desc"]='Permet afegir dades del camp a la imatge en descarregar';

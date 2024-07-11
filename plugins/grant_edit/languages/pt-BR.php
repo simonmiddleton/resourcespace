@@ -9,3 +9,5 @@ $lang["grant_edit_date"]='Data de expiração para acesso de edição';
 $lang["grant_edit_list"]='Usuários atuais com acesso adicional de edição';
 $lang["grant_edit_delete_user"]='Confirmar remoção de acesso aprimorado para';
 $lang["grant_edit_group_list"]='Grupos atuais com acesso adicional de edição';
+$lang["plugin-grant_edit-title"]='Conceder Edição';
+$lang["plugin-grant_edit-desc"]='Permite aos administradores conceder aos usuários acesso temporário total de edição aos recursos';

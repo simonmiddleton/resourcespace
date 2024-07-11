@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Zaloguj się za pomocą konta spoza W
 $lang["wordpress_sso_use_wp_login"]='Zaloguj się przy użyciu konta WordPress';
 $lang["wordpress_sso_retry"]='Kliknij tutaj, aby spróbować zalogować się ponownie';
 $lang["origin_wordpress_sso"]='Plugin Wordpress SSO (jednolity login)';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Zaawansowane] Umożliwia jednokrotne logowanie z instalacją Wordpress';

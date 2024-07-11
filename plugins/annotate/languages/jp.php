@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='PDF出力オプション（実験的）';
 $lang["annotate_pdf_output_only_annotated"]='PDF出力に注釈付きリソースのみを含める。';
 $lang["annotate_admin_edit_access"]='他のユーザーの注釈を編集する機能';
 $lang["annotate_ref_not_supplied"]='参照が提供されていません。';
+$lang["plugin-annotate-title"]='注釈を付ける';
+$lang["plugin-annotate-desc"]='jQuery画像注釈の作成を有効にします';

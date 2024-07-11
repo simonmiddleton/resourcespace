@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='Opțiune de ieșire PDF (experimentală)';
 $lang["annotate_pdf_output_only_annotated"]='Include doar Resursele Anotate în Ieșirea PDF';
 $lang["annotate_admin_edit_access"]='Posibilitatea de a edita adnotările altor utilizatori';
 $lang["annotate_ref_not_supplied"]='Referința nu a fost furnizată';
+$lang["plugin-annotate-title"]='Adnotează';
+$lang["plugin-annotate-desc"]='Permite crearea de adnotări de imagini jquery';

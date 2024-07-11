@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Arşivden geri yükleme için
 $lang["offline_archive_resource_log_restore_removed"]='Arşivden geri yükleme iptal edildi';
 $lang["offline_archive_resource_log_restore_request"]='Arşivden geri yükleme talep edildi';
 $lang["offline_archive_resource_restore"]='Kaynakları geri yükle';
+$lang["plugin-offline_archive-title"]='Çevrimdışı Arşiv';
+$lang["plugin-offline_archive-desc"]='Arşivlenmiş dosyaların çevrimdışı bir konuma taşınmasını sağlar';

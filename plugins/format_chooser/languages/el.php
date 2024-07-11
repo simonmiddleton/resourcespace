@@ -14,3 +14,5 @@ $lang["downloadformat"]='Μορφή λήψης';
 $lang["are_available-2"]='θα μετατραπεί';
 $lang["are_available-1"]='θα μετατραπεί';
 $lang["are_available-0"]='θα μετατραπεί';
+$lang["plugin-format_chooser-title"]='Επιλογέας Μορφής';
+$lang["plugin-format_chooser-desc"]='Σας επιτρέπει να επιλέξετε διαφορετικές μορφές κατά τη λήψη αρχείων που δημιουργούνται άμεσα.';

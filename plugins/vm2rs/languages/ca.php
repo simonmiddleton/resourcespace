@@ -6,3 +6,5 @@ $lang["vm2rs_field_id_l"]='Identificador de camp (ruta de Vimeo)';
 $lang["vm2rs_thumb"]='Ruta de la miniatura';
 $lang["vm2rs_online_preview"]='Previsualització en línia';
 $lang["vm2rs_youtube_video"]='Vídeo de Youtube';
+$lang["plugin-vm2rs-title"]='Vimeo a ResourceSpace';
+$lang["plugin-vm2rs-desc"]='Permet incrustar vídeos de Vimeo.';

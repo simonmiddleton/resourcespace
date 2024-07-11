@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='"museumplus_modules_saved_c
 $lang["museumplus_error_invalid_association"]='Nieprawidłowe powiązanie modułu(ów). Upewnij się, że poprawny moduł i/lub identyfikator rekordu został wprowadzony!';
 $lang["museumplus_id_returns_multiple_records"]='Znaleziono wiele rekordów - proszę podać identyfikator techniczny zamiast tego';
 $lang["museumplus_error_module_no_field_maps"]='Nie można zsynchronizować danych z MuseumPlus. Powód: moduł \'%name\' nie ma skonfigurowanych mapowanie pól.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Zaawansowane] Umożliwia wyodrębnienie metadanych zasobów z MuseumPlus za pomocą jego REST API (MpRIA).';

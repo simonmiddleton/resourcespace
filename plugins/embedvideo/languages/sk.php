@@ -7,3 +7,5 @@ $lang["embed_video_configuration"]='Vložiť konfiguráciu videa';
 $lang["specify_resourcetype"]='Prosím, určite, pre ktorý typ zdroja by sa mala zobrazovať funkcia "vložiť".';
 $lang["video_resourcetype"]='Typ zdroja videa';
 $lang["embedvideo_share"]='Vstavi video';
+$lang["plugin-embedvideo-title"]='Vdelaj video';
+$lang["plugin-embedvideo-desc"]='Nudi funkcijo za generiranje HTML za vdelane videoposnetke na oddaljenih straneh.';

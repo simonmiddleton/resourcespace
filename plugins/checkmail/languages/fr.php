@@ -38,3 +38,5 @@ $lang["yourresourceshavebeenuploaded"]='Vos ressources ont été téléchargées
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), avec l\'ID [user-ref] et l\'e-mail [user-email], n\'est pas autorisé à télécharger par e-mail (vérifiez les autorisations "c" ou "d" ou les utilisateurs bloqués dans la page de configuration de vérification des e-mails). Enregistré le : [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Créé à partir du plugin Check Mail';
 $lang["checkmail_resource_type_population"]='(de extensions autorisées)';
+$lang["plugin-checkmail-title"]='Vérifier le courrier';
+$lang["plugin-checkmail-desc"]='[Avancé] Permet l\'ingestion des pièces jointes envoyées par e-mail';

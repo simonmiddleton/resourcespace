@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='Entrée de journal introuvable';
 $lang["rse_version_revert_state"]='Revenir à l\'état précédent';
 $lang["rse_version_rstate_changes"]='Rétablissement de l\'état de la collection #%COLLECTION en rejouant les événements jusqu\'à l\'enregistrement sélectionné, mais sans l\'inclure.';
 $lang["rse_version_invalid_time"]='Revenir à une date antérieure à [date] n\'est pas pris en charge';
+$lang["plugin-rse_version-title"]='Contrôle de version';
+$lang["plugin-rse_version-desc"]='ResourceSpace Entreprise - Contrôle de Version';

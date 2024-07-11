@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Standart ResourceSpace girişlerini tercih edin.
 $lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='[username] olarak giriş yaptınız';
 $lang["winauth_not_logged_in"]='Giriş yapmadınız veya web sunucunuz doğru yapılandırılmamış.';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Advanced] Windows Entegre Kimlik Doğrulama';

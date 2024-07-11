@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Contrassegnato per il riprist
 $lang["offline_archive_resource_log_restore_removed"]='Ripristino annullato dall\'archivio';
 $lang["offline_archive_resource_log_restore_request"]='Richiesta di ripristino dall\'archivio';
 $lang["offline_archive_resource_restore"]='Ripristina risorse';
+$lang["plugin-offline_archive-title"]='Archivio Offline';
+$lang["plugin-offline_archive-desc"]='Consente il trasferimento dei file archiviati in una posizione offline';

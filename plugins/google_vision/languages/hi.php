@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='गूगल विज़न केव
 $lang["google_vision_translation_api_key"]='Google API कुंजी दर्ज करके अनुवाद API के माध्यम से Vision कीवर्ड्स का अनुवाद सक्षम करें';
 $lang["google_vision_translation_languages"]='अल्पविराम से अलग की गई भाषा कोडों की सूची, जैसे "no,es"';
 $lang["google_vision_translation_keep_english"]='मूल अंग्रेजी कीवर्ड्स रखें?';
+$lang["plugin-google_vision-title"]='गूगल विज़न एपीआई';
+$lang["plugin-google_vision-desc"]='छवि पहचान क्षमता। अपलोड की गई छवियों को Google Cloud Vision API पर भेजता है और सुझाए गए मेटाडेटा को सेट करता है।';

@@ -35,3 +35,4 @@ $lang["emu_nodata_returned"]='Geen EMu-gegevens gevonden voor het opgegeven IRN.
 $lang["emu_createdfromemu"]='Gemaakt met EMU-plugin';
 $lang["emu_module"]='EMu-module';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
+$lang["plugin-emu-desc"]='[Geavanceerd] Stelt in staat om resource metadata uit de EMu-database te extraheren.';

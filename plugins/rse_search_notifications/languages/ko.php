@@ -23,3 +23,5 @@ $lang["enable"]='사용 가능';
 $lang["checknow"]='지금 확인';
 $lang["columnheader-enabled"]='활성화됨';
 $lang["columnheader-last-found"]='마지막으로 찾은';
+$lang["plugin-rse_search_notifications-title"]='검색 알림';
+$lang["plugin-rse_search_notifications-desc"]='저장된 검색에 변경 사항이 발생하면 사용자에게 알림';

@@ -49,3 +49,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='Το \'museumplus_modules_s
 $lang["museumplus_error_invalid_association"]='Μη έγκυρη συσχέτιση ενοτήτων. Βεβαιωθείτε ότι έχετε εισαγάγει το σωστό ID Ενότητας και/ή Εγγραφής!';
 $lang["museumplus_id_returns_multiple_records"]='Βρέθηκαν πολλαπλές εγγραφές - παρακαλώ εισαγάγετε το τεχνικό ID αντί αυτού';
 $lang["museumplus_error_module_no_field_maps"]='Αδυναμία συγχρονισμού δεδομένων από το MuseumPlus. Αιτία: το αντικείμενο \'%name\' δεν έχει διαμορφωθεί μεταφορά πεδίων.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Προχωρημένο] Επιτρέπει την εξαγωγή μεταδεδομένων πόρων από το MuseumPlus χρησιμοποιώντας το REST API του (MpRIA).';

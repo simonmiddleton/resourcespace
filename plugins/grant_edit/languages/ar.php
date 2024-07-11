@@ -9,3 +9,5 @@ $lang["grant_edit_date"]='تاريخ انتهاء صلاحية الوصول لل
 $lang["grant_edit_list"]='المستخدمون الحاليون الذين لديهم صلاحية تحرير إضافية';
 $lang["grant_edit_delete_user"]='تأكيد إزالة الوصول المحسّن لـ';
 $lang["grant_edit_group_list"]='المجموعات الحالية التي لديها وصول إضافي للتحرير';
+$lang["plugin-grant_edit-title"]='منح التحرير';
+$lang["plugin-grant_edit-desc"]='يمكن للمسؤولين منح المستخدمين وصولاً كاملاً مؤقتاً لتحرير الموارد';

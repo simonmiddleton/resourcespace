@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Denne tilleggsmodulen lar deg sette en b
 $lang["conditional_terms_field"]='Metadatafelt';
 $lang["conditional_terms_value"]='Verdi';
 $lang["conditional_terms_plugin_misconfigured"]='Betingelsesvilkår-tillegget er konfigurert feil';
+$lang["plugin-conditional_terms-title"]='Betingede vilkår';
+$lang["plugin-conditional_terms-desc"]='Aktiverer betinget visning av vilkårsside ved nedlasting basert på ressursmetadata';

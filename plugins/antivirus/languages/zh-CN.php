@@ -10,3 +10,5 @@ $lang["antivirus_action_quarantine"]='移动到隔离区。';
 $lang["antivirus_deleting_file"]='删除资源 [%resource_id%] 及其关联的任何文件！';
 $lang["antivirus_moving_file"]='移动资源 [%resource_id%] 到归档状态 [%archive_state%]。';
 $lang["antivirus_av_not_setup_error"]='防病毒软件路径未设置！';
+$lang["plugin-antivirus-title"]='杀毒软件';
+$lang["plugin-antivirus-desc"]='[高级] 通过与大多数已知的可以运行命令行的杀毒引擎集成来提供杀毒功能';

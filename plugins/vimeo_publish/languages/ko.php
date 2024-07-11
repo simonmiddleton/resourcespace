@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='리소스가 Vimeo에 게시되었습
 $lang["vimeo_publish_account_options"]='Vimeo 계정 옵션';
 $lang["vimeo_publish_allow_user_accounts"]='사용자가 자신의 Vimeo 계정에 게시할 수 있도록 허용합니다. 거짓인 경우 아래에 단일 Vimeo 계정에 대한 액세스를 구성해야 합니다';
 $lang["vimeo_publish_set_account"]='Vimeo 계정 설정';
+$lang["plugin-vimeo_publish-title"]='비메오 게시';
+$lang["plugin-vimeo_publish-desc"]='OAuth 2.0을 사용하여 Vimeo에 리소스 게시';

@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='Opció de sortida PDF (experimental)';
 $lang["annotate_pdf_output_only_annotated"]='Només inclogui recursos anotats en la sortida PDF';
 $lang["annotate_admin_edit_access"]='Capacitat per editar les anotacions d\'altres usuaris';
 $lang["annotate_ref_not_supplied"]='Referència no proporcionada';
+$lang["plugin-annotate-title"]='Anotar';
+$lang["plugin-annotate-desc"]='Permet la creació d\'anotacions d\'imatges amb jquery';

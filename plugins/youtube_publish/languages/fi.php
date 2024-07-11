@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Luokka';
 $lang["youtube_publish_category_error"]='Virhe haettaessa YouTube-kategorioita: -';
 $lang["youtube_chunk_size"]='Palojen koko käytettäväksi YouTubeen ladattaessa (MB)';
 $lang["youtube_publish_add_anchor"]='Lisää ankkuritunnisteet URL-osoitteeseen tallennettaessa YouTube-URL-metadatatietokenttään?';
+$lang["plugin-youtube_publish-title"]='YouTube Julkaisu';
+$lang["plugin-youtube_publish-desc"]='Julkaisee videoresurssin määritettyyn YouTube-tiliin.';

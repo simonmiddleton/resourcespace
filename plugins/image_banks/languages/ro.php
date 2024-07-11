@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Nu se poate analiza configurația furn
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Format de configurare nevalid pentru instanța \'%PROVIDER\' (provider)';
 $lang["image_banks_error_bad_url_scheme"]='Schemă URL nevalidă găsită pentru instanța \'%PROVIDER\' (furnizor)';
 $lang["image_banks_error_unexpected_response"]='Ne pare rău, am primit un răspuns neașteptat de la furnizor. Vă rugăm să contactați administratorul de sistem pentru investigații suplimentare (consultați jurnalul de depanare).';
+$lang["plugin-image_banks-title"]='Bănci de imagini';
+$lang["plugin-image_banks-desc"]='Permite utilizatorilor să selecteze o Bancă de Imagini externă pentru a căuta. Utilizatorii pot apoi descărca sau crea resurse noi pe baza rezultatelor returnate.';

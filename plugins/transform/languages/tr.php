@@ -75,3 +75,5 @@ $lang["cropper_use_srgb"]='sRGB kullan';
 $lang["transform_update_preview"]='Önizlemeyi güncelleştir';
 $lang["transform_preset_sizes"]='Önceden tanımlanmış hedef boyutunu seçin';
 $lang["error_crop_invalid"]='Lütfen görüntünün bir bölgesini seçin';
+$lang["plugin-transform-title"]='Görüntü Araçları (dönüştür)';
+$lang["plugin-transform-desc"]='Kırpılmış ve ölçeklendirilmiş alternatif görüntülerin oluşturulmasını sağlar (jCrop Mobil destekli)';

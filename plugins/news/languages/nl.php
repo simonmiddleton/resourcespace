@@ -12,3 +12,5 @@ $lang["news_body"]='Lichaamsinhoud';
 $lang["news_nonewmessages"]='Geen nieuwe berichten';
 $lang["title"]='Laatste nieuws...';
 $lang["title-too-long"]='Het titelveld is langer dan de toegestane 50 tekens';
+$lang["plugin-news-title"]='Nieuws';
+$lang["plugin-news-desc"]='Voegt nieuwsitems toe aan de startpagina';

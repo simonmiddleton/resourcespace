@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Falcon 사용을 위해 생성된 공유에 표
 $lang["falcon_link_log_publish"]='Falcon을 통해 공유된 리소스';
 $lang["falcon_link_log_archive"]='Falcon을 통해 보관된 리소스';
 $lang["falcon_link_error_falcon_check_tags"]='설명과 태그가 비어 있지 않은지 확인하세요';
+$lang["plugin-falcon_link-title"]='팔콘 링크';
+$lang["plugin-falcon_link-desc"]='[고급] Falcon.io에 리소스 게시';

@@ -51,3 +51,5 @@ $lang["museumplus_error_invalid_association"]='Asociere modul(e) invalid(e). Vă
 $lang["museumplus_id_returns_multiple_records"]='Au fost găsite mai multe înregistrări - vă rugăm să introduceți ID-ul tehnic în loc';
 $lang["museumplus_error_module_no_field_maps"]='Imposibil de sincronizat datele din MuseumPlus. Motiv: modulul \'%name\' nu are configurate nicio mapare de câmpuri.';
 $lang["museumplus_api_user"]='Utilizator';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Avansat] Permite extragerea metadatelor resurselor din MuseumPlus folosind API-ul său REST (MpRIA).';

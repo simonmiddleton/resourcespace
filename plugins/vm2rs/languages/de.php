@@ -6,3 +6,5 @@ $lang["vm2rs_field_id_l"]='Feld-ID (Vimeo-Pfad)';
 $lang["vm2rs_thumb"]='Miniaturansichtspfad';
 $lang["vm2rs_online_preview"]='Online-Vorschau';
 $lang["vm2rs_youtube_video"]='YouTube-Video';
+$lang["plugin-vm2rs-title"]='Vimeo zu ResourceSpace';
+$lang["plugin-vm2rs-desc"]='Ermöglicht das Einbetten von Videos von Vimeo.';

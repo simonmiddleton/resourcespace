@@ -70,3 +70,5 @@ $lang["tms_link_field_mappings"]='TMS-felt til ResourceSpace-feltkartlegginger';
 $lang["tms_link_mediapaths_resource_reference_column"]='Kolonne som skal brukes i MediaMaster-tabellen for å lagre Ressurs-ID. Dette er valgfritt og brukes for å unngå at flere ressurser bruker samme Media Master-ID.';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_write_to_debug_log"]='Inkluder skriptfremdrift i systemets feilsøkingslogg (krever at feilsøkingslogging er konfigurert separat). Forsiktig: Vil føre til rask vekst av feilsøkingsloggfilen.';
+$lang["plugin-tms_link-title"]='TMS-lenke';
+$lang["plugin-tms_link-desc"]='[Avansert] Tillater at ressursmetadata kan hentes fra TMS-databasen.';

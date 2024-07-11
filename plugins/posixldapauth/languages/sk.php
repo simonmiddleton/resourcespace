@@ -47,3 +47,5 @@ $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% zlyhal, pr
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP vyhľadávanie bolo úspešné, ale nenašli sa žiadne skupiny.';
 $lang["posixldapauth_user_suffix"]='Prípona používateľa:';
 $lang["posixldapauth_rdn"]='RDN';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP autorizacija';
+$lang["plugin-posixldapauth-desc"]='[ZASTARELO] LDAP vtičnik za AD in LDAP. Za integracijo AD uporabite simpleldap.';

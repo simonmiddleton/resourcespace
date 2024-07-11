@@ -72,3 +72,5 @@ $lang["tms_link_confirm_delete_module_config"]='هل أنت متأكد أنك ت
 $lang["tms_link_log_expiry"]='عدد الأيام لتخزين سجلات البرنامج النصي. سيتم حذف أي سجلات TMS في هذا الدليل والتي تعود تاريخها إلى فترة أقدم من ذلك';
 $lang["tms_link_mediapaths_resource_reference_column"]='العمود المستخدم في جدول MediaMaster لتخزين معرف المورد. هذا اختياري ويستخدم لتجنب استخدام موارد متعددة لنفس معرف Media Master.';
 $lang["tms_link_write_to_debug_log"]='تضمين تقدم البرنامج النصي في سجل تصحيح النظام (يتطلب تكوين تسجيل التصحيح بشكل منفصل). تحذير: سيؤدي إلى زيادة سريعة في حجم ملف سجل التصحيح.';
+$lang["plugin-tms_link-title"]='رابط TMS';
+$lang["plugin-tms_link-desc"]='[متقدم] يسمح باستخراج بيانات التعريف للموارد من قاعدة بيانات TMS.';

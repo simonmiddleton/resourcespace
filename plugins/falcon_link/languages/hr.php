@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Tekst korisnika za prikaz dijeljenja stvorenih 
 $lang["falcon_link_log_publish"]='Dijeljeni resurs putem Falcona';
 $lang["falcon_link_log_archive"]='Arhivirani resurs putem Falcona';
 $lang["falcon_link_error_falcon_check_tags"]='Molimo provjerite da opis i oznake nisu prazni';
+$lang["plugin-falcon_link-title"]='Falcon Link';
+$lang["plugin-falcon_link-desc"]='[Napredno] Objavi resurse na Falcon.io';

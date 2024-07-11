@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Eénmalige uitlog-URL';
 $lang["simplesaml_start_url"]='Start/Aanmelden URL';
 $lang["simplesaml_existing_config"]='Volg de instructies in de Knowledge Base om uw bestaande SAML-configuratie te migreren';
 $lang["simplesaml_test_site_url"]='URL van de SimpleSAML-testsite';
+$lang["plugin-simplesaml-title"]='Eenvoudige SAML';
+$lang["plugin-simplesaml-desc"]='[Geavanceerd] SAML-authenticatie vereist om toegang te krijgen tot ResourceSpace';

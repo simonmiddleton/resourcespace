@@ -12,3 +12,5 @@ $lang["outofrange"]='Buiten bereik';
 $lang["invalidrange"]='Ongeldige reeks';
 $lang["splitpdf_createnewresource"]='Maak voor elke reeks een nieuwe bron';
 $lang["splitpdf_createnewalternativefile"]='Maak voor elk bereik een nieuw alternatief bestand aan voor deze bron';
+$lang["plugin-pdf_split-title"]='PDF Splitsen';
+$lang["plugin-pdf_split-desc"]='Staat toe dat PDF-bestanden in meerdere pagina\'s worden gesplitst';

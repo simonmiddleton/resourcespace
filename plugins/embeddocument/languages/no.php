@@ -12,3 +12,5 @@ $lang["embeddocument_specify_resourcetype"]='Vennligst spesifiser hvilken ressur
 $lang["embeddocument_document_resourcetype"]='Fjernstyrt dokumentvisning ressurstype:';
 $lang["embeddocument_allow_original_download"]='Tillat nedlasting av PDF-varianten av ressursfilen?';
 $lang["embeddocument_embed_share"]='Bygg inn dokument';
+$lang["plugin-embeddocument-title"]='Bygg inn dokument';
+$lang["plugin-embeddocument-desc"]='Gir en funksjon for å generere HTML for innebygde dokumentforhåndsvisninger på eksterne nettsteder.';

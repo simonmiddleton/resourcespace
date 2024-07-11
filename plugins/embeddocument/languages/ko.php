@@ -12,3 +12,5 @@ $lang["embeddocument_maximise"]='최대화';
 $lang["embeddocument_heading"]='원격 문서 뷰어 구성';
 $lang["embeddocument_specify_resourcetype"]='\'임베드\' 기능이 나타날 리소스 유형을 지정해 주세요.';
 $lang["embeddocument_document_resourcetype"]='원격 문서 뷰어 리소스 유형:';
+$lang["plugin-embeddocument-title"]='문서 삽입';
+$lang["plugin-embeddocument-desc"]='원격 사이트에서 삽입 가능한 문서 미리보기를 위한 HTML을 생성하는 기능을 제공합니다.';

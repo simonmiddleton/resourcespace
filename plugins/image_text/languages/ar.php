@@ -16,3 +16,5 @@ $lang["image_text_position"]='موضع النص في اللافتة الإعلا
 $lang["image_text_banner_position"]='موضع البانر بالنسبة للصورة.';
 $lang["image_text_font"]='الخط الذي يجب استخدامه، يجب أن يكون مدعومًا من إصدار ImageMagick المثبت';
 $lang["image_text_noim"]='يتطلب هذا الملحق تثبيت Imagemagick.';
+$lang["plugin-image_text-title"]='نص الصورة';
+$lang["plugin-image_text-desc"]='يمكن إضافة بيانات الحقل إلى الصورة عند التنزيل';

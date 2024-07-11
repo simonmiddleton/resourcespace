@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='PDF Uitvoeroptie (experimenteel)';
 $lang["annotate_pdf_output_only_annotated"]='Alleen geannoteerde bronnen opnemen in PDF-uitvoer';
 $lang["annotate_admin_edit_access"]='Mogelijkheid om annotaties van andere gebruikers te bewerken';
 $lang["annotate_ref_not_supplied"]='Referentie niet opgegeven';
+$lang["plugin-annotate-title"]='Annoteren';
+$lang["plugin-annotate-desc"]='Maakt het mogelijk om jquery-beeldannotaties te maken';

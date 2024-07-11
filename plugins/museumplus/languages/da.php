@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='"museumplus_modules_saved_c
 $lang["museumplus_error_invalid_association"]='Ugyldig modul(er) tilknytning. Sørg venligst for, at den korrekte modul og/eller post-ID er blevet indtastet!';
 $lang["museumplus_id_returns_multiple_records"]='Flere poster fundet - indtast venligst den tekniske ID i stedet';
 $lang["museumplus_error_module_no_field_maps"]='Kan ikke synkronisere data fra MuseumPlus. Årsag: modulet \'%name\' har ingen konfigurerede feltmappings.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Avanceret] Tillader udtrækning af ressource-metadata fra MuseumPlus ved hjælp af dets REST API (MpRIA).';

@@ -16,3 +16,5 @@ $lang["image_text_position"]='Posisi teks di banner.';
 $lang["image_text_banner_position"]='Posisi banner relatif terhadap gambar.';
 $lang["image_text_font"]='Font yang digunakan harus didukung oleh versi imagemagick yang terpasang';
 $lang["image_text_noim"]='Plugin ini memerlukan Imagemagick untuk diinstal.';
+$lang["plugin-image_text-title"]='Teks Gambar';
+$lang["plugin-image_text-desc"]='Memungkinkan data bidang ditambahkan ke gambar saat diunduh';

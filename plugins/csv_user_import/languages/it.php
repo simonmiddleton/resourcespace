@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='Il file CSV deve avere una riga di intestaz
 $lang["csv_user_import_condition3"]='Colonna(e) che conterranno valori contenenti <b>virgole (,)</b>, assicurati di formattarle come tipo <b>testo</b> in modo da non dover aggiungere virgolette (""). Quando salvi come file .csv, assicurati di selezionare l\'opzione di citazione delle celle di tipo testo';
 $lang["csv_user_import_condition4"]='Colonne consentite: *nome utente, *email, password, nome completo, scadenza account, commenti, restrizione IP, lingua. Nota: i campi obbligatori sono contrassegnati con *';
 $lang["csv_user_import_condition5"]='La lingua dell\'utente tornerà automaticamente a quella impostata utilizzando l\'opzione di configurazione "$defaultlanguage" se la colonna "lang" non viene trovata o non ha un valore';
+$lang["plugin-csv_user_import-title"]='Importazione Utenti CSV';
+$lang["plugin-csv_user_import-desc"]='[Avanzato] Fornisce la possibilità di importare un batch di utenti basato su un file CSV preformattato';

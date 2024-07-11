@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Categoria';
 $lang["youtube_publish_category_error"]='Erro ao recuperar categorias do YouTube: -';
 $lang["youtube_chunk_size"]='Tamanho do bloco a ser usado ao fazer upload para o YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Adicionar tags de âncora à URL ao salvar no campo de metadados de URL do YouTube?';
+$lang["plugin-youtube_publish-title"]='Publicar no YouTube';
+$lang["plugin-youtube_publish-desc"]='Publica recurso de vídeo na conta do YouTube configurada.';

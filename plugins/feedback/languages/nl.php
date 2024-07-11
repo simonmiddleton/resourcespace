@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Tekst / HTML:';
 $lang["feedback_options-comma_separated"]='Opties: (gescheiden door komma\'s)';
 $lang["feedback_add_new_field"]='Nieuw veld toevoegen';
 $lang["feedback_back_to_plugin_manager"]='Terug naar Plugin Manager';
+$lang["plugin-feedback-title"]='Feedback';
+$lang["plugin-feedback-desc"]='Voegt een algemene gebruikersfeedbackfunctie toe met configureerbare vragen.';

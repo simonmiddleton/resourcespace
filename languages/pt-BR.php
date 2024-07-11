@@ -2933,3 +2933,10 @@ $lang["all__emaillogindetails"]='<br />
 [lang_username] : [username] <br /><br />
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["plugin-category-asset-processing"]='Processamento de Ativos';
+$lang["plugin-category-authentication"]='Autenticação';
+$lang["plugin-category-collaboration"]='Colaboração';
+$lang["plugin-category-system"]='Sistema';
+$lang["plugin-category-user-interface"]='Interface do Usuário';
+$lang["plugin-category-workflow-and-access"]='Fluxo de Trabalho e Acesso';
+$lang["plugin-category-integrations"]='Integrações';

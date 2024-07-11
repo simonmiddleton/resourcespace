@@ -49,3 +49,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='De \'museumplus_modules_sav
 $lang["museumplus_error_invalid_association"]='Ongeldige module(s) associatie. Zorg ervoor dat de juiste Module en/of Record ID zijn ingevoerd!';
 $lang["museumplus_id_returns_multiple_records"]='Meerdere records gevonden - voer in plaats daarvan de technische ID in';
 $lang["museumplus_error_module_no_field_maps"]='Kan geen gegevens synchroniseren vanuit MuseumPlus. Reden: module \'%name\' heeft geen veldtoewijzingen geconfigureerd.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Geavanceerd] Stelt in staat om resource metadata te extraheren uit MuseumPlus met behulp van de REST API (MpRIA).';

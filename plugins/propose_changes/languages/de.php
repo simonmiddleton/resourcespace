@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Vorgeschlagene Bearbeitung';
 $lang["actions_propose_changes"]='Zeige mir die vom Benutzer vorgeschlagenen Änderungen in meiner Aktionsliste';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Ihre vorgeschlagenen Änderungen wurden überprüft.<br/>[changesummary]<br/>Klicken Sie unten, um die Änderungen zu überprüfen.<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Vorgeschlagene Änderungen wurden eingereicht.<br/>[changesummary]<br/>Klicken Sie unten, um die Änderungen zu überprüfen.<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Änderungen vorschlagen';
+$lang["plugin-propose_changes-desc"]='Fügt die Option hinzu, Benutzern vorzuschlagen, Metadatenänderungen ohne Bearbeitungszugriff vorzunehmen';

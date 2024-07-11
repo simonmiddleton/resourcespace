@@ -11,3 +11,5 @@ $lang["outofrange"]='सीमा से बाहर';
 $lang["invalidrange"]='अमान्य सीमा';
 $lang["splitpdf_createnewresource"]='प्रत्येक श्रेणी के लिए एक नया संसाधन बनाएँ';
 $lang["splitpdf_createnewalternativefile"]='इस संसाधन पर प्रत्येक श्रेणी के लिए एक नया वैकल्पिक फ़ाइल बनाएँ';
+$lang["plugin-pdf_split-title"]='पीडीएफ विभाजन';
+$lang["plugin-pdf_split-desc"]='पीडीएफ फाइलों को कई पृष्ठों में विभाजित करने की अनुमति देता है';

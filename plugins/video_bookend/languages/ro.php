@@ -9,3 +9,5 @@ $lang["bookend-noimage-2"]='(lipsă imagine de închidere)';
 $lang["bookend-intro"]='Selectați imagini din lista de fișiere alternative pentru a fi utilizate ca imagini de deschidere și închidere.';
 $lang["bookend-failed"]='Eșec!';
 $lang["bookend-could-not-open-file"]='Eroare - nu s-a putut deschide fișierul!';
+$lang["plugin-video_bookend-title"]='Carcasă video';
+$lang["plugin-video_bookend-desc"]='Adaugă posibilitatea de a descărca un videoclip cu un titlu și un grafic de final';

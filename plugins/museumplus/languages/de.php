@@ -53,3 +53,5 @@ $lang["museumplus_id_returns_multiple_records"]='Mehrere Datensätze gefunden - 
 $lang["museumplus_error_module_no_field_maps"]='Die Daten können nicht von MuseumPlus synchronisiert werden. Grund: Das Modul \'%name\' hat keine Feldzuordnungen konfiguriert.';
 $lang["museumplus_api_pass"]='Passwort';
 $lang["museumplus_modules_configuration_header"]='Konfiguration der Module';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Erweitert] Ermöglicht das Extrahieren von Ressourcen-Metadaten aus MuseumPlus mithilfe seiner REST-API (MpRIA).';

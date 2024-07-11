@@ -54,3 +54,5 @@ $lang["rse_workflow_bcc_admin"]='Powiadom administratorów systemu, gdy zostanie
 $lang["rse_workflow_state_not_editable"]='Ten stan archiwum nie jest edytowalny, jest to stan wymagany przez system, został ustawiony w pliku config.php lub nie istnieje';
 $lang["rse_workflow_state_notify_help"]='Użytkownicy zobaczą zasoby w tym stanie jako działania, zamiast otrzymywać proste powiadomienia';
 $lang["rse_workflow_introduction"]='Aby zmienić stany i działania przepływu pracy, użyj opcji \'Zarządzaj działaniami przepływu pracy\' i \'Zarządzaj stanami przepływu pracy\' w Admin. Kliknij [link_param], aby przejść do Admin';
+$lang["plugin-rse_workflow-title"]='Zaawansowany Workflow';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Przepływ pracy';

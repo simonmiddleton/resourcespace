@@ -61,3 +61,5 @@ $lang["doi_hide_meta"]='Sakrij DOI metapodatke';
 $lang["doi_fetched_xml_from_MDS"]='Trenutni XML metapodaci uspješno su dohvaćeni iz DataCite-ove pohrane metapodataka';
 $lang["doi_info_wikipedia"]='https://hr.wikipedia.org/wiki/Digital_Object_Identifier';
 $lang["doi_sum_of"]='od';
+$lang["plugin-doi-title"]='Digitalni identifikator objekta';
+$lang["plugin-doi-desc"]='Generira DOI-jeve za nepromjenjive objekte prije nego što ih registrira na DataCite za trajno citiranje.';

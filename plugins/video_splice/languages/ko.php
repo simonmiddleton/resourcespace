@@ -45,3 +45,5 @@ $lang["video_splice_no_export_folder"]='구성 파일에 비디오 내보내기 
 $lang["video_splice_incorrect_quantity"]='유효한 리소스가 이 페이지가 로드된 이후 컬렉션에서 제거되었거나 추가되었습니다. 다시 시도해 주세요.';
 $lang["video_splice_createdfromvideosplice"]='비디오 스플라이스 플러그인에서 생성됨';
 $lang["video_splice_error_invalid_action"]='오류 : 잘못된 작업';
+$lang["plugin-video_splice-title"]='비디오 스플라이스';
+$lang["plugin-video_splice-desc"]='비디오 자르기 및 연결 기능 추가';

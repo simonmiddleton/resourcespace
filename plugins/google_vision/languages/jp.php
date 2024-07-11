@@ -21,3 +21,5 @@ $lang["google_vision_translation_languages"]='言語コードのカンマ区切�
 $lang["google_vision_translation_keep_english"]='オリジナルの英語のキーワードを保持しますか？';
 $lang["google_vision_translation"]='多言語翻訳 (たげんごほんやく)';
 $lang["google_vision_api"]='Google Vision API';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='画像認識機能。アップロードされた画像をGoogle Cloud Vision APIに渡し、提案されたメタデータを設定します。';

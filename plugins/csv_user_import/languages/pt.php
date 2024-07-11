@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='O arquivo CSV deve ter uma linha de cabeça
 $lang["csv_user_import_condition3"]='Coluna(s) que terão valores contendo <b>vírgulas ( , )</b>, certifique-se de formatá-la(s) como tipo <b>texto</b> para que não seja necessário adicionar aspas (""). Ao salvar como arquivo .csv, certifique-se de marcar a opção de colocar aspas em células do tipo texto';
 $lang["csv_user_import_condition4"]='Colunas permitidas: *nome de usuário, *e-mail, senha, nome completo, expiração da conta, comentários, restrição de IP, idioma. Observação: os campos obrigatórios estão marcados com *';
 $lang["csv_user_import_condition5"]='O idioma do usuário voltará ao padrão definido usando a opção de configuração "$defaultlanguage" se a coluna de idioma não for encontrada ou não tiver um valor';
+$lang["plugin-csv_user_import-title"]='Importação de Usuários via CSV';
+$lang["plugin-csv_user_import-desc"]='[Avançado] Fornece a capacidade de importar um lote de usuários com base em um arquivo CSV pré-formatado';

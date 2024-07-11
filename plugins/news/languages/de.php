@@ -12,3 +12,5 @@ $lang["news_body"]='Körperinhalt';
 $lang["news_nonewmessages"]='Keine neuen Nachrichten';
 $lang["title"]='Neueste Nachrichten...';
 $lang["title-too-long"]='Das Titelfeld ist länger als die erlaubten 50 Zeichen';
+$lang["plugin-news-title"]='Nachrichten';
+$lang["plugin-news-desc"]='Fügt Startseiten-Nachrichten hinzu';

@@ -24,3 +24,5 @@ $lang["notes"]='Notities';
 $lang["confirmdeleteconsentfile"]='Weet u zeker dat u dit bestand wilt VERWIJDEREN? Dit kan niet ongedaan worden gemaakt.';
 $lang["consent_manager_mediums"]='Toestemming gebruik media';
 $lang["consent_manager_access"]='Beheer toestemmingsgegevens (indien nog niet ingeschakeld via de toestemming "Toegang tot het systeeminstellingen gebied")';
+$lang["plugin-consentmanager-title"]='Toestemmingsbeheerder';
+$lang["plugin-consentmanager-desc"]='Voegt de mogelijkheid toe om toestemming te beheren die is gegeven door onderwerpen die in uw mediabestanden voorkomen';

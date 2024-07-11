@@ -11,3 +11,5 @@ $lang["openai_gpt_max_tokens"]='Maximální počet tokenů';
 $lang["openai_gpt_advanced"]='UPOZORNĚNÍ - Tato sekce je určena pouze pro testovací účely a neměla by být měněna na živých systémech. Změna jakýchkoli možností pluginu zde ovlivní chování všech konfigurovaných polí metadat. Měňte s opatrností!';
 $lang["openai_gpt_system_message"]='Počáteční text systémové zprávy. Zástupné symboly %%IN_TYPE%% a %%OUT_TYPE%% budou nahrazeny \'text\' nebo \'json\' v závislosti na typech zdrojového/cílového pole';
 $lang["property-openai_gpt_prompt"]='GPT výzva';
+$lang["plugin-openai_gpt-title"]='Integrace OpenAI API GPT';
+$lang["plugin-openai_gpt-desc"]='OpenAI generovaná metadata. Předává nakonfigurovaná data polí do OpenAI API a ukládá vrácené informace.';

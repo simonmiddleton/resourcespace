@@ -39,3 +39,5 @@ $lang["weekday-5"]='Vrijdag';
 $lang["weekday-6"]='Zaterdag';
 $lang["show_affected_resources"]='Toon betrokken bronnen';
 $lang["group_no"]='Groep';
+$lang["plugin-action_dates-title"]='Actiedata';
+$lang["plugin-action_dates-desc"]='Maakt geplande verwijdering of beperking van bronnen mogelijk op basis van datumvelden';

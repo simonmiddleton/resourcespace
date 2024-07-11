@@ -46,3 +46,5 @@ $lang["posixldapauth_unable_to_search_ldap_server"]='Kan ikke søke i LDAP-serve
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% mislyktes, vennligst sjekk innstillingene.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP-søk vellykket, men ingen grupper funnet.';
 $lang["posixldapauth_test"]='Test';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP-autorisering';
+$lang["plugin-posixldapauth-desc"]='[UTGÅTT] LDAP-plugin for AD & LDAP. Bruk simpleldap for AD-integrasjon.';

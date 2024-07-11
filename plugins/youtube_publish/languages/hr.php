@@ -52,3 +52,5 @@ $lang["youtube_publish_category"]='Kategorija';
 $lang["youtube_publish_category_error"]='Pogreška pri dohvaćanju kategorija YouTube-a: -';
 $lang["youtube_chunk_size"]='Veličina bloka za korištenje prilikom prijenosa na YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Dodajte sidrene oznake u URL prilikom spremanja u polje metapodataka YouTube URL-a?';
+$lang["plugin-youtube_publish-title"]='YouTube Objavi';
+$lang["plugin-youtube_publish-desc"]='Objavljuje video resurs na konfigurirani YouTube račun.';

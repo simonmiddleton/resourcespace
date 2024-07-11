@@ -28,3 +28,5 @@ $lang["selectlicence"]='Lütfen bir Lisans Kimliği seçin';
 $lang["confirmdeletelicensefile"]='Bu dosyayı SİLMEK istediğinizden emin misiniz? Bu işlem geri alınamaz.';
 $lang["license_manager_mediums"]='Lisans kullanım ortamları';
 $lang["license_manager_access"]='Lisans verilerini yönet (zaten "Sistem Kurulum alanına erişebilir" izni ile etkinleştirilmemişse)';
+$lang["plugin-licensemanager-title"]='Lisans Yöneticisi';
+$lang["plugin-licensemanager-desc"]='Kaynak lisanslamasını yönetme yeteneği ekler';

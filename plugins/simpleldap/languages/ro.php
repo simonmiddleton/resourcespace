@@ -50,3 +50,5 @@ $lang["simpleldap_usermatchcomment"]='Actualizat la utilizator LDAP de SimpleLDA
 $lang["origin_simpleldap"]='Pluginul SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Nu verificați FQDN-ul serverului cu CN-ul certificatului';
 $lang["port"]='Port';
+$lang["plugin-simpleldap-title"]='LDAP Simplu';
+$lang["plugin-simpleldap-desc"]='[Avansat] Implementare mai simplă a autentificării ldap, vizată pentru Active Directory dar suportă și directorul Oracle';

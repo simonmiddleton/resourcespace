@@ -54,3 +54,5 @@ $lang["rse_workflow_link_close"]='बंद करें';
 $lang["rse_workflow_more_notes_title"]='टिप्पणियाँ:';
 $lang["rse_workflow_email_from"]='सूचना भेजने के लिए ईमेल पता (खाली होने पर %EMAILFROM% का उपयोग करेगा):';
 $lang["rse_workflow_bcc_admin"]='योगदानकर्ता को सूचित किए जाने पर सिस्टम प्रशासकों को सूचित करें';
+$lang["plugin-rse_workflow-title"]='उन्नत कार्यप्रवाह';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace एंटरप्राइज - कार्यप्रवाह';

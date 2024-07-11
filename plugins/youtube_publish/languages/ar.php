@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='التصنيف';
 $lang["youtube_publish_category_error"]='خطأ في استرداد فئات يوتيوب: -';
 $lang["youtube_chunk_size"]='حجم القطعة المستخدمة عند الرفع إلى يوتيوب (ميجابايت)';
 $lang["youtube_publish_add_anchor"]='هل تريد إضافة علامات الربط للرابط عند حفظه في حقل بيانات الرابط الخاص بـ يوتيوب؟';
+$lang["plugin-youtube_publish-title"]='نشر YouTube';
+$lang["plugin-youtube_publish-desc"]='ينشر المورد الفيديو إلى حساب YouTube المُعد.';

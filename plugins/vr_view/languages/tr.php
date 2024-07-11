@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Alan, yuvarlanma/eğimin önlenip önlenmeyece�
 $lang["vr_view_yaw_only_value"]='Kontrol edilecek değer. Bulunursa, is_yaw_only seçeneği true olarak ayarlanacaktır';
 $lang["vr_view_orig_image"]='Önizleme görüntüsü için orijinal kaynak dosyasını kaynak olarak kullan?';
 $lang["vr_view_orig_video"]='Video önizlemesi için orijinal kaynak dosyasını kaynak olarak kullan?';
+$lang["plugin-vr_view-title"]='VR Görünümü';
+$lang["plugin-vr_view-desc"]='Google VR Görünümü - 360 derece görüntü ve video önizlemeleri (equirectangular format)';

@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"]='Özel formatlar';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Mevcut dosya çıktı seçeneklerinin, orijinal dosya için özel video formatları oluşturmak üzere kullanılmasına izin verilsin mi?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Şimdi dönüştürmeyi başlatmak için işaretleyin. İşaretlenmezse, dosya hazır olduğunda bir bildirim alacaksınız';
 $lang["video_tracks_transcode_now_label"]='Şimdi dönüştür';
+$lang["plugin-video_tracks-title"]='Video Parçaları';
+$lang["plugin-video_tracks-desc"]='[İleri] Video kaynakları için farklı ses ve altyazı seçenekleri desteği ekle';

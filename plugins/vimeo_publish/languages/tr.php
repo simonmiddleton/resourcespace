@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Kaynak Vimeo\'ya yüklendi. [vimeo_ur
 $lang["vimeo_publish_account_options"]='Vimeo hesap seçenekleri';
 $lang["vimeo_publish_allow_user_accounts"]='Kullanıcıların kendi Vimeo hesaplarına yayın yapmalarına izin ver. Yanlışsa, aşağıda tek bir Vimeo hesabına erişim yapılandırılmalıdır';
 $lang["vimeo_publish_set_account"]='Vimeo hesabını ayarla';
+$lang["plugin-vimeo_publish-title"]='Vimeo Yayınla';
+$lang["plugin-vimeo_publish-desc"]='OAuth 2.0 kullanarak kaynakları Vimeo\'ya yayınla';

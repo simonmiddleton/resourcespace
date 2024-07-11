@@ -12,3 +12,5 @@ $lang["news_body"]='Gövde içeriği';
 $lang["news_nonewmessages"]='Yeni mesaj yok';
 $lang["title"]='Son Haberler...';
 $lang["title-too-long"]='Başlık alanı izin verilen 50 karakterden daha uzun';
+$lang["plugin-news-title"]='Haberler';
+$lang["plugin-news-desc"]='Ana sayfa haber öğeleri ekler';

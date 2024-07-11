@@ -45,3 +45,5 @@ $lang["action-trim"]='Beskær';
 $lang["video-trim_output"]='Output';
 $lang["action-splice"]='Splejs';
 $lang["video_splice_error_invalid_action"]='Fejl: Ugyldig handling';
+$lang["plugin-video_splice-title"]='Video Sammenføjning';
+$lang["plugin-video_splice-desc"]='Tilføjer mulighed for at trimme og splejse videoer';

@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='SimpleLDAP 플러그인에 의해 생성됨.';
 $lang["simpleldap_usermatchcomment"]='SimpleLDAP에 의해 LDAP 사용자로 업데이트됨.';
 $lang["origin_simpleldap"]='SimpleLDAP 플러그인';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='서버의 FQDN을 인증서의 CN과 대조하지 마십시오';
+$lang["plugin-simpleldap-title"]='간단한 LDAP';
+$lang["plugin-simpleldap-desc"]='[고급] Active Directory를 대상으로 하지만 Oracle 디렉토리도 지원하는 간단한 ldap 인증 구현';

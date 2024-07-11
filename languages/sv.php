@@ -3088,3 +3088,10 @@ $lang["all__emaillogindetails"]='<br />
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
 $lang["csv_export_filename"]='metadata_export_[search]_[time]';
+$lang["plugin-category-asset-processing"]='Tillgångsbehandling';
+$lang["plugin-category-authentication"]='Autentisering';
+$lang["plugin-category-collaboration"]='Samarbete';
+$lang["plugin-category-integrations"]='Integrationer';
+$lang["plugin-category-system"]='System';
+$lang["plugin-category-user-interface"]='Användargränssnitt';
+$lang["plugin-category-workflow-and-access"]='Arbetsflöde och åtkomst';

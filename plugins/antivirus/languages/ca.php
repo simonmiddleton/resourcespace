@@ -10,3 +10,5 @@ $lang["antivirus_action_quarantine"]='Moure a quarantena';
 $lang["antivirus_moving_file"]='Moure el recurs [%resource_id%] a l\'estat d\'arxiu [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Ruta de l\'antivirus no configurada!';
 $lang["antivirus_deleting_file"]='Eliminant el recurs [%resource_id%] i qualsevol fitxer associat!';
+$lang["plugin-antivirus-title"]='Antivirus';
+$lang["plugin-antivirus-desc"]='[Avançat] Capacitats antivirus mitjançant la integració amb la majoria dels motors antivirus coneguts que poden executar-se per línia de comandaments';

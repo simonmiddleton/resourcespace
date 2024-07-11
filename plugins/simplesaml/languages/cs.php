@@ -80,3 +80,5 @@ $lang["simplesaml_start_url"]='Spustit/Přihlásit se URL';
 $lang["simplesaml_existing_config"]='Postupujte podle pokynů v databázi znalostí pro migraci vaší stávající konfigurace SAML';
 $lang["simplesaml_test_site_url"]='URL testovacího webu SimpleSAML';
 $lang["simplesaml_authorisation_login_error"]='Nemáte přístup k této aplikaci! Kontaktujte prosím správce svého účtu!';
+$lang["plugin-simplesaml-title"]='Jednoduché SAML';
+$lang["plugin-simplesaml-desc"]='[Pokročilé] Vyžadovat SAML autentizaci pro přístup k ResourceSpace';

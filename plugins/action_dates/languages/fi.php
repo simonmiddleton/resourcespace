@@ -39,3 +39,5 @@ $lang["weekday-6"]='Lauantai';
 $lang["show_affected_resources"]='Näytä vaikuttavat resurssit';
 $lang["group_no"]='Ryhmä';
 $lang["action_dates_email_text"]='Seuraavat resurssit on määrä rajoittaa ja/tai muuttaa tilaa [päivien] päivän kuluttua.';
+$lang["plugin-action_dates-title"]='Toimintapäivät';
+$lang["plugin-action_dates-desc"]='Mahdollistaa resurssien aikataulutetun poistamisen tai rajoittamisen päivämääräkenttien perusteella';

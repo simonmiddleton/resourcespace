@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Saltare la convalida e processare il 
 $lang["csv_upload_force_offline"]='Questo grande file CSV potrebbe richiedere molto tempo per essere elaborato, quindi verrà eseguito offline. Riceverai una notifica tramite un messaggio di ResourceSpace una volta completata l\'elaborazione';
 $lang["csv_upload_recommend_offline"]='Questa grande CSV potrebbe richiedere molto tempo per essere elaborata. Si consiglia di abilitare i lavori offline se si necessita di elaborare grandi CSV';
 $lang["csv_upload_createdfromcsvupload"]='Creato tramite il plugin di caricamento CSV';
+$lang["plugin-csv_upload-title"]='Caricamento CSV';
+$lang["plugin-csv_upload-desc"]='[Avanzato] Carica i metadati utilizzando un file CSV.';

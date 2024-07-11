@@ -12,3 +12,5 @@ $lang["edit_usage"]='Bewerk gebruik';
 $lang["delete_usage"]='Verwijder gebruik';
 $lang["resource_usage_configuration"]='Configuratie van het gebruik van bronnen';
 $lang["resource_usage_mediums"]='Lijst van beschikbare gebruiksopties (gescheiden door komma\'s)';
+$lang["plugin-resource_usage-title"]='Gebruik van bronnen';
+$lang["plugin-resource_usage-desc"]='[Geavanceerd] Voegt de mogelijkheid toe om het gebruik van bronnen te loggen via de bronweergavepagina';

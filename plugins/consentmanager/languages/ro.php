@@ -24,3 +24,5 @@ $lang["notes"]='Note';
 $lang["confirmdeleteconsentfile"]='Sunteți sigur că doriți să ȘTERGEȚI acest fișier? Această acțiune nu poate fi anulată.';
 $lang["consent_manager_mediums"]='Vă rugăm să traduceți: Consimțământ pentru utilizarea mijloacelor';
 $lang["consent_manager_access"]='Gestionați datele de consimțământ (unde nu sunt deja activate prin permisiunea "Poate accesa zona de configurare a sistemului")';
+$lang["plugin-consentmanager-title"]='Manager de consimțământ';
+$lang["plugin-consentmanager-desc"]='Adaugă capacitatea de a gestiona consimțământul acordat de subiecții prezentați în fișierele tale media';

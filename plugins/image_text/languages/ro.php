@@ -16,3 +16,5 @@ $lang["image_text_position"]='Poziția textului în banner.';
 $lang["image_text_banner_position"]='Poziția bannerului relativ la imagine.';
 $lang["image_text_font"]='Fontul de utilizat trebuie să fie suportat de versiunea de ImageMagick instalată';
 $lang["image_text_noim"]='Acest plugin necesită instalarea Imagemagick.';
+$lang["plugin-image_text-title"]='Text imagine';
+$lang["plugin-image_text-desc"]='Permite adăugarea datelor câmpului la imagine la descărcare';

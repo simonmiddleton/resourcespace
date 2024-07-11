@@ -16,3 +16,5 @@ $lang["image_text_position"]='バナー内のテキストの位置。';
 $lang["image_text_banner_position"]='画像に対するバナーの位置。';
 $lang["image_text_font"]='使用するフォントは、インストールされているImageMagickバージョンでサポートされている必要があります。';
 $lang["image_text_noim"]='このプラグインを使用するには、Imagemagickがインストールされている必要があります。';
+$lang["plugin-image_text-title"]='画像テキスト';
+$lang["plugin-image_text-desc"]='ダウンロード時にフィールドデータを画像に追加できるようにします';

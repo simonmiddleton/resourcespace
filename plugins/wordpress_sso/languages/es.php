@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Iniciar sesión usando una cuenta que
 $lang["wordpress_sso_use_wp_login"]='Iniciar sesión usando una cuenta de WordPress';
 $lang["wordpress_sso_retry"]='Haga clic aquí para intentar iniciar sesión de nuevo';
 $lang["origin_wordpress_sso"]='Plugin SSO de Wordpress';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Avanzado] Permite el inicio de sesión único con la instalación de Wordpress';

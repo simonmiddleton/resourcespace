@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Tekli çıkış URL\'si';
 $lang["simplesaml_start_url"]='Başlat/Oturum Açma URL\'si';
 $lang["simplesaml_existing_config"]='Bilinen Bilgi Tabanı talimatlarını izleyerek mevcut SAML yapılandırmanızı taşıyın';
 $lang["simplesaml_test_site_url"]='SimpleSAML test sitesi URL\'si';
+$lang["plugin-simplesaml-title"]='Basit SAML';
+$lang["plugin-simplesaml-desc"]='[İleri] ResourceSpace\'e erişim için SAML kimlik doğrulaması gerektir';

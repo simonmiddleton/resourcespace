@@ -75,3 +75,5 @@ $lang["px"]='像素';
 $lang["rotation90"]='顺时针90度';
 $lang["rotation270"]='逆时针旋转90度';
 $lang["cropper_use_srgb"]='使用sRGB';
+$lang["plugin-transform-title"]='图像工具（转换）';
+$lang["plugin-transform-desc"]='启用创建裁剪和缩放的替代图像（支持移动设备的jCrop）';

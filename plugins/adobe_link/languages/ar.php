@@ -12,3 +12,5 @@ $lang["adobe_link_upload_document"]='حفظ';
 $lang["adobe_link_saving"]='حفظ...';
 $lang["adobe_link_saving_wait"]='جاري حفظ الملف، يرجى الانتظار لتلقي رسالة التأكيد. قد تحتاج إلى تحديث الصفحة لتحديث صورة المعاينة.';
 $lang["adobe_link_import"]='استيراد';
+$lang["plugin-adobe_link-title"]='رابط Adobe';
+$lang["plugin-adobe_link-desc"]='[متقدم] السماح باستيراد ملفات Adobe من ResourceSpace إلى Adobe CC';

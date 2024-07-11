@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='Een geldige bron is toegevoegd aan of 
 $lang["video_splice_createdfromvideosplice"]='Gemaakt met de Video Splice plugin';
 $lang["video-trim_output"]='Uitvoer';
 $lang["video_splice_error_invalid_action"]='Fout: Ongeldige actie';
+$lang["plugin-video_splice-title"]='Video Samenvoegen';
+$lang["plugin-video_splice-desc"]='Voegt videobijsnijden en -samenvoegen functionaliteit toe';

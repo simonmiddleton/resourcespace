@@ -38,3 +38,5 @@ $lang["yourresourcehasbeenuploaded"]='La tua risorsa è stata caricata';
 $lang["yourresourceshavebeenuploaded"]='Le tue risorse sono state caricate';
 $lang["checkmail_not_allowed_error_template"]='L\'utente [user-fullname] ([username]), con ID [user-ref] e e-mail [user-email], non è autorizzato a caricare tramite e-mail (verificare le autorizzazioni "c" o "d" o gli utenti bloccati nella pagina di configurazione di checkmail). Registrato il: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Creato dal plugin Check Mail';
+$lang["plugin-checkmail-title"]='Controlla Posta';
+$lang["plugin-checkmail-desc"]='[Avanzato] Consente l\'ingestione di allegati e-mail';

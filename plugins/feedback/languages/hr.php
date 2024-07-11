@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Tekst / HTML:';
 $lang["feedback_options-comma_separated"]='Opcije: (odvojene zarezom)';
 $lang["feedback_add_new_field"]='Dodaj novi polje';
 $lang["feedback_back_to_plugin_manager"]='Natrag na Upravitelja dodataka';
+$lang["plugin-feedback-title"]='Povratne informacije';
+$lang["plugin-feedback-desc"]='Dodaje opću funkciju povratnih informacija korisnika s konfigurabilnim pitanjima.';

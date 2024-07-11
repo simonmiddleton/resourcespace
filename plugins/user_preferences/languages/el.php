@@ -6,3 +6,5 @@ $lang["user_preferences_change_username"]='Να επιτρέπεται η αλλ
 $lang["user_preferences_change_email"]='Επιτρέψτε την αλλαγή της διεύθυνσης ηλεκτρονικού ταχυδρομείου';
 $lang["user_preferences_change_name"]='Να επιτρέπεται η αλλαγή του ονόματος του χρήστη';
 $lang["changeyourpassword"]='Αλλαγή του κωδικού πρόσβασης και των στοιχείων χρήστη μου';
+$lang["plugin-user_preferences-title"]='Προτιμήσεις Χρήστη';
+$lang["plugin-user_preferences-desc"]='Προσφέρει επιπλέον προτιμήσεις χρήστη';

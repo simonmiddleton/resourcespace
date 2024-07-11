@@ -12,3 +12,5 @@ $lang["edit_usage"]='Kullanımı düzenle';
 $lang["delete_usage"]='Kullanımı sil';
 $lang["resource_usage_configuration"]='Kaynak kullanım yapılandırması';
 $lang["resource_usage_mediums"]='Mevcut kullanım seçeneklerinin listesi (virgülle ayrılmış)';
+$lang["plugin-resource_usage-title"]='Kaynak Kullanımı';
+$lang["plugin-resource_usage-desc"]='[İleri] Kaynak kullanımını kaynak görüntüleme sayfası aracılığıyla kaydetme yeteneği ekler';

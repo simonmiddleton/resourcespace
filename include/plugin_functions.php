@@ -111,12 +111,13 @@ function purge_plugin_config($name)
  *
  * @param string $path Path to .yaml file to open.
  * @param bool $validate Check that the .yaml file is complete. [optional, default=false]
+ * @param bool $translate Translate the contents to the user's selected language (default=true)
  * @return array|bool Associative array of yaml values. If validate is false, this function will return an array of 
  *                    blank values if a yaml isn't available
  */
-function get_plugin_yaml($path, $validate=true)
+function get_plugin_yaml($path, $validate=true, $translate=true)
 {
-    #We're not using a full YAML structure, so this parsing function will do
+    # We're not using a full YAML structure, so this parsing function will do
     $plugin_yaml['name'] = basename($path, '.yaml');
     $plugin_yaml['version'] = '0';
     $plugin_yaml['author'] = '';
@@ -163,6 +164,28 @@ function get_plugin_yaml($path, $validate=true)
     } elseif ($validate) {
         return false;
     }
+
+    // Handle translations for base plugins
+    global $language,$languages,$lang;
+    if ($translate && $language!="en" && $language!="")
+        {
+        // Include relevant language file and use the translations instead, if set.
+        if (!array_key_exists($language,$languages)) {exit("Invalid language");} // Prevent path traversal
+        $plugin_lang_file=dirname(__FILE__) . "/../plugins/" . $plugin_yaml["name"] . "/languages/" . $language . ".php";
+        if (file_exists($plugin_lang_file))
+            {
+            include_once($plugin_lang_file);
+            if (isset($lang["plugin-" . $plugin_yaml["name"] . "-title"]))
+                {
+                // Append the translated title so the English title is still visible, this is so it's still possible to find the relevant plugin
+                // in the Knowledge Base (until we have Knowledge Base translations down the line)
+                $plugin_yaml["title"].=" (" . ($lang["plugin-" . $plugin_yaml["name"] . "-title"] ?? $plugin_yaml["title"]) . ")";
+                }
+            $plugin_yaml["desc"]= $lang["plugin-" . $plugin_yaml["name"] . "-desc"]  ?? $plugin_yaml["desc"];
+            }
+        $param="plugin-category-" . strtolower(str_replace(" ","-",$plugin_yaml["category"]));
+        $plugin_yaml["category"]= $lang[$param] ?? $plugin_yaml["category"];  
+        }
 
     return $plugin_yaml;
 }

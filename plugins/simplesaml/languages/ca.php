@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='URL de tancament de sessió única';
 $lang["simplesaml_start_url"]='Inici/URL d\'inici de sessió';
 $lang["simplesaml_existing_config"]='Segueix les instruccions de la Base de Coneixement per migrar la teva configuració SAML existent';
 $lang["simplesaml_test_site_url"]='URL del lloc de prova SimpleSAML';
+$lang["plugin-simplesaml-title"]='SAML simple';
+$lang["plugin-simplesaml-desc"]='[Avançat] Requereix autenticació SAML per accedir a ResourceSpace';

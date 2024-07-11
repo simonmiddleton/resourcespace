@@ -32,3 +32,5 @@ $lang["video_tracks_transcode_now_label"]='Μετατροπή κωδικοποί
 $lang["video_tracks_select_generate_opt"]='Παρακαλώ επιλέξτε μια επιλογή δημιουργίας';
 $lang["video_tracks_save_alt_not_perm"]='Αδυναμία αποθήκευσης εναλλακτικής χωρίς άδεια';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='ΣΗΜΑΝΤΙΚΟ! Το πρόσθετο Video Tracks έχει καταργήσει τις ρυθμίσεις μορφών εξόδου. Μπορούν να οριστούν μόνο στο config.php. Το πρόσθετο δεν θα λειτουργήσει όπως προβλέπεται μέχρι να αντιγραφεί η επιλογή διαμόρφωσης. Παρακαλώ αντιγράψτε τα εξής:- %nl%####%nl%[output_formats_config]####%nl%';
+$lang["plugin-video_tracks-title"]='Βίντεο Κομμάτια';
+$lang["plugin-video_tracks-desc"]='[Προηγμένο] Προσθήκη υποστήριξης για διαφορετικές επιλογές ήχου και υποτίτλων για βίντεο πόρους';

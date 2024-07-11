@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='Δημιουργήθηκε από το πρόσ
 $lang["simpleldap_usermatchcomment"]='Ενημερώθηκε σε χρήστη LDAP από το SimpleLDAP.';
 $lang["origin_simpleldap"]='Πρόσθετο SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Μην ελέγχετε το FQDN του διακομιστή έναντι του CN του πιστοποιητικού';
+$lang["plugin-simpleldap-title"]='Απλό LDAP';
+$lang["plugin-simpleldap-desc"]='[Προηγμένο] Απλούστερη υλοποίηση πιστοποίησης ldap, στοχευμένη στον Active Directory αλλά υποστηρίζει επίσης τον κατάλογο Oracle';

@@ -10,3 +10,5 @@ $lang["antivirus_action_quarantine"]='Verplaats naar quarantaine';
 $lang["antivirus_deleting_file"]='Verwijderen van bronbestand [%resource_id%] en alle bijbehorende bestanden!';
 $lang["antivirus_moving_file"]='Verplaatsen van bronbestand [%resource_id%] naar archiefstatus [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Antivirus pad niet ingesteld!';
+$lang["plugin-antivirus-title"]='Antivirus';
+$lang["plugin-antivirus-desc"]='[Geavanceerde] Antivirusmogelijkheden door integratie met de meeste bekende antivirus-engines die via de opdrachtregel kunnen worden uitgevoerd';

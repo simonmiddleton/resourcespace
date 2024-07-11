@@ -2883,3 +2883,10 @@ $lang["all__emailresource"]='<br />
 [lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
 $lang["csv_export_filename"]='metadata_export_[search]_[time]';
+$lang["plugin-category-asset-processing"]='Verwerkingsproces van middelen';
+$lang["plugin-category-authentication"]='Authenticatie';
+$lang["plugin-category-collaboration"]='Samenwerking';
+$lang["plugin-category-integrations"]='Integraties';
+$lang["plugin-category-system"]='Systeem';
+$lang["plugin-category-user-interface"]='Gebruikersinterface';
+$lang["plugin-category-workflow-and-access"]='Workflow en Toegang';

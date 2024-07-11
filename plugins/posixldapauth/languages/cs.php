@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Nepodařilo se připoji
 $lang["posixldapauth_unable_to_search_ldap_server"]='Nelze prohledat LDAP server.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% selhalo, zkontrolujte prosím nastavení.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP hledání bylo úspěšné, ale nebyly nalezeny žádné skupiny.';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP autorizace';
+$lang["plugin-posixldapauth-desc"]='[ZASTARALÉ] LDAP plugin pro AD a LDAP. Použijte simpleldap pro integraci AD.';

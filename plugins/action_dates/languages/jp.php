@@ -39,3 +39,5 @@ $lang["weekday-5"]='金曜日';
 $lang["weekday-6"]='土曜日';
 $lang["show_affected_resources"]='影響を受けたリソースを表示する';
 $lang["group_no"]='グループ';
+$lang["plugin-action_dates-title"]='アクション日付';
+$lang["plugin-action_dates-desc"]='日付フィールドに基づいてリソースのスケジュール削除または制限を有効にします';

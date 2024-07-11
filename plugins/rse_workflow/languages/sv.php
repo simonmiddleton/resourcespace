@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='E-postadress att skicka notifieringar från (k
 $lang["rse_workflow_bcc_admin"]='Meddela systemadministratörerna när bidragsgivaren har meddelats';
 $lang["rse_workflow_state_notify_help"]='Användare kommer att se resurser i detta tillstånd som åtgärder, snarare än att få enkla aviseringar';
 $lang["rse_workflow_introduction"]='För att ändra arbetsflödesstatusar och åtgärder, använd \'Hantera arbetsflödesåtgärder\' och \'Hantera arbetsflödesstatusar\' från Admin. Klicka [här] för att gå till Admin';
+$lang["plugin-rse_workflow-title"]='Avancerat arbetsflöde';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbetsflöde';

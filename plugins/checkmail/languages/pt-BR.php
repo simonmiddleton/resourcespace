@@ -38,3 +38,5 @@ $lang["yourresourcehasbeenuploaded"]='Seu recurso foi enviado';
 $lang["yourresourceshavebeenuploaded"]='Seus recursos foram enviados';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), com ID [user-ref] e e-mail [user-email] não tem permissão para fazer upload por e-mail (verifique as permissões "c" ou "d" ou os usuários bloqueados na página de configuração de verificação de e-mail). Registrado em: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Criado a partir do plugin Verificar E-mail';
+$lang["plugin-checkmail-title"]='Verificar Email';
+$lang["plugin-checkmail-desc"]='[Avançado] Permite a ingestão de anexos enviados por e-mail';

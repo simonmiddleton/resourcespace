@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='プロバイダーの設定を解析�
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='\'%PROVIDER\'（プロバイダー）インスタンスの無効な構成形式';
 $lang["image_banks_error_bad_url_scheme"]='\'%PROVIDER\' (プロバイダー) インスタンスに無効なURLスキームが見つかりました';
 $lang["image_banks_error_unexpected_response"]='申し訳ありませんが、プロバイダーから予期しない応答がありました。詳細な調査についてはシステム管理者に連絡してください（デバッグログを参照）。';
+$lang["plugin-image_banks-title"]='画像バンク';
+$lang["plugin-image_banks-desc"]='ユーザーが外部のイメージバンクを選択して検索できるようにします。ユーザーは、返された結果に基づいて新しいリソースをダウンロードまたは作成できます。';

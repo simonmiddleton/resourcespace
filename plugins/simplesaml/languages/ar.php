@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='عنوان URL لتسجيل الخروج 
 $lang["simplesaml_start_url"]='بدء/تسجيل الدخول عبر الرابط (URL)';
 $lang["simplesaml_existing_config"]='اتبع تعليمات قاعدة المعرفة لنقل تكوين SAML الحالي الخاص بك';
 $lang["simplesaml_test_site_url"]='عنوان URL لموقع اختبار SimpleSAML';
+$lang["plugin-simplesaml-title"]='سامبل بسيط';
+$lang["plugin-simplesaml-desc"]='[متقدم] يتطلب مصادقة SAML للوصول إلى ResourceSpace';

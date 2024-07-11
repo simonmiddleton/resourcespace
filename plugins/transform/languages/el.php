@@ -75,3 +75,5 @@ $lang["transform_update_preview"]='Ενημέρωση προεπισκόπηση
 $lang["transform_preset_sizes"]='Επιλέξτε από προκαθορισμένο μέγεθος στόχου';
 $lang["error_crop_invalid"]='Παρακαλώ επιλέξτε μια περιοχή της εικόνας';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Εργαλεία Εικόνας (μετασχηματισμός)';
+$lang["plugin-transform-desc"]='Επιτρέπει τη δημιουργία περικομμένων και κλιμακωμένων εναλλακτικών εικόνων (jCrop με υποστήριξη για κινητά)';

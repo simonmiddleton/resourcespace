@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='LDAP sunucusuna bağlan
 $lang["posixldapauth_unable_to_search_ldap_server"]='LDAP sunucusunda arama yapılamıyor.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% başarısız oldu, lütfen ayarları kontrol edin.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP araması başarılı, ancak 0 grup bulundu.';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP Yetkilendirme';
+$lang["plugin-posixldapauth-desc"]='[DEPRECATED] AD ve LDAP için LDAP eklentisi. AD entegrasyonu için simpleldap kullanın.';

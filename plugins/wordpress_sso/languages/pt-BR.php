@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Entrar usando uma conta não-WordPres
 $lang["wordpress_sso_use_wp_login"]='Entrar usando conta do WordPress';
 $lang["wordpress_sso_retry"]='Clique aqui para tentar fazer login novamente';
 $lang["origin_wordpress_sso"]='Plugin de SSO para Wordpress';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Avançado] Permite Login Único com instalação do Wordpress';

@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='श्रेणी';
 $lang["youtube_publish_category_error"]='यूट्यूब श्रेणियाँ प्राप्त करने में त्रुटि: -';
 $lang["youtube_chunk_size"]='यूट्यूब पर अपलोड करते समय उपयोग करने के लिए चंक आकार (MB)';
 $lang["youtube_publish_add_anchor"]='क्या YouTube URL मेटाडेटा फ़ील्ड में सहेजते समय URL में एंकर टैग जोड़ें?';
+$lang["plugin-youtube_publish-title"]='यूट्यूब प्रकाशित करें';
+$lang["plugin-youtube_publish-desc"]='कॉन्फ़िगर किए गए YouTube खाते पर वीडियो संसाधन प्रकाशित करता है।';

@@ -23,3 +23,5 @@ $lang["enable"]='Omogućiti';
 $lang["checknow"]='Provjeri sada';
 $lang["columnheader-enabled"]='Omogućeno';
 $lang["columnheader-last-found"]='Posljednje pronađeno';
+$lang["plugin-rse_search_notifications-title"]='Obavijesti o pretraživanju';
+$lang["plugin-rse_search_notifications-desc"]='Obavijesti korisnika kada dođe do promjena u spremljenoj pretrazi';

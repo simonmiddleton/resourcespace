@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Brugertekst til visning af delinger, der er opr
 $lang["falcon_link_log_publish"]='Delt ressource via Falcon';
 $lang["falcon_link_log_archive"]='Arkiveret ressource via Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Venligst tjek, at beskrivelsen og tags ikke er tomme';
+$lang["plugin-falcon_link-title"]='Falcon Link';
+$lang["plugin-falcon_link-desc"]='[Avanceret] Udgiv ressourcer til Falcon.io';

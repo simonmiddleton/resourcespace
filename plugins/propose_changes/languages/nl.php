@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Voorgestelde bewerking';
 $lang["actions_propose_changes"]='Toon me door gebruikers voorgestelde wijzigingen in mijn actielijst';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Uw voorgestelde wijzigingen zijn beoordeeld.<br/>[changesummary]<br/>Klik hieronder om de wijzigingen te bekijken<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='<img_headerlogo]<br />Voorgestelde wijzigingen zijn ingediend.<br/>[changesummary]<br/>Klik hieronder om de wijzigingen te bekijken<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Wijzigingen Voorstellen';
+$lang["plugin-propose_changes-desc"]='Voegt optie toe om gebruikers toe te staan metadatawijzigingen voor te stellen zonder bewerkingsrechten';

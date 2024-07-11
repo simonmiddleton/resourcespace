@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='File CSV harus memiliki baris header';
 $lang["csv_user_import_condition3"]='Kolom yang akan memiliki nilai yang mengandung <b>koma (,)</b>, pastikan Anda memformatnya sebagai tipe <b>teks</b> sehingga Anda tidak perlu menambahkan tanda kutip (""). Saat menyimpan sebagai file .csv, pastikan untuk memeriksa opsi mengutip sel tipe teks';
 $lang["csv_user_import_condition4"]='Kolom yang diizinkan: *nama pengguna, *surel, kata sandi, nama lengkap, akun berakhir, komentar, batasan IP, bahasa. Catatan: kolom wajib ditandai dengan *';
 $lang["csv_user_import_condition5"]='Bahasa Indonesian: Bahasa pengguna akan kembali ke bahasa default yang diatur menggunakan opsi konfigurasi "$defaultlanguage" jika kolom bahasa tidak ditemukan atau tidak memiliki nilai';
+$lang["plugin-csv_user_import-title"]='Impor Pengguna CSV';
+$lang["plugin-csv_user_import-desc"]='[Advanced] Menyediakan kemampuan untuk mengimpor sekelompok pengguna berdasarkan file CSV yang telah diformat sebelumnya';

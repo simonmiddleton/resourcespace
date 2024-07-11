@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='पाठ / HTML:';
 $lang["feedback_options-comma_separated"]='विकल्प: (अल्पविराम से अलग किए गए)';
 $lang["feedback_add_new_field"]='नया फ़ील्ड जोड़ें';
 $lang["feedback_back_to_plugin_manager"]='प्लगइन प्रबंधक पर वापस';
+$lang["plugin-feedback-title"]='प्रतिक्रिया';
+$lang["plugin-feedback-desc"]='कॉन्फ़िगर करने योग्य प्रश्नों के साथ एक सामान्य उपयोगकर्ता प्रतिक्रिया फ़ंक्शन जोड़ता है।';

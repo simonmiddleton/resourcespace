@@ -39,3 +39,5 @@ $lang["group_no"]='Grupo';
 $lang["action_dates_email_text_restrict"]='Os seguintes recursos serão restritos em [days] dias.';
 $lang["action_dates_email_text_state"]='Os seguintes recursos estão programados para mudar de estado em [days] dias.';
 $lang["action_dates_email_text"]='Os seguintes recursos estão programados para serem restritos e/ou mudar de estado em [days] dias.';
+$lang["plugin-action_dates-title"]='Datas de Ação';
+$lang["plugin-action_dates-desc"]='Permite a exclusão ou restrição programada de recursos com base em campos de data';

@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='التعديل المقترح';
 $lang["actions_propose_changes"]='أظهر لي التغييرات المقترحة من قبل المستخدم في قائمة إجراءاتي';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />تمت مراجعة التغييرات المقترحة من قبلك.<br/>[changesummary]<br/>انقر أدناه لمراجعة التغييرات<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />تم تقديم تغييرات مقترحة.<br/>[changesummary]<br/>انقر أدناه لمراجعة التغييرات<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='اقتراح التغييرات';
+$lang["plugin-propose_changes-desc"]='يضيف خيارًا للسماح للمستخدمين باقتراح تغييرات في البيانات الوصفية دون الوصول إلى التحرير';

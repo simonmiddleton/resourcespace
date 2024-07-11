@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Connexion en utilisant un compte non-
 $lang["wordpress_sso_use_wp_login"]='Connexion en utilisant un compte WordPress';
 $lang["wordpress_sso_retry"]='Cliquez ici pour essayer de vous connecter à nouveau';
 $lang["origin_wordpress_sso"]='Plugin SSO Wordpress';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Avancé] Permet l\'authentification unique avec l\'installation de Wordpress';

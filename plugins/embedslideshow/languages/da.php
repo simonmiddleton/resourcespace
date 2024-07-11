@@ -24,3 +24,5 @@ $lang["embedslideshow_directlink"]='Ikke-indlejret direkte URL';
 $lang["embedslideshow_directlinkopen"]='Åbn direkte link (ny side)';
 $lang["embedslideshow_dynamic_size"]='Dynamisk ændring af forhåndsvisningens størrelse baseret på afspillerens størrelse?';
 $lang["sizename_pixels"]='%name (%pixels pixels)';
+$lang["plugin-embedslideshow-title"]='Indsæt Diasshow';
+$lang["plugin-embedslideshow-desc"]='Giver en funktion til at generere HTML til indlejrede samlingsdias på eksterne sider';

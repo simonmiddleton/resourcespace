@@ -23,3 +23,5 @@ $lang["enable"]='启用';
 $lang["checknow"]='立即检查';
 $lang["columnheader-enabled"]='启用 (Qǐyòng)';
 $lang["columnheader-last-found"]='最后发现';
+$lang["plugin-rse_search_notifications-title"]='搜索通知';
+$lang["plugin-rse_search_notifications-desc"]='当已保存的搜索发生更改时通知用户';

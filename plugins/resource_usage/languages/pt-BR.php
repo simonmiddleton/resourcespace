@@ -12,3 +12,5 @@ $lang["edit_usage"]='Editar uso';
 $lang["delete_usage"]='Excluir uso';
 $lang["resource_usage_configuration"]='Configuração de uso de recursos';
 $lang["resource_usage_mediums"]='Lista de opções de uso disponíveis (separadas por vírgula)';
+$lang["plugin-resource_usage-title"]='Uso de Recursos';
+$lang["plugin-resource_usage-desc"]='[Avançado] Adiciona a capacidade de registrar o uso de recursos através da página de visualização de recursos';

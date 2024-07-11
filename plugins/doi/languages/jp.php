@@ -61,3 +61,5 @@ $lang["doi_show_meta"]='DOIメタデータを表示する';
 $lang["doi_hide_meta"]='DOIメタデータを非表示にする';
 $lang["doi_fetched_xml_from_MDS"]='DataCiteのメタデータストアから現在のXMLメタデータを正常に取得できました。';
 $lang["doi_info_wikipedia"]='https://ja.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["plugin-doi-title"]='デジタルオブジェクト識別子';
+$lang["plugin-doi-desc"]='不変オブジェクトのためのDOIを生成し、それらを永続的な引用のためにDataCiteに登録します。';

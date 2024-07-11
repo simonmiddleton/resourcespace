@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='ロール/ピッチを防止するかどうか�
 $lang["vr_view_yaw_only_value"]='チェックする値。見つかった場合、is_yaw_onlyオプションがtrueに設定されます。';
 $lang["vr_view_orig_image"]='オリジナルのリソースファイルを画像プレビューのソースとして使用しますか？';
 $lang["vr_view_orig_video"]='オリジナルのリソースファイルをビデオプレビューのソースとして使用しますか？';
+$lang["plugin-vr_view-title"]='VRビュー';
+$lang["plugin-vr_view-desc"]='Google VR View - 360度画像およびビデオプレビュー（正距円筒図法形式）';

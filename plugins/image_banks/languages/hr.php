@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Nije moguće parsirati konfiguraciju p
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Neispravan format konfiguracije za instancu \'%PROVIDER\' (pružatelj usluga)';
 $lang["image_banks_error_bad_url_scheme"]='Pronađen nevažeći URL shema za instancu \'%PROVIDER\' (pružatelj usluga)';
 $lang["image_banks_error_unexpected_response"]='Žao nam je, primili smo neočekivani odgovor od pružatelja usluge. Molimo kontaktirajte svog sistemskog administratora za daljnju istragu (pogledajte zapisnik za otklanjanje grešaka).';
+$lang["plugin-image_banks-title"]='Banke slika';
+$lang["plugin-image_banks-desc"]='Omogućuje korisnicima odabir vanjske banke slika za pretraživanje. Korisnici tada mogu preuzeti ili stvoriti nove resurse na temelju dobivenih rezultata.';

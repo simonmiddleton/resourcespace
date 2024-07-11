@@ -24,3 +24,5 @@ $lang["notes"]='Noter';
 $lang["confirmdeleteconsentfile"]='Er du sikker på, at du ønsker at SLETTE denne fil? Dette kan ikke gøres om.';
 $lang["consent_manager_mediums"]='Samtykke til brug af medier';
 $lang["consent_manager_access"]='Administrer samtykke-data (hvor det ikke allerede er aktiveret via tilladelsen "Kan få adgang til Systemopsætningsområdet")';
+$lang["plugin-consentmanager-title"]='Samtykke Manager';
+$lang["plugin-consentmanager-desc"]='Tilføjer muligheden for at administrere samtykke givet af personer, der er med i dine mediefiler';

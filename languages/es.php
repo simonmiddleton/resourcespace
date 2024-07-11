@@ -2885,3 +2885,10 @@ $lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
 [text_footer]';
 $lang["log-missinglang"]='[type] (idioma faltante)';
 $lang["email_actions_truncated"]='Solo se muestran aquí las 1000 acciones más recientes. Tienes [total] acciones. Inicia sesión en [application_name] para verlas todas.';
+$lang["plugin-category-asset-processing"]='Procesamiento de Activos';
+$lang["plugin-category-authentication"]='Autenticación';
+$lang["plugin-category-collaboration"]='Colaboración';
+$lang["plugin-category-integrations"]='Integraciones';
+$lang["plugin-category-system"]='Sistema';
+$lang["plugin-category-user-interface"]='Interfaz de Usuario';
+$lang["plugin-category-workflow-and-access"]='Flujo de trabajo y acceso';

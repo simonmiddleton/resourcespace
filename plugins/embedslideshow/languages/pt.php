@@ -24,3 +24,5 @@ $lang["embedslideshow_directlink"]='URL direto não incorporado';
 $lang["embedslideshow_directlinkopen"]='Abrir link direto (nova página)';
 $lang["embedslideshow_dynamic_size"]='Redimensionamento dinâmico da pré-visualização com base no tamanho do reprodutor?';
 $lang["sizename_pixels"]='%name (%pixels pixels)';
+$lang["plugin-embedslideshow-title"]='Incorporar Apresentação de Slides';
+$lang["plugin-embedslideshow-desc"]='Fornece uma função para gerar HTML para slideshows de coleções incorporáveis em sites remotos';

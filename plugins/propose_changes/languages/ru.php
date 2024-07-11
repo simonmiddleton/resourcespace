@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Предложенное редактир
 $lang["actions_propose_changes"]='Покажите мне предложенные пользователями изменения в моем списке действий';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Ваши предложенные изменения были рассмотрены.<br/>[changesummary]<br/>Нажмите ниже, чтобы просмотреть изменения<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Предложенные изменения были отправлены.<br/>[changesummary]<br/>Нажмите ниже, чтобы ознакомиться с изменениями<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Предложить изменения';
+$lang["plugin-propose_changes-desc"]='Добавляет возможность пользователям предлагать изменения метаданных без доступа на редактирование';

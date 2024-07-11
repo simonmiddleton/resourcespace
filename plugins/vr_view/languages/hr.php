@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Polje koje se koristi za određivanje treba li 
 $lang["vr_view_yaw_only_value"]='Vrijednost za provjeru. Ako se pronađe, opcija is_yaw_only bit će postavljena na true';
 $lang["vr_view_orig_image"]='Koristiti izvornu datoteku resursa kao izvor za pregled slike?';
 $lang["vr_view_orig_video"]='Koristiti izvornu datoteku resursa kao izvor za pregled videa?';
+$lang["plugin-vr_view-title"]='VR Pregled';
+$lang["plugin-vr_view-desc"]='Google VR View - 360 stupnjeva pregledi slika i videozapisa (equirektangularni format)';

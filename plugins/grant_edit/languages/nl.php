@@ -9,3 +9,5 @@ $lang["grant_edit_date"]='Vervaldatum voor bewerktoegang';
 $lang["grant_edit_list"]='Huidige gebruikers met extra bewerkingsrechten';
 $lang["grant_edit_delete_user"]='Bevestig verwijdering van verbeterde toegang voor';
 $lang["grant_edit_group_list"]='Huidige groepen met extra bewerkingsrechten';
+$lang["plugin-grant_edit-title"]='Toestemming Bewerken';
+$lang["plugin-grant_edit-desc"]='Stelt beheerders in staat om gebruikers tijdelijke volledige bewerkingsrechten voor bronnen te geven';

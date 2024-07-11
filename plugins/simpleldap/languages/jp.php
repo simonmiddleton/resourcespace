@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='SimpleLDAPプラグインによって作成さ�
 $lang["simpleldap_usermatchcomment"]='SimpleLDAPによってLDAPユーザーに更新されました。';
 $lang["origin_simpleldap"]='SimpleLDAPプラグイン';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='サーバーのFQDNを証明書のCNと照合しないでください。';
+$lang["plugin-simpleldap-title"]='シンプルLDAP';
+$lang["plugin-simpleldap-desc"]='[高度] Active Directoryを対象とした、Oracleディレクトリもサポートするシンプルなldap認証の実装';

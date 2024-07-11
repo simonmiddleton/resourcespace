@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='用于确定是否应防止横滚/俯仰的字�
 $lang["vr_view_yaw_only_value"]='需要检查的值。如果找到，则is_yaw_only选项将被设置为true。';
 $lang["vr_view_orig_image"]='使用原始资源文件作为图像预览的源文件？';
 $lang["vr_view_orig_video"]='使用原始资源文件作为视频预览的源文件？';
+$lang["plugin-vr_view-title"]='VR 视图';
+$lang["plugin-vr_view-desc"]='Google VR View - 360度图像和视频预览（等距圆柱投影格式）';

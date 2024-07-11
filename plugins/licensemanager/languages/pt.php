@@ -28,3 +28,5 @@ $lang["confirmdeletelicensefile"]='Tem certeza de que deseja EXCLUIR este arquiv
 $lang["license_manager_mediums"]='Meios de uso de licença';
 $lang["license_manager_access"]='Gerenciar dados de licença (onde ainda não estiver habilitado através da permissão "Pode acessar a área de configuração do sistema")';
 $lang["action-unlink"]='Desvincular';
+$lang["plugin-licensemanager-title"]='Gerenciador de Licenças';
+$lang["plugin-licensemanager-desc"]='Adiciona a capacidade de gerenciar licenciamento de recursos';

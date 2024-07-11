@@ -28,3 +28,6 @@ $lang["feedback_options-comma_separated"] = "Alternativ (kommaseparerade):";
 
 $lang["feedback_add_new_field"] = "Lägg till nytt fält";
 $lang["feedback_back_to_plugin_manager"] = "Tillbaka: Tilläggshanteraren";
+
+$lang["plugin-feedback-title"]='Återkoppling';
+$lang["plugin-feedback-desc"]='Lägger till en allmän användarfeedbackfunktion med konfigurerbara frågor.';

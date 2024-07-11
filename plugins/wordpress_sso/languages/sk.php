@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Prihlásiť sa pomocou účtu mimo Wo
 $lang["wordpress_sso_use_wp_login"]='Prihlásiť sa pomocou účtu WordPress';
 $lang["wordpress_sso_retry"]='Kliknite sem, če želite poskusiti ponovno prijaviti';
 $lang["origin_wordpress_sso"]='Wordpress SSO plugin - Plugin pre jednotné prihlásenie (SSO) do Wordpress';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Advanced] Omogoča enotno prijavo z namestitvijo Wordpress';

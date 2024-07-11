@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Geef de voorkeur aan standaard ResourceSpace log
 $lang["winauth_test"]='Test';
 $lang["winauth_not_logged_in"]='Je bent niet ingelogd of je webserver is niet correct geconfigureerd';
 $lang["winauth_user_info"]='Je bent ingelogd als: [username]';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Geavanceerde] Windows Geïntegreerde Authenticatie';

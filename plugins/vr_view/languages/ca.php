@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Camp utilitzat per determinar si s\'ha de preve
 $lang["vr_view_yaw_only_value"]='Valor a comprovar. Si es troba, l\'opció is_yaw_only es configurarà com a true';
 $lang["vr_view_orig_image"]='Utilitzar el fitxer original del recurs com a font per a la vista prèvia de la imatge?';
 $lang["vr_view_orig_video"]='Utilitzar el fitxer original de recurs com a font per a la vista prèvia del vídeo?';
+$lang["plugin-vr_view-title"]='Vista VR';
+$lang["plugin-vr_view-desc"]='Google VR View - Previsualitzacions d\'imatges i vídeos de 360 graus (format equirectangular)';

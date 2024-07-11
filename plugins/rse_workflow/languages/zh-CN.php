@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='发送通知的电子邮件地址（如果为�
 $lang["rse_workflow_bcc_admin"]='当通知贡献者时，通知系统管理员。';
 $lang["rse_workflow_state_notify_help"]='用户将看到处于此状态的资源显示为操作，而不是接收简单的通知';
 $lang["rse_workflow_introduction"]='要修改工作流状态和操作，请使用“管理工作流操作”和“管理工作流状态”从管理员。点击[这里]进入管理员';
+$lang["plugin-rse_workflow-title"]='高级工作流程';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace 企业版 - 工作流程';

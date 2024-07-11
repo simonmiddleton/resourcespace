@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Pole służące do określenia, czy należy zap
 $lang["vr_view_yaw_only_value"]='Wartość do sprawdzenia. Jeśli zostanie znaleziona, opcja is_yaw_only zostanie ustawiona na true';
 $lang["vr_view_orig_image"]='Czy użyć oryginalnego pliku zasobu jako źródła podglądu obrazu?';
 $lang["vr_view_orig_video"]='Czy użyć oryginalnego pliku zasobu jako źródła podglądu wideo?';
+$lang["plugin-vr_view-title"]='Widok VR';
+$lang["plugin-vr_view-desc"]='Google VR View - podglądy obrazów i wideo 360 stopni (format equirectangular)';

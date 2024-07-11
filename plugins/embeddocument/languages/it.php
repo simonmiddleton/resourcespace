@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Configurazione del visualizzatore remoto di docu
 $lang["embeddocument_specify_resourcetype"]='Si prega di specificare per quale tipo di risorsa dovrebbe apparire la funzionalità "embed".';
 $lang["embeddocument_document_resourcetype"]='Tipo di risorsa Visualizzatore di documenti remoto';
 $lang["embeddocument_embed_share"]='Incorpora documento';
+$lang["plugin-embeddocument-title"]='Incorpora Documento';
+$lang["plugin-embeddocument-desc"]='Fornisce una funzione per generare HTML per anteprime di documenti incorporabili su siti remoti.';

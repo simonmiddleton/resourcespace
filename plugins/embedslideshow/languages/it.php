@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='Nessuna transizione automatica';
 $lang["embedslideshow_directlink"]='URL diretto non incorporato';
 $lang["embedslideshow_directlinkopen"]='Apri link diretto (nuova pagina)';
 $lang["embedslideshow_dynamic_size"]='Ridimensionamento dinamico dell\'anteprima in base alla dimensione del lettore?';
+$lang["plugin-embedslideshow-title"]='Incorpora Presentazione';
+$lang["plugin-embedslideshow-desc"]='Fornisce una funzione per generare HTML per slideshow di collezioni incorporabili su siti remoti';

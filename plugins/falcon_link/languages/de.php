@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Benutzertext zur Anzeige für Freigaben, die f�
 $lang["falcon_link_log_publish"]='Geteilte Ressource über Falcon';
 $lang["falcon_link_log_archive"]='Archivierte Ressource über Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Bitte überprüfen Sie, dass die Beschreibung und Tags nicht leer sind';
+$lang["plugin-falcon_link-title"]='Falcon Link';
+$lang["plugin-falcon_link-desc"]='[Erweitert] Ressourcen auf Falcon.io veröffentlichen';

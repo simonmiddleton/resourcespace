@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='\'museumplus_modules_saved_
 $lang["museumplus_error_invalid_association"]='Geçersiz modül(ler) ilişkisi. Lütfen doğru Modül ve/veya Kayıt Kimliğinin girildiğinden emin olun!';
 $lang["museumplus_id_returns_multiple_records"]='Birden fazla kayıt bulundu - lütfen teknik kimliği girin';
 $lang["museumplus_error_module_no_field_maps"]='MuseumPlus\'tan veri senkronize edilemiyor. Sebep: \'%name\' modülünde alan eşlemeleri yapılandırılmamış.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Gelişmiş] Kaynak meta verilerinin MuseumPlus\'tan REST API\'si (MpRIA) kullanılarak çıkarılmasına izin verir.';

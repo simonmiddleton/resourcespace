@@ -2891,3 +2891,10 @@ $lang["all__emailresource"]='<br />
 <a href="[url]">[embed_thumbnail]</a><br /><br />
 [lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
 [text_footer]';
+$lang["plugin-category-asset-processing"]='Processamento de Ativos';
+$lang["plugin-category-authentication"]='Autenticação';
+$lang["plugin-category-collaboration"]='Colaboração';
+$lang["plugin-category-integrations"]='Integrações';
+$lang["plugin-category-system"]='Sistema';
+$lang["plugin-category-user-interface"]='Interface do Usuário';
+$lang["plugin-category-workflow-and-access"]='Fluxo de Trabalho e Acesso';

@@ -47,3 +47,5 @@ $lang["posixldapauth_unable_to_search_ldap_server"]='Αδυναμία αναζή
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% απέτυχε, παρακαλώ ελέγξτε τις ρυθμίσεις.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Η αναζήτηση LDAP ήταν επιτυχής, αλλά δεν βρέθηκαν ομάδες.';
 $lang["posixldapauth_rdn"]='RDN';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP Εξουσιοδότηση';
+$lang["plugin-posixldapauth-desc"]='[ΑΠΟΣΥΡΘΗΚΕ] Πρόσθετο LDAP για AD & LDAP. Χρησιμοποιήστε το simpleldap για ενσωμάτωση με AD.';

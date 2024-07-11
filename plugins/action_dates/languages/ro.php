@@ -39,3 +39,5 @@ $lang["group_no"]='Grup';
 $lang["action_dates_email_text_restrict"]='Următoarele resurse urmează să fie restricționate în [days] zile.';
 $lang["action_dates_email_text_state"]='Următoarele resurse urmează să își schimbe starea în [days] zile.';
 $lang["action_dates_email_text"]='Următoarele resurse urmează să fie restricționate și/sau să își schimbe starea în [days] zile.';
+$lang["plugin-action_dates-title"]='Date de acțiune';
+$lang["plugin-action_dates-desc"]='Permite ștergerea sau restricționarea programată a resurselor pe baza câmpurilor de dată';

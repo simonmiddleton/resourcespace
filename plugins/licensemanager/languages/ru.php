@@ -28,3 +28,5 @@ $lang["confirmdeletelicensefile"]='Вы уверены, что хотите УД
 $lang["license_manager_mediums"]='Используемые носители лицензий';
 $lang["license_manager_access"]='Управление данными лицензии (если не включено разрешение "Может получить доступ к области настройки системы")';
 $lang["unlinklicense"]='Отвязать лицензию';
+$lang["plugin-licensemanager-title"]='Менеджер лицензий';
+$lang["plugin-licensemanager-desc"]='Добавляет возможность управления лицензированием ресурсов';

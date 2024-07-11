@@ -61,3 +61,5 @@ $lang["doi_hide_meta"]='Piilota DOI metatiedot';
 $lang["doi_fetched_xml_from_MDS"]='Nykyinen XML-metatieto saatiin haettua onnistuneesti DataCiten metatietovarastosta';
 $lang["doi_info_wikipedia"]='https://fi.wikipedia.org/wiki/Digital_Object_Identifier';
 $lang["doi_sum_of"]='of';
+$lang["plugin-doi-title"]='Digitaalinen objektitunniste';
+$lang["plugin-doi-desc"]='Luo DOI-tunnisteet muuttumattomille objekteille ennen niiden rekisteröintiä DataCiteen pysyvää viittausta varten.';

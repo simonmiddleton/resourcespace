@@ -11,3 +11,5 @@ $lang["outofrange"]='범위를 벗어남';
 $lang["invalidrange"]='잘못된 범위';
 $lang["splitpdf_createnewresource"]='각 범위에 대해 새 리소스 생성';
 $lang["splitpdf_createnewalternativefile"]='이 리소스에 대해 각 범위에 대한 새로운 대체 파일 생성';
+$lang["plugin-pdf_split-title"]='PDF 분할';
+$lang["plugin-pdf_split-desc"]='PDF 파일을 여러 페이지로 분할할 수 있습니다';

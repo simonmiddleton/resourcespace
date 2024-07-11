@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='No es pot analitzar la configuració d
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Format de configuració no vàlid per a la instància de \'%PROVIDER\' (proveïdor)';
 $lang["image_banks_error_bad_url_scheme"]='S\'ha trobat un esquema d\'URL no vàlid per a la instància de \'%PROVIDER\' (proveïdor)';
 $lang["image_banks_error_unexpected_response"]='Ho sentim, hem rebut una resposta inesperada del proveïdor. Si us plau, contacteu amb l\'administrador del sistema per a una investigació més detallada (vegeu el registre de depuració).';
+$lang["plugin-image_banks-title"]='Bancs d\'Imatges';
+$lang["plugin-image_banks-desc"]='Permet als usuaris seleccionar un Banc d\'Imatges extern per cercar-hi. Els usuaris poden descarregar o crear nous recursos basats en els resultats obtinguts.';

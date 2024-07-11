@@ -35,3 +35,5 @@ $lang["emu_upload_nodata"]='Nu s-au găsit date EMu pentru acest IRN:';
 $lang["emu_nodata_returned"]='Nu s-au găsit date EMu pentru IRN-ul specificat.';
 $lang["emu_createdfromemu"]='Creat din modulul EMU';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
+$lang["plugin-emu-desc"]='[Avansat] Permite extragerea metadatelor resursei din baza de date EMu.';
+$lang["plugin-emu-title"]='EMu';

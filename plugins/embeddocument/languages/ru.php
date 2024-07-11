@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Конфигурация удаленного п
 $lang["embeddocument_specify_resourcetype"]='Пожалуйста, укажите для какого типа ресурсов должна быть доступна функция "вставки".';
 $lang["embeddocument_document_resourcetype"]='Тип ресурса удаленного просмотрщика документов';
 $lang["embeddocument_embed_share"]='Встроить документ';
+$lang["plugin-embeddocument-title"]='Встроить документ';
+$lang["plugin-embeddocument-desc"]='Предоставляет функцию для создания HTML для встраиваемых предварительных просмотров документов на удаленных сайтах.';

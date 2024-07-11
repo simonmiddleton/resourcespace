@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Κατηγορία';
 $lang["youtube_publish_category_error"]='Σφάλμα κατά την ανάκτηση των κατηγοριών YouTube: -';
 $lang["youtube_chunk_size"]='Μέγεθος κομματιού για χρήση κατά τη μεταφόρτωση στο YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Προσθέστε αγκύρωση στα tags του URL κατά την αποθήκευση στο πεδίο μεταδεδομένων του URL του YouTube;';
+$lang["plugin-youtube_publish-title"]='Δημοσίευση στο YouTube';
+$lang["plugin-youtube_publish-desc"]='Δημοσιεύει το βίντεο πόρο στον διαμορφωμένο λογαριασμό YouTube.';

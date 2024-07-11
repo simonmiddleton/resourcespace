@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='خيار إخراج PDF (تجريبي)';
 $lang["annotate_pdf_output_only_annotated"]='فقط ضمّن المصادر المشار إليها في الناتج النهائي لملف PDF';
 $lang["annotate_admin_edit_access"]='القدرة على تحرير تعليقات المستخدمين الآخرين';
 $lang["annotate_ref_not_supplied"]='المرجع غير مزود';
+$lang["plugin-annotate-title"]='التعليق';
+$lang["plugin-annotate-desc"]='يتيح إنشاء تعليقات توضيحية على الصور باستخدام jQuery';

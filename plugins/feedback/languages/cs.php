@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Text / HTML:';
 $lang["feedback_options-comma_separated"]='Možnosti: (oddělené čárkami)';
 $lang["feedback_add_new_field"]='Přidat nové pole';
 $lang["feedback_back_to_plugin_manager"]='Zpět na Správce pluginů';
+$lang["plugin-feedback-title"]='Zpětná vazba';
+$lang["plugin-feedback-desc"]='Přidává obecnou funkci zpětné vazby uživatele s konfigurovatelnými otázkami.';

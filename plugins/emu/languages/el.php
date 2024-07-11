@@ -35,3 +35,5 @@ $lang["emu_upload_nodata"]='Δεν βρέθηκαν δεδομένα EMu για 
 $lang["emu_nodata_returned"]='Δεν βρέθηκαν δεδομένα EMu για το συγκεκριμένο IRN.';
 $lang["emu_createdfromemu"]='Δημιουργήθηκε από το πρόσθετο EMU';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
+$lang["plugin-emu-title"]='EMu';
+$lang["plugin-emu-desc"]='[Προχωρημένο] Επιτρέπει την εξαγωγή μεταδεδομένων πόρων από τη βάση δεδομένων EMu.';

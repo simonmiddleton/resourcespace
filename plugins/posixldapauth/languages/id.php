@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Tidak dapat terhubung k
 $lang["posixldapauth_unable_to_search_ldap_server"]='Tidak dapat mencari server LDAP.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% gagal, silakan periksa pengaturan.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Pencarian LDAP berhasil, tetapi tidak ditemukan grup.';
+$lang["plugin-posixldapauth-title"]='Otorisasi LDAP POSIX';
+$lang["plugin-posixldapauth-desc"]='[DEPRECATED] Plugin LDAP untuk AD & LDAP. Gunakan simpleldap untuk integrasi AD.';

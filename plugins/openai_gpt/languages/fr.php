@@ -14,3 +14,5 @@ $lang["openai_gpt_system_message"]='Texte initial du message système. Les espac
 $lang["openai_gpt_intro"]='Ajoute des métadonnées générées en passant des données existantes à l\'API OpenAI avec une invite personnalisable. Consultez <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> pour plus d\'informations détaillées.';
 $lang["openai_gpt_api_key"]='Clé API OpenAI. Obtenez votre clé API depuis <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["property-openai_gpt_prompt"]='Invite GPT';
+$lang["plugin-openai_gpt-title"]='Intégration de l\'API GPT d\'OpenAI';
+$lang["plugin-openai_gpt-desc"]='Métadonnées générées par OpenAI. Transmet les données de champ configurées à l\'API OpenAI et stocke les informations retournées.';

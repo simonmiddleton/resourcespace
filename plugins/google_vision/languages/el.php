@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='Η Google Vision επιστρέφει 
 $lang["google_vision_translation_api_key"]='Ενεργοποίηση μετάφρασης λέξεων κλειδιών Vision μέσω του API μετάφρασης εισάγοντας ένα έγκυρο κλειδί Google API';
 $lang["google_vision_translation_languages"]='Λίστα κωδικών γλωσσών χωρισμένων με κόμμα, π.χ. "no,es"';
 $lang["google_vision_translation_keep_english"]='Διατηρήστε τις αρχικές αγγλικές λέξεις-κλειδιά;';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Δυνατότητα αναγνώρισης εικόνας. Στέλνει τις ανεβασμένες εικόνες στο Google Cloud Vision API και ορίζει προτεινόμενα μεταδεδομένα.';

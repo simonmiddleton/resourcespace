@@ -14,3 +14,5 @@ $lang["downloadformat"]='डाउनलोड प्रारूप';
 $lang["are_available-2"]='परिवर्तित किया जाएगा';
 $lang["are_available-1"]='परिवर्तित किया जाएगा';
 $lang["are_available-0"]='परिवर्तित किया जाएगा';
+$lang["plugin-format_chooser-title"]='प्रारूप चयनकर्ता';
+$lang["plugin-format_chooser-desc"]='यह आपको फ़ाइलों को डाउनलोड करते समय विभिन्न प्रारूप चुनने की अनुमति देता है जो तुरंत उत्पन्न होते हैं।';

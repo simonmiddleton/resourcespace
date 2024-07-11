@@ -7,3 +7,5 @@ $lang["embed_video_configuration"]='Upotetun videon asetukset';
 $lang["specify_resourcetype"]='Määritä, mille resurssityypille "upotus" -toiminto tulisi näkyä.';
 $lang["video_resourcetype"]='Videotyyppi resurssina';
 $lang["embedvideo_share"]='Upota video';
+$lang["plugin-embedvideo-title"]='Upota video';
+$lang["plugin-embedvideo-desc"]='Tarjoaa toiminnon HTML:n luomiseen upotettavaa videota varten etäsivustoilla.';

@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Editare propusă';
 $lang["actions_propose_changes"]='Arată-mi modificările propuse de utilizator în lista mea de acțiuni';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Propunerile tale de modificare au fost revizuite.<br/>[changesummary]<br/>Apasă mai jos pentru a revizui modificările<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Au fost propuse modificări.<br/>[changesummary]<br/>Dați clic mai jos pentru a revizui modificările<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Propune Modificări';
+$lang["plugin-propose_changes-desc"]='Adaugă opțiunea de a permite utilizatorilor să propună modificări ale metadatelor fără acces de editare';

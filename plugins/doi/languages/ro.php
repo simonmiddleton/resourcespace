@@ -61,3 +61,5 @@ $lang["doi_show_meta"]='Afișează metadatele DOI';
 $lang["doi_hide_meta"]='Ascundeți metadatele DOI';
 $lang["doi_fetched_xml_from_MDS"]='Metadatele XMl curente au fost preluate cu succes din depozitul de metadate DataCite';
 $lang["doi_info_wikipedia"]='https://ro.wikipedia.org/wiki/Identificator_de_Obiect_Digital';
+$lang["plugin-doi-title"]='Identificator de obiect digital';
+$lang["plugin-doi-desc"]='Generează DOI-uri pentru obiecte imuabile înainte de a le înregistra la DataCite pentru citare persistentă.';

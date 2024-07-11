@@ -14,3 +14,5 @@ $lang["openai_gpt_advanced"]='VAROITUS - Tämä osio on tarkoitettu vain testaus
 $lang["openai_gpt_system_message"]='Alkuperäinen järjestelmäviestin teksti. Paikkamerkit %%IN_TYPE%% ja %%OUT_TYPE%% korvataan \'text\' tai \'json\' riippuen lähde/kohdekentän tyypeistä';
 $lang["openai_gpt_intro"]='Lisää metatietoja, jotka on luotu syöttämällä olemassa olevia tietoja OpenAI API:lle mukautettavalla kehotteella. Katso tarkempia tietoja osoitteesta <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a>.';
 $lang["openai_gpt_api_key"]='OpenAI API-avain. Hanki API-avaimesi osoitteesta <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='OpenAI API GPT -integraatio';
+$lang["plugin-openai_gpt-desc"]='OpenAI luoma metadata. Välittää konfiguroidut kenttätiedot OpenAI API:lle ja tallentaa palautetut tiedot.';

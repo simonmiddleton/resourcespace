@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Preskoči provjeru i obradi CSV datot
 $lang["csv_upload_force_offline"]='Ovaj veliki CSV datoteku može dugo trajati za obradu, stoga će se izvršiti izvan mreže. Bit ćete obaviješteni putem ResourceSpace poruke kada obrada bude završena';
 $lang["csv_upload_recommend_offline"]='Ovaj veliki CSV može dugo trajati u obradi. Preporučuje se omogućavanje offline poslova ako trebate obrađivati velike CSV datoteke';
 $lang["csv_upload_createdfromcsvupload"]='Stvoreno pomoću dodatka za učitavanje CSV datoteka';
+$lang["plugin-csv_upload-title"]='CSV prijenos';
+$lang["plugin-csv_upload-desc"]='[Napredno] Učitajte meta podatke koristeći CSV datoteku.';

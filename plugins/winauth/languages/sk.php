@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Uprednostnite štandardné prihlasovanie do Reso
 $lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Ste prihlásený ako: [username]';
 $lang["winauth_not_logged_in"]='Nie ste prihlásený, alebo váš webový server nie je správne nakonfigurovaný';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Advanced] Integrovaná autentifikácia Windows';

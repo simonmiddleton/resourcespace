@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Hopp over validering og prosesser CSV
 $lang["csv_upload_force_offline"]='Denne store CSV-filen kan ta lang tid å behandle, så den vil bli kjørt offline. Du vil bli varslet via en ResourceSpace-melding når behandlingen er fullført';
 $lang["csv_upload_recommend_offline"]='Denne store CSV-filen kan ta veldig lang tid å behandle. Det anbefales å aktivere offline-jobber hvis du trenger å behandle store CSV-filer';
 $lang["csv_upload_createdfromcsvupload"]='Opprettet fra CSV-opplastingsprogramtillegget';
+$lang["plugin-csv_upload-title"]='CSV-opplasting';
+$lang["plugin-csv_upload-desc"]='[Avansert] Last opp metadata ved hjelp av en CSV-fil.';

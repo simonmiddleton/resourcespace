@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='Indirizzo email da cui inviare le notifiche (v
 $lang["rse_workflow_bcc_admin"]='Notificare gli amministratori di sistema quando il contributore viene notificato';
 $lang["rse_workflow_state_notify_help"]='Gli utenti vedranno le risorse in questo stato apparire come azioni, piuttosto che ricevere semplici notifiche';
 $lang["rse_workflow_introduction"]='Per modificare gli stati e le azioni del flusso di lavoro, utilizza \'Gestisci azioni del flusso di lavoro\' e \'Gestisci stati del flusso di lavoro\' da Admin. Clicca [link_param] per andare a Admin';
+$lang["plugin-rse_workflow-title"]='Flusso di lavoro avanzato';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Flusso di lavoro';

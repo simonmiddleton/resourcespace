@@ -23,3 +23,5 @@ $lang["enable"]='Ota käyttöön';
 $lang["checknow"]='Tarkista nyt';
 $lang["columnheader-enabled"]='Käytössä';
 $lang["columnheader-last-found"]='Viimeksi löydetty';
+$lang["plugin-rse_search_notifications-title"]='Hakuilmoitukset';
+$lang["plugin-rse_search_notifications-desc"]='Ilmoita käyttäjälle, kun tallennettuun hakuun tulee muutoksia';

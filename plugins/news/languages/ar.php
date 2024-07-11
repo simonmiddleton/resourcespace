@@ -12,3 +12,5 @@ $lang["news_body"]='محتوى الجسم';
 $lang["news_nonewmessages"]='لا توجد رسائل جديدة';
 $lang["title"]='آخر الأخبار...';
 $lang["title-too-long"]='حقل العنوان أطول من 50 حرف المسموح به';
+$lang["plugin-news-title"]='أخبار';
+$lang["plugin-news-desc"]='يضيف عناصر الأخبار إلى الصفحة الرئيسية';

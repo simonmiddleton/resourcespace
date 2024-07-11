@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='このプラグインにより、ダウ�
 $lang["conditional_terms_field"]='メタデータフィールド';
 $lang["conditional_terms_value"]='価値';
 $lang["conditional_terms_plugin_misconfigured"]='条件付き用語プラグインが誤って設定されています。';
+$lang["plugin-conditional_terms-title"]='条件付き利用規約';
+$lang["plugin-conditional_terms-desc"]='リソースメタデータに基づいてダウンロード時に条件付きで利用規約ページを表示する機能を有効にします';

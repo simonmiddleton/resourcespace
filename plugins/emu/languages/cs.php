@@ -34,3 +34,5 @@ $lang["emu_no_resource"]='Není zadáno ID zdroje!';
 $lang["emu_upload_nodata"]='Nebyly nalezeny žádné údaje EMu pro toto IRN:';
 $lang["emu_nodata_returned"]='Nebyla nalezena žádná data EMu pro zadané IRN.';
 $lang["emu_createdfromemu"]='Vytvořeno z pluginu EMU';
+$lang["plugin-emu-title"]='EMu';
+$lang["plugin-emu-desc"]='[Pokročilé] Umožňuje extrahovat metadata zdrojů z databáze EMu.';

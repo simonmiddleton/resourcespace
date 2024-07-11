@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='提案された編集';
 $lang["actions_propose_changes"]='私のアクションリストにユーザー提案の変更を表示してください。';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />提案された変更内容が確認されました。<br/>[changesummary]<br/>以下のリンクをクリックして変更内容を確認してください。<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />提案された変更が提出されました。<br/>[changesummary]<br/>変更内容を確認するには以下をクリックしてください。<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='変更を提案';
+$lang["plugin-propose_changes-desc"]='ユーザーが編集アクセス権なしでメタデータの変更を提案できるオプションを追加';

@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"]='Toestaan da
 $lang["cookies_notification_cookies_use_title"]='Gebruik van cookies';
 $lang["cookies_notification_cookies_use_error_msg"]='Je hebt besloten om het gebruik van cookies door ResourceSpace niet toe te staan. We hebben je moeten uitloggen omdat ResourceSpace cookies nodig heeft om goed te kunnen werken.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"]='Je moet het gebruik van cookies accepteren voordat je toegang krijgt tot het systeem.';
+$lang["plugin-cookies_notification-title"]='Cookies-melding';
+$lang["plugin-cookies_notification-desc"]='Voegt de mogelijkheid toe om gebruikers te informeren over hoe ResourceSpace cookies kan gebruiken om gebruikersactiviteit te volgen door een bericht in de header weer te geven';

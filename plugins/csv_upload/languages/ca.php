@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Ometre la validació i processar el f
 $lang["csv_upload_force_offline"]='Aquest gran fitxer CSV pot trigar molt de temps a processar, per la qual cosa s\'executarà en línia. Seràs notificat a través d\'un missatge de ResourceSpace una vegada que el processament hagi finalitzat';
 $lang["csv_upload_recommend_offline"]='Aquest gran CSV pot trigar molt de temps a processar. Es recomana habilitar les tasques fora de línia si necessiteu processar grans CSVs';
 $lang["csv_upload_createdfromcsvupload"]='Creat per l\'extensió de càrrega de CSV';
+$lang["plugin-csv_upload-title"]='Pujada CSV';
+$lang["plugin-csv_upload-desc"]='[Avançat] Carrega les metadades utilitzant un fitxer CSV.';

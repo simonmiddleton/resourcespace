@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='Google Vision returnează doar cuvinte
 $lang["google_vision_translation_api_key"]='Permiteți traducerea cuvintelor cheie ale Viziunii prin intermediul API-ului de traducere, introducând o cheie API validă Google';
 $lang["google_vision_translation_languages"]='Listă de coduri de limbă separate prin virgulă, de exemplu "no,es"';
 $lang["google_vision_translation_keep_english"]='Păstrați cuvintele cheie originale în limba engleză?';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Capacitate de recunoaștere a imaginilor. Trimite imaginile încărcate către API-ul Google Cloud Vision și setează metadatele sugerate.';

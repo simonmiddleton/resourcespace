@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='İlerleme pingi arasındaki süre (ms
 $lang["flickr_api_key"]='Flickr API anahtarı';
 $lang["flickr_api_secret"]='Flickr API sırrı';
 $lang["flickr_warn_no_title_access"]='Başlık alanına (ID #%id) erişim olmadan yayınlama yapılamaz. Lütfen bir yöneticiyle iletişime geçin!';
+$lang["plugin-flickr_theme_publish-title"]='Flickr Yayınlama';
+$lang["plugin-flickr_theme_publish-desc"]='Seçilen temalar içindeki seçilen kaynakları Flickr\'a yayınlar.';

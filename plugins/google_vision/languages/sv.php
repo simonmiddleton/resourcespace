@@ -21,3 +21,5 @@ $lang["google_vision_translation_api_key"]='Aktivera översättning av Vision-ny
 $lang["google_vision_translation_languages"]='Komma separerad lista av språkkoder, t.ex. "no,es"';
 $lang["google_vision_translation_keep_english"]='Behåll de ursprungliga engelska nyckelorden?';
 $lang["google_vision_api"]='Google Vision API';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Bildigenkänningskapacitet. Skickar uppladdade bilder till Google Cloud Vision API och ställer in föreslagen metadata.';

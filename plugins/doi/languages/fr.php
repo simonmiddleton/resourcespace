@@ -62,3 +62,5 @@ $lang["doi_show_meta"]='Afficher les métadonnées DOI';
 $lang["doi_hide_meta"]='Masquer les métadonnées DOI';
 $lang["doi_fetched_xml_from_MDS"]='Les métadonnées XMl actuelles ont été récupérées avec succès depuis le magasin de métadonnées de DataCite';
 $lang["doi_info_wikipedia"]='https://fr.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["plugin-doi-title"]='Identifiant d\'objet numérique';
+$lang["plugin-doi-desc"]='Génère des DOI pour les objets immuables avant de les enregistrer chez DataCite pour une citation persistante.';

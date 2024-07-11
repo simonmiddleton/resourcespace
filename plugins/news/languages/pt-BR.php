@@ -12,3 +12,5 @@ $lang["news_body"]='Conteúdo do corpo';
 $lang["news_nonewmessages"]='Não há novas mensagens';
 $lang["title"]='Últimas notícias...';
 $lang["title-too-long"]='O campo de título é maior do que os 50 caracteres permitidos';
+$lang["plugin-news-title"]='Notícias';
+$lang["plugin-news-desc"]='Adiciona itens de notícias na página inicial';

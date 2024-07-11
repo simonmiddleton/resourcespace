@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='SimpleLDAP eklentisi tarafından oluşturuldu.'
 $lang["simpleldap_usermatchcomment"]='SimpleLDAP tarafından LDAP kullanıcısına güncellendi.';
 $lang["origin_simpleldap"]='SimpleLDAP eklentisi';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Sunucunun FQDN\'sini sertifikanın CN\'si ile karşılaştırmayın';
+$lang["plugin-simpleldap-title"]='Basit LDAP';
+$lang["plugin-simpleldap-desc"]='[Advanced] Active Directory\'ye yönelik basitleştirilmiş ldap kimlik doğrulama uygulaması, ancak Oracle dizinini de destekler';

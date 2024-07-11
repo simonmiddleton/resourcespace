@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='Ένα έγκυρο αντικείμε
 $lang["video_splice_createdfromvideosplice"]='Δημιουργήθηκε από το πρόσθετο Video Splice';
 $lang["video-trim_output"]='Έξοδος';
 $lang["video_splice_error_invalid_action"]='Σφάλμα: Μη έγκυρη ενέργεια';
+$lang["plugin-video_splice-title"]='Συγκόλληση Βίντεο';
+$lang["plugin-video_splice-desc"]='Προσθέτει δυνατότητα κοπής και συγκόλλησης βίντεο';

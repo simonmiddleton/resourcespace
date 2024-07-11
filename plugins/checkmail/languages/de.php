@@ -38,3 +38,5 @@ $lang["yourresourcehasbeenuploaded"]='Ihre Ressource wurde hochgeladen';
 $lang["yourresourceshavebeenuploaded"]='Ihre Ressourcen wurden hochgeladen';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), mit der ID [user-ref] und der E-Mail-Adresse [user-email], ist nicht berechtigt, per E-Mail hochzuladen (überprüfen Sie die Berechtigungen "c" oder "d" oder die blockierten Benutzer auf der Checkmail-Setup-Seite). Aufgezeichnet am: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Erstellt vom Check Mail-Plugin';
+$lang["plugin-checkmail-title"]='E-Mail prüfen';
+$lang["plugin-checkmail-desc"]='[Erweitert] Ermöglicht das Einfügen von E-Mail-Anhängen';

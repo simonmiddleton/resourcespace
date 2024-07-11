@@ -39,3 +39,5 @@ $lang["yourresourceshavebeenuploaded"]='Dine ressurser har blitt lastet opp';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), med ID [user-ref] og e-post [user-email] har ikke tillatelse til å laste opp via e-post (sjekk tillatelser "c" eller "d" eller blokkerte brukere på siden for e-postkontroll). Registrert på: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Opprettet fra Sjekk e-post-tillegget';
 $lang["checkmail_resource_type_population"]='<br />(fra tillatte_utvidelser)';
+$lang["plugin-checkmail-title"]='Sjekk e-post';
+$lang["plugin-checkmail-desc"]='[Avansert] Tillater inntak av e-postvedlegg';

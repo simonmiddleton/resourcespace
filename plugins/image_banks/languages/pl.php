@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Nie można przetworzyć konfiguracji d
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Nieprawidłowy format konfiguracji dla instancji \'%PROVIDER\' (dostawca)';
 $lang["image_banks_error_bad_url_scheme"]='Nieprawidłowy schemat URL znaleziony dla instancji \'%PROVIDER\' (dostawca)';
 $lang["image_banks_error_unexpected_response"]='Przepraszamy, otrzymano nieoczekiwaną odpowiedź od dostawcy. Proszę skontaktować się z administratorem systemu w celu dalszego zbadania (zobacz dziennik debugowania).';
+$lang["plugin-image_banks-title"]='Banki obrazów';
+$lang["plugin-image_banks-desc"]='Pozwala użytkownikom wybrać zewnętrzny Bank Obrazów do przeszukiwania. Użytkownicy mogą następnie pobierać lub tworzyć nowe zasoby na podstawie zwróconych wyników.';

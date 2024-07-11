@@ -28,3 +28,5 @@ $lang["selectlicence"]='Valitse lisenssin tunnus';
 $lang["confirmdeletelicensefile"]='Oletko varma, että haluat POISTAA tämän tiedoston? Tätä ei voi peruuttaa.';
 $lang["license_manager_mediums"]='Lisenssin käyttövälineet';
 $lang["license_manager_access"]='Hallinnoi lisenssitietoja (jos ei ole jo käytössä "Pääsy järjestelmän asetusten alueelle" -oikeuden kautta)';
+$lang["plugin-licensemanager-title"]='Lisenssinhallinta';
+$lang["plugin-licensemanager-desc"]='Lisää mahdollisuuden hallita resurssilisenssejä';

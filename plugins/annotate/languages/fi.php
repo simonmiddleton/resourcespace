@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='PDF-tulostusvaihtoehto (kokeellinen)';
 $lang["annotate_pdf_output_only_annotated"]='Vain sisällytä kommentoidut resurssit PDF-tulosteeseen';
 $lang["annotate_admin_edit_access"]='Kyky muokata muiden käyttäjien huomautuksia';
 $lang["annotate_ref_not_supplied"]='Viittaus puuttuu';
+$lang["plugin-annotate-title"]='Merkitse';
+$lang["plugin-annotate-desc"]='Mahdollistaa jquery-kuvamerkintöjen luomisen';

@@ -13,3 +13,6 @@ $lang["new_content_rss_feed"]="Rss-flöde för nya material";
 $lang["subject"]="Ämne";
 $lang["rss_feed_for_search_filter"]="Skapa rss-flöde för denna sökfråga";
 $lang["filtered_resource_update_for"]="Filtrerad uppdatering av material för sökfrågan [%search%]"; #%search% will be replaced, e.g. "!last50"
+
+$lang["plugin-rss2-title"]='RSS-flöde';
+$lang["plugin-rss2-desc"]='Möjliggör autentiserad generering av RSS-flöden av nytt innehåll, inklusive konfigurerbara fält.';

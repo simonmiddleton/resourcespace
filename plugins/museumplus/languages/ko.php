@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='\'museumplus_modules_saved_
 $lang["museumplus_error_invalid_association"]='잘못된 모듈 연결입니다. 올바른 모듈 및/또는 레코드 ID가 입력되었는지 확인하세요!';
 $lang["museumplus_id_returns_multiple_records"]='여러 개의 레코드가 발견되었습니다 - 대신 기술 ID를 입력해 주세요';
 $lang["museumplus_error_module_no_field_maps"]='MuseumPlus에서 데이터를 동기화할 수 없습니다. 이유: 모듈 \'%name\'에 필드 매핑이 구성되어 있지 않습니다.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[고급] MuseumPlus의 REST API (MpRIA)를 사용하여 리소스 메타데이터를 추출할 수 있습니다.';

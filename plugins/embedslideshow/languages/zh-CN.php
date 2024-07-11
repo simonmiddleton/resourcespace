@@ -24,3 +24,5 @@ $lang["embedslideshow_directlinkopen"]='打开直接链接（新页面）';
 $lang["embedslideshow_dynamic_size"]='基于播放器大小的动态预览调整？';
 $lang["embedslideshow_minimise"]='&minus; 最小化幻灯片';
 $lang["sizename_pixels"]='%name (%pixels 像素)';
+$lang["plugin-embedslideshow-title"]='嵌入幻灯片';
+$lang["plugin-embedslideshow-desc"]='提供在远程站点上生成可嵌入集合幻灯片的HTML功能';

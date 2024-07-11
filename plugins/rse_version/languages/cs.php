@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='Záznam protokolu nenalezen';
 $lang["rse_version_revert_state"]='Vrátit stav';
 $lang["rse_version_rstate_changes"]='Vrácení stavu pro kolekci #%COLLECTION přehráním událostí až po, ale ne včetně vybraného záznamu.';
 $lang["rse_version_invalid_time"]='Vrácení do doby před [date] není podporováno';
+$lang["plugin-rse_version-title"]='Správa verzí';
+$lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Řízení verzí';

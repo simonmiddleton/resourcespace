@@ -10,3 +10,5 @@ $lang["antivirus_action_quarantine"]='Přesunout do karantény';
 $lang["antivirus_deleting_file"]='Mazání zdroje [%resource_id%] a všech souvisejících souborů!';
 $lang["antivirus_moving_file"]='Přesouvání zdroje [%resource_id%] do archivačního stavu [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Cesta k antiviru není nastavena!';
+$lang["plugin-antivirus-title"]='Antivirus';
+$lang["plugin-antivirus-desc"]='[Pokročilé] Antivirové schopnosti integrací s většinou známých antivirových motorů, které mohou běžet z příkazového řádku';

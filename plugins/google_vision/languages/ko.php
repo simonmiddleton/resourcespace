@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='Google Vision은 영어 키워드만 �
 $lang["google_vision_translation_api_key"]='Google API 키를 입력하여 Vision 키워드 번역 API 활성화';
 $lang["google_vision_translation_languages"]='쉼표로 구분된 언어 코드 목록, 예: "no,es"';
 $lang["google_vision_translation_keep_english"]='원래 영어 키워드를 유지하시겠습니까?';
+$lang["plugin-google_vision-title"]='구글 비전 API';
+$lang["plugin-google_vision-desc"]='이미지 인식 기능. 업로드된 이미지를 Google Cloud Vision API에 전달하고 제안된 메타데이터를 설정합니다.';

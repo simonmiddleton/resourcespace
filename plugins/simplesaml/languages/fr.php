@@ -80,3 +80,5 @@ $lang["simplesaml_start_url"]='URL de démarrage/connexion';
 $lang["simplesaml_existing_config"]='Suivez les instructions de la base de connaissances pour migrer votre configuration SAML existante';
 $lang["simplesaml_test_site_url"]='URL du site de test SimpleSAML';
 $lang["simplesaml_allow_duplicate_email"]='Autoriser la création de nouveaux comptes si des comptes ResourceSpace existants ont la même adresse e-mail ? (cela est remplacé si la correspondance d\'e-mail est définie ci-dessus et qu\'une correspondance est trouvée)';
+$lang["plugin-simplesaml-title"]='Simple SAML';
+$lang["plugin-simplesaml-desc"]='[Avancé] Exiger l\'authentification SAML pour accéder à ResourceSpace';

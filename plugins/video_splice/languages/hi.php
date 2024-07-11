@@ -45,3 +45,5 @@ $lang["video_splice_no_export_folder"]='कॉन्फ़िगरेशन फ
 $lang["video_splice_incorrect_quantity"]='एक मान्य संसाधन या तो संग्रह से हटा दिया गया है या जोड़ा गया है जब से यह पृष्ठ लोड हुआ है। कृपया पुनः प्रयास करें।';
 $lang["video_splice_createdfromvideosplice"]='वीडियो स्प्लाइस प्लगइन से बनाया गया';
 $lang["video_splice_error_invalid_action"]='त्रुटि : अमान्य क्रिया';
+$lang["plugin-video_splice-title"]='वीडियो स्प्लाइस';
+$lang["plugin-video_splice-desc"]='वीडियो ट्रिमिंग और स्प्लाइसिंग क्षमता जोड़ता है';

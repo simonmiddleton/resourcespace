@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Markeret til genopretning fra
 $lang["offline_archive_resource_log_restore_removed"]='Annulleret gendannelse fra arkiv';
 $lang["offline_archive_resource_log_restore_request"]='Anmodet genopretning fra arkiv';
 $lang["offline_archive_resource_restore"]='Gendan ressourcer';
+$lang["plugin-offline_archive-title"]='Offline Arkiv';
+$lang["plugin-offline_archive-desc"]='Muliggør flytning af arkiverede filer til en offline placering';

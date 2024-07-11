@@ -50,3 +50,5 @@ $lang["simpleldap_usermatchcomment"]='Aktualizované na LDAP používateľa pomo
 $lang["origin_simpleldap"]='Jednoduchý doplnok SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Ne preverjajte FQDN strežnika proti CN certifikatu';
 $lang["port"]='Vrata';
+$lang["plugin-simpleldap-title"]='Jednoduchý LDAP';
+$lang["plugin-simpleldap-desc"]='[Pokročilé] Jednoduchšia implementácia ldap autentifikácie, zameraná na Active Directory, ale podporuje aj Oracle directory';

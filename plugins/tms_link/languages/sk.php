@@ -72,3 +72,5 @@ TMS %názov_modulu %tms_uid_pole';
 $lang["tms_link_confirm_delete_module_config"]='Ste si istý/á, že chcete vymazať konfiguráciu tohto modulu? Táto akcia sa nedá vrátiť späť!';
 $lang["tms_link_mediapaths_resource_reference_column"]='Stolpec za uporabo v tabeli MediaMaster za shranjevanje ID vira. To je neobvezno in se uporablja za preprečevanje uporabe istega Media Master ID-ja za več virov.';
 $lang["tms_link_write_to_debug_log"]='Vključi napredek skripta v sistemski dnevnik za odpravljanje napak (zahteva ločeno konfigurirano beleženje napak). Opozorilo: Povzroči hitro rast datoteke dnevnika za odpravljanje napak.';
+$lang["plugin-tms_link-title"]='Povezava TMS';
+$lang["plugin-tms_link-desc"]='[Pokročilo] Omogoča pridobivanje metapodatkov virov iz baze podatkov TMS.';

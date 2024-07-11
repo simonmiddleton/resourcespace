@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='Lähetysosoite ilmoitusten lähettämiseen (k�
 $lang["rse_workflow_bcc_admin"]='Ilmoita järjestelmänvalvojille, kun tekijälle ilmoitetaan';
 $lang["rse_workflow_state_notify_help"]='Käyttäjät näkevät tässä tilassa olevat resurssit toimintoina, sen sijaan että saisivat yksinkertaisia ilmoituksia';
 $lang["rse_workflow_introduction"]='Muokataksesi työnkulun tiloja ja toimintoja, käytä \'Hallitse työnkulun toimintoja\' ja \'Hallitse työnkulun tiloja\' kohdasta Ylläpito. Napsauta [tästä] siirtyäksesi Ylläpitoon';
+$lang["plugin-rse_workflow-title"]='Edistynyt työnkulku';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Työnkulku';

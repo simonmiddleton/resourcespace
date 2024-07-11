@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='El archivo CSV debe tener una fila de encab
 $lang["csv_user_import_condition3"]='Columnas que tendrán valores que contienen <b>comas ( , )</b>, asegúrese de formatearlas como tipo <b>texto</b> para que no tenga que agregar comillas (""). Al guardar como archivo .csv, asegúrese de marcar la opción de citar celdas de tipo texto';
 $lang["csv_user_import_condition4"]='Columnas permitidas: *nombre de usuario, *correo electrónico, contraseña, nombre completo, vencimiento de cuenta, comentarios, restricción de IP, idioma. Nota: los campos obligatorios están marcados con *';
 $lang["csv_user_import_condition5"]='El idioma del usuario volverá al predeterminado establecido usando la opción de configuración "$defaultlanguage" si no se encuentra la columna de idioma o no tiene un valor';
+$lang["plugin-csv_user_import-title"]='Importación de Usuarios CSV';
+$lang["plugin-csv_user_import-desc"]='[Avanzado] Proporciona la capacidad de importar un lote de usuarios basado en un archivo CSV preformateado';

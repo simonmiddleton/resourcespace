@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Pominąć walidację i przetworzyć p
 $lang["csv_upload_force_offline"]='Ten duży plik CSV może wymagać długiego czasu przetwarzania, więc zostanie uruchomiony w trybie offline. Otrzymasz powiadomienie za pośrednictwem wiadomości w ResourceSpace, gdy przetwarzanie zostanie zakończone';
 $lang["csv_upload_recommend_offline"]='Ten duży plik CSV może wymagać bardzo długiego czasu przetwarzania. Zaleca się włączenie zadań offline, jeśli chcesz przetwarzać duże pliki CSV';
 $lang["csv_upload_createdfromcsvupload"]='Utworzono za pomocą wtyczki CSV Upload';
+$lang["plugin-csv_upload-title"]='Przesyłanie CSV';
+$lang["plugin-csv_upload-desc"]='[Zaawansowane] Prześlij metadane za pomocą pliku CSV.';

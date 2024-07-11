@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='为Falcon使用创建的共享的用户文本�
 $lang["falcon_link_log_publish"]='共享资源通过Falcon。';
 $lang["falcon_link_log_archive"]='已通过Falcon存档的资源';
 $lang["falcon_link_error_falcon_check_tags"]='请检查描述和标签是否为空。';
+$lang["plugin-falcon_link-title"]='猎鹰链接';
+$lang["plugin-falcon_link-desc"]='[高级] 发布资源到Falcon.io';

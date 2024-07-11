@@ -70,3 +70,5 @@ $lang["tms_link_confirm_delete_module_config"]='Êtes-vous sûr(e) de vouloir su
 $lang["tms_link_upload_tms_field"]='ID d\'objet TMS';
 $lang["tms_link_mediapaths_resource_reference_column"]='Colonne à utiliser dans la table MediaMaster pour stocker l\'ID de la ressource. Ceci est facultatif et est utilisé pour éviter que plusieurs ressources utilisent le même ID Media Master.';
 $lang["tms_link_write_to_debug_log"]='Inclure la progression du script dans le journal de débogage du système (nécessite une configuration séparée du journal de débogage). Attention : Cela entraînera une croissance rapide du fichier de journal de débogage.';
+$lang["plugin-tms_link-title"]='Lien TMS';
+$lang["plugin-tms_link-desc"]='[Avancé] Permet d\'extraire les métadonnées des ressources depuis la base de données TMS.';

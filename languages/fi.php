@@ -3041,3 +3041,10 @@ $lang["all__emailnotifyuploadsharenew"]='<br />
 [lang_clicklinkviewcollection] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["plugin-category-asset-processing"]='Omaisuuden käsittely';
+$lang["plugin-category-authentication"]='Tunnistautuminen';
+$lang["plugin-category-collaboration"]='Yhteistyö';
+$lang["plugin-category-integrations"]='Integraatiot';
+$lang["plugin-category-system"]='Järjestelmä';
+$lang["plugin-category-user-interface"]='Käyttöliittymä';
+$lang["plugin-category-workflow-and-access"]='Työnkulku ja käyttöoikeus';

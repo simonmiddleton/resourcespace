@@ -12,3 +12,5 @@ $lang["news_body"]='मुख्य सामग्री';
 $lang["news_nonewmessages"]='कोई नया संदेश नहीं';
 $lang["title"]='ताज़ा समाचार...';
 $lang["title-too-long"]='शीर्षक फ़ील्ड 50 वर्णों की अनुमति से अधिक लंबा है';
+$lang["plugin-news-title"]='समाचार';
+$lang["plugin-news-desc"]='मुख पृष्ठ समाचार आइटम जोड़ता है';

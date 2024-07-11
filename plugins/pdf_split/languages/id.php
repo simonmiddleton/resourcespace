@@ -12,3 +12,5 @@ $lang["outofrange"]='Di luar jangkauan';
 $lang["invalidrange"]='Rentang tidak valid';
 $lang["splitpdf_createnewresource"]='Buat sumber daya baru untuk setiap rentang';
 $lang["splitpdf_createnewalternativefile"]='Buatlah file alternatif baru pada sumber daya ini untuk setiap rentang';
+$lang["plugin-pdf_split-title"]='Pisahkan PDF';
+$lang["plugin-pdf_split-desc"]='Memungkinkan file PDF untuk dibagi menjadi beberapa halaman';

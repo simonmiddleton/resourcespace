@@ -75,3 +75,5 @@ $lang["transform_update_preview"]='プレビューを更新する';
 $lang["transform_preset_sizes"]='事前定義されたターゲットサイズから選択してください。';
 $lang["error_crop_invalid"]='画像の領域を選択してください。';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='画像ツール（変換）';
+$lang["plugin-transform-desc"]='トリミングおよびスケーリングされた代替画像の作成を可能にします（モバイル対応のjCrop）';

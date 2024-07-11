@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Zdrojový súbor bol publikovaný na 
 $lang["vimeo_publish_account_options"]='Možnosti računa Vimeo';
 $lang["vimeo_publish_allow_user_accounts"]='Povolit užívateľom publikovať na ich vlastné účty Vimeo. Ak je nastavené na false, potom prístup k jedinému účtu Vimeo musí byť nakonfigurovaný nižšie';
 $lang["vimeo_publish_set_account"]='Nastavite račun Vimeo';
+$lang["plugin-vimeo_publish-title"]='Objavi na Vimeo';
+$lang["plugin-vimeo_publish-desc"]='Objavite vire na Vimeo z uporabo OAuth 2.0';

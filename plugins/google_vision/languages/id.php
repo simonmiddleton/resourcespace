@@ -21,3 +21,5 @@ $lang["google_vision_translation_api_key"]='Aktifkan terjemahan kata kunci Visio
 $lang["google_vision_translation_languages"]='Daftar kode bahasa yang dipisahkan dengan koma, contohnya "no,es"';
 $lang["google_vision_translation_keep_english"]='Tetapkan kata kunci bahasa Inggris asli?';
 $lang["google_vision_autotitle"]='Secara otomatis mengatur judul ke kata kunci dengan peringkat tertinggi';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Kemampuan pengenalan gambar. Mengirimkan gambar yang diunggah ke Google Cloud Vision API dan menetapkan metadata yang disarankan.';

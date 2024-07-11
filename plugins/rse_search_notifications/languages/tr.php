@@ -23,3 +23,5 @@ $lang["enable"]='Etkinleştir';
 $lang["checknow"]='Şimdi kontrol et';
 $lang["columnheader-enabled"]='Etkinleştirildi';
 $lang["columnheader-last-found"]='Son bulunan';
+$lang["plugin-rse_search_notifications-title"]='Arama Bildirimleri';
+$lang["plugin-rse_search_notifications-desc"]='Kaydedilmiş bir aramada değişiklikler olduğunda kullanıcıyı bilgilendir';

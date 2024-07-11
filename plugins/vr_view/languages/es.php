@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Campo utilizado para determinar si se debe evit
 $lang["vr_view_yaw_only_value"]='Valor a comprobar. Si se encuentra, la opción is_yaw_only se establecerá en verdadero';
 $lang["vr_view_orig_image"]='¿Usar el archivo de recurso original como fuente para la vista previa de la imagen?';
 $lang["vr_view_orig_video"]='¿Usar el archivo de recurso original como fuente para la vista previa del video?';
+$lang["plugin-vr_view-title"]='Vista VR';
+$lang["plugin-vr_view-desc"]='Vista VR de Google - vistas previas de imágenes y videos de 360 grados (formato equirectangular)';

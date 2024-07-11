@@ -79,3 +79,5 @@ $lang["transform_update_preview"]='Actualitzar vista prèvia';
 $lang["transform_preset_sizes"]='Selecciona una mida de destinació predefinida';
 $lang["error_crop_invalid"]='Si us plau, seleccioneu una regió de la imatge';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Eines d\'imatge (transformar)';
+$lang["plugin-transform-desc"]='Permet la creació d\'imatges alternatives retallades i escalades (jCrop amb suport per a mòbils)';

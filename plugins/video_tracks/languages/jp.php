@@ -32,3 +32,5 @@ $lang["video_tracks_transcode_now_label"]='今すぐトランスコードする'
 $lang["video_tracks_select_generate_opt"]='生成オプションを選択してください';
 $lang["video_tracks_save_alt_not_perm"]='権限がないため、代替を保存できません';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='重要！ビデオトラックプラグインは出力フォーマット設定を廃止しました。これらはconfig.phpでのみ設定できます。設定オプションがコピーされるまで、プラグインは意図した通りに動作しません。次の内容をコピーしてください：- %nl%####%nl%[output_formats_config]####%nl%';
+$lang["plugin-video_tracks-title"]='ビデオトラック';
+$lang["plugin-video_tracks-desc"]='[高度] ビデオリソースの異なるオーディオおよび字幕オプションのサポートを追加';

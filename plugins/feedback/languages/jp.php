@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='テキスト / HTML';
 $lang["feedback_options-comma_separated"]='オプション：（コンマで区切ってください）';
 $lang["feedback_add_new_field"]='新しいフィールドを追加する';
 $lang["feedback_back_to_plugin_manager"]='プラグインマネージャーに戻る';
+$lang["plugin-feedback-title"]='フィードバック';
+$lang["plugin-feedback-desc"]='一般的なユーザーフィードバック機能を追加し、設定可能な質問を含む。';

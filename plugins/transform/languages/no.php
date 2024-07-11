@@ -75,3 +75,5 @@ $lang["transform_preset_sizes"]='Velg fra forhåndsdefinert målstørrelse';
 $lang["error_crop_invalid"]='Vennligst velg en region av bildet';
 $lang["replaceslideshowimage"]='Erstatt lysbildefremvisningsbilde';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Bildeverktøy (transformere)';
+$lang["plugin-transform-desc"]='Aktiverer opprettelse av beskårne og skalerte alternative bilder (jCrop med mobilstøtte)';

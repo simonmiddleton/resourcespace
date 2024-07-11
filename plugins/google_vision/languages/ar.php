@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='تعيد خدمة Google Vision فقط
 $lang["google_vision_translation_api_key"]='تمكين ترجمة كلمات مفتاحية الرؤية عبر واجهة برمجة الترجمة عن طريق إدخال مفتاح API صالح من Google';
 $lang["google_vision_translation_languages"]='قائمة مفصولة بفواصل من رموز اللغة، مثال: "no,es"';
 $lang["google_vision_translation_keep_english"]='الرجاء ترجمة: الاحتفاظ بالكلمات الرئيسية الإنجليزية الأصلية؟';
+$lang["plugin-google_vision-title"]='واجهة برمجة تطبيقات رؤية جوجل';
+$lang["plugin-google_vision-desc"]='قدرة التعرف على الصور. يمرر الصور المحملة إلى واجهة برمجة تطبيقات Google Cloud Vision ويحدد البيانات الوصفية المقترحة.';

@@ -61,3 +61,5 @@ $lang["doi_sure_register_resource"]='x kaynağı kaydetmeye devam edilsin mi?';
 $lang["doi_show_meta"]='DOI meta verilerini göster';
 $lang["doi_hide_meta"]='DOI meta verilerini gizle';
 $lang["doi_fetched_xml_from_MDS"]='Mevcut XML meta verileri, DataCite\'ın meta veri deposundan başarıyla alınabildi.';
+$lang["plugin-doi-title"]='Dijital Nesne Tanımlayıcısı';
+$lang["plugin-doi-desc"]='Değiştirilemez nesneler için kalıcı atıf amacıyla DataCite\'ta kaydedilmeden önce DOI\'ler oluşturur.';

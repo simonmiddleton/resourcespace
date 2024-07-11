@@ -39,3 +39,5 @@ $lang["weekday-5"]='Piątek';
 $lang["weekday-6"]='Sobota';
 $lang["show_affected_resources"]='Pokaż dotknięte zasoby';
 $lang["group_no"]='Grupa';
+$lang["plugin-action_dates-title"]='Daty działań';
+$lang["plugin-action_dates-desc"]='Umożliwia zaplanowane usuwanie lub ograniczanie zasobów na podstawie pól daty';

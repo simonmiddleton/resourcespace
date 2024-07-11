@@ -28,3 +28,5 @@ $lang["confirmdeletelicensefile"]='Weet u zeker dat u dit bestand wilt VERWIJDER
 $lang["license_manager_mediums"]='Licentiegebruik media';
 $lang["license_manager_access"]='Beheer licentiegegevens (indien nog niet ingeschakeld via de toestemming "Toegang tot het systeeminstellingen gebied")';
 $lang["outbound_license_description"]='Wij zijn de auteursrechthebbenden';
+$lang["plugin-licensemanager-title"]='Licentiebeheerder';
+$lang["plugin-licensemanager-desc"]='Voegt de mogelijkheid toe om resource-licenties te beheren';

@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Prefereix els inicis de sessió estàndard de Re
 $lang["winauth_test"]='Prova';
 $lang["winauth_user_info"]='Has iniciat sessió com a: [nom d\'usuari]';
 $lang["winauth_not_logged_in"]='No heu iniciat sessió o el vostre servidor web no està configurat correctament';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Avançat] Autenticació Integrada de Windows';

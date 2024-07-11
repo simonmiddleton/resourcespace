@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Επισημασμένο γι
 $lang["offline_archive_resource_log_restore_removed"]='Ακυρωμένη επαναφορά από το αρχείο';
 $lang["offline_archive_resource_log_restore_request"]='Αιτήθηκε ανάκτηση από αρχείο αντιγράφων ασφαλείας';
 $lang["offline_archive_resource_restore"]='Επαναφορά πόρων';
+$lang["plugin-offline_archive-title"]='Αποσυνδεδεμένο Αρχείο';
+$lang["plugin-offline_archive-desc"]='Επιτρέπει τη μετακίνηση των αρχειοθετημένων αρχείων σε μια εκτός σύνδεσης τοποθεσία';

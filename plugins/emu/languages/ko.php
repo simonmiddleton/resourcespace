@@ -34,3 +34,5 @@ $lang["emu_no_resource"]='리소스 ID가 지정되지 않았습니다!';
 $lang["emu_upload_nodata"]='이 IRN에 대한 EMu 데이터가 없습니다:';
 $lang["emu_nodata_returned"]='지정된 IRN에 대한 EMu 데이터를 찾을 수 없습니다.';
 $lang["emu_createdfromemu"]='EMU 플러그인에서 생성됨';
+$lang["plugin-emu-desc"]='[고급] 리소스 메타데이터를 EMu 데이터베이스에서 추출할 수 있습니다.';
+$lang["plugin-emu-title"]='EMu';

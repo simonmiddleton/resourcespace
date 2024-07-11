@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='La ressource a été publiée sur Vim
 $lang["vimeo_publish_account_options"]='Options de compte Vimeo';
 $lang["vimeo_publish_allow_user_accounts"]='Autoriser les utilisateurs à publier sur leurs propres comptes Vimeo. Si la valeur est fausse, l\'accès à un seul compte Vimeo doit être configuré ci-dessous';
 $lang["vimeo_publish_set_account"]='Configurer le compte Vimeo';
+$lang["plugin-vimeo_publish-title"]='Publier sur Vimeo';
+$lang["plugin-vimeo_publish-desc"]='Publier des ressources sur Vimeo en utilisant OAuth 2.0';

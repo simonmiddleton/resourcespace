@@ -21,3 +21,5 @@ $lang["google_vision_translation_api_key"]='Включите перевод кл
 $lang["google_vision_translation_languages"]='Список языковых кодов, разделенных запятыми, например, "no,es"';
 $lang["google_vision_translation_keep_english"]='Сохранить оригинальные ключевые слова на английском языке?';
 $lang["google_vision_api"]='Google Vision API';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Возможность распознавания изображений. Передает загруженные изображения в Google Cloud Vision API и устанавливает предложенные метаданные.';

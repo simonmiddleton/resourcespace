@@ -12,3 +12,5 @@ $lang["news_body"]='Treść ciała';
 $lang["news_nonewmessages"]='Brak nowych wiadomości';
 $lang["title"]='Najnowsze wiadomości...';
 $lang["title-too-long"]='Pole tytułu jest dłuższe niż dozwolone 50 znaków';
+$lang["plugin-news-title"]='Aktualności';
+$lang["plugin-news-desc"]='Dodaje elementy wiadomości na stronie głównej';

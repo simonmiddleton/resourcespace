@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='CSV 파일에는 헤더 행이 있어야 �
 $lang["csv_user_import_condition3"]='값에 <b>쉼표( , )</b>가 포함될 열은 <b>텍스트</b> 형식으로 설정하여 따옴표("")를 추가할 필요가 없도록 하십시오. .csv 파일로 저장할 때 텍스트 형식 셀에 따옴표를 추가하는 옵션을 선택했는지 확인하십시오';
 $lang["csv_user_import_condition4"]='허용된 열: *username, *email, password, fullname, account_expires, comments, ip_restrict, lang. 참고: 필수 필드는 *로 표시됩니다';
 $lang["csv_user_import_condition5"]='사용자의 언어는 lang 열이 없거나 값이 없는 경우 "$defaultlanguage" 구성 옵션을 사용하여 설정된 언어로 기본 설정됩니다';
+$lang["plugin-csv_user_import-title"]='CSV 사용자 가져오기';
+$lang["plugin-csv_user_import-desc"]='[고급] 사전 형식화된 CSV 파일을 기반으로 사용자 일괄 가져오기 기능 제공';

@@ -24,3 +24,5 @@ $lang["embedslideshow_directlink"]='URL direct non intégré';
 $lang["embedslideshow_directlinkopen"]='Ouvrir le lien direct (nouvelle page)';
 $lang["embedslideshow_dynamic_size"]='Redimensionnement dynamique de l\'aperçu en fonction de la taille du lecteur ?';
 $lang["sizename_pixels"]='%name (%pixels pixels)';
+$lang["plugin-embedslideshow-title"]='Intégrer le diaporama';
+$lang["plugin-embedslideshow-desc"]='Fournit une fonction pour générer du HTML pour des diaporamas de collections intégrables sur des sites distants';

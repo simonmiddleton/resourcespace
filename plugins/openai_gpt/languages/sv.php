@@ -14,3 +14,5 @@ $lang["openai_gpt_advanced"]='VARNING - Denna sektion är endast för teständam
 $lang["openai_gpt_system_message"]='Ursprungligt systemmeddelande. Platshållare %%IN_TYPE%% och %%OUT_TYPE%% kommer att ersättas med \'text\' eller \'json\' beroende på käll-/måltypfält.';
 $lang["openai_gpt_intro"]='Lägger till metadata som genereras genom att skicka befintliga data till OpenAI API med en anpassningsbar prompt. Se <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> för mer detaljerad information.';
 $lang["openai_gpt_api_key"]='OpenAI API-nyckel. Få din API-nyckel från <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='OpenAI API GPT-integration';
+$lang["plugin-openai_gpt-desc"]='OpenAI genererade metadata. Skickar konfigurerad fältdata till OpenAI API och lagrar den returnerade informationen.';

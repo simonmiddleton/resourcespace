@@ -12,3 +12,5 @@ $lang["invalidrange"]='Interval nevalid';
 $lang["splitpdf_createnewresource"]='Creați o resursă nouă pentru fiecare interval';
 $lang["splitpdf_createnewalternativefile"]='Creați un fișier alternativ nou pentru fiecare interval pe această resursă';
 $lang["to-page"]='la';
+$lang["plugin-pdf_split-title"]='Împărțire PDF';
+$lang["plugin-pdf_split-desc"]='Permite împărțirea fișierelor PDF în mai multe pagini';

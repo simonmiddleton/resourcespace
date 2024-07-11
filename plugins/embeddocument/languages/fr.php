@@ -12,3 +12,5 @@ $lang["embeddocument_specify_resourcetype"]='Veuillez préciser pour quel type d
 $lang["embeddocument_document_resourcetype"]='Type de ressource de visualisation de document à distance';
 $lang["embeddocument_embed_share"]='Intégrer le document';
 $lang["embeddocument_maximise"]='maximiser';
+$lang["plugin-embeddocument-title"]='Intégrer le document';
+$lang["plugin-embeddocument-desc"]='Fournit une fonction pour générer du HTML pour des aperçus de documents intégrables sur des sites distants.';

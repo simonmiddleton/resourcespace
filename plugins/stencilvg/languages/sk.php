@@ -6,3 +6,5 @@ $lang["stencilvg_resource_type_for_new"]='Počiatočný typ zdroja pre uložené
 $lang["stencilvg-rsvg-not-installed"]='Nainštalujte rsvg (librsvg2-bin) pre možnosť výstupu do formátov PDF a EPS.';
 $lang["stencilvg_dpi"]='DPI pre rastrový (napr. PNG) výstup.';
 $lang["stencilvg_createdfromstencilvg"]='Vytvorené pomocou doplnku StencilVG';
+$lang["plugin-stencilvg-title"]='StencilVG';
+$lang["plugin-stencilvg-desc"]='Spletno tiskanje (W2P) / Funkcionalnost dinamičnega objavljanja z uporabo SVG predlog datotek';

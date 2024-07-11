@@ -67,3 +67,5 @@ $lang["youtube_publish_category"]='Kategori';
 $lang["youtube_publish_category_error"]='Galat saat mengambil kategori YouTube: -';
 $lang["youtube_chunk_size"]='Ukuran potongan yang digunakan saat mengunggah ke YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Tambahkan tag anchor ke URL saat menyimpan ke bidang metadata URL YouTube?';
+$lang["plugin-youtube_publish-title"]='Publikasikan YouTube';
+$lang["plugin-youtube_publish-desc"]='Mempublikasikan sumber daya video ke akun YouTube yang dikonfigurasi.';

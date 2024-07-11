@@ -9,3 +9,6 @@ $lang["refine"]="Förfina";
 $lang["refineresults"]="Sök inom detta resultatsätt";
 $lang["additionalkeywords"]="Ytterligare sökord";
 $lang["clearsearch"]="Rensa sökordsfältet";
+
+$lang["plugin-refineresults-title"]='Förfina resultat';
+$lang["plugin-refineresults-desc"]='Lägger till en förfina resultat-ruta ovanför sökresultaten';

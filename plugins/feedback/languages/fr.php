@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Texte / HTML:';
 $lang["feedback_options-comma_separated"]='Options: (séparées par des virgules)';
 $lang["feedback_back_to_plugin_manager"]='Retourner au Gestionnaire de plugins';
 $lang["feedback_add_new_field"]='Ajouter un nouveau champ';
+$lang["plugin-feedback-title"]='Retour d\'information';
+$lang["plugin-feedback-desc"]='Ajoute une fonction de retour d\'information général des utilisateurs avec des questions configurables.';

@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='Žádný automatický přechod';
 $lang["embedslideshow_directlink"]='Nepřímá URL adresa bez vložení';
 $lang["embedslideshow_directlinkopen"]='Otevřít přímý odkaz (nová stránka)';
 $lang["embedslideshow_dynamic_size"]='Dynamická změna velikosti náhledu podle velikosti přehrávače?';
+$lang["plugin-embedslideshow-title"]='Vložit prezentaci';
+$lang["plugin-embedslideshow-desc"]='Poskytuje funkci pro generování HTML pro vkládání prezentací kolekcí na vzdálené stránky';

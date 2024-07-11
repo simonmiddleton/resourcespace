@@ -23,3 +23,5 @@ $lang["enable"]='Ενεργοποίηση';
 $lang["checknow"]='Ελέγξτε τώρα';
 $lang["columnheader-enabled"]='Ενεργοποιημένο (Energoποιημένο)';
 $lang["columnheader-last-found"]='Τελευταία εύρεση';
+$lang["plugin-rse_search_notifications-title"]='Ειδοποιήσεις Αναζήτησης';
+$lang["plugin-rse_search_notifications-desc"]='Ειδοποίηση χρήστη όταν γίνονται αλλαγές σε αποθηκευμένη αναζήτηση';

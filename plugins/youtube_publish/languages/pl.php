@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Kategoria';
 $lang["youtube_publish_category_error"]='Błąd podczas pobierania kategorii z YouTube: -';
 $lang["youtube_chunk_size"]='Rozmiar fragmentu do użycia podczas przesyłania na YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Dodaj tagi kotwicy do adresu URL podczas zapisywania w polu metadanych adresu URL na YouTube?';
+$lang["plugin-youtube_publish-title"]='Publikacja na YouTube';
+$lang["plugin-youtube_publish-desc"]='Publikuje zasób wideo na skonfigurowane konto YouTube.';

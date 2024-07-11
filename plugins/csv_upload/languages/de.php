@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Möchten Sie die Validierung überspr
 $lang["csv_upload_force_offline"]='Diese große CSV-Datei kann lange dauern, um verarbeitet zu werden, daher wird sie offline ausgeführt. Sie werden über eine ResourceSpace-Nachricht benachrichtigt, sobald die Verarbeitung abgeschlossen ist';
 $lang["csv_upload_recommend_offline"]='Diese große CSV-Datei kann sehr lange dauern, um verarbeitet zu werden. Es wird empfohlen, Offline-Jobs zu aktivieren, wenn Sie große CSV-Dateien verarbeiten müssen';
 $lang["csv_upload_createdfromcsvupload"]='Erstellt durch das CSV-Upload-Plugin';
+$lang["plugin-csv_upload-title"]='CSV-Upload';
+$lang["plugin-csv_upload-desc"]='[Erweitert] Metadaten mit einer CSV-Datei hochladen.';

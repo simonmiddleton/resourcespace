@@ -75,3 +75,5 @@ $lang["cropper_use_srgb"]='Použijte sRGB';
 $lang["transform_update_preview"]='Aktualizovat náhled';
 $lang["transform_preset_sizes"]='Vyberte z předdefinované cílové velikosti';
 $lang["error_crop_invalid"]='Vyberte prosím oblast obrázku';
+$lang["plugin-transform-title"]='Nástroje pro obrázky (transformace)';
+$lang["plugin-transform-desc"]='Umožňuje vytváření oříznutých a změněných alternativních obrázků (jCrop s podporou mobilních zařízení)';

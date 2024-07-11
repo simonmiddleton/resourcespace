@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='Google Vision ne renvoie que des mots-
 $lang["google_vision_translation_api_key"]='Activer la traduction des mots-clés de Vision via l\'API de traduction en entrant une clé API Google valide';
 $lang["google_vision_translation_languages"]='Liste de codes de langues séparés par des virgules, par exemple "no,es"';
 $lang["google_vision_translation_keep_english"]='Conserver les mots-clés anglais d\'origine ?';
+$lang["plugin-google_vision-title"]='API Google Vision';
+$lang["plugin-google_vision-desc"]='Capacité de reconnaissance d\'image. Transmet les images téléchargées à l\'API Google Cloud Vision et définit les métadonnées suggérées.';

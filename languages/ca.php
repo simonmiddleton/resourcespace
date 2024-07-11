@@ -2877,3 +2877,10 @@ $lang["all__emailnotifyresourcesunsubmitted"]='<br />
 [lang_viewalluserpending] <br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["plugin-category-asset-processing"]='Processament d\'actius';
+$lang["plugin-category-authentication"]='Autenticació';
+$lang["plugin-category-collaboration"]='Col·laboració';
+$lang["plugin-category-integrations"]='Integracions';
+$lang["plugin-category-system"]='Sistema';
+$lang["plugin-category-user-interface"]='Interfície d\'usuari';
+$lang["plugin-category-workflow-and-access"]='Flux de treball i accés';

@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='Tid mellem fremskridts-pings (ms)';
 $lang["flickr_api_key"]='Flickr API nøgle';
 $lang["flickr_api_secret"]='Flickr API hemmelighed';
 $lang["flickr_warn_no_title_access"]='Offentliggørelse er ikke tilladt uden adgang til titelfeltet (ID #%id). Kontakt venligst en administrator!';
+$lang["plugin-flickr_theme_publish-title"]='Flickr Udgivelse';
+$lang["plugin-flickr_theme_publish-desc"]='Udgiver valgte ressourcer inden for valgte temaer til Flickr.';

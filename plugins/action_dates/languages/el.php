@@ -39,3 +39,5 @@ $lang["group_no"]='Ομάδα';
 $lang["action_dates_email_text_restrict"]='Οι παρακάτω πόροι πρόκειται να περιοριστούν σε [days] ημέρες.';
 $lang["action_dates_email_text_state"]='Οι παρακάτω πόροι πρόκειται να αλλάξουν κατάσταση σε [days] ημέρες.';
 $lang["action_dates_email_text"]='Τα παρακάτω αρχεία πρόκειται να περιοριστούν και/ή να αλλάξουν κατάσταση σε [days] ημέρες.';
+$lang["plugin-action_dates-title"]='Ημερομηνίες Δράσεων';
+$lang["plugin-action_dates-desc"]='Ενεργοποιεί τον προγραμματισμένο διαγραφή ή περιορισμό των πόρων βάσει πεδίων ημερομηνίας';

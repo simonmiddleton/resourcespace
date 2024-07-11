@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='日志条目未找到。';
 $lang["rse_version_revert_state"]='回滚状态';
 $lang["rse_version_rstate_changes"]='回滚 #%COLLECTION 集合的状态，通过重放事件直到但不包括所选记录。';
 $lang["rse_version_invalid_time"]='回滚到 [date] 之前的时间不受支持。';
+$lang["plugin-rse_version-title"]='版本控制';
+$lang["plugin-rse_version-desc"]='ResourceSpace 企业版 - 版本控制';

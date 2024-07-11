@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Fält som används för att avgöra om roll/pit
 $lang["vr_view_yaw_only_value"]='Värde att kontrollera. Om det hittas kommer alternativet is_yaw_only att ställas in på true';
 $lang["vr_view_orig_image"]='Använd originalresursfilen som källa för förhandsvisning av bild?';
 $lang["vr_view_orig_video"]='Använd originalresursfilen som källa för videoförhandsvisning?';
+$lang["plugin-vr_view-title"]='VR-vy';
+$lang["plugin-vr_view-desc"]='Google VR View - 360 graders bild- och videoförhandsvisningar (equirektangulärt format)';

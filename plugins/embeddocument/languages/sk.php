@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Konfigurácia vzdialeného prehliadača dokument
 $lang["embeddocument_specify_resourcetype"]='Prosím, určite, pre ktorý typ zdroja by sa mala zobrazovať funkcia "vložiť".';
 $lang["embeddocument_document_resourcetype"]='Typ zdroja vzdialeného prehliadača dokumentov';
 $lang["embeddocument_embed_share"]='Vdelaj dokument';
+$lang["plugin-embeddocument-title"]='Vstavi dokument';
+$lang["plugin-embeddocument-desc"]='Poskrbi za funkcijo za ustvarjanje HTML za vdelane predoglede dokumentov na oddaljenih mestih.';

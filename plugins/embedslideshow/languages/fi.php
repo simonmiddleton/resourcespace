@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='Ei automaattista siirtymää';
 $lang["embedslideshow_directlink"]='Ei upotettu suora URL';
 $lang["embedslideshow_directlinkopen"]='Avaa suora linkki (uusi sivu)';
 $lang["embedslideshow_dynamic_size"]='Dynaaminen esikatselun koon muuttaminen pelaajan koon perusteella?';
+$lang["plugin-embedslideshow-title"]='Upota diaesitys';
+$lang["plugin-embedslideshow-desc"]='Tarjoaa toiminnon HTML:n luomiseen upotettavia kokoelmadiaesityksiä varten etäsivustoilla';

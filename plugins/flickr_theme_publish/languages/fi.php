@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='Aika edistymisilmoitusten välillä (
 $lang["flickr_api_key"]='Flickr API -avain';
 $lang["flickr_api_secret"]='Flickr API salainen avain';
 $lang["flickr_warn_no_title_access"]='Julkaiseminen ei ole sallittua ilman pääsyä otsikkokenttään (ID #%id). Ota yhteyttä ylläpitäjään!';
+$lang["plugin-flickr_theme_publish-title"]='Flickr-julkaisu';
+$lang["plugin-flickr_theme_publish-desc"]='Julkaisee valitut resurssit valituissa teemoissa Flickriin.';

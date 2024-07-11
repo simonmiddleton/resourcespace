@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='進捗状況のピング間隔（ミ�
 $lang["flickr_api_key"]='Flickr APIキー';
 $lang["flickr_api_secret"]='Flickr API シークレットキー';
 $lang["flickr_warn_no_title_access"]='タイトルフィールド（ID＃%id）へのアクセスなしでの公開は許可されていません。管理者に連絡してください！';
+$lang["plugin-flickr_theme_publish-title"]='Flickr公開';
+$lang["plugin-flickr_theme_publish-desc"]='選択したテーマ内の選択したリソースをFlickrに公開します。';

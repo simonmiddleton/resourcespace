@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Διεύθυνση URL αποσύνδεσ
 $lang["simplesaml_start_url"]='Έναρξη/Σύνδεση στο URL';
 $lang["simplesaml_existing_config"]='Ακολουθήστε τις οδηγίες της Βάσης Γνώσεων για να μεταφέρετε την υπάρχουσα διαμόρφωση SAML σας';
 $lang["simplesaml_test_site_url"]='Διεύθυνση URL δοκιμαστικού ιστότοπου SimpleSAML';
+$lang["plugin-simplesaml-title"]='Απλό SAML';
+$lang["plugin-simplesaml-desc"]='[Προχωρημένο] Απαιτείται έλεγχος ταυτότητας SAML για πρόσβαση στο ResourceSpace';

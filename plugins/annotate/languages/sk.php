@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='Možnost izvoza v PDF (eksperimentalno)';
 $lang["annotate_pdf_output_only_annotated"]='Zahrnúť do PDF výstupu iba anotované zdroje';
 $lang["annotate_admin_edit_access"]='Možnost urejanja opomb drugih uporabnikov';
 $lang["annotate_ref_not_supplied"]='Referencia nezadaná';
+$lang["plugin-annotate-title"]='Označi';
+$lang["plugin-annotate-desc"]='Omogoča ustvarjanje opomb slik z uporabo jQuery';

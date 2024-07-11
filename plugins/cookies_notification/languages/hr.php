@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"]='Dozvoliti k
 $lang["cookies_notification_cookies_use_title"]='Upotreba kolačića';
 $lang["cookies_notification_cookies_use_error_msg"]='Odlučili ste ne dopustiti korištenje kolačića (cookies) u ResourceSpaceu. Morali smo vas odjaviti jer ResourceSpace zahtijeva kolačiće kako bi pravilno funkcionirao.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"]='Potrebno je prihvatiti korištenje kolačića prije pristupa sustavu.';
+$lang["plugin-cookies_notification-title"]='Obavijest o kolačićima';
+$lang["plugin-cookies_notification-desc"]='Dodaje mogućnost obavještavanja korisnika o tome kako ResourceSpace može koristiti kolačiće za praćenje aktivnosti korisnika prikazivanjem poruke u zaglavlju';

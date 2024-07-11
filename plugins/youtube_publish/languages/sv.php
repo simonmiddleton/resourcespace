@@ -73,3 +73,5 @@ $lang["youtube_publish_failedupload_error"]='Överföringsfel';
 $lang["youtube_publish_category_error"]='Fel vid hämtning av YouTube-kategorier: -';
 $lang["youtube_chunk_size"]='Storlek på segment att använda vid uppladdning till YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Lägg till ankaretiketter till URL:en när du sparar till metadatafältet för YouTube-URL?';
+$lang["plugin-youtube_publish-title"]='YouTube Publicera';
+$lang["plugin-youtube_publish-desc"]='Publicerar videorresurs till konfigurerat YouTube-konto.';

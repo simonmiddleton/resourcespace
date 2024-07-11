@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='无法解析提供者的配置（用�
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='\'%PROVIDER\'（提供者）实例的配置格式无效';
 $lang["image_banks_error_bad_url_scheme"]='发现无效的 URL 方案用于 \'%PROVIDER\'（提供者）实例';
 $lang["image_banks_error_unexpected_response"]='对不起，收到来自提供者的意外响应。请联系您的系统管理员以进一步调查（请参阅调试日志）。';
+$lang["plugin-image_banks-title"]='图片库';
+$lang["plugin-image_banks-desc"]='允许用户选择外部图片库进行搜索。用户可以根据返回的结果下载或创建新资源。';

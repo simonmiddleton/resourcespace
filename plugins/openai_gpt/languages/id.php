@@ -14,3 +14,5 @@ $lang["openai_gpt_advanced"]='PERINGATAN - Bagian ini hanya untuk tujuan penguji
 $lang["openai_gpt_system_message"]='Teks pesan sistem awal. Placeholder %%IN_TYPE%% dan %%OUT_TYPE%% akan digantikan oleh \'teks\' atau \'json\' tergantung pada jenis bidang sumber/target';
 $lang["openai_gpt_intro"]='Menambahkan metadata yang dihasilkan dengan mengirimkan data yang ada ke OpenAI API dengan prompt yang dapat disesuaikan. Lihat <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> untuk informasi lebih rinci.';
 $lang["openai_gpt_api_key"]='Kunci API OpenAI. Dapatkan kunci API Anda dari <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='Integrasi API GPT OpenAI';
+$lang["plugin-openai_gpt-desc"]='OpenAI menghasilkan metadata. Mengirimkan data bidang yang dikonfigurasi ke API OpenAI dan menyimpan informasi yang dikembalikan.';

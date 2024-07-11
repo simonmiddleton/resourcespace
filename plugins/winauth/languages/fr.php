@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Préférez les connexions standard de ResourceSp
 $lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Vous êtes connecté en tant que : [nom d\'utilisateur]';
 $lang["winauth_not_logged_in"]='Vous n\'êtes pas connecté ou votre serveur web n\'a pas été configuré correctement';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Avancé] Authentification intégrée Windows';

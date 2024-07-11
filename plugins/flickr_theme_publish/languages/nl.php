@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='Tijd tussen voortgangspings (ms)';
 $lang["flickr_api_key"]='Flickr API-sleutel';
 $lang["flickr_api_secret"]='Flickr API-geheim';
 $lang["flickr_warn_no_title_access"]='Publiceren is niet toegestaan zonder toegang tot het titelveld (ID #%id). Neem contact op met een beheerder!';
+$lang["plugin-flickr_theme_publish-title"]='Flickr Publicatie';
+$lang["plugin-flickr_theme_publish-desc"]='Publiceert geselecteerde bronnen binnen geselecteerde thema\'s op Flickr.';

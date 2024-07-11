@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='CSV datoteka mora imati zaglavljeni redak';
 $lang["csv_user_import_condition3"]='Stupci koji će sadržavati vrijednosti s <b>zarezima (,)</b>, formatirajte kao tip <b>tekst</b> kako ne biste morali dodavati navodnike (""). Prilikom spremanja kao .csv datoteku, provjerite opciju navođenja ćelija tipa teksta';
 $lang["csv_user_import_condition4"]='Dopušteni stupci: *korisničko ime, *e-pošta, lozinka, puno ime, istek računa, komentari, ograničenje IP adrese, jezik. Napomena: obvezna polja su označena s *';
 $lang["csv_user_import_condition5"]='Jezik korisnika će se automatski vratiti na onaj koji je postavljen korištenjem opcije konfiguracije "$defaultlanguage" ako stupac "lang" nije pronađen ili nema vrijednost';
+$lang["plugin-csv_user_import-title"]='CSV uvoz korisnika';
+$lang["plugin-csv_user_import-desc"]='[Napredno] Omogućuje uvoz serije korisnika na temelju unaprijed formatirane CSV datoteke';

@@ -82,6 +82,10 @@ for ($n=0;$n<count($inst_plugins);$n++)
         if(isset($py[$yaml_idx]))
             {
             $inst_plugins[$n][$yaml_idx] = $py[$yaml_idx];
+            if (($yaml_idx)=="desc") // Special case, "desc" in the YAML is "descrip" in the page/db.
+                {
+                $inst_plugins[$n]["descrip"] = $py[$yaml_idx];
+                }
             }
         }
     }
@@ -274,9 +278,7 @@ if($searching)
             continue;
             }
 
-        // Plugin description key is different if plugin is installed (desc|descrip)
         $plugin_description = (isset($plugin["desc"]) ? $plugin["desc"] : "");
-        $plugin_description = (isset($plugin["descrip"]) ? $plugin["descrip"] : $plugin_description);
 
         // Plugin version key is different if plugin is installed (version|inst_version)
         $plugin_version = (isset($plugin["version"]) ? $plugin["version"] : "");

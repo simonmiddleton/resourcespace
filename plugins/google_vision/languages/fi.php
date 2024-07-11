@@ -21,3 +21,5 @@ $lang["google_vision_translation_api_key"]='Ota käyttöön Vision-avainsanojen 
 $lang["google_vision_translation_languages"]='Pilkulla eroteltu luettelo kielikoodeista, esim. "no,es"';
 $lang["google_vision_translation_keep_english"]='Säilytetäänkö alkuperäiset englanninkieliset avainsanat?';
 $lang["google_vision_api"]='Google Vision API';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Kuvantunnistusominaisuus. Lähettää ladatut kuvat Google Cloud Vision API:lle ja asettaa ehdotetut metatiedot.';

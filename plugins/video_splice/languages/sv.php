@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='En giltig resurs har antingen tagits b
 $lang["video_splice_createdfromvideosplice"]='Skapad från Video Splice-plugin';
 $lang["video-trim_output"]='Utdata';
 $lang["video_splice_error_invalid_action"]='Fel: Ogiltig åtgärd';
+$lang["plugin-video_splice-title"]='Videoklippning';
+$lang["plugin-video_splice-desc"]='Lägger till kapacitet för videoklippning och sammanfogning';

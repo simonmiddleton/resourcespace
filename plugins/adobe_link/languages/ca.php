@@ -12,3 +12,5 @@ $lang["adobe_link_import_successful"]='S\'està important el fitxer';
 $lang["adobe_link_upload_document"]='Desar';
 $lang["adobe_link_saving"]='Desant...';
 $lang["adobe_link_saving_wait"]='El fitxer s\'està desant, si us plau, espereu pel missatge de confirmació. Potser necessitareu actualitzar la pàgina per actualitzar la imatge de vista prèvia.';
+$lang["plugin-adobe_link-title"]='Enllaç Adobe';
+$lang["plugin-adobe_link-desc"]='[Avançat] Permet la ingesta d\'arxius Adobe des de ResourceSpace a Adobe CC';

@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Pole, ki se uporablja za določanje ali naj se 
 $lang["vr_view_yaw_only_value"]='Hodnota, ktorá sa má skontrolovať. Ak sa nájde, nastaví sa možnosť is_yaw_only na true';
 $lang["vr_view_orig_image"]='Použiť pôvodný súbor zdroja ako zdroj pre náhľad obrázka?';
 $lang["vr_view_orig_video"]='Použiť pôvodný súbor zdroja ako zdroj pre náhľad videa?';
+$lang["plugin-vr_view-title"]='VR Pogled';
+$lang["plugin-vr_view-desc"]='Google VR View - 360-stopinjski predogled slik in videoposnetkov (equirektangularni format)';

@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='النص المستخدم للعرض للمشا
 $lang["falcon_link_log_publish"]='المورد المشترك عبر فالكون';
 $lang["falcon_link_log_archive"]='المورد المؤرشف عبر فالكون';
 $lang["falcon_link_error_falcon_check_tags"]='يرجى التحقق من عدم ترك الوصف والعلامات فارغة';
+$lang["plugin-falcon_link-title"]='رابط فالكون';
+$lang["plugin-falcon_link-desc"]='[متقدم] نشر الموارد إلى Falcon.io';

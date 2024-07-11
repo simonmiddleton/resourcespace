@@ -3103,3 +3103,10 @@ $lang["system_notification_email"]='[img_headerlogo]<br />
 [message]<br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["plugin-category-asset-processing"]='Asset-Verarbeitung';
+$lang["plugin-category-authentication"]='Authentifizierung';
+$lang["plugin-category-collaboration"]='Zusammenarbeit';
+$lang["plugin-category-integrations"]='Integrationen';
+$lang["plugin-category-system"]='System';
+$lang["plugin-category-user-interface"]='Benutzeroberfläche';
+$lang["plugin-category-workflow-and-access"]='Workflow und Zugriff';

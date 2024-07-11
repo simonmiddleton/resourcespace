@@ -61,3 +61,5 @@ $lang["doi_hide_meta"]='Ukryj metadane DOI';
 $lang["doi_fetched_xml_from_MDS"]='Aktualne metadane XML zostały pomyślnie pobrane z magazynu metadanych DataCite';
 $lang["doi_info_wikipedia"]='https://pl.wikipedia.org/wiki/Digital_Object_Identifier';
 $lang["doi_sum_of"]='z';
+$lang["plugin-doi-title"]='Cyfrowy Identyfikator Obiektu';
+$lang["plugin-doi-desc"]='Generuje DOI dla niezmiennych obiektów przed ich rejestracją w DataCite w celu trwałego cytowania.';

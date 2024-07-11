@@ -84,3 +84,5 @@ $lang["simplesaml_single_logout_url"]='URL de deconectare unică';
 $lang["simplesaml_start_url"]='Începe/Conectează-te la URL';
 $lang["simplesaml_existing_config"]='Urmăriți instrucțiunile din Baza de Cunoștințe pentru a migra configurația SAML existentă';
 $lang["simplesaml_test_site_url"]='URL-ul site-ului de testare SimpleSAML';
+$lang["plugin-simplesaml-title"]='SAML simplu';
+$lang["plugin-simplesaml-desc"]='[Avansat] Necesită autentificare SAML pentru a accesa ResourceSpace';

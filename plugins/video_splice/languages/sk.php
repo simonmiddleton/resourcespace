@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='Platný zdroj buď bol odstránený al
 $lang["video_splice_createdfromvideosplice"]='Vytvorené pomocou pluginu Video Splice';
 $lang["video-trim_output"]='Výstup';
 $lang["video_splice_error_invalid_action"]='Napaka: Neveljavna akcija';
+$lang["plugin-video_splice-title"]='Video Spajanje';
+$lang["plugin-video_splice-desc"]='Dodaja možnost obrezovanja in spajanja videoposnetkov';

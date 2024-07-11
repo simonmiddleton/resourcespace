@@ -12,3 +12,5 @@ $lang["outofrange"]='範囲外 (Han\'i-gai)';
 $lang["invalidrange"]='範囲が無効です。';
 $lang["splitpdf_createnewresource"]='各範囲ごとに新しいリソースを作成してください。';
 $lang["splitpdf_createnewalternativefile"]='このリソースの各範囲に対して、新しい代替ファイルを作成してください。';
+$lang["plugin-pdf_split-title"]='PDF分割';
+$lang["plugin-pdf_split-desc"]='PDFファイルを複数のページに分割することを許可します';

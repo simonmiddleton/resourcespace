@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='ログエントリが見つかりません�
 $lang["rse_version_revert_state"]='状態を元に戻す (Jōtai o moto ni modosu)';
 $lang["rse_version_rstate_changes"]='選択されたレコードを含まない範囲で、イベントを再生してコレクション＃%COLLECTIONの状態を元に戻しています。';
 $lang["rse_version_invalid_time"]='日付[date]より前の時点に戻すことはサポートされていません。';
+$lang["plugin-rse_version-title"]='バージョン管理';
+$lang["plugin-rse_version-desc"]='ResourceSpaceエンタープライズ - バージョン管理';

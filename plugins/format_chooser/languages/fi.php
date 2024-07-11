@@ -14,3 +14,5 @@ $lang["downloadformat"]='Latausmuoto';
 $lang["are_available-2"]='muutetaan';
 $lang["are_available-1"]='muutetaan';
 $lang["are_available-0"]='muutetaan';
+$lang["plugin-format_chooser-title"]='Muodon valitsin';
+$lang["plugin-format_chooser-desc"]='Mahdollistaa erilaisten tiedostomuotojen valitsemisen ladattaessa tiedostoja, jotka luodaan lennossa.';

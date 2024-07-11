@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Navrhovaná úprava';
 $lang["actions_propose_changes"]='Zobraz mi navrhované zmeny používateľa v mojom zozname akcií';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Vaše navrhované zmeny boli preskúmané.<br/>[changesummary]<br/>Kliknite nižšie pre prehliadnutie zmien<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Navrhované zmeny boli odoslané.<br/>[changesummary]<br/>Kliknite nižšie pre prehliadnutie zmien<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Predlagaj spremembe';
+$lang["plugin-propose_changes-desc"]='Doda možnost, da uporabniki predlagajo spremembe metapodatkov brez dostopa za urejanje';

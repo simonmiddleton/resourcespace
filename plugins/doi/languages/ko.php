@@ -61,3 +61,5 @@ $lang["doi_sure_register_resource"]='x개의 리소스를 등록하시겠습니�
 $lang["doi_show_meta"]='DOI 메타데이터 표시';
 $lang["doi_hide_meta"]='DOI 메타데이터 숨기기';
 $lang["doi_fetched_xml_from_MDS"]='현재 XML 메타데이터를 DataCite의 메타데이터 저장소에서 성공적으로 가져올 수 있었습니다.';
+$lang["plugin-doi-title"]='디지털 객체 식별자';
+$lang["plugin-doi-desc"]='불변 객체에 대해 DOI를 생성한 후 DataCite에 등록하여 지속적인 인용을 가능하게 합니다.';

@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='Opprettet av SimpleLDAP-tillegget.';
 $lang["simpleldap_usermatchcomment"]='Oppdatert til LDAP-bruker av SimpleLDAP.';
 $lang["origin_simpleldap"]='EnkelLDAP-tillegg';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Ikke sjekk FQDN-en til serveren mot CN-en til sertifikatet';
+$lang["plugin-simpleldap-title"]='Enkel LDAP';
+$lang["plugin-simpleldap-desc"]='[Avansert] Enklere implementering av ldap-autentisering, rettet mot Active Directory men støtter også Oracle-katalog';

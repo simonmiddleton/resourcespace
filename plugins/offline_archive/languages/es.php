@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Marcado para restauración de
 $lang["offline_archive_resource_log_restore_removed"]='Restauración cancelada desde el archivo';
 $lang["offline_archive_resource_log_restore_request"]='Solicitud de restauración desde el archivo';
 $lang["offline_archive_resource_restore"]='Restaurar recursos';
+$lang["plugin-offline_archive-title"]='Archivo sin conexión';
+$lang["plugin-offline_archive-desc"]='Permite la reubicación de archivos archivados a una ubicación fuera de línea';

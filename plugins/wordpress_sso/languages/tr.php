@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='WordPress olmayan hesap ile giriş ya
 $lang["wordpress_sso_use_wp_login"]='WordPress hesabı kullanarak giriş yap';
 $lang["wordpress_sso_retry"]='Tekrar giriş yapmak için buraya tıklayın';
 $lang["origin_wordpress_sso"]='Wordpress SSO eklentisi';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Gelişmiş] Wordpress kurulumu ile Tek Oturum Açmayı sağlar';

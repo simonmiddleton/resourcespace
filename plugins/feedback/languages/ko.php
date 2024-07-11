@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='텍스트 / HTML:';
 $lang["feedback_options-comma_separated"]='옵션: (쉼표로 구분)';
 $lang["feedback_add_new_field"]='새 필드 추가';
 $lang["feedback_back_to_plugin_manager"]='플러그인 관리자로 돌아가기';
+$lang["plugin-feedback-title"]='피드백';
+$lang["plugin-feedback-desc"]='일반 사용자 피드백 기능을 구성 가능한 질문과 함께 추가합니다.';

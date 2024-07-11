@@ -32,3 +32,5 @@ $lang["video_tracks_transcode_now_label"]='Транскодировать сей
 $lang["video_tracks_select_generate_opt"]='Пожалуйста, выберите вариант генерации';
 $lang["video_tracks_save_alt_not_perm"]='Невозможно сохранить альтернативу без разрешения';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='ВАЖНО! Плагин Video Tracks устарел настройки форматов вывода. Их можно установить только в config.php. Плагин не будет работать должным образом, пока параметр конфигурации не будет скопирован. Пожалуйста, скопируйте следующее:- %nl%####%nl%[output_formats_config]####%nl%';
+$lang["plugin-video_tracks-title"]='Видеодорожки';
+$lang["plugin-video_tracks-desc"]='[Расширенные] Добавить поддержку различных аудио и субтитровых опций для видео ресурсов';

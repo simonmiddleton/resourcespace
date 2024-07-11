@@ -39,3 +39,5 @@ $lang["weekday-5"]='Пятница';
 $lang["weekday-6"]='Суббота';
 $lang["show_affected_resources"]='Показать затронутые ресурсы';
 $lang["group_no"]='Группа';
+$lang["plugin-action_dates-title"]='Даты действий';
+$lang["plugin-action_dates-desc"]='Включает запланированное удаление или ограничение ресурсов на основе полей даты';

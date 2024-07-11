@@ -19,3 +19,5 @@ $lang["format_chooser_remove_profile"]='Ta bort profil';
 $lang["are_available-2"]='kommer att konverteras';
 $lang["are_available-1"]='kommer att konverteras';
 $lang["are_available-0"]='kommer att konverteras';
+$lang["plugin-format_chooser-title"]='Formatväljare';
+$lang["plugin-format_chooser-desc"]='Gör att du kan välja olika format när du laddar ner filer som genereras direkt.';

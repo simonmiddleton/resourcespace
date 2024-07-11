@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Conectați-vă folosind un cont non-W
 $lang["wordpress_sso_use_wp_login"]='Conectați-vă folosind contul WordPress';
 $lang["wordpress_sso_retry"]='Apasă aici pentru a încerca să te autentifici din nou';
 $lang["origin_wordpress_sso"]='Plugin-ul SSO pentru Wordpress';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Avansat] Permite autentificarea unică cu instalarea Wordpress';

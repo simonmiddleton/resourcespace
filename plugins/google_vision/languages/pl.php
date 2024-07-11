@@ -21,3 +21,5 @@ $lang["google_vision_translation_api_key"]='Włącz tłumaczenie słów kluczowy
 $lang["google_vision_translation_languages"]='Lista kodów języków oddzielonych przecinkami, np. "no,es"';
 $lang["google_vision_translation_keep_english"]='Zachowaj oryginalne angielskie słowa kluczowe?';
 $lang["google_vision_api"]='Google Vision API';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Możliwość rozpoznawania obrazów. Przesyła przesłane obrazy do Google Cloud Vision API i ustawia sugerowane metadane.';

@@ -34,3 +34,5 @@ $lang["image_banks_error_unexpected_response"]='Üzgünüz, sağlayıcıdan bekl
 $lang["image_banks_local_download_attempt"]='Kullanıcı, izin verilen sağlayıcıların bir parçası olmayan bir sisteme işaret ederek ImageBank eklentisini kullanarak \'%FILE\' dosyasını indirmeye çalıştı';
 $lang["image_banks_bad_file_create_attempt"]='Kullanıcı, izin verilen sağlayıcıların bir parçası olmayan bir sisteme işaret ederek ImageBank eklentisini kullanarak \'%FILE\' dosyası ile bir kaynak oluşturmaya çalıştı';
 $lang["image_banks_createdfromimagebanks"]='Görsel Bankaları eklentisinden oluşturuldu';
+$lang["plugin-image_banks-title"]='Görsel Bankaları';
+$lang["plugin-image_banks-desc"]='Kullanıcıların arama yapmak için harici bir Görsel Bankası seçmelerine olanak tanır. Kullanıcılar daha sonra döndürülen sonuçlara göre yeni kaynaklar indirebilir veya oluşturabilirler.';

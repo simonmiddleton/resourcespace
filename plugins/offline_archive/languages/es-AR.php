@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_removed"]='Restauración cancelada d
 $lang["offline_archive_resource_log_restore_request"]='Solicitud de restauración desde el archivo';
 $lang["offline_archive_resource_restore"]='Restaurar recursos';
 $lang["offline_archive_archivefield"]='Por favor, seleccione el campo de metadatos que contendrá el código de referencia de archivo';
+$lang["plugin-offline_archive-title"]='Archivo Offline';
+$lang["plugin-offline_archive-desc"]='Permite la reubicación de archivos archivados a una ubicación fuera de línea';

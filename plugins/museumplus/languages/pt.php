@@ -51,3 +51,5 @@ $lang["museumplus_error_invalid_association"]='Associação de módulo(s) invál
 $lang["museumplus_id_returns_multiple_records"]='Vários registros encontrados - por favor, insira o ID técnico em vez disso';
 $lang["museumplus_error_module_no_field_maps"]='Não é possível sincronizar dados do MuseumPlus. Motivo: o módulo \'%name\' não possui mapeamentos de campos configurados.';
 $lang["museumplus_module_setup"]='Configuração do módulo';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Avançado] Permite que os metadados dos recursos sejam extraídos do MuseumPlus usando sua API REST (MpRIA).';

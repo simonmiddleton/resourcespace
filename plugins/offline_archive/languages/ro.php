@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Marcate pentru restaurare din
 $lang["offline_archive_resource_log_restore_removed"]='Anulată restaurarea din arhivă';
 $lang["offline_archive_resource_log_restore_request"]='Solicitare de restaurare din arhivă';
 $lang["offline_archive_resource_restore"]='Restabilire resurse';
+$lang["plugin-offline_archive-title"]='Arhivă Offline';
+$lang["plugin-offline_archive-desc"]='Permite relocarea fișierelor arhivate într-o locație offline';

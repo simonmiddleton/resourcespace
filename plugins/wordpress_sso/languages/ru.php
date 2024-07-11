@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Войти с помощью акка
 $lang["wordpress_sso_use_wp_login"]='Войти с помощью учетной записи WordPress';
 $lang["wordpress_sso_retry"]='Нажмите здесь, чтобы попробовать войти снова';
 $lang["origin_wordpress_sso"]='Плагин единого входа Wordpress (Wordpress SSO)';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Расширенный] Позволяет единый вход с установкой Wordpress';

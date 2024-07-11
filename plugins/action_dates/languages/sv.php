@@ -44,3 +44,5 @@ $lang["weekday-5"]='Fredag';
 $lang["weekday-6"]='Lördag';
 $lang["show_affected_resources"]='Visa påverkade resurser';
 $lang["group_no"]='Grupp';
+$lang["plugin-action_dates-title"]='Åtgärdsdatum';
+$lang["plugin-action_dates-desc"]='Möjliggör schemalagd radering eller begränsning av resurser baserat på datumfält';

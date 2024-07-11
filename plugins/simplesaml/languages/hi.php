@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='एकल लॉगआउट यूआर
 $lang["simplesaml_start_url"]='प्रारंभ/साइन ऑन यूआरएल';
 $lang["simplesaml_existing_config"]='अपने मौजूदा SAML कॉन्फ़िगरेशन को माइग्रेट करने के लिए नॉलेज बेस निर्देशों का पालन करें';
 $lang["simplesaml_test_site_url"]='SimpleSAML परीक्षण साइट URL';
+$lang["plugin-simplesaml-title"]='सरल SAML';
+$lang["plugin-simplesaml-desc"]='[उन्नत] ResourceSpace तक पहुँचने के लिए SAML प्रमाणीकरण आवश्यक है';

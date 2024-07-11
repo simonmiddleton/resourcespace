@@ -28,3 +28,5 @@ $lang["selectlicence"]='يرجى اختيار معرف الترخيص';
 $lang["confirmdeletelicensefile"]='هل أنت متأكد أنك تريد حذف هذا الملف؟ لا يمكن التراجع عن هذا الإجراء.';
 $lang["license_manager_mediums"]='استخدام وسائط الترخيص';
 $lang["license_manager_access"]='إدارة بيانات الترخيص (حيث لم يتم تمكينها بالفعل عبر إذن "الوصول إلى منطقة إعداد النظام")';
+$lang["plugin-licensemanager-title"]='مدير التراخيص';
+$lang["plugin-licensemanager-desc"]='يضيف القدرة على إدارة تراخيص الموارد';

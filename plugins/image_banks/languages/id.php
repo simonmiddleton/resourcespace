@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Tidak dapat mem-parsing konfigurasi pe
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Format konfigurasi tidak valid untuk instance \'%PROVIDER\' (penyedia)';
 $lang["image_banks_error_bad_url_scheme"]='Skema URL tidak valid ditemukan untuk instance \'%PROVIDER\' (penyedia)';
 $lang["image_banks_error_unexpected_response"]='Maaf, menerima respons yang tidak terduga dari penyedia. Silakan hubungi administrator sistem Anda untuk penyelidikan lebih lanjut (lihat log debug).';
+$lang["plugin-image_banks-title"]='Bank Gambar';
+$lang["plugin-image_banks-desc"]='Memungkinkan pengguna untuk memilih Bank Gambar eksternal untuk dicari. Pengguna kemudian dapat mengunduh atau membuat sumber daya baru berdasarkan hasil yang dikembalikan.';

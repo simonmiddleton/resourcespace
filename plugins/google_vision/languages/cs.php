@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='Google Vision vrací pouze anglická k
 $lang["google_vision_translation_api_key"]='Povolit překlad klíčových slov Vision prostřednictvím překladového API zadáním platného klíče Google API';
 $lang["google_vision_translation_languages"]='Čárkou oddělený seznam kódů jazyků, např. "no,es"';
 $lang["google_vision_translation_keep_english"]='Ponechat původní anglická klíčová slova?';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Schopnost rozpoznávání obrázků. Předává nahrané obrázky do Google Cloud Vision API a nastavuje navrhovaná metadata.';

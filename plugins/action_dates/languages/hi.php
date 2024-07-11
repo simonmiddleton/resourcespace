@@ -37,3 +37,5 @@ $lang["weekday-3"]='बुधवार';
 $lang["weekday-4"]='गुरुवार';
 $lang["weekday-5"]='शुक्रवार';
 $lang["weekday-6"]='शनिवार';
+$lang["plugin-action_dates-title"]='क्रिया तिथियाँ';
+$lang["plugin-action_dates-desc"]='तिथि क्षेत्रों के आधार पर संसाधनों के अनुसूचित विलोपन या प्रतिबंध को सक्षम बनाता है';

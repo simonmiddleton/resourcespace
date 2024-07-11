@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Veld gebruikt om te bepalen of roll/pitch moet 
 $lang["vr_view_yaw_only_value"]='Te controleren waarde. Indien gevonden, wordt de optie is_yaw_only ingesteld op true';
 $lang["vr_view_orig_image"]='Gebruik het originele bronbestand als bron voor de afbeeldingsvoorvertoning?';
 $lang["vr_view_orig_video"]='Gebruik het originele bronbestand van de resource als bron voor de videovoorvertoning?';
+$lang["plugin-vr_view-title"]='VR-weergave';
+$lang["plugin-vr_view-desc"]='Google VR View - 360 graden beeld- en videovoorbeelden (equirectangulaire formaat)';

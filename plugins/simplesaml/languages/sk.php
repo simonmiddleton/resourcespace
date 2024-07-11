@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Jednotná URL adresa pro odhlášení';
 $lang["simplesaml_start_url"]='Začiatočná URL adresa/Prihlásenie sa na URL adresu';
 $lang["simplesaml_existing_config"]='Sledujte pokyny v báze znalostí pre migráciu vašej existujúcej SAML konfigurácie';
 $lang["simplesaml_test_site_url"]='URL testovacej stránky SimpleSAML';
+$lang["plugin-simplesaml-title"]='Jednoduchý SAML';
+$lang["plugin-simplesaml-desc"]='[Pokročilo] Zahtevaj SAML overjanje za dostop do ResourceSpace';

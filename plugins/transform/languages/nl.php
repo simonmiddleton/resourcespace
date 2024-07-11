@@ -75,3 +75,5 @@ $lang["transform_preset_sizes"]='Selecteer een vooraf gedefinieerde doelgrootte'
 $lang["error_crop_invalid"]='Selecteer alstublieft een regio van de afbeelding';
 $lang["input_formats"]='Invoerformaten';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Beeldhulpmiddelen (transformeren)';
+$lang["plugin-transform-desc"]='Maakt het mogelijk om bijgesneden en geschaalde alternatieve afbeeldingen te maken (jCrop met mobiele ondersteuning)';

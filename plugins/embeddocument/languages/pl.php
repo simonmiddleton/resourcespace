@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Konfiguracja zdalnego przeglądarki dokumentów'
 $lang["embeddocument_specify_resourcetype"]='Proszę określić dla jakiego typu zasobu funkcjonalność „osadzania” powinna być dostępna.';
 $lang["embeddocument_document_resourcetype"]='Zdalny przeglądarka dokumentów - Typ zasobu:';
 $lang["embeddocument_embed_share"]='Osadź dokument';
+$lang["plugin-embeddocument-title"]='Osadź dokument';
+$lang["plugin-embeddocument-desc"]='Zapewnia funkcję generowania HTML dla osadzalnych podglądów dokumentów na zdalnych stronach.';

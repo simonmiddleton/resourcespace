@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='सत्यापन छोड़े
 $lang["csv_upload_force_offline"]='यह बड़ा CSV संसाधित करने में अधिक समय ले सकता है, इसलिए इसे ऑफ़लाइन चलाया जाएगा। संसाधन पूरा होने पर आपको ResourceSpace संदेश के माध्यम से सूचित किया जाएगा।';
 $lang["csv_upload_recommend_offline"]='यह बड़ा CSV संसाधित करने में बहुत समय ले सकता है। यदि आपको बड़े CSV संसाधित करने की आवश्यकता है, तो यह अनुशंसा की जाती है कि ऑफ़लाइन नौकरियों को सक्षम किया जाए।';
 $lang["csv_upload_createdfromcsvupload"]='CSV अपलोड प्लगइन से बनाया गया';
+$lang["plugin-csv_upload-title"]='CSV अपलोड';
+$lang["plugin-csv_upload-desc"]='[उन्नत] CSV फ़ाइल का उपयोग करके मेटा डेटा अपलोड करें।';

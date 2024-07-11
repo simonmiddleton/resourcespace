@@ -61,3 +61,5 @@ $lang["doi_sure_register_resource"]='Pokračovat v registraci x zdrojů?';
 $lang["doi_show_meta"]='Zobrazit metadata DOI';
 $lang["doi_hide_meta"]='Skrýt metadata DOI';
 $lang["doi_fetched_xml_from_MDS"]='Aktuální XML metadata byla úspěšně načtena z úložiště metadat DataCite.';
+$lang["plugin-doi-title"]='Digitální identifikátor objektu';
+$lang["plugin-doi-desc"]='Generuje DOI pro neměnné objekty před jejich registrací u DataCite pro trvalou citaci.';

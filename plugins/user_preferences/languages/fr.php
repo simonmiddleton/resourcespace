@@ -6,3 +6,5 @@ $lang["user_preferences_change_username"]='Autoriser la modification du nom de c
 $lang["user_preferences_change_email"]='Autoriser la modification de l\'adresse e-mail';
 $lang["user_preferences_change_name"]='Autoriser la modification du nom de l\'utilisateur';
 $lang["changeyourpassword"]='Changer mon mot de passe et mes informations utilisateur';
+$lang["plugin-user_preferences-title"]='Préférences de l\'utilisateur';
+$lang["plugin-user_preferences-desc"]='Offre des préférences utilisateur supplémentaires';

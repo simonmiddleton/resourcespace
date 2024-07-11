@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='प्रगति पिंग्स
 $lang["flickr_api_key"]='Flickr एपीआई कुंजी';
 $lang["flickr_api_secret"]='Flickr एपीआई सीक्रेट';
 $lang["flickr_warn_no_title_access"]='शीर्षक फ़ील्ड (ID #%id) तक पहुँच के बिना प्रकाशन की अनुमति नहीं है। कृपया एक प्रशासक से संपर्क करें!';
+$lang["plugin-flickr_theme_publish-title"]='फ्लिकर प्रकाशन';
+$lang["plugin-flickr_theme_publish-desc"]='चयनित विषयों के अंतर्गत चयनित संसाधनों को Flickr पर प्रकाशित करता है।';

@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='CSVファイルにはヘッダー行が必�
 $lang["csv_user_import_condition3"]='<b>コンマ( , )</b>を含む値がある列については、タイプを<b>テキスト</b>にフォーマットして、引用符(" ")を追加する必要がないようにしてください。.csvファイルとして保存する場合は、テキストタイプのセルを引用符で囲むオプションを確認してください。';
 $lang["csv_user_import_condition4"]='許可された列：*ユーザー名、*メール、パスワード、フルネーム、アカウント有効期限、コメント、IP制限、言語。注：必須フィールドには*が付いています。';
 $lang["csv_user_import_condition5"]='ユーザーの言語がlang列が見つからない場合、または値がない場合、"$defaultlanguage"構成オプションを使用して設定された言語にデフォルトで戻ります。';
+$lang["plugin-csv_user_import-title"]='CSVユーザーインポート';
+$lang["plugin-csv_user_import-desc"]='[高度] 事前にフォーマットされたCSVファイルに基づいてユーザーのバッチをインポートする機能を提供します';

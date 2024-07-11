@@ -24,3 +24,5 @@ $lang["notes"]='Poznámky';
 $lang["confirmdeleteconsentfile"]='Opravdu chcete TENTO soubor SMAZAT? Toto nelze vrátit zpět.';
 $lang["consent_manager_mediums"]='Média pro použití souhlasu';
 $lang["consent_manager_access"]='Spravovat data souhlasu (pokud již není povoleno prostřednictvím oprávnění "Může přistupovat do oblasti nastavení systému")';
+$lang["plugin-consentmanager-title"]='Správce souhlasů';
+$lang["plugin-consentmanager-desc"]='Přidává možnost spravovat souhlasy udělené subjekty uvedenými ve vašich mediálních souborech';

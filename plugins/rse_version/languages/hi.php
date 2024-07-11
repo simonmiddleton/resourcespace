@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='लॉग प्रविष्टि नह
 $lang["rse_version_revert_state"]='स्थिति पुनः स्थापित करें';
 $lang["rse_version_rstate_changes"]='चयनित रिकॉर्ड को छोड़कर, घटनाओं को फिर से चलाकर संग्रह #%COLLECTION की स्थिति को पुनःस्थापित करना।';
 $lang["rse_version_invalid_time"]='[date] से पहले के समय में वापस जाना समर्थित नहीं है';
+$lang["plugin-rse_version-title"]='संस्करण नियंत्रण';
+$lang["plugin-rse_version-desc"]='ResourceSpace एंटरप्राइज - संस्करण नियंत्रण';

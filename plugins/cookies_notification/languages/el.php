@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"]='Να επι
 $lang["cookies_notification_cookies_use_title"]='Χρήση cookies';
 $lang["cookies_notification_cookies_use_error_msg"]='Αποφασίσατε να μην επιτρέπετε τη χρήση cookies από το ResourceSpace. Αναγκαστήκαμε να σας αποσυνδέσουμε καθώς το ResourceSpace απαιτεί τα cookies για να λειτουργήσει σωστά.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"]='Απαιτείται να αποδεχθείτε τη χρήση cookies πριν από την πρόσβαση στο σύστημα.';
+$lang["plugin-cookies_notification-title"]='Ειδοποίηση για Cookies';
+$lang["plugin-cookies_notification-desc"]='Προσθέτει τη δυνατότητα να ειδοποιεί τους χρήστες για το πώς το ResourceSpace μπορεί να χρησιμοποιεί cookies για την παρακολούθηση της δραστηριότητας των χρηστών, εμφανίζοντας ένα μήνυμα στην κεφαλίδα';

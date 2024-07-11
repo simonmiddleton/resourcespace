@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Označeno pro obnovení z arc
 $lang["offline_archive_resource_log_restore_removed"]='Obnovení z archivu zrušeno';
 $lang["offline_archive_resource_log_restore_request"]='Požadováno obnovení z archivu';
 $lang["offline_archive_resource_restore"]='Obnovit zdroje';
+$lang["plugin-offline_archive-title"]='Offline archivace';
+$lang["plugin-offline_archive-desc"]='Umožňuje přesun archivovaných souborů na offline místo';

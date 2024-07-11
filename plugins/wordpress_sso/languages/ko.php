@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='WordPress가 아닌 계정으로 로�
 $lang["wordpress_sso_use_wp_login"]='WordPress 계정으로 로그인';
 $lang["wordpress_sso_retry"]='여기를 클릭하여 다시 로그인 시도';
 $lang["origin_wordpress_sso"]='Wordpress SSO 플러그인';
+$lang["plugin-wordpress_sso-title"]='워드프레스 SSO';
+$lang["plugin-wordpress_sso-desc"]='[고급] Wordpress 설치와 단일 로그인 허용';

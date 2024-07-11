@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='Die CSV-Datei muss eine Kopfzeile haben';
 $lang["csv_user_import_condition3"]='Spalte(n), die Werte mit <b>Kommas ( , )</b> enthalten werden, stellen Sie sicher, dass Sie sie als Typ <b>Text</b> formatieren, damit Sie keine Anführungszeichen ("") hinzufügen müssen. Beim Speichern als .csv-Datei stellen Sie sicher, dass Sie die Option zum Zitieren von Textzellen aktivieren';
 $lang["csv_user_import_condition4"]='Erlaubte Spalten: *Benutzername, *E-Mail, Passwort, vollständiger Name, Kontoablaufdatum, Kommentare, IP-Einschränkung, Sprache. Hinweis: Pflichtfelder sind mit * markiert';
 $lang["csv_user_import_condition5"]='Die Sprache des Benutzers wird standardmäßig auf diejenige zurückgesetzt, die mit der "$defaultlanguage" Konfigurationsoption festgelegt wurde, wenn die Sprachspalte nicht gefunden wird oder keinen Wert hat';
+$lang["plugin-csv_user_import-title"]='CSV-Benutzerimport';
+$lang["plugin-csv_user_import-desc"]='[Erweitert] Ermöglicht das Importieren einer Benutzergruppe basierend auf einer vorformatierten CSV-Datei';

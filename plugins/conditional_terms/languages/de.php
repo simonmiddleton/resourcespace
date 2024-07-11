@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Dieses Plugin ermöglicht es Ihnen, eine
 $lang["conditional_terms_field"]='Metadatenfeld';
 $lang["conditional_terms_value"]='Wert';
 $lang["conditional_terms_plugin_misconfigured"]='Das Plugin für bedingte Bedingungen ist falsch konfiguriert';
+$lang["plugin-conditional_terms-title"]='Bedingte Bedingungen';
+$lang["plugin-conditional_terms-desc"]='Ermöglicht die bedingte Anzeige der Nutzungsbedingungen-Seite beim Herunterladen basierend auf den Metadaten der Ressource';

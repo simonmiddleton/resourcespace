@@ -23,3 +23,5 @@ $lang["enable"]='Mengaktifkan';
 $lang["checknow"]='Periksa sekarang';
 $lang["columnheader-enabled"]='Diaktifkan';
 $lang["columnheader-last-found"]='Terakhir ditemukan';
+$lang["plugin-rse_search_notifications-title"]='Pemberitahuan Pencarian';
+$lang["plugin-rse_search_notifications-desc"]='Beri tahu pengguna ketika terjadi perubahan pada pencarian yang disimpan';

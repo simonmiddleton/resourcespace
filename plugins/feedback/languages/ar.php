@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='نص / HTML';
 $lang["feedback_options-comma_separated"]='الخيارات: (مفصولة بفاصلة)';
 $lang["feedback_add_new_field"]='إضافة حقل جديد';
 $lang["feedback_back_to_plugin_manager"]='العودة إلى مدير المكوّنات الإضافية';
+$lang["plugin-feedback-title"]='ملاحظات';
+$lang["plugin-feedback-desc"]='يضيف وظيفة ملاحظات المستخدم العامة مع أسئلة قابلة للتكوين.';

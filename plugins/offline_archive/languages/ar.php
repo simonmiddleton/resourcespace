@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='تم وضع علامة على
 $lang["offline_archive_resource_log_restore_removed"]='إلغاء استعادة من الأرشيف';
 $lang["offline_archive_resource_log_restore_request"]='استرجاع مطلوب من الأرشيف';
 $lang["offline_archive_resource_restore"]='استعادة الموارد';
+$lang["plugin-offline_archive-title"]='أرشيف غير متصل بالإنترنت';
+$lang["plugin-offline_archive-desc"]='يتيح نقل الملفات المؤرشفة إلى موقع غير متصل بالإنترنت';

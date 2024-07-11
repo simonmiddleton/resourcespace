@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Questo plugin consente di impostare una 
 $lang["conditional_terms_field"]='Campo di metadati';
 $lang["conditional_terms_value"]='Valore';
 $lang["conditional_terms_plugin_misconfigured"]='Il plugin dei termini condizionali è configurato in modo errato';
+$lang["plugin-conditional_terms-title"]='Termini Condizionali';
+$lang["plugin-conditional_terms-desc"]='Abilita la visualizzazione condizionale della pagina dei termini al download in base ai metadati della risorsa';

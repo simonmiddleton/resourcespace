@@ -12,3 +12,5 @@ $lang["news_body"]='Isi Konten';
 $lang["news_nonewmessages"]='Tidak ada pesan baru';
 $lang["title"]='Berita Terbaru...';
 $lang["title-too-long"]='Bidang judul lebih panjang dari 50 karakter yang diizinkan';
+$lang["plugin-news-title"]='Berita';
+$lang["plugin-news-desc"]='Menambahkan item berita halaman utama';
