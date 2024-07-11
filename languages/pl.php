@@ -2909,3 +2909,4 @@ $lang["plugin-category-integrations"]='Integracje';
 $lang["plugin-category-system"]='System';
 $lang["plugin-category-user-interface"]='Interfejs użytkownika';
 $lang["plugin-category-workflow-and-access"]='Przepływ pracy i dostęp';
+$lang["call-function"]='Wywołaj funkcję';

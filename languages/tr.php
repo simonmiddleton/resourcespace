@@ -2779,3 +2779,4 @@ $lang["plugin-category-integrations"]='Entegrasyonlar';
 $lang["plugin-category-system"]='Sistem';
 $lang["plugin-category-user-interface"]='Kullanıcı Arayüzü';
 $lang["plugin-category-workflow-and-access"]='İş Akışı ve Erişim';
+$lang["call-function"]='Fonksiyonu çağır';

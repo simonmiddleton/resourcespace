@@ -2853,3 +2853,4 @@ $lang["plugin-category-integrations"]='Integracije';
 $lang["plugin-category-system"]='Sustav';
 $lang["plugin-category-user-interface"]='Korisničko sučelje';
 $lang["plugin-category-workflow-and-access"]='Tijek rada i pristup';
+$lang["call-function"]='Pozovi funkciju';

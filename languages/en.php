@@ -3156,3 +3156,4 @@ $lang["plugin-category-integrations"]="Integrations";
 $lang["plugin-category-system"]="System";
 $lang["plugin-category-user-interface"]="User Interface";
 $lang["plugin-category-workflow-and-access"]="Workflow and Access";
+$lang["call-function"]="Call function";

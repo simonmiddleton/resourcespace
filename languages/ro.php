@@ -2858,3 +2858,4 @@ $lang["plugin-category-integrations"]='Integrări';
 $lang["plugin-category-system"]='Sistem';
 $lang["plugin-category-user-interface"]='Interfață utilizator';
 $lang["plugin-category-workflow-and-access"]='Flux de lucru și Acces';
+$lang["call-function"]='Apelare funcție';

@@ -2849,3 +2849,4 @@ $lang["plugin-category-integrations"]='Integrationer';
 $lang["plugin-category-system"]='System';
 $lang["plugin-category-user-interface"]='Brugergrænseflade';
 $lang["plugin-category-workflow-and-access"]='Workflow og adgang';
+$lang["call-function"]='Kald funktion';

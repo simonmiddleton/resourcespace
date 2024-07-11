@@ -2853,3 +2853,4 @@ $lang["plugin-category-integrations"]='Ενσωματώσεις';
 $lang["plugin-category-system"]='Σύστημα';
 $lang["plugin-category-user-interface"]='Διεπαφή Χρήστη';
 $lang["plugin-category-workflow-and-access"]='Ροή εργασίας και Πρόσβαση';
+$lang["call-function"]='Κλήση λειτουργίας';

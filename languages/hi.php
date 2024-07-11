@@ -2787,3 +2787,4 @@ $lang["plugin-category-integrations"]='एकीकरण';
 $lang["plugin-category-system"]='प्रणाली';
 $lang["plugin-category-user-interface"]='उपयोगकर्ता इंटरफ़ेस';
 $lang["plugin-category-workflow-and-access"]='कार्यप्रवाह और पहुँच';
+$lang["call-function"]='फ़ंक्शन कॉल करें';

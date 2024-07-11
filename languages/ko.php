@@ -2782,3 +2782,4 @@ $lang["plugin-category-integrations"]='통합';
 $lang["plugin-category-system"]='시스템';
 $lang["plugin-category-user-interface"]='사용자 인터페이스';
 $lang["plugin-category-workflow-and-access"]='워크플로우 및 접근';
+$lang["call-function"]='함수 호출';

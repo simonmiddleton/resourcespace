@@ -2773,3 +2773,4 @@ $lang["plugin-category-integrations"]='Integrace';
 $lang["plugin-category-system"]='Systém';
 $lang["plugin-category-user-interface"]='Uživatelské rozhraní';
 $lang["plugin-category-workflow-and-access"]='Pracovní postup a přístup';
+$lang["call-function"]='Zavolejte funkci';

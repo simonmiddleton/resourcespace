@@ -3048,3 +3048,4 @@ $lang["plugin-category-integrations"]='Integraatiot';
 $lang["plugin-category-system"]='Järjestelmä';
 $lang["plugin-category-user-interface"]='Käyttöliittymä';
 $lang["plugin-category-workflow-and-access"]='Työnkulku ja käyttöoikeus';
+$lang["call-function"]='Kutsu funktio';

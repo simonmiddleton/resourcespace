@@ -128,7 +128,7 @@ if ($api_function!="")
 ?>
 <div class="QuestionSubmit">
     <input type="hidden" name="submitting" value="" id="submitting" />
-    <input type="submit" name="submit" value="Submit" onclick="document.getElementById('submitting').value='true';" />
+    <input type="submit" name="submit" value="<?php echo $lang["call-function"] ?>" onclick="document.getElementById('submitting').value='true';" />
 </div>
 
 </form>

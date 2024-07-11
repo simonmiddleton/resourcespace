@@ -2884,3 +2884,4 @@ $lang["plugin-category-integrations"]='Integracions';
 $lang["plugin-category-system"]='Sistema';
 $lang["plugin-category-user-interface"]='Interfície d\'usuari';
 $lang["plugin-category-workflow-and-access"]='Flux de treball i accés';
+$lang["call-function"]='Truca funció';

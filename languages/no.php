@@ -3040,3 +3040,4 @@ $lang["plugin-category-integrations"]='Integrasjoner';
 $lang["plugin-category-system"]='System';
 $lang["plugin-category-user-interface"]='Brukergrensesnitt';
 $lang["plugin-category-workflow-and-access"]='Arbeidsflyt og tilgang';
+$lang["call-function"]='Ring funksjon';

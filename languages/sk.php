@@ -3224,3 +3224,4 @@ $lang["plugin-category-integrations"]='Integracije';
 $lang["plugin-category-system"]='Sistem';
 $lang["plugin-category-user-interface"]='Uporabniški vmesnik';
 $lang["plugin-category-workflow-and-access"]='Potek dela in dostop';
+$lang["call-function"]='Pokliči funkcijo';

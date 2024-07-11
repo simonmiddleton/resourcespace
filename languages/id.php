@@ -2944,3 +2944,4 @@ $lang["plugin-category-integrations"]='Integrasi';
 $lang["plugin-category-system"]='Sistem';
 $lang["plugin-category-user-interface"]='Antarmuka Pengguna';
 $lang["plugin-category-workflow-and-access"]='Alur Kerja dan Akses';
+$lang["call-function"]='Panggil fungsi';

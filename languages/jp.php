@@ -2927,3 +2927,4 @@ $lang["plugin-category-integrations"]='統合';
 $lang["plugin-category-system"]='システム';
 $lang["plugin-category-user-interface"]='ユーザーインターフェース';
 $lang["plugin-category-workflow-and-access"]='ワークフローとアクセス';
+$lang["call-function"]='関数を呼び出す';
