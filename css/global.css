@@ -2635,3 +2635,7 @@ input[type="text"]#iconpicker-input {
 .cke_notification_warning {
     display: none;
 }
+
+#cke_text {
+    display: inline-block;
+}
