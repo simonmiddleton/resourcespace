@@ -195,24 +195,24 @@ if($html_validation !== true && $html_validation !== '')
             {
             ?>
             <label for="text"><?php echo escape($lang['text']); ?></label>
-            <textarea id="<?php echo escape($lang["text"]); ?>" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
+            <textarea id="text" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
             <script type="text/javascript">
             <?php
             if(!hook('ckeditorinit'))
                 {
                 ?>
-                var editor = CKEDITOR.instances['<?php echo escape($lang["text"]); ?>'];
+                var editor = CKEDITOR.instances['text'];
                 if(editor) {
                     editor.destroy(true);
                 }
 
-                CKEDITOR.replace('<?php echo escape($lang["text"]); ?>',
+                CKEDITOR.replace('text',
                     {
                     toolbar : [ <?php global $ckeditor_content_toolbars;echo $ckeditor_content_toolbars; ?> ],
                     height: "600"
                     });
                 
-                var editor = CKEDITOR.instances['<?php echo escape($lang["text"]); ?>'];
+                var editor = CKEDITOR.instances['text'];
                 
                 CKEDITOR.config.autoParagraph = false;
                 <?php
