@@ -875,7 +875,7 @@ if ($download_usage_email)
     <label for="tarinfo"></label>
     <?php if(!hook('collectiondownloadformhelp'))
         { ?>
-    <div class="FormHelpInner tickset"><?php echo escape($lang["collection_download_tar_info"])  . "<br />" . escape($lang["collection_download_tar_applink"]); ?></div><?php
+    <div class="FormHelpInner tickset"><?php echo escape($lang["collection_download_tar_info"])  . "<br />" . strip_tags_and_attributes($lang["collection_download_tar_applink"], array('a'), array('href', 'target')); ?></div><?php
         } ?>
     
     <div class="clearerleft"></div>
