@@ -6,3 +6,5 @@ $lang["stencilvg_resource_type_for_new"]='Opprinnelig ressurstype for lagrede ut
 $lang["stencilvg-rsvg-not-installed"]='Installer rsvg (librsvg2-bin) for PDF- og EPS-utdatakapasitet.';
 $lang["stencilvg_dpi"]='DPI for rasterutgang (f.eks. PNG).';
 $lang["stencilvg_createdfromstencilvg"]='Opprettet fra StencilVG-tillegget';
+$lang["plugin-stencilvg-title"]='StencilVG';
+$lang["plugin-stencilvg-desc"]='Web til utskrift (W2P) / Dynamisk publiseringsfunksjonalitet ved bruk av SVG-mal filer';

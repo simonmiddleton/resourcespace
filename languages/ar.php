@@ -2992,3 +2992,10 @@ $lang["edit__batch"]='من فضلك ترجم';
 $lang["team_content__introtext"]='من فضلك ترجم';
 
 $lang["field_ref_and_name"]='%ref% - %name%';
+$lang["plugin-category-asset-processing"]='معالجة الأصول';
+$lang["plugin-category-authentication"]='المصادقة';
+$lang["plugin-category-collaboration"]='تعاون';
+$lang["plugin-category-integrations"]='التكاملات';
+$lang["plugin-category-system"]='النظام';
+$lang["plugin-category-user-interface"]='واجهة المستخدم';
+$lang["plugin-category-workflow-and-access"]='سير العمل والوصول';

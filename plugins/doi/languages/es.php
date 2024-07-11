@@ -61,3 +61,5 @@ $lang["doi_hide_meta"]='Ocultar metadatos DOI';
 $lang["doi_fetched_xml_from_MDS"]='Los metadatos XMl actuales se pudieron obtener correctamente del almacén de metadatos de DataCite';
 $lang["doi_info_wikipedia"]='https://es.wikipedia.org/wiki/Identificador_de_objeto_digital';
 $lang["doi_sum_no_title_2"]='como un título en su lugar entonces';
+$lang["plugin-doi-title"]='Identificador de Objeto Digital';
+$lang["plugin-doi-desc"]='Genera DOIs para objetos inmutables antes de registrarlos en DataCite para citación persistente.';

@@ -9,3 +9,6 @@ $lang['auto_login_enabled']='Aktivera automatisk inloggning baserad på ip-adres
 $lang['auto_login_ip']='Ip-adresser för automatisk inloggning';
 
 $lang['wildcardpermittedeg']="Jokertecken kan användas i begränsningen av ip-adresser, reguljära uttryck inleds med ’!’. Exempel:";
+
+$lang["plugin-auto_login-title"]='Automatisk inloggning';
+$lang["plugin-auto_login-desc"]='[Avancerad] Automatisk inloggning via IP-mönster. Ställ in via användarredigeringssidan i Hantera användare när den är aktiverad.';

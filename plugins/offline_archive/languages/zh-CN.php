@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='标记为从存档中恢复�
 $lang["offline_archive_resource_log_restore_removed"]='取消从存档中恢复。';
 $lang["offline_archive_resource_log_restore_request"]='请求从归档中恢复。';
 $lang["offline_archive_resource_restore"]='恢复资源';
+$lang["plugin-offline_archive-title"]='离线存档';
+$lang["plugin-offline_archive-desc"]='启用将归档文件重新定位到离线位置';

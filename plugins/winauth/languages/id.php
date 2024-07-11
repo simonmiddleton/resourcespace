@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Lebih disukai login standar ResourceSpace. Jika 
 $lang["winauth_test"]='Uji coba';
 $lang["winauth_user_info"]='Anda telah masuk sebagai: [nama pengguna]';
 $lang["winauth_not_logged_in"]='Anda tidak masuk, atau server web Anda belum dikonfigurasi dengan benar';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Advanced] Otentikasi Terintegrasi Windows';

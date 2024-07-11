@@ -61,3 +61,5 @@ $lang["doi_fetched_xml_from_MDS"]='Текущие метаданные XMl бы�
 $lang["doi_info_publisher"]='на поле <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=10">издатель</a>';
 $lang["doi_info_wikipedia"]='https://ru.wikipedia.org/wiki/Digital_Object_Identifier';
 $lang["doi_sum_of"]='из';
+$lang["plugin-doi-title"]='Цифровой идентификатор объекта';
+$lang["plugin-doi-desc"]='Генерирует DOI для неизменяемых объектов перед их регистрацией в DataCite для постоянного цитирования.';

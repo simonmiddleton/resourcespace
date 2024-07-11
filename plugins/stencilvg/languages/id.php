@@ -6,3 +6,5 @@ $lang["stencilvg_resource_type_for_new"]='Jenis sumber daya awal untuk file outp
 $lang["stencilvg-rsvg-not-installed"]='Pasang rsvg (librsvg2-bin) untuk kemampuan output PDF dan EPS.';
 $lang["stencilvg_dpi"]='DPI untuk output raster (misalnya PNG).';
 $lang["stencilvg_createdfromstencilvg"]='Dibuat dari plugin StencilVG';
+$lang["plugin-stencilvg-title"]='StencilVG';
+$lang["plugin-stencilvg-desc"]='Fungsi Web to print (W2P) / Penerbitan Dinamis menggunakan file template SVG';

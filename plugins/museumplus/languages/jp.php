@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='\'museumplus_modules_saved_
 $lang["museumplus_error_invalid_association"]='モジュールの関連付けが無効です。正しいモジュールおよび/またはレコードIDが入力されていることを確認してください！';
 $lang["museumplus_id_returns_multiple_records"]='複数のレコードが見つかりました - 代わりに技術IDを入力してください。';
 $lang["museumplus_error_module_no_field_maps"]='MuseumPlusからデータを同期できません。理由：モジュール「%name」にフィールドマッピングが設定されていません。';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[高度] MuseumPlusのREST API (MpRIA)を使用してリソースメタデータを抽出することを許可します。';

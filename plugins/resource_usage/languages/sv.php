@@ -12,3 +12,5 @@ $lang["edit_usage"]='Redigera användning';
 $lang["delete_usage"]='Radera användning';
 $lang["resource_usage_configuration"]='Konfiguration av resursanvändning';
 $lang["resource_usage_mediums"]='Lista över tillgängliga användningsalternativ (kommaseparerade)';
+$lang["plugin-resource_usage-title"]='Resursanvändning';
+$lang["plugin-resource_usage-desc"]='[Avancerad] Lägger till möjligheten att logga resursanvändning via resursvisningssidan';

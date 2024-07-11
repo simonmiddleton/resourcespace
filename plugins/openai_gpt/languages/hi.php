@@ -11,3 +11,5 @@ $lang["openai_gpt_advanced"]='चेतावनी - यह अनुभाग 
 $lang["openai_gpt_system_message"]='प्रारंभिक सिस्टम संदेश पाठ। प्लेसहोल्डर %%IN_TYPE%% और %%OUT_TYPE%% को स्रोत/लक्ष्य फ़ील्ड प्रकारों के आधार पर \'text\' या \'json\' से बदला जाएगा';
 $lang["openai_gpt_intro"]='मौजूदा डेटा को एक अनुकूलन योग्य प्रॉम्प्ट के साथ OpenAI API को पास करके उत्पन्न मेटाडेटा जोड़ता है। अधिक विस्तृत जानकारी के लिए <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> देखें।';
 $lang["openai_gpt_api_key"]='ओपनएआई एपीआई कुंजी। अपनी एपीआई कुंजी <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a> से प्राप्त करें';
+$lang["plugin-openai_gpt-title"]='ओपनएआई एपीआई जीपीटी एकीकरण';
+$lang["plugin-openai_gpt-desc"]='OpenAI द्वारा उत्पन्न मेटाडेटा। कॉन्फ़िगर किए गए फ़ील्ड डेटा को OpenAI API को पास करता है और लौटाई गई जानकारी को संग्रहीत करता है।';

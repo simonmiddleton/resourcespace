@@ -9,3 +9,5 @@ $lang["bookend-noimage-2"]='Δεν υπάρχει εικόνα κλεισίμα�
 $lang["bookend-intro"]='Επιλέξτε εικόνες από τη λίστα εναλλακτικών αρχείων για χρήση ως εικόνες έναρξης και λήξης.';
 $lang["bookend-failed"]='Αποτυχία!';
 $lang["bookend-could-not-open-file"]='Σφάλμα - αδυναμία ανοίγματος αρχείου!';
+$lang["plugin-video_bookend-title"]='Βίντεο Εισαγωγή/Επίλογος';
+$lang["plugin-video_bookend-desc"]='Προσθέτει τη δυνατότητα λήψης βίντεο με τίτλο και τελικό γραφικό';

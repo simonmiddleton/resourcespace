@@ -40,3 +40,5 @@ $lang["yourresourcehasbeenuploaded"]='Din fil er blevet uploadet';
 $lang["yourresourceshavebeenuploaded"]='Dine ressourcer er blevet uploadet';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), med ID [user-ref] og e-mail [user-email], har ikke tilladelse til at uploade via e-mail (kontroller tilladelserne "c" eller "d" eller de blokerede brugere på siden for checkmail opsætning). Registreret den: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Oprettet fra Check Mail-plugin';
+$lang["plugin-checkmail-title"]='Tjek mail';
+$lang["plugin-checkmail-desc"]='[Avanceret] Tillader indtagelse af e-mailvedhæftninger';

@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Feltet bruges til at afgøre, om roll/pitch ska
 $lang["vr_view_yaw_only_value"]='Værdi der skal kontrolleres. Hvis den findes, vil is_yaw_only-indstillingen blive sat til sand';
 $lang["vr_view_orig_image"]='Brug den originale ressourcefil som kilde til billedvisning?';
 $lang["vr_view_orig_video"]='Brug den originale ressourcefil som kilde til video-preview?';
+$lang["plugin-vr_view-title"]='VR-visning';
+$lang["plugin-vr_view-desc"]='Google VR View - 360 graders billede- og videoforhåndsvisninger (equirektangulært format)';

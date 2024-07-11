@@ -23,3 +23,5 @@ $lang["enable"]='Inschakelen';
 $lang["checknow"]='Controleer nu';
 $lang["columnheader-enabled"]='Ingeschakeld';
 $lang["columnheader-last-found"]='Laatst gevonden';
+$lang["plugin-rse_search_notifications-title"]='Zoekmeldingen';
+$lang["plugin-rse_search_notifications-desc"]='Gebruiker op de hoogte stellen wanneer er wijzigingen plaatsvinden in een opgeslagen zoekopdracht';

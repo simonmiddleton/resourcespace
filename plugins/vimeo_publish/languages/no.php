@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Ressursen har blitt publisert til Vim
 $lang["vimeo_publish_account_options"]='Vimeo-kontovalgmuligheter';
 $lang["vimeo_publish_allow_user_accounts"]='Tillat brukere å publisere til sine egne Vimeo-kontoer. Hvis dette er satt til "false", må tilgang til en enkelt Vimeo-konto konfigureres nedenfor';
 $lang["vimeo_publish_set_account"]='Angi Vimeo-konto';
+$lang["plugin-vimeo_publish-title"]='Vimeo Publiser';
+$lang["plugin-vimeo_publish-desc"]='Publiser ressurser til Vimeo ved hjelp av OAuth 2.0';

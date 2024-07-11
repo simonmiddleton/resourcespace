@@ -14,3 +14,5 @@ $lang["downloadformat"]='Formát stahování';
 $lang["are_available-2"]='bude převedeno';
 $lang["are_available-1"]='bude převedeno';
 $lang["are_available-0"]='bude převedeno';
+$lang["plugin-format_chooser-title"]='Výběr formátu';
+$lang["plugin-format_chooser-desc"]='Umožňuje vám vybrat různé formáty při stahování souborů, které jsou generovány za běhu.';

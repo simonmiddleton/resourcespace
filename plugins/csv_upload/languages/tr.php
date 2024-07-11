@@ -66,3 +66,5 @@ $lang["csv_upload_force_offline"]='Bu büyük CSV\'nin işlenmesi uzun sürebili
 $lang["csv_upload_recommend_offline"]='Bu büyük CSV\'nin işlenmesi çok uzun sürebilir. Büyük CSV\'leri işlemeniz gerekiyorsa çevrimdışı işler etkinleştirmenizi öneririz.';
 $lang["csv_upload_createdfromcsvupload"]='CSV Yükleme eklentisinden oluşturuldu';
 $lang["csv_upload_create_new_notes"]='Yeni kaynaklar oluşturmak için gerekli seçenekleri seçin';
+$lang["plugin-csv_upload-title"]='CSV Yükleme';
+$lang["plugin-csv_upload-desc"]='[İleri] Meta verileri bir CSV dosyası kullanarak yükleyin.';

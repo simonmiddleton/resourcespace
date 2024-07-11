@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Lewati validasi dan proses file CSV s
 $lang["csv_upload_force_offline"]='CSV yang besar ini mungkin memerlukan waktu yang lama untuk diproses sehingga akan dijalankan secara offline. Anda akan diberitahu melalui pesan ResourceSpace setelah proses selesai';
 $lang["csv_upload_recommend_offline"]='CSV yang besar ini mungkin memerlukan waktu yang sangat lama untuk diproses. Disarankan untuk mengaktifkan pekerjaan luring jika Anda perlu memproses CSV yang besar';
 $lang["csv_upload_createdfromcsvupload"]='Dibuat dari plugin Unggah CSV';
+$lang["plugin-csv_upload-title"]='Unggah CSV';
+$lang["plugin-csv_upload-desc"]='[Advanced] Unggah metadata menggunakan file CSV.';

@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='نوع \'museumplus_modules
 $lang["museumplus_error_invalid_association"]='ارتباط وحدة غير صالحة. يرجى التأكد من إدخال معرف الوحدة و / أو السجل الصحيح!';
 $lang["museumplus_id_returns_multiple_records"]='تم العثور على سجلات متعددة - يرجى إدخال معرف التقني بدلاً من ذلك';
 $lang["museumplus_error_module_no_field_maps"]='غير قادر على مزامنة البيانات من MuseumPlus. السبب: الوحدة \'%name\' ليس لديها تعيينات حقول مُكوَّنة.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[متقدم] يسمح باستخراج بيانات الموارد الوصفية من MuseumPlus باستخدام واجهة برمجة التطبيقات REST الخاصة به (MpRIA).';

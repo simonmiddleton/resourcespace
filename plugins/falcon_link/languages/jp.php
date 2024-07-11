@@ -41,3 +41,5 @@ $lang["falcon_link_log_publish"]='Falconを介して共有されたリソース'
 $lang["falcon_link_log_archive"]='ファルコンを介してアーカイブされたリソース';
 $lang["falcon_link_error_falcon_check_tags"]='説明とタグが空でないことを確認してください。';
 $lang["falcon_link_title"]='ファルコンリンク';
+$lang["plugin-falcon_link-title"]='ファルコンリンク';
+$lang["plugin-falcon_link-desc"]='[Advanced] リソースをFalcon.ioに公開する';

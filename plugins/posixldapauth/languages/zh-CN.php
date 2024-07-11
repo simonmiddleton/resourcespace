@@ -47,3 +47,5 @@ $lang["posixldapauth_unable_to_search_ldap_server"]='无法搜索LDAP服务器�
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% 失败，请检查设置。';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP搜索成功，但未找到0个组。';
 $lang["posixldapauth_rdn"]='RDN';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP 授权';
+$lang["plugin-posixldapauth-desc"]='[已弃用] 用于 AD 和 LDAP 的 LDAP 插件。使用 simpleldap 进行 AD 集成。';

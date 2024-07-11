@@ -16,3 +16,5 @@ $lang["image_text_position"]='Positie van tekst in banner.';
 $lang["image_text_banner_position"]='Positie van de banner ten opzichte van de afbeelding.';
 $lang["image_text_font"]='Lettertype om te gebruiken, moet worden ondersteund door de geïnstalleerde versie van ImageMagick';
 $lang["image_text_noim"]='Deze plugin vereist dat Imagemagick geïnstalleerd is.';
+$lang["plugin-image_text-title"]='Afbeeldingstekst';
+$lang["plugin-image_text-desc"]='Maakt het mogelijk om veldgegevens toe te voegen aan afbeelding bij download';

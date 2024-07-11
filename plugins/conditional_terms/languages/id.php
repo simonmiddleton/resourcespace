@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Plugin ini memungkinkan Anda untuk menet
 $lang["conditional_terms_field"]='Bidang metadata';
 $lang["conditional_terms_value"]='Nilai';
 $lang["conditional_terms_plugin_misconfigured"]='Plugin syarat bersyarat salah dikonfigurasi';
+$lang["plugin-conditional_terms-title"]='Syarat Bersyarat';
+$lang["plugin-conditional_terms-desc"]='Memungkinkan tampilan bersyarat halaman syarat saat unduhan berdasarkan metadata sumber daya';

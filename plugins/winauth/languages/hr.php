@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Preferiraj standardne ResourceSpace prijave. Ako
 $lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Prijavljeni ste kao: [korisničko ime]';
 $lang["winauth_not_logged_in"]='Niste prijavljeni ili vaš web poslužitelj nije ispravno konfiguriran';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Napredno] Windows integrirana autentifikacija';

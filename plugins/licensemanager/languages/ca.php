@@ -28,3 +28,5 @@ $lang["selectlicence"]='Si us plau, seleccioneu un ID de llicència';
 $lang["confirmdeletelicensefile"]='Esteu segur que voleu ELIMINAR aquest fitxer? Aquesta acció no es pot desfer.';
 $lang["license_manager_mediums"]='Ús de mitjans de llicència';
 $lang["license_manager_access"]='Gestionar les dades de llicència (on no estigui habilitat a través del permís "Pot accedir a l\'àrea de configuració del sistema")';
+$lang["plugin-licensemanager-title"]='Gestor de llicències';
+$lang["plugin-licensemanager-desc"]='Afegeix la capacitat de gestionar les llicències de recursos';

@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='Επιλογή εξαγωγής σε PDF (πειρ
 $lang["annotate_pdf_output_only_annotated"]='Συμπεριλάβετε μόνο τους πόρους με σχολιασμό στην έξοδο PDF';
 $lang["annotate_admin_edit_access"]='Δυνατότητα επεξεργασίας σχολίων άλλων χρηστών';
 $lang["annotate_ref_not_supplied"]='Η αναφορά δεν παρέχεται';
+$lang["plugin-annotate-title"]='Σχολιάστε';
+$lang["plugin-annotate-desc"]='Επιτρέπει τη δημιουργία σχολίων εικόνας με χρήση jquery';

@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='Entri log tidak ditemukan';
 $lang["rse_version_revert_state"]='Kembalikan keadaan';
 $lang["rse_version_rstate_changes"]='Mengembalikan status untuk koleksi #%COLLECTION dengan memutar ulang peristiwa hingga, tetapi tidak termasuk catatan yang dipilih.';
 $lang["rse_version_invalid_time"]='Mengembalikan ke waktu sebelum [date] tidak didukung';
+$lang["plugin-rse_version-title"]='Kontrol Versi';
+$lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Kontrol Versi';

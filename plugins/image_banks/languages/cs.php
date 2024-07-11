@@ -34,3 +34,5 @@ $lang["image_banks_error_unexpected_response"]='Omlouváme se, obdrželi jsme ne
 $lang["image_banks_local_download_attempt"]='Uživatel se pokusil stáhnout \'%FILE\' pomocí pluginu ImageBank tím, že ukázal na systém, který není součástí povolených poskytovatelů';
 $lang["image_banks_bad_file_create_attempt"]='Uživatel se pokusil vytvořit zdroj s \'%FILE\' souborem pomocí pluginu ImageBank tím, že ukázal na systém, který není součástí povolených poskytovatelů';
 $lang["image_banks_createdfromimagebanks"]='Vytvořeno z pluginu Image Banks';
+$lang["plugin-image_banks-title"]='Obrazové banky';
+$lang["plugin-image_banks-desc"]='Umožňuje uživatelům vybrat externí Image Bank pro prohledávání. Uživatelé pak mohou stahovat nebo vytvářet nové zdroje na základě vrácených výsledků.';

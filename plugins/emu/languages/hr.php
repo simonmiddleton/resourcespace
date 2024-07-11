@@ -35,3 +35,5 @@ $lang["emu_upload_nodata"]='Nisu pronađeni EMu podaci za ovaj IRN:';
 $lang["emu_nodata_returned"]='Nema EMu podataka pronađenih za određeni IRN.';
 $lang["emu_createdfromemu"]='Stvoreno pomoću EMU dodatka';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
+$lang["plugin-emu-title"]='EMu';
+$lang["plugin-emu-desc"]='[Napredno] Omogućuje izdvajanje metapodataka resursa iz EMu baze podataka.';

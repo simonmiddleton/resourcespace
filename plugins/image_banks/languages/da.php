@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Kan ikke analysere udbydernes konfigur
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Ugyldigt konfigurationsformat for \'%PROVIDER\' (udbyder) instance';
 $lang["image_banks_error_bad_url_scheme"]='Ugyldig URL-skema fundet for \'%PROVIDER\' (udbyder) instance';
 $lang["image_banks_error_unexpected_response"]='Beklager, modtog et uventet svar fra udbyderen. Kontakt venligst din systemadministrator for yderligere undersøgelse (se fejllog).';
+$lang["plugin-image_banks-title"]='Billedbanker';
+$lang["plugin-image_banks-desc"]='Giver brugerne mulighed for at vælge en ekstern billedbank at søge igennem. Brugerne kan derefter downloade eller oprette nye ressourcer baseret på de returnerede resultater.';

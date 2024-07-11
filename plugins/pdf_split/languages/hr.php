@@ -12,3 +12,5 @@ $lang["outofrange"]='Izvan dosega';
 $lang["invalidrange"]='Nevažeći raspon';
 $lang["splitpdf_createnewresource"]='Stvorite novi resurs za svaki raspon';
 $lang["splitpdf_createnewalternativefile"]='Stvorite novu alternativnu datoteku za svaki raspon na ovom resursu';
+$lang["plugin-pdf_split-title"]='PDF Razdvajanje';
+$lang["plugin-pdf_split-desc"]='Omogućuje razdvajanje PDF datoteka na više stranica';

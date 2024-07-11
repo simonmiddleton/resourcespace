@@ -14,3 +14,5 @@ $lang["openai_gpt_advanced"]='ATENȚIE - Această secțiune este destinată doar
 $lang["openai_gpt_system_message"]='Textul inițial al mesajului sistemului. Locurile rezervate %%IN_TYPE%% și %%OUT_TYPE%% vor fi înlocuite cu \'text\' sau \'json\' în funcție de tipurile de câmp sursă/țintă';
 $lang["openai_gpt_intro"]='Adaugă metadate generate prin trimiterea datelor existente către API-ul OpenAI cu un prompt personalizabil. Consultați <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> pentru informații mai detaliate.';
 $lang["openai_gpt_api_key"]='Cheie API OpenAI. Obțineți cheia API de la <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='Integrare API GPT OpenAI';
+$lang["plugin-openai_gpt-desc"]='Metadate generate de OpenAI. Transmite datele câmpului configurat către API-ul OpenAI și stochează informațiile returnate.';

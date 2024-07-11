@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Configuración del visor de documentos remoto';
 $lang["embeddocument_specify_resourcetype"]='Por favor, especifique para qué tipo de recurso debe aparecer la funcionalidad de "incrustar".';
 $lang["embeddocument_document_resourcetype"]='Tipo de recurso de visor de documentos remoto:';
 $lang["embeddocument_embed_share"]='Incrustar documento';
+$lang["plugin-embeddocument-title"]='Incrustar Documento';
+$lang["plugin-embeddocument-desc"]='Proporciona una función para generar HTML para vistas previas de documentos incrustables en sitios remotos.';

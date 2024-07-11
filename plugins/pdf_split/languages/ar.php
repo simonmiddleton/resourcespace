@@ -12,3 +12,5 @@ $lang["outofrange"]='خارج النطاق';
 $lang["invalidrange"]='نطاق غير صالح';
 $lang["splitpdf_createnewresource"]='إنشاء مورد جديد لكل نطاق';
 $lang["splitpdf_createnewalternativefile"]='إنشاء ملف بديل جديد على هذا المورد لكل نطاق';
+$lang["plugin-pdf_split-title"]='تقسيم PDF';
+$lang["plugin-pdf_split-desc"]='يسمح بتقسيم ملفات PDF إلى صفحات متعددة';

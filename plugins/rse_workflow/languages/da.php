@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='E-mailadresse til at sende notifikationer fra 
 $lang["rse_workflow_bcc_admin"]='Underret systemadministratorer, når bidragyderen er underrettet';
 $lang["rse_workflow_state_notify_help"]='Brugere vil se ressourcer i denne tilstand som handlinger, i stedet for at modtage simple meddelelser';
 $lang["rse_workflow_introduction"]='For at ændre arbejdsgangstilstande og handlinger, brug \'Administrer arbejdsgangshandlinger\' og \'Administrer arbejdsgangstilstande\' fra Admin. Klik [link_param] for at gå til Admin';
+$lang["plugin-rse_workflow-title"]='Avanceret Arbejdsgang';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbejdsgang';

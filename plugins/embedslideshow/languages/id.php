@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='Tidak ada transisi otomatis';
 $lang["embedslideshow_directlink"]='URL langsung non-tersematkan';
 $lang["embedslideshow_directlinkopen"]='Buka tautan langsung (halaman baru)';
 $lang["embedslideshow_dynamic_size"]='Pengubahan ukuran dinamis pratinjau berdasarkan ukuran pemutar?';
+$lang["plugin-embedslideshow-title"]='Sematkan Tayangan Slide';
+$lang["plugin-embedslideshow-desc"]='Menyediakan fungsi untuk menghasilkan HTML untuk tayangan slide koleksi yang dapat disematkan di situs jarak jauh';

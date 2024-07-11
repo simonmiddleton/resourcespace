@@ -12,3 +12,5 @@ $lang["outofrange"]='Außerhalb des Bereichs';
 $lang["invalidrange"]='Ungültiger Bereich';
 $lang["splitpdf_createnewresource"]='Erstellen Sie für jeden Bereich eine neue Ressource';
 $lang["splitpdf_createnewalternativefile"]='Erstelle für jeden Bereich eine neue alternative Datei für diese Ressource';
+$lang["plugin-pdf_split-title"]='PDF teilen';
+$lang["plugin-pdf_split-desc"]='Ermöglicht das Aufteilen von PDF-Dateien in mehrere Seiten';

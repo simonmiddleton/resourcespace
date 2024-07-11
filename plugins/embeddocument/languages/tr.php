@@ -12,3 +12,5 @@ $lang["embeddocument_maximise"]='maksimize et';
 $lang["embeddocument_heading"]='Uzaktan Belge Görüntüleyici Yapılandırması';
 $lang["embeddocument_specify_resourcetype"]='Lütfen \'göm\' işlevinin hangi kaynak türü için görünmesi gerektiğini belirtin.';
 $lang["embeddocument_document_resourcetype"]='Uzaktan Belge Görüntüleyici Kaynak Türü:';
+$lang["plugin-embeddocument-title"]='Belgeyi Göm';
+$lang["plugin-embeddocument-desc"]='Uzak sitelerde gömülebilir belge önizlemeleri için HTML oluşturma işlevi sağlar.';

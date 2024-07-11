@@ -14,3 +14,5 @@ $lang["downloadformat"]='Формат загрузки';
 $lang["are_available-2"]='будет преобразовано';
 $lang["are_available-1"]='будет преобразовано';
 $lang["are_available-0"]='будет преобразовано';
+$lang["plugin-format_chooser-title"]='Выбор формата';
+$lang["plugin-format_chooser-desc"]='Позволяет выбрать различные форматы при загрузке файлов, которые генерируются на лету.';

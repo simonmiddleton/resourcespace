@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Texte utilisateur à afficher pour les partages
 $lang["falcon_link_log_publish"]='Ressource partagée via Falcon';
 $lang["falcon_link_log_archive"]='Ressource archivée via Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Veuillez vérifier que la description et les tags ne sont pas vides';
+$lang["plugin-falcon_link-title"]='Lien Falcon';
+$lang["plugin-falcon_link-desc"]='[Avancé] Publier des ressources sur Falcon.io';

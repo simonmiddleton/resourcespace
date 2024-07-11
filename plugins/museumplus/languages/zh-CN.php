@@ -51,3 +51,5 @@ $lang["museumplus_error_invalid_association"]='无效的模块关联。请确保
 $lang["museumplus_id_returns_multiple_records"]='找到多个记录 - 请输入技术ID。';
 $lang["museumplus_error_module_no_field_maps"]='无法从MuseumPlus同步数据。原因：模块“%name”未配置字段映射。';
 $lang["museumplus_interval_run"]='在以下间隔运行脚本（例如：+1天，+2周，双周）。留空则每次 cron_copy_hitcount.php 运行时都会执行';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[高级] 允许使用其 REST API (MpRIA) 从 MuseumPlus 提取资源元数据。';

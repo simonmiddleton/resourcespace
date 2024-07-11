@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='カテゴリー';
 $lang["youtube_publish_category_error"]='YouTubeのカテゴリを取得できませんでした：-';
 $lang["youtube_chunk_size"]='YouTubeへのアップロード時に使用するチャンクサイズ（MB）';
 $lang["youtube_publish_add_anchor"]='YouTubeのURLメタデータフィールドに保存する際に、アンカータグを追加しますか？';
+$lang["plugin-youtube_publish-title"]='YouTube公開';
+$lang["plugin-youtube_publish-desc"]='設定されたYouTubeアカウントにビデオリソースを公開します。';

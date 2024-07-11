@@ -14,3 +14,5 @@ $lang["downloadformat"]='تنسيق التحميل';
 $lang["are_available-2"]='سيتم تحويلها';
 $lang["are_available-1"]='سيتم تحويلها';
 $lang["are_available-0"]='سيتم تحويلها';
+$lang["plugin-format_chooser-title"]='محدد التنسيق';
+$lang["plugin-format_chooser-desc"]='يسمح لك باختيار تنسيقات مختلفة عند تنزيل الملفات التي يتم إنشاؤها في الحال.';

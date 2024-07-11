@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Ehdotettu muokkaus';
 $lang["actions_propose_changes"]='Näytä minulle käyttäjän ehdottamat muutokset toimintaluettelossani';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Ehdotuksesi muutoksista on tarkistettu.<br/>[changesummary]<br/>Klikkaa alla olevaa linkkiä tarkastaaksesi muutokset<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Ehdotetut muutokset on lähetetty.<br/>[changesummary]<br/>Klikkaa alla olevaa linkkiä tarkastaaksesi muutokset<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Ehdota muutoksia';
+$lang["plugin-propose_changes-desc"]='Lisää vaihtoehdon, joka sallii käyttäjien ehdottaa metatietojen muutoksia ilman muokkausoikeuksia';

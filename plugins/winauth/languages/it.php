@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Preferisci i login standard di ResourceSpace. Se
 $lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Sei loggato come: [username]';
 $lang["winauth_not_logged_in"]='Non hai effettuato l\'accesso o il tuo server web non è stato configurato correttamente';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Avanzato] Autenticazione Integrata di Windows';

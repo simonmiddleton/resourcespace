@@ -2911,3 +2911,10 @@ $lang["all__emailnotifyresourcesunsubmitted"]='<br />
 [text_footer]';
 $lang["error_upload_duplicate_file"]='Téléversement de fichier en double, le fichier correspond aux ressources : [resources]';
 $lang["oj-creation-success"]='Travail hors ligne [jobnumber] créé. Vous serez informé lorsqu\'il sera terminé';
+$lang["plugin-category-asset-processing"]='Traitement des ressources';
+$lang["plugin-category-authentication"]='Authentification';
+$lang["plugin-category-collaboration"]='Collaboration';
+$lang["plugin-category-integrations"]='Intégrations';
+$lang["plugin-category-system"]='Système';
+$lang["plugin-category-user-interface"]='Interface Utilisateur';
+$lang["plugin-category-workflow-and-access"]='Flux de travail et accès';

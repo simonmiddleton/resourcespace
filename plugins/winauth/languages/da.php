@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Foretræk standard ResourceSpace logins. Hvis de
 $lang["winauth_test"]='Test';
 $lang["winauth_not_logged_in"]='Du er ikke logget ind, eller din webserver er ikke blevet konfigureret korrekt';
 $lang["winauth_user_info"]='Du er logget ind som: [username]';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Avanceret] Windows Integreret Godkendelse';

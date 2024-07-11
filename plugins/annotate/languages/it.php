@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='Opzione di output PDF (sperimentale)';
 $lang["annotate_pdf_output_only_annotated"]='Includi solo le risorse annotate nell\'output PDF';
 $lang["annotate_admin_edit_access"]='Possibilità di modificare le annotazioni degli altri utenti';
 $lang["annotate_ref_not_supplied"]='Riferimento non fornito';
+$lang["plugin-annotate-title"]='Annota';
+$lang["plugin-annotate-desc"]='Abilita la creazione di annotazioni di immagini con jquery';

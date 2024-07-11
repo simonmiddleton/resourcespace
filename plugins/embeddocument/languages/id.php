@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Konfigurasi Penampil Dokumen Jarak Jauh';
 $lang["embeddocument_specify_resourcetype"]='Harap tentukan jenis sumber daya mana yang fungsi \'embed\' harus muncul untuk.';
 $lang["embeddocument_document_resourcetype"]='Jenis Sumber Daya Pemirsa Dokumen Jarak Jauh';
 $lang["embeddocument_embed_share"]='Sematkan dokumen';
+$lang["plugin-embeddocument-title"]='Sematkan Dokumen';
+$lang["plugin-embeddocument-desc"]='Menyediakan fungsi untuk menghasilkan HTML untuk pratinjau dokumen yang dapat disematkan di situs jarak jauh.';

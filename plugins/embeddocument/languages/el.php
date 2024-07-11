@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Ρύθμιση Απομακρυσμένου Πρ
 $lang["embeddocument_specify_resourcetype"]='Παρακαλώ καθορίστε για ποιον τύπο πόρου θα πρέπει να εμφανίζεται η λειτουργία \'ενσωμάτωση\'.';
 $lang["embeddocument_document_resourcetype"]='Τύπος Πόρου Απομακρυσμένου Προβολέα Εγγράφων';
 $lang["embeddocument_embed_share"]='Ενσωμάτωση εγγράφου';
+$lang["plugin-embeddocument-title"]='Ενσωμάτωση Εγγράφου';
+$lang["plugin-embeddocument-desc"]='Παρέχει μια λειτουργία για τη δημιουργία HTML για ενσωματώσιμες προεπισκοπήσεις εγγράφων σε απομακρυσμένους ιστότοπους.';

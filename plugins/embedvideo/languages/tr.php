@@ -7,3 +7,5 @@ $lang["embed_help"]='Aşağıdaki HTML\'yi kopyalayıp yapıştırarak bu videoy
 $lang["embed_video_configuration"]='Video Gömme Yapılandırması';
 $lang["specify_resourcetype"]='Lütfen \'gömme\' işlevinin hangi kaynak türü için görünmesi gerektiğini belirtin.';
 $lang["video_resourcetype"]='Video Kaynak Türü';
+$lang["plugin-embedvideo-title"]='Videoyu Göm';
+$lang["plugin-embedvideo-desc"]='Uzaktaki sitelerde gömülebilir video için HTML oluşturma işlevi sağlar.';

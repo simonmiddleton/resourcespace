@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Campo utilizzato per determinare se il rollio/p
 $lang["vr_view_yaw_only_value"]='Valore da controllare. Se trovato, l\'opzione is_yaw_only verrà impostata su true';
 $lang["vr_view_orig_image"]='Usare il file originale della risorsa come sorgente per l\'anteprima dell\'immagine?';
 $lang["vr_view_orig_video"]='Usare il file originale della risorsa come fonte per l\'anteprima del video?';
+$lang["plugin-vr_view-title"]='Vista VR';
+$lang["plugin-vr_view-desc"]='Google VR View - Anteprime di immagini e video a 360 gradi (formato equirettangolare)';

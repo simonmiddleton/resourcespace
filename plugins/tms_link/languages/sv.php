@@ -70,3 +70,5 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field översätts till "T
 $lang["tms_link_confirm_delete_module_config"]='Är du säker på att du vill ta bort denna modulkonfiguration? Denna åtgärd kan inte ångras!';
 $lang["tms_link_mediapaths_resource_reference_column"]='Kolumn att använda i MediaMaster-tabellen för att lagra Resurs-ID. Detta är valfritt och används för att undvika att flera resurser använder samma Media Master-ID.';
 $lang["tms_link_write_to_debug_log"]='Inkludera skriptframsteg i systemets felsökningslogg (kräver att felsökningsloggning konfigureras separat). Varning: Kommer att orsaka snabb tillväxt av felsökningsloggfilen.';
+$lang["plugin-tms_link-title"]='TMS-länk';
+$lang["plugin-tms_link-desc"]='[Avancerad] Tillåter att resursmetadata extraheras från TMS-databasen.';

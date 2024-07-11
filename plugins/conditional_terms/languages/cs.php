@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Tento plugin vám umožňuje nastavit po
 $lang["conditional_terms_field"]='Pole metadat';
 $lang["conditional_terms_value"]='Hodnota';
 $lang["conditional_terms_plugin_misconfigured"]='Plugin podmíněných podmínek je nesprávně nakonfigurován';
+$lang["plugin-conditional_terms-title"]='Podmíněné podmínky';
+$lang["plugin-conditional_terms-desc"]='Umožňuje podmíněné zobrazení stránky s podmínkami při stahování na základě metadat zdroje';

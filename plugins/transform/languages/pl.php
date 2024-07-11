@@ -75,3 +75,5 @@ $lang["transform_update_preview"]='Aktualizuj podgląd';
 $lang["transform_preset_sizes"]='Wybierz z predefiniowanych rozmiarów docelowych';
 $lang["error_crop_invalid"]='Proszę wybrać region obrazu';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Narzędzia obrazów (transformacja)';
+$lang["plugin-transform-desc"]='Umożliwia tworzenie przyciętych i skalowanych alternatywnych obrazów (jCrop z obsługą mobilną)';

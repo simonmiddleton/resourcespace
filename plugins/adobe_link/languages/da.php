@@ -12,3 +12,5 @@ $lang["adobe_link_import_successful"]='Filen bliver importeret';
 $lang["adobe_link_upload_document"]='Gem';
 $lang["adobe_link_saving"]='Gemmer...';
 $lang["adobe_link_saving_wait"]='Filen bliver gemt, vent venligst på bekræftelsesbeskeden. Du skal muligvis opdatere siden for at opdatere forhåndsvisningsbilledet.';
+$lang["plugin-adobe_link-title"]='Adobe Link';
+$lang["plugin-adobe_link-desc"]='[Tillad avanceret] Indtagelse af Adobe-filer fra ResourceSpace til Adobe CC';

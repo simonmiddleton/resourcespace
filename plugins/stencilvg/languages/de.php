@@ -6,3 +6,5 @@ $lang["stencilvg_resource_type_for_new"]='Ursprünglicher Ressourcentyp für ges
 $lang["stencilvg-rsvg-not-installed"]='Bitte installieren Sie rsvg (librsvg2-bin), um die PDF- und EPS-Ausgabefähigkeit zu ermöglichen.';
 $lang["stencilvg_dpi"]='DPI für Raster (z.B. PNG) Ausgabe.';
 $lang["stencilvg_createdfromstencilvg"]='Erstellt mit dem StencilVG-Plugin';
+$lang["plugin-stencilvg-title"]='StencilVG';
+$lang["plugin-stencilvg-desc"]='Web-to-Print (W2P) / Dynamische Veröffentlichungsfunktionalität mit SVG-Vorlagendateien';

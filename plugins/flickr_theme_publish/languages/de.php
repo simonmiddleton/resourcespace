@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='Zeit zwischen Fortschritts-Pings (ms)
 $lang["flickr_api_key"]='Flickr API-Schlüssel';
 $lang["flickr_api_secret"]='Flickr API Geheimnis';
 $lang["flickr_warn_no_title_access"]='Veröffentlichung ohne Zugriff auf das Titelfeld (ID #%id) nicht erlaubt. Bitte kontaktieren Sie einen Administrator!';
+$lang["plugin-flickr_theme_publish-title"]='Flickr-Veröffentlichung';
+$lang["plugin-flickr_theme_publish-desc"]='Veröffentlicht ausgewählte Ressourcen innerhalb ausgewählter Themen auf Flickr.';

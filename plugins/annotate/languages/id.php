@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='Opsi Output PDF (eksperimental)';
 $lang["annotate_pdf_output_only_annotated"]='Hanya sertakan Sumber Daya yang Dianotasi dalam Output PDF';
 $lang["annotate_admin_edit_access"]='Kemampuan untuk mengedit catatan pengguna lain';
 $lang["annotate_ref_not_supplied"]='Referensi tidak disediakan';
+$lang["plugin-annotate-title"]='Memberi Anotasi';
+$lang["plugin-annotate-desc"]='Memungkinkan pembuatan anotasi gambar jquery';

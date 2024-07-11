@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Inloggen met een niet-WordPress accou
 $lang["wordpress_sso_use_wp_login"]='Inloggen met een WordPress-account';
 $lang["wordpress_sso_retry"]='Klik hier om opnieuw in te loggen';
 $lang["origin_wordpress_sso"]='Wordpress SSO plugin: Wordpress SSO-plugin';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Geavanceerd] Staat Single Sign On toe met Wordpress-installatie';

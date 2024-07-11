@@ -12,3 +12,5 @@ $lang["news_body"]='Sadržaj tijela';
 $lang["news_nonewmessages"]='Nema novih poruka';
 $lang["title"]='Najnovije vijesti...';
 $lang["title-too-long"]='Polje naslova je duže od dopuštenih 50 znakova';
+$lang["plugin-news-title"]='Vijesti';
+$lang["plugin-news-desc"]='Dodaje vijesti na početnoj stranici';

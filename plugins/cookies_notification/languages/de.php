@@ -10,3 +10,5 @@ $lang["cookies_notification_cookies_use_title"]='Verwendung von Cookies';
 $lang["cookies_notification_cookies_use_error_msg"]='Sie haben sich entschieden, Cookies für ResourceSpace nicht zuzulassen. Wir mussten Sie ausloggen, da ResourceSpace Cookies benötigt, um ordnungsgemäß zu funktionieren.';
 
 $lang["cookies_notification_cookies_use_require_option_error_msg"]='Sie müssen die Verwendung von Cookies akzeptieren, bevor Sie auf das System zugreifen können.';
+$lang["plugin-cookies_notification-title"]='Cookies-Benachrichtigung';
+$lang["plugin-cookies_notification-desc"]='Fügt die Möglichkeit hinzu, Benutzer darüber zu informieren, wie ResourceSpace Cookies verwenden kann, um Benutzeraktivitäten zu verfolgen, indem eine Nachricht in der Kopfzeile angezeigt wird';

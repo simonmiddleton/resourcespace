@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='LDAPサーバーに接�
 $lang["posixldapauth_unable_to_search_ldap_server"]='LDAPサーバーを検索できません。';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% が失敗しました。設定を確認してください。';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP検索は成功しましたが、0グループが見つかりませんでした。';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP 認証';
+$lang["plugin-posixldapauth-desc"]='[非推奨] ADおよびLDAP用のLDAPプラグイン。AD統合にはsimpleldapを使用してください。';

@@ -77,3 +77,5 @@ $lang["transform_update_preview"]='Opdater forhåndsvisning';
 $lang["transform_preset_sizes"]='Vælg fra foruddefineret målstørrelse';
 $lang["error_crop_invalid"]='Vælg venligst en region af billedet';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Billedværktøjer (transformer)';
+$lang["plugin-transform-desc"]='Muliggør oprettelse af beskårne og skalerede alternative billeder (jCrop med mobilunderstøttelse)';

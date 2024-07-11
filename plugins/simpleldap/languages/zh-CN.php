@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='由SimpleLDAP插件创建。';
 $lang["simpleldap_usermatchcomment"]='已通过SimpleLDAP更新为LDAP用户。';
 $lang["origin_simpleldap"]='SimpleLDAP插件';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='不要将服务器的FQDN与证书的CN进行检查。';
+$lang["plugin-simpleldap-title"]='简单LDAP';
+$lang["plugin-simpleldap-desc"]='[高级] 更简单的ldap认证实现，针对Active Directory但也支持Oracle目录';

@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='Možnost výstupu PDF (experimentální)';
 $lang["annotate_pdf_output_only_annotated"]='Zahrnout do výstupu PDF pouze anotované zdroje';
 $lang["annotate_admin_edit_access"]='Schopnost upravovat anotace ostatních uživatelů';
 $lang["annotate_ref_not_supplied"]='Reference není uveden';
+$lang["plugin-annotate-title"]='Anotovat';
+$lang["plugin-annotate-desc"]='Umožňuje vytváření anotací obrázků pomocí jquery';

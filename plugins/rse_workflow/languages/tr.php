@@ -54,3 +54,5 @@ $lang["rse_workflow_link_close"]='Kapat';
 $lang["rse_workflow_more_notes_title"]='Notlar:';
 $lang["rse_workflow_email_from"]='Bildirim göndermek için e-posta adresi (boş bırakılırsa %EMAILFROM% kullanılacak):';
 $lang["rse_workflow_bcc_admin"]='Katkıda bulunan kişi bilgilendirildiğinde sistem yöneticilerini bilgilendir';
+$lang["plugin-rse_workflow-title"]='Gelişmiş İş Akışı';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Kurumsal - İş Akışı';

@@ -12,3 +12,5 @@ $lang["edit_usage"]='編集使用法';
 $lang["delete_usage"]='削除使用履歴';
 $lang["resource_usage_configuration"]='リソース使用状況の設定';
 $lang["resource_usage_mediums"]='利用可能な使用オプションのリスト（コンマで区切ってください）';
+$lang["plugin-resource_usage-title"]='リソース使用';
+$lang["plugin-resource_usage-desc"]='[高度] リソースビュー ページを介してリソース使用状況を記録する機能を追加します';

@@ -16,3 +16,5 @@ $lang["image_text_position"]='Θέση κειμένου στο banner.';
 $lang["image_text_banner_position"]='Θέση του banner σε σχέση με την εικόνα.';
 $lang["image_text_font"]='Γραμματοσειρά που πρέπει να χρησιμοποιηθεί, πρέπει να υποστηρίζεται από την εγκατεστημένη έκδοση του imagemagick';
 $lang["image_text_noim"]='Αυτό το πρόσθετο απαιτεί την εγκατάσταση του Imagemagick.';
+$lang["plugin-image_text-title"]='Κείμενο Εικόνας';
+$lang["plugin-image_text-desc"]='Επιτρέπει την προσθήκη δεδομένων πεδίου στην εικόνα κατά τη λήψη';

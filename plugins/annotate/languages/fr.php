@@ -25,3 +25,5 @@ $lang["annotate_pdf_output_only_annotated"]='Ne inclure que les ressources annot
 $lang["annotate_admin_edit_access"]='Capacité de modifier les annotations d\'autres utilisateurs';
 $lang["annotate_ref_not_supplied"]='Référence non fournie';
 $lang["annotate_show_author"]='Afficher l\'auteur de l\'annotation lors de la visualisation des aperçus ?';
+$lang["plugin-annotate-title"]='Annoter';
+$lang["plugin-annotate-desc"]='Permet la création d\'annotations d\'images avec jQuery';

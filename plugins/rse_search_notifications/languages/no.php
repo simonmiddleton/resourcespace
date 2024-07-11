@@ -23,3 +23,5 @@ $lang["enable"]='Aktiver';
 $lang["checknow"]='Sjekk nå';
 $lang["columnheader-enabled"]='Aktivert';
 $lang["columnheader-last-found"]='Siste funnet';
+$lang["plugin-rse_search_notifications-title"]='Søkvarsler';
+$lang["plugin-rse_search_notifications-desc"]='Varsle bruker når endringer skjer i et lagret søk';

@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Kategori';
 $lang["youtube_publish_category_error"]='Fejl ved hentning af YouTube-kategorier: -';
 $lang["youtube_chunk_size"]='Størrelse på blokken til brug ved upload til YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Tilføj anker-tags til URL\'en, når du gemmer den i YouTube URL-metadatafeltet?';
+$lang["plugin-youtube_publish-title"]='YouTube Udgiv';
+$lang["plugin-youtube_publish-desc"]='Udgiver videoressource til konfigureret YouTube-konto.';

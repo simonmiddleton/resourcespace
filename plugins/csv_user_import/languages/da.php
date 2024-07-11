@@ -14,3 +14,5 @@ $lang["csv_user_import_condition3"]='Kolonner, der vil have værdier indeholdend
 $lang["csv_user_import_condition4"]='Tilladte kolonner: *brugernavn, *email, adgangskode, fulde navn, konto udløber, kommentarer, IP-begrænsning, sprog. Bemærk: obligatoriske felter er markeret med *';
 $lang["csv_user_import_condition5"]='Brugersprog vil automatisk skifte tilbage til det sprog, der er angivet i "$defaultlanguage" konfigurationsindstillingen, hvis "lang" kolonnen ikke findes eller ikke har en værdi';
 $lang["csv_user_import_error_found"]='Fejl fundet - afbryder';
+$lang["plugin-csv_user_import-title"]='CSV-brugerimport';
+$lang["plugin-csv_user_import-desc"]='[Avanceret] Giver mulighed for at importere en batch af brugere baseret på en forudformateret CSV-fil';

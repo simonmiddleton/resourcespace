@@ -14,3 +14,5 @@ $lang["openai_gpt_advanced"]='ATENÇÃO - Esta seção é apenas para fins de te
 $lang["openai_gpt_system_message"]='Texto inicial da mensagem do sistema. Os espaços reservados %%IN_TYPE%% e %%OUT_TYPE%% serão substituídos por \'texto\' ou \'json\' dependendo dos tipos de campo de origem/destino';
 $lang["openai_gpt_intro"]='Adiciona metadados gerados ao passar dados existentes para a API OpenAI com um prompt personalizável. Consulte <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> para mais informações detalhadas.';
 $lang["openai_gpt_api_key"]='Chave da API OpenAI. Obtenha sua chave da API em <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='Integração com a API GPT da OpenAI';
+$lang["plugin-openai_gpt-desc"]='Metadados gerados pelo OpenAI. Passa os dados do campo configurado para a API do OpenAI e armazena as informações retornadas.';

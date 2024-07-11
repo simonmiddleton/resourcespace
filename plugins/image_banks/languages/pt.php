@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Incapaz de analisar a configuração d
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Formato de configuração inválido para a instância \'%PROVIDER\' (provedor)';
 $lang["image_banks_error_bad_url_scheme"]='Esquema de URL inválido encontrado para a instância de \'%PROVIDER\' (provedor)';
 $lang["image_banks_error_unexpected_response"]='Desculpe, recebemos uma resposta inesperada do provedor. Por favor, entre em contato com o administrador do sistema para uma investigação mais detalhada (veja o log de depuração).';
+$lang["plugin-image_banks-title"]='Bancos de Imagens';
+$lang["plugin-image_banks-desc"]='Permite aos usuários selecionar um Banco de Imagens externo para pesquisar. Os usuários podem então baixar ou criar novos recursos com base nos resultados retornados.';

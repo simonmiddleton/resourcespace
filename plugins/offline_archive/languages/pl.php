@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Oznaczony do przywrócenia z 
 $lang["offline_archive_resource_log_restore_removed"]='Anulowano przywracanie z archiwum';
 $lang["offline_archive_resource_log_restore_request"]='Żądanie przywrócenia z archiwum';
 $lang["offline_archive_resource_restore"]='Przywróć zasoby';
+$lang["plugin-offline_archive-title"]='Archiwum Offline';
+$lang["plugin-offline_archive-desc"]='Umożliwia przeniesienie zarchiwizowanych plików do lokalizacji offline';

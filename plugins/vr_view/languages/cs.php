@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Pole použité k určení, zda by mělo být za
 $lang["vr_view_yaw_only_value"]='Hodnota ke kontrole. Pokud je nalezena, bude možnost is_yaw_only nastavena na true';
 $lang["vr_view_orig_image"]='Použít původní soubor zdroje jako zdroj pro náhled obrázku?';
 $lang["vr_view_orig_video"]='Použít původní soubor zdroje jako zdroj pro náhled videa?';
+$lang["plugin-vr_view-title"]='Zobrazení VR';
+$lang["plugin-vr_view-desc"]='Google VR View - 360stupňové náhledy obrázků a videí (equirektangulární formát)';

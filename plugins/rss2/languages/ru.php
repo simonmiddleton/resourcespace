@@ -11,3 +11,5 @@ $lang["new_content_rss_feed"]='Лента RSS нового контента';
 $lang["subject"]='Тема';
 $lang["rss_feed_for_search_filter"]='Создать RSS-канал для этого запроса';
 $lang["filtered_resource_update_for"]='Обновление отфильтрованных ресурсов для поиска [%search%]';
+$lang["plugin-rss2-title"]='RSS Лента';
+$lang["plugin-rss2-desc"]='Позволяет аутентифицированную генерацию RSS-лент нового контента, включая настраиваемые поля.';

@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='Adresa de email de la care se vor trimite noti
 $lang["rse_workflow_bcc_admin"]='Notificați administratorii de sistem când contributorul este notificat';
 $lang["rse_workflow_state_notify_help"]='Utilizatorii vor vedea resursele în această stare apărând ca acțiuni, în loc să primească notificări simple';
 $lang["rse_workflow_introduction"]='Pentru a modifica stările și acțiunile fluxului de lucru, utilizați \'Gestionați acțiunile fluxului de lucru\' și \'Gestionați stările fluxului de lucru\' din Admin. Faceți clic pe [link_param] pentru a merge la Admin';
+$lang["plugin-rse_workflow-title"]='Flux de lucru avansat';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Flux de lucru';

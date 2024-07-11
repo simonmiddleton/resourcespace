@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"]='Kullanıcı
 $lang["cookies_notification_cookies_use_title"]='Çerez kullanımı';
 $lang["cookies_notification_cookies_use_error_msg"]='Çerezlerin ResourceSpace tarafından kullanılmasına izin vermemeye karar verdiniz. ResourceSpace\'in düzgün çalışabilmesi için çerezlere ihtiyaç duyduğundan, sizi oturumdan çıkarmak zorunda kaldık.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"]='Sisteme erişmeden önce çerez kullanımını kabul etmeniz gerekmektedir.';
+$lang["plugin-cookies_notification-title"]='Çerez Bildirimi';
+$lang["plugin-cookies_notification-desc"]='Kullanıcıları, ResourceSpace\'in çerezleri kullanarak kullanıcı etkinliğini nasıl izleyebileceği konusunda bilgilendirme yeteneği ekler ve başlıkta bir mesaj gösterir';

@@ -34,3 +34,5 @@ $lang["image_banks_error_unexpected_response"]='죄송합니다, 제공자로부
 $lang["image_banks_local_download_attempt"]='사용자가 허용된 제공자가 아닌 시스템을 가리켜 ImageBank 플러그인을 사용하여 \'%FILE\'을(를) 다운로드하려고 시도했습니다';
 $lang["image_banks_bad_file_create_attempt"]='사용자가 허용된 제공자가 아닌 시스템을 가리켜 ImageBank 플러그인을 사용하여 \'%FILE\' 파일로 리소스를 생성하려고 시도했습니다';
 $lang["image_banks_createdfromimagebanks"]='이미지 뱅크 플러그인에서 생성됨';
+$lang["plugin-image_banks-title"]='이미지 뱅크';
+$lang["plugin-image_banks-desc"]='사용자가 외부 이미지 뱅크를 선택하여 검색할 수 있도록 허용합니다. 사용자는 반환된 결과를 기반으로 새 리소스를 다운로드하거나 생성할 수 있습니다.';

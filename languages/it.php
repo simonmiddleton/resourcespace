@@ -2855,3 +2855,10 @@ $lang["all__emailnotifyresourcessubmitted"]='<br />
 [text_footer]';
 $lang["oj-creation-success"]='Lavoro offline [jobnumber] creato. Sarai avvisato quando sarà completato';
 $lang["editcollection"]='Modifica collezione';
+$lang["plugin-category-asset-processing"]='Elaborazione delle risorse';
+$lang["plugin-category-authentication"]='Autenticazione';
+$lang["plugin-category-collaboration"]='Collaborazione';
+$lang["plugin-category-integrations"]='Integrazioni';
+$lang["plugin-category-system"]='Sistema';
+$lang["plugin-category-user-interface"]='Interfaccia Utente';
+$lang["plugin-category-workflow-and-access"]='Flusso di lavoro e Accesso';

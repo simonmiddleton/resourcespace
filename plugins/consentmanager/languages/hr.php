@@ -24,3 +24,5 @@ $lang["notes"]='Bilješke';
 $lang["confirmdeleteconsentfile"]='Jeste li sigurni da želite IZBRISATI ovu datoteku? Ovo se ne može poništiti.';
 $lang["consent_manager_mediums"]='Dopušteni mediji korištenja';
 $lang["consent_manager_access"]='Upravljaj podacima o suglasnosti (gdje nije već omogućeno putem dozvole "Može pristupiti području postavljanja sustava")';
+$lang["plugin-consentmanager-title"]='Upravitelj pristanka';
+$lang["plugin-consentmanager-desc"]='Dodaje mogućnost upravljanja pristankom danim od strane subjekata prikazanih u vašim medijskim datotekama';

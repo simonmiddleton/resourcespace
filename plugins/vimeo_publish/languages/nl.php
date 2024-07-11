@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Bronbestand is gepubliceerd op Vimeo.
 $lang["vimeo_publish_account_options"]='Vimeo account opties';
 $lang["vimeo_publish_allow_user_accounts"]='Sta gebruikers toe om naar hun eigen Vimeo-accounts te publiceren. Als dit onwaar is, moet toegang tot een enkel Vimeo-account hieronder worden geconfigureerd';
 $lang["vimeo_publish_set_account"]='Stel Vimeo-account in';
+$lang["plugin-vimeo_publish-title"]='Vimeo Publiceren';
+$lang["plugin-vimeo_publish-desc"]='Publiceer bronnen op Vimeo met OAuth 2.0';

@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Tekst / HTML:';
 $lang["feedback_options-comma_separated"]='Muligheder: (kommasepareret)';
 $lang["feedback_add_new_field"]='Tilføj nyt felt';
 $lang["feedback_back_to_plugin_manager"]='Tilbage til Plugin Manager';
+$lang["plugin-feedback-title"]='Feedback';
+$lang["plugin-feedback-desc"]='Tilføjer en generel brugerfeedbackfunktion med konfigurerbare spørgsmål.';

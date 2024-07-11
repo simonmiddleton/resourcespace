@@ -45,3 +45,5 @@ $lang["video_splice_createdfromvideosplice"]='Dibuat dari plugin Video Splice';
 $lang["video-trim_output"]='Keluaran';
 $lang["action-splice"]='Sambung';
 $lang["video_splice_error_invalid_action"]='Kesalahan: Tindakan tidak valid';
+$lang["plugin-video_splice-title"]='Potongan Video';
+$lang["plugin-video_splice-desc"]='Menambahkan kemampuan pemangkasan dan penyambungan video';

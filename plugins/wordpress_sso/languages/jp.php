@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='WordPressアカウント以外でロ�
 $lang["wordpress_sso_use_wp_login"]='WordPressアカウントを使用してログインしてください。';
 $lang["wordpress_sso_retry"]='再度ログインを試みるにはここをクリックしてください。';
 $lang["origin_wordpress_sso"]='WordPress SSO プラグイン';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[高度] WordPressインストールでシングルサインオンを許可';

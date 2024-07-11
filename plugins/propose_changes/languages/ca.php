@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Edició proposada';
 $lang["actions_propose_changes"]='Mostra\'m els canvis proposats pels usuaris a la meva llista d\'accions';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Les seves propostes de canvis han estat revisades.<br/>[changesummary]<br/>Feu clic a continuació per revisar els canvis<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />S\'han enviat els canvis proposats.<br/>[changesummary]<br/>Feu clic a continuació per revisar els canvis<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Proposar canvis';
+$lang["plugin-propose_changes-desc"]='Afegeix l\'opció per permetre als usuaris proposar canvis de metadades sense accés d\'edició';

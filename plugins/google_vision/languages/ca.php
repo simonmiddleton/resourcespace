@@ -21,3 +21,5 @@ $lang["google_vision_translation_intro"]='Google Vision només retorna paraules 
 $lang["google_vision_translation_api_key"]='Habilita la traducció de les paraules clau de Vision a través de l\'API de traducció introduint una clau d\'API de Google vàlida';
 $lang["google_vision_translation_languages"]='Llista separada per comes de codis de llenguatge, per exemple "no,es"';
 $lang["google_vision_translation_keep_english"]='Mantenir les paraules clau originals en anglès?';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Capacitat de reconeixement d\'imatges. Envia les imatges pujades a l\'API de Google Cloud Vision i estableix metadades suggerides.';

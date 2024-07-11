@@ -6,3 +6,4 @@ $lang["stencilvg_resource_type_for_new"]='النوع الأولي للمصادر
 $lang["stencilvg-rsvg-not-installed"]='يرجى تثبيت rsvg (librsvg2-bin) لإمكانية الإخراج في صيغة PDF و EPS.';
 $lang["stencilvg_dpi"]='النقاط في البوصة للإخراج النقطي (مثل PNG) DPI.';
 $lang["stencilvg_createdfromstencilvg"]='تم إنشاؤه باستخدام ملحق StencilVG';
+$lang["plugin-stencilvg-desc"]='الويب إلى الطباعة (W2P) / وظيفة النشر الديناميكي باستخدام ملفات قالب SVG';

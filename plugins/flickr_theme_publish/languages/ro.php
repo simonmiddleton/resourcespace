@@ -53,3 +53,5 @@ $lang["flickr_api_secret"]='Cheia API secretă Flickr';
 $lang["flickr_warn_no_title_access"]='Publicarea nu este permisă fără acces la câmpul de titlu (ID #%id). Vă rugăm să contactați un administrator!';
 $lang["flickr-publish-public"]='Public';
 $lang["flickr-publish-private"]='Privat';
+$lang["plugin-flickr_theme_publish-title"]='Publicare pe Flickr';
+$lang["plugin-flickr_theme_publish-desc"]='Publică resursele selectate în temele selectate pe Flickr.';

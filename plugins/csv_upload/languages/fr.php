@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Ignorer la validation et traiter le f
 $lang["csv_upload_force_offline"]='Ce grand fichier CSV peut prendre beaucoup de temps à être traité, il sera donc exécuté hors ligne. Vous serez informé(e) via un message ResourceSpace une fois que le traitement sera terminé';
 $lang["csv_upload_recommend_offline"]='Ce grand fichier CSV peut prendre beaucoup de temps à traiter. Il est recommandé d\'activer les tâches hors ligne si vous avez besoin de traiter des fichiers CSV volumineux';
 $lang["csv_upload_createdfromcsvupload"]='Créé à partir du plugin de téléchargement CSV';
+$lang["plugin-csv_upload-title"]='Téléversement CSV';
+$lang["plugin-csv_upload-desc"]='[Avancé] Télécharger les métadonnées en utilisant un fichier CSV.';

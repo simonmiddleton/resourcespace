@@ -10,3 +10,5 @@ $lang['vm2rs_thumb']="Ruta Thumbnail";
 
 $lang["vm2rs_online_preview"]='Vista previa en línea';
 $lang["vm2rs_youtube_video"]='Video de Youtube';
+$lang["plugin-vm2rs-title"]='Vimeo a ResourceSpace';
+$lang["plugin-vm2rs-desc"]='Permite incrustar videos de Vimeo.';

@@ -24,3 +24,5 @@ $lang["embedslideshow_directlink"]='URL direct ne-încorporat';
 $lang["embedslideshow_directlinkopen"]='Deschideți linkul direct (pagină nouă)';
 $lang["embedslideshow_dynamic_size"]='Redimensionare dinamică a previzualizării în funcție de dimensiunea player-ului?';
 $lang["embedslideshow_seconds"]='? secunde';
+$lang["plugin-embedslideshow-title"]='Incorporează prezentare de diapozitive';
+$lang["plugin-embedslideshow-desc"]='Oferă o funcție pentru generarea de HTML pentru slideshow-uri de colecții încorporabile pe site-uri externe';

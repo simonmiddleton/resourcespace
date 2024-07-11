@@ -16,3 +16,5 @@ $lang["image_text_position"]='Položaj teksta na banneru.';
 $lang["image_text_banner_position"]='Položaj trake u odnosu na sliku.';
 $lang["image_text_font"]='Fonta za upotrebu, moraju biti podržane od strane instalirane verzije ImageMagick-a';
 $lang["image_text_noim"]='Ovaj dodatak zahtijeva instaliran Imagemagick.';
+$lang["plugin-image_text-title"]='Tekst slike';
+$lang["plugin-image_text-desc"]='Omogućuje dodavanje podataka polja slici prilikom preuzimanja';

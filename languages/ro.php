@@ -2851,3 +2851,10 @@ $lang["system_notification_email"]='[img_headerlogo]<br />
 [text_footer]';
 $lang["error_upload_duplicate_file"]='Încărcare fișier duplicat, fișierul se potrivește cu resursele: [resources]';
 $lang["oj-creation-success"]='Lucrarea offline [jobnumber] a fost creată. Veți fi notificat când va fi finalizată';
+$lang["plugin-category-asset-processing"]='Procesare Resurse';
+$lang["plugin-category-authentication"]='Autentificare';
+$lang["plugin-category-collaboration"]='Colaborare';
+$lang["plugin-category-integrations"]='Integrări';
+$lang["plugin-category-system"]='Sistem';
+$lang["plugin-category-user-interface"]='Interfață utilizator';
+$lang["plugin-category-workflow-and-access"]='Flux de lucru și Acces';

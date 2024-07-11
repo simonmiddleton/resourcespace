@@ -38,3 +38,5 @@ $lang["yourresourceshavebeenuploaded"]='"Resurssisi on ladattu."';
 $lang["checkmail_not_allowed_error_template"]='Käyttäjä [user-fullname] ([username]), tunnisteella [user-ref] ja sähköpostilla [user-email], ei ole lupa lähettää tiedostoja sähköpostitse (tarkista käyttöoikeudet "c" tai "d" tai estetyt käyttäjät Checkmail-asetussivulla). Kirjattu: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Luotu Tarkista sähköposti -liitännäisestä';
 $lang["checkmail_resource_type_population"]='(sallituista laajennuksista)';
+$lang["plugin-checkmail-title"]='Tarkista posti';
+$lang["plugin-checkmail-desc"]='[Edistynyt] Sallii sähköpostiliitteiden tuonnin';

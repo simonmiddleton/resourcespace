@@ -61,3 +61,5 @@ $lang["doi_show_meta"]='عرض بيانات التعريف الرقمي للمو
 $lang["doi_hide_meta"]='إخفاء بيانات DOI الوصفية';
 $lang["doi_fetched_xml_from_MDS"]='يمكن جلب البيانات الوصفية الحالية لـ XML بنجاح من مخزن بيانات DataCite';
 $lang["doi_info_wikipedia"]='https://ar.wikipedia.org/wiki/معرف_الكائن_الرقمي';
+$lang["plugin-doi-title"]='معرف الكائن الرقمي';
+$lang["plugin-doi-desc"]='ينشئ معرفات الكائنات الرقمية (DOIs) للكائنات غير القابلة للتغيير قبل تسجيلها في DataCite للحصول على استشهاد دائم.';

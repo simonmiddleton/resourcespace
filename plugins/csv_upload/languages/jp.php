@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='バリデーションをスキップ�
 $lang["csv_upload_force_offline"]='この大きなCSVファイルは処理に時間がかかるため、オフラインで実行されます。処理が完了したら、ResourceSpaceのメッセージで通知されます。';
 $lang["csv_upload_recommend_offline"]='この大きなCSVファイルを処理するには非常に長い時間がかかる可能性があります。大きなCSVファイルを処理する必要がある場合は、オフラインジョブを有効にすることをお勧めします。';
 $lang["csv_upload_createdfromcsvupload"]='CSVアップロードプラグインから作成されました。';
+$lang["plugin-csv_upload-title"]='CSVアップロード';
+$lang["plugin-csv_upload-desc"]='[高度な] CSVファイルを使用してメタデータをアップロードします。';

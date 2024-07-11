@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='Vytvořeno pluginem SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"]='Aktualizováno na uživatele LDAP pomocí SimpleLDAP.';
 $lang["origin_simpleldap"]='Plugin SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Nekontrolujte FQDN serveru proti CN certifikátu';
+$lang["plugin-simpleldap-title"]='Jednoduché LDAP';
+$lang["plugin-simpleldap-desc"]='[Pokročilé] Jednodušší implementace ověřování ldap, zaměřená na Active Directory, ale podporuje také Oracle directory';

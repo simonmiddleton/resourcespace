@@ -16,3 +16,5 @@ $lang["image_text_position"]='Позиция текста на баннере.';
 $lang["image_text_banner_position"]='Позиция баннера относительно изображения.';
 $lang["image_text_font"]='Шрифт, который необходимо использовать, должен быть поддерживаемым установленной версией ImageMagick';
 $lang["image_text_noim"]='Этот плагин требует установленного Imagemagick.';
+$lang["plugin-image_text-title"]='Текст изображения';
+$lang["plugin-image_text-desc"]='Позволяет добавлять данные поля к изображению при загрузке';

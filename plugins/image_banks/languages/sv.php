@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Kan inte tolka leverantörers konfigur
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Ogiltigt konfigurationsformat för \'%PROVIDER\' (leverantör) instans';
 $lang["image_banks_error_bad_url_scheme"]='Ogiltigt URL-schema hittades för \'%PROVIDER\' (leverantör) instans';
 $lang["image_banks_error_unexpected_response"]='Tyvärr, fick ett oväntat svar från leverantören. Vänligen kontakta din systemadministratör för vidare undersökning (se felsökningslogg).';
+$lang["plugin-image_banks-title"]='Bildbanker';
+$lang["plugin-image_banks-desc"]='Tillåter användare att välja en extern Bildbank att söka igenom. Användare kan sedan ladda ner eller skapa nya resurser baserat på de returnerade resultaten.';

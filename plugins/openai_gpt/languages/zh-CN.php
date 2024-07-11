@@ -14,3 +14,5 @@ $lang["openai_gpt_advanced"]='警告 - 此部分仅用于测试目的，不应�
 $lang["openai_gpt_system_message"]='初始系统消息文本。占位符 %%IN_TYPE%% 和 %%OUT_TYPE%% 将根据源/目标字段类型替换为“text”或“json”';
 $lang["openai_gpt_intro"]='通过将现有数据传递给OpenAI API并使用可自定义的提示来添加元数据。有关更详细的信息，请参阅 <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a>。';
 $lang["openai_gpt_api_key"]='OpenAI API 密钥。获取您的 API 密钥，请访问 <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='OpenAI API GPT 集成';
+$lang["plugin-openai_gpt-desc"]='OpenAI生成的元数据。将配置的字段数据传递给OpenAI API并存储返回的信息。';

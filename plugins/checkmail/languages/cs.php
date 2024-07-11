@@ -38,3 +38,5 @@ $lang["yourresourcehasbeenuploaded"]='Váš zdroj byl nahrán';
 $lang["yourresourceshavebeenuploaded"]='Vaše zdroje byly nahrány';
 $lang["checkmail_not_allowed_error_template"]='[uživatel-fullname] ([uživatelské jméno]), s ID [uživatel-ref] a e-mailem [uživatel-email] nemá povoleno nahrávat přes e-mail (zkontrolujte oprávnění "c" nebo "d" nebo blokované uživatele na stránce nastavení checkmail). Zaznamenáno: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Vytvořeno z pluginu Check Mail';
+$lang["plugin-checkmail-title"]='Zkontrolovat poštu';
+$lang["plugin-checkmail-desc"]='[Pokročilé] Umožňuje vkládání příloh z e-mailů';

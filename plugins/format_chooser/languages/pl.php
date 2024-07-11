@@ -14,3 +14,5 @@ $lang["downloadformat"]='Format pobierania';
 $lang["are_available-2"]='zostanie przekonwertowane';
 $lang["are_available-1"]='zostanie przekonwertowane';
 $lang["are_available-0"]='zostanie przekonwertowane';
+$lang["plugin-format_chooser-title"]='Wybór Formatu';
+$lang["plugin-format_chooser-desc"]='Pozwala wybrać różne formaty podczas pobierania plików, które są generowane na bieżąco.';

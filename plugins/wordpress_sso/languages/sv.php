@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Logga in med ett icke-WordPress-konto
 $lang["wordpress_sso_use_wp_login"]='Logga in med ditt WordPress-konto';
 $lang["wordpress_sso_retry"]='Klicka här för att försöka logga in igen';
 $lang["origin_wordpress_sso"]='Wordpress SSO-plugin';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Avancerad] Tillåter Single Sign On med Wordpress-installation';

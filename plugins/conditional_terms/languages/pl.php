@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Ten plugin pozwala na ustawienie warunku
 $lang["conditional_terms_field"]='Pole metadanych';
 $lang["conditional_terms_value"]='Wartość';
 $lang["conditional_terms_plugin_misconfigured"]='Wtyczka warunkowych warunków jest źle skonfigurowana';
+$lang["plugin-conditional_terms-title"]='Warunki warunkowe';
+$lang["plugin-conditional_terms-desc"]='Umożliwia warunkowe wyświetlanie strony z warunkami przy pobieraniu na podstawie metadanych zasobu';

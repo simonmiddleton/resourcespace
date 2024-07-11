@@ -54,3 +54,5 @@ $lang["rse_workflow_link_close"]='Zavřít';
 $lang["rse_workflow_more_notes_title"]='Poznámky:';
 $lang["rse_workflow_email_from"]='E-mailová adresa pro odeslání oznámení (pokud je prázdné, použije se %EMAILFROM%):';
 $lang["rse_workflow_bcc_admin"]='Upozornit správce systému, když je přispěvatel upozorněn';
+$lang["plugin-rse_workflow-title"]='Pokročilý pracovní postup';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Pracovní postup';

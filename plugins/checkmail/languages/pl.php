@@ -37,3 +37,5 @@ $lang["yourresourceshavebeenuploaded"]='Twoje zasoby zostały przesłane';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), o ID [user-ref] i adresie e-mail [user-email], nie ma uprawnień do przesyłania plików za pomocą poczty e-mail (sprawdź uprawnienia "c" lub "d" lub zablokowanych użytkowników na stronie konfiguracji poczty e-mail). Zapisano w: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Utworzono z wtyczki Sprawdź pocztę';
 $lang["checkmail_resource_type_population"]='<br />(z dozwolonych_rozszerzeń)';
+$lang["plugin-checkmail-title"]='Sprawdź pocztę';
+$lang["plugin-checkmail-desc"]='[Zaawansowane] Umożliwia importowanie załączników e-mailowych';

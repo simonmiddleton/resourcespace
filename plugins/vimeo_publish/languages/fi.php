@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Resurssi on julkaistu Vimeoon. Voit t
 $lang["vimeo_publish_account_options"]='Vimeon tilivaihtoehdot';
 $lang["vimeo_publish_allow_user_accounts"]='Salli käyttäjien julkaista omiin Vimeo-tiliinsä. Jos arvo on epätosi, yhden Vimeo-tilin käyttöoikeus on määritettävä alla';
 $lang["vimeo_publish_set_account"]='Aseta Vimeo-tili';
+$lang["plugin-vimeo_publish-title"]='Vimeo Julkaisu';
+$lang["plugin-vimeo_publish-desc"]='Julkaise resurssit Vimeoon käyttämällä OAuth 2.0:aa';

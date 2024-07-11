@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Einzelne Abmelde-URL';
 $lang["simplesaml_start_url"]='Start-/Anmelde-URL';
 $lang["simplesaml_existing_config"]='Folgen Sie den Anweisungen der Wissensdatenbank, um Ihre bestehende SAML-Konfiguration zu migrieren';
 $lang["simplesaml_test_site_url"]='SimpleSAML Testseite URL';
+$lang["plugin-simplesaml-title"]='Einfaches SAML';
+$lang["plugin-simplesaml-desc"]='[Erweitert] SAML-Authentifizierung erforderlich, um auf ResourceSpace zuzugreifen';

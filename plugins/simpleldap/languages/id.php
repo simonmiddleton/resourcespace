@@ -50,3 +50,5 @@ $lang["origin_simpleldap"]='Plugin SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Jangan periksa FQDN server dengan CN sertifikat';
 $lang["port"]='Port';
 $lang["simpleldap_domain"]='Domain';
+$lang["plugin-simpleldap-title"]='LDAP Sederhana';
+$lang["plugin-simpleldap-desc"]='[Advanced] Implementasi lebih sederhana dari autentikasi ldap, ditargetkan pada Active Directory tetapi juga mendukung direktori Oracle';

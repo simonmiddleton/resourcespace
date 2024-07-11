@@ -14,3 +14,5 @@ $lang["downloadformat"]='Formato di download';
 $lang["are_available-2"]='sarà convertito';
 $lang["are_available-1"]='sarà convertito';
 $lang["are_available-0"]='sarà convertito';
+$lang["plugin-format_chooser-title"]='Selezionatore di Formato';
+$lang["plugin-format_chooser-desc"]='Ti consente di scegliere diversi formati durante il download dei file che vengono generati al volo.';

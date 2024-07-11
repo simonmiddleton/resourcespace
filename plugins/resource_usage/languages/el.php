@@ -12,3 +12,5 @@ $lang["edit_usage"]='Επεξεργασία χρήσης';
 $lang["delete_usage"]='Διαγραφή χρήσης';
 $lang["resource_usage_configuration"]='Διαμόρφωση χρήσης πόρων';
 $lang["resource_usage_mediums"]='Λίστα διαθέσιμων επιλογών χρήσης (χωρισμένες με κόμμα)';
+$lang["plugin-resource_usage-title"]='Χρήση Πόρων';
+$lang["plugin-resource_usage-desc"]='[Προηγμένο] Προσθέτει τη δυνατότητα καταγραφής της χρήσης πόρων μέσω της σελίδας προβολής πόρων';

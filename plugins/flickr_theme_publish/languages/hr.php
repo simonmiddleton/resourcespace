@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='Vrijeme između pingova napretka (ms)
 $lang["flickr_api_key"]='Ključ API-ja za Flickr';
 $lang["flickr_api_secret"]='Tajna Flickr API-ja';
 $lang["flickr_warn_no_title_access"]='Objavljivanje nije dopušteno bez pristupa polju naslova (ID #%id). Molimo kontaktirajte administratora!';
+$lang["plugin-flickr_theme_publish-title"]='Objavljivanje na Flickru';
+$lang["plugin-flickr_theme_publish-desc"]='Objavljuje odabrane resurse unutar odabranih tema na Flickr.';

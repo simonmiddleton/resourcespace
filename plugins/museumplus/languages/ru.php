@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='"museumplus_modules_saved_c
 $lang["museumplus_error_invalid_association"]='Неверная связь модуля(ей). Пожалуйста, убедитесь, что правильный идентификатор модуля и/или записи был введен!';
 $lang["museumplus_id_returns_multiple_records"]='Найдено несколько записей - введите технический идентификатор вместо этого';
 $lang["museumplus_error_module_no_field_maps"]='Невозможно синхронизировать данные из MuseumPlus. Причина: модуль \'%name\' не имеет настроенных сопоставлений полей.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Advanced] Позволяет извлекать метаданные ресурса из MuseumPlus с использованием его REST API (MpRIA).';

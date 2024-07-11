@@ -38,3 +38,5 @@ $lang["yourresourcehasbeenuploaded"]='Sumber daya Anda telah diunggah';
 $lang["yourresourceshavebeenuploaded"]='Sumber daya Anda telah diunggah';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), dengan ID [user-ref] dan e-mail [user-email] tidak diizinkan untuk mengunggah melalui e-mail (periksa izin "c" atau "d" atau pengguna yang diblokir di halaman pengaturan checkmail). Terekam pada: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Dibuat dari plugin Periksa Email';
+$lang["plugin-checkmail-title"]='Periksa Email';
+$lang["plugin-checkmail-desc"]='[Advanced] Memungkinkan pemasukan lampiran e-mail';

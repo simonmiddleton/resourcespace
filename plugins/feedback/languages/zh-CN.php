@@ -20,3 +20,5 @@ $lang["feedback_options-comma_separated"]='选项：（逗号分隔）';
 $lang["feedback_add_new_field"]='添加新字段';
 $lang["feedback_back_to_plugin_manager"]='返回插件管理器';
 $lang["feedback_questions"]='问题';
+$lang["plugin-feedback-title"]='反馈';
+$lang["plugin-feedback-desc"]='添加一个带有可配置问题的通用用户反馈功能。';

@@ -50,3 +50,5 @@ $lang["youtube_publish_video_title"]='Titlu video';
 $lang["youtube_publish_authentication"]='Autentificare';
 $lang["youtube_publish_public"]='Public';
 $lang["youtube_publish_private"]='Privat';
+$lang["plugin-youtube_publish-title"]='Publicare pe YouTube';
+$lang["plugin-youtube_publish-desc"]='Publică resursa video pe contul YouTube configurat.';

@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='Sin transición automática';
 $lang["embedslideshow_directlink"]='URL directo no incrustado';
 $lang["embedslideshow_directlinkopen"]='Abrir enlace directo (nueva página)';
 $lang["embedslideshow_dynamic_size"]='¿Redimensionamiento dinámico de la vista previa en función del tamaño del reproductor?';
+$lang["plugin-embedslideshow-title"]='Incrustar Presentación Diapositivas';
+$lang["plugin-embedslideshow-desc"]='Proporciona una función para generar HTML para presentaciones de diapositivas de colecciones insertables en sitios remotos';

@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Navrhovaná úprava';
 $lang["actions_propose_changes"]='Zobrazit mi uživatelské návrhy změn v mém seznamu akcí';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Vaše navrhované změny byly zkontrolovány.<br/>[changesummary]<br/>Klikněte níže pro zkontrolování změn<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Navrhované změny byly odeslány.<br/>[changesummary]<br/>Klikněte níže pro zobrazení změn<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Navrhnout změny';
+$lang["plugin-propose_changes-desc"]='Přidává možnost umožnit uživatelům navrhovat změny metadat bez přístupu k úpravám';

@@ -23,3 +23,5 @@ $lang["enable"]='Povoliť';
 $lang["checknow"]='Skontrolujte teraz';
 $lang["columnheader-enabled"]='Povolené';
 $lang["columnheader-last-found"]='Posledná nájdená';
+$lang["plugin-rse_search_notifications-title"]='Obvestila o iskanju';
+$lang["plugin-rse_search_notifications-desc"]='Obvesti uporabnika, ko pride do sprememb v shranjenem iskanju';

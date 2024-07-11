@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Campo usado para determinar se o roll/pitch dev
 $lang["vr_view_yaw_only_value"]='Valor a ser verificado. Se encontrado, a opção is_yaw_only será definida como verdadeira';
 $lang["vr_view_orig_image"]='Usar o arquivo de recurso original como fonte para visualização da imagem?';
 $lang["vr_view_orig_video"]='Usar o arquivo de recurso original como fonte para a pré-visualização do vídeo?';
+$lang["plugin-vr_view-title"]='Visualização VR';
+$lang["plugin-vr_view-desc"]='Google VR View - Visualizações de imagens e vídeos em 360 graus (formato equiretangular)';

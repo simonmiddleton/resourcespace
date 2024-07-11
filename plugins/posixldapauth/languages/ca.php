@@ -47,3 +47,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='No s\'ha pogut connecta
 $lang["posixldapauth_unable_to_search_ldap_server"]='No es possible cercar al servidor LDAP.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% ha fallat, si us plau, comprova la configuració.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Cerca LDAP realitzada amb èxit, però no s\'han trobat grups.';
+$lang["plugin-posixldapauth-title"]='Autorització LDAP POSIX';
+$lang["plugin-posixldapauth-desc"]='[OBSOLET] Plugin LDAP per AD i LDAP. Utilitzeu simpleldap per a la integració d\'AD.';

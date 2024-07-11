@@ -54,3 +54,5 @@ $lang["rse_workflow_configuration"]='Configuration de flux de travail';
 $lang["rse_workflow_state_notify_message"]='Il y a de nouvelles ressources dans l\'état de flux de travail:';
 $lang["rse_workflow_state_notify_help"]='Les utilisateurs verront les ressources dans cet état apparaître comme des actions, plutôt que de recevoir de simples notifications';
 $lang["rse_workflow_introduction"]='Pour modifier les états et actions du flux de travail, utilisez les options \'Gérer les actions du flux de travail\' et \'Gérer les états du flux de travail\' dans Admin. Cliquez sur [link_param] pour accéder à Admin';
+$lang["plugin-rse_workflow-title"]='Flux de travail avancé';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Entreprise - Flux de travail';

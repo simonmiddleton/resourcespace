@@ -7,3 +7,5 @@ $lang["embed_help"]='Zkopírujte a vložte níže uvedený HTML kód pro vložen
 $lang["embed_video_configuration"]='Konfigurace vložení videa';
 $lang["specify_resourcetype"]='Prosím, uveďte, pro který typ zdroje by se měla funkce \'vložit\' zobrazit.';
 $lang["video_resourcetype"]='Typ zdroje videa';
+$lang["plugin-embedvideo-title"]='Vložit video';
+$lang["plugin-embedvideo-desc"]='Poskytuje funkci pro generování HTML pro vkládání videa na vzdálené stránky.';

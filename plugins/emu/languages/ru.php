@@ -34,3 +34,5 @@ $lang["emu_no_resource"]='Не указан ID ресурса!';
 $lang["emu_upload_nodata"]='Данные EMu не найдены для этого IRN:';
 $lang["emu_nodata_returned"]='Данные EMu не найдены для указанного IRN.';
 $lang["emu_createdfromemu"]='Создано с помощью плагина EMU';
+$lang["plugin-emu-title"]='EMu';
+$lang["plugin-emu-desc"]='[Расширенный] Позволяет извлекать метаданные ресурса из базы данных EMu.';

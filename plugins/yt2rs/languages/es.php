@@ -10,3 +10,5 @@ $lang['yt2rs_thumb']="Ruta Thumbnail";
 
 $lang["yt2rs_online_preview"]='Vista previa en línea';
 $lang["yt2rs_youtube_video"]='Video de Youtube';
+$lang["plugin-yt2rs-title"]='YouTube a ResourceSpace';
+$lang["plugin-yt2rs-desc"]='Permite publicar videos desde YouTube.';

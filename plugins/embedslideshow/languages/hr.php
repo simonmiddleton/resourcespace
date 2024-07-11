@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='Nema automatskog prijelaza';
 $lang["embedslideshow_directlink"]='Nije ugrađeni izravni URL';
 $lang["embedslideshow_directlinkopen"]='Otvori izravnu poveznicu (nova stranica)';
 $lang["embedslideshow_dynamic_size"]='Dinamičko prilagođavanje veličine pregleda na temelju veličine playera?';
+$lang["plugin-embedslideshow-title"]='Ugradi prezentaciju';
+$lang["plugin-embedslideshow-desc"]='Pruža funkciju za generiranje HTML-a za ugrađene prezentacije kolekcija na udaljenim stranicama';

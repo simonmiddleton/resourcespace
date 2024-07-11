@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='Otomatik geçiş yok';
 $lang["embedslideshow_directlink"]='Gömülü olmayan doğrudan URL';
 $lang["embedslideshow_directlinkopen"]='Doğrudan bağlantıyı aç (yeni sayfa)';
 $lang["embedslideshow_dynamic_size"]='Oynatıcı boyutuna göre önizlemenin dinamik olarak yeniden boyutlandırılması?';
+$lang["plugin-embedslideshow-title"]='Slayt Gösterisini Göm';
+$lang["plugin-embedslideshow-desc"]='Uzaktaki sitelerde gömülebilir koleksiyon slayt gösterileri için HTML oluşturma işlevi sağlar';

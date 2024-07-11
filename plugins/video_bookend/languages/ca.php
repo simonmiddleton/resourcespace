@@ -9,3 +9,5 @@ $lang["bookend-noimage-2"]='(no hi ha cap imatge de tancament)';
 $lang["bookend-intro"]='Seleccioneu imatges de la llista de fitxers alternatius per utilitzar com a imatges d\'obertura i tancament.';
 $lang["bookend-failed"]='Fallat!';
 $lang["bookend-could-not-open-file"]='Error - no s\'ha pogut obrir el fitxer!';
+$lang["plugin-video_bookend-title"]='Vídeo Bookend';
+$lang["plugin-video_bookend-desc"]='Afegeix la capacitat de descarregar un vídeo amb un títol i un gràfic final';

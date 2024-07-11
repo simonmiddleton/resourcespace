@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='PDF 출력 옵션 (실험적)';
 $lang["annotate_pdf_output_only_annotated"]='PDF 출력에 주석이 달린 리소스만 포함';
 $lang["annotate_admin_edit_access"]='다른 사용자의 주석을 편집할 수 있는 기능';
 $lang["annotate_ref_not_supplied"]='참조가 제공되지 않음';
+$lang["plugin-annotate-title"]='주석 달기';
+$lang["plugin-annotate-desc"]='jQuery 이미지 주석 생성을 활성화합니다';

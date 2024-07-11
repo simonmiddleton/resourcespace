@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Markerad för återställning
 $lang["offline_archive_resource_log_restore_removed"]='Avbruten återställning från arkiv';
 $lang["offline_archive_resource_log_restore_request"]='Begärd återställning från arkiv';
 $lang["offline_archive_resource_restore"]='Återställ resurser';
+$lang["plugin-offline_archive-title"]='Offlinearkiv';
+$lang["plugin-offline_archive-desc"]='Möjliggör flyttning av arkiverade filer till en offline-plats';

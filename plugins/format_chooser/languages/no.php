@@ -14,3 +14,5 @@ $lang["downloadformat"]='Nedlastingsformat';
 $lang["are_available-2"]='vil bli konvertert';
 $lang["are_available-1"]='vil bli konvertert';
 $lang["are_available-0"]='vil bli konvertert';
+$lang["plugin-format_chooser-title"]='Formatvelger';
+$lang["plugin-format_chooser-desc"]='Lar deg velge forskjellige formater når du laster ned filer som genereres på farten.';

@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Текст / HTML:';
 $lang["feedback_options-comma_separated"]='Опции: (разделенные запятой)';
 $lang["feedback_add_new_field"]='Добавить новое поле';
 $lang["feedback_back_to_plugin_manager"]='Назад к Менеджеру плагинов';
+$lang["plugin-feedback-title"]='Обратная связь';
+$lang["plugin-feedback-desc"]='Добавляет общую функцию обратной связи с пользователями с настраиваемыми вопросами.';

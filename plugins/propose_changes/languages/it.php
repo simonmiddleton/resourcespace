@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Modifica proposta';
 $lang["actions_propose_changes"]='Mostrami le modifiche proposte dagli utenti nella mia lista di azioni';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Le tue modifiche proposte sono state esaminate.<br/>[changesummary]<br/>Clicca qui sotto per esaminare le modifiche<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Le modifiche proposte sono state inviate.<br/>[changesummary]<br/>Clicca qui sotto per rivedere le modifiche<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Proporre Modifiche';
+$lang["plugin-propose_changes-desc"]='Aggiunge l\'opzione per consentire agli utenti di proporre modifiche ai metadati senza accesso di modifica';

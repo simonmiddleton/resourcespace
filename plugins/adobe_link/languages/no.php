@@ -12,3 +12,5 @@ $lang["adobe_link_upload_document"]='Lagre';
 $lang["adobe_link_saving"]='Lagrer..';
 $lang["adobe_link_saving_wait"]='Filen blir lagret, vennligst vent på bekreftelsesmeldingen. Du må kanskje oppdatere siden for å oppdatere forhåndsvisningsbildet.';
 $lang["adobe_link_title"]='Adobe Link';
+$lang["plugin-adobe_link-title"]='Adobe Link';
+$lang["plugin-adobe_link-desc"]='[Tilleggsfunksjoner] Tillat import av Adobe-filer fra ResourceSpace til Adobe CC';

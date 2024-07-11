@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Dette plugin tillader dig at sætte en b
 $lang["conditional_terms_field"]='Metadatafelt';
 $lang["conditional_terms_value"]='Værdi';
 $lang["conditional_terms_plugin_misconfigured"]='Betingelsesmæssige vilkår plugin er konfigureret forkert';
+$lang["plugin-conditional_terms-title"]='Betingede vilkår';
+$lang["plugin-conditional_terms-desc"]='Muliggør betinget visning af vilkårsside ved download baseret på ressource metadata';

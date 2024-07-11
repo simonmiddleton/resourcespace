@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Markiert zur Wiederherstellun
 $lang["offline_archive_resource_log_restore_removed"]='Abgebrochene Wiederherstellung aus dem Archiv';
 $lang["offline_archive_resource_log_restore_request"]='Angeforderte Wiederherstellung aus dem Archiv';
 $lang["offline_archive_resource_restore"]='Wiederherstellen von Ressourcen';
+$lang["plugin-offline_archive-title"]='Offline-Archiv';
+$lang["plugin-offline_archive-desc"]='Ermöglicht die Verlagerung archivierter Dateien an einen Offline-Standort';

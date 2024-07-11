@@ -21,3 +21,5 @@ $lang["google_vision_translation_api_key"]='Omogućite prijevod ključnih riječ
 $lang["google_vision_translation_languages"]='Popis jezika odvojen zarezima, npr. "no,es"';
 $lang["google_vision_translation_keep_english"]='Zadržati originalne engleske ključne riječi?';
 $lang["google_vision_api"]='Google Vision API';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Sposobnost prepoznavanja slika. Prosljeđuje učitane slike Google Cloud Vision API-ju i postavlja predložene metapodatke.';

@@ -40,3 +40,5 @@ $lang["yourresourceshavebeenuploaded"]='Vaše zdroje boli nahraté';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), s ID [user-ref] a e-mailom [user-email] nemá povolenie na nahrávanie cez e-mail (skontrolujte oprávnenia "c" alebo "d" alebo zablokovaných používateľov na stránke nastavenia checkmail). Zaznamenané dňa: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Vytvorené z doplnku Kontrola e-mailov';
 $lang["checkmail_resource_type_population"]='<br />(z dovoljenih razširitev)';
+$lang["plugin-checkmail-title"]='Preveri pošto';
+$lang["plugin-checkmail-desc"]='[Advanced] Omogoča uvoz e-poštnih prilog';

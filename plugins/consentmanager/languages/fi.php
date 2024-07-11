@@ -24,3 +24,5 @@ $lang["notes"]='Muistiinpanot';
 $lang["confirmdeleteconsentfile"]='Oletko varma, että haluat POISTAA tämän tiedoston? Tätä ei voi peruuttaa.';
 $lang["consent_manager_mediums"]='Suostumuksen käyttövälineet';
 $lang["consent_manager_access"]='Hallinnoi suostumustietoja (jos ei ole jo käytössä "Pääsy järjestelmän asetusten alueelle" -oikeuden kautta)';
+$lang["plugin-consentmanager-title"]='Suostumusten hallinta';
+$lang["plugin-consentmanager-desc"]='Lisää mahdollisuuden hallita suostumusta, jonka media-tiedostoissasi esiintyvät henkilöt ovat antaneet';

@@ -39,3 +39,5 @@ $lang["group_no"]='Grup';
 $lang["action_dates_email_text_restrict"]='Sumber daya berikut akan dibatasi dalam [days] hari.';
 $lang["action_dates_email_text_state"]='Sumber daya berikut akan berubah status dalam [days] hari.';
 $lang["action_dates_email_text"]='Sumber daya berikut akan dibatasi dan/atau mengubah status dalam [days] hari.';
+$lang["plugin-action_dates-title"]='Tanggal Tindakan';
+$lang["plugin-action_dates-desc"]='Memungkinkan penghapusan atau pembatasan sumber daya yang dijadwalkan berdasarkan bidang tanggal';

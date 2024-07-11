@@ -37,3 +37,5 @@ $lang["yourresourcehasbeenuploaded"]='Resursa ta a fost încărcată';
 $lang["yourresourceshavebeenuploaded"]='Resursele tale au fost încărcate';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), cu ID-ul [user-ref] și adresa de e-mail [user-email] nu are permisiunea de a încărca prin e-mail (verificați permisiunile "c" sau "d" sau utilizatorii blocați în pagina de configurare a verificării prin e-mail). Înregistrat la data de: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Creat din pluginul Verificare poștă electronică';
+$lang["plugin-checkmail-title"]='Verifică poșta';
+$lang["plugin-checkmail-desc"]='[Avansat] Permite ingestia atașamentelor trimise prin e-mail';

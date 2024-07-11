@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Ni mogoče razčleniti konfiguracije p
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Neveljaven format konfiguracije za instanco \'%PROVIDER\' (ponudnik)';
 $lang["image_banks_error_bad_url_scheme"]='Najdena neveljavna shema URL za instanco \'%PROVIDER\' (ponudnik)';
 $lang["image_banks_error_unexpected_response"]='Oprostite, prejeli smo nepričakovan odgovor od ponudnika. Prosimo, obrnite se na svojega sistemskega administratorja za nadaljnjo preiskavo (glejte dnevnik odpravljanja napak).';
+$lang["plugin-image_banks-title"]='Banka slik';
+$lang["plugin-image_banks-desc"]='Omogoča uporabnikom izbiro zunanje banke slik za iskanje. Uporabniki lahko nato prenesejo ali ustvarijo nove vire na podlagi vrnjenih rezultatov.';

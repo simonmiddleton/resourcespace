@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='Adresa e-pošte za slanje obavijesti (koristit
 $lang["rse_workflow_bcc_admin"]='Obavijestite sistemskog administratora kada se obavijesti suradnik';
 $lang["rse_workflow_state_notify_help"]='Korisnici će vidjeti resurse u ovom stanju kao radnje, umjesto da primaju jednostavne obavijesti';
 $lang["rse_workflow_introduction"]='Za izmjenu stanja i radnji tijeka rada, koristite \'Upravljanje radnjama tijeka rada\' i \'Upravljanje stanjima tijeka rada\' iz Admin. Kliknite [link_param] za odlazak na Admin';
+$lang["plugin-rse_workflow-title"]='Napredni tijek rada';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Radni tijek';

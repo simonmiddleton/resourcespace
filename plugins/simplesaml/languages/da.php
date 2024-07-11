@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Ene logud-URL';
 $lang["simplesaml_start_url"]='Start/Tilmeldings-URL';
 $lang["simplesaml_existing_config"]='Følg instruktionerne i vidensbasen for at migrere din eksisterende SAML-konfiguration';
 $lang["simplesaml_test_site_url"]='SimpleSAML test site URL: URL til SimpleSAML test websted';
+$lang["plugin-simplesaml-title"]='Simple SAML';
+$lang["plugin-simplesaml-desc"]='[Avanceret] Kræv SAML-godkendelse for at få adgang til ResourceSpace';

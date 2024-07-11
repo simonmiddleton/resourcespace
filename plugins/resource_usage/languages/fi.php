@@ -12,3 +12,5 @@ $lang["edit_usage"]='Muokkaa käyttöä';
 $lang["delete_usage"]='Poista käyttö';
 $lang["resource_usage_configuration"]='Resurssien käyttökonfiguraatio';
 $lang["resource_usage_mediums"]='Saatavilla olevien käyttövaihtoehtojen luettelo (pilkulla eroteltuna)';
+$lang["plugin-resource_usage-title"]='Resurssin käyttö';
+$lang["plugin-resource_usage-desc"]='[Edistynyt] Lisää mahdollisuuden kirjata resurssien käyttöä resurssin katselusivun kautta';

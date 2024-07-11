@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Не удалось п�
 $lang["posixldapauth_unable_to_search_ldap_server"]='Невозможно выполнить поиск на сервере LDAP.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% не удалось, пожалуйста, проверьте настройки.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Успешный поиск LDAP, но не найдено ни одной группы.';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP Авторизация';
+$lang["plugin-posixldapauth-desc"]='[УСТАРЕЛО] Плагин LDAP для AD и LDAP. Используйте simpleldap для интеграции с AD.';

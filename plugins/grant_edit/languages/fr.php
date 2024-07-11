@@ -9,3 +9,5 @@ $lang["grant_edit_date"]='Date d\'expiration pour l\'accès à la modification';
 $lang["grant_edit_list"]='Utilisateurs actuels avec accès supplémentaire à l\'édition';
 $lang["grant_edit_delete_user"]='Confirmer la suppression de l\'accès amélioré pour';
 $lang["grant_edit_group_list"]='Groupes actuels avec accès supplémentaire à l\'édition';
+$lang["plugin-grant_edit-title"]='Accorder la modification';
+$lang["plugin-grant_edit-desc"]='Permet aux administrateurs d\'accorder aux utilisateurs un accès temporaire complet à l\'édition des ressources';

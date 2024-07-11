@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Deze plugin stelt u in staat om een voor
 $lang["conditional_terms_field"]='Metadataveld';
 $lang["conditional_terms_value"]='Waarde';
 $lang["conditional_terms_plugin_misconfigured"]='De plug-in voor voorwaardelijke voorwaarden is verkeerd geconfigureerd';
+$lang["plugin-conditional_terms-title"]='Voorwaardelijke Voorwaarden';
+$lang["plugin-conditional_terms-desc"]='Stelt voorwaardelijke weergave van de voorwaardenpagina bij download in op basis van resource-metadata';

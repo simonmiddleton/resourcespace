@@ -12,3 +12,5 @@ $lang["news_body"]='Conținutul corpului';
 $lang["news_nonewmessages"]='Nu există mesaje noi';
 $lang["title"]='Ultimele știri...';
 $lang["title-too-long"]='Câmpul titlu este mai lung decât cele 50 de caractere permise';
+$lang["plugin-news-title"]='Știri';
+$lang["plugin-news-desc"]='Adaugă articole de știri pe pagina principală';

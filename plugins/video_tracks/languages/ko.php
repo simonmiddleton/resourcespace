@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"]='사용자 지정 형식';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='사용 가능한 파일 출력 옵션을 사용하여 원본 파일의 사용자 지정 비디오 형식을 만들 수 있도록 허용하시겠습니까?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='지금 트랜스코딩을 시작하려면 선택하십시오. 선택하지 않으면 파일이 준비되었을 때 알림을 받게 됩니다';
 $lang["video_tracks_transcode_now_label"]='지금 트랜스코딩';
+$lang["plugin-video_tracks-title"]='비디오 트랙';
+$lang["plugin-video_tracks-desc"]='[고급] 비디오 리소스에 대한 다양한 오디오 및 자막 옵션 지원 추가';

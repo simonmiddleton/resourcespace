@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"]='Brak automatycznego przejścia';
 $lang["embedslideshow_directlink"]='Bez osadzonego adresu URL';
 $lang["embedslideshow_directlinkopen"]='Otwórz bezpośredni link (nowa strona)';
 $lang["embedslideshow_dynamic_size"]='Dynamiczne dostosowywanie rozmiaru podglądu na podstawie rozmiaru odtwarzacza?';
+$lang["plugin-embedslideshow-title"]='Osadź Pokaz Slajdów';
+$lang["plugin-embedslideshow-desc"]='Zapewnia funkcję generowania kodu HTML dla osadzalnych pokazów slajdów kolekcji na zdalnych stronach';

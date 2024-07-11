@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Edição proposta';
 $lang["actions_propose_changes"]='Mostrar-me as alterações propostas pelo usuário na minha lista de ações';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />As suas alterações propostas foram revistas.<br/>[changesummary]<br/>Clique abaixo para rever as alterações<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Foram submetidas alterações propostas.<br/>[changesummary]<br/>Clique abaixo para revisar as alterações<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Propor Alterações';
+$lang["plugin-propose_changes-desc"]='Adiciona a opção para permitir que os usuários proponham alterações de metadados sem acesso de edição';

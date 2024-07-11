@@ -12,3 +12,5 @@ $lang["news_body"]='本文内容';
 $lang["news_nonewmessages"]='新しいメッセージはありません。';
 $lang["title"]='最新ニュース...';
 $lang["title-too-long"]='タイトルフィールドは50文字以内に制限されています。';
+$lang["plugin-news-title"]='ニュース';
+$lang["plugin-news-desc"]='ホームページのニュース項目を追加します';

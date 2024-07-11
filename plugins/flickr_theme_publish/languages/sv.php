@@ -66,3 +66,5 @@ $lang["flickr_nice_progress_min_timeout"]='Tid mellan framstegsmeddelanden (ms)'
 $lang["flickr_api_key"]='Flickr API-nyckel';
 $lang["flickr_api_secret"]='Flickr API hemlig nyckel';
 $lang["flickr_warn_no_title_access"]='Publicering är inte tillåten utan åtkomst till titelfältet (ID #%id). Vänligen kontakta en administratör!';
+$lang["plugin-flickr_theme_publish-title"]='Flickr-publicering';
+$lang["plugin-flickr_theme_publish-desc"]='Publicerar valda resurser inom valda teman till Flickr.';

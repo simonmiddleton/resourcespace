@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Enkel utloggning URL';
 $lang["simplesaml_start_url"]='Start-/Logga in-URL';
 $lang["simplesaml_existing_config"]='Följ instruktionerna i kunskapsdatabasen för att migrera din befintliga SAML-konfiguration';
 $lang["simplesaml_test_site_url"]='SimpleSAML test webbplatsens URL';
+$lang["plugin-simplesaml-title"]='Enkel SAML';
+$lang["plugin-simplesaml-desc"]='[Avancerad] Kräver SAML-autentisering för att få tillgång till ResourceSpace';

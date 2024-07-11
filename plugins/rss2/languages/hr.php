@@ -9,3 +9,5 @@ $lang["new_content_rss_feed"]='Novi sadržaj RSS kanala';
 $lang["subject"]='Predmet';
 $lang["rss_feed_for_search_filter"]='Stvorite RSS kanal za ovaj upit';
 $lang["filtered_resource_update_for"]='Ažuriranje filtriranih resursa za pretragu [%search%]';
+$lang["plugin-rss2-title"]='RSS Feed';
+$lang["plugin-rss2-desc"]='Omogućuje autentificirano generiranje RSS feedova novog sadržaja, uključujući konfigurabilna polja.';

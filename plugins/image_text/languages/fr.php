@@ -16,3 +16,5 @@ $lang["image_text_position"]='Position du texte dans la bannière.';
 $lang["image_text_banner_position"]='Position de la bannière par rapport à l\'image.';
 $lang["image_text_font"]='Police de caractères à utiliser, doit être prise en charge par la version d\'ImageMagick installée';
 $lang["image_text_noim"]='Ce plugin nécessite l\'installation d\'Imagemagick.';
+$lang["plugin-image_text-title"]='Texte de l\'image';
+$lang["plugin-image_text-desc"]='Permet d\'ajouter des données de champ à l\'image lors du téléchargement';

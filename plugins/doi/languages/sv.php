@@ -61,3 +61,5 @@ $lang["doi_show_meta"]='Visa DOI-metadata';
 $lang["doi_hide_meta"]='Dölj DOI-metadata';
 $lang["doi_fetched_xml_from_MDS"]='Nuvarande XML-metadata kunde hämtas framgångsrikt från DataCites metadata-lagring';
 $lang["doi_info_wikipedia"]='https://sv.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["plugin-doi-title"]='Digital Object Identifier';
+$lang["plugin-doi-desc"]='Genererar DOI:er för oföränderliga objekt innan de registreras hos DataCite för beständig citat.';

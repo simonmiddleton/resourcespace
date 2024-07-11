@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='LDAP सर्वर �
 $lang["posixldapauth_unable_to_search_ldap_server"]='LDAP सर्वर खोजने में असमर्थ।';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% विफल हो गया, कृपया सेटिंग्स जांचें।';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP खोज सफल, लेकिन 0 समूह मिले।';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP प्राधिकरण';
+$lang["plugin-posixldapauth-desc"]='[अप्रचलित] AD और LDAP के लिए LDAP प्लगइन। AD एकीकरण के लिए simpleldap का उपयोग करें।';

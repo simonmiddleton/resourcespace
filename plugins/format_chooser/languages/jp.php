@@ -14,3 +14,5 @@ $lang["downloadformat"]='ダウンロード形式';
 $lang["are_available-2"]='変換されます。';
 $lang["are_available-1"]='変換されます。';
 $lang["are_available-0"]='変換されます。';
+$lang["plugin-format_chooser-title"]='フォーマット選択ツール';
+$lang["plugin-format_chooser-desc"]='ファイルをダウンロードする際に、オンザフライで生成される異なる形式を選択できます。';

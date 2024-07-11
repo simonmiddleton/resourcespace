@@ -38,3 +38,5 @@ $lang["checkmail_cronhelp"]='Bu eklenti, yükleme amacıyla dosya almak için ay
 Bağlantıyı doğru bir şekilde kurduktan ve betiğin nasıl çalıştığını anladıktan sonra, her bir veya iki dakikada bir çalıştırmak için bir cron işi ayarlamanız gerekecektir.<br />Bu işlem posta kutusunu tarayacak ve her çalıştırmada bir okunmamış e-postayı okuyacaktır.<br /><br />
 Her iki dakikada bir çalışan bir cron işi örneği:<br />
 */2 * * * * cd /var/www/resourcespace/plugins/checkmail/pages; php ./cron_check_email.php >> /var/log/cron.log 2>&1<br /><br />';
+$lang["plugin-checkmail-title"]='Postayı Kontrol Et';
+$lang["plugin-checkmail-desc"]='[Gelişmiş] E-posta ile gönderilen eklerin alınmasına izin verir';

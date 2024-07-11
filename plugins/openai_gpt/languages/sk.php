@@ -14,3 +14,5 @@ $lang["property-openai_gpt_input_field"]='Vstupné pole GPT';
 $lang["openai_gpt_system_message"]='Začetno besedilo sistemskega sporočila. Mesta za vstavljanje %%IN_TYPE%% in %%OUT_TYPE%% bodo zamenjana z \'text\' ali \'json\' glede na vrste izvornih/ciljnih polj';
 $lang["openai_gpt_intro"]='Dodaja metapodatke, ustvarjene s posredovanjem obstoječih podatkov API-ju OpenAI s prilagodljivim pozivom. Za podrobnejše informacije glejte <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a>.';
 $lang["openai_gpt_api_key"]='Ključ API OpenAI. Pridobite svoj ključ API na <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='Integrácia OpenAI API GPT';
+$lang["plugin-openai_gpt-desc"]='OpenAI generirani metapodatki. Posreduje konfigurirane podatke polja API-ju OpenAI in shrani vrnjene informacije.';

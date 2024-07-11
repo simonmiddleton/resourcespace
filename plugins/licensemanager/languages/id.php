@@ -28,3 +28,5 @@ $lang["selectlicence"]='Silakan pilih ID Lisensi';
 $lang["confirmdeletelicensefile"]='Apakah Anda yakin ingin MENGHAPUS file ini? Tindakan ini tidak dapat dibatalkan.';
 $lang["license_manager_mediums"]='Penggunaan Lisensi Media';
 $lang["license_manager_access"]='Mengelola data lisensi (jika belum diaktifkan melalui izin "Dapat mengakses area Pengaturan Sistem")';
+$lang["plugin-licensemanager-title"]='Manajer Lisensi';
+$lang["plugin-licensemanager-desc"]='Menambahkan kemampuan untuk mengelola lisensi sumber daya';

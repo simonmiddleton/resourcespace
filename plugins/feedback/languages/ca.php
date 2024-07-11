@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Text / HTML: Text / HTML';
 $lang["feedback_options-comma_separated"]='Opcions: (separades per comes)';
 $lang["feedback_add_new_field"]='Afegir un camp nou';
 $lang["feedback_back_to_plugin_manager"]='Tornar al gestor de connectors';
+$lang["plugin-feedback-title"]='Comentaris';
+$lang["plugin-feedback-desc"]='Afegeix una funció general de retroalimentació d\'usuari amb preguntes configurables.';

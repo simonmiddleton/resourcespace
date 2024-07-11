@@ -16,3 +16,5 @@ $lang["image_text_position"]='横幅中文本的位置。';
 $lang["image_text_banner_position"]='横幅位置相对于图像的位置。';
 $lang["image_text_font"]='要使用的字体必须由已安装的ImageMagick版本支持。';
 $lang["image_text_noim"]='此插件需要安装Imagemagick。';
+$lang["plugin-image_text-title"]='图像文本';
+$lang["plugin-image_text-desc"]='允许在下载时将字段数据添加到图像';

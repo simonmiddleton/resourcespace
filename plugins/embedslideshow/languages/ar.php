@@ -24,3 +24,5 @@ $lang["embedslideshow_directlinkopen"]='فتح رابط مباشر (صفحة ج�
 $lang["embedslideshow_dynamic_size"]='تغيير حجم المعاينة بشكل ديناميكي بناءً على حجم المشغل؟';
 $lang["embedslideshow_minimise"]='&minus; تصغير عرض الشرائح';
 $lang["sizename_pixels"]='%name (%pixels بكسل)';
+$lang["plugin-embedslideshow-title"]='تضمين عرض الشرائح';
+$lang["plugin-embedslideshow-desc"]='يوفر وظيفة لإنشاء HTML لعروض الشرائح القابلة للتضمين للمجموعات على المواقع البعيدة';

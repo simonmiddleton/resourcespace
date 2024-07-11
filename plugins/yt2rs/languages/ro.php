@@ -6,3 +6,5 @@ $lang["yt2rs_field_id_l"]='Identificator câmp (cale Youtube)';
 $lang["yt2rs_thumb"]='Calea miniaturilor';
 $lang["yt2rs_online_preview"]='Previzualizare Online';
 $lang["yt2rs_youtube_video"]='Video Youtube';
+$lang["plugin-yt2rs-title"]='YouTube în ResourceSpace';
+$lang["plugin-yt2rs-desc"]='Permite publicarea videoclipurilor de pe YouTube.';

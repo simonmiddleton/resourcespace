@@ -80,3 +80,5 @@ $lang["simplesaml_start_url"]='Mulai/Tautan Masuk (URL)';
 $lang["simplesaml_existing_config"]='Ikuti instruksi Basis Pengetahuan untuk memigrasi konfigurasi SAML yang sudah ada';
 $lang["simplesaml_test_site_url"]='URL situs uji coba SimpleSAML';
 $lang["simplesaml_addrow"]='Tambahkan pemetaan';
+$lang["plugin-simplesaml-title"]='SAML Sederhana';
+$lang["plugin-simplesaml-desc"]='[Advanced] Memerlukan autentikasi SAML untuk mengakses ResourceSpace';

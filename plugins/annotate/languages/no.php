@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='PDF-utdataalternativ (eksperimentelt)';
 $lang["annotate_pdf_output_only_annotated"]='Bare inkluder merkede ressurser i PDF-utdata';
 $lang["annotate_admin_edit_access"]='Evne til å redigere andre brukeres merknader';
 $lang["annotate_ref_not_supplied"]='Referanse ikke oppgitt';
+$lang["plugin-annotate-title"]='Annoter';
+$lang["plugin-annotate-desc"]='Aktiverer opprettelse av jquery-bildeanmerkninger';

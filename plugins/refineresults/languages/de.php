@@ -9,3 +9,6 @@ $lang["refine"]="Suchen";
 $lang["refineresults"]="In diesen Suchergebnissen suchen";
 $lang["additionalkeywords"]="Zusätzliche Stichworte";
 $lang["clearsearch"]="Suchbegriffe zurücksetzen";
+
+$lang["plugin-refineresults-title"]='Ergebnisse verfeinern';
+$lang["plugin-refineresults-desc"]='Fügt ein Verfeinerungsergebnisfeld über den Suchergebnissen hinzu';

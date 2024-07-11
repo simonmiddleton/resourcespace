@@ -61,3 +61,5 @@ $lang["doi_hide_meta"]='隐藏DOI元数据';
 $lang["doi_fetched_xml_from_MDS"]='当前的XML元数据可以成功地从DataCite的元数据存储中获取。';
 $lang["doi_info_wikipedia"]='https://en.wikipedia.org/wiki/Digital_Object_Identifier';
 $lang["doi_info_publisher"]='在<a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=10">出版商</a>字段。';
+$lang["plugin-doi-title"]='数字对象标识符';
+$lang["plugin-doi-desc"]='在将不可变对象注册到DataCite以进行持久引用之前生成DOI。';

@@ -12,3 +12,5 @@ $lang["invalidrange"]='Rang no vàlid';
 $lang["splitpdf_createnewresource"]='Crear un nou recurs per a cada rang';
 $lang["splitpdf_createnewalternativefile"]='Crear un nou fitxer alternatiu per a aquest recurs per a cada rang';
 $lang["range"]='Rang';
+$lang["plugin-pdf_split-title"]='Divisió de PDF';
+$lang["plugin-pdf_split-desc"]='Permet dividir els fitxers PDF en diverses pàgines';

@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Preferujte standardní přihlášení do Resourc
 $lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Jste přihlášen jako: [username]';
 $lang["winauth_not_logged_in"]='Nejste přihlášeni, nebo váš webový server nebyl správně nakonfigurován';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Pokročilé] Integrované ověřování Windows';

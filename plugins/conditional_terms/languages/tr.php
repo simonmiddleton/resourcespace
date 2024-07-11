@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Bu eklenti, indirme koşullarının gör
 $lang["conditional_terms_field"]='Metadata alanı';
 $lang["conditional_terms_value"]='Değer';
 $lang["conditional_terms_plugin_misconfigured"]='Koşullu terimler eklentisi yanlış yapılandırılmış';
+$lang["plugin-conditional_terms-title"]='Koşullu Şartlar';
+$lang["plugin-conditional_terms-desc"]='Kaynak meta verilerine dayalı olarak indirme sırasında şartlı terim sayfasının görüntülenmesini etkinleştirir';

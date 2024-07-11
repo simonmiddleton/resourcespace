@@ -14,3 +14,5 @@ $lang["openai_gpt_advanced"]='ADVARSEL - Denne sektion er kun til testformål og
 $lang["openai_gpt_system_message"]='Indledende systembeskedtekst. Pladsholdere %%IN_TYPE%% og %%OUT_TYPE%% vil blive erstattet af \'tekst\' eller \'json\' afhængigt af kilde-/mål-felttyperne';
 $lang["openai_gpt_intro"]='Tilføjer metadata genereret ved at sende eksisterende data til OpenAI API med en tilpasselig prompt. Se <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> for mere detaljeret information.';
 $lang["openai_gpt_api_key"]='OpenAI API-nøgle. Få din API-nøgle fra <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='OpenAI API GPT integration';
+$lang["plugin-openai_gpt-desc"]='OpenAI genererede metadata. Sender konfigurerede feltdata til OpenAI API\'et og gemmer de returnerede oplysninger.';

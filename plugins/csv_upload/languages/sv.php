@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Hoppa över validering och bearbeta C
 $lang["csv_upload_force_offline"]='Denna stora CSV-fil kan ta lång tid att bearbeta, så den kommer att köras offline. Du kommer att meddelas via ett ResourceSpace-meddelande när bearbetningen är klar';
 $lang["csv_upload_recommend_offline"]='Denna stora CSV-fil kan ta mycket lång tid att bearbeta. Det rekommenderas att offline-jobb aktiveras om du behöver bearbeta stora CSV-filer';
 $lang["csv_upload_createdfromcsvupload"]='Skapad från CSV Uppladdningsplugin';
+$lang["plugin-csv_upload-title"]='CSV-uppladdning';
+$lang["plugin-csv_upload-desc"]='[Avancerad] Ladda upp metadata med en CSV-fil.';

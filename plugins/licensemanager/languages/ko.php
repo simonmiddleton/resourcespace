@@ -28,3 +28,5 @@ $lang["selectlicence"]='라이선스 ID를 선택하세요';
 $lang["confirmdeletelicensefile"]='이 파일을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.';
 $lang["license_manager_mediums"]='라이선스 사용 매체';
 $lang["license_manager_access"]='라이선스 데이터 관리 (이미 "시스템 설정 영역에 접근할 수 있는" 권한을 통해 활성화되지 않은 경우)';
+$lang["plugin-licensemanager-title"]='라이선스 관리자';
+$lang["plugin-licensemanager-desc"]='리소스 라이선스 관리를 할 수 있는 기능 추가';

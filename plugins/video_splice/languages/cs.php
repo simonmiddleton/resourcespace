@@ -45,3 +45,5 @@ $lang["video_splice_no_export_folder"]='Nelze provést export, protože v konfig
 $lang["video_splice_incorrect_quantity"]='Platný zdroj byl buď odstraněn, nebo přidán do kolekce od načtení této stránky. Zkuste to prosím znovu.';
 $lang["video_splice_createdfromvideosplice"]='Vytvořeno z pluginu Video Splice';
 $lang["video_splice_error_invalid_action"]='Chyba: Neplatná akce';
+$lang["plugin-video_splice-title"]='Video Splice';
+$lang["plugin-video_splice-desc"]='Přidává možnost ořezávání a spojování videa';

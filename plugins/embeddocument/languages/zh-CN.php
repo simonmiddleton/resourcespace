@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='远程文档查看器配置';
 $lang["embeddocument_specify_resourcetype"]='请指定“嵌入”功能应出现在哪种资源类型中。';
 $lang["embeddocument_document_resourcetype"]='远程文档查看器资源类型：';
 $lang["embeddocument_embed_share"]='嵌入文档';
+$lang["plugin-embeddocument-title"]='嵌入文档';
+$lang["plugin-embeddocument-desc"]='提供生成嵌入远程站点的文档预览HTML的功能。';

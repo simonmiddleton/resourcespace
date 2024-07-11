@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Adres URL pojedynczego wylogowania';
 $lang["simplesaml_start_url"]='Rozpocznij/Zaloguj się na adres URL';
 $lang["simplesaml_existing_config"]='Postępuj zgodnie z instrukcjami bazy wiedzy, aby przenieść istniejącą konfigurację SAML';
 $lang["simplesaml_test_site_url"]='Adres URL strony testowej SimpleSAML';
+$lang["plugin-simplesaml-title"]='Prosty SAML';
+$lang["plugin-simplesaml-desc"]='[Zaawansowane] Wymagaj uwierzytelniania SAML, aby uzyskać dostęp do ResourceSpace';

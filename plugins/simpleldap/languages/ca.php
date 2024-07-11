@@ -50,3 +50,5 @@ $lang["origin_simpleldap"]='Connector SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='No comprovis el FQDN del servidor amb el CN del certificat';
 $lang["simpleldap_update_group"]='Actualitza el grup d\'usuari en cada inici de sessió. Si no s\'utilitzen grups d\'AD per determinar l\'accés, establiu-ho com a fals perquè els usuaris puguin ser promocionats manualment';
 $lang["simpleldap_testing"]='Provant la configuració LDAP';
+$lang["plugin-simpleldap-title"]='LDAP simple';
+$lang["plugin-simpleldap-desc"]='[Avançat] Implementació més senzilla de l\'autenticació ldap, dirigida a Active Directory però també compatible amb el directori Oracle';

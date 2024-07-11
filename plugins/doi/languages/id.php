@@ -61,3 +61,5 @@ $lang["doi_hide_meta"]='Sembunyikan metadata DOI';
 $lang["doi_fetched_xml_from_MDS"]='Metadata XMl saat ini berhasil diambil dari toko metadata DataCite';
 $lang["doi_show_meta"]='Tampilkan metadata DOI';
 $lang["doi_info_wikipedia"]='https://id.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["plugin-doi-title"]='Pengidentifikasi Objek Digital';
+$lang["plugin-doi-desc"]='Menghasilkan DOI untuk objek yang tidak dapat diubah sebelum mendaftarkannya di DataCite untuk kutipan yang persisten.';

@@ -23,3 +23,5 @@ $lang["enable"]='Habilitar';
 $lang["checknow"]='Comprova ara';
 $lang["columnheader-enabled"]='Habilitat';
 $lang["columnheader-last-found"]='Última trobada';
+$lang["plugin-rse_search_notifications-title"]='Notificacions de cerca';
+$lang["plugin-rse_search_notifications-desc"]='Notificar a l\'usuari quan es produeixin canvis en una cerca desada';

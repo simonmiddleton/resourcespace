@@ -23,3 +23,5 @@ $lang["enable"]='Habilitar';
 $lang["checknow"]='Revisar ahora';
 $lang["columnheader-enabled"]='Habilitado';
 $lang["columnheader-last-found"]='Último encontrado';
+$lang["plugin-rse_search_notifications-title"]='Notificaciones de búsqueda';
+$lang["plugin-rse_search_notifications-desc"]='Notificar al usuario cuando ocurran cambios en una búsqueda guardada';

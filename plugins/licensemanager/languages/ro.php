@@ -30,3 +30,5 @@ $lang["selectlicence"]='Vă rugăm să selectați un ID de licență';
 $lang["confirmdeletelicensefile"]='Sunteți sigur că doriți să ȘTERGEȚI acest fișier? Această acțiune nu poate fi anulată.';
 $lang["license_manager_mediums"]='Utilizare licență medii';
 $lang["license_manager_access"]='Gestionați datele de licență (unde nu sunt deja activate prin permisiunea "Poate accesa zona de configurare a sistemului")';
+$lang["plugin-licensemanager-title"]='Manager de licențe';
+$lang["plugin-licensemanager-desc"]='Adaugă capacitatea de a gestiona licențierea resurselor';

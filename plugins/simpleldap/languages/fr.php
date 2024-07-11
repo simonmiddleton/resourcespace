@@ -50,3 +50,5 @@ $lang["simpleldap_usermatchcomment"]='Mis à jour vers l\'utilisateur LDAP par S
 $lang["origin_simpleldap"]='Plugin SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Ne pas vérifier le FQDN du serveur par rapport au CN du certificat';
 $lang["port"]='Port';
+$lang["plugin-simpleldap-title"]='LDAP simple';
+$lang["plugin-simpleldap-desc"]='[Avancé] Implémentation simplifiée de l\'authentification LDAP, ciblée sur Active Directory mais prenant également en charge le répertoire Oracle';

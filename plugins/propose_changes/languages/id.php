@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Usulan suntingan';
 $lang["actions_propose_changes"]='Tunjukkan kepada saya perubahan yang diusulkan oleh pengguna dalam daftar tindakan saya';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Perubahan yang Anda usulkan telah ditinjau.<br/>[changesummary]<br/>Klik di bawah ini untuk meninjau perubahan tersebut<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Perubahan yang diusulkan telah diajukan.<br/>[changesummary]<br/>Klik di bawah ini untuk meninjau perubahan tersebut<br/><a href=\'[url]\'>[url]</a>';
+$lang["plugin-propose_changes-title"]='Usulkan Perubahan';
+$lang["plugin-propose_changes-desc"]='Menambahkan opsi untuk memungkinkan pengguna mengusulkan perubahan metadata tanpa akses edit';

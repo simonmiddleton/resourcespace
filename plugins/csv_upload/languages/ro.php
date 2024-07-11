@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Săriți peste validare și procesaț
 $lang["csv_upload_force_offline"]='Acest fișier CSV mare poate dura mult timp pentru a fi procesat, așa că va fi rulat offline. Veți fi notificat printr-un mesaj ResourceSpace odată ce procesarea este completă';
 $lang["csv_upload_recommend_offline"]='Acest fișier CSV mare poate dura foarte mult timp pentru a fi procesat. Se recomandă activarea sarcinilor offline dacă trebuie să procesați fișiere CSV mari';
 $lang["csv_upload_createdfromcsvupload"]='Creat prin intermediul plugin-ului de încărcare CSV';
+$lang["plugin-csv_upload-title"]='Încărcare CSV';
+$lang["plugin-csv_upload-desc"]='[Avansat] Încărcați metadate folosind un fișier CSV.';

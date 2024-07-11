@@ -16,3 +16,5 @@ $lang["image_text_position"]='배너에서 텍스트의 위치';
 $lang["image_text_banner_position"]='배너의 위치 이미지에 대한 상대적 위치.';
 $lang["image_text_font"]='사용할 글꼴, 설치된 imagemagick 버전에서 지원되어야 함';
 $lang["image_text_noim"]='이 플러그인은 Imagemagick가 설치되어 있어야 합니다.';
+$lang["plugin-image_text-title"]='이미지 텍스트';
+$lang["plugin-image_text-desc"]='다운로드 시 이미지에 필드 데이터를 추가할 수 있게 합니다';

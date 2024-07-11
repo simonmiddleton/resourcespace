@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Foretrekk standard ResourceSpace pålogginger. H
 $lang["winauth_test"]='Test';
 $lang["winauth_not_logged_in"]='Du er ikke logget inn, eller din webserver er ikke konfigurert riktig';
 $lang["winauth_user_info"]='Du er logget inn som: [username]';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Avansert] Windows Integrert Autentisering';

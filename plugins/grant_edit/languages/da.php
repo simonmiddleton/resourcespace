@@ -9,3 +9,5 @@ $lang["grant_edit_date"]='Udløbsdato for redigeringsadgang';
 $lang["grant_edit_list"]='Nuværende brugere med yderligere redigeringsadgang';
 $lang["grant_edit_delete_user"]='Bekræft fjernelse af forbedret adgang til';
 $lang["grant_edit_group_list"]='Nuværende grupper med ekstra redigeringsadgang';
+$lang["plugin-grant_edit-title"]='Giv Redigeringsadgang';
+$lang["plugin-grant_edit-desc"]='Giver administratorer mulighed for at give brugere midlertidig fuld redigeringsadgang til ressourcer';

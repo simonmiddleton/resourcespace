@@ -12,3 +12,5 @@ $lang["edit_usage"]='사용 편집';
 $lang["delete_usage"]='사용 삭제';
 $lang["resource_usage_configuration"]='리소스 사용 구성';
 $lang["resource_usage_mediums"]='사용 가능한 사용 옵션 목록 (쉼표로 구분)';
+$lang["plugin-resource_usage-title"]='리소스 사용';
+$lang["plugin-resource_usage-desc"]='[고급] 리소스 보기 페이지를 통해 리소스 사용을 기록하는 기능 추가';

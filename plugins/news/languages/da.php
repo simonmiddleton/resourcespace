@@ -12,3 +12,5 @@ $lang["news_body"]='Krop indhold';
 $lang["news_nonewmessages"]='Ingen nye beskeder';
 $lang["title"]='Seneste nyheder...';
 $lang["title-too-long"]='Titelfeltet er længere end de tilladte 50 tegn';
+$lang["plugin-news-title"]='Nyheder';
+$lang["plugin-news-desc"]='Tilføjer nyhedselementer på startsiden';

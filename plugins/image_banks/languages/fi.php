@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Ei voida jäsentää palveluntarjoajie
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Virheellinen kokoonpanomuoto \'%PROVIDER\' (palveluntarjoaja) instanssille';
 $lang["image_banks_error_bad_url_scheme"]='Virheellinen URL-järjestelmä löydetty \'%PROVIDER\' (palveluntarjoaja) instanssille';
 $lang["image_banks_error_unexpected_response"]='Pahoittelut, saimme odottamattoman vastauksen palveluntarjoajalta. Ota yhteyttä järjestelmänvalvojaan lisätutkimuksia varten (katso virheloki).';
+$lang["plugin-image_banks-title"]='Kuvapankit';
+$lang["plugin-image_banks-desc"]='Sallii käyttäjien valita ulkoisen kuvapankin, jota voi hakea läpi. Käyttäjät voivat sitten ladata tai luoda uusia resursseja saatujen tulosten perusteella.';

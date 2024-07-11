@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='تكوين عارض الوثائق عن بُعد
 $lang["embeddocument_specify_resourcetype"]='يرجى تحديد نوع المورد الذي يجب أن تظهر فيه وظيفة "تضمين".';
 $lang["embeddocument_document_resourcetype"]='نوع مورد المصدر لعارض المستندات عن بعد';
 $lang["embeddocument_embed_share"]='تضمين المستند';
+$lang["plugin-embeddocument-title"]='تضمين المستند';
+$lang["plugin-embeddocument-desc"]='يوفر وظيفة لإنشاء HTML لمعاينات المستندات القابلة للتضمين على المواقع البعيدة.';

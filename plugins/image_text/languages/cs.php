@@ -16,3 +16,5 @@ $lang["image_text_position"]='Pozice textu v banneru.';
 $lang["image_text_banner_position"]='Pozice banneru vzhledem k obrázku.';
 $lang["image_text_font"]='Písmo k použití, musí být podporováno nainstalovanou verzí imagemagick';
 $lang["image_text_noim"]='Tento plugin vyžaduje nainstalovaný Imagemagick.';
+$lang["plugin-image_text-title"]='Text obrázku';
+$lang["plugin-image_text-desc"]='Umožňuje přidání dat pole do obrázku při stahování';

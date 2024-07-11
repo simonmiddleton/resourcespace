@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Ohita validointi ja käsittele CSV-ti
 $lang["csv_upload_force_offline"]='Tämä suuri CSV-tiedosto saattaa kestää kauan käsitellä, joten se käsitellään offline-tilassa. Sinulle ilmoitetaan ResourceSpace-viestillä, kun käsittely on valmis';
 $lang["csv_upload_recommend_offline"]='Tämän suuren CSV-tiedoston käsittely voi kestää hyvin pitkään. Suosittelemme offline-tehtävien käyttöä, jos sinun tarvitsee käsitellä suuria CSV-tiedostoja';
 $lang["csv_upload_createdfromcsvupload"]='Luotu CSV-latausliitännäisestä';
+$lang["plugin-csv_upload-title"]='CSV-lataus';
+$lang["plugin-csv_upload-desc"]='[Lisäasetukset] Lataa metatiedot CSV-tiedostolla.';

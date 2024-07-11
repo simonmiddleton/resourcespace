@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='El fitxer CSV ha de tenir una fila d\'encap
 $lang["csv_user_import_condition3"]='Columnes que contindran valors amb <b>comes (,)</b>, assegureu-vos de formatar-les com a tipus <b>text</b> perquè no hàgiu d\'afegir cometes (""). En desar com a fitxer .csv, assegureu-vos de marcar l\'opció de posar entre cometes les cel·les de tipus text';
 $lang["csv_user_import_condition4"]='Columnes permeses: *nom d\'usuari, *correu electrònic, contrasenya, nom complet, caducitat del compte, comentaris, restricció d\'IP, idioma. Nota: els camps obligatoris estan marcats amb *';
 $lang["csv_user_import_condition5"]='El llenguatge de l\'usuari es tornarà per defecte al que s\'ha establert utilitzant l\'opció de configuració "$defaultlanguage" si no es troba la columna de llengua o no té cap valor';
+$lang["plugin-csv_user_import-title"]='Importació d\'usuaris CSV';
+$lang["plugin-csv_user_import-desc"]='[Avançat] Proporciona la capacitat d\'importar un lot d\'usuaris basat en un fitxer CSV preformatat';

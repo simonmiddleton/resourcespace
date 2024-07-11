@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='단일 로그아웃 URL';
 $lang["simplesaml_start_url"]='시작/로그인 URL';
 $lang["simplesaml_existing_config"]='지식 베이스 지침을 따라 기존 SAML 구성을 마이그레이션하세요';
 $lang["simplesaml_test_site_url"]='SimpleSAML 테스트 사이트 URL';
+$lang["plugin-simplesaml-title"]='간단한 SAML';
+$lang["plugin-simplesaml-desc"]='[고급] ResourceSpace에 접근하려면 SAML 인증이 필요합니다';

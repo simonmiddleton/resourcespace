@@ -80,3 +80,5 @@ $lang["simplesaml_start_url"]='Inicio/URL de inicio de sesión';
 $lang["simplesaml_existing_config"]='Siga las instrucciones de la Base de Conocimiento para migrar su configuración SAML existente';
 $lang["simplesaml_test_site_url"]='URL del sitio de prueba de SimpleSAML';
 $lang["simplesaml_allow_public_shares"]='¿Si se bloquea el sitio, permitir que las comparticiones públicas eviten la autenticación SAML?';
+$lang["plugin-simplesaml-title"]='SAML Simple';
+$lang["plugin-simplesaml-desc"]='[Avanzado] Requerir autenticación SAML para acceder a ResourceSpace';

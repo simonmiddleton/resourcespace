@@ -9,3 +9,5 @@ $lang["new_content_rss_feed"]='नया सामग्री RSS फ़ीड'
 $lang["subject"]='विषय';
 $lang["rss_feed_for_search_filter"]='इस क्वेरी के लिए आरएसएस फ़ीड बनाएँ';
 $lang["filtered_resource_update_for"]='खोज [%search%] के लिए फ़िल्टर किया गया संसाधन अद्यतन';
+$lang["plugin-rss2-title"]='आरएसएस फ़ीड';
+$lang["plugin-rss2-desc"]='प्रमाणीकृत आरएसएस फीड्स के निर्माण को सक्षम बनाता है जिसमें नए सामग्री और विन्यास योग्य फ़ील्ड्स शामिल हैं।';

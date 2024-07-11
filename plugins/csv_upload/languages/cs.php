@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Přeskočit ověření a zpracovat CS
 $lang["csv_upload_force_offline"]='Tento velký CSV může trvat dlouho zpracovat, takže bude spuštěn offline. Po dokončení zpracování budete informováni prostřednictvím zprávy v ResourceSpace.';
 $lang["csv_upload_recommend_offline"]='Tento velký CSV soubor může trvat velmi dlouho zpracovat. Doporučuje se povolit offline úlohy, pokud potřebujete zpracovávat velké CSV soubory';
 $lang["csv_upload_createdfromcsvupload"]='Vytvořeno z pluginu pro nahrávání CSV';
+$lang["plugin-csv_upload-title"]='Nahrání CSV';
+$lang["plugin-csv_upload-desc"]='[Pokročilé] Nahrát metadata pomocí CSV souboru.';

@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_wp_login"]='Σύνδεση με λογαριασμό Wo
 $lang["wordpress_sso_retry"]='Κάντε κλικ εδώ για να δοκιμάσετε να συνδεθείτε ξανά';
 $lang["origin_wordpress_sso"]='Πρόσθετο ενιαίας σύνδεσης (SSO) για το Wordpress';
 $lang["wordpress_sso_auto_created"]='Δημιουργήθηκε αυτόματα από το πρόσθετο wordpress_sso';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Προηγμένο] Επιτρέπει την Ενιαία Σύνδεση με εγκατάσταση Wordpress';

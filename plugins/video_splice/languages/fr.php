@@ -45,3 +45,5 @@ $lang["video_splice_createdfromvideosplice"]='Créé à partir du plugin Video S
 $lang["action-trim"]='Couper';
 $lang["video-trim_output"]='Sortie';
 $lang["video_splice_error_invalid_action"]='Erreur : Action invalide';
+$lang["plugin-video_splice-title"]='Montage Vidéo';
+$lang["plugin-video_splice-desc"]='Ajoute la capacité de découpage et de montage vidéo';

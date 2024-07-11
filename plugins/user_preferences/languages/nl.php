@@ -6,3 +6,5 @@ $lang["user_preferences_change_username"]='Toestaan om de accountnaam te wijzige
 $lang["user_preferences_change_email"]='Toestaan wijzigen E-mailadres';
 $lang["user_preferences_change_name"]='Toestaan ​​om de naam van de gebruiker te wijzigen';
 $lang["changeyourpassword"]='Wijzig mijn wachtwoord en gebruikersgegevens';
+$lang["plugin-user_preferences-title"]='Gebruikersvoorkeuren';
+$lang["plugin-user_preferences-desc"]='Biedt extra gebruikersvoorkeuren';

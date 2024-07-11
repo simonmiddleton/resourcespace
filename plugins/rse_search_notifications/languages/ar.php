@@ -23,3 +23,5 @@ $lang["enable"]='تمكين';
 $lang["checknow"]='التحقق الآن';
 $lang["columnheader-enabled"]='تمكين';
 $lang["columnheader-last-found"]='آخر العثور';
+$lang["plugin-rse_search_notifications-title"]='إشعارات البحث';
+$lang["plugin-rse_search_notifications-desc"]='إخطار المستخدم عند حدوث تغييرات في البحث المحفوظ';

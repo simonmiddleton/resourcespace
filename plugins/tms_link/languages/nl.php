@@ -70,3 +70,5 @@ $lang["tms_link_confirm_delete_module_config"]='Weet u zeker dat u deze module c
 $lang["tms_link_mediapaths_resource_reference_column"]='Kolom te gebruiken in de MediaMaster-tabel om Resource ID op te slaan. Dit is optioneel en wordt gebruikt om te voorkomen dat meerdere resources dezelfde Media Master ID gebruiken.';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_write_to_debug_log"]='Scriptvoortgang opnemen in systeemdebuglogboek (vereist afzonderlijke configuratie van debuglogging). Let op: Zal snelle groei van het debuglogboek veroorzaken.';
+$lang["plugin-tms_link-title"]='TMS Link';
+$lang["plugin-tms_link-desc"]='[Geavanceerd] Stelt in staat om resource-metadata uit de TMS-database te extraheren.';

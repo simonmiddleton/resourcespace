@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='تم إنشاؤه بواسطة مكوّن Simpl
 $lang["simpleldap_usermatchcomment"]='تم تحديث المستخدم إلى LDAP بواسطة SimpleLDAP.';
 $lang["origin_simpleldap"]='ملحق SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='لا تقم بالتحقق من FQDN للخادم مقابل CN للشهادة';
+$lang["plugin-simpleldap-title"]='LDAP بسيط';
+$lang["plugin-simpleldap-desc"]='[متقدم] تنفيذ أبسط لمصادقة ldap، يستهدف Active Directory ولكنه يدعم أيضًا دليل Oracle';

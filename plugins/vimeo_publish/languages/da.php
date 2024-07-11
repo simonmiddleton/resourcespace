@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Ressourcen er blevet offentliggjort p
 $lang["vimeo_publish_account_options"]='Vimeo kontoindstillinger';
 $lang["vimeo_publish_allow_user_accounts"]='Tillad brugere at publicere til deres egne Vimeo-konti. Hvis falsk, skal adgang til en enkelt Vimeo-konto konfigureres nedenfor';
 $lang["vimeo_publish_set_account"]='Angiv Vimeo-konto';
+$lang["plugin-vimeo_publish-title"]='Vimeo Udgiv';
+$lang["plugin-vimeo_publish-desc"]='Udgiv ressourcer til Vimeo ved hjælp af OAuth 2.0';

@@ -9,3 +9,5 @@ $lang["grant_edit_date"]='Voimassaolon päättymispäivä muokkausoikeuksille';
 $lang["grant_edit_list"]='Nykyiset käyttäjät, joilla on lisämuokkausoikeudet';
 $lang["grant_edit_delete_user"]='Vahvista parannetun käyttöoikeuden poistaminen kohteesta';
 $lang["grant_edit_group_list"]='Nykyiset ryhmät, joilla on lisämuokkausoikeudet';
+$lang["plugin-grant_edit-title"]='Myönnä Muokkausoikeus';
+$lang["plugin-grant_edit-desc"]='Mahdollistaa ylläpitäjien myöntää käyttäjille tilapäisen täydellisen muokkausoikeuden resursseihin';

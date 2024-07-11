@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='PDF Çıktı Seçeneği (deneysel)';
 $lang["annotate_pdf_output_only_annotated"]='Yalnızca Açıklamalı Kaynakları PDF Çıktısına Dahil Et';
 $lang["annotate_admin_edit_access"]='Diğer kullanıcıların açıklamalarını düzenleme yeteneği';
 $lang["annotate_ref_not_supplied"]='Referans sağlanmadı';
+$lang["plugin-annotate-title"]='Açıklama Ekle';
+$lang["plugin-annotate-desc"]='Jquery görüntü açıklamalarının oluşturulmasını sağlar';

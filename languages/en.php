@@ -3149,3 +3149,10 @@ $lang["action_unset_no_file"]               = "Mark as file missing";
 $lang["completed_set_no_file"]              = "Resource marked as having no file";
 $lang["completed_unset_no_file"]            = "Resource marked as file missing";
 
+$lang["plugin-category-asset-processing"]="Asset Processing";
+$lang["plugin-category-authentication"]="Authentication";
+$lang["plugin-category-collaboration"]="Collaboration";
+$lang["plugin-category-integrations"]="Integrations";
+$lang["plugin-category-system"]="System";
+$lang["plugin-category-user-interface"]="User Interface";
+$lang["plugin-category-workflow-and-access"]="Workflow and Access";

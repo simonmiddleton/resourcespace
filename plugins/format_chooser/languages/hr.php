@@ -14,3 +14,5 @@ $lang["downloadformat"]='Preuzmi format';
 $lang["are_available-2"]='bit će pretvoreno';
 $lang["are_available-1"]='bit će pretvoreno';
 $lang["are_available-0"]='bit će pretvoreno';
+$lang["plugin-format_chooser-title"]='Izbornik formata';
+$lang["plugin-format_chooser-desc"]='Omogućuje vam odabir različitih formata prilikom preuzimanja datoteka koje se generiraju u hodu.';

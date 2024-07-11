@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='Yhden kirjautumisen uloskirjautumisen URL
 $lang["simplesaml_start_url"]='Aloitus/Kirjautumis-URL';
 $lang["simplesaml_existing_config"]='Seuraa tietopohjan ohjeita siirtääksesi nykyinen SAML-konfiguraatiosi';
 $lang["simplesaml_test_site_url"]='SimpleSAML-testisivuston URL-osoite';
+$lang["plugin-simplesaml-title"]='Yksinkertainen SAML';
+$lang["plugin-simplesaml-desc"]='[Edistynyt] Vaadi SAML-todennus ResourceSpaceen pääsyä varten';

@@ -70,3 +70,5 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field se traduce ca "TMS 
 $lang["tms_link_confirm_delete_module_config"]='Sunteți sigur că doriți să ștergeți această configurație de modul? Această acțiune nu poate fi anulată!';
 $lang["tms_link_mediapaths_resource_reference_column"]='Coloana de utilizat în tabelul MediaMaster pentru a stoca ID-ul Resursei. Acesta este opțional și este folosit pentru a evita utilizarea aceluiași ID Media Master de către mai multe resurse.';
 $lang["tms_link_write_to_debug_log"]='Includeți progresul scriptului în jurnalul de depanare al sistemului (necesită configurarea separată a jurnalului de depanare). Atenție: Va cauza creșterea rapidă a fișierului jurnal de depanare.';
+$lang["plugin-tms_link-title"]='Link TMS';
+$lang["plugin-tms_link-desc"]='[Avansat] Permite extragerea metadatelor resursei din baza de date TMS.';

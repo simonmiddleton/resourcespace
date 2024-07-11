@@ -28,3 +28,5 @@ $lang["selectlicence"]='Vyberte prosím ID licence';
 $lang["confirmdeletelicensefile"]='Opravdu chcete TENTO soubor SMAZAT? Toto nelze vrátit zpět.';
 $lang["license_manager_mediums"]='Média použití licence';
 $lang["license_manager_access"]='Spravovat licenční údaje (pokud již není povoleno oprávněním "Může přistupovat do oblasti nastavení systému")';
+$lang["plugin-licensemanager-title"]='Správce licencí';
+$lang["plugin-licensemanager-desc"]='Přidává možnost spravovat licencování zdrojů';

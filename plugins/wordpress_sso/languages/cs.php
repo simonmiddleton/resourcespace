@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='Přihlásit se pomocí ne-WordPress �
 $lang["wordpress_sso_use_wp_login"]='Přihlásit se pomocí účtu WordPress';
 $lang["wordpress_sso_retry"]='Klikněte zde pro opětovné přihlášení';
 $lang["origin_wordpress_sso"]='Wordpress SSO plugin';
+$lang["plugin-wordpress_sso-title"]='Wordpress SSO';
+$lang["plugin-wordpress_sso-desc"]='[Pokročilé] Umožňuje jednotné přihlášení s instalací Wordpressu';

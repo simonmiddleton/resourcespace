@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='標準のResourceSpaceログインを使用す�
 $lang["winauth_test"]='テスト';
 $lang["winauth_user_info"]='ログイン中のユーザー名: [username]';
 $lang["winauth_not_logged_in"]='ログインしていないか、Webサーバーが正しく設定されていません。';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[高度な] Windows 統合認証';

@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Suosi standardi ResourceSpace-kirjautumisia. Jos
 $lang["winauth_test"]='Testi';
 $lang["winauth_user_info"]='Olet kirjautuneena käyttäjänä: [käyttäjänimi]';
 $lang["winauth_not_logged_in"]='Et ole kirjautunut sisään tai verkkopalvelimesi asetuksia ei ole määritetty oikein';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Edistynyt] Windowsin integroitu todennus';

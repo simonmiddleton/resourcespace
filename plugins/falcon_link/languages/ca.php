@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Text de l\'usuari per mostrar les comparticions
 $lang["falcon_link_log_publish"]='Recurs compartit a través de Falcon';
 $lang["falcon_link_log_archive"]='Recurs arxivat a través de Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Si us plau, comprova que la descripció i les etiquetes no estiguin buides';
+$lang["plugin-falcon_link-title"]='Enllaç Falcon';
+$lang["plugin-falcon_link-desc"]='[Avançat] Publica recursos a Falcon.io';

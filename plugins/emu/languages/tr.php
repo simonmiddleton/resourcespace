@@ -34,3 +34,5 @@ $lang["emu_no_resource"]='Kaynak kimliği belirtilmedi!';
 $lang["emu_upload_nodata"]='Bu IRN için EMu verisi bulunamadı:';
 $lang["emu_nodata_returned"]='Belirtilen IRN için EMu verisi bulunamadı.';
 $lang["emu_createdfromemu"]='EMU eklentisinden oluşturuldu';
+$lang["plugin-emu-desc"]='[Gelişmiş] Kaynak meta verilerinin EMu veritabanından çıkarılmasına izin verir.';
+$lang["plugin-emu-title"]='EMu';

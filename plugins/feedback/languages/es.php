@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Texto / HTML:';
 $lang["feedback_options-comma_separated"]='Opciones: (separadas por comas)';
 $lang["feedback_add_new_field"]='Agregar Nuevo Campo';
 $lang["feedback_back_to_plugin_manager"]='Volver al Administrador de Plugins';
+$lang["plugin-feedback-title"]='Retroalimentación';
+$lang["plugin-feedback-desc"]='Añade una función general de retroalimentación de usuarios con preguntas configurables.';

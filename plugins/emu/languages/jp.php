@@ -35,3 +35,4 @@ $lang["emu_nodata_returned"]='指定されたIRNに対するEMuデータが見�
 $lang["emu_createdfromemu"]='EMUプラグインから作成されました。';
 $lang["emu_rs_mappings_header"]='EMu - ResourceSpaceのマッピングルール';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
+$lang["plugin-emu-desc"]='[高度] EMuデータベースからリソースメタデータを抽出することを許可します。';

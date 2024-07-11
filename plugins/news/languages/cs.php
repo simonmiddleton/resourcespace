@@ -12,3 +12,5 @@ $lang["news_body"]='Obsah těla';
 $lang["news_nonewmessages"]='Žádné nové zprávy';
 $lang["title"]='Nejnovější zprávy...';
 $lang["title-too-long"]='Pole názvu je delší než povolených 50 znaků';
+$lang["plugin-news-title"]='Novinky';
+$lang["plugin-news-desc"]='Přidává novinky na domovskou stránku';

@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Text uživatele k zobrazení pro sdílení vytv
 $lang["falcon_link_log_publish"]='Sdílený zdroj přes Falcon';
 $lang["falcon_link_log_archive"]='Archivovaný zdroj přes Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Zkontrolujte, zda popis a štítky nejsou prázdné';
+$lang["plugin-falcon_link-title"]='Odkaz Falcon';
+$lang["plugin-falcon_link-desc"]='[Pokročilé] Publikovat zdroje na Falcon.io';

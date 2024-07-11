@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='Um recurso válido foi removido ou adi
 $lang["video_splice_createdfromvideosplice"]='Criado a partir do plugin Video Splice';
 $lang["video-trim_output"]='Saída';
 $lang["video_splice_error_invalid_action"]='Erro: Ação inválida';
+$lang["plugin-video_splice-title"]='Emenda de Vídeo';
+$lang["plugin-video_splice-desc"]='Adiciona capacidade de corte e emenda de vídeo';

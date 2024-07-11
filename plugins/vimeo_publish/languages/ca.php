@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='El recurs s\'ha publicat a Vimeo. Pod
 $lang["vimeo_publish_account_options"]='Opcions del compte de Vimeo';
 $lang["vimeo_publish_allow_user_accounts"]='Permetre als usuaris publicar als seus propis comptes de Vimeo. Si és fals, llavors l\'accés a un sol compte de Vimeo ha de ser configurat a continuació';
 $lang["vimeo_publish_set_account"]='Establir un compte de Vimeo';
+$lang["plugin-vimeo_publish-title"]='Publicar a Vimeo';
+$lang["plugin-vimeo_publish-desc"]='Publica recursos a Vimeo utilitzant OAuth 2.0';

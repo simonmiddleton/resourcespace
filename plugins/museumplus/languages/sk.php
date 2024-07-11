@@ -49,3 +49,5 @@ $lang["museumplus_error_invalid_association"]='Neplatné prepojenie modulu. Uist
 $lang["museumplus_id_returns_multiple_records"]='Nájdených viacero záznamov - prosím, zadajte technické ID namiesto toho';
 $lang["museumplus_error_module_no_field_maps"]='Nemožné synchronizovať dáta z MuseumPlus. Dôvod: modul \'%name\' nemá nakonfigurované mapovanie polí.';
 $lang["museumplus_rs_uid_field"]='ResourceSpace pole UID';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Advanced] Omogoča pridobivanje metapodatkov virov iz MuseumPlus z uporabo njegovega REST API (MpRIA).';

@@ -14,3 +14,5 @@ $lang["openai_gpt_prompt_return_json"]='Sufix de la indicació de finalització 
 $lang["openai_gpt_system_message"]='Text inicial del sistema. Els espais reservats %%IN_TYPE%% i %%OUT_TYPE%% seran substituïts per \'text\' o \'json\' depenent dels tipus de camp d\'origen/destinació';
 $lang["openai_gpt_intro"]='Afegeix metadades generades passant dades existents a l\'API d\'OpenAI amb un missatge personalitzable. Consulteu <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> per obtenir informació més detallada.';
 $lang["openai_gpt_api_key"]='Clau API d\'OpenAI. Obteniu la vostra clau API des de <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='Integració de l\'API GPT d\'OpenAI';
+$lang["plugin-openai_gpt-desc"]='Metadades generades per OpenAI. Passa les dades del camp configurat a l\'API d\'OpenAI i emmagatzema la informació retornada.';

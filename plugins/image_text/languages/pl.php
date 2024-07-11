@@ -16,3 +16,5 @@ $lang["image_text_position"]='Pozycja tekstu na banerze.';
 $lang["image_text_banner_position"]='Pozycja banera względem obrazka.';
 $lang["image_text_font"]='Czcionka do użycia musi być obsługiwana przez zainstalowaną wersję ImageMagick';
 $lang["image_text_noim"]='Ten plugin wymaga zainstalowania Imagemagick.';
+$lang["plugin-image_text-title"]='Tekst obrazu';
+$lang["plugin-image_text-desc"]='Umożliwia dodanie danych pola do obrazu podczas pobierania';

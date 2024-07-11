@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Feld, das verwendet wird, um zu bestimmen, ob R
 $lang["vr_view_yaw_only_value"]='Zu überprüfender Wert. Wenn er gefunden wird, wird die Option is_yaw_only auf true gesetzt';
 $lang["vr_view_orig_image"]='Verwenden Sie die Originalressourcendatei als Quelle für die Bildvorschau?';
 $lang["vr_view_orig_video"]='Verwenden Sie die Originalressourcendatei als Quelle für die Video-Vorschau?';
+$lang["plugin-vr_view-title"]='VR-Ansicht';
+$lang["plugin-vr_view-desc"]='Google VR View - 360-Grad-Bild- und Video-Vorschauen (equirectangulares Format)';

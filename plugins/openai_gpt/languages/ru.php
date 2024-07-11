@@ -14,3 +14,5 @@ $lang["openai_gpt_system_message"]='Начальный текст системн
 $lang["openai_gpt_intro"]='Добавляет метаданные, сгенерированные путем передачи существующих данных в OpenAI API с настраиваемым запросом. Обратитесь к <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> для получения более подробной информации.';
 $lang["openai_gpt_api_key"]='Ключ API OpenAI. Получите свой ключ API на <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["property-openai_gpt_prompt"]='Подсказка GPT';
+$lang["plugin-openai_gpt-title"]='Интеграция с OpenAI API GPT';
+$lang["plugin-openai_gpt-desc"]='OpenAI сгенерированные метаданные. Передает настроенные данные полей в API OpenAI и сохраняет полученную информацию.';

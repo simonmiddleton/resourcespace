@@ -75,3 +75,5 @@ $lang["cropper_use_srgb"]='sRGB 사용';
 $lang["transform_update_preview"]='미리보기 업데이트';
 $lang["transform_preset_sizes"]='미리 정의된 대상 크기에서 선택';
 $lang["error_crop_invalid"]='이미지의 영역을 선택하세요';
+$lang["plugin-transform-title"]='이미지 도구 (변환)';
+$lang["plugin-transform-desc"]='크롭 및 스케일된 대체 이미지를 생성할 수 있습니다 (모바일 지원 jCrop)';

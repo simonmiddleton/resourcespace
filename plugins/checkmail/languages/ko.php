@@ -34,3 +34,5 @@ $lang["yourresourcehasbeenuploaded"]='리소스가 업로드되었습니다';
 $lang["yourresourceshavebeenuploaded"]='귀하의 리소스가 업로드되었습니다';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), ID [user-ref] 및 이메일 [user-email]은(는) 이메일을 통해 업로드할 수 없습니다 (권한 "c" 또는 "d"를 확인하거나 checkmail 설정 페이지에서 차단된 사용자를 확인하십시오). 기록된 시간: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='메일 확인 플러그인에서 생성됨';
+$lang["plugin-checkmail-title"]='메일 확인';
+$lang["plugin-checkmail-desc"]='[고급] 이메일 첨부 파일의 수집을 허용합니다';

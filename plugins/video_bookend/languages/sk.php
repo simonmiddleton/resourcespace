@@ -9,3 +9,5 @@ $lang["bookend-noimage-2"]='(končna slika ni na voljo)';
 $lang["bookend-intro"]='Vyberte obrázky z alternatívneho zoznamu súborov, ktoré sa majú použiť ako úvodné a záverečné obrázky.';
 $lang["bookend-failed"]='Zlyhalo!';
 $lang["bookend-could-not-open-file"]='Chyba - nemožno otvoriť súbor!';
+$lang["plugin-video_bookend-title"]='Video Bookend';
+$lang["plugin-video_bookend-desc"]='Dodaja možnost prenosa videoposnetka z naslovom in končno grafiko';

@@ -50,3 +50,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='\'museumplus_modules_saved_
 $lang["museumplus_error_invalid_association"]='Virheellinen moduulin liitos. Varmista, että oikea moduuli ja/tai tietueen tunnus on syötetty oikein!';
 $lang["museumplus_id_returns_multiple_records"]='Useita tietueita löydetty - syötä tekninen tunnus sen sijaan';
 $lang["museumplus_error_module_no_field_maps"]='Ei voida synkronoida tietoja MuseumPlus:sta. Syy: moduulilla \'%name\' ei ole määritetty kenttäkartoituksia.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Edistynyt] Mahdollistaa resurssin metatietojen poimimisen MuseumPlusista sen REST API:n (MpRIA) avulla.';

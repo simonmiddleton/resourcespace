@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='Действительный ресу�
 $lang["video_splice_createdfromvideosplice"]='Создано с помощью плагина Video Splice';
 $lang["video-trim_output"]='Вывод';
 $lang["video_splice_error_invalid_action"]='Ошибка: Недопустимое действие';
+$lang["plugin-video_splice-title"]='Склейка видео';
+$lang["plugin-video_splice-desc"]='Добавляет возможность обрезки и склеивания видео';

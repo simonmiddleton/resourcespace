@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='Soubor CSV musí mít řádek záhlaví';
 $lang["csv_user_import_condition3"]='Sloupce, které budou obsahovat hodnoty s <b>čárkami( , )</b>, ujistěte se, že je formátujete jako typ <b>text</b>, abyste nemuseli přidávat uvozovky (""). Při ukládání jako .csv soubor se ujistěte, že máte zaškrtnutou možnost citování buněk typu text';
 $lang["csv_user_import_condition4"]='Povolené sloupce: *uživatelské jméno, *email, heslo, celé jméno, platnost účtu, komentáře, omezení IP, jazyk. Poznámka: povinná pole jsou označena *';
 $lang["csv_user_import_condition5"]='Jazyk uživatele se vrátí zpět na ten, který je nastaven pomocí konfigurační volby "$defaultlanguage", pokud sloupec lang není nalezen nebo nemá hodnotu';
+$lang["plugin-csv_user_import-title"]='Import uživatelů CSV';
+$lang["plugin-csv_user_import-desc"]='[Pokročilé] Poskytuje možnost importovat dávku uživatelů na základě předem naformátovaného souboru CSV';

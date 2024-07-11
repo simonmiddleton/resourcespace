@@ -75,3 +75,5 @@ $lang["error_crop_invalid"]='Por favor, seleccione una región de la imagen';
 $lang["imagetoolstransform"]='Herramientas de imagen - Transformar';
 $lang["resources_transformed_successfully-0"]='0 recursos transformados exitosamente.';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Herramientas de Imagen (transformar)';
+$lang["plugin-transform-desc"]='Permite la creación de imágenes alternativas recortadas y escaladas (jCrop con soporte móvil)';

@@ -70,3 +70,5 @@ $lang["tms_link_not_deleted_error_detail"]='Nelze odstranit požadovanou konfigu
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"]='Opravdu chcete smazat tuto konfiguraci modulu? Tuto akci nelze vrátit zpět!';
 $lang["tms_link_write_to_debug_log"]='Zahrnout průběh skriptu do systémového ladicího protokolu (vyžaduje samostatně nakonfigurované ladicí protokolování). Pozor: Způsobí rychlý růst souboru ladicího protokolu.';
+$lang["plugin-tms_link-title"]='Odkaz TMS';
+$lang["plugin-tms_link-desc"]='[Pokročilé] Umožňuje extrahovat metadata zdrojů z databáze TMS.';

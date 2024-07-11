@@ -36,3 +36,5 @@ $lang["selectlicence"]='Vänligen välj ett licens-ID';
 $lang["confirmdeletelicensefile"]='Är du säker på att du vill RADERA den här filen? Det går inte att ångra.';
 $lang["license_manager_mediums"]='Licensanvändningsmedier';
 $lang["license_manager_access"]='Hantera licensdata (där det inte redan är aktiverat via "Kan komma åt Systeminställningar"-behörighet)';
+$lang["plugin-licensemanager-title"]='Licenshanterare';
+$lang["plugin-licensemanager-desc"]='Lägger till möjligheten att hantera resurslicensiering';

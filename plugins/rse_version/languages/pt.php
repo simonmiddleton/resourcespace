@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='Entrada de registro não encontrada';
 $lang["rse_version_revert_state"]='Reverter estado';
 $lang["rse_version_rstate_changes"]='Revertendo o estado da coleção #%COLLECTION reproduzindo eventos até, mas não incluindo o registro selecionado.';
 $lang["rse_version_invalid_time"]='Reverter para um tempo anterior a [date] não é suportado';
+$lang["plugin-rse_version-title"]='Controle de Versão';
+$lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Controle de Versão';

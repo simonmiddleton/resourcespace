@@ -75,3 +75,5 @@ $lang["transform"]='Transformasi';
 $lang["transformed"]='Transformasi';
 $lang["px"]='px';
 $lang["scaled"]='Berskala';
+$lang["plugin-transform-title"]='Alat Gambar (transformasi)';
+$lang["plugin-transform-desc"]='Memungkinkan pembuatan gambar alternatif yang dipotong dan diskalakan (jCrop dengan dukungan Mobile)';

@@ -45,3 +45,5 @@ $lang["video_splice_createdfromvideosplice"]='Creato dal plugin Video Splice';
 $lang["video_splice_incorrect_quantity"]='Una risorsa valida è stata rimossa o aggiunta alla collezione dopo il caricamento di questa pagina. Si prega di riprovare.';
 $lang["video-trim_output"]='Output';
 $lang["video_splice_error_invalid_action"]='Errore: Azione non valida';
+$lang["plugin-video_splice-title"]='Montaggio Video';
+$lang["plugin-video_splice-desc"]='Aggiunge la capacità di tagliare e unire video';

@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='Typ \'museumplus_modules_sa
 $lang["museumplus_error_invalid_association"]='Neplatné přiřazení modulů. Ujistěte se, že byl zadán správný modul a/nebo ID záznamu!';
 $lang["museumplus_id_returns_multiple_records"]='Nalezeno více záznamů - prosím, zadejte technické ID místo toho';
 $lang["museumplus_error_module_no_field_maps"]='Nelze synchronizovat data z MuseumPlus. Důvod: modul \'%name\' nemá nakonfigurované mapování polí.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Pokročilé] Umožňuje extrahovat metadata zdrojů z MuseumPlus pomocí jeho REST API (MpRIA).';

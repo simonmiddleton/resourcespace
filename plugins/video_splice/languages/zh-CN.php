@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='有效的资源自此页面加载以�
 $lang["video_splice_createdfromvideosplice"]='由视频拼接插件创建';
 $lang["video-trim_output"]='输出';
 $lang["video_splice_error_invalid_action"]='错误：无效操作';
+$lang["plugin-video_splice-title"]='视频拼接';
+$lang["plugin-video_splice-desc"]='添加视频剪辑和拼接功能';

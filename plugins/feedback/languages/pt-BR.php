@@ -20,3 +20,5 @@ $lang["feedback_text-html"]='Texto / HTML:';
 $lang["feedback_options-comma_separated"]='Opções: (separadas por vírgula)';
 $lang["feedback_add_new_field"]='Adicionar Novo Campo';
 $lang["feedback_back_to_plugin_manager"]='Voltar para o Gerenciador de Plugins';
+$lang["plugin-feedback-title"]='Feedback';
+$lang["plugin-feedback-desc"]='Adiciona uma função geral de feedback do usuário com perguntas configuráveis.';

@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='进度提示之间的时间间隔（�
 $lang["flickr_api_key"]='Flickr API密钥';
 $lang["flickr_api_secret"]='Flickr API 密钥';
 $lang["flickr_warn_no_title_access"]='未授权访问标题字段 (ID #%id) ，禁止发布。请联系管理员！';
+$lang["plugin-flickr_theme_publish-title"]='Flickr 发布';
+$lang["plugin-flickr_theme_publish-desc"]='将选定主题中的选定资源发布到Flickr。';

@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Categorie';
 $lang["youtube_publish_category_error"]='Fout bij het ophalen van YouTube-categorieën: -';
 $lang["youtube_chunk_size"]='Grootte van de blokken te gebruiken bij het uploaden naar YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Voeg anker tags toe aan de URL bij het opslaan in het metadata veld van de YouTube URL?';
+$lang["plugin-youtube_publish-title"]='YouTube Publiceren';
+$lang["plugin-youtube_publish-desc"]='Publiceert videobron naar geconfigureerd YouTube-account.';

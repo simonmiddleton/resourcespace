@@ -21,3 +21,5 @@ $lang["google_vision_translation_api_key"]='启用通过翻译 API 翻译 Vision
 $lang["google_vision_translation_languages"]='语言代码的逗号分隔列表，例如“no,es”。';
 $lang["google_vision_translation_keep_english"]='保留原始的英文关键词？';
 $lang["google_vision_api"]='谷歌视觉API';
+$lang["plugin-google_vision-title"]='Google 视觉 API';
+$lang["plugin-google_vision-desc"]='图像识别功能。将上传的图像传递给Google Cloud Vision API并设置建议的元数据。';

@@ -7,3 +7,5 @@ $lang["embed_video_configuration"]='Configurare încorporare video';
 $lang["specify_resourcetype"]='Vă rugăm să specificați pentru ce tip de resurse ar trebui să apară funcționalitatea "încorporare".';
 $lang["video_resourcetype"]='Tip resursă video';
 $lang["embedvideo_share"]='Incorporează video';
+$lang["plugin-embedvideo-title"]='Incorporează Video';
+$lang["plugin-embedvideo-desc"]='Oferă o funcție pentru a genera HTML pentru video încorporabil pe site-uri externe.';

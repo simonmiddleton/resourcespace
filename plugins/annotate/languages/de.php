@@ -33,3 +33,5 @@ $lang["resource_types_to_exclude"]='Auszuschließende Ressourcentypen (anklicken
 $lang["annotatedebug"]='Fehlerbehebung:';
 $lang["annotate_pdf_output"]='PDF-Ausgabeoption (experimentell)';
 $lang["annotate_pdf_output_only_annotated"]='Nur annotierte Ressourcen in PDF-Ausgabe einschließen';
+$lang["plugin-annotate-title"]='Kommentieren';
+$lang["plugin-annotate-desc"]='Ermöglicht die Erstellung von jQuery-Bildanmerkungen';

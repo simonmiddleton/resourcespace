@@ -54,3 +54,5 @@ $lang["rse_workflow_link_close"]='닫기';
 $lang["rse_workflow_more_notes_title"]='노트:';
 $lang["rse_workflow_email_from"]='알림을 보낼 이메일 주소 (비워두면 %EMAILFROM% 사용):';
 $lang["rse_workflow_bcc_admin"]='기여자가 알림을 받을 때 시스템 관리자에게 알림';
+$lang["plugin-rse_workflow-title"]='고급 워크플로우';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace 엔터프라이즈 - 워크플로우';

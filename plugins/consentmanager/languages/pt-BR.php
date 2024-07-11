@@ -24,3 +24,5 @@ $lang["notes"]='Notas';
 $lang["confirmdeleteconsentfile"]='Você tem certeza de que deseja EXCLUIR este arquivo? Esta ação não pode ser desfeita.';
 $lang["consent_manager_mediums"]='Consentimento de uso de meios de comunicação';
 $lang["consent_manager_access"]='Gerenciar dados de consentimento (onde ainda não estiver habilitado via permissão "Pode acessar a área de configuração do sistema")';
+$lang["plugin-consentmanager-title"]='Gerenciador de Consentimento';
+$lang["plugin-consentmanager-desc"]='Adiciona a capacidade de gerenciar o consentimento dado por sujeitos apresentados em seus arquivos de mídia';

@@ -80,3 +80,5 @@ $lang["simplesaml_single_logout_url"]='URL для одностороннего �
 $lang["simplesaml_start_url"]='Начальный/URL для входа';
 $lang["simplesaml_existing_config"]='Следуйте инструкциям базы знаний, чтобы перенести вашу существующую конфигурацию SAML';
 $lang["simplesaml_test_site_url"]='URL тестового сайта SimpleSAML';
+$lang["plugin-simplesaml-title"]='Простой SAML';
+$lang["plugin-simplesaml-desc"]='[Дополнительно] Требовать аутентификацию SAML для доступа к ResourceSpace';

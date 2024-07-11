@@ -24,3 +24,5 @@ $lang["confirmdeleteconsentfile"]='Êtes-vous sûr(e) de vouloir SUPPRIMER ce fi
 $lang["consent_manager_mediums"]='Autoriser les supports d\'utilisation';
 $lang["consent_manager_access"]='Gérer les données de consentement (lorsqu\'elles ne sont pas déjà activées via l\'autorisation "Peut accéder à la zone de configuration du système")';
 $lang["notes"]='Notes';
+$lang["plugin-consentmanager-title"]='Gestionnaire de consentement';
+$lang["plugin-consentmanager-desc"]='Ajoute la capacité de gérer le consentement donné par les sujets figurant dans vos fichiers multimédias';

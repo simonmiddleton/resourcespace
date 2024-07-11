@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Ditandai untuk dipulihkan dar
 $lang["offline_archive_resource_log_restore_removed"]='Dibatalkan pemulihan dari arsip';
 $lang["offline_archive_resource_log_restore_request"]='Permintaan pemulihan dari arsip yang tersimpan';
 $lang["offline_archive_resource_restore"]='Memulihkan sumber daya';
+$lang["plugin-offline_archive-title"]='Arsip Offline';
+$lang["plugin-offline_archive-desc"]='Memungkinkan relokasi file yang diarsipkan ke lokasi offline';

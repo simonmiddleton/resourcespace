@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Kategorie';
 $lang["youtube_publish_category_error"]='Fehler beim Abrufen von YouTube-Kategorien: -';
 $lang["youtube_chunk_size"]='Größe der Datenblöcke, die beim Hochladen auf YouTube verwendet werden sollen (MB)';
 $lang["youtube_publish_add_anchor"]='Sollen Anker-Tags zur URL hinzugefügt werden, wenn sie im Feld "YouTube-URL-Metadaten" gespeichert wird?';
+$lang["plugin-youtube_publish-title"]='YouTube Veröffentlichen';
+$lang["plugin-youtube_publish-desc"]='Veröffentlicht Videoressource auf dem konfigurierten YouTube-Konto.';

@@ -28,3 +28,5 @@ $lang["license_manager_mediums"]='ライセンス使用媒体';
 $lang["license_manager_access"]='ライセンスデータを管理する（「システム設定エリアにアクセスできる」権限で既に有効になっていない場合）。';
 $lang["license_usage-web"]='Web';
 $lang["inbound"]='インバウンド';
+$lang["plugin-licensemanager-title"]='ライセンスマネージャー';
+$lang["plugin-licensemanager-desc"]='リソースライセンス管理機能を追加します';

@@ -24,3 +24,5 @@ $lang["embedslideshow_directlink"]='Μη ενσωματωμένος άμεσος
 $lang["embedslideshow_directlinkopen"]='Άνοιγμα άμεσου συνδέσμου (νέα σελίδα)';
 $lang["embedslideshow_dynamic_size"]='Δυναμική αλλαγή μεγέθους προεπισκόπησης βάσει μεγέθους του παίκτη;';
 $lang["embedslideshow_minimise"]='&minus; ελαχιστοποίηση παρουσίασης διαφανειών';
+$lang["plugin-embedslideshow-title"]='Ενσωμάτωση Παρουσίασης Διαφανειών';
+$lang["plugin-embedslideshow-desc"]='Παρέχει μια λειτουργία για τη δημιουργία HTML για ενσωματώσιμες προβολές διαφανειών συλλογών σε απομακρυσμένους ιστότοπους';

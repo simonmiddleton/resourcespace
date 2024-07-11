@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Etäasiakirjan katseluohjelman määritys';
 $lang["embeddocument_specify_resourcetype"]='Määritä, mille resurssityypille "upotus" -toiminto tulisi näkyä.';
 $lang["embeddocument_document_resourcetype"]='Etäasiakirjan katselu resurssityyppi:';
 $lang["embeddocument_embed_share"]='Upota asiakirja';
+$lang["plugin-embeddocument-title"]='Upota asiakirja';
+$lang["plugin-embeddocument-desc"]='Tarjoaa toiminnon HTML:n luomiseen upotettavia asiakirjaesikatseluja varten etäsivustoilla.';

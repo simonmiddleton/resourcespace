@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Resurs je objavljen na Vimeo platform
 $lang["vimeo_publish_account_options"]='Opcije računa na Vimeo platformi';
 $lang["vimeo_publish_allow_user_accounts"]='Dozvoli korisnicima da objavljuju na svoje Vimeo račune. Ako je lažno, pristup jednom Vimeo računu mora biti konfiguriran u nastavku';
 $lang["vimeo_publish_set_account"]='Postavite Vimeo račun';
+$lang["plugin-vimeo_publish-title"]='Objavi na Vimeu';
+$lang["plugin-vimeo_publish-desc"]='Objavi resurse na Vimeo koristeći OAuth 2.0';

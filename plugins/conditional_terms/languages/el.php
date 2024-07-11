@@ -6,3 +6,5 @@ $lang["conditional_terms_description"]='Αυτό το πρόσθετο σας ε
 $lang["conditional_terms_field"]='Πεδίο μεταδεδομένων';
 $lang["conditional_terms_value"]='Αξία';
 $lang["conditional_terms_plugin_misconfigured"]='Το πρόσθετο όρων υπό συνθήκη είναι κακοδιαμορφωμένο';
+$lang["plugin-conditional_terms-title"]='Όροι υπό όρους';
+$lang["plugin-conditional_terms-desc"]='Ενεργοποιεί την υπό όρους εμφάνιση της σελίδας όρων κατά τη λήψη με βάση τα μεταδεδομένα του πόρου';

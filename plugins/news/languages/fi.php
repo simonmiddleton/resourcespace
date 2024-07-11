@@ -12,3 +12,5 @@ $lang["news_body"]='Ruumiin sisältö';
 $lang["news_nonewmessages"]='Ei uusia viestejä';
 $lang["title"]='Viimeisimmät uutiset...';
 $lang["title-too-long"]='Otsikkokenttä on pidempi kuin sallittu 50 merkkiä';
+$lang["plugin-news-title"]='Uutiset';
+$lang["plugin-news-desc"]='Lisää etusivun uutiskohteita';

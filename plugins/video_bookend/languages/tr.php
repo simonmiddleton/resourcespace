@@ -9,3 +9,5 @@ $lang["bookend-intro"]='Açılış ve kapanış görüntüleri için alternatif 
 $lang["bookend-failed"]='Başarısız!';
 $lang["bookend-could-not-open-file"]='Hata - dosya açılamadı!';
 $lang["bookend"]='Kitap Desteği';
+$lang["plugin-video_bookend-title"]='Video Kitap Sonu';
+$lang["plugin-video_bookend-desc"]='Bir videoyu başlık ve bitiş grafiği ile indirme yeteneği ekler';

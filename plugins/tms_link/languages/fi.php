@@ -70,3 +70,5 @@ $lang["tms_link_confirm_delete_module_config"]='Oletko varma, että haluat poist
 $lang["tms_link_test_link"]='Testilinkki TMS:ään';
 $lang["tms_link_mediapaths_resource_reference_column"]='Sarake, jota käytetään MediaMaster-taulukossa tallentamaan resurssin tunnus. Tämä on valinnainen ja sitä käytetään välttämään useiden resurssien käyttämistä samalla Media Master -tunnuksella.';
 $lang["tms_link_write_to_debug_log"]='Sisällytä skriptin eteneminen järjestelmän virhelokiin (vaatii erillisen virhelokin määrityksen). Varoitus: Aiheuttaa virhelokitiedoston nopean kasvun.';
+$lang["plugin-tms_link-title"]='TMS-linkki';
+$lang["plugin-tms_link-desc"]='[Edistynyt] Mahdollistaa resurssin metatietojen poimimisen TMS-tietokannasta.';

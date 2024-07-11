@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Πεδίο που χρησιμοποιείτα�
 $lang["vr_view_yaw_only_value"]='Τιμή για έλεγχο. Εάν βρεθεί, η επιλογή is_yaw_only θα οριστεί σε true';
 $lang["vr_view_orig_image"]='Χρησιμοποιήστε το αρχικό αρχείο πόρου ως πηγή για προεπισκόπηση εικόνας;';
 $lang["vr_view_orig_video"]='Να χρησιμοποιηθεί το αρχικό αρχείο πόρου ως πηγή για προεπισκόπηση βίντεο;';
+$lang["plugin-vr_view-title"]='Προβολή VR';
+$lang["plugin-vr_view-desc"]='Προβολή Google VR - Προεπισκοπήσεις εικόνων και βίντεο 360 μοιρών (μορφή equirectangular)';

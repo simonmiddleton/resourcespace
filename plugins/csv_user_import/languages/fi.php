@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='CSV-tiedoston ensimmäisellä rivillä on o
 $lang["csv_user_import_condition3"]='Sarakkeet, joissa on arvoja, jotka sisältävät <b>pilkkuja (,)</b>, tulee muotoilla tyypiksi <b>teksti</b>, jotta lainausmerkkejä ("") ei tarvitse lisätä. Tallennettaessa .csv-tiedostona, varmista, että valitset vaihtoehdon lainata tekstityypin soluja';
 $lang["csv_user_import_condition4"]='Sallitut sarakkeet: *käyttäjänimi, *sähköposti, salasana, koko nimi, tilin vanhentuminen, kommentit, IP-rajoitukset, kieli. Huomaa: pakolliset kentät on merkitty *-merkillä';
 $lang["csv_user_import_condition5"]='Käyttäjän kieli palautuu oletusarvoisesti "$defaultlanguage" asetuksen mukaiseksi, jos kieltä ei löydy tai sen arvoa ei ole määritetty sarakkeessa "lang"';
+$lang["plugin-csv_user_import-title"]='CSV-käyttäjätuonti';
+$lang["plugin-csv_user_import-desc"]='[Edistynyt] Mahdollistaa käyttäjäerän tuomisen ennalta muotoillun CSV-tiedoston perusteella';

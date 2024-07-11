@@ -50,3 +50,5 @@ $lang["simpleldap_usermatchcomment"]='Zaktualizowano użytkownika LDAP przez Sim
 $lang["origin_simpleldap"]='Wtyczka SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Nie sprawdzaj FQDN serwera zgodnie z CN certyfikatu';
 $lang["port"]='Port';
+$lang["plugin-simpleldap-title"]='Prosty LDAP';
+$lang["plugin-simpleldap-desc"]='[Zaawansowane] Prostsza implementacja uwierzytelniania ldap, skierowana na Active Directory, ale wspiera również katalog Oracle';

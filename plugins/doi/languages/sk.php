@@ -61,3 +61,5 @@ $lang["doi_show_meta"]='Zobraziť metadáta DOI';
 $lang["doi_hide_meta"]='Skryť metadáta DOI';
 $lang["doi_fetched_xml_from_MDS"]='Aktuálne XML metadáta boli úspešne získané z úložiska metadát DataCite';
 $lang["doi_info_wikipedia"]='https://sl.wikipedia.org/wiki/Digitalni_objektni_oznacevalnik';
+$lang["plugin-doi-title"]='Digitalni identifikator objekta';
+$lang["plugin-doi-desc"]='Generira DOI-je za nespremenljive objekte pred njihovo registracijo pri DataCite za trajno citiranje.';

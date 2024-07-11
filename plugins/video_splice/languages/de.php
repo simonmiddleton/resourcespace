@@ -45,3 +45,5 @@ $lang["video_splice_createdfromvideosplice"]='Erstellt mit dem Video Splice-Plug
 $lang["video-trim_output"]='Ausgabe';
 $lang["action-splice"]='Spleißen';
 $lang["video_splice_error_invalid_action"]='Fehler: Ungültige Aktion';
+$lang["plugin-video_splice-title"]='Video-Schnitt';
+$lang["plugin-video_splice-desc"]='Fügt die Möglichkeit zum Zuschneiden und Zusammenfügen von Videos hinzu';

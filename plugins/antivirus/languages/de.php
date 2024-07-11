@@ -10,3 +10,5 @@ $lang["antivirus_action_quarantine"]='In Quarantäne verschieben';
 $lang["antivirus_deleting_file"]='Lösche Ressource [%resource_id%] und alle zugehörigen Dateien!';
 $lang["antivirus_moving_file"]='Verschiebe Ressource [%resource_id%] in den Archivstatus [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Antivirus-Pfad nicht eingerichtet!';
+$lang["plugin-antivirus-title"]='Antivirus';
+$lang["plugin-antivirus-desc"]='[Erweitert] Antivirus-Funktionen durch Integration mit den meisten bekannten Antivirus-Engines, die über die Befehlszeile ausgeführt werden können';

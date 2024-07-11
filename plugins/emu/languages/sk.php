@@ -35,3 +35,5 @@ $lang["emu_upload_nodata"]='Pre tento IRN sa nenašli žiadne dáta v EMu';
 $lang["emu_nodata_returned"]='Neboli nájdené žiadne EMu dáta pre zadané IRN.';
 $lang["emu_createdfromemu"]='Vytvorené z EMU pluginu';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
+$lang["plugin-emu-title"]='EMu';
+$lang["plugin-emu-desc"]='[Advanced] Omogoča pridobivanje metapodatkov virov iz baze podatkov EMu.';

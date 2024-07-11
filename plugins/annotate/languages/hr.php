@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='PDF opcija izlaza (eksperimentalna)';
 $lang["annotate_pdf_output_only_annotated"]='Uključi samo anotirane resurse u PDF izlazu';
 $lang["annotate_admin_edit_access"]='Mogućnost uređivanja bilješki drugih korisnika';
 $lang["annotate_ref_not_supplied"]='Referenca nije dostavljena';
+$lang["plugin-annotate-title"]='Označi';
+$lang["plugin-annotate-desc"]='Omogućuje stvaranje jquery bilješki na slikama';

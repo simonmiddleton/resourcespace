@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='E-postadresse å sende varsler fra (vil bruke 
 $lang["rse_workflow_bcc_admin"]='Varsle systemadministratorer når bidragsyteren blir varslet';
 $lang["rse_workflow_state_notify_help"]='Brukere vil se ressurser i denne tilstanden som handlinger, i stedet for å motta enkle varsler';
 $lang["rse_workflow_introduction"]='For å endre arbeidsflyttilstander og handlinger, bruk \'Administrer arbeidsflythandlinger\' og \'Administrer arbeidsflyttilstander\' fra Admin. Klikk [link_param] for å gå til Admin';
+$lang["plugin-rse_workflow-title"]='Avansert arbeidsflyt';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbeidsflyt';

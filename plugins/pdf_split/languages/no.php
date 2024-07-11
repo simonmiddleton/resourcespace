@@ -12,3 +12,5 @@ $lang["outofrange"]='Utenfor rekkevidde';
 $lang["invalidrange"]='Ugyldig område';
 $lang["splitpdf_createnewresource"]='Opprett en ny ressurs for hver rekkevidde';
 $lang["splitpdf_createnewalternativefile"]='Opprett en ny alternativ fil på denne ressursen for hver rekkevidde';
+$lang["plugin-pdf_split-title"]='PDF-deling';
+$lang["plugin-pdf_split-desc"]='Tillater PDF-filer å deles opp i flere sider';

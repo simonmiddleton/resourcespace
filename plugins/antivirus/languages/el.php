@@ -10,3 +10,5 @@ $lang["antivirus_action_quarantine"]='Μεταφορά στην καραντίν
 $lang["antivirus_deleting_file"]='Διαγραφή του αντικειμένου [%resource_id%] και οποιωνδήποτε συνδεδεμένων αρχείων!';
 $lang["antivirus_moving_file"]='Μετακίνηση του αντικειμένου [%resource_id%] στην κατάσταση αρχείου [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Η διαδρομή του αντιιικού δεν έχει οριστεί!';
+$lang["plugin-antivirus-title"]='Αντιιός';
+$lang["plugin-antivirus-desc"]='[Προηγμένες] δυνατότητες Antivirus με ενσωμάτωση με τους περισσότερους γνωστούς μηχανισμούς antivirus που μπορούν να εκτελούν γραμμή εντολών';

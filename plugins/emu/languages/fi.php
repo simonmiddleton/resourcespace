@@ -35,3 +35,4 @@ $lang["emu_nodata_returned"]='Määriteltyä IRN-tunnusta vastaavia EMu-tietoja 
 $lang["emu_createdfromemu"]='Luotu EMU-liitännäisestä';
 $lang["emu_last_run_date"]='Skripti viimeksi suoritettu';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
+$lang["plugin-emu-desc"]='[Advanced] Sallii resurssin metatietojen poimimisen EMu-tietokannasta.';

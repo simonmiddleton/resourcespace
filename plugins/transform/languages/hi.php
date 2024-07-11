@@ -75,3 +75,5 @@ $lang["cropper_use_srgb"]='sRGB का उपयोग करें';
 $lang["transform_update_preview"]='पूर्वावलोकन अपडेट करें';
 $lang["transform_preset_sizes"]='पूर्वनिर्धारित लक्ष्य आकार से चुनें';
 $lang["error_crop_invalid"]='कृपया छवि के एक क्षेत्र का चयन करें';
+$lang["plugin-transform-title"]='छवि उपकरण (रूपांतरण)';
+$lang["plugin-transform-desc"]='क्रॉप और स्केल किए गए वैकल्पिक छवियों का निर्माण सक्षम करता है (jCrop मोबाइल समर्थन के साथ)';

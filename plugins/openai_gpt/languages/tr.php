@@ -11,3 +11,5 @@ $lang["openai_gpt_temperature"]='Örnekleme sıcaklığı 0 ile 1 arasında (dah
 $lang["openai_gpt_max_tokens"]='Maksimum jetonlar';
 $lang["openai_gpt_advanced"]='UYARI - Bu bölüm yalnızca test amaçlıdır ve canlı sistemlerde değiştirilmemelidir. Buradaki eklenti seçeneklerinden herhangi birini değiştirmek, yapılandırılmış tüm meta veri alanlarının davranışını etkileyecektir. Dikkatle değiştirin!';
 $lang["openai_gpt_system_message"]='Başlangıç sistem mesajı metni. Yer tutucular %%IN_TYPE%% ve %%OUT_TYPE%%, kaynak/hedef alan türlerine bağlı olarak \'text\' veya \'json\' ile değiştirilecektir.';
+$lang["plugin-openai_gpt-title"]='OpenAI API GPT entegrasyonu';
+$lang["plugin-openai_gpt-desc"]='OpenAI tarafından oluşturulan meta veriler. Yapılandırılmış alan verilerini OpenAI API\'sine iletir ve döndürülen bilgileri depolar.';

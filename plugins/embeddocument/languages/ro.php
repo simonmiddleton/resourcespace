@@ -12,3 +12,5 @@ $lang["embeddocument_heading"]='Configurare vizualizator documente la distanță
 $lang["embeddocument_specify_resourcetype"]='Vă rugăm să specificați pentru ce tip de resurse ar trebui să apară funcționalitatea "încorporare".';
 $lang["embeddocument_document_resourcetype"]='Tip resursă: Vizualizator de documente la distanță';
 $lang["embeddocument_embed_share"]='Incorporează documentul';
+$lang["plugin-embeddocument-title"]='Incorporează Documentul';
+$lang["plugin-embeddocument-desc"]='Oferă o funcție pentru a genera HTML pentru previzualizări de documente încorporabile pe site-uri externe.';

@@ -12,3 +12,5 @@ $lang["embeddocument_maximise"]='अधिकतम करें';
 $lang["embeddocument_heading"]='दूरस्थ दस्तावेज़ व्यूअर कॉन्फ़िगरेशन';
 $lang["embeddocument_specify_resourcetype"]='कृपया निर्दिष्ट करें कि \'एम्बेड\' कार्यक्षमता किस संसाधन प्रकार के लिए दिखाई देनी चाहिए।';
 $lang["embeddocument_document_resourcetype"]='दूरस्थ दस्तावेज़ व्यूअर संसाधन प्रकार:';
+$lang["plugin-embeddocument-title"]='दस्तावेज़ एम्बेड करें';
+$lang["plugin-embeddocument-desc"]='दूरस्थ साइटों पर एम्बेड करने योग्य दस्तावेज़ पूर्वावलोकन के लिए HTML उत्पन्न करने का एक कार्य प्रदान करता है।';

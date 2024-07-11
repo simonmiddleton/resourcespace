@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='¿Omitir la validación y procesar el
 $lang["csv_upload_force_offline"]='Este archivo CSV grande puede tardar mucho tiempo en procesarse, por lo que se ejecutará sin conexión. Se le notificará a través de un mensaje de ResourceSpace una vez que se haya completado el procesamiento';
 $lang["csv_upload_recommend_offline"]='Este archivo CSV grande puede tardar mucho tiempo en procesarse. Se recomienda habilitar trabajos sin conexión si necesita procesar archivos CSV grandes';
 $lang["csv_upload_createdfromcsvupload"]='Creado desde el plugin de carga CSV';
+$lang["plugin-csv_upload-title"]='Carga de CSV';
+$lang["plugin-csv_upload-desc"]='[Carga avanzada] Subir metadatos usando un archivo CSV.';

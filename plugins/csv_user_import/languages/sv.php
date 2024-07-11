@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='CSV-filen måste ha en rubrikrad';
 $lang["csv_user_import_condition3"]='Kolumn(er) som kommer att ha värden som innehåller <b>kommor (,)</b>, se till att formatera det som typen <b>text</b> så att du inte behöver lägga till citattecken (""). När du sparar som en .csv-fil, se till att markera alternativet att citera celler av typen text';
 $lang["csv_user_import_condition4"]='Tillåtna kolumner: *användarnamn, *e-post, lösenord, fullständigt namn, konto utgår, kommentarer, IP-begränsning, språk. Observera: obligatoriska fält är markerade med *';
 $lang["csv_user_import_condition5"]='Användarens språk kommer att återgå till det som är inställt med "$defaultlanguage" konfigurationsalternativet om språkkolumnen inte hittas eller inte har ett värde';
+$lang["plugin-csv_user_import-title"]='CSV-användarimport';
+$lang["plugin-csv_user_import-desc"]='[Avancerad] Ger möjlighet att importera en batch av användare baserat på en förformaterad CSV-fil';

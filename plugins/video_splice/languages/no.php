@@ -45,3 +45,5 @@ $lang["video_splice_createdfromvideosplice"]='Opprettet fra Video Splice-tillegg
 $lang["video-trim_output"]='Utdata';
 $lang["video-splice"]='Videoklipp';
 $lang["video_splice_error_invalid_action"]='Feil: Ugyldig handling';
+$lang["plugin-video_splice-title"]='Video-spleising';
+$lang["plugin-video_splice-desc"]='Legger til mulighet for trimming og sammenføyning av video';

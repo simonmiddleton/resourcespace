@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Отмечено для во�
 $lang["offline_archive_resource_log_restore_removed"]='Отмененное восстановление из архива';
 $lang["offline_archive_resource_log_restore_request"]='Запрошено восстановление из архива';
 $lang["offline_archive_resource_restore"]='Восстановить ресурсы';
+$lang["plugin-offline_archive-title"]='Офлайн Архив';
+$lang["plugin-offline_archive-desc"]='Позволяет перемещать архивированные файлы в оффлайн-место хранения';

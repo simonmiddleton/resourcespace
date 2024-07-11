@@ -9,3 +9,5 @@ $lang["new_content_rss_feed"]='Novo feed RSS de conteúdo';
 $lang["subject"]='Assunto';
 $lang["rss_feed_for_search_filter"]='Criar feed RSS para esta consulta';
 $lang["filtered_resource_update_for"]='Atualização de recurso filtrado para pesquisa [%search%]';
+$lang["plugin-rss2-title"]='Feed RSS';
+$lang["plugin-rss2-desc"]='Permite a geração autenticada de feeds RSS de novos conteúdos, incluindo campos configuráveis.';

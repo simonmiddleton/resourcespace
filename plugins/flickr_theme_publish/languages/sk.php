@@ -53,3 +53,5 @@ $lang["flickr_api_key"]='Flickr API kľúč';
 $lang["flickr_api_secret"]='Tajný kľúč Flickr API';
 $lang["flickr_warn_no_title_access"]='Publikovanie nie je povolené bez prístupu k názvu pola (ID #%id). Prosím, kontaktujte administrátora!';
 $lang["flickr_prefix_id_title"]='Pridajte predponu ID zdroja k názvu';
+$lang["plugin-flickr_theme_publish-title"]='Objava na Flickrju';
+$lang["plugin-flickr_theme_publish-desc"]='Objavi izbrane vire v izbranih temah na Flickr.';

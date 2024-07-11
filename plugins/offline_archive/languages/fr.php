@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='Marqué pour restauration à 
 $lang["offline_archive_resource_log_restore_removed"]='Restauration annulée depuis l\'archive';
 $lang["offline_archive_resource_log_restore_request"]='Restauration demandée depuis les archives';
 $lang["offline_archive_resource_restore"]='Restaurer les ressources';
+$lang["plugin-offline_archive-title"]='Archive Hors Ligne';
+$lang["plugin-offline_archive-desc"]='Permet le déplacement des fichiers archivés vers un emplacement hors ligne';

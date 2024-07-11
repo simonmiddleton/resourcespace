@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='롤/피치 방지를 결정하는 데 사용되
 $lang["vr_view_yaw_only_value"]='확인할 값입니다. 발견되면 is_yaw_only 옵션이 true로 설정됩니다';
 $lang["vr_view_orig_image"]='원본 리소스 파일을 이미지 미리보기의 소스로 사용하시겠습니까?';
 $lang["vr_view_orig_video"]='비디오 미리보기의 소스로 원본 리소스 파일을 사용하시겠습니까?';
+$lang["plugin-vr_view-title"]='VR 보기';
+$lang["plugin-vr_view-desc"]='Google VR View - 360도 이미지 및 비디오 미리보기 (등각형 형식)';

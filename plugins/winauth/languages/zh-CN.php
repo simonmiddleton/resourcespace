@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='首选标准 ResourceSpace 登录。如果启用
 $lang["winauth_test"]='测试';
 $lang["winauth_user_info"]='您已登录为：[用户名]';
 $lang["winauth_not_logged_in"]='您尚未登录或您的Web服务器配置不正确。';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[高级] Windows 集成身份验证';

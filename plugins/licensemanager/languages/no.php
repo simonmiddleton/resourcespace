@@ -28,3 +28,5 @@ $lang["selectlicence"]='Vennligst velg en lisens-ID';
 $lang["confirmdeletelicensefile"]='Er du sikker på at du ønsker å SLETTE denne filen? Dette kan ikke angres.';
 $lang["license_manager_mediums"]='Lisensbrukmedium';
 $lang["license_manager_access"]='Administrere lisensdata (hvor det ikke allerede er aktivert via "Kan få tilgang til Systemoppsett-området"-tillatelse)';
+$lang["plugin-licensemanager-title"]='Lisensbehandler';
+$lang["plugin-licensemanager-desc"]='Legger til muligheten til å administrere ressurslisensiering';

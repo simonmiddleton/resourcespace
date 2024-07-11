@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='Nie znaleziono wpisu dziennika';
 $lang["rse_version_revert_state"]='Przywróć stan';
 $lang["rse_version_rstate_changes"]='Przywracanie stanu dla kolekcji #%COLLECTION poprzez odtworzenie zdarzeń aż do, ale bez wybranego rekordu.';
 $lang["rse_version_invalid_time"]='Powrót do czasu przed [date] nie jest obsługiwany';
+$lang["plugin-rse_version-title"]='Kontrola wersji';
+$lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Kontrola wersji';

@@ -83,3 +83,5 @@ $lang["cropper_use_srgb"]='Använd sRGB';
 $lang["transform_update_preview"]='Uppdatera förhandsvisning';
 $lang["transform_preset_sizes"]='Välj från fördefinierad målstorlek';
 $lang["error_crop_invalid"]='Vänligen välj en region av bilden';
+$lang["plugin-transform-title"]='Bildverktyg (transformera)';
+$lang["plugin-transform-desc"]='Möjliggör skapande av beskurna och skalade alternativa bilder (jCrop med mobilt stöd)';

@@ -41,3 +41,5 @@ $lang["offline_archive_resource_log_restore_set"]='아카이브에서 복원 대
 $lang["offline_archive_resource_log_restore_removed"]='아카이브에서 복원 취소됨';
 $lang["offline_archive_resource_log_restore_request"]='아카이브에서 복원 요청됨';
 $lang["offline_archive_resource_restore"]='리소스 복원';
+$lang["plugin-offline_archive-title"]='오프라인 아카이브';
+$lang["plugin-offline_archive-desc"]='보관된 파일을 오프라인 위치로 이동할 수 있게 합니다';

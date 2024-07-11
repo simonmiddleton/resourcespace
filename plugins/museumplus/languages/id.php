@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='"museumplus_modules_saved_c
 $lang["museumplus_error_invalid_association"]='Asosiasi modul yang tidak valid. Pastikan bahwa Modul dan/atau ID Rekaman yang benar telah dimasukkan!';
 $lang["museumplus_id_returns_multiple_records"]='Beberapa catatan ditemukan - silakan masukkan ID teknisnya';
 $lang["museumplus_error_module_no_field_maps"]='Tidak dapat menyinkronkan data dari MuseumPlus. Alasan: modul \'%name\' tidak memiliki pemetaan bidang yang dikonfigurasi.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Advanced] Memungkinkan metadata sumber daya diekstraksi dari MuseumPlus menggunakan REST API-nya (MpRIA).';

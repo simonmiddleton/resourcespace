@@ -15,3 +15,6 @@ $lang['downloadformat'] = 'Download-Format';
 # Overwrite existing strings (we always download all files)
 $lang['are_available-0'] = $lang['are_available-2'] = 'werden konvertiert';
 $lang['are_available-1'] = 'wird konvertiert';
+
+$lang["plugin-format_chooser-title"]='Format-Auswahl';
+$lang["plugin-format_chooser-desc"]='Ermöglicht es Ihnen, beim Herunterladen von Dateien verschiedene Formate auszuwählen, die dynamisch erstellt werden.';

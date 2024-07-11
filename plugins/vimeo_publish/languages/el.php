@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Το αντικείμενο έχει 
 $lang["vimeo_publish_account_options"]='Επιλογές λογαριασμού Vimeo';
 $lang["vimeo_publish_allow_user_accounts"]='Να επιτραπεί στους χρήστες να δημοσιεύουν στους δικούς τους λογαριασμούς Vimeo. Εάν είναι ψευδές, τότε η πρόσβαση σε έναν μόνο λογαριασμό Vimeo πρέπει να διαμορφωθεί παρακάτω';
 $lang["vimeo_publish_set_account"]='Ορίστε λογαριασμός Vimeo';
+$lang["plugin-vimeo_publish-title"]='Δημοσίευση στο Vimeo';
+$lang["plugin-vimeo_publish-desc"]='Δημοσιεύστε πόρους στο Vimeo χρησιμοποιώντας OAuth 2.0';

@@ -16,3 +16,5 @@ $lang["image_text_position"]='Pozícia textu v bannery.';
 $lang["image_text_banner_position"]='Pozícia banneru vzhľadom na obrázok.';
 $lang["image_text_font"]='Použitý font musí byť podporovaný nainštalovanou verziou ImageMagick';
 $lang["image_text_noim"]='Tento plugin vyžaduje nainštalovaný Imagemagick.';
+$lang["plugin-image_text-title"]='Besedilo slike';
+$lang["plugin-image_text-desc"]='Omogoča dodajanje podatkov polja k sliki ob prenosu';

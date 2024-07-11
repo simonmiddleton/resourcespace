@@ -24,3 +24,5 @@ $lang["confirmdeleteconsentfile"]='Sei sicuro di voler ELIMINARE questo file? Qu
 $lang["consent_manager_mediums"]='Autorizzazione all\'uso dei mezzi di comunicazione';
 $lang["consent_manager_access"]='Gestire i dati di consenso (dove non già abilitato tramite il permesso "Può accedere all\'area di configurazione del sistema")';
 $lang["consent_id"]='ID di consenso';
+$lang["plugin-consentmanager-title"]='Gestore del Consenso';
+$lang["plugin-consentmanager-desc"]='Aggiunge la capacità di gestire il consenso dato dai soggetti presenti nei tuoi file multimediali';

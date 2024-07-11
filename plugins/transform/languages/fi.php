@@ -75,3 +75,5 @@ $lang["transform_update_preview"]='Päivitä esikatselu';
 $lang["transform_preset_sizes"]='Valitse esiasetettu kohdekoko';
 $lang["error_crop_invalid"]='Valitse kuva-alue';
 $lang["px"]='px';
+$lang["plugin-transform-title"]='Kuvatyökalut (muunna)';
+$lang["plugin-transform-desc"]='Mahdollistaa rajattujen ja skaalattujen vaihtoehtoisten kuvien luomisen (jCrop mobiilituki)';

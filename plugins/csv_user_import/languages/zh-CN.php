@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='CSV文件必须有标题行。';
 $lang["csv_user_import_condition3"]='包含逗号（，）的值的列，请确保将其格式化为<b>文本</b>类型，以便无需添加引号（""）。保存为 .csv 文件时，请确保选中引用文本类型单元格的选项。';
 $lang["csv_user_import_condition4"]='允许的列：*用户名，*电子邮件，密码，全名，帐户过期，注释，IP限制，语言。注意：强制字段已标记为*。';
 $lang["csv_user_import_condition5"]='如果未找到语言列或其值为空，则用户的语言将默认回到使用“$defaultlanguage”配置选项设置的语言。';
+$lang["plugin-csv_user_import-title"]='CSV用户导入';
+$lang["plugin-csv_user_import-desc"]='[高级] 提供基于预格式化的CSV文件批量导入用户的功能';

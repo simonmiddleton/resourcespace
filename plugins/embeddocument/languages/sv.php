@@ -19,3 +19,5 @@ $lang["embeddocument_specify_resourcetype"] = "Ange materialtypen som verktyget 
 $lang["embeddocument_document_resourcetype"] = "Dokumentmaterialtyp:";
 
 $lang["embeddocument_embed_share"]='Bädda in dokument';
+$lang["plugin-embeddocument-title"]='Bädda in dokument';
+$lang["plugin-embeddocument-desc"]='Ger en funktion för att generera HTML för inbäddningsbara dokumentförhandsvisningar på externa webbplatser.';

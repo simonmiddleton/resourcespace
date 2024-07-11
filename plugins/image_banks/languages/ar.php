@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='غير قادر على تحليل تك
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='تنسيق تكوين غير صالح لمثيل \'%PROVIDER\' (المزود)';
 $lang["image_banks_error_bad_url_scheme"]='تم العثور على مخطط URL غير صالح لمزود \'%PROVIDER\' (المزود)';
 $lang["image_banks_error_unexpected_response"]='عذرًا، تلقينا استجابة غير متوقعة من المزود. يرجى الاتصال بمسؤول النظام الخاص بك لمزيد من التحقيق (راجع سجل التصحيح).';
+$lang["plugin-image_banks-title"]='بنوك الصور';
+$lang["plugin-image_banks-desc"]='يسمح للمستخدمين باختيار بنك صور خارجي للبحث من خلاله. يمكن للمستخدمين بعد ذلك تنزيل أو إنشاء موارد جديدة بناءً على النتائج المسترجعة.';

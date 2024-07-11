@@ -38,3 +38,5 @@ $lang["yourresourceshavebeenuploaded"]='您的资源已上传。';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username])，ID为[user-ref]，电子邮件为[user-email]，不允许通过电子邮件上传（请检查权限“c”或“d”或在checkmail设置页面中查看被阻止的用户）。记录时间：[datetime]。';
 $lang["checkmail_createdfromcheckmail"]='从“检查邮件”插件创建';
 $lang["checkmail_resource_type_population"]='<br />(来自 allowed_extensions)';
+$lang["plugin-checkmail-title"]='检查邮件';
+$lang["plugin-checkmail-desc"]='[高级] 允许导入电子邮件附件';

@@ -45,3 +45,5 @@ $lang["video_splice_no_export_folder"]='Yapılandırma dosyasında video dışa 
 $lang["video_splice_incorrect_quantity"]='Geçerli bir kaynak bu sayfa yüklendiğinden beri koleksiyona eklenmiş veya koleksiyondan kaldırılmış. Lütfen tekrar deneyin.';
 $lang["video_splice_createdfromvideosplice"]='Video Splice eklentisinden oluşturuldu';
 $lang["video_splice_error_invalid_action"]='Hata : Geçersiz işlem';
+$lang["plugin-video_splice-title"]='Video Birleştirme';
+$lang["plugin-video_splice-desc"]='Video kırpma ve birleştirme yeteneği ekler';

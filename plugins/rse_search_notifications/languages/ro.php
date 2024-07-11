@@ -23,3 +23,5 @@ $lang["enable"]='Activare';
 $lang["checknow"]='Verifică acum';
 $lang["columnheader-enabled"]='Activat';
 $lang["columnheader-last-found"]='Ultima găsită';
+$lang["plugin-rse_search_notifications-title"]='Notificări de căutare';
+$lang["plugin-rse_search_notifications-desc"]='Notifică utilizatorul când apar modificări la o căutare salvată';

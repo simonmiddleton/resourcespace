@@ -46,3 +46,5 @@ $lang["posixldapauth_unable_to_search_ldap_server"]='غير قادر على ال
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='فشل %call%، يرجى التحقق من الإعدادات.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='البحث في LDAP ناجح، ولكن لم يتم العثور على أي مجموعات.';
 $lang["posixldapauth_tests_passed_save_settings_and_set_group_mapping"]='تم اجتياز الاختبارات، يرجى حفظ الإعدادات الخاصة بك ثم العودة لتعيين تعيين المجموعة.';
+$lang["plugin-posixldapauth-title"]='تفويض POSIX LDAP';
+$lang["plugin-posixldapauth-desc"]='[مهمل] مكون LDAP الإضافي لـ AD و LDAP. استخدم simpleldap لتكامل AD.';

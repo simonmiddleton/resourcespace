@@ -10,3 +10,5 @@ $lang["antivirus_deleting_file"]='Удаление ресурса [%resource_id%
 $lang["antivirus_moving_file"]='Перемещение ресурса [%resource_id%] в архивное состояние [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Путь для антивируса не настроен!';
 $lang["antivirus_action_delete"]='Удалить навсегда';
+$lang["plugin-antivirus-title"]='Антивирус';
+$lang["plugin-antivirus-desc"]='[Расширенные] возможности антивируса за счет интеграции с большинством известных антивирусных движков, которые могут работать через командную строку';

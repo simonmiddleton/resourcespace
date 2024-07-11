@@ -6,3 +6,4 @@ $lang["stencilvg_resource_type_for_new"]='保存输出文件的初始资源类�
 $lang["stencilvg-rsvg-not-installed"]='安装rsvg（librsvg2-bin）以获得PDF和EPS输出功能。';
 $lang["stencilvg_dpi"]='位图（如PNG）输出的DPI。';
 $lang["stencilvg_createdfromstencilvg"]='从StencilVG插件创建';
+$lang["plugin-stencilvg-desc"]='网页到打印 (W2P) / 使用SVG模板文件的动态发布功能';

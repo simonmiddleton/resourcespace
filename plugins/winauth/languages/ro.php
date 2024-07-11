@@ -11,3 +11,5 @@ $lang["winauth_prefer_normal"]='Preferați autentificările standard ResourceSpa
 $lang["winauth_test"]='Test';
 $lang["winauth_not_logged_in"]='Nu sunteți autentificat sau serverul web nu a fost configurat corect';
 $lang["winauth_user_info"]='Ești autentificat ca: [username]';
+$lang["plugin-winauth-title"]='WinAuth';
+$lang["plugin-winauth-desc"]='[Avansat] Autentificare Integrată Windows';

@@ -70,3 +70,5 @@ $lang["tms_link_not_deleted_error_detail"]='İstenen modül yapılandırması si
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"]='Bu modül yapılandırmasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!';
 $lang["tms_link_write_to_debug_log"]='Sistem hata ayıklama günlüğüne betik ilerlemesini dahil et (hata ayıklama günlüğü ayrı olarak yapılandırılmalıdır). Dikkat: Hata ayıklama günlüğü dosyasının hızla büyümesine neden olacaktır.';
+$lang["plugin-tms_link-title"]='TMS Bağlantısı';
+$lang["plugin-tms_link-desc"]='[Gelişmiş] Kaynak meta verilerinin TMS veritabanından çıkarılmasına izin verir.';

@@ -23,3 +23,5 @@ $lang["google_vision_translation_api_key"]='Activeer de vertaling van Vision zoe
 $lang["google_vision_translation_languages"]='Komma-gescheiden lijst van taalcodes, bijvoorbeeld "no,es"';
 $lang["google_vision_translation_keep_english"]='Behoud de originele Engelse zoekwoorden?';
 $lang["google_vision_face_dependent_field"]='Selecteer een metadata-veld dat verborgen zal worden wanneer het veld voor gezichtsherkenning leeg is (optioneel)';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Beeldherkenningsmogelijkheid. Stuurt geüploade afbeeldingen naar de Google Cloud Vision API en stelt voorgestelde metadata in.';

@@ -28,3 +28,5 @@ $lang["confirmdeletelicensefile"]='Ste si istý, že chcete VYMAZAŤ tento súbo
 $lang["license_manager_mediums"]='Použitie licencie na médiá';
 $lang["license_manager_access"]='Spravovať údaje o licenciách (ak nie sú už povolené prostredníctvom oprávnenia "Môže pristupovať k oblasti nastavenia systému")';
 $lang["inbound"]='Prichodný';
+$lang["plugin-licensemanager-title"]='Upravitelj licenc';
+$lang["plugin-licensemanager-desc"]='Dodaja možnost upravljanja licenciranja virov';

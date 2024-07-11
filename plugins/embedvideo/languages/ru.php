@@ -7,3 +7,5 @@ $lang["embed_video_configuration"]='Конфигурация вставки ви
 $lang["specify_resourcetype"]='Пожалуйста, укажите для какого типа ресурсов должна быть доступна функция "вставки".';
 $lang["video_resourcetype"]='Тип ресурса: Видео';
 $lang["embedvideo_share"]='Встроить видео';
+$lang["plugin-embedvideo-title"]='Встроить видео';
+$lang["plugin-embedvideo-desc"]='Предоставляет функцию для генерации HTML для встраиваемого видео на удаленных сайтах.';

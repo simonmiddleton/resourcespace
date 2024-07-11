@@ -24,3 +24,5 @@ $lang["embedslideshow_directlink"]='Niet-ingesloten directe URL';
 $lang["embedslideshow_directlinkopen"]='Open directe link (nieuwe pagina)';
 $lang["embedslideshow_dynamic_size"]='Dynamische aanpassing van de voorvertoning op basis van de grootte van de speler?';
 $lang["sizename_pixels"]='%name (%pixels pixels)';
+$lang["plugin-embedslideshow-title"]='Insluiten Diavoorstelling';
+$lang["plugin-embedslideshow-desc"]='Biedt een functie om HTML te genereren voor insluitbare collectie-diavoorstellingen op externe sites';

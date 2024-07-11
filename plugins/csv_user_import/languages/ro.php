@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='Fișierul CSV trebuie să aibă o linie ant
 $lang["csv_user_import_condition3"]='Coloanele care vor avea valori ce conțin <b>virgule (,)</b>, asigurați-vă că le formatați ca tip <b>text</b>, astfel încât să nu fie necesar să adăugați ghilimele (""). La salvarea fișierului .csv, asigurați-vă că bifați opțiunea de citare a celulelor de tip text';
 $lang["csv_user_import_condition4"]='Coloane permise: *nume de utilizator, *adresă de email, parolă, nume complet, expirarea contului, comentarii, restricționare IP, limbă. Notă: câmpurile obligatorii sunt marcate cu *';
 $lang["csv_user_import_condition5"]='Limba utilizatorului va reveni implicit la cea setată folosind opțiunea de configurare "$defaultlanguage" dacă coloana de limbă nu este găsită sau nu are o valoare';
+$lang["plugin-csv_user_import-title"]='Import utilizatori CSV';
+$lang["plugin-csv_user_import-desc"]='[Avansat] Oferă posibilitatea de a importa un lot de utilizatori pe baza unui fișier CSV preformatat';

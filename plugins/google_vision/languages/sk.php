@@ -21,3 +21,5 @@ $lang["google_vision_translation_api_key"]='Povolite prevajanje ključnih besed 
 $lang["google_vision_translation_languages"]='Čiarkou oddelený zoznam kódov jazykov, napr. "no,es"';
 $lang["google_vision_translation_keep_english"]='Zachovať pôvodné anglické kľúčové slová?';
 $lang["google_vision_api"]='Google Vision API';
+$lang["plugin-google_vision-title"]='Google Vision API';
+$lang["plugin-google_vision-desc"]='Zmožnost prepoznavanja slik. Naložene slike pošlje v Google Cloud Vision API in nastavi predlagane metapodatke.';

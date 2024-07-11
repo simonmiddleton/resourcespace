@@ -51,3 +51,5 @@ $lang["museumplus_error_invalid_association"]='Associació de mòduls no vàlida
 $lang["museumplus_id_returns_multiple_records"]='S\'han trobat diversos registres - si us plau, introdueixi l\'ID tècnic en lloc d\'això';
 $lang["museumplus_error_module_no_field_maps"]='No es possible sincronitzar les dades de MuseumPlus. Raó: el mòdul \'%name\' no té cap configuració de mapeig de camps.';
 $lang["museumplus_field_mappings"]='MuseumPlus - Assignacions de camps de ResourceSpace';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Avançat] Permet extreure les metadades dels recursos de MuseumPlus utilitzant la seva API REST (MpRIA).';

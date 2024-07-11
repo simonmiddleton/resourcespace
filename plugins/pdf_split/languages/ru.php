@@ -12,3 +12,5 @@ $lang["outofrange"]='Вне диапазона';
 $lang["invalidrange"]='Неверный диапазон';
 $lang["splitpdf_createnewresource"]='Создать новый ресурс для каждого диапазона';
 $lang["splitpdf_createnewalternativefile"]='Создать новый альтернативный файл для каждого диапазона на этом ресурсе';
+$lang["plugin-pdf_split-title"]='Разделение PDF';
+$lang["plugin-pdf_split-desc"]='Позволяет разделять PDF файлы на несколько страниц';

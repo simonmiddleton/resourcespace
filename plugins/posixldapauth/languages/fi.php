@@ -46,3 +46,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Ei voitu muodostaa yhte
 $lang["posixldapauth_unable_to_search_ldap_server"]='Ei mahdollista hakea LDAP-palvelimelta.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% epäonnistui, tarkista asetukset.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP-haku onnistui, mutta 0 ryhmää löytyi.';
+$lang["plugin-posixldapauth-title"]='POSIX LDAP -valtuutus';
+$lang["plugin-posixldapauth-desc"]='[EI KÄYTÖSSÄ] LDAP-laajennus AD:lle ja LDAP:lle. Käytä simpleldapia AD-integraatioon.';

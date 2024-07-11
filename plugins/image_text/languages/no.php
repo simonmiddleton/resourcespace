@@ -16,3 +16,5 @@ $lang["image_text_position"]='Posisjonen til teksten i banneret.';
 $lang["image_text_banner_position"]='Plassering av banner i forhold til bilde.';
 $lang["image_text_font"]='Skrifttypen som skal brukes, må støttes av den installerte versjonen av ImageMagick';
 $lang["image_text_noim"]='Denne utvidelsen krever at Imagemagick er installert.';
+$lang["plugin-image_text-title"]='Bildetekst';
+$lang["plugin-image_text-desc"]='Aktiverer feltdata til å legges til bildet ved nedlasting';

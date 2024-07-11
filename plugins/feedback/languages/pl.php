@@ -20,3 +20,5 @@ $lang["feedback_options-comma_separated"]='Opcje: (oddzielone przecinkami)';
 $lang["feedback_add_new_field"]='Dodaj nowe pole';
 $lang["feedback_back_to_plugin_manager"]='Powrót do menedżera wtyczek';
 $lang["feedback_list-multiple_selection"]='Lista: Wielokrotny wybór';
+$lang["plugin-feedback-title"]='Opinie';
+$lang["plugin-feedback-desc"]='Dodaje ogólną funkcję opinii użytkownika z konfigurowalnymi pytaniami.';

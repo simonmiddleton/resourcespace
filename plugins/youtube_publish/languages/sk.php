@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Kategória';
 $lang["youtube_publish_category_error"]='Chyba pri získavaní kategórií YouTube: -';
 $lang["youtube_chunk_size"]='Veľkosť bloku na použitie pri nahrávaní na YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Pridať kotvy (anchor tags) k URL pri ukladaní do metadátového poľa YouTube URL?';
+$lang["plugin-youtube_publish-title"]='YouTube Publikacija';
+$lang["plugin-youtube_publish-desc"]='Objavi video vir na konfiguriran račun YouTube.';

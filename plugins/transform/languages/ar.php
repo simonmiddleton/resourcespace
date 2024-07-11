@@ -75,3 +75,5 @@ $lang["transform_preset_sizes"]='اختر من الأحجام المستهدفة
 $lang["error_crop_invalid"]='يرجى تحديد منطقة من الصورة';
 $lang["error-transform-failed"]='خطأ: فشل تحويل المورد %res.';
 $lang["px"]='بكسل';
+$lang["plugin-transform-title"]='أدوات الصور (تحويل)';
+$lang["plugin-transform-desc"]='يتيح إنشاء صور بديلة مقصوصة ومقاسة (دعم jCrop مع الأجهزة المحمولة)';

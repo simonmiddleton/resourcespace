@@ -14,3 +14,5 @@ $lang["downloadformat"]='다운로드 형식';
 $lang["are_available-2"]='변환됩니다';
 $lang["are_available-1"]='변환됩니다';
 $lang["are_available-0"]='변환됩니다';
+$lang["plugin-format_chooser-title"]='형식 선택기';
+$lang["plugin-format_chooser-desc"]='파일을 다운로드할 때 실시간으로 생성되는 다양한 형식을 선택할 수 있습니다.';

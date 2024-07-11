@@ -32,3 +32,5 @@ $lang["video_tracks_transcode_now_label"]='تحويل الترميز الآن';
 $lang["video_tracks_select_generate_opt"]='يرجى اختيار خيار التوليد';
 $lang["video_tracks_save_alt_not_perm"]='غير قادر على حفظ البديل بدون إذن';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='هام! لقد تم إهمال إعدادات تنسيقات الإخراج في إضافة مسارات الفيديو. يمكن تعيينها فقط في config.php. لن تعمل الإضافة كما هو مقصود حتى يتم نسخ خيار التكوين. يرجى نسخ ما يلي:- %nl%####%nl%[output_formats_config]####%nl%';
+$lang["plugin-video_tracks-title"]='مسارات الفيديو';
+$lang["plugin-video_tracks-desc"]='[متقدم] إضافة دعم لخيارات الصوت والترجمة المختلفة لموارد الفيديو';

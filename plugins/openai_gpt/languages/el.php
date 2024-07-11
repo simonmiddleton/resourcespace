@@ -14,3 +14,5 @@ $lang["openai_gpt_advanced"]='ΠΡΟΕΙΔΟΠΟΙΗΣΗ - Αυτή η ενότ�
 $lang["openai_gpt_system_message"]='Αρχικό κείμενο μηνύματος συστήματος. Οι θέσεις %%IN_TYPE%% και %%OUT_TYPE%% θα αντικατασταθούν από \'text\' ή \'json\' ανάλογα με τους τύπους πεδίων πηγής/στόχου';
 $lang["openai_gpt_intro"]='Προσθέτει μεταδεδομένα που δημιουργούνται περνώντας υπάρχοντα δεδομένα στο OpenAI API με προσαρμόσιμη προτροπή. Ανατρέξτε στο <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>https://platform.openai.com/docs/introduction</a> για πιο λεπτομερείς πληροφορίες.';
 $lang["openai_gpt_api_key"]='Κλειδί API του OpenAI. Αποκτήστε το κλειδί API από <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
+$lang["plugin-openai_gpt-title"]='Ενσωμάτωση OpenAI API GPT';
+$lang["plugin-openai_gpt-desc"]='Το OpenAI δημιούργησε μεταδεδομένα. Μεταφέρει τα διαμορφωμένα δεδομένα πεδίου στο API του OpenAI και αποθηκεύει τις επιστρεφόμενες πληροφορίες.';

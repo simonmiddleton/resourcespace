@@ -80,3 +80,5 @@ $lang["simplesaml_test_site_url"]='SimpleSAML测试站点URL';
 $lang["simplesaml_email_attribute"]='用于电子邮件地址的属性';
 $lang["simplesaml_sp_cert_organizationalunitname"]='组织单位 / 部门';
 $lang["simplesaml_idp_metadata_xml"]='粘贴IdP元数据XML';
+$lang["plugin-simplesaml-title"]='简单SAML';
+$lang["plugin-simplesaml-desc"]='[高级] 需要 SAML 认证才能访问 ResourceSpace';

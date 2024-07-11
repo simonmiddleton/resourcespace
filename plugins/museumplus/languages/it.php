@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='Il \'museumplus_modules_sav
 $lang["museumplus_error_invalid_association"]='Associazione modulo/i non valida. Assicurati di aver inserito il modulo corretto e/o l\'ID del record!';
 $lang["museumplus_id_returns_multiple_records"]='Sono stati trovati record multipli - si prega di inserire l\'ID tecnico invece';
 $lang["museumplus_error_module_no_field_maps"]='Impossibile sincronizzare i dati da MuseumPlus. Motivo: il modulo \'%name\' non ha alcuna configurazione di mappatura dei campi.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Avanzato] Consente di estrarre i metadati delle risorse da MuseumPlus utilizzando la sua API REST (MpRIA).';

@@ -2846,3 +2846,10 @@ $lang["system_notification_email"]='[img_headerlogo]<br />
 [message]<br /><br /> 
 <a href="[url]">[url]</a><br /><br />
 [text_footer]';
+$lang["plugin-category-asset-processing"]='Obrada sredstava';
+$lang["plugin-category-authentication"]='Autentifikacija';
+$lang["plugin-category-collaboration"]='Suradnja';
+$lang["plugin-category-integrations"]='Integracije';
+$lang["plugin-category-system"]='Sustav';
+$lang["plugin-category-user-interface"]='Korisničko sučelje';
+$lang["plugin-category-workflow-and-access"]='Tijek rada i pristup';

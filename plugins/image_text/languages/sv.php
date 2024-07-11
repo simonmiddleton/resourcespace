@@ -21,3 +21,6 @@ $lang['image_text_banner_position']="Textrutans position i förhållande till bi
 $lang['image_text_banner_position_list']=array("top"=>"överkant", "bottom"=>"nederkant");
 $lang['image_text_font']="Typsnitt att använda, typsnittet måste stödas av den ImageMagick-version som är installerad";
 $lang['image_text_noim']="Det här tillägget kräver att ImageMagick är installerat.";
+
+$lang["plugin-image_text-title"]='Bildtext';
+$lang["plugin-image_text-desc"]='Möjliggör att fältdata läggs till i bilden vid nedladdning';

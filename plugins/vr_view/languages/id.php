@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Bidang yang digunakan untuk menentukan apakah r
 $lang["vr_view_yaw_only_value"]='Nilai yang akan diperiksa. Jika ditemukan, opsi is_yaw_only akan diatur menjadi benar';
 $lang["vr_view_orig_image"]='Gunakan file sumber sumber daya asli sebagai sumber untuk pratinjau gambar?';
 $lang["vr_view_orig_video"]='Gunakan file sumber sumber daya asli sebagai sumber untuk pratinjau video?';
+$lang["plugin-vr_view-title"]='Tampilan VR';
+$lang["plugin-vr_view-desc"]='Google VR View - pratinjau gambar dan video 360 derajat (format equirectangular)';

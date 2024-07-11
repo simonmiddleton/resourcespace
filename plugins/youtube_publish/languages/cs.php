@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Kategorie';
 $lang["youtube_publish_category_error"]='Chyba při načítání kategorií YouTube: -';
 $lang["youtube_chunk_size"]='Velikost části pro nahrávání na YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Přidat kotvicí značky do URL při ukládání do pole metadat URL YouTube?';
+$lang["plugin-youtube_publish-title"]='Publikovat na YouTube';
+$lang["plugin-youtube_publish-desc"]='Publikuje video zdroj na nakonfigurovaný účet YouTube.';

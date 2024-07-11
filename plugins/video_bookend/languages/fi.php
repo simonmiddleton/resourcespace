@@ -9,3 +9,5 @@ $lang["bookend-noimage-2"]='(ei sulkevaa kuvaa)';
 $lang["bookend-intro"]='Valitse kuvat vaihtoehtoisesta tiedostolistasta käytettäväksi aloitus- ja lopetuskuvina.';
 $lang["bookend-failed"]='Epäonnistui!';
 $lang["bookend-could-not-open-file"]='Virhe - tiedostoa ei voitu avata!';
+$lang["plugin-video_bookend-title"]='Videon alku- ja loppukohta';
+$lang["plugin-video_bookend-desc"]='Lisää mahdollisuuden ladata video, jossa on otsikko ja lopputeksti';

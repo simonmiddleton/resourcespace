@@ -25,3 +25,5 @@ $lang["annotate_pdf_output"]='PDF-outputindstilling (eksperimentel)';
 $lang["annotate_pdf_output_only_annotated"]='Kun inkluder kommenterede ressourcer i PDF-output';
 $lang["annotate_admin_edit_access"]='Evne til at redigere andre brugeres noter';
 $lang["annotate_ref_not_supplied"]='Henvisning ikke angivet';
+$lang["plugin-annotate-title"]='Annoter';
+$lang["plugin-annotate-desc"]='Muliggør oprettelse af jquery-billedannoteringer';

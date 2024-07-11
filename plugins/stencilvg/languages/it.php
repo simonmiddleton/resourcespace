@@ -6,3 +6,5 @@ $lang["stencilvg_resource_type_for_new"]='Tipo di risorsa iniziale per i file di
 $lang["stencilvg-rsvg-not-installed"]='Installa rsvg (librsvg2-bin) per la capacità di output PDF ed EPS.';
 $lang["stencilvg_dpi"]='DPI per output raster (es. PNG).';
 $lang["stencilvg_createdfromstencilvg"]='Creato dal plugin StencilVG';
+$lang["plugin-stencilvg-title"]='StencilVG';
+$lang["plugin-stencilvg-desc"]='Funzionalità Web to print (W2P) / Pubblicazione dinamica utilizzando file modello SVG';

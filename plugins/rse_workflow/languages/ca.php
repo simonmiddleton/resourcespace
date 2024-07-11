@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='Adreça de correu electrònic per enviar notif
 $lang["rse_workflow_bcc_admin"]='Notificar als administradors del sistema quan es notifiqui el contribuent';
 $lang["rse_workflow_state_notify_help"]='Els usuaris veuran els recursos en aquest estat apareixent com a accions, en lloc de rebre notificacions simples';
 $lang["rse_workflow_introduction"]='Per modificar els estats i les accions del flux de treball, utilitza \'Gestiona les accions del flux de treball\' i \'Gestiona els estats del flux de treball\' des d\'Admin. Fes clic [aquí] per anar a Admin';
+$lang["plugin-rse_workflow-title"]='Flux de treball avançat';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Flux de treball';

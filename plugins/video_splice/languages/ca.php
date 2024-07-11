@@ -45,3 +45,5 @@ $lang["video_splice_createdfromvideosplice"]='Creat a partir del connector Video
 $lang["video-trim_output"]='Sortida';
 $lang["action-splice"]='Empalmar';
 $lang["video_splice_error_invalid_action"]='Error: Acció no vàlida';
+$lang["plugin-video_splice-title"]='Unió de Vídeo';
+$lang["plugin-video_splice-desc"]='Afegeix la capacitat de retallar i unir vídeos';

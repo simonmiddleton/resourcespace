@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='Validatie overslaan en CSV-bestand of
 $lang["csv_upload_force_offline"]='Deze grote CSV kan lang duren om te verwerken, dus zal offline worden uitgevoerd. U ontvangt een melding via een ResourceSpace-bericht zodra de verwerking is voltooid';
 $lang["csv_upload_recommend_offline"]='Deze grote CSV kan erg lang duren om te verwerken. Het wordt aanbevolen om offline taken in te schakelen als je grote CSV\'s moet verwerken';
 $lang["csv_upload_createdfromcsvupload"]='Aangemaakt met de CSV Upload plugin';
+$lang["plugin-csv_upload-title"]='CSV Upload';
+$lang["plugin-csv_upload-desc"]='[Geavanceerd] Upload metadata met een CSV-bestand.';

@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='Χρόνος μεταξύ ενημε�
 $lang["flickr_api_key"]='Κλειδί API Flickr';
 $lang["flickr_api_secret"]='Μυστικό κλειδί Flickr API';
 $lang["flickr_warn_no_title_access"]='Η δημοσίευση δεν επιτρέπεται χωρίς πρόσβαση στο πεδίο τίτλου (ID #%id). Παρακαλούμε επικοινωνήστε με έναν διαχειριστή!';
+$lang["plugin-flickr_theme_publish-title"]='Δημοσίευση στο Flickr';
+$lang["plugin-flickr_theme_publish-desc"]='Δημοσιεύει επιλεγμένους πόρους εντός επιλεγμένων θεμάτων στο Flickr.';

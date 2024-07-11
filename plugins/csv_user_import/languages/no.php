@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='CSV-filen må ha en overskriftsrad';
 $lang["csv_user_import_condition3"]='Kolonner som vil inneholde verdier med <b>kommategn (,)</b>, må formateres som type <b>tekst</b> slik at du ikke trenger å legge til anførselstegn (""). Når du lagrer som en .csv-fil, må du sørge for å sjekke alternativet for å sitere celler med teksttype';
 $lang["csv_user_import_condition4"]='Tillatte kolonner: *brukernavn, *epost, passord, fullt navn, konto utløper, kommentarer, IP-begrensning, språk. Merk: Obligatoriske felt er markert med *';
 $lang["csv_user_import_condition5"]='Språket til brukeren vil automatisk gå tilbake til det som er satt ved bruk av "$defaultlanguage" konfigurasjonsalternativet hvis språkkolonnen ikke finnes eller ikke har en verdi';
+$lang["plugin-csv_user_import-title"]='CSV-brukerimport';
+$lang["plugin-csv_user_import-desc"]='[Avansert] Gir mulighet til å importere en gruppe brukere basert på en forhåndsformatert CSV-fil';

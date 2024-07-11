@@ -36,3 +36,5 @@ $lang["embedslideshowconfig"]='Bädda in bildspelskonfiguration';
 $lang["embedslideshow_textfield"]='Visa ytterligare bildtext?';
 $lang["embedslideshow_resourcedatatextfield"]='Metadatafält för att lagra bildtext?';
 $lang["embedslideshow_dynamic_size"]='Dynamisk storleksändring av förhandsvisning baserat på spelarstorlek?';
+$lang["plugin-embedslideshow-title"]='Bädda in bildspel';
+$lang["plugin-embedslideshow-desc"]='Ger en funktion för att generera HTML för inbäddningsbara samlingsbildspel på externa webbplatser';

@@ -53,3 +53,5 @@ $lang["flickr_nice_progress_min_timeout"]='진행 상태 핑 간격 (밀리초)'
 $lang["flickr_api_key"]='Flickr API 키';
 $lang["flickr_api_secret"]='Flickr API 비밀키';
 $lang["flickr_warn_no_title_access"]='제목 필드(ID #%id)에 대한 접근 없이 게시할 수 없습니다. 관리자에게 문의하세요!';
+$lang["plugin-flickr_theme_publish-title"]='Flickr 게시하기';
+$lang["plugin-flickr_theme_publish-desc"]='선택한 테마 내에서 선택한 리소스를 Flickr에 게시합니다.';

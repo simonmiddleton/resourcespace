@@ -75,3 +75,5 @@ $lang["error_crop_invalid"]='Molimo odaberite regiju slike';
 $lang["errormustchoosecropscale"]='Greška: Morate odabrati izrez i/ili unijeti vrijednosti skaliranja.';
 $lang["px"]='px';
 $lang["rotation90"]='90 stupnjeva udesno';
+$lang["plugin-transform-title"]='Alati za slike (transformacija)';
+$lang["plugin-transform-desc"]='Omogućuje stvaranje izrezanih i skaliranih alternativnih slika (jCrop s podrškom za mobilne uređaje)';

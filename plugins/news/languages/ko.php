@@ -12,3 +12,5 @@ $lang["news_body"]='본문 내용';
 $lang["news_nonewmessages"]='새 메시지가 없습니다';
 $lang["title"]='최신 뉴스...';
 $lang["title-too-long"]='제목 필드는 허용된 50자보다 깁니다';
+$lang["plugin-news-title"]='뉴스';
+$lang["plugin-news-desc"]='홈페이지 뉴스 항목 추가';

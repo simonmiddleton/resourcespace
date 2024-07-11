@@ -52,3 +52,5 @@ $lang["youtube_publish_category"]='Categoria';
 $lang["youtube_publish_category_error"]='Error en la recuperació de les categories de YouTube: -';
 $lang["youtube_chunk_size"]='Mida del fragment a utilitzar en pujar a YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Afegir etiquetes d\'àncora a la URL quan es guarda al camp de metadades d\'URL de YouTube?';
+$lang["plugin-youtube_publish-title"]='Publicar a YouTube';
+$lang["plugin-youtube_publish-desc"]='Publica el recurs de vídeo al compte de YouTube configurat.';

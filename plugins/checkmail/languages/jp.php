@@ -38,3 +38,5 @@ $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username])、ID
 $lang["checkmail_createdfromcheckmail"]='「Check Mail」プラグインから作成されました。';
 $lang["checkmail_email"]='電子メール (でんしメール)';
 $lang["checkmail_resource_type_population"]='（許可されている拡張子から）';
+$lang["plugin-checkmail-title"]='メールを確認';
+$lang["plugin-checkmail-desc"]='[高度] メール添付ファイルの取り込みを許可';

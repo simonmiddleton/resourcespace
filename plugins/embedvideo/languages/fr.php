@@ -7,3 +7,5 @@ $lang["embed_video_configuration"]='Configuration d\'intégration de vidéo';
 $lang["specify_resourcetype"]='Veuillez préciser pour quel type de ressource la fonctionnalité "intégrer" doit apparaître.';
 $lang["video_resourcetype"]='Type de ressource vidéo';
 $lang["embedvideo_share"]='Intégrer la vidéo';
+$lang["plugin-embedvideo-title"]='Intégrer la vidéo';
+$lang["plugin-embedvideo-desc"]='Fournit une fonction pour générer du HTML pour des vidéos intégrables sur des sites distants.';

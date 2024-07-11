@@ -45,3 +45,5 @@ $lang["video_splice_incorrect_quantity"]='Poprawny zasób został usunięty lub 
 $lang["video_splice_createdfromvideosplice"]='Utworzono za pomocą wtyczki Video Splice';
 $lang["video-trim_output"]='Wynik';
 $lang["video_splice_error_invalid_action"]='Błąd: Nieprawidłowa akcja';
+$lang["plugin-video_splice-title"]='Łączenie wideo';
+$lang["plugin-video_splice-desc"]='Dodaje możliwość przycinania i łączenia wideo';

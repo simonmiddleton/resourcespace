@@ -39,3 +39,5 @@ $lang["action_dates_email_text"]='Els recursos següents estan programats per se
 $lang["action_dates_email_range_restrict"]='Els següents recursos es restringiran en un termini de [days_min] a [days_max] dies.';
 $lang["action_dates_email_range_state"]='Els següents recursos canviaran d\'estat en un termini de [days_min] a [days_max] dies.';
 $lang["action_dates_email_range"]='Els recursos següents estan programats per ser restringits i/o canviar d\'estat en un termini de [days_min] a [days_max] dies.';
+$lang["plugin-action_dates-title"]='Dates d\'Acció';
+$lang["plugin-action_dates-desc"]='Permet la supressió o restricció programada de recursos basats en camps de data';

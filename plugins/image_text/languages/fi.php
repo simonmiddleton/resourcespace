@@ -16,3 +16,5 @@ $lang["image_text_position"]='Tekstin sijainti bannerissa.';
 $lang["image_text_banner_position"]='Bannerin sijainti suhteessa kuvaan.';
 $lang["image_text_font"]='Käytettävä fontti, on oltava tuettu asennetulla imagemagick-versiolla';
 $lang["image_text_noim"]='Tämä liitännäinen vaatii Imagemagickin asennuksen.';
+$lang["plugin-image_text-title"]='Kuvan teksti';
+$lang["plugin-image_text-desc"]='Mahdollistaa kenttätietojen lisäämisen kuvaan latauksen yhteydessä';

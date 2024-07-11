@@ -32,3 +32,5 @@ $lang["video_tracks_transcode_now_label"]='Transcoder maintenant';
 $lang["video_tracks_select_generate_opt"]='Veuillez choisir une option de génération';
 $lang["video_tracks_save_alt_not_perm"]='Impossible de sauvegarder l\'alternative sans autorisation';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='IMPORTANT! Le plugin Video Tracks a déprécié les paramètres des formats de sortie. Ils ne peuvent être définis que dans config.php. Le plugin ne fonctionnera pas comme prévu tant que l\'option de configuration n\'aura pas été copiée. Veuillez copier ce qui suit :- %nl%####%nl%[output_formats_config]####%nl%';
+$lang["plugin-video_tracks-title"]='Pistes Vidéo';
+$lang["plugin-video_tracks-desc"]='[Avancé] Ajouter la prise en charge de différentes options audio et de sous-titres pour les ressources vidéo';

@@ -12,3 +12,5 @@ $lang["news_body"]='正文内容';
 $lang["news_nonewmessages"]='没有新消息。';
 $lang["title"]='最新消息...';
 $lang["title-too-long"]='标题字段超过了允许的50个字符。';
+$lang["plugin-news-title"]='新闻';
+$lang["plugin-news-desc"]='添加主页新闻项目';

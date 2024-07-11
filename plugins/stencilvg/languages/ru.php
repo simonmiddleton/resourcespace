@@ -6,3 +6,5 @@ $lang["stencilvg_resource_type_for_new"]='Тип исходного ресурс
 $lang["stencilvg-rsvg-not-installed"]='Установите rsvg (librsvg2-bin) для возможности вывода в форматах PDF и EPS.';
 $lang["stencilvg_dpi"]='DPI для растрового (например, PNG) вывода.';
 $lang["stencilvg_createdfromstencilvg"]='Создано с помощью плагина StencilVG';
+$lang["plugin-stencilvg-title"]='StencilVG';
+$lang["plugin-stencilvg-desc"]='Веб-печать (W2P) / Функциональность динамической публикации с использованием файлов шаблонов SVG';

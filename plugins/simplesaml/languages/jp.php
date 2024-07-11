@@ -80,3 +80,5 @@ $lang["simplesaml_test_site_url"]='SimpleSAMLのテストサイトのURL';
 $lang["simplesaml_sp_cert_emailaddress"]='メールアドレス';
 $lang["simplesaml_idp_section"]='IdP';
 $lang["simplesaml_acs_url"]='ACS URL / 返信URL';
+$lang["plugin-simplesaml-title"]='シンプルSAML';
+$lang["plugin-simplesaml-desc"]='[高度] ResourceSpaceにアクセスするにはSAML認証が必要です';

@@ -6,3 +6,5 @@ $lang["yt2rs_field_id_l"]='Identificador de campo (ruta de Youtube)';
 $lang["yt2rs_thumb"]='Ruta de miniaturas';
 $lang["yt2rs_online_preview"]='Vista previa en línea';
 $lang["yt2rs_youtube_video"]='Video de Youtube';
+$lang["plugin-yt2rs-title"]='YouTube a ResourceSpace';
+$lang["plugin-yt2rs-desc"]='Permite publicar videos desde YouTube.';

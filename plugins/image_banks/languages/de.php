@@ -35,3 +35,5 @@ $lang["image_banks_error_generic_parse"]='Konfiguration der Anbieter (für Multi
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Ungültiges Konfigurationsformat für \'%PROVIDER\' (Anbieter) Instanz';
 $lang["image_banks_error_bad_url_scheme"]='Ungültiges URL-Schema für \'%PROVIDER\' (Anbieter) Instanz gefunden';
 $lang["image_banks_error_unexpected_response"]='Entschuldigung, eine unerwartete Antwort vom Anbieter erhalten. Bitte wenden Sie sich an Ihren Systemadministrator für weitere Untersuchungen (siehe Debug-Log).';
+$lang["plugin-image_banks-title"]='Bildbanken';
+$lang["plugin-image_banks-desc"]='Ermöglicht Benutzern, eine externe Bilddatenbank zur Durchsuchung auszuwählen. Benutzer können dann basierend auf den zurückgegebenen Ergebnissen neue Ressourcen herunterladen oder erstellen.';

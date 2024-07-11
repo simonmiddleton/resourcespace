@@ -41,3 +41,5 @@ $lang["falcon_link_share_user"]='Gebruikerstekst om weer te geven voor gedeelde 
 $lang["falcon_link_log_publish"]='Gedeelde bron via Falcon';
 $lang["falcon_link_log_archive"]='Gearchiveerde bron via Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Controleer alstublieft of de beschrijving en tags niet leeg zijn';
+$lang["plugin-falcon_link-title"]='Falcon Link';
+$lang["plugin-falcon_link-desc"]='[Geavanceerd] Publiceer bronnen naar Falcon.io';

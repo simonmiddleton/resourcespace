@@ -2764,3 +2764,12 @@ $lang["icon_picker_placeholder"]='Pište pro filtrování';
 $lang["anymonth"]='Jakýkoli měsíc';
 $lang["collectionidprefix"]='ID_kolekce';
 $lang["themes__manage"]='Organizujte a upravujte zvýrazněné kolekce dostupné online. Zvýrazněné kolekce jsou speciálně propagované kolekce. <br /><br /> <strong>1 Pro vytvoření nového záznamu pod zvýrazněnou kolekcí - vytvořte kolekci</strong><br /> Vyberte <strong>Moje kolekce</strong> z hlavního horního menu a nastavte zcela novou <strong>veřejnou</strong> kolekci. Nezapomeňte během nastavení zahrnout název zvýrazněné kolekce. Použijte existující název zvýrazněné kolekce pro seskupení kolekce pod aktuální zvýrazněnou kolekci (ujistěte se, že jej napíšete přesně stejně), nebo zvolte nový název pro vytvoření zcela nové zvýrazněné kolekce. Nikdy neumožňujte uživatelům přidávat/odstraňovat zdroje ze zvýrazněných kolekcí. <br /> <br /><strong>2 Pro úpravu obsahu existujícího záznamu pod zvýrazněnou kolekcí</strong><br /> Vyberte <strong>upravit kolekci</strong>. Položky v této kolekci se zobrazí v panelu <strong>Moje kolekce</strong> na spodní části obrazovky. Použijte standardní nástroje pro úpravu, odstranění nebo přidání zdrojů. <br /> <br /><strong>3 Pro změnu názvu zvýrazněné kolekce nebo přesunutí kolekce pod jinou zvýrazněnou kolekci</strong><br /> Vyberte <strong>upravit vlastnosti</strong> a upravte kategorii zvýrazněné kolekce nebo název kolekce. Použijte existující název zvýrazněné kolekce pro seskupení kolekce pod aktuální zvýrazněnou kolekci (ujistěte se, že jej napíšete přesně stejně), nebo zvolte nový název pro vytvoření zcela nové zvýrazněné kolekce. <br /> <br /><strong>4 Pro odstranění kolekce ze zvýrazněné kolekce</strong><br /> Vyberte <strong>upravit vlastnosti</strong> a smažte slova v poli kategorie zvýrazněné kolekce.';
+$lang["uploadedstatus"]="Zdrojový [file] z %filestotal% nahrán - %path%";
+
+$lang["plugin-category-asset-processing"]='Zpracování aktiv';
+$lang["plugin-category-authentication"]='Ověření';
+$lang["plugin-category-collaboration"]='Spolupráce';
+$lang["plugin-category-integrations"]='Integrace';
+$lang["plugin-category-system"]='Systém';
+$lang["plugin-category-user-interface"]='Uživatelské rozhraní';
+$lang["plugin-category-workflow-and-access"]='Pracovní postup a přístup';

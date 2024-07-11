@@ -14,3 +14,5 @@ $lang["wordpress_sso_use_standard_login"]='使用非WordPress帐户登录';
 $lang["wordpress_sso_use_wp_login"]='使用WordPress账户登录';
 $lang["wordpress_sso_retry"]='点击此处尝试重新登录。';
 $lang["origin_wordpress_sso"]='WordPress SSO插件';
+$lang["plugin-wordpress_sso-title"]='Wordpress 单点登录';
+$lang["plugin-wordpress_sso-desc"]='[高级] 允许与Wordpress安装进行单点登录';

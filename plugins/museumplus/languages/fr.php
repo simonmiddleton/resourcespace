@@ -51,3 +51,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='Le \'museumplus_modules_sav
 $lang["museumplus_error_invalid_association"]='Association de module(s) invalide(s). Veuillez vous assurer que le module et/ou l\'identifiant d\'enregistrement correct(s) ont été saisis !';
 $lang["museumplus_id_returns_multiple_records"]='Plusieurs enregistrements trouvés - veuillez entrer l\'identifiant technique à la place';
 $lang["museumplus_error_module_no_field_maps"]='Impossible de synchroniser les données de MuseumPlus. Raison : le module \'%name\' n\'a pas de mappages de champs configurés.';
+$lang["plugin-museumplus-title"]='MuseumPlus';
+$lang["plugin-museumplus-desc"]='[Avancé] Permet d\'extraire les métadonnées des ressources de MuseumPlus en utilisant son API REST (MpRIA).';

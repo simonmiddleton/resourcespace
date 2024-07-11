@@ -54,3 +54,5 @@ $lang["rse_workflow_email_from"]='E-mailadres om meldingen van te verzenden (zal
 $lang["rse_workflow_bcc_admin"]='Waarschuw systeembeheerders wanneer de bijdrager op de hoogte wordt gesteld';
 $lang["rse_workflow_state_notify_help"]='Gebruikers zullen bronnen in deze staat zien verschijnen als acties, in plaats van eenvoudige meldingen te ontvangen';
 $lang["rse_workflow_introduction"]='Om workflow-statussen en acties te wijzigen, gebruik \'Beheer workflow-acties\' en \'Beheer workflow-statussen\' vanuit Beheer. Klik op [link_param] om naar Beheer te gaan';
+$lang["plugin-rse_workflow-title"]='Geavanceerde Workflow';
+$lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Workflow';

@@ -39,3 +39,5 @@ $lang["weekday-5"]='星期五';
 $lang["weekday-6"]='星期六';
 $lang["show_affected_resources"]='显示受影响的资源。';
 $lang["group_no"]='组 (Zǔ)';
+$lang["plugin-action_dates-title"]='操作日期';
+$lang["plugin-action_dates-desc"]='启用基于日期字段的资源定期删除或限制';

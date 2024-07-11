@@ -14,3 +14,5 @@ $lang["csv_user_import_condition2"]='CSV dosyasında bir başlık satırı olmal
 $lang["csv_user_import_condition3"]='Virgül ( , ) içeren değerler içerecek sütun(lar) için, bunu <b>metin</b> türünde biçimlendirdiğinizden emin olun, böylece tırnak işareti ("") eklemenize gerek kalmaz. .csv dosyası olarak kaydederken, metin türü hücreleri tırnak içine alma seçeneğini işaretlediğinizden emin olun.';
 $lang["csv_user_import_condition4"]='İzin verilen sütunlar: *kullanıcı adı, *e-posta, şifre, tam ad, hesap_süresi, yorumlar, ip_kısıtla, dil. Not: zorunlu alanlar * ile işaretlenmiştir';
 $lang["csv_user_import_condition5"]='Kullanıcının dili, lang sütunu bulunamazsa veya bir değeri yoksa "$defaultlanguage" yapılandırma seçeneği kullanılarak ayarlanan dile geri dönecektir';
+$lang["plugin-csv_user_import-title"]='CSV Kullanıcı İçe Aktarma';
+$lang["plugin-csv_user_import-desc"]='[İleri] Önceden biçimlendirilmiş bir CSV dosyasına dayalı olarak toplu kullanıcıları içe aktarma yeteneği sağlar';

@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='유효성 검사를 건너뛰고 CSV 
 $lang["csv_upload_force_offline"]='이 큰 CSV 파일은 처리하는 데 시간이 오래 걸릴 수 있으므로 오프라인으로 실행됩니다. 처리가 완료되면 ResourceSpace 메시지를 통해 알림을 받게 됩니다';
 $lang["csv_upload_recommend_offline"]='이 큰 CSV는 처리하는 데 매우 오랜 시간이 걸릴 수 있습니다. 큰 CSV를 처리해야 하는 경우 오프라인 작업을 활성화하는 것이 좋습니다';
 $lang["csv_upload_createdfromcsvupload"]='CSV 업로드 플러그인에서 생성됨';
+$lang["plugin-csv_upload-title"]='CSV 업로드';
+$lang["plugin-csv_upload-desc"]='[고급] CSV 파일을 사용하여 메타데이터 업로드.';

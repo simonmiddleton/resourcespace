@@ -66,3 +66,5 @@ $lang["csv_upload_process_offline_quick"]='跳过验证并离线处理CSV文件�
 $lang["csv_upload_force_offline"]='这个大型 CSV 文件可能需要很长时间才能处理完毕，因此将在离线状态下运行。处理完成后，您将通过 ResourceSpace 消息收到通知。';
 $lang["csv_upload_recommend_offline"]='这个大型 CSV 文件可能需要很长时间才能处理完毕。如果您需要处理大型 CSV 文件，建议启用离线作业。';
 $lang["csv_upload_createdfromcsvupload"]='从CSV上传插件创建';
+$lang["plugin-csv_upload-title"]='CSV上传';
+$lang["plugin-csv_upload-desc"]='[高级] 使用CSV文件上传元数据';

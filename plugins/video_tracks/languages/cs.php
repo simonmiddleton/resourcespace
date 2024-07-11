@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"]='Vlastní formáty';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Povolit použití dostupných možností výstupu souborů k vytvoření vlastních video formátů pro původní soubor?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Zaškrtněte pro zahájení transkódování nyní. Pokud nezaškrtnuto, obdržíte oznámení, až bude soubor připraven.';
 $lang["video_tracks_transcode_now_label"]='Převést nyní';
+$lang["plugin-video_tracks-title"]='Video stopy';
+$lang["plugin-video_tracks-desc"]='[Pokročilé] Přidat podporu pro různé možnosti zvuku a titulků pro video zdroje';

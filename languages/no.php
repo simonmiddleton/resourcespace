@@ -3033,3 +3033,10 @@ $lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [user
 
 [text_footer]';
 $lang["csv_export_filename"]='metadata_export_[search]_[time]';
+$lang["plugin-category-asset-processing"]='Behandling av eiendeler';
+$lang["plugin-category-authentication"]='Autentisering';
+$lang["plugin-category-collaboration"]='Samarbeid';
+$lang["plugin-category-integrations"]='Integrasjoner';
+$lang["plugin-category-system"]='System';
+$lang["plugin-category-user-interface"]='Brukergrensesnitt';
+$lang["plugin-category-workflow-and-access"]='Arbeidsflyt og tilgang';

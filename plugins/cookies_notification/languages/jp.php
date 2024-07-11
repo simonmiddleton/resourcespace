@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"]='ユーザ�
 $lang["cookies_notification_cookies_use_title"]='Cookieの使用';
 $lang["cookies_notification_cookies_use_error_msg"]='ResourceSpaceでCookieの使用を許可しないことを決定しました。ResourceSpaceは正常に動作するためにCookieが必要なため、ログアウトする必要がありました。';
 $lang["cookies_notification_cookies_use_require_option_error_msg"]='システムにアクセスする前に、クッキーの使用を承諾する必要があります。';
+$lang["plugin-cookies_notification-title"]='クッキー通知';
+$lang["plugin-cookies_notification-desc"]='ResourceSpaceがユーザーの活動を追跡するためにクッキーをどのように使用するかを通知する機能を追加し、ヘッダーにメッセージを表示します';
