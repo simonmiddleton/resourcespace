@@ -4,10 +4,6 @@
  * 
  * @package ResourceSpace
  * @subpackage Pages_Team
- * @author Brian Adams <wreality@gmail.com>
- * @todo Link to wiki page for config.php activated plugins. (Help text)
- * @todo Fortify plugin delete code
- * @todo Update plugin DB if uploaded plugin is installed (upgrade functionality)
  */
 include "../../include/boot.php";
 
@@ -73,8 +69,7 @@ function legacy_check(&$i_plugin, $key)
 for ($n=0;$n<count($inst_plugins);$n++)
     {
     # Check if group access is permitted by YAML file. Needed because plugin may have been enabled before this development)
-    $plugin_yaml_path = get_plugin_path($inst_plugins[$n]["name"])."/".$inst_plugins[$n]["name"].".yaml";
-    $py = get_plugin_yaml($plugin_yaml_path, false);  
+    $py = get_plugin_yaml($inst_plugins[$n]["name"], false);  
     
     // Override YAML values (not config) with updated plugin YAML
     foreach(["title","name","icon","author","desc","version","category","config_url"] as $yaml_idx)
@@ -108,7 +103,7 @@ function load_plugins($plugins_dir)
             if ((count($status)==0) || ($status[0]['inst_version']==null))
                 {
                 # Look for a <pluginname>.yaml file.
-                $plugin_yaml = get_plugin_yaml($plugins_dir.$file.'/'.$file.'.yaml', false);
+                $plugin_yaml = get_plugin_yaml($file, false);
                 foreach ($plugin_yaml as $key=>$value)
                     {
                     $plugins_avail[$file][$key] = $value ;

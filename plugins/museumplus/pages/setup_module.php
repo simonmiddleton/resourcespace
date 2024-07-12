@@ -11,8 +11,7 @@ if(!checkperm('a'))
 $museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);
 
 $plugin_name = 'museumplus';
-$plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
-$plugin_yaml = get_plugin_yaml($plugin_yaml_path, false);
+$plugin_yaml = get_plugin_yaml($plugin_name, false);
 $breadcrumbs = array(
     array(
         'title' => $lang["systemsetup"],

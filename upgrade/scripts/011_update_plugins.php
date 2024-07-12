@@ -10,7 +10,7 @@ $plugins_dir = dirname(__FILE__) . '/../../plugins/';
 
 foreach ($active_plugins as $plugin)
     {
-    $plugin_yaml = get_plugin_yaml($plugins_dir . $plugin . '/' . $plugin . '.yaml', false);
+    $plugin_yaml = get_plugin_yaml($plugin, false);
     if ($plugin_yaml['title'] != '')
         {
         ps_query("UPDATE plugins SET title = ? WHERE name = ?",["s",$plugin_yaml['title'],"s",$plugin]);

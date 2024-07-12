@@ -274,8 +274,7 @@ foreach($plugins as $plugin_name)
         ) {
             # Installed plugin isn't marked as installed in the DB.  Update it now.
             # Check if there's a plugin.yaml file to get version and author info.
-            $plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
-            $p_y = get_plugin_yaml($plugin_yaml_path, false);
+            $p_y = get_plugin_yaml($plugin_name, false);
             # Write what information we have to the plugin DB.
             ps_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
                 ,array
@@ -304,8 +303,7 @@ $plugins = array();
 foreach($active_plugins as $plugin)
     {
     # Check group access && YAML, only enable for global access at this point
-    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
-    $py = get_plugin_yaml($plugin_yaml_path, false);
+    $py = get_plugin_yaml($plugin["name"], false);
     array_push($active_yaml,$py);
     if ($py['disable_group_select'] || $plugin['enabled_groups'] == '')
         {
@@ -318,8 +316,7 @@ for ($n=count($active_plugins)-1;$n>=0;$n--)
     {
     $plugin=$active_plugins[$n];
     # Check group access && YAML, only enable for global access at this point
-    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
-    $py = get_plugin_yaml($plugin_yaml_path, false);
+    $py = get_plugin_yaml($plugin["name"], false);
     if ($py['disable_group_select'] || $plugin['enabled_groups'] == '')
         {
         include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
