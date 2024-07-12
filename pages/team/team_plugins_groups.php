@@ -10,9 +10,7 @@ include "../../include/boot.php";
 include "../../include/authenticate.php";if (!checkperm("a")) {exit ("Permission denied.");}
 
 $plugin=getval("plugin","");
-
-$plugin_yaml_path = get_plugin_path($plugin) . "/" . $plugin . ".yaml";
-$py = get_plugin_yaml($plugin_yaml_path, false);  
+$py = get_plugin_yaml($plugin, false);
 if($py['disable_group_select'])
     {
     $error = $lang['plugins-disabled-plugin-message'];

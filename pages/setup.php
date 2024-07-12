@@ -1238,7 +1238,7 @@ else
         if (is_dir($plugins_dir.$file)&&$file[0]!='.')
             {
             # Look for a <pluginname>.yaml file.
-            $plugin_yaml = get_plugin_yaml($plugins_dir.$file.'/'.$file.'.yaml', false);
+            $plugin_yaml = get_plugin_yaml($file, false);
             if(isset($plugin_yaml["category"]) 
                     && $plugin_yaml["category"]=="structural"
                     && isset($plugin_yaml["info_url"])

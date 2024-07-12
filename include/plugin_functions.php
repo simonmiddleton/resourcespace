@@ -21,7 +21,7 @@ function activate_plugin($name)
     $plugin_dir = get_plugin_path($name);
     if (file_exists($plugin_dir))
         {
-        $plugin_yaml = get_plugin_yaml("$plugin_dir/$name.yaml", false);
+        $plugin_yaml = get_plugin_yaml($name, false);
         # If no yaml, or yaml file but no description present, attempt to read an 'about.txt' file
         if ('' == $plugin_yaml['desc'])
             {
@@ -109,16 +109,17 @@ function purge_plugin_config($name)
  * Load a .yaml file for a plugin and return an array of its
  * values.
  *
- * @param string $path Path to .yaml file to open.
+ * @param string $plugin Name of the plugin
  * @param bool $validate Check that the .yaml file is complete. [optional, default=false]
  * @param bool $translate Translate the contents to the user's selected language (default=true)
  * @return array|bool Associative array of yaml values. If validate is false, this function will return an array of 
  *                    blank values if a yaml isn't available
  */
-function get_plugin_yaml($path, $validate=true, $translate=true)
+function get_plugin_yaml($plugin, $validate=true, $translate=true)
 {
+
     # We're not using a full YAML structure, so this parsing function will do
-    $plugin_yaml['name'] = basename($path, '.yaml');
+    $plugin_yaml['name'] = $plugin;
     $plugin_yaml['version'] = '0';
     $plugin_yaml['author'] = '';
     $plugin_yaml['info_url'] = '';
@@ -130,6 +131,11 @@ function get_plugin_yaml($path, $validate=true, $translate=true)
     $plugin_yaml['title'] = '';
     $plugin_yaml['icon'] = '';
 
+    // Validate plugin name (prevent path traversal when getting .yaml)
+    if (!ctype_alnum(str_replace(["_","-"],"",$plugin))) { return $validate ? false : $plugin_yaml;}
+
+    // Find plugin YAML
+    $path = get_plugin_path($plugin) . "/" . $plugin . ".yaml";
     if (!(file_exists($path) && is_readable($path))) {
         return $validate ? false : $plugin_yaml;
     }
@@ -1534,9 +1540,8 @@ function register_group_access_plugins(int $usergroup=-1,array $plugins = []): a
     foreach($active_plugins as $plugin)
         {
         #Get Yaml
-        $plugin_yaml_path = get_plugin_path($plugin["name"]) ."/".$plugin["name"].".yaml";
         $py="";
-        $py = get_plugin_yaml($plugin_yaml_path, false);
+        $py = get_plugin_yaml($plugin["name"], false);
 
         # Check group access and applicable for this user in the group, only if group access is permitted as otherwise will have been processed already
         if(!$py['disable_group_select'] && $plugin['enabled_groups'] != '')
