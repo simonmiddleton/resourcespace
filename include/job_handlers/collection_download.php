@@ -24,10 +24,19 @@ global $lang, $baseurl, $baseurl_short, $offline_job_delete_completed, $exiftool
 $text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument, $ffmpeg_preview_extension,
 $collection_download_settings,$restricted_full_download, $ffmpeg_supported_extensions, $ffmpeg_audio_extensions;
 
-foreach($job_data as $arg => $value)
-    {
-    $$arg = $value;
-    }
+$collection             = $job_data['collection'];
+$collectiondata         = $job_data['collectiondata'];
+$result                 = $job_data['result'];
+$size                   = $job_data['size'];
+$exiftool_write_option  = $job_data['exiftool_write_option'];
+$useoriginal            = $job_data['useoriginal'];
+$id                     = $job_data['id'];
+$includetext            = $job_data['includetext'];
+$count_data_only_types  = $job_data['count_data_only_types'];
+$usage                  = $job_data['usage'];
+$usagecomment           = $job_data['usagecomment'];
+$settings_id            = $job_data['settings_id'];
+$include_csv_file       = $job_data['include_csv_file'];
 
 if(isset($job_data["ext"]))
     {

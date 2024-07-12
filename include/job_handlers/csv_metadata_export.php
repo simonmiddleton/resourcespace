@@ -4,18 +4,23 @@ Job handler to process CSV metadata download for result set
 
 Requires the following job data:
 
-$job_data["personaldata"]    - (bool) Only include fields marked as likely to contains personal data?
-$job_data["allavailable"]    - (bool) Include data from all fields?
-$job_data["$search_results"] - (array) Result set returned by do_search()*/
+$job_data["personaldata"]       - (bool) Only include fields marked as likely to contains personal data?
+$job_data["allavailable"]       - (bool) Include data from all fields?
+$job_data["exportresources"]    - (array) List of resources to export
+*/
 
 include_once __DIR__ . '/../csv_export_functions.php';
 
 global $lang, $baseurl_short, $offline_job_delete_completed, $scramble_key, $userref, $username;
 
-foreach($job_data as $arg => $value)
-    {
-    $$arg = $value;
-    }
+$personaldata       = $job_data["personaldata"];
+$allavailable       = $job_data["allavailable"];
+$exportresources    = $job_data["exportresources"];
+$search             = $job_data["search"];
+$restypes           = $job_data["restypes"];
+$archive            = $job_data["archive"];
+$access             = $job_data["access"];
+$sort               = $job_data["sort"];
 
 // Set up the user who requested the metadata download as it needs to be processed with their access
 $user_select_sql = new PreparedStatementQuery();

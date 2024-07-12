@@ -11,12 +11,9 @@ include_once __DIR__ . '/../image_processing.php';
 
 global $offline_job_delete_completed;
 
-$path = '';
-
-foreach($job_data as $arg => $value)
-    {
-    $$arg = $value;
-    }
+$ref        = $job_data["ref"];
+$extension  = $job_data["extension"];
+$path       = $job_data["path"]??'';
 
 extract_text($ref, $extension, $path);
 
@@ -30,8 +27,4 @@ else
     job_queue_update($jobref, $job_data, STATUS_COMPLETE);
     }
 
-// Clean after job handler
-foreach($job_data as $arg => $value)
-    {
-    unset($$arg);
-    }
+unset($ref,$extension,$path);
