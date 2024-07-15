@@ -27,18 +27,18 @@ function responsiveCollectionBar() {
         jQuery('#CollectionDiv').hide(0);
         responsive_hide = function() {
             return jQuery('#CollectionMinitems').html();
-        }  
+        }
         jQuery('#UICenter').before("<div id='cover' style='display: none;'></div>");
-        jQuery("#CollectionDiv").before("<div id='responsive_collection_toggle' class='CollectBack'><a class='rotate' href='#'></a></div>"); 
+        jQuery("#CollectionDiv").before("<div id='responsive_collection_toggle' class='CollectBack'><a class='rotate' href='#'></a></div>");
         hideResponsiveCollection();
 
         jQuery("#responsive_collection_toggle").click(function(event) {
             event.preventDefault();
             if(!jQuery('#responsive_collection_toggle').hasClass('slide_btn')) {
-                showResponsiveCollection();        
-            } else {  
-                hideResponsiveCollection(); 
-            } 
+                showResponsiveCollection();
+            } else {
+                hideResponsiveCollection();
+            }
         });
     }
     else if(jQuery(window).width()<=900 && (jQuery('#responsive_collection_toggle').length)) {
@@ -54,7 +54,7 @@ function responsiveCollectionBar() {
         }else if(thumbs==="hide") {
             showResponsiveCollection();
             HideThumbs();
-        } 
+        }
     }
 }
 
@@ -80,14 +80,14 @@ function touchScroll(id)
     {
     if(is_touch_device())
         {
-        var el             = document.getElementById(id);
+        let el             = document.getElementById(id);
         var scrollStartPos = 0;
 
-        document.getElementById(id).addEventListener("touchstart", function(event) {
+        el.addEventListener("touchstart", function(event) {
             scrollStartPos = this.scrollTop+event.touches[0].pageY;
         });
 
-        document.getElementById(id).addEventListener("touchmove", function(event) {
+        el.addEventListener("touchmove", function(event) {
             this.scrollTop = scrollStartPos-event.touches[0].pageY;
         });
         }
