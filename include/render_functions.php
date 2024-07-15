@@ -7151,7 +7151,7 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     /** @var string Client side namespace to prevent clashes */
     $ns = "Resource{$ref}{$ctx['context']}";
 
-    if (!($resource['has_image'] !== RESOURCE_PREVIEWS_NONE && $download_multisize)) {
+    if (!(($resource['has_image'] !== RESOURCE_PREVIEWS_NONE) && $download_multisize)) {
         return;
     }
 
