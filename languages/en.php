@@ -2598,6 +2598,7 @@ $lang['systemconfig_max_login_attempts_per_ip_label'] = 'How many failed login a
 $lang['systemconfig_max_login_attempts_per_username_label'] = 'How many failed login attempts per username until a temporary ban is placed on this IP';
 $lang['systemconfig_max_login_attempts_wait_minutes_label'] = 'Waiting time (in minutes) for temporary banned users due to failed login attempts';
 $lang['systemconfig_password_brute_force_delay_label'] = 'Delay (in seconds) after failed attempts';
+$lang['systemconfig_external_share_requires_password_label'] = 'External sharing links require password';
 $lang['systemconfig_option_not_allowed_error'] = 'Option not allowed! Please contact system admin';
 $lang['systemconfig_comments'] = 'Resource comments';
 $lang['systemconfig_featured_collections'] = 'Featured Collections';

@@ -403,6 +403,7 @@ $page_def[] = config_add_single_select(
     '',
     true
 );
+$page_def[] = config_add_boolean_select('share_password_required', $lang['systemconfig_external_share_requires_password_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
 // API section
