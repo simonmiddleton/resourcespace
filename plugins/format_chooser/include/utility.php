@@ -215,4 +215,15 @@ function getProfileFileName($profile)
     return null;
     }
 
-?>
+/**
+ * Helper function to run determine if the plugin should take effect.
+ * @param array $resource Resource data
+ */
+function failed_format_chooser_checks(array $resource): bool
+{
+    return $resource['has_image'] !== RESOURCE_PREVIEWS_ALL
+        || !$GLOBALS['download_multisize']
+        || $GLOBALS['save_as']
+        || !supportsInputFormat($resource['file_extension'])
+        || !file_exists(get_resource_path($resource['ref'], true, '', false, $resource['file_extension']));
+}

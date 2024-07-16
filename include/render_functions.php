@@ -7290,7 +7290,7 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         updatePreviewLink('<?php echo escape($ns); ?>', selected_size, picker);
         updateDownloadLink('<?php echo escape($ns); ?>', selected_size, picker);
     });
-    <?php hook('append_to_resource_tools_size_download_options_script', '', [$ns, $allowed_sizes]); ?>
+    <?php hook('append_to_resource_tools_size_download_options_script', '', [$ns, $allowed_sizes, $resource]); ?>
     </script>
 <?php
 }

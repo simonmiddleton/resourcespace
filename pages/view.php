@@ -1859,7 +1859,7 @@ function updateDownloadLink(ns, selected_size, picker)
     download_btn.prop('href', link.attr('href'));
     download_btn.attr('onclick', link.attr('onclick'));
     download_btn.text(link.text().trim());
-    <?php hook('append_to_updateDownloadLink_js'); ?>
+    <?php hook('append_to_updateDownloadLink_js', '', [$resource]); ?>
 }
 
     jQuery('document').ready(function(){

@@ -1,6 +1,10 @@
 <?php
 function HookFormat_chooserViewAppend_to_download_filename_td(array $resource, string $ns)
 {
+    if (failed_format_chooser_checks($resource)) {
+        return false;
+    }
+
     // IMPORTANT: the namespace variables (i.e. "ns") exist in both PHP and JS worlds and are generated
     // by render_resource_tools_size_download_options() which are then relied upon on the view page.
     ?>
@@ -18,8 +22,12 @@ function HookFormat_chooserViewAppend_to_download_filename_td(array $resource, s
     showProfileChooser('', false, $ns);
 }
 
-function HookFormat_chooserViewAppend_to_resource_tools_size_download_options_script(string $ns, array $allowed_sizes)
+function HookFormat_chooserViewAppend_to_resource_tools_size_download_options_script(string $ns, array $allowed_sizes, array $resource)
 {
+    if (failed_format_chooser_checks($resource)) {
+        return false;
+    }
+
     // IMPORTANT: Directly within Javascript world on the view page (via render_resource_tools_size_download_options())!
 
     if (count($allowed_sizes) > 1) {
@@ -58,9 +66,14 @@ function HookFormat_chooserViewAppend_to_resource_tools_size_download_options_sc
     <?php
 }
 
-function HookFormat_chooserViewAppend_to_updateDownloadLink_js()
+function HookFormat_chooserViewAppend_to_updateDownloadLink_js(array $resource)
 {
     global $baseurl;
+
+    if (failed_format_chooser_checks($resource)) {
+        return false;
+    }
+
 
     /*
     IMPORTANT: Directly within Javascript world on the view page!
