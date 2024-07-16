@@ -250,7 +250,6 @@ $page_def[] = config_add_boolean_select('advanced_search_contributed_by', $lang[
 $page_def[] = config_add_boolean_select('advanced_search_media_section', $lang['systemconfig_advanced_search_media_section_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
-
 // Navigation section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_navigation'] . '</h3><div id="SystemConfigNavigationSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('help_link', $lang['systemconfig_help_link_label'], $yes_no_options, 420, '', true);
@@ -578,10 +577,10 @@ config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/a
 
 # $lang is not a config option! 
 unset($system_wide_config_options['lang']);
-foreach ($system_wide_config_options as $key => $value)
-    {
-    $GLOBALS[$key] = $value;
-    }
+foreach ($system_wide_config_options as $key => $value) {
+    // Some varible names are used multiple times, only get the first value
+    $GLOBALS[$key] = $GLOBALS[$key] ?? $value;
+}
 
 # Get user ref for use in header.php when loading profile image.
 if (!isset($userref))
