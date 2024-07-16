@@ -1533,10 +1533,7 @@ function create_resource_type($name)
     ps_query("INSERT INTO resource_type (name) VALUES (?) ",array("s",$name));
     $newid = sql_insert_id();
     clear_query_cache("schema");
-    if(isset($GLOBALS["restype_cache"]))
-        {
-        unset($GLOBALS["restype_cache"]);
-        }
+    clear_restype_cache();
     return $newid;
     }
 
@@ -1636,9 +1633,20 @@ function save_resource_type(int $ref, array $savedata)
         }
 
     clear_query_cache("schema");
+    clear_restype_cache();
     return true;
     }
 
+/**
+ * Force clear of restype_cache after editing resource type where get_resource_types() needs to pick up the new value.
+ */
+function clear_restype_cache() : void
+    {
+    if(isset($GLOBALS["restype_cache"]))
+        {
+        unset($GLOBALS["restype_cache"]);
+        }
+    }
 
 /**
  * Get resource_type data
