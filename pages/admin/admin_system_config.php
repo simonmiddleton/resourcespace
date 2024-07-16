@@ -579,9 +579,7 @@ config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/a
 unset($system_wide_config_options['lang']);
 foreach ($system_wide_config_options as $key => $value) {
     // Some varible names are used multiple times, only get the first value
-    if (!isset($GLOBALS[$key])) {
-        $GLOBALS[$key] = $value;
-    }
+    $GLOBALS[$key] = $GLOBALS[$key] ?? $value;
 }
 
 # Get user ref for use in header.php when loading profile image.
