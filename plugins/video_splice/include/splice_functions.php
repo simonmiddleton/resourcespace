@@ -33,12 +33,12 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
         $target_completed_location = $target_temp_location . "/" . $target_order_count . $has_no_audio . "." . $target_video_extension;
 
         // SECURITY NOTE: The target_video_command and target_audio_command are not escaped as they come from config and contain multiple option/value combinations thus cannot be escaped
-        $validcommandregex = "/^[a-zA-Z0-9\\s\\-:]*\$/";
-        if (!preg_match($validcommandregex, $target_video_command) === 1) {
+        $validcommandregex = '/^[a-zA-Z0-9\s\-:]*$/';
+        if (!preg_match($validcommandregex, $target_video_command)) {
             debug("Invalid video command: " . $target_video_command);
             return false;
         }
-        if (!preg_match($validcommandregex, $target_audio_command) === 1) {
+        if (!preg_match($validcommandregex, $target_audio_command)) {
             debug("Invalid audio command: " . $target_audio_command);
             return false;
         }
