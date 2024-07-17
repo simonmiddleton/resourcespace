@@ -55,7 +55,7 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
             if ($extension == 'jpg' || $extension == 'png')
                 {
                 run_command(
-                    "{$ffmpeg_fullpath} -y -loop 1 -i image -t video_bookend_seconds path_n",
+                    "{$ffmpeg_fullpath} -y -loop 1 -i image -t video_bookend_seconds -filter:v \"crop=trunc(iw/2)*2:trunc(ih/2)*2\" path_n",
                     false,
                     [
                         'image' => new CommandPlaceholderArg($image, 'is_valid_rs_path'),
