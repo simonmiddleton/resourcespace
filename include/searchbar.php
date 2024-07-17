@@ -203,7 +203,7 @@ $found_year="";if (isset($set_fields["basicyear"])) {$found_year=$set_fields["ba
 $found_month="";if (isset($set_fields["basicmonth"])) {$found_month=$set_fields["basicmonth"];}
 $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basicday"];}
 
-$selected_search_tab = getval("selected_search_tab","");
+$selected_search_tab = getval("selected_search_tab", "search");
 ?>
 <script>
 var categoryTreeChecksArray = [];
