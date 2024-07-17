@@ -7162,7 +7162,7 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         }
 
         $downloadthissize = resource_download_allowed($ref, $size['id'], $resource['resource_type']);
-        if ($GLOBALS['hide_restricted_download_sizes'] && !$downloadthissize && !checkperm('q')) {
+        if (!$downloadthissize && !checkperm('q')) {
             continue;
         }
 
