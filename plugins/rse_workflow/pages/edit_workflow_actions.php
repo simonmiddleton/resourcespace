@@ -146,12 +146,12 @@ else
         echo "<tr class=\"rse_workflow_link\" onclick=\"CentralSpaceLoad('" .  $baseurl . "/plugins/rse_workflow/pages/edit_action.php?ref=" . $workflowaction["ref"] . "',true);\">";
         ?>
             <td><div class="ListTitle"><?php echo escape($workflowaction["name"]); ?></div>
-            </td>           
-            <td><?php echo $workflowaction["text"]; ?>
             </td>
-            <td><?php echo $workflowaction["buttontext"]; ?>
+            <td><?php echo escape($workflowaction["text"]); ?>
             </td>
-            <td><?php 
+            <td><?php echo escape($workflowaction["buttontext"]); ?>
+            </td>
+            <td><?php
                 $fromstates=explode(",",$workflowaction["statusfrom"]);
                 $fromstatetext="";
                 foreach ($fromstates as $fromstate)

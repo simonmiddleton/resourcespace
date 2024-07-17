@@ -173,7 +173,13 @@ renderBreadcrumbs($links_trail);
     
     <div class="Question" id="buttontext_question">
     <label for="buttontext"><?php echo escape($lang["rse_workflow_button_text"]); ?></label>
-    <input class="stdwidth" type="text" name="buttontext" id="buttontext" value="<?php echo escape($workflowaction["buttontext"]);  ?>" />
+    <input
+        class="stdwidth"
+        type="text"
+        name="buttontext"
+        id="buttontext"
+        value="<?php echo escape($workflowaction["buttontext"]);  ?>"
+    />
     <div class="clearerleft"> </div>
     </div>
     
