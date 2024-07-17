@@ -599,6 +599,7 @@ function compile_search_actions($top_actions)
         "restypes"      =>  $restypes,
         "order_by"      =>  $order_by,
         "archive"       =>  $archive,
+        "access"        =>  $search_access,
         "sort"          =>  $sort,
         "daylimit"      =>  $daylimit,
         "offset"        =>  $offset,

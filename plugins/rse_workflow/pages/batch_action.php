@@ -55,12 +55,21 @@ $search = getval("search", "");
 $restypes = getval("restypes", "");
 if (strpos($search,"!")!==false) {$restypes="";}
 $order_by = getval("order_by", "relevance");
-$archive = getval("archive", "0");
+$archive = getval("archive", "");
+$access = getval("access", null);
 $per_page = getval("per_page", null, true);
 $offset = getval("offset", 0, true);
 $sort = getval("sort", "desc");
 $recent_search_daylimit = getval("recent_search_daylimit", "");
 $go = getval("go", "");
+
+$search_all_workflow_states_cache = $search_all_workflow_states;
+
+if ($archive == "") {
+    $archive = 0;
+} else {
+    $search_all_workflow_states = false;
+}
 
 // Override if needed
 if(!is_null($collection))
@@ -85,8 +94,12 @@ $result = do_search(
     $go,
     true, # $stats_logging
     false, # $return_refs_only
-    false # $editable_only
+    false, # $editable_only
+    false,
+    $access
 );
+
+$search_all_workflow_states = $search_all_workflow_states_cache;
 
 $resources = array();
 if(is_array($result) && count($result) > 0)
@@ -131,6 +144,7 @@ $form_action = generateURL($_SERVER['PHP_SELF'],
         "restypes" => $restypes,
         "order_by" => $order_by,
         "archive" => $archive,
+        "access" => $access,
         "per_page" => $per_page,
         "offset" => $offset,
         "sort" => $sort,
