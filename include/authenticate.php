@@ -23,6 +23,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
             }
         }
     // Establish session hash
+    $session_hash = "";
     if (array_key_exists("user",$_GET))
         {
         $session_hash=$_GET["user"];
@@ -34,7 +35,6 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
     elseif (isset($anonymous_login))
         {
         $username=$anonymous_login;
-        $session_hash="";
         $rs_session=get_rs_session_id(true);
         }
 
