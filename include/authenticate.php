@@ -36,7 +36,12 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
         $username=$anonymous_login;
         $session_hash="";
         $rs_session=get_rs_session_id(true);
-        }  
+        }
+
+    if (!is_string($session_hash)) {
+        http_response_code(400);
+        exit();
+    }
 
     // Automatic anonymous login, do not require session hash.
     $user_select_sql = new PreparedStatementQuery();
