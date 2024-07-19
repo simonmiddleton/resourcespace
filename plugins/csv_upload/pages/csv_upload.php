@@ -180,7 +180,9 @@ jQuery('document').ready(function()
        
         console.log("selected: " + selField);
         console.log("prev:      " + prevField);
-        
+        if (selField == undefined || selField == '') {
+            return; 
+        }
         jQuery(this).attr("prev",selField);
         if(prevField != selField)
             {
@@ -552,7 +554,7 @@ switch($csvstep)
                             $workflow_states = get_editable_states($userref);
                             foreach($workflow_states as $workflow_state)
                                 {
-                                ?><option value="<?php echo (int) $workflow_state["id"]; ?>" <?php if($csv_set_options["status_default"] == $workflow_state["id"]){echo " selected ";} ?>><?php echo escape($workflow_state["name"]); ?></option>                                   
+                                ?><option value="<?php echo (int) $workflow_state["id"]; ?>"><?php echo escape($workflow_state["name"]); ?></option>                                   
                                 <?php
                                 }
                             ?>
@@ -593,7 +595,7 @@ switch($csvstep)
                                 {
                                 if(!checkperm("ea" . $n) || checkperm("v"))
                                     {
-                                    echo "<option value=\"" . $n . "\" " . (($csv_set_options["access_default"] == $n) ? " selected " : "") . ">" . escape($lang["access" . $n]) . "</option>\n";
+                                    echo "<option value=\"" . $n . "\">" . escape($lang["access" . $n]) . "</option>\n";
                                     }
                                 }
                                 ?>
