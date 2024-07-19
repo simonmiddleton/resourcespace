@@ -2926,7 +2926,7 @@ function get_featured_collection_resources(array $c, array $ctx)
             $unionparams = array_merge($rca_join_params, ["i",$c["bg_img_resource_ref"]], $rca_where_params);
             }
         // For most_popular_image & most_popular_images we change the limit only if it hasn't been provided by the context.
-        elseif($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($limit))
+        elseif (in_array($c["thumbnail_selection_method"],[$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_recent_image"]]) && is_null($limit))
             {
             $limit = 1;
             }
@@ -3021,7 +3021,6 @@ function get_featured_collection_resources(array $c, array $ctx)
                     $union,
                     sql_limit(null, $limit)
                 );
-            
                 $fc_resources = array_merge($fc_resources, ps_array($sql,array_merge($subquery_params,$unionparams),"themeimage"));
                 }
                 $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
@@ -3033,9 +3032,15 @@ function get_featured_collection_resources(array $c, array $ctx)
     $subquery["where"] .= " {$rca_where} {$fc_permissions_where}";
     $subquery_params = array_merge($subquery_params,$fc_permissions_where_params);
     
-    $sql = sprintf("SELECT DISTINCT ti.ref AS `value`, ti.use_as_theme_thumbnail, ti.hit_count FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
+    $order_by="ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC";
+    if ($c["thumbnail_selection_method"]==$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_recent_image"])
+        {
+        $order_by="ti.ref DESC";
+        }
+    $sql = sprintf("SELECT DISTINCT ti.ref AS `value`, ti.use_as_theme_thumbnail, ti.hit_count FROM (%s %s) AS ti ORDER BY %s %s",
         implode(" ", $subquery),
         $union,
+        $order_by,
         sql_limit(null, $limit)
     );
 

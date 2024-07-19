@@ -2774,3 +2774,5 @@ $lang["plugin-category-system"]='Systém';
 $lang["plugin-category-user-interface"]='Uživatelské rozhraní';
 $lang["plugin-category-workflow-and-access"]='Pracovní postup a přístup';
 $lang["call-function"]='Zavolejte funkci';
+$lang["background_most_recent_image"]='Nejnovější obrázek';
+$lang["systemconfig_external_share_requires_password_label"]='Odkazy pro externí sdílení vyžadují heslo';

@@ -2945,3 +2945,5 @@ $lang["plugin-category-system"]='Sistem';
 $lang["plugin-category-user-interface"]='Antarmuka Pengguna';
 $lang["plugin-category-workflow-and-access"]='Alur Kerja dan Akses';
 $lang["call-function"]='Panggil fungsi';
+$lang["background_most_recent_image"]='Gambar terbaru';
+$lang["systemconfig_external_share_requires_password_label"]='Tautan berbagi eksternal memerlukan kata sandi';

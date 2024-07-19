@@ -2941,3 +2941,5 @@ $lang["plugin-category-user-interface"]='Interface do Usuário';
 $lang["plugin-category-workflow-and-access"]='Fluxo de Trabalho e Acesso';
 $lang["plugin-category-integrations"]='Integrações';
 $lang["call-function"]='Chamar função';
+$lang["background_most_recent_image"]='Imagem mais recente';
+$lang["systemconfig_external_share_requires_password_label"]='Links de compartilhamento externo exigem senha';

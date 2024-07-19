@@ -2854,3 +2854,5 @@ $lang["plugin-category-system"]='Sustav';
 $lang["plugin-category-user-interface"]='Korisničko sučelje';
 $lang["plugin-category-workflow-and-access"]='Tijek rada i pristup';
 $lang["call-function"]='Pozovi funkciju';
+$lang["background_most_recent_image"]='Najnovija slika';
+$lang["systemconfig_external_share_requires_password_label"]='Vanjske poveznice za dijeljenje zahtijevaju lozinku';

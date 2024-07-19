@@ -2780,3 +2780,5 @@ $lang["plugin-category-system"]='Sistem';
 $lang["plugin-category-user-interface"]='Kullanıcı Arayüzü';
 $lang["plugin-category-workflow-and-access"]='İş Akışı ve Erişim';
 $lang["call-function"]='Fonksiyonu çağır';
+$lang["background_most_recent_image"]='En son görüntü';
+$lang["systemconfig_external_share_requires_password_label"]='Harici paylaşım bağlantıları şifre gerektirir';

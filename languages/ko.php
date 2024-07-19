@@ -2783,3 +2783,5 @@ $lang["plugin-category-system"]='시스템';
 $lang["plugin-category-user-interface"]='사용자 인터페이스';
 $lang["plugin-category-workflow-and-access"]='워크플로우 및 접근';
 $lang["call-function"]='함수 호출';
+$lang["background_most_recent_image"]='가장 최근 이미지';
+$lang["systemconfig_external_share_requires_password_label"]='외부 공유 링크는 비밀번호가 필요합니다';

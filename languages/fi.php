@@ -3049,3 +3049,5 @@ $lang["plugin-category-system"]='Järjestelmä';
 $lang["plugin-category-user-interface"]='Käyttöliittymä';
 $lang["plugin-category-workflow-and-access"]='Työnkulku ja käyttöoikeus';
 $lang["call-function"]='Kutsu funktio';
+$lang["background_most_recent_image"]='Uusin kuva';
+$lang["systemconfig_external_share_requires_password_label"]='Ulkoinen jakolinkki vaatii salasanan';

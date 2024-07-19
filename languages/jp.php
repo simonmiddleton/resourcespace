@@ -2928,3 +2928,5 @@ $lang["plugin-category-system"]='システム';
 $lang["plugin-category-user-interface"]='ユーザーインターフェース';
 $lang["plugin-category-workflow-and-access"]='ワークフローとアクセス';
 $lang["call-function"]='関数を呼び出す';
+$lang["background_most_recent_image"]='最新の画像';
+$lang["systemconfig_external_share_requires_password_label"]='外部共有リンクにはパスワードが必要です';
