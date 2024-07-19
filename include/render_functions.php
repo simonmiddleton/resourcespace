@@ -1345,7 +1345,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                     CentralSpaceLoad('<?php echo $baseurl; ?>/pages/search.php?search=!collection' + response.redirect_to_collection, true);
                                     }
                                 else if(basename(document.URL).substr(0, 20) === 'collections_featured'){
-                                    CentralSpaceLoad('<?php echo $baseurl . '/pages/collections_featured.php'; ?>')
+                                    CentralSpaceLoad(document.URL);
                                     }
                                 }
                         }, 'json');    
