@@ -3224,3 +3224,6 @@ $lang["plugin-category-integrations"]='Integracije';
 $lang["plugin-category-system"]='Sistem';
 $lang["plugin-category-user-interface"]='Uporabniški vmesnik';
 $lang["plugin-category-workflow-and-access"]='Potek dela in dostop';
+$lang["call-function"]='Pokliči funkcijo';
+$lang["background_most_recent_image"]='Najbolj nedavna slika';
+$lang["systemconfig_external_share_requires_password_label"]='Zunanje povezave za deljenje zahtevajo geslo';

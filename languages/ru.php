@@ -2887,3 +2887,6 @@ $lang["plugin-category-integrations"]='Интеграции';
 $lang["plugin-category-system"]='Система';
 $lang["plugin-category-user-interface"]='Пользовательский интерфейс';
 $lang["plugin-category-workflow-and-access"]='Рабочий процесс и доступ';
+$lang["call-function"]='Вызвать функцию';
+$lang["background_most_recent_image"]='Самое последнее изображение';
+$lang["systemconfig_external_share_requires_password_label"]='Ссылки для внешнего обмена требуют пароль';

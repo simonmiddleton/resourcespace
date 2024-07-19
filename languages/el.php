@@ -2853,3 +2853,6 @@ $lang["plugin-category-integrations"]='Ενσωματώσεις';
 $lang["plugin-category-system"]='Σύστημα';
 $lang["plugin-category-user-interface"]='Διεπαφή Χρήστη';
 $lang["plugin-category-workflow-and-access"]='Ροή εργασίας και Πρόσβαση';
+$lang["call-function"]='Κλήση λειτουργίας';
+$lang["background_most_recent_image"]='Πιο πρόσφατη εικόνα';
+$lang["systemconfig_external_share_requires_password_label"]='Οι εξωτερικοί σύνδεσμοι κοινής χρήσης απαιτούν κωδικό πρόσβασης';

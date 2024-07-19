@@ -2994,3 +2994,6 @@ $lang["plugin-category-integrations"]='集成';
 $lang["plugin-category-system"]='系统';
 $lang["plugin-category-user-interface"]='用户界面';
 $lang["plugin-category-workflow-and-access"]='工作流程和访问权限';
+$lang["call-function"]='调用函数';
+$lang["background_most_recent_image"]='最新图片';
+$lang["systemconfig_external_share_requires_password_label"]='外部共享链接需要密码';

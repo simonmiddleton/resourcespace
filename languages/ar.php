@@ -2999,3 +2999,6 @@ $lang["plugin-category-integrations"]='التكاملات';
 $lang["plugin-category-system"]='النظام';
 $lang["plugin-category-user-interface"]='واجهة المستخدم';
 $lang["plugin-category-workflow-and-access"]='سير العمل والوصول';
+$lang["call-function"]='استدعاء الوظيفة';
+$lang["background_most_recent_image"]='أحدث صورة';
+$lang["systemconfig_external_share_requires_password_label"]='الروابط الخارجية للمشاركة تتطلب كلمة مرور';

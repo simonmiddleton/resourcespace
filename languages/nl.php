@@ -2890,3 +2890,6 @@ $lang["plugin-category-integrations"]='Integraties';
 $lang["plugin-category-system"]='Systeem';
 $lang["plugin-category-user-interface"]='Gebruikersinterface';
 $lang["plugin-category-workflow-and-access"]='Workflow en Toegang';
+$lang["call-function"]='Functie aanroepen';
+$lang["background_most_recent_image"]='Meest recente afbeelding';
+$lang["systemconfig_external_share_requires_password_label"]='Externe deelkoppelingen vereisen wachtwoord';

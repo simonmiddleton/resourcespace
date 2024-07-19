@@ -366,6 +366,7 @@ $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
     "no_image" => 0,
     "most_popular_image" => 1,
     "most_popular_images" => 10,
+    "most_recent_image" => 20,
     "manual" => 100,
 );
 $COLLECTION_PUBLIC_TYPES = array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED);
