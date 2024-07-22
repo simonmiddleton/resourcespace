@@ -4943,7 +4943,7 @@ function render_featured_collection(array $ctx, array $fc)
         if(count($theme_images) == 1)
             {
             $alt_string = $theme_images[0]['alt_text'] ?? "";
-            $theme_image_path = $theme_images[0]["path"];
+            $theme_image_path = $theme_images[0]["path"] ?? "";
             $html_container_style[] = "background: url({$theme_image_path});";
             $html_container_style[] = "background-size: cover;";
             $theme_images = array();
