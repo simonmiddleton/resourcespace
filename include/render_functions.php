@@ -4928,8 +4928,10 @@ function render_featured_collection(array $ctx, array $fc)
     $theme_images = (isset($ctx["images"]) ? $ctx["images"] : array());
     $theme_images = array_map(
         function($theme_image) use ($view_title_field, $lang){
+            if (!isset($theme_image['ref'])) {return $theme_image;} // Invalid data [t35944]
             $ref = $theme_image['ref'];
             $resource_data = get_resource_data($ref);
+            if ($resource_data===false) {return $theme_image;} // Resource not found
             $theme_image['alt_text'] = $resource_data['field' . $view_title_field] ?? $lang['resource-1'] . ' ' . $ref;
             return $theme_image;
         }
