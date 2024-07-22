@@ -366,7 +366,7 @@ else
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"] => $lang["select"],
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] => $lang["background_most_popular_image"],
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] => str_replace("%n", $theme_images_number, $lang["background_most_popular_images"]),
-                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_recent_image"] => str_replace("%n", $theme_images_number, $lang["background_most_recent_image"]),
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_recent_image"] => $lang["background_most_recent_image"],
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"] => $lang["background_manual_selection"],
             );
 
