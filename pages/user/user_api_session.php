@@ -47,7 +47,7 @@ include "../../include/header.php";
     } elseif($remote_system) {?>
         <p>
         <?php echo escape(str_replace(
-            ["%system%","[applicationname]"],
+            ["[system]","[applicationname]"],
             [$remote_system["name"],$applicationname],
             $lang["user_api_session_text"]
             ));?>

@@ -3138,7 +3138,7 @@ $lang["system_user_default"]                = "SYSTEM";
 $lang["userlimitreached"] = "You have reached your user limit. An existing user must be disabled or deleted before you can create new accounts or enable existing accounts.";
 
 $lang["user_api_session_title"]             = "Remote system API access";
-$lang["user_api_session_text"]              = "The remote system '%system%' is requesting access to [applicationname] using your credentials. Click 'Grant access' only if you have initiated this request"; 
+$lang["user_api_session_text"]              = "The remote system '[system]' is requesting access to [applicationname] using your credentials. Click 'Grant access' only if you have initiated this request"; 
 $lang["user_api_session_invalid_system"]    = "Invalid system requested";
 $lang["user_api_session_grant_access"]      = "Grant access";
 $lang["user_api_session_grant_success"]     = "Key issued successfully.";
