@@ -4979,7 +4979,7 @@ function render_featured_collection(array $ctx, array $fc)
                 );
                 ?>
                 <img src="<?php echo $theme_image['path']; ?>" 
-                     alt="<?php echo escape($theme_image['alt_text']); ?>" 
+                     alt="<?php echo escape($theme_image['alt_text'] ?? ""); ?>" 
                      class="TileGroupImageBase" 
                      style="<?php echo implode(" ", $style); ?>" >
                 <?php
