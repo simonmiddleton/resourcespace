@@ -3233,11 +3233,10 @@ function emulate_user($user, $usergroup="")
                     $plugins[]=$plugin['name'];
                     }
                 }
-            for ($n=count($plugins)-1;$n>=0;$n--)
-                {
-                register_plugin_language($plugins[$n]);
-                }
-            $emulate_plugins_set=true;                  
+            foreach (array_reverse($plugins) as $plugin) {
+                register_plugin_language($plugin);
+            }
+            $emulate_plugins_set=true;
             }
         
         if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)

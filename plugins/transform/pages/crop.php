@@ -549,14 +549,12 @@ renderBreadcrumbs($links_trail);
 
 ?>
 <p><?php
-  if($cropperestricted)
-      {
-      echo strip_tags_and_attributes($lang['transformblurbrestricted']);
-      }
-  else
-      {
-      echo escape($saveaction == "original" ? $lang['transformblurb-original'] : $lang['transformblurb']);
-      }?>
+    if($cropperestricted) {
+        echo strip_tags_and_attributes($lang['transformblurbrestricted']);
+    } else {
+        $blurb = $saveaction == "original" ? $lang['transformblurb-original'] : $lang['transformblurb'];
+        echo strip_tags_and_attributes($blurb);
+    }?>
 </p>
 
 
