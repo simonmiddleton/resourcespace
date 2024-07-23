@@ -189,8 +189,8 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
                 }
             $plugin_yaml["desc"]= $lang["plugin-" . $plugin_yaml["name"] . "-desc"]  ?? $plugin_yaml["desc"];
             }
-        $param="plugin-category-" . strtolower(str_replace(" ","-",$plugin_yaml["category"]));
-        $plugin_yaml["category"]= $lang[$param] ?? $plugin_yaml["category"];  
+        $param="plugin-category-" . strtolower(str_replace(" ","-",$plugin_yaml["category"] ?? ""));
+        $plugin_yaml["category"]= $lang[$param] ?? $plugin_yaml["category"] ?? "";
         }
 
     return $plugin_yaml;
