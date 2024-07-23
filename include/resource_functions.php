@@ -6236,7 +6236,7 @@ function get_total_disk_usage()
 /**
  *  Calculate if the quota set by $disksize in the configuration has been exceeded.
  *
- * @return array|bool           Rrue if the system is over quota
+ * @return array|bool           True if the system is over quota
  */
 function overquota()
     {
