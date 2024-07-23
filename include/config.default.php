@@ -1006,6 +1006,9 @@ $file_upload_block_duplicates=false;
 # recommended if files are large, since the checksums can take time
 $file_checksums_offline = false;
 
+// Enable file integrity checking
+$file_integrity_checks=false;
+
 // $file_integrity_verify_window - set server time window that the file integrity check script can run in.
 // This can be resource intensive when checking checksums for a large number of resources.
 // Note that to fully verify file integrity requires setting $file_checksums=true AND $file_checksums_50k=false)

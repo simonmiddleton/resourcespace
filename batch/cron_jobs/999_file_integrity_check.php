@@ -1,6 +1,8 @@
 <?php
 include_once __DIR__ . "/../../include/boot.php";
 
+if (!$file_integrity_checks) {echo "Skipping file integrity checks.\n";return;}
+
 function check_valid_cron_time()
 {
     // Check if in a valid time period
