@@ -552,6 +552,13 @@ function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$fi
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
+    // Check not over quota
+    if (overquota())
+        {
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['disk_size_no_upload_explain']));
+        }
+
+    // Check for duplicates
     $duplicates=check_duplicate_checksum($file_path,false);
     if (count($duplicates)>0)
         {
@@ -583,6 +590,12 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
         {
         // URL failed validation
         return false;
+        }
+
+    // Check not over quota
+    if (overquota())
+        {
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['disk_size_no_upload_explain']));
         }
 
     // Generate unique hash to use so that other uploads with the same name won't conflict
@@ -1424,6 +1437,13 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
             }
         }
 
+    // Check not over quota
+    if (overquota())
+        {
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['disk_size_no_upload_explain']));
+        }
+
+    // Check for duplicates
     $duplicates = check_duplicate_checksum($_FILES['file']['tmp_name'], false);
     if (count($duplicates) > 0)
         {

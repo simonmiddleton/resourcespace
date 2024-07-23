@@ -41,31 +41,25 @@ include "../../include/header.php";
     <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
     <ul>
     
-    <?php if (checkperm("c")) { 
-        if ($overquota)
-            {
-            ?><li class="overquota"><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo escape($lang["manageresources"])?> : <strong><?php echo escape($lang["manageresources-overquota"])?></strong></li><?php
-            }
-        else
-            {
-            ?><li><a href="<?php echo $baseurl_short?>pages/team/team_resource.php"
-                <?php if (getval("modal","")!="")
-                  {
-                  # If a modal, open in the same modal
-                  ?>
-                  onClick="return ModalLoad(this,true,true,'right');"
-<?php
-                  }
-                else
-                  { ?>
-                  onClick="return CentralSpaceLoad(this,true);"
-                  <?php
-                  }
+    <?php if (checkperm("c"))
+        { 
+        ?><li><a href="<?php echo $baseurl_short?>pages/team/team_resource.php"
+            <?php if (getval("modal","")!="")
+                {
+                # If a modal, open in the same modal
                 ?>
-            
-            ><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo escape($lang["manageresources"]); ?></a></li><?php
-            }
-        }
+                onClick="return ModalLoad(this,true,true,'right');"
+<?php
+                }
+            else
+                { ?>
+                onClick="return CentralSpaceLoad(this,true);"
+                <?php
+                }
+            ?>
+        
+        ><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo escape($lang["manageresources"]); ?></a></li><?php    
+    }
     ?>
                 
     <?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo escape($lang["managerequestsorders"]); ?>

@@ -6233,14 +6233,16 @@ function get_total_disk_usage()
     return ps_value("select ifnull(sum(disk_usage),0) value from resource where ref>?",array("i",$fstemplate_alt_threshold), 0,"stats");
     }
 
+/**
+ *  Calculate if the quota set by $disksize in the configuration has been exceeded.
+ *
+ * @return array|bool           Rrue if the system is over quota
+ */
 function overquota()
     {
-    # Return true if the system is over quota
     global $disksize;
     if (isset($disksize))
         {
-        # Disk quota functionality. Calculate the usage by the $storagedir folder only rather than the whole disk.
-        # Unix only due to reliance on 'du' command
 
         $avail=$disksize * 1000 * 1000 * 1000;
         $used=get_total_disk_usage();

@@ -542,33 +542,11 @@ if(0 > $ref && $reset_date_upload_template && isset($reset_date_field) && '' == 
     }
 
 # check for upload disabled due to space limitations...
-if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
+if ($ref<0 && isset($disk_quota_limit_size_warning_noupload) && overquota())
     {
-    # check free space
-    if (isset($disksize))
-        {
-            # Use disk quota rather than real disk size
-        $avail=$disksize*(1024*1024*1024);
-        $used=get_total_disk_usage();
-        $free=$avail-$used;
-        }
-    else
-        {       
-        $avail=disk_total_space($storagedir);
-        $free=disk_free_space($storagedir);
-        $used=$avail-$free;
-        }
-        
-    # convert limit
-    $limit=$disk_quota_limit_size_warning_noupload*1024*1024*1024;
-
-    # compare against size setting
-    if($free<=$limit)
-        {
-        # shut down uploading by redirecting to explanation page
-        $explain=$baseurl_short."pages/no_uploads.php";
-        redirect($explain);
-        }
+    # shut down uploading by redirecting to explanation page
+    $explain=$baseurl_short."pages/no_uploads.php";
+    redirect($explain);
     }
 
 // Check if upload should be disabled because the filestore location is indexed and browseable
