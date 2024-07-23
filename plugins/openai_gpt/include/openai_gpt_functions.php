@@ -168,7 +168,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
             }
         else
             {
-            $newvalue = $openai_response;
+            $newvalue = trim($openai_response," \"");
             }
         $valid_response = true;
         }
