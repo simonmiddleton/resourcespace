@@ -898,10 +898,9 @@ function check_db_structs($verbose=false)
     
     // Check the structure of all active plugins.
     global $plugins;
-    for ($n=0;$n<count($plugins);$n++)
-        {
-        CheckDBStruct("plugins/" . $plugins[$n] . "/dbstruct");
-        }
+    foreach ($plugins as $plugin) {
+        CheckDBStruct("plugins/" . $plugin . "/dbstruct");
+    }
     hook("checkdbstruct");
     
     clear_process_lock('database_update_in_progress');
