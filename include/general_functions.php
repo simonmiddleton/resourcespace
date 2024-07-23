@@ -4823,43 +4823,46 @@ function get_system_status()
         return $return;
         }
 
-
-    // Check for resources that have failed integrity checks
-    $exclude_sql = [];
-    $exclude_params = [];
-    $exclude_types = array_merge($GLOBALS["file_integrity_ignore_resource_types"],$GLOBALS["data_only_resource_types"]);
-    if(count($exclude_types) > 0) {
-        $exclude_sql[] = "resource_type NOT IN (" . ps_param_insert(count($exclude_types)) . ")";
-        $exclude_params = array_merge($exclude_params,ps_param_fill($exclude_types,"i"));
-    }
-    if(count($GLOBALS["file_integrity_ignore_states"]) > 0) {
-        $exclude_sql[] = "resource_type NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
-        $exclude_params = array_merge($exclude_params,ps_param_fill($GLOBALS["file_integrity_ignore_states"],"i"));
-    }
-    $failedquery = "SELECT COUNT(*) value FROM resource WHERE ref>0 AND integrity_fail=1 AND no_file=0"
-        . (count($exclude_sql) > 0 ? " AND " . join(" AND ", $exclude_sql) : "");
-    $failed = ps_value($failedquery,$exclude_params,0);
-    if($failed > 0) {
-        $return['results']['files_integrity_fail'] = [
-            'status' => 'FAIL',
-            'info' => "Files have failed integrity checks",
-            'severity' => SEVERITY_WARNING,
-            'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
-        ];
-    }
-    // Also check for resources that have not been verified in the last two weeks
-    $norecentquery = "SELECT COUNT(*) value FROM resource WHERE ref>0 AND no_file=0 "
-    . (count($exclude_sql) > 0 ? " AND " . join(" AND ", $exclude_sql) : "")
-    . "AND DATEDIFF(NOW(),last_verified) > 14";
-    $notchecked = ps_value($norecentquery,$exclude_params,0);
-    if($notchecked > 0) {
-        $return['results']['recent_file_verification'] = [
-            'status' => 'FAIL',
-            'info' => $notchecked . " resources have not had recent file integrity checks",
-            'severity' => SEVERITY_WARNING,
-            'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
-        ];
-    }
+    global $file_integrity_checks;
+    if ($file_integrity_checks)
+        {
+        // Check for resources that have failed integrity checks
+        $exclude_sql = [];
+        $exclude_params = [];
+        $exclude_types = array_merge($GLOBALS["file_integrity_ignore_resource_types"],$GLOBALS["data_only_resource_types"]);
+        if(count($exclude_types) > 0) {
+            $exclude_sql[] = "resource_type NOT IN (" . ps_param_insert(count($exclude_types)) . ")";
+            $exclude_params = array_merge($exclude_params,ps_param_fill($exclude_types,"i"));
+        }
+        if(count($GLOBALS["file_integrity_ignore_states"]) > 0) {
+            $exclude_sql[] = "resource_type NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
+            $exclude_params = array_merge($exclude_params,ps_param_fill($GLOBALS["file_integrity_ignore_states"],"i"));
+        }
+        $failedquery = "SELECT COUNT(*) value FROM resource WHERE ref>0 AND integrity_fail=1 AND no_file=0"
+            . (count($exclude_sql) > 0 ? " AND " . join(" AND ", $exclude_sql) : "");
+        $failed = ps_value($failedquery,$exclude_params,0);
+        if($failed > 0) {
+            $return['results']['files_integrity_fail'] = [
+                'status' => 'FAIL',
+                'info' => "Files have failed integrity checks",
+                'severity' => SEVERITY_WARNING,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+            ];
+        }
+        // Also check for resources that have not been verified in the last two weeks
+        $norecentquery = "SELECT COUNT(*) value FROM resource WHERE ref>0 AND no_file=0 "
+        . (count($exclude_sql) > 0 ? " AND " . join(" AND ", $exclude_sql) : "")
+        . "AND DATEDIFF(NOW(),last_verified) > 14";
+        $notchecked = ps_value($norecentquery,$exclude_params,0);
+        if($notchecked > 0) {
+            $return['results']['recent_file_verification'] = [
+                'status' => 'FAIL',
+                'info' => $notchecked . " resources have not had recent file integrity checks",
+                'severity' => SEVERITY_WARNING,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+            ];
+        }
+        }
 
 
     // Check filestore folder browseability
