@@ -14,15 +14,19 @@ if (!function_exists("rse_workflow_get_actions")) {
     function rse_workflow_get_actions($status="",$ref="") : array
     {
         # Check if we are searching for actions specific to a status
-        $condition = "";
-        $params = array();
-        if($status != "" && is_int($status)) {
-            $condition = " WHERE wa.statusfrom = ? ";
-            $params = array_merge("i", $status);
+        $condition = new PreparedStatementQuery();
+        if ($status != "" && is_int($status)) {
+            $condition = new PreparedStatementQuery('WHERE wa.statusfrom = ? ', ['i', $status]);
         }
-        if($ref != "") {
-            $condition = " WHERE wa.ref=? ";
-            $params = array_merge("i", $ref);
+        if ($ref != "") {
+            $condition = new PreparedStatementQuery(
+                sprintf(
+                    '%s%s wa.ref = ? ',
+                    $condition->sql,
+                    $condition->sql === '' ? 'WHERE' : 'AND'
+                ),
+                array_merge($condition->parameters, ['i', $ref])
+            );
         }
 
         $results = ps_query(
@@ -39,11 +43,11 @@ if (!function_exists("rse_workflow_get_actions")) {
                 a.notify_user_flag,
                 a.email_from,
                 a.bcc_admin
-            FROM workflow_actions wa
-                LEFT OUTER JOIN archive_states a ON wa.statusto = a.code $condition
+            FROM workflow_actions AS wa
+            LEFT OUTER JOIN archive_states AS a ON wa.statusto = a.code {$condition->sql}
             GROUP BY wa.ref
             ORDER BY wa.ref, wa.statusfrom, wa.statusto ASC",
-            $params
+            $condition->parameters
         );
 
         foreach ($results as &$row) {
