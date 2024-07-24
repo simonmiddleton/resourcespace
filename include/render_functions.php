@@ -2998,7 +2998,7 @@ function render_share_options($shareopts=array())
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
-                $selected   = (substr($editexpiration,0,10) == $ymd_date);
+                $selected   = (substr($editexpiration  ?? "",0,10) == $ymd_date);
                 $date_text  = nicedate($ymd_date,false,true);
                 $option_class = '';
                 $day_date = date('D', $date);
