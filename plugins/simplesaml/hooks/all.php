@@ -541,7 +541,7 @@ function HookSimplesamlAllLoginformlink()
 
     // Include URL redirect for RelayState
     $requested = parse_url(getval("url",""));
-    $relpath = trim($requested["path"]) ?? "/";
+    $relpath = trim($requested["path"] ?? "/");
 
     if (file_exists(dirname(__DIR__,3) . str_replace("../","",$relpath))) {
         // Only add if this is a valid file
