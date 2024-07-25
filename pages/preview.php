@@ -140,7 +140,7 @@ if($resource['has_image'] === 0)
 
 // Determine the appropriate preview sizes to look for. Access will be checked by get_resource_preview()
 $previewsizes = ["scr","pre"];
-$imagepre = get_resource_preview($resource,$previewsizes, $access, $use_watermark);
+$imagepre = get_resource_preview($resource,$previewsizes, $access, $use_watermark, $page);
 if($imagepre)
     {
     $url = $imagepre["url"];
@@ -150,12 +150,21 @@ else
     $url = $GLOBALS["baseurl_short"] . 'gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
     }
 
+// Here we check for the presence or otherwise of the relevant multi-page preview files (for PDFs and potentially others) 
+// The resulting values control the presence or otherwise of the navigation chevrons used for Next and Previous page browsing
+// Multi-page preview files for the second page onwards will either be "scr" or "pre" size. 
+// The size to look for here is governed by $resource_view_use_pre. If false then "scr" else true means "pre" 
+$multipagesize=$resource_view_use_pre?"pre":"scr";
 
-# Next / previous page browsing (e.g. pdfs)
 $previouspage=$page-1;
-if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$previouspage,$use_watermark,"",$alternative))&&!file_exists(get_resource_path($ref,true,"",false,$ext,-1,$previouspage,$use_watermark,"",$alternative))) {$previouspage=-1;}
+if (!file_exists(get_resource_path($ref,true,$multipagesize,false,$ext,-1,$previouspage,$use_watermark,"",$alternative))
+    && !file_exists(get_resource_path($ref,true,"",false,$ext,-1,$previouspage,$use_watermark,"",$alternative))) {
+    $previouspage=-1;
+}
 $nextpage=$page+1;
-if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$nextpage,$use_watermark,"",$alternative))) {$nextpage=-1;}
+if (!file_exists(get_resource_path($ref,true,$multipagesize,false,$ext,-1,$nextpage,$use_watermark,"",$alternative))) {
+    $nextpage=-1;
+}
 
 // get mp3 paths if necessary and set $use_mp3_player switch
 if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && (in_array($resource["file_extension"],$ffmpeg_audio_extensions) || $resource["file_extension"]=="mp3") && $mp3_player){
@@ -286,8 +295,23 @@ if (
 <table cellpadding="0" cellspacing="0">
 <tr>
 
-<td valign="middle"><?php if ($resource['file_extension']!="jpg" && $previouspage!=-1 &&resource_download_allowed($ref,"scr",$resource["resource_type"])) { ?><a onClick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>&ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($previouspage)?>" class="PDFnav  pagePrev">&lt;</a><?php } 
-elseif ($nextpage!=-1 && resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark) { ?><a href="#" class="PDFnav pagePrev">&nbsp;&nbsp;&nbsp;</a><?php } ?></td>
+<td valign="middle">
+    <?php 
+    if ($resource['file_extension']!="jpg" && $previouspage!=-1 &&resource_download_allowed($ref,"scr",$resource["resource_type"])) {
+    ?>
+    <a onClick="return CentralSpaceLoad(this);" 
+        href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>
+        &ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>
+        &order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>
+        <?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>
+        &archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($previouspage)?>" class="PDFnav  pagePrev">&lt;</a>
+    <?php } 
+    elseif ($nextpage!=-1 && resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark) {
+    ?>
+    <a href="#" class="PDFnav pagePrev">&nbsp;&nbsp;&nbsp;</a>
+    <?php } 
+    ?>
+</td>
 <?php 
 $video_preview_file=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
 $block_video_playback = resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre');
@@ -337,7 +361,20 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
             } // end hook replacepreviewimage 
         }
         ?>
-<td valign="middle"><?php if ($nextpage!=-1 && resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark) { ?><a onClick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>&ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($nextpage)?>" class="PDFnav pageNext">&gt;</a><?php } ?></td>
+<td valign="middle">
+    <?php 
+    if ($nextpage!=-1 && resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark) {
+    ?>
+    <a onClick="return CentralSpaceLoad(this);" 
+        href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>
+        &ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>
+        &order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>
+        <?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>
+        &archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($nextpage)?>" class="PDFnav pageNext">&gt;
+    </a>
+    <?php } 
+    ?>
+</td>
 </tr></table>
 
 <?php } // end hook previewimage2 ?>

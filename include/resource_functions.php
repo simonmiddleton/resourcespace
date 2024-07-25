@@ -9408,11 +9408,12 @@ function related_resource_pull(array $resource)
  * @param int       $access     Resource access
  * @param array     $sizes      Array of size IDs to look through, in order of size. If not provied will use all sizes
  * @param bool      $watermark  Look for watermarked versions?
+ * @param int       $page       Page to look for
  *
  * @return string | bool        URL, or false if no image is found
  *
  */
-function get_resource_preview(array $resource,array $sizes = [], int $access = -1, bool $watermark = false)
+function get_resource_preview(array $resource,array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1)
     {
     if(empty($sizes))
         {
@@ -9469,14 +9470,14 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
                 false,
                 $resource['preview_extension'],
                 true,
-                1,
+                $page,
                 $use_watermark,
                 $resource['file_modified']
             );
             if(file_exists($img_file))
                 {
                 $preview["path"] = $img_file;
-                $preview["url"] = get_resource_path($resource['ref'],false,$size ,false,$resource['preview_extension'],true,1,$use_watermark,$resource['file_modified']);
+                $preview["url"] = get_resource_path($resource['ref'],false,$size ,false,$resource['preview_extension'],true,$page,$use_watermark,$resource['file_modified']);
                 $GLOBALS["use_error_exception"] = true;
                 try
                     {
