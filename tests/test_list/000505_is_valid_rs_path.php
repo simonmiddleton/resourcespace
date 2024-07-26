@@ -16,6 +16,11 @@ copy(dirname(__DIR__, 2) . '/gfx/homeanim/1.jpg', $static_sync_test_path);
 
 $use_cases = [
     [
+        'name' => 'Allow watermark (static) file',
+        'input' => [dirname(__DIR__, 2) . '/gfx/watermark.png'],
+        'expected' => true,
+    ],
+    [
         'name' => 'Allow resource files',
         'setup' => fn() => file_put_contents(get_resource_path($resource_a, true, '', true, 'jpg'), ''),
         'input' => [get_resource_path($resource_a, true, '', true, 'jpg')],
