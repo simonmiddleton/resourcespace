@@ -203,7 +203,10 @@ if($order_by_resource_id)
 $sort_order_fields['resourcetype'] = $lang['type'];
 
 foreach ($sort_fields as $field) {
-    $sort_order_fields["field$field"] = get_resource_type_field($field)["title"];
+    $field_data = get_resource_type_field($field);
+    if ($field_data !== false) {
+        $sort_order_fields["field$field"] = $field_data["title"];
+    }
 }
 
 $page_def[] = config_add_single_select(
