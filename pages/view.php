@@ -1017,8 +1017,10 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 }
                                             ?>
                                             <tr class="DownloadDBlend">
-                                                <td class="DownloadFileName"><h2><?php echo $download_file_name; ?></h2></td>
-                                                <td class="DownloadFileSize"><?php echo escape($lang["notavailableshort"]); ?></td>
+                                                <td class="DownloadFileName">
+                                                    <h2><?php echo escape($download_file_name); ?></h2>
+                                                    <p><?php echo escape($lang["notavailableshort"]); ?></p>
+                                                </td>
 
                                                 <?php
                                                 if ($generate_data_only_pdf_file)
@@ -1043,7 +1045,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     if(!hook('resourcerequest'))
                                                         {
                                                         ?>
-                                                        <td <?php hook("modifydownloadbutton") ?> class="DownloadButton"></td>
+                                                        <td <?php hook("modifydownloadbutton"); ?> class="DownloadButton">
+                                                            <a href="<?php echo generateURL("{$baseurl}/pages/resource_request.php", $urlparams); ?>" onclick="return CentralSpaceLoad(this, true);">
+                                                                <?php echo escape($lang["action-request"])?>
+                                                            </a>
+                                                        </td>
                                                         <?php
                                                         }
                                                     }
@@ -1096,7 +1102,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 <?php
                                             }
 
-                                        // render_resource_tools_size_download_options();
                                         hook('additionalresourcetools2', '', array($resource, $access));
                                         include "view_alternative_files.php";
                                     ?>
