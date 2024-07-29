@@ -397,8 +397,11 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
         $allowed_paths = array_map('trim', $override_paths);
     }
     else {
-        $default_paths[] = $GLOBALS['storagedir'];
-        $default_paths[] = $GLOBALS['syncdir'];
+        $default_paths = [
+            dirname(__DIR__) . '/gfx',
+            $GLOBALS['storagedir'],
+            $GLOBALS['syncdir'],
+        ];
         if (isset($GLOBALS['tempdir'])) {
             $default_paths[] = $GLOBALS['tempdir'];
         }
