@@ -1561,5 +1561,5 @@ function register_group_access_plugins(?int $usergroup=-1,array $plugins = []): 
             }
         }
 
-    return array_unique($plugins);
+    return array_values(array_unique($plugins));
 }
