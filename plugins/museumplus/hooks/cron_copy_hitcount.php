@@ -15,20 +15,20 @@ function HookMuseumplusCron_copy_hitcountAddplugincronjob()
         {
         $museumplus_script_last_ran = '';
         $check_script_last_ran = check_script_last_ran(MPLUS_LAST_IMPORT, $museumplus_script_failure_notify_days, $museumplus_script_last_ran);
-        $mplus_script_future_run_date = new DateTime();
+        $current_datetime = new DateTimeImmutable();
 
         // Use last date the script was run, if available
-        if($check_script_last_ran || (!$check_script_last_ran && $lang['status-never'] != $museumplus_script_last_ran))
-            {
-            $mplus_script_future_run_date = DateTime::createFromFormat('l F jS Y @ H:m:s', $museumplus_script_last_ran);
-            }
+        if ($check_script_last_ran || (!$check_script_last_ran && $lang['status-never'] != $museumplus_script_last_ran)) {
+            $mplus_script_last_run_datetime = DateTimeImmutable::createFromFormat(
+                'l F jS Y @ H:m:s',
+                $museumplus_script_last_ran
+            );
+        } else {
+            $mplus_script_last_run_datetime = $current_datetime;
+        }
 
-        $mplus_script_future_run_date->modify($museumplus_interval_run);
-
-        // Calculate difference between dates and establish whether it should run or not
-        $date_diff = $mplus_script_future_run_date->diff(new DateTime());
-
-        if(0 < $date_diff->days)
+        $mplus_script_future_run_datetime = $mplus_script_last_run_datetime->modify($museumplus_interval_run);
+        if ($mplus_script_future_run_datetime && $mplus_script_future_run_datetime > $current_datetime)
             {
             return false;
             }
