@@ -1122,6 +1122,17 @@ jQuery(document).ready(function () {
             },
 
         onBeforeUpload: (files) => {
+            <?php
+            if ($upload_collection_name_required && $upload_then_edit && $replace_resource == "" && $replace == "" && $alternative == "")
+                { ?>
+                let upload_collection_name = document.getElementById("entercolname").value;
+                if (upload_collection_name == '')
+                    {
+                    styledalert('<?php echo escape($lang['error-unable_to_upload']) ?>', '<?php echo escape($lang["collectionname"] . ":  " .$lang["requiredfield"]); ?>', 380);
+                    return false;
+                    }
+                <?php } ?>
+
             res_type_field = document.getElementById("resourcetype");
             res_type = "";
             if (typeof(res_type_field) !== 'undefined' && res_type_field != null)
@@ -1932,7 +1943,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
-    <h2 class="CollapsibleSectionHead collapsed" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo escape($lang["upload-options"]); ?></h2>
+    <h2 class="CollapsibleSectionHead <?php if ($upload_collection_name_required && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php } ?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo escape($lang["upload-options"]); ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
     <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
     <?php
