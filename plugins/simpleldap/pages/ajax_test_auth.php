@@ -56,7 +56,7 @@ if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1)
     $GLOBALS["use_error_exception"] = true;
     try 
         {
-        $login = ldap_bind( $ds, ldap_escape($binduserstring, "", LDAP_ESCAPE_DN), $simpleldap['ldappassword'] );
+        $login = ldap_bind( $ds, $binduserstring, $simpleldap['ldappassword'] );
         }
     catch(Exception $e)
         {
