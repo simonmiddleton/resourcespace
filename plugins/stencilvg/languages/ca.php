@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='PPP per a sortida ràster (p. ex. PNG).';
 $lang["stencilvg_createdfromstencilvg"]='Creat amb el connector StencilVG';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='Funcionalitat de publicació dinàmica / Web to print (W2P) utilitzant fitxers de plantilla SVG';
+$lang["stencilvg-print"]='Imprimeix';
+$lang["stencilvg-download"]='Descarregar';
+$lang["stencilvg-save_as_new_resource"]='Desa com a nou recurs';
+$lang["stencilvg-no_parameters_found"]='No s\'han trobat paràmetres de plantilla';

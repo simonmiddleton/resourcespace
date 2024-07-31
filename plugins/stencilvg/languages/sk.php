@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='DPI pre rastrový (napr. PNG) výstup.';
 $lang["stencilvg_createdfromstencilvg"]='Vytvorené pomocou doplnku StencilVG';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='Spletno tiskanje (W2P) / Funkcionalnost dinamičnega objavljanja z uporabo SVG predlog datotek';
+$lang["stencilvg-print"]='Tiskanje';
+$lang["stencilvg-download"]='Prenesi';
+$lang["stencilvg-save_as_new_resource"]='Shrani kot nov vir';
+$lang["stencilvg-no_parameters_found"]='Nobeni parametri predloge niso bili najdeni';

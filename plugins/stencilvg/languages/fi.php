@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='DPI raster (esim. PNG) tulosteelle.';
 $lang["stencilvg_createdfromstencilvg"]='Luotu StencilVG-liitännäisestä';
 $lang["plugin-stencilvg-desc"]='Web-to-print (W2P) / Dynaaminen julkaisu toiminnallisuus käyttäen SVG-mallipohjatiedostoja';
 $lang["plugin-stencilvg-title"]='StencilVG';
+$lang["stencilvg-print"]='Tulosta';
+$lang["stencilvg-download"]='Lataa';
+$lang["stencilvg-save_as_new_resource"]='Tallenna uutena resurssina';
+$lang["stencilvg-no_parameters_found"]='Malliparametreja ei löytynyt';

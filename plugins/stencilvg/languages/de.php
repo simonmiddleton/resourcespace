@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='DPI für Raster (z.B. PNG) Ausgabe.';
 $lang["stencilvg_createdfromstencilvg"]='Erstellt mit dem StencilVG-Plugin';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='Web-to-Print (W2P) / Dynamische Veröffentlichungsfunktionalität mit SVG-Vorlagendateien';
+$lang["stencilvg-print"]='Drucken';
+$lang["stencilvg-download"]='Herunterladen';
+$lang["stencilvg-save_as_new_resource"]='Als neue Ressource speichern';
+$lang["stencilvg-no_parameters_found"]='Keine Vorlagenparameter gefunden';

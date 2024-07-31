@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='DPI för raster (t.ex. PNG) utdata.';
 $lang["stencilvg_createdfromstencilvg"]='Skapad från StencilVG-tillägg';
 $lang["plugin-stencilvg-desc"]='Webb till tryck (W2P) / Dynamisk publiceringsfunktionalitet med SVG-mallfiler';
 $lang["plugin-stencilvg-title"]='StencilVG';
+$lang["stencilvg-print"]='Skriv ut';
+$lang["stencilvg-download"]='Ladda ner';
+$lang["stencilvg-save_as_new_resource"]='Spara som ny resurs';
+$lang["stencilvg-no_parameters_found"]='Inga mallparametrar hittades';

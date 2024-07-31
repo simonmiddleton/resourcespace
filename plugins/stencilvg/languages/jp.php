@@ -7,3 +7,7 @@ $lang["stencilvg-rsvg-not-installed"]='rsvg (librsvg2-bin)をインストール�
 $lang["stencilvg_dpi"]='ラスター（例：PNG）出力のDPI。';
 $lang["stencilvg_createdfromstencilvg"]='ステンシルVGプラグインから作成されました。';
 $lang["plugin-stencilvg-desc"]='Web to print (W2P) / SVGテンプレートファイルを使用した動的出版機能';
+$lang["stencilvg-print"]='印刷';
+$lang["stencilvg-download"]='ダウンロード';
+$lang["stencilvg-save_as_new_resource"]='新しいリソースとして保存';
+$lang["stencilvg-no_parameters_found"]='テンプレートパラメータが見つかりません';

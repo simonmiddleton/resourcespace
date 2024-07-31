@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='래스터 (예: PNG) 출력의 DPI.';
 $lang["stencilvg_createdfromstencilvg"]='StencilVG 플러그인에서 생성됨';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='웹 투 프린트 (W2P) / SVG 템플릿 파일을 사용한 동적 출판 기능';
+$lang["stencilvg-print"]='인쇄';
+$lang["stencilvg-download"]='다운로드';
+$lang["stencilvg-save_as_new_resource"]='새 리소스로 저장';
+$lang["stencilvg-no_parameters_found"]='템플릿 매개변수가 없습니다';

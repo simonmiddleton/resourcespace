@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='PPP para salida de mapa de bits (por ejemplo, PNG).';
 $lang["stencilvg_createdfromstencilvg"]='Creado desde el plugin StencilVG';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='Funcionalidad de impresión web a impresión (W2P) / Publicación dinámica utilizando archivos de plantilla SVG';
+$lang["stencilvg-print"]='Imprimir';
+$lang["stencilvg-download"]='Descargar';
+$lang["stencilvg-save_as_new_resource"]='Guardar como nuevo recurso';
+$lang["stencilvg-no_parameters_found"]='No se encontraron parámetros de plantilla';

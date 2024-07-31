@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='रास्टर (जैसे PNG) आउटपुट
 $lang["stencilvg_createdfromstencilvg"]='स्टेंसिलवीजी प्लगइन से बनाया गया';
 $lang["plugin-stencilvg-desc"]='वेब से प्रिंट (W2P) / एसवीजी टेम्पलेट फाइलों का उपयोग करके डायनामिक पब्लिशिंग कार्यक्षमता';
 $lang["plugin-stencilvg-title"]='स्टेंसिलवीजी';
+$lang["stencilvg-print"]='प्रिंट';
+$lang["stencilvg-download"]='डाउनलोड';
+$lang["stencilvg-save_as_new_resource"]='नए संसाधन के रूप में सहेजें';
+$lang["stencilvg-no_parameters_found"]='कोई टेम्पलेट पैरामीटर नहीं मिले';

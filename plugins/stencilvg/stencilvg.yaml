@@ -7,3 +7,4 @@ icon    : fa fa-hat-wizard
 default_priority: 998
 category: Asset processing
 config_url: /plugins/stencilvg/pages/setup.php
+info_url: https://www.resourcespace.com/knowledge-base/plugins/stencilvg

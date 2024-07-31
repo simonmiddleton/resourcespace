@@ -7,3 +7,7 @@ $lang["stencilvg-rsvg-not-installed"]='يرجى تثبيت rsvg (librsvg2-bin) �
 $lang["stencilvg_dpi"]='النقاط في البوصة للإخراج النقطي (مثل PNG) DPI.';
 $lang["stencilvg_createdfromstencilvg"]='تم إنشاؤه باستخدام ملحق StencilVG';
 $lang["plugin-stencilvg-desc"]='الويب إلى الطباعة (W2P) / وظيفة النشر الديناميكي باستخدام ملفات قالب SVG';
+$lang["stencilvg-print"]='طباعة';
+$lang["stencilvg-download"]='تنزيل';
+$lang["stencilvg-save_as_new_resource"]='حفظ كموارد جديدة';
+$lang["stencilvg-no_parameters_found"]='لم يتم العثور على معلمات القالب';

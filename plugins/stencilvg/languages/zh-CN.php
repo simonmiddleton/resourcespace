@@ -7,3 +7,7 @@ $lang["stencilvg-rsvg-not-installed"]='安装rsvg（librsvg2-bin）以获得PDF�
 $lang["stencilvg_dpi"]='位图（如PNG）输出的DPI。';
 $lang["stencilvg_createdfromstencilvg"]='从StencilVG插件创建';
 $lang["plugin-stencilvg-desc"]='网页到打印 (W2P) / 使用SVG模板文件的动态发布功能';
+$lang["stencilvg-print"]='打印';
+$lang["stencilvg-download"]='下载';
+$lang["stencilvg-save_as_new_resource"]='另存为新资源';
+$lang["stencilvg-no_parameters_found"]='未找到模板参数';

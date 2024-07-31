@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='DPI untuk output raster (misalnya PNG).';
 $lang["stencilvg_createdfromstencilvg"]='Dibuat dari plugin StencilVG';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='Fungsi Web to print (W2P) / Penerbitan Dinamis menggunakan file template SVG';
+$lang["stencilvg-print"]='Cetak';
+$lang["stencilvg-download"]='Unduh';
+$lang["stencilvg-save_as_new_resource"]='Simpan sebagai sumber daya baru';
+$lang["stencilvg-no_parameters_found"]='Tidak ditemukan parameter template';

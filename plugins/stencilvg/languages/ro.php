@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='DPI pentru ieșirea raster (de exemplu, PNG).';
 $lang["stencilvg_createdfromstencilvg"]='Creat cu ajutorul plugin-ului StencilVG';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='Funcționalitate Web to print (W2P) / Publicare dinamică folosind fișiere șablon SVG';
+$lang["stencilvg-print"]='Imprimare';
+$lang["stencilvg-download"]='Descărcare';
+$lang["stencilvg-save_as_new_resource"]='Salvează ca resursă nouă';
+$lang["stencilvg-no_parameters_found"]='Nu au fost găsiți parametri de șablon';

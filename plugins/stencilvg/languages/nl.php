@@ -7,3 +7,7 @@ $lang["stencilvg-rsvg-not-installed"]='Installeer rsvg (librsvg2-bin) voor PDF- 
 $lang["stencilvg_dpi"]='DPI voor raster (bijv. PNG) uitvoer.';
 $lang["stencilvg_createdfromstencilvg"]='Gemaakt met de StencilVG plugin';
 $lang["plugin-stencilvg-desc"]='Web naar print (W2P) / Dynamische publicatiefunctie met behulp van SVG-sjabloonbestanden';
+$lang["stencilvg-print"]='Afdrukken';
+$lang["stencilvg-download"]='Downloaden';
+$lang["stencilvg-save_as_new_resource"]='Opslaan als nieuwe bron';
+$lang["stencilvg-no_parameters_found"]='Geen sjabloonparameters gevonden';

@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='ΔΠΕ για απεικόνιση πλέγματος (�
 $lang["stencilvg_createdfromstencilvg"]='Δημιουργήθηκε από το πρόσθετο StencilVG';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='Λειτουργία Web to print (W2P) / Δυναμική Δημοσίευση χρησιμοποιώντας αρχεία προτύπων SVG';
+$lang["stencilvg-print"]='Εκτύπωση';
+$lang["stencilvg-download"]='Λήψη';
+$lang["stencilvg-save_as_new_resource"]='Αποθήκευση ως νέο πόρο';
+$lang["stencilvg-no_parameters_found"]='Δεν βρέθηκαν παράμετροι προτύπου';

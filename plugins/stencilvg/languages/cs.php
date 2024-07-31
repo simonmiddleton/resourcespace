@@ -8,3 +8,7 @@ $lang["stencilvg_dpi"]='DPI pro rastrový (např. PNG) výstup.';
 $lang["stencilvg_createdfromstencilvg"]='Vytvořeno z pluginu StencilVG';
 $lang["plugin-stencilvg-title"]='StencilVG';
 $lang["plugin-stencilvg-desc"]='Web to print (W2P) / Funkce dynamického publikování pomocí souborů šablon SVG';
+$lang["stencilvg-print"]='Tisk';
+$lang["stencilvg-download"]='Stáhnout';
+$lang["stencilvg-save_as_new_resource"]='Uložit jako nový zdroj';
+$lang["stencilvg-no_parameters_found"]='Nebyly nalezeny žádné parametry šablony';
