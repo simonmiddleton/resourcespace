@@ -372,31 +372,36 @@ function validate_resource_files(array $resources,array $criteria = []): array
  */
 function is_valid_rs_path(string $path, array $override_paths = []): bool
 {
+    debug_function_call(__FUNCTION__, func_get_args());
     if ($GLOBALS["config_windows"]) {
         $path = str_replace("\\", "/", $path);
     }
 
     $sourcerealpath = realpath($path);
     $source_path_not_real = !$sourcerealpath || !file_exists($sourcerealpath);
+    debug('source_path_not_real = ' . json_encode($source_path_not_real));
 
     $checkname  = $path;
     if (pathinfo($path, PATHINFO_EXTENSION) === "icc") {
         // ResourceSpace generated .icc files have a double extension, need to strip extension again before checking
         $checkname = pathinfo($path, PATHINFO_FILENAME);
     }
+    debug("checkname = {$checkname}");
 
     if ($source_path_not_real) {
         if (!(preg_match('/^(?!\.)(?!.*\.$)(?!.*\.\.)[a-zA-Z0-9_\-[:space:]\/:.]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($checkname))
         ) {
+            debug('Invalid non-existing path');
             return false;
         }
     }
 
     $path_to_validate = $source_path_not_real ? $path : $sourcerealpath;
+    debug("path_to_validate = {$path_to_validate}");
+
     if (count($override_paths) > 0) {
-        $allowed_paths = array_map('trim', $override_paths);
-    }
-    else {
+        $default_paths = $override_paths;
+    } else {
         $default_paths = [
             dirname(__DIR__) . '/gfx',
             $GLOBALS['storagedir'],
@@ -405,26 +410,27 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
         if (isset($GLOBALS['tempdir'])) {
             $default_paths[] = $GLOBALS['tempdir'];
         }
-
-        $allowed_paths = array_filter(
-            array_map(
-                'trim',
-                array_unique($default_paths)
-                )
-            );
     }
+    $allowed_paths = array_filter(array_map('trim', array_unique($default_paths)));
+    debug('allowed_paths = ' . implode(', ', $allowed_paths));
 
     foreach ($allowed_paths as $validpath) {
+        debug("Iter allowed paths - {$validpath}");
         $validpath = realpath($validpath);
         if ($GLOBALS["config_windows"]) {
             $validpath = str_replace("\\","/", $validpath);
             $path_to_validate = str_replace("\\","/", $path_to_validate);
         }
+        debug("validpath = {$validpath}");
+        debug("path_to_validate = {$path_to_validate}");
+        debug('mb_strpos($path_to_validate, $validpath) === 0 = ' . json_encode(mb_strpos($path_to_validate, $validpath) === 0));
         if ($validpath !== false && mb_strpos($path_to_validate, $validpath) === 0) {
+            debug('Path allowed');
             return true;
         }
     }
 
+    debug('Default as an invalid path');
     return false;
 }
 
