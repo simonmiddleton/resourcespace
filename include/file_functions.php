@@ -414,16 +414,16 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
     $allowed_paths = array_filter(array_map('trim', array_unique($default_paths)));
     debug('allowed_paths = ' . implode(', ', $allowed_paths));
 
-    foreach ($allowed_paths as $validpath) {
-        debug("Iter allowed paths - {$validpath}");
-        $validpath = realpath($validpath);
+    foreach ($allowed_paths as $allowed_path) {
+        debug("Iter allowed path - {$allowed_path}");
+        $validpath = $source_path_not_real ? $allowed_path : realpath($allowed_path);
         if ($GLOBALS["config_windows"]) {
+            $allowed_path = str_replace("\\","/", $allowed_path);
             $validpath = str_replace("\\","/", $validpath);
             $path_to_validate = str_replace("\\","/", $path_to_validate);
         }
         debug("validpath = {$validpath}");
         debug("path_to_validate = {$path_to_validate}");
-        debug('mb_strpos($path_to_validate, $validpath) === 0 = ' . json_encode(mb_strpos($path_to_validate, $validpath) === 0));
         if ($validpath !== false && mb_strpos($path_to_validate, $validpath) === 0) {
             debug('Path allowed');
             return true;
