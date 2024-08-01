@@ -3,6 +3,7 @@
 command_line_only();
 
 // --- Set up
+$orig_storagedir = $storagedir;
 $run_id = test_generate_random_ID(5);
 $test_tmp_dir = get_temp_dir(false);
 $resource_a = create_resource(1, 0);
@@ -12,6 +13,12 @@ $syncdir = sys_get_temp_dir() . "/staticsync/test_{$run_id}";
 mkdir($syncdir, 0777, true);
 $static_sync_test_path = "{$syncdir}/test_static_sync.jpg";
 copy(dirname(__DIR__, 2) . '/gfx/homeanim/1.jpg', $static_sync_test_path);
+
+// Symlinked filestore
+$target_dir = sys_get_temp_dir() . "/filestore/rs_test_{$run_id}";
+mkdir($target_dir, 0777, true);
+$link_name = "{$GLOBALS['storagedir']}/test_{$run_id}";
+symlink($target_dir, $link_name);
 // --- End of Set up
 
 $use_cases = [
@@ -24,6 +31,19 @@ $use_cases = [
         'name' => 'Allow resource files',
         'setup' => fn() => file_put_contents(get_resource_path($resource_a, true, '', true, 'jpg'), ''),
         'input' => [get_resource_path($resource_a, true, '', true, 'jpg')],
+        'expected' => true,
+    ],
+    [
+        'name' => 'Allow resource files (filestore w/ symlink)',
+        'setup' => function() use ($resource_a, $link_name) {
+            $GLOBALS['storagedir'] = $link_name;
+            file_put_contents(get_resource_path($resource_a, true, '', true, 'jpg'), '');
+        },
+        'revert' => fn() => $GLOBALS['storagedir'] = $orig_storagedir,
+        'input' => [
+            // simulate get_resource_path running with the same storagedir
+            str_replace($GLOBALS['storagedir'], $link_name, get_resource_path($resource_a, true, '', true, 'jpg'))
+        ],
         'expected' => true,
     ],
     [
@@ -54,6 +74,20 @@ $use_cases = [
         'expected' => true,
     ],
     [
+        'name' => 'Allow non-existent files within filestore (w/ symlink)',
+        'setup' => fn() => $GLOBALS['storagedir'] = $link_name,
+        'revert' => fn() => $GLOBALS['storagedir'] = $orig_storagedir,
+        'input' => [
+            // simulate get_resource_path running with the same storagedir
+            str_replace(
+                $GLOBALS['storagedir'],
+                $link_name,
+                get_resource_path($resource_a, true, 'not_real_size', true, 'jpg')
+            )
+        ],
+        'expected' => true,
+    ],
+    [
         'name' => 'Block non-existent files with path traversal (outside filestore)',
         'input' => ["{$test_tmp_dir}/../../../someFile.ext"],
         'expected' => false,
@@ -79,6 +113,12 @@ foreach($use_cases as $uc)
         }
 
     $result = is_valid_rs_path(...$uc['input']);
+
+    // Revert global use case environment
+    if (isset($uc['revert'])) {
+        $uc['revert']();
+    }
+
     if($uc['expected'] !== $result)
         {
         echo "Use case: {$uc['name']} - ";
@@ -91,6 +131,8 @@ foreach($use_cases as $uc)
     }
 
 // Tear down
-unset($run_id, $test_tmp_dir, $resource_a, $use_cases, $result);
+$storagedir = $orig_storagedir;
+unlink($link_name);
+unset($orig_storagedir, $run_id, $test_tmp_dir, $resource_a, $target_dir, $link_name, $use_cases, $result);
 
 return true;
