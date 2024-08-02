@@ -18,7 +18,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
     $openai_gpt_message_output_json, $openai_gpt_message_text, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,
     $openai_gpt_temperature,$openai_gpt_example_json_user,$openai_gpt_example_json_assistant,$openai_gpt_example_text_user,
     $openai_gpt_example_text_assistant,$openai_gpt_max_tokens, $openai_gpt_max_data_length, $openai_gpt_system_message,
-    $openai_gpt_fallback_model, $openai_gpt_message_output_text;
+    $openai_gpt_fallback_model, $openai_gpt_message_output_text, $open_gpt_model_override;
 
     // Don't update if not a valid field type
     if(!in_array($target_field["type"],$valid_ai_field_types))
@@ -121,7 +121,8 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
 
     // Can't use old model since move to chat API
     $use_model =trim($openai_gpt_model) == "text-davinci-003" ? $openai_gpt_fallback_model : $openai_gpt_model; 
-
+    if (isset($open_gpt_model_override)) {$use_model=$open_gpt_model_override;}
+    
     $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$use_model,$messages,$openai_gpt_temperature,$openai_gpt_max_tokens);
 
     if(trim($openai_response) != "")

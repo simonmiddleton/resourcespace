@@ -3098,3 +3098,4 @@ $lang["plugin-category-workflow-and-access"]='Arbetsflöde och åtkomst';
 $lang["call-function"]='Ring funktion';
 $lang["background_most_recent_image"]='Senaste bilden';
 $lang["systemconfig_external_share_requires_password_label"]='Externa delningslänkar kräver lösenord';
+$lang["error-unable_to_upload"]='Kan inte ladda upp filer';

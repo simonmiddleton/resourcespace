@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='Legger til metadata generert ved å sende eksisterend
 $lang["openai_gpt_api_key"]='OpenAI API-nøkkel. Få din API-nøkkel fra <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT-integrasjon';
 $lang["plugin-openai_gpt-desc"]='OpenAI genererte metadata. Sender konfigurert feltdata til OpenAI API og lagrer den returnerte informasjonen.';
+$lang["openai_gpt_model_override"]='Modellen har blitt låst i global konfigurasjon til: [model]';

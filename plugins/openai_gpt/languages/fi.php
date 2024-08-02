@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='Lisää metatietoja, jotka on luotu syöttämällä o
 $lang["openai_gpt_api_key"]='OpenAI API-avain. Hanki API-avaimesi osoitteesta <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT -integraatio';
 $lang["plugin-openai_gpt-desc"]='OpenAI luoma metadata. Välittää konfiguroidut kenttätiedot OpenAI API:lle ja tallentaa palautetut tiedot.';
+$lang["openai_gpt_model_override"]='Malli on lukittu globaaliin kokoonpanoon: [model]';

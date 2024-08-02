@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='通过将现有数据传递给OpenAI API并使用可�
 $lang["openai_gpt_api_key"]='OpenAI API 密钥。获取您的 API 密钥，请访问 <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT 集成';
 $lang["plugin-openai_gpt-desc"]='OpenAI生成的元数据。将配置的字段数据传递给OpenAI API并存储返回的信息。';
+$lang["openai_gpt_model_override"]='该模型已在全局配置中锁定为：[model]';

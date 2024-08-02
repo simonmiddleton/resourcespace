@@ -16,3 +16,4 @@ $lang["openai_gpt_api_key"]='Ключ API OpenAI. Получите свой кл
 $lang["property-openai_gpt_prompt"]='Подсказка GPT';
 $lang["plugin-openai_gpt-title"]='Интеграция с OpenAI API GPT';
 $lang["plugin-openai_gpt-desc"]='OpenAI сгенерированные метаданные. Передает настроенные данные полей в API OpenAI и сохраняет полученную информацию.';
+$lang["openai_gpt_model_override"]='Модель была заблокирована в глобальной конфигурации на: [model]';

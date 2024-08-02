@@ -16,3 +16,4 @@ $lang["openai_gpt_api_key"]='Clé API OpenAI. Obtenez votre clé API depuis <a h
 $lang["property-openai_gpt_prompt"]='Invite GPT';
 $lang["plugin-openai_gpt-title"]='Intégration de l\'API GPT d\'OpenAI';
 $lang["plugin-openai_gpt-desc"]='Métadonnées générées par OpenAI. Transmet les données de champ configurées à l\'API OpenAI et stocke les informations retournées.';
+$lang["openai_gpt_model_override"]='Le modèle a été verrouillé dans la configuration globale sur : [model]';

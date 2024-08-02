@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='Adaugă metadate generate prin trimiterea datelor exi
 $lang["openai_gpt_api_key"]='Cheie API OpenAI. Obțineți cheia API de la <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='Integrare API GPT OpenAI';
 $lang["plugin-openai_gpt-desc"]='Metadate generate de OpenAI. Transmite datele câmpului configurat către API-ul OpenAI și stochează informațiile returnate.';
+$lang["openai_gpt_model_override"]='Modelul a fost blocat în configurația globală la: [model]';

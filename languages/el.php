@@ -2856,3 +2856,4 @@ $lang["plugin-category-workflow-and-access"]='Ροή εργασίας και Π�
 $lang["call-function"]='Κλήση λειτουργίας';
 $lang["background_most_recent_image"]='Πιο πρόσφατη εικόνα';
 $lang["systemconfig_external_share_requires_password_label"]='Οι εξωτερικοί σύνδεσμοι κοινής χρήσης απαιτούν κωδικό πρόσβασης';
+$lang["error-unable_to_upload"]='Αδυναμία μεταφόρτωσης αρχείων';

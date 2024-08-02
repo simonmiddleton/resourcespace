@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='Προσθέτει μεταδεδομένα που δ
 $lang["openai_gpt_api_key"]='Κλειδί API του OpenAI. Αποκτήστε το κλειδί API από <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='Ενσωμάτωση OpenAI API GPT';
 $lang["plugin-openai_gpt-desc"]='Το OpenAI δημιούργησε μεταδεδομένα. Μεταφέρει τα διαμορφωμένα δεδομένα πεδίου στο API του OpenAI και αποθηκεύει τις επιστρεφόμενες πληροφορίες.';
+$lang["openai_gpt_model_override"]='Το μοντέλο έχει κλειδωθεί στην παγκόσμια διαμόρφωση σε: [model]';

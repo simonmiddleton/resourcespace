@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='Dodaja metapodatke, ustvarjene s posredovanjem obstoj
 $lang["openai_gpt_api_key"]='Ključ API OpenAI. Pridobite svoj ključ API na <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='Integrácia OpenAI API GPT';
 $lang["plugin-openai_gpt-desc"]='OpenAI generirani metapodatki. Posreduje konfigurirane podatke polja API-ju OpenAI in shrani vrnjene informacije.';
+$lang["openai_gpt_model_override"]='Model je bil zaklenjen v globalni konfiguraciji na: [model]';

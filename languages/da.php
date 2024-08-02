@@ -2852,3 +2852,4 @@ $lang["plugin-category-workflow-and-access"]='Workflow og adgang';
 $lang["call-function"]='Kald funktion';
 $lang["background_most_recent_image"]='Nyeste billede';
 $lang["systemconfig_external_share_requires_password_label"]='Eksterne delingslinks kræver adgangskode';
+$lang["error-unable_to_upload"]='Kan ikke uploade filer';

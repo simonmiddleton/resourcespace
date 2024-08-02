@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='يضيف البيانات الوصفية التي ي�
 $lang["openai_gpt_api_key"]='مفتاح API الخاص بـ OpenAI. احصل على مفتاح API الخاص بك من <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='تكامل OpenAI API GPT';
 $lang["plugin-openai_gpt-desc"]='تم إنشاء البيانات الوصفية بواسطة OpenAI. ينقل بيانات الحقول المُعدة إلى واجهة برمجة تطبيقات OpenAI ويخزن المعلومات المُعادة.';
+$lang["openai_gpt_model_override"]='تم قفل النموذج في التكوين العالمي إلى: [model]';

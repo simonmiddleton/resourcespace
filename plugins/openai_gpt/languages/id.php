@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='Menambahkan metadata yang dihasilkan dengan mengirimk
 $lang["openai_gpt_api_key"]='Kunci API OpenAI. Dapatkan kunci API Anda dari <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='Integrasi API GPT OpenAI';
 $lang["plugin-openai_gpt-desc"]='OpenAI menghasilkan metadata. Mengirimkan data bidang yang dikonfigurasi ke API OpenAI dan menyimpan informasi yang dikembalikan.';
+$lang["openai_gpt_model_override"]='Model telah dikunci dalam konfigurasi global ke: [model]';

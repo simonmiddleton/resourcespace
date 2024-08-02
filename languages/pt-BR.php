@@ -2943,3 +2943,4 @@ $lang["plugin-category-integrations"]='Integrações';
 $lang["call-function"]='Chamar função';
 $lang["background_most_recent_image"]='Imagem mais recente';
 $lang["systemconfig_external_share_requires_password_label"]='Links de compartilhamento externo exigem senha';
+$lang["error-unable_to_upload"]='Não foi possível fazer upload de arquivos';
