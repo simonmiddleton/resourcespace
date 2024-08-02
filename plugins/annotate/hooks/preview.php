@@ -19,7 +19,7 @@ function HookAnnotatePreviewReplacepreviewbacktoview(){
 
 function HookAnnotatePreviewPreviewimage2 (){
 global $ajax,$ext,$baseurl,$ref,$k,$search,$offset,$order_by,$sort,$archive,$lang,
-       $download_multisize,$baseurl_short,$url,$path,$path_orig,$annotate_ext_exclude,
+       $download_multisize,$baseurl_short,$url,$preview_path,$path_orig,$annotate_ext_exclude,
        $annotate_rt_exclude,$annotate_public_view,$annotate_pdf_output,$nextpage,
        $previouspage, $alternative, $view_title_field;
     
@@ -32,14 +32,14 @@ if ($k != "" && !$annotate_public_view) {
     return false;
 }
 
-if (!file_exists($path) && !file_exists($path_orig)) {
+if (!file_exists($preview_path) && !file_exists($path_orig)) {
     return false;
 }
 
-if (!file_exists($path)) {
+if (!file_exists($preview_path)) {
     $sizes = getimagesize($path_orig);
 } else {
-    $sizes = getimagesize($path);
+    $sizes = getimagesize($preview_path);
 }
 
 $w = $sizes[0];

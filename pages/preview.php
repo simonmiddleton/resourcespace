@@ -288,10 +288,19 @@ if (
 
 
 </p>
-<?php } ?>
+<?php } 
 
-<?php if (!hook("previewimage")) { ?>
-<?php if (!hook("previewimage2")) { ?>
+$GLOBALS['preview_path'] = get_resource_path(
+    $resource['ref'], 
+    true, 
+    resource_download_allowed($resource['ref'], 'scr', $resource['resource_type']) ? 'scr' : 'pre'
+);
+$GLOBALS['path_orig'] = resource_download_allowed($resource['ref'], '', $resource['resource_type']) ? 
+    get_resource_path($resource['ref'], true, '') : 
+    $GLOBALS['preview_path'];
+
+if (!hook("previewimage")) { 
+    if (!hook("previewimage2")) { ?>
 <table cellpadding="0" cellspacing="0">
 <tr>
 
