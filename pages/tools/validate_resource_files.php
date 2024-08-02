@@ -2,7 +2,7 @@
 
 // Check either resource file integrity or presence only depending on config
 
-include __DIR__ . "/../../include/boot.php";
+include_once __DIR__ . "/../../include/boot.php";
 include_once __DIR__ . "/../../include/image_processing.php";
 command_line_only();
 
@@ -72,12 +72,14 @@ if (count($resources) > 0) {
     $current_config_fails = check_resources($resources);
     if (count($current_config_fails) > 0) {
         logScript('The following resources failed: ' . implode(', ', $current_config_fails));
-        logScript('Validating ' . count($resources) . ' resources (with old config setup - !$file_checksums_50k)');
+        logScript('Validating ' . count($current_config_fails) . ' resources (with old config setup - !$file_checksums_50k)');
 
-        $orig_file_checksums_50k = $file_checksums_50k;
-        $file_checksums_50k = !$file_checksums_50k;
-        $negated_config_fails = check_resources($resources);
-        $file_checksums_50k = $orig_file_checksums_50k;
+        $orig_file_checksums_50k = $GLOBALS['file_checksums_50k'];
+        $GLOBALS['file_checksums_50k'] = !$GLOBALS['file_checksums_50k'];
+        $negated_config_fails = check_resources(
+            array_filter($resources, fn($val) => in_array($val['ref'], $current_config_fails))
+        );
+        $GLOBALS['file_checksums_50k'] = $orig_file_checksums_50k;
         if (count($negated_config_fails) > 0) {
             logScript('The following resources failed: ' . implode(', ', $negated_config_fails));
         }
