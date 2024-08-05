@@ -11,6 +11,8 @@ if ($generateall) {
     # Create a preview video
     $targetfile = get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative); 
 
+    set_processing_message("Resource " . $ref . ": Generating preview video");
+
     $snapshotsize = getimagesize($target);
     $width=$snapshotsize[0];
     $height=$snapshotsize[1];
@@ -158,6 +160,8 @@ if ($generateall) {
             ) {
                 $generate = false;
             }
+
+            set_processing_message("Resource " . $ref . ": Generating alternative video '" . $ffmpeg_alternatives[$n]["name"] . "'");
 
             $tmp = hook("preventgeneratealt", "", [$file]);
             if ($tmp===true) {$generate = false;}

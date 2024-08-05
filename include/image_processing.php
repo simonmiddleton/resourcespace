@@ -569,6 +569,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 function extract_exif_comment($ref,$extension="")
     {
     debug_function_call('extract_exif_comment', func_get_args());
+    set_processing_message("Resource " . $ref . ": Extracting metadata");
+
     # Extract the EXIF comment from either the ImageDescription field or the UserComment
     # Also parse IPTC headers and insert
     # EXIF headers
@@ -1145,6 +1147,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         trigger_error("Parameter 'ref' must be numeric!");
         }
 
+    set_processing_message("Resource " . $ref . ": Creating previews");
     hook('create_previews_extra', '', array($ref));
 
     // keep_for_hpr will be set to true if necessary in preview_preprocessing.php to indicate that an intermediate jpg can serve as the hpr.
@@ -1512,6 +1515,8 @@ function create_previews_using_im(
         $override_size = false;
         for ($n=0;$n<count($ps);$n++)
             {
+            set_processing_message("Resource " . $ref . ": Creating preview '" . ($ps[$n]["name"] ?? "???") . "'");
+
             if ($imagemagick_mpr)
                 {
                 $mpr_parts = [];

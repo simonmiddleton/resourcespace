@@ -120,7 +120,8 @@ if ($contact_sheet)
     } ?>
 
 <script type="text/javascript">
-    ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
+    var ProcessingCSRF=<?php echo generate_csrf_js_object('processing'); ?>;
+    var ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
 </script>
 
 <?php
@@ -332,7 +333,9 @@ endif; # !hook("customhtmlheader")
 <a href="#UICenter" class="skip-to-main-content"><?php echo escape($lang["skip-to-main-content"]); ?></a>
 
 <!-- Processing graphic -->
-<div id='ProcessingBox' style='display: none'><h3><?php echo escape($lang["status_processing"]); ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+<div id='ProcessingBox' style='display: none'><h3><?php echo escape($lang["status_processing"]); ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+<p id="ProcessingStatus"></p>
+</div>
 
 <!-- Loading graphic -->
 <?php

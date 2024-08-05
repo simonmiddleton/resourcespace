@@ -73,7 +73,8 @@ function validate_user($user_select_sql, $getuserdata=true)
                        g.download_limit,
                        g.download_log_days,
                        g.edit_filter_id,
-                       g.derestrict_filter_id
+                       g.derestrict_filter_id,
+                       u.processing_messages processing_messages
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref
@@ -121,7 +122,7 @@ function setup_user(array $userdata)
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
-           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION, $plugins;
+           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION, $plugins, $userprocessing_messages;
         
     # Hook to modify user permissions
     if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -162,6 +163,8 @@ function setup_user(array $userdata)
     $userfullname=$userdata["fullname"];
     $userorigin=$userdata["origin"];
     $usersession = $userdata["session"];
+    $userprocessing_messages = $userdata["processing_messages"];
+
     if (isset($userdata["email_rate_limit_active"]))
         {
         $useremail_rate_limit_active=$userdata["email_rate_limit_active"];
@@ -3628,4 +3631,37 @@ function update_user_access(int $user = 0, array $set_values = []): bool
 function checkPermission_manage_users() : bool
     {
     return checkperm('t') && checkperm('u');
+    }
+
+/**
+ * Get the processing status message for the current user.
+ *
+ */
+function get_processing_message()
+    {
+    global $userref;
+    global $userprocessing_messages;
+    if ($userprocessing_messages!="")
+        {
+        ps_query("update user set processing_messages=null where ref=?",["i",$userref]); // Clear out messages as now collected.
+        return explode(";;",$userprocessing_messages);
+        }
+    else
+        {
+        return false;
+        }
+    }
+
+/**
+ * Set a new processing message for the current user.
+ *
+ * @param string $message   The processing status message to add.
+ */
+function set_processing_message(string $message)
+    {
+    global $userref,$userprocessing_messages;
+    if ($userprocessing_messages!="") {$userprocessing_messages.=";;";} // Add delimiter
+    $userprocessing_messages.=$message;
+    ps_query("update user set processing_messages=? where ref=?",["s",$userprocessing_messages,"i",$userref]);
+    return true;
     }

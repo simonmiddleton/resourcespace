@@ -1819,14 +1819,49 @@ function HideHelp(id)
         }
     }
 
+var ProcessingTimer;
+var ProcessingMessages;
+var ProcessingCount=-1;
 function CentralSpaceShowProcessing()
     {
     jQuery('#ProcessingBox').fadeIn('fast');
+    jQuery('#ProcessingStatus').html('');
+    CentralSpaceUpdateProcessing();
+    ProcessingTimer = setInterval(CentralSpaceUpdateProcessing, 500);
     }
 
 function CentralSpaceHideProcessing()
     {
     jQuery('#ProcessingBox').fadeOut('fast');
+    clearInterval(ProcessingTimer);
+    }
+
+function CentralSpaceUpdateProcessing()
+    {
+    // Fetch more items on fourth tick.
+    if (ProcessingCount==-1)
+        {
+        api("get_processing_message", null, function(response) {
+        console.log ("API success");
+        console.log(response);
+        ProcessingMessages=[];
+        if(response!= false)
+            {
+            ProcessingMessages=response;
+            return true;
+            }
+        }, ProcessingCSRF);
+        }
+    else    
+        {
+        if (ProcessingCount in ProcessingMessages)
+            {
+            jQuery('#ProcessingStatus').html(ProcessingMessages[ProcessingCount]);
+            }
+        }
+
+    ProcessingCount++;
+    if (ProcessingCount==3) {ProcessingCount=-1;}
     }
 
 

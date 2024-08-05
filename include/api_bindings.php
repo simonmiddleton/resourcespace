@@ -1565,3 +1565,11 @@ function api_toggle_active_state_for_nodes(array $refs): array
     http_response_code(403);
     return [];
     }
+
+/**
+ * Expose {@see get_processing_message} to the API
+ */
+function api_get_processing_message()
+    {
+    return get_processing_message();
+    }
