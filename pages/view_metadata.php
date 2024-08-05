@@ -147,7 +147,7 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
                 $udata = get_user($resource["created_by"]);
                 if($udata !== false)
                     {
-                    $udata_fullname = highlightkeywords(escape($udata["fullname"]), $search);
+                    $udata_fullname = highlightkeywords(escape($udata["fullname"] ?? ""), $search);
                     $udata_a_tag_href = generateURL("{$baseurl_short}pages/team/team_user_edit.php", ['ref' => $udata["ref"]]);
                     $udata_a_tag = sprintf(
                         '<a href="%s" onclick="return CentralSpaceLoad(this, true);">%s</a>',
