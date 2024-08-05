@@ -3639,8 +3639,7 @@ function checkPermission_manage_users() : bool
  */
 function get_processing_message()
     {
-    global $userref;
-    global $userprocessing_messages;
+    global $userref,$userprocessing_messages;
     if ($userprocessing_messages!="")
         {
         ps_query("update user set processing_messages=null where ref=?",["i",$userref]); // Clear out messages as now collected.
@@ -3657,9 +3656,11 @@ function get_processing_message()
  *
  * @param string $message   The processing status message to add.
  */
+$set_processing_message_first_call=true;
 function set_processing_message(string $message)
     {
-    global $userref,$userprocessing_messages;
+    global $userref,$userprocessing_messages,$set_processing_message_first_call;
+    if ($set_processing_message_first_call) {$userprocessing_messages="";$set_processing_message_first_call=false;} // Blank existing messages if present for first command this page load.
     if ($userprocessing_messages!="") {$userprocessing_messages.=";;";} // Add delimiter
     $userprocessing_messages.=$message;
     ps_query("update user set processing_messages=? where ref=?",["s",$userprocessing_messages,"i",$userref]);
