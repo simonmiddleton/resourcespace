@@ -3113,3 +3113,4 @@ $lang["plugin-category-workflow-and-access"]='Workflow und Zugriff';
 $lang["call-function"]='Funktion aufrufen';
 $lang["background_most_recent_image"]='Neueste Bild';
 $lang["systemconfig_external_share_requires_password_label"]='Externe Freigabelinks erfordern ein Passwort';
+$lang["error-unable_to_upload"]='Dateien können nicht hochgeladen werden';

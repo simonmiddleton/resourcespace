@@ -2895,3 +2895,4 @@ $lang["plugin-category-workflow-and-access"]='Flujo de trabajo y acceso';
 $lang["call-function"]='Llamar función';
 $lang["background_most_recent_image"]='Imagen más reciente';
 $lang["systemconfig_external_share_requires_password_label"]='Los enlaces de compartición externa requieren contraseña';
+$lang["error-unable_to_upload"]='No se pueden subir archivos';

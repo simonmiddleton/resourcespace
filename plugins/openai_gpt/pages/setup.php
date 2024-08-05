@@ -26,7 +26,16 @@ if (!(isset($openai_gpt_hide_api_key) && $openai_gpt_hide_api_key))
 
 $page_def[] = config_add_section_header($lang["plugin_category_advanced"]);
 $page_def[] = config_add_html("<div class='Question'><strong>" . escape($lang["openai_gpt_advanced"]) . "</strong><div class='clearerleft'></div></div>");
-$page_def[] = config_add_text_input("openai_gpt_model",$lang["openai_gpt_model"]);
+
+if (!isset($open_gpt_model_override)) // Can be forced in configuration
+    {
+    $page_def[] = config_add_text_input("openai_gpt_model",$lang["openai_gpt_model"]);
+    }
+else   
+    {
+    $page_intro.=str_replace("[model]","<strong>$open_gpt_model_override</strong>",$lang["openai_gpt_model_override"]);
+    }
+
 $page_def[] = config_add_text_input("openai_gpt_system_message",$lang["openai_gpt_system_message"]);
 $page_def[] = config_add_text_input("openai_gpt_temperature",$lang["openai_gpt_temperature"]);
 $page_def[] = config_add_text_input("openai_gpt_max_tokens",$lang["openai_gpt_max_tokens"]);

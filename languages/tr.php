@@ -2782,3 +2782,4 @@ $lang["plugin-category-workflow-and-access"]='İş Akışı ve Erişim';
 $lang["call-function"]='Fonksiyonu çağır';
 $lang["background_most_recent_image"]='En son görüntü';
 $lang["systemconfig_external_share_requires_password_label"]='Harici paylaşım bağlantıları şifre gerektirir';
+$lang["error-unable_to_upload"]='Dosyalar yüklenemiyor';

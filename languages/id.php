@@ -2947,3 +2947,4 @@ $lang["plugin-category-workflow-and-access"]='Alur Kerja dan Akses';
 $lang["call-function"]='Panggil fungsi';
 $lang["background_most_recent_image"]='Gambar terbaru';
 $lang["systemconfig_external_share_requires_password_label"]='Tautan berbagi eksternal memerlukan kata sandi';
+$lang["error-unable_to_upload"]='Tidak dapat mengunggah file';

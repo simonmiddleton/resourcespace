@@ -2790,3 +2790,4 @@ $lang["plugin-category-workflow-and-access"]='कार्यप्रवाह 
 $lang["call-function"]='फ़ंक्शन कॉल करें';
 $lang["background_most_recent_image"]='सबसे हाल की छवि';
 $lang["systemconfig_external_share_requires_password_label"]='बाहरी साझाकरण लिंक के लिए पासवर्ड आवश्यक है';
+$lang["error-unable_to_upload"]='फ़ाइल अपलोड करने में असमर्थ';

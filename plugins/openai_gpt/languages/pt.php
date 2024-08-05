@@ -16,3 +16,4 @@ $lang["openai_gpt_intro"]='Adiciona metadados gerados ao passar dados existentes
 $lang["openai_gpt_api_key"]='Chave de API do OpenAI. Obtenha sua chave de API em <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a>';
 $lang["plugin-openai_gpt-title"]='Integração com a API GPT da OpenAI';
 $lang["plugin-openai_gpt-desc"]='Metadados gerados pelo OpenAI. Passa os dados do campo configurado para a API do OpenAI e armazena as informações retornadas.';
+$lang["openai_gpt_model_override"]='O modelo foi bloqueado na configuração global para: [model]';

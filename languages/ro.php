@@ -2861,3 +2861,4 @@ $lang["plugin-category-workflow-and-access"]='Flux de lucru și Acces';
 $lang["call-function"]='Apelare funcție';
 $lang["background_most_recent_image"]='Cea mai recentă imagine';
 $lang["systemconfig_external_share_requires_password_label"]='Linkurile de partajare externă necesită parolă';
+$lang["error-unable_to_upload"]='Nu se pot încărca fișierele';

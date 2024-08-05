@@ -3002,3 +3002,4 @@ $lang["plugin-category-workflow-and-access"]='سير العمل والوصول';
 $lang["call-function"]='استدعاء الوظيفة';
 $lang["background_most_recent_image"]='أحدث صورة';
 $lang["systemconfig_external_share_requires_password_label"]='الروابط الخارجية للمشاركة تتطلب كلمة مرور';
+$lang["error-unable_to_upload"]='غير قادر على تحميل الملفات';

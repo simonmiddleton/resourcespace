@@ -13,3 +13,4 @@ $lang["openai_gpt_advanced"]='경고 - 이 섹션은 테스트 목적으로만 �
 $lang["openai_gpt_system_message"]='초기 시스템 메시지 텍스트. 자리 표시자 %%IN_TYPE%% 및 %%OUT_TYPE%%는 소스/대상 필드 유형에 따라 \'text\' 또는 \'json\'으로 대체됩니다';
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT 통합';
 $lang["plugin-openai_gpt-desc"]='OpenAI 생성 메타데이터. 구성된 필드 데이터를 OpenAI API에 전달하고 반환된 정보를 저장합니다.';
+$lang["openai_gpt_model_override"]='모델이 글로벌 구성에서 다음으로 잠겼습니다: [model]';

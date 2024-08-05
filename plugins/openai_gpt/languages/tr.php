@@ -13,3 +13,4 @@ $lang["openai_gpt_advanced"]='UYARI - Bu bölüm yalnızca test amaçlıdır ve 
 $lang["openai_gpt_system_message"]='Başlangıç sistem mesajı metni. Yer tutucular %%IN_TYPE%% ve %%OUT_TYPE%%, kaynak/hedef alan türlerine bağlı olarak \'text\' veya \'json\' ile değiştirilecektir.';
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT entegrasyonu';
 $lang["plugin-openai_gpt-desc"]='OpenAI tarafından oluşturulan meta veriler. Yapılandırılmış alan verilerini OpenAI API\'sine iletir ve döndürülen bilgileri depolar.';
+$lang["openai_gpt_model_override"]='Model, küresel yapılandırmada kilitlendi: [model]';

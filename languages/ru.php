@@ -2890,3 +2890,4 @@ $lang["plugin-category-workflow-and-access"]='Рабочий процесс и �
 $lang["call-function"]='Вызвать функцию';
 $lang["background_most_recent_image"]='Самое последнее изображение';
 $lang["systemconfig_external_share_requires_password_label"]='Ссылки для внешнего обмена требуют пароль';
+$lang["error-unable_to_upload"]='Не удалось загрузить файлы';

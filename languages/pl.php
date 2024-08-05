@@ -2912,3 +2912,4 @@ $lang["plugin-category-workflow-and-access"]='Przepływ pracy i dostęp';
 $lang["call-function"]='Wywołaj funkcję';
 $lang["background_most_recent_image"]='Najnowszy obraz';
 $lang["systemconfig_external_share_requires_password_label"]='Linki do udostępniania zewnętrznego wymagają hasła';
+$lang["error-unable_to_upload"]='Nie można przesłać plików';

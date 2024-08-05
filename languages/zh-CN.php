@@ -2997,3 +2997,4 @@ $lang["plugin-category-workflow-and-access"]='工作流程和访问权限';
 $lang["call-function"]='调用函数';
 $lang["background_most_recent_image"]='最新图片';
 $lang["systemconfig_external_share_requires_password_label"]='外部共享链接需要密码';
+$lang["error-unable_to_upload"]='无法上传文件';
