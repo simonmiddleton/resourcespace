@@ -1826,8 +1826,9 @@ function CentralSpaceShowProcessing()
     {
     jQuery('#ProcessingBox').fadeIn('fast');
     jQuery('#ProcessingStatus').html('');
-    CentralSpaceUpdateProcessing();
-    ProcessingTimer = setInterval(CentralSpaceUpdateProcessing, 500);
+    api("get_processing_message", null, function(response) {});
+    ProcessingMessages=[];
+    ProcessingTimer = setInterval(CentralSpaceUpdateProcessing, 250);
     }
 
 function CentralSpaceHideProcessing()
@@ -1861,7 +1862,7 @@ function CentralSpaceUpdateProcessing()
         }
 
     ProcessingCount++;
-    if (ProcessingCount==3) {ProcessingCount=-1;}
+    if (ProcessingCount==10) {ProcessingCount=-1;}
     }
 
 

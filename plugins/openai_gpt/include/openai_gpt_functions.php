@@ -31,7 +31,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
         $resources = [$resources];
         }
 
-    //set_processing_message(((count($resources)>1)?"Multiple resources":"Resource " . $resources[0]) . ": AI processing for field " . $target_field);
+    set_processing_message(((count($resources)>1)?"Multiple resources":"Resource " . $resources[0]) . ": AI processing for field '" . $target_field["name"] . "'");
 
     $resources = array_filter($resources,"is_int_loose");
     $valid_response = false;

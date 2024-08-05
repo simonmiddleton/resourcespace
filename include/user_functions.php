@@ -3642,7 +3642,7 @@ function get_processing_message()
     global $userref,$userprocessing_messages;
     if ($userprocessing_messages!="")
         {
-        ps_query("update user set processing_messages=null where ref=?",["i",$userref]); // Clear out messages as now collected.
+        ps_query("update user set processing_messages='' where ref=?",["i",$userref]); // Clear out messages as now collected.
         return explode(";;",$userprocessing_messages);
         }
     else
