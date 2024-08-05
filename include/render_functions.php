@@ -254,6 +254,10 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
         checkSearchDisplayCondition<?php echo $field["ref"];?> = function ()   
             {
+            // Is the governed field resource type ok; if not then no checking necessary as its already hidden
+            const conditionalquestion = document.getElementById("question_<?php echo $n ?>");
+            if (conditionalquestion.dataset.resource_type_ok !="1") { return; }
+
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
             var ixThisField;
@@ -442,7 +446,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     if (!$forsearchbar)
         {
         ?>
-        <div class="Question ConditionalVisibility" data-for_resource_types="<?php 
+        <div class="Question ConditionalVisibility" data-resource_type_ok="" data-for_resource_types="<?php 
         // Add class for each supported resource type to allow showing/hiding on advanced search
         if($field["resource_types"] == "Collections")
             {

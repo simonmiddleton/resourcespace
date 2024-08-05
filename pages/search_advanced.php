@@ -268,7 +268,7 @@ function displayValidFields() {
     // Determine which fields should be displayed for the selected resource types and considering any field display conditions.
     const conditionalquestions = document.getElementsByClassName("ConditionalVisibility");
     let fieldvalidfortypes = [];
-    let $add_type_specific_header = false;
+    let add_type_specific_header = false;
 
     for (let conditionalquestion of conditionalquestions)
         {
@@ -295,30 +295,37 @@ function displayValidFields() {
             // Field isn't valid for the selected resource types so hide.
             document.getElementById(conditionalquestion.id).style.display = "none";
             console.log("hide " + conditionalquestion.id);
+            // Record the decision
+            document.getElementById(conditionalquestion.id).dataset.resource_type_ok = "0";
             }
-        else if (conditionalquestion.dataset.has_display_condition === '1')
+        else 
             {
-            // Display condition applies for field so check it to decide if field is shown.
-            let conditiontocheck = 'checkSearchDisplayCondition' + conditionalquestion.dataset.question_field_ref;
-            window[conditiontocheck]();
-            console.log("display condition check for " + conditionalquestion.id);
-            }
-        else
-            {
-            // No display condition and field valid for resource types selected so show.
-            document.getElementById(conditionalquestion.id).style.display = "";
-            console.log("show " + conditionalquestion.id);
+            // Record the decision
+            document.getElementById(conditionalquestion.id).dataset.resource_type_ok = "1";
+            if (conditionalquestion.dataset.has_display_condition === '1')
+                {
+                // Display condition applies for field so check it to decide if field is shown.
+                let conditiontocheck = 'checkSearchDisplayCondition' + conditionalquestion.dataset.question_field_ref;
+                window[conditiontocheck]();
+                console.log("display condition check for " + conditionalquestion.id);
+                }
+            else
+                {
+                // No display condition and field valid for resource types selected so show.
+                document.getElementById(conditionalquestion.id).style.display = "";
+                console.log("show " + conditionalquestion.id);
+                }
             }
 
         if (document.getElementById(conditionalquestion.id).style.display == '' && fieldvalidfortypes[0] !== "Global")
             {
             // At least one resource type field is displayed so add the type specific fields section.
-            $add_type_specific_header = true;
+            add_type_specific_header = true;
             }
         }
 
     // Determine if resource type specific fields section should be displayed.
-    if ($add_type_specific_header)
+    if (add_type_specific_header)
         {
         jQuery('#AdvancedSearchRestypeSectionHead').show();
         if (getCookie('AdvancedSearchRestypeSection') != "collapsed") {
