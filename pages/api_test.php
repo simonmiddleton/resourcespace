@@ -64,7 +64,7 @@ renderBreadcrumbs([
 ]);
 ?>
 
-<p><?php echo strip_tags_and_attributes($lang["api-help"]);render_help_link("api"); ?></p>
+<p><?php echo strip_tags_and_attributes($lang["api-help"]);render_help_link("api/"); ?></p>
 
 <form id="api-form" method="post" action="<?php echo $baseurl_short?>pages/api_test.php" onSubmit="return CentralSpacePost(this);">
 <?php generateFormToken("api-form"); ?>
