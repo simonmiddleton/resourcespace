@@ -77,4 +77,26 @@ if (count($results) > 2) {
     return false;
 }
 
+// Check validate_resource_files script can handle old (changed) config setup
+$validate_resource_files_script = function(array $args) {
+    $argv = $args;
+    $argc = count($argv);
+    include dirname(__DIR__, 2) . '/pages/tools/validate_resource_files.php';
+};
+$orig_file_checksums_50k = $file_checksums_50k;
+$resource_ut = create_resource($test_image_type, 0);
+upload_file($resource_ut, true, false, false, __DIR__ . '/../../gfx/watermark.png', false, false);
+$file_checksums_50k = false;
+generate_file_checksum($resource_ut, 'png');
+$file_checksums_50k = $orig_file_checksums_50k; # simulate config change
+$script_result = cast_echo_to_string($validate_resource_files_script, [[]]);
+$found_log = preg_match('/old checksum recorded: (\d+(?: ?, ?\d+)*)/', $script_result, $script_result_matches);
+if (!$found_log || !in_array($resource_ut, explode(', ', $script_result_matches[1]))) {
+    echo 'Test F: Failed to detect old config setup - ';
+    test_log("validate_resource_files_script results >>>\n{$script_result}<<<");
+    test_log("script_result_matches: " . print_r($script_result_matches, true));
+    test_log('--- ');
+    return false;
+}
+
 return true;
