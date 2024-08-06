@@ -3660,6 +3660,7 @@ $set_processing_message_first_call=true;
 function set_processing_message(string $message)
     {
     global $userref,$userprocessing_messages,$set_processing_message_first_call;
+    $userprocessing_messages=ps_value("select processing_messages value from user where ref=?",["i",$userref],''); // Fetch fresh from the DB as it may have been cleared by get_processing_message() since we started processing.
     if ($set_processing_message_first_call) {$userprocessing_messages="";$set_processing_message_first_call=false;} // Blank existing messages if present for first command this page load.
     if ($userprocessing_messages!="") {$userprocessing_messages.=";;";} // Add delimiter
     $userprocessing_messages.=$message;

@@ -1819,51 +1819,50 @@ function HideHelp(id)
         }
     }
 
-var ProcessingTimer;
+var ProcessingDisplayTimer;
+var ProcessingAPITimer;
 var ProcessingMessages;
 var ProcessingCount=-1;
 function CentralSpaceShowProcessing()
     {
     jQuery('#ProcessingBox').fadeIn('fast');
     jQuery('#ProcessingStatus').html('');
-    api("get_processing_message", null, function(response) {});
     ProcessingMessages=[];
-    ProcessingTimer = setInterval(CentralSpaceUpdateProcessing, 250);
+    ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 250);
+    ProcessingAPITimer = setInterval(CentralSpace_ProcessingAPITimer, 3000);
+    setTimeout(CentralSpace_ProcessingAPITimer, 1000); // Initial more rapid call.
     }
 
 function CentralSpaceHideProcessing()
     {
     jQuery('#ProcessingBox').fadeOut('fast');
-    clearInterval(ProcessingTimer);
+    clearInterval(ProcessingDisplayTimer);
+    clearInterval(ProcessingAPITimer);
     }
 
-function CentralSpaceUpdateProcessing()
+function CentralSpace_ProcessingDisplayTimer()
     {
-    // Fetch more items on fourth tick.
-    if (ProcessingCount==-1)
+    var NewMessage=ProcessingMessages.shift();
+    if (NewMessage!==undefined)
         {
-        api("get_processing_message", null, function(response) {
-        console.log ("API success");
-        console.log(response);
-        ProcessingMessages=[];
-        if(response!= false)
-            {
-            ProcessingMessages=response;
-            return true;
-            }
-        }, ProcessingCSRF);
+        jQuery('#ProcessingStatus').html(NewMessage);
         }
-    else    
-        {
-        if (ProcessingCount in ProcessingMessages)
-            {
-            jQuery('#ProcessingStatus').html(ProcessingMessages[ProcessingCount]);
-            }
-        }
-
-    ProcessingCount++;
-    if (ProcessingCount==10) {ProcessingCount=-1;}
     }
+
+function CentralSpace_ProcessingAPITimer()
+    {
+    // Use the API to fetch any new processing messages.       
+    api("get_processing_message", null, function(response) {
+    console.log ("API execution");
+    console.log(response);
+    ProcessingMessages=[];
+    if(response!= false && Array.isArray(response))
+        {
+        ProcessingMessages=ProcessingMessages.concat(response);
+        }
+    }, ProcessingCSRF);
+    }
+
 
 
 /**
