@@ -2936,3 +2936,5 @@ $lang["processing_alternative_video"]='リソース [resource]: 代替ビデオ 
 $lang["processing_extracting_metadata"]='リソース [resource]: メタデータを抽出中';
 $lang["processing_creating_previews"]='リソース [resource]: プレビューの作成';
 $lang["processing_creating_preview"]='リソース [resource]: プレビュー \'[name]\' を作成中';
+$lang["processing_updating_resources"]='メタデータを更新中（[done]/[total]）';
+$lang["processing_calculating_updates_required"]='更新の計算中 ([count]/[total])';

@@ -16,3 +16,6 @@ $lang["openai_gpt_model_override"]                   = "The model has been locke
 $lang["openai_gpt_processing_multiple_resources"] = "Multiple resources";
 $lang["openai_gpt_processing_resource"] = "Resource [resource]";
 $lang["openai_gpt_processing_field"] = "AI processing for field '[field]'";
+
+
+$lang["property-gpt_source"]="GPT Source";

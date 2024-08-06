@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Modelul a fost blocat în configurația glob
 $lang["openai_gpt_processing_multiple_resources"]='Resurse multiple';
 $lang["openai_gpt_processing_resource"]='Resursă [resource]';
 $lang["openai_gpt_processing_field"]='Procesare AI pentru câmpul \'[field]\'';
+$lang["property-gpt_source"]='Sursă GPT';

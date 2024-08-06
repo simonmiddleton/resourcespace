@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='O modelo foi bloqueado na configuração glo
 $lang["openai_gpt_processing_multiple_resources"]='Vários recursos';
 $lang["openai_gpt_processing_resource"]='Recurso [resource]';
 $lang["openai_gpt_processing_field"]='Processamento de IA para o campo \'[field]\'';
+$lang["property-gpt_source"]='Fonte GPT';

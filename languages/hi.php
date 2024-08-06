@@ -2796,3 +2796,5 @@ $lang["processing_alternative_video"]='संसाधन [resource]: वैक�
 $lang["processing_extracting_metadata"]='संसाधन [resource]: मेटाडेटा निकालना';
 $lang["processing_creating_previews"]='संसाधन [resource]: पूर्वावलोकन बना रहा है';
 $lang["processing_creating_preview"]='संसाधन [resource]: पूर्वावलोकन \'[name]\' बना रहा है';
+$lang["processing_updating_resources"]='मेटाडाटा अपडेट हो रहा है ([done]/[total])';
+$lang["processing_calculating_updates_required"]='अपडेट्स की गणना की जा रही है ([count]/[total])';

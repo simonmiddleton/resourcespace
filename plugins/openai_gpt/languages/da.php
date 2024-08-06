@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Modellen er blevet låst i den globale konfi
 $lang["openai_gpt_processing_multiple_resources"]='Flere ressourcer';
 $lang["openai_gpt_processing_resource"]='Ressource [resource]';
 $lang["openai_gpt_processing_field"]='AI-behandling for feltet \'[field]\'';
+$lang["property-gpt_source"]='GPT Kilde';

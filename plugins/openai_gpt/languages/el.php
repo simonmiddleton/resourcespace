@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Το μοντέλο έχει κλειδωθ�
 $lang["openai_gpt_processing_multiple_resources"]='Πολλαπλοί πόροι';
 $lang["openai_gpt_processing_resource"]='Πόρος [resource]';
 $lang["openai_gpt_processing_field"]='Επεξεργασία AI για το πεδίο \'[field]\'';
+$lang["property-gpt_source"]='Πηγή GPT';

@@ -2782,3 +2782,5 @@ $lang["processing_alternative_video"]='Generování alternativního videa \'[nam
 $lang["processing_extracting_metadata"]='Zdroj [resource]: Extrahování metadat';
 $lang["processing_creating_previews"]='Zdroj [resource]: Vytváření náhledů';
 $lang["processing_creating_preview"]='Vytváření náhledu pro zdroj [resource] \'[name]\'';
+$lang["processing_updating_resources"]='Aktualizace metadat ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Počítání potřebných aktualizací ([count]/[total])';

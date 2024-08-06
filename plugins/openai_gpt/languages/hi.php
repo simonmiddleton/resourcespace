@@ -17,3 +17,4 @@ $lang["openai_gpt_model_override"]='मॉडल को वैश्विक �
 $lang["openai_gpt_processing_multiple_resources"]='कई संसाधन';
 $lang["openai_gpt_processing_resource"]='संसाधन [resource]';
 $lang["openai_gpt_processing_field"]='फ़ील्ड \'[field]\' के लिए एआई प्रोसेसिंग';
+$lang["property-gpt_source"]='जीपीटी स्रोत';

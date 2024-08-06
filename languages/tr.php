@@ -2788,3 +2788,5 @@ $lang["processing_alternative_video"]='Kaynak [resource]: Alternatif video \'[na
 $lang["processing_extracting_metadata"]='Kaynak [resource]: Metadata çıkarılıyor';
 $lang["processing_creating_previews"]='Kaynak [resource]: Önizlemeler oluşturuluyor';
 $lang["processing_creating_preview"]='Kaynak [resource]: Önizleme oluşturuluyor \'[name]\'';
+$lang["processing_updating_resources"]='Meta verileri güncelleniyor ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Gerekli güncellemeler hesaplanıyor ([count]/[total])';

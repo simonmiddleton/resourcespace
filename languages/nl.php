@@ -2899,3 +2899,5 @@ $lang["processing_alternative_video"]='Resource [resource]: Alternatieve video \
 $lang["processing_extracting_metadata"]='Resource [resource]: Metadata extraheren';
 $lang["processing_creating_previews"]='Resource [resource]: Voorbeelden maken';
 $lang["processing_creating_preview"]='Resource [resource]: Voorbeeld aanmaken \'[name]\'';
+$lang["processing_updating_resources"]='Metadata bijwerken ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Updates berekenen vereist ([count]/[total])';

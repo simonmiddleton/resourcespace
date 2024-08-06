@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Model telah dikunci dalam konfigurasi global
 $lang["openai_gpt_processing_multiple_resources"]='Beberapa sumber daya';
 $lang["openai_gpt_processing_resource"]='Sumber [resource]';
 $lang["openai_gpt_processing_field"]='Pemrosesan AI untuk bidang \'[field]\'';
+$lang["property-gpt_source"]='Sumber GPT';

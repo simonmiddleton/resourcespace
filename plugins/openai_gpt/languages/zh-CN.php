@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='该模型已在全局配置中锁定为：[m
 $lang["openai_gpt_processing_multiple_resources"]='多个资源';
 $lang["openai_gpt_processing_resource"]='资源 [resource]';
 $lang["openai_gpt_processing_field"]='字段 \'[field]\' 的AI处理';
+$lang["property-gpt_source"]='GPT来源';

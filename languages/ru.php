@@ -2896,3 +2896,5 @@ $lang["processing_alternative_video"]='Ресурс [resource]: Генераци
 $lang["processing_extracting_metadata"]='Ресурс [resource]: Извлечение метаданных';
 $lang["processing_creating_previews"]='Ресурс [resource]: Создание превью';
 $lang["processing_creating_preview"]='Ресурс [resource]: Создание предварительного просмотра \'[name]\'';
+$lang["processing_updating_resources"]='Обновление метаданных ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Вычисление необходимых обновлений ([count]/[total])';

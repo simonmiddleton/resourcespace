@@ -3003,3 +3003,5 @@ $lang["processing_alternative_video"]='资源 [resource]：正在生成备用视
 $lang["processing_extracting_metadata"]='资源 [resource]：提取元数据';
 $lang["processing_creating_previews"]='资源 [resource]：创建预览';
 $lang["processing_creating_preview"]='资源 [resource]：正在创建预览 \'[name]\'';
+$lang["processing_updating_resources"]='更新元数据（[done]/[total]）';
+$lang["processing_calculating_updates_required"]='计算所需更新 ([count]/[total])';

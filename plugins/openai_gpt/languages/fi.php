@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Malli on lukittu globaaliin kokoonpanoon: [m
 $lang["openai_gpt_processing_multiple_resources"]='Useita resursseja';
 $lang["openai_gpt_processing_resource"]='Resurssi [resource]';
 $lang["openai_gpt_processing_field"]='AI-käsittely kentälle \'[field]\'';
+$lang["property-gpt_source"]='GPT-lähde';

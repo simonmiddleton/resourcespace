@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='モデルはグローバル設定でロッ�
 $lang["openai_gpt_processing_multiple_resources"]='複数のリソース';
 $lang["openai_gpt_processing_resource"]='リソース [resource]';
 $lang["openai_gpt_processing_field"]='フィールド \'[field]\' のAI処理';
+$lang["property-gpt_source"]='GPTソース';

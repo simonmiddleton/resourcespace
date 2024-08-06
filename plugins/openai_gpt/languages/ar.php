@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='تم قفل النموذج في التكوي
 $lang["openai_gpt_processing_multiple_resources"]='موارد متعددة';
 $lang["openai_gpt_processing_resource"]='المورد [resource]';
 $lang["openai_gpt_processing_field"]='المعالجة بالذكاء الاصطناعي للحقل \'[field]\'';
+$lang["property-gpt_source"]='مصدر GPT';

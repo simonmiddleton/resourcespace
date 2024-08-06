@@ -3104,3 +3104,5 @@ $lang["processing_alternative_video"]='Resurs [resource]: Genererar alternativ v
 $lang["processing_extracting_metadata"]='Resurs [resource]: Extraherar metadata';
 $lang["processing_creating_previews"]='Resurs [resource]: Skapar förhandsvisningar';
 $lang["processing_creating_preview"]='Resurs [resource]: Skapar förhandsvisning \'[name]\'';
+$lang["processing_updating_resources"]='Uppdaterar metadata ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Beräknar nödvändiga uppdateringar ([count]/[total])';

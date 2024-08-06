@@ -2901,3 +2901,5 @@ $lang["processing_alternative_video"]='Recurso [resource]: Generando video alter
 $lang["processing_extracting_metadata"]='Recurso [resource]: Extrayendo metadatos';
 $lang["processing_creating_previews"]='Recurso [resource]: Creando vistas previas';
 $lang["processing_creating_preview"]='Recurso [resource]: Creando vista previa \'[name]\'';
+$lang["processing_updating_resources"]='Actualizando metadatos ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Calculando actualizaciones requeridas ([count]/[total])';

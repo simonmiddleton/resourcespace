@@ -17,3 +17,4 @@ $lang["openai_gpt_model_override"]='Model, küresel yapılandırmada kilitlendi:
 $lang["openai_gpt_processing_multiple_resources"]='Birden fazla kaynak';
 $lang["openai_gpt_processing_resource"]='Kaynak [resource]';
 $lang["openai_gpt_processing_field"]='\'[field]\' alanı için AI işleme';
+$lang["property-gpt_source"]='GPT Kaynağı';

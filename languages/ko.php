@@ -2791,3 +2791,5 @@ $lang["processing_alternative_video"]='리소스 [resource]: 대체 비디오 \'
 $lang["processing_extracting_metadata"]='리소스 [resource]: 메타데이터 추출 중';
 $lang["processing_creating_previews"]='리소스 [resource]: 미리보기 생성 중';
 $lang["processing_creating_preview"]='리소스 [resource]: 미리보기 \'[name]\' 생성 중';
+$lang["processing_updating_resources"]='메타데이터 업데이트 중 ([done]/[total])';
+$lang["processing_calculating_updates_required"]='업데이트 계산 중 ([count]/[total])';

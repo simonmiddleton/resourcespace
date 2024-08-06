@@ -17,3 +17,4 @@ $lang["openai_gpt_model_override"]='모델이 글로벌 구성에서 다음으�
 $lang["openai_gpt_processing_multiple_resources"]='다중 리소스';
 $lang["openai_gpt_processing_resource"]='리소스 [resource]';
 $lang["openai_gpt_processing_field"]='필드 \'[field]\'에 대한 AI 처리';
+$lang["property-gpt_source"]='GPT 소스';

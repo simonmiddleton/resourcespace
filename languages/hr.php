@@ -2862,3 +2862,5 @@ $lang["processing_alternative_video"]='Resurs [resource]: Generiranje alternativ
 $lang["processing_extracting_metadata"]='Resurs [resource]: Izdvajanje metapodataka';
 $lang["processing_creating_previews"]='Resurs [resource]: Stvaranje pregleda';
 $lang["processing_creating_preview"]='Resurs [resource]: Stvaranje pregleda \'[name]\'';
+$lang["processing_updating_resources"]='Ažuriranje metapodataka ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Izračunavanje potrebnih ažuriranja ([count]/[total])';

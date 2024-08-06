@@ -2862,3 +2862,5 @@ $lang["processing_alternative_video"]='Πόρος [resource]: Δημιουργί
 $lang["processing_extracting_metadata"]='Πόρος [resource]: Εξαγωγή μεταδεδομένων';
 $lang["processing_creating_previews"]='Πόρος [resource]: Δημιουργία προεπισκοπήσεων';
 $lang["processing_creating_preview"]='Πόρος [resource]: Δημιουργία προεπισκόπησης \'[name]\'';
+$lang["processing_updating_resources"]='Ενημέρωση μεταδεδομένων ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Υπολογισμός απαιτούμενων ενημερώσεων ([count]/[total])';

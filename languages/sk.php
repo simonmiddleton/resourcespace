@@ -3233,3 +3233,5 @@ $lang["processing_alternative_video"]='Vir [resource]: Ustvarjanje alternativneg
 $lang["processing_extracting_metadata"]='Zdroj [resource]: Izvlečenje metapodatkov';
 $lang["processing_creating_previews"]='Ustvarjanje predogledov za vir [resource]';
 $lang["processing_creating_preview"]='Zdroj [resource]: Ustvarjanje predogleda \'[name]\'';
+$lang["processing_updating_resources"]='Posodabljanje metapodatkov ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Izračunavanje potrebnih posodobitev ([count]/[total])';

@@ -2867,3 +2867,5 @@ $lang["processing_alternative_video"]='Resursă [resource]: Generare video alter
 $lang["processing_extracting_metadata"]='Resursă [resource]: Extrage metadate';
 $lang["processing_creating_previews"]='Resursă [resource]: Crearea previzualizărilor';
 $lang["processing_creating_preview"]='Resursă [resource]: Crearea previzualizării \'[name]\'';
+$lang["processing_updating_resources"]='Actualizare metadate ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Calculând actualizările necesare ([count]/[total])';

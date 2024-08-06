@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Model został zablokowany w globalnej konfig
 $lang["openai_gpt_processing_multiple_resources"]='Wiele zasobów';
 $lang["openai_gpt_processing_resource"]='Zasób [resource]';
 $lang["openai_gpt_processing_field"]='Przetwarzanie AI dla pola \'[field]\'';
+$lang["property-gpt_source"]='Źródło GPT';

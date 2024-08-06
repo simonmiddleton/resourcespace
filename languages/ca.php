@@ -2893,3 +2893,5 @@ $lang["processing_alternative_video"]='Recurs [resource]: Generant vídeo altern
 $lang["processing_extracting_metadata"]='Recurs [resource]: Extraient metadades';
 $lang["processing_creating_previews"]='Recurs [resource]: Creant previsualitzacions';
 $lang["processing_creating_preview"]='Recurs [resource]: Creant vista prèvia \'[name]\'';
+$lang["processing_updating_resources"]='Actualitzant metadades ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Calculant les actualitzacions necessàries ([count]/[total])';

@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Le modèle a été verrouillé dans la confi
 $lang["openai_gpt_processing_multiple_resources"]='Ressources multiples';
 $lang["openai_gpt_processing_resource"]='Ressource [resource]';
 $lang["openai_gpt_processing_field"]='Traitement IA pour le champ \'[field]\'';
+$lang["property-gpt_source"]='Source GPT';

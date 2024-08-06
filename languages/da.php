@@ -2858,3 +2858,5 @@ $lang["processing_alternative_video"]='Ressource [resource]: Genererer alternati
 $lang["processing_extracting_metadata"]='Ressource [resource]: Uddrager metadata';
 $lang["processing_creating_previews"]='Ressource [resource]: Opretter forhåndsvisninger';
 $lang["processing_creating_preview"]='Ressource [resource]: Opretter forhåndsvisning \'[name]\'';
+$lang["processing_updating_resources"]='Opdaterer metadata ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Beregner nødvendige opdateringer ([count]/[total])';

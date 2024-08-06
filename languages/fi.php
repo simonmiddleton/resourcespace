@@ -3057,3 +3057,5 @@ $lang["processing_alternative_video"]='Resurssi [resource]: Luodaan vaihtoehtois
 $lang["processing_extracting_metadata"]='Resurssi [resource]: Metatietojen poiminta';
 $lang["processing_creating_previews"]='Resurssi [resource]: Esikatselujen luominen';
 $lang["processing_creating_preview"]='Resurssi [resource]: Esikatselun luominen \'[name]\'';
+$lang["processing_updating_resources"]='Päivitetään metatietoja ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Lasketaan tarvittavia päivityksiä ([count]/[total])';

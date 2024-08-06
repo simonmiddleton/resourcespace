@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Model je zaključan u globalnoj konfiguracij
 $lang["openai_gpt_processing_multiple_resources"]='Više resursa';
 $lang["openai_gpt_processing_resource"]='Resurs [resource]';
 $lang["openai_gpt_processing_field"]='AI obrada za polje \'[field]\'';
+$lang["property-gpt_source"]='Izvor GPT';

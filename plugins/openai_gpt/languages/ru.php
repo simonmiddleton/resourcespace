@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Модель была заблокирова
 $lang["openai_gpt_processing_multiple_resources"]='Несколько ресурсов';
 $lang["openai_gpt_processing_resource"]='Ресурс [resource]';
 $lang["openai_gpt_processing_field"]='Обработка ИИ для поля \'[field]\'';
+$lang["property-gpt_source"]='Источник GPT';

@@ -2953,3 +2953,5 @@ $lang["processing_alternative_video"]='Sumber Daya [resource]: Menghasilkan vide
 $lang["processing_extracting_metadata"]='Sumber [resource]: Mengekstrak metadata';
 $lang["processing_creating_previews"]='Sumber [resource]: Membuat pratinjau';
 $lang["processing_creating_preview"]='Sumber [resource]: Membuat pratinjau \'[name]\'';
+$lang["processing_updating_resources"]='Memperbarui metadata ([done]/[total])';
+$lang["processing_calculating_updates_required"]='Menghitung pembaruan yang diperlukan ([count]/[total])';

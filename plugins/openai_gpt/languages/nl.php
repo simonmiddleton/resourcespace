@@ -20,3 +20,4 @@ $lang["openai_gpt_model_override"]='Het model is vergrendeld in de globale confi
 $lang["openai_gpt_processing_multiple_resources"]='Meerdere bronnen';
 $lang["openai_gpt_processing_resource"]='Bron [resource]';
 $lang["openai_gpt_processing_field"]='AI-verwerking voor veld \'[field]\'';
+$lang["property-gpt_source"]='GPT Bron';
