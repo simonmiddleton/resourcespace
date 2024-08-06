@@ -17,3 +17,6 @@ $lang["openai_gpt_api_key"]='Cheie API OpenAI. Obțineți cheia API de la <a hre
 $lang["plugin-openai_gpt-title"]='Integrare API GPT OpenAI';
 $lang["plugin-openai_gpt-desc"]='Metadate generate de OpenAI. Transmite datele câmpului configurat către API-ul OpenAI și stochează informațiile returnate.';
 $lang["openai_gpt_model_override"]='Modelul a fost blocat în configurația globală la: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Resurse multiple';
+$lang["openai_gpt_processing_resource"]='Resursă [resource]';
+$lang["openai_gpt_processing_field"]='Procesare AI pentru câmpul \'[field]\'';

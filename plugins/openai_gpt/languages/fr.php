@@ -17,3 +17,6 @@ $lang["property-openai_gpt_prompt"]='Invite GPT';
 $lang["plugin-openai_gpt-title"]='Intégration de l\'API GPT d\'OpenAI';
 $lang["plugin-openai_gpt-desc"]='Métadonnées générées par OpenAI. Transmet les données de champ configurées à l\'API OpenAI et stocke les informations retournées.';
 $lang["openai_gpt_model_override"]='Le modèle a été verrouillé dans la configuration globale sur : [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Ressources multiples';
+$lang["openai_gpt_processing_resource"]='Ressource [resource]';
+$lang["openai_gpt_processing_field"]='Traitement IA pour le champ \'[field]\'';

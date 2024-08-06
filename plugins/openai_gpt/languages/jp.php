@@ -17,3 +17,6 @@ $lang["openai_gpt_api_key"]='OpenAI APIキー。APIキーは<a href=\'https://op
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT 統合';
 $lang["plugin-openai_gpt-desc"]='OpenAI生成のメタデータ。設定されたフィールドデータをOpenAI APIに渡し、返された情報を保存します。';
 $lang["openai_gpt_model_override"]='モデルはグローバル設定でロックされています: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='複数のリソース';
+$lang["openai_gpt_processing_resource"]='リソース [resource]';
+$lang["openai_gpt_processing_field"]='フィールド \'[field]\' のAI処理';

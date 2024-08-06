@@ -14,3 +14,6 @@ $lang["property-openai_gpt_prompt"]='GPT výzva';
 $lang["plugin-openai_gpt-title"]='Integrace OpenAI API GPT';
 $lang["plugin-openai_gpt-desc"]='OpenAI generovaná metadata. Předává nakonfigurovaná data polí do OpenAI API a ukládá vrácené informace.';
 $lang["openai_gpt_model_override"]='Model byl uzamčen v globální konfiguraci na: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Více zdrojů';
+$lang["openai_gpt_processing_resource"]='Zdroj [resource]';
+$lang["openai_gpt_processing_field"]='Zpracování AI pro pole \'[field]\'';

@@ -17,3 +17,6 @@ $lang["openai_gpt_api_key"]='Clau API d\'OpenAI. Obteniu la vostra clau API des 
 $lang["plugin-openai_gpt-title"]='Integració de l\'API GPT d\'OpenAI';
 $lang["plugin-openai_gpt-desc"]='Metadades generades per OpenAI. Passa les dades del camp configurat a l\'API d\'OpenAI i emmagatzema la informació retornada.';
 $lang["openai_gpt_model_override"]='El model ha estat bloquejat en la configuració global a: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Múltiples recursos';
+$lang["openai_gpt_processing_resource"]='Recurs [resource]';
+$lang["openai_gpt_processing_field"]='Processament d\'IA per al camp \'[field]\'';

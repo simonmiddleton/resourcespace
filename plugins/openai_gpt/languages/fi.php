@@ -17,3 +17,6 @@ $lang["openai_gpt_api_key"]='OpenAI API-avain. Hanki API-avaimesi osoitteesta <a
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT -integraatio';
 $lang["plugin-openai_gpt-desc"]='OpenAI luoma metadata. Välittää konfiguroidut kenttätiedot OpenAI API:lle ja tallentaa palautetut tiedot.';
 $lang["openai_gpt_model_override"]='Malli on lukittu globaaliin kokoonpanoon: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Useita resursseja';
+$lang["openai_gpt_processing_resource"]='Resurssi [resource]';
+$lang["openai_gpt_processing_field"]='AI-käsittely kentälle \'[field]\'';

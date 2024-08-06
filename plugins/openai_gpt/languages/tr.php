@@ -14,3 +14,6 @@ $lang["openai_gpt_system_message"]='Başlangıç sistem mesajı metni. Yer tutuc
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT entegrasyonu';
 $lang["plugin-openai_gpt-desc"]='OpenAI tarafından oluşturulan meta veriler. Yapılandırılmış alan verilerini OpenAI API\'sine iletir ve döndürülen bilgileri depolar.';
 $lang["openai_gpt_model_override"]='Model, küresel yapılandırmada kilitlendi: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Birden fazla kaynak';
+$lang["openai_gpt_processing_resource"]='Kaynak [resource]';
+$lang["openai_gpt_processing_field"]='\'[field]\' alanı için AI işleme';

@@ -17,3 +17,6 @@ $lang["openai_gpt_api_key"]='OpenAI API-sleutel. Haal je API-sleutel op van <a h
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT-integratie';
 $lang["plugin-openai_gpt-desc"]='OpenAI gegenereerde metadata. Geeft geconfigureerde veldgegevens door aan de OpenAI API en slaat de teruggestuurde informatie op.';
 $lang["openai_gpt_model_override"]='Het model is vergrendeld in de globale configuratie naar: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Meerdere bronnen';
+$lang["openai_gpt_processing_resource"]='Bron [resource]';
+$lang["openai_gpt_processing_field"]='AI-verwerking voor veld \'[field]\'';

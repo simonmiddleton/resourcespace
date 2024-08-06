@@ -17,3 +17,6 @@ $lang["openai_gpt_api_key"]='OpenAI API-nyckel. Få din API-nyckel från <a href
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT-integration';
 $lang["plugin-openai_gpt-desc"]='OpenAI genererade metadata. Skickar konfigurerad fältdata till OpenAI API och lagrar den returnerade informationen.';
 $lang["openai_gpt_model_override"]='Modellen har låsts i den globala konfigurationen till: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Flera resurser';
+$lang["openai_gpt_processing_resource"]='Resurs [resource]';
+$lang["openai_gpt_processing_field"]='AI-bearbetning för fältet \'[field]\'';

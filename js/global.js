@@ -1828,7 +1828,7 @@ function CentralSpaceShowProcessing()
     jQuery('#ProcessingBox').fadeIn('fast');
     jQuery('#ProcessingStatus').html('');
     ProcessingMessages=[];
-    ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 250);
+    ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 350);
     ProcessingAPITimer = setInterval(CentralSpace_ProcessingAPITimer, 3000);
     setTimeout(CentralSpace_ProcessingAPITimer, 1000); // Initial more rapid call.
     }

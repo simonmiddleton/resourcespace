@@ -17,3 +17,6 @@ $lang["openai_gpt_api_key"]='OpenAI API-Schlüssel. Holen Sie sich Ihren API-Sch
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT-Integration';
 $lang["plugin-openai_gpt-desc"]='OpenAI generierte Metadaten. Überträgt konfigurierte Felddaten an die OpenAI API und speichert die zurückgegebenen Informationen.';
 $lang["openai_gpt_model_override"]='Das Modell wurde in der globalen Konfiguration gesperrt auf: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Mehrere Ressourcen';
+$lang["openai_gpt_processing_resource"]='Ressource [resource]';
+$lang["openai_gpt_processing_field"]='KI-Verarbeitung für Feld \'[field]\'';

@@ -568,8 +568,9 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
 function extract_exif_comment($ref,$extension="")
     {
+    global $lang;
     debug_function_call('extract_exif_comment', func_get_args());
-    set_processing_message("Resource " . $ref . ": Extracting metadata");
+    set_processing_message(str_replace("[resource]",$ref,$lang["processing_extracting_metadata"]));
 
     # Extract the EXIF comment from either the ImageDescription field or the UserComment
     # Also parse IPTC headers and insert
@@ -1147,7 +1148,8 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         trigger_error("Parameter 'ref' must be numeric!");
         }
 
-    set_processing_message("Resource " . $ref . ": Creating previews");
+    set_processing_message(str_replace("[resource]",$ref,$lang["processing_creating_previews"]));
+
     hook('create_previews_extra', '', array($ref));
 
     // keep_for_hpr will be set to true if necessary in preview_preprocessing.php to indicate that an intermediate jpg can serve as the hpr.
@@ -1374,7 +1376,7 @@ function create_previews_using_im(
     global $autorotate_no_ingest,$always_make_previews,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension, $watermark_single_image;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension, $watermark_single_image, $lang;
 
     $icc_transform_complete=false;
     debug_function_call(__FUNCTION__, func_get_args());
@@ -1515,7 +1517,7 @@ function create_previews_using_im(
         $override_size = false;
         for ($n=0;$n<count($ps);$n++)
             {
-            set_processing_message("Resource " . $ref . ": Creating preview '" . ($ps[$n]["name"] ?? "???") . "'");
+            set_processing_message(str_replace(["[resource]","[name]"],[$ref,($ps[$n]["name"] ?? "???")],$lang["processing_creating_preview"]));
 
             if ($imagemagick_mpr)
                 {

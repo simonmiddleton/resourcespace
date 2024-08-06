@@ -14,3 +14,6 @@ $lang["openai_gpt_system_message"]='초기 시스템 메시지 텍스트. 자리
 $lang["plugin-openai_gpt-title"]='OpenAI API GPT 통합';
 $lang["plugin-openai_gpt-desc"]='OpenAI 생성 메타데이터. 구성된 필드 데이터를 OpenAI API에 전달하고 반환된 정보를 저장합니다.';
 $lang["openai_gpt_model_override"]='모델이 글로벌 구성에서 다음으로 잠겼습니다: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='다중 리소스';
+$lang["openai_gpt_processing_resource"]='리소스 [resource]';
+$lang["openai_gpt_processing_field"]='필드 \'[field]\'에 대한 AI 처리';

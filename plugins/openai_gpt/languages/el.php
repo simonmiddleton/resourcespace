@@ -17,3 +17,6 @@ $lang["openai_gpt_api_key"]='Κλειδί API του OpenAI. Αποκτήστε 
 $lang["plugin-openai_gpt-title"]='Ενσωμάτωση OpenAI API GPT';
 $lang["plugin-openai_gpt-desc"]='Το OpenAI δημιούργησε μεταδεδομένα. Μεταφέρει τα διαμορφωμένα δεδομένα πεδίου στο API του OpenAI και αποθηκεύει τις επιστρεφόμενες πληροφορίες.';
 $lang["openai_gpt_model_override"]='Το μοντέλο έχει κλειδωθεί στην παγκόσμια διαμόρφωση σε: [model]';
+$lang["openai_gpt_processing_multiple_resources"]='Πολλαπλοί πόροι';
+$lang["openai_gpt_processing_resource"]='Πόρος [resource]';
+$lang["openai_gpt_processing_field"]='Επεξεργασία AI για το πεδίο \'[field]\'';
