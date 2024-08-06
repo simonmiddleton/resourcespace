@@ -476,6 +476,7 @@ if ($processupload)
         mkdir($targetDir,0777,true);
         }
     $upfilename = getval("file_name","");
+    $key = getval('key', 0, true);
     $cleanupTargetDir = true; // Remove old files
     $maxFileAge = 5 * 3600; // Temp file age in seconds
     set_time_limit($php_time_limit);
@@ -491,7 +492,7 @@ if ($processupload)
      // Clean the filename
     $origuploadedfilename= $upfilename;
     $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly)) . ((!empty($origextension)) ? ".{$origextension}" : '');
-    $encodedname = substr($encodedname, -30); // Keep temp filename short to avoid full path exceeding path length limits.
+    $encodedname = ($key > 0 ? "{$key}-" : "") . substr($encodedname, -30); // Keep temp filename short to avoid full path exceeding path length limits.
     $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname;
 
     debug("upload_batch - processing. Looking for file at " . $upfilepath);
@@ -1174,6 +1175,8 @@ jQuery(document).ready(function () {
 
              // Encode the file names
             const updatedFiles = {}
+            let key = 1;
+            let filenames = [];
             Object.keys(files).forEach(fileid => {
             console.log(files[fileid]);
                 updatedFiles[fileid] = {
@@ -1185,6 +1188,13 @@ jQuery(document).ready(function () {
                 safefilename = base64encode(`${parts.join('.')}`) + `.${extension}`;
                 upload_name = safefilename.replace(/\//g,'RS_FORWARD_SLASH');  // To fix issue with forward slashes in base64 string
                 updatedFiles[fileid].meta.name = upload_name.substring(upload_name.length - 30);
+                if(filenames.includes(updatedFiles[fileid].meta.name)) {
+                    updatedFiles[fileid].meta.name = key + '-' + updatedFiles[fileid].meta.name;
+                    updatedFiles[fileid].meta.key = key;
+                    key++;
+                } else {
+                    filenames.push(updatedFiles[fileid].meta.name);
+                }
                 console.debug('file obj')
                 console.debug(files[fileid].id)
                 });
@@ -1394,6 +1404,7 @@ function processFile(file, forcepost)
         ajax: 'true',
         processupload: "true",
         file_name: file.name,
+        key: file.meta.key ?? "",
         <?php if($CSRF_enabled)
             {
             echo generateAjaxToken("upload_batch") . ",\n";
