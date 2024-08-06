@@ -1384,7 +1384,7 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
 */
 function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true, bool $logthis = false)
     {
-    global $userref;
+    global $userref, $lang;
     if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
         {return false;}
 
@@ -1409,8 +1409,12 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
         }
 
     $resources_chunks = array_chunk($resources, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    $done=0;
     foreach($resources_chunks as $resources_chunk)
         {
+        set_processing_message(str_replace(["[done]","[total]"],[$done,count($resources)],$lang["processing_updating_resources"]));
+        $done+=count($resources_chunk);
+
         $resource_node_values = '';
         $sql_params = [];
         foreach($resources_chunk as $resource)
@@ -1587,14 +1591,18 @@ function delete_resource_nodes(int $resourceid,$nodes=array(),$logthis=true)
  */
 function delete_resource_nodes_multi($resources=array(),$nodes=array())
     {
+    global $lang;
     if(!is_array($nodes))
         {$nodes=array($nodes);}
 
     $resource_chunks = array_chunk($resources, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
     $node_chunks = array_chunk($nodes, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
-
+    $done=0;
     foreach ($resource_chunks as $resource_chunk)
         {
+        set_processing_message(str_replace(["[done]","[total]"],[$done,count($resources)],$lang["processing_updating_resources"]));
+        $done+=count($resource_chunk);
+
         foreach ($node_chunks as $node_chunk)
             {
             $sql = "DELETE FROM resource_node WHERE resource in (" . ps_param_insert(count($resource_chunk)) . ") AND node in (" . ps_param_insert(count($node_chunk)) . ")";

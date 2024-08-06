@@ -158,7 +158,7 @@ function museumplus_delete_module_conf(element, id)
         return;
         }
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
     jQuery.ajax(
         {
         type: 'POST',
@@ -192,7 +192,7 @@ function museumplus_delete_module_conf(element, id)
             })
         .always(function()
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             });
 
     return;

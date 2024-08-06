@@ -333,20 +333,11 @@ endif; # !hook("customhtmlheader")
 <a href="#UICenter" class="skip-to-main-content"><?php echo escape($lang["skip-to-main-content"]); ?></a>
 
 <!-- Processing graphic -->
-<div id='ProcessingBox' style='display: none'><h3><?php echo escape($lang["status_processing"]); ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+<div id='ProcessingBox' style='display: none'><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i>
 <p id="ProcessingStatus"></p>
 </div>
 
-<!-- Loading graphic -->
-<?php
-if(!hook("customloadinggraphic"))
-    {
-    ?>
-    <div id="LoadingBox"><i aria-hidden="true" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
-    <?php
-    }
-
-hook("bodystart"); ?>
+<?php hook("bodystart"); ?>
 
 <!--Global Header-->
 <?php

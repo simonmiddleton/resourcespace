@@ -340,7 +340,7 @@ function SetSlideshowFlag(element)
         <?php echo generateAjaxToken("SetSlideshowFlag"); ?>
         };
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
 
     jQuery.ajax(
         {
@@ -350,7 +350,7 @@ function SetSlideshowFlag(element)
         }).fail(function(data, textStatus, jqXHR) {
             styledalert(data.status, data.statusText);
         }).always(function() {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
         });
 
     return false;

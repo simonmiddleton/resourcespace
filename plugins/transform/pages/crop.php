@@ -834,7 +834,7 @@ renderBreadcrumbs($links_trail);
                 <?php echo generateAjaxToken('crop_reload'); ?>
                 };
             cropdate = new Date();
-            CentralSpaceShowLoading();
+            CentralSpaceShowProcessing();
             jQuery.ajax({
                 type: 'POST',
                 url: baseurl_short + 'plugins/transform/pages/crop.php',
@@ -856,7 +856,7 @@ renderBreadcrumbs($links_trail);
         
         jQuery('#cropimage').on("load", function() 
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             console.log("cropimage loaded");
             if(typeof imgwidth === "undefined")
                 {

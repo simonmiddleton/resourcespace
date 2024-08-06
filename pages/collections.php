@@ -410,7 +410,7 @@ else { ?>
                 });
 
             UpdateSelColSearchFilterBar();
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
         });
 
         jQuery('#CentralSpace').on('resourcesremovedfromcollection', function(response,resource_list) {
@@ -420,7 +420,7 @@ else { ?>
                     jQuery("#check" + resource).prop('checked','');
                 });
 
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             UpdateSelColSearchFilterBar();
         });
 

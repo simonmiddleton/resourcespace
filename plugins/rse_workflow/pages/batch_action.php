@@ -197,7 +197,7 @@ function process_wf_action(e)
     post_data.ajax = true;
     post_data.process_action = true;
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
     jQuery.ajax({
         type: 'POST',
         url: "<?php echo $form_action; ?>",
@@ -223,7 +223,7 @@ function process_wf_action(e)
             })
         .always(function()
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             ModalClose();
             });
 

@@ -333,7 +333,7 @@ input:checked + .customFieldLabel, .keywordselected {
     color: #fff;
 }
   
-#LoadingBox,  #ProcessingBox{
+#ProcessingBox{
     background-color:white;
     color:black;
 }

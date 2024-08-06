@@ -1569,6 +1569,8 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
     for ($n=0;$n<count($fields);$n++)
         {
+        set_processing_message(str_replace(["[count]","[total]"],[$n+1,count($fields)],$lang["processing_calculating_updates_required"]));
+
         $nodes_to_add       = [];
         $nodes_to_remove    = [];
         $oldnodenames       = [];
@@ -2264,7 +2266,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         {
         delete_resource_nodes_multi($list,$all_nodes_to_remove);
         }
-    // Updates for individual reesources
+    // Updates for individual resources
     foreach($resource_nodes_add as $resource=>$addnodes)
         {
         add_resource_nodes($resource,$addnodes,false,false);

@@ -1601,7 +1601,7 @@ if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_acce
                     return true;
                     }
 
-                CentralSpaceShowLoading();
+                CentralSpaceShowProcessing();
                 metadataReport(<?php echo escape($ref); ?>, '<?php echo escape($context); ?>');
 
                 return true;

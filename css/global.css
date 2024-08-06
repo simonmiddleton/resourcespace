@@ -866,7 +866,7 @@ div.autocomplete ul li {
 .dynamickeywords {float:left;}
 .keywordsselected {margin-top:10px;}
 
-#LoadingBox, #ProcessingBox
+#ProcessingBox
     {
     position: absolute;
     top:300px;

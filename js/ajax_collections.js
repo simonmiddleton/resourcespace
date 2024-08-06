@@ -110,7 +110,7 @@ function AddResourceToCollection(event, ui, resource, size, collection_id) {
             {
             styledalert("", response);
             UpdateSelColSearchFilterBar();
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             }
         else
             {
@@ -187,7 +187,7 @@ function RemoveResourceFromCollection(event,resource,pagename, collection_id, cs
             {
             styledalert("", response);
             UpdateSelColSearchFilterBar();
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             }
         else
             {
@@ -234,12 +234,12 @@ function ProcessCollectionResourceSelection(resource_list, primary_action, colle
     var csrf_post_data = JSON.parse(csrf_data);
     if(primary_action)
         {
-        CentralSpaceShowLoading();
+        CentralSpaceShowProcessing();
         add_multiple_resources_to_collection(resource_list, collection, csrf_post_data)
         }
     else
         {
-        CentralSpaceShowLoading();
+        CentralSpaceShowProcessing();
         remove_multiple_resources_from_collection(resource_list, collection, csrf_post_data)
         }
     return true;
@@ -299,7 +299,7 @@ function ClearSelectionCollection(t)
 
     console.debug("ClearSelectionCollection: post_data = %o", post_data);
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
 
     jQuery.ajax({
         type: 'POST',
@@ -326,7 +326,7 @@ function ClearSelectionCollection(t)
             })
         .always(function()
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             });
 
     return true;
@@ -336,7 +336,7 @@ function ClearSelectionCollection(t)
 function UpdateSelColSearchFilterBar()
     {
     console.log('Called UpdateSelColSearchFilterBar()');
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
 
     jQuery.ajax({
         type: 'GET',
@@ -369,7 +369,7 @@ function UpdateSelColSearchFilterBar()
             })
         .always(function()
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             });
 
     jQuery(".TopInpageNavLeft").unbind('UpdateForSelectionCollection').one("UpdateForSelectionCollection", function(e, clear)
@@ -403,7 +403,7 @@ function UpdateSelectedResourcesCounter(clear)
         return;
         }
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
     jQuery.ajax({
         type: 'GET',
         url: baseurl + "/pages/ajax/collections.php",
@@ -441,7 +441,7 @@ function UpdateSelectedResourcesCounter(clear)
             })
         .always(function()
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             });
     }
 
@@ -543,13 +543,13 @@ function RemoveSelectedFromCollection(csrf_id, csrf_token)
     let csrf_data = {};
     csrf_data[csrf_id] = csrf_token;
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
     api("collection_remove_resources",post_data,function(response){
         if(typeof response == 'string')
             {
             styledalert("", response);
             UpdateSelColSearchFilterBar();
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             }
         else
             {
@@ -577,7 +577,7 @@ function add_resource_to_collection(resource, collection, csrf)
         {
         styledalert("", response);
         UpdateSelColSearchFilterBar();
-        CentralSpaceHideLoading();
+        CentralSpaceHideProcessing();
         }
     else
         {
@@ -604,7 +604,7 @@ function add_multiple_resources_to_collection(resource_list, collection, csrf)
             {
             styledalert("", response);
             UpdateSelColSearchFilterBar();
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             }
         else
             {
@@ -631,7 +631,7 @@ function remove_resource_from_collection(resource, collection, csrf)
         if(typeof response == 'string')
             { 
             UpdateSelColSearchFilterBar();
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             styledalert("", response);
             }
         else
@@ -658,7 +658,7 @@ function remove_multiple_resources_from_collection(resource_list, collection, cs
         if(typeof response == 'string')
             {
             UpdateSelColSearchFilterBar();
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             styledalert("", response);
             }
         else

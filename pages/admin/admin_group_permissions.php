@@ -450,7 +450,7 @@ function SavePermissions(perms, formsubmit)
     {
     console.debug('SavePermissions(perms = %o)', perms);
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
     let permissions_list = ProcessDisabledPermissions(perms).map(function(perm) {
         // Custom Permissions are provided with all the required info
         if (
@@ -515,7 +515,7 @@ function SavePermissions(perms, formsubmit)
             })
         .always(function()
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             });
 
     return;

@@ -116,7 +116,7 @@ $tms_modules_mappings_html .= "
                 return;
                 }
 
-            CentralSpaceShowLoading();
+            CentralSpaceShowProcessing();
 
             jQuery.ajax(
                 {
@@ -134,7 +134,7 @@ $tms_modules_mappings_html .= "
                 }).fail(function(data, textStatus, jqXHR) {
                     styledalert('{$lang["tms_link_not_found_error_title"]}', '{$lang["tms_link_not_deleted_error_detail"]}');
                 }).always(function() {
-                    CentralSpaceHideLoading();
+                    CentralSpaceHideProcessing();
                 });
 
             return;

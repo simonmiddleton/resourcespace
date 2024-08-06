@@ -17,7 +17,7 @@ function createNewResource(event, element)
     {
     event.preventDefault();
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
 
     jQuery.ajax(
         {
@@ -41,7 +41,7 @@ function createNewResource(event, element)
                 }
             styledalert(data.statusText, data.responseJSON.data.message);
         }).always(function() {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
         });
     }
 </script>

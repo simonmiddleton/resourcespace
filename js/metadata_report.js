@@ -4,7 +4,7 @@ function metadataReport(ref, context)
 		baseurl + "/pages/ajax/metadata_report.php?ref="+ref+"&context=" + context,
         function()
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             }
 		);
 	}

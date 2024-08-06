@@ -303,7 +303,7 @@ jQuery('#checkhtml').click(function(e) {
             'text': checktext, 
             <?php echo generateAjaxToken('admin_content_edit'); ?>,
         }, function(response, status, xhr){
-        CentralSpaceHideLoading();
+        CentralSpaceHideProcessing();
         jQuery('#submissionResponse').html(response);
     });
     e.preventDefault();

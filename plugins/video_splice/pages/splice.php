@@ -441,7 +441,7 @@ include "../../../include/header.php";
         <!--Hidden value to track new order to post on submit-->
         <input type="hidden" name="splice_order" id="splice_reel_order" />
         <div class="QuestionSubmit">
-             <input name="splice_submit" class="spliceubmit" type="submit" value="<?php echo escape($lang["action-splice"]); ?>" onclick="CentralSpaceShowLoading();">
+             <input name="splice_submit" class="spliceubmit" type="submit" value="<?php echo escape($lang["action-splice"]); ?>" onclick="CentralSpaceShowProcessing();">
              <br />
              <div class="clearerleft"> </div>
         </div>

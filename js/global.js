@@ -265,31 +265,31 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
     // if (!modal) {jQuery(anchor).fadeTo(0,0.6);}
 
     // Start the timer for the loading box.
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
 
     CentralSpace.load(url, function (response, status, xhr)
         {
         if(xhr.status == 403)
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             styledalert(errortext,xhr.responseText);
             }
         else if (xhr.status == 205)
             {
             console.debug("Full page reload required " + response);
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             window.location.href = anchor.href;
             }
         else if (status=="error")
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             CentralSpace.html(errorpageload  + xhr.status + " " + xhr.statusText + "<br/>" + response);
             jQuery(anchor).fadeTo(0,1);
             }
         else
             {
             // Load completed
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             if (modal)
                 {
                 // Show the modal
@@ -419,7 +419,7 @@ top.window.onpopstate = function(event)
         // to scripts initialising correctly, perhaps using an event or similar,
         // or for all initialisation to have already completed in the header.php load ~DH
 
-        CentralSpaceShowLoading();
+        CentralSpaceShowProcessing();
         window.location.reload(true);
         return true;
     }
@@ -475,7 +475,7 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
         url += '?ajax=true';
         }
     url += '&posting=true';
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
 
     pagename=basename(url);
     pagename=pagename.substr(0, pagename.lastIndexOf('.'));
@@ -491,7 +491,7 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
                 }
             return;
             }
-        CentralSpaceHideLoading();
+        CentralSpaceHideProcessing();
         CentralSpace.html(data);
 
         jQuery('#UICenter').show(0);
@@ -549,7 +549,7 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
     .fail(function(result,textStatus) {
         if (result.status>0)
             {
-            CentralSpaceHideLoading();
+            CentralSpaceHideProcessing();
             if(result.status == 409)
                 {
                 // This is used for edit conflicts - show the response
@@ -576,20 +576,6 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
     return false;
     }
 
-function CentralSpaceShowLoading()
-    {
-    CentralSpaceLoading=true;
-    ClearLoadingTimers();
-    loadingtimers.push(window.setTimeout("jQuery('#CentralSpace').fadeTo('fast',0.7);jQuery('#LoadingBox').fadeIn('fast');",ajaxLoadingTimer));
-    }
-
-function CentralSpaceHideLoading()
-    {
-    CentralSpaceLoading=false;
-    ClearLoadingTimers();
-    jQuery('#LoadingBox').fadeOut('fast');
-    jQuery('#CentralSpace').fadeTo('fast',1);
-    }
 
 /* AJAX loading of CollectionDiv contents given a link */
 function CollectionDivLoad (anchor,scrolltop)
@@ -1298,7 +1284,7 @@ function LoadActions(pagename,id,type,ref, extra_data)
         return jQuery.when(false);
         }
 
-    CentralSpaceShowLoading();
+    CentralSpaceShowProcessing();
     url = baseurl_short+"pages/ajax/load_actions.php";
     var data = {
         actiontype: type,
@@ -1341,7 +1327,7 @@ function LoadActions(pagename,id,type,ref, extra_data)
 
             return false;
             })
-        .always(() => CentralSpaceHideLoading());
+        .always(() => CentralSpaceHideProcessing());
     }
 
 /**
@@ -1819,18 +1805,23 @@ function HideHelp(id)
         }
     }
 
+var ProcessingInitTimer;
 var ProcessingDisplayTimer;
 var ProcessingAPITimer;
 var ProcessingMessages;
 var ProcessingCount=-1;
 function CentralSpaceShowProcessing()
     {
-    jQuery('#ProcessingBox').fadeIn('fast');
     jQuery('#ProcessingStatus').html('');
     ProcessingMessages=[];
     ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 350);
     ProcessingAPITimer = setInterval(CentralSpace_ProcessingAPITimer, 3000);
     setTimeout(CentralSpace_ProcessingAPITimer, 1000); // Initial more rapid call.
+
+    ProcessingInitTimer=setTimeout(function ()
+        {
+        jQuery('#ProcessingBox').fadeIn('fast');
+        },1000);
     }
 
 function CentralSpaceHideProcessing()
@@ -1838,6 +1829,7 @@ function CentralSpaceHideProcessing()
     jQuery('#ProcessingBox').fadeOut('fast');
     clearInterval(ProcessingDisplayTimer);
     clearInterval(ProcessingAPITimer);
+    clearTimeout(ProcessingInitTimer);
     }
 
 function CentralSpace_ProcessingDisplayTimer()
@@ -1855,7 +1847,6 @@ function CentralSpace_ProcessingAPITimer()
     api("get_processing_message", null, function(response) {
     console.log ("API execution");
     console.log(response);
-    ProcessingMessages=[];
     if(response!= false && Array.isArray(response))
         {
         ProcessingMessages=ProcessingMessages.concat(response);
