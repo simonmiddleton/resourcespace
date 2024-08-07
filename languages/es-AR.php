@@ -2857,3 +2857,4 @@ $lang["processing_creating_previews"]='Recurso [resource]: Creando vistas previa
 $lang["processing_creating_preview"]='Recurso [resource]: Creando vista previa \'[name]\'';
 $lang["processing_updating_resources"]='Actualizando metadatos ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Calculando actualizaciones requeridas ([count]/[total])';
+$lang["processing_alternative_image"]='Recurso [resource]: Generando imagen alternativa \'[name]\'';

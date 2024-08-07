@@ -2860,3 +2860,4 @@ $lang["processing_creating_previews"]='Ressource [resource]: Opretter forhåndsv
 $lang["processing_creating_preview"]='Ressource [resource]: Opretter forhåndsvisning \'[name]\'';
 $lang["processing_updating_resources"]='Opdaterer metadata ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Beregner nødvendige opdateringer ([count]/[total])';
+$lang["processing_alternative_image"]='Ressource [resource]: Genererer alternativt billede \'[name]\'';

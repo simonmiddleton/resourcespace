@@ -2869,3 +2869,4 @@ $lang["processing_creating_previews"]='Resursă [resource]: Crearea previzualiz�
 $lang["processing_creating_preview"]='Resursă [resource]: Crearea previzualizării \'[name]\'';
 $lang["processing_updating_resources"]='Actualizare metadate ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Calculând actualizările necesare ([count]/[total])';
+$lang["processing_alternative_image"]='Resursă [resource]: Generare imagine alternativă \'[name]\'';

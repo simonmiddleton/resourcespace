@@ -3051,3 +3051,4 @@ $lang["processing_creating_previews"]='Ressurs [resource]: Oppretter forhåndsvi
 $lang["processing_creating_preview"]='Ressurs [resource]: Oppretter forhåndsvisning \'[name]\'';
 $lang["processing_updating_resources"]='Oppdaterer metadata ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Beregner nødvendige oppdateringer ([count]/[total])';
+$lang["processing_alternative_image"]='Ressurs [resource]: Genererer alternativt bilde \'[name]\'';

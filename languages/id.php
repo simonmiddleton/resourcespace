@@ -2955,3 +2955,4 @@ $lang["processing_creating_previews"]='Sumber [resource]: Membuat pratinjau';
 $lang["processing_creating_preview"]='Sumber [resource]: Membuat pratinjau \'[name]\'';
 $lang["processing_updating_resources"]='Memperbarui metadata ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Menghitung pembaruan yang diperlukan ([count]/[total])';
+$lang["processing_alternative_image"]='Sumber [resource]: Menghasilkan gambar alternatif \'[name]\'';

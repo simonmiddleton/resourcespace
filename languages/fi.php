@@ -3059,3 +3059,4 @@ $lang["processing_creating_previews"]='Resurssi [resource]: Esikatselujen luomin
 $lang["processing_creating_preview"]='Resurssi [resource]: Esikatselun luominen \'[name]\'';
 $lang["processing_updating_resources"]='Päivitetään metatietoja ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Lasketaan tarvittavia päivityksiä ([count]/[total])';
+$lang["processing_alternative_image"]='Resurssi [resource]: Luodaan vaihtoehtoista kuvaa \'[name]\'';

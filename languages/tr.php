@@ -2790,3 +2790,4 @@ $lang["processing_creating_previews"]='Kaynak [resource]: Önizlemeler oluşturu
 $lang["processing_creating_preview"]='Kaynak [resource]: Önizleme oluşturuluyor \'[name]\'';
 $lang["processing_updating_resources"]='Meta verileri güncelleniyor ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Gerekli güncellemeler hesaplanıyor ([count]/[total])';
+$lang["processing_alternative_image"]='Kaynak [resource]: Alternatif görüntü \'[name]\' oluşturuluyor';

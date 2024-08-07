@@ -2784,3 +2784,4 @@ $lang["processing_creating_previews"]='Zdroj [resource]: Vytváření náhledů'
 $lang["processing_creating_preview"]='Vytváření náhledu pro zdroj [resource] \'[name]\'';
 $lang["processing_updating_resources"]='Aktualizace metadat ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Počítání potřebných aktualizací ([count]/[total])';
+$lang["processing_alternative_image"]='Zdroj [resource]: Generování alternativního obrázku \'[name]\'';

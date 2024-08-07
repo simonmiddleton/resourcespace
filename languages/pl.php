@@ -2920,3 +2920,4 @@ $lang["processing_creating_previews"]='Zasób [resource]: Tworzenie podglądów'
 $lang["processing_creating_preview"]='Zasób [resource]: Tworzenie podglądu \'[name]\'';
 $lang["processing_updating_resources"]='Aktualizowanie metadanych ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Obliczanie wymaganych aktualizacji ([count]/[total])';
+$lang["processing_alternative_image"]='Zasób [resource]: Generowanie alternatywnego obrazu \'[name]\'';

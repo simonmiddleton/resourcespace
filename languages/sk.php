@@ -3235,3 +3235,4 @@ $lang["processing_creating_previews"]='Ustvarjanje predogledov za vir [resource]
 $lang["processing_creating_preview"]='Zdroj [resource]: Ustvarjanje predogleda \'[name]\'';
 $lang["processing_updating_resources"]='Posodabljanje metapodatkov ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Izračunavanje potrebnih posodobitev ([count]/[total])';
+$lang["processing_alternative_image"]='Vir [resource]: Ustvarjanje alternativne slike \'[name]\'';

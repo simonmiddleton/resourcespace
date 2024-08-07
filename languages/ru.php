@@ -2898,3 +2898,4 @@ $lang["processing_creating_previews"]='Ресурс [resource]: Создание
 $lang["processing_creating_preview"]='Ресурс [resource]: Создание предварительного просмотра \'[name]\'';
 $lang["processing_updating_resources"]='Обновление метаданных ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Вычисление необходимых обновлений ([count]/[total])';
+$lang["processing_alternative_image"]='Ресурс [resource]: Генерация альтернативного изображения \'[name]\'';

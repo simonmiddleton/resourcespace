@@ -2798,3 +2798,4 @@ $lang["processing_creating_previews"]='संसाधन [resource]: पूर�
 $lang["processing_creating_preview"]='संसाधन [resource]: पूर्वावलोकन \'[name]\' बना रहा है';
 $lang["processing_updating_resources"]='मेटाडाटा अपडेट हो रहा है ([done]/[total])';
 $lang["processing_calculating_updates_required"]='अपडेट्स की गणना की जा रही है ([count]/[total])';
+$lang["processing_alternative_image"]='संसाधन [resource]: वैकल्पिक छवि \'[name]\' उत्पन्न कर रहा है';

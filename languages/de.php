@@ -3121,3 +3121,4 @@ $lang["processing_creating_previews"]='Ressource [resource]: Vorschauen erstelle
 $lang["processing_creating_preview"]='Ressource [resource]: Vorschau \'[name]\' wird erstellt';
 $lang["processing_updating_resources"]='Aktualisiere Metadaten ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Berechnung der erforderlichen Updates ([count]/[total])';
+$lang["processing_alternative_image"]='Ressource [resource]: Erzeuge alternatives Bild \'[name]\'';

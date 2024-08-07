@@ -2938,3 +2938,4 @@ $lang["processing_creating_previews"]='リソース [resource]: プレビュー�
 $lang["processing_creating_preview"]='リソース [resource]: プレビュー \'[name]\' を作成中';
 $lang["processing_updating_resources"]='メタデータを更新中（[done]/[total]）';
 $lang["processing_calculating_updates_required"]='更新の計算中 ([count]/[total])';
+$lang["processing_alternative_image"]='リソース [resource]: 代替画像 \'[name]\' を生成中';

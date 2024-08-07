@@ -2929,3 +2929,4 @@ $lang["processing_creating_previews"]='Ressource [resource] : Création d\'aper�
 $lang["processing_creating_preview"]='Ressource [resource] : Création de l\'aperçu \'[name]\'';
 $lang["processing_updating_resources"]='Mise à jour des métadonnées ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Calcul des mises à jour requises ([count]/[total])';
+$lang["processing_alternative_image"]='Ressource [resource] : Génération d\'une image alternative \'[name]\'';

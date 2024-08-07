@@ -2895,3 +2895,4 @@ $lang["processing_creating_previews"]='Recurs [resource]: Creant previsualitzaci
 $lang["processing_creating_preview"]='Recurs [resource]: Creant vista prèvia \'[name]\'';
 $lang["processing_updating_resources"]='Actualitzant metadades ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Calculant les actualitzacions necessàries ([count]/[total])';
+$lang["processing_alternative_image"]='Recurs [resource]: Generant imatge alternativa \'[name]\'';

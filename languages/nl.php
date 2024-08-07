@@ -2901,3 +2901,4 @@ $lang["processing_creating_previews"]='Resource [resource]: Voorbeelden maken';
 $lang["processing_creating_preview"]='Resource [resource]: Voorbeeld aanmaken \'[name]\'';
 $lang["processing_updating_resources"]='Metadata bijwerken ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Updates berekenen vereist ([count]/[total])';
+$lang["processing_alternative_image"]='Resource [resource]: Alternatieve afbeelding \'[name]\' genereren';

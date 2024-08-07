@@ -2873,3 +2873,4 @@ $lang["processing_creating_previews"]='Risorsa [resource]: Creazione anteprime';
 $lang["processing_creating_preview"]='Risorsa [resource]: Creazione dell\'anteprima \'[name]\'';
 $lang["processing_updating_resources"]='Aggiornamento dei metadati ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Calcolando gli aggiornamenti necessari ([count]/[total])';
+$lang["processing_alternative_image"]='Risorsa [resource]: Generazione immagine alternativa \'[name]\'';

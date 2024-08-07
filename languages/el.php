@@ -2864,3 +2864,4 @@ $lang["processing_creating_previews"]='Πόρος [resource]: Δημιουργί
 $lang["processing_creating_preview"]='Πόρος [resource]: Δημιουργία προεπισκόπησης \'[name]\'';
 $lang["processing_updating_resources"]='Ενημέρωση μεταδεδομένων ([done]/[total])';
 $lang["processing_calculating_updates_required"]='Υπολογισμός απαιτούμενων ενημερώσεων ([count]/[total])';
+$lang["processing_alternative_image"]='Πόρος [resource]: Δημιουργία εναλλακτικής εικόνας \'[name]\'';

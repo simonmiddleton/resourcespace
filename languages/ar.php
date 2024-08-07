@@ -3010,3 +3010,4 @@ $lang["processing_creating_previews"]='المورد [resource]: إنشاء مع�
 $lang["processing_creating_preview"]='المورد [resource]: إنشاء معاينة \'[name]\'';
 $lang["processing_updating_resources"]='تحديث البيانات الوصفية ([done]/[total])';
 $lang["processing_calculating_updates_required"]='حساب التحديثات المطلوبة ([count]/[total])';
+$lang["processing_alternative_image"]='المورد [resource]: يتم إنشاء صورة بديلة \'[name]\'';
