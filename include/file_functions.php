@@ -411,7 +411,7 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
             $default_paths[] = $GLOBALS['tempdir'];
         }
     }
-    $allowed_paths = array_filter(array_map('trim', array_unique($default_paths)));
+    $allowed_paths = array_filter(array_map('trim', array_unique(array_merge($default_paths, STORAGE_DIR_LINKS))));
     debug('allowed_paths = ' . implode(', ', $allowed_paths));
 
     foreach ($allowed_paths as $allowed_path) {
@@ -445,3 +445,38 @@ function is_safe_basename(string $val): bool
         safe_file_name($file_name) === str_replace(' ', '_', $file_name)
         && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION));
 }
+
+/**
+ * Utility function to help find directory symlinks inside a path, up to X levels deep.
+ * 
+ * @param string $path Directory start point
+ * @param int $depth Specify depth stop point
+ * @return array Map between links and their target
+ */
+function scan_path_for_links(string $path, int $depth): array {
+    $path = trim($path);
+    if ($path === '' || !is_dir($path) || $depth < 0) {
+        return [];
+    }
+
+    $symlinks = [];
+    $dir_iter = new DirectoryIterator($path);
+    foreach ($dir_iter as $it) {
+        if ($it->isDot() || !$it->isDir()) {
+            continue;
+        }
+
+        $filename = $it->getFilename();
+
+        if ($it->isLink()) {
+            $target = $it->getRealPath();
+            if ($target !== false) {
+                $symlinks[$path . DIRECTORY_SEPARATOR . $filename] = $target;
+            }
+        }
+        $symlinks = array_merge($symlinks, scan_path_for_links($path . DIRECTORY_SEPARATOR . $filename, $depth - 1));
+    }
+
+    return $symlinks;
+};
+
