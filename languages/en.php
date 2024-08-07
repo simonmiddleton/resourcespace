@@ -3164,6 +3164,7 @@ $lang["call-function"]="Call function";
 
 $lang["processing_preview_video"] = "Resource [resource]: Generating preview video";
 $lang["processing_alternative_video"] = "Resource [resource]: Generating alternative video '[name]'";
+$lang["processing_alternative_image"] = "Resource [resource]: Generating alternative image '[name]'";
 $lang["processing_extracting_metadata"] = "Resource [resource]: Extracting metadata";
 $lang["processing_creating_previews"] = "Resource [resource]: Creating previews";
 $lang["processing_creating_preview"] = "Resource [resource]: Creating preview '[name]'";

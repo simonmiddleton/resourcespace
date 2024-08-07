@@ -4178,6 +4178,9 @@ function create_image_alternatives(int $ref, array $params, $force = false)
             }
         }
 
+        global $lang;
+        set_processing_message(str_replace(["[resource]","[name]"],[$ref,$alternate_config["name"]],$lang["processing_alternative_image"]));
+
         // Create the alternative file.
         $aref  = add_alternative_file($ref, $alternate_config['name'],$alternate_config['description'] ?? "");
         $apath = get_resource_path($ref, true, '', true, $alternate_config['target_extension'], -1, 1, false, '', $aref);

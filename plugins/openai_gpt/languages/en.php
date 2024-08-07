@@ -10,12 +10,10 @@ $lang["openai_gpt_max_tokens"]              = "Max tokens";
 $lang["openai_gpt_advanced"]                = "WARNING - This section is for testing purposes only and should not be changed on live systems. Changing any of the plugin options here will affect the behaviour of all the metadata fields that have been configured. Alter with caution!";
 $lang["openai_gpt_system_message"]          = "Initial system message text. Placeholders %%IN_TYPE%% and %%OUT_TYPE%% will be replaced by 'text' or 'json' depending on the source/target field types";
 
-
-$lang["openai_gpt_model_override"]                   = "The model has been locked in global configuration to: [model]";
+$lang["openai_gpt_model_override"]          = "The model has been locked in global configuration to: [model]";
 
 $lang["openai_gpt_processing_multiple_resources"] = "Multiple resources";
 $lang["openai_gpt_processing_resource"] = "Resource [resource]";
-$lang["openai_gpt_processing_field"] = "AI processing for field '[field]'";
-
+$lang["openai_gpt_processing_field"] = "AI metadata generation for field '[field]'";
 
 $lang["property-gpt_source"]="GPT Source";
