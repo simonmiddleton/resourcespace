@@ -26,6 +26,11 @@ parameters:
 			path: include/collections_functions.php
 
 		-
+			message: "#^Constant STORAGE_DIR_LINKS not found\\.$#"
+			count: 1
+			path: include/file_functions.php
+
+		-
 			message: "#^Variable \\$additional_title_pages in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: include/footer.php
