@@ -232,7 +232,7 @@ $storagedir ??= dirname(__DIR__) . '/filestore';
 $storageurl ??= "{$baseurl}/filestore";
 
 /** @var array List of links found under the storagedir */
-define('STORAGE_DIR_LINKS', array_values(scan_path_for_links($storagedir, 3)));
+define('STORAGE_DIR_LINKS', array_values(scan_path_for_links($storagedir, 2)));
 
 // Reset prepared statement cache before reconnecting
 unset($prepared_statement_cache);
