@@ -33,7 +33,7 @@ if (!isset($open_gpt_model_override)) // Can be forced in configuration
     }
 else   
     {
-    $page_intro.=str_replace("[model]","<strong>$open_gpt_model_override</strong>",$lang["openai_gpt_model_override"]);
+    $page_intro.=str_replace("[model]","<strong>$open_gpt_model_override</strong>",escape($lang["openai_gpt_model_override"]));
     }
 
 $page_def[] = config_add_text_input("openai_gpt_system_message",$lang["openai_gpt_system_message"]);
