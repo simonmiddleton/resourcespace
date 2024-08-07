@@ -478,5 +478,5 @@ function scan_path_for_links(string $path, int $depth): array {
     }
 
     return $symlinks;
-};
+}
 
