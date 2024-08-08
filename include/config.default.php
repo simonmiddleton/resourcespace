@@ -2955,6 +2955,9 @@ $batch_replace_local_folder = ""; # e.g. "/upload";
 $filestore_evenspread=false;
 $filestore_migrate=false;
 
+// If filestore has symlinks, you MUST configure all link targets otherwise is_valid_rs_path() will fail to recognise genuine locations
+$extra_allowed_filestore_paths = [];
+
 // Set $system_download_config=true if you want to allow admin users to download the config.php file, user and configuration data from your server, optionally including resource data
 // Most data will be obfuscated unless you set $system_download_config_force_obfuscation = false
 // This requires offline jobs to be enabled

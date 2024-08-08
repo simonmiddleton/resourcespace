@@ -411,7 +411,14 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
             $default_paths[] = $GLOBALS['tempdir'];
         }
     }
-    $allowed_paths = array_filter(array_map('trim', array_unique($default_paths)));
+    $allowed_paths = array_filter(
+        array_map(
+            'trim',
+            array_unique(
+                array_merge($default_paths, $GLOBALS['extra_allowed_filestore_paths'])
+            )
+        )
+    );
     debug('allowed_paths = ' . implode(', ', $allowed_paths));
 
     foreach ($allowed_paths as $allowed_path) {
