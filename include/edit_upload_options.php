@@ -17,50 +17,6 @@ if ($on_upload || (isset($ref) && $ref<0))
         <?php
         }
 
-    if($on_upload && $upload_then_edit)
-        {
-        ?>
-        <div id="question_resourcetype" class="Question">
-            <label for="resourcetype"><?php echo escape($lang["resourcetype"]); ?></label>
-            <select id="resourcetype"
-                    class="stdwidth"
-                    name="resource_type"
-                    >
-                <option value='' <?php ($resource_type == "") ? "selected" : ""?>><?php  echo escape($lang["select"]) ; ?></option>
-            <?php
-            $types                = get_resource_types("",false,false,true);
-            $shown_resource_types = array();
-
-            for($n = 0; $n < count($types); $n++)
-                {
-                // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
-                if(checkperm("XU{$types[$n]['ref']}") 
-                    || 
-                    in_array($types[$n]['ref'], $hide_resource_types)
-                    || (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
-                    )
-                    {
-                    continue;
-                    }
-
-                $shown_resource_types[] = $types[$n]['ref'];
-
-                $selected = '';
-                if(isset($resource_type) && $resource_type == $types[$n]['ref'])
-                    {
-                    $selected = 'selected';
-                    }
-                ?>
-                <option value="<?php echo $types[$n]['ref']; ?>" <?php echo $selected; ?>><?php echo escape($types[$n]["name"]); ?></option>
-                <?php
-                }
-            ?>
-            </select>
-            <div class="clearerleft"></div>
-        </div>
-        <?php
-        }
-
     if($on_upload || !$embedded_data_user_select)
         {
         if ($metadata_read)

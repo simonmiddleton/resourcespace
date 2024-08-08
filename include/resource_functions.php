@@ -7170,12 +7170,6 @@ function process_edit_form($ref, $resource)
         $uploadparams['relateonupload'] = 'yes';
         }
 
-    if($ref < 0 && $resource_type=="")
-        {
-        if (!is_array($save_errors)){$save_errors=array();}
-        $save_errors['resource_type'] = $lang["resourcetype"] . ": " . $lang["requiredfield"];
-        }
-
     if (
         $upload_collection_name_required
         && getval("entercolname","") == "" 
