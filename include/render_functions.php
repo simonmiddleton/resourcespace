@@ -4248,26 +4248,28 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
 
     # Value formatting
     # Optimised to use the value as is if there are no "~" characters present in the value
-    if(strpos($value,"~") !== false) 
-        {
+    if (strpos($value,"~") !== false) {
+        
+        $field_value = $value;
         debug('value formatting due to ~ character...');
         # The field value may be a list of comma separated language encoded values, so process the nodes
         $field_nodes_in_value=explode(",",$value);
-        if(count($field_nodes_in_value) == 1)  
-            {
-            # Translate the single value
-            $value=i18n_get_translated($value);
-            }
-        elseif(count($field_nodes_in_value) > 1)
-            {
+        if (count($field_nodes_in_value) > 1) {
             # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
             $field_nodes_all = get_nodes($field['ref']);
             $names_i18n_in_value = extract_node_options($field_nodes_all, true, true);
             # Convert the field nodes in value as an array keyed by the names to allow an intersect by key operation 
             $node_names_in_value = array_intersect_key($names_i18n_in_value, array_flip($field_nodes_in_value));
             $value = implode(', ', $node_names_in_value);
-            }
-        } 
+        }
+
+        # Not a node list so translate the raw value or something went wrong trying to resolve the node values 
+        # so attempt to translate the raw value to display instead
+        if (count($field_nodes_in_value) == 1 || trim($value) == "") {
+            # Translate the single value
+            $value=i18n_get_translated($field_value);
+        }
+    } 
         
         // Don't display the comma for radio buttons:
         if($field['type'] == FIELD_TYPE_RADIO_BUTTONS)
