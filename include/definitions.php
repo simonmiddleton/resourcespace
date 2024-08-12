@@ -730,16 +730,16 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
-    'unoconv' => [
+    'unoconvert' => [
         'required' => false,
         'path_var_name' => 'unoconv_path',
-        'display_name' => 'Unoconv',
+        'display_name' => 'Unoserver',
         'show_on_check_page' => true,
         'version_check' => [
             'argument' => '--version',
             'callback' => [
                 'fct_name' => 'check_utility_cli_version_found_by_name',
-                'args' => [['unoconv']],
+                'args' => [['unoconvert']],
             ],
         ],
     ],
