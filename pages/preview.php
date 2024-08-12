@@ -299,21 +299,33 @@ $GLOBALS['path_orig'] = resource_download_allowed($resource['ref'], '', $resourc
     get_resource_path($resource['ref'], true, '') : 
     $GLOBALS['preview_path'];
 
+$urlparams = array(
+    "ref"           => $ref,
+    "alternative"   => $alternative,
+    "ext"           => $ext,
+    "k"             => $k,
+    "search"        => $search,
+    "offset"        => $offset,
+    "order_by"      => $order_by,
+    "sort"          => $sort,
+    "archive"       => $archive
+);
+if($saved_thumbs_state=="show") {
+    $urlparams += ["thumbs" => "show"];
+}
+
 if (!hook("previewimage")) { 
-    if (!hook("previewimage2")) { ?>
+    if (!hook("previewimage2")) { 
+?>
 <table cellpadding="0" cellspacing="0">
 <tr>
-
 <td valign="middle">
     <?php 
     if ($resource['file_extension']!="jpg" && $previouspage!=-1 &&resource_download_allowed($ref,"scr",$resource["resource_type"])) {
+        $urlparams += ["page" => $previouspage];
     ?>
     <a onClick="return CentralSpaceLoad(this);" 
-        href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>
-        &ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>
-        &order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>
-        <?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>
-        &archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($previouspage)?>" class="PDFnav  pagePrev">&lt;</a>
+        href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams); ?>" class="PDFnav  pagePrev">&lt;</a>
     <?php } 
     elseif ($nextpage!=-1 && resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark) {
     ?>
@@ -370,16 +382,14 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
             } // end hook replacepreviewimage 
         }
         ?>
+
 <td valign="middle">
     <?php 
     if ($nextpage!=-1 && resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark) {
+        $urlparams += ["page" => $nextpage];
     ?>
     <a onClick="return CentralSpaceLoad(this);" 
-        href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>
-        &ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>
-        &order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>
-        <?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>
-        &archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($nextpage)?>" class="PDFnav pageNext">&gt;
+        href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams); ?>" class="PDFnav pageNext">&gt;
     </a>
     <?php } 
     ?>
