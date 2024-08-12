@@ -2103,7 +2103,7 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
         $parent = $nodeentry['parent'];
         $order_by = $nodeentry['order_by'];
         $resource = $nodeentry['resource'];
-        $active = $nodeentry['active'];
+        $active = $nodeentry['active'] ?? 1;
 
         # Save the current node prior to establishing the pointer which can null the current node
         $savednode=null;
