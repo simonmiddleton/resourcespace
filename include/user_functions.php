@@ -248,7 +248,7 @@ function setup_user(array $userdata)
 
     # Apply config override options
     $config_options=trim((string) $userdata["config_options"]);
-    override_rs_variables_by_eval($GLOBALS, $config_options);
+    override_rs_variables_by_eval($GLOBALS, $config_options, 'usergroup');
 
     // Set default workflow states to show actions for, if not manually set by user
     get_config_option($userref,'actions_notify_states', $user_actions_notify_states, false);
@@ -1958,7 +1958,7 @@ function check_access_key($resources,$key,$checkcollection=true)
             $config_options=trim($userinfo[0]["config_options"]??"");
 
             // We need to get all globals as we don't know what may be referenced here
-            override_rs_variables_by_eval($GLOBALS, $config_options);
+            override_rs_variables_by_eval($GLOBALS, $config_options, 'usergroup');
             }
         }
     
@@ -3248,7 +3248,7 @@ function emulate_user($user, $usergroup="")
             $config_options=trim($userinfo[0]["config_options"]??"");
 
             // We need to get all globals as we don't know what may be referenced here
-            override_rs_variables_by_eval($GLOBALS, $config_options);
+            override_rs_variables_by_eval($GLOBALS, $config_options, 'usergroup');
             }
         }
     

@@ -211,7 +211,7 @@ $process_config_overrides = function(array $rows, string $what)
         try
             {
             // Auto signing $matches because a variable assignment from an already signed code is considered safe 
-            override_rs_variables_by_eval($GLOBALS, $sign_code(implode(PHP_EOL, $matches)));
+            override_rs_variables_by_eval($GLOBALS, $sign_code(implode(PHP_EOL, $matches)), 'test');
             }
         catch (Throwable $th)
             {

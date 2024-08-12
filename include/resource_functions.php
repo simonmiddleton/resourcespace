@@ -6527,7 +6527,7 @@ function resource_type_config_override($resource_type, $only_onchange=true)
         $config_options=ps_value("select config_options value from resource_type where ref=?",array("i",$resource_type), "","schema");
         if ($config_options!="")
             {
-            override_rs_variables_by_eval($GLOBALS, $config_options);
+            override_rs_variables_by_eval($GLOBALS, $config_options, 'resource_type');
             }
         }
     }
