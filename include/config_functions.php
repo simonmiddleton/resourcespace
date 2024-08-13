@@ -1396,18 +1396,23 @@ function config_register_core_field_refs(string $source, array $refs)
 /**
  * Run PHP code on array of variables. Used for modifying $GLOBALS.
  *
- * @param  array   $variables   Array of variables to apply override on.
- * @param  string  $code        Signed string containing the PHP code to run.
+ * @param  array   $variables      Array of variables to apply override on.
+ * @param  string  $code           Signed string containing the PHP code to run.
+ * @param  string  $override_for   Context in which override is being made. Generally this will be 'usergroup' or 'resource_type' config overrides.
+ *                                 This ensures we only revert config to its original state for the same origin of the override.
+ *                                 For example, if applying resource type specific config, don't revert config changed at the user group level.
+ *                                 This also prevents unexpected changes of config whilst pages are being loaded.
  * 
  * @return void
  */
-function override_rs_variables_by_eval(array $variables, string $code)
+function override_rs_variables_by_eval(array $variables, string $code, string $override_for)
     {
     global $configs_overwritten;
     // Remove all previous overwrides that have been set
-    if(is_array($configs_overwritten) && count($configs_overwritten) != 0)
+    if(is_array($configs_overwritten) && isset($configs_overwritten[$override_for]) && count($configs_overwritten[$override_for]) != 0)
         {
-        foreach($configs_overwritten as $option => $value)
+        // We're processing config override for the same origin e.g. user group or resource type. Previously these were changed so revert them.
+        foreach($configs_overwritten[$override_for] as $option => $value)
             {
             if ($value === 'UNSET_override_rs_variables_by_eval')
                 {
@@ -1452,7 +1457,7 @@ function override_rs_variables_by_eval(array $variables, string $code)
         $GLOBALS[$temp_variable_name] = $temp_variable_val;
         }
 
-    $configs_overwritten = $temp_array;
+    $configs_overwritten[$override_for] = $temp_array;
     }
 
 

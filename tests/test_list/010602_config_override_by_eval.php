@@ -4,14 +4,14 @@ command_line_only();
 # Testing with config who's value is changed from the default in config.default.php
 
 global $metadata_report;
-$original_value = $metadata_report;
+$original_value_metadata_report = $metadata_report;
 $metadata_report = false;
 $starting_value = $metadata_report;
 
 $config_to_override = '$metadata_report = true;';
 $config_to_override_signed = "//SIG" . sign_code($config_to_override) . "\n" . $config_to_override;
 
-override_rs_variables_by_eval($GLOBALS, $config_to_override_signed);
+override_rs_variables_by_eval($GLOBALS, $config_to_override_signed, 'test');
 
 if ($starting_value == $GLOBALS['metadata_report'])
     {
@@ -22,7 +22,7 @@ if ($starting_value == $GLOBALS['metadata_report'])
 
 $config_to_override_signed = '';
 
-override_rs_variables_by_eval($GLOBALS, $config_to_override_signed);
+override_rs_variables_by_eval($GLOBALS, $config_to_override_signed, 'test');
 
 if ($starting_value != $GLOBALS['metadata_report'])
     {
@@ -34,7 +34,7 @@ $metadata_report = true;
 $config_to_override = '$metadata_report = false;';
 $config_to_override_signed = "//SIG" . sign_code($config_to_override) . "\n" . $config_to_override;
 
-override_rs_variables_by_eval($GLOBALS, $config_to_override_signed);
+override_rs_variables_by_eval($GLOBALS, $config_to_override_signed, 'test');
 
 if ($starting_value != $GLOBALS['metadata_report'])
     {
@@ -53,7 +53,7 @@ if (isset($resource_created_by_filter))
 $config_to_override = '$resource_created_by_filter = array(-1);';
 $config_to_override_signed = "//SIG" . sign_code($config_to_override) . "\n" . $config_to_override;
 
-override_rs_variables_by_eval($GLOBALS, $config_to_override_signed);
+override_rs_variables_by_eval($GLOBALS, $config_to_override_signed, 'test');
 
 if (!isset($GLOBALS['resource_created_by_filter']) && count($GLOBALS['resource_created_by_filter']) != 0)
     {
@@ -63,7 +63,7 @@ if (!isset($GLOBALS['resource_created_by_filter']) && count($GLOBALS['resource_c
 
 $config_to_override_signed = '';
 
-override_rs_variables_by_eval($GLOBALS, $config_to_override_signed);
+override_rs_variables_by_eval($GLOBALS, $config_to_override_signed, 'test');
 
 if (isset($GLOBALS['resource_created_by_filter']))
     {
@@ -71,6 +71,31 @@ if (isset($GLOBALS['resource_created_by_filter']))
     return false;
     }
 
+
+# Test configs changed by the usergroup are not reverted to their original value if called again as a resource type override.
+unset($GLOBALS['configs_overwritten']);
+$original_value_edit_autosave = $edit_autosave;
+$edit_autosave = true;
+
+$config_to_override = '$edit_autosave = false;';
+$config_to_override_signed = "//SIG" . sign_code($config_to_override) . "\n" . $config_to_override;
+# Apply usergroup override - $edit_autosave becomes false in global.
+override_rs_variables_by_eval($GLOBALS, $config_to_override_signed, 'usergroup');
+
+$metadata_report = true;
+$config_to_override = '$metadata_report = false;';
+$config_to_override_signed = "//SIG" . sign_code($config_to_override) . "\n" . $config_to_override;
+# Apply override from resource_type.
+override_rs_variables_by_eval($GLOBALS, $config_to_override_signed, 'resource_type');
+
+if ($GLOBALS['edit_autosave'] !== false)
+    {
+    echo '6. Later applied config overrides are resetting earlier overrides to default values. '; # no longer false
+    return false;
+    }
+
+
 unset($resource_created_by_filter);
-$metadata_report = $original_value;
+$metadata_report = $original_value_metadata_report;
+$edit_autosave = $original_value_edit_autosave;
 return true;
