@@ -35,14 +35,14 @@ $use_cases = [
     ],
     [
         'name' => 'Allow resource files (filestore w/ symlink)',
-        'setup' => function() use ($resource_a, $link_name) {
+        'setup' => function() use ($resource_a, $link_name, $orig_storagedir) {
+            // Put file into alternative symlinked storagedir location, then revert before test
             $GLOBALS['storagedir'] = $link_name;
             file_put_contents(get_resource_path($resource_a, true, '', true, 'jpg'), '');
+            $GLOBALS['storagedir'] = $orig_storagedir;
         },
-        'revert' => fn() => $GLOBALS['storagedir'] = $orig_storagedir,
         'input' => [
-            // simulate get_resource_path running with the same storagedir
-            str_replace($GLOBALS['storagedir'], $link_name, get_resource_path($resource_a, true, '', true, 'jpg'))
+            get_resource_path($resource_a, true, '', true, 'jpg'),
         ],
         'expected' => true,
     ],
