@@ -1746,15 +1746,7 @@ function create_previews_using_im(
                     {
                     global $icc_preview_profile_embed;
                     // we have an extracted ICC profile, so use it as source
-                    if ($icc_preview_profile != "" && $icc_preview_profile_embed)
-                        {
-                        $profilepath = dirname(__FILE__,2) . "/iccprofiles/" . $icc_preview_profile;
-                        $targetprofile = file_exists($profilepath) ? $profilepath : "";
-                        }
-                    else
-                        {
-                        $targetprofile = "";
-                        }
+                    $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
 
                     if ($imagemagick_mpr)
                         {
@@ -1765,11 +1757,9 @@ function create_previews_using_im(
                         }
                     else
                         {
-                        $profile  = " -strip -profile %%ICCPATH%% " . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile %%TARGETPROFILE%% " : "");
+                        $profile  = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");
                         $cmdparams["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'is_valid_rs_path');
-                        if ($targetprofile != "") {
-                            $cmdparams["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'file_exists');
-                        }
+                        $cmdparams["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'file_exists');
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
