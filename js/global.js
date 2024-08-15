@@ -1805,7 +1805,8 @@ function HideHelp(id)
         }
     }
 
-var ProcessingInitTimer;
+var ProcessingFirstTimer;
+var ProcessingSecondTimer;
 var ProcessingDisplayTimer;
 var ProcessingAPITimer;
 var ProcessingMessages;
@@ -1816,9 +1817,9 @@ function CentralSpaceShowProcessing()
     ProcessingMessages=[];
     ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 350);
     ProcessingAPITimer = setInterval(CentralSpace_ProcessingAPITimer, 3000);
-    setTimeout(CentralSpace_ProcessingAPITimer, 1000); // Initial more rapid call.
+    ProcessingFirstTimer=setTimeout(CentralSpace_ProcessingAPITimer, 1000); // First more rapid call.
 
-    ProcessingInitTimer=setTimeout(function ()
+    ProcessingSecondTimer=setTimeout(function ()
         {
         jQuery('#ProcessingBox').fadeIn('fast');
         },1000);
@@ -1829,7 +1830,8 @@ function CentralSpaceHideProcessing()
     jQuery('#ProcessingBox').fadeOut('fast');
     clearInterval(ProcessingDisplayTimer);
     clearInterval(ProcessingAPITimer);
-    clearTimeout(ProcessingInitTimer);
+    clearTimeout(ProcessingFirstTimer);
+    clearTimeout(ProcessingSecondTimer);
     }
 
 function CentralSpace_ProcessingDisplayTimer()

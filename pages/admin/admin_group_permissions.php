@@ -494,6 +494,7 @@ function SavePermissions(perms, formsubmit)
         })
         .done(function(response, textStatus, jqXHR)
             {
+            CentralSpaceHideProcessing();
             // redraw page to show/hide any dependendant permissions
             CentralSpaceLoad('<?php echo $admin_group_permissions_url; ?>' + (formsubmit?'&submitted=true':''), false);
             if(formsubmit)
