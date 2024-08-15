@@ -18,7 +18,7 @@ function HookOpenai_gptAdmin_resource_type_fieldsReplacetabnamecolumn()
     $source=$fields[$n]["openai_gpt_input_field"];
     if ($source==-1) {$source=$lang["image"];} elseif (is_numeric($source)) $source=$lang["field"] . " " . $source;
     ?><td>
-      <?php echo $source; ?>
+      <?php echo is_null($source)?"":escape($source); ?>
       </td><?php
     return false;
     }
