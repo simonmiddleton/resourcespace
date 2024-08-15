@@ -23,7 +23,10 @@ function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, a
             $videos[] = $resource;
         }
     }
+
     $min_access = collection_min_access($videos);
+    unset($GLOBALS['hook_return_value']);
+
     if ($pagename=="collections" && count($videos) > 0 && $min_access === 0) {
         $option = array(
             "value" => "video_splice",
@@ -35,7 +38,7 @@ function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, a
         );
 
         $options[] = $option;
-
-        return $options;
     }
+
+    return $options;
 }
