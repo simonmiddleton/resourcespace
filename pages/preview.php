@@ -311,7 +311,7 @@ $urlparams = array(
     "archive"       => $archive
 );
 if($saved_thumbs_state=="show") {
-    $urlparams += ["thumbs" => "show"];
+    $urlparams["thumbs"] = "show";
 }
 
 if (!hook("previewimage")) { 
@@ -322,7 +322,7 @@ if (!hook("previewimage")) {
 <td valign="middle">
     <?php 
     if ($resource['file_extension']!="jpg" && $previouspage!=-1 &&resource_download_allowed($ref,"scr",$resource["resource_type"])) {
-        $urlparams += ["page" => $previouspage];
+        $urlparams["page"] = $previouspage;
     ?>
     <a onClick="return CentralSpaceLoad(this);" 
         href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams); ?>" class="PDFnav  pagePrev">&lt;</a>
@@ -386,7 +386,7 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
 <td valign="middle">
     <?php 
     if ($nextpage!=-1 && resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark) {
-        $urlparams += ["page" => $nextpage];
+        $urlparams["page"] = $nextpage;
     ?>
     <a onClick="return CentralSpaceLoad(this);" 
         href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams); ?>" class="PDFnav pageNext">&gt;
