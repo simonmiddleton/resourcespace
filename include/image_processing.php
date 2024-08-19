@@ -3977,7 +3977,7 @@ function remove_video_previews(int $resource) : void
  */
 function start_previews(int $ref, string $extension = ""): int
 {
-    global $lang;
+    global $lang, $minimal_previews_sizes;
 
     $minimal_previews = false;
     $resource_data = get_resource_data($ref,false);
@@ -4011,7 +4011,7 @@ function start_previews(int $ref, string $extension = ""): int
     if ($minimal_previews) {
         if (!in_array($extension,$GLOBALS["minimal_preview_creation_exclude_extensions"])) {
             // Extension hasn't been excluded from immediate preview creation
-            $success = create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
+            $success = create_previews($ref, false, $extension, false, false, -1, true, $ingested, false, $minimal_previews_sizes);
             return $success ? 2 : 0;
         }
         return 2;
