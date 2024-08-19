@@ -4405,7 +4405,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Request all
-    if($count_result > 0 && ($k == '' || $internal_share_access) && checkperm("q"))
+    if($count_result > 0 && checkperm("q"))
         {
         # Ability to request a whole collection 
 
