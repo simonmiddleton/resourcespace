@@ -2798,6 +2798,11 @@ $facial_recognition_tag_field = null;
 // Security note: it is best to place it outside of web root
 // IMPORTANT: ResourceSpace will not create this folder if it doesn't exist
 $facial_recognition_face_recognizer_models_location = '';
+
+
+// Metadata field ID which can mark a resource as being part of the training set.
+// Note: all facial recognition resource annotations will be used (i.e. you can't pick annotations).
+$facial_recognition_mark_for_training_field = 0;
 #######################################
 #######################################
 
