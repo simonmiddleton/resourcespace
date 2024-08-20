@@ -3206,3 +3206,7 @@ $related_search_searchcrumb_field=51;
 # NOTE - does not work with $advanced_search_archive_select=true (advanced search status searching) as the below option removes the workflow selection altogether.
 # IMPORTANT - this feature gets disabled when requests ask for a specific archive state (e.g. View deleted resources or View resources in pending review)
 $search_all_workflow_states=false;
+
+# Array of preview sizes to be created at upload when minimal preview creation is enabled.
+# Limit to essential sizes only to reduce delay.
+$minimal_previews_sizes = array('pre', 'col', 'thm');
