@@ -18,15 +18,10 @@ OPTIONS SUMMARY
 
     -h, --help                  Display this help text and exit
     --overwrite-existing        Allows the trainer to recreate the prepared data (tag) image
-    --use-as-training           Metadata field ID which can mark a resource as being part of the training set. Note: all
-                                facial recognition resource annotations will be used (i.e. you can't pick annotations).
 
 EXAMPLES
     # Update training data
     php facial_recognition_trainer.php
-
-    # Only train the model with resources flagged by metadata field #92
-    php facial_recognition_trainer.php --use-as-training=92 
 
 
 HELP;
@@ -35,7 +30,6 @@ $cli_short_options = 'h';
 $cli_long_options  = [
     'help',
     'overwrite-existing',
-    'use-as-training:',
 ];
 
 if(!$facial_recognition)
@@ -53,7 +47,6 @@ $allow_training               = false;
 $overwrite_existing           = false;
 $no_previews_found_counter    = 0;
 $prepared_trainer_data        = '';
-$use_as_training = 0;
 
 if('' === $facial_recognition_face_recognizer_models_location)
     {
@@ -86,19 +79,10 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
         {
         $overwrite_existing = true;
         }
-
-    if ($option_name === 'use-as-training') {
-        if (!is_int_loose($option_value)) {
-            echo '"use-as-training" option expects only ONE metadata field ID' . PHP_EOL;
-            exit(1);
-        }
-
-        $use_as_training = (int) $option_value;
-    }
     }
 
 // Step 1: Preparing the data
-$training_data_set_condition = $use_as_training > 0
+$training_data_set_condition = $facial_recognition_mark_for_training_field > 0
     ? new PreparedStatementQuery(
         'AND EXISTS (
             SELECT *
@@ -106,7 +90,7 @@ $training_data_set_condition = $use_as_training > 0
             INNER JOIN node AS n ON n.ref = rn.node AND n.resource_type_field = ?
             WHERE rn.`resource` = a.`resource`
         )',
-        ['i', $use_as_training]
+        ['i', $facial_recognition_mark_for_training_field]
     )
     : new PreparedStatementQuery();
 $annotations = ps_query(
