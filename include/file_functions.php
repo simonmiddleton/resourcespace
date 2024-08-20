@@ -382,21 +382,34 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
     debug('source_path_not_real = ' . json_encode($source_path_not_real));
 
     $checkname  = $path;
-    if (pathinfo($path, PATHINFO_EXTENSION) === "icc") {
+    $pathinfo = pathinfo($path);
+    if (($pathinfo["extension"] ?? "") === "icc") {
         // ResourceSpace generated .icc files have a double extension, need to strip extension again before checking
-        $checkname = pathinfo($path, PATHINFO_FILENAME);
+        $checkname = $pathinfo["filename"] ?? "";
     }
     debug("checkname = {$checkname}");
 
     if ($source_path_not_real) {
-        if (!(preg_match('/^(?!\.)(?!.*\.$)(?!.*\.\.)[a-zA-Z0-9_\-[:space:]\/:.]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($checkname))
+        if (!(preg_match('/^(?!\.)(?!.*\.$)(?!.*\.\.)[a-zA-Z0-9_\-[:space:]\/:.]+$/', ($pathinfo['dirname'] ?? "")) && is_safe_basename($checkname))
         ) {
             debug('Invalid non-existing path');
             return false;
         }
     }
 
-    $path_to_validate = $source_path_not_real ? $path : $sourcerealpath;
+    // Check if path contains symlinks, if so don't use the value returned by realpath() as it is unlikley to match the expected paths
+    $symlink = false;
+    $path_parts = array_filter(explode("/", $path));
+    $checkpath = "";
+    foreach($path_parts as $path_part) {
+        $checkpath .= "/" . $path_part;
+        if(is_link($checkpath)) {
+            debug("{$checkpath} is a symlink");
+            $symlink = true;
+            break;
+        }
+    }
+    $path_to_validate = ($source_path_not_real || $symlink) ? $path : $sourcerealpath;
     debug("path_to_validate = {$path_to_validate}");
 
     if (count($override_paths) > 0) {
