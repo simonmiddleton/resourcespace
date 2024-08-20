@@ -24,7 +24,7 @@ if (!hook("replacelistitem"))
                     <input 
                         type="checkbox" 
                         id="check<?php echo escape($ref)?>" 
-                        class="checkselect"
+                        class="checkselect checkselectmedium"
                         title="<?php echo escape($lang['action-select'] . " - " . $resource_view_title) ?>"
                         data-resource="<?php echo escape($result[$n]["ref"]); ?>"
                         aria-label="<?php echo escape($lang["action-select"])?>"

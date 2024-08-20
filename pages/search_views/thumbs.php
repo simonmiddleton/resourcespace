@@ -320,7 +320,7 @@ if (!hook("renderresultthumb"))
                     <input 
                         type="checkbox" 
                         id="check<?php echo escape($ref)?>" 
-                        class="checkselect"
+                        class="checkselect checkselectmedium"
                         title="<?php echo escape($lang['action-select'] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>"
                         data-resource="<?php echo escape($result[$n]["ref"]); ?>"
                         aria-label="<?php echo escape($lang["action-select"])?>"
@@ -344,7 +344,7 @@ if (!hook("renderresultthumb"))
         if(!hook("replacethumbsidinthumbnail"))
             {
             if ($display_resource_id_in_thumbnail && $ref>0) 
-                { echo "<span class='ResourcePanelResourceID'>" . escape($ref) . "</span>$br"; } 
+                { echo "<label for='check" . escape($ref) . "'" . "class='ResourcePanelResourceID'>" . escape($ref) . "</label>$br"; } 
             else 
                 { ?><?php }
             } # end hook("replacethumbsidinthumbnail")
