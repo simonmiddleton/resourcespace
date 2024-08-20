@@ -1915,9 +1915,9 @@ $upload_methods = array(
         'in_browser_upload' => true
     );
 
-# Set path to Unoconv (a python-based bridge to OpenOffice) to allow document conversion to PDF.
-## $unoconv_path="/usr/bin";
-# Files with these extensions will be passed to unoconv (if enabled above) for conversion to PDF and auto thumb-preview generation.
+# Set path to Unoserver (a python-based bridge to OpenOffice) to allow document conversion to PDF.
+## $unoconv_path="/usr/local/bin";
+# Files with these extensions will be passed to unoserver (if enabled above) for conversion to PDF and auto thumb-preview generation.
 # Default list taken from http://svn.rpmforge.net/svn/trunk/tools/unoconv/docs/formats.txt
 $unoconv_extensions=array("ods","xls","xlsx","doc","docx","odt","odp","html","rtf","txt","ppt","pptx","sxw","sdw","html","psw","rtf","sdw","pdb","bib","txt","ltx","sdd","sda","odg","sdc","potx","key");
 
