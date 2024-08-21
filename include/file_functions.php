@@ -419,6 +419,7 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
             dirname(__DIR__) . '/gfx',
             $GLOBALS['storagedir'],
             $GLOBALS['syncdir'],
+            $GLOBALS['fstemplate_alt_storagedir'],
         ];
         if (isset($GLOBALS['tempdir'])) {
             $default_paths[] = $GLOBALS['tempdir'];
