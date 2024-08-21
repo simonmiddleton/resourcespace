@@ -2102,24 +2102,34 @@ function check_access_key_collection($collection, $key, $checkresource=true)
 /**
  * Generates a unique username for the given name
  *
- * @param  string $name The user's full name
+ * @param string    $name       The user's full name
+ * @param string    $email      Optional email address
+ * 
  * @return string   The username to use
  */
-function make_username($name)
-    {
-    # First compress the various name parts
-    $s=trim_array(explode(" ",$name));
-    
-    $name=$s[count($s)-1];
-    for ($n=count($s)-2;$n>=0;$n--)
-        {
-        $name=substr($s[$n],0,1) . $name;
+function make_username(string $name, string $email = ""): string
+{
+    if ($GLOBALS["username_from_email"] && trim($email) !== "") {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$email], 0);
+        if ($c === 0)
+            return trim($email);
         }
-    $name=safe_file_name(strtolower($name));
+        debug("make_username() - Unable to use invalid e-mail address: " . $email);
+    }
+    
+    # First compress the various name parts
+    $s = trim_array(explode(" ",$name));
+    
+    $name = $s[count($s)-1];
+    for ($n=count($s)-2;$n>=0;$n--) {
+        $name=substr($s[$n],0,1) . $name;
+    }
+    $name = safe_file_name(strtolower($name));
 
     # Create fullname usernames:
     global $user_account_fullname_create;
-    if($user_account_fullname_create) {
+    if ($user_account_fullname_create) {
         $name = '';
 
         foreach ($s as $name_part) {
@@ -2131,16 +2141,15 @@ function make_username($name)
     }
     
     # Check for uniqueness... append an ever-increasing number until unique.
-    $unique=false;
-    $num=-1;
-    while (!$unique)
-        {
+    $unique = false;
+    $num = -1;
+    while (!$unique) {
         $num++;
-        $c=ps_value("select count(*) value from user where username=?",array("s",($name . (($num==0)?"":$num))),0);
-        $unique=($c==0);
-        }
-    return $name . (($num==0)?"":$num);
+        $c = ps_value("select count(*) value from user where username=?",array("s",($name . (($num==0)?"":$num))),0);
+        $unique = ($c==0);
     }
+    return $name . (($num==0)?"":$num);    
+}
     
 /**
  * Returns a list of user groups selectable in the registration . The standard user groups are translated using $lang. Custom user groups are i18n translated.
