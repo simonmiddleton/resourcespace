@@ -498,8 +498,8 @@ if(count(canSeeAnnotationsFields()) > 0)
         // Set the width and height of the image otherwise if the source of the file
         // is fetched from download.php, Annotorious will not be able to determine its
         // size
-        preview_image_copy.width(<?php echo $image_width; ?>);
-        preview_image_copy.height(<?php echo $image_height; ?>);
+        preview_image_copy.width(<?php echo (int) $image_width; ?>);
+        preview_image_copy.height(<?php echo (int) $image_height; ?>);
 
         preview_image_copy.prependTo(preview_image_link.parent());
         preview_image_link.hide();
