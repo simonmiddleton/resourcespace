@@ -168,7 +168,9 @@ function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
         }
 
     $target = $baseDirectory . '/' . get_download_filename($resource['ref'],$size,-1,$ext);
-
+    if (!file_exists($target)) {
+        return false;
+    }
     $format = getImageFormat($size);
     $width = (int)$format['width'];
     $height = (int)$format['height'];
