@@ -1513,6 +1513,8 @@ function create_previews_using_im(
             $cmdparams["%%DEFAULT_ICC_FILE%%"] = new CommandPlaceholderArg($default_icc_file, 'is_safe_basename');
         }
 
+        $use_icc_profile = apply_icc_profile($origfile);
+
         $created_count=0;
         $override_size = false;
         for ($n=0;$n<count($ps);$n++)
@@ -1714,6 +1716,7 @@ function create_previews_using_im(
             $wpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,"",$alternative);
                 if (file_exists($wpath))
                     {unlink($wpath);}
+
             # Always make a screen size for non-JPEG extensions regardless of actual image size
             # This is because the original file itself is not suitable for full screen preview, as it is with JPEG files.
             #
@@ -1742,7 +1745,7 @@ function create_previews_using_im(
                     }
                 }
                 $profile='';
-                if ($icc_extraction && !$icc_transform_complete && !$previewbased && file_exists($iccpath) && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
+                if ($use_icc_profile && !$icc_transform_complete && !$previewbased && file_exists($iccpath) && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
                     {
                     global $icc_preview_profile_embed;
                     // we have an extracted ICC profile, so use it as source
@@ -1813,7 +1816,7 @@ function create_previews_using_im(
                                 $mpr_parts['strip_target']=false;
                                 $mpr_parts['targetprofile']='';
                                 }
-                            elseif ($icc_extraction)
+                            elseif ($use_icc_profile)
                                 {
                                 // Keep any profile extracted (don't use -strip).
                                 $profile ="  -colorspace %%IMAGEMAGICK_COLORSPACE%% ";
@@ -1993,7 +1996,7 @@ function create_previews_using_im(
                             {
                             // need to convert the profile
                             $mpr_parts['wm_sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? $iccpath : ''). " " . $icc_preview_options;
-                            $mpr_parts['wm_targetprofile']=($icc_extraction && file_exists($iccpath) && $id!="thm" || $id!="col" || $id!="pre" || $id=="scr" ? dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile : "");
+                            $mpr_parts['wm_targetprofile']=($use_icc_profile && file_exists($iccpath) && $id!="thm" || $id!="col" || $id!="pre" || $id=="scr" ? dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile : "");
                             }
                         }
                     $command_parts[]=$mpr_parts;
@@ -4188,7 +4191,7 @@ function create_image_alternatives(int $ref, array $params, $force = false)
                 extract_icc_profile($ref, $extension);
                 }
 
-            if (file_exists($iccpath))
+            if (file_exists($iccpath) && apply_icc_profile(get_resource_path($ref, true, "", false, $extension, -1)))
                 {
                 $source_profile = ' -strip -profile ' . $iccpath;
                 }
@@ -4249,3 +4252,40 @@ function is_valid_imagemagick_color(string $val): bool
 {
     return preg_match('/^#?[a-zA-Z]+$|^rgb\(\d{1,3},\d{1,3},\d{1,3}\)$/', $val);
 }
+
+
+/**
+ * With $icc_extraction enabled, determine whether we should apply the icc profile that has been found.
+ * Note: This doesn't prevent ICC profile extraction.
+ *
+ * @param   string   $original_file_path    Path to the original file from which the ICC profile was extracted.
+ * 
+ * @return bool
+ */
+function apply_icc_profile(string $original_file_path): bool
+    {
+    global $icc_extraction, $excluded_icc_profiles;
+    if (!$icc_extraction)
+        {
+        return false;
+        }
+
+    if (count($excluded_icc_profiles) > 0)
+        {
+        $identify_fullpath = get_utility_path("im-identify");
+        if ($identify_fullpath == false)
+            {
+            return false;
+            }
+        
+        $cmdparams["%%INFILE%%"] = new CommandPlaceholderArg($original_file_path, 'is_valid_rs_path');
+        $profile_found = run_command($identify_fullpath . ' -format "%[profile:icc]" %%INFILE%%', false, $cmdparams);
+
+        if (in_array($profile_found, $excluded_icc_profiles))
+            {
+            return false; // ICC profile found will not be applied.
+            }
+        }
+
+    return true;
+    }

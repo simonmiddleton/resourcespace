@@ -2199,6 +2199,10 @@ $calibre_extensions=array("epub","mobi","lrf","pdb","chm","cbr","cbz");
 # Enable extraction and use of ICC profiles from original images
 $icc_extraction = false;
 
+# Array containing ICC profiles that should not be applied.
+# Values used must be exactly as returned from command: identify -format "%[profile:icc]" path/to/file
+$excluded_icc_profiles = array();
+
 # target color profile for preview generation
 # the file must be located in the /iccprofiles folder
 # this target preview will be used for the conversion
