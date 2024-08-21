@@ -290,15 +290,6 @@ if (
 </p>
 <?php } 
 
-$GLOBALS['preview_path'] = get_resource_path(
-    $resource['ref'], 
-    true, 
-    resource_download_allowed($resource['ref'], 'scr', $resource['resource_type']) ? 'scr' : 'pre'
-);
-$GLOBALS['path_orig'] = resource_download_allowed($resource['ref'], '', $resource['resource_type']) ? 
-    get_resource_path($resource['ref'], true, '') : 
-    $GLOBALS['preview_path'];
-
 $urlparams = array(
     "ref"           => $ref,
     "alternative"   => $alternative,

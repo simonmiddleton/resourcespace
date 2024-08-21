@@ -19,11 +19,21 @@ function HookAnnotatePreviewReplacepreviewbacktoview(){
 
 function HookAnnotatePreviewPreviewimage2 (){
 global $ajax,$ext,$baseurl,$ref,$k,$search,$offset,$order_by,$sort,$archive,$lang,
-       $download_multisize,$baseurl_short,$url,$preview_path,$path_orig,$annotate_ext_exclude,
+       $download_multisize,$baseurl_short,$url,$annotate_ext_exclude,
        $annotate_rt_exclude,$annotate_public_view,$annotate_pdf_output,$nextpage,
        $previouspage, $alternative, $view_title_field;
     
 $resource=get_resource_data($ref);
+$size = resource_download_allowed($resource['ref'], 'scr', $resource['resource_type']) ? ['scr'] : ['pre'];
+$preview_path = get_resource_preview($resource, $size);
+if($preview_path !== false) {
+    $preview_path = $preview_path['path'];
+}
+$path_orig = resource_download_allowed($resource['ref'], '', $resource['resource_type']) ? get_resource_path($resource['ref'], true, '') : $preview_path;
+
+if($preview_path === false && ($path_orig === false || trim($path_orig) == '')) { 
+    return false;
+}
 
 if (in_array($resource['file_extension'],$annotate_ext_exclude)){return false;}
 if (in_array($resource['resource_type'],$annotate_rt_exclude)){return false;}
