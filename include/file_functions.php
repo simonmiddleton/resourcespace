@@ -397,7 +397,7 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
         }
     }
 
-    // Check if path contains symlinks, if so don't use the value returned by realpath() as it is unlikley to match the expected paths
+    // Check if path contains symlinks, if so don't use the value returned by realpath() as it is unlikely to match the expected paths
     $symlink = false;
     $path_parts = array_filter(explode("/", $path));
     $checkpath = "";
