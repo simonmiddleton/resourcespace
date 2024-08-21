@@ -1513,7 +1513,7 @@ function create_previews_using_im(
             $cmdparams["%%DEFAULT_ICC_FILE%%"] = new CommandPlaceholderArg($default_icc_file, 'is_safe_basename');
         }
 
-        $use_icc_profile = apply_icc_profile($origfile);
+        $use_icc_profile = can_apply_icc_profile($origfile);
 
         $created_count=0;
         $override_size = false;
@@ -4191,7 +4191,7 @@ function create_image_alternatives(int $ref, array $params, $force = false)
                 extract_icc_profile($ref, $extension);
                 }
 
-            if (file_exists($iccpath) && apply_icc_profile(get_resource_path($ref, true, "", false, $extension, -1)))
+            if (file_exists($iccpath) && can_apply_icc_profile(get_resource_path($ref, true, "", false, $extension, -1)))
                 {
                 $source_profile = ' -strip -profile ' . $iccpath;
                 }
@@ -4262,7 +4262,7 @@ function is_valid_imagemagick_color(string $val): bool
  * 
  * @return bool
  */
-function apply_icc_profile(string $original_file_path): bool
+function can_apply_icc_profile(string $original_file_path): bool
     {
     global $icc_extraction, $excluded_icc_profiles;
     if (!$icc_extraction)
