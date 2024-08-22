@@ -430,7 +430,7 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
 
     foreach ($allowed_paths as $allowed_path) {
         debug("Iter allowed path - {$allowed_path}");
-        $validpath = $source_path_not_real ? $allowed_path : realpath($allowed_path);
+        $validpath = ($source_path_not_real || $symlink) ? $allowed_path : realpath($allowed_path);
         if ($GLOBALS["config_windows"]) {
             $allowed_path = str_replace("\\","/", $allowed_path);
             $validpath = str_replace("\\","/", $validpath);
