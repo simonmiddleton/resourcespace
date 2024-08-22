@@ -4987,7 +4987,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
     return $r;
     }
 
-function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
+function import_resource($path, $type, $title, $ingest=false, $extension='')
     {
     global $syncdir,$lang;
     // Import the resource at the given path
@@ -5009,7 +5009,7 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, 
         '',
         $syncdir . DIRECTORY_SEPARATOR . $path
     );
-    return update_resource($r, $path, $type, $title, $ingest, $createPreviews, $extension);
+    return update_resource($r, $path, $type, $title, $ingest, true, $extension);
     }
 
 function get_alternative_files($resource,$order_by="",$sort="",$type="")

@@ -507,7 +507,7 @@ function ProcessFolder($folder)
                 if ($modified_title !== false) { $title = $modified_title; }
 
                 # Import this file
-                $r = import_resource($shortpath, $type, $title, $staticsync_ingest,$enable_thumbnail_creation_on_upload, $extension);
+                $r = import_resource($shortpath, $type, $title, $staticsync_ingest, $extension);
                 echo " - Created resource #" . $r . PHP_EOL;
                 if ($r !== false)
                     {
