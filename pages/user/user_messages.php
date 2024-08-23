@@ -33,12 +33,12 @@ include "../../include/header.php";
             <?php if ($user_preferences) { ?>
                 <li>
                     <a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo LINK_CARET . "&nbsp;" . $lang["userpreferences"];?>
+                        <?php echo LINK_CARET . "&nbsp;" . escape($lang["userpreferences"]); ?>
                     </a>
                 </li>
                 <li>
                     <a href="<?php echo $baseurl_short?>pages/user/user_message.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo LINK_CARET . "&nbsp;" . $lang["new_message"];?>
+                        <?php echo LINK_CARET . "&nbsp;" . escape($lang["new_message"]); ?>
                     </a>
                 </li>
             <?php }
@@ -76,7 +76,7 @@ include "../../include/header.php";
 
             if ($unread) { ?>
                 <li>
-                    <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?allseen=<?php echo $userref; ?>" onclick="return CentralSpaceLoad(this,true);">    <?php echo LINK_CARET . "&nbsp;" . $lang['mymessages_markallread']; ?>
+                    <a href="<?php echo generateURL("{$baseurl_short}pages/user/user_messages.php", ['allseen' => $userref]); ?>" onclick="return CentralSpaceLoad(this,true);">    <?php echo LINK_CARET . "&nbsp;" . escape($lang['mymessages_markallread']); ?>
                     </a>
                 </li>
             <?php } ?>

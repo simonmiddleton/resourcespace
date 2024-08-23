@@ -58,7 +58,7 @@ include "../../include/header.php";
 <?php
 if ($user_preferences)
     {?>
-    <li><a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . "&nbsp;" . $lang["userpreferences"];?></a></li>
+    <li><a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . "&nbsp;" . escape($lang["userpreferences"]); ?></a></li>
     <?php 
     }
 // Make sure all states are unchecked if they had the deprecated option $actions_resource_review set to false.
@@ -75,8 +75,8 @@ if(trim($actions_notify_states) != "")
     $add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true&order_by=date";
     $search_url = $baseurl_short . "pages/search.php?search=&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true";
     ?>
-    <li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']; ?></a></li>
-    <li><a href="#" onclick="CentralSpaceLoad('<?php echo $search_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_view_editable_as_resultset']; ?></a></li>
+    <li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . escape($lang['actions_add_editable_to_collection']); ?></a></li>
+    <li><a href="#" onclick="CentralSpaceLoad('<?php echo $search_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . escape($lang['actions_view_editable_as_resultset']); ?></a></li>
     <?php
     }?>
 
@@ -156,7 +156,7 @@ else
   
   if ($results==0)      
       {
-      echo "<tr><td style='padding:20px;'>" . $lang['actions_noactions'] . "</td></tr>";
+      echo "<tr><td style='padding:20px;'>" . escape($lang['actions_noactions']) . "</td></tr>";
       }
   else
       {

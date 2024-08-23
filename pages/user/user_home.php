@@ -69,13 +69,13 @@ $introtext=text("introtext");
             {
             $failedjobs = job_queue_get_jobs("",STATUS_ERROR, $userref);
             $failedjobcount = count($failedjobs);
-            echo "<li><a id='user_jobs_link' href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . $lang['my_jobs'] . ($failedjobcount > 0 ? "&nbsp;<span class='FailedJobCountPill Pill'>" . $failedjobcount . "</span>":"") . "</a>";
+            echo "<li><a id='user_jobs_link' href='" . generateURL("{$baseurl_short}pages/manage_jobs.php", ['job_user' => $userref]) . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . escape($lang['my_jobs']) . ($failedjobcount > 0 ? "&nbsp;<span class='FailedJobCountPill Pill'>" . escape($failedjobcount) . "</span>":"") . "</a>";
             echo "</li>";
             }
 
         if($allow_share)
             {
-            echo "<li><a id='manages_shares_link'  href='" . $baseurl_short . "pages/manage_external_shares.php?share_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-share-alt'></i><br />" . $lang['my_shares'] . "</a>";
+            echo "<li><a id='manages_shares_link'  href='" . generateURL("{$baseurl_short}pages/manage_external_shares.php", ['share_user' => $userref]) . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-share-alt'></i><br />" . escape($lang['my_shares']) . "</a>";
             echo "</li>";
             }
             

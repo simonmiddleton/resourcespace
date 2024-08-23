@@ -241,7 +241,7 @@ for ($n=0;$n<count($files);$n++)
 
     <?php if($editaccess && (file_exists(get_resource_path($ref , true, '', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true)) || file_exists(get_resource_path($ref , true, 'hpr', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true))))
         {
-        echo "<a href=\"#\" onclick=\"previewform=jQuery('#previewform');jQuery('#upload_pre_alt').val('" . $files[$n]["ref"] . "');return " . ($modal ? "Modal" : "CentralSpace") . "Post(previewform, true);\">" . LINK_CARET . $lang["useaspreviewimage"] . "</a>";
+        echo "<a href=\"#\" onclick=\"previewform=jQuery('#previewform');jQuery('#upload_pre_alt').val('" . escape($files[$n]["ref"]) . "');return " . ($modal ? "Modal" : "CentralSpace") . "Post(previewform, true);\">" . LINK_CARET . escape($lang["useaspreviewimage"]) . "</a>";
         } 
     
     hook("refreshinfo"); ?>

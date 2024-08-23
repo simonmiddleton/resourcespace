@@ -218,7 +218,7 @@ renderBreadcrumbs($links_trail);
 
     if($msgto == 0)
         {
-        echo "<div class='Question'><label>" . $lang["message_recipients"] . "</label>";
+        echo "<div class='Question'><label>" . escape($lang["message_recipients"]) . "</label>";
         $user_select_internal = true;
         $user_select_class = "medwidth";
         $autocomplete_user_scope = "message_";
