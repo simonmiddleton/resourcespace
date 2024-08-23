@@ -450,7 +450,7 @@ elseif($restypes=='')
             $restypes.=($restypes=='' ? '' : ',').$types[$t]['ref'];
             }
         }
-    if($search_includes_themes){$restypes.=($restypes=='' ? '' : ','). "themes";}
+    if($search_includes_themes){$restypes.=($restypes=='' ? '' : ','). "FeaturedCollections";}
     
     ?>
     <input type="hidden" name="restypes" id="restypes" value="<?php echo escape($restypes); ?>" />
