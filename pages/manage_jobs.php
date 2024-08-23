@@ -260,7 +260,7 @@ include '../include/header.php';
 
     if(checkperm('a') && $endedjobs > 0)
         {
-        echo "<p><a href='#' onclick='if(confirm(\"" . $lang["job_confirm_purge"] . "\")){update_job(true,\"purge_jobs\");}'>" . LINK_CARET . $lang["jobs_action_purge_complete"] . "</a></p>";
+        echo "<p><a href='#' onclick='if(confirm(\"" . escape($lang["job_confirm_purge"]) . "\")){update_job(true,\"purge_jobs\");}'>" . LINK_CARET . escape($lang["jobs_action_purge_complete"]) . "</a></p>";
         }
 
     ?>
@@ -277,7 +277,7 @@ include '../include/header.php';
                 <select class="stdwidth" id="job_type" name="job_type">
                     <?php 
                     // Not filtered by default when searching, add option to filter by month
-                    echo "<option " .  ($job_type == 0 ? " selected" : "") . " value=''>" . $lang["all"] . "</option>\n";                   
+                    echo "<option " .  ($job_type == 0 ? " selected" : "") . " value=''>" . escape($lang["all"]) . "</option>\n";                   
                     $alljobtypes = array_unique(array_column($jobs,"type"));
                     foreach ($alljobtypes as $avail_jobtype)
                         {
@@ -292,10 +292,10 @@ include '../include/header.php';
                 <select class="stdwidth" id="job_status" name="job_status">
                     <?php 
                     // Not filtered by default when searching, add option to filter by month
-                    echo "<option " .  ($job_status == -1 ? " selected" : "") . " value='-1'>" . $lang["all"] . "</option>\n";                   
+                    echo "<option " .  ($job_status == -1 ? " selected" : "") . " value='-1'>" . escape($lang["all"]) . "</option>\n";                   
                     foreach(array(0,1,2,3,5) as $status)
                         {
-                        echo "<option " .  ($status == $job_status ? " selected" : "") . " value=\"" .  $status . "\">" . $lang["job_status_" . $status] . "</option>\n";
+                        echo "<option " .  ($status == $job_status ? " selected" : "") . " value=\"" .  $status . "\">" . escape($lang["job_status_" . $status]) . "</option>\n";
                         }
                     ?>
                 </select>
