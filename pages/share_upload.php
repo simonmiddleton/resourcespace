@@ -174,12 +174,12 @@ include "../include/header.php";
             echo "<div class='PageInformal'>" . implode("<br/>", $messages) . "</div>";
             }
 
-        echo "<p><strong>" . $lang["warning-upload-link"] . "</strong></p>"; 
-        echo "<p>" . $lang["warning-upload-instructions"] . "</p>";
+        echo "<p><strong>" . escape($lang["warning-upload-link"]) . "</strong></p>"; 
+        echo "<p>" . escape($lang["warning-upload-instructions"]) . "</p>";
 
         if(count($curshares) > 0)
             {
-            echo "<p><a href='" . generateURL($baseurl_short . "pages/manage_external_shares.php", $cursharefltr) . "'>" . LINK_CARET . $lang["external_shares_view_existing"] . "</a></p>";
+            echo "<p><a href='" . generateURL($baseurl_short . "pages/manage_external_shares.php", $cursharefltr) . "'>" . LINK_CARET . escape($lang["external_shares_view_existing"]) . "</a></p>";
             }
         ?>
         <form method=post id="shareuploadform" action="<?php echo generateURL($baseurl_short . "pages/share_upload.php", $cursharefltr); ?>" onsubmit="return CentralSpacePost(this,true);">

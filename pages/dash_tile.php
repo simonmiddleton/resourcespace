@@ -480,8 +480,8 @@ include "../include/header.php";
 
 if(!$validpage)
     {
-    echo "<h2>".$lang["error"]."</h2>";
-    echo "<p>".$lang["error-dashactionmissing"]."</p>";
+    echo "<h2>" . escape($lang["error"]) . "</h2>";
+    echo "<p>" . escape($lang["error-dashactionmissing"]) . "</p>";
     include "../include/footer.php";
     exit;
     }

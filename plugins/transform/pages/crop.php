@@ -511,7 +511,7 @@ include "../../../include/header.php";
 ?>
 
 <div class="BasicsBox">
-<h1><?php echo $saveaction == "original" ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']; ?></h1>
+<h1><?php echo escape($saveaction == "original" ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']); ?></h1>
 
 <?php
 # slider, sound, controls
@@ -1192,7 +1192,7 @@ renderBreadcrumbs($links_trail);
                     // if the system is configured to support a type selector for alt files, show it
                     if (isset($alt_types) && count($alt_types) > 1)
                         {
-                        echo "<tr><td style='text-align:right'>\n<label for='alt_type'>".$lang["alternatetype"].":</label></td><td colspan='3'><select name='alt_type' id='alt_type'>";
+                        echo "<tr><td style='text-align:right'>\n<label for='alt_type'>". escape($lang["alternatetype"]).":</label></td><td colspan='3'><select name='alt_type' id='alt_type'>";
                         foreach($alt_types as $thealttype)
                             {
                             $thealttype = escape($thealttype);

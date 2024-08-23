@@ -17,7 +17,7 @@ include "../include/header.php";
     ]);
     ?>
     <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/check.php">
-        <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . $lang["repeatinstallationcheck"]; ?>
+        <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . escape($lang["repeatinstallationcheck"]); ?>
     </a>
     <br/><br/>
     <table class="InfoTable">
