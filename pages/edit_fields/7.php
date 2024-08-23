@@ -106,10 +106,10 @@ if(!(isset($treeonly) && true == $treeonly))
                     document.getElementById('<?php echo $tree_id; ?>').style.display='none';
                     }
                 return false;"
-        ><?php echo LINK_CARET . $lang['showhidetree']; ?></a>
+        ><?php echo LINK_CARET . escape($lang['showhidetree']); ?></a>
         &nbsp;
         <a href="#" onclick="clearCategoryTree_<?php echo $tree_id; ?>(); return false;">
-            <?php echo LINK_CARET .  $lang['clearall']; ?>
+            <?php echo LINK_CARET .  escape($lang['clearall']); ?>
         </a>
     </div>
     <script>

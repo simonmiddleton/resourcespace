@@ -735,8 +735,8 @@ elseif ($k != "" && !$internal_share_access)
     <h2><?php echo i18n_get_collection_name($tempcol)?></h2>
         <br />
         <div class="CollectionStatsAnon">
-        <?php echo ($tempcol) ?  $lang["created"] . " " . nicedate($tempcol["created"]) : "" ?><br />
-        <?php echo $count_result . " " . $lang["youfoundresources"]; ?><br />
+        <?php echo ($tempcol) ?  escape($lang["created"] . " " . nicedate($tempcol["created"])) : "" ?><br />
+        <?php echo escape($count_result . " " . $lang["youfoundresources"]); ?><br />
         </div>
         <?php
         $min_access=collection_min_access($result);
