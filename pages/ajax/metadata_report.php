@@ -104,9 +104,9 @@ else
     ($exiftool_write&&$file_writability)?$write_status=$lang['metadatatobewritten']." ".$writability_comment:$write_status=$lang['nowritewillbeattempted'];
 
     echo "<table class=\"InfoTable\">";
-    echo "<tr><td colspan=\"5\">".$lang['resourcetype'].": ".$type_name."</td></tr>";
-    echo "<tr><td colspan=\"5\">".$lang['existing_tags']."</td></tr>";
-    echo "<tr><td width=\"150\">".$applicationname."</td><td width=\"50\">".$lang['group']."</td><td width=\"150\">".$lang['exiftooltag']."</td><td>".$lang['embeddedvalue']."</td><td>$write_status</td>";
+    echo "<tr><td colspan=\"5\">" . escape("{$lang['resourcetype']}: {$type_name}") . "</td></tr>";
+    echo "<tr><td colspan=\"5\">" . escape($lang['existing_tags']) . "</td></tr>";
+    echo "<tr><td width=\"150\">" . escape($applicationname) . "</td><td width=\"50\">". escape($lang['group']) ."</td><td width=\"150\">". escape($lang['exiftooltag']) ."</td><td>". escape($lang['embeddedvalue']) ."</td><td>" . escape($write_status) . "</td>";
     
     hook('more_metadata_report_headings');
     
@@ -148,7 +148,7 @@ else
                 $RS_field_name=ps_query("select title from resource_type_field where ref = ?", array("i",$RS_field_ref),"schema");
                 $RS_field_name = lang_or_i18n_get_translated($RS_field_name[0]['title'], "fieldtitle-");
                 # Display the RS resource field ref, title, exiftool group, tag and properties.
-                echo "<td>". str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name']) . "</td><td>$group</td><td>$tag $tagprops</td>";
+                echo "<td>". escape(str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name'])) . "</td><td>$group</td><td>$tag $tagprops</td>";
                 } 
             else 
                 {
@@ -180,7 +180,7 @@ else
                     {
                     if ($tag=="filemodifydate")
                         {
-                        echo "<td>" . $value . "</td><td>+ " . $lang["date_of_download"] . "</td>";
+                        echo "<td>" . $value . "</td><td>+ " . escape($lang["date_of_download"]) . "</td>";
                         }
                     else
                         {
@@ -258,8 +258,8 @@ else
     # Add tags which don't exist in the original file?
     if ($exiftool_write&&$file_writability)
         {
-        echo "<tr><td colspan=\"5\">" . $lang['new_tags'] . "</td></tr>";
-        echo "<tr><td width=\"150\">".$applicationname."</td><td width=\"50\">".$lang['group']."</td><td width=\"150\">".$lang['exiftooltag']."</td><td>".$lang['embeddedvalue']."</td><td>$write_status</td></tr>";
+        echo "<tr><td colspan=\"5\">" . escape($lang['new_tags']) . "</td></tr>";
+        echo "<tr><td width=\"150\">".escape($applicationname)."</td><td width=\"50\">". escape($lang['group']) ."</td><td width=\"150\">". escape($lang['exiftooltag']) ."</td><td>". escape($lang['embeddedvalue']) ."</td><td>" . escape($write_status) . "</td></tr>";
 
         # Process the report of the original file.
         foreach ($results_simulated as $result_simulated)
@@ -285,7 +285,7 @@ else
                 $RS_field_name = ps_query("select title from resource_type_field where ref = ?", array("i",$RS_field_ref),"schema");
                 $RS_field_name = lang_or_i18n_get_translated($RS_field_name[0]['title'], "fieldtitle-");
                 # Display the RS resource field ref, title, exiftool group, tag and properties.
-                echo "<td>". str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name']) . "</td><td>$group</td><td>$tag $tagprops</td>"; 
+                echo "<td>". escape(str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name'])) . "</td><td>$group</td><td>$tag $tagprops</td>"; 
 
                 # Display the value.
                 if ($tag!="filesize" && $tag!="filemodifydate")

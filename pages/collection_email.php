@@ -312,7 +312,7 @@ if(!$internal_share_only)
 
 <?php if ($cc_me && $useremail!=""){?>
 <div class="Question">
-<label for="ccme"><?php echo str_replace("%emailaddress", $useremail, $lang["cc-emailaddress"]); ?></label><input type=checkbox checked id="ccme" name="ccme">
+<label for="ccme"><?php echo escape(str_replace("%emailaddress", $useremail, $lang["cc-emailaddress"])); ?></label><input type=checkbox checked id="ccme" name="ccme">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
