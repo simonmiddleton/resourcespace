@@ -4226,10 +4226,10 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 {
                 if(in_array($treenode["ref"],$resource_nodes)) 
                     {
-                    $treenodenames[]=$treenode["path"];
+                    $treenodenames[] = $treenode["translated_path"];
                     }
                 }
-            $value = implode(", ",$treenodenames);        
+            $value = implode(", ", $treenodenames);
             }
     
     if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
@@ -4249,11 +4249,10 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
     # Value formatting
     # Optimised to use the value as is if there are no "~" characters present in the value
     if (strpos($value,"~") !== false) {
-        
         $field_value = $value;
         debug('value formatting due to ~ character...');
         # The field value may be a list of comma separated language encoded values, so process the nodes
-        $field_nodes_in_value=explode(",",$value);
+        $field_nodes_in_value = explode(",", $field["nodes"]);
         if (count($field_nodes_in_value) > 1) {
             # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
             $field_nodes_all = get_nodes($field['ref']);
