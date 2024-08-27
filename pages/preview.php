@@ -288,10 +288,10 @@ if (
 
 
 </p>
-<?php } ?>
+<?php } 
 
-<?php if (!hook("previewimage")) { ?>
-<?php if (!hook("previewimage2")) { ?>
+if (!hook("previewimage")) { 
+    if (!hook("previewimage2")) { ?>
 <table cellpadding="0" cellspacing="0">
 <tr>
 
