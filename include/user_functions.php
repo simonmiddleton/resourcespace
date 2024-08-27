@@ -479,17 +479,26 @@ function get_user_by_email($email)
 /**
  * Retrieve user ID by username
  *
- * @param  string $username The username to search for
+ * @param  string $username The username to search for (will match email if not found)
  * @return mixed  The matching user ID or false if not found
  */
 function get_user_by_username($username)
-    {
-    if(!is_string($username))
-        {
+{
+    if (!is_string($username)) {
         return false;
-        }
-    return ps_value("select ref value from user where username=?",array("s",$username),false);
     }
+    $params = ["s",$username];
+    $usermatch = ps_value("SELECT ref value FROM user WHERE username = ?", $params , 0);
+    if ($usermatch == 0 && filter_var($username, FILTER_VALIDATE_EMAIL)) {
+        // Check if trying to use email address
+        $emailmatches = ps_array("SELECT ref value FROM user WHERE email = ?", $params);
+        if (count($emailmatches) == 1) {
+            debug("Matched user to email address");
+            $usermatch = $emailmatches[0];
+        }
+    }
+    return $usermatch > 0 ? $usermatch : false;
+}
 
 /**
  * Returns a list of user groups. The standard user groups are translated using $lang. Custom user groups are i18n translated.
@@ -2104,7 +2113,7 @@ function check_access_key_collection($collection, $key, $checkresource=true)
  *
  * @param string    $name       The user's full name
  * @param string    $email      Optional email address
- * 
+ *
  * @return string   The username to use
  */
 function make_username(string $name, string $email = ""): string
@@ -2117,10 +2126,10 @@ function make_username(string $name, string $email = ""): string
         }
         debug("make_username() - Unable to use invalid e-mail address: " . $email);
     }
-    
+
     # First compress the various name parts
     $s = trim_array(explode(" ",$name));
-    
+
     $name = $s[count($s)-1];
     for ($n=count($s)-2;$n>=0;$n--) {
         $name=substr($s[$n],0,1) . $name;
@@ -2135,11 +2144,11 @@ function make_username(string $name, string $email = ""): string
         foreach ($s as $name_part) {
             $name .= '_' . $name_part;
         }
-        
+
         $name = substr($name, 1);
         $name = safe_file_name($name);
     }
-    
+
     # Check for uniqueness... append an ever-increasing number until unique.
     $unique = false;
     $num = -1;
@@ -2148,9 +2157,9 @@ function make_username(string $name, string $email = ""): string
         $c = ps_value("select count(*) value from user where username=?",array("s",($name . (($num==0)?"":$num))),0);
         $unique = ($c==0);
     }
-    return $name . (($num==0)?"":$num);    
+    return $name . (($num==0)?"":$num);
 }
-    
+
 /**
  * Returns a list of user groups selectable in the registration . The standard user groups are translated using $lang. Custom user groups are i18n translated.
  *

@@ -50,7 +50,7 @@ if (!hook("replaceauth")) {
 
     $username = trim($username);
     if ($case_insensitive_username) {
-        $username = ps_value("select username value from user where lower(username) = lower(?)", array("s", $username), $username);
+        $username = ps_value("SELECT username value FROM user WHERE LOWER(username) = LOWER(?)", ["s", $username], $username);
     }
 
 # Also check that the username provided has not been locked out due to excessive login attempts.
@@ -79,7 +79,7 @@ if (!hook("replaceauth")) {
         debug("[login.php] Process the submitted login details...");
 
         $password = trim(getval("password", ""));
-        $result = perform_login();
+        $result = perform_login($username, $password);
         if ($result['valid']) {
             debug("[login.php] Performed login - valid result");
 
@@ -205,7 +205,7 @@ if (!hook("replaceloginform")) {
         </p>
 
         <?php if ($error != "") { ?>
-            <div class="FormIncorrect" id="LoginError" tabindex="-1"><?php echo $error?></div>
+            <div class="FormIncorrect" id="LoginError" tabindex="-1"><?php echo strip_tags_and_attributes($error) ?></div>
             <script>window.onload = function() { document.getElementById("LoginError").focus(); }</script>
         <?php }?>
 
@@ -222,7 +222,7 @@ if (!hook("replaceloginform")) {
             <div class="clearerleft"> </div>
         </div>
 
-        <?php if ($disable_languages == false) { ?>   
+        <?php if ($disable_languages == false) { ?>
             <div class="Question HalfWidth">
                 <label for="language"><?php echo escape($lang["language"]); ?></label>
                 <select id="language" class="stdwidth" name="language" onBlur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
