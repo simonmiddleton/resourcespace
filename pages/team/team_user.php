@@ -142,7 +142,6 @@ include "../../include/header.php";
     # Fetch users
     $usersfound = false;
 
-
     $users_sql  = get_users($group,$find,$order_by,true,$offset+$per_page,"",true);
     $users      = sql_limit_with_total_count($users_sql,$per_page,$offset);
     $results    = $users["total"];
@@ -158,7 +157,7 @@ include "../../include/header.php";
     $totalpages =ceil($results/$per_page);
     $curpage    =floor($offset/$per_page)+1;
 
-    $url=generateURL(
+    $pageurl = generateURL(
         $baseurl_short . "pages/team/team_user.php",
         ["group"     => $group,
         "order_by"  => $order_by,
@@ -283,7 +282,7 @@ include "../../include/header.php";
     </tr>
     <?php
     // Parse $url var as this is being manipulated by the pager(). This allows us to build correct URLs later on (e.g for team_user_edit_url)
-    $url_parse = parse_url($url);
+    $url_parse = parse_url($pageurl);
     $url_qs = [];
     if(isset($url_parse['query']))
         {
@@ -315,7 +314,7 @@ include "../../include/header.php";
         <td><?php echo escape((string)$users[$n]["fullname"])?></td>
         <?php } ?>
         <?php if (!hook("replacegroupnamerow")){?>
-        <td><?php echo $users[$n]["groupname"]; ?></td>
+        <td><?php echo i18n_get_translated($users[$n]["groupname"]); ?></td>
         <?php } ?>
         <?php if (!hook("replaceemailrow")){?>
         <td><?php echo htmlentities((string)$users[$n]["email"])?></td>

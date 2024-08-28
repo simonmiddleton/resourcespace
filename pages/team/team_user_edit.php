@@ -9,17 +9,21 @@ include "../../include/boot.php";
 include "../../include/authenticate.php"; 
 include "../../include/api_functions.php"; 
 
-$backurl=getval("backurl","");
-$modal=(getval("modal","")=="true");
-$url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getval("ref","",true) . "&backurl=" . urlencode($backurl);
-if (!checkPermission_manage_users())
-    {
+$ref = getval("ref","",true);
+$backurl = getval("backurl","");
+$modal = (getval("modal","")=="true");
+
+$urlparams= array(
+    'ref'               => $ref,
+    'backurl'            => $backurl,
+);
+$url = generateURL($baseurl_short . "pages/team/team_user_edit.php", $urlparams);
+
+if (!checkPermission_manage_users()) {
     exit(escape($lang["error-permissiondenied"]));
-    }
+}
 
-$ref=getval("ref","",true);
 $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2 => $lang["disabled"]);
-
 
 if (getval("unlock","")!="" && enforcePostRequest(getval("ajax", false)))
     {
@@ -129,7 +133,7 @@ renderBreadcrumbs([
     ],
     [
         'title' => $lang["manageusers"],
-        'href'  => $baseurl_short . "pages/team/team_user.php"
+        'href'  => strpos($backurl,"team_user.php") !== false ? $backurl : $baseurl_short . "pages/team/team_user.php"
     ],
     [
         'title' => $lang["edituser"],
@@ -142,7 +146,7 @@ renderBreadcrumbs([
 <?php if (isset($error)) { ?><div class="FormError"><?php echo escape($error); ?></div><?php } ?>
 <?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>
 
-<form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
+<form method=post action='<?php echo $url; ?>' onsubmit='return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);'>
 <?php 
 if($modal)
     {
@@ -178,7 +182,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="Question" ><label><?php echo escape($lang["username"])?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
 <?php if (!hook("password", "", array($user))) { ?>
-<div class="Question"><label><?php echo escape($lang["password"])?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo escape($lang["hidden"]); ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo escape($lang["suggest"])?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["password"])?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo escape($lang["hidden"]); ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo escape($lang["suggest"])?>" onclick="jQuery.get(this.form.action + '&suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
 <?php } else { ?>
 <div><input name="password" id="password" type="hidden" value="<?php echo escape($lang["hidden"]);?>" /></div>
 <?php } ?>
