@@ -17,7 +17,7 @@ $urlparams= array(
     'ref'               => $ref,
     'backurl'            => $backurl,
 );
-$url = generateURL($baseurl_short . "pages/team/team_user_edit.php", $urlparams);
+$pageurl = generateURL($baseurl_short . "pages/team/team_user_edit.php", $urlparams);
 
 if (!checkPermission_manage_users()) {
     exit(escape($lang["error-permissiondenied"]));
@@ -146,7 +146,7 @@ renderBreadcrumbs([
 <?php if (isset($error)) { ?><div class="FormError"><?php echo escape($error); ?></div><?php } ?>
 <?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>
 
-<form method=post action='<?php echo $url; ?>' onsubmit='return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);'>
+<form method=post action='<?php echo escape($pageurl); ?>' onsubmit='return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);'>
 <?php 
 if($modal)
     {
@@ -365,7 +365,7 @@ if(!hook('ticktoemailpassword'))
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo escape($lang["log"])?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["clicktoviewlog"])?></a></div>
+<div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($pageurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["clicktoviewlog"])?></a></div>
 <div class="clearerleft"> </div></div>
 
 <?php
@@ -374,7 +374,7 @@ if($userref != $ref)
     // Add message link
     ?>
     <div class="Question"><label><?php echo escape($lang["new_message"])?></label>
-    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["message"])?></a></div>
+    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($pageurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["message"])?></a></div>
     <div class="clearerleft"> </div></div>
 <?php
     }  

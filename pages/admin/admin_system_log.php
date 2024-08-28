@@ -167,7 +167,16 @@ elseif (strpos($backurl, "pages/team/team_user.php") !== false)
     }
 elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
     {
-    // Arrived from Edit user page
+    // Arrived from edit user page. This may also have a separate backurl
+    $back2url = $baseurl_short . "pages/team/team_user.php";
+    $url_parse = parse_url($backurl);
+    if (isset($url_parse['query'])) {
+        parse_str($url_parse['query'], $url2_qs);
+        if (strpos($url2_qs["backurl"] ?? "", "pages/team/team_user.php") !== false) {
+            $back2url = $url2_qs["backurl"];
+        }
+    }
+
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
@@ -176,7 +185,7 @@ elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
         ),
         array(
             'title' => $lang["manageusers"],
-            'href'  => $baseurl_short . "pages/team/team_user.php"
+            'href'  => $back2url,
         ),
         array(
             'title' => $lang["edituser"],
