@@ -139,7 +139,7 @@ renderBreadcrumbs([
 ?>
 
 </div>
-<?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
+<?php if (isset($error)) { ?><div class="FormError"><?php echo escape($error); ?></div><?php } ?>
 <?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>
 
 <form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">

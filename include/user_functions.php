@@ -669,7 +669,7 @@ function save_user($ref)
         ps_query("DELETE FROM user WHERE ref = ?", array("i", $ref));
 
         hook('on_delete_user', "", array($ref));
-        
+
         include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
 
@@ -694,46 +694,74 @@ function save_user($ref)
         $approved               = getval('approved', 0, true);
         $expires                = getval('account_expires', '');
 
-        # Username or e-mail address already exists?
-        $c = ps_value("SELECT count(*) value FROM user WHERE ref <> ? AND (username = ? OR email = ?)", array("i", $ref, "s", $username, "s", $email), 0);
-        if($c > 0 && $email != '')
-            {
-            return $lang["useralreadyexists"]; # An account with that e-mail or username already exists, changes not saved
-            }
+        // Create SQL to check for username or e-mail address conflict
+        $conditions = "username = ? OR email = ?";
+        $params = ["s", $username, "s", $username];
 
-       // Enabling a disabled account but at the user limit?
-        if (user_limit_reached() && $current_user_data["approved"]!=1 && $approved==1)
-            {
-            return $lang["userlimitreached"]; // Return error message 
+        // Add code to set different values depending on what has conflicted
+        $typecheck =  "WHEN (username = ?) THEN 1 "; // username matches another username
+        $typecheck .= "WHEN (email = ?) THEN 2 "; // username matches another account's email
+        $typeparams = ["s", $username, "s", $username];
+
+        if ($email !== "") {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $lang['error_invalid_email'];
             }
+            // Add checks for email conflicts
+            $conditions .= " OR username = ? OR email = ?";
+            $params = array_merge($params,["s", $email, "s", $email]);
+            $typecheck .= "WHEN (email = ?) THEN 3 "; // email matches another account's email
+            $typecheck .= "WHEN (username = ?) THEN 4 "; // email matches the username of another account
+            $typeparams = array_merge($typeparams, ["s", $email, "s", $email]);
+        }
+        $matchsql = " SELECT MIN(CASE $typecheck END) AS value
+                         FROM user
+                        WHERE ref <> ? AND ($conditions)";
+        $c = ps_value($matchsql, array_merge($params, ["i",$ref], $typeparams), 0);
+        switch ($c) {
+            case 1:
+                return $lang["useralreadyexists"]; // An account with that username already exists
+                break;
+            case 2:
+                return $lang["useralreadyexists"]; // Username matches another account's e-mail
+                break;
+            case 3:
+                return $lang["useremailalreadyexists"]; // An account with that e-mail address exists
+                break;
+            case 4:
+                return $lang["useralreadyexists"]; // Email matches another account's username
+                break;
+            case 0:
+            default:
+                // All ok
+                break;
+        }
+
+        // Enabling a disabled account but at the user limit?
+        if (user_limit_reached() && $current_user_data["approved"] != 1 && $approved==1) {
+            return $lang["userlimitreached"]; // Return error message 
+        }
 
         // Password checks:
-        if($suggest != '' || ($password == '' && $emailresetlink != ''))
-            {
+        if ($suggest != '' || ($password == '' && $emailresetlink != '')) {
             $password = make_password();
-            }
-        elseif($password != $lang['hidden'])    
-            {
+        } elseif ($password != $lang['hidden']) {
             $message = check_password($password);
-            if($message !== true)
-                {
+            if ($message !== true) {
                 return $message;
-                }
             }
+        }
 
         # Validate expiry date
         if ($expires != "" && preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0) {
             return str_replace('[value]', $expires, $lang['error_invalid_date_format']);
         }
-        
-        if($expires == "" || strtotime($expires)==false)
-            {
+
+        if ($expires == "" || strtotime($expires)==false) {
             $expires = null;
-            }
-        else   
-            {
+        } else {
             $expires =  date("Y-m-d",strtotime($expires));
-            }
+        }
 
         $passsql = '';
         $sql_params = array();
@@ -998,11 +1026,10 @@ function auto_create_user_account($hash="")
     $newusername = make_username(getval("name",""));
 
     // Check valid email
-    if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
-        {
+    if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
         return $lang['setup-emailerr'];
-        }
-    
+    }
+
     #check if account already exists
     $check=ps_value("SELECT email value FROM user WHERE email = ?",["s",$user_email],"");
     if ($check!="")
@@ -1017,10 +1044,10 @@ function auto_create_user_account($hash="")
 
     # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
     $approve=false;
-        
+
     # Block immediate reset
     $bypassemail=false;
-        
+
     if ($auto_approve_accounts==true)
         {
         $approve=true;
@@ -1036,7 +1063,7 @@ function auto_create_user_account($hash="")
             if (substr(strtolower($email),strlen($email)-strlen($domain)-1)==("@" . strtolower($domain)))
                 {
                 # E-mail domain match.
-                $approve=true;                                
+                $approve=true;
 
                 # If user group is supplied, set this
                 if (is_numeric($set_usergroup)) {$usergroup=$set_usergroup;}
