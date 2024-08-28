@@ -723,13 +723,13 @@ function save_user($ref)
                 return $lang["useralreadyexists"]; // An account with that username already exists
                 break;
             case 2:
-                return $lang["useralreadyexists"]; // Username matches another account's e-mail
+                return $lang["username_conflicts_email"]; // Username matches another account's e-mail
                 break;
             case 3:
                 return $lang["useremailalreadyexists"]; // An account with that e-mail address exists
                 break;
             case 4:
-                return $lang["useralreadyexists"]; // Email matches another account's username
+                return $lang["email_conflicts_username"]; // Email matches another account's username
                 break;
             case 0:
             default:
