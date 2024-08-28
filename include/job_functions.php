@@ -303,7 +303,7 @@ function job_queue_run_job($job, $clear_process_lock)
     
     set_process_lock('job_' . $jobref);
     
-    $logmessage =  "Running job #" . $jobref . PHP_EOL;
+    $logmessage =  "Running job #" . $jobref . ' at ' . date('Y-m-d H:i:s') . PHP_EOL;
     echo $logmessage;
     debug($logmessage);
 
@@ -361,7 +361,7 @@ function job_queue_run_job($job, $clear_process_lock)
         job_queue_update($jobref,$job_data,STATUS_ERROR,date('Y-m-d H:i:s'));
         }
     
-    $logmessage =  " - Finished job #" . $jobref . PHP_EOL;
+    $logmessage =  " - Finished job #" . $jobref . ' at ' . date('Y-m-d H:i:s') . PHP_EOL;
     echo $logmessage;
     debug($logmessage);
     
