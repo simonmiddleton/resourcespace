@@ -133,7 +133,7 @@ if($offline_job_queue)
             }
         job_queue_run_job($offlinejob, $clear_job_process_lock);    
         }
-    echo $lang["complete"] . PHP_EOL;
+    echo $lang["complete"] . ' ' . date('Y-m-d H:i:s') . PHP_EOL;
     }
 else
     {
