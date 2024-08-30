@@ -1,0 +1,6 @@
+ref,int,NO,PRI,,auto_increment
+page,int,NO,,,
+type,int,NO,,0,
+content,mediumtext,YES,,,
+options,mediumtext,YES,,,
+order_by,int,NO,,,
