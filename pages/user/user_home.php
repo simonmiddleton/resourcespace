@@ -16,7 +16,7 @@ $introtext=text("introtext");
   
     <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
     <ul>
-    
+    <?php if (0 !== $useracceptedterms) { ?>
     <li><a id="profile_link" href="<?php echo $baseurl_short?>pages/user/user_profile_edit.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-user-circle"></i><br /><?php echo escape($lang["profile"]); ?></a></li>
     
     <?php if ($allow_password_change && !checkperm("p") && $userorigin=="") { ?>
@@ -96,6 +96,7 @@ $introtext=text("introtext");
             hook('user_home_additional_links');
     
         # Log out
+    }
         if(!isset($password_reset_mode) || !$password_reset_mode)
         {?>
         <li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-sign-out fa-fw"></i><br /><?php echo escape($lang["logout"]); ?></a></li>

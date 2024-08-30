@@ -122,6 +122,8 @@ include "../include/header.php";
                type="submit"
                value="&nbsp;&nbsp;<?php echo escape($lang["proceed"]); ?>&nbsp;&nbsp;"
                <?php hook('terms_save_input_attributes', '', array($ref, $url)); ?>/>
+               <input type="button" name="decline" onclick="window.location='<?php echo generateURL($baseurl . '/login.php', ['logout' => true, 'nc' => time()])?>';"
+               value="<?php echo escape($lang["idecline"]); ?>"/>
     </div>
     </form>
 </div>
