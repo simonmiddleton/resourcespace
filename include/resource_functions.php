@@ -1776,9 +1776,19 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     // Work out what all the new nodes for this resource  will be while maintaining their order
                     $new_nodes = array_filter($nodes_by_ref,function($node) use ($nodes_to_add){return in_array($node["ref"],$nodes_to_add);});
 
+                    # 'to' should contain the resulting nodes after the amendment. The difference between 'to' and 'from' is what has changed.
+                    $resulting_nodes_for_log = $nodes_to_add;
+                    if ($mode == "AP")
+                        {
+                        $resulting_nodes_for_log = array_unique(array_merge($nodes_to_add, $current_field_nodes));
+                        }
+                    if ($mode == "RM")
+                        {
+                        $resulting_nodes_for_log = array_diff($current_field_nodes, $removed_nodes);
+                        }
                     $log_node_updates[$ref][] = [
                         'from'  => $current_field_nodes,
-                        'to'    => $nodes_to_add,
+                        'to'    => $resulting_nodes_for_log,
                         ];
 
                     if((count($added_nodes)>0 || count($removed_nodes)>0) && in_array($fields[$n]['ref'], $joins))
