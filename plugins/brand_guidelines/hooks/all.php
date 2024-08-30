@@ -2,6 +2,13 @@
 function HookBrand_guidelinesAllInitialise()
     {
     include_once dirname(__DIR__) . '/include/brand_guidelines_functions.php';
+    
+    /** Types of content you can add to brand guideline pages */
+    define('GUIDELINE_CONTENT_TYPES', [
+        0 => 'text',
+        1 => 'resource',
+        2 => 'colour',
+    ]);
     }
 
 function HookBrand_guidelinesAllHandleuserref() {
