@@ -1303,7 +1303,6 @@ function LoadActions(pagename,id,type,ref, extra_data)
         .then(function(response, status, xhr)
             {
             console.debug('[LoadActions] xhr = %o', xhr);
-
             if(response.includes('pagename="login"'))
                 {
                 styledalert(errortext,errornotloggedin + ' <a href="' + baseurl_short + '" target="_new">' + login + '</a>');
@@ -1805,33 +1804,48 @@ function HideHelp(id)
         }
     }
 
-var ProcessingFirstTimer;
-var ProcessingSecondTimer;
-var ProcessingDisplayTimer;
-var ProcessingAPITimer;
+var ProcessingTimersActive=false;
+var ProcessingFirstTimer=0;
+var ProcessingSecondTimer=0;
+var ProcessingDisplayTimer=0;
+var ProcessingAPITimer=0;
 var ProcessingMessages;
 var ProcessingCount=-1;
+
 function CentralSpaceShowProcessing()
     {
+    const callerName = CentralSpaceShowProcessing.caller ? CentralSpaceShowProcessing.caller.name : "Anonymous function";
+    console.log("CentralSpaceShowProcessing CALLED BY: ", callerName);
+    if (ProcessingTimersActive) { return; }
+
     jQuery('#ProcessingStatus').html('');
     ProcessingMessages=[];
+
     ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 350);
+    ProcessingFirstTimer=setTimeout(CentralSpace_ProcessingAPITimer, 1000); 
     ProcessingAPITimer = setInterval(CentralSpace_ProcessingAPITimer, 3000);
-    ProcessingFirstTimer=setTimeout(CentralSpace_ProcessingAPITimer, 1000); // First more rapid call.
 
     ProcessingSecondTimer=setTimeout(function ()
-        {
-        jQuery('#ProcessingBox').fadeIn('fast');
-        },1000);
+    {
+    jQuery('#ProcessingBox').fadeIn('fast');
+    },1000);
+
+    ProcessingTimersActive=true;
     }
 
 function CentralSpaceHideProcessing()
     {
+    const callerName = CentralSpaceHideProcessing.caller ? CentralSpaceHideProcessing.caller.name : "Anonymous function";
+    console.log("CentralSpaceHideProcessing CALLED BY: ", callerName);
+    if (!ProcessingTimersActive) { return; }
+
     jQuery('#ProcessingBox').fadeOut('fast');
-    clearInterval(ProcessingDisplayTimer);
-    clearInterval(ProcessingAPITimer);
-    clearTimeout(ProcessingFirstTimer);
-    clearTimeout(ProcessingSecondTimer);
+    clearInterval(ProcessingDisplayTimer); ProcessingDisplayTimer=0; 
+    clearTimeout(ProcessingFirstTimer);    ProcessingFirstTimer=0; 
+    clearInterval(ProcessingAPITimer);     ProcessingAPITimer=0; 
+    clearTimeout(ProcessingSecondTimer);   ProcessingSecondTimer=0; 
+
+    ProcessingTimersActive=false;
     }
 
 function CentralSpace_ProcessingDisplayTimer()
