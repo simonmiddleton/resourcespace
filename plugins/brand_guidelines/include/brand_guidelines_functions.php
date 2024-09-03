@@ -115,11 +115,19 @@ function render_block_colour_item(array $value) {
     <?php
 }
 
-function render_navigation_item(string $name, bool $is_section) {
-    if ($is_section) {
-        printf('<h2>%s</h2>', escape(i18n_get_translated($name)));
+function render_navigation_item(array $item, bool $is_current = false) {
+    if ($item['parent'] == 0) {
+        printf('<h2>%s</h2>', escape(i18n_get_translated($item['name'])));
     } else {
-        printf('<h3>%s</h3>', escape(i18n_get_translated($name)));
+        ?>
+        <h3
+            <?php echo $is_current ? 'class="current"' : ''; ?> 
+            onclick="CentralSpaceLoad('<?php echo generateURL(
+                "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
+                ['spage' => $item['ref']]
+            ); ?>');"
+        ><?php echo escape(i18n_get_translated($item['name'])); ?></h3>
+        <?php
     }
 }
 

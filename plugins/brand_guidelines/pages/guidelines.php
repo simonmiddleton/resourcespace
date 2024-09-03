@@ -11,6 +11,7 @@ if (!acl_can_view_brand_guidelines()) {
 }
 
 $all_pages = get_node_tree(0, get_pages());
+$selected_page = getval('spage', 0, false, 'is_positive_int_loose');
 
 
 
@@ -21,21 +22,45 @@ render_content_menu();
 <div class="guidelines-container">
     <nav class="guidelines-sidebar">
     <?php
-    foreach ($all_pages as $section) {
-        render_navigation_item($section['name'], true);
+    foreach ($all_pages as $s => $section) {
+        render_navigation_item($section, false);
 
         $section_children = $section['children'] ?? [];
         foreach ($section_children as $i => $page) {
-            render_navigation_item($page['name'], false);
+            render_navigation_item(
+                $page,
+                (
+                    $selected_page == $page['ref']
+                    || (
+                        $selected_page == 0
+                        && $s === array_key_first($all_pages)
+                        && $i === array_key_first($section_children)
+                    )
+                )
+            );
 
             if (acl_can_edit_brand_guidelines() && $i === array_key_last($section_children)) {
-                render_navigation_item($lang['brand_guidelines_new_page'], false);
+                render_navigation_item(
+                    [
+                        'ref' => 0,
+                        'name' => $lang['brand_guidelines_new_page'],
+                        'parent' => $section['ref'],
+                    ],
+                    false
+                );
             }
         }
     }
 
     if (acl_can_edit_brand_guidelines()) {
-        render_navigation_item($lang['brand_guidelines_new_section'], true);
+        render_navigation_item(
+            [
+                'ref' => 0,
+                'name' => $lang['brand_guidelines_new_section'],
+                'parent' => 0,
+            ],
+            false
+        );
     }
     ?>
     </nav>
