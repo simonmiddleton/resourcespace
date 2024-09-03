@@ -335,6 +335,11 @@ if ($saveaction != '' && enforcePostRequest(false))
         copy($previewsourcepath, $org);
         }
 
+    if ($use_system_icc_profile_config && $saveaction != "original")
+        {
+        $imgactions = array_merge($imgactions, transform_apply_icc_profile($ref, $originalpath));
+        }
+
     // Perform the actual transformation
     $transformed = transform_file($originalpath, $newpath, $imgactions);
 
