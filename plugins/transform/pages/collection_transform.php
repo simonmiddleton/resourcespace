@@ -49,6 +49,12 @@ if ($doit && enforcePostRequest(true) && count($resources) > 0)
         mkdir($batchtempdir, 0777);
         }
 
+$keep_original = true; # Default to create alternative file using original file
+if ($replace_resource_preserve_option && getval("keep_original", "true") === 'false')
+    {
+    $keep_original = false;
+    }
+
     foreach($resources as $resource)
         {
         $edit_access=get_edit_access($resource);
@@ -74,8 +80,11 @@ if ($doit && enforcePostRequest(true) && count($resources) > 0)
 
             if($generated)
                 {
-                debug("Saving original file and renaming " . $crop_temp_file . " to " . $origpath);
-                save_original_file_as_alternative($resource);
+                if ($keep_original)
+                    {
+                    debug("Saving original file and renaming " . $crop_temp_file . " to " . $origpath);
+                    save_original_file_as_alternative($resource);
+                    }
                 $copied = rename($crop_temp_file,$origpath);
                 if($copied)
                     {
@@ -137,7 +146,7 @@ include __DIR__ . "/../../../include/header.php";
 ?>
 
 <script>
-    function batch_rotate(collection,rotation)
+    function batch_rotate(collection,rotation,keep_original)
         {
         CentralSpaceShowProcessing();
         jQuery.ajax({
@@ -148,6 +157,7 @@ include __DIR__ . "/../../../include/header.php";
                 collection : collection,
                 rotation : rotation,
                 doit : 1,
+                keep_original : keep_original,
                 <?php echo generateAjaxToken("processTileChange"); ?>
                 },
             })
@@ -174,17 +184,29 @@ include __DIR__ . "/../../../include/header.php";
 <div class="BasicsBox">
     <h1><?php echo escape($lang['batchtransform']); ?></h1>
     <p><strong><?php echo escape($lang['batchtransform-introtext']); ?></strong></p>
-    <form name='batchtransform' onsubmit='batch_rotate(<?php echo (int) $collection ?>,jQuery("#rotation").val());return false;' action='<?php echo $baseurl_short?>plugins/transform/pages/collection_transform.php' >
+    <form name='batchtransform' onsubmit='batch_rotate(<?php echo (int) $collection ?>,jQuery("#rotation").val(),jQuery("#keep_original").prop("checked"));return false;' action='<?php echo $baseurl_short?>plugins/transform/pages/collection_transform.php' >
         <input type='hidden' name='doit' value='1' />
         <input type='hidden' name='collection' value='<?php echo (int) $collection ?>' />
         <?php generateFormToken("batchtransform"); ?>
 
-        <?php echo escape($lang['rotation']); ?>:<br />
-        <select id='rotation' name='rotation'>
-            <option value='90'><?php echo escape($lang['rotation90']); ?></option>
-            <option value='180'><?php echo escape($lang['rotation180']); ?></option>
-            <option value='270'><?php echo escape($lang['rotation270']); ?></option>
-        </select>
+        <div class="question" id="rotation_question">
+            <?php echo escape($lang['rotation']); ?>:<br />
+            <select id='rotation' name='rotation'>
+                <option value='90'><?php echo escape($lang['rotation90']); ?></option>
+                <option value='180'><?php echo escape($lang['rotation180']); ?></option>
+                <option value='270'><?php echo escape($lang['rotation270']); ?></option>
+            </select>
+        </div>
+
+        <?php
+        if ($replace_resource_preserve_option)
+            { ?>
+            <div class="question" id="keep_original_question">
+                <label for="keep_original"><?php echo escape($lang["replace_resource_preserve_original"]); ?></label>
+                <input type='checkbox' id='keep_original' name='keep_original' <?php echo $replace_resource_preserve_default ? ' checked' : ''; ?>/>
+            </div>
+            <?php } ?>
+
         <br /><br />
         <input type="submit" value="<?php echo escape($lang['transform']) ?>" />
     </form>

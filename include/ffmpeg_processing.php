@@ -14,8 +14,14 @@ if ($generateall) {
     set_processing_message(str_replace("[resource]",$ref,$lang["processing_preview_video"]));
 
     $snapshotsize = getimagesize($target);
+    $rotation = get_image_orientation($file);
     $width=$snapshotsize[0];
     $height=$snapshotsize[1];
+    if($rotation !== 0 && $rotation !== 180) { 
+        $tmp = $width;
+        $width = $height;
+        $height = $tmp; 
+    }
     $sourcewidth=$width;
     $sourceheight=$height;
     global $config_windows, $ffmpeg_get_par;

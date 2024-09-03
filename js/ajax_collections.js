@@ -403,7 +403,6 @@ function UpdateSelectedResourcesCounter(clear)
         return;
         }
 
-    CentralSpaceShowProcessing();
     jQuery.ajax({
         type: 'GET',
         url: baseurl + "/pages/ajax/collections.php",

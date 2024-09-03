@@ -2929,9 +2929,13 @@ function get_image_orientation($file)
         $orientation = trim(str_replace('CW', '', $orientation));
     }
 
-    // Failed or no orientation available
+    // Failed or no orientation available try rotation as well
     if (!is_numeric($orientation)) {
+        $cmd = $exiftool_fullpath . " -s3 -rotation %%FILE%%";
+        $orientation = run_command($cmd, false, ['%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
+        if (!is_numeric($orientation)) {
         return 0;
+        }
     }
 
     return $orientation;

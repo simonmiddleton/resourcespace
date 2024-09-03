@@ -371,6 +371,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             }
 
         // Use the resultant file as requested
+        $replace_resource_preserve_option_original = $replace_resource_preserve_option;
         if ($saveaction == "alternative" && $cropper_enable_alternative_files)
             {
             $description    = getval("description","");
@@ -391,9 +392,24 @@ if ($saveaction != '' && enforcePostRequest(false))
         elseif ($saveaction == "original" && $cropper_transform_original && $edit_access && !$cropperestricted)
             {
             // Replace the original file with the cropped file in newpath
-            // If keep_original is selected then save the original as an additional file
-            $keep_original = getval("keep_original", "") != "";
+            // By default keep original as alternative file. To prevent this $replace_resource_preserve_option must be enabled and the user select not to.
+            $keep_original = true;
+            if ($replace_resource_preserve_option && getval("keep_original", "") == "")
+                {
+                $keep_original = false;
+                }
+
+            if ($keep_original)
+                {
+                // Update global value for use in replace_resource_file
+                $replace_resource_preserve_option = true;
+                }
+
+            //$keep_original = getval("keep_original", "") != "";
             $success = replace_resource_file($ref,$newpath,true,false,$keep_original);
+
+            $replace_resource_preserve_option = $replace_resource_preserve_option_original;
+
             if (!$success)
                 {
                 $onload_message = array("title" => $lang["error"],"text" =>str_replace("%res",$ref,$lang['error-transform-failed']));

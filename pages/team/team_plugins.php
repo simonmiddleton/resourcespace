@@ -353,6 +353,10 @@ if($searching)
                     {$plugin_config_url = $baseurl_short . $plugin['config_url'];}
                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . escape($lang['options']).'</a> ';        
                    }
+                if (isset($plugin['config']) && $plugin['config'])
+                    {
+                    echo '<a href="#' . escape($plugin['name']) . '" class="p-purge"><i class="fa fa-trash"></i>&nbsp;' . escape($lang['plugins-purge']) . '</a> ';
+                    }
                 ?>
                     </div><!-- End of ListTools -->
                 </td>

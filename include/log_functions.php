@@ -120,7 +120,7 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $
         }
     
     $parameters=array();
-    $sql = "SELECT date, ref, resource, type, resource_type_field AS field, user, notes, diff, usageoption FROM resource_log WHERE type not in ('l', 't')";
+    $sql = "SELECT date, ref, resource, type, resource_type_field AS field, user, notes, diff, usageoption FROM resource_log WHERE type != 'l'";
     if($minref > 0)
         {
         $sql .= " AND ref >= ?";
