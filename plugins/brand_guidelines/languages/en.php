@@ -6,3 +6,5 @@ $lang['brand_guidelines_top_nav_title'] = 'Guidelines';
 $lang['brand_guidelines_new_resource'] = 'New resource';
 $lang['brand_guidelines_existing_resource'] = 'Existing resource';
 $lang['brand_guidelines_new_content'] = 'Add new content';
+$lang['brand_guidelines_new_page'] = '+ New page';
+$lang['brand_guidelines_new_section'] = '+ New section';

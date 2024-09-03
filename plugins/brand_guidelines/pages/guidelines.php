@@ -2,12 +2,7 @@
 
 declare(strict_types=1);
 
-use function Montala\ResourceSpace\Plugins\BrandGuidelines\acl_can_view_brand_guidelines;
-use function Montala\ResourceSpace\Plugins\BrandGuidelines\render_block_colour_item;
-use function Montala\ResourceSpace\Plugins\BrandGuidelines\render_content_menu;
-use function Montala\ResourceSpace\Plugins\BrandGuidelines\render_individual_menu;
-use function Montala\ResourceSpace\Plugins\BrandGuidelines\render_new_block_element_button;
-use function Montala\ResourceSpace\Plugins\BrandGuidelines\render_new_content_button;
+namespace Montala\ResourceSpace\Plugins\BrandGuidelines;
 
 include_once dirname(__DIR__, 3) . '/include/boot.php';
 include_once RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
@@ -15,6 +10,7 @@ if (!acl_can_view_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
+$all_pages = get_node_tree(0, get_pages());
 
 
 
@@ -23,16 +19,26 @@ render_individual_menu();
 render_content_menu();
 ?>
 <div class="guidelines-container">
-    <div class="guidelines-sidebar">
-        <h2>Brand Overview</h2>
-        <h3>Overview</h3>
-        <h3>+ New page</h3>
-        <h2>Logo</h2>
-        <h3>Logos</h3>
-        <h3>Colours</h3>
-        <h3>+ New page</h3>
-        <h2>+ New section</h2>
-    </div>
+    <nav class="guidelines-sidebar">
+    <?php
+    foreach ($all_pages as $section) {
+        render_navigation_item($section['name'], true);
+
+        $section_children = $section['children'] ?? [];
+        foreach ($section_children as $i => $page) {
+            render_navigation_item($page['name'], false);
+
+            if (acl_can_edit_brand_guidelines() && $i === array_key_last($section_children)) {
+                render_navigation_item($lang['brand_guidelines_new_page'], false);
+            }
+        }
+    }
+
+    if (acl_can_edit_brand_guidelines()) {
+        render_navigation_item($lang['brand_guidelines_new_section'], true);
+    }
+    ?>
+    </nav>
     <div class="BasicsBox">
         <div class="guidelines-content">
             <div id="guidelines-content--overview">

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 function HookBrand_guidelinesAdmin_group_permissionsAdditionalperms() {
     $pyaml = get_plugin_yaml('brand_guidelines', false, true);
     ?>

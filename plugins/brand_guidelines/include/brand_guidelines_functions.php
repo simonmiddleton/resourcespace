@@ -18,6 +18,13 @@ function acl_can_edit_brand_guidelines(): bool {
     return checkperm('a') || checkperm('bge');
 }
 
+function get_pages() {
+    return ps_query(
+        'SELECT ' . columns_in('brand_guidelines_pages', null, 'brand_guidelines')
+        . 'FROM brand_guidelines_pages'
+    );
+}
+
 function render_individual_menu() {
     ?>
     <div id="menu-individual" class="context-menu-container" style="display:none;">
@@ -106,6 +113,14 @@ function render_block_colour_item(array $value) {
         </div>
     </div>
     <?php
+}
+
+function render_navigation_item(string $name, bool $is_section) {
+    if ($is_section) {
+        printf('<h2>%s</h2>', escape(i18n_get_translated($name)));
+    } else {
+        printf('<h3>%s</h3>', escape(i18n_get_translated($name)));
+    }
 }
 
 /* 
