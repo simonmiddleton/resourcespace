@@ -1,4 +1,5 @@
 <?php
+define('RESOURCESPACE_BASE_PATH', dirname(__DIR__));
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
 define('SYSTEM_UPGRADE_LEVEL', 27);
