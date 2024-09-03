@@ -134,6 +134,8 @@ if (!hook("ajaxcollections")) { ?>
     <script src="<?php echo $baseurl;?>/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <?php } ?>
 
+<script src="<?php echo $baseurl; ?>/lib/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+
 <!--  UPPY -->
 <script type="text/javascript" src="<?php echo $baseurl_short;?>lib/js/uppy.js?<?php echo $css_reload_key;?>"></script>
 <link rel="stylesheet" href="<?php echo $baseurl?>/css/uppy.min.css?css_reload_key=<?php echo $css_reload_key?>">
