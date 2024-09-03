@@ -901,63 +901,54 @@ function config_add_boolean_select($config_var, $label, $choices = '', $width = 
  * @param integer $columns the number of columns to use 
  */
 function config_checkbox_select($name, $label, $current, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false,$on_change_js=null, $hidden=false)
-    {
+{
     global $lang;
-    if(trim($current) != "")
-        {
-        $currentvalues=explode(",",$current);
-        }
-    else
-        {
+    if (trim($current) != "") {
+        $currentvalues = explode(",", $current);
+    } else {
         $currentvalues = [];
-        }
+    }
     $wrap = 0;
     ?>
-    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-    <label for="<?php echo escape($name)?>" ><?php echo escape($label)?></label>
-        <?php
-        if($autosave)
-            {
-            ?>
+    <div class="Question" id="question_<?php echo escape($name); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
+        <label for="question<?php echo escape($name); ?>" ><?php echo escape($label)?></label>
+        <?php if ($autosave) { ?>
             <div class="AutoSaveStatus">
-                <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+                <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
             </div>
-            <?php
-            }
-        ?>
+        <?php } ?>
      
         <table cellpadding=2 cellspacing=0>
             <tr>
-        <?php
-        foreach($choices as $key => $choice)
-            {
-            $value=$usekeys?$key:$choice;
-            $wrap++;
-            if($wrap > $columns)
-                {
-                $wrap = 1;
-                ?>
-                </tr>
-                <tr>
-                <?php
+            <?php
+            foreach ($choices as $key => $choice) {
+                $value = $usekeys ? $key : $choice;
+                $wrap++;
+                if ($wrap > $columns) {
+                    $wrap = 1;
+                    ?>
+                    </tr>
+                    <tr>
+                    <?php
                 }
                 ?>
-            <td width="1">
-                <input type="checkbox"
-                       name="<?php echo $name; ?>"
-                       value="<?php echo $value; ?>"
-                    <?php
-                    if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php }
-                    if(in_array($value, $currentvalues))
-                        {
-                        ?>
-                        checked
-                        <?php
-                        }?>
+                <td width="1">
+                    <input type="checkbox"
+                        name="<?php echo escape($name); ?>"
+                        value="<?php echo escape($value); ?>"
+                        id="<?php echo escape($name . '_' . $value); ?>"
+                        <?php if ($autosave) { ?>
+                            onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>');"
+                        <?php }
+                        if (in_array($value, $currentvalues)) { ?>
+                            checked
+                        <?php } ?>
                     >
-            </td>
-            <td><?php echo escape(i18n_get_translated($choice)); ?>&nbsp;</td>
-            <?php
+                </td>
+                <td>
+                    <label for="<?php echo escape($name . '_' . $value); ?>"><?php echo escape(i18n_get_translated($choice)); ?>&nbsp;</label>
+                </td>
+                <?php
             }
             ?>
             </tr>
