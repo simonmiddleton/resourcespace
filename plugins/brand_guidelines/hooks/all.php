@@ -1,4 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
+use function Montala\ResourceSpace\Plugins\BrandGuidelines\acl_can_view_brand_guidelines;
+
 function HookBrand_guidelinesAllInitialise()
     {
     include_once dirname(__DIR__) . '/include/brand_guidelines_functions.php';
