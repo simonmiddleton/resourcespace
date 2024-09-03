@@ -3714,7 +3714,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     $colorspace1 = "";
-    if (isset($actions["srgb"]))
+    if (isset($actions["srgb"]) && $actions["srgb"] !== false)
         {
         if (version_compare($imversion,"6.7.5-5",">="))
             {

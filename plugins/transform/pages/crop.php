@@ -182,7 +182,7 @@ $imgactions["tfactions"] = explode(",",$tfactions);
 $imgactions["quality"] = getval("quality",100,true);
 $imgactions["resolution"] = getval("resolution",0,true);
 $imgactions["gamma"] = getval("gamma",50,true);
-$imgactions["srgb"] = ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != ""));
+$imgactions["srgb"] = ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != "")) && $saveaction != "original";
 
 // Generate a preview image for the operation if it doesn't already exist
 $crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date("Ymd",time()) . $scramble_key) . ".jpg";
