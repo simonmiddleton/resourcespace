@@ -18,11 +18,23 @@ function acl_can_edit_brand_guidelines(): bool {
     return checkperm('a') || checkperm('bge');
 }
 
-function get_pages() {
+function get_pages(): array {
+    return ps_query("SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_PAGES)} FROM brand_guidelines_pages ORDER BY parent ASC, order_by ASC");
+}
+
+function get_page_contents(int $id): array {
     return ps_query(
-        'SELECT ' . columns_in('brand_guidelines_pages', null, 'brand_guidelines')
-        . 'FROM brand_guidelines_pages'
+        "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_CONTENT)} FROM brand_guidelines_content WHERE `page` = ? ORDER BY order_by ASC",
+        ['i', $id]
     );
+}
+
+/**
+ * Check if a pagem item is a section
+ * @param array{parent: int} $I Generic page data structure
+ */
+function is_section(array $I): bool {
+    return (int) $I['parent'] === 0;
 }
 
 function render_individual_menu() {
@@ -119,7 +131,7 @@ function render_block_colour_item(array $value) {
 }
 
 function render_navigation_item(array $item, bool $is_current = false) {
-    if ($item['parent'] == 0) {
+    if (is_section($item)) {
         printf('<h2>%s</h2>', escape(i18n_get_translated($item['name'])));
     } else {
         ?>

@@ -14,6 +14,8 @@ function HookBrand_guidelinesAllInitialise()
         1 => 'resource',
         2 => 'colour',
     ]);
+    define('BRAND_GUIDELINES_DB_COLS_PAGES', columns_in('brand_guidelines_pages', null, 'brand_guidelines'));
+    define('BRAND_GUIDELINES_DB_COLS_CONTENT', columns_in('brand_guidelines_content', null, 'brand_guidelines'));
     }
 
 function HookBrand_guidelinesAllHandleuserref() {

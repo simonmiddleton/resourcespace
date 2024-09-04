@@ -10,9 +10,19 @@ if (!acl_can_view_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
-$all_pages = get_node_tree(0, get_pages());
+$pages_db = get_pages();
+$all_pages = get_node_tree(0, $pages_db);
 $selected_page = getval('spage', 0, false, 'is_positive_int_loose');
+$available_pages = extract_node_options(array_filter($pages_db, fn($item) => !is_section($item)), true, true);
 
+if (isset($available_pages[$selected_page])) {
+    $selected_page_title = $available_pages[$selected_page];
+} else {
+    $selected_page = array_key_first($available_pages);
+    $selected_page_title = $available_pages[array_key_first($available_pages)];
+}
+
+$page_contents = get_page_contents((int) $selected_page);
 
 
 include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
@@ -71,7 +81,7 @@ render_content_menu();
     <div class="BasicsBox">
         <div class="guidelines-content">
             <div id="guidelines-content--overview">
-                <h1>Overview</h1>
+                <h1><?php echo escape($selected_page_title); ?></h1>
                 <p>Follow the guidelines below for our branding logos and colours.</p>
                 <?php render_new_content_button('add-new-content-1'); ?>
                 <h2>Full-width resource</h2>
