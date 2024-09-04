@@ -211,12 +211,14 @@ render_content_menu();
         // todo: break apart logic between different types of contextual menus
         if (target == 'menu-individual') {
             jQuery("#" + target).css({
+                display: 'none',
                 left: jQuery(".top-right-menu").position().left,
                 top: jQuery(".top-right-menu").position().top + 20
             });
         } else {
             let btn_id = e.getAttribute('id');
             jQuery("#" + target).css({
+                display: 'none',
                 left: jQuery("#" + btn_id).position().left - 16,
                 top: jQuery("#" + btn_id).position().top + 40
             });
