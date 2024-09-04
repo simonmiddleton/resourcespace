@@ -387,7 +387,7 @@ jQuery(document).ready(function()
                 //Uncheck All checkboxes
                 jQuery('.SearchTypeCheckbox').prop('checked',false);
                 // Check Featured Collections
-                selectedtypes=["FeaturedCollections"];
+                selectedtypes=["Collections"];
                 jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',true);
 
                 advSearchShowHideSection('Global',false);
@@ -717,6 +717,7 @@ for ($n=0;$n<count($fields);$n++)
     # Render this field
     render_search_field($fields[$n], $fields, $value, true, 'SearchWidth', false, array(), $searched_nodes, $resetform);
     }
+    debug("QUESTION NEXT n=".$n);
 ?>
 </div>
 
@@ -837,8 +838,13 @@ if($advanced_search_archive_select)
     <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchFeaturedCollectionsSectionHead" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>><?php echo escape($lang["themes"]) ; ?></h1>
     <div class="AdvancedSection" id="AdvancedSearchFeaturedCollectionsSection" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>>
     <?php
-    $fields=get_advanced_search_collection_fields();
-    for ($n=0;$n<count($fields);$n++)
+    
+    // Questions may have already be rendered for earlier sections
+    // If so then note the starting number for any questions yet to be rendered in subsequent secions
+    $start_n = $n ?? 0; 
+
+    $fields=array_merge($fields,get_advanced_search_collection_fields());
+    for ($n=$start_n;$n<count($fields);$n++)
         {
         # Work out a default value
         if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
