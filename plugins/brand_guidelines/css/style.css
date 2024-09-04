@@ -20,6 +20,10 @@
     padding: 3px 0 3px 15px;
 }
 
+.guidelines-sidebar h2:last-of-type {
+    cursor: pointer;
+}
+
 .guidelines-sidebar h3.current {
     background: #00000012;
 }
