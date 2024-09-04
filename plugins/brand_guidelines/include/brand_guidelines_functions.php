@@ -30,7 +30,7 @@ function get_page_contents(int $id): array {
 }
 
 /**
- * Check if a pagem item is a section
+ * Check if a page item is a section
  * @param array{parent: int} $I Generic page data structure
  */
 function is_section(array $I): bool {

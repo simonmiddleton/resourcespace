@@ -82,6 +82,11 @@ render_content_menu();
         <div class="guidelines-content">
             <div id="guidelines-content--overview">
                 <h1><?php echo escape($selected_page_title); ?></h1>
+                <?php
+                foreach ($page_contents as $page_content) {
+                    echo '<h3>(raw content data structure - debug)</h3><pre>';print_r($page_content);echo '</pre>';
+                }
+                ?>
                 <p>Follow the guidelines below for our branding logos and colours.</p>
                 <?php render_new_content_button('add-new-content-1'); ?>
                 <h2>Full-width resource</h2>
@@ -190,10 +195,6 @@ render_content_menu();
     </div>
 </div>
 <script>
-    function scrollToElement(id) {
-        document.getElementById(id).scrollIntoView({ block: "center", behavior: 'smooth' });
-    }
-
     function showOptionsMenu(e, target) {
         // todo: break apart logic between different types of contextual menus
         if (target == 'menu-individual') {
