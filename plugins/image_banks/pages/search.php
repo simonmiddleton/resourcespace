@@ -13,16 +13,20 @@ include_once "{$rs_root}/include/authenticate.php";
 
 $search = getval("search", "");
 $image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
+
+$per_page = (int) getval("per_page", $default_perpage, true);
+$order_by = getval('order_by', '', false);
 $search_params = array(
     "search"                 => $search,
     "image_bank_provider_id" => $image_bank_provider_id,
     "search_image_banks"     => true,
+    "order_by"               => $order_by,
+    "per_page"               => $per_page
 );
 
 // Paging functionality
 $url = generateURL("{$baseurl_short}pages/search.php", $search_params);
 $offset = (int) getval("offset", 0, true);
-$per_page = (int) getval("per_page", $default_perpage, true);
 rs_setcookie("per_page", $per_page, 0, "", "", false, false);
 $curpage = floor($offset / $per_page) + 1;
 // End of Paging functionality
@@ -60,6 +64,28 @@ $results_error = $results->getError();
 $results_warning = $results->getWarning();
 $totalpages = ceil($results->total / $per_page);
 
+$default_sort_order = $default_sort;
+$rel = $lang[$default_sort] ?? $lang["relevance"];
+$orderFields = array($default_sort_order => $rel);
+if ($popularity_sort) {
+    $orderFields['popularity'] = $lang['popularity'];
+}
+if ($orderbyrating) {
+    $orderFields['rating'] = $lang['rating'];
+}
+if ($date_column) {
+    $orderFields['date'] = $lang['date'];
+}
+if ($colour_sort) {
+    $orderFields['colour'] = $lang['colour'];
+}
+if ($order_by_resource_id) {
+    $orderFields['resourceid'] = $lang['resourceid'];
+}
+$orderFields['resourcetype'] = $lang['type'];
+
+$orderFields['modified'] = $lang['modified'];
+
 include_once "{$rs_root}/include/header.php";
 ?>
 <div class="BasicsBox">
@@ -70,6 +96,22 @@ include_once "{$rs_root}/include/header.php";
             </div>
             <div class="InpageNavLeftBlock AlignLeftBlockText">
                 <span class="Selected"><?php echo escape($lang["image_banks_image_bank"]); ?>: </span><?php echo escape($provider_name); ?>
+            </div>
+            <div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
+            <select name="order_by" onchange="CentralSpaceLoad(this.value, true);" aria-label="<?php echo escape($lang["sortorder"]) ?>">
+            <?php
+            foreach ($orderFields as $orderfield => $ordername) {
+            $value = generateURL(
+                "{$baseurl_short}pages/search.php",
+                $search_params,
+                ["order_by" => $orderfield]
+            );
+            $extra_attributes = $order_by === $orderfield ? ' selected' : '';
+
+            echo render_dropdown_option($value, $ordername, [], $extra_attributes);
+            }
+            ?>
+            </select>
             </div>
             <div class="InpageNavLeftBlock">
                 <select name="per_page" onchange="CentralSpaceLoad(this.value, true);">

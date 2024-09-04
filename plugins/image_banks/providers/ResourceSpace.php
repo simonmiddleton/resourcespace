@@ -48,6 +48,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
     /** @inheritdoc */
     public function runSearch(string $keywords, int $per_page = 24, int $page = 1): ProviderSearchResults
         {
+        $order_by = $GLOBALS['order_by'];
         $per_page = $per_page > 0 ? $per_page : $GLOBALS['default_perpage'];
         $page = $page > 0 ? $page : 1;
         $offset = ($page - 1) * $per_page;
@@ -56,8 +57,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             {
             $instance = $this->getSelectedSystemInstance()->toArray();
             $instance_cfg = $instance['configuration'];
-
-            $cache_id = md5("{$instance['baseURL']}--{$keywords}--{$per_page}--{$page}");
+            $cache_id = md5("{$instance['baseURL']}--{$keywords}--{$order_by}--{$per_page}--{$page}");
             $api_cached_results = $this->getCache($cache_id, 1);
             if($api_cached_results)
                 {
@@ -70,6 +70,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                     [
                         'search' => $keywords,
                         'fetchrows' => "{$offset},{$per_page}",
+                        'order_by' => $order_by
                     ]
                 );
                 $this->setCache($cache_id, json_encode($api_results));
