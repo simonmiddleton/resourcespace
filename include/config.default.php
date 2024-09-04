@@ -3037,7 +3037,7 @@ $field_column_string_separator = ',';
 // $uploader_plugins[] = "Webcam";
 // $uploader_plugins[] = "OneDrive";
 
-$uploader_plugins = [];
+$uploader_plugins = ["Webcam"];
 
 // The valid Companion server URL
 $uppy_companion_url = "";
