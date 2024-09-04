@@ -20,6 +20,7 @@ render_individual_menu();
 render_content_menu();
 ?>
 <div class="guidelines-container">
+    <button><?php echo escape($lang['brand_guidelines_view_table_of_content']); ?></button>
     <nav class="guidelines-sidebar">
     <?php
     foreach ($all_pages as $s => $section) {

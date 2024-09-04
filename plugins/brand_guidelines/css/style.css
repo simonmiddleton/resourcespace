@@ -188,3 +188,36 @@
 .top-right-menu:hover {
     background: #dfdfdf;
 }
+
+@media(max-width:600px) {
+    .guidelines-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .guidelines-content {
+        /* margin-top: 10px; */
+        max-width: 100%;
+    }
+
+    .guidelines-sidebar {
+        margin: unset;
+    }
+
+    .image-full-width {
+        width: 100%;
+        /* height: 200px; */
+    }
+
+    .image-half-width img {
+        width: 100%;
+    }
+
+    .paragraph-half-width {
+        width: 100%;
+    }
+
+    .image-container {
+        flex-wrap: wrap;
+    }
+}

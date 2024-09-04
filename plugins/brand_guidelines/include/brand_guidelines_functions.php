@@ -105,11 +105,14 @@ function render_block_colour_item(array $value) {
         <div class="guidelines-colour-block--details">
             <span><?php echo escape($value['name']); ?></span>
             <br>
-            <div class="type">HEX:</div><span>#<?php echo escape($value['hex']); ?></span>
+            <div class="type">HEX:</div>
+            <span>#<?php echo escape($value['hex']); ?></span>
             <br>
-            <div class="type">RGB:</div><span><?php echo escape(implode(', ', $value['rgb'])); ?></span>
+            <div class="type">RGB:</div>
+            <span><?php echo escape(implode(', ', $value['rgb'])); ?></span>
             <br>
-            <div class="type">CMYK:</div><span><?php echo escape(implode(', ', $value['cmyk'])); ?></span>
+            <div class="type">CMYK:</div>
+            <span><?php echo escape(implode(', ', $value['cmyk'])); ?></span>
         </div>
     </div>
     <?php
