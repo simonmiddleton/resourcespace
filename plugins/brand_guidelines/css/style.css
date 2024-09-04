@@ -189,10 +189,22 @@
     background: #dfdfdf;
 }
 
+button#guidelines-toc {
+    display: none;
+}
+
 @media(max-width:600px) {
     .guidelines-container {
         display: flex;
         flex-direction: column;
+    }
+
+    button#guidelines-toc {
+        display: block;
+    }
+
+    button#guidelines-toc:hover {
+        background-color: #1679c0;
     }
 
     .guidelines-content {
@@ -201,6 +213,7 @@
     }
 
     .guidelines-sidebar {
+        display: none;
         margin: unset;
     }
 

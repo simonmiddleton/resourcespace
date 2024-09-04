@@ -20,7 +20,10 @@ render_individual_menu();
 render_content_menu();
 ?>
 <div class="guidelines-container">
-    <button><?php echo escape($lang['brand_guidelines_view_table_of_content']); ?></button>
+    <button id="guidelines-toc" onclick="jQuery('nav.guidelines-sidebar').slideToggle(150);">
+        <i class="fa-solid fa-bars"></i>
+        <span> <?php echo escape($lang['brand_guidelines_view_table_of_content']); ?></span>
+    </button>
     <nav class="guidelines-sidebar">
     <?php
     foreach ($all_pages as $s => $section) {
