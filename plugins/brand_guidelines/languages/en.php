@@ -9,3 +9,5 @@ $lang['brand_guidelines_new_content'] = 'Add new content';
 $lang['brand_guidelines_new_page'] = '+ New page';
 $lang['brand_guidelines_new_section'] = '+ New section';
 $lang['brand_guidelines_view_table_of_content'] = 'View table of content';
+$lang['brand_guidelines_new_section_title'] = 'Create new section';
+$lang['brand_guidelines_new_page_title'] = 'Create new page';

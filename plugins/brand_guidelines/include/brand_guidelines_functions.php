@@ -29,6 +29,10 @@ function get_page_contents(int $id): array {
     );
 }
 
+function new_page_record() {
+    die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
+}
+
 /**
  * Check if a page item is a section
  * @param array{parent: int} $I Generic page data structure
@@ -137,17 +141,37 @@ function render_block_colour_item(array $value) {
 }
 
 function render_navigation_item(array $item, bool $is_current = false) {
-    if (is_section($item)) {
-        printf('<h2>%s</h2>', escape(i18n_get_translated($item['name'])));
-    } else {
-        ?>
-        <h3
-            <?php echo $is_current ? 'class="current"' : ''; ?> 
-            onclick="CentralSpaceLoad('<?php echo generateURL(
+    if ($item['parent'] > 0 && $item['ref'] !== 0) {
+        // Table of content navigation
+        $onclick = sprintf(
+            'return CentralSpaceLoad(\'%s\');',
+            generateURL(
                 "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
                 ['spage' => $item['ref']]
-            ); ?>');"
-        ><?php echo escape(i18n_get_translated($item['name'])); ?></h3>
+            )
+        );
+    } elseif($item['ref'] === 0) {
+        // Manage table of content
+        $onclick = sprintf(
+            'return ModalLoad(\'%s\', true, true);',
+            generateURL(
+                "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage.php",
+                $item['parent'] > 0 ? ['parent' => $item['parent']] : []
+            )
+        );
+    } else {
+        $onclick = '';
+    }
+
+    if (is_section($item)) {
+        ?>
+        <h2 onclick="<?php echo $onclick; ?>"><?php echo escape(i18n_get_translated($item['name'])); ?></h2>
+        <?php
+    } else {
+        ?>
+        <h3 <?php echo $is_current ? 'class="current"' : ''; ?> onclick="<?php echo $onclick; ?>"><?php
+                echo escape(i18n_get_translated($item['name']));
+        ?></h3>
         <?php
     }
 }

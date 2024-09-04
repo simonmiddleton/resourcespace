@@ -7,6 +7,7 @@ namespace Montala\ResourceSpace\Plugins\BrandGuidelines;
 include_once dirname(__DIR__, 3) . '/include/boot.php';
 include_once RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
 if (!acl_can_view_brand_guidelines()) {
+    http_response_code(401);
     exit(escape($lang['error-permissiondenied']));
 }
 
