@@ -84,6 +84,9 @@ function render_content_menu() {
 }
 
 function render_new_content_button(string $id) {
+    if (!acl_can_edit_brand_guidelines()) {
+        return;
+    }
     ?>
     <div id="<?php echo escape($id); ?>" class="add-new-content-container" onclick="showOptionsMenu(this, 'menu-content');">
         <i class="fa-solid fa-plus"></i>
@@ -93,6 +96,9 @@ function render_new_content_button(string $id) {
 }
 
 function render_new_block_element_button(string $class) {
+    if (!acl_can_edit_brand_guidelines()) {
+        return;
+    }
     ?>
     <div class="<?php echo escape($class); ?>">
         <i class="fa-solid fa-plus"></i>

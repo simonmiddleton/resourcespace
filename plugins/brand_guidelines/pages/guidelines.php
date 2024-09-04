@@ -64,7 +64,7 @@ render_content_menu();
                     );
                 }
             }
-        } else {
+        } elseif (acl_can_edit_brand_guidelines()) {
             render_navigation_item(
                 [
                     'ref' => 0,
