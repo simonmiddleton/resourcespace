@@ -410,7 +410,6 @@ if ($saveaction != '' && enforcePostRequest(false))
                 $replace_resource_preserve_option = true;
                 }
 
-            //$keep_original = getval("keep_original", "") != "";
             $success = replace_resource_file($ref,$newpath,true,false,$keep_original);
 
             $replace_resource_preserve_option = $replace_resource_preserve_option_original;
