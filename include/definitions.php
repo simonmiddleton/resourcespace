@@ -902,3 +902,37 @@ const COLLECTION_FRAME_HEIGHT=153;
 const DOWNLOAD_FILE_LIFETIME=14;
 
 $max_collection_thumbs=150;
+
+$languages["en"]="British English";
+$languages["en-US"]="American English";
+$languages["ar"]="العربية";
+$languages["id"]="Bahasa Indonesia"; # Indonesian
+$languages["ca"]="Català"; # Catalan
+$languages["cs"]="čeština"; # Czech
+$languages["da"]="Dansk"; # Danish
+$languages["de"]="Deutsch"; # German
+$languages["el"]="Ελληνικά"; # Greek
+$languages["es"]="Español"; # Spanish
+$languages["es-AR"]="Español (Argentina)";
+$languages["fi"]="Suomi"; # Finnish
+$languages["fr"]="Français"; # French
+$languages["hi"]="आधुनिक मानक हिन्दी"; # Hindi
+$languages["hr"]="Hrvatski"; # Croatian
+$languages["it"]="Italiano"; # Italian
+$languages["jp"]="日本語"; # Japanese
+$languages["ko"]="한국어"; # Korean
+$languages["nl"]="Nederlands"; # Dutch
+$languages["no"]="Norsk"; # Norwegian
+$languages["pl"]="Polski"; # Polish
+$languages["pt"]="Português"; # Portuguese
+$languages["pt-BR"]="Português do Brasil"; # Brazilian Portuguese
+$languages["ro"]="Limba română"; # Romanian
+$languages["ru"]="Русский язык"; # Russian
+$languages["sk"]="Slovenčina"; # Slovak
+$languages["sv"]="Svenska"; # Swedish
+$languages["tr"]="Türkçe"; # Turkish
+$languages["uk"]="українська мова"; # Ukranian
+$languages["zh-CN"]="简体字"; # Simplified Chinese
+
+# English stop words
+$noadd=array("", "a","the","this","then","another","is","with","in","and","where","how","on","of","to", "from", "at", "for", "-", "by", "be");
