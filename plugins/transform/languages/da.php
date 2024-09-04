@@ -79,3 +79,4 @@ $lang["error_crop_invalid"]='Vælg venligst en region af billedet';
 $lang["px"]='px';
 $lang["plugin-transform-title"]='Billedværktøjer (transformer)';
 $lang["plugin-transform-desc"]='Muliggør oprettelse af beskårne og skalerede alternative billeder (jCrop med mobilunderstøttelse)';
+$lang["use_system_icc_profile_config"]='Brug systemkonfiguration til ICC-profilbehandling. Vil tilsidesætte sRGB-indstillingerne ovenfor.';
