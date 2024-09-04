@@ -1023,12 +1023,12 @@ function auto_create_user_account($hash="")
             }
         }
 
-    $newusername = make_username(getval("name",""));
-
     // Check valid email
     if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
         return $lang['setup-emailerr'];
     }
+
+    $newusername = make_username(getval("name",""),$user_email);
 
     #check if account already exists
     $check=ps_value("SELECT email value FROM user WHERE email = ?",["s",$user_email],"");
@@ -1038,7 +1038,6 @@ function auto_create_user_account($hash="")
         }
 
     # Prepare to create the user.
-    $email = trim(getval("email", "")) ;
     $password = make_password();
     $password = rs_password_hash("RS{$newusername}{$password}");
 
@@ -1060,7 +1059,7 @@ function auto_create_user_account($hash="")
             {
             // If a group is not specified the variables don't get set correctly so we need to correct this
             if (is_numeric($domain)){$domain=$set_usergroup;$set_usergroup="";}
-            if (substr(strtolower($email),strlen($email)-strlen($domain)-1)==("@" . strtolower($domain)))
+            if (substr(strtolower($user_email),strlen($user_email)-strlen($domain)-1)==("@" . strtolower($domain)))
                 {
                 # E-mail domain match.
                 $approve=true;
@@ -1078,7 +1077,7 @@ function auto_create_user_account($hash="")
         "s",$newusername,
         "s",$password,
         "s",$name,
-        "s",$email,
+        "s",$user_email,
         "i",$usergroup,
         "s",$customContents . (trim($comment) != "" ? "\n" . $comment : ""),
         "i",($approve ? 1 : 0),
@@ -1159,7 +1158,7 @@ function auto_create_user_account($hash="")
         global $user_pref_user_management_notifications;
         
         $templatevars['name']=getval("name","");
-        $templatevars['email']=getval("email","");
+        $templatevars['email']=$user_email;
         $templatevars['userrequestcomment']=strip_tags(getval("userrequestcomment",""));
         $templatevars['userrequestcustom']=strip_tags($customContents);
         $url = $baseurl . "?u=" . $new;
@@ -1203,7 +1202,7 @@ function auto_create_user_account($hash="")
 
     // Send a confirmation e-mail to requester
     send_mail(
-        $email,
+        $user_email,
         "{$applicationname}: {$lang['account_request_label']}",
         $lang['account_request_confirmation_email_to_requester']);
 
