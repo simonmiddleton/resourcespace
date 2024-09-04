@@ -39,30 +39,40 @@ render_content_menu();
     foreach ($all_pages as $s => $section) {
         render_navigation_item($section, false);
 
-        $section_children = $section['children'] ?? [];
-        foreach ($section_children as $i => $page) {
-            render_navigation_item(
-                $page,
-                (
-                    $selected_page == $page['ref']
-                    || (
-                        $selected_page == 0
-                        && $s === array_key_first($all_pages)
-                        && $i === array_key_first($section_children)
-                    )
-                )
-            );
-
-            if (acl_can_edit_brand_guidelines() && $i === array_key_last($section_children)) {
+        if (isset($section['children'])) {
+            foreach ($section['children'] as $i => $page) {
                 render_navigation_item(
-                    [
-                        'ref' => 0,
-                        'name' => $lang['brand_guidelines_new_page'],
-                        'parent' => $section['ref'],
-                    ],
-                    false
+                    $page,
+                    (
+                        $selected_page == $page['ref']
+                        || (
+                            $selected_page == 0
+                            && $s === array_key_first($all_pages)
+                            && $i === array_key_first($section['children'])
+                        )
+                    )
                 );
+
+                if (acl_can_edit_brand_guidelines() && $i === array_key_last($section['children'])) {
+                    render_navigation_item(
+                        [
+                            'ref' => 0,
+                            'name' => $lang['brand_guidelines_new_page'],
+                            'parent' => $section['ref'],
+                        ],
+                        false
+                    );
+                }
             }
+        } else {
+            render_navigation_item(
+                [
+                    'ref' => 0,
+                    'name' => $lang['brand_guidelines_new_page'],
+                    'parent' => $section['ref'],
+                ],
+                false
+            );
         }
     }
 
@@ -86,7 +96,9 @@ render_content_menu();
                 foreach ($page_contents as $page_content) {
                     echo '<h3>(raw content data structure - debug)</h3><pre>';print_r($page_content);echo '</pre>';
                 }
+                render_new_content_button('add-new-content-end');
                 ?>
+                <br><br><hr><p>Mock-up below</p><hr>
                 <p>Follow the guidelines below for our branding logos and colours.</p>
                 <?php render_new_content_button('add-new-content-1'); ?>
                 <h2>Full-width resource</h2>
