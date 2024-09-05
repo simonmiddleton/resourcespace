@@ -30,7 +30,7 @@ function get_page_contents(int $id): array {
 }
 
 function new_page_record() {
-    die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
+    echo '<pre>';print_r($GLOBALS['processed_toc_fields']);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
 }
 
 /**

@@ -9,7 +9,7 @@ $name        = getval('name', '');
 $email       = getval('email', '');
 $description = getval('description', '');
 $save        = getval("save","") != "" && enforcePostRequest(false);
-$processed_rr_cfields = process_custom_fields_submission($custom_researchrequest_fields, $save);
+$processed_rr_cfields = process_custom_fields_submission($custom_researchrequest_fields, $save, []);
 
 if ($save)
     {

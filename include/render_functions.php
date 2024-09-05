@@ -3437,7 +3437,7 @@ function render_custom_fields(array $cfs)
 
             $required_html = ($field["required"] ? "<sup>*</sup>" : "");
             ?>
-            <label for="custom_<?php echo $field_id; ?>"><?php echo escape(i18n_get_translated($field["title"])) . $required_html; ?></label>
+            <label for="<?php echo $field_id; ?>"><?php echo escape(i18n_get_translated($field["title"])) . $required_html; ?></label>
             <?php
             switch($field["type"])
                 {
