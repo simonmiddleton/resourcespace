@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Montala\ResourceSpace\Plugins\BrandGuidelines;
 
-include_once dirname(__DIR__, 3) . '/include/boot.php';
+include_once dirname(__DIR__, 4) . '/include/boot.php';
 include_once RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
 if (!acl_can_edit_brand_guidelines()) {
     http_response_code(401);
     exit(escape($lang['error-permissiondenied']));
 }
 
-$form_action = "{$baseurl_short}plugins/brand_guidelines/pages/manage.php";
+$form_action = "{$baseurl_short}plugins/brand_guidelines/pages/manage/toc.php";
 $parent = (int) getval('parent', 0, false, 'is_positive_int_loose');
 // todo: ensure parent is never a page
 

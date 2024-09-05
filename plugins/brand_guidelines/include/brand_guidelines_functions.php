@@ -155,7 +155,7 @@ function render_navigation_item(array $item, bool $is_current = false) {
         $onclick = sprintf(
             'return ModalLoad(\'%s\', true, true);',
             generateURL(
-                "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage.php",
+                "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/toc.php",
                 $item['parent'] > 0 ? ['parent' => $item['parent']] : []
             )
         );
