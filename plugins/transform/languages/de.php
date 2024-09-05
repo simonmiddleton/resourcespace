@@ -84,3 +84,4 @@ $lang["error_crop_invalid"]='Bitte wählen Sie einen Bereich des Bildes aus';
 $lang["transform_preview_gen_error"]='Fehler beim Generieren der Transformationsvorschau.';
 $lang["plugin-transform-title"]='Bildwerkzeuge (transformieren)';
 $lang["plugin-transform-desc"]='Ermöglicht die Erstellung von zugeschnittenen und skalierten alternativen Bildern (jCrop mit Mobilunterstützung)';
+$lang["use_system_icc_profile_config"]='Systemkonfiguration für die ICC-Profilverarbeitung verwenden. Überschreibt die oben genannten sRGB-Optionen.';

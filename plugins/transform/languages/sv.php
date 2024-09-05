@@ -85,3 +85,4 @@ $lang["transform_preset_sizes"]='Välj från fördefinierad målstorlek';
 $lang["error_crop_invalid"]='Vänligen välj en region av bilden';
 $lang["plugin-transform-title"]='Bildverktyg (transformera)';
 $lang["plugin-transform-desc"]='Möjliggör skapande av beskurna och skalade alternativa bilder (jCrop med mobilt stöd)';
+$lang["use_system_icc_profile_config"]='Använd systemkonfiguration för ICC-profilbearbetning. Kommer att åsidosätta sRGB-alternativen ovan.';

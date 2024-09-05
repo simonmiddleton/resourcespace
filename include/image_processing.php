@@ -3662,6 +3662,12 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
                 }
             }
         }
+    elseif (isset($actions['icc_profile']) && is_array($actions['icc_profile']))
+        {
+        $profile .= $actions['icc_profile']['command'];
+        $cmd_args = array_merge($cmd_args,  $actions['icc_profile']['cmdparams']);
+        unset($actions["srgb"]);
+        }
     elseif (!isset($actions["rgb"]) && !$imagemagick_preserve_profiles)
         {
         $cmd_args['%imagemagick_colorspace'] = $imagemagick_colorspace;
@@ -3708,7 +3714,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     $colorspace1 = "";
-    if (isset($actions["srgb"]))
+    if (isset($actions["srgb"]) && $actions["srgb"] !== false)
         {
         if (version_compare($imversion,"6.7.5-5",">="))
             {
@@ -4292,4 +4298,35 @@ function can_apply_icc_profile(string $original_file_path): bool
         }
 
     return true;
+    }
+
+/**
+ * Check if system is using ICC profiles and prepare ImageMagick command for use by transform_file() to enable
+ * system wide configuration for $icc_extraction to be applied when transforming a file, such as by format chooser or image tools.
+ *
+ * @param  int      $ref                  Resource id.
+ * @param  string   $original_file_path   Path to the original file for the resource.
+ */
+function transform_apply_icc_profile(int $ref, string $original_file_path): array
+    {
+    if (!can_apply_icc_profile($original_file_path))
+        {
+        return array();
+        }
+
+    $iccpath = get_resource_path($ref, true, '', false, 'icc', -1, 1, false, "", -1);
+    if (!file_exists($iccpath))
+        {
+        return array();
+        }
+    
+    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile;
+    $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+
+    
+    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");
+    $transform_actions['icc_profile']['cmdparams']["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'is_valid_rs_path');
+    $transform_actions['icc_profile']['cmdparams']["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'file_exists');
+
+    return $transform_actions;
     }

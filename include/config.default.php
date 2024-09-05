@@ -217,36 +217,6 @@ $custom_font='';
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)
-$languages["en"]="British English";
-$languages["en-US"]="American English";
-$languages["ar"]="العربية";
-$languages["id"]="Bahasa Indonesia"; # Indonesian
-$languages["ca"]="Català"; # Catalan
-$languages["cs"]="čeština"; # Czech
-$languages["da"]="Dansk"; # Danish
-$languages["de"]="Deutsch"; # German
-$languages["el"]="Ελληνικά"; # Greek
-$languages["es"]="Español"; # Spanish
-$languages["es-AR"]="Español (Argentina)";
-$languages["fi"]="Suomi"; # Finnish
-$languages["fr"]="Français"; # French
-$languages["hi"]="आधुनिक मानक हिन्दी"; # Hindi
-$languages["hr"]="Hrvatski"; # Croatian
-$languages["it"]="Italiano"; # Italian
-$languages["jp"]="日本語"; # Japanese
-$languages["ko"]="한국어"; # Korean
-$languages["nl"]="Nederlands"; # Dutch
-$languages["no"]="Norsk"; # Norwegian
-$languages["pl"]="Polski"; # Polish
-$languages["pt"]="Português"; # Portuguese
-$languages["pt-BR"]="Português do Brasil"; # Brazilian Portuguese
-$languages["ro"]="Limba română"; # Romanian
-$languages["ru"]="Русский язык"; # Russian
-$languages["sk"]="Slovenčina"; # Slovak
-$languages["sv"]="Svenska"; # Swedish
-$languages["tr"]="Türkçe"; # Turkish
-$languages["zh-CN"]="简体字"; # Simplified Chinese
-
 
 # Disable language selection options (Includes Browser Detection for language)
 $disable_languages=false;
@@ -259,18 +229,6 @@ $browser_language=true;
 
 # Can users change passwords?
 $allow_password_change=true;
-
-# search params
-# Common keywords to ignore both when searching and when indexing.
-# Copy this block to config.php and uncomment the languages you would like to use.
-
-$noadd=array();
-
-# English stop words
-$noadd=array_merge($noadd, array("", "a","the","this","then","another","is","with","in","and","where","how","on","of","to", "from", "at", "for", "-", "by", "be"));
-
-# Swedish stop words (copied from http://snowball.tartarus.org/algorithms/swedish/stop.txt 20101124)
-#$noadd=array_merge($noadd, array("och", "det", "att", "i", "en", "jag", "hon", "som", "han", "på", "den", "med", "var", "sig", "för", "så", "till", "är", "men", "ett", "om", "hade", "de", "av", "icke", "mig", "du", "henne", "då", "sin", "nu", "har", "inte", "hans", "honom", "skulle", "hennes", "där", "min", "man", "ej", "vid", "kunde", "något", "från", "ut", "när", "efter", "upp", "vi", "dem", "vara", "vad", "över", "än", "dig", "kan", "sina", "här", "ha", "mot", "alla", "under", "någon", "eller", "allt", "mycket", "sedan", "ju", "denna", "själv", "detta", "åt", "utan", "varit", "hur", "ingen", "mitt", "ni", "bli", "blev", "oss", "din", "dessa", "några", "deras", "blir", "mina", "samma", "vilken", "er", "sådan", "vår", "blivit", "dess", "inom", "mellan", "sånt", "varför", "varje", "vilka", "ditt", "vem", "vilket", "sitta", "sådana", "vart", "dina", "vars", "vårt", "våra", "ert", "era", "vilkas"));
 
 # How many results trigger the 'suggestion' feature, -1 disables the feature
 # WARNING - there is a significant performance penalty for enabling this feature as it attempts to find the most popular keywords for the entire result set.
@@ -3079,7 +3037,7 @@ $field_column_string_separator = ',';
 // $uploader_plugins[] = "Webcam";
 // $uploader_plugins[] = "OneDrive";
 
-$uploader_plugins = [];
+$uploader_plugins = ["Webcam"];
 
 // The valid Companion server URL
 $uppy_companion_url = "";

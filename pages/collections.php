@@ -882,16 +882,6 @@ else
     <?php 
     # Loop through saved searches
     if (is_null($cinfo['savedsearch']) && ($k=='' || $internal_share_access)) {
-        // Don't include saved search item in result if this is a smart collection  
-
-        # Setting the save search icon
-        $folderurl = $baseurl . "/gfx/images/";
-        $iconurl = $folderurl . "save-search" . "_" . $language . ".gif";
-
-        if (!file_exists($iconurl)) {
-            # A language specific icon is not found, use the default icon
-            $iconurl = $folderurl . "save-search.gif";
-        }
 
         for ($n = 0; $n < count($searches); $n++) {
             $ref = $searches[$n]["ref"];
@@ -902,9 +892,7 @@ else
                 <table border="0" class="CollectionResourceAlign">
                     <tr>
                         <td>
-                            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>">
-                                <img alt="" border=0 width=56 height=75 src="<?php echo $iconurl?>"/>
-                            </a>
+                            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><i class="fa fa-magnifying-glass fa-4x"></i></a>
                         </td>
                     </tr>
                 </table>

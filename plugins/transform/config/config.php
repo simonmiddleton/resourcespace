@@ -16,6 +16,7 @@ $cropper_restricteduse_groups=array();
 $cropper_resolutions=array();
 $cropper_quality_select = false;
 $cropper_srgb_option = false;
+$use_system_icc_profile_config = false;
 $cropper_preset_sizes = array(
     "Facebook"  => array(
         "Profile Photo"             => "180x180",

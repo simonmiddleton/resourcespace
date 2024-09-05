@@ -506,7 +506,6 @@ if (getval("regen","") != "" && enforcePostRequest($ajax)) {
             $onload_message["text"] = $lang["recreatepreviews_pending"];
             break;
         case 1:
-            $onload_message["text"] = $lang["success"];
             break;
         case 0:
         default:
@@ -1027,7 +1026,6 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
                 $onload_message["text"] = $lang["recreatepreviews_pending"];
                 break;
             case 1:
-                $onload_message["text"] = $lang["success"];
                 break;
             case 0:
             default:

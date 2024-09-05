@@ -77,3 +77,4 @@ $lang["transform_preset_sizes"]='Vyberte z předdefinované cílové velikosti';
 $lang["error_crop_invalid"]='Vyberte prosím oblast obrázku';
 $lang["plugin-transform-title"]='Nástroje pro obrázky (transformace)';
 $lang["plugin-transform-desc"]='Umožňuje vytváření oříznutých a změněných alternativních obrázků (jCrop s podporou mobilních zařízení)';
+$lang["use_system_icc_profile_config"]='Použít systémovou konfiguraci pro zpracování ICC profilů. Přepíše výše uvedené možnosti sRGB.';

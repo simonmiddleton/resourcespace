@@ -77,3 +77,4 @@ $lang["px"]='px';
 $lang["rotation90"]='90 stupnjeva udesno';
 $lang["plugin-transform-title"]='Alati za slike (transformacija)';
 $lang["plugin-transform-desc"]='Omogućuje stvaranje izrezanih i skaliranih alternativnih slika (jCrop s podrškom za mobilne uređaje)';
+$lang["use_system_icc_profile_config"]='Koristi sistemsku konfiguraciju za obradu ICC profila. Prepisat će gore navedene sRGB opcije.';

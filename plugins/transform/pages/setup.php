@@ -27,6 +27,7 @@ $page_def[] = config_add_text_list_input('cropper_resolutions', $lang['cropper_r
 $page_def[] = config_add_boolean_select('cropper_quality_select', $lang['cropper_quality_select']);
 $page_def[] = config_add_boolean_select('cropper_jpeg_rgb', $lang['cropper_jpeg_rgb']);
 $page_def[] = config_add_boolean_select('cropper_srgb_option', $lang['cropper_srgb_option']);
+$page_def[] = config_add_boolean_select('use_system_icc_profile_config', $lang['use_system_icc_profile_config']);
 
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);

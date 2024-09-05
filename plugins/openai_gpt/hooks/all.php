@@ -203,6 +203,10 @@ function HookOpenai_gptAllAfterpreviewcreation($ref, $alternative): bool
         return false;
         }
 
+    $fields = get_resource_field_data($ref, false);
+    $fields_with_values = array_filter($fields, function ($f) { return isset($f['value']) && $f['value'] != '';});
+    $fields_with_values = array_column($fields_with_values, 'ref');
+
     // Do any fields use image as input?
     $ai_gpt_image_fields = ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE openai_gpt_input_field = -1");
     foreach($ai_gpt_image_fields as $ai_gpt_image_field)
@@ -212,12 +216,20 @@ function HookOpenai_gptAllAfterpreviewcreation($ref, $alternative): bool
             {
             continue;
             }
+
         // Get the preview file
         $file=get_resource_path($ref,true,"pre");
         if (!file_exists($file))
             {
             return false;
             }
+
+        // Only update this field if it is empty.
+        if (in_array($ai_gpt_image_field['ref'], $fields_with_values))
+            {
+            continue;
+            }
+
         $success = openai_gpt_update_field($ref,$ai_gpt_image_field, [],$file);
         }
     return $success[$ref] ?? false;

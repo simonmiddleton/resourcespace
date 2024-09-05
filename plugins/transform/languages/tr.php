@@ -77,3 +77,4 @@ $lang["transform_preset_sizes"]='Önceden tanımlanmış hedef boyutunu seçin';
 $lang["error_crop_invalid"]='Lütfen görüntünün bir bölgesini seçin';
 $lang["plugin-transform-title"]='Görüntü Araçları (dönüştür)';
 $lang["plugin-transform-desc"]='Kırpılmış ve ölçeklendirilmiş alternatif görüntülerin oluşturulmasını sağlar (jCrop Mobil destekli)';
+$lang["use_system_icc_profile_config"]='ICC profil işleme için sistem yapılandırmasını kullan. Yukarıdaki sRGB seçeneklerini geçersiz kılacaktır.';

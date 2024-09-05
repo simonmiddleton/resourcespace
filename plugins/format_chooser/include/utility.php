@@ -136,6 +136,8 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
         $transform_actions['profile'][] = ['strip' => false, 'path' => $basePath . $profile];
         }
 
+    $transform_actions = array_merge($transform_actions, transform_apply_icc_profile($resource['ref'], $originalPath));
+
     if(!transform_file($path, $target, $transform_actions))
         {
         die('Unable to transform file!');

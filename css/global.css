@@ -2418,6 +2418,10 @@ a.BrowseRefresh{
     vertical-align: top;
 }
 
+/* Fixes for label alignment with checkboxes */
+.Question table td:has(> input[type="checkbox"]) { vertical-align: bottom; }
+.Question td > label{ margin-top: 0.1em; width: auto; }
+
 .Question input[name="antispam_user_code"] { position: absolute; left: -2000px; }
 
 #ShareDeleteForm .ListViewBulkActions {

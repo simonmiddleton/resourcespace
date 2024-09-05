@@ -77,3 +77,4 @@ $lang["error_crop_invalid"]='Proszę wybrać region obrazu';
 $lang["px"]='px';
 $lang["plugin-transform-title"]='Narzędzia obrazów (transformacja)';
 $lang["plugin-transform-desc"]='Umożliwia tworzenie przyciętych i skalowanych alternatywnych obrazów (jCrop z obsługą mobilną)';
+$lang["use_system_icc_profile_config"]='Użyj konfiguracji systemu do przetwarzania profili ICC. Zastąpi powyższe opcje sRGB.';

@@ -16,7 +16,7 @@ $introtext=text("introtext");
   
     <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
     <ul>
-    <?php if (0 !== $useracceptedterms) { ?>
+    <?php if (0 !== $useracceptedterms && $terms_login) { ?>
     <li><a id="profile_link" href="<?php echo $baseurl_short?>pages/user/user_profile_edit.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-user-circle"></i><br /><?php echo escape($lang["profile"]); ?></a></li>
     
     <?php if ($allow_password_change && !checkperm("p") && $userorigin=="") { ?>

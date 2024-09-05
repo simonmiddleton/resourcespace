@@ -77,3 +77,4 @@ $lang["input_formats"]='Invoerformaten';
 $lang["px"]='px';
 $lang["plugin-transform-title"]='Beeldhulpmiddelen (transformeren)';
 $lang["plugin-transform-desc"]='Maakt het mogelijk om bijgesneden en geschaalde alternatieve afbeeldingen te maken (jCrop met mobiele ondersteuning)';
+$lang["use_system_icc_profile_config"]='Gebruik systeemconfiguratie voor ICC-profielverwerking. Zal de bovenstaande sRGB-opties overschrijven.';

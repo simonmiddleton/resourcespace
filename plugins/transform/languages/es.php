@@ -77,3 +77,4 @@ $lang["px"]='px';
 $lang["tweaked"]='Ajustado';
 $lang["plugin-transform-title"]='Herramientas de Imagen (transformar)';
 $lang["plugin-transform-desc"]='Permite la creación de imágenes alternativas recortadas y escaladas (jCrop con soporte móvil)';
+$lang["use_system_icc_profile_config"]='Usar configuración del sistema para el procesamiento de perfiles ICC. Anulará las opciones sRGB anteriores.';

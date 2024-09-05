@@ -182,7 +182,7 @@ $imgactions["tfactions"] = explode(",",$tfactions);
 $imgactions["quality"] = getval("quality",100,true);
 $imgactions["resolution"] = getval("resolution",0,true);
 $imgactions["gamma"] = getval("gamma",50,true);
-$imgactions["srgb"] = ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != ""));
+$imgactions["srgb"] = ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != "")) && $saveaction != "original";
 
 // Generate a preview image for the operation if it doesn't already exist
 $crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date("Ymd",time()) . $scramble_key) . ".jpg";
@@ -335,6 +335,11 @@ if ($saveaction != '' && enforcePostRequest(false))
         copy($previewsourcepath, $org);
         }
 
+    if ($use_system_icc_profile_config && $saveaction != "original")
+        {
+        $imgactions = array_merge($imgactions, transform_apply_icc_profile($ref, $originalpath));
+        }
+
     // Perform the actual transformation
     $transformed = transform_file($originalpath, $newpath, $imgactions);
 
@@ -405,7 +410,6 @@ if ($saveaction != '' && enforcePostRequest(false))
                 $replace_resource_preserve_option = true;
                 }
 
-            //$keep_original = getval("keep_original", "") != "";
             $success = replace_resource_file($ref,$newpath,true,false,$keep_original);
 
             $replace_resource_preserve_option = $replace_resource_preserve_option_original;
