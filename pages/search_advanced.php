@@ -841,7 +841,7 @@ if($advanced_search_archive_select)
     
     // Questions may have already be rendered for earlier sections
     // If so then note the starting number for any questions yet to be rendered in subsequent secions
-    $start_n = $n ?? 0; 
+    $start_n = isset($n)?$n:0; 
 
     $fields=array_merge($fields,get_advanced_search_collection_fields());
     for ($n=$start_n;$n<count($fields);$n++)
