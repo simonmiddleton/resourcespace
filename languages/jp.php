@@ -2973,3 +2973,4 @@ $lang["workflow-actions-archive"]='アーカイブ';
 $lang["workflow-actions-return-to-user-review"]='ユーザーレビューに戻る';
 $lang["workflow-actions-return-to-review"]='レビューに戻る';
 $lang["workflow-actions-publish"]='公開';
+$lang["workflow-actions-make-this-resource-active"]='このリソースをアクティブにする';

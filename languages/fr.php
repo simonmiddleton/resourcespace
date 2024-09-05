@@ -2964,3 +2964,4 @@ $lang["workflow-actions-archive"]='Archiver';
 $lang["workflow-actions-return-to-user-review"]='Retour à la révision utilisateur';
 $lang["workflow-actions-return-to-review"]='Retour à la révision';
 $lang["workflow-actions-publish"]='Publier';
+$lang["workflow-actions-make-this-resource-active"]='Rendre cette ressource active';

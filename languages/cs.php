@@ -2819,3 +2819,4 @@ $lang["workflow-actions-archive"]='Archivovat';
 $lang["workflow-actions-return-to-user-review"]='Vrátit k uživatelské recenzi';
 $lang["workflow-actions-return-to-review"]='Vrátit se k recenzi';
 $lang["workflow-actions-publish"]='Publikovat';
+$lang["workflow-actions-make-this-resource-active"]='Aktivovat tento zdroj';

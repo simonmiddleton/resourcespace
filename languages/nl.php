@@ -2936,3 +2936,4 @@ $lang["workflow-actions-archive"]='Archief';
 $lang["workflow-actions-return-to-user-review"]='Terug naar gebruikersbeoordeling';
 $lang["workflow-actions-return-to-review"]='Terug naar beoordeling';
 $lang["workflow-actions-publish"]='Publiceren';
+$lang["workflow-actions-make-this-resource-active"]='Maak deze bron actief';

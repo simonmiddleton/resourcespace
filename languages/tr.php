@@ -2825,3 +2825,4 @@ $lang["workflow-actions-archive"]='Arşiv';
 $lang["workflow-actions-return-to-user-review"]='Kullanıcı incelemesine dön';
 $lang["workflow-actions-return-to-review"]='İncelemeye dön';
 $lang["workflow-actions-publish"]='Yayınla';
+$lang["workflow-actions-make-this-resource-active"]='Bu kaynağı aktif yap';

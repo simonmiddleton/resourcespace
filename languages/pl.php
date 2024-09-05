@@ -2955,3 +2955,4 @@ $lang["workflow-actions-archive"]='Archiwum';
 $lang["workflow-actions-return-to-user-review"]='Powrót do przeglądu użytkownika';
 $lang["workflow-actions-return-to-review"]='Powrót do przeglądu';
 $lang["workflow-actions-publish"]='Opublikuj';
+$lang["workflow-actions-make-this-resource-active"]='Uaktywnij ten zasób';

@@ -3208,3 +3208,4 @@ $lang["workflow-actions-archive"]="Archive";
 $lang["workflow-actions-return-to-user-review"]="Return to user review";
 $lang["workflow-actions-return-to-review"]="Return to review";
 $lang["workflow-actions-publish"]="Publish";
+$lang["workflow-actions-make-this-resource-active"]="Make this resource active";

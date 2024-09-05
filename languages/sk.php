@@ -3270,3 +3270,4 @@ $lang["workflow-actions-archive"]='Arhiv';
 $lang["workflow-actions-return-to-user-review"]='Vrni se k uporabniškemu pregledu';
 $lang["workflow-actions-return-to-review"]='Vrni se na pregled';
 $lang["workflow-actions-publish"]='Objavi';
+$lang["workflow-actions-make-this-resource-active"]='Aktiviraj ta vir';

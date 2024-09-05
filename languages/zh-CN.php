@@ -3040,3 +3040,4 @@ $lang["workflow-actions-archive"]='存档';
 $lang["workflow-actions-return-to-user-review"]='返回用户审核';
 $lang["workflow-actions-return-to-review"]='返回审核';
 $lang["workflow-actions-publish"]='发布';
+$lang["workflow-actions-make-this-resource-active"]='使此资源激活';

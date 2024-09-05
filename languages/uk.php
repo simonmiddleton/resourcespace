@@ -2819,3 +2819,4 @@ $lang["workflow-actions-archive"]='Архів';
 $lang["workflow-actions-return-to-user-review"]='Повернутися до перегляду користувача';
 $lang["workflow-actions-return-to-review"]='Повернутися до перегляду';
 $lang["workflow-actions-publish"]='Опублікувати';
+$lang["workflow-actions-make-this-resource-active"]='Зробити цей ресурс активним';

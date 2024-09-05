@@ -2833,3 +2833,4 @@ $lang["workflow-actions-archive"]='संग्रहालय';
 $lang["workflow-actions-return-to-user-review"]='उपयोगकर्ता समीक्षा पर वापस जाएँ';
 $lang["workflow-actions-return-to-review"]='समीक्षा पर वापस जाएँ';
 $lang["workflow-actions-publish"]='प्रकाशित करें';
+$lang["workflow-actions-make-this-resource-active"]='इस संसाधन को सक्रिय करें';

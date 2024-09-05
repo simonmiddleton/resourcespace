@@ -2933,3 +2933,4 @@ $lang["workflow-actions-archive"]='Архив';
 $lang["workflow-actions-return-to-user-review"]='Вернуться к обзору пользователя';
 $lang["workflow-actions-return-to-review"]='Вернуться к обзору';
 $lang["workflow-actions-publish"]='Опубликовать';
+$lang["workflow-actions-make-this-resource-active"]='Сделать этот ресурс активным';

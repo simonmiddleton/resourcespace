@@ -2899,3 +2899,4 @@ $lang["workflow-actions-archive"]='Αρχείο';
 $lang["workflow-actions-return-to-user-review"]='Επιστροφή στην αναθεώρηση χρήστη';
 $lang["workflow-actions-return-to-review"]='Επιστροφή στην ανασκόπηση';
 $lang["workflow-actions-publish"]='Δημοσίευση';
+$lang["workflow-actions-make-this-resource-active"]='Κάντε αυτόν τον πόρο ενεργό';

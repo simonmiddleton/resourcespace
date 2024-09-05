@@ -2930,3 +2930,4 @@ $lang["workflow-actions-archive"]='Arxiu';
 $lang["workflow-actions-return-to-user-review"]='Torna a la revisió de l\'usuari';
 $lang["workflow-actions-return-to-review"]='Torna a revisar';
 $lang["workflow-actions-publish"]='Publica';
+$lang["workflow-actions-make-this-resource-active"]='Fes que aquest recurs estigui actiu';

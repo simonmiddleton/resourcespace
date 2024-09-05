@@ -2895,3 +2895,4 @@ $lang["workflow-actions-archive"]='Arkiv';
 $lang["workflow-actions-return-to-user-review"]='Tilbage til brugeranmeldelse';
 $lang["workflow-actions-return-to-review"]='Tilbage til gennemgang';
 $lang["workflow-actions-publish"]='Udgiv';
+$lang["workflow-actions-make-this-resource-active"]='Gør denne ressource aktiv';

@@ -2904,3 +2904,4 @@ $lang["workflow-actions-archive"]='Arhivă';
 $lang["workflow-actions-return-to-user-review"]='Revenire la revizuirea utilizatorului';
 $lang["workflow-actions-return-to-review"]='Întoarce-te la revizuire';
 $lang["workflow-actions-publish"]='Publică';
+$lang["workflow-actions-make-this-resource-active"]='Activează această resursă';

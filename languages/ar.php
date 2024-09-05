@@ -3045,3 +3045,4 @@ $lang["workflow-actions-archive"]='أرشيف';
 $lang["workflow-actions-return-to-user-review"]='العودة إلى مراجعة المستخدم';
 $lang["workflow-actions-return-to-review"]='العودة إلى المراجعة';
 $lang["workflow-actions-publish"]='نشر';
+$lang["workflow-actions-make-this-resource-active"]='اجعل هذا المورد نشطًا';

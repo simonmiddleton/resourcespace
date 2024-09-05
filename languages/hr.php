@@ -2899,3 +2899,4 @@ $lang["workflow-actions-archive"]='Arhiva';
 $lang["workflow-actions-return-to-user-review"]='Povratak na korisnički pregled';
 $lang["workflow-actions-return-to-review"]='Povratak na pregled';
 $lang["workflow-actions-publish"]='Objavi';
+$lang["workflow-actions-make-this-resource-active"]='Učinite ovaj resurs aktivnim';

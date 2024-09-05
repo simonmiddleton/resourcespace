@@ -2990,3 +2990,4 @@ $lang["workflow-actions-archive"]='Arsip';
 $lang["workflow-actions-return-to-user-review"]='Kembali ke tinjauan pengguna';
 $lang["workflow-actions-return-to-review"]='Kembali ke ulasan';
 $lang["workflow-actions-publish"]='Terbitkan';
+$lang["workflow-actions-make-this-resource-active"]='Aktifkan sumber daya ini';

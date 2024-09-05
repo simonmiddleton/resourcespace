@@ -2828,3 +2828,4 @@ $lang["workflow-actions-archive"]='아카이브';
 $lang["workflow-actions-return-to-user-review"]='사용자 검토로 돌아가기';
 $lang["workflow-actions-return-to-review"]='검토로 돌아가기';
 $lang["workflow-actions-publish"]='게시';
+$lang["workflow-actions-make-this-resource-active"]='이 리소스를 활성화하십시오';

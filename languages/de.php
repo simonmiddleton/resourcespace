@@ -3156,3 +3156,4 @@ $lang["workflow-actions-archive"]='Archiv';
 $lang["workflow-actions-return-to-user-review"]='Zurück zur Benutzerüberprüfung';
 $lang["workflow-actions-return-to-review"]='Zurück zur Überprüfung';
 $lang["workflow-actions-publish"]='Veröffentlichen';
+$lang["workflow-actions-make-this-resource-active"]='Dieses Medium aktivieren';
