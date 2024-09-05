@@ -229,7 +229,9 @@ if (!hook("replaceloginform")) {
                 <?php reset($languages); foreach ($languages as $key => $value) { ?>
                     <option value="<?php echo $key?>" <?php if ($language == $key) {
                         ?>selected<?php
-                                   } ?>><?php echo $value?></option>
+                                   } ?>><?php 
+                                   $display_lang=$lang["language-" . $key];if ($lang["language-" . $key]!==$value) {$display_lang.=" (" . $value . ")";}
+                                   echo escape($display_lang) ?></option>
                 <?php } ?>
                 </select>
                 <div class="clearerleft"> </div>

@@ -903,7 +903,7 @@ const DOWNLOAD_FILE_LIFETIME=14;
 
 $max_collection_thumbs=150;
 
-$languages["en"]="British English";
+$languages["en"]="International English";
 $languages["en-US"]="American English";
 $languages["ar"]="العربية";
 $languages["id"]="Bahasa Indonesia"; # Indonesian

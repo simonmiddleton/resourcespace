@@ -3170,3 +3170,37 @@ $lang["processing_creating_previews"] = "Resource [resource]: Creating previews"
 $lang["processing_creating_preview"] = "Resource [resource]: Creating preview '[name]'";
 $lang["processing_updating_resources"] = "Updating metadata ([done]/[total])";
 $lang["processing_calculating_updates_required"] = "Calculating updates required ([count]/[total])";
+
+
+
+$lang["language-en"]="International English";
+$lang["language-en-US"]="American English";
+$lang["language-ar"]="Arabic";
+$lang["language-id"]="Indonesian";
+$lang["language-ca"]="Catalan";
+$lang["language-cs"]="Czech";
+$lang["language-da"]="Danish";
+$lang["language-de"]="German";
+$lang["language-el"]="Greek";
+$lang["language-es"]="Spanish";
+$lang["language-es-AR"]="Spanish (Argentina)";
+$lang["language-fi"]="Finnish";
+$lang["language-fr"]="French";
+$lang["language-hi"]="Hindi";
+$lang["language-hr"]="Croatian";
+$lang["language-it"]="Italian";
+$lang["language-jp"]="Japanese";
+$lang["language-ko"]="Korean";
+$lang["language-nl"]="Dutch";
+$lang["language-no"]="Norwegian";
+$lang["language-pl"]="Polish";
+$lang["language-pt"]="Portuguese";
+$lang["language-pt-BR"]="Brazilian Portuguese";
+$lang["language-ro"]="Romanian";
+$lang["language-ru"]="Russian";
+$lang["language-sk"]="Slovak";
+$lang["language-sv"]="Swedish";
+$lang["language-tr"]="Turkish";
+$lang["language-uk"]="Ukranian";
+$lang["language-zh-CN"]="Simplified Chinese";
+
