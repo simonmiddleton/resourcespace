@@ -2960,3 +2960,7 @@ $lang["language-sv"]='Suédois';
 $lang["language-tr"]='Turc';
 $lang["language-uk"]='Ukrainien';
 $lang["language-zh-CN"]='Chinois simplifié';
+$lang["workflow-actions-archive"]='Archiver';
+$lang["workflow-actions-return-to-user-review"]='Retour à la révision utilisateur';
+$lang["workflow-actions-return-to-review"]='Retour à la révision';
+$lang["workflow-actions-publish"]='Publier';

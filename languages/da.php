@@ -2891,3 +2891,7 @@ $lang["language-sv"]='Svensk';
 $lang["language-tr"]='Tyrkisk';
 $lang["language-uk"]='Ukrainsk';
 $lang["language-zh-CN"]='Forenklet kinesisk';
+$lang["workflow-actions-archive"]='Arkiv';
+$lang["workflow-actions-return-to-user-review"]='Tilbage til brugeranmeldelse';
+$lang["workflow-actions-return-to-review"]='Tilbage til gennemgang';
+$lang["workflow-actions-publish"]='Udgiv';

@@ -2824,3 +2824,7 @@ $lang["language-sv"]='스웨덴어';
 $lang["language-tr"]='터키어';
 $lang["language-uk"]='우크라이나어';
 $lang["language-zh-CN"]='간체 중국어';
+$lang["workflow-actions-archive"]='아카이브';
+$lang["workflow-actions-return-to-user-review"]='사용자 검토로 돌아가기';
+$lang["workflow-actions-return-to-review"]='검토로 돌아가기';
+$lang["workflow-actions-publish"]='게시';

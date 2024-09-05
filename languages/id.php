@@ -2986,3 +2986,7 @@ $lang["language-sv"]='Swedia';
 $lang["language-tr"]='Turki';
 $lang["language-uk"]='Ukraina';
 $lang["language-zh-CN"]='Bahasa Tionghoa Sederhana';
+$lang["workflow-actions-archive"]='Arsip';
+$lang["workflow-actions-return-to-user-review"]='Kembali ke tinjauan pengguna';
+$lang["workflow-actions-return-to-review"]='Kembali ke ulasan';
+$lang["workflow-actions-publish"]='Terbitkan';

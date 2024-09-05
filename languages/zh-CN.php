@@ -3036,3 +3036,7 @@ $lang["language-sv"]='瑞典语';
 $lang["language-tr"]='土耳其语';
 $lang["language-uk"]='乌克兰语';
 $lang["language-zh-CN"]='简体中文';
+$lang["workflow-actions-archive"]='存档';
+$lang["workflow-actions-return-to-user-review"]='返回用户审核';
+$lang["workflow-actions-return-to-review"]='返回审核';
+$lang["workflow-actions-publish"]='发布';

@@ -2895,3 +2895,7 @@ $lang["language-sv"]='Švedski';
 $lang["language-tr"]='Turski';
 $lang["language-uk"]='Ukrajinski';
 $lang["language-zh-CN"]='Pojednostavljeni kineski';
+$lang["workflow-actions-archive"]='Arhiva';
+$lang["workflow-actions-return-to-user-review"]='Povratak na korisnički pregled';
+$lang["workflow-actions-return-to-review"]='Povratak na pregled';
+$lang["workflow-actions-publish"]='Objavi';

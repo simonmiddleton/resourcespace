@@ -3204,3 +3204,7 @@ $lang["language-tr"]="Turkish";
 $lang["language-uk"]="Ukranian";
 $lang["language-zh-CN"]="Simplified Chinese";
 
+$lang["workflow-actions-archive"]="Archive";
+$lang["workflow-actions-return-to-user-review"]="Return to user review";
+$lang["workflow-actions-return-to-review"]="Return to review";
+$lang["workflow-actions-publish"]="Publish";

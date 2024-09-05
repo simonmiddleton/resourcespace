@@ -171,7 +171,7 @@ function HookRse_workflowViewAdditionaldownloadtabs()
                     ?>
                     <input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"]; ?>" id="rse_workflow_action_<?php echo $validaction["ref"]; ?>" value="true" >
                     <input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"]; ?>" id="more_workflow_action_<?php echo $validaction["ref"]; ?>" value="" >       
-                    <input type="submit" name="rse_workflow_action_submit_<?php echo $validaction["ref"]; ?>" id="rse_workflow_action_submit_<?php echo $validaction["ref"]; ?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
+                    <input type="submit" name="rse_workflow_action_submit_<?php echo $validaction["ref"]; ?>" id="rse_workflow_action_submit_<?php echo $validaction["ref"]; ?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"],"workflow-actions") ?>&nbsp;" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
                     <?php
                     generateFormToken("resource_{$ref}_workflowaction{$validaction['ref']}");
                     hook("rse_wf_formend","",array($resource["archive"],$validaction["statusto"]));

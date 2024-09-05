@@ -3041,3 +3041,7 @@ $lang["language-sv"]='السويدية';
 $lang["language-tr"]='التركية';
 $lang["language-uk"]='الأوكرانية';
 $lang["language-zh-CN"]='الصينية المبسطة';
+$lang["workflow-actions-archive"]='أرشيف';
+$lang["workflow-actions-return-to-user-review"]='العودة إلى مراجعة المستخدم';
+$lang["workflow-actions-return-to-review"]='العودة إلى المراجعة';
+$lang["workflow-actions-publish"]='نشر';

@@ -2904,3 +2904,7 @@ $lang["language-sv"]='Svedese';
 $lang["language-tr"]='Turco';
 $lang["language-uk"]='Ucraino';
 $lang["language-zh-CN"]='Cinese semplificato';
+$lang["workflow-actions-archive"]='Archivio';
+$lang["workflow-actions-return-to-user-review"]='Torna alla revisione dell\'utente';
+$lang["workflow-actions-return-to-review"]='Torna alla revisione';
+$lang["workflow-actions-publish"]='Pubblica';

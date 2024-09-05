@@ -2929,3 +2929,7 @@ $lang["language-sv"]='Шведский';
 $lang["language-tr"]='Турецкий';
 $lang["language-uk"]='Украинский';
 $lang["language-zh-CN"]='Упрощённый китайский';
+$lang["workflow-actions-archive"]='Архив';
+$lang["workflow-actions-return-to-user-review"]='Вернуться к обзору пользователя';
+$lang["workflow-actions-return-to-review"]='Вернуться к обзору';
+$lang["workflow-actions-publish"]='Опубликовать';

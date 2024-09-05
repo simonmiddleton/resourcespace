@@ -35,13 +35,15 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
  * For field names / values using the i18n syntax, return the version in the current user's language. Format is ~en:Somename~es:Someothername
  *
  * @param  string|null $text
+ * @param  string|null $lang_domain As an optional fallback if an i18n string is not provided, check the system language translations for a matching translation instead.
+
  * @return string
  */
-function i18n_get_translated($text)
+function i18n_get_translated($text,$lang_domain=null)
 {
     $text ??= ''; 
         
-    global $language,$defaultlanguage;
+    global $language,$defaultlanguage,$lang;
 
     $asdefaultlanguage = $defaultlanguage;
 
@@ -53,7 +55,12 @@ function i18n_get_translated($text)
     $s = explode("~",$text);
 
     # Not a translatable field?
-    if (count($s) < 2) {
+    if (count($s) < 2){
+        if (!is_null($lang_domain)) {
+            # Search the provided $lang domain for a match and return that if present.
+            $key=$lang_domain . "-" . preg_replace("/[^a-z0-9\-]/", '', strtolower(str_replace(" ","-",$text)));
+            if (array_key_exists($key,$lang)) {return $lang[$key];}
+        }
         return $text;
     }
 

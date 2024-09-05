@@ -2895,3 +2895,7 @@ $lang["language-sv"]='Σουηδικά';
 $lang["language-tr"]='Τουρκικά';
 $lang["language-uk"]='Ουκρανικά';
 $lang["language-zh-CN"]='Απλοποιημένα Κινέζικα';
+$lang["workflow-actions-archive"]='Αρχείο';
+$lang["workflow-actions-return-to-user-review"]='Επιστροφή στην αναθεώρηση χρήστη';
+$lang["workflow-actions-return-to-review"]='Επιστροφή στην ανασκόπηση';
+$lang["workflow-actions-publish"]='Δημοσίευση';

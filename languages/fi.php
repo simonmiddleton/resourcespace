@@ -3090,3 +3090,7 @@ $lang["language-sv"]='Ruotsi';
 $lang["language-tr"]='Turkki';
 $lang["language-uk"]='Ukrainalainen';
 $lang["language-zh-CN"]='Yksinkertaistettu kiina';
+$lang["workflow-actions-archive"]='Arkisto';
+$lang["workflow-actions-return-to-user-review"]='Palaa käyttäjän tarkasteluun';
+$lang["workflow-actions-return-to-review"]='Palaa tarkasteluun';
+$lang["workflow-actions-publish"]='Julkaise';

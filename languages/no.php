@@ -3082,3 +3082,7 @@ $lang["language-sv"]='Svensk';
 $lang["language-tr"]='Tyrkisk';
 $lang["language-uk"]='Ukrainsk';
 $lang["language-zh-CN"]='Forenklet kinesisk';
+$lang["workflow-actions-archive"]='Arkiv';
+$lang["workflow-actions-return-to-user-review"]='Gå tilbake til brukervurdering';
+$lang["workflow-actions-return-to-review"]='Gå tilbake til gjennomgang';
+$lang["workflow-actions-publish"]='Publiser';

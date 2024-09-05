@@ -2829,3 +2829,7 @@ $lang["language-sv"]='स्वीडिश';
 $lang["language-tr"]='तुर्की';
 $lang["language-uk"]='यूक्रेनी';
 $lang["language-zh-CN"]='सरलीकृत चीनी';
+$lang["workflow-actions-archive"]='संग्रहालय';
+$lang["workflow-actions-return-to-user-review"]='उपयोगकर्ता समीक्षा पर वापस जाएँ';
+$lang["workflow-actions-return-to-review"]='समीक्षा पर वापस जाएँ';
+$lang["workflow-actions-publish"]='प्रकाशित करें';

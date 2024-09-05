@@ -3266,3 +3266,7 @@ $lang["language-sv"]='Švedščina';
 $lang["language-tr"]='Turščina';
 $lang["language-uk"]='Ukrajinščina';
 $lang["language-zh-CN"]='Poenostavljena kitajščina';
+$lang["workflow-actions-archive"]='Arhiv';
+$lang["workflow-actions-return-to-user-review"]='Vrni se k uporabniškemu pregledu';
+$lang["workflow-actions-return-to-review"]='Vrni se na pregled';
+$lang["workflow-actions-publish"]='Objavi';

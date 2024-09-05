@@ -2821,3 +2821,7 @@ $lang["language-sv"]='İsveççe';
 $lang["language-tr"]='Türkçe';
 $lang["language-uk"]='Ukraynaca';
 $lang["language-zh-CN"]='Basitleştirilmiş Çince';
+$lang["workflow-actions-archive"]='Arşiv';
+$lang["workflow-actions-return-to-user-review"]='Kullanıcı incelemesine dön';
+$lang["workflow-actions-return-to-review"]='İncelemeye dön';
+$lang["workflow-actions-publish"]='Yayınla';

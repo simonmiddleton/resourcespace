@@ -2926,3 +2926,7 @@ $lang["language-sv"]='Suec';
 $lang["language-tr"]='Turc';
 $lang["language-uk"]='Ucraïnès';
 $lang["language-zh-CN"]='Xinès simplificat';
+$lang["workflow-actions-archive"]='Arxiu';
+$lang["workflow-actions-return-to-user-review"]='Torna a la revisió de l\'usuari';
+$lang["workflow-actions-return-to-review"]='Torna a revisar';
+$lang["workflow-actions-publish"]='Publica';

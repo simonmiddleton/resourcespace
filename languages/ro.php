@@ -2900,3 +2900,7 @@ $lang["language-sv"]='Suedeză';
 $lang["language-tr"]='Turcă';
 $lang["language-uk"]='Ucraineană';
 $lang["language-zh-CN"]='Chineză simplificată';
+$lang["workflow-actions-archive"]='Arhivă';
+$lang["workflow-actions-return-to-user-review"]='Revenire la revizuirea utilizatorului';
+$lang["workflow-actions-return-to-review"]='Întoarce-te la revizuire';
+$lang["workflow-actions-publish"]='Publică';

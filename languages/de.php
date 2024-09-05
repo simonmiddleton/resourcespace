@@ -3152,3 +3152,7 @@ $lang["language-tr"]='Türkisch';
 $lang["language-uk"]='Ukrainisch';
 $lang["language-zh-CN"]='Vereinfachtes Chinesisch';
 $lang["language-hi"]='Hindi';
+$lang["workflow-actions-archive"]='Archiv';
+$lang["workflow-actions-return-to-user-review"]='Zurück zur Benutzerüberprüfung';
+$lang["workflow-actions-return-to-review"]='Zurück zur Überprüfung';
+$lang["workflow-actions-publish"]='Veröffentlichen';

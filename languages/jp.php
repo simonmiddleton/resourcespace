@@ -2969,3 +2969,7 @@ $lang["language-sv"]='スウェーデン語';
 $lang["language-tr"]='トルコ語';
 $lang["language-uk"]='ウクライナ語';
 $lang["language-zh-CN"]='簡体字中国語';
+$lang["workflow-actions-archive"]='アーカイブ';
+$lang["workflow-actions-return-to-user-review"]='ユーザーレビューに戻る';
+$lang["workflow-actions-return-to-review"]='レビューに戻る';
+$lang["workflow-actions-publish"]='公開';

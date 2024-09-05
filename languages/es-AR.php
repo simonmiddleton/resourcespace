@@ -2888,3 +2888,7 @@ $lang["language-sv"]='Sueco';
 $lang["language-tr"]='Turco';
 $lang["language-uk"]='Ucraniano';
 $lang["language-zh-CN"]='Chino Simplificado';
+$lang["workflow-actions-archive"]='Archivo';
+$lang["workflow-actions-return-to-user-review"]='Volver a la revisión del usuario';
+$lang["workflow-actions-return-to-review"]='Volver a revisar';
+$lang["workflow-actions-publish"]='Publicar';

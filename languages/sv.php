@@ -3137,3 +3137,7 @@ $lang["language-sv"]='Svenska';
 $lang["language-tr"]='Turkiska';
 $lang["language-uk"]='Ukrainska';
 $lang["language-zh-CN"]='Förenklad kinesiska';
+$lang["workflow-actions-archive"]='Arkiv';
+$lang["workflow-actions-return-to-user-review"]='Återgå till användargranskning';
+$lang["workflow-actions-return-to-review"]='Återgå till granskning';
+$lang["workflow-actions-publish"]='Publicera';

@@ -2815,3 +2815,7 @@ $lang["language-sv"]='шведська';
 $lang["language-tr"]='Турецька';
 $lang["language-uk"]='Українська';
 $lang["language-zh-CN"]='Спрощена китайська';
+$lang["workflow-actions-archive"]='Архів';
+$lang["workflow-actions-return-to-user-review"]='Повернутися до перегляду користувача';
+$lang["workflow-actions-return-to-review"]='Повернутися до перегляду';
+$lang["workflow-actions-publish"]='Опублікувати';

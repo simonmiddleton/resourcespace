@@ -53,7 +53,7 @@ if (!function_exists("rse_workflow_get_actions")) {
         foreach ($results as &$row) {
             $row["text"]        = i18n_get_translated($row["text"]);
             $row["name"]        = i18n_get_translated($row["name"]);
-            $row["buttontext"]  = i18n_get_translated($row["buttontext"]);
+            $row["buttontext"]  = i18n_get_translated($row["buttontext"],"workflow-actions");
         }
 
         return $results;
@@ -274,7 +274,7 @@ function rse_workflow_compile_actions(array $url_params): array
         {
         $option = array(
             "value" => "rse_workflow_move_to_workflow~" . $action["ref"],
-            "label" => i18n_get_translated($action["buttontext"]),
+            "label" => i18n_get_translated($action["buttontext"],"workflow-actions"),
             "data_attr" => array(
                 "url" => generateURL(
                     "{$baseurl}/plugins/rse_workflow/pages/batch_action.php",

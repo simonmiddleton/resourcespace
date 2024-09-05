@@ -2815,3 +2815,7 @@ $lang["language-sv"]='švédština';
 $lang["language-tr"]='Turečtina';
 $lang["language-uk"]='Ukrajinština';
 $lang["language-zh-CN"]='Zjednodušená čínština';
+$lang["workflow-actions-archive"]='Archivovat';
+$lang["workflow-actions-return-to-user-review"]='Vrátit k uživatelské recenzi';
+$lang["workflow-actions-return-to-review"]='Vrátit se k recenzi';
+$lang["workflow-actions-publish"]='Publikovat';
