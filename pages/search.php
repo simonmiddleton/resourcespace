@@ -500,9 +500,13 @@ foreach($checkparams as $checkparam)
 
 check_order_by_in_table_joins($order_by);
 
-if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11) )
+if (preg_match("/@{2}!/", $search) || false === strpos($search, '!') || '!properties' == substr($search, 0, 11) )
     {
     rs_setcookie('search', $search,0,"","",false,false);
+    }
+else
+    {
+    rs_setcookie('search', "",0,"","",false,false);    
     }
 
 # set cookie when search form has been submitted - controls display of search results link in header_links.php

@@ -78,6 +78,10 @@ $simple         = array();
 $searched_nodes = array();
 $initial_tags = array();
 
+# Check if any negative node searches in any of the keywords,
+# if there is bypass the node expansion/text replacement/OR syntax generation
+$negative_node_search_check = preg_match("/@{2}!/", $quicksearch);
+
 for ($n=0;$n<count($keywords);$n++)
     {
     if (trim($keywords[$n])!="")
@@ -105,7 +109,7 @@ for ($n=0;$n<count($keywords);$n++)
             }
             
         // Nodes search
-        elseif(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
+        elseif(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false  && 0 === $negative_node_search_check)
             {
             $nodes = resolve_nodes_from_string($keywords[$n]);
             foreach($nodes as $node)
