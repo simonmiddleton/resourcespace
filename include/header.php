@@ -455,7 +455,13 @@ if ($pagename != "preview")
             if (!hook("replaceheadernav1"))
                 {
                 echo "<ul>";
-                if (($top_nav_upload && checkperm("c")) || ($top_nav_upload_user && checkperm("d")))
+                if (
+                    (
+                        ($top_nav_upload && checkperm("c")) 
+                        || 
+                        ($top_nav_upload_user && checkperm("d"))
+                    ) 
+                    && ($useracceptedterms == 1 || !$terms_login))
                     {
                     $topuploadurl = get_upload_url("",$k);
                     ?>
@@ -509,7 +515,7 @@ if ($pagename != "preview")
                 </li>
 
                 <!-- Admin menu link -->
-                <?php if (checkperm("t"))
+                <?php if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login))
                     { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
                     <?php 
                         if (!$actions_on && (checkperm("R")||checkperm("r")))
