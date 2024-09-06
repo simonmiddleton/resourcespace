@@ -6333,7 +6333,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 
     $filesize=filesize_unlimited($file);
 
-    $is_image = strpos($mime_content_type, "image/");
+    $is_image = strpos($mime_content_type, 'image/') !== false;
     # imagemagick_calculate_sizes is normally turned off
     if ($is_image && isset($imagemagick_path) && $imagemagick_calculate_sizes)
         {
