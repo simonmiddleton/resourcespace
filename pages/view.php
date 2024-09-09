@@ -659,7 +659,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 );
 
                                 if (file_exists($video_preview_file)
-                                    && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre')
+                                    && ( ($open_access_for_contributor && $userref == $resource['created_by'])
+                                         || !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre') )
                                     )
                                     {
                                     # Include the player if a video preview file exists for this resource.
