@@ -226,7 +226,7 @@ if (getval("refreshcollectionframe","")!="")
 
 # Update the hitcounts for the search nodes (if search specified)
 # (important we fetch directly from $_GET and not from a cookie
-$usearch= isset($_GET["search"]) ? $_GET["search"] : "";
+$usearch= isset($_GET["search"]) && !is_array($_GET["search"]) ? $_GET["search"] : "";
 # Update resource/node hit count
 if (strpos($usearch,NODE_TOKEN_PREFIX) !== false)
     {
