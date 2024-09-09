@@ -479,17 +479,26 @@ function get_user_by_email($email)
 /**
  * Retrieve user ID by username
  *
- * @param  string $username The username to search for
+ * @param  string $username The username to search for (will match email if not found)
  * @return mixed  The matching user ID or false if not found
  */
 function get_user_by_username($username)
-    {
-    if(!is_string($username))
-        {
+{
+    if (!is_string($username)) {
         return false;
-        }
-    return ps_value("select ref value from user where username=?",array("s",$username),false);
     }
+    $params = ["s",$username];
+    $usermatch = ps_value("SELECT ref value FROM user WHERE username = ?", $params , 0);
+    if ($usermatch == 0 && filter_var($username, FILTER_VALIDATE_EMAIL)) {
+        // Check if trying to use email address
+        $emailmatches = ps_array("SELECT ref value FROM user WHERE email = ?", $params);
+        if (count($emailmatches) == 1) {
+            debug("Matched user to email address");
+            $usermatch = $emailmatches[0];
+        }
+    }
+    return $usermatch > 0 ? $usermatch : false;
+}
 
 /**
  * Returns a list of user groups. The standard user groups are translated using $lang. Custom user groups are i18n translated.
@@ -660,7 +669,7 @@ function save_user($ref)
         ps_query("DELETE FROM user WHERE ref = ?", array("i", $ref));
 
         hook('on_delete_user', "", array($ref));
-        
+
         include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
 
@@ -685,46 +694,74 @@ function save_user($ref)
         $approved               = getval('approved', 0, true);
         $expires                = getval('account_expires', '');
 
-        # Username or e-mail address already exists?
-        $c = ps_value("SELECT count(*) value FROM user WHERE ref <> ? AND (username = ? OR email = ?)", array("i", $ref, "s", $username, "s", $email), 0);
-        if($c > 0 && $email != '')
-            {
-            return $lang["useralreadyexists"]; # An account with that e-mail or username already exists, changes not saved
-            }
+        // Create SQL to check for username or e-mail address conflict
+        $conditions = "username = ? OR email = ?";
+        $params = ["s", $username, "s", $username];
 
-       // Enabling a disabled account but at the user limit?
-        if (user_limit_reached() && $current_user_data["approved"]!=1 && $approved==1)
-            {
-            return $lang["userlimitreached"]; // Return error message 
+        // Add code to set different values depending on what has conflicted
+        $typecheck =  "WHEN (username = ?) THEN 1 "; // username matches another username
+        $typecheck .= "WHEN (email = ?) THEN 2 "; // username matches another account's email
+        $typeparams = ["s", $username, "s", $username];
+
+        if ($email !== "") {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $lang['error_invalid_email'];
             }
+            // Add checks for email conflicts
+            $conditions .= " OR username = ? OR email = ?";
+            $params = array_merge($params,["s", $email, "s", $email]);
+            $typecheck .= "WHEN (email = ?) THEN 3 "; // email matches another account's email
+            $typecheck .= "WHEN (username = ?) THEN 4 "; // email matches the username of another account
+            $typeparams = array_merge($typeparams, ["s", $email, "s", $email]);
+        }
+        $matchsql = " SELECT MIN(CASE $typecheck END) AS value
+                         FROM user
+                        WHERE ref <> ? AND ($conditions)";
+        $c = ps_value($matchsql, array_merge($params, ["i",$ref], $typeparams), 0);
+        switch ($c) {
+            case 1:
+                return $lang["useralreadyexists"]; // An account with that username already exists
+                break;
+            case 2:
+                return $lang["username_conflicts_email"]; // Username matches another account's e-mail
+                break;
+            case 3:
+                return $lang["useremailalreadyexists"]; // An account with that e-mail address exists
+                break;
+            case 4:
+                return $lang["email_conflicts_username"]; // Email matches another account's username
+                break;
+            case 0:
+            default:
+                // All ok
+                break;
+        }
+
+        // Enabling a disabled account but at the user limit?
+        if (user_limit_reached() && $current_user_data["approved"] != 1 && $approved==1) {
+            return $lang["userlimitreached"]; // Return error message 
+        }
 
         // Password checks:
-        if($suggest != '' || ($password == '' && $emailresetlink != ''))
-            {
+        if ($suggest != '' || ($password == '' && $emailresetlink != '')) {
             $password = make_password();
-            }
-        elseif($password != $lang['hidden'])    
-            {
+        } elseif ($password != $lang['hidden']) {
             $message = check_password($password);
-            if($message !== true)
-                {
+            if ($message !== true) {
                 return $message;
-                }
             }
+        }
 
         # Validate expiry date
         if ($expires != "" && preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0) {
             return str_replace('[value]', $expires, $lang['error_invalid_date_format']);
         }
-        
-        if($expires == "" || strtotime($expires)==false)
-            {
+
+        if ($expires == "" || strtotime($expires)==false) {
             $expires = null;
-            }
-        else   
-            {
+        } else {
             $expires =  date("Y-m-d",strtotime($expires));
-            }
+        }
 
         $passsql = '';
         $sql_params = array();
@@ -986,14 +1023,13 @@ function auto_create_user_account($hash="")
             }
         }
 
-    $newusername = make_username(getval("name",""));
-
     // Check valid email
-    if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
-        {
+    if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
         return $lang['setup-emailerr'];
-        }
-    
+    }
+
+    $newusername = make_username(getval("name",""),$user_email);
+
     #check if account already exists
     $check=ps_value("SELECT email value FROM user WHERE email = ?",["s",$user_email],"");
     if ($check!="")
@@ -1002,16 +1038,15 @@ function auto_create_user_account($hash="")
         }
 
     # Prepare to create the user.
-    $email = trim(getval("email", "")) ;
     $password = make_password();
     $password = rs_password_hash("RS{$newusername}{$password}");
 
     # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
     $approve=false;
-        
+
     # Block immediate reset
     $bypassemail=false;
-        
+
     if ($auto_approve_accounts==true)
         {
         $approve=true;
@@ -1024,10 +1059,10 @@ function auto_create_user_account($hash="")
             {
             // If a group is not specified the variables don't get set correctly so we need to correct this
             if (is_numeric($domain)){$domain=$set_usergroup;$set_usergroup="";}
-            if (substr(strtolower($email),strlen($email)-strlen($domain)-1)==("@" . strtolower($domain)))
+            if (substr(strtolower($user_email),strlen($user_email)-strlen($domain)-1)==("@" . strtolower($domain)))
                 {
                 # E-mail domain match.
-                $approve=true;                                
+                $approve=true;
 
                 # If user group is supplied, set this
                 if (is_numeric($set_usergroup)) {$usergroup=$set_usergroup;}
@@ -1042,7 +1077,7 @@ function auto_create_user_account($hash="")
         "s",$newusername,
         "s",$password,
         "s",$name,
-        "s",$email,
+        "s",$user_email,
         "i",$usergroup,
         "s",$customContents . (trim($comment) != "" ? "\n" . $comment : ""),
         "i",($approve ? 1 : 0),
@@ -1076,7 +1111,7 @@ function auto_create_user_account($hash="")
         global $rs_session;
         $rs_session=get_rs_session_id();
         if($rs_session!==false)
-            {               
+            {
             # Copy any anonymous session collections to the new user account 
             global $username, $userref;
 
@@ -1100,20 +1135,20 @@ function auto_create_user_account($hash="")
         }
     if ($approve)
         {
-        # Auto approving        
+        # Auto approving
         if($bypassemail)
             {
             // No requirement to check anything else e.g. a valid email domain. We can take user direct to the password reset page to set the new account
             $password_reset_url_key=create_password_reset_key($newusername);
-            redirect($baseurl . "?rp=" . $new . $password_reset_url_key);           
+            redirect($baseurl . "?rp=" . $new . $password_reset_url_key);
             exit();
             }
         else
             {
-            email_reset_link($email, true);
+            email_reset_link($user_email, true);
             redirect($baseurl."/pages/done.php?text=user_request");
             exit();
-            }           
+            }
         }
     else
         {
@@ -1121,9 +1156,9 @@ function auto_create_user_account($hash="")
         # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
         # but also adds the new user name to the mail)
         global $user_pref_user_management_notifications;
-        
+
         $templatevars['name']=getval("name","");
-        $templatevars['email']=getval("email","");
+        $templatevars['email']=$user_email;
         $templatevars['userrequestcomment']=strip_tags(getval("userrequestcomment",""));
         $templatevars['userrequestcustom']=strip_tags($customContents);
         $url = $baseurl . "?u=" . $new;
@@ -1167,7 +1202,7 @@ function auto_create_user_account($hash="")
 
     // Send a confirmation e-mail to requester
     send_mail(
-        $email,
+        $user_email,
         "{$applicationname}: {$lang['account_request_label']}",
         $lang['account_request_confirmation_email_to_requester']);
 
@@ -2102,46 +2137,55 @@ function check_access_key_collection($collection, $key, $checkresource=true)
 /**
  * Generates a unique username for the given name
  *
- * @param  string $name The user's full name
+ * @param string    $name       The user's full name
+ * @param string    $email      Optional email address
+ *
  * @return string   The username to use
  */
-function make_username($name)
-    {
-    # First compress the various name parts
-    $s=trim_array(explode(" ",$name));
-    
-    $name=$s[count($s)-1];
-    for ($n=count($s)-2;$n>=0;$n--)
-        {
-        $name=substr($s[$n],0,1) . $name;
+function make_username(string $name, string $email = ""): string
+{
+    if ($GLOBALS["username_from_email"] && trim($email) !== "") {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$email], 0);
+        if ($c === 0)
+            return trim($email);
         }
-    $name=safe_file_name(strtolower($name));
+        debug("make_username() - Unable to use invalid e-mail address: " . $email);
+    }
+
+    # First compress the various name parts
+    $s = trim_array(explode(" ",$name));
+
+    $name = $s[count($s)-1];
+    for ($n=count($s)-2;$n>=0;$n--) {
+        $name=substr($s[$n],0,1) . $name;
+    }
+    $name = safe_file_name(strtolower($name));
 
     # Create fullname usernames:
     global $user_account_fullname_create;
-    if($user_account_fullname_create) {
+    if ($user_account_fullname_create) {
         $name = '';
 
         foreach ($s as $name_part) {
             $name .= '_' . $name_part;
         }
-        
+
         $name = substr($name, 1);
         $name = safe_file_name($name);
     }
-    
+
     # Check for uniqueness... append an ever-increasing number until unique.
-    $unique=false;
-    $num=-1;
-    while (!$unique)
-        {
+    $unique = false;
+    $num = -1;
+    while (!$unique) {
         $num++;
-        $c=ps_value("select count(*) value from user where username=?",array("s",($name . (($num==0)?"":$num))),0);
-        $unique=($c==0);
-        }
-    return $name . (($num==0)?"":$num);
+        $c = ps_value("select count(*) value from user where username=?",array("s",($name . (($num==0)?"":$num))),0);
+        $unique = ($c==0);
     }
-    
+    return $name . (($num==0)?"":$num);
+}
+
 /**
  * Returns a list of user groups selectable in the registration . The standard user groups are translated using $lang. Custom user groups are i18n translated.
  *

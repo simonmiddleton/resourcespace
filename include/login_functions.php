@@ -24,15 +24,21 @@ function perform_login($loginuser="",$loginpass="")
 
     // If a special key is sent, which is the MD5 hash of the username and the secret scramble key, then allow a login 
     // using the MD5 password hash as the password. This is for the 'log in as this user' feature.
-    $impersonate_user = (getval('userkey', '') === md5($username . $scramble_key));
+    $impersonate_user = (getval('userkey', '') ===  hash('sha256',$loginuser . $scramble_key . date("Ymd")));
 
     // Get user record
     $user_ref = get_user_by_username($username);
     $found_user_record = ($user_ref !== false);
-    if($found_user_record)
-        {
+    if ($found_user_record) {
         $user_data = get_user($user_ref);
+        // Did the user log in using their email address? If so update username variable
+        if (
+            mb_strtolower($user_data['username']) !== mb_strtolower($username)
+            && mb_strtolower($user_data['email']) === mb_strtolower($username)
+        ) {
+            $username = $user_data['username'];
         }
+    }
 
     // User logs in
     if($found_user_record && rs_password_verify($password, $user_data['password'], ['username' => $username]) && $password != "")
