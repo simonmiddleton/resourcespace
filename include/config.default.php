@@ -1362,9 +1362,12 @@ $auto_approve_accounts=false;
 
 $auto_approve_domains=array();
 
-# Allows for usernames to be created based on full name (eg. John Mac -> John_Mac)
-# Note: user_account_auto_creation needs to be true.
+// Allows for usernames to be created based on full name (eg. John Mac -> John_Mac)
+// Note: user_account_auto_creation needs to be true. Will be overridden if $username_from_email is enabled and a valid email is available
 $user_account_fullname_create=false;
+
+// Optionally use the email address as the username when user accounts are auto created. This will override $user_account_fullname_create if a valid email is available
+$username_from_email = false;
 
 # Display a larger preview image on the edit page?
 $edit_large_preview=true;
@@ -3174,3 +3177,4 @@ $search_all_workflow_states=false;
 # Array of preview sizes to be created at upload when minimal preview creation is enabled.
 # Limit to essential sizes only to reduce delay.
 $minimal_previews_sizes = array('pre', 'col', 'thm');
+

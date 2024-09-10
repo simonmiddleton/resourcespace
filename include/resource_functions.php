@@ -6333,7 +6333,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 
     $filesize=filesize_unlimited($file);
 
-    $is_image = strpos($mime_content_type, "image/");
+    $is_image = strpos($mime_content_type, 'image/') !== false;
     # imagemagick_calculate_sizes is normally turned off
     if ($is_image && isset($imagemagick_path) && $imagemagick_calculate_sizes)
         {
@@ -9402,6 +9402,7 @@ function related_resource_pull(array $resource)
  */
 function get_resource_preview(array $resource,array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1)
     {
+    global $userref, $open_access_for_contributor;
     if(empty($sizes))
         {
         $sizes = array_reverse(array_column(get_all_image_sizes(),"id"));
@@ -9444,7 +9445,8 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
         $validimage = false;
         foreach($sizes as $size)
             {
-            if(resource_has_access_denied_by_RT_size($resource['resource_type'], $size))
+            if(resource_has_access_denied_by_RT_size($resource['resource_type'], $size)
+               && !($open_access_for_contributor && $userref == $resource['created_by']) )
                 {
                 continue;
                 }

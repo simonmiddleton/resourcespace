@@ -81,8 +81,8 @@ function simpleldap_authenticate(string $username,string $password)
     $login = false;
     foreach (array_unique($binduserstrings) as $binduserstring) {
         debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring);
+        $GLOBALS["use_error_exception"] = true;
         try {
-            $GLOBALS["use_error_exception"] = true;
             $login = ldap_bind($ds, $binduserstring, $password);
             debug("LDAP bind success");
             break;
@@ -94,6 +94,7 @@ function simpleldap_authenticate(string $username,string $password)
                 return false;
             }
         }
+        unset($GLOBALS["use_error_exception"]);
     }
     if (!$login) {
         debug("LDAP - failed to bind to LDAP server");

@@ -164,7 +164,15 @@ $page_def[] = config_add_html('</div>');
 
 // Multilingual section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_multilingual'] . '</h3><div id="SystemConfigMultilingualSection" class="CollapsibleSection">');
-$page_def[] = config_add_single_select('defaultlanguage', $lang['systemconfig_default_language_label'], $languages, true, 420, '', true);
+
+// Add localised language for display when selecting languages.
+$display_languages=$languages;
+foreach ($display_languages as $key=>$value)
+    {
+    $display_lang=$lang["language-" . $key];if ($lang["language-" . $key]!==$value) {$display_lang.=" (" . $value . ")";}
+    $display_languages[$key]=$display_lang;
+    }
+$page_def[] = config_add_single_select('defaultlanguage', $lang['systemconfig_default_language_label'], $display_languages, true, 420, '', true);
 $page_def[] = config_add_boolean_select('disable_languages', $lang['disable_languages'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_boolean_select('browser_language', $lang['systemconfig_browser_language_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
