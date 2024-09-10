@@ -232,7 +232,11 @@ function HookAction_datesCronCron()
                 if ($action_dates_reallydelete)
                     {
                     # FULL DELETION
+                    # Unset deletion state to force the resource to be fully deleted
+                    $temp = $GLOBALS['resource_deletion_state'];
+                    unset($GLOBALS['resource_deletion_state']);
                     delete_resource($ref);
+                    $GLOBALS['resource_deletion_state'] = $temp;
                     }
                 else
                     {
