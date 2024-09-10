@@ -2912,6 +2912,11 @@ function is_html($string)
  */
 function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true)
     {
+
+    if (!is_string_loose($value)) {
+        return;
+    }
+
     global $baseurl_short, $baseurl_short;
     if($path == "")
         {
@@ -4517,6 +4522,16 @@ function is_int_loose($var)
 function is_positive_int_loose($V): bool
     {
     return is_int_loose($V) && $V > 0;
+    }
+
+/**
+ * Helper function to check if a value is able to be cast to a string
+ * 
+ * @param mixed $var value to be tested
+ */
+function is_string_loose($var): bool
+    {
+    return !is_array($var) && $var === (string)$var;
     }
 
 /**
