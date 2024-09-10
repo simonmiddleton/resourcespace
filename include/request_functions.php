@@ -1229,22 +1229,25 @@ function get_notification_users_by_owner_field(array $users, array $resources)
 
     $users_to_notify = [];
 
-    // Determine which users should be notified based on the owner field value and its mappings
+    // Build a list of owner field nodes belonging to the incoming list of resources; true means get full node details 
     $resource_nodes = get_resource_nodes_batch($resources, [$owner_field], true);
-
-    // All resources are unmanaged so no users should be filtered out
+    
+    // There are resources, but there is no routing data (ie. no owners to route to), so no users are filtered out
     if(!empty($resources) && empty($resource_nodes))
         {
         return $users_map_ref_email;
         }
 
+    // Determine which users should be notified based on the owner field value and its mappings
     foreach($resource_nodes as $rtf_rns)
         {
         $owner_field_node_id = $rtf_rns[$owner_field][0]['ref'] ?? 0;
         $mapped_group = $owner_field_mappings[$owner_field_node_id] ?? 0;
         if($owner_field_node_id > 0 && $mapped_group > 0)
             {
+            // Build a list of userrefs within the mapped group
             $group_users = array_column(get_users($mapped_group, '', 'u.username', false, -1, 1, false, 'u.ref'), 'ref');
+            // Each of the userrefs which is a member of the mapped group will be notified
             $users_to_notify += array_intersect_key($users_map_ref_email, array_flip($group_users));
             }
         }
