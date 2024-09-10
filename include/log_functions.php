@@ -489,7 +489,7 @@ function log_search_event(string $search, array $resource_types, array $archive_
     $archive_states = array_filter($archive_states, 'is_int_loose');
 
     $parameters=array();
-    $parameters[]="s";$parameters[]=($search === '' ? null : $search);
+    $parameters[]="s";$parameters[]=($search === '' || !is_string_loose($search) ? null : $search);
     $parameters[]="s";$parameters[]=(empty($resource_types) ? null : implode(', ', $resource_types));
     $parameters[]="s";$parameters[]=(empty($archive_states) ? null : implode(', ', $archive_states));
     $parameters[]="i";$parameters[]=(is_null($userref) ? null : (int)$userref);
