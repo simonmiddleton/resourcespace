@@ -1814,8 +1814,6 @@ var ProcessingCount=-1;
 
 function CentralSpaceShowProcessing()
     {
-    const callerName = CentralSpaceShowProcessing.caller ? CentralSpaceShowProcessing.caller.name : "Anonymous function";
-    console.log("CentralSpaceShowProcessing CALLED BY: ", callerName);
     if (ProcessingTimersActive) { return; }
 
     jQuery('#ProcessingStatus').html('');
@@ -1835,8 +1833,6 @@ function CentralSpaceShowProcessing()
 
 function CentralSpaceHideProcessing()
     {
-    const callerName = CentralSpaceHideProcessing.caller ? CentralSpaceHideProcessing.caller.name : "Anonymous function";
-    console.log("CentralSpaceHideProcessing CALLED BY: ", callerName);
     if (!ProcessingTimersActive) { return; }
 
     jQuery('#ProcessingBox').fadeOut('fast');
