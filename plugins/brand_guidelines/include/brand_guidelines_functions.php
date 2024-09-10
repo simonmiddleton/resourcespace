@@ -40,7 +40,7 @@ function create_page(string $name, int $parent): int {
         ]
     );
     $ref = sql_insert_id();
-    log_activity(null, LOG_CODE_CREATED, $name, 'brand_guidelines_pages', 'name', $ref);
+    log_activity(null, LOG_CODE_CREATED, $name, 'brand_guidelines_pages', 'name', $ref, null, '');
     return $ref;
 }
 
