@@ -13,7 +13,7 @@ if (!acl_can_edit_brand_guidelines()) {
 }
 
 $save = getval('posting', '') !== '' && enforcePostRequest(false);
-$pages_db = get_pages();
+$pages_db = get_all_pages();
 $all_sections = extract_node_options(array_filter($pages_db, __NAMESPACE__ . '\is_section'), true, true);
 $parent = getval('parent', 0, false, (fn($V) => is_positive_int_loose($V) || ($save && is_array($V) && count($V) === 1)));
 

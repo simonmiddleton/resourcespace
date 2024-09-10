@@ -18,8 +18,12 @@ function acl_can_edit_brand_guidelines(): bool {
     return checkperm('a') || checkperm('bge');
 }
 
-function get_pages(): array {
-    return ps_query("SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_PAGES)} FROM brand_guidelines_pages ORDER BY parent ASC, order_by ASC");
+function get_all_pages(): array {
+    return ps_query(
+        "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_PAGES)} FROM brand_guidelines_pages ORDER BY parent ASC, order_by ASC",
+        [],
+        'brand_guidelines_pages'
+    );
 }
 
 function get_page_contents(int $id): array {
@@ -41,6 +45,7 @@ function create_page(string $name, int $parent): int {
     );
     $ref = sql_insert_id();
     log_activity(null, LOG_CODE_CREATED, $name, 'brand_guidelines_pages', 'name', $ref, null, '');
+    clear_query_cache('brand_guidelines_pages');
     return $ref;
 }
 

@@ -11,7 +11,7 @@ if (!acl_can_view_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
-$pages_db = get_pages();
+$pages_db = get_all_pages();
 $all_pages = get_node_tree(0, $pages_db);
 $selected_page = getval('spage', 0, false, 'is_positive_int_loose');
 $available_pages = extract_node_options(array_filter($pages_db, fn($item) => !is_section($item)), true, true);
