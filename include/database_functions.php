@@ -1378,7 +1378,7 @@ function sql_reorder_records(string $table, array $refs)
 * 
 * @param string $table The source table
 * @param string $alias Optionally, a different alias to use
-* @param string $plugin Specifies that this table is defined in a plugin with the supplied name
+* @param string $plugin [DEPRECATED] Specifies that this table is defined in a plugin with the supplied name
 * @param bool   $return_list Set to true to return a list of column names. Note: the alias is ignored in this mode.
 * 
 * @return string|array
@@ -1388,16 +1388,8 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
     global $plugins;
     if (is_null($alias)) {$alias=$table;}
 
-    // Locate the table definition file
-    $table_file= "/dbstruct/table_" . safe_file_name($table) . ".txt";
-    if (!is_null($plugin))
-        {
-        $table_file="plugins/" . safe_file_name($plugin) . "/" . $table_file;
-        }
-    $table_file=dirname(__FILE__) . "/../" . $table_file; // Locate relative to this file.
-
-    // Fetch structure and return column names as a list.
-    $structure=explode("\n",trim(file_get_contents($table_file)));
+    $table_file = dirname(__DIR__) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
+    $structure = file_exists($table_file) ? explode("\n", trim(file_get_contents($table_file))) : [];
     $columns=array();
     foreach ($structure as $column) {$columns[]=explode(",",$column)[0];}
 
@@ -1405,10 +1397,6 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
 
     foreach ($plugins as $plugin_entry)
         {
-        if ($plugin_entry === $plugin)
-            {
-            continue; // The plugin dbstruct has already been processed; don't process it again
-            }
         $plugin_file=get_plugin_path($plugin_entry) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
         if (file_exists($plugin_file))
             {
@@ -1416,6 +1404,10 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
             foreach ($structure as $column) {$columns[]=explode(",",$column)[0];}
             }
         }
+
+    if ($columns === []) {
+        trigger_error("Unable to find the structure for database table '{$table}'", E_USER_ERROR);
+    }
 
     if($return_list)
         {
