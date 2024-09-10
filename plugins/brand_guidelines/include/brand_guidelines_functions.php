@@ -40,8 +40,7 @@ function create_page(string $name, int $parent): int {
         ]
     );
     $ref = sql_insert_id();
-    // todo: remove the '' for old value once t36263 is patched to trunk and merged on this branch
-    log_activity(null, LOG_CODE_CREATED, $name, 'brand_guidelines_pages', 'name', $ref, null, '');
+    log_activity(null, LOG_CODE_CREATED, $name, 'brand_guidelines_pages', 'name', $ref);
     return $ref;
 }
 
