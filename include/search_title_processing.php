@@ -4,7 +4,7 @@
 $search_title = "";
 $search_title_links = "";
 
-global $baseurl_short, $filename_field, $archive_standard;
+global $baseurl_short, $filename_field, $archive_standard,$related_search_searchcrumb_field;
 
 # Display a title of the search (if there is a title)
 $searchcrumbs="";
@@ -37,7 +37,7 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                 {
                 $refinements[$n] = substr_replace($refinements[$n],": ",$semi_pos,strlen(":;"));
                 }
-        
+
             $search_title_element=str_replace(";"," OR ",$refinements[$n]);
             $search_title_element=search_title_node_processing($search_title_element);
             if ($n!=0 || !$archive_standard)
@@ -53,7 +53,7 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                 if ($x!=$n && substr($refinements[$x+1],0)!="-")
                     {
                     $searchcrumbs.=",";
-                    }       
+                    }
                 }
 
 
@@ -62,7 +62,7 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                 {
                 $datefieldinfo=ps_query("select ref from resource_type_field where name=? and type IN (4,6,10)", array("s",trim($search_title_element[0])), "schema");
 
-                if (count($datefieldinfo)) 
+                if (count($datefieldinfo))
                     {
                     $search_title_element[1]=str_replace("|", "-", $search_title_element[1]);
                     $search_title_element[1]=str_replace("nn", "??", $search_title_element[1]);
@@ -86,10 +86,10 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                 {
                 $search_title_element=$search_title_element[0];
                 }
-                
+
 
             if (substr(trim($search_title_element),0,6)=="!empty")
-                {// superspecial !empty search  
+                {// superspecial !empty search
                 $search_title_elementq=trim(str_replace("!empty","",rawurldecode($search_title_element)));
                 if (is_numeric($search_title_elementq))
                     {
@@ -123,7 +123,7 @@ if ($search_titles)
     if(substr($search, 0, 11) == "!collection")
         {
         $col_title_ua = "";
-        // add a tooltip to Smart Collection titles (which provides a more detailed view of the searchstring.    
+        // add a tooltip to Smart Collection titles (which provides a more detailed view of the searchstring.
         $alt_text = '';
         if ($pagename=="search" && isset($collectiondata['savedsearch']) && $collectiondata['savedsearch']!='')
             {
@@ -132,7 +132,7 @@ if ($search_titles)
                 {
                 $alt_text = "title='search=" . $smartsearch[0]['search'] . "&restypes=" . $smartsearch[0]['restypes'] . "&archive=" . $smartsearch[0]['archive'] . "'";
                 }
-            } 
+            }
 
         hook("collectionsearchtitlemod");
 
@@ -156,7 +156,7 @@ if ($search_titles)
 
             $fc_branch_path = move_featured_collection_branch_path_root(
                 // We ask for the branch up from the parent as we want to generate a different link for the actual collection.
-                // If we were to use the $collectiondata["ref"] then the generated link for the collection would've pointed at 
+                // If we were to use the $collectiondata["ref"] then the generated link for the collection would've pointed at
                 // collections_featured.php which we don't want
                 get_featured_collection_category_branch_by_leaf((int) $collectiondata["parent"], [])
             );
@@ -191,9 +191,9 @@ if ($search_titles)
         $searched_types_refs_array = explode(",", $restypes); # Searched resource types and collection types
         $resource_types_array = get_resource_types("", false,false,true); # Get all resource types, untranslated
         $searched_resource_types_names_array = array();
-        for ($n = 0; $n < count($resource_types_array); $n++) 
+        for ($n = 0; $n < count($resource_types_array); $n++)
             {
-            if (in_array($resource_types_array[$n]["ref"], $searched_types_refs_array)) 
+            if (in_array($resource_types_array[$n]["ref"], $searched_types_refs_array))
                 {
                 $searched_resource_types_names_array[] = lang_or_i18n_get_translated($resource_types_array[$n]["name"], "resourcetype-", "-2");
                 }
@@ -207,15 +207,15 @@ if ($search_titles)
 
         # Which collection types (if any) are selected?
         $searched_collection_types_names_array = array();
-        if (in_array("mycol", $searched_types_refs_array)) 
+        if (in_array("mycol", $searched_types_refs_array))
             {
             $searched_collection_types_names_array[] = $lang["mycollections"];
             }
-        if (in_array("pubcol", $searched_types_refs_array)) 
+        if (in_array("pubcol", $searched_types_refs_array))
             {
             $searched_collection_types_names_array[] = $lang["publiccollections"];
             }
-        if (in_array("themes", $searched_types_refs_array)) 
+        if (in_array("themes", $searched_types_refs_array))
             {
             $searched_collection_types_names_array[] = $lang["themes"];
             }
@@ -242,7 +242,7 @@ if ($search_titles)
             # Step 1: Replace %resourcetypes%
             $searchtitle=$lang["all"]." ".implode($lang["resourcetypes_separator"]." ",$searched_resource_types_names_array);
             //$searchtitle = str_replace_formatted_placeholder("%resourcetypes%", $searched_resource_types_names_array, $lang["resourcetypes-collections"], false, //$lang["resourcetypes_separator"]);
-            
+
             # Step 2: Replace %collectiontypes%
             $searchtitle = str_replace_formatted_placeholder("%collectiontypes%", $searched_collection_types_names_array, $searchtitle, false, $lang["collectiontypes_separator"]);
             }
@@ -305,7 +305,7 @@ if ($search_titles)
             $resources=explode(",",$resources);
             $resources=$resources[0];
             $title_string = $lang["listresources"] . " " . $resources;
-            }    
+            }
         elseif (substr($search,0,15)=="!archivepending")
             {
             $title_string = $lang["resourcespendingarchive"];
@@ -326,7 +326,7 @@ if ($search_titles)
             {
             $cuser=substr($search,14);
             $cuser=explode(",",$cuser);
-            $cuser=$cuser[0];   
+            $cuser=$cuser[0];
 
             if ($cuser==$userref)
                 {
@@ -346,7 +346,7 @@ if ($search_titles)
                         break;
                     }
                 }
-            else 
+            else
                 {
                 $udata = get_user($cuser);
                 if($udata)
@@ -358,13 +358,13 @@ if ($search_titles)
             }
         elseif (substr($search,0,8)=="!hasdata")
             {
-            $fieldref=intval(trim(substr($search,8)));        
+            $fieldref=intval(trim(substr($search,8)));
             $fieldinfo=get_resource_type_field($fieldref);
             $fdisplayname = trim((string)$fieldinfo["title"]) != "" ? $fieldinfo["title"] : $fieldref;
             $title_string = $lang["search_title_hasdata"] . " " . $fdisplayname;
             }
         elseif (substr($search,0,6)=="!empty")
-            { 
+            {
             $fieldref=intval(trim(substr($search,6)));
             $fieldinfo=get_resource_type_field($fieldref);
             $displayname=i18n_get_translated($fieldinfo["title"]);
@@ -380,14 +380,14 @@ if ($search_titles)
         elseif (substr($search,0,7)=="!locked")
             {
             $title_string = $lang["locked_resource_search"];
-            } 
+            }
         if(isset($title_string) && $title_string !="")
             {
             $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . escape($title_string) . '</a> ' . $searchcrumbs . '</div></div> ';
             }
         }
-    
-    elseif (!$archive_standard) 
+
+    elseif (!$archive_standard)
         {
         $title_strings = [];
         $wfstates = explode(",",$archive);
@@ -397,7 +397,7 @@ if ($search_titles)
             }
         $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . escape(implode(", ",$title_strings)) . '</a>' . escape($searchcrumbs) . '</div></div> ';
         }
-    
+
     hook("addspecialsearchtitle");
     }
 
@@ -405,8 +405,8 @@ hook('add_search_title_links');
 
 if (
     !hook("replacenoresourcesfoundsearchtitle")
-    && !is_array($result) 
-    && empty($collections) 
+    && !is_array($result)
+    && empty($collections)
     && getval("addsmartcollection","") == ''
     ) {
         $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '">'.$lang["noresourcesfound"].'</a></div></div>';
