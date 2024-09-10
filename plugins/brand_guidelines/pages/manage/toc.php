@@ -17,10 +17,15 @@ $pages_db = get_pages();
 $all_sections = extract_node_options(array_filter($pages_db, __NAMESPACE__ . '\is_section'), true, true);
 $parent = getval('parent', 0, false, (fn($V) => is_positive_int_loose($V) || ($save && is_array($V) && count($V) === 1)));
 
-// Quick page parent (ie. section) validation (value type is different depending on the save status)
+// Quick page parent (ie. section) validation (value type is different depending how we got here - by new page button
+// or saving)
 foreach ($all_sections as $section_id => $section) {
     if (is_positive_int_loose($parent) && $section_id == $parent) {
         $parent = (int) $parent;
+        
+        // Convert submitted data into the expected type so process_custom_fields_submission() can automatically select
+        // the dropdown option
+        $_GET['parent'] = [md5("parent_{$section}")];
         break;
     } elseif ($save && is_array($parent) && $parent[0] === md5("parent_{$section}")) {
         $parent = (int) $section_id;
@@ -39,21 +44,30 @@ $toc_fields = [
     'required' => true,
     ],
 ];
-if (!is_section(['parent' => $parent])) {
+$is_page = !is_section(['parent' => $parent]);
+if ($is_page) {
     $page_title = $lang['brand_guidelines_new_page_title'];
     $toc_fields[] = [
         'id'       => 'parent',
         'title'    => $lang['brand_guidelines_section'],
         'type'     => FIELD_TYPE_DROP_DOWN_LIST,
         'options'  => $all_sections,
-        // todo: make it select based on the $parent
         'required' => true,
     ];
 }
 $processed_toc_fields = process_custom_fields_submission($toc_fields, $save, ['html_properties_prefix' => '']);
 
 if ($save && count_errors($processed_toc_fields) === 0) {
-    new_page_record();
+    $new_page_id = create_page(
+        $processed_toc_fields[0]['value'],
+        $is_page ? $processed_toc_fields[1]['selected_options'][$parent] : 0
+    );
+    js_call_CentralSpaceLoad(
+        generateURL(
+            "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
+            ['spage' => $new_page_id]
+        )
+    );
 }
 
 

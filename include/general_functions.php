@@ -5584,3 +5584,12 @@ function enforceSharePassword(string $password) : void
         exit(escape($lang["error-permissiondenied"]));
         }
     }
+
+/**
+ * Helper function to call the JS CentralSpaceLoad().
+ * @return never
+ */
+function js_call_CentralSpaceLoad(string $url)
+{
+    exit("<script>CentralSpaceLoad('{$url}');</script>");
+}

@@ -29,8 +29,20 @@ function get_page_contents(int $id): array {
     );
 }
 
-function new_page_record() {
-    echo '<pre>';print_r($GLOBALS['processed_toc_fields']);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
+function create_page(string $name, int $parent): int {
+    ps_query(
+        'INSERT INTO `brand_guidelines_pages` (`name`, `parent`, `order_by`)
+        SELECT ?, ?, MAX(order_by) + 10 FROM brand_guidelines_pages WHERE `parent` = ?',
+        [
+            's', $name,
+            'i', $parent,
+            'i', $parent,
+        ]
+    );
+    $ref = sql_insert_id();
+    // todo: remove the '' for old value once t36263 is patched to trunk and merged on this branch
+    log_activity(null, LOG_CODE_CREATED, $name, 'brand_guidelines_pages', 'name', $ref, null, '');
+    return $ref;
 }
 
 /**
