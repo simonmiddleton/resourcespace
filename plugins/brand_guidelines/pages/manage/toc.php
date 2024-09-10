@@ -60,7 +60,7 @@ $processed_toc_fields = process_custom_fields_submission($toc_fields, $save, ['h
 if ($save && count_errors($processed_toc_fields) === 0) {
     $new_page_id = create_page(
         $processed_toc_fields[0]['value'],
-        $is_page ? $processed_toc_fields[1]['selected_options'][$parent] : 0
+        $is_page && isset($processed_toc_fields[1]['selected_options'][$parent]) ? $parent : 0
     );
     js_call_CentralSpaceLoad(
         generateURL(
