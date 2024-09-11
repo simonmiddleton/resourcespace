@@ -16,7 +16,9 @@ $all_pages = get_node_tree(0, $pages_db);
 $selected_page = getval('spage', 0, false, 'is_positive_int_loose');
 $available_pages = extract_node_options(array_filter($pages_db, fn($item) => !is_section($item)), true, true);
 
-if (isset($available_pages[$selected_page])) {
+if ($available_pages === []) {
+    $selected_page_title = '';
+} elseif (isset($available_pages[$selected_page])) {
     $selected_page_title = $available_pages[$selected_page];
 } else {
     $selected_page = array_key_first($available_pages);
@@ -97,7 +99,9 @@ render_content_menu();
                 foreach ($page_contents as $page_content) {
                     echo '<h3>(raw content data structure - debug)</h3><pre>';print_r($page_content);echo '</pre>';
                 }
-                render_new_content_button('add-new-content-end');
+                if ($available_pages !== []) {
+                    render_new_content_button('add-new-content-end');
+                }
                 ?>
                 <br><br><hr><p>Mock-up below</p><hr>
                 <p>Follow the guidelines below for our branding logos and colours.</p>
@@ -209,31 +213,37 @@ render_content_menu();
 </div>
 <script>
     function showOptionsMenu(e, target) {
-        // todo: break apart logic between different types of contextual menus
+        let btn_el = jQuery(e);
+
         if (target == 'menu-individual') {
-            jQuery("#" + target).css({
-                display: 'none',
-                left: jQuery(".top-right-menu").position().left,
-                top: jQuery(".top-right-menu").position().top + 20
-            });
+            let nav_ctx = btn_el.parents('.guidelines-sidebar').length !== 0;
+            off_left = nav_ctx ? 10 : 30;
+            off_top = nav_ctx ? -10 : 0;
         } else {
-            let btn_id = e.getAttribute('id');
-            jQuery("#" + target).css({
-                display: 'none',
-                left: jQuery("#" + btn_id).position().left - 16,
-                top: jQuery("#" + btn_id).position().top + 40
-            });
+            off_left = -16;
+            off_top = 40;
         }
 
+        jQuery("#" + target).css({
+            display: 'none',
+            left: btn_el.position().left + off_left,
+            top: btn_el.position().top + off_top
+        });
         jQuery("#" + target).slideToggle(150);
+    }
+
+    function closeOptionsMenu() {
+        jQuery('#menu-individual').slideUp(150);
+        jQuery('#menu-content').slideUp(150);
     }
 
     document.onkeydown = function(e) {
         // On esc, close down contextual menus 
         if (e.keyCode == 27) {
-            jQuery('#menu-individual').slideUp(150);
-            jQuery('#menu-content').slideUp(150);
+            closeOptionsMenu();
         }
+
+    document.onclick = () => closeOptionsMenu();
     };
 </script>
 <?php
