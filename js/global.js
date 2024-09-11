@@ -1849,7 +1849,7 @@ function CentralSpace_ProcessingDisplayTimer()
     var NewMessage=ProcessingMessages.shift();
     if (NewMessage!==undefined)
         {
-        jQuery('#ProcessingStatus').html(NewMessage);
+        jQuery('#ProcessingStatus').html(DOMPurify.sanitize(NewMessage));
         }
     }
 

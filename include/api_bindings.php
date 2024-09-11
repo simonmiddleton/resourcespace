@@ -1568,6 +1568,8 @@ function api_toggle_active_state_for_nodes(array $refs): array
 
 /**
  * Expose {@see get_processing_message} to the API
+ * 
+ * @return false|array
  */
 function api_get_processing_message()
     {

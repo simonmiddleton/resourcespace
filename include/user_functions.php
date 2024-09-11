@@ -3679,7 +3679,8 @@ function checkPermission_manage_users() : bool
 
 /**
  * Get the processing status message for the current user.
- *
+ * 
+ * @return false|array
  */
 function get_processing_message()
     {
@@ -3699,6 +3700,8 @@ function get_processing_message()
  * Set a new processing message for the current user.
  *
  * @param string $message   The processing status message to add.
+ * 
+ * @return void
  */
 $set_processing_message_first_call=true;
 function set_processing_message(string $message)
@@ -3709,5 +3712,4 @@ function set_processing_message(string $message)
     if ($userprocessing_messages!="") {$userprocessing_messages.=";;";} // Add delimiter
     $userprocessing_messages.=$message;
     ps_query("update user set processing_messages=? where ref=?",["s",$userprocessing_messages,"i",$userref]);
-    return true;
     }
