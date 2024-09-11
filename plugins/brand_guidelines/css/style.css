@@ -102,12 +102,20 @@
 
 .context-menu-row {
     padding: 7px 5px;
+    width: -webkit-fill-available;
     border-radius: 4px;
+    text-align: left;
+    background-color: unset;
+    color: inherit;
+    box-shadow: none;
+    font-size: unset;
+    font-weight: unset;
 }
 
 .context-menu-row:hover {
     background: #e7e7e7;
-    cursor: pointer;
+    filter: none;
+    -webkit-filter: none;
 }
 
 .context-menu-row i {

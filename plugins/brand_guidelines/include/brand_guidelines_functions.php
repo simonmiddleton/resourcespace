@@ -63,22 +63,22 @@ function render_individual_menu() {
     }
     ?>
     <div id="menu-individual" class="context-menu-container" style="display:none;">
-        <div class="context-menu-row">
+        <button class="context-menu-row">
             <i class="fa-solid fa-fw fa-pen-to-square"></i>
             <span><?php echo escape($GLOBALS['lang']['action-edit']); ?></span>
-        </div>
-        <div class="context-menu-row">
+        </button>
+        <button class="context-menu-row">
             <i class="fa-solid fa-fw fa-trash-can"></i>
             <span><?php echo escape($GLOBALS['lang']['action-delete']); ?></span>
-        </div>
-        <div class="context-menu-row">
+        </button>
+        <button class="context-menu-row">
             <i class="fa-solid fa-fw fa-chevron-up"></i>
             <span><?php echo escape($GLOBALS['lang']['action-move-up']); ?></span>
-        </div>
-        <div class="context-menu-row">
+        </button>
+        <button class="context-menu-row">
             <i class="fa-solid fa-fw fa-chevron-down"></i>
             <span><?php echo escape($GLOBALS['lang']['action-move-down']); ?></span>
-        </div>
+        </button>
     </div>
     <?php
 }
