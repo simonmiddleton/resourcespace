@@ -217,7 +217,11 @@ render_content_menu();
 
         if (target == 'menu-individual') {
             let nav_ctx = btn_el.parents('.guidelines-sidebar').length !== 0;
-            off_left = nav_ctx ? 10 : 30;
+            let is_responsive = window.matchMedia("(max-width: 600px)").matches;
+            off_left = nav_ctx
+                // Offset based on the .context-menu-container width adjusted for smaller screens
+                ? (is_responsive ? -175 : 10)
+                : (is_responsive ? -165 : 30);
             off_top = nav_ctx ? -10 : 0;
         } else {
             off_left = -16;
@@ -243,7 +247,7 @@ render_content_menu();
             closeOptionsMenu();
         }
 
-    document.onclick = () => closeOptionsMenu();
+    // document.onclick = () => closeOptionsMenu();
     };
 </script>
 <?php
