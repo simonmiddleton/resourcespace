@@ -49,6 +49,12 @@ function create_page(string $name, int $parent): int {
     return $ref;
 }
 
+function delete_pages(): bool
+{
+    // ps_query('');
+    return false;
+}
+
 /**
  * Check if a page item is a section
  * @param array{parent: int} $I Generic page data structure
@@ -67,7 +73,7 @@ function render_individual_menu() {
             <i class="fa-solid fa-fw fa-pen-to-square"></i>
             <span><?php echo escape($GLOBALS['lang']['action-edit']); ?></span>
         </button>
-        <button class="context-menu-row">
+        <button class="context-menu-row" onclick="return delete_item(this);">
             <i class="fa-solid fa-fw fa-trash-can"></i>
             <span><?php echo escape($GLOBALS['lang']['action-delete']); ?></span>
         </button>

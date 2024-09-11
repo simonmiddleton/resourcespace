@@ -12,7 +12,8 @@ if (!acl_can_edit_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
-$save = getval('posting', '') !== '' && enforcePostRequest(false);
+$delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
+$save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0;
 $pages_db = get_all_pages();
 $all_sections = extract_node_options(array_filter($pages_db, __NAMESPACE__ . '\is_section'), true, true);
 $parent = getval('parent', 0, false, (fn($V) => is_positive_int_loose($V) || ($save && is_array($V) && count($V) === 1)));
@@ -68,6 +69,10 @@ if ($save && count_errors($processed_toc_fields) === 0) {
             ['spage' => $new_page_id]
         )
     );
+} elseif ($delete > 0) {
+    // todo: if delete is a section, delete it's children too
+    delete_pages();
+    js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
 }
 
 

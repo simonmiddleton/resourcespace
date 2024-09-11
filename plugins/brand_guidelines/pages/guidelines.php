@@ -213,6 +213,7 @@ render_content_menu();
 </div>
 <script>
     function showOptionsMenu(e, target) {
+        console.debug('showOptionsMenu(e = %o, target = %o)', e, target);
         hideOptionsMenu();
         let btn_el = jQuery(e);
 
@@ -229,11 +230,17 @@ render_content_menu();
             off_top = 40;
         }
 
-        jQuery("#" + target).css({
-            display: 'none',
-            left: btn_el.position().left + off_left,
-            top: btn_el.position().top + off_top
-        });
+        console.debug(jQuery("#" + target));
+        jQuery("#" + target)
+            .css({
+                display: 'none',
+                left: btn_el.position().left + off_left,
+                top: btn_el.position().top + off_top
+            })
+            .data(
+                'item-ref',
+                btn_el.data('item-ref') /* todo: this will most likely become an Item object so we can distinguish between item types (nav/content) */
+            );
         jQuery("#" + target).slideDown(150);
     }
 
@@ -254,6 +261,51 @@ render_content_menu();
             hideOptionsMenu();
         }
     };
+
+    function delete_item(e) {
+        // console.debug('delete_item(e = %o)', e);
+        // let el = jQuery(e);
+        
+        // todo: ditinguish between item types (nav/content)
+        return toc_delete_item(e);
+    }
+
+    function toc_delete_item(e) {
+        console.debug('toc_delete_item(e = %o)', e);
+        let el = jQuery(e);
+        let item_id = el.parent('#menu-individual').data('item-ref');
+
+        if(confirm('<?php echo escape($lang["confirm-deletion"]); ?>'))
+            {
+            console.debug('deleted #' + item_id);
+
+            let temp_form = document.createElement("form");
+            temp_form.setAttribute("method", "post");
+            temp_form.setAttribute("action", '<?php echo "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/toc.php"; ?>?delete=' + item_id);
+
+            let ajx = document.createElement("input");
+            ajx.setAttribute("type", "hidden");
+            ajx.setAttribute("name", "ajax");
+            ajx.setAttribute("value", "true");
+            temp_form.appendChild(ajx);
+
+            <?php
+            if ($CSRF_enabled) {
+            ?>
+                let csrf = document.createElement("input");
+                csrf.setAttribute("type", "hidden");
+                csrf.setAttribute("name", "<?php echo $CSRF_token_identifier; ?>");
+                csrf.setAttribute("value", "<?php echo generateCSRFToken($usersession, "toc_delete_item"); ?>");
+                temp_form.appendChild(csrf);
+            <?php
+            }
+            ?>
+
+            CentralSpacePost(temp_form, true, false, false);
+            };
+
+        return false;
+    }
 </script>
 <?php
 include_once RESOURCESPACE_BASE_PATH . '/include/footer.php';
