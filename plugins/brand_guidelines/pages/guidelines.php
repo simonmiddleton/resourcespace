@@ -213,6 +213,7 @@ render_content_menu();
 </div>
 <script>
     function showOptionsMenu(e, target) {
+        hideOptionsMenu();
         let btn_el = jQuery(e);
 
         if (target == 'menu-individual') {
@@ -233,21 +234,25 @@ render_content_menu();
             left: btn_el.position().left + off_left,
             top: btn_el.position().top + off_top
         });
-        jQuery("#" + target).slideToggle(150);
+        jQuery("#" + target).slideDown(150);
     }
 
-    function closeOptionsMenu() {
-        jQuery('#menu-individual').slideUp(150);
-        jQuery('#menu-content').slideUp(150);
+    function hideOptionsMenu() {
+        let menu_individual = jQuery('#menu-individual');
+        let menu_content = jQuery('#menu-content');
+        if (menu_individual.is(':visible')) {
+            jQuery('#menu-individual').slideUp(150);
+        }
+        if (menu_content.is(':visible')) {
+            jQuery('#menu-content').slideUp(150);
+        }
     }
 
     document.onkeydown = function(e) {
         // On esc, close down contextual menus 
         if (e.keyCode == 27) {
-            closeOptionsMenu();
+            hideOptionsMenu();
         }
-
-    // document.onclick = () => closeOptionsMenu();
     };
 </script>
 <?php
