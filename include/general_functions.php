@@ -4531,7 +4531,7 @@ function is_positive_int_loose($V): bool
  */
 function is_string_loose($var): bool
     {
-    return !is_array($var) && $var === (string)$var;
+    return !is_array($var) && $var == (string)$var;
     }
 
 /**
