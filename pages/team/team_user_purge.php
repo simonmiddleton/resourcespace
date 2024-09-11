@@ -16,8 +16,13 @@ if ($months!="")
     else
         {
         $condition="(created IS NULL OR created<date_sub(now(), interval {$months} month)) AND 
-						  (last_active IS NULL OR last_active<date_sub(now(), interval {$months} month))";
-        $count=ps_value("SELECT count(*) value FROM user WHERE $condition", [], 0);
+                        (last_active IS NULL OR last_active<date_sub(now(), interval {$months} month))";
+        if (checkperm("U")) {
+            $condition .= " AND (usergroup = ? OR usergroup IN (SELECT ref FROM usergroup g WHERE g.parent = ?))";
+            $params = array("i", $usergroup, "i", $usergroup);
+        }
+
+        $count=ps_value("SELECT COUNT(*) value FROM user WHERE $condition", $params ?? [], 0);
         }
     }
     
@@ -25,11 +30,11 @@ if (isset($condition) && getval("purge2","")!="" && enforcePostRequest(false))
     {
     if($user_purge_disable)
         {
-        ps_query("UPDATE user SET approved=2 WHERE $condition AND approved=1");    
+        ps_query("UPDATE user SET approved=2 WHERE $condition AND approved=1", $params ?? []);
         }
     else
         {
-        ps_query("DELETE FROM user WHERE $condition");
+        ps_query("DELETE FROM user WHERE $condition", $params ?? []);
         }
     redirect("pages/team/team_user.php");
     }
@@ -78,7 +83,7 @@ if(isset($count) && $count==0)
 <input type="hidden" name="months" value="<?php echo escape($months); ?>">
 <input name="purge2" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["purgeusers"]); ?>&nbsp;&nbsp;" />
 </p>
-<?php $users=ps_query("select " . columns_in("user") . " from user where $condition"); ?>
+<?php $users=ps_query("SELECT " . columns_in("user") . " FROM user WHERE $condition", $params ?? []); ?>
 <table class="InfoTable">
     <tr>
         <td><strong><?php echo escape($lang["username"]); ?></strong></td>
@@ -103,7 +108,12 @@ if(isset($count) && $count==0)
 
 <?php } else { ?>
 
-<p><?php echo str_replace("%","<input type='number' class='PurgeUsersMonths' name=months value=12>", escape($lang["purgeuserscommand"])); ?>
+<p><?php
+echo str_replace(
+    "%",
+    "<input type='number' class='PurgeUsersMonths' name=months value=12 min=1>",
+    escape($lang["purgeuserscommand"])
+); ?>
 <br /><br />
 <input name="purge1" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["purgeusers"]); ?>&nbsp;&nbsp;" />
 </p>
