@@ -32,6 +32,12 @@
     text-decoration: underline;
 }
 
+.guidelines-sidebar .top-right-menu {
+    margin: 0px;
+    border-radius: unset;
+    cursor: pointer;
+}
+
 .guidelines-content {
     margin-top: 10px;
     max-width: 1000px;

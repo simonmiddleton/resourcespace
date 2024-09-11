@@ -58,6 +58,9 @@ function is_section(array $I): bool {
 }
 
 function render_individual_menu() {
+    if (!acl_can_edit_brand_guidelines()) {
+        return;
+    }
     ?>
     <div id="menu-individual" class="context-menu-container" style="display:none;">
         <div class="context-menu-row">
@@ -156,7 +159,11 @@ function render_block_colour_item(array $value) {
     <?php
 }
 
-function render_navigation_item(array $item, bool $is_current = false) {
+function render_navigation_item(array $item, bool $is_current = false)
+{
+    $can_edit_brand_guidelines = acl_can_edit_brand_guidelines();
+    $show_individual_menu = true;
+
     if ($item['parent'] > 0 && $item['ref'] !== 0) {
         // Table of content navigation
         $onclick = sprintf(
@@ -166,7 +173,7 @@ function render_navigation_item(array $item, bool $is_current = false) {
                 ['spage' => $item['ref']]
             )
         );
-    } elseif($item['ref'] === 0) {
+    } elseif($item['ref'] === 0 && $can_edit_brand_guidelines) {
         // Manage table of content
         $onclick = sprintf(
             'return ModalLoad(\'%s\', true, true);',
@@ -175,6 +182,7 @@ function render_navigation_item(array $item, bool $is_current = false) {
                 $item['parent'] > 0 ? ['parent' => $item['parent']] : []
             )
         );
+        $show_individual_menu = false;
     } else {
         $onclick = '';
     }
@@ -188,6 +196,18 @@ function render_navigation_item(array $item, bool $is_current = false) {
         <h3 <?php echo $is_current ? 'class="current"' : ''; ?> onclick="<?php echo $onclick; ?>"><?php
                 echo escape(i18n_get_translated($item['name']));
         ?></h3>
+        <?php
+    }
+
+    if ($can_edit_brand_guidelines && $show_individual_menu) {
+        ?>
+        <div
+            class="top-right-menu"
+            onclick="showOptionsMenu(this, 'menu-individual');"
+            data-item-ref="<?php echo escape($item['ref']); ?>"
+        >
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+        </div>
         <?php
     }
 }
