@@ -254,9 +254,16 @@ render_content_menu();
         }
     }
 
-    document.onkeydown = function(e) {
+    onkeydown = (e) => {
         // On esc, close down contextual menus 
         if (e.keyCode == 27) {
+            hideOptionsMenu();
+        }
+    };
+
+    onmousedown = (e) => {
+        // Close menus when clicking away
+        if (!(e.target.closest('#menu-individual') || e.target.closest('#menu-content'))) {
             hideOptionsMenu();
         }
     };
