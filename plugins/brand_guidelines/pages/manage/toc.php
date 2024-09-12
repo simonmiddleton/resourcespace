@@ -24,9 +24,12 @@ if ($ref > 0) {
     $all_pages_index = array_column($pages_db, null,'ref');
     if (isset($all_pages_index[$ref])) {
         $edit = true;
+
         // Help the process_custom_fields_submission() fill in the form
-        $_GET['name'] = $all_pages_index[$ref]['name'];
-        $parent = $all_pages_index[$ref]['parent'];
+        if (!$save) {
+            $_GET['name'] = $all_pages_index[$ref]['name'];
+            $parent = $all_pages_index[$ref]['parent'];
+        }
     }
 }
 
