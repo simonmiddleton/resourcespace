@@ -6,7 +6,9 @@ use function Montala\ResourceSpace\Plugins\BrandGuidelines\acl_can_view_brand_gu
 
 function HookBrand_guidelinesAllInitialise()
     {
-    include_once dirname(__DIR__) . '/include/brand_guidelines_functions.php';
+    $plugin_root = dirname(__DIR__);
+    include_once "{$plugin_root}/include/brand_guidelines_functions.php";
+    include_once "{$plugin_root}/include/database_functions.php";
     
     /** Types of content you can add to brand guideline pages */
     define('GUIDELINE_CONTENT_TYPES', [

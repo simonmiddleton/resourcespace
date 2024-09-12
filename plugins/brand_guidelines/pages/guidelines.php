@@ -281,13 +281,10 @@ render_content_menu();
 
             let temp_form = document.createElement("form");
             temp_form.setAttribute("method", "post");
-            temp_form.setAttribute("action", '<?php echo "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/toc.php"; ?>?delete=' + item_id);
-
-            let ajx = document.createElement("input");
-            ajx.setAttribute("type", "hidden");
-            ajx.setAttribute("name", "ajax");
-            ajx.setAttribute("value", "true");
-            temp_form.appendChild(ajx);
+            temp_form.setAttribute(
+                "action",
+                '<?php echo "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/toc.php"; ?>?delete=' + item_id
+            );
 
             <?php
             if ($CSRF_enabled) {

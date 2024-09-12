@@ -70,9 +70,17 @@ if ($save && count_errors($processed_toc_fields) === 0) {
         )
     );
 } elseif ($delete > 0) {
-    // todo: if delete is a section, delete it's children too
-    delete_pages();
-    js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
+    $delete_list = [$delete];
+    if (isset($all_sections[$delete])) {
+        $section_page_struct = array_column(get_node_tree(0, $pages_db), 'children', 'ref');
+        $children = isset($section_page_struct[$delete]) ? array_column($section_page_struct[$delete], 'ref') : [];
+        $delete_list = array_merge($delete_list, $children);
+    }
+
+    if (delete_pages($delete_list)) {
+        js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
+    }
+    exit(error_alert($lang['error-failed-to-delete'], true, 200));
 }
 
 

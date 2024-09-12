@@ -18,43 +18,6 @@ function acl_can_edit_brand_guidelines(): bool {
     return checkperm('a') || checkperm('bge');
 }
 
-function get_all_pages(): array {
-    return ps_query(
-        "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_PAGES)} FROM brand_guidelines_pages ORDER BY parent ASC, order_by ASC",
-        [],
-        'brand_guidelines_pages'
-    );
-}
-
-function get_page_contents(int $id): array {
-    return ps_query(
-        "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_CONTENT)} FROM brand_guidelines_content WHERE `page` = ? ORDER BY order_by ASC",
-        ['i', $id]
-    );
-}
-
-function create_page(string $name, int $parent): int {
-    ps_query(
-        'INSERT INTO `brand_guidelines_pages` (`name`, `parent`, `order_by`)
-        SELECT ?, ?, MAX(order_by) + 10 FROM brand_guidelines_pages WHERE `parent` = ?',
-        [
-            's', $name,
-            'i', $parent,
-            'i', $parent,
-        ]
-    );
-    $ref = sql_insert_id();
-    log_activity(null, LOG_CODE_CREATED, $name, 'brand_guidelines_pages', 'name', $ref, null, '');
-    clear_query_cache('brand_guidelines_pages');
-    return $ref;
-}
-
-function delete_pages(): bool
-{
-    // ps_query('');
-    return false;
-}
-
 /**
  * Check if a page item is a section
  * @param array{parent: int} $I Generic page data structure

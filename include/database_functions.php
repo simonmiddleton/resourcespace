@@ -1277,17 +1277,10 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
 * 
 * @param string  $v   String value that may require truncating
 * @param integer $len Desired length (limit as imposed by the database schema). {@see https://www.resourcespace.com/knowledge-base/developers/database_schema}
-* 
-* @return string
 */
-function sql_truncate_text_val(string $v, int $len)
+function sql_truncate_text_val(string $v, int $len): string
     {
-    if(mb_strlen($v) > $len)
-        {
-        $truncated_sql_val = mb_strcut($v, 0, $len);
-        }
-
-    return isset($truncated_sql_val) ? $truncated_sql_val : $v;
+    return mb_strlen($v) > $len ? mb_strcut($v, 0, $len) : $v;
     }
 
 /**
