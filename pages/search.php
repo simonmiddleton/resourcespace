@@ -1690,6 +1690,33 @@ if($use_selection_collection)
         var resource_ending=null; // Shifted click resource marks the end of a range
         var primary_action = null;
 
+        // The presence of a collection div indicates that event handlers for resource selection and deselection are established elsewhere
+        var isCollectionDivPresent = document.getElementById("CollectionDiv");
+        // Its absence means that handlers for resource selection and deselection need to be established here 
+        if (!isCollectionDivPresent) { 
+            jQuery('#CentralSpace').on('resourcesaddedtocollection', function(response,resource_list) {
+            resource_list.forEach(function (resource)
+                {
+                    jQuery("#ResourceShell" + resource).addClass("Selected");
+                    jQuery("#check" + resource).prop('checked','checked');
+                });
+
+            UpdateSelColSearchFilterBar();
+            CentralSpaceHideLoading();
+            });
+
+            jQuery('#CentralSpace').on('resourcesremovedfromcollection', function(response,resource_list) {
+            resource_list.forEach(function (resource)
+                {
+                    jQuery("#ResourceShell" + resource).removeClass("Selected");
+                    jQuery("#check" + resource).prop('checked','');
+                });
+
+            CentralSpaceHideLoading();
+            UpdateSelColSearchFilterBar();
+            });
+        }
+
         // Process the clicked box
         jQuery(".checkselect").click(function(e)
             {
