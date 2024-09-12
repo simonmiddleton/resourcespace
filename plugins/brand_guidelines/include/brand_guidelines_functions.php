@@ -32,7 +32,7 @@ function render_individual_menu() {
     }
     ?>
     <div id="menu-individual" class="context-menu-container" style="display:none;">
-        <button class="context-menu-row">
+        <button class="context-menu-row" onclick="return edit_item(this);">
             <i class="fa-solid fa-fw fa-pen-to-square"></i>
             <span><?php echo escape($GLOBALS['lang']['action-edit']); ?></span>
         </button>

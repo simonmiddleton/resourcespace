@@ -11,4 +11,6 @@ $lang['brand_guidelines_new_section'] = '+ New section';
 $lang['brand_guidelines_view_table_of_content'] = 'View table of content';
 $lang['brand_guidelines_new_section_title'] = 'Create new section';
 $lang['brand_guidelines_new_page_title'] = 'Create new page';
+$lang['brand_guidelines_edit_section_title'] = 'Edit section';
+$lang['brand_guidelines_edit_page_title'] = 'Edit page';
 $lang['brand_guidelines_section'] = 'Section';

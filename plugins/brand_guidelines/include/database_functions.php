@@ -31,6 +31,7 @@ function get_page_contents(int $id): array
  */
 function create_page(string $name, int $parent): int
 {
+    db_begin_transaction('brand_guidelines_create_page');
     ps_query(
         'INSERT INTO `brand_guidelines_pages` (`name`, `parent`, `order_by`)
         SELECT ?, ?, MAX(order_by) + 10 FROM brand_guidelines_pages WHERE `parent` = ?',
@@ -42,8 +43,32 @@ function create_page(string $name, int $parent): int
     );
     $ref = sql_insert_id();
     log_activity(null, LOG_CODE_CREATED, $name, 'brand_guidelines_pages', 'name', $ref, null, '');
+    db_end_transaction('brand_guidelines_create_page');
     clear_query_cache('brand_guidelines_pages');
     return $ref;
+}
+
+/**
+ * Edit Brand Guidelines page/section.
+ * @param int $ref Page ID
+ * @param string $name Page name
+ * @param int $parent The sections' ID a page belongs to. Use zero for sections (i.e. root pages)
+ */
+function save_page(int $ref, string $name, int $parent)
+{
+    db_begin_transaction('brand_guidelines_save_page');
+    log_activity(null, LOG_CODE_EDITED, $name, 'brand_guidelines_pages', 'name', $ref, null, null, null, true);
+    log_activity(null, LOG_CODE_EDITED, $parent, 'brand_guidelines_pages', 'parent', $ref, null, null, null, true);
+    ps_query(
+        'UPDATE `brand_guidelines_pages` SET `name` = ?, `parent` = ? WHERE `ref` = ?',
+        [
+            's', sql_truncate_text_val($name, 255),
+            'i', $parent,
+            'i', $ref,
+        ]
+    );
+    db_end_transaction('brand_guidelines_save_page');
+    clear_query_cache('brand_guidelines_pages');
 }
 
 /**

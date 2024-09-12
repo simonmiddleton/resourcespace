@@ -12,11 +12,23 @@ if (!acl_can_edit_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
+$ref = (int) getval('ref', 0, false, 'is_positive_int_loose'); 
+$edit = false;
 $delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
 $save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0;
 $pages_db = get_all_pages();
 $all_sections = extract_node_options(array_filter($pages_db, __NAMESPACE__ . '\is_section'), true, true);
 $parent = getval('parent', 0, false, (fn($V) => is_positive_int_loose($V) || ($save && is_array($V) && count($V) === 1)));
+
+if ($ref > 0) {
+    $all_pages_index = array_column($pages_db, null,'ref');
+    if (isset($all_pages_index[$ref])) {
+        $edit = true;
+        // Help the process_custom_fields_submission() fill in the form
+        $_GET['name'] = $all_pages_index[$ref]['name'];
+        $parent = $all_pages_index[$ref]['parent'];
+    }
+}
 
 // Quick page parent (ie. section) validation (value type is different depending how we got here - by new page button
 // or saving)
@@ -36,7 +48,7 @@ foreach ($all_sections as $section_id => $section) {
 
 
 // Page setup
-$page_title = $lang['brand_guidelines_new_section_title'];
+$page_title = $edit ? $lang['brand_guidelines_edit_section_title'] : $lang['brand_guidelines_new_section_title'];
 $toc_fields = [
     [
     'id'       => 'name',
@@ -47,7 +59,7 @@ $toc_fields = [
 ];
 $is_page = !is_section(['parent' => $parent]);
 if ($is_page) {
-    $page_title = $lang['brand_guidelines_new_page_title'];
+    $page_title = $edit ? $lang['brand_guidelines_edit_page_title'] : $lang['brand_guidelines_new_page_title'];
     $toc_fields[] = [
         'id'       => 'parent',
         'title'    => $lang['brand_guidelines_section'],
@@ -59,15 +71,18 @@ if ($is_page) {
 $processed_toc_fields = process_custom_fields_submission($toc_fields, $save, ['html_properties_prefix' => '']);
 
 if ($save && count_errors($processed_toc_fields) === 0) {
-    $new_page_id = create_page(
-        $processed_toc_fields[0]['value'],
-        $is_page && isset($processed_toc_fields[1]['selected_options'][$parent]) ? $parent : 0
-    );
+    $bg_page_name = $processed_toc_fields[0]['value'];
+    $bg_page_parent = $is_page && isset($processed_toc_fields[1]['selected_options'][$parent]) ? $parent : 0;
+
+    if ($edit) {
+        save_page($ref, $bg_page_name, $bg_page_parent);
+        $redirect_params = $is_page ? ['spage' => $ref] : [];
+    } else {
+        $redirect_params = ['spage' => create_page($bg_page_name, $bg_page_parent)];
+    }
+
     js_call_CentralSpaceLoad(
-        generateURL(
-            "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
-            ['spage' => $new_page_id]
-        )
+        generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", $redirect_params)
     );
 } elseif ($delete > 0) {
     $delete_list = [$delete];
@@ -97,16 +112,14 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
     >
         <?php
         generateFormToken('manage_toc');
+        render_hidden_input('ref', (string) $ref);
         render_custom_fields($processed_toc_fields);
         ?>
         <div class="QuestionSubmit" >
-            <input type="submit" name="create" value="<?php echo escape($lang['create']); ?>"></input>
+            <input type="submit" name="toc_submit" value="<?php echo escape($edit ? $lang['save'] : $lang['create']); ?>"></input>
             <div class="clearleft"></div>
         </div>
     </form>
 </div>
-<script>
-// todo: delete if left unused
-</script>
 <?php
 include_once RESOURCESPACE_BASE_PATH . '/include/footer.php';

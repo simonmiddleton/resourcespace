@@ -230,7 +230,6 @@ render_content_menu();
             off_top = 40;
         }
 
-        console.debug(jQuery("#" + target));
         jQuery("#" + target)
             .css({
                 display: 'none',
@@ -262,6 +261,18 @@ render_content_menu();
         }
     };
 
+    function edit_item(e) {
+        console.debug('edit_item(e = %o)', e);
+        let item_id = jQuery(e).parent('#menu-individual').data('item-ref');
+        // todo: ditinguish between item types (nav/content) for the URL
+        return ModalLoad(
+            baseurl + '/plugins/brand_guidelines/pages/manage/toc.php?'
+            + new URLSearchParams({ref: item_id}).toString(),
+            true,
+            true
+        );
+    }
+
     function delete_item(e) {
         // console.debug('delete_item(e = %o)', e);
         // let el = jQuery(e);
@@ -272,13 +283,9 @@ render_content_menu();
 
     function toc_delete_item(e) {
         console.debug('toc_delete_item(e = %o)', e);
-        let el = jQuery(e);
-        let item_id = el.parent('#menu-individual').data('item-ref');
-
         if(confirm('<?php echo escape($lang["confirm-deletion"]); ?>'))
             {
-            console.debug('deleted #' + item_id);
-
+            let item_id = jQuery(e).parent('#menu-individual').data('item-ref');
             let temp_form = document.createElement("form");
             temp_form.setAttribute("method", "post");
             temp_form.setAttribute(
