@@ -301,6 +301,7 @@ render_content_menu();
             CentralSpacePost(temp_form, true, false, false);
             };
 
+        hideOptionsMenu();
         return false;
     }
 </script>
