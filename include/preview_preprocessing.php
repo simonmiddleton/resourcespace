@@ -728,6 +728,10 @@ if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpe
             $output = run_command($exiftool_fullpath . ' -s3 -ImageWidth -ImageHeight %%FILEPATH%%', false, $cmdparams);
             $dimensions = explode("\n",$output);
             if (count(array_filter($dimensions, 'is_int_loose')) == 2) {
+                $rotation = get_image_orientation($file);
+                if ($rotation != 0 && $rotation != 180) { 
+                    $dimensions = array_reverse($dimensions);
+                }
                 $scale = '-vf scale=' . escapeshellarg(implode(':', $dimensions));
             }
         }
