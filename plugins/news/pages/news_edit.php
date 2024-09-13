@@ -63,12 +63,12 @@ $jumpcount=1;
 
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo escape($lang["date"]); ?></td>
-<td><?php echo escape($lang["news_headline"]); ?></td>
-<td><?php echo escape($lang["news_body"]); ?></td>
-<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+<th><?php echo escape($lang["date"]); ?></th>
+<th><?php echo escape($lang["news_headline"]); ?></th>
+<th><?php echo escape($lang["news_body"]); ?></th>
+<th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
 </tr>
 
 <?php

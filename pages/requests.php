@@ -33,14 +33,14 @@ $jumpcount=1;
 ?><div class="TopInpageNav"><?php pager();  ?></div>
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo escape($lang["requestorderid"]); ?></td>
-<td><?php echo escape($lang["description"]); ?></td>
-<td><?php echo escape($lang["date"]); ?></td>
-<td><?php echo escape($lang["itemstitle"]); ?></td>
-<td><?php echo escape($lang["status"]); ?></td>
-<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+<th><?php echo escape($lang["requestorderid"]); ?></th>
+<th><?php echo escape($lang["description"]); ?></th>
+<th><?php echo escape($lang["date"]); ?></th>
+<th><?php echo escape($lang["itemstitle"]); ?></th>
+<th><?php echo escape($lang["status"]); ?></th>
+<th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
 </tr>
 
 <?php

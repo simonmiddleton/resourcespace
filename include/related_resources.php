@@ -106,11 +106,11 @@ if ($enable_related_resources)
                     {
                     ?>
                     <div class="Listview ListviewTight" >
-                        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+                        <table class="ListviewStyle">
                         <tbody>
                             <tr class="ListviewTitleStyle">
-                                <td><h3><?php echo escape($restypename); ?></h3></td>     
-                                <td><div class="ListTools"></div></td>                                    
+                                <th><h3><?php echo escape($restypename); ?></h3></th>     
+                                <th><div class="ListTools"></div></th>                                    
                             </tr>
                             <?php
                                 foreach($relatedresources as $relatedresource)

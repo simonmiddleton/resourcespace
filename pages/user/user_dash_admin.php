@@ -73,15 +73,15 @@ include "../../include/header.php";
     </p>
     <form class="Listview">
     <input type="hidden" name="submit" value="true" />
-    <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+    <table class="ListviewStyle">
         <thead>
             <tr class="ListviewTitleStyle">
-                <td><?php echo escape($lang["dashtileshow"]);?></td>
-                <td><?php echo escape($lang["dashtiletitle"]);?></td>
-                <td><?php echo escape($lang["dashtiletext"]);?></td>
-                <td><?php echo escape($lang["dashtilelink"]);?></td>
-                <td><?php echo escape($lang["showresourcecount"]);?></td>
-                <td><?php echo escape($lang["tools"]);?></td>
+                <th><?php echo escape($lang["dashtileshow"]);?></th>
+                <th><?php echo escape($lang["dashtiletitle"]);?></th>
+                <th><?php echo escape($lang["dashtiletext"]);?></th>
+                <th><?php echo escape($lang["dashtilelink"]);?></th>
+                <th><?php echo escape($lang["showresourcecount"]);?></th>
+                <th><?php echo escape($lang["tools"]);?></th>
             </tr>
         </thead>
         <tbody id="dashtilelist">

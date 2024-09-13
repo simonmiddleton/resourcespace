@@ -41,7 +41,7 @@ if(!checkperm('v') && !$bypass_permission_check)
 
     <div class="BasicsBox">
         <div class="Listview">
-            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle" style="margin:0;">
+            <table class="ListviewStyle">
                 <tr class="ListviewTitleStyle">
                     <th><?php echo escape($lang["log_column"]); ?></th>
                     <th><?php echo escape($lang["log_value"]); ?></th>

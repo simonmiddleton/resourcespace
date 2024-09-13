@@ -60,24 +60,24 @@ function addColumnHeader($orderName, $labelKey)
         $image = '';
     }
 
-    ?><td>
+    ?><th>
     <a href="<?php echo $baseurl ?>/pages/admin/admin_size_management.php?<?php
     if ($find!="") { ?>&find=<?php echo escape($find); }
     ?>&orderby=<?php echo $orderName . ($order_by==$orderName ? '+desc' : ''); ?>"
        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang[$labelKey]) . $image ?></a>
-    </td>
+    </th>
     <?php
 }
 
     ?>
     <div class="Listview">
-        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+        <table class="ListviewStyle">
             <tr class="ListviewTitleStyle">
                 <?php addColumnHeader("id", "property-id"); ?>
                 <?php addColumnHeader("name", "property-name"); ?>
                 <?php addColumnHeader("width", "property-width"); ?>
                 <?php addColumnHeader("height", "property-height"); ?>
-                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+                <th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
             </tr>
 <?php
         foreach ($sizes as $size)

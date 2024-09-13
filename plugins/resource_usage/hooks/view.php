@@ -25,18 +25,18 @@ function HookResource_usageViewCustompanels()
         {
         ?>
         <div class="Listview">
-            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+            <table class="ListviewStyle">
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo escape($lang['usage_ref']); ?></a></td>
-                    <td><?php echo escape($lang['usage_location']); ?></a></td>
-                    <td><?php echo escape($lang['usage_medium']); ?></a></td>
-                    <td><?php echo escape($lang['description']); ?></a></td>
-                    <td><?php echo escape($lang['usage_date']); ?></a></td>
+                    <th><?php echo escape($lang['usage_ref']); ?></a></th>
+                    <th><?php echo escape($lang['usage_location']); ?></a></th>
+                    <th><?php echo escape($lang['usage_medium']); ?></a></th>
+                    <th><?php echo escape($lang['description']); ?></a></th>
+                    <th><?php echo escape($lang['usage_date']); ?></a></th>
     <?php
     if($edit_access)
         {
         ?>
-        <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
+        <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
         <?php
         }
         ?>

@@ -70,18 +70,18 @@ include '../../include/header.php';
         renderBreadcrumbs($links_trail);
     ?>
         <div class="Listview">
-            <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
+            <table class="ListviewStyle">
                 <tbody>
                     <tr class="ListviewTitleStyle">
-                        <td><?php echo escape($lang['accesskey']); ?></td>
-                        <td><?php echo escape($lang['type']); ?></td>
-                        <td><?php echo escape($lang['sharedby']); ?></td>
-                        <td><?php echo escape($lang['sharedwith']); ?></td>
-                        <td><?php echo escape($lang['lastupdated']); ?></td>
-                        <td><?php echo escape($lang['lastused']); ?></td>
-                        <td><?php echo escape($lang['expires']); ?></td>
-                        <td><?php echo escape($lang['access']); ?></td>
-                        <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
+                        <th><?php echo escape($lang['accesskey']); ?></th>
+                        <th><?php echo escape($lang['type']); ?></th>
+                        <th><?php echo escape($lang['sharedby']); ?></th>
+                        <th><?php echo escape($lang['sharedwith']); ?></th>
+                        <th><?php echo escape($lang['lastupdated']); ?></th>
+                        <th><?php echo escape($lang['lastused']); ?></th>
+                        <th><?php echo escape($lang['expires']); ?></th>
+                        <th><?php echo escape($lang['access']); ?></th>
+                        <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
                     </tr>
                     <?php
                     foreach($external_shares as $external_share)

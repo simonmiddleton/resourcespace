@@ -69,10 +69,10 @@ $jumpcount=1;
 </form>
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo escape($lang["report_name"]); ?></td>
-<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+<th><?php echo escape($lang["report_name"]); ?></th>
+<th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
 </tr>
 
 <?php

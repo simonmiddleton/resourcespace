@@ -177,18 +177,18 @@ if(isset($resource['field'.$view_title_field]))
 <?php generateFormToken("fileform"); ?>
 <div class="Listview"  id="altlistitems">
     
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <!--Title row-->    
 <tr class="ListviewTitleStyle">
-<td><?php if (count($files)>0){?><input type="checkbox" class="checkbox" onclick="toggleAll();" id="toggleall" /><?php } ?></td>
-<td><?php echo escape($lang["name"]); ?></td>
-<td><?php echo escape($lang["description"]); ?></td>
+<th><?php if (count($files)>0){?><input type="checkbox" class="checkbox" onclick="toggleAll();" id="toggleall" /><?php } ?></th>
+<th><?php echo escape($lang["name"]); ?></th>
+<th><?php echo escape($lang["description"]); ?></th>
 <?php hook('alternativefileslist'); ?>
-<td><?php echo escape($lang["filetype"]); ?></td>
-<td><?php echo escape($lang["filesize"]); ?></td>
-<td><?php echo escape($lang["date"]); ?></td>
-<?php if(count($alt_types) > 1){ ?><td><?php echo escape($lang["alternatetype"]); ?></td><?php } ?>
-<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+<th><?php echo escape($lang["filetype"]); ?></th>
+<th><?php echo escape($lang["filesize"]); ?></th>
+<th><?php echo escape($lang["date"]); ?></th>
+<?php if(count($alt_types) > 1){ ?><th><?php echo escape($lang["alternatetype"]); ?></th><?php } ?>
+<th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
 </tr>
 
 <?php

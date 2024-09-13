@@ -643,7 +643,7 @@ switch($csvstep)
                 <?php generateFormToken("upload_csv_form"); ?>
                 <input type="hidden" id="csvstep" name="csvstep" value="4" > 
                 <div class="Listview">
-                    <table id="csv_upload_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+                    <table id="csv_upload_table" class="ListviewStyle">
                     <tr class="ListviewTitleStyle"> 
                         <th><?php echo escape($lang["csv_upload_mapping_header"]); ?></th>
                         <th><?php echo escape($lang["field"]); ?></th>

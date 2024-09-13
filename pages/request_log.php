@@ -105,16 +105,16 @@ if ($k=="" && !$modal) { ?>
 
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <!--Title row-->    
 <tr class="ListviewTitleStyle">
-<td width="5%"><?php echo escape($lang["date"]); ?></td>
-<td width="5%"><?php echo escape($lang["requestorderid"]); ?></td>
-<td width="5%"><?php echo escape($lang["user"]); ?></td>
-<td width="25%"><?php echo escape($lang["comments"]); ?></td>
-<td width="10%"><?php echo escape($lang["status"]); ?></td>
-<td width="25%"><?php echo escape($lang["approvalreason"]); ?></td>
-<td width="25%"><?php echo escape($lang["declinereason"]); ?></td>
+<th width="5%"><?php echo escape($lang["date"]); ?></th>
+<th width="5%"><?php echo escape($lang["requestorderid"]); ?></th>
+<th width="5%"><?php echo escape($lang["user"]); ?></th>
+<th width="25%"><?php echo escape($lang["comments"]); ?></th>
+<th width="10%"><?php echo escape($lang["status"]); ?></th>
+<th width="25%"><?php echo escape($lang["approvalreason"]); ?></th>
+<th width="25%"><?php echo escape($lang["declinereason"]); ?></th>
 </tr>
 
 <?php

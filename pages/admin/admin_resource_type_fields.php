@@ -74,9 +74,9 @@ function addColumnHeader($orderName, $labelKey)
     $newparams["field_sort"] = ($field_sort=="desc" || $field_order_by=="order_by") ? 'asc' : 'desc';
 
     ?>
-    <td><a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,$newparams); ?>" onClick="return CentralSpaceLoad(this);"><?php
+    <th><a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,$newparams); ?>" onClick="return CentralSpaceLoad(this);"><?php
           echo escape($lang[$labelKey]) . $arrow ?></a>
-    </td>
+    </th>
     <?php
     }
       
@@ -193,7 +193,7 @@ else
     
     
 <div class="Listview">
-<table id="resource_type_field_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table id="resource_type_field_table" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 <?php  
 $system_tabs = get_tab_name_options();
@@ -211,7 +211,7 @@ if (!hook('replacetabnamecolumnheader'))
     addColumnHeader('tab_name', 'property-tab_name');
     }
 ?>
-<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+<th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
 </tr>
 
 <tbody id="resource_type_field_table_body">

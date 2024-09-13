@@ -81,11 +81,11 @@ jQuery(document).ready(function()
     </div>
 
     <div class="Listview">
-        <table id="offline_archive_table" class="ListviewStyle offline_archive_table" border="0" cellspacing="0" cellpadding="0">
+        <table id="offline_archive_table" class="ListviewStyle offline_archive_table">
             <tr class="ListviewTitleStyle">
-                <td style="width:150px"><?php echo escape($lang['property-reference']); ?></td>
-                <td><?php echo escape($lang['property-title']); ?></td>
-                <td style="width:150px"><?php echo escape($lang['fieldtitle-file_size']); ?></td>
+                <th style="width:150px"><?php echo escape($lang['property-reference']); ?></th>
+                <th><?php echo escape($lang['property-title']); ?></th>
+                <th style="width:150px"><?php echo escape($lang['fieldtitle-file_size']); ?></th>
             </tr>
             <?php
             foreach ($pendingresources as $pendingresource)

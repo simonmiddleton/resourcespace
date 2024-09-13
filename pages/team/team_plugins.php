@@ -252,16 +252,16 @@ if($searching)
     $all_plugins = array_merge($inst_plugins, $plugins_avail);
     ?>
     <div class="Listview">
-        <table class= "ListviewStyle" cellspacing="0" cellpadding="0" border="0">
+        <table class= "ListviewStyle">
             <thead>
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo escape($lang['plugins-icon']); ?></td>
-                    <td><?php echo escape($lang['name']); ?></td>
-                    <td><?php echo escape($lang['description']); ?></td>
-                    <td><?php echo escape($lang['plugins-author']); ?></td>
-                    <td><?php echo escape($lang['plugins-version']); ?></td>
+                    <th><?php echo escape($lang['plugins-icon']); ?></th>
+                    <th><?php echo escape($lang['name']); ?></th>
+                    <th><?php echo escape($lang['description']); ?></th>
+                    <th><?php echo escape($lang['plugins-author']); ?></th>
+                    <th><?php echo escape($lang['plugins-version']); ?></th>
                     <?php hook('additional_plugin_columns'); ?>
-                    <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
+                    <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
                 </tr>
             </thead>
             <tbody>
@@ -380,16 +380,16 @@ if($searching)
 if (count($inst_plugins)>0)
    { ?>
    <div class="Listview">
-   <table class= "ListviewStyle" cellspacing="0" cellpadding="0" border="0">
+   <table class= "ListviewStyle">
       <thead>
          <tr class="ListviewTitleStyle">
-         <td><?php echo escape($lang['plugins-icon']); ?></td>
-         <td><?php echo escape($lang['name']); ?></td>
-         <td><?php echo escape($lang['description']); ?></td>
-         <td><?php echo escape($lang['plugins-author']); ?></td>
-         <td><?php echo escape($lang['plugins-instversion']); ?></td>
+         <th><?php echo escape($lang['plugins-icon']); ?></th>
+         <th><?php echo escape($lang['name']); ?></th>
+         <th><?php echo escape($lang['description']); ?></th>
+         <th><?php echo escape($lang['plugins-author']); ?></th>
+         <th><?php echo escape($lang['plugins-instversion']); ?></th>
          <?php hook('additional_plugin_columns'); ?>
-         <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
+         <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
          </tr>
       </thead>
       <tbody>
@@ -561,15 +561,15 @@ function display_plugin_category($plugins,$category,$header=true)
         }
         ?>
         <div class="Listview CollapsiblePluginList">
-            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+            <table class="ListviewStyle">
                 <thead>
                     <tr class="ListviewTitleStyle">
-                    <td><?php echo escape($lang['plugins-icon']); ?></td>
-                    <td><?php echo escape($lang['name']); ?></td>
-                    <td><?php echo escape($lang['description']); ?></td>
-                    <td><?php echo escape($lang['plugins-author']); ?></td>
-                    <td><?php echo escape($lang['plugins-version']); ?></td>
-                    <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
+                    <th><?php echo escape($lang['plugins-icon']); ?></th>
+                    <th><?php echo escape($lang['name']); ?></th>
+                    <th><?php echo escape($lang['description']); ?></th>
+                    <th><?php echo escape($lang['plugins-author']); ?></th>
+                    <th><?php echo escape($lang['plugins-version']); ?></th>
+                    <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
                     </tr>
                 </thead>
                 <tbody>

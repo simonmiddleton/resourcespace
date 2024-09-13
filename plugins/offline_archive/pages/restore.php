@@ -67,17 +67,17 @@ if (isset($resulttext))
         $codes=array();
         ?>
         <div class="Listview">
-            <table id="offline_archive_table" class="ListviewStyle offline_archive_table" border="0" cellspacing="0" cellpadding="0">
+            <table id="offline_archive_table" class="ListviewStyle offline_archive_table">
                 <?php 
                 echo '<tr class="ListviewTitleStyle">';
-                echo '<td style="width:150px"></td>';
-                echo '<td style="width:150px">';
+                echo '<th style="width:150px"></th>';
+                echo '<th style="width:150px">';
                 echo escape($lang['property-reference']);
-                echo '</td><td>';
+                echo '</th><th>';
                 echo escape($lang['property-title']);
-                echo '</td><td>';   
+                echo '</th><th>';   
                 echo escape($lang['offline_archive_archive_ref']);
-                echo '</td>';
+                echo '</th>';
                 echo "</tr>";   
                     
                 foreach ($resourcedetails as $resourcedetail)

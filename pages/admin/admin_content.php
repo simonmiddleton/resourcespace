@@ -68,16 +68,16 @@ $jumpcount=1;
 ?><div style="float:right;margin-top:-5px;"><?php pager();?></div>
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td width="10%"><?php echo escape($lang["page"]); ?></td>
-<td width="25%"><?php echo escape($lang["name"]); ?></td>
+<th width="10%"><?php echo escape($lang["page"]); ?></th>
+<th width="25%"><?php echo escape($lang["name"]); ?></th>
 <?php if ($extended) { ?>
-<td width="10%"><?php echo escape($lang["language"]); ?></td>
-<td width="10%"><?php echo escape($lang["group"]); ?></td>
+<th width="10%"><?php echo escape($lang["language"]); ?></th>
+<th width="10%"><?php echo escape($lang["group"]); ?></th>
 <?php } ?>
-<td width="<?php echo $extended ? "40" : "55"; ?>%"><?php echo escape($lang["text"])?></td>
-<td width="10%"><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+<th width="<?php echo $extended ? "40" : "55"; ?>%"><?php echo escape($lang["text"])?></th>
+<th width="10%"><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
 </tr>
 
 <?php

@@ -50,18 +50,18 @@ $jumpcount=1;
 
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 <?php if(!hook("requestlistheader")): ?>
-<td><?php echo escape($lang["requestorderid"]); ?></td>
-<td><?php echo escape($lang["username"]); ?></td>
-<td><?php echo escape($lang["fullname"]); ?></td>
-<td><?php echo escape($lang["date"]); ?></td>
-<td><?php echo escape($lang["itemstitle"]); ?></td>
-<td><?php echo escape($lang["type"]); ?></td>
-<td><?php echo escape($lang["assignedto"]); ?></td>
-<td><?php echo escape($lang["status"]); ?></td>
-<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+<th><?php echo escape($lang["requestorderid"]); ?></th>
+<th><?php echo escape($lang["username"]); ?></th>
+<th><?php echo escape($lang["fullname"]); ?></th>
+<th><?php echo escape($lang["date"]); ?></th>
+<th><?php echo escape($lang["itemstitle"]); ?></th>
+<th><?php echo escape($lang["type"]); ?></th>
+<th><?php echo escape($lang["assignedto"]); ?></th>
+<th><?php echo escape($lang["status"]); ?></th>
+<th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
 <?php endif; ?>
 </tr>
 

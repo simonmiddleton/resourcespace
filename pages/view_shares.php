@@ -43,18 +43,18 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
             <div class="clearerright"> </div>
         </div><!-- End of RecordHeader --> 
         <div class="Listview">
-            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+            <table class="ListviewStyle">
                 <tr class="ListviewTitleStyle">
-                    <td width="15%">
+                    <th width="15%">
                     <?php echo escape($lang["sharedwith"]); ?>
-                    </td>
-                    <td width="15%">
+                    </th>
+                    <th width="15%">
                     <?php echo escape($lang["access"]); ?>
-                    </td>
-                    <td width="40%">
+                    </th>
+                    <th width="40%">
                     <?php echo escape($lang["fieldtitle-notes"]); ?>
-                    </td>
-                    <td width="30%"><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+                    </th>
+                    <th width="30%"><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
                 </tr>
             <?php
             // Display row for each share/attached user

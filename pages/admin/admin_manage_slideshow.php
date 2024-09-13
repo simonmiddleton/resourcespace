@@ -198,14 +198,14 @@ button[disabled]{
 
     <p><?php echo escape($lang['manage-slideshow-instructions']); render_help_link("resourceadmin/homepage-slideshow");?></p>
     <div class="Listview">
-        <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
+        <table class="ListviewStyle">
             <tbody>
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo escape($lang["preview"]); ?></td>
-                    <td><?php echo escape($lang["home_page"]); ?></td>
-                    <td><?php echo escape($lang["theme"]); ?></td>
-                    <td><?php echo escape($lang["login_word"]); ?></td>
-                    <td><?php echo escape($lang["tools"]); ?></td>
+                    <th><?php echo escape($lang["preview"]); ?></th>
+                    <th><?php echo escape($lang["home_page"]); ?></th>
+                    <th><?php echo escape($lang["theme"]); ?></th>
+                    <th><?php echo escape($lang["login_word"]); ?></th>
+                    <th><?php echo escape($lang["tools"]); ?></th>
                 </tr>
             <?php
             foreach($slideshow_files as $slideshow_index => $slideshow_file_info)

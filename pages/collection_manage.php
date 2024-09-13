@@ -512,25 +512,25 @@ function promptBeforePaging()
 <input type=hidden name="collection_delete_multiple" id="collection_delete_multiple" value="">
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td> <input type="checkbox" onclick='check_delete_all(this)'> </td>
-<td class="name"><?php if ($col_order_by=="name") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=name&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["collectionname"])?></a><?php if ($col_order_by=="name") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
+<th> <input type="checkbox" onclick='check_delete_all(this)'> </th>
+<th class="name"><?php if ($col_order_by=="name") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=name&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["collectionname"])?></a><?php if ($col_order_by=="name") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></th>
 
-<td class="fullname"><?php if ($col_order_by=="fullname") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=fullname&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["owner"])?></a><?php if ($col_order_by=="fullname") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
+<th class="fullname"><?php if ($col_order_by=="fullname") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=fullname&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["owner"])?></a><?php if ($col_order_by=="fullname") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></th>
 
-<td class="ref"><?php if ($col_order_by=="ref") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=ref&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["id"])?></a><?php if ($col_order_by=="ref") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
+<th class="ref"><?php if ($col_order_by=="ref") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=ref&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["id"])?></a><?php if ($col_order_by=="ref") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></th>
 
-<td class="created"><?php if ($col_order_by=="created") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=created&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["created"])?></a><?php if ($col_order_by=="created") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
+<th class="created"><?php if ($col_order_by=="created") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=created&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["created"])?></a><?php if ($col_order_by=="created") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></th>
 
-<td class="count"><?php if ($col_order_by=="count") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=count&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["itemstitle"])?></a><?php if ($col_order_by=="count") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
+<th class="count"><?php if ($col_order_by=="count") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=count&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["itemstitle"])?></a><?php if ($col_order_by=="count") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></th>
 
-<td class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["access"])?></a><?php if ($col_order_by=="type") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
+<th class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["access"])?></a><?php if ($col_order_by=="type") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></th>
 
-<td class="collectionin"><?php echo escape($lang["showcollectionindropdown"]) ?></td>
+<th class="collectionin"><?php echo escape($lang["showcollectionindropdown"]) ?></th>
 
 <?php hook("beforecollectiontoolscolumnheader");?>
-<td class="tools"><div class="ListTools"><?php echo escape($lang['actions'])?></div></td>
+<th class="tools"><div class="ListTools"><?php echo escape($lang['actions'])?></div></th>
 </tr>
 <form method="get" name="colactions" id="colactions" action="<?php echo $baseurl_short?>pages/collection_manage.php">
 <?php
