@@ -141,7 +141,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
     }
 .ListviewStyle td, .ListviewTitleStyle th
     {
-    border:1px solid #eee;
+    border:1px solid #ddd;
     }
 
 .Question select .optionWeekend { background-color: #ccc; }
