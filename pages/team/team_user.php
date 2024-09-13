@@ -314,7 +314,7 @@ include "../../include/header.php";
         <td><?php echo escape((string)$users[$n]["fullname"])?></td>
         <?php } ?>
         <?php if (!hook("replacegroupnamerow")){?>
-        <td><?php echo i18n_get_translated($users[$n]["groupname"]); ?></td>
+        <td><?php echo escape(i18n_get_translated($users[$n]["groupname"])); ?></td>
         <?php } ?>
         <?php if (!hook("replaceemailrow")){?>
         <td><?php echo htmlentities((string)$users[$n]["email"])?></td>

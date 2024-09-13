@@ -92,7 +92,7 @@ if(getval('loginas', '') === '')
     }
 
 
-// Log in as this user. A user key must be generated to enable login using the MD5 hash as the password.
+// Log in as this user. A user key must be generated to enable login using a hash as the password.
 if(getval('loginas', '') != '')
     {
     // Log user switch in the activity log for both sides (the user we moved from and the one we moved to)
@@ -110,7 +110,7 @@ if(getval('loginas', '') != '')
     $_POST = [];
     $_POST['username'] = $user['username'];
     $_POST['password'] = $user['password'];
-    $_POST['userkey'] = hash('sha256',$user["username"] . $scramble_key . date("Ymd"));
+    $_POST['userkey'] = hash_hmac("sha256", "login_as_user" . $user["username"] . date("Ymd"), $scramble_key, true);
     $_POST[$CSRF_token_identifier] = generateCSRFToken($usersession, 'autologin');
 
     include '../../login.php';

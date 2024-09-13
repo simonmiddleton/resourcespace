@@ -2146,9 +2146,10 @@ function make_username(string $name, string $email = ""): string
 {
     if ($GLOBALS["username_from_email"] && trim($email) !== "") {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$email], 0);
-        if ($c === 0)
-            return trim($email);
+            $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$email], 0);
+            if ($c === 0) {
+                return trim($email);
+            }
         }
         debug("make_username() - Unable to use invalid e-mail address: " . $email);
     }
