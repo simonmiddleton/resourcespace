@@ -190,7 +190,7 @@ div.autocomplete ul li {color: #000;}
 #RatingStarLink0 {color: #888;}
 
 .Listview .ListViewSubTable,.Listview .ListViewSubTable td,.Listview .ListViewSubTable tr {background-image: none;}
-.Listview {background-color: white;border-radius:6px;}
+.Listview {background-color: white;}
 .highlight {color: #000;background-color: #ff0;}
 .Tab a {padding: 8px 1rem;background: rgba(255, 255, 255, 0.4);}
 .TabBar { background-color: #ededed; }
