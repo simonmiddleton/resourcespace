@@ -15,8 +15,6 @@ if (PHP_SAPI != 'cli') {
         exit("Permission denied");
     }
 }
-include_once '../../include/node_functions.php';
-include_once '../../include/resource_functions.php';
 
 $resource_type_field = getval("field", "");
 

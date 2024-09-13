@@ -2,8 +2,6 @@
 if(PHP_SAPI != 'cli') { exit('Access denied'); }
 $museumplus_rs_root = dirname(__FILE__) . '/../../../';
 include $museumplus_rs_root . 'include/boot.php';
-include_once $museumplus_rs_root . 'include/resource_functions.php';
-include_once $museumplus_rs_root . 'include/log_functions.php';
 
 $help_text = <<<'HELP'
 NAME

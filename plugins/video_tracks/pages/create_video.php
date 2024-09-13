@@ -1,6 +1,5 @@
 <?php
 include_once '../../../include/boot.php';
-include_once '../../../include/resource_functions.php';
 include_once '../../../include/authenticate.php';
 include_once '../../../include/image_processing.php';
 

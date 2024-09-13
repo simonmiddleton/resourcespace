@@ -4,7 +4,6 @@ from outputting stray characters that will mess up the binary download
 we will clear the buffer and start over right before we download the file*/
 ob_start(); $nocache=true;
 include_once dirname(__FILE__) . '/../include/boot.php';
-include_once dirname(__FILE__) . '/../include/resource_functions.php';
 include_once dirname(__FILE__) . '/../include/image_processing.php';
 ob_end_clean(); 
 if($download_no_session_cache_limiter)

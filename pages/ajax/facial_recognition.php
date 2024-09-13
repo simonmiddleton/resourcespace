@@ -1,9 +1,7 @@
 <?php
 include      __DIR__ . '/../../include/boot.php';
 include      __DIR__ . '/../../include/authenticate.php';
-include_once __DIR__ . '/../../include/resource_functions.php';
 include_once __DIR__ . '/../../include/facial_recognition_functions.php';
-include_once __DIR__ . '/../../include/node_functions.php';
 
 $return   = array();
 $action   = getval('action', '');

@@ -6,7 +6,6 @@ if(!checkperm('t'))
     header('HTTP/1.1 401 Unauthorized');
     exit('Access denied!');
     }
-include_once '../../../include/resource_functions.php';
 include_once '../include/emu_functions.php';
 include_once '../include/emu_api.php';
 
