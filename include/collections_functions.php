@@ -3731,12 +3731,9 @@ function collection_min_access($collection)
             return $minextaccess;
             }
         }
-    
-    if ($minaccess == 3) {
-        # Custom permissions are being used so test access to each resource, restricting access as needed
-        $minaccess = 0;
-    }
 
+    # Reset minaccess and allow get_resource_access to determine the min access for the collection 
+    $minaccess = 0;
     for($n = 0; $n < count($result); $n++)
         {
         $access = get_resource_access($result[$n]);
