@@ -4531,7 +4531,10 @@ function is_positive_int_loose($V): bool
  */
 function is_string_loose($var): bool
     {
-    return !is_array($var) && $var == (string)$var;
+    global $mysql_charset;
+    return !is_array($var) 
+        && $var == (string)$var 
+        && mb_detect_encoding($var, isset($mysql_charset) ? $mysql_charset : 'utf8', true) !== false;
     }
 
 /**
