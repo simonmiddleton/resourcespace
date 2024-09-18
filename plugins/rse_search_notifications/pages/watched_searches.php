@@ -22,9 +22,9 @@ $orderby = getval("orderby",-1);
 if ($callback!="")
     {
     $ref = getval("ref", -1,true);
-    $search = getval("search", "", false, 'is_string_loose');
-    $restypes = getval("restypes", "", false, 'is_string_loose');
-    $archive = getval("archive", "", true);
+    $search = getval("search", "");
+    $restypes = getval("restypes", "");
+    $archive = getval("archive", "");
 
     switch ($callback)
         {
