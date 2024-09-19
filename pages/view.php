@@ -1772,13 +1772,11 @@ if($annotate_enabled)
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
     <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
     <?php
-    if($facial_recognition)
-        {
+    if ($facial_recognition_active) {
         ?>
         <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSFaceRecognition/rs_facial_recognition.js"></script>
         <?php
-        }
-        ?>
+    } ?>
     <!-- End of Annotorious -->
     <?php
     }

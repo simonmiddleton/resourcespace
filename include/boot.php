@@ -467,15 +467,13 @@ if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagena
 set_watermark_image();
 
 // Facial recognition setup
-if($facial_recognition)
-    {
+if ($facial_recognition) {
     include_once __DIR__ . '/facial_recognition_functions.php';
-    $facial_recognition = initFacialRecognition();
-    }
-if(!$disable_geocoding) 
-    {
+    $facial_recognition_active = initFacialRecognition();
+}
+if (!$disable_geocoding) {
     include_once __DIR__ . '/map_functions.php';
-    }
+}
 
 # Pre-load all text for this page.
 global $site_text;

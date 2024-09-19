@@ -3211,3 +3211,7 @@ $lang["workflow-actions-return-to-user-review"]="Return to user review";
 $lang["workflow-actions-return-to-review"]="Return to review";
 $lang["workflow-actions-publish"]="Publish";
 $lang["workflow-actions-make-this-resource-active"]="Make this resource active";
+
+$lang["error_invalid_path"] = "The configured %variable path does not exist: %path";
+$lang["error_invalid_field_type"] = "The configured %variable is of the wrong field type. Should be %type";
+$lang["facial-recognition"] =  "Facial recognition";

@@ -8,7 +8,7 @@ $action   = getval('action', '');
 $resource = getval('resource', 0, true);
 
 if(
-    !$facial_recognition ||
+    !$facial_recognition_active ||
     !get_edit_access($resource) ||
     !metadata_field_edit_access($facial_recognition_tag_field)
 )
