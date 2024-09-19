@@ -41,74 +41,62 @@ EXAMPLES
 // CLI options check
 $options = getopt($offline_job_short_options, $offline_job_cli_long_options);
 
-foreach($options as $option_name => $option_value)
-    {
-    if(in_array($option_name, ['h', 'help']))
-        {
+foreach ($options as $option_name => $option_value) {
+    if (in_array($option_name, ['h', 'help'])) {
         fwrite(STDOUT, $help_text . PHP_EOL);
         exit(0);
-        }
+    }
 
-    if(in_array($option_name, ['c', 'clear-lock']))
-        {
+    if (in_array($option_name, ['c', 'clear-lock'])) {
         $clear_lock = true;
-        }
+    }
 
     // IMPORTANT: job can be an integer when option is used once or an array when options is used multiple times
     // (e.g. php offline_jobs.php --clear-lock --job=2 --job=10 )
-    if(in_array($option_name, ['j', 'job']))
-        {
-        if(!is_array($option_value))
-            {
+    if (in_array($option_name, ['j', 'job'])) {
+        if (!is_array($option_value)) {
             $jobs[] = (int)$option_value;
             continue;
-            }
-
+        }
         $jobs = $option_value;
-        }
-
-    if(in_array($option_name, ['m', 'max-jobs']))
-        {
-        $max_jobs =  (int)$option_value;
-        }
     }
 
-if($offline_job_queue)
-    {
+    if (in_array($option_name, ['m', 'max-jobs'])) {
+        $max_jobs =  (int)$option_value;
+    }
+}
+
+if ($offline_job_queue) {
     // Mark any jobs that are still marked as in progress but have an old process lock as failed
     $runningjobs=job_queue_get_jobs("",STATUS_INPROGRESS,"","","ref", "ASC");
+
     $jobcount = count($runningjobs);
-    foreach($runningjobs as $runningjob)
-        {
+    foreach ($runningjobs as $runningjob) {
         $runningjob_data = json_decode($runningjob["job_data"],true);
-        if(!is_process_lock("job_" . $runningjob["ref"]))
-            {
+        if (!is_process_lock("job_" . $runningjob["ref"])) {
             // No current lock in place. Check for presence of an old lock and mark as failed
             $saved_process_lock_max_seconds = $process_locks_max_seconds;
             $process_locks_max_seconds = 9999999;
-            if(is_process_lock("job_" . $runningjob["ref"]))
-                {
+            if (is_process_lock("job_" . $runningjob["ref"])) {
                 echo "Job is in progress (ID: " . $runningjob["ref"] . ") but has exceeded maximum lock time - marking as failed\n";
                 job_queue_update($runningjob["ref"],$runningjob_data,STATUS_ERROR);
                 clear_process_lock("job_" . $runningjob["ref"]);
-                }
+            }
             $process_locks_max_seconds = $saved_process_lock_max_seconds;
             $jobcount--;
-            }
         }
-    
-    if($jobcount >= $max_jobs)
-        {
+    }
+    if ($jobcount >= $max_jobs) {
         exit("There are currently " . $jobcount . " jobs in progress. Exiting\n");
-        }
+    }
 
-    $offlinejobs=job_queue_get_jobs("", STATUS_ACTIVE, "","","priority,ref", "ASC");
-    foreach($offlinejobs as $offlinejob)
-        {
-        if(!empty($jobs) && !in_array($offlinejob["ref"], $jobs))
-            {
+    while (!isset($offlinejobs) || count($offlinejobs) > 0) {
+        // Get jobs in small batches so that new higher priority jobs won't have to wait if there is a backlog
+        $offlinejobs = job_queue_get_jobs("", STATUS_ACTIVE, "","","priority,ref", "ASC","", false, 5);
+        $offlinejob = array_shift($offlinejobs);
+        if (!empty($jobs) && !in_array($offlinejob["ref"], $jobs)) {
             continue;
-            }
+        }
 
         $readonly_jobs = array(
             "collection_download",
@@ -117,25 +105,20 @@ if($offline_job_queue)
             );
 
         // Only run essential and non-data affecting jobs in read only mode
-        if($system_read_only && !in_array($offlinejob["type"],$readonly_jobs))
-            {
+        if ($system_read_only && !in_array($offlinejob["type"],$readonly_jobs)) {
             continue;
-            }
+        }
 
         $clear_job_process_lock = false;
-        if(PHP_SAPI == 'cli' && $clear_lock && in_array($offlinejob['ref'], $jobs))
-            {
+        if (PHP_SAPI == 'cli' && $clear_lock && in_array($offlinejob['ref'], $jobs)) {
             $clear_job_process_lock = true;
-            }
-        if($offlinejob["start_date"] > date('Y-m-d H:i:s',time()))
-            {
-            continue;
-            }
-        job_queue_run_job($offlinejob, $clear_job_process_lock);    
         }
+        if ($offlinejob["start_date"] > date('Y-m-d H:i:s',time())) {
+            continue;
+        }
+        job_queue_run_job($offlinejob, $clear_job_process_lock);
+    }
     echo $lang["complete"] . ' ' . date('Y-m-d H:i:s') . PHP_EOL;
-    }
-else
-    {
+} else {
     echo $lang["offline_processing_disabled"] . PHP_EOL;
-    }
+}
