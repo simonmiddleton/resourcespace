@@ -17,11 +17,14 @@
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$fields,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
+function render_search_field($field,$fields,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), 
+                             $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
     {
     node_field_options_override($field);
 
-    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
+    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, 
+        $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, 
+        $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
 
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
     $multiple=false;
@@ -254,6 +257,10 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
         checkSearchDisplayCondition<?php echo $field["ref"];?> = function ()   
             {
+            // Is the governed field resource type ok; if not then no checking necessary as its already hidden
+            const conditionalquestion = document.getElementById("question_<?php echo $n ?>");
+            if (conditionalquestion.dataset.resource_type_ok !="1") { return; }
+
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
             var ixThisField;
@@ -442,7 +449,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     if (!$forsearchbar)
         {
         ?>
-        <div class="Question ConditionalVisibility" data-for_resource_types="<?php 
+        <div class="Question ConditionalVisibility" data-resource_type_ok="" data-for_resource_types="<?php 
         // Add class for each supported resource type to allow showing/hiding on advanced search
         if($field["resource_types"] == "Collections")
             {

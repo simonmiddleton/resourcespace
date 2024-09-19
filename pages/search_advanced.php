@@ -268,7 +268,7 @@ function displayValidFields() {
     // Determine which fields should be displayed for the selected resource types and considering any field display conditions.
     const conditionalquestions = document.getElementsByClassName("ConditionalVisibility");
     let fieldvalidfortypes = [];
-    let $add_type_specific_header = false;
+    let add_type_specific_header = false;
 
     for (let conditionalquestion of conditionalquestions)
         {
@@ -295,30 +295,37 @@ function displayValidFields() {
             // Field isn't valid for the selected resource types so hide.
             document.getElementById(conditionalquestion.id).style.display = "none";
             console.log("hide " + conditionalquestion.id);
+            // Record the decision
+            document.getElementById(conditionalquestion.id).dataset.resource_type_ok = "0";
             }
-        else if (conditionalquestion.dataset.has_display_condition === '1')
+        else 
             {
-            // Display condition applies for field so check it to decide if field is shown.
-            let conditiontocheck = 'checkSearchDisplayCondition' + conditionalquestion.dataset.question_field_ref;
-            window[conditiontocheck]();
-            console.log("display condition check for " + conditionalquestion.id);
-            }
-        else
-            {
-            // No display condition and field valid for resource types selected so show.
-            document.getElementById(conditionalquestion.id).style.display = "";
-            console.log("show " + conditionalquestion.id);
+            // Record the decision
+            document.getElementById(conditionalquestion.id).dataset.resource_type_ok = "1";
+            if (conditionalquestion.dataset.has_display_condition === '1')
+                {
+                // Display condition applies for field so check it to decide if field is shown.
+                let conditiontocheck = 'checkSearchDisplayCondition' + conditionalquestion.dataset.question_field_ref;
+                window[conditiontocheck]();
+                console.log("display condition check for " + conditionalquestion.id);
+                }
+            else
+                {
+                // No display condition and field valid for resource types selected so show.
+                document.getElementById(conditionalquestion.id).style.display = "";
+                console.log("show " + conditionalquestion.id);
+                }
             }
 
         if (document.getElementById(conditionalquestion.id).style.display == '' && fieldvalidfortypes[0] !== "Global")
             {
             // At least one resource type field is displayed so add the type specific fields section.
-            $add_type_specific_header = true;
+            add_type_specific_header = true;
             }
         }
 
     // Determine if resource type specific fields section should be displayed.
-    if ($add_type_specific_header)
+    if (add_type_specific_header)
         {
         jQuery('#AdvancedSearchRestypeSectionHead').show();
         if (getCookie('AdvancedSearchRestypeSection') != "collapsed") {
@@ -380,7 +387,7 @@ jQuery(document).ready(function()
                 //Uncheck All checkboxes
                 jQuery('.SearchTypeCheckbox').prop('checked',false);
                 // Check Featured Collections
-                selectedtypes=["FeaturedCollections"];
+                selectedtypes=["Collections"];
                 jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',true);
 
                 advSearchShowHideSection('Global',false);
@@ -710,6 +717,7 @@ for ($n=0;$n<count($fields);$n++)
     # Render this field
     render_search_field($fields[$n], $fields, $value, true, 'SearchWidth', false, array(), $searched_nodes, $resetform);
     }
+    debug("QUESTION NEXT n=".$n);
 ?>
 </div>
 
@@ -830,8 +838,13 @@ if($advanced_search_archive_select)
     <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchFeaturedCollectionsSectionHead" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>><?php echo escape($lang["themes"]) ; ?></h1>
     <div class="AdvancedSection" id="AdvancedSearchFeaturedCollectionsSection" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>>
     <?php
-    $fields=get_advanced_search_collection_fields();
-    for ($n=0;$n<count($fields);$n++)
+    
+    // Questions may have already be rendered for earlier sections
+    // If so then note the starting number for any questions yet to be rendered in subsequent secions
+    $start_n = $n; 
+
+    $fields=array_merge($fields,get_advanced_search_collection_fields());
+    for ($n=$start_n;$n<count($fields);$n++)
         {
         # Work out a default value
         if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
