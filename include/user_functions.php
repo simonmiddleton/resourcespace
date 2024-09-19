@@ -1947,6 +1947,10 @@ function check_access_key($resources,$key,$checkcollection=true)
     if (count($userinfo)>0)
         {
         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
+        // Usergroup that the key is trying to emulate has no permissions
+        if (trim((string) $userinfo[0]['permissions']) == '') {
+            return false;
+        }
         $userpermissions=explode(",",$userinfo[0]["permissions"]);
         
         if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
