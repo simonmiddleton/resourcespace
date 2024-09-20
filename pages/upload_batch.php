@@ -1072,6 +1072,7 @@ jQuery(document).ready(function () {
         'Unsplash' => true,
         );
 
+    $uploader_plugins = array_unique($uploader_plugins);
     for($n=0;$n<count($uploader_plugins);$n++)
         {
         // Fix for change to name in updated library that will break old configs
