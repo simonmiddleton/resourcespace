@@ -3,11 +3,11 @@
 # Language File for the SimpleLDAP Plugin
 # -------
 $lang['simpleldap_ldaptype'] = "Directory Provider";
-$lang['ldapserver'] = "LDAP Server";
+$lang['ldapserver'] = "LDAP Server/URL e.g.ldaps://hostname:port";
 $lang['ldap_encoding'] = "Data encoding received from the LDAP Server (set if not UTF-8 and data is not displayed properly - e.g display name)";
 $lang['domain'] = "AD Domain, if multiple separate with semi-colons";
 $lang['emailsuffix'] = "Email suffix - used if no email attribute data found";
-$lang['port'] = "Port";
+$lang['port'] = "Port. Only used if server above is not the full LDAP URL";
 $lang['basedn'] = "Base DN. If users are in multiple DNs,separate with semi-colons";
 $lang['loginfield'] = "Login Field";
 $lang['usersuffix'] = "User Suffix (a dot will be added in front of the suffix)";

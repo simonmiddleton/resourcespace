@@ -43,17 +43,17 @@ function simpleldap_authenticate(string $username,string $password)
     }
 
     // Set up first connection
-    debug("LDAP - Connecting to LDAP server: " . $simpleldap['ldapserver'] . " on port " . $simpleldap['port']);
-    if ($simpleldap['port'] == 636) {
-        $ds = ldap_connect('ldaps://' . $simpleldap['ldapserver'] . ':636');
+    if (substr(strtolower($simpleldap['ldapserver']),0,4) == "ldap") {
+        $connstring = $simpleldap['ldapserver'];
+    } elseif ($simpleldap['port'] == 636) {
+        $connstring = 'ldaps://' . $simpleldap['ldapserver'] . ':636';
     } else {
-        $ds = ldap_connect( $simpleldap['ldapserver'],$simpleldap['port'] );
+        $connstring = 'ldap://' . $simpleldap['ldapserver'] . ':' . $simpleldap['port'];
     }
 
-    if ($ds) {
-        debug("LDAP - Connected to LDAP server ");
-    } else {
-        debug("LDAP - Unable to connect to LDAP server " . $simpleldap['ldapserver'] . " on port " . $simpleldap['port']);
+    $ds = ldap_connect($connstring);
+    if ($ds === false) {
+        debug("LDAP - Invalid connection URL: '" . $connstring . "'");
         return false;
     }
 
