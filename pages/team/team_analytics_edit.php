@@ -97,7 +97,7 @@ if ($print)
         </style>
 
     <link href="<?php echo $baseurl ?>/css/global.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
-    <link href="<?php echo $baseurl ?>/css/colour.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
+    <link href="<?php echo $baseurl ?>/css/light.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
 
     <!-- Load jQuery and jQueryUI -->
     <script src="<?php echo $baseurl . $jquery_path; ?>?css_reload_key=<?php echo $css_reload_key; ?>"></script>
