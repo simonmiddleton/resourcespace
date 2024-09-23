@@ -913,19 +913,19 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     else
                         {
                         // Range has been passed via normal inputs, construct the value from the date/time dropdowns
-                        $date_parts=array("_start_","_end_");
+                        $date_parts=array("_start","_end");
 
                         foreach($date_parts as $date_part)
                             {
-                            $val = getval("field_" . $fields[$n]["ref"] . $date_part . "year","");
+                            $val = getval("field_" . $fields[$n]["ref"] . $date_part . "-y","");
                             if (intval($val)<=0)
                                 {
                                 $val="";
                                 }
-                            elseif (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="")
+                            elseif (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "-m",""))!="")
                                 {
                                 $val.="-" . $field;
-                                if (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="")
+                                if (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "-d",""))!="")
                                     {
                                     $val.="-" . $field;
                                     }
@@ -1851,19 +1851,19 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             else
                 {
                 // Range has been passed via normal inputs, construct the value from the date/time dropdowns
-                $date_parts=array("_start_","_end_");
+                $date_parts=array("_start","_end");
 
                 foreach($date_parts as $date_part)
                     {
-                    $val = $postvals["field_" . $fields[$n]["ref"] . $date_part . "year"] ?? "";
+                    $val = $postvals["field_" . $fields[$n]["ref"] . $date_part . "-y"] ?? "";
                     if ((int) $val <= 0)
                         {
                         $val="";
                         }
-                    elseif (($field = ($postvals["field_" . $fields[$n]["ref"] . $date_part . "month"] ?? "")) != "")
+                    elseif (($field = ($postvals["field_" . $fields[$n]["ref"] . $date_part . "-m"] ?? "")) != "")
                         {
                         $val.="-" . $field;
-                        if (($field=($postvals["field_" . $fields[$n]["ref"] . $date_part . "day"] ?? "")) != "")
+                        if (($field=($postvals["field_" . $fields[$n]["ref"] . $date_part . "-d"] ?? "")) != "")
                             {
                             $val.="-" . $field;
                             }

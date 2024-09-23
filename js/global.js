@@ -2128,13 +2128,28 @@ function enforceSharePassword(error_text)
 return true;
 }
 
-function sufficientDateRangeParts(fieldidentifier)
+function sufficientDateParts(fieldidentifier)
 {
-    return (
-            jQuery('#' + fieldidentifier + '_year').val() != '' // Always need a year
-            && (
-                // If a day is set then must have month, if not then month is ok
-                jQuery('#' + fieldidentifier + '_day').val() == "" || jQuery('#' + fieldidentifier + '_month').val() != ""
-            )
-        );
+    year = jQuery('#' + fieldidentifier + "-y").val() ?? "";
+    month = jQuery('#' + fieldidentifier + "-m").val() ?? "";
+    day = jQuery('#' + fieldidentifier + "-d").val() ?? "";
+    hour = jQuery('#' + fieldidentifier + '-h').val() ?? "";
+    minute = jQuery('#' + fieldidentifier + '-i').val() ?? "";
+
+
+    console.log("Day: (#" + fieldidentifier + "-d) : " + day);
+    console.log("Month: (#" + fieldidentifier + "-m) : " + month);
+    console.log("Year: (#" + fieldidentifier + "-y) : " +  year);
+    console.log("Hour: (#" + fieldidentifier + "-h) : " +  hour);
+    console.log("Minute: (#" + fieldidentifier + "-i) : " +  minute);
+
+    valid = year !== '' // Always need a year
+            && (day === '' || month !== '') // If a day is set then must have month
+            && (hour === '' || day !== '') // If an hour is set then must have day
+            && (minute === '' || hour !== '') // If a minute is set then must have hour
+
+    if (!valid) {
+        console.debug("Insufficient date inputs selected for field " + fieldidentifier + ". Preventing autosave");
+    }
+    return valid;
 }
