@@ -124,7 +124,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Table header styling */
 .ListviewStyle thead, .ListviewTitleStyle {
-    background: #6a6a6a;
+    background: #444;
     text-transform: uppercase;
 }
 .ListviewTitleStyle td, .ListviewTitleStyle th, .ListviewTitleStyle a, .ListviewTitleStyle a:visited {
@@ -139,10 +139,13 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
     {
     border-collapse: collapse;
     }
-.ListviewStyle td, .ListviewTitleStyle th
+.ListviewStyle tr:nth-child(even)
     {
-    border:1px solid #ddd;
+    background-color: #f6f6f6;
     }
+.ListViewBulkActions span {color: #666666}
+.ListViewBulkActions span:hover {color: #2E99E6;}
+
 
 .Question select .optionWeekend { background-color: #ccc; }
 .lockedQuestion {background-color: #ddd; }
@@ -209,10 +212,6 @@ div.autocomplete ul li {color: #000;}
 #InfoBoxCollectionInner h2 {color:black;}
 #InfoBoxCollectionInner p {color:black;}
 .NewFlag { background-color: #fff; color: #737373; text-shadow: none;}
-
-/* Mouseover effect on list views */
-.ListviewStyle tr:hover td {background-color: #EEE;} 
-.ListviewStyle tr.ListviewTitleStyle:hover td {background:none;background-color:#555;}
 
 /* Single file upload progress bar */
 .meter-value {background-color: #BBBBBB;}

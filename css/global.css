@@ -499,7 +499,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 }
 
 /*Resource Panel layout*/
-.Listview {overflow-x:auto; margin: 0 0 25px 0; clear:both;}
+.Listview {overflow-x:auto; margin: 0 0 25px 0; clear:both;border-radius:8px;}
 .ListviewTight {margin: 5px 10px 5px 0;}
 .Listview table{ width:100%;}
 .Listview td, .Listview th {padding:6px 8px 6px 8px;vertical-align: top;}
@@ -509,9 +509,8 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .ListViewBulkActions {margin-bottom: 15px;}
 .ListViewBulkActions i {padding-right: 8px;}
 .ListViewBulkActions .DisabledLink:hover {color: #666666;}
-.ListViewBulkActions span {cursor: pointer; margin-right: 5px; margin-left: 5px; color: #666666}
+.ListViewBulkActions span {cursor: pointer; margin-right: 5px; margin-left: 5px;}
 .ListViewBulkActions span .DisabledLink {cursor: default;}
-.ListViewBulkActions span:hover {color: #2E99E6;}
 
 /*Search Panel layout*/
 .SearchSpace {padding: 15px;width: auto;}
@@ -2576,7 +2575,7 @@ input[type="text"]#iconpicker-input {
 
 /* Search Bar Tab styling */
 #SearchBarTabsContainer {
-    background: rgb(0 0 0 / 20%);
+    background: rgb(0 0 0 / 30%);
 }
 #SearchBarTabsContainer a {
     display: inline-block;
