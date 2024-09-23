@@ -158,16 +158,16 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         if ($search!="") {$search.=", ";}
         $search.="enddate:" . getval("enddate","");
         }
-    if (getval("start_year","")!="")
+    if (getval("start-y","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.="startdate:" . getval("start_year","");
-        if (getval("start_month","")!="")
+        $search.="startdate:" . getval("start-y","");
+        if (getval("start-m","")!="")
             {
-            $search.="-" . getval("start_month","");
-            if (getval("start_day","")!="")
+            $search.="-" . getval("start-m","");
+            if (getval("start-d","")!="")
                 {
-                $search.="-" . getval("start_day","");
+                $search.="-" . getval("start-d","");
                 }
             else
                 {
@@ -179,16 +179,16 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             $search.="-01-01";
             }
         }
-    if (getval("end_year","")!="")
+    if (getval("end-y","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.="enddate:" . getval("end_year","");
-        if (getval("end_month","")!="")
+        $search.="enddate:" . getval("end-y","");
+        if (getval("end-m","")!="")
             {
-            $search.="-" . getval("end_month","");
-            if (getval("end_day","")!="")
+            $search.="-" . getval("end-m","");
+            if (getval("end-d","")!="")
                 {
-                $search.="-" . getval("end_day","");
+                $search.="-" . getval("end-d","");
                 }
             else
                 {
@@ -310,13 +310,13 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             if (strpos($search, $name.":")===false)
                 {
                 // Get each part of the date
-                $key_year=$name."_year";
+                $key_year=$name."-y";
                 $value_year=getval($key_year,"");
 
-                $key_month=$name."_month";
+                $key_month=$name."-m";
                 $value_month=getval($key_month,"");
 
-                $key_day=$name."_day";
+                $key_day=$name."-d";
                 $value_day=getval($key_day,"");
 
                 // The following constructs full date yyyy-mm-dd or partial dates yyyy-mm or yyyy
@@ -360,15 +360,15 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             else
                 {
                 #Date range search - start date
-                if (getval($name . "_start_year","")!="")
+                if (getval($name . "_start-y","")!="")
                     {
-                    $datepart.= "start" . getval($name . "_start_year","");
-                    if (getval($name . "_start_month","")!="")
+                    $datepart.= "start" . getval($name . "_start-y","");
+                    if (getval($name . "_start-m","")!="")
                         {
-                        $datepart.="-" . getval($name . "_start_month","");
-                        if (getval($name . "_start_day","")!="")
+                        $datepart.="-" . getval($name . "_start-m","");
+                        if (getval($name . "_start-d","")!="")
                             {
-                            $datepart.="-" . getval($name . "_start_day","");
+                            $datepart.="-" . getval($name . "_start-d","");
                             }
                         else
                             {
@@ -382,15 +382,15 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     }
 
                 #Date range search - end date
-                if (getval($name . "_end_year","")!="")
+                if (getval($name . "_end-y","")!="")
                     {
-                    $datepart.= "end" . getval($name . "_end_year","");
-                    if (getval($name . "_end_month","")!="")
+                    $datepart.= "end" . getval($name . "_end-y","");
+                    if (getval($name . "_end-m","")!="")
                         {
-                        $datepart.="-" . getval($name . "_end_month","");
-                        if (getval($name . "_end_day","")!="")
+                        $datepart.="-" . getval($name . "_end-m","");
+                        if (getval($name . "_end-d","")!="")
                             {
-                            $datepart.="-" . getval($name . "_end_day","");
+                            $datepart.="-" . getval($name . "_end-d","");
                             }
                         else
                             {
@@ -3054,7 +3054,7 @@ function update_search_from_request($search)
 
         if ($value!="" && substr($key,0,6)=="field_")
             {
-            if ((string_ends_with($key,"_year")!==false)||(string_ends_with($key,"_month")!==false)||(string_ends_with($key,"_day")!==false))
+            if ((string_ends_with($key,"-y")!==false)||(string_ends_with($key,"-m")!==false)||(string_ends_with($key,"_day")!==false))
                 {
                 # Date field
 
@@ -3064,7 +3064,7 @@ function update_search_from_request($search)
                 $value="";
                 if (strpos($search, $field.":")===false)
                     {
-                    $key_year=$key_part."_year";
+                    $key_year=$key_part."-y";
                     $value_year=getval($key_year,"");
 
                     if ($value_year != "") {
@@ -3073,14 +3073,14 @@ function update_search_from_request($search)
                         $value = "nnnn";
                     }
 
-                    $key_month=$key_part."_month";
+                    $key_month=$key_part."-m";
                     $value_month=getval($key_month,"");
 
                     if ($value_month == "") {
                         $value_month .= "nn";
                     }
 
-                    $key_day=$key_part."_day";
+                    $key_day=$key_part."-d";
                     $value_day=getval($key_day,"");
 
                     if ($value_day!="") {
