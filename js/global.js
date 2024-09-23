@@ -2127,3 +2127,14 @@ function enforceSharePassword(error_text)
     }
 return true;
 }
+
+function sufficientDateRangeParts(fieldidentifier)
+{
+    return (
+            jQuery('#' + fieldidentifier + '_year').val() != '' // Always need a year
+            && (
+                // If a day is set then must have month, if not then month is ok
+                jQuery('#' + fieldidentifier + '_day').val() == "" || jQuery('#' + fieldidentifier + '_month').val() != ""
+            )
+        );
+}

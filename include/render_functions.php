@@ -2350,22 +2350,22 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         <input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo $name?>_edtf" id="<?php echo $name?>_edtf" type="text" value="<?php echo ($startvalue!=""|$endvalue!="")?$startvalue . "/" . $endvalue:""; ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } elseif (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
 <?php
         }?>
-    <!--  date range search start -->           
-    <!--- start date -->    
+    <!--  date range search start -->
+    <!--- start date -->
     <div class="stdwidth indent <?php echo $name?>_range" id="<?php echo $name?>_from">
     <label class="InnerLabel"><?php echo escape($lang["fromdate"])?></label>
-    
-        <?php       
+
+        <?php
         if($date_d_m_y)
-            {  
+            {
             ?>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_day"><?php echo escape($lang["day"]); ?></label>
-            <select name="<?php echo $name?>_start_day"
+            <select name="<?php echo $name?>_start_day" id="<?php echo $name?>_start_day"
              <?php
-            if ($forsearch && $autoupdate) 
+            if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
             elseif (!$forsearch  && $edit_autosave)
-            {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+            {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
               >
               <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
               <?php
@@ -2377,12 +2377,12 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
               ?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_month"><?php echo escape($lang["month"]); ?></label>
-            <select name="<?php echo $name?>_start_month"
-                <?php 
-                if ($forsearch && $autoupdate) 
+            <select name="<?php echo $name?>_start_month" id="<?php echo $name?>_start_month"
+                <?php
+                if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
                 <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
                 <?php
@@ -2395,16 +2395,16 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             <?php
             }
         else
-            { 
-            ?>      
+            {
+            ?>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_month"><?php echo escape($lang["month"]); ?></label>
-            <select name="<?php echo $name?>_start_month"
+            <select name="<?php echo $name?>_start_month" id="<?php echo $name?>_start_month"
                 <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
-                    >                   
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
+                    >
                 <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
@@ -2414,12 +2414,12 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_day"><?php echo escape($lang["day"]); ?></label>
-            <select name="<?php echo $name?>_start_day"
-              <?php 
-                if ($forsearch && $autoupdate) 
+            <select name="<?php echo $name?>_start_day"  id="<?php echo $name?>_start_day"
+              <?php
+                if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
               <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
               <?php
@@ -2430,17 +2430,17 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 }
               ?>
             </select>
-            <?php	      
+            <?php
             }
         if($forsearch)
             {?>
-            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_year"><?php echo escape($lang["year"]); ?></label>
-            <select name="<?php echo escape($name) ?>_start_year"
-                <?php 
-                if ($forsearch && $autoupdate) 
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_year"><?php echo escape($lang["year"]); ?></label>
+            <select name="<?php echo escape($name) ?>_start_year" id="<?php echo $name?>_start_year"
+                <?php
+                if ($forsearch && $autoupdate)
                         { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+                {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                 >
                 <option value=""><?php echo escape($forsearch?$lang["anyyear"]:$lang["year"]); ?></option>
                 <?php
@@ -2463,31 +2463,29 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if($forsearch && !$forsearchbar)
                     { ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>>
             <?php
             }?>
     </div>
-    
+
     <div class="clearerleft"> </div>
-    
+
     <!--- to date -->
     <label  class='daterangelabel'></label>
-    
-    
-    
+
     <div class="stdwidth indent <?php echo $name?>_range" id="<?php echo $name?>_to" >
     <label class="InnerLabel"><?php echo escape($lang["todate"])?></label>
-    <?php       
+    <?php
         if($date_d_m_y)
             {
             ?>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_day"><?php echo escape($lang["day"]); ?></label>
-            <select name="<?php echo $name?>_end_day"
-              <?php 
-                if ($forsearch && $autoupdate) 
+            <select name="<?php echo $name?>_end_day" id="<?php echo $name?>_end_day"
+              <?php
+                if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
                 <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
                 <?php
@@ -2498,12 +2496,12 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_month"><?php echo escape($lang["month"]); ?></label>
-            <select name="<?php echo $name?>_end_month"
-                <?php 
-                if ($forsearch && $autoupdate) 
+            <select name="<?php echo $name?>_end_month"  id="<?php echo $name?>_end_month"
+                <?php
+                if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
                 <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
                 <?php
@@ -2519,12 +2517,12 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {
             ?>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_month"><?php echo escape($lang["month"]); ?></label>
-            <select name="<?php echo $name?>_end_month" <?php 
+            <select name="<?php echo $name?>_end_month" id="<?php echo $name?>_end_month" <?php
                 if (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } 
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } 
                 else
                     {?>onChange="UpdateResultCount();"<?php } ?>
-                    >                   
+                    >
                 <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
@@ -2534,12 +2532,12 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_day"><?php echo escape($lang["day"]); ?></label>
-            <select name="<?php echo $name?>_end_day"
-              <?php 
-                if ($forsearch && $autoupdate) 
+            <select name="<?php echo $name?>_end_day" id="<?php echo $name?>_end_day"
+              <?php
+                if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
               <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
               <?php
@@ -2550,16 +2548,16 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 }
               ?>
             </select>
-            <?php	      
+            <?php
             }
         if($forsearch)
             {?>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_year"><?php echo escape($lang["year"]); ?></label>
-            <select name="<?php echo $name?>_end_year" 
-            <?php 
-            if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
+            <select name="<?php echo $name?>_end_year" id="<?php echo $name?>_end_year"
+            <?php
+            if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+                    {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
               <option value=""><?php echo escape($forsearch?$lang["anyyear"]:$lang["year"]); ?></option>
               <?php
@@ -2577,22 +2575,22 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 {?>
                 <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_year"><?php echo escape($lang["year"]); ?></label>
                 <input size="5" name="<?php echo escape($name) ?>_end_year" id="<?php echo escape($name) ?>_end_year" type="text" value="<?php echo $found_end_year ?>"
-                    <?php 
-                    
+                    <?php
+
                     if ($forsearch && $autoupdate)
                         { ?>onChange="UpdateResultCount();"<?php }
                     if($forsearch && !$forsearchbar)
                         { ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php }
                     elseif (!$forsearch  && $edit_autosave)
-                        {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
+                        {?>onChange="if(sufficientDateRangeParts('<?php echo $name?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>>
                 <?php
                 }
-            
+
             if($forsearch !== true)
                 {
                 ?>
         <script>
-            //Get value of the date element before the change
+            // Get value of the date element before the change
             jQuery('[name^=<?php echo $name;?>]').on('focus', function(){
                 jQuery.data(this, 'current', jQuery(this).val());
             });
@@ -4299,7 +4297,6 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             $value = $modified_value['value'];
             debug('field value modified by display_field_modified_value hook');
             }
-
         # Final stages of rendering
 
         # Include display template when necessary
