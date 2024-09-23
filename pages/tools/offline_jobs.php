@@ -94,7 +94,10 @@ if ($offline_job_queue) {
         // Get jobs in small batches so that new higher priority jobs won't have to wait if there is a backlog
         $offlinejobs = job_queue_get_jobs("", STATUS_ACTIVE, "","","priority,ref", "ASC","", false, 5);
         $offlinejob = array_shift($offlinejobs);
-        if (!empty($jobs) && !in_array($offlinejob["ref"], $jobs)) {
+        if (
+            !isset($offlinejob["start_date"])
+            || (!empty($jobs) && !in_array($offlinejob["ref"], $jobs))
+        ) {
             continue;
         }
 
