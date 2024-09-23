@@ -137,7 +137,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                     clearTimeout(wto);
                                     wto=setTimeout(function() {
                                         // Reflect the change of the governing field into the following governed field condition checker
-                                        console.log("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref']; ?>");
+                                        console.debug("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref']; ?>");
                                         for (i = 0; i<categoryTreeChecksArray.length; i++) {
                                             categoryTreeChecksArray[i]();
                                         }
@@ -165,7 +165,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "DISPCOND DYNAMKKD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
+                                    console.debug("<?php echo "DISPCOND DYNAMKKD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
@@ -181,7 +181,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "DISPCOND DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
+                                    console.debug("<?php echo "DISPCOND DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
@@ -219,7 +219,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "DISPCOND CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
+                                    console.debug("<?php echo "DISPCOND CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
@@ -404,13 +404,13 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 // If the governed field display state has changed then enact the change by sliding
                 if ( newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status )
                     {
-                    console.log("IDNAME " + idname<?php echo $field['ref']; ?>);
-                    console.log("   FIELD <?php echo $field['ref']; ?> STATUS '" + field<?php echo $field['ref']; ?>status+"'");
-                    console.log("NEWFIELD <?php echo $field['ref']; ?> STATUS '" + newfield<?php echo $field['ref']; ?>status+"'");
+                    console.debug("IDNAME " + idname<?php echo $field['ref']; ?>);
+                    console.debug("   FIELD <?php echo $field['ref']; ?> STATUS '" + field<?php echo $field['ref']; ?>status+"'");
+                    console.debug("NEWFIELD <?php echo $field['ref']; ?> STATUS '" + newfield<?php echo $field['ref']; ?>status+"'");
                     // Toggle the display state between "block" and "none", clearing any incomplete actions in the process
                     jQuery(idname<?php echo $field['ref']; ?>).slideToggle(function()
                         {
-                        console.log("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
+                        console.debug("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
                         jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
                         });
 

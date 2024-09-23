@@ -2136,12 +2136,11 @@ function sufficientDateParts(fieldidentifier)
     hour = jQuery('#' + fieldidentifier + '-h').val() ?? "";
     minute = jQuery('#' + fieldidentifier + '-i').val() ?? "";
 
-
-    console.log("Day: (#" + fieldidentifier + "-d) : " + day);
-    console.log("Month: (#" + fieldidentifier + "-m) : " + month);
-    console.log("Year: (#" + fieldidentifier + "-y) : " +  year);
-    console.log("Hour: (#" + fieldidentifier + "-h) : " +  hour);
-    console.log("Minute: (#" + fieldidentifier + "-i) : " +  minute);
+    console.debug("Day: (#" + fieldidentifier + "-d) : " + day);
+    console.debug("Month: (#" + fieldidentifier + "-m) : " + month);
+    console.debug("Year: (#" + fieldidentifier + "-y) : " +  year);
+    console.debug("Hour: (#" + fieldidentifier + "-h) : " +  hour);
+    console.debug("Minute: (#" + fieldidentifier + "-i) : " +  minute);
 
     valid = year !== '' // Always need a year
             && (day === '' || month !== '') // If a day is set then must have month
