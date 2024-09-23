@@ -96,8 +96,6 @@ else{
         {
     ?>
     function validate_date_field(field_ref){
-
-        console.log("BANG validate_date_field");
             let day   = jQuery('#'+field_ref+'-d').val();
             let month = jQuery('#'+field_ref+'-m').val();
             let year  = jQuery('#'+field_ref+'-y').val(); 
