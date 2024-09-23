@@ -1856,12 +1856,13 @@ function updateDownloadLink(ns, selected_size, picker)
             {
                 SAFE_FOR_JQUERY: true,
                 ALLOWED_TAGS: ['a'],
-                ALLOWED_ATTR: ['href', 'onclick'],
+                ALLOWED_ATTR: ['href', 'onclick','data-api-native-csrf'],
             }
         )
     );
     download_btn.prop('href', link.attr('href'));
     download_btn.attr('onclick', link.attr('onclick'));
+    download_btn.attr('data-api-native-csrf', link.attr('data-api-native-csrf'));
     download_btn.text(link.text().trim());
     <?php hook('append_to_updateDownloadLink_js', '', [$resource]); ?>
 }
