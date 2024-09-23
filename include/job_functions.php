@@ -115,14 +115,13 @@ function job_queue_delete($ref)
  * @param  string $status       Job status - see definitions.php
  * @param  int    $user         Job user
  * @param  string $job_code     Unique job code
- * @param  string $job_order_by
- * @param  string $job_sort
- * @param  string $find
- * @param  bool   $returnsql
- * @param  int    $maxjobs      Maximum number of jobs to return
+ * @param  string $job_order_by 
+ * @param  string $job_sort     
+ * @param  string $find         
+ * @param  bool   $returnsql    
  * @return mixed                Resulting array of requests or an SQL query object
  */
-function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="", $returnsql=false,int $maxjobs = 0)
+function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="", $returnsql=false)
     {
     global $userref;
     $condition = array();
@@ -199,7 +198,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
         }
 
     $conditional_sql="";
-    if (count($condition)>0){$conditional_sql=" WHERE " . implode(" AND ",$condition);}
+    if (count($condition)>0){$conditional_sql=" where " . implode(" and ",$condition);}
     
     // Check order by value is valid
     if (!in_array(strtolower($job_order_by), array("priority", "ref", "type", "fullname", "status", "start_date")))
@@ -210,15 +209,10 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
     // Check sort value is valid
     if (!in_array(strtolower($job_sort), array("asc", "desc")))
         {
-        $job_sort = "ASC";
+        $job_sort = "asc";
         }
 
-    $limit = "";
-    if ($maxjobs > 0) {
-        $limit = " LIMIT ?";
-        $parameters = array_merge($parameters,["i",$maxjobs]);
-    }
-    $sql = "SELECT j.ref, j.type, replace(replace(j.job_data,'\r',' '),'\n',' ') as job_data, j.user, j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user " . $conditional_sql . " ORDER BY " . $job_order_by . " " . $job_sort . ",start_date ASC " . $limit;
+    $sql = "SELECT j.ref, j.type, replace(replace(j.job_data,'\r',' '),'\n',' ') as job_data, j.user, j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user " . $conditional_sql . " ORDER BY " . $job_order_by . " " . $job_sort . ",start_date ASC";
     if($returnsql){return new PreparedStatementQuery($sql, $parameters);}
     return ps_query($sql, $parameters);
     }
