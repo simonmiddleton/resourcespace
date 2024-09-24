@@ -38,7 +38,7 @@ blockquote {padding:0 0 2em; margin:0 2.5em;}
 blockquote blockquote {padding:1em 0 2em; margin:0 2.5em;}
 a:link, a:visited {text-decoration:none;}
 a:hover, a:active {text-decoration:underline;}
-input,textarea {box-sizing: border-box;}
+input,textarea {box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
 option {font-size:1em;}
 
 p.tight {padding:0 0 0.75em;}
@@ -123,10 +123,14 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 
 button:hover, input[type=submit]:hover, input[type=button]:hover, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:hover,.UploadButton a:hover {
     filter: brightness(1.08);
+    -moz-filter: brightness(1.08);
+    -webkit-filter: brightness(1.08);    
 }
 
 button:active, input[type=submit]:active, input[type=button]:active, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:active,.UploadButton a:active {
     filter: brightness(0.92);
+    -moz-filter: brightness(0.92);
+    -webkit-filter: brightness(0.92);    
 }
 
 /* Prevent iOS overriding button styling */
@@ -139,6 +143,8 @@ span+input {
 }
 
 select, .sp-replacer {
+    -webkit-appearance: none;
+    -moz-appearance: none;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMiIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDIyIDEzIj4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgLTQpIj4KICAgIDxyZWN0IHdpZHRoPSIyMiIgaGVpZ2h0PSIxMSIgeT0iMiIvPgogICAgPHBvbHlsaW5lIHN0cm9rZT0iIzJFOTlFNiIgc3Ryb2tlLXdpZHRoPSIyIiBwb2ludHM9IjkuNTk2IDEuNDc1IDkuNTk2IDguNTk2IDIuNDc1IDguNTk2IiB0cmFuc2Zvcm09InJvdGF0ZSg0NSA2LjAzNiA1LjAzNikiLz4KICA8L2c+Cjwvc3ZnPgo=);
     background-repeat: no-repeat;
     background-position: right 65%;
@@ -194,6 +200,11 @@ select:before {
 #custom_access {padding-left: 300px;}
 #custom_access .radiooptions{margin: 5px;}
 
+/* Hide arrow on selects in IE */
+select::-ms-expand
+    {
+    display: none;
+    }
 /*General layout*/
 #Header {
     padding: 5px 25px 5px 25px;
@@ -492,11 +503,18 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question{padding: 0.7em 0 0.7em 0.5em;}
 .QuestionSubmit{ padding: 1em 0 1em 0.5em;}
 .QuestionSubmit.QuestionSticky {
+    position: -webkit-sticky; 
     position: sticky;
     bottom: 0;
     z-index: 2;
 }
-
+/* IE does not support position: sticky so fall back to standard styling */
+@media all and (-ms-high-contrast:none) {
+    .QuestionSubmit.QuestionSticky {
+        border-top: none;
+        box-shadow: none;
+    }
+}
 .Question label, .QuestionSubmit label{ width: 300px;float: left;margin-top: 0.3em;padding-right:10px;}
 .Question .customFieldset { padding: 0; border: 0;}
 .Question #capswarning { margin-left: 190px; display: none; font-weight: bold;}
@@ -600,6 +618,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .ColNarrow {float: left;width: 171px;margin-bottom: 10px;}
 .RecordPanel .buffer {margin-right: 10px;}
 .RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; margin-top: 10px;padding-left: 10px;} 
+.RecordPanel .SearchSimilar {float: left;width: auto; margin: 0 10px 2px 0;padding: 0;}
 .RecordPanel .item {word-wrap: break-word; float: left;margin-left: 10px;margin-top: 10px;margin-right: 10px;position:relative;}
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0;padding: 0;}
@@ -775,7 +794,7 @@ div.autocomplete ul li {
 #imageContainer>#hoverNav{ left: 0;}
 #hoverNav a{ outline: none;}
 
-#prevLink, #nextLink{ width: 49%; height: 100%; display: block; }
+#prevLink, #nextLink{ width: 49%; height: 100%; background-image: url(data:image/gif;base64,AAAA); /* Trick IE into showing hover */ display: block; }
 #prevLink { left: 0; float: left;}
 #nextLink, .sharelink { right: 0; float: right;}
 
@@ -844,6 +863,7 @@ div.autocomplete ul li {
     margin-right: 25px;
 }
 
+
 .uppy-Dashboard-browse{
     font-size: 20px;
     margin-bottom: 8px;
@@ -900,6 +920,7 @@ div.autocomplete ul li {
     {
     overflow: auto;
     transform: translateZ(0);
+    -webkit-transform: translateZ(0);
     }
 
     .ui-layout-pane-north {
@@ -1040,6 +1061,8 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 
 #contactadminbox  textarea{
     width:100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin-right: 5px;
     }
@@ -1069,6 +1092,8 @@ input.contactadminbutton  {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     filter: unset;
+    -moz-filter: unset;
+    -webkit-filter: unset;
     min-width: unset;
 }
 
@@ -1747,6 +1772,12 @@ form.FormFilter button.ClearButton {
     vertical-align: text-bottom;
     max-width: 80%;
 }
+.SearchSimilar .customFieldLabel {
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 3px;
+    vertical-align: text-bottom;
+}
 
 .keywordselected {
     display: inline-block;
@@ -1788,6 +1819,9 @@ a.Enabled, a:visited.Enabled {
 .checkselect {float:left;padding-left:5px;}
 
 .checkselectmedium {
+    -moz-transform: scale(1.3); /* FF */
+    -webkit-transform: scale(1.3); /* Safari and Chrome */
+    -o-transform: scale(1.3); /* Opera */
     transform: scale(1.3);
     margin-top: 4px;
     margin-right: 5px;
@@ -2172,6 +2206,7 @@ a.BrowseRefresh{
 }
 
 .FloatingPreviewContainer {
+    position: -webkit-sticky; 
     position: sticky;
     top: 15px;
     margin-bottom: 16px;
@@ -2334,6 +2369,7 @@ input[type="text"]#iconpicker-input {
 
 .BasicsBox.SearchSticky {
     top: 0;
+    position: -webkit-sticky; 
     position: sticky;
     z-index: 101;
     padding-top: 15px;
@@ -2448,7 +2484,7 @@ input[type="text"]#iconpicker-input {
     {
     min-width: 250px;
     max-width: 40%;
-    border-radius:8px;
+    border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
     margin-bottom: 0;
     }
 #HomeSiteTextInner{padding:15px;}
