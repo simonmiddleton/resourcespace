@@ -21,12 +21,12 @@ include '../../../include/header.php';
 <p><h1><?php echo escape($lang["offline_archive_view_completed"]) ?></h1><p>
 
 <div class="Listview">
-    <table id="offline_archive_table" class="ListviewStyle offline_archive_table" border="0" cellspacing="0" cellpadding="0">
+    <table id="offline_archive_table" class="ListviewStyle offline_archive_table">
         <tr class="ListviewTitleStyle">
-            <td style="width:150px"><?php echo escape($lang['offline_archive_archive_ref']); ?></td>
-            <td><?php echo escape($lang['offline_archive_archive_status']); ?></td>
-            <td><?php echo escape($lang['offline_archive_archive_date']); ?></td>
-            <td><?php echo escape($lang['offline_archive_view_associated']); ?></td>
+            <th style="width:150px"><?php echo escape($lang['offline_archive_archive_ref']); ?></th>
+            <th><?php echo escape($lang['offline_archive_archive_status']); ?></th>
+            <th><?php echo escape($lang['offline_archive_archive_date']); ?></th>
+            <th><?php echo escape($lang['offline_archive_view_associated']); ?></th>
         </tr>
         <?php
         foreach ($completedarchives as $completedarchive)

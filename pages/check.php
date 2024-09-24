@@ -92,6 +92,26 @@ if (in_array("transform", $plugins)) {
     <?php
 }
 
+
+// Check write access to $facial_recognition_face_recognizer_models_location (if $facial_recognition is enabled)
+if ($facial_recognition) {
+    $success = is_writable($facial_recognition_face_recognizer_models_location);
+    if ($success === false) {
+        $result = $lang["status-fail"] . ": " . $facial_recognition_face_recognizer_models_location . $lang["nowriteaccesstohomeanim"];
+    } else {
+        $result = $lang["status-ok"];
+    }
+    ?>
+    <tr>
+        <td><?php echo escape($lang["facial-recognition"]); ?></td>
+        <td><?php echo escape($lang['write_access_to'] . $facial_recognition_face_recognizer_models_location); ?></td>
+        <td>
+            <b><?php echo escape($result); ?></b>
+        </td>
+    </tr>
+    <?php
+}
+
 # Check flag set if code needs signing
 if (get_sysvar("code_sign_required") == "YES") {
     $result = $lang["status-fail"];

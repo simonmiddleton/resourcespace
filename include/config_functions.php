@@ -544,7 +544,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
 
     if($current !=='')
         {
-        $origin_in_config = (substr($current, 0, 13) != '[storage_url]');
+        $origin_in_config = (substr($current, 0, 13) != '[storage_url]' && !str_contains($current, 'system/config'));
         if ($origin_in_config)
             {
             # Current value may have originated in config.php - file uploader to consider this unset
@@ -614,13 +614,26 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             ?>
         </form>
         <?php
-        if ($file_preview && $current !== "")
-            {
-            global $baseurl; ?>
+        if ($file_preview && $current !== "") {
+            global $baseurl; 
+
+            $matches = array();
+
+            if (preg_match("/system\/config.*/", $current, $matches) && count($matches) == 1) {
+                $img_url = $baseurl . '/filestore/' . $matches[0];
+            } else {
+                $img_url = $baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current);
+            }
+
+            ?>
             <div id="preview_<?php echo escape($name); ?>">
-            <img class="config-image-preview" src="<?php echo escape($baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current)) . '?v=' . date("s") ?>" alt="<?php echo escape($lang["preview"] . ' - ' . $label) ?>">
+                <img class="config-image-preview"
+                    src="<?php echo escape($img_url) . '?v=' . date("s") ?>"
+                    alt="<?php echo escape($lang["preview"] . ' - ' . $label) ?>">
             </div>
-            <?php } ?>
+            <?php
+        }
+        ?>
         <div class="clearerleft"></div>
     </div>
     <?php

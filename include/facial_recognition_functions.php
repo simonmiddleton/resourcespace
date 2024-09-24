@@ -13,15 +13,29 @@ function initFacialRecognition()
     global $facial_recognition_tag_field, $facial_recognition_face_recognizer_models_location, $annotate_enabled,
            $annotate_fields;
 
-    if(!is_numeric($facial_recognition_tag_field) || 0 >= $facial_recognition_tag_field)
-        {
+    if (!is_numeric($facial_recognition_tag_field) || 0 >= $facial_recognition_tag_field) {
         return false;
-        }
+    }
 
-    if(!file_exists($facial_recognition_face_recognizer_models_location))
-        {
-        return false;
+    if (!is_dir($facial_recognition_face_recognizer_models_location)) {
+        if (strpos($facial_recognition_face_recognizer_models_location, $GLOBALS["storagedir"]) === 0) {
+            // Create the directory as it is in the configured filestore
+            mkdir($facial_recognition_face_recognizer_models_location, 0777, true);
+        } else {
+            // Folder needs to be created by server admin
+            $error = str_replace(
+                ["%variable","%path"],
+                ["\$facial_recognition_face_recognizer_models_location", $facial_recognition_face_recognizer_models_location],
+                $GLOBALS["lang"]["error_invalid_path"]
+            );
+            if (PHP_SAPI == "cli") {
+                echo $error . PHP_EOL;
+            } else {
+                debug($error);
+            }
+            return false;
         }
+    }
 
     $facial_recognition_rtf_type = ps_value(
         "SELECT `type` AS `value`
@@ -30,10 +44,19 @@ function initFacialRecognition()
         ",array("i",$facial_recognition_tag_field),
         null, "schema");
 
-    if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST != $facial_recognition_rtf_type)
-        {
-        return false;
+    if (FIELD_TYPE_DYNAMIC_KEYWORDS_LIST != $facial_recognition_rtf_type) {
+        $error = str_replace(
+            ["%variable","%type"],
+            ["\$facial_recognition_tag_field", $GLOBALS["lang"]["fieldtype-dynamic_keywords_list"]],
+            $GLOBALS["lang"]["error_invalid_field_type"]
+        );
+        if (PHP_SAPI == "cli") {
+            echo $error . PHP_EOL;
+        } else {
+            debug($error);
         }
+        return false;
+    }
 
     $annotate_enabled = true;
     $annotate_fields[] = $facial_recognition_tag_field;

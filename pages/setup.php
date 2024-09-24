@@ -181,7 +181,7 @@ if(get_post_bool('ajax'))
 <title><?php echo escape($lang["setup-rs_initial_configuration"]);?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="../css/global.css?csr=5" rel="stylesheet" type="text/css" /> 
-<link href="../css/colour.css?csr=5" rel="stylesheet" type="text/css" /> 
+<link href="../css/light.css?csr=5" rel="stylesheet" type="text/css" /> 
 <script src="..<?php echo $jquery_path; ?>"></script>
 <!--- FontAwesome for icons-->
 <link rel="stylesheet" href="../lib/fontawesome/css/font-awesome.min.css">

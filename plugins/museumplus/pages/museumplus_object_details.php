@@ -7,7 +7,6 @@ if(!checkperm('t'))
     http_response_code(401);
     exit('Access denied!');
     }
-include_once "$museumplus_rs_root/include/resource_functions.php";
 include_once "../include/museumplus_functions.php";
 
 

@@ -173,10 +173,10 @@ function HookGrant_editEditAppendcustomfields()
 
         <div class="Question" id="question_grant_edit" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
             <label><?php echo escape($lang["grant_edit_list"]); ?></label>
-            <table cellpadding=3 cellspacing=3 class="ListviewStyle">
+            <table class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-            <td><?php echo escape($lang['user']);?></td>
-            <td><?php echo escape($lang['expires']);?></td>
+            <th><?php echo escape($lang['user']);?></th>
+            <th><?php echo escape($lang['expires']);?></th>
             </tr>
             <?php
             foreach($grant_editusers as $grant_edituser)
@@ -226,10 +226,10 @@ function HookGrant_editEditAppendcustomfields()
 
         <div class="Question" id="question_grant_edit" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
             <label><?php echo escape($lang["grant_edit_group_list"]); ?></label>
-            <table cellpadding=3 cellspacing=3 class="ListviewStyle">
+            <table class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-            <td><?php echo escape($lang['user_group']);?></td>
-            <td><?php echo escape($lang['expires']);?></td>
+            <th><?php echo escape($lang['user_group']);?></th>
+            <th><?php echo escape($lang['expires']);?></th>
             </tr>
             <?php
             foreach($grant_editgroups as $grant_editgroup)

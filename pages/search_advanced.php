@@ -294,7 +294,7 @@ function displayValidFields() {
             {
             // Field isn't valid for the selected resource types so hide.
             document.getElementById(conditionalquestion.id).style.display = "none";
-            console.log("hide " + conditionalquestion.id);
+            console.debug("hide " + conditionalquestion.id);
             // Record the decision
             document.getElementById(conditionalquestion.id).dataset.resource_type_ok = "0";
             }
@@ -307,13 +307,13 @@ function displayValidFields() {
                 // Display condition applies for field so check it to decide if field is shown.
                 let conditiontocheck = 'checkSearchDisplayCondition' + conditionalquestion.dataset.question_field_ref;
                 window[conditiontocheck]();
-                console.log("display condition check for " + conditionalquestion.id);
+                console.debug("display condition check for " + conditionalquestion.id);
                 }
             else
                 {
                 // No display condition and field valid for resource types selected so show.
                 document.getElementById(conditionalquestion.id).style.display = "";
-                console.log("show " + conditionalquestion.id);
+                console.debug("show " + conditionalquestion.id);
                 }
             }
 

@@ -32,11 +32,11 @@ $url        = generateURL($baseurl_short . 'pages/view.php', $get_params );
     <h1><?php echo escape(str_replace('%fieldtitle%', $field_title, $lang['track_field_history_field_history_page_title'])); ?></h1>
     <div class="clearerleft"></div>
     <div class="Listview">
-        <table id="track_field_history_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+        <table id="track_field_history_table" class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-                <td width="10%"><?php echo escape($lang['date']); ?></td>
-                <td width="10%"><?php echo escape($lang['user']); ?></td>
-                <td><?php echo escape($lang['track_field_history_change']); ?></td>
+                <th width="10%"><?php echo escape($lang['date']); ?></th>
+                <th width="10%"><?php echo escape($lang['user']); ?></th>
+                <th><?php echo escape($lang['track_field_history_change']); ?></th>
             </tr>
             <?php
             if($no_records) { ?>

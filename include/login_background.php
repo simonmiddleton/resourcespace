@@ -1,6 +1,3 @@
-<?php
-include_once 'resource_functions.php';
-?>
 <script>
 var SlideshowImages = new Array();
 var SlideshowCurrent = -1;

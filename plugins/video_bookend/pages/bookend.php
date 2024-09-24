@@ -9,6 +9,7 @@ $nocache = true;
 include_once "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/image_processing.php";
+include_once "../../../include/video_functions.php";
 
 $ref             = getval("ref", 0, true);
 $alternatives    = get_alternative_files($ref);
@@ -19,6 +20,22 @@ $ffmpeg_fullpath = get_utility_path("ffmpeg");
 if(getval("submit", "") != "" && enforcePostRequest(false))
     {
     $temp_dir = get_temp_dir(false, uniqid('bookend'));
+
+    # Join videos (this will stitch the 2 image => video files into one (variable $final)
+
+    $final = "{$temp_dir}/video_bookend_temp_final_{$ref}.mp4";
+    $resource = get_resource_data($ref);
+    $source = get_resource_path($ref, true, "", false, $resource["file_extension"]);
+    $source_pre = get_resource_path($ref, true, "pre", false, $ffmpeg_preview_extension);
+
+    $video_properties = get_video_resolution($source_pre);
+
+    $scaling_params = "scale=" . $video_properties['width'] . ":" . $video_properties['height'] . 
+                        ":force_original_aspect_ratio=decrease,pad=" . 
+                        $video_properties['width'] . ":" . $video_properties['height'] . 
+                        ":-1:-1:color=black";
+
+    $framerate_params = '-r ' . $video_properties['framerate'];
     
     for($n = 1; $n <= 2; $n++)
         {
@@ -55,7 +72,7 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
             if ($extension == 'jpg' || $extension == 'png')
                 {
                 run_command(
-                    "{$ffmpeg_fullpath} -y -loop 1 -i image -t video_bookend_seconds -filter:v \"crop=trunc(iw/2)*2:trunc(ih/2)*2\" path_n",
+                    "{$ffmpeg_fullpath} -y -loop 1 -i image -t video_bookend_seconds $framerate_params -filter:v \"crop=trunc(iw/2)*2:trunc(ih/2)*2, $scaling_params\" path_n",
                     false,
                     [
                         'image' => new CommandPlaceholderArg($image, 'is_valid_rs_path'),
@@ -68,7 +85,7 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
             if($extension == 'gif')
                 {
                 run_command(
-                    "{$ffmpeg_fullpath} -i image path_n",
+                    "{$ffmpeg_fullpath} -i image $framerate_params -filter:v \"$scaling_params\" path_n",
                     false,
                     [
                         'image' => new CommandPlaceholderArg($image, 'is_valid_rs_path'),
@@ -79,13 +96,7 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
             }
         }
 
-    # Join videos (this will stitch the 2 image => vide files into one (variable $final)
-
-    $final = "{$temp_dir}/video_bookend_temp_final_{$ref}.mp4";
-    $resource = get_resource_data($ref);
-    $source = get_resource_path($ref, true, "", false, $resource["file_extension"]);
-    $source_pre = get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
-
+        
     # Build text file so it works with mp4. Also don't use the original mp4 for source as this just freezes when outputed
     # Only add a line (for the title/closing) if the exist
 

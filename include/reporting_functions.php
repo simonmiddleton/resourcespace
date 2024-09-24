@@ -149,7 +149,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
             # Merge translation strings if multiple in a single column
             if (substr($key,0,4)=="i18n") {
                 $delimiter = substr($key,4,strpos($key,"_")-4);
-                $value=implode("", i18n_merge_translations(explode($delimiter,$value)));
+                $value=implode("", i18n_merge_translations(explode($delimiter,(string)$value)));
             }
         }
         unset($value);

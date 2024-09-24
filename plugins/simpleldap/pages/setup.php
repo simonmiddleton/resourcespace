@@ -265,12 +265,12 @@ config_boolean_field(
     $lang['simpleldap_LDAPTLS_REQCERT_never_label'],
     $simpleldap['LDAPTLS_REQCERT_never']);
 config_text_field("ldapserver",$lang['ldapserver'],$simpleldap['ldapserver'],60);
+config_text_field("port",$lang['port'],$simpleldap['port'],5);
 config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['ldap_encoding'], 60);
 config_text_field("domain",$lang['domain'],$simpleldap['domain'],60);
 config_text_field("emailsuffix",$lang['emailsuffix'],$simpleldap['emailsuffix'],60);
 config_text_field("email_attribute",$lang['email_attribute'],$simpleldap['email_attribute'],60);
 config_text_field("phone_attribute",$lang['phone_attribute'],$simpleldap['phone_attribute'],60);
-config_text_field("port",$lang['port'],$simpleldap['port'],5);
 config_text_field("basedn",$lang['basedn'],$simpleldap['basedn'],60);
 config_text_field("loginfield",$lang['loginfield'],$simpleldap['loginfield'],30);
 config_text_field("usersuffix",$lang['usersuffix'],$simpleldap['usersuffix'],30);

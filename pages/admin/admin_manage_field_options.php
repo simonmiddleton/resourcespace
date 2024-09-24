@@ -536,7 +536,7 @@ if($ajax)
         }
         ?>
         <div class="Listview">
-        <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="5">
+        <table class="ListviewStyle">
         <?php
         // When editing a category tree we won't show the table headers since the data
         // will move to the right every time we go one level deep
@@ -545,12 +545,12 @@ if($ajax)
             ?>
             <thead>
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo escape($lang['name']); ?></td>
-                    <td><?php echo escape($lang['resources']); ?></td>
-                    <td><?php echo escape($lang['property-order_by']); ?></td>
-                    <td><?php echo escape($lang['actions']); ?></td>
-                    <td> </td>
-                    <td> </td>
+                    <th><?php echo escape($lang['name']); ?></th>
+                    <th><?php echo escape($lang['resources']); ?></th>
+                    <th><?php echo escape($lang['property-order_by']); ?></th>
+                    <th><?php echo escape($lang['actions']); ?></th>
+                    <th> </th>
+                    <th> </th>
                 </tr>
             </thead>
             <tbody>

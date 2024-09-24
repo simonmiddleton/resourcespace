@@ -1072,18 +1072,16 @@ jQuery(document).ready(function () {
         'Unsplash' => true,
         );
 
-    for($n=0;$n<count($uploader_plugins);$n++)
-        {
+    $uploader_plugins = array_unique($uploader_plugins);
+    foreach ($uploader_plugins as $uploader_plugin) {
         // Fix for change to name in updated library that will break old configs
-        if($uploader_plugins[$n] == "Onedrive")
-            {
-            $uploader_plugins[$n] = "OneDrive";
-            }
-        if(isset($supported_plugins[$uploader_plugins[$n]]))
-            {
-            echo "var " . $uploader_plugins[$n]  . "= Uppy." . $uploader_plugins[$n] . ";\n";
-            }
+        if ($uploader_plugin == "Onedrive") {
+            $uploader_plugin = "OneDrive";
         }
+        if (isset($supported_plugins[$uploader_plugin])) {
+            echo "var " . $uploader_plugin  . "= Uppy." . $uploader_plugin . ";\n";
+        }
+    }
     ?>
 
 

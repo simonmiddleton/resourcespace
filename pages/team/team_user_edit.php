@@ -92,7 +92,7 @@ if(getval('loginas', '') === '')
     }
 
 
-// Log in as this user. A user key must be generated to enable login using the MD5 hash as the password.
+// Log in as this user. A user key must be generated to enable login using a hash as the password.
 if(getval('loginas', '') != '')
     {
     // Log user switch in the activity log for both sides (the user we moved from and the one we moved to)
@@ -110,7 +110,7 @@ if(getval('loginas', '') != '')
     $_POST = [];
     $_POST['username'] = $user['username'];
     $_POST['password'] = $user['password'];
-    $_POST['userkey'] = hash('sha256',$user["username"] . $scramble_key . date("Ymd"));
+    $_POST['userkey'] = hash_hmac("sha256", "login_as_user" . $user["username"] . date("Ymd"), $scramble_key, true);
     $_POST[$CSRF_token_identifier] = generateCSRFToken($usersession, 'autologin');
 
     include '../../login.php';
@@ -182,7 +182,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="Question" ><label><?php echo escape($lang["username"])?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
 <?php if (!hook("password", "", array($user))) { ?>
-<div class="Question"><label><?php echo escape($lang["password"])?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo escape($lang["hidden"]); ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo escape($lang["suggest"])?>" onclick="jQuery.get(this.form.action + '&suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["password"])?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo escape($lang["hidden"]); ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo escape($lang["suggest"])?>" onclick="jQuery.get(this.form.action + '&suggest=true', function(result) {jQuery('#password').val(DOMPurify.sanitize(result));});return false;" /><div class="clearerleft"> </div></div>
 <?php } else { ?>
 <div><input name="password" id="password" type="hidden" value="<?php echo escape($lang["hidden"]);?>" /></div>
 <?php } ?>

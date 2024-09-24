@@ -38,11 +38,11 @@ $jumpcount=1;
 ?><div class="TopInpageNav"><?php pager();  ?></div>
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo escape($lang["keyword"]); ?></td>
-<td><?php echo escape($find==""?$lang["relatedkeywords"]:$lang["matchingrelatedkeywords"]); ?></td>
-<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+<th><?php echo escape($lang["keyword"]); ?></th>
+<th><?php echo escape($find==""?$lang["relatedkeywords"]:$lang["matchingrelatedkeywords"]); ?></th>
+<th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
 </tr>
 
 <?php

@@ -112,14 +112,14 @@ function addColumnHeader($orderName, $labelKey)
         $image = '';
     }
 
-?>      <td>
+?>      <th>
             <a href="<?php echo $baseurl ?>/pages/admin/admin_group_management.php?<?php
                 if ($find!="") { ?>&find=<?php echo escape($find); }
                 if ($filter_by_parent!="") { ?>&filterbyparent=<?php echo escape($filter_by_parent); }
                 if ($filter_by_permissions!="") { ?>&filterbypermissions=<?php echo escape($filter_by_permissions); }
             ?>&orderby=<?php echo $orderName . ($order_by==$orderName ? '+desc' : ''); ?>"
             onClick="return CentralSpaceLoad(this);"><?php echo escape($lang[$labelKey]) . $image ?></a>
-        </td>
+        </th>
 <?php
 }
 
@@ -151,13 +151,13 @@ function addColumnHeader($orderName, $labelKey)
     </div>
     
     <div class="Listview">
-        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+        <table class="ListviewStyle">
             <tr class="ListviewTitleStyle">
                 <?php addColumnHeader("ref", "property-reference"); ?>
                 <?php addColumnHeader("name", "property-user_group"); ?>
                 <?php addColumnHeader("users", "users"); ?>
                 <?php addColumnHeader("pname", "property-user_group_parent"); ?>
-                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+                <th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
             </tr>
 <?php
         $url_params=

@@ -1,16 +1,14 @@
 <?php
 include      __DIR__ . '/../../include/boot.php';
 include      __DIR__ . '/../../include/authenticate.php';
-include_once __DIR__ . '/../../include/resource_functions.php';
 include_once __DIR__ . '/../../include/facial_recognition_functions.php';
-include_once __DIR__ . '/../../include/node_functions.php';
 
 $return   = array();
 $action   = getval('action', '');
 $resource = getval('resource', 0, true);
 
 if(
-    !$facial_recognition ||
+    !$facial_recognition_active ||
     !get_edit_access($resource) ||
     !metadata_field_edit_access($facial_recognition_tag_field)
 )

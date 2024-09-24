@@ -140,61 +140,61 @@ include "../../include/header.php";
     </div>
 
     <div class="Listview" id="user_messages">
-        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+        <table class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-                <td><input type="checkbox" id="messages-select-all"></td>
-                <td>
+                <th><input type="checkbox" id="messages-select-all"></th>
+                <th>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=created&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
                         <?php echo escape($lang["created"])?>
                     </a>
                     <?php if ($msg_order_by == "created") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
-                </td>
-                <td>
+                </th>
+                <th>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=from&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
                         <?php echo escape($lang["from"])?>
                     </a>
                     <?php if ($msg_order_by == "from") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
-                </td>
-                <td>
+                </th>
+                <th>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=fullname&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
                         <?php echo escape($lang["fullname"])?>
                     </a>
                     <?php if ($msg_order_by == "fullname") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
-                </td>
+                </th>
                 <?php if ($messages_actions_usergroup) { ?>
-                    <td><?php echo escape($lang["property-user_group"]); ?></td>
+                    <th><?php echo escape($lang["property-user_group"]); ?></th>
                 <?php } ?>
-                <td>
+                <th>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=message&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
                         <?php echo escape($lang["message"])?>
                     </a>
                     <?php if ($msg_order_by == "message") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
-                </td>
-                <td>
+                </th>
+                <th>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=expires&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
                         <?php echo escape($lang["expires"])?>
                     </a>
                     <?php if ($msg_order_by == "expires") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
-                </td>
-                <td>
+                </th>
+                <th>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=seen&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
                         <?php echo escape($lang["seen"])?>
                     </a>
                     <?php if ($msg_order_by == "seen") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
-                </td>
-                <td><div class="ListTools"><?php echo escape($lang["tools"])?></div></td>
+                </th>
+                <th><div class="ListTools"><?php echo escape($lang["tools"])?></div></th>
             </tr>
             <?php
             for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++)

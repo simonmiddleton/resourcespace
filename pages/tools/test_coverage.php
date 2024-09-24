@@ -66,13 +66,13 @@ usort($functions, function ($a, $b) { return $b['count_code'] - $a['count_code']
 
 ?><h1><?php echo round(($test_coverage_count / count($functions)) * 100,3); ?>% test coverage</h1>
 <p>(excluding plugins/ and lib/)</p>
-<table border="0" cellspacing="0" cellpadding="3" class="ListviewStyle">
+<table class="ListviewStyle">
     <tbody>
         <tr class="ListviewTitleStyle">
-            <td></td>
-            <td>Function</td>
-            <td>Code calls<span class="DESC"></span></td>
-            <td>Test calls</td>
+            <th></th>
+            <th>Function</th>
+            <th>Code calls<span class="DESC"></span></th>
+            <th>Test calls</th>
         </tr>
     <?php
 for ($i=0; $i<count($functions); $i++)

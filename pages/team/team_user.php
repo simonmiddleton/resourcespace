@@ -254,13 +254,13 @@ include "../../include/header.php";
             "order_by"  =>$orderName . ($order_by==$orderName ? ' desc' : ''),
             "find"      =>$find]
         );
-        ?><td><a href="<?php echo $column_header_url?>" onClick="return CentralSpaceLoad(this);"><?php
-                echo escape($lang[$labelKey]) . $image ?></a></td>
+        ?><th><a href="<?php echo $column_header_url?>" onClick="return CentralSpaceLoad(this);"><?php
+                echo escape($lang[$labelKey]) . $image ?></a></th>
         <?php
     }
 
     ?>
-    <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+    <table class="ListviewStyle">
     <tr class="ListviewTitleStyle">
     <?php
         addColumnHeader('u.username', 'username');
@@ -278,7 +278,7 @@ include "../../include/header.php";
         addColumnHeader('last_active', 'lastactive');
         hook("additional_user_column_header");
     ?>
-    <td><div class="ListTools"><?php echo escape($lang["tools"])?></div></td>
+    <th><div class="ListTools"><?php echo escape($lang["tools"])?></div></th>
     </tr>
     <?php
     // Parse $url var as this is being manipulated by the pager(). This allows us to build correct URLs later on (e.g for team_user_edit_url)
@@ -314,7 +314,7 @@ include "../../include/header.php";
         <td><?php echo escape((string)$users[$n]["fullname"])?></td>
         <?php } ?>
         <?php if (!hook("replacegroupnamerow")){?>
-        <td><?php echo i18n_get_translated($users[$n]["groupname"]); ?></td>
+        <td><?php echo escape(i18n_get_translated($users[$n]["groupname"])); ?></td>
         <?php } ?>
         <?php if (!hook("replaceemailrow")){?>
         <td><?php echo htmlentities((string)$users[$n]["email"])?></td>

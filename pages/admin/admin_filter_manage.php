@@ -71,15 +71,15 @@ include "../../include/header.php";
             ?>
                 
             <div class="Listview">
-            <table id="filter_list_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+            <table id="filter_list_table" class="ListviewStyle">
             <tbody>
                 <tr class="ListviewTitleStyle">
-                    <td>
+                    <th>
                         <a href="<?php echo generateURL($filter_manage_url,$params, array("filterorder"=>"ref", "sort"=> $revsort)); ?>" onclick="return CentralSpaceLoad(this);"><?php echo escape($lang['property-reference']); ?></a>
-                    </td>
-                    <td><a href="<?php echo generateURL($filter_manage_url,$params, array("filterorder"=>"name", "sort"=> $revsort)); ?>" onclick="return CentralSpaceLoad(this);"><?php echo escape($lang['property-name']); ?></a>
-                    </td>
-                    <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
+                    </th>
+                    <th><a href="<?php echo generateURL($filter_manage_url,$params, array("filterorder"=>"name", "sort"=> $revsort)); ?>" onclick="return CentralSpaceLoad(this);"><?php echo escape($lang['property-name']); ?></a>
+                    </th>
+                    <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
                 </tr>
 
             <?php

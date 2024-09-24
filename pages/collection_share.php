@@ -460,26 +460,26 @@ if (isset($show_error)) { ?>
             {
             ?>
             <div class="Listview">
-            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+            <table class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-            <td><?php echo escape($lang["accesskey"]);?></td>
-            <td><?php echo escape($lang["sharedby"]);?></td>
-            <td><?php echo escape($lang["sharedwith"]);?></td>
-            <td><?php echo escape($lang["lastupdated"]);?></td>
-            <td><?php echo escape($lang["lastused"]);?></td>
-            <td><?php echo escape($lang["expires"]);?></td>
-            <td><?php echo escape($lang["access"]);?></td>
+            <th><?php echo escape($lang["accesskey"]);?></th>
+            <th><?php echo escape($lang["sharedby"]);?></th>
+            <th><?php echo escape($lang["sharedwith"]);?></th>
+            <th><?php echo escape($lang["lastupdated"]);?></th>
+            <th><?php echo escape($lang["lastused"]);?></th>
+            <th><?php echo escape($lang["expires"]);?></th>
+            <th><?php echo escape($lang["access"]);?></th>
             <?php
             global $social_media_links;
             if (!empty($social_media_links))
                 {
                 ?>
-                <td><?php echo escape($lang['social_media']); ?></td>
+                <th><?php echo escape($lang['social_media']); ?></th>
                 <?php
                 }
             ?>
             <?php hook("additionalcolexternalshareheader");?>
-            <td><div class="ListTools"><?php echo escape($lang["tools"])?></div></td>
+            <th><div class="ListTools"><?php echo escape($lang["tools"])?></div></th>
             </tr>
             <?php
             for ($n=0;$n<count($keys);$n++)

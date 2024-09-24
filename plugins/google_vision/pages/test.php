@@ -1,7 +1,6 @@
 <?php
 // Do the include and authorization checking ritual
 include '../../../include/boot.php';
-include_once '../../../include/resource_functions.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
 

@@ -165,9 +165,9 @@ renderBreadcrumbs($links_trail);
         }
         ?>
         <div class="Listview">
-            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+            <table class="ListviewStyle">
                 <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo escape($lang["searching_and_access"]) ?></td>
+                    <th colspan=3 class="permheader"><?php echo escape($lang["searching_and_access"]) ?></th>
                 </tr>
 <?php
 DrawOption("s", $lang["searchcapability"]);
@@ -202,7 +202,7 @@ DrawOption("q", $lang["can_make_resource_requests"], false);
 DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo escape($lang["metadatafields"]); ?></td>
+                    <td colspan=3 class="permheader"><?php echo escape($lang["metadatafields"]); ?></th>
                 </tr>
 <?php
 
@@ -246,7 +246,7 @@ foreach ($fields as $field)
     }
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo escape($lang["resourcetypes"]); ?></td>
+                    <th colspan=3 class="permheader"><?php echo escape($lang["resourcetypes"]); ?></th>
                 </tr>
 <?php
 
@@ -293,7 +293,7 @@ if (in_array("XE",$permissions))
         }
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo escape($lang["resource_creation_and_management"]); ?></td>
+                    <th colspan=3 class="permheader"><?php echo escape($lang["resource_creation_and_management"]); ?></th>
                 </tr>
 <?php
 
@@ -322,7 +322,7 @@ DrawOption("i", $lang["can_manage_archive_resources"]);
 DrawOption('A', $lang["can_manage_alternative_files"], true);
 ?>
     <tr class="ListviewTitleStyle">
-        <td colspan=3 class="permheader"><?php echo escape($lang["themes_and_collections"]); ?></td>
+        <th colspan=3 class="permheader"><?php echo escape($lang["themes_and_collections"]); ?></th>
     </tr>
 <?php
 
@@ -363,7 +363,7 @@ DrawOption("J", $lang["display_only_resources_within_accessible_themes"]);
 # ---------- End of Dash Tiles
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo escape($lang["administration"]); ?></td>
+                    <th colspan=3 class="permheader"><?php echo escape($lang["administration"]); ?></th>
                 </tr>
 <?php
 
@@ -396,7 +396,7 @@ else
     }
 DrawOption('ex', $lang['permission_manage_external_shares']);
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo escape($lang["other"]); ?></td>
+                    <th colspan=3 class="permheader"><?php echo escape($lang["other"]); ?></th>
                 </tr>
 <?php
 DrawOption("p", $lang["can_change_own_password"], true);

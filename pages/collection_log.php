@@ -56,14 +56,14 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 
 
 <div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <!--Title row-->    
 <tr class="ListviewTitleStyle">
-<td><?php echo escape($lang["date"]); ?></td>
-<td><?php echo escape($lang["user"]); ?></td>
-<td><?php echo escape($lang["action"]); ?></td>
-<td><?php echo escape($lang["resourceid"]); ?></td>
-<td><?php $field=get_fields(array($view_title_field)); if (!empty($field[0]["title"])) {echo lang_or_i18n_get_translated($field[0]["title"], "fieldtitle-");}?></td>
+<th><?php echo escape($lang["date"]); ?></th>
+<th><?php echo escape($lang["user"]); ?></th>
+<th><?php echo escape($lang["action"]); ?></th>
+<th><?php echo escape($lang["resourceid"]); ?></th>
+<th><?php $field=get_fields(array($view_title_field)); if (!empty($field[0]["title"])) {echo lang_or_i18n_get_translated($field[0]["title"], "fieldtitle-");}?></th>
 <?php hook("log_extra_columns_header"); ?>
 </tr>
 

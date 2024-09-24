@@ -55,14 +55,14 @@ function addColumnHeader($orderName, $labelKey)
         $linksort = 'asc';
         }
 
-    ?><td><a href="<?php echo $baseurl ?>/pages/admin/admin_resource_types.php?restype_order_by=<?php echo escape($orderName) ?>&restype_sort=<?php echo $linksort;
+    ?><th><a href="<?php echo $baseurl ?>/pages/admin/admin_resource_types.php?restype_order_by=<?php echo escape($orderName) ?>&restype_sort=<?php echo $linksort;
             ?>&find=<?php echo urlencode((string)$find)?>&backurl=<?php echo urlencode((string)$url) ?>" onClick="return CentralSpaceLoad(this);"><?php
-            echo escape($lang[$labelKey]) . $arrow ?></a></td>
+            echo escape($lang[$labelKey]) . $arrow ?></a></th>
 
         <?php
 
         }
-?>  
+?>
 
 <div class="BasicsBox">
 <h1><?php echo escape($lang["resource_types_manage"]); ?></h1>
@@ -104,7 +104,7 @@ if(!$allow_reorder)
 </div>
 
 <div class="Listview ListviewTight">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 
 <?php
@@ -113,7 +113,7 @@ addColumnHeader('name', 'property-name');
 addColumnHeader('fieldcount', 'admin_resource_type_field_count');
 ?>
 
-<td><div class="ListTools"><?php echo escape($lang["tools"]) ?></div></td>
+<th><div class="ListTools"><?php echo escape($lang["tools"]) ?></div></th>
 </tr>
 <tbody id="resource_type_table_body">
 <?php

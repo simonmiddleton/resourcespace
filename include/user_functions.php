@@ -1947,6 +1947,10 @@ function check_access_key($resources,$key,$checkcollection=true)
     if (count($userinfo)>0)
         {
         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
+        // Usergroup that the key is trying to emulate has no permissions
+        if (trim((string) $userinfo[0]['permissions']) == '') {
+            return false;
+        }
         $userpermissions=explode(",",$userinfo[0]["permissions"]);
         
         if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
@@ -2146,9 +2150,10 @@ function make_username(string $name, string $email = ""): string
 {
     if ($GLOBALS["username_from_email"] && trim($email) !== "") {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$email], 0);
-        if ($c === 0)
-            return trim($email);
+            $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$email], 0);
+            if ($c === 0) {
+                return trim($email);
+            }
         }
         debug("make_username() - Unable to use invalid e-mail address: " . $email);
     }
@@ -3679,7 +3684,8 @@ function checkPermission_manage_users() : bool
 
 /**
  * Get the processing status message for the current user.
- *
+ * 
+ * @return false|array
  */
 function get_processing_message()
     {
@@ -3699,6 +3705,8 @@ function get_processing_message()
  * Set a new processing message for the current user.
  *
  * @param string $message   The processing status message to add.
+ * 
+ * @return void
  */
 $set_processing_message_first_call=true;
 function set_processing_message(string $message)
@@ -3709,5 +3717,4 @@ function set_processing_message(string $message)
     if ($userprocessing_messages!="") {$userprocessing_messages.=";;";} // Add delimiter
     $userprocessing_messages.=$message;
     ps_query("update user set processing_messages=? where ref=?",["s",$userprocessing_messages,"i",$userref]);
-    return true;
     }

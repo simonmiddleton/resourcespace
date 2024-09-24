@@ -5,10 +5,13 @@ include "{$rsroot}/include/boot.php";
 include "{$rsroot}/include/authenticate.php";
 include_once "{$rsroot}/include/ajax_functions.php";
 
+$collection = getval("collection", 0, true);
+
 if(checkperm("b") && !(isset($anonymous_login) && $username == $anonymous_login && $anonymous_user_session_collection))
     {
     // Only has access to the result selection collection
     $selection_collection_only = true;
+    $collection = $USER_SELECTION_COLLECTION;
     }
 
 $allowed_actions = array(
@@ -24,7 +27,6 @@ $allowed_actions = array(
     "remove_multiple_resources"
     );
 
-$collection = getval("collection", 0, true);
 if($collection==0 && isset($anonymous_login) && $username==$anonymous_login)
     {
     if(is_null($USER_SELECTION_COLLECTION))

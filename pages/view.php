@@ -1772,13 +1772,11 @@ if($annotate_enabled)
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
     <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
     <?php
-    if($facial_recognition)
-        {
+    if ($facial_recognition_active) {
         ?>
         <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSFaceRecognition/rs_facial_recognition.js"></script>
         <?php
-        }
-        ?>
+    } ?>
     <!-- End of Annotorious -->
     <?php
     }
@@ -1858,12 +1856,13 @@ function updateDownloadLink(ns, selected_size, picker)
             {
                 SAFE_FOR_JQUERY: true,
                 ALLOWED_TAGS: ['a'],
-                ALLOWED_ATTR: ['href', 'onclick'],
+                ALLOWED_ATTR: ['href', 'onclick','data-api-native-csrf'],
             }
         )
     );
     download_btn.prop('href', link.attr('href'));
     download_btn.attr('onclick', link.attr('onclick'));
+    download_btn.attr('data-api-native-csrf', link.attr('data-api-native-csrf'));
     download_btn.text(link.text().trim());
     <?php hook('append_to_updateDownloadLink_js', '', [$resource]); ?>
 }

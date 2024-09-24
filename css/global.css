@@ -85,25 +85,17 @@ input[type="file"] {
 }
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
-    border: 1px solid transparent;
-    background-color: #1679c0;
     background-image: none;
-    color: #fff;
     text-decoration: none;
     cursor: pointer;
     font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 
+
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .MissingFile a {
-    border: 1px solid #000;
-    background-color: #fff;
-    color: #000;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
     border-radius: 5px;
     cursor: default;
 }
-
 .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
     line-height: 1.8rem;
     padding: 0 1rem;
@@ -146,10 +138,6 @@ button:active, input[type=submit]:active, input[type=button]:active, .RecordPane
     -webkit-filter: brightness(0.92);    
 }
 
-.emailinvalid {
-    background-color: red;
-}
-
 /* Prevent iOS overriding button styling */
 input[type=submit], input[type=button] {
     -webkit-appearance: none;
@@ -170,12 +158,10 @@ select, .sp-replacer {
     z-index: 0;
     padding-right: 30px;
     display: inline-block;
-    background-color: #fff;
 }
 
 select:before {
     content: "\f078";
-    color: #2e99e6;
     display: inline-block;
     font: normal normal normal 14px/1 "Font Awesome 5 Free", sans-serif;
     font-weight: 600;
@@ -184,10 +170,6 @@ select:before {
     position: absolute;
     right: 2rem;
     z-index: 1;
-}
-
-input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:focus {
-    box-shadow: 0 0 6px hsla(205, 79%, 54%, 0.5);
 }
 
 /* Hide arrow on selects in IE */
@@ -499,7 +481,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 }
 
 /*Resource Panel layout*/
-.Listview {overflow-x:auto; margin: 0 0 25px 0; clear:both;}
+.Listview {overflow-x:auto; margin: 0 0 25px 0; clear:both;border-radius:8px;}
 .ListviewTight {margin: 5px 10px 5px 0;}
 .Listview table{ width:100%;}
 .Listview td, .Listview th {padding:6px 8px 6px 8px;vertical-align: top;}
@@ -508,10 +490,8 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Listview .IconStar {width:11px;height:12px;padding: 0;display: block;float:left;}
 .ListViewBulkActions {margin-bottom: 15px;}
 .ListViewBulkActions i {padding-right: 8px;}
-.ListViewBulkActions .DisabledLink:hover {color: #666666;}
-.ListViewBulkActions span {cursor: pointer; margin-right: 5px; margin-left: 5px; color: #666666}
+.ListViewBulkActions span {cursor: pointer; margin-right: 5px; margin-left: 5px;}
 .ListViewBulkActions span .DisabledLink {cursor: default;}
-.ListViewBulkActions span:hover {color: #2E99E6;}
 
 /*Search Panel layout*/
 .SearchSpace {padding: 15px;width: auto;}
@@ -537,9 +517,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     position: -webkit-sticky; 
     position: sticky;
     bottom: 0;
-    background-color: #f2f2f2;
-    border-top: 1px solid #c1c1c1;
-    box-shadow: 0 -12px 15px -12px #bbbbbb;
     z-index: 2;
 }
 /* IE does not support position: sticky so fall back to standard styling */
@@ -551,7 +528,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 }
 .Question label, .QuestionSubmit label{ width: 300px;float: left;margin-top: 0.3em;padding-right:10px;}
 .Question .customFieldset { padding: 0; border: 0;}
-.Question #capswarning { margin-left: 190px; display: none; color: red;font-weight: bold;}
+.Question #capswarning { margin-left: 190px; display: none; font-weight: bold;}
 .Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;}
 .Question .medwidth,.medwidth{width: 285px;font-size: 1em;}
 .Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;}
@@ -637,12 +614,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     display: inline-grid;
 }
 
-.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink,
-.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink:hover,
-.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink:active  {
-    background-color: white;
-    box-shadow: unset;
-}
+
 
 .RecordPanel .PictureDoc {float: left;margin: 50px 130px;}
 
@@ -659,7 +631,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; margin-top: 10px;padding-left: 10px;} 
 .RecordPanel .SearchSimilar {float: left;width: auto; margin: 0 10px 2px 0;padding: 0;}
 .RecordPanel .item {word-wrap: break-word; float: left;margin-left: 10px;margin-top: 10px;margin-right: 10px;position:relative;}
-.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #767676;}
+.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0;padding: 0;}
 .RecordPanel .RecordDownload {float: left;width: 425px;margin: 0 0 10px 0;}
 .RecordPanel .RecordDownload table {width: 100%;margin: 0;padding: 0;}
@@ -901,28 +873,7 @@ div.autocomplete ul li {
 #uploader .uppy-size--md .uppy-DashboardContent-addMore {
     margin-right: 25px;
 }
-.uppy-StatusBar-actionBtn,
-.uppy-Dashboard-browse,
-.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
-.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
-.uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
-.uppy-DashboardContent-addMore, .uppy-DashboardContent-addMore:focus {
-    background-color: #1988d7;
-    color: #fff;
-}
-.uppy-Dashboard-browse:focus, .uppy-Dashboard-browse:hover {
-    border: 1px solid transparent;
-}
-.uppy-DashboardContent-back:hover,
-.uppy-DashboardContent-addMore:hover {
-    color: #fff;
-}
 
-.uppy-Dashboard-Item-action--remove {
-    border: unset;
-    box-shadow: unset;
-    background-color: unset;
-}
 
 .uppy-Dashboard-browse{
     font-size: 20px;
@@ -931,10 +882,6 @@ div.autocomplete ul li {
 
 .uppy-DashboardContent-addMore svg{
     display:none;
-}
-
-.uppy-Dashboard-Item-previewInnerWrap {
-    background-color: #f2f2f2 !important;
 }
 
 .uppy-size--xl .uppy-Dashboard-Item {
@@ -967,8 +914,6 @@ div.autocomplete ul li {
 }
  
 .uppy-ProviderBrowserItem-inner {
-    color: #000;
-    background-color: #F0F0F0;
     width: 100%;
 }
  
@@ -1005,10 +950,7 @@ div.autocomplete ul li {
     {
     cursor: pointer;
     }
-.CollapsibleSectionHead:hover
-    {
-    color: #757575;
-    }
+
 
 h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     {
@@ -1036,7 +978,6 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .CommentEntryInfoFlag{display: inline-flex;}
 .CommentFlag{display: inline; margin-right: 12px;}
 .CommentFlagged{display: inline; margin-right: 10px;}
-.CommentFlagged i {color: #F44336;}
 .CommentBody{width: 100%; margin-top: 10px; margin-bottom: 10px;}
 .CommentFlagReason{width: 100%; height: 60px;}
 .CommentFlagFullname {margin-top: 5px; width: 150px;}
@@ -1050,7 +991,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .CommentRespond {display: inline-block; width: auto; margin-right: 12px;}
 .TaggingHint {cursor: hand;display:block;width:588px;padding:5px;}
 .TaggingHint::before {content: "\f02b  ";   font: normal normal normal 14px "Font Awesome 5 Free", sans-serif;font-weight: 600;}
-.comment_form_container{background-color: white; border: 1px solid lightgray; padding: 8px; border-radius: 4px; width: 600px; margin-top: 5px;}
+.comment_form_container{padding: 8px; border-radius: 4px; width: 600px; margin-top: 5px;}
 
 .collectionscompactstylespacer {height:25px;}
 
@@ -1104,9 +1045,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     {
     margin-right: 10px;
     margin-top: 3px;
-    background-color: white;
     padding: 4px 4px 4px 5px;
-    box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
     border-radius: 5px;
     }
 
@@ -1121,11 +1060,9 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 
 .update_result_order_button {
     display: inline-block;
-    background-color: white;
     padding: 6px 8px 5px 8px;
     vertical-align: middle;
     border-radius: 5px;
-    box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
 }
 
 #SearchResultFound {
@@ -1158,11 +1095,9 @@ input.contactadminbutton  {
 .search-icon:active {
     float: left;
     position: relative;
-    color: #0299d8;
     margin-top: -35px;
     margin-left: 219px;
     font-size: 17px;
-    background-color: #e8edf1;
     box-shadow: none;
     padding: 7px 6px 6px 6px;
     border-top-left-radius: 0;
@@ -1295,11 +1230,9 @@ a.HomePanel:hover {
 
 .DashTileActions {
     position: absolute;
-    color: #fff;
     left: 0;
     bottom: 0;
     width: 100%;
-    background: #000;
     height: 20px;
     text-align: right;
     z-index:3;
@@ -1477,7 +1410,6 @@ div.video-js {margin:auto;}
     padding: 14px 20px 10px 20px;
 }
 
-#modal .BasicsBox .HelpHeader a { color: #999; }
 #modal .BasicsBox .HelpHeader .backtoresults { margin-top: 18px; }
 
 #modal:focus {
@@ -1599,11 +1531,9 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 
 .FeaturedSimpleTileActions {
     position: absolute;
-    color: #fff;
     left: 0;
     bottom: 0;
     width: 100%;
-    background: #000;
     text-align: right;
     z-index:2;
 }
@@ -1621,9 +1551,8 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 .FeaturedSimpleTile.FullWidth { height: 40px; }
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleLink { width: 85%; }
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 { background-color: unset; }
-.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"] { padding: 3px 5px; border-radius: 4px; font-size: 0.85em; background-color: #646B60; }
+.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"] { padding: 3px 5px; border-radius: 4px; font-size: 0.85em;}
 .FeaturedSimpleTile.FullWidth .ListTools .ActionsContainer select { margin: 5px 5px; }
-.FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents { background-color: rgba(0,0,0,0.4); }
 .FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents h2 span { font-size: larger; }
 
 .MessageUnread {
@@ -1659,10 +1588,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 
 #login_box .Question input[type=text],
 #login_box .Question input[type=password],
-#login_box textarea {
-    background-color: #9a9a9ad9;
-    color: white;
-}
+
 
 #login_box .Question label {
     width: 515px;
@@ -1722,12 +1648,9 @@ p.ExternalLoginLinks {
 }
 
 #login_box .FormError {
-    color: white;
-    background-color: #ff000030;
     margin: 0;
     padding: 5px;
     border-radius: 6px;
-    border: 2px solid red;
 }
 #LoginHeader {
     border-radius: 6px;
@@ -1832,7 +1755,7 @@ form.FormFilter button.ClearButton {
     }
 .ImageTools
     {
-    position:absolute;display:inline;background-color:black;visibility:hidden;
+    position:absolute;display:inline;visibility:hidden;
     }
 .ImageStripLink:hover .ImageTools
     {
@@ -1889,8 +1812,6 @@ form.FormFilter button.ClearButton {
 
 #PreviewToolsOptionsWrapper {
     height: 100%;
-    background: rgba(0, 0, 0, 0.65);
-    color: #FFF;
     font-size: 26px;
 }
 
@@ -1899,21 +1820,13 @@ form.FormFilter button.ClearButton {
     margin: 5px 10px 0 0;
 }
 
-.ToolsOptionLink:link, .ToolsOptionLink:visited {
-    color: #FFF;
-}
-
 .ToolsOptionLink:hover {
-    color: #79BC41;
     text-decoration: none;
 }
 
-.ToolsOptionLink.Enabled {
-    color: #79BC41;
-}
+
 
 a.Enabled, a:visited.Enabled {
-    color: #79BC41;
     text-decoration: underline;
 }
 
@@ -1929,7 +1842,6 @@ a.Enabled, a:visited.Enabled {
 }
 
 #Metadata {
-    background-color: #FFF;
     border-radius: 6px;
     padding-bottom: 8px;
 }
@@ -1994,7 +1906,6 @@ a.Enabled, a:visited.Enabled {
 #OverFlowLinks {
     margin: 5px;
     padding: 15px 18px 5px 15px;
-    background-color: rgba(0, 0, 0, 0.6);
     display: none;
     position: absolute;
     right: 100px;
@@ -2029,7 +1940,6 @@ a.Enabled, a:visited.Enabled {
 #Header #ssearchbox {
     margin-top: 0;
     width: 250px;
-    background-color: rgba(255, 255, 255, 0.9);
 }
 
 #previewimage {
@@ -2054,10 +1964,8 @@ select.MultiSelect:before {
     content: unset;
 }
 .MultiRTypeSelect {
-    background-color: #fff;
     width: 292px;
     padding: 3px;
-    border: 1px solid rgba(0,0,0,0.25);
     border-radius: 4px;
 }
 .MultiRTypeSelect label {
@@ -2278,11 +2186,8 @@ a.BrowseRefresh{
 }
 
 .Question.QuestionStickyRight {
-    background-color: #f2f2f2;
-    border-left: 1px solid #c1c1c1;
     border-top: none;
     border-bottom: none;
-    box-shadow: -12px 0px 15px -12px #bbbbbb;
     padding-left: 15px;
     padding-top: 0;
     padding-bottom: 0;
@@ -2384,9 +2289,6 @@ a.BrowseRefresh{
 
 .user_message_text {
     padding: 10px;
-    background: #fff;
-    color: #000000;
-    border: 1px solid lightgray;
     width: 85%;
     float: left;
     border-radius: 8px;
@@ -2444,12 +2346,9 @@ input[type="text"]#iconpicker-input {
 #iconpicker-button {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    background-color: white;
     padding: 5px 10px 4px 10px;
-    border: 1px solid rgba(0,0,0,0.25);
     display: inline-block;
     vertical-align: top;
-    box-shadow: inset -1px -1px 3px 0px rgb(0 0 0 / 10%);
     cursor: pointer;
     margin: 3px 0;
 }
@@ -2487,15 +2386,10 @@ input[type="text"]#iconpicker-input {
     border-radius: 5px;
 }
 
-.iconpicker-content-icon:hover {background-color: #0000001f;}
-
 .BasicsBox.SearchSticky {
     top: 0;
     position: -webkit-sticky; 
     position: sticky;
-    background-color: #efefef;
-    border-bottom: 1px solid #c1c1c1;
-    box-shadow: 0 12px 10px -12px #bbbbbb;
     z-index: 101;
     padding-top: 15px;
     margin-top: 0;
@@ -2532,7 +2426,6 @@ input[type="text"]#iconpicker-input {
     left: -9999px;
     z-index: 999;
     padding: 1em;
-    background-color: white;
     opacity: 0;
 }
 
@@ -2558,7 +2451,6 @@ input[type="text"]#iconpicker-input {
 }
 .jstree-default-dark .jstree-anchor {
     text-shadow: none;
-    color: #666666;
 }
 .jstree-default-dark .jstree-wholerow {
     border-radius: 5px;
@@ -2569,14 +2461,11 @@ input[type="text"]#iconpicker-input {
 .jstree-default-dark .jstree-wholerow-clicked {
     background: #737373;
 }
-.jstree-default-dark .jstree-hovered,
-.jstree-default-dark>.jstree-wholerow-ul .jstree-clicked {
-    color: white;
-}
+
 
 /* Search Bar Tab styling */
 #SearchBarTabsContainer {
-    background: rgb(0 0 0 / 20%);
+    background: rgb(0 0 0 / 30%);
 }
 #SearchBarTabsContainer a {
     display: inline-block;
@@ -2589,10 +2478,6 @@ input[type="text"]#iconpicker-input {
     border-top-right-radius: 8px;
     font-weight: 500;
     text-align: center;
-    color: white;
-}
-.SearchBarTab:hover {
-    background: rgba(255, 255, 255, 10%);
 }
 .SearchBarTab.SearchTab {
     margin: 10px 2px 0 10px;
@@ -2600,9 +2485,7 @@ input[type="text"]#iconpicker-input {
 .SearchBarTab.BrowseTab {
     margin: 10px 10px 0 2px;
 }
-.SearchBarTab.SearchBarTabSelected {
-    background: rgb(255 255 255 / 14%);
-}
+
 
 #LoginError {
     outline: none;
@@ -2633,7 +2516,6 @@ input[type="text"]#iconpicker-input {
     margin-bottom: 0;
     }
 #HomeSiteTextInner{padding:15px;}
-#HomeSiteText h1,#HomeSiteText p {color:#fff;}
 #HomeSiteText p {padding-bottom:8px;}
 
 .no_file_link.no_file:before {

@@ -4,7 +4,6 @@ from outputting stray characters that will mess up the binary download
 we will clear the buffer and start over right before we download the file*/
 ob_start(); $nocache=true;
 include_once dirname(__FILE__) . '/../include/boot.php';
-include_once dirname(__FILE__) . '/../include/resource_functions.php';
 include_once dirname(__FILE__) . '/../include/image_processing.php';
 ob_end_clean(); 
 if($download_no_session_cache_limiter)
@@ -403,6 +402,7 @@ header("Content-Type: {$mime}");
 debug("PAGES/DOWNLOAD.PHP: Set MIME type to '{$mime}'");
 
 // Check if http_range is sent by browser (or download manager)
+$range_requested = false;
 if(isset($_SERVER['HTTP_RANGE']) && strpos($_SERVER['HTTP_RANGE'],"=")!==false) # Check it's set and also contains the expected = delimiter
     {
     debug("PAGES/DOWNLOAD.PHP: HTTP_RANGE is set to '{$_SERVER['HTTP_RANGE']}'");
@@ -417,6 +417,7 @@ if(isset($_SERVER['HTTP_RANGE']) && strpos($_SERVER['HTTP_RANGE'],"=")!==false) 
         IMPORTANT: If multiple ranges are not specified, PHP can return an error for "Undefined offset: 1",
         so we pad the array with an empty string */
         list($range, $extra_ranges) = array_pad(explode(',', $range_orig, 2), 2, '');
+        $range_requested = true;
         }
     else
         {
@@ -462,7 +463,10 @@ if(0 < $seek_start || $seek_end < ($file_size - 1))
 else
     {
     header("Content-Length: {$file_size}");
-
+    if ($range_requested) {
+        // Safari seems to require this
+        header("Content-Range: bytes {$seek_start}-{$seek_end}/{$file_size}");
+    }
     debug("PAGES/DOWNLOAD.PHP: Content-Length: {$file_size}");
 
     $total_to_send=$file_size;

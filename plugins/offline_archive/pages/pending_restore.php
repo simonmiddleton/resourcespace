@@ -42,12 +42,12 @@ if (isset($resulttext))
 <form id="cancel_restore_form" name="form1" method="post" action="<?php echo $baseurl ?>/plugins/offline_archive/pages/pending_restore.php">
 <input type="hidden" name="remove" id="remove" value="">
 <div class="Listview">
-    <table id="offline_archive_table" class="ListviewStyle offline_archive_table" border="0" cellspacing="0" cellpadding="0">
+    <table id="offline_archive_table" class="ListviewStyle offline_archive_table">
         <tr class="ListviewTitleStyle">
-            <td style="width:150px"><?php echo  escape($lang['property-reference']); ?></td>
-            <td><?php echo escape($lang['property-title']); ?></td>
-            <td><?php echo escape($lang['offline_archive_archive_ref']); ?></td>
-            <td><?php echo escape($lang["tools"]); ?><td>
+            <th style="width:150px"><?php echo  escape($lang['property-reference']); ?></th>
+            <th><?php echo escape($lang['property-title']); ?></th>
+            <th><?php echo escape($lang['offline_archive_archive_ref']); ?></th>
+            <th><?php echo escape($lang["tools"]); ?><th>
         </tr>
         <?php
         foreach ($pendingrestores as $pendingrestore)

@@ -30,15 +30,15 @@ function HookConsentmanagerViewCustompanels()
 
     <?php if (count($consents)>0) { ?>
         <div class="Listview">
-        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+        <table class="ListviewStyle">
         <tr class="ListviewTitleStyle">
-        <td><?php echo escape($lang["consent_id"]); ?></a></td>
-        <td><?php echo escape($lang["name"]); ?></a></td>
-        <td><?php echo escape($lang["usage"]); ?></a></td>
-        <td><?php echo escape($lang["fieldtitle-expiry_date"]); ?></a></td>
+        <th><?php echo escape($lang["consent_id"]); ?></a></th>
+        <th><?php echo escape($lang["name"]); ?></a></th>
+        <th><?php echo escape($lang["usage"]); ?></a></th>
+        <th><?php echo escape($lang["fieldtitle-expiry_date"]); ?></a></th>
 
         <?php if ($edit_access || checkperm("cm")) { ?>
-        <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+        <th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
         <?php } ?>
 
         </tr>

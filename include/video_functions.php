@@ -1,7 +1,7 @@
 <?php
 
 /**
-* Get video resolution using FFMpeg
+* Get video resolution and framerate using FFMpeg
 * 
 * @uses get_video_info()
 * 
@@ -12,8 +12,9 @@
 function get_video_resolution($file)
     {
     $video_resolution = array(
-        'width'  => 0,
-        'height' => 0,
+        'width'     => 0,
+        'height'    => 0,
+        'framerate' => 0.0,
     );
 
     $video_info = get_video_info($file);
@@ -28,7 +29,16 @@ function get_video_resolution($file)
         {
         $video_resolution['height'] = intval($video_info['height']);
         }
- 
+    
+    if (!empty($video_info['r_frame_rate'])) {
+        $framerate_pieces = explode('/', $video_info['r_frame_rate']);
+
+        if (floatval($framerate_pieces[1]) > 0) {
+            $video_resolution['framerate'] = floatval($framerate_pieces[0] / $framerate_pieces[1]);    
+        }
+    }
+
+
     if(isset($video_info['streams']) && is_array($video_info['streams']))
         {
         foreach( $video_info['streams'] as $stream)
@@ -37,6 +47,12 @@ function get_video_resolution($file)
                 {
                 $video_resolution['width']  = intval($stream['width']);
                 $video_resolution['height'] = intval($stream['height']);
+                
+                $framerate_pieces = explode('/', $stream['r_frame_rate']);
+                if (floatval($framerate_pieces[1]) > 0) {
+                    $video_resolution['framerate'] = floatval($framerate_pieces[0] / $framerate_pieces[1]);    
+                }
+                
                 break;
                 }
             }

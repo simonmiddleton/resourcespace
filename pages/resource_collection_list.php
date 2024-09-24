@@ -18,16 +18,16 @@ if (count($collections)!=0){
         <div class="Title"><?php echo escape($lang['associatedcollections'])?></div>
 
 <div class="Listview nopadding" >
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+<table class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo escape($lang["collectionname"])?></td>
-<td><?php echo escape($lang["owner"])?></td>
-<td><?php echo escape($lang["id"])?></td>
-<td><?php echo escape($lang["created"])?></td>
-<td><?php echo escape($lang["itemstitle"])?></td>
-<td><?php echo escape($lang["access"])?></td>
+<th><?php echo escape($lang["collectionname"])?></th>
+<th><?php echo escape($lang["owner"])?></th>
+<th><?php echo escape($lang["id"])?></th>
+<th><?php echo escape($lang["created"])?></th>
+<th><?php echo escape($lang["itemstitle"])?></th>
+<th><?php echo escape($lang["access"])?></th>
 <?php hook("beforecollectiontoolscolumnheader");?>
-<td><div class="ListTools"><?php echo escape($lang["actions"])?></div></td>
+<th><div class="ListTools"><?php echo escape($lang["actions"])?></div></th>
 </tr>
 <?php
 

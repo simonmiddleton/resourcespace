@@ -140,17 +140,17 @@ else
 
 <div class="BasicsBox">
   <div class="Listview" id="<?php echo $modal ? "Modal" : "CentralSpace"; ?>_resource_actions">
-      <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+      <table class="ListviewStyle">
           <tr class="ListviewTitleStyle">
-              <td><?php if ($order_by=="date"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"date")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["date"]); ?></a></td>
+              <th><?php if ($order_by=="date"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"date")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["date"]); ?></a></th>
               
-            <td> <?php if ($order_by=="name"       ) {?><td><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["user"]); ?></a></td>
-            <?php if ($messages_actions_usergroup){?><td> <?php  if ($order_by=="usergroup"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["columnheader-user_group"]); ?></a></td>
+            <th> <?php if ($order_by=="name"       ) {?><th><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["user"]); ?></a></th>
+            <?php if ($messages_actions_usergroup){?><th> <?php  if ($order_by=="usergroup"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["columnheader-user_group"]); ?></a></th>
             <?php } ?>
-              <td><?php if ($order_by=="ref"        ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"ref")) ?>"         onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["property-reference"]); ?></a></td>
-              <td><?php if ($order_by=="description") {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"description")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["description"]); ?></a></td>
-              <td><?php if ($order_by=="type"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"type")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["type"]); ?></a></td>
-              <td><div class="ListTools"><?php echo escape($lang["tools"])?></div></td>
+              <th><?php if ($order_by=="ref"        ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"ref")) ?>"         onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["property-reference"]); ?></a></th>
+              <th><?php if ($order_by=="description") {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"description")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["description"]); ?></a></th>
+              <th><?php if ($order_by=="type"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"type")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["type"]); ?></a></th>
+              <th><div class="ListTools"><?php echo escape($lang["tools"])?></div></th>
           </tr>
   <?php
   

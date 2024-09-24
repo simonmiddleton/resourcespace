@@ -205,14 +205,14 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 ?>
 
     <div class="Listview">
-        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+        <table class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-                <td><?php render_sortable_header($lang["created"],2); ?></td>
-                <td><?php render_sortable_header($lang["username"],3); ?></td>
-                <td><?php render_sortable_header($lang["columnheader-title"],4); ?></td>
-                <td><?php render_sortable_header($lang["columnheader-last-found"],11); ?></td>
-                <td><?php render_sortable_header($lang["columnheader-enabled"],8); ?></td>
-                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+                <th><?php render_sortable_header($lang["created"],2); ?></th>
+                <th><?php render_sortable_header($lang["username"],3); ?></th>
+                <th><?php render_sortable_header($lang["columnheader-title"],4); ?></th>
+                <th><?php render_sortable_header($lang["columnheader-last-found"],11); ?></th>
+                <th><?php render_sortable_header($lang["columnheader-enabled"],8); ?></th>
+                <th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
             </tr>
             <?php
             for ($i=$offset; $i<$offset + WATCHED_SEARCHES_ITEMS_PER_PAGE; $i++)

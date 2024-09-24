@@ -1106,7 +1106,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $headers .= "Content-Type: text/html; charset=\"UTF-8\"" . $eol;
         // Add CSS links so email can use the styles
         $messageprefix = '<link href="' . $baseurl . '/css/global.css" rel="stylesheet" type="text/css" media="screen,projection,print" />';
-        $messageprefix .= '<link href="' . $baseurl . '/css/colour.css" rel="stylesheet" type="text/css" media="screen,projection,print" />';
+        $messageprefix .= '<link href="' . $baseurl . '/css/light.css" rel="stylesheet" type="text/css" media="screen,projection,print" />';
         $messageprefix .= '<link href="' . $baseurl . '/css/css_override.php" rel="stylesheet" type="text/css" media="screen,projection,print" />';
         $message = $messageprefix . $message;
         }
@@ -2912,6 +2912,11 @@ function is_html($string)
  */
 function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true)
     {
+
+    if (!is_string_loose($value)) {
+        return;
+    }
+
     global $baseurl_short, $baseurl_short;
     if($path == "")
         {
@@ -4517,6 +4522,16 @@ function is_int_loose($var)
 function is_positive_int_loose($V): bool
     {
     return is_int_loose($V) && $V > 0;
+    }
+
+/**
+ * Helper function to check if a value is able to be cast to a string
+ * 
+ * @param mixed $var value to be tested
+ */
+function is_string_loose($var): bool
+    {
+    return !is_array($var) && $var == (string)$var;
     }
 
 /**

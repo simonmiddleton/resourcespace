@@ -22,9 +22,9 @@ function perform_login($loginuser="",$loginpass="")
         $username = trim($loginuser); 
         }
 
-    // If a special key is sent, which is the MD5 hash of the username and the secret scramble key, then allow a login 
-    // using the MD5 password hash as the password. This is for the 'log in as this user' feature.
-    $impersonate_user = (getval('userkey', '') ===  hash('sha256',$loginuser . $scramble_key . date("Ymd")));
+    // If a special key is sent, which is a hash based on the username and scramble key, then allow a login
+    // using this hash as the password. This is for the 'log in as this user' feature.
+    $impersonate_user = hash_equals(getval('userkey', ''),hash_hmac("sha256", "login_as_user" . $loginuser . date("Ymd"), $scramble_key, true));
 
     // Get user record
     $user_ref = get_user_by_username($username);

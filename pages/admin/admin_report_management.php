@@ -82,25 +82,25 @@ function addColumnHeader($orderName, $labelKey)
         $image = '';
     }
 
-    ?><td>
+    ?><th>
     <a href="<?php echo $baseurl ?>/pages/admin/admin_report_management.php?<?php
     if ($find!="") { ?>&find=<?php echo escape($find); }
     ?>&orderby=<?php echo $orderName . ($order_by==$orderName ? '+desc' : ''); ?>"
        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang[$labelKey]) . $image ?></a>
-    </td>
+    </th>
     <?php
 }
 
     ?>
     <div class="Listview">
-        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+        <table class="ListviewStyle">
             <tr class="ListviewTitleStyle">
                 <?php
                 addColumnHeader("ref", "property-reference");
                 addColumnHeader("name", "property-name");
                 addColumnHeader('support_non_correlated_sql', 'property-support_non_correlated_sql');
                 ?>
-                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
+                <th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
             </tr>
 <?php
         foreach ($reports as $report)

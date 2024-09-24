@@ -1660,7 +1660,7 @@ $lang["average"]="Average";
 $lang["popupblocked"]="The popup has been blocked by your browser.";
 $lang["closethiswindow"]="Close this window";
 
-$lang["requestaddedtocollection"]="This resource has been added to your current collection. You can request the items in your collection by clicking 'Request All' on the collection bar below.";
+$lang["requestaddedtocollection"]="This resource has been added to your current collection. You can request the items in your collection by clicking \'Request All\' on the collection bar below.";
 
 $lang["subcategories"]="Subcategories";
 $lang["subcategory"]="Subcategory";
@@ -3211,3 +3211,7 @@ $lang["workflow-actions-return-to-user-review"]="Return to user review";
 $lang["workflow-actions-return-to-review"]="Return to review";
 $lang["workflow-actions-publish"]="Publish";
 $lang["workflow-actions-make-this-resource-active"]="Make this resource active";
+
+$lang["error_invalid_path"] = "The configured %variable path does not exist: %path";
+$lang["error_invalid_field_type"] = "The configured %variable is of the wrong field type. Should be %type";
+$lang["facial-recognition"] =  "Facial recognition";

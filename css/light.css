@@ -124,7 +124,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Table header styling */
 .ListviewStyle thead, .ListviewTitleStyle {
-    background: #6a6a6a;
+    background: #444;
     text-transform: uppercase;
 }
 .ListviewTitleStyle td, .ListviewTitleStyle th, .ListviewTitleStyle a, .ListviewTitleStyle a:visited {
@@ -135,6 +135,17 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
     color: #d4d4d4;
     text-decoration:none;
 }
+.ListviewStyle 
+    {
+    border-collapse: collapse;
+    }
+.ListviewStyle tr:nth-child(even)
+    {
+    background-color: #f6f6f6;
+    }
+.ListViewBulkActions span {color: #666666}
+.ListViewBulkActions span:hover {color: #2E99E6;}
+
 
 .Question select .optionWeekend { background-color: #ccc; }
 .lockedQuestion {background-color: #ddd; }
@@ -182,7 +193,7 @@ div.autocomplete ul li {color: #000;}
 #RatingStarLink0 {color: #888;}
 
 .Listview .ListViewSubTable,.Listview .ListViewSubTable td,.Listview .ListViewSubTable tr {background-image: none;}
-.Listview {background-color: white;border-radius:6px;}
+.Listview {background-color: white;}
 .highlight {color: #000;background-color: #ff0;}
 .Tab a {padding: 8px 1rem;background: rgba(255, 255, 255, 0.4);}
 .TabBar { background-color: #ededed; }
@@ -201,10 +212,6 @@ div.autocomplete ul li {color: #000;}
 #InfoBoxCollectionInner h2 {color:black;}
 #InfoBoxCollectionInner p {color:black;}
 .NewFlag { background-color: #fff; color: #737373; text-shadow: none;}
-
-/* Mouseover effect on list views */
-.ListviewStyle tr:hover td {background-color: #EEE;} 
-.ListviewStyle tr.ListviewTitleStyle:hover td {background:none;background-color:#555;}
 
 /* Single file upload progress bar */
 .meter-value {background-color: #BBBBBB;}
@@ -420,3 +427,236 @@ input:checked + .customFieldLabel, .keywordselected {
     }
 
 .currenteditmulti {background-color: #8a8d8f !important;}
+
+.SearchBarTab.SearchBarTabSelected {
+    background: rgb(255 255 255 / 14%);
+}
+
+.SearchBarTab:hover {
+    background: rgba(255, 255, 255, 10%);
+}
+
+#HomeSiteText h1,#HomeSiteText p {color:#fff;}
+
+button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
+    background-color: #1679c0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .MissingFile a {
+    border: 1px solid #000;
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+
+.emailinvalid {
+    background-color: red;
+}
+
+select, .sp-replacer {
+    background-color: #fff;
+}
+
+select:before {
+    color: #2e99e6;
+}
+
+input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:focus {
+    box-shadow: 0 0 6px hsla(205, 79%, 54%, 0.5);
+}
+
+.ListViewBulkActions .DisabledLink:hover {color: #666666;}
+
+.QuestionSubmit.QuestionSticky {
+    background-color: #f2f2f2;
+    border-top: 1px solid #c1c1c1;
+    box-shadow: 0 -12px 15px -12px #bbbbbb;
+}
+.Question #capswarning {color: red;}
+
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink,
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink:hover,
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink:active  {
+    background-color: white;
+    box-shadow: unset;
+}
+
+.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {color: #767676;}
+
+.uppy-StatusBar-actionBtn,
+.uppy-Dashboard-browse,
+.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
+.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
+.uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
+.uppy-DashboardContent-addMore, .uppy-DashboardContent-addMore:focus {
+    background-color: #1988d7;
+    color: #fff;
+}
+.uppy-Dashboard-browse:focus, .uppy-Dashboard-browse:hover {
+    border: 1px solid transparent;
+}
+.uppy-DashboardContent-back:hover,
+.uppy-DashboardContent-addMore:hover {
+    color: #fff;
+}
+
+.uppy-Dashboard-Item-action--remove {
+    border: unset;
+    box-shadow: unset;
+    background-color: unset;
+}
+
+.uppy-Dashboard-Item-previewInnerWrap {
+    background-color: #f2f2f2 !important;
+}
+
+.uppy-ProviderBrowserItem-inner {
+    color: #000;
+    background-color: #F0F0F0;
+}
+
+.CollapsibleSectionHead:hover
+    {
+    color: #757575;
+    }
+
+.CommentFlagged i {color: #F44336;}
+
+.comment_form_container{background-color: white; border: 1px solid lightgray;}
+.icondisplay
+    {
+    background-color: white;
+    box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
+    }
+
+.update_result_order_button {
+    background-color: white;
+    box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
+}
+
+.search-icon,
+.search-icon:hover,
+.search-icon:active {
+    color: #0299d8;
+    background-color: #e8edf1;
+}
+
+.DashTileActions {
+    color: #fff;
+    background: #000;
+}
+
+#modal .BasicsBox .HelpHeader a { color: #999; }
+.FeaturedSimpleTileActions {
+    color: #fff;
+    background: #000;
+}
+
+.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"] { background-color: #646B60; }
+
+.FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents { background-color: rgba(0,0,0,0.4); }
+#login_box textarea {
+    background-color: #9a9a9ad9;
+    color: white;
+}
+
+#login_box .FormError {
+    color: white;
+    background-color: #ff000030;
+    border: 2px solid red;
+}
+
+.ImageTools
+    {
+    background-color:black;
+    }
+
+#PreviewToolsOptionsWrapper {
+    background: rgba(0, 0, 0, 0.65);
+    color: #FFF;
+}
+
+.ToolsOptionLink:link, .ToolsOptionLink:visited {
+    color: #FFF;
+}
+
+.ToolsOptionLink:hover {
+    color: #79BC41;
+}
+
+.ToolsOptionLink.Enabled {
+    color: #79BC41;
+}
+
+a.Enabled, a:visited.Enabled {
+    color: #79BC41;
+}
+
+#Metadata {
+    background-color: #FFF;
+}
+
+#OverFlowLinks {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+#Header #ssearchbox {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+.MultiRTypeSelect {
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.25);
+}
+.Question.QuestionStickyRight {
+    background-color: #f2f2f2;
+    border-left: 1px solid #c1c1c1;
+    box-shadow: -12px 0px 15px -12px #bbbbbb;
+}
+
+.user_message_text {
+    background: #fff;
+    color: #000000;
+    border: 1px solid lightgray;
+    }
+
+#iconpicker-button {
+    background-color: white;
+    border: 1px solid rgba(0,0,0,0.25);
+    box-shadow: inset -1px -1px 3px 0px rgb(0 0 0 / 10%);
+}
+
+.iconpicker-content-icon:hover {background-color: #0000001f;}
+
+.BasicsBox.SearchSticky {
+    background-color: #efefef;
+    border-bottom: 1px solid #c1c1c1;
+    box-shadow: 0 12px 10px -12px #bbbbbb;
+}
+
+/* Skip to main content hidden button */
+.skip-to-main-content {
+    background-color: white;
+}
+
+.jstree-default-dark .jstree-anchor {
+    color: #666666;
+}
+
+.jstree-default-dark .jstree-hovered,
+.jstree-default-dark>.jstree-wholerow-ul .jstree-clicked {
+    color: white;
+}
+
+.SearchBarTab {
+    color: white;
+}
+
+button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
+    border: 1px solid transparent;
+    color: #fff;
+}
+
+.ToolsOptionLink:link, .ToolsOptionLink:visited {
+    color: #FFF;
+}

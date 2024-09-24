@@ -27,7 +27,6 @@
 */
 
 include __DIR__ . '/../../include/boot.php';
-include_once __DIR__ . '/../../include/resource_functions.php';
 command_line_only();
 set_time_limit(0);
 $use_error_exception = true;

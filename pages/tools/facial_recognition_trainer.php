@@ -1,7 +1,7 @@
 <?php
 include __DIR__ . '/../../include/boot.php';
 command_line_only();
-ob_end_clean();
+ob_end_flush();
 restore_error_handler();
 
 $help_text = <<<'HELP'
@@ -32,11 +32,10 @@ $cli_long_options  = [
     'overwrite-existing',
 ];
 
-if(!$facial_recognition)
-    {
+if (!$facial_recognition_active) {
     echo 'Error: Facial recognition is not enabled!' . PHP_EOL;
     exit(1);
-    }
+}
 
 // Init
 $convert_fullpath             = get_utility_path('im-convert');

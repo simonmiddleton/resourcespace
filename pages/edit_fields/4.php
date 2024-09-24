@@ -56,13 +56,11 @@ if($date_d_m_y){
 ?>
 <select id="<?php echo $name; ?>-d" name="<?php echo $name?>-d"
 
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
 ><option value=""><?php echo escape($lang["day"]); ?></option>
 <?php for ($d=1;$d<=31;$d++) {?><option value="<?php echo sprintf("%02d",$d)?>"<?php if($d==$dd){echo " selected";}?>><?php echo sprintf("%02d",$d)?></option><?php } ?>
 </select>
     
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
 ><option value=""><?php echo escape($lang["month"]); ?></option>
 <?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo escape($lang["months"][$m-1]); ?></option><?php } ?>
 </select>
@@ -71,7 +69,6 @@ if($date_d_m_y){
 else{
 ?>
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
 ><option value=""><?php echo escape($lang["month"]); ?></option>
 <?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo escape($lang["months"][$m-1]); ?></option><?php } ?>
 </select>
@@ -87,11 +84,25 @@ else{
 
     jQuery(document).ready(function(){
         jQuery('[id^=<?php echo escape($name); ?>-]').on('change', function(event){
-            validate_date_field(event.target.id.split('-')[0]);
+            partsok = sufficientDateParts('<?php echo $name; ?>');
+            if (partsok) {
+                datevalid = validate_date_field(event.target.id.split('-')[0]);
+                <?php
+                if ($edit_autosave) { ?>
+                    if(datevalid) {
+                        AutoSave('<?php echo $field["ref"]; ?>');
+                    } else {
+                        console.debug("Invalid date inputs selected. Preventing autosave");
+                    }
+                    <?php
+                } ?>
+            } else {
+                console.debug("Insufficient date inputs selected. Preventing autosave");
+            }
         })
     })
-        
-    <?php 
+
+    <?php
     if($date_validation_js)
         {
     ?>
@@ -177,10 +188,11 @@ else{
                     // So an entered ISO date of 2021-02-30 will convert back into 2021-03-02
                     // If the entered ISO date matches its converted back counterpart then it's a viable date  
                     if(date_entered_iso !== date_viable_iso){
-                        styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);
+                        styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);date_is_valid = false;
                     }
                 }
             }
+            return date_is_valid;
         }
         <?php
         $date_validation_js = false;
@@ -189,7 +201,7 @@ else{
 
 </script>
 <label class="accessibility-hidden" for="<?php echo $name; ?>-y"><?php echo escape($lang["year"]); ?></label>
-<input id="<?php echo $name; ?>-y" type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>" <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
+<input id="<?php echo $name; ?>-y" type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>">
 
 
 <?php hook("addtoeditdate","",array($field));?>
@@ -199,13 +211,11 @@ else{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <select id="<?php echo $name; ?>-h" name="<?php echo $name?>-h"
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
 ><option value=""><?php echo escape($lang["hour-abbreviated"]); ?></option>
 <?php for ($m=0;$m<=23;$m++) {?><option <?php if($m==$dh){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>
 
 <select id="<?php echo $name; ?>-i" name="<?php echo $name?>-i"
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
 ><option value=""><?php echo escape($lang["minute-abbreviated"]); ?></option>
 <?php for ($m=0;$m<=59;$m++) {?><option <?php if($m==$di){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>

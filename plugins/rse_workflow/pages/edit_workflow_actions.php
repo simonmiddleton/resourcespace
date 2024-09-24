@@ -112,23 +112,23 @@ renderBreadcrumbs($links_trail);
 <h2><?php echo escape($lang['rse_workflow_status_heading']); ?></h2>
 <div class="BasicsBox">
 <div class="Listview">
-        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle rse_workflow_table" id='rse_workflow_table'>
+        <table class="ListviewStyle rse_workflow_table" id='rse_workflow_table'>
             <tr class="ListviewTitleStyle">
-                <td>
+                <th>
                 <?php echo escape($lang['rse_workflow_action_name']); ?>
-                </td><td>
+                </th><th>
                 <?php echo escape($lang['rse_workflow_action_text']); ?>
-                </td><td>
+                </th><th>
                 <?php echo escape($lang['rse_workflow_button_text']); ?>
-                </td><td>               
+                </th><th>               
                 <?php echo escape($lang['rse_workflow_action_status_from']); ?>
-                </td><td>
+                </th><th>
                 <?php echo escape($lang['rse_workflow_action_status_to']); ?>
-                </td><td>
+                </th><th>
                 <?php echo escape($lang['rse_workflow_action_reference']); ?>
-                </td><td>
+                </th><th>
                 <?php echo escape($lang['tools']); ?>
-                </td>
+                </th>
             </tr>
 
 <?php

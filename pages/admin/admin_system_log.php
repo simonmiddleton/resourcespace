@@ -330,31 +330,31 @@ $select_table_url = generateURL(
         <div class="clearerleft"></div>
     </div>
     <div class="Listview">
-        <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="5">
+        <table class="ListviewStyle">
             <tbody>
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo escape($lang['fieldtype-date_and_time']); ?></td>
-                    <td><?php echo escape($lang['user']); ?></td>
-                    <td><?php echo escape($lang['property-operation']); ?></td>
-                    <td><?php echo escape($lang['fieldtitle-notes']); ?></td>
-                    <td><?php echo escape($lang['property-resource-field']); ?></td>
-                    <td><?php echo escape($lang['property-old_value']); ?></td>
-                    <td><?php echo escape($lang['property-new_value']); ?></td>
-                    <td><?php echo escape($lang['difference']); ?></td>
+                    <th><?php echo escape($lang['fieldtype-date_and_time']); ?></th>
+                    <th><?php echo escape($lang['user']); ?></th>
+                    <th><?php echo escape($lang['property-operation']); ?></th>
+                    <th><?php echo escape($lang['fieldtitle-notes']); ?></th>
+                    <th><?php echo escape($lang['property-resource-field']); ?></th>
+                    <th><?php echo escape($lang['property-old_value']); ?></th>
+                    <th><?php echo escape($lang['property-new_value']); ?></th>
+                    <th><?php echo escape($lang['difference']); ?></th>
                     <?php
                     if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo escape($lang['property-table']); ?></td>
+                        <th><?php echo escape($lang['property-table']); ?></th>
                         <?php
                         }
                         ?>
-                    <td><?php echo escape($lang['property-column']); ?></td>
+                    <th><?php echo escape($lang['property-column']); ?></th>
                     <?php
                     if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo escape($lang['property-table_reference']); ?></td>
+                        <th><?php echo escape($lang['property-table_reference']); ?></th>
                         <?php
                         }
                         ?>

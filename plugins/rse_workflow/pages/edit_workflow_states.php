@@ -119,15 +119,15 @@ $links_trail = array(
 renderBreadcrumbs($links_trail);
 ?>
 <div class="Listview">
-        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle rse_workflow_table" id='rse_workflow_table'>
+        <table class="ListviewStyle rse_workflow_table" id='rse_workflow_table'>
             <tr class="ListviewTitleStyle">
-                <td>
+                <th>
                 <?php echo escape($lang['rse_workflow_state_name']); ?>
-                </td><td>
+                </th><th>
                 <?php echo escape($lang['rse_workflow_state_reference']); ?>
-                </td><td>
+                </th><th>
                 <?php echo escape($lang['tools']); ?>
-                </td>
+                </th>
             </tr>
 
 <?php
