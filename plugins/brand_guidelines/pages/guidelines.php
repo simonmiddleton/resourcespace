@@ -297,7 +297,8 @@ render_content_menu();
             temp_form.setAttribute("method", "post");
             temp_form.setAttribute(
                 "action",
-                '<?php echo "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/toc.php"; ?>?delete=' + item_id
+                baseurl + '/plugins/brand_guidelines/pages/manage/toc.php?'
+                + new URLSearchParams({delete: item_id}).toString()
             );
 
             <?php
@@ -305,7 +306,7 @@ render_content_menu();
             ?>
                 let csrf = document.createElement("input");
                 csrf.setAttribute("type", "hidden");
-                csrf.setAttribute("name", "<?php echo $CSRF_token_identifier; ?>");
+                csrf.setAttribute("name", "<?php echo escape($CSRF_token_identifier); ?>");
                 csrf.setAttribute("value", "<?php echo generateCSRFToken($usersession, "toc_delete_item"); ?>");
                 temp_form.appendChild(csrf);
             <?php
@@ -314,6 +315,42 @@ render_content_menu();
 
             CentralSpacePost(temp_form, true, false, false);
             };
+
+        hideOptionsMenu();
+        return false;
+    }
+
+    function reorder_item(e, direction) {
+        console.debug('reorder_item(e = %o, direction = %o)', e, direction);
+        let item_id = jQuery(e).parent('#menu-individual').data('item-ref');
+        console.debug('item id = %o', item_id);
+
+        // todo: ditinguish between item types (nav/content)
+
+        // TOC items
+        let temp_form = document.createElement("form");
+        temp_form.setAttribute("method", "post");
+        temp_form.setAttribute(
+            "action",
+            baseurl + '/plugins/brand_guidelines/pages/manage/toc.php?'
+                + new URLSearchParams({
+                    ref: item_id,
+                    reorder: direction,
+                }).toString()
+        );
+        <?php
+        if ($CSRF_enabled) {
+        ?>
+            let csrf = document.createElement("input");
+            csrf.setAttribute("type", "hidden");
+            csrf.setAttribute("name", "<?php echo escape($CSRF_token_identifier); ?>");
+            csrf.setAttribute("value", "<?php echo generateCSRFToken($usersession, "toc_reorder_item"); ?>");
+            temp_form.appendChild(csrf);
+        <?php
+        }
+        ?>
+
+        CentralSpacePost(temp_form, true, false, false);
 
         hideOptionsMenu();
         return false;

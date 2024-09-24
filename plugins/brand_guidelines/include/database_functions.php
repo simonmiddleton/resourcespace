@@ -96,3 +96,20 @@ function delete_pages(array $refs): bool
 
     return isset($done);
 }
+
+/**
+ * Re-order databse records (where order_by exists)
+ * @param string $table Database table (where the operation takes place)
+ * @param array{ref: int|numeric-string, order_by: int|numeric-string}
+ * @param null|callable $filter Optional filter, if the $list has unnecessary elements
+ */
+function reorder_items(string $table, array $list, ?callable $filter)
+{
+    $ref_ob_map = array_map(
+        'intval',
+        array_column(array_filter($list, $filter), 'order_by', 'ref')
+    );
+    asort($ref_ob_map, SORT_NUMERIC);
+    sql_reorder_records($table, array_keys($ref_ob_map));
+    clear_query_cache($table);
+}

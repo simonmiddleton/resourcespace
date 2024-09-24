@@ -15,7 +15,8 @@ if (!acl_can_edit_brand_guidelines()) {
 $ref = (int) getval('ref', 0, false, 'is_positive_int_loose'); 
 $edit = false;
 $delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
-$save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0;
+$reorder = getval('reorder', '', false, fn($v) => is_string($v) && in_array($v, ['up', 'down']));
+$save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
 $pages_db = get_all_pages();
 $all_sections = extract_node_options(array_filter($pages_db, __NAMESPACE__ . '\is_section'), true, true);
 $parent = getval('parent', 0, false, (fn($V) => is_positive_int_loose($V) || ($save && is_array($V) && count($V) === 1)));
@@ -87,7 +88,7 @@ if ($save && count_errors($processed_toc_fields) === 0) {
     js_call_CentralSpaceLoad(
         generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", $redirect_params)
     );
-} elseif ($delete > 0) {
+} elseif ($delete > 0 && enforcePostRequest(false)) {
     $delete_list = [$delete];
     if (isset($all_sections[$delete])) {
         $section_page_struct = array_column(get_node_tree(0, $pages_db), 'children', 'ref');
@@ -99,6 +100,19 @@ if ($save && count_errors($processed_toc_fields) === 0) {
         js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
     }
     exit(error_alert($lang['error-failed-to-delete'], true, 200));
+} elseif ($reorder !== '' && enforcePostRequest(false)) {
+    if ($edit) {
+        reorder_items(
+            'brand_guidelines_pages',
+            array_replace(
+                $all_pages_index,
+                [$ref => compute_item_order($all_pages_index[$ref], $reorder)]
+            ),
+            fn($V) => $V['parent'] === $all_pages_index[$ref]['parent']
+        );
+        js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
+    }
+    exit(error_alert($lang['error-failed-to-move'], true, 200));
 }
 
 

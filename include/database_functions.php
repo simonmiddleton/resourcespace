@@ -1336,7 +1336,14 @@ function ps_fill_param_array($string, $value, $type)
  */
 function sql_reorder_records(string $table, array $refs)
     {
-    if(!in_array($table, ['collection', 'tab']))
+    $GLOBALS['use_error_exception'] = true;
+    try {
+        $cols = columns_in($table, null, null, true);
+    } catch (Throwable $t) {
+        $cols = [];
+    }
+    $GLOBALS['use_error_exception'] = false;
+    if(!in_array('order_by', $cols))
         {
         return;
         }

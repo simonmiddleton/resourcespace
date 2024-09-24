@@ -26,6 +26,27 @@ function is_section(array $I): bool {
     return (int) $I['parent'] === 0;
 }
 
+/**
+ * Compute moving (for re-ordering purposes) an item based on the requested direction (up/down). Example:
+ * 
+ * ```php
+ * $changed_list = array_replace(
+ *     $all_pages_index,
+ *     [$ref => compute_item_order($all_pages_index[$ref], $reorder)]
+ * );
+ * ```
+ * 
+ * @phpstan-template T of array
+ * @param T $item Generic item record with at least the 'order_by' key
+ * @param string $direction The direction of the re-order - up/down
+ * @return T
+ */
+function compute_item_order(array $item, string $direction): array
+{
+    $item['order_by'] += ($direction === 'up' ? -1 : 1) * 15;
+    return $item;
+}
+
 function render_individual_menu() {
     if (!acl_can_edit_brand_guidelines()) {
         return;
@@ -40,11 +61,11 @@ function render_individual_menu() {
             <i class="fa-solid fa-fw fa-trash-can"></i>
             <span><?php echo escape($GLOBALS['lang']['action-delete']); ?></span>
         </button>
-        <button class="context-menu-row">
+        <button class="context-menu-row" onclick="return reorder_item(this, 'up');">
             <i class="fa-solid fa-fw fa-chevron-up"></i>
             <span><?php echo escape($GLOBALS['lang']['action-move-up']); ?></span>
         </button>
-        <button class="context-menu-row">
+        <button class="context-menu-row" onclick="return reorder_item(this, 'down');">
             <i class="fa-solid fa-fw fa-chevron-down"></i>
             <span><?php echo escape($GLOBALS['lang']['action-move-down']); ?></span>
         </button>
@@ -99,14 +120,15 @@ function render_new_block_element_button(string $class) {
 }
 
 /**
- * todo: consider using a dedicated colour object instead
- * Example:
+ * todo: consider using a dedicated colour object instead. Example:
+ * ```php
  * render_block_colour_item([
  *     'name' => 'Black',
  *     'hex' => '000000',
  *     'rgb' => [22, 71, 85],
  *     'cmyk' => [74, 16, 0, 67],
  * ]);
+ * ```
  */
 function render_block_colour_item(array $value) {
     ?>
