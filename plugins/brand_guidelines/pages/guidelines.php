@@ -98,10 +98,17 @@ render_content_menu();
                 <?php
                 foreach ($page_contents as $page_content) {
                     echo '<h3>(raw content data structure - debug)</h3><pre>';print_r($page_content);echo '</pre>';
+                    render_new_content_button("add-new-content-after-{$page_content['ref']}");
                 }
-                if ($available_pages !== []) {
+                if ($available_pages !== [] && $page_contents === []) {
                     render_new_content_button('add-new-content-end');
                 }
+
+
+
+
+
+
                 ?>
                 <br><br><hr><p>Mock-up below</p><hr>
                 <p>Follow the guidelines below for our branding logos and colours.</p>

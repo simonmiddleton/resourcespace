@@ -76,22 +76,22 @@ function render_individual_menu() {
 function render_content_menu() {
     ?>
     <div id="menu-content" class="context-menu-container" style="width: 180px; display:none;">
-        <div class="context-menu-row">
+        <button class="context-menu-row">
             <i class="fa-solid fa-fw fa-align-left"></i>
             <span><?php echo escape($GLOBALS['lang']['text']); ?></span>
-        </div>
-        <div class="context-menu-row">
+        </button>
+        <button class="context-menu-row">
             <i class="fa-solid fa-fw fa-upload"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_new_resource']); ?></span>
-        </div>
-        <div class="context-menu-row">
+        </button>
+        <button class="context-menu-row">
             <i class="fa-solid fa-fw fa-photo-film"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_existing_resource']); ?></span>
-        </div>
-        <div class="context-menu-row">
+        </button>
+        <button class="context-menu-row">
             <i class="fa-solid fa-fw fa-palette"></i>
             <span><?php echo escape($GLOBALS['lang']['colour']); ?></span>
-        </div>
+        </button>
     </div>
     <?php
 }
