@@ -1875,7 +1875,6 @@ function get_resource_type_field_columns()
         'exiftool_field'           => [$lang['property-exiftool_field'],'',0,1],
         'fits_field'               => [$lang['property-fits_field'], $lang['information-fits_field'], 0, 1],
         'personal_data'            => [$lang['property-personal_data'],'',1,1],
-        'use_for_similar'          => [$lang['property-use_for_find_similar_searching'],'',1,1],
         'hide_when_uploading'      => [$lang['property-hide_when_uploading'],'',1,1],
         'hide_when_restricted'     => [$lang['property-hide_when_restricted'],'',1,1],
         'help_text'                => [$lang['property-help_text'],'',2,1],

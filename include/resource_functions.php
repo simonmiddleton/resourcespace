@@ -3891,44 +3891,6 @@ function get_all_resource_types()
         "schema");
     }
 
-
-function get_resource_top_keywords($resource,$count)
-    {
-    # Return the top $count keywords (by hitcount) used by $resource.
-    # This section is for the 'Find Similar' search.
-    # Currently the date fields are not used for this feature
-
-    $return=array();
-
-    $keywords = ps_query("SELECT DISTINCT n.ref, n.name, n.resource_type_field FROM node n INNER JOIN resource_node rn ON n.ref=rn.node WHERE (rn.resource = ? AND n.resource_type_field IN (SELECT rtf.ref FROM resource_type_field rtf WHERE use_for_similar=1) ) ORDER BY new_hit_count DESC LIMIT $count",["i",$resource]);
-
-    foreach ($keywords as $keyword )
-        {
-        # Apply permissions and strip out any results the user does not have access to.
-        if (metadata_field_view_access($keyword["resource_type_field"]) && !checkperm("T" . $resource))
-            {
-            $r =  $keyword["name"] ;
-            }
-
-        if(isset($r) && trim($r) != '')
-            {
-            if (substr($r,0,1)==","){$r=substr($r,1);}
-            $s=split_keywords(i18n_get_translated($r));
-            # Splitting keywords can result in break words being included in these results
-            # These should be removed here otherwise they will show as keywords themselves which is incorrect
-            global $noadd;
-            foreach ($s as $a)
-                {
-                if(!empty($a) && !in_array($a,$noadd))
-                    {
-                    $return[]=$a;
-                    }
-                }
-            }
-        }
-    return $return;
-    }
-
 function clear_resource_data($resource)
     {
     # Clears stored data for a resource.
