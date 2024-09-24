@@ -67,8 +67,18 @@ foreach ($options as $option_name => $option_value) {
 }
 
 if ($offline_job_queue) {
+
+    $readonly_jobs = array(
+        "collection_download",
+        "create_download_file",
+        "csv_metadata_export",
+        );
+
+    // Only run essential and non-data affecting jobs in read only mode
+    $gettypes = $system_read_only ? implode(",", $readonly_jobs) : "";
+
     // Mark any jobs that are still marked as in progress but have an old process lock as failed
-    $runningjobs=job_queue_get_jobs("",STATUS_INPROGRESS,"","","ref", "ASC");
+    $runningjobs=job_queue_get_jobs($gettypes,STATUS_INPROGRESS,"","","ref", "ASC");
 
     $jobcount = count($runningjobs);
     foreach ($runningjobs as $runningjob) {
@@ -92,23 +102,12 @@ if ($offline_job_queue) {
 
     while (!isset($offlinejobs) || count($offlinejobs) > 0) {
         // Get jobs in small batches so that new higher priority jobs won't have to wait if there is a backlog
-        $offlinejobs = job_queue_get_jobs("", STATUS_ACTIVE, "","","priority,ref", "ASC","", false, 5);
+        $offlinejobs = job_queue_get_jobs($gettypes, STATUS_ACTIVE, "","","priority,ref", "ASC","", false, 5, true);
         $offlinejob = array_shift($offlinejobs);
         if (
             !isset($offlinejob["start_date"])
             || (!empty($jobs) && !in_array($offlinejob["ref"], $jobs))
         ) {
-            continue;
-        }
-
-        $readonly_jobs = array(
-            "collection_download",
-            "create_download_file",
-            "csv_metadata_export",
-            );
-
-        // Only run essential and non-data affecting jobs in read only mode
-        if ($system_read_only && !in_array($offlinejob["type"],$readonly_jobs)) {
             continue;
         }
 

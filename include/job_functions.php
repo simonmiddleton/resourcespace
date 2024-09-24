@@ -111,115 +111,107 @@ function job_queue_delete($ref)
 /**
  * Gets a list of offline jobs
  *
- * @param  string $type         Job type
+ * @param  string $type         Job type, can be a comma separated list of job types
  * @param  string $status       Job status - see definitions.php
  * @param  int    $user         Job user
  * @param  string $job_code     Unique job code
- * @param  string $job_order_by
- * @param  string $job_sort
- * @param  string $find
- * @param  bool   $returnsql
+ * @param  string $job_order_by Column to order by - default is priority
+ * @param  string $job_sort     Sort order - ASC or DESC
+ * @param  string $find         Search jobs for this string
+ * @param  bool   $returnsql    Return raw SQL
  * @param  int    $maxjobs      Maximum number of jobs to return
+ * @param  bool   $overdue      Only return overdue jobs?
  * @return mixed                Resulting array of requests or an SQL query object
  */
-function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="", $returnsql=false,int $maxjobs = 0)
+function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="", $returnsql=false,int $maxjobs = 0, bool $overdue = false)
     {
     global $userref;
     $condition = array();
     $parameters = array();
-    if($type != "")
-        {
-        $condition[] = " type = ? ";
-        $parameters = array_merge($parameters,array("s",$type));
-        }
-    if(!checkperm('a') && PHP_SAPI != 'cli')
-        {
+    if ($type != "") {
+        $types = explode(",", $type);
+        $condition[] = " type IN (" . ps_param_insert(count($types)). ")";
+        $parameters = array_merge($parameters,ps_param_fill($types, "s"));
+    }
+    if (!checkperm('a') && PHP_SAPI != 'cli') {
         // Don't show certain jobs for normal users
         $hiddentypes = array();
         $hiddentypes[] = "delete_file";
-        $condition[] = " type NOT IN (" . ps_param_insert(count($hiddentypes)) . ")";  
+        $condition[] = " type NOT IN (" . ps_param_insert(count($hiddentypes)) . ")";
         $parameters = array_merge($parameters, ps_param_fill($hiddentypes,"s"));
-        }
-        
-    if((int)$status > -1)
-        {
+    }
+
+    if ((int)$status > -1) {
         $condition[] =" status = ? ";
         $parameters = array_merge($parameters,array("i",(int)$status));
-        }
+    }
 
-    if((int)$user > 0)
-        {
+    if ($overdue) {
+        $condition[] =" start_date <= ? ";
+        $parameters = array_merge($parameters,array("s",date('Y-m-d H:i:s')));
+    }
+
+    if ((int)$user > 0) {
         // Has user got access to see this user's jobs?
-        if($user == $userref || checkperm_user_edit($user))
-            {             
+        if ($user == $userref || checkperm_user_edit($user)) {
             $condition[] = " user = ?";
             $parameters = array_merge($parameters,array("i",(int)$user));
-            }
-        elseif(isset($userref))
-            {
+        } elseif (isset($userref)) {
             // Only show own jobs
             $condition[] = " user = ?";
             $parameters = array_merge($parameters,array("i",(int)$userref));
-            }
-        else
-            {
+        } else {
             // No access - return empty array
             return array();
-            }
         }
-    else
-        {
+    } else {
         // Requested jobs for all users - only possible for cron or system admin, set condition otherwise
-        if(PHP_SAPI != "cli" && !checkperm('a'))
-            {
-            if(isset($userref))
-                {
+        if (PHP_SAPI != "cli" && !checkperm('a')) {
+            if (isset($userref)) {
                 // Only show own jobs
                 $condition[] = " user = ?";
                 $parameters = array_merge($parameters,array("i",(int)$userref));
-                }
-            else
-                {
+            } else {
                 // No access - return nothing
                 return array();
-                }
             }
         }
+    }
 
-    if($job_code!="")
-        {
+    if ($job_code != "") {
         $condition[] =" job_code = ?";
         $parameters = array_merge($parameters,array("s",$job_code));
-        }
+    }
 
-    if($find!="")
-        {
+    if ($find != "") {
         $find = '%' . $find . '%';
         $condition[] = " (j.ref LIKE ? OR j.job_data LIKE ? OR j.success_text LIKE ? OR j.failure_text LIKE ? OR j.user LIKE ? OR u.username LIKE ? OR u.fullname LIKE ?)";
-        }
+    }
 
-    $conditional_sql="";
-    if (count($condition)>0){$conditional_sql=" WHERE " . implode(" AND ",$condition);}
-    
+    $conditional_sql = "";
+    if (count($condition)>0) {
+        $conditional_sql = " WHERE " . implode(" AND ",$condition);
+    }
+
     // Check order by value is valid
-    if (!in_array(strtolower($job_order_by), array("priority", "ref", "type", "fullname", "status", "start_date")))
-        {
+    if (!in_array(strtolower($job_order_by), array("priority", "ref", "type", "fullname", "status", "start_date"))) {
         $job_order_by = "priority";
-        }
-    
+    }
+
     // Check sort value is valid
-    if (!in_array(strtolower($job_sort), array("asc", "desc")))
-        {
+    if (!in_array(strtolower($job_sort), array("asc", "desc"))) {
         $job_sort = "ASC";
-        }
+    }
 
     $limit = "";
     if ($maxjobs > 0) {
         $limit = " LIMIT ?";
         $parameters = array_merge($parameters,["i",$maxjobs]);
     }
-    $sql = "SELECT j.ref, j.type, replace(replace(j.job_data,'\r',' '),'\n',' ') as job_data, j.user, j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user " . $conditional_sql . " ORDER BY " . $job_order_by . " " . $job_sort . ",start_date ASC " . $limit;
-    if($returnsql){return new PreparedStatementQuery($sql, $parameters);}
+    $sql = "SELECT j.ref, j.type, REPLACE(REPLACE(j.job_data,'\r',' '),'\n',' ') AS job_data, j.user, j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user " . $conditional_sql . " ORDER BY " . $job_order_by . " " . $job_sort . ", start_date " . $job_sort . $limit;
+    if ($returnsql) {
+        return new PreparedStatementQuery($sql, $parameters);
+    }
     return ps_query($sql, $parameters);
     }
 
