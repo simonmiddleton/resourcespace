@@ -446,52 +446,63 @@ function config_add_html($content)
  /**
  * Generate an html text entry or password block
  *
- * @param string $name the name of the text block. Usually the name of the config variable being set.
- * @param string $label the user text displayed to label the text block. Usually a $lang string.
- * @param string $current the current value of the config variable being set.
- * @param boolean $password whether this is a "normal" text-entry field or a password-style
- *          field. Defaulted to false.
- * @param integer $width the width of the input field in pixels. Default: 420.
+ * @param string    $name       The name of the configuration variable to be added.
+ * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
+ * @param string    $current    The current value of the config variable being set.
+ * @param bool      $password   Whether this is a "normal" text-entry field or a password-style field.
+ * @param int       $width      The width of the input field in pixels. Default: 420.
+ * @param bool      $textarea   Render as a HTML <textarea>
+ * @param string    $title      The title attribute of the element
+ * @param bool      $autosave   Enable auto-saving of changes when focus is lost
+ * @param bool      $hidden     Whether field is hidden on the page
+ * @param string    $help_link  Help link to be displayed alongside the label.
  */
-function config_text_input($name, $label, $current, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false, $hidden = false)
-    {
+function config_text_input($name, $label, $current, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false, $hidden = false, $help_link = "")
+{
     global $lang;
 
-    if(is_null($title))
-        {
+    if (is_null($title)) {
         // This is how it was used on plugins setup page. Makes sense for developers when trying to debug and not much for non-technical users
         $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
-        }
+    }
     ?>
 
-    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-        <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
-    <?php
-    if($autosave)
-        {
-        ?>
-        <div class="AutoSaveStatus">
-            <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
-        </div>
+    <div class="Question" id="question_<?php echo escape($name); ?>" <?php if ($hidden) { ?> style="display:none;"<?php } ?>>
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>">
+            <?php
+            echo escape($label);
+            if ($help_link !== "") {
+                render_help_link($help_link);
+            }
+            ?>
+        </label>
+
+        <?php
+        if ($autosave) {
+            ?>
+            <div class="AutoSaveStatus">
+                <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
+            </div>
         <?php
         }
 
-    if($textarea == false)
-        {
-        ?>
-        <input id="<?php echo $name; ?>"
-               name="<?php echo $name; ?>"
-               type="<?php echo $password ? 'password' : 'text'; ?>"
-               value="<?php echo escape((string) $current); ?>"
-               <?php if($autosave) { ?>onFocusOut="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
-               style="width:<?php echo $width; ?>px" />
-        <?php
-        }
-    else
-        {
-        ?>
-        <textarea id="<?php echo $name; ?>" name="<?php echo $name; ?>" style="width:<?php echo $width; ?>px"><?php echo escape($current); ?></textarea>
-        <?php
+        if ($textarea == false) {
+            ?>
+            <input id="<?php echo escape($name); ?>"
+                name="<?php echo escape($name); ?>"
+                type="<?php echo $password ? 'password' : 'text'; ?>"
+                value="<?php echo escape((string) $current); ?>"
+                <?php if ($autosave) { ?>onFocusOut="AutoSaveConfigOption('<?php echo escape($name); ?>');"<?php } ?>
+                style="width:<?php echo escape($width); ?>px" />
+            <?php
+        } else {
+            ?>
+            <textarea id="<?php echo escape($name); ?>"
+                name="<?php echo escape($name); ?>"
+                style="width:<?php echo escape($width); ?>px">
+                <?php echo escape($current); ?>
+            </textarea>
+            <?php
         }
         ?>
         <div class="clearerleft"></div>
@@ -504,15 +515,19 @@ function config_text_input($name, $label, $current, $password = false, $width = 
  * Return a data structure that will instruct the configuration page generator functions to
  * add a text entry configuration variable to the setup page.
  *
- * @param string $config_var the name of the configuration variable to be added.
- * @param string $label the user text displayed to label the text block. Usually a $lang string.
- * @param boolean $password whether this is a "normal" text-entry field or a password-style
- *          field. Defaulted to false.
- * @param integer $width the width of the input field in pixels. Default: 420.
+ * @param string    $config_var The name of the configuration variable to be added.
+ * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
+ * @param bool      $password   Whether this is a "normal" text-entry field or a password-style field.
+ * @param int       $width      The width of the input field in pixels. Default: 420.
+ * @param bool      $textarea   Render as a HTML <textarea>
+ * @param string    $title      The title attribute of the element
+ * @param bool      $autosave   Enable auto-saving of changes when focus is lost
+ * @param bool      $hidden     Whether field is hidden on the page
+ * @param string    $help_link  Help link to be displayed alongside the label.
  */
-function config_add_text_input($config_var, $label, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false, $hidden=false)
+function config_add_text_input($config_var, $label, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false, $hidden=false, string $help_link = "")
     {
-    return array('text_input', $config_var, $label, $password, $width, $textarea, $title, $autosave, $hidden);
+    return array('text_input', $config_var, $label, $password, $width, $textarea, $title, $autosave, $hidden, $help_link);
     }
 
 
@@ -742,43 +757,40 @@ function config_add_file_input($config_var, $label, $form_action, $width = 420, 
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  */
 function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null,$hidden=false)
-    {
+{
     global $lang;
     
-    if(is_null($title))
-        {
+    if (is_null($title)) {
         // This is how it was used on plugins setup page. Makes sense for developers when trying to debug and not much for non-technical users
         $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
-        }
-    ?>
-    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-        <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
-        <?php
-        if($autosave)
-            {
-            ?>
-            <div class="AutoSaveStatus">
-                <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
-            </div>
-            <?php
-            }
-        ?>
-        <select id="<?php echo $name; ?>"
-                name="<?php echo $name; ?>"
-                <?php if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
-                style="width:<?php echo $width; ?>px">
-        <?php
-        foreach($choices as $key => $choice)
-            {
-            $value = $usekeys ? $key : $choice;
-            echo '<option value="' . $value . '"' . (($current == $value) ? ' selected' : '') . ">$choice</option>";
-            }
-        ?>
-        </select>
-     <div class="clearerleft"></div>
-    </div>
-    <?php
     }
+    ?>
+
+    <div class="Question" id="question_<?php echo escape($name); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?>>
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>">
+            <?php echo escape($label); ?>
+        </label>
+        <?php if ($autosave) { ?>
+            <div class="AutoSaveStatus">
+                <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
+            </div>
+        <?php } ?>
+        <select id="<?php echo escape($name); ?>"
+            name="<?php echo escape($name); ?>"
+            <?php if ($autosave) { ?>
+                onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>');"
+            <?php } ?>
+            style="width:<?php echo escape($width); ?>px">
+            <?php foreach ($choices as $key => $choice) {
+                $value = $usekeys ? $key : $choice;
+                echo '<option value="' . $value . '"' . (($current == $value) ? ' selected' : '') . ">$choice</option>";
+            } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    
+    <?php
+}
 
 
 /**
@@ -848,24 +860,26 @@ function config_boolean_select(
     $html_question_id = "question_{$name}";
     ?>
     <div class="Question" id="<?php echo escape($html_question_id); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-        <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>">
+            <?php echo escape($label); ?>
+        </label>
 
         <?php
         if($autosave)
             {
             ?>
             <div class="AutoSaveStatus">
-                <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+                <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
             </div>
             <?php
             }
             ?>
-        <select id="<?php echo $name; ?>"
-                name="<?php echo $name; ?>"
+        <select id="<?php echo escape($name); ?>"
+                name="<?php echo escape($name); ?>"
                 <?php if($autosave) { ?>
                     onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>'<?php echo $reload_page ? ", true" : ""?>);"
                 <?php } ?>
-                style="width:<?php echo $width; ?>px">
+                style="width:<?php echo escape($width); ?>px">
             <option value="1"<?php if($current == '1') { ?> selected<?php } ?>><?php echo $choices[1]; ?></option>
             <option value="0"<?php if($current == '0') { ?> selected<?php } ?>><?php echo $choices[0]; ?></option>
         </select>
@@ -1022,41 +1036,47 @@ function config_add_single_ftype_select($config_var, $label, $width=300, $rtype=
  * @param integer $current the current value of the config variable being set
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_single_ftype_select($name, $label, $current, $width=300, $rtype=false, $ftypes=array(), $autosave = false)
-    {
+function config_single_ftype_select($name, $label, $current, $width = 300, $rtype = false, $ftypes = array(), $autosave = false)
+{
     global $lang;
 
-    if ($rtype === false) { $rtype = ''; }
-    $fields = get_resource_type_fields($rtype, 'title, name', 'asc', '', $ftypes, true);
-
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    
-     <?php
-    if($autosave)
-        {
-        ?>
-        <div class="AutoSaveStatus">
-            <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
-        </div>
-        <?php
-        }
-        ?>
-    <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px"
-    <?php if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>>
-    <option value="" <?php echo $current == "" ? ' selected' : '' ?>><?php echo escape($lang["select"]); ?></option>
-<?php
-    foreach($fields as $field)
-        {
-        echo '    <option value="'. $field['ref'] . '"' . (($current==$field['ref'])?' selected':'') . '>' . lang_or_i18n_get_translated($field['title'],'fieldtitle-') . '</option>';
-        }
-?>
-    </select>
-  <div class="clearerleft"></div>
-  </div>
-<?php
+    if ($rtype === false) {
+        $rtype = '';
     }
+
+    $fields = get_resource_type_fields($rtype, 'title, name', 'asc', '', $ftypes, true);
+    ?>
+
+    <div class="Question">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+    
+        <?php if ($autosave) { ?>
+            <div class="AutoSaveStatus">
+                <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
+            </div>
+        <?php } ?>
+
+        <select name="<?php echo escape($name); ?>"
+            id="<?php echo escape($name); ?>"
+            style="width:<?php echo escape($width); ?>px"
+            <?php if ($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo escape($name); ?>');"<?php } ?>>
+            <option value="" <?php echo $current == "" ? ' selected' : '' ?>>
+                <?php echo escape($lang["select"]); ?>
+            </option>
+            <?php foreach ($fields as $field) { ?>
+                <option value="<?php echo (int) $field['ref']; ?>"
+                    <?php echo $current == $field['ref'] ? ' selected' : ''; ?>>
+                    <?php echo escape(lang_or_i18n_get_translated($field['title'],'fieldtitle-')); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+
+    <?php
+}
 
 /**
 * Generate Javascript function used for auto saving individual config options
@@ -1242,7 +1262,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'text_input':
-                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
+                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
 
             case 'file_input':

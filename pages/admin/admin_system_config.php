@@ -33,12 +33,14 @@ $page_def[] = config_add_single_select(
     true);
 $page_def[] = config_add_text_input(
     'download_filename_format',
-    $lang['setup-download_filename_format'] . render_help_link('resourceadmin/download_filename_format', true),
+    $lang['setup-download_filename_format'],
     false,
     420,
     false,
     '',
-    true
+    true,
+    false,
+    'resourceadmin/download_filename_format'
 );
 $page_def[] = config_add_html('</div>');
 
