@@ -1932,3 +1932,41 @@ function is_valid_contact_sheet_preview_size(string $val): bool
 {
     return preg_match('/^\d+x\d+$/', $val);
 }
+
+/**
+ * Store a config option that has been removed from the UI so that it will still work until it has been set in config file
+ *
+ * @param string $option
+ *
+ * @return bool Returns true if option been saved, false if not
+ *
+ */
+function removed_ui_config_save($option): bool
+{
+    if (isset($GLOBALS[$option]) && trim($GLOBALS[$option]) !== "") {
+        // This has been removed from the UI - set to a config file option if it was previously set
+        set_config_option(NULL, $option . "_REMOVED", $GLOBALS[$option]);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Check if there is a previously stored value for the given config option.
+ * Intended for options that were previously set in the UI but now need to be set in config.
+ *
+ * @param string    $option
+ * @param mixed     $default The default value to set for the config option if not set anywhere
+ *
+ * @return bool     True if the config option is overridden with a stored value from user_preferences, false if not
+ *
+ */
+function check_removed_ui_config(string $option, $default = ""): bool
+{
+    if (!isset($GLOBALS[$option])) {
+        $GLOBALS[$option] = $GLOBALS[$option . "_REMOVED"] ?? $default;
+        return true;
+    }
+    return false;
+}
+

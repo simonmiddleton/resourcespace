@@ -60,6 +60,9 @@ if('' != getval('submit', '') || '' != getval('save', ''))
 
     $emu_rs_mappings       = $emu_rs_mappings_new;
     $emu_rs_saved_mappings = plugin_encode_complex_configs($emu_rs_mappings_new);
+
+    // Save this removed config option if it was previously set - now should be set in config
+    removed_ui_config_save('emu_log_directory');
     }
 
 // Add test script functionality
@@ -101,7 +104,6 @@ $page_def[] = config_add_boolean_select('emu_enable_script', $lang['emu_enable_s
 $page_def[] = config_add_boolean_select('emu_test_mode', $lang['emu_test_mode']);
 $page_def[] = config_add_text_input('emu_interval_run', $lang['emu_interval_run']);
 $page_def[] = config_add_text_input('emu_script_failure_notify_days', $lang['emu_script_failure_notify_days']);
-$page_def[] = config_add_text_input('emu_log_directory', $lang['emu_log_directory']);
 $page_def[] = config_add_single_ftype_select('emu_created_by_script_field', $lang['emu_created_by_script_field']);
 
 // EMu settings
