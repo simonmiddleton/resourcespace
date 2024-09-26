@@ -448,6 +448,7 @@ function config_gen_setup_post($page_def,$plugin_name)
                 switch ($def[0])
                     {
                     case 'html':
+                    case 'fixed_input':
                         $omit = true;
                         break;  
                     case 'section_header':
@@ -622,7 +623,11 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
             case 'multi_archive_select':
                 config_multi_archive_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
                 break;
-    
+            case 'fixed_input':
+                render_fixed_text_question($def[1], $def[2], $def[3]);
+                break;
+            default:
+                break;
             }
         }
         ?>

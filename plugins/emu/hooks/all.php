@@ -1,5 +1,6 @@
 <?php
 include_once dirname(__FILE__) . '/../include/emu_api.php';
+
 function HookEmuAllInitialise()
 {
     check_removed_ui_config("emu_log_directory");

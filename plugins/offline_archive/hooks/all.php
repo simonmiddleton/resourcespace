@@ -2,6 +2,12 @@
 
 include_once __DIR__ . "/../include/offline_archive_functions.php";
 
+function HookOffline_archiveAllInitialise()
+{
+	check_removed_ui_config("offline_archive_archivepath");
+	check_removed_ui_config("offline_archive_restorepath");
+}
+
 function HookOffline_archiveAllAddplugincronjob()
     {
     $linebreak = PHP_SAPI == "cli" ? PHP_EOL : "<br/>"; // Cron may be called from browser

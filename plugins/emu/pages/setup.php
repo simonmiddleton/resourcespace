@@ -10,10 +10,10 @@ include_once '../include/emu_functions.php';
 
 
 $plugin_name = 'emu';
-if(!in_array($plugin_name, $plugins))
-    {
+if (!in_array($plugin_name, $plugins)) {
     plugin_activate_for_setup($plugin_name);
-    }
+    check_removed_ui_config("emu_log_directory");
+}
 
 $emu_rs_mappings               = plugin_decode_complex_configs($emu_rs_saved_mappings);
 $emu_script_last_ran           = '';
@@ -62,7 +62,7 @@ if('' != getval('submit', '') || '' != getval('save', ''))
     $emu_rs_saved_mappings = plugin_encode_complex_configs($emu_rs_mappings_new);
 
     // Save this removed config option if it was previously set - now should be set in config
-    removed_ui_config_save('emu_log_directory');
+    save_removed_ui_config('emu_log_directory');
     }
 
 // Add test script functionality
@@ -104,6 +104,8 @@ $page_def[] = config_add_boolean_select('emu_enable_script', $lang['emu_enable_s
 $page_def[] = config_add_boolean_select('emu_test_mode', $lang['emu_test_mode']);
 $page_def[] = config_add_text_input('emu_interval_run', $lang['emu_interval_run']);
 $page_def[] = config_add_text_input('emu_script_failure_notify_days', $lang['emu_script_failure_notify_days']);
+$helptext = str_replace("%variable","\$emu_log_directory",$lang['ui_removed_config_message']);
+$page_def[] = config_add_fixed_input($lang['emu_log_directory'], $emu_log_directory, $helptext);
 $page_def[] = config_add_single_ftype_select('emu_created_by_script_field', $lang['emu_created_by_script_field']);
 
 // EMu settings

@@ -5867,18 +5867,26 @@ function render_antispam_question()
 /**
  * Renders a 'fixed' text question - not an input but to display information or values that cannot be changed
  *
- * @param  string $label
- * @param  string $text
- * @return void
+ * @param  string $label        Question label
+ * @param  string $text         Fixed text
+ * @param  string $helptext     Optional help text
+ *
  */
-function render_fixed_text_question($label, $text)
-    {   
+function render_fixed_text_question(string $label, string $text, string $helptext = ""): void
+{
     echo "<div class='Question'>
-        <label>" . escape($label) . "</label>
-        <div class='Fixed'>" . escape($text) . "</div>
-        <div class='clearerleft'></div>
-        </div>";
-    }
+            <label>" . escape($label) . "</label>
+            <div class='Fixed'>" . escape($text) . "</div>
+        <div class='clearerleft'></div>";
+    if (trim($helptext) != "") {?>
+        <div class="FormHelp" style="padding:0; clear:left;" >
+            <div class="FormHelpInner"><?php echo escape($helptext); ?></div>
+        </div>
+        <?php
+    }?>
+    </div>
+    <?php
+}
 
 
 /**

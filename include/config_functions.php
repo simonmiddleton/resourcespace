@@ -1300,6 +1300,11 @@ function config_generate_html(array $page_def)
             case 'multi_archive_select':
                 config_multi_archive_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4]);
                 break;
+            case 'fixed_input':
+                render_fixed_text_question($def[1], $def[2], $def[3]);
+                break;
+            default:
+                break;
             }
         }
     }
@@ -1941,7 +1946,7 @@ function is_valid_contact_sheet_preview_size(string $val): bool
  * @return bool Returns true if option been saved, false if not
  *
  */
-function removed_ui_config_save($option): bool
+function save_removed_ui_config($option): bool
 {
     if (isset($GLOBALS[$option]) && trim($GLOBALS[$option]) !== "") {
         // This has been removed from the UI - set to a config file option if it was previously set
@@ -1970,3 +1975,17 @@ function check_removed_ui_config(string $option, $default = ""): bool
     return false;
 }
 
+/**
+ * Return a data structure that will instruct the configuration page generator functions to
+ * add a fixed input setting the setup page. Uses render_fixed_text_question(). Used for options removed from the UI
+ *
+ * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
+ * @param string    $value       The fixed text value to be displayed
+ * @param string    $helptext   Optional text that will be displayed below the question
+ *
+ * @return array   Array of data that will be passed to the page generation code
+ */
+function config_add_fixed_input(string $label, string $value, string $helptext = ""): array
+{
+    return array('fixed_input', $label, $value, $helptext);
+}
