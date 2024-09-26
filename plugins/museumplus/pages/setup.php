@@ -78,8 +78,11 @@ escape($museumplus_script_last_ran)
 $page_def[] = config_add_html($script_last_ran_content);
 $page_def[] = config_add_boolean_select('museumplus_enable_script', $lang['museumplus_enable_script']);
 $page_def[] = config_add_text_input('museumplus_interval_run', $lang['museumplus_interval_run']);
+
+// Removed from UI
 $helptext = str_replace("%variable","\$museumplus_log_directory",$lang['ui_removed_config_message']);
-$page_def[] = config_add_fixed_input($lang['museumplus_log_directory'], $museumplus_log_directory, $helptext);
+$showval = $museumplus_log_directory !== "" ? $museumplus_log_directory : $lang["notavailableshort"];
+$page_def[] = config_add_fixed_input($lang['museumplus_log_directory'], $showval, $helptext);
 
 // $page_def[] = config_add_single_ftype_select('museumplus_integrity_check_field', $lang['museumplus_integrity_check_field'], 420); # not in use until we can reliably get integrity checks of the data from M+
 

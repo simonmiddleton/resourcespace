@@ -4,6 +4,7 @@ include_once dirname(__FILE__) . "/../include/tms_link_functions.php";
 
 function HookTms_linkAllInitialise()
     {
+    check_removed_ui_config("tms_link_log_directory");
     $tms_link_config = get_plugin_config('tms_link');
 
     if(is_null($tms_link_config) || get_sysvar(TMS_LINK_MODULES_MIGRATED) !== false)

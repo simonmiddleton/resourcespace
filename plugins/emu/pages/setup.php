@@ -104,8 +104,12 @@ $page_def[] = config_add_boolean_select('emu_enable_script', $lang['emu_enable_s
 $page_def[] = config_add_boolean_select('emu_test_mode', $lang['emu_test_mode']);
 $page_def[] = config_add_text_input('emu_interval_run', $lang['emu_interval_run']);
 $page_def[] = config_add_text_input('emu_script_failure_notify_days', $lang['emu_script_failure_notify_days']);
+
+// Removed from UI
 $helptext = str_replace("%variable","\$emu_log_directory",$lang['ui_removed_config_message']);
-$page_def[] = config_add_fixed_input($lang['emu_log_directory'], $emu_log_directory, $helptext);
+$showval = $emu_log_directory !== "" ? $emu_log_directory : $lang["notavailableshort"];
+$page_def[] = config_add_fixed_input($lang['emu_log_directory'], $showval, $helptext);
+
 $page_def[] = config_add_single_ftype_select('emu_created_by_script_field', $lang['emu_created_by_script_field']);
 
 // EMu settings

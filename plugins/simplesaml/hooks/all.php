@@ -1,5 +1,12 @@
 <?php
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
+
+
+function HookSimplesamlAllInitialise()
+{
+	check_removed_ui_config("simplesaml_lib_path");
+}
+
 function HookSimplesamlAllPreheaderoutput()
     {      
     if(!simplesaml_php_check() || get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL) != SYSTEM_UPGRADE_LEVEL)

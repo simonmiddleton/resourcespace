@@ -27,8 +27,10 @@ $plugin_page_heading = $lang['offline_archive_configuration'];
 
 $page_def[] = config_add_single_ftype_select('offline_archive_archivefield',$lang['offline_archive_archivefield']);
 
+// Removed from UI
 $helptext = str_replace("%variable","\$offline_archive_archivepath",$lang['ui_removed_config_message']);
-$page_def[] = config_add_fixed_input($lang['offline_archive_archivepath'], $offline_archive_archivepath, $helptext);
+$showval = $offline_archive_archivepath !== "" ? $offline_archive_archivepath : $lang["notavailableshort"];
+$page_def[] = config_add_fixed_input($lang['offline_archive_archivepath'], $showval, $helptext);
 
 $helptext = str_replace("%variable","\$offline_archive_restorepath",$lang['ui_removed_config_message']);
 $page_def[] = config_add_fixed_input($lang['offline_archive_restorepath'], $offline_archive_restorepath, $helptext);
