@@ -513,7 +513,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
     global $lang,$baseurl_short;
 ?>
     <div class="BasicsBox">
-    <h1><?php echo escape($plugin_page_heading); ?></h1>
+    <h1><?php echo strip_tags_and_attributes($plugin_page_heading, ['a'], ['href', 'target']); ?></h1>
 <?php
     $links_trail = array(
         array(
@@ -643,17 +643,18 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
  * @param string $description the user text displayed to describe the section. Usually a $lang string.
  */
 function config_section_header($title, $description)
-    {
-?>
-   <div class="Question">
-    <br /><h2><?php echo $title?></h2>
-    <?php if ($description!=""){?>
-        <p><?php echo $description?></p>
-    <?php } ?>
-    <div class="clearerleft"></div>
-  </div>
-<?php
-    }
+{
+    ?>
+    <div class="Question">
+        <br />
+        <h2><?php echo escape($title); ?></h2>
+        <?php if ($description != "") { ?>
+            <p><?php echo escape($description); ?></p>
+        <?php } ?>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to add
@@ -702,13 +703,25 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
     global $lang;
     ?>
     <div class="Question">
-        <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-        <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" <?php if(count($choices) > 7) {echo ' size="7"';} ?> style="width:<?php echo $width ?>px">
-            <?php foreach($choices as $key => $choice) {
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+
+        <select name="<?php echo escape($name); ?>[]"
+            id="<?php echo escape($name); ?>"
+            class="MultiSelect"
+            multiple="multiple"
+            <?php if (count($choices) > 7) { ?> size="7" <?php } ?>
+            style="width:<?php echo (int) $width; ?>px">
+            <?php foreach ($choices as $key => $choice) {
                 $value = $usekeys ? $key : $choice;
-                echo '    <option value="' . $value . '"' . ((in_array($value, $current)) ? ' selected' : '') . ">$choice</option>";
-            } ?>
+                ?>
+                <option value="<?php echo escape($value); ?>" <?php echo in_array($value, $current) ? ' selected' : ''; ?>>
+                    <?php echo escape($choice); ?>
+                </option>";
+            <?php } ?>
         </select>
+
         <div class="clearerleft"></div>
     </div>
     <?php
@@ -744,26 +757,30 @@ function config_add_multi_select($config_var, $label, $choices, $usekeys=true, $
  * @param integer $current the current value of the config variable being set.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_single_user_select($name, $label, $current=array(), $width=300)
-    {
+function config_single_user_select($name, $label, $current = array(), $width = 300)
+{
     global $lang;
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px">
-<?php
-    $users=get_users();
-    foreach ($users as $user)
-        {
-        echo '    <option value="' . $user['ref'] . '"' . (($user['ref']==$current)?' selected':'') . '>' . $user['fullname'] . ' (' . $user['email'] . ')</option>';
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-  
-<?php
-    }
+    ?>
+    <div class="Question">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+        <select name="<?php echo escape($name); ?>"
+            id="<?php echo escape($name); ?>"
+            style="width:<?php echo (int) $width; ?>px">
+            <?php
+            $users = get_users();
+            foreach ($users as $user) { ?>
+                <option value="<?php echo (int) $user['ref']; ?>"
+                    <?php echo $user['ref'] == $current ? ' selected' : ''; ?>>
+                    <?php echo escape($user['fullname'] . ' (' . $user['email'] . ')'); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -790,25 +807,32 @@ function config_add_single_user_select($config_var, $label, $width=300)
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
 function config_multi_user_select($name, $label, $current=array(), $width=300)
-    {
+{
     global $lang;
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
-<?php
-    $users=get_users();
-    foreach ($users as $user)
-        {
-        echo '    <option value="' . $user['ref'] . '"' . ((in_array($user['ref'],$current))?' selected':'') . '>' . $user['fullname'] . ' (' . $user['email'] . ')</option>';
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-  
-<?php
-    }
+    ?>
+    <div class="Question">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+        <select name="<?php echo escape($name); ?>[]"
+            id="<?php echo escape($name); ?>"
+            class="MultiSelect"
+            multiple="multiple"
+            size="7"
+            style="width:<?php echo (int) $width; ?>px">
+            <?php
+            $users = get_users();
+            foreach ($users as $user) { ?>
+                <option value="<?php echo (int) $user['ref']; ?>"
+                    <?php echo in_array($user['ref'], $current) ? ' selected' : ''; ?>>
+                    <?php echo escape($user['fullname'] . ' (' . $user['email'] . ')'); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
     
 
 
@@ -834,25 +858,29 @@ function config_add_multi_user_select($config_var, $label, $width=300)
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
 function config_single_group_select($name, $label, $current=array(), $width=300)
-    {
+{
     global $lang;
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px">
-<?php
-    $usergroups=get_usergroups();
-    foreach ($usergroups as $usergroup)
-        {
-        echo '    <option value="' . $usergroup['ref'] . '"' . (($usergroup['ref']==$current)?' selected':'') . '>' . $usergroup['name'] . '</option>';
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-  
-<?php
-    }
+    ?>
+    <div class="Question">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+        <select name="<?php echo escape($name); ?>"
+            id="<?php echo escape($name); ?>"
+            style="width:<?php echo (int) $width; ?>px">
+            <?php
+            $usergroups = get_usergroups();
+            foreach ($usergroups as $usergroup) { ?>
+                <option value="<?php echo (int) $usergroup['ref']; ?>"
+                    <?php echo $usergroup['ref'] == $current ? ' selected' : ''; ?>>
+                    <?php echo escape($usergroup['name']); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
     
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -879,25 +907,32 @@ function config_add_single_group_select($config_var, $label, $width=300)
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
 function config_multi_group_select($name, $label, $current=array(), $width=300)
-    {
+{
     global $lang;
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
-<?php
-    $usergroups=get_usergroups();
-    foreach ($usergroups as $usergroup)
-        {
-        echo '    <option value="' . $usergroup['ref'] . '"' . ((in_array($usergroup['ref'],$current))?' selected':'') . '>' . $usergroup['name'] . '</option>';
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-  
-<?php
-    }
+    ?>
+    <div class="Question">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+        <select name="<?php echo escape($name); ?>[]"
+            id="<?php echo escape($name); ?>"
+            class="MultiSelect"
+            multiple="multiple"
+            size="7"
+            style="width:<?php echo (int) $width; ?>px">
+            <?php
+            $usergroups = get_usergroups();
+            foreach ($usergroups as $usergroup) { ?>
+                <option value="<?php echo (int) $usergroup['ref']; ?>"
+                    <?php echo in_array($usergroup['ref'], $current) ? ' selected' : ''; ?>>
+                    <?php echo escape($usergroup['name']); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
     
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -924,47 +959,56 @@ function config_add_multi_group_select($config_var, $label, $width=300)
  * @param integer $size - Number of visible options. Default 7
  * @param integer $rtype - Limit to fields associated with a specific resource type 
  */
-function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$rtype=false) 
-    {
+function config_multi_ftype_select($name, $label, $current, $width = 300, $size = 7, $rtype = false) 
+{
     global $lang;
-    if($rtype===false){
-        $fields = get_resource_type_fields("","order_by");
+
+    if ($rtype === false) {
+        $fields = get_resource_type_fields("", "order_by");
+    } else {
+        $fields = get_resource_type_fields($rtype, "order_by");
     }
-    else{
-        $fields = get_resource_type_fields($rtype,"order_by");
-    }
+
     $all_resource_types = get_resource_types();
-    $resource_types = array_column($all_resource_types,"name","ref");
+    $resource_types = array_column($all_resource_types, "name", "ref");
     ?>
+
     <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="<?php echo $size?>" style="width:<?php echo $width ?>px">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+        <select name="<?php echo escape($name); ?>[]"
+            id="<?php echo escape($name); ?>"
+            class="MultiSelect"
+            multiple="multiple"
+            size="<?php echo (int) $size; ?>"
+            style="width:<?php echo (int) $width; ?>px">
+            <?php
+            foreach ($fields as $field) {
+                $str_restypes = "";
+                $fieldrestypes = explode(",", (string) $field["resource_types"]);
+                $fieldrestypenames = [];
+
+                if ($field["global"] != 1) {
+                    foreach ($fieldrestypes as $fieldrestype) {
+                        $fieldrestypenames[] = i18n_get_translated($resource_types[$fieldrestype]);
+                    }
+
+                    if (count($fieldrestypes) < count($all_resource_types) - 2) {
+                        // Don't show this if they are linked to all but one resource types
+                        $str_restypes = " (" .  implode(",", $fieldrestypenames) . ")";
+                    }
+                } ?>
+                <option value="<?php echo (int) $field['ref']; ?>"
+                    <?php echo in_array($field['ref'], $current) ? ' selected':''; ?>>
+                    <?php echo escape(lang_or_i18n_get_translated($field['title'], 'fieldtitle-') .  $str_restypes); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
     <?php
-    foreach($fields as $field)
-        {
-        $str_restypes = "";
-        $fieldrestypes = explode(",",(string)$field["resource_types"]);
-        $fieldrestypenames = [];
-        if($field["global"] != 1)
-            {
-            foreach($fieldrestypes as $fieldrestype)
-                {
-                $fieldrestypenames[] =i18n_get_translated($resource_types[$fieldrestype]);
-                }
-            if(count($fieldrestypes) < count($all_resource_types)-2)
-                {
-                // Don't show this if they are linked to all but one resource types
-                $str_restypes = " (" .  implode(",",$fieldrestypenames) . ")";
-                }
-            }
-        echo '<option value="'. $field['ref'] . '"' . (in_array($field['ref'],$current) ? ' selected':'') . '>' . escape(lang_or_i18n_get_translated($field['title'],'fieldtitle-') .  $str_restypes) .  '</option>';
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-<?php
-    }
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -988,24 +1032,27 @@ function config_add_multi_ftype_select($config_var, $label, $width=300,$size=7,$
  * @param integer $current the current value of the config variable being set
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_single_rtype_select($name, $label, $current, $width=300)
-    {
+function config_single_rtype_select($name, $label, $current, $width = 300)
+{
     global $lang;
-    $rtypes=get_resource_types("",true,false,true);
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px">
-<?php
-    foreach($rtypes as $rtype)
-        {
-        echo '    <option value="'. $rtype['ref'] . '"' . (($current==$rtype['ref'])?' selected':'') . '>' . lang_or_i18n_get_translated($rtype['name'],'resourcetype-') . '</option>';
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-<?php
+    $rtypes = get_resource_types("", true, false, true);
+    ?>
+    <div class="Question">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+        <select name="<?php echo escape($name); ?>" id="<?php echo escape($name); ?>" style="width:<?php echo (int) $width; ?>px">
+            <?php
+            foreach ($rtypes as $rtype) { ?>
+                <option value="<?php echo (int) $rtype['ref']; ?>"
+                    <?php echo $current == $rtype['ref'] ? ' selected' : ''; ?>>
+                    <?php echo escape(lang_or_i18n_get_translated($rtype['name'], 'resourcetype-')); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
 }
 
 /**
@@ -1137,32 +1184,32 @@ return array('multi_archive_select', $config_var, $label, $choices, $width);
  *          displaying as: $choices[i][$dispcolA] . '(' . $choices[i][$dispcolB] . ')'
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_db_single_select($name, $label, $current, $choices, $ixcol='ref', $dispcolA='name', $dispcolB='', $fmt='', $width=300)
-    {
+function config_db_single_select($name, $label, $current, $choices, $ixcol = 'ref', $dispcolA = 'name', $dispcolB = '', $fmt = '', $width = 300)
+{
     global $lang;
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px">
-<?php
-    foreach($choices as $item)
-        {
-        if ($dispcolB!='')
-            {
-            $usertext=str_replace(array('%A','%B'), array($item[$dispcolA],$item[$dispcolB]),$fmt==''?$lang['plugin_field_fmt']:$fmt);
-            }
-        else
-            {
-            $usertext=$item[$dispcolA];
-            }
-        echo '    <option value="' . $item[$ixcol] . '"' . (($item[$ixcol]==$current)?' selected':'') . '>' . $usertext . '</option>';
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-<?php
-    }
+    ?>
+    <div class="Question">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo escape($label); ?>
+        </label>
+        <select name="<?php echo escape($name); ?>" id="<?php echo escape($name); ?>" style="width:<?php echo (int) $width; ?>px">
+            <?php
+            foreach ($choices as $item) {
+                if ($dispcolB != '') {
+                    $usertext = str_replace(array('%A', '%B'), array($item[$dispcolA], $item[$dispcolB]), $fmt == '' ? $lang['plugin_field_fmt'] : $fmt);
+                } else {
+                    $usertext = $item[$dispcolA];
+                } ?>
+                <option value="<?php echo escape($item[$ixcol]); ?>"
+                    <?php echo $item[$ixcol] == $current ? ' selected' : ''; ?>>
+                    <?php echo escape($usertext); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -1211,32 +1258,37 @@ function config_add_db_single_select($config_var, $label, $choices, $ixcol='ref'
  *          displaying as: $choices[i][$dispcolA] . '(' . $choices[i][$dispcolB] . ')'
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
- function config_db_multi_select($name, $label, $current, $choices, $ixcol='ref', $dispcolA='name', $dispcolB='', $fmt='', $width=300)
-    {
+function config_db_multi_select($name, $label, $current, $choices, $ixcol = 'ref', $dispcolA = 'name', $dispcolB = '', $fmt = '', $width = 300)
+{
     global $lang;
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" size="7" class="MultiSelect" style="width:<?php echo $width ?>px">
-<?php
-    foreach($choices as $item)
-        {
-        if ($dispcolB!='')
-            {
-            $usertext=str_replace(array('%A','%B'), array($item[$dispcolA],$item[$dispcolB]),$fmt==''?$lang['plugin_field_fmt']:$fmt);
-            }
-            else
-            {
-            $usertext=$item[$dispcolA];
-            }
-        echo '    <option value="' . $item[$ixcol] . '"' . (in_array($item[$ixcol],$current)?' selected':'') . '>' . $usertext . '</option>';
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-<?php
-    }
+    ?>
+    <div class="Question">
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
+            <?php echo strip_tags_and_attributes($label, ['a'], ['href', 'target']); ?>
+        </label>
+        <select name="<?php echo escape($name); ?>[]"
+            id="<?php echo escape($name); ?>"
+            multiple="multiple"
+            size="7"
+            class="MultiSelect"
+            style="width:<?php echo (int) $width; ?>px">
+            <?php
+            foreach ($choices as $item) {
+                if ($dispcolB != '') {
+                    $usertext = str_replace(array('%A', '%B'), array($item[$dispcolA], $item[$dispcolB]), $fmt == '' ? $lang['plugin_field_fmt'] : $fmt);
+                } else {
+                    $usertext = $item[$dispcolA];
+                } ?>
+                <option value="<?php echo escape($item[$ixcol]); ?>"
+                    <?php echo in_array($item[$ixcol], $current) ? ' selected' : ''; ?>>
+                    <?php echo escape($usertext); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to

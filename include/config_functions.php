@@ -470,7 +470,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
     <div class="Question" id="question_<?php echo escape($name); ?>" <?php if ($hidden) { ?> style="display:none;"<?php } ?>>
         <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>">
             <?php
-            echo escape($label);
+            echo strip_tags_and_attributes($label, ['a'], ['href', 'target']);
             if ($help_link !== "") {
                 render_help_link($help_link);
             }
@@ -493,14 +493,15 @@ function config_text_input($name, $label, $current, $password = false, $width = 
                 type="<?php echo $password ? 'password' : 'text'; ?>"
                 value="<?php echo escape((string) $current); ?>"
                 <?php if ($autosave) { ?>onFocusOut="AutoSaveConfigOption('<?php echo escape($name); ?>');"<?php } ?>
-                style="width:<?php echo escape($width); ?>px" />
+                style="width:<?php echo (int) $width; ?>px" />
             <?php
         } else {
             ?>
             <textarea id="<?php echo escape($name); ?>"
                 name="<?php echo escape($name); ?>"
-                style="width:<?php echo escape($width); ?>px">
-                <?php echo escape($current); ?>
+                style="width:<?php echo (int) $width; ?>px"><?php
+                echo escape($current);
+                ?>
             </textarea>
             <?php
         }
@@ -768,7 +769,7 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
 
     <div class="Question" id="question_<?php echo escape($name); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?>>
         <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>">
-            <?php echo escape($label); ?>
+            <?php echo strip_tags_and_attributes($label, ['a'], ['href', 'target']); ?>
         </label>
         <?php if ($autosave) { ?>
             <div class="AutoSaveStatus">
@@ -780,11 +781,14 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
             <?php if ($autosave) { ?>
                 onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>');"
             <?php } ?>
-            style="width:<?php echo escape($width); ?>px">
+            style="width:<?php echo (int) $width; ?>px">
             <?php foreach ($choices as $key => $choice) {
-                $value = $usekeys ? $key : $choice;
-                echo '<option value="' . $value . '"' . (($current == $value) ? ' selected' : '') . ">$choice</option>";
-            } ?>
+                $value = $usekeys ? $key : $choice; ?>
+                <option value="<?php echo escape($value); ?>"
+                    <?php echo $current == $value ? ' selected' : ''; ?>>
+                    <?php echo escape($choice); ?>
+                </option>
+            <?php } ?>
         </select>
         <div class="clearerleft"></div>
     </div>
@@ -861,7 +865,7 @@ function config_boolean_select(
     ?>
     <div class="Question" id="<?php echo escape($html_question_id); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
         <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>">
-            <?php echo escape($label); ?>
+            <?php echo strip_tags_and_attributes($label, ['a'], ['href', 'target']); ?>
         </label>
 
         <?php
@@ -879,7 +883,7 @@ function config_boolean_select(
                 <?php if($autosave) { ?>
                     onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>'<?php echo $reload_page ? ", true" : ""?>);"
                 <?php } ?>
-                style="width:<?php echo escape($width); ?>px">
+                style="width:<?php echo (int) $width; ?>px">
             <option value="1"<?php if($current == '1') { ?> selected<?php } ?>><?php echo $choices[1]; ?></option>
             <option value="0"<?php if($current == '0') { ?> selected<?php } ?>><?php echo $choices[0]; ?></option>
         </select>
@@ -1060,7 +1064,7 @@ function config_single_ftype_select($name, $label, $current, $width = 300, $rtyp
 
         <select name="<?php echo escape($name); ?>"
             id="<?php echo escape($name); ?>"
-            style="width:<?php echo escape($width); ?>px"
+            style="width:<?php echo (int) $width; ?>px"
             <?php if ($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo escape($name); ?>');"<?php } ?>>
             <option value="" <?php echo $current == "" ? ' selected' : '' ?>>
                 <?php echo escape($lang["select"]); ?>
