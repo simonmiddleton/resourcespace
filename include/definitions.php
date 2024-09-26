@@ -903,6 +903,7 @@ const DOWNLOAD_FILE_LIFETIME=14;
 
 $max_collection_thumbs=150;
 
+// Define languages available
 $languages["en"]="International English";
 $languages["en-US"]="American English";
 $languages["ar"]="العربية";
@@ -1034,7 +1035,6 @@ $extensionToFA = array(
     'rpm' => 'fa-file',
     'msi' => 'fa-file',
     'bin' => 'fa-file',
-    'iso' => 'fa-file-zipper',
     'log' => 'fa-file-alt',
     'cfg' => 'fa-file-alt',
     'ini' => 'fa-file-alt',
