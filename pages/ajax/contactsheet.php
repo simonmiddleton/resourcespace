@@ -242,7 +242,7 @@ foreach($results as $result_data)
         }
 
     // Determine the image path. If no file is found then do not continue.
-    $img_path = dirname(__DIR__, 2) . "/gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false);
+    $img_path = dirname(__DIR__, 2) . "/gfx/no_preview/default.png";
     foreach([$img_size, 'lpr', 'scr', 'pre'] as $img_preview_size)
         {
         if(

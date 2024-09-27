@@ -275,20 +275,9 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 if ($key=="thumbnail")
                     {
                     $thm_path=get_resource_path($value,true,"thm",false,"",-1,1,false);
-                    if (!file_exists($thm_path)){
-                        $resourcedata=get_resource_data($value);
-                        if(is_array($resourcedata))
-                            {
-                            $thm_path = sprintf(
-                                '%s/gfx/%s',
-                                dirname(__DIR__),
-                                get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true)
-                            );
-                            }
-                        else
-                            {
-                            $thm_path = dirname(__DIR__) . "/gfx/no_preview/resource_type/type1.png";
-                            }
+                    if (!file_exists($thm_path))
+                        {
+                        $thm_path = dirname(__DIR__) . "/gfx/no_preview/default.png";    
                         }
                     else
                         {

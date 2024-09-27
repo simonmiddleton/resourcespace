@@ -135,7 +135,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                     ->setPreviewUrl(sprintf(
                         '%s/gfx/%s',
                         $GLOBALS['baseurl'],
-                        get_nopreview_icon($row['resource_type'], $row['file_extension'], false)
+                        "no_preview/default.png"
                     ))
                     ->setPreviewWidth(128)
                     ->setPreviewHeight(128);
@@ -318,7 +318,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                 ->setPreviewUrl(sprintf(
                     '%s/gfx/%s',
                     $GLOBALS['baseurl'],
-                    get_nopreview_icon($resource_data['resource_type'], $resource_data['file_extension'], false)
+                    "no_preview/default.png"
                 ))
                 ->setPreviewWidth(128)
                 ->setPreviewHeight(128);

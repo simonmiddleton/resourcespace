@@ -30,7 +30,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
                 }
             else
                 {
-                $previewpath = "{$baseurl_short}gfx/".get_nopreview_icon($resources[$m]["resource_type"],$resources[$m]["file_extension"],"col");
+                $previewpath = "{$baseurl_short}gfx/no_preview/default.png";
                 $border = false;
                 }
             $modifiedurl=hook('searchpublicmodifyurl');

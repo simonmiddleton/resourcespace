@@ -2492,11 +2492,7 @@ if ($ref>0 && !$multiple)
             else
                 {
                 # Show the no-preview icon
-                ?>
-                <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? "")); ?>"
-                src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
-                <br />
-<?php
+                echo get_nopreview_html($resource["file_extension"]);
                 }
             if ($resource["file_extension"]!="") 
                 { ?>           

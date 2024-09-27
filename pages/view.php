@@ -708,7 +708,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     }
                                 else
                                     {
-                                    $thumb_url=$baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);
+                                    $thumb_url=$baseurl . "/gfx/no_preview/default.png";
                                     }
     
                                 include "mp3_play.php";
@@ -741,15 +741,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 else
                                     {?>
                                     <div id="previewimagewrapper">
-                                        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false); ?>"
-                                            alt=""
-                                            class="Picture NoPreview"
-                                            style="border:none;"
-                                            id="previewimage" />
-                                        <?php
-                                        hook('aftersearchimg', '', array($ref));
-                                        hook("previewextras");
-                                        ?>
+                                    <?php echo get_nopreview_html($resource["file_extension"]); ?>
                                     </div>
                                     <?php
                                     }

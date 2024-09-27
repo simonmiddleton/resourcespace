@@ -125,10 +125,7 @@ if ($errors!="")
             } 
         else 
             { 
-            ?>      
-            <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-             border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>"/>
-            <?php 
+            echo get_nopreview_html($result[$n]["file_extension"]);
             } 
         ?>
 

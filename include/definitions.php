@@ -1038,6 +1038,7 @@ $extensionToFA = array(
     'log' => 'fa-file-alt',
     'cfg' => 'fa-file-alt',
     'ini' => 'fa-file-alt',
+    'csv' => 'fa-file-csv',
     
     // Fonts
     'ttf' => 'fa-file-font',

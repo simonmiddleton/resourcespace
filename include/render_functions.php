@@ -6101,7 +6101,8 @@ function display_related_resources($context)
                                             render_resource_image($arr_related[$n], $thumbnail["url"], "collection");
                                             }
                                         else
-                                            { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                            { 
+                                            echo get_nopreview_html($arr_related[$n]["file_extension"]);
                                             } ?>
                                         </a>
                                 </td></tr>
@@ -6161,7 +6162,7 @@ function display_related_resources($context)
                                     }
                                 else
                                     { 
-                                    ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                    echo get_nopreview_html($arr_related[$n]["file_extension"]);
                                     } ?>
                                     </a>
                                 </td></tr>
@@ -6213,7 +6214,7 @@ function display_related_resources($context)
                                     }
                                 else
                                     {
-                                    ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                    echo get_nopreview_html($arr_related[$n]["file_extension"]);
                                     }
                                 ?></a>
                             </td>
@@ -6804,10 +6805,12 @@ function render_resource_view_image(array $resource, array $context)
         }
     else
         {
-        $imagepath = dirname(__DIR__) . '/gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
-        $imageurl = $GLOBALS["baseurl_short"] . 'gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
-        list($image_width, $image_height) = @getimagesize($imagepath);
-        $validimage = false;
+        ?>
+        <div id="previewimagewrapper">
+        <?php echo get_nopreview_html($resource["file_extension"]); ?>
+        </div>
+        <?php 
+        return true;
         }
 
     $previewimagelink = generateURL("{$GLOBALS["baseurl"]}/pages/preview.php", $GLOBALS["urlparams"], array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");

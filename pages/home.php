@@ -255,7 +255,7 @@ if (!hook("replaceslideshow"))
                 else
                     {
                     $defaultpreview=true;
-                    $home_col_image=$baseurl_short . "gfx/" . get_nopreview_icon($home_collection["resource_type"],$home_collection["file_extension"], false);
+                    $home_col_image=$baseurl_short . "gfx/no_preview/default.png";
                     }
                 $tile_height=180;
                 $tile_width=250;

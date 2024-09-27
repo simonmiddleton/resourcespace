@@ -234,7 +234,7 @@ include "../../../include/header.php";
                             }
                         else
                             {
-                            $img = "../../../gfx/" . get_nopreview_icon($video_data["resource_type"], $video_data["file_extension"], true);
+                            $img = "../../../gfx/no_preview/default.png";
                             }
 
                 ?>
