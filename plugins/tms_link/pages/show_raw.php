@@ -66,7 +66,7 @@ if($tmsid != 0)
                 {
                 foreach($tmsdata as $name=>$value)
                     {
-                    echo $name . " : " . $value . "<br />";
+                    echo escape($name . " : " . ($value ?? '[NULL]')) . "<br />";
                     }
                 }
             else

@@ -58,11 +58,6 @@ input[type="text"], input[type="password"], input[type="url"],input[type="email"
     margin: 3px 0;
 }
 
-input[type="text"], input[type="password"], input[type="number"], input[type="email"], textarea, select, .sp-replacer {
-    border: 1px solid rgba(0,0,0,0.25);
-    box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.1);
- }
-
 input[type="submit"], input[type="button"], button {
     padding: 6px 14px;
     vertical-align: middle;
@@ -153,7 +148,6 @@ select, .sp-replacer {
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMiIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDIyIDEzIj4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgLTQpIj4KICAgIDxyZWN0IHdpZHRoPSIyMiIgaGVpZ2h0PSIxMSIgeT0iMiIvPgogICAgPHBvbHlsaW5lIHN0cm9rZT0iIzJFOTlFNiIgc3Ryb2tlLXdpZHRoPSIyIiBwb2ludHM9IjkuNTk2IDEuNDc1IDkuNTk2IDguNTk2IDIuNDc1IDguNTk2IiB0cmFuc2Zvcm09InJvdGF0ZSg0NSA2LjAzNiA1LjAzNikiLz4KICA8L2c+Cjwvc3ZnPgo=);
     background-repeat: no-repeat;
     background-position: right 65%;
-    box-shadow: 0 1px 3px 1px rgba(0,0,0,0.1);
     position: relative;
     z-index: 0;
     padding-right: 30px;
@@ -171,12 +165,6 @@ select:before {
     right: 2rem;
     z-index: 1;
 }
-
-/* Hide arrow on selects in IE */
-select::-ms-expand
-    {
-    display: none;
-    }
 
 #clearbutton {margin: 10px 5px 0 0;width: 122px; font-weight: 600;}
 #searchbutton{ width: 122px;margin: 10px 0 0 0; font-weight: 600;}
@@ -212,6 +200,11 @@ select::-ms-expand
 #custom_access {padding-left: 300px;}
 #custom_access .radiooptions{margin: 5px;}
 
+/* Hide arrow on selects in IE */
+select::-ms-expand
+    {
+    display: none;
+    }
 /*General layout*/
 #Header {
     padding: 5px 25px 5px 25px;
@@ -236,11 +229,7 @@ select::-ms-expand
     overflow:auto;
     background-repeat: no-repeat;
     background-position: center top;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
-    -webkit-transition: background-image 1s linear;
     transition: background-image 1s linear;
 }
 #HeaderNav1, #HeaderNav2 {
@@ -740,7 +729,7 @@ table.TableArray:not(:first-of-type) {margin-top: 5px;}
 .SearchBreadcrumbs + .RecordHeader .SearchTitle {margin-top:0;}
 
 .CategoryBox {overflow:auto;width:414px;height:80px;padding:2px;font-size:1em;}
-.MiniCategoryBox {overflow:auto;width:240px;height:80px;padding:4px;font-size:1em;border: 1px solid rgba(0,0,0,0.25)}
+.MiniCategoryBox {overflow:auto;width:240px;height:80px;padding:4px;font-size:1em;}
  
 .CategoryTree {overflow:auto;width:420px;height:400px;display:none;}
 .backline {
@@ -967,7 +956,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 #CommentsPanelHeaderRow { display: table-row;}
 #CommentsPanelHeaderRowPolicyLink { margin-top:-10px;text-align: right; padding-right: 5px; display: table-cell;}
 #CommentsContainer { width: 100%;}
-.CommentEntry { margin-top: 10px; width: 600px; border: 1px solid lightgray; border-radius: 4px; padding: 8px; background: white;}
+.CommentEntry { margin-top: 10px; width: 600px; border-radius: 4px; padding: 8px;}
 .CommentEntryInfoContainer {width: 100%;}
 .CommentEntryInfo { width: 100%;}
 .CommentEntryInfoCommenterName { font-weight: bolder; }
@@ -1182,7 +1171,6 @@ input.contactadminbutton  {
 }
 a.HomePanel:hover {
     border-radius:8px;
-    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3);
 }
 
 .HomePanelDynamicDash p.tile_corner_box {
@@ -1546,7 +1534,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 
 .HomePanel.DashTile .HomePanelIN img:not(img:only-of-type),
-.FeaturedSimpleTileImage img.TileGroupImageBase { position: absolute; top: 10px; height: 100%; box-shadow: 0 0 25px #000; }
+.FeaturedSimpleTileImage img.TileGroupImageBase { position: absolute; top: 10px; height: 100%; }
 
 .FeaturedSimpleTile.FullWidth { height: 40px; }
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleLink { width: 85%; }
@@ -1570,7 +1558,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 #login_box {
     padding: 20px 25px 5px 25px;
     border-radius: 15px;
-    box-shadow: 0 1px 10px 1px rgba(0,0,0,0.25);
 }
 
 #login_box h1 {
@@ -1744,7 +1731,6 @@ form.FormFilter button.ClearButton {
     }
 
 .ImageStrip:hover {
-    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
     transform: scale(1.15);
 }
     
@@ -1947,7 +1933,6 @@ a.Enabled, a:visited.Enabled {
 }
 
 #preview, #wmpreview {
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     max-height: 250px;
     max-width: 240px;
     margin-top: 10px;
@@ -2054,7 +2039,6 @@ select.MultiSelect:before {
 .BrowseBarRoot {
     text-transform: uppercase;
     font-weight: bold;
-    background: rgba(255, 255, 255, 0.1);
     padding-top: 2px;
     padding-bottom: 2px;
     margin-top: 10px;
@@ -2357,12 +2341,9 @@ input[type="text"]#iconpicker-input {
     width: 418px;
     height: 285px;
     left: 318px;
-    background: white;
-    border: 1px solid rgba(0,0,0,0.25);
     border-radius: 6px;
     position: absolute;
     display: none;
-    box-shadow: 0px 3px 5px 1px #0000004a;
     margin-top: 5px;
 }
 
@@ -2455,18 +2436,9 @@ input[type="text"]#iconpicker-input {
 .jstree-default-dark .jstree-wholerow {
     border-radius: 5px;
 }
-.jstree-default-dark .jstree-wholerow-hovered {
-    background: gray;
-}
-.jstree-default-dark .jstree-wholerow-clicked {
-    background: #737373;
-}
 
 
 /* Search Bar Tab styling */
-#SearchBarTabsContainer {
-    background: rgb(0 0 0 / 30%);
-}
 #SearchBarTabsContainer a {
     display: inline-block;
 }

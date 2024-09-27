@@ -397,6 +397,7 @@ input:checked + .customFieldLabel, .keywordselected {
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.35);border-radius: 6px;}
 ::-webkit-scrollbar-thumb:active{background:rgba(0,0,0,0.4);border-radius: 6px;}
 
+
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2
     {
     background-color: rgba(0,0,0,0.4);
@@ -660,3 +661,64 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 .ToolsOptionLink:link, .ToolsOptionLink:visited {
     color: #FFF;
 }
+
+input[type="text"], input[type="password"], input[type="number"], input[type="email"], textarea, select, .sp-replacer {
+    border: 1px solid rgba(0,0,0,0.25);
+    box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.1);
+ }
+
+ select, .sp-replacer {
+    box-shadow: 0 1px 3px 1px rgba(0,0,0,0.1);
+}
+
+a.HomePanel:hover {
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3);
+}
+
+.FeaturedSimpleTileImage img.TileGroupImageBase {box-shadow: 0 0 25px #000; }
+
+#login_box {
+    box-shadow: 0 1px 10px 1px rgba(0,0,0,0.25);
+}
+
+.ImageStrip:hover {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+
+#preview, #wmpreview {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+#iconpicker-container {
+    width: 418px;
+    height: 285px;
+    left: 318px;
+    background: white;
+    border-radius: 6px;
+    position: absolute;
+    display: none;
+    box-shadow: 0px 3px 5px 1px #0000004a;
+    margin-top: 5px;
+}
+.jstree-default-dark .jstree-wholerow-hovered {
+    background: gray;
+}
+.jstree-default-dark .jstree-wholerow-clicked {
+    background: #737373;
+}
+.CommentEntry { border: 1px solid lightgray; background: white;}
+
+.BrowseBarRoot {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#iconpicker-container {
+    background: white;
+    border: 1px solid rgba(0,0,0,0.25);
+}
+
+#SearchBarTabsContainer {
+    background: rgb(0 0 0 / 30%);
+}
+
+.MiniCategoryBox {border: 1px solid rgba(0,0,0,0.25);}
