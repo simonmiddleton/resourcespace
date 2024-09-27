@@ -98,6 +98,7 @@
     right: 648px;
     top: 248px;
     width: 140px;
+    z-index: 1;
 }
 
 .context-menu-row {
