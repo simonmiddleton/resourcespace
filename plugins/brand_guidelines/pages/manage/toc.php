@@ -15,7 +15,7 @@ if (!acl_can_edit_brand_guidelines()) {
 $ref = (int) getval('ref', 0, false, 'is_positive_int_loose'); 
 $edit = false;
 $delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
-$reorder = getval('reorder', '', false, fn($v) => is_string($v) && in_array($v, ['up', 'down']));
+$reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
 $save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
 $pages_db = get_all_pages();
 $all_sections = extract_node_options(array_filter($pages_db, __NAMESPACE__ . '\is_section'), true, true);

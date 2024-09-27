@@ -3489,6 +3489,10 @@ function render_custom_fields(array $cfs)
 
                 case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
                 default:
+                    // Allow plugins to render (their own) custom field types
+                    if (hook('render_custom_fields_default_case_override', '', [$field]) !== false) {
+                        break;
+                    }
                     ?>
                     <input type=text
                            id="<?php echo $field_id; ?>"

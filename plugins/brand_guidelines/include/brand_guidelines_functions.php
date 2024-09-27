@@ -47,6 +47,12 @@ function compute_item_order(array $item, string $direction): array
     return $item;
 }
 
+/** Input validation for the re-order capability */
+function reorder_input_validator($value): bool
+{
+    return is_string($value) && in_array($value, ['up', 'down']);
+}
+
 function render_individual_menu() {
     if (!acl_can_edit_brand_guidelines()) {
         return;
@@ -76,7 +82,7 @@ function render_individual_menu() {
 function render_content_menu() {
     ?>
     <div id="menu-content" class="context-menu-container" style="width: 180px; display:none;">
-        <button class="context-menu-row">
+        <button class="context-menu-row" onclick="return new_content_item(this, 'text');">
             <i class="fa-solid fa-fw fa-align-left"></i>
             <span><?php echo escape($GLOBALS['lang']['text']); ?></span>
         </button>

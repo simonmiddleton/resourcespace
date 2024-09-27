@@ -223,7 +223,9 @@ render_content_menu();
         console.debug('showOptionsMenu(e = %o, target = %o)', e, target);
         hideOptionsMenu();
         let btn_el = jQuery(e);
+        let target_item_type = 'content';
 
+        // Determine the position offset for the menu so it's within the proximity of the calling "item" element 
         if (target == 'menu-individual') {
             let nav_ctx = btn_el.parents('.guidelines-sidebar').length !== 0;
             let is_responsive = window.matchMedia("(max-width: 600px)").matches;
@@ -232,6 +234,7 @@ render_content_menu();
                 ? (is_responsive ? -175 : 10)
                 : (is_responsive ? -165 : 30);
             off_top = nav_ctx ? -10 : 0;
+            let target_item_type = nav_ctx ? 'nav' : 'content';
         } else {
             off_left = -16;
             off_top = 40;
@@ -244,10 +247,17 @@ render_content_menu();
                 top: btn_el.position().top + off_top
             })
             .data(
+                'item',
+                {
+                    ref: btn_el.data('item-ref'),
+                    target_item_type: target_item_type,
+                }
+            )
+            .data(
                 'item-ref',
                 btn_el.data('item-ref') /* todo: this will most likely become an Item object so we can distinguish between item types (nav/content) */
-            );
-        jQuery("#" + target).slideDown(150);
+            )
+            .slideDown(150);
     }
 
     function hideOptionsMenu() {
@@ -360,6 +370,16 @@ render_content_menu();
         CentralSpacePost(temp_form, true, false, false);
 
         hideOptionsMenu();
+        return false;
+    }
+
+    function new_content_item(e, type) {
+        console.debug('new_content_item(e = %o, type = %o)', e, type);
+        hideOptionsMenu();
+        let btn_el = jQuery(e);
+        let item = jQuery(e).parent('#menu-content').data('item');
+        console.debug(item);
+        
         return false;
     }
 </script>

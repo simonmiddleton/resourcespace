@@ -11,13 +11,17 @@ function HookBrand_guidelinesAllInitialise()
     include_once "{$plugin_root}/include/database_functions.php";
     
     /** Types of content you can add to brand guideline pages */
-    define('GUIDELINE_CONTENT_TYPES', [
-        0 => 'text',
-        1 => 'resource',
-        2 => 'colour',
+    define('BRAND_GUIDELINES_CONTENT_TYPES', [
+        'text' => 0,
+        'resource' => 1,
+        'colour' => 2,
     ]);
     define('BRAND_GUIDELINES_DB_COLS_PAGES', columns_in('brand_guidelines_pages', null, 'brand_guidelines'));
     define('BRAND_GUIDELINES_DB_COLS_CONTENT', columns_in('brand_guidelines_content', null, 'brand_guidelines'));
+    
+    // Custom field types - see HookBrand_guidelinesContentRender_custom_fields_default_case_override()
+    define('FIELD_TYPE_NUMERIC', 101);
+    define('FIELD_TYPE_TEXT_RICH', 102);
     }
 
 function HookBrand_guidelinesAllHandleuserref() {

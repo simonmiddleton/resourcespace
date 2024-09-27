@@ -1171,11 +1171,16 @@ function process_custom_fields_submission(array $fields, $submitted, array $ctx)
             $field["value"] = implode(", ", $field["selected_options"]);
             }
 
-        if($submitted && $field["required"] && $field["value"] == "")
-            {
-            $field["error"] = str_replace("%field", i18n_get_translated($field["title"]), $lang["researchrequest_custom_field_required"]);
-            return $field;
-            }
+        if ($submitted && ($error = hook('process_custom_fields_submission_validator', '', [$field]))) {
+            // Allow plugins to validate (their own) custom field types
+            $field['error'] = $error;
+        } elseif ($submitted && $field['required'] && $field['value'] == '') {
+            $field['error'] = str_replace(
+                '%field',
+                i18n_get_translated($field['title']),
+                $lang['researchrequest_custom_field_required']
+            );
+        }
 
         return $field;
         }, gen_custom_fields_html_props(get_valid_custom_fields($fields), $ctx));
