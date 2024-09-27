@@ -134,7 +134,10 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
             }
 
         $sql = report_process_query_placeholders($report['query'], $report_placeholders);
+        
+        db_set_connection_mode("read_only");
         $results = ps_query($sql,$sql_parameters);
+        db_clear_connection_mode();
         }
     
     $resultcount = count($results);
