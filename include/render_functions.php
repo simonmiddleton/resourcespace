@@ -4227,10 +4227,10 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 {
                 if(in_array($treenode["ref"],$resource_nodes)) 
                     {
-                    $treenodenames[] = $treenode["translated_path"];
+                    $treenodenames[] = ["ref" => $treenode["ref"], "name" => $treenode["translated_path"]];
                     }
                 }
-            $value = implode(", ", $treenodenames);
+            $value = render_fixedlist_as_pills($treenodenames);
             }
     
     if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
@@ -4271,16 +4271,16 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         }
     } 
         
-        // Don't display the comma for radio buttons:
-        if($field['type'] == FIELD_TYPE_RADIO_BUTTONS)
-            {
-            $value = str_replace(',', '', $value);
-            }
+        // Handle the rest of the fixed list fields, category trees have their own section
+        if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
+            $resource_nodes = get_resource_nodes($ref, $field["ref"], true, false);
+            $value = render_fixedlist_as_pills($resource_nodes);
+        }
 
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # ckeditor that have not yet been edited.
         if(
-            $field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR
+            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && !in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value == strip_tags($value))
             )
             {
@@ -4389,6 +4389,27 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             }
         }
     }
+
+/*
+* Helper function for display_field to genereate html for fixed list fields, rendering them as a series of pills with search links
+*
+* @param array $node Array of nodes to display
+*/
+function render_fixedlist_as_pills($nodes):string 
+{ 
+    global $baseurl;
+    $display_html = "";
+    if (count($nodes) > 0) {
+        foreach ($nodes as $nodedata) {
+            $search_url = generateURL($baseurl . '/pages/search.php', ['search' => NODE_TOKEN_PREFIX . $nodedata['ref']]);
+            $display_html .= "<a href=\"{$search_url}\" onclick=\"CentralSpaceLoad(this)\"</a>";
+            $display_html .= "<div class=\"categorytreenode\">" . escape($nodedata["name"]) . "</div>";
+            $display_html .= "</a>";
+        }
+        return "<div>" . $display_html . "</div>";
+    }
+    return '';
+}
 
 /*
 * Render the resource lock/unlock link for resource tools

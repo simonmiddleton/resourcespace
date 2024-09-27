@@ -1832,6 +1832,16 @@ a.Enabled, a:visited.Enabled {
     padding-bottom: 8px;
 }
 
+.categorytreenode {
+    background-color: #2e99e6;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 6px;
+    line-height: 20px;
+    display: inline-block;
+    margin: 2px
+}
+
 .ReportSheet {padding:10px;}
 .ReportSummary td {padding:10px;}
 .ReportMetric {font-size:200%;padding-left:5px;}
