@@ -18,7 +18,13 @@ function HookEmbedvideoViewAfterresourceactions()
 
     $key = generate_resource_access_key($ref, 0, 0, "", $lang["embedvideo_share"]);
 
-    if ($video_preview_original || !file_exists(get_resource_path($ref, true, "pre", false, $ffmpeg_preview_extension))) {
+    if (
+        (
+            $video_preview_original
+            && strtolower($resource['file_extension']) == "mp4"
+        ) 
+        || !file_exists(get_resource_path($ref, true, "pre", false, $ffmpeg_preview_extension))
+    ) {
         $video_path = get_resource_path($ref, false, "", false, $resource['file_extension'], -1, 1, false, "", -1, false);
     } else {
         $video_path = get_resource_path($ref, false, "pre", false, $ffmpeg_preview_extension, -1, 1, false, "", -1, false);
@@ -47,10 +53,11 @@ function HookEmbedvideoViewAfterresourceactions()
         <!-- START VIDEOJS -->
         <video id="introvideo' .  (int) $ref . '"
             controls
+            data-setup="{}"
             preload="' . escape((string) $preload)  . '"
             width="' . escape($ffmpeg_preview_max_width) . '" 
             height="' . escape($ffmpeg_preview_max_height) . '" 
-            class="Picture"
+            class="video-js vjs-default-skin vjs-big-play-centered"
             poster="' . escape($thumb) . '">
             <source src="' . escape($video_path) . '" type="video/' . escape($ffmpeg_preview_extension) . '" >
             <p class="vjs-no-js">

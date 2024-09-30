@@ -1106,7 +1106,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $headers .= "Content-Type: text/html; charset=\"UTF-8\"" . $eol;
         // Add CSS links so email can use the styles
         $messageprefix = '<link href="' . $baseurl . '/css/global.css" rel="stylesheet" type="text/css" media="screen,projection,print" />';
-        $messageprefix .= '<link href="' . $baseurl . '/css/colour.css" rel="stylesheet" type="text/css" media="screen,projection,print" />';
+        $messageprefix .= '<link href="' . $baseurl . '/css/light.css" rel="stylesheet" type="text/css" media="screen,projection,print" />';
         $messageprefix .= '<link href="' . $baseurl . '/css/css_override.php" rel="stylesheet" type="text/css" media="screen,projection,print" />';
         $message = $messageprefix . $message;
         }

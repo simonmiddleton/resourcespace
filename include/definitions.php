@@ -903,6 +903,7 @@ const DOWNLOAD_FILE_LIFETIME=14;
 
 $max_collection_thumbs=150;
 
+// Define languages available
 $languages["en"]="International English";
 $languages["en-US"]="American English";
 $languages["ar"]="العربية";
@@ -936,3 +937,117 @@ $languages["zh-CN"]="简体字"; # Simplified Chinese
 
 # English stop words
 $noadd=array("", "a","the","this","then","another","is","with","in","and","where","how","on","of","to", "from", "at", "for", "-", "by", "be");
+
+// FontAwesome classes for the icon to display when there's no preview image.
+$extensionToFA = array(
+    // Images
+    'png' => 'fa-file-image',
+    'jpg' => 'fa-file-image',
+    'jpeg' => 'fa-file-image',
+    'gif' => 'fa-file-image',
+    'svg' => 'fa-file-image',
+    'svgz' => 'fa-file-image',
+    'tif' => 'fa-file-image',
+    'tiff' => 'fa-file-image',
+    'bmp' => 'fa-file-image',
+    'ico' => 'fa-file-image',
+    'psd' => 'fa-file-image',
+    'raw' => 'fa-file-image',
+    'dng' => 'fa-file-image',
+    'cr2' => 'fa-file-image',
+    'nef' => 'fa-file-image',
+    'orf' => 'fa-file-image',
+    'rw2' => 'fa-file-image',
+    
+    // Video
+    'mp4' => 'fa-file-video',
+    'mov' => 'fa-file-video',
+    'avi' => 'fa-file-video',
+    'mkv' => 'fa-file-video',
+    'flv' => 'fa-file-video',
+    'wmv' => 'fa-file-video',
+    '3gp' => 'fa-file-video',
+    'webm' => 'fa-file-video',
+    'vob' => 'fa-file-video',
+    'm4v' => 'fa-file-video',
+
+    // Audio
+    'mp3' => 'fa-file-audio',
+    'wav' => 'fa-file-audio',
+    'aac' => 'fa-file-audio',
+    'flac' => 'fa-file-audio',
+    'm4a' => 'fa-file-audio',
+    'wma' => 'fa-file-audio',
+    'ogg' => 'fa-file-audio',
+    'aif' => 'fa-file-audio',
+    'aiff' => 'fa-file-audio',
+    
+    // Documents
+    'pdf' => 'fa-file-pdf',
+    'doc' => 'fa-file-word',
+    'docx' => 'fa-file-word',
+    'odt' => 'fa-file-word',
+    'xls' => 'fa-file-excel',
+    'xlsx' => 'fa-file-excel',
+    'ods' => 'fa-file-excel',
+    'ppt' => 'fa-file-powerpoint',
+    'pptx' => 'fa-file-powerpoint',
+    'odp' => 'fa-file-powerpoint',
+    'rtf' => 'fa-file-alt',
+    'txt' => 'fa-file-alt',
+    'md' => 'fa-file-alt',
+    
+    // Code
+    'php' => 'fa-file-code',
+    'html' => 'fa-file-code',
+    'htm' => 'fa-file-code',
+    'css' => 'fa-file-code',
+    'js' => 'fa-file-code',
+    'json' => 'fa-file-code',
+    'xml' => 'fa-file-code',
+    'sql' => 'fa-file-code',
+    'sh' => 'fa-file-code',
+    'py' => 'fa-file-code',
+    'java' => 'fa-file-code',
+    'c' => 'fa-file-code',
+    'cpp' => 'fa-file-code',
+    'rb' => 'fa-file-code',
+    'go' => 'fa-file-code',
+    
+    // Compressed
+    'zip' => 'fa-file-zipper',
+    'rar' => 'fa-file-zipper',
+    '7z' => 'fa-file-zipper',
+    'tar' => 'fa-file-zipper',
+    'gz' => 'fa-file-zipper',
+    'bz2' => 'fa-file-zipper',
+    'xz' => 'fa-file-zipper',
+    'iso' => 'fa-file-zipper',
+    
+    // Miscellaneous
+    'exe' => 'fa-file',
+    'dll' => 'fa-file',
+    'bat' => 'fa-file',
+    'dmg' => 'fa-file',
+    'app' => 'fa-file',
+    'apk' => 'fa-file',
+    'deb' => 'fa-file',
+    'rpm' => 'fa-file',
+    'msi' => 'fa-file',
+    'bin' => 'fa-file',
+    'log' => 'fa-file-alt',
+    'cfg' => 'fa-file-alt',
+    'ini' => 'fa-file-alt',
+    'csv' => 'fa-file-csv',
+    
+    // Fonts
+    'ttf' => 'fa-file-font',
+    'otf' => 'fa-file-font',
+    'woff' => 'fa-file-font',
+    'woff2' => 'fa-file-font',
+    
+    // Default to 'file' for unrecognized extensions
+    'default' => 'fa-file',
+);
+
+

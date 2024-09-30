@@ -49,14 +49,12 @@ if ($enable_related_resources)
                             <?php if ((int) $relatedresource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                                 {
                                 $thm_url = get_resource_path($relatedresource["ref"],false,"col",false,$relatedresource["preview_extension"],-1,1,$use_watermark,$relatedresource["file_modified"]);
+                                render_resource_image($relatedresource, $thm_url, "collection");
                                 }
                             else
                                 {
-                                $thm_url = $baseurl_short . "gfx/" . get_nopreview_icon($relatedresource["resource_type"],$relatedresource["file_extension"],false);
-                                $relatedresource["thumb_height"] = 75;
-                                $relatedresource["thumb_width"] = 75;
+                                echo get_nopreview_html($relatedresource["file_extension"]);
                                 }
-                            render_resource_image($relatedresource, $thm_url, "collection");
                             ?>
                             </a>
                             

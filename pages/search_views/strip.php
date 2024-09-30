@@ -28,8 +28,7 @@ $thumbnail = get_resource_preview($result[$n],["pre","thm"],$access,$watermark);
     else { ?><img class="ImageStrip" 
                 border=0
                 alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                src="<?php echo $baseurl_short; ?>gfx/<?php echo get_nopreview_icon($result[$n]['resource_type'], $result[$n]['file_extension'], false); ?>" 
-
+                src="<?php echo $baseurl_short; ?>gfx/no_preview/default.png"
             /><?php 
     } ?>
 </a> 

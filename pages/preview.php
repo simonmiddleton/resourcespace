@@ -147,7 +147,7 @@ if($imagepre)
     }
 else
     {
-    $url = $GLOBALS["baseurl_short"] . 'gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
+    $url = $GLOBALS["baseurl_short"] . 'gfx/no_preview/default.png';
     }
 
 // Here we check for the presence or otherwise of the relevant multi-page preview files (for PDFs and potentially others) 

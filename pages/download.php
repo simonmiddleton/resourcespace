@@ -290,7 +290,7 @@ else
     if(!file_exists($path) && $noattach)
         {
         # Return icon for file (for previews)
-        $path = '../gfx/' . get_nopreview_icon($resource_data['resource_type'], $ext, 'thm');
+        $path = '../gfx/no_preview/default.png';
         }
 
     if($noattach)

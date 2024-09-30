@@ -971,12 +971,7 @@ else
                                 alt="<?php echo escape(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
                                 <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?>
                             />
-                        <?php } else { ?>
-                            <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                                border=0
-                                src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>"
-                            />
-                        <?php }
+                        <?php } else { echo get_nopreview_html($result[$n]["file_extension"]); }
                         hook("aftersearchimg","",array($result[$n]))?>
                         </a></td>
                     </tr></table><?php

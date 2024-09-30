@@ -42,10 +42,16 @@ foreach ($Iterator as $i)
 
 $counter = 0;
 # Test each page.
+$shown_percent = -1;
 foreach ($pages as $page)
     {
-    echo "\e[4D" . str_pad(round($counter*100/count($pages)),"3"," ",STR_PAD_LEFT) . "%";
-    ob_flush();
+    $new_percent = round($counter*100/count($pages));
+    if ($new_percent!=$shown_percent)
+	{
+	echo "\e[4D" . str_pad($new_percent,"3"," ",STR_PAD_LEFT) . "%";
+        ob_flush();
+	$shown_percent=$new_percent;
+        }
     if (!$TestPage($page)) {echo $page;return false;}
     $counter++;
     }

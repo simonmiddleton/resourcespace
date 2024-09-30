@@ -130,7 +130,7 @@ if (
     && !in_array($resource["archive"],$file_integrity_ignore_states)
 ) {
     // Validate resource file
-    $missing_original = count(array_intersect(check_resources([$resource]),[$ref])) === 1;
+    $missing_original = count(array_intersect(check_resources([$resource],true),[$ref])) === 1;
 }
 
 // Set $use_mp3_player switch if appropriate
@@ -226,7 +226,7 @@ if (getval("refreshcollectionframe","")!="")
 
 # Update the hitcounts for the search nodes (if search specified)
 # (important we fetch directly from $_GET and not from a cookie
-$usearch= isset($_GET["search"]) && !is_array($_GET["search"]) ? $_GET["search"] : "";
+$usearch= isset($_GET['search']) && is_string_loose($_GET['search']) ? $_GET["search"] : "";
 # Update resource/node hit count
 if (strpos($usearch,NODE_TOKEN_PREFIX) !== false)
     {
@@ -708,7 +708,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     }
                                 else
                                     {
-                                    $thumb_url=$baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);
+                                    $thumb_url=$baseurl . "/gfx/no_preview/default.png";
                                     }
     
                                 include "mp3_play.php";
@@ -741,15 +741,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 else
                                     {?>
                                     <div id="previewimagewrapper">
-                                        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false); ?>"
-                                            alt=""
-                                            class="Picture NoPreview"
-                                            style="border:none;"
-                                            id="previewimage" />
-                                        <?php
-                                        hook('aftersearchimg', '', array($ref));
-                                        hook("previewextras");
-                                        ?>
+                                    <?php echo get_nopreview_html($resource["file_extension"]); ?>
                                     </div>
                                     <?php
                                     }
@@ -1678,87 +1670,6 @@ if ($show_related_themes==true )
             </div>
         </div><?php
         }
-    } 
-
-if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access))
-    {
-    ?>
-    <!--Panel for search for similar resources-->
-    <div class="RecordBox">
-    <div class="RecordPanel"> 
-    <div id="SearchSimilar">
-
-    <div class="RecordResource">
-    <div class="Title"><?php echo escape($lang["searchforsimilarresources"]); ?></div>
-
-    <script type="text/javascript">
-    function <?php echo $context ?>UpdateFSResultCount()
-        {
-        // set the target of the form to be the result count iframe and submit
-
-        // some pages are erroneously calling this function because it exists in unexpected
-        // places due to dynamic page loading. So only do it if it seems likely to work.
-        if(jQuery('#<?php echo $context ?>findsimilar').length > 0)
-            {
-            document.getElementById("<?php echo $context ?>findsimilar").target="<?php echo $context ?>resultcount";
-            document.getElementById("<?php echo $context ?>countonly").value="yes";
-            document.getElementById("<?php echo $context ?>findsimilar").submit();
-            document.getElementById("<?php echo $context ?>findsimilar").target="";
-            document.getElementById("<?php echo $context ?>countonly").value="";
-            }
-        }
-    </script>
-
-    <form method="post" action="<?php echo $baseurl ?>/pages/find_similar.php?context=<?php echo $context ?>" id="<?php echo $context ?>findsimilar">
-    <input type="hidden" name="resource_type" value="<?php echo $resource["resource_type"]?>">
-    <input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
-    <?php
-    generateFormToken("{$context}findsimilar");
-
-    $keywords=array_values(array_unique(get_resource_top_keywords($ref,50)));
-    if (count($keywords)!=0)
-        {
-        for ($n=0;$n<count($keywords);$n++)
-            {
-            ?>
-            <div class="SearchSimilar">
-                <input 
-                    type=checkbox 
-                    id="<?php echo escape($context . "similar_search_" . $keywords[$n] . "_" . $n); ?>" 
-                    name="keyword_<?php echo escape($keywords[$n]); ?>" 
-                    value="yes"
-                    onClick="<?php echo escape($context) ?>UpdateFSResultCount();">
-                    <label 
-                        class="customFieldLabel" 
-                        for="<?php echo escape($context . "similar_search_" . $keywords[$n] . "_" . $n); ?>">
-                        <?php echo escape(i18n_get_translated($keywords[$n])); ?>
-                    </label>
-                </div>
-            <?php
-            }        
-        ?>
-        <div class="clearerleft"> </div>
-        <br />
-        <input name="search" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
-        <iframe src="<?php echo $baseurl ?>/pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
-        </form>
-        <?php
-        }
-
-    else
-        {
-        echo escape($lang["nosimilarresources"]); 
-        }
-        ?>
-
-    <div class="clearerleft"> </div>
-    </div>
-    </div>
-    </div>
-
-    </div>
-    <?php 
-    hook("afterviewfindsimilar");
     }
 
 if($annotate_enabled)
@@ -1856,12 +1767,13 @@ function updateDownloadLink(ns, selected_size, picker)
             {
                 SAFE_FOR_JQUERY: true,
                 ALLOWED_TAGS: ['a'],
-                ALLOWED_ATTR: ['href', 'onclick'],
+                ALLOWED_ATTR: ['href', 'onclick','data-api-native-csrf'],
             }
         )
     );
     download_btn.prop('href', link.attr('href'));
     download_btn.attr('onclick', link.attr('onclick'));
+    download_btn.attr('data-api-native-csrf', link.attr('data-api-native-csrf'));
     download_btn.text(link.text().trim());
     <?php hook('append_to_updateDownloadLink_js', '', [$resource]); ?>
 }

@@ -370,8 +370,7 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
             }
         else
             {
-            $preview_path  = "{$baseurl_short}gfx/";
-            $preview_path .= get_nopreview_icon($preview_resource['resource_type'], $preview_resource['file_extension'], false);
+            $preview_path  = "{$baseurl_short}gfx/no_preview/default.png";
             $no_preview    = true;
             }
         ?>
@@ -481,8 +480,7 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
                 }
             else
                 {
-                $preview_path  = "{$baseurl_short}gfx/";
-                $preview_path .= get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
+                $preview_path  = "{$baseurl_short}gfx/no_preview/default.png";
                 $shadow        = false;
                 }
     

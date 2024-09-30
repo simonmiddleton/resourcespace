@@ -913,19 +913,19 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     else
                         {
                         // Range has been passed via normal inputs, construct the value from the date/time dropdowns
-                        $date_parts=array("_start_","_end_");
+                        $date_parts=array("_start","_end");
 
                         foreach($date_parts as $date_part)
                             {
-                            $val = getval("field_" . $fields[$n]["ref"] . $date_part . "year","");
+                            $val = getval("field_" . $fields[$n]["ref"] . $date_part . "-y","");
                             if (intval($val)<=0)
                                 {
                                 $val="";
                                 }
-                            elseif (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="")
+                            elseif (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "-m",""))!="")
                                 {
                                 $val.="-" . $field;
-                                if (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="")
+                                if (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "-d",""))!="")
                                     {
                                     $val.="-" . $field;
                                     }
@@ -1851,19 +1851,19 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             else
                 {
                 // Range has been passed via normal inputs, construct the value from the date/time dropdowns
-                $date_parts=array("_start_","_end_");
+                $date_parts=array("_start","_end");
 
                 foreach($date_parts as $date_part)
                     {
-                    $val = $postvals["field_" . $fields[$n]["ref"] . $date_part . "year"] ?? "";
+                    $val = $postvals["field_" . $fields[$n]["ref"] . $date_part . "-y"] ?? "";
                     if ((int) $val <= 0)
                         {
                         $val="";
                         }
-                    elseif (($field = ($postvals["field_" . $fields[$n]["ref"] . $date_part . "month"] ?? "")) != "")
+                    elseif (($field = ($postvals["field_" . $fields[$n]["ref"] . $date_part . "-m"] ?? "")) != "")
                         {
                         $val.="-" . $field;
-                        if (($field=($postvals["field_" . $fields[$n]["ref"] . $date_part . "day"] ?? "")) != "")
+                        if (($field=($postvals["field_" . $fields[$n]["ref"] . $date_part . "-d"] ?? "")) != "")
                             {
                             $val.="-" . $field;
                             }
@@ -3118,7 +3118,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
         $templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",-1,1,($watermark)?(($access==1)?true:false):false);
         if (!file_exists($templatevars['thumbnail'])){
             $resourcedata=get_resource_data($resource);
-            $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
+            $templatevars['thumbnail']="../gfx/no_preview/default.png";
         }
         $templatevars['url']=$baseurl . "/?r=" . $resource . $key;
         $templatevars['fromusername']=$fromusername;
@@ -3889,44 +3889,6 @@ function get_all_resource_types()
                 rt.ref",
         [],
         "schema");
-    }
-
-
-function get_resource_top_keywords($resource,$count)
-    {
-    # Return the top $count keywords (by hitcount) used by $resource.
-    # This section is for the 'Find Similar' search.
-    # Currently the date fields are not used for this feature
-
-    $return=array();
-
-    $keywords = ps_query("SELECT DISTINCT n.ref, n.name, n.resource_type_field FROM node n INNER JOIN resource_node rn ON n.ref=rn.node WHERE (rn.resource = ? AND n.resource_type_field IN (SELECT rtf.ref FROM resource_type_field rtf WHERE use_for_similar=1) ) ORDER BY new_hit_count DESC LIMIT $count",["i",$resource]);
-
-    foreach ($keywords as $keyword )
-        {
-        # Apply permissions and strip out any results the user does not have access to.
-        if (metadata_field_view_access($keyword["resource_type_field"]) && !checkperm("T" . $resource))
-            {
-            $r =  $keyword["name"] ;
-            }
-
-        if(isset($r) && trim($r) != '')
-            {
-            if (substr($r,0,1)==","){$r=substr($r,1);}
-            $s=split_keywords(i18n_get_translated($r));
-            # Splitting keywords can result in break words being included in these results
-            # These should be removed here otherwise they will show as keywords themselves which is incorrect
-            global $noadd;
-            foreach ($s as $a)
-                {
-                if(!empty($a) && !in_array($a,$noadd))
-                    {
-                    $return[]=$a;
-                    }
-                }
-            }
-        }
-    return $return;
     }
 
 function clear_resource_data($resource)
@@ -8118,52 +8080,17 @@ function get_OR_fields()
     }
 
 /**
-* Returns the path (relative to the gfx folder) of a suitable folder to represent
-* a resource with the given resource type or extension
-* Extension matches are tried first, followed by resource type matches
-* Finally, if there are no matches then the 'type1' image will be used.
-* set contactsheet to true to cd up one more level.
+* Returns the HTML necessary to represent a resource with the given extension when no image preview exists.
 *
-* @param integer $resource_type
-* @param string  $extension
-* @param boolean $col_size
+* @param string     $extension       File extension  
 *
 * @return string
 */
-function get_nopreview_icon($resource_type, $extension, $col_size)
+function get_nopreview_html($extension)
     {
-    global $language;
-
-    $col=($col_size?"_col":"");
-    $folder=dirname(dirname(__FILE__)) . "/gfx/";
-    $extension=strtolower((string) $extension);
-
-    # Metadata template? Always use icon for 'mdtr', although typically no file will be attached.
-    global $metadata_template_resource_type;
-    if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$resource_type) {$extension="mdtr";}
-
-    # Try a plugin
-    $try=hook('plugin_nopreview_icon','',array($resource_type,$col, $extension));
-    if (false !== $try && file_exists($folder . $try))
-        {
-        return $try;
-        }
-
-    # Try extension (language specific)
-    $try="no_preview/" . $extension . $col . "_" . $language . ".png";
-    if (file_exists($folder . $try))
-        {
-        return $try;
-        }
-    # Try extension (default)
-    $try="no_preview/" . $extension . $col . ".png";
-    if (file_exists($folder . $try))
-        {
-        return $try;
-        }
-
-    # Fall back to a default
-    return "no_preview/default" . $col . ".png";
+    global $extensionToFA;
+    $extension=strtolower(trim($extension));
+    return "<i class='nopreview fa fa-regularx " . ($extensionToFA[$extension] ?? $extensionToFA["default"]) . "'></i>";
     }
 
 
