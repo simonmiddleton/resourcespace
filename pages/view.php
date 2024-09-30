@@ -130,7 +130,7 @@ if (
     && !in_array($resource["archive"],$file_integrity_ignore_states)
 ) {
     // Validate resource file
-    $missing_original = count(array_intersect(check_resources([$resource]),[$ref])) === 1;
+    $missing_original = count(array_intersect(check_resources([$resource],true),[$ref])) === 1;
 }
 
 // Set $use_mp3_player switch if appropriate
