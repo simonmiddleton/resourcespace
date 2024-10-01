@@ -5081,7 +5081,7 @@ function get_system_status()
     // Return file extensions with counts
     $return['results']['files_by_extension'] = [
         'status' => 'OK',
-        'total' => ps_query("select file_extension,count(*) `count` from resource where length(file_extension)>0 group by file_extension order by `count` desc;",[])
+        'total' => ps_query("select file_extension,count(*) `count`,round(sum(disk_usage)/power(1024,3),2) disk_usage_gb from resource where length(file_extension)>0 group by file_extension order by `count` desc;",[])
     ];
     // Check if plugins have any warnings
     $extra_checks = hook('extra_checks');
