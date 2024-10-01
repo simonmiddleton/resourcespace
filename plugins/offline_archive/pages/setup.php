@@ -17,12 +17,6 @@ if (!in_array($plugin_name, $plugins)) {
     check_removed_ui_config("offline_archive_restorepath");
 }
 
-if (($_SERVER["REQUEST_METHOD"] ?? "GET") === "POST") {
-    // Save these removed config options if previously set - now should be set in config
-    save_removed_ui_config('offline_archive_archivepath');
-    save_removed_ui_config('offline_archive_restorepath');
-}
-
 $plugin_page_heading = $lang['offline_archive_configuration'];
 
 $page_def[] = config_add_single_ftype_select('offline_archive_archivefield',$lang['offline_archive_archivefield']);

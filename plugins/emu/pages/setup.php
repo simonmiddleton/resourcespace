@@ -60,9 +60,6 @@ if('' != getval('submit', '') || '' != getval('save', ''))
 
     $emu_rs_mappings       = $emu_rs_mappings_new;
     $emu_rs_saved_mappings = plugin_encode_complex_configs($emu_rs_mappings_new);
-
-    // Save this removed config option if it was previously set - now should be set in config
-    save_removed_ui_config('emu_log_directory');
     }
 
 // Add test script functionality

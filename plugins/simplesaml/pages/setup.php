@@ -63,8 +63,6 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
     set_plugin_config("simplesaml",$simplesaml);
     include_plugin_config($plugin_name,base64_encode(serialize($simplesaml)));
 
-    // Save this removed config option if it was previously set - now should be set in config
-    save_removed_ui_config('simplesaml_lib_path');
     if (getval('submit','') != '') {
         redirect('pages/team/team_plugins.php');
     }

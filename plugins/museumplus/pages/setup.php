@@ -13,11 +13,6 @@ if (!in_array($plugin_name, $plugins)) {
     check_removed_ui_config("museumplus_log_directory");
 }
 
-if (($_SERVER["REQUEST_METHOD"] ?? "GET") === "POST") {
-    // Save this removed config option if it was previously set - now should be set in config
-    save_removed_ui_config('museumplus_log_directory');
-}
-
 // Validate modules config (this is configurable on a different page - setup_module.php)
 $museumplus_modules_config = plugin_decode_complex_configs(getval('museumplus_modules_saved_config', $museumplus_modules_saved_config));
 if(!is_array($museumplus_modules_config))

@@ -2,11 +2,6 @@
 include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
-if (($_SERVER["REQUEST_METHOD"] ?? "GET") === "POST") {
-    // Save this removed config option if it was previously set - now should be set in config
-    save_removed_ui_config('tms_link_log_directory');
-}
-
 $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
 
 $scriptlastran=ps_value("select value from sysvars where name='last_tms_import'",array(), "");
