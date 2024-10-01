@@ -397,6 +397,11 @@ if ($pagename != "preview")
         { 
         ?>   
         <div id="HeaderButtons" style="display:none;">
+            <div id="ButtonHolder">
+            <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
+                <span class="rbText"><?php echo escape($lang["responsive_main_menu"]); ?></span>
+                <span class="fa fa-fw fa-lg fa-bars"></span>
+            </a>
             <a href="#" id="HeaderNav1Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
                 <span class="rbText">
                     <?php if ($allow_password_change == false)
@@ -417,10 +422,7 @@ if ($pagename != "preview")
                     ?><span class="fa fa-fw fa-lg fa-user"></span> <?php
                     }
                 ?></a>
-            <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
-                <span class="rbText"><?php echo escape($lang["responsive_main_menu"]); ?></span>
-                <span class="fa fa-fw fa-lg fa-bars"></span>
-            </a>
+            </div>
         </div>
         <?php
         }
@@ -433,7 +435,15 @@ if ($pagename != "preview")
     if (!isset($allow_password_change)) {$allow_password_change=true;}
     if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
         {
+        hook("midheader"); ?>
+        <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
+        <?php
+        if(!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login))
+            {
+            include dirname(__FILE__) . "/header_links.php";
+            }
         ?>
+        </div>
         <div id="HeaderNav1" class="HorizontalNav">
         <?php
         hook("beforeheadernav1");
@@ -543,15 +553,6 @@ if ($pagename != "preview")
         include_once __DIR__ . '/../pages/ajax/message.php';
         ?>
         </div>
-        <?php hook("midheader"); ?>
-        <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
-        <?php
-        if(!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login))
-            {
-            include dirname(__FILE__) . "/header_links.php";
-            }
-        ?>
-        </div> 
 
         <?php
         }

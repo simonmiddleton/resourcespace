@@ -241,7 +241,12 @@ select::-ms-expand
     float: right;
     height:47px;
 }
-#HeaderNav2 {padding-left: 30px;}
+#HeaderNav2 {
+    position: absolute;
+    left: 280px;
+    right: 280px;
+    overflow:visible;
+}
 #HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0;}
 .HeaderImgLink{
     float: left;
