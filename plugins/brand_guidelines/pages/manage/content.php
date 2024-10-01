@@ -35,6 +35,25 @@ if ($ref > 0) {
     } */
 }
 
+$_GET['richtext'] = '<h5>test malicious</h5>';
+$_GET['richtext'] = '
+<div id="lipsum"></div>
+<h2>Lorem&nbsp;</h2>
+<h3>Ipsum</h3>
+<p>Lorem <strong>ipsum</strong> <em>dolor</em> <span style="text-decoration: underline;">sit</span> <s>amet</s>, consectetur adipiscing elit.</p>
+<ul>
+<li>Praesent quis tincidunt purus.</li>
+<li>Curabitur laoreet, dui nec eleifend pharetra, arcu neque rhoncus urna, non interdum erat erat quis dolor.&nbsp;</li>
+</ul>
+<p>Curabitur laoreet sodales ligula, quis blandit magna gravida a.&nbsp;</p>
+<ol>
+<li>Nunc sodales,</li>
+<li>metus a eleifend fringilla,</li>
+<li>ipsum urna varius felis, eget pretium odio nisi sit amet justo.&nbsp;</li>
+</ol>
+<p><a href="https://www.resourcespace.com/knowledge-base/" target="_blank" rel="noopener">Vestibulum</a> porttitor libero at felis consequat, ac blandit velit scelerisque. Pellentesque sodales mauris a luctus aliquam. Sed pellentesque sed magna eu ultricies. Sed ac faucibus augue.</p>
+</div>
+';
 // Page setup
 $page_def = [
     BRAND_GUIDELINES_CONTENT_TYPES['text'] => [
@@ -44,19 +63,9 @@ $page_def = [
         ],
         'fields' => [
             [
-            'id'       => 'name',
-            'title'    => $lang['name'],
-            'type'     => FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
-            'required' => true,
-            ],
-            [
-            'id'       => 'width',
-            'title'    => $lang['property-width'],
-            'type'     => FIELD_TYPE_DROP_DOWN_LIST,
-            'options'  => [
-                'full_width' => $lang['brand_guidelines_full_width'],
-                'half_width' => $lang['brand_guidelines_half_width']
-            ],
+            'id'       => 'richtext',
+            'title'    => $lang['text'],
+            'type'     => FIELD_TYPE_TEXT_RICH,
             'required' => true,
             ],
         ],
@@ -144,5 +153,24 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
         </div>
     </form>
 </div>
+<script>
+tinymce.remove();
+tinymce.init({
+    selector: '#manage_content .Question textarea#richtext',
+    width: 900,
+    height: 400,
+    license_key: 'gpl',
+    promotion: false,
+    branding: false,
+    plugins: 'lists, link',
+    toolbar: 'h2 h3 bold italic underline strikethrough removeformat | bullist numlist link | outdent indent',
+    // toolbar1: 'h2 h3 bold italic underline strikethrough',
+    // toolbar2: 'bullist numlist link | outdent indent removeformat',
+    menubar: '',
+    setup: (editor) => {
+        editor.on('blur', (e) => tinymce.triggerSave());
+    },
+});
+</script>
 <?php
 include_once RESOURCESPACE_BASE_PATH . '/include/footer.php';

@@ -53,6 +53,23 @@ function reorder_input_validator($value): bool
     return is_string($value) && in_array($value, ['up', 'down']);
 }
 
+/** Rich text editor input parser (removes invalid HTML tags/attributes)  */
+function richtext_input_parser(string $value): string
+{
+    $cache_permitted_html_tags = $GLOBALS['permitted_html_tags'];
+    $GLOBALS['permitted_html_tags'] = [
+        'html',
+        'body',
+    ];
+    $parsed = strip_tags_and_attributes(
+        $value,
+        ['p', 'span', 'h2', 'h3', 'strong', 'em', 'ul', 'ol', 'li', 'a'],
+        ['href', 'target', 'rel']
+    );
+    $GLOBALS['permitted_html_tags'] = $cache_permitted_html_tags;
+    return $parsed;
+}
+
 function render_individual_menu() {
     if (!acl_can_edit_brand_guidelines()) {
         return;
@@ -82,7 +99,11 @@ function render_individual_menu() {
 function render_content_menu() {
     ?>
     <div id="menu-content" class="context-menu-container" style="width: 180px; display:none;">
-        <button class="context-menu-row" onclick="return new_content_item(this, 'text');">
+        <button
+            class="context-menu-row"
+            onclick="return new_content_item(this);"
+            data-item-type="<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['text']); ?>"
+        >
             <i class="fa-solid fa-fw fa-align-left"></i>
             <span><?php echo escape($GLOBALS['lang']['text']); ?></span>
         </button>
@@ -90,7 +111,11 @@ function render_content_menu() {
             <i class="fa-solid fa-fw fa-upload"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_new_resource']); ?></span>
         </button>
-        <button class="context-menu-row">
+        <button
+            class="context-menu-row"
+            onclick="return new_content_item(this);"
+            data-item-type="<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['resource']); ?>"
+        >
             <i class="fa-solid fa-fw fa-photo-film"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_existing_resource']); ?></span>
         </button>

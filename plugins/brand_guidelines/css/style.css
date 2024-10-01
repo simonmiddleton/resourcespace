@@ -222,6 +222,11 @@ form.guidelines .FormError {
     margin: 0 0 10px 310px;
 }
 
+/* Hide the FIELD_TYPE_TEXT_RICH label on manage/content.php */
+#Question_richtext label {
+    display: none;
+}
+
 @media(max-width:600px) {
     .guidelines-container {
         display: flex;

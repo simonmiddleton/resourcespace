@@ -1172,7 +1172,7 @@ function process_custom_fields_submission(array $fields, $submitted, array $ctx)
             }
 
         if ($submitted && ($error = hook('process_custom_fields_submission_validator', '', [$field]))) {
-            // Allow plugins to validate (their own) custom field types
+            // Allow plugins to validate (their own) custom field types or override existing behaviour
             $field['error'] = $error;
         } elseif ($submitted && $field['required'] && $field['value'] == '') {
             $field['error'] = str_replace(

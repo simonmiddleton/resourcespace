@@ -271,6 +271,21 @@ render_content_menu();
         }
     }
 
+    jQuery('#CentralSpace').on('ModalClosed', (e, modal) => {
+        let modal_url = new URL(modal.url);
+        let modal_url_params = modal_url.searchParams;
+        let manage_content_path = baseurl_short + 'plugins/brand_guidelines/pages/manage/content.php';
+
+        // Handle manage text content item page (modal) closing
+        if (
+            modal_url.pathname === manage_content_path
+            && modal_url_params.has('type')
+            && modal_url_params.get('type') === '<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['text']); ?>'
+        ) {
+            tinymce.remove();
+        }
+    });
+
     onkeydown = (e) => {
         // On esc, close down contextual menus 
         if (e.keyCode == 27) {
@@ -373,14 +388,23 @@ render_content_menu();
         return false;
     }
 
-    function new_content_item(e, type) {
-        console.debug('new_content_item(e = %o, type = %o)', e, type);
+    function new_content_item(e) {
+        console.debug('new_content_item(e = %o)', e);
         hideOptionsMenu();
         let btn_el = jQuery(e);
         let item = jQuery(e).parent('#menu-content').data('item');
+        let type = btn_el.data('item-type');
         console.debug(item);
-        
-        return false;
+        console.debug(type);
+
+        return ModalLoad(
+            baseurl + '/plugins/brand_guidelines/pages/manage/content.php?'
+            + new URLSearchParams({
+                type: type,
+            }).toString(),
+            true,
+            true
+        );
     }
 </script>
 <?php

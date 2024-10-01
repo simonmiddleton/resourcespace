@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use function Montala\ResourceSpace\Plugins\BrandGuidelines\richtext_input_parser;
+
 /**
  * Render decorator of custom fields used by Brand Guidelines
  * @param array $field Custom field structure - {@see process_custom_fields_submission()}
@@ -33,7 +35,15 @@ function HookBrand_guidelinesContentRender_custom_fields_default_case_override(a
         >
         <?php
         return true;
+    } elseif ($field['type'] === FIELD_TYPE_TEXT_RICH) {
+        ?>
+        <textarea id="<?php echo escape($field_id); ?>" name="<?php echo escape($field_name); ?>"><?php
+            echo escape($field_value); ?>
+        </textarea>
+        <?php
+        return true;
     }
+
     return false;
 }
 
@@ -44,7 +54,7 @@ function HookBrand_guidelinesContentRender_custom_fields_default_case_override(a
  */
 function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(array $field)
 {
-    $field_value = $field['value'];
+    $field_value = trim($field['value']);
 
     if (
         $field['type'] === FIELD_TYPE_NUMERIC
@@ -56,6 +66,12 @@ function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(a
             i18n_get_translated($field['title']),
             str_replace('?', '1', $GLOBALS['lang']['shouldbeormore'])
         );
+    } elseif ($field['type'] === FIELD_TYPE_TEXT_RICH) {
+        if ($field_value === '') {
+            return $GLOBALS['lang']['requiredfields-general'];
+        } elseif (richtext_input_parser($field_value) === '') {
+            return $GLOBALS['lang']['brand_guidelines_err_invalid_input'];
+        }
     }
 
     return false;
