@@ -368,6 +368,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .CollectionPanelInfo{width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .CollectionPanelThumb{max-height: 75px;}
 .CollectionResourceAlign {width:110px;height:90px;text-align: center;vertical-align: middle;}
+.CollectionPanelShell .nopreview {font-size:60px;}
 
 #CollectionMinTitle{float: left;margin: 4px 10px 0 25px;}
 #CollectionMinDropTitle{float: left;padding:0.2em 0;margin-top: 6px;}
@@ -426,6 +427,9 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
 .ImageColourWrapper {display: inline-block;}
+.ResourcePanel .nopreview {font-size:120px;margin-top:0.4em;}
+.ResourcePanelLarge .nopreview {font-size:200px;margin-top:0.35em;}
+.ImageStripLink .nopreview {font-size:150px;position: relative; left:-100px;left: -1em;top: -0.2em;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
 .ResourceTypeIcon.fa-fw {height: 16px;float:right;margin: 3px; background: #ffffffcc; padding: 3px 4px 2px 4px; border-radius: 3px;}
@@ -588,6 +592,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 /* Larger layout changes */
 .RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0 0 10px 0;}
+#previewimagewrapper .nopreview {font-size:150px;}
 .RecordPanel.RecordPanelLarge .Picture {display: inline-block; max-width: 100%;}
 .RecordPanel.RecordPanelLarge .RecordDownload {width: 70%; margin-right: 10px;}
 .RecordPanel.RecordPanelLarge #ResourceDownloadOptions {
@@ -1830,6 +1835,16 @@ a.Enabled, a:visited.Enabled {
 #Metadata {
     border-radius: 6px;
     padding-bottom: 8px;
+}
+
+.categorytreenode {
+    background-color: #2e99e6;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 6px;
+    line-height: 20px;
+    display: inline-block;
+    margin: 2px
 }
 
 .ReportSheet {padding:10px;}

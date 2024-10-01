@@ -692,7 +692,7 @@ else
 
                         if(!$iiif_thumb)
                             {
-                            $response["thumbnail"] = $baseurl . "/gfx/" . get_nopreview_icon($iiif_results[0]["resource_type"],"jpg",false);
+                            $response["thumbnail"] = $baseurl . "/gfx/no_preview/default.png";
                             }
 
                         // Sequences

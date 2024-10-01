@@ -20,7 +20,7 @@ function getPreviewURLForType($resource, $type, $alternative = -1, $page = 1)
         }
     elseif(resource_has_access_denied_by_RT_size($resource['resource_type'], $type))
         {
-        return $baseurl . '/gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
+        return $baseurl . '/gfx/no_preview/default.png';
         }
 
     $path = get_resource_path(

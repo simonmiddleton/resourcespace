@@ -289,7 +289,7 @@ include __DIR__ . "/../../../include/header.php";
             } else {
                 // If an image is not available, fetch a nopreview image based on extension   
                 $alter_data = get_alternative_file($resource,$alt_file);    
-                $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
+                $image = $baseurl_short . 'gfx/no_preview/default.png';
             } ?>
 
             <div class="Question">

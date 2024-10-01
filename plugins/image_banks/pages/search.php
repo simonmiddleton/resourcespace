@@ -98,20 +98,20 @@ include_once "{$rs_root}/include/header.php";
                 <span class="Selected"><?php echo escape($lang["image_banks_image_bank"]); ?>: </span><?php echo escape($provider_name); ?>
             </div>
             <div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
-            <select name="order_by" onchange="CentralSpaceLoad(this.value, true);" aria-label="<?php echo escape($lang["sortorder"]) ?>">
-            <?php
-            foreach ($orderFields as $orderfield => $ordername) {
-            $value = generateURL(
-                "{$baseurl_short}pages/search.php",
-                $search_params,
-                ["order_by" => $orderfield]
-            );
-            $extra_attributes = $order_by === $orderfield ? ' selected' : '';
+                <select name="order_by" onchange="CentralSpaceLoad(this.value, true);" aria-label="<?php echo escape($lang["sortorder"]) ?>">
+                    <?php
+                    foreach ($orderFields as $orderfield => $ordername) {
+                    $value = generateURL(
+                        "{$baseurl_short}pages/search.php",
+                        $search_params,
+                        ["order_by" => $orderfield]
+                    );
+                    $extra_attributes = $order_by === $orderfield ? ' selected' : '';
 
-            echo render_dropdown_option($value, $ordername, [], $extra_attributes);
-            }
-            ?>
-            </select>
+                    echo render_dropdown_option($value, $ordername, [], $extra_attributes);
+                    }
+                    ?>
+                </select>
             </div>
             <div class="InpageNavLeftBlock">
                 <select name="per_page" onchange="CentralSpaceLoad(this.value, true);">

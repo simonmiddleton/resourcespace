@@ -3118,7 +3118,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
         $templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",-1,1,($watermark)?(($access==1)?true:false):false);
         if (!file_exists($templatevars['thumbnail'])){
             $resourcedata=get_resource_data($resource);
-            $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
+            $templatevars['thumbnail']="../gfx/no_preview/default.png";
         }
         $templatevars['url']=$baseurl . "/?r=" . $resource . $key;
         $templatevars['fromusername']=$fromusername;
@@ -8080,52 +8080,17 @@ function get_OR_fields()
     }
 
 /**
-* Returns the path (relative to the gfx folder) of a suitable folder to represent
-* a resource with the given resource type or extension
-* Extension matches are tried first, followed by resource type matches
-* Finally, if there are no matches then the 'type1' image will be used.
-* set contactsheet to true to cd up one more level.
+* Returns the HTML necessary to represent a resource with the given extension when no image preview exists.
 *
-* @param integer $resource_type
-* @param string  $extension
-* @param boolean $col_size
+* @param string     $extension       File extension  
 *
 * @return string
 */
-function get_nopreview_icon($resource_type, $extension, $col_size)
+function get_nopreview_html($extension)
     {
-    global $language;
-
-    $col=($col_size?"_col":"");
-    $folder=dirname(dirname(__FILE__)) . "/gfx/";
-    $extension=strtolower((string) $extension);
-
-    # Metadata template? Always use icon for 'mdtr', although typically no file will be attached.
-    global $metadata_template_resource_type;
-    if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$resource_type) {$extension="mdtr";}
-
-    # Try a plugin
-    $try=hook('plugin_nopreview_icon','',array($resource_type,$col, $extension));
-    if (false !== $try && file_exists($folder . $try))
-        {
-        return $try;
-        }
-
-    # Try extension (language specific)
-    $try="no_preview/" . $extension . $col . "_" . $language . ".png";
-    if (file_exists($folder . $try))
-        {
-        return $try;
-        }
-    # Try extension (default)
-    $try="no_preview/" . $extension . $col . ".png";
-    if (file_exists($folder . $try))
-        {
-        return $try;
-        }
-
-    # Fall back to a default
-    return "no_preview/default" . $col . ".png";
+    global $extensionToFA;
+    $extension=strtolower(trim($extension));
+    return "<i class='nopreview fa fa-regularx " . ($extensionToFA[$extension] ?? $extensionToFA["default"]) . "'></i>";
     }
 
 

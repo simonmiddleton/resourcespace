@@ -504,7 +504,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         resource_type_config_override($resourcedata['resource_type']);
 
         if (!file_exists($templatevars['thumbnail'])){
-        $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
+        $templatevars['thumbnail']="../gfx/no_preview/default.png";
         }
         $templatevars['url']=$baseurl."/?r=".$ref;
         if (isset($filename_field)) {
@@ -900,7 +900,7 @@ function email_resource_request($ref,$details)
     $templatevars['thumbnail']=get_resource_path($ref,true,"thm",false,"jpg",-1,1,($watermark)?(($access==1)?true:false):false);
     if (!file_exists($templatevars['thumbnail']))
         {
-        $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
+        $templatevars['thumbnail']="../gfx/no_preview/default.png";
         }
 
     if (isset($filename_field))

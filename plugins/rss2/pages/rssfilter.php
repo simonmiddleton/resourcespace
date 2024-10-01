@@ -157,7 +157,7 @@ for ($n=0;$n<count($result);$n++)
 
     $imgurl="";
     $imgurl=get_resource_path($result[$n]['ref'],true,"col",false);
-    if ((int) $result[$n]['has_image'] === RESOURCE_PREVIEWS_NONE){ $imgurl=$baseurl."/gfx/".get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true);}
+    if ((int) $result[$n]['has_image'] === RESOURCE_PREVIEWS_NONE){ $imgurl=$baseurl."/gfx/no_preview/default.png";}
     else{$imgurl=get_resource_path($result[$n]['ref'],false,"col",false);}
     $add_desc="";
     foreach ($rss_fields as $rssfield)

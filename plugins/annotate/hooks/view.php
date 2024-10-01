@@ -119,9 +119,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
         }
     else
         {
-        ?>
-        <img src="<?php echo $baseurl?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture NoPreview" style="border:none;" id="previewimage" />
-        <?php
+        echo get_nopreview_html($resource["file_extension"]);
         }
 
     return true;    

@@ -25,9 +25,7 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
                 $image=get_resource_path($resource,false,"thm");
                 }
             else{
-                $res = get_resource_data($resource);
-                $res_ext = $res['file_extension'];
-                $image = $baseurl . 'gfx/' . get_nopreview_icon('', $res_ext, '');
+                $image=$baseurl . 'gfx/no_preview/default.png';
                 }
             }
         else
@@ -48,7 +46,7 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
             else
                 {
                 // If an image does not exist, get a nopreview image by looking at the extension of the alternative file    
-                $image = $baseurl . '/gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
+                $image = $baseurl . '/gfx/no_preview/default.png';
                 }
             }
         

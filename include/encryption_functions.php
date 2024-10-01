@@ -1,17 +1,18 @@
 <?php
 /**
 * Encrypts data
-* 
+*
 * @uses generateSecureKey()
-* 
-* @param  string  $data  Data to be encypted
-* @param  string  $key
-* @todo Add a third parameter to use with custom metadata (NOT ResourceSpace metadata) for generating MAC. this should
+*
+* @param  string  $data         Data to be encypted
+* @param  string  $key          Key to use
+* @param  string  $keylength    Optional key length
+* @todo Add a fourth parameter to use with custom metadata (NOT ResourceSpace metadata) for generating MAC. this should
 * add extra security by making MAC harder to be forged
-* 
+*
 * @return  string  Encrypted data
 */
-function rsEncrypt($data, $key)
+function rsEncrypt($data, $key, $keylength=128)
     {
     global $scramble_key;
 
@@ -33,7 +34,7 @@ function rsEncrypt($data, $key)
     */
     $method  = "AES-128-CTR";
     $options = OPENSSL_RAW_DATA;
-    $nonce   = generateSecureKey(128);
+    $nonce   = generateSecureKey($keylength);
 
     // Get 2 derived subkeys, one for message authentication code (MAC) and the other one for encryption/ decryption.
     $mac_key = hash_hmac("sha256", "mac_key", $scramble_key, true);
@@ -70,7 +71,6 @@ function rsDecrypt($data, $key)
     // Get 2 derived subkeys, one for message authentication code (MAC) and the other one for encryption/ decryption.
     $mac_key = hash_hmac("sha256", "mac_key", $scramble_key, true);
     $enc_key = hash_hmac("sha256", "enc_key", $scramble_key, true);
-
     if (count(explode("@@", $data))<3){return false;}
     list($nonce, $cyphertext, $mac) = explode("@@", $data);
 
@@ -80,7 +80,6 @@ function rsDecrypt($data, $key)
         debug("rsCrypt: MAC did not match!");
         return false;
         }
-
     // Synthetic Initialization Vector (SIV)
     $siv = substr(hash_hmac("sha256", "{$nonce}{$scramble_key}{$key}", $mac_key, true), 0, 16);
 
