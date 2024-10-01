@@ -3517,16 +3517,12 @@ function generate_temp_download_key(int $user, int $resource, string $size): str
         return "";
         }
 
-    $user_data = get_user($user);
-    $data =  generateSecureKey(128)
-        . ":" . $user
+    $data = $user
         . ":" . $resource
         . ":" . $size
-        . ":" .  time()
-        . ":" . hash_hmac("sha256", "user_pass_mac", $user_data['password']);
-
+        . ":" .  time();
     return base64_encode(
-        rsEncrypt($data, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']))
+        rsEncrypt($data, hash_hmac('sha256', 'dld_key', $GLOBALS['scramble_key']), 32)
     );
     }
 
@@ -3543,44 +3539,51 @@ function generate_temp_download_key(int $user, int $resource, string $size): str
  * 
  */
 function validate_temp_download_key(int $ref, string $keystring, string $size, int $expire_seconds = 0, bool $setup_user = true) : bool
-    {
-    if ($expire_seconds < 1)
-        {
+{
+    if ($expire_seconds < 1) {
         global $api_resource_path_expiry_hours;
         $expiry_time_limit = 60 * 60 * $api_resource_path_expiry_hours;
-        }
-    else
-        {
+    } else {
         $expiry_time_limit = $expire_seconds;
-        }
+    }
 
     $decoded_keystring = mb_strpos($keystring, '@@', 0, 'UTF-8') !== false ? $keystring : base64_decode($keystring);
-    $keydata = rsDecrypt($decoded_keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
 
-    if($keydata != false)
-        {
+    if (strlen($keystring) > 300) {
+        // Support older keys that used the combined scramble keys
+        $usekey = hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']);
+    } else {
+        $usekey = hash_hmac('sha256', 'dld_key', $GLOBALS['scramble_key']);
+    }
+
+    $keydata = rsDecrypt($decoded_keystring, $usekey);
+    if ($keydata != false) {
         $download_key_parts = explode(":", $keydata);
-        // First element is the nonce
-        if($download_key_parts[2] == $ref && $download_key_parts[3] == $size)
-            {
-            $ak_user = $download_key_parts[1];
+
+        if (count($download_key_parts) == 6) {
+            // Support the old longer keys - multiple nonces are no longer used
+            array_shift($download_key_parts);
+        }
+
+        if ($download_key_parts[1] == $ref && $download_key_parts[2] == $size) {
+            $ak_user = $download_key_parts[0];
             $ak_userdata = get_user($ak_user);
-            $key_time = $download_key_parts[4];
-            if($ak_userdata !== false 
+            $key_time = $download_key_parts[3];
+            if (
+                $ak_userdata !== false
                 && ((time()- $key_time) < $expiry_time_limit)
-                && hash_hmac("sha256", "user_pass_mac", $ak_userdata['password']) === $download_key_parts[5])
-                {
-                if ($setup_user) { setup_user($ak_userdata); }
-                return true;
+            ) {
+                if ($setup_user) {
+                    setup_user($ak_userdata); 
                 }
+                return true;
             }
         }
-    else
-        {
+    } else {
         debug("Failed to decrypt temp_download_key");
-        }
-    return false;
     }
+    return false;
+}
 
 /**
  * Set up a dummy user with required permissions etc. to pass permission checks if running scripts from the command line
