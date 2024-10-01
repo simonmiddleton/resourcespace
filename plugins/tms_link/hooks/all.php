@@ -5,6 +5,13 @@ include_once dirname(__FILE__) . "/../include/tms_link_functions.php";
 function HookTms_linkAllInitialise()
     {
     $tms_link_config = get_plugin_config('tms_link');
+    if (isset($tms_link_config["tms_link_log_directory"])) {
+        // Legacy config  - remove from plugin settings
+        save_removed_ui_config('tms_link_log_directory');
+        unset($tms_link_config["tms_link_log_directory"]);
+        set_plugin_config('tms_link', $tms_link_config);
+    }
+    check_removed_ui_config("tms_link_log_directory");
 
     if(is_null($tms_link_config) || get_sysvar(TMS_LINK_MODULES_MIGRATED) !== false)
         {

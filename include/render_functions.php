@@ -5888,18 +5888,36 @@ function render_antispam_question()
 /**
  * Renders a 'fixed' text question - not an input but to display information or values that cannot be changed
  *
- * @param  string $label
- * @param  string $text
- * @return void
+ * @param  string $label        Question label
+ * @param  string $text         Fixed text
+ * @param  string $helptext     Optional help text
+ * @param  string $helptext     Optional div identifier
+ *
  */
-function render_fixed_text_question($label, $text)
-    {   
-    echo "<div class='Question'>
-        <label>" . escape($label) . "</label>
-        <div class='Fixed'>" . escape($text) . "</div>
-        <div class='clearerleft'></div>
-        </div>";
-    }
+function render_fixed_text_question(string $label, string $text, string $helptext = "", string $divid = ""): void
+{
+    $fixed_html = '
+        <div class="Question" %identifier>
+            <label>%label</label>
+            <div class="Fixed">%text</div>
+            <div class="clearerleft"></div>
+            %helptextdiv
+        </div>';
+
+    $help_html = '
+        <div class="FormHelp" style="padding:0; clear:left;" >
+            <div class="FormHelpInner">%helptext</div>
+        </div>';
+
+    $replace = [
+        "%identifier" => (trim($divid) != '' ? ' id="' . escape($divid) . '"' : ''),
+        "%label" => escape($label),
+        "%text" => escape($text),
+        "%helptextdiv" => (trim($helptext) != "" ? str_replace("%helptext", escape($helptext), $help_html) : ""),
+    ];
+
+     echo str_replace(array_keys($replace),$replace,$fixed_html);
+}
 
 
 /**

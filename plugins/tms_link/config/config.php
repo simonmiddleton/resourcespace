@@ -16,7 +16,7 @@ $tms_link_password='';
 $tms_link_enable_update_script=true;
 $tms_link_script_failure_notify_days=3;
 
-$tms_link_log_directory="";
+// $tms_link_log_directory=""; // This must now must be set in the primary config file
 $tms_link_log_expiry=7;
 $tms_link_write_to_debug_log = false;
 

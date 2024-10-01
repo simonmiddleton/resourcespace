@@ -8,11 +8,12 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 
 $plugin_name = 'simplesaml';
-if(!in_array($plugin_name, $plugins))
-    {plugin_activate_for_setup($plugin_name);}
-    
-if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest(false))
-    {
+if (!in_array($plugin_name, $plugins)) {
+    plugin_activate_for_setup($plugin_name);
+	check_removed_ui_config("simplesaml_lib_path");
+}
+
+if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest(false)) {
     $simplesaml['simplesaml_site_block'] = getval('simplesaml_site_block','');
     $simplesaml['simplesaml_login'] = getval('simplesaml_login','');
     $simplesaml['simplesaml_allow_public_shares'] = getval('simplesaml_allow_public_shares','');
@@ -20,11 +21,11 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
     $simplesaml['simplesaml_allow_standard_login'] = getval('simplesaml_allow_standard_login','');
     $simplesaml['simplesaml_prefer_standard_login'] = getval('simplesaml_prefer_standard_login','');
     $simplesaml['simplesaml_sp'] = getval('simplesaml_sp','');
-    
+
     $simplesaml['simplesaml_username_attribute'] = getval('simplesaml_username_attribute','');
     $simplesaml['simplesaml_fullname_attribute'] = getval('simplesaml_fullname_attribute','');
     $simplesaml['simplesaml_email_attribute'] = getval('simplesaml_email_attribute','');
-    $simplesaml['simplesaml_group_attribute'] = getval('simplesaml_group_attribute','');    
+    $simplesaml['simplesaml_group_attribute'] = getval('simplesaml_group_attribute','');
     $simplesaml['simplesaml_fallback_group'] = getval('simplesaml_fallback_group','');
     $simplesaml['simplesaml_update_group'] = getval('simplesaml_update_group','');
     $simplesaml['simplesaml_create_new_match_email'] = getval('simplesaml_create_new_match_email','');
@@ -33,37 +34,39 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
     $simplesaml['simplesaml_fullname_separator'] = getval('simplesaml_fullname_separator','');
     $simplesaml['simplesaml_username_separator'] = getval('simplesaml_username_separator','');
     $simplesaml['simplesaml_custom_attributes'] = getval('simplesaml_custom_attributes', '');
-    $simplesaml['simplesaml_lib_path'] = getval('simplesaml_lib_path', '');
     $simplesaml['simplesaml_authorisation_claim_name'] = getval('simplesaml_authorisation_claim_name', '');
     $simplesaml['simplesaml_authorisation_claim_value'] = getval('simplesaml_authorisation_claim_value', '');
     $simplesaml['simplesaml_rsconfig'] = getval('simplesaml_rsconfig','');
-    
+
     $samlgroups = $_REQUEST['samlgroup'];
     $rsgroups = $_REQUEST['rsgroup'];
     $priority = $_REQUEST['priority'];
 
-    if (count($samlgroups) > 0){    
-        $simplesaml_groupmap=array();   
+    if (count($samlgroups) > 0){
+        $simplesaml_groupmap=array();
         $mappingcount=0;
-        }
-    
-    for ($i=0; $i < count($samlgroups); $i++)
-        {
-        if ($samlgroups[$i] <> '' && $rsgroups[$i] <> '' && is_numeric($rsgroups[$i]))
-            {
+    }
+
+    for ($i=0; $i < count($samlgroups); $i++) {
+        if ($samlgroups[$i] <> '' && $rsgroups[$i] <> '' && is_numeric($rsgroups[$i])) {
             $simplesaml_groupmap[$mappingcount]=array();
             $simplesaml_groupmap[$mappingcount]["samlgroup"]=$samlgroups[$i];
             $simplesaml_groupmap[$mappingcount]["rsgroup"]=$rsgroups[$i];
-            if(isset($priority[$i])){$simplesaml_groupmap[$mappingcount]["priority"]=$priority[$i];}
+            if (isset($priority[$i])) {
+                $simplesaml_groupmap[$mappingcount]["priority"]=$priority[$i];
+            }
             $mappingcount++;
-            }           
         }
-    
+    }
+
     $simplesaml["simplesaml_groupmap"]=$simplesaml_groupmap;
     set_plugin_config("simplesaml",$simplesaml);
     include_plugin_config($plugin_name,base64_encode(serialize($simplesaml)));
-    if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
-    }   
+
+    if (getval('submit','') != '') {
+        redirect('pages/team/team_plugins.php');
+    }
+}
 
 
 global $baseurl;
@@ -194,7 +197,10 @@ jQuery("#simplesaml_rsconfig").change(function(event)
 </div>
 <?php
 
-config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path,false,420,false,null,false,$simplesaml_rsconfig);
+$helptext = str_replace("%variable","\$simplesaml_lib_path",$lang['ui_removed_config_message']);
+$showval = $simplesaml_lib_path !== "" ? $simplesaml_lib_path : $lang["notavailableshort"];
+render_fixed_text_question($lang['simplesaml_lib_path_label'], $showval, $helptext, "question_simplesaml_lib_path");
+
 config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp,false,420,false,null,false);
 
 ?>

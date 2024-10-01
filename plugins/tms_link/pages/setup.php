@@ -2,7 +2,6 @@
 include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
-
 $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
 
 $scriptlastran=ps_value("select value from sysvars where name='last_tms_import'",array(), "");
@@ -34,7 +33,11 @@ $page_def[] = config_add_text_input('tms_link_query_chunk_size',$lang['tms_link_
 $page_def[] = config_add_boolean_select('tms_link_test_mode', $lang['tms_link_test_mode']);
 $page_def[] = config_add_text_input('tms_link_test_count',$lang['tms_link_test_count']);
 
-$page_def[] = config_add_text_input('tms_link_log_directory',$lang['tms_link_log_directory']);
+// Removed from UI
+$helptext = str_replace("%variable","\$tms_link_log_directory",$lang['ui_removed_config_message']);
+$showval = $tms_link_log_directory !== "" ? $tms_link_log_directory : $lang["notavailableshort"];
+$page_def[] =  config_add_fixed_input($lang['tms_link_log_directory'], $showval, $helptext);
+
 $page_def[] = config_add_text_input('tms_link_log_expiry',$lang['tms_link_log_expiry']);
 $page_def[] = config_add_boolean_select('tms_link_write_to_debug_log', $lang['tms_link_write_to_debug_log']);
 
@@ -172,36 +175,33 @@ $page_def[] = config_add_hidden("tms_link_modules_saved_mappings");
 // Do the page generation ritual -- don't change this section.
 config_gen_setup_post($page_def, $plugin_name);
 
-if(trim($tms_link_log_directory)!="" && (getval("save","")!="" || getval("submit","")!=""))
-    {
-    if (!is_dir($tms_link_log_directory))
-        {
-        @mkdir($tms_link_log_directory, 0755, true);
-        if (!is_dir($tms_link_log_directory))
-            {
+if (trim($tms_link_log_directory) != "") {
+    // Test valid settings
+    $GLOBALS['use_error_exception'] = true;
+    if (!is_dir($tms_link_log_directory)) {
+        try {
+            mkdir($tms_link_log_directory, 0755, true);
+        } catch (Exception $e) {
             $errortext = 'Invalid log directory: ' . escape($tms_link_log_directory);
+            debug($errortext . " " . $e->getMessage());
             }
-        }
-    else
-        {
+    } else {
         $logfilepath=$tms_link_log_directory . DIRECTORY_SEPARATOR . "tms_import_log_test.log";
-        $logfile=@fopen($logfilepath,'a');
-        if(!file_exists($logfilepath))
-            {
-            $errortext = 'Unable to create log file in directory: ' . escape($tms_link_log_directory);            
-            }
-        else
-            {
+        try {
+            $logfile = fopen($logfilepath,'a');
             fclose($logfile);
             unlink($logfilepath);
-            }
+        } catch (Exception $e) {
+            $errortext = 'Unable to create log file in directory: ' . escape($tms_link_log_directory);
+            debug($errortext . " " . $e->getMessage());
         }
     }
+    unset($GLOBALS['use_error_exception']);
+}
 
 include '../../../include/header.php';
-if(isset($errortext))
-    {
+if(isset($errortext)) {
     echo "<div class=\"PageInformal\">" . $errortext . "</div>";
-    }
+}
 config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';

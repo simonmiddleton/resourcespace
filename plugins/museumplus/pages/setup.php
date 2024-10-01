@@ -8,12 +8,11 @@ if(!checkperm('a'))
     }
 
 $plugin_name = 'museumplus';
-if(!in_array($plugin_name, $plugins))
-    {
+if (!in_array($plugin_name, $plugins)) {
     plugin_activate_for_setup($plugin_name);
-    }
+    check_removed_ui_config("museumplus_log_directory");
+}
 
-    
 // Validate modules config (this is configurable on a different page - setup_module.php)
 $museumplus_modules_config = plugin_decode_complex_configs(getval('museumplus_modules_saved_config', $museumplus_modules_saved_config));
 if(!is_array($museumplus_modules_config))
@@ -22,8 +21,6 @@ if(!is_array($museumplus_modules_config))
     $museumplus_modules_config = array();
     $museumplus_modules_saved_config = '';
     }
-
-
 
 // API settings
 $page_def[] = config_add_section_header($lang['museumplus_api_settings_header']);
@@ -76,7 +73,12 @@ escape($museumplus_script_last_ran)
 $page_def[] = config_add_html($script_last_ran_content);
 $page_def[] = config_add_boolean_select('museumplus_enable_script', $lang['museumplus_enable_script']);
 $page_def[] = config_add_text_input('museumplus_interval_run', $lang['museumplus_interval_run']);
-$page_def[] = config_add_text_input('museumplus_log_directory', $lang['museumplus_log_directory']);
+
+// Removed from UI
+$helptext = str_replace("%variable","\$museumplus_log_directory",$lang['ui_removed_config_message']);
+$showval = $museumplus_log_directory !== "" ? $museumplus_log_directory : $lang["notavailableshort"];
+$page_def[] = config_add_fixed_input($lang['museumplus_log_directory'], $showval, $helptext);
+
 // $page_def[] = config_add_single_ftype_select('museumplus_integrity_check_field', $lang['museumplus_integrity_check_field'], 420); # not in use until we can reliably get integrity checks of the data from M+
 
 // MuseumPlus - modules configuration
