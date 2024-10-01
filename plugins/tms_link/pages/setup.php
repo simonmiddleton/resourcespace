@@ -182,7 +182,8 @@ if (trim($tms_link_log_directory) != "") {
         try {
             mkdir($tms_link_log_directory, 0755, true);
         } catch (Exception $e) {
-            $errortext = 'Invalid log directory: ' . escape($tms_link_log_directory) . " " . $e->getMessage();
+            $errortext = 'Invalid log directory: ' . escape($tms_link_log_directory);
+            debug($errortext . " " . $e->getMessage());
             }
     } else {
         $logfilepath=$tms_link_log_directory . DIRECTORY_SEPARATOR . "tms_import_log_test.log";
@@ -191,7 +192,8 @@ if (trim($tms_link_log_directory) != "") {
             fclose($logfile);
             unlink($logfilepath);
         } catch (Exception $e) {
-            $errortext = 'Unable to create log file in directory: ' . escape($tms_link_log_directory) . " " . $e->getMessage();
+            $errortext = 'Unable to create log file in directory: ' . escape($tms_link_log_directory);
+            debug($errortext . " " . $e->getMessage());
         }
     }
     unset($GLOBALS['use_error_exception']);
