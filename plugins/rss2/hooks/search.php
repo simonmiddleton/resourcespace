@@ -10,12 +10,20 @@ function HookRss2SearchRender_search_actions_add_option($options)
         $querystring = "user=" . base64_encode($username) . "&search=" . $search . "&restypes=" . $restypes . "&archive=" . $archive;
         $private_key = get_api_key($userref);
 
-        // Sign the query using the private key
+        // Sign the query using the private key, this needs to be done encoded so that it is checked correctly
         $sign = hash("sha256",$private_key . $querystring);
         $querystring = "user=" . base64_encode($username) . "&search=" . urlencode($search) . "&restypes=";
         $querystring .= urlencode($restypes) . "&archive=" . urlencode($archive);
 
-        $url = $baseurl_short . "plugins/rss2/pages/rssfilter.php?" . $querystring  . "&sign=" . urlencode($sign);
+        $query_params = [
+            "user" => base64_encode($username),
+            "search" => $search,
+            "restypes" => $restypes,
+            "archive" => $archive,
+            "sign" => $sign
+        ];
+
+        $url = generateURL($baseurl_short . "plugins/rss2/pages/rssfilter.php", $query_params);
 
         $data_attribute['url'] = $url;
         $data_attribute['no-ajax'] = true;
