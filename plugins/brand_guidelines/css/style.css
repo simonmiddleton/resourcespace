@@ -40,7 +40,6 @@
 
 .guidelines-sidebar .top-right-menu {
     margin: 0px;
-    cursor: pointer;
     display: inline-block;
     vertical-align: bottom;
 }
@@ -202,12 +201,13 @@
 }
 
 .top-right-menu {
-    border-radius: 30px;
+    margin: 10px;
     width: 28px;
     height: 28px;
+    border-radius: 30px;
     text-align: center;
     font-size: 20px;
-    margin: 10px;
+    cursor: pointer;
 }
 
 .top-right-menu:hover {

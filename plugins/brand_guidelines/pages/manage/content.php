@@ -13,14 +13,29 @@ if (!acl_can_edit_brand_guidelines()) {
 }
 
 $ref = (int) getval('ref', 0, false, 'is_positive_int_loose'); # consider renaming to be more specific
-$type = (int) getval('type', 0, false, fn($V) => in_array($V, BRAND_GUIDELINES_CONTENT_TYPES));
+$type = (int) getval(
+    'type',
+    BRAND_GUIDELINES_CONTENT_TYPES['text'],
+    false,
+    fn($V) => in_array($V, BRAND_GUIDELINES_CONTENT_TYPES)
+);
+
+// Content always belongs to a page
+$page = (int) getval('page', 0, false, 'is_positive_int_loose');
+$all_pages = array_column(array_filter(get_all_pages(), __NAMESPACE__ . '\filter_only_pages'), null, 'ref');
+if ($page === 0 && $all_pages !== []) {
+    $page = (int) array_key_first($all_pages);
+} elseif (!isset($all_pages[$page])) {
+    http_response_code(400);
+    exit(escape(str_replace('%key', 'page', $GLOBALS['lang']['error-request-missing-key'])));
+}
+$page_contents_db = get_page_contents($page);
+
+// Actions
 $delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
 $reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
 $save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
 $edit = false;
-
-$page = getval('page', 0, false, 'is_positive_int_loose');
-$page_contents_db = get_page_contents($page);
 
 if ($ref > 0) {
     /* $all_pages_index = array_column($pages_db, null,'ref');
@@ -35,7 +50,6 @@ if ($ref > 0) {
     } */
 }
 
-$_GET['richtext'] = '<h5>test malicious</h5>';
 $_GET['richtext'] = '
 <div id="lipsum"></div>
 <h2>Lorem&nbsp;</h2>
@@ -91,19 +105,20 @@ $page_title = $page_def[$type]['title'];
 $processed_fields = process_custom_fields_submission($page_def[$type]['fields'], $save, ['html_properties_prefix' => '']);
 
 if ($save && count_errors($processed_fields) === 0) {
-    /* $bg_page_name = $processed_fields[0]['value'];
-    $bg_page_parent = $is_page && isset($processed_fields[1]['selected_options'][$parent]) ? $parent : 0;
+    $item = [
+        'type' => $type,
+        'fields' => $processed_fields,
+    ];
 
     if ($edit) {
-        // save_page($ref, $bg_page_name, $bg_page_parent);
-        $redirect_params = $is_page ? ['spage' => $ref] : [];
-    } else {
-        $redirect_params = ['spage' => create_page($bg_page_name, $bg_page_parent)];
+        // save_page_content($ref, $item);
+    } elseif (!create_page_content($page, $item)) {
+        exit(error_alert($lang['error_fail_save'], true, 200));
     }
 
     js_call_CentralSpaceLoad(
-        generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", $redirect_params)
-    ); */
+        generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
+    );
 } elseif ($delete > 0 && enforcePostRequest(false)) {
     /* if (delete_pages($delete_list)) {
         js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
@@ -150,6 +165,7 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
     >
         <?php
         generateFormToken('manage_content');
+        render_hidden_input('page', (string) $page);
         render_hidden_input('ref', (string) $ref);
         render_hidden_input('type', (string) $type);
         render_custom_fields($processed_fields);

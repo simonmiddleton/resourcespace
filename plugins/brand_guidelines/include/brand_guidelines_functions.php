@@ -20,10 +20,19 @@ function acl_can_edit_brand_guidelines(): bool {
 
 /**
  * Check if a page item is a section
- * @param array{parent: int} $I Generic page data structure
+ * @param array{parent: int|numeric-string} $I Generic page data structure
  */
 function is_section(array $I): bool {
     return (int) $I['parent'] === 0;
+}
+
+/**
+ * Check if a page item is just a page (i.e. NOT a section)
+ * @param array{parent: int|numeric-string} $I Generic page data structure
+ */
+function filter_only_pages(array $I): bool
+{
+    return !is_section($I);
 }
 
 /**
@@ -69,6 +78,27 @@ function richtext_input_parser(string $value): string
     $GLOBALS['permitted_html_tags'] = $cache_permitted_html_tags;
     return $parsed;
 }
+
+function create_page_content(int $ref, array $item): bool
+{
+    if (!acl_can_edit_brand_guidelines()) {
+        return false;
+    }
+
+    // todo: consider returning error message if need be for any of the use cases
+
+    if (
+        $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']
+        && create_content_item_text($ref, $item['fields'][0]['value'])
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+
+// todo: move these to a render_functions file
 
 function render_individual_menu() {
     if (!acl_can_edit_brand_guidelines()) {
@@ -222,22 +252,22 @@ function render_navigation_item(array $item, bool $is_current = false)
     }
 
     if ($can_edit_brand_guidelines && $show_individual_menu) {
-        ?>
-        <div
-            class="top-right-menu"
-            onclick="showOptionsMenu(this, 'menu-individual');"
-            data-item-ref="<?php echo escape($item['ref']); ?>"
-        >
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-        </div>
-        <?php
+        render_item_top_right_menu((int) $item['ref']);
     }
 }
 
-/* 
-
-function render_() {
+function render_item_top_right_menu(int $ref)
+{
+    if (!acl_can_edit_brand_guidelines()) {
+        return;
+    }
     ?>
+    <div
+        class="top-right-menu"
+        onclick="showOptionsMenu(this, 'menu-individual');"
+        data-item-ref="<?php echo $ref; ?>"
+    >
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </div>
     <?php
 }
- */

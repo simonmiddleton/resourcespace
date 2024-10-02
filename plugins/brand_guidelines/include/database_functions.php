@@ -34,7 +34,7 @@ function create_page(string $name, int $parent): int
     db_begin_transaction('brand_guidelines_create_page');
     ps_query(
         'INSERT INTO `brand_guidelines_pages` (`name`, `parent`, `order_by`)
-        SELECT ?, ?, MAX(order_by) + 10 FROM brand_guidelines_pages WHERE `parent` = ?',
+        SELECT ?, ?, coalesce(max(order_by), 0) + 10 FROM brand_guidelines_pages WHERE `parent` = ?',
         [
             's', sql_truncate_text_val($name, 255),
             'i', $parent,
@@ -113,3 +113,30 @@ function reorder_items(string $table, array $list, ?callable $filter)
     sql_reorder_records($table, array_keys($ref_ob_map));
     clear_query_cache($table);
 }
+
+function create_content_item_text(int $page, string $text): int
+{
+    $content = json_encode(['text-content' => $text]);
+    if ($content === false) {
+        debug(json_last_error_msg());
+        return 0;
+    }
+
+    db_begin_transaction('brand_guidelines_create_content_item_text');
+    ps_query(
+        'INSERT INTO `brand_guidelines_content` (`page`, `type`, `content`, `order_by`)
+        SELECT ?, ?, ?, coalesce(max(order_by), 0) + 10 FROM brand_guidelines_content WHERE `page` = ?',
+        [
+            'i', $page,
+            'i', BRAND_GUIDELINES_CONTENT_TYPES['text'],
+            's', $content,
+            'i', $page,
+        ]
+    );
+    $ref = sql_insert_id();
+    log_activity(null, LOG_CODE_CREATED, $text, 'brand_guidelines_content', 'content', $ref, null, '');
+    db_end_transaction('brand_guidelines_create_content_item_text');
+    clear_query_cache('brand_guidelines_content');
+    return $ref;
+}
+
