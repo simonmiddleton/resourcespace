@@ -384,7 +384,7 @@ if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {head
 # ----------------------------------------------------------------------------------------------------------------------
 # Basic CORS and CSRF protection
 #
-if($iiif_enabled && $pagename == "download") {
+if(($iiif_enabled || hook('directdownloadaccess')) && $pagename == "download") {
     // Required as direct links to media files may be served through download.php 
     // and may fail without the Access-Control-Allow-Origin header being set
     $CORS_whitelist[] = $_SERVER['HTTP_ORIGIN'] ?? ($_SERVER['HTTP_REFERER'] ?? "");
