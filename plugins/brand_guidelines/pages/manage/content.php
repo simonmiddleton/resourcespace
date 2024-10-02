@@ -111,6 +111,13 @@ if ($save && count_errors($processed_fields) === 0) {
     exit(error_alert($lang['error-failed-to-delete'], true, 200));
 } elseif ($reorder !== '' && enforcePostRequest(false)) {
     if ($edit) {
+        // Remap left/right direction to up/down where the item supports it
+        if ($reorder === 'left') {
+            $reorder = 'up';
+        } elseif ($reorder === 'right') {
+            $reorder = 'down';
+        }
+
         /* reorder_items(
             'brand_guidelines_content',
             array_replace(
