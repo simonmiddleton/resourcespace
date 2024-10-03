@@ -5078,6 +5078,11 @@ function get_system_status()
             ",[],0)/(1024*1024),3) // Note - limit to this month and last month before the concat to get the exact period; ensures not performing the concat on a large set of data.
     ];
 
+    // Return file extensions with counts
+    $return['results']['files_by_extension'] = [
+        'status' => 'OK',
+        'total' => ps_query("select file_extension,count(*) `count`,round(sum(disk_usage)/power(1024,3),2) disk_usage_gb from resource where length(file_extension)>0 group by file_extension order by `count` desc;",[])
+    ];
     // Check if plugins have any warnings
     $extra_checks = hook('extra_checks');
     if($extra_checks !== false && is_array($extra_checks))

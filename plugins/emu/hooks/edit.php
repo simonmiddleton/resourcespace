@@ -56,10 +56,17 @@ function HookEmuAllAdditionalvalcheck($fields, $fields_item)
         {
         global $emu_data;
 
-        $emu_irn         = intval(getval("field_{$emu_irn_field}", '', true));
+        $emu_field_data = getval("field_{$emu_irn_field}", '', true);
+
+        $emu_irn         = intval($emu_field_data);
         $emu_rs_mappings = plugin_decode_complex_configs($emu_rs_saved_mappings);
         $emu_data        = get_emu_data($emu_api_server, $emu_api_server_port, array($emu_irn), $emu_rs_mappings);
 
+        if ($emu_irn === 0 && $emu_field_data === '')
+            {
+            // Don't force a blank entry to be 0 on save.
+            $emu_irn = '';
+            }
         // Make sure we actually do save this data, even if we return an error
         update_field($ref, $emu_irn_field, $emu_irn);
 
@@ -132,14 +139,20 @@ function HookEmuEditAftersaveresourcedata()
 
     global $ref, $emu_irn_field, $emu_rs_saved_mappings, $emu_data, $emu_update_list, $lang;
 
-    if(count($emu_data) === 0)
+    $emu_irn = (int) getval("field_{$emu_irn_field}", 0, false, 'is_positive_int_loose');
+    $emu_irn_invalid = $emu_data === [];
+
+    if ($emu_irn === 0 && $emu_irn_invalid)
+        {
+        return false;
+        }
+    elseif ($emu_irn > 0 && $emu_irn_invalid)
         {
         return [$lang['emu_nodata_returned']];
         }
 
     // Update resources with EMu data
     $resources = (is_array($emu_update_list) ? $emu_update_list : [(int) $ref]);
-    $emu_irn         = intval(getval("field_{$emu_irn_field}", '', true));
     $emu_rs_mappings = plugin_decode_complex_configs($emu_rs_saved_mappings);
 
     foreach($resources as $resource_ref)

@@ -261,13 +261,20 @@ body {
     display:inline-block;
 }
 .ResponsiveHeaderButton {
-    margin-bottom:5px;
-    width: 35%;
+    width: 48%;
 }
 #HeaderButtons {
+    position: absolute;
+    left: 280px;
+    right: 15px;
     display:none;
 }
-
+#ButtonHolder {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
 @media(max-width:1200px) {
     #Header {
         min-height: 47px;
@@ -278,11 +285,9 @@ body {
         vertical-align: top;
     }
     #HeaderNav1Click {
-        float:right;
         margin-right: 5px;
     }
     #HeaderNav2Click {
-        float: right;
         margin-right: 5px;
     }
     .ResponsiveNav1Username {
@@ -293,6 +298,7 @@ body {
     }
     #HeaderNav1 {
         display:none;
+        position: static;
         margin:0;
         height: auto !important;
         float: none;
@@ -301,6 +307,7 @@ body {
     }
     #HeaderNav2 {
         display:none;
+        position: static;
         margin:0;
         height: auto !important;
         float: none;
@@ -308,6 +315,7 @@ body {
         clear: both;
         text-align: right;
         padding-left: 0;
+        padding-top: 10px;
     }
     #Header .HorizontalNav ul li {
         display: inline-block;
@@ -369,7 +377,7 @@ body {
 }
 @media(max-width:990px) {
     #HeaderButtons {
-        padding-left:150px;
+        /* padding-left:150px; */
     }
 }
 @media(max-width:700px) {

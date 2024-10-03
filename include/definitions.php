@@ -969,11 +969,13 @@ $extensionToFA = array(
     'avi' => 'fa-file-video',
     'mkv' => 'fa-file-video',
     'flv' => 'fa-file-video',
+    'fla' => 'fa-file-video',
     'wmv' => 'fa-file-video',
     '3gp' => 'fa-file-video',
     'webm' => 'fa-file-video',
     'vob' => 'fa-file-video',
     'm4v' => 'fa-file-video',
+    'mxf' => 'fa-file-video',
 
     // Audio
     'mp3' => 'fa-file-audio',
@@ -1029,16 +1031,6 @@ $extensionToFA = array(
     'iso' => 'fa-file-zipper',
     
     // Miscellaneous
-    'exe' => 'fa-file',
-    'dll' => 'fa-file',
-    'bat' => 'fa-file',
-    'dmg' => 'fa-file',
-    'app' => 'fa-file',
-    'apk' => 'fa-file',
-    'deb' => 'fa-file',
-    'rpm' => 'fa-file',
-    'msi' => 'fa-file',
-    'bin' => 'fa-file',
     'log' => 'fa-file-alt',
     'cfg' => 'fa-file-alt',
     'ini' => 'fa-file-alt',

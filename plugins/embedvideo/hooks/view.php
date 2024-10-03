@@ -64,7 +64,15 @@ function HookEmbedvideoViewAfterresourceactions()
                 To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
             </p>';
         echo "\n";
-        display_video_subtitles($ref,$access);
+        $video_altfiles=get_alternative_files($ref);
+        foreach ($video_altfiles as $video_altfile) {
+            if (mb_strtolower($video_altfile["file_extension"]) =="vtt") {
+                $download_path = generateURL($baseurl . "/pages/download.php", ['ref' => $ref, 'alternative' => $video_altfile['ref'], 'ext' => 'vtt', 'k' => $key])
+                ?>
+                <track class="videojs_alt_track" kind="subtitles" src="<?php echo $download_path; ?>" label="<?php echo escape($video_altfile["description"]); ?>" ></track>
+                <?php
+            }
+        }
         echo "</video>";
         ?>
     </textarea>

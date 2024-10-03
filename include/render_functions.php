@@ -259,7 +259,8 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             {
             // Is the governed field resource type ok; if not then no checking necessary as its already hidden
             const conditionalquestion = document.getElementById("question_<?php echo $n ?>");
-            if (conditionalquestion.dataset.resource_type_ok !="1") { return; }
+            if (Object.hasOwnProperty(conditionalquestion, 'dataset') 
+                && conditionalquestion.dataset.resource_type_ok !="1") { return; }
 
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
@@ -5892,18 +5893,36 @@ function render_antispam_question()
 /**
  * Renders a 'fixed' text question - not an input but to display information or values that cannot be changed
  *
- * @param  string $label
- * @param  string $text
- * @return void
+ * @param  string $label        Question label
+ * @param  string $text         Fixed text
+ * @param  string $helptext     Optional help text
+ * @param  string $helptext     Optional div identifier
+ *
  */
-function render_fixed_text_question($label, $text)
-    {   
-    echo "<div class='Question'>
-        <label>" . escape($label) . "</label>
-        <div class='Fixed'>" . escape($text) . "</div>
-        <div class='clearerleft'></div>
-        </div>";
-    }
+function render_fixed_text_question(string $label, string $text, string $helptext = "", string $divid = ""): void
+{
+    $fixed_html = '
+        <div class="Question" %identifier>
+            <label>%label</label>
+            <div class="Fixed">%text</div>
+            <div class="clearerleft"></div>
+            %helptextdiv
+        </div>';
+
+    $help_html = '
+        <div class="FormHelp" style="padding:0; clear:left;" >
+            <div class="FormHelpInner">%helptext</div>
+        </div>';
+
+    $replace = [
+        "%identifier" => (trim($divid) != '' ? ' id="' . escape($divid) . '"' : ''),
+        "%label" => escape($label),
+        "%text" => escape($text),
+        "%helptextdiv" => (trim($helptext) != "" ? str_replace("%helptext", escape($helptext), $help_html) : ""),
+    ];
+
+     echo str_replace(array_keys($replace),$replace,$fixed_html);
+}
 
 
 /**

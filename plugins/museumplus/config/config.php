@@ -56,7 +56,7 @@ $museumplus_ug_bypass_F_perm = (isset($GLOBALS['museumplus_ug_bypass_F_perm']) &
 ############################################################
 $museumplus_enable_script = true;
 $museumplus_interval_run = '+1 day'; // see http://php.net/manual/en/datetime.formats.relative.php or http://php.net/manual/en/datetime.add.php
-$museumplus_log_directory = '';
+// $museumplus_log_directory = '';  // This must now must be set in the primary config file
 $museumplus_script_failure_notify_days = 3;
 $museumplus_integrity_check_field = 0; # NOT IN USE until we can reliably get integrity checks of the data from M+. Even __lastModified can't guarantee us some of the virtual fields haven't been changed from other modules.
 

@@ -97,6 +97,13 @@ function get_emu_resources()
 */
 function get_emu_data($emu_api_server, $emu_api_server_port, array $irns, array $emu_rs_mappings)
     {
+    # Remove blanks or 0 values from the array as no need to call API for these.
+    $irns = array_values(array_filter($irns, 'is_positive_int_loose'));
+    if (count($irns) === 0)
+        {
+        return array();
+        }
+
     $GLOBALS['use_error_exception'] = true;
     try
         {

@@ -1304,6 +1304,11 @@ function config_generate_html(array $page_def)
             case 'multi_archive_select':
                 config_multi_archive_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4]);
                 break;
+            case 'fixed_input':
+                render_fixed_text_question($def[1], $def[2], $def[3]);
+                break;
+            default:
+                break;
             }
         }
     }
@@ -1935,4 +1940,56 @@ function get_resource_type_field_columns()
 function is_valid_contact_sheet_preview_size(string $val): bool
 {
     return preg_match('/^\d+x\d+$/', $val);
+}
+
+/**
+ * Store a config option that has been removed from the UI so that it will still work until it has been set in config file
+ *
+ * @param string $option
+ *
+ * @return bool Returns true if option been saved, false if not
+ *
+ */
+function save_removed_ui_config($option): bool
+{
+    if (isset($GLOBALS[$option]) && trim($GLOBALS[$option]) !== "") {
+        // This has been removed from the UI - set to a config file option if it was previously set
+        set_config_option(NULL, $option . "_REMOVED", $GLOBALS[$option]);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Check if there is a previously stored value for the given config option.
+ * Intended for options that were previously set in the UI but now need to be set in config.
+ *
+ * @param string    $option
+ * @param mixed     $default The default value to set for the config option if not set anywhere
+ *
+ * @return bool     True if the config option is overridden with a stored value from user_preferences, false if not
+ *
+ */
+function check_removed_ui_config(string $option, $default = ""): bool
+{
+    if (!isset($GLOBALS[$option])) {
+        $GLOBALS[$option] = $GLOBALS[$option . "_REMOVED"] ?? $default;
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Return a data structure that will instruct the configuration page generator functions to
+ * add a fixed input setting the setup page. Uses render_fixed_text_question(). Used for options removed from the UI
+ *
+ * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
+ * @param string    $value       The fixed text value to be displayed
+ * @param string    $helptext   Optional text that will be displayed below the question
+ *
+ * @return array   Array of data that will be passed to the page generation code
+ */
+function config_add_fixed_input(string $label, string $value, string $helptext = ""): array
+{
+    return array('fixed_input', $label, $value, $helptext);
 }

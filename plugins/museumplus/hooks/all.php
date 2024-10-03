@@ -1,6 +1,16 @@
 <?php
 function HookMuseumplusAllInitialise()
     {
+    // Check for previously saved config that is no longer set in UI
+    $museumplus_config = get_plugin_config('museumplus');
+    if (isset($museumplus_config["museumplus_log_directory"])) {
+        // Legacy config  - remove from plugin settings
+        save_removed_ui_config('museumplus_log_directory');
+        unset($museumplus_config["museumplus_log_directory"]);
+        set_plugin_config('museumplus', $museumplus_config);
+    }
+    check_removed_ui_config("museumplus_log_directory");
+
     $mplus_config = get_plugin_config('museumplus');
     $mplus_config = (is_null($mplus_config) ? [] : $mplus_config);
 

@@ -1,5 +1,19 @@
 <?php
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
+
+
+function HookSimplesamlAllInitialise()
+{
+    $simplesaml_config = get_plugin_config('simplesaml');
+    if (isset($simplesaml_config["simplesaml_lib_path"])) {
+        // Legacy config  - remove from plugin settings
+        save_removed_ui_config('simplesaml_lib_path');
+        unset($simplesaml_config["simplesaml_lib_path"]);
+        set_plugin_config('simplesaml', $simplesaml_config);
+    }
+	check_removed_ui_config("simplesaml_lib_path");
+}
+
 function HookSimplesamlAllPreheaderoutput()
     {      
     if(!simplesaml_php_check() || get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL) != SYSTEM_UPGRADE_LEVEL)
