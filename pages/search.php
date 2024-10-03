@@ -634,8 +634,23 @@ if($k=="" || $internal_share_access)
 
 if($use_selection_collection)
     {
+    // Clean up the user selection collection so that only resources in the current search can exist in the colleciton. 
+    $selection_collection = do_search('!collection'. $USER_SELECTION_COLLECTION);
+    $resource_not_in_search = array_diff(array_column($selection_collection, 'ref'), array_column($result, 'ref'));
+    if (count($resource_not_in_search) > 0) {
+        collection_remove_resources($USER_SELECTION_COLLECTION, $resource_not_in_search);
+    }
     ?>
     <script>
+    <?php 
+    $clear = count(do_search('!collection'. $USER_SELECTION_COLLECTION)) == 0 ? 'true' : 'false';
+    if (count($resource_not_in_search) > 0) {
+        ?>
+        UpdateSelectedResourcesCounter(<?php echo $clear; ?>);
+        UpdateSelectedBtns(<?php echo $clear; ?>);
+        <?php
+    }
+    ?>
     var searchparams = <?php echo json_encode($searchparams); ?>;
     </script>
     <?php
