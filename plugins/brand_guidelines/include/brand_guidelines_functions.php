@@ -66,6 +66,7 @@ function reorder_input_validator($value): bool
 function richtext_input_parser(string $value): string
 {
     $cache_permitted_html_tags = $GLOBALS['permitted_html_tags'];
+    // Minimum tags required by {@see strip_tags_and_attributes()}
     $GLOBALS['permitted_html_tags'] = [
         'html',
         'body',
@@ -79,6 +80,11 @@ function richtext_input_parser(string $value): string
     return $parsed;
 }
 
+/**
+ * Create a new page content item (use case).
+ * @param int $ref Page ID
+ * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array} An item data structure
+ */
 function create_page_content(int $ref, array $item): bool
 {
     if (!acl_can_edit_brand_guidelines()) {

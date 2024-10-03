@@ -99,7 +99,8 @@ if ($save && count_errors($processed_toc_fields) === 0) {
     if (delete_pages($delete_list)) {
         js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
     }
-    exit(error_alert($lang['error-failed-to-delete'], true, 200));
+    error_alert($lang['error-failed-to-delete'], true, 200);
+    exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {
     if ($edit) {
         reorder_items(
@@ -112,7 +113,8 @@ if ($save && count_errors($processed_toc_fields) === 0) {
         );
         js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
     }
-    exit(error_alert($lang['error-failed-to-move'], true, 200));
+    error_alert($lang['error-failed-to-move'], true, 200);
+    exit();
 }
 
 
