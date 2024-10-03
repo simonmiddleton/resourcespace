@@ -470,6 +470,8 @@ set_watermark_image();
 if ($facial_recognition) {
     include_once __DIR__ . '/facial_recognition_functions.php';
     $facial_recognition_active = initFacialRecognition();
+} else {
+    $facial_recognition_active = false;
 }
 if (!$disable_geocoding) {
     include_once __DIR__ . '/map_functions.php';
