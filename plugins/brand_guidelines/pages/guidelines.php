@@ -239,7 +239,7 @@ render_content_menu();
         console.debug('showOptionsMenu(e = %o, target = %o)', e, target);
         hideOptionsMenu();
         let btn_el = jQuery(e);
-        let target_item_type = 'content';
+        let manage_page = 'content';
 
         // Determine the position offset for the menu so it's within the proximity of the calling "item" element 
         if (target == 'menu-individual') {
@@ -250,7 +250,7 @@ render_content_menu();
                 ? (is_responsive ? -175 : 10)
                 : (is_responsive ? -165 : 30);
             off_top = nav_ctx ? -10 : 0;
-            let target_item_type = nav_ctx ? 'nav' : 'content';
+            manage_page = nav_ctx ? 'toc' : 'content';
         } else {
             off_left = -16;
             off_top = 40;
@@ -266,7 +266,7 @@ render_content_menu();
                 'item',
                 {
                     ref: btn_el.data('item-ref'),
-                    target_item_type: target_item_type,
+                    manage_page: manage_page,
                 }
             )
             .data(
@@ -318,11 +318,12 @@ render_content_menu();
 
     function edit_item(e) {
         console.debug('edit_item(e = %o)', e);
-        let item_id = jQuery(e).parent('#menu-individual').data('item-ref');
-        // todo: ditinguish between item types (nav/content) for the URL
+        let item = jQuery(e).parent('#menu-individual').data('item');
+        console.debug('Editing item - %o', item);
         return ModalLoad(
-            baseurl + '/plugins/brand_guidelines/pages/manage/toc.php?'
-            + new URLSearchParams({ref: item_id}).toString(),
+            `${baseurl}/plugins/brand_guidelines/pages/manage/${item.manage_page}.php?${
+                new URLSearchParams({ref: item.ref}).toString()
+            }`,
             true,
             true
         );

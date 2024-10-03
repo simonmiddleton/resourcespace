@@ -12,44 +12,6 @@ if (!acl_can_edit_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
-$ref = (int) getval('ref', 0, false, 'is_positive_int_loose'); # consider renaming to be more specific
-$type = (int) getval(
-    'type',
-    BRAND_GUIDELINES_CONTENT_TYPES['text'],
-    false,
-    fn($V) => in_array($V, BRAND_GUIDELINES_CONTENT_TYPES)
-);
-
-// Content always belongs to a page
-$page = (int) getval('page', 0, false, 'is_positive_int_loose');
-$all_pages = array_column(array_filter(get_all_pages(), __NAMESPACE__ . '\filter_only_pages'), null, 'ref');
-if ($page === 0 && $all_pages !== []) {
-    $page = (int) array_key_first($all_pages);
-} elseif (!isset($all_pages[$page])) {
-    http_response_code(400);
-    exit(escape(str_replace('%key', 'page', $GLOBALS['lang']['error-request-missing-key'])));
-}
-$page_contents_db = get_page_contents($page);
-
-// Actions
-$delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
-$reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
-$save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
-$edit = false;
-
-if ($ref > 0) {
-    /* $all_pages_index = array_column($pages_db, null,'ref');
-    if (isset($all_pages_index[$ref])) {
-        $edit = true;
-
-        // Help the process_custom_fields_submission() fill in the form
-        if (!$save) {
-            $_GET['name'] = $all_pages_index[$ref]['name'];
-            $parent = $all_pages_index[$ref]['parent'];
-        }
-    } */
-}
-
 $_GET['richtext'] = '
 <div id="lipsum"></div>
 <h2>Lorem&nbsp;</h2>
@@ -68,6 +30,49 @@ $_GET['richtext'] = '
 <p><a href="https://www.resourcespace.com/knowledge-base/" target="_blank" rel="noopener">Vestibulum</a> porttitor libero at felis consequat, ac blandit velit scelerisque. Pellentesque sodales mauris a luctus aliquam. Sed pellentesque sed magna eu ultricies. Sed ac faucibus augue.</p>
 </div>
 ';
+
+// Actions
+$delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
+$reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
+$save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
+$edit = false;
+
+// Specific page content item 
+$ref = (int) getval('ref', 0, false, 'is_positive_int_loose');
+if ($ref > 0) {
+    $db_item = get_page_content_item($ref);
+    if ($db_item !== []) {
+        // echo '<pre>';print_r($db_item);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
+        $edit = true;
+        $page = $db_item['page'];
+        $type = $db_item['type'];
+
+        // Help the process_custom_fields_submission() fill in the form
+        if (!$save) {
+            $content = json_decode($db_item['content'], true);
+            $_GET['richtext'] = $content['text-content'];
+        }
+    }
+}
+
+// Content always belongs to a page
+$page ??= (int) getval('page', 0, false, 'is_positive_int_loose');
+$all_pages = array_column(array_filter(get_all_pages(), __NAMESPACE__ . '\filter_only_pages'), null, 'ref');
+if ($page === 0 && $all_pages !== []) {
+    $page = (int) array_key_first($all_pages);
+} elseif (!isset($all_pages[$page])) {
+    http_response_code(400);
+    exit(escape(str_replace('%key', 'page', $GLOBALS['lang']['error-request-missing-key'])));
+}
+$page_contents_db = get_page_contents($page);
+
+$type ??= (int) getval(
+    'type',
+    BRAND_GUIDELINES_CONTENT_TYPES['text'],
+    false,
+    fn($V) => in_array($V, BRAND_GUIDELINES_CONTENT_TYPES)
+);
+
 // Page setup
 $page_def = [
     BRAND_GUIDELINES_CONTENT_TYPES['text'] => [
@@ -110,17 +115,19 @@ if ($save && count_errors($processed_fields) === 0) {
         'fields' => $processed_fields,
     ];
 
-    if ($edit) {
-        // save_page_content($ref, $item);
-    } elseif (!create_page_content($page, $item)) {
-        error_alert($lang['error_fail_save'], true, 200);
-        exit();
+    if (
+        ($edit && save_page_content($ref, $item))
+        || (!$edit && create_page_content($page, $item))
+    ) {
+        js_call_CentralSpaceLoad(
+            generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
+        );
     }
 
-    js_call_CentralSpaceLoad(
-        generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
-    );
+    error_alert($lang['error_fail_save'], true, 200);
+    exit();
 } elseif ($delete > 0 && enforcePostRequest(false)) {
+    // todo: use the same function to delete page content (by page ID) and call when deleting TOC pages too.
     /* if (delete_pages($delete_list)) {
         js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
     } */

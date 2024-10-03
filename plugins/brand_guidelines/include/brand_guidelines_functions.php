@@ -102,3 +102,24 @@ function create_page_content(int $ref, array $item): bool
 
     return false;
 }
+
+/**
+ * Save a page content item change (use case).
+ * @param int $ref Page content item ID
+ * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array} An item data structure
+ */
+function save_page_content(int $ref, array $item)
+{
+    if (!acl_can_edit_brand_guidelines()) {
+        return false;
+    }
+
+    if (
+        $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']
+        && save_content_item_text($ref, $item['fields'][0]['value'])
+    ) {
+        return true;
+    }
+
+    return false;
+}

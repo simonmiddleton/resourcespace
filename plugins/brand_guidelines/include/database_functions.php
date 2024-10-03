@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Montala\ResourceSpace\Plugins\BrandGuidelines;
 
-/**
- * Get all Brand Guidelines pages
- */
+/** Get all Brand Guidelines pages */
 function get_all_pages(): array
 {
     return ps_query(
@@ -16,12 +14,23 @@ function get_all_pages(): array
     );
 }
 
+/** Get a Brand Guidelines page (entire) content */
 function get_page_contents(int $id): array
 {
     return ps_query(
         "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_CONTENT)} FROM brand_guidelines_content WHERE `page` = ? ORDER BY order_by ASC",
         ['i', $id]
     );
+}
+
+/** Get a specific page content item */
+function get_page_content_item(int $id): array
+{
+    $item = ps_query(
+        "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_CONTENT)} FROM brand_guidelines_content WHERE `ref` = ?",
+        ['i', $id]
+    );
+    return $item !== [] ? $item[0] : [];
 }
 
 /**
@@ -140,3 +149,24 @@ function create_content_item_text(int $page, string $text): int
     return $ref;
 }
 
+function save_content_item_text(int $ref, string $text)
+{
+    $content = json_encode(['text-content' => $text]);
+    if ($content === false) {
+        debug(json_last_error_msg());
+        return false;
+    }
+
+    db_begin_transaction('brand_guidelines_save_page_content_item_text');
+    log_activity(null, LOG_CODE_EDITED, $text, 'brand_guidelines_content', 'content', $ref, null, '');
+    ps_query(
+        'UPDATE `brand_guidelines_content` SET `content` = ? WHERE `ref` = ?',
+        [
+            's', $content,
+            'i', $ref,
+        ]
+    );
+    db_end_transaction('brand_guidelines_save_page_content_item_text');
+    clear_query_cache('brand_guidelines_content');
+    return true;
+}
