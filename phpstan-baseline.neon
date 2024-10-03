@@ -6,16 +6,6 @@ parameters:
 			path: include/boot.php
 
 		-
-			message: "#^Constant MESSAGE_DEFAULT_TTL_SECONDS not found\\.$#"
-			count: 1
-			path: include/collections_functions.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN not found\\.$#"
-			count: 2
-			path: include/collections_functions.php
-
-		-
 			message: "#^Variable \\$collections in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: include/collections_functions.php
@@ -29,11 +19,6 @@ parameters:
 			message: "#^Variable \\$additional_title_pages in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: include/footer.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL not found\\.$#"
-			count: 2
-			path: include/general_functions.php
 
 		-
 			message: "#^Variable \\$_SERVER in isset\\(\\) always exists and is not nullable\\.$#"
@@ -91,31 +76,6 @@ parameters:
 			path: include/image_processing.php
 
 		-
-			message: "#^Constant MESSAGE_DEFAULT_TTL_SECONDS not found\\.$#"
-			count: 2
-			path: include/message_functions.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL not found\\.$#"
-			count: 2
-			path: include/message_functions.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN not found\\.$#"
-			count: 5
-			path: include/message_functions.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE not found\\.$#"
-			count: 2
-			path: include/message_functions.php
-
-		-
-			message: "#^Constant NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES not found\\.$#"
-			count: 2
-			path: include/node_functions.php
-
-		-
 			message: "#^Variable \\$is_tree in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: include/node_functions.php
@@ -129,11 +89,6 @@ parameters:
 			message: "#^Variable \\$collectiondata in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: include/request_functions.php
-
-		-
-			message: "#^Constant NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES not found\\.$#"
-			count: 2
-			path: include/resource_functions.php
 
 		-
 			message: "#^Variable \\$fp on left side of \\?\\? always exists and is not nullable\\.$#"
@@ -166,16 +121,6 @@ parameters:
 			path: include/searchbar.php
 
 		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL not found\\.$#"
-			count: 5
-			path: include/user_functions.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN not found\\.$#"
-			count: 4
-			path: include/user_functions.php
-
-		-
 			message: "#^Variable \\$order_by on left side of \\?\\? always exists and is not nullable\\.$#"
 			count: 1
 			path: include/user_functions.php
@@ -204,11 +149,6 @@ parameters:
 			message: "#^Variable \\$groups in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: pages/ajax/autocomplete_user.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE not found\\.$#"
-			count: 1
-			path: pages/ajax/message.php
 
 		-
 			message: "#^Variable \\$allowed_external_share_groups in empty\\(\\) always exists and is not falsy\\.$#"
@@ -276,24 +216,9 @@ parameters:
 			path: pages/team/team_analytics_edit.php
 
 		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL not found\\.$#"
-			count: 14
-			path: pages/team/team_mail.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN not found\\.$#"
-			count: 13
-			path: pages/team/team_mail.php
-
-		-
 			message: "#^Variable \\$unoconv_path in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: pages/tools/staticsync.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE not found\\.$#"
-			count: 1
-			path: pages/user/user_messages.php
 
 		-
 			message: "#^Variable \\$fields_tab_names in isset\\(\\) always exists and is not nullable\\.$#"
@@ -334,43 +259,3 @@ parameters:
 			message: "#^Variable \\$email in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: plugins/simplesaml/hooks/all.php
-
-		-
-			message: "#^Constant MESSAGE_DEFAULT_TTL_SECONDS not found\\.$#"
-			count: 2
-			path: upgrade/scripts/016_update_user_password_column.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN not found\\.$#"
-			count: 2
-			path: upgrade/scripts/016_update_user_password_column.php
-
-		-
-			message: "#^Constant MESSAGE_DEFAULT_TTL_SECONDS not found\\.$#"
-			count: 1
-			path: upgrade/scripts/024_video_tracks_removing_output_formats.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN not found\\.$#"
-			count: 1
-			path: upgrade/scripts/024_video_tracks_removing_output_formats.php
-
-		-
-			message: "#^Constant MESSAGE_DEFAULT_TTL_SECONDS not found\\.$#"
-			count: 1
-			path: upgrade/scripts/025_populate_resource_type_field_resource_type.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN not found\\.$#"
-			count: 1
-			path: upgrade/scripts/025_populate_resource_type_field_resource_type.php
-
-		-
-			message: "#^Constant MESSAGE_DEFAULT_TTL_SECONDS not found\\.$#"
-			count: 1
-			path: upgrade/scripts/026_download_filename_format.php
-
-		-
-			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN not found\\.$#"
-			count: 1
-			path: upgrade/scripts/026_download_filename_format.php

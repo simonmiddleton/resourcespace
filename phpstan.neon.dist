@@ -16,6 +16,8 @@ parameters:
         - tests
         - upgrade
         - lib/stemming
+    bootstrapFiles:
+        - include/definitions.php
 
     scanDirectories:
       - lib/html2pdf/
