@@ -317,9 +317,8 @@ render_content_menu();
     };
 
     function edit_item(e) {
-        console.debug('edit_item(e = %o)', e);
         let item = jQuery(e).parent('#menu-individual').data('item');
-        console.debug('Editing item - %o', item);
+        console.debug('Edit item - %o', item);
         return ModalLoad(
             `${baseurl}/plugins/brand_guidelines/pages/manage/${item.manage_page}.php?${
                 new URLSearchParams({ref: item.ref}).toString()
@@ -330,38 +329,30 @@ render_content_menu();
     }
 
     function delete_item(e) {
-        // console.debug('delete_item(e = %o)', e);
-        // let el = jQuery(e);
-        
-        // todo: ditinguish between item types (nav/content)
-        return toc_delete_item(e);
-    }
+        let item = jQuery(e).parent('#menu-individual').data('item');
+        console.debug('Delete item - %o', item);
 
-    function toc_delete_item(e) {
-        console.debug('toc_delete_item(e = %o)', e);
-        if(confirm('<?php echo escape($lang["confirm-deletion"]); ?>'))
+        if(confirm('<?php echo escape($lang['confirm-deletion']); ?>'))
             {
-            let item_id = jQuery(e).parent('#menu-individual').data('item-ref');
-            let temp_form = document.createElement("form");
-            temp_form.setAttribute("method", "post");
+            let temp_form = document.createElement('form');
+            temp_form.setAttribute('method', 'post');
             temp_form.setAttribute(
-                "action",
-                baseurl + '/plugins/brand_guidelines/pages/manage/toc.php?'
-                + new URLSearchParams({delete: item_id}).toString()
+                'action',
+                `${baseurl}/plugins/brand_guidelines/pages/manage/${item.manage_page}.php?${
+                    new URLSearchParams({delete: item.ref}).toString()
+                }`
             );
-
             <?php
             if ($CSRF_enabled) {
             ?>
-                let csrf = document.createElement("input");
-                csrf.setAttribute("type", "hidden");
-                csrf.setAttribute("name", "<?php echo escape($CSRF_token_identifier); ?>");
-                csrf.setAttribute("value", "<?php echo generateCSRFToken($usersession, "toc_delete_item"); ?>");
+                let csrf = document.createElement('input');
+                csrf.setAttribute('type', 'hidden');
+                csrf.setAttribute('name', '<?php echo escape($CSRF_token_identifier); ?>');
+                csrf.setAttribute('value', '<?php echo generateCSRFToken($usersession, 'delete_item'); ?>');
                 temp_form.appendChild(csrf);
             <?php
             }
             ?>
-
             CentralSpacePost(temp_form, true, false, false);
             };
 

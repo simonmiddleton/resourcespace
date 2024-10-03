@@ -88,22 +88,27 @@ function save_page(int $ref, string $name, int $parent)
  */
 function delete_pages(array $refs): bool
 {
-    $batch_activity_logger = fn($ref) => log_activity(null, LOG_CODE_DELETED, null, 'brand_guidelines_pages', 'name', $ref);
-    $refs_chunked = db_chunk_id_list($refs);
-
-    db_begin_transaction('brand_guidelines_delete_pages');
-    foreach ($refs_chunked as $refs_list) {
-        $done = ps_query(
-            'DELETE FROM brand_guidelines_pages WHERE ref IN (' . ps_param_insert(count($refs_list)) . ')',
-            ps_param_fill($refs_list, 'i')
+    $relevant_content_items = [];
+    foreach($refs as $page_ref) {
+        $relevant_content_items = array_merge(
+            $relevant_content_items,
+            array_column(get_page_contents($page_ref), 'ref')
         );
-
-        array_walk($refs_list, $batch_activity_logger);
     }
-    db_end_transaction('brand_guidelines_delete_pages');
-    clear_query_cache('brand_guidelines_pages');
 
-    return isset($done);
+    db_begin_transaction('delete_brand_guidelines_pages');
+    $deleted = db_delete_table_records(
+        'brand_guidelines_pages',
+        $refs,
+        fn($ref) => log_activity(null, LOG_CODE_DELETED, null, 'brand_guidelines_pages', 'name', $ref)
+    );
+    if ($deleted && $relevant_content_items !== []) {
+        $deleted = db_delete_table_records('brand_guidelines_content', $relevant_content_items, fn() => null);
+    }
+    db_end_transaction('delete_brand_guidelines_pages');
+    clear_query_cache('brand_guidelines_pages');
+    clear_query_cache('brand_guidelines_content');
+    return $deleted;
 }
 
 /**
@@ -169,4 +174,23 @@ function save_content_item_text(int $ref, string $text)
     db_end_transaction('brand_guidelines_save_page_content_item_text');
     clear_query_cache('brand_guidelines_content');
     return true;
+}
+
+/**
+ * Delete a Brand Guideline page content
+ *
+ * @param list<int> $refs List of page content IDs
+ * @return bool True if it executed the query, false otherwise
+ */
+function delete_page_content(array $refs): bool
+{
+    db_begin_transaction('delete_brand_guidelines_content');
+    $deleted = db_delete_table_records(
+        'brand_guidelines_content',
+        $refs,
+        fn($ref) => log_activity(null, LOG_CODE_DELETED, null, 'brand_guidelines_content', 'content', $ref)
+    );
+    db_end_transaction('delete_brand_guidelines_content');
+    clear_query_cache('brand_guidelines_content');
+    return $deleted;
 }

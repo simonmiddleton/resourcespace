@@ -95,10 +95,12 @@ if ($save && count_errors($processed_toc_fields) === 0) {
         $children = isset($section_page_struct[$delete]) ? array_column($section_page_struct[$delete], 'ref') : [];
         $delete_list = array_merge($delete_list, $children);
     }
+    $delete_list = array_map('intval', $delete_list);
 
     if (delete_pages($delete_list)) {
         js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
     }
+
     error_alert($lang['error-failed-to-delete'], true, 200);
     exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {

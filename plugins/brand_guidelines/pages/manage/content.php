@@ -108,10 +108,16 @@ if ($save && count_errors($processed_fields) === 0) {
     error_alert($lang['error_fail_save'], true, 200);
     exit();
 } elseif ($delete > 0 && enforcePostRequest(false)) {
-    // todo: use the same function to delete page content (by page ID) and call when deleting TOC pages too.
-    /* if (delete_pages($delete_list)) {
-        js_call_CentralSpaceLoad("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php");
-    } */
+    $db_item = get_page_content_item($delete);
+    if ($db_item !== [] && delete_page_content([$delete])) {
+        js_call_CentralSpaceLoad(
+            generateURL(
+                "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
+                ['spage' => $db_item['page']]
+            )
+        );
+    }
+
     error_alert($lang['error-failed-to-delete'], true, 200);
     exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {

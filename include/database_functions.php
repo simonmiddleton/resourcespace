@@ -1431,3 +1431,44 @@ function db_chunk_id_list(array $refs): array
             : array_chunk($valid_ids, SYSTEM_DATABASE_IDS_CHUNK_SIZE)
     );
     }
+
+/**
+ * Delete database table records from a list of IDs
+ *
+ * ```php
+ * return db_delete_table_records(
+ *     'brand_guidelines_content',
+ *     $refs,
+ *     fn($ref) => log_activity(null, LOG_CODE_DELETED, null, 'brand_guidelines_content', 'content', $ref)
+ * );
+ * ```
+ *
+ * Example how to not log it:
+ * ```php
+ * return db_delete_table_records('brand_guidelines_content', $refs, fn() => null);
+ * ```
+ * @param string $table Database table name
+ * @param list<int> $refs List of database IDs
+ * @return bool True if it executed the query, false otherwise
+ */
+function db_delete_table_records(string $table, array $refs, callable $logger): bool
+{
+    if (!in_array('ref', columns_in($table, null, null, true))) {
+        return false;
+    }
+
+    $refs_chunked = db_chunk_id_list($refs);
+    foreach ($refs_chunked as $refs_list) {
+        $done = ps_query(
+            sprintf(
+                'DELETE FROM %s WHERE ref IN (%s)',
+                $table,
+                ps_param_insert(count($refs_list))
+            ),
+            ps_param_fill($refs_list, 'i')
+        );
+        array_walk($refs_list, $logger);
+    }
+
+    return isset($done);
+}
