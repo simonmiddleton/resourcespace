@@ -121,6 +121,7 @@ if ($save && count_errors($processed_fields) === 0) {
     error_alert($lang['error-failed-to-delete'], true, 200);
     exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {
+    var_dump($reorder);echo '<pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
     if ($edit) {
         // Remap left/right direction to up/down where the item supports it
         if ($reorder === 'left') {
@@ -144,6 +145,7 @@ if ($save && count_errors($processed_fields) === 0) {
             generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
         );
     }
+
     error_alert($lang['error-failed-to-move'], true, 200);
     exit();
 }

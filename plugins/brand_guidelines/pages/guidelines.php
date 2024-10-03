@@ -269,10 +269,6 @@ render_content_menu();
                     manage_page: manage_page,
                 }
             )
-            .data(
-                'item-ref',
-                btn_el.data('item-ref') /* todo: this will most likely become an Item object so we can distinguish between item types (nav/content) */
-            )
             .slideDown(150);
     }
 
