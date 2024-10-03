@@ -361,22 +361,19 @@ render_content_menu();
     }
 
     function reorder_item(e, direction) {
-        console.debug('reorder_item(e = %o, direction = %o)', e, direction);
-        let item_id = jQuery(e).parent('#menu-individual').data('item-ref');
-        console.debug('item id = %o', item_id);
+        let item = jQuery(e).parent('#menu-individual').data('item');
+        console.debug('Re-order item - %o', item);
 
-        // todo: ditinguish between item types (nav/content)
-
-        // TOC items
         let temp_form = document.createElement("form");
         temp_form.setAttribute("method", "post");
         temp_form.setAttribute(
             "action",
-            baseurl + '/plugins/brand_guidelines/pages/manage/toc.php?'
-                + new URLSearchParams({
-                    ref: item_id,
+            `${baseurl}/plugins/brand_guidelines/pages/manage/${item.manage_page}.php?${
+                new URLSearchParams({
+                    ref: item.ref,
                     reorder: direction,
                 }).toString()
+            }`
         );
         <?php
         if ($CSRF_enabled) {
@@ -389,9 +386,7 @@ render_content_menu();
         <?php
         }
         ?>
-
         CentralSpacePost(temp_form, true, false, false);
-
         hideOptionsMenu();
         return false;
     }
