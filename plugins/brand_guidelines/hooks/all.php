@@ -9,6 +9,7 @@ function HookBrand_guidelinesAllInitialise()
     $plugin_root = dirname(__DIR__);
     include_once "{$plugin_root}/include/brand_guidelines_functions.php";
     include_once "{$plugin_root}/include/database_functions.php";
+    include_once "{$plugin_root}/include/render_functions.php";
     
     /** Types of content you can add to brand guideline pages */
     define('BRAND_GUIDELINES_CONTENT_TYPES', [
