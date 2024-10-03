@@ -12,25 +12,6 @@ if (!acl_can_edit_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
-$_GET['richtext'] = '
-<div id="lipsum"></div>
-<h2>Lorem&nbsp;</h2>
-<h3>Ipsum</h3>
-<p>Lorem <strong>ipsum</strong> <em>dolor</em> <span style="text-decoration: underline;">sit</span> <s>amet</s>, consectetur adipiscing elit.</p>
-<ul>
-<li>Praesent quis tincidunt purus.</li>
-<li>Curabitur laoreet, dui nec eleifend pharetra, arcu neque rhoncus urna, non interdum erat erat quis dolor.&nbsp;</li>
-</ul>
-<p>Curabitur laoreet sodales ligula, quis blandit magna gravida a.&nbsp;</p>
-<ol>
-<li>Nunc sodales,</li>
-<li>metus a eleifend fringilla,</li>
-<li>ipsum urna varius felis, eget pretium odio nisi sit amet justo.&nbsp;</li>
-</ol>
-<p><a href="https://www.resourcespace.com/knowledge-base/" target="_blank" rel="noopener">Vestibulum</a> porttitor libero at felis consequat, ac blandit velit scelerisque. Pellentesque sodales mauris a luctus aliquam. Sed pellentesque sed magna eu ultricies. Sed ac faucibus augue.</p>
-</div>
-';
-
 // Actions
 $delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
 $reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
