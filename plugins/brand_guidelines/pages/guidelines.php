@@ -362,7 +362,7 @@ render_content_menu();
 
     function reorder_item(e, direction) {
         let item = jQuery(e).parent('#menu-individual').data('item');
-        console.debug('Re-order item - %o', item);
+        console.debug('Re-order item - %o - direction: %o', item, direction);
 
         let temp_form = document.createElement("form");
         temp_form.setAttribute("method", "post");
