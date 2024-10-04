@@ -33,8 +33,14 @@ abstract class Provider
     * @param  string   $keywords  Search keyword(s)
     * @param  integer  $per_page  Number of results per page
     * @param  integer  $page      Select the page number
+    * @param  array    $ctx       Any other search related contextual information specific provider instances might need
     */
-    abstract protected function runSearch(string $keywords, int $per_page = 24, int $page = 1): ProviderSearchResults;
+    abstract protected function runSearch(
+        string $keywords,
+        int $per_page = 24,
+        int $page = 1,
+        array $ctx = []
+    ): ProviderSearchResults;
 
     /**
      * Get file information for download or when creating a new resource based on a Providers' source file.
@@ -72,10 +78,11 @@ abstract class Provider
     * @param  string   $keywords  Search keyword(s)
     * @param  integer  $per_page  Number of results per page
     * @param  integer  $page      Select the page number
+    * @param  array    $ctx       Any other search related contextual information specific provider instances might need
     */
-    final public function search($keywords, $per_page = 24, $page = 1): ProviderSearchResults
+    final public function search($keywords, $per_page = 24, $page = 1, array $ctx = []): ProviderSearchResults
         {
-        return $this->runSearch($keywords, $per_page, $page);
+        return $this->runSearch($keywords, $per_page, $page, $ctx);
         }
 
 
@@ -213,5 +220,13 @@ abstract class Provider
             'header' => [],
             'data' => [$this->lang['collection_download_original']]
         ];
+        }
+
+    /**
+     * Get the Providers' sort options which should be displayed on the search page
+     */
+    public function getSortOptions(): array
+        {
+        return [];
         }
     }

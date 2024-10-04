@@ -39,7 +39,7 @@ class Shutterstock extends Provider
         }
 
     /** @inheritdoc */
-    public function runSearch(string $keywords, int $per_page = 24, int $page = 1): ProviderSearchResults
+    public function runSearch(string $keywords, int $per_page = 24, int $page = 1, array $ctx = []): ProviderSearchResults
         {
         if($per_page < 3)
             {
