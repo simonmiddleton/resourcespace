@@ -445,6 +445,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return parent::getResourceDownloadOptionsTable($id);
         }
 
+    /** @inheritdoc */
     public function getSortOptions(): array
         {
         $sort_options = [
