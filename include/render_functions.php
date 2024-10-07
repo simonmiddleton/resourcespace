@@ -4145,7 +4145,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
     debug_function_call(__FUNCTION__, [$field['ref'], $valueonly, $fixedwidth]);
     global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $force_display_template_orderby;
 
-    $value=$field["value"];
+    $value = (string) $field["value"];
     $title=escape($field["title"]);
     $modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
     if($modified_field)
@@ -4173,11 +4173,11 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             {
             $extra.="<div class=\"clearerleft\"></div><div class=\"RecordStory\"><h1>{$title}</h1>
             <p>{$value}</p><p>{$warningtext}</p>{$dismisslink}</div>";
-            }   
+            }
         }
     
     # Handle general warning messages
-    if (!$valueonly && $field["type"] == FIELD_TYPE_WARNING_MESSAGE && trim((string)$value) != "") 
+    if (!$valueonly && $field["type"] == FIELD_TYPE_WARNING_MESSAGE && trim($value) != "") 
         {
         debug('Handle general warning messages');
         $warningtext = $value;
@@ -4193,13 +4193,13 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             <p>".nl2br(escape(i18n_get_translated($warningtext)))."</p>{$dismisslink}</div>";
             }
         }
-    
+
     if ($field['value_filter']!="")
         {
         debug('Calling value_filter...');
         eval(eval_check_signed($field['value_filter']));
         }
-    elseif ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos((string)$value,":")!=false)
+    elseif ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
         {
         // Show the time as well as date if entered
         $value=nicedate($value,true,true);
@@ -4208,9 +4208,9 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         {
         $value=nicedate($value,false,true);
         }
-    elseif ($field["type"]==FIELD_TYPE_DATE_RANGE) 
+    elseif ($field["type"]==FIELD_TYPE_DATE_RANGE)
         {
-        $rangedates = explode(",",(string)$value);      
+        $rangedates = explode(",",$value);
         natsort($rangedates);
         $value=implode(DATE_RANGE_SEPARATOR,$rangedates);
         }
