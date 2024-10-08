@@ -351,7 +351,7 @@ if ($search_titles)
                 $udata = get_user($cuser);
                 if($udata)
                     {
-                    $udisplayname = trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
+                    $udisplayname = trim((string)$udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
                     $title_string = $lang["contributedby"] . " " . $udisplayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"");
                     }
                 }
