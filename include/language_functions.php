@@ -266,7 +266,7 @@ function str_replace_formatted_placeholder($mixedplaceholder, $mixedreplace, $su
     else {$placeholder = array($mixedplaceholder);}
     for ($n = 0;$n<count($placeholder);$n++)
         {
-        $array_placeholder[$n] = array(strtoupper($placeholder[$n]), strtolower($placeholder[$n]), ucfirstletter($placeholder[$n]));
+        $array_placeholder[$n] = array(strtoupper((string)$placeholder[$n]), strtolower((string)$placeholder[$n]), ucfirstletter((string)$placeholder[$n]));
         }
 
     # Creates a multi-dimensional array of the replace values written in different case styles.
@@ -274,14 +274,14 @@ function str_replace_formatted_placeholder($mixedplaceholder, $mixedreplace, $su
     else {$replace = array($mixedreplace);}
     for ($n = 0;$n<count($replace);$n++)
         {
-        $array_replace[$n] = array(strtoupper($replace[$n]), strtolower($replace[$n]), ucfirst(strtolower($replace[$n])));
+        $array_replace[$n] = array(strtoupper((string)$replace[$n]), strtolower((string)$replace[$n]), ucfirst(strtolower((string)$replace[$n])));
         }
 
     # Adds "?" to the arrays if required.
     if ($question_mark)
         {
         $array_placeholder[] = "?";
-        $array_replace[] = strtoupper($replace[0]);
+        $array_replace[] = strtoupper((string)$replace[0]);
         }
 
     # Replaces the placeholders with the replace values and returns the new string.
