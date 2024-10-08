@@ -64,10 +64,12 @@ if ($alt_access)
         $enable_alt_file_preview_mouseover = $alt_pre != '' && $alternative_file_previews_mouseover;
         $css_PointerEventsNone = $enable_alt_file_preview_mouseover ? ' PointerEventsNone' : '';
         $rowspan = 1;
-        if(in_array(strtolower($altfiles[$n]["file_extension"]),VIEW_IN_BROWSER_EXTENSIONS) && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"]))
-            {
+        if (
+            in_array(strtolower($altfiles[$n]["file_extension"] ?? ""),VIEW_IN_BROWSER_EXTENSIONS)
+            && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"])
+        ) {
             $rowspan = 2;
-            }
+        }
 
         ?>
         <tr class="DownloadDBlend" id="alt_file_preview_<?php echo $altfiles[$n]['ref']; ?>">
