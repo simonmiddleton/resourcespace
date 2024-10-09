@@ -1,11 +1,20 @@
 <?php
 include "../../../include/boot.php";
+include "../../../include/authenticate.php";
+
+
+// Find image
+$ref=getval("ref",0,true);
+$image=get_resource_path($ref,false,"",false,"png");
+$imageFilePath=get_resource_path($ref,true,"",false,"png");
+if (!file_exists($imageFilePath)) {exit("Work in progress, original file must be PNG");}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    set_processing_message($lang["openai_image_edit__preparing_images"]);
+
     $input = json_decode(file_get_contents('php://input'), true);
 
-    // Read the image from disk (ensure this path is correct)
-    $imageFilePath = 'tesla.png';  // Path to your image
     $maskData = $input['mask'];    // Base64 encoded mask from the frontend
     $prompt = isset($input['prompt']) ? $input['prompt'] : '';
 
@@ -38,6 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Attach the form data
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
+    // Update the status message
+    set_processing_message($lang["openai_image_edit__completing"]);
+
     // Execute the request and get the response
     $response = curl_exec($ch);
 
@@ -62,13 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
+
+include "../../../include/header.php";
+
+
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Mask Tool</title>
     <style>
         canvas {
             border: 1px solid black;
@@ -76,33 +86,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         #penSize {
             margin: 10px;
         }
+        #canvas {
+        background-image:
+        linear-gradient(45deg, #ccc 25%, transparent 25%), 
+        linear-gradient(135deg, #ccc 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #ccc 75%),
+        linear-gradient(135deg, transparent 75%, #ccc 75%);
+        background-size:25px 25px; /* Must be a square */
+        background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px; /* Must be half of one side of the square */
+        float:left;
+        }
+        #tools
+        {
+        float:left;
+        margin:20px;
+        }
+
     </style>
-</head>
-<body>
-    <img id="image" src="tesla.png" alt="Your Image" hidden>
-    <div class="canvas-container">
+    <img id="image" src="<?php echo $image ?>" alt="" hidden>
     <canvas id="canvas"></canvas>
-    </div>
-    <br>
+    <div class="toolbox">
+    <div id="tools">
     <label for="penSize">Pen Size: </label>
     <input type="range" id="penSize" min="1" max="100" value="50">
     <br>
     <button id="clearBtn">Clear</button>
     <button id="submitBtn">Submit</button>
     <br>
-    <textarea id="prompt" required placeholder="Prompt for regeneration">Complete image as appropriate</textarea>
-<style>
-        /* Apply checkerboard pattern directly to the canvas container */
-        #canvas {
-            background-image:
-      linear-gradient(45deg, #ccc 25%, transparent 25%), 
-      linear-gradient(135deg, #ccc 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, #ccc 75%),
-      linear-gradient(135deg, transparent 75%, #ccc 75%);
-    background-size:25px 25px; /* Must be a square */
-    background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px; /* Must be half of one side of the square */
-        }
-    </style>
+    <textarea id="prompt" rows="5" required placeholder="Prompt for regeneration">Complete image as appropriate</textarea>
+    </div>
+    </div>
 </head>
 <body>
     <script>
@@ -164,8 +177,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Clear the canvas
         document.getElementById('clearBtn').addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear previous drawings
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);  // Draw new image
         });
 
         // Submit canvas as mask
@@ -174,8 +187,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const prompt = document.getElementById('prompt').value;
             const originalImage = image.src;
 
+            CentralSpaceShowProcessing();
+
             // Send mask and image to the backend via AJAX
-            const response = await fetch('mask_test.php', {
+            const response = await fetch('<?php echo $baseurl_short ?>plugins/openai_image_edit/pages/edit.php?ref=<?php echo $ref ?>&<?php echo $CSRF_token_identifier?>=<?php echo generateCSRFToken($usersession, "openai_image_edit"); ?>', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -205,8 +220,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 console.error('Failed to get a valid image URL from OpenAI.');
             }
-
+            CentralSpaceHideProcessing();
         });
     </script>
-</body>
-</html>
+<?php
+include "../../../include/footer.php";
+
