@@ -212,7 +212,7 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
             </div>
         </form>
     </div>
-    <div class="preview guidelines-colour-block<?php echo (BRAND_GUIDELINES_CONTENT_TYPES['colour'] !== $type ? ' DisplayNone' : ''); ?>">Preview</div>
+    <div class="preview guidelines-colour-block<?php echo (BRAND_GUIDELINES_CONTENT_TYPES['colour'] !== $type ? ' DisplayNone' : ''); ?>"><?php echo escape($lang['preview']); ?></div>
 </div>
 <script>
 tinymce.remove();
