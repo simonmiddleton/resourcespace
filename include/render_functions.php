@@ -3428,6 +3428,11 @@ function render_custom_fields(array $cfs)
             $field_name  = $field["html_properties"]["name"];
             $field_value = $field["value"];
 
+            $show_help_text = isset($field['help_text']) && trim($field['help_text'] !== '');
+            $help_js = $show_help_text
+                ? sprintf('onblur="HideHelp(\'%1$s\');" onfocus="ShowHelp(\'%1$s\');"', escape($field_id))
+                : '';
+
             global $FIXED_LIST_FIELD_TYPES;
             $selected_options_hashes = array_map(function($opt) use ($field_id)
                 {
@@ -3496,13 +3501,23 @@ function render_custom_fields(array $cfs)
                     }
                     ?>
                     <input type=text
-                           id="<?php echo $field_id; ?>"
+                           id="<?php echo escape($field_id); ?>"
                            class="stdwidth"
-                           name="<?php echo $field_name; ?>"
-                           value="<?php echo escape($field_value); ?>">
+                           name="<?php echo escape($field_name); ?>"
+                           value="<?php echo escape($field_value); ?>"
+                           <?php echo $help_js; ?>
+                    >
                     <?php
                     break;
                 }
+
+            if ($show_help_text) {
+                ?>
+                <div id="help_<?php echo escape($field_id); ?>" class="FormHelp" style="display: none;">
+                    <div class="FormHelpInner"><?php echo escape($field['help_text']); ?></div>
+                </div>
+                <?php
+            }
 
             if(isset($field["error"]) && trim($field["error"]) != "")
                 {

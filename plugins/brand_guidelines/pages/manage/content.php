@@ -100,18 +100,21 @@ $page_def = [
             [
             'id'       => 'hex',
             'title'    => $lang['brand_guidelines_hex'],
+            'help_text' => $lang['brand_guidelines_hex_help_txt'],
             'type'     => FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
             'required' => false,
             ],
             [
             'id'       => 'rgb',
             'title'    => $lang['brand_guidelines_rgb'],
+            'help_text' => $lang['brand_guidelines_rgb_help_txt'],
             'type'     => FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
             'required' => false,
             ],
             [
             'id'       => 'cmyk',
             'title'    => $lang['brand_guidelines_cmyk'],
+            'help_text' => $lang['brand_guidelines_cmyk_help_txt'],
             'type'     => FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
             'required' => false,
             ],
@@ -233,6 +236,10 @@ tinymce.init({
     },
 });
 
+jQuery(document).ready(() => {
+    update_colour_preview(jQuery('#hex').val());
+});
+
 jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
     const field_value = jQuery(e.target).val();
     if (field_value === '') {
@@ -245,7 +252,7 @@ jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
     let background_colour = '';
     switch (e.target.id) {
         case 'hex':
-            background_colour = `#${field_value}`;
+            background_colour = field_value;
             jQuery('#rgb').val(Object.values(hex_to_rgb(field_value)));
             jQuery('#cmyk').val(Object.values(hex_to_cmyk(field_value)));
             break;
@@ -274,10 +281,15 @@ jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
             break;
     }
 
-    jQuery('.preview.guidelines-colour-block').css('background-color', background_colour);
-    console.log('field_value = %o', field_value);
-    console.log('e.target.id = %o', e.target.id);
+    update_colour_preview(background_colour);
 });
+
+function update_colour_preview(hex) {
+    if (hex !== '') {
+        jQuery('.preview.guidelines-colour-block')
+            .css('background-color', hex.substring(0, 1) === '#' ? hex : `#${hex}`);
+    }
+}
 
 function show_form_error(selector, msg) {
     jQuery('<div>', { class: 'FormError' }).text(msg).appendTo(selector);
