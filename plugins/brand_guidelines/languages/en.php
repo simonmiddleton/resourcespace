@@ -21,3 +21,6 @@ $lang['brand_guidelines_title_edit_text'] = 'Edit text';
 $lang['brand_guidelines_title_select_resource'] = 'Select existing resource';
 // $lang['brand_guidelines_btn_add_resource'] = 'Add resource'; # unsure if it's better to have custom button labels
 $lang['brand_guidelines_err_invalid_input'] = 'Invalid input submitted';
+$lang['brand_guidelines_hex'] = 'HEX';
+$lang['brand_guidelines_rgb'] = 'RGB';
+$lang['brand_guidelines_cmyk'] = 'CMYK';

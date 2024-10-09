@@ -55,7 +55,11 @@ function render_content_menu()
             <i class="fa-solid fa-fw fa-photo-film"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_existing_resource']); ?></span>
         </button>
-        <button class="context-menu-row">
+        <button
+            class="context-menu-row"
+            onclick="return new_content_item(this);"
+            data-item-type="<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['colour']); ?>"
+        >
             <i class="fa-solid fa-fw fa-palette"></i>
             <span><?php echo escape($GLOBALS['lang']['colour']); ?></span>
         </button>

@@ -53,6 +53,17 @@
 .guidelines-content h2 { font-size: 1.3rem; }
 .guidelines-content .top-right-menu { float: right; }
 
+.form-wrapper-2 {
+    float: left;
+}
+.preview.guidelines-colour-block--colour {
+    width: 200px;
+    height: 150px;
+    border: 1px solid black;
+    float: left;
+    margin: 0.8em 0 0 0.8em;
+}
+
 .guidelines-colour-block {
     width: 200px;
     border-radius: 15px;
