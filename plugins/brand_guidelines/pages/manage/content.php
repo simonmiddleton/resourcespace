@@ -212,7 +212,7 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
             </div>
         </form>
     </div>
-    <div class="preview guidelines-colour-block--colour <?php echo (BRAND_GUIDELINES_CONTENT_TYPES['colour'] !== $type ? 'DisplayNone' : ''); ?>">Preview</div>
+    <div class="preview guidelines-colour-block<?php echo (BRAND_GUIDELINES_CONTENT_TYPES['colour'] !== $type ? ' DisplayNone' : ''); ?>">Preview</div>
 </div>
 <script>
 tinymce.remove();
@@ -274,7 +274,7 @@ jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
             break;
     }
 
-    jQuery('.preview.guidelines-colour-block--colour').css('background-color', background_colour);
+    jQuery('.preview.guidelines-colour-block').css('background-color', background_colour);
     console.log('field_value = %o', field_value);
     console.log('e.target.id = %o', e.target.id);
 });
