@@ -253,8 +253,14 @@ jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
     switch (e.target.id) {
         case 'hex':
             background_colour = field_value;
-            jQuery('#rgb').val(Object.values(hex_to_rgb(field_value)));
-            jQuery('#cmyk').val(Object.values(hex_to_cmyk(field_value)));
+            const hex2rgb = hex_to_rgb(field_value);
+            if (Object.keys(hex2rgb).length !== 0) {
+                jQuery('#rgb').val(Object.values(hex2rgb));
+                jQuery('#cmyk').val(Object.values(hex_to_cmyk(field_value)));
+            } else {
+                show_form_error('#Question_hex', '<?php echo escape($lang['brand_guidelines_err_invalid_input']); ?>');
+            }
+
             break;
 
         case 'rgb':
@@ -298,9 +304,15 @@ function show_form_error(selector, msg) {
 }
 
 function hex_to_rgb(hex) {
+    console.debug('hex_to_rgb(%o)', hex);
     // Expand short form, if applicable
     hex = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => r + r + g + g + b + b);
+    console.debug('hex = %o', hex);
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    console.debug('result = %o', result);
+    if (result === null) {
+        return {};
+    }
     return {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
