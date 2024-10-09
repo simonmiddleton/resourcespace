@@ -45,8 +45,8 @@ if ($page === 0 && $all_pages !== []) {
     http_response_code(400);
     exit(escape(str_replace('%key', 'page', $GLOBALS['lang']['error-request-missing-key'])));
 }
-$page_contents_db = get_page_contents($page);
 
+// Content (item) always has a type
 $type ??= (int) getval(
     'type',
     BRAND_GUIDELINES_CONTENT_TYPES['text'],
@@ -121,7 +121,6 @@ if ($save && count_errors($processed_fields) === 0) {
     error_alert($lang['error-failed-to-delete'], true, 200);
     exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {
-    var_dump($reorder);echo '<pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
     if ($edit) {
         // Remap left/right direction to up/down where the item supports it
         if ($reorder === 'left') {
@@ -130,16 +129,22 @@ if ($save && count_errors($processed_fields) === 0) {
             $reorder = 'down';
         }
 
-        /* reorder_items(
+        // find elements that need re-ordering
+        $page_contents_db = array_column(get_page_contents($page), null, 'ref');
+        // echo '<pre>';print_r($page_contents_db);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
+
+        // apply group logic (e.g. skip entire group) - if applicable
+            // determine what kind of groups we have (resource/color) and how many items are in each group (for skipping calculations)
+
+        reorder_items(
             'brand_guidelines_content',
             array_replace(
-                // todo: change to the right var
-                $all_pages_index,
+                $page_contents_db,
                 // todo: add logic to jump over item groups (when relevant)
-                [$ref => compute_item_order($all_pages_index[$ref], $reorder)]
+                [$ref => compute_item_order($page_contents_db[$ref], $reorder)]
             ),
-            fn($V) => $V['page'] === $all_pages_index[$ref]['page']
-        ); */
+            null
+        );
         js_call_CentralSpaceLoad(
             // todo: use sections (id="content-item-<ref>") to navigate back to the moved items' position to allow user to continue their work
             generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
