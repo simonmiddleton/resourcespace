@@ -42,6 +42,11 @@ function HookBrand_guidelinesContentRender_custom_fields_default_case_override(a
         </textarea>
         <?php
         return true;
+    } elseif ($field['type'] === FIELD_TYPE_COLOUR_PREVIEW) {
+        ?>
+        <div class="preview guidelines-colour-block"></div>
+        <?php
+        return true;
     }
 
     return false;

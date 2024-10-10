@@ -92,6 +92,12 @@ $page_def = [
         ],
         'fields' => [
             [
+            'id'       => 'colour_preview',
+            'title'    => $lang['preview'],
+            'type'     => FIELD_TYPE_COLOUR_PREVIEW,
+            'required' => false,
+            ],
+            [
             'id'       => 'name',
             'title'    => $lang['name'],
             'type'     => FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
@@ -194,28 +200,25 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
 ?>
 <div class="BasicsBox">
     <h1><?php echo escape($edit ? $page_title['edit'] : $page_title['new']); ?></h1>
-    <div class="form-wrapper-<?php echo escape((string) $type); ?>">
-        <form
-            name="manage_content"
-            id="manage_content" class="modalform guidelines"
-            method="POST"
-            action="<?php echo "{$baseurl_short}plugins/brand_guidelines/pages/manage/content.php"; ?>"
-            onsubmit="return CentralSpacePost(this, true, true);"
-        >
-            <?php
-            generateFormToken('manage_content');
-            render_hidden_input('page', (string) $page);
-            render_hidden_input('ref', (string) $ref);
-            render_hidden_input('type', (string) $type);
-            render_custom_fields($processed_fields);
-            ?>
-            <div class="QuestionSubmit" >
-                <input type="submit" name="content_submit" value="<?php echo escape($edit ? $lang['save'] : $lang['create']); ?>"></input>
-                <div class="clearleft"></div>
-            </div>
-        </form>
-    </div>
-    <div class="preview guidelines-colour-block<?php echo (BRAND_GUIDELINES_CONTENT_TYPES['colour'] !== $type ? ' DisplayNone' : ''); ?>"><?php echo escape($lang['preview']); ?></div>
+    <form
+        name="manage_content"
+        id="manage_content" class="modalform guidelines"
+        method="POST"
+        action="<?php echo "{$baseurl_short}plugins/brand_guidelines/pages/manage/content.php"; ?>"
+        onsubmit="return CentralSpacePost(this, true, true);"
+    >
+        <?php
+        generateFormToken('manage_content');
+        render_hidden_input('page', (string) $page);
+        render_hidden_input('ref', (string) $ref);
+        render_hidden_input('type', (string) $type);
+        render_custom_fields($processed_fields);
+        ?>
+        <div class="QuestionSubmit" >
+            <input type="submit" name="content_submit" value="<?php echo escape($edit ? $lang['save'] : $lang['create']); ?>"></input>
+            <div class="clearleft"></div>
+        </div>
+    </form>
 </div>
 <script>
 tinymce.remove();
@@ -304,12 +307,9 @@ function show_form_error(selector, msg) {
 }
 
 function hex_to_rgb(hex) {
-    console.debug('hex_to_rgb(%o)', hex);
     // Expand short form, if applicable
     hex = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => r + r + g + g + b + b);
-    console.debug('hex = %o', hex);
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    console.debug('result = %o', result);
     if (result === null) {
         return {};
     }

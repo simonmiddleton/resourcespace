@@ -23,6 +23,7 @@ function HookBrand_guidelinesAllInitialise()
     // Custom field types - see HookBrand_guidelinesContentRender_custom_fields_default_case_override()
     define('FIELD_TYPE_NUMERIC', 101);
     define('FIELD_TYPE_TEXT_RICH', 102);
+    define('FIELD_TYPE_COLOUR_PREVIEW', 103);
     }
 
 function HookBrand_guidelinesAllHandleuserref() {
