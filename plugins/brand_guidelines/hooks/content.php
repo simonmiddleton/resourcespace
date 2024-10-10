@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use function Montala\ResourceSpace\Plugins\BrandGuidelines\colour_cmyk_input_validator;
+use function Montala\ResourceSpace\Plugins\BrandGuidelines\colour_hex_input_validator;
+use function Montala\ResourceSpace\Plugins\BrandGuidelines\colour_rgb_input_validator;
 use function Montala\ResourceSpace\Plugins\BrandGuidelines\richtext_input_parser;
 
 /**
@@ -77,6 +80,16 @@ function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(a
         } elseif (richtext_input_parser($field_value) === '') {
             return $GLOBALS['lang']['brand_guidelines_err_invalid_input'];
         }
+    } elseif (
+        $field['type'] === FIELD_TYPE_TEXT_BOX_SINGLE_LINE
+        && $field_value !== ''
+        && (
+            ($field['id'] === 'hex' && !colour_hex_input_validator($field_value))
+            || ($field['id'] === 'rgb' && !colour_rgb_input_validator($field_value))
+            || ($field['id'] === 'cmyk' && !colour_cmyk_input_validator($field_value))
+        )
+    ) {
+            return $GLOBALS['lang']['brand_guidelines_err_invalid_input'];
     }
 
     return false;

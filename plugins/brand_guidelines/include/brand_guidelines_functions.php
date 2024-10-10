@@ -80,6 +80,36 @@ function richtext_input_parser(string $value): string
     return $parsed;
 }
 
+/** Input validation for HEX colour syntax, including short form notations (e.g. 03A === 0033AA) */
+function colour_hex_input_validator($value): bool
+{
+    return preg_match(
+        '/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i',
+        // Expand short form, if applicable
+        preg_replace_callback(
+            '/^#?([a-f\d])([a-f\d])([a-f\d])$/i',
+            fn(array $matches) => sprintf('%1$s%1$s%2$s%2$s%3$s%3$s', $matches[1], $matches[2], $matches[3]),
+            $value,
+        )
+    ) === 1;
+}
+
+/** Input validation for RGB colour syntax (e.g. 0,0,0) */
+function colour_rgb_input_validator($value): bool
+{
+    return is_string($value) && preg_match('/^\d{1,3}, ?\d{1,3}, ?\d{1,3}$/', $value) === 1 
+        ? count(array_filter(array_map('trim', explode(',', $value)), fn($val) => $val >= 0 && $val <= 255)) === 3
+        : false;
+}
+
+/** Input validation for CMYK colour syntax (e.g. 0,0,0,100) */
+function colour_cmyk_input_validator($value): bool
+{
+    return is_string($value) && preg_match('/^\d{1,3}, ?\d{1,3}, ?\d{1,3}, ?\d{1,3}$/', $value) === 1 
+        ? count(array_filter(array_map('trim', explode(',', $value)), fn($val) => $val >= 0 && $val <= 100)) === 4
+        : false;
+}
+
 /**
  * Create a new page content item (use case).
  * @param int $ref Page ID
