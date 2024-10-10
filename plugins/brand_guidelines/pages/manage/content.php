@@ -241,7 +241,10 @@ tinymce.init({
 });
 
 jQuery(document).ready(() => {
-    update_colour_preview(jQuery('#hex').val());
+    const background_colour = jQuery('#hex').val();
+    if (background_colour !== undefined) {
+        update_colour_preview(background_colour);
+    }
 });
 
 jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
