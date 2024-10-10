@@ -23,7 +23,6 @@ $ref = (int) getval('ref', 0, false, 'is_positive_int_loose');
 if ($ref > 0) {
     $db_item = get_page_content_item($ref);
     if ($db_item !== []) {
-        // echo '<pre>';print_r($db_item);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
         $edit = true;
         $page = $db_item['page'];
         $type = $db_item['type'];
@@ -293,6 +292,10 @@ jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
     update_colour_preview(background_colour);
 });
 
+/**
+ * Helper: update colour preview
+ * @param {String} hex Hexadecimal value (with/without # prefix)
+ */
 function update_colour_preview(hex) {
     if (hex !== '') {
         jQuery('.preview.guidelines-colour-block')
@@ -300,12 +303,21 @@ function update_colour_preview(hex) {
     }
 }
 
+/**
+ * Helper: show individual form question error
+ * @param {String} selector Selector to use to find the element to append the FormError div to
+ */
 function show_form_error(selector, msg) {
     jQuery('<div>', { class: 'FormError' }).text(msg).appendTo(selector);
     // jQuery('<div>', { class: 'FormError DisplayNone' }).text(msg).appendTo(selector);
     // jQuery(selector).find('div.FormError').removeClass('DisplayNone');
 }
 
+/**
+ * Calculate the RGB value from HEX
+ * @param {String} hex Hexadecimal value (with/without # prefix)
+ * @return {{r: Number, g: Number, b: Number}} Return an RGB object or an empty object if the input is invalid 
+ */
 function hex_to_rgb(hex) {
     // Expand short form, if applicable
     hex = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => r + r + g + g + b + b);
@@ -320,17 +332,35 @@ function hex_to_rgb(hex) {
     };
 }
 
+/**
+ * Calculate the HEX value from RGB
+ * @param {Number} r Red value
+ * @param {Number} g Green value
+ * @param {Number} b Blue value
+ * @return {String} Returns the HEX value, empty string if input is invalid
+ */
 function rgb_to_hex(r, g, b) {
     return ([r, g, b].filter((i) => i >= 0 && i <= 255).length === 3)
         ? `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1).toUpperCase()}`
         : '';
 }
 
+/**
+ * Calculate the CMYK value from HEX
+ * @param {String} hex Hexadecimal value (with/without # prefix)
+ */
 function hex_to_cmyk(hex) {
     const { r, g, b } = hex_to_rgb(hex);
     return rgb_to_cmyk(r, g, b);
 }
 
+/**
+ * Calculate the CMYK value from RGB
+ * @param {Number} red
+ * @param {Number} green
+ * @param {Number} blue
+ * @return {{c: Number, m: Number, y: Number, k: Number}} Returns a CMYK object
+ */
 function rgb_to_cmyk(red, green, blue) {
     if (red === 0 && green === 0 && blue === 0) {
         return { c: 0, m: 0, y: 0, k: 100 };
@@ -348,6 +378,14 @@ function rgb_to_cmyk(red, green, blue) {
     };
 }
 
+/**
+ * Calculate the RGB value from CMYK
+ * @param {Number} c Cyan value
+ * @param {Number} m Magenta value
+ * @param {Number} y Yellow value
+ * @param {Number} k Black (key) value
+ * @return {{r: Number, g: Number, b: Number}} Return an RGB object or an empty object if the input is invalid 
+ */
 function cmyk_to_rgb(c, m, y, k) {
     if (([c, m, y, k].filter((i) => i >= 0 && i <= 100).length !== 4)) {
         return {};
