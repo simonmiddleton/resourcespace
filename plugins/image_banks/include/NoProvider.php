@@ -35,7 +35,7 @@ class NoProvider extends Provider
         }
 
     /** @inheritdoc */
-    public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
+    public function runSearch($keywords, $per_page = 24, $page = 1, array $ctx = []): ProviderSearchResults
         {
         return new ProviderSearchResults();
         }

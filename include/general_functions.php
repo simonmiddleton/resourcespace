@@ -1677,15 +1677,13 @@ function pager($break=true,$scrolltotop=true,$options=array())
  * @param  mixed $strName   The filename
  * @return string           The filename minus the extension
  */
-function remove_extension($strName)
-    {
-    $ext = strrchr($strName, '.');
-    if($ext !== false)
-    {
-    $strName = substr($strName, 0, -strlen($ext));
+function remove_extension($strName) {
+    $ext = strrchr((string) $strName, '.');
+    if($ext !== false) {
+        $strName = substr($strName, 0, -strlen($ext));
     }
     return $strName;
-    }
+}
 
 
 /**

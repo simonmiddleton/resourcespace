@@ -99,8 +99,8 @@ $units=max(pow(10,strlen(floor($max/2))-1),1);
 $col=imagecolorallocate($graph,230,230,230);
 for ($n=0;$n<$max;$n+=$units)
     {
-    $y=($height-$margin)-(floor((($height-$margin)/($max*1)) * $n));
-    imageline($graph,$xoffset,floor($y),$width-$rightmargin,floor($y),($n==0)?$black:$col);
+    $y = (int) floor(($height-$margin)-(floor((($height-$margin)/($max*1)) * $n)));
+    imageline($graph,$xoffset,$y,$width-$rightmargin,$y,($n==0)?$black:$col);
 
     $bbox=imagettfbbox(9,0,$font,$n); # Get bounding box to right-align text.
     imagettftext($graph,9,0,$xoffset-$bbox[2]-$bbox[0]-5,$y+5,$black,$font,$n);
@@ -111,14 +111,14 @@ $col = imagecolorallocate($graph, 230, 230, 230);
 if ($month == "") {
     # Yearly graph. 12 lines.
     for ($n = 0; $n <= 12; $n++) {
-        $x = $xoffset + ($n / 12 * ($width - $xoffset));
+        $x = (int) floor($xoffset + ($n / 12 * ($width - $xoffset)));
         imageline($graph, $x, 0, $x, $height - $margin + 16, ($n == 0) ? $black : $col);
     }
 } else {
     # Monthly graph. Max-X lines.
     for ($n = $minx; $n <= $maxx; $n++) {
         $factor = ($n - $minx) / ($maxx - $minx);
-        $x = $xoffset + ($factor * ($width - $xoffset - $rightmargin));
+        $x = (int) floor($xoffset + ($factor * ($width - $xoffset - $rightmargin)));
         imageline($graph, $x, 0, $x, $height - $margin, ($n == $minx) ? $black : $col);
     }
 }
@@ -130,8 +130,8 @@ for ($n=$minx;($n<=$maxx && (   ($year<$thisyear) || ($n<=$thisday)  ));$n++)
     {
     if (array_key_exists($n,$days)) {$val=$days[$n];} else {$val=0;}
     
-    $x=$xoffset + floor((($width-$xoffset-$rightmargin)/($maxx-$minx))*($n-$minx));
-    $y=($height-$margin)-(floor((($height-$margin)/($max*1)) * $val));
+    $x = (int) floor($xoffset + floor((($width-$xoffset-$rightmargin)/($maxx-$minx))*($n-$minx)));
+    $y = (int) floor(($height-$margin)-(floor((($height-$margin)/($max*1)) * $val)));
         
     if ($oldx!=-1)
         {
@@ -158,7 +158,7 @@ if ($month=="")
     # Annual graph, draw months
     for ($n=1;$n<=12;$n++)
         {
-        $x=$xoffset+(($n-1)/12*($width-$xoffset))+14;
+        $x = (int) floor($xoffset+(($n-1)/12*($width-$xoffset))+14);
         $text=substr($lang["months"][$n-1],0,3);
         imagettftext($graph,9,0,$x,$height-$margin+14,$col,$font,$text);
         }
@@ -169,7 +169,7 @@ else
     for ($n=$minx;$n<=$maxx;$n++)
         {
         $factor=($n-$minx)/($maxx-$minx);
-        $x=$xoffset+($factor*($width-$xoffset-$rightmargin))-2+(2-strlen($n)*3);
+        $x= (int) floor($xoffset+($factor*($width-$xoffset-$rightmargin))-2+(2-strlen($n)*3));
         imagettftext($graph,9,0,$x,$height-$margin+14,$col,$font,$n);
         }
     }

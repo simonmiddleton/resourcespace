@@ -199,7 +199,7 @@ function tms_link_get_tms_resources(array $module)
 
     return ps_query(
         "   SELECT rn.resource,
-                   max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS objectid,
+                   max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS identifier,
                    max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS `checksum`
               FROM resource_node AS rn
         INNER JOIN node AS n ON rn.node = n.ref AND n.resource_type_field IN ({$sql_rtf_in})

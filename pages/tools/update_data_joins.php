@@ -6,10 +6,37 @@
 # If neither are set the script will use $data_joins to add AND remove fields
 #
 include "../../include/boot.php";
-include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
+if('cli' != PHP_SAPI) {
+    include "../../include/authenticate.php";
+    if (!checkperm("a")) {
+        exit("Permission denied");
+    }
+    $add=getval("add","");
+    $remove=getval("remove","");
+} else {
+    $shortopts = "ha:r:";
+    $longopts = array("help","add:","remove:");
+    $clargs = getopt($shortopts, $longopts);
 
-$add=getval("add","");
-$remove=getval("remove","");
+    if (isset($clargs["help"]) || isset($clargs["h"])){
+        echo "Usage php update_data_joins.php [OPTIONS]" . PHP_EOL . PHP_EOL;
+        echo "Optional arguments:-" . PHP_EOL;
+        echo "-a, --add     A list of fields to add i.e. --add <comma separated list of numbers>" . PHP_EOL;
+        echo "-r, --remove  A list of fields to remove i.e. --remove <comma separated list of numbers>" . PHP_EOL;
+        echo "Examples:-". PHP_EOL;
+        echo "   php update_data_joins.php --add 18" . PHP_EOL;
+        echo "   - This will add field18 to the resource table and update the data join for" . PHP_EOL;
+        echo "     field 18 (usually description/caption) for all resources." . PHP_EOL;
+        echo "Examples:-". PHP_EOL;
+        echo "   php update_data_joins.php --remove 51" . PHP_EOL;
+        echo "   - This will remove field51 from the resource table" . PHP_EOL;
+        echo "   php update_data_joins.php" . PHP_EOL;
+        echo "   - This will add all fields in \$data_joins to the resource table and remove fields not present" . PHP_EOL;
+        exit();
+    }
+    $add = $clargs["add"] ?? $clargs["a"] ?? "";
+    $remove = $clargs["remove"] ?? $clargs["r"] ?? "";
+}
 
 $all=(($add=='' && $remove=='')?true:false);
 
@@ -38,13 +65,11 @@ if($remove!=='' || $all)
         {
         $remove=explode(",",$remove);
         $r_count=count($remove);
-        for($r=0 && $r_count>0;$r<$r_count;$r++)
-            {
-            if(!in_array("field".$remove[$r],$fields))
-                {
+        for($r=0;$r<$r_count;$r++) {
+            if(!in_array("field".$remove[$r], $fields)) {
                 unset($remove[$r]);
-                }
             }
+        }
         $remove=array_filter(array_values($remove),"is_int_loose");
         }    
     if(count($remove)>0)

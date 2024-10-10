@@ -20,7 +20,17 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             {
             $this->id = 3;
             $this->name = "ResourceSpace";
-            $this->configs = ['resourcespace_instances_cfg' => ''];
+            $this->configs = [
+                'resourcespace_instances_cfg' => '',
+                // Loaded from global ResourceSpace configs
+                'default_sort' => 'relevance',
+                'popularity_sort' => true,
+                'orderbyrating' => false,
+                'date_column' => false,
+                'colour_sort' => true,
+                'order_by_resource_id' => true,
+
+            ];
             $this->warning = "";
             $this->lang = $lang;
             $this->temp_dir_path = $temp_dir_path;
@@ -46,9 +56,8 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         }
 
     /** @inheritdoc */
-    public function runSearch(string $keywords, int $per_page = 24, int $page = 1): ProviderSearchResults
+    public function runSearch(string $keywords, int $per_page = 24, int $page = 1, array $ctx = []): ProviderSearchResults
         {
-        $order_by = $GLOBALS['order_by'];
         $per_page = $per_page > 0 ? $per_page : $GLOBALS['default_perpage'];
         $page = $page > 0 ? $page : 1;
         $offset = ($page - 1) * $per_page;
@@ -57,7 +66,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             {
             $instance = $this->getSelectedSystemInstance()->toArray();
             $instance_cfg = $instance['configuration'];
-            $cache_id = md5("{$instance['baseURL']}--{$keywords}--{$order_by}--{$per_page}--{$page}");
+            $cache_id = md5("{$instance['baseURL']}--{$keywords}--{$ctx['order_by']}--{$per_page}--{$page}");
             $api_cached_results = $this->getCache($cache_id, 1);
             if($api_cached_results)
                 {
@@ -70,7 +79,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                     [
                         'search' => $keywords,
                         'fetchrows' => "{$offset},{$per_page}",
-                        'order_by' => $order_by
+                        'order_by' => $ctx['order_by'],
                     ]
                 );
                 $this->setCache($cache_id, json_encode($api_results));
@@ -434,5 +443,31 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             }
 
         return parent::getResourceDownloadOptionsTable($id);
+        }
+
+    /** @inheritdoc */
+    public function getSortOptions(): array
+        {
+        $sort_options = [
+            $this->configs['default_sort'] => $this->lang[$this->configs['default_sort']] ?? $this->lang['relevance'],
+        ];
+        if ($this->configs['popularity_sort']) {
+            $sort_options['popularity'] = $this->lang['popularity'];
+        }
+        if ($this->configs['orderbyrating']) {
+            $sort_options['rating'] = $this->lang['rating'];
+        }
+        if ($this->configs['date_column']) {
+            $sort_options['date'] = $this->lang['date'];
+        }
+        if ($this->configs['colour_sort']) {
+            $sort_options['colour'] = $this->lang['colour'];
+        }
+        if ($this->configs['order_by_resource_id']) {
+            $sort_options['resourceid'] = $this->lang['resourceid'];
+        }
+        $sort_options['resourcetype'] = $this->lang['type'];
+        $sort_options['modified'] = $this->lang['modified'];
+        return $sort_options;
         }
     }

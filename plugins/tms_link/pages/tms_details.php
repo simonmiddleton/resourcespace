@@ -19,35 +19,47 @@ $tmsdata = tms_link_get_tms_data($ref, $tmsid);
 
 include "../../../include/header.php";
 ?>
-<h2><?php echo escape($lang["tms_link_tms_data"]); ?></h2>
-<?php
-if(!is_array($tmsdata))
-    {
-    echo $tmsdata;
-    include "../../../include/footer.php";
-    die();
-    }
-?>
-<div class="Listview">
-    <table style="border=1;">
-<?php
-foreach($tmsdata as $module_name => $module_tms_data)
-    {
-    ?>
-    <tr colspan="2"><strong><?php echo escape($module_name); ?></strong></tr>
+<div class="RecordBox">
+    <div class="RecordPanel">
+        <div class="RecordHeader">
+            <div class="backtoresults">
+                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+            </div>
+            <h1><?php echo escape($lang["tms_link_tms_data"]); ?></h1>
+        </div>
+    </div>
+
+    <div class="BasicsBox">
     <?php
-    foreach($module_tms_data as $tms_column => $tms_value)
-        {
-        ?>
-        <tr> 
-           <td><strong><?php echo escape($tms_column); ?></strong></td>
-           <td><?php echo escape($tms_value??""); ?></td>
-        </tr>
+    if (!is_array($tmsdata)) {
+        echo escape($tmsdata);
+    } else {?>
+        <div class="Listview">
+        <table class="ListviewStyle">
+            <?php
+            foreach ($tmsdata as $module_name => $module_tms_data) {
+                ?>
+                <tr class="ListviewTitleStyle">
+                    <th><?php echo escape($module_name); ?></th>
+                    <th><?php echo escape($tmsid); ?></th>
+                </tr>
+                <?php
+                foreach ($module_tms_data as $tms_column => $tms_value) {
+                    ?>
+                    <tr> 
+                        <td><strong><?php echo escape($tms_column); ?></strong></td>
+                        <td><?php echo escape($tms_value??""); ?></td>
+                    </tr>
+                    <?php
+                }
+            }?>
+            </table>
+        </div>
         <?php
-        }
     }
     ?>
-    </table>
-</div>
+    </div> <!-- End BasicsBox -->
+</div> <!-- End RecordBox -->
+
 <?php
 include "../../../include/footer.php";

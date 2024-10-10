@@ -7,13 +7,12 @@ function HookRss2SearchRender_search_actions_add_option($options)
 
     if ($k=='')
         {
-        $querystring = "user=" . base64_encode($username) . "&search=" . $search . "&restypes=" . $restypes . "&archive=" . $archive;
+        $querystring = "user=" . base64_encode($username) . "&search=" . $search . "&restypes=" .$restypes;
+        $querystring .= "&archive=" . $archive;
         $private_key = get_api_key($userref);
 
-        // Sign the query using the private key, this needs to be done encoded so that it is checked correctly
+        // Sign the query using the private key, this needs to be done un-encoded so that it is checked correctly
         $sign = hash("sha256",$private_key . $querystring);
-        $querystring = "user=" . base64_encode($username) . "&search=" . urlencode($search) . "&restypes=";
-        $querystring .= urlencode($restypes) . "&archive=" . urlencode($archive);
 
         $query_params = [
             "user" => base64_encode($username),

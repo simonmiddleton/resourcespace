@@ -13,8 +13,7 @@ include_once "{$rs_root}/include/authenticate.php";
 
 $search = getval("search", "");
 $image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
-
-$per_page = (int) getval("per_page", $default_perpage, true);
+$per_page = (int) getval("per_page", $default_perpage, false, 'is_positive_int_loose');
 $order_by = getval('order_by', '', false);
 $search_params = array(
     "search"                 => $search,
@@ -26,7 +25,7 @@ $search_params = array(
 
 // Paging functionality
 $url = generateURL("{$baseurl_short}pages/search.php", $search_params);
-$offset = (int) getval("offset", 0, true);
+$offset = (int) getval("offset", 0, false, 'is_positive_int_loose');
 rs_setcookie("per_page", $per_page, 0, "", "", false, false);
 $curpage = floor($offset / $per_page) + 1;
 // End of Paging functionality
@@ -51,7 +50,7 @@ if ($results->getError() === '' && $providers_select_list !== [])
     {
     $provider = getProviderSelectInstance($providers, $image_bank_provider_id);
     $provider_name = $providers_select_list[$image_bank_provider_id] ?? $provider->getName();
-    $results = $provider->search($search, $per_page, $curpage);
+    $results = $provider->search($search, $per_page, $curpage, $search_params);
 
     // On the off chance something else went terribly wrong (ie. code bug), let user know we couldn't find the Provider
     if ($provider instanceof NoProvider)
@@ -64,28 +63,6 @@ $results_error = $results->getError();
 $results_warning = $results->getWarning();
 $totalpages = ceil($results->total / $per_page);
 
-$default_sort_order = $default_sort;
-$rel = $lang[$default_sort] ?? $lang["relevance"];
-$orderFields = array($default_sort_order => $rel);
-if ($popularity_sort) {
-    $orderFields['popularity'] = $lang['popularity'];
-}
-if ($orderbyrating) {
-    $orderFields['rating'] = $lang['rating'];
-}
-if ($date_column) {
-    $orderFields['date'] = $lang['date'];
-}
-if ($colour_sort) {
-    $orderFields['colour'] = $lang['colour'];
-}
-if ($order_by_resource_id) {
-    $orderFields['resourceid'] = $lang['resourceid'];
-}
-$orderFields['resourcetype'] = $lang['type'];
-
-$orderFields['modified'] = $lang['modified'];
-
 include_once "{$rs_root}/include/header.php";
 ?>
 <div class="BasicsBox">
@@ -97,45 +74,51 @@ include_once "{$rs_root}/include/header.php";
             <div class="InpageNavLeftBlock AlignLeftBlockText">
                 <span class="Selected"><?php echo escape($lang["image_banks_image_bank"]); ?>: </span><?php echo escape($provider_name); ?>
             </div>
+            <?php
+            $sort_options = $provider->getSortOptions();
+            if ($sort_options !== []) {
+            ?>
             <div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
-                <select name="order_by" onchange="CentralSpaceLoad(this.value, true);" aria-label="<?php echo escape($lang["sortorder"]) ?>">
+                <select
+                    name="order_by"
+                    onchange="CentralSpaceLoad(this.value, true);"
+                    aria-label="<?php echo escape($lang["sortorder"]); ?>"
+                >
                     <?php
-                    foreach ($orderFields as $orderfield => $ordername) {
-                    $value = generateURL(
-                        "{$baseurl_short}pages/search.php",
-                        $search_params,
-                        ["order_by" => $orderfield]
-                    );
-                    $extra_attributes = $order_by === $orderfield ? ' selected' : '';
-
-                    echo render_dropdown_option($value, $ordername, [], $extra_attributes);
+                    foreach ($sort_options as $sort_by => $name) {
+                        echo render_dropdown_option(
+                            generateURL("{$baseurl_short}pages/search.php", $search_params, ['order_by' => $sort_by]),
+                            $name,
+                            [],
+                            $order_by === $sort_by ? ' selected' : ''
+                        );
                     }
                     ?>
                 </select>
             </div>
+            <?php
+            }
+            ?>
             <div class="InpageNavLeftBlock">
-                <select name="per_page" onchange="CentralSpaceLoad(this.value, true);">
+                <select
+                    name="per_page"
+                    onchange="CentralSpaceLoad(this.value, true);"
+                    aria-label="<?php echo escape($lang['perpage']); ?>"
+                >
                     <?php
-                    foreach($results_display_array as $results_display_per_page)
-                        {
-                        $value = generateURL(
-                            "{$baseurl_short}pages/search.php",
-                            $search_params,
-                            array(
-                                "per_page" => $results_display_per_page
-                            )
+                    foreach ($results_display_array as $results_display_per_page) {
+                        echo render_dropdown_option(
+                            generateURL(
+                                "{$baseurl_short}pages/search.php",
+                                $search_params,
+                                ['per_page' => $results_display_per_page]
+                            ),
+                            str_replace('?', $results_display_per_page, $lang['perpage_option']),
+                            [],
+                            $results_display_per_page === $per_page ? ' selected' : ''
                         );
-                        $label = str_replace("?", $results_display_per_page, $lang["perpage_option"]);
-                        $extra_attributes = "";
-
-                        if($results_display_per_page === $per_page)
-                            {
-                            $extra_attributes = " selected";
-                            }
-
-                        echo render_dropdown_option($value, $label, array(), $extra_attributes);
-                        }
-                        ?>
+                    }
+                    ?>
                 </select>
             </div>
             <?php

@@ -1,17 +1,15 @@
 <?php
 function HookTms_linkViewRenderfield($field)
-    {
-    if(!checkperm("a"))
-        {
+{
+    if (!checkperm("a")) {
         return false;
-        }
+    }
 
-    global $baseurl,$tms_link_object_id_field,$search, $ref;
+    global $baseurl,$search, $ref;
 
-    if(tms_link_is_rs_uid_field($field["ref"]) && $field["value"] != "")
-        {           
+    if (tms_link_is_rs_uid_field($field["ref"]) && $field["value"] != "") {
         $tmsid = $field["value"];
-        $value = highlightkeywords($tmsid, $search, $field["partial_index"], $field["name"], $field["keywords_index"]);
+        $value = highlightkeywords(escape($tmsid), escape($search), $field["partial_index"], $field["name"], $field["keywords_index"]);
         $title = escape($field["title"]);
         $a_href = generateURL(
             "{$baseurl}/plugins/tms_link/pages/tms_details.php",
@@ -22,15 +20,13 @@ function HookTms_linkViewRenderfield($field)
         );
         ?>
         <div class="itemNarrow">
-            <h3><?php echo $title; ?></h3>
+            <h3><?php echo escape($title); ?></h3>
             <p>
-                <a href="<?php echo $a_href; ?>"><?php echo $value; ?></a>
+                <a href="<?php echo $a_href; ?>" onclick="return ModalLoad(this,true)"><?php echo $value; ?></a>
             </p>
         </div>
         <?php
-
         return true;
         }
-
     return false;
-    }
+}

@@ -187,8 +187,9 @@ else{
                     date_viable_iso = date_entered_obj.toISOString().split('T')[0];
                     // So an entered ISO date of 2021-02-30 will convert back into 2021-03-02
                     // If the entered ISO date matches its converted back counterpart then it's a viable date  
-                    if(date_entered_iso !== date_viable_iso){
-                        styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);date_is_valid = false;
+                    if (date_entered_iso !== date_viable_iso) {
+                        styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);
+                        date_is_valid = false;
                     }
                 }
             }
