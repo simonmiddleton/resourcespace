@@ -12,48 +12,6 @@ if (!acl_can_edit_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
-// Actions
-$delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
-$reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
-$save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
-$edit = false;
-
-// Specific page content item 
-$ref = (int) getval('ref', 0, false, 'is_positive_int_loose');
-if ($ref > 0) {
-    $db_item = get_page_content_item($ref);
-    if ($db_item !== []) {
-        $edit = true;
-        $page = $db_item['page'];
-        $type = $db_item['type'];
-
-        // Help the process_custom_fields_submission() fill in the form
-        if (!$save) {
-            $content = json_decode($db_item['content'], true);
-            $_GET['richtext'] = $content['text-content'];
-        }
-    }
-}
-
-// Content always belongs to a page
-$page ??= (int) getval('page', 0, false, 'is_positive_int_loose');
-$all_pages = array_column(array_filter(get_all_pages(), __NAMESPACE__ . '\filter_only_pages'), null, 'ref');
-if ($page === 0 && $all_pages !== []) {
-    $page = (int) array_key_first($all_pages);
-} elseif (!isset($all_pages[$page])) {
-    http_response_code(400);
-    exit(escape(str_replace('%key', 'page', $GLOBALS['lang']['error-request-missing-key'])));
-}
-
-// Content (item) always has a type
-$type ??= (int) getval(
-    'type',
-    BRAND_GUIDELINES_CONTENT_TYPES['text'],
-    false,
-    fn($V) => in_array($V, BRAND_GUIDELINES_CONTENT_TYPES)
-);
-
-// Page setup
 $page_def = [
     BRAND_GUIDELINES_CONTENT_TYPES['text'] => [
         'title' => [
@@ -126,9 +84,53 @@ $page_def = [
         ],
     ],
 ];
+
+// Actions
+$delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
+$reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
+$save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
+$edit = false;
+
+// Specific page content item 
+$ref = (int) getval('ref', 0, false, 'is_positive_int_loose');
+if ($ref > 0) {
+    $db_item = get_page_content_item($ref);
+    if ($db_item !== []) {
+        $edit = true;
+        $page = $db_item['page'];
+        $type = $db_item['type'];
+
+        // Help the process_custom_fields_submission() fill in the form
+        $item_content_fields = convert_from_db_content($db_item['content'], $page_def[$type]['fields']);
+        foreach ($item_content_fields as $item_field) {
+            // When saving, POSTd data will always override GETd data {@see process_custom_fields_submission()}
+            $_GET[$item_field['html_properties']['name']] = $item_field['value'];
+        }
+    }
+}
+
+// Content always belongs to a page
+$page ??= (int) getval('page', 0, false, 'is_positive_int_loose');
+$all_pages = array_column(array_filter(get_all_pages(), __NAMESPACE__ . '\filter_only_pages'), null, 'ref');
+if ($page === 0 && $all_pages !== []) {
+    $page = (int) array_key_first($all_pages);
+} elseif (!isset($all_pages[$page])) {
+    http_response_code(400);
+    exit(escape(str_replace('%key', 'page', $GLOBALS['lang']['error-request-missing-key'])));
+}
+
+// Content (item) always has a type
+$type ??= (int) getval(
+    'type',
+    BRAND_GUIDELINES_CONTENT_TYPES['text'],
+    false,
+    fn($V) => in_array($V, BRAND_GUIDELINES_CONTENT_TYPES)
+);
+
+// Process
+$_GET['colour_preview'] = $_POST['colour_preview'] = $_COOKIE['colour_preview'] = ''; # Not expected to be submitted!
 $page_title = $page_def[$type]['title'];
 $processed_fields = process_custom_fields_submission($page_def[$type]['fields'], $save, ['html_properties_prefix' => '']);
-
 if ($save && count_errors($processed_fields) === 0) {
     $item = [
         'type' => $type,

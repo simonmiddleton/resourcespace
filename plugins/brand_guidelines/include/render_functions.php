@@ -80,6 +80,7 @@ function render_new_content_button(string $id)
     <?php
 }
 
+// todo: convert to an actual button and give callback
 function render_new_block_element_button(string $class)
 {
     if (!acl_can_edit_brand_guidelines()) {
@@ -98,27 +99,29 @@ function render_new_block_element_button(string $class)
  * render_block_colour_item([
  *     'name' => 'Black',
  *     'hex' => '000000',
- *     'rgb' => [22, 71, 85],
- *     'cmyk' => [74, 16, 0, 67],
+ *     'rgb' => '0, 0, 0',
+ *     'cmyk' => '0, 0, 0, 100',
  * ]);
  * ```
  */
 function render_block_colour_item(array $value)
 {
+    $hex = ltrim($value['hex'], '#');
     ?>
     <div class="guidelines-colour-block">
-        <div class="guidelines-colour-block--colour" style="background-color: #<?php echo escape($value['hex']); ?>"></div>
+        <?php render_item_top_right_menu($value['ref']); ?>
+        <div class="guidelines-colour-block--colour" style="background-color: #<?php echo escape($hex); ?>"></div>
         <div class="guidelines-colour-block--details">
-            <span><?php echo escape($value['name']); ?></span>
+            <span><?php echo escape(i18n_get_translated($value['name'])); ?></span>
             <br>
-            <div class="type">HEX:</div>
-            <span>#<?php echo escape($value['hex']); ?></span>
+            <div class="type"><?php echo escape($GLOBALS['lang']['brand_guidelines_hex']); ?>:</div>
+            <span>#<?php echo escape($hex); ?></span>
             <br>
-            <div class="type">RGB:</div>
-            <span><?php echo escape(implode(', ', $value['rgb'])); ?></span>
+            <div class="type"><?php echo escape($GLOBALS['lang']['brand_guidelines_rgb']); ?>:</div>
+            <span><?php echo escape($value['rgb']); ?></span>
             <br>
-            <div class="type">CMYK:</div>
-            <span><?php echo escape(implode(', ', $value['cmyk'])); ?></span>
+            <div class="type"><?php echo escape($GLOBALS['lang']['brand_guidelines_cmyk']); ?>:</div>
+            <span><?php echo escape($value['cmyk']); ?></span>
         </div>
     </div>
     <?php

@@ -112,25 +112,15 @@ function colour_cmyk_input_validator($value): bool
 
 /**
  * Create a new page content item (use case).
- * @param int $ref Page ID
+ * @param int $page Page ID
  * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array} An item data structure
  */
-function create_page_content(int $ref, array $item): bool
+function create_page_content(int $page, array $item): bool
 {
     if (!acl_can_edit_brand_guidelines()) {
         return false;
     }
-
-    // todo: consider returning error message if need be for any of the use cases
-
-    if (
-        $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']
-        && create_content_item_text($ref, $item['fields'][0]['value'])
-    ) {
-        return true;
-    }
-
-    return false;
+    return in_array($item['type'], BRAND_GUIDELINES_CONTENT_TYPES) && create_content_item($page, $item);
 }
 
 /**
@@ -143,13 +133,50 @@ function save_page_content(int $ref, array $item)
     if (!acl_can_edit_brand_guidelines()) {
         return false;
     }
+    return in_array($item['type'], BRAND_GUIDELINES_CONTENT_TYPES) && save_content_item($ref, $item);
+}
 
-    if (
-        $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']
-        && save_content_item_text($ref, $item['fields'][0]['value'])
-    ) {
-        return true;
+/**
+ * Data transfer utility to help translate custom fields' data structures to a minimum required data structure that we
+ * can store in the database.
+ * @param array $input Submitted custom fields' data structure {@see process_custom_fields_submission()}
+ */
+function convert_to_db_content(array $input): array
+{
+    /**
+     * @var list<string> List of content fields' IDs that would be meaningless to store (e.g. colour_preview is a field
+     * used only to visually display the color).
+     */
+    $unnecessary_fields = ['colour_preview'];
+
+    // Storing each field ID and its value should be enough relevant information to correctly render when reconstructed.
+    return array_diff_key(array_column($input, 'value', 'id'), array_flip($unnecessary_fields));
+}
+
+/**
+ * Data transfer utility to help reconstruct custom fields' data structure 
+ * @param string $json Database record value (JSON type)
+ * @param array $def Custom fields' data structure as input to {@see process_custom_fields_submission()}
+ * @return array Same custom fields' data structure with, where applicable, an extra "value" key representing the current
+ * field value
+ */
+function convert_from_db_content(string $json, array $def): array
+{
+    $content = json_decode($json, true);
+
+    // Reconstruct custom fields' (with HTML properties - also used by {@see process_custom_fields_submission()})
+    $fields = gen_custom_fields_html_props(
+        get_valid_custom_fields($def),
+        ['html_properties_prefix' => '']
+    );
+
+    $result = [];
+    foreach ($fields as $field) {
+        // Add custom fields' value. Note: {@see process_custom_fields_submission()} will always override this key val.
+        $result[] = array_merge(
+            $field,
+            isset($content[$field['id']]) ? ['value' => $content[$field['id']]] : []
+        );
     }
-
-    return false;
+    return $result;
 }

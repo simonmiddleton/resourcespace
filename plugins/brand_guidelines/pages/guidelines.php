@@ -110,8 +110,18 @@ render_content_menu();
                             id="page-content-item-<?php echo escape((string) $item['ref']); ?>"
                         ><?php
                             render_item_top_right_menu($item['ref']);
-                            echo richtext_input_parser($item_content['text-content']);
+                            echo richtext_input_parser($item_content['richtext']);
                         ?></div>
+                        <?php
+                    } elseif ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['colour']) {
+                        // todo: determine item groups on page ahead of rendering
+                        ?>
+                        <div class="colour-group">
+                        <?php
+                        render_block_colour_item(array_merge(['ref' => $item['ref']], $item_content));
+                        render_new_block_element_button('guidelines-colour-block new');
+                        ?>
+                        </div>
                         <?php
                     }
 
@@ -186,22 +196,25 @@ render_content_menu();
                 <h2>Montala logo colours</h2>
                 <?php
                 render_block_colour_item([
+                    'ref' => 0,
                     'name' => 'Primary',
                     'hex' => 'ff9249',
-                    'rgb' => [255, 146, 73],
-                    'cmyk' => [70, 0, 51, 34],
+                    'rgb' => '255, 146, 73',
+                    'cmyk' => '70, 0, 51, 34',
                 ]);
                 render_block_colour_item([
+                    'ref' => 0,
                     'name' => 'Secondary',
                     'hex' => 'd8d2cc',
-                    'rgb' => [28, 103, 108],
-                    'cmyk' => [74, 5, 0, 58],
+                    'rgb' => '28, 103, 108',
+                    'cmyk' => '74, 5, 0, 58',
                 ]);
                 render_block_colour_item([
+                    'ref' => 0,
                     'name' => 'Tertiary',
                     'hex' => '646464',
-                    'rgb' => [22, 71, 85],
-                    'cmyk' => [74, 16, 0, 67],
+                    'rgb' => '22, 71, 85',
+                    'cmyk' => '74, 16, 0, 67',
                 ]);
                 ?>
                 <?php render_new_block_element_button('guidelines-colour-block new'); ?>
@@ -211,22 +224,25 @@ render_content_menu();
             <h2>ResourceSpace logo colours</h2>
             <?php
             render_block_colour_item([
+                'ref' => 0,
                 'name' => 'Light Green 1',
                 'hex' => '79bc41',
-                'rgb' => [255, 146, 73],
-                'cmyk' => [70, 0, 51, 34],
+                'rgb' => '255, 146, 73',
+                'cmyk' => '70, 0, 51, 34',
             ]);
             render_block_colour_item([
+                'ref' => 0,
                 'name' => 'Dark Green',
                 'hex' => '4f8c1d',
-                'rgb' => [28, 103, 108],
-                'cmyk' => [74, 5, 0, 58],
+                'rgb' => '28, 103, 108',
+                'cmyk' => '74, 5, 0, 58',
             ]);
             render_block_colour_item([
+                'ref' => 0,
                 'name' => 'Black',
                 'hex' => '000000',
-                'rgb' => [22, 71, 85],
-                'cmyk' => [74, 16, 0, 67],
+                'rgb' => '22, 71, 85',
+                'cmyk' => '74, 16, 0, 67',
             ]);
             ?>
             <?php render_new_block_element_button('guidelines-colour-block new'); ?>

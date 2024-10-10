@@ -128,42 +128,53 @@ function reorder_items(string $table, array $list, ?callable $filter)
     clear_query_cache($table);
 }
 
-function create_content_item_text(int $page, string $text): int
+/**
+ * Create new database record for a content item
+ * @param int $page The page ID the content item belongs to
+ * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array} A content item data structure
+ * @return int Returns the ID of the new database record or zero otherwise.
+ */
+function create_content_item(int $page, array $item): int
 {
-    $content = json_encode(['text-content' => $text]);
+    $content = json_encode(convert_to_db_content($item['fields']));
     if ($content === false) {
         debug(json_last_error_msg());
         return 0;
     }
 
-    db_begin_transaction('brand_guidelines_create_content_item_text');
+    db_begin_transaction('brand_guidelines_create_content_item');
     ps_query(
         'INSERT INTO `brand_guidelines_content` (`page`, `type`, `content`, `order_by`)
         SELECT ?, ?, ?, coalesce(max(order_by), 0) + 10 FROM brand_guidelines_content WHERE `page` = ?',
         [
             'i', $page,
-            'i', BRAND_GUIDELINES_CONTENT_TYPES['text'],
+            'i', $item['type'],
             's', $content,
             'i', $page,
         ]
     );
     $ref = sql_insert_id();
-    log_activity(null, LOG_CODE_CREATED, $text, 'brand_guidelines_content', 'content', $ref, null, '');
-    db_end_transaction('brand_guidelines_create_content_item_text');
+    log_activity(null, LOG_CODE_CREATED, $content, 'brand_guidelines_content', 'content', $ref, null, '');
+    db_end_transaction('brand_guidelines_create_content_item');
     clear_query_cache('brand_guidelines_content');
     return $ref;
 }
 
-function save_content_item_text(int $ref, string $text)
+/**
+ * Save a content item database record
+ * @param int $ref The content item ID
+ * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array} A content item data structure
+ */
+function save_content_item(int $ref, array $item): bool
 {
-    $content = json_encode(['text-content' => $text]);
+    $content = json_encode(convert_to_db_content($item['fields']));
     if ($content === false) {
         debug(json_last_error_msg());
         return false;
     }
 
-    db_begin_transaction('brand_guidelines_save_page_content_item_text');
-    log_activity(null, LOG_CODE_EDITED, $text, 'brand_guidelines_content', 'content', $ref, null, '');
+    db_begin_transaction('brand_guidelines_save_page_content_item');
+    log_activity(null, LOG_CODE_EDITED, $content, 'brand_guidelines_content', 'content', $ref, null, '');
     ps_query(
         'UPDATE `brand_guidelines_content` SET `content` = ? WHERE `ref` = ?',
         [
@@ -171,7 +182,7 @@ function save_content_item_text(int $ref, string $text)
             'i', $ref,
         ]
     );
-    db_end_transaction('brand_guidelines_save_page_content_item_text');
+    db_end_transaction('brand_guidelines_save_page_content_item');
     clear_query_cache('brand_guidelines_content');
     return true;
 }
