@@ -6882,7 +6882,7 @@ function render_resource_view_image(array $resource, array $context)
             {
             $GLOBALS["image_preview_zoom"] = false;
             $tile_region_support = false;
-            $not_jpg = strtolower($resource['file_extension']) != "jpg";
+            $not_jpg = strtolower((string)$resource['file_extension']) != "jpg";
             $fulljpgsize = $not_jpg ? "hpr" : "";
             $fulljpgext = $not_jpg ? 'jpg' : $resource['file_extension'];
             $zoom_image_path = get_resource_path($resource["ref"], true, $fulljpgsize, false, $fulljpgext, true, 1, $use_watermark);
