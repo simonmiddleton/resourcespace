@@ -119,7 +119,7 @@ render_content_menu();
                         <div class="colour-group">
                         <?php
                         render_block_colour_item(array_merge(['ref' => $item['ref']], $item_content));
-                        render_new_block_element_button('guidelines-colour-block new');
+                        render_new_block_element_button('guidelines-colour-block new'); # todo: always last item in the group
                         ?>
                         </div>
                         <?php
@@ -300,13 +300,12 @@ render_content_menu();
     }
 
     jQuery('#CentralSpace').on('ModalClosed', (e, modal) => {
-        let modal_url = new URL(modal.url);
-        let modal_url_params = modal_url.searchParams;
-        let manage_content_path = baseurl_short + 'plugins/brand_guidelines/pages/manage/content.php';
+        const modal_url = new URL(modal.url);
+        const modal_url_params = modal_url.searchParams;
 
         // Handle manage text content item page (modal) closing
         if (
-            modal_url.pathname === manage_content_path
+            modal_url.pathname === `${baseurl_short}plugins/brand_guidelines/pages/manage/content.php`
             && modal_url_params.has('type')
             && modal_url_params.get('type') === '<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['text']); ?>'
         ) {

@@ -241,10 +241,18 @@ tinymce.init({
 });
 
 jQuery(document).ready(() => {
-    const background_colour = jQuery('#hex').val();
-    if (background_colour !== undefined) {
-        update_colour_preview(background_colour);
+    // Add the content type to the modal URL so ModalClosed event has the necessary information for its subscriber (see
+    // guidelines.php page - needed to remove tinymce)
+    let modal_url = new URL(modalurl);
+    modal_url.searchParams.set('type', '<?php echo escape((string) $type); ?>');
+    modalurl = modal_url.toString();
+    <?php
+    if ($type === BRAND_GUIDELINES_CONTENT_TYPES['colour']) {
+        ?>
+        update_colour_preview(jQuery('#hex').val());
+        <?php
     }
+    ?>
 });
 
 jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
