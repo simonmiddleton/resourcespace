@@ -8088,9 +8088,8 @@ function get_OR_fields()
 */
 function get_nopreview_html($extension)
     {
-    global $extensionToFA;
     $extension=strtolower(trim($extension));
-    return "<i class='nopreview fa fa-regularx " . ($extensionToFA[$extension] ?? $extensionToFA["default"]) . "'></i>";
+    return "<i class='nopreview fa fa-regularx " . (FONTAWESOME_EXTENSIONS[$extension] ?? FONTAWESOME_EXTENSIONS["default"]) . "'></i>";
     }
 
 

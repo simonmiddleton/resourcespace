@@ -939,7 +939,7 @@ $languages["zh-CN"]="简体字"; # Simplified Chinese
 $noadd=array("", "a","the","this","then","another","is","with","in","and","where","how","on","of","to", "from", "at", "for", "-", "by", "be");
 
 // FontAwesome classes for the icon to display when there's no preview image.
-$extensionToFA = array(
+const FONTAWESOME_EXTENSIONS = [
     // Images
     'png' => 'fa-file-image',
     'jpg' => 'fa-file-image',
@@ -1040,6 +1040,6 @@ $extensionToFA = array(
     
     // Default to 'file' for unrecognized extensions
     'default' => 'fa-file',
-);
+];
 
 
