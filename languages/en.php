@@ -141,7 +141,6 @@ $lang['property-field_full_width'] = "Display full width on view page";
 $lang["property-enable_advanced_search"]="Enable advanced search";
 $lang["property-system_date_help_text"]="Unable to disable this as this field is set as the system specific date field, you can change this via configuration or asking an administrator";
 $lang["property-enable_simple_search"]="Enable simple search";
-$lang["property-use_for_find_similar_searching"]="Use for find similar searching";
 $lang["property-iptc_equiv"]="Iptc equiv";
 $lang["property-display_template"]="Display template";
 $lang["property-value_filter"]="Value filter";
