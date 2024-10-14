@@ -908,6 +908,7 @@ $languages["en"]="International English";
 $languages["en-US"]="American English";
 $languages["ar"]="العربية";
 $languages["id"]="Bahasa Indonesia"; # Indonesian
+$languages["bn"]="বাংলা"; # Bengali 
 $languages["ca"]="Català"; # Catalan
 $languages["cs"]="čeština"; # Czech
 $languages["da"]="Dansk"; # Danish
@@ -924,6 +925,8 @@ $languages["jp"]="日本語"; # Japanese
 $languages["ko"]="한국어"; # Korean
 $languages["nl"]="Nederlands"; # Dutch
 $languages["no"]="Norsk"; # Norwegian
+$languages["fa"]="فارسی"; # Persian
+$languages["pa"]="ਪੰਜਾਬੀ"; # Punjabi
 $languages["pl"]="Polski"; # Polish
 $languages["pt"]="Português"; # Portuguese
 $languages["pt-BR"]="Português do Brasil"; # Brazilian Portuguese
@@ -931,8 +934,10 @@ $languages["ro"]="Limba română"; # Romanian
 $languages["ru"]="Русский язык"; # Russian
 $languages["sk"]="Slovenčina"; # Slovak
 $languages["sv"]="Svenska"; # Swedish
+$languages["sw"]="Kiswahili"; # Swahili
 $languages["tr"]="Türkçe"; # Turkish
 $languages["uk"]="українська мова"; # Ukranian
+$languages["ur"]="اُردُو"; # Urdu
 $languages["zh-CN"]="简体字"; # Simplified Chinese
 
 # English stop words
