@@ -4231,7 +4231,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                     $treenodenames[] = ["ref" => $treenode["ref"], "name" => $treenode["translated_path"]];
                     }
                 }
-            $value = render_fixedlist_as_pills($treenodenames);
+            $value = render_fixed_list_as_pills($treenodenames);
             }
     
     if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
@@ -4275,7 +4275,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         // Handle the rest of the fixed list fields, category trees have their own section
         if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
             $resource_nodes = get_resource_nodes($ref, $field["ref"], true, false);
-            $value = render_fixedlist_as_pills($resource_nodes);
+            $value = render_fixed_list_as_pills($resource_nodes);
         }
 
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
