@@ -1709,27 +1709,7 @@ if($use_selection_collection)
         var isCollectionDivPresent = document.getElementById("CollectionDiv");
         // Its absence means that handlers for resource selection and deselection need to be established here 
         if (!isCollectionDivPresent) { 
-            jQuery('#CentralSpace').on('resourcesaddedtocollection', function(response,resource_list) {
-            resource_list.forEach(function (resource)
-                {
-                    jQuery("#ResourceShell" + resource).addClass("Selected");
-                    jQuery("#check" + resource).prop('checked','checked');
-                });
-
-            UpdateSelColSearchFilterBar();
-            CentralSpaceHideLoading();
-            });
-
-            jQuery('#CentralSpace').on('resourcesremovedfromcollection', function(response,resource_list) {
-            resource_list.forEach(function (resource)
-                {
-                    jQuery("#ResourceShell" + resource).removeClass("Selected");
-                    jQuery("#check" + resource).prop('checked','');
-                });
-
-            CentralSpaceHideLoading();
-            UpdateSelColSearchFilterBar();
-            });
+            registerResourceSelectDeselectHandlers();
         }
 
         // Process the clicked box
