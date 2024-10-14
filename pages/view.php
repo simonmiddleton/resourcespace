@@ -425,16 +425,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
             parent_element.find("#RelatedResources").appendTo(parent_element.find("#Panel2")).addClass("TabPanel");
             removePanel.remove();
 
-            parent_element.find("#SearchSimilar").children().children(".Title").attr("panel", "SearchSimilar").appendTo(parent_element.find("#Titles2"));
-            removePanel=parent_element.find("#SearchSimilar").parent().parent();
-            parent_element.find("#SearchSimilar").appendTo(parent_element.find("#Panel2")).addClass("TabPanel").hide();
-            removePanel.remove();
-            // if there are no related resources
-            if (parent_element.find("#RelatedResources").length==0) {
-                parent_element.find("#SearchSimilar").show();
-                parent_element.find("div[panel='SearchSimilar']").addClass("Selected"); 
-            }    
-
             // if there are no collections and themes
             if (parent_element.find("#resourcecollections").is(':empty')) {
                 parent_element.find("div[panel='CollectionsThemes']").addClass("Selected"); 
