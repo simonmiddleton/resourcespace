@@ -1971,6 +1971,7 @@ select.MultiSelect:before {
 .MultiRTypeSelect {
     width: 292px;
     padding: 3px;
+    border: 1px solid rgba(0,0,0,0.25);
     border-radius: 4px;
 }
 .MultiRTypeSelect label {
