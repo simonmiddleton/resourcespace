@@ -4392,11 +4392,11 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
     }
 
 /*
-* Helper function for display_field to genereate html for fixed list fields, rendering them as a series of pills with search links
+* Helper function for display_field to generate html for fixed list fields, rendering them as a series of pills with search links
 *
 * @param array $node Array of nodes to display
 */
-function render_fixedlist_as_pills($nodes):string 
+function render_fixed_list_as_pills($nodes):string 
 { 
     global $baseurl;
     $display_html = "";
@@ -4404,7 +4404,7 @@ function render_fixedlist_as_pills($nodes):string
         foreach ($nodes as $nodedata) {
             $search_url = generateURL($baseurl . '/pages/search.php', ['search' => NODE_TOKEN_PREFIX . $nodedata['ref']]);
             $display_html .= "<a href=\"{$search_url}\" onclick=\"CentralSpaceLoad(this)\"</a>";
-            $display_html .= "<div class=\"categorytreenode\">" . escape($nodedata["name"]) . "</div>";
+            $display_html .= "<div class=\"fixedlistnodepill\">" . escape($nodedata["name"]) . "</div>";
             $display_html .= "</a>";
         }
         return "<div>" . $display_html . "</div>";
