@@ -361,11 +361,16 @@ if(!hook('ticktoemailpassword'))
 
 <div class="Question">
 <label><?php echo escape($lang["team_user_contributions"])?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo $ref?>"><?php echo LINK_CARET ?><?php echo escape($lang["team_user_view_contributions"]) ?></a></div>
+<div class="Fixed">
+    <a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo (int)$ref?>">
+    <?php echo LINK_CARET ?><?php echo escape($lang["team_user_view_contributions"]) ?></a></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo escape($lang["log"])?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($pageurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["clicktoviewlog"])?></a></div>
+<div class="Fixed">
+    <a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo (int)$ref ?>&backurl=<?php echo urlencode($pageurl) ?>" 
+    onClick="return CentralSpaceLoad(this,true);">
+    <?php echo LINK_CARET ?><?php echo escape($lang["clicktoviewlog"])?></a></div>
 <div class="clearerleft"> </div></div>
 
 <?php
@@ -374,7 +379,7 @@ if($userref != $ref)
     // Add message link
     ?>
     <div class="Question"><label><?php echo escape($lang["new_message"])?></label>
-    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($pageurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["message"])?></a></div>
+    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo (int)$ref ?>&backurl=<?php echo urlencode($pageurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["message"])?></a></div>
     <div class="clearerleft"> </div></div>
 <?php
     }  

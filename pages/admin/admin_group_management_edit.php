@@ -208,7 +208,18 @@ function dump_config_default_options()
 
 include "../../include/header.php";
 
-?><form method="post" enctype="multipart/form-data" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_management_edit.php?ref=<?php echo $ref . $url_params ?>" id="mainform" class="FormWide">
+$url_params_edit = array(
+    "ref"=>$ref,
+    "offset"=>$offset,
+    "order_by"=>$order_by,
+    "filterbyparent"=>$filter_by_parent,
+    "find" =>$find,
+    "filterbypermissions"=>$filter_by_permissions
+);
+
+?><form method="post" enctype="multipart/form-data" 
+        action="<?php echo generateURL($baseurl_short . 'pages/admin/admin_group_management_edit.php', $url_params_edit);?>"
+        id="mainform" class="FormWide">
     <?php generateFormToken("mainform"); ?>
     <div class="BasicsBox">
     <h1><?php echo escape($lang["page-title_user_group_management_edit"]); ?></h1>
@@ -237,7 +248,7 @@ include "../../include/header.php";
 
         <div class="Question">
             <label for="reference"><?php echo escape($lang["property-reference"]); ?></label>
-            <div class="Fixed"><?php echo $ref; ?></div>
+            <div class="Fixed"><?php echo (int)$ref; ?></div>
             <div class="clearerleft"></div>
         </div>
 

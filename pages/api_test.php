@@ -84,7 +84,7 @@ renderBreadcrumbs([
     ?>
     
 </select>
-<?php if ($api_function!="") { ?>&nbsp;&nbsp;<a target="_blank" href="https://www.resourcespace.com/knowledge-base/api/<?php echo $api_function ?>"><?php echo escape($lang["api-view-documentation"]); ?></a><?php } ?>
+<?php if ($api_function!="") { ?>&nbsp;&nbsp;<a target="_blank" href="https://www.resourcespace.com/knowledge-base/api/<?php echo escape($api_function) ?>"><?php echo escape($lang["api-view-documentation"]); ?></a><?php } ?>
 </div>
 
 <?php

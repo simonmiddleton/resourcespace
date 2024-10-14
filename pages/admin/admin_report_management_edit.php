@@ -77,11 +77,17 @@ $record = $record[0];
 
 include "../../include/header.php";
 
+$url_params_edit = array(
+    "ref"=>$ref,
+    "orderby"=>$order_by,
+    "find" =>$find
+);
+
 ?>
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 <form method="post"
       enctype="multipart/form-data"
-      action="<?php echo $baseurl_short; ?>pages/admin/admin_report_management_edit.php?ref=<?php echo $ref . $url_params ?>"
+      action="<?php echo generateURL($baseurl_short . 'pages/admin/admin_report_management_edit.php', $url_params_edit);?>"
       id="mainform"
       onSubmit="return CentralSpacePost(this,true);" class="FormWide">
     <?php generateFormToken("mainform"); ?>
@@ -112,7 +118,7 @@ include "../../include/header.php";
 
         <div class="Question">
             <label for="reference"><?php echo escape($lang["property-reference"]); ?></label>
-            <div class="Fixed"><?php echo $ref; ?></div>
+            <div class="Fixed"><?php echo (int)$ref; ?></div>
             <div class="clearerleft"></div>
         </div>
 
