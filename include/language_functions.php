@@ -804,10 +804,8 @@ function i18n_merge_translations(array $values): array
  *
  * @param   string  $language_key   Key of $languages array, e.g. "fr"
  * @param   string  $language_value The value (full name) from the $languages array, e.g. "Français"
- * 
- * @return  string  The language name, translated to your language.
  */
-function get_display_language($language_key, $language_value)
+function get_display_language($language_key, $language_value): string
 {
     global $lang;
     $display_lang = $lang["language-" . $language_key];
