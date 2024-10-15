@@ -270,24 +270,28 @@ if($resource_contact_link && ($k=="" || $internal_share_access))
         <script>
         function showContactBox(){
 
-                if(jQuery('#contactadminbox').length)
-                    {
-                    jQuery('#contactadminbox').slideDown();
-                    return false;
-                    }
 
-                jQuery.ajax({
-                        type: "GET",
-                        url: baseurl_short+"pages/ajax/contactadmin.php?ref="+<?php echo $ref ?>+"&insert=true&ajax=true",
-                        success: function(html){
-                                jQuery('#RecordDownloadTabContainer li:last-child').after(html);
-                                document.getElementById('messagetext').focus();
-                                },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            alert('<?php echo escape($lang["error"]) ?>\n' + textStatus);
-                            }
-                        });
-                }
+            //Check if contact box has already been fetched
+            if(jQuery('#contactadminboxcontainer').length)
+            {
+                jQuery('#contactadminbox').slideDown();
+                return false;
+            }
+
+            jQuery.ajax({
+                    type: "GET",
+                    url: baseurl_short+"pages/ajax/contactadmin.php?ref="+<?php echo $ref ?>+"&insert=true&ajax=true",
+                    success: function(html){
+                            jQuery('#RecordDownloadTabContainer li:last-child').after("<div id='contactadminboxcontainer'></div>");
+                            jQuery('#contactadminboxcontainer').html(html);
+                            jQuery('#contactadminbox').slideDown();
+                            document.getElementById('messagetext').focus();
+                            },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert('<?php echo escape($lang["error"]) ?>\n' + textStatus);
+                        }
+                    });                    
+            }
         </script>
         <?php
         }

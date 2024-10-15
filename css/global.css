@@ -1069,8 +1069,8 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     min-width: 90px;
 }
 
-#contactadminbox  textarea{
-    width:100%;
+#contactadminbox textarea, #antispam {
+    width: 90%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
