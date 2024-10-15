@@ -2852,9 +2852,15 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         if (!in_array($valuenode,$current_field_node_ids)) {
                             $newnodes[] = $valuenode;
                         }
-                    } elseif ($fieldinfo['type'] !== FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                    } else {
                         // Check for translated versions and different cases
-                        // This is not performed for dynamic keyword fields as there are likely to be too many
+
+                        if ($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                            // Special case for dynamic keywords as there will likely be a lot of them. Instead of getting and checking all of them,
+                            // $fieldnodes to get subset of existing nodes for checking of language translations using like match by node name.
+                            $fieldnodes = get_nodes($field, null, false, null, null, $newvalue, false, false, false);
+                        }
+
                         $matchnode = 0;
                         foreach($fieldnodes as $fieldnode) {
                             if (
@@ -2872,6 +2878,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                                 break;
                             }
                         }
+
                         if ($matchnode > 0) {
                             if(!in_array($matchnode, $nodes_to_add)) {
                                 $nodes_to_add[] = $matchnode;
@@ -2880,13 +2887,14 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                                 $newnodes[] = $matchnode;
                             }
                         }
-                    } elseif (!checkperm('bdk' . $field)) {
-                        // Dynamic keyword, add as new node
-                        // Append the option and update the field
-                        $newnode            = set_node(null, $field, trim($newvalue), null, null);
-                        $nodes_to_add[]     = $newnode;
-                        debug("update_field: field option added: '" . trim($newvalue));
-                        clear_query_cache("schema");
+                        elseif ($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field)) {
+                            // Dynamic keyword, add as new node
+                            // Append the option and update the field
+                            $newnode            = set_node(null, $field, trim($newvalue), null, null);
+                            $nodes_to_add[]     = $newnode;
+                            debug("update_field: field option added: '" . trim($newvalue));
+                            clear_query_cache("schema");
+                        }
                     }
                 } // End of foreach $newvalue
             }
