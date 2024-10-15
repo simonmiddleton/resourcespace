@@ -79,6 +79,7 @@ if ($user===false)
     exit();
     }
 
+
 if (!checkperm_user_edit($user))
     {
     error_alert($lang["error-permissiondenied"],true);
@@ -192,19 +193,34 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <?php } ?>
 
 <div class="Question"><label><?php echo escape($lang["group"])?></label>
-<?php if (!hook("replaceusergroups")) { ?>
-<select class="stdwidth" name="usergroup">
-<?php
-    $groups=get_usergroups(true);
-    for ($n=0;$n<count($groups);$n++)
+<?php if (!hook("replaceusergroups"))
+    {
+    if (!can_set_admin_usergroup($user["usergroup"]))
         {
         ?>
-        <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]; ?></option>   
+        <div class="Fixed"><?php echo escape($user["groupname"])?>
+        <input type="text" name="usergroup" value="<?php echo (int) $user["usergroup"];?>" style="display:none"></div>
         <?php
         }
-?>
-</select>
-<?php } ?>
+    else
+        {
+        ?>
+        <select class="stdwidth" name="usergroup">
+        <?php
+            $groups=get_usergroups(true);
+            for ($n=0;$n<count($groups);$n++)
+                {
+                if (can_set_admin_usergroup($groups[$n]["ref"]))
+                    {
+                    ?>
+                    <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($groups[$n]["name"]); ?></option>
+                    <?php
+                    }
+                }
+                ?>
+        </select>
+  <?php }
+    } ?>
 <div class="clearerleft"> </div></div>
 <?php hook("additionalusergroupfields"); ?>
 

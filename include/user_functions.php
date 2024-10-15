@@ -805,8 +805,19 @@ function save_user($ref)
 
         if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
             {
-            log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
-            ps_query("DELETE FROM resource WHERE ref = -?", array("i", $ref));
+            if (can_set_admin_usergroup($usergroup) && can_set_admin_usergroup($current_user_data['usergroup']))
+                {
+                log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
+                ps_query("DELETE FROM resource WHERE ref = -?", array("i", $ref));
+                }
+            else
+                {
+                # User cannot set $usergroup to one with "super admin" level permissions - "a". Make no changes.
+                # Check on current user group prevents permission de-escalation of "super admin" level user by user with less permissions.
+                global $userref;
+                debug("User $userref unable to change user group for user $ref from user group {$current_user_data['usergroup']} to user group $usergroup as this would involve granting or revoking the 'a' permission which they do not them self have.");
+                $usergroup = $current_user_data['usergroup'];
+                }
             }
 
         if($email != $current_user_data["email"])
@@ -3720,4 +3731,50 @@ function set_processing_message(string $message)
     if ($userprocessing_messages!="") {$userprocessing_messages.=";;";} // Add delimiter
     $userprocessing_messages.=$message;
     ps_query("update user set processing_messages=? where ref=?",["s",$userprocessing_messages,"i",$userref]);
+    }
+
+
+/**
+ * Consider if the current user is able to escalate the permissions of a user to the level of a "super admin".
+ * Only users with "a" permission should be able to make other users super admins (user groups with "a" permission).
+ * Also used to determine if "super admin" level user groups should be displayed.
+ *
+ * @param  int  $new_usergroup   ID of user group to be set
+ */
+function can_set_admin_usergroup(?int $new_usergroup) : bool
+    {
+    if (is_null($new_usergroup))
+        {
+        # No usergroup supplied e.g. when creating new user account.
+        return true;
+        }
+
+    global $userpermissions;
+
+    if (in_array('a', $userpermissions))
+        {
+        return true;
+        }
+
+    global $can_set_admin_usergroup_perms_array;
+    if (!isset($can_set_admin_usergroup_perms_array))
+        {
+        # Get permissions once and store in global "cache" variable to avoid multiple queries to db as multiple groups maybe checked.
+        $usergroup_permissions = ps_query("SELECT ug.ref as `ref`, IF(FIND_IN_SET('permissions', ug.inherit_flags) AND pg.permissions IS NOT NULL, pg.permissions, ug.permissions) AS `permissions` FROM usergroup ug LEFT JOIN usergroup pg ON pg.ref = ug.parent;");
+        foreach ($usergroup_permissions as $usergroup_permission)
+            {
+            $can_set_admin_usergroup_perms_array[$usergroup_permission['ref']] = $usergroup_permission['permissions']; 
+            }
+        $GLOBALS['can_set_admin_usergroup_perms_array'] = $can_set_admin_usergroup_perms_array;
+        }
+
+    $new_usergroup_permissions = $can_set_admin_usergroup_perms_array[$new_usergroup];
+    $new_usergroup_permissions = explode(',', str_replace(' ', '', $new_usergroup_permissions));
+    if (!in_array('a', $new_usergroup_permissions))
+        {
+        // New usergroup doesn't have 'a' permission.
+        return true;
+        }
+
+    return false;
     }
