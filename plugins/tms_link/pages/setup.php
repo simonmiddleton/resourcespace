@@ -64,24 +64,21 @@ $tms_modules_mappings_html = "
                 <th><strong>{$lang['tms_link_modules_mappings_tools']}</strong></th>
             </tr>";
 
-foreach($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module)
-    {
+foreach ($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module) {
     $tms_link_module_name = escape($tms_link_module['module_name']??"");
     $tms_link_tms_uid_field = escape($tms_link_module['tms_uid_field']??"");
 
     $tms_link_rs_uid_field = get_resource_type_field($tms_link_module['rs_uid_field']??"");
-    if(false !== $tms_link_rs_uid_field)
-        {
+    if (false !== $tms_link_rs_uid_field) {
         $tms_link_rs_uid_field = escape((string) $tms_link_rs_uid_field['title']);
-        }
+    }
 
     $tms_link_applicable_resource_types = '';
-    if(!empty($tms_link_module['applicable_resource_types']))
-        {
+    if (!empty($tms_link_module['applicable_resource_types'])) {
         $tms_link_applicable_resource_types = get_resource_types(implode(',', $tms_link_module['applicable_resource_types']));
         $tms_link_applicable_resource_types = array_column($tms_link_applicable_resource_types, 'name');
         $tms_link_applicable_resource_types = escape(implode(', ', $tms_link_applicable_resource_types));
-        }
+    }
 
     $tms_modules_mappings_html .= "
             <tr>
@@ -102,7 +99,7 @@ foreach($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module
                     <button type=\"button\" id=\"delete_tms_module_{$tms_link_module_index}\" onclick=\"delete_tms_module_mapping(this, '{$tms_link_module_index}');\">{$lang['action-delete']}</button>
                 </td>
             </tr>";
-    }
+}
 $tms_modules_mappings_html .= "
         </table>
         <script>
@@ -158,7 +155,7 @@ $tms_modules_mappings_html .= "
                 type:'POST',
                 url: post_url,
                 data: post_data,
-                dataType: 'json',          
+                dataType: 'json',
             }).done(function(response, status, xhr)
                 {
                 styledalert(response.result,response.message);
@@ -199,9 +196,9 @@ if (trim($tms_link_log_directory) != "") {
     unset($GLOBALS['use_error_exception']);
 }
 
-include '../../../include/header.php';
-if(isset($errortext)) {
-    echo "<div class=\"PageInformal\">" . $errortext . "</div>";
+include __DIR__ . '/../../../include/header.php';
+if (isset($errortext)) {
+    echo "<div class=\"PageInformal\">" . escape($errortext) . "</div>";
 }
 config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
-include '../../../include/footer.php';
+include __DIR__ . '/../../../include/footer.php';

@@ -127,11 +127,9 @@ $tmserrors = array();
 foreach(tms_link_get_modules_mappings() as $module)
     {
     $tms_resources = tms_link_get_tms_resources($module);
-print_r($tms_resources);
-    if(empty($tms_resources))
-        {
+    if (empty($tms_resources)) {
         continue;
-        }
+    }
 
     $current_tms_count = count($tms_resources);
     $tmscount += $current_tms_count;
