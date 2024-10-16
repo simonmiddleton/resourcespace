@@ -103,7 +103,7 @@ if ($ref > 0) {
         // Help the process_custom_fields_submission() fill in the form
         $item_content_fields = convert_from_db_content($db_item['content'], $page_def[$type]['fields']);
         foreach ($item_content_fields as $item_field) {
-            // When saving, POSTd data will always override GETd data {@see process_custom_fields_submission()}
+            // When saving, POSTd data has precedence over GETd data {@see process_custom_fields_submission()}
             $_GET[$item_field['html_properties']['name']] = $item_field['value'];
         }
     }
@@ -126,11 +126,15 @@ $type ??= (int) getval(
     false,
     fn($V) => in_array($V, BRAND_GUIDELINES_CONTENT_TYPES)
 );
+$page_title = $page_def[$type]['title'];
 
 // Process
 $_GET['colour_preview'] = $_POST['colour_preview'] = $_COOKIE['colour_preview'] = ''; # Not expected to be submitted!
-$page_title = $page_def[$type]['title'];
-$processed_fields = process_custom_fields_submission($page_def[$type]['fields'], $save, ['html_properties_prefix' => '']);
+$processed_fields = process_custom_fields_submission(
+    $page_def[$type]['fields'],
+    $save,
+    ['html_properties_prefix' => '']
+);
 if ($save && count_errors($processed_fields) === 0) {
     $item = [
         'type' => $type,
