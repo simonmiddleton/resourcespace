@@ -79,3 +79,4 @@ $lang["simplesaml_single_logout_url"]='একক লগআউট URL';
 $lang["simplesaml_start_url"]='শুরু/সাইন অন URL';
 $lang["simplesaml_existing_config"]='আপনার বিদ্যমান SAML কনফিগারেশন স্থানান্তর করতে নলেজ বেস নির্দেশাবলী অনুসরণ করুন';
 $lang["simplesaml_test_site_url"]='SimpleSAML পরীক্ষা সাইট URL';
+$lang["simplesaml_idp_section"]='IdP';

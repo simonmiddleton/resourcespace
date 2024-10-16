@@ -125,9 +125,9 @@ foreach ($plugins as $plugin)
             
             $messages=array();
             $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads.
- Where the context is unclear, make a best guess. Don't add the period character at the start or end of the translation if one isn't at the start or end of the value being translated.
-Text within square brackets indicates a system parameter that MUST NOT itself be translated so for example '[list]' must remain '[list]' even if translating to Swedish.
-In the event that you cannot provide a translation, return the word CALAMITY. Do not output anything that is not either a valid translation or the word CALAMITY.");
+ Where there is not an obvious translation in the DAM context, use a general context or make a best guess. Don't add the period character at the start or end of the translation if one isn't at the start or end of the value being translated.
+Text within square brackets indicates a system parameter that MUST NOT itself be translated so for example '[list]' must remain '[list]' even if translating to Swedish. If a phrase does not require translation (e.g. because it is a Proper Noun with no local translation) simply return the phrase untranslated and consider this to be a valid translation.
+In the event that you cannot provide a translation (with the exception of the cases listed above) return the word CALAMITY followed by the reason the translation could not be provided. Do not output anything that is not either a valid translation or the word CALAMITY with the reason.");
             $messages[]=array("role"=>"user","content"=>"Please translate: " . $lang_en_extended[$mkey]);
             
             $result=generateChatCompletions($openai_key,"gpt-4o",0,2048,$messages);

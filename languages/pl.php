@@ -2960,3 +2960,5 @@ $lang["ui_removed_config_message"]='To musi teraz być ustawione w pliku konfigu
 $lang["language-bn"]='Bengalski';
 $lang["language-fa"]='Perski';
 $lang["language-pa"]='Pendżabski';
+$lang["language-sw"]='Swahili';
+$lang["language-ur"]='Urdu';

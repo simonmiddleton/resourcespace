@@ -3051,3 +3051,4 @@ $lang["language-bn"]='البنغالية';
 $lang["language-fa"]='فارسي';
 $lang["language-pa"]='البنجابية';
 $lang["language-sw"]='السواحيلية';
+$lang["language-ur"]='اردو';

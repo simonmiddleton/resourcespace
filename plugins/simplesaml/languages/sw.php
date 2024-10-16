@@ -79,3 +79,4 @@ $lang["simplesaml_single_logout_url"]='URL ya kutoka mara moja';
 $lang["simplesaml_start_url"]='Anza/Ingia URL';
 $lang["simplesaml_existing_config"]='Fuata maelekezo ya Msingi wa Maarifa ili kuhamisha usanidi wako wa SAML uliopo';
 $lang["simplesaml_test_site_url"]='URL ya tovuti ya majaribio ya SimpleSAML';
+$lang["simplesaml_idp_section"]='IdP';

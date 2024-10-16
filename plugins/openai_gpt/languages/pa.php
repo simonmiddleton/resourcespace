@@ -14,3 +14,5 @@ $lang["openai_gpt_processing_multiple_resources"]='ਕਈ ਸਰੋਤ';
 $lang["openai_gpt_processing_resource"]='ਸਰੋਤ [resource]';
 $lang["openai_gpt_processing_field"]='ਫੀਲਡ \'[field]\' ਲਈ AI ਮੈਟਾਡੇਟਾ ਜਨਰੇਸ਼ਨ';
 $lang["property-gpt_source"]='GPT ਸਰੋਤ';
+$lang["property-openai_gpt_prompt"]='GPT Prompt';
+$lang["property-openai_gpt_input_field"]='GPT Input';

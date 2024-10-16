@@ -15,3 +15,4 @@ $lang["openai_gpt_processing_resource"]='রিসোর্স [resource]';
 $lang["openai_gpt_processing_field"]='ক্ষেত্র \'[field]\' এর জন্য এআই মেটাডেটা উৎপাদন';
 $lang["property-gpt_source"]='GPT উৎস';
 $lang["property-openai_gpt_input_field"]='GPT ইনপুট';
+$lang["property-openai_gpt_prompt"]='GPT প্রম্পট';

@@ -2901,3 +2901,4 @@ $lang["language-bn"]='Bengalsk';
 $lang["language-fa"]='Persisk';
 $lang["language-sw"]='Swahili';
 $lang["language-pa"]='Punjabi';
+$lang["language-ur"]='Urdu';

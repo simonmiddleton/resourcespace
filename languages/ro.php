@@ -2910,3 +2910,4 @@ $lang["language-bn"]='Bengali';
 $lang["language-fa"]='Persană';
 $lang["language-sw"]='Swahili';
 $lang["language-pa"]='Punjabi';
+$lang["language-ur"]='Urdu';

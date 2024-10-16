@@ -79,3 +79,4 @@ $lang["simplesaml_single_logout_url"]='آدرس خروج یکپارچه';
 $lang["simplesaml_start_url"]='شروع/ورود به URL';
 $lang["simplesaml_existing_config"]='دستورالعمل‌های پایگاه دانش را برای مهاجرت پیکربندی SAML موجود خود دنبال کنید';
 $lang["simplesaml_test_site_url"]='آدرس سایت تست SimpleSAML';
+$lang["simplesaml_idp_section"]='IdP';

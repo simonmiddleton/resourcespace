@@ -14,3 +14,4 @@ $lang["openai_gpt_processing_multiple_resources"]='Rasilimali nyingi';
 $lang["openai_gpt_processing_resource"]='Rasilimali [resource]';
 $lang["openai_gpt_processing_field"]='Uundaji wa metadata wa AI kwa uwanja \'[field]\'';
 $lang["property-gpt_source"]='Chanzo cha GPT';
+$lang["property-openai_gpt_prompt"]='GPT Prompt';

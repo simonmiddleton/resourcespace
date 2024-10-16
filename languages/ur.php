@@ -2827,3 +2827,9 @@ $lang["error_invalid_field_type"]='تشکیل شدہ %variable غلط فیلڈ �
 $lang["facial-recognition"]='چہرے کی شناخت';
 $lang["ui_removed_config_message"]='یہ اب کنفیگریشن فائل میں %variable کے طور پر سیٹ کیا جانا چاہیے۔';
 $lang["language-es"]='ہسپانوی';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["merge_filename_title_spacer"]='اسپیسَر';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["iiif"]='IIIF';
+$lang["language-hi"]='Hindi';
+$lang["contact_sheet_footer_address"]='XXX مین اسٹریٹ، سٹی، ABC 123 - ٹیلیفون: (111) 000-8888 - فیکس: (000) 111-9999';

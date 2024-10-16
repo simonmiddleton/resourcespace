@@ -15,3 +15,4 @@ $lang["openai_gpt_processing_multiple_resources"]='منابع متعدد';
 $lang["openai_gpt_processing_resource"]='منبع [resource]';
 $lang["openai_gpt_processing_field"]='تولید ابرداده هوش مصنوعی برای فیلد \'[field]\'';
 $lang["property-gpt_source"]='منبع GPT';
+$lang["property-openai_gpt_prompt"]='GPT Prompt';

@@ -79,3 +79,4 @@ $lang["simplesaml_single_logout_url"]='سنگل لاگ آؤٹ یو آر ایل';
 $lang["simplesaml_start_url"]='شروع/سائن آن یو آر ایل';
 $lang["simplesaml_existing_config"]='اپنی موجودہ SAML ترتیب کو منتقل کرنے کے لیے نالج بیس کی ہدایات پر عمل کریں۔';
 $lang["simplesaml_test_site_url"]='SimpleSAML ٹیسٹ سائٹ URL';
+$lang["simplesaml_idp_section"]='IdP';
