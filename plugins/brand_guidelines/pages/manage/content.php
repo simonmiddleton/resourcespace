@@ -103,8 +103,10 @@ if ($ref > 0) {
         // Help the process_custom_fields_submission() fill in the form
         $item_content_fields = convert_from_db_content($db_item['content'], $page_def[$type]['fields']);
         foreach ($item_content_fields as $item_field) {
-            // When saving, POSTd data has precedence over GETd data {@see process_custom_fields_submission()}
-            $_GET[$item_field['html_properties']['name']] = $item_field['value'];
+            if (isset($item_field['value'])) {
+                // When saving, POSTd data already has precedence over GETd {@see process_custom_fields_submission()}
+                $_GET[$item_field['html_properties']['name']] = $item_field['value'];
+            }
         }
     }
 }
