@@ -5,11 +5,12 @@ if(!checkPermission_dashadmin()){exit($lang["error-permissiondenied"]);}
 include "../../include/dash_functions.php";
 
 
-$user_groups = array(ucfirst($lang['all_users']));
-if(checkperm('h') && checkperm('hdt_ug'))
-    {
-    $user_groups += get_usergroups(false, '', true);
-    }
+if(checkperm('h') && checkperm('hdt_ug')) {
+    $user_groups = array_merge([ucfirst($lang['all_users'])], get_usergroups(false, '', true));
+} else {
+    global $usergroup;
+    $user_groups = array_filter(get_usergroups(false, '', true), fn($k) => $usergroup == $k, ARRAY_FILTER_USE_KEY);
+}
 
 // Get selected user group or default to all users dash tiles
 $selected_user_group = getval('selected_user_group', key($user_groups), true);
