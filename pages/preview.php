@@ -409,7 +409,7 @@ if ($show_resource_title_in_titlebar){
     }
 }
 
-if(count(canSeeAnnotationsFields()) > 0)
+if(count(canSeeAnnotationsFields()) > 0 && isset($image_height) && isset($image_width))
     {
     ?>
     <!-- Annotorious -->
