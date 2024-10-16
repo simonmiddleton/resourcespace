@@ -2813,3 +2813,4 @@ $lang["action-revertmetadata"]='ਮੈਟਾਡੇਟਾ ਵਾਪਸ ਕਰੋ'
 $lang["fieldhelp-no_config_override_help"]='ਇਸ ਕਨਫਿਗ ਆਈਟਮ ਲਈ ਕੋਈ ਮਦਦ ਨਹੀਂ ਹੈ';
 $lang["collectionidprefix"]='Col_ID';
 $lang["clicktologinasthisuser"]='ਇਸ ਯੂਜ਼ਰ ਵਜੋਂ ਲੌਗ ਇਨ ਕਰੋ';
+$lang["language-es"]='ਸਪੇਨੀ';

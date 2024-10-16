@@ -2821,3 +2821,4 @@ $lang["language-ur"]='উর্দু';
 $lang["megapixel-short"]='এমপি';
 $lang["iiif"]='IIIF';
 $lang["language-es"]='স্প্যানিশ';
+$lang["language-hi"]='হিন্দি';

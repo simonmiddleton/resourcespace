@@ -2814,3 +2814,6 @@ $lang["facial-recognition"]='Utambuzi wa uso';
 $lang["ui_removed_config_message"]='Hii lazima iwekwe sasa katika faili ya usanidi kama %variable';
 $lang["plugin_field_fmt"]='%A (%B)';
 $lang["gigabyte-symbol"]='GB';
+$lang["collectionidprefix"]='Col_ID';
+$lang["language-ro"]='Kirumiya';
+$lang["map_osmbzh"]='OSM Luxembourg';
