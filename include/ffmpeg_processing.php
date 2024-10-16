@@ -24,7 +24,7 @@ if ($generateall) {
         $par = 1;
         # Find out the Pixel Aspect Ratio
         $shell_exec_cmd = $ffmpeg_fullpath . " -i %%FILE%% 2>&1";
-        $shell_exec_params = ["%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename')];
+        $shell_exec_params = ["%%FILE%%" => new CommandPlaceholderArg($file, 'is_valid_rs_path')];
 
         if (isset($ffmpeg_command_prefix)) {
             $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
