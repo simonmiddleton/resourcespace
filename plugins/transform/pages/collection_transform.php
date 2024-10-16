@@ -80,17 +80,7 @@ if ($replace_resource_preserve_option && getval("keep_original", "true") === 'fa
 
             if($generated)
                 {
-                if ($keep_original)
-                    {
-                    debug("Saving original file and renaming " . $crop_temp_file . " to " . $origpath);
-                    save_original_file_as_alternative($resource);
-                    }
-                $copied = rename($crop_temp_file,$origpath);
-                if($copied)
-                    {
-                    debug("Renamed " . $crop_temp_file . " to " . $origpath);
-                    create_previews($resource,false,$resdata["file_extension"]);
-                    }
+                $success = replace_resource_file($resource, $crop_temp_file, true, false, $keep_original);
                 $successcount++;
                 }
             else

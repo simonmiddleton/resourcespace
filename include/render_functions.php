@@ -4250,7 +4250,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                     $treenodenames[] = ["ref" => $treenode["ref"], "name" => $treenode["translated_path"]];
                     }
                 }
-            $value = render_fixedlist_as_pills($treenodenames);
+            $value = render_fixed_list_as_pills($treenodenames);
             }
     
     if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
@@ -4294,7 +4294,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         // Handle the rest of the fixed list fields, category trees have their own section
         if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
             $resource_nodes = get_resource_nodes($ref, $field["ref"], true, false);
-            $value = render_fixedlist_as_pills($resource_nodes);
+            $value = render_fixed_list_as_pills($resource_nodes);
         }
 
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
@@ -4411,11 +4411,11 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
     }
 
 /*
-* Helper function for display_field to genereate html for fixed list fields, rendering them as a series of pills with search links
+* Helper function for display_field to generate html for fixed list fields, rendering them as a series of pills with search links
 *
 * @param array $node Array of nodes to display
 */
-function render_fixedlist_as_pills($nodes):string 
+function render_fixed_list_as_pills($nodes):string 
 { 
     global $baseurl;
     $display_html = "";
@@ -4423,7 +4423,7 @@ function render_fixedlist_as_pills($nodes):string
         foreach ($nodes as $nodedata) {
             $search_url = generateURL($baseurl . '/pages/search.php', ['search' => NODE_TOKEN_PREFIX . $nodedata['ref']]);
             $display_html .= "<a href=\"{$search_url}\" onclick=\"CentralSpaceLoad(this)\"</a>";
-            $display_html .= "<div class=\"categorytreenode\">" . escape($nodedata["name"]) . "</div>";
+            $display_html .= "<div class=\"fixedlistnodepill\">" . escape($nodedata["name"]) . "</div>";
             $display_html .= "</a>";
         }
         return "<div>" . $display_html . "</div>";
@@ -6901,7 +6901,7 @@ function render_resource_view_image(array $resource, array $context)
             {
             $GLOBALS["image_preview_zoom"] = false;
             $tile_region_support = false;
-            $not_jpg = strtolower($resource['file_extension']) != "jpg";
+            $not_jpg = strtolower((string)$resource['file_extension']) != "jpg";
             $fulljpgsize = $not_jpg ? "hpr" : "";
             $fulljpgext = $not_jpg ? 'jpg' : $resource['file_extension'];
             $zoom_image_path = get_resource_path($resource["ref"], true, $fulljpgsize, false, $fulljpgext, true, 1, $use_watermark);

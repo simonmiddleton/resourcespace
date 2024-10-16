@@ -376,7 +376,6 @@ if ($saveaction != '' && enforcePostRequest(false))
             }
 
         // Use the resultant file as requested
-        $replace_resource_preserve_option_original = $replace_resource_preserve_option;
         if ($saveaction == "alternative" && $cropper_enable_alternative_files)
             {
             $description    = getval("description","");
@@ -403,16 +402,8 @@ if ($saveaction != '' && enforcePostRequest(false))
                 {
                 $keep_original = false;
                 }
-
-            if ($keep_original)
-                {
-                // Update global value for use in replace_resource_file
-                $replace_resource_preserve_option = true;
-                }
-
+                
             $success = replace_resource_file($ref,$newpath,true,false,$keep_original);
-
-            $replace_resource_preserve_option = $replace_resource_preserve_option_original;
 
             if (!$success)
                 {

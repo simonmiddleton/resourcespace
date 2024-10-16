@@ -226,13 +226,14 @@ if (!hook("replaceloginform")) {
             <div class="Question HalfWidth">
                 <label for="language"><?php echo escape($lang["language"]); ?></label>
                 <select id="language" class="stdwidth" name="language" onBlur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
-                <?php reset($languages); foreach ($languages as $key => $value) { ?>
-                    <option value="<?php echo $key?>" <?php if ($language == $key) {
-                        ?>selected<?php
-                                   } ?>><?php 
-                                   $display_lang=$lang["language-" . $key];if ($lang["language-" . $key]!==$value) {$display_lang.=" (" . $value . ")";}
-                                   echo escape($display_lang) ?></option>
-                <?php } ?>
+                    <?php
+                    reset($languages);
+                    foreach ($languages as $key => $value) { ?>
+                        <option value="<?php echo escape($key); ?>"
+                            <?php if ($language == $key) { ?>selected<?php } ?>>
+                            <?php echo escape(get_display_language($key, $value)); ?>
+                        </option>
+                    <?php } ?>
                 </select>
                 <div class="clearerleft"> </div>
             </div> 

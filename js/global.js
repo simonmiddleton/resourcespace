@@ -2152,3 +2152,27 @@ function sufficientDateParts(fieldidentifier)
     }
     return valid;
 }
+
+function registerResourceSelectDeselectHandlers() {
+    jQuery('#CentralSpace').on('resourcesaddedtocollection', function(response,resource_list) {
+        resource_list.forEach(function (resource)
+            {
+                jQuery("#ResourceShell" + resource).addClass("Selected");
+                jQuery("#check" + resource).prop('checked','checked');
+            });
+
+        UpdateSelColSearchFilterBar();
+        CentralSpaceHideProcessing();
+    });
+
+    jQuery('#CentralSpace').on('resourcesremovedfromcollection', function(response,resource_list) {
+        resource_list.forEach(function (resource)
+            {
+                jQuery("#ResourceShell" + resource).removeClass("Selected");
+                jQuery("#check" + resource).prop('checked','');
+            });
+
+        CentralSpaceHideProcessing();
+        UpdateSelColSearchFilterBar();
+    });
+}

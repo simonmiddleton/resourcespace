@@ -79,6 +79,7 @@ if ($user===false)
     exit();
     }
 
+
 if (!checkperm_user_edit($user))
     {
     error_alert($lang["error-permissiondenied"],true);
@@ -192,19 +193,34 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <?php } ?>
 
 <div class="Question"><label><?php echo escape($lang["group"])?></label>
-<?php if (!hook("replaceusergroups")) { ?>
-<select class="stdwidth" name="usergroup">
-<?php
-    $groups=get_usergroups(true);
-    for ($n=0;$n<count($groups);$n++)
+<?php if (!hook("replaceusergroups"))
+    {
+    if (!can_set_admin_usergroup($user["usergroup"]))
         {
         ?>
-        <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]; ?></option>   
+        <div class="Fixed"><?php echo escape($user["groupname"])?>
+        <input type="text" name="usergroup" value="<?php echo (int) $user["usergroup"];?>" style="display:none"></div>
         <?php
         }
-?>
-</select>
-<?php } ?>
+    else
+        {
+        ?>
+        <select class="stdwidth" name="usergroup">
+        <?php
+            $groups=get_usergroups(true);
+            for ($n=0;$n<count($groups);$n++)
+                {
+                if (can_set_admin_usergroup($groups[$n]["ref"]))
+                    {
+                    ?>
+                    <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($groups[$n]["name"]); ?></option>
+                    <?php
+                    }
+                }
+                ?>
+        </select>
+  <?php }
+    } ?>
 <div class="clearerleft"> </div></div>
 <?php hook("additionalusergroupfields"); ?>
 
@@ -361,11 +377,16 @@ if(!hook('ticktoemailpassword'))
 
 <div class="Question">
 <label><?php echo escape($lang["team_user_contributions"])?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo $ref?>"><?php echo LINK_CARET ?><?php echo escape($lang["team_user_view_contributions"]) ?></a></div>
+<div class="Fixed">
+    <a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo (int)$ref?>">
+    <?php echo LINK_CARET ?><?php echo escape($lang["team_user_view_contributions"]) ?></a></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo escape($lang["log"])?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($pageurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["clicktoviewlog"])?></a></div>
+<div class="Fixed">
+    <a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo (int)$ref ?>&backurl=<?php echo urlencode($pageurl) ?>" 
+    onClick="return CentralSpaceLoad(this,true);">
+    <?php echo LINK_CARET ?><?php echo escape($lang["clicktoviewlog"])?></a></div>
 <div class="clearerleft"> </div></div>
 
 <?php
@@ -374,7 +395,7 @@ if($userref != $ref)
     // Add message link
     ?>
     <div class="Question"><label><?php echo escape($lang["new_message"])?></label>
-    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($pageurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["message"])?></a></div>
+    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo (int)$ref ?>&backurl=<?php echo urlencode($pageurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["message"])?></a></div>
     <div class="clearerleft"> </div></div>
 <?php
     }  

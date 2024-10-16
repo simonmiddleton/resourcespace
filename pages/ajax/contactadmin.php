@@ -20,9 +20,35 @@ $resource=get_resource_data($ref);if ($resource===false) {exit($lang['resourceno
 
 $imagename=i18n_get_translated($resource["field".$view_title_field]);
 
-
 if (getval("send","")!="" && enforcePostRequest(false))
     {
+
+    # If an anonymous user is trying to send a message 
+    # validate that the anti-spam code has been filled in
+    if (isset($anonymous_login) && $anonymous_login == $username)
+        {
+        $errors = false;
+        $spamcode = getval("antispamcode","");
+        $usercode = getval("antispam","");
+        $spamtime = getval("antispamtime",0);
+    
+        if($spamtime<(time()-180) || $spamtime>time())
+            {
+            $errors = true;
+            $antispam_error=$lang["expiredantispam"];    
+            }
+        elseif(!hook('replaceantispam_check') && !verify_antispam($spamcode, $usercode, $spamtime))
+            {
+            $errors = true;
+            $antispam_error=$lang["requiredantispam"];
+            }
+
+        if($errors) 
+            {
+            exit($antispam_error);
+            }
+        }
+
     $messagetext=getval("messagetext","");  
     $templatevars['url']=$baseurl . "/?r=" . $ref;
     $templatevars['fromusername']=($userfullname=="" ? $username : $userfullname);
@@ -114,9 +140,11 @@ if ($insert=="")
 
 function sendResourceMessage()
     {
-        if (!jQuery('#messagetext').val()) {
-        return false;
+        if (!jQuery('#messagetext').val() || (jQuery('#antispam').length && !jQuery('#antispam').val())) {
+            alert('<?php echo escape($lang["requiredfields-general"]); ?>');
+            return false;
         }
+
     jQuery.ajax({
         type: "POST",
         data: jQuery('#contactadminform').serialize(),
@@ -124,11 +152,14 @@ function sendResourceMessage()
         success: function(html){                        
                 //jQuery('#RecordDownload li:last-child').after(html);
                 if(html=="SUCCESS")
-                    {alert('<?php echo escape($lang["emailsent"]); ?>');}
+                    {
+                        alert('<?php echo escape($lang["emailsent"]); ?>');
+                        jQuery('#contactadminboxcontainer').remove();
+                    }
                 else
-                    {alert('<?php echo escape($lang["error"]); ?>\n' + html);}
-                jQuery('#messagetext').val("");
-                jQuery('#contactadminbox').slideUp();
+                    {
+                        alert('<?php echo escape($lang["error"]); ?>: ' + html);
+                    }
                 },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             alert('<?php echo escape($lang["error"]); ?>\n' + textStatus);
@@ -138,18 +169,27 @@ function sendResourceMessage()
 
 </script>
 <div class="clearerleft"> </div>
-<div id="contactadminbox">
+<div id="contactadminbox" style="display: none">
 <p><?php echo escape($lang["contactadmin"]); ?></p>
 <form name="contactadminform" method=post id="contactadminform" action="<?php echo $baseurl_short?>pages/ajax/contactadmin.php?ref=<?php echo $ref ?>">
     <?php generateFormToken("contactadminform"); ?>
 <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
 
 <div>
-<p><?php echo escape($lang["contactadminintro"]); ?></p>
+<p><?php echo escape($lang["contactadminintro"]); ?><sup>*</sup></p>
 <textarea rows=6 name="messagetext" id="messagetext"></textarea>
 <div class="clearerleft"> </div>
 
 <div id="contactadminbuttons">
+<?php if (isset($anonymous_login) && $anonymous_login == $username && !hook("replaceantispam"))
+            {
+            if(isset($antispam_error))
+                {
+                error_alert($antispam_error, false);
+                }
+            render_antispam_question();
+            }
+?>
 <input name="send" type="submit" class="contactadminbutton" value="&nbsp;&nbsp;<?php echo escape($lang["send"]); ?>&nbsp;&nbsp;" onClick="sendResourceMessage();return false;" />
 <input name="cancel" type="submit" class="contactadminbutton" value="&nbsp;&nbsp;<?php echo escape($lang["cancel"]); ?>&nbsp;&nbsp;" onClick="jQuery('#contactadminbox').slideUp();return false;" />
 </div>

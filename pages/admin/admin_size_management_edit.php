@@ -91,10 +91,17 @@ if (getval("save", false) && enforcePostRequest(false))
 $record = ps_query("SELECT ref, id, width, height, padtosize, `name`, internal, allow_preview, allow_restricted, quality FROM preview_size WHERE ref = ?",array("i",$ref));
 $record = $record[0];
 include "../../include/header.php";
+
+$url_params_edit = array(
+    "ref"=>$ref,
+    "orderby"=>$order_by,
+    "find" =>$find
+);
+
 ?>
 <form method="post" 
       enctype="multipart/form-data" 
-      action="<?php echo $baseurl_short; ?>pages/admin/admin_size_management_edit.php?ref=<?php echo urlencode($ref) . $url_params ?>"
+      action="<?php echo generateURL($baseurl_short . 'pages/admin/admin_size_management_edit.php', $url_params_edit);?>"
       id="mainform"
       onSubmit="return CentralSpacePost(this, true);">
     <?php generateFormToken("mainform"); ?>

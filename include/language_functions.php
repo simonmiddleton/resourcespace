@@ -797,3 +797,22 @@ function i18n_merge_translations(array $values): array
         array_values($options)
     );
 }
+
+/**
+ * Get the name of a language in your own language plus its native name.
+ * Used for language selection dropdowns.
+ *
+ * @param   string  $language_key   Key of $languages array, e.g. "fr"
+ * @param   string  $language_value The value (full name) from the $languages array, e.g. "Français"
+ */
+function get_display_language($language_key, $language_value): string
+{
+    global $lang;
+    $display_lang = $lang["language-" . $language_key];
+    
+    if ($lang["language-" . $language_key ] !== $language_value) {
+        $display_lang .= " (" . $language_value . ")";
+    }
+
+    return $display_lang;
+}

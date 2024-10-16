@@ -94,7 +94,7 @@ if ($generateall) {
     $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -loglevel error -i %%FILE%% " . $ffmpeg_preview_options . " -t %%SECONDS%% -s %%WIDTH%%x%%HEIGHT%% %%TARGETFILE%%";
 
     $shell_exec_params = [
-        "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
+        "%%FILE%%" => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
         "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
         "%%WIDTH%%" => (int) $width,
         "%%HEIGHT%%" => (int) $height,

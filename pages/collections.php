@@ -402,28 +402,8 @@ else { ?>
             jQuery('#CentralSpace').trigger('prepareDragDrop');
         });
 
-        jQuery('#CentralSpace').on('resourcesaddedtocollection', function(response,resource_list) {
-            resource_list.forEach(function (resource)
-                {
-                    jQuery("#ResourceShell" + resource).addClass("Selected");
-                    jQuery("#check" + resource).prop('checked','checked');
-                });
-
-            UpdateSelColSearchFilterBar();
-            CentralSpaceHideProcessing();
-        });
-
-        jQuery('#CentralSpace').on('resourcesremovedfromcollection', function(response,resource_list) {
-            resource_list.forEach(function (resource)
-                {
-                    jQuery("#ResourceShell" + resource).removeClass("Selected");
-                    jQuery("#check" + resource).prop('checked','');
-                });
-
-            CentralSpaceHideProcessing();
-            UpdateSelColSearchFilterBar();
-        });
-
+        registerResourceSelectDeselectHandlers();
+         
     </script>
     <!-- End of Drag and Drop -->
     <style>
@@ -742,13 +722,31 @@ elseif ($k != "" && !$internal_share_access)
         $min_access=collection_min_access($result);
         if ($min_access==0) {
             # Ability to download only if minimum access allows it
-            if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0)) { ?>
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'collection'=>$usercollection, 'url'=>'pages/download_usage.php?collection='.$usercollection.'&k='.$k]);?>">
+            if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) {
+                if ($terms_download) {
+                    if ($download_usage) {
+                        $download_url = generateURL($baseurl_short . '/pages/terms.php', 
+                            [
+                                'k' => $k, 
+                                'collection' => $usercollection, 
+                                'url' => generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k])
+                            ]);
+                    } else {
+                        $download_url = generateURL($baseurl_short . '/pages/terms.php', 
+                            [ 
+                                'k' => $k, 
+                                'collection' => $usercollection, 
+                                'url'=> generateURL($baseurl_short .'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k])
+                            ]);
+                    }
+                } elseif ($download_usage) {
+                    $download_url = generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k]);
+                } else {
+                    $download_url = generateURL($baseurl_short .'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k]);
+                }
+                ?>
+                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $download_url;?>">
                     <?php echo LINK_CARET ?><?php echo escape($lang["action-download"])?></a><br />
-            <?php 
-            } elseif ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
-                <a href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'collection'=>$usercollection, 'url'=>'pages/collection_download.php?collection='.$usercollection.'&k='.$k]);?>" 
-                    onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["action-download"])?></a><br />
             <?php 
             }
         }
@@ -1123,8 +1121,30 @@ if (count($addarray)>0 && $addarray[0]!="")
         <?php if(!hook("replaceanoncollectiontools"))
             {
             if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result) > 0)
-                {?>
-                <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'url'=>'pages/collection_download.php?collection='.$usercollection.'&k='.$k])?>"><?php echo escape($lang["action-download"])?></a></li>
+                {
+                if ($terms_download) {
+                    if ($download_usage) {
+                        $download_url = generateURL($baseurl_short . '/pages/terms.php', 
+                            [
+                                'k' => $k, 
+                                'collection' => $usercollection, 
+                                'url' => generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k])
+                            ]);
+                    } else {
+                        $download_url = generateURL($baseurl_short . '/pages/terms.php', 
+                            [ 
+                                'k' => $k, 
+                                'collection' => $usercollection, 
+                                'url'=> generateURL($baseurl_short .'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k])
+                            ]);
+                    }
+                } elseif ($download_usage) {
+                    $download_url = generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k]);
+                } else {
+                    $download_url = generateURL($baseurl_short .'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k]);
+                }    
+                ?>
+                <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $download_url; ?>"><?php echo escape($lang["action-download"]); ?></a></li>
                 <?php
                 }
             if ($feedback)
