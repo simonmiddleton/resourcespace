@@ -180,3 +180,41 @@ function convert_from_db_content(string $json, array $def): array
     }
     return $result;
 }
+
+/**
+ * Helper function to group similar sequential page (colour & resource) content items for rendering purposes. A group is
+ * made of at least one item (to allow users to add to it).
+ * @param array $items Page content item records
+ * @return array Returns item as is and a group item (with members) otherwise
+ */
+function group_content_items(array $items): array
+{
+    $result = [];
+    $allow_groups_for = [
+        BRAND_GUIDELINES_CONTENT_TYPES['colour'],
+        BRAND_GUIDELINES_CONTENT_TYPES['resource']
+    ];
+    $tmp = [
+        'type' => BRAND_GUIDELINES_CONTENT_TYPES['group'],
+        'members' => [],
+    ];
+    foreach ($items as $item) {
+        $group_type = in_array($item['type'], $allow_groups_for);
+        $next_item = next($items);
+        if (
+            $next_item !== false
+            && $item['type'] === $next_item['type']
+            && $group_type
+            // todo: except full-width resources 
+        ) {
+            $tmp['members'][] = $item;
+        } elseif ($tmp['members'] !== [] || ($tmp['members'] === [] && $group_type)) {
+            $tmp['members'][] = $item;
+            $result[] = $tmp;
+            $tmp['members'] = [];
+        } else {
+            $result[] = $item;
+        }
+    }
+    return $result;
+}

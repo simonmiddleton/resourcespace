@@ -25,8 +25,16 @@ if ($available_pages === []) {
     $selected_page_title = $available_pages[$selected_page];
 }
 
-$page_contents = get_page_contents((int) $selected_page);
-
+$page_contents = array_map(function($item) {
+    $item_content = json_decode($item['content'], true);
+    if ($item_content === false) {
+        debug("Failed to decode page item (#{$item['ref']}) content. Reason: " . json_last_error_msg());
+        return $item;
+    }
+    $item['content'] = $item_content;
+    return $item;
+}, get_page_contents((int) $selected_page));
+$page_contents_grouped = group_content_items($page_contents);
 
 include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
 render_individual_menu();
@@ -96,36 +104,46 @@ render_content_menu();
             <div id="guidelines-content--overview">
                 <h1><?php echo escape($selected_page_title); ?></h1>
                 <?php
-                foreach ($page_contents as $item) {
+                foreach ($page_contents_grouped as $item) {
                     // echo '<h3>(raw content data structure - debug)</h3><pre>';print_r($item);echo '</pre>';
-                    $item_content = json_decode($item['content'], true);
-                    if ($item_content === false) {
-                        debug("Failed to decode page item (#{$item['ref']}) content. Reason: " . json_last_error_msg());
-                        continue;
-                    }
 
                     if ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']) {
+                        $new_content_btn_id = $item['ref'];
                         ?>
                         <div
                             id="page-content-item-<?php echo escape((string) $item['ref']); ?>"
                         ><?php
                             render_item_top_right_menu($item['ref']);
-                            echo richtext_input_parser($item_content['richtext']);
+                            echo richtext_input_parser($item['content']['richtext']);
                         ?></div>
                         <?php
-                    } elseif ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['colour']) {
-                        // todo: determine item groups on page ahead of rendering
+                    } elseif ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['group']) {
+                        $members = implode(',', array_column($item['members'], 'ref'));
+                        $new_content_btn_id = "group-{$members}";
                         ?>
-                        <div class="colour-group">
+                        <div class="group" data-members="<?php echo escape($members); ?>">
                         <?php
-                        render_block_colour_item(array_merge(['ref' => $item['ref']], $item_content));
-                        render_new_block_element_button('guidelines-colour-block new'); # todo: always last item in the group
+                        render_item_top_right_menu(0);
+                        foreach ($item['members'] as $group_item) {
+                            $new_block_item_btn = '';
+                            if ($group_item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['colour']) {
+                                $new_block_item_btn = 'guidelines-colour-block new';
+                                render_block_colour_item(array_merge(
+                                    ['ref' => $group_item['ref']],
+                                    $group_item['content']
+                                ));
+                            } elseif ($group_item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
+                                // todo: implement
+                                $new_block_item_btn = 'new-thumbnail-image';
+                            }
+                        }
+                        render_new_block_element_button($new_block_item_btn);
                         ?>
                         </div>
                         <?php
                     }
 
-                    render_new_content_button("add-new-content-after-{$item['ref']}");
+                    render_new_content_button("add-new-content-after-{$new_content_btn_id}");
                 }
 
                 if ($available_pages !== [] && $page_contents === []) {
@@ -271,6 +289,10 @@ render_content_menu();
             off_left = -16;
             off_top = 40;
         }
+        
+        // todo: investigate why menu is waaaay off from where we click.
+        console.debug("btn_el = %o", btn_el);
+        console.debug("btn_el.position() = %o", btn_el.position());
 
         jQuery("#" + target)
             .css({

@@ -16,6 +16,7 @@ function HookBrand_guidelinesAllInitialise()
         'text' => 0,
         'resource' => 1,
         'colour' => 2,
+        'group' => 100, # internal use by group_content_items()
     ]);
     define('BRAND_GUIDELINES_DB_COLS_PAGES', columns_in('brand_guidelines_pages', null, 'brand_guidelines'));
     define('BRAND_GUIDELINES_DB_COLS_CONTENT', columns_in('brand_guidelines_content', null, 'brand_guidelines'));
