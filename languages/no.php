@@ -3088,3 +3088,7 @@ $lang["error_invalid_path"]='Den konfigurerte %variable-stien eksisterer ikke: %
 $lang["error_invalid_field_type"]='Den konfigurerte %variable er av feil felttype. Bør være %type';
 $lang["facial-recognition"]='Ansiktsgjenkjenning';
 $lang["ui_removed_config_message"]='Dette må nå settes i konfigurasjonsfilen som %variable';
+$lang["language-bn"]='Bengalsk';
+$lang["language-fa"]='Persisk';
+$lang["language-sw"]='Swahili';
+$lang["language-pa"]='Punjabi';

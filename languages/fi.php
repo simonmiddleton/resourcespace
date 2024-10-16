@@ -3096,3 +3096,7 @@ $lang["error_invalid_path"]='Määritetty %variable polku ei ole olemassa: %path
 $lang["error_invalid_field_type"]='Määritetty %variable on väärän kenttätyypin. Sen pitäisi olla %type';
 $lang["facial-recognition"]='Kasvojentunnistus';
 $lang["ui_removed_config_message"]='Tämä on nyt asetettava määritystiedostossa muuttujana %variable';
+$lang["language-bn"]='Bengali';
+$lang["language-fa"]='Persia';
+$lang["language-pa"]='Punjabi';
+$lang["language-sw"]='Swahili';

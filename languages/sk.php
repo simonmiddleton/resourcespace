@@ -3272,3 +3272,7 @@ $lang["error_invalid_path"]='Konfigurirana pot %variable ne obstaja: %path';
 $lang["error_invalid_field_type"]='Konfigurirana %variable je napačnega tipa polja. Morala bi biti %type';
 $lang["facial-recognition"]='Prepoznavanje obrazov';
 $lang["ui_removed_config_message"]='To je zdaj treba nastaviti v konfiguracijski datoteki kot %variable';
+$lang["language-bn"]='Bengálčina';
+$lang["language-fa"]='Perzijščina';
+$lang["language-pa"]='Pandžabi';
+$lang["language-ur"]='Urdu';

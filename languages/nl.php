@@ -2938,3 +2938,7 @@ $lang["error_invalid_path"]='Het geconfigureerde %variable pad bestaat niet: %pa
 $lang["error_invalid_field_type"]='De geconfigureerde %variable is van het verkeerde veldtype. Moet %type zijn';
 $lang["facial-recognition"]='Gezichtsherkenning';
 $lang["ui_removed_config_message"]='Dit moet nu worden ingesteld in het configuratiebestand als %variable';
+$lang["language-bn"]='Bengaals';
+$lang["language-fa"]='Perzisch';
+$lang["language-pa"]='Punjabi';
+$lang["language-sw"]='Swahili';

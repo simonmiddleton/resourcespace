@@ -3047,3 +3047,7 @@ $lang["error_invalid_path"]='المسار المكون %variable غير موجو
 $lang["error_invalid_field_type"]='تم تكوين %variable بنوع حقل خاطئ. يجب أن يكون %type';
 $lang["facial-recognition"]='التعرف على الوجوه';
 $lang["ui_removed_config_message"]='يجب الآن تعيين هذا في ملف التكوين كـ %variable';
+$lang["language-bn"]='البنغالية';
+$lang["language-fa"]='فارسي';
+$lang["language-pa"]='البنجابية';
+$lang["language-sw"]='السواحيلية';

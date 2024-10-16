@@ -2992,3 +2992,6 @@ $lang["error_invalid_path"]='Jalur %variable yang dikonfigurasi tidak ada: %path
 $lang["error_invalid_field_type"]='%variable yang dikonfigurasi memiliki tipe bidang yang salah. Seharusnya %type';
 $lang["facial-recognition"]='Pengenalan wajah';
 $lang["ui_removed_config_message"]='Ini sekarang harus diatur dalam file konfigurasi sebagai %variable';
+$lang["language-bn"]='Bengali';
+$lang["language-fa"]='Persia';
+$lang["language-sw"]='Swahili';

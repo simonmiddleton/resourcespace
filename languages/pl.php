@@ -2957,3 +2957,6 @@ $lang["error_invalid_path"]='Skonfigurowana ścieżka %variable nie istnieje: %p
 $lang["error_invalid_field_type"]='Skonfigurowana %variable ma niewłaściwy typ pola. Powinien być %type';
 $lang["facial-recognition"]='Rozpoznawanie twarzy';
 $lang["ui_removed_config_message"]='To musi teraz być ustawione w pliku konfiguracyjnym jako %variable';
+$lang["language-bn"]='Bengalski';
+$lang["language-fa"]='Perski';
+$lang["language-pa"]='Pendżabski';

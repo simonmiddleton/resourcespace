@@ -2906,3 +2906,7 @@ $lang["error_invalid_path"]='Calea %variable configurată nu există: %path';
 $lang["error_invalid_field_type"]='Variabila configurată %variable este de tipul de câmp greșit. Ar trebui să fie %type';
 $lang["facial-recognition"]='Recunoaștere facială';
 $lang["ui_removed_config_message"]='Acest lucru trebuie acum să fie setat în fișierul de configurare ca %variable';
+$lang["language-bn"]='Bengali';
+$lang["language-fa"]='Persană';
+$lang["language-sw"]='Swahili';
+$lang["language-pa"]='Punjabi';
