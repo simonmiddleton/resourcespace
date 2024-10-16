@@ -101,7 +101,6 @@ render_content_menu();
     </nav>
     <div class="BasicsBox">
         <div class="guidelines-content" data-page="<?php echo escape((string) $selected_page); ?>">
-            <div id="guidelines-content--overview">
                 <h1><?php echo escape($selected_page_title); ?></h1>
                 <?php
                 foreach ($page_contents_grouped as $item) {
@@ -149,14 +148,15 @@ render_content_menu();
                 if ($available_pages !== [] && $page_contents === []) {
                     render_new_content_button('add-new-content-end');
                 }
-
-
-
-
-
-
                 ?>
-                <br><br><hr><p>Mock-up below</p><hr>
+
+
+
+
+
+
+            <br><br><hr><p>Mock-up below</p><hr>
+            <div id="guidelines-content--overview">
                 <p>Follow the guidelines below for our branding logos and colours.</p>
                 <?php render_new_content_button('add-new-content-1'); ?>
                 <h2>Full-width resource</h2>
@@ -272,33 +272,28 @@ render_content_menu();
     function showOptionsMenu(e, target) {
         console.debug('showOptionsMenu(e = %o, target = %o)', e, target);
         hideOptionsMenu();
-        let btn_el = jQuery(e);
+        const is_responsive = window.matchMedia("(max-width: 600px)").matches;
+        const el_pos = calculate_position_offset_parents(e);
+        const btn_el = jQuery(e);
         let manage_page = 'content';
 
         // Determine the position offset for the menu so it's within the proximity of the calling "item" element 
         if (target == 'menu-individual') {
-            let nav_ctx = btn_el.parents('.guidelines-sidebar').length !== 0;
-            let is_responsive = window.matchMedia("(max-width: 600px)").matches;
-            off_left = nav_ctx
-                // Offset based on the .context-menu-container width adjusted for smaller screens
-                ? (is_responsive ? -175 : 10)
-                : (is_responsive ? -165 : 30);
-            off_top = nav_ctx ? -10 : 0;
-            manage_page = nav_ctx ? 'toc' : 'content';
+            manage_page = btn_el.parents('.guidelines-sidebar').length !== 0 ? 'toc' : 'content';
+            // Offset based on the .context-menu-container width adjusted for smaller screens
+            off_left = is_responsive ? -195 : 2; 
+            off_top = is_responsive ? -220 : -78;
         } else {
-            off_left = -16;
-            off_top = 40;
+            off_left = -35;
+            off_top = is_responsive ? -180 : -40;
         }
-        
-        // todo: investigate why menu is waaaay off from where we click.
-        console.debug("btn_el = %o", btn_el);
-        console.debug("btn_el.position() = %o", btn_el.position());
+        console.debug("off_top = %o -- off_left = %o", off_top, off_left);
 
         jQuery("#" + target)
             .css({
                 display: 'none',
-                left: btn_el.position().left + off_left,
-                top: btn_el.position().top + off_top
+                top: el_pos.top + off_top,
+                left: el_pos.left + off_left,
             })
             .data(
                 'item',
