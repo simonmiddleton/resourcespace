@@ -2828,3 +2828,6 @@ $lang["language-hi"]='Hindi';
 $lang["language-pa"]='Punjabi';
 $lang["language-hr"]='Kroeshia';
 $lang["language-ur"]='Urdu';
+$lang["client-encoding"]='(tafsiri-ya-mteja: %encoding)';
+$lang["map_tfneighbourhood"]='Jirani';
+$lang["all__emailcontactadmin"]='Tafadhali tafsiri: <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';

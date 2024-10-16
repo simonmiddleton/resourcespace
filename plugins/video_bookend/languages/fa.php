@@ -8,3 +8,4 @@ $lang["bookend-noimage-2"]='(بدون تصویر پایانی)';
 $lang["bookend-intro"]='تصاویر را از لیست فایل‌های جایگزین انتخاب کنید تا برای تصاویر آغازین و پایانی استفاده شوند.';
 $lang["bookend-failed"]='ناموفق!';
 $lang["bookend-could-not-open-file"]='خطا - نمی‌توان فایل را باز کرد!';
+$lang["bookend"]='پایان کتاب';
