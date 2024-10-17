@@ -180,7 +180,7 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
         $plugin_lang_file=dirname(__FILE__) . "/../plugins/" . $plugin_yaml["name"] . "/languages/" . $language . ".php";
         if (file_exists($plugin_lang_file))
             {
-            include_once($plugin_lang_file);
+            include_once $plugin_lang_file;
             if (isset($lang["plugin-" . $plugin_yaml["name"] . "-title"]))
                 {
                 // Append the translated title so the English title is still visible, this is so it's still possible to find the relevant plugin

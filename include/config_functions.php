@@ -1954,7 +1954,7 @@ function save_removed_ui_config($option): bool
 {
     if (isset($GLOBALS[$option]) && trim($GLOBALS[$option]) !== "") {
         // This has been removed from the UI - set to a config file option if it was previously set
-        set_config_option(NULL, $option . "_REMOVED", $GLOBALS[$option]);
+        set_config_option(null, $option . "_REMOVED", $GLOBALS[$option]);
         return true;
     }
     return false;
