@@ -120,7 +120,12 @@ function create_page_content(int $page, array $item): bool
     if (!acl_can_edit_brand_guidelines()) {
         return false;
     }
-    return in_array($item['type'], BRAND_GUIDELINES_CONTENT_TYPES) && create_content_item($page, $item);
+    $created = in_array($item['type'], BRAND_GUIDELINES_CONTENT_TYPES) && create_content_item($page, $item);
+    if ($created && $item['position_after'] > 0) {
+        // adjust order_by following new addition otherwise moving content might end up in the wrong place
+        reorder_items('brand_guidelines_content', get_page_contents($page), null);
+    }
+    return $created;
 }
 
 /**
