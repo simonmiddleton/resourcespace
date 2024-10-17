@@ -209,6 +209,7 @@ function group_content_items(array $items): array
         ) {
             $tmp['members'][] = $item;
         } elseif ($tmp['members'] !== [] || ($tmp['members'] === [] && $group_type)) {
+            // todo: half-width resources should only be in groups of max 2 elements
             $tmp['members'][] = $item;
             $result[] = $tmp;
             $tmp['members'] = [];
