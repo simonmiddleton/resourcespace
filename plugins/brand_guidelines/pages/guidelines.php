@@ -109,9 +109,7 @@ render_content_menu();
                     if ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']) {
                         $new_content_btn_id = $item['ref'];
                         ?>
-                        <div
-                            id="page-content-item-<?php echo escape((string) $item['ref']); ?>"
-                        ><?php
+                        <div id="page-content-item-<?php echo (int) $item['ref']; ?>"><?php
                             render_item_top_right_menu($item['ref']);
                             echo richtext_input_parser($item['content']['richtext']);
                         ?></div>
@@ -300,6 +298,7 @@ render_content_menu();
                 {
                     ref: btn_el.data('item-ref'),
                     manage_page: manage_page,
+                    position_after: get_previous_page_content_item_id(e),
                 }
             )
             .slideDown(150);
@@ -309,10 +308,10 @@ render_content_menu();
         let menu_individual = jQuery('#menu-individual');
         let menu_content = jQuery('#menu-content');
         if (menu_individual.is(':visible')) {
-            jQuery('#menu-individual').slideUp(150);
+            menu_individual.slideUp(150);
         }
         if (menu_content.is(':visible')) {
-            jQuery('#menu-content').slideUp(150);
+            menu_content.slideUp(150);
         }
     }
 
@@ -423,22 +422,47 @@ render_content_menu();
         console.debug('new_content_item(e = %o)', e);
         hideOptionsMenu();
         let page = jQuery('div.guidelines-content').data('page');
-        console.debug('page = %o', page);
-        let btn_el = jQuery(e);
+        console.debug({page});
+        const btn_el = jQuery(e);
+
         let item = btn_el.parent('#menu-content').data('item');
-        let type = btn_el.data('item-type');
-        console.debug(item);
-        console.debug(type);
+        if (!item) {
+            // Add new (+) functionality gets called directly (i.e. not via showOptionsMenu())
+            item = {
+                ref: 0,
+                manage_page: 'content',
+                position_after: get_previous_page_content_item_id(e),
+            };
+        }
+        console.debug({item});
+
+        const type = btn_el.data('item-type');
+        console.debug({type});
 
         return ModalLoad(
             baseurl + '/plugins/brand_guidelines/pages/manage/content.php?'
             + new URLSearchParams({
                 page: page,
                 type: type,
+                after_item: item.position_after,
             }).toString(),
             true,
             true
         );
+    }
+
+    /**
+     * Helper function to get the previous content item ID.
+     * @param {Element} e DOM element
+     * @return {Number}
+     */
+    function get_previous_page_content_item_id(e)
+    {
+        const pci_prefix = 'page-content-item-';
+        const prev_pci = jQuery(e).prev(`div[id^="${pci_prefix}"]`);
+        return position_item_after = prev_pci.length !== 0
+            ? parseInt(prev_pci.attr('id').substring((pci_prefix.length)), 10)
+            : 0;
     }
 </script>
 <?php

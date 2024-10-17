@@ -102,7 +102,7 @@ function render_new_block_element_button(string $class, int $type): void
 }
 
 /**
- * todo: consider using a dedicated colour object instead. Example:
+ * Render a colour page content item. Example:
  * ```php
  * render_block_colour_item([
  *     'ref' => 9,
@@ -112,13 +112,15 @@ function render_new_block_element_button(string $class, int $type): void
  *     'cmyk' => '0, 0, 0, 100',
  * ]);
  * ```
+ * @param array{ref: int, name: string, hex: string, rgb: string, cmyk: string} $value Colour value to render
  */
-function render_block_colour_item(array $value)
+function render_block_colour_item(array $value): void
 {
+    $ref = (int) $value['ref'];
     $hex = ltrim($value['hex'], '#');
     ?>
-    <div class="guidelines-colour-block">
-        <?php render_item_top_right_menu($value['ref']); ?>
+    <div id="page-content-item-<?php echo $ref; ?>" class="guidelines-colour-block">
+        <?php render_item_top_right_menu($ref); ?>
         <div class="guidelines-colour-block--colour" style="background-color: #<?php echo escape($hex); ?>"></div>
         <div class="guidelines-colour-block--details">
             <span><?php echo escape(i18n_get_translated($value['name'])); ?></span>
