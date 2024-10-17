@@ -113,7 +113,7 @@ function colour_cmyk_input_validator($value): bool
 /**
  * Create a new page content item (use case).
  * @param int $page Page ID
- * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array} An item data structure
+ * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array, position_after: int} $item An item data structure
  */
 function create_page_content(int $page, array $item): bool
 {

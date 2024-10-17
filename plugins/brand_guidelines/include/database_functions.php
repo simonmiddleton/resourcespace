@@ -131,7 +131,7 @@ function reorder_items(string $table, array $list, ?callable $filter)
 /**
  * Create new database record for a content item
  * @param int $page The page ID the content item belongs to
- * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array} A content item data structure
+ * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array, position_after: int} $item A content item data structure
  * @return int Returns the ID of the new database record or zero otherwise.
  */
 function create_content_item(int $page, array $item): int
@@ -145,11 +145,22 @@ function create_content_item(int $page, array $item): int
     db_begin_transaction('brand_guidelines_create_content_item');
     ps_query(
         'INSERT INTO `brand_guidelines_content` (`page`, `type`, `content`, `order_by`)
-        SELECT ?, ?, ?, coalesce(max(order_by), 0) + 10 FROM brand_guidelines_content WHERE `page` = ?',
+              SELECT
+                     ?,
+                     ?,
+                     ?,
+                     coalesce(
+                         (SELECT order_by + 5 FROM brand_guidelines_content WHERE ref = ?),
+                         max(order_by) + 10,
+                         10
+                     )
+                FROM brand_guidelines_content
+               WHERE `page` = ?',
         [
             'i', $page,
             'i', $item['type'],
             's', $content,
+            'i', $item['position_after'],
             'i', $page,
         ]
     );

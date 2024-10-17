@@ -459,7 +459,10 @@ render_content_menu();
     function get_previous_page_content_item_id(e)
     {
         const pci_prefix = 'page-content-item-';
-        const prev_pci = jQuery(e).prev(`div[id^="${pci_prefix}"]`);
+        let prev_pci = jQuery(e).prev(`div[id^="${pci_prefix}"]`);
+        if (prev_pci.length === 0) {
+            prev_pci = jQuery(e).prev('.group').find(`div[id^="${pci_prefix}"]`).last();
+        }
         return position_item_after = prev_pci.length !== 0
             ? parseInt(prev_pci.attr('id').substring((pci_prefix.length)), 10)
             : 0;

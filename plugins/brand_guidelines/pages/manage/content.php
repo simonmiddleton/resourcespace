@@ -90,6 +90,7 @@ $delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
 $reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
 $save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
 $edit = false;
+$after_item = (int) getval('after_item', 0, false, 'is_positive_int_loose');
 
 // Specific page content item 
 $ref = (int) getval('ref', 0, false, 'is_positive_int_loose');
@@ -141,6 +142,7 @@ if ($save && count_errors($processed_fields) === 0) {
     $item = [
         'type' => $type,
         'fields' => $processed_fields,
+        'position_after' => $after_item, # technically only required for NEW items
     ];
 
     if (
@@ -219,6 +221,7 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
         render_hidden_input('page', (string) $page);
         render_hidden_input('ref', (string) $ref);
         render_hidden_input('type', (string) $type);
+        render_hidden_input('after_item', (string) $after_item);
         render_custom_fields($processed_fields);
         ?>
         <div class="QuestionSubmit" >
