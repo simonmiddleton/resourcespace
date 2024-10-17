@@ -80,16 +80,24 @@ function render_new_content_button(string $id)
     <?php
 }
 
-// todo: convert to an actual button and give callback
-function render_new_block_element_button(string $class)
+/**
+ * Render the button for new content item within a group.
+ * @param string $class CSS class to use
+ * @param int $type Content item type to create (values of BRAND_GUIDELINES_CONTENT_TYPES)
+ */
+function render_new_block_element_button(string $class, int $type): void
 {
     if (!acl_can_edit_brand_guidelines()) {
         return;
     }
     ?>
-    <div class="<?php echo escape($class); ?>">
+    <button
+        class="<?php echo escape($class); ?>"
+        onclick="return new_content_item(this);"
+        data-item-type="<?php echo escape((string) $type); ?>"
+    >
         <i class="fa-solid fa-plus"></i>
-    </div>
+    </button>
     <?php
 }
 
@@ -97,6 +105,7 @@ function render_new_block_element_button(string $class)
  * todo: consider using a dedicated colour object instead. Example:
  * ```php
  * render_block_colour_item([
+ *     'ref' => 9,
  *     'name' => 'Black',
  *     'hex' => '000000',
  *     'rgb' => '0, 0, 0',

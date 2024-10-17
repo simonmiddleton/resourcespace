@@ -87,13 +87,19 @@
 }
 
 .guidelines-colour-block.new {
+    height: 150px;
+    margin-top: 0px;
+    margin-left: 0px;
+    padding: unset;
     border: 2px dashed lightgray;
     border-radius: 15px;
-    height: 150px;
+    background-color: unset;
+    box-shadow: unset;
     vertical-align: top;
     text-align: center;
     line-height: 150px;
     font-size: 25px;
+    color: #474747;
     cursor: pointer;
 }
 
