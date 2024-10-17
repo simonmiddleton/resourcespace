@@ -285,7 +285,7 @@ jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
             break;
 
         case 'rgb':
-            const [r, g, b] = field_value.split(',');
+            const [r, g, b] = field_value.split(',').map((v) => parseInt(v, 10));
             background_colour = rgb_to_hex(r, g, b);
             if (background_colour !== '') {
                 jQuery('#hex').val(background_colour.substring(1));
