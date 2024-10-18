@@ -901,7 +901,7 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                     url: baseurl_short+"pages/ajax/user_action.php",
                                                     data: {
                                                         "action" : "submitpending",
-                                                        "collection_add" : "<?php echo $collection_add ?>",
+                                                        "collection_add" : "<?php echo (int) $collection_add ?>",
                                                         <?php echo generateAjaxToken('submit_for_review'); ?>
                                                     },
                                                     success: function(response){
@@ -911,19 +911,19 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                                 if($send_collection_to_admin) 
                                                                     {
                                                                     ?>
-                                                                    api('send_collection_to_admin',{'collection': <?php echo $collection_add; ?>}, function(response)
+                                                                    api('send_collection_to_admin',{'collection': <?php echo (int) $collection_add; ?>}, function(response)
                                                                         {
-                                                                        console.debug('A copy of collection #<?php echo $collection_add; ?> has been sent for review.');
+                                                                        console.debug('A copy of collection #<?php echo (int) $collection_add; ?> has been sent for review.');
                                                                         },
                                                                         <?php echo generate_csrf_js_object('send_collection_to_admin'); ?>
                                                                     );
                                                                     <?php
                                                                     }
-                                                                echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . $collection_add . "';";
+                                                                echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . (int) $collection_add . "';";
                                                                 }
                                                             else
                                                                 {
-                                                                echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!contributions" . $userref . "&archive=-1&order_by=date&sort=desc';";
+                                                                echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!contributions" . (int) $userref . "&archive=-1&order_by=date&sort=desc';";
                                                                 }
                                                             ?>
                                                             },
@@ -939,7 +939,7 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                 <?php 
                                                 if (is_int_loose($collection_add))
                                                     {
-                                                    echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . $collection_add . "';";
+                                                    echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . (int) $collection_add . "';";
                                                     }
                                                 else
                                                     {
@@ -1640,7 +1640,7 @@ if($display != 'map')
     { ?>
     <script>
     place     = '<?php echo escape(getval("place", "")); ?>';
-    display   = '<?php echo $display; ?>';
+    display   = '<?php echo escape($display) ; ?>';
 
     jQuery(document).ready(function()
         {
