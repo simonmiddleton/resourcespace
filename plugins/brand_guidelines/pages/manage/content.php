@@ -210,7 +210,7 @@ if ($save && count_errors($processed_fields) === 0) {
         reorder_items('brand_guidelines_content', $items_to_sort, null);
         js_call_CentralSpaceLoad(
             generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
-                // . "#page-content-item-" . urlencode((string) $ref) # todo: delete if no ticket raised for issue with CentralSpaceLoad()
+                // . "#page-content-item-" . urlencode((string) $ref) # todo: uncomment when ticket #36454 is resolved
         );
     }
 
