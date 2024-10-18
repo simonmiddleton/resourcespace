@@ -662,11 +662,11 @@ function report_has_date_by_id(int $report)
 /**
  * Check if report has a "thumbnail" column in its SQL query.
  * 
- * @param string $query The reports' SQL query.
+ * @param ?string $query The reports' SQL query.
 */
-function report_has_thumbnail(string $query): bool
+function report_has_thumbnail(?string $query): bool
     {
-    return preg_match('/(AS )*\'thumbnail\'/mi', $query);
+    return preg_match('/(AS )*\'thumbnail\'/mi', (string) $query);
     }
 
 /**
