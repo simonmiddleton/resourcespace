@@ -171,32 +171,46 @@ if ($save && count_errors($processed_fields) === 0) {
     exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {
     if ($edit) {
-        // Remap left/right direction to up/down where the item supports it
-        if ($reorder === 'left') {
-            $reorder = 'up';
-        } elseif ($reorder === 'right') {
-            $reorder = 'down';
-        }
-
-        // find elements that need re-ordering
+        /*
+        Use cases:
+            - move up/down items (no group logic);
+            - move up/down items over an entire group;
+            - move left/right within the group boundaries;
+            - move left/right outside group boundaries to take an item out of a group 
+        */
         $page_contents_db = array_column(get_page_contents($page), null, 'ref');
-        // echo '<pre>';print_r($page_contents_db);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
-
-        // apply group logic (e.g. skip entire group) - if applicable
-            // determine what kind of groups we have (resource/color) and how many items are in each group (for skipping calculations)
-
-        reorder_items(
-            'brand_guidelines_content',
-            array_replace(
-                $page_contents_db,
-                // todo: add logic to jump over item groups (when relevant)
-                [$ref => compute_item_order($page_contents_db[$ref], $reorder)]
-            ),
-            null
+        $page_contents_grouped = group_content_items($page_contents_db);
+        $applicable_group = array_filter(
+            $page_contents_grouped,
+            fn($item) => isset($item['members']) && in_array($page_contents_db[$ref], $item['members'])
         );
+        $ref_idx = array_search($page_contents_db[$ref], $page_contents_grouped);
+        $closest_item = function(int $needle, array $items, string $direction) {
+            $keys = array_keys($items);
+            return $items[$keys[array_search($needle, $keys) + cast_reorder_direction_to_int($direction)] ?? -1] ?? [];
+        };
+
+        if (
+            $applicable_group === []
+            && $ref_idx !== false
+            && ($ci = $closest_item($ref_idx, $page_contents_grouped, $reorder))
+            && isset($ci['members'])
+        ) {
+            // Jump over an entire group
+            $items_to_sort = array_replace(
+                $page_contents_db,
+                [$ref => compute_item_order($page_contents_db[$ref], $reorder, count($ci['members']))]
+            );
+        } else {
+            $items_to_sort = array_replace(
+                $page_contents_db,
+                [$ref => compute_item_order($page_contents_db[$ref], $reorder)]
+            );
+        }
+        reorder_items('brand_guidelines_content', $items_to_sort, null);
         js_call_CentralSpaceLoad(
-            // todo: use sections (id="content-item-<ref>") to navigate back to the moved items' position to allow user to continue their work
             generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
+                // . "#page-content-item-" . urlencode((string) $ref) # todo: delete if no ticket raised for issue with CentralSpaceLoad()
         );
     }
 

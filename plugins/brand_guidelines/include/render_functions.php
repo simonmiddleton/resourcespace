@@ -27,6 +27,14 @@ function render_individual_menu()
             <i class="fa-solid fa-fw fa-chevron-down"></i>
             <span><?php echo escape($GLOBALS['lang']['action-move-down']); ?></span>
         </button>
+        <button class="context-menu-row DisplayNone" onclick="return reorder_item(this, 'up');">
+            <i class="fa-solid fa-fw fa-chevron-left"></i>
+            <span><?php echo escape($GLOBALS['lang']['brand_guidelines_move_left']); ?></span>
+        </button>
+        <button class="context-menu-row DisplayNone" onclick="return reorder_item(this, 'down');">
+            <i class="fa-solid fa-fw fa-chevron-right"></i>
+            <span><?php echo escape($GLOBALS['lang']['brand_guidelines_move_right']); ?></span>
+        </button>
     </div>
     <?php
 }
@@ -83,7 +91,7 @@ function render_new_content_button(string $id)
 /**
  * Render the button for new content item within a group.
  * @param string $class CSS class to use
- * @param int $type Content item type to create (values of BRAND_GUIDELINES_CONTENT_TYPES)
+ * @param value-of<BRAND_GUIDELINES_CONTENT_TYPES> $type Content item type to create
  */
 function render_new_block_element_button(string $class, int $type): void
 {

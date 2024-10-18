@@ -27,3 +27,5 @@ $lang['brand_guidelines_rgb'] = 'RGB';
 $lang['brand_guidelines_rgb_help_txt'] = 'RGB (0-255). Example: 116,182,50';
 $lang['brand_guidelines_cmyk'] = 'CMYK';
 $lang['brand_guidelines_cmyk_help_txt'] = 'CMYK (0-100). Example: 36,0,73,29';
+$lang['brand_guidelines_move_left'] = 'Move left';
+$lang['brand_guidelines_move_right'] = 'Move right';

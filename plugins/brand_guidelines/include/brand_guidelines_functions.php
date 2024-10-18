@@ -36,6 +36,16 @@ function filter_only_pages(array $I): bool
 }
 
 /**
+ * Helper function to cast a re-order direction to an integer.
+ * @param 'up'|'down' Re-order direction
+ * @return -1|1
+ */
+function cast_reorder_direction_to_int(string $direction): int
+{
+    return $direction === 'up' ? -1 : 1;
+}
+
+/**
  * Compute moving (for re-ordering purposes) an item based on the requested direction (up/down). Example:
  * 
  * ```php
@@ -48,11 +58,18 @@ function filter_only_pages(array $I): bool
  * @phpstan-template T of array
  * @param T $item Generic item record with at least the 'order_by' key
  * @param string $direction The direction of the re-order - up/down
+ * @param int $jump_over Specify how many elements to jump over
  * @return T
  */
-function compute_item_order(array $item, string $direction): array
+function compute_item_order(array $item, string $direction, int $jump_over = 1): array
 {
-    $item['order_by'] += ($direction === 'up' ? -1 : 1) * 15;
+    /* Use cases:
+    Move up from 50 (over 40): 50+(−10×1)−5 = 35
+    Move down from 40 (over 50): 40+(10×1)+5 = 55
+    Move up from 40 (over 2 items): 40+(−10×2)−5 = 15
+    */
+    $sign = cast_reorder_direction_to_int($direction);
+    $item['order_by'] += ($sign * 10 * $jump_over) + ($sign * 5);
     return $item;
 }
 

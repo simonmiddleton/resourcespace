@@ -273,6 +273,7 @@ render_content_menu();
         const is_responsive = window.matchMedia("(max-width: 600px)").matches;
         const el_pos = calculate_position_offset_parents(e);
         const btn_el = jQuery(e);
+        let menu_el = jQuery(`#${target}`);
         let manage_page = 'content';
 
         // Determine the position offset for the menu so it's within the proximity of the calling "item" element 
@@ -287,7 +288,18 @@ render_content_menu();
         }
         console.debug("off_top = %o -- off_left = %o", off_top, off_left);
 
-        jQuery("#" + target)
+        // Alter menu options depending on the page content item (e.g. grouped items can only be moved left/right)
+        const menu_btn_mv_up_dwn = 'button:has(> i.fa-chevron-up), button:has(> i.fa-chevron-down)';
+        const menu_btn_mv_lft_rgt = 'button:has(> i.fa-chevron-left), button:has(> i.fa-chevron-right)';
+        if (manage_page === 'content' && btn_el.parents('.group').length) {
+            menu_el.find(menu_btn_mv_up_dwn).addClass('DisplayNone');
+            menu_el.find(menu_btn_mv_lft_rgt).removeClass('DisplayNone');
+        } else {
+            menu_el.find(menu_btn_mv_up_dwn).removeClass('DisplayNone');
+            menu_el.find(menu_btn_mv_lft_rgt).addClass('DisplayNone');
+        }
+
+        menu_el
             .css({
                 display: 'none',
                 top: el_pos.top + off_top,
