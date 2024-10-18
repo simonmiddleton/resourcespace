@@ -231,21 +231,6 @@ parameters:
 			path: plugins/csv_upload/include/meta_functions.php
 
 		-
-			message: "#^Variable \\$contributors in empty\\(\\) always exists and is always falsy\\.$#"
-			count: 1
-			path: plugins/doi/include/model.php
-
-		-
-			message: "#^Variable \\$value in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: plugins/doi/include/model.php
-
-		-
-			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: plugins/doi/include/model.php
-
-		-
 			message: "#^Variable \\$preview_sizes on left side of \\?\\?\\= is never defined\\.$#"
 			count: 2
 			path: plugins/image_banks/providers/ResourceSpace.php
