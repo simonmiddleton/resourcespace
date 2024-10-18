@@ -275,6 +275,14 @@ function job_queue_run_job($job, $clear_process_lock)
         }
 
     $jobuserdata = get_user($jobuser);
+    if (!$jobuserdata)
+        {
+        $logmessage = " - Job #{$jobref} could not be run as invalid user ref #{$jobuser} was supplied." . PHP_EOL;
+        echo $logmessage;
+        debug($logmessage);
+        job_queue_update($jobref,$job_data,STATUS_ERROR);
+        return;
+        }
     setup_user($jobuserdata);
     $job_success_text=$job["success_text"];
     $job_failure_text=$job["failure_text"];
