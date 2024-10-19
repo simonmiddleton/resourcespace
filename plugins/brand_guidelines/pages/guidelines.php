@@ -291,9 +291,6 @@ render_content_menu();
         // Alter menu options for group related page content items
         if (manage_page === 'content') {
             const group_members = btn_el.parents('.group').find('div[id^="page-content-item-"]');
-                console.group('');
-                console.debug(btn_el.parent());
-                console.debug(group_members);
             const menu_options = {
                 edit: { element: 'button:has(> i.fa-pen-to-square)', show: true },
                 move_up: { element: 'button:has(> i.fa-chevron-up)', show: true },
@@ -312,6 +309,14 @@ render_content_menu();
                 menu_options.move_up.show = false;
                 menu_options.move_left.show = true;
                 menu_options.move_down.show = true;
+            } else if (
+                !(first_group_member || last_group_member)
+                && group_members.filter(`#${btn_el.parent().attr('id')}`).length
+            ) {
+                menu_options.move_left.show = true;
+                menu_options.move_right.show = true;
+                menu_options.move_up.show = false;
+                menu_options.move_down.show = false;
             } else if (btn_el.parent('.group').length) {
                 // Group functionality (delete or re-order entire group)
                 menu_options.edit.show = false;
@@ -324,7 +329,6 @@ render_content_menu();
                     menu_el.find(option.element).addClass('DisplayNone');
                 }
             });
-            console.groupEnd();
         }
 
         menu_el
