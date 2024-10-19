@@ -29,3 +29,4 @@ $lang['brand_guidelines_cmyk'] = 'CMYK';
 $lang['brand_guidelines_cmyk_help_txt'] = 'CMYK (0-100). Example: 36,0,73,29';
 $lang['brand_guidelines_move_left'] = 'Move left';
 $lang['brand_guidelines_move_right'] = 'Move right';
+$lang['brand_guidelines_confirm_delete_group_members'] = 'Are you sure you want to delete all in this group?';

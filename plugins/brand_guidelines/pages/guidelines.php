@@ -407,7 +407,11 @@ render_content_menu();
         let item = jQuery(e).parent('#menu-individual').data('item');
         console.debug('Delete item - %o', item);
 
-        if(confirm('<?php echo escape($lang['confirm-deletion']); ?>'))
+        if(confirm(
+            item.group_members
+                ? '<?php echo escape($lang['brand_guidelines_confirm_delete_group_members']); ?>'
+                : '<?php echo escape($lang['confirm-deletion']); ?>'
+        ))
             {
             let temp_form = document.createElement('form');
             temp_form.setAttribute('method', 'post');
