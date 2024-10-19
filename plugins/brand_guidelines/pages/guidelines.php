@@ -288,15 +288,43 @@ render_content_menu();
         }
         console.debug("off_top = %o -- off_left = %o", off_top, off_left);
 
-        // Alter menu options depending on the page content item (e.g. grouped items can only be moved left/right)
-        const menu_btn_mv_up_dwn = 'button:has(> i.fa-chevron-up), button:has(> i.fa-chevron-down)';
-        const menu_btn_mv_lft_rgt = 'button:has(> i.fa-chevron-left), button:has(> i.fa-chevron-right)';
-        if (manage_page === 'content' && btn_el.parents('.group').length) {
-            menu_el.find(menu_btn_mv_up_dwn).addClass('DisplayNone');
-            menu_el.find(menu_btn_mv_lft_rgt).removeClass('DisplayNone');
-        } else {
-            menu_el.find(menu_btn_mv_up_dwn).removeClass('DisplayNone');
-            menu_el.find(menu_btn_mv_lft_rgt).addClass('DisplayNone');
+        // Alter menu options for group related page content items
+        if (manage_page === 'content') {
+            const group_members = btn_el.parents('.group').find('div[id^="page-content-item-"]');
+                console.group('');
+                console.debug(btn_el.parent());
+                console.debug(group_members);
+            const menu_options = {
+                edit: { element: 'button:has(> i.fa-pen-to-square)', show: true },
+                move_up: { element: 'button:has(> i.fa-chevron-up)', show: true },
+                move_down: { element: 'button:has(> i.fa-chevron-down)', show: true },
+                move_left: { element: 'button:has(> i.fa-chevron-left)', show: false },
+                move_right: { element: 'button:has(> i.fa-chevron-right)', show: false },
+            };
+            const first_group_member = group_members.first().is(btn_el.parent());
+            const last_group_member = group_members.last().is(btn_el.parent());
+
+            if (first_group_member && !last_group_member) {
+                menu_options.move_up.show = true;
+                menu_options.move_right.show = true;
+                menu_options.move_down.show = false;
+            } else if (last_group_member && !first_group_member) {
+                menu_options.move_up.show = false;
+                menu_options.move_left.show = true;
+                menu_options.move_down.show = true;
+            } else if (btn_el.parent('.group').length) {
+                // Group functionality (delete or re-order entire group)
+                menu_options.edit.show = false;
+            }
+
+            Object.values(menu_options).forEach((option, i) => {
+                if (option.show) {
+                    menu_el.find(option.element).removeClass('DisplayNone');
+                } else {
+                    menu_el.find(option.element).addClass('DisplayNone');
+                }
+            });
+            console.groupEnd();
         }
 
         menu_el
