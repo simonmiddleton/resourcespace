@@ -241,3 +241,13 @@ function group_content_items(array $items): array
     }
     return $result;
 }
+
+/**
+ * Helper filter function to determine if a page content item is part of group
+ * @param int $ref Page content item ID
+ * @param array $table Lookup table (e.g.: array_column(get_page_contents($page), null, 'ref'))
+ */
+function is_group_member(int $ref, array $table): callable
+{
+    return fn($item) => isset($item['members']) && in_array($table[$ref], $item['members']);
+}

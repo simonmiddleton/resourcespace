@@ -5579,6 +5579,15 @@ function validate_sort_value($val): bool
 }
 
 /**
+ * Input validation helper function for a CSV of integers (mostly used for IDs).
+ * @param mixed $val User input value to be validated
+ */
+function validate_digit_csv($val): bool
+{
+    return is_string($val) && preg_match('/^\d+,? ?(, ?\d+ ?,? ?)*$/', $val) === 1;
+}
+
+/**
  * Helper function to get an array of values with a subset of their original keys.
  *
  * @param list<string> List of keys to extract from the values

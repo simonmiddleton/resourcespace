@@ -275,6 +275,7 @@ render_content_menu();
         const btn_el = jQuery(e);
         let menu_el = jQuery(`#${target}`);
         let manage_page = 'content';
+        let group_members_csv = '';
 
         // Determine the position offset for the menu so it's within the proximity of the calling "item" element 
         if (target == 'menu-individual') {
@@ -290,7 +291,8 @@ render_content_menu();
 
         // Alter menu options for group related page content items
         if (manage_page === 'content') {
-            const group_members = btn_el.parents('.group').find('div[id^="page-content-item-"]');
+            const group_container = btn_el.parents('.group');
+            const group_members = group_container.find('div[id^="page-content-item-"]');
             const menu_options = {
                 edit: { element: 'button:has(> i.fa-pen-to-square)', show: true },
                 move_up: { element: 'button:has(> i.fa-chevron-up)', show: true },
@@ -320,6 +322,7 @@ render_content_menu();
             } else if (btn_el.parent('.group').length) {
                 // Group functionality (delete or re-order entire group)
                 menu_options.edit.show = false;
+                group_members_csv = group_container.data('members');
             }
 
             Object.values(menu_options).forEach((option, i) => {
@@ -343,6 +346,7 @@ render_content_menu();
                     ref: btn_el.data('item-ref'),
                     manage_page: manage_page,
                     position_after: get_previous_page_content_item_id(e),
+                    group_members: group_members_csv,
                 }
             )
             .slideDown(150);
@@ -424,6 +428,18 @@ render_content_menu();
             <?php
             }
             ?>
+            if (item.group_members) {
+                jQuery('<input>').attr({
+                    type: 'hidden',
+                    name: 'delete_group',
+                    value: 'true',
+                }).appendTo(temp_form)
+                jQuery('<input>').attr({
+                    type: 'hidden',
+                    name: 'group_members',
+                    value: item.group_members,
+                }).appendTo(temp_form)
+            }
             CentralSpacePost(temp_form, true, false, false);
             };
 
@@ -457,6 +473,13 @@ render_content_menu();
         <?php
         }
         ?>
+        if (item.group_members) {
+            jQuery('<input>').attr({
+                type: 'hidden',
+                name: 'group_members',
+                value: item.group_members,
+            }).appendTo(temp_form)
+        }
         CentralSpacePost(temp_form, true, false, false);
         hideOptionsMenu();
         return false;

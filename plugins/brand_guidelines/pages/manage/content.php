@@ -88,6 +88,23 @@ $page_def = [
 // Actions
 $delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
 $reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
+$group_members = array_values(array_unique(
+    array_filter(
+        array_map('intval', explode(',', getval('group_members', '', false, 'validate_digit_csv')))
+    ),
+    SORT_NUMERIC
+));
+if ($group_members !== []) {
+    sort($group_members, SORT_NUMERIC);
+
+    // Group actions simulate the action being applied to one item
+    $first_group_member = reset($group_members);
+    if (getval('delete_group', false) === 'true') {
+        $delete = $first_group_member;
+    } elseif ($reorder !== '') {
+        $_POST['ref'] = $first_group_member;
+    }
+}
 $save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
 $edit = false;
 $after_item = (int) getval('after_item', 0, false, 'is_positive_int_loose');
@@ -156,9 +173,23 @@ if ($save && count_errors($processed_fields) === 0) {
 
     error_alert($lang['error_fail_save'], true, 200);
     exit();
-} elseif ($delete > 0 && enforcePostRequest(false)) {
+} else if ($delete > 0 && enforcePostRequest(false)) {
     $db_item = get_page_content_item($delete);
-    if ($db_item !== [] && delete_page_content([$delete])) {
+    if ($db_item !== [] && $group_members !== []) {
+        $page_contents_db = array_column(get_page_contents($db_item['page']), null, 'ref');
+        $page_contents_grouped = group_content_items($page_contents_db);
+        $applicable_group = array_filter($page_contents_grouped, is_group_member($db_item['ref'], $page_contents_db));
+        $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
+        $list_of_applicable_members = array_column($applicable_group_members, 'ref');
+        sort($list_of_applicable_members, SORT_NUMERIC);
+        if (array_intersect($list_of_applicable_members, $group_members) === $group_members) {
+            $items_to_delete = $list_of_applicable_members;
+        }
+    } else if ($db_item !== []) {
+        $items_to_delete = [$delete];
+    }
+
+    if (isset($items_to_delete) && delete_page_content($items_to_delete)) {
         js_call_CentralSpaceLoad(
             generateURL(
                 "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
@@ -170,6 +201,7 @@ if ($save && count_errors($processed_fields) === 0) {
     error_alert($lang['error-failed-to-delete'], true, 200);
     exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {
+    echo '<pre>';print_r($group_members);echo '</pre>';
     if ($edit) {
         /*
         Use cases:
@@ -180,15 +212,16 @@ if ($save && count_errors($processed_fields) === 0) {
         */
         $page_contents_db = array_column(get_page_contents($page), null, 'ref');
         $page_contents_grouped = group_content_items($page_contents_db);
-        $applicable_group = array_filter(
-            $page_contents_grouped,
-            fn($item) => isset($item['members']) && in_array($page_contents_db[$ref], $item['members'])
-        );
+        $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
         $ref_idx = array_search($page_contents_db[$ref], $page_contents_grouped);
         $closest_item = function(int $needle, array $items, string $direction) {
             $keys = array_keys($items);
             return $items[$keys[array_search($needle, $keys) + cast_reorder_direction_to_int($direction)] ?? -1] ?? [];
         };
+
+        // todo: implement new use case to re-order an entire group
+    echo '<pre>';print_r($applicable_group);echo '</pre>';
+    var_dump($ref_idx);
 
         if (
             $applicable_group === []
@@ -207,6 +240,7 @@ if ($save && count_errors($processed_fields) === 0) {
                 [$ref => compute_item_order($page_contents_db[$ref], $reorder)]
             );
         }
+        die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
         reorder_items('brand_guidelines_content', $items_to_sort, null);
         js_call_CentralSpaceLoad(
             generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
