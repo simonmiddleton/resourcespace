@@ -23,10 +23,6 @@ function render_individual_menu()
             <i class="fa-solid fa-fw fa-chevron-up"></i>
             <span><?php echo escape($GLOBALS['lang']['action-move-up']); ?></span>
         </button>
-        <button class="context-menu-row" onclick="return reorder_item(this, 'down');">
-            <i class="fa-solid fa-fw fa-chevron-down"></i>
-            <span><?php echo escape($GLOBALS['lang']['action-move-down']); ?></span>
-        </button>
         <button class="context-menu-row DisplayNone" onclick="return reorder_item(this, 'up');">
             <i class="fa-solid fa-fw fa-chevron-left"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_move_left']); ?></span>
@@ -34,6 +30,10 @@ function render_individual_menu()
         <button class="context-menu-row DisplayNone" onclick="return reorder_item(this, 'down');">
             <i class="fa-solid fa-fw fa-chevron-right"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_move_right']); ?></span>
+        </button>
+        <button class="context-menu-row" onclick="return reorder_item(this, 'down');">
+            <i class="fa-solid fa-fw fa-chevron-down"></i>
+            <span><?php echo escape($GLOBALS['lang']['action-move-down']); ?></span>
         </button>
     </div>
     <?php
