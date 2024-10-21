@@ -787,10 +787,6 @@ const SENSITIVE_VARIABLE_NAMES = [
     'fstemplate_alt_scramblekey',
 
     // Plugins
-    'checkmail_email',
-    'checkmail_password',
-    'doi_username',
-    'doi_password',
     'ldapauth_rootdn',
     'ldapauth_rootpass',
     'ldapauth',
