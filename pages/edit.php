@@ -638,7 +638,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     if($save_auto_next)
                         {
                         debug('Process all remaining resources in the collection');
-                        $autosave_errors = false; 
+                        $auto_next_errors_found = false; 
                         $lastedited = $ref;
                         $restypearr = get_resource_types();
                         $resource_types = array();
@@ -651,7 +651,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         $review_collection_contents_count = count($review_collection_contents);
                         for($n=1;$n<$review_collection_contents_count;$n++)
                             {
-                            $auto_errors = array();
+                            $auto_next_errors = array();
                             $ref = $review_collection_contents[$n]["ref"];
                             # Fetch resource data.
                             $resource=get_resource_data($ref);
@@ -727,12 +727,17 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 
                                 if($fielderror)
                                     {
-                                    $auto_errors[$field['ref']] = i18n_get_translated($field['title']) . ": {$lang['requiredfield']}";
+                                    $field_visibility_status=getval("field_".$fields[$n]['ref']."_displayed","");
+                                    # Register an error only if the empty required field was actually displayed
+                                    if ($field_visibility_status=="block")
+                                        {
+                                        $auto_next_errors[$field['ref']] = i18n_get_translated($field['title']) . ": {$lang['requiredfield']}";
+                                        }
                                     }
                                 }
                             
                             // If no errors, remove from collection and continue
-                            if(count($auto_errors) == 0)
+                            if(count($auto_next_errors) == 0)
                                 {
                                 debug("edit: autosaved resource " . $ref . ", removing from collection " . (string)(0-$userref));
                                 remove_resource_from_collection($ref,0-$userref);
@@ -740,14 +745,19 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             else
                                 {
                                 debug("edit: autosave errors saving resource: " . $ref);
-                                $autosave_errors = true;                   
+                                $auto_next_errors_found = true;                   
                                 }
                             }
-                        if($autosave_errors)
+                        if($auto_next_errors_found)
                             {
-                            // Redirect to upload_review_mode in order to finish editing remaining resources that errored, include submit to generate required error message
+                            // Errors are still outstanding which require further editing corrections
+                            // Redirect back into upload_review_mode passing in error messages to be rendered
                             ?>
-                            <script>CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("upload_review_mode"=>"true","lastedited"=>$lastedited,"showextraerrors"=>json_encode($auto_errors))); ?>',true);</script>
+                            <script>
+                            CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, 
+                                                array("upload_review_mode"=>"true","lastedited"=>$lastedited,
+                                                "showextraerrors"=>json_encode($auto_next_errors))); ?>',true);
+                            </script>
                             <?php
                             exit();
                             }
