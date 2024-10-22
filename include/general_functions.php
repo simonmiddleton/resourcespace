@@ -3014,7 +3014,10 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
 
     foreach($parameters as $parameter => $parameter_value)
         {
-        $query_string_params[] = $parameter . '=' . urlencode((string) $parameter_value);
+        if(!is_array($parameter_value)) 
+            {
+            $query_string_params[] = $parameter . '=' . urlencode((string) $parameter_value);
+            }
         }
 
     # Ability to hook in and change the URL.
