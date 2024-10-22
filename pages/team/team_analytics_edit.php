@@ -256,7 +256,7 @@ for ($n=0;$n<count($list);$n++)
 <td width="1"><input type="checkbox" id="piegroup_check" name="graph_types[]" value="piegroup" <?php if (in_array("piegroup",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="piegroup_check" ><?php echo escape($lang["report_user_group_pie"]); ?></label></td>
 <td width="1"><input type="checkbox" id="pieresourcetype_check" name="graph_types[]" value="pieresourcetype" <?php if (in_array("pieresourcetype",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="pieresourcetype_check" ><?php echo escape($lang["report_resource_type_pie"]); ?></label></td>
 <td width="1"><input type="checkbox" id="line_check" name="graph_types[]" value="line" <?php if (in_array("line",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="line_check" ><?php echo escape($lang["report_time_line"]); ?></label></td>
-<td width="1"><input type="checkbox" id="summary_check" name="graph_types[]" value="summary" <?php if (in_array("summary",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="line_check" ><?php echo escape($lang["report_summary_block"]); ?></label></td>
+<td width="1"><input type="checkbox" id="summary_check" name="graph_types[]" value="summary" <?php if (in_array("summary",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="summary_check" ><?php echo escape($lang["report_summary_block"]); ?></label></td>
 </tr></table>
 <div class="clearerleft"> </div>
 </div>
