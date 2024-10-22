@@ -1161,6 +1161,13 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         // Build the available sort sequence entries, starting with the default derived above
         $orderFields = array($default_sort_order => $rel);
+
+        // Ensure relevance is the next available option if not yet present
+        if (!array_key_exists('relevance', $orderFields)) {
+            $orderFields['relevance'] = $lang['relevance'];
+        }
+
+        // Add the remaining options
         if ($popularity_sort) {
             $orderFields['popularity'] = $lang['popularity'];
         }
