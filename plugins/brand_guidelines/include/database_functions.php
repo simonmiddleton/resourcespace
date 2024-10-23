@@ -117,7 +117,7 @@ function delete_pages(array $refs): bool
  * @param array{ref: int|numeric-string, order_by: int|numeric-string}
  * @param null|callable $filter Optional filter, if the $list has unnecessary elements
  */
-function reorder_items(string $table, array $list, ?callable $filter)
+function reorder_items(string $table, array $list, ?callable $filter): void
 {
     $ref_ob_map = array_map(
         'intval',

@@ -158,6 +158,71 @@ function save_page_content(int $ref, array $item)
     return in_array($item['type'], BRAND_GUIDELINES_CONTENT_TYPES) && save_content_item($ref, $item);
 }
 
+function reorder_page_content($reorder, array $init_page_content, array $refs): bool
+{
+    echo '<b>refs</b><pre>';print_r($refs);echo '</pre>';
+    echo '<b>init_page_content</b><pre>';print_r($init_page_content);echo '</pre>';
+    $group_items_jump = 0;
+    foreach ($refs as $ref) {
+        if (!isset($init_page_content[$ref])) {
+            continue;
+        }
+
+        $page_contents_db ??= $init_page_content;
+        $page_contents_grouped = group_content_items($page_contents_db);
+        $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
+        $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
+        $list_of_applicable_members = array_column($applicable_group_members, 'ref');
+        sort($list_of_applicable_members, SORT_NUMERIC);
+        $ref_idx = array_search($page_contents_db[$ref], $page_contents_grouped);
+        $closest_item = function(int $needle, array $items, string $direction) {
+            $keys = array_keys($items);
+            return $items[$keys[array_search($needle, $keys) + cast_reorder_direction_to_int($direction)] ?? -1] ?? [];
+        };
+
+        if (
+            $applicable_group === []
+            && $ref_idx !== false
+            && ($ci = $closest_item($ref_idx, $page_contents_grouped, $reorder))
+            && isset($ci['members'])
+        ) {
+            // Jump over an entire group
+            $items_to_sort = array_replace(
+                $page_contents_db,
+                [$ref => compute_item_order($page_contents_db[$ref], $reorder, count($ci['members']))]
+            );
+        } else if (
+            $list_of_applicable_members !== []
+            && $refs === $list_of_applicable_members
+        ) {
+            if ($group_items_jump <= 0) {
+                $group_items_jump = count($list_of_applicable_members);
+            }
+
+            $items_to_sort = array_replace(
+                $page_contents_db,
+                [$ref => compute_item_order($page_contents_db[$ref], $reorder, $group_items_jump--)]
+            );
+        } else {
+            $items_to_sort = array_replace(
+                $page_contents_db,
+                [$ref => compute_item_order($page_contents_db[$ref], $reorder)]
+            );
+        }
+
+        $page_contents_db = reorder_items_in_memory($items_to_sort);
+        $done = true;
+        echo '<b>new_order (after #'.$ref.')</b><pre>';print_r($page_contents_db);echo '</pre>';
+    }
+
+    die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
+    if ($done) {
+        reorder_items('brand_guidelines_content', $page_contents_db, null);
+        return true;
+    }
+    return false;
+}
+
 /**
  * Data transfer utility to help translate custom fields' data structures to a minimum required data structure that we
  * can store in the database.
@@ -250,4 +315,22 @@ function group_content_items(array $items): array
 function is_group_member(int $ref, array $table): callable
 {
     return fn($item) => isset($item['members']) && in_array($table[$ref], $item['members']);
+}
+
+/**
+ * Re-order table records in memory in ascending order based on their order_by
+ * @template T of array<postive-int, array{ref: postive-int, order_by: int}>
+ * @param T $table
+ * @return T
+ */
+function reorder_items_in_memory(array $table): array
+{
+    $ref_ob_map = array_column($table, 'order_by', 'ref');
+    asort($ref_ob_map, SORT_NUMERIC);
+    $order_by = 0;
+    foreach (array_keys($ref_ob_map) as $item_ref) {
+        $order_by += 10;
+        $table[$item_ref]['order_by'] = $order_by;
+    }
+    return $table;
 }

@@ -100,7 +100,7 @@ if ($group_members !== []) {
     // Group actions simulate the action being applied to one item
     $first_group_member = reset($group_members);
     if (getval('delete_group', false) === 'true') {
-        $delete = $first_group_member;
+        $delete = $_POST['ref'] = $first_group_member;
     } elseif ($reorder !== '') {
         $_POST['ref'] = $first_group_member;
     }
@@ -138,6 +138,7 @@ if ($page === 0 && $all_pages !== []) {
     http_response_code(400);
     exit(escape(str_replace('%key', 'page', $GLOBALS['lang']['error-request-missing-key'])));
 }
+$page_contents_db = array_column(get_page_contents($page), null, 'ref');
 
 // Content (item) always has a type
 $type ??= (int) getval(
@@ -147,6 +148,21 @@ $type ??= (int) getval(
     fn($V) => in_array($V, BRAND_GUIDELINES_CONTENT_TYPES)
 );
 $page_title = $page_def[$type]['title'];
+
+// Add group logic, if applicable
+$act_on_group_members = false;
+if (!$save && $group_members !== []) {
+    $page_contents_grouped = group_content_items($page_contents_db);
+    $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
+    $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
+    $list_of_applicable_members = array_column($applicable_group_members, 'ref');
+    sort($list_of_applicable_members, SORT_NUMERIC);
+
+    if (array_intersect($list_of_applicable_members, $group_members) === $group_members) {
+        $act_on_group_members = true;
+        $group_members = $list_of_applicable_members;
+    }
+}
 
 // Process
 $_GET['colour_preview'] = $_POST['colour_preview'] = $_COOKIE['colour_preview'] = ''; # Not expected to be submitted!
@@ -201,51 +217,32 @@ if ($save && count_errors($processed_fields) === 0) {
     error_alert($lang['error-failed-to-delete'], true, 200);
     exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {
-    echo '<pre>';print_r($group_members);echo '</pre>';
     if ($edit) {
         /*
         Use cases:
             - move up/down items (no group logic);
             - move up/down items over an entire group;
+            - move up/down an entire group of items;
             - move left/right within the group boundaries;
-            - move left/right outside group boundaries to take an item out of a group 
+            - move up/down outside group boundaries to take an item out of a group 
         */
-        $page_contents_db = array_column(get_page_contents($page), null, 'ref');
-        $page_contents_grouped = group_content_items($page_contents_db);
-        $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
-        $ref_idx = array_search($page_contents_db[$ref], $page_contents_grouped);
-        $closest_item = function(int $needle, array $items, string $direction) {
-            $keys = array_keys($items);
-            return $items[$keys[array_search($needle, $keys) + cast_reorder_direction_to_int($direction)] ?? -1] ?? [];
-        };
+        // $page_contents_db = array_column(get_page_contents($page), null, 'ref');
+        // $page_contents_grouped = group_content_items($page_contents_db);
+        // $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
+        // $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
+        // $list_of_applicable_members = array_column($applicable_group_members, 'ref');
+        // sort($list_of_applicable_members, SORT_NUMERIC);
+        // $items_to_reorder = $group_members !== [] && array_intersect($list_of_applicable_members, $group_members) === $group_members
+        //     ? $list_of_applicable_members
+        //     : [$ref];
 
-        // todo: implement new use case to re-order an entire group
-    echo '<pre>';print_r($applicable_group);echo '</pre>';
-    var_dump($ref_idx);
-
-        if (
-            $applicable_group === []
-            && $ref_idx !== false
-            && ($ci = $closest_item($ref_idx, $page_contents_grouped, $reorder))
-            && isset($ci['members'])
-        ) {
-            // Jump over an entire group
-            $items_to_sort = array_replace(
-                $page_contents_db,
-                [$ref => compute_item_order($page_contents_db[$ref], $reorder, count($ci['members']))]
-            );
-        } else {
-            $items_to_sort = array_replace(
-                $page_contents_db,
-                [$ref => compute_item_order($page_contents_db[$ref], $reorder)]
+        $items_to_reorder = $act_on_group_members ? $group_members : [$ref];
+        if (reorder_page_content($reorder, $page_contents_db, $items_to_reorder)) {
+            js_call_CentralSpaceLoad(
+                generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
+                    // . "#page-content-item-" . urlencode((string) $ref) # todo: uncomment when ticket #36454 is resolved
             );
         }
-        die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
-        reorder_items('brand_guidelines_content', $items_to_sort, null);
-        js_call_CentralSpaceLoad(
-            generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
-                // . "#page-content-item-" . urlencode((string) $ref) # todo: uncomment when ticket #36454 is resolved
-        );
     }
 
     error_alert($lang['error-failed-to-move'], true, 200);
