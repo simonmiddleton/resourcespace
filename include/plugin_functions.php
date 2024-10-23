@@ -713,8 +713,8 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
             name="<?php echo escape($name);?>[]"
             id="<?php echo escape($name);?>"
             class="MultiRTypeSelect"
-            style="width:<?php (int) $width ?>px">
-            <div style="max-height:147px;overflow:auto">
+            style="width:<?php echo (int) $width; ?>px">
+            <div class="MultiRtypeSelectContainer">
             <?php foreach($choices as $key => $choice) {
                 $value = $usekeys ? $key : $choice; ?>
                 <span id="option<?php echo escape($value);?>">
@@ -829,7 +829,7 @@ function config_multi_user_select($name, $label, $current=array(), $width=420)
             id="<?php echo escape($name); ?>"
             class="MultiRTypeSelect"
             style="width:<?php echo (int) $width; ?>px">
-            <div style="max-height:147px;overflow:auto">
+            <div class="MultiRtypeSelectContainer">
             <?php
             $users = get_users();
             foreach ($users as $user) { ?>
@@ -934,7 +934,7 @@ function config_multi_group_select($name, $label, $current=array(), $width=420)
             class="MultiRTypeSelect"
             style="width:<?php echo (int) $width; ?>px"
         >
-            <div style="max-height:147px; overflow:auto">
+            <div class="MultiRtypeSelectContainer">
                 <?php
                 $usergroups = get_usergroups();
                 foreach ($usergroups as $usergroup) { ?>
@@ -1304,7 +1304,7 @@ function config_db_multi_select($name, $label, $current, $choices, $ixcol = 'ref
             id="<?php echo escape($name); ?>"
             class="MultiRTypeSelect"
             >
-            <div style="max-height:126px;overflow:auto">
+            <div class="MultiRtypeSelectContainer">
             <?php
             foreach ($choices as $item) {
                 if ($dispcolB != '') {
