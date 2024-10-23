@@ -154,13 +154,13 @@ $act_on_group_members = false;
 if (!$save && $group_members !== []) {
     $page_contents_grouped = group_content_items($page_contents_db);
     $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
-    $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
-    $list_of_applicable_members = array_column($applicable_group_members, 'ref');
+    $applicable_group_members = array_column((reset($applicable_group) ?: [])['members'] ?? [], null, 'ref');
+    $list_of_applicable_members = array_keys($applicable_group_members);
     sort($list_of_applicable_members, SORT_NUMERIC);
 
     if (array_intersect($list_of_applicable_members, $group_members) === $group_members) {
         $act_on_group_members = true;
-        $group_members = $list_of_applicable_members;
+        $group_members = array_intersect(array_keys($applicable_group_members), $group_members);
     }
 }
 
@@ -217,32 +217,11 @@ if ($save && count_errors($processed_fields) === 0) {
     error_alert($lang['error-failed-to-delete'], true, 200);
     exit();
 } elseif ($reorder !== '' && enforcePostRequest(false)) {
-    if ($edit) {
-        /*
-        Use cases:
-            - move up/down items (no group logic);
-            - move up/down items over an entire group;
-            - move up/down an entire group of items;
-            - move left/right within the group boundaries;
-            - move up/down outside group boundaries to take an item out of a group 
-        */
-        // $page_contents_db = array_column(get_page_contents($page), null, 'ref');
-        // $page_contents_grouped = group_content_items($page_contents_db);
-        // $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
-        // $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
-        // $list_of_applicable_members = array_column($applicable_group_members, 'ref');
-        // sort($list_of_applicable_members, SORT_NUMERIC);
-        // $items_to_reorder = $group_members !== [] && array_intersect($list_of_applicable_members, $group_members) === $group_members
-        //     ? $list_of_applicable_members
-        //     : [$ref];
-
-        $items_to_reorder = $act_on_group_members ? $group_members : [$ref];
-        if (reorder_page_content($reorder, $page_contents_db, $items_to_reorder)) {
-            js_call_CentralSpaceLoad(
-                generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
-                    // . "#page-content-item-" . urlencode((string) $ref) # todo: uncomment when ticket #36454 is resolved
-            );
-        }
+    if ($edit && reorder_page_content($reorder, $page_contents_db, $act_on_group_members ? $group_members : [$ref])) {
+        js_call_CentralSpaceLoad(
+            generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
+                // . "#page-content-item-" . urlencode((string) $ref) # todo: uncomment when ticket #36454 is resolved
+        );
     }
 
     error_alert($lang['error-failed-to-move'], true, 200);

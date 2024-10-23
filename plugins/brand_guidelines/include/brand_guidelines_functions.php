@@ -158,11 +158,27 @@ function save_page_content(int $ref, array $item)
     return in_array($item['type'], BRAND_GUIDELINES_CONTENT_TYPES) && save_content_item($ref, $item);
 }
 
+/**
+ * Re-order page content. Use cases:
+ * - move up/down items (no group logic);
+ * - move up/down items over an entire group;
+ * - move up/down an entire group of items;
+ * - move left/right within the group boundaries;
+ * - move up/down outside group boundaries to take an item out of a group;
+ */
 function reorder_page_content($reorder, array $init_page_content, array $refs): bool
 {
-    echo '<b>refs</b><pre>';print_r($refs);echo '</pre>';
-    echo '<b>init_page_content</b><pre>';print_r($init_page_content);echo '</pre>';
+    $direction_int = cast_reorder_direction_to_int($reorder);
+    $act_on_group = count($refs) > 1;
+    if ($act_on_group && $direction_int === 1) {
+        $refs = array_reverse($refs);
+    }
     $group_items_jump = 0;
+    $closest_item = function(int $needle, array $items, int $direction) {
+        $keys = array_keys($items);
+        return $items[$keys[array_search($needle, $keys) + $direction] ?? -1] ?? [];
+    };
+
     foreach ($refs as $ref) {
         if (!isset($init_page_content[$ref])) {
             continue;
@@ -175,15 +191,11 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
         $list_of_applicable_members = array_column($applicable_group_members, 'ref');
         sort($list_of_applicable_members, SORT_NUMERIC);
         $ref_idx = array_search($page_contents_db[$ref], $page_contents_grouped);
-        $closest_item = function(int $needle, array $items, string $direction) {
-            $keys = array_keys($items);
-            return $items[$keys[array_search($needle, $keys) + cast_reorder_direction_to_int($direction)] ?? -1] ?? [];
-        };
 
         if (
             $applicable_group === []
             && $ref_idx !== false
-            && ($ci = $closest_item($ref_idx, $page_contents_grouped, $reorder))
+            && ($ci = $closest_item($ref_idx, $page_contents_grouped, $direction_int))
             && isset($ci['members'])
         ) {
             // Jump over an entire group
@@ -192,9 +204,11 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
                 [$ref => compute_item_order($page_contents_db[$ref], $reorder, count($ci['members']))]
             );
         } else if (
-            $list_of_applicable_members !== []
+            $act_on_group
+            && $list_of_applicable_members !== []
             && $refs === $list_of_applicable_members
         ) {
+            // Move up/down an entire group (one group item at a time)
             if ($group_items_jump <= 0) {
                 $group_items_jump = count($list_of_applicable_members);
             }
@@ -204,6 +218,7 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
                 [$ref => compute_item_order($page_contents_db[$ref], $reorder, $group_items_jump--)]
             );
         } else {
+            // Move up/down (or the equivalent left/right, when item is within a group)
             $items_to_sort = array_replace(
                 $page_contents_db,
                 [$ref => compute_item_order($page_contents_db[$ref], $reorder)]
@@ -212,10 +227,8 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
 
         $page_contents_db = reorder_items_in_memory($items_to_sort);
         $done = true;
-        echo '<b>new_order (after #'.$ref.')</b><pre>';print_r($page_contents_db);echo '</pre>';
     }
 
-    die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
     if ($done) {
         reorder_items('brand_guidelines_content', $page_contents_db, null);
         return true;
