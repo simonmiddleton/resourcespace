@@ -81,3 +81,7 @@ $lang['simplesaml_single_logout_url'] = "Single logout URL";
 $lang['simplesaml_start_url'] = "Start/Sign on URL";
 $lang['simplesaml_existing_config'] = "Follow the Knowledge Base instructions to migrate your existing SAML configuration";
 $lang['simplesaml_test_site_url'] = "SimpleSAML test site URL";
+$lang['simplesaml_idp_certs'] = "SAML IdP certificates";
+$lang['simplesaml_idp_cert_expiring'] = "IdP %idpname certificate expiring at %expiretime";
+$lang['simplesaml_idp_cert_expired'] = "IdP %idpname certificate expired at %expiretime";
+$lang['simplesaml_idp_cert_expires'] = "IdP %idpname certificate expires at %expiretime";

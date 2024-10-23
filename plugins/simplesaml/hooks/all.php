@@ -669,7 +669,7 @@ function HookSimplesamlResource_emailReplaceresourceemailredirect()
         return false;
         }
     global $baseurl_short, $userref, $ref, $search, $offset, $order_by, $sort, $archive;
-    
+
     redirect($baseurl_short . "pages/done.php?text=resource_email&resource=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive));
     }
 
@@ -705,8 +705,8 @@ function HookSimplesamlAllCheck_access_key()
     }
 
 function HookSimplesamlAllExtra_checks()
-    {
-    $return = array();  // Array containing any errors / warnings found.
+{
+    $return = [];  // Array containing any errors / warnings found.
 
     // Check if incompatible with PHP version
     $simplesaml_php_check = [
@@ -717,17 +717,13 @@ function HookSimplesamlAllExtra_checks()
     ];
 
     $GLOBALS['use_error_exception'] = true;
-    try
-        {
-        if (!simplesaml_php_check())
-            {
+    try {
+        if (!simplesaml_php_check()) {
             $return['simplesaml_php'] = $simplesaml_php_check;
-            }
         }
-    catch (Exception $e)
-        {
+    } catch (Exception $e) {
         $return['simplesaml_php_exception'] = $simplesaml_php_check;
-        }
+    }
     unset($GLOBALS['use_error_exception']);
 
     // Check if SAML library needs updating (if pre-9.7 SP not using ResourceSpace config)
@@ -738,21 +734,56 @@ function HookSimplesamlAllExtra_checks()
     ];
 
     $GLOBALS['use_error_exception'] = true;
-    try
-        {
-        if (!simplesaml_config_check())
-            {
+    try {
+        if (!simplesaml_config_check()) {
             $return['saml_config_check'] = $simplesaml_config_check;
-            }
         }
-    catch (Exception $e)
-        {
+    } catch (Exception $e) {
         $return['saml_config_exception'] = $simplesaml_config_check;
-        }
+    }
     unset($GLOBALS['use_error_exception']);
 
-    if (count($return) > 0)
-        {
-        return $return;
+    // Check for expired certificates
+    if (isset($GLOBALS["simplesamlconfig"]["metadata"])) {
+        // Only possible to check if using ResourceSpace stored SAML config
+        $idpindex = 1; // Some systems have multiple IdPs
+        foreach ($GLOBALS["simplesamlconfig"]["metadata"] as $idpid => $idpdata) {
+            $idpname = $idpid; // IdP may not have a friendly readable name configured
+            $idpcheckname = "simplesaml_php_certificate_" . $idpindex;
+            $latestexpiry = get_saml_metadata_expiry($idpid);
+            if (isset($idpdata["name"])) {
+                if (is_string($idpdata["name"])) {
+                    $idpfriendlyname = $idpdata["name"];
+                } else {
+                    $idpfriendlyname = (string) ($idpdata["name"][$GLOBALS['language']] ?? reset($idpdata["name"]));
+                }
+                $idpname .= " (" . $idpfriendlyname . ")";
+            }
+            $placeholders = ["%idpname", "%expiretime"];
+            $replace = [$idpname, $latestexpiry];
+
+            // Return errors - each IdP must have a unique check identifier
+            if ($latestexpiry < date("Y-m-d H:i")) {
+                $return[$idpcheckname] = [
+                    'status' => 'FAIL',
+                    'info' => str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expired']),
+                    'severity' => SEVERITY_CRITICAL,
+                ];
+            } elseif ($latestexpiry < date("Y-m-d H:i", time()+60*60*24*7)) {
+                $return[$idpcheckname] = [
+                    'status' => 'FAIL',
+                    'info' => str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expiring']),
+                    'severity' => SEVERITY_WARNING,
+                ];
+            } else {
+                $return[$idpcheckname] = [
+                    'status' => 'OK',
+                    'info' => str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expires']),
+                ];
+            }
+        $idpindex++;
         }
     }
+
+    return count($return) > 0 ? $return : false;
+}
