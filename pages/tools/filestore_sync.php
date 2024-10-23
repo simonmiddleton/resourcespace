@@ -63,9 +63,8 @@ if ($auth_part !== false) {
         echo "Enter password for " . $remote_user . ": ";
         system('stty -echo');
         $remote_password = trim(fgets(STDIN));
-        $password = trim(fgets(STDIN));
         system('stty echo');
-        if ($password === false) {
+        if ($remote_password === false) {
             echo "  A password must be entered. " . PHP_EOL;
             exit(1);
         }
