@@ -1,7 +1,7 @@
-<?php include "../../include/boot.php";
+<?php include __DIR__ . "/../../include/boot.php";
 
-// Copy files from the remote system
-// Before running this the scramble key must be the same on both systems so copy over the relevant config.php entries first.
+ob_end_flush(); // Disable output buffering (causes the output to appear in bursts)
+ini_set('memory_limit','4096M'); // Needed as large systems can produce a very large list of files
 
 // Output all files in a folder, recursively.
 function ShowFilesInFolderRecursive ($path)
@@ -36,9 +36,14 @@ if (php_sapi_name() != "cli") {
 
 // CLI access, connect to the remote system, retrieve the list and start the download. username and password for basic auth can be provided if required
 if (!isset($argv[1])) {
-    echo "Usage: " . PHP_EOL . "  php filestore_sync.php [username:password@][base url of remote system]" . PHP_EOL;
-    echo "  e.g. php filestore_sync.php a.user:mypassword@https://acme.resourcespace.com" . PHP_EOL;
-    echo "       php filestore_sync.php https://acme.resourcespace.com" . PHP_EOL;
+    echo "Copy files from a remote ResourceSpace system.". PHP_EOL;
+    echo "Before running this the \$scramble_key must be the same on both systems, so copy over all relevant config.php entries first." . PHP_EOL . PHP_EOL;
+    echo "Usage:  php filestore_sync.php [username:password@][base url of remote system]" . PHP_EOL . PHP_EOL;
+    echo "    e.g." . PHP_EOL . PHP_EOL . "        php filestore_sync.php https://acme.myresourcespace.com" . PHP_EOL . PHP_EOL;
+    echo "    if server is using basic HTTP authentication:" . PHP_EOL . PHP_EOL;
+    echo "        php filestore_sync.php a.user:mypassword@https://acme.myresourcespace.com" . PHP_EOL . PHP_EOL;
+    echo "    or to use basic authentication but prompt for password:" . PHP_EOL . PHP_EOL;
+    echo "        php filestore_sync.php a.user@https://acme.myresourcespace.com" . PHP_EOL . PHP_EOL;
     exit();
 }
 
@@ -52,19 +57,29 @@ if ($auth_part !== false) {
         $credparts = explode(":", $credentials);
         $remote_user = trim($credparts[0]);
         $remote_password = trim($credparts[1] ?? "");
+    } else {
+        // Prompt for password
+        $remote_user = $credentials;
+        echo "Enter password for " . $remote_user . ": ";
+        system('stty -echo');
+        $remote_password = trim(fgets(STDIN));
+        $password = trim(fgets(STDIN));
+        system('stty echo');
+        if ($password === false) {
+            echo "  A password must be entered. " . PHP_EOL;
+            exit(1);
+        }
     }
 }
-
-ob_end_flush(); // Disable output buffering (causes the output to appear in bursts)
 
 // Get the file
 $ch = curl_init($url . "/pages/tools/filestore_sync.php?access_key=" . $access_key);
 if (trim($remote_user ?? "") !== "" && trim($remote_password ?? "") !== "") {
-    echo "Using basic authentication for " . $remote_user . ":" . $remote_password . PHP_EOL;
+    echo PHP_EOL . "Using basic authentication for " . $remote_user . PHP_EOL;
     curl_setopt($ch, CURLOPT_USERPWD, $remote_user . ":" . $remote_password);
 }
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
-curl_setopt($ch, CURLOPT_TIMEOUT, 600); // 10 minutes
+curl_setopt($ch, CURLOPT_TIMEOUT, 3600); // 1 hour
 $file_list = curl_exec($ch);
 curl_close($ch);
 
