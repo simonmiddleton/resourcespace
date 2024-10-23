@@ -86,7 +86,7 @@ $page_def = [
 ];
 
 // Actions
-$delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
+$delete = $_COOKIE['ref'] = (int) getval('delete', 0, false, 'is_positive_int_loose');
 $reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
 $group_members = array_values(array_unique(
     array_filter(
@@ -160,12 +160,13 @@ if (!$save && $group_members !== []) {
 
     if (array_intersect($list_of_applicable_members, $group_members) === $group_members) {
         $act_on_group_members = true;
+        // Maintain the order in which the group members actually are or the final sorted version will be incorrect
         $group_members = array_intersect(array_keys($applicable_group_members), $group_members);
     }
 }
 
 // Process
-$_GET['colour_preview'] = $_POST['colour_preview'] = $_COOKIE['colour_preview'] = ''; # Not expected to be submitted!
+$_POST['colour_preview'] = $_GET['colour_preview'] = $_COOKIE['colour_preview'] = ''; # Not expected to be submitted!
 $processed_fields = process_custom_fields_submission(
     $page_def[$type]['fields'],
     $save,
@@ -190,26 +191,11 @@ if ($save && count_errors($processed_fields) === 0) {
     error_alert($lang['error_fail_save'], true, 200);
     exit();
 } else if ($delete > 0 && enforcePostRequest(false)) {
-    $db_item = get_page_content_item($delete);
-    if ($db_item !== [] && $group_members !== []) {
-        $page_contents_db = array_column(get_page_contents($db_item['page']), null, 'ref');
-        $page_contents_grouped = group_content_items($page_contents_db);
-        $applicable_group = array_filter($page_contents_grouped, is_group_member($db_item['ref'], $page_contents_db));
-        $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
-        $list_of_applicable_members = array_column($applicable_group_members, 'ref');
-        sort($list_of_applicable_members, SORT_NUMERIC);
-        if (array_intersect($list_of_applicable_members, $group_members) === $group_members) {
-            $items_to_delete = $list_of_applicable_members;
-        }
-    } else if ($db_item !== []) {
-        $items_to_delete = [$delete];
-    }
-
-    if (isset($items_to_delete) && delete_page_content($items_to_delete)) {
+    if ($edit && delete_page_content($act_on_group_members ? $group_members : [$ref])) {
         js_call_CentralSpaceLoad(
             generateURL(
                 "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
-                ['spage' => $db_item['page']]
+                ['spage' => $page]
             )
         );
     }
