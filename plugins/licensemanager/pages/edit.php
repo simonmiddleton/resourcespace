@@ -192,8 +192,8 @@ include "../../../include/header.php";
 
 <form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/edit.php" enctype="multipart/form-data">
 <input type=hidden name="submitted" value="true">
-<input type=hidden name="ref" value="<?php echo $ref?>">
-<input type=hidden name="resource" value="<?php echo $resource?>">
+<input type=hidden name="ref" value="<?php echo escape($ref)?>">
+<input type=hidden name="resource" value="<?php echo escape($resource)?>">
 <?php generateFormToken("licensemanager_edit"); ?>
 
 <div class="Question"><label><?php echo escape($lang["license_id"]); ?></label><div class="Fixed"><?php echo escape($ref == "new" ? $lang["licensemanager_new"] : $ref); ?></div>
@@ -284,7 +284,7 @@ foreach ($license_usage_mediums as $medium)
 
 <div class="Question">
     <label for="resources"><?php echo escape($lang["linkedresources"]); ?></label>
-    <textarea class="stdwidth" rows="3" name="resources" id="resources"><?php echo join(", ",$resources)?></textarea>
+    <textarea class="stdwidth" rows="3" name="resources" id="resources"><?php echo escape(join(", ",$resources))?></textarea>
     <div class="clearerleft"> </div>
 </div>
 
@@ -294,8 +294,9 @@ foreach ($license_usage_mediums as $medium)
     
     if($license["file"]!="")
         {
+        $download_url = generateURL("download.php",["resource"=>$resource,"ref"=>$ref]);
         ?>
-        <span><i class="fa fa-file"></i> <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $license['file']; ?></a></span>
+        <span><i class="fa fa-file"></i> <a href="<?php echo $download_url;?>"><?php echo escape($license['file']); ?></a></span>
         &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="return confirm('<?php echo escape($lang["confirmdeletelicensefile"]); ?>');">
         <?php
         }

@@ -358,3 +358,33 @@ function get_saml_sp_name()
         }
     return $simplesaml_sp;
     }
+
+
+/**
+ * Get the latest expiration date for the given SAML Identity Provider's certificates
+ *
+ * @param string $entityid  EntityID of SAML IdP
+ *
+ * @return string           Expiration date. Empty string if no certificate or IdP is not found.
+ *
+ */
+function get_saml_metadata_expiry($entityid)
+{
+    $expiry = "";
+    if (!isset($GLOBALS["simplesamlconfig"]["metadata"][$entityid])) {
+        return $expiry;
+    } else {
+        if (isset($GLOBALS["simplesamlconfig"]["metadata"][$entityid]["keys"])) {
+            // Each IdP may have multiple certificates
+            foreach($GLOBALS["simplesamlconfig"]["metadata"][$entityid]["keys"] as $idpkey) {
+                if ($idpkey["type"] == 'X509Certificate') {
+                    $keyexpiry = getCertificateExpiry($idpkey["X509Certificate"]);
+                    if ($expiry == "" || $keyexpiry > $expiry) {
+                        $expiry = $keyexpiry;
+                    }
+                }
+            }
+        }
+    return $expiry;
+    }
+}

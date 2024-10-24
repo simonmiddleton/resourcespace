@@ -226,29 +226,9 @@ parameters:
 			path: pages/view_metadata.php
 
 		-
-			message: "#^Variable \\$userresourcedefaults in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: plugins/checkmail/pages/cron_check_email.php
-
-		-
 			message: "#^Offset 0 on array\\<string, array\\<int\\|string, array\\{remote_ref\\: mixed, nicename\\: mixed, required\\: mixed, type\\: mixed, missing\\: false, remote_table\\?\\: 'resource'\\}\\|array\\{remote_table\\: 'resource', remote_ref\\: null, required\\: bool, missing\\: false\\}\\>\\> in isset\\(\\) does not exist\\.$#"
 			count: 1
 			path: plugins/csv_upload/include/meta_functions.php
-
-		-
-			message: "#^Variable \\$contributors in empty\\(\\) always exists and is always falsy\\.$#"
-			count: 1
-			path: plugins/doi/include/model.php
-
-		-
-			message: "#^Variable \\$value in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: plugins/doi/include/model.php
-
-		-
-			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: plugins/doi/include/model.php
 
 		-
 			message: "#^Variable \\$preview_sizes on left side of \\?\\?\\= is never defined\\.$#"

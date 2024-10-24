@@ -101,7 +101,10 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
         var results_update_publish=0;
         var ifrm = document.getElementById('progressiframe');
         
-        ifrm.src = "<?php echo $baseurl_short?>plugins/flickr_theme_publish/pages/flickr_publish.php?theme=<?php echo $theme?>&private=<?php echo $private?>&publish_type=<?php echo $publish_type ?>&start_publish=true";
+        ifrm.src = "<?php echo generateURL(
+            $baseurl_short . "plugins/flickr_theme_publish/pages/flickr_publish.php",
+            ["theme"=>$theme,"private"=>$private,"publish_type"=>$publish_type,"start_publish"=>"true"]
+        );?>";
 
         progress= jQuery("progress3").PeriodicalUpdater("<?php echo $baseurl_short?>plugins/flickr_theme_publish/pages/flickr_publish_progress.php?id=<?php echo urlencode($id) ?>", {
             method: 'post',          // method; get or post
@@ -144,7 +147,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
             }
             else if(remoteData.indexOf("permissions")!=-1){
                 var newData='<?php echo escape($lang["setting-permissions"]); ?>';
-                if(<?php echo $private?>==1){remoteData=newData.replace("%permission",'<?php echo escape($lang["flickr_private"]); ?>');}
+                if(<?php echo escape($private)?>==1){remoteData=newData.replace("%permission",'<?php echo escape($lang["flickr_private"]); ?>');}
                 else{remoteData=newData.replace("%permission",'<?php echo escape($lang["flickr_public"]); ?>');}
             }
             if(updateCount==true){

@@ -2830,3 +2830,7 @@ $lang["language-id"]='اندونزیایی';
 $lang["map_tfneighbourhood"]='محله';
 $lang["language-sw"]='سواحیلی';
 $lang["map_nasagibs_group"]='NASA GIBS';
+$lang["language-ur"]='اردو';
+$lang["contact_sheet_footer_address"]='XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["language-hi"]='Hindi';

@@ -2821,3 +2821,7 @@ $lang["language-ur"]='উর্দু';
 $lang["megapixel-short"]='এমপি';
 $lang["iiif"]='IIIF';
 $lang["language-es"]='স্প্যানিশ';
+$lang["language-hi"]='হিন্দি';
+$lang["contact_sheet_footer_address"]='XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999';
+$lang["language-ru"]='রাশিয়ান';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';

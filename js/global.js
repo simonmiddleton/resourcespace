@@ -238,10 +238,10 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
     pagename=basename(url);
     pagename=pagename.substr(0, pagename.lastIndexOf('.'));
 
-    var end_url = url.substr(url.length-1, 1);
+    var end_url = url.substr(url.indexOf('#'));
     // Drop # at end of url if present
-    if (end_url == "#") {
-        url = url.substr(0,url.length-1);
+    if (end_url.substr(0,1) == "#") {
+        url = url.substr(0,url.length - end_url.length);
     }
 
     // Attach ajax parameter
@@ -255,7 +255,7 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
         }
 
     // Reinstate # at end of url if present
-    if (end_url == "#") {
+    if (end_url.substr(0,1) == "#") {
         url += end_url;
     }
 

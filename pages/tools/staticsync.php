@@ -634,7 +634,6 @@ function ProcessFolder($folder)
                                             {
                                             if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
                                                 {
-                                                $given_value=$value;
                                                 // Append the values if possible
                                                 if(in_array($field_info['type'],
                                                         [
@@ -646,24 +645,10 @@ function ProcessFolder($folder)
                                                         ]))
                                                     {
                                                     $existing_value  = get_data_by_field($r,$field);
-                                                    $value      = $existing_value . " " . $value;
-                                                    update_field($r,$field,$value);
+                                                    $values_to_add[$field] = $existing_value . " " . $value;
                                                     }
                                                 }
-
-                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field, $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
-                                                {
-                                                $value=$given_value;
-                                                }
                                             }
-
-                                            // If this is a 'joined' field add it to the resource column
-                                            $joins = get_resource_table_joins();
-                                            if(in_array($field_info['ref'], $joins) && is_numeric($field_info['ref']))
-                                                {
-                                                update_resource_field_column($r,$field,$value);
-                                                }
-                                        echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
                                         }
                                     }
                                 }
@@ -675,15 +660,10 @@ function ProcessFolder($folder)
                                 {
                                 $nodes_to_add = array_merge($nodes_to_add,$nodeids);
                                 }
-
-                            add_resource_nodes($r,$nodes_to_add);
                             }
                         }
                         
-                    if(isset($staticsync_filepath_to_field))
-                        {
-                        update_field($r,$staticsync_filepath_to_field,$shortpath);
-                        }
+
 
                     # Update resource table
                     $setvals = array();
@@ -717,6 +697,22 @@ function ProcessFolder($folder)
                         }
                     $params[] = 'i'; $params[] = $r;
                     ps_query("UPDATE resource SET " . implode(",",$updatesql) . " WHERE ref = ?", $params);
+                    unset($GLOBALS["get_resource_data_cache"][$r]);
+
+                    if (count($nodes_to_add ?? [])) {
+                        echo " - adding nodes " . implode(", ",$nodes_to_add) . "to resource: $r" . PHP_EOL;
+                        add_resource_nodes($r,$nodes_to_add);
+                    }
+                    if (count($values_to_add ?? [])) {
+                        foreach ($values_to_add as $field => $value) {
+                            echo " - adding value $value in field ref: $field to resource: $r" . PHP_EOL;
+                            $errors = [];
+                            $result = update_field($r,$field,$value);
+                        }
+                    }
+                    if(isset($staticsync_filepath_to_field)) {
+                        update_field($r,$staticsync_filepath_to_field,$shortpath);
+                    }
 
                     # Add any alternative files
                     $altpath = $fullpath . $staticsync_alternatives_suffix;
@@ -1014,7 +1010,14 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
         if($ref=="")
             {
             //Primary resource file may have been ingested on a previous run - try to locate it
-            $ingested = ps_array("SELECT resource value FROM resource_node LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ? AND value LIKE ?",["i",$filename_field,"s",$altbasename . "%"]);
+            $ingested = ps_array(
+                "SELECT resource value
+                FROM resource_node rn
+                    LEFT JOIN node n ON n.ref=rn.node
+                WHERE n.resource_type_field = ?
+                    AND rn.resource LIKE ?",
+                ["i",$filename_field,"s",$altbasename . "%"]
+            );
 
             if(count($ingested) < 1)
                 {

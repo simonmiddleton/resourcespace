@@ -1978,6 +1978,11 @@ select.MultiSelect:before {
     float: unset;
     padding-left: 3px;
 }
+.MultiRTypeSelectContainer {
+    max-height:147px;
+    overflow:auto;
+}
+
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink {
     min-height: unset;
     padding: 0;

@@ -375,11 +375,6 @@ body {
         max-width: 600px;
     }
 }
-@media(max-width:990px) {
-    #HeaderButtons {
-        /* padding-left:150px; */
-    }
-}
 @media(max-width:700px) {
     .headerlink {
         display:none;

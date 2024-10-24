@@ -3276,3 +3276,4 @@ $lang["language-bn"]='Bengálčina';
 $lang["language-fa"]='Perzijščina';
 $lang["language-pa"]='Pandžabi';
 $lang["language-ur"]='Urdu';
+$lang["language-sw"]='Swahili';

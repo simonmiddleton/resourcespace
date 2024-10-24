@@ -235,7 +235,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $logtext = "Warning: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . $line_count;
                 csv_upload_log($logfile,$logtext);
                 array_push ($messages,$logtext);
-                $error_count++;
                 $resource_type_set = $csv_set_options["resource_type_default"];
                 }
 

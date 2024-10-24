@@ -1954,7 +1954,7 @@ function save_removed_ui_config($option): bool
 {
     if (isset($GLOBALS[$option]) && trim($GLOBALS[$option]) !== "") {
         // This has been removed from the UI - set to a config file option if it was previously set
-        set_config_option(NULL, $option . "_REMOVED", $GLOBALS[$option]);
+        set_config_option(null, $option . "_REMOVED", $GLOBALS[$option]);
         return true;
     }
     return false;
@@ -1981,10 +1981,10 @@ function check_removed_ui_config(string $option, $default = ""): bool
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
- * add a fixed input setting the setup page. Uses render_fixed_text_question(). Used for options removed from the UI
+ * add a fixed input setting to the setup page. Uses render_fixed_text_question(). Useful for options removed from the UI
  *
  * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
- * @param string    $value       The fixed text value to be displayed
+ * @param string    $value      The fixed text value to be displayed
  * @param string    $helptext   Optional text that will be displayed below the question
  *
  * @return array   Array of data that will be passed to the page generation code

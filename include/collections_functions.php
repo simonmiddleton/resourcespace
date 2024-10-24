@@ -5991,7 +5991,7 @@ function move_featured_collection_branch_path_root(array $branch_path)
 function allow_collection_share(array $c)
     {
     global $allow_share, $manage_collections_share_link, $k, $internal_share_access,
-    $restricted_share, $system_read_only, $system_read_only;
+    $restricted_share, $system_read_only, $system_read_only, $collection_allow_empty_share;
 
     if(!isset($GLOBALS["count_result"]))
         {
@@ -6010,7 +6010,7 @@ function allow_collection_share(array $c)
         $allow_share
         && !$system_read_only
         && $manage_collections_share_link
-        && $collection_resources > 0
+        && ($collection_resources > 0 || $collection_allow_empty_share)
         && ($k == "" || $internal_share_access)
         && !checkperm("b")
         && (checkperm("v")

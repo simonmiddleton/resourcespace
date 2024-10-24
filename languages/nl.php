@@ -2942,3 +2942,4 @@ $lang["language-bn"]='Bengaals';
 $lang["language-fa"]='Perzisch';
 $lang["language-pa"]='Punjabi';
 $lang["language-sw"]='Swahili';
+$lang["language-ur"]='Urdu';

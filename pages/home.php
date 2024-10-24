@@ -247,16 +247,16 @@ if (!hook("replaceslideshow"))
                 }
             else
                 {
-                $defaultpreview=false;          
-                if(file_exists(get_resource_path($home_collection["home_page_image"],true,"pre",false)))
-                    {
+                $defaultpreview=false;
+                if(
+                    isset($home_collection["home_page_image"])
+                    && file_exists(get_resource_path($home_collection["home_page_image"],true,"pre",false))
+                ) {
                     $home_col_image=get_resource_path($home_collection["home_page_image"],false,"pre",false);
-                    }
-                else
-                    {
+                } else {
                     $defaultpreview=true;
                     $home_col_image=$baseurl_short . "gfx/no_preview/default.png";
-                    }
+                }
                 $tile_height=180;
                 $tile_width=250;
                 $resource_data=get_resource_data($home_collection["home_page_image"]);

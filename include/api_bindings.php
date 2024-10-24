@@ -939,17 +939,23 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
 
     $file_location_parts=pathinfo($file_location);
 
-    if (is_valid_upload_path($file_location_parts["dirname"], $valid_upload_paths))
-        {
-        if (is_banned_extension(pathinfo($file_location_parts["basename"], PATHINFO_EXTENSION)))
-            {
+    if (is_valid_upload_path($file_location_parts["dirname"], $valid_upload_paths)) {
+        if (is_banned_extension(pathinfo($file_location_parts["basename"], PATHINFO_EXTENSION))) {
             return array("Status" => "FAILED","Message" => "The file for resource {$ref} was not replaced. File {$file_location} is invalid.");
-            }
         }
-    else
-        {
+    } elseif (api_validate_upload_url($file_location)) {
+        if (overquota()) {
+            return ajax_response_fail(ajax_build_message($GLOBALS['lang']['disk_size_no_upload_explain']));
+        }
+        $upload_key = uniqid((int) $ref . "_");
+        $tmp_file_location = temp_local_download_remote_file($file_location, $upload_key);
+        if ($tmp_file_location === false) {
+            return ["Status" => "FAILED", "Message" => "The file for resource {$ref} was no replaced. The file could not be retrieved from {$file_location}"];
+        }
+        $file_location = $tmp_file_location;
+    } else {
         return array("Status" => "FAILED","Message" => "The file for resource {$ref} was not replaced. File location {$file_location} is invalid.");
-        }
+    }
 
     $duplicates=check_duplicate_checksum($file_location,false);
     if (count($duplicates)>0)

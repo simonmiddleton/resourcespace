@@ -10,7 +10,7 @@ include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 $plugin_name = 'simplesaml';
 if (!in_array($plugin_name, $plugins)) {
     plugin_activate_for_setup($plugin_name);
-	check_removed_ui_config("simplesaml_lib_path");
+    check_removed_ui_config("simplesaml_lib_path");
 }
 
 if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest(false)) {

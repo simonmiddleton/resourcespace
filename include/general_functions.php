@@ -3014,7 +3014,10 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
 
     foreach($parameters as $parameter => $parameter_value)
         {
-        $query_string_params[] = $parameter . '=' . urlencode((string) $parameter_value);
+        if(!is_array($parameter_value)) 
+            {
+            $query_string_params[] = $parameter . '=' . urlencode((string) $parameter_value);
+            }
         }
 
     # Ability to hook in and change the URL.
@@ -5619,4 +5622,20 @@ function enforceSharePassword(string $password) : void
 function js_call_CentralSpaceLoad(string $url)
 {
     exit("<script>CentralSpaceLoad('{$url}');</script>");
+}
+
+/**
+ * Get expiration date of a given PEM certificate 
+ *
+ * @param string $cert  Certificate text
+ * 
+ * @return string|bool  Expiry date. False if unable to parse certificate
+ * 
+ */
+function getCertificateExpiry(string $cert)
+{
+    /* Construct a PEM formatted certificate */
+    $pemCert = "-----BEGIN CERTIFICATE-----\n" . chunk_split($cert, 64) . "-----END CERTIFICATE-----\n";
+    $data = openssl_x509_parse($pemCert);
+    return $data ? date('Y-m-d H:i:s', $data['validTo_time_t']) : false;
 }

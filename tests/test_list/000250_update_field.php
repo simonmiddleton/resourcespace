@@ -142,9 +142,6 @@ unset($use_cases, $result, $rtf_date);
 
 $keywords_list_field = create_resource_type_field("test_translated_keywords", 0, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST, 'test_translated_keywords', false);
 $subtest_g_node_ref = set_node(null, $keywords_list_field, '~en:Edit properties~fr:Modifier les propriétés~es:Editar propiedades', null, '');
-set_node(null, $keywords_list_field, '~en:ons~fr:fr-one~es:es-one', null, '');
-set_node(null, $keywords_list_field, '~en:two~fr:fr-two~es:es-two', null, '');
-
 
 $userpermissions[] = 'bdk' . $keywords_list_field;
 
