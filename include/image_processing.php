@@ -1971,7 +1971,7 @@ function create_previews_using_im(
                             }
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = "{$convert_fullpath} %%FILE%% %%WMFILE%% -flatten %%WMPOSITION%% %%WM_SCALED_DIMS%% %%TARGETDIMENSIONSWM%% %%WMTARGET%%";
+                        $runcommand = "{$convert_fullpath} %%FILE%% %%WMFILE%% -gravity %%WMPOSITION%% -geometry %%WM_SCALED_DIMS%% -resize %%TARGETDIMENSIONSWM%% -composite %%WMTARGET%%";
                         $cmdparams["%%FILE%%"] = new CommandPlaceholderArg($file,"is_safe_basename");
                         $cmdparams["%%WM_SCALED_DIMS%%"] = new CommandPlaceholderArg(
                             (int)$wm_scaled_width . "x" . (int)$wm_scaled_height . "+0+0",
