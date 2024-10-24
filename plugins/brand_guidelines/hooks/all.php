@@ -20,6 +20,13 @@ function HookBrand_guidelinesAllInitialise()
     ]);
     define('BRAND_GUIDELINES_DB_COLS_PAGES', columns_in('brand_guidelines_pages', null, 'brand_guidelines'));
     define('BRAND_GUIDELINES_DB_COLS_CONTENT', columns_in('brand_guidelines_content', null, 'brand_guidelines'));
+    define(
+        'BRAND_GUIDELINES_DEFAULT_IMAGE_SIZES',
+        array_diff_key(
+            array_column(get_all_image_sizes(true), 'name', 'id'),
+            array_flip(['col', 'thm', 'hpr'])
+        )
+    );
     
     // Custom field types - see HookBrand_guidelinesContentRender_custom_fields_default_case_override()
     define('FIELD_TYPE_NUMERIC', 101);

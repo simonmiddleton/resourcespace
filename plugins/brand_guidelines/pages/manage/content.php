@@ -37,8 +37,26 @@ $page_def = [
             'id'       => 'resource_id',
             'title'    => $lang['resourceid'],
             'type'     => FIELD_TYPE_NUMERIC,
-            'required' => true,
             'constraints' => ['min' => 1],
+            'required' => true,
+            ],
+            [
+            'id'       => 'image_size',
+            'title'    => $lang['fieldtitle-image_size'],
+            'type'     => FIELD_TYPE_DROP_DOWN_LIST,
+            'options'  => BRAND_GUIDELINES_DEFAULT_IMAGE_SIZES,
+            'required' => true,
+            ],
+            [
+            'id'       => 'layout',
+            'title'    => $lang['brand_guidelines_layout'],
+            'type'     => FIELD_TYPE_DROP_DOWN_LIST,
+            'options'  => [
+                'thumbnail' => $lang['imagesize-thumbnail'],
+                'half-width' => $lang['brand_guidelines_half_width'],
+                'full-width' => $lang['brand_guidelines_full_width'],
+            ],
+            'required' => true,
             ],
         ],
     ],
@@ -117,6 +135,10 @@ if ($ref > 0) {
         $edit = true;
         $page = $db_item['page'];
         $type = $db_item['type'];
+
+        // todo: for image_size, change options to what the resource has available
+        // $sizes = get_image_sizes($resource['ref'], false, $resource['file_extension'], true);
+        // echo '<b>get_image_sizes</b><pre>';print_r(get_image_sizes($ref));echo '</pre>';
 
         // Help the process_custom_fields_submission() fill in the form
         $item_content_fields = convert_from_db_content($db_item['content'], $page_def[$type]['fields']);
@@ -234,8 +256,10 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
         render_hidden_input('after_item', (string) $after_item);
         render_custom_fields($processed_fields);
         ?>
-        <div class="QuestionSubmit" >
-            <input type="submit" name="content_submit" value="<?php echo escape($edit ? $lang['save'] : $lang['create']); ?>"></input>
+        <div class="QuestionSubmit">
+            <input type="submit" name="content_submit" value="<?php
+                echo escape($edit ? $lang['save'] : $lang['add']);
+            ?>"></input>
             <div class="clearleft"></div>
         </div>
     </form>
