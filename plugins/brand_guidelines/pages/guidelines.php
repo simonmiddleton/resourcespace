@@ -203,66 +203,6 @@ render_content_menu();
 
             </div>
             <?php render_new_content_button('add-new-content-4'); ?>
-            <br>
-            <br>
-            <div id="guidelines-content--colours">
-                <h1>Colours</h1>
-                <p>Branding colors are a carefully selected and standardized set of hues that represent a brand's identity, evoke specific emotions, and create visual harmony across all brand-related materials.</p>
-                <?php render_new_content_button('add-new-content-5'); ?>
-                <h2>Montala logo colours</h2>
-                <?php
-                render_block_colour_item([
-                    'ref' => 0,
-                    'name' => 'Primary',
-                    'hex' => 'ff9249',
-                    'rgb' => '255, 146, 73',
-                    'cmyk' => '70, 0, 51, 34',
-                ]);
-                render_block_colour_item([
-                    'ref' => 0,
-                    'name' => 'Secondary',
-                    'hex' => 'd8d2cc',
-                    'rgb' => '28, 103, 108',
-                    'cmyk' => '74, 5, 0, 58',
-                ]);
-                render_block_colour_item([
-                    'ref' => 0,
-                    'name' => 'Tertiary',
-                    'hex' => '646464',
-                    'rgb' => '22, 71, 85',
-                    'cmyk' => '74, 16, 0, 67',
-                ]);
-                ?>
-                <?php render_new_block_element_button('guidelines-colour-block new', BRAND_GUIDELINES_CONTENT_TYPES['colour']); ?>
-            </div>
-            <?php render_new_content_button('add-new-content-6'); ?>
-            <br>
-            <h2>ResourceSpace logo colours</h2>
-            <?php
-            render_block_colour_item([
-                'ref' => 0,
-                'name' => 'Light Green 1',
-                'hex' => '79bc41',
-                'rgb' => '255, 146, 73',
-                'cmyk' => '70, 0, 51, 34',
-            ]);
-            render_block_colour_item([
-                'ref' => 0,
-                'name' => 'Dark Green',
-                'hex' => '4f8c1d',
-                'rgb' => '28, 103, 108',
-                'cmyk' => '74, 5, 0, 58',
-            ]);
-            render_block_colour_item([
-                'ref' => 0,
-                'name' => 'Black',
-                'hex' => '000000',
-                'rgb' => '22, 71, 85',
-                'cmyk' => '74, 16, 0, 67',
-            ]);
-            ?>
-            <?php render_new_block_element_button('guidelines-colour-block new', BRAND_GUIDELINES_CONTENT_TYPES['colour']); ?>
-            <?php render_new_content_button('add-new-content-7'); ?>
         </div>
     </div>
 </div>
