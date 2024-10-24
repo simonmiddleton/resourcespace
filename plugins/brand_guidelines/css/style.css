@@ -73,6 +73,7 @@
 .guidelines-colour-block--colour {
     height: 150px;
     border-radius: inherit;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .1);
 }
 
 .guidelines-colour-block--details {
