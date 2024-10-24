@@ -1,5 +1,5 @@
 <?php
-include "include/boot.php";
+include_once "include/boot.php";
 include_once "include/login_functions.php";
 
 debug("[login.php] Reached login page...");
