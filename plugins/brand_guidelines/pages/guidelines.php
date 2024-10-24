@@ -424,7 +424,7 @@ render_content_menu();
                 value: item.group_members,
             }).appendTo(temp_form)
         }
-        CentralSpacePost(temp_form, true, false, false);
+        CentralSpacePost(temp_form, false, true, false);
         hideOptionsMenu();
         return false;
     }
