@@ -53,6 +53,8 @@
 .guidelines-content h2 { font-size: 1.3rem; }
 .guidelines-content .top-right-menu { float: right; }
 
+#menu-content { width: 180px; }
+
 .preview.guidelines-colour-block {
     height: 150px;
     margin: unset;

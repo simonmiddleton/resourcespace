@@ -42,7 +42,7 @@ function render_individual_menu()
 function render_content_menu()
 {
     ?>
-    <div id="menu-content" class="context-menu-container" style="width: 180px; display:none;">
+    <div id="menu-content" class="context-menu-container" style="display:none;">
         <button
             class="context-menu-row"
             onclick="return new_content_item(this);"
