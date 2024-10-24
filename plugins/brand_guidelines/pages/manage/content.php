@@ -228,7 +228,7 @@ if ($save && count_errors($processed_fields) === 0) {
     if ($edit && reorder_page_content($reorder, $page_contents_db, $act_on_group_members ? $group_members : [$ref])) {
         js_call_CentralSpaceLoad(
             generateURL("{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php", ['spage' => $page])
-                // . "#page-content-item-" . urlencode((string) $ref) # todo: uncomment when ticket #36454 is resolved
+                . "#page-content-item-" . urlencode((string) $ref)
         );
     }
 
