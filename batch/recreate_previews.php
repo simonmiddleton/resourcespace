@@ -128,6 +128,7 @@ else
 
 if(is_array($resources) && count($resources) > 0)
     {
+    hook('beforescriptaction');
     foreach ($resources as $resource)
         {
         if($videoupdate)
