@@ -250,7 +250,18 @@ function convert_to_db_content(array $input): array
     $unnecessary_fields = ['colour_preview'];
 
     // Storing each field ID and its value should be enough relevant information to correctly render when reconstructed.
-    return array_diff_key(array_column($input, 'value', 'id'), array_flip($unnecessary_fields));
+    // Dropdown fields use the the field options' ID instead (static information as opposed to the value which is i18n)
+    $db_col_value = [];
+    foreach ($input as $field) {
+        if (in_array($field['id'], $unnecessary_fields)) {
+            continue;
+        }
+
+        $db_col_value[$field['id']] = $field['type'] === FIELD_TYPE_DROP_DOWN_LIST
+            ? array_key_first($field['selected_options'])
+            : $field['value'];
+    }
+    return $db_col_value;
 }
 
 /**
