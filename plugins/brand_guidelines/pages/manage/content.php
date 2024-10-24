@@ -195,6 +195,7 @@ $processed_fields = process_custom_fields_submission(
     ['html_properties_prefix' => '']
 );
 if ($save && count_errors($processed_fields) === 0) {
+    echo '<pre>';print_r($processed_fields);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
     $item = [
         'type' => $type,
         'fields' => $processed_fields,
