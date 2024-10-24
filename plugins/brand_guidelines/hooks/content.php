@@ -66,7 +66,7 @@ function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(a
 
     if (
         $field['type'] === FIELD_TYPE_NUMERIC
-        && !(is_positive_int_loose($field_value) && $field_value < $field['constraints']['min'])
+        && (!is_positive_int_loose($field_value) || $field_value < $field['constraints']['min'])
     ) {
         return sprintf(
             '%s. %s: %s',
