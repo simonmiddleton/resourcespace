@@ -616,20 +616,27 @@ function header_add_map_providers()
 
         L.TileLayer.Provider.providers = {
 
-        <?php   
+        <?php
         foreach($geo_leaflet_sources as $leaflet_source)
             {
             echo escape($leaflet_source["code"])  . ": {\n";
             if($geo_tile_caching)
                 {
+                // Is this the search page? If so need to get collection ID to authenticate external shares
+                $searchparts = explode(" ", getval("search", ""));
+                $collection = str_replace("!collection", "", $searchparts[0]);
+                $resource = getval("ref",""); // For resource view page
                 $urlparams = array(
                     "provider"  =>  $leaflet_source["code"],
+                    "resource"  => $resource,
+                    "collection"  => $collection,
+                    "k"  =>  getval("k",""),
                     );
                 $sourceurl = generateURL($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
                 }
             else
                 {
-                $sourceurl =  $leaflet_source["url"];                        
+                $sourceurl =  $leaflet_source["url"];
                 }
             echo "        url: '" . $sourceurl . "',\n";
             echo "        options: {\n";
