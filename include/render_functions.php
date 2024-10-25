@@ -4250,28 +4250,42 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
 
     # Value formatting
     # Optimised to use the value as is if there are no "~" characters present in the value
-    if (strpos($value,"~") !== false) {
-        $field_value = $value;
-        debug('value formatting due to ~ character...');
-        # The field value may be a list of comma separated language encoded values, so process the nodes
-        $field_nodes_in_value = explode(",", $field["nodes"]);
-        if (count($field_nodes_in_value) > 1) {
-            # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
-            $field_nodes_all = get_nodes($field['ref']);
-            $names_i18n_in_value = extract_node_options($field_nodes_all, true, true);
-            # Convert the field nodes in value as an array keyed by the names to allow an intersect by key operation 
-            $node_names_in_value = array_intersect_key($names_i18n_in_value, array_flip($field_nodes_in_value));
-            $value = implode(', ', $node_names_in_value);
+    $lang_string_tilde_postion = mb_strpos($value, '~');
+    if ($lang_string_tilde_postion !== false && mb_substr($value, $lang_string_tilde_postion + 3, $lang_string_tilde_postion + 1) === ':')
+        {
+        $is_lang_string = true;
+        }
+    else
+        {
+        $is_lang_string = false;
         }
 
-        # Not a node list so translate the raw value or something went wrong trying to resolve the node values 
-        # so attempt to translate the raw value to display instead
-        if (count($field_nodes_in_value) == 1 || trim($value) == "") {
-            # Translate the single value
-            $value=i18n_get_translated($field_value);
+    if ($is_lang_string) {
+        if ($field['type'] == FIELD_TYPE_CATEGORY_TREE) {
+            $value = $field['value']; # Use value from get_cattree_node_strings() which is i18n translated (likely default language at this point as $value still contains ~).
+        } else {
+            $field_value = $value;
+            debug('value formatting due to ~ character...');
+            # The field value may be a list of comma separated language encoded values, so process the nodes
+            $field_nodes_in_value = explode(",", $field["nodes"]);
+            if (count($field_nodes_in_value) > 1) {
+                # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
+                $field_nodes_all = get_nodes($field['ref']);
+                $names_i18n_in_value = extract_node_options($field_nodes_all, true, true);
+                # Convert the field nodes in value as an array keyed by the names to allow an intersect by key operation 
+                $node_names_in_value = array_intersect_key($names_i18n_in_value, array_flip($field_nodes_in_value));
+                $value = implode(', ', $node_names_in_value);
+            }
+
+            # Not a node list so translate the raw value or something went wrong trying to resolve the node values 
+            # so attempt to translate the raw value to display instead
+            if (count($field_nodes_in_value) == 1 || trim($value) == "") {
+                # Translate the single value
+                $value=i18n_get_translated($field_value);
+            }
         }
-    } 
-        
+    }
+
         // Handle the rest of the fixed list fields, category trees have their own section
         if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
             $resource_nodes = get_resource_nodes($ref, $field["ref"], true, false);
