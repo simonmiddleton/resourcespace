@@ -26,6 +26,7 @@ function drawImageOnCanvas() {
     document.getElementById('canvas-container').style.visibility='visible';
     document.getElementById('toolbox').style.visibility='visible';
     CentralSpaceHideProcessing();
+    HideThumbs(); // More visual space
 };
 
 // Adjust pen size
@@ -37,7 +38,7 @@ document.getElementById('penSize').addEventListener('input', function () {
 canvas.addEventListener('mousedown', (e) => {
     drawing = true;
     [lastX, lastY] = getMousePos(e);
-    draw();
+    draw(e);
 });
 
 canvas.addEventListener('mouseup', () => drawing = false);

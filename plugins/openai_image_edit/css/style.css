@@ -26,9 +26,9 @@ canvas {
 }
 #tools input, #tools select, #tools textarea, #downloadBtn
 	{
-	width:200px;
+	width:250px;
 	}
 #clearBtn, #submitBtn
 	{
-	width:95px;
+	width:123px;
 	}
