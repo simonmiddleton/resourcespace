@@ -8386,7 +8386,11 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         }
 
     // Build the filename
-    $filename = str_replace(array_keys($bind), array_values($bind), $formatted_str);
+    $filename =preg_replace_callback(
+        '/%(field(\d+)|resource|extension|size|alternative|filename)/',
+        fn($matches) => $bind[$matches[0]],
+        $formatted_str
+    );
     // Allow plugins to completely overwrite it
     $hook_downloadfilenamealt = hook('downloadfilenamealt', '', [$ref, $size, $alternative, $ext]);
     if (is_string($hook_downloadfilenamealt) && $hook_downloadfilenamealt !== '')
