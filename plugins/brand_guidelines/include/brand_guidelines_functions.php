@@ -306,26 +306,32 @@ function convert_from_db_content(string $json, array $def): array
 function group_content_items(array $items): array
 {
     $result = [];
-    $allow_groups_for = [
-        BRAND_GUIDELINES_CONTENT_TYPES['colour'],
-        BRAND_GUIDELINES_CONTENT_TYPES['resource']
-    ];
     $tmp = [
         'type' => BRAND_GUIDELINES_CONTENT_TYPES['group'],
         'members' => [],
     ];
     foreach ($items as $item) {
-        $group_type = in_array($item['type'], $allow_groups_for);
+        $group_type = (
+            $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['colour']
+            || (
+                $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']
+                && $item['content']['layout'] !== 'full-width'
+            )
+        );
+        $group_size_reached = (
+            $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']
+            && $item['content']['layout'] === 'half-width'
+            && count($tmp['members']) === 1
+        );
         $next_item = next($items);
         if (
             $next_item !== false
             && $item['type'] === $next_item['type']
             && $group_type
-            // todo: except full-width resources 
+            && !$group_size_reached
         ) {
             $tmp['members'][] = $item;
         } elseif ($tmp['members'] !== [] || ($tmp['members'] === [] && $group_type)) {
-            // todo: half-width resources should only be in groups of max 2 elements
             $tmp['members'][] = $item;
             $result[] = $tmp;
             $tmp['members'] = [];
