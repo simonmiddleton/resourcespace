@@ -165,7 +165,8 @@
 
 .image-full-width {
     width: 1000px;
-    height: 200px;
+    /* max-width: 1000px; */
+    height: 200px; /* todo: to be discussed as this was on purpose mocked like this */
     display: inline-block;
     object-fit: cover;
 }
@@ -186,7 +187,7 @@
 
 .image-half-width img {
     width: 488px;
-    object-fit: cover;
+    /* object-fit: cover; */
 }
 
 .paragraph-half-width {
@@ -197,7 +198,7 @@
 .image-thumbnail img {
     max-width: 200px;
     border-radius: 5px;
-    object-fit: cover;
+    /* object-fit: cover; */
 }
 
 .image-container {
@@ -229,6 +230,17 @@
 .top-right-menu:hover {
     background: #dfdfdf;
 }
+
+.image-half-width .top-right-menu {
+    position: relative;
+    right: 48px;
+}
+
+.resource-content-full-width .top-right-menu {
+    position: relative;
+    top: 48px;
+}
+
 
 button#guidelines-toc {
     display: none;

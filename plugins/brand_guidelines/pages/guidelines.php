@@ -144,7 +144,7 @@ render_content_menu();
                                     $group_item['content']
                                 ));
                             } elseif ($group_item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
-                                $new_block_item_btn = 'new-thumbnail-image';
+                                $new_block_item_btn = "new-{$group_item['content']['layout']}-image";
                                 render_resource_item($group_item);
                             }
                         }
