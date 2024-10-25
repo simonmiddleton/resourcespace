@@ -560,7 +560,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
 
     if($current !=='')
         {
-        $origin_in_config = (substr($current, 0, 13) != '[storage_url]' && !str_contains($current, 'system/config'));
+        $origin_in_config = (substr($current, 0, 13) != '[storage_url]') && mb_strpos($current, 'system/config') === false;
         if ($origin_in_config)
             {
             # Current value may have originated in config.php - file uploader to consider this unset
