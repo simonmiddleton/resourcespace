@@ -114,13 +114,27 @@ render_content_menu();
                             echo richtext_input_parser($item['content']['richtext']);
                         ?></div>
                         <?php
+                    } elseif (
+                        $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']
+                        && $item['content']['layout'] === 'full-width'
+                    ) {
+                        render_resource_item($item);
                     } elseif ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['group']) {
                         $members = implode(',', array_column($item['members'], 'ref'));
                         $new_content_btn_id = "group-{$members}";
+                        $group_members_types = array_unique(array_column($item['members'], 'type'));
+                        $is_resource_group = reset($group_members_types) === BRAND_GUIDELINES_CONTENT_TYPES['resource'];
                         ?>
                         <div class="group" data-members="<?php echo escape($members); ?>">
                         <?php
                         render_item_top_right_menu(0);
+
+                        if ($is_resource_group) {
+                            ?>
+                            <div class="image-container">
+                            <?php
+                        }
+
                         foreach ($item['members'] as $group_item) {
                             $new_block_item_btn = '';
                             if ($group_item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['colour']) {
@@ -130,11 +144,17 @@ render_content_menu();
                                     $group_item['content']
                                 ));
                             } elseif ($group_item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
-                                // todo: implement
                                 $new_block_item_btn = 'new-thumbnail-image';
+                                render_resource_item($group_item);
                             }
                         }
                         render_new_block_element_button($new_block_item_btn, BRAND_GUIDELINES_CONTENT_TYPES['colour']);
+
+                        if ($is_resource_group) {
+                            ?>
+                            </div>
+                            <?php
+                        }
                         ?>
                         </div>
                         <?php

@@ -206,3 +206,61 @@ function render_item_top_right_menu(int $ref)
     </div>
     <?php
 }
+
+function render_resource_item(array $item): void
+{
+    $resource = get_resource_data($item['content']['resource_id']);
+    if ($resource === false) {
+        // todo: consider indicating somehow a missing resource to admins only
+        return;
+    }
+
+    $ref = (int) $item['ref'];
+    $image_size = $item['content']['image_size'];
+    $layout = $item['content']['layout'];
+
+    $image_sizes = array_column(get_image_sizes($resource['ref'], true, $resource['file_extension'], true), null, 'id');
+    $preview = $image_sizes[$image_size];
+
+    $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $resource['ref']]);
+    $resource_title = i18n_get_translated(get_data_by_field($resource['ref'], $GLOBALS['view_title_field']));
+
+    // echo get_nopreview_html($resource['file_extension']);
+
+    if ($layout === 'full-width') {
+    ?>
+        <div id="page-content-item-<?php echo $ref; ?>">
+            <?php render_item_top_right_menu($ref); ?>
+            <a href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
+                <img
+                    class="image-full-width"
+                    src="<?php echo $preview['url']; ?>"
+                    alt="<?php echo escape($resource_title); ?>"
+                >
+            </a>
+        </div>
+    <?php
+    } else if ($layout === 'half-width') {
+    ?>
+        <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width" style="padding-right: 20px">
+            <?php render_item_top_right_menu($ref); ?>
+            <a href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
+                <!-- todo: find out why this doesn't look the same without the .image-full-width -->
+                <!-- <img class="image-full-width" src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>"> -->
+                <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
+            </a>
+        </div>
+    <?php
+    } else {
+    ?>
+        <div id="page-content-item-<?php echo $ref; ?>" class="image-thumbnail">
+            <?php render_item_top_right_menu($ref); ?>
+            <a href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
+                <!-- todo: find out why this doesn't look the same without the .image-full-width -->
+                <!-- <img class="image-full-width" src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>"> -->
+                <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
+            </a>
+        </div>
+    <?php
+    }
+}

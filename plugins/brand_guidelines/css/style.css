@@ -164,25 +164,14 @@
 }
 
 .image-full-width {
+    width: 1000px;
+    height: 200px;
     display: inline-block;
+    object-fit: cover;
 }
 
 .image-half-width {
     display: inline-block;
-}
-
-.image-full-width {
-    width: 1000px;
-    height: 200px;
-}
-
-.image-half-width img {
-    width: 488px;
-}
-
-.paragraph-half-width {
-    display: inline-block;
-    width: 488px;
 }
 
 .image-thumbnail {
@@ -195,9 +184,20 @@
     border-radius: 5px;
 }
 
+.image-half-width img {
+    width: 488px;
+    object-fit: cover;
+}
+
+.paragraph-half-width {
+    display: inline-block;
+    width: 488px;
+}
+
 .image-thumbnail img {
     max-width: 200px;
     border-radius: 5px;
+    object-fit: cover;
 }
 
 .image-container {

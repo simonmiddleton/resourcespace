@@ -95,7 +95,6 @@ function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(a
         $field['type'] === FIELD_TYPE_DROP_DOWN_LIST
         && $field['id'] === 'image_size'
         && $field_value !== ''
-
     ) {
         $resource = get_resource_data((int) getval('resource_id', 0, false, 'is_positive_int_loose'));
         if ($resource === false) {
