@@ -283,11 +283,16 @@ function convert_from_db_content(string $json, array $def): array
 
     $result = [];
     foreach ($fields as $field) {
-        // Add custom fields' value. Note: {@see process_custom_fields_submission()} will always override this key val.
-        $result[] = array_merge(
-            $field,
-            isset($content[$field['id']]) ? ['value' => $content[$field['id']]] : []
-        );
+        if (!isset($content[$field['id']])) {
+            continue;
+        }
+
+        $value = $field['type'] === FIELD_TYPE_DROP_DOWN_LIST && isset($field['options'][$content[$field['id']]])
+            ? $field['options'][$content[$field['id']]]
+            : $content[$field['id']];
+
+        // Add custom fields' value. Note: {@see process_custom_fields_submission()} will always override this "value" key
+        $result[] = array_merge($field, ['value' => $value]);
     }
     return $result;
 }

@@ -136,15 +136,21 @@ if ($ref > 0) {
         $page = $db_item['page'];
         $type = $db_item['type'];
 
-        // todo: for image_size, change options to what the resource has available
-        // $sizes = get_image_sizes($resource['ref'], false, $resource['file_extension'], true);
-        // echo '<b>get_image_sizes</b><pre>';print_r(get_image_sizes($ref));echo '</pre>';
-
         // Help the process_custom_fields_submission() fill in the form
         $item_content_fields = convert_from_db_content($db_item['content'], $page_def[$type]['fields']);
         foreach ($item_content_fields as $item_field) {
             if (isset($item_field['value'])) {
-                // When saving, POSTd data already has precedence over GETd {@see process_custom_fields_submission()}
+                /**
+                 * Note: when saving, POSTd data already has precedence over GETd (through {@see getval()})
+                 * {@see process_custom_fields_submission()}
+                 */
+
+                if ($item_field['type'] === FIELD_TYPE_DROP_DOWN_LIST) {
+                    $html_field_id = $item_field['html_properties']['id'];
+                    $_GET[$html_field_id] = [md5("{$html_field_id}_{$item_field['value']}")];
+                    continue;
+                }
+
                 $_GET[$item_field['html_properties']['name']] = $item_field['value'];
             }
         }
@@ -195,7 +201,6 @@ $processed_fields = process_custom_fields_submission(
     ['html_properties_prefix' => '']
 );
 if ($save && count_errors($processed_fields) === 0) {
-    echo '<pre>';print_r($processed_fields);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
     $item = [
         'type' => $type,
         'fields' => $processed_fields,

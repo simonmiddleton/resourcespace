@@ -90,7 +90,7 @@ function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(a
             || ($field['id'] === 'cmyk' && !colour_cmyk_input_validator($field_value))
         )
     ) {
-            return $GLOBALS['lang']['brand_guidelines_err_invalid_input'];
+        return $GLOBALS['lang']['brand_guidelines_err_invalid_input'];
     } else if (
         $field['type'] === FIELD_TYPE_DROP_DOWN_LIST
         && $field['id'] === 'image_size'
