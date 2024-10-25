@@ -11,6 +11,8 @@ if ($access!=0)
     exit("Access denied");
     }
 
+set_processing_message($lang["openai_image_edit__preparing_image_for_editing"]);
+
 $jpg=get_resource_path($ref,true,"",false,"jpg");
 if (!file_exists($jpg))
     {

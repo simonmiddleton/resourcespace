@@ -92,12 +92,12 @@ include "../../../include/header.php";
 ?>
 
 <img id="image" src="get_png.php?ref=<?php echo $ref ?>" alt="" hidden>
-<div class="canvas-container" style="position: relative;">
+<div id="canvas-container" class="canvas-container" style="position: relative;visibility:hidden;">
     <canvas id="canvas"></canvas>
     <canvas id="overlayCanvas" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
 </div>
 
-<div class="toolbox openai-image-edit">
+<div id="toolbox" class="toolbox openai-image-edit" style="visibility:hidden;">
 <div id="tools">
 <label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]) ?></label><br>
 <input type="range" id="penSize" min="10" max="200" value="75">
@@ -130,6 +130,7 @@ include "../../../include/header.php";
 </div>
 
 <script>
+CentralSpaceShowProcessing();
 submit_url='../pages/edit.php?ref=<?php echo $ref ?>&<?php echo $CSRF_token_identifier?>=<?php echo generateCSRFToken($usersession, "openai_image_edit"); ?>';
 alternative_url='../pages/save_alternative.php?ref=<?php echo $ref ?>&<?php echo $CSRF_token_identifier?>=<?php echo generateCSRFToken($usersession, "openai_image_edit"); ?>';
 

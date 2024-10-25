@@ -22,7 +22,10 @@ function drawImageOnCanvas() {
     overlayCanvas.height = image.height;
 
     ctx.drawImage(image, 0, 0, image.width, image.height);
-    //alert(image.width + "x" + image.height)
+    
+    document.getElementById('canvas-container').style.visibility='visible';
+    document.getElementById('toolbox').style.visibility='visible';
+    CentralSpaceHideProcessing();
 };
 
 // Adjust pen size
