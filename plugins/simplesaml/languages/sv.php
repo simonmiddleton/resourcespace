@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='Följ instruktionerna i kunskapsdatabasen f
 $lang["simplesaml_test_site_url"]='SimpleSAML test webbplatsens URL';
 $lang["plugin-simplesaml-title"]='Enkel SAML';
 $lang["plugin-simplesaml-desc"]='[Avancerad] Kräver SAML-autentisering för att få tillgång till ResourceSpace';
+$lang["simplesaml_idp_certs"]='SAML IdP-certifikat';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname-certifikat går ut %expiretime';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname certifikat gick ut %expiretime';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname-certifikatet går ut %expiretime';

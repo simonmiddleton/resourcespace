@@ -82,3 +82,7 @@ $lang["simplesaml_sp_samlphp_link"]='Besøk SimpleSAMLphp testnettsted';
 $lang["simplesaml_acs_url"]='ACS URL / Svar-URL';
 $lang["plugin-simplesaml-title"]='Enkel SAML';
 $lang["plugin-simplesaml-desc"]='[Krever] SAML-autentisering for å få tilgang til ResourceSpace';
+$lang["simplesaml_idp_certs"]='SAML IdP-sertifikater';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname-sertifikat utløper kl %expiretime';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname-sertifikat utløp ved %expiretime';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname-sertifikat utløper kl %expiretime';

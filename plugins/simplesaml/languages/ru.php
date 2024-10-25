@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='Следуйте инструкциям б�
 $lang["simplesaml_test_site_url"]='URL тестового сайта SimpleSAML';
 $lang["plugin-simplesaml-title"]='Простой SAML';
 $lang["plugin-simplesaml-desc"]='[Дополнительно] Требовать аутентификацию SAML для доступа к ResourceSpace';
+$lang["simplesaml_idp_certs"]='SAML IdP сертификаты';
+$lang["simplesaml_idp_cert_expiring"]='Сертификат IdP %idpname истекает в %expiretime';
+$lang["simplesaml_idp_cert_expired"]='Сертификат IdP %idpname истек в %expiretime';
+$lang["simplesaml_idp_cert_expires"]='Сертификат IdP %idpname истекает в %expiretime';

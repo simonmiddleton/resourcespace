@@ -82,3 +82,7 @@ $lang["simplesaml_test_site_url"]='URL testovacího webu SimpleSAML';
 $lang["simplesaml_authorisation_login_error"]='Nemáte přístup k této aplikaci! Kontaktujte prosím správce svého účtu!';
 $lang["plugin-simplesaml-title"]='Jednoduché SAML';
 $lang["plugin-simplesaml-desc"]='[Pokročilé] Vyžadovat SAML autentizaci pro přístup k ResourceSpace';
+$lang["simplesaml_idp_certs"]='SAML IdP certifikáty';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname certifikát vyprší v %expiretime';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname certifikát vypršel v %expiretime';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname certifikát vyprší v %expiretime';

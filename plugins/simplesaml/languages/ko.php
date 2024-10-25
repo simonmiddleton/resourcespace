@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='지식 베이스 지침을 따라 기존 SA
 $lang["simplesaml_test_site_url"]='SimpleSAML 테스트 사이트 URL';
 $lang["plugin-simplesaml-title"]='간단한 SAML';
 $lang["plugin-simplesaml-desc"]='[고급] ResourceSpace에 접근하려면 SAML 인증이 필요합니다';
+$lang["simplesaml_idp_certs"]='SAML IdP 인증서';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname 인증서가 %expiretime에 만료됩니다';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname 인증서가 %expiretime에 만료되었습니다';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname 인증서가 %expiretime에 만료됩니다';

@@ -80,3 +80,7 @@ $lang["simplesaml_start_url"]='شروع/ورود به URL';
 $lang["simplesaml_existing_config"]='دستورالعمل‌های پایگاه دانش را برای مهاجرت پیکربندی SAML موجود خود دنبال کنید';
 $lang["simplesaml_test_site_url"]='آدرس سایت تست SimpleSAML';
 $lang["simplesaml_idp_section"]='IdP';
+$lang["simplesaml_idp_certs"]='گواهینامه‌های SAML IdP';
+$lang["simplesaml_idp_cert_expiring"]='گواهی IdP %idpname در %expiretime منقضی می‌شود';
+$lang["simplesaml_idp_cert_expired"]='گواهی IdP %idpname در %expiretime منقضی شد';
+$lang["simplesaml_idp_cert_expires"]='گواهی IdP %idpname در %expiretime منقضی می‌شود';

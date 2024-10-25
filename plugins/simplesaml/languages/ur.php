@@ -80,3 +80,7 @@ $lang["simplesaml_start_url"]='شروع/سائن آن یو آر ایل';
 $lang["simplesaml_existing_config"]='اپنی موجودہ SAML ترتیب کو منتقل کرنے کے لیے نالج بیس کی ہدایات پر عمل کریں۔';
 $lang["simplesaml_test_site_url"]='SimpleSAML ٹیسٹ سائٹ URL';
 $lang["simplesaml_idp_section"]='IdP';
+$lang["simplesaml_idp_certs"]='SAML IdP سرٹیفکیٹس';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname سرٹیفکیٹ %expiretime پر ختم ہو رہا ہے';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname سرٹیفکیٹ %expiretime پر ختم ہو گیا ہے';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname سرٹیفکیٹ %expiretime پر ختم ہو رہا ہے';

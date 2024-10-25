@@ -82,3 +82,7 @@ $lang["simplesaml_test_site_url"]='URL situs uji coba SimpleSAML';
 $lang["simplesaml_addrow"]='Tambahkan pemetaan';
 $lang["plugin-simplesaml-title"]='SAML Sederhana';
 $lang["plugin-simplesaml-desc"]='[Advanced] Memerlukan autentikasi SAML untuk mengakses ResourceSpace';
+$lang["simplesaml_idp_certs"]='Sertifikat SAML IdP';
+$lang["simplesaml_idp_cert_expiring"]='Sertifikat IdP %idpname akan kedaluwarsa pada %expiretime';
+$lang["simplesaml_idp_cert_expired"]='Sertifikat IdP %idpname kedaluwarsa pada %expiretime';
+$lang["simplesaml_idp_cert_expires"]='Sertifikat IdP %idpname berakhir pada %expiretime';

@@ -86,3 +86,7 @@ $lang["simplesaml_existing_config"]='Urmăriți instrucțiunile din Baza de Cuno
 $lang["simplesaml_test_site_url"]='URL-ul site-ului de testare SimpleSAML';
 $lang["plugin-simplesaml-title"]='SAML simplu';
 $lang["plugin-simplesaml-desc"]='[Avansat] Necesită autentificare SAML pentru a accesa ResourceSpace';
+$lang["simplesaml_idp_certs"]='Certificate IdP SAML';
+$lang["simplesaml_idp_cert_expiring"]='Certificatul IdP %idpname expiră la %expiretime';
+$lang["simplesaml_idp_cert_expired"]='Certificatul IdP %idpname a expirat la %expiretime';
+$lang["simplesaml_idp_cert_expires"]='Certificatul IdP %idpname expiră la %expiretime';
