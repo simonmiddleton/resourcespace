@@ -92,11 +92,15 @@ include "../../../include/header.php";
 ?>
 
 <img id="image" src="get_png.php?ref=<?php echo $ref ?>" alt="" hidden>
-<canvas id="canvas"></canvas>
+<div class="canvas-container" style="position: relative;">
+    <canvas id="canvas"></canvas>
+    <canvas id="overlayCanvas" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
+</div>
+
 <div class="toolbox openai-image-edit">
 <div id="tools">
 <label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]) ?></label><br>
-<input type="range" id="penSize" min="1" max="100" value="75">
+<input type="range" id="penSize" min="10" max="200" value="75">
 <br><br>
 <label for="prompt"><?php echo escape($lang["openai_image_edit__prompt"]) ?></label><br>
 <textarea id="prompt" rows="5" required placeholder="Prompt for regeneration">Complete image as appropriate</textarea>

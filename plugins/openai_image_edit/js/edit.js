@@ -1,7 +1,12 @@
 
 const canvas = document.getElementById('canvas');
-const image = document.getElementById('image');
 const ctx = canvas.getContext('2d');
+
+const overlayCanvas = document.getElementById('overlayCanvas');
+const overlayCtx = overlayCanvas.getContext('2d');
+
+const image = document.getElementById('image');
+
 let drawing = false;
 let penSize = document.getElementById('penSize').value;
 let lastX = 0;
@@ -12,6 +17,10 @@ image.onload = drawImageOnCanvas;
 function drawImageOnCanvas() {
     canvas.width = image.width
     canvas.height = image.height;
+
+    overlayCanvas.width = image.width
+    overlayCanvas.height = image.height;
+
     ctx.drawImage(image, 0, 0, image.width, image.height);
     //alert(image.width + "x" + image.height)
 };
@@ -25,15 +34,42 @@ document.getElementById('penSize').addEventListener('input', function () {
 canvas.addEventListener('mousedown', (e) => {
     drawing = true;
     [lastX, lastY] = getMousePos(e);
+    draw();
 });
 
 canvas.addEventListener('mouseup', () => drawing = false);
 canvas.addEventListener('mousemove', draw);
 
 function draw(e) {
-    if (!drawing) return;
 
     const [x, y] = getMousePos(e);
+    // Clear the previous preview
+    overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+    if (!drawing) 
+        {
+        // Not drawing, draw a pen preview only.
+        // Draw a circle at the current mouse position
+
+        // Set dashed pattern for visibility on any background
+        overlayCtx.setLineDash([5, 5]);  // Alternating dash pattern
+        overlayCtx.lineWidth = 2;
+
+        // Draw a white circle outline
+        overlayCtx.strokeStyle = 'white';
+        overlayCtx.beginPath();
+        overlayCtx.arc(x, y, penSize / 2, 0, Math.PI * 2);
+        overlayCtx.stroke();
+
+        // Draw a black circle outline over the white to create contrast
+        overlayCtx.strokeStyle = 'black';
+        overlayCtx.lineWidth = 1;
+        overlayCtx.beginPath();
+        overlayCtx.arc(x, y, penSize / 2, 0, Math.PI * 2);
+        overlayCtx.stroke();
+        return;
+        }
+        
     ctx.lineWidth = penSize;
     ctx.globalCompositeOperation = 'destination-out';
     ctx.strokeStyle = "black";
@@ -56,6 +92,11 @@ function getMousePos(e) {
         e.clientY - rect.top
     ];
 }
+
+// Hide the brush preview when the mouse leaves the main canvas
+canvas.addEventListener('mouseleave', () => {
+    overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+});
 
 // Submit canvas as mask
 document.getElementById('submitBtn').addEventListener('click', async () => {
