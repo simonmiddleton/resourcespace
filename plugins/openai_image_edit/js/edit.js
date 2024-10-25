@@ -47,7 +47,10 @@ canvas.addEventListener('mousemove', draw);
 function draw(e) {
 
     const [x, y] = getMousePos(e);
-    // Clear the previous preview
+
+    e.preventDefault(); 
+    
+    // Clear the previous brush preview
     overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
     if (!drawing) 
@@ -100,6 +103,7 @@ function getMousePos(e) {
 // Hide the brush preview when the mouse leaves the main canvas
 canvas.addEventListener('mouseleave', () => {
     overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+    drawing=false;
 });
 
 // Submit canvas as mask
