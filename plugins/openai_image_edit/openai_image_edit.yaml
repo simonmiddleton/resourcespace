@@ -1,7 +1,7 @@
 name: openai_image_edit
 title: OpenAI API image editing (beta)
 author: Montala Limited
-version: 1.0 beta
+version: 1.0
 desc: Erase parts of an image and have OpenAI DALL-E regenerate them.
 icon: fa fa-magic
 category: asset processing
