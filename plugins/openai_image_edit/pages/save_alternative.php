@@ -1,7 +1,7 @@
 <?php
 include "../../../include/boot.php";
 include "../../../include/authenticate.php";
-include "../../../include/image_processing.php";
+include_once "../../../include/image_processing.php";
 // Save the submitted file as an alternative file to the resource record
 
 $ref=getval("ref",0,true);
