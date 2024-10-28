@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='AI 편집 이미지';
 $lang["openai_image_edit__saving_alternative"]='대체 파일 저장 중';
 $lang["openai_image_edit__generating_alternative_previews"]='미리보기 이미지 생성 중';
 $lang["openai_image_edit__preparing_image_for_editing"]='편집을 위한 이미지 준비 중';
+$lang["openai_image_edit__sending"]='OpenAI: 이미지 데이터 전송 중';

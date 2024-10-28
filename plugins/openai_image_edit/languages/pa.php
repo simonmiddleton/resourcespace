@@ -16,3 +16,4 @@ $lang["openai_image_edit__saving_alternative"]='ਵਿਕਲਪਿਕ ਫਾਈ�
 $lang["openai_image_edit__generating_alternative_previews"]='ਪ੍ਰੀਵਿਊ ਚਿੱਤਰ ਬਣਾਉਣਾ';
 $lang["openai_image_edit__preparing_image_for_editing"]='ਸੰਪਾਦਨ ਲਈ ਚਿੱਤਰ ਤਿਆਰ ਕਰਨਾ';
 $lang["openai_image_edit__completing"]='OpenAI: ਚਿੱਤਰ ਨੂੰ ਪੂਰਾ ਕਰਨਾ';
+$lang["openai_image_edit__sending"]='OpenAI: ਚਿੱਤਰ ਡੇਟਾ ਨੂੰ ਸਥਾਂਤਰਿਤ ਕਰਨਾ';

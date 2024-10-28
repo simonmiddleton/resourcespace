@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='एआई संपादित छवि'
 $lang["openai_image_edit__saving_alternative"]='वैकल्पिक फ़ाइल सहेजना';
 $lang["openai_image_edit__generating_alternative_previews"]='पूर्वावलोकन छवियाँ उत्पन्न करना';
 $lang["openai_image_edit__preparing_image_for_editing"]='संपादन के लिए छवि तैयार करना';
+$lang["openai_image_edit__sending"]='OpenAI: चित्र डेटा का स्थानांतरण';

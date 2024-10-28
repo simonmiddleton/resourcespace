@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='AI編集画像';
 $lang["openai_image_edit__saving_alternative"]='代替ファイルを保存しています';
 $lang["openai_image_edit__generating_alternative_previews"]='プレビュー画像を生成しています';
 $lang["openai_image_edit__preparing_image_for_editing"]='編集のために画像を準備中';
+$lang["openai_image_edit__sending"]='OpenAI: 画像データを転送中';

@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='AI uređena slika';
 $lang["openai_image_edit__saving_alternative"]='Spremanje alternativne datoteke';
 $lang["openai_image_edit__generating_alternative_previews"]='Generiranje slika pregleda';
 $lang["openai_image_edit__preparing_image_for_editing"]='Priprema slike za uređivanje';
+$lang["openai_image_edit__sending"]='OpenAI: Prijenos podataka o slici';

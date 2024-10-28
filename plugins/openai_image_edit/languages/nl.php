@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='AI bewerkte afbeelding';
 $lang["openai_image_edit__saving_alternative"]='Alternatief bestand opslaan';
 $lang["openai_image_edit__generating_alternative_previews"]='Voorbeeldafbeeldingen genereren';
 $lang["openai_image_edit__preparing_image_for_editing"]='Afbeelding voorbereiden voor bewerking';
+$lang["openai_image_edit__sending"]='OpenAI: Beeldgegevens overdragen';

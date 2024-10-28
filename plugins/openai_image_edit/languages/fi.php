@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='AI muokattu kuva';
 $lang["openai_image_edit__saving_alternative"]='Tallennetaan vaihtoehtoista tiedostoa';
 $lang["openai_image_edit__generating_alternative_previews"]='Esikatselukuvien luominen';
 $lang["openai_image_edit__preparing_image_for_editing"]='Kuvan valmistelu muokkaamista varten';
+$lang["openai_image_edit__sending"]='OpenAI: Kuvadatan siirtäminen';

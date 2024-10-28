@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='AI ترمیم شدہ تصویر';
 $lang["openai_image_edit__saving_alternative"]='متبادل فائل محفوظ کر رہے ہیں';
 $lang["openai_image_edit__generating_alternative_previews"]='پیش نظارہ امیجز تیار کرنا';
 $lang["openai_image_edit__preparing_image_for_editing"]='تصویر کو ترمیم کے لیے تیار کرنا';
+$lang["openai_image_edit__sending"]='OpenAI: تصویر کے ڈیٹا کی منتقلی';

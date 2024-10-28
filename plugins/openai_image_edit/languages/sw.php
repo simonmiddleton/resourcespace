@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='picha iliyohaririwa na AI';
 $lang["openai_image_edit__saving_alternative"]='Hifadhi faili mbadala';
 $lang["openai_image_edit__generating_alternative_previews"]='Kuzalisha picha za awali';
 $lang["openai_image_edit__preparing_image_for_editing"]='Kukarabati picha kwa ajili ya kuhariri';
+$lang["openai_image_edit__sending"]='OpenAI: Kuhamasisha data ya picha';

@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='Εικόνα επεξεργασμένη α
 $lang["openai_image_edit__saving_alternative"]='Αποθήκευση εναλλακτικού αρχείου';
 $lang["openai_image_edit__generating_alternative_previews"]='Δημιουργία προεπισκοπήσεων εικόνων';
 $lang["openai_image_edit__preparing_image_for_editing"]='Προετοιμασία εικόνας για επεξεργασία';
+$lang["openai_image_edit__sending"]='OpenAI: Μεταφορά των δεδομένων εικόνας';

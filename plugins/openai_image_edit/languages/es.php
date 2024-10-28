@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='Imagen editada por IA';
 $lang["openai_image_edit__saving_alternative"]='Guardando archivo alternativo';
 $lang["openai_image_edit__generating_alternative_previews"]='Generando imágenes de vista previa';
 $lang["openai_image_edit__preparing_image_for_editing"]='Preparando la imagen para editar';
+$lang["openai_image_edit__sending"]='OpenAI: Transfiriendo los datos de la imagen';

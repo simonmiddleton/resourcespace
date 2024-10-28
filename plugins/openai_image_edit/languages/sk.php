@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='Obrázok upravený umelou inteligenciou';
 $lang["openai_image_edit__saving_alternative"]='Ukladanie alternatívneho súboru';
 $lang["openai_image_edit__generating_alternative_previews"]='Generovanie náhľadových obrázkov';
 $lang["openai_image_edit__preparing_image_for_editing"]='Pripravujem obrázok na úpravu';
+$lang["openai_image_edit__sending"]='OpenAI: Prenos údajov o obrázku';

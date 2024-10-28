@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='AI编辑的图像';
 $lang["openai_image_edit__saving_alternative"]='保存备用文件';
 $lang["openai_image_edit__generating_alternative_previews"]='生成预览图像';
 $lang["openai_image_edit__preparing_image_for_editing"]='准备图像以进行编辑';
+$lang["openai_image_edit__sending"]='OpenAI: 转移图像数据';

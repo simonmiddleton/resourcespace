@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='KI-bearbeitetes Bild';
 $lang["openai_image_edit__saving_alternative"]='Alternative Datei speichern';
 $lang["openai_image_edit__generating_alternative_previews"]='Vorschau-Bilder generieren';
 $lang["openai_image_edit__preparing_image_for_editing"]='Bild zur Bearbeitung vorbereiten';
+$lang["openai_image_edit__sending"]='OpenAI: Übertragung der Bilddaten';

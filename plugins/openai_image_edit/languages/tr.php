@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='Yapay zeka ile düzenlenmiş görüntü';
 $lang["openai_image_edit__saving_alternative"]='Alternatif dosya kaydediliyor';
 $lang["openai_image_edit__generating_alternative_previews"]='Önizleme görüntüleri oluşturuluyor';
 $lang["openai_image_edit__preparing_image_for_editing"]='Görüntüyü düzenleme için hazırlama';
+$lang["openai_image_edit__sending"]='OpenAI: Görüntü verilerini aktarma';

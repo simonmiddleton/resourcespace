@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='صورة معدلة بواسطة الذك�
 $lang["openai_image_edit__saving_alternative"]='حفظ ملف بديل';
 $lang["openai_image_edit__generating_alternative_previews"]='إنشاء صور معاينة';
 $lang["openai_image_edit__preparing_image_for_editing"]='تحضير الصورة للتحرير';
+$lang["openai_image_edit__sending"]='OpenAI: نقل بيانات الصورة';

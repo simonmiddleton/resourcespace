@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='Gambar yang diedit AI';
 $lang["openai_image_edit__saving_alternative"]='Menyimpan file alternatif';
 $lang["openai_image_edit__generating_alternative_previews"]='Menghasilkan gambar pratinjau';
 $lang["openai_image_edit__preparing_image_for_editing"]='Menyiapkan gambar untuk diedit';
+$lang["openai_image_edit__sending"]='OpenAI: Mentransfer data gambar';

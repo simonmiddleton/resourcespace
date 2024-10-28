@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='Imatge editada per IA';
 $lang["openai_image_edit__saving_alternative"]='Desant estalviant fitxer alternatiu';
 $lang["openai_image_edit__generating_alternative_previews"]='Generant imatges de previsualització';
 $lang["openai_image_edit__preparing_image_for_editing"]='Preparant la imatge per a l\'edició';
+$lang["openai_image_edit__sending"]='OpenAI: Transferint les dades de la imatge';

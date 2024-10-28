@@ -16,3 +16,4 @@ $lang["openai_image_edit__filename"]='AI redigeret billede';
 $lang["openai_image_edit__saving_alternative"]='Gemmer alternativ fil';
 $lang["openai_image_edit__generating_alternative_previews"]='Genererer forhåndsvisningsbilleder';
 $lang["openai_image_edit__preparing_image_for_editing"]='Forbereder billede til redigering';
+$lang["openai_image_edit__sending"]='OpenAI: Overførsel af billeddata';
