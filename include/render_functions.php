@@ -6121,7 +6121,7 @@ function display_related_resources($context)
                                             }
                                         else
                                             { 
-                                            echo get_nopreview_html($arr_related[$n]["file_extension"]);
+                                            echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
                                             } ?>
                                         </a>
                                 </td></tr>
@@ -6181,7 +6181,7 @@ function display_related_resources($context)
                                     }
                                 else
                                     { 
-                                    echo get_nopreview_html($arr_related[$n]["file_extension"]);
+                                    echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
                                     } ?>
                                     </a>
                                 </td></tr>
@@ -6233,7 +6233,7 @@ function display_related_resources($context)
                                     }
                                 else
                                     {
-                                    echo get_nopreview_html($arr_related[$n]["file_extension"]);
+                                    echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
                                     }
                                 ?></a>
                             </td>
@@ -6826,7 +6826,7 @@ function render_resource_view_image(array $resource, array $context)
         {
         ?>
         <div id="previewimagewrapper">
-        <?php echo get_nopreview_html($resource["file_extension"]); ?>
+        <?php echo get_nopreview_html((string) $resource["file_extension"]); ?>
         </div>
         <?php 
         return true;

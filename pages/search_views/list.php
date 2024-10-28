@@ -62,7 +62,7 @@ if (!hook("replacelistitem"))
                     }
                 else
                     {
-                    echo get_nopreview_html($result[$n]["file_extension"]);
+                    echo get_nopreview_html((string) $result[$n]["file_extension"]);
                     }
                 ?>
             </a>

@@ -2502,7 +2502,7 @@ if ($ref>0 && !$multiple)
             else
                 {
                 # Show the no-preview icon
-                echo get_nopreview_html($resource["file_extension"]);
+                echo get_nopreview_html((string) $resource["file_extension"]);
                 }
             if ($resource["file_extension"]!="") 
                 { ?>           

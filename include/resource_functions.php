@@ -8094,7 +8094,7 @@ function get_OR_fields()
 *
 * @return string
 */
-function get_nopreview_html($extension)
+function get_nopreview_html(string $extension) : string
     {
     $extension=strtolower(trim($extension));
     return "<i class='nopreview fa fa-solid " . (FONTAWESOME_EXTENSIONS[$extension] ?? FONTAWESOME_EXTENSIONS["default"]) . "'></i>";
