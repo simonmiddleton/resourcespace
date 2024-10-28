@@ -149,7 +149,7 @@ include "../../../include/header.php";
 CentralSpaceShowProcessing();
 submit_url='../pages/edit.php?ref=<?php echo $ref ?>';
 alternative_url='../pages/save_alternative.php?ref=<?php echo $ref ?>';
-view_url='<?php echo $baseurl_short ?>/pages/view.php?ref=<?php echo $ref ?>';
+view_url='<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $ref ?>';
 csrf_pair={<?php echo generateAjaxToken("openai_image_edit"); ?>};
 </script>
 <script src="../js/edit.js"></script>
