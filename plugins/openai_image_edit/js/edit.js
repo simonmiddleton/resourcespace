@@ -161,6 +161,7 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
         };
     } else {
         console.error('Failed to get a valid image URL from OpenAI.');
+        styledalert('OpenAI',result.error.message);
     }
     CentralSpaceHideProcessing();
 });
