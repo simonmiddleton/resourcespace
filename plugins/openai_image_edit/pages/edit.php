@@ -42,10 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     set_processing_message($lang["openai_image_edit__preparing_images"]);
 
-    $input = json_decode(file_get_contents('php://input'), true);
-
-    $maskData = $input['mask'];    // Base64 encoded mask from the frontend
-    $prompt = isset($input['prompt']) ? $input['prompt'] : '';
+    $maskData = $_POST['mask'];    // Base64 encoded mask from the frontend
+    $prompt = isset($_POST['prompt']) ? $_POST['prompt'] : '';
 
     // Decode the mask data from base64
     list($type, $maskData) = explode(';', $maskData);
@@ -149,10 +147,10 @@ include "../../../include/header.php";
 
 <script>
 CentralSpaceShowProcessing();
-submit_url='../pages/edit.php?ref=<?php echo $ref ?>&<?php echo $CSRF_token_identifier?>=<?php echo generateCSRFToken($usersession, "openai_image_edit"); ?>';
-alternative_url='../pages/save_alternative.php?ref=<?php echo $ref ?>&<?php echo $CSRF_token_identifier?>=<?php echo generateCSRFToken($usersession, "openai_image_edit"); ?>';
-
+submit_url='../pages/edit.php?ref=<?php echo $ref ?>';
+alternative_url='../pages/save_alternative.php?ref=<?php echo $ref ?>';
 view_url='<?php echo $baseurl_short ?>/pages/view.php?ref=<?php echo $ref ?>';
+csrf_pair={<?php echo generateAjaxToken("openai_image_edit"); ?>};
 </script>
 <script src="../js/edit.js"></script>
 <?php

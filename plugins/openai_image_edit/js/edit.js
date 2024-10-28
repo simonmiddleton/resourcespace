@@ -123,14 +123,19 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
     CentralSpaceShowProcessing();
 
     // Send mask and image to the backend via AJAX
+
+    // Prepare form data
+    const formData = new URLSearchParams({
+        ...csrf_pair,
+        mask: mask,
+        imageType: document.getElementById('downloadType').value,
+        prompt: prompt,
+        ajax: true
+    });
+
     const response = await fetch(submit_url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            mask: mask,
-            image: originalImage,
-            prompt: prompt
-        })
+        body: formData
     });
     
     const result = await response.json();  // Parse the response as JSON
@@ -183,26 +188,26 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
         // Save as alternative file
         CentralSpaceShowProcessing();
 
+        // Prepare form data
+        const formData = new URLSearchParams({
+            ...csrf_pair,
+            ajax: true,
+            imageData: dataURL,
+            imageType: document.getElementById('downloadType').value
+        });
+
         fetch(alternative_url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                imageData: dataURL,
-                imageType: document.getElementById('downloadType').value
+            body: formData
             })
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log('Image submitted successfully:', result);
-            window.location.href=view_url;
-        })
-        .catch(error => {
-            alert('Error submitting image:' + error);
-        });
+            .then(response => response.json())
+            .then(result => {
+                console.log('Image submitted successfully:', result);
+                window.location.href=view_url;
+            })
+            .catch(error => {
+                alert('Error submitting image:' + error);
+            });
         }
-    
-
 
 });
