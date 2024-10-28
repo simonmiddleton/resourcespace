@@ -2694,7 +2694,7 @@ function order_tree_nodes($nodes)
     for($n=0;$n < count($orderednodes);$n++)
         {
         $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
-        if (!isset($orderednodes[$n]["translated_name"]) || (mb_substr(trim($orderednodes[$n]["translated_name"]), 0, 1) == '~' && mb_substr(trim($orderednodes[$n]["translated_name"]), 3, 1) == ':'))
+        if (!isset($orderednodes[$n]["translated_name"]) || is_i18n_language_string($orderednodes[$n]["translated_name"]))
             {
             // Where translated_path is in i18n format, add_sql_node_language() couldn't find a match with the current language. Translate it to get default language.
             $orderednodes[$n]["translated_path"] = i18n_get_translated($orderednodes[$n]["name"]);
@@ -2722,7 +2722,7 @@ function order_tree_nodes($nodes)
                 for($c=0;$c < count($children);$c++)
                     {
                     $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
-                    if (!isset($children[$c]["translated_name"]) || (mb_substr(trim($children[$c]["translated_name"]), 0, 1) == '~' && mb_substr(trim($children[$c]["translated_name"]), 3, 1) == ':'))
+                    if (!isset($children[$c]["translated_name"]) || is_i18n_language_string($children[$c]["translated_name"]))
                         {
                         // Where translated_path is in i18n format, add_sql_node_language() couldn't find a match with the current language. Translate it to get default language.
                         $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  i18n_get_translated($children[$c]["name"]);

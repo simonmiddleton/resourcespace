@@ -4248,22 +4248,9 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             $title="";
             }
 
-    # Value formatting
-    # Optimised to use the value as is if there are no "~" characters present in the value
-    $lang_string_tilde_postion = mb_strpos($value, '~');
-    if ($lang_string_tilde_postion !== false && mb_substr($value, $lang_string_tilde_postion + 3, $lang_string_tilde_postion + 1) === ':')
-        {
-        $is_lang_string = true;
-        }
-    else
-        {
-        $is_lang_string = false;
-        }
-
-    if ($is_lang_string) {
-        if ($field['type'] == FIELD_TYPE_CATEGORY_TREE) {
-            $value = $field['value']; # Use value from get_cattree_node_strings() which is i18n translated (likely default language at this point as $value still contains ~).
-        } else {
+        # Value formatting
+        # Optimised to use the value as is if there are no "~" characters present in the value
+        if (is_i18n_language_string($value) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
             $field_value = $value;
             debug('value formatting due to ~ character...');
             # The field value may be a list of comma separated language encoded values, so process the nodes
@@ -4284,7 +4271,6 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 $value=i18n_get_translated($field_value);
             }
         }
-    }
 
         // Handle the rest of the fixed list fields, category trees have their own section
         if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
