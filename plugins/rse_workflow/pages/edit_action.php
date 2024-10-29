@@ -151,9 +151,10 @@ $links_trail = array(
 );
 
 renderBreadcrumbs($links_trail);
+$workflowaction_url = generateURL($baseurl_short . "plugins/rse_workflow/pages/edit_action.php",['ref'=>$ref]);
 ?>
 
-<form id="form_workflow_action" name="form_workflow_action" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $ref ?>">
+<form id="form_workflow_action" name="form_workflow_action" method="post" action="<?php echo $workflowaction_url;?>">
     <?php generateFormToken("form_workflow_action"); ?>
     <input type="hidden" name="ref" id="actionref" value="<?php echo escape($ref) ?>" />
     <input type="hidden" name="submitted" value="true">

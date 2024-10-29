@@ -83,7 +83,7 @@ elseif($process_csv && file_exists($csv_file))
     <?php 
     foreach($messages as $message)
         {
-        echo $message . PHP_EOL;
+        echo escape($message) . PHP_EOL;
         }
     ?>
     </textarea>
@@ -126,7 +126,7 @@ else
                 <form method="post" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
                     <?php generateFormToken("csv_user_import"); ?>
                     <input type="hidden" id="process_csv"  name="process_csv" value="1">
-                    <input type="hidden" id="user_group_selector"  name="user_group_selector" value="<?php echo $user_group_selector; ?>">
+                    <input type="hidden" id="user_group_selector"  name="user_group_selector" value="<?php echo escape($user_group_selector); ?>">
                     <input type="submit" name="process_csv" onClick="return CentralSpacePost(this, true);" value="Process CSV">
                 </form>
                 <?php

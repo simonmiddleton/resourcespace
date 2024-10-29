@@ -164,12 +164,11 @@ elseif ($saved)
     echo "<div class=\"PageInformal\">" . $lang['saved'] . "</div>";
     }
     
-    
+$workflowstate_url = generateURL($baseurl_short."plugins/rse_workflow/pages/edit_state.php",["code"=>$code]);
 ?>
-        
 <div class="BasicsBox">
 
-<form id="form_workflow_state" name="form_workflow_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_state.php?code=<?php echo $code ?>">
+<form id="form_workflow_state" name="form_workflow_state" method="post" action="<?php echo $workflowstate_url;?>">
     <?php generateFormToken("form_workflow_state"); ?>
     <input type="hidden" name="submitted" value="true">
     <input type="hidden" name="code" value="<?php echo escape($code);  ?>">
