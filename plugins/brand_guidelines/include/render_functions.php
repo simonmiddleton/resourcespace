@@ -81,10 +81,10 @@ function render_new_content_button(string $id)
         return;
     }
     ?>
-    <div id="<?php echo escape($id); ?>" class="add-new-content-container" onclick="showOptionsMenu(this, 'menu-content');">
+    <button id="<?php echo escape($id); ?>" class="add-new-content-container" onclick="showOptionsMenu(this, 'menu-content');">
         <i class="fa-solid fa-plus"></i>
         <span><?php echo escape($GLOBALS['lang']['brand_guidelines_new_content']); ?></span>
-    </div>
+    </button>
     <?php
 }
 

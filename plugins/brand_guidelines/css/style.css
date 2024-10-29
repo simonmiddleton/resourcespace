@@ -158,8 +158,11 @@
     display: inline-block;
     width: 200px;
     box-sizing: border-box;
-    text-align: center; 
-    cursor: pointer;
+    box-shadow: unset;
+    font-size: 15px;
+    font-weight: inherit;
+    color: #474747;
+    background-color: unset;
 }
 
 .add-new-content-container i {
