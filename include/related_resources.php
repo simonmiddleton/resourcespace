@@ -53,7 +53,7 @@ if ($enable_related_resources)
                                 }
                             else
                                 {
-                                echo get_nopreview_html($relatedresource["file_extension"]);
+                                echo get_nopreview_html((string) $relatedresource["file_extension"]);
                                 }
                             ?>
                             </a>
