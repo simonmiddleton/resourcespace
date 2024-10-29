@@ -242,7 +242,7 @@ function render_resource_item(array $item): void
     <?php
     } else if ($layout === 'half-width') {
     ?>
-        <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width" style="padding-right: 20px">
+        <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width">
             <?php render_item_top_right_menu($ref); ?>
             <a href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <!-- todo: find out why this doesn't look the same without the .image-full-width (see todo in style.css) -->

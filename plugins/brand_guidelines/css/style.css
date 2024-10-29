@@ -52,6 +52,22 @@
 .guidelines-content h1 { font-size: 1.7rem; }
 .guidelines-content h2 { font-size: 1.3rem; }
 .guidelines-content .top-right-menu { float: right; }
+.guidelines-content button.new {
+    margin-top: 0px;
+    margin-left: 0px;
+    padding: unset;
+    border: 2px dashed lightgray;
+    border-radius: 15px;
+    background-color: unset;
+    box-shadow: unset;
+    vertical-align: top;
+    text-align: center;
+    line-height: 150px;
+    font-size: 25px;
+    color: #474747;
+    cursor: pointer;
+}
+
 
 #menu-content { width: 180px; }
 
@@ -91,19 +107,6 @@
 
 .guidelines-colour-block.new {
     height: 150px;
-    margin-top: 0px;
-    margin-left: 0px;
-    padding: unset;
-    border: 2px dashed lightgray;
-    border-radius: 15px;
-    background-color: unset;
-    box-shadow: unset;
-    vertical-align: top;
-    text-align: center;
-    line-height: 150px;
-    font-size: 25px;
-    color: #474747;
-    cursor: pointer;
 }
 
 .guidelines-content--typography-block {
@@ -164,15 +167,14 @@
 }
 
 .image-full-width {
-    width: 1000px;
-    /* max-width: 1000px; */
-    height: 200px; /* todo: to be discussed as this was on purpose mocked like this */
+    max-width: 1000px;
     display: inline-block;
     object-fit: cover;
 }
 
 .image-half-width {
     display: inline-block;
+    padding-right: 20px;
 }
 
 .image-thumbnail {
@@ -215,6 +217,11 @@
     font-size: 30px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.new-half-width-image {
+    width: 396px;
+    height: 274px;
 }
 
 .top-right-menu {
