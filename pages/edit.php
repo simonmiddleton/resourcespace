@@ -2585,13 +2585,7 @@ hook('aftereditcollapsiblesection');
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
     {
-    foreach ($save_errors as &$save_error) 
-        {
-        if(is_string($save_error))
-            {
-            $save_error=escape($save_error);
-            }
-        }
+    array_walk($save_errors,fn (&$v)=>escape($v ?? ""),[]);
     ?>
     <script>
     preventautoscroll = true;

@@ -115,14 +115,14 @@ if ($collection_request_min_access == 0)
   if($backlink!="")
     {
     ?><p>
-      <a href='<?php echo rawurldecode($backlink); ?>'><?php echo LINK_CARET_BACK ?><?php echo escape($lang['back']); ?></a>
+      <a href='<?php echo escape(rawurldecode($backlink)); ?>'><?php echo LINK_CARET_BACK ?><?php echo escape($lang['back']); ?></a>
     </p>
     <?php
     }?>
         
         
   <h1><?php echo escape($lang["requestcollection"]);render_help_link("resourceadmin/user-resource-requests");?></h1>
-  <p><?php echo text("introtext")?></p>
+  <p><?php echo escape(text("introtext"))?></p>
   
     <form method="post" onsubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_request.php">  
     <?php generateFormToken("collection_request"); ?>

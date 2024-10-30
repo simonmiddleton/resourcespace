@@ -108,7 +108,7 @@ if (!hook("replaceauth")) {
             } else {
                 ?>
             <script type="text/javascript">
-                CentralSpaceLoad('<?php echo $baseurl . "/" . $redirect_url?>',true);
+                CentralSpaceLoad('<?php echo $baseurl . "/" . escape($redirect_url)?>',true);
             </script>
                 <?php
             }
