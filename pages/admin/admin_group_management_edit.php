@@ -312,7 +312,7 @@ $url_params_edit = array(
 
     <div class="CollapsibleSection" style="display:none;">
 
-        <p><?php echo strip_tags_and_attributes($lang["action-title_see_wiki_for_user_group_advanced_options"]); ?></p>
+        <p><?php echo strip_tags_and_attributes($lang["action-title_see_wiki_for_user_group_advanced_options"], ["a"], ["href"]); ?></p>
 
         <?php
         $filters = get_filters("name","ASC");
