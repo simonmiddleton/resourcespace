@@ -304,12 +304,14 @@ if(
             $message->url = $templatevars["url"];
             $message->template = "propose_changes_emailproposedchanges";
             $message->templatevars = $templatevars;
+
             if($propose_changes_notify_admin)
                 {
                 debug("propose_changes: sending notifications to admins");
                 $resource_admins = get_notification_users("RESOURCE_ADMIN");
                 send_user_notification($resource_admins,$message);
                 }
+
             if($propose_changes_notify_contributor)
                 {
                 $notify_user=get_user($resource["created_by"]);
@@ -319,6 +321,16 @@ if(
                     send_user_notification([$notify_user],$message);
                     }
                 }
+
+            foreach($propose_changes_notify_addresses as $propose_changes_notify_address)
+                {
+                if(filter_var($propose_changes_notify_address, FILTER_VALIDATE_EMAIL))
+                    {
+                    debug("propose_changes: sending submitted email to : ". $propose_changes_notify_address);
+                    send_mail($propose_changes_notify_address, $applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"], $message->get_text(), "", "", "emailproposedchanges", $templatevars);
+                    }
+                }
+
             $resulttext=$lang["propose_changes_proposed_changes_submitted"];
             }
         }
