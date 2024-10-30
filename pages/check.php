@@ -16,8 +16,8 @@ include "../include/header.php";
         ['title' => $lang["installationcheck"]]
     ]);
     ?>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/check.php">
-        <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . escape($lang["repeatinstallationcheck"]); ?>
+    <a onClick="jQuery('#repeat-spinner').addClass('fa-spin');return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/check.php">
+        <?php echo '<i aria-hidden="true" id="repeat-spinner" class="fa fa-sync-alt"></i>&nbsp;' . escape($lang["repeatinstallationcheck"]); ?>
     </a>
     <br/><br/>
     <table class="InfoTable">
