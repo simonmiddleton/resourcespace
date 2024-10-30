@@ -1812,7 +1812,7 @@ var ProcessingAPITimer=0;
 var ProcessingMessages;
 var ProcessingCount=-1;
 
-function CentralSpaceShowProcessing()
+function CentralSpaceShowProcessing(delay = 1000, defaultmessage = '')
     {
     if (ProcessingTimersActive) { return; }
 
@@ -1823,10 +1823,12 @@ function CentralSpaceShowProcessing()
     ProcessingFirstTimer=setTimeout(CentralSpace_ProcessingAPITimer, 1000); 
     ProcessingAPITimer = setInterval(CentralSpace_ProcessingAPITimer, 3000);
 
+    jQuery('#ProcessingStatus').html(DOMPurify.sanitize(defaultmessage));
+
     ProcessingSecondTimer=setTimeout(function ()
     {
     jQuery('#ProcessingBox').fadeIn('fast');
-    },1000);
+    },delay);
 
     ProcessingTimersActive=true;
     }

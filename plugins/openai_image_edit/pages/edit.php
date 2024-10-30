@@ -151,6 +151,7 @@ submit_url='../pages/edit.php?ref=<?php echo $ref ?>';
 alternative_url='../pages/save_alternative.php?ref=<?php echo $ref ?>';
 view_url='<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $ref ?>';
 csrf_pair={<?php echo generateAjaxToken("openai_image_edit"); ?>};
+defaultLoadingMessage=<?php echo json_encode($lang["openai_image_edit__preparing_images"]) ?>;
 </script>
 <script src="../js/edit.js"></script>
 <?php

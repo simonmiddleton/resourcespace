@@ -120,7 +120,7 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
     const prompt = document.getElementById('prompt').value;
     const originalImage = image.src;
 
-    CentralSpaceShowProcessing();
+    CentralSpaceShowProcessing(0,defaultLoadingMessage);
 
     // Send mask and image to the backend via AJAX
 
@@ -187,7 +187,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
     if (document.getElementById('downloadAction').value=='alternative')
         {
         // Save as alternative file
-        CentralSpaceShowProcessing();
+        CentralSpaceShowProcessing(0);
 
         // Prepare form data
         const formData = new URLSearchParams({

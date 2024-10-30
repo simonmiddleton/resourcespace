@@ -1,9 +1,9 @@
 <?php
 $lang["openai_image_edit__edit_with_ai"]="Edit with AI (beta)";
 $lang["openai_image_edit__prompt"]="Prompt";
-$lang["openai_image_edit__preparing_images"]="OpenAI: Preparing images and mask";
-$lang["openai_image_edit__completing"]="OpenAI: Completing the image";
-$lang["openai_image_edit__sending"]="OpenAI: Transferring the image data";
+$lang["openai_image_edit__preparing_images"]="Preparing image mask";
+$lang["openai_image_edit__completing"]="Completing the image";
+$lang["openai_image_edit__sending"]="Transferring the image data";
 $lang["openai_image_edit__pensize"]="Brush size";
 $lang["openai_image_edit__reset"]="Reset";
 $lang["openai_image_edit__generate"]="Generate";
