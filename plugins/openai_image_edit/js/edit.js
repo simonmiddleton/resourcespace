@@ -118,7 +118,6 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
 
     const mask = tempCanvas.toDataURL('image/png');
     const prompt = document.getElementById('prompt').value;
-    const originalImage = image.src;
 
     CentralSpaceShowProcessing(0,defaultLoadingMessage);
 
@@ -151,13 +150,13 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
         // Redraw the canvas with the new image once it loads
         image.onload = () => {
 
-            // I have no idea why this is necessary or why it does anything, but without it the following drawImage() fails to draw anything.
-            canvas.width = canvas.width;
-            canvas.height = canvas.height;
+        // I have no idea why this is necessary or why it does anything, but without it the following drawImage() fails to draw anything.
+        canvas.width = canvas.width;
+        canvas.height = canvas.height;
 
-            ctx.drawImage(image, 0, 0);  // Draw new image
+        ctx.drawImage(image, 0, 0);  // Draw new image
 
-            document.getElementById('downloadOptions').style.visibility='visible';
+        document.getElementById('downloadOptions').style.visibility='visible';
         };
     } else {
         console.error('Failed to get a valid image URL from OpenAI.');

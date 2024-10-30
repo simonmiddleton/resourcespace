@@ -44,7 +44,7 @@ if ($source_width>$source_height)
 else
     {
     // Portrait (or square), height is 1024
-    $target_width=floor(($source_width/$source_height)*1024);;
+    $target_width=floor(($source_width/$source_height)*1024);
     $target_height=1024;
     }
 $png = imagecreatetruecolor($target_width, $target_height);
