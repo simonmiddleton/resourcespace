@@ -63,12 +63,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "Content-Type: multipart/form-data"
     ]);
 
+
+    // Improve the mask by replacing non transparent areas with black. This significantly reduces the time to send the mask to OpenAI as the compression is much better.
+    $mask=imagecreatefromstring($maskData);
+    // Set blending mode off to preserve transparency
+    imagealphablending($mask, false);
+    imagesavealpha($mask, true);
+
+    // Get image dimensions
+    $width = imagesx($mask);
+    $height = imagesy($mask);
+
+    // Loop through each pixel
+    for ($x = 0; $x < $width; $x++) {
+        for ($y = 0; $y < $height; $y++) {
+            // Get the color and alpha of the current pixel
+            $rgba = imagecolorat($mask, $x, $y);
+            $alpha = ($rgba & 0x7F000000) >> 24;
+
+            // Set the pixel to black with the same alpha
+            $black = imagecolorallocatealpha($mask, 0, 0, 0, $alpha);
+            imagesetpixel($mask, $x, $y, $black);
+        }
+    }
+
+    // Re-render the mask
+    ob_start();
+    imagepng($mask);
+    $maskDataSimplified = ob_get_contents();
+    ob_end_clean();
+
     // Prepare the data array using CURLFile for both image and mask
     $data = [
         'model' => 'dall-e-2',  // Specify model (if applicable)
         //'image' => new CURLFile($imageFilePath, 'image/png'),
         'image' => new CURLStringFile($maskData, 'image/png'),
-        'mask' => new CURLStringFile($maskData, 'image/png'),
+        'mask' => new CURLStringFile($maskDataSimplified, 'image/png'),
         'prompt' => $prompt,
         'n' => 1,
         'size' => '1024x1024'
