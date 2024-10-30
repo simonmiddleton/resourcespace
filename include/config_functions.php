@@ -618,7 +618,14 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         else
             {
             $file_location = str_replace('[storage_url]', $storagedir, $current);
-            $mime_type = explode("/",mime_content_type($file_location));
+            if (function_exists('mime_content_type'))
+                {
+                $mime_type = explode("/", mime_content_type($file_location));
+                }
+            else
+                {
+                $mime_type = explode("/", get_mime_type($file_location));
+                }
             $file_type = end($mime_type);
             $file_size = str_replace("&nbsp;"," ",formatfilesize(filesize($file_location)));
             ?>
