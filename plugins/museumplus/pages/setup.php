@@ -26,7 +26,6 @@ if(!is_array($museumplus_modules_config))
 $page_def[] = config_add_section_header($lang['museumplus_api_settings_header']);
 $page_def[] = config_add_text_input('museumplus_host', $lang['museumplus_host']);
 $page_def[] = config_add_text_input('museumplus_host_api', $lang['museumplus_host_api']);
-$page_def[] = config_add_text_input('museumplus_application', $lang['museumplus_application']);
 $page_def[] = config_add_text_input('museumplus_api_user', $lang['museumplus_api_user']);
 $page_def[] = config_add_text_input('museumplus_api_pass', $lang['museumplus_api_pass'], true);
 
