@@ -950,7 +950,7 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
         $upload_key = uniqid((int) $ref . "_");
         $tmp_file_location = temp_local_download_remote_file($file_location, $upload_key);
         if ($tmp_file_location === false) {
-            return ["Status" => "FAILED", "Message" => "The file for resource {$ref} was no replaced. The file could not be retrieved from {$file_location}"];
+            return ["Status" => "FAILED", "Message" => "The file for resource {$ref} was not replaced. The file could not be retrieved from {$file_location}"];
         }
         $file_location = $tmp_file_location;
     } else {
