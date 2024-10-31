@@ -16,10 +16,6 @@ select {font-size:1em; height:1.8rem;}
 html {height:100%;-webkit-text-size-adjust: 100%;}
 body {width:100%;height:100%; margin:0;padding:0;font-size:15px;text-align: center; line-height: 1.4; overflow: hidden;}
 
-.ui-dialog .ui-dialog-buttonpane {text-align: center;}
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {float: none;}
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button{width:100%;}
-
 /*Basic tag setup for creating standards across platforms and browsers*/
 p, h1, h2, h3, h4, h5 {padding:0; margin:0; vertical-align:top;}
 p {padding:0 0 1em; margin:0; font-size:1em;}
@@ -867,7 +863,9 @@ div.autocomplete ul li {
     padding: 10px;
     }
 
-.ui-widget-content {border:3px dashed #ccc;border-radius:10px;}
+.ui-widget-content {
+    border-radius: 15px;
+}
 
 #uploader .uppy-size--md .uppy-DashboardContent-addMore {
     margin-right: 25px;
@@ -2543,4 +2541,43 @@ input[type="text"]#iconpicker-input {
 
 #cke_text {
     display: inline-block;
+}
+
+/* Custom styling for jQuery UI dialogs */
+
+.ui-dialog {
+    padding: 0;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    text-align: center;
+    border-radius: 0 0 15px 15px;
+    padding: .3em;
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    float: none;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    padding: 1em 1em .5em 1em;
+}
+
+.ui-dialog .ui-dialog-title {
+    width: 100%; 
+    font-size: 16px;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+    border-radius: 5px;
+    font-weight: 600;
+    margin: .5em .4em .5em .4em;
+}
+
+.ui-corner-all {
+    border-radius: 15px;
+}
+
+.ui-widget-overlay {
+    opacity: 0.25;
 }
