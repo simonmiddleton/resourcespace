@@ -74,13 +74,17 @@ $page_def[] = config_add_file_input(
     'linkedheaderimgsrc',
     $lang['systemconfig_linkedheaderimgsrc_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
-    316
+    316,
+    array('gif','jpg','png'),
+    true
 );
 $page_def[] = config_add_file_input(
     'header_favicon',
     $lang['systemconfig_header_favicon_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
-    316
+    316,
+    array('ico','png','svg'),
+    true
 );
 
 $page_def[] = config_add_colouroverride_input(
