@@ -40,7 +40,7 @@
 
 .guidelines-sidebar .top-right-menu {
     margin: 0px;
-    display: inline-block;
+    display: inline-block; /* todo: remove once the TOC sidebar content has been updated so menu item and menu are in the same container */
     vertical-align: bottom;
 }
 
@@ -215,6 +215,7 @@
 }
 
 .top-right-menu {
+    display: none;
     margin: 10px;
     width: 28px;
     height: 28px;
@@ -224,7 +225,15 @@
     cursor: pointer;
 }
 
-.top-right-menu:hover {
+.guidelines-sidebar h2:hover + .top-right-menu,
+.guidelines-sidebar h3:hover + .top-right-menu {
+    /* todo: see note from ".guidelines-sidebar .top-right-menu" rule */
+    display: inline-block;
+}
+
+div[id^='page-content-item-']:hover .top-right-menu,
+.group:hover > .top-right-menu {
+    display: block;
     background: #dfdfdf;
 }
 
