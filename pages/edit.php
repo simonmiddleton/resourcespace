@@ -1316,7 +1316,7 @@ else
         }
         if (!hook("replaceeditheader")) 
             { ?>
-            <div class="RecordHeader">
+            <div class="RecordHeader" style="width: 100%">
             <?php
             # Draw nav
             if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
