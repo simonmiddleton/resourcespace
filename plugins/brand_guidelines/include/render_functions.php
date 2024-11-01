@@ -191,14 +191,16 @@ function render_navigation_item(array $item, bool $is_current = false)
     }
 }
 
-function render_item_top_right_menu(int $ref)
+function render_item_top_right_menu(int $ref, array $class = [])
 {
     if (!acl_can_edit_brand_guidelines()) {
         return;
     }
+
+    $html_class = array_map('escape', array_filter(array_map('trim', ['top-right-menu', ...$class])));
     ?>
     <div
-        class="top-right-menu"
+        class="<?php echo implode(' ', $html_class); ?>"
         onclick="showOptionsMenu(this, 'menu-individual');"
         data-item-ref="<?php echo $ref; ?>"
     >
@@ -222,44 +224,45 @@ function render_resource_item(array $item): void
     $image_sizes = array_column(get_image_sizes($resource['ref'], true, $resource['file_extension'], true), null, 'id');
     $preview = $image_sizes[$image_size];
 
+
     $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $resource['ref']]);
     $resource_title = i18n_get_translated(get_data_by_field($resource['ref'], $GLOBALS['view_title_field']));
 
+    // todo: implement logic to add nopreviews (use CSS to increase font-size as needed based on container e.g thm/half/full)
     // echo get_nopreview_html($resource['file_extension']);
 
     if ($layout === 'full-width') {
     ?>
-        <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width">
-            <?php render_item_top_right_menu($ref); ?>
-            <a href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
+        <!-- <div id="previewimagewrapper">
+        <?php echo get_nopreview_html($resource["file_extension"]); ?>
+        </div> -->
+        <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width grid-container">
+            <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <img
                     class="image-full-width"
                     src="<?php echo $preview['url']; ?>"
                     alt="<?php echo escape($resource_title); ?>"
                 >
             </a>
+            <?php render_item_top_right_menu($ref, ['grid-item']); ?>
         </div>
     <?php
     } else if ($layout === 'half-width') {
     ?>
-        <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width">
-            <?php render_item_top_right_menu($ref); ?>
-            <a href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
-                <!-- todo: find out why this doesn't look the same without the .image-full-width (see todo in style.css) -->
-                <!-- <img class="image-full-width" src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>"> -->
+        <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width grid-container">
+            <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
             </a>
+            <?php render_item_top_right_menu($ref, ['grid-item']); ?>
         </div>
     <?php
     } else {
     ?>
-        <div id="page-content-item-<?php echo $ref; ?>" class="image-thumbnail">
-            <?php render_item_top_right_menu($ref); ?>
-            <a href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
-                <!-- todo: find out why this doesn't look the same without the .image-full-width (see todo in style.css) -->
-                <!-- <img class="image-full-width" src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>"> -->
+        <div id="page-content-item-<?php echo $ref; ?>" class="image-thumbnail grid-container">
+            <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
             </a>
+            <?php render_item_top_right_menu($ref, ['grid-item']); ?>
         </div>
     <?php
     }

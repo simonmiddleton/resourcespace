@@ -104,8 +104,6 @@ render_content_menu();
                 <h1><?php echo escape($selected_page_title); ?></h1>
                 <?php
                 foreach ($page_contents_grouped as $item) {
-                    // echo '<h3>(raw content data structure - debug)</h3><pre>';print_r($item);echo '</pre>';
-
                     if ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']) {
                         $new_content_btn_id = $item['ref'];
                         ?>
@@ -144,11 +142,19 @@ render_content_menu();
                                     $group_item['content']
                                 ));
                             } elseif ($group_item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
-                                $new_block_item_btn = "new new-{$group_item['content']['layout']}-image";
+                                $new_block_item_btn = "new image-{$group_item['content']['layout']}";
                                 render_resource_item($group_item);
                             }
                         }
-                        render_new_block_element_button($new_block_item_btn, $group_item['type']);
+                        
+                        if (!(
+                            $is_resource_group
+                            && count($item['members']) === 2
+                            && $item['members'][0]['content']['layout'] === 'half-width'
+                        )) {
+                            // Render the new block element for everything except second half-width item
+                            render_new_block_element_button($new_block_item_btn, $group_item['type']);
+                        }
 
                         if ($is_resource_group) {
                             ?>
