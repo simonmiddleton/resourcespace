@@ -101,34 +101,36 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
  */
 function HookOpenai_gptAllUpdate_field($resource, $field, $value, $existing, $fieldinfo,$newnodes,$newvalues)
     {
-    global $valid_ai_field_types;
+    global $valid_ai_field_types, $gpt_fields_processed;
+
+    // Keep track of the fields that we have processed so that we can avoid infinite update_field loops
+    if (!isset($gpt_fields_processed)) {
+        $gpt_fields_processed = [];
+    } elseif (in_array($field, $gpt_fields_processed)) {
+        return;
+    }
+
+    $gpt_fields_processed[] = $field;
+
     // Is this field referenced by other fields?
     $targetfields = openai_gpt_get_dependent_fields($field);
-    foreach($targetfields as $targetfield)
-        {
+    foreach ($targetfields as $targetfield) {
         // Create array of new string values that will be passed to the API
         $source_values = [];
-        if(count($newvalues) > 0)
-            {
+        if (count($newvalues) > 0) {
             $source_values = $newvalues;
-            }
-        elseif(count($newnodes) > 0)
-            {
+        } elseif (count($newnodes) > 0) {
             get_nodes_by_refs($newnodes);
             $source_values = array_column($newnodes,"name");            
-            }
-        else
-            {
+        } else {
             $source_values[] = $value;
-            }
-
-        if(!in_array($targetfield["type"],$valid_ai_field_types) || count($source_values) == 0)
-            {
-            return false;
-            }
-        // Use this field's value to update the dependent field
-        return openai_gpt_update_field($resource, $targetfield, $source_values);
         }
+
+        // Use this field's value to update the dependent field
+        if (in_array($targetfield["type"],$valid_ai_field_types) && count($source_values) > 0) {
+            openai_gpt_update_field($resource, $targetfield, $source_values);
+        }
+    }
     return false;
     }
     
