@@ -41,13 +41,6 @@ $page_def = [
             'required' => true,
             ],
             [
-            'id'       => 'image_size',
-            'title'    => $lang['fieldtitle-image_size'],
-            'type'     => FIELD_TYPE_DROP_DOWN_LIST,
-            'options'  => BRAND_GUIDELINES_DEFAULT_IMAGE_SIZES,
-            'required' => true,
-            ],
-            [
             'id'       => 'layout',
             'title'    => $lang['brand_guidelines_layout'],
             'type'     => FIELD_TYPE_DROP_DOWN_LIST,
@@ -57,6 +50,19 @@ $page_def = [
                 'full-width' => $lang['brand_guidelines_full_width'],
             ],
             'required' => true,
+            ],
+            [
+            'id'       => 'image_size',
+            'title'    => $lang['fieldtitle-image_size'],
+            'type'     => FIELD_TYPE_DROP_DOWN_LIST,
+            'options'  => BRAND_GUIDELINES_DEFAULT_IMAGE_SIZES,
+            'required' => true,
+            ],
+            [
+            'id'       => 'caption',
+            'title'    => $lang['fieldtitle-caption'],
+            'type'     => FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
+            'required' => false,
             ],
         ],
     ],
@@ -243,6 +249,12 @@ if ($save && count_errors($processed_fields) === 0) {
 }
 
 
+if ($type === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
+    $field_options = array_column($processed_fields, null, 'id')['layout']['options'];
+    $half_width_val_hash = md5("layout_{$field_options['half-width']}");
+    $thumbnail_val_hash = md5("layout_{$field_options['thumbnail']}");
+}
+
 include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
 ?>
 <div class="BasicsBox">
@@ -299,6 +311,25 @@ jQuery(document).ready(() => {
     if ($type === BRAND_GUIDELINES_CONTENT_TYPES['colour']) {
         ?>
         update_colour_preview(jQuery('#hex').val());
+        <?php
+    }
+    else if ($type === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
+        ?>
+        jQuery('#layout')
+            .change((e) => {
+                if (e.target.value === '<?php echo escape($half_width_val_hash); ?>') {
+                    jQuery('#Question_caption').slideDown(150);
+                } else {
+                    jQuery('#Question_caption').slideUp(150);
+                }
+                
+                if (e.target.value === '<?php echo escape($thumbnail_val_hash); ?>') {
+                    jQuery('#Question_image_size').slideUp(150);
+                } else {
+                    jQuery('#Question_image_size').slideDown(150);
+                }
+            })
+            .trigger('change');
         <?php
     }
     ?>
@@ -371,8 +402,6 @@ function update_colour_preview(hex) {
  */
 function show_form_error(selector, msg) {
     jQuery('<div>', { class: 'FormError' }).text(msg).appendTo(selector);
-    // jQuery('<div>', { class: 'FormError DisplayNone' }).text(msg).appendTo(selector);
-    // jQuery(selector).find('div.FormError').removeClass('DisplayNone');
 }
 
 /**

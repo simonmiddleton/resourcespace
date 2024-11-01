@@ -220,6 +220,7 @@ function render_resource_item(array $item): void
     $ref = (int) $item['ref'];
     $image_size = $item['content']['image_size'];
     $layout = $item['content']['layout'];
+    $caption = trim($item['content']['caption'] ?? '');
 
     $image_sizes = array_column(get_image_sizes($resource['ref'], true, $resource['file_extension'], true), null, 'id');
     $preview = $image_sizes[$image_size];
@@ -252,6 +253,11 @@ function render_resource_item(array $item): void
         <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width grid-container">
             <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
+                <?php
+                if ($caption !== '') {
+                    ?><p><?php echo escape($caption); ?></p><?php
+                }
+                ?>
             </a>
             <?php render_item_top_right_menu($ref, ['grid-item']); ?>
         </div>
