@@ -186,10 +186,9 @@ $page_title = $page_def[$type]['title'];
 // Add group logic, if applicable
 $act_on_group_members = false;
 if (!$save && $group_members !== []) {
-    $page_contents_grouped = group_content_items(
-        array_filter(array_map(__NAMESPACE__ . '\decode_page_content_item', $page_contents_db))
-    );
-    $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
+    $decoded_page_contents = array_filter(array_map(__NAMESPACE__ . '\decode_page_content_item', $page_contents_db));
+    $page_contents_grouped = group_content_items($decoded_page_contents);
+    $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $decoded_page_contents));
     $applicable_group_members = array_column((reset($applicable_group) ?: [])['members'] ?? [], null, 'ref');
     $list_of_applicable_members = array_keys($applicable_group_members);
     sort($list_of_applicable_members, SORT_NUMERIC);
