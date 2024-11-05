@@ -51,7 +51,12 @@ function render_content_menu()
             <i class="fa-solid fa-fw fa-align-left"></i>
             <span><?php echo escape($GLOBALS['lang']['text']); ?></span>
         </button>
-        <button class="context-menu-row">
+        <button
+            class="context-menu-row"
+            onclick="return new_content_item(this);"
+            data-item-type="<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['resource']); ?>"
+            data-item-upload-url="<?php echo get_upload_url(); ?>"
+        >
             <i class="fa-solid fa-fw fa-upload"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_new_resource']); ?></span>
         </button>

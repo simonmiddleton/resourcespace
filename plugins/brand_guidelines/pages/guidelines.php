@@ -412,6 +412,19 @@ render_content_menu();
 
         const type = btn_el.data('item-type');
         const extra_params = e.classList.contains('image-half-width') ? {layout: 'half-width'} : {};
+        const resource_type_new_upload = btn_el.data('item-upload-url');
+        if (
+            type === <?php echo BRAND_GUIDELINES_CONTENT_TYPES['resource']; ?>
+            && typeof resource_type_new_upload !== "undefined"
+        ) {
+            const back_to_content_page_url = new URL(resource_type_new_upload);
+            const manage_content_page = new URL(`${baseurl}/plugins/brand_guidelines/pages/manage/content.php`);
+            manage_content_page.searchParams.set('page', page);
+            manage_content_page.searchParams.set('type', type);
+            manage_content_page.searchParams.set('after_item', item.position_after);
+            back_to_content_page_url.searchParams.set('redirecturl', manage_content_page.toString());
+            return CentralSpaceLoad(back_to_content_page_url.toString(), true);
+        }
 
         return ModalLoad(
             baseurl + '/plugins/brand_guidelines/pages/manage/content.php?'

@@ -42,3 +42,7 @@ function HookBrand_guidelinesAllHandleuserref() {
         ];
     }
 }
+
+function HookBrand_guidelinesAllModify_redirecturl()
+{
+}
