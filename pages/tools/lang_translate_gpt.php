@@ -130,7 +130,7 @@ Text within square brackets indicates a system parameter that MUST NOT itself be
 In the event that you cannot provide a translation (with the exception of the cases listed above) return the word CALAMITY followed by the reason the translation could not be provided. Do not output anything that is not either a valid translation or the word CALAMITY with the reason.");
             $messages[]=array("role"=>"user","content"=>"Please translate: " . $lang_en_extended[$mkey]);
             
-            $result=generateChatCompletions($openai_key,"gpt-4o",0,2048,$messages);
+            $result=generateChatCompletions($openai_key,"gpt-4o-mini",0,2048,$messages);
     echo "\n";print_r($result);echo "\n\n";
 
             // Check there are no bad parameters in the results by comparing with the master list.

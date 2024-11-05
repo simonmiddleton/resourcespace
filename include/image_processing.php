@@ -36,6 +36,11 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing, $valid_upload_paths;
 
+    # FStemplate support - do not allow samples from the template to be replaced
+    if (resource_file_readonly($ref)) {
+        return false;
+    }
+
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
 
@@ -1139,6 +1144,11 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     {
     global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge, $lang, $ffmpeg_preview_gif;
     global $previews_allow_enlarge, $offline_job_queue, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
+
+    # FStemplate support - do not allow previews from the template to be changed
+    if (resource_file_readonly($ref)) {
+        return false;
+    }
 
     # Used to preemptively create folder
     get_resource_path($ref,true,"pre",true);
@@ -3240,6 +3250,11 @@ function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool
     {
     debug("upload_file_by_url(ref = $ref, no_exif = $no_exif,revert = $revert, autorotate = $autorotate, url = $url)");
 
+    # FStemplate support - do not allow samples from the template to be replaced
+    if (resource_file_readonly($ref)) {
+        return false;
+    }
+
     if (!(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override')))
         {
         return false;
@@ -3439,6 +3454,10 @@ function getSvgSize($file_path)
 */
 function replace_preview_from_resource($ref,$previewresource,$previewalt)
     {
+    # FStemplate support - do not allow samples from the template to be replaced
+    if (resource_file_readonly($ref)) {
+        return false;
+    }
     $prepath = get_resource_path($ref,true,"tmp",true);
     foreach(array("","hpr") as $usesize)
         {

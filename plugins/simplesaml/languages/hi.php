@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='अपने मौजूदा SAML कॉ
 $lang["simplesaml_test_site_url"]='SimpleSAML परीक्षण साइट URL';
 $lang["plugin-simplesaml-title"]='सरल SAML';
 $lang["plugin-simplesaml-desc"]='[उन्नत] ResourceSpace तक पहुँचने के लिए SAML प्रमाणीकरण आवश्यक है';
+$lang["simplesaml_idp_certs"]='SAML IdP प्रमाणपत्र';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname प्रमाणपत्र %expiretime पर समाप्त हो रहा है';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname प्रमाणपत्र %expiretime पर समाप्त हो गया';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname प्रमाणपत्र %expiretime पर समाप्त हो रहा है';

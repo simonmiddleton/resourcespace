@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='Bilinen Bilgi Tabanı talimatlarını izley
 $lang["simplesaml_test_site_url"]='SimpleSAML test sitesi URL\'si';
 $lang["plugin-simplesaml-title"]='Basit SAML';
 $lang["plugin-simplesaml-desc"]='[İleri] ResourceSpace\'e erişim için SAML kimlik doğrulaması gerektir';
+$lang["simplesaml_idp_certs"]='SAML IdP sertifikaları';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname sertifikası %expiretime tarihinde sona eriyor';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname sertifikası %expiretime tarihinde süresi doldu';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname sertifikası %expiretime tarihinde sona eriyor';

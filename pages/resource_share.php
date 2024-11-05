@@ -151,7 +151,7 @@ if($editing && !$editexternalurl)
             else {$previous_page_modal = false;}
             ?>
             
-            <h1><?php echo $page_header; render_help_link("user/resource-sharing");?></h1>
+            <h1><?php echo escape($page_header); render_help_link("user/resource-sharing");?></h1>
             <p>
             <?php
             if($previous_page_modal)

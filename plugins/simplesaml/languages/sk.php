@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='Sledujte pokyny v báze znalostí pre migr�
 $lang["simplesaml_test_site_url"]='URL testovacej stránky SimpleSAML';
 $lang["plugin-simplesaml-title"]='Jednoduchý SAML';
 $lang["plugin-simplesaml-desc"]='[Pokročilo] Zahtevaj SAML overjanje za dostop do ResourceSpace';
+$lang["simplesaml_idp_certs"]='SAML IdP certifikáty';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname certifikat poteče ob %expiretime';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname certifikat je potekel ob %expiretime';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname certifikat poteče ob %expiretime';

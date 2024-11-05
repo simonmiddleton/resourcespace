@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='Seuraa tietopohjan ohjeita siirtääksesi n
 $lang["simplesaml_test_site_url"]='SimpleSAML-testisivuston URL-osoite';
 $lang["plugin-simplesaml-title"]='Yksinkertainen SAML';
 $lang["plugin-simplesaml-desc"]='[Edistynyt] Vaadi SAML-todennus ResourceSpaceen pääsyä varten';
+$lang["simplesaml_idp_certs"]='SAML IdP -varmenteet';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname -sertifikaatti vanhenee %expiretime';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname -sertifikaatti vanhentui %expiretime';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname -sertifikaatti vanhenee %expiretime';

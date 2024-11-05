@@ -4786,6 +4786,11 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         $upload_then_process=false;
         }
 
+    # FStemplate support - do not allow samples from the template to be replaced
+    if (resource_file_readonly($r)) {
+        return false;
+    }
+
     # Work out extension based on path
     if($extension=='')
         {
@@ -7404,6 +7409,11 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     global $replace_resource_preserve_option, $notify_on_resource_change_days, $lang, $userref;
     debug("replace_resource_file(ref=" . $ref . ", file_location=" . $file_location . ", no_exif=" . ($no_exif ? "TRUE" : "FALSE") . " , keep_original=" . ($keep_original ? "TRUE" : "FALSE"));
 
+    # FStemplate support - do not allow samples from the template to be replaced
+    if (resource_file_readonly($ref)) {
+        return false;
+    }
+
     $resource = get_resource_data($ref);
     if (!get_edit_access($ref,$resource["archive"],$resource)
         ||
@@ -8094,7 +8104,7 @@ function get_OR_fields()
 *
 * @return string
 */
-function get_nopreview_html($extension)
+function get_nopreview_html(string $extension) : string
     {
     $extension=strtolower(trim($extension));
     return "<i class='nopreview fa fa-solid " . (FONTAWESOME_EXTENSIONS[$extension] ?? FONTAWESOME_EXTENSIONS["default"]) . "'></i>";
@@ -8386,7 +8396,11 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         }
 
     // Build the filename
-    $filename = str_replace(array_keys($bind), array_values($bind), $formatted_str);
+    $filename =preg_replace_callback(
+        '/%(field(\d+)|resource|extension|size|alternative|filename)/',
+        fn($matches) => $bind[$matches[0]],
+        $formatted_str
+    );
     // Allow plugins to completely overwrite it
     $hook_downloadfilenamealt = hook('downloadfilenamealt', '', [$ref, $size, $alternative, $ext]);
     if (is_string($hook_downloadfilenamealt) && $hook_downloadfilenamealt !== '')

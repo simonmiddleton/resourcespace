@@ -816,3 +816,14 @@ function get_display_language($language_key, $language_value): string
 
     return $display_lang;
 }
+
+/**
+ * Simple check to determine if the text string supplied contains i18n language translations.
+ * Returns true if match found e.g.  '~en:test~en-US:test'. Returns false if no code is found. e.g. 'test'.
+ *
+ * @param  string  $text   Text string to check e.g. a node name or field value.
+ */
+function is_i18n_language_string($text): bool
+    {
+    return preg_match('/~(.*?):/', $text) === 1;
+    }

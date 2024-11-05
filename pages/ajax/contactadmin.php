@@ -35,17 +35,17 @@ if (getval("send","")!="" && enforcePostRequest(false))
         if($spamtime<(time()-180) || $spamtime>time())
             {
             $errors = true;
-            $antispam_error = escape($lang["expiredantispam"]);
+            $antispam_error = $lang["expiredantispam"];
             }
         elseif(!hook('replaceantispam_check') && !verify_antispam($spamcode, $usercode, $spamtime))
             {
             $errors = true;
-            $antispam_error = escape($lang["requiredantispam"]);
+            $antispam_error = $lang["requiredantispam"];
             }
 
         if($errors) 
             {
-            exit($antispam_error);
+            exit(escape($antispam_error));
             }
         }
 

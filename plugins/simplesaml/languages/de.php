@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='Folgen Sie den Anweisungen der Wissensdaten
 $lang["simplesaml_test_site_url"]='SimpleSAML Testseite URL';
 $lang["plugin-simplesaml-title"]='Einfaches SAML';
 $lang["plugin-simplesaml-desc"]='[Erweitert] SAML-Authentifizierung erforderlich, um auf ResourceSpace zuzugreifen';
+$lang["simplesaml_idp_certs"]='SAML IdP-Zertifikate';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname Zertifikat läuft ab am %expiretime';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname Zertifikat ist am %expiretime abgelaufen';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname Zertifikat läuft ab am %expiretime';

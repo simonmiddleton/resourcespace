@@ -9,6 +9,12 @@ function HookVideo_spliceViewAfterresourceactions()
     $can_create_alternative = $editaccess && !checkperm("A");
     $can_download = $access === RESOURCE_ACCESS_FULL;
 
+    if (!in_array($resource["file_extension"], $videosplice_allowed_extensions))
+        {
+        # No link to "Trim" required as it's not configured for the incoming file extension
+        return false;
+        }
+
     if ($resource['ref'] < 0 || !$can_create_resource && !$can_create_alternative && !$can_download)
         {
         # No link to "Trim" required as user doesn't have permission to do anything with it.

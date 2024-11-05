@@ -109,7 +109,7 @@ foreach ($resources as $resource)
     ?>
     <a class="embedslideshow_preview_inner" id="embedslideshow_preview<?php echo $page ?>" style="display:none;" href="#" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo $page + 1 ?>,false,false);return false;">
         <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
-        border="0" width=<?php echo $width ?> height=<?php echo $height; ?> src="<?php echo $preview_path ?>">
+        border="0" width=<?php echo (int) $width; ?> height=<?php echo (int) $height; ?> src="<?php echo escape($preview_path); ?>">
     </a>
     <?php 
     global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;

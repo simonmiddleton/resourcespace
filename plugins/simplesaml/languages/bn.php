@@ -80,3 +80,7 @@ $lang["simplesaml_start_url"]='শুরু/সাইন অন URL';
 $lang["simplesaml_existing_config"]='আপনার বিদ্যমান SAML কনফিগারেশন স্থানান্তর করতে নলেজ বেস নির্দেশাবলী অনুসরণ করুন';
 $lang["simplesaml_test_site_url"]='SimpleSAML পরীক্ষা সাইট URL';
 $lang["simplesaml_idp_section"]='IdP';
+$lang["simplesaml_idp_certs"]='SAML IdP সার্টিফিকেটসমূহ';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname সার্টিফিকেট %expiretime এ মেয়াদ শেষ হচ্ছে';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname সার্টিফিকেট %expiretime এ মেয়াদোত্তীর্ণ হয়েছে';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname সার্টিফিকেটের মেয়াদ শেষ হবে %expiretime';

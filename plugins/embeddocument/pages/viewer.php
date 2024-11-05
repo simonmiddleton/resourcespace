@@ -29,7 +29,7 @@ $download=getval("download","") != "";
 <ul class="embeddocument_controls_standard">    
 <li class="embeddocument_begn" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(1,false,false);"<span>|<</span></li>
 <li class="embeddocument_prev" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(embeddocument_page-1,false,false);"><span><</span></li>
-<li class="embeddocument_auto" Style="cursor: pointer;" onClick="embeddocument_auto=!embeddocument_auto;if (embeddocument_auto) {embeddocument_ShowPage(embeddocument_page,false,false_<?php echo $ref ?>);} else {clearTimeout(timer);}"<span>||</span></li>
+<li class="embeddocument_auto" Style="cursor: pointer;" onClick="embeddocument_auto=!embeddocument_auto;if (embeddocument_auto) {embeddocument_ShowPage(embeddocument_page,false,false_<?php echo escape($ref); ?>);} else {clearTimeout(timer);}"<span>||</span></li>
 <li class="embeddocument_next" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(embeddocument_page+1,false,false);"<span>></span></li>
 <li class="embeddocument_end" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(embeddocument_pages.length-1,false,false);"><span>>|</span></li>
 <li class="embeddocument_jump" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(document.getElementById('embeddocument_page_box').value,false,true);"><span><?php echo escape($lang["jump"]); ?></span></li>

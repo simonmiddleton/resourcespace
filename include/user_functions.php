@@ -3255,7 +3255,7 @@ function emulate_user($user, $usergroup="")
     if (count($userinfo)>0)
         {
         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
-        $userpermissions=explode(",",$userinfo[0]["permissions"]);
+        $userpermissions=explode(",",$userinfo[0]["permissions"] ?? "");
 
         if(upload_share_active())
             {

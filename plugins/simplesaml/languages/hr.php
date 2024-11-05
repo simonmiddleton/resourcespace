@@ -82,3 +82,7 @@ $lang["simplesaml_test_site_url"]='URL testnog mjesta SimpleSAML-a';
 $lang["simplesaml_acs_url"]='ACS URL / URL za odgovor';
 $lang["plugin-simplesaml-title"]='Jednostavni SAML';
 $lang["plugin-simplesaml-desc"]='[Napredno] Za pristup ResourceSpace zahtijevaj SAML autentifikaciju';
+$lang["simplesaml_idp_certs"]='SAML IdP certifikati';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname certifikat istječe u %expiretime';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname certifikat je istekao u %expiretime';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname certifikat ističe u %expiretime';

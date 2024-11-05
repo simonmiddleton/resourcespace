@@ -83,7 +83,7 @@ function mplus_search(string $module_name, DOMDocument $search)
         }
 
     $basic_auth = "{$conn_data['username']}:{$conn_data['password']}";
-    $url = "{$conn_data['host']}/{$conn_data['application']}/ria-ws/application/module/{$module_name}/search/";
+    $url = "{$conn_data['host']}/ria-ws/application/module/{$module_name}/search/";
 
     $xml = new DOMDocument('1.0', 'UTF-8');
     $application = $xml->createElement('application');

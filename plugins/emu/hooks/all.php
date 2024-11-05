@@ -15,6 +15,9 @@ function HookEmuAllInitialise()
 
 function HookEmuAllExtra_checks()
     {
+    $default_socket_timeout_cache = ini_get('default_socket_timeout');
+    ini_set('default_socket_timeout', 5);
+
     $GLOBALS['use_error_exception'] = true;
     try
         {
@@ -31,4 +34,6 @@ function HookEmuAllExtra_checks()
         return $message;
         }
     unset($GLOBALS['use_error_exception']);
+
+    ini_set('default_socket_timeout', $default_socket_timeout_cache);
     }

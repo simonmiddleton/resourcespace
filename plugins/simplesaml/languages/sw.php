@@ -80,3 +80,7 @@ $lang["simplesaml_start_url"]='Anza/Ingia URL';
 $lang["simplesaml_existing_config"]='Fuata maelekezo ya Msingi wa Maarifa ili kuhamisha usanidi wako wa SAML uliopo';
 $lang["simplesaml_test_site_url"]='URL ya tovuti ya majaribio ya SimpleSAML';
 $lang["simplesaml_idp_section"]='IdP';
+$lang["simplesaml_idp_certs"]='Vyeti vya SAML IdP';
+$lang["simplesaml_idp_cert_expiring"]='Cheti cha IdP %idpname kinamalizika muda wake saa %expiretime';
+$lang["simplesaml_idp_cert_expired"]='Cheti cha IdP %idpname kilimalizika muda wake saa %expiretime';
+$lang["simplesaml_idp_cert_expires"]='Cheti cha IdP %idpname kinamalizika muda wake saa %expiretime';

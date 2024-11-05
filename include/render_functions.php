@@ -4267,30 +4267,30 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             $title="";
             }
 
-    # Value formatting
-    # Optimised to use the value as is if there are no "~" characters present in the value
-    if (strpos($value,"~") !== false) {
-        $field_value = $value;
-        debug('value formatting due to ~ character...');
-        # The field value may be a list of comma separated language encoded values, so process the nodes
-        $field_nodes_in_value = explode(",", $field["nodes"]);
-        if (count($field_nodes_in_value) > 1) {
-            # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
-            $field_nodes_all = get_nodes($field['ref']);
-            $names_i18n_in_value = extract_node_options($field_nodes_all, true, true);
-            # Convert the field nodes in value as an array keyed by the names to allow an intersect by key operation 
-            $node_names_in_value = array_intersect_key($names_i18n_in_value, array_flip($field_nodes_in_value));
-            $value = implode(', ', $node_names_in_value);
+        # Value formatting
+        # Optimised to use the value as is if there are no "~" characters present in the value
+        if (is_i18n_language_string($value) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
+            $field_value = $value;
+            debug('value formatting due to ~ character...');
+            # The field value may be a list of comma separated language encoded values, so process the nodes
+            $field_nodes_in_value = explode(",", $field["nodes"]);
+            if (count($field_nodes_in_value) > 1) {
+                # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
+                $field_nodes_all = get_nodes($field['ref']);
+                $names_i18n_in_value = extract_node_options($field_nodes_all, true, true);
+                # Convert the field nodes in value as an array keyed by the names to allow an intersect by key operation 
+                $node_names_in_value = array_intersect_key($names_i18n_in_value, array_flip($field_nodes_in_value));
+                $value = implode(', ', $node_names_in_value);
+            }
+
+            # Not a node list so translate the raw value or something went wrong trying to resolve the node values 
+            # so attempt to translate the raw value to display instead
+            if (count($field_nodes_in_value) == 1 || trim($value) == "") {
+                # Translate the single value
+                $value=i18n_get_translated($field_value);
+            }
         }
 
-        # Not a node list so translate the raw value or something went wrong trying to resolve the node values 
-        # so attempt to translate the raw value to display instead
-        if (count($field_nodes_in_value) == 1 || trim($value) == "") {
-            # Translate the single value
-            $value=i18n_get_translated($field_value);
-        }
-    } 
-        
         // Handle the rest of the fixed list fields, category trees have their own section
         if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
             $resource_nodes = get_resource_nodes($ref, $field["ref"], true, false);
@@ -4423,7 +4423,7 @@ function render_fixed_list_as_pills($nodes):string
         foreach ($nodes as $nodedata) {
             $search_url = generateURL($baseurl . '/pages/search.php', ['search' => NODE_TOKEN_PREFIX . $nodedata['ref']]);
             $display_html .= "<a href=\"{$search_url}\" onclick=\"CentralSpaceLoad(this)\"</a>";
-            $display_html .= "<div class=\"fixedlistnodepill\">" . escape($nodedata["name"]) . "</div>";
+            $display_html .= "<div class=\"fixedlistnodepill\">" . escape(i18n_get_translated($nodedata["name"])) . "</div>";
             $display_html .= "</a>";
         }
         return "<div>" . $display_html . "</div>";
@@ -6140,7 +6140,7 @@ function display_related_resources($context)
                                             }
                                         else
                                             { 
-                                            echo get_nopreview_html($arr_related[$n]["file_extension"]);
+                                            echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
                                             } ?>
                                         </a>
                                 </td></tr>
@@ -6200,7 +6200,7 @@ function display_related_resources($context)
                                     }
                                 else
                                     { 
-                                    echo get_nopreview_html($arr_related[$n]["file_extension"]);
+                                    echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
                                     } ?>
                                     </a>
                                 </td></tr>
@@ -6252,7 +6252,7 @@ function display_related_resources($context)
                                     }
                                 else
                                     {
-                                    echo get_nopreview_html($arr_related[$n]["file_extension"]);
+                                    echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
                                     }
                                 ?></a>
                             </td>
@@ -6845,7 +6845,7 @@ function render_resource_view_image(array $resource, array $context)
         {
         ?>
         <div id="previewimagewrapper">
-        <?php echo get_nopreview_html($resource["file_extension"]); ?>
+        <?php echo get_nopreview_html((string) $resource["file_extension"]); ?>
         </div>
         <?php 
         return true;

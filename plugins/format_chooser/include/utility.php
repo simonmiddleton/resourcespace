@@ -49,7 +49,7 @@ function getImageFormat($size)
     $found_idx = array_search($size, array_column($sizes, 'id'));
     if($found_idx === false)
         {
-        die('Unknown size: "' . $size . '"');
+        die('Unknown size: "' . escape($size) . '"');
         }
 
     return [

@@ -82,3 +82,7 @@ $lang["simplesaml_sp_cert_organizationalunitname"]='组织单位 / 部门';
 $lang["simplesaml_idp_metadata_xml"]='粘贴IdP元数据XML';
 $lang["plugin-simplesaml-title"]='简单SAML';
 $lang["plugin-simplesaml-desc"]='[高级] 需要 SAML 认证才能访问 ResourceSpace';
+$lang["simplesaml_idp_certs"]='SAML IdP 证书';
+$lang["simplesaml_idp_cert_expiring"]='IdP %idpname 证书将于 %expiretime 到期';
+$lang["simplesaml_idp_cert_expired"]='IdP %idpname 证书于 %expiretime 过期';
+$lang["simplesaml_idp_cert_expires"]='IdP %idpname 证书将在 %expiretime 过期';

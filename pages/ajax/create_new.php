@@ -69,7 +69,7 @@ switch ($newtype)
         <?php generateFormToken($csrf_code); 
         foreach($extraparams as $extraparam => $extravalue)
             {
-            echo "<input type=hidden name='" . $extraparam  .  "' value='" . $extravalue . "'>";
+            echo "<input type=hidden name='" . escape($extraparam)  .  "' value='" . escape($extravalue) . "'>";
             }
         ?>
         <input type="text" class="medwidth" name="<?php echo $newparam ?>" id="<?php echo $newparam ?>" value="">

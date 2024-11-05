@@ -837,7 +837,7 @@ if('' != $tile_type && $tile_type !== "conf")
             width = 515;
             }
             
-        jQuery("#previewdashtile").load("<?php echo $previewurl; ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
+        jQuery("#previewdashtile").load("<?php echo escape($previewurl); ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
     }
 
     updateDashTilePreview();

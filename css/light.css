@@ -252,9 +252,8 @@ div.autocomplete ul li {color: #000;}
 .HomePanelDynamicDash p.tile_corner_box {background: rgba(0,0,0,0.4);border-top-left-radius: 5px;color:#fff;}
 
 /* Delete Dialog */
-.delete-dialog .ui-dialog-titlebar,  .ui-dialog-titlebar{
-    background-color: #d7d7d7;
-    background: linear-gradient(#d3d3d3,#dfdfdf);
+.delete-dialog .ui-dialog-titlebar, .ui-dialog-titlebar{
+    background: white;
     border: #878787;
     color: #3A3A3A;
 }
@@ -722,3 +721,26 @@ a.HomePanel:hover {
 }
 
 .MiniCategoryBox {border: 1px solid rgba(0,0,0,0.25);}
+
+/* Custom styling for jQuery UI dialogs */
+
+.ui-widget-content {
+    border: 1px solid #e7e7e7;
+}
+
+.ui-dialog .ui-dialog-title {
+    background: white; 
+}
+
+.ui-dialog {
+    box-shadow: 0 1px 10px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+    background-color: #1679c0;
+    color: white;
+}
+
+.ui-button, .ui-button:active {
+    border: 1px solid #c5c5c5;
+}

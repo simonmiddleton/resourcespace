@@ -489,6 +489,27 @@ function ProcessFolder($folder)
                     {
                     if(in_array(strtolower($extension), $extensions)) { $type = $rt; }
                     }
+                if (isset($staticsync_mapfolders)) {
+                    $field_nodes    = array();
+                    foreach ($staticsync_mapfolders as $mapfolder) {
+                        $match = $mapfolder["match"];
+                        $field = $mapfolder["field"];
+                        $level = $mapfolder["level"];
+                        $path_parts = explode("/", $shortpath);
+                        if (
+                            $field == 'resource_type'
+                            && (strpos("/" . $shortpath, $match) !== false)
+                            && $level < count($path_parts)
+                        ) {
+                            $value = $path_parts[$level-1];
+                            $typeidx = array_search($value,array_column($restypes,"name"));
+                            if($typeidx !== false) {
+                                $type = $restypes[$typeidx]["ref"];
+                                echo " - \$staticsync_mapfolders - set resource type to " . $value . " ($type)". PHP_EOL;
+                            }
+                        }
+                    }
+                }
                 $modified_type = hook('modify_type', 'staticsync', array( $type ));
                 if (is_numeric($modified_type)) { $type = $modified_type; }
 
@@ -564,18 +585,7 @@ function ProcessFolder($folder)
                                             echo " - Will set archive level to " . $lang['status' . $value] . " ($archiveval)". PHP_EOL;
                                             }                                        
                                         }
-                                    elseif ($field == 'resource_type')
-                                        {
-                                        # first determine if the value matches a valid resource type                                        
-                                        $value = $path_parts[$level-1];
-                                        $typeidx = array_search($value,array_column($restypes,"name"));                                        
-                                        if($typeidx !== false)
-                                            {
-                                            $maprestype = $restypes[$typeidx]["ref"];
-                                            echo " - \$staticsync_mapfolders - set resource type to " . $value . " ($maprestype)". PHP_EOL;
-                                            }                                        
-                                        }
-                                    else 
+                                    elseif (is_int_loose($field))
                                         {
                                         # Save the value
                                         $value = $path_parts[$level-1];
@@ -676,11 +686,6 @@ function ProcessFolder($folder)
                     else
                         {
                         $setvals["archive"] = $staticsync_defaultstate;
-                        }
-
-                    if(isset($maprestype) && $maprestype != $type)
-                        {
-                        $setvals["resource_type"] = $maprestype;
                         }
 
                     if(!$enable_thumbnail_creation_on_upload)

@@ -368,7 +368,7 @@ function get_saml_sp_name()
  * @return string           Expiration date. Empty string if no certificate or IdP is not found.
  *
  */
-function get_saml_metadata_expiry($entityid)
+function get_saml_metadata_expiry($entityid): string
 {
     $expiry = "";
     if (!isset($GLOBALS["simplesamlconfig"]["metadata"][$entityid])) {

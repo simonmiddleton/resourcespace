@@ -80,3 +80,7 @@ $lang["simplesaml_single_logout_url"]='URL для єдиного виходу';
 $lang["simplesaml_start_url"]='URL для початку/входу';
 $lang["simplesaml_existing_config"]='Дотримуйтесь інструкцій бази знань для міграції вашої існуючої конфігурації SAML';
 $lang["simplesaml_test_site_url"]='URL тестового сайту SimpleSAML';
+$lang["simplesaml_idp_certs"]='SAML IdP сертифікати';
+$lang["simplesaml_idp_cert_expiring"]='Сертифікат IdP %idpname закінчується о %expiretime';
+$lang["simplesaml_idp_cert_expired"]='Сертифікат IdP %idpname закінчився о %expiretime';
+$lang["simplesaml_idp_cert_expires"]='Сертифікат IdP %idpname закінчується о %expiretime';

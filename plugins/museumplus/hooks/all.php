@@ -53,6 +53,9 @@ function HookMuseumplusAllInitialise()
         unset($mplus_config['museumplus_resource_types']);
         unset($mplus_config['museumplus_rs_saved_mappings']);
         unset($mplus_config['museumplus_cms_url_form_part']); # not migrated but no longer needed
+        # Host and application cannot be migrated due to changes in format.
+        unset($mplus_config['museumplus_application']);
+        unset($mplus_config['museumplus_host']);
 
         set_plugin_config('museumplus', $mplus_config);
         }

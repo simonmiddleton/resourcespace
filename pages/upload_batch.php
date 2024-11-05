@@ -183,8 +183,9 @@ $processupload                          = getval("processupload","") != "";
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
 $attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '') && (trim($alternative) == '');
 
-$redirecturl = getval("redirecturl","");
+$redirecturl = urldecode(getval("redirecturl",""));
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
+$redirecturl = escape($redirecturl);
 
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {
@@ -1016,7 +1017,7 @@ include "../include/header.php";
 ?>
 
 <script>
-redirurl = '<?php echo $redirecturl ?>';
+redirurl = '<?php echo $redirecturl ?>';  // Echo the redirecturl directly as it has either been built via generateURL or it's already escaped
 var resource_keys=[];
 var processed_resource_keys=[];
 var relate_on_upload = <?php echo ($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes") ? " true" : "false"; ?>;
@@ -1814,6 +1815,7 @@ function postUploadActions()
             dialogClass: 'no-close',
             buttons: {
                 <?php
+                // Echo the redirecturl directly as it has either been built via generateURL or it's already escaped
                 if ($redirecturl != "")
                     {
                     echo "'" . escape($lang['upload_process_successful']) . "' : function() {
@@ -2043,7 +2045,7 @@ hook('plupload_before_status');
 <!-- Continue button, hidden unless errors are encountered so that user can view log before continuing -->
 <div class="BasicsBox" >
     <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo escape($lang['continue']); ?>&nbsp;&nbsp;"
-        onclick="return CentralSpaceLoad('<?php echo $redirecturl?>',true);">
+        onclick="return CentralSpaceLoad('<?php echo $redirecturl; ?>',true);">
 </div>
 <?php
 

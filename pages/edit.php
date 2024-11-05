@@ -1316,7 +1316,7 @@ else
         }
         if (!hook("replaceeditheader")) 
             { ?>
-            <div class="RecordHeader">
+            <div class="RecordHeader" style="width: 100%">
             <?php
             # Draw nav
             if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
@@ -2502,7 +2502,7 @@ if ($ref>0 && !$multiple)
             else
                 {
                 # Show the no-preview icon
-                echo get_nopreview_html($resource["file_extension"]);
+                echo get_nopreview_html((string) $resource["file_extension"]);
                 }
             if ($resource["file_extension"]!="") 
                 { ?>           
@@ -2585,13 +2585,7 @@ hook('aftereditcollapsiblesection');
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
     {
-    foreach ($save_errors as &$save_error) 
-        {
-        if(is_string($save_error))
-            {
-            $save_error=escape($save_error);
-            }
-        }
+    array_walk($save_errors,fn (&$v)=>escape($v ?? ""),[]);
     ?>
     <script>
     preventautoscroll = true;

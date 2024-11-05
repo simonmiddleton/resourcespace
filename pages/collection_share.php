@@ -260,7 +260,7 @@ if (isset($show_error)) { ?>
         }
     else
         {
-        ?><h1><?php echo $page_header; render_help_link("user/sharing-resources");?></h1><?php
+        ?><h1><?php echo escape($page_header); render_help_link("user/sharing-resources");?></h1><?php
         }
 
     if(isset($warningtext))

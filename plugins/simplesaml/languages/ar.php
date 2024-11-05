@@ -82,3 +82,7 @@ $lang["simplesaml_existing_config"]='اتبع تعليمات قاعدة المع
 $lang["simplesaml_test_site_url"]='عنوان URL لموقع اختبار SimpleSAML';
 $lang["plugin-simplesaml-title"]='سامبل بسيط';
 $lang["plugin-simplesaml-desc"]='[متقدم] يتطلب مصادقة SAML للوصول إلى ResourceSpace';
+$lang["simplesaml_idp_certs"]='شهادات SAML IdP';
+$lang["simplesaml_idp_cert_expiring"]='شهادة IdP %idpname تنتهي صلاحيتها في %expiretime';
+$lang["simplesaml_idp_cert_expired"]='انتهت صلاحية شهادة IdP %idpname في %expiretime';
+$lang["simplesaml_idp_cert_expires"]='شهادة IdP %idpname تنتهي صلاحيتها في %expiretime';
