@@ -256,7 +256,7 @@ form.guidelines .FormError {
 }
 
 /* --- Deviation from standard behaviour (on purpose for UI/UX consistency/improvement) */
-/* Hide the FIELD_TYPE_TEXT_RICH label on manage/content.php */
+/* Hide the FIELD_TYPE_TEXT_RICH label on manage/content.php. Image size and caption are visible based on the layout. */
 #Question_richtext label, #Question_image_size, #Question_caption {
     display: none;
 }
