@@ -199,6 +199,15 @@ if (!$save && $group_members !== []) {
     }
 }
 
+// Allow new additional resource items to have a particular layout already selected
+if (
+    !($save || $edit)
+    && ($layout = getval('layout', '', false, fn($V) => isset($page_def[$type]['fields'][1]['options'][$V])))
+) {
+    // Note: this is a hack to avoid knowing the hash value on the client side
+    $_GET['layout'] = [md5("layout_{$page_def[$type]['fields'][1]['options'][$layout]}")];
+}
+
 // Process
 $_POST['colour_preview'] = $_GET['colour_preview'] = $_COOKIE['colour_preview'] = ''; # Not expected to be submitted!
 $processed_fields = process_custom_fields_submission(

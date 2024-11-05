@@ -403,7 +403,6 @@ render_content_menu();
         console.debug('new_content_item(e = %o)', e);
         hideOptionsMenu();
         let page = jQuery('div.guidelines-content').data('page');
-        console.debug({page});
         const btn_el = jQuery(e);
 
         let item = btn_el.parent('#menu-content').data('item');
@@ -418,7 +417,7 @@ render_content_menu();
         console.debug({item});
 
         const type = btn_el.data('item-type');
-        console.debug({type});
+        const extra_params = e.classList.contains('image-half-width') ? {layout: 'half-width'} : {};
 
         return ModalLoad(
             baseurl + '/plugins/brand_guidelines/pages/manage/content.php?'
@@ -426,6 +425,7 @@ render_content_menu();
                 page: page,
                 type: type,
                 after_item: item.position_after,
+                ...extra_params,
             }).toString(),
             true,
             true
