@@ -1,10 +1,10 @@
 <?php
 include dirname(__FILE__)."/../../../include/boot.php";
-
 include dirname(__FILE__)."/../../../include/authenticate.php";
 
-$is_admin = checkperm("t");
-if (!$is_admin && !checkperm("cm")) {exit ("Permission denied.");}
+$is_admin=checkperm("t");
+
+if (!consentmanager_check_read()) {exit ("Permission denied.");}
 global $baseurl;
 
 $offset=getval("offset",0,true);
@@ -15,10 +15,8 @@ $delete=getval("delete","");
 if ($delete!="" && enforcePostRequest(false))
     {
     # Delete consent
-    ps_query("delete from consent where ref= ?", ['i', $delete]);
+    consentmanager_delete_consent($delete);
     }
-
-
 
 include dirname(__FILE__)."/../../../include/header.php";
 
@@ -31,7 +29,7 @@ $url_params = array(
     'archive'    => getval('archive','')
 );
 ?>
-<div class="BasicsBox"> 
+<div class="BasicsBox">
 <h1><?php echo escape($lang["manageconsents"]); ?></h1>
 <?php
     $links_trail = array(
@@ -51,16 +49,8 @@ $url_params = array(
 <?php generateFormToken("consentlist"); ?>
 <input type=hidden name="delete" id="consentdelete" value="">
  
-<?php 
-$sql="";
-$params = [];
-if ($findtext!="")
-    {
-    $sql="where name like ?";
-    $params = ['s', "%$findtext%"];
-    }
-
-$consents= ps_query("select ". columns_in('consent', null, 'consentmanager') ." from consent $sql order by ref", $params);
+<?php
+$consents=consentmanager_get_all_consents($findtext);
 
 # pager
 $per_page = $default_perpage_list;
@@ -125,7 +115,7 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
         <div class="Question">
             <label for="find"><?php echo escape($lang["consentsearch"]); ?><br/></label>
             <div class="tickset">
-             <div class="Inline">           
+             <div class="Inline">
             <input type=text placeholder="<?php echo escape($lang['searchbytext']); ?>" name="findtext" id="findtext" value="<?php echo escape($findtext); ?>" maxlength="100" class="shrtwidth" />
             
             <input type="button" value="<?php echo escape($lang['clearbutton']); ?>" onClick="$('findtext').value='';CentralSpacePost(document.getElementById('consentlist'));return false;" />
@@ -133,7 +123,7 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
              
             </div>
             </div>
-            <div class="clearerleft"> 
+            <div class="clearerleft">
             </div>
         </div>
 
