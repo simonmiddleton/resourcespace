@@ -185,7 +185,9 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
         }
 
         $page_contents_db ??= $init_page_content;
-        $page_contents_grouped = group_content_items($page_contents_db);
+        $page_contents_grouped = group_content_items(
+            array_filter(array_map(__NAMESPACE__ . '\decode_page_content_item', $page_contents_db))
+        );
         $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
         $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
         $list_of_applicable_members = array_column($applicable_group_members, 'ref');
@@ -368,4 +370,19 @@ function reorder_items_in_memory(array $table): array
         $table[$item_ref]['order_by'] = $order_by;
     }
     return $table;
+}
+
+/**
+ * Page content item (JSON) decoder
+ * @param array $item A (database record) page content item data structure {@see BRAND_GUIDELINES_DB_COLS_CONTENT}
+ */
+function decode_page_content_item(array $item): array
+{
+    $item_content = json_decode($item['content'], true);
+    if ($item_content === false) {
+        debug("Failed to decode page item (#{$item['ref']}) content. Reason: " . json_last_error_msg());
+        return [];
+    }
+    $item['content'] = $item_content;
+    return $item;
 }

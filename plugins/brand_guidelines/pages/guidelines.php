@@ -25,15 +25,9 @@ if ($available_pages === []) {
     $selected_page_title = $available_pages[$selected_page];
 }
 
-$page_contents = array_map(function($item) {
-    $item_content = json_decode($item['content'], true);
-    if ($item_content === false) {
-        debug("Failed to decode page item (#{$item['ref']}) content. Reason: " . json_last_error_msg());
-        return $item;
-    }
-    $item['content'] = $item_content;
-    return $item;
-}, get_page_contents((int) $selected_page));
+$page_contents = array_filter(
+    array_map(__NAMESPACE__ . '\decode_page_content_item', get_page_contents((int) $selected_page))
+);
 $page_contents_grouped = group_content_items($page_contents);
 
 include_once RESOURCESPACE_BASE_PATH . '/include/header.php';

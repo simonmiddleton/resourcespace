@@ -186,7 +186,9 @@ $page_title = $page_def[$type]['title'];
 // Add group logic, if applicable
 $act_on_group_members = false;
 if (!$save && $group_members !== []) {
-    $page_contents_grouped = group_content_items($page_contents_db);
+    $page_contents_grouped = group_content_items(
+        array_filter(array_map(__NAMESPACE__ . '\decode_page_content_item', $page_contents_db))
+    );
     $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
     $applicable_group_members = array_column((reset($applicable_group) ?: [])['members'] ?? [], null, 'ref');
     $list_of_applicable_members = array_keys($applicable_group_members);
@@ -350,7 +352,6 @@ jQuery('#hex, #rgb, #cmyk').on('focusout', (e) => {
         return;
     }
 
-    // jQuery('.Question div.FormError').addClass('DisplayNone');
     jQuery('.Question div.FormError').remove();
 
     let background_colour = '';
