@@ -1,7 +1,6 @@
 <?php
 include "../../../include/boot.php";
-
-include "../../../include/authenticate.php"; if (!checkperm("a")) {exit ("Permission denied.");}
+include "../../../include/authenticate.php"; if (!checkperm("a")) {exit (escape($lang["error-permissiondenied"]));}
 $plugin_page_heading = 'Consent Manager';
 $plugin_name = 'consentmanager';
 if(!in_array($plugin_name, $plugins))

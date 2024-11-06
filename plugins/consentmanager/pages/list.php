@@ -4,7 +4,7 @@ include dirname(__FILE__)."/../../../include/authenticate.php";
 
 $is_admin=checkperm("t");
 
-if (!consentmanager_check_read()) {exit ("Permission denied.");}
+if (!consentmanager_check_read()) {exit (escape($lang["error-permissiondenied"]) );}
 global $baseurl;
 
 $offset=getval("offset",0,true);
@@ -118,7 +118,7 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
              <div class="Inline">
             <input type=text placeholder="<?php echo escape($lang['searchbytext']); ?>" name="findtext" id="findtext" value="<?php echo escape($findtext); ?>" maxlength="100" class="shrtwidth" />
             
-            <input type="button" value="<?php echo escape($lang['clearbutton']); ?>" onClick="$('findtext').value='';CentralSpacePost(document.getElementById('consentlist'));return false;" />
+            <input type="button" value="<?php echo escape($lang['clearbutton']); ?>" onClick="jQuery('#findtext').val('');CentralSpacePost(document.getElementById('consentlist'));return false;" />
             <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" />
              
             </div>
