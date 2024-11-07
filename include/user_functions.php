@@ -3677,14 +3677,16 @@ function update_user_access(int $user = 0, array $set_values = []): bool
         "last_ip" => ["s",get_ip()],
         "logged_in" => ["i",0],
         "session" => ["s"],
+        "login_tries" => ["i"],
     ];
     $col_sql = [];
     $update_params = [];
     foreach ($validcolumns as $column => $setparams) {
         $setval = $set_values[$column] ?? ($setparams[1] ?? false);
-        if($setval) {
+        if($setval !== false) {
             // Only update if a value has been passed or we have a default - so session is not accidentally wiped
-            $col_sql[] = $column . " = ?";  $update_params = array_merge(
+            $col_sql[] = $column . " = ?";
+            $update_params = array_merge(
                 $update_params,
                 [$setparams[0],$setval] // Override the default if passed
                 );
