@@ -789,7 +789,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     $redirectparams["promptsubmit"] = 'true';
                                     }
 
-                                $url = $redirecturl != "" ? escape($redirecturl) : generateURL($baseurl . "/pages/search.php",$redirectparams);
+                                $url = $redirecturl != "" ? $redirecturl : generateURL($baseurl . "/pages/search.php",$redirectparams);
                                 }
                             ?>
                             <script>CentralSpaceLoad('<?php echo $url; // The $url var has been generated or escaped above ?>',true);</script>

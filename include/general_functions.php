@@ -5573,6 +5573,50 @@ function is_jpeg_extension(string $extension): bool
     }
 
 /**
+ * Input validation helper function to check a URL is ours. Mostly used for redirect URLs.
+ * @param mixed $val URL to check
+ */
+function is_resourcespace_url($val): bool
+{
+    return is_string($val) && mb_strpos($val, $GLOBALS['baseurl']) === 0;
+}
+
+/**
+ * Input validation helper function to check if a URL is safe (from XSS). Mostly intended for redirect URLs.
+ * @param mixed $val URL to check
+ */
+function is_safe_url($url): bool
+{
+    if (!(is_string($url) && filter_var($url, FILTER_VALIDATE_URL))) {
+        return false;
+    }
+
+    $url_parts = parse_url($url);
+    if ($url_parts === false) {
+        return false;
+    }
+
+    // Check URL components (except query strings) don't contain XSS payloads
+    foreach(array_diff_key($url_parts, ['query' => 1]) as $value) {
+        if ($value !== escape($value)) {
+            return false;
+        }
+    }
+
+    // Check query strings, if applicable
+    $qs_params = [];
+    parse_str($url_parts['query'] ?? '', $qs_params);
+    foreach ($qs_params as $param => $value) {
+        if ($param !== escape($param) || $value !== escape($value)) {
+            debug("[WARN] Suspicious query string parameter ({$param} with value: {$value}) found in URL - {$url}");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * Input validation helper function for sorting (ASC/DESC).
  * @param mixed $val User input value to be validated
  */
@@ -5599,6 +5643,7 @@ function get_sub_array_with(array $keys): callable
 {
     return fn(array $input): array => array_intersect_key($input, array_flip($keys));
 }
+
 
 /**
  * Server side check to backup front end javascript validation.

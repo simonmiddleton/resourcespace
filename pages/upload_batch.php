@@ -184,8 +184,9 @@ $processupload                          = getval("processupload","") != "";
 $attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '') && (trim($alternative) == '');
 
 $redirecturl = urldecode(getval("redirecturl",""));
-if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
-$redirecturl = escape($redirecturl);
+if ((!is_resourcespace_url($redirecturl) && !hook("modifyredirecturl")) || !is_safe_url($redirecturl)) {
+    $redirecturl = '';
+}
 
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {
