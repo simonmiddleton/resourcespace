@@ -209,6 +209,15 @@ if (
     $_GET['layout'] = [md5("layout_{$page_def[$type]['fields'][1]['options'][$layout]}")];
 }
 
+// Allow the upload flow to call back with the new resource ID and preset it on the form
+if (
+    !($save || $edit)
+    && $type === BRAND_GUIDELINES_CONTENT_TYPES['resource']
+    && ($with_resource_ref = getval('w_ref', '', false, 'is_positive_int_loose'))
+) {
+    $_GET['resource_id'] = $with_resource_ref;
+}
+
 // Process
 $_POST['colour_preview'] = $_GET['colour_preview'] = $_COOKIE['colour_preview'] = ''; # Not expected to be submitted!
 $processed_fields = process_custom_fields_submission(
