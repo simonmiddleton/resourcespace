@@ -47,8 +47,11 @@ else
 $search_access = getval("search_access", null, true);
 $submitted = getval("submitted", "");
 $external_upload = upload_share_active();
+
 $redirecturl = getval("redirecturl","");
-if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
+if ((!is_resourcespace_url($redirecturl) && !hook("modifyredirecturl")) || !is_safe_url($redirecturl)) {
+    $redirecturl = '';
+}
 
 if($terms_upload && $external_upload !== false && (!isset($_COOKIE["acceptedterms"]) || $_COOKIE["acceptedterms"] != true))
     {
