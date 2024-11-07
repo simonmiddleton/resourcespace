@@ -418,7 +418,7 @@ render_content_menu();
             && typeof resource_type_new_upload !== "undefined"
         ) {
             const back_to_content_page_url = new URL(resource_type_new_upload);
-            const manage_content_page = new URL(`${baseurl}/plugins/brand_guidelines/pages/manage/content.php`);
+            const manage_content_page = new URL('<?php echo BRAND_GUIDELINES_URL_MANAGE_CONTENT; ?>');
             manage_content_page.searchParams.set('page', page);
             manage_content_page.searchParams.set('type', type);
             manage_content_page.searchParams.set('after_item', item.position_after);
