@@ -1,6 +1,12 @@
 <?php
 # Reporting functions
 
+/**
+ * Retrieves the name of a report
+ *
+ * @param array $report The report array containing at least a 'name' key.
+ * @return string The translated report name.
+ */
 function get_report_name($report)
 {
     # Translates or customizes the report name.
@@ -12,11 +18,21 @@ function get_report_name($report)
     return lang_or_i18n_get_translated($report["name"], "report-");
 }
 
+/**
+ * Retrieves an array of reports from the database.
+ *
+ * This function queries the database for all reports and processes them by:
+ * 1. Translating the report names using the `get_report_name` function.
+ * 2. Checking if the reports contain date fields using `report_has_date`.
+ * 3. Verifying if the reports have associated thumbnails using `report_has_thumbnail`.
+ * 
+ * The reports are always listed in the same order, regardless of the language used.
+ *
+ * @return array An array of processed reports, each containing 'ref', 'name', 
+ *               'contains_date', and 'has_thumbnail' keys.
+ */
 function get_reports()
     {
-    # Returns an array of reports. The standard reports are translated using $lang. Custom reports are i18n translated.
-    # The reports are always listed in the same order - regardless of the used language. 
-
     # Executes query.
     $r = ps_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report ORDER BY name");
 
@@ -356,7 +372,18 @@ function create_periodic_email($user, $report, $period, $email_days, array $user
     return true;
     }
 
-
+/**
+ * Sends periodic report emails to users based on configured schedules.
+ *
+ * This function checks for any scheduled reports that need to be sent, either because they are
+ * pending or overdue. It gathers the necessary user email addresses, generates the reports,
+ * and sends them as emails with attachments if applicable.
+ *
+ * @param bool $echo_out Determines whether to output progress messages during processing.
+ * @param bool $toemail Determines whether to send the reports via email.
+ *
+ * @return void
+ */
 function send_periodic_report_emails($echo_out = true, $toemail=true)
     {
     # For all configured periodic reports, send a mail if necessary.
@@ -587,6 +614,15 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
     clear_process_lock("periodic_report_emails");
     }
 
+/**
+ * Deletes a periodic report for the current user.
+ *
+ * This function removes the specified periodic report from the database for the user
+ * and also clears any associated unsubscribe (opt out) records.
+ *
+ * @param int $ref The reference ID of the periodic report to delete.
+ * @return bool Returns true upon successful deletion.
+ */
 function delete_periodic_report($ref)
     {
     global $userref;
@@ -596,6 +632,16 @@ function delete_periodic_report($ref)
     return true;
     }
 
+/**
+ * Unsubscribes a user from a specified periodic report.
+ *
+ * This function inserts a record into the unsubscribe table, preventing the specified user
+ * from receiving future emails related to the given periodic report.
+ *
+ * @param int $user_id The ID of the user to unsubscribe.
+ * @param int $periodic_email_id The ID of the periodic email report to unsubscribe from.
+ * @return bool Returns true upon successful unsubscription.
+ */
 function unsubscribe_user_from_periodic_report($user_id, $periodic_email_id)
     {
     $query = 'INSERT INTO report_periodic_emails_unsubscribe 
@@ -606,6 +652,17 @@ function unsubscribe_user_from_periodic_report($user_id, $periodic_email_id)
     return true;
     }
 
+/**
+ * Retrieves the translated version of an activity type.
+ *
+ * This function takes an activity type string, checks if a corresponding
+ * translation exists in the global language array, and returns the
+ * translated string if available. If no translation is found, it returns
+ * the original activity type.
+ *
+ * @param string $activity_type The activity type in plain text English.
+ * @return string The translated activity type if available; otherwise, the original activity type.
+ */
 function get_translated_activity_type($activity_type)
     {
     # Activity types are stored in plain text english in daily_stat. This function will use language strings to resolve a translated value where one is set.

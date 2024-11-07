@@ -787,6 +787,14 @@ function append_usergroup_position($usergroup)
     return isset($last_tile[0]['default_order_by']) ? $last_tile[0]['order_by'] + 10 : 10;
     }
 
+/**
+ * Reorder dashboard tiles for a specific user group.
+ *
+ * This function retrieves all dashboard tiles assigned to a user group and updates each tile's order in increments of 10.
+ *
+ * @param int $usergroup The user group ID for which dashboard tiles should be reordered.
+ * @return void
+ */
 function reorder_usergroup_dash($usergroup)
     {
     $usergroup_tiles = ps_query("SELECT usergroup_dash_tile.dash_tile FROM usergroup_dash_tile LEFT JOIN dash_tile ON usergroup_dash_tile.dash_tile = dash_tile.ref WHERE usergroup_dash_tile.usergroup = ? ORDER BY usergroup_dash_tile.default_order_by", ['i', $usergroup]);
@@ -799,6 +807,14 @@ function reorder_usergroup_dash($usergroup)
         }
     }
 
+/**
+ * Update the display order of a specific dashboard tile for a user group.
+ *
+ * @param int $usergroup The user group ID to which the dashboard tile belongs.
+ * @param int $tile The ID of the dashboard tile to update.
+ * @param int $default_order_by The new default order position for the tile within the user group's dashboard.
+ * @return void
+ */
 function update_usergroup_dash_tile_order($usergroup, $tile, $default_order_by)
     {
     ps_query("UPDATE usergroup_dash_tile SET default_order_by = ? WHERE usergroup = ? AND dash_tile = ?", ['i', $default_order_by, 'i', $usergroup, 'i', $tile]);
@@ -868,12 +884,47 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
         }
     }
 
+/**
+ * Retrieve user group IDs associated with a specific dashboard tile.
+ *
+ * This function fetches the IDs of all user groups that have access to a given dashboard tile.
+ * Each user group ID is returned as a value in the resulting array.
+ *
+ * @param int $tile_id The ID of the dashboard tile for which to retrieve associated user groups.
+ * @return array An array of user group IDs that are linked to the specified dashboard tile.
+ */
 function get_tile_user_groups($tile_id)
     {
     return ps_array("SELECT usergroup AS `value` FROM usergroup_dash_tile WHERE dash_tile = ?",array("i",$tile_id));
     }
 
 
+/**
+ * Retrieve dashboard tiles available to a specific user group.
+ *
+ * This function returns the tiles that are accessible by a particular user group, optionally filtered by a specific tile ID.
+ * The function ensures that the user group ID is numeric and fetches the tiles that are either available to all users
+ * or specifically assigned to the provided user group.
+ *
+ * @param int $user_group_id The ID of the user group for which to retrieve available tiles.
+ * @param int|string $tile (optional) Specific tile ID to filter by; if omitted, all available tiles for the user group are returned.
+ * @return array An array of associative arrays, each representing a dashboard tile with keys:
+ *               - 'ref' (int): Unique reference ID of the tile.
+ *               - 'tile' (int): Same as 'ref', included for compatibility.
+ *               - 'title' (string): The title of the tile.
+ *               - 'txt' (string): Text content of the tile.
+ *               - 'link' (string): Link associated with the tile.
+ *               - 'url' (string): URL of an external resource, if any.
+ *               - 'reload_interval_secs' (int): Time interval for reloading the tile content in seconds.
+ *               - 'resource_count' (int): Resource count, if applicable.
+ *               - 'all_users' (int): Flag indicating if the tile is available to all users.
+ *               - 'allow_delete' (int): Flag indicating if the tile can be deleted.
+ *               - 'default_order_by' (int): Default order for the tile.
+ *               - 'order_by' (int|null): Order for the tile within the user group; may be null if not explicitly set.
+ *               - 'dash_tile' (int): Always set to 1, indicating it is a dashboard tile.
+ *
+ * @throws \Exception If $user_group_id is not a numeric value.
+ */
 function get_usergroup_available_tiles($user_group_id, $tile = '')
     {
     if(!is_numeric($user_group_id))
@@ -1353,6 +1404,20 @@ function get_user_dash($user)
     <?php
     }
 
+
+/**
+ * Render JavaScript for the dashboard tile delete dialog.
+ *
+ * This function outputs JavaScript to create and display a jQuery UI dialog for deleting dashboard tiles.
+ * Depending on the `$all_users` parameter, the dialog may include additional options for deleting default tiles
+ * or managing default dashboard tiles.
+ *
+ * @param bool $all_users (optional) If set to `true`, additional options are displayed for managing tiles that are 
+ *                         accessible by all users. Default is `false`.
+ * @global string $baseurl The base URL of the application, used to redirect to team management pages.
+ * @global array $lang Language strings for localizing dialog text.
+ * @return void Outputs JavaScript directly to the page to render the dialog.
+ */
 function render_delete_dialog_JS($all_users=false)
     {
     global $baseurl, $lang;
@@ -1637,6 +1702,12 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
     <?php
     }
 
+/**
+ * Generate custom CSS style for a dashboard tile background color.
+ *
+ * @param array $buildstring An associative array containing tile style properties, including 'tlstylecolour' for the background color.
+ * @return string A CSS style string for the background color (e.g., "background-color: #FFFFFF;"), or an empty string if no color is specified.
+ */
 function get_tile_custom_style($buildstring)
     {
     if (isset($buildstring['tlstylecolour']))
@@ -1723,6 +1794,25 @@ function render_upgrade_available_tile($user)
     <?php
     }
 
+
+/**
+ * Generate HTML and JavaScript for the dashboard tile toolbar.
+ *
+ * This function renders a toolbar for a dashboard tile, providing options to delete or edit the tile,
+ * based on the user's permissions. The toolbar appears on hover and includes JavaScript functionality 
+ * to manage tile interactions, including preventing accidental clicks on the tile itself when using the toolbar.
+ *
+ * @param array $tile An associative array containing information about the dashboard tile, including:
+ *                    - 'ref' (int): Tile reference ID.
+ *                    - 'all_users' (int): Flag indicating if the tile is accessible by all users.
+ *                    - 'no_edit' (bool): Flag indicating if the tile is non-editable.
+ *                    - 'url' (string|null): Optional URL for the tile's link.
+ * @param string $tile_id The unique HTML ID of the tile used for identifying elements in the toolbar.
+ * @global string $baseurl_short The base URL of the application, used for generating edit links.
+ * @global array $lang Language strings for localizing toolbar text.
+ * @global bool $managed_home_dash Flag indicating if home dashboard management is enabled.
+ * @return void Outputs HTML and JavaScript directly to the page for the tile toolbar.
+ */
 function generate_dash_tile_toolbar(array $tile, $tile_id)
     {
     global $baseurl_short, $lang, $managed_home_dash;

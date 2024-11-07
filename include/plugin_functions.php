@@ -1475,8 +1475,14 @@ function plugin_activate_for_setup($plugin_name)
     return true;
     }
 
-
-
+/**
+ * Includes configuration files for a specified plugin.
+ *
+ * @param string $plugin_name The name of the plugin whose configuration files are to be included.
+ * @param string $config Optional serialized base64-encoded configuration string.
+ * @param string $config_json Optional JSON-encoded configuration string.
+ * @return void This function does not return a value; it modifies global variables.
+ */
 function include_plugin_config($plugin_name,$config="",$config_json="")
 {
     global $mysql_charset;
@@ -1520,6 +1526,13 @@ function include_plugin_config($plugin_name,$config="",$config_json="")
     }
 }
 
+
+/**
+ * Registers the language files for a specified plugin.
+ * 
+ * @param string $plugin The name of the plugin for which to register language files.
+ * @return void This function does not return a value; it modifies the global $lang variable.
+ */
 function register_plugin_language($plugin)
     {
     global $plugins,$language,$pagename,$lang,$applicationname,$customsitetext;
@@ -1557,6 +1570,16 @@ function register_plugin_language($plugin)
         }
     }
 
+/**
+ * Retrieves the file path for a specified plugin.
+ *
+ * This function checks both the standard plugin directory and the user-uploaded filestore directory to locate
+ * the plugin. It can return either the file path on disk or a URL to the plugin based on the provided parameter.
+ *
+ * @param string $plugin The short name of the plugin to locate.
+ * @param bool $url Optional. If true, return the URL to the plugin instead of the file path. Default is false.
+ * @return string|false The path to the plugin on disk or the URL to the plugin, or false if the plugin is not found.
+ */
 function get_plugin_path($plugin,$url=false)
     {
     # For the given plugin shortname, return the path on disk
@@ -1575,6 +1598,15 @@ function get_plugin_path($plugin,$url=false)
     if (file_exists($pluginpath)) {return $url ? $storageurl . "/plugins/" . $plugin : $pluginpath;}
     }
 
+/**
+ * Registers a specified plugin by including its hooks and API bindings.
+ *
+ * This function attempts to load hook files specific to the current page, as well as an 'all' hook that is
+ * applicable across all pages. Additionally, it loads any API bindings that the plugin may have.
+ *
+ * @param string $plugin The short name of the plugin to register.
+ * @return bool Always returns true after attempting to include the relevant files.
+ */
 function register_plugin($plugin)
     {
     global $plugins,$language,$pagename,$lang,$applicationname;

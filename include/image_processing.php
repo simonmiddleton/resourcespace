@@ -571,6 +571,20 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     return true;
     }
 
+/**
+ * Extract and process EXIF, IPTC, and FITS metadata for a resource.
+ *
+ * This function retrieves metadata from an image file, including EXIF, IPTC, and FITS metadata,
+ * and updates the corresponding fields in the database. The process includes support for embedded
+ * geolocation data, handling character encoding, and applying user-configurable options for specific fields.
+ * If ExifTool is available, it is used for more comprehensive metadata extraction. Otherwise, the PHP
+ * `exif_read_data` function is used as a fallback.
+ *
+ * @param int $ref The resource reference ID.
+ * @param string $extension (optional) The file extension for the image, used to validate processing compatibility.
+ * @global array $lang Language strings for localization.
+ * @return bool Returns `false` if the file does not exist; otherwise, void.
+ */
 function extract_exif_comment($ref,$extension="")
     {
     global $lang;
@@ -1116,6 +1130,18 @@ function extract_exif_comment($ref,$extension="")
     autocomplete_blank_fields($ref, false);
     }
 
+/**
+ * Convert IPTC metadata text to UTF-8 encoding.
+ *
+ * This function attempts to detect the character encoding of IPTC metadata text and converts it to UTF-8.
+ * If conversion is not possible due to missing libraries or if the encoding is unknown, the text is returned as-is.
+ * It uses a predefined list of character encodings for the conversion attempts.
+ *
+ * @param string $text The IPTC metadata text to be converted.
+ * @global string $iptc_expectedchars A string of characters expected in the IPTC text, used for encoding validation.
+ * @global string $mysql_charset The MySQL charset configuration, affecting whether conversion is needed.
+ * @return string The converted text in UTF-8 encoding, or the original text if conversion fails.
+ */
 function iptc_return_utf8($text)
     {
     # For the given $text, return the utf-8 equiv.
@@ -1140,6 +1166,33 @@ function iptc_return_utf8($text)
     return $text;
     }
 
+/**
+ * Generate previews for a resource, including thumbnails and alternative image sizes.
+ *
+ * This function creates or updates image previews for a resource, such as thumbnails, 
+ * based on the specified parameters. It supports a variety of configurations, including 
+ * resizing with ImageMagick or GD library, generating checksums, and setting file attributes. 
+ * If the file size exceeds a specified limit, it can queue the preview generation as an offline job.
+ *
+ * @param int $ref The resource ID for which previews are generated.
+ * @param bool $thumbonly (optional) If `true`, only the thumbnail will be generated. Default is `false`.
+ * @param string $extension (optional) The file extension for the resource. Default is "jpg".
+ * @param bool $previewonly (optional) If `true`, only preview images will be generated. Default is `false`.
+ * @param bool $previewbased (optional) If `true`, previews are generated based on existing previews rather than original files. Default is `false`.
+ * @param int $alternative (optional) If set, specifies an alternative file ID to generate previews for. Default is `-1`.
+ * @param bool $ignoremaxsize (optional) If `true`, the file size limit for preview generation is ignored. Default is `false`.
+ * @param bool $ingested (optional) If `true`, marks the resource as already ingested into the system. Default is `false`.
+ * @param bool $checksum_required (optional) If `true`, generates a checksum for the file. Default is `true`.
+ * @param array $onlysizes (optional) Specifies an array of preview sizes to generate. If empty, all sizes are generated.
+ * @global string $imagemagick_path The path to ImageMagick for image processing.
+ * @global float $preview_generate_max_file_size Maximum file size (in MB) for generating previews.
+ * @global bool $previews_allow_enlarge If `true`, allows previews to be larger than the original image.
+ * @global array $lang Language strings for localization.
+ * @global bool $offline_job_queue If `true`, enables queuing of offline preview jobs.
+ * @global array $preview_no_flatten_extensions File extensions for which flattening is disabled.
+ * @global array $preview_keep_alpha_extensions File extensions that retain alpha transparency in previews.
+ * @return bool Returns `true` if previews were generated successfully; `false` otherwise.
+ */
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
     {
     global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge, $lang, $ffmpeg_preview_gif;
@@ -1371,6 +1424,31 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     return true;
     }
 
+
+/**
+ * Generate previews for a resource using ImageMagick.
+ *
+ * This function creates image previews for a resource by leveraging ImageMagick to handle
+ * resizing and generating thumbnails, medium, large, and custom-sized previews.
+ * It provides flexible options to control the generation process, such as limiting previews to specific sizes,
+ * applying watermarks, handling color profiles, and managing alternative files. 
+ * The function includes extensive support for non-standard image formats and configurations.
+ *
+ * @param int $ref The resource ID for which previews are generated.
+ * @param bool $thumbonly (optional) If `true`, only the thumbnail will be generated. Default is `false`.
+ * @param string $extension (optional) The file extension for the resource. Default is "jpg".
+ * @param bool $previewonly (optional) If `true`, only preview images will be generated. Default is `false`.
+ * @param bool $previewbased (optional) If `true`, previews are generated based on existing previews rather than original files. Default is `false`.
+ * @param int $alternative (optional) Specifies an alternative file ID to generate previews for, if any. Default is `-1`.
+ * @param bool $ingested (optional) If `true`, marks the resource as already ingested into the system. Default is `false`.
+ * @param array $onlysizes (optional) Specifies an array of preview sizes to generate. If empty, all sizes are generated.
+ * @global string $imagemagick_path Path to the ImageMagick installation.
+ * @global int $imagemagick_quality Quality setting for ImageMagick output images.
+ * @global bool $previews_allow_enlarge If `true`, allows previews to be larger than the original image.
+ * @global array $watermark Path to watermark image and settings.
+ * @global array $camera_autorotation_ext List of extensions requiring camera auto-rotation.
+ * @return bool Returns `true` if previews were generated successfully; `false` otherwise.
+ */
 function create_previews_using_im(
     int $ref,
     bool $thumbonly = false,
@@ -2246,6 +2324,17 @@ function create_previews_using_im(
         }
     }
 
+/**
+ * Calculate and update the mean color values for a resource image.
+ *
+ * This function calculates the mean red, green, and blue color values for a given image by sampling 
+ * pixels in a grid pattern. It adjusts for brightness and excludes grayscale pixels to determine the dominant colors.
+ * Additionally, it updates the thumbnail dimensions and color key in the resource record.
+ *
+ * @param resource $image The image resource to analyze for mean color.
+ * @param int $ref The resource ID for which the color data is updated.
+ * @return void
+ */
 function extract_mean_colour($image,$ref)
     {
     # for image $image, calculate the mean colour and update this to the image_red, image_green, image_blue tables
@@ -2306,6 +2395,21 @@ function extract_mean_colour($image,$ref)
     );
     }
 
+
+/**
+ * Update the portrait or landscape orientation field for a resource.
+ *
+ * This function determines whether a resource image is in portrait, landscape, or square orientation
+ * and updates the specified field accordingly. If no image resource is provided, it attempts to load
+ * the thumbnail image for the resource.
+ *
+ * @param int $ref The resource ID to update.
+ * @param resource|null $image (optional) An image resource for orientation analysis. If not provided, 
+ *                             the function will load the resource thumbnail.
+ * @global int $portrait_landscape_field The ID of the field to store orientation data.
+ * @global array $lang Language strings for "portrait," "landscape," and "square."
+ * @return void
+ */
 function update_portrait_landscape_field($ref,$image=null){
     # updates portrait_landscape_field
 
@@ -2335,6 +2439,17 @@ function update_portrait_landscape_field($ref,$image=null){
         }
     }
 
+/**
+ * Generate a color key for an image based on dominant colors.
+ *
+ * This function extracts a color key that represents the dominant colors in an image,
+ * similar to a soundex code for colors. It maps the colors in the image to predefined
+ * color categories (e.g., black, white, red, etc.), calculates the closest match for each
+ * sampled pixel, and returns a five-character color key based on the most frequent colors.
+ *
+ * @param resource $image The image resource to analyze.
+ * @return string A five-character string representing the dominant colors in the image.
+ */
 function get_colour_key($image)
     {
     # Extracts a colour key for the image, like a soundex.
@@ -2408,11 +2523,29 @@ function get_colour_key($image)
     return $colkey;
     }
 
+
+
+/**
+ * Apply rotation and gamma adjustments to all preview images of a resource.
+ *
+ * This function adjusts the preview images of a resource by rotating or applying gamma correction.
+ * It primarily modifies the screen resolution preview, then scales and updates other preview sizes
+ * accordingly. For video resources, it also rotates snapshot images. Updates to rotation and gamma
+ * values are recorded in the database to allow future reconstruction of adjustments.
+ *
+ * @param int $ref The resource ID for which previews are tweaked.
+ * @param int $rotateangle The angle in degrees to rotate the preview images.
+ * @param float $gamma The gamma correction factor (values > 1 to lighten, values < 1 to darken).
+ * @param string $extension (optional) The file extension for the preview images. Default is "jpg".
+ * @param int $alternative (optional) The ID of an alternative file to tweak previews for. Default is `-1`.
+ * @param string $resource_ext (optional) The file extension of the original resource, used for video snapshot rotation.
+ * @global array $ffmpeg_supported_extensions Extensions supported for video processing with FFmpeg.
+ * @global bool $watermark Whether watermarking is enabled.
+ * @global int $portrait_landscape_field The field ID for storing portrait or landscape orientation.
+ * @return bool Returns `false` if the main preview file does not exist; otherwise, updates previews and returns `void`.
+ */
 function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
     {
-    # Tweak all preview images
-    # On the edit screen, preview images can be either rotated or gamma adjusted. We keep the high(original) and low resolution print versions intact as these would be adjusted professionally when in use in the target application.
-
     # Use the screen resolution version for processing
     global $ffmpeg_supported_extensions;
 
@@ -2559,6 +2692,20 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
 
     }
 
+/**
+ * Apply rotation and gamma adjustments to all watermarked preview images of a resource.
+ *
+ * This function modifies watermarked preview images by applying a specified rotation angle
+ * and gamma correction factor. Each preview size defined in the database is processed, adjusting
+ * the watermarked version accordingly. The function resizes and updates each adjusted preview image.
+ *
+ * @param int $ref The resource ID for which watermarked previews are tweaked.
+ * @param int $rotateangle The angle in degrees to rotate the watermarked preview images.
+ * @param float $gamma The gamma correction factor to apply (values > 1 to lighten, values < 1 to darken).
+ * @param string $extension (optional) The file extension for the preview images. Default is "jpg".
+ * @param int $alternative (optional) The ID of an alternative file to tweak previews for. Default is `-1`.
+ * @return bool Returns `false` if a watermarked file does not exist; otherwise, updates previews and returns `void`.
+ */
 function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1){
 
     $ps=ps_query("select ref,id,width,height,padtosize,name,internal,allow_preview,allow_restricted,quality from preview_size where (internal=1 or allow_preview=1)");
@@ -2596,7 +2743,17 @@ function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alte
     }
 }
 
-
+/**
+ * Rotate an image resource by a specified angle without using built-in rotation functions.
+ *
+ * This function manually rotates an image resource by 90, -90, or 180 degrees, creating
+ * a new image with the rotated pixels. If the angle is not one of these specified values, 
+ * the original image is returned unmodified.
+ *
+ * @param resource $src_img The source image resource to rotate.
+ * @param int $angle The angle in degrees to rotate the image (90, -90, or 180).
+ * @return resource The rotated image resource, or the original if the angle is unsupported.
+ */
 function AltImageRotate($src_img, $angle) {
 
     if ($angle==270) {$angle=-90;}
@@ -2644,6 +2801,17 @@ function AltImageRotate($src_img, $angle) {
     return $rotate;
 }
 
+
+/**
+ * Convert a base64-encoded image to a JPEG file.
+ *
+ * This function decodes a base64-encoded image string and saves it as a JPEG file.
+ *
+ * @param string $imageData The base64-encoded image data.
+ * @param string $outputfile The path to save the decoded JPEG file.
+ * @return void
+ * @throws Exception if the output file cannot be opened for writing.
+ */
 function base64_to_jpeg( $imageData, $outputfile ) {
 
  $jpeg = fopen( $outputfile, "wb" ) or die ("can't open");
@@ -2687,6 +2855,31 @@ function extract_indd_pages($filename)
     return false;
     }
 
+/**
+ * Generate or update the checksum for a resource file.
+ *
+ * This function calculates a unique checksum for a specified resource file. It either
+ * generates the checksum based on file contents and updates the resource record,
+ * or clears any existing checksum if the file does not exist. It also sets metadata 
+ * indicating the checksum's last verification date and integrity status.
+ *
+ * @param int $resource The ID of the resource for which the checksum is generated.
+ * @param string $extension The file extension of the resource.
+ * @param bool $anyway (optional) If `true`, forces checksum generation regardless of configuration settings.
+ * @global bool $file_checksums Indicates if checksum generation is enabled.
+ * @global bool $file_checksums_offline Indicates if checksums should be generated offline.
+ * @return bool Returns `true` if the checksum was generated; `false` if the file does not exist or was not generated.
+ */
+
+ /**
+ * Clear the checksum for a resource.
+ *
+ * This function removes the checksum value for a specified resource, marking it as needing
+ * a new checksum. Primarily used when the checksum cannot be generated.
+ *
+ * @param int $resource The ID of the resource to clear the checksum for.
+ * @return bool Returns `true` if the checksum was cleared successfully; `false` otherwise.
+ */
 function generate_file_checksum($resource,$extension,$anyway=false)
     {
     global $file_checksums;
@@ -2719,6 +2912,12 @@ function generate_file_checksum($resource,$extension,$anyway=false)
         }
     }
 
+/**
+ * Clear the checksum value for a specified resource.
+ *
+ * @param int $resource The ID of the resource to clear the checksum for.
+ * @return bool Returns `true` if the checksum was cleared successfully; `false` if the resource ID is invalid.
+ */
 function clear_file_checksum($resource){
     if (strlen($resource) > 0 && is_numeric($resource)){
         ps_query("UPDATE resource SET file_checksum='' WHERE ref= ?", ['i', $resource]);
@@ -2728,6 +2927,20 @@ function clear_file_checksum($resource){
     }
 }
 
+/**
+ * Check for duplicate files based on checksum.
+ *
+ * This function calculates the checksum of a file and checks if any existing resources
+ * have the same checksum, indicating a possible duplicate. If a duplicate is found and
+ * the resource is not marked for replacement, the function returns the list of duplicate
+ * resource IDs.
+ *
+ * @param string $filepath The file path of the file to check.
+ * @param int $replace_resource The resource ID to replace, if applicable, to avoid detecting it as a duplicate.
+ * @global bool $file_upload_block_duplicates Indicates if duplicate checking is enabled.
+ * @global bool $file_checksums_50k If true, calculates checksum based on the first 50 KB of the file and its size.
+ * @return array An array of duplicate resource IDs, or an empty array if no duplicates are found.
+ */
 function check_duplicate_checksum($filepath,$replace_resource){
     global $file_upload_block_duplicates,$file_checksums_50k;
     if ($file_upload_block_duplicates)
@@ -2752,6 +2965,16 @@ function check_duplicate_checksum($filepath,$replace_resource){
     return array();
 }
 
+/**
+ * Upload and generate previews for a resource.
+ *
+ * This function uploads a user-provided preview image for a specified resource, ensuring
+ * the file is in JPEG format. After moving the file to its temporary location, it generates
+ * previews and cleans up the temporary file if not in use for transcoding.
+ *
+ * @param int $ref The resource ID for which the preview is uploaded.
+ * @return bool Returns `true` if the preview upload and processing are successful, `false` if the file is not in JPEG format.
+ */
 function upload_preview($ref)
     {
     hook ("removeannotations","",array($ref));
@@ -2922,6 +3145,16 @@ function extract_text($ref,$extension,$path="")
     return true;
     }
 
+/**
+ * Get the orientation of an image file using ExifTool.
+ *
+ * This function retrieves the orientation metadata of an image file. If orientation information
+ * is not available, it attempts to retrieve the rotation metadata. The function uses ExifTool 
+ * for the extraction and processes the result to return the orientation angle in degrees.
+ *
+ * @param string $file The path to the image file.
+ * @return int The orientation angle in degrees (0, 90, 180, 270), or 0 if no orientation information is available.
+ */
 function get_image_orientation($file)
     {
     $exiftool_fullpath = get_utility_path('exiftool');
@@ -2951,6 +3184,18 @@ function get_image_orientation($file)
     return $orientation;
     }
 
+/**
+ * Automatically rotate an image based on its orientation metadata.
+ *
+ * This function uses ImageMagick to rotate an image to the correct orientation. If the image's
+ * orientation is determined using ExifTool, the function will rotate the image accordingly. It
+ * preserves custom metadata when applicable.
+ *
+ * @param string $src_image The path to the source image that needs to be rotated.
+ * @param int|bool $ref The resource ID for the image; used to fetch orientation data if needed.
+ *                      Pass `false` if no resource ID is available.
+ * @return bool Returns `true` if the image was successfully rotated and saved, or `false` on failure.
+ */
 function AutoRotateImage($src_image, $ref = false)
     {
     # use $ref to pass a resource ID in case orientation data needs to be taken
@@ -3078,7 +3323,19 @@ function extract_icc_profile($ref, $extension, $alternative = -1)
     return false;
     }
 
-
+/**
+ * Extracts the ICC profile from an image file using ImageMagick.
+ *
+ * This function attempts to extract the ICC profile from the specified image file and saves it as a
+ * separate file with the `.icc` extension. It checks if the ICC profile already exists and will
+ * remove it before extraction. The function is compatible with both Windows and non-Windows
+ * environments.
+ *
+ * @param string $infile The path to the input image file from which to extract the ICC profile.
+ * @param string $ref Optional. The resource ID associated with the image file. Used to determine the
+ *                    output path for the extracted ICC profile.
+ * @return bool Returns `true` if the ICC profile was successfully extracted and saved, or `false` on failure.
+ */
 function extract_icc($infile, $ref='') {
     global $config_windows, $syncdir;
 
@@ -3121,6 +3378,19 @@ function extract_icc($infile, $ref='') {
     return file_exists($outfile);
 }
 
+/**
+ * Retrieves the version of ImageMagick installed on the system.
+ *
+ * This function checks the version of ImageMagick by executing the `convert` command.
+ * It can return the version information as either an array or a string, depending on the
+ * value of the $array parameter.
+ *
+ * @param bool $array Optional. If set to true, the function returns an array containing the
+ *                    major, minor, revision, and patch version numbers. If false, it returns
+ *                    a version string in the format "major.minor.revision-patch".
+ * @return mixed Returns an array with version numbers if $array is true, a version string if false,
+ *               or false if ImageMagick is not installed or the version cannot be determined.
+ */
 function get_imagemagick_version($array=true){
     // return version number of ImageMagick, or false if it is not installed or cannot be determined.
     // will return an array of major/minor/version/patch if $array is true, otherwise just the version string
@@ -4145,6 +4415,25 @@ function get_sizes_to_generate(
     }
     return $ps;
 }
+
+
+/**
+ * Generates alternative image files for a specified resource.
+ *
+ * This function checks the existing alternative files and creates new ones based on the specified
+ * parameters. It can also force the creation of alternatives even if they already exist. It uses
+ * ImageMagick to process the images according to the specified configurations.
+ *
+ * @param int $ref The resource ID for which alternatives are being generated.
+ * @param array $params An associative array containing the following keys:
+ *                      - file: The file path of the original image.
+ *                      - extension: The extension of the original image (default is "jpg").
+ *                      - previewonly: A boolean indicating if only previews should be created.
+ *                      - previewbased: A boolean indicating if the alternatives are based on previews.
+ *                      - ingested: A boolean indicating if the resource has been ingested (default is true).
+ * @param bool $force Optional. If set to true, will force the generation of alternative files even if they exist.
+ * @return bool Returns true if alternatives were generated successfully, false otherwise.
+ */
 
 function create_image_alternatives(int $ref, array $params, $force = false)
 {

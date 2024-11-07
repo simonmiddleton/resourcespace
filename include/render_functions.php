@@ -1756,6 +1756,16 @@ function render_access_key_tr(array $record)
     <?php
     }
 
+/**
+ * Checks whether a specified field should be displayed based on various conditions.
+ *
+ * This function evaluates several criteria to determine if a field is visible in the resource editing interface.
+ * It takes into account the field's active status, permissions for viewing and editing, upload conditions, 
+ * and any custom hooks that may hide the field.
+ *
+ * @param array $field The field configuration array containing information about the field's settings.
+ * @return bool Returns true if the field should be displayed; false otherwise.
+ */
 function is_field_displayed($field)
     {
     global $ref, $resource, $upload_review_mode;
@@ -1774,6 +1784,18 @@ function is_field_displayed($field)
         || hook('edithidefield2', '', array('field' => $field)));
     }
 
+/**
+ * Displays a field in the resource edit interface.
+ *
+ * This function handles the rendering of various types of fields based on their configurations and context.
+ * It supports multiple modes, such as batch editing, and adjusts the display based on user permissions,
+ * errors from previous saves, and whether the field is being copied from another resource.
+ *
+ * @param int $n The index of the field in the form.
+ * @param array $field The field configuration array containing settings and metadata for the field.
+ * @param bool $newtab Indicates if the field should be displayed in a new tab.
+ * @param bool $modal Indicates if the field is part of a modal dialog.
+ */
 function display_field($n, $field, $newtab=false,$modal=false)
   {
   debug_function_call(__FUNCTION__, [$n, $field['ref'], $newtab, $modal]);
@@ -2280,7 +2302,20 @@ function display_field($n, $field, $newtab=false,$modal=false)
   hook('afterfielddisplay', '', array($n, $field));
   }
 
-    
+/**
+ * Renders a date range input field for resource editing.
+ *
+ * This function creates a set of input fields for selecting a start and end date. It supports EDTF format
+ * and includes validation for the entered dates. It also provides functionality for handling multiple edit modes
+ * and integrates with the autosave feature.
+ *
+ * @param string $name The base name for the input fields.
+ * @param string $value The value of the date range (in a specific format).
+ * @param bool $forsearch Indicates if the field is being used for a search query.
+ * @param bool $autoupdate Indicates if the field should trigger an update on change.
+ * @param array $field The field configuration array containing settings and metadata for the field.
+ * @param string $reset An optional parameter indicating if the form should be reset.
+ */
 function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,$field=array(),$reset="")
     {
     $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
@@ -5570,7 +5605,16 @@ function render_hidden_input(string $name, string $value)
     <?php
     }
 
-
+/**
+ * Renders a dropdown for selecting the workflow state of a resource.
+ *
+ * This function generates a dropdown menu with various workflow states, 
+ * allowing the user to select the current state of the resource. 
+ * The available options are based on permission checks and additional states defined globally.
+ *
+ * @param int|null $current The currently selected state, if any.
+ * @param bool $checkaccess Indicates whether to check user permissions for each state.
+ */
 function render_workflow_state_question($current=null, $checkaccess=true)
     {
     global $additional_archive_states, $lang;
@@ -5593,6 +5637,15 @@ function render_workflow_state_question($current=null, $checkaccess=true)
     render_dropdown_question($lang["status"], "share_status", $statusoptions, $current, " class=\"stdWidth\"");
     }
 
+/**
+ * Renders a question field for setting a share password.
+ *
+ * This function generates an HTML input field where users can set or change 
+ * the password for shared access to a resource. It includes functionality to 
+ * toggle password visibility and indicates if the password is required.
+ *
+ * @param bool $blank Indicates if the password field should be left blank (default is true).
+ */
 function render_share_password_question($blank=true)
     {
     global $lang, $share_password_required; 

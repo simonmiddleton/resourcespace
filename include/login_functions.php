@@ -219,7 +219,17 @@ function perform_login($loginuser="",$loginpass="")
     return $result;
     }
 
-    
+/**
+ * Generates a unique session hash for user authentication.
+ *
+ * This function creates a session hash based on either a completely randomized method or a method
+ * that combines a password hash with the current date. It ensures that the generated hash is unique
+ * by checking against existing sessions in the database.
+ *
+ * @param string $password_hash The hashed password of the user, used for generating the session hash.
+ * @return string Returns a unique session hash.
+ */
+
 function generate_session_hash($password_hash)
     {
     # Generates a unique session hash
