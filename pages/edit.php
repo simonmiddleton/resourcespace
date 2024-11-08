@@ -49,7 +49,7 @@ $submitted = getval("submitted", "");
 $external_upload = upload_share_active();
 
 $redirecturl = getval("redirecturl","");
-if ((!is_resourcespace_url($redirecturl) && !hook("modifyredirecturl")) || !is_safe_url($redirecturl)) {
+if ((!url_starts_with($baseurl, $redirecturl) && !hook("modifyredirecturl")) || !is_safe_url($redirecturl)) {
     $redirecturl = '';
 }
 

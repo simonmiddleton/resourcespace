@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 command_line_only();
 
-// --- Set up
-$initial_baseurl = $baseurl;
-$baseurl = 'http://test.localhost';
-// --- End of Set up
-
 $use_cases = [
     [
         'name' => 'Incorrect type',
@@ -21,24 +16,29 @@ $use_cases = [
         'expected' => true,
     ],
     [
-        'name' => 'Simple (not ours)',
+        'name' => 'Different URL',
         'input' => 'http://unknown.localhost/pages/search.php',
         'expected' => false,
     ],
     [
-        'name' => 'Simple with query string params',
+        'name' => 'With query string params',
         'input' => 'http://test.localhost/pages/search.php?foo=1&bar=2',
         'expected' => true,
     ],
     [
-        'name' => 'URL found later',
+        'name' => 'Base value found part of a different URL',
         'input' => 'http://unknown.localhost/pages/search.php?foo=1&bar=http://test.localhost/pages/search.php',
+        'expected' => false,
+    ],
+    [
+        'name' => 'Not a URL',
+        'input' => 'Lorem ipsum',
         'expected' => false,
     ],
 ];
 foreach($use_cases as $uc)
     {
-    $result = is_resourcespace_url($uc['input']);
+    $result = url_starts_with('http://test.localhost', $uc['input']);
     if($uc['expected'] !== $result)
         {
         echo "Use case: {$uc['name']} - ";
@@ -48,7 +48,6 @@ foreach($use_cases as $uc)
     }
 
 // Tear down
-$baseurl = $initial_baseurl;
-unset($use_cases, $result, $initial_baseurl);
+unset($use_cases, $result);
 
 return true;

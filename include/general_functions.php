@@ -5573,12 +5573,15 @@ function is_jpeg_extension(string $extension): bool
     }
 
 /**
- * Input validation helper function to check a URL is ours. Mostly used for redirect URLs.
+ * Input validation helper function to check a URL is ours (e.g. if it's our base URL). Mostly used for redirect URLs.
+ *
+ * @param string $base The value the URL is expected to start with. Due to the structure of a URL, you can also check
+ * for (partial) paths.
  * @param mixed $val URL to check
  */
-function is_resourcespace_url($val): bool
+function url_starts_with(string $base, $val): bool
 {
-    return is_string($val) && mb_strpos($val, $GLOBALS['baseurl']) === 0;
+    return is_string($val) && filter_var($val, FILTER_VALIDATE_URL) && mb_strpos($val, $base) === 0;
 }
 
 /**

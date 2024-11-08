@@ -184,7 +184,7 @@ $processupload                          = getval("processupload","") != "";
 $attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '') && (trim($alternative) == '');
 
 $redirecturl = urldecode(getval("redirecturl",""));
-if ((!is_resourcespace_url($redirecturl) && !hook("modifyredirecturl")) || !is_safe_url($redirecturl)) {
+if ((!url_starts_with($baseurl, $redirecturl) && !hook("modifyredirecturl")) || !is_safe_url($redirecturl)) {
     $redirecturl = '';
 }
 
