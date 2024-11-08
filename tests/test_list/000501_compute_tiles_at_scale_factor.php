@@ -5,10 +5,9 @@ command_line_only();
 include_once __DIR__ . '/../../include/image_processing.php';
 
 // Setup
-$orig_global_data = [
-    'preview_tile_size' => $preview_tile_size,
-    'preview_tile_scale_factors' => $preview_tile_scale_factors,
-];
+$preview_tile_size_cache = $preview_tile_size;
+$preview_tile_scale_factors_cache = $preview_tile_scale_factors;
+
 $preview_tile_size = 1024;
 $preview_tile_scale_factors = [1, 2, 4, 8];
 $source_width = 5616;
@@ -117,11 +116,17 @@ if(!($start_tile_region && $end_tile_region))
 
 
 // Tear down
-unset($source_width, $source_height, $tiles, $expected_tile_ids, $start_tile_region, $end_tile_region);
-foreach($orig_global_data as $orig_global_var_name => $orig_global_var_value)
-    {
-    $$orig_global_var_name = $orig_global_var_value;
-    }
-unset($orig_global_data);
+$preview_tile_size = $preview_tile_size_cache;
+$preview_tile_scale_factors = $preview_tile_scale_factors_cache;
+unset(
+    $source_width,
+    $source_height,
+    $tiles,
+    $expected_tile_ids,
+    $start_tile_region,
+    $end_tile_region,
+    $preview_tile_size_cache,
+    $preview_tile_scale_factors_cache
+);
 
 return true;

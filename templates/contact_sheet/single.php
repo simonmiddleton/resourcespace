@@ -1,16 +1,16 @@
 <style>
 <?php
-if(isset($refnumberfontsize))
+if(isset($bind_placeholders['refnumberfontsize']))
     {
     ?>
-    page { font-size: <?php echo (int) $refnumberfontsize; ?>px; }
+    page { font-size: <?php echo (int) $bind_placeholders['refnumberfontsize']; ?>px; }
     <?php
     }
 
-if(isset($titlefontsize))
+if(isset($bind_placeholders['titlefontsize']))
     {
     ?>
-    #pageTitle { font-size: <?php echo (int) $titlefontsize; ?>px; }
+    #pageTitle { font-size: <?php echo (int) $bind_placeholders['titlefontsize']; ?>px; }
     <?php
     }
     ?>
@@ -21,19 +21,19 @@ if(isset($titlefontsize))
 </style>
 <?php
 global $contact_sheet_field_name, $contact_sheet_field_name_bold;
-foreach($resources as $resource_ref => $resource)
+foreach($bind_placeholders['resources'] as $resource_ref => $resource)
     {
     ?>
 <page backtop="25mm" backbottom="25mm">
 <?php
-if(isset($contactsheet_header))
+if(isset($bind_placeholders['contactsheet_header']))
     {
     ?>
     <page_header>
         <table cellspacing="0" style="width: 100%;">
             <tr>
                 <?php
-            	if($contact_sheet_include_applicationname)
+            	if($bind_placeholders['contact_sheet_include_applicationname'])
                 	{
                 	?>
                 	<td style="width: 60%;">
@@ -41,11 +41,11 @@ if(isset($contactsheet_header))
                 	</td>
                 	<?php
                 	}
-            if(isset($add_contactsheet_logo))
+            if(isset($bind_placeholders['add_contactsheet_logo']))
                 {
                 ?>
                 <td style="width: 40%;" align=right>
-                    <img id="logo" src="<?php echo $contact_sheet_logo; ?>" alt="Logo" <?php if(isset($contact_sheet_logo_resize) && $contact_sheet_logo_resize){ ?> style="width:100%;height:auto;"<?php } ?>>
+                    <img id="logo" src="<?php echo $bind_placeholders['contact_sheet_logo']; ?>" alt="Logo" <?php if(isset($bind_placeholders['column_width_resize']) && $bind_placeholders['column_width_resize']){ ?> style="width:100%;height:auto;"<?php } ?>>
                 </td>
                 <?php
                 }
@@ -57,7 +57,7 @@ if(isset($contactsheet_header))
     <?php
     }
 
-if(isset($contact_sheet_footer))
+if(isset($bind_placeholders['contact_sheet_footer']))
     {
     ?>
     <page_footer>
@@ -78,16 +78,16 @@ if(isset($contact_sheet_footer))
 
 
     <!-- Real content starts here -->
-    <h3 id="pageTitle"><?php echo escape($title); ?></h3>
+    <h3 id="pageTitle"><?php echo escape($bind_placeholders['title']); ?></h3>
 
     <table style="width: 100%;">
         <tr>
             <td style="width: 15%"></td>
-            <td style="width: 70%; height: <?php echo $available_height * 0.5; ?>px;">
+            <td style="width: 70%; height: <?php echo $bind_placeholders['available_height'] * 0.5; ?>px;">
             <?php
-            $image_dimensions = calculate_image_dimensions($resource['preview_src'], $available_width * 0.7, $available_height * 0.5);
+            $image_dimensions = calculate_image_dimensions($resource['preview_src'], $bind_placeholders['available_width'] * 0.7, $bind_placeholders['available_height'] * 0.5);
 
-            if(isset($contact_sheet_add_link))
+            if(isset($bind_placeholders['contact_sheet_add_link']))
                 {
                 // IMPORTANT: having space between a tag and img creates some weird visual lines (HTML2PDF issues maybe?!)
                 ?>
@@ -106,7 +106,7 @@ if(isset($contact_sheet_footer))
         </tr>
         </table>
     <?php
-    if($config_sheetthumb_include_ref)
+    if($bind_placeholders['config_sheetthumb_include_ref'])
         {
         ?>
         <p><?php echo (int) $resource_ref; ?></p>
