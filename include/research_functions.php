@@ -240,6 +240,7 @@ function save_research_request($ref)
                     SELECT ?, resource FROM collection_resource 
                     WHERE collection = ? AND resource NOT IN (SELECT resource FROM collection_resource WHERE collection = ?)", $parameters);
         }
+    return true;
     }
 
 /**
