@@ -47,16 +47,6 @@ function HookBrand_guidelinesAllHandleuserref() {
     }
 }
 
-function HookBrand_guidelinesAllModify_redirecturl()
-{
-    $redirecturl = getval('redirecturl', '');
-    if (mb_strcut($redirecturl, 0, mb_strlen(BRAND_GUIDELINES_URL_MANAGE_CONTENT)) === BRAND_GUIDELINES_URL_MANAGE_CONTENT) {
-        return $redirecturl;
-    } else {
-        return false;
-    }
-}
-
 function HookBrand_guidelinesAllPostUploadActions_before_csl_redirurl_js(): void
 {
     /*
