@@ -2,6 +2,18 @@
 
 use Montala\ResourceSpace\CommandPlaceholderArg;
 
+/**
+ * Generates a random JPEG image for a given resource with random background color and text.
+ *
+ * This function creates an image of specified dimensions with a random background color
+ * and text indicating the resource reference. The image is then saved to the resource's
+ * designated path and also triggers the creation of previews for the resource.
+ *
+ * @param int $resource The reference ID of the resource for which the image is being created.
+ * @param int $width The width of the generated image in pixels.
+ * @param int $height The height of the generated image in pixels.
+ * @return bool Returns true on success, indicating that the image was created and saved successfully.
+ */
 function resource_random_jpg($resource,$width, $height)
     {
     // Set random colours 
@@ -20,6 +32,8 @@ function resource_random_jpg($resource,$width, $height)
     $path = get_resource_path($resource,true,'',true,'jpg');
     imagejpeg($test_image, $path,50);
     create_previews($resource,false,'jpg');
+
+    return true;
     }
 
 /**

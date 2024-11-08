@@ -3,11 +3,19 @@
 # Functions to perform searches (read only)
 # - For resource indexing / keyword creation, see resource_functions.php
 
+
+/**
+ * Resolves the most commonly used keyword that sounds like the given keyword.
+ *
+ * This function attempts to find a keyword that phonetically matches the provided keyword
+ * using the Soundex algorithm. If no Soundex match is found, it will suggest the most commonly
+ * used keyword that starts with the same first few letters.
+ *
+ * @param string $keyword The keyword to resolve.
+ * @return string|false Returns the matched keyword if found, or false if no match is found.
+ */
 function resolve_soundex($keyword)
     {
-    # returns the most commonly used keyword that sounds like $keyword, or failing a soundex match,
-    # the most commonly used keyword that starts with the same few letters.
-
     global $soundex_suggest_limit;
     $soundex=ps_value("SELECT keyword value FROM keyword WHERE soundex = ? AND keyword NOT LIKE '% %' AND hit_count >= ? ORDER BY hit_count DESC LIMIT 1",["s",soundex($keyword),"i",$soundex_suggest_limit],false);
     if (($soundex===false) && (strlen($keyword)>=4))
@@ -18,12 +26,19 @@ function resolve_soundex($keyword)
     return $soundex;
     }
 
+/**
+ * Suggests search refinements based on common keywords from a set of resource references.
+ *
+ * This function analyzes the provided array of resource references and the original search query.
+ * It identifies common keywords associated with the specified resources and suggests new search queries
+ * by appending these keywords to the original search query, provided they are not already included in it.
+ *
+ * @param array $refs An array of resource references to analyze.
+ * @param string $search The original search query.
+ * @return array An array of suggested search refinements. Returns an empty array if no refinements can be suggested.
+ */
 function suggest_refinement($refs,$search)
     {
-    # Given an array of resource references ($refs) and the original
-    # search query ($search), produce a list of suggested search refinements to
-    # reduce the result set intelligently.
-
     if (count($refs)==0) {return array();} // Nothing to do, nothing to return
     $in=ps_param_insert(count($refs));
     $suggest=array();
@@ -39,6 +54,18 @@ function suggest_refinement($refs,$search)
     return $suggest;
     }
 
+/**
+ * Retrieves a list of fields suitable for advanced searching.
+ *
+ * This function queries the database for resource type fields that are marked for advanced searching.
+ * It checks for visibility based on user permissions and whether the fields are hidden from the search.
+ * If a designated date field is specified and not already included in the results, it will be added
+ * to the beginning of the list if it matches the resource types of the other fields.
+ *
+ * @param bool $archive Whether to include fields related to archived resources. Defaults to false.
+ * @param string $hiddenfields A comma-separated string of field references that should be hidden from the search.
+ * @return array An array of searchable fields that can be used in an advanced search form.
+ */
 function get_advanced_search_fields($archive=false, $hiddenfields="")
     {
     global $FIXED_LIST_FIELD_TYPES, $date_field, $daterange_search;
@@ -101,10 +128,19 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
     return $return;
     }
 
-
+/**
+ * Retrieves a list of fields suitable for advanced searching within collections.
+ *
+ * This function constructs an array of fields specifically related to collections, including
+ * collection title, keywords, and owner. It checks against a list of hidden fields to determine
+ * which fields should be included in the return array for advanced searching.
+ *
+ * @param bool $archive Whether to include fields related to archived collections. Defaults to false.
+ * @param string $hiddenfields A comma-separated string of field references that should be hidden from the search.
+ * @return array An array of fields suitable for advanced searching in the context of collections.
+ */
 function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
     {
-    # Returns a list of fields suitable for advanced searching.
     $return=array();
 
     $hiddenfields=explode(",",$hiddenfields);
@@ -123,14 +159,20 @@ function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
     return $return;
     }
 
-
+/**
+ * Constructs a search query string from the posted search form data.
+ *
+ * This function takes the advanced search form fields and assembles them
+ * into a search query string that can be used for a standard search. It
+ * processes various input fields, including dates, keywords, and resource IDs,
+ * while respecting user permissions and field visibility settings.
+ *
+ * @param array $fields An array of fields used in the search form.
+ * @param bool $fromsearchbar Indicates if the search is initiated from a search bar.
+ * @return string The constructed search query string based on the input data.
+ */
 function search_form_to_search_query($fields,$fromsearchbar=false)
     {
-    # Take the data in the the posted search form that contained $fields, and assemble
-    # a search query string that can be used for a standard search.
-    #
-    # This is used to take the advanced search form and assemble it into a search query.
-
     global $auto_order_checkbox,$checkbox_and,$resource_field_verbatim_keyword_regex;
     $search="";
     if (getval("basicyear","")!="")
@@ -503,11 +545,21 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         return $search;
     }
 
+/**
+ * Refines the search string to eliminate duplicates and ensure proper formatting.
+ *
+ * This function addresses several issues related to searching, including:
+ * - Eliminating duplicate terms from the search query.
+ * - Preserving string search functionality when quotes are used.
+ * - Formatting date-related keywords correctly.
+ * - Adjusting keywords for advanced search fields and ensuring they carry over properly.
+ * - Fixing bugs related to search separators and ensuring valid search syntax.
+ *
+ * @param string $search The original search string to be refined.
+ * @return string The refined search string, with duplicates removed and properly formatted.
+ */
 function refine_searchstring($search)
     {
-    # This function solves several issues related to searching.
-    # it eliminates duplicate terms, helps the field content to carry values over into advanced search correctly, fixes a searchbar bug where separators (such as in a pasted filename) cause an initial search to fail, separates terms for searchcrumbs.
-
     global $use_refine_searchstring;
 
     if (!$use_refine_searchstring){return $search;}
@@ -581,7 +633,18 @@ function refine_searchstring($search)
     return $search;
     }
 
-
+/**
+ * Compiles a list of actions based on the provided top actions and search parameters.
+ *
+ * This function generates an array of options for various actions that can be performed
+ * on search results, such as saving searches to collections, saving to dashboards,
+ * exporting results, editing resources, and running reports. The available actions depend
+ * on user permissions and specific conditions.
+ *
+ * @param bool $top_actions Indicates whether to include top actions in the options.
+ * @return array An array of action options, each containing value, label, data attributes,
+ *               category, and order for sorting.
+ */
 function compile_search_actions($top_actions)
     {
     $options = array();
@@ -782,6 +845,25 @@ function compile_search_actions($top_actions)
     return $options;
     }
 
+/**
+ * Constructs a SQL filter based on the provided search parameters.
+ *
+ * This function generates a prepared statement query that can be used to filter search results
+ * based on various criteria, including archive status, resource types, user permissions, and more.
+ * The function also takes into account user-specific access rights and other configurations
+ * to ensure that the returned resources meet the necessary visibility and editability criteria.
+ *
+ * @param string $search The search query string.
+ * @param mixed $archive Archive states to filter by (can be a comma-separated string).
+ * @param string $restypes Resource types to include in the search.
+ * @param int $recent_search_daylimit Limit for filtering recent searches by creation date.
+ * @param mixed $access_override If set, overrides access restrictions.
+ * @param bool $return_disk_usage Indicates whether to include disk usage information.
+ * @param bool $editable_only If true, only returns resources that are editable by the user.
+ * @param int|null $access The specific access level to filter by (if applicable).
+ * @param bool $smartsearch If true, enables smart search features.
+ * @return PreparedStatementQuery A prepared statement object containing the SQL query and parameters.
+ */
 function search_filter($search,$archive,$restypes,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null, $smartsearch = false)
     {
     debug_function_call("search_filter", func_get_args());
@@ -1156,6 +1238,30 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
     return $sql_filter;
     }
 
+
+/**
+ * Processes special searches and constructs a corresponding SQL query.
+ *
+ * This function handles various special search commands (like viewing the last resources, 
+ * resources with no downloads, duplicates, collections, etc.) and creates a prepared statement 
+ * for the query that retrieves the desired resources based on the search parameters. 
+ * It also incorporates user permissions and other configurations into the search logic.
+ *
+ * @param string $search The search string indicating the type of special search.
+ * @param PreparedStatementQuery $sql_join The SQL JOIN query to be applied.
+ * @param int $fetchrows The number of rows to fetch.
+ * @param string $sql_prefix The prefix for the SQL query.
+ * @param string $sql_suffix The suffix for the SQL query.
+ * @param string $order_by The order by clause for sorting the results.
+ * @param string $orig_order The original order specified by the user.
+ * @param string $select The fields to select in the query.
+ * @param PreparedStatementQuery $sql_filter The SQL WHERE filter to apply.
+ * @param mixed $archive Archive states to filter by.
+ * @param bool $return_disk_usage Indicates whether to return disk usage information.
+ * @param bool $return_refs_only If true, returns only resource references.
+ * @param bool $returnsql If true, returns the constructed SQL query instead of executing it.
+ * @return mixed The results of the special search or false if no special search was matched.
+ */
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
     {
     # Process special searches. These return early with results.
@@ -2372,12 +2478,19 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     return $return;
     }
 
-
+/**
+ * Generates a list of keywords for indexing, including all possible infixes 
+ * for each keyword in the provided list.
+ *
+ * This function processes each keyword and, for those without spaces, 
+ * adds all possible infixes of a specified minimum length to the return array. 
+ * The resulting array is suitable for indexing in fields that have partial indexing enabled.
+ *
+ * @param array $keywords An array of keywords to process for partial indexing.
+ * @return array An array of keywords, each with its associated position in the original list.
+ */
 function add_partial_index($keywords)
     {
-    # For each keywords in the supplied keywords list add all possible infixes and return the combined array.
-    # This therefore returns all keywords that need indexing for the given string.
-    # Only for fields with 'partial_index' enabled.
     $return=array();
     $position=0;
     $x=0;
@@ -2408,7 +2521,20 @@ function add_partial_index($keywords)
     return $return;
     }
 
-
+/**
+ * Highlights keywords in the given text based on the search query.
+ *
+ * This function scans the provided text for keywords specified in the search string 
+ * and wraps them in HTML markup to highlight them. 
+ *
+ * @param string $text The text in which to highlight keywords.
+ * @param string $search The search query containing keywords to highlight.
+ * @param bool $partial_index Indicates whether partial indexing is used (default: false).
+ * @param string $field_name Optional. The name of the field being searched.
+ * @param int $keywords_index Indicates the indexing status of the field (default: 1).
+ * @param int $str_highlight_options Options for highlighting (default: STR_HIGHLIGHT_SIMPLE).
+ * @return string The text with highlighted keywords.
+ */
 function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
     {
     global $noadd;
@@ -2564,19 +2690,41 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
     return $text;
     }
 
+/**
+ * Comparison function for sorting highlights by their length.
+ *
+ * This function is used to sort keyword highlights for the `str_highlight` function.
+ * It ensures that keywords are sorted based on their length, with shorter keywords
+ * coming before longer ones. If the lengths are equal, it sorts them alphabetically.
+ *
+ * This fixes an odd problem for str_highlight related to the order of keywords.
+ * 
+ * @param string $a The first string to compare.
+ * @param string $b The second string to compare.
+ * @return int Returns 0 if lengths are equal, -1 if $a is shorter than $b, and 1 if $a is longer than $b.
+ */
 function sorthighlights($a, $b)
     {
-    # fixes an odd problem for str_highlight related to the order of keywords
     if (strlen($a) < strlen($b)) {
         return 0;
         }
     return ($a < $b) ? -1 : 1;
     }
 
-
+/**
+ * Suggests complete existing keywords based on a partial search term.
+ *
+ * This function fetches keywords that match the given partial word, returning
+ * suggestions from the keyword database. It also considers user permissions by
+ * excluding indexed fields that are hidden from the user. Additionally, it can
+ * restrict results to a specific resource type field.
+ *
+ * @param string $search The partial keyword to search for.
+ * @param string $ref (optional) The resource type field to restrict suggestions to.
+ * @return array An array of suggested keywords matching the search criteria.
+ */
 function get_suggested_keywords($search,$ref="")
     {
-    # For the given partial word, suggest complete existing keywords.
     global $autocomplete_search_items,$autocomplete_search_min_hitcount;
 
     # Fetch a list of fields that are not available to the user - these must be omitted from the search.
@@ -2613,6 +2761,17 @@ function get_suggested_keywords($search,$ref="")
     }
 
 
+/**
+ * Retrieves keywords related to a given keyword reference.
+ *
+ * This function checks a cache for related keywords associated with the provided
+ * keyword reference. If not found in the cache, it queries the database for related
+ * keywords. The relationship can be one-way or bidirectional based on the
+ * configuration. It returns an array of related keyword references.
+ *
+ * @param int $keyref The reference ID of the keyword for which to find related keywords.
+ * @return array An array of related keyword references.
+ */
 function get_related_keywords($keyref)
 {
     debug_function_call("get_related_keywords", func_get_args());
@@ -2636,12 +2795,24 @@ function get_related_keywords($keyref)
 }
 
 
-
+/**
+ * Retrieves keywords and their related keywords, optionally filtered by specific keywords.
+ *
+ * This function returns a list of keywords along with their related keywords grouped
+ * together. It can filter the results based on the provided keyword or specific keyword
+ * string. The related keywords are returned as a comma-separated string.
+ *
+ * @param string $find An optional keyword to find related keywords for. If specified,
+ *                     it filters the results to include only the related keywords for
+ *                     this keyword.
+ * @param string $specific An optional specific keyword to find. If specified, it filters
+ *                         the results to include only the related keywords for this specific
+ *                         keyword.
+ * @return array An array of keywords and their related keywords grouped together.
+ */
 function get_grouped_related_keywords($find="",$specific="")
     {
     debug_function_call("get_grouped_related_keywords", func_get_args());
-
-    # Returns each keyword and the related keywords grouped, along with the resolved keywords strings.
     $sql="";$params=array();
 
     if ($find!="")
@@ -2665,6 +2836,18 @@ function get_grouped_related_keywords($find="",$specific="")
         ",$params,"keywords_related");
     }
 
+/**
+ * Saves the related keywords for a specified keyword.
+ *
+ * This function first resolves the keyword reference for the provided keyword. It then deletes
+ * any existing relationships for that keyword and inserts the new related keywords into the
+ * database.
+ *
+ * @param string $keyword The keyword for which related keywords are being saved.
+ * @param string $related A comma-separated string of related keywords to associate with the
+ *                        specified keyword.
+ * @return bool Returns true on success, or false on failure.
+ */
 function save_related_keywords($keyword,$related)
     {
     debug_function_call("save_related_keywords", func_get_args());
@@ -2684,12 +2867,20 @@ function save_related_keywords($keyword,$related)
     return true;
     }
 
-
+/**
+ * Retrieves a list of fields suitable for the simple search box.
+ *
+ * This function gathers all resource type fields that are marked for simple search usage.
+ * It includes standard fields and custom fields that have their titles translated. It ensures
+ * that only fields with appropriate permissions and those that are either indexed or of a 
+ * fixed list type are included in the returned array.
+ *
+ * @return array An array of fields suitable for simple search, including their titles and other 
+ *               properties, filtered by permissions and search capabilities.
+ */
 function get_simple_search_fields()
     {
     global $FIXED_LIST_FIELD_TYPES, $country_search;
-    # Returns a list of fields suitable for the simple search box.
-    # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
 
     # First get all the fields
     $allfields=get_resource_type_fields("","global,order_by");
@@ -2717,13 +2908,16 @@ function get_simple_search_fields()
     return $return;
     }
 
-
+/**
+ * Retrieves a list of fields/properties suitable for search display based on the provided field references.
+ *
+ * @param array $field_refs An array of field references to filter the search display fields.
+ * @return array An array of fields with their properties, including translated titles, that are 
+ *               visible to the user based on permission checks.
+ * @throws Exception if the input parameter is not an array.
+ */
 function get_fields_for_search_display($field_refs)
     {
-    # Returns a list of fields/properties with refs matching the supplied field refs, for search display setup
-    # This returns fewer columns and doesn't require that the fields be indexed, as in this case it's only used to judge whether the field should be highlighted.
-    # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
-
     if (!is_array($field_refs))
         {
         exit(" passed to getfields() is not an array. ");
@@ -3180,6 +3374,18 @@ function update_search_from_request($search)
     return $search;
     }
 
+
+/**
+ * Retrieves the default resource types for search functionality.
+ *
+ * This function determines which resource types to include in the search based on the global 
+ * settings for resource and theme inclusion. If resources are to be included, it checks the 
+ * default resource types and returns them as an array. If no specific default resource types 
+ * are defined, it defaults to including "Global." If resources are not to be included, it 
+ * defaults to "Collections," and if themes are included, "FeaturedCollections" is also added.
+ *
+ * @return array An array of default resource types to be used in the search.
+ */
 function get_search_default_restypes()
     {
     global $search_includes_resources, $search_includes_themes,$default_res_types;
@@ -3204,12 +3410,16 @@ function get_search_default_restypes()
     return $defaultrestypes;
     }
 
+
+/**
+ * Retrieves the selected resource types for the search functionality.
+ *
+ *
+ * @return array An array of selected resource types for the search.
+ */
 function get_selectedtypes()
     {
     global $search_includes_resources, $default_advanced_search_mode;
-
-    # The restypes cookie is populated with $default_res_type at login and maintained thereafter
-    # The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
     $restypes=getval("restypes","");
     $advanced_search_section = getval("advanced_search_section", "");
 
@@ -3247,6 +3457,16 @@ function get_selectedtypes()
 
     return $selectedtypes;
     }
+
+/**
+ * Renders the buttons for the advanced search form.
+ *
+ * This function generates HTML for two buttons: 
+ * one to reset the search form and clear the submitted search criteria, 
+ * and another to execute the search. 
+ *
+ * @return void This function outputs HTML directly and does not return a value.
+ */
 
 function render_advanced_search_buttons()
     {
