@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Bank Gambar';
 $lang["image_banks_search_image_banks_label"]='Cari bank gambar eksternal';
-$lang["image_banks_search_image_banks_info_text"]='Silakan tentukan Bank Gambar mana yang ingin Anda telusuri';
 $lang["image_banks_pixabay_api_key"]='Kunci API';
 $lang["image_banks_image_bank"]='Bank Gambar';
 $lang["image_banks_create_new_resource"]='Membuat sumber daya baru';

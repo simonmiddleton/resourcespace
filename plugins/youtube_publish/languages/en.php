@@ -53,23 +53,3 @@ $lang["youtube_publish_category"]="Category";
 $lang["youtube_publish_category_error"]="Error retrieving YouTube categories: - ";
 $lang["youtube_chunk_size"]="Chunk size to use when uploading to YouTube (MB)";
 $lang["youtube_publish_add_anchor"]="Add anchor tags to URl when saving to YouTube URL metadata field?";
-
-/*
-No longer used since we use the API to retrieve categories
-
-$lang["youtube_publish_film"]="Film & Animation";
-$lang["youtube_publish_autos"]="Autos & Vehicles";
-$lang["youtube_publish_music"]="Music";
-$lang["youtube_publish_animals"]="Pets &amp; Animals";
-$lang["youtube_publish_sports"]="Sports";
-$lang["youtube_publish_travel"]="Travel &amp; Events";
-$lang["youtube_publish_games"]="Gaming";
-$lang["youtube_publish_people"]="People & Blogs";
-$lang["youtube_publish_comedy"]="Comedy";
-$lang["youtube_publish_entertainment"]="Entertainment";
-$lang["youtube_publish_news"]="News &amp; Politics";
-$lang["youtube_publish_howto"]="Howto &amp; Style";
-$lang["youtube_publish_education"]="Education";
-$lang["youtube_publish_tech"]="Science &amp; Technology";
-$lang["youtube_publish_nonprofit"]="Nonprofits & Activism";
-*/

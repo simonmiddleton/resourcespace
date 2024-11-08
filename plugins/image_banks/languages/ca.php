@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Bancs d\'Imatges';
 $lang["image_banks_search_image_banks_label"]='Cerca en bancs d\'imatges externs';
-$lang["image_banks_search_image_banks_info_text"]='Si us plau, especifiqueu a través de quina Banc d\'Imatges voleu cercar';
 $lang["image_banks_pixabay_api_key"]='Clau d\'API';
 $lang["image_banks_image_bank"]='Banc d\'Imatges';
 $lang["image_banks_create_new_resource"]='Crear un nou recurs';

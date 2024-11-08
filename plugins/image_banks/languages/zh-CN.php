@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='图像库';
 $lang["image_banks_search_image_banks_label"]='搜索外部图像库';
-$lang["image_banks_search_image_banks_info_text"]='请指定您想要搜索的图像库。';
 $lang["image_banks_pixabay_api_key"]='API密钥';
 $lang["image_banks_image_bank"]='图像库';
 $lang["image_banks_create_new_resource"]='创建新资源';

@@ -200,7 +200,6 @@ $lang["managethemes"]="Hallitse teemoja";
 $lang["manageresearchrequests"]="Hallitse tutkimuspyyntöjä";
 $lang["manageusers"]="Hallitse käyttäjiä";
 $lang["managecontent"]="Hallitse sisältöä";
-$lang["viewstatistics"]="Katso tilastoja";
 $lang["viewreports"]="Katso raportteja";
 $lang["viewreport"]="Katso raporttia";
 $lang["treeobjecttype-report"]=$lang["report"]="Raportti";
@@ -569,7 +568,6 @@ $lang["add"]="Lisää";
 $lang["create"]="Luo";
 $lang["treeobjecttype-group"]=$lang["group"]="Ryhmä";
 $lang["confirmaddgroup"]="Tahdotko varmasti lisätä kaikki jäsenet tässä ryhmässä?";
-$lang["backtoteamhome"]="Takaisin ryhmäkeskuksen kotisivulle";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="Resurssin tunnus";
 $lang["id"]="Tunnus";
 $lang["todate"]="Päivämäärään asti";
@@ -905,8 +903,6 @@ $lang["setup-introtext"]="Kiitos ResourceSpacen valinnasta. Tämä asetusohjelma
 $lang["setup-checkerrors"]="Virheitä havaittu ennen asetuksien tekemistä.<br />  Ole hyvä ja korjaa nämä virheet, jonka jälkeen voit palata tälle sivulle.";
 $lang["setup-errorheader"]="Asetuksissasi havaittiin virheitä. Katso alta yksityiskohtaiset virheviestit.";
 $lang["setup-warnheader"]="Jotkin asetuksesi antoivat varoitusviestejä. Katso alta yksityskohtia. Tämä ei välttämättä merkitse ongelmia asetusten kanssa.";
-$lang["setup-basicsettings"]="Perusasetukset";
-$lang["setup-basicsettingsdetails"]="Nämä asetukset tekevät ResourceSpace-asennuksen perusteet. Vaaditut kohdat on merkitty merkillä <strong>*</strong>";
 $lang["setup-dbaseconfig"]="Tietokannan asetukset";
 $lang["setup-mysqlerror"]="MySQL-asetuksissa on virhe:";
 $lang["setup-mysqlerrorversion"]="MySQL-version pitäisi olla 5 tai suurempi.";
@@ -1146,9 +1142,6 @@ $lang["savesearchassmartcollection"]="Tallenna haku älykkäänä kokoelmana";
 $lang["smartcollection"]="Älykäs kokoelma";
 $lang["dosavedsearch"]="Toteuta tallennettu haku";
 
-$lang["uploadertryjava"]="Käytä vanhaa Java-latausta";
-$lang["uploadertryplupload"]="<strong>UUSI</strong> - kokeile uudenlaista latausta";
-$lang["getjava"]="Varmistaaksesi, että koneellasi on uusin Java-ohjelmisto, käy Javan verkkosivulla";
 
 $lang["all"]="Kaikki";
 $lang["backtoresults"]="Takaisin tuloksiin";
@@ -1248,22 +1241,7 @@ $lang["stars"]="Tähtiä";
 
 # System Setup
 # System Setup Tree Nodes (for the default setup tree)
-$lang["treenode-root"]="Juuri";
-$lang["treenode-group_management"]="Ryhmien hallinta";
-$lang["treenode-new_group"]="Uusi ryhmä";
-$lang["treenode-new_subgroup"]="Uusi aliryhmä";
-$lang["treenode-resource_types_and_fields"]="Resurssityypit/kentät";
-$lang["treenode-new_resource_type"]="Uusi resurssityyppi";
-$lang["treenode-new_field"]="Uusi kenttä";
-$lang["treenode-reports"]="Raportit";
-$lang["treenode-new_report"]="Uusi raportti";
-$lang["treenode-downloads_and_preview_sizes"]="Latauksen / esikatselun koko";
-$lang["treenode-new_download_and_preview_size"]="Uuden latauksen / esikatselun koko";
-$lang["treenode-database_statistics"]="Tietokannan tilastot";
-$lang["treenode-permissions_search"]="Käyttöoikeuksien haku";
-$lang["treenode-no_name"]="(ei nimeä)";
 
-$lang["treeobjecttype-preview_size"]="Esikatselun koko";
 
 $lang["permissions"]="Käyttöoikeudet";
 
@@ -1387,13 +1365,8 @@ $lang["foldercontent"] = "Kansion sisältö";
 $lang["intro-local_upload"] = "Valitse yksi tai usempi tiedosto paikallisesta latauskansiosta ja napsauta <b>Lataa</b>. Kun tiedostot on ladattu, ne voidaan poistaa latauskansiosta.";
 $lang["intro-single_upload"] = "Napsauta <b>Selaa</b> löytääksesi tiedoston ja napsauta sitten <b>Lataa</b>.";
 $lang["intro-plupload"] = "Napsauta <b>Lisää tiedostoja</b> valitaksesi yhden tai useamman tiedoston ja napsauta sitten <b>Aloita lataus</b>";
-$lang["intro-plupload_dragdrop"] = "Vedä ja pudota tai napsauta <b>Lisää tiedostoja</b> valitaksesi yhden tai useamman tiedoston ja napsauta sitten <b>Aloita lataus</b>";
 $lang["intro-plupload_upload-replace_resource"] = "Napsauta <b>Lisää tiedostoja</b> valitaksesi tiedoston ja napsauta sitten <b>Aloita lataus</b>.";
 $lang["intro-batch_edit"] = "Ole hyvä ja määrittele oletusarvoiset lautausasetukset ja oletusarvoiset arvot ladattavaksi valitsemiesi resurssien metatiedoille.";
-$lang["pluploader_warning"]="Selaimesi ei ehkä tue erittäin suurien tiedostojen latauksia. Jos kohtaat ongelmia, yritä päivittää selaimesi tai käytä linkkejä alla";
-$lang["getsilverlight"]="Varmistaaksesi, että sinulla on Silverlightin uusin versio selaimellasi, käy Microsoftin Silverlight-sivustolla";
-$lang["getbrowserplus"]="Hankkiaksesi uusimman version BrowserPlus-ohjelmasta, käy Yahoo BrowserPlus-sivustolla";
-$lang["pluploader_usejava"]="Käytä vanhaa Java-latausohjelmaa";
 
 $lang["collections-1"] = "(<strong>1</strong> kokoelma)";
 $lang["collections-2"] = "(<strong>%d</strong> kokoelmaa, joissa on <strong>%d</strong> kohdetta)"; # %number will be replaced, e.g. 3 Collections

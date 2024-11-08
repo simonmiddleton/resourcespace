@@ -80,7 +80,6 @@ $lang["fieldtype-date_and_time"]="Datum / Uhrzeit";
 $lang["fieldtype-expiry_date"]="Ablaufdatum";
 $lang["fieldtype-category_tree"]="Kategoriebaum";
 $lang["fieldtype-dynamic_keywords_list"]="Dynamische Stichwortliste";
-$lang["fieldtype-dynamic_tree_in_development"]="Dynamischer Baum (in Entwicklung)";
 
 # Property labels (for the default properties)
 $lang["property-reference"]="Referenz";
@@ -218,7 +217,6 @@ $lang["managethemes"]="Themen verwalten";
 $lang["manageresearchrequests"]="Suchanfragen verwalten";
 $lang["manageusers"]="Benutzer verwalten";
 $lang["managecontent"]="Inhalte verwalten";
-$lang["viewstatistics"]="Statistiken ansehen";
 $lang["viewreports"]="Berichte ansehen";
 $lang["viewreport"]="Bericht ansehen";
 $lang["treeobjecttype-report"]=$lang["report"]="Bericht";
@@ -608,7 +606,6 @@ $lang["add"]="hinzufügen";
 $lang["create"]="Erstellen";
 $lang["treeobjecttype-group"]=$lang["group"]="Gruppe";
 $lang["confirmaddgroup"]="Alle Benutzer dieser Gruppe zuordnen?";
-$lang["backtoteamhome"]="zurück zur Administration";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="Ressource (ID)";
 $lang["id"]="ID";
 $lang["todate"]="bis";
@@ -968,8 +965,6 @@ $lang["setup-introtext"]="Danke, dass Sie sich für ResourceSpace entschieden ha
 $lang["setup-checkerrors"]="Fehler gefunden.<br />Bitte beheben Sie diese Fehler und laden Sie dann diese Seite erneut.";
 $lang["setup-errorheader"]="In Ihrer Konfiguration wurden Fehler gefunden.  Eine detaillierte Fehlerbeschreibung finden Sie unten.";
 $lang["setup-warnheader"]="Einige Ihrer Einstellungen haben zu Warnungen geführt.  Details finden Sie unten. Das bedeutet nicht, dass Ihre Konfiguration fehlerhaft ist.";
-$lang["setup-basicsettings"]="Grundeinstellungen";
-$lang["setup-basicsettingsdetails"]="Dies sind die Grundeinstellungen für Ihre ResourceSpace Installation. Pflichtfelder sind mit einem <strong>*</strong> markiert";
 $lang["setup-dbaseconfig"]="Datenbank Konfiguration";
 $lang["setup-mysqlerror"]="Fehler in Ihren MySQL Einstellungen:";
 $lang["setup-mysqlerrorversion"]="MySQL Version 5 oder neuer benötigt.";
@@ -1214,9 +1209,6 @@ $lang["markers"] = "Markierungen";
  $lang["dosavedsearch"]="Gespeicherte Suche ausführen";
 
 
- $lang["uploadertryjava"]="Wenn Sie Probleme mit dem Upload haben, versuchen Sie bitte den <strong>Java Uploader</strong>.";
- $lang["uploadertryplupload"]="<strong>NEW</strong> - Versuchen Sie den neuen Uploader.";
- $lang["getjava"]="Um sicherzustellen, dass Sie die neueste Java Version installiert haben, besuchen Sie bitte die Java Website.";
 
  $lang["all"]="Alle";
  $lang["allresourcessearchbar"]="Alle Ressourcen";
@@ -1236,7 +1228,6 @@ $lang["markers"] = "Markierungen";
 
  $lang["requestaddedtocollection"]="Diese Ressource wurde zu Ihrer aktuellen Kollektion hinzugefügt. Sie können die Ressourcen in Ihrer Kollektion mit dem Link \'Alle anfordern\' anfordern.";
 
- $lang["nodownloadsavailable"]="Für diese Ressource gibt es leider keine Downloads.";
  $lang["reload"]="Aktualisieren";
  $lang["alternatetype"]="Alternative Art";
 
@@ -1327,22 +1318,7 @@ $lang["columnheader-last_seen"]="Zuletzt gesehen";
 
 # System Setup
 # System Setup Tree Nodes (for the default setup tree)
- $lang["treenode-root"]="Root";
- $lang["treenode-group_management"]="Gruppenverwaltung";
- $lang["treenode-new_group"]="Neue Gruppe";
- $lang["treenode-new_subgroup"]="Neue Untergruppe";
- $lang["treenode-resource_types_and_fields"]="Ressourcen Typen / Felder";
- $lang["treenode-new_resource_type"]="Neuen Ressourcen Typ";
- $lang["treenode-new_field"]="Neues Feld";
- $lang["treenode-reports"]="Berichte";
- $lang["treenode-new_report"]="Neuer Bericht";
- $lang["treenode-downloads_and_preview_sizes"]="Download- / Vorschaugrößen";
- $lang["treenode-new_download_and_preview_size"]="Neue Download- / Vorschaugröße";
- $lang["treenode-database_statistics"]="Datenbank Statistiken";
- $lang["treenode-permissions_search"]="Suche nach Berechtigungen";
- $lang["treenode-no_name"]="(ohne Namen)";
 
- $lang["treeobjecttype-preview_size"]="Vorschaugröße";
 
  $lang["permissions"]="Berechtigungen";
 
@@ -1477,14 +1453,9 @@ $lang["foldercontent"] = "Ordnerinhalt";
 $lang["intro-local_upload"] = "Wählen Sie eine oder mehrere Dateien vom lokalen Upload Ordner aus und klicken Sie auf <b>Upload</b>. Nachdem die Dateien hochgeladen sind, können Sie aus dem Upload Ordner gelöscht werden.";
 $lang["intro-single_upload"] = "Klicken Sie auf <b>Durchsuchen</b>, um eine Datei auszuwählen, und klicken Sie dann <b>Upload</b> an.";
 $lang["intro-plupload"] = "Klicken Sie auf <b>+ Dateien</b>, um eine oder mehrere Dateien auszuwählen, und klicken Sie dann <b>Hochladen</b> an";
-$lang["intro-plupload_dragdrop"] = "Ziehen Sie oder Klicken Sie <b>+ Dateien</b>, um eine oder mehrere Dateien auszuwählen, und klicken Sie dann <b>Hochladen</b> an";
 $lang["intro-plupload_upload-replace_resource"] = "Klicken Sie auf <b>+ Dateien</b>, um eine Datei auszuwählen, und klicken Sie dann <b>Hochladen</b> an.";
 $lang["intro-batch_edit"] = "Bitte wählen Sie die Standard-Uploadeinstellungen und die Standardwerte für die Metadaten der Ressourcen, die Sie hochladen wollen.";
 $lang["plupload-maxfilesize"] = "Die maximale erlaubte Upload-Dateigröße ist %s.";
-$lang["pluploader_warning"]="Ihr Browser unterstützt unter Umständen keine sehr großen Uploads. Wenn Sie damit Probleme haben, aktualisieren Sie bitte Ihren Browser oder versuchen Sie einen der untenstehenden Links";
-$lang["getsilverlight"]="Um sicherzustellen, dass Sie die neueste Version von Silverlight installiert haben, besuchen Sie bitte die Microsoft Silverlight Website";
-$lang["getbrowserplus"]="Um die neueste Version von BrowserPlus zu installieren, besuchen Sie bitte die Yahoo BrowserPlus Website";
-$lang["pluploader_usejava"]="Den alten Java-Uploader benutzen";
 
 $lang["collections-1"] = "(<strong>1</strong> Kollektion)";
 $lang["collections-2"] = "(<strong>%number</strong> Kollektionen)"; # %number will be replaced, e.g. 3 Collections
@@ -1766,7 +1737,6 @@ $lang['action-move-down'] = 'Nach unten';
 $lang["about__about"]="Ihr Text zu \"Über uns\" hier.";
 $lang["all__researchrequest"]="Lassen Sie unser Team nach den benötigten Resourcen suchen.";
 $lang["change_language__introtext"]="Bitte wählen Sie Ihre Sprache aus:";
-$lang["change_password__introtext"]="Neues Passwort unten eingeben, um es zu ändern";
 $lang["collection_edit__introtext"]="Organisieren und verwalten Sie Ihre Arbeit, indem Sie Ressourcen in Gruppen zusammenstellen. Erstellen Sie Kollektionen wie Sie sie benötigen.\n\n<br />\n\nAlle Kollektionen in Ihrer Liste erscheinen im \"Meine Kollektionen\" Menü am unteren Ende des Fensters.\n\n<br /><br />\n\n<strong>Privater Zugriff</strong> erlaubt nur Ihnen und ausgewählten Benutzern, die Kollektion zu anzusehen. Ideal, um Ressourcen für die eigene Arbeit zusammenzustellen und im Team weiterzugeben.\n\n<br /><br />\n\n<strong>Öffentlicher Zugriff</strong> erlaubt allen Benutzern, die Kollektion zu finden und anzusehen.\n\n<br /><br />\n\nSie können aussuchen, ob Sie anderen Benutzern (öffentlicher Zugriff oder ausgewählte Benutzer beim privaten Zugriff) erlauben, Ressourcen hinzuzufügen oder zu löschen";
 $lang["collection_email__introtext"]="Bitte füllen Sie das untenstehende Formular aus, um die Kollektion per E-Mail weiterzugeben. Der/die Benutzer werden statt eines Dateianhangs einen Link zu dieser Kollektion erhalten und können dann die passenden Ressourcen auswählen und herunterladen.";
 $lang["collection_manage__findpublic"]="Öffentliche Kollektionen sind für alle Benutzer zugängliche Gruppen von Ressourcen. Um öffentliche Kollektionen zu finden, geben Sie die ID, oder einen Teil des Kollektions- bzw. Benutzernamens ein. Fügen Sie dann die Kollektion zu Ihren Kollektionen hinzu, um auf die Ressourcen zuzugreifen.";

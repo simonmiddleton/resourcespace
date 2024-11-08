@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Bildbanker';
 $lang["image_banks_search_image_banks_label"]='Sök externa bildbanker';
-$lang["image_banks_search_image_banks_info_text"]='Var god ange vilken bildbank du vill söka igenom';
 $lang["image_banks_pixabay_api_key"]='API-nyckel';
 $lang["image_banks_image_bank"]='Bildbank';
 $lang["image_banks_create_new_resource"]='Skapa ny resurs';

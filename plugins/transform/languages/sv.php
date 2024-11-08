@@ -43,7 +43,6 @@ $lang['no_resources_found']="inga material hittade";
 $lang['batch_transforming_collection']="Transformerar samling %col"; # %col will be replaced with the collection id
 $lang['not-transformed']="transformerades inte: Åtkomst nekades.";
 $lang['error-unable-to-rename']="Fel: Kunde inte byta namn på den transformerade filen för material %res."; # %res will be replaced with the resource id
-$lang['success']="Klar!";
 $lang['error-transform-failed']="Fel: Transformering av material %res misslyckades."; # %res will be replaced with the resource id
 $lang['transform_summary']="Sammanfattning";
 $lang['resources_in_collection-1']="1 material i samlingen.";

@@ -321,11 +321,6 @@ $lang["resources_uploaded-n"]="%done% úspešne nahraných zdrojov."; # %done% w
 $lang["resources_failed-0"]="Všetky zdroje boli nahrané v poriadku.";
 $lang["resources_failed-1"]="1 zdroj sa nepodarilo nahrať.";
 $lang["resources_failed-n"]="Nahrávanie %done% zdrojov zlyhalo."; # %failed% will be replaced, e.g. 2 resources failed.
-$lang["specifyftpserver"]="Parametre pripojenia na vzdialený FTP server ";
-$lang["ftpserver"]="Adresa FTP servera";
-$lang["ftpusername"]="Používateľské meno";
-$lang["ftppassword"]="Heslo";
-$lang["ftpfolder"]="Cesta k priečinku s dátami na FTP serveri";
 $lang["usesmtp"]="Na odosielanie a prijímanie e-mailov použiť server SMTP";
 $lang["smtpsecure"]="Zabezpečenie SMTP";
 $lang["smtphost"]="Adresa SMTP servera";
@@ -336,7 +331,6 @@ $lang["smtppassword"]="Heslo";
 
 
 $lang["connect"]="Pripojiť";
-$lang["uselocalupload"]="ALEBO: Namiesto vzdialeného servera FTP použite lokálny priečinok na nahrávanie.Viď parameter local_ftp_upload_folder";
 
 # User contributions
 $lang["contributenewresource"]="Prispejte novým zdrojom";
@@ -724,7 +718,6 @@ $lang["groupsmart"]="Skupina (inteligentné)";
 $lang["confirmaddgroup"]="Naozaj chcete pridať všetkých aktuálnych členov do tejto skupiny?";
 $lang["confirmaddgroupsmart"]="Naozaj chcete dynamicky zahrnúť členov do tejto skupiny?";
 $lang["back_to"] = "Späť na %area";
-$lang["backtoteamhome"]="Späť na domovskú stránku správcu";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="ID prostriedku";
 $lang["id"]="ID";
 $lang["todate"]="Do dátumu";
@@ -786,7 +779,6 @@ $lang["continuetohome"]="Pokračovať na domovskú stránku";
 $lang["backtohelphome"]="Späť na domovskú stránku pomoci";
 $lang["backtosearch"]="Späť na výsledky vyhľadávania";
 $lang["backtoview"]="Zobrazenie zdrojov";
-$lang["backtoeditresource"]="Späť na editáciu zdroja";
 $lang["backtouser"]="Späť na prihlásenie používateľa";
 $lang["continuetouser"]="Pokračujte na prihlásenie používateľa";
 $lang["termsandconditions"]="Podmienky používania";
@@ -978,9 +970,7 @@ $lang["warningexpiredtext"]="Upozornenie! Platnosť zdroja vypršala. Pre obnove
 $lang["warningexpiredok"]="Povoliť sťahovanie";
 $lang["userrequestcomment"]="Komentár";
 $lang["addresourcebatchbrowser"]="Nahrať zdroje znalostí";
-$lang["addresourcebatchbrowserjava"]="Pridanie zdroje v dávke - použitím webového prehľiadača a Java (staršie)";
 
-$lang["addresourcebatchftp"]="Pridanie súboru zdrojov - načítaním z FTP servera";
 $lang["replaceresourcebatch"]="Nahrať súbor zdrojov";
 $lang["editmode"]="Režim úprav";
 $lang["replacealltext"]="Nahradiť celý text / možnosti";
@@ -1122,7 +1112,6 @@ $lang["clicktologinasthisuser"]="Kliknutím sa prihlásite ako tento používate
 $lang["clicktoviewlog"]="Kliknutím zobrazíte log";
 $lang["addkeyword"]="Pridajte kľúčové slovo";
 $lang["selectedresources"]="Vybrané zdroje";
-$lang["addresourcebatchlocalfolder"]="Pridať súbor zdrojov - načítaním z lokálneho priečinka";
 $lang["phpextensions"]="PHP rozšírenia";
 
 # Setup Script
@@ -1187,8 +1176,6 @@ $lang["setup-rs_initial_configuration"]="ResourceSpace: Počiatočná konfigurá
 $lang["setup-include_not_writable"]="priečinok '/include' nie je zapisovateľný. Zapisovateľnosť sa vyžaduje iba počas nastavovania.";
 $lang["setup-binpath"]="Cesta k %bin"; #%bin will be replaced, e.g. "Imagemagickova cesta"
 $lang["setup-begin_installation"]="Zahájiť inštaláciu!";
-$lang["setup-ftp_settings"]="Nastavenia FTP";
-$lang["setup-if_ftpserver"]="Potrebné iba v prípade, že plánujete použiť funkciu nahrávania z FTP";
 $lang["setup-smtp-settings"]="Nastavenia SMTP";
 $lang["setup-if-usesmtp"]="Na odchádzajúce e-maily (napr. Gmail) použije externý server SMTP. Používa PHPMailer";
 $lang["setup-if-smtpsecure"]="'', 'tls' alebo 'ssl'. Pre službu Gmail je potrebné zadať reťazec „tls“ alebo „ssl“.";
@@ -1290,7 +1277,6 @@ $lang["allowedextensions"]="Povolené typy súborov";
 $lang["allowedextensions-extensions"]="Povolené typy: %EXTENSIONS"; # Use %EXTENSIONS, %extensions or %Extensions as a placeholder. The placeholder will be replaced with the filename extensions, using the same case. E.g. "Povolené rozšírenia:% ROZŠÍRENIA " -> " Povolené rozšírenia: JPG, PNG"
 
 $lang["alternativebatchupload"]="Nahrajte alternatívne súbory";
-$lang["alternativelocalupload"]="Nahrať alternatívne súbory - načítať z miestneho priečinka na odovzdanie";
 
 $lang["confirmdeletefieldoption"]="Naozaj chcete odstrániť túto voľbu poľa?";
 
@@ -1335,7 +1321,6 @@ $lang['plugins-search-results-header'] = 'Výsledky vyhľadávania rozšírení'
 $lang['plugins-author'] = 'Autor';
 $lang['plugins-version'] = 'Verzia';
 $lang['plugins-instversion'] = 'Nainštalovaná verzia';
-$lang['plugins-uploadheader'] = 'Nahrať rozšírenie';
 $lang['plugins-deactivate'] = 'Deaktivácia';
 $lang['plugins-moreinfo'] = 'Viac informácií';
 $lang['plugins-activate'] = 'Aktivovať';
@@ -1422,9 +1407,6 @@ $lang["smartcollection"]="Inteligentná zbierka";
 $lang["dosavedsearch"]="Uložené vyhľadávanie";
 
 
-$lang["uploadertryjava"]="Použite pôvodný Java applet na nahrávanie zdrojov na server";
-$lang["uploadertryplupload"]="<strong>NOVÝ</strong> - Vyskúšajte nový nahrávač štýlov";
-$lang["getjava"]="Ak chcete zabezpečiť, aby ste vo svojom systéme mali najnovšíe Oracle Java JRE, navštívte webovú stránku Oracle";
 
 $lang["all"]="Všetko";
 $lang["allresourcessearchbar"]="Všetky zdroje";
@@ -1687,15 +1669,10 @@ $lang["error-failed-to-move"] = "Nepodarilo sa presunúť";
 $lang["no-options-available"]="Nie sú k dispozícii žiadne možnosti";
 $lang["header-upload-subtitle"] = "Krok %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Priečinok miestneho nahrávania";
-$lang["ftp_upload_path"] = "FTP priečinok";
 $lang["foldercontent"] = "Obsah priečinka";
 $lang["intro-local_upload"] = "Vyberte jeden alebo viac súborov z lokálneho priečinka na odovzdanie a kliknite na „Nahrať“. Po nahraní súborov ich môžete odstrániť z priečinka na odovzdanie.";
-$lang["intro-ftp_upload"] = "Vyberte jeden alebo viac súborov z priečinka FTP a kliknite na „Nahrať“";
-$lang["intro-java_upload"] = "Kliknutím na „Prehľadávať“ vyhľadajte jeden alebo viac súborov a potom kliknite na „Nahrať“";
-$lang["intro-java_upload-replace_resource"] = "Kliknite na „Prehľadávať“ a vyhľadajte súbor a potom kliknite na „Nahrať“";
 $lang["intro-single_upload"] = "Kliknite na „Prehľadávať“ a vyhľadajte súbor a potom kliknite na „Nahrať“";
 $lang["intro-plupload"] = "Kliknutím na „Pridať súbory“ vyhľadajte jeden alebo viac súborov a potom kliknite na „Spustiť nahrávanie“";
-$lang["intro-plupload_dragdrop"] = "Presuňte súbory myšou alebo kliknite na „Pridať súbory“, vyhľadajte jeden alebo viac súborov a potom kliknite na „Spustiť nahrávanie“";
 $lang["intro-plupload_upload-replace_resource"] = "Kliknutím na „Pridať súbory“ vyhľadajte súbor a potom kliknite na „Spustiť nahrávanie“.";
 $lang["intro-batch_edit"] = "Zadajte predvolené nastavenia nahrávania a predvolené hodnoty pre metadáta zdrojov, ktoré sa chystáte nahrať.";
 $lang["plupload-maxfilesize"] = "Maximálna povolená veľkosť súboru na odovzdanie je% s.";
@@ -1956,7 +1933,6 @@ $lang["fieldhelp-permissions_filter"]="Môžete zadať jedno povolenie alebo via
 $lang['page-title_user_group_management_edit'] = "Upraviť skupinu používateľov";
 $lang['page-subtitle_user_group_management_edit'] = "Táto časť sa používa na úpravu vlastností skupiny používateľov.";
 $lang["action-title_remove_user_group_logo"]="Zaškrtnite, ak chcete odstrániť logo skupiny používateľov";
-$lang["action-title_see_wiki_for_advanced_options"]="Prosím pozrite si <a href='https://www.resourcespace.com/knowledge-base/'>Znalostná základňa</a> pre ďalšiu pomoc s pokročilými možnosťami";
 
 # admin web edit
 $lang['page-title_web_edit'] = "Upraviť súbor";
@@ -2057,7 +2033,6 @@ $lang["all__comments_policy"]="";
 $lang["all__comments_removal_message"]="";
 $lang["all__footer"]="Powered by <a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace Open Source Digital Asset Management</a>";
 $lang["all__researchrequest"]="Nechajte náš tím nájsť pre Vás potrebné zdroje.";
-$lang["all__searchpanel"]="Vyhľadávajte pomocou popisov, kľúčových slov a čísel zdrojov";
 $lang["change_language__introtext"]="Nižšie si zvoľte jazyk, prosím .";
 $lang['collection_download__write_metadata_on_download_label'] = 'Chcete do sťahovaných súborov vložiť metadáta zdrojov? Aktiváciou tejto voľby, môže dôjsť k spomaleniu sťahovania.';
 $lang["collection_edit__introtext"]="Usporiadajte a spravujte zdroje zoskupovaním. Vytvorte si vlastné 'Zbierky' tak aby obsahovo vyhovovali spôsobu Vašej práce. \n\n<br />\n\n Všetky zbierky v zozname sa zobrazia na paneli Moje zbierky v dolnej časti obrazovky \n\n<br /><br />\n\n<strong>Súkromný prístup</strong> umožňuje zobraziť zbierku iba Vám a Vami vybraným používateľom. Ideálne na zoskupovanie zdrojov v rámci projektov, na ktorých pracujete samostatne a následné zdieľanie zdrojov medzi členmi projektového tímu. \n\n<br /><br />\n\n<strong> Prístup pre verejnosť</strong> umožňuje všetkým používateľom systému vyhľadať a prezerať si zbierku. Užitočné, ak si želáte zdieľať Vaše zbierky zdrojov, o ktorých si myslíte, že by z nich mohli mať úžitok iní používatelia. \n\n<br /><br />\n\n Môžete si vybrať, či povolíte iným používateľom (verejným alebo používateľom, ktorým ste pridali prístup do svojej súkromnej zbierky), aby pridávali a odstraňovali zdroje v zbierke alebo si ich len prezerali";
@@ -2082,11 +2057,8 @@ $lang["download_progress__introtext"]="Sťahovanie začne čoskoro. Po dokončen
 $lang["downloadfile_nofile"]="Požadovaný súbor nebol nájdený.";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Vyberte, ktoré polia chcete prepísať. Polia, ktoré nevyberiete, zostanú nedotknuté.";
-$lang["home__help"]="Pomoc a rady, ako využiť ResourceSpace naplno";
-$lang["home__mycollections"]="Usporiadajte, spolupracujte a zdieľajte svoje zdroje.S pomocou týchto nástrojov môžete pracovať efektívnejšie";
 $lang["home__restrictedtext"]="Kliknutím na odkaz, ktorý vám bol zaslaný e-mailom, získate prístup k vybraným zdrojom.";
 $lang["home__restrictedtitle"]="Vitajte v ResourceSpace [ver]";
-$lang["home__themes"]="Najlepšie zdroje, ručne vyberané a zoskupené";
 $lang["home__welcometext"]="Jednoduchý, rýchle a bezplatný spôsob usporiadania digitálnych diel";
 $lang["home__welcometitle"]="Vitajte v ResourceSpace [ver]";
 $lang["login__welcomelogin"]="Vitajte v ResourceSpace, prosím prihláste sa ...";
@@ -2096,9 +2068,6 @@ $lang["resource_email__introtext"]="Tento zdroj môžete rýchlo zdieľať s ost
 $lang["resource_request__introtext"]="Vaša žiadosť je takmer kompletná. Uveďte dôvod svojej žiadosti, aby sme mohli efektívne reagovať.";
 $lang["search_advanced__introtext"]="<strong>Tip na vyhľadávanie</strong><br />Každá časť, ktorú necháte prázdnu alebo neoznačenú, zahrnie VŠETKY dané možnosti do vyhľadávania. Napríklad, ak nešpecifikujete krajinu, vyhľadávanie vráti výsledky zo všetkých krajín. Ak vyberiete iba „Afrika“, výsledky budú obsahovať LEN zdroje z „Afriky“.";
 $lang["team_archive__introtext"]="Ak chcete upraviť jednotlivé archívne zdroje, jednoducho vyhľadajte prostriedok a kliknite na tlačidlo Upraviť na paneli „Nástroj zdrojov“ na obrazovke prostriedkov. Zoznam všetkých zdrojov, ktoré sú pripravené na archiváciu, je uvedený v zozname Čakajúce prostriedky. Z tohto zoznamu je možné pridať ďalšie informácie a preniesť záznam prostriedku do archívu.";
-$lang["team_batch__introtext"]="";
-$lang["team_batch_select__introtext"]="";
-$lang["team_batch_upload__introtext"]="";
 $lang["team_content__introtext"]="";
 $lang["team_copy__introtext"]="Zadajte ID prostriedku, ktorý chcete skopírovať. Skopírujú sa iba údaje o zdroji - žiadny odovzdaný súbor sa neskopíruje.";
 $lang["team_home__introtext"]="Vitajte v oblasti správy systému. Pomocou nižšie uvedených odkazov môžete spravovať zdroje, odpovedať na žiadosti o zdroje, spravovať vybrané kolekcie a meniť nastavenia systému.";
@@ -2109,12 +2078,10 @@ $lang["team_stats__introtext"]="Grafy sa generujú na požiadanie, na základe a
 $lang["team_user__introtext"]="V tejto časti môžete pridávať, odstraňovať a upravovať používateľov.";
 $lang["terms__introtext"]="Predtým, než budete pokračovať musíte akceptovať podmienky používania. \n\n";
 $lang["terms__terms"]="Podmienky používania nájdete tu";
-$lang["terms and conditions__terms and conditions"]="Podmienky používania nájdete tu";
 $lang["themes__findpublic"]="Verejné zbierky sú zbierky zdrojov, zdieľané ostatními používateľmi.";
 $lang["themes__introtext"]="Odporúčané zbierky sú skupiny zdrojov vytvorené správcami aby poskytli prehľad o zdrojoch dostupných v systéme.";
 $lang["themes__manage"]="Usporiadajte a upravujte vybrané zbierky dostupné online. Vybrané zbierky sú propagované zbierky. <br /><br /><strong> 1 Ak chcete vytvoriť nový záznam v odporúčaných zbierkach - vytvorte zbierku </strong><br /> Zvoľte <strong> Moje zbierky </strong> z hlavnej ponuky a vztvorte úplne novú <strong> verejnú </strong> zbierku. Nezabudnite uviesť názov odporúčanej zbierky. Použite existujúci názov odporúčanej zbierky na zoskupenie zbierky do uvedenej zbierky alebo vyberte nový názov a vytvorte úplne novú odporúčanú zbierku. Nikdy neumožnujte používateľom pridávať / odoberať zdroje z odporúčaných zbierok. <br /><br /><strong> 2 Upraviť obsah existujúceho záznamu v rámci odporúčanej kolekcie </strong><br /> Zvoľte <strong> upraviť kolekciu </strong> . Položky v tejto zbierke sa zobrazia v sekcii <strong> Moje zbierky </strong> panela v dolnej časti obrazovky. Na úpravu, odstránenie alebo pridanie zdrojov použite štandardné nástroje. <br /><br /><strong> 3 Ak chcete zmeniť názov odporúčanej zbierky alebo presunúť zbierku pod inú vybranú kolekciu </strong><br /> zvoľte <strong> upravovať vlastnosti </strong> a upravte uvedenú kategóriu zbierky alebo názov zbierky. Použite existujúci názov odporúčanej zbierky na zoskupenie zbierky do aktuálnej vybranej zbierky (nezabudnite napísať presne to isté), alebo vyberte nový názov a vytvorte úplne novú odporúčanú zbierku. <br /><br /><strong> 4 Odstránenie zbierky z odporúčaných zbierok </strong><br /> Zvoľte <strong>upravovať vlastnosti </strong> a odstráňte slová z poľa kategórie odporúčaných zbierok.";
 $lang["upload__introtext"]="";
-$lang["upload_swf__introtext"]="";
 $lang["user_password__introtext"]="Zadajte svoju e-mailovú adresu a bude vám zaslané Vaše používateľské meno a heslo.";
 $lang["user_preferences__introtext"]="Ak chcete zmeniť svoje heslo, nižšie zadajte nové heslo.";
 $lang["user_preferences__introtext_new"]="Zadajte heslo nižšie.";
@@ -2224,7 +2191,6 @@ $lang["plugin_category_general"]="Všeobecné";
 $lang["plugin_category_api"]="API";
 $lang["plugin_category_advanced"]="Pokročilé";
 $lang["plugin_category_design"]="Dizajn";
-$lang["plugin_category_sharing"]="Zdieľanie obsahu";
 /* * End - Plugin Category Strings * */
 
 /* System Down page strings */
@@ -2368,7 +2334,6 @@ $lang["system_performance"]="Výkon systému";
 $lang["mysql_throughput"]="Priepustnosť MySQL";
 $lang["cpu_benchmark"]="Referenčná hodnota výkonu CPU";
 $lang["disk_write_speed"]="Rýchlosť zápisu na disk";
-$lang["metadata_option_change_warning"]="Upozorňujeme, že úrava týchto nastavení v súčasnosti automaticky nezmení uložené parametre. Na migráciu existujúcich uložených hodnôt sa musí použiť dávková úprava";
 
 /* Manage slideshows */
 $lang["manage_slideshow"] = "Správa prezentácie";
@@ -2574,9 +2539,6 @@ $lang['error-duplicatesfound'] = "Bol nájdený duplikát: zdroj(e) %resourceref
 $lang['see_log'] = "Podrobnosti o tomto nahratí nájdete v denníku nižšie.";
 // Filter rules 
 $lang["filter_migration"]           = "Migrácia filtrov";
-$lang["filter_search_success"]      = "Vyhľadávací filter bol úspešne migrovaný";
-$lang["filter_search_error"]        = "Pri migrácii vyhľadávacieho filtra sa vyskytla chyba. Skontrolujte filter vyhľadávania";
-$lang["filter_search_delete_error"] = "Filter používajú nasledujúci používatelia alebo skupiny";
 $lang["filter_manage"]              = "Správa filtrov";
 $lang["filter_edit"]                = "Upraviť filter";
 $lang["filter_new"]                 = "Nový filter";

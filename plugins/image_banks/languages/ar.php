@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='مصارف الصور';
 $lang["image_banks_search_image_banks_label"]='البحث في بنوك الصور الخارجية';
-$lang["image_banks_search_image_banks_info_text"]='يرجى تحديد بنك الصور الذي ترغب في البحث من خلاله';
 $lang["image_banks_pixabay_api_key"]='مفتاح API';
 $lang["image_banks_image_bank"]='مصرف الصور';
 $lang["image_banks_create_new_resource"]='إنشاء مورد جديد';

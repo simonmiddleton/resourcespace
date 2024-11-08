@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='画像バンク';
 $lang["image_banks_search_image_banks_label"]='外部画像バンクを検索する';
-$lang["image_banks_search_image_banks_info_text"]='どの画像バンクを検索するか指定してください。';
 $lang["image_banks_pixabay_api_key"]='APIキー';
 $lang["image_banks_image_bank"]='画像バンク';
 $lang["image_banks_create_new_resource"]='新しいリソースを作成する';

@@ -46,7 +46,6 @@ $lang["managethemes"]="管理主题";
 $lang["manageresearchrequests"]="管理搜索要求";
 $lang["manageusers"]="管理用户";
 $lang["managecontent"]="管理内容";
-$lang["viewstatistics"]="查看分析";
 $lang["viewreports"]="查看报告";
 $lang["viewreport"]="查看报告";
 $lang["report"]="报告";
@@ -161,7 +160,6 @@ $lang["rightclicktodownload"]="单击右键并选取‘存档为’已储存资�
 $lang["downloadinprogress"]="下载中";
 $lang["editmultipleresources"]="多项编辑";
 $lang["editresource"]="编辑资源";
-$lang["resourcesselected"]="已选取的资源"; # e.g. 17 资源已被选取.
 $lang["image"]="图片";
 $lang["previewimage"]="图片预览";
 $lang["file"]="档案";
@@ -184,7 +182,6 @@ $lang["indexedsearchable"]="已编入索引，可搜索";
 $lang["clearform"]="清除表格";
 $lang["emailresourcetitle"]="发送";
 $lang["resourcetitle"]="资源名称";
-$lang["filename"]="原有的档案名称";
 $lang["requestresource"]="资源搜索要求";
 $lang["action-viewmatchingresources"]="查看匹配的资源";
 $lang["nomatchingresources"]="未发现匹配的资源";
@@ -358,7 +355,6 @@ $lang["add"]="加入";
 $lang["create"]="建立";
 $lang["group"]="群体";
 $lang["confirmaddgroup"]="你确定要把这些用户加入该用户群吗?";
-$lang["backtoteamhome"]="返回团队中心";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="资源编号";
 $lang["id"]="编号";
 $lang["date"]="日期";
@@ -505,7 +501,6 @@ $lang["removetext"]="移除文本";
 $lang["find"]="寻找";
 $lang["andreplacewith"]="以此取代";
 $lang["relateallresources"]="把此收藏夹中的资源联系起来";
-$lang["country"]="国家";
 
 # New for 1.5
 $lang["columns"]="栏目";
@@ -810,8 +805,6 @@ $lang["savesearchassmartcollection"]="将搜索到的资源加入快速收藏夹
 $lang["smartcollection"]="快速收藏夹";
 
 
-$lang["uploadertryjava"]="如果这个浏览器有问题, 请使用 <strong>Java</strong>";
-$lang["getjava"]="确定你有最新版本的Java, 请浏览 Java 网站";
 
 $lang["all"]="全部";
 $lang["backtoresults"]="返回搜索结果";
@@ -828,7 +821,6 @@ $lang["closethiswindow"]="关闭这视窗";
 
 $lang["requestaddedtocollection"]="该资源已加入你的收藏夹中.";
 
-$lang["nodownloadsavailable"]="Sorry, there are no downloads available for this resource";
 $lang["reload"]="Reload";
 $lang["alternatetype"]="alternatetye";
 

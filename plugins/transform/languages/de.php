@@ -42,7 +42,6 @@ $lang['no_resources_found']="Keine Ressource gefunden!";
 $lang['batch_transforming_collection']="Stapelverarbeitung der Kollektion %col"; # %col will be replaced with the collection id
 $lang['not-transformed']="Bearbeitung nicht möglich: Kein Zugriff!";
 $lang['error-unable-to-rename']="Fehler: Die Datei der bearbeiteten Ressource %res konnte nicht umbenannt werden!"; # %res will be replaced with the resource id
-$lang['success']="Erfolg!";
 $lang['error-transform-failed']="Fehler: Keine Bearbeitung der Ressource %res möglich!"; # %res will be replaced with the resource id
 $lang['transform_summary']="Zusammenfassung";
 $lang['resources_in_collection-1']="1 Ressource in der Kollektion.";

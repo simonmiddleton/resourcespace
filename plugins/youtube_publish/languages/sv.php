@@ -45,25 +45,8 @@ $lang["youtube_publish_username"]="Användarnamn (Youtube)";
 $lang["youtube_publish_password"]="Lösenord (Youtube)";
 $lang["youtube_publish_existingurl"] = "Existerande Youtube-adress:";
 $lang["youtube_publish_notuploaded"] = "Inte överförd";
-$lang["youtube_publish_failedupload_nolocation"] = "Fel: Fick ingen en giltig webbadress till Youtube-klippet";
 $lang["youtube_publish_success"] = "Videon publicerad!";
 $lang["youtube_publish_renewing_token"] = "Förnyar igenkänningstecknet för åtkomstkontroll";
-$lang["youtube_publish_category"]="Kategori";
-$lang["youtube_publish_film"]="Film och animering";
-$lang["youtube_publish_autos"]="Bilar och fordon";
-$lang["youtube_publish_music"]="Musik";
-$lang["youtube_publish_animals"]="Djur och husdjur";
-$lang["youtube_publish_sports"]="Sport";
-$lang["youtube_publish_travel"]="Resor och h&#228;ndelser";
-$lang["youtube_publish_games"]="Spel";
-$lang["youtube_publish_people"]="M&#228;nniskor och bloggar";
-$lang["youtube_publish_comedy"]="Komedi";
-$lang["youtube_publish_entertainment"]="N&#246;je";
-$lang["youtube_publish_news"]="Nyheter och politik";
-$lang["youtube_publish_howto"]="Instruktioner och stil";
-$lang["youtube_publish_education"]="Utbildning";
-$lang["youtube_publish_tech"]="Vetenskap och teknik";
-$lang["youtube_publish_nonprofit"]="Ideellt arbete och aktivism";
 
 $lang["youtube_publish_oauth2_advice_desc"]='För att installera detta tillägg behöver du ställa in OAuth 2.0 eftersom alla andra autentiseringsmetoder officiellt är föråldrade. För detta behöver du registrera din ResourceSpace-webbplats som ett projekt med Google och få en OAuth-klient-ID och hemlighet. Det finns ingen kostnad involverad
 
