@@ -583,7 +583,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
  * @param int $ref The resource reference ID.
  * @param string $extension (optional) The file extension for the image, used to validate processing compatibility.
  * @global array $lang Language strings for localization.
- * @return bool Returns `false` if the file does not exist; otherwise, void.
+ * @return bool Returns `false` if the file does not exist; true on successful completion
  */
 function extract_exif_comment($ref,$extension="")
     {
@@ -1128,6 +1128,8 @@ function extract_exif_comment($ref,$extension="")
 
     // Autocomplete any blank fields without overwriting any existing metadata
     autocomplete_blank_fields($ref, false);
+
+    return true;
     }
 
 /**
@@ -2542,7 +2544,7 @@ function get_colour_key($image)
  * @global array $ffmpeg_supported_extensions Extensions supported for video processing with FFmpeg.
  * @global bool $watermark Whether watermarking is enabled.
  * @global int $portrait_landscape_field The field ID for storing portrait or landscape orientation.
- * @return bool Returns `false` if the main preview file does not exist; otherwise, updates previews and returns `void`.
+ * @return bool Returns `false` if the main preview file does not exist; otherwise, updates previews and returns true.
  */
 function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
     {
@@ -2689,7 +2691,7 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
                 imagejpeg($snapshot_source, $snapshot, 95);
                 }
         }
-
+    return true;
     }
 
 /**
@@ -2704,7 +2706,7 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
  * @param float $gamma The gamma correction factor to apply (values > 1 to lighten, values < 1 to darken).
  * @param string $extension (optional) The file extension for the preview images. Default is "jpg".
  * @param int $alternative (optional) The ID of an alternative file to tweak previews for. Default is `-1`.
- * @return bool Returns `false` if a watermarked file does not exist; otherwise, updates previews and returns `void`.
+ * @return bool Returns `false` if a watermarked file does not exist; otherwise, updates previews and returns true.
  */
 function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1){
 
@@ -2741,6 +2743,7 @@ function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alte
         imagecopyresampled($wm_target,$wm_source,0,0,0,0,$sw,$sh,$tw,$th);
         imagejpeg($wm_target,$wm_file,95);
     }
+return true;
 }
 
 /**
@@ -4558,6 +4561,7 @@ function create_image_alternatives(int $ref, array $params, $force = false)
             );
         }
     }
+return true;
 }
 
 /**

@@ -1596,6 +1596,8 @@ function get_plugin_path($plugin,$url=false)
     # Filestore location
     $pluginpath=$storagedir . "/plugins/" . $plugin;
     if (file_exists($pluginpath)) {return $url ? $storageurl . "/plugins/" . $plugin : $pluginpath;}
+
+    return false;
     }
 
 /**
