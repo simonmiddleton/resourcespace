@@ -1745,7 +1745,6 @@ function postUploadActions()
         {?>
         if(!upRedirBlock)
             { 
-            <?php hook('postUploadActions_before_csl_redirurl_js'); ?>
             CentralSpaceLoad(redirurl,true);
             }
         <?php
