@@ -422,7 +422,7 @@ render_content_menu();
             manage_content_page.searchParams.set('page', page);
             manage_content_page.searchParams.set('type', type);
             manage_content_page.searchParams.set('after_item', item.position_after);
-            back_to_content_page_url.searchParams.set('redirecturl', manage_content_page.toString());
+            back_to_content_page_url.searchParams.set('guidelines_cb', manage_content_page.toString());
             return CentralSpaceLoad(back_to_content_page_url.toString(), true);
         }
 

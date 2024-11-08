@@ -386,3 +386,11 @@ function decode_page_content_item(array $item): array
     $item['content'] = $item_content;
     return $item;
 }
+
+/**
+ * Helper validator to check if a callback URL is for Brand Guidelines
+ */
+function is_brand_guidelines_callback($url): bool
+{
+    return url_starts_with(BRAND_GUIDELINES_URL_MANAGE_CONTENT, $url) && is_safe_url($url);
+}
