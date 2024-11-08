@@ -205,7 +205,7 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
  *      whose elements are UTF-8 encoded strings, booleans, numbers or arrays
  *      of such elements and whose keys are either numbers or UTF-8 encoded
  *      strings.
- * @return json encoded version of $config or null if $config is beyond our
+ * @return string encoded version of $config or null if $config is beyond our
  *         capabilities to encode
  */
 function config_json_encode($config)

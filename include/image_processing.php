@@ -2333,7 +2333,7 @@ function create_previews_using_im(
  * pixels in a grid pattern. It adjusts for brightness and excludes grayscale pixels to determine the dominant colors.
  * Additionally, it updates the thumbnail dimensions and color key in the resource record.
  *
- * @param resource $image The image resource to analyze for mean color.
+ * @param GdImage $image The image resource to analyze for mean color.
  * @param int $ref The resource ID for which the color data is updated.
  * @return void
  */
@@ -2449,7 +2449,7 @@ function update_portrait_landscape_field($ref,$image=null){
  * color categories (e.g., black, white, red, etc.), calculates the closest match for each
  * sampled pixel, and returns a five-character color key based on the most frequent colors.
  *
- * @param resource $image The image resource to analyze.
+ * @param GdImage $image The image resource to analyze.
  * @return string A five-character string representing the dominant colors in the image.
  */
 function get_colour_key($image)
@@ -2753,7 +2753,7 @@ return true;
  * a new image with the rotated pixels. If the angle is not one of these specified values, 
  * the original image is returned unmodified.
  *
- * @param resource $src_img The source image resource to rotate.
+ * @param GdImage $src_img The source image resource to rotate.
  * @param int $angle The angle in degrees to rotate the image (90, -90, or 180).
  * @return resource The rotated image resource, or the original if the angle is unsupported.
  */
