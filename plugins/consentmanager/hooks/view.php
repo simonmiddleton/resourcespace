@@ -5,6 +5,7 @@ function HookConsentmanagerViewCustompanels()
     global $lang,$baseurl_short,$ref,$edit_access,$k,$consent_usage_mediums;
 
     if($k!=""){return false;}
+    if (!consentmanager_check_read($ref)) {return false;}
 
     $consents=consentmanager_get_consents($ref);
     ?>
