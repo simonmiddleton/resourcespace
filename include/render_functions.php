@@ -2192,7 +2192,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 }
             sort($field_nodes);
             debug(sprintf('$field_nodes = %s', json_encode($field_nodes)));
-            if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
+            if(!$multiple && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
                 {
                 echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
                 echo "<input id='field_" . (int) $field['ref']  . "_currentval' name='" . "field_" . (int) $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
