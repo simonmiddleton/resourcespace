@@ -8,7 +8,7 @@ include dirname(__FILE__) . "/../upgrade/upgrade.php";
 
 $ref=getval("ref","");
 $resource=getval("resource","");
-$file_path=get_license_file_path($ref);
+$file_path=get_license_file_path((int) $ref);
 
 # Check access
 if ($resource!="")
@@ -72,7 +72,7 @@ if (getval("submitted","")!="")
             ]
         );  
         $ref=sql_insert_id();
-        $file_path=get_license_file_path($ref); // get updated path
+        $file_path=get_license_file_path((int) $ref); // get updated path
 
         # Add to all the selected resources
         if (getval("resources","")!="")
