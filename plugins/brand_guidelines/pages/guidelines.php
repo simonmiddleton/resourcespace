@@ -110,6 +110,7 @@ render_content_menu();
                     $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']
                     && $item['content']['layout'] === 'full-width'
                 ) {
+                    $new_content_btn_id = $item['ref'];
                     render_resource_item($item);
                 } elseif ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['group']) {
                     $members = implode(',', array_column($item['members'], 'ref'));
