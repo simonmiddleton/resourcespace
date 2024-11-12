@@ -243,6 +243,19 @@ function render_resource_item(array $item): void
         <?php echo get_nopreview_html($resource["file_extension"]); ?>
         </div> -->
         <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width grid-container">
+        <?php
+        if (
+            in_array((string) $resource['file_extension'], $GLOBALS['ffmpeg_supported_extensions'])
+            && !(isset($resource['is_transcoding']) && $resource['is_transcoding'] !== 0)
+        ) {
+            $GLOBALS['resource'] = $resource;
+            $GLOBALS['access'] = get_resource_access($resource);
+            $ref = (int) $resource['ref'];
+            include RESOURCESPACE_BASE_PATH . '/pages/video_player.php';
+            // Reset after rendering the video player (relies heavily on globals/scope vars)
+            $ref = (int) $item['ref'];
+        } else {
+            ?>
             <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <img
                     class="image-full-width"
@@ -250,6 +263,9 @@ function render_resource_item(array $item): void
                     alt="<?php echo escape($resource_title); ?>"
                 >
             </a>
+            <?php
+        }
+        ?>
             <?php render_item_top_right_menu($ref, ['grid-item']); ?>
         </div>
     <?php
