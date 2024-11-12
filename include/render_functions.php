@@ -4297,6 +4297,11 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 # Convert the field nodes in value as an array keyed by the names to allow an intersect by key operation 
                 $node_names_in_value = array_intersect_key($names_i18n_in_value, array_flip($field_nodes_in_value));
                 $value = implode(', ', $node_names_in_value);
+                $field_nodes_translated = array_map(function($node_value, $node_id) 
+                        {
+                        return ['name' => $node_value, 'ref' => $node_id];
+                        }
+                        , $node_names_in_value, array_keys($node_names_in_value));
             }
 
             # Not a node list so translate the raw value or something went wrong trying to resolve the node values 
@@ -4304,13 +4309,13 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             if (count($field_nodes_in_value) == 1 || trim($value) == "") {
                 # Translate the single value
                 $value=i18n_get_translated($field_value);
+                $field_nodes_translated = [['name' => $value, 'ref' => $field['nodes']]];
             }
         }
 
         // Handle the rest of the fixed list fields, category trees have their own section
         if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
-            $resource_nodes = get_resource_nodes($ref, $field["ref"], true, false);
-            $value = render_fixed_list_as_pills($resource_nodes);
+            $value = render_fixed_list_as_pills($field_nodes_translated ?? get_resource_nodes($ref, $field["ref"], true, false));
         }
 
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
@@ -4439,7 +4444,7 @@ function render_fixed_list_as_pills($nodes):string
         foreach ($nodes as $nodedata) {
             $search_url = generateURL($baseurl . '/pages/search.php', ['search' => NODE_TOKEN_PREFIX . $nodedata['ref']]);
             $display_html .= "<a href=\"{$search_url}\" onclick=\"CentralSpaceLoad(this)\"</a>";
-            $display_html .= "<div class=\"fixedlistnodepill\">" . escape(i18n_get_translated($nodedata["name"])) . "</div>";
+            $display_html .= "<div class=\"fixedlistnodepill\">" . escape($nodedata["name"]) . "</div>";
             $display_html .= "</a>";
         }
         return "<div>" . $display_html . "</div>";
