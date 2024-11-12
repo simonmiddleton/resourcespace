@@ -790,3 +790,14 @@ function i18n_merge_translations(array $values): array
         array_values($options)
     );
 }
+
+/**
+ * Simple check to determine if the text string supplied contains i18n language translations.
+ * Returns true if match found e.g.  '~en:test~en-US:test'. Returns false if no code is found. e.g. 'test'.
+ *
+ * @param  string  $text   Text string to check e.g. a node name or field value.
+ */
+function is_i18n_language_string($text): bool
+    {
+    return preg_match('/~(.*?):/', $text) === 1;
+    }

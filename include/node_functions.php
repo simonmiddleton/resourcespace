@@ -2686,7 +2686,15 @@ function order_tree_nodes($nodes)
     for($n=0;$n < count($orderednodes);$n++)
         {
         $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
-        $orderednodes[$n]["translated_path"] = $orderednodes[$n]["translated_name"] ?? i18n_get_translated($orderednodes[$n]["name"]);
+        if (!isset($orderednodes[$n]["translated_name"]) || is_i18n_language_string($orderednodes[$n]["translated_name"]))
+            {
+            // Where translated_path is in i18n format, add_sql_node_language() couldn't find a match with the current language. Translate it to get default language.
+            $orderednodes[$n]["translated_path"] = i18n_get_translated($orderednodes[$n]["name"]);
+            }
+        else
+            {
+            $orderednodes[$n]["translated_path"] = $orderednodes[$n]["translated_name"];
+            }
         }
 
     // Find child nodes
@@ -2706,7 +2714,15 @@ function order_tree_nodes($nodes)
                 for($c=0;$c < count($children);$c++)
                     {
                     $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
-                    $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  ($children[$c]["translated_name"] ?? i18n_get_translated($children[$c]["name"]));
+                    if (!isset($children[$c]["translated_name"]) || is_i18n_language_string($children[$c]["translated_name"]))
+                        {
+                        // Where translated_path is in i18n format, add_sql_node_language() couldn't find a match with the current language. Translate it to get default language.
+                        $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  i18n_get_translated($children[$c]["name"]);
+                        }
+                    else
+                        {
+                        $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  ($children[$c]["translated_name"]);
+                        }
                     // Insert the child after the parent and any nodes with a lower order_by value
                     array_splice($orderednodes, $n+1+$c, 0,  [$children[$c]]);
                     // Remove child from $treenodes
