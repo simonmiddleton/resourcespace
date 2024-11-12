@@ -312,8 +312,6 @@ tinymce.init({
     branding: false,
     plugins: 'lists, link',
     toolbar: 'h2 h3 bold italic underline strikethrough removeformat | bullist numlist link | outdent indent',
-    // toolbar1: 'h2 h3 bold italic underline strikethrough',
-    // toolbar2: 'bullist numlist link | outdent indent removeformat',
     menubar: '',
     setup: (editor) => {
         editor.on('blur', (e) => tinymce.triggerSave());
