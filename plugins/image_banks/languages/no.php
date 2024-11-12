@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Bildegalleri';
 $lang["image_banks_search_image_banks_label"]='Søk i eksterne bildebanker';
-$lang["image_banks_search_image_banks_info_text"]='Vennligst spesifiser hvilken bildebank du ønsker å søke gjennom';
 $lang["image_banks_pixabay_api_key"]='API-nøkkel';
 $lang["image_banks_image_bank"]='Bildepark';
 $lang["image_banks_create_new_resource"]='Opprett ny ressurs';

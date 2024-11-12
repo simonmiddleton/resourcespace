@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Τράπεζες Εικόνων';
 $lang["image_banks_search_image_banks_label"]='Αναζήτηση σε εξωτερικές τράπεζες εικόνων';
-$lang["image_banks_search_image_banks_info_text"]='Παρακαλώ καθορίστε ποιο Τράπεζα Εικόνων επιθυμείτε να αναζητήσετε';
 $lang["image_banks_pixabay_api_key"]='Κλειδί API';
 $lang["image_banks_image_bank"]='Τράπεζα Εικόνων';
 $lang["image_banks_create_new_resource"]='Δημιουργία νέου αντικειμένου';

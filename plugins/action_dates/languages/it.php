@@ -37,7 +37,5 @@ $lang["weekday-3"]='Mercoledì';
 $lang["weekday-4"]='Giovedì';
 $lang["weekday-5"]='Venerdì';
 $lang["weekday-6"]='Sabato';
-$lang["show_affected_resources"]='Mostra le risorse interessate';
-$lang["group_no"]='Gruppo';
 $lang["plugin-action_dates-title"]='Date di Azione';
 $lang["plugin-action_dates-desc"]='Abilita l\'eliminazione o la restrizione programmata delle risorse in base ai campi data';

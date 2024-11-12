@@ -37,7 +37,5 @@ $lang["weekday-3"]='Onsdag';
 $lang["weekday-4"]='Torsdag';
 $lang["weekday-5"]='Fredag';
 $lang["weekday-6"]='Lørdag';
-$lang["show_affected_resources"]='Vis påvirkede ressurser';
-$lang["group_no"]='Gruppe';
 $lang["plugin-action_dates-title"]='Handlingsdatoer';
 $lang["plugin-action_dates-desc"]='Aktiverer planlagt sletting eller begrensning av ressurser basert på datofelt';

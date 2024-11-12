@@ -107,7 +107,6 @@ $lang["managethemes"]="Administrer temabasert innholdsoversikt";
 $lang["manageresearchrequests"]="Administrer materialforespørsler";
 $lang["manageusers"]="Administrer brukere";
 $lang["managecontent"]="Administrer tekster";
-$lang["viewstatistics"]="Vis statistikker";
 $lang["viewreports"]="Vis rapporter";
 $lang["viewreport"]="Vis rapport";
 $lang["report"]="Rapport";
@@ -230,7 +229,6 @@ $lang["rightclicktodownload"]="Klikk på denne lenken og velg 'Lagre som...' for
 $lang["downloadinprogress"]="Nedlasting pågår";
 $lang["editmultipleresources"]="Rediger filer";
 $lang["editresource"]="Rediger fil";
-$lang["resourcesselected"]="filer valgt"; # e.g. 17 resources selected.
 $lang["image"]="Bilde";
 $lang["previewimage"]="Forhåndsvis bilde";
 $lang["file"]="Fil";
@@ -435,7 +433,6 @@ $lang["add"]="Legg til";
 $lang["create"]="Opprett";
 $lang["group"]="Gruppe";
 $lang["confirmaddgroup"]="Er du sikker på at du vil legge til alle medlemmene i denne gruppen?";
-$lang["backtoteamhome"]="Tilbake til Administrasjonssiden";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="Material-ID";
 $lang["id"]="ID";
 $lang["todate"]="Til dato";
@@ -745,8 +742,6 @@ $lang["setup-introtext"]="Takk for at du valgte ResourceSpace.  Dette oppsettscr
 $lang["setup-checkerrors"]="Før-konfigurasjonsfeil ble oppdaget.<br /> Vennligst løs disse problemene og kom tilbake til denne siden for å fortsette.";
 $lang["setup-errorheader"]="Det ble oppdaget feil i konfigurasjonen. Se nedenfor for detaljerte feilmeldinger.";
 $lang["setup-warnheader"]="Noen av innstillingene dine utløste advarsler. Se nedenfor etter detaljer. Dette betyr ikke nødvendigvis at det er problemer med konfigurasjonen din.";
-$lang["setup-basicsettings"]="Grunnleggende innstillinger";
-$lang["setup-basicsettingsdetails"]="Disse innstillingene utgjør det grunnleggende oppsettet for din ResourceSpace-installasjon. Nødvendige punkter er merket med en <strong>*</strong>";
 $lang["setup-dbaseconfig"]="Database-konfigurasjon";
 $lang["setup-mysqlerror"]="Det ble oppdaget en feil i dine MySQL-innstillinger:";
 $lang["setup-mysqlerrorversion"]="MySQL må være versjon 5 eller høyere.";
@@ -907,7 +902,6 @@ $lang['plugins-installedheader'] = 'Aktiverte programtillegg';
 $lang['plugins-author'] = 'Forfatter';
 $lang['plugins-version'] = 'Versjon';
 $lang['plugins-instversion'] = 'Installert versjon';
-$lang['plugins-uploadheader'] = 'Last opp programtillegg';
 $lang['plugins-deactivate'] = 'Deaktiver';
 $lang['plugins-moreinfo'] = 'Mer informasjon';
 $lang['plugins-activate'] = 'Aktiver';
@@ -969,8 +963,6 @@ $lang["savesearchassmartcollection"]="Lagre søket som smart-mappe";
 $lang["smartcollection"]="Smart-mappe";
 
 
-$lang["uploadertryjava"]="Hvis du har problemer med opplastingen, eller <strong>laster opp svært store filer</strong>, prøv <strong>Java opplasteren</strong>";
-$lang["getjava"]="For å forsikre deg om at du har den siste Java-programvaren på ditt system, besøk Java-nettestedet";
 
 $lang["all"]="Alle";
 $lang["backtoresults"]="Tilbake til resultatvisning";
@@ -987,7 +979,6 @@ $lang["closethiswindow"]="Lukk vinduet";
 
 $lang["requestaddedtocollection"]="Dette materialet har blitt lagt til det aktive lysbordet. Du kan bestille filene i lysbordet ditt ved å klikke på \'Bestill alle\' i lysbord-bjelken nedenfor.";
 
-$lang["nodownloadsavailable"]="Beklager, det finnes ingen tilgjengelige nedlastinger for dette materialet";
 $lang["reload"]="Oppdater";
 $lang["alternatetype"]="Alternativ type";
 
@@ -1055,7 +1046,6 @@ $lang["phpinivalue"]="PHP.INI verdi for '?'"; # E.g. "PHP.INI value for 'memory_
 $lang["nowriteaccesstofilestore"]=" ikke skrivbar";
 $lang["blockedbrowsingoffilestore"]="Blockert navigering av 'filestore'-katalogen";
 $lang["noblockedbrowsingoffilestore"]="filestore mappen ser ut til å være navigerbar; fjern 'Indexes' fra Apache 'Options' listen.";
-$lang["executionofconvertfailed"]="Oppgaveutføringen feilet; uventet resultat når konverteringskommando ble utført. Resultatet var '?'.<br>Hvis du bruker Windows og IIS 6, må tilgang gis for kommandolinjeutførelse. Konsultér installasjonsinstruksjonenene i wikien."; # ? will be replaced.
 $lang["lastscheduledtaskexection"]="Siste planlagte oppgaveutførelse (days)";
 $lang["executecronphp"]="Relevans-sjekk vil ikke være effektivt og periodiske e-postrapporter vil ikke bli sendt. Forsikre deg om at <a href='../batch/cron.php'>batch/cron.php</a> blir utført minst en gang daglig via en cron-jobb eller lignende.";
 $lang["shouldbeormore"]="skal være ? eller høyere"; # E.g. should be 200M or greater
@@ -1068,22 +1058,7 @@ $lang["anynumberofstars"]="Stjerner, uansett antall";
 
 # System Setup
 # System Setup Tree Nodes (for the default setup tree)
-$lang["treenode-root"]="Rot";
-$lang["treenode-group_management"]="Gruppeadministrasjon";
-$lang["treenode-new_group"]="Ny gruppe";
-$lang["treenode-new_subgroup"]="Ny undergruppe";
-$lang["treenode-resource_types_and_fields"]="Materialtype / felt";
-$lang["treenode-new_resource_type"]="Ny materialtype";
-$lang["treenode-new_field"]="Nytt felt";
-$lang["treenode-reports"]="Rapporter";
-$lang["treenode-new_report"]="Ny rapport";
-$lang["treenode-downloads_and_preview_sizes"]="Nedlastinger / Forhåndsvisningsstørrelser";
-$lang["treenode-new_download_and_preview_size"]="Ny nedlasting / Forhåndsvisningsstørrelse";
-$lang["treenode-database_statistics"]="Database-statistikk";
-$lang["treenode-permissions_search"]="Søk etter tilgangsnivå";
-$lang["treenode-no_name"]="(uten navn)";
 
-$lang["treeobjecttype-preview_size"]="Forhåndsvisningsstørrelse";
 
 $lang["permissions"]="Tilgangsnivå";
 

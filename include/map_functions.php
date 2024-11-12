@@ -6,7 +6,16 @@
 
 use Gettext\Languages\Exporter\Php;
 
-function leaflet_osm_basemaps() // OpenStreetMap basemaps.
+/**
+ * Generates OpenStreetMap basemaps for use in a Leaflet map.
+ *
+ * This function defines various tile layers from OpenStreetMap and related providers,
+ * setting properties such as caching, retina display support, maximum zoom levels,
+ * and attribution for each layer.
+ *
+ * @return string JavaScript code that initializes the OSM basemaps for Leaflet.
+ */
+function leaflet_osm_basemaps() 
     {
     global $map_default_cache, $map_retina;
 
@@ -78,6 +87,14 @@ function leaflet_osm_basemaps() // OpenStreetMap basemaps.
         }); ";
     }
 
+/**
+ * Generates ESRI basemaps for use in a Leaflet map.
+ *
+ * This function defines various tile layers from ESRI, setting properties such as caching,
+ * retina display support, maximum zoom levels, and attribution for each layer.
+ *
+ * @return string JavaScript code that initializes the ESRI basemaps for Leaflet.
+ */
 function leaflet_esri_basemaps() // ESRI basemaps.
     {
     global $map_default_cache, $map_retina;
@@ -233,6 +250,11 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
         }); ";
     }
 
+/**
+ * Generates Hydda basemaps for use in a Leaflet map.
+ *
+ * @return string JavaScript code that initializes the Hydda basemaps for Leaflet.
+ */
 function leaflet_hydda_basemaps() // Hydda basemaps.
     {
     global $map_layer_cache, $map_retina;
@@ -255,6 +277,11 @@ function leaflet_hydda_basemaps() // Hydda basemaps.
         }); ";
     }
 
+/**
+ * Generates NASA basemaps for use in a Leaflet map.
+ *
+ * @return string JavaScript code that initializes the NASA basemaps for Leaflet.
+ */
 function leaflet_nasa_basemaps() // NASA basemaps.
     {
     global $map_layer_cache, $map_retina;
@@ -290,6 +317,11 @@ function leaflet_nasa_basemaps() // NASA basemaps.
         }); ";
     }
 
+/**
+ * Generates USGS basemaps for use in a Leaflet map.
+ *
+ * @return string JavaScript code that initializes the USGS basemaps for Leaflet.
+ */
 function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map basemaps.
     {
     global $map_layer_cache, $map_retina;
@@ -316,6 +348,11 @@ function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map base
         }); ";
     }
 
+/**
+ * Generates Thunderforest basemaps for use in a Leaflet map.
+ *
+ * @return string JavaScript code that initializes the Thunderforest basemaps for Leaflet.
+ */
 function leaflet_thunderforest_basemaps() // Thunderforest basemaps.
     {
     global $map_layer_cache, $map_retina, $map_tfapi;
@@ -402,7 +439,14 @@ function leaflet_mapbox_basemaps() // Mapbox basemaps.
         }); ";
     }
 
-// Determine the map zoom from the geolocation coordinates numeric precision.
+/**
+ * Generates Mapbox basemaps for use in a Leaflet map.
+ *
+ * This function initializes a Mapbox tile layer, requiring an API ID and access token.
+ * It also allows configuration for caching, retina display support, and attribution.
+ *
+ * @return string JavaScript code that initializes the Mapbox basemap for Leaflet.
+ */
 function leaflet_map_zoom($map_zoom)
     {
     global $resource, $geolocation_default_bounds;
@@ -444,7 +488,14 @@ function leaflet_map_zoom($map_zoom)
     return $zoom;
     }
 
-// Parse the resource polygon string for latitude and longitude minimum and maximum and format polygon string.
+/**
+ * Parses the resource polygon string to extract latitude and longitude bounds and formats the polygon string.
+ *
+ * @param array $fields The resource fields array containing polygon data.
+ * @param bool $minmax Flag to determine if minimum and maximum latitude and longitude values should be calculated.
+ * @return array An associative array containing the minimum and maximum latitude and longitude values,
+ *               as well as the formatted polygon string for Leaflet display.
+ */
 function leaflet_polygon_parsing($fields, $minmax = true)
     {
     global $map_polygon_field;
@@ -476,7 +527,13 @@ function leaflet_polygon_parsing($fields, $minmax = true)
     return $polygon;
     }
 
-// Check geolocation coordinates for valid numeric values.
+/**
+ * Validates geolocation coordinates to ensure they are numeric and within acceptable bounds.
+ *
+ * @param mixed $coordinate The coordinate value to check.
+ * @param string $type The type of coordinate ('latitude' or 'longitude').
+ * @return bool True if the coordinate is valid; otherwise, false.
+ */
 function leaflet_coordinate_check($coordinate, $type)
     {
     $check = false;
@@ -498,7 +555,15 @@ function leaflet_coordinate_check($coordinate, $type)
     return $check;
     }
 
-// Create a map color markers legend.
+/**
+ * Creates a map color markers legend for Leaflet maps.
+ *
+ * This function generates HTML for a legend that displays markers with colors corresponding to resource types 
+ * or custom metadata field values. If a custom metadata field is defined, the legend reflects that; otherwise, 
+ * it shows the default resource types and their associated colors.
+ *
+ * @return void Outputs the HTML for the legend.
+ */
 function leaflet_markers_legend()
     {
     global $lang, $marker_metadata_field, $marker_metadata_array, $MARKER_COLORS;
@@ -531,6 +596,15 @@ function leaflet_markers_legend()
         }
     }
 
+/**
+ * Adds map providers for Leaflet maps.
+ *
+ * This function generates a JavaScript snippet that defines various tile layer providers for use in Leaflet maps.
+ * It supports OpenStreetMap and ESRI basemaps, as well as custom providers defined in the global variable `$geo_leaflet_sources`.
+ * The function also includes options for caching tile layers and handling different zoom levels and attribution.
+ *
+ * @return void Outputs the HTML and JavaScript for adding map providers to Leaflet.
+ */
 function header_add_map_providers()
     {
     global $geo_leaflet_sources, $baseurl, $geo_tile_caching;
@@ -689,6 +763,14 @@ function header_add_map_providers()
     <?php
     }
 
+/**
+ * Checks the current page and includes necessary geolocation libraries for Leaflet maps.
+ *
+ * This function loads the Leaflet Control Geocoder plugin and checks if the current page requires geolocation capabilities.
+ * It also handles polyfills for browser compatibility, specifically for Internet Explorer and Edge.
+ *
+ * @return void Outputs the HTML and JavaScript for including geolocation libraries if applicable.
+ */
 function get_geolibraries()
     {
     global $baseurl, $pagename, $map_default_cache, $map_layer_cache, $geo_leaflet_maps_sources,
@@ -727,6 +809,14 @@ function set_geo_map_centerview()
     echo "mapdefaultzoom = " . (int)$centerparts[2] . ";\n";
     }
 
+/**
+ * Outputs the script tag for including additional Leaflet plugins.
+ *
+ * This function loads the necessary JavaScript for the Leaflet Marker Cluster library, which helps in managing
+ * large sets of markers on Leaflet maps by clustering them for better visualization.
+ *
+ * @return void Outputs the script tag for the Marker Cluster plugin.
+ */
 function get_geo_maps_scripts()
     {
     global $baseurl;

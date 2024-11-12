@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Billedbanker';
 $lang["image_banks_search_image_banks_label"]='Søg i eksterne billedbanker';
-$lang["image_banks_search_image_banks_info_text"]='Angiv venligst hvilken billedbank du ønsker at søge igennem';
 $lang["image_banks_pixabay_api_key"]='API nøgle';
 $lang["image_banks_image_bank"]='Billedbank';
 $lang["image_banks_create_new_resource"]='Opret nyt ressource';

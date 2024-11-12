@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Baze slika';
 $lang["image_banks_search_image_banks_label"]='Pretraživanje vanjskih banki slika';
-$lang["image_banks_search_image_banks_info_text"]='Molimo navedite kroz koju bazu slika želite pretraživati';
 $lang["image_banks_pixabay_api_key"]='Ključ API-ja';
 $lang["image_banks_image_bank"]='Baza slika';
 $lang["image_banks_create_new_resource"]='Stvorite novi resurs';

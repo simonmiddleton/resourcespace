@@ -2,6 +2,18 @@
 # Research functions
 # Functions to accomodate research requests
 
+/**
+ * Sends a research request by inserting it into the requests table and notifying the relevant users.
+ *
+ * This function takes an array of custom fields related to the research request,
+ * processes the input data, and sends an email notification to the designated research admins.
+ * It gathers resource types, deadlines, contact information, and custom fields, and stores them
+ * in the database. It also constructs and sends a notification message with the request details.
+ *
+ * @param array $rr_cfields An array of custom fields associated with the research request.
+ * @return void This function does not return any value but performs database operations and sends notifications.
+ * @throws Exception If there is an error during JSON encoding of custom fields.
+ */
 function send_research_request(array $rr_cfields)
     {
     # Insert a search request into the requests table.
@@ -86,6 +98,16 @@ function send_research_request(array $rr_cfields)
     send_user_notification($research_notify_users,$userconfirmmessage);
     }
 
+/**
+ * Retrieves research requests from the database, optionally filtering by a search term
+ * and sorting the results by a specified field.
+ *
+ * @param string $find Optional search term to filter research requests by name, description, contact, or reference number.
+ * @param string $order_by The field to sort the results by. Valid options are 'ref', 'name', 'created', 'status', or 'assigned_to'.
+ * @param string $sort The sort direction, either 'ASC' or 'DESC'. Defaults to 'ASC'.
+ *
+ * @return array An array of research requests that match the search criteria.
+ */
 function get_research_requests($find="",$order_by="name",$sort="ASC")
     {
     $searchsql="";
@@ -107,6 +129,12 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 		order by $use_order_by $use_sort", $parameters);
     }
 
+/**
+ * Retrieves a research request by its reference number, returning its details including name, description, deadline, contact information, user assignment, status, and custom fields.
+ *
+ * @param int $ref The reference number of the research request to retrieve.
+ * @return array|false An associative array with the research request details if found, or false if no request exists.
+ */
 function get_research_request($ref)
     {
     $rr_sql="SELECT rr.ref,rr.name,rr.description,rr.deadline,rr.email,rr.contact,rr.finaluse,rr.resource_types,rr.noresources,rr.shape,
@@ -123,6 +151,12 @@ function get_research_request($ref)
     return $return[0];
     }
 
+/**
+ * Saves a research request by updating its status and assigned user, sending notifications to the originator if the status changes, and optionally deleting the request or copying existing collection resources.
+ *
+ * @param int $ref The reference number of the research request to be saved.
+ * @return bool True if the operation was successful, false otherwise.
+ */
 function save_research_request($ref)
     {
     # Save
@@ -206,9 +240,15 @@ function save_research_request($ref)
                     SELECT ?, resource FROM collection_resource 
                     WHERE collection = ? AND resource NOT IN (SELECT resource FROM collection_resource WHERE collection = ?)", $parameters);
         }
+    return true;
     }
 
-
+/**
+ * Retrieves the collection reference associated with a given research request.
+ *
+ * @param int $ref The reference number of the research request.
+ * @return int|false The collection reference if found, or false if not.
+ */
 function get_research_request_collection($ref)
     {
     $parameters=array("i",$ref);
@@ -216,6 +256,13 @@ function get_research_request_collection($ref)
     if (($return==0) || (strlen($return)==0)) {return false;} else {return $return;}
     }
 
+/**
+ * Updates the collection reference associated with a specified research request.
+ *
+ * @param int $research The reference number of the research request.
+ * @param int $collection The reference number of the collection to associate.
+ * @return void
+ */
 function set_research_collection($research,$collection)
     {
     $parameters=array("i",$collection, "i",$research);

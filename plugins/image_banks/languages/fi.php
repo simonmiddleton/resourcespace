@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Kuvapankit';
 $lang["image_banks_search_image_banks_label"]='Etsi ulkoisia kuvapankkeja';
-$lang["image_banks_search_image_banks_info_text"]='Määritä, minkä kuvapankin haluat etsiä';
 $lang["image_banks_pixabay_api_key"]='API-avain';
 $lang["image_banks_image_bank"]='Kuvapankki';
 $lang["image_banks_create_new_resource"]='Luo uusi resurssi';

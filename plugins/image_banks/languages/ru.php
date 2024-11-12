@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Банки изображений';
 $lang["image_banks_search_image_banks_label"]='Поиск изображений во внешних банках изображений';
-$lang["image_banks_search_image_banks_info_text"]='Пожалуйста, укажите, в каком Банке изображений вы хотите выполнить поиск';
 $lang["image_banks_pixabay_api_key"]='Ключ API';
 $lang["image_banks_image_bank"]='Банк изображений';
 $lang["image_banks_create_new_resource"]='Создать новый ресурс';

@@ -1433,7 +1433,6 @@ $lang["average"]='Vă rugăm să traduceți: Medie';
 $lang["popupblocked"]='Fereastra pop-up a fost blocată de browserul tău.';
 $lang["closethiswindow"]='Închideți această fereastră';
 $lang["requestaddedtocollection"]='Acest resursă a fost adăugată la colecția ta curentă. Poți solicita elementele din colecția ta făcând clic pe "Solicită toate" în bara de colecție de mai jos.';
-$lang["nodownloadsavailable"]='Regretăm, nu există descărcări disponibile pentru acest resursă';
 $lang["alternatetype"]='Tip alternativ';
 $lang["subcategories"]='Subcategorii';
 $lang["subcategory"]='Subcategorie';

@@ -943,8 +943,7 @@ function delete_collection($collection)
  * @param  integer $collection  Collection id
  * @return void
  */
-function 
-refresh_collection_frame($collection="")
+function refresh_collection_frame($collection="")
     {
     # Refresh the CollectionDiv
     global $baseurl, $headerinsert;
@@ -3788,6 +3787,26 @@ function remove_all_resources_from_collection($ref){
     ps_query("DELETE FROM external_access_keys WHERE collection = ? AND upload!=1",array("i",$ref));
     }   
 
+/**
+ * Retrieve promoted collections to be displayed on the home page.
+ *
+ * This function fetches public collections that are marked for publishing to the home page.
+ * It returns an array of collection data, including metadata and thumbnail information for the
+ * home page image if one is assigned.
+ *
+ * @global array $COLLECTION_PUBLIC_TYPES Array of public collection types to filter collections by.
+ * @return array An array of associative arrays representing each promoted collection, with keys:
+ *               - 'ref' (int): The unique identifier for the collection.
+ *               - 'type' (int): The type identifier for the collection.
+ *               - 'name' (string): The name of the collection.
+ *               - 'home_page_publish' (int): Indicates if the collection is published on the home page.
+ *               - 'home_page_text' (string): Display text for the collection for the home page.
+ *               - 'home_page_image' (int): Resource ID for the image displayed on the home page.
+ *               - 'thumb_height' (int): Thumbnail height of the associated image.
+ *               - 'thumb_width' (int): Thumbnail width of the associated image.
+ *               - 'resource_type' (int): The type of the associated resource.
+ *               - 'file_extension' (string): File extension of the associated resource.
+ */
 function get_home_page_promoted_collections()
     {
     global $COLLECTION_PUBLIC_TYPES;
@@ -7061,6 +7080,17 @@ function check_upload_terms(int $collection, string $k) : bool
         }
     }
 
+/**
+ * Determines whether the current user has permission to create collections.
+ *
+ * This function checks for specific conditions that would prevent the user from creating collections.
+ * It returns `false` if any of these conditions are met:
+ * - The user has the "b" permission, which restricts collection creation.
+ * - The user is anonymous and does not have a session collection.
+ *
+ * @global bool $anonymous_user_session_collection Indicates if anonymous users are allowed to create session collections.
+ * @return bool Returns `true` if the user can create collections; otherwise, `false`.
+ */
 function can_create_collections()
     {
     global $anonymous_user_session_collection;

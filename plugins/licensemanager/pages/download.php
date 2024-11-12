@@ -5,7 +5,7 @@ include "../include/file_functions.php";
 
 $ref=getval("ref",0,true);
 $resource=getval("resource",0,true);
-$file_path=get_license_file_path($ref);
+$file_path=get_license_file_path((int) $ref);
 
 # Check access
 if ($resource!="")

@@ -45,7 +45,6 @@ $lang["managethemes"]="Gestisci temi";
 $lang["manageresearchrequests"]="Gestisci richieste";
 $lang["manageusers"]="Gestisci utenti";
 $lang["managecontent"]="Gestisci contenuti";
-$lang["viewstatistics"]="Vedi statistiche";
 $lang["viewreports"]="Vedi reports";
 $lang["viewreport"]="Vedi report";
 $lang["report"]="Report";
@@ -146,7 +145,6 @@ $lang["rightclicktodownload"]="Clicca il tasto destro del mouse e scegli 'Salva'
 $lang["downloadinprogress"]="Scaricamento in corso";
 $lang["editmultipleresources"]="Modifica piu risorse";
 $lang["editresource"]="Modifica risorsa";
-$lang["resourcesselected"]="risorse selezionate"; # e.g. 17 resources selected.
 $lang["image"]="Immagine";
 $lang["previewimage"]="Anteprima immagine";
 $lang["file"]="File";
@@ -188,7 +186,6 @@ $lang["jump"]="Vai";
 $lang["titleandcountry"]="Titolo / Paese";
 $lang["torefineyourresults"]="Per trovare piu' risultati prova";
 $lang["verybestresources"]="Le migliori risorse";
-$lang["emailresource"]="Risorsa per E-mail";
 $lang["addtocurrentcollection"]="Aggiungi alla collezione selezionata";
 $lang["storyextract"]="Riassunto";
 $lang["addresource"]="Aggiungi risorsa";
@@ -328,7 +325,6 @@ $lang["add"]="Aggiungi";
 $lang["create"]="Crea nuovo";
 $lang["group"]="Gruppo";
 $lang["confirmaddgroup"]="Sei sicuro di voler aggiungere tutti i membri a questo gruppo?";
-$lang["backtoteamhome"]="torna al Admin";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="ID della risorsa";
 $lang["id"]="ID";
 $lang["date"]="Data";
@@ -463,7 +459,6 @@ $lang["appendtext"]="Aggiungi testo in fondo";
 $lang["find"]="Cerca";
 $lang["andreplacewith"]="...e sostituisci con...";
 $lang["relateallresources"]="Lega tutte le risorse di questa collezione";
-$lang["country"]="Paese";
 
 
 # New for 1.6
@@ -1476,7 +1471,6 @@ $lang["average"]='Media';
 $lang["popupblocked"]='Il popup è stato bloccato dal tuo browser.';
 $lang["closethiswindow"]='Chiudi questa finestra';
 $lang["requestaddedtocollection"]='Questa risorsa è stata aggiunta alla tua collezione corrente. Puoi richiedere gli elementi nella tua collezione cliccando su "Richiedi tutto" sulla barra della collezione qui sotto.';
-$lang["nodownloadsavailable"]='Spiacente, non ci sono download disponibili per questa risorsa';
 $lang["alternatetype"]='Tipo alternativo';
 $lang["subcategories"]='Sottocategorie';
 $lang["subcategory"]='Sottocategoria';

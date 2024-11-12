@@ -14,7 +14,8 @@ $extract_text_job_data = array(
     'ref'       => $testresource1,
     'extension' => "txt",
 );
-$offlinejob_to_fail = job_queue_add('extract_text', $extract_text_job_data, 9876);
+
+$offlinejob_to_fail = job_queue_add('extract_text', $extract_text_job_data, 2147483647); # $user is max value for MySQL int column.
 
 
 // Offline job to be processed

@@ -80,7 +80,6 @@ $lang["fieldtype-date_and_time"]="Datum/tid";
 $lang["fieldtype-expiry_date"]="Utgångsdatum";
 $lang["fieldtype-category_tree"]="Kategoriträd";
 $lang["fieldtype-dynamic_keywords_list"]="Dynamisk nyckelordslista";
-$lang["fieldtype-dynamic_tree_in_development"]="Dynamiskt träd (under utveckling)";
 
 # Property labels (for the default properties)
 $lang["property-reference"]="Referensnr";
@@ -215,7 +214,6 @@ $lang["managethemes"]="Hantera teman";
 $lang["manageresearchrequests"]="Hantera researchförfrågningar";
 $lang["manageusers"]="Hantera användare";
 $lang["managecontent"]="Hantera webbplatsens innehåll";
-$lang["viewstatistics"]="Visa statistik";
 $lang["viewreports"]="Visa rapporter";
 $lang["viewreport"]="Visa rapport";
 $lang["treeobjecttype-report"]=$lang["report"]="Rapport";
@@ -597,7 +595,6 @@ $lang["add"]="Lägg till";
 $lang["create"]="Skapa";
 $lang["treeobjecttype-group"]=$lang["group"]="Grupp";
 $lang["confirmaddgroup"]="Vill du lägga till alla medlemmar i den här gruppen?";
-$lang["backtoteamhome"]="Tillbaka: Administration, första sidan";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="Materialnr";
 $lang["id"]="Nr";
 $lang["todate"]="Till datum";
@@ -953,8 +950,6 @@ $lang["setup-introtext"]="Tack för att du väljer ResourceSpace. Detta konfigur
 $lang["setup-checkerrors"]="Fel upptäcktes i systemkonfigurationen.<br/>Åtgärda dessa fel, och peka sedan webbläsaren till den här sidan igen när du vill fortsätta.";
 $lang["setup-errorheader"]="Fel upptäcktes i konfigurationen. Se detaljerade felmeddelanden nedan.";
 $lang["setup-warnheader"]="Några av inställningarna genererade varningsmeddelanden, se nedan. Det betyder inte nödvändigtvis att det är ett problem med konfigurationen.";
-$lang["setup-basicsettings"]="Grundläggande inställningar";
-$lang["setup-basicsettingsdetails"]="Här gör du de grundläggande inställningarna för installationen av ResourceSpace.<br><strong>*</strong>Obligatoriskt fält";
 $lang["setup-dbaseconfig"]="Databaskonfiguration";
 $lang["setup-mysqlerror"]="Det finns ett fel i MySQL-inställningarna:";
 $lang["setup-mysqlerrorversion"]="MySQL-versionen måste vara 5 eller senare.";
@@ -1119,7 +1114,6 @@ $lang['plugins-installedheader'] = 'Aktiverade tillägg';
 $lang['plugins-author'] = 'Upphovsman';
 $lang['plugins-version'] = 'Version';
 $lang['plugins-instversion'] = 'Installerad version';
-$lang['plugins-uploadheader'] = 'Överför tillägg';
 $lang['plugins-deactivate'] = 'Inaktivera';
 $lang['plugins-moreinfo'] = 'Mer information';
 $lang['plugins-activate'] = 'Aktivera';
@@ -1131,10 +1125,6 @@ $lang['plugins-upload'] = 'Överför inställningar';
 $lang['plugins-getrsc'] = 'Fil att använda:';
 $lang['plugins-saveconfig'] = 'Spara inställningar';
 $lang['plugins-saveandexit'] = 'Spara och avsluta';
-$lang['plugins-didnotwork'] = 'Ett problem uppstod. Välj en giltig rsc-fil för det här tillägget och klicka på <b>Överför&nbsp;inställningar</b>.';
-$lang['plugins-goodrsc'] = 'Inställningarna överförda. Klicka på <b>Spara&nbsp;inställningar</b> om du vill spara inställningarna.';
-$lang['plugins-badrsc'] = 'Detta var inte en giltig rsc-fil';
-$lang['plugins-wrongplugin'] = 'Detta var en rsc-fil för tillägget %plugin. Välj en fil för det här tillägget'; // %plugin is replaced by the name of the plugin being configured.
 $lang['plugins-configvar'] = 'Ställer in konfigurationsvariabeln: $%cvn'; //%cvn is replaced by the name of the config variable being set
 
 #Location Data
@@ -1204,9 +1194,6 @@ $lang["smartcollection"]="Smart samling";
 $lang["dosavedsearch"]="Utför sparad sökning";
 
 
-$lang["uploadertryjava"]="Använd den äldre Java-överföraren";
-$lang["uploadertryplupload"]="<strong>NY!</strong> – Prova nya överföraren";
-$lang["getjava"]="Besök Javas webbplats om du vill säkerställa att du har den senaste Java-versionen installerad";
 
 $lang["all"]="Alla";
 $lang["allresourcessearchbar"]="Alla material";
@@ -1313,22 +1300,7 @@ $lang["stars"]="Stjärnor";
 
 # System Setup
 # System Setup Tree Nodes (for the default setup tree)
-$lang["treenode-root"]="Rot";
-$lang["treenode-group_management"]="Grupphanteraren";
-$lang["treenode-new_group"]="Ny grupp";
-$lang["treenode-new_subgroup"]="Ny undergrupp";
-$lang["treenode-resource_types_and_fields"]="Materialtyper/-fält";
-$lang["treenode-new_resource_type"]="Ny materialtyp";
-$lang["treenode-new_field"]="Nytt fält";
-$lang["treenode-reports"]="Rapporter";
-$lang["treenode-new_report"]="Ny rapport";
-$lang["treenode-downloads_and_preview_sizes"]="Storlekar för hämtning/förhandsgranskning";
-$lang["treenode-new_download_and_preview_size"]="Ny storlek";
-$lang["treenode-database_statistics"]="Databasstatistik";
-$lang["treenode-permissions_search"]="Behörighetssökning";
-$lang["treenode-no_name"]="Namnlös";
 
-$lang["treeobjecttype-preview_size"]="Storlek";
 
 $lang["permissions"]="Behörigheter";
 
@@ -1457,14 +1429,9 @@ $lang["foldercontent"] = "Mappinnehåll";
 $lang["intro-local_upload"] = "Välj en eller flera filer från den lokala överföringsmappen och klicka sedan på <b>Överför</b>. När filerna är överförda kan de tas bort från överföringsmappen.";
 $lang["intro-single_upload"] = "Klicka på <b>Bläddra</b> för att välja en fil och klicka sedan på <b>Överför</b>.";
 $lang["intro-plupload"] = "Klicka på <b>Lägg till filer</b> för att välja en eller flera filer och klicka sedan på <b>Starta överföring</b>";
-$lang["intro-plupload_dragdrop"] = "Dra och släpp eller klicka på <b>Lägg till filer</b> för att välja en eller flera filer och klicka sedan på <b>Starta överföring</b>";
 $lang["intro-plupload_upload-replace_resource"] = "Klicka på <b>Lägg till filer</b> för att välja en fil och klicka sedan på <b>Starta överföring</b>.";
 $lang["intro-batch_edit"] = "Ange förvalda inställningar för överföring och förvald metadata för materialen du kommer att överföra.";
 $lang["plupload-maxfilesize"] = "Den största tillåtna filstorleken vid överföringar är %s.";
-$lang["pluploader_warning"]="Webbläsaren kanske inte stöder överföring av mycket stora filer. Om problem uppstår kan du uppgradera webbläsaren eller använda länkarna nedan";
-$lang["getsilverlight"]="Besök webbplatsen för Microsoft Silverlight om du vill säkerställa att du har den senaste versionen av Silverlight installerad";
-$lang["getbrowserplus"]="Besök webbplatsen för Yahoo BrowserPlus om du vill säkerställa att du har den senaste versionen av BrowserPlus installerad";
-$lang["pluploader_usejava"]="Använd den äldre Java-överföraren";
 
 $lang["collections-1"] = "(<strong>1</strong> samling)";
 $lang["collections-2"] = "(<strong>%number</strong> samlingar)"; # %number will be replaced, e.g. 3 Collections
@@ -1647,7 +1614,6 @@ $lang["about__about"]="Din egen text för ’Om oss’ …";
 $lang["all__footer"]="<a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace</a>: Digital materialförvaltning (dam) med öppen källkod";
 $lang["all__researchrequest"]="Låt vårt team hitta materialen du är ute efter.";
 $lang["change_language__introtext"]="Välj ditt önskade språk nedan.";
-$lang["change_password__introtext"]="Skriv in ett nytt lösenord nedan om du vill byta lösenord";
 $lang["collection_edit__introtext"]="Organisera och hantera dina material genom att dela upp dem i samlingar.\n\n<br />\n\nDu når alla dina samlingar från panelen <b>Mina&nbsp;samlingar</b> i nederkant av skärmen.\n\n<br /><br />\n\n<strong>Privat åtkomst</strong> tillåter endast dig och dina utvalda användare att se samlingen. Idealiskt om du vill samla material i projekt som du jobbar med enskilt eller i en grupp.\n\n<br /><br />\n\n<strong>Gemensam åtkomst</strong> tillåter alla interna användare att söka efter och se samlingen. Användbart om du vill dela materialet med andra som skulle kunna ha nytta av det. \n\n<br /><br />\n\nDu kan välja om du vill att de andra användarna ska kunna lägga till och ta bort material eller bara kunna visa materialen.";
 $lang["collection_email__introtext"]="Dela snabbt och enkelt materialet i denna samling med andra. Ett e-postmeddelande innehållande en webblänk till samlingarna skapas och skickas automatiskt. Du kan även lägga till ett eget meddelande.";
 $lang["collection_email__introtextthemeshare"]="Dela snabbt och enkelt alla teman i denna temakategori med andra. Ett e-postmeddelande innehållande en webblänk till respektive tema skapas och skickas automatiskt. Du kan även lägga till ett eget meddelande.";

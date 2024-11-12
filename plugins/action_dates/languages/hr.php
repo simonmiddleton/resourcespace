@@ -37,7 +37,5 @@ $lang["weekday-3"]='Srijeda';
 $lang["weekday-4"]='Četvrtak';
 $lang["weekday-5"]='Petak';
 $lang["weekday-6"]='Subota';
-$lang["show_affected_resources"]='Prikaži pogođene resurse';
-$lang["group_no"]='Grupa';
 $lang["plugin-action_dates-title"]='Datumi radnji';
 $lang["plugin-action_dates-desc"]='Omogućuje zakazano brisanje ili ograničenje resursa na temelju polja s datumima';

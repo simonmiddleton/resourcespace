@@ -8,16 +8,7 @@ $resource=getval("resource","",true);
 $file_path=get_consent_file_path($ref);
 
 # Check access
-if ($resource!="")
-    {
-    $edit_access=get_edit_access($resource);
-    if (!$edit_access && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without edit access
-    }
-else
-    {
-    # Editing all consents via Manage Consents - admin only
-    if (!checkperm("a") && !checkperm("cm")) {exit("Access denied");} 
-    }
+if ($resource!="" && !consentmanager_check_write($resource)) {exit("Access denied");} # Should never arrive at this page without edit access
 
 $url_params = array(
     'search'     => getval('search',''),
@@ -60,19 +51,7 @@ if (getval("submitted","")!="")
     if ($ref=="new")
         {
         # New record 
-        ps_query(
-            "insert into consent (name,email,telephone,consent_usage,notes,expires) values ( ?, ?, ?, ?, ?, ?)",
-            [
-                's', getval('name', ''),
-                's', getval('email', ''),
-                's', getval('telephone', ''),
-                's', $consent_usage,
-                's', getval('notes', ''),
-                's', $expires
-            ]
-            
-        );  
-        $ref=sql_insert_id();
+        $ref=consentmanager_create_consent (getval('name', ''),getval('email', ''),getval('telephone', ''),$consent_usage,getval('notes', ''),$expires);
         $file_path=get_consent_file_path($ref); // get updated path
 
         # Add to all the selected resources
@@ -84,27 +63,15 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    ps_query("insert into resource_consent(resource,consent) values (?, ?)", ['i', $r, 'i', $ref]);
-                    resource_log($r,"","",$lang["new_consent"] . " " . $ref);
+                    consentmanager_link_consent($ref,$r);
                     }
                 }
             }
         }
     else
         {
-        # Existing record   
-        ps_query(
-            "update consent set name= ?,email= ?, telephone= ?,consent_usage= ?,notes= ?,expires= ? where ref= ?",
-            [
-                's', getval('name', ''),
-                's', getval('email', ''),
-                's', getval('telephone', ''),
-                's', $consent_usage,
-                's', getval('notes', ''),
-                's', $expires,
-                'i', $ref
-            ]
-        );
+        # Update existing record   
+        consentmanager_update_consent($ref, getval('name', ''),getval('email', ''),getval('telephone', ''),$consent_usage,getval('notes', ''),$expires);
 
         # Add all the selected resources
         ps_query("delete from resource_consent where consent= ?",['i', $ref]);
@@ -117,8 +84,7 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    ps_query("insert into resource_consent(resource,consent) values (?, ?)", ['i', $r, 'i', $ref]);
-                    resource_log($r,"","",$lang["new_consent"] . " " . $ref);
+                    consentmanager_link_consent($ref,$r);
                     }
                 }
             }
@@ -174,10 +140,9 @@ if ($ref=="new")
     }
 else
     {
-    $consent=ps_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref= ?", ['i', $ref]);
-    if (count($consent)==0) {exit("Consent not found.");}
-    $consent=$consent[0];
-    $resources=ps_array("select distinct resource value from resource_consent where consent= ? order by resource", ['i', $ref]);
+    $consent=consentmanager_get_consent($ref);
+    if ($consent===false) {exit("Consent not found.");}
+    $resources=$consent["resources"];
     }
         
 include "../../../include/header.php";

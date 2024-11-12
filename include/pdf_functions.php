@@ -260,29 +260,16 @@ function get_template_path($template_name, $template_namespace)
 */
 function process_template($template_path, array $bind_placeholders = array())
     {
-    global $applicationname, $baseurl, $baseurl_short, $storagedir, $lang, $linkedheaderimgsrc, $contact_sheet_date_include_time, $contact_sheet_date_wordy, $pdf_properties;
+    global $applicationname, $baseurl, $baseurl_short, $storagedir, $lang, $linkedheaderimgsrc;
+    global $contact_sheet_date_include_time, $contact_sheet_date_wordy, $pdf_properties;
 
     // General placeholders available to templates
-    $general_params = array(
-        'applicationname' => $applicationname,
-        'baseurl'         => $baseurl,
-        'baseurl_short'   => $baseurl_short,
-        'filestore'       => $storagedir,
-        'lang'            => $lang,
-        'date'            => nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
-    );
-
-    if('' != $linkedheaderimgsrc)
-        {
-        $general_params['linkedheaderimgsrc'] = $linkedheaderimgsrc;
-        }
-
-    $bind_params = array_merge($general_params, $bind_placeholders);
-
-    foreach($bind_params as $bind_param => $bind_param_value)
-        {
-        $$bind_param = $bind_param_value;
-        }
+    $applicationname = $bind_placeholders['applicationname'] ?? $applicationname;
+    $baseurl         = $bind_placeholders['baseurl'] ?? $baseurl;
+    $baseurl_short   = $bind_placeholders['baseurl_short'] ?? $baseurl_short;
+    $filestore       = $bind_placeholders['filestore'] ?? $storagedir;
+    $lang            = $bind_placeholders['lang'] ?? $lang;
+    $date            = $bind_placeholders['date'] ?? nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy);
 
     // Sometimes, HTML2PDF complains about headers being already sent
     ob_end_clean();

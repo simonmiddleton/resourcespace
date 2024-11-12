@@ -4,7 +4,6 @@
 # -------
 #
 #
-$lang['action_dates_restrictsettings']="Inställningar för automatisk begränsning av material";
 $lang['action_dates_deletesettings']="Inställningar för automatisk borttagning av material – använd med försiktighet";
 $lang['action_dates_configuration']="Välj de fält som ska användas för att automatiskt utföra de specificerade åtgärderna";
 $lang['action_dates_delete']="Ta bort material automatiskt när datumet i detta fält nåtts";
@@ -42,7 +41,5 @@ $lang["weekday-3"]='Onsdag';
 $lang["weekday-4"]='Torsdag';
 $lang["weekday-5"]='Fredag';
 $lang["weekday-6"]='Lördag';
-$lang["show_affected_resources"]='Visa påverkade resurser';
-$lang["group_no"]='Grupp';
 $lang["plugin-action_dates-title"]='Åtgärdsdatum';
 $lang["plugin-action_dates-desc"]='Möjliggör schemalagd radering eller begränsning av resurser baserat på datumfält';

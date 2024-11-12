@@ -4300,6 +4300,15 @@ function get_resource_custom_access($resource)
     return $resource_custom_access;
     }
 
+/**
+ * Retrieves custom access settings for users and user groups associated with a specific resource.
+ *
+ * This function performs a database query to return a list of custom access rows for a given resource,
+ * including the names of user groups and users, the access level, and expiration details.
+ *
+ * @param int $resource The resource reference ID for which to retrieve custom access settings.
+ * @return array The result set containing user groups, users, access levels, and expiration information.
+ */
 function get_resource_custom_access_users_usergroups($resource)
     {
     # Returns only matching custom_access rows, with users and groups expanded
@@ -4316,7 +4325,16 @@ function get_resource_custom_access_users_usergroups($resource)
     ", ['i', $resource]);
     }
 
-
+/**
+ * Saves custom access settings for a specific resource.
+ *
+ * This function retrieves custom access groups associated with the given resource,
+ * deletes existing custom access records for that resource, and then inserts new 
+ * access settings based on user input.
+ *
+ * @param int $resource The resource reference ID for which custom access is being set.
+ * @return void
+ */
 function save_resource_custom_access($resource)
     {
     $groups=get_resource_custom_access($resource);
@@ -4563,6 +4581,14 @@ function stripMetadata($file_path)
     return true;
     }
 
+/**
+ * Writes metadata to a specified file using ExifTool.
+ *
+ * @param string $path The file path where the metadata will be written.
+ * @param int $ref The reference ID of the resource associated with the file.
+ * @param string $uniqid A unique identifier for the temporary file location (optional).
+ * @return string|bool The path to the temporary file if successful, false otherwise.
+ */
 function write_metadata($path, $ref, $uniqid="")
     {
     debug_function_call('write_metadata', func_get_args());
@@ -4773,10 +4799,21 @@ function delete_exif_tmpfile($tmpfile)
     if(file_exists($tmpfile)){unlink ($tmpfile);}
     }
 
+/**
+ * Updates a resource with a new file and its associated metadata.
+ *
+ * @param int $r The resource ID to update.
+ * @param string $path The file path of the new resource.
+ * @param string $type The type of the resource.
+ * @param string $title The title for the resource.
+ * @param bool $ingest Indicates if the resource is being ingested.
+ * @param bool $createPreviews Flag to create previews.
+ * @param string $extension The file extension of the new resource.
+ * @param bool $after_upload_processing Indicates if the update is after upload processing.
+ * @return int|bool The resource ID if successful, false otherwise.
+ */
 function update_resource($r, $path, $type, $title, $ingest=false, $createPreviews=true, $extension='',$after_upload_processing=false)
     {
-    # Update the resource with the file at the given path
-    # Note that the file will be used at it's present location and will not be copied.
     global $syncdir, $staticsync_prefer_embedded_title, $view_title_field, $filename_field, $upload_then_process, $offline_job_queue, $lang,
         $extracted_text_field, $offline_job_queue, $offline_job_in_progress, $autorotate_ingest, $enable_thumbnail_creation_on_upload,
         $userref, $lang, $upload_then_process_holding_state,$unoconv_extensions;
@@ -4972,12 +5009,22 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
     return $r;
     }
 
+/**
+ * Imports a resource from the specified path and updates its details.
+ *
+ * This function is used to import resources into the system, particularly through staticsync.php
+ * It creates a new resource entry and updates it with the provided file details.
+ *
+ * @param string $path The file path of the resource to import.
+ * @param string $type The type of the resource being imported.
+ * @param string $title The title for the imported resource.
+ * @param bool $ingest Indicates if the resource is being ingested (default is false).
+ * @param string $extension The file extension of the resource (optional).
+ * @return int|bool The newly created resource ID if successful, false otherwise.
+ */
 function import_resource($path, $type, $title, $ingest=false, $extension='')
     {
     global $syncdir,$lang;
-    // Import the resource at the given path
-    // This is used by staticsync.php and Camillo's SOAP API
-    // Note that the file will be used at it's present location and will not be copied.
 
     $r=create_resource($type);
     if($r === false)
@@ -4997,6 +5044,15 @@ function import_resource($path, $type, $title, $ingest=false, $extension='')
     return update_resource($r, $path, $type, $title, $ingest, true, $extension);
     }
 
+/**
+ * Retrieves alternative files associated with a specified resource.
+ *
+ * @param int $resource The resource ID for which to fetch alternative files.
+ * @param string $order_by The field to order the results by (optional).
+ * @param string $sort The sorting direction (ASC or DESC) for the order_by field (optional).
+ * @param string $type The type of alternative file to filter by (optional).
+ * @return array|bool An array of alternative files if successful, false otherwise.
+ */
 function get_alternative_files($resource,$order_by="",$sort="",$type="")
     {
     # Returns a list of alternative files for the given resource
@@ -5146,6 +5202,13 @@ function delete_alternative_file($resource, $ref) : bool
     return true;
     }
 
+/**
+ * Retrieves a specific alternative file associated with a given resource.
+ *
+ * @param int $resource The resource ID associated with the alternative file.
+ * @param int $ref The reference ID of the alternative file to retrieve.
+ * @return array|bool An associative array containing the alternative file details if found, false otherwise.
+ */
 function get_alternative_file($resource,$ref)
     {
     # Returns the row for the requested alternative file
@@ -5153,6 +5216,13 @@ function get_alternative_file($resource,$ref)
     if (count($return)==0) {return false;} else {return $return[0];}
     }
 
+/**
+ * Updates the details of an alternative file in the database.
+ *
+ * @param int $resource The resource ID associated with the alternative file.
+ * @param int $ref The reference ID of the alternative file to update.
+ * @return void
+ */
 function save_alternative_file($resource,$ref)
     {
     # Saves the 'alternative file' edit form back to the database
@@ -5163,6 +5233,14 @@ function save_alternative_file($resource,$ref)
     array("s",$name,"s",$description,"s",$alt_type,"i",$resource,"i",$ref));
     }
 
+/**
+ * Saves a user rating for a given resource.
+ *
+ * @param int $userref The reference ID of the user rating the resource.
+ * @param int $ref The reference ID of the resource being rated.
+ * @param int $rating The rating value to be saved (0 to remove rating).
+ * @return void
+ */
 function user_rating_save($userref,$ref,$rating)
     {
     # Save a user rating for a given resource
@@ -5259,6 +5337,14 @@ function get_field($field)
         }
     }
 
+/**
+ * Retrieves the keyword that will be indexed for a given field option.
+ *
+ * This function splits the provided option into keywords and applies stemming if enabled.
+ *
+ * @param string $option The field option to process.
+ * @return string The keyword to be indexed.
+ */
 function get_keyword_from_option($option)
     {
     # For the given field option, return the keyword that will be indexed.
@@ -5272,22 +5358,23 @@ function get_keyword_from_option($option)
     return $keywords[1];
     }
 
+/**
+ * Retrieves the access level for the currently logged-in user for a specified resource.
+ *
+ * The access levels returned are:
+ * - 0 = Full Access (download all sizes)
+ * - 1 = Restricted Access (download only those sizes that are set to allow restricted downloads)
+ * - 2 = Confidential (no access)
+ *
+ * @param int|array $resource The reference ID of the resource or a resource data array.
+ * @return int The access level for the resource.
+ */
 function get_resource_access($resource)
     {
     global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref, $open_access_for_contributor,
         $userref,$usergroup, $usersearchfilter, $search_all_workflow_states,
         $userderestrictfilter, $userdata, $custom_access;
-    # $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.
-
-    # Returns the access that the currently logged-in user has to $resource.
-    # Return values:
-    # 0 = Full Access (download all sizes)
-    # 1 = Restricted Access (download only those sizes that are set to allow restricted downloads)
-    # 2 = Confidential (no access)
-
-    # Load the 'global' access level set on the resource
-    # In the case of a search, resource type and global,group and user access are passed through to this point, to avoid multiple unnecessary get_resource_data queries.
-    # passthru signifies that this is the case, so that blank values in group or user access mean that there is no data to be found, so don't check again .
+    
     $passthru="no";
 
     // get_resource_data doesn't contain permissions, so fix for the case that such an array could be passed into this function unintentionally.
@@ -5494,12 +5581,32 @@ function get_resource_access($resource)
     return (int) $access;
     }
 
-
+/**
+ * Retrieves the custom access level for a specific user on a given resource.
+ *
+ * This function checks the `resource_custom_access` table to see if the user has any custom access
+ * permissions for the specified resource. It returns the access level if found and still valid;
+ * otherwise, it returns false.
+ *
+ * @param int $resource The resource ID to check access for.
+ * @param int $user The user ID to check for custom access.
+ * @return mixed The access level if found; false otherwise.
+ */
 function get_custom_access_user($resource,$user)
     {
     return ps_value("select access value from resource_custom_access where resource=? and user=? and (user_expires is null or user_expires>now())",array("i",$resource,"i",$user),false);
     }
 
+/**
+ * Edits the external access settings for a given resource.
+ *
+ * @param string $key The external access key to edit.
+ * @param int $access The new access level; defaults to -1 for no change.
+ * @param string $expires The expiration date for the access key; optional.
+ * @param string $group The user group to share with; defaults to the current user group if not specified.
+ * @param string $sharepwd The password for accessing the resource; "(unchanged)" means no change.
+ * @return bool Returns true if the operation was successful; false if the key is empty.
+ */
 function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sharepwd="")
     {
     global $userref,$usergroup, $scramble_key;
@@ -5857,6 +5964,11 @@ function log_diff($fromvalue, $tovalue)
     }
 
 
+/**
+ * Retrieves a list of all metadata templates for a specified resource type.
+ *
+ * @return array An array of metadata templates, each containing the resource reference and its title.
+ */
 
 function get_metadata_templates()
     {
@@ -5865,6 +5977,12 @@ function get_metadata_templates()
     return ps_query("select ref,field$metadata_template_title_field from resource where ref>0 and resource_type= ? order by field$metadata_template_title_field", ['i', $metadata_template_resource_type]);
     }
 
+/**
+ * Retrieves a list of collections that a resource is used in for the specified resource reference.
+ *
+ * @param int $ref The resource reference for which to retrieve associated collections.
+ * @return array An array of collections associated with the resource, including user information and resource count.
+ */
 function get_resource_collections($ref)
     {
     global $userref;
@@ -5897,9 +6015,17 @@ function get_resource_collections($ref)
         ));
     }
 
+/**
+ * Retrieves a summary of downloads for a given resource, categorized by usage type.
+ *
+ * This function queries the resource log to count the number of downloads 
+ * for the specified resource, grouping the results by the usage option.
+ *
+ * @param int $resource The resource reference for which to retrieve the download summary.
+ * @return array An array of download summaries, each containing the usage option and the corresponding count.
+ */
 function download_summary($resource)
     {
-    # Returns a summary of downloads by usage type
     return ps_query("select usageoption,count(*) c from resource_log where resource=? and type='D' group by usageoption order by usageoption",array("i",$resource));
     }
 
@@ -6141,7 +6267,16 @@ function get_page_count($resource,$alternative=-1)
     return $pages;
     }
 
-
+/**
+ * Updates the disk usage for a specified resource by calculating the total size of the files
+ * in the resource's directory and storing the result in the resource table.
+ *
+ * This function first checks for the size of the primary resource file and then scans the 
+ * associated folder to compute the total disk usage, excluding any files in staticsync locations.
+ *
+ * @param int $resource The resource reference whose disk usage is to be updated.
+ * @return bool Returns true on success, or false if the directory does not exist.
+ */
 function update_disk_usage($resource)
     {
     # we're also going to record the size of the primary resource here before we do the entire folder
@@ -6431,6 +6566,22 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
     return $fileinfo;
     }
 
+/**
+ * Generates an external access key for a resource, allowing specified access to a user or group.
+ *
+ * This function creates a unique access key and stores it in the database along with 
+ * information about the resource, the user, the type of access granted, 
+ * expiration date, email, and user group. It also hashes the share password if provided.
+ *
+ * @param int $resource The resource reference for which the access key is being generated.
+ * @param int $userref The user reference for the user to whom access is granted.
+ * @param int $access The level of access granted (e.g., full access, restricted).
+ * @param string|null $expires The expiration date of the access key, formatted as 'Y-m-d'.
+ * @param string $email The email address associated with the user receiving the access key.
+ * @param string $group The user group associated with the access, defaults to the current user group if not specified.
+ * @param string $sharepwd The share password, if any, used to secure access.
+ * @return string|bool Returns the generated access key on success, or false if permissions are insufficient.
+ */
 function generate_resource_access_key($resource,$userref,$access,$expires,$email,$group="",$sharepwd="")
         {
         if(checkperm("noex"))
@@ -6458,6 +6609,19 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
         return $k;
         }
 
+/**
+ * Retrieves all external access keys granted for a specific resource.
+ *
+ * This function returns a list of all external access details for the given resource,
+ * including users and emails associated with each access key. If the user does not have
+ * the elevated 'v' permission, the function will only return access keys associated 
+ * with the current user. The results are grouped by access key, allowing for multiple 
+ * users or emails to be returned as comma-separated values.
+ *
+ * @param int $resource The reference ID of the resource for which external access is being retrieved.
+ * @return array An array of access details, including access keys, users, emails, expiration dates, 
+ *               and other related information for the specified resource.
+ */
 function get_resource_external_access($resource)
     {
     # Return all external access given to a resource

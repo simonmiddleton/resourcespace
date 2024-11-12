@@ -63,7 +63,7 @@ file_put_contents($test_path . "testtextsync.txt","TEST");
 $sync_tree_field= create_resource_type_field("Sync tree", 0, FIELD_TYPE_CATEGORY_TREE, "synctree",true);
 $staticsync_mapped_category_tree = $sync_tree_field;
 
-// Required for Test G and H
+// Required for Test G, H, and M
 $projectspath = $test_path . "projects/conferenceA/";
 if (!file_exists($projectspath))
     {
@@ -72,12 +72,28 @@ if (!file_exists($projectspath))
 file_put_contents($projectspath . "projecta.txt","TEST");
 $project_field = create_resource_type_field("Sync Project", 0, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "syncproject",true);
 
-$staticsync_mapfolders[]=array
-    (
+$landscapepath = $test_path . "landscape/mountains/" . get_resource_types()[0]["name"];
+if (!file_exists($landscapepath)) {
+    mkdir($landscapepath,0777,true);
+}
+file_put_contents($projectspath . "mountaina.txt","TEST");
+$landscape_field = create_resource_type_field("Landscape", get_resource_types()[0]["ref"], FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "landscape",true);
+
+$staticsync_mapfolders[]=array (
     "match"=>"/projects/",
     "field"=>$project_field,
     "level"=>4
-    );
+);
+$staticsync_mapfolders[] = array (
+"match"=>"/landscape/",
+"field"=>"resource_type",
+"level"=>5
+);
+$staticsync_mapfolders[] = array (
+    "match"=>"/landscape/",
+    "field"=>148,
+    "level"=>4
+);
 
 // Required for Test I
 $alternativespath = $projectspath . "projecta.txt_alternatives/";
@@ -113,6 +129,9 @@ if (!file_exists($altsuffixpath))
 file_put_contents($altsuffixpath . "alt_suffix_primary.txt","TEST_ALT_SUFFIX_PRIMARY");
 file_put_contents($altsuffixpath . "alt_suffix_primary_odd.txt","TEST_ALT_SUFFIX_ODD");
 file_put_contents($altsuffixpath . "alt_suffix_primary_side.txt","TEST_ALT_SUFFIX_SIDE");
+
+// Required for Test M
+
 
 // Run staticsync, but hold back the output (has to be an include not a PHP exec so the above test config is used)
 $argv=array();
@@ -239,6 +258,13 @@ if (is_array($results) && count($results) > 0)
     echo "Test L failed: File in \$nogo location was imported - ";
     return false;
     }
+
+// Test M - apply resource type specific field data from mapped folders
+$results = do_search("mountains");
+if (is_array($results) && count($results) != 1) {
+    echo "Test M failed: Resource Type Specific data not applied from mapped folders - ";
+    return false;
+}
 
 $userref            = $saved_userref;
 $userpermissions    = $saved_perms;

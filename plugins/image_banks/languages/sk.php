@@ -3,7 +3,6 @@
 
 $lang["image_banks_configuration"]='Obrazové banky';
 $lang["image_banks_search_image_banks_label"]='Hľadať v externých bankách obrázkov';
-$lang["image_banks_search_image_banks_info_text"]='Prosím, uveďte, cez ktorú Obrazovú banku chcete vyhľadávať';
 $lang["image_banks_pixabay_api_key"]='API kľúč';
 $lang["image_banks_image_bank"]='Obrazová banka';
 $lang["image_banks_create_new_resource"]='Vytvoriť nový zdroj';

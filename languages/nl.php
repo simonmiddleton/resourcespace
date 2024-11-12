@@ -45,7 +45,6 @@ $lang["managethemes"]="Beheer collecties";
 $lang["manageresearchrequests"]="Beheer onderzoekaanvragen";
 $lang["manageusers"]="Beheer gebruikers";
 $lang["managecontent"]="Beheer teksten van site";
-$lang["viewstatistics"]="Statestieken";
 $lang["viewreports"]="Raportages";
 $lang["viewreport"]="Raportages";
 $lang["report"]="Raport";
@@ -147,7 +146,6 @@ $lang["rightclicktodownload"]="Klik recht op deze link en selecteer 'Bewaren als
 $lang["downloadinprogress"]="Download wordt uitgevoerd";
 $lang["editmultipleresources"]="Bewerk meerder materialen";
 $lang["editresource"]="Bewerk materiaal";
-$lang["resourcesselected"]="materialen geselecteerd"; # e.g. 17 resources selected.
 $lang["image"]="Beeld";
 $lang["previewimage"]="Voorvertoon beeld";
 $lang["file"]="Bestand";
@@ -189,7 +187,6 @@ $lang["jump"]="Ga";
 $lang["titleandcountry"]="Titel / Land";
 $lang["torefineyourresults"]="Om uw zoekopdracht preciezer te maken, probeer";
 $lang["verybestresources"]="De beste materialen";
-$lang["emailresource"]="E-mail";
 $lang["addtocurrentcollection"]="Voeg aan huidige collectie toe";
 $lang["storyextract"]="Uittreksel";
 $lang["addresource"]="Voeg materiaal toe";
@@ -329,7 +326,6 @@ $lang["add"]="Voeg toe";
 $lang["create"]="Maak";
 $lang["group"]="Groep";
 $lang["confirmaddgroup"]="Weet u zeker dat u alle leden van deze groep wilt toevoegen?";
-$lang["backtoteamhome"]="terug naar het bedieningspaneel";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="Materiaal ID";
 $lang["id"]="ID";
 $lang["date"]="Datum";
@@ -463,7 +459,6 @@ $lang["appendtext"]="Voeg tekst toe";
 $lang["find"]="Vind";
 $lang["andreplacewith"]="...ven vervang voor...";
 $lang["relateallresources"]="Relateer alle materialen aan elkaar in deze collectie";
-$lang["country"]="Land";
 
 
 
@@ -1483,7 +1478,6 @@ $lang["average"]='Gemiddelde';
 $lang["popupblocked"]='De pop-up is geblokkeerd door uw browser.';
 $lang["closethiswindow"]='Sluit dit venster';
 $lang["requestaddedtocollection"]='Deze bron is toegevoegd aan uw huidige collectie. U kunt de items in uw collectie aanvragen door op \'Alles aanvragen\' te klikken op de collectiebalk hieronder.';
-$lang["nodownloadsavailable"]='Sorry, er zijn geen downloads beschikbaar voor deze bron';
 $lang["alternatetype"]='Alternatief type';
 $lang["subcategories"]='Subcategorieën';
 $lang["subcategory"]='Subcategorie';

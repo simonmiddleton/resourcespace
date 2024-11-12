@@ -46,8 +46,6 @@ $lang["manageresearchrequests"]="Gerenciar Requisições de Pesquisa";
 $lang["manageusers"]="Gerenciar Usuários";
 $lang["managecontent"]="Gerenciar Textos do Serviço";
 
-$lang["viewstatistics"]="Ver Estatísticas do ResourceSpace";
-$lang["viewserverstatistics"]="Ver Estatísticas do Servidor";
 
 $lang["viewreports"]="Ver Relatórios";
 $lang["viewreport"]="Ver Relatório";
@@ -154,7 +152,6 @@ $lang["rightclicktodownload"]="Clique com o botão direito do mouse e escolha \"
 $lang["downloadinprogress"]="Download em Progresso";
 $lang["editmultipleresources"]="Editar Múltiplos Conteúdos";
 $lang["editresource"]="Editar Conteúdo";
-$lang["resourcesselected"]="conteúdos selecionados"; # e.g. 17 contents selected.
 $lang["image"]="Imagem";
 $lang["previewimage"]="Imagem Preview";
 $lang["file"]="Arquivo";
@@ -174,7 +171,6 @@ $lang["indexedsearchable"]="Indexado, campos procuráveis";
 $lang["clearform"]="Limpar Formulário";
 $lang["emailresourcetitle"]="Email";
 $lang["resourcetitle"]="Título do Conteúdo";
-$lang["filename"]="Arquivo Original";
 $lang["requestresource"]="Requisitar Conteúdo";
 $lang["action-viewmatchingresources"]="Ver conteúdo";
 $lang["nomatchingresources"]="Nenhum conteúdo";
@@ -340,7 +336,6 @@ $lang["add"]="Adicionar";
 $lang["create"]="Criar";
 $lang["group"]="Grupo";
 $lang["confirmaddgroup"]="Você tem certeza que deseja adicionar todos os membros neste grupo?";
-$lang["backtoteamhome"]="voltar à página de administração";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="ID do Conteúdo";
 $lang["id"]="ID";
 $lang["date"]="Data";
@@ -476,7 +471,6 @@ $lang["appendtext"]="Acrescentar Texto";
 $lang["find"]="Encontrar";
 $lang["andreplacewith"]="...e trocar por...";
 $lang["relateallresources"]="Relacionar todo o conteúdo nesta coleção";
-$lang["country"]="País";
 
 # New for 1.5
 $lang["columns"]="Colunas";
@@ -1527,7 +1521,6 @@ $lang["average"]='Média';
 $lang["popupblocked"]='O pop-up foi bloqueado pelo seu navegador.';
 $lang["closethiswindow"]='Feche esta janela';
 $lang["requestaddedtocollection"]='Este recurso foi adicionado à sua coleção atual. Você pode solicitar os itens em sua coleção clicando em \'Solicitar Todos\' na barra de coleção abaixo.';
-$lang["nodownloadsavailable"]='Desculpe, não há downloads disponíveis para este recurso';
 $lang["alternatetype"]='Tipo alternativo';
 $lang["subcategories"]='Subcategorias';
 $lang["subcategory"]='Subcategoria';

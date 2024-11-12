@@ -37,7 +37,5 @@ $lang["weekday-3"]='Streda';
 $lang["weekday-4"]='Štvrtok';
 $lang["weekday-5"]='Piatok';
 $lang["weekday-6"]='Sobota';
-$lang["show_affected_resources"]='Zobraziť ovplyvnené zdroje';
-$lang["group_no"]='Skupina';
 $lang["plugin-action_dates-title"]='Datumi dejanj';
 $lang["plugin-action_dates-desc"]='Omogoča načrtovano brisanje ali omejitev virov na podlagi datumskih polj';
