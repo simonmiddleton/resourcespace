@@ -301,9 +301,9 @@ function convert_from_db_content(string $json, array $def): array
 
 /**
  * Helper function to group similar sequential page (colour & resource) content items for rendering purposes. A group is
- * made of at least one item (to allow users to add to it).
+ * made of at least one item (to allow users to add to it). Full width resources do not get grouped.
  * @param array $items Page content item records
- * @return array Returns item as is and a group item (with members) otherwise
+ * @return array Returns the item as is or makes it a group member otherwise
  */
 function group_content_items(array $items): array
 {
@@ -312,32 +312,42 @@ function group_content_items(array $items): array
         'type' => BRAND_GUIDELINES_CONTENT_TYPES['group'],
         'members' => [],
     ];
+    $is_resource_content_type = static fn(array $V): bool => (
+        $V['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource'] && $V['content']['layout'] !== 'full-width'
+    );
+
     foreach ($items as $item) {
-        $group_type = (
-            $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['colour']
-            || (
-                $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']
-                && $item['content']['layout'] !== 'full-width'
-            )
-        );
-        $group_size_reached = (
-            $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']
-            && $item['content']['layout'] === 'half-width'
-            && count($tmp['members']) === 1
-        );
+        $colour_content_type = $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['colour'];
+        $resource_content_type = $is_resource_content_type($item);
+        $group_type = $colour_content_type || $resource_content_type;
         $next_item = next($items);
+
         if (
-            $next_item !== false
+            $group_type
+            && $next_item !== false
             && $item['type'] === $next_item['type']
-            && $group_type
-            && !$group_size_reached
+            && (
+                $colour_content_type
+                || (
+                    $resource_content_type
+                    && $is_resource_content_type($next_item)
+                    && $item['content']['layout'] === $next_item['content']['layout']
+                    && (
+                        $item['content']['layout'] === 'thumbnail'
+                        || ($item['content']['layout'] === 'half-width' && $tmp['members'] === [])
+                    )
+                )
+            )
         ) {
+            // First/mid group member, as applicable
             $tmp['members'][] = $item;
-        } elseif ($tmp['members'] !== [] || ($tmp['members'] === [] && $group_type)) {
+        } elseif ($group_type) {
+            // The only/last group member
             $tmp['members'][] = $item;
             $result[] = $tmp;
             $tmp['members'] = [];
         } else {
+            // Not a group (type) member
             $result[] = $item;
         }
     }
