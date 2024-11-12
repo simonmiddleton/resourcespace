@@ -876,13 +876,13 @@ function allowed_type_mime($allowedtype)
  * @param  string $from             From address - defaults to $email_from
  * @param  string $reply_to         Reply to address - defaults to $email_from 
  * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
- * @param  string $templatevars     Used to populate email template placeholders
+ * @param  array $templatevars      Used to populate email template placeholders
  * @param  string $from_name        Email from name
  * @param  string $cc               Optional CC addresses
  * @param  string $bcc              Optional BCC addresses
  * @param  array $files             Optional array of file paths to attach in the format [filename.txt => /path/to/file.txt]
  */
-function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
+function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=array(),$from_name="",$cc="",$bcc="",$files = array())
     { 
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
     global $email_footer, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
@@ -1135,7 +1135,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
  * @param  string $from             From address - defaults to $email_from 
  * @param  string $reply_to         Reply to address - defaults to $email_from
  * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
- * @param  string $templatevars     Used to populate email template placeholders
+ * @param  array $templatevars     Used to populate email template placeholders
  * @param  string $from_name        Email from name
  * @param  string $cc               Optional CC addresses
  * @param  string $bcc              Optional BCC addresses
@@ -1143,7 +1143,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
  * @return void
  */
 
-function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="", $files=array())
+function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=array(),$from_name="",$cc="",$bcc="", $files=array())
     {
     # Include footer
     global $header_colour_style_override, $mime_types_by_extension, $email_from;
