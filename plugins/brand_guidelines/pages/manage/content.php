@@ -207,6 +207,10 @@ if (
 ) {
     // Note: this is a hack to avoid knowing the hash value on the client side
     $_GET['layout'] = [md5("layout_{$page_def[$type]['fields'][1]['options'][$layout]}")];
+    if ($layout === 'half-width' && isset($page_def[$type]['fields'][2]['options']['pre'])) {
+        // Default to pre size (thm would be too small) for a half-width layout
+        $_GET['image_size'] = [md5("image_size_{$page_def[$type]['fields'][2]['options']['pre']}")];
+    }
 }
 
 // Allow the upload flow to call back with the new resource ID and preset it on the form
@@ -339,7 +343,7 @@ jQuery(document).ready(() => {
                 } else {
                     jQuery('#Question_caption').slideUp(150);
                 }
-                
+
                 if (e.target.value === '<?php echo escape($thumbnail_val_hash); ?>') {
                     jQuery('#Question_image_size').slideUp(150);
                 } else {

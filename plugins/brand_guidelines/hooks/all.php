@@ -24,7 +24,7 @@ function HookBrand_guidelinesAllInitialise()
         'BRAND_GUIDELINES_DEFAULT_IMAGE_SIZES',
         array_diff_key(
             array_column(get_all_image_sizes(true), 'name', 'id'),
-            array_flip(['col', 'thm', 'hpr'])
+            array_flip(['col', 'hpr'])
         )
     );
     define(
