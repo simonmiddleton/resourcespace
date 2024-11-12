@@ -21,13 +21,6 @@ function HookBrand_guidelinesAllInitialise()
     define('BRAND_GUIDELINES_DB_COLS_PAGES', columns_in('brand_guidelines_pages', null, 'brand_guidelines'));
     define('BRAND_GUIDELINES_DB_COLS_CONTENT', columns_in('brand_guidelines_content', null, 'brand_guidelines'));
     define(
-        'BRAND_GUIDELINES_DEFAULT_IMAGE_SIZES',
-        array_diff_key(
-            array_column(get_all_image_sizes(true), 'name', 'id'),
-            array_flip(['col', 'hpr'])
-        )
-    );
-    define(
         'BRAND_GUIDELINES_URL_MANAGE_CONTENT',
         "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/content.php"
     );

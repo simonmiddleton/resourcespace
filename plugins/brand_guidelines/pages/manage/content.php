@@ -55,7 +55,10 @@ $page_def = [
             'id'       => 'image_size',
             'title'    => $lang['fieldtitle-image_size'],
             'type'     => FIELD_TYPE_DROP_DOWN_LIST,
-            'options'  => BRAND_GUIDELINES_DEFAULT_IMAGE_SIZES,
+            'options'  => array_diff_key(
+                array_column(get_all_image_sizes(true), 'name', 'id'),
+                array_flip(['col', 'hpr'])
+            ),
             'required' => true,
             ],
             [
