@@ -1553,7 +1553,7 @@ function rs_quoted_printable_encode($string, $linelen = 0, $linebreak="=\r\n", $
     $len = strlen($string);
     $result = '';
     for($i=0;$i<$len;$i++) {
-            if (($linelen >= 76) && (false)) { // break lines over 76 characters, and put special QP linebreak
+            if ($linelen >= 76) { // break lines over 76 characters, and put special QP linebreak
                     $linelen = $breaklen;
                     $result.= $linebreak;
             }
