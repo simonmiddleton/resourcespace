@@ -1284,14 +1284,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     }
                 }
 
-
-            if (isset($templatevars))
+            foreach($templatevars as $key=>$value)
                 {
-                foreach($templatevars as $key=>$value)
-                    {
-                    $template=str_replace("[" . $key . "]",nl2br($value),$template);
-                    }
+                $template=str_replace("[" . $key . "]",nl2br($value),$template);
                 }
+                
             $body=$template;    
             } 
         }
