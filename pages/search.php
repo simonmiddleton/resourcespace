@@ -713,7 +713,7 @@ if(!$collectionsearch)
             return false;
             }
         jQuery('.ResourcePanel').draggable({
-            distance: 50,
+            distance: 20,
             connectWith: '#CollectionSpace, .BrowseBarLink',
             appendTo: 'body',
             zIndex: 99000,
@@ -775,6 +775,7 @@ if ($allow_reorder && $display!="list") {
             connectWith: '#CollectionSpace',
             appendTo: 'body',
             zIndex: 99000,
+            distance: 20,
             scroll: false,
             helper: function(event, ui)
                 {
