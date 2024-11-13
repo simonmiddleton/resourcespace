@@ -572,7 +572,15 @@ if (($extension=="mp3" || $extension=="flac") && !isset($newfile))
     if (file_exists($target))
         {
         #if the file contains an image, use it; if it's blank, it needs to be erased because it will cause an error in ffmpeg_processing.php
-        if (filesize_unlimited($target)>0){$newfile = $target;}else{unlink($target);}
+        if (filesize_unlimited($target) > 0)
+            {
+            $newfile = $target;
+            }
+        else
+            {
+            unlink($target);
+            $preview_preprocessing_success = true;
+            }
         }
     }
 
@@ -786,7 +794,7 @@ if (($ffmpeg_fullpath!=false) && in_array($extension, $ffmpeg_audio_extensions))
     Try ImageMagick
    ----------------------------------------
 */
-if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!in_array($extension, $ffmpeg_supported_extensions)))
+if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_extensions, array('mp3')))) && (!in_array($extension, $ffmpeg_supported_extensions)))
     {
     $prefix="";
 
