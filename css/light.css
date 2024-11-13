@@ -143,6 +143,14 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
     {
     background-color: #f6f6f6;
     }
+.tableRowEven
+    {
+    background-color: #f6f6f6 !important;
+    }
+.tableRowOdd
+    {
+    background-color: #efefef !important;
+    }
 .ListViewBulkActions span {color: #666666}
 .ListViewBulkActions span:hover {color: #2E99E6;}
 

@@ -5142,7 +5142,7 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
     $checked_attr = $checked ? ' checked' : '';
     ?>
     <input type="hidden" name="permission_<?php echo $base64_perm; ?>" value="<?php echo $input_value; ?>">
-    <tr>
+    <tr class="<?php echo count($permissions_done) % 2 == 0 ? 'tableRowEven' : 'tableRowOdd'; ?>">
     <td><?php if ($reverse) {?><i><?php } ?><?php echo escape($permission) ?><?php if ($reverse) {?></i><?php } ?></td>
         <td><?php echo $description_escaped; ?></td>
         <td>
