@@ -233,10 +233,13 @@ function render_resource_item(array $item): void
 
     $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $resource_data['ref']]);
     $resource_title = i18n_get_translated(get_data_by_field($resource_data['ref'], $GLOBALS['view_title_field']));
+    $video_player_ctx = [
+        'context' => "item_{$ref}",
+        'resource_title' => $resource_title,
+    ];
 
     // todo: implement logic to add nopreviews (use CSS to increase font-size as needed based on container e.g thm/half/full)
     // echo get_nopreview_html($resource['file_extension']);
-    $video_player_ctx = ['context' => "item_{$ref}"];
 
     if ($layout === 'full-width') {
     ?>
@@ -322,7 +325,7 @@ function render_video_player(array $resource, array $ctx = []): string
             'ffmpeg_preview_max_width' => $GLOBALS['ffmpeg_preview_max_width'],
             'ffmpeg_preview_max_height' => $GLOBALS['ffmpeg_preview_max_height'],
         ];
-        return cast_echo_to_string(function() use ($resource, $ctx) {
+        $player_html = cast_echo_to_string(function() use ($resource, $ctx) {
             $ref = (int) $resource['ref'];
             $GLOBALS['resource'] = $resource;
             $GLOBALS['access'] = get_resource_access($resource);
@@ -341,11 +344,21 @@ function render_video_player(array $resource, array $ctx = []): string
             $GLOBALS['display'] = 'brand_guidelines';
 
             include RESOURCESPACE_BASE_PATH . '/pages/video_player.php';
+            ?>
+            <a
+                class="grid-item video-js-resource"
+                href="<?php echo generateURL($GLOBALS['baseurl_short'], ['r' => $ref]); ?>"
+                onclick="return ModalLoad(this, true);"
+            ><?php
+                echo escape(trim($ctx['resource_title']) ?: $GLOBALS['lang']['backtoview']);
+            ?></a>
+            <?php
         });
         unset($GLOBALS['resource'], $GLOBALS['access'], $GLOBALS['display'], $GLOBALS['context']);
         foreach ($cache as $name => $value) {
             $GLOBALS[$name] = $value;
         }
+        return $player_html;
     } else {
         return '';
     }
