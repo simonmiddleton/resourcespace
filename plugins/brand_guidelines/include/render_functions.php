@@ -236,6 +236,7 @@ function render_resource_item(array $item): void
 
     // todo: implement logic to add nopreviews (use CSS to increase font-size as needed based on container e.g thm/half/full)
     // echo get_nopreview_html($resource['file_extension']);
+    $video_player_ctx = ['context' => "item_{$ref}"];
 
     if ($layout === 'full-width') {
     ?>
@@ -244,7 +245,7 @@ function render_resource_item(array $item): void
         </div> -->
         <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width grid-container">
         <?php
-        if (($video_player = render_video_player($resource_data))) {
+        if (($video_player = render_video_player($resource_data, $video_player_ctx))) {
             echo $video_player;
         } else {
             ?>
@@ -257,13 +258,28 @@ function render_resource_item(array $item): void
             </a>
             <?php
         }
+        render_item_top_right_menu($ref, ['grid-item']);
         ?>
-            <?php render_item_top_right_menu($ref, ['grid-item']); ?>
         </div>
     <?php
     } else if ($layout === 'half-width') {
-    ?>
+        $video_player = render_video_player(
+            $resource_data,
+            array_merge(
+                $video_player_ctx,
+                [
+                    'max_width' => 466,
+                    'max_height' => 262,
+                ]
+            )
+        );
+        ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width grid-container">
+        <?php
+        if ($video_player !== '') {
+            echo $video_player;
+        } else {
+            ?>
             <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
                 <?php
@@ -272,7 +288,10 @@ function render_resource_item(array $item): void
                 }
                 ?>
             </a>
-            <?php render_item_top_right_menu($ref, ['grid-item']); ?>
+            <?php
+        }
+        render_item_top_right_menu($ref, ['grid-item']);
+        ?>
         </div>
     <?php
     } else {
@@ -287,18 +306,46 @@ function render_resource_item(array $item): void
     }
 }
 
-function render_video_player(array $resource)
+/**
+ * Render video player for resource content items
+ * @param array $resource Resource data {@see get_resource_data()}
+ * @param array{context: string, max_width: int, max_height: int} $ctx Set optional context for the rendered video player
+ * @return string Either nothing or the video player HTML to render
+ */
+function render_video_player(array $resource, array $ctx = []): string
 {
     if (
         in_array((string) $resource['file_extension'], $GLOBALS['ffmpeg_supported_extensions'])
         && !(isset($resource['is_transcoding']) && $resource['is_transcoding'] !== 0)
     ) {
-        return cast_echo_to_string(function() use ($resource) {
+        $cache = [
+            'ffmpeg_preview_max_width' => $GLOBALS['ffmpeg_preview_max_width'],
+            'ffmpeg_preview_max_height' => $GLOBALS['ffmpeg_preview_max_height'],
+        ];
+        return cast_echo_to_string(function() use ($resource, $ctx) {
             $ref = (int) $resource['ref'];
             $GLOBALS['resource'] = $resource;
             $GLOBALS['access'] = get_resource_access($resource);
+
+            if (isset($ctx['max_width']) && is_positive_int_loose($ctx['max_width'])) {
+                $GLOBALS['ffmpeg_preview_max_width'] = $ctx['max_width'];
+            }
+
+            if (isset($ctx['max_height']) && is_positive_int_loose($ctx['max_height'])) {
+                $GLOBALS['ffmpeg_preview_max_height'] = $ctx['max_height'];
+            }
+
+            // Set a context & display so we can distinguish multiple videos on the guidelines page otherwise we may end
+            // up with a half-width video rendered at max preview size.
+            $GLOBALS['context'] = $ctx['context'];
+            $GLOBALS['display'] = 'brand_guidelines';
+
             include RESOURCESPACE_BASE_PATH . '/pages/video_player.php';
         });
+        unset($GLOBALS['resource'], $GLOBALS['access'], $GLOBALS['display'], $GLOBALS['context']);
+        foreach ($cache as $name => $value) {
+            $GLOBALS[$name] = $value;
+        }
     } else {
         return '';
     }

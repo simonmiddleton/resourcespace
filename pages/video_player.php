@@ -182,10 +182,13 @@ if(isset($videojs_resolution_selection))
         </script>
 <?php } ?>
 
-    <script>
-        // START DISABLE VIDEOJS RIGHT CONTEXT MENU
-        jQuery('.video-js').bind('contextmenu',function() { return false; });
-    </script>
 </div>
+
+<!-- START DISABLE VIDEOJS RIGHT CONTEXT MENU -->
+<script>
+    jQuery('.video-js').bind('contextmenu',function() { return false; });
+</script>
+<!-- END DISABLE VIDEOJS RIGHT CONTEXT MENU -->
+
 <!-- END VIDEOJS -->
         

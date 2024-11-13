@@ -210,6 +210,10 @@
     height: inherit;
 }
 
+.image-half-width .grid-item.top-right-menu {
+    z-index: 999;
+}
+
 .top-right-menu {
     display: none;
     margin: 10px;
@@ -237,14 +241,18 @@ div[id^='page-content-item-']:hover .top-right-menu,
     display: grid;
     grid-template-areas: "box";
 }
-a.grid-item {
+.grid-item.top-right-menu,
+a.grid-item,
+.guidelines-content .videojscontent {
     grid-area: box;
 }
 .grid-item.top-right-menu {
-    grid-area: box;
     place-self: start end;
 }
 
+.guidelines-content .video-js {
+    margin: unset;
+}
 
 
 button#guidelines-toc {
