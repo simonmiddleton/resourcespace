@@ -216,8 +216,8 @@ function render_item_top_right_menu(int $ref, array $class = [])
 
 function render_resource_item(array $item): void
 {
-    $resource = get_resource_data($item['content']['resource_id']);
-    if ($resource === false) {
+    $resource_data = get_resource_data($item['content']['resource_id']);
+    if ($resource_data === false) {
         // todo: consider indicating somehow a missing resource to admins only
         return;
     }
@@ -227,12 +227,12 @@ function render_resource_item(array $item): void
     $layout = $item['content']['layout'];
     $caption = trim($item['content']['caption'] ?? '');
 
-    $image_sizes = array_column(get_image_sizes($resource['ref'], true, $resource['file_extension'], true), null, 'id');
+    $image_sizes = array_column(get_image_sizes($resource_data['ref'], true, $resource_data['file_extension'], true), null, 'id');
     $preview = $image_sizes[$image_size];
 
 
-    $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $resource['ref']]);
-    $resource_title = i18n_get_translated(get_data_by_field($resource['ref'], $GLOBALS['view_title_field']));
+    $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $resource_data['ref']]);
+    $resource_title = i18n_get_translated(get_data_by_field($resource_data['ref'], $GLOBALS['view_title_field']));
 
     // todo: implement logic to add nopreviews (use CSS to increase font-size as needed based on container e.g thm/half/full)
     // echo get_nopreview_html($resource['file_extension']);
@@ -240,20 +240,12 @@ function render_resource_item(array $item): void
     if ($layout === 'full-width') {
     ?>
         <!-- <div id="previewimagewrapper">
-        <?php echo get_nopreview_html($resource["file_extension"]); ?>
+        <?php echo get_nopreview_html($resource_data["file_extension"]); ?>
         </div> -->
         <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width grid-container">
         <?php
-        if (
-            in_array((string) $resource['file_extension'], $GLOBALS['ffmpeg_supported_extensions'])
-            && !(isset($resource['is_transcoding']) && $resource['is_transcoding'] !== 0)
-        ) {
-            $GLOBALS['resource'] = $resource;
-            $GLOBALS['access'] = get_resource_access($resource);
-            $ref = (int) $resource['ref'];
-            include RESOURCESPACE_BASE_PATH . '/pages/video_player.php';
-            // Reset after rendering the video player (relies heavily on globals/scope vars)
-            $ref = (int) $item['ref'];
+        if (($video_player = render_video_player($resource_data))) {
+            echo $video_player;
         } else {
             ?>
             <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
@@ -292,5 +284,22 @@ function render_resource_item(array $item): void
             <?php render_item_top_right_menu($ref, ['grid-item']); ?>
         </div>
     <?php
+    }
+}
+
+function render_video_player(array $resource)
+{
+    if (
+        in_array((string) $resource['file_extension'], $GLOBALS['ffmpeg_supported_extensions'])
+        && !(isset($resource['is_transcoding']) && $resource['is_transcoding'] !== 0)
+    ) {
+        return cast_echo_to_string(function() use ($resource) {
+            $ref = (int) $resource['ref'];
+            $GLOBALS['resource'] = $resource;
+            $GLOBALS['access'] = get_resource_access($resource);
+            include RESOURCESPACE_BASE_PATH . '/pages/video_player.php';
+        });
+    } else {
+        return '';
     }
 }
