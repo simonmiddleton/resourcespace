@@ -664,23 +664,30 @@ $fields=get_advanced_search_fields($archiveonly);
 $showndivide=false;
 
 # Preload resource types
-$rtypes=get_resource_types();
+$rtypes     = array_column(get_resource_types(), 'ref');
+$all_rtypes = array_column(get_resource_types('', true, true), 'ref');
+
+$no_access_rtypes = array_values(array_diff($all_rtypes, $rtypes));
 $rtypecount = count($rtypes);
 // Order by resource types for displaying in sections
 $fieldorders = [];
 $fieldglobal = [];
-foreach($fields as $field)
+foreach($fields as $key => $field)
     {
     $fieldorders[$field["ref"]]   = $field["order_by"];
-    $fieldglobal[$field["ref"]]   = ($field["global"] == 1 || count(explode(",",(string)$field["resource_types"])) == $rtypecount) ? 1 : 0;
+    $field_rtypes_with_access = array_diff(explode(',', $field['resource_types'] ?? ''), $no_access_rtypes);
+    $fieldglobal[$field["ref"]] = $fields[$key]['global'] = ($field["global"] == 1 || count($field_rtypes_with_access) == $rtypecount) ? 1 : 0;
     }
 array_multisort($fieldglobal, SORT_DESC, $fieldorders, SORT_ASC, $fields);
-
+//die(print_r(array_column($fields, 'ref')));
 for ($n=0;$n<count($fields);$n++)
     {
     # Show a dividing header for resource type specific fields
-    if (($fields[$n]["global"] != 1 && count(explode(",",(string)$field["resource_types"])) != $rtypecount) && !$showndivide)
+    $field_rtypes_with_access = array_diff(explode(',', $fields[$n]['resource_types'] ?? ''), $no_access_rtypes);
+    //if ($fields[$n]['ref'] == 84) { die(print_r([$field_rtypes_with_access, $rtypecount])); }
+    if (($fields[$n]["global"] != 1 && count($field_rtypes_with_access) != $rtypecount) && !$showndivide)
         {
+        if($fields[$n]['ref'] == 84) { die('<script>alert("here")</script>');}
         $showndivide=true;
         ?>
         </div>
