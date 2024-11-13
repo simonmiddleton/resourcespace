@@ -30,6 +30,18 @@ $page_contents = array_filter(
 );
 $page_contents_grouped = group_content_items($page_contents);
 
+// Extra header inserts (as required) - unsure if really needed
+if (getval('ajax', '') === '') {
+    $headerinsert .= "<link href=\"{$baseurl_short}lib/videojs/video-js.min.css?r={$css_reload_key}\" rel=\"stylesheet\">";
+    $headerinsert .= "<script src=\"{$baseurl_short}lib/videojs/video.min.js?r=<{$css_reload_key}\"></script>";
+    $headerinsert .= "<script src=\"{$baseurl_short}js/videojs-extras.js?r=<{$css_reload_key}\"></script>";
+    if(isset($videojs_resolution_selection))
+        {
+        $headerinsert .= "<link href=\"{$baseurl_short}lib/videojs-resolution-switcher/videojs-resolution-switcher.css?r={$css_reload_key}\" rel=\"stylesheet\">";
+        $headerinsert .= "<script src=\"{$baseurl_short}lib/videojs-resolution-switcher/videojs-resolution-switcher.js?r=<{$css_reload_key}\"></script>";
+        }
+}
+
 include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
 render_individual_menu();
 render_content_menu();
