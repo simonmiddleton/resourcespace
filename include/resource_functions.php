@@ -1413,7 +1413,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 * IMPORTANT: this function will always set the resource defaults if any are found. The "client code"
 *            is where developers decide whether this should happen
 *
-* @global string $userresourcedefaults  Resource defaults rules value based on user group a user belongs to
 *
 * @param integer $ref             Resource ID
 * @param array   $specific_fields Specific field ID(s) to update
@@ -6952,7 +6951,6 @@ function truncate_join_field_value($value)
 *
 * @uses get_resource_path()
 *
-* @global array $get_resource_path_extra_download_query_string_params Array of query string params
 *                                                                     as expected by generateURL()
 *
 * @param integer $resource_id Resource unique ref

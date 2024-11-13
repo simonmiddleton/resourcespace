@@ -1893,7 +1893,6 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
  * Get the definitions for resource_type_field columns, including properties and display configurations.
  *
  *
- * @global array $lang Language strings array for localization of field names and tooltips.
  * @return array An associative array of resource type field column definitions.
  */
 function get_resource_type_field_columns()

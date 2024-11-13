@@ -7,8 +7,6 @@
  * and the user's ID. If a debug override is set for a specific user or globally, and the 
  * override has not expired, debug logging will be activated. Expired overrides are removed.
  *
- * @global bool $debug_log_override A flag to indicate whether debug logging is overridden.
- * @global int $userref The ID of the current user.
  * @return void
  */
 function check_debug_log_override()

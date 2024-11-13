@@ -1414,8 +1414,6 @@ function get_user_dash($user)
  *
  * @param bool $all_users (optional) If set to `true`, additional options are displayed for managing tiles that are 
  *                         accessible by all users. Default is `false`.
- * @global string $baseurl The base URL of the application, used to redirect to team management pages.
- * @global array $lang Language strings for localizing dialog text.
  * @return void Outputs JavaScript directly to the page to render the dialog.
  */
 function render_delete_dialog_JS($all_users=false)
@@ -1808,9 +1806,6 @@ function render_upgrade_available_tile($user)
  *                    - 'no_edit' (bool): Flag indicating if the tile is non-editable.
  *                    - 'url' (string|null): Optional URL for the tile's link.
  * @param string $tile_id The unique HTML ID of the tile used for identifying elements in the toolbar.
- * @global string $baseurl_short The base URL of the application, used for generating edit links.
- * @global array $lang Language strings for localizing toolbar text.
- * @global bool $managed_home_dash Flag indicating if home dashboard management is enabled.
  * @return void Outputs HTML and JavaScript directly to the page for the tile toolbar.
  */
 function generate_dash_tile_toolbar(array $tile, $tile_id)
