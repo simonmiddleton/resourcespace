@@ -202,7 +202,7 @@ DrawOption("q", $lang["can_make_resource_requests"], false);
 DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo escape($lang["metadatafields"]); ?></th>
+                    <th colspan=3 class="permheader"><?php echo escape($lang["metadatafields"]); ?></th>
                 </tr>
 <?php
 
