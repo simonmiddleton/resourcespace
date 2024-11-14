@@ -281,6 +281,10 @@ function render_resource_item(array $item): void
                     ]
                 )
             );
+
+        if ($no_preview !== '' && $caption !== '') {
+            $video_player = str_replace('</a>', '<p>' . escape($caption) . '</p></a>', $no_preview);
+        }
         ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width grid-container">
         <?php
