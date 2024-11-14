@@ -221,21 +221,27 @@ function render_resource_item(array $item): void
     $caption = trim($item['content']['caption'] ?? '');
     $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $item['content']['resource_id']]);
     $no_preview = '';
+    $no_preview_link = sprintf(
+        '<a class="grid-item" href="%s" onclick="return ModalLoad(this, true);">%s</a>',
+        $resource_view_url,
+        get_nopreview_html('default')
+    );
 
     $resource_data = get_resource_data($item['content']['resource_id']);
     if ($resource_data === false) {
-        $no_preview = sprintf(
-            '<a class="grid-item" href="%s" onclick="return ModalLoad(this, true);">%s</a>',
-            $resource_view_url,
-            get_nopreview_html('default')
-        );
+        $no_preview = $no_preview_link;
     } else {
         $image_sizes = array_column(
             get_image_sizes($resource_data['ref'], true, $resource_data['file_extension'], true),
             null,
             'id'
         );
-        $preview = $image_sizes[$item['content']['image_size']];
+        
+        if (isset($image_sizes[$item['content']['image_size']])) {
+            $preview = $image_sizes[$item['content']['image_size']];
+        } else {
+            $no_preview = $no_preview_link;
+        }
         $resource_title = i18n_get_translated(get_data_by_field($resource_data['ref'], $GLOBALS['view_title_field']));
         $video_player_ctx = [
             'context' => "item_{$ref}",
@@ -243,7 +249,6 @@ function render_resource_item(array $item): void
         ];
     }
 
-    // todo: implement logic to add nopreviews (use CSS to increase font-size as needed based on container e.g thm/half/full)
     if ($layout === 'full-width') {
     ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width grid-container">
