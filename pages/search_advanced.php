@@ -679,15 +679,13 @@ foreach($fields as $key => $field)
     $fieldglobal[$field["ref"]] = $fields[$key]['global'] = ($field["global"] == 1 || count($field_rtypes_with_access) == $rtypecount) ? 1 : 0;
     }
 array_multisort($fieldglobal, SORT_DESC, $fieldorders, SORT_ASC, $fields);
-//die(print_r(array_column($fields, 'ref')));
+
 for ($n=0;$n<count($fields);$n++)
     {
     # Show a dividing header for resource type specific fields
     $field_rtypes_with_access = array_diff(explode(',', $fields[$n]['resource_types'] ?? ''), $no_access_rtypes);
-    //if ($fields[$n]['ref'] == 84) { die(print_r([$field_rtypes_with_access, $rtypecount])); }
     if (($fields[$n]["global"] != 1 && count($field_rtypes_with_access) != $rtypecount) && !$showndivide)
         {
-        if($fields[$n]['ref'] == 84) { die('<script>alert("here")</script>');}
         $showndivide=true;
         ?>
         </div>
