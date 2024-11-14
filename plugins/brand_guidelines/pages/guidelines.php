@@ -95,8 +95,25 @@ render_content_menu();
     </nav>
     <div class="BasicsBox">
         <div class="guidelines-content" data-page="<?php echo escape((string) $selected_page); ?>">
-            <h1><?php echo escape($selected_page_title); ?></h1>
+            <h1>
+                <span><?php
+                    echo escape($selected_page_title);
+
+                if (acl_can_edit_brand_guidelines()) {
+                ?></span>
+                    <button
+                        id="toggle_view_mode"
+                        class=""
+                        onclick="return jQuery('.add-new-content-container, button.new').toggleClass('DisplayNone')
+                            && jQuery('#toggle_view_mode i.fa-regular').toggleClass(['fa-eye', 'fa-eye-slash']);"
+                    >
+                        <i class="fa-regular fa-eye-slash"></i>
+                    </button>
+                <?php
+                }
+            ?></h1>
             <?php
+
             foreach ($page_contents_grouped as $item) {
                 if ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']) {
                     $new_content_btn_id = $item['ref'];
