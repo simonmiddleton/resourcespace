@@ -182,6 +182,10 @@ if(isset($videojs_resolution_selection))
         </script>
 <?php } ?>
 
+    <?php
+    // Allow "caller" code to define the context for the hook
+    hook('extra_videojs_content_html', '', [$ctx ?? []]);
+    ?>
 </div>
 
 <!-- START DISABLE VIDEOJS RIGHT CONTEXT MENU -->

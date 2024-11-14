@@ -273,6 +273,7 @@ function render_resource_item(array $item): void
                 [
                     'max_width' => 466,
                     'max_height' => 262,
+                    'caption' => $caption,
                 ]
             )
         );
@@ -354,7 +355,12 @@ function render_video_player(array $resource, array $ctx = []): string
             ?></a>
             <?php
         });
-        unset($GLOBALS['resource'], $GLOBALS['access'], $GLOBALS['display'], $GLOBALS['context']);
+        unset(
+            $GLOBALS['resource'],
+            $GLOBALS['access'],
+            $GLOBALS['display'],
+            $GLOBALS['context'],
+        );
         foreach ($cache as $name => $value) {
             $GLOBALS[$name] = $value;
         }
