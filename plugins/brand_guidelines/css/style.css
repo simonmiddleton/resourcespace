@@ -71,6 +71,13 @@
 
 #menu-content { width: 180px; }
 
+#toggle_view_mode {
+    margin-left: 10px;
+    min-width: 30px;
+    margin-top: unset;
+    background: #474747;
+}
+
 .preview.guidelines-colour-block {
     height: 150px;
     margin: unset;
@@ -175,10 +182,14 @@
     object-fit: cover;
 }
 
+
+.image-full-width .nopreview {
+    width: 1000px;
+}
+
 .image-half-width:first-child {
     padding-right: 20px;
 }
-
 
 .image-thumbnail {
     display: inline-block;
@@ -191,7 +202,8 @@
 }
 
 .image-half-width img,
-.image-half-width p {
+.image-half-width p,
+.image-half-width .nopreview {
     width: 466px;
 }
 
@@ -273,6 +285,24 @@ a.grid-item.video-js-resource {
     max-width: 900px;
 }
 
+.grid-item .nopreview {
+    height: 200px;
+    font-size: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+a.grid-item > .nopreview {
+    background: #dbdbdb;
+    border-radius: 5px;
+}
+
+.guidelines-content > div[id^='page-content-item-']:has(> a.grid-item .nopreview),
+.group:has(a.grid-item .nopreview) {
+    margin-top: 10px;
+}
+
 button#guidelines-toc {
     display: none;
 }
@@ -349,6 +379,10 @@ form.guidelines .tox-toolbar__group > button {
     .grid-item.top-right-menu,
     a.grid-item.video-js-resource {
         background: #dfdfdf;
+    }
+
+    .image-half-width a.grid-item > .nopreview {
+        width: 300px;
     }
 
     .image-half-width a.grid-item.video-js-resource,

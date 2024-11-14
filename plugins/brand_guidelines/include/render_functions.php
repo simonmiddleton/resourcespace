@@ -216,39 +216,41 @@ function render_item_top_right_menu(int $ref, array $class = [])
 
 function render_resource_item(array $item): void
 {
-    $resource_data = get_resource_data($item['content']['resource_id']);
-    if ($resource_data === false) {
-        // todo: consider indicating somehow a missing resource to admins only
-        return;
-    }
-
     $ref = (int) $item['ref'];
-    $image_size = $item['content']['image_size'];
     $layout = $item['content']['layout'];
     $caption = trim($item['content']['caption'] ?? '');
+    $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $item['content']['resource_id']]);
+    $no_preview = '';
 
-    $image_sizes = array_column(get_image_sizes($resource_data['ref'], true, $resource_data['file_extension'], true), null, 'id');
-    $preview = $image_sizes[$image_size];
-
-
-    $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $resource_data['ref']]);
-    $resource_title = i18n_get_translated(get_data_by_field($resource_data['ref'], $GLOBALS['view_title_field']));
-    $video_player_ctx = [
-        'context' => "item_{$ref}",
-        'resource_title' => $resource_title,
-    ];
+    $resource_data = get_resource_data($item['content']['resource_id']);
+    if ($resource_data === false) {
+        $no_preview = sprintf(
+            '<a class="grid-item" href="%s" onclick="return ModalLoad(this, true);">%s</a>',
+            $resource_view_url,
+            get_nopreview_html('default')
+        );
+    } else {
+        $image_sizes = array_column(
+            get_image_sizes($resource_data['ref'], true, $resource_data['file_extension'], true),
+            null,
+            'id'
+        );
+        $preview = $image_sizes[$item['content']['image_size']];
+        $resource_title = i18n_get_translated(get_data_by_field($resource_data['ref'], $GLOBALS['view_title_field']));
+        $video_player_ctx = [
+            'context' => "item_{$ref}",
+            'resource_title' => $resource_title,
+        ];
+    }
 
     // todo: implement logic to add nopreviews (use CSS to increase font-size as needed based on container e.g thm/half/full)
-    // echo get_nopreview_html($resource['file_extension']);
-
     if ($layout === 'full-width') {
     ?>
-        <!-- <div id="previewimagewrapper">
-        <?php echo get_nopreview_html($resource_data["file_extension"]); ?>
-        </div> -->
         <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width grid-container">
         <?php
-        if (($video_player = render_video_player($resource_data, $video_player_ctx))) {
+        if ($no_preview !== '') {
+            echo $no_preview;
+        } else if (($video_player = render_video_player($resource_data, $video_player_ctx))) {
             echo $video_player;
         } else {
             ?>
@@ -266,17 +268,19 @@ function render_resource_item(array $item): void
         </div>
     <?php
     } else if ($layout === 'half-width') {
-        $video_player = render_video_player(
-            $resource_data,
-            array_merge(
-                $video_player_ctx,
-                [
-                    'max_width' => 466,
-                    'max_height' => 262,
-                    'caption' => $caption,
-                ]
-            )
-        );
+        $video_player = $no_preview !== ''
+            ? $no_preview
+            : render_video_player(
+                $resource_data,
+                array_merge(
+                    $video_player_ctx,
+                    [
+                        'max_width' => 466,
+                        'max_height' => 262,
+                        'caption' => $caption,
+                    ]
+                )
+            );
         ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width grid-container">
         <?php
@@ -301,10 +305,18 @@ function render_resource_item(array $item): void
     } else {
     ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="image-thumbnail grid-container">
-            <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
-                <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
-            </a>
-            <?php render_item_top_right_menu($ref, ['grid-item']); ?>
+            <?php
+            if ($no_preview === '') {
+                ?>
+                <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
+                    <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
+                </a>
+                <?php
+            } else {
+                echo $no_preview;
+            }
+            render_item_top_right_menu($ref, ['grid-item']);
+            ?>
         </div>
     <?php
     }
