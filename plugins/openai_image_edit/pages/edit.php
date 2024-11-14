@@ -87,6 +87,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
         }
 
+    if ($mode=="clone")
+        {
+        $mask=imagecreatefromstring($maskData);
+
+        // Get the width and height of the image
+        $width = imagesx($mask);
+        $height = imagesy($mask);
+
+        // Create a new true color image with the same dimensions
+        $image = imagecreatefromstring($maskData);
+        imagealphablending($image, true);
+        imagesavealpha($image, true);
+
+        // Clone parts of the surrounding image by moving it in an ever decreasing box
+        for ($offset=300;$offset>0;$offset-=10)
+            {
+            imagecopy($image, $mask, -$offset, 0, 0, 0, $width, $height);
+            imagecopy($image, $mask, 0, -$offset, 0, 0, $width, $height);
+            imagecopy($image, $mask, $offset, 0, 0, 0, $width, $height);
+            imagecopy($image, $mask, 0, $offset, 0, 0, $width, $height);
+            }
+        imagecopy($image, $mask, 0, 0, 0, 0, $width, $height);
+
+        // Start output buffering to capture the image data in memory
+        ob_start();
+        imagepng($image);
+        $imagedata = ob_get_clean();
+
+        // Free up memory
+        imagedestroy($mask);
+        imagedestroy($image);
+
+        // Return the image data as JSON with base64 encoding
+        header('Content-Type: application/json');
+        echo json_encode(["image_base64" => base64_encode($imagedata)]);
+        exit();
+        }
+
+
     // Prepare the OpenAI API request using multipart/form-data
     if ($mode=="edit")
         {
@@ -233,6 +272,7 @@ include "../../../include/header.php";
     <option value="generate"><?php echo escape($lang["openai_image_edit__mode_generate"]) ?></option>
     <option value="white"><?php echo escape($lang["openai_image_edit__mode_white"]) ?></option>
     <option value="black"><?php echo escape($lang["openai_image_edit__mode_black"]) ?></option>
+    <option value="clone"><?php echo escape($lang["openai_image_edit__mode_clone"]) ?></option>
 </select>
 <br><br>
 <label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]) ?></label><br>

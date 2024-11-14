@@ -22,4 +22,5 @@ $lang["openai_image_edit__mode_variation"] = "Create variation (DALL-E 2)";
 $lang["openai_image_edit__mode_generate"] = "Generate replacement (DALL-E 3)";
 $lang["openai_image_edit__mode_white"] = "Fill with white";
 $lang["openai_image_edit__mode_black"] = "Fill with black";
+$lang["openai_image_edit__mode_clone"] = "Clone fill";
 $lang["openai_image_edit__creating_new_resource"] = "Creating new resource";
