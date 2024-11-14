@@ -204,19 +204,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include "../../../include/header.php";
 ?>
 
-<h1><?php echo escape($lang["openai_image_edit__edit_with_ai"]); ?></h1>
-<?php
-renderBreadcrumbs([
-    [
-        "title" => $lang["backtoview"],
-        "href"  => $baseurl_short . "pages/view.php?ref=" . $ref
-    ], 
-    [
-        "title" => $lang["openai_image_edit__edit_with_ai"],
-        "help"  => "plugins/openai_image_edit"
-    ]
-]);
-?>
+<div class="BasicsBox">
+    <?php
+    renderBreadcrumbs([
+        [
+            "title" => $lang["backtoview"],
+            "href"  => $baseurl_short . "pages/view.php?ref=" . $ref
+        ], 
+        [
+            "title" => $lang["openai_image_edit__edit_with_ai"],
+            "help"  => "plugins/openai_image_edit"
+        ]
+    ]);
+    ?>
+</div>
 <img id="image" src="get_png.php?ref=<?php echo $ref ?>" alt="" hidden>
 <div id="canvas-container" class="canvas-container" style="position: relative;visibility:hidden;">
     <canvas id="canvas"></canvas>
