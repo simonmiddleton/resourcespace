@@ -341,7 +341,18 @@ form.guidelines .tox-toolbar__group > button {
         flex-wrap: wrap;
     }
 
-    .top-right-menu {
-        display: unset;
+    .top-right-menu,
+    a.grid-item.video-js-resource {
+        display: block;
+    }
+
+    .grid-item.top-right-menu,
+    a.grid-item.video-js-resource {
+        background: #dfdfdf;
+    }
+
+    .image-half-width a.grid-item.video-js-resource,
+    .resource-content-full-width a.grid-item.video-js-resource {
+        max-width: 75%;
     }
 }
