@@ -208,7 +208,7 @@ include "../../../include/header.php";
 <?php
 renderBreadcrumbs([
     [
-        "title" => $lang["backtoview"] . " #" . $ref,
+        "title" => $lang["backtoview"],
         "href"  => $baseurl_short . "pages/view.php?ref=" . $ref
     ], 
     [

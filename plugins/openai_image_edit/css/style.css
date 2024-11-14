@@ -10,11 +10,6 @@
 	cursor: crosshair;
 }
 
-.canvas-container #overlayCanvas
-	{
-	margin-top: 20px;
-	}
-
 .toolbox.openai-image-edit {
 	border: none;
 }
