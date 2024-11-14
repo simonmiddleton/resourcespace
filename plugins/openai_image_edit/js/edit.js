@@ -47,7 +47,7 @@ canvas.addEventListener('mousemove', draw);
 function draw(e) {
 
     if (document.getElementById('penSize').disabled) {return false;}
-    
+
     const [x, y] = getMousePos(e);
 
     e.preventDefault(); 
@@ -210,7 +210,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
             imageType: document.getElementById('downloadType').value
         });
 
-        fetch(downloadAction.value=='alternative' ? alternative_url : save_new_url, {
+        fetch(downloadAction=='alternative' ? alternative_url : save_new_url, {
             method: 'POST',
             body: formData
             })
