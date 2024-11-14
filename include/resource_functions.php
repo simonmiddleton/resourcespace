@@ -594,10 +594,11 @@ function put_resource_data($resource,$data)
  * @param  integer  $archive        ID of target archive state, 999 if archived
  * @param  integer  $user           User ID, -1 for current user
  * @param  string   $origin         Source of resource, should not be blank
+ * @param  string   $file_extension         If specified
  * 
  * @return mixed    false if invalid inputs given, integer of resource reference if resource is created
  */
-function create_resource($resource_type,$archive=999,$user=-1,$origin='')
+function create_resource($resource_type,$archive=999,$user=-1,$origin='',$file_extension='')
     {
     # Create a new resource.
     global $k,$terms_upload;
@@ -632,7 +633,7 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
         $user = $userref;
         }
 
-    ps_query("INSERT INTO resource(resource_type,creation_date,archive,created_by) VALUES (?,NOW(),?,?)",["i",$resource_type,"i",$archive,"i",$user]);
+    ps_query("INSERT INTO resource(resource_type,creation_date,archive,created_by,file_extension) VALUES (?,NOW(),?,?,?)",["i",$resource_type,"i",$archive,"i",$user,"s",$file_extension]);
 
     $insert=sql_insert_id();
 

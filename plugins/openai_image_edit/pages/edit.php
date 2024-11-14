@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     set_processing_message($lang["openai_image_edit__preparing_images"]);
 
     $maskData = $_POST['mask'];    // Base64 encoded mask from the frontend
+    $mode = $_POST['mode']; 
     $prompt = isset($_POST['prompt']) ? $_POST['prompt'] : '';
 
     // Decode the mask data from base64
@@ -50,8 +51,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     list(, $maskData)      = explode(',', $maskData);
     $maskData = base64_decode($maskData);
 
+    if ($mode=="white" || $mode=="black")
+        {
+        $mask=imagecreatefromstring($maskData);
+
+        // Get the width and height of the image
+        $width = imagesx($mask);
+        $height = imagesy($mask);
+
+        // Create a new true color image with the same dimensions
+        $newBackground = imagecreatetruecolor($width, $height);
+
+        // Fill the new image with colour
+        $shade=255;
+        if ($mode=="black") {$shade=0;}
+        $fill = imagecolorallocate($newBackground, $shade, $shade, $shade);
+        imagefill($newBackground, 0, 0, $fill);
+
+        // Copy the original image onto the white background
+        // This will replace transparent areas with white
+        imagecopy($newBackground, $mask, 0, 0, 0, 0, $width, $height);
+
+        // Start output buffering to capture the image data in memory
+        ob_start();
+        imagepng($newBackground);
+        $imagedata = ob_get_clean();
+
+        // Free up memory
+        imagedestroy($mask);
+        imagedestroy($newBackground);
+
+        // Return the image data as JSON with base64 encoding
+        header('Content-Type: application/json');
+        echo json_encode(["image_base64" => base64_encode($imagedata)]);
+        exit();
+        }
+
     // Prepare the OpenAI API request using multipart/form-data
-    $url = 'https://api.openai.com/v1/images/edits';
+    if ($mode=="edit")
+        {
+        $url = 'https://api.openai.com/v1/images/edits';
+        $model = "dall-e-2";
+        $content_type="multipart/form-data";
+        }
+    if ($mode=="variation")
+        {
+        $url = 'https://api.openai.com/v1/images/variations';
+        $model = "dall-e-2";
+        $content_type="multipart/form-data";
+        }
+    if ($mode=="generate")
+        {
+        $url = 'https://api.openai.com/v1/images/generations';
+        $model = "dall-e-3";
+        $content_type="application/json";
+        }
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -60,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     curl_setopt($ch, CURLOPT_NOPROGRESS, false);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Authorization: Bearer $openai_gpt_api_key",
-        "Content-Type: multipart/form-data"
+        "Content-Type: " . $content_type
     ]);
 
 
@@ -95,14 +149,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Prepare the data array using CURLFile for both image and mask
     $data = [
-        'model' => 'dall-e-2',  // Specify model (if applicable)
-        //'image' => new CURLFile($imageFilePath, 'image/png'),
-        'image' => new CURLStringFile($maskData, 'image/png'),
-        'mask' => new CURLStringFile($maskDataSimplified, 'image/png'),
-        'prompt' => $prompt,
+        'model' => $model,  // Specify model (if applicable)
         'n' => 1,
         'size' => '1024x1024'
     ];
+
+    if ($mode=="edit" || $mode=="variation")
+        {
+        $data['image'] = new CURLStringFile($maskData, 'image/png');
+        }
+
+    if ($mode=="edit" || $mode=="generate")
+        {
+        $data['prompt'] = $prompt;
+        }
+
+    if ($mode=="edit")
+        {
+        $data['mask'] = new CURLStringFile($maskDataSimplified, 'image/png');
+        }
+
+    if ($mode=="generate")
+        {
+        $data=json_encode($data);
+        }
 
     // Attach the form data
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -131,10 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
-
 include "../../../include/header.php";
-
-
 ?>
 
 <img id="image" src="get_png.php?ref=<?php echo $ref ?>" alt="" hidden>
@@ -145,6 +212,15 @@ include "../../../include/header.php";
 
 <div id="toolbox" class="toolbox openai-image-edit" style="visibility:hidden;">
 <div id="tools">
+<label for="editMode"><?php echo escape($lang["openai_image_edit__mode"]) ?></label><br>
+<select id="editMode">
+    <option value="edit"><?php echo escape($lang["openai_image_edit__mode_edit"]) ?></option>
+    <option value="variation"><?php echo escape($lang["openai_image_edit__mode_variation"]) ?></option>
+    <option value="generate"><?php echo escape($lang["openai_image_edit__mode_generate"]) ?></option>
+    <option value="white"><?php echo escape($lang["openai_image_edit__mode_white"]) ?></option>
+    <option value="black"><?php echo escape($lang["openai_image_edit__mode_black"]) ?></option>
+</select>
+<br><br>
 <label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]) ?></label><br>
 <input type="range" id="penSize" min="10" max="200" value="75">
 <br><br>
@@ -167,6 +243,8 @@ include "../../../include/header.php";
 <select id="downloadAction">
     <option value="download"><?php echo escape($lang["openai_image_edit__download"]) ?></option>
 <?php if ($edit_access) { ?><option value="alternative"><?php echo escape($lang["openai_image_edit__alternative"]) ?></option><?php } ?>
+<?php if (checkperm("c")) { ?><option value="new"><?php echo escape($lang["openai_image_edit__new"]) ?></option><?php } ?>
+
 </select>
 <br>
 <button id="downloadBtn"><?php echo escape($lang["openai_image_edit__export"]) ?></button>
@@ -179,7 +257,9 @@ include "../../../include/header.php";
 CentralSpaceShowProcessing();
 submit_url='../pages/edit.php?ref=<?php echo $ref ?>';
 alternative_url='../pages/save_alternative.php?ref=<?php echo $ref ?>';
+save_new_url='../pages/save_new.php?ref=<?php echo $ref ?>';
 view_url='<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $ref ?>';
+view_new_url='<?php echo $baseurl ?>/pages/view.php?ref=';
 csrf_pair={<?php echo generateAjaxToken("openai_image_edit"); ?>};
 defaultLoadingMessage=<?php echo json_encode($lang["openai_image_edit__preparing_images"]) ?>;
 </script>

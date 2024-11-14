@@ -58,3 +58,4 @@ $lang["youtube_chunk_size"]='Storlek på segment att använda vid uppladdning ti
 $lang["youtube_publish_add_anchor"]='Lägg till ankaretiketter till URL:en när du sparar till metadatafältet för YouTube-URL?';
 $lang["plugin-youtube_publish-title"]='YouTube Publicera';
 $lang["plugin-youtube_publish-desc"]='Publicerar videorresurs till konfigurerat YouTube-konto.';
+$lang["youtube_publish_category"]='Kategori';
