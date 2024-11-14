@@ -68,9 +68,10 @@ ob_start();
         header {
             top: 0;
         }
-
-        /* Main content styling */
-        .content {
+        h1 {
+            text-align: center;
+        }
+       .content {
             margin-top: 60px; /* Offset for header */
             margin-bottom: 60px; /* Offset for footer */
             margin-right: 200px; /* Offset for sidebar */
@@ -80,14 +81,11 @@ ob_start();
             height: calc(100vh - 120px); /* 100vh minus header and footer */
             overflow: hidden;
         }
-
-        /* Slideshow styling */
         .slideshow {
             position: relative;
             width: 100%;
             height: 100%;
         }
-
         .slide {
             position: absolute;
             width: 100%;
@@ -98,15 +96,29 @@ ob_start();
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
-
         .slide.active {
             opacity: 1;
         }
-
         .embedslideshow_text {
             margin-top: 10px;
             margin-left: 10px;
         }
+        .slide-page-button-style {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        .slide-page-input-active {
+            background-color: white;
+            border: 1px solid #999;
+            cursor: text;
+        }
+
     </style>
 
 </head>
@@ -189,17 +201,49 @@ ob_start();
     <li id="slide-play" style="cursor: pointer;display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i>&nbsp;</li>
     <li id="slide-go-next" style="cursor: pointer;display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i>&nbsp;</li>
     <li id="slide-go-end" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i>&nbsp;</li>
-    <li id="slide-go-atpage" style="cursor: pointer;display: inline-block;" onChange="showSlidePage('atpage');return false;">
-        <span><?php echo escape($lang["jump"]);?>&nbsp;<input type="text" id="slide-page-number" size="1" /></span>&nbsp;/&nbsp;#&nbsp;<span id="slide-page-count"></span></li>
+    <li id="slide-go-atpage" style="cursor: pointer;display: inline-block;">
+        <span>&nbsp;<input type="number" id="slide-page-number" class="slide-page-button-style" placeholder="   JUMP"/></span>&nbsp;
+    </li>
 </ul>
 <!-- Slideshow navigation control markup END -->
 
 <!-- JavaScript for slideshow -->
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const page_input = document.getElementById("slide-page-number");
+
+    // Event listener for focus - changes input to editable mode
+    page_input.addEventListener("focus", function() {
+        page_input.classList.add("input-active");
+        page_input.placeholder = ""; // Clear placeholder when editing
+    });
+
+    // Event listener for blur (when focus is lost) - reverts to button appearance
+    page_input.addEventListener("blur", function() {
+        if (page_input.value) {
+            page_input.classList.remove("input-active");
+            page_input.classList.add("button-style");
+            page_input.placeholder = page_input.value; // Set entered number as placeholder
+        } else {
+            page_input.placeholder = "   JUMP"; // Reset placeholder if no input
+        }
+        if (page_input.value > 0 && page_input.value <= slides.length) {
+            showSlidePage(page_input.value);
+            page_input.value = ""; // Reset value and placeholder after jump
+            page_input.placeholder = "   JUMP"; 
+        }
+    });
+
+    // Event listener for Enter key press
+    page_input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            page_input.blur(); // Trigger blur to apply changes
+        }
+    });
+});
+
 const slides = document.querySelectorAll('.slide');
 const slideTransition = 1000 * <?php echo (int)$transition;?>;
-document.getElementById('slide-page-count').value = slides.length;
-document.getElementById('slide-page-count').innerHTML = slides.length;
 
 let slideTimer = 0;
 let currentSlide = 0;
@@ -209,7 +253,6 @@ function showNextSlide() {
     slides[currentSlide].classList.remove('active');
     // Move to the next slide, or back to the first one if at the end
     currentSlide = (currentSlide + 1) % slides.length;
-    // Show the slide
     slides[currentSlide].classList.add('active');
 }
 
@@ -221,24 +264,26 @@ function showPrevSlide() {
     if (currentSlide < 0) {
         currentSlide = slides.length - 1;
     }
-    // Show the slide
     slides[currentSlide].classList.add('active');
 }
 
-function showSlidePage(pagerequest) {
+function showSlidePage(pageRequest) {
+    // Stop the running slideshow 
+    clearInterval(slideTimer);
     // Hide current slide
     slides[currentSlide].classList.remove('active');
-    if(pagerequest=='start') {
+    if(pageRequest==='start') {
         currentSlide = 0;
     }
-    if(pagerequest=='end') {
+    else if(pageRequest==='end') {
         currentSlide = slides.length - 1;
     }
-    if(pagerequest=='atpage') {
-        currentSlide = slides.length - 1;
+    else if(!isNaN(pageRequest)) {
+        currentSlide = pageRequest - 1;
     }
-    // Show the slide
+    // Show requested slide and then restart the slideshow
     slides[currentSlide].classList.add('active');
+    slideTimer = setInterval(showNextSlide, slideTransition);
 }
 
 function pauseSlideShow() {
