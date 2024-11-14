@@ -51,21 +51,21 @@ function generate_temp_download_key_pre_v105(int $user, int $resource, string $s
     );
 }
 
-// Subtest 1 - Access keys created pre version 10.3.
+// Subtest 1 - Access keys created pre version 10.3
 $pre_v103_access_key = generate_temp_download_key_pre_v103($userref, $resource_to_get, '');
 if (!validate_temp_download_key($resource_to_get, $pre_v103_access_key, '', 0, false)) {
     echo 'Subtest 1 - Valid pre 10.3 access key was interpreted as invalid.';
     return false;
 }
 
-// Subtest 3 - Access keys created in v10.3 & v10.4.
+// Subtest 2 - Access keys created in v10.3 & v10.4
 $access_key = generate_temp_download_key_pre_v105($userref, $resource_to_get, '');
 if (!validate_temp_download_key($resource_to_get, $access_key, '', 0, false)) {
     echo 'Subtest 2 - Valid access key from pre v10.5 was interpreted as invalid.';
     return false;
 }
 
-// Subtest 2 - Access keys created from version 10.5
+// Subtest 3 - Access keys created from version 10.5
 $access_key = generate_temp_download_key($userref, $resource_to_get, '');
 if (!validate_temp_download_key($resource_to_get, $access_key, '', 0, false)) {
     echo 'Subtest 3 - Valid access key was interpreted as invalid.';
