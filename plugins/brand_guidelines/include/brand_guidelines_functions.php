@@ -162,7 +162,8 @@ function save_page_content(int $ref, array $item)
  * Re-order page content. Use cases:
  * - move up/down items (no group logic);
  * - move up/down items over an entire group;
- * - move up/down an entire group of items;
+ * - move up/down a group over another group;
+ * - move up/down an entire group of items (including over another group);
  * - move left/right within the group boundaries;
  * - move up/down outside group boundaries to take an item out of a group;
  */
@@ -174,10 +175,33 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
         $refs = array_reverse($refs);
     }
     $group_items_jump = 0;
-    $closest_item = function(int $needle, array $items, int $direction) {
+    $get_sibling = static function(int $needle, array $items) use ($direction_int) {
         $keys = array_keys($items);
-        return $items[$keys[array_search($needle, $keys) + $direction] ?? -1] ?? [];
+        return $items[$keys[array_search($needle, $keys) + $direction_int] ?? -1] ?? [];
     };
+    $closest_item = static function(int $needle, array $items) use ($get_sibling): array {
+        foreach ($items as $item_idx => $item) {
+            if (isset($item['ref']) && $item['ref'] === $needle) {
+                return $get_sibling($item_idx, $items);
+            } else if (isset($item['members'])) {
+                foreach ($item['members'] as $member_item_idx => $member_item) {
+                    if ($member_item['ref'] !== $needle) {
+                        continue;
+                    }
+
+                    $sibling = $get_sibling($member_item_idx, $item['members']);
+                    if ($sibling === []) {
+                        // Member item is at the edge, moving it will take it out so determine the groups' sibling
+                        $sibling = $get_sibling($item_idx, $items);
+                    }
+                    return $sibling;
+                }
+            }
+        }
+        return [];
+    };
+    $init_page_content = array_filter(array_map(__NAMESPACE__ . '\decode_page_content_item', $init_page_content));
+    $done = false;
 
     foreach ($refs as $ref) {
         if (!isset($init_page_content[$ref])) {
@@ -185,25 +209,21 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
         }
 
         $page_contents_db ??= $init_page_content;
-        $page_contents_grouped = group_content_items(
-            array_filter(array_map(__NAMESPACE__ . '\decode_page_content_item', $page_contents_db))
-        );
+        $page_contents_grouped = group_content_items($page_contents_db);
         $applicable_group = array_filter($page_contents_grouped, is_group_member($ref, $page_contents_db));
         $applicable_group_members = (reset($applicable_group) ?: [])['members'] ?? [];
         $list_of_applicable_members = array_column($applicable_group_members, 'ref');
         sort($list_of_applicable_members, SORT_NUMERIC);
-        $ref_idx = array_search($page_contents_db[$ref], $page_contents_grouped);
+        $closest_sibling = $closest_item($ref, $page_contents_grouped);
 
-        if (
-            $applicable_group === []
-            && $ref_idx !== false
-            && ($ci = $closest_item($ref_idx, $page_contents_grouped, $direction_int))
-            && isset($ci['members'])
-        ) {
+        if ($closest_sibling === []) {
+            // Item is at the page content boundaries (there's nothing to move)
+            return true;
+        } else if (isset($closest_sibling['members'])) {
             // Jump over an entire group
             $items_to_sort = array_replace(
                 $page_contents_db,
-                [$ref => compute_item_order($page_contents_db[$ref], $reorder, count($ci['members']))]
+                [$ref => compute_item_order($page_contents_db[$ref], $reorder, count($closest_sibling['members']))]
             );
         } else if (
             $act_on_group
@@ -234,8 +254,9 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
     if ($done) {
         reorder_items('brand_guidelines_content', $page_contents_db, null);
         return true;
+    } else {
+        return false;
     }
-    return false;
 }
 
 /**
