@@ -1764,7 +1764,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             }
 
                         $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
-                        debug("BANG " . __LINE__ . "  " . $updated_resources[$ref][$fields[$n]['ref']]);
                         }
                     }
                 else
