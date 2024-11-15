@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         imagesavealpha($image, true);
 
         // Clone parts of the surrounding image by moving it in an ever decreasing box
-        for ($offset=300;$offset>0;$offset-=10)
+        for ($offset=300;$offset>0;$offset-=30)
             {
             imagecopy($image, $mask, -$offset, 0, 0, 0, $width, $height);
             imagecopy($image, $mask, 0, -$offset, 0, 0, $width, $height);

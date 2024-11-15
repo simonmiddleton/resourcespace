@@ -49,6 +49,7 @@ function draw(e) {
     if (document.getElementById('penSize').disabled) {return false;}
 
     const [x, y] = getMousePos(e);
+    const mode = document.getElementById('editMode').value;
 
     e.preventDefault(); 
     
@@ -84,6 +85,14 @@ function draw(e) {
     ctx.strokeStyle = "black";
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
+
+    if (mode=="clone" || mode=="white" || mode=="black")
+        {
+        // Add shadow for blur effect
+        ctx.lineWidth = penSize/3;
+        ctx.shadowColor = 'black'; // Set shadow color to match stroke
+        ctx.shadowBlur = penSize/2;       // Increase this value for stronger blur
+        }
 
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
