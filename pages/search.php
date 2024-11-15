@@ -103,11 +103,13 @@ foreach($keywords as $keyword)
         }
 
     $resource_type_field = ps_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$field_shortname), 0, "schema");
-    if(0 == $resource_type_field || metadata_field_view_access($resource_type_field))
+    if(0 == $resource_type_field || !metadata_field_view_access($resource_type_field))
         {
         // User can't search against a metadata field they don't have access to
         continue;
         }
+
+    $resource_type_field = get_resource_type_field($resource_type_field);
     $nodes = get_nodes($resource_type_field, null, $resource_type_field["type"]==FIELD_TYPE_CATEGORY_TREE);
     
     // Check if multiple nodes have been specified for an OR search
@@ -636,7 +638,10 @@ if($use_selection_collection)
     {
     // Clean up the user selection collection so that only resources in the current search can exist in the colleciton. 
     $selection_collection = do_search('!collection'. $USER_SELECTION_COLLECTION);
-    $resource_not_in_search = array_diff(array_column($selection_collection, 'ref'), array_column($result, 'ref'));
+    $resource_not_in_search = array_diff(
+        array_column($selection_collection, 'ref'),
+        is_array($result)?array_column($result, 'ref'):[]
+    );
     if (count($resource_not_in_search) > 0) {
         collection_remove_resources($USER_SELECTION_COLLECTION, $resource_not_in_search);
     }
