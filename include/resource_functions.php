@@ -1764,6 +1764,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             }
 
                         $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
+                        debug("BANG " . __LINE__ . "  " . $updated_resources[$ref][$fields[$n]['ref']]);
                         }
                     }
                 else
@@ -1812,6 +1813,13 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
                         }
                     }
+                // Add any onchange code
+                if($fields[$n]["onchange_macro"]!="") {
+                    $val = implode(',',array_column(get_nodes_by_refs($resource_add_nodes ?? $resulting_nodes_for_log),"name"));
+                    $macro_resource_id=$ref;
+                    //$val = implode(",",$updated_resources[$ref][$fields[$n]['ref']]);
+                    eval(eval_check_signed($fields[$n]["onchange_macro"]));
+                }
                 }
             } // End of fixed list field section
         elseif($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
