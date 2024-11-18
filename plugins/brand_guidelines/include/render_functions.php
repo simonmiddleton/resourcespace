@@ -158,42 +158,58 @@ function render_navigation_item(array $item, bool $is_current = false)
 
     if ($item['parent'] > 0 && $item['ref'] !== 0) {
         // Table of content navigation
-        $onclick = sprintf(
-            'return CentralSpaceLoad(\'%s\');',
-            generateURL(
-                "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
-                ['spage' => $item['ref']]
-            )
+        $onclick = 'return CentralSpaceLoad(this);';
+        $url = generateURL(
+            "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
+            ['spage' => $item['ref']]
         );
     } elseif($item['ref'] === 0 && $can_edit_brand_guidelines) {
         // Manage table of content
-        $onclick = sprintf(
-            'return ModalLoad(\'%s\', true, true);',
-            generateURL(
-                "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/toc.php",
-                $item['parent'] > 0 ? ['parent' => $item['parent']] : []
-            )
+        $onclick = 'return ModalLoad(this, true, true);';
+        $url = generateURL(
+            "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/toc.php",
+            $item['parent'] > 0 ? ['parent' => $item['parent']] : []
         );
         $show_individual_menu = false;
     } else {
         $onclick = '';
     }
 
-    if (is_section($item)) {
+    $class = ['grid-item'];
+    if ($is_current) {
+        $class[] = 'current';
+    }
+    $class = implode(' ', $class);
+
+    ?>
+    <li class="grid-container">
+    <?php
+    if (is_section($item) && $item['ref'] !== 0) {
         ?>
-        <h2 onclick="<?php echo $onclick; ?>"><?php echo escape(i18n_get_translated($item['name'])); ?></h2>
+        <h2 class="grid-item"><?php echo escape(i18n_get_translated($item['name'])); ?></h2>
+        <?php
+    } else if (is_section($item) && $item['ref'] === 0) {
+        ?>
+        <h2 class="grid-item">
+            <a class="<?php echo $class; ?>" href="<?php echo $url; ?>" onclick="<?php echo $onclick; ?>"><?php
+                echo escape(i18n_get_translated($item['name']));
+            ?></a>
+        </h2>
         <?php
     } else {
         ?>
-        <h3 <?php echo $is_current ? 'class="current"' : ''; ?> onclick="<?php echo $onclick; ?>"><?php
-                echo escape(i18n_get_translated($item['name']));
-        ?></h3>
+        <a class="<?php echo $class; ?>" href="<?php echo $url; ?>" onclick="<?php echo $onclick; ?>"><?php
+            echo escape(i18n_get_translated($item['name']));
+        ?></a>
         <?php
     }
 
     if ($can_edit_brand_guidelines && $show_individual_menu) {
-        render_item_top_right_menu((int) $item['ref']);
+        render_item_top_right_menu((int) $item['ref'], ['grid-item']);
     }
+    ?>
+    </li>
+    <?php
 }
 
 function render_item_top_right_menu(int $ref, array $class = [])

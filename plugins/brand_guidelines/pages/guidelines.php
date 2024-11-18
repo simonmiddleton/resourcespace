@@ -40,12 +40,13 @@ render_content_menu();
         <span> <?php echo escape($lang['brand_guidelines_view_table_of_content']); ?></span>
     </button>
     <nav class="guidelines-sidebar">
+        <ul>
     <?php
     foreach ($all_pages as $s => $section) {
         render_navigation_item($section, false);
 
         if (isset($section['children'])) {
-            foreach ($section['children'] as $i => $page) {
+            foreach ($section['children'] as $p => $page) {
                 render_navigation_item(
                     $page,
                     (
@@ -53,12 +54,12 @@ render_content_menu();
                         || (
                             $selected_page == 0
                             && $s === array_key_first($all_pages)
-                            && $i === array_key_first($section['children'])
+                            && $p === array_key_first($section['children'])
                         )
                     )
                 );
 
-                if (acl_can_edit_brand_guidelines() && $i === array_key_last($section['children'])) {
+                if (acl_can_edit_brand_guidelines() && $p === array_key_last($section['children'])) {
                     render_navigation_item(
                         [
                             'ref' => 0,
@@ -92,6 +93,7 @@ render_content_menu();
         );
     }
     ?>
+        </ul>
     </nav>
     <div class="BasicsBox">
         <div class="guidelines-content" data-page="<?php echo escape((string) $selected_page); ?>">

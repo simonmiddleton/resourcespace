@@ -8,42 +8,58 @@
     margin: 20px;
     border-right: 1px solid #c1c1c1;
     box-shadow: 12px 0px 10px -12px #bbbbbb;
-    font-size: 0;
+}
+
+.guidelines-sidebar > ul {
+    margin: unset;
+    list-style: none;
+}
+
+.guidelines-sidebar li {
+    padding: unset;
+}
+
+.guidelines-sidebar li:has(> h2) {
+    margin-top: 10px;
+}
+
+.guidelines-sidebar li:has(> a) {
+    margin-left: 5px;
 }
 
 .guidelines-sidebar h2 {
     font-size: 18px;
     font-weight: 500;
-    margin-top: 10px;
-    display: inline-block;
-    width: calc(100% - 28px);
 }
 
-.guidelines-sidebar h3 {
-    font-size:16px;
-    cursor: pointer;
-    padding: 3px 0 3px 15px;
-    display: inline-block;
-    width: calc(100% - 43px);
+.guidelines-sidebar li > a {
+    margin: 3px 28px 0 0;
     border-radius: 8px;
+    padding: 3px 15px;
+    text-decoration: none;
+    font-size:16px;
 }
 
-.guidelines-sidebar h2:last-of-type {
-    cursor: pointer;
+.guidelines-sidebar li h2 > a {
+    text-decoration: none;
+    color: unset;
 }
 
-.guidelines-sidebar h3.current {
+.guidelines-sidebar li > a:hover {
+    color: unset;
     background: #00000012;
 }
 
-.guidelines-sidebar--link:hover {
-    text-decoration: underline;
+.guidelines-sidebar li:hover > .top-right-menu {
+    display: block;
+}
+
+.guidelines-sidebar a.current {
+    background: #00000012;
 }
 
 .guidelines-sidebar .top-right-menu {
-    margin: 0px;
-    display: inline-block; /* todo: remove once the TOC sidebar content has been updated so menu item and menu are in the same container */
-    vertical-align: bottom;
+    margin: 0;
 }
 
 .guidelines-content {
@@ -239,12 +255,6 @@
     cursor: pointer;
 }
 
-.guidelines-sidebar h2:hover + .top-right-menu,
-.guidelines-sidebar h3:hover + .top-right-menu {
-    /* todo: see note from ".guidelines-sidebar .top-right-menu" rule */
-    display: inline-block;
-}
-
 div[id^='page-content-item-']:hover .top-right-menu,
 .group:hover > .top-right-menu,
 div[id^='page-content-item-']:hover > a.grid-item.video-js-resource {
@@ -257,6 +267,7 @@ div[id^='page-content-item-']:hover > a.grid-item.video-js-resource {
     grid-template-areas: "box";
 }
 .grid-item.top-right-menu,
+.guidelines-sidebar li h2.grid-item,
 .grid-item.rich-text-content,
 a.grid-item,
 .guidelines-content .videojscontent {
