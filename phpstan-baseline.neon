@@ -239,3 +239,6 @@ parameters:
 			message: "#^Variable \\$email in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: plugins/simplesaml/hooks/all.php
+		-
+			message: '#^Constant (BRAND_GUIDELINES|FIELD_TYPE)_[A-Z_]+ not found\.$#'
+			path: plugins/brand_guidelines/*

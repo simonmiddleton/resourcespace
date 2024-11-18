@@ -82,7 +82,7 @@ $fields = array(
 );
 
 // Check HTML props are generated
-$html_props = gen_custom_fields_html_props(get_valid_custom_fields($fields));
+$html_props = gen_custom_fields_html_props(get_valid_custom_fields($fields), []);
 if(!isset($html_props[0]["html_properties"]) || !is_array($html_props[0]["html_properties"]))
     {
     echo "Generate HTML properties - ";

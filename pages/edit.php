@@ -47,8 +47,11 @@ else
 $search_access = getval("search_access", null, true);
 $submitted = getval("submitted", "");
 $external_upload = upload_share_active();
+
 $redirecturl = getval("redirecturl","");
-if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
+if ((!url_starts_with($baseurl, $redirecturl) && !hook("modifyredirecturl")) || !is_safe_url($redirecturl)) {
+    $redirecturl = '';
+}
 
 if($terms_upload && $external_upload !== false && (!isset($_COOKIE["acceptedterms"]) || $_COOKIE["acceptedterms"] != true))
     {
@@ -789,7 +792,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     $redirectparams["promptsubmit"] = 'true';
                                     }
 
-                                $url = $redirecturl != "" ? escape($redirecturl) : generateURL($baseurl . "/pages/search.php",$redirectparams);
+                                $url = $redirecturl != "" ? $redirecturl : generateURL($baseurl . "/pages/search.php",$redirectparams);
                                 }
                             ?>
                             <script>CentralSpaceLoad('<?php echo $url; // The $url var has been generated or escaped above ?>',true);</script>

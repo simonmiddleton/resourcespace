@@ -3463,6 +3463,11 @@ function render_custom_fields(array $cfs)
             $field_name  = $field["html_properties"]["name"];
             $field_value = $field["value"];
 
+            $show_help_text = isset($field['help_text']) && trim($field['help_text'] !== '');
+            $help_js = $show_help_text
+                ? sprintf('onblur="HideHelp(\'%1$s\');" onfocus="ShowHelp(\'%1$s\');"', escape($field_id))
+                : '';
+
             global $FIXED_LIST_FIELD_TYPES;
             $selected_options_hashes = array_map(function($opt) use ($field_id)
                 {
@@ -3471,7 +3476,7 @@ function render_custom_fields(array $cfs)
 
             $required_html = ($field["required"] ? "<sup>*</sup>" : "");
             ?>
-            <label for="custom_<?php echo $field_id; ?>"><?php echo escape(i18n_get_translated($field["title"])) . $required_html; ?></label>
+            <label for="<?php echo $field_id; ?>"><?php echo escape(i18n_get_translated($field["title"])) . $required_html; ?></label>
             <?php
             switch($field["type"])
                 {
@@ -3525,15 +3530,29 @@ function render_custom_fields(array $cfs)
 
                 case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
                 default:
+                    // Allow plugins to render (their own) custom field types
+                    if (hook('render_custom_fields_default_case_override', '', [$field]) !== false) {
+                        break;
+                    }
                     ?>
                     <input type=text
-                           id="<?php echo $field_id; ?>"
+                           id="<?php echo escape($field_id); ?>"
                            class="stdwidth"
-                           name="<?php echo $field_name; ?>"
-                           value="<?php echo escape($field_value); ?>">
+                           name="<?php echo escape($field_name); ?>"
+                           value="<?php echo escape($field_value); ?>"
+                           <?php echo $help_js; ?>
+                    >
                     <?php
                     break;
                 }
+
+            if ($show_help_text) {
+                ?>
+                <div id="help_<?php echo escape($field_id); ?>" class="FormHelp" style="display: none;">
+                    <div class="FormHelpInner"><?php echo escape($field['help_text']); ?></div>
+                </div>
+                <?php
+            }
 
             if(isset($field["error"]) && trim($field["error"]) != "")
                 {

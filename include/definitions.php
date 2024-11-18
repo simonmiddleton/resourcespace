@@ -1,4 +1,5 @@
 <?php
+define('RESOURCESPACE_BASE_PATH', dirname(__DIR__));
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
 define('SYSTEM_UPGRADE_LEVEL', 27);
@@ -249,6 +250,9 @@ function definitions_get_by_prefix($prefix)
         }
     return $return_definitions;
     }
+
+/** Helper function for using constants with PHP's string interpolation */
+$rs_const = fn($val) => $val;
 
 $h264_profiles=array(
     "Baseline"=>"242E0",

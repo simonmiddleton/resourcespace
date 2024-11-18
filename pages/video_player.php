@@ -20,14 +20,14 @@ if ($ffmpeg_preview_gif && $resource['file_extension'] == 'gif' && $alternative 
     }
 
 // Look for a standard preview video with the expected extension.
-$video_preview = get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative);
+$video_preview = get_resource_path($ref, true, 'pre', false, $GLOBALS['ffmpeg_preview_extension'], true, 1, false, '', $alternative);
 if(file_exists($video_preview))
     {
-    $video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, true);
-    $video_preview_type = "video/{$ffmpeg_preview_extension}";
+    $video_preview_path = get_resource_path($ref, false, 'pre', false, $GLOBALS['ffmpeg_preview_extension'], true, 1, false, '', $alternative, true);
+    $video_preview_type = "video/{$GLOBALS['ffmpeg_preview_extension']}";
     }       
         
-if((!file_exists($video_preview) || $video_preview_original) && get_resource_access($ref) == 0)
+if((!file_exists($video_preview) || $GLOBALS['video_preview_original']) && get_resource_access($ref) == 0)
     {
     # Attempt to play the source file direct (not a preview). For direct MP4 upload support - the file itself is an MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
     $origvideofile = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, false, '', $alternative);
@@ -39,7 +39,7 @@ if((!file_exists($video_preview) || $video_preview_original) && get_resource_acc
             // A direct URL to the file was expected but download.php was used instead. Original file maybe within staticsync's $syncdir (no ingest mode).
             $video_preview_path = str_replace('size=&', 'size=videojs&', $video_preview_path);
             }
-        $video_preview_type = "video/{$ffmpeg_preview_extension}";
+        $video_preview_type = "video/{$GLOBALS['ffmpeg_preview_extension']}";
         }
     }
 
@@ -94,20 +94,20 @@ $thumb     = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, false,
 $thumb_raw = $thumb;
 $thumb     = urlencode($thumb);
 
-$width=$ffmpeg_preview_max_width;
-$height=$ffmpeg_preview_max_height;
+$width=$GLOBALS['ffmpeg_preview_max_width'];
+$height=$GLOBALS['ffmpeg_preview_max_height'];
 
 $preload='auto';
 // preview size adjustments for search
-if ($pagename=="search"){
+if ($GLOBALS['pagename']=="search"){
     switch($display){
         case "xlthumbs":
             $width="350";
-            $height=350/$ffmpeg_preview_max_width*$ffmpeg_preview_max_height;
+            $height=350/$GLOBALS['ffmpeg_preview_max_width']*$GLOBALS['ffmpeg_preview_max_height'];
             break;
         case "thumbs":
             $width="150";
-            $height=150/$ffmpeg_preview_max_width*$ffmpeg_preview_max_height;
+            $height=150/$GLOBALS['ffmpeg_preview_max_width']*$GLOBALS['ffmpeg_preview_max_height'];
             break;
     }
 }
@@ -115,9 +115,9 @@ if ($pagename=="search"){
 // Play video on hover?
 $play_on_hover = false;
 if (
-    ($pagename == 'search' && $video_search_play_hover)
-    || ($pagename == 'view' && $video_view_play_hover)
-    || ($pagename == 'preview' && $video_preview_play_hover)
+    ($GLOBALS['pagename'] == 'search' && $video_search_play_hover)
+    || ($GLOBALS['pagename'] == 'view' && $video_view_play_hover)
+    || ($GLOBALS['pagename'] == 'preview' && $video_preview_play_hover)
 ) {
     $play_on_hover=true;
 }
@@ -125,25 +125,25 @@ if (
 // Using keyboard hotkeys?
 $playback_hotkeys = false;
 if (
-    ($pagename == 'search' && $keyboard_navigation_video_search)
-    || ($pagename == 'view' && $keyboard_navigation_video_view)
-    || ($pagename=='preview' && $keyboard_navigation_video_preview)
+    ($GLOBALS['pagename'] == 'search' && $keyboard_navigation_video_search)
+    || ($GLOBALS['pagename'] == 'view' && $keyboard_navigation_video_view)
+    || ($GLOBALS['pagename']=='preview' && $keyboard_navigation_video_preview)
 ) {
     $playback_hotkeys=true;
 }
 
-global $ffmpeg_preview_extension,$css_reload_key,$context;
+global $css_reload_key,$context;
 ?>
-<link href="<?php echo $baseurl_short?>lib/videojs/video-js.min.css?r=<?php echo $css_reload_key?>" rel="stylesheet">
-<script src="<?php echo $baseurl_short?>lib/videojs/video.min.js?r=<?php echo $css_reload_key?>"></script>
-<script src="<?php echo $baseurl_short?>js/videojs-extras.js?r=<?php echo $css_reload_key?>"></script>
+<link href="<?php echo $GLOBALS['baseurl_short']; ?>lib/videojs/video-js.min.css?r=<?php echo $css_reload_key?>" rel="stylesheet">
+<script src="<?php echo $GLOBALS['baseurl_short']; ?>lib/videojs/video.min.js?r=<?php echo $css_reload_key?>"></script>
+<script src="<?php echo $GLOBALS['baseurl_short']; ?>js/videojs-extras.js?r=<?php echo $css_reload_key?>"></script>
 <?php
 
 if(isset($videojs_resolution_selection))
     {
     ?>
-    <link href="<?php echo $baseurl_short?>lib/videojs-resolution-switcher/videojs-resolution-switcher.css?r=<?php echo $css_reload_key?>" rel="stylesheet">
-    <script src="<?php echo $baseurl_short?>lib/videojs-resolution-switcher/videojs-resolution-switcher.js?r=<?php echo $css_reload_key?>"></script>
+    <link href="<?php echo $GLOBALS['baseurl_short']; ?>lib/videojs-resolution-switcher/videojs-resolution-switcher.css?r=<?php echo $css_reload_key?>" rel="stylesheet">
+    <script src="<?php echo $GLOBALS['baseurl_short']; ?>lib/videojs-resolution-switcher/videojs-resolution-switcher.js?r=<?php echo $css_reload_key?>"></script>
     <?php
     }
     
@@ -157,23 +157,23 @@ if(isset($videojs_resolution_selection))
         preload="<?php echo $preload?>"
         width="<?php echo $width?>" 
         height="<?php echo $height?>" 
-        class="video-js vjs-default-skin vjs-big-play-centered <?php if($pagename=='search'){echo "video-$display";} if($view_as_gif){echo ' vjs-gif-transparent';}?>" 
+        class="video-js vjs-default-skin vjs-big-play-centered <?php if($GLOBALS['pagename']=='search'){echo "video-$display";} if($view_as_gif){echo ' vjs-gif-transparent';}?>" 
         poster="<?php echo $thumb_raw?>"
         <?php if($play_on_hover){ ?>
-            onmouseout="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].pause();<?php echo $pagename !== 'search' ? "jQuery('.vjs-big-play-button').show();" : '';?>"
-            onmouseover="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].play();<?php echo $pagename !== 'search' ? "jQuery('.vjs-big-play-button').hide();" : '';?>"
+            onmouseout="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].pause();<?php echo $GLOBALS['pagename'] !== 'search' ? "jQuery('.vjs-big-play-button').show();" : '';?>"
+            onmouseover="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].play();<?php echo $GLOBALS['pagename'] !== 'search' ? "jQuery('.vjs-big-play-button').hide();" : '';?>"
         <?php } ?>
         >
         <?php	          
         foreach($video_preview_sources as $video_preview_source)
             {
             ?>
-            <source src="<?php echo $video_preview_source["url"]; ?>" type='<?php echo $video_preview_source["type"]; ?>' label='<?php echo escape($video_preview_source["label"] != "" ? $video_preview_source["label"] : $lang["preview"]); ?>'/>
+            <source src="<?php echo $video_preview_source["url"]; ?>" type='<?php echo $video_preview_source["type"]; ?>' label='<?php echo escape($video_preview_source["label"] != "" ? $video_preview_source["label"] : $GLOBALS['lang']["preview"]); ?>'/>
             <?php	
             }?>
         <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
         <?php hook("html5videoextra"); ?>
-        <?php display_video_subtitles($ref,$access); ?>
+        <?php display_video_subtitles($ref,$GLOBALS['access']); ?>
     </video>
 
 <?php if($play_on_hover && !$view_as_gif){ ?>   
@@ -182,6 +182,10 @@ if(isset($videojs_resolution_selection))
         </script>
 <?php } ?>
 
+    <?php
+    // Allow "caller" code to define the context for the hook
+    hook('extra_videojs_content_html', '', [$ctx ?? []]);
+    ?>
 </div>
 
 <!-- START DISABLE VIDEOJS RIGHT CONTEXT MENU -->

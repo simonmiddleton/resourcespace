@@ -5570,12 +5570,68 @@ function is_jpeg_extension(string $extension): bool
     }
 
 /**
+ * Input validation helper function to check a URL is ours (e.g. if it's our base URL). Mostly used for redirect URLs.
+ *
+ * @param string $base The value the URL is expected to start with. Due to the structure of a URL, you can also check
+ * for (partial) paths.
+ * @param mixed $val URL to check
+ */
+function url_starts_with(string $base, $val): bool
+{
+    return is_string($val) && filter_var($val, FILTER_VALIDATE_URL) && mb_strpos($val, $base) === 0;
+}
+
+/**
+ * Input validation helper function to check if a URL is safe (from XSS). Mostly intended for redirect URLs.
+ * @param mixed $val URL to check
+ */
+function is_safe_url($url): bool
+{
+    if (!(is_string($url) && filter_var($url, FILTER_VALIDATE_URL))) {
+        return false;
+    }
+
+    $url_parts = parse_url($url);
+    if ($url_parts === false) {
+        return false;
+    }
+
+    // Check URL components (except query strings) don't contain XSS payloads
+    foreach(array_diff_key($url_parts, ['query' => 1]) as $value) {
+        if ($value !== escape($value)) {
+            return false;
+        }
+    }
+
+    // Check query strings, if applicable
+    $qs_params = [];
+    parse_str($url_parts['query'] ?? '', $qs_params);
+    foreach ($qs_params as $param => $value) {
+        if ($param !== escape($param) || $value !== escape($value)) {
+            debug("[WARN] Suspicious query string parameter ({$param} with value: {$value}) found in URL - {$url}");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * Input validation helper function for sorting (ASC/DESC).
  * @param mixed $val User input value to be validated
  */
 function validate_sort_value($val): bool
 {
     return is_string($val) && in_array(mb_strtolower($val), ['asc', 'desc']);
+}
+
+/**
+ * Input validation helper function for a CSV of integers (mostly used for IDs).
+ * @param mixed $val User input value to be validated
+ */
+function validate_digit_csv($val): bool
+{
+    return is_string($val) && preg_match('/^\d+,? ?(, ?\d+ ?,? ?)*$/', $val) === 1;
 }
 
 /**
@@ -5587,6 +5643,7 @@ function get_sub_array_with(array $keys): callable
 {
     return fn(array $input): array => array_intersect_key($input, array_flip($keys));
 }
+
 
 /**
  * Server side check to backup front end javascript validation.
@@ -5602,6 +5659,15 @@ function enforceSharePassword(string $password) : void
         exit(escape($lang["error-permissiondenied"]));
         }
     }
+
+/**
+ * Helper function to call the JS CentralSpaceLoad().
+ * @return never
+ */
+function js_call_CentralSpaceLoad(string $url)
+{
+    exit("<script>CentralSpaceLoad('{$url}');</script>");
+}
 
 /**
  * Get expiration date of a given PEM certificate 

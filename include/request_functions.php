@@ -1119,16 +1119,19 @@ function get_valid_custom_fields(array $fields)
 * 
 * @param  array  $fields  List of custom fields as returned by get_valid_custom_fields(). Note: At this point code 
 * assumes fields have been validated
+* @param  array  $ctx     Contextual information for {@see process_custom_fields_submission()} 
 * 
 * @return array Returns collection items with the extra "html_properties" key
 */
-function gen_custom_fields_html_props(array $fields)
+function gen_custom_fields_html_props(array $fields, array $ctx): array
     {
-    return array_map(function($field)
+    $prefix = $ctx['html_properties_prefix'] ?? 'custom_field_';
+    return array_map(function($field) use ($prefix)
         {
+        $ident = $prefix . $field['id'];
         $field["html_properties"] = array(
-            "id"   => "custom_field_{$field["id"]}",
-            "name" => (!empty($field["options"]) ? "custom_field_{$field["id"]}[]" : "custom_field_{$field["id"]}"),
+            "id"   => $ident,
+            "name" => (!empty($field["options"]) ? "{$ident}[]" : $ident),
         );
         return $field;
         }, $fields);
@@ -1140,10 +1143,11 @@ function gen_custom_fields_html_props(array $fields)
 * 
 * @param  array    $fields     List of custom fields
 * @param  boolean  $submitted  Processing submitted fields?
+* @param  array    $ctx        Contextual information (e.g. change the prefix for html tags' identifiers)
 * 
 * @return array Returns collection of items with the extra "html_properties" key
 */
-function process_custom_fields_submission(array $fields, $submitted)
+function process_custom_fields_submission(array $fields, $submitted, array $ctx): array
     {
     return array_map(function($field) use ($submitted)
         {
@@ -1167,14 +1171,19 @@ function process_custom_fields_submission(array $fields, $submitted)
             $field["value"] = implode(", ", $field["selected_options"]);
             }
 
-        if($submitted && $field["required"] && $field["value"] == "")
-            {
-            $field["error"] = str_replace("%field", i18n_get_translated($field["title"]), $lang["researchrequest_custom_field_required"]);
-            return $field;
-            }
+        if ($submitted && ($error = hook('process_custom_fields_submission_validator', '', [$field]))) {
+            // Allow plugins to validate (their own) custom field types or override existing behaviour
+            $field['error'] = $error;
+        } elseif ($submitted && $field['required'] && $field['value'] == '') {
+            $field['error'] = str_replace(
+                '%field',
+                i18n_get_translated($field['title']),
+                $lang['researchrequest_custom_field_required']
+            );
+        }
 
         return $field;
-        }, gen_custom_fields_html_props(get_valid_custom_fields($fields)));
+        }, gen_custom_fields_html_props(get_valid_custom_fields($fields), $ctx));
     }
 
 

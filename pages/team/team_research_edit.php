@@ -87,7 +87,8 @@ if(!hook("replaceresearcheditshape"))
 $rr_cfields = gen_custom_fields_html_props(
     get_valid_custom_fields(
         json_decode($research["custom_fields_json"], true)
-    )
+    ),
+    []
 );
 array_walk($rr_cfields, function($field, $i)
     {

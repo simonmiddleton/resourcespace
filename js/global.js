@@ -466,15 +466,27 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
         CentralSpace=jQuery('#modal');
         }
 
-    if (url.indexOf("?")!=-1)
-        {
-        url += '&ajax=true';
+        var end_url = url.substr(url.indexOf('#'));
+        // Drop # at end of url if present
+        if (end_url.substr(0,1) == "#") {
+            url = url.substr(0,url.length - end_url.length);
         }
-    else
-        {
-        url += '?ajax=true';
+    
+        // Attach ajax parameter
+        if (url.indexOf("?")!=-1)
+            {
+            url += '&ajax=true';
+            }
+        else
+            {
+            url += '?ajax=true';
+            }
+        url += '&posting=true';
+        // Reinstate # at end of url if present
+        if (end_url.substr(0,1) == "#") {
+            url += end_url;
         }
-    url += '&posting=true';
+
     CentralSpaceShowProcessing();
 
     pagename=basename(url);
@@ -2177,4 +2189,26 @@ function registerResourceSelectDeselectHandlers() {
         CentralSpaceHideProcessing();
         UpdateSelColSearchFilterBar();
     });
+}
+
+/**
+ * Calculate an elements' position by traversing offsetParent
+ * @param {Element} el DOM element
+ * @return {{left: Number, top: Number}}
+ */
+function calculate_position_offset_parents(el)
+{
+    let pos = {};
+    pos.left = el.offsetLeft;
+    pos.top = el.offsetTop;
+    while (el.offsetParent) {
+        pos.left = pos.left + el.offsetParent.offsetLeft;
+        pos.top = pos.top + el.offsetParent.offsetTop;
+        if (el === document.getElementsByTagName('body')[0]) {
+            break;
+        } else {
+            el = el.offsetParent;
+        }
+    }
+    return pos;
 }
