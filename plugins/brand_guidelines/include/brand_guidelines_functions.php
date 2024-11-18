@@ -7,14 +7,16 @@ namespace Montala\ResourceSpace\Plugins\BrandGuidelines;
 /**
  * Helper function for access control purposes to check if user can view the Brand Guidelines
  */
-function acl_can_view_brand_guidelines(): bool {
+function acl_can_view_brand_guidelines(): bool
+{
     return !checkperm('bgv');
 }
 
 /**
  * Helper function for access control purposes to check if user can edit the Brand Guidelines
  */
-function acl_can_edit_brand_guidelines(): bool {
+function acl_can_edit_brand_guidelines(): bool
+{
     return checkperm('a') || checkperm('bge');
 }
 
@@ -22,7 +24,8 @@ function acl_can_edit_brand_guidelines(): bool {
  * Check if a page item is a section
  * @param array{parent: int|numeric-string} $I Generic page data structure
  */
-function is_section(array $I): bool {
+function is_section(array $I): bool
+{
     return (int) $I['parent'] === 0;
 }
 
@@ -47,14 +50,14 @@ function cast_reorder_direction_to_int(string $direction): int
 
 /**
  * Compute moving (for re-ordering purposes) an item based on the requested direction (up/down). Example:
- * 
+ *
  * ```php
  * $changed_list = array_replace(
  *     $all_pages_index,
  *     [$ref => compute_item_order($all_pages_index[$ref], $reorder)]
  * );
  * ```
- * 
+ *
  * @phpstan-template T of array
  * @param T $item Generic item record with at least the 'order_by' key
  * @param string $direction The direction of the re-order - up/down
@@ -114,7 +117,7 @@ function colour_hex_input_validator($value): bool
 /** Input validation for RGB colour syntax (e.g. 0,0,0) */
 function colour_rgb_input_validator($value): bool
 {
-    return is_string($value) && preg_match('/^\d{1,3}, ?\d{1,3}, ?\d{1,3}$/', $value) === 1 
+    return is_string($value) && preg_match('/^\d{1,3}, ?\d{1,3}, ?\d{1,3}$/', $value) === 1
         ? count(array_filter(array_map('trim', explode(',', $value)), fn($val) => $val >= 0 && $val <= 255)) === 3
         : false;
 }
@@ -122,7 +125,7 @@ function colour_rgb_input_validator($value): bool
 /** Input validation for CMYK colour syntax (e.g. 0,0,0,100) */
 function colour_cmyk_input_validator($value): bool
 {
-    return is_string($value) && preg_match('/^\d{1,3}, ?\d{1,3}, ?\d{1,3}, ?\d{1,3}$/', $value) === 1 
+    return is_string($value) && preg_match('/^\d{1,3}, ?\d{1,3}, ?\d{1,3}, ?\d{1,3}$/', $value) === 1
         ? count(array_filter(array_map('trim', explode(',', $value)), fn($val) => $val >= 0 && $val <= 100)) === 4
         : false;
 }
@@ -175,15 +178,15 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
         $refs = array_reverse($refs);
     }
     $group_items_jump = 0;
-    $get_sibling = static function(int $needle, array $items) use ($direction_int) {
+    $get_sibling = static function (int $needle, array $items) use ($direction_int) {
         $keys = array_keys($items);
         return $items[$keys[array_search($needle, $keys) + $direction_int] ?? -1] ?? [];
     };
-    $closest_item = static function(int $needle, array $items) use ($get_sibling): array {
+    $closest_item = static function (int $needle, array $items) use ($get_sibling): array {
         foreach ($items as $item_idx => $item) {
             if (isset($item['ref']) && $item['ref'] === $needle) {
                 return $get_sibling($item_idx, $items);
-            } else if (isset($item['members'])) {
+            } elseif (isset($item['members'])) {
                 foreach ($item['members'] as $member_item_idx => $member_item) {
                     if ($member_item['ref'] !== $needle) {
                         continue;
@@ -219,13 +222,13 @@ function reorder_page_content($reorder, array $init_page_content, array $refs): 
         if ($closest_sibling === []) {
             // Item is at the page content boundaries (there's nothing to move)
             return true;
-        } else if (isset($closest_sibling['members'])) {
+        } elseif (isset($closest_sibling['members'])) {
             // Jump over an entire group
             $items_to_sort = array_replace(
                 $page_contents_db,
                 [$ref => compute_item_order($page_contents_db[$ref], $reorder, count($closest_sibling['members']))]
             );
-        } else if (
+        } elseif (
             $act_on_group
             && $list_of_applicable_members !== []
             && $refs === $list_of_applicable_members
@@ -288,11 +291,11 @@ function convert_to_db_content(array $input): array
 }
 
 /**
- * Data transfer utility to help reconstruct custom fields' data structure 
+ * Data transfer utility to help reconstruct custom fields' data structure
  * @param string $json Database record value (JSON type)
  * @param array $def Custom fields' data structure as input to {@see process_custom_fields_submission()}
- * @return array Same custom fields' data structure with, where applicable, an extra "value" key representing the current
- * field value
+ * @return array Same custom fields' data structure with, where applicable, an extra "value" key representing the
+ * current field value
  */
 function convert_from_db_content(string $json, array $def): array
 {
@@ -314,7 +317,8 @@ function convert_from_db_content(string $json, array $def): array
             ? $field['options'][$content[$field['id']]]
             : $content[$field['id']];
 
-        // Add custom fields' value. Note: {@see process_custom_fields_submission()} will always override this "value" key
+        // Add custom fields' value. Note: {@see process_custom_fields_submission()} will always override this "value"
+        // key
         $result[] = array_merge($field, ['value' => $value]);
     }
     return $result;

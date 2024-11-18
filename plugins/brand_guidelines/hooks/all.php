@@ -5,12 +5,12 @@ declare(strict_types=1);
 use function Montala\ResourceSpace\Plugins\BrandGuidelines\acl_can_view_brand_guidelines;
 
 function HookBrand_guidelinesAllInitialise()
-    {
+{
     $plugin_root = dirname(__DIR__);
     include_once "{$plugin_root}/include/brand_guidelines_functions.php";
     include_once "{$plugin_root}/include/database_functions.php";
     include_once "{$plugin_root}/include/render_functions.php";
-    
+
     /** Types of content you can add to brand guideline pages */
     define('BRAND_GUIDELINES_CONTENT_TYPES', [
         'text' => 0,
@@ -29,12 +29,14 @@ function HookBrand_guidelinesAllInitialise()
     define('FIELD_TYPE_NUMERIC', 101);
     define('FIELD_TYPE_TEXT_RICH', 102);
     define('FIELD_TYPE_COLOUR_PREVIEW', 103);
-    }
+}
 
-function HookBrand_guidelinesAllHandleuserref() {
+function HookBrand_guidelinesAllHandleuserref()
+{
     if (acl_can_view_brand_guidelines()) {
         $GLOBALS['custom_top_nav'][] = [
-            'title' => '<i aria-hidden="true" class="fa-fw fa-solid fa-list-check"></i>&nbsp;' . $GLOBALS['lang']['brand_guidelines_top_nav_title'],
+            'title' => '<i aria-hidden="true" class="fa-fw fa-solid fa-list-check"></i>&nbsp;'
+                . $GLOBALS['lang']['brand_guidelines_top_nav_title'],
             'link' => "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
         ];
     }

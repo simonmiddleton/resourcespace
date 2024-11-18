@@ -86,7 +86,11 @@ function render_new_content_button(string $id)
         return;
     }
     ?>
-    <button id="<?php echo escape($id); ?>" class="add-new-content-container" onclick="showOptionsMenu(this, 'menu-content');">
+    <button
+        id="<?php echo escape($id); ?>"
+        class="add-new-content-container"
+        onclick="showOptionsMenu(this, 'menu-content');"
+    >
         <i class="fa-solid fa-plus"></i>
         <span><?php echo escape($GLOBALS['lang']['brand_guidelines_new_content']); ?></span>
     </button>
@@ -163,7 +167,7 @@ function render_navigation_item(array $item, bool $is_current = false)
             "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/guidelines.php",
             ['spage' => $item['ref']]
         );
-    } elseif($item['ref'] === 0 && $can_edit_brand_guidelines) {
+    } elseif ($item['ref'] === 0 && $can_edit_brand_guidelines) {
         // Manage table of content
         $onclick = 'return ModalLoad(this, true, true);';
         $url = generateURL(
@@ -188,7 +192,7 @@ function render_navigation_item(array $item, bool $is_current = false)
         ?>
         <h2 class="grid-item"><?php echo escape(i18n_get_translated($item['name'])); ?></h2>
         <?php
-    } else if (is_section($item) && $item['ref'] === 0) {
+    } elseif (is_section($item) && $item['ref'] === 0) {
         ?>
         <h2 class="grid-item">
             <a class="<?php echo $class; ?>" href="<?php echo $url; ?>" onclick="<?php echo $onclick; ?>"><?php
@@ -252,7 +256,7 @@ function render_resource_item(array $item): void
             null,
             'id'
         );
-        
+
         if (isset($image_sizes[$item['content']['image_size']])) {
             $preview = $image_sizes[$item['content']['image_size']];
         } else {
@@ -266,12 +270,12 @@ function render_resource_item(array $item): void
     }
 
     if ($layout === 'full-width') {
-    ?>
+        ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width grid-container">
         <?php
         if ($no_preview !== '') {
             echo $no_preview;
-        } else if (($video_player = render_video_player($resource_data, $video_player_ctx))) {
+        } elseif (($video_player = render_video_player($resource_data, $video_player_ctx))) {
             echo $video_player;
         } else {
             ?>
@@ -287,8 +291,8 @@ function render_resource_item(array $item): void
         render_item_top_right_menu($ref, ['grid-item']);
         ?>
         </div>
-    <?php
-    } else if ($layout === 'half-width') {
+        <?php
+    } elseif ($layout === 'half-width') {
         $video_player = $no_preview !== ''
             ? $no_preview
             : render_video_player(
@@ -326,9 +330,9 @@ function render_resource_item(array $item): void
         render_item_top_right_menu($ref, ['grid-item']);
         ?>
         </div>
-    <?php
+        <?php
     } else {
-    ?>
+        ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="image-thumbnail grid-container">
             <?php
             if ($no_preview === '') {
@@ -343,14 +347,15 @@ function render_resource_item(array $item): void
             render_item_top_right_menu($ref, ['grid-item']);
             ?>
         </div>
-    <?php
+        <?php
     }
 }
 
 /**
  * Render video player for resource content items
  * @param array $resource Resource data {@see get_resource_data()}
- * @param array{context: string, max_width: int, max_height: int} $ctx Set optional context for the rendered video player
+ * @param array{context: string, max_width: int, max_height: int} $ctx Set optional context for the rendered video
+ * player
  * @return string Either nothing or the video player HTML to render
  */
 function render_video_player(array $resource, array $ctx = []): string
@@ -363,7 +368,7 @@ function render_video_player(array $resource, array $ctx = []): string
             'ffmpeg_preview_max_width' => $GLOBALS['ffmpeg_preview_max_width'],
             'ffmpeg_preview_max_height' => $GLOBALS['ffmpeg_preview_max_height'],
         ];
-        $player_html = cast_echo_to_string(function() use ($resource, $ctx) {
+        $player_html = cast_echo_to_string(function () use ($resource, $ctx) {
             $ref = (int) $resource['ref'];
             $GLOBALS['resource'] = $resource;
             $GLOBALS['access'] = get_resource_access($resource);

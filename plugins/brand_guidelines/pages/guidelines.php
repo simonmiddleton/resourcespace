@@ -102,7 +102,7 @@ render_content_menu();
                     echo escape($selected_page_title);
 
                 if (acl_can_edit_brand_guidelines()) {
-                ?></span>
+                    ?></span>
                     <button
                         id="toggle_view_mode"
                         class=""
@@ -111,9 +111,9 @@ render_content_menu();
                     >
                         <i class="fa-regular fa-eye-slash"></i>
                     </button>
-                <?php
+                    <?php
                 }
-            ?></h1>
+                ?></h1>
             <?php
 
             foreach ($page_contents_grouped as $item) {
@@ -125,7 +125,7 @@ render_content_menu();
                             echo richtext_input_parser($item['content']['richtext']);
                         ?></div><?php
                         render_item_top_right_menu($item['ref'], ['grid-item']);
-                    ?>
+?>
                     </div>
                     <?php
                 } elseif (
@@ -163,12 +163,14 @@ render_content_menu();
                             render_resource_item($group_item);
                         }
                     }
-                    
-                    if (!(
+
+                    if (
+                        !(
                         $is_resource_group
                         && count($item['members']) === 2
                         && $item['members'][0]['content']['layout'] === 'half-width'
-                    )) {
+                        )
+                    ) {
                         // Render the new block element for everything except second half-width item
                         render_new_block_element_button($new_block_item_btn, $group_item['type']);
                     }
@@ -350,13 +352,13 @@ render_content_menu();
             );
             <?php
             if ($CSRF_enabled) {
-            ?>
+                ?>
                 let csrf = document.createElement('input');
                 csrf.setAttribute('type', 'hidden');
                 csrf.setAttribute('name', '<?php echo escape($CSRF_token_identifier); ?>');
                 csrf.setAttribute('value', '<?php echo generateCSRFToken($usersession, 'delete_item'); ?>');
                 temp_form.appendChild(csrf);
-            <?php
+                <?php
             }
             ?>
             if (item.group_members) {
@@ -395,13 +397,13 @@ render_content_menu();
         );
         <?php
         if ($CSRF_enabled) {
-        ?>
+            ?>
             let csrf = document.createElement("input");
             csrf.setAttribute("type", "hidden");
             csrf.setAttribute("name", "<?php echo escape($CSRF_token_identifier); ?>");
             csrf.setAttribute("value", "<?php echo generateCSRFToken($usersession, "toc_reorder_item"); ?>");
             temp_form.appendChild(csrf);
-        <?php
+            <?php
         }
         ?>
         if (item.group_members) {

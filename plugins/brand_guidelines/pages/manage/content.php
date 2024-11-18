@@ -136,7 +136,7 @@ $save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete ===
 $edit = false;
 $after_item = (int) getval('after_item', 0, false, 'is_positive_int_loose');
 
-// Specific page content item 
+// Specific page content item
 $ref = (int) getval('ref', 0, false, 'is_positive_int_loose');
 if ($ref > 0) {
     $db_item = get_page_content_item($ref);
@@ -250,7 +250,7 @@ if ($save && count_errors($processed_fields) === 0) {
 
     error_alert($lang['error_fail_save'], true, 200);
     exit();
-} else if ($delete > 0 && enforcePostRequest(false)) {
+} elseif ($delete > 0 && enforcePostRequest(false)) {
     if ($edit && delete_page_content($act_on_group_members ? $group_members : [$ref])) {
         js_call_CentralSpaceLoad(
             generateURL(
@@ -336,8 +336,7 @@ jQuery(document).ready(() => {
         ?>
         update_colour_preview(jQuery('#hex').val());
         <?php
-    }
-    else if ($type === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
+    } elseif ($type === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
         ?>
         jQuery('#layout')
             .change((e) => {

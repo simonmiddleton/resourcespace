@@ -72,7 +72,7 @@ function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(a
                 i18n_get_translated($field['title']),
                 str_replace('?', '1', $GLOBALS['lang']['shouldbeormore'])
             );
-        } else if (get_resource_data($field_value) === false) {
+        } elseif (get_resource_data($field_value) === false) {
             return $GLOBALS['lang']['brand_guidelines_err_invalid_input'];
         }
     } elseif ($field['type'] === FIELD_TYPE_TEXT_RICH) {
@@ -91,7 +91,7 @@ function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(a
         )
     ) {
         return $GLOBALS['lang']['brand_guidelines_err_invalid_input'];
-    } else if (
+    } elseif (
         $field['type'] === FIELD_TYPE_DROP_DOWN_LIST
         && $field['id'] === 'image_size'
         && $field_value !== ''

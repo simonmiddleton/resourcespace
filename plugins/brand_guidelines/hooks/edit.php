@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Ensure we always pass along the Brand Guidelines callback URL, if one was provided. 
+ * Ensure we always pass along the Brand Guidelines callback URL, if one was provided.
  * @global array $uploadparams
  */
 function HookBrand_guidelinesEditEditbeforeheader(): void

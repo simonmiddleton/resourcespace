@@ -12,17 +12,22 @@ if (!acl_can_edit_brand_guidelines()) {
     exit(escape($lang['error-permissiondenied']));
 }
 
-$ref = (int) getval('ref', 0, false, 'is_positive_int_loose'); 
+$ref = (int) getval('ref', 0, false, 'is_positive_int_loose');
 $edit = false;
 $delete = (int) getval('delete', 0, false, 'is_positive_int_loose');
 $reorder = getval('reorder', '', false, __NAMESPACE__ . '\reorder_input_validator');
 $save = getval('posting', '') !== '' && enforcePostRequest(false) && $delete === 0 && $reorder === '';
 $pages_db = get_all_pages();
 $all_sections = extract_node_options(array_filter($pages_db, __NAMESPACE__ . '\is_section'), true, true);
-$parent = getval('parent', 0, false, (fn($V) => is_positive_int_loose($V) || ($save && is_array($V) && count($V) === 1)));
+$parent = getval(
+    'parent',
+    0,
+    false,
+    (fn($V) => is_positive_int_loose($V) || ($save && is_array($V) && count($V) === 1))
+);
 
 if ($ref > 0) {
-    $all_pages_index = array_column($pages_db, null,'ref');
+    $all_pages_index = array_column($pages_db, null, 'ref');
     if (isset($all_pages_index[$ref])) {
         $edit = true;
 
@@ -39,7 +44,7 @@ if ($ref > 0) {
 foreach ($all_sections as $section_id => $section) {
     if (is_positive_int_loose($parent) && $section_id == $parent) {
         $parent = (int) $parent;
-        
+
         // Convert submitted data into the expected type so process_custom_fields_submission() can automatically select
         // the dropdown option
         $_GET['parent'] = [md5("parent_{$section}")];
@@ -137,7 +142,11 @@ include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
         render_custom_fields($processed_toc_fields);
         ?>
         <div class="QuestionSubmit" >
-            <input type="submit" name="toc_submit" value="<?php echo escape($edit ? $lang['save'] : $lang['create']); ?>"></input>
+            <input
+                type="submit"
+                name="toc_submit"
+                value="<?php echo escape($edit ? $lang['save'] : $lang['create']); ?>"
+            >
             <div class="clearleft"></div>
         </div>
     </form>

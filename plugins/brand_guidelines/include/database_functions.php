@@ -8,7 +8,10 @@ namespace Montala\ResourceSpace\Plugins\BrandGuidelines;
 function get_all_pages(): array
 {
     return ps_query(
-        "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_PAGES)} FROM brand_guidelines_pages ORDER BY parent ASC, order_by ASC",
+        sprintf(
+            'SELECT %s FROM brand_guidelines_pages ORDER BY parent ASC, order_by ASC',
+            BRAND_GUIDELINES_DB_COLS_PAGES
+        ),
         [],
         'brand_guidelines_pages'
     );
@@ -18,7 +21,10 @@ function get_all_pages(): array
 function get_page_contents(int $id): array
 {
     return ps_query(
-        "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_CONTENT)} FROM brand_guidelines_content WHERE `page` = ? ORDER BY order_by ASC",
+        sprintf(
+            'SELECT %s FROM brand_guidelines_content WHERE `page` = ? ORDER BY order_by ASC',
+            BRAND_GUIDELINES_DB_COLS_CONTENT
+        ),
         ['i', $id]
     );
 }
@@ -89,7 +95,7 @@ function save_page(int $ref, string $name, int $parent)
 function delete_pages(array $refs): bool
 {
     $relevant_content_items = [];
-    foreach($refs as $page_ref) {
+    foreach ($refs as $page_ref) {
         $relevant_content_items = array_merge(
             $relevant_content_items,
             array_column(get_page_contents($page_ref), 'ref')
@@ -131,7 +137,8 @@ function reorder_items(string $table, array $list, ?callable $filter): void
 /**
  * Create new database record for a content item
  * @param int $page The page ID the content item belongs to
- * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array, position_after: int} $item A content item data structure
+ * @param array{type: BRAND_GUIDELINES_CONTENT_TYPES, fields: array, position_after: int} $item A content item data
+ * structure
  * @return int Returns the ID of the new database record or zero otherwise.
  */
 function create_content_item(int $page, array $item): int
