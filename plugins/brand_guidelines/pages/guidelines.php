@@ -118,10 +118,13 @@ render_content_menu();
                 if ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['text']) {
                     $new_content_btn_id = $item['ref'];
                     ?>
-                    <div id="page-content-item-<?php echo (int) $item['ref']; ?>"><?php
-                        render_item_top_right_menu($item['ref']);
-                        echo richtext_input_parser($item['content']['richtext']);
-                    ?></div>
+                    <div id="page-content-item-<?php echo (int) $item['ref']; ?>" class="grid-container">
+                        <div class="rich-text-content grid-item"><?php
+                            echo richtext_input_parser($item['content']['richtext']);
+                        ?></div><?php
+                        render_item_top_right_menu($item['ref'], ['grid-item']);
+                    ?>
+                    </div>
                     <?php
                 } elseif (
                     $item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']

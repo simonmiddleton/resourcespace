@@ -257,6 +257,7 @@ div[id^='page-content-item-']:hover > a.grid-item.video-js-resource {
     grid-template-areas: "box";
 }
 .grid-item.top-right-menu,
+.grid-item.rich-text-content,
 a.grid-item,
 .guidelines-content .videojscontent {
     grid-area: box;
@@ -311,6 +312,10 @@ button#guidelines-toc {
 
 form.guidelines .FormError {
     margin: 0 0 10px 310px;
+}
+
+.rich-text-content {
+    min-height: 48px;
 }
 
 /* ResourceSpace global.css is setting these and TinyMCE then has some logic which makes the buttons spread more than
