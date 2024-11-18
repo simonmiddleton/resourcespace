@@ -6,6 +6,8 @@
 }
 .guidelines-sidebar {
     margin: 20px;
+    border-right: 1px solid #c1c1c1;
+    box-shadow: 12px 0px 10px -12px #bbbbbb;
     font-size: 0;
 }
 
