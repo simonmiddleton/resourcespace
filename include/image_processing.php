@@ -3608,14 +3608,26 @@ function delete_previews($resource,$alternative=-1)
  */
 function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
 {
+    
+    # Stop empty $prefix from causing extraneous quotes being passed to IM,
+    # this is ignored on Linux but fails on Windows
+    if($prefix) {
+        $identcommand = $identify_fullpath . ' -format %wx%h %%PREFIX%%%%SOURCE%%[0]';
+        $params = [
+            '%%PREFIX%%' => new CommandPlaceholderArg($prefix,
+                fn($val): bool => preg_match('/^\w\w\w:$|^$/', $val, $matches)
+            ),
+            '%%SOURCE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+        ];
+
+    } else {
+        $identcommand = $identify_fullpath . ' -format %wx%h %%SOURCE%%[0]';
+        $params = [
+            '%%SOURCE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+        ];
+    }
+
     # Get image's dimensions.
-    $identcommand = $identify_fullpath . ' -format %wx%h %%PREFIX%%%%SOURCE%%[0]';
-    $params = [
-        '%%PREFIX%%' => new CommandPlaceholderArg($prefix,
-            fn($val): bool => preg_match('/^\w\w\w:$|^$/', $val, $matches)
-        ),
-        '%%SOURCE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
-    ];
     $identoutput = run_command($identcommand,false,$params);
     if (strtolower($extension) == "svg") {
         list($w, $h) = getSvgSize($file);
