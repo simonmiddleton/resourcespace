@@ -106,7 +106,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         {
         $allfields[$field["ref"]] = $field;
         $allfields[$field["ref"]]["options"] =  in_array($field["type"],$FIXED_LIST_FIELD_TYPES) ? get_field_options($field["ref"],true) : array();
-        $allfields[$field["ref"]]["resource_types"] = $field["global"] == 0 ? explode(",",$field["resource_types"]) : array_keys($resource_types);
+        $allfields[$field["ref"]]["resource_types"] = $field["global"] == 0 ? explode(",",$field["resource_types"] ?? "") : array_keys($resource_types);
         }
     array_push($messages,
         "{$lang['csv_upload_process']} " . ($processcsv ? $lang['csv_upload_step5'] : $lang['csv_upload_step4']),
