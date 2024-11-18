@@ -3794,7 +3794,6 @@ function remove_all_resources_from_collection($ref){
  * It returns an array of collection data, including metadata and thumbnail information for the
  * home page image if one is assigned.
  *
- * @global array $COLLECTION_PUBLIC_TYPES Array of public collection types to filter collections by.
  * @return array An array of associative arrays representing each promoted collection, with keys:
  *               - 'ref' (int): The unique identifier for the collection.
  *               - 'type' (int): The type identifier for the collection.
@@ -7088,7 +7087,6 @@ function check_upload_terms(int $collection, string $k) : bool
  * - The user has the "b" permission, which restricts collection creation.
  * - The user is anonymous and does not have a session collection.
  *
- * @global bool $anonymous_user_session_collection Indicates if anonymous users are allowed to create session collections.
  * @return bool Returns `true` if the user can create collections; otherwise, `false`.
  */
 function can_create_collections()

@@ -1,5 +1,5 @@
 <?php
-$lang["openai_image_edit__edit_with_ai"]="Edit with AI (beta)";
+$lang["openai_image_edit__edit_with_ai"]="Edit with AI";
 $lang["openai_image_edit__prompt"]="Prompt";
 $lang["openai_image_edit__preparing_images"]="Preparing image mask";
 $lang["openai_image_edit__completing"]="Completing the image";
@@ -15,5 +15,12 @@ $lang["openai_image_edit__filename"] = "AI edited image";
 $lang["openai_image_edit__saving_alternative"] = "Saving alternative file";
 $lang["openai_image_edit__generating_alternative_previews"] = "Generating preview images";
 $lang["openai_image_edit__preparing_image_for_editing"] = "Preparing image for editing";
-
-
+$lang["openai_image_edit__new"] = "Save as a new resource";
+$lang["openai_image_edit__mode"] = "Mode";
+$lang["openai_image_edit__mode_edit"] = "Edit image (DALL-E 2)";
+$lang["openai_image_edit__mode_variation"] = "Create variation (DALL-E 2)";
+$lang["openai_image_edit__mode_generate"] = "Generate replacement (DALL-E 3)";
+$lang["openai_image_edit__mode_white"] = "Fill with white";
+$lang["openai_image_edit__mode_black"] = "Fill with black";
+$lang["openai_image_edit__mode_clone"] = "Clone fill";
+$lang["openai_image_edit__creating_new_resource"] = "Creating new resource";

@@ -634,8 +634,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 || ($ffmpeg_preview_gif && strtolower((string)$resource["file_extension"]) === 'gif'))
                                 &&
                                 !(isset($resource['is_transcoding']) && $resource['is_transcoding'] !== 0)
-                                )
-                                {
+                            ) {
                                 // Video preview START
                                 # Establish whether it's ok to use original as the preview instead of the "pre" size
                                 $videosize= ($video_preview_original) ? "" : "pre"; 
@@ -686,9 +685,13 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                         ]
                                         );
                                     }
-                                } // Video preview END
-                            elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"))
-                                {
+                             // Video preview END
+                            } elseif (
+                                $use_mp3_player 
+                                && file_exists($mp3realpath) 
+                                && !hook("replacemp3player")
+                                && !resource_has_access_denied_by_RT_size($resource['resource_type'], $hide_real_filepath ? 'videojs' : '')
+                            ) {
                                 // MP3 preview START 
                                 ?>
                                 <div id="previewimagewrapper">
@@ -709,17 +712,13 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 </div>
                                 <?php
                                 // MP3 preview END 
-                                }
-                            elseif($resource['has_image'] !== RESOURCE_PREVIEWS_NONE)
-                                {
+                            } elseif ($resource['has_image'] !== RESOURCE_PREVIEWS_NONE) {
                                 render_resource_view_image($resource,[
                                     "access"=>$access,
                                     "edit_access"=>$edit_access,
                                     ]
                                     );
-                                }
-                            else
-                                {
+                            } else {
                                 // No preview. If configured, try and use a preview from a related resource
                                 $pullresource = related_resource_pull($resource);
                                 if($pullresource !== false)
@@ -738,7 +737,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     </div>
                                     <?php
                                     }
-                                }
+                            }
                             } // Standard previews END
                     } /* End of replacerenderinnerresourcepreview hook and end of renderinnerresourcepreview hook */
 

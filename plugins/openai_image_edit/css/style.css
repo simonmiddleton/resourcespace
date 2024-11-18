@@ -6,15 +6,9 @@
 	background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px;
 	/* Must be half of one side of the square */
 	float:left;
-    margin-top: 20px;
 	border: 1px solid black;
 	cursor: crosshair;
 }
-
-.canvas-container #overlayCanvas
-	{
-	margin-top: 20px;
-	}
 
 .toolbox.openai-image-edit {
 	border: none;

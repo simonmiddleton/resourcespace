@@ -46,7 +46,10 @@ canvas.addEventListener('mousemove', draw);
 
 function draw(e) {
 
+    if (document.getElementById('penSize').disabled) {return false;}
+
     const [x, y] = getMousePos(e);
+    const mode = document.getElementById('editMode').value;
 
     e.preventDefault(); 
     
@@ -82,6 +85,14 @@ function draw(e) {
     ctx.strokeStyle = "black";
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
+
+    if (mode=="clone" || mode=="white" || mode=="black")
+        {
+        // Add shadow for blur effect
+        ctx.lineWidth = penSize/3;
+        ctx.shadowColor = 'black'; // Set shadow color to match stroke
+        ctx.shadowBlur = penSize/2;       // Increase this value for stronger blur
+        }
 
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
@@ -128,6 +139,7 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
         ...csrf_pair,
         mask: mask,
         imageType: document.getElementById('downloadType').value,
+        mode: document.getElementById('editMode').value,
         prompt: prompt,
         ajax: true
     });
@@ -165,12 +177,23 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
     CentralSpaceHideProcessing();
 });
 
+// Get the mode selector and add an event listener
+document.getElementById('editMode').addEventListener('change', () => {
+    const mode = document.getElementById('editMode').value;
+    const brush = document.getElementById('penSize');
+    const prompt = document.getElementById('prompt');
+    brush.disabled=(mode=='generate' || mode=='variation');
+    prompt.disabled=(mode=='white' || mode=='black' || mode=='variation');
+});
+
+
 // Get the download button and add an event listener
 document.getElementById('downloadBtn').addEventListener('click', () => {
     // Convert the canvas content to a data URL (PNG format)
     const dataURL = canvas.toDataURL(document.getElementById('downloadType').value);
+    const downloadAction=document.getElementById('downloadAction').value;
 
-    if (document.getElementById('downloadAction').value=='download')
+    if (downloadAction=='download')
         {
         // Download the file (or really, save, as it's already on the user's system)
 
@@ -183,7 +206,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
         link.click();
         }
 
-    if (document.getElementById('downloadAction').value=='alternative')
+    if (downloadAction=='alternative' || downloadAction=='new')
         {
         // Save as alternative file
         CentralSpaceShowProcessing(0);
@@ -196,18 +219,27 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
             imageType: document.getElementById('downloadType').value
         });
 
-        fetch(alternative_url, {
+        fetch(downloadAction=='alternative' ? alternative_url : save_new_url, {
             method: 'POST',
             body: formData
             })
             .then(response => response.json())
             .then(result => {
                 console.log('Image submitted successfully:', result);
-                window.location.href=view_url;
+
+                if (downloadAction=='alternative')
+                    {
+                    window.location.href=view_url;
+                    }
+                else    
+                    {
+                    window.location.href=view_new_url + result['resource'];
+                    }
             })
             .catch(error => {
                 alert('Error submitting image:' + error);
             });
         }
 
+        
 });

@@ -582,7 +582,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
  *
  * @param int $ref The resource reference ID.
  * @param string $extension (optional) The file extension for the image, used to validate processing compatibility.
- * @global array $lang Language strings for localization.
  * @return bool Returns `false` if the file does not exist; true on successful completion
  */
 function extract_exif_comment($ref,$extension="")
@@ -1140,8 +1139,6 @@ function extract_exif_comment($ref,$extension="")
  * It uses a predefined list of character encodings for the conversion attempts.
  *
  * @param string $text The IPTC metadata text to be converted.
- * @global string $iptc_expectedchars A string of characters expected in the IPTC text, used for encoding validation.
- * @global string $mysql_charset The MySQL charset configuration, affecting whether conversion is needed.
  * @return string The converted text in UTF-8 encoding, or the original text if conversion fails.
  */
 function iptc_return_utf8($text)
@@ -1186,13 +1183,6 @@ function iptc_return_utf8($text)
  * @param bool $ingested (optional) If `true`, marks the resource as already ingested into the system. Default is `false`.
  * @param bool $checksum_required (optional) If `true`, generates a checksum for the file. Default is `true`.
  * @param array $onlysizes (optional) Specifies an array of preview sizes to generate. If empty, all sizes are generated.
- * @global string $imagemagick_path The path to ImageMagick for image processing.
- * @global float $preview_generate_max_file_size Maximum file size (in MB) for generating previews.
- * @global bool $previews_allow_enlarge If `true`, allows previews to be larger than the original image.
- * @global array $lang Language strings for localization.
- * @global bool $offline_job_queue If `true`, enables queuing of offline preview jobs.
- * @global array $preview_no_flatten_extensions File extensions for which flattening is disabled.
- * @global array $preview_keep_alpha_extensions File extensions that retain alpha transparency in previews.
  * @return bool Returns `true` if previews were generated successfully; `false` otherwise.
  */
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
@@ -1444,11 +1434,6 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
  * @param int $alternative (optional) Specifies an alternative file ID to generate previews for, if any. Default is `-1`.
  * @param bool $ingested (optional) If `true`, marks the resource as already ingested into the system. Default is `false`.
  * @param array $onlysizes (optional) Specifies an array of preview sizes to generate. If empty, all sizes are generated.
- * @global string $imagemagick_path Path to the ImageMagick installation.
- * @global int $imagemagick_quality Quality setting for ImageMagick output images.
- * @global bool $previews_allow_enlarge If `true`, allows previews to be larger than the original image.
- * @global array $watermark Path to watermark image and settings.
- * @global array $camera_autorotation_ext List of extensions requiring camera auto-rotation.
  * @return bool Returns `true` if previews were generated successfully; `false` otherwise.
  */
 function create_previews_using_im(
@@ -2408,8 +2393,6 @@ function extract_mean_colour($image,$ref)
  * @param int $ref The resource ID to update.
  * @param resource|null $image (optional) An image resource for orientation analysis. If not provided, 
  *                             the function will load the resource thumbnail.
- * @global int $portrait_landscape_field The ID of the field to store orientation data.
- * @global array $lang Language strings for "portrait," "landscape," and "square."
  * @return void
  */
 function update_portrait_landscape_field($ref,$image=null){
@@ -2541,9 +2524,6 @@ function get_colour_key($image)
  * @param string $extension (optional) The file extension for the preview images. Default is "jpg".
  * @param int $alternative (optional) The ID of an alternative file to tweak previews for. Default is `-1`.
  * @param string $resource_ext (optional) The file extension of the original resource, used for video snapshot rotation.
- * @global array $ffmpeg_supported_extensions Extensions supported for video processing with FFmpeg.
- * @global bool $watermark Whether watermarking is enabled.
- * @global int $portrait_landscape_field The field ID for storing portrait or landscape orientation.
  * @return bool Returns `false` if the main preview file does not exist; otherwise, updates previews and returns true.
  */
 function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
@@ -2869,19 +2849,7 @@ function extract_indd_pages($filename)
  * @param int $resource The ID of the resource for which the checksum is generated.
  * @param string $extension The file extension of the resource.
  * @param bool $anyway (optional) If `true`, forces checksum generation regardless of configuration settings.
- * @global bool $file_checksums Indicates if checksum generation is enabled.
- * @global bool $file_checksums_offline Indicates if checksums should be generated offline.
  * @return bool Returns `true` if the checksum was generated; `false` if the file does not exist or was not generated.
- */
-
- /**
- * Clear the checksum for a resource.
- *
- * This function removes the checksum value for a specified resource, marking it as needing
- * a new checksum. Primarily used when the checksum cannot be generated.
- *
- * @param int $resource The ID of the resource to clear the checksum for.
- * @return bool Returns `true` if the checksum was cleared successfully; `false` otherwise.
  */
 function generate_file_checksum($resource,$extension,$anyway=false)
     {
@@ -2940,8 +2908,6 @@ function clear_file_checksum($resource){
  *
  * @param string $filepath The file path of the file to check.
  * @param int $replace_resource The resource ID to replace, if applicable, to avoid detecting it as a duplicate.
- * @global bool $file_upload_block_duplicates Indicates if duplicate checking is enabled.
- * @global bool $file_checksums_50k If true, calculates checksum based on the first 50 KB of the file and its size.
  * @return array An array of duplicate resource IDs, or an empty array if no duplicates are found.
  */
 function check_duplicate_checksum($filepath,$replace_resource){

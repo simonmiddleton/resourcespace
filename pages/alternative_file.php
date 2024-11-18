@@ -131,7 +131,7 @@ $backtoalternativefileurl = generateURL("{$baseurl_short}pages/alternative_file.
     method="post"
     class="form"
     id="fileform"
-    onsubmit="return <?php echo $context = "Modal" ? "Modal" : "CentralSpace"; ?>Post(this, true);" action="<?php echo $backtoalternativefileurl?>">
+    onsubmit="return <?php echo $context == "Modal" ? "Modal" : "CentralSpace"; ?>Post(this, true);" action="<?php echo $backtoalternativefileurl?>">
 <?php
 if($modal)
     {

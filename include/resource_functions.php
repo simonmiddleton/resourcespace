@@ -594,10 +594,11 @@ function put_resource_data($resource,$data)
  * @param  integer  $archive        ID of target archive state, 999 if archived
  * @param  integer  $user           User ID, -1 for current user
  * @param  string   $origin         Source of resource, should not be blank
+ * @param  string   $file_extension         If specified
  * 
  * @return mixed    false if invalid inputs given, integer of resource reference if resource is created
  */
-function create_resource($resource_type,$archive=999,$user=-1,$origin='')
+function create_resource($resource_type,$archive=999,$user=-1,$origin='',$file_extension='')
     {
     # Create a new resource.
     global $k,$terms_upload;
@@ -632,7 +633,7 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
         $user = $userref;
         }
 
-    ps_query("INSERT INTO resource(resource_type,creation_date,archive,created_by) VALUES (?,NOW(),?,?)",["i",$resource_type,"i",$archive,"i",$user]);
+    ps_query("INSERT INTO resource(resource_type,creation_date,archive,created_by,file_extension) VALUES (?,NOW(),?,?,?)",["i",$resource_type,"i",$archive,"i",$user,"s",$file_extension]);
 
     $insert=sql_insert_id();
 
@@ -1413,7 +1414,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 * IMPORTANT: this function will always set the resource defaults if any are found. The "client code"
 *            is where developers decide whether this should happen
 *
-* @global string $userresourcedefaults  Resource defaults rules value based on user group a user belongs to
 *
 * @param integer $ref             Resource ID
 * @param array   $specific_fields Specific field ID(s) to update
@@ -1812,6 +1812,13 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
                         }
                     }
+                // Add any onchange code
+                if($fields[$n]["onchange_macro"]!="") {
+                    $val = implode(',',array_column(get_nodes_by_refs($resource_add_nodes ?? $resulting_nodes_for_log),"name"));
+                    $macro_resource_id=$ref;
+                    //$val = implode(",",$updated_resources[$ref][$fields[$n]['ref']]);
+                    eval(eval_check_signed($fields[$n]["onchange_macro"]));
+                }
                 }
             } // End of fixed list field section
         elseif($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
@@ -6952,7 +6959,6 @@ function truncate_join_field_value($value)
 *
 * @uses get_resource_path()
 *
-* @global array $get_resource_path_extra_download_query_string_params Array of query string params
 *                                                                     as expected by generateURL()
 *
 * @param integer $resource_id Resource unique ref
