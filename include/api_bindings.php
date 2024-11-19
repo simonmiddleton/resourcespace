@@ -1585,7 +1585,7 @@ function api_get_processing_message()
 /**
  * Expose {@see checkperm} to the API
  * 
- * @param string $perm  The permissions tring to check for. 
+ * @param string $perm  The permissions string to check for. 
  * @return bool
  */
 function api_checkperm($perm)
