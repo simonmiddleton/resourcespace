@@ -1581,3 +1581,13 @@ function api_get_processing_message()
     {
     return get_processing_message();
     }
+
+/**
+ * Expose {@see checkperm} to the API
+ * 
+ * @return false|array
+ */
+function api_checkperm($perm)
+    {
+    return checkperm($perm);
+    }
