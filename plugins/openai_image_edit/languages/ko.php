@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='대체 생성 (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='흰색으로 채우기';
 $lang["openai_image_edit__mode_black"]='검은색으로 채우기';
 $lang["openai_image_edit__creating_new_resource"]='새 자원 만들기';
+$lang["openai_image_edit__mode_clone"]='클론 채우기';

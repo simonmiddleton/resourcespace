@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Genereer vervanging (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Vul met wit';
 $lang["openai_image_edit__mode_black"]='Vul met zwart';
 $lang["openai_image_edit__creating_new_resource"]='Nieuwe resource aanmaken';
+$lang["openai_image_edit__mode_clone"]='Kloon vullen';

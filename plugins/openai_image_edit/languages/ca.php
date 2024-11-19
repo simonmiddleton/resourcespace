@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Generar reemplaçament (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Omplir amb blanc';
 $lang["openai_image_edit__mode_black"]='Omplir amb negre';
 $lang["openai_image_edit__creating_new_resource"]='Creant un nou recurs';
+$lang["openai_image_edit__mode_clone"]='Clonar omplir';

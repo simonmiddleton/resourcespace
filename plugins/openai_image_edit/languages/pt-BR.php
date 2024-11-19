@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Gerar substituição (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Preencher com branco';
 $lang["openai_image_edit__mode_black"]='Preencher com preto';
 $lang["openai_image_edit__creating_new_resource"]='Criando novo recurso';
+$lang["openai_image_edit__mode_clone"]='Preencher clone';

@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='生成替代品 (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='填充为白色';
 $lang["openai_image_edit__mode_black"]='填充黑色';
 $lang["openai_image_edit__creating_new_resource"]='创建新资源';
+$lang["openai_image_edit__mode_clone"]='克隆填充';

@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Hasilkan pengganti (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Isi dengan putih';
 $lang["openai_image_edit__mode_black"]='Isi dengan hitam';
 $lang["openai_image_edit__creating_new_resource"]='Membuat sumber daya baru';
+$lang["openai_image_edit__mode_clone"]='Duplikasi isi';

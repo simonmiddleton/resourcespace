@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Δημιουργία αντικατά
 $lang["openai_image_edit__mode_white"]='Γεμίστε με λευκό';
 $lang["openai_image_edit__mode_black"]='Γεμίστε με μαύρο';
 $lang["openai_image_edit__creating_new_resource"]='Δημιουργία νέου πόρου';
+$lang["openai_image_edit__mode_clone"]='Αντιγραφή συμπλήρωσης';

@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Ersatz generieren (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Mit Weiß füllen';
 $lang["openai_image_edit__mode_black"]='Mit Schwarz füllen';
 $lang["openai_image_edit__creating_new_resource"]='Neues Medium erstellen';
+$lang["openai_image_edit__mode_clone"]='Klonfüllung';

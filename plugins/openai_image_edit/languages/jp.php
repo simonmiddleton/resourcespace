@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='置き換えを生成 (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='白で塗りつぶす';
 $lang["openai_image_edit__mode_black"]='黒で塗りつぶす';
 $lang["openai_image_edit__creating_new_resource"]='新しいリソースを作成中';
+$lang["openai_image_edit__mode_clone"]='クローンフィル';
