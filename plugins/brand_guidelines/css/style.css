@@ -5,7 +5,7 @@
     grid-template-columns: 20% 1fr;
 }
 .guidelines-sidebar {
-    margin: 20px;
+    margin: 20px 20px 0 20px;
     border-right: 1px solid #c1c1c1;
     box-shadow: 12px 0px 10px -12px #bbbbbb;
 }
@@ -35,7 +35,7 @@
 .guidelines-sidebar li > a {
     margin: 3px 28px 0 0;
     border-radius: 8px;
-    padding: 3px 15px;
+    padding: 3px 6px;
     text-decoration: none;
     font-size:16px;
 }
@@ -347,6 +347,17 @@ form.guidelines .tox-toolbar__group > button {
     padding: unset; /* Remove padding to give as much horizontal space to tinymce and align with header */
 }
 /* --- End of Deviation from standard behaviour */
+
+@media(max-width:1000px) {
+    /* Prevent the sidebar from getting squished too much on smaller screens */
+    .guidelines-container {
+        grid-template-columns: 30% 1fr;
+    }
+
+    .guidelines-sidebar {
+        margin: 20px 20px 0 0;
+    }
+}
 
 @media(max-width:600px) {
     .guidelines-container {
