@@ -40,7 +40,14 @@ if('cli' != PHP_SAPI) {
 
 $all=(($add=='' && $remove=='')?true:false);
 
-$fields=ps_array("SELECT `COLUMN_NAME` value FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='{$mysql_db}' AND `TABLE_NAME`='resource' AND `COLUMN_NAME` LIKE 'field%'",[]);
+$fields=ps_array(
+    "SELECT `COLUMN_NAME` value
+    FROM `INFORMATION_SCHEMA`.`COLUMNS`
+    WHERE `TABLE_SCHEMA`='{$mysql_db}'
+        AND `TABLE_NAME`='resource'
+        AND `COLUMN_NAME` REGEXP 'field\\\\d+' = 1",
+        []
+    );
 echo "fields: " . json_encode($fields) . "<br/>";
 
 $resource_table_joins = get_resource_table_joins();
