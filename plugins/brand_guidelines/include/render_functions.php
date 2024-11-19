@@ -160,6 +160,11 @@ function render_navigation_item(array $item, bool $is_current = false)
     $can_edit_brand_guidelines = acl_can_edit_brand_guidelines();
     $show_individual_menu = true;
 
+    $class = ['grid-item'];
+    if ($is_current) {
+        $class[] = 'current';
+    }
+
     if ($item['parent'] > 0 && $item['ref'] !== 0) {
         // Table of content navigation
         $onclick = 'return CentralSpaceLoad(this);';
@@ -169,6 +174,7 @@ function render_navigation_item(array $item, bool $is_current = false)
         );
     } elseif ($item['ref'] === 0 && $can_edit_brand_guidelines) {
         // Manage table of content
+        $class[] = 'new';
         $onclick = 'return ModalLoad(this, true, true);';
         $url = generateURL(
             "{$GLOBALS['baseurl']}/plugins/brand_guidelines/pages/manage/toc.php",
@@ -179,10 +185,6 @@ function render_navigation_item(array $item, bool $is_current = false)
         $onclick = '';
     }
 
-    $class = ['grid-item'];
-    if ($is_current) {
-        $class[] = 'current';
-    }
     $class = implode(' ', $class);
 
     ?>

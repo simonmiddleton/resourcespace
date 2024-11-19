@@ -30,3 +30,5 @@ $lang['brand_guidelines_move_left'] = 'Move left';
 $lang['brand_guidelines_move_right'] = 'Move right';
 $lang['brand_guidelines_confirm_delete_group_members'] = 'Are you sure you want to delete all in this group?';
 $lang['brand_guidelines_layout'] = 'Layout';
+$lang['brand_guidelines_view_mode'] = 'View mode';
+$lang['brand_guidelines_edit_mode'] = 'Edit mode';
