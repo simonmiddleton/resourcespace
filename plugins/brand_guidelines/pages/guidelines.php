@@ -341,6 +341,7 @@ render_content_menu();
     function edit_item(e) {
         let item = jQuery(e).parent('#menu-individual').data('item');
         console.debug('Edit item - %o', item);
+        hideOptionsMenu();
         return ModalLoad(
             `${baseurl}/plugins/brand_guidelines/pages/manage/${item.manage_page}.php?${
                 new URLSearchParams({ref: item.ref}).toString()
