@@ -1551,3 +1551,14 @@ function api_toggle_active_state_for_nodes(array $refs): array
     http_response_code(403);
     return [];
     }
+
+/**
+ * Expose {@see checkperm} to the API
+ * 
+ * @param string $perm  The permissions string to check for. 
+ * @return bool
+ */
+function api_checkperm($perm)
+    {
+    return checkperm($perm);
+    }
