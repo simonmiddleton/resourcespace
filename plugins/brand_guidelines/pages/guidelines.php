@@ -98,18 +98,17 @@ render_content_menu();
     <div class="BasicsBox">
         <div class="guidelines-content" data-page="<?php echo escape((string) $selected_page); ?>">
             <h1>
-                <span><?php
-                    echo escape($selected_page_title);
-
+                <span><?php echo escape($selected_page_title); ?></span>
+                <?php
                 if (acl_can_edit_brand_guidelines()) {
-                    ?></span>
+                    ?>
                     <button
-                        id="toggle_view_mode"
-                        class=""
-                        onclick="return jQuery('.add-new-content-container, button.new').toggleClass('DisplayNone')
-                            && jQuery('#toggle_view_mode i.fa-regular').toggleClass(['fa-eye', 'fa-eye-slash']);"
+                        id="toggle-view-edit-mode"
+                        title="<?php echo escape($lang['brand_guidelines_view_mode']); ?>"
+                        aria-label="<?php echo escape($lang['brand_guidelines_view_mode']); ?>"
+                        onclick="return toggleViewEditMode(this);"
                     >
-                        <i class="fa-regular fa-eye-slash"></i>
+                        <i class="fa fa-fw fa-regular fa-eye"></i>
                     </button>
                     <?php
                 }
@@ -196,6 +195,25 @@ render_content_menu();
     </div>
 </div>
 <script>
+    function toggleViewEditMode(el) {
+        const btn = jQuery(el);
+        const view_mode_txt = '<?php echo escape($lang['brand_guidelines_view_mode']); ?>';
+        const edit_mode_txt = '<?php echo escape($lang['brand_guidelines_edit_mode']); ?>';
+
+        if (btn.prop('title') === view_mode_txt) {
+            btn.prop('title', edit_mode_txt);
+            btn.attr('aria-label', edit_mode_txt);
+        } else {
+            btn.prop('title', view_mode_txt);
+            btn.attr('aria-label', view_mode_txt);
+        }
+
+        jQuery('.add-new-content-container, button.new, .guidelines-sidebar li a.new')
+            .toggleClass('DisplayNone');
+
+        return jQuery('#toggle-view-edit-mode i.fa').toggleClass(['fa-eye', 'fa-regular', 'fa-pencil']);
+    }
+
     function showOptionsMenu(e, target) {
         console.debug('showOptionsMenu(e = %o, target = %o)', e, target);
         hideOptionsMenu();
