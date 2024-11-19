@@ -25,7 +25,8 @@ function get_page_contents(int $id): array
             'SELECT %s FROM brand_guidelines_content WHERE `page` = ? ORDER BY order_by ASC',
             BRAND_GUIDELINES_DB_COLS_CONTENT
         ),
-        ['i', $id]
+        ['i', $id],
+        'brand_guidelines_content'
     );
 }
 
@@ -33,8 +34,9 @@ function get_page_contents(int $id): array
 function get_page_content_item(int $id): array
 {
     $item = ps_query(
-        "SELECT {$GLOBALS['rs_const'](BRAND_GUIDELINES_DB_COLS_CONTENT)} FROM brand_guidelines_content WHERE `ref` = ?",
-        ['i', $id]
+        sprintf('SELECT %s FROM brand_guidelines_content WHERE `ref` = ?', BRAND_GUIDELINES_DB_COLS_CONTENT),
+        ['i', $id],
+        'brand_guidelines_content'
     );
     return $item !== [] ? $item[0] : [];
 }

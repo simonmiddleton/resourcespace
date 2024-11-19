@@ -251,9 +251,6 @@ function definitions_get_by_prefix($prefix)
     return $return_definitions;
     }
 
-/** Helper function for using constants with PHP's string interpolation */
-$rs_const = fn($val) => $val;
-
 $h264_profiles=array(
     "Baseline"=>"242E0",
     "Main"=>"4D40",
