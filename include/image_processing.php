@@ -1891,11 +1891,6 @@ function create_previews_using_im(
                                 $mpr_parts['strip_target']=false;
                                 $mpr_parts['targetprofile']='';
                                 }
-                            elseif ($use_icc_profile)
-                                {
-                                // Keep any profile extracted (don't use -strip).
-                                $profile ="  -colorspace %%IMAGEMAGICK_COLORSPACE%% ";
-                                }
                             else
                                 {
                                 # By default, strip the colour profiles ('+' is remove the profile, confusingly)
