@@ -71,7 +71,7 @@ function create_page(string $name, int $parent): int
  * @param string $name Page name
  * @param int $parent The sections' ID a page belongs to. Use zero for sections (i.e. root pages)
  */
-function save_page(int $ref, string $name, int $parent)
+function save_page(int $ref, string $name, int $parent): void
 {
     db_begin_transaction('brand_guidelines_save_page');
     log_activity(null, LOG_CODE_EDITED, $name, 'brand_guidelines_pages', 'name', $ref, null, null, null, true);
