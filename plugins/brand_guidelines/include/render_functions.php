@@ -242,7 +242,6 @@ function render_resource_item(array $item): void
     $layout = $item['content']['layout'];
     $caption = trim($item['content']['caption'] ?? '');
     $resource_view_url = generateURL($GLOBALS['baseurl_short'], ['r' => $item['content']['resource_id']]);
-    $no_preview = '';
     $no_preview_link = sprintf(
         '<a class="grid-item" href="%s" onclick="return ModalLoad(this, true);">%s</a>',
         $resource_view_url,
@@ -250,20 +249,12 @@ function render_resource_item(array $item): void
     );
 
     $resource_data = get_resource_data($item['content']['resource_id']);
-    if ($resource_data === false) {
-        $no_preview = $no_preview_link;
-    } else {
+    if ($resource_data !== false) {
         $image_sizes = array_column(
             get_image_sizes($resource_data['ref'], true, $resource_data['file_extension'], true),
             null,
             'id'
         );
-
-        if (isset($image_sizes[$item['content']['image_size']])) {
-            $preview = $image_sizes[$item['content']['image_size']];
-        } else {
-            $no_preview = $no_preview_link;
-        }
         $resource_title = i18n_get_translated(get_data_by_field($resource_data['ref'], $GLOBALS['view_title_field']));
         $video_player_ctx = [
             'context' => "item_{$ref}",
@@ -272,14 +263,17 @@ function render_resource_item(array $item): void
     }
 
     if ($layout === 'full-width') {
+        $video_player = $resource_data !== false ? render_video_player($resource_data, $video_player_ctx) : '';
+        $fallback = $GLOBALS['brand_guidelines_fallback_size_for_full_width'];
         ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="resource-content-full-width grid-container">
         <?php
-        if ($no_preview !== '') {
-            echo $no_preview;
-        } elseif (($video_player = render_video_player($resource_data, $video_player_ctx))) {
+        if ($video_player !== '') {
             echo $video_player;
-        } else {
+        } elseif (
+            (isset($image_sizes['scr']) && ($preview = $image_sizes['scr']))
+            || (isset($image_sizes[$fallback]) && ($preview = $image_sizes[$fallback]))
+        ) {
             ?>
             <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <img
@@ -289,15 +283,16 @@ function render_resource_item(array $item): void
                 >
             </a>
             <?php
+        } else {
+            echo $no_preview_link;
         }
         render_item_top_right_menu($ref, ['grid-item']);
         ?>
         </div>
         <?php
     } elseif ($layout === 'half-width') {
-        $video_player = $no_preview !== ''
-            ? $no_preview
-            : render_video_player(
+        $video_player = $resource_data !== false
+            ? render_video_player(
                 $resource_data,
                 array_merge(
                     $video_player_ctx,
@@ -307,17 +302,18 @@ function render_resource_item(array $item): void
                         'caption' => $caption,
                     ]
                 )
-            );
-
-        if ($no_preview !== '' && $caption !== '') {
-            $video_player = str_replace('</a>', '<p>' . escape($caption) . '</p></a>', $no_preview);
-        }
+            )
+            : '';
+        $fallback = $GLOBALS['brand_guidelines_fallback_size_for_half_width'];
         ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="image-half-width grid-container">
         <?php
         if ($video_player !== '') {
             echo $video_player;
-        } else {
+        } elseif (
+            (isset($image_sizes['pre']) && ($preview = $image_sizes['pre']))
+            || (isset($image_sizes[$fallback]) && ($preview = $image_sizes[$fallback]))
+        ) {
             ?>
             <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                 <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
@@ -328,6 +324,11 @@ function render_resource_item(array $item): void
                 ?>
             </a>
             <?php
+        } else {
+            if ($caption !== '') {
+                $no_preview_link = str_replace('</a>', '<p>' . escape($caption) . '</p></a>', $no_preview_link);
+            }
+            echo $no_preview_link;
         }
         render_item_top_right_menu($ref, ['grid-item']);
         ?>
@@ -337,14 +338,18 @@ function render_resource_item(array $item): void
         ?>
         <div id="page-content-item-<?php echo $ref; ?>" class="image-thumbnail grid-container">
             <?php
-            if ($no_preview === '') {
+            $fallback = $GLOBALS['brand_guidelines_fallback_size_for_thumbnail'];
+            if (
+                (isset($image_sizes['thm']) && ($preview = $image_sizes['thm']))
+                || (isset($image_sizes[$fallback]) && ($preview = $image_sizes[$fallback]))
+            ) {
                 ?>
                 <a class="grid-item" href="<?php echo $resource_view_url; ?>" onclick="return ModalLoad(this, true);">
                     <img src="<?php echo $preview['url']; ?>" alt="<?php echo escape($resource_title); ?>">
                 </a>
                 <?php
             } else {
-                echo $no_preview;
+                echo $no_preview_link;
             }
             render_item_top_right_menu($ref, ['grid-item']);
             ?>

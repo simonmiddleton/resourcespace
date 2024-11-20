@@ -91,30 +91,6 @@ function HookBrand_guidelinesContentProcess_custom_fields_submission_validator(a
         )
     ) {
         return $GLOBALS['lang']['brand_guidelines_err_invalid_input'];
-    } elseif (
-        $field['type'] === FIELD_TYPE_DROP_DOWN_LIST
-        && $field['id'] === 'image_size'
-        && $field_value !== ''
-    ) {
-        $resource = get_resource_data((int) getval('resource_id', 0, false, 'is_positive_int_loose'));
-        if ($resource === false) {
-            // If resource ID is invalid this is already caught by the "resource_id" field validation logic (see above
-            // for the numeric field type)
-            return false;
-        }
-
-        $applicable_resource_sizes = array_intersect(
-            array_keys($field['options']),
-            array_column(get_image_sizes($resource['ref'], true, $resource['file_extension'], true), 'id')
-        );
-        $valid_selected_resource_size = array_intersect(
-            $applicable_resource_sizes,
-            array_keys($field['selected_options'])
-        );
-
-        if ($valid_selected_resource_size === []) {
-            return $GLOBALS['lang']['brand_guidelines_err_miss_prev_size'];
-        }
     }
 
     return false;
