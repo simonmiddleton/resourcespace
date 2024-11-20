@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Montala\ResourceSpace\Plugins\BrandGuidelines;
 
-function render_individual_menu()
+function render_individual_menu(): void
 {
     if (!acl_can_edit_brand_guidelines()) {
         return;
@@ -39,7 +39,7 @@ function render_individual_menu()
     <?php
 }
 
-function render_content_menu()
+function render_content_menu(): void
 {
     ?>
     <div id="menu-content" class="context-menu-container" style="display:none;">
@@ -80,7 +80,7 @@ function render_content_menu()
     <?php
 }
 
-function render_new_content_button(string $id)
+function render_new_content_button(string $id): void
 {
     if (!acl_can_edit_brand_guidelines()) {
         return;
@@ -155,7 +155,12 @@ function render_block_colour_item(array $value): void
     <?php
 }
 
-function render_navigation_item(array $item, bool $is_current = false)
+/**
+ * Render the table of contents (TOC) items.
+ * @param array $item A section/page record {@see get_all_pages()}
+ * @param bool $is_current Specify if the input item is the currently selected page
+ */
+function render_navigation_item(array $item, bool $is_current = false): void
 {
     $can_edit_brand_guidelines = acl_can_edit_brand_guidelines();
     $show_individual_menu = true;
@@ -218,7 +223,12 @@ function render_navigation_item(array $item, bool $is_current = false)
     <?php
 }
 
-function render_item_top_right_menu(int $ref, array $class = [])
+/**
+ * Render the contextual right menu.
+ * @param int $ref Items' ID. Note: item is generic here, it refers to both section/page as well as page content items.
+ * @param list<string> $class List of HTML classes to add to the wrapping div.
+ */
+function render_item_top_right_menu(int $ref, array $class = []): void
 {
     if (!acl_can_edit_brand_guidelines()) {
         return;
@@ -236,6 +246,10 @@ function render_item_top_right_menu(int $ref, array $class = [])
     <?php
 }
 
+/**
+ * Render resource content item.
+ * @param array $item A decoded page content item. {@see guidelines.php}
+ */
 function render_resource_item(array $item): void
 {
     $ref = (int) $item['ref'];

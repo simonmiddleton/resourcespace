@@ -169,8 +169,11 @@ function save_page_content(int $ref, array $item)
  * - move up/down an entire group of items (including over another group);
  * - move left/right within the group boundaries;
  * - move up/down outside group boundaries to take an item out of a group;
+ * @param string $reorder The move direction (up/down only). Note that moving left/right <=> up/down.
+ * @param array $init_page_content The page content {@see get_page_contents()} with the keys being each items' ref.
+ * @param array $refs List of IDs to move. Multiple IDs means we move an entire group.
  */
-function reorder_page_content($reorder, array $init_page_content, array $refs): bool
+function reorder_page_content(string $reorder, array $init_page_content, array $refs): bool
 {
     $direction_int = cast_reorder_direction_to_int($reorder);
     $act_on_group = count($refs) > 1;
@@ -386,7 +389,7 @@ function group_content_items(array $items): array
  */
 function is_group_member(int $ref, array $table): callable
 {
-    return fn($item) => isset($item['members']) && in_array($table[$ref], $item['members']);
+    return static fn($item) => isset($item['members']) && in_array($table[$ref], $item['members']);
 }
 
 /**
