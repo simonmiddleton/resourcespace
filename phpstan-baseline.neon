@@ -56,11 +56,6 @@ parameters:
 			path: include/geocoding_view.php
 
 		-
-			message: "#^Variable \\$file_path in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
 			message: "#^Variable \\$height in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: include/image_processing.php
