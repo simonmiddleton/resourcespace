@@ -52,16 +52,6 @@ $page_def = [
             'required' => true,
             ],
             [
-            'id'       => 'image_size',
-            'title'    => $lang['fieldtitle-image_size'],
-            'type'     => FIELD_TYPE_DROP_DOWN_LIST,
-            'options'  => array_diff_key(
-                array_column(get_all_image_sizes(true), 'name', 'id'),
-                array_flip(['col', 'hpr'])
-            ),
-            'required' => true,
-            ],
-            [
             'id'       => 'caption',
             'title'    => $lang['fieldtitle-caption'],
             'type'     => FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
@@ -210,10 +200,6 @@ if (
 ) {
     // Note: this is a hack to avoid knowing the hash value on the client side
     $_GET['layout'] = [md5("layout_{$page_def[$type]['fields'][1]['options'][$layout]}")];
-    if ($layout === 'half-width' && isset($page_def[$type]['fields'][2]['options']['pre'])) {
-        // Default to pre size (thm would be too small) for a half-width layout
-        $_GET['image_size'] = [md5("image_size_{$page_def[$type]['fields'][2]['options']['pre']}")];
-    }
 }
 
 // Allow the upload flow to call back with the new resource ID and preset it on the form
@@ -278,7 +264,6 @@ if ($save && count_errors($processed_fields) === 0) {
 if ($type === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
     $field_options = array_column($processed_fields, null, 'id')['layout']['options'];
     $half_width_val_hash = md5("layout_{$field_options['half-width']}");
-    $thumbnail_val_hash = md5("layout_{$field_options['thumbnail']}");
 }
 
 include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
@@ -344,12 +329,6 @@ jQuery(document).ready(() => {
                     jQuery('#Question_caption').slideDown(150);
                 } else {
                     jQuery('#Question_caption').slideUp(150);
-                }
-
-                if (e.target.value === '<?php echo escape($thumbnail_val_hash); ?>') {
-                    jQuery('#Question_image_size').slideUp(150);
-                } else {
-                    jQuery('#Question_image_size').slideDown(150);
                 }
             })
             .trigger('change');

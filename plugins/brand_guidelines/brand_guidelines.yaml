@@ -4,6 +4,7 @@ title: Brand Guidelines
 desc: Create brand guidelines for your audience. For example, what logos to use and where they can be used and colours to use in branding materials, tone of voice and more. 
 author: Montala Limited
 info_url: http://www.resourcespace.com/knowledge-base/plugins/brand-guidelines
+config_url: /plugins/brand_guidelines/pages/setup.php
 default_priority: 999
 icon: fa-solid fa-list-check
 category: compliance
