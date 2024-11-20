@@ -560,7 +560,7 @@ function HookSimplesamlAllLoginformlink()
     if (file_exists(dirname(__DIR__,3) . str_replace("../","",$relpath))) {
         // Only add if this is a valid file
         parse_str($requested["query"] ?? "", $params);
-        if (!is_string($params[array_key_first($params)])) {
+        if (!is_string($params[array_key_first($params)] ?? false)) {
             unset($params);
         }
     }
