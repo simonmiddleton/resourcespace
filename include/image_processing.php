@@ -212,18 +212,18 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             # if not, try exiftool
             elseif ($exiftool_fullpath!=false)
                 {
-                if (isset($file_path))
+                if ($file_path !== "")
                     {
                     $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
                     $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($file_path, 'is_valid_rs_path')]);
                     }
-                else
+                else if (is_valid_rs_path($processfile['tmp_name']))
                     {
                     $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
                     $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($processfile['tmp_name'], 'is_valid_rs_path')]);
                     }
 
-                if (strlen($file_type_by_exiftool) > 0)
+                if (strlen($file_type_by_exiftool ?? "") > 0)
                     {
                     $extension=str_replace(" ","_",trim(strtolower($file_type_by_exiftool)));
                     $filename = $filename . "." . $extension;
