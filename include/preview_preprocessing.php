@@ -181,7 +181,7 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
     global $rw2_thumb_extract;
     global $raf_thumb_extract;
     global $arw_thumb_extract;
-    
+    $pipe_character = $GLOBALS["config_windows"] ? "-w":">";
     if (
         ( 
             ($extension == "cr2" && $cr2_thumb_extract) || 
@@ -202,7 +202,7 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
                 }
 
             // Attempt extraction. Replaced ">" with -w since this has been seen to fail on some Windows servers
-            $cmd=$exiftool_fullpath.' -b '.$bin_tag.' '.escapeshellarg($file).' -w %d%f.jpg';
+            $cmd=$exiftool_fullpath.' -b '.$bin_tag.' '.escapeshellarg($file)." $pipe_character %d%f.jpg";
             $wait=run_command($cmd);
             $extractedpreview=preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
             if($target!=$extractedpreview && file_exists($extractedpreview))
@@ -222,7 +222,7 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
 
                 $bin_tag=" -previewimage ";
                 //2nd attempt
-                $cmd=$exiftool_fullpath.' -b '.$bin_tag.' '.escapeshellarg($file).' -w %d%f.jpg';
+                $cmd=$exiftool_fullpath.' -b '.$bin_tag.' '.escapeshellarg($file)." $pipe_character %d%f.jpg";
                 $wait=run_command($cmd);
                 $extractedpreview=preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
                 if($target!=$extractedpreview && file_exists($extractedpreview))
