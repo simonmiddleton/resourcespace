@@ -220,6 +220,7 @@ if (!empty($plugin_tests)) {
 
 # Run tests
 echo "-----\n";ob_flush();
+$testsfailed = false;
 foreach ($tests as $key => $test_stack) {
     foreach ($test_stack as $test) {
         $starttime = microtime(true);
@@ -232,14 +233,16 @@ foreach ($tests as $key => $test_stack) {
             $result=false;
         }
         # -------------- Did it work? -----------------------------------------------
-        if ($result===false) {
+        if ($result === false) {
+            $testsfailed = true;
             echo "FAIL\n";ob_flush();
             if (isset($email_test_fails_to)) {
                 $svnrevision=trim(shell_exec("svnversion ."));
                 send_mail($email_test_fails_to,"Test $test has failed as of r" . $svnrevision,"Hi,\n\nAs of revision " . $svnrevision. " the test '" . $test . "' is failing.\n\nThis e-mail was sent from the installation at $baseurl.");
             }
-            if ($key=="test_list") {
-                exit(); # If a core test fails cancel all other tests
+            if (substr($key,-9,9) == "test_list") {
+                echo "-----\n";ob_flush();
+                break 2; # If a core test fails cancel all other tests
             } else {
                 break;  # If a plugin test fails abort tests for this plugin but continue
             }
@@ -249,7 +252,7 @@ foreach ($tests as $key => $test_stack) {
     }
     echo "-----\n";ob_flush();
 }
-echo "All tests complete.\n";
+echo ($testsfailed ? "Tests failed" : "All tests complete.") . PHP_EOL;
 
 if(array_search('noteardown',$argv)===false) {
     # Remove database
