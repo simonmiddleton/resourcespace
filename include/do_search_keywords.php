@@ -606,17 +606,27 @@
                                         }
                                     elseif ($wildcards)
                                         {
-                                        // Wildcard match - use fulltext search
                                         $union = new PreparedStatementQuery();
-                                        $union->sql = " SELECT resource, [bit_or_condition] hit_count AS score
-                                                          FROM resource_node rn[union_index]
-                                                         WHERE rn[union_index].node IN
-                                                               (SELECT ref
-                                                                  FROM `node`
-                                                                 WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE) " .
-                                                                 $union_restriction_clause->sql . "
-                                                                ) GROUP BY resource ";
-
+                                        if (substr($keyword,0,1) == "*") {
+                                            /// Full text searching can't match anywhere except the start, use a LIKE search
+                                            $keyword = str_replace("*", "%", $keyword);
+                                            $union->sql = "
+                                                SELECT resource, [bit_or_condition] hit_count AS score
+                                                  FROM resource_node rn[union_index]
+                                                 WHERE rn[union_index].node IN
+                                                       (SELECT ref FROM `node` WHERE name LIKE ? "
+                                                       . $union_restriction_clause->sql . ")
+                                              GROUP BY resource ";
+                                        } else {
+                                            // Use fulltext search
+                                            $union->sql = "
+                                                SELECT resource, [bit_or_condition] hit_count AS score
+                                                  FROM resource_node rn[union_index]
+                                                 WHERE rn[union_index].node IN
+                                                       (SELECT ref FROM `node` WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE) "
+                                                        . $union_restriction_clause->sql . ")
+                                              GROUP BY resource ";
+                                        }
                                         $union->parameters = array_merge(["s",$keyword], $union_restriction_clause->parameters);
                                         $sql_keyword_union[] = $union;
                                         $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
