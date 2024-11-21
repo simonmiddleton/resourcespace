@@ -564,7 +564,7 @@
                                         {
                                         // Search is looking for a keyword in a specified field
                                         if ($wildcards) {
-                                            $union_restriction_clause->sql .= " AND resource_type_field IN (" . ps_param_insert(count($sql_exclude_fields)) .  ")";
+                                            $union_restriction_clause->sql .= " AND resource_type_field = ?";
                                         } else {
                                             $union_restriction_clause->sql .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE node.resource_type_field = ?)";
                                         }
