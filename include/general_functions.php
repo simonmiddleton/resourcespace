@@ -5596,8 +5596,8 @@ function is_safe_url($url): bool
         return false;
     }
 
-    // Check URL components (except query strings) don't contain XSS payloads
-    foreach(array_diff_key($url_parts, ['query' => 1]) as $value) {
+    // Check URL components (except the port and query strings) don't contain XSS payloads
+    foreach(array_diff_key($url_parts, ['port' => 1, 'query' => 1]) as $value) {
         if ($value !== escape($value)) {
             return false;
         }
