@@ -32,62 +32,57 @@ $use_cases = [
     ],
     [
         'name' => 'XSS payload',
-        'input' => "$baseurl/pages\"/edit.php",
+        'input' => "http://test.localhost/pages\"/edit.php",
         'expected' => false,
     ],
     [
         'name' => 'URL w/ fragment',
-        'input' => "$baseurl/some_page.php#myFragment",
+        'input' => "http://test.localhost/some_page.php#myFragment",
         'expected' => true,
     ],
     [
         'name' => 'URL w/ malicious fragment',
-        'input' => "$baseurl/some_page.php#my<b>Fragment",
+        'input' => "http://test.localhost/some_page.php#my<b>Fragment",
         'expected' => false,
     ],
     [
         'name' => 'No QS (w/ ? marker)',
-        'input' => "$baseurl/pages/edit.php?",
+        'input' => "http://test.localhost/pages/edit.php?",
         'expected' => true,
     ],
     [
         'name' => 'No QS',
-        'input' => "$baseurl/pages/edit.php",
+        'input' => "http://test.localhost/pages/edit.php",
         'expected' => true,
     ],
     [
         'name' => 'URL w/ simple query strings',
-        'input' => "$baseurl/pages/edit.php?foo=1&bar=2",
+        'input' => "http://test.localhost/pages/edit.php?foo=1&bar=2",
         'expected' => true,
     ],
     [
         'name' => 'URL w/ malicious query strings param name',
-        'input' => "$baseurl/pages/edit.php?fo\"o=1&bar=2",
+        'input' => "http://test.localhost/pages/edit.php?fo\"o=1&bar=2",
         'expected' => false,
     ],
     [
         'name' => 'URL w/ malicious query strings',
-        'input' => "$baseurl/pages/edit.php?foo=<b>bad</b>&bar=2",
+        'input' => "http://test.localhost/pages/edit.php?foo=<b>bad</b>&bar=2",
         'expected' => false,
     ],
     [
         'name' => 'URL encoded param',
-        'input' => sprintf(
-            '%s/pages/edit.php?ref=1&redirect=%s',
-            $baseurl,
-            urlencode("http://irrelevant.localhost/some_page.php?foo=bar")
-        ),
+        'input' => 'http://test.localhost/pages/edit.php?ref=1&redirect='
+            . urlencode("http://irrelevant.localhost/some_page.php?foo=bar"),
         'expected' => true,
     ],
 ];
-foreach($use_cases as $uc)
-    {
-    if($uc['expected'] !== is_safe_url($uc['input']))
-        {
+foreach ($use_cases as $uc) {
+    if ($uc['expected'] !== is_safe_url($uc['input'])) {
         echo "Use case: {$uc['name']} - ";
         return false;
-        }
     }
+}
 
 // Tear down
 unset($use_cases);
