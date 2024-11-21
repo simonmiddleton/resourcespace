@@ -36,6 +36,11 @@ $use_cases = [
         'expected' => false,
     ],
     [
+        'name' => 'URL w/ port',
+        'input' => "http://test.localhost:8000/some_page.php",
+        'expected' => true,
+    ],
+    [
         'name' => 'URL w/ fragment',
         'input' => "http://test.localhost/some_page.php#myFragment",
         'expected' => true,
