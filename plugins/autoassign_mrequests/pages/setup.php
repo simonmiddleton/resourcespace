@@ -54,10 +54,15 @@ include '../../../include/header.php';
 
 // Get information to populate options later on
 $user_groups = get_usergroups();
+$user_groups = array_filter($user_groups, function($group){
+    if (in_array('R', explode(',', $group['permissions']))) {
+        return true;
+    }
+});
 $fields = ps_query("SELECT ref, title 
                     FROM resource_type_field 
                     ORDER BY title, name;", array(), "schema");
-$users = get_users();
+$users = get_users(implode(',', array_column($user_groups, 'ref')));
 
 // Get maps
 $rows = ps_query("SELECT id, user_id, user_group_id, field_id, field_value 
