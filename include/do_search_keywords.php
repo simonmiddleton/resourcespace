@@ -345,36 +345,16 @@
                             // ********************************************************************************
                             //                                                                 Handle wildcards
                             // ********************************************************************************
-
-                            # Handle wildcards
-                            $wildcards = array();
-                            if (strpos($keyword, "*") !== false || $wildcard_always_applied)
-                                {
-                                if ($wildcard_always_applied && strpos($keyword, "*") === false)
-                                    {
+                            $wildcards = false;
+                            if (strpos($keyword, "*") !== false || $wildcard_always_applied) {
+                                if ($wildcard_always_applied && strpos($keyword, "*") === false) {
                                     # Suffix asterisk if none supplied and using $wildcard_always_applied mode.
                                     $keyword = $keyword . "*";
-                                    }
-
-                                # Keyword contains a wildcard. Expand.
-                                global $wildcard_expand_limit;
-
-                                $wildcard_sql = new PreparedStatementQuery ();
-                                $wildcard_sql->sql = 
-                                    "SELECT * FROM (SELECT ref value 
-                                        FROM keyword 
-                                        WHERE keyword LIKE ? 
-                                        ORDER BY hit_count DESC";
-                                if(isset($wildcard_expand_limit) && $wildcard_expand_limit>0)
-                                    {
-                                    $wildcard_sql->sql .= " LIMIT $wildcard_expand_limit ";
-                                    }
-                                $wildcard_sql->sql .= ") AS wildcard";
-                                $wildcard_sql->parameters = ["s", str_replace("*", "%", $keyword)];
-                                $wildcards = ps_array($wildcard_sql->sql,$wildcard_sql->parameters);
+                                }
+                                $wildcards = true;
                             }
 
-                            $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
+                            $keyref = resolve_keyword(str_replace('*', '', $keyword), false, true, !$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
                             if ($keyref === false)
                                 {
                                 if($stemming)
@@ -434,7 +414,7 @@
                                     }
                                 }
 
-                            if ($keyref === false && !$omit && !$empty && count($wildcards) == 0 && !$field_short_name_specified && !$canskip)
+                            if ($keyref === false && !$omit && !$empty && !$wildcards && !$field_short_name_specified && !$canskip)
                                 {
                                 // ********************************************************************************
                                 //                                                                     No wildcards
@@ -516,21 +496,6 @@
                                             }
                                         }
                                     }
-
-                                # Merge wildcard expansion with related keywords
-                                if (isset($wildcard_sql) && count($wildcards)>0) 
-                                    {
-                                    if (count($wildcards) > SYSTEM_DATABASE_IDS_CHUNK_SIZE)
-                                        {
-                                        $relatedsql->sql .= " OR nk[union_index].keyword IN (" . $wildcard_sql->sql . ")";
-                                        $relatedsql->parameters = array_merge($relatedsql->parameters,$wildcard_sql->parameters);
-                                        }
-                                    else
-                                        {
-                                        $relatedsql->sql .= " OR nk[union_index].keyword IN (" . ps_param_insert(count($wildcards)) . ")";
-                                        $relatedsql->parameters = array_merge($relatedsql->parameters,ps_param_fill($wildcards,'s'));
-                                        }
-                                    }
                                 if (count($related) > 0)
                                     {
                                     $relatedsql->sql .= " OR (nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
@@ -575,7 +540,11 @@
 
                                     if (!empty($sql_exclude_fields))
                                         {
-                                        $union_restriction_clause->sql .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE resource_type_field IN (" . ps_param_insert(count($sql_exclude_fields)) .  "))";
+                                        if ($wildcards) {
+                                            $union_restriction_clause->sql = " AND resource_type_field NOT IN (" . ps_param_insert(count($sql_exclude_fields)) .  ")";
+                                        } else {
+                                            $union_restriction_clause->sql .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE resource_type_field IN (" . ps_param_insert(count($sql_exclude_fields)) .  "))";
+                                        }
                                         $union_restriction_clause->parameters = array_merge($union_restriction_clause->parameters,ps_param_fill($sql_exclude_fields,"i"));
 
                                         $skipfields = explode(",",str_replace(array("'","\""),"",$sql_exclude_fields));
@@ -583,14 +552,22 @@
 
                                     if (count($hidden_indexed_fields) > 0)
                                         {
-                                        $union_restriction_clause->sql .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" .  ps_param_insert(count($hidden_indexed_fields)) . "))";
+                                        if ($wildcards) {
+                                            $union_restriction_clause->sql = " AND resource_type_field NOT IN (" . ps_param_insert(count($hidden_indexed_fields)) .  ")";
+                                        } else {
+                                            $union_restriction_clause->sql .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" .  ps_param_insert(count($hidden_indexed_fields)) . "))";
+                                        }
                                         $union_restriction_clause->parameters = array_merge($union_restriction_clause->parameters,ps_param_fill($hidden_indexed_fields,"i"));
                                         $skipfields = array_merge($skipfields,$hidden_indexed_fields);
                                         }
                                     if (isset($search_field_restrict) && $search_field_restrict!="")
                                         {
                                         // Search is looking for a keyword in a specified field
-                                        $union_restriction_clause->sql .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE node.resource_type_field = ?)";
+                                        if ($wildcards) {
+                                            $union_restriction_clause->sql .= " AND resource_type_field IN (" . ps_param_insert(count($sql_exclude_fields)) .  ")";
+                                        } else {
+                                            $union_restriction_clause->sql .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE node.resource_type_field = ?)";
+                                        }
                                         $union_restriction_clause->parameters = array_merge($union_restriction_clause->parameters,["i",$search_field_restrict]);
                                         }
                                     if ($empty)  // we are dealing with a special search checking if a field is empty
@@ -626,6 +603,25 @@
                                         $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
                                         $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
                                         $sql_keyword_union_or[]= false;
+                                        }
+                                    elseif ($wildcards)
+                                        {
+                                        // Wildcard match - use fulltext search
+                                        $union = new PreparedStatementQuery();
+                                        $union->sql = " SELECT resource, [bit_or_condition] hit_count AS score
+                                                          FROM resource_node rn[union_index]
+                                                         WHERE rn[union_index].node IN
+                                                               (SELECT ref
+                                                                  FROM `node`
+                                                                 WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE) " .
+                                                                 $union_restriction_clause->sql . "
+                                                                ) GROUP BY resource ";
+
+                                        $union->parameters = array_merge(["s",$keyword], $union_restriction_clause->parameters);
+                                        $sql_keyword_union[] = $union;
+                                        $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                                        $sql_keyword_union_or[] = "";
+                                        $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
                                         }
                                     else  // we are dealing with a standard keyword match
                                         {
