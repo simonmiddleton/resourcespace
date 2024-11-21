@@ -54,23 +54,6 @@ ob_start();
             flex-direction: column;
             height: 100vh;
         }
-
-        header {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 1em;
-            position: fixed;
-            width: 100%;
-            z-index: 10;
-        }
-
-        header {
-            top: 0;
-        }
-        h1 {
-            text-align: center;
-        }
        .content {
             margin-top: 60px; /* Offset for header */
             margin-bottom: 60px; /* Offset for footer */
@@ -99,20 +82,35 @@ ob_start();
         .slide.active {
             opacity: 1;
         }
+        .fas {
+            color: #888;
+            margin:auto 2px;
+            float:left;
+            padding: 4px 5px;
+            border-radius: 3px;
+            -moz-border-radius: 3px;
+        }
+        .fas:hover {
+	        color:#585858;
+	    }
+
         .embedslideshow_text {
             margin-top: 10px;
             margin-left: 10px;
         }
         .slide-page-button-style {
             width: 60px;
-            height: 40px;
+            height: 30px;
             text-align: center;
-            font-size: 12px;
-            border: 1px solid #ccc;
+            font-size: 16px;
+            border: 1px solid #666;
             border-radius: 5px;
             background-color: #f0f0f0;
             cursor: pointer;
         }
+        .slide-page-button-style:hover {
+	        color:#666;
+	    }
         .slide-page-input-active {
             background-color: white;
             border: 1px solid #999;
@@ -123,11 +121,6 @@ ob_start();
 
 </head>
 <body>
-<!-- Header -->
-<header>
-    <h1>Slideshow</h1>
-</header>
-
 <!-- Main Content -->
 <main class="content">
     <div class="slideshow">
@@ -167,7 +160,7 @@ ob_start();
         $preview_path .= "&k=" . $k;
     ?>
     <!-- Markup for current resource START -->
-    <div class="slide" style="background-image: url(<?php echo escape($preview_path); ?>);">
+    <div class="slide" style="background-image: url(<?php echo escape($preview_path); ?>);" onClick="showNextSlide();return false;">
 
     <?php 
         global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;
@@ -177,7 +170,7 @@ ob_start();
             if($resource_textdata !="") 
                 {
                 ?>
-                <div class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo $resource_textdata;?></div>
+                <div class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo escape($resource_textdata);?></div>
                 <?php
                 }       
             }
@@ -194,17 +187,21 @@ ob_start();
     </div>
 </main>
 <!-- Slideshow navigation control markup START -->
+<div style="vertical-align:middle;">
 <ul>   
-    <li id="slide-go-start" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('start');return false;"><i class="fas fa-step-backward"></i>&nbsp;</li>
-    <li id="slide-go-prev" style="cursor: pointer;display: inline-block;" onClick="showPrevSlide();return false;"><i class="fas fa-backward"></i>&nbsp;</li>
-    <li id="slide-pause" style="cursor: pointer;display: inline-block;" onClick="pauseSlideShow();return false;"><i class="fas fa-pause"></i>&nbsp;</li>
-    <li id="slide-play" style="cursor: pointer;display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i>&nbsp;</li>
-    <li id="slide-go-next" style="cursor: pointer;display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i>&nbsp;</li>
-    <li id="slide-go-end" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i>&nbsp;</li>
+    <li id="slide-go-start" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('start');return false;"><i class="fas fa-step-backward"></i></li>
+    <li id="slide-go-prev" style="cursor: pointer;display: inline-block;" onClick="showPrevSlide();return false;"><i class="fas fa-backward"></i></li>
+    <li id="slide-pause" style="cursor: pointer;display: inline-block;" onClick="pauseSlideShow();return false;"><i class="fas fa-pause"></i></li>
+    <li id="slide-play" style="cursor: pointer;display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i></li>
+    <li id="slide-go-next" style="cursor: pointer;display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i></li>
+    <li id="slide-go-end" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i></li>
     <li id="slide-go-atpage" style="cursor: pointer;display: inline-block;">
-        <span>&nbsp;<input type="number" id="slide-page-number" class="slide-page-button-style" placeholder="   JUMP"/></span>&nbsp;
+        <span>&nbsp;<input type="number" id="slide-page-number" class="slide-page-button-style"/></span>
+        &nbsp;&sol;&nbsp;
+        <span id="slide-page-count"></span>
     </li>
 </ul>
+</div>
 <!-- Slideshow navigation control markup END -->
 
 <!-- JavaScript for slideshow -->
@@ -215,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Event listener for focus - changes input to editable mode
     page_input.addEventListener("focus", function() {
         page_input.classList.add("input-active");
+        page_input.value = ""; 
         page_input.placeholder = ""; // Clear placeholder when editing
     });
 
@@ -224,13 +222,9 @@ document.addEventListener("DOMContentLoaded", function() {
             page_input.classList.remove("input-active");
             page_input.classList.add("button-style");
             page_input.placeholder = page_input.value; // Set entered number as placeholder
-        } else {
-            page_input.placeholder = "   JUMP"; // Reset placeholder if no input
-        }
+        } 
         if (page_input.value > 0 && page_input.value <= slides.length) {
             showSlidePage(page_input.value);
-            page_input.value = ""; // Reset value and placeholder after jump
-            page_input.placeholder = "   JUMP"; 
         }
     });
 
@@ -254,6 +248,7 @@ function showNextSlide() {
     // Move to the next slide, or back to the first one if at the end
     currentSlide = (currentSlide + 1) % slides.length;
     slides[currentSlide].classList.add('active');
+    updatePageNumber(currentSlide);
 }
 
 function showPrevSlide() {
@@ -265,6 +260,7 @@ function showPrevSlide() {
         currentSlide = slides.length - 1;
     }
     slides[currentSlide].classList.add('active');
+    updatePageNumber(currentSlide);
 }
 
 function showSlidePage(pageRequest) {
@@ -284,6 +280,7 @@ function showSlidePage(pageRequest) {
     // Show requested slide and then restart the slideshow
     slides[currentSlide].classList.add('active');
     slideTimer = setInterval(showNextSlide, slideTransition);
+    updatePageNumber(currentSlide);
 }
 
 function pauseSlideShow() {
@@ -299,8 +296,17 @@ function playSlideShow() {
     slideTimer = setInterval(showNextSlide, slideTransition);
 }
 
+function updatePageNumber(slidePageNumber) {
+    const slidePageElement = document.getElementById("slide-page-number");
+    slidePageElement.value = slidePageNumber + 1; 
+    slidePageElement.placeholder = slidePageNumber + 1;
+}
+// Display number of pages in slideshow
+document.getElementById('slide-page-count').textContent = slides.length;
+
 // Initialize slideshow by displaying the first image
 slides[currentSlide].classList.add('active');
+updatePageNumber(currentSlide);
 
 // Set interval for changing slides
 slideTimer = setInterval(showNextSlide, slideTransition); 
