@@ -1814,9 +1814,11 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     }
                 // Add any onchange code
                 if($fields[$n]["onchange_macro"]!="") {
-                    $val = implode(',',array_column(get_nodes_by_refs($resource_add_nodes ?? $resulting_nodes_for_log),"name"));
+                    $val = implode(
+                        ',',
+                        array_column(get_nodes_by_refs($resource_add_nodes ?? $resulting_nodes_for_log),"name")
+                    );
                     $macro_resource_id=$ref;
-                    //$val = implode(",",$updated_resources[$ref][$fields[$n]['ref']]);
                     eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
                 }
