@@ -485,6 +485,9 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'mysqli' => 'mysqli_init',
 ];
 
+const WINDOWS_SHELL_REDIRECT = '-w';
+const LINUX_SHELL_REDIRECT   = '>';
+
 // Chunking a list of IDs (with the highest ID length) in batches of this size should be well within the default max_allowed_packet size
 const SYSTEM_DATABASE_IDS_CHUNK_SIZE = 500;
 
