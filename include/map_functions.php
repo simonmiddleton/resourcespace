@@ -790,9 +790,6 @@ function get_geolibraries()
     <!--Leaflet Control Geocoder 1.10.0 plugin files-->
     <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-control-geocoder-1.10.0/dist/Control.Geocoder.css"/>
     <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-control-geocoder-1.10.0/dist/Control.Geocoder.min.js"></script>
-
-    <!--Polyfill for Internet Explorer and Edge browser compatibility-->
-    <!--<script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces5%2Ces6%2Ces2017%2Cdefault%2Ces2018%2Ces7"></script>-->
     <?php
     }
 

@@ -17,7 +17,7 @@ if ($access!=0 || !$edit_access)
 set_processing_message($lang["openai_image_edit__saving_alternative"]);
 
 // Extract the base64-encoded image data
-$imageData = $_POST['imageData'];
+$imageData = getval('imageData','');
 // Remove the data URL scheme part (e.g., 'data:image/jpeg;base64,')
 $imageData = str_replace('data:image/jpeg;base64,', '', $imageData);
 $imageData = str_replace('data:image/png;base64,', '', $imageData);
@@ -29,7 +29,7 @@ $imageData = str_replace(' ', '+', $imageData);
 // Decode the base64-encoded image data
 $imageData = base64_decode($imageData);
 
-$imageType = $_POST['imageType'];
+$imageType = getval('imageType','');
 $extension = explode("/",$imageType)[1];
 
 $alt=add_alternative_file($ref,$lang["openai_image_edit__filename"] . " (" . $username . ", " . strtoupper($extension). ")","",$imageType,$extension,strlen($imageData));

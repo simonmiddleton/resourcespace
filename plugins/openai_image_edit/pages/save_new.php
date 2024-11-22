@@ -15,7 +15,7 @@ if ($access!=0 || !$edit_access || !checkperm("c"))
     }
 
 // Extract the base64-encoded image data
-$imageData = $_POST['imageData'];
+$imageData = getval('imageData','');
 // Remove the data URL scheme part (e.g., 'data:image/jpeg;base64,')
 $imageData = str_replace('data:image/jpeg;base64,', '', $imageData);
 $imageData = str_replace('data:image/png;base64,', '', $imageData);
@@ -27,7 +27,7 @@ $imageData = str_replace(' ', '+', $imageData);
 // Decode the base64-encoded image data
 $imageData = base64_decode($imageData);
 
-$imageType = $_POST['imageType'];
+$imageType = getval('imageType','');
 $extension = explode("/",$imageType)[1];
 
 // Create resource

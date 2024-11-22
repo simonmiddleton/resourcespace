@@ -37,14 +37,15 @@ function curlprogress($resource,$download_size, $downloaded, $upload_size, $uplo
             }
         }
     }
-
+    
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
 
     set_processing_message($lang["openai_image_edit__preparing_images"]);
 
-    $maskData = $_POST['mask'];    // Base64 encoded mask from the frontend
-    $mode = $_POST['mode']; 
-    $prompt = isset($_POST['prompt']) ? $_POST['prompt'] : '';
+    $maskData = getval('mask','');    // Base64 encoded mask from the frontend
+    $mode = getval('mode',''); 
+    $prompt = getval('prompt','');
 
     // Decode the mask data from base64
     list($type, $maskData) = explode(';', $maskData);
@@ -267,27 +268,27 @@ include "../../../include/header.php";
 <div id="tools">
 <label for="editMode"><?php echo escape($lang["openai_image_edit__mode"]) ?></label><br>
 <select id="editMode">
-    <option value="edit"><?php echo escape($lang["openai_image_edit__mode_edit"]) ?></option>
-    <option value="variation"><?php echo escape($lang["openai_image_edit__mode_variation"]) ?></option>
-    <option value="generate"><?php echo escape($lang["openai_image_edit__mode_generate"]) ?></option>
-    <option value="white"><?php echo escape($lang["openai_image_edit__mode_white"]) ?></option>
-    <option value="black"><?php echo escape($lang["openai_image_edit__mode_black"]) ?></option>
-    <option value="clone"><?php echo escape($lang["openai_image_edit__mode_clone"]) ?></option>
+    <option value="edit"><?php echo escape($lang["openai_image_edit__mode_edit"]); ?></option>
+    <option value="variation"><?php echo escape($lang["openai_image_edit__mode_variation"]); ?></option>
+    <option value="generate"><?php echo escape($lang["openai_image_edit__mode_generate"]); ?></option>
+    <option value="white"><?php echo escape($lang["openai_image_edit__mode_white"]); ?></option>
+    <option value="black"><?php echo escape($lang["openai_image_edit__mode_black"]); ?></option>
+    <option value="clone"><?php echo escape($lang["openai_image_edit__mode_clone"]); ?></option>
 </select>
 <br><br>
-<label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]) ?></label><br>
+<label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]); ?></label><br>
 <input type="range" id="penSize" min="10" max="200" value="75">
 <br><br>
-<label for="prompt"><?php echo escape($lang["openai_image_edit__prompt"]) ?></label><br>
+<label for="prompt"><?php echo escape($lang["openai_image_edit__prompt"]); ?></label><br>
 <textarea id="prompt" rows="5" required placeholder="Prompt for regeneration">Complete image as appropriate</textarea>
 <br>
-<button id="clearBtn" onclick="window.location.reload();"><?php echo escape($lang["openai_image_edit__reset"]) ?></button>
-<button id="submitBtn"><?php echo escape($lang["openai_image_edit__generate"]) ?></button>
+<button id="clearBtn" onclick="window.location.reload();"><?php echo escape($lang["openai_image_edit__reset"]); ?></button>
+<button id="submitBtn"><?php echo escape($lang["openai_image_edit__generate"]); ?></button>
 <br><br><br>
 
 
 <div id="downloadOptions" style="visibility: hidden;">
-<label for="downloadType"><?php echo escape($lang["openai_image_edit__exportoptions"]) ?></label><br>
+<label for="downloadType"><?php echo escape($lang["openai_image_edit__exportoptions"]); ?></label><br>
 <select id="downloadType">
     <option value="image/jpeg">JPEG</option>
     <option value="image/png">PNG</option>
@@ -295,13 +296,13 @@ include "../../../include/header.php";
 </select>
 <br>
 <select id="downloadAction">
-    <option value="download"><?php echo escape($lang["openai_image_edit__download"]) ?></option>
-<?php if ($edit_access) { ?><option value="alternative"><?php echo escape($lang["openai_image_edit__alternative"]) ?></option><?php } ?>
-<?php if (checkperm("c")) { ?><option value="new"><?php echo escape($lang["openai_image_edit__new"]) ?></option><?php } ?>
+    <option value="download"><?php echo escape($lang["openai_image_edit__download"]); ?></option>
+<?php if ($edit_access) { ?><option value="alternative"><?php echo escape($lang["openai_image_edit__alternative"]); ?></option><?php } ?>
+<?php if (checkperm("c")) { ?><option value="new"><?php echo escape($lang["openai_image_edit__new"]); ?></option><?php } ?>
 
 </select>
 <br>
-<button id="downloadBtn"><?php echo escape($lang["openai_image_edit__export"]) ?></button>
+<button id="downloadBtn"><?php echo escape($lang["openai_image_edit__export"]); ?></button>
 </div>
 
 </div>
@@ -309,10 +310,10 @@ include "../../../include/header.php";
 
 <script>
 CentralSpaceShowProcessing();
-submit_url='../pages/edit.php?ref=<?php echo $ref ?>';
-alternative_url='../pages/save_alternative.php?ref=<?php echo $ref ?>';
-save_new_url='../pages/save_new.php?ref=<?php echo $ref ?>';
-view_url='<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $ref ?>';
+submit_url='<?php echo generateURL($baseurl . "/plugins/openai_image_edit/pages/edit.php",[],["ref"=>$ref]); ?>';
+alternative_url='<?php echo generateURL($baseurl . "/plugins/openai_image_edit/pages/save_alternative.php",[],["ref"=>$ref]); ?>';
+save_new_url='<?php echo generateURL($baseurl . "/plugins/openai_image_edit/pages/save_new.php",[] ,["ref"=>$ref]); ?>';
+view_url='<?php echo generateURL($baseurl . "/pages/view.php",[],["ref"=>$ref]); ?>';
 view_new_url='<?php echo $baseurl ?>/pages/view.php?ref=';
 csrf_pair={<?php echo generateAjaxToken("openai_image_edit"); ?>};
 defaultLoadingMessage=<?php echo json_encode($lang["openai_image_edit__preparing_images"]) ?>;

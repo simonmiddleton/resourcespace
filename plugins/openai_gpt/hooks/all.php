@@ -62,7 +62,7 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
                 {
                 if($field["ref"]!=$ref) // Don't show itself as an option
                     {?>
-                    <option value="<?php echo (int)$field["ref"]; ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo escape($lang["field"]. ": " . i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="") ? "" : escape((string) $field["name"]))  . ")" ?></option>
+                    <option value="<?php echo (int)$field["ref"]; ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo escape($lang["field"]. ": " . i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="") ? "" : escape((string) $field["name"]))  . ")"; ?></option>
                     <?php
                     }
                 }
@@ -77,7 +77,7 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         ?>
         <div class="Question" >
             <label><?php echo escape((string) $column_detail[0]); ?></label>
-            <textarea class="stdwidth" rows="3" id="field_edit_<?php echo escape((string) $column_detail[0]); ?>" name="<?php echo escape((string) $column); ?>"><?php echo escape((string) $currentvalue)?></textarea>
+            <textarea class="stdwidth" rows="3" id="field_edit_<?php echo escape((string) $column_detail[0]); ?>" name="<?php echo escape((string) $column); ?>"><?php echo escape((string) $currentvalue); ?></textarea>
         </div>      
         <?php
         return true;
