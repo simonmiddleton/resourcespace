@@ -6,7 +6,7 @@ include_once dirname(__DIR__, 3) . '/include/boot.php';
 include_once RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
 if (!checkperm('a')) {
     http_response_code(401);
-    exit($lang['error-permissiondenied']);
+    exit(escape($lang['error-permissiondenied']));
 }
 
 $plugin_name = 'brand_guidelines';
