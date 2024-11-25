@@ -13,14 +13,12 @@ function perform_login($loginuser="",$loginpass="")
     $result = [];
     $result['valid'] = $valid = false;
 
-    if(trim($loginpass) != "")
-        {
-        $password = trim($loginpass); 
-        }
-    if(trim($loginuser) != "")
-        {
-        $username = trim($loginuser); 
-        }
+    if (trim($loginpass) != "") {
+        $password = trim($loginpass);
+    }
+    if(trim($loginuser) != "") {
+        $username = trim($loginuser);
+    }
 
     // If a special key is sent, which is a hash based on the username and scramble key, then allow a login
     // using this hash as the password. This is for the 'log in as this user' feature.
@@ -41,39 +39,34 @@ function perform_login($loginuser="",$loginpass="")
     }
 
     // User logs in
-    if($found_user_record && rs_password_verify($password, $user_data['password'], ['username' => $username]) && $password != "")
-        {
+    if ($found_user_record
+        && rs_password_verify($password, (string) $user_data['password'], ['username' => $username])
+        && $password != ""
+    ) {
         $password_hash_info = get_password_hash_info();
         $algo = $password_hash_info['algo'];
         $options = $password_hash_info['options'];
 
-        if(password_needs_rehash($user_data['password'], $algo, $options))
-            {
+        if (password_needs_rehash($user_data['password'], $algo, $options)) {
             $password_hash = rs_password_hash("RS{$username}{$password}");
-            if($password_hash === false)
-                {
+            if ($password_hash === false) {
                 trigger_error('Failed to rehash password!');
-                }
+            }
 
             ps_query("UPDATE user SET `password` = ? WHERE ref = ?", array("s",$password_hash,"i",$user_ref));
-            }
-        else
-            {
+        } else {
             $password_hash = $user_data['password'];
-            }
-
-        $valid = true;
         }
-    // An admin logs in as this user
-    elseif(
+        $valid = true;
+    } elseif (
+        // An admin logs in as this user
         $found_user_record
         && $impersonate_user
-        && rs_password_verify($password, $user_data['password'], ['username' => $username, 'impersonate_user' => true])
-    )
-        {
+        && rs_password_verify($password, (string) $user_data['password'], ['username' => $username, 'impersonate_user' => true])
+    ) {
         $password_hash = $user_data['password'];
         $valid = true;
-        }
+    }
 
     $ip = get_ip();
 
