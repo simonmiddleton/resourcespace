@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Yerine koyma oluştur (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Beyaz ile doldur';
 $lang["openai_image_edit__mode_black"]='Siyah ile doldur';
 $lang["openai_image_edit__creating_new_resource"]='Yeni kaynak oluşturma';
+$lang["openai_image_edit__mode_clone"]='Klon doldur';

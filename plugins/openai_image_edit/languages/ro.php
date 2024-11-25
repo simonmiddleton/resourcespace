@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Generați înlocuire (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Umpleți cu alb';
 $lang["openai_image_edit__mode_black"]='Umpleți cu negru';
 $lang["openai_image_edit__creating_new_resource"]='Crearea unei noi resurse';
+$lang["openai_image_edit__mode_clone"]='Umplere clonă';

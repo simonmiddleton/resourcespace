@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='متبادل تیار کریں (DALL-
 $lang["openai_image_edit__mode_white"]='سفید سے بھر دیں';
 $lang["openai_image_edit__mode_black"]='سیاہ سے بھرنا';
 $lang["openai_image_edit__creating_new_resource"]='نیا وسائل بنانا';
+$lang["openai_image_edit__mode_clone"]='کلون بھرنا';

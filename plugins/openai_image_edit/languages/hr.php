@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Generiraj zamjenu (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Ispuni bijelom';
 $lang["openai_image_edit__mode_black"]='Ispuni crnom';
 $lang["openai_image_edit__creating_new_resource"]='Kreiranje novog resursa';
+$lang["openai_image_edit__mode_clone"]='Kloniraj ispunu';

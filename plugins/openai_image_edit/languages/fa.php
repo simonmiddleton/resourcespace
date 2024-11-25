@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='تولید جایگزین (DALL-E 3)'
 $lang["openai_image_edit__mode_white"]='با سفید پر کنید';
 $lang["openai_image_edit__mode_black"]='با سیاه پر کن';
 $lang["openai_image_edit__creating_new_resource"]='ایجاد منبع جدید';
+$lang["openai_image_edit__mode_clone"]='کپی پر کردن';

@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='ਬਦਲਾਅ ਪੈਦਾ ਕਰ�
 $lang["openai_image_edit__mode_white"]='ਸਫੇਦ ਨਾਲ ਭਰੋ';
 $lang["openai_image_edit__mode_black"]='ਕਾਲੇ ਨਾਲ ਭਰੋ';
 $lang["openai_image_edit__creating_new_resource"]='ਨਵਾਂ ਸਰੋਤ ਬਣਾਉਣਾ';
+$lang["openai_image_edit__mode_clone"]='ਕਲੋਨ ਭਰੋ';

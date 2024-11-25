@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Generer erstatning (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Udfyld med hvid';
 $lang["openai_image_edit__mode_black"]='Udfyld med sort';
 $lang["openai_image_edit__creating_new_resource"]='Oprettelse af ny ressource';
+$lang["openai_image_edit__mode_clone"]='Klon udfyld';

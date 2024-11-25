@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='إنشاء بديل (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='املأ بالأبيض';
 $lang["openai_image_edit__mode_black"]='املأ بالأسود';
 $lang["openai_image_edit__creating_new_resource"]='إنشاء مورد جديد';
+$lang["openai_image_edit__mode_clone"]='استنساخ التعبئة';

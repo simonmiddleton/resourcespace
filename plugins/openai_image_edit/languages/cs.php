@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Vytvořit náhradu (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Vyplnit bílou';
 $lang["openai_image_edit__mode_black"]='Vyplnit černou';
 $lang["openai_image_edit__creating_new_resource"]='Vytváření nového zdroje';
+$lang["openai_image_edit__mode_clone"]='Klonovat vyplnění';

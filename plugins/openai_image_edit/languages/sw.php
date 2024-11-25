@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Tengeneza mbadala (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Jaza na nyeupe';
 $lang["openai_image_edit__mode_black"]='Jaza na nyeusi';
 $lang["openai_image_edit__creating_new_resource"]='Kuunda rasilimali mpya';
+$lang["openai_image_edit__mode_clone"]='Clone jaza';

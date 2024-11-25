@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Сгенерировать замен
 $lang["openai_image_edit__mode_white"]='Заполнить белым';
 $lang["openai_image_edit__mode_black"]='Заполнить черным';
 $lang["openai_image_edit__creating_new_resource"]='Создание нового ресурса';
+$lang["openai_image_edit__mode_clone"]='Клонировать заполнение';

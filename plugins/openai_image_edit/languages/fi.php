@@ -25,3 +25,4 @@ $lang["openai_image_edit__mode_generate"]='Tuota korvaus (DALL-E 3)';
 $lang["openai_image_edit__mode_white"]='Täytä valkoisella';
 $lang["openai_image_edit__mode_black"]='Täytä mustalla';
 $lang["openai_image_edit__creating_new_resource"]='Uuden resurssin luominen';
+$lang["openai_image_edit__mode_clone"]='Kloona täyttö';
