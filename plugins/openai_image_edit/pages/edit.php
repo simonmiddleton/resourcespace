@@ -249,7 +249,7 @@ include "../../../include/header.php";
     renderBreadcrumbs([
         [
             "title" => $lang["backtoview"],
-            "href"  => $baseurl_short . "pages/view.php?ref=" . $ref
+            "href"  => generateURL($baseurl_short . "pages/view.php", ["ref" => $ref])
         ], 
         [
             "title" => $lang["openai_image_edit__edit_with_ai"],
@@ -258,7 +258,7 @@ include "../../../include/header.php";
     ]);
     ?>
 </div>
-<img id="image" src="get_png.php?ref=<?php echo $ref ?>" alt="" hidden>
+<img id="image" src="get_png.php?ref=<?php echo (int) $ref ?>" alt="" hidden>
 <div id="canvas-container" class="canvas-container" style="position: relative;visibility:hidden;">
     <canvas id="canvas"></canvas>
     <canvas id="overlayCanvas" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
