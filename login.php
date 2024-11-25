@@ -210,7 +210,7 @@ if (!hook("replaceloginform")) {
         <?php }?>
 
         <div class="Question">
-            <label for="username"><?php echo escape($lang["username"]); ?> </label>
+            <label for="username"><?php echo escape($lang["email"] . " / " . $lang["username"]); ?> </label>
             <input type="text" name="username" id="username" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?> value="<?php echo escape(getval("username", "")); ?>"/>
             <div class="clearerleft"> </div>
         </div>
