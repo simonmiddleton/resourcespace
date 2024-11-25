@@ -181,7 +181,7 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
     global $rw2_thumb_extract;
     global $raf_thumb_extract;
     global $arw_thumb_extract;
-    $shell_redirect = $GLOBALS["config_windows"] ? "-w":">";
+
     if (
         ( 
             ($extension == "cr2" && $cr2_thumb_extract) || 
