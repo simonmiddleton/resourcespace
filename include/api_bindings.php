@@ -1597,7 +1597,7 @@ function api_checkperm($perm)
  * Expose {@see get_resource_access} to the API
  * 
 * @param int $resource The reference ID of the resource.
-* @return false|int The access level for the resource, or false if an number was not supplied.
+* @return false|int The access level for the resource, or false if a number was not supplied.
 */
 function api_get_resource_access($resource)
     {
