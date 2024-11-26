@@ -110,6 +110,7 @@ if(getval('loginas', '') != '')
     // userkey and CSRF tokens still need to be placed in post array as perform_login() references these directly
     $_POST = [];
     $_POST['username'] = $user['username'];
+    $_POST['password'] = $user['password'];
     $_POST['userkey'] = hash_hmac("sha256", "login_as_user" . $user["username"] . date("Ymd"), $scramble_key, true);
     $_POST[$CSRF_token_identifier] = generateCSRFToken($usersession, 'autologin');
 
