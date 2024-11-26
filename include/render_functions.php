@@ -944,6 +944,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     // use query strings here as this is used to render elements and sometimes it
     // can depend on other params
     $modal  = ('true' == getval('modal', ''));
+    $access  = getval('access', '');
     $sort = validate_sort_value($sort) ? mb_strtoupper($sort) : 'DESC';
     ?>
     <select id="sort_order_selection" onChange="UpdateResultOrder();" aria-label="<?php echo escape($lang["sortorder"]) ?>">
@@ -974,14 +975,15 @@ function render_sort_order(array $order_fields,$default_sort_order)
             }
 
         $option .= sprintf('
-                data-url="%spages/search.php?search=%s&amp;order_by=%s&amp;archive=%s&amp;k=%s&amp;restypes=%s"
+                data-url="%spages/search.php?search=%s&amp;order_by=%s&amp;archive=%s&amp;k=%s&amp;restypes=%s&amp;access=%s"
             ',
             $baseurl_short,
             urlencode($search),
             $name,
             urlencode($archive),
             urlencode($k),
-            urlencode($restypes)
+            urlencode($restypes),
+            urlencode($access)
         );
 
         $option .= '>';
