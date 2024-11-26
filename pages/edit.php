@@ -2107,10 +2107,9 @@ if (
 hook("beforeaccessselector");
 if (!hook("replaceaccessselector"))
 {
- if($ref<0 && $override_access_default!==false)
- {
-   $resource["access"]=$override_access_default;
-}
+    if (($ref<0 || ($upload_then_edit && $upload_review_mode)) && $override_access_default !== false) {
+        $resource["access"] = $override_access_default;
+    }
 
 if ($ref<0 && (($show_status_and_access_on_upload== false && $show_access_on_upload == false) || ($show_access_on_upload == false || ($show_access_on_upload == true && !eval($show_access_on_upload_perm)))))            # Upload template and the status and access fields are configured to be hidden on uploads.
    {?>
