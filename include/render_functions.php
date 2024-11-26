@@ -24,7 +24,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
     global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, 
         $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, 
-        $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
+        $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current, $DATE_FIELD_TYPES;
 
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
     $multiple=false;
@@ -413,6 +413,21 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                         {
                         console.debug("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
                         jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
+                        <?php 
+                        if ($forsearchbar) {
+                            if ($field['type'] == FIELD_TYPE_CATEGORY_TREE) { ?>
+                                jQuery('.search_tree_<?php echo $field['ref']; ?>_nodes').each(function(i, element){    
+                                    jQuery('#'+element.value+'_anchor').click();
+                                });
+                            <?php } elseif (in_array($field['type'], $DATE_FIELD_TYPES)) { ?>
+                                jQuery('#field_<?php echo $field['ref']; ?>-y').val('');
+                                jQuery('#field_<?php echo $field['ref']; ?>-m').val('');
+                                jQuery('#field_<?php echo $field['ref']; ?>-d').val('');
+                            <?php } else { ?>
+                                jQuery(idname<?php echo (int) $field['ref']; ?> + ' #field_<?php echo (int) $field['ref']; ?>').val('');
+                            <?php 
+                                }
+                        } ?>
                         });
 
                     // Adjust the border accordingly
