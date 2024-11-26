@@ -5,10 +5,9 @@
 * @uses debug() 
 * 
 * @param string  $file_path Physical path of the file to be scanned
-* 
 * @return string Returns SAFE for safe files or UNSAFE otherwise
 */
-function antivirus_scan($file_path)
+function antivirus_scan(string $file_path): string
     {
     global $lang, $antivirus_path, $antivirus_silent_options, $config_windows;
 
