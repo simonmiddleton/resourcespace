@@ -4,7 +4,7 @@ include '../../../include/authenticate.php';
 if(!checkperm('a'))
     {
     header('HTTP/1.1 401 Unauthorized');
-    exit($lang['error-permissiondenied']);
+    exit(escape($lang['error-permissiondenied']));
     }
 
 $plugin_name = 'antivirus';
@@ -43,9 +43,6 @@ $page_def[] = config_add_single_select(
 // Render setup page ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-if(isset($error))
-    {
-    echo "<div class=\"PageInformal\">{$error}</div>";
-    }
+render_top_page_error_style($error ?? '');
 config_gen_setup_html($page_def, $plugin_name, null, $lang['antivirus_configuration']);
 include '../../../include/footer.php';

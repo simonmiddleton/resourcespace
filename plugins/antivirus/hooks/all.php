@@ -1,7 +1,12 @@
 <?php
 function HookAntivirusAllAfterpluploadfile($resource_id, $file_extension)
     {
-    global $lang, $resource_deletion_state, $antivirus_action, $antivirus_quarantine_state;
+    global $lang, $antivirus_action, $antivirus_quarantine_state;
+
+    if(!isset($GLOBALS['antivirus_path']) || trim($GLOBALS['antivirus_path']) == '') {
+        debug("[antivirus][ERROR] The Antivirus path is not set up!");
+        return false;
+    }
 
     // This will show both as a styledalert and as a message in the log
     $response = array(
