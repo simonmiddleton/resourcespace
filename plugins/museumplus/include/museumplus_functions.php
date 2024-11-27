@@ -131,16 +131,18 @@ function do_http_request($url, $basic_auth, $content_type, $request_method, $dat
 */
 function mplus_get_connection_data()
     {
-    global $museumplus_host, $museumplus_host_api, $museumplus_api_user, $museumplus_api_pass;
+    global $museumplus_host, $museumplus_host_api, $museumplus_application, $museumplus_api_user, $museumplus_api_pass;
 
+    # Don't check $museumplus_application - this isn't used with the newer style M+ URLs.
     if(trim($museumplus_host) == '' || trim($museumplus_api_user) == '' || trim($museumplus_api_pass) == '')
         {
-        mplus_log_event('Missing MuseumPlus API configuration (host, application, API username or API password', array(), 'error');
+        mplus_log_event('Missing MuseumPlus API configuration (host, API username or API password', array(), 'error');
         return array();
         }
 
     return array(
-        'host'        => ($museumplus_host_api == '' ? $museumplus_host : $museumplus_host_api), // Use the separate API host config if set
+        'host'        => ($museumplus_host_api==''?$museumplus_host:$museumplus_host_api), // Use the separate API host config if set
+        'application' => $museumplus_application,
         'username'    => $museumplus_api_user,
         'password'    => $museumplus_api_pass);
     }
@@ -179,9 +181,10 @@ function mplus_notify(array $users, $message)
 */
 function mplus_generate_module_record_url(string $module, int $id)
     {
-    global $museumplus_host;
+    global $museumplus_host, $museumplus_application;
 
     $host = trim($museumplus_host, " \n\r\t\v\0/");
+    $application = trim($museumplus_application, " \n\r\t\v\0/");
     $module = trim($module, " \n\r\t\v\0/");
     $id = ($id > 0 ? $id : '');
 
@@ -190,10 +193,21 @@ function mplus_generate_module_record_url(string $module, int $id)
         return '';
         }
 
-    return sprintf('%s/v#!m/%s/%s',
-        $host,
-        escape($module),
-        escape($id));
+    if ($application != '')
+        {
+        return sprintf('%s/%s/v#!m/%s/%s',
+            $host,
+            $application,
+            escape($module),
+            escape($id));
+        }
+    else
+        {
+        return sprintf('%s/v#!m/%s/%s',
+            $host,
+            escape($module),
+            escape($id));
+        }
     }
 
 
