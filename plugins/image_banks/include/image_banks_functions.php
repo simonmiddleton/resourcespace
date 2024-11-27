@@ -91,8 +91,7 @@ function getProviders(array $loaded_providers): array
  */
 function validFileSource(string $file, Provider $provider): bool
     {
-    $download_endpoint = $provider->getAllowedDownloadEndpoint();
-    return mb_substr(realpath($file), 0, mb_strlen($download_endpoint)) === $download_endpoint;
+    return url_starts_with($provider->getAllowedDownloadEndpoint(), $file);
     }
 
 /**
