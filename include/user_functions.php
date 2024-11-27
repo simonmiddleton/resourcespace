@@ -718,6 +718,10 @@ function save_user($ref)
                          FROM user
                         WHERE ref <> ? AND ($conditions)";
         $c = ps_value($matchsql, array_merge($params, ["i",$ref], $typeparams), 0);
+        if ($c > 0 && checkperm("U")) {
+            // Return an ambiguous message if delegated user admin
+            return $lang["useralreadyexists"];
+        }
         switch ($c) {
             case 1:
                 return $lang["useralreadyexists"]; // An account with that username already exists
@@ -1041,12 +1045,12 @@ function auto_create_user_account($hash="")
 
     $newusername = make_username(getval("name",""),$user_email);
 
-    #check if account already exists
-    $check=ps_value("SELECT email value FROM user WHERE email = ?",["s",$user_email],"");
-    if ($check!="")
-        {
-        return $lang["useremailalreadyexists"];
-        }
+    // Check if account already exists
+    $emailmatches = ps_value("SELECT COUNT(*) value FROM user WHERE email = ?",["s",$user_email], 0);
+    if ($emailmatches > 0) {
+        // Return an ambiguous message if delegated user admin
+        return (checkperm("U") ? $lang["useralreadyexists"] : $lang["useremailalreadyexists"]);
+    }
 
     # Prepare to create the user.
     $password = make_password();
