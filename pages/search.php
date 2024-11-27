@@ -110,7 +110,7 @@ foreach($keywords as $keyword)
         }
 
     $resource_type_field = get_resource_type_field($resource_type_field);
-    $nodes = get_nodes($resource_type_field, null, $resource_type_field["type"]==FIELD_TYPE_CATEGORY_TREE);
+    $nodes = get_nodes($resource_type_field["ref"], null, $resource_type_field["type"]==FIELD_TYPE_CATEGORY_TREE);
     
     // Check if multiple nodes have been specified for an OR search
     $keywords_expanded=explode(';',$specific_field_search[1]);
