@@ -215,10 +215,10 @@ function consentmanager_get_consent($consent)
     {
     if (!consentmanager_check_read()) {return false;}
 
-    $consent=ps_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref= ?", ['i', $consent]);
+    $consent=ps_query("select ref,name,email,telephone,consent_usage,notes,expires,file from consent where ref= ?", ['i', $consent]);
     if (empty($consent)) {return false;}
-    $resources=ps_array("select distinct resource value from resource_consent where consent= ? order by resource", ['i', $consent]);
     $consent=$consent[0];
+    $resources=ps_array("select distinct resource value from resource_consent where consent= ? order by resource", ['i', $consent['ref']]);
     $consent["resources"]=$resources;
     return $consent;
     }
