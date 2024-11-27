@@ -6,7 +6,7 @@ include_once __DIR__ . "/../../include/plugin_functions.php";
 
 $active_plugins = ps_array('SELECT name value FROM plugins WHERE inst_version > 0',[]);
 
-$plugins_dir = dirname(__FILE__) . '/../../plugins/';
+$plugins_dir = __DIR__ . '/../../plugins/';
 
 foreach ($active_plugins as $plugin)
     {

@@ -7,7 +7,7 @@ function HookLicensemanagerViewCustompanels()
     if($k!=""){return false;}
 
     # Check if it's necessary to upgrade the database structure
-    include dirname(__FILE__) . "/../upgrade/upgrade.php";
+    include __DIR__ . "/../upgrade/upgrade.php";
 
     $licenses=ps_query("select license.ref,license.outbound,license.holder,license.license_usage,license.description,license.expires from license join resource_license on license.ref=resource_license.license where resource_license.resource=? order by ref", ['i', $ref]);
     ?>

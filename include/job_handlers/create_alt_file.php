@@ -15,7 +15,7 @@ e.g.
 
 */
 
-include_once dirname(__FILE__) . "/../image_processing.php";
+include_once __DIR__ . "/../image_processing.php";
 global $filename_field, $offline_job_prefixes;
 $jobsuccess = false;
 $job_cmd_ok = false;

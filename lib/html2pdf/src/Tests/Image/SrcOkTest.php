@@ -27,7 +27,7 @@ class SrcOkTest extends AbstractTest
     public function testCase()
     {
         $object = $this->getObject();
-        $object->writeHTML('Hello World <img src="'.dirname(__FILE__).'/res/logo.png" />');
+        $object->writeHTML('Hello World <img src="'.__DIR__.'/res/logo.png" />');
         $result = $object->output('test.pdf', 'S');
 
         $this->assertContains('PhpUnit Test', $result);

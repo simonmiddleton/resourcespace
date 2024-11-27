@@ -27,7 +27,7 @@ class ExamplesTest extends \PHPUnit_Framework_TestCase
      */
     protected function launchExample($example)
     {
-        $filename = dirname(dirname(dirname(__FILE__))).'/examples/'.$example.'.php';
+        $filename = dirname(dirname(__DIR__)).'/examples/'.$example.'.php';
         if (!is_file($filename)) {
             throw new \Exception('The filename of the example ['.$example.'] does not exist!');
         }
@@ -42,7 +42,7 @@ class ExamplesTest extends \PHPUnit_Framework_TestCase
         $content = $parts[0];
 
         // replace the good path
-        $content = str_replace('dirname(__FILE__)', "'$folder'", $content);
+        $content = str_replace('__DIR__', "'$folder'", $content);
 
         // add the class to use
         $content = 'use Spipu\Html2Pdf\Html2Pdf; '.$content;

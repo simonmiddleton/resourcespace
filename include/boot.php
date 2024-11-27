@@ -6,31 +6,31 @@
  */
 
 # Include the most commonly used functions
-include_once dirname(__FILE__) . '/definitions.php';
-include_once dirname(__FILE__) . '/version.php';
-include_once dirname(__FILE__) . '/general_functions.php';
-include_once dirname(__FILE__) . '/database_functions.php';
-include_once dirname(__FILE__) . '/search_functions.php';
-include_once dirname(__FILE__) . '/do_search.php';
-include_once dirname(__FILE__) . '/resource_functions.php';
-include_once dirname(__FILE__) . '/collections_functions.php';
-include_once dirname(__FILE__) . '/language_functions.php';
-include_once dirname(__FILE__) . '/message_functions.php';
-include_once dirname(__FILE__) . '/node_functions.php';
-include_once dirname(__FILE__) . '/encryption_functions.php';
-include_once dirname(__FILE__) . '/render_functions.php';
-include_once dirname(__FILE__) . '/user_functions.php';
-include_once dirname(__FILE__) . '/debug_functions.php';
-include_once dirname(__FILE__) . '/log_functions.php';
-include_once dirname(__FILE__) . '/file_functions.php';
-include_once dirname(__FILE__) . '/config_functions.php';
-include_once dirname(__FILE__) . '/plugin_functions.php';
-include_once dirname(__FILE__) . '/migration_functions.php';
-include_once dirname(__FILE__) . '/metadata_functions.php';
-include_once dirname(__FILE__) . '/job_functions.php';
-include_once dirname(__FILE__) . '/tab_functions.php';
-include_once dirname(__FILE__) . '/mime_types.php';
-include_once dirname(__FILE__) . '/CommandPlaceholderArg.php';
+include_once __DIR__ . '/definitions.php';
+include_once __DIR__ . '/version.php';
+include_once __DIR__ . '/general_functions.php';
+include_once __DIR__ . '/database_functions.php';
+include_once __DIR__ . '/search_functions.php';
+include_once __DIR__ . '/do_search.php';
+include_once __DIR__ . '/resource_functions.php';
+include_once __DIR__ . '/collections_functions.php';
+include_once __DIR__ . '/language_functions.php';
+include_once __DIR__ . '/message_functions.php';
+include_once __DIR__ . '/node_functions.php';
+include_once __DIR__ . '/encryption_functions.php';
+include_once __DIR__ . '/render_functions.php';
+include_once __DIR__ . '/user_functions.php';
+include_once __DIR__ . '/debug_functions.php';
+include_once __DIR__ . '/log_functions.php';
+include_once __DIR__ . '/file_functions.php';
+include_once __DIR__ . '/config_functions.php';
+include_once __DIR__ . '/plugin_functions.php';
+include_once __DIR__ . '/migration_functions.php';
+include_once __DIR__ . '/metadata_functions.php';
+include_once __DIR__ . '/job_functions.php';
+include_once __DIR__ . '/tab_functions.php';
+include_once __DIR__ . '/mime_types.php';
+include_once __DIR__ . '/CommandPlaceholderArg.php';
 
 # Switch on output buffering.
 ob_start(null,4096);
@@ -54,18 +54,18 @@ if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your
 
 # *** LOAD CONFIG ***
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
-if (file_exists(dirname(__FILE__)."/config.default.php"))
+if (file_exists(__DIR__."/config.default.php"))
     {
-    include dirname(__FILE__) . "/config.default.php";
+    include __DIR__ . "/config.default.php";
     }
-if (file_exists(dirname(__FILE__)."/config.deprecated.php"))
+if (file_exists(__DIR__."/config.deprecated.php"))
     {
-    include dirname(__FILE__) . "/config.deprecated.php";
+    include __DIR__ . "/config.deprecated.php";
     }
 
 # Load the real config
-if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
-include dirname(__FILE__)."/config.php";
+if (!file_exists(__DIR__."/config.php")) {header ("Location: pages/setup.php" );die(0);}
+include __DIR__."/config.php";
 
 // Set exception_ignore_args so that if $log_error_messages_url is set it receives all the necessary 
 // information to perform troubleshooting
@@ -337,11 +337,28 @@ if(!isset($language))
     $language = setLanguage();
     }
 
+// Disallow access to PHP running in the plugin folders unless the plugin is enabled
+$current_script = $_SERVER['SCRIPT_FILENAME'];
+$plugins_dirs = [realpath(__DIR__ . '/../plugins'),realpath($storagedir . '/plugins')]; // Check both possible plugin locations, base and filestore
+foreach ($plugins_dirs as $plugins_dir)
+    {
+    if (strpos($current_script, $plugins_dir) === 0) {
+        // Extract the plugin name from the path
+        $relative_path = str_replace($plugins_dir . DIRECTORY_SEPARATOR, '', $current_script);
+        $path_parts = explode(DIRECTORY_SEPARATOR, $relative_path);
+        $plugin_name = $path_parts[0] ?? null;
+
+        if (isset($plugin_name) && !empty($plugin_name) && !in_array($plugin_name, $plugins)) {
+                die("Error: Plugin " . escape($plugin_name) . " is not activated.");
+            }
+        }
+    }
+
 # Fix due to rename of US English language file
 if (isset($language) && $language=="us") {$language="en-US";}
 
 # Always include the english pack (in case items have not yet been translated)
-include dirname(__FILE__)."/../languages/en.php";
+include __DIR__."/../languages/en.php";
 if ($language!="en")
     {
     if (substr($language, 2, 1)!='-')
@@ -353,7 +370,7 @@ if ($language!="en")
     $GLOBALS["use_error_exception"] = true;
     try
         {
-        include dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+        include __DIR__."/../languages/" . safe_file_name($language) . ".php";
         }
     catch (Throwable $e)
         {
@@ -497,7 +514,7 @@ foreach($systemvars as $systemvar)
 hook("initialise");
 
 # Load the language specific stemming algorithm, if one exists
-$stemming_file=dirname(__FILE__) . "/../lib/stemming/" . safe_file_name($defaultlanguage) . ".php"; # Important - use the system default language NOT the user selected language, because the stemmer must use the system defaults when indexing for all users.
+$stemming_file=__DIR__ . "/../lib/stemming/" . safe_file_name($defaultlanguage) . ".php"; # Important - use the system default language NOT the user selected language, because the stemmer must use the system defaults when indexing for all users.
 if(file_exists($stemming_file))
     {
     include_once $stemming_file;

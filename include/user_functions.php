@@ -670,7 +670,7 @@ function save_user($ref)
 
         hook('on_delete_user', "", array($ref));
 
-        include_once dirname(__FILE__) ."/dash_functions.php";
+        include_once __DIR__ ."/dash_functions.php";
         empty_user_dash($ref);
 
         log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
@@ -1107,7 +1107,7 @@ function auto_create_user_account($hash="")
     // Create dash tiles for the new user
     if($home_dash)
         {
-        include_once dirname(__FILE__) . '/dash_functions.php';
+        include_once __DIR__ . '/dash_functions.php';
 
         create_new_user_dash($new);
         build_usergroup_dash($usergroup, $new);
@@ -1348,7 +1348,7 @@ function new_user($newuser, $usergroup = 0)
     #Create Default Dash for the new user
     if($home_dash)
         {
-        include_once dirname(__FILE__)."/dash_functions.php";
+        include_once __DIR__."/dash_functions.php";
         create_new_user_dash($newref);
         }
     
@@ -3155,8 +3155,8 @@ function get_languages_notify_users(array $languages = array())
     global $applicationname,$defaultlanguage;
     
     $language_strings_all   = array();
-    $lang_file_en           = dirname(__FILE__)."/../languages/en.php";
-    $lang_file_default      = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+    $lang_file_en           = __DIR__."/../languages/en.php";
+    $lang_file_default      = __DIR__."/../languages/" . safe_file_name($defaultlanguage) . ".php";
 
      // add en and default language lang array values - always need en as some lang arrays do not contain all strings
     include $lang_file_en;
@@ -3184,7 +3184,7 @@ function get_languages_notify_users(array $languages = array())
         include $lang_file_en;
         include $lang_file_default;
 
-        $lang_file = dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+        $lang_file = __DIR__."/../languages/" . safe_file_name($language) . ".php";
 
         if (file_exists($lang_file))
             {

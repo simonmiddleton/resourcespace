@@ -125,7 +125,7 @@ function load_plugins($plugins_dir)
     closedir($dirh);
     }
 
-load_plugins(dirname(__FILE__) . '/../../plugins/');
+load_plugins(__DIR__ . '/../../plugins/');
 if(!file_exists($storagedir . '/plugins/'))
     {
     mkdir($storagedir . '/plugins/');

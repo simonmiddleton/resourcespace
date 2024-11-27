@@ -1,7 +1,7 @@
 <?php
-include dirname(__FILE__) . '/../../include/boot.php';
-include dirname(__FILE__) . '/../../include/authenticate.php';
-include_once dirname(__FILE__) . '/../../include/node_functions.php';
+include __DIR__ . '/../../include/boot.php';
+include __DIR__ . '/../../include/authenticate.php';
+include_once __DIR__ . '/../../include/node_functions.php';
 
 /*
 This allows Asynchronous searches for nodes, either by: node ID or simply by searching for a name (fuzzy search)
@@ -33,7 +33,7 @@ $found_node_by_ref    = array();
 $current_node_pointer = 0;
 
 
-if(0 < $node && get_node($node, $found_node_by_ref))
+if($node > 0 && get_node($node, $found_node_by_ref))
     {
     $found_node_by_ref['name'] = i18n_get_translated($found_node_by_ref['name']);
 

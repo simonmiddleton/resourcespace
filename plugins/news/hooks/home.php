@@ -2,7 +2,7 @@
 function HookNewsHomeHomebeforepanels()
     {
     global $lang,$site_text,$baseurl;
-    include_once dirname(__FILE__)."/../inc/news_functions.php";
+    include_once __DIR__."/../inc/news_functions.php";
     $recent = 3;
     $news = get_news_headlines("",$recent);
     $results=count($news);

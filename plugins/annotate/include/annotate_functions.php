@@ -2,7 +2,7 @@
 
 use Montala\ResourceSpace\CommandPlaceholderArg;
 
-include_once dirname(__FILE__) . '/../../../lib/html2pdf/vendor/tecnickcom/tcpdf/tcpdf.php';
+include_once __DIR__ . '/../../../lib/html2pdf/vendor/tecnickcom/tcpdf/tcpdf.php';
 
 class MYPDF extends TCPDF {
         
@@ -80,7 +80,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
     global $contact_sheet_preview_size,$annotate_pdf_output_only_annotated,$lang,$userfullname,$view_title_field,$baseurl,$imagemagick_path,$imagemagick_colorspace,$previewpage,$annotate_font,$access;
     $date= date("m-d-Y h:i a");
     
-    include_once dirname(__FILE__) . '/../../../include/image_processing.php';
+    include_once __DIR__ . '/../../../include/image_processing.php';
 
     $pdfstoragepath=get_annotate_file_path($ref,true,"pdf");
     $jpgstoragepath=get_annotate_file_path($ref,true,"jpg");

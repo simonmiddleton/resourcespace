@@ -154,7 +154,7 @@ PHP files, you can use ``xgettext`` on the template cache instead.
 Create a script that forces the generation of the cache for all your
 templates. Here is a simple example to get you started::
 
-    $tplDir = dirname(__FILE__).'/templates';
+    $tplDir = __DIR__.'/templates';
     $tmpDir = '/tmp/cache/';
     $loader = new Twig_Loader_Filesystem($tplDir);
 

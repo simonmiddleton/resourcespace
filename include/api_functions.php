@@ -10,7 +10,7 @@
 global $iiif_enabled; 
 if($iiif_enabled)
     {
-    include_once dirname(__FILE__) . '/iiif_functions.php';
+    include_once __DIR__ . '/iiif_functions.php';
     }
 
 /**

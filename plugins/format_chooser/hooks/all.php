@@ -1,6 +1,6 @@
 <?php
 
-include_once dirname(__FILE__) . "/../include/utility.php";
+include_once __DIR__ . "/../include/utility.php";
 
 function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alternative = -1, $usage = -1, $usagecomment = "")
     {

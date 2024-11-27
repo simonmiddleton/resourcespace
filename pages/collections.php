@@ -1,10 +1,10 @@
 <?php
-include_once dirname(__FILE__)."/../include/boot.php";
+include_once __DIR__."/../include/boot.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include_once dirname(__FILE__)."/../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include_once __DIR__."/../include/authenticate.php";}
 if (checkperm("b")){exit($lang["error-permissiondenied"]);}
-include_once dirname(__FILE__)."/../include/research_functions.php";
+include_once __DIR__."/../include/research_functions.php";
 
 
 $sort            = getval('sort', 'ASC');

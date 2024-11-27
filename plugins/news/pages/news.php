@@ -4,10 +4,10 @@
  * @package ResourceSpace
  */
 
-include dirname(__FILE__)."/../../../include/boot.php";
+include __DIR__."/../../../include/boot.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";
-include_once dirname(__FILE__)."/../inc/news_functions.php";
+include __DIR__."/../../../include/authenticate.php";
+include_once __DIR__."/../inc/news_functions.php";
 
 global $baseurl;
 
@@ -86,7 +86,7 @@ if (!$newsdisplay)
     exit;
     }
     
-include dirname(__FILE__)."/../../../include/header.php";
+include __DIR__."/../../../include/header.php";
 
 ?>
  
@@ -109,4 +109,4 @@ include dirname(__FILE__)."/../../../include/header.php";
 </div>
 
 <?php
-include dirname(__FILE__)."/../../../include/footer.php";
+include __DIR__."/../../../include/footer.php";

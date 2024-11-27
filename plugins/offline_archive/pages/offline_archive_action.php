@@ -1,5 +1,5 @@
 <?php
-include dirname(__FILE__) . '/../../../include/boot.php';
+include __DIR__ . '/../../../include/boot.php';
 
 command_line_only();
 $errors = offline_archive_run_jobs(true);

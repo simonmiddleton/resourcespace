@@ -62,7 +62,7 @@ class BuiltInServer
         if (!is_null($docroot)) {
             $this->docroot = $docroot;
         } else {
-            $this->docroot = dirname(dirname(__FILE__)) . '/www/';
+            $this->docroot = dirname(__DIR__) . '/www/';
         }
 
         // Rationalize docroot
@@ -178,7 +178,7 @@ class BuiltInServer
      */
     public function setRouter($router)
     {
-        $file = dirname(dirname(__FILE__)) . '/tests/routers/' . $router . '.php';
+        $file = dirname(__DIR__) . '/tests/routers/' . $router . '.php';
         if (!file_exists($file)) {
             throw new \InvalidArgumentException('Unknown router "' . $router . '".');
         }

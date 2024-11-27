@@ -25,7 +25,7 @@ function oauth2client_php_autoload($className)
         // Maximum class file path depth in this project is 3.
         $classPath = array_slice($classPath, 0, 3);
     }
-    $filePath = dirname(__FILE__) . '/src/' . implode('/', $classPath) . '.php';
+    $filePath = __DIR__ . '/src/' . implode('/', $classPath) . '.php';
     if (file_exists($filePath)) {
         require_once $filePath;
     }

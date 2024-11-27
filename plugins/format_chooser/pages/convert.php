@@ -1,7 +1,7 @@
 <?php
 
 include '../../../include/boot.php';
-include_once dirname(__FILE__) . "/../include/utility.php";
+include_once __DIR__ . "/../include/utility.php";
 
 $k=getval("k","");
 $ref = getval('ref', 0, true);
@@ -17,7 +17,7 @@ $height = getval('height', 0, true);
 
 if('' == $k || !check_access_key($ref, $k)) //Check if available through external share
     {
-    include dirname(__FILE__) . '/../../../include/authenticate.php';
+    include __DIR__ . '/../../../include/authenticate.php';
     }
 
 // Permissions check

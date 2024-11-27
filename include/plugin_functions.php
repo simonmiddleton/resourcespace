@@ -177,7 +177,7 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
         {
         // Include relevant language file and use the translations instead, if set.
         if (!array_key_exists($language,$languages)) {exit("Invalid language");} // Prevent path traversal
-        $plugin_lang_file=dirname(__FILE__) . "/../plugins/" . $plugin_yaml["name"] . "/languages/" . $language . ".php";
+        $plugin_lang_file=__DIR__ . "/../plugins/" . $plugin_yaml["name"] . "/languages/" . $language . ".php";
         if (file_exists($plugin_lang_file))
             {
             include_once $plugin_lang_file;
@@ -1590,7 +1590,7 @@ function get_plugin_path($plugin,$url=false)
     $plugin=safe_file_name($plugin);
 
     # Standard location
-    $pluginpath=dirname(__FILE__) . "/../plugins/" . $plugin;
+    $pluginpath=__DIR__ . "/../plugins/" . $plugin;
     if (file_exists($pluginpath)) {return $url ? $baseurl_short . "plugins/" . $plugin : $pluginpath;}
 
     # Filestore location

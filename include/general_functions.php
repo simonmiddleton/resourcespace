@@ -418,12 +418,12 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             $lang=array();
 
             # Include language file
-            $searchlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($search_language) . ".php";
+            $searchlangfile = __DIR__."/../languages/" . safe_file_name($search_language) . ".php";
             if(file_exists($searchlangfile))
                 {
                 include $searchlangfile;
                 }
-            include dirname(__FILE__)."/../languages/" . safe_file_name($search_language) . ".php";
+            include __DIR__."/../languages/" . safe_file_name($search_language) . ".php";
 
             # Include plugin languages in reverse order as per boot.php
             global $plugins;
@@ -589,12 +589,12 @@ function get_site_text($page,$name,$getlanguage,$group)
     if ($page=="") {$key=$name;} else {$key=$page . "__" . $name;}
 
     # Include specific language(s)
-    $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+    $defaultlangfile = __DIR__."/../languages/" . safe_file_name($defaultlanguage) . ".php";
     if(file_exists($defaultlangfile))
         {
         include $defaultlangfile;
         }
-    $getlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($getlanguage) . ".php";
+    $getlangfile = __DIR__."/../languages/" . safe_file_name($getlanguage) . ".php";
     if(file_exists($getlangfile))
         {
         include $getlangfile;
@@ -1712,7 +1712,7 @@ function getAbsolutePath($path, $create_if_not_exists = false)
         }
     else // It is a relative path.
         {
-        $folder = sprintf('%s%s..%s%s', dirname(__FILE__), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
+        $folder = sprintf('%s%s..%s%s', __DIR__, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
         }
 
     if ($create_if_not_exists && !file_exists($folder)) // Test if the path need to be created.
@@ -1978,7 +1978,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
     {
     global $storagedir, $tempdir;
     // Set up the default.
-    $result = dirname(dirname(__FILE__)) . "/filestore/tmp";
+    $result = dirname(__DIR__) . "/filestore/tmp";
 
     // if $tempdir is explicity set, use it.
     if(isset($tempdir))
@@ -2047,7 +2047,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
 function convert_path_to_url($abs_path)
     {
     // Get the root directory of the app:
-    $rootDir = dirname(dirname(__FILE__));
+    $rootDir = dirname(__DIR__);
     // Get the baseurl:
     global $baseurl;
     // Replace the $rootDir with $baseurl in the path given:
@@ -2292,7 +2292,7 @@ function error_alert($error, $back = true, $code = 403)
     extract($GLOBALS, EXTR_SKIP);
     if($back)
         {
-        include dirname(__FILE__)."/header.php";
+        include __DIR__."/header.php";
         }
 
     ?>
@@ -2320,7 +2320,7 @@ function error_alert($error, $back = true, $code = 403)
     <?php
     if($back)
         {
-        include dirname(__FILE__)."/footer.php";
+        include __DIR__."/footer.php";
         }
     }
 
@@ -3976,7 +3976,7 @@ function get_debug_log_dir()
     global $tempdir, $storagedir;
 
     // Set up the default.
-    $result = dirname(dirname(__FILE__)) . "/filestore/tmp";
+    $result = dirname(__DIR__) . "/filestore/tmp";
 
     // if $tempdir is explicity set, use it.
     if(isset($tempdir))
@@ -5435,7 +5435,7 @@ function set_watermark_image()
         }
     elseif (trim($wm) !== '')
         {
-        $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
+        $GLOBALS["watermark"] = __DIR__. "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
     }
 

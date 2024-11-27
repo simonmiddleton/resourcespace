@@ -49,7 +49,7 @@ if("{$dirname_path}/1_71a3211b5d04a88.jpg" != get_resource_path(1, true, null))
 if(!file_exists(get_resource_path(100000, true, '', false)))
     {
     $generated_path = get_resource_path(100000, true, '', true);
-    copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $generated_path);
+    copy(__DIR__ . '/../../gfx/homeanim/1.jpg', $generated_path);
 
     if(!file_exists($generated_path))
         {

@@ -1,8 +1,8 @@
 <?php
 function HookRse_workflowAllInitialise()
      {
-     include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
-     include_once dirname(__FILE__)."/../../../include/language_functions.php";
+     include_once __DIR__."/../include/rse_workflow_functions.php";
+     include_once __DIR__."/../../../include/language_functions.php";
      # Deny access to specific pages if RSE_KEY is not enabled and a valid key is not found.
      global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates, $workflowicons;
     

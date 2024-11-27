@@ -1,10 +1,10 @@
 <?php
-include_once dirname(__FILE__) . "/../include/boot.php";
+include_once __DIR__ . "/../include/boot.php";
 command_line_only();
 
-include_once dirname(__FILE__) . "/../include/reporting_functions.php";
-include_once dirname(__FILE__) . "/../include/action_functions.php";
-include_once dirname(__FILE__) . "/../include/request_functions.php";
+include_once __DIR__ . "/../include/reporting_functions.php";
+include_once __DIR__ . "/../include/action_functions.php";
+include_once __DIR__ . "/../include/request_functions.php";
 
 $LINE_END = ('cli' == PHP_SAPI) ? PHP_EOL : "<br>";
 set_time_limit($cron_job_time_limit);

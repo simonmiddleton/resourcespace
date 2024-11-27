@@ -1,6 +1,6 @@
 <?php
-include dirname(__FILE__) . '/../../include/boot.php';
-include dirname(__FILE__) . '/../../include/authenticate.php';
+include __DIR__ . '/../../include/boot.php';
+include __DIR__ . '/../../include/authenticate.php';
 
 $resource = getval('resource', '');
 $ref = getval('ref', '');

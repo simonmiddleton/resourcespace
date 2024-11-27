@@ -18,7 +18,7 @@ if ($delete != "" && enforcePostRequest(false))
     ps_query("delete from user_report where ref= ? and user= ?", ['i', $delete, 'i', $userref]);
     }
 
-include dirname(__FILE__)."/../../include/header.php";
+include __DIR__."/../../include/header.php";
 
 ?>
 
@@ -127,5 +127,5 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
 </div>
 
 <?php
-include dirname(__FILE__)."/../../include/footer.php";
+include __DIR__."/../../include/footer.php";
 

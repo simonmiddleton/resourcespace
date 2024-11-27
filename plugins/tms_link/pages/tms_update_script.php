@@ -4,10 +4,10 @@ if (php_sapi_name() != 'cli') {
     exit ("Access denied");
 }
 
-include dirname(__FILE__) . "/../../../include/boot.php";
+include __DIR__ . "/../../../include/boot.php";
 
 
-include_once dirname(__FILE__) . "/../include/tms_link_functions.php";
+include_once __DIR__ . "/../include/tms_link_functions.php";
 
 // To reduce debug log file growth, debug logging is disabled by default but can be enabled within the plugin options.
 global $tms_link_write_to_debug_log;

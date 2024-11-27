@@ -75,7 +75,7 @@ if ($success === false) {
 
 # Check write access to homeanim (if transform plugin is installed)
 if (in_array("transform", $plugins)) {
-    $success = is_writable(dirname(__FILE__) . "/../" . $homeanim_folder);
+    $success = is_writable(__DIR__ . "/../" . $homeanim_folder);
     if ($success === false) {
         $result = $lang["status-fail"] . ": " . $homeanim_folder . $lang["nowriteaccesstohomeanim"];
     } else {

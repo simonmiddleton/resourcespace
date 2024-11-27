@@ -3,7 +3,7 @@
 include "../../include/boot.php";
 command_line_only();
 
-$folder=dirname(__FILE__) . "/../../dbstruct/";
+$folder=__DIR__ . "/../../dbstruct/";
 
 $dir=scandir($folder);
 foreach ($dir as $file)

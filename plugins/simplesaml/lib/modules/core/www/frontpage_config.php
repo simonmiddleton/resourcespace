@@ -188,6 +188,6 @@ $t->data['requiredmap'] = [
     'optional' => $translator->noop('{core:frontpage:optional}'),
 ];
 $t->data['version'] = $config->getVersion();
-$t->data['directory'] = dirname(dirname(dirname(dirname(__FILE__))));
+$t->data['directory'] = dirname(dirname(dirname(__DIR__)));
 
 $t->show();

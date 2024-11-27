@@ -434,13 +434,13 @@ if ($saveaction != '' && enforcePostRequest(false))
                 $onload_message = array("title" => $lang["error"],"text" =>$lang['error-permissiondenied']);
                 }
 
-            if(file_exists(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
-                !is_writable(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
+            if(file_exists(__DIR__ . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
+                !is_writable(__DIR__ . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
                 {
-                error_alert(str_replace("[path]",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder), $lang['error-file-permissions']));
+                error_alert(str_replace("[path]",realpath(__DIR__ . '/../../../' . $homeanim_folder), $lang['error-file-permissions']));
                 exit();
                 }
-            rename($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
+            rename($newpath,__DIR__ . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
             set_slideshow($sequence);
             unlink($crop_pre_file);
             redirect($baseurl_short . "pages/home.php");
@@ -1061,7 +1061,7 @@ renderBreadcrumbs($links_trail);
     <?php
     // Set up available actions 
     $saveactions = array("download"=>$lang["download"]);
-    if ($cropper_enable_replace_slideshow && !$cropperestricted && checkperm('t') && is_writable(dirname(__FILE__)."/../../../" . $homeanim_folder)) 
+    if ($cropper_enable_replace_slideshow && !$cropperestricted && checkperm('t') && is_writable(__DIR__."/../../../" . $homeanim_folder)) 
         {
         $saveactions["slideshow"] = $lang['replaceslideshowimage'];
         }

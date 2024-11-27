@@ -1,5 +1,5 @@
 <?php
-include dirname(__FILE__) . "/../include/consent_functions.php";
+include __DIR__ . "/../include/consent_functions.php";
 function HookConsentmanagerViewCustompanels()
     {
     global $lang,$baseurl_short,$ref,$edit_access,$k,$consent_usage_mediums;

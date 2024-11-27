@@ -117,7 +117,7 @@ if ($print)
     }
 else
     {
-    include dirname(__FILE__)."/../../include/header.php";
+    include __DIR__."/../../include/header.php";
     }
 ?>
 
@@ -393,5 +393,5 @@ if ($print)
     }
 else
     {
-    include dirname(__FILE__)."/../../include/footer.php";
+    include __DIR__."/../../include/footer.php";
     }

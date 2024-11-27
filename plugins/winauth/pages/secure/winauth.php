@@ -2,8 +2,8 @@
 #
 # winauth login page - logs the user in if Windows authentication is enabled
 #
-include dirname(__FILE__) . '/../../../../include/boot.php';
-include_once dirname(__FILE__) . '/../../include/winauth_functions.php';
+include __DIR__ . '/../../../../include/boot.php';
+include_once __DIR__ . '/../../include/winauth_functions.php';
    
 $session_hash="";
 $url = urldecode(getval("url",""));
@@ -22,7 +22,7 @@ $username = trim($winuser['user']);
 $userref = $username === '' ? 0 : ps_value("select ref value from user where username=? and approved=1",array("s",$username),0);
 if($userref != 0)
     {
-    include_once dirname(__FILE__) . '/../../../../include/login_functions.php';
+    include_once __DIR__ . '/../../../../include/login_functions.php';
     $ip=get_ip();
     
     # Generate a new session hash.

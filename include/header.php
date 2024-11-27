@@ -228,7 +228,7 @@ if($browse_on)
 
 <?php if ($keyboard_navigation)
     {
-    include dirname(__FILE__) . "/keyboard_navigation.php";
+    include __DIR__ . "/keyboard_navigation.php";
     }
 hook("additionalheaderjs");?>
 
@@ -442,7 +442,7 @@ if ($pagename != "preview")
         <?php
         if(!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login))
             {
-            include dirname(__FILE__) . "/header_links.php";
+            include __DIR__ . "/header_links.php";
             }
         ?>
         </div>
@@ -608,7 +608,7 @@ if (checkperm("s") || (is_anonymous_user() && $show_anonymous_login_panel))
         ?>
         <div id="SearchBarContainer" class="ui-layout-east" >
         <?php
-        include dirname(__FILE__)."/searchbar.php";
+        include __DIR__."/searchbar.php";
 
         ?>
         </div>

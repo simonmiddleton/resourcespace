@@ -1081,13 +1081,13 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
             {
             if (substr($userlanguage, 2, 1)=='-' && substr($userlanguage, 0, 2)!='en')
                 {
-                $langpath = dirname(__FILE__)."/../languages/" . safe_file_name(substr($userlanguage, 0, 2)) . ".php";
+                $langpath = __DIR__."/../languages/" . safe_file_name(substr($userlanguage, 0, 2)) . ".php";
                 if(file_exists($langpath))
                     {
                     include $langpath;
                     }
                 }
-            $langpath = dirname(__FILE__)."/../languages/" . safe_file_name($userlanguage) . ".php";
+            $langpath = __DIR__."/../languages/" . safe_file_name($userlanguage) . ".php";
             if(file_exists($langpath))
                 {
                 include $langpath;

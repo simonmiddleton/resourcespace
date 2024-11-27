@@ -5,6 +5,6 @@ if('cli' != PHP_SAPI)
     exit('Command line execution only');
     }
 
-include dirname(__FILE__) . "/../../include/boot.php";
+include __DIR__ . "/../../include/boot.php";
 
 resign_all_code();

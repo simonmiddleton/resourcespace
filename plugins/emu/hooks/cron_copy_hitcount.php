@@ -1,5 +1,5 @@
 <?php
-include_once dirname(__FILE__) . '/../include/emu_functions.php';
+include_once __DIR__ . '/../include/emu_functions.php';
 
 function HookEmuCron_copy_hitcountAddplugincronjob()
     {
@@ -83,7 +83,7 @@ function HookEmuCron_copy_hitcountAddplugincronjob()
 
     if(EMU_SCRIPT_MODE_IMPORT == $emu_script_mode)
         {
-        $script_file = dirname(__FILE__) . '/../pages/emu_script.php';
+        $script_file = __DIR__ . '/../pages/emu_script.php';
 
         if(!file_exists($script_file))
             {
@@ -102,7 +102,7 @@ function HookEmuCron_copy_hitcountAddplugincronjob()
 
     if(EMU_SCRIPT_MODE_SYNC == $emu_script_mode)
         {
-        $script_file = dirname(__FILE__) . '/../pages/emu_sync_script.php';
+        $script_file = __DIR__ . '/../pages/emu_sync_script.php';
 
         if(!file_exists($script_file))
             {

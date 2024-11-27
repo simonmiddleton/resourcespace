@@ -26,7 +26,7 @@ function SAML2_autoload(string $className) : void
         $className = $renamed[$className];
     }
 
-    $file = dirname(__FILE__).'/'.str_replace('_', '/', $className).'.php';
+    $file = __DIR__.'/'.str_replace('_', '/', $className).'.php';
     if (file_exists($file)) {
         require_once($file);
         $newName = '\\'.str_replace('_', '\\', $className);

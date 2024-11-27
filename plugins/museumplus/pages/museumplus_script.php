@@ -1,6 +1,6 @@
 <?php
 if(PHP_SAPI != 'cli') { exit('Access denied'); }
-$museumplus_rs_root = dirname(__FILE__) . '/../../../';
+$museumplus_rs_root = __DIR__ . '/../../../';
 include $museumplus_rs_root . 'include/boot.php';
 
 $help_text = <<<'HELP'

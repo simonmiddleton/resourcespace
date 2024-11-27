@@ -18,7 +18,7 @@ if (!class_exists('Memcache') && !class_exists('Memcached')) {
 }
 
 // This is the base directory of the SimpleSAMLphp installation
-$baseDir = dirname(dirname(__FILE__));
+$baseDir = dirname(__DIR__);
 
 // Add library autoloader
 require_once($baseDir . '/lib/_autoload.php');

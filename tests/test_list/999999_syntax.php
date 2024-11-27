@@ -18,7 +18,7 @@ $exclude_paths = array(
     "/vendor/",
     "rector.php"
 );
-$Directory = new RecursiveDirectoryIterator(dirname(__FILE__) . "/../../");
+$Directory = new RecursiveDirectoryIterator(__DIR__ . "/../../");
 $Iterator = new RecursiveIteratorIterator($Directory);
 foreach ($Iterator as $i)
     {

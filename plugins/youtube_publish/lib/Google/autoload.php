@@ -24,7 +24,7 @@ function google_api_php_client_autoload($className)
   // Drop 'Google', and maximum class file path depth in this project is 3.
   $classPath = array_slice($classPath, 1, 2);
 
-  $filePath = dirname(__FILE__) . '/' . implode('/', $classPath) . '.php';
+  $filePath = __DIR__ . '/' . implode('/', $classPath) . '.php';
   if (file_exists($filePath)) {
     require_once($filePath);
   }

@@ -1,6 +1,6 @@
 <?php
-include_once dirname(__FILE__) . '/../include/emu_api.php';
-include_once dirname(__FILE__) . '/../include/emu_functions.php';
+include_once __DIR__ . '/../include/emu_api.php';
+include_once __DIR__ . '/../include/emu_functions.php';
 
 
 function HookEmuEditEdithidefield($field)
@@ -19,7 +19,7 @@ function HookEmuEditEdithidefield($field)
 function HookEmuEditEditbeforesectionhead()
     {
     global $lang, $baseurl, $ref, $resource, $emu_irn_field, $emu_confirm_upload, $emu_resource_types;
-    if(0 > $ref && in_array($resource['resource_type'], $emu_resource_types))
+    if($ref < 0 && in_array($resource['resource_type'], $emu_resource_types))
         {
         $value = escape(get_data_by_field($ref,$emu_irn_field));
         ?>

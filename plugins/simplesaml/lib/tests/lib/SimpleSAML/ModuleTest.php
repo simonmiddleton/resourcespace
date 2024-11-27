@@ -30,7 +30,7 @@ class ModuleTest extends TestCase
     {
         // test for the most basic functionality
         $this->assertEquals(
-            dirname(dirname(dirname(dirname(__FILE__)))) . '/modules/module',
+            dirname(dirname(dirname(__DIR__))) . '/modules/module',
             Module::getModuleDir('module')
         );
     }

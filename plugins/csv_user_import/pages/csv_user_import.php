@@ -6,7 +6,7 @@ if(!checkperm('u'))
     header('HTTP/1.1 401 Unauthorized');
     die('Permission denied!');
     }
-include_once dirname(__FILE__). '/../include/csv_functions.php';
+include_once __DIR__. '/../include/csv_functions.php';
 
 // Init
 $fd                  = 'user_' . $userref . '_csv_user_batch_uploaded_data';

@@ -7,9 +7,9 @@ if('cli' != $php_sapi_name)
     exit('Access denied');
     }
 
-include dirname(__FILE__) . '/../../../include/boot.php';
-include_once dirname(__FILE__) . '/../include/emu_functions.php';
-include_once dirname(__FILE__) . '/../include/emu_api.php';
+include __DIR__ . '/../../../include/boot.php';
+include_once __DIR__ . '/../include/emu_functions.php';
+include_once __DIR__ . '/../include/emu_api.php';
 
 
 // Init

@@ -4,10 +4,10 @@
  * @package ResourceSpace
  */
 
-include dirname(__FILE__)."/../../../include/boot.php";
-include dirname(__FILE__)."/../../../include/authenticate.php";
-include_once dirname(__FILE__)."/../include/meta_functions.php";
-include_once dirname(__FILE__)."/../include/csv_functions.php";
+include __DIR__."/../../../include/boot.php";
+include __DIR__."/../../../include/authenticate.php";
+include_once __DIR__."/../include/meta_functions.php";
+include_once __DIR__."/../include/csv_functions.php";
     
 $fd="user_{$userref}_uploaded_meta";            // file descriptor for uploaded file
 $allfields              = get_resource_type_fields("","title");
@@ -130,7 +130,7 @@ if($csvuploaded)
     unset($csv_info["row_count"]); // No longer needed
     }
 
-include dirname(__FILE__)."/../../../include/header.php";
+include __DIR__."/../../../include/header.php";
 
 ?>
 
@@ -138,7 +138,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 if (!checkperm("c"))
     {   
     echo "<div class=\"BasicsBox\">" . $lang['csv_upload_error_no_permission'] . "</div>";  
-    include dirname(__FILE__)."/../../../include/footer.php";
+    include __DIR__."/../../../include/footer.php";
     return;
     }
 ?>
@@ -909,5 +909,5 @@ switch($csvstep)
 </div><!-- end of BasicsBox -->
 <?php
 
-include dirname(__FILE__)."/../../../include/footer.php";
+include __DIR__."/../../../include/footer.php";
 

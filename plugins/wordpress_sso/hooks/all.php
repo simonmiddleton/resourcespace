@@ -2,7 +2,7 @@
 
 function HookWordpress_ssoAllProvideusercredentials()
     {
-    include_once dirname(__FILE__)."/../include/wordpress_sso_functions.php";
+    include_once __DIR__."/../include/wordpress_sso_functions.php";
 
     #use standard authentication if available
     if (isset($_COOKIE["user"]) && $_COOKIE["user"]!="|") {return true;}

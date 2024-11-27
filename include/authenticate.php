@@ -369,7 +369,7 @@ if(
 
     if(filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN))
         {
-        include_once dirname(__FILE__) . "/ajax_functions.php";
+        include_once __DIR__ . "/ajax_functions.php";
         $return['error'] = array(
             'title'  => $lang["error-csrf-verification"],
             'detail' => $lang["error-csrf-verification-failed"]);

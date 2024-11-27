@@ -408,7 +408,7 @@ function propose_changes_display_field($n, $field)
 
         $is_search = false;
 
-        include dirname(__FILE__) . "/../../../pages/edit_fields/{$type}.php";
+        include __DIR__ . "/../../../pages/edit_fields/{$type}.php";
         }
     # ----------------------------------------------------------------------------
     ?>

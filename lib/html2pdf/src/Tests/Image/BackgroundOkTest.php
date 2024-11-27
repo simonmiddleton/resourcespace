@@ -27,7 +27,7 @@ class BackgroundOkTest extends AbstractTest
     public function testCase()
     {
         $object = $this->getObject();
-        $object->writeHTML('<div style="background-image: url('.dirname(__FILE__).'/res/logo.png)">Hello World</div>');
+        $object->writeHTML('<div style="background-image: url('.__DIR__.'/res/logo.png)">Hello World</div>');
         $result = $object->output('test.pdf', 'S');
 
         $this->assertContains('PhpUnit Test', $result);

@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../lib/Google/vendor/autoload.php';
+require_once __DIR__ . '/../lib/Google/vendor/autoload.php';
 
 function youtube_publish_initialize()
     {

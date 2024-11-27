@@ -5,10 +5,10 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
-include dirname(__FILE__)."/../../../include/boot.php";
+include __DIR__."/../../../include/boot.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
-include_once dirname(__FILE__)."/../inc/news_functions.php";
+include __DIR__."/../../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
+include_once __DIR__."/../inc/news_functions.php";
 
 $ref=getval("ref","",true);
 $offset=getval("offset",0,true);
@@ -55,7 +55,7 @@ if (!isset($error[0]) && getval("save","")!=""  && enforcePostRequest(false))
     
 # Fetch news data
 $news=get_news($ref,"","");
-include dirname(__FILE__)."/../../../include/header.php";
+include __DIR__."/../../../include/header.php";
 ?>
 
 <p id="EditNewsBack">
@@ -106,4 +106,4 @@ include dirname(__FILE__)."/../../../include/header.php";
 </div>
 
 <?php	  
-include dirname(__FILE__)."/../../../include/footer.php";
+include __DIR__."/../../../include/footer.php";

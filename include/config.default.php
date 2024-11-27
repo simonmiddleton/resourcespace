@@ -1652,7 +1652,7 @@ $request_adds_to_collection=false;
 # $image_alternatives[1]["source_params"]="";
 # $image_alternatives[1]["filename"]="cmyk";
 # $image_alternatives[1]["target_extension"]="jpg";
-# $image_alternatives[1]["params"]="-quality 100 -flatten $icc_preview_options -profile ".dirname(__FILE__) . "/../iccprofiles/name_of_cmyk_profile.icc"; # Quality 100 JPEG with specific CMYK ICC Profile
+# $image_alternatives[1]["params"]="-quality 100 -flatten $icc_preview_options -profile ".__DIR__ . "/../iccprofiles/name_of_cmyk_profile.icc"; # Quality 100 JPEG with specific CMYK ICC Profile
 # $image_alternatives[1]["icc"]=true; # use source ICC profile in command
 
 # Example - automatically create a JPG2000 file alternative when an TIF file is uploaded

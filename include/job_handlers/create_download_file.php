@@ -17,7 +17,7 @@ If a file is to be created for only a specific user to download you can create a
     $job_data["url"]=$baseurl . "/pages/download.php?userfile=" . $ref . "_" . $randomstring . ".<file extension here>;
 */
 
-include_once dirname(__FILE__) . "/../image_processing.php";
+include_once __DIR__ . "/../image_processing.php";
 
 global $config_windows,$baseurl, $baseurl_short, $offline_job_prefixes;
 $jobsuccess = false;

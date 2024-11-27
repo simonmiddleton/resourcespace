@@ -7,8 +7,8 @@ function HookTms_linkCron_copy_hitcountAddplugincronjob()
     if (isset($php_path) && (file_exists($php_path . "/php") || ($config_windows && file_exists($php_path . "/php.exe"))))
         {
         echo "\r\nRunning TMS update script....\r\n";
-        echo "COMMAND: \"" . $php_path . (($config_windows)?"/php.exe\" ":"/php\" ") . dirname(__FILE__) . "/../pages/tms_update_script.php";
-        run_command("\"" . $php_path . (($config_windows)?"/php.exe\" ":"/php\" ") . dirname(__FILE__) . "/../pages/tms_update_script.php");
+        echo "COMMAND: \"" . $php_path . (($config_windows)?"/php.exe\" ":"/php\" ") . __DIR__ . "/../pages/tms_update_script.php";
+        run_command("\"" . $php_path . (($config_windows)?"/php.exe\" ":"/php\" ") . __DIR__ . "/../pages/tms_update_script.php");
         echo "\r\nTMS update script started, please check setup page to ensure script has completed.\r\n";
         }
     else

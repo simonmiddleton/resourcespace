@@ -920,7 +920,7 @@ function CheckDBStruct($path,$verbose=false)
     if (!file_exists($path))
         {
         # Check for path
-        $path=dirname(__FILE__) . "/../" . $path; # Make sure this works when called from non-root files..
+        $path=__DIR__ . "/../" . $path; # Make sure this works when called from non-root files..
         if (!file_exists($path)) {return false;}
         }
     

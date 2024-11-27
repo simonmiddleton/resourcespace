@@ -22,7 +22,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 class Google_IO_Stream extends Google_IO_Abstract
@@ -88,7 +88,7 @@ class Google_IO_Stream extends Google_IO_Abstract
         $default_options['ssl'] : array();
 
     if (!array_key_exists("cafile", $requestSslContext)) {
-      $requestSslContext["cafile"] = dirname(__FILE__) . '/cacerts.pem';
+      $requestSslContext["cafile"] = __DIR__ . '/cacerts.pem';
     }
 
     $options = array(

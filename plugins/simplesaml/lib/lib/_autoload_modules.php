@@ -56,7 +56,7 @@ function temporaryLoader(string $class)
 
     // try to load it from the corresponding file
     $path = explode('_', $class);
-    $file = dirname(__FILE__) . DIRECTORY_SEPARATOR . join(DIRECTORY_SEPARATOR, $path) . '.php';
+    $file = __DIR__ . DIRECTORY_SEPARATOR . join(DIRECTORY_SEPARATOR, $path) . '.php';
     if (file_exists($file)) {
         require_once $file;
     }

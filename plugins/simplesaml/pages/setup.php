@@ -5,7 +5,7 @@
 
 include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
-include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
+include_once __DIR__ . '/../include/simplesaml_functions.php';
 
 $plugin_name = 'simplesaml';
 if (!in_array($plugin_name, $plugins)) {

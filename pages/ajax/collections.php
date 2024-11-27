@@ -1,5 +1,5 @@
 <?php
-$rsroot = dirname(dirname(dirname(__FILE__)));
+$rsroot = dirname(dirname(__DIR__));
 include "{$rsroot}/include/boot.php";
 
 include "{$rsroot}/include/authenticate.php";

@@ -1,8 +1,8 @@
 <?php
-include dirname(__FILE__) . '/../../include/boot.php';
-include dirname(__FILE__) . '/../../include/authenticate.php';
-include_once dirname(__FILE__) . '/../../include/node_functions.php';
-include_once dirname(__FILE__) . '/../../include/annotation_functions.php';
+include __DIR__ . '/../../include/boot.php';
+include __DIR__ . '/../../include/authenticate.php';
+include_once __DIR__ . '/../../include/node_functions.php';
+include_once __DIR__ . '/../../include/annotation_functions.php';
 
 if(!$annotate_enabled)
     {

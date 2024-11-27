@@ -5968,7 +5968,7 @@ function log_diff($fromvalue, $tovalue)
     if ($tovalue=="") {return "- " . $fromvalue;}
 
     // For standard strings, use Diff library
-    require_once dirname(__FILE__) . '/../lib/Diff/class.Diff.php';
+    require_once __DIR__ . '/../lib/Diff/class.Diff.php';
     return Diff::toString(Diff::compare($fromvalue, $tovalue));
     }
 

@@ -1,6 +1,6 @@
 <?php
-include dirname(__FILE__)."/../../../include/boot.php";
-include dirname(__FILE__)."/../../../include/authenticate.php";
+include __DIR__."/../../../include/boot.php";
+include __DIR__."/../../../include/authenticate.php";
 
 $is_admin=checkperm("t");
 
@@ -18,7 +18,7 @@ if ($delete!="" && enforcePostRequest(false))
     consentmanager_delete_consent($delete);
     }
 
-include dirname(__FILE__)."/../../../include/header.php";
+include __DIR__."/../../../include/header.php";
 
 $url_params = array(
     'search'     => getval('search',''),
@@ -130,4 +130,4 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
 </form>
 <?php
 
-include dirname(__FILE__)."/../../../include/footer.php";
+include __DIR__."/../../../include/footer.php";

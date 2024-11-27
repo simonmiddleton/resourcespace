@@ -44,7 +44,7 @@ $enable_thumbnail_creation_on_upload = false;
 $alternative_file_previews = false;
 
 // Create file to sync
-copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $test_path . "teststatic.jpg");
+copy(__DIR__ . '/../../gfx/homeanim/1.jpg', $test_path . "teststatic.jpg");
 
 // Required for test L ($nogo)
 $nogo = '[to_skip]';
@@ -53,7 +53,7 @@ if (!file_exists($test_nogo_path))
     {
     mkdir($test_nogo_path,0777,true);
     }
-copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $test_nogo_path . "skipped.jpg");
+copy(__DIR__ . '/../../gfx/homeanim/1.jpg', $test_nogo_path . "skipped.jpg");
 
 // Required for test D
 $staticsync_extension_mapping[2]=array("txt");
@@ -139,7 +139,7 @@ $argc=0;
 ob_flush();
 ob_start();
 $staticsync_suppress_output=true;
-include dirname(__FILE__) . "/../../pages/tools/staticsync.php";
+include __DIR__ . "/../../pages/tools/staticsync.php";
 ob_end_clean();
 
 // Test A: check the file has gone

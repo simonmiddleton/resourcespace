@@ -5,9 +5,9 @@ if (substr(php_sapi_name(), 0, 3) != 'cli')
     exit;
     }
 
-include_once dirname(__FILE__) . "/../../../include/boot.php";
+include_once __DIR__ . "/../../../include/boot.php";
 
-include_once dirname(__FILE__) . "/../include/search_notifications_functions.php";
+include_once __DIR__ . "/../include/search_notifications_functions.php";
 
 define('THIS_PROCESS_LOCK','watchedsearchescron');
 

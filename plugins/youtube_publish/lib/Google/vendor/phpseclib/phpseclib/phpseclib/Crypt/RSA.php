@@ -484,7 +484,7 @@ abstract class RSA extends AsymmetricKey
     protected static function initialize_static_variables()
     {
         if (!isset(self::$configFile)) {
-            self::$configFile = dirname(__FILE__) . '/../openssl.cnf';
+            self::$configFile = __DIR__ . '/../openssl.cnf';
         }
 
         parent::initialize_static_variables();

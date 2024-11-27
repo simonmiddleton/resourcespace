@@ -1387,7 +1387,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         global $no_preview_extensions;
         if (isset($imagemagick_path) && !in_array(strtolower($extension),$no_preview_extensions)) {
             $preview_preprocessing_success = false;
-            include dirname(__FILE__)."/preview_preprocessing.php";
+            include __DIR__."/preview_preprocessing.php";
             // $created_previews will have been set in preview_preprocessing.php to indicate succces/failure
             if (!$preview_preprocessing_success) {
                 return false;
@@ -1826,7 +1826,7 @@ function create_previews_using_im(
                     {
                     global $icc_preview_profile_embed;
                     // we have an extracted ICC profile, so use it as source
-                    $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                    $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
 
                     if ($imagemagick_mpr)
                         {
@@ -2068,7 +2068,7 @@ function create_previews_using_im(
                             {
                             // need to convert the profile
                             $mpr_parts['wm_sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? $iccpath : ''). " " . $icc_preview_options;
-                            $mpr_parts['wm_targetprofile']=($use_icc_profile && file_exists($iccpath) && $id!="thm" || $id!="col" || $id!="pre" || $id=="scr" ? dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile : "");
+                            $mpr_parts['wm_targetprofile']=($use_icc_profile && file_exists($iccpath) && $id!="thm" || $id!="col" || $id!="pre" || $id=="scr" ? __DIR__ . '/../iccprofiles/' . $icc_preview_profile : "");
                             }
                         }
                     $command_parts[]=$mpr_parts;
@@ -4608,7 +4608,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
         }
     
     global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile;
-    $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+    $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
 
     
     $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");

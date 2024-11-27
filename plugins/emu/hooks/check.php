@@ -1,5 +1,5 @@
 <?php
-include_once dirname(__FILE__) . '/../include/emu_api.php';
+include_once __DIR__ . '/../include/emu_api.php';
 
 function HookEmuCheckAddinstallationcheck()
     {

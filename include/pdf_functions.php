@@ -71,7 +71,7 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
     {
     global $applicationname, $baseurl, $baseurl_short, $storagedir, $linkedheaderimgsrc, $language, $contact_sheet_date_include_time, $contact_sheet_date_wordy;
 
-    $html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/vendor/autoload.php';
+    $html2pdf_path = __DIR__ . '/../lib/html2pdf/vendor/autoload.php';
     if(!file_exists($html2pdf_path))
         {
         trigger_error('html2pdf class file is missing. Please make sure you have it under lib folder!');
@@ -213,7 +213,7 @@ function get_template_path($template_name, $template_namespace)
     $remove_directory_listings = array('.', '..');
 
     // Directories that may contain these files
-    $default_tpl_dir   = dirname(__FILE__) . "/../templates/{$template_namespace}";
+    $default_tpl_dir   = __DIR__ . "/../templates/{$template_namespace}";
     $filestore_tpl_dir = "{$storagedir}/system/templates/{$template_namespace}";
 
     if(!file_exists($default_tpl_dir))
@@ -411,7 +411,7 @@ function get_pdf_templates($template_namespace)
     $remove_directory_listings = array('.', '..');
 
     // Directories that may contain these files
-    $default_tpl_dir   = dirname(__FILE__) . "/../templates/{$template_namespace}";
+    $default_tpl_dir   = __DIR__ . "/../templates/{$template_namespace}";
     $filestore_tpl_dir = "{$storagedir}/system/templates/{$template_namespace}";
 
     if(!file_exists($default_tpl_dir))

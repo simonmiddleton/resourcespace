@@ -54,7 +54,7 @@ class IMu
 	public static $language;
 }
 
-IMu::$api = dirname(__FILE__);
+IMu::$api = __DIR__;
 IMu::$lib = IMu::$api;
 IMu::$language = 'en';
 ?>

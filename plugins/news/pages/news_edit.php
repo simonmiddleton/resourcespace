@@ -5,10 +5,10 @@
  * @package ResourceSpace
  */
 
-include dirname(__FILE__)."/../../../include/boot.php";
+include __DIR__."/../../../include/boot.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
-include_once dirname(__FILE__)."/../inc/news_functions.php";
+include __DIR__."/../../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
+include_once __DIR__."/../inc/news_functions.php";
 global $baseurl;
 
 $offset=getval("offset",0,true);
@@ -27,7 +27,7 @@ if (getval("create","")!="")
     redirect("plugins/news/pages/news_content_edit.php?ref=new");
     }
 
-include dirname(__FILE__)."/../../../include/header.php";
+include __DIR__."/../../../include/header.php";
 
 ?>
 
@@ -121,4 +121,4 @@ for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
 
 <?php
 
-include dirname(__FILE__)."/../../../include/footer.php";
+include __DIR__."/../../../include/footer.php";

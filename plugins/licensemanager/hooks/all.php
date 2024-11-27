@@ -1,5 +1,5 @@
 <?php
-include_once dirname(__FILE__) . "/../include/license_functions.php";
+include_once __DIR__ . "/../include/license_functions.php";
 
 function HookLicensemanagerAllExport_add_tables()
     {

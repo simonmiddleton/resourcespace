@@ -849,21 +849,21 @@ class TCPDF_FONTS {
 						$pfile .= '// Japanese'."\n";
 						$pfile .= '$enc=\'UniJIS-UTF16-H\';'."\n";
 						$pfile .= '$cidinfo=array(\'Registry\'=>\'Adobe\', \'Ordering\'=>\'Japan1\',\'Supplement\'=>5);'."\n";
-						$pfile .= 'include(dirname(__FILE__).\'/uni2cid_aj16.php\');'."\n";
+						$pfile .= 'include(__DIR__.\'/uni2cid_aj16.php\');'."\n";
 						break;
 					}
 					case 'CID0KR': {
 						$pfile .= '// Korean'."\n";
 						$pfile .= '$enc=\'UniKS-UTF16-H\';'."\n";
 						$pfile .= '$cidinfo=array(\'Registry\'=>\'Adobe\', \'Ordering\'=>\'Korea1\',\'Supplement\'=>0);'."\n";
-						$pfile .= 'include(dirname(__FILE__).\'/uni2cid_ak12.php\');'."\n";
+						$pfile .= 'include(__DIR__.\'/uni2cid_ak12.php\');'."\n";
 						break;
 					}
 					case 'CID0CS': {
 						$pfile .= '// Chinese Simplified'."\n";
 						$pfile .= '$enc=\'UniGB-UTF16-H\';'."\n";
 						$pfile .= '$cidinfo=array(\'Registry\'=>\'Adobe\', \'Ordering\'=>\'GB1\',\'Supplement\'=>2);'."\n";
-						$pfile .= 'include(dirname(__FILE__).\'/uni2cid_ag15.php\');'."\n";
+						$pfile .= 'include(__DIR__.\'/uni2cid_ag15.php\');'."\n";
 						break;
 					}
 					case 'CID0CT':
@@ -871,7 +871,7 @@ class TCPDF_FONTS {
 						$pfile .= '// Chinese Traditional'."\n";
 						$pfile .= '$enc=\'UniCNS-UTF16-H\';'."\n";
 						$pfile .= '$cidinfo=array(\'Registry\'=>\'Adobe\', \'Ordering\'=>\'CNS1\',\'Supplement\'=>0);'."\n";
-						$pfile .= 'include(dirname(__FILE__).\'/uni2cid_aj16.php\');'."\n";
+						$pfile .= 'include(__DIR__.\'/uni2cid_aj16.php\');'."\n";
 						break;
 					}
 				}
@@ -1522,7 +1522,7 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function _getfontpath() {
-		if (!defined('K_PATH_FONTS') AND is_dir($fdir = realpath(dirname(__FILE__).'/../fonts'))) {
+		if (!defined('K_PATH_FONTS') AND is_dir($fdir = realpath(__DIR__.'/../fonts'))) {
 			if (substr($fdir, -1) != '/') {
 				$fdir .= '/';
 			}

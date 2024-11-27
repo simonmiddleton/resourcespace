@@ -87,7 +87,7 @@ class Module
      */
     public static function getModuleDir($module)
     {
-        $baseDir = dirname(dirname(dirname(__FILE__))) . '/modules';
+        $baseDir = dirname(dirname(__DIR__)) . '/modules';
         $moduleDir = $baseDir . '/' . $module;
 
         return $moduleDir;

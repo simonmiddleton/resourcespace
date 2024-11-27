@@ -4,7 +4,7 @@ include_once "../../../include/authenticate.php";
 include "../include/file_functions.php";
 
 # Check if it's necessary to upgrade the database structure
-include dirname(__FILE__) . "/../upgrade/upgrade.php";
+include __DIR__ . "/../upgrade/upgrade.php";
 
 $ref=getval("ref","");
 $resource=getval("resource","");

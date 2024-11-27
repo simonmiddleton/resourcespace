@@ -597,7 +597,7 @@ if ($extension=="txt" && !isset($newfile))
     {
     $text=wordwrap(file_get_contents($file),90);
     $width=650;$height=850;
-    $font=dirname(__FILE__). "/../gfx/fonts/vera.ttf";
+    $font=__DIR__. "/../gfx/fonts/vera.ttf";
     $im=imagecreatetruecolor($width,$height);
     $col=imagecolorallocate($im,255,255,255);
     imagefilledrectangle($im,0,0,$width,$height,$col);
@@ -673,7 +673,7 @@ if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpe
             $snapshot_points_distance = max($duration / $ffmpeg_snapshot_frames,1);
             
             // Find video resolution, figure out whether it is landscape/ portrait and adjust the scaling for the snapshots accordingly
-            include_once dirname(__FILE__) . '/video_functions.php';
+            include_once __DIR__ . '/video_functions.php';
 
             $video_resolution = get_video_resolution($file);
             
@@ -765,7 +765,7 @@ if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpe
         if ($ffmpeg_preview && ($extension!=$ffmpeg_preview_extension || $ffmpeg_preview_force) )
             {
             debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
-            include dirname(__FILE__)."/ffmpeg_processing.php";
+            include __DIR__."/ffmpeg_processing.php";
             }
         }
         debug('FFMPEG-VIDEO: ####################################################################');

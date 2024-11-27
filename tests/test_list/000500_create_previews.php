@@ -1,15 +1,15 @@
 <?php
 command_line_only();
 
-include_once dirname(__FILE__) . "/../../include/image_processing.php";
+include_once __DIR__ . "/../../include/image_processing.php";
 
 $resource500 = create_resource(1,0);
 
 // Test A - check that minimal previews are created
 $enable_thumbnail_creation_on_upload = false;
 
-$valid_upload_paths[] = dirname(__FILE__) . '/../../gfx/homeanim/';
-upload_file($resource500,true,false,false,dirname(__FILE__) . '/../../gfx/homeanim/1.jpg',false,false);
+$valid_upload_paths[] = __DIR__ . '/../../gfx/homeanim/';
+upload_file($resource500,true,false,false,__DIR__ . '/../../gfx/homeanim/1.jpg',false,false);
 
 $result = start_previews($resource500);
 if($result !== 2 

@@ -412,7 +412,7 @@ h2#dbaseconfig{  min-height: 32px;}
     if (!(isset($_REQUEST['submit']))){ //No Form Submission, lets setup some defaults
         if (!isset($storagedir) | $storagedir=="")
             {
-            $storagedir = dirname(__FILE__)."/../filestore";
+            $storagedir = __DIR__."/../filestore";
             $lang = set_language($defaultlanguage); # Updates $lang with $storagedir which is used in some strings.
             }
         if (isset($_SERVER['HTTP_HOST']))
@@ -813,7 +813,7 @@ h2#dbaseconfig{  min-height: 32px;}
             $config_output .= "\$defaultlanguage = '$defaultlanguage';\r\n";
         }
         
-        $storagedir = dirname(__FILE__)."/../filestore";
+        $storagedir = __DIR__."/../filestore";
         $configstoragelocations = false;
 
         $use_smtp=get_post('use_smtp');
@@ -853,7 +853,7 @@ h2#dbaseconfig{  min-height: 32px;}
             }
 
         # Append defaults for new systems.
-        $config_output.=file_get_contents(dirname(__FILE__) . "/../include/config.new_installs.php");
+        $config_output.=file_get_contents(__DIR__ . "/../include/config.new_installs.php");
     }
 ?>
 <?php //Output Section
@@ -1228,7 +1228,7 @@ else
     </div>
     <?php
     include "../include/plugin_functions.php";
-    $plugins_dir = dirname(__FILE__)."/../plugins/";
+    $plugins_dir = __DIR__."/../plugins/";
     # Build an array of available plugins.
     $dirh = opendir($plugins_dir);
     $plugins_avail = array();

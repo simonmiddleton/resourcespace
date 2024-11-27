@@ -91,7 +91,7 @@ function HookMuseumplusCron_copy_hitcountAddplugincronjob()
             }
         }
 
-    $script_file = dirname(__FILE__) . '/../pages/museumplus_script.php';
+    $script_file = __DIR__ . '/../pages/museumplus_script.php';
     if(!file_exists($script_file))
         {
         echo nl2br(PHP_EOL . "MuseumPlus: script '{$script_file}' not found!", !$cli);

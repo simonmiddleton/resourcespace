@@ -1,6 +1,6 @@
 <?php
 
-include_once dirname(__FILE__) . '/../include/winauth_functions.php';
+include_once __DIR__ . '/../include/winauth_functions.php';
 
 function HookWinauthAllPreheaderoutput()
     {

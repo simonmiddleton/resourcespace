@@ -50,7 +50,7 @@ $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . 
 
 
 // Font selection
-$fontsdir=scandir(dirname(__FILE__) . "/../../css/fonts/");
+$fontsdir=scandir(__DIR__ . "/../../css/fonts/");
 $fonts=array();
 foreach ($fontsdir as $f)
     {

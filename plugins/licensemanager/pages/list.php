@@ -1,7 +1,7 @@
 <?php
-include dirname(__FILE__)."/../../../include/boot.php";
+include __DIR__."/../../../include/boot.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";
+include __DIR__."/../../../include/authenticate.php";
 
 $is_admin = checkperm("a");
 if (!$is_admin && !checkperm("lm")) {exit ("Permission denied.");}
@@ -9,7 +9,7 @@ global $baseurl;
 
 
 # Check if it's necessary to upgrade the database structure
-include dirname(__FILE__) . "/../upgrade/upgrade.php";
+include __DIR__ . "/../upgrade/upgrade.php";
 
 
 $offset=getval("offset",0,true);
@@ -25,7 +25,7 @@ if ($delete!="" && enforcePostRequest(false))
 
 
 
-include dirname(__FILE__)."/../../../include/header.php";
+include __DIR__."/../../../include/header.php";
 
 $url_params = array(
     'search'     => getval('search',''),
@@ -149,4 +149,4 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 </form>
 <?php
 
-include dirname(__FILE__)."/../../../include/footer.php";
+include __DIR__."/../../../include/footer.php";

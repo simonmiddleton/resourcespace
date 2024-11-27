@@ -1,7 +1,7 @@
 <?php
 
 // Add the new reports created for report-from-search functionality
-$path=dirname(__FILE__)."/../../dbstruct/data_report.txt";
+$path=__DIR__."/../../dbstruct/data_report.txt";
 
 ps_query("select ref,support_non_correlated_sql from report limit 1",[]); // Ensure new column created first.
 

@@ -5933,7 +5933,7 @@ function render_antispam_question()
     $height = 50; //CAPTCHA image height
     $width = 160; //CAPTCHA image width
     $font_size = 25; //CAPTCHA Font size
-    $font=dirname(__FILE__). "/../gfx/fonts/vera.ttf";
+    $font=__DIR__. "/../gfx/fonts/vera.ttf";
 
     $capimage = imagecreate($width, $height);
     imagecolorallocate($capimage, 245, 245, 245);

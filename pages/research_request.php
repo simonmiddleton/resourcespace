@@ -190,9 +190,9 @@ include "../include/header.php";
         render_custom_fields($processed_rr_cfields);
 
         // Legacy plugins
-        if(file_exists(dirname(__FILE__) . "/../plugins/research_request.php"))
+        if(file_exists(__DIR__ . "/../plugins/research_request.php"))
             {
-            include dirname(__FILE__) . "/../plugins/research_request.php";
+            include __DIR__ . "/../plugins/research_request.php";
             }
 
         if (isset($anonymous_login) && $anonymous_login == $username && !hook("replaceantispam"))

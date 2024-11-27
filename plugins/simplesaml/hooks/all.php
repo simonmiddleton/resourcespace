@@ -1,5 +1,5 @@
 <?php
-include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
+include_once __DIR__ . '/../include/simplesaml_functions.php';
 
 
 function HookSimplesamlAllInitialise()

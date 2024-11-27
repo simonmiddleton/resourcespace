@@ -739,7 +739,7 @@ function i18n_get_all_translations(string $langid): array
             $GLOBALS["use_error_exception"] = true;
             try
                 {
-                include dirname(__FILE__)."/../languages/" . safe_file_name($langcode) . ".php";
+                include __DIR__."/../languages/" . safe_file_name($langcode) . ".php";
                 }
             catch (Exception $e)
                 {

@@ -7,9 +7,9 @@ delete them.
 
 */
 
-include dirname(__FILE__) . "/../../include/boot.php";
+include __DIR__ . "/../../include/boot.php";
 
-include dirname(__FILE__) . "/../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
+include __DIR__ . "/../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 
 $dryrun = getval('dryrun', '');
 if (strlen($dryrun) > 0) {

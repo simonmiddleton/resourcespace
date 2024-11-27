@@ -1,7 +1,7 @@
 <?php
-include dirname(__FILE__) . '/../../../include/boot.php';
-include_once dirname(__FILE__) . '/../../../include/authenticate.php';
-include_once dirname(__FILE__) . '/../../../include/ajax_functions.php';
+include __DIR__ . '/../../../include/boot.php';
+include_once __DIR__ . '/../../../include/authenticate.php';
+include_once __DIR__ . '/../../../include/ajax_functions.php';
 
 
 $ref = getval("ref", 0, true);
