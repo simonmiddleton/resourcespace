@@ -17,6 +17,7 @@ define('MPLUS_FIELD_ID', '__id'); # This field holds the technical ID of a modul
 ############################################################
 $museumplus_host = '';
 $museumplus_host_api = '';
+$museumplus_application = ''; # Retained for older M+ URLs where the application name must be supplied separately. Likely blank for newer setups.
 $museumplus_api_user = '';
 $museumplus_api_pass = '';
 
