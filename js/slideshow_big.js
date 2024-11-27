@@ -1,11 +1,5 @@
 var SlideshowTimer=0;
 var SlideshowActive=false;
-
-jQuery(window).on('popstate', function(){
-    SlideshowImages = [];
-    jQuery('body').css('background-image','');
-    jQuery('body').css('transition', '');
-});
             
 function RegisterSlideshowImage(image, resource, single_image_flag)
     {
