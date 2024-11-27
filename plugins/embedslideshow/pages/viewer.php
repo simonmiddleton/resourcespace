@@ -55,13 +55,11 @@ ob_start();
             height: 100vh;
         }
        .content {
-            margin-top: 60px; /* Offset for header */
-            margin-bottom: 60px; /* Offset for footer */
-            margin-right: 200px; /* Offset for sidebar */
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: calc(100vh - 120px); /* 100vh minus header and footer */
             overflow: hidden;
         }
         .slideshow {
@@ -98,11 +96,17 @@ ob_start();
             margin-top: 10px;
             margin-left: 10px;
         }
+        .slide-control {
+            width: 8%;
+            height: 8%;
+            cursor: pointer;
+        }
         .slide-page-button-style {
-            width: 60px;
-            height: 30px;
+            float:left;
+            margin-top: 2px;
+            width: 40%;
             text-align: center;
-            font-size: 16px;
+            font-size: 14px;
             border: 1px solid #666;
             border-radius: 5px;
             background-color: #f0f0f0;
@@ -187,20 +191,20 @@ ob_start();
     </div>
 </main>
 <!-- Slideshow navigation control markup START -->
-<div style="vertical-align:middle;">
+<div>
 <ul>   
-    <li id="slide-go-start" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('start');return false;"><i class="fas fa-step-backward"></i></li>
-    <li id="slide-go-prev" style="cursor: pointer;display: inline-block;" onClick="showPrevSlide();return false;"><i class="fas fa-backward"></i></li>
-    <li id="slide-pause" style="cursor: pointer;display: inline-block;" onClick="pauseSlideShow();return false;"><i class="fas fa-pause"></i></li>
-    <li id="slide-play" style="cursor: pointer;display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i></li>
-    <li id="slide-go-next" style="cursor: pointer;display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i></li>
-    <li id="slide-go-end" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i></li>
-    <li id="slide-go-atpage" style="cursor: pointer;display: inline-block;">
-        <span>&nbsp;<input type="number" id="slide-page-number" class="slide-page-button-style"/></span>
-        &nbsp;&sol;&nbsp;
-        <span id="slide-page-count"></span>
+    <li id="slide-go-start"  class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('start');return false;"><i class="fas fa-step-backward"></i></li>
+    <li id="slide-go-prev"   class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showPrevSlide();return false;"><i class="fas fa-backward"></i></li>
+    <li id="slide-pause"     class="slide-control" style="cursor: pointer;display: inline-block;" onClick="pauseSlideShow();return false;"><i class="fas fa-pause"></i></li>
+    <li id="slide-play"      class="slide-control" style="cursor: pointer;display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i></li>
+    <li id="slide-go-next"   class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i></li>
+    <li id="slide-go-end"    class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i></li>
+    <li id="slide-go-atpage" class="slide-control" style="cursor: pointer;display: inline-block;">
+        <span><input type="number" id="slide-page-number" class="slide-page-button-style"/></span>
+        <span style="margin-top:2px;float:left;">&nbsp;&sol;&nbsp;</span>
+        <span id="slide-page-count" style="margin-top:2px;float:left; font-size:14px;"></span>
     </li>
-</ul>
+</ul><br>
 </div>
 <!-- Slideshow navigation control markup END -->
 
