@@ -10,8 +10,9 @@ $ffmpeg_fullpath = get_utility_path("ffmpeg");
 if ($generateall) {
     # Create a preview video
     $targetfile = get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative); 
-
-    set_processing_message(str_replace("[resource]",$ref,$lang["processing_preview_video"]));
+    if (PHP_SAPI !== "cli") {
+        set_processing_message(str_replace("[resource]",$ref,$lang["processing_preview_video"]));
+    }
 
     $snapshotsize = getimagesize($target);
     $width=$snapshotsize[0];
@@ -160,8 +161,9 @@ if ($generateall) {
             ) {
                 $generate = false;
             }
-
-            set_processing_message(str_replace(["[resource]","[name]"],[$ref,$ffmpeg_alternatives[$n]["name"]],$lang["processing_alternative_video"]));
+            if (PHP_SAPI !== "cli") {
+                set_processing_message(str_replace(["[resource]","[name]"],[$ref,$ffmpeg_alternatives[$n]["name"]],$lang["processing_alternative_video"]));
+            }
 
             $tmp = hook("preventgeneratealt", "", [$file]);
             if ($tmp===true) {$generate = false;}

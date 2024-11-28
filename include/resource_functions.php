@@ -1569,7 +1569,9 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
     for ($n=0;$n<count($fields);$n++)
         {
-        set_processing_message(str_replace(["[count]","[total]"],[$n+1,count($fields)],$lang["processing_calculating_updates_required"]));
+        if (PHP_SAPI !== "cli") {
+            set_processing_message(str_replace(["[count]","[total]"],[$n+1,count($fields)],$lang["processing_calculating_updates_required"]));
+        }
 
         $nodes_to_add       = [];
         $nodes_to_remove    = [];

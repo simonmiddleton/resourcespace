@@ -590,7 +590,9 @@ function extract_exif_comment($ref,$extension="")
     {
     global $lang;
     debug_function_call('extract_exif_comment', func_get_args());
-    set_processing_message(str_replace("[resource]",$ref,$lang["processing_extracting_metadata"]));
+    if (PHP_SAPI !== "cli") {
+        set_processing_message(str_replace("[resource]",$ref,$lang["processing_extracting_metadata"]));
+    }
 
     # Extract the EXIF comment from either the ImageDescription field or the UserComment
     # Also parse IPTC headers and insert
@@ -1204,8 +1206,9 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         {
         trigger_error("Parameter 'ref' must be numeric!");
         }
-
-    set_processing_message(str_replace("[resource]",$ref,$lang["processing_creating_previews"]));
+    if (PHP_SAPI !== "cli") {
+        set_processing_message(str_replace("[resource]",$ref,$lang["processing_creating_previews"]));
+    }
 
     hook('create_previews_extra', '', array($ref));
 
@@ -1596,7 +1599,9 @@ function create_previews_using_im(
         $override_size = false;
         for ($n=0;$n<count($ps);$n++)
             {
-            set_processing_message(str_replace(["[resource]","[name]"],[$ref,($ps[$n]["name"] ?? "???")],$lang["processing_creating_preview"]));
+            if (PHP_SAPI !== "cli") {
+                set_processing_message(str_replace(["[resource]","[name]"],[$ref,($ps[$n]["name"] ?? "???")],$lang["processing_creating_preview"]));
+            }
 
             if ($imagemagick_mpr)
                 {
@@ -4415,6 +4420,7 @@ function get_sizes_to_generate(
 
 function create_image_alternatives(int $ref, array $params, $force = false)
 {
+    global $lang;
     // Handle alternative image file generation
     $convert_fullpath = get_utility_path("im-convert");
     if ($convert_fullpath === false) {
@@ -4467,9 +4473,9 @@ function create_image_alternatives(int $ref, array $params, $force = false)
             }
         }
 
-        global $lang;
-        set_processing_message(str_replace(["[resource]","[name]"],[$ref,$alternate_config["name"]],$lang["processing_alternative_image"]));
-
+        if (PHP_SAPI !== "cli") {
+            set_processing_message(str_replace(["[resource]","[name]"],[$ref,$alternate_config["name"]],$lang["processing_alternative_image"]));
+        }
         // Create the alternative file.
         $aref  = add_alternative_file($ref, $alternate_config['name'],$alternate_config['description'] ?? "");
         $apath = get_resource_path($ref, true, '', true, $alternate_config['target_extension'], -1, 1, false, '', $aref);

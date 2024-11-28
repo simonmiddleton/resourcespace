@@ -18,7 +18,7 @@ if ($collection !== false) {
     if (!allow_multi_edit($collection_ref, $collection_ref)) {
         exit(escape($lang["no_access_to_collection"]));
     }
-        
+
     $resources = do_search("!collection" . $ref);
     $colcount = count($resources);
 
@@ -81,6 +81,7 @@ if ($collection !== false) {
                 $ref=$collection_ref; // restore collection id because tweaking resets $ref to resource ids
                 break;
         }
+        set_processing_message(""); // Clear once complete or unread messages will hang around
         refresh_collection_frame($collection_ref);
     }
 } else {

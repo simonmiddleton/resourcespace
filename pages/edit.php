@@ -504,6 +504,7 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
 if (getval("regen","") != "" && enforcePostRequest($ajax)) {
     hook('edit_recreate_previews_extra', '', [$ref]);
     $result = start_previews($ref);
+    set_processing_message(""); // Clear once complete
     switch ($result) {
         case 2:
             $onload_message["text"] = $lang["recreatepreviews_pending"];
@@ -950,7 +951,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $editsearch["restypes"] = $restypes;
                 $editsearch["archive"]  = $archive;
                 $editsearch["search_access"] = $search_access;
-                $save_errors=save_resource_data_multi(0,$editsearch,$_POST);
+                $save_errors = save_resource_data_multi(0,$editsearch,$_POST);
+                set_processing_message(""); // Clear once complete
 
                 // When editing a search for the COLLECTION_TYPE_SELECTION we want to close the modal and reload the page
                 if(!is_array($save_errors) && $edit_selection_collection_resources)
@@ -1003,6 +1005,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 {
                 debug('Save resource data multi');
                 $save_errors=save_resource_data_multi($collection, [],$_POST);
+                set_processing_message(""); // Clear once complete
                 if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
                     redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));

@@ -3720,9 +3720,10 @@ function checkPermission_manage_users() : bool
 function get_processing_message()
     {
     global $userref,$userprocessing_messages;
+
     if ($userprocessing_messages!="")
         {
-        ps_query("update user set processing_messages='' where ref=?",["i",$userref]); // Clear out messages as now collected.
+        ps_query("UPDATE user SET processing_messages='' WHERE ref=?",["i",$userref]); // Clear out messages as now collected.
         return explode(";;",$userprocessing_messages);
         }
     else
@@ -3742,11 +3743,24 @@ $set_processing_message_first_call=true;
 function set_processing_message(string $message)
     {
     global $userref,$userprocessing_messages,$set_processing_message_first_call;
-    $userprocessing_messages=ps_value("select processing_messages value from user where ref=?",["i",$userref],''); // Fetch fresh from the DB as it may have been cleared by get_processing_message() since we started processing.
-    if ($set_processing_message_first_call) {$userprocessing_messages="";$set_processing_message_first_call=false;} // Blank existing messages if present for first command this page load.
-    if ($userprocessing_messages!="") {$userprocessing_messages.=";;";} // Add delimiter
-    $userprocessing_messages.=$message;
-    ps_query("update user set processing_messages=? where ref=?",["s",$userprocessing_messages,"i",$userref]);
+    if (PHP_SAPI === "cli") {
+        // Messages don't work unless using browser
+        return;
+    }
+    $userprocessing_messages=ps_value("SELECT processing_messages value FROM user WHERE ref=?",["i",$userref],''); // Fetch fresh from the DB as it may have been cleared by get_processing_message() since we started processing.
+    if ($set_processing_message_first_call || trim($message) === "") {
+        // Blank existing messages if present for first command this page load
+        // Passing an empty string should always clear out any messages
+        $userprocessing_messages = "";
+        $set_processing_message_first_call=false;
+    }
+    if ($userprocessing_messages != "") {
+         // Add delimiter
+        $userprocessing_messages .= ";;";
+    }
+    $userprocessing_messages .= $message;
+
+    ps_query("UPDATE user SET processing_messages=? WHERE ref=?",["s",$userprocessing_messages,"i",$userref]);
     }
 
 
