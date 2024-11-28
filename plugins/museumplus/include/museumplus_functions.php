@@ -133,9 +133,10 @@ function mplus_get_connection_data()
     {
     global $museumplus_host, $museumplus_host_api, $museumplus_application, $museumplus_api_user, $museumplus_api_pass;
 
-    if(trim($museumplus_host) == '' || trim($museumplus_application) == '' || trim($museumplus_api_user) == '' || trim($museumplus_api_pass) == '')
+    # Don't check $museumplus_application - this isn't used with the newer style M+ URLs.
+    if(trim($museumplus_host) == '' || trim($museumplus_api_user) == '' || trim($museumplus_api_pass) == '')
         {
-        mplus_log_event('Missing MuseumPlus API configuration (host, application, API username or API password', array(), 'error');
+        mplus_log_event('Missing MuseumPlus API configuration (host, API username or API password', array(), 'error');
         return array();
         }
 
@@ -187,16 +188,26 @@ function mplus_generate_module_record_url(string $module, int $id)
     $module = trim($module, " \n\r\t\v\0/");
     $id = ($id > 0 ? $id : '');
 
-    if($host == '' || $application == '' || $module == '' || $id == '')
+    if($host == '' || $module == '' || $id == '')
         {
         return '';
         }
 
-    return sprintf('%s/%s/v#!m/%s/%s',
-        $host,
-        $application,
-        escape($module),
-        escape($id));
+    if ($application != '')
+        {
+        return sprintf('%s/%s/v#!m/%s/%s',
+            $host,
+            $application,
+            escape($module),
+            escape($id));
+        }
+    else
+        {
+        return sprintf('%s/v#!m/%s/%s',
+            $host,
+            escape($module),
+            escape($id));
+        }
     }
 
 
