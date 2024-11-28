@@ -5,5 +5,5 @@ version: 2.0
 desc: OpenAI generated metadata. Passes configured field data to the OpenAI API and stores the returned information.
 icon: fa fa-tags
 config_url: /plugins/openai_gpt/pages/setup.php
-category: asset processing
+category: integrations
 info_url: https://www.resourcespace.com/knowledge-base/plugins/openai_gpt

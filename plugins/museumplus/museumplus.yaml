@@ -2,10 +2,11 @@ name: museumplus
 title: MuseumPlus
 author: Montala Ltd.
 version: 1.0
-desc: [Advanced] Allows resource metadata to be extracted from MuseumPlus using its REST API (MpRIA).
+desc: Allows resource metadata to be extracted from MuseumPlus using its REST API (MpRIA).
 icon: fa fa-university
+icon-colour: #B64B00
 info_url: https://www.resourcespace.com/knowledge-base/user/plugin-museumplus
 config_url: /plugins/museumplus/pages/setup.php
 default_priority: 100
-category: asset processing
+category: integrations
 disable_group_select: 1

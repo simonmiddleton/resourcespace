@@ -1262,13 +1262,6 @@ a.HomePanel:hover {
     font-size: 0.7em;
 }
 
-/* Plugin icon styling */
-.plugin-icon {
-    font-size: 28px;
-    width: 100%;
-    text-align: center;
-}
-
 /* Maintenance Page */
 #system_down_container {
         width: 500px;
@@ -2581,3 +2574,55 @@ input[type="text"]#iconpicker-input {
 .ui-widget-overlay {
     opacity: 0.25;
 }
+
+.PluginDisplay
+    {
+    width:400px;
+    height:150px;
+    float: left;
+    border-radius: 10px;
+    margin: 10px 20px 10px 0;
+    padding: 20px;
+    }
+
+.PluginDisplay h2 
+    {
+    margin-bottom:10px;
+    }
+
+.PluginDisplay .plugin-icon
+    {
+    text-align: left;
+    padding-right: 10px;
+    vertical-align: middle; /* Align the icon within the container */
+    }
+
+.PluginDisplay p   
+    {
+    margin: 10px 0;
+    height:50px;
+    overflow-y: auto; /* Scroll if content overflows */
+    }
+
+.PluginDisplay .PluginTools   
+    {
+    font-size: 0.9em;
+    text-align: right;
+    }
+
+.PluginDisplay .PluginTools    a
+    {
+    padding-left:10px;
+    }
+
+.plugin-title
+    {
+    vertical-align: middle; /* Align the text with the icon */
+    display: inline-block; /* Ensures proper alignment */
+    }
+
+.plugin-header  
+    {
+    display: inline-block; /* Makes the container fit its content */
+    vertical-align: middle; /* Aligns the container relative to other elements */
+    }

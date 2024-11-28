@@ -72,7 +72,7 @@ for ($n=0;$n<count($inst_plugins);$n++)
     $py = get_plugin_yaml($inst_plugins[$n]["name"], false);  
     
     // Override YAML values (not config) with updated plugin YAML
-    foreach(["title","name","icon","author","desc","version","category","config_url"] as $yaml_idx)
+    foreach(["title","name","icon","author","desc","version","category","config_url","icon-colour"] as $yaml_idx)
         {
         if(isset($py[$yaml_idx]))
             {
@@ -251,20 +251,7 @@ if($searching)
     {
     $all_plugins = array_merge($inst_plugins, $plugins_avail);
     ?>
-    <div class="Listview">
-        <table class= "ListviewStyle">
-            <thead>
-                <tr class="ListviewTitleStyle">
-                    <th><?php echo escape($lang['plugins-icon']); ?></th>
-                    <th><?php echo escape($lang['name']); ?></th>
-                    <th><?php echo escape($lang['description']); ?></th>
-                    <th><?php echo escape($lang['plugins-author']); ?></th>
-                    <th><?php echo escape($lang['plugins-version']); ?></th>
-                    <?php hook('additional_plugin_columns'); ?>
-                    <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
-                </tr>
-            </thead>
-            <tbody>
+
     <?php
     foreach($all_plugins as $plugin)
         {
@@ -272,105 +259,13 @@ if($searching)
             {
             continue;
             }
-
-        $plugin_description = (isset($plugin["desc"]) ? $plugin["desc"] : "");
-
-        // Plugin version key is different if plugin is installed (version|inst_version)
-        $plugin_version = (isset($plugin["version"]) ? $plugin["version"] : "");
-        $plugin_version = (isset($plugin["inst_version"]) ? $plugin["inst_version"] : $plugin_version);
-        /* Make sure that the version number is displayed with at least one decimal place.
-        If the version number is 0 the displayed version is $lang["notavailableshort"].
-        (E.g. 0 -> (en:)N/A ; 1 -> 1.0 ; 0.92 -> 0.92)
-        */
-        if($plugin_version == 0)
-           {
-           $plugin_version = $lang["notavailableshort"];
-           }
-        elseif(sprintf("%.1f", $plugin_version) == $plugin_version)
-            {
-            $plugin_version = sprintf("%.1f", $plugin_version);
-            }
-
-        $activate_or_deactivate_label = (isset($plugin["inst_version"]) ? $lang["plugins-deactivate"] : $lang['plugins-activate']);
-        $activate_or_deactivate_class = (isset($plugin["inst_version"]) ? "p-deactivate" : "p-activate");
-        $activate_or_deactivate_href  = $plugin['name'];
-
-        if(isset($plugin["legacy_inst"]))
-            {
-            $activate_or_deactivate_label = $lang["plugins-legacyinst"];
-            $activate_or_deactivate_class = "nowrap";
-            $activate_or_deactivate_href  = "";
-            }
-
-        switch ($activate_or_deactivate_label)
-            {
-            case $lang['plugins-activate']:
-                $activate_or_deactivate_icon = "fas fa-check";
-                break;
-            case $lang["plugins-deactivate"]:
-                $activate_or_deactivate_icon = "fa fa-times";
-                break;
-            default:
-                $activate_or_deactivate_icon = "fas fa-check";
-            }
-        ?>
-            <tr>
-                <td><?php echo '<i class="plugin-icon ' . escape($plugin["icon"]) . '"></i>'; ?></td>
-                <td><?php echo $plugin["title"] != "" ? escape($plugin["title"]) : escape($plugin["name"]); ?></td>
-                <td><?php echo escape($plugin_description); ?></td>
-                <td><?php echo escape($plugin["author"]); ?></td>
-                <td><?php echo escape($plugin_version); ?></td>
-                <?php hook('additional_plugin_column_data'); ?>
-                <td>
-                    <div class="ListTools">
-                    <?php
-                    if(!in_array($plugin["name"],$disabled_plugins) || isset($plugin["inst_version"]))
-                        {?>
-                        <a href="#<?php echo $activate_or_deactivate_href; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo '<i class="' . $activate_or_deactivate_icon . '"></i>&nbsp;' . $activate_or_deactivate_label; ?></a>
-                        <?php
-                        }
-                    elseif(in_array($plugin["name"],$disabled_plugins))
-                        {
-                        echo ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . '<i class="' . $activate_or_deactivate_icon . '"></i>' . "&nbsp;" . strip_tags_and_attributes($lang['plugins-disabled-plugin-message'],array("a"),array("href","target")) . "</a>");
-                        }
-                if ($plugin['info_url']!='')
-                   {
-                   echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . escape($lang['plugins-moreinfo']) .'</a> ';
-                   }
-                if (!$plugin['disable_group_select'])
-                    {
-                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '"><i class="fas fa-users"></i>&nbsp;' . escape($lang['groupaccess']) . ((isset($plugin['enabled_groups']) && trim($plugin['enabled_groups']) != '') ? ' (' . escape($lang["on"]) . ')': '') . '</a> ';
-                    $plugin['enabled_groups'] = (isset($plugin['enabled_groups']) ? array($plugin['enabled_groups']) : array());
-                    }
-                if ($plugin['config_url']!='')        
-                   {
-                   // Correct path to support plugins that are located in filestore/plugins
-                   if(substr($plugin['config_url'],0,8)=="/plugins")
-                    {
-                    $plugin_config_url = str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'],true), $plugin['config_url']);
-                    }
-                   else
-                    {$plugin_config_url = $baseurl_short . $plugin['config_url'];}
-                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . escape($lang['options']).'</a> ';        
-                   }
-                if (isset($plugin['config']) && $plugin['config'])
-                    {
-                    echo '<a href="#' . escape($plugin['name']) . '" class="p-purge"><i class="fa fa-trash"></i>&nbsp;' . escape($lang['plugins-purge']) . '</a> ';
-                    }
-                ?>
-                    </div><!-- End of ListTools -->
-                </td>
-            </tr>
-        <?php
+        RenderPlugin($plugin,isset($plugin["inst_version"]));
         }
         ?>
-            </tbody>
-        </table>
         <form id="anc-post" method="post" action="<?php echo $baseurl_short; ?>pages/team/team_plugins.php">
             <?php generateFormToken("anc_post"); ?>
             <input type="hidden" id="anc-input" name="" value="" />
         </form>
-    </div><!-- end of ListView -->
     </div> <!-- end of BasicBox -->
     <?php
     include "../../include/footer.php";
@@ -378,94 +273,22 @@ if($searching)
     }
     
 if (count($inst_plugins)>0)
-   { ?>
-   <div class="Listview">
-   <table class= "ListviewStyle">
-      <thead>
-         <tr class="ListviewTitleStyle">
-         <th><?php echo escape($lang['plugins-icon']); ?></th>
-         <th><?php echo escape($lang['name']); ?></th>
-         <th><?php echo escape($lang['description']); ?></th>
-         <th><?php echo escape($lang['plugins-author']); ?></th>
-         <th><?php echo escape($lang['plugins-instversion']); ?></th>
-         <?php hook('additional_plugin_columns'); ?>
-         <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
-         </tr>
-      </thead>
-      <tbody>
-         <?php 
-         foreach ($inst_plugins as $p)
+   { 
+    foreach ($inst_plugins as $p)
+        {
+        if($searching && !findPluginFromSearch($p, $find))
             {
-            if($searching && !findPluginFromSearch($p, $find))
-                {
-                continue;
-                }
-            # Make sure that the version number is displayed with at least one decimal place.
-            # If the version number is 0 the displayed version is $lang["notavailableshort"].
-            # (E.g. 0 -> (en:)N/A ; 1 -> 1.0 ; 0.92 -> 0.92)
-            if ($p['inst_version']==0)
-               {
-               $formatted_inst_version = $lang["notavailableshort"];
-               }
-            else
-               {
-               if (sprintf("%.1f",$p['inst_version'])==$p['inst_version'])
-                  {
-                  $formatted_inst_version = sprintf("%.1f",$p['inst_version']);
-                  }
-               else
-                  {
-                  $formatted_inst_version = $p['inst_version'];
-                  }
-               }
-            echo '<tr>';
-            echo '<td><i class="plugin-icon ' . $p['icon'] . '"></td>';
-            echo $p['title'] != '' ? "<td>" . escape($p['title']). "</td>" : "<td>" .escape($p['name']) . "</td>";
-            echo "<td>{$p['descrip']}</td><td>{$p['author']}</td><td>".$formatted_inst_version."</td>";
-            hook('additional_plugin_column_data');
-            echo '<td><div class="ListTools">';
-            if (isset($p['legacy_inst']))
-               {
-               echo '<a class="nowrap" href="#"><i class="fas fa-check"></i>&nbsp;' . escape($lang['plugins-legacyinst']).'</a> '; # TODO: Update this link to point to a help page on the wiki
-               }
-            else
-               {
-               echo '<a href="#'.escape($p['name']).'" class="p-deactivate"><i class="fas fa-times"></i>&nbsp;' . escape($lang['plugins-deactivate']).'</a> ';
-               }
-            if ($p['info_url']!='')
-               {
-               echo '<a class="nowrap" href="'.$p['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . escape($lang['plugins-moreinfo']).'</a> ';
-               }
-            if (!$p['disable_group_select'])
-                {
-                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '"><i class="fas fa-users"></i>&nbsp;' . escape($lang['groupaccess']) . ((trim((string) $p['enabled_groups']) != '') ? ' (' . escape($lang["on"]) . ')': '')  . '</a> ';
-                $p['enabled_groups'] = array($p['enabled_groups']);
-                }
-            if ($p['config_url']!='')        
-               {
-               // Correct path to support plugins that are located in filestore/plugins
-               if(substr($p['config_url'],0,8)=="/plugins")
-                {
-                $plugin_config_url = str_replace("/plugins/" . $p['name'], (string)get_plugin_path($p['name'],true), $p['config_url']);
-                }
-               else
-                {$plugin_config_url = $baseurl_short . $p['config_url'];}
-               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' .escape($lang['options']).'</a> ';        
-               }
-            echo '</div></td></tr>';
-            } 
-         ?>
-      </tbody>
-   </table>
-   </div>
-   <?php 
+            continue;
+            }
+        RenderPlugin($p);
+        } 
    } 
 else 
    {
    echo "<p>".escape($lang['plugins-noneinstalled'])."</p>";
    } ?>
 
-<h2 class="pageline"><?php echo escape($lang['plugins-availableheader']); ?></h2>
+<h2 class="pageline clearerleft"><?php echo escape($lang['plugins-availableheader']); ?></h2>
 <?php
 
 if (count($plugins_avail)>0) 
@@ -478,46 +301,7 @@ if (count($plugins_avail)>0)
             continue;
             }
 
-      $plugin_row = '<tr><td>'.'<i class="plugin-icon '.$p['icon'].'">'.'</td>';
-      if ($p['title'] != '')
-        {
-        $plugin_row .= '<td>'.$p['title'].'</td>';
-        }
-      else
-        {
-        $plugin_row .= '<td>'.$p['name'].'</td>';
-        }
-      $plugin_row .= '<td>'.$p['desc'].'</td><td>'.$p['author'].'</td>';
-      if ($p['version'] == 0)
-         {
-         $plugin_row .= '<td>' . $lang["notavailableshort"] . '</td>';
-         }
-      else
-         {
-         $plugin_row .= '<td>'.$p['version'].'</td>';
-         }
-        $plugin_row .= '<td><div class="ListTools">';
-      
-        if(!in_array($p["name"],$disabled_plugins) || isset($p["inst_version"]))
-            {
-            $plugin_row .= '<a href="#'.$p['name'].'" class="p-activate"><i class="fa fa-check"></i>&nbsp;' . $lang['plugins-activate'].'</a> ';
-            }
-        elseif(in_array($p["name"],$disabled_plugins))
-            {
-            $plugin_row .=  ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . '<i class="fas fa-ban"></i>&nbsp;' . "&nbsp;" . $lang['plugins-disabled-plugin-message'] . "</a>");
-            }
-                        
-     
-      if ($p['info_url']!='')
-         {
-         $plugin_row .= '<a class="nowrap" href="'.$p['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;'  . $lang['plugins-moreinfo'].'</a> ';
-         }
-      if ($p['config'])
-         {
-         $plugin_row .= '<a href="#'.$p['name'].'" class="p-purge"><i class="fa fa-trash"></i>&nbsp;' . $lang['plugins-purge'].'</a> ';
-         }
-      $plugin_row .= '</div></td></tr>';  
-      if(isset($p["category"]))
+    if(isset($p["category"]))
          {
          $p["category"] = trim(strtolower($p["category"]));
          #Check for category lists
@@ -531,7 +315,7 @@ if (count($plugins_avail)>0)
                     {
                     $plugin_categories[$p_cat] = array();
                     }
-                array_push($plugin_categories[$p_cat], $plugin_row);
+                array_push($plugin_categories[$p_cat], $p);
                }
             }
          else 
@@ -541,56 +325,36 @@ if (count($plugins_avail)>0)
                $plugin_categories[$p["category"]] = array();
                }
 
-            array_push($plugin_categories[$p["category"]], $plugin_row);
+            array_push($plugin_categories[$p["category"]], $p);
             }
          }
       }
 
-function display_plugin_category($plugins,$category,$header=true) 
+function display_plugin_category($plugins,$category) 
     { 
     global $lang;
     ?>
     <div class="plugin-category-container">
     <?php 
-    if($header)
+    $category_name = isset($lang["plugin_category_{$category}"]) ? $lang["plugin_category_{$category}"] : $category;
+    ?>
+    <h3 class="CollapsiblePluginListHead collapsed clearerleft"><?php echo escape($category_name); ?></h3>
+    <div class="CollapsiblePluginList" style="display: none;">
+     <?php
+    foreach($plugins as $plugin)
         {
-        $category_name = isset($lang["plugin_category_{$category}"]) ? $lang["plugin_category_{$category}"] : $category;
-        ?>
-        <h3 class="CollapsiblePluginListHead collapsed"><?php echo escape($category_name); ?></h3>
-        <?php
+        RenderPlugin($plugin,isset($plugin["inst_version"]));
         }
-        ?>
-        <div class="Listview CollapsiblePluginList">
-            <table class="ListviewStyle">
-                <thead>
-                    <tr class="ListviewTitleStyle">
-                    <th><?php echo escape($lang['plugins-icon']); ?></th>
-                    <th><?php echo escape($lang['name']); ?></th>
-                    <th><?php echo escape($lang['description']); ?></th>
-                    <th><?php echo escape($lang['plugins-author']); ?></th>
-                    <th><?php echo escape($lang['plugins-version']); ?></th>
-                    <th><div class="ListTools"><?php echo escape($lang['tools']); ?></div></th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php
-                foreach($plugins as $plugin)
-                    {
-                    echo $plugin;
-                    }
-                ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
+       ?>
+    </div></div>
     <?php
     }
 
    # Category Specific plugins
    ksort($plugin_categories);
-   foreach($plugin_categories as $category => $plugins)
+   foreach($plugin_categories as $category => $plugins_to_show)
       {
-      display_plugin_category($plugins,$category);
+      display_plugin_category($plugins_to_show,$category);
       }
     ?>
    <script>
@@ -622,5 +386,6 @@ else
   <input type="hidden" id="anc-input" name="" value="" />
 </form>
 <?php
+
 include "../../include/footer.php";
 

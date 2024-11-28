@@ -5,6 +5,6 @@ version: 1.0
 desc: Image recognition capability. Passes uploaded images to the Google Cloud Vision API and sets suggested metadata.
 icon: fa fa-tags
 config_url: /plugins/google_vision/pages/setup.php
-category: asset processing
+category: integrations
 info_url: https://www.resourcespace.com/knowledge-base/plugins/google-vision
 disable_group_select: 1

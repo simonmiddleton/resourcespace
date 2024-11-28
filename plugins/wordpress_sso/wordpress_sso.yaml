@@ -1,7 +1,8 @@
 name: wordpress_sso
 title: Wordpress SSO
-desc: [Advanced] Allows Single Sign On with Wordpress installation
+desc: Allows Single Sign On with Wordpress installation
 icon: fab fa-wordpress-simple
+icon-colour: #00749C
 author: Montala Limited
 version: 1.0
 config_url: /plugins/wordpress_sso/pages/setup.php

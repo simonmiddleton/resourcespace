@@ -4,6 +4,7 @@ author: Montala Ltd.
 version: 1.0
 desc: In-application chat bot for tutorials and assistance
 icon: fa fa-robot
+icon-colour: #44AA44
 category: User Interface
 disable_group_select: 0
 info_url: https://www.resourcespace.com/knowledge-base/plugins/resourcebot

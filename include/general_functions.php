@@ -5684,3 +5684,80 @@ function getCertificateExpiry(string $cert)
     $data = openssl_x509_parse($pemCert);
     return $data ? date('Y-m-d H:i:s', $data['validTo_time_t']) : false;
 }
+
+
+/**
+ * Is the provided colour a valid CSS colour and therefore safe to display?
+ *
+ * @param  string $color    The colour string
+ * @return boolean          True if a valid colour, false if not
+ */
+function isValidCssColor(string $colour)
+    {
+    $regex = '/^(#([a-fA-F0-9]{3}|[a-fA-F0-9]{4}|[a-fA-F0-9]{6}|[a-fA-F0-9]{8})'
+           . '|rgb\((\d{1,3},\s?){2}\d{1,3}\)'
+           . '|rgba\((\d{1,3},\s?){3}(0|0?\.\d+|1)\)'
+           . '|hsl\(\d{1,3},\s?\d{1,3}%,\s?\d{1,3}%\)'
+           . '|hsla\(\d{1,3},\s?\d{1,3}%,\s?\d{1,3}%,\s?(0|0?\.\d+|1)\)'
+           . '|[a-zA-Z]+)$/';
+    return preg_match($regex, trim($colour)) === 1;
+    }
+
+
+/**
+ * Generate a consistent HSL-based colour with a fixed brightness and saturation, but a random hue.
+ *
+ * This function hashes the input key (e.g., plugin name) to determine the hue,
+ * while keeping the saturation and brightness fixed. The generated colour is
+ * converted to a CSS hex colour code.
+ *
+ * @param string $key The input string (e.g., plugin name) to generate a colour for.
+ * @param int $saturation The saturation percentage (0-100). Default is 70.
+ * @param int $lightness The lightness percentage (0-100). Default is 50.
+ * @return string The generated CSS hex colour code (e.g., #ff5733).
+ */
+function generateConsistentColour($key, $saturation = 70, $lightness = 50) {
+    // Hash the key to get a consistent hue
+    $hash = md5($key);
+    $hue = hexdec(substr($hash, 0, 6)) % 360; // Use first 6 hex chars to determine hue
+
+    // Convert HSL to RGB
+    list($r, $g, $b) = hslToRgb($hue, $saturation / 100, $lightness / 100);
+
+    // Convert to a CSS hex colour
+    return sprintf('#%02x%02x%02x', $r, $g, $b);
+}
+
+/**
+ * Convert HSL to RGB.
+ *
+ * @param float $h Hue (0-360).
+ * @param float $s Saturation (0-1).
+ * @param float $l Lightness (0-1).
+ * @return array Array with RGB values (0-255).
+ */
+function hslToRgb($h, $s, $l) {
+    $c = (1 - abs(2 * $l - 1)) * $s;
+    $x = $c * (1 - abs(fmod($h / 60, 2) - 1));
+    $m = $l - $c / 2;
+
+    if ($h < 60) {
+        $r = $c; $g = $x; $b = 0;
+    } elseif ($h < 120) {
+        $r = $x; $g = $c; $b = 0;
+    } elseif ($h < 180) {
+        $r = 0; $g = $c; $b = $x;
+    } elseif ($h < 240) {
+        $r = 0; $g = $x; $b = $c;
+    } elseif ($h < 300) {
+        $r = $x; $g = 0; $b = $c;
+    } else {
+        $r = $c; $g = 0; $b = $x;
+    }
+
+    return [
+        (int)(($r + $m) * 255),
+        (int)(($g + $m) * 255),
+        (int)(($b + $m) * 255)
+    ];
+}

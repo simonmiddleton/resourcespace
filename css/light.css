@@ -752,3 +752,10 @@ a.HomePanel:hover {
 .ui-button, .ui-button:active {
     border: 1px solid #c5c5c5;
 }
+
+.PluginDisplay
+    {
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 3px solid rgba(255, 255, 255, 0);
+    }

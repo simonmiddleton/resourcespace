@@ -4,5 +4,5 @@ author: Montala Limited
 version: 1.0
 desc: Erase parts of an image and have OpenAI DALL-E regenerate them.
 icon: fa fa-magic
-category: asset processing
+category: integrations
 info_url: https://www.resourcespace.com/knowledge-base/plugins/openai_image_edit
