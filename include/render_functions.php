@@ -3493,15 +3493,15 @@ function render_custom_fields(array $cfs)
 
             $required_html = ($field["required"] ? "<sup>*</sup>" : "");
             ?>
-            <label for="<?php echo $field_id; ?>"><?php echo escape(i18n_get_translated($field["title"])) . $required_html; ?></label>
+            <label for="<?php echo escape($field_id); ?>"><?php echo escape(i18n_get_translated($field["title"])) . $required_html; ?></label>
             <?php
             switch($field["type"])
                 {
                 case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
                     ?>
-                    <textarea id="<?php echo $field_id; ?>"
+                    <textarea id="<?php echo escape($field_id); ?>"
                               class="stdwidth MultiLine"
-                              name="<?php echo $field_name; ?>"
+                              name="<?php echo escape($field_name); ?>"
                               rows=6
                               cols=50><?php echo escape($field_value); ?></textarea>
                     <?php
@@ -3509,7 +3509,7 @@ function render_custom_fields(array $cfs)
 
                 case FIELD_TYPE_DROP_DOWN_LIST:
                     ?>
-                    <select id="<?php echo $field_id; ?>" class="stdwidth" name="<?php echo $field_name; ?>">
+                    <select id="<?php echo escape($field_id); ?>" class="stdwidth" name="<?php echo escape($field_name); ?>">
                     <?php
                     foreach($field["options"] as $f_option)
                         {
@@ -3535,7 +3535,7 @@ function render_custom_fields(array $cfs)
                         $checked = (in_array($computed_value, $selected_options_hashes) ? " checked" : "");
                         ?>
                         <div class="Inline">
-                            <input type="checkbox" name="<?php echo $field_name; ?>" value="<?php echo $computed_value; ?>"<?php echo $checked; ?>>&nbsp;<?php echo $label; ?>
+                            <input type="checkbox" name="<?php echo escape($field_name); ?>" value="<?php echo $computed_value; ?>"<?php echo $checked; ?>>&nbsp;<?php echo $label; ?>
                         </div>
                         <?php
                         }

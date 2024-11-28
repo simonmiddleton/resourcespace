@@ -458,11 +458,11 @@ render_content_menu();
         const extra_params = e.classList.contains('image-half-width') ? {layout: 'half-width'} : {};
         const resource_type_new_upload = btn_el.data('item-upload-url');
         if (
-            type === <?php echo BRAND_GUIDELINES_CONTENT_TYPES['resource']; ?>
+            type === <?php echo (int) BRAND_GUIDELINES_CONTENT_TYPES['resource']; ?>
             && typeof resource_type_new_upload !== "undefined"
         ) {
             const back_to_content_page_url = new URL(resource_type_new_upload);
-            const manage_content_page = new URL('<?php echo BRAND_GUIDELINES_URL_MANAGE_CONTENT; ?>');
+            const manage_content_page = new URL('<?php echo escape(BRAND_GUIDELINES_URL_MANAGE_CONTENT); ?>');
             manage_content_page.searchParams.set('page', page);
             manage_content_page.searchParams.set('type', type);
             manage_content_page.searchParams.set('after_item', item.position_after);
