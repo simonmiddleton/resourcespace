@@ -115,9 +115,14 @@ foreach($recentactions as $notifyuser=>$user_actions)
             $usernotification->append_text('<tr><td>' . nicedate($user_action["date"], true, true, true) . '</td>');
             $usernotification->append_text('<td><a href="' . $editlink . '" >' . $user_action["ref"] . '</a></td>');
 
-
             $actionfromuser = get_user($user_action["user"]);
-            $usernotification->append_text('<td>' . escape(isset($actionfromuser["fullname"]) ? $actionfromuser["fullname"] : $actionfromuser["username"]) . '</td>');
+            if ($actionfromuser === false) {
+                // User may have beewn deleted
+                $actionusername = $user_action["user"];
+            } else {
+                $actionusername = isset($actionfromuser["fullname"]) ? $actionfromuser["fullname"] : $actionfromuser["username"];
+            }
+            $usernotification->append_text('<td>' . escape($actionusername) . '</td>');
             $usernotification->append_text('<td>' . escape(tidy_trim($user_action["description"],200)) . '</td>');
             $usernotification->append_text('<td>');
             $langtype = 'actions_type_' . $user_action['type'];
