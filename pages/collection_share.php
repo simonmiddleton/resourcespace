@@ -529,7 +529,12 @@ if (isset($show_error)) { ?>
 
 </form>
 </div>
-
+<script>
+jQuery('#collectionform').submit(function(){
+    CentralSpaceShowProcessing();
+    jQuery('#collectionform :input[type=submit]').hide();
+});
+</script>
 <?php
 include "../include/footer.php";
 ?>
