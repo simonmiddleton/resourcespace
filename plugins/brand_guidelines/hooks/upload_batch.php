@@ -34,7 +34,7 @@ function HookBrand_guidelinesUpload_batchPostUploadActions_before_csl_redirurl_j
 {
     printf('<!-- Logic for %s -->%s', escape(__FUNCTION__), PHP_EOL);
     ?>
-    if (redirurl.startsWith('<?php echo BRAND_GUIDELINES_URL_MANAGE_CONTENT; ?>')) {
+    if (redirurl.startsWith('<?php echo escape(BRAND_GUIDELINES_URL_MANAGE_CONTENT); ?>')) {
         console.debug('HookBrand_guidelinesAllPostUploadActions_before_csl_redirurl_js specific logic ...');
         redirurl += `&w_ref=${
             resource_keys
