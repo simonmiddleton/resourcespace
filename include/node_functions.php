@@ -1412,7 +1412,9 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
     $done=0;
     foreach($resources_chunks as $resources_chunk)
         {
-        set_processing_message(str_replace(["[done]","[total]"],[$done,count($resources)],$lang["processing_updating_resources"]));
+        if (PHP_SAPI !== "cli") {
+            set_processing_message(str_replace(["[done]","[total]"],[$done,count($resources)],$lang["processing_updating_resources"]));
+        }
         $done+=count($resources_chunk);
 
         $resource_node_values = '';
@@ -1600,7 +1602,9 @@ function delete_resource_nodes_multi($resources=array(),$nodes=array())
     $done=0;
     foreach ($resource_chunks as $resource_chunk)
         {
-        set_processing_message(str_replace(["[done]","[total]"],[$done,count($resources)],$lang["processing_updating_resources"]));
+        if (PHP_SAPI !== "cli") {
+            set_processing_message(str_replace(["[done]","[total]"],[$done,count($resources)],$lang["processing_updating_resources"]));
+        }
         $done+=count($resource_chunk);
 
         foreach ($node_chunks as $node_chunk)
