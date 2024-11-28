@@ -387,20 +387,3 @@ elseif (defined('API_CALL') && $_SERVER['REQUEST_METHOD'] === 'POST' && !isValid
         ajax_response_fail(ajax_build_message("{$lang['error-csrf-verification']}: {$lang['error_invalid_input']}"))
     );
     }
-
-// Disallow access to PHP running in the plugin folders unless the plugin is enabled
-$current_script = $_SERVER['SCRIPT_FILENAME'];
-$plugins_dirs = [realpath(__DIR__ . '/../plugins'),realpath($storagedir . '/plugins')]; // Check both possible plugin locations, base and filestore
-foreach ($plugins_dirs as $plugins_dir)
-    {
-    if (strpos($current_script, $plugins_dir) === 0) {
-        // Extract the plugin name from the path
-        $relative_path = str_replace($plugins_dir . DIRECTORY_SEPARATOR, '', $current_script);
-        $path_parts = explode(DIRECTORY_SEPARATOR, $relative_path);
-        $plugin_name = $path_parts[0] ?? null;
-
-        if (isset($plugin_name) && !empty($plugin_name) && !in_array($plugin_name, $plugins)) {
-                die("Error: Plugin " . escape($plugin_name) . " is not activated.");
-            }
-        }
-    }
