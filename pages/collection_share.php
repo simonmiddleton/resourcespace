@@ -223,7 +223,7 @@ if (isset($show_error)) { ?>
 }
 ?>
     <div class="BasicsBox">     
-    <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref)?>">
+    <form class="test" onsubmit="createShare(this); return false;" method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref)?>">
     <input type="hidden" name="ref" id="ref" value="<?php echo escape($ref) ?>">
     <input type="hidden" name="deleteaccess" id="deleteaccess" value="">
     <input type="hidden" name="editaccess" id="editaccess" value="<?php echo escape($editaccess)?>">
@@ -529,6 +529,12 @@ if (isset($show_error)) { ?>
 
 </form>
 </div>
+<script>
+jQuery('#collectionform').submit(function(){
+    CentralSpaceShowProcessing();
+    jQuery('#collectionform :input[type=submit]').hide();
+});
+</script>
 
 <?php
 include "../include/footer.php";
