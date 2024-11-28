@@ -170,7 +170,7 @@ if($simple_search_pills_view)
 <script src="<?php echo $baseurl_short; ?>js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
 <!-- DOMPurify -->
-<script src="<?php echo $baseurl; ?>/lib/js/purify.min.js"></script>
+<script src="<?php echo $baseurl; ?>/lib/js/purify.min.js?reload_key=<?php echo (int) $css_reload_key; ?>"></script>
 
 <?php 
 global $not_authenticated_pages;

@@ -1704,7 +1704,6 @@ function updateSizeInfo(ns, selected_size)
         DOMPurify.sanitize(
             preview_size_info[selected_size]['html']['size_info'],
             {
-                SAFE_FOR_JQUERY: true,
                 ALLOWED_TAGS: ['p'],
             }
         )
@@ -1757,7 +1756,6 @@ function updateDownloadLink(ns, selected_size, picker)
         DOMPurify.sanitize(
             preview_size_info[selected_size]['html']['download_column'],
             {
-                SAFE_FOR_JQUERY: true,
                 ALLOWED_TAGS: ['a'],
                 ALLOWED_ATTR: ['href', 'onclick','data-api-native-csrf'],
             }
