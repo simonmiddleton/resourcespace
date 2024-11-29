@@ -286,9 +286,11 @@ body {
     }
     #HeaderNav1Click {
         margin-right: 5px;
+        min-width: 30px;
     }
     #HeaderNav2Click {
         margin-right: 5px;
+        min-width: 30px;
     }
     .ResponsiveNav1Username {
         display:none !important;
@@ -418,6 +420,10 @@ body {
     }
     #HeaderImg {
         margin-left: 10px;
+    }
+
+    #HeaderNav1 li.HeaderLink.UploadButton {
+        padding-top: 10px;
     }
 }
 @media(max-width:384px) {
