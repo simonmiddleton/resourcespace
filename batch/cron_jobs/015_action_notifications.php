@@ -117,7 +117,7 @@ foreach($recentactions as $notifyuser=>$user_actions)
 
             $actionfromuser = get_user($user_action["user"]);
             if ($actionfromuser === false) {
-                // User may have beewn deleted
+                // User may have been deleted
                 $actionusername = $user_action["user"];
             } else {
                 $actionusername = isset($actionfromuser["fullname"]) ? $actionfromuser["fullname"] : $actionfromuser["username"];
