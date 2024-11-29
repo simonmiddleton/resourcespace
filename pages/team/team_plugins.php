@@ -194,10 +194,12 @@ include "../../include/header.php"; ?>
       }
       $('#BasicsBox').ready(function() {
          $('a.p-deactivate').click(function() {
+         $(this).parent().parent().fadeOut('fast');
          actionPost('deactivate', $(this).attr('href'));
          return false;
          });
          $('a.p-activate').click(function() {
+         $(this).parent().parent().fadeOut('fast');
          var pname = $(this).attr('href');
          actionPost('activate', $(this).attr('href'));
          return false;
@@ -205,10 +207,6 @@ include "../../include/header.php"; ?>
          $('a.p-purge').click(function() {
          actionPost('purge', $(this).attr('href'));
          return false;                        
-         });
-         $('a.p-delete').click(function() {
-         actionPost('delete', $(this).attr('href'));
-         return false;
          });
       });
    });
@@ -362,12 +360,12 @@ function display_plugin_category($plugins,$category)
          if(jQuery(this).hasClass("collapsed")) {
             jQuery(this).removeClass("collapsed");
             jQuery(this).addClass("expanded");
-            jQuery(this).siblings(".CollapsiblePluginList").show();
+            jQuery(this).siblings(".CollapsiblePluginList").slideDown('fast');
          }
          else {
             jQuery(this).removeClass("expanded");
             jQuery(this).addClass("collapsed");
-            jQuery(this).siblings(".CollapsiblePluginList").hide();
+            jQuery(this).siblings(".CollapsiblePluginList").slideUp('fast');
          }
       });
       jQuery(".CollapsiblePluginList").hide();
