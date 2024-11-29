@@ -2,7 +2,7 @@ name        : winauth
 title       : WinAuth
 author      : Montala Limited
 version     : 1.0
-desc        : Windows Integrated Authentication
+desc        : Windows Integrated Authentication.
 icon        : fab fa-windows
 icon-colour: #0088BB
 info_url    : https://www.resourcespace.com/knowledge-base/plugins/winauth

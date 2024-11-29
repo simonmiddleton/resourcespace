@@ -2,7 +2,7 @@ name: openai_gpt
 title: OpenAI API GPT integration
 author: Montala Limited
 version: 2.0
-desc: OpenAI generated metadata. Passes configured field data to the OpenAI API and stores the returned information.
+desc: Automated metadata processing using AI.
 icon: fa fa-tags
 config_url: /plugins/openai_gpt/pages/setup.php
 category: integrations

@@ -2,7 +2,7 @@
 title: YouTube to ResourceSpace
 author: Julio Melon (Ayuda en Accion)
 version: 2.0
-desc: Enables to publish videos from youtube.
+desc: Add YouTube hosted videos as resources.
 icon: fa fa-youtube
 icon-colour: red
 config_url: /plugins/yt2rs/pages/setup.php

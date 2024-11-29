@@ -2,7 +2,7 @@ name    : image_text
 title   : Image Text
 author  : Montala Ltd.
 version : 1.0
-desc    : Enables field data to be added to image at download
+desc    : Enables field data to be added to image at download.
 icon    : fa fa-comment-dots
 config_url: /plugins/image_text/pages/setup.php
 category: Asset processing

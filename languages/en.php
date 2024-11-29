@@ -1461,9 +1461,9 @@ $lang['plugins-author'] = 'Author';
 $lang['plugins-version'] = 'Version';
 $lang['plugins-instversion'] = 'Installed version';
 $lang['plugins-icon'] = 'Icon';
-$lang['plugins-deactivate'] = 'Deactivate';
-$lang['plugins-moreinfo'] = 'More info';
-$lang['plugins-activate'] = 'Activate';
+$lang['plugins-deactivate'] = 'Uninstall';
+$lang['plugins-moreinfo'] = 'Docs';
+$lang['plugins-activate'] = 'Install';
 $lang['plugins-purge'] = 'Purge configuration';
 $lang['plugins-headertext'] = 'Plugins extend the functionality of ResourceSpace.';
 $lang['plugins-legacyinst'] = 'Activated via config.php';
@@ -1602,7 +1602,7 @@ $lang['reportbug-preparebutton']="Prepare bug report";
 
 $lang["enterantispamcode"]="Anti-Spam, please enter the following code";
 
-$lang["groupaccess"]="Group access";
+$lang["groupaccess"]="Access";
 $lang["plugin-groupsallaccess"]="This plugin is activated for all groups";
 $lang["plugin-groupsspecific"]="This plugin is activated for the selected groups only";
 

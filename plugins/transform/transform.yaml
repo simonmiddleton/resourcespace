@@ -2,7 +2,7 @@ name    : transform
 title   : Image Tools (transform)
 author  : David Dwiggins/Montala Limited
 version : 1.4
-desc    : Enables creation of cropped and scaled alternative images (jCrop w/Mobile support)
+desc    : Enables creation of cropped and scaled alternative images.
 icon    : fa fa-crop-alt
 config_url: /plugins/transform/pages/setup.php
 default_priority: 998

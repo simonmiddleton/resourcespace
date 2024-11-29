@@ -1,6 +1,6 @@
 name: rse_workflow
 title: Advanced Workflow
-desc: ResourceSpace Enterprise - Workflow 
+desc: Configure custom workflow states and actions beyond the defaults.
 icon: fa fa-check-square
 author: Montala Limited
 version: 1.0

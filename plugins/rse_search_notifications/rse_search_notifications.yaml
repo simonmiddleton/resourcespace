@@ -1,6 +1,6 @@
 name: rse_search_notifications
 title: Search Notifications
-desc: Notify user when changes occur to a saved search
+desc: Notify user when changes occur to a saved search.
 icon: fa fa-bell
 icon-colour: #FFD700
 author: Montala Limited

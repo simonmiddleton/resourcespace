@@ -1,6 +1,6 @@
 name: google_analytics
 title: Google Analytics
-desc: Google Analytics Plugin
+desc: Add Google Analytics tracking.
 icon: fa fa-chart-line
 author: Montala Limited
 version: 1.0

@@ -2,7 +2,7 @@ name: licensemanager
 title: License Manager
 author: Montala Limited
 version: 1.0
-desc: Adds the capability to manage resource licensing
+desc: Manage resource licensing.
 icon: fa fa-id-card
 category: Compliance
 config_url: /plugins/licensemanager/pages/setup.php

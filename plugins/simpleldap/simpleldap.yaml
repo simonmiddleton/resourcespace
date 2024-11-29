@@ -1,9 +1,10 @@
 name    : simpleldap
-title   : Simple LDAP
+title   : LDAP
 author  : David Dwiggins, Montala Ltd.
 version : 1.2
-desc    : Simpler implementation of ldap authentication, targeted at Active Directory but also supports Oracle directory
+desc    : User authentication via LDAP.
 icon    : fa fa-key
+icon-colour: #777777
 config_url: /plugins/simpleldap/pages/setup.php
 category: authentication
 disable_group_select: 1

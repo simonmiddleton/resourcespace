@@ -2,7 +2,7 @@ name: cookies_notification
 title: Cookies Notification
 author: Montala Limited
 version: 1.1
-desc: Adds the ability to notify users of how ResourceSpace may use cookies to track user activity by showing a message in the header
+desc: Notify of cookie use by showing a message in the header.
 icon: fa fa-cookie
 icon-colour: #964B00
 config_url: /plugins/cookies_notification/pages/setup.php

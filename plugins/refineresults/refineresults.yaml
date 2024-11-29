@@ -2,7 +2,7 @@ name: refineresults
 title: Refine Results
 author: Montala Limited
 version: 1.0
-desc: Adds a refine results box above search results
+desc: An option to refine search results, above the search result display.
 icon: fa fa-filter
 category: user interface
 info_url: https://www.resourcespace.com/knowledge-base/plugins/refine-results

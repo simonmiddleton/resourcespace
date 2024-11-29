@@ -1,6 +1,6 @@
 name: propose_changes
 title: Propose Changes
-desc: Adds option to allow users to propose metadata changes without edit access
+desc: Allow users to propose metadata changes without edit access.
 icon: fa fa-lightbulb
 version: 1.0
 config_url: /plugins/propose_changes/pages/setup.php

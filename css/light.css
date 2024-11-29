@@ -759,3 +759,8 @@ a.HomePanel:hover {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 3px solid rgba(255, 255, 255, 0);
     }
+
+.PluginDisplay .Pill
+    {
+    background-color: #1679c0;
+    }

@@ -4,7 +4,7 @@ author  : Montala Ltd.
 version : 1.0
 icon    : fa fa-archive
 icon-colour: #999999
-desc    : Enables the relocation of achived files to an offline location
+desc    : Enables the relocation of achived files to an offline location.
 config_url: /plugins/offline_archive/pages/setup.php
 disable_group_select: 1
 category: Asset processing

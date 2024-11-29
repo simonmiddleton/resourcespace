@@ -2,7 +2,7 @@ name: autoassign_mrequests
 title: Auto-assign managed requests
 author: Montala Limited
 version: 1.0
-desc: Used to auto-assign managed requests to a specific user based on resource type and field value map
+desc: Automatically assign requests based on resource type and metadata.
 icon: fa fa-shopping-cart
 config_url: /plugins/autoassign_mrequests/pages/setup.php
 default_priority: 100

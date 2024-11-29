@@ -1,8 +1,8 @@
 name: google_vision
-title: Google Vision API
+title: Google Vision
 author: Montala Limited
 version: 1.0
-desc: Image recognition capability. Passes uploaded images to the Google Cloud Vision API and sets suggested metadata.
+desc: Automated image tagging using AI.
 icon: fa fa-tags
 config_url: /plugins/google_vision/pages/setup.php
 category: integrations

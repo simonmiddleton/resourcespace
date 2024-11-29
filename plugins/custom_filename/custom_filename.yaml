@@ -1,8 +1,8 @@
 name: custom_filename
 title: Custom Filename
-author: Alin Cota
+author: Montala Limited
 version: 1.0
-desc: Provides the ablity to post-process the filename and save the newly processed value in a separate field. At the moment this plugin takes the original filename and removes the extension to help with MuseumPlus integration.
+desc: Post-process the filename and save the newly processed value in a separate field.
 icon: fa fa-bars
 config_url: /plugins/custom_filename/pages/setup.php
 default_priority: 100

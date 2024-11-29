@@ -2,7 +2,7 @@ name: resourcebot
 title: Resource Bot
 author: Montala Ltd.
 version: 1.0
-desc: In-application chat bot for tutorials and assistance
+desc: In-application chat bot for tutorials and assistance.
 icon: fa fa-robot
 icon-colour: #44AA44
 category: User Interface

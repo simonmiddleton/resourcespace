@@ -1698,101 +1698,84 @@ function register_group_access_plugins(?int $usergroup=-1,array $plugins = []): 
 
 
 /**
- * RenderPlugin
- * Render the plugin as seen in the Plugin Manager including options to active and configure.
+ * Render the plugin in the Plugin Manager with options to activate and configure.
  *
  * @param  array   $plugin    An array containing the plugin data, loaded from the plugin table
- * @param  boolean $active    If true, add an option to deactivate and allow group configuration
+ * @param  boolean $active    If true, display options to deactivate and allow group configuration
  * @return void
  */
-function RenderPlugin($plugin,$active=true)
-    {
-    global $lang,$plugin_config_url,$baseurl_short,$disabled_plugins,$disabled_plugins_message;
+function RenderPlugin($plugin, $active = true)
+{
+    global $lang, $plugin_config_url, $baseurl_short, $disabled_plugins, $disabled_plugins_message;
 
-    // Prepare links and styling
-    $activate_or_deactivate_label = ($active ? $lang["plugins-deactivate"] : $lang['plugins-activate']);
-    $activate_or_deactivate_class = ($active ? "p-deactivate" : "p-activate");
-    $activate_or_deactivate_href  = $plugin['name'];
-    switch ($activate_or_deactivate_label)
-        {
-        case $lang['plugins-activate']:
-            $activate_or_deactivate_icon = "fas fa-check";
-            break;
-        case $lang["plugins-deactivate"]:
-            $activate_or_deactivate_icon = "fa fa-times";
-            break;
-        default:
-            $activate_or_deactivate_icon = "fas fa-check";
-        }
-    if(isset($plugin["legacy_inst"]))
-        {
-        $activate_or_deactivate_label = $lang["plugins-legacyinst"];
-        $activate_or_deactivate_class = "nowrap";
-        $activate_or_deactivate_href  = "";
-        }
+    // Determine activation/deactivation labels, classes, and icons
+    $is_legacy = isset($plugin["legacy_inst"]);
+    $label = $is_legacy ? $lang["plugins-legacyinst"] : ($active ? $lang["plugins-deactivate"] : $lang["plugins-activate"]);
+    $class = $is_legacy ? "nowrap" : ($active ? "p-deactivate" : "p-activate");
+    $icon = $is_legacy ? "" : ($active ? "fa fa-circle-xmark" : "fas fa-circle-plus");
+    $href = $is_legacy ? "" : $plugin['name'];
 
-    // Fetch and use a colour from the YAML
-    $iconcolour=generateConsistentColour(substr($plugin["title"],0,3),80,30); // Default colour based on name only.
-    if (isset($plugin["icon-colour"]) && $plugin["icon-colour"]!="") 
-    if (isset($plugin["icon-colour"]) && isValidCssColor($plugin["icon-colour"]))
-        {
-        $iconcolour=$plugin["icon-colour"];
-        }
+    // Determine icon colour
+    $icon_colour = isset($plugin["icon-colour"]) && isValidCssColor($plugin["icon-colour"])
+        ? $plugin["icon-colour"]
+        : generateConsistentColour(substr($plugin["title"], 0, 3), 80, 30);
 
-    // Render main part
+    // Render the plugin display
     echo '<div class="PluginDisplay">';
     echo '<h2>';
     echo '<span class="plugin-header">';
-    echo '<i class="plugin-icon fa-2x ' . $plugin['icon'] . '" style="color:' . $iconcolour . ';"></i>';
-    echo '<span class="plugin-title">' . ($plugin['title'] != '' ? escape($plugin['title']) : escape($plugin['name'])) . '</span>';
+    echo '<i class="plugin-icon fa-2x ' . escape($plugin['icon']) . '" style="color:' . escape($icon_colour) . ';"></i>';
+    echo '<span class="plugin-title">' . escape($plugin['title'] ?: $plugin['name']) . '</span>';
     echo '</span>';
     echo '</h2>';
-    echo "<p>{$plugin['desc']}</p>";
+    echo '<p>' . escape($plugin['desc']) . '</p>';
     echo '<p class="PluginTools">';
 
-    // Render links
-    if(!in_array($plugin["name"],$disabled_plugins) || isset($plugin["inst_version"]))
-        {?>
-        <a href="#<?php echo $activate_or_deactivate_href; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo '<i class="' . $activate_or_deactivate_icon . '"></i>&nbsp;' . $activate_or_deactivate_label; ?></a>
-        <?php
-        }
-    elseif(in_array($plugin["name"],$disabled_plugins))
-        {
-        echo ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . '<i class="' . $activate_or_deactivate_icon . '"></i>' . "&nbsp;" . strip_tags_and_attributes($lang['plugins-disabled-plugin-message'],array("a"),array("href","target")) . "</a>");
-        }
+    // Render activation/deactivation or disabled message
+    if (!$is_legacy && (!in_array($plugin["name"], $disabled_plugins) || isset($plugin["inst_version"]))) {
+        echo '<a href="#' . escape($href) . '" class="' . escape($class) . '">';
+        echo '<i class="' . escape($icon) . '"></i>&nbsp;' . escape($label);
+        echo '</a>';
+    } elseif (in_array($plugin["name"], $disabled_plugins)) {
+        $message = $disabled_plugins_message ?: $lang['plugins-disabled-plugin-message'];
+        echo strip_tags_and_attributes(i18n_get_translated($message), ['a'], ['href', 'target']);
+    }
 
-    if ($plugin['info_url']!='')
-        {
-        echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . escape($lang['plugins-moreinfo']) .'</a> ';
-        }
+    // Render "more info" link if available
+    if (!empty($plugin['info_url'])) {
+        echo '<a class="nowrap" href="' . escape($plugin['info_url']) . '" target="_blank">';
+        echo '<i class="fas fa-info"></i>&nbsp;' . escape($lang['plugins-moreinfo']);
+        echo '</a> ';
+    }
 
-    if ($active)
-        {
-        // Options for active plugin
-        if (!$plugin['disable_group_select'])
-            {
-            echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '"><i class="fas fa-users"></i>&nbsp;' . escape($lang['groupaccess']) . ((trim((string) $plugin['enabled_groups']) != '') ? ' (' . escape($lang["on"]) . ')': '')  . '</a> ';
-            $plugin['enabled_groups'] = array($plugin['enabled_groups']);
-            }
+    // Render group access link for active plugins
+    if ($active && empty($plugin['disable_group_select'])) {
+        echo '<a onClick="return CentralSpaceLoad(this, true);" class="nowrap" href="';
+        echo $baseurl_short . 'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']);
+        echo '"><i class="fas fa-users"></i>&nbsp;' . escape($lang['groupaccess']);
+        if (!empty(trim((string) $plugin['enabled_groups']))) {
+            $s=explode(",",$plugin['enabled_groups']);
+            echo ' <span class="Pill">' . count($s) . '</span>';
         }
-   
-    if ($plugin['config_url']!='')        
-        {
-        // Correct path to support plugins that are located in filestore/plugins
-        if(substr($plugin['config_url'],0,8)=="/plugins")
-            {
-            $plugin_config_url = str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'],true), $plugin['config_url']);
-            }
-        else
-            {$plugin_config_url = $baseurl_short . $plugin['config_url'];}
-        echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . escape($lang['options']).'</a> ';        
-        }
+        echo '</a> ';
+    }
 
-    if (isset($plugin['config']) && $plugin['config'])
-        {
-        // Purge config link
-        echo '<a href="#' . escape($plugin['name']) . '" class="p-purge"><i class="fa fa-trash"></i>&nbsp;' . escape($lang['plugins-purge']) . '</a> ';
-        }
+    // Render configuration options link if available
+    if (!empty($plugin['config_url'])) {
+        $plugin_config_url = (substr($plugin['config_url'], 0, 8) === "/plugins")
+            ? str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'], true), $plugin['config_url'])
+            : $baseurl_short . $plugin['config_url'];
+        echo '<a onClick="return CentralSpaceLoad(this, true);" class="nowrap" href="' . escape($plugin_config_url) . '">';
+        echo '<i class="fas fa-cog"></i>&nbsp;' . escape($lang['options']);
+        echo '</a> ';
+    }
+
+    // Render purge configuration link if applicable
+    if (!empty($plugin['config'])) {
+        echo '<a href="#' . escape($plugin['name']) . '" class="p-purge">';
+        echo '<i class="fa fa-trash"></i>&nbsp;' . escape($lang['purge']);
+        echo '</a> ';
+    }
 
     echo '</p></div>';
-    }
+}

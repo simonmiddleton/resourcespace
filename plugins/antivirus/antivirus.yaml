@@ -2,7 +2,7 @@ name    : antivirus
 title   : Antivirus
 author  : Alin Cota
 version : 1.1
-desc    : Antivirus capabilities by integrating with most known antivirus engines that can run command line
+desc    : Antivirus capabilities by integrating with most known antivirus engines that can run command line.
 icon    : fa fa-shield-alt
 info_url: https://www.resourcespace.com/knowledge-base/plugins/antivirus
 config_url: /plugins/antivirus/pages/setup.php

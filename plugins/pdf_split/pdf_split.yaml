@@ -2,7 +2,7 @@ name: pdf_split
 title: PDF Split
 author: Montala Limited
 version: 1.0
-desc: Allows PDF files to be split to multiple pages
+desc: Allows PDF files to be split to multiple pages.
 icon: fa fa-file-pdf
 icon-colour: red
 category: Asset processing

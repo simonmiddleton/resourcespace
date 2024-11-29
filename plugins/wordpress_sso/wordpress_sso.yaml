@@ -1,6 +1,6 @@
 name: wordpress_sso
 title: Wordpress SSO
-desc: Allows Single Sign On with Wordpress installation
+desc: SSO via Wordpress; logging in to Wordpress logs you in to ResourceSpace.
 icon: fab fa-wordpress-simple
 icon-colour: #00749C
 author: Montala Limited

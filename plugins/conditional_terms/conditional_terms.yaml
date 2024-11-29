@@ -1,6 +1,6 @@
 name: conditional_terms
 title: Conditional Terms
-desc: Enables conditional display of terms page at download based on resource metadata 
+desc: Enables conditional display of terms page at download based on resource metadata.
 icon: fa fa-list-ul
 author: Montala Limited
 config_url: /plugins/conditional_terms/pages/setup.php

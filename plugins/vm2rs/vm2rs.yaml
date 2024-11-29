@@ -2,7 +2,7 @@
 title: Vimeo to ResourceSpace
 author: Tony W, Mariano B. (OMF)
 version: 1.0
-desc: Enables embedding videos from vimeo.
+desc: Embed videos from Vimeo as if they are ResourceSpace resources.
 icon: fab fa-vimeo
 icon-colour: #19B7EA
 config_url: /plugins/vm2rs/pages/setup.php
