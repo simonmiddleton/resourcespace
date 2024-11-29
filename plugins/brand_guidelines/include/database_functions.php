@@ -127,10 +127,8 @@ function delete_pages(array $refs): bool
  */
 function reorder_items(string $table, array $list, ?callable $filter): void
 {
-    $ref_ob_map = array_map(
-        'intval',
-        array_column(array_filter($list, $filter), 'order_by', 'ref')
-    );
+    $list_filtered = $filter === null ? array_filter($list) : array_filter($list, $filter); # PHP 7.4 support
+    $ref_ob_map = array_map('intval', array_column($list_filtered, 'order_by', 'ref'));
     asort($ref_ob_map, SORT_NUMERIC);
     sql_reorder_records($table, array_keys($ref_ob_map));
     clear_query_cache($table);
