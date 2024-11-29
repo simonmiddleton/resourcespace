@@ -2142,6 +2142,11 @@ function enforceSharePassword(error_text)
 return true;
 }
 
+/**
+ * Determine if we have minimum date parts in order to allow calling AutoSave (on edit page - see edit_fields/4.php)
+ * @param {String} fieldidentifier 
+ * @returns {bool}
+ */
 function sufficientDateParts(fieldidentifier)
 {
     year = jQuery('#' + fieldidentifier + "-y").val() ?? "";
@@ -2156,10 +2161,19 @@ function sufficientDateParts(fieldidentifier)
     console.debug("Hour: (#" + fieldidentifier + "-h) : " +  hour);
     console.debug("Minute: (#" + fieldidentifier + "-i) : " +  minute);
 
-    valid = year !== '' // Always need a year
-            && (day === '' || month !== '') // If a day is set then must have month
-            && (hour === '' || day !== '') // If an hour is set then must have day
-            && (minute === '' || hour !== '') // If a minute is set then must have hour
+    const required_validator = (
+        year !== '' // Always need a year
+        && (day === '' || month !== '') // If a day is set then must have month
+        && (hour === '' || day !== '') // If an hour is set then must have day
+        && (minute === '' || hour !== '') // If a minute is set then must have hour
+    );
+    const optional_validator = (
+        [year, month, day, hour, minute].filter(e => e === '').length === 5
+        || required_validator
+    );
+    const valid = jQuery(`label[for="${fieldidentifier}"] > sup`).text() === '*'
+        ? required_validator
+        : optional_validator;
 
     if (!valid) {
         console.debug("Insufficient date inputs selected for field " + fieldidentifier + ". Preventing autosave");
