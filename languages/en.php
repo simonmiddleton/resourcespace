@@ -1452,7 +1452,7 @@ $lang["nocookies"]="A cookie could not be set correctly. Please make sure you ha
 $lang["selectedresourceslightroom"]="Selected resources (Lightroom compatible list):";
 
 # Plugins Manager
-$lang['plugins-noneinstalled'] = "No plugins currently activated.";
+$lang['plugins-noneinstalled'] = "No plugins currently installed.";
 $lang['plugins-noneavailable'] = "No plugins currently available.";
 $lang['plugins-availableheader'] = 'Available plugins';
 $lang['plugins-installedheader'] = 'Currently installed plugins';
@@ -1466,7 +1466,7 @@ $lang['plugins-moreinfo'] = 'Docs';
 $lang['plugins-activate'] = 'Install';
 $lang['plugins-purge'] = 'Purge configuration';
 $lang['plugins-headertext'] = 'Plugins extend the functionality of ResourceSpace.';
-$lang['plugins-legacyinst'] = 'Activated via config.php';
+$lang['plugins-legacyinst'] = 'Installed via config.php';
 $lang['plugins-upload-title'] = 'Get configuration from file';
 $lang['plugins-upload'] = 'Upload configuration';
 $lang['plugins-getrsc'] = 'File to use:';
@@ -1603,8 +1603,8 @@ $lang['reportbug-preparebutton']="Prepare bug report";
 $lang["enterantispamcode"]="Anti-Spam, please enter the following code";
 
 $lang["groupaccess"]="Access";
-$lang["plugin-groupsallaccess"]="This plugin is activated for all groups";
-$lang["plugin-groupsspecific"]="This plugin is activated for the selected groups only";
+$lang["plugin-groupsallaccess"]="This plugin is available to all groups";
+$lang["plugin-groupsspecific"]="This plugin is available to the selected groups only";
 
 $lang["associatedcollections"]="Associated collections";
 
@@ -1913,7 +1913,7 @@ $lang["error-csrf-verification-failed"] = "CSRF verification failed! Try reloadi
 $lang["error-method-not_allowed"] = "Method Not Allowed.";
 $lang["error-405-method-not_allowed"] = "405 Method Not Allowed.";
 $lang["error-403-forbidden"] = "403 Forbidden.";
-$lang["error-plugin-not-activated"] = "Plugin not activated";
+$lang["error-plugin-not-activated"] = "Plugin not installed";
 $lang["error-failed-to-delete"] = "Failed to delete";
 $lang["error-failed-to-move"] = "Failed to move";
 $lang["error-type-mismatch"] = "Argument '%arg' must be of type %expected-type, %type given";
