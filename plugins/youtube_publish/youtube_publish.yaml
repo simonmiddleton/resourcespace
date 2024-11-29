@@ -2,7 +2,7 @@ name: youtube_publish
 title: YouTube Publish
 author: Montala Limited
 version: 1.0
-desc: Publish video resource to a configured YouTube account.
+desc: Publish video resources to a configured YouTube account.
 icon: fa fa-youtube
 icon-colour: red
 config_url: /plugins/youtube_publish/pages/setup.php
