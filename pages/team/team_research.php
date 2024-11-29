@@ -28,7 +28,6 @@ include "../../include/header.php";
 
 
 <div class="BasicsBox"> 
-  <h2>&nbsp;</h2>
   <h1><?php echo escape($lang["manageresearchrequests"])?></h1>
   <p><?php echo text("introtext");render_help_link('resourceadmin/user-research-requests');?></p>
  

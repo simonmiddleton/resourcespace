@@ -53,8 +53,7 @@ if (getval("submitting","")!="" && $api_function!="")
 ?>
 
 
-<div class="RecordBox">
-<div class="RecordPanel">
+<div class="BasicsBox">
 <h1><?php echo escape($lang['api-test-tool']); ?></h1>
 
 <?php
@@ -189,7 +188,6 @@ private_key="<?php echo get_api_key($userref) ?>"; user=<?php echo escape(escape
 <?php } ?>
 
 
-</div>
 </div>
 <script>
 function ToggleSendParam(el)

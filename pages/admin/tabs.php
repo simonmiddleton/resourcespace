@@ -160,6 +160,7 @@ foreach($tab_records['data'] as $tab_record)
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
+<h1><?php echo escape($lang["system_tabs"]); ?></h1>
     <?php
     render_top_page_error_style($admin_tabs_management_error ?? '');
     renderBreadcrumbs([
