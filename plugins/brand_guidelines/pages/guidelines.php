@@ -32,7 +32,15 @@ $page_contents_grouped = group_content_items($page_contents);
 
 // Persistent (cookie based) toggle view/edit mode
 $show_edit_mode_view = (bool) getval('show_edit_mode_view', false, false, 'is_positive_int_loose');
-$view_edit_display_class = $show_edit_mode_view ? [] : ['class' => ['DisplayNone']];
+if ($show_edit_mode_view) {
+    $top_right_menu_extra_class = [];
+    $view_edit_display_class = [];
+    $show_hide_top_right_menu = [];
+} else {
+    $top_right_menu_extra_class = ['DisplayNone'];
+    $view_edit_display_class = ['class' => $top_right_menu_extra_class];
+    $show_hide_top_right_menu = ['top_right_menu_class' => $top_right_menu_extra_class];
+}
 
 include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
 render_individual_menu();
@@ -47,7 +55,7 @@ render_content_menu();
         <ul>
     <?php
     foreach ($all_pages as $s => $section) {
-        render_navigation_item($section, false);
+        render_navigation_item($section, false, $show_hide_top_right_menu);
 
         if (isset($section['children'])) {
             foreach ($section['children'] as $p => $page) {
@@ -60,7 +68,8 @@ render_content_menu();
                             && $s === array_key_first($all_pages)
                             && $p === array_key_first($section['children'])
                         )
-                    )
+                    ),
+                    $show_hide_top_right_menu
                 );
 
                 if (acl_can_edit_brand_guidelines() && $p === array_key_last($section['children'])) {
@@ -133,7 +142,7 @@ render_content_menu();
                         <div class="rich-text-content grid-item"><?php
                             echo richtext_input_parser($item['content']['richtext']);
                         ?></div><?php
-                        render_item_top_right_menu($item['ref'], ['grid-item']);
+                        render_item_top_right_menu($item['ref'], ['grid-item', ...$top_right_menu_extra_class]);
 ?>
                     </div>
                     <?php
@@ -142,7 +151,7 @@ render_content_menu();
                     && $item['content']['layout'] === 'full-width'
                 ) {
                     $new_content_btn_id = $item['ref'];
-                    render_resource_item($item);
+                    render_resource_item($item, $show_hide_top_right_menu);
                 } elseif ($item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['group']) {
                     $members = implode(',', array_column($item['members'], 'ref'));
                     $new_content_btn_id = "group-{$members}";
@@ -151,7 +160,7 @@ render_content_menu();
                     ?>
                     <div class="group" data-members="<?php echo escape($members); ?>">
                     <?php
-                    render_item_top_right_menu(0);
+                    render_item_top_right_menu(0, $top_right_menu_extra_class);
 
                     if ($is_resource_group) {
                         ?>
@@ -163,13 +172,16 @@ render_content_menu();
                         $new_block_item_btn = '';
                         if ($group_item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['colour']) {
                             $new_block_item_btn = 'new guidelines-colour-block';
-                            render_block_colour_item(array_merge(
-                                ['ref' => $group_item['ref']],
-                                $group_item['content']
-                            ));
+                            render_block_colour_item(
+                                array_merge(
+                                    ['ref' => $group_item['ref']],
+                                    $group_item['content']
+                                ),
+                                $show_hide_top_right_menu
+                            );
                         } elseif ($group_item['type'] === BRAND_GUIDELINES_CONTENT_TYPES['resource']) {
                             $new_block_item_btn = "new image-{$group_item['content']['layout']}";
-                            render_resource_item($group_item);
+                            render_resource_item($group_item, $show_hide_top_right_menu);
                         }
                     }
 
@@ -225,7 +237,7 @@ render_content_menu();
             SetCookie('show_edit_mode_view', 1);
         }
 
-        jQuery('.add-new-content-container, button.new, .guidelines-sidebar li a.new')
+        jQuery('.add-new-content-container, button.new, .guidelines-sidebar li a.new, .top-right-menu')
             .toggleClass('DisplayNone');
 
         return jQuery('#toggle-view-edit-mode i.fa').toggleClass(['fa-eye', 'fa-regular', 'fa-pencil']);
