@@ -30,6 +30,10 @@ $page_contents = array_filter(
 );
 $page_contents_grouped = group_content_items($page_contents);
 
+// Persistent (cookie based) toggle view/edit mode
+$show_edit_mode_view = (bool) getval('show_edit_mode_view', false, false, 'is_positive_int_loose');
+$view_edit_display_class = $show_edit_mode_view ? [] : ['class' => ['DisplayNone']];
+
 include_once RESOURCESPACE_BASE_PATH . '/include/header.php';
 render_individual_menu();
 render_content_menu();
@@ -66,7 +70,8 @@ render_content_menu();
                             'name' => $lang['brand_guidelines_new_page'],
                             'parent' => $section['ref'],
                         ],
-                        false
+                        false,
+                        $view_edit_display_class
                     );
                 }
             }
@@ -77,7 +82,8 @@ render_content_menu();
                     'name' => $lang['brand_guidelines_new_page'],
                     'parent' => $section['ref'],
                 ],
-                false
+                false,
+                $view_edit_display_class
             );
         }
     }
@@ -89,7 +95,8 @@ render_content_menu();
                 'name' => $lang['brand_guidelines_new_section'],
                 'parent' => 0,
             ],
-            false
+            false,
+            $view_edit_display_class
         );
     }
     ?>
@@ -101,14 +108,17 @@ render_content_menu();
                 <span><?php echo escape($selected_page_title); ?></span>
                 <?php
                 if (acl_can_edit_brand_guidelines()) {
+                    $view_edit_btn_label = escape(
+                        $show_edit_mode_view ? $lang['brand_guidelines_view_mode'] : $lang['brand_guidelines_edit_mode']
+                    );
                     ?>
                     <button
                         id="toggle-view-edit-mode"
-                        title="<?php echo escape($lang['brand_guidelines_view_mode']); ?>"
-                        aria-label="<?php echo escape($lang['brand_guidelines_view_mode']); ?>"
+                        title="<?php echo $view_edit_btn_label; ?>"
+                        aria-label="<?php echo $view_edit_btn_label; ?>"
                         onclick="return toggleViewEditMode(this);"
                     >
-                        <i class="fa fa-fw fa-regular fa-eye"></i>
+                        <i class="fa fa-fw <?php echo $show_edit_mode_view ? 'fa-regular fa-eye' : 'fa-pencil'; ?>"></i>
                     </button>
                     <?php
                 }
@@ -171,6 +181,9 @@ render_content_menu();
                         )
                     ) {
                         // Render the new block element for everything except second half-width item
+                        if (!$show_edit_mode_view) {
+                            $new_block_item_btn .= ' DisplayNone';
+                        }
                         render_new_block_element_button($new_block_item_btn, $group_item['type']);
                     }
 
@@ -184,11 +197,11 @@ render_content_menu();
                     <?php
                 }
 
-                render_new_content_button("add-new-content-after-{$new_content_btn_id}");
+                render_new_content_button("add-new-content-after-{$new_content_btn_id}", $view_edit_display_class);
             }
 
             if ($available_pages !== [] && $page_contents === []) {
-                render_new_content_button('add-new-content-end');
+                render_new_content_button('add-new-content-end', $view_edit_display_class);
             }
             ?>
         </div>
@@ -199,13 +212,17 @@ render_content_menu();
         const btn = jQuery(el);
         const view_mode_txt = '<?php echo escape($lang['brand_guidelines_view_mode']); ?>';
         const edit_mode_txt = '<?php echo escape($lang['brand_guidelines_edit_mode']); ?>';
+        const show_edit_mode_view = getCookie('show_edit_mode_view');
 
-        if (btn.prop('title') === view_mode_txt) {
-            btn.prop('title', edit_mode_txt);
-            btn.attr('aria-label', edit_mode_txt);
-        } else {
+        // The view state is the default mode - see server side logic based on $show_edit_mode_view
+        if (show_edit_mode_view !== 'undefined' && show_edit_mode_view === '1') {
             btn.prop('title', view_mode_txt);
             btn.attr('aria-label', view_mode_txt);
+            SetCookie('show_edit_mode_view', 0);
+        } else {
+            btn.prop('title', edit_mode_txt);
+            btn.attr('aria-label', edit_mode_txt);
+            SetCookie('show_edit_mode_view', 1);
         }
 
         jQuery('.add-new-content-container, button.new, .guidelines-sidebar li a.new')
