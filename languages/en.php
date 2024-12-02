@@ -2314,7 +2314,7 @@ $lang["all__emailbulk"]="<br /><br />\n[text]<br /><br />\n[text_footer]\n";
 $lang["all__emailcollection"]="<br />\n[fromusername] [lang_emailcollectionmessage] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
 $lang["all__emailcollectionexternal"]="<br />\n[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
 $lang["all__emailcontactadmin"]="<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href=\"[url]\">[embed_thumbnail]</a><br /><br />[text_footer]";
-$lang["all__emaillogindetails"]="<br />\n[welcome]<br /><br /> \n[lang_newlogindetails]<br /><br /> \n[lang_username] : [username] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emaillogindetails"]="<br />\n[welcome]<br /> \n[lang_newlogindetails]<br /><br /> \n[lang_username] : [username] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["all__emailnewresearchrequestwaiting"]="<br />\n[username] ([userfullname] - [useremail])\n[lang_haspostedresearchrequest]<br /><br />\n[lang_nameofproject]:[name]<br /><br />\n[lang_descriptionofproject]:[description]<br /><br />\n[lang_deadline]:[deadline]<br /><br />\n[lang_contacttelephone]:[contact]<br /><br />\n[lang_finaluse]: [finaluse]<br /><br />\n[lang_shaperequired]: [shape]<br /><br />\n[lang_noresourcesrequired]: [noresources]<br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n<a href=\"[teamresearchurl]\">[teamresearchurl]</a><br /><br />\n[text_footer]\n";
 $lang["all__emailnotifyresourcesapproved"]="<br />\n[lang_userresourcesapproved]\n[list] <br />\n[lang_viewcontributedsubittedl] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["all__emailnotifyresourcessubmitted"]="<br />\n[lang_userresourcessubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
@@ -2406,7 +2406,7 @@ $lang["externalshare_using_permissions_from_user_group"]="If you are e-mailing e
 $lang["delete__nopassword"]="Please confirm that you would like to delete this resource.";
 
 $lang["collection_download_too_large"]="Sorry, this collection is too large to download as one file. Try reducing the size of the collection or selecting a smaller image size.";
-$lang["all__passwordnewemailhtml"]="<br /><br />Please click on the link below to set a new password for your account.<br /><br />URL: <a href=\"[url]\" target=\"_blank\" >[url]</a><br />username: [username]<br />[text_footer]" ;
+$lang["all__passwordnewemailhtml"]="[img_headerlogo][welcome]<br/><br/>Please click on the link below to set a new password for your account.<br/><br/><a href=\"[url]\" target=\"_blank\" >[url]</a><br/><br/>Your new username: [username]<br/><br/>[text_footer]" ;
 
 $lang['disk_size_no_upload_heading']="Uploading temporarily unavailable";
 $lang['disk_size_no_upload_explain']="Due to space constraints, uploading has been temporarily disabled. We apologize for any inconvenience.";
@@ -3217,3 +3217,4 @@ $lang["error_invalid_field_type"] = "The configured %variable is of the wrong fi
 $lang["facial-recognition"] =  "Facial recognition";
 
 $lang['ui_removed_config_message'] = 'This must now be set in the configuration file as %variable';
+$lang["welcome_generic"] = "Welcome to %applicationname";

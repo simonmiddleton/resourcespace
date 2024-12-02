@@ -864,15 +864,13 @@ function save_user($ref)
                 build_usergroup_dash($usergroup, $ref);
             }
 
-    if($emailresetlink != '')
-        {
-        $result=email_reset_link($email, true);
-        if ($result!==true) 
-            {    
+    if ($emailresetlink != '') {
+        $result = email_reset_link($email, empty($current_user_data["last_active"])); // Message differs if new user
+        if ($result!==true) {
             return $result;
-            }
         }
-        
+    }
+
     if(getval('approved', '')!='')
         {
         # Clear any user request messages
@@ -888,118 +886,121 @@ function save_user($ref)
  *
  * @param  string $email
  * @param  string $username
- * @param  string $password
+ * @param  string $unused Previously $password, these are no longer sent
  * @param  integer $usergroup
- * @return void
  */
-function email_user_welcome($email,$username,$password,$usergroup)
-    {
-    global $applicationname,$email_from,$baseurl,$lang;
-    
-    # Fetch any welcome message for this user group
-    $welcome=ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?",["i",$usergroup],"");
-    if (trim((string)$welcome)!="") {$welcome.="\n\n";}
+function email_user_welcome(string $email, string $username, string $unused = "", int $usergroup): void
+{
+    global $applicationname, $baseurl,$lang;
 
-    $templatevars['welcome']  = i18n_get_translated($welcome);
-    $templatevars['username'] = $username;
-    $templatevars['url']=$baseurl;
-    $message=$templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $templatevars['url'];
-            
-    send_mail($email,$applicationname . ": " . $lang["youraccountdetails"],$message,"","","emaillogindetails",$templatevars);
+    # Fetch any welcome message for this user group
+    $welcome = ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?",["i",$usergroup],"");
+    if (trim($welcome) === "") {
+        $welcome = str_replace("%applicationname", $applicationname, $lang["welcome_generic"]);
     }
 
-function email_reset_link($email,$newuser=false)
-    {
+    $templatevars['welcome']  = i18n_get_translated($welcome) . "\n\n";
+    $templatevars['username'] = $username;
+    $templatevars['url'] = $baseurl;
+    $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" . $templatevars['url'];
+    send_mail($email,$applicationname . ": " . $lang["youraccountdetails"],$message,"","","emaillogindetails",$templatevars);
+}
+
+/**
+ * Email password reset link to the user
+ *
+ * @param string $email     Email address of user
+ * @param string $newuser   Is this a new user account? If so a welcome message template will be used
+ *
+ * @return bool|string  true if success or error message
+ *
+ */
+function email_reset_link(string $email, bool $newuser=false)
+{
+    global $applicationname, $baseurl, $lang;
     debug("password_reset - checking for email: " . $email);
     # Send a link to reset password
     global $password_brute_force_delay, $scramble_key, $lang;
 
-    if($email == '')
-        {
-        return $lang["accountnoemail-reset-not-emailed"]; # Password reset link was not sent because the account has no email address
-        }
-
+    if ($email == '') {
+        // Password reset link not sent because the account has no email address
+        return $lang["accountnoemail-reset-not-emailed"];
+    }
     # The reset link is sent after the principal user update has completed
     # It will only be sent if (after the user update) there is an approved and unexpired user with the specified email address
-    $details = ps_query("SELECT ref, username, usergroup, origin, approved, 
-	CASE WHEN isnull(account_expires) THEN false
-         WHEN account_expires > now() THEN false
-         ELSE true END as has_expired
-         FROM user WHERE email = ?;", 
-    array("s", $email));
+    $details = ps_query(
+            "SELECT ref, username, usergroup, origin, approved,
+	                CASE
+                        WHEN isnull(account_expires) THEN false
+                        WHEN account_expires > NOW() THEN false
+                        ELSE true
+                    END
+                    AS has_expired
+               FROM user WHERE email = ?;",
+            ["s", $email]
+        );
 
-    sleep($password_brute_force_delay);
+    if (($GLOBALS["pagename"] ?? "") !== "team_user_edit") {
+        // Don't add delay if admin is resetting password
+        sleep($password_brute_force_delay);
+    }
 
-    if(count($details) == 0) {
+    if (count($details) == 0) {
         return $lang["accountnotfound-reset-not-emailed"]; # Password reset link was not sent because there is no account with that email 
     }
 
     # Process the user with the email address
     $details = $details[0];
 
-    if($details["has_expired"]) {
-        return $lang["accountexpired-reset-not-emailed"]; # Password reset link was not sent because the account has expired 
-    } 
-    if($details["approved"] != 1) {
-        return $lang["accountnotapproved-reset-not-emailed"]; # Password reset link was not sent because the account is not approved 
+    if ($details["has_expired"]) {
+        // Password reset link was not sent because the account has expired
+        return $lang["accountexpired-reset-not-emailed"];
+    }
+    if ($details["approved"] != 1) {
+        // Password reset link was not sent because the account is not approved
+        return $lang["accountnotapproved-reset-not-emailed"];
     }
 
     // Don't send password reset links if we don't control the password
     $blockreset = isset($details["origin"]) && trim($details["origin"]) != "";
 
-    global $applicationname, $email_from, $baseurl, $lang;
-
-    if(!$blockreset)
-        {
-        $password_reset_url_key = create_password_reset_key($details['username']);        
+    if (!$blockreset) {
+        $password_reset_url_key = create_password_reset_key($details['username']);
         $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
-        }
+    }
+    $templatevars['username'] = $details["username"];
 
-    if($newuser)
-        {
-        $templatevars['username']=$details["username"];
-
+    if ($newuser) {
         // Fetch any welcome message for this user group
-        $welcome = ps_value('SELECT welcome_message AS value FROM usergroup WHERE ref = ?', array("i",$details['usergroup']), '');
+        $welcome = ps_value('SELECT welcome_message AS value FROM usergroup WHERE ref = ?', ["i",$details['usergroup']], '');
 
-        if(trim((string)$welcome) != '')
-            {
-            $welcome .= "\n\n";
-            }
-
-        $templatevars['welcome']=i18n_get_translated($welcome);
-        if($blockreset)
-            {
-            $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
-            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
-            if ($result!==true) {return $result;} // Pass any e-mail errors back
-            }
-        else
-            {
-            $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
-            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
-            if ($result!==true) {return $result;} // Pass any e-mail errors back
-            }
+        if (trim($welcome) === "") {
+            $welcome = str_replace("%applicationname", $applicationname, $lang["welcome_generic"]);
         }
-    else
-        {
-        $templatevars['username']=$details["username"];
-        $message=$lang["username"] . ": " . $templatevars['username'];
-        if($blockreset)
-            {
+
+        $templatevars['welcome'] = i18n_get_translated($welcome) . "\n\n";
+        if ($blockreset) {
+            $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
+            $result = send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+        } else {
+            $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
+            $result = send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+        }
+    } else {
+        // Existing user
+        $message = $lang["username"] . ": " . $templatevars['username'];
+        if ($blockreset) {
             $message .=  "\n\n" . $lang["passwordresetnotpossible"] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl;
             $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
-            if ($result!==true) {return $result;} // Pass any e-mail errors back
-            }
-        else
-            {
-            $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
-            $result=send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
-            if ($result!==true) {return $result;} // Pass any e-mail errors back
-            }
-        }   
-    return true; # Email reset link successful
+        } else {
+            $message .= "\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
+            $result = send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+        }
     }
+
+    // Pass any e-mail errors back, or ereturn truer if successful
+    return $result;
+}
 
 /**
  * Automatically creates a user account
@@ -1010,9 +1011,10 @@ function email_reset_link($email,$newuser=false)
  * @return boolean Success?
  */
 function auto_create_user_account($hash="")
-    {
-    global $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
-           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $applicationname;
+{
+    global $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select,
+           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $applicationname,
+           $username, $userref;
 
     // Feature disabled if user limit reached.
     if (user_limit_reached()) {return false;}
@@ -1057,33 +1059,29 @@ function auto_create_user_account($hash="")
     $password = rs_password_hash("RS{$newusername}{$password}");
 
     # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
-    $approve=false;
+    $approve = false;
 
-    # Block immediate reset
-    $bypassemail=false;
-
-    if ($auto_approve_accounts==true)
-        {
-        $approve=true;
-        $bypassemail=true; // We can send user  direct to password reset page
-        }
-    elseif (count($auto_approve_domains)>0)
-        {
+    if ($auto_approve_accounts==true) {
+        // No longer taken direct to password page as this can be used by bots. User must click on an email link
+        $approve = true;
+    } elseif (count($auto_approve_domains)>0) {
         # Check e-mail domain.
-        foreach ($auto_approve_domains as $domain=>$set_usergroup)
-            {
+        foreach ($auto_approve_domains as $domain=>$set_usergroup) {
             // If a group is not specified the variables don't get set correctly so we need to correct this
-            if (is_numeric($domain)){$domain=$set_usergroup;$set_usergroup="";}
-            if (substr(strtolower($user_email),strlen($user_email)-strlen($domain)-1)==("@" . strtolower($domain)))
-                {
+            if (is_numeric($domain)) {
+                $domain = $set_usergroup;
+                $set_usergroup = "";
+            }
+            if (substr(strtolower($user_email),strlen($user_email)-strlen($domain)-1)==("@" . strtolower($domain))) {
                 # E-mail domain match.
                 $approve=true;
-
                 # If user group is supplied, set this
-                if (is_numeric($set_usergroup)) {$usergroup=$set_usergroup;}
+                if (is_numeric($set_usergroup)) {
+                    $usergroup = $set_usergroup;
                 }
             }
         }
+    }
 
     # Create the user
     $name = getval("name","");
@@ -1105,68 +1103,44 @@ function auto_create_user_account($hash="")
     $new = sql_insert_id();
 
     // Create dash tiles for the new user
-    if($home_dash)
-        {
+    if ($home_dash) {
         include_once __DIR__ . '/dash_functions.php';
-
         create_new_user_dash($new);
         build_usergroup_dash($usergroup, $new);
-        }
+    }
 
     global $user_registration_opt_in;
-    if($user_registration_opt_in && getval("login_opt_in", "") == "yes")
-        {
+    if ($user_registration_opt_in && getval("login_opt_in", "") == "yes") {
         log_activity($lang["user_registration_opt_in_message"], LOG_CODE_USER_OPT_IN, null, "user", null, null, null, null, $new, false);
-        }
+    }
 
     hook("afteruserautocreated", "all",array("new"=>$new));
     global $anonymous_login;
-    if(isset($anonymous_login))
-        {
+    if (isset($anonymous_login)) {
         global $rs_session;
         $rs_session=get_rs_session_id();
-        if($rs_session!==false)
-            {
-            # Copy any anonymous session collections to the new user account 
-            global $username, $userref;
-
-            if(is_array($anonymous_login) && array_key_exists($baseurl, $anonymous_login))
-                {
+        if ($rs_session!==false) {
+            # Copy any anonymous session collections to the new user account
+            if (is_array($anonymous_login) && array_key_exists($baseurl, $anonymous_login)) {
                 $anonymous_login = $anonymous_login[$baseurl];
-                }
+            }
 
             $username=$anonymous_login;
             $userref=ps_value("SELECT ref value FROM user where username=?",array("s",$anonymous_login),"");
             $sessioncollections=get_session_collections($rs_session,$userref,false);
-            if(count($sessioncollections)>0)
-                {
-                foreach($sessioncollections as $sessioncollection)
-                    {
+            if (count($sessioncollections)>0) {
+                foreach($sessioncollections as $sessioncollection) {
                     update_collection_user($sessioncollection,$new);
-                    }
-                ps_query("UPDATE user SET current_collection = ? WHERE ref = ?", array("i", $sessioncollection, "i", $new));
                 }
+                ps_query("UPDATE user SET current_collection = ? WHERE ref = ?", array("i", $sessioncollection, "i", $new));
             }
         }
-    if ($approve)
-        {
-        # Auto approving
-        if($bypassemail)
-            {
-            // No requirement to check anything else e.g. a valid email domain. We can take user direct to the password reset page to set the new account
-            $password_reset_url_key=create_password_reset_key($newusername);
-            redirect($baseurl . "?rp=" . $new . $password_reset_url_key);
-            exit();
-            }
-        else
-            {
-            email_reset_link($user_email, true);
-            redirect($baseurl."/pages/done.php?text=user_request");
-            exit();
-            }
-        }
-    else
-        {
+    }
+    if ($approve) {
+        email_reset_link($user_email, true);
+        redirect($baseurl."/pages/done.php?text=user_request");
+        exit();
+    } else {
         # Managed approving
         # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
         # but also adds the new user name to the mail)
@@ -1198,10 +1172,9 @@ function auto_create_user_account($hash="")
         $message->append_text(": " . $templatevars['userrequestcomment'] . "<br/><br/>");
         $message->append_text("lang_ipaddress");
         $message->append_text(": " . get_ip() . "<br/><br/>");
-        if(trim($customContents) != "")
-            {
+        if (trim($customContents) != ""){
             $message->append_text($customContents . "<br/><br/>");
-            }
+        }
         $message->append_text("lang_userrequestnotification3");
         $message->append_text("<br/><br/>" . $templatevars['linktouser']);
         $message->user_preference =  [
@@ -1213,16 +1186,17 @@ function auto_create_user_account($hash="")
         $message->templatevars = $templatevars;
         $message->eventdata = $eventdata;
         send_user_notification($approval_notify_users,$message);
-        }
+    }
 
     // Send a confirmation e-mail to requester
     send_mail(
         $user_email,
         "{$applicationname}: {$lang['account_request_label']}",
-        $lang['account_request_confirmation_email_to_requester']);
+        $lang['account_request_confirmation_email_to_requester']
+    );
 
     return true;
-    }
+}
 
 
 /**
