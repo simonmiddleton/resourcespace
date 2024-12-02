@@ -80,15 +80,22 @@ function render_content_menu(): void
     <?php
 }
 
-function render_new_content_button(string $id): void
+/**
+ * Render the new content button
+ * @param string $id The HTML id of the button
+ * @param array{class: list<string>} Contextual information (e.g. add extra classes to the button)
+ */
+function render_new_content_button(string $id, array $ctx): void
 {
     if (!acl_can_edit_brand_guidelines()) {
         return;
     }
+
+    $extra_class = array_filter($ctx['class'] ?? [], fn($class) => is_string($class) && trim($class) !== '');
     ?>
     <button
         id="<?php echo escape($id); ?>"
-        class="add-new-content-container"
+        class="add-new-content-container <?php echo escape(implode(' ', $extra_class)); ?>"
         onclick="showOptionsMenu(this, 'menu-content');"
     >
         <i class="fa-solid fa-plus"></i>
@@ -159,8 +166,9 @@ function render_block_colour_item(array $value): void
  * Render the table of contents (TOC) items.
  * @param array $item A section/page record {@see get_all_pages()}
  * @param bool $is_current Specify if the input item is the currently selected page
+ * @param array{class: list<string>} Contextual information (e.g. add extra classes to the link)
  */
-function render_navigation_item(array $item, bool $is_current = false): void
+function render_navigation_item(array $item, bool $is_current = false, array $ctx = []): void
 {
     $can_edit_brand_guidelines = acl_can_edit_brand_guidelines();
     $show_individual_menu = true;
@@ -190,7 +198,8 @@ function render_navigation_item(array $item, bool $is_current = false): void
         $onclick = '';
     }
 
-    $class = implode(' ', $class);
+    $extra_class = array_filter($ctx['class'] ?? [], fn($class) => is_string($class) && trim($class) !== '');
+    $class = implode(' ', array_merge($class, $extra_class));
 
     ?>
     <li class="grid-container">
