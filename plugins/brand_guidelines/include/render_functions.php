@@ -211,14 +211,14 @@ function render_navigation_item(array $item, bool $is_current = false, array $ct
     } elseif (is_section($item) && $item['ref'] === 0) {
         ?>
         <h2 class="grid-item">
-            <a class="<?php echo $class; ?>" href="<?php echo $url; ?>" onclick="<?php echo $onclick; ?>"><?php
+            <a class="<?php echo escape($class); ?>" href="<?php echo $url; ?>" onclick="<?php echo $onclick; ?>"><?php
                 echo escape(i18n_get_translated($item['name']));
             ?></a>
         </h2>
         <?php
     } else {
         ?>
-        <a class="<?php echo $class; ?>" href="<?php echo $url; ?>" onclick="<?php echo $onclick; ?>"><?php
+        <a class="<?php echo escape($class); ?>" href="<?php echo $url; ?>" onclick="<?php echo $onclick; ?>"><?php
             echo escape(i18n_get_translated($item['name']));
         ?></a>
         <?php
