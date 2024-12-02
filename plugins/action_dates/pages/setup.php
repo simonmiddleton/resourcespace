@@ -34,7 +34,7 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     $action_dates_config["action_dates_deletefield"] = getval('action_dates_deletefield','',true);
     $action_dates_config["action_dates_reallydelete"] = getval('action_dates_reallydelete','');
     $action_dates_config["action_dates_new_state"] = getval('action_dates_new_state','');
-    $action_dates_config["action_dates_eligible_states"] = getval('action_dates_eligible_states','');
+    $action_dates_config["action_dates_eligible_states"] = getval('action_dates_eligible_states', [], false, 'is_array');
     $action_dates_config["action_dates_email_for_state"] = getval('action_dates_email_for_state','');
     $action_dates_config["action_dates_email_for_restrict"] = getval('action_dates_email_for_restrict','');
     $action_dates_config["action_dates_email_admin_days"] = getval('action_dates_email_admin_days','',true);
