@@ -74,7 +74,7 @@ if (getval("save", "") != "" && enforcePostRequest(false)) {
             if ($message === true) {
                 if ($password_reset_mode && empty($last_active) && $email != "") {
                     // This account has just been created, probably an auto approved account. Send the welcome email
-                    email_user_welcome($email,$username,$lang["hidden"],$usergroup);
+                    email_user_welcome($email,$username,$usergroup);
                     redirect($baseurl_short."pages/done.php?text=password_changed&notloggedin=true");
                     exit();
                 }

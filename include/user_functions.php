@@ -886,10 +886,9 @@ function save_user($ref)
  *
  * @param  string $email
  * @param  string $username
- * @param  string $unused Previously $password, these are no longer sent
  * @param  integer $usergroup
  */
-function email_user_welcome(string $email, string $username, string $unused = "", int $usergroup): void
+function email_user_welcome(string $email, string $username, int $usergroup): void
 {
     global $applicationname, $baseurl,$lang;
 
