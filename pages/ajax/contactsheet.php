@@ -225,12 +225,10 @@ foreach($results as $result_data)
                     {
                     $contact_sheet_value = tidylist($contact_sheet_value);
                     }
-                $field_name='';
-                if($contact_sheet_field_name)
-                    {
-                    $field_name.=$contact_sheet_field['title'] . ': ';
-                    }
-                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = $field_name . tidylist(i18n_get_translated($contact_sheet_value));
+                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = 
+                                            array(  "title" => $contact_sheet_field['title'],
+                                                    "value" => tidylist(i18n_get_translated($contact_sheet_value)),
+                                                    "type"  => $contact_sheet_field["type"]);
             }
         }
 
