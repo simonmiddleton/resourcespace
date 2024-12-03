@@ -55,8 +55,8 @@ ob_start();
             height: 100vh;
         }
        .content {
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -101,10 +101,16 @@ ob_start();
             height: 8%;
             cursor: pointer;
         }
+        .slide-control-atpage {
+            width: 20%;
+            height: 8%;
+            cursor: pointer;
+        }
         .slide-page-button-style {
             float:left;
             margin-top: 2px;
-            width: 40%;
+            min-width: 40px;
+            max-width: 60px;
             text-align: center;
             font-size: 14px;
             border: 1px solid #666;
@@ -191,7 +197,7 @@ ob_start();
     </div>
 </main>
 <!-- Slideshow navigation control markup START -->
-<div>
+<div style="width:40vw;margin:auto;">
 <ul>   
     <li id="slide-go-start"  class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('start');return false;"><i class="fas fa-step-backward"></i></li>
     <li id="slide-go-prev"   class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showPrevSlide();return false;"><i class="fas fa-backward"></i></li>
@@ -199,10 +205,12 @@ ob_start();
     <li id="slide-play"      class="slide-control" style="cursor: pointer;display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i></li>
     <li id="slide-go-next"   class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i></li>
     <li id="slide-go-end"    class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i></li>
-    <li id="slide-go-atpage" class="slide-control" style="cursor: pointer;display: inline-block;">
+    <li id="slide-go-atpage" class="slide-control-atpage" style="cursor: pointer;display: inline-block;">
         <span><input type="number" id="slide-page-number" class="slide-page-button-style"/></span>
-        <span style="margin-top:2px;float:left;">&nbsp;&sol;&nbsp;</span>
-        <span id="slide-page-count" style="margin-top:2px;float:left; font-size:14px;"></span>
+    </li>
+    <li class="slide-control" style="cursor: pointer;display: inline-block;">
+        <span style="margin-top:2px;float:left;">&nbsp;&nbsp;&sol;&nbsp;&nbsp;</span>
+        <span id="slide-page-count" style="margin-top:2px;float:left;font-size:14px;"></span>
     </li>
 </ul><br>
 </div>
