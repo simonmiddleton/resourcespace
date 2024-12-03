@@ -74,27 +74,10 @@ if(!isset($help_js))
     $help_js = '';
     }
 
-if($edit_autosave)
-    {
-    ?>
-    <script type="text/javascript">
-    // Function to allow radio buttons to save automatically when $edit_autosave from config is set: 
-    function radio_allow_save()
-        {
-        preventautosave = false;
-
-        setTimeout(function()
-            {
-            preventautosave = true;
-            }, 1000);
-        }
-    </script>
-    <?php
-    }
-
 if($display_as_radiobuttons) 
     {
     $active_nodes = array_column(array_filter($field['nodes'], 'node_is_active'), 'ref');
+    $field_ref_escaped = escape($field['ref']);
     ?>
     <table id="" class="radioOptionTable" cellpadding="3" cellspacing="3">                    
         <tbody>
@@ -128,16 +111,16 @@ if($display_as_radiobuttons)
                 ?>
                 <td width="10" valign="middle">
                     <input type="radio"
-                           id="field_<?php echo $field["ref"] . '_' . sha1($node['name']); ?>"
-                           name="<?php echo $name; ?>"
-                           value="<?php echo $node['ref']; ?>"
+                           id="field_<?php echo $field_ref_escaped . '_' . sha1($node['name']); ?>"
+                           name="<?php echo escape($name); ?>"
+                           value="<?php echo (int) $node['ref']; ?>"
                        <?php
                         echo $checked ? ' checked ' : '';
 
                         if($edit_autosave)
                             {
                             ?>
-                            onChange="AutoSave('<?php echo $field["ref"]; ?>');"
+                            onChange="AutoSave('<?php echo $field_ref_escaped; ?>');"
                             <?php
                             }
                         if($autoupdate)
@@ -151,14 +134,8 @@ if($display_as_radiobuttons)
                 </td>
                 <td align="left" valign="middle">
                     <label class="customFieldLabel"
-                           for="field_<?php echo $field["ref"] . '_' . sha1($node['name']); ?>"
-                        <?php
-                        if($edit_autosave)
-                            {
-                            ?>
-                            onmousedown="radio_allow_save();"<?php
-                            }
-                            ?>><?php echo i18n_get_translated($node['name']); ?></label>
+                           for="field_<?php echo $field_ref_escaped . '_' . sha1($node['name']); ?>"
+                    ><?php echo escape(i18n_get_translated($node['name'])); ?></label>
                 </td>
                 <?php 
                 } 
@@ -195,8 +172,8 @@ elseif($display_as_checkbox)
                 <td valign=middle>
                     <input id="nodes_searched_<?php echo $node['ref']; ?>"
                            type="checkbox"
-                           name="<?php echo $name; ?>"
-                           value="<?php echo $node['ref']; ?>"
+                           name="<?php echo escape($name); ?>"
+                           value="<?php echo (int) $node['ref']; ?>"
                         <?php
                         if(in_array($node['ref'], $selected_nodes))
                             {
@@ -227,7 +204,7 @@ elseif($display_as_checkbox)
 elseif($display_as_dropdown)
     {
     ?>
-    <select class="<?php echo $class; ?>" name="<?php echo $name; ?>" <?php if($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+    <select class="<?php echo $class; ?>" name="<?php echo escape($name); ?>" <?php if($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
         <option value=""></option>
     <?php
     foreach($field['nodes'] as $node)
