@@ -6025,6 +6025,43 @@ function escape(string $unsafe): string
     return htmlspecialchars($unsafe, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
+/**
+ * HTML aware function to break up long words onto multiple lines for
+ * PDF generation where CSS text wrapping can't be used
+ * 
+ * @param  string $html     HTML/Text to be processed
+ * @param  int    $length   Maximum word length
+ * @return string 
+ * 
+ */
+function html_break_long_words(string $html, int $length): string {
+    
+    // Regex to match tags and text separately
+    preg_match_all('/<[^>]+>|[^<]+/', $html, $matches);
+
+    $output = '';
+
+    foreach ($matches[0] as $part) {
+        if ($part[0] === '<') {
+            // If it's an HTML tag, add it to the output as-is
+            $output .= $part;
+        } else {
+            // If it's plain text, process it for long words
+            $words = preg_split('/(\s+)/', $part, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+            foreach ($words as $word) {
+                if (strlen($word) > $length) {
+                    // Insert <br> tags
+                    $word = chunk_split($word, $length, '<br>');
+                }
+                $output .= $word;
+            }
+        }
+    }
+
+    return $output;
+}
+
 
 /**
  * Renders a fontawesome icon selector question

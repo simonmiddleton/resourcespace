@@ -107,15 +107,38 @@ foreach($bind_placeholders['resources'] as $resource_ref => $resource)
         <?php
         }
 
-    if(!$bind_placeholders['contact_sheet_metadata_under_thumbnail'])
-    	{
+    if(!$bind_placeholders['contact_sheet_metadata_under_thumbnail']) {
 		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
-			{
+		{
+            //Build string to wordwrap for column layout
+            $csf_output = "";
+
+            // If field name should be displayed...
+            if($contact_sheet_field_name) {
+
+                // ...check if it should be bolded or not
+                if($contact_sheet_field_name_bold) {
+                    $csf_output .= "<b>" . escape($contact_sheet_field['title']) . ": </b>";
+                } else {
+                    $csf_output .= escape($contact_sheet_field['title']) . ": ";
+                }
+            }
+
+            // If field contains richtext...
+            if ($contact_sheet_field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
+                // ...output in the same way as view.php, without escaping
+                $csf_output .= '<br>' . strip_paragraph_tags(strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target']));
+            } else {
+                $csf_output .=  escape($contact_sheet_field['value']);
+            }
+
 			?>
-			<span><?php echo wordwrap(escape($contact_sheet_field),(int)($bind_placeholders['column_width']/7),"<br>",true); ?></span><br>
+			<span>
+                <?php echo html_break_long_words($csf_output, (int)($bind_placeholders['column_width']/7)); ?>
+            </span><br>
 			<?php
-			}
 		}
+	}
 
     if(isset($bind_placeholders['contact_sheet_add_link']))
         {
@@ -131,26 +154,32 @@ foreach($bind_placeholders['resources'] as $resource_ref => $resource)
         <?php
         }
     
-    if($bind_placeholders['contact_sheet_metadata_under_thumbnail'])
-    	{
-		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
-			{
-			if($contact_sheet_field_name && $contact_sheet_field_name_bold)
-                {
-                $contact_sheet_field=explode(': ', $contact_sheet_field);
-                ?>
-                <span><b><?php echo escape($contact_sheet_field[0]); ?></b>: <?php echo wordwrap(escape($contact_sheet_field[1]),(int)($bind_placeholders['column_width']/7),"<br>",true); ?></span><br>
-                <?php
+    if($bind_placeholders['contact_sheet_metadata_under_thumbnail']) {
+		foreach($resource['contact_sheet_fields'] as $contact_sheet_field) {
+                // If field name should be displayed...
+                if($contact_sheet_field_name) {
+
+                    // ...check if it should be bolded or not
+                    if($contact_sheet_field_name_bold) {
+                        ?><span><b><?php echo escape($contact_sheet_field['title']); ?></b>:
+                        <?php 
+                    } else {
+                        ?><span><?php echo escape($contact_sheet_field['title']); ?>:
+                        <?php 
+                    }
                 }
-            else
-                {
-                ?>
-                <span><?php echo wordwrap(escape($contact_sheet_field),(int)($bind_placeholders['column_width']/7),"<br>",true); ?></span><br>
-                <?php
+
+                // If field contains richtext...
+                if ($contact_sheet_field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
+                    // ...output in the same way as view.php, without escaping
+                    $csf_output = strip_paragraph_tags(strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target']));
+                    echo '<br>' . html_break_long_words($csf_output, (int)($bind_placeholders['column_width']/7)) . '<br></span>';
+                } else {
+                    echo html_break_long_words(escape($contact_sheet_field['value']), (int)($bind_placeholders['column_width']/7)) . '<br></span>';
                 }
-			}
-		}
-        ?>
+        }
+	}
+    ?>
     </td>
 
     <?php

@@ -114,22 +114,31 @@ if(isset($bind_placeholders['contact_sheet_footer']))
                     <?php
                     }
 
-                foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
-                    {
-                    if($contact_sheet_field_name && $contact_sheet_field_name_bold)
-                        {
-                        $contact_sheet_field=explode(': ', $contact_sheet_field);
-                        ?>
-                        <span><b><?php echo escape($contact_sheet_field[0]); ?></b>: <?php echo escape($contact_sheet_field[1]); ?></span><br>
-                        <?php
-                        }
-                    else
-                        {
-                        ?>
-                        <span><?php echo escape($contact_sheet_field); ?></span><br>
-                        <?php
+                foreach($resource['contact_sheet_fields'] as $contact_sheet_field) {
+
+                    // If field name should be displayed...
+                    if($contact_sheet_field_name) {
+
+                        // ...check if it should be bolded or not
+                        if($contact_sheet_field_name_bold) {
+                            ?><span><b><?php echo escape($contact_sheet_field['title']); ?></b>:
+                            <?php 
+                        } else {
+                            ?><span><?php echo escape($contact_sheet_field['title']); ?>:
+                            <?php 
                         }
                     }
+
+                    // If field contains richtext...
+                    if ($contact_sheet_field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
+                        // ...output in the same way as view.php, without escaping
+                        echo strip_paragraph_tags(strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target'])) . '<br></span>';
+                    } else {
+                        echo escape($contact_sheet_field['value']) . '<br></span>';
+                    }
+
+                }
+
                     ?>
                 </td>
             </tr>
