@@ -125,8 +125,13 @@
                 {
                 for($n = 0; $n < count($custom_top_nav); $n++)
                     {
+                    if (!is_safe_url($custom_top_nav[$n]['link'])) {
+                        debug("Unsafe link detected in configuration - {$custom_top_nav[$n]['link']}");
+                        continue;
+                    }
+
                     // External links should open in a new tab
-                    if (strpos($custom_top_nav[$n]['link'], $baseurl) === false)
+                    if (!url_starts_with($baseurl, $custom_top_nav[$n]['link']))
                         {
                         $on_click = '';
                         $target   = ' target="_blank"';
@@ -152,9 +157,10 @@
                             }
                             ?>
                         <li class="HeaderLink">
-                            <a href="<?php echo $custom_top_nav[$n]["link"]; ?>"<?php echo $target . $on_click; ?>>
-                                <?php echo i18n_get_translated($custom_top_nav[$n]["title"]) ?>
-                            </a>
+                            <a href="<?php echo $custom_top_nav[$n]["link"]; ?>"<?php echo $target . $on_click; ?>><?php
+                                // Not escaping to allow links to have an icon (if applicable)
+                                echo strip_tags_and_attributes(i18n_get_translated($custom_top_nav[$n]["title"]));
+                            ?></a>
                         </li>
                         <?php
                     }
