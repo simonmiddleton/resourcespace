@@ -1582,8 +1582,9 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 
 #login_box .Question input[type=text],
-#login_box .Question input[type=password],
-
+#login_box .Question input[type=password] {
+    width: 550px;
+}
 
 #login_box .Question label {
     width: 515px;
