@@ -4,6 +4,9 @@ var modalfit=false;
 var CentralSpaceLoading=false;
 var ajaxinprogress=false;
 
+const currentPageUrlParams = new URLSearchParams(window.location.search);
+const external_access_key = currentPageUrlParams.get('k');
+
 // prevent all caching of ajax requests by stupid browsers like IE
 jQuery.ajaxSetup({ cache: false });
 
@@ -1828,7 +1831,7 @@ function CentralSpaceShowProcessing(delay = 1000, defaultmessage = '')
     {
     if (ProcessingTimersActive) { return; }
 
-    if (b_progressmsgs) {
+    if (b_progressmsgs && external_access_key.length == 0) {
         jQuery('#ProcessingStatus').html('');
         ProcessingMessages=[];
         ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 350);
