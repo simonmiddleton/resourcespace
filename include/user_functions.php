@@ -939,7 +939,7 @@ function email_reset_link(string $email, bool $newuser=false)
             ["s", $email]
         );
 
-    if (($GLOBALS["pagename"] ?? "") !== "team_user_edit") {
+    if ($GLOBALS["pagename"] !== "team_user_edit") {
         // Don't add delay if admin is resetting password
         sleep($password_brute_force_delay);
     }
@@ -997,7 +997,7 @@ function email_reset_link(string $email, bool $newuser=false)
         }
     }
 
-    // Pass any e-mail errors back, or ereturn truer if successful
+    // Pass any e-mail errors back, or return true if successful
     return $result;
 }
 
