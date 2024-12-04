@@ -235,7 +235,7 @@ function get_collection($ref, $usecache = false)
         $users = ps_array("SELECT u.username value FROM user u,user_collection c WHERE u.ref=c.user AND c.collection = ? ORDER BY u.username",array("i",$ref));
         $return["users"]=join(", ",$users);
 
-        $groups = ps_array("SELECT concat('" . $lang["groupsmart"] . "',u.name) value FROM usergroup u,usergroup_collection c WHERE u.ref = c.usergroup AND c.collection = ? ORDER BY u.name",array("i",$ref));
+        $groups = ps_array("SELECT concat('" . $lang["groupsmart"] . ": ',u.name) value FROM usergroup u,usergroup_collection c WHERE u.ref = c.usergroup AND c.collection = ? ORDER BY u.name",array("i",$ref));
         $return["groups"]=join(", ",$groups);
         
 
