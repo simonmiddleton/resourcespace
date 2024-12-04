@@ -1157,24 +1157,18 @@ jQuery(document).ready(function()
 # Function to automatically save the form on field changes, if configured.
  if ($edit_autosave)
     { ?>
-    preventautosave=false;
-    
-    
+    // Allow events to disable autosaving under certain TEMPORARY conditions
+    preventautosave = false;
+
     // Disable autosave on enter keypress as form will be submitted by this keypress anyway which can result in duplicate data
-    
-    jQuery("#CentralSpace").on("keydown", ":input:not(textarea):input:not(text)", function(e) 
-        {
-        if (e.which == 13) 
-            {
+    jQuery("#CentralSpace").on("keydown", ":input:not(textarea):input:not(text)", (e) => {
+        if (e.which == 13) {
             preventautosave = true;
             e.preventDefault();
-            }
-            else
-            {
+        } else {
             preventautosave = false;    
-            }
-        });
-        
+        }
+    });
 
     function AutoSave(field, stop_recurrence)
         {
