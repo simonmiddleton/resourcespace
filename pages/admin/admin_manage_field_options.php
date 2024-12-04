@@ -482,6 +482,7 @@ if($ajax)
     }
     ?>
 <div class="BasicsBox">
+<h1><?php echo escape($lang['manage_metadata_field_options'] . (isset($field_data['title']) ? ': ' . i18n_get_translated($field_data['title']) : '')); ?></h1>
 <?php
     $links_trail = array(
         array(

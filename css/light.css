@@ -124,7 +124,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Table header styling */
 .ListviewStyle thead, .ListviewTitleStyle {
-    background: #444 !important;
+    background: #444;
     text-transform: uppercase;
 }
 .ListviewTitleStyle td, .ListviewTitleStyle th, .ListviewTitleStyle a, .ListviewTitleStyle a:visited {
@@ -151,6 +151,14 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
     {
     background-color: #ffffff !important;
     }
+
+.ListviewStyle tr:hover {
+    background-color: #e5e5e5;
+}
+tr.ListviewTitleStyle:hover {
+    background-color: black;
+}
+
 .ListViewBulkActions span {color: #666666}
 .ListViewBulkActions span:hover {color: #2E99E6;}
 
@@ -326,6 +334,10 @@ div.MessageBox a {
 #login_box .QuestionSubmit {background:none; border: none;}
 #login_box .Question .stdwidth {width: 550px; border-radius: 6px; min-height: 32px;}
 #login_box, #login_box h1,  #login_box a {color: #FFF;}
+#login_box .Question input[type=text], #login_box .Question input[type=password], #login_box textarea {
+    background-color: #9a9a9ad9;
+    color: white;
+}
 
 /* Highlighting required fields in certain plugins */
 .highlighted {border: 3px solid #F00 !important;}
@@ -725,7 +737,7 @@ a.HomePanel:hover {
 }
 
 #SearchBarTabsContainer {
-    background: rgb(0 0 0 / 30%);
+    background: rgb(0 0 0 / 20%);
 }
 
 .MiniCategoryBox {border: 1px solid rgba(0,0,0,0.25);}
