@@ -3733,6 +3733,11 @@ function collection_min_access($collection)
 
     # Reset minaccess and allow get_resource_access to determine the min access for the collection 
     $minaccess = 0;
+
+    global $usersearchfilter;
+    $usersearchfilter_original = $usersearchfilter;
+    # Performance improvement - Don't check search filters again in get_resource_access as $result contains only resources allowed by the search filter.
+    $usersearchfilter = '';
     for($n = 0; $n < count($result); $n++)
         {
         $access = get_resource_access($result[$n]);
@@ -3741,6 +3746,7 @@ function collection_min_access($collection)
             $minaccess = $access;
             }
         }
+    $usersearchfilter = $usersearchfilter_original;
 
     return $minaccess;
     }
