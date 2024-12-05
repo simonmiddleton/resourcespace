@@ -47,7 +47,7 @@ if($submitted && $resultcount > 0)
     {
 
     $findstrings = array("[search]","[time]");
-    $replacestrings = array(safe_file_name($search),date("Ymd-H:i",time()));
+    $replacestrings = array(mb_substr(safe_file_name($search), 0, 150), date("Ymd-H:i", time()));
     $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
 
     $csv_filename_noext = strip_extension($csv_filename);
