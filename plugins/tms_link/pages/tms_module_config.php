@@ -14,7 +14,7 @@ $alltables = odbc_tables($conn);
 while (odbc_fetch_row($alltables))
     {
     $type = odbc_result($alltables, 4);
-    if ($type == "TABLE")
+    if ($type == "TABLE" || $type == "VIEW")
         {
         $tablename = odbc_result($alltables,3);
         $arrtables[$tablename] = $tablename;
