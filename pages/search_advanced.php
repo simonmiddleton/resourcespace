@@ -5,7 +5,18 @@ include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission d
 
 $selected_archive_states=array();
 
-$archivechoices = getval("archive", getval("saved_archive", false), false, 'is_array');
+$archivechoices = getval(
+    "archive",
+    getval(
+        "saved_archive",
+        false,
+        false,
+        fn ($v) => is_array($v) || is_int_loose($v) || preg_match("~^\\-*\\d+[,\\-*\\d+]*$~",$v)
+    ),
+    false,
+    fn ($v) => is_array($v) || is_int_loose($v) || preg_match("~^\\-*\\d+[,\\-*\\d+]*$~",$v)
+);
+
 if($archivechoices !== false)
     {
     $search_all_workflow_states = false;
