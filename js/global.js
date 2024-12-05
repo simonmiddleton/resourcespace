@@ -1831,7 +1831,7 @@ function CentralSpaceShowProcessing(delay = 1000, defaultmessage = '')
     {
     if (ProcessingTimersActive) { return; }
 
-    if (b_progressmsgs && external_access_key.length == 0) {
+    if (b_progressmsgs && (external_access_key == null || external_access_key.length == 0)) {
         jQuery('#ProcessingStatus').html('');
         ProcessingMessages=[];
         ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 350);
