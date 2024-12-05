@@ -579,15 +579,41 @@
                                             return false;
                                             }
 
+                                        $selectedrestypes = [];
+                                        $restypes = trim((string)($restypes));
+                                        if ($restypes != "") {
+                                            $selectedrestypes = explode(",",$restypes);
+                                        }
+                                        
                                         $restypesql = new PreparedStatementQuery();
+                                    
                                         $nodatafieldinfo = get_resource_type_field($nodatafield);
-                                        if ($nodatafieldinfo["global"] != 1)
-                                            {
-                                            $nodatarestypes = explode(",",(string)$nodatafieldinfo["resource_types"]);
-                                            $restypesql->sql = " AND r[union_index].resource_type IN (" . ps_param_insert(count($nodatarestypes)) . ") ";
-                                            $restypesql->parameters = ps_param_fill($nodatarestypes,"i");
+                                        $nodatarestypes = trim((string)$nodatafieldinfo["resource_types"]);
+                                        if ($nodatarestypes != "") {
+                                            $nodatarestypes = explode(",",$nodatarestypes);
+                                        } else {
+                                            $nodatarestypes = [];
+                                        }
+                                    
+                                        if ($nodatafieldinfo["global"] === 1) {
+                                            // Global field empty search
+                                            // Candidate resources are those which exist in selected resource types
+                                            if (count($selectedrestypes) > 0) {
+                                                $restypesql->sql = " AND r[union_index].resource_type IN (" . ps_param_insert(count($selectedrestypes)) . ") ";
+                                                $restypesql->parameters = ps_param_fill($selectedrestypes,"i");
                                             }
-
+                                        } else {
+                                            // Non-global field empty search
+                                            // Candidate resources are those whose resource type is linked to the field and which exists in selected resource types
+                                            if (count($selectedrestypes) > 0) {
+                                                $candidaterestypes = array_intersect($nodatarestypes,$selectedrestypes);
+                                            } else {
+                                                $candidaterestypes = $nodatarestypes;
+                                            }
+                                            $restypesql->sql = " AND r[union_index].resource_type IN (" . ps_param_insert(count($candidaterestypes)) . ") ";
+                                            $restypesql->parameters = ps_param_fill($candidaterestypes,"i");
+                                        }
+                                        
                                         // Check that nodes are empty
                                         $union = new PreparedStatementQuery();
                                         $union->sql = "SELECT ref AS resource, [bit_or_condition] 1 AS score FROM resource r[union_index] WHERE r[union_index].ref NOT IN
