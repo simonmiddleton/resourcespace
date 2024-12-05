@@ -119,7 +119,11 @@ function HookAnnotateViewRenderinnerresourcepreview()
         }
     else
         {
-        echo get_nopreview_html((string) $resource["file_extension"]);
+        ?>
+        <div id="previewimagewrapper">
+            <?php echo get_nopreview_html((string) $resource["file_extension"]); ?>
+        </div>
+        <?php
         }
 
     return true;    
