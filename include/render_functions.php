@@ -3185,7 +3185,7 @@ function render_filter_bar_button($text, $attr, $icon)
 * 
 * For free text searches this SHOULD NOT work!
 * 
-* @param array   $search_params
+* @param array{search: string, restypes: string, archive: string, advsearch?: 'true'|''} $search_params
 * @param boolean $return_params_only Exception to the rule! Rather than render, return the upload here params
 * 
 * @return void|array
@@ -3227,8 +3227,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
     $upload_here_params['search'] = $search_params['search'];
 
     // Special search !collection
-    if(mb_substr($search_params['search'], 0, 11) == '!collection')
-        {
+    if (mb_substr($search_params['search'], 0, 11) == '!collection') {
         $collection = explode(' ', $search_params['search']);
         $collection = str_replace('!collection', '', $collection[0]);
         $collection = explode(',', $collection);
@@ -3237,8 +3236,17 @@ function render_upload_here_button(array $search_params, $return_params_only = f
         //Check the user is able to upload to this collection before continuing
         if(!collection_writeable($collection)) {return;}
 
-        $upload_here_params['collection_add'] = $collection;
+        $smart_collection = get_saved_searches($collection)[0] ?? [];
+        if ($smart_collection !== []) {
+            $search_params = array_merge(
+                $search_params,
+                array_intersect_key($smart_collection, array_flip(['search', 'restypes', 'archive']))
+            );
+            $upload_here_params['search'] = $search_params['search'];
+        } else {
+            $upload_here_params['collection_add'] = $collection;
         }
+    }
 
     if (isset($search_params['advsearch']) && $search_params['advsearch'] == 'true')
         {
