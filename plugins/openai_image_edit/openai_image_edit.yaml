@@ -1,5 +1,5 @@
 name: openai_image_edit
-title: OpenAI API Image Editing
+title: OpenAI Image Editing
 author: Montala Limited
 version: 1.0
 desc: Erase parts of an image and have OpenAI DALL-E regenerate them.

@@ -1,8 +1,8 @@
 name: openai_gpt
-title: OpenAI API GPT integration
+title: OpenAI GPT integration
 author: Montala Limited
 version: 2.0
-desc: Automated metadata processing using AI.
+desc: Automated processing of metadata and images using AI.
 icon: fa fa-tags
 config_url: /plugins/openai_gpt/pages/setup.php
 category: integrations
