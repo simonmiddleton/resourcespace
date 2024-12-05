@@ -42,12 +42,12 @@ $randstring = md5(json_encode($job_data));
 $csvfile = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . $randstring . $scramble_key) . ".csv";
 
 $findstrings = array("[search]","[time]");
-$replacestrings = array(safe_file_name("TEST"),date("Ymd-H:i",time()));
+$replacestrings = array(mb_substr(safe_file_name($search), 0, 150), date("Ymd-H:i", time()));
 $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
 
 $csv_filename_noext = strip_extension($csv_filename);
 
-$csvurl = $baseurl_short . "pages/download.php?userfile=" . $userref . "_" . $randstring . ".csv&filename=" . $csv_filename_noext . ".csv";
+$csvurl = $baseurl_short . "pages/download.php?userfile=" . $userref . "_" . $randstring . ".csv&filename=" . $csv_filename_noext;
 
 generateResourcesMetadataCSV($exportresources,$personaldata, $allavailable, $csvfile);
 
