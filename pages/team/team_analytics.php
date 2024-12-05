@@ -114,7 +114,7 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
                 class="shrtwidth"
             />
 
-            <input type="button" value="<?php echo escape($lang['clearbutton']); ?>" onClick="$('findtext').value='';form.submit();" />
+            <input type="button" value="<?php echo escape($lang['clearbutton']); ?>" onClick="jQuery('#findtext').val('');form.submit();" />
             <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" />
 
             </div>
