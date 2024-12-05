@@ -593,7 +593,12 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 /* Larger layout changes */
 .RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0 0 10px 0;}
-#previewimagewrapper .nopreview {font-size:150px;}
+#previewimagewrapper .nopreview {
+    font-size: 150px;
+    margin: 30px 0 15px 0;
+    width: 740px;
+    text-align: center;
+}
 .RecordPanel.RecordPanelLarge .Picture {display: inline-block; max-width: 100%;}
 .RecordPanel.RecordPanelLarge .RecordDownload {width: 70%; margin-right: 10px;}
 .RecordPanel.RecordPanelLarge #ResourceDownloadOptions {

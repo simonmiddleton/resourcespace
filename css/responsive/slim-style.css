@@ -1193,3 +1193,13 @@ body {
         height: auto;
     }
 }
+
+@media(max-width:1235px) {
+    #previewimagewrapper {
+        min-width: 100%;
+    }
+    #previewimagewrapper .nopreview {
+        width: 100%;
+        margin-top: 0;
+    }
+}
