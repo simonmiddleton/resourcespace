@@ -132,7 +132,7 @@ if(isset($download_usage_prevent_options))
         <input type="hidden" name="save" value="true" />
         <input type="hidden" name="iaccept" value="<?php echo escape($iaccept) ?>" />
         <h1><?php echo escape($lang["usage"]); ?></h1>
-        <p><?php echo escape($lang["indicateusage"]); ?></p>
+        <p><?php echo strip_tags_and_attributes($lang["indicateusage"], array('a'), array('href', 'target')); ?></p>
 
 
 <?php if ($download_usage_email){ ?>

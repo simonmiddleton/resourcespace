@@ -741,7 +741,7 @@ if (
     ) {
         ?>
         <div class="Question">
-        <label for="downloadsize"><?php echo escape($lang["downloadsize"]); ?></label>
+        <label for="downloadsize"><?php echo strip_tags_and_attributes($lang["downloadsize"], array('a'), array('href', 'target')); ?></label>
         <div class="tickset">
     <?php
     $maxaccess=collection_max_access($collection);
