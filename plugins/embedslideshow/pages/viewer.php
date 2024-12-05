@@ -11,15 +11,6 @@ $k          = getval('k', '');
 $size       = getval('size', 'pre');
 $transition = (int)getval('transition', 4, true);
 $showtext   = getval('showtext', '0');
-
-$player_width   = getval('width', 0, true);
-$player_height  = getval('height', 0, true);
-if ($player_width === 0 || $player_height === 0)
-    {
-    exit("Invalid height and width parameters.");
-    }
-$player_height = $player_height - 48;
-$player_ratio = $player_width / $player_height;
     
 # Check key is valid
 if (!check_access_key_collection($ref,$k))
@@ -69,8 +60,8 @@ ob_start();
         }
         .slide {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 90%;
+            height: 90%;
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
@@ -93,8 +84,11 @@ ob_start();
 	    }
 
         .embedslideshow_text {
-            margin-top: 10px;
-            margin-left: 10px;
+            margin-top: 86vh;
+            margin-left: 40vw;
+        }
+        .slide-navigator {
+            width:40vw;margin:auto;
         }
         .slide-control {
             width: 8%;
@@ -113,20 +107,19 @@ ob_start();
             max-width: 60px;
             text-align: center;
             font-size: 14px;
-            border: 1px solid #666;
+            border: 1px solid #444;
             border-radius: 5px;
             background-color: #f0f0f0;
             cursor: pointer;
         }
         .slide-page-button-style:hover {
-	        color:#666;
+	        color:#444;
 	    }
         .slide-page-input-active {
             background-color: white;
             border: 1px solid #999;
             cursor: text;
         }
-
     </style>
 
 </head>
@@ -171,7 +164,6 @@ ob_start();
     ?>
     <!-- Markup for current resource START -->
     <div class="slide" style="background-image: url(<?php echo escape($preview_path); ?>);" onClick="showNextSlide();return false;">
-
     <?php 
         global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;
         if($embedslideshow_textfield && $showtext) 
@@ -186,6 +178,7 @@ ob_start();
             }
     ?>
     </div>
+
     <!-- Markup for current resource END -->
     <?php 
         $page++;
@@ -196,19 +189,20 @@ ob_start();
     <!-- Containing section END -->
     </div>
 </main>
+
 <!-- Slideshow navigation control markup START -->
-<div style="width:40vw;margin:auto;">
+<div class="slide-navigator">
 <ul>   
-    <li id="slide-go-start"  class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('start');return false;"><i class="fas fa-step-backward"></i></li>
-    <li id="slide-go-prev"   class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showPrevSlide();return false;"><i class="fas fa-backward"></i></li>
-    <li id="slide-pause"     class="slide-control" style="cursor: pointer;display: inline-block;" onClick="pauseSlideShow();return false;"><i class="fas fa-pause"></i></li>
-    <li id="slide-play"      class="slide-control" style="cursor: pointer;display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i></li>
-    <li id="slide-go-next"   class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i></li>
-    <li id="slide-go-end"    class="slide-control" style="cursor: pointer;display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i></li>
-    <li id="slide-go-atpage" class="slide-control-atpage" style="cursor: pointer;display: inline-block;">
-        <span><input type="number" id="slide-page-number" class="slide-page-button-style"/></span>
+    <li id="slide-go-start"  class="slide-control" style="display: inline-block;" onClick="showSlidePage('start');return false;"><i class="fas fa-step-backward"></i></li>
+    <li id="slide-go-prev"   class="slide-control" style="display: inline-block;" onClick="showPrevSlide();return false;"><i class="fas fa-backward"></i></li>
+    <li id="slide-pause"     class="slide-control" style="display: inline-block;" onClick="pauseSlideShow();return false;"><i class="fas fa-pause"></i></li>
+    <li id="slide-play"      class="slide-control" style="display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i></li>
+    <li id="slide-go-next"   class="slide-control" style="display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i></li>
+    <li id="slide-go-end"    class="slide-control" style="display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i></li>
+    <li id="slide-go-atpage" class="slide-control-atpage" style="display: inline-block;">
+        <span><input type="number" id="slide-page-number" class="slide-page-button-style" min="1"/></span>
     </li>
-    <li class="slide-control" style="cursor: pointer;display: inline-block;">
+    <li class="slide-control" style="display: inline-block;">
         <span style="margin-top:2px;float:left;">&nbsp;&nbsp;&sol;&nbsp;&nbsp;</span>
         <span id="slide-page-count" style="margin-top:2px;float:left;font-size:14px;"></span>
     </li>
