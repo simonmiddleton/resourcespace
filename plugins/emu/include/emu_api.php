@@ -136,18 +136,23 @@ class EMuAPI
     * Set columns property
     * 
     * @param array $names Column name(s) to set
-    * 
-    * @return void
     */
-    public function setColumns(array $names)
-        {
+    public function setColumns(array $names): void
+    {
         $this->columns = array_merge($this->columns, $names);
 
-        if(!empty($this->columns))
-            {
-            $this->module->addFetchSet('object_fields', $this->columns);
+        if (!empty($this->columns)) {
+            try {
+                $this->module->addFetchSet('object_fields', $this->columns);
+            } catch (Throwable $t) {
+                debug(sprintf(
+                    'Unable to set module columns (%s). %s',
+                    implode(', ', $this->columns),
+                    json_encode(['trace' => $t->getTraceAsString()])
+                ));
             }
         }
+    }
 
 
     /**
@@ -212,22 +217,26 @@ class EMuAPI
     * Get EMu objects based on an array of IRNs
     * 
     * @param array $irns Array of Unique KE EMu object identifiers
-    * 
-    * @return array
     */
-    public function getObjectsByIrns(array $irns)
-        {
+    public function getObjectsByIrns(array $irns): array
+    {
         $count_irns = count($irns);
-
-        if(0 === $count_irns)
-            {
+        if (0 === $count_irns) {
             return array();
-            }
-
-        $this->module->findKeys($irns);
-
-        return $this->getResults('object_fields', 0, $count_irns);
         }
+
+        try {
+            $this->module->findKeys($irns);
+            return $this->getResults('object_fields', 0, $count_irns);
+        } catch (Throwable $t) {
+            debug(sprintf(
+                'Unable to find records by keys (%s). %s',
+                implode(', ', $irns),
+                json_encode(['trace' => $t->getTraceAsString()])
+            ));
+            return [];
+        }
+    }
 
 
     /**
