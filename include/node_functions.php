@@ -3105,3 +3105,117 @@ function toggle_category_tree_nodes_active_state(int $rtf, array $node_refs): ar
 function node_is_active(array $node): bool {
     return $node['active'] === 1;
 }
+
+
+/**
+ * Suggest dynamic keyword nodes. Used by pages/edit_fields/9_ajax/suggest_keywords.php
+ *
+ * @param int $field        Metadata field ID
+ * @param string $keyword   String to match
+ * @param bool $readonly    Add an option to add new node if no exact match
+ *
+ */
+function suggest_dynamic_keyword_nodes(int $field, string $keyword, bool $readonly): array
+{
+    if (checkperm("bdk" . $field) || !metadata_field_edit_access($field)) {
+        // Not permitted to add new nodes
+        $readonly = true;
+    }
+    $fielddata = get_resource_type_field($field);
+    if (!$fielddata
+        || !metadata_field_view_access($field)
+    ) {
+        return [];
+    }
+
+    $nodes = get_nodes($field);
+
+    // Return matches
+    $exactmatch = false;
+    $results    = [];
+    $match_is_deactivated = false;
+
+    // Set $keywords_remove_diacritics so as to only add versions with diacritics to return array if none are in the submitted string
+    $GLOBALS['keywords_remove_diacritics'] = mb_strlen($keyword) === strlen($keyword);
+    $keyword = normalize_keyword($keyword);
+
+    foreach ($nodes as $node) {
+        $trans = i18n_get_translated($node['name'], true);
+        $compare = normalize_keyword($trans);
+        $node_is_active = node_is_active($node);
+        if ($GLOBALS['dynamic_keyword_suggest_contains']) {
+            if (
+                '' != $trans
+                && (
+                    !isset($dynamic_keyword_suggest_contains_characters)
+                    || $dynamic_keyword_suggest_contains_characters <= mb_strlen($keyword)
+                )
+                && mb_strpos(mb_strtolower($compare), mb_strtolower($keyword)) !== false
+            ) {
+                if (mb_strtolower($compare) == mb_strtolower($keyword)) {
+                    $exactmatch = true;
+                    $match_is_deactivated = !$node_is_active;
+                }
+
+                if ($node_is_active) {
+                    $results[] = [
+                        'label' => $trans,
+                        'value' => $node['ref']
+                    ];
+                }
+            }
+        } else {
+            if ('' != $compare && mb_substr(mb_strtolower($compare), 0, mb_strlen($keyword)) == mb_strtolower($keyword)) {
+                if (mb_strtolower($compare) == mb_strtolower($keyword)) {
+                    $exactmatch = true;
+                    $match_is_deactivated = !$node_is_active;
+                }
+
+                if ($node_is_active) {
+                    $results[] = [
+                        'label' => $trans,
+                        'value' => $node['ref']
+                    ];
+                }
+            }
+        }
+    }
+
+    $keyword = stripslashes($keyword);
+
+    $fielderror = false;
+    if (!$exactmatch && !$readonly) {
+        # Ensure regexp filter is honoured if one is present
+        if (strlen(trim((string)$fielddata["regexp_filter"])) >= 1) {
+            if (preg_match("#^" . str_replace($GLOBALS['regexp_slash_replace'], '\\', $fielddata["regexp_filter"]) . "$#",$keyword,$matches) <= 0) {
+                $fielderror = true;
+            }
+        }
+
+        if (!$fielderror) {
+            $results[] = array(
+                'label' => "{$GLOBALS['lang']['createnewentryfor']} {$keyword}",
+                'value' => "{$GLOBALS['lang']['createnewentryfor']} {$keyword}"
+            );
+        } else {
+            $results[] = array(
+                'label' => "{$GLOBALS['lang']['keywordfailedregexfilter']} {$keyword}",
+                'value' => "{$GLOBALS['lang']['keywordfailedregexfilter']} {$keyword}"
+            );
+        }
+    } elseif ($exactmatch && $match_is_deactivated) {
+        $text = "{$GLOBALS['lang']['inactive_entry_matched']} {$keyword}";
+        $results = [
+            [
+                'label' => $text,
+                'value' => $text,
+            ]
+        ];
+    } elseif ($readonly && empty($results)) {
+        $results[] = array(
+                'label' => "{$GLOBALS['lang']['noentryexists']} {$keyword}",
+                'value' => "{$GLOBALS['lang']['noentryexists']} {$keyword}"
+            );
+    }
+    return $results;
+}
