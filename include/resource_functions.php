@@ -3231,20 +3231,6 @@ function delete_resource($ref)
         # log this so that administrator can tell who requested deletion
         resource_log($ref,LOG_CODE_DELETED,'');
 
-        # Log the deletion of this resource for any collection it was in.
-        $in_collections = ps_query("select collection, resource from collection_resource where resource = ?", array("i", $ref));
-
-        # Remove the resource from any collections
-        ps_query("delete from collection_resource where resource = ?", array("i", $ref));
-
-        if (count($in_collections) > 0)
-            {
-            for($n=0; $n < count($in_collections); $n++)
-                {
-                collection_log($in_collections[$n]['collection'], LOG_CODE_COLLECTION_DELETED_RESOURCE, $in_collections[$n]['resource']);
-                }
-            }
-
         return true;
         }
 
@@ -6709,6 +6695,8 @@ function resource_type_config_override($resource_type, $only_onchange=true)
 */
 function update_archive_status($resource, $archive, $existingstates = array(), $collection  = 0, $more_notes="")
     {
+    global $resource_deletion_state;
+    
     if(!is_array($resource))
         {
         $resource = array($resource);
@@ -6739,6 +6727,18 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
         }
 
     ps_query("UPDATE resource SET archive = ? WHERE ref IN (" . ps_param_insert(count($resource)) . ")",array_merge(["i",$archive],ps_param_fill($resource,"i")));
+
+    # Resources should be removed from collections when being moved into the deletion state as specified in config,default.php
+    if ($resource_deletion_state == $archive) {
+        foreach ($resource as $ref) {
+            $in_collections = ps_query('SELECT collection, resource FROM collection_resource WHERE resource = ?', ['i', $ref]);
+            ps_query('DELETE FROM collection_resource WHERE resource = ?', ['i', $ref]);
+            foreach ($in_collections as $col) { 
+                collection_log($col['collection'], LOG_CODE_COLLECTION_DELETED_RESOURCE, $col['resource']);
+            }
+        }
+    }
+
     hook('after_update_archive_status', '', array($resource, $archive,$existingstates));
     // Send notifications
     debug("update_archive_status - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
