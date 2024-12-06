@@ -3147,8 +3147,8 @@ function suggest_dynamic_keyword_nodes(int $field, string $keyword, bool $readon
             if (
                 '' != $trans
                 && (
-                    !isset($dynamic_keyword_suggest_contains_characters)
-                    || $dynamic_keyword_suggest_contains_characters <= mb_strlen($keyword)
+                    !isset($GLOBALS['dynamic_keyword_suggest_contains_characters'])
+                    || $GLOBALS['dynamic_keyword_suggest_contains_characters'] <= mb_strlen($keyword)
                 )
                 && mb_strpos(mb_strtolower($compare), mb_strtolower($keyword)) !== false
             ) {
