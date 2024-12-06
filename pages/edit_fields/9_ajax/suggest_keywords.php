@@ -8,8 +8,18 @@ if ($k=="" || (!check_access_key_collection($upload_collection,$k))) {
 $field    = getval('field', '');
 $keyword  = getval('term', '');
 $readonly = ('' != getval('readonly', '') ? true : false);
+if (checkperm("bdk" . $field)) {
+    $readonly =true;
+}
 
 $fielddata = get_resource_type_field($field);
+if (!$fielddata
+    || !metadata_field_view_access($field)
+    || (!$readonly && !metadata_field_edit_access($field))
+) {
+    http_response_code(403);
+    exit(escape($lang["error-permissiondenied"]));
+}
 $nodes = get_nodes($field);
 
 // Return matches
