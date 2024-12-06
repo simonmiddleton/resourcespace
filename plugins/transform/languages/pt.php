@@ -71,6 +71,7 @@ $lang["cropper_quality_select"]='Permitir ao usuário selecionar a qualidade do 
 $lang["cropper_srgb_option"]='Adicionar opção para forçar o uso do perfil sRGB';
 $lang["cropper_jpeg_rgb"]='Forçar sRGB (substitui a opção do usuário)';
 $lang["cropper_use_srgb"]='Utilize sRGB';
+$lang["transform-recrop"]='Recortar imagem novamente';
 $lang["transform_update_preview"]='Atualizar visualização';
 $lang["transform_preset_sizes"]='Selecionar a partir do tamanho de destino pré-definido';
 $lang["error_crop_invalid"]='Por favor, selecione uma região da imagem';

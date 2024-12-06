@@ -70,6 +70,7 @@ $lang["cropper_quality_select"]='Sta de gebruiker toe om de kwaliteit van het re
 $lang["cropper_srgb_option"]='Optie toevoegen om het gebruik van het sRGB-profiel te verplichten';
 $lang["cropper_jpeg_rgb"]='Verplicht sRGB (overschrijft gebruikersoptie)';
 $lang["cropper_use_srgb"]='Gebruik sRGB';
+$lang["transform-recrop"]='Opnieuw bijsnijden afbeelding';
 $lang["transform_update_preview"]='Bijwerken voorbeeldweergave';
 $lang["transform_preset_sizes"]='Selecteer een vooraf gedefinieerde doelgrootte';
 $lang["error_crop_invalid"]='Selecteer alstublieft een regio van de afbeelding';

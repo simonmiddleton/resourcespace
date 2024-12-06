@@ -68,6 +68,7 @@ $lang["cropper_resolution_select"]='从预设分辨率 (PPI) 中选择。<br>留
 $lang["cropper_quality_select"]='允许用户选择结果文件的质量（仅限JPG / PNG）。';
 $lang["cropper_srgb_option"]='添加选项以强制使用sRGB配置文件。';
 $lang["cropper_jpeg_rgb"]='强制使用 sRGB（覆盖用户选项）';
+$lang["transform-recrop"]='重新裁剪图像';
 $lang["transform_update_preview"]='更新预览';
 $lang["transform_preset_sizes"]='从预定义的目标尺寸中选择。';
 $lang["error_crop_invalid"]='请选择图像的一个区域。';

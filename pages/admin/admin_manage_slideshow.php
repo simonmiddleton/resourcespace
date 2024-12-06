@@ -139,6 +139,7 @@ if($ajax === 'true' && $action == 'set_flag' && enforcePostRequest($ajax))
 
         $update_status = set_slideshow(
             $slideshow_id,
+            $slideshow['resource_ref'],
             $slideshow['homepage_show'],
             $slideshow['featured_collections_show'],
             $slideshow['login_show']);
