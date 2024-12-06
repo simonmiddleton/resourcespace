@@ -1,8 +1,7 @@
 <?php
-$suppress_headers=true; # Suppress headers including the XFRAME limitation so that this page can be remotely embedded.
+$suppress_headers = true; # Suppress headers including the XFRAME limitation so that this page can be remotely embedded.
 
 include "../../../include/boot.php";
-
 include_once "../languages/en.php"; # Because this may not be included automatically, i.e. if the plugin is not available to all groups.
 
 # Get variables and check key is valid.
@@ -11,312 +10,271 @@ $k          = getval('k', '');
 $size       = getval('size', 'pre');
 $transition = (int)getval('transition', 4, true);
 $showtext   = getval('showtext', '0');
+
+$player_width   = getval('width', 0, true);
+$player_height  = getval('height', 0, true);
+
+if ($player_width === 0 || $player_height === 0) {
+    exit("Invalid height and width parameters.");
+}
+
+$player_height = $player_height - 48;
+$player_ratio = $player_width / $player_height;
     
 # Check key is valid
-if (!check_access_key_collection($ref,$k))
-    {
+if (!check_access_key_collection($ref,$k)) {
     exit($lang["embedslideshow_notavailable"]);
-    }
+}
     
 # Load watermark settings
-$use_watermark=check_use_watermark();
+$use_watermark = check_use_watermark();
 ob_start();
 ?>
-
 <html>
-<head>
-<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
-<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slideshow</title>
-    <style>
-        /* Reset some default browser padding */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <head>
+        <link href="../css/embedslideshow.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" /> 
+        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
+        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
+        <link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
+        <script src="../../..<?php echo $jquery_path ?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
+    </head>
+    <body>
+        <div class="embedslideshow_player">
+            <div class="embedslideshow_preview"
+                id="embedslideshow_preview"
+                style="position: relative;width:<?php echo (int) $player_width?>px;height:<?php echo (int) $player_height?>px;">
+                <script type="text/javascript">
+                    var embedslideshow_page=1;
+                    var embedslideshow_x_offsets =  new Array();
+                    var embedslideshow_y_offsets =  new Array();
+                    <?php if ($transition > 0) { ?>
+                        var embedslideshow_auto=true;
+                    <?php } else { ?>
+                        var embedslideshow_auto=false;
+                    <?php } ?>
+                    var timer;
+                </script>
 
-        /* Layout styling */
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-       .content {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .slideshow {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-        .slide {
-            position: absolute;
-            width: 90%;
-            height: 90%;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-        .slide.active {
-            opacity: 1;
-        }
-        .fas {
-            color: #888;
-            margin:auto 2px;
-            float:left;
-            padding: 4px 5px;
-            border-radius: 3px;
-            -moz-border-radius: 3px;
-        }
-        .fas:hover {
-	        color:#585858;
-	    }
-
-        .embedslideshow_text {
-            margin-top: 86vh;
-            margin-left: 40vw;
-        }
-        .slide-navigator {
-            width:40vw;margin:auto;
-        }
-        .slide-control {
-            width: 8%;
-            height: 8%;
-            cursor: pointer;
-        }
-        .slide-control-atpage {
-            width: 20%;
-            height: 8%;
-            cursor: pointer;
-        }
-        .slide-page-button-style {
-            float:left;
-            margin-top: 2px;
-            min-width: 40px;
-            max-width: 60px;
-            text-align: center;
-            font-size: 14px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-            cursor: pointer;
-        }
-        .slide-page-button-style:hover {
-	        color:#444;
-	    }
-        .slide-page-input-active {
-            background-color: white;
-            border: 1px solid #999;
-            cursor: text;
-        }
-    </style>
-
-</head>
-<body>
-<!-- Main Content -->
-<main class="content">
-    <div class="slideshow">
-
-    <?php
-    $page=1;
-    # Load images from the slideshow collection
-    $resources=do_search("!collection" . $ref);
-    if(count($resources) == 0)
-        {
-        $all_fcs = get_all_featured_collections();
-        $refs = array_column($all_fcs, 'ref');
-        $ref_key = array_search($ref, $refs);
-        if($ref_key !== null && is_featured_collection_category($all_fcs[$ref_key]))
-            {
-            $resources = get_featured_collection_resources($all_fcs[$ref_key], ['all_fcs' => $all_fcs]);
-            $resources = get_resource_data_batch($resources);
-            }
-        }
-    if(count($resources) == 0)
-        {
-        exit($lang["embedslideshow_notavailable"]);
-        }
-
-    foreach ($resources as $resource)
-        {
-        $file_path=get_resource_path($resource["ref"],true,$size,false,$resource["preview_extension"],-1,1,$use_watermark);
-        if (file_exists($file_path))
-            {
-            $preview_path=get_resource_path($resource["ref"],false,$size,false,$resource["preview_extension"],-1,1,$use_watermark);     
-            }
-        else
-            {
-            # Fall back to 'pre' size
-            $preview_path=get_resource_path($resource["ref"],false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
-            }        
-        $preview_path .= "&k=" . $k;
-    ?>
-    <!-- Markup for current resource START -->
-    <div class="slide" style="background-image: url(<?php echo escape($preview_path); ?>);" onClick="showNextSlide();return false;">
-    <?php 
-        global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;
-        if($embedslideshow_textfield && $showtext) 
-            { 
-            $resource_textdata = i18n_get_translated(get_data_by_field($resource["ref"],$embedslideshow_resourcedatatextfield));
-            if($resource_textdata !="") 
-                {
-                ?>
-                <div class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo escape($resource_textdata);?></div>
                 <?php
-                }       
+                $page = 1;
+                $resources = do_search("!collection" . $ref);
+                if (count($resources) == 0) {
+                    $all_fcs = get_all_featured_collections();
+                    $refs = array_column($all_fcs, 'ref');
+                    $ref_key = array_search($ref, $refs);
+                    if ($ref_key !== null && is_featured_collection_category($all_fcs[$ref_key])) {
+                        $resources = get_featured_collection_resources($all_fcs[$ref_key], ['all_fcs' => $all_fcs]);
+                        $resources = get_resource_data_batch($resources);
+                    }
+                }
+
+                if (count($resources) == 0) {
+                    exit($lang["embedslideshow_notavailable"]);
+                }
+
+                foreach ($resources as $resource) {
+                    $file_path = get_resource_path($resource["ref"], true, $size, false, $resource["preview_extension"], -1, 1, $use_watermark);
+
+                    if (file_exists($file_path)) {
+                        $preview_path = get_resource_path($resource["ref"], false, $size, false, $resource["preview_extension"], -1, 1, $use_watermark);     
+                    } else {
+                    # Fall back to 'pre' size
+                    $preview_path = get_resource_path($resource["ref"], false, "pre", false, $resource["preview_extension"], -1, 1, $use_watermark);
+                    }
+
+                    $preview_path .= "&k=" . $k;
+            
+                    # Sets height and width to display 
+                    if (!isset($resource["thumb_width"])
+                        || $resource["thumb_width"] < 1
+                        || !isset($resource["thumb_height"])
+                        || $resource["thumb_height"] < 1
+                    ) {
+                        # No Preview Available
+                        continue;
+                    }
+
+                    $ratio = $resource["thumb_width"] / $resource["thumb_height"];
+            
+                    if ($ratio > $player_ratio) { // Base on the width unless we have been asked to scale to specific width
+                        # Landscape image, width is the largest - scale the height
+                        $width = $player_width - 8;
+                        $height = floor($width / $ratio);
+                    } else {
+                        $height = $player_height;
+                        $width = floor($height* $ratio);
+                    }
+                    ?>
+
+                    <a class="embedslideshow_preview_inner"
+                        id="embedslideshow_preview<?php echo $page ?>"
+                        style="display:none;"
+                        href="#"
+                        onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo $page + 1 ?>,false,false);return false;">
+                        <img
+                            alt="<?php echo escape(i18n_get_translated($resource['field' . $view_title_field] ?? ""));?>"
+                            border="0"
+                            width=<?php echo (int) $width; ?>
+                            height=<?php echo (int) $height; ?>
+                            src="<?php echo escape($preview_path); ?>">
+                    </a>
+
+                    <?php
+                    global $embedslideshow_textfield, $embedslideshow_resourcedatatextfield;
+                    if ($embedslideshow_textfield && $showtext) {
+                        $resource_data = i18n_get_translated(get_data_by_field($resource["ref"], $embedslideshow_resourcedatatextfield));
+                        if ($resource_data != "") {
+                            ?>
+                            <span class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo $resource_data;?></span>
+                            <?php
+                        }       
+                    }
+                    ?>
+                    <script type="text/javascript">
+                        embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):0; ?>;
+                        embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ($ratio > $player_ratio)?(ceil(($player_height-$height)/2)+4):0; ?>;
+                    </script>
+                    <?php
+                    $page++;
+                }
+
+                $maxpages = $page - 1;
+
+                // ratio won't be set if none of the resources in the collection have previews available. 
+                if (!isset($ratio)) {
+                    ob_end_clean();
+                    exit($lang["embedslideshow_notavailable"]);
+                }
+                ob_flush();
+                ?>
+            </div>
+
+            <ul class="embedslideshow_controls_standard">
+                <?php if ($width > 100) { ?>
+                    <li class="embedslideshow_begn"
+                        style="cursor: pointer;"
+                        onClick="embedslideshow_auto=false;embedslideshow_ShowPage(1,false,false);return false;">
+                        <i class="fas fa-step-backward"></i>
+                    </li>
+                <?php } ?>
+                <li class="embedslideshow_prev"
+                    style="cursor: pointer;"
+                    onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_page-1,false,false);return false;">
+                    <i class="fas fa-backward"></i>
+                </li>
+
+                <?php if ($width > 100) { ?>
+                    <li class="embedslideshow_auto"
+                        id="embedslideshow_auto"
+                        style="cursor: pointer;"
+                        onClick="embedslideshow_auto=!embedslideshow_auto;if (embedslideshow_auto) {embedslideshow_ShowPage(embedslideshow_page+1,false,false);$('#embedslideshow_auto').fadeTo(100,1);} else {clearTimeout(timer);$('#embedslideshow_auto').fadeTo(100,0.4);}return false;">
+                        <i class="fas fa-pause"></i>
+                    </li>
+
+                    <?php if ($transition == 0) { ?>
+                        <script type="text/javascript">
+                            $('#embedslideshow_auto').fadeTo(100,0.4);
+                        </script>
+                    <?php } ?>
+                <?php } ?>
+
+                <li class="embedslideshow_next"
+                    style="cursor: pointer;"
+                    onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_page+1,false,false);return false;">
+                    <i class="fas fa-forward"></i>
+                </li>
+
+                <?php if ($width > 100) { ?>
+                    <li class="embedslideshow_end"
+                        style="cursor: pointer;"
+                        onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_pages.length-1,false,false);return false;">
+                        <i class="fas fa-step-forward"></i>
+                    </li>
+                <?php } ?>
+
+                <?php if ($width > 200) {
+                    # Jump controls - only if enough room to display them
+                    ?>
+                    <li class="embedslideshow_jump"
+                        style="cursor: pointer;"
+                        onClick="embedslideshow_auto=false;embedslideshow_ShowPage(document.getElementById('embedslideshow_page_box').value,false,true);return false;">
+                        <span><?php echo escape($lang["jump"]); ?></span>
+                    </li>
+                    <li class="embedslideshow_jump-box">
+                        <input type="text" id="embedslideshow_page_box" size="1" /> / <span id="page-count">#</span>
+                    </li>
+                <?php } ?>
+            </ul>
+
+            <script type="text/javascript">
+
+            function embedslideshow_ShowPage(page_set, from_auto, jump) {
+                if (!embedslideshow_auto && from_auto) {
+                    return false; // Auto switched off but timer still running. Terminate.
+                }
+                
+                if (embedslideshow_page == page_set && jump) {
+                    alert("<?php echo escape($lang["embedslideshow_alreadyonpage"]); ?>");
+                    return false;
+                }
+                
+                // Fade out pause button if manually clicked
+                if (!embedslideshow_auto) {
+                    jQuery('#embedslideshow_auto').fadeTo(100,0.4);
+                }
+                    
+                // Faster fade time when manually clicked
+                if (embedslideshow_auto) {
+                    var embedslideshow_fadetime = 1000;
+                } else {
+                    var embedslideshow_fadetime = 200;
+                }
+                
+                // Fade out current page
+                jQuery('#embedslideshow_preview' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
+                jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
+                    
+                embedslideshow_page = page_set;
+
+                if (embedslideshow_page > (<?php echo $maxpages ?>)) {
+                    embedslideshow_page = 1; // back to first page
+                }
+
+                if (embedslideshow_page < 1) {
+                    embedslideshow_page = <?php echo $maxpages ?>; // to last page
+                } 
+                
+                // Center in space
+                jQuery('#embedslideshow_preview' + embedslideshow_page).css('top',embedslideshow_y_offsets[embedslideshow_page] + 'px');
+                jQuery('#embedslideshow_preview' + embedslideshow_page).css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
+                jQuery('.embedslideshow_text').css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
+                    
+                // Fade in new page
+                jQuery('#embedslideshow_preview' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
+                jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
+                
+                if (embedslideshow_auto) {
+                    timer = setTimeout("embedslideshow_ShowPage(embedslideshow_page+1,true,false);",<?php echo $transition == 0 ? 4000 : $transition * 1000; ?>);
+                } else {
+                    clearTimeout(timer);
+                }
+                
+                if (jQuery('#embedslideshow_page_box')) {
+                    jQuery('#embedslideshow_page_box').val(embedslideshow_page);
+                }
             }
-    ?>
-    </div>
 
-    <!-- Markup for current resource END -->
-    <?php 
-        $page++;
-        }
-    $maxpages=$page-1;
-    ob_flush();
-    ?>
-    <!-- Containing section END -->
-    </div>
-</main>
+            embedslideshow_ShowPage(1, false, false);
 
-<!-- Slideshow navigation control markup START -->
-<div class="slide-navigator">
-<ul>   
-    <li id="slide-go-start"  class="slide-control" style="display: inline-block;" onClick="showSlidePage('start');return false;"><i class="fas fa-step-backward"></i></li>
-    <li id="slide-go-prev"   class="slide-control" style="display: inline-block;" onClick="showPrevSlide();return false;"><i class="fas fa-backward"></i></li>
-    <li id="slide-pause"     class="slide-control" style="display: inline-block;" onClick="pauseSlideShow();return false;"><i class="fas fa-pause"></i></li>
-    <li id="slide-play"      class="slide-control" style="display: none;" onClick="playSlideShow();return false;"><i class="fas fa-play"></i></li>
-    <li id="slide-go-next"   class="slide-control" style="display: inline-block;" onClick="showNextSlide();return false;"><i class="fas fa-forward"></i></li>
-    <li id="slide-go-end"    class="slide-control" style="display: inline-block;" onClick="showSlidePage('end');return false;"><i class="fas fa-step-forward"></i></li>
-    <li id="slide-go-atpage" class="slide-control-atpage" style="display: inline-block;">
-        <span><input type="number" id="slide-page-number" class="slide-page-button-style" min="1"/></span>
-    </li>
-    <li class="slide-control" style="display: inline-block;">
-        <span style="margin-top:2px;float:left;">&nbsp;&nbsp;&sol;&nbsp;&nbsp;</span>
-        <span id="slide-page-count" style="margin-top:2px;float:left;font-size:14px;"></span>
-    </li>
-</ul><br>
-</div>
-<!-- Slideshow navigation control markup END -->
+            <?php if ($width > 200) { ?>
+                // Publishes total page count after forward slash next to actual page
+                function totalPages() {
+                    document.getElementById('page-count').innerHTML = <?php echo $maxpages ?>;
+                }
+                totalPages();
+            <?php } ?>
 
-<!-- JavaScript for slideshow -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const page_input = document.getElementById("slide-page-number");
-
-    // Event listener for focus - changes input to editable mode
-    page_input.addEventListener("focus", function() {
-        page_input.classList.add("input-active");
-        page_input.value = ""; 
-        page_input.placeholder = ""; // Clear placeholder when editing
-    });
-
-    // Event listener for blur (when focus is lost) - reverts to button appearance
-    page_input.addEventListener("blur", function() {
-        if (page_input.value) {
-            page_input.classList.remove("input-active");
-            page_input.classList.add("button-style");
-            page_input.placeholder = page_input.value; // Set entered number as placeholder
-        } 
-        if (page_input.value > 0 && page_input.value <= slides.length) {
-            showSlidePage(page_input.value);
-        }
-    });
-
-    // Event listener for Enter key press
-    page_input.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            page_input.blur(); // Trigger blur to apply changes
-        }
-    });
-});
-
-const slides = document.querySelectorAll('.slide');
-const slideTransition = 1000 * <?php echo (int)$transition;?>;
-
-let slideTimer = 0;
-let currentSlide = 0;
-
-function showNextSlide() {
-    // Hide current slide
-    slides[currentSlide].classList.remove('active');
-    // Move to the next slide, or back to the first one if at the end
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add('active');
-    updatePageNumber(currentSlide);
-}
-
-function showPrevSlide() {
-    // Hide current slide
-    slides[currentSlide].classList.remove('active');
-    // Move to the previous slide, or back to the last one if at the start
-    currentSlide = currentSlide - 1;
-    if (currentSlide < 0) {
-        currentSlide = slides.length - 1;
-    }
-    slides[currentSlide].classList.add('active');
-    updatePageNumber(currentSlide);
-}
-
-function showSlidePage(pageRequest) {
-    // Stop the running slideshow 
-    clearInterval(slideTimer);
-    // Hide current slide
-    slides[currentSlide].classList.remove('active');
-    if(pageRequest==='start') {
-        currentSlide = 0;
-    }
-    else if(pageRequest==='end') {
-        currentSlide = slides.length - 1;
-    }
-    else if(!isNaN(pageRequest)) {
-        currentSlide = pageRequest - 1;
-    }
-    // Show requested slide and then restart the slideshow
-    slides[currentSlide].classList.add('active');
-    slideTimer = setInterval(showNextSlide, slideTransition);
-    updatePageNumber(currentSlide);
-}
-
-function pauseSlideShow() {
-    clearInterval(slideTimer);
-    document.getElementById('slide-pause').style.display = 'none';
-    document.getElementById('slide-play').style.display = 'inline-block';
-}
-
-function playSlideShow() {
-    showNextSlide();
-    document.getElementById('slide-play').style.display = 'none';
-    document.getElementById('slide-pause').style.display = 'inline-block';
-    slideTimer = setInterval(showNextSlide, slideTransition);
-}
-
-function updatePageNumber(slidePageNumber) {
-    const slidePageElement = document.getElementById("slide-page-number");
-    slidePageElement.value = slidePageNumber + 1; 
-    slidePageElement.placeholder = slidePageNumber + 1;
-}
-// Display number of pages in slideshow
-document.getElementById('slide-page-count').textContent = slides.length;
-
-// Initialize slideshow by displaying the first image
-slides[currentSlide].classList.add('active');
-updatePageNumber(currentSlide);
-
-// Set interval for changing slides
-slideTimer = setInterval(showNextSlide, slideTransition); 
-</script>
-
-</body>
+            </script>
+        </div>
+    </body>
 </html>
