@@ -46,3 +46,5 @@ $thumbs_display_archive_state = true;
 $featured_collection_static_bg = true;
 $file_checksums = true;
 $hide_real_filepath = true;
+
+$plugins[] = "brand_guidelines";
