@@ -757,14 +757,14 @@ function save_user($ref)
         }
 
         # Validate expiry date
-        if ($expires != "" && preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0) {
+        if ($expires != "" && (preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0 || strtotime($expires) == false)) {
             return str_replace('[value]', $expires, $lang['error_invalid_date_format']);
         }
 
-        if ($expires == "" || strtotime($expires)==false) {
-            $expires = null;
+        if ($expires == "") {
+            $expires = null; 
         } else {
-            $expires =  date("Y-m-d",strtotime($expires));
+            $expires = date("Y-m-d", strtotime($expires));
         }
 
         $passsql = '';
