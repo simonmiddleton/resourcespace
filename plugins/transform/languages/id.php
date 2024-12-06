@@ -68,6 +68,7 @@ $lang["cropper_quality_select"]='Izinkan pengguna untuk memilih kualitas file ha
 $lang["cropper_srgb_option"]='Menambahkan opsi untuk memaksa penggunaan profil sRGB';
 $lang["cropper_jpeg_rgb"]='Memaksa sRGB (mengesampingkan opsi pengguna)';
 $lang["cropper_use_srgb"]='Gunakan sRGB';
+$lang["transform-recrop"]='Memotong ulang gambar';
 $lang["transform_update_preview"]='Perbarui pratinjau';
 $lang["transform_preset_sizes"]='Pilih dari ukuran target yang telah ditentukan sebelumnya';
 $lang["error_crop_invalid"]='Silakan pilih wilayah gambar';

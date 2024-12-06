@@ -71,6 +71,7 @@ $lang["cropper_quality_select"]='Salli käyttäjän valita lopputiedoston laatu 
 $lang["cropper_srgb_option"]='Lisää vaihtoehto pakottaa sRGB-profiilin käyttö';
 $lang["cropper_jpeg_rgb"]='Pakota sRGB (ohittaa käyttäjän asetuksen)';
 $lang["cropper_use_srgb"]='Käytä sRGB:tä';
+$lang["transform-recrop"]='Uudelleen rajaa kuva';
 $lang["transform_update_preview"]='Päivitä esikatselu';
 $lang["transform_preset_sizes"]='Valitse esiasetettu kohdekoko';
 $lang["error_crop_invalid"]='Valitse kuva-alue';

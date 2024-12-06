@@ -70,6 +70,7 @@ $lang["cropper_quality_select"]='السماح للمستخدم باختيار ج
 $lang["cropper_srgb_option"]='إضافة خيار لإجبار استخدام ملف sRGB الملائم';
 $lang["cropper_jpeg_rgb"]='إجبار sRGB (يتجاوز خيار المستخدم)';
 $lang["cropper_use_srgb"]='استخدم sRGB';
+$lang["transform-recrop"]='إعادة تقطيع الصورة';
 $lang["transform_update_preview"]='تحديث المعاينة';
 $lang["transform_preset_sizes"]='اختر من الأحجام المستهدفة المحددة مسبقًا';
 $lang["error_crop_invalid"]='يرجى تحديد منطقة من الصورة';

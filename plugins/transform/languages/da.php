@@ -73,6 +73,7 @@ $lang["cropper_quality_select"]='Tillad brugeren at vælge kvaliteten af den res
 $lang["cropper_srgb_option"]='Tilføj mulighed for at tvinge brug af sRGB-profil';
 $lang["cropper_jpeg_rgb"]='Tving sRGB (tilsidesætter brugerindstilling)';
 $lang["cropper_use_srgb"]='Brug sRGB';
+$lang["transform-recrop"]='Venligst beskær billede igen';
 $lang["transform_update_preview"]='Opdater forhåndsvisning';
 $lang["transform_preset_sizes"]='Vælg fra foruddefineret målstørrelse';
 $lang["error_crop_invalid"]='Vælg venligst en region af billedet';

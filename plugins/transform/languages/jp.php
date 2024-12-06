@@ -71,6 +71,7 @@ $lang["cropper_quality_select"]='ユーザーが生成されるファイルの�
 $lang["cropper_srgb_option"]='sRGBプロファイルの強制使用オプションを追加する。';
 $lang["cropper_jpeg_rgb"]='sRGBを強制する（ユーザーオプションを上書きする）';
 $lang["cropper_use_srgb"]='sRGB を使用してください。';
+$lang["transform-recrop"]='画像を再クロップする';
 $lang["transform_update_preview"]='プレビューを更新する';
 $lang["transform_preset_sizes"]='事前定義されたターゲットサイズから選択してください。';
 $lang["error_crop_invalid"]='画像の領域を選択してください。';

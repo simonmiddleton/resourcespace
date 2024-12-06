@@ -441,7 +441,7 @@ if ($saveaction != '' && enforcePostRequest(false))
                 exit();
                 }
             rename($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
-            set_slideshow($sequence);
+            set_slideshow($sequence, $ref);
             unlink($crop_pre_file);
             redirect($baseurl_short . "pages/home.php");
             exit();

@@ -71,6 +71,7 @@ $lang["cropper_quality_select"]='Povoliť používateľovi výber kvality výsle
 $lang["cropper_srgb_option"]='Pridať možnosť na nútené použitie sRGB profilu';
 $lang["cropper_jpeg_rgb"]='Vynútiť sRGB (prepíše používateľskú voľbu)';
 $lang["cropper_use_srgb"]='Použite sRGB';
+$lang["transform-recrop"]='Znovu orezať obrázok';
 $lang["transform_update_preview"]='Aktualizovať náhľad';
 $lang["transform_preset_sizes"]='Vyberte preddefinovanú cieľovú veľkosť';
 $lang["error_crop_invalid"]='Prosím, vyberte oblasť obrázka';

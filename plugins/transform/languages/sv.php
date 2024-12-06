@@ -79,6 +79,7 @@ $lang["cropper_quality_select"]='Tillåt användaren att välja kvaliteten på d
 $lang["cropper_srgb_option"]='Lägg till alternativ för att tvinga användning av sRGB-profil';
 $lang["cropper_jpeg_rgb"]='Tvinga sRGB (åsidosätter användaralternativ)';
 $lang["cropper_use_srgb"]='Använd sRGB';
+$lang["transform-recrop"]='Omkropps-bild igen';
 $lang["transform_update_preview"]='Uppdatera förhandsvisning';
 $lang["transform_preset_sizes"]='Välj från fördefinierad målstorlek';
 $lang["error_crop_invalid"]='Vänligen välj en region av bilden';

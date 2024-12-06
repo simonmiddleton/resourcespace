@@ -69,6 +69,7 @@ $lang["cropper_quality_select"]='Dopusti korisniku odabir kvalitete rezultiraju�
 $lang["cropper_srgb_option"]='Dodaj opciju za prisilno korištenje sRGB profila';
 $lang["cropper_jpeg_rgb"]='Nametni sRGB (zaobilazi korisničku opciju)';
 $lang["cropper_use_srgb"]='Koristite sRGB';
+$lang["transform-recrop"]='Ponovno obreži sliku';
 $lang["transform_update_preview"]='Ažuriranje pregleda';
 $lang["transform_preset_sizes"]='Odaberite iz unaprijed definirane ciljne veličine';
 $lang["error_crop_invalid"]='Molimo odaberite regiju slike';
