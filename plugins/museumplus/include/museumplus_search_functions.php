@@ -123,7 +123,6 @@ function mplus_search(string $module_name, DOMDocument $search)
         return array();
         }
 
-    debug('mplus_search(): Response: ' . (isset($result['result']) ? $result['result'] : 'result key not set in response'));
     return $result;
     }
 
