@@ -37,7 +37,12 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
     global $baseurl_short, $ref, $result, $n, $k, $search, $offset, $sort, $order_by, $archive,
         $lang, $showkeypreview, $value, $view_title_field, $resource_view_title;
 
+    global $usersearchfilter;
+    $usersearchfilter_original = $usersearchfilter;
+    # Performance improvement - Don't check search filters again in get_resource_access as $result contains only resources allowed by the search filter.
+    $usersearchfilter = '';
     $url = getPreviewURL($result[$n]);
+    $usersearchfilter = $usersearchfilter_original;
 
     if ($url === false) {
         return false;
