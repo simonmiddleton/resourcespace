@@ -11,7 +11,7 @@ function HooksimplesamlCheckAddinstallationcheck()
     display_extension_status('openssl');
     display_extension_status('ldap');
 
-    if (isset($GLOBALS["simplesamlconfig"]["metadata"])) {
+    if (isset($GLOBALS["simplesamlconfig"]["metadata"]) && $GLOBALS['simplesaml_check_idp_cert_expiry']) {
         // Check expiry date of IdP certificates
         // Only possible to check if using ResourceSpace stored SAML config
         ?>
@@ -24,7 +24,6 @@ function HooksimplesamlCheckAddinstallationcheck()
         $idpindex = 1; // Some systems have multiple IdPs
         foreach ($GLOBALS["simplesamlconfig"]["metadata"] as $idpid => $idpdata) {
             $idpname = $idpid; // IdP may not have a friendly readable name configured
-            $idpcheckname = "simplesaml_php_certificate_" . $idpindex;
             $latestexpiry = get_saml_metadata_expiry($idpid);
             if (isset($idpdata["name"])) {
                 if (is_string($idpdata["name"])) {

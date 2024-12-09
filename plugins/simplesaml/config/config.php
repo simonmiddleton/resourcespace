@@ -32,6 +32,7 @@ $simplesaml_authorisation_claim_name = '';
 $simplesaml_authorisation_claim_value = '';
 
 $simplesaml_rsconfig = false;
+$simplesaml_check_idp_cert_expiry = true;
 
 // When using ResourceSpace to store SAML config these setttings are initialised and set in the following pages:-
 // plugins/simplesaml/lib/lib/_autoload.php
