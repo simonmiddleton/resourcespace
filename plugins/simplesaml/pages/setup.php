@@ -37,6 +37,7 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
     $simplesaml['simplesaml_authorisation_claim_name'] = getval('simplesaml_authorisation_claim_name', '');
     $simplesaml['simplesaml_authorisation_claim_value'] = getval('simplesaml_authorisation_claim_value', '');
     $simplesaml['simplesaml_rsconfig'] = getval('simplesaml_rsconfig','');
+    $simplesaml['simplesaml_check_idp_cert_expiry'] = getval('simplesaml_check_idp_cert_expiry','');
 
     $samlgroups = $_REQUEST['samlgroup'];
     $rsgroups = $_REQUEST['rsgroup'];
@@ -80,7 +81,8 @@ foreach (array(
     'simplesaml_create_new_match_email',
     'simplesaml_allow_duplicate_email',
     'simplesaml_multiple_email_notify',
-    'simplesaml_rsconfig'
+    'simplesaml_rsconfig',
+    'simplesaml_check_idp_cert_expiry',
     ) as $thefield)
     {
     if (!isset($simplesaml[$thefield]))
@@ -160,6 +162,7 @@ generateFormToken("simplesaml_form");
 config_section_header($lang['simplesaml_sp_config'], '');
 
 config_boolean_field("simplesaml_rsconfig",$lang['simplesaml_rsconfig'],$simplesaml_rsconfig);
+config_boolean_field("simplesaml_check_idp_cert_expiry",$lang['simplesaml_check_idp_cert_expiry'],$simplesaml_check_idp_cert_expiry);
 
 ?>
 <script>

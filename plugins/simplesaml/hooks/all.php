@@ -749,7 +749,7 @@ function HookSimplesamlAllExtra_checks()
     unset($GLOBALS['use_error_exception']);
 
     // Check for expired certificates
-    if (isset($GLOBALS["simplesamlconfig"]["metadata"])) {
+    if (isset($GLOBALS["simplesamlconfig"]["metadata"]) && $GLOBALS['simplesaml_check_idp_cert_expiry']) {
         // Only possible to check if using ResourceSpace stored SAML config
         $idpindex = 1; // Some systems have multiple IdPs
         foreach ($GLOBALS["simplesamlconfig"]["metadata"] as $idpid => $idpdata) {
@@ -772,13 +772,15 @@ function HookSimplesamlAllExtra_checks()
                 $return[$idpcheckname] = [
                     'status' => 'FAIL',
                     'info' => str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expired']),
-                    'severity' => SEVERITY_CRITICAL,
+                    'severity' => SEVERITY_WARNING,
+                    'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
                 ];
             } elseif ($latestexpiry < date("Y-m-d H:i", time()+60*60*24*7)) {
                 $return[$idpcheckname] = [
                     'status' => 'FAIL',
                     'info' => str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expiring']),
                     'severity' => SEVERITY_WARNING,
+                    'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
                 ];
             } else {
                 $return[$idpcheckname] = [

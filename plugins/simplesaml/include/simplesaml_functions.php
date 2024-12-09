@@ -378,7 +378,7 @@ function get_saml_metadata_expiry($entityid): string
             // Each IdP may have multiple certificates
             foreach($GLOBALS["simplesamlconfig"]["metadata"][$entityid]["keys"] as $idpkey) {
                 if ($idpkey["type"] == 'X509Certificate') {
-                    $keyexpiry = getCertificateExpiry($idpkey["X509Certificate"]);
+                    $keyexpiry = getCertificateExpiry(preg_replace('/\s+/', '', $idpkey["X509Certificate"]));
                     if ($expiry == "" || $keyexpiry > $expiry) {
                         $expiry = $keyexpiry;
                     }
