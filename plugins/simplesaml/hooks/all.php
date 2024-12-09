@@ -772,7 +772,7 @@ function HookSimplesamlAllExtra_checks()
                 $return[$idpcheckname] = [
                     'status' => 'FAIL',
                     'info' => str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expired']),
-                    'severity' => SEVERITY_CRITICAL,
+                    'severity' => SEVERITY_WARNING,
                 ];
             } elseif ($latestexpiry < date("Y-m-d H:i", time()+60*60*24*7)) {
                 $return[$idpcheckname] = [
