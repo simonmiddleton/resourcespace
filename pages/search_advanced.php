@@ -11,6 +11,7 @@ $archivechoices = getval(
         "saved_archive",
         false,
         false,
+        // Regex below is to force any strings to be a csv list of digits
         fn ($v) => is_array($v) || is_int_loose($v) || preg_match("~^\\-*\\d+[,\\-*\\d+]*$~",$v)
     ),
     false,
