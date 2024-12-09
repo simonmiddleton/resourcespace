@@ -23,7 +23,7 @@ $player_ratio = $player_width / $player_height;
     
 # Check key is valid
 if (!check_access_key_collection($ref,$k)) {
-    exit($lang["embedslideshow_notavailable"]);
+    exit(escape($lang["embedslideshow_notavailable"]));
 }
     
 # Load watermark settings
@@ -69,7 +69,7 @@ ob_start();
                 }
 
                 if (count($resources) == 0) {
-                    exit($lang["embedslideshow_notavailable"]);
+                    exit(escape($lang["embedslideshow_notavailable"]));
                 }
 
                 foreach ($resources as $resource) {
@@ -125,7 +125,7 @@ ob_start();
                         $resource_data = i18n_get_translated(get_data_by_field($resource["ref"], $embedslideshow_resourcedatatextfield));
                         if ($resource_data != "") {
                             ?>
-                            <span class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo $resource_data;?></span>
+                            <span class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo escape($resource_data); ?></span>
                             <?php
                         }       
                     }
@@ -143,7 +143,7 @@ ob_start();
                 // ratio won't be set if none of the resources in the collection have previews available. 
                 if (!isset($ratio)) {
                     ob_end_clean();
-                    exit($lang["embedslideshow_notavailable"]);
+                    exit(escape($lang["embedslideshow_notavailable"]));
                 }
                 ob_flush();
                 ?>
