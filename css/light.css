@@ -139,7 +139,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
     {
     border-collapse: collapse;
     }
-.ListviewStyle tr:nth-child(even)
+.ListviewStyle tr:nth-child(even):not(.ListviewTitleStyle)
     {
     background-color: #f6f6f6;
     }
@@ -153,10 +153,10 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
     }
 
 .ListviewStyle tr:hover {
-    background-color: #e5e5e5;
+    background-color: #e5e5e5 !important;
 }
 tr.ListviewTitleStyle:hover {
-    background-color: black;
+    background-color: black !important;
 }
 
 .ListViewBulkActions span {color: #666666}
