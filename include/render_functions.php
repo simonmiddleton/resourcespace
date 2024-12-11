@@ -28,6 +28,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
     $multiple=false;
+    $field['ref'] = (int) $field['ref'];
 ?>
 <!-- RENDERING FIELD=<?php echo $field['ref'] . " " . escape($field['name']);?> -->
 <?php
@@ -424,7 +425,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 jQuery('#field_<?php echo $field['ref']; ?>-m').val('');
                                 jQuery('#field_<?php echo $field['ref']; ?>-d').val('');
                             <?php } else { ?>
-                                jQuery(idname<?php echo (int) $field['ref']; ?> + ' #field_<?php echo (int) $field['ref']; ?>').val('');
+                                jQuery(idname<?php echo $field['ref']; ?> + ' #field_<?php echo $field['ref']; ?>').val('');
                             <?php 
                                 }
                         } ?>
@@ -479,7 +480,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             {
             echo (string)$field["resource_types"];
             }
-        ?>" id="question_<?php echo $n ?>" data-has_display_condition="<?php echo !$displaycondition ? '1' : '0'; ?>" data-question_field_ref="<?php echo (int) $field['ref']; ?>"<?php
+        ?>" id="question_<?php echo $n ?>" data-has_display_condition="<?php echo !$displaycondition ? '1' : '0'; ?>" data-question_field_ref="<?php echo $field['ref']; ?>"<?php
         if (strlen((string) $field["tooltip_text"])>=1)
             {
             echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";
