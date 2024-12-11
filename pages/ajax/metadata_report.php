@@ -148,12 +148,12 @@ else
                 $RS_field_name=ps_query("select title from resource_type_field where ref = ?", array("i",$RS_field_ref),"schema");
                 $RS_field_name = lang_or_i18n_get_translated($RS_field_name[0]['title'], "fieldtitle-");
                 # Display the RS resource field ref, title, exiftool group, tag and properties.
-                echo "<td>". escape(str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name'])) . "</td><td>$group</td><td>$tag $tagprops</td>";
+                echo "<td>". escape(str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name'])) . "</td><td>" . escape($group) . "</td><td>" . escape("{$tag} {$tagprops}") . "</td>";
                 } 
             else 
                 {
                 # Not an RS resource field; display exiftool group, tag and properties.
-                echo "<td></td><td>$group</td><td>$tag $tagprops</td>";
+                echo "<td></td><td>" . escape($group) . "</td><td>" . escape("{$tag} {$tagprops}") . "</td>";
                 }
 
             # Look for the tag in the simulated download.
@@ -174,24 +174,24 @@ else
                 # Compare the values from the original file and the simulated download.
                 if ($value!=$newvalue && $tag!="filesize" && $tag!="filemodifydate")
                     {
-                    echo "<td>- " . $value . "</td><td>+ " . $newvalue . "</td>";
+                    echo "<td>- " . escape($value) . "</td><td>+ " . escape($newvalue) . "</td>";
                     }
                 else
                     {
                     if ($tag=="filemodifydate")
                         {
-                        echo "<td>" . $value . "</td><td>+ " . escape($lang["date_of_download"]) . "</td>";
+                        echo "<td>" . escape($value) . "</td><td>+ " . escape($lang["date_of_download"]) . "</td>";
                         }
                     else
                         {
-                        echo "<td>" . $value . "</td><td></td>";
+                        echo "<td>" . escape($value) . "</td><td></td>";
                         }
                     }
                 }
             else 
                 {
                 # The tag is removed in the simulated download.
-                echo "<td>- " . $value . "</td><td>+</td>";
+                echo "<td>- " . escape($value) . "</td><td>+</td>";
                 }
                 
             hook('more_metadata_report_cells');
@@ -239,16 +239,16 @@ else
                     }
                     ?>
                     <td>
-                    <?php echo str_replace(
+                    <?php echo escape(str_replace(
                             array('%ref%', '%name%'),
                             array($rs_field['ref'], lang_or_i18n_get_translated($rs_field['title'], 'fieldtitle-')),
                             $lang['field_ref_and_name']
-                        );
+                        ));
                     ?>
                     </td>
                     <td>fits</td>
-                    <td><?php echo $fits_field; ?></td>
-                    <td><?php echo $fits_field_value; ?></td>
+                    <td><?php echo escape($fits_field); ?></td>
+                    <td><?php echo escape($fits_field_value); ?></td>
                     <td></td>
                 </tr>
                 <?php
@@ -285,12 +285,12 @@ else
                 $RS_field_name = ps_query("select title from resource_type_field where ref = ?", array("i",$RS_field_ref),"schema");
                 $RS_field_name = lang_or_i18n_get_translated($RS_field_name[0]['title'], "fieldtitle-");
                 # Display the RS resource field ref, title, exiftool group, tag and properties.
-                echo "<td>". escape(str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name'])) . "</td><td>$group</td><td>$tag $tagprops</td>"; 
+                echo "<td>". escape(str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name'])) . "</td><td>" . escape($group) . "</td><td>" . escape("{$tag} {$tagprops}") . "</td>"; 
 
                 # Display the value.
                 if ($tag!="filesize" && $tag!="filemodifydate")
                     {
-                    echo "<td></td><td>+ " . $value . "</td>";
+                    echo "<td></td><td>+ " . escape($value) . "</td>";
                     }
 
                 echo "</tr>";
