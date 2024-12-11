@@ -8,8 +8,8 @@ $run_id = test_generate_random_ID(5);
 $test1750field = create_resource_type_field("dynamic" . $run_id);
 
 // Set nodes for field
-set_node(NULL, $test1750field, "Anaée", NULL, "");
-set_node(NULL, $test1750field, "Anais", NULL, "");
+set_node(null, $test1750field, "Anaée", null, "");
+set_node(null, $test1750field, "Anais", null, "");
 
 // A - Test that both matches are returned
 $results = suggest_dynamic_keyword_nodes($test1750field, "ana", false);
