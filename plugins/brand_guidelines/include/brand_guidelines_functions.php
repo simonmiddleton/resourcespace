@@ -93,7 +93,7 @@ function richtext_input_parser(string $value): string
     ];
     $parsed = strip_tags_and_attributes(
         $value,
-        ['p', 'span', 'h2', 'h3', 'strong', 'em', 'ul', 'ol', 'li', 'a', 's'],
+        ['p', 'span', 'h2', 'h3', 'strong', 'em', 'ul', 'ol', 'li', 'a', 's', 'br'],
         ['href', 'target', 'rel']
     );
     $GLOBALS['permitted_html_tags'] = $cache_permitted_html_tags;
