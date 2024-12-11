@@ -6728,7 +6728,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
 
     ps_query("UPDATE resource SET archive = ? WHERE ref IN (" . ps_param_insert(count($resource)) . ")",array_merge(["i",$archive],ps_param_fill($resource,"i")));
 
-    # Resources should be removed from collections when being moved into the deletion state as specified in config,default.php
+    # Resources should be removed from collections when being moved into the deletion state as specified in config.default.php
     if ($resource_deletion_state == $archive) {
         foreach ($resource as $ref) {
             $in_collections = ps_query('SELECT collection, resource FROM collection_resource WHERE resource = ?', ['i', $ref]);
