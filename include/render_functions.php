@@ -7363,7 +7363,12 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
             'download_column' => cast_echo_to_string('add_download_column', [$ref, $size, $downloadthissize]),
         ];
 
-        if ($downloadthissize && $size['allow_preview'] == 1 && !hook('previewlinkbar')) {
+        if (
+            $downloadthissize 
+            && $size['allow_preview'] == 1 
+            && !hook('previewlinkbar')
+            && file_exists($size['path'])
+        ) {
             $GLOBALS['data_viewsize'] = $size['id']; # relied upon by some plugins (e.g lightbox)
 
             // Fake $size key entry used in JS land to update the View button before showing it to the user
