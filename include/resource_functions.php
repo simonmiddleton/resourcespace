@@ -5370,8 +5370,8 @@ function get_resource_access($resource)
     {
     global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref, $open_access_for_contributor,
         $userref,$usergroup, $usersearchfilter, $search_all_workflow_states,
-        $userderestrictfilter, $userdata, $custom_access;
-    
+        $userderestrictfilter, $userdata, $custom_access, $resource_access_cache;
+
     $passthru="no";
 
     // get_resource_data doesn't contain permissions, so fix for the case that such an array could be passed into this function unintentionally.
@@ -5393,18 +5393,23 @@ function get_resource_access($resource)
     $access=$resourcedata["access"];
     $resource_type=$resourcedata['resource_type'];
 
+    if (isset($resource_access_cache[$ref]))
+        {
+        return $resource_access_cache[$ref];
+        }
+
     // Set a couple of flags now that we can check later on if we need to check whether sharing is permitted based on whether access has been specifically granted to user/group
     $customgroupaccess=false;
     $customuseraccess=false;
 
     if('' != $k)
         {
-
         # External access - check how this was shared.
         $extaccess = ps_value("SELECT access `value` FROM external_access_keys WHERE resource = ? AND access_key = ? AND (expires IS NULL OR expires > NOW())", array("i",$ref,"s",$k), -1);
 
         if(-1 != $extaccess && (!$internal_share_access || ($internal_share_access && $extaccess < $access)))
             {
+            $resource_access_cache[$ref] = (int) $extaccess;
             return (int) $extaccess;
             }
         }
@@ -5412,6 +5417,7 @@ function get_resource_access($resource)
     if (checkperm("z" . $resourcedata['archive']) && !($uploader_view_override && $resourcedata['created_by'] == $userref))
         {
         // User has no access to this archive state
+        $resource_access_cache[$ref] = 2;
         return 2;
         }
 
@@ -5435,6 +5441,7 @@ function get_resource_access($resource)
         {
         # Permission to access all resources
         # Always return 0
+        $resource_access_cache[$ref] = 0;
         return 0;
         }
 
@@ -5476,6 +5483,7 @@ function get_resource_access($resource)
     if ($open_access_for_contributor && $resourcedata['created_by'] == $userref)
         {
         # If user has contributed resource, grant open access and ignore any further filters.
+        $resource_access_cache[$ref] = 0;
         return 0;
         }
 
@@ -5500,22 +5508,26 @@ function get_resource_access($resource)
     if (isset($userspecific) && $userspecific !== false)
         {
         $customuseraccess=true;
+        $resource_access_cache[$ref] = (int) $userspecific;
         return (int) $userspecific;
         }        
     if (isset($groupspecific) && $groupspecific !== false)
         {
         $customgroupaccess=true;
+        $resource_access_cache[$ref] = (int) $groupspecific;
         return (int) $groupspecific;
         }
 
     if (checkperm('T'.$resource_type))
         {
         // this resource type is always confidential/hidden for this user group
+        $resource_access_cache[$ref] = 2;
         return 2;
         }
 
     if ($usersearchfilter_isset && !$usersearchfilter_isvalid)
         {
+        $resource_access_cache[$ref] = 2;
         return 2; # Not found in results, so deny
         }
 
@@ -5575,6 +5587,7 @@ function get_resource_access($resource)
             }        
         }
 
+    $resource_access_cache[$ref] = (int) $access;
     return (int) $access;
     }
 
