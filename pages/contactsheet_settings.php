@@ -493,7 +493,7 @@ if($contactsheet_sorting)
 $cs_size = explode("x", $contact_sheet_preview_size);
 $height  = $cs_size[1];
 
-if($contact_sheet_previews == true)
+if ($contact_sheet_previews)
     {
     ?>
     <div style="float:left;padding:0px -50px 15px 0;height:<?php echo escape($height) ?>px;margin-top:-15px;margin-right:-50px">

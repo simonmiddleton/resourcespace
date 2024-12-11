@@ -22,7 +22,7 @@ if('' == $k || !check_access_key($ref, $k)) //Check if available through externa
 
 // Permissions check
 $allowed = resource_download_allowed($ref, $size, $resource['resource_type'], $alternative);
-debug("PLUGINS/FORMAT_CHOOSER/PAGES/CONVERT.PHP: \$allowed = " . ($allowed == true ? 'TRUE' : 'FALSE'));
+debug("PLUGINS/FORMAT_CHOOSER/PAGES/CONVERT.PHP: \$allowed = " . ($allowed ? 'TRUE' : 'FALSE'));
 
 if(!$allowed || $ref <= 0)
     {

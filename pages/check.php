@@ -497,7 +497,7 @@ function get_utility_version(string $utilityname)
     $name = $version_check['utility']['display_name'] ?? $name;
     $expected = $version_check['found'];
 
-    if ($expected == false) {
+    if (!$expected) {
         # There was a correct path but the version check failed - unexpected output when executing the command.
         $error_msg = "{$lang["status-fail"]}:<br />"
             . str_replace(['%command', '%output'], [$version_command, $version], $lang['execution_failed']);

@@ -222,7 +222,7 @@ if (!hook("replaceloginform")) {
             <div class="clearerleft"> </div>
         </div>
 
-        <?php if ($disable_languages == false) { ?>
+        <?php if (!$disable_languages) { ?>
             <div class="Question HalfWidth">
                 <label for="language"><?php echo escape($lang["language"]); ?></label>
                 <select id="language" class="stdwidth" name="language" onBlur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">

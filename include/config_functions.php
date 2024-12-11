@@ -486,7 +486,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         <?php
         }
 
-        if ($textarea == false) {
+        if (!$textarea) {
             ?>
             <input id="<?php echo escape($name); ?>"
                 name="<?php echo escape($name); ?>"

@@ -486,7 +486,7 @@ if(!$editaccess)
         node_field_options_override($proposefields[$n]);
 
         # Should this field be displayed?
-        if ((isset($proposefields[$n]["display"]) && $proposefields[$n]["display"]==true) ||
+        if ((isset($proposefields[$n]["display"]) && $proposefields[$n]["display"]) ||
             ($proposefields[$n]["active"] == 1 &&
             ($proposefields[$n]["global"]==1 || in_array($resource["resource_type"],$fieldrestypes[$proposefields[$n]["ref"]])) &&
             metadata_field_view_access($proposefields[$n]["ref"])

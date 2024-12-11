@@ -25,7 +25,7 @@ if (!hook("renderresultthumb"))
     $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * (count($thumbs_display_fields))) + 2;
 
     # Add space for number of annotations
-    if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
+    if ($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all))
         {
         $thumbs_displayed_fields_height += $field_height;
         }

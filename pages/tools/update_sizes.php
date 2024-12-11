@@ -23,7 +23,9 @@ if (count($resourceinfo)>0)
         {
         # Check ImageMagick identify utility.
         $identify_fullpath = get_utility_path("im-identify");
-        if ($identify_fullpath==false) {exit("Could not find ImageMagick 'identify' utility.");}
+        if (!$identify_fullpath) {
+            exit("Could not find ImageMagick 'identify' utility.");
+        }
 
         $prefix = '';
         # Camera RAW images need prefix

@@ -45,7 +45,7 @@ $max=ps_value("select max(ref) value from resource",array(),0);
 $ref=getval("ref",false);
 $previewbased=getval("previewbased",false);
 
-if ($collectionid == false){
+if (!$collectionid) {
     if (!(is_numeric($ref) && $ref > 0)) {
         $ref = 1;
     }

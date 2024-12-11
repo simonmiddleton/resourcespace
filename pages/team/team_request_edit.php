@@ -265,7 +265,7 @@ if ($request !== false)
                     <option class="<?php echo $option_class ?>" value="<?php echo $dateval ?>" <?php echo $expires_selected ?>><?php echo nicedate($dateval,false,true)?></option>
                     <?php
                     }
-                if ($request["expires"]!="" && $sel==false)
+                if ($request["expires"] != "" && !$sel)
                     {
                     # Option is out of range, but show it anyway.
                     ?>

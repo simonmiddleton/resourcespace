@@ -31,7 +31,7 @@ $ref = getval('ref', 0, true);
 // See if we came from the ../pages/geolocate_collection.php page.
 $geocol = getval('geocol', '', true);
 $resource = get_resource_data($ref);
-if ($resource == false)
+if (!$resource)
     {
     $onload_message = array("title" => $lang["error"],"text" => $lang['resourcenotfound']);
     include "../include/footer.php";
@@ -68,7 +68,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 
 
 
-    if ( count($s)==2  && $valid_coords == true) 
+    if (count($s) == 2 && $valid_coords) 
         {    
         $mapzoom=getval('map-zoom','');        
         if ($mapzoom>=2 && $mapzoom<=21)
@@ -112,7 +112,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 
 $zoom = getval('new_zoom',  $resource["mapzoom"]);
 
-if ($valid_coords == false && getval('geo-loc','') != '')
+if (!$valid_coords && getval('geo-loc','') != '')
     {
     echo "<p class='FormIncorrect'>" . escape($lang['location-validation-error'])  . "</p>";
     }

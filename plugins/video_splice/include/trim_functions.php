@@ -19,7 +19,9 @@ function generate_video_trim(string $target, string $source_video_file, int $res
     // establish FFMPEG location.
     $ffmpeg_fullpath = get_utility_path("ffmpeg");
     $use_avconv = false;
-    if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
+    if (strpos($ffmpeg_fullpath, 'avconv')) {
+        $use_avconv = true;
+    }
 
     if ($config_windows)
         {

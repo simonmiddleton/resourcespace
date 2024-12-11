@@ -40,7 +40,7 @@ if ($resource===false || $ref <= 0)
     exit();
     }
 
-if (in_array(strtoupper($resource['file_extension']), $cropper_allowed_extensions)==false) 
+if (!in_array(strtoupper($resource['file_extension']), $cropper_allowed_extensions)) 
     {
     error_alert($lang['error_resource_not_image_extension'] . ' (' . implode(', ', $cropper_allowed_extensions) . ')');
     exit();

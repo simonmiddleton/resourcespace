@@ -46,7 +46,9 @@ if (file_exists($target)) {
 
 # Locate imagemagick.
 $convert_fullpath = get_utility_path("im-convert");
-if ($convert_fullpath==false) {exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");}
+if (!$convert_fullpath) {
+    exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");
+}
 
 debug ("Starting preview preprocessing. File extension is $extension.",$ref);
 
@@ -923,7 +925,7 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
             if ($extension=="eps"){
                 # Locate imagemagick.
                 $identify_fullpath = get_utility_path("im-identify");
-                if ($identify_fullpath==false)
+                if (!$identify_fullpath)
                     {
                     debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.");
                     return false;

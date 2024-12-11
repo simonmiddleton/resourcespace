@@ -69,7 +69,7 @@ if (substr($sapi_type, 0, 3) != 'cli') {
 }
 
 $exiftool_fullpath = get_utility_path("exiftool");
-if ($exiftool_fullpath == false) {
+if (!$exiftool_fullpath) {
     die ("Could not find Exiftool.");
 }
 
@@ -137,7 +137,7 @@ foreach ($fieldrefs as $fieldref) {
             $exiftool_tag = "";
 
             foreach ($exiftool_tags as $current_exiftool_tag) {
-                if (strpos(trim($current_exiftool_tag), " ") == true) {
+                if (strpos(trim($current_exiftool_tag), " ")) {
                     exit("ERROR: exiftool tags do not use spaces please check the tags used in the fields options for Field " . (int) $fieldref);
                 }
 

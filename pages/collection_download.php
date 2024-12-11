@@ -58,20 +58,31 @@ set_time_limit(0);
 
 $archiver_fullpath = get_utility_path("archiver");
 
-if (!isset($zipcommand) && !$use_zip_extension)
-    {
-    if (!$collection_download) {exit($lang["download-of-collections-not-enabled"]);}
-    if ($archiver_fullpath==false) {exit($lang["archiver-utility-not-found"]);}
-    if (!isset($collection_download_settings)) {exit($lang["collection_download_settings-not-defined"]);}
-    elseif (!is_array($collection_download_settings)) {exit($lang["collection_download_settings-not-an-array"]);}
-    if (!isset($archiver_listfile_argument)) {exit($lang["listfile-argument-not-defined"]);}
+if (!isset($zipcommand) && !$use_zip_extension) {
+    if (!$collection_download) {
+        exit(escape($lang["download-of-collections-not-enabled"]));
     }
+
+    if (!$archiver_fullpath) {
+        exit(escape($lang["archiver-utility-not-found"]));
+    }
+
+    if (!isset($collection_download_settings)) {
+        exit(escape($lang["collection_download_settings-not-defined"]));
+    } elseif (!is_array($collection_download_settings)) {
+        exit(escape($lang["collection_download_settings-not-an-array"]));
+    }
+
+    if (!isset($archiver_listfile_argument)) {
+        exit(escape($lang["listfile-argument-not-defined"]));
+    }
+}
     
 $archiver = $collection_download && ($archiver_fullpath!=false) && (isset($archiver_listfile_argument)) && (isset($collection_download_settings) ? is_array($collection_download_settings) : false);
 
 # initiate text file
 if (
-    $zipped_collection_textfile == true
+    $zipped_collection_textfile
     && $includetext == "true"
     && hook('replacecollectiontextfile', '', array($collectiondata))
     ) { 

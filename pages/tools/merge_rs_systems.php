@@ -773,7 +773,7 @@ if($import && isset($folder_path))
                 exit(1);
                 }
 
-            if((bool) $spec_cfg_value["create"] == false)
+            if ((bool) !$spec_cfg_value["create"])
                 {
                 logScript("Skipping usergroup as per the specification record");
                 $usergroups_not_created[] = $src_ug["ref"];

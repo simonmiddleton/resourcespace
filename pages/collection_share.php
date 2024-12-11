@@ -176,7 +176,7 @@ if (!$collection_allow_empty_share && $resource_count == 0)
     
 #Check if any resources are not active
 $collectionstates = (isset($collectionstates) ? $collectionstates : is_collection_approved($ref));
-if (!$collection_allow_not_approved_share && $collectionstates==false) {
+if (!$collection_allow_not_approved_share && !$collectionstates) {
         $show_error=true;
         $error=$lang["notapprovedsharecollection"];
         }
@@ -301,7 +301,8 @@ if (isset($show_error)) { ?>
             <li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref) ?>&generateurl=true"><?php echo escape($lang["generateurl"])?></a></li> <?php 
             } 
 
-        if($hide_internal_sharing_url==false 
+        if (
+            !$hide_internal_sharing_url 
             && ($collection["type"] == COLLECTION_TYPE_FEATURED
             && allow_featured_collection_share($collection)
             || $collection["public"]==1 || $ignore_collection_access)

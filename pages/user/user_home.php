@@ -24,7 +24,7 @@ $introtext=text("introtext");
         <?php } ?>
     
     <?php
-        if ($disable_languages==false && $show_language_chooser)
+        if (!$disable_languages && $show_language_chooser)
             {?>
             <li><a id="language_link" href="<?php echo $baseurl_short?>pages/change_language.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-language"></i><br /><?php echo escape($lang["languageselection"]); ?></a></li>
             <?php

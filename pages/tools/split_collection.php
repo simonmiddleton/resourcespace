@@ -9,7 +9,7 @@ include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission
 $collectionid=getval("col", false);
 $numcollections=getval("num", 2, true);
 
-if ($collectionid == false) 
+if (!$collectionid) 
     {
     echo "Collection ID not supplied";
     die();

@@ -1,7 +1,7 @@
 <?php
 
 # Could not match on provided keywords? Attempt to return some suggestions.
-if ($fullmatch==false)
+if (!$fullmatch)
     {
     if ($suggested==$keywords)
         {

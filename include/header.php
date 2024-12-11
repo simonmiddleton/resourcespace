@@ -395,7 +395,7 @@ if ($pagename != "preview")
     $user_profile_image = get_profile_image($userref,false);
 
     // Responsive
-    if (isset($username) && ($pagename!="login") && ($loginterms==false) && getval("k","")=="") 
+    if (isset($username) && ($pagename!="login") && !$loginterms && getval("k","")=="") 
         { 
         ?>   
         <div id="HeaderButtons" style="display:none;">
@@ -406,7 +406,7 @@ if ($pagename != "preview")
             </a>
             <a href="#" id="HeaderNav1Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
                 <span class="rbText">
-                    <?php if ($allow_password_change == false)
+                    <?php if (!$allow_password_change)
                         {
                         echo escape((!isset($userfullname)||$userfullname==""?$username:$userfullname));
                         }
@@ -435,7 +435,7 @@ if ($pagename != "preview")
     hook("headertop");
 
     if (!isset($allow_password_change)) {$allow_password_change=true;}
-    if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
+    if (isset($username) && !in_array($pagename, $not_authenticated_pages) && !$loginterms && '' == $k || $internal_share_access)
         {
         hook("midheader"); ?>
         <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
@@ -603,7 +603,7 @@ if (checkperm("s") || (is_anonymous_user() && $show_anonymous_login_panel))
     $modified_omit_searchbar_pages = hook('modifyomitsearchbarpages');
     if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
 
-    if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") )     
+    if (!in_array($pagename,$omit_searchbar_pages) && !$loginterms && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") )     
         {
         ?>
         <div id="SearchBarContainer" class="ui-layout-east" >

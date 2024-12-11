@@ -14,7 +14,7 @@ if (!checkperm("a") || !(((string)(int)$ruleid == (string)$ruleid) || $ruleid ==
 if($ruleid != "new")
     {
     $filter_rule = get_filter_rule($ruleid);
-    if($filter_rule == false)
+    if (!$filter_rule)
         {
         exit ($lang["error"]);
         }

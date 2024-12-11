@@ -487,8 +487,11 @@ if ($add!="")
             {
             hook("preaddtocollection");
             #add to current collection      
-            if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getval("size",""))==false)
-                { ?>
+            if (
+                $usercollection == -$userref
+                || $to_collection == -$userref
+                || !add_resource_to_collection($add, ($to_collection === '') ? $usercollection : $to_collection, false, getval("size", ""))
+            ) { ?>
                 <script language="Javascript">styledalert("<?php echo escape($lang['error'])?>","<?php echo escape($lang["cantmodifycollection"])?>");</script><?php
                 }
             else
@@ -532,7 +535,7 @@ if ($remove!="")
         {
         hook("preremovefromcollection");
         #remove from current collection
-        if (remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection) == false)
+        if (!remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection))
             {
             ?><script language="Javascript">styledalert("<?php echo escape($lang['error'])?>","<?php echo escape($lang["cantmodifycollection"])?>");</script><?php
             }
@@ -652,7 +655,7 @@ if ($research!="")
     {
     hook("preresearch");
     $col=get_research_request_collection($research);
-    if ($col==false)
+    if (!$col)
         {
         $rr=get_research_request($research);
         $name="Research: " . $rr["name"];  # Do not translate this string, the collection name is translated when displayed!
@@ -824,7 +827,7 @@ else
                             }
                         }
 
-                    if ($found==false)
+                    if (!$found)
                         {
                         # Add this one at the end, it can't be found
                         $notfound = $cinfo;

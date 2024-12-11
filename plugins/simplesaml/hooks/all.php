@@ -148,7 +148,7 @@ function HookSimplesamlAllPreheaderoutput()
 
 function HookSimplesamlAllProvideusercredentials()
         {       
-        if(simplesaml_php_check() == false)
+        if (!simplesaml_php_check())
             {
             return false;
             }

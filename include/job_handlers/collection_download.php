@@ -74,7 +74,7 @@ if(is_array($modified_collection_resources))
     }
 
 # initiate text file
-if($GLOBALS['zipped_collection_textfile'] == true && $includetext == "true")
+if ($GLOBALS['zipped_collection_textfile'] && $includetext == "true")
     {
     $text = i18n_get_collection_name($collectiondata) . "\r\n" .
     $lang["downloaded"] . " " . nicedate(date("Y-m-d H:i:s"), true, true) . "\r\n\r\n" .

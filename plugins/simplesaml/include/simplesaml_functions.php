@@ -40,7 +40,7 @@ function simplesaml_get_lib_path()
 function simplesaml_authenticate()
     {
     global $as;
-    if(simplesaml_is_configured() == false)
+    if (!simplesaml_is_configured())
         {
         debug("simplesaml: plugin not configured.");
         return false;
@@ -82,7 +82,7 @@ function simplesaml_getattributes()
 function simplesaml_signout()
     {
     global $baseurl, $as;
-    if(simplesaml_is_configured() == false)
+    if (!simplesaml_is_configured())
         {
         debug("simplesaml: plugin not configured.");
         return false;
@@ -107,7 +107,7 @@ function simplesaml_signout()
 function simplesaml_is_authenticated()
     {
     global $as,$simplesaml_authenticated;
-    if(simplesaml_is_configured() == false)
+    if (!simplesaml_is_configured())
         {
         debug("simplesaml: plugin not configured.");
         return false;
@@ -134,7 +134,7 @@ function simplesaml_is_authenticated()
 
 function simplesaml_getauthdata($value)
     {
-    if(simplesaml_is_configured() == false)
+    if (!simplesaml_is_configured())
         {
         debug("simplesaml: plugin not configured.");
         return false;
@@ -221,7 +221,7 @@ function simplesaml_config_check()
     {
     global $simplesaml_version, $lang;
     
-    if(simplesaml_is_configured() == false)
+    if (!simplesaml_is_configured())
         {
         debug("simplesaml: plugin not configured.");
         return false;

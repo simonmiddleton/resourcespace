@@ -1917,7 +1917,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     $oldnodenames = explode(NODE_NAME_STRING_SEPARATOR,$hookval);
                     foreach($oldnodenames as $oldnodename)
                         {
-                        if(trim($oldnodename) == "" && $fields[$n]["required"] == false)
+                        if (trim($oldnodename) == "" && !$fields[$n]["required"])
                             {
                             $valid_hook_nodes = true;
                             }
@@ -3854,7 +3854,7 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
             {
             if(!isset($return[$resource_types[$n]["ref"]]))
                 {
-                if ($translate==true)
+                if ($translate)
                     {
                     # Translate name
                     $resource_types[$n]["name"]=lang_or_i18n_get_translated($resource_types[$n]["name"], "resourcetype-");
@@ -4358,7 +4358,9 @@ function get_custom_access($resource, $usergroup, $return_default = true)
     {
     global $custom_access;
 
-    if ($custom_access == false) {return false;}
+    if (!$custom_access) {
+        return false;
+    }
 
     $result = ps_value("select access value from resource_custom_access where resource = ? and usergroup = ?", array("i", $resource, "i", $usergroup), '');
 
@@ -4527,7 +4529,7 @@ function createTempFile($path, $uniqid, $filename)
     $tmpfile = "{$tmp_dir}/{$filename}";
 
     $copy_hook = hook('createtempfile_copy', '', array($path, $tmpfile));
-    if($copy_hook == false)
+    if (!$copy_hook)
         {
         copy($path, $tmpfile);
         }
@@ -6248,7 +6250,7 @@ function get_page_count($resource,$alternative=-1)
         $cmdparams = [
             '[FILE]' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
         ];
-        if ($exiftool_fullpath == false) {
+        if (!$exiftool_fullpath) {
             # Try with ImageMagick instead
             $command = get_utility_path("im-identify") . ' -format %n [FILE]';
             $pages = trim(run_command($command, false, $cmdparams));
@@ -6464,7 +6466,9 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 
         # Locate imagemagick.
         $identify_fullpath = get_utility_path("im-identify");
-        if ($identify_fullpath==false) {exit("Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.");}
+        if (!$identify_fullpath) {
+            exit("Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.");
+        }
         # Get image's dimensions.
         $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
         $identoutput=run_command($identcommand);

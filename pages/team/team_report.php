@@ -252,7 +252,7 @@ foreach($report_options as $report_opt)
     echo sprintf(
         '<option value="%s" data-contains_date=%d data-view_as_search_results=%s %s>%s</option>',
         $report_opt['ref'],
-        ($report_opt['contains_date'] == true ? 1 : 0),
+        ($report_opt['contains_date'] ? 1 : 0),
         (int) ($report_opt['has_thumbnail'] && !$report_opt['support_non_correlated_sql']),
         ($report_opt['ref'] == $report ? ' selected' : ''),
         escape($report_opt['name']));

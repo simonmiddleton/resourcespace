@@ -376,7 +376,7 @@ EOT;
                 $comment['name'] = $comment['username'];
             }
 
-            if ($anonymous_mode == true)
+            if ($anonymous_mode)
                 {
                 echo "<div class='CommentEntryInfoCommenterName'>" . escape($comment['name']) . "</div>";
                 }

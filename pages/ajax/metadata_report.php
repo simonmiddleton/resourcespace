@@ -6,7 +6,7 @@ include "../../include/authenticate.php";
 if (!$metadata_report) {exit("This function is not enabled.");}
 
 $exiftool_fullpath = get_utility_path("exiftool");
-if ($exiftool_fullpath==false)
+if (!$exiftool_fullpath)
     {
     echo escape($lang["exiftoolnotfound"]);
     }

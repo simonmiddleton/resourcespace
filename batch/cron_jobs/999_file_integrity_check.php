@@ -27,7 +27,7 @@ if (is_process_lock("file_integrity_check")) {
     return;
 }
 
-if (check_valid_cron_time() == false) {
+if (!check_valid_cron_time()) {
     if ('cli' == PHP_SAPI) {
         echo " - Outside of valid time period. Set times are between " . $file_integrity_verify_window[0] . ":00 and " . $file_integrity_verify_window[1] . ":00 hours. Current hour: " . date('H') . ":00" . $LINE_END;
     }

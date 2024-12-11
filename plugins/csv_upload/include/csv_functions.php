@@ -973,7 +973,7 @@ function csv_upload_get_info($filename, &$messages)
 
     $file=fopen($filename,'r');
 
-    if (($headers = fgetcsv($file))==false)
+    if (!($headers = fgetcsv($file)))
         {
         array_push($messages, $lang["csv_upload_error_no_header"]);
         fclose($file);

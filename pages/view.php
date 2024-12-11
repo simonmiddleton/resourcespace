@@ -835,7 +835,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
                                                 if (
                                                     !hook("replacedownloadspacetableheaders")
-                                                    && $table_headers_drawn == false
+                                                    && !$table_headers_drawn
                                                     ) {
                                                         ?>
                                                         <td><?php echo escape($lang["fileinformation"]); ?></td>
@@ -887,7 +887,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 ]
                                             );
                                             }
-                                        elseif (strlen((string) $resource["file_extension"])>0 && !($access==1 && $restricted_full_download==false))
+                                        elseif (strlen((string) $resource["file_extension"]) > 0 && !($access == 1 && !$restricted_full_download))
                                             {
                                             # Files without multiple download sizes (i.e. no alternative previews generated).
                                             $path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
@@ -920,7 +920,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 $nodownloads=true;
                                                 }
                                             }
-                                        elseif (strlen((string) $resource["file_extension"])>0 && ($access==1 && $restricted_full_download==false))
+                                        elseif (strlen((string) $resource["file_extension"]) > 0 && ($access == 1 && !$restricted_full_download))
                                             {
                                             # Files without multiple download sizes (i.e. no alternative previews generated).
                                             $path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
@@ -953,7 +953,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
                                         // Render a "View in browser" button for PDF/MP3 (no longer configurable in config as SVGs can easily be disguised)
                                         if (strlen((string) $resource["file_extension"]) > 0 
-                                            && ($access == 0 || ($access == 1 && $restricted_full_download == true)) 
+                                            && ($access == 0 || ($access == 1 && $restricted_full_download)) 
                                             && in_array(strtolower($resource["file_extension"]),VIEW_IN_BROWSER_EXTENSIONS))
                                             {
                                             $path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
@@ -1636,7 +1636,7 @@ if($enable_related_resources)
 
     display_related_resources($relatedcontext);
     }
-if ($show_related_themes==true )
+if ($show_related_themes)
     {
     // Public/featured collections
     $result=get_themes_by_resource($ref);

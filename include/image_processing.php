@@ -86,7 +86,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $exiftool_fullpath = get_utility_path("exiftool");
 
         # Process file upload for resource $ref
-        if ($revert==true)
+        if ($revert)
             {
             $original_filename=get_data_by_field($ref,$filename_field);
 
@@ -332,7 +332,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         }
                     }
 
-                if ($result==false)
+                if (!$result)
                     {
                     return false;
                     }
@@ -410,7 +410,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $exif_fields = array_column(get_exiftool_fields($resource['resource_type']), 'ref');
                 $oldval = get_data_by_field($ref, $view_title_field);
 
-                if (strpos($oldval, $merged_filename) == false && in_array($view_title_field, $exif_fields))
+                if (!strpos($oldval, $merged_filename) && in_array($view_title_field, $exif_fields))
                     {
                     switch (strtolower($merge_filename_with_title_option))
                         {
@@ -1284,7 +1284,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath==false){
+    if (!$convert_fullpath) {
         debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");
         return false;
     }
@@ -1518,7 +1518,7 @@ function create_previews_using_im(
 
         # Locate imagemagick.
         $identify_fullpath = get_utility_path("im-identify");
-        if ($identify_fullpath==false) {
+        if (!$identify_fullpath) {
             debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.");
             return false;
         }
@@ -1553,7 +1553,7 @@ function create_previews_using_im(
 
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
-        if ($convert_fullpath==false) {
+        if (!$convert_fullpath) {
             debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.");
             return false;
         }
@@ -1683,7 +1683,7 @@ function create_previews_using_im(
 
             # Locate imagemagick.
             $convert_fullpath = get_utility_path("im-convert");
-            if ($convert_fullpath==false) {
+            if (!$convert_fullpath) {
                 debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.");
                 return false;
             }
@@ -3129,7 +3129,7 @@ function extract_text($ref,$extension,$path="")
 function get_image_orientation($file)
     {
     $exiftool_fullpath = get_utility_path('exiftool');
-    if ($exiftool_fullpath == false) {
+    if (!$exiftool_fullpath) {
         return 0;
     }
 
@@ -3184,7 +3184,7 @@ function AutoRotateImage($src_image, $ref = false)
 
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath == false) {
+    if (!$convert_fullpath) {
         return false;
     }
 
@@ -3312,7 +3312,9 @@ function extract_icc($infile, $ref='') {
 
     # Locate imagemagick, or fail this if it isn't installed
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath==false) {return false;}
+    if (!$convert_fullpath) {
+        return false;
+    }
 
     if ($config_windows){ $stderrclause = ''; } else { $stderrclause = '2>&1'; }
     $path_parts = pathinfo($infile);
@@ -3368,7 +3370,9 @@ function get_imagemagick_version($array=true){
 
     # Locate imagemagick, or return false if it isn't installed
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath==false) {return false;}
+    if (!$convert_fullpath) {
+        return false;
+    }
 
     $versionstring = run_command($convert_fullpath . " --version");
     // example:
@@ -4576,7 +4580,7 @@ function can_apply_icc_profile(string $original_file_path): bool
     if (count($excluded_icc_profiles) > 0)
         {
         $identify_fullpath = get_utility_path("im-identify");
-        if ($identify_fullpath == false)
+        if (!$identify_fullpath)
             {
             return false;
             }

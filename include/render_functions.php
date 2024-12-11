@@ -206,7 +206,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 $jquery_selector = "input[name=\"{$checkname}\"]";
 
                                 # If however its a drop down list then we should be processing select elements
-                                if ($fields[$cf]['display_as_dropdown'] == true)
+                                if ($fields[$cf]['display_as_dropdown'])
                                     {
                                     $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
                                     $jquery_selector = "select[name=\"{$checkname}\"]";
@@ -333,7 +333,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                         $jquery_condition_selector = "input[name=\"{$checkname}[]\"]:checked:enabled";
 
                         # If however its a drop down list then we should be searching for selected option
-                        if ($scriptcondition['display_as_dropdown'] == true)
+                        if ($scriptcondition['display_as_dropdown'])
                             {
                             $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
                             }

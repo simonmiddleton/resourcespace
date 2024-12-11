@@ -137,7 +137,7 @@ $links_trail = array(
 renderBreadcrumbs($links_trail);
 ?>
     <p><?php echo escape($lang['page-subtitle_user_group_permissions_edit']); render_help_link("systemadmin/all-user-permissions");?></p>   
-    <?php if(getval("submitted", false) == true){?><div class="PageInformal"><?php echo escape($lang['changessaved']);?></div><?php }?>
+    <?php if (getval("submitted", false)) { ?><div class="PageInformal"><?php echo escape($lang['changessaved']);?></div><?php } ?>
     <form method="post" id="copypermissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="return CentralSpacePost(this,true);">   
         <?php generateFormToken("permissions"); ?>
         <input type="hidden" name="save" value="1">

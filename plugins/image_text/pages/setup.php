@@ -13,7 +13,9 @@ if(!in_array($plugin_name, $plugins))
 $plugin_page_heading = $lang['image_text_configuration'];
     
 $identify_fullpath = get_utility_path("im-identify");
-if ($identify_fullpath==false) {exit($lang['image_text_noim']);}
+if (!$identify_fullpath) {
+    exit(escape($lang['image_text_noim']));
+}
 
 $identcommand = $identify_fullpath . ' -list font | grep Font:';
 $identoutput=run_command($identcommand);

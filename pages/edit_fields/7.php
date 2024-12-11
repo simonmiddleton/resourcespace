@@ -68,7 +68,7 @@ foreach($valid_nodes as $node)
     $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"" . escape($name) . "\" value=\"{$node["ref"]}\">";
 
     // Show previously selected options on the status box
-    if(!(isset($treeonly) && true == $treeonly))
+    if (!(isset($treeonly) && $treeonly))
         {
         $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" . escape(i18n_get_translated($node['name'])) . "</span><br /></div>";
         }
@@ -86,7 +86,7 @@ if(!$is_search)
 ?>
 <div class="Fixed">
 <?php
-if(!(isset($treeonly) && true == $treeonly))
+if (!(isset($treeonly) && $treeonly))
     {
     ?>
     <div id="<?php echo $status_box_id; ?>" class="CategoryBox">
@@ -347,7 +347,7 @@ if(!$is_search)
             }
 
         <?php
-        if( !(isset($treeonly) && true == $treeonly) )
+        if (!(isset($treeonly) && $treeonly))
             {
         ?>
             reorder_selected_statusbox_<?php echo $tree_id; ?>();
@@ -389,7 +389,7 @@ if(!$is_search)
     jquery_tree_by_id.on('after_open.jstree', function (event, data)
         {
         <?php
-        if( !(isset($treeonly) && true == $treeonly) )
+        if (!(isset($treeonly) && $treeonly))
             {
         ?>
             reorder_selected_statusbox_<?php echo $tree_id; ?>();

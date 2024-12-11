@@ -322,7 +322,10 @@ function HookAction_datesCronCron()
     foreach($notify_users as $notify_user)
         {
         get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message);   
-        if($send_message==false){ continue; } # If this user doesn't want notifications they won't get any messages or emails
+        if (!$send_message) {
+            # If this user doesn't want notifications they won't get any messages or emails
+            continue;
+        }
 
         # Notification is required; it will either be sent as an email only or as a message with a possible additional email
         get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    

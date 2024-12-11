@@ -1031,7 +1031,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         <?php 
         if($iconthumbs && !$high_contrast_mode)
             {
-            if($xlthumbs == true)
+            if ($xlthumbs)
                 {
                 if($display == 'xlthumbs')
                     {
@@ -1114,7 +1114,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         else
             {
-            if ($xlthumbs==true) { ?> <?php if ($display=="xlthumbs") { ?><span class="Selected"><?php echo escape($lang["xlthumbs"])?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["xlthumbs"])?></a><?php } ?>&nbsp; |&nbsp;<?php } ?>
+            if ($xlthumbs) { ?> <?php if ($display=="xlthumbs") { ?><span class="Selected"><?php echo escape($lang["xlthumbs"])?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["xlthumbs"])?></a><?php } ?>&nbsp; |&nbsp;<?php } ?>
             <?php if ($display=="thumbs") { ?> <span class="Selected"><?php echo escape($lang["largethumbs"])?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["largethumbs"])?></a><?php } ?>&nbsp; |&nbsp; 
             <?php if ($display=="strip") { ?><span class="Selected"><?php echo escape($lang["striptitle"])?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["striptitle"])?></a><?php } ?>&nbsp; |&nbsp;
             <?php if ($display=="list") { ?> <span class="Selected"><?php echo escape($lang["list"])?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["list"])?></a><?php } ?> <?php hook("adddisplaymode"); ?> 
@@ -1526,7 +1526,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
          * If there is a mix of resource_types in results, and there is a config option for a particular resource_type that overrides $annotate_enabled, then display of ResourcePanels in search.php is affected.
          * This line detects if $annotate_enabled == true in config, and ensures that all ResourcePanels have same height value 
          */
-        if ($annotate_enabled == true) 
+        if ($annotate_enabled) 
             {
             $annotate_enabled_adjust_size_all = true;
             }
@@ -1627,7 +1627,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
     }
         }
     # Listview - Add closing tag if a list is displayed.
-    if ($list_displayed==true)
+    if ($list_displayed)
         {
         ?>
         </table>

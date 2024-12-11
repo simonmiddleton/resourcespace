@@ -5,7 +5,7 @@ include_once __DIR__ . '/../../include/image_processing.php';
 
 // Validate that EXIF data is extracted and prioritised correctly
 $exiftool_fullpath = get_utility_path("exiftool");
-if ($exiftool_fullpath == false)
+if (!$exiftool_fullpath)
     {
     echo "INFO: Exiftool not found - unable to test.\n";
     return;

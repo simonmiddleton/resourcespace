@@ -501,7 +501,7 @@ h2#dbaseconfig{  min-height: 32px;}
         //Note: The opening php tag is missing and is added when the file is written.
         //This allows the config to be displayed in the bottom div when in development mode.
         $config_windows = get_post_bool('config_windows');
-        $exe_ext = $config_windows==true?'.exe':'';
+        $exe_ext = $config_windows ? '.exe' : '';
         $config_output="";
         $config_output .= "###############################\r\n";
         $config_output .= "## ResourceSpace\r\n";
@@ -872,7 +872,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
     check_db_structs();
 
     // set the current upgrade level to current one specified in definitions.php
-    if(false == get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL))
+    if (!get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL))
         {
         set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL, SYSTEM_UPGRADE_LEVEL);
         }
@@ -1072,7 +1072,7 @@ else
 {
 ?>
 <form action="setup.php" method="POST">
-<?php echo $config_windows==true?'<input type="hidden" name="config_windows" value="true"/>':'' ?>
+<?php echo $config_windows ? '<input type="hidden" name="config_windows" value="true"/>' : ''; ?>
     <div id="intro">
             <div id="preconfig">
                 <h2><?php echo escape($lang["installationcheck"]); ?></h2>
@@ -1091,7 +1091,7 @@ else
                         $pass = true;
                         }
                 ?>
-                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "PHP", $lang["softwareversion"]) . ": " . $phpversion) . ($pass==false?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
+                <p class="<?php echo $pass ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "PHP", $lang["softwareversion"]) . ": " . $phpversion) . (!$pass ? '<br />' : ' ') . "(" . escape($result) . ")"; ?></p>
                 <p><?php echo escape(str_replace("%phpinifile", php_ini_loaded_file(), $lang["php-config-file"])); ?></p>
                 <?php
                     if(function_exists('gd_info'))
@@ -1113,7 +1113,7 @@ else
                         $continue = false;
                         }
                 ?>
-                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "GD", $lang["softwareversion"]) . ": " . $version) . ($pass!=true?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
+                <p class="<?php echo $pass ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "GD", $lang["softwareversion"]) . ": " . $version) . ($pass!=true?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
                 <?php
                     $memory_limit=ini_get("memory_limit");
                     if (ResolveKB($memory_limit)<(200*1024))
@@ -1127,7 +1127,7 @@ else
                         $pass = true;
                         }
                 ?>
-                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "memory_limit", $lang["phpinivalue"]) . ": " . $memory_limit) . ($pass==false?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
+                <p class="<?php echo $pass ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "memory_limit", $lang["phpinivalue"]) . ": " . $memory_limit) . (!$pass ? '<br />' : ' ') . "(" . escape($result) . ")"; ?></p>
                 <?php
                     $post_max_size = ini_get("post_max_size");
                     if (ResolveKB($post_max_size)<(100*1024))
@@ -1141,7 +1141,7 @@ else
                         $pass = true;
                         }
                 ?>
-                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "post_max_size", $lang["phpinivalue"]) . ": " . $post_max_size) . ($pass==false?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
+                <p class="<?php echo $pass ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "post_max_size", $lang["phpinivalue"]) . ": " . $post_max_size) . (!$pass ? '<br />' : ' ') . "(" . escape($result) . ")"; ?></p>
                 <?php
                     $upload_max_filesize = ini_get("upload_max_filesize");
                     if (ResolveKB($upload_max_filesize)<(100*1024))
@@ -1155,7 +1155,7 @@ else
                         $pass = true;
                         }
                 ?>
-                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "upload_max_filesize", $lang["phpinivalue"]) . ": " . $upload_max_filesize) . ($pass==false?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
+                <p class="<?php echo $pass ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "upload_max_filesize", $lang["phpinivalue"]) . ": " . $upload_max_filesize) . (!$pass ? '<br />' : ' ') . "(" . escape($result) . ")"; ?></p>
                 <?php
                     $success = is_writable('../include');
                     if ($success===false)
@@ -1170,7 +1170,7 @@ else
                         $pass = true;
                         }
                 ?>
-                    <p class="<?php echo $pass == true ? '' : 'failure';?>"><?php echo escape($lang["setup-checkconfigwrite"]) . ($pass==false?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
+                    <p class="<?php echo $pass ? '' : 'failure';?>"><?php echo escape($lang["setup-checkconfigwrite"]) . (!$pass ? '<br />' : ' ') . "(" . escape($result) . ")"; ?></p>
                 <?php
                     if (!file_exists($storagedir))
                         {
@@ -1195,7 +1195,7 @@ else
                         $pass = true;
                         }
                 ?>
-                    <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo escape($lang["setup-checkstoragewrite"]) . ($pass==false?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
+                    <p class="<?php echo $pass ? '' : 'failure'; ?>"><?php echo escape($lang["setup-checkstoragewrite"]) . (!$pass ? '<br />':' ') . "(" . escape($result) . ")"; ?></p>
             </div>
             <h1><?php echo escape($lang["setup-welcome"]);?></h1>
             <p><?php echo strip_tags_and_attributes($lang["setup-introtext"]);?></p>

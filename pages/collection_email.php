@@ -105,7 +105,7 @@ if(is_featured_collection_category($collection))
     }
 
 $collectionstates = (isset($collectionstates) ? $collectionstates : is_collection_approved($ref));
-if(!$collection_allow_not_approved_share && $collectionstates == false)
+if (!$collection_allow_not_approved_share && !$collectionstates)
     {
     $show_error=true;
     $error=$lang["notapprovedsharecollection"];
@@ -198,7 +198,7 @@ else
 render_help_link("user/sharing-resources");?>
 </p>
 
-<form name="collectionform" method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_email.php?catshare=<?php if($themeshare==true){echo "true";}else{echo "false";}?>">
+<form name="collectionform" method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_email.php?catshare=<?php if ($themeshare){echo "true";}else{echo "false";}?>">
 <input type=hidden name=redirect id=redirect value=yes>
 <input type=hidden name=ref id="ref" value="<?php echo escape($collection["ref"]); ?>">
 <?php
@@ -234,7 +234,7 @@ else
                 <option value="<?php echo $list[$n]["ref"]; ?>" <?php if ($ref==$list[$n]["ref"]) {?>     selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
                 <?php 
                 }
-            if ($found==false)
+            if (!$found)
                 {
                 # Add this one at the end, it can't be found
                 $notfound=get_collection($ref);

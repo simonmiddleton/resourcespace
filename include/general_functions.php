@@ -926,7 +926,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $count=ps_value("select count(*) value from mail_log where date >= DATE_SUB(now(),interval 1 hour)",[],0);
         if (($count + count($valid_emails))>$email_rate_limit)
             {
-            if (isset($userref) && ($useremail_rate_limit_active ?? false) == false)
+            if (isset($userref) && !($useremail_rate_limit_active ?? false))
                 {
                 // Rate limit not previously active, activate and warn them.
                 ps_query("update user set email_rate_limit_active=1 where ref=?",["i",$userref]);
@@ -1812,7 +1812,7 @@ function strip_extension($name,$use_ext_list=false)
         else
         {
             global $download_filename_strip_extensions;
-            if ($use_ext_list == true && isset($download_filename_strip_extensions))
+            if ($use_ext_list && isset($download_filename_strip_extensions))
             {
                 // Use list of specified extensions if config present.
                 $fn_extension=substr($name,$s+1);
@@ -2029,7 +2029,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
         }
 
     // return the result.
-    if($asUrl==true)
+    if ($asUrl)
     {
         $result = convert_path_to_url($result);
     $result = str_replace('\\','/',$result);

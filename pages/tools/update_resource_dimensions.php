@@ -15,8 +15,8 @@ if(!$exiftool_resolution_calc)
 else
     {
     $exiftool_fullpath = get_utility_path("exiftool");
-    if($exiftool_fullpath==false){
-    die("Could not find exiftool. Aborting...");
+    if (!$exiftool_fullpath) {
+        die("Could not find exiftool. Aborting...");
     }
 else
     {

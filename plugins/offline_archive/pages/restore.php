@@ -27,7 +27,7 @@ else
     $valid=false;
     }
     
-if($valid==true)
+if ($valid)
     {
     $title_field="field".$view_title_field;
     $resourcedetails=ps_query("SELECT ref, $title_field, file_size FROM resource WHERE ref IN (". ps_param_insert(count($restoreresources)) . ")", ps_param_fill($restoreresources, 'i'));
@@ -62,7 +62,7 @@ if (isset($resulttext))
 <h1><?php echo escape($lang["offline_archive_resource_restore"]) ?></h1>
 </p>
 
-<?php if($resources!="" && $valid==true)
+<?php if ($resources != "" && $valid)
         {
         $codes=array();
         ?>

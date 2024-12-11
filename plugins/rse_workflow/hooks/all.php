@@ -204,7 +204,7 @@ function HookRse_workflowAllAfter_setup_user()
     global $userref, $usergroup;
     
     get_config_option($userref,'user_pref_resource_notifications', $addwfactions);        
-    if($addwfactions==false)
+    if (!$addwfactions)
         {
         // No notifications were sent so actions shouldn't appear either
         return false;

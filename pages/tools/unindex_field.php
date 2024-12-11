@@ -33,7 +33,7 @@ else
 if($field != 0)
     {
     $fieldinfo = get_resource_type_field($field);
-    if ($fieldinfo == false)
+    if (!$fieldinfo)
         {
         exit("Invalid field specified.");
         }

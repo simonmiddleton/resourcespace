@@ -136,7 +136,7 @@ if ($upload_review_mode)
         }
 
     # Make sure review collection is clear of any resources moved out of users archive status permissions by other users
-    if ($edit_access_for_contributor == false)
+    if (!$edit_access_for_contributor)
         {
         collection_cleanup_inaccessible_resources($collection);
         }
@@ -2021,7 +2021,7 @@ if (    (
         || !hook("editstatushide") 
         )
    && 
-        upload_share_active() == false
+        !upload_share_active()
    ) # If grant_edit plugin isn't overriding
 {
   if (
@@ -2108,7 +2108,8 @@ if (!hook("replaceaccessselector"))
         $resource["access"] = $override_access_default;
     }
 
-if ($ref<0 && (($show_status_and_access_on_upload== false && $show_access_on_upload == false) || ($show_access_on_upload == false || ($show_access_on_upload == true && !eval($show_access_on_upload_perm)))))            # Upload template and the status and access fields are configured to be hidden on uploads.
+if ($ref < 0 && ((!$show_status_and_access_on_upload && !$show_access_on_upload) || (!$show_access_on_upload || ($show_access_on_upload && !eval($show_access_on_upload_perm)))))
+# Upload template and the status and access fields are configured to be hidden on uploads.
    {?>
    <input type=hidden name="access" value="<?php echo escape($resource["access"])?>"><?php
 }

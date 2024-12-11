@@ -115,8 +115,10 @@ if ($generateall) {
 
     if (
         $ffmpeg_get_par
-        && (isset($snapshotcheck)
-        && $snapshotcheck==false)
+        && (
+            isset($snapshotcheck)
+            && !$snapshotcheck
+        )
         && $par > 0
         && $par <> 1
     ) {
@@ -216,7 +218,7 @@ if ($generateall) {
                         ]
                     );
                     // add this filename to be added to resource.ffmpeg_alt_previews
-                    if (isset($ffmpeg_alternatives[$n]['alt_preview']) && $ffmpeg_alternatives[$n]['alt_preview']==true) {
+                    if (isset($ffmpeg_alternatives[$n]['alt_preview']) && $ffmpeg_alternatives[$n]['alt_preview']) {
                         $ffmpeg_alt_previews[] = basename($apath);
                     }
                 } else {

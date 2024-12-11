@@ -55,7 +55,7 @@ if ($save)
         $errors = true;
         }
 
-    if ($errors == false) 
+    if (!$errors) 
         {
         daily_stat("New research request",0);
         send_research_request($processed_rr_cfields);

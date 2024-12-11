@@ -23,10 +23,11 @@ global $internal_share_access, $userfullname;
 if (
     $collection_commenting 
     && ($k == '' || $internal_share_access) 
-    && count($comments)==0 && $feedback_resource_select == false
-    ) {
-        $errors=$lang["feedbacknocomments"];
-    }
+    && count($comments) == 0
+    && !$feedback_resource_select
+) {
+    $errors = $lang["feedbacknocomments"];
+}
 
 $comment="";
 if (getval("save","")!="" && enforcePostRequest(false))

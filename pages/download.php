@@ -188,7 +188,7 @@ else
    
     // Check permissions
     $allowed = $override_key ? true : resource_download_allowed($ref, $size, $resource_data['resource_type'], $alternative);
-    debug("PAGES/DOWNLOAD.PHP: \$allowed = " . ($allowed == true ? 'TRUE' : 'FALSE'));
+    debug("PAGES/DOWNLOAD.PHP: \$allowed = " . ($allowed ? 'TRUE' : 'FALSE'));
    
     if(!$allowed || $ref <= 0)
         {

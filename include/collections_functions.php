@@ -4442,7 +4442,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Contact Sheet
-    if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($contact_sheet_link_on_collection_bar))
+    if (0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet && ($contact_sheet_link_on_collection_bar))
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/contactsheet_settings.php",$urlparams);
         $options[$o]['value']='contact_sheet';
@@ -4806,7 +4806,7 @@ function collection_download_process_text_file($ref, $collection, $filename)
     {
     global $lang, $zipped_collection_textfile, $includetext, $size, $subbed_original, $k, $text, $sizetext;
 
-    if (($zipped_collection_textfile==true)&&($includetext=="true"))
+    if ($zipped_collection_textfile && ($includetext == "true"))
         {
         if ($size==""){$sizetext="";}else{$sizetext="-".$size;}
         if ($subbed_original) { $sizetext = '(' . $lang['substituted_original'] . ')'; }
@@ -4824,7 +4824,7 @@ function collection_download_process_text_file($ref, $collection, $filename)
         if($fields_count > 0)
             {
             $hook_replace_text = hook('replacecollectiontext', '', array($text, $sizetext, $filename, $ref, $fields, $fields_count, $commentdata));
-            if($hook_replace_text == false)
+            if (!$hook_replace_text)
                 {
                 $text.= ($sizetext == '' ? '' : $sizetext) . ' '. $filename. "\r\n-----------------------------------------------------------------\r\n";
                 $text .= $lang['resourceid'] . ': ' . $ref . "\r\n";
@@ -5014,7 +5014,7 @@ function collection_download_process_summary_notes(
 
     if (
         !hook('zippedcollectiontextfile', '', array($text))
-        && $zipped_collection_textfile == true 
+        && $zipped_collection_textfile
         && $includetext == "true"
     ) {
         $qty_sizes = isset($available_sizes[$size]) ? count($available_sizes[$size]) : 0;
@@ -6885,7 +6885,7 @@ function send_collection_to_admin(int $collection)
     foreach($notify_users as $notify_user)
         {
         get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message, $admin_resource_access_notifications);       
-        if($send_message==false)
+        if (!$send_message)
             {
             continue;
             }       

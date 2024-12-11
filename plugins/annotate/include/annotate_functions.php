@@ -235,7 +235,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
     $pdf->lastPage();
 
     #Make AJAX preview?:
-    if ($preview==true && isset($imagemagick_path)) 
+    if ($preview && isset($imagemagick_path)) 
         {
         if (file_exists($jpgstoragepath)){unlink($jpgstoragepath);}
         if (file_exists($pdfstoragepath)){unlink($pdfstoragepath);}
@@ -256,7 +256,9 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
         );
 
         $convert_fullpath = get_utility_path("im-convert");
-        if ($convert_fullpath == false) {exit("Could not find ImageMagick 'convert' utility at location '$command'");}  
+        if (!$convert_fullpath) {
+            exit("Could not find ImageMagick 'convert' utility at location '$command'");
+        }  
         
         run_command(
             "{$convert_fullpath} -resize contact_sheet_preview_size -quality 90 -colorspace imagemagick_colorspace"

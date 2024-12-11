@@ -182,7 +182,7 @@ for ($n=0;$n<count($keywords);$n++)
                 $searched_field = $fields[$field_index];
 
                 // We already have a field on search bar so remove this keyword from search box
-                if(true == $searched_field['simple_search'])
+                if ($searched_field['simple_search'])
                     {
                     $quicksearch = str_replace(NODE_TOKEN_PREFIX . $searched_node, '', $quicksearch);
                     }

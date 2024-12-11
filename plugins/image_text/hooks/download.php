@@ -9,7 +9,7 @@ function HookImage_textDownloadModifydownloadfile()
     $image_text_max_height, $image_text_min_height, $image_text_font, $image_text_position,
     $image_text_banner_position, $imagemagick_path;
 
-    if (getval('noattach', '') == true) {
+    if (getval('noattach', '')) {
         return;
     }
 
@@ -55,7 +55,9 @@ function HookImage_textDownloadModifydownloadfile()
 
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath==false) {exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");}
+    if (!$convert_fullpath) {
+        exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");
+    }
 
     $tmpolfile= get_temp_dir() . "/" . $ref . "_image_text_" . uniqid() . "." . $ext;
     $createolcommand = $convert_fullpath . " -background '#000' -fill white -gravity %%POSITION%% -font %%FONT%% -size %%WIDTHHEIGHT%% caption:%%CAPTION%% %%TMPOLFILE%%";

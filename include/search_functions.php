@@ -2301,7 +2301,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 
     $ns=trim_spaces($search);
 
-    if ($index==false && strpos($ns,":")!==false) # special 'constructed' query type
+    if (!$index && strpos($ns, ":") !== false) # special 'constructed' query type
         {
         if($keepquotes)
             {
@@ -2393,11 +2393,11 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     if (
         $preserve_hyphen
         && (substr($string,0,1) == "-" || strpos($string," -") !== false) /*support minus as first character for simple NOT searches */
-        && strpos($string," - ") == false
-        ) {
-            # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
-            $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
-        }
+        && !strpos($string, " - ")
+    ) {
+        # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
+        $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
+    }
     if (substr($string,0,1)=="!" && strpos(substr($string,1),"!")===false)
             {
             // If we have the exclamation mark configured as a config separator but we are doing a special search we don't want to remove it

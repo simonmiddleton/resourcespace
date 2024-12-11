@@ -834,7 +834,7 @@ function system_notification($message, $url="")
     foreach($notify_users as $notify_user)
         {
         get_config_option($notify_user['ref'],'user_pref_system_management_notifications', $send_message);
-        if($send_message==false)
+        if (!$send_message)
             {
             continue;
             }
@@ -1006,7 +1006,7 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
             // Need full user info
             $userdetails = get_user($userdetails["ref"]);
             }
-        if($userdetails == false)
+        if (!$userdetails)
             {
             continue;
             }
@@ -1032,7 +1032,7 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
                     }
                 }
             }
-        if($send_message==false)
+        if (!$send_message)
             {
             continue;
             }

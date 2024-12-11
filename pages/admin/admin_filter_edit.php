@@ -132,7 +132,7 @@ foreach($filter_rules as $fr_id => $frule)
         {  
         $nodeinfo = array();
         get_node($rulenode, $nodeinfo);
-        if($nodeinfo == false)
+        if (!$nodeinfo)
             {
             debug("filter rule #" . $fr_id . " - node " . $rulenode . " not found ");
             // Node does not exist
@@ -159,7 +159,7 @@ foreach($filter_rules as $fr_id => $frule)
         {  
         $nodeinfo = array();
         get_node($rulenode, $nodeinfo);
-        if($nodeinfo == false)
+        if (!$nodeinfo)
             {
             debug("filter rule #" . $fr_id . " - node " . $rulenode . " not found ");
             // Node does not exist

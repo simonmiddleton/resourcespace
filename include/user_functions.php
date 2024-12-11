@@ -658,7 +658,7 @@ function save_user($ref)
 
     $current_user_data = get_user($ref);
 
-    if ($current_user_data == false) {
+    if (!$current_user_data) {
         return $lang['accountdoesnotexist'];
     }
 
@@ -757,7 +757,7 @@ function save_user($ref)
         }
 
         # Validate expiry date
-        if ($expires != "" && (preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0 || strtotime($expires) == false)) {
+        if ($expires != "" && (preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0 || !strtotime($expires))) {
             return str_replace('[value]', $expires, $lang['error_invalid_date_format']);
         }
 
@@ -1060,7 +1060,7 @@ function auto_create_user_account($hash="")
     # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
     $approve = false;
 
-    if ($auto_approve_accounts==true) {
+    if ($auto_approve_accounts) {
         // No longer taken direct to password page as this can be used by bots. User must click on an email link
         $approve = true;
     } elseif (count($auto_approve_domains)>0) {
@@ -1586,7 +1586,7 @@ function resolve_userlist_groups($userlist)
                         }
                     }
                 }
-            if ($default_group==false)
+            if (!$default_group)
                 {
                 # Custom group
                 # Decode the groupname
@@ -1666,7 +1666,7 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
                         }
                     }
                 }
-            if ($default_group==false)
+            if (!$default_group)
                 { 
                 # Custom group
                 # Decode the groupname
@@ -2992,7 +2992,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
 
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath == false) 
+    if (!$convert_fullpath) 
         {
         debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); 
         return false;

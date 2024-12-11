@@ -54,7 +54,7 @@ function HookImage_textCollection_downloadModifydownloadfile()
 
     # Locate imagemagick.
     $identify_fullpath = get_utility_path("im-identify");
-    if ($identify_fullpath == false) {
+    if (!$identify_fullpath) {
         debug("Could not find ImageMagick 'identify' utility at location '{$imagemagick_path}'.");
         return false;
     }
@@ -73,7 +73,9 @@ function HookImage_textCollection_downloadModifydownloadfile()
 
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath==false) {exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");}
+    if (!$convert_fullpath) {
+        exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");
+    }
 
     $tmpolfile= get_temp_dir() . "/" . $result[$n]["ref"] . "_image_text_" . $userref . "." . $pextension;
 
