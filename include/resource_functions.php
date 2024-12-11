@@ -5417,8 +5417,8 @@ function get_resource_access($resource)
     if (checkperm("z" . $resourcedata['archive']) && !($uploader_view_override && $resourcedata['created_by'] == $userref))
         {
         // User has no access to this archive state
-        $resource_access_cache[$ref] = 2;
-        return 2;
+        $resource_access_cache[$ref] = RESOURCE_ACCESS_CONFIDENTIAL;
+        return RESOURCE_ACCESS_CONFIDENTIAL;
         }
 
     $usersearchfilter_isvalid = false;
@@ -5441,11 +5441,11 @@ function get_resource_access($resource)
         {
         # Permission to access all resources
         # Always return 0
-        $resource_access_cache[$ref] = 0;
-        return 0;
+        $resource_access_cache[$ref] = RESOURCE_ACCESS_FULL;
+        return RESOURCE_ACCESS_FULL;
         }
 
-    if ($access == 3)
+    if ($access == RESOURCE_ACCESS_CUSTOM_GROUP)
         {
         $customgroupaccess = true;
         # Load custom access level
@@ -5455,7 +5455,7 @@ function get_resource_access($resource)
             if ($access === false)
                 {
                 # Custom access disabled? Always return 'open' access for resources marked as custom.
-                $access = 0;
+                $access = RESOURCE_ACCESS_FULL;
                 $customgroupaccess = false;
                 }
             }
@@ -5468,23 +5468,23 @@ function get_resource_access($resource)
             else
                 {
                 # Custom access disabled? Always return 'open' access for resources marked as custom.
-                $access = 0;
+                $access = RESOURCE_ACCESS_FULL;
                 $customgroupaccess = false;
                 }
             }
         }
 
-    if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],$resourcedata))
+    if ($access == RESOURCE_ACCESS_RESTRICTED && get_edit_access($ref,$resourcedata['archive'],$resourcedata))
         {
         # If access is restricted and user has edit access, grant open access.
-        $access = 0;
+        $access = RESOURCE_ACCESS_FULL;
         }
 
     if ($open_access_for_contributor && $resourcedata['created_by'] == $userref)
         {
         # If user has contributed resource, grant open access and ignore any further filters.
-        $resource_access_cache[$ref] = 0;
-        return 0;
+        $resource_access_cache[$ref] = RESOURCE_ACCESS_FULL;
+        return RESOURCE_ACCESS_FULL;
         }
 
     # Check for user-specific and group-specific access (overrides any other restriction)
@@ -5492,7 +5492,7 @@ function get_resource_access($resource)
     // We need to check for custom access either when access is set to be custom or
     // when the user group has restricted access to all resource types or specific resource types
     // are restricted
-    if ($access!=0 || !checkperm('g') || checkperm('X' . $resource_type) || checkperm("rws{$resourcedata['archive']}"))
+    if ($access != RESOURCE_ACCESS_FULL || !checkperm('g') || checkperm('X' . $resource_type) || checkperm("rws{$resourcedata['archive']}"))
         {
         if ($passthru=="no")
             {
@@ -5521,14 +5521,14 @@ function get_resource_access($resource)
     if (checkperm('T'.$resource_type))
         {
         // this resource type is always confidential/hidden for this user group
-        $resource_access_cache[$ref] = 2;
-        return 2;
+        $resource_access_cache[$ref] = RESOURCE_ACCESS_CONFIDENTIAL;
+        return RESOURCE_ACCESS_CONFIDENTIAL;
         }
 
     if ($usersearchfilter_isset && !$usersearchfilter_isvalid)
         {
-        $resource_access_cache[$ref] = 2;
-        return 2; # Not found in results, so deny
+        $resource_access_cache[$ref] = RESOURCE_ACCESS_CONFIDENTIAL;
+        return RESOURCE_ACCESS_CONFIDENTIAL; # Not found in results, so deny
         }
 
     /*
@@ -5538,17 +5538,17 @@ function get_resource_access($resource)
     UNLESS user/ group has been granted custom (override) access
     */
     if (
-        $access == 0
+        $access == RESOURCE_ACCESS_FULL
         && ((!checkperm("g") || checkperm("rws{$resourcedata['archive']}") || checkperm('X'.$resource_type))
         && !$customgroupaccess
         && !$customuseraccess)
         )
         {
-        $access = 1;
+        $access = RESOURCE_ACCESS_RESTRICTED;
         }
 
     // Check for a derestrict filter, this allows exceptions for users without the 'g' permission who normally have restricted accesss to all available resources)
-    if ($access==1 && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim((string) $userderestrictfilter) != "")
+    if ($access == RESOURCE_ACCESS_RESTRICTED && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim((string) $userderestrictfilter) != "")
         {
         if( strlen(trim((string) $userderestrictfilter)) > 0
             && !is_numeric($userderestrictfilter)
@@ -5581,7 +5581,7 @@ function get_resource_access($resource)
             $matchedfilter = filter_check($userderestrictfilter, get_resource_nodes($ref));
             if($matchedfilter)
                 {
-                $access=0;
+                $access = RESOURCE_ACCESS_FULL;
                 $customgroupaccess = true;
                 }
             }        
