@@ -710,8 +710,7 @@ function ProcessFolder($folder)
                         $joins = get_resource_table_joins();
                         foreach ($nodes_to_add as $node) {
                             $node_data = [];
-                            get_node($node,$node_data);
-                            if (in_array($node_data["resource_type_field"],$joins)) {
+                            if (get_node($node,$node_data) && in_array($node_data["resource_type_field"],$joins)) {
                                 update_resource_field_column($r,$node_data["resource_type_field"],$node_data["name"]);
                             }
                         }
