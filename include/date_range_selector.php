@@ -66,7 +66,7 @@ $dd=getval($name . "-d",1);
 <select name="<?php echo $name?>-m">
 <?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo escape($lang["months"][$m-1]); ?></option><?php } ?>
 </select>
-<input type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>">
+<input type=text size=5 name="<?php echo $name?>-y" value="<?php echo escape($dy); ?>">
 <div class="clearerleft"> </div>
 </div>
 
@@ -84,7 +84,7 @@ $dd=getval($name . "-d",date("d"));
 <select name="<?php echo $name?>-m">
 <?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo escape($lang["months"][$m-1]); ?></option><?php } ?>
 </select>
-<input type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>">
+<input type=text size=5 name="<?php echo $name?>-y" value="<?php echo escape($dy); ?>">
 <div class="clearerleft"> </div>
 </div>
 </div>

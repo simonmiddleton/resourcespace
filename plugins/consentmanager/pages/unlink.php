@@ -35,8 +35,8 @@ include "../../../include/header.php";
 
 <form method="post" action="<?php echo $baseurl_short?>plugins/consentmanager/pages/unlink.php" onSubmit="return CentralSpacePost(this,true);">
 <input type=hidden name="submitted" value="true">
-<input type=hidden name="ref" value="<?php echo $ref?>">
-<input type=hidden name="resource" value="<?php echo $resource?>">
+<input type=hidden name="ref" value="<?php echo (int) $ref; ?>">
+<input type=hidden name="resource" value="<?php echo (int) $resource; ?>">
 <?php generateFormToken("consentmanager_unlink"); ?>
 <div class="Question"><label><?php echo escape($lang["resourceid"]); ?></label><div class="Fixed"><?php echo escape($resource)?></div>
 <div class="clearerleft"> </div></div>

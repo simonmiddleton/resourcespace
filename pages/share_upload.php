@@ -163,11 +163,8 @@ $page_header = $editing ? $lang["title-upload-link-edit"] . ":  " . $uploadkey :
 include "../include/header.php";
 
 ?>
-<div class="BasicsBox">     
-    <?php
-
-        ?>
-        <h1><?php echo $page_header; render_help_link("user/sharing-upload");?></h1>
+<div class="BasicsBox">
+        <h1><?php echo escape($page_header); render_help_link("user/sharing-upload");?></h1>
         <?php
         if(count($messages) > 0)
             {
@@ -206,7 +203,19 @@ include "../include/header.php";
             ?>
             <div class="Question">
                 <label><?php echo escape($lang["expires"]); ?></label>
-                <input name="shareexpires" type=date class="stdwidth" min="<?php echo date("Y-m-d",time()); ?>" value="<?php if($shareexpires != ""){echo substr($shareexpires,0,10);}else{echo date("Y-m-d",time()+60*60*24*7);} ?>"></input>
+                <input
+                    name="shareexpires"
+                    type=date
+                    class="stdwidth"
+                    min="<?php echo date("Y-m-d",time()); ?>"
+                    value="<?php
+                        if ($shareexpires != "") {
+                            echo escape(substr($shareexpires, 0, 10));
+                        } else {
+                            echo date("Y-m-d", time() + 60 * 60 * 24 * 7);
+                        } ?>"
+                >
+                </input>
                 <div class="clearerleft"> </div>
             </div>
 
