@@ -122,3 +122,8 @@ function HookFormat_chooserViewAppend_to_updateDownloadLink_js(array $resource)
     }
     <?php
 }
+
+function HookFormat_chooserViewModifySizesArray ($resource, $sizes) : array 
+    {
+    return get_image_sizes($resource['ref'],false,$resource['file_extension'],false);
+    }

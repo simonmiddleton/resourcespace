@@ -801,7 +801,10 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 $origidx = array_search(1,array_column($allsizes,"original"),true);
                                                 $sizes = array_merge([$allsizes[$origidx]],$sizes);
                                             }
-
+                                            $modified_sizes = hook('modifysizesarray', '', [$resource, $sizes]);
+                                            if ($modified_sizes !== false) {
+                                                $sizes = $modified_sizes;
+                                            }
                                             for ($n=0;$n<count($sizes);$n++)
                                                 {
                                                 // Only the original file is rendered on its own row. For all the other
