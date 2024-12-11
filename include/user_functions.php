@@ -1050,7 +1050,7 @@ function auto_create_user_account($hash="")
     $emailmatches = ps_value("SELECT COUNT(*) value FROM user WHERE email = ?",["s",$user_email], 0);
     if ($emailmatches > 0) {
         // Return an ambiguous message if delegated user admin
-        return (checkperm("U") ? $lang["useralreadyexists"] : $lang["useremailalreadyexists"]);
+        return checkperm("U") ? $lang["useralreadyexists"] : $lang["useremailalreadyexists"];
     }
 
     # Prepare to create the user.
