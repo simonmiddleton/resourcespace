@@ -80,7 +80,7 @@ elseif($action == 'delete' && $id > 0 && enforcePostRequest(false))
 
     unset($museumplus_modules_config[$id]);
     mplus_save_module_config($museumplus_modules_config);
-    ajax_send_response(200, ajax_response_ok(array('modules_saved_configs' => plugin_encode_complex_configs($museumplus_modules_config))));
+    ajax_send_response(200, ajax_response_ok_no_data());
     }
 
 if($id > 0 && isset($museumplus_modules_config[$id]))
