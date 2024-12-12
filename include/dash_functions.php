@@ -1813,7 +1813,7 @@ function render_upgrade_available_tile($user)
 function generate_dash_tile_toolbar(array $tile, $tile_id)
     {
     global $baseurl_short, $lang, $managed_home_dash;
-    $editlink = $baseurl_short . "pages/dash_tile.php?edit=" . $tile['ref'];
+    $editlink = $baseurl_short . "pages/dash_tile.php?edit=" . (int) $tile['ref'];
     if(!$managed_home_dash && (checkPermission_dashadmin() || checkPermission_dashuser()))
         {
         ?>
@@ -1845,7 +1845,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
         {
         if (pagename == "home")
         {
-            var tileid = "<?php echo $tile["ref"]; ?>"; //Needs to be set for delete functionality
+            var tileid = "<?php echo (int) $tile["ref"]; ?>"; //Needs to be set for delete functionality
             var usertileid = "<?php echo escape(substr($tile_id, 18)); ?>" //Needs to be set for delete functionality
             var usertileidname = "#<?php echo escape(substr($tile_id, 9)); ?>";
             var dashtileactionsid = "#DashTileActions_" + usertileid;

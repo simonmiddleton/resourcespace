@@ -661,7 +661,7 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
     if(!$is_tree)
         {
         ?>
-        <tr id="new_node_<?php echo $parent; ?>_children">
+        <tr id="new_node_<?php echo (int) $parent; ?>_children">
             <td>
                 <input type="text" class="stdwidth" name="new_option_name" form="new_option" value="">
             </td>
@@ -670,7 +670,7 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                 <div class="ListTools">
                     <form id="new_option" method="post" action="<?php echo $form_action; ?>">
                         <?php generateFormToken("new_option"); ?>
-                        <button type="submit" onClick="AddNode(<?php echo $parent; ?>); return false;"><?php echo escape($lang['add']); ?></button>
+                        <button type="submit" onClick="AddNode(<?php echo (int) $parent; ?>); return false;"><?php echo escape($lang['add']); ?></button>
                     </form>
                 </div>
             </td>
@@ -682,7 +682,7 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
 
     // Trees only
     ?>
-    <table id="new_node_<?php echo $parent; ?>_children" cellspacing="0" cellpadding="5">
+    <table id="new_node_<?php echo (int) $parent; ?>_children" cellspacing="0" cellpadding="5">
         <tbody>
             <tr>
             <?php
@@ -702,10 +702,10 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                     <img alt="" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
                 </td>
                 <td>
-                    <input type="text" name="new_option_name" form="new_node_<?php echo $parent; ?>_option" value="">
+                    <input type="text" name="new_option_name" form="new_node_<?php echo (int) $parent; ?>_option" value="">
                 </td>
                 <td>
-                    <select class="node_parent_chosen_selector" name="new_option_parent" form="new_node_<?php echo $parent; ?>_option">
+                    <select class="node_parent_chosen_selector" name="new_option_parent" form="new_node_<?php echo (int) $parent; ?>_option">
                         <option value="">Select parent</option>
                         <?php foreach($parent_node_options as $node) {
                             $selected = '';
@@ -718,9 +718,9 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                 </td>
                 <td>
                     <div class="ListTools">
-                        <form id="new_node_<?php echo $parent; ?>_option" method="post" action="<?php echo $form_action; ?>">
+                        <form id="new_node_<?php echo (int) $parent; ?>_option" method="post" action="<?php echo $form_action; ?>">
                             <?php generateFormToken("new_node_{$parent}_option"); ?>
-                            <button type="submit" onClick="AddNode(<?php echo $parent; ?>); return false;"><?php echo escape($lang['add']); ?></button>
+                            <button type="submit" onClick="AddNode(<?php echo (int) $parent; ?>); return false;"><?php echo escape($lang['add']); ?></button>
                         </form>
                     </div>
                 </td>
@@ -885,14 +885,14 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                     >
                 </td>
                 <td>
-                    <select id="node_option_<?php echo $ref; ?>_parent_select" parent_node="<?php echo $parent; ?>" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
+                    <select id="node_option_<?php echo $ref; ?>_parent_select" parent_node="<?php echo (int) $parent; ?>" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
                         <option value="">Select parent</option>
                     </select>
                 </td>
                 <td><?php echo $use_count ?></td>
                 <td>
                     <div class="ListTools">
-                        <form id="option_<?php echo $ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $resource_type_field; ?>">
+                        <form id="option_<?php echo $ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo (int) $resource_type_field; ?>">
                             <input type="hidden" name="option_order_by" value="<?php echo $order_by; ?>">
                             <input 
                                     type="number"

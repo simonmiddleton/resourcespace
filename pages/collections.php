@@ -164,7 +164,7 @@ if ($allow_reorder)
                 if ((ref==null)&&(results!== null)&&
                     ('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1]
                     ||
-                    '<?php echo "!collection" . $usercollection; ?>' === results[1])
+                    '<?php echo "!collection" . (int) $usercollection; ?>' === results[1])
 
                     ) CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
               }
@@ -418,7 +418,7 @@ else { ?>
     </head>
 
     <body class="CollectBack" id="collectbody">
-<div style="display:none;" id="currentusercollection"><?php echo $usercollection?></div>
+<div style="display:none;" id="currentusercollection"><?php echo (int) $usercollection; ?></div>
 
 <script>usercollection='<?php echo escape($usercollection) ?>';</script>
 <?php 

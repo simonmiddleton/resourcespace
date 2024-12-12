@@ -197,7 +197,7 @@ return false ;
         |
         <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["viewallresults"]); ?></a>
         |
-        <a class="nextLink" href="<?php echo $baseurl_short?>plugins/youtube_publish/pages/youtube_upload.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["nextresult"]) . "&nbsp;" . LINK_CARET ?></a>
+        <a class="nextLink" href="<?php echo $baseurl_short?>plugins/youtube_publish/pages/youtube_upload.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo escape($order_by); ?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["nextresult"]) . "&nbsp;" . LINK_CARET ?></a>
     </div>
 </div>
 <div class="BasicsBox" >
@@ -242,17 +242,18 @@ echo "</p>";
 
 </div>
 
-<?php
-if ($youtube_username != '')
-    {   
-    ?>  
-    <div class="Question" >
-    <?php echo "<p>" . str_replace("%youtube_username%", "<strong>" . $youtube_username . "</strong>", $lang["youtube_publishloggedinas"]) . "</p>";
-    echo "<p><a href=\"" . $baseurl . "/plugins/youtube_publish/pages/youtube_upload.php?resource=" . $ref . "&deletetokens=true" . "\">&gt; " . $lang["youtube_publish_change_login"] . "</a></p>";?>
+<?php if ($youtube_username != '') { ?>  
+    <div class="Question">
+        <p><?php echo strip_tags_and_attributes(str_replace("%youtube_username%", "<strong>" . $youtube_username . "</strong>", $lang["youtube_publishloggedinas"])); ?></p>
+        <p>
+            <a href="<?php echo $baseurl . '/plugins/youtube_publish/pages/youtube_upload.php?resource=' . (int) $ref . '&deletetokens=true'; ?>">&gt;
+                <?php echo escape($lang["youtube_publish_change_login"]); ?>
+            </a>
+        </p>
     </div>
-    <?php } ?>
+<?php } ?>
 
-<form action="<?php echo $baseurl ?>/plugins/youtube_publish/pages/youtube_upload.php?resource=<?php echo $ref ?>" method="post">
+<form action="<?php echo $baseurl ?>/plugins/youtube_publish/pages/youtube_upload.php?resource=<?php echo (int) $ref; ?>" method="post">
     <?php generateFormToken("youtube_upload"); ?>
     <div class="Question" >
         <label for="video_title"><?php echo escape($lang["youtube_publish_video_title"]); ?></label>
