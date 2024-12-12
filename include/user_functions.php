@@ -757,7 +757,7 @@ function save_user($ref)
         }
 
         # Validate expiry date
-        if ($expires != "" && (preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0 || !strtotime($expires))) {
+        if ($expires != "" && (preg_match ("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0 || strtotime($expires) === false)) {
             return str_replace('[value]', $expires, $lang['error_invalid_date_format']);
         }
 

@@ -137,7 +137,7 @@ foreach ($fieldrefs as $fieldref) {
             $exiftool_tag = "";
 
             foreach ($exiftool_tags as $current_exiftool_tag) {
-                if (strpos(trim($current_exiftool_tag), " ")) {
+                if (strpos(trim($current_exiftool_tag), " ") !== false) {
                     exit("ERROR: exiftool tags do not use spaces please check the tags used in the fields options for Field " . (int) $fieldref);
                 }
 

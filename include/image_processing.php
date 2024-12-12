@@ -410,7 +410,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $exif_fields = array_column(get_exiftool_fields($resource['resource_type']), 'ref');
                 $oldval = get_data_by_field($ref, $view_title_field);
 
-                if (!strpos($oldval, $merged_filename) && in_array($view_title_field, $exif_fields))
+                if (strpos($oldval, $merged_filename) === false && in_array($view_title_field, $exif_fields))
                     {
                     switch (strtolower($merge_filename_with_title_option))
                         {

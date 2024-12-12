@@ -352,7 +352,7 @@ if ($search_titles)
                 if($udata)
                     {
                     $udisplayname = trim((string)$udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
-                    $title_string = $lang["contributedby"] . " " . $udisplayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"");
+                    $title_string = $lang["contributedby"] . " " . $udisplayname . ((strpos($archive,",") === false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"");
                     }
                 }
             }

@@ -109,7 +109,7 @@ if (isset($custom_font) && $custom_font != '') {
 }
 
 // Higher contrast mode changes
-if (isset($high_contrast_mode) && $high_contrast_mode == true) { ?>
+if (isset($high_contrast_mode) && $high_contrast_mode) { ?>
     body, html {
         background: white;
         color: black;

@@ -2393,7 +2393,7 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     if (
         $preserve_hyphen
         && (substr($string,0,1) == "-" || strpos($string," -") !== false) /*support minus as first character for simple NOT searches */
-        && !strpos($string, " - ")
+        && strpos($string, " - ") === false
     ) {
         # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
         $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
