@@ -6038,7 +6038,7 @@ function escape(string $unsafe): string
  * HTML aware function to break up long words onto multiple lines for
  * PDF generation where CSS text wrapping can't be used
  * 
- * @param  string $html     HTML/Text to be processed
+ * @param  string $html     HTML/text to be processed
  * @param  int    $length   Maximum word length
  * @return string 
  * 
@@ -6060,8 +6060,8 @@ function html_break_long_words(string $html, int $length): string {
 
             foreach ($words as $word) {
                 if (strlen($word) > $length) {
-                    // Insert <br> tags
-                    $word = chunk_split($word, $length, '<br>');
+                    // Insert <br> tags between chunks only
+                    $word = wordwrap($word, $length, '<br>', true);
                 }
                 $output .= $word;
             }
