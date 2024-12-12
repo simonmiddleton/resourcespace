@@ -4644,9 +4644,10 @@ function validate_remote_code(string $code)
 /**
  * Get system status information
  * 
+ * @param  bool  $basic  Optional, set to true to perform a quick "system up" check only.
  * @return array
  */
-function get_system_status()
+function get_system_status(bool $basic=false)
     {
     $return = [
         'results' => [
@@ -4670,6 +4671,27 @@ function get_system_status()
         {
         include_once $rs_root . '/include/definitions.php';
         $check_requirements_only = true;
+        }
+
+    // Check database connectivity.
+    $check = ps_value('SELECT count(ref) value FROM resource_type', array(), 0);
+    if ($check <= 0)
+        {
+        $return['results']['database_connection'] = [
+            'status' => 'FAIL',
+            'info' => 'SQL query produced unexpected result',
+            'severity' => SEVERITY_CRITICAL,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_CRITICAL],
+        ];
+
+        return $return;
+        }
+ 
+    // End of basic check.
+    if ($basic)
+        {
+        // Return early, this is a rapid check of DB connectivity only.
+        return ['status'=>'OK'];
         }
 
     // Check required PHP modules
@@ -4735,19 +4757,7 @@ function get_system_status()
         }
 
 
-    // Check database connectivity.
-    $check = ps_value('SELECT count(ref) value FROM resource_type', array(), 0);
-    if ($check <= 0)
-        {
-        $return['results']['database_connection'] = [
-            'status' => 'FAIL',
-            'info' => 'SQL query produced unexpected result',
-            'severity' => SEVERITY_CRITICAL,
-            'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_CRITICAL],
-        ];
 
-        return $return;
-        }
 
     // Check database encoding.
     global $mysql_db;

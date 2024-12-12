@@ -1223,9 +1223,9 @@ function api_get_profile_image($user)
     return get_profile_image($user);
     }
 
-function api_get_system_status()
+function api_get_system_status($basic=false)
     {
-    return get_system_status();
+    return get_system_status($basic);
     }
 
 function api_relate_all_resources($related)
