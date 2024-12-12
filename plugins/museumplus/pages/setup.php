@@ -14,7 +14,7 @@ if (!in_array($plugin_name, $plugins)) {
 }
 
 // Validate modules config (this is configurable on a different page - setup_module.php)
-$museumplus_modules_config = plugin_decode_complex_configs(getval('museumplus_modules_saved_config', $museumplus_modules_saved_config));
+$museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);
 if(!is_array($museumplus_modules_config))
     {
     $error = $lang['museumplus_error_unknown_type_saved_config'];
