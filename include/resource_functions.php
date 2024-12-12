@@ -2728,7 +2728,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             {
             // Not a list of node IDs; value has been passed as normal string value
             // Get all the new values into an array
-            if(strpos($value,NODE_NAME_STRING_SEPARATOR) != false)
+            if (strpos($value, NODE_NAME_STRING_SEPARATOR) !== false)
                 {
                 $newvalues = array_map('trim', explode(NODE_NAME_STRING_SEPARATOR, $value));
                 }
@@ -4641,7 +4641,7 @@ function write_metadata($path, $ref, $uniqid="")
 
         $metadata_all=get_resource_field_data($ref, false,true,null,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
         $read_only_fields = array_column(array_filter($metadata_all, function($value) {
-            return (bool) $value['read_only'] == true;
+            return (bool) $value['read_only'] === true;
         }), 'ref');
 
         $write_to=array();

@@ -4279,7 +4279,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         debug('Calling value_filter...');
         eval(eval_check_signed($field['value_filter']));
         }
-    elseif ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
+    elseif ($field["type"] == FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":") !== false)
         {
         // Show the time as well as date if entered
         $value=nicedate($value,true,true);

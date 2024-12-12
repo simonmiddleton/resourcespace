@@ -38,7 +38,7 @@ function check_api_key($username,$querystring,$sign,$authmode="userkey"): bool
     // Fetch user ID and API key
     $user=get_user_by_username($username); if ($user===false) {return false;}
     $aj = strpos($querystring,"&ajax=");
-    if($aj != false)
+    if ($aj !== false)
         {
         $querystring = substr($querystring,0,$aj);
         }

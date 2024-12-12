@@ -77,15 +77,15 @@ if (getval("save",'') != '' && enforcePostRequest(false))
 
         hook('before_usage_redirect');
         $url_parts = [];
-        if(strpos($url, '?') != false)
+        if (strpos($url, '?') !== false)
             {
             parse_str(explode('?',$url)[1],$url_parts);
             }
-        if(strpos($url, 'download.php') != false && count($url_parts) > 0 && $url_parts['noattatch'] = true)
+        if (strpos($url, 'download.php') !== false && count($url_parts) > 0 && $url_parts['noattatch'] = true)
             {
             $redirect_url = $url;
             }
-        elseif(strpos($url, 'download.php') != false && (strpos($url, $baseurl_short) !== false || strpos($url, $baseurl) !== false))
+        elseif(strpos($url, 'download.php') !== false && (strpos($url, $baseurl_short) !== false || strpos($url, $baseurl) !== false))
             {
             $download_url_suffix_params['url'] = $url;
             }

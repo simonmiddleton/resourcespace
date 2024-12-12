@@ -1004,7 +1004,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $searchstart = mb_substr($search,0,strpos($search,"collectiontitle:"));
         $titlepos = strpos($search,"collectiontitle:")+16;
         $searchend = mb_substr($search,$titlepos);
-        if(strpos($searchend,":") != false)
+        if (strpos($searchend, ":") !== false)
             {
             // Remove any other parts of the search with xxxxx: prefix that relate to other search aspects
             $searchtitleval=explode(":",$searchend)[0];
@@ -7075,7 +7075,7 @@ function check_upload_terms(int $collection, string $k) : bool
 
     if (!is_array($collection)                                                  // not uploading to collection
         || !in_array($collection["ref"],array_column($keyinfo,"collection"))    // share is not for this collection
-        || (bool)$keyinfo[0]["upload"] != true)                                 // share type not upload
+        || (bool) $keyinfo[0]["upload"] !== true)                                 // share type not upload
         {
         return true;
         }

@@ -146,7 +146,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
             if(json_last_error() !== JSON_ERROR_NONE || !is_array($apivalues))
                 {
                 debug("openai_gpt error - invalid JSON text response received from API: " . json_last_error_msg() . " " . trim($openai_response));
-                if(strpos($openai_response,",") != false)
+                if (strpos($openai_response, ",") !== false)
                     {
                     // Try and split on comma
                     $apivalues = explode(",",$openai_response);
