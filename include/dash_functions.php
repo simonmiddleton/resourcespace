@@ -573,6 +573,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                         return false;
                         }
                      jQuery("#HomePanelContainer").sortable({
+                        distance: 20,
                         items: ".DashTileDraggable",
                         start: function(event,ui) {
                             jQuery("#dash_tile_bin").show();
@@ -1335,6 +1336,7 @@ function get_user_dash($user)
                     return false;
                     }               
                  jQuery("#HomePanelContainer").sortable({
+                    distance: 20,
                     items: ".DashTileDraggable",
                     start: function(event,ui) {
                         jQuery("#dash_tile_bin").show();
