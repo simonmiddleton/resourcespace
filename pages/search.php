@@ -169,7 +169,7 @@ foreach ($display_fields as $display_field)
     $all_field_info_count = count($all_field_info);
     for ($m=0;$m<$all_field_info_count;$m++)
         {
-        if ($all_field_info[$m]["ref"]==$display_field)
+        if ($all_field_info[$m]["ref"]==$display_field && $all_field_info[$m]['active'] == 1)
             {
             $field_info=$all_field_info[$m];
             $df[$n]['ref']=$display_field;
