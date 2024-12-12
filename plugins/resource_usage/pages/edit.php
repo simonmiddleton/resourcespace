@@ -127,7 +127,7 @@ include "../../../include/header.php";
     </div>
 
     <div class="Question">
-        <label><?php echo escape($lang['description']); ?></label>
+        <label for="description"><?php echo escape($lang['description']); ?></label>
         <textarea id="description" class="stdwidth" name="description" rows="4"><?php echo escape($usage_data["description"]); ?></textarea>
         <div class="clearerleft"></div>
     </div>

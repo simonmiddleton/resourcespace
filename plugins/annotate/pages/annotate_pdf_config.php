@@ -201,14 +201,14 @@ function loadIt() {
         <?php } ?>
 
         <div class="Question">
-        <label><?php echo escape($lang["size"])?></label>
+        <label for="size"><?php echo escape($lang["size"])?></label>
         <select class="shrtwidth" name="size" id="size" onChange="jQuery().annotate('preview'); "><?php echo $papersize_select ?>
         </select>
         <div class="clearerleft"> </div>
         </div>
 
         <div name="previewPageOptions" id="previewPageOptions" class="Question" style="display:none">
-        <label><?php echo escape($lang['previewpage'])?></label>
+        <label for="previewpage"><?php echo escape($lang['previewpage'])?></label>
         <select class="shrtwidth" name="previewpage" id="previewpage" onChange="jQuery().annotate('preview');   ">
         </select>
         </div>

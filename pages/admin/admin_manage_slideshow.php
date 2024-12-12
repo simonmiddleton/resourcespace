@@ -306,9 +306,7 @@ button[disabled]{
         </table>
     </div>
     <div id="slideshow_static_image" class="Question">
-        <label>
-        <?php echo escape($lang["slideshow_use_static_image"]); ?>    
-        </label>
+        <label for="slideshow_static_image_checkbox"><?php echo escape($lang["slideshow_use_static_image"]); ?></label>
         <input type="checkbox" name="slideshow_static_image" id="slideshow_static_image_checkbox" <?php if($static_slideshow_image){echo "checked";} ?> onchange="if(this.checked){jQuery.get('<?php echo $manageurl ?>?ajax=true&static=true');}else{jQuery.get('<?php echo $manageurl ?>?ajax=true&static=false');}"></input>
     <div class="clearerleft"></div>
     </div>

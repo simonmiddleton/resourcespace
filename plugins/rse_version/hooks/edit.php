@@ -97,7 +97,7 @@ function HookRse_versionEditBefore_status_question()
         });
     </script>
     <div class="Question" id="edit_mode_status" style="display: none; padding-bottom: 0px; margin-bottom: 0px;">
-        <label><?php echo escape($lang["editmode"]); ?></label>
+        <label for="modeselect_status"><?php echo escape($lang["editmode"]); ?></label>
         <select id="modeselect_status" class="stdwidth" name="modeselect_status" onchange="modeselect_status_onchange(this);">
             <option value=""></option>
             <option value="revert"><?php echo escape($lang["revertmetadatatodatetime"]); ?></option>

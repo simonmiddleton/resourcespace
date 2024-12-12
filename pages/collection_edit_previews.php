@@ -113,7 +113,7 @@ include "../include/header.php";
             <?php if (allow_multi_edit($resources,$ref))
                 { ?>
                 <div class="Question">
-                    <label><?php echo escape($lang["imagecorrection"])?><br/><?php echo escape($lang["previewthumbonly"])?></label>
+                    <label for="tweak"><?php echo escape($lang["imagecorrection"])?><br/><?php echo escape($lang["previewthumbonly"])?></label>
                     <select class="stdwidth" name="tweak" id="tweak" onChange="return CentralSpacePost(this.form,true);">
                         <option value=""><?php echo escape($lang["select"])?></option>
                         <?php

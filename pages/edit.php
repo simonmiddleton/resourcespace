@@ -1346,7 +1346,7 @@ else
     if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode)
         { ?>
         <div class="Question" id="question_imagecorrection">
-            <label><?php echo escape($lang["imagecorrection"])?><br/><?php echo escape($lang["previewthumbonly"])?></label>
+            <label for="tweak"><?php echo escape($lang["imagecorrection"])?><br/><?php echo escape($lang["previewthumbonly"])?></label>
             <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo $modal ? "true" : "false"; ?>); <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('mainform'),true);">
             <option value=""><?php echo escape($lang["select"])?></option>
             <?php if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)

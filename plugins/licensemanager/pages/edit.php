@@ -207,8 +207,11 @@ include "../../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo escape($lang["licensor_licensee"]); ?></label><input type=text class="stdwidth" name="holder" id="holder" value="<?php echo escape($license["holder"])?>" />
-<div class="clearerleft"> </div></div>
+<div class="Question">
+    <label for="holder"><?php echo escape($lang["licensor_licensee"]); ?></label>
+    <input type=text class="stdwidth" name="holder" id="holder" value="<?php echo escape($license["holder"])?>" />
+    <div class="clearerleft"></div>
+</div>
 
 <div class="Question"><label><?php echo escape($lang["indicateusagemedium"]); ?></label>
 <table>
@@ -234,14 +237,13 @@ foreach ($license_usage_mediums as $medium)
 
 <div class="clearerleft"> </div></div>
 
-
-
-<div class="Question"><label><?php echo escape($lang["description"]); ?></label><textarea rows="4" class="stdwidth" name="description" id="description"><?php echo escape($license["description"]) ?></textarea>
-<div class="clearerleft"> </div></div>
-
+<div class="Question">
+    <label for="description"><?php echo escape($lang["description"]); ?></label>
+    <textarea rows="4" class="stdwidth" name="description" id="description"><?php echo escape($license["description"]) ?></textarea>
+    <div class="clearerleft"></div>
+</div>
 
 <div class="Question"><label><?php echo escape($lang["fieldtitle-expiry_date"]); ?></label>
-
 
     <select id="expires_day" name="expires_day" class="SearchWidth" style="width:98px;">
       <?php

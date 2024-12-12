@@ -120,7 +120,7 @@ if(!collection_readable($collection))
             </div>
 
             <div class="Question">
-                <label><?php echo escape($lang["display"]); ?></label>
+                <label for="sheetstyle"><?php echo escape($lang["display"]); ?></label>
                 <select class="shrtwidth" name="sheetstyle" id="sheetstyle" onChange="
                     if (jQuery('#sheetstyle').val()=='list')
                         {
@@ -222,7 +222,7 @@ if($contact_sheet_include_header_option)
     {
     ?>  
     <div class="Question">
-        <label><?php echo escape($lang["contact_sheet-include_header_option"]); ?></label>
+        <label for="includeheader"><?php echo escape($lang["contact_sheet-include_header_option"]); ?></label>
         <select class="shrtwidth" name="includeheader" id="includeheader" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
             <option value="true"><?php echo escape($lang["yes"]); ?></option>
             <option value="false" <?php if (!$contact_sheet_include_header){?>selected<?php } ?>><?php echo escape($lang["no"]); ?></option>
@@ -237,7 +237,7 @@ if($contact_sheet_single_select_size)
     $sizes = get_all_image_sizes(false, false);
     ?>
     <div id="size_options" class="Question" style="display:none">
-        <label><?php echo escape($lang["contact_sheet-single_select_size"]); ?></label>
+        <label for="ressize"><?php echo escape($lang["contact_sheet-single_select_size"]); ?></label>
         <select class="shrtwidth" name="ressize" id="ressize" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
         <?php
         foreach($sizes as $size)
@@ -255,7 +255,7 @@ if(isset($contact_sheet_logo_option) && $contact_sheet_logo_option && isset($con
     {
     ?>
     <div class="Question">
-        <label><?php echo escape($lang["contact_sheet-add_logo_option"]); ?></label>
+        <label for="addlogo"><?php echo escape($lang["contact_sheet-add_logo_option"]); ?></label>
         <select class="shrtwidth" name="addlogo" id="addlogo" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
             <option value="true"><?php echo escape($lang["yes"]); ?></option>
             <option value="false"><?php echo escape($lang["no"]); ?></option>
@@ -269,7 +269,7 @@ if($contact_sheet_add_link_option)
     {
     ?>  
     <div class="Question">
-        <label><?php echo escape($lang["contact_sheet-add_link_option"]); ?></label>
+        <label for="addlink"><?php echo escape($lang["contact_sheet-add_link_option"]); ?></label>
         <select class="shrtwidth" name="addlink" id="addlink" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
             <option value="true"><?php echo escape($lang["yes"]); ?></option>
             <option value="false" <?php if (!$contact_sheet_add_link){?>selected<?php } ?>><?php echo escape($lang["no"]); ?></option>
@@ -283,7 +283,7 @@ if($contact_sheet_field_name_option)
     {
     ?>  
     <div class="Question">
-        <label><?php echo escape($lang["contact_sheet-field_name_option"]); ?></label>
+        <label for="addfieldname"><?php echo escape($lang["contact_sheet-field_name_option"]); ?></label>
         <select class="shrtwidth" name="addfieldname" id="addfieldname" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
             <option value="true"><?php echo escape($lang["yes"]); ?></option>
             <option value="false"><?php echo escape($lang["no"]); ?></option>
@@ -297,7 +297,7 @@ if($contactsheet_use_field_templates)
     {
     ?>
     <div class="Question">
-        <label><?php echo escape($lang['contact_sheet_field_template']); ?></label>
+        <label for="field_template"><?php echo escape($lang['contact_sheet_field_template']); ?></label>
         <select id="field_template" class="shrtwidth" name="field_template" onChange="updateAvailableContactSheetFieldsTemplate(jQuery('#field_template').val());jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
             <?php
             $t_count=count($contactsheet_field_template);
@@ -352,7 +352,7 @@ if($contactsheet_use_field_templates)
     ?>
 
     <div class="Question">
-        <label><?php echo escape($contactsheet_use_field_templates ? $lang['contact_sheet_field_template_fields'] : $lang['contact_sheet_select_fields']); ?></label>
+        <label for="selected_contact_sheet_fields"><?php echo escape($contactsheet_use_field_templates ? $lang['contact_sheet_field_template_fields'] : $lang['contact_sheet_select_fields']); ?></label>
         <?php
         if($contactsheet_use_field_templates)
             {
@@ -390,7 +390,7 @@ if($contactsheet_use_field_templates)
     </div>
 
     <div class="Question">
-        <label><?php echo escape($lang["size"]); ?></label>
+        <label for="size"><?php echo escape($lang["size"]); ?></label>
         <select class="shrtwidth" name="size" id="size" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');"><?php echo $papersize_select; ?></select>
         <div class="clearerleft"> </div>
     </div>
@@ -401,7 +401,7 @@ if($contactsheet_sorting)
     $all_field_info = get_fields_for_search_display(array_unique(array_merge($thumbs_display_fields,$list_display_fields,$config_sheetlist_fields,$config_sheetthumb_fields)));
     ?>
     <div class="Question">
-        <label><?php echo escape($lang["sortorder"]); ?></label>
+        <label for="orderby"><?php echo escape($lang["sortorder"]); ?></label>
         <select class="shrtwidth" name="orderby" id="orderby" onChange="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
             <option value="relevance" selected><?php echo escape($lang["collection-order"]); ?></option>
             <option value="date"><?php echo escape($lang["date"]); ?></option>
@@ -424,7 +424,7 @@ if($contactsheet_sorting)
     </div>
 
     <div class="Question">
-        <label><?php echo escape($lang["sort-type"]) ?></label>
+        <label for="sort"><?php echo escape($lang["sort-type"]) ?></label>
         <select class="shrtwidth" name="sort" id="sort" onChange="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
             <option value="asc" selected><?php echo escape($lang["ascending"]); ?></option>
             <option value="desc"><?php echo escape($lang["descending"]); ?></option>
@@ -436,13 +436,13 @@ if($contactsheet_sorting)
     ?>
 
             <div id="ThumbnailOptions" class="Question">
-                <label><?php echo escape($lang["columns"]); ?></label>
+                <label for="ThumbnailOptions"><?php echo escape($lang["columns"]); ?></label>
                 <select class="shrtwidth" name="columns" id="ThumbnailOptions" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');"><?php echo $columns_select ?></select>
                 <div class="clearerleft"> </div>
             </div>
 
             <div id="OrientationOptions" class="Question">
-                <label><?php echo escape($lang["orientation"]); ?></label>
+                <label for="orientation"><?php echo escape($lang["orientation"]); ?></label>
                 <select class="shrtwidth" name="orientation" id="orientation" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
                     <option value="P"><?php echo escape($lang["portrait"]); ?></option>
                     <option value="L"><?php echo escape($lang["landscape"]); ?></option>
@@ -457,7 +457,7 @@ if($contactsheet_sorting)
                     {
                     ?>
                     <div id="WatermarkOptions" class="Question">
-                        <label><?php echo escape($lang["show_watermarked_previews_and_thumbnails"]); ?></label>
+                        <label for="force_watermark"><?php echo escape($lang["show_watermarked_previews_and_thumbnails"]); ?></label>
                         <select class="shrtwidth" name="force_watermark" id="force_watermark" onChange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
                             <option value="true"><?php echo escape($lang["yes"]); ?></option>
                             <option value="false"><?php echo escape($lang["no"]); ?></option>
@@ -476,7 +476,7 @@ if($contactsheet_sorting)
             ?>
 
             <div name="previewPageOptions" id="previewPageOptions" class="Question" style="display:none">
-                <label><?php echo escape($lang['previewpage']); ?></label>
+                <label for="previewpage"><?php echo escape($lang['previewpage']); ?></label>
                 <select class="shrtwidth" name="previewpage" id="previewpage" onChange="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');"></select>
             </div>
 

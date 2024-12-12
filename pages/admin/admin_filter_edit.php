@@ -280,7 +280,7 @@ include "../../include/header.php";
                 </div>
 
                 <div class="Question">
-                    <label><?php echo escape($lang["action-delete"]); ?></label>
+                    <label for="delete_filter"><?php echo escape($lang["action-delete"]); ?></label>
                     <input id="delete_filter" name="delete_filter" type="checkbox" value="<?php echo escape($filterid); ?>" >
                     <div class="clearerleft"></div>
                 </div>

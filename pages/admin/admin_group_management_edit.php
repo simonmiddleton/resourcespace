@@ -269,7 +269,7 @@ $url_params_edit = array(
 
             <?php if ($record['parent'])
                 {?>
-                <label><?php echo escape($lang["property-permissions_inherit"]); ?></label>
+                <label for="permissions_inherit"><?php echo escape($lang["property-permissions_inherit"]); ?></label>
                 <input id="permissions_inherit" name="inherit_flags[]" type="checkbox" value="permissions" onClick="if(jQuery('#permissions_inherit').is(':checked')){jQuery('#permissions_area').slideUp();}else{jQuery('#permissions_area').slideDown();}" <?php if(in_array("permissions",$record['inherit'])){echo "checked";} ?>>
                 <div class="clearerleft"></div> 
                 <?php
@@ -387,7 +387,7 @@ $url_params_edit = array(
 
             <?php if ($record['parent'])
                 {?>
-                <label><?php echo escape($lang["property-config_inherit"]); ?></label>
+                <label for="config_inherit"><?php echo escape($lang["property-config_inherit"]); ?></label>
                 <input id="config_inherit" name="inherit_flags[]" type="checkbox" value="config_options" onClick="if(jQuery('#config_inherit').is(':checked')){jQuery('#config_area').slideUp();}else{jQuery('#config_area').slideDown();}" <?php if(in_array("config_options",$record['inherit'])){echo "checked";} ?>>
                 <div class="clearerleft"></div> 
                 <?php
@@ -471,7 +471,7 @@ $url_params_edit = array(
     <div class="BasicsBox">
 
         <div class="Question">
-            <label><?php echo escape($lang["fieldtitle-tick_to_delete_group"]); ?></label>
+            <label for="delete_user_group"><?php echo escape($lang["fieldtitle-tick_to_delete_group"]); ?></label>
             <input id="delete_user_group" name="deleteme" type="checkbox" value="yes" <?php if($has_dependants) { ?> disabled="disabled"<?php } ?>>
             <div class="clearerleft"></div>
             <div class="FormHelp">

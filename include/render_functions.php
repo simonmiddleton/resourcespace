@@ -1615,7 +1615,7 @@ function render_text_question($label, $input, $additionaltext="", $numeric=false
         }
     ?>
     <div id="question_<?php echo $input; ?>" class="<?php echo implode(" ", $div_class); ?>" >
-        <label><?php echo $label; ?></label>
+        <label for="<?php echo escape($input); ?>_input"><?php echo $label; ?></label>
         <?php
         printf('<input name="%s" id="%s_input" type="%s" value="%s"%s/>',
             escape($input),

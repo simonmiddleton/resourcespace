@@ -184,7 +184,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 
 <?php if (!hook("password", "", array($user))) { ?>
 <div class="Question">
-    <label><?php echo escape($lang["password"]); ?></label>
+    <label for="password"><?php echo escape($lang["password"]); ?></label>
     <input
         name="password"
         id="password"
@@ -208,8 +208,12 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div><input name="password" id="password" type="hidden" value="<?php echo escape($lang["hidden"]);?>" /></div>
 <?php } ?>
 
-<?php if (!hook("replacefullname")){?>
-<div class="Question"><label><?php echo escape($lang["fullname"])?></label><input name="fullname" id="user_edit_fullname" type="text" class="stdwidth" value="<?php echo form_value_display($user,"fullname") ?>"><div class="clearerleft"> </div></div>
+<?php if (!hook("replacefullname")) { ?>
+    <div class="Question">
+        <label for="user_edit_fullname"><?php echo escape($lang["fullname"])?></label>
+        <input name="fullname" id="user_edit_fullname" type="text" class="stdwidth" value="<?php echo form_value_display($user,"fullname") ?>">
+        <div class="clearerleft"></div>
+    </div>
 <?php } ?>
 
 <div class="Question"><label><?php echo escape($lang["group"])?></label>
@@ -245,7 +249,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <?php hook("additionalusergroupfields"); ?>
 
 <div class="Question">
-    <label><?php echo escape($lang["emailaddress"])?></label>
+    <label for="user_edit_email"><?php echo escape($lang["emailaddress"])?></label>
     <input 
         name="email" 
         id="user_edit_email" 
@@ -266,8 +270,11 @@ if (!isset($error)) {
     $account_expires_datepart = substr($account_expires_datepart,0,10);
 }
 ?>
-<div class="Question"><label><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]; ?></label>
-        <input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo $account_expires_datepart; ?>"><div class="clearerleft"> </div></div>
+<div class="Question">
+    <label for="user_edit_expires"><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]; ?></label>
+    <input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo $account_expires_datepart; ?>">
+    <div class="clearerleft"></div>
+</div>
 
 <div class="Question"><label><?php echo escape($lang["ipaddressrestriction"])?><br/><?php echo escape($lang["wildcardpermittedeg"])?> 194.128.*</label>
         <input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
@@ -326,11 +333,13 @@ $filters[] = array("ref" => -1, "name" => $lang["disabled"]);
 <?php
            
 hook("additionaluserfields");
-if (!hook("replacecomments"))
-    { ?>
-    <div class="Question"><label><?php echo escape($lang["comments"])?></label><textarea id="user_edit_comments" name="comments" class="stdwidth" rows=5 cols=50><?php echo form_value_display($user,"comments")?></textarea><div class="clearerleft"> </div></div>
-    <?php
-    } ?>
+if (!hook("replacecomments")) { ?>
+    <div class="Question">
+        <label for="user_edit_comments"><?php echo escape($lang["comments"])?></label>
+        <textarea id="user_edit_comments" name="comments" class="stdwidth" rows=5 cols=50><?php echo form_value_display($user,"comments")?></textarea>
+        <div class="clearerleft"></div>
+    </div>
+<?php } ?>
 <div class="Question"><label><?php echo escape($lang["created"])?></label>
 <div class="Fixed"><?php echo nicedate($user["created"],true,true,true) ?></div>
 <div class="clearerleft"> </div></div>

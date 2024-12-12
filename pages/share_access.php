@@ -43,7 +43,7 @@ include "../include/header.php";
     <input type=hidden name="return_url" value="<?php echo escape($return_url)?>">
     
     <div class="Question">
-    <label><?php echo escape($lang["share-enter-password"]); ?></label>
+    <label for="share_password"><?php echo escape($lang["share-enter-password"]); ?></label>
     <input name="share_password" id="share_password" type="password" class="stdwidth" />
     <div class="clearerleft"> </div>
     </div>

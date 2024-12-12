@@ -146,7 +146,8 @@ if(isset($download_usage_prevent_options))
    
         <?php  if(!$remove_usage_textbox && !$usage_textbox_below)  {  echo html_usagecomments($usagecomment,$error);   }   ?>
 
-        <div class="Question"><label><?php echo escape($lang["indicateusagemedium"]); ?></label>
+        <div class="Question">
+            <label for="usage"><?php echo escape($lang["indicateusagemedium"]); ?></label>
             <select class="stdwidth" name="usage" id="usage" <?php if(isset($download_usage_prevent_options)){ echo 'onchange="checkvalidusage();"';}?>>
                 <option value=""><?php echo escape($lang["select"]); ?></option>
                 <?php 

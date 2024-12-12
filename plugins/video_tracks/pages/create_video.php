@@ -256,7 +256,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         <input name="ref" type="hidden" value="<?php echo $ref; ?>">
         <input type="hidden" name="generate" value="yes" />
         <div class="Question" id="question_video_track_format">
-            <label><?php echo escape($lang["video_tracks_select_output"]); ?></label>
+            <label for="video_track_format"><?php echo escape($lang["video_tracks_select_output"]); ?></label>
             <select class="stdwidth" name="video_track_format" id="video_track_format" >
             <?php
             foreach ($video_tracks_output_formats as $video_tracks_output_format=>$video_tracks_output_command)
@@ -272,7 +272,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         {?>
         <!-- Select subtitle file -->
         <div class="Question" id="question_video_subtitles">
-            <label><?php echo escape($lang["video_tracks_select_subtitle"]); ?></label>
+            <label for="video_subtitle_file"><?php echo escape($lang["video_tracks_select_subtitle"]); ?></label>
             <select class="stdwidth" name="video_subtitle_file" id="video_subtitle_file" >
             <option value=""><?php echo escape($lang["select"]); ?></option>
             <?php
@@ -294,8 +294,8 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         {?>
         <!-- Select audio file -->
         <div class="Question" id="question_video_audio">
-            <label><?php echo escape($lang["video_tracks_select_audio"]); ?></label>
-            <select class="stdwidth" name="video_audio_file" id="video_subtitle_file" >
+            <label for="video_audio_file"><?php echo escape($lang["video_tracks_select_audio"]); ?></label>
+            <select class="stdwidth" name="video_audio_file" id="video_audio_file" >
             <option value=""><?php echo escape($lang["select"]); ?></option>
             <?php
             foreach ($audio_alts as $audio_alt)

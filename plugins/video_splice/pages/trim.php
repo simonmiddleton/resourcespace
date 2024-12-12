@@ -448,7 +448,7 @@ if(isset($resource["field".$view_title_field]))
             <div class="clearerleft"> </div>
         </div>
         <div class="Question" id="question_uploadtype">
-            <label><?php echo escape($lang["video-trim_output"]); ?></label>
+            <label for="uploadtype"><?php echo escape($lang["video-trim_output"]); ?></label>
             <select name="output_type" id="uploadtype" class="stdwidth" onChange="show_hide_collection_add()">
             <?php if($can_create_alternative) { ?><option value="alt"><?php echo escape($lang["addalternativefile"]); ?></option><?php } ?>
             <?php if($can_create_resource) { ?><option value="new"><?php echo escape($lang["createnewresource"]); ?></option><?php } ?>
@@ -457,7 +457,7 @@ if(isset($resource["field".$view_title_field]))
             <div class="clearerleft"> </div>
         </div>
         <div class="Question" id="question_collectionadd" style="display:none;">
-            <label><?php echo escape($lang["addtocurrentcollection"]); ?></label>
+            <label for="collectionadd"><?php echo escape($lang["addtocurrentcollection"]); ?></label>
             <input name="collection_add" id="collectionadd" value="yes" type="checkbox">
             <div class="clearerleft"> </div>
         </div>

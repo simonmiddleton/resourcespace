@@ -273,7 +273,7 @@ include '../include/header.php';
         <div id="QuestionJobFilter">
 
             <div class="Question" id="QuestionJobType">
-                <label><?php echo escape($lang["job_filter_type"]); ?></label>
+                <label for="job_type"><?php echo escape($lang["job_filter_type"]); ?></label>
                 <select class="stdwidth" id="job_type" name="job_type">
                     <?php 
                     // Not filtered by default when searching, add option to filter by month
@@ -288,7 +288,7 @@ include '../include/header.php';
                 <div class="clearerleft"></div> 
             </div>   
             <div class="Question" id="QuestionJobStatus">
-                <label><?php echo escape($lang["job_filter_status"]); ?></label>
+                <label for="job_status"><?php echo escape($lang["job_filter_status"]); ?></label>
                 <select class="stdwidth" id="job_status" name="job_status">
                     <?php 
                     // Not filtered by default when searching, add option to filter by month

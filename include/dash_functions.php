@@ -1623,8 +1623,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         <?php
         }
         ?>
-        <label><?php echo escape($lang['colour']); ?></label>
-   
+        <label for="tile_style_colour"><?php echo escape($lang['colour']); ?></label>
         <script src="<?php echo $baseurl; ?>/lib/spectrum/spectrum.js"></script>
         <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/spectrum/spectrum.css" />
         <input id="tile_style_colour" name="tlstylecolour" type="text" onchange="update_tile_preview_colour(this.value);" value="<?php echo $tile_colour; ?>">

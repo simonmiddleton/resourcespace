@@ -261,8 +261,8 @@ include "../../../include/header.php";
             <div class="clearerleft"> </div>
             </div>
         <div class="Question" id="question_video_splice_video">
-            <label><?php echo escape($lang["video_splice_select_video"]); ?></label>
-            <select class="stdwidth" name="video_splice_video" id="video_splice_video" >
+            <label for="video_splice_video"><?php echo escape($lang["video_splice_select_video"]); ?></label>
+            <select class="stdwidth" name="video_splice_video" id="video_splice_video">
             <?php
             foreach ($ffmpeg_std_video_options as $video_output_video=>$video_splice_output_command)
                 {
@@ -273,7 +273,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_resolution">
-            <label><?php echo escape($lang["video_splice_select_resolution"]); ?></label>
+            <label for="video_splice_resolution"><?php echo escape($lang["video_splice_select_resolution"]); ?></label>
             <select class="stdwidth" name="video_splice_resolution" id="video_splice_resolution" >
             <?php
             foreach ($ffmpeg_std_resolution_options as $video_output_resolution=>$video_splice_output_command)
@@ -285,7 +285,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_frame_rate">
-            <label><?php echo escape($lang["video_splice_select_frame_rate"]); ?></label>
+            <label for="video_splice_frame_rate"><?php echo escape($lang["video_splice_select_frame_rate"]); ?></label>
             <select class="stdwidth" name="video_splice_frame_rate" id="video_splice_frame_rate" >
             <?php
             foreach ($ffmpeg_std_frame_rate_options as $video_output_frame_rate=>$video_splice_output_command)
@@ -297,7 +297,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_audio">
-            <label><?php echo escape($lang["video_splice_select_audio"]); ?></label>
+            <label for="video_splice_audio"><?php echo escape($lang["video_splice_select_audio"]); ?></label>
             <select class="stdwidth" name="video_splice_audio" id="video_splice_audio" >
             <?php
             foreach ($ffmpeg_std_audio_options as $video_output_audio=>$video_splice_output_command)

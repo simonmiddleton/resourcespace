@@ -249,9 +249,11 @@ renderBreadcrumbs($links_trail);
     echo "<div class='clearer'> </div>";
     echo "</div>";
     ?>
-    <div class="Question"><label><?php echo escape($lang["message"]); ?></label>
+    <div class="Question">
+        <label for="messagetext"><?php echo escape($lang["message"]); ?></label>
         <textarea id="messagetext" name="messagetext" class="stdwidth Inline required" rows=5 cols=50></textarea>
-        <div class="clearerleft"> </div></div>
+        <div class="clearerleft"></div>
+    </div>
     <div class="QuestionSubmit">        
     <input name="send" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["send"]); ?>&nbsp;&nbsp;" onclick="sendMessage();return false;"/>
     </div>

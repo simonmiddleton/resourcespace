@@ -43,7 +43,7 @@ include '../../../include/header.php';
         }
     ?>
     <div class="Question">
-        <label>Log</label>
+        <label for="emu_test_script_log"><?php echo escape($lang["log"]); ?></label>
         <textarea id="emu_test_script_log" disabled><?php echo implode(PHP_EOL, $output); ?></textarea>
     </div>
     <div class="QuestionSubmit">
