@@ -860,13 +860,26 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
         $pdf_pages = 1;
     }
     $resolution=$pdf_resolution;
-    $scr_size=ps_query("select width,height from preview_size where id='scr'");
-    if(empty($scr_size)){
-        # since this is not an application required size we can't assume there's a record for it
-        $scr_size=ps_query("select width,height from preview_size where id='pre'");
+
+    # Get pre image dimensions
+    $pre_size = ps_query("select width,height from preview_size where id='pre'");
+
+    # Get scr image dimensions
+    $scr_size = ps_query("select width,height from preview_size where id='scr'");
+
+    $pre_width  = $pre_size[0]['width'];
+    $pre_height = $pre_size[0]['height'];
+
+    # Since scr is not an application required size we can't assume there's a record for it
+    # so fallback to pre dimensions
+    if (empty($scr_size)) {
+        $scr_width  = $pre_size[0]['width'];
+        $scr_height = $pre_size[0]['height'];
+    } else {        
+        $scr_width  = $scr_size[0]['width'];
+        $scr_height = $scr_size[0]['height'];
     }
-    $scr_width=$scr_size[0]['width'];
-    $scr_height=$scr_size[0]['height'];
+
 
         if ($pdf_dynamic_rip) {
 
@@ -913,7 +926,10 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
 
                     if ($pdf_max_dim != 0)
                         {
-                        $resolution = ceil((max($scr_width, $scr_height) * 2) / ($pdf_max_dim / 72));
+                        #Determine largest of generated sizes 
+                        $pdf_target_width  = max($scr_width, $pre_width);
+                        $pdf_target_height = max($scr_height, $pre_height);
+                        $resolution = ceil((max($pdf_target_width, $pdf_target_height) * 2) / ($pdf_max_dim / 72));
                         }
                     else
                         {
@@ -951,49 +967,67 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                     else{
                         $pdf_max_dim=$pdfinfo[1];
                         }
-                    $resolution=ceil((max($scr_width,$scr_height)*2)/($pdf_max_dim/72));
+                        #Determine largest of generated sizes 
+                        $pdf_target_width  = max($scr_width, $pre_width);
+                        $pdf_target_height = max($scr_height, $pre_height);
+                        $resolution=ceil((max($pdf_target_width,$pdf_target_height)*2)/($pdf_max_dim/72));
                 }
             }
         }
 
     # Create multiple pages.
-    for ($n=1;$n<=$pdf_pages;$n++)
-        {
+    for ($n=1;$n<=$pdf_pages;$n++) {
+        
         # Set up target file
-        $size="";if ($n>1) {$resource_view_use_pre?$size="pre":$size="scr";}
-        $target=get_resource_path($ref,true,$size,false,"jpg",-1,$n,false,"",$alternative);
-        if (file_exists($target)) {unlink($target);}
+        $size = "";
+        
+        if ($n>1) {
+            $size="scr";
+        }
 
-        if ($dUseCIEColor){$dUseCIEColor=" -dUseCIEColor ";} else {$dUseCIEColor="";}
+        $target = get_resource_path($ref,true,$size,false,"jpg",-1,$n,false,"",$alternative);
+        
+        if (file_exists($target)) {
+            unlink($target);
+        }
+
+        if ($dUseCIEColor) {
+            $dUseCIEColor=" -dUseCIEColor ";
+        } else {
+            $dUseCIEColor="";
+        }
+
         $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=" . $imagemagick_quality . " -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
         $output=run_command($gscommand2);
 
         # Stop trying when after the last page
-        if (strstr($output, 'FirstPage > LastPage'))
-            {
+        if (strstr($output, 'FirstPage > LastPage')) {
             break;
-            }
+        }
 
         debug("PDF multi page preview: page $n, executing " . $gscommand2);
 
         # Set that this is the file to be used.
-        if (file_exists($target) && $n==1)
-            {
-            $newfile=$target;$pagecount=$n;
+        if (file_exists($target) && $n==1) {
+            $newfile = $target;
+            $pagecount = $n;
             debug("Page $n generated successfully",RESOURCE_LOG_APPEND_PREVIOUS);
-            }
+        }
             
         # resize directly to the screen size (no other sizes needed)
-         if (file_exists($target)&& $n!=1) {
+        if (file_exists($target) && $n != 1) {
+            
             $command2 = $convert_fullpath . " " . $prefix . escapeshellarg($target) . "[0] -quality $imagemagick_quality -resize " 
             . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " ".escapeshellarg($target);
             $output=run_command($command2); $pagecount=$n;
 
             # Add a watermarked image too?
             global $watermark, $watermark_single_image;
-            if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative))){
+            if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative))) {
+                
                 if ($watermark !== '' && $alternative==-1) {
-                    $wmpath=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
+                    
+                    $wmpath = get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
                     if (file_exists($wmpath)) {
                         unlink($wmpath);
                     }
@@ -1009,6 +1043,7 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                         // The watermark geometry will be based on the shortest scr dimension scaled to the configured percentage
                         $wm_scale=$watermark_single_image['scale'] / 100;
 
+                        // $wm_scaled_width = $pdf_target_width * $wm_scale;
                         if($scr_width < $scr_height) {
                             // Portrait; scaled length is based on width
                             $wm_scaled_length = $scr_width * $wm_scale;
@@ -1040,7 +1075,36 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                     }
                     
                 }
+
             }
+            
+            // Generate path for pre copy of page
+            $pre_target = get_resource_path($ref, true, "pre", false, "jpg", -1, $n, false, "", $alternative);
+
+            // Copy scr to be used as source
+            copy($target, $pre_target);
+            
+            // Resize to pre dimensions
+            $command3 = $convert_fullpath . " " . $prefix . escapeshellarg($pre_target) . "[0] -quality $imagemagick_quality -resize " 
+            . escapeshellarg($pre_width) . "x" . escapeshellarg($pre_height) . " ".escapeshellarg($pre_target);
+            $output = run_command($command3);
+
+            // Copy and reize watermarked image if it exists
+            if (isset($wmpath) && file_exists($wmpath)) {
+
+                // Generate path for pre copy of page
+                $pre_target_wm = get_resource_path($ref, true, "pre", false, "", -1, $n, true, "", $alternative);
+
+                // Copy watermarked scr to be used as source
+                copy($wmpath, $pre_target_wm);
+                
+                // Resize to pre dimensions
+                $command4 = $convert_fullpath . " " . $prefix . escapeshellarg($pre_target_wm) . "[0] -quality $imagemagick_quality -resize " 
+                . escapeshellarg($pre_width) . "x" . escapeshellarg($pre_height) . " ".escapeshellarg($pre_target_wm);
+                $output = run_command($command4);
+
+            }
+
         }
         
         # Splitting of PDF files to multiple resources
