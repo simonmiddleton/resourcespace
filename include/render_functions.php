@@ -4360,7 +4360,10 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
 
         // Handle the rest of the fixed list fields, category trees have their own section
         if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
-            $value = render_fixed_list_as_pills($field_nodes_translated ?? get_resource_nodes($ref, $field["ref"], true, false));
+            $nodes = $field_nodes_translated ?? array_map(function($ref, $name) {
+                return ['ref' => $ref, 'name' => $name];
+            }, array_keys($field['nodes_values']), $field['nodes_values']);
+            $value = render_fixed_list_as_pills($nodes);
         }
 
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 

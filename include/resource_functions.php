@@ -3504,19 +3504,19 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
             if(in_array($fields[$n]['type'],$FIXED_LIST_FIELD_TYPES)
                 && $fields[$n]['type'] != FIELD_TYPE_CATEGORY_TREE
                 && trim($fields[$n]['nodes']??"") != ""
-                && (bool)$fields[$n]['automatic_nodes_ordering'])
-                {
+            ) {
                 $fieldnoderefs = explode(",",$fields[$n]['nodes']);
                 $fieldnodes = get_nodes_by_refs($fieldnoderefs);
-                $ordered_nodes = array_column(reorder_nodes($fieldnodes),"name");
+                if ((bool) $fields[$n]['automatic_nodes_ordering']) {
+                    $fieldnodes = reorder_nodes($fieldnodes);
+                }
+                $fieldnodes = array_column($fieldnodes, 'name', 'ref');
                 if ($translate_value)
                     {
-                    $fields[$n]['value'] = implode(", ", array_map("i18n_get_translated", $ordered_nodes));
+                    $fieldnodes = array_map("i18n_get_translated", $fieldnodes);
                     }
-                else
-                    {
-                    $fields[$n]['value'] = implode(", ", $ordered_nodes);
-                    }
+                $fields[$n]['value'] = implode(", ", $fieldnodes);
+                $fields[$n]['nodes_values'] = $fieldnodes; 
                 }
 
             $return[] = $fields[$n];
