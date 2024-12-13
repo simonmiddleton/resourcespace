@@ -2207,25 +2207,3 @@ function registerResourceSelectDeselectHandlers() {
         UpdateSelColSearchFilterBar();
     });
 }
-
-/**
- * Calculate an elements' position by traversing offsetParent
- * @param {Element} el DOM element
- * @return {{left: Number, top: Number}}
- */
-function calculate_position_offset_parents(el)
-{
-    let pos = {};
-    pos.left = el.offsetLeft;
-    pos.top = el.offsetTop;
-    while (el.offsetParent) {
-        pos.left = pos.left + el.offsetParent.offsetLeft;
-        pos.top = pos.top + el.offsetParent.offsetTop;
-        if (el === document.getElementsByTagName('body')[0]) {
-            break;
-        } else {
-            el = el.offsetParent;
-        }
-    }
-    return pos;
-}

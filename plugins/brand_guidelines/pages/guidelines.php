@@ -247,23 +247,74 @@ render_content_menu();
         console.debug('showOptionsMenu(e = %o, target = %o)', e, target);
         hideOptionsMenu();
         const is_responsive = window.matchMedia("(max-width: 600px)").matches;
-        const el_pos = calculate_position_offset_parents(e);
+        const uicenter_el = document.getElementById('UICenter');
+        const header_bb = document.getElementById('Header').getBoundingClientRect();
+        const container_bb = document.querySelector('.guidelines-container').getBoundingClientRect();
+        const btn_bb = e.getBoundingClientRect();
         const btn_el = jQuery(e);
         let menu_el = jQuery(`#${target}`);
         let manage_page = 'content';
         let group_members_csv = '';
+        let off_top = 0;
+        let off_left = 0;
+        let off_top_rev = 0;
+        let off_left_rev = 0;
+        let menu_el_tmp = menu_el.clone().appendTo('.guidelines-container');
+        menu_el_tmp.css({
+            'display': 'block',
+            'visibility': 'hidden',
+        });
+        const menu_bb = menu_el_tmp[0].getBoundingClientRect();
 
-        // Determine the position offset for the menu so it's within the proximity of the calling "item" element 
+        /*
+        Determine the position offset for the menu so it's within the proximity of the calling "item" element 
+        Notes:
+        - the bounding box (BB) ignores margins so you have to account for them too
+        - in responsive mode, the body is overflowing vertically (Y axis) instead of the UICenter
+        */
         if (target == 'menu-individual') {
             manage_page = btn_el.parents('.guidelines-sidebar').length !== 0 ? 'toc' : 'content';
-            // Offset based on the .context-menu-container width adjusted for smaller screens
-            off_left = is_responsive ? -195 : 2; 
-            off_top = is_responsive ? -220 : -78;
+            off_left_rev -= menu_bb.width + btn_bb.width + (2 * parseInt(getComputedStyle(e).margin));
+            if (is_responsive) {
+                off_top += document.body.scrollTop
+                    - header_bb.height
+                    - document.getElementById('SearchBarContainer').getBoundingClientRect().height;
+            } else {
+                off_top += uicenter_el.scrollTop - header_bb.height;
+                off_left += uicenter_el.scrollLeft;
+                off_left_rev += uicenter_el.scrollLeft;
+            }
         } else {
-            off_left = -35;
-            off_top = is_responsive ? -180 : -40;
+            const btn_margin = getComputedStyle(e);
+            if (is_responsive) {
+                off_top += document.body.scrollTop
+                    - header_bb.height
+                    - document.getElementById('SearchBarContainer').getBoundingClientRect().height
+                    + parseInt(btn_margin.marginTop) + parseInt(btn_margin.marginBottom);
+                off_left -= container_bb.left + parseInt(getComputedStyle(menu_el_tmp[0]).marginRight);
+            } else {
+                off_top += uicenter_el.scrollTop
+                    - parseInt(getComputedStyle(document.querySelector('.BasicsBox')).marginTop)
+                    - parseInt(getComputedStyle(document.querySelector('.guidelines-content')).marginTop)
+                    - parseInt(btn_margin.marginTop);
+                off_left -= container_bb.left
+                    + parseInt(
+                        getComputedStyle(document.querySelector('.guidelines-sidebar')).marginRight
+                    );
+            }
+
+            off_top_rev += off_top - menu_bb.height - btn_bb.height - parseInt(btn_margin.marginBottom);
         }
         console.debug("off_top = %o -- off_left = %o", off_top, off_left);
+        menu_el_tmp.remove();
+
+        // Check if target menu will go outside container boundaries to have a better UX by always having the menu in
+        // sight
+        if ((btn_bb.left + off_left + menu_bb.width) > container_bb.right) {
+            off_left = off_left_rev;
+        } else if (target != 'menu-individual' && (btn_bb.top + off_top + menu_bb.height) > container_bb.bottom) {
+            off_top = off_top_rev;
+        }
 
         // Alter menu options for group related page content items
         if (manage_page === 'content') {
@@ -313,8 +364,8 @@ render_content_menu();
         menu_el
             .css({
                 display: 'none',
-                top: el_pos.top + off_top,
-                left: el_pos.left + off_left,
+                top: btn_bb.top + off_top,
+                left: btn_bb.left + off_left,
             })
             .data(
                 'item',
