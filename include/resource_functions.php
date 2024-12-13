@@ -6712,7 +6712,7 @@ function resource_type_config_override($resource_type, $only_onchange=true)
 */
 function update_archive_status($resource, $archive, $existingstates = array(), $collection  = 0, $more_notes="")
     {
-    global $resource_deletion_state;
+    global $resource_deletion_state,$remove_deleted_resources_from_collections;
     
     if(!is_array($resource))
         {
@@ -6733,7 +6733,14 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
             continue;
             }
 
-        resource_log($resource[$n], LOG_CODE_STATUS_CHANGED, 0, $more_notes, isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);
+        resource_log(
+            $resource[$n],
+            $resource_deletion_state == $archive ? LOG_CODE_DELETED : LOG_CODE_STATUS_CHANGED,
+            0,
+            $more_notes,
+            isset($existingstates[$n]) ? $existingstates[$n] : '',
+            $archive
+        );
         }
 
     # Prevent any attempt to update with non-numeric archive state
@@ -6746,7 +6753,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
     ps_query("UPDATE resource SET archive = ? WHERE ref IN (" . ps_param_insert(count($resource)) . ")",array_merge(["i",$archive],ps_param_fill($resource,"i")));
 
     # Resources should be removed from collections when being moved into the deletion state as specified in config.default.php
-    if ($resource_deletion_state == $archive) {
+    if ($remove_deleted_resources_from_collections && $resource_deletion_state == $archive) {
         foreach ($resource as $ref) {
             $in_collections = ps_query('SELECT collection, resource FROM collection_resource WHERE resource = ?', ['i', $ref]);
             ps_query('DELETE FROM collection_resource WHERE resource = ?', ['i', $ref]);
@@ -6804,13 +6811,7 @@ function delete_resources_in_collection($collection)
     if(isset($resource_deletion_state))
         {
         update_archive_status($r_refs,$resource_deletion_state,$r_states);
-        foreach($r_refs as $ref){resource_log($ref,LOG_CODE_DELETED,'');}
         collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
-        ps_query(
-            "DELETE FROM collection_resource  WHERE resource IN (" . ps_param_insert(count($r_refs)) . ")",
-            ps_param_fill($r_refs,"i")
-        );
-
         }
 
     return true;
