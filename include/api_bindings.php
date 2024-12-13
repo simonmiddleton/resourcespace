@@ -1615,6 +1615,7 @@ function api_resource_file_readonly($ref): array
     if (is_positive_int_loose($ref)) {
         return ajax_response_ok(['readonly' => resource_file_readonly($ref)]);
     } else {
+        http_response_code(400);
         return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_resource_id_non_numeric']));
     }
 }
