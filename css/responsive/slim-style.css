@@ -261,20 +261,13 @@ body {
     display:inline-block;
 }
 .ResponsiveHeaderButton {
-    width: 48%;
+    margin-bottom: 5px;
+    width: 35%;
 }
 #HeaderButtons {
-    position: absolute;
-    left: 280px;
-    right: 15px;
     display:none;
 }
-#ButtonHolder {
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-}
+
 @media(max-width:1200px) {
     #Header {
         min-height: 47px;
@@ -285,10 +278,12 @@ body {
         vertical-align: top;
     }
     #HeaderNav1Click {
+        float: right;
         margin-right: 5px;
         min-width: 30px;
     }
     #HeaderNav2Click {
+        float: right;
         margin-right: 5px;
         min-width: 30px;
     }
@@ -300,7 +295,6 @@ body {
     }
     #HeaderNav1 {
         display:none;
-        position: static;
         margin:0;
         height: auto !important;
         float: none;
@@ -317,7 +311,6 @@ body {
         clear: both;
         text-align: right;
         padding-left: 0;
-        padding-top: 10px;
     }
     #Header .HorizontalNav ul li {
         display: inline-block;
@@ -375,6 +368,11 @@ body {
 
     .Question .customFieldLabel {
         max-width: 600px;
+    }
+}
+@media(max-width:990px) {
+    #HeaderButtons {
+        padding-left: 150px;
     }
 }
 @media(max-width:700px) {

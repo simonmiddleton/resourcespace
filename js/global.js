@@ -1399,7 +1399,7 @@ function toggleFieldLock(field)
 */
 function headerLinksDropdown()
     {
-    var containerWidth = Math.ceil(jQuery("#HeaderLinksContainer").innerWidth()) - 30;
+    var containerWidth = jQuery("#HeaderLinksContainer").innerWidth() - 30;
     var links =  jQuery("#HeaderLinksContainer").find(".HeaderLink"); // get elements that are links in the header bar
     var linksWidth = 0;
     var caretCreated = false;

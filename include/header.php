@@ -437,15 +437,7 @@ if ($pagename != "preview")
     if (!isset($allow_password_change)) {$allow_password_change=true;}
     if (isset($username) && !in_array($pagename, $not_authenticated_pages) && !$loginterms && '' == $k || $internal_share_access)
         {
-        hook("midheader"); ?>
-        <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
-        <?php
-        if(!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login))
-            {
-            include __DIR__ . "/header_links.php";
-            }
         ?>
-        </div>
         <div id="HeaderNav1" class="HorizontalNav">
         <?php
         hook("beforeheadernav1");
@@ -554,6 +546,15 @@ if ($pagename != "preview")
         hook("afterheadernav1");
         include_once __DIR__ . '/../pages/ajax/message.php';
         ?>
+        </div>
+        <?php hook("midheader"); ?>
+        <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
+            <?php
+            if(!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login))
+                {
+                include dirname(__FILE__) . "/header_links.php";
+                }
+            ?>
         </div>
 
         <?php
