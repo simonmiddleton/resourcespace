@@ -7028,9 +7028,12 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     return !$count_only ? $snapshots_found : count($snapshots_found);
     }
 
-function resource_file_readonly($ref)
+/**
+ * Check if resource file is read-only because it's part of the filestore template threshold
+ * @param int|numeric-string $ref Resource ID
+ */
+function resource_file_readonly($ref): bool
     {
-    # Even if the user has edit access to a resource, the main file may be read only.
     global $fstemplate_alt_threshold;
     return $fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold;
     }

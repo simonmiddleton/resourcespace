@@ -1604,3 +1604,17 @@ function api_get_resource_access($resource)
     if (!is_int_loose($resource)) {return false;}
     return get_resource_access($resource);
     }
+
+/**
+ * Exposing {@see resource_file_readonly} to the API
+ * @param int|numeric-string $ref Resource ID
+ * @return array{status:"success","data":{"readonly":bool}}|array{status:"fail","data":{"message":string}}
+ */
+function api_resource_file_readonly($ref): array
+{
+    if (is_positive_int_loose($ref)) {
+        return ajax_response_ok(['readonly' => resource_file_readonly($ref)]);
+    } else {
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_resource_id_non_numeric']));
+    }
+}
