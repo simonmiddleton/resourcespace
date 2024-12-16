@@ -3253,7 +3253,7 @@ function update_search_from_request($search)
                 # Date field
 
                 # Construct the date from the supplied dropdown values
-                $key_part=substr($key,0, strrpos($key, "_"));
+                $key_part=substr($key,0, strrpos($key, "-"));
                 $field=substr($key_part,6);
                 $value="";
                 if (strpos($search, $field.":")===false)
