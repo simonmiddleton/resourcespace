@@ -1,9 +1,6 @@
 <?php
 /**
  * View resource page
- * 
- * @package ResourceSpace
- * @subpackage Pages
  */
 include_once "../include/boot.php";
 

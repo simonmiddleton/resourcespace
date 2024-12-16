@@ -1,9 +1,6 @@
 <?php
 /**
  * Initial setup page.
- * 
- * @package ResourceSpace
- * @subpackage Pages_Misc
  */
 include_once '../include/file_functions.php';
 include_once '../include/definitions.php';

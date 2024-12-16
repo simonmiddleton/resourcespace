@@ -3,10 +3,6 @@
  * Image processing functions
  *
  * Functions to allow upload and resizing of images.
- *
- * @package ResourceSpace
- * @subpackage Includes
- * @todo Document
  */
 
 use Montala\ResourceSpace\CommandPlaceholderArg;

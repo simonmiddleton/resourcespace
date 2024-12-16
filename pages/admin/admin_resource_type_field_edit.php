@@ -1,9 +1,6 @@
 <?php
 /**
  * User edit form display page (part of Team Center)
- * 
- * @package ResourceSpace
- * @subpackage Pages_Team
  */
 
 include "../../include/boot.php";

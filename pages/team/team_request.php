@@ -1,9 +1,6 @@
 <?php
 /**
  * Manage resource request page (part of Team Center)
- * 
- * @package ResourceSpace
- * @subpackage Pages_Team
  */
 
 

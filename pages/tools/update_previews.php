@@ -1,9 +1,6 @@
 <?php
 /**
  * Quick 'n' dirty script to update all preview images.
- * 
- * @package ResourceSpace
- * @subpackage Team_Admin
  */
 
 # options:

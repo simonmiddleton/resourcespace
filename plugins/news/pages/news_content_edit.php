@@ -1,9 +1,6 @@
 <?php
 /**
  * Edit news items page 
- * 
- * @package ResourceSpace
- * @subpackage Pages_Team
  */
 include __DIR__."/../../../include/boot.php";
 

@@ -1,9 +1,6 @@
 <?php
 /**
  * Team center home page (part of Team Center)
- * 
- * @package ResourceSpace
- * @subpackage Pages_Team
  */
 include "../../include/boot.php";
 include "../../include/authenticate.php";if (!checkperm("t")) {exit ("Permission denied.");}

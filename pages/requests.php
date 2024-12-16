@@ -2,8 +2,7 @@
 /**
  * View my own requests
  * 
- * @package ResourceSpace
- */
+  */
 include "../include/boot.php";
 
 include "../include/authenticate.php";

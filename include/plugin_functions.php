@@ -1,10 +1,8 @@
 <?php
 /**
  * Functions related to the management of plugins.
- *
- * @package ResourceSpace
- * @subpackage Includes
  */
+
 /**
  * Activate a named plugin.
  *

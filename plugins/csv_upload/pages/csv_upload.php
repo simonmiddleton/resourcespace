@@ -1,8 +1,7 @@
 <?php
 /**
  * CSV upload * 
- * @package ResourceSpace
- */
+  */
 
 include __DIR__."/../../../include/boot.php";
 include __DIR__."/../../../include/authenticate.php";

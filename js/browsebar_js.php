@@ -2,7 +2,6 @@
 /**
 * JS functions for the Browse Bar
 *
-* @package ResourceSpace
 */
 
 include_once "../include/boot.php";

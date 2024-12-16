@@ -2,8 +2,7 @@
 /**
  * Manage news items (under Team Center)
  * 
- * @package ResourceSpace
- */
+  */
 
 include __DIR__."/../../../include/boot.php";
 

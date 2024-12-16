@@ -1,9 +1,6 @@
 <?php
 /**
  * Plugins management interface (part of team center)
- * 
- * @package ResourceSpace
- * @subpackage Pages_Team
  */
 include "../../include/boot.php";
 

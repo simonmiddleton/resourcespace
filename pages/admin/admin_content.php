@@ -1,9 +1,6 @@
 <?php
 /**
  * Manage content string page (part of System area)
- * 
- * @package ResourceSpace
- * @subpackage Pages_Team
  */
 include "../../include/boot.php";
 

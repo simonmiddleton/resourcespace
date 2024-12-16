@@ -2,7 +2,6 @@
 /**
 * Functions used to render HTML & Javascript
 *
-* @package ResourceSpace
 */
 
 

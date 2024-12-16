@@ -1,9 +1,6 @@
 <?php
 /**
  * User management start page (part of team center)
- * 
- * @Package ResourceSpace
- * @Subpackage Pages_Team
  */
 include "../../include/boot.php";
 include "../../include/authenticate.php";

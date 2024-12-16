@@ -1,7 +1,6 @@
 <?php
 /**
  * Display news items  * 
- * @package ResourceSpace
  */
 
 include __DIR__."/../../../include/boot.php";
