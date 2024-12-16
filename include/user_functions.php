@@ -2738,11 +2738,9 @@ function offset_user_local_timezone($datetime, $format)
  */
 function checkPermission_anonymoususer()
     {
-    global $baseurl, $anonymous_login, $anonymous_autouser_group, $username, $usergroup;
+    global $baseurl, $anonymous_login, $username, $usergroup;
 
-    return
-        (
-        isset($anonymous_login)
+    return isset($anonymous_login)
         && (
             (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
             || (
@@ -2750,9 +2748,7 @@ function checkPermission_anonymoususer()
                 && array_key_exists($baseurl, $anonymous_login)
                 && $anonymous_login[$baseurl] == $username
                 )
-            )
-        )
-        || (isset($anonymous_autouser_group) && $usergroup == $anonymous_autouser_group);
+            );
     }
 
 

@@ -140,38 +140,6 @@ else
     rs_setcookie('cookiecheck', 'true', 0, '/');
     hook("removeuseridcookie");
     }
-
-if (!$valid && isset($anonymous_autouser_group))
-    {
-    # Automatically create a users for anonymous access, and place them in a user group.
-    
-    # Prepare to create the user.
-    $email=trim(getval("email","")) ;
-    $username="anonymous" . ps_value("select max(ref)+1 value from user", array(), 0); # Make up a username.
-    $password=make_password();
-    $password_hash = rs_password_hash("RS{$username}{$password}");
-
-    # Create the user
-    ps_query("insert into user (username,password,fullname,email,usergroup,approved) values (?, ?, ?, '', ?, 1)",array("s",$username,"s",$password_hash,"s",$username,"i",$anonymous_autouser_group));
-    $new = sql_insert_id();
-   
-    $login_data = perform_login();
-    rs_setcookie("user", $session_hash, 100, "", "", substr($baseurl,0,5)=="https", true);
-
-    // Setup the user
-    $login_session_hash = (isset($login_data['session_hash']) ? $login_data['session_hash'] : '');
-    $user_select_sql = new PreparedStatementQuery();
-    $user_select_sql->sql = "u.session=?";
-    $user_select_sql->parameters = ["s",$login_session_hash];
-    $user_data = validate_user($user_select_sql, true);
-
-    $valid = false;
-    if(0 < count($user_data))
-        {
-        $valid = true;
-        setup_user($user_data[0]);
-        }
-    }
     
 if (!$valid && !isset($system_login))
     {
