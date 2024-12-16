@@ -1277,19 +1277,19 @@ jQuery(document).ready(function () {
                 }?>
             })
         <?php
-        foreach($uploader_plugins as $uploader_plugin)
-            {
-            if(isset($supported_plugins[$uploader_plugin]))
-                {
+        foreach ($uploader_plugins as $uploader_plugin) {
+            if ($uploader_plugin == "Onedrive") {
+                $uploader_plugin = "OneDrive";
+            }
+            if (isset($supported_plugins[$uploader_plugin])) {
                 echo ".use(" . $uploader_plugin  . ", {target: Dashboard,";
-                if($supported_plugins[$uploader_plugin] === true && trim($uppy_companion_url) != "")
-                    {
+                if ($supported_plugins[$uploader_plugin] === true && trim($uppy_companion_url) != "") {
                     echo "\ncompanionUrl: '" . escape($uppy_companion_url) . "'";
-                    }
+                }
                 echo "
                     })";
-                }
-            }?>
+            }
+        }?>
         ; // End of Uppy options
 
     uppy.on('complete', (result) => {
