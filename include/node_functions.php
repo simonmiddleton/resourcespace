@@ -2979,9 +2979,8 @@ function toggle_active_state_for_nodes(array $refs): array
     $tree_nodes_by_rtf = [];
     $nodes_new_state = [];
 
-    db_begin_transaction('toggle_node_active_state');
-
     foreach ($refs_chunked as $refs_chunk) {
+        db_begin_transaction('toggle_node_active_state');
         $nodes = get_nodes_by_refs($refs_chunk);
         $nodes_to_toggle = [];
 
@@ -3008,11 +3007,13 @@ function toggle_active_state_for_nodes(array $refs): array
                 ),
                 array_merge(ps_param_fill($nodes_to_toggle, 'i'), ps_param_fill($GLOBALS['FIXED_LIST_FIELD_TYPES'], 'i'))
             );
+        }
+
+        db_end_transaction('toggle_node_active_state');
+        if ($nodes_to_toggle !== []) {
             $nodes_new_state += array_column(get_nodes_by_refs($nodes_to_toggle), 'active', 'ref');
         }
     }
-
-    db_end_transaction('toggle_node_active_state');
 
     foreach ($tree_nodes_by_rtf as $rtf => $nodes_list) {
         $nodes_new_state += toggle_category_tree_nodes_active_state($rtf, $nodes_list);
