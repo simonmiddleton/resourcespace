@@ -4490,7 +4490,7 @@ function render_fixed_list_as_pills($nodes):string
     if (count($nodes) > 0) {
         foreach ($nodes as $nodedata) {
             $search_url = generateURL($baseurl . '/pages/search.php', ['search' => NODE_TOKEN_PREFIX . $nodedata['ref']]);
-            $display_html .= "<a href=\"{$search_url}\" onclick=\"CentralSpaceLoad(this)\"</a>";
+            $display_html .= "<a href=\"{$search_url}\" onclick=\"CentralSpaceLoad(this)\">";
             $display_html .= "<div class=\"fixedlistnodepill\">" . escape($nodedata["name"]) . "</div>";
             $display_html .= "</a>";
         }
