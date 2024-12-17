@@ -224,7 +224,7 @@ function openai_gpt_generate_completions($apiKey, $model, $messages, $temperatur
     debug("openai_gpt_generate_completions() \$model = '" . $model . "', \$prompt = '" . json_encode($messages) . "' \$temperature = '" . $temperature . "', \$max_tokens = " . $max_tokens);
 
     // Set the endpoint URL
-    global $openai_gpt_endpoint,  $openai_response_cache;
+    global $openai_gpt_endpoint,  $openai_response_cache, $userref;
     
     $messagestring = json_encode($messages);
     if(isset($openai_response_cache[md5($openai_gpt_endpoint . $messagestring)]))
@@ -290,6 +290,9 @@ function openai_gpt_generate_completions($apiKey, $model, $messages, $temperatur
         $openai_response_cache[md5($openai_gpt_endpoint . $messagestring)] = false;
         return false;
         }
+
+    // Log the usage
+    if (isset($response_data["usage"]["total_tokens"]) && is_numeric($response_data["usage"]["total_tokens"])) {daily_stat("OpenAI Token Usage",$userref,$response_data["usage"]["total_tokens"]);}
 
     // Return the text from the completions
     if (isset($response_data["choices"][0]["message"]["content"]))
