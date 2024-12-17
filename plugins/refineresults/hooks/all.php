@@ -147,23 +147,21 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
     }
 
 function HookRefineresultsSearchSearchstringprocessing()
-    {
+{
     global $search,$k;
-    $refine=trim(getval("refine_keywords",""));
-    if ($refine!="")
-        {
-        if ($k!="")
-            {
+    $refine = trim(getval("refine_keywords",""));
+    if ($refine != "") {
+        if ($k != "") {
             # Slightly different behaviour when searching within external shares. There is no search bar, so the provided string is the entirity of the search.
-            $s=explode(" ",$search);
-            $search=$s[0] . " " . $refine;  
-            }
-        else
-            {
-            $search.=", " . $refine;    
-            }
+            $s = explode(" ",$search);
+            $search = $s[0] . " " . $refine;
+        } else if ((string) $search != "") {
+            $search .= ", " . $refine;
+        } else {
+            $search = $refine;
         }
-    $search=refine_searchstring($search);   
     }
+    $search = refine_searchstring($search);
+}
 
 ?>
