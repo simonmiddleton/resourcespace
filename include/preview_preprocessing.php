@@ -1043,7 +1043,6 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                         // The watermark geometry will be based on the shortest scr dimension scaled to the configured percentage
                         $wm_scale=$watermark_single_image['scale'] / 100;
 
-                        // $wm_scaled_width = $pdf_target_width * $wm_scale;
                         if($scr_width < $scr_height) {
                             // Portrait; scaled length is based on width
                             $wm_scaled_length = $scr_width * $wm_scale;
