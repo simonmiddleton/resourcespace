@@ -233,7 +233,7 @@ else
                 $propertycheck=explode(":",$property);
                 $propertyname=isset($propertycheck[0])?$propertycheck[0]:"";
                 $propertyval=isset($propertycheck[1])?$propertycheck[1]:"";
-                if($propertyval!="")
+                if($propertyval!="" && isset($propertyfields[$propertyname]))
                     {
                     $fieldname=$propertyfields[$propertyname];
                     $$fieldname=$propertyval;
