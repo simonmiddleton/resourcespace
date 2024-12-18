@@ -1088,7 +1088,7 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
             . escapeshellarg($pre_width) . "x" . escapeshellarg($pre_height) . " ".escapeshellarg($pre_target);
             $output = run_command($command3);
 
-            // Copy and reize watermarked image if it exists
+            // Copy and resize watermarked image if it exists
             if (isset($wmpath) && file_exists($wmpath)) {
 
                 // Generate path for pre copy of page
