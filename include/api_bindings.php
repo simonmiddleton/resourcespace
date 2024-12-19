@@ -141,6 +141,8 @@ function api_get_resource_field_data($resource)
             {
             for($n=0;$n<$resultcount;$n++)
                 {
+                // Remove node_values array as not required for the API
+                unset($results[$n]['nodes_values']);
                 $results[$n] = array_map("i18n_get_translated",$results[$n]);
                 }
             }
