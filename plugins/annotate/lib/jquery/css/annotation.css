@@ -7,6 +7,7 @@
     margin: 0;
     position: relative;
     overflow:hidden;
+    background-size: contain;
 }
 .image-annotate-view {
     display: none;

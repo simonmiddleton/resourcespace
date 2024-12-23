@@ -54,7 +54,11 @@ function HookAnnotateAllAdditionalheaderjs(){
 
 <script type="text/javascript" src="<?php echo $baseurl_short?>plugins/annotate/lib/jquery/js/jquery.annotate.js?css_reload_key=<?php echo $css_reload_key?>"></script>
 <script language="javascript">
-    function annotate(ref,k,w,h,annotate_toggle,page, modal){
+    function annotate(ref, k, imgElement, annotate_toggle, page, modal){
+
+        //Determine displayed (potentially scaled) image dimensions
+        w = imgElement.offsetWidth;
+        h = imgElement.offsetHeight;
 
         // Prevent duplication of image if loading is interrupted:
         var canvasExists = document.getElementsByClassName("image-annotate-canvas");

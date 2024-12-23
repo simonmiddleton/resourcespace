@@ -46,15 +46,6 @@ if (!file_exists($preview_path) && !file_exists($path_orig)) {
     return false;
 }
 
-if (!file_exists($preview_path)) {
-    $sizes = getimagesize($path_orig);
-} else {
-    $sizes = getimagesize($preview_path);
-}
-
-$w = $sizes[0];
-$h = $sizes[1];
-
 ?>
 
 <script type="text/javascript">
@@ -102,7 +93,7 @@ $h = $sizes[1];
 <div>
         <td>
             <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
-            alt="" id="toAnnotate" onload="annotate(<?php echo (int)$ref?>,'<?php echo escape($k)?>','<?php echo escape($w)?>','<?php echo escape($h)?>',<?php echo escape(getval("annotate_toggle",true))?>,<?php echo (int) getval('page', 1); ?>);" src="<?php echo escape($url)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+            alt="" id="toAnnotate" onload="annotate(<?php echo (int)$ref?>,'<?php echo escape($k)?>',this ,<?php echo escape(getval("annotate_toggle",true))?>,<?php echo (int) getval('page', 1); ?>, false);" src="<?php echo escape($url)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
         </td>
     <?php
     if($nextpage != -1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
