@@ -127,6 +127,8 @@ if(isset($bind_placeholders['contact_sheet_footer']))
                             ?><span><?php echo escape($contact_sheet_field['title']); ?>:
                             <?php 
                         }
+                    } else {
+                        ?><span><?php
                     }
 
                     // If field contains richtext...

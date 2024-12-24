@@ -122,6 +122,8 @@ foreach($bind_placeholders['resources'] as $resource_ref => $resource)
                 } else {
                     $csf_output .= escape($contact_sheet_field['title']) . ": ";
                 }
+            } else {
+                ?><span><?php
             }
 
             // If field contains richtext...
