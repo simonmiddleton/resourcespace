@@ -39,7 +39,7 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
             file_exists($path) 
             && (
                 !$imagemagick_preserve_profiles 
-                || in_array($size, array("hpr", "lpr")) 
+                || in_array($size, array("hpr", "lpr", ""))
                 || $alternative !== -1
             )
         ) {
