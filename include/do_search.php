@@ -66,7 +66,7 @@ function do_search(
         $userref,$k, $DATE_FIELD_TYPES,$stemming, $usersearchfilter, $userpermissions, $usereditfilter, $userdata,
         $lang, $baseurl, $internal_share_access, $config_separators, $date_field, $noadd, $wildcard_always_applied,
         $index_contributed_by, $max_results, $config_search_for_number,
-        $category_tree_search_use_and_logic, $date_field, $FIXED_LIST_FIELD_TYPES;
+        $category_tree_search_use_and_logic, $date_field, $FIXED_LIST_FIELD_TYPES, $userderestrictfilter;
 
     if($editable_only && !$returnsql && trim((string) $k) != "" && !$internal_share_access)
         {
@@ -214,17 +214,38 @@ function do_search(
 
     $select.=$return_disk_usage ? ',r.disk_usage' : '';      // disk usage
 
-    # select group and user access rights if available, otherwise select null values so columns can still be used regardless
-    # this makes group and user specific access available in the basic search query, which can then be passed through access functions
-    # in order to eliminate many single queries.
-    if (!checkperm("v") && !$access_override)
-        {
-        $select.=",rca.access group_access,rca2.access user_access ";
+    // Get custom group and user access rights if available to generate resultant_access,
+    // otherwise select null values so columns can still be used regardless
+    // This can then be passed through  to access checking functions in order to eliminate many single queries.
+    if (!checkperm("v") && !$access_override) {
+        // Get custom access
+        $select .= ",rca.access group_access,rca2.access user_access ";
+        if (!checkperm("g") && !$internal_share_access) {
+            // Restrict all resources by default
+            if (is_int_loose($userderestrictfilter) && $userderestrictfilter > 0) {
+                // Add exemption for custom access
+                $derestrict_filter_sql = get_filter_sql($userderestrictfilter);
+                if (is_a($derestrict_filter_sql,"PreparedStatementQuery")) {
+                    $access_sql = "CASE WHEN " . $derestrict_filter_sql->sql . " THEN 0 ELSE 1 END";
+                    $select .= ", LEAST(IFNULL(rca.access, $access_sql), IFNULL(rca2.access, $access_sql)) resultant_access ";
+                    // Add node parameters to the start
+                    $sql_join->parameters = array_merge(
+                        $derestrict_filter_sql->parameters,
+                        $derestrict_filter_sql->parameters,
+                        $sql_join->parameters);
+                }
+            } else {
+                // Set access to restricted unless custom access is set
+                $select .= ", LEAST(IFNULL(rca.access, 1), IFNULL(rca2.access, 1)) resultant_access ";
+            }
+        } else {
+            // Standard resultant access for this user based on resource access and custom access
+            $select .= ", LEAST(IFNULL(rca.access, r.access), IFNULL(rca2.access, r.access)) resultant_access ";
         }
-    else
-        {
-        $select.=",null group_access, null user_access ";
-        }
+    } else {
+        $select .= ", null group_access, null user_access ";
+        $select .= ", r.access resultant_access ";
+    }
 
     # add 'joins' to select (only add fields if not returning the refs only)
     $joins=$return_refs_only===false|| $GLOBALS["include_fieldx"] === true ? get_resource_table_joins() : array();

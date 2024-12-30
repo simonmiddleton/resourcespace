@@ -1,6 +1,8 @@
 <?php
 command_line_only();
-
+$saved_permissions = $userpermissions;
+$savedderestrictfilter = $userderestrictfilter;
+$original_user_data = $userdata;
 
 // Setup test specific user
 $user_general = new_user("test_001402_general", 2);
@@ -102,10 +104,81 @@ if ($resource_order != $expected_order)
     return false;
     }
 
+ // Check collection_min_access()
+
+setup_user($user_general_data);
+// Should get 0 as minimum access by default
+$min_access = collection_min_access($collection_ref);
+if ($min_access !== RESOURCE_ACCESS_FULL) {
+    echo "collection_min_access with 'g' permission - ";
+    return false;
+}
+
+// Test restricted user access (no 'g' permission)
+$userpermissions = array_values(array_diff($userpermissions, ['g']));
+$GLOBALS["resource_access_cache"] = [];$GLOBALS["get_resource_data_cache"] = [];
+$min_access = collection_min_access($collection_ref);
+if ($min_access !== RESOURCE_ACCESS_RESTRICTED) {
+    echo "collection_min_access with no 'g' permission - ". $resource_list[0];
+    return false;
+}
+
+// Restrict access to a single resource - should get 1 as minimum access
+$userpermissions[] = "g";
+ps_query("UPDATE resource SET access=? WHERE ref=?",["i", RESOURCE_ACCESS_RESTRICTED, "i", $resource_list[0]]);
+$GLOBALS["resource_access_cache"] = [];$GLOBALS["get_resource_data_cache"] = [];
+$min_access = collection_min_access($collection_ref);
+if ($min_access !== RESOURCE_ACCESS_RESTRICTED) {
+    echo "collection_min_access with 'g' permission and restricted resource - ";
+    return false;
+}
+
+// Derestricted resource - user has no 'g' permission but filter matches- should get 1 as minimum access even if some match
+// Create new 'Derestrict' field
+$derestrictfield = create_resource_type_field("Derestrict?", 0, FIELD_TYPE_CHECK_BOX_LIST, "derestrict");
+$derestrictnode = set_node(null, $derestrictfield, "Derestrict?",'',1000);
+add_resource_nodes($resource_list[0],[$derestrictnode], false);
+
+// Create filter
+$filter_name = "Derestricted";
+$filter_condition = RS_FILTER_ALL;
+$derestrictfilter = save_filter(0,$filter_name,$filter_condition);
+$rules = [
+    [RS_FILTER_NODE_IN, [$derestrictnode]]
+];
+save_filter_rule(0, $derestrictfilter, $rules);
+$userderestrictfilter = $derestrictfilter;
+// Reset access
+ps_query("UPDATE resource SET access=? WHERE ref=?",["i", RESOURCE_ACCESS_FULL, "i", $resource_list[0]]);
+$userpermissions = array_values(array_diff($userpermissions, ['g']));
+$GLOBALS["resource_access_cache"] = [];$GLOBALS["get_resource_data_cache"] = [];
+$min_access = collection_min_access($collection_ref);
+if ($min_access !== RESOURCE_ACCESS_RESTRICTED) {
+    echo "collection_min_access with 'g' permission and one derestricted resource - ";
+    return false;
+}
+
+// Update remaining resources to match filter - should get 0 as minimum access
+add_resource_nodes($resource_list[1],[$derestrictnode], false);
+add_resource_nodes($resource_list[2],[$derestrictnode], false);
+add_resource_nodes($resource_list[3],[$derestrictnode], false);
+$GLOBALS["resource_access_cache"] = [];$GLOBALS["get_resource_data_cache"] = [];
+$min_access = collection_min_access($collection_ref);
+if ($min_access !== RESOURCE_ACCESS_FULL) {
+    echo "collection_min_access with 'g' permission and all derestricted resources - ";
+    return false;
+}
+
 // Tear down
 unset($user_general, $user_general_data);
 unset($resource_list, $resource_entry, $collection_ref, $new_order);
 unset($min_access, $max_access);
 unset($resource_order_sql, $resource_order, $expected_order);
+$GLOBALS["resource_access_cache"] = [];$GLOBALS["get_resource_data_cache"] = [];
+$userpermissions = $saved_permissions;
+$userderestrictfilter = $savedderestrictfilter;
 
+// Reset as the primary test user
+setup_user($original_user_data);
+$userdata = $original_user_data;
 return true;

@@ -3691,65 +3691,52 @@ function collection_max_access($collection)
  */
 
 function collection_min_access($collection)
-    {
-    global $k, $internal_share_access;
-    if(is_array($collection))
-        {
+{
+    global $k, $internal_share_access, $usersearchfilter;
+    if (is_array($collection)) {
         $result = $collection;
-        }
-    else
-        {
+    } else {
         $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '','',false,false);
-        if (!is_array($result))
-            {
-            $result = array();
+    }
+
+    if (!is_array($result) || empty($result)) {
+        return 2;
+    }
+
+    if (checkperm("v")) {
+        // Always has open access
+        return 0;
+    }
+
+    if (isset($result[0]["resultant_access"])) {
+        $minaccess = max(array_column($result,"resultant_access"));
+    } else  {
+        # Reset minaccess and allow get_resource_access to determine the min access for the collection
+        $minaccess = 0;
+        $usersearchfilter_original = $usersearchfilter;
+        # Performance improvement - Don't check search filters again in get_resource_access as $result contains only resources allowed by the search filter.
+        $usersearchfilter = '';
+        for ($n = 0; $n < count($result); $n++) {
+            $access = get_resource_access($result[$n]); // Use the access already calculated if available
+            if ($access > $minaccess) {
+                $minaccess = $access;
             }
         }
-    if(count($result) > 0 && isset($result[0]["access"]) && !checkperm("v"))
-        {
-        $minaccess = max(array_column($result,"access"));
-        }
-    else
-        {
-        $minaccess = 0;
-        }
-    if($k != "")
-        {
+        $usersearchfilter = $usersearchfilter_original;
+    }
+
+    if ($k != "") {
         # External access - check how this was shared. If internal share access and share is more open than the user's access return that
-        $params=ps_param_fill(array_column($result,"ref"),"i");
+        $params = ps_param_fill(array_column($result,"ref"),"i");
         $params[]="s";$params[]=$k;
 
-        if (count($result) == 0)
-            {   
-            return false; 
-            }
-
         $minextaccess = ps_value("SELECT max(access) value FROM external_access_keys WHERE resource IN (" . ps_param_insert(count($result)) . ") AND access_key = ? AND (expires IS NULL OR expires > NOW())", $params, -1);
-        if($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess))))
-            {
+        if ($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess)))) {
             return $minextaccess;
-            }
         }
-
-    # Reset minaccess and allow get_resource_access to determine the min access for the collection 
-    $minaccess = 0;
-
-    global $usersearchfilter;
-    $usersearchfilter_original = $usersearchfilter;
-    # Performance improvement - Don't check search filters again in get_resource_access as $result contains only resources allowed by the search filter.
-    $usersearchfilter = '';
-    for($n = 0; $n < count($result); $n++)
-        {
-        $access = get_resource_access($result[$n]);
-        if($access > $minaccess)
-            {
-            $minaccess = $access;
-            }
-        }
-    $usersearchfilter = $usersearchfilter_original;
-
-    return $minaccess;
     }
+    return $minaccess;
+}
 
 /**
  * Set an existing collection to be public

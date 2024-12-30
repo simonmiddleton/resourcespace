@@ -1571,26 +1571,19 @@ if (!hook("replacesearchheader")) # Always show search header now.
                     }
 
                 $ref = $result[$n]["ref"];
-            
+
                 $GLOBALS['get_resource_data_cache'][$ref] = $result[$n];
                 $url=generateURL($baseurl_short."pages/view.php",$searchparams, array("ref"=>$ref));
-                
-                if ($result[$n]["access"]==0 && !checkperm("g") && !$internal_share_access)
-                    {
-                    # Resource access is open but user does not have the 'g' permission. Set access to restricted. If they have been granted specific access this will be added next
-                    $result[$n]["access"]=1; 
-                    }           
-                    
-                // Check if user or group has been granted specific access level as set in array returned from do_search function. 
-                if(isset($result[$n]["user_access"]) && $result[$n]["user_access"]!="")
-                    {$result[$n]["access"]=$result[$n]["user_access"];}
-                elseif (isset($result[$n]["group_access"]) && $result[$n]["group_access"]!="")
-                    {$result[$n]["access"]=$result[$n]["group_access"];}
-                // Global $access needs to be set to check watermarks in search views (and may be used in hooks)        
-                $access=$result[$n]["access"];
-            
+
+                // Global $access needs to be set to check watermarks in search views (and may be used in hooks)
+                $access =
+                    $result[$n]["resultant_access"] ?? // Access should have already been calculated in search
+                        $result[$n]["user_access"] ??
+                                $result[$n]["group_access"] ??
+                                    $result[$n]["access"];
+
                 if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results
-    
+
                 hook('beforesearchviewcalls');
 
                 // Prepare for display all $data_joins fields (ie fieldX columns)

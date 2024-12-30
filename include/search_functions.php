@@ -2221,7 +2221,7 @@ function get_filter_sql($filterid)
             }
 
         # If custom access has been granted for the user or group, nullify the search filter, effectively selecting "true".
-        if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
+        if (!$access_override && $custom_access_overrides_search_filter)
             {
             $filter_ors[] = "(rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2)";
             }
@@ -3068,35 +3068,30 @@ function get_filter_rule($ruleid)
 /**
 * Save filter, will return existing filter ID if text matches already migrated
 *
-* @param int $filter            - ID of filter
+* @param int $filter            - ID of filter. Set to 0 for new filter
 * @param int $filter_name       - Name of filter
 * @param int $filter_condition  - One of RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY
 *
 * @return boolean | integer     - false, or ID of filter
 */
-function save_filter($filter,$filter_name,$filter_condition)
-    {
-    if(!in_array($filter_condition, array(RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY)))
-        {
+function save_filter(int $filter, string $filter_name, string $filter_condition)
+{
+    if (!in_array($filter_condition, array(RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY))) {
         return false;
-        }
+    }
 
-    if($filter != 0)
-        {
-        if(!is_numeric($filter))
-            {
+    if ($filter != 0) {
+        if (!is_int_loose($filter)) {
             return false;
-            }
-        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"s",$filter_condition,"i",$filter));
         }
-    else
-        {
+        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"s",$filter_condition,"i",$filter));
+    } else {
         ps_query("INSERT INTO filter (name, filter_condition) VALUES (?,?)",array("s",$filter_name,"s",$filter_condition));
         return sql_insert_id();
-        }
+    }
 
     return $filter;
-    }
+}
 
 /**
 * Save filter rule, will return existing rule ID if text matches already migrated
