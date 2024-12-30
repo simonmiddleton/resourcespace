@@ -169,6 +169,8 @@ foreach($bind_placeholders['resources'] as $resource_ref => $resource)
                         ?><span><?php echo escape($contact_sheet_field['title']); ?>:
                         <?php 
                     }
+                } else {
+                    ?><span><?php
                 }
 
                 // If field contains richtext...
