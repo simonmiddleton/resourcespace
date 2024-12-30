@@ -22,10 +22,10 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
             $image_path=get_resource_path($resource,true,"thm");
             if (file_exists($image_path)) 
                 {
-                $image=get_resource_path($resource,false,"thm");
+                $image = get_resource_path($resource,false,"thm");
                 }
             else{
-                $image=$baseurl . 'gfx/no_preview/default.png';
+                $image = $baseurl . '/gfx/no_preview/default.png';
                 }
             }
         else
