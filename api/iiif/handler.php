@@ -39,6 +39,7 @@ $iiif_options["preview_tile_scale_factors"] = $preview_tile_scale_factors ?? [1,
 $iiif_options["download_chunk_size"] = $download_chunk_size;
 $iiif_options["rights"] = $iiif_rights_statement ?? "";
 $iiif_options["media_extensions"] = $iiif_media_extensions;
+$iiif_options["only_power_of_two_sizes"] = $iiif_only_power_of_two_sizes;
 if(isset($iiif_sequence_prefix))
     {
     $iiif_options["iiif_sequence_prefix"] = $iiif_sequence_prefix;

@@ -2715,12 +2715,15 @@ $iiif_sequence_field = 1;
 // Optional rights text: This value must be a valid value - see https://iiif.io/api/presentation/3.0/#rights for more information
 // $iiif_rights_statement = "http://creativecommons.org/publicdomain/mark/1.0/";
 
-//
-// $iiif_custom_sizes
 // Set to true to support Mirador/Universal viewer that requires the ability to request arbitrary sizes by 'w,', ',h' 
 // Note that this can result in significantly more storage space being required for each resource published via IIIF
 // See https://iiif.io/api/image/2.1 for more information 
 $iiif_custom_sizes = false;
+
+// IIIF viewers using OpenSeaDragon (e.g. Mirador v4) don't support sizes that are not power of two. This will simply
+// filter invalid sizes out and rely more on custom sizes.
+// Source: https://github.com/openseadragon/openseadragon/issues/2618 (other issues referenced there for more info)
+$iiif_only_power_of_two_sizes = false;
 
 $iiif_max_width  = 1024;
 $iiif_max_height = 1024;

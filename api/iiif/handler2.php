@@ -84,16 +84,14 @@ else
             // Check resource actually exists and is active
             $fulljpgsize = strtolower($resource["file_extension"]) != "jpg" ? "hpr" : "";
             $img_path = get_resource_path($resourceid,true,$fulljpgsize,false, "jpg");
-            if(!file_exists($img_path))
+            $image_size = get_original_imagesize($resourceid, $img_path, "jpg");
+            if($image_size === false)
                 {
-                // Missing file
                 $errors[] = "No image available for this identifier";
                 iiif_error(404,$errors);
                 }
-            $image_size = get_original_imagesize($resourceid,$img_path, "jpg");
             $imageWidth = (int) $image_size[1];
             $imageHeight = (int) $image_size[2];
-            $portrait = ($imageHeight >= $imageWidth) ? true : false;
 
             // Get all available sizes
             $sizes = get_image_sizes($resourceid,true,"jpg",false);
@@ -102,22 +100,22 @@ else
                 {
                 foreach($sizes as $size)
                     {
-                    // Compute actual pixel size - use same calculations as when generating previews
-                    if ($portrait)
-                        {
-                        // portrait or square
-                        $preheight = $size['height'];
-                        $prewidth = round(($imageWidth * $preheight + $imageHeight - 1) / $imageHeight);
-                        }
-                    else
-                        {
-                        $prewidth = $size['width'];
-                        $preheight = round(($imageHeight * $prewidth + $imageWidth - 1) / $imageWidth);
-                        }
-                    if($prewidth > 0 && $preheight > 0 && $prewidth <= $iiif_max_width && $preheight <= $iiif_max_height)
-                        {
-                        $availsizes[] = array("id"=>$size['id'],"width" => $prewidth, "height" => $preheight);
-                        }
+                    if (
+                        $size['width'] > 0
+                        && $size['height'] > 0
+                        && $size['width'] <= $iiif_max_width
+                        && $size['height'] <= $iiif_max_height
+                        && (
+                            !$iiif_only_power_of_two_sizes
+                            || (is_power_of_two($size['width']) && is_power_of_two($size['height']))
+                        )
+                    ) {
+                        $availsizes[] = [
+                            'id' => $size['id'],
+                            'width' => $size['width'],
+                            'height' => $size['height'],
+                        ];
+                    }
                     }
                 }
 

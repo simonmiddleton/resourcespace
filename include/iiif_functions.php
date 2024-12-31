@@ -30,6 +30,7 @@ final class IIIFRequest {
     public int      $errorcode;
     public array    $searchresults;
     public array    $processing;
+    public bool     $only_power_of_two_sizes;
 
     private array   $response;
     private array   $request;
@@ -811,16 +812,14 @@ final class IIIFRequest {
                 $fulljpgsize = $this->largest_jpg_size($resource);
             }
             $img_path = get_resource_path($this->request["id"],true,$fulljpgsize,false, "jpg");
-            if(!file_exists($img_path))
+            $image_size = get_original_imagesize($this->request["id"],$img_path, "jpg");
+            if($image_size === false)
                 {
-                // Missing file
                 $this->errors[] = "No image available for this identifier";
                 $this->triggerError(404);
                 }
-            $image_size = get_original_imagesize($this->request["id"],$img_path, "jpg");
             $this->imagewidth = (int) $image_size[1];
             $this->imageheight = (int) $image_size[2];
-            $portrait = ($this->imageheight >= $this->imagewidth) ? true : false;
 
             // Get all available sizes
             $sizes = get_image_sizes($this->request["id"],true,"jpg",false);
@@ -829,22 +828,22 @@ final class IIIFRequest {
                 {
                 foreach($sizes as $size)
                     {
-                    // Compute actual pixel size - use same calculations as when generating previews
-                    if ($portrait)
-                        {
-                        // portrait or square
-                        $preheight = $size['height'];
-                        $prewidth = round(($this->imagewidth * $preheight + $this->imageheight - 1) / $this->imageheight);
-                        }
-                    else
-                        {
-                        $prewidth = $size['width'];
-                        $preheight = round(($this->imageheight * $prewidth + $this->imagewidth - 1) / $this->imagewidth);
-                        }
-                    if($prewidth > 0 && $preheight > 0 && $prewidth <= $this->max_width && $preheight <= $this->max_height)
-                        {
-                        $availsizes[] = array("id"=>$size['id'],"width" => $prewidth, "height" => $preheight);
-                        }
+                    if (
+                        $size['width'] > 0
+                        && $size['height'] > 0
+                        && $size['width'] <= $this->max_width
+                        && $size['height'] <= $this->max_height
+                        && (
+                            !$this->only_power_of_two_sizes
+                            || (is_power_of_two($size['width']) && is_power_of_two($size['height']))
+                        )
+                    ) {
+                        $availsizes[] = [
+                            'id' => $size['id'],
+                            'width' => $size['width'],
+                            'height' => $size['height'],
+                        ];
+                    }
                     }
                 }
 
@@ -1581,3 +1580,8 @@ function iiif_error($errorcode = 404, $errors = array())
     }
 
 // End of IIIF v2.1 functions.
+
+function is_power_of_two(int $x): bool
+{
+    return $x > 0 && (($x & ($x - 1)) === 0);
+}
