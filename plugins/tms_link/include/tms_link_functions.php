@@ -454,32 +454,36 @@ function tms_get_mediamasterid(bool $create=true,int $resource=null)
   {
   global $conn, $errormessage, $tms_link_tms_loginid,$tms_link_mediapaths_resource_reference_column ;
   // Get the latest inserted ID that we have not used
-  $tmssql = new PreparedStatementQuery(
-    "SELECT MediaMasterID FROM MediaMaster 
+  $tmssql = "SELECT MediaMasterID FROM MediaMaster 
       WHERE LoginID = ? 
         AND DisplayRendID='-1' 
-        AND PrimaryRendID='-1'",
-        ["s",$tms_link_tms_loginid]);
+        AND PrimaryRendID='-1'";
+  $tmssql_params = array($tms_link_tms_loginid);
 
   if ($tms_link_mediapaths_resource_reference_column != "" && $resource !=null)
-    {
-      $tmssql->sql .= "AND $tms_link_mediapaths_resource_reference_column = ?";
-      $tmssql->parameters = array_merge($tmssql->parameters,["i",$resource]);
-    }
-  
-  $tmsps = odbc_prepare($conn,$tmssql->sql);
-  $mediamasterresult=odbc_exec($tmsps,$tmssql->parameters);
+      {
+      if (!preg_match('/^[a-zA-Z0-9_]*$/', $tms_link_mediapaths_resource_reference_column))
+          {
+          debug('tms_link: $tms_link_mediapaths_resource_reference_column can only contain letters, numbers or underscore.');
+          return false;
+          }
+      $tmssql .= " AND $tms_link_mediapaths_resource_reference_column = ?";
+      $tmssql_params = array_merge($tmssql_params, array($resource));
+      }
+
+  $tmsps = odbc_prepare($conn, $tmssql);
+  $mediamasterresult = odbc_execute($tmsps, $tmssql_params);
 
   if(!$mediamasterresult)
     {
-    debug("tms_link: SQL = " . $tmssql); 
+    debug("tms_link: SQL = " . $tmssql . " PARAMS = " . implode(', ', $tmssql_params));
     $errormessage=odbc_errormsg();
-    debug("tms_link: ERROR = " . $errormessage);  
+    debug("tms_link: ERROR = " . $errormessage);
     return false;
     }
   $mediamasterids=array();
 
-  while($row = odbc_fetch_array($mediamasterresult ))
+  while($row = odbc_fetch_array($tmsps))
     {
     $mediamasterids[] = $row["MediaMasterID"];
     }
