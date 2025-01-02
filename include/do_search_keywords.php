@@ -651,9 +651,13 @@
                                                  WHERE rn[union_index].node IN
                                                        (SELECT ref FROM `node` WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE) "
                                                         . $union_restriction_clause->sql . ")
-                                              GROUP BY resource ";
+                                              GROUP BY resource ".
+                                              ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
                                         }
                                         $union->parameters = array_merge(["s",$keyword], $union_restriction_clause->parameters);
+                                        if($non_field_keyword_sql->sql != "") {
+                                            $union->parameters = array_merge($union->parameters,$non_field_keyword_sql->parameters);
+                                        }
                                         $sql_keyword_union[] = $union;
                                         $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
                                         $sql_keyword_union_or[] = "";
