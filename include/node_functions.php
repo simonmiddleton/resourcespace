@@ -641,16 +641,14 @@ function reorder_nodes(array $unordered_nodes)
 * @param  integer  $parent               ID of the parent of this node
 * @param  integer  $node_depth_level     When rendering for trees, we need to know how many levels deep we need to render it
 * @param  array    $parent_node_options  Array of node options to be used as parent for new records
-*
-* @return void
 */
-function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth_level = 0, array $parent_node_options = array())
+function render_new_node_record($form_action, bool $is_tree, $parent = 0, $node_depth_level = 0, array $parent_node_options = array()): void
     {
     global $baseurl_short, $lang;
-    if(!isset($is_tree))
-        {
-        trigger_error('$is_tree param for render_new_node_record() must be set to either TRUE or FALSE!');
-        }
+
+    if (!is_safe_url($form_action)) {
+        $form_action = '';
+    }
 
     if (trim($form_action)=="")
         {
@@ -957,7 +955,16 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
             {
             $parent = 0;
             }
-        render_new_node_record('/pages/admin/admin_manage_field_options.php?field=' . $resource_type_field, true, $parent, $node_depth_level, $all_nodes);
+        render_new_node_record(
+            generateURL(
+                "{$GLOBALS['baseurl']}/pages/admin/admin_manage_field_options.php",
+                ['field' => $resource_type_field]
+            ),
+            true,
+            $parent,
+            $node_depth_level,
+            $all_nodes
+        );
         }
 
     return true;
