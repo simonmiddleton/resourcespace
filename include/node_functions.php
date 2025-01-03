@@ -792,10 +792,16 @@ function get_node_order_by($resource_type_field, $is_tree = false, $parent = nul
 * @param  integer  $order_by              Value of the order in the list (e.g. 10)
 * @param  boolean  $last_node             Set to true to allow to insert new records after last node in each level
 * @param  integer  $use_count             Counter of how many resources use a particular node
-*
-* @return boolean
 */
-function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count = 0)
+function draw_tree_node_table(
+    $ref,
+    int $resource_type_field,
+    string $name,
+    $parent,
+    int $order_by,
+    bool $last_node = false,
+    int $use_count = 0
+): bool
     {
     global $baseurl_short, $lang, $FIXED_LIST_FIELD_TYPES;
 
@@ -806,6 +812,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
         {
         return false;
         }
+    $ref_escaped = escape($ref);
 
     $fieldinfo  = get_resource_type_field($resource_type_field);
     if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES))
@@ -822,7 +829,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
         {
         $toggle_node_mode = 'unex';
         $spacer_filename  = 'node_unex.gif';
-        $onClick          = sprintf('ToggleTreeNode(%s, %s);', $ref, $resource_type_field);
+        $onClick          = sprintf('ToggleTreeNode(%s, %s);', (int) $ref, $resource_type_field);
         }
 
     // Determine Node depth
@@ -854,7 +861,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
         ? $lang['userpreference_disable_option']
         : $lang['userpreference_enable_option'];
     ?>
-    <table id="node_<?php echo $ref; ?>" cellspacing="0" cellpadding="5" data-toggle-node-mode = "<?php echo $toggle_node_mode; ?>">
+    <table id="node_<?php echo $ref_escaped; ?>" cellspacing="0" cellpadding="5" data-toggle-node-mode = "<?php echo $toggle_node_mode; ?>">
         <tbody>
             <tr>
             <?php
@@ -871,32 +878,32 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                 }
                 ?>
                 <td class="backline" width="10">
-                    <img alt="" id="node_<?php echo (int) $ref; ?>_toggle_button" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/<?php echo $spacer_filename; ?>" onclick="<?php echo $onClick; ?>">
+                    <img alt="" id="node_<?php echo $ref_escaped; ?>_toggle_button" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/<?php echo $spacer_filename; ?>" onclick="<?php echo $onClick; ?>">
                 </td>
                 <td>
                     <input
                         type="text"
                         class="<?php echo escape($node_disabled_class); ?>"
                         name="option_name"
-                        form="option_<?php echo (int) $ref; ?>"
+                        form="option_<?php echo $ref_escaped; ?>"
                         value="<?php echo escape($name); ?>"
                     >
                 </td>
                 <td>
-                    <select id="node_option_<?php echo $ref; ?>_parent_select" parent_node="<?php echo (int) $parent; ?>" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
+                    <select id="node_option_<?php echo $ref_escaped; ?>_parent_select" parent_node="<?php echo (int) $parent; ?>" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref_escaped; ?>">
                         <option value="">Select parent</option>
                     </select>
                 </td>
-                <td><?php echo $use_count ?></td>
+                <td><?php echo escape($use_count); ?></td>
                 <td>
                     <div class="ListTools">
-                        <form id="option_<?php echo $ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo (int) $resource_type_field; ?>">
+                        <form id="option_<?php echo $ref_escaped; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo (int) $resource_type_field; ?>">
                             <input type="hidden" name="option_order_by" value="<?php echo $order_by; ?>">
                             <input 
                                     type="number"
                                     name="node_order_by" 
                                     value="<?php echo $node_index; ?>" 
-                                    id="option_<?php echo $ref; ?>_order_by" 
+                                    id="option_<?php echo $ref_escaped; ?>_order_by" 
                                     readonly='true'
                                     min='1'
                                 >
@@ -904,9 +911,9 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                             <td> <!-- Buttons for changing order -->
                                 <button 
                                     type="button"
-                                    id="option_<?php echo $ref; ?>_move_to"
+                                    id="option_<?php echo $ref_escaped; ?>_move_to"
                                     onclick="
-                                        EnableMoveTo(<?php echo $ref; ?>);
+                                        EnableMoveTo(<?php echo $ref_escaped; ?>);
                                         
                                         return false;
                                     ">
@@ -914,25 +921,25 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                                 </button>
                                 <button 
                                     type="submit"
-                                    id="option_<?php echo $ref; ?>_order_by_apply"
+                                    id="option_<?php echo $ref_escaped; ?>_order_by_apply"
                                     onclick="
-                                        ApplyMoveTo(<?php echo $ref; ?>);
+                                        ApplyMoveTo(<?php echo $ref_escaped; ?>);
                                         return false;
                                     "
                                     style="display: none;"
                                 >
                                 <?php echo escape($lang['action-title_apply']); ?>
                                 </button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'moveup'); return false;"><?php echo escape($lang['action-move-up']); ?></button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'movedown'); return false;"><?php echo escape($lang['action-move-down']); ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $ref_escaped; ?>, 'moveup'); return false;"><?php echo escape($lang['action-move-up']); ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $ref_escaped; ?>, 'movedown'); return false;"><?php echo escape($lang['action-move-down']); ?></button>
                             </td>
                         <td> <!-- Action buttons -->
-                            <button type="submit" onclick="SaveNode(<?php echo $ref; ?>); return false;"><?php echo escape($lang['save']); ?></button>
-                            <button id="node_<?php echo escape($ref); ?>_toggle_active_btn" type="submit" onclick="ToggleNodeActivation(<?php echo escape($ref); ?>); return false;"><?php echo escape($activation_action_label); ?></button>
+                            <button type="submit" onclick="SaveNode(<?php echo $ref_escaped; ?>); return false;"><?php echo escape($lang['save']); ?></button>
+                            <button id="node_<?php echo $ref_escaped; ?>_toggle_active_btn" type="submit" onclick="ToggleNodeActivation(<?php echo $ref_escaped; ?>); return false;"><?php echo escape($activation_action_label); ?></button>
                             <?php
                             if(!is_parent_node($ref))
                                 {?>
-                            <button type="submit" onclick="DeleteNode(<?php echo $ref; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
+                            <button type="submit" onclick="DeleteNode(<?php echo $ref_escaped; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
                                 <?php 
                                 }
                             ?>
@@ -945,7 +952,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
             </tr>
         </tbody>
     </table>
-    <div id="node_<?php echo $ref; ?>_children"></div>
+    <div id="node_<?php echo $ref_escaped; ?>_children"></div>
 
     <?php
     // Add a way of inserting new records after the last node of each level
