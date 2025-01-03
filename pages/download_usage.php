@@ -81,7 +81,7 @@ if (getval("save",'') != '' && enforcePostRequest(false))
             {
             parse_str(explode('?',$url)[1],$url_parts);
             }
-        if (strpos($url, 'download.php') !== false && count($url_parts) > 0 && $url_parts['noattatch'] = true)
+        if (strpos($url, 'download.php') !== false && count($url_parts) > 0 && $url_parts['noattach'] == true)
             {
             $redirect_url = $url;
             }
