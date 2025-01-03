@@ -2229,6 +2229,11 @@ a.BrowseRefresh{
     margin-bottom: 16px;
 }
 
+.FloatingPreviewContainer .nopreview {
+    font-size: 120px;
+    margin-bottom: 5px;
+}
+
 /* Tile navigation used on top menus */
 
 .TileNav ul {list-style:none;padding:0;margin:0;}

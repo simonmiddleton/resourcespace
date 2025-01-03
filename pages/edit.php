@@ -2507,6 +2507,7 @@ if ($ref>0 && !$multiple)
             if ($resource["file_extension"]!="") 
                 { ?>           
                 <strong>
+                <br />
                 <?php 
                 $orig_path = get_resource_path($ref,true,"",false,$resource["file_extension"]);
                 if(file_exists($orig_path))
