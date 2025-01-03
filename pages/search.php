@@ -552,6 +552,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
+        $full_search_results = do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, true, $editable_only, false, $search_access,false,true);
         $result=do_search($search,$restypes,$order_by,$archive,[max($offset-$colcount,0),$resourcestoretrieve],$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access,false,true);
         }
     }
@@ -633,14 +634,13 @@ if($k=="" || $internal_share_access)
     </script>
     <?php
     }
-
 if($use_selection_collection)
     {
     // Clean up the user selection collection so that only resources in the current search can exist in the colleciton. 
     $selection_collection = do_search('!collection'. $USER_SELECTION_COLLECTION);
     $resource_not_in_search = array_diff(
         array_column($selection_collection, 'ref'),
-        is_array($result)?array_column($result, 'ref'):[]
+        is_array($full_search_results)?array_column($full_search_results, 'ref'):[]
     );
     if (count($resource_not_in_search) > 0) {
         collection_remove_resources($USER_SELECTION_COLLECTION, $resource_not_in_search);
