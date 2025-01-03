@@ -634,11 +634,11 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
 
         if ($error=="Server shutdown in progress")
             {
-            echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";           
+            echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!-- " . escape($sql) . " --></span>";           
             }
         elseif (substr($error,0,15)=="Too many tables")
             {
-            echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";            
+            echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!-- " . escape($sql) . " --></span>";            
             }
         elseif (strpos($error,"has gone away")!==false && $reconnect)
             {
