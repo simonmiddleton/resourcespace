@@ -3653,8 +3653,8 @@ function log_keyword_usage($keywords, $search_result)
  */
 function set_search_order_by(string $search,string $order_by, string $sort): string
     {
-    if(strtolower($sort)!=='desc') {
-        $sort='asc';
+    if (!validate_sort_value($sort)) {
+        $sort = 'asc';
     }
     $order_by_date_sql_comma = ",";
     $order_by_date = "r.ref $sort";

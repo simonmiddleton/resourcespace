@@ -91,10 +91,9 @@ function do_search(
         $fetchrows=$modifyfetchrows;
         }
 
-    if(strtolower($sort)!=='desc')      // default to ascending if not a valid "desc"
-        {
-        $sort='asc';
-        }
+    if (!validate_sort_value($sort)) {
+        $sort = 'asc';
+    }
 
    // Check the requested order_by is valid for this search. Function also allows plugin hooks to change this
     $orig_order=$order_by;
