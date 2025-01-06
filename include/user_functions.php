@@ -968,6 +968,7 @@ function email_reset_link(string $email, bool $newuser=false)
         $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
     }
     $templatevars['username'] = $details["username"];
+    $email_subject = $applicationname . ": " . $lang["youraccountdetails"];
 
     if ($newuser) {
         // Fetch any welcome message for this user group
@@ -980,20 +981,20 @@ function email_reset_link(string $email, bool $newuser=false)
         $templatevars['welcome'] = i18n_get_translated($welcome) . "\n\n";
         if ($blockreset) {
             $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
-            $result = send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            $result = send_mail($email, $email_subject, $message);
         } else {
             $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
-            $result = send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            $result = send_mail($email, $email_subject, $message,"","","passwordnewemailhtml",$templatevars);
         }
     } else {
         // Existing user
         $message = $lang["username"] . ": " . $templatevars['username'];
         if ($blockreset) {
             $message .=  "\n\n" . $lang["passwordresetnotpossible"] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl;
-            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            $result = send_mail($email, $email_subject, $message);
         } else {
             $message .= "\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
-            $result = send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            $result = send_mail($email, $email_subject, $message,"","","password_reset_email_html",$templatevars);
         }
     }
 
