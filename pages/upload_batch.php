@@ -1269,11 +1269,11 @@ jQuery(document).ready(function () {
             // Add custom header for companion authentication as won't have access to the user's session cookie
             $companion_new_token = generateCSRFToken($upload_session,"companion_upload");
             echo "\nheaders: {
-                'uppy-auth-token'   : 'cs:" . $upload_session . "-ct:" . $companion_new_token . "'
+                'uppy-auth-token'   : 'cs:" . escape($upload_session) . "-ct:" . escape($companion_new_token) . "'
                 },\n";
             if(trim($upload_chunk_size) != "")
                 {
-                echo "chunkSize: " . str_ireplace(array("kb","mb","gb"),array("000","000000","000000000"),$upload_chunk_size) . ",\n";
+                echo "chunkSize: " . escape(str_ireplace(array("kb","mb","gb"),array("000","000000","000000000"),$upload_chunk_size)) . ",\n";
                 }?>
             })
         <?php
