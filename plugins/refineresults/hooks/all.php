@@ -155,7 +155,7 @@ function HookRefineresultsSearchSearchstringprocessing()
             # Slightly different behaviour when searching within external shares. There is no search bar, so the provided string is the entirity of the search.
             $s = explode(" ",$search);
             $search = $s[0] . " " . $refine;
-        } else if ((string) $search != "") {
+        } elseif ((string) $search != "") {
             $search .= ", " . $refine;
         } else {
             $search = $refine;
