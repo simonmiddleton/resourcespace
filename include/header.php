@@ -457,9 +457,9 @@ if ($pagename != "preview")
         else
             {
             if (!hook("replaceheadernav1"))
-                {
-                echo "<ul>";
-                if (
+                { ?>
+                <ul>
+                <?php if (
                     (
                         ($top_nav_upload && checkperm("c")) 
                         || 
