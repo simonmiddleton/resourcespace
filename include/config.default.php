@@ -64,6 +64,8 @@ $use_mysqli_ssl = false;
 
 // $mysqli_ssl_server_cert = '/etc/ssl/certs/server.pem';
 // $mysqli_ssl_ca_cert     = '/etc/ssl/certs/ca_chain.pem';
+// $mysqli_ssl_ca_path     = '/etc/ssl/certs';
+$mysqli_ssl_verify_server_cert = true;
 
 // Optimisation options
 /**

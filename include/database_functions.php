@@ -224,22 +224,23 @@ $db = null;
 function sql_connect() 
     {
     global $db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset, $mysql_sort_buffer_size,
-           $mysql_server_port, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert;
+           $mysql_server_port, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert, $mysqli_ssl_ca_path,
+           $mysqli_ssl_verify_server_cert;
 
     $init_connection = function(
         $mysql_server, 
         $mysql_server_port, 
         $mysql_username, 
         $mysql_password, 
-        $mysql_db) use ($mysql_charset, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert)
+        $mysql_db) use ($mysql_charset, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert, $mysqli_ssl_ca_path, $mysqli_ssl_verify_server_cert)
         {
-        $db_connection = mysqli_connect($mysql_server, $mysql_username, $mysql_password, $mysql_db, $mysql_server_port);
+        $db_connection = mysqli_init();
 
-        if($use_mysqli_ssl)
-            {
-            mysqli_ssl_set($db_connection, null, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert, null, null);
-            }
-
+        if($use_mysqli_ssl) {
+            mysqli_ssl_set($db_connection, null, $mysqli_ssl_server_cert ?? null, $mysqli_ssl_ca_cert ?? null, $mysqli_ssl_ca_path ?? null, null);
+        }
+        $connectflags = $mysqli_ssl_verify_server_cert ? 0 : MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
+        mysqli_real_connect($db_connection, $mysql_server, $mysql_username, $mysql_password, $mysql_db, $mysql_server_port, null, $connectflags);
         if(isset($mysql_charset) && is_string($mysql_charset) && trim($mysql_charset) !== "")
             {
             mysqli_set_charset($db_connection, $mysql_charset);
