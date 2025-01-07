@@ -480,12 +480,13 @@ function email_collection_request($ref,$details,$external_email): bool
  * @return boolean
  */
 function managed_collection_request($ref,$details,$ref_is_resource=false)
-    {   
+    {
+    debug_function_call(__FUNCTION__, func_get_args());
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,
         $watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,
         $resource_type_request_emails_and_email_notify, $manage_request_admin,$resource_request_reason_required,
         $admin_resource_access_notifications, $notify_manage_request_admin,
-        $assigned_to_user, $admin_resource_access_notifications;
+        $assigned_to_user;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
 
@@ -593,7 +594,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             {
             if (isset($required) && in_array($custom[$n],$required) && getval("custom" . $n,"")=="")
                 {
-                return false; # Required field was not set.
+                debug('Required field was not set.');
+                return false;
                 }            
             $message->append_text("<br />\n");
             $message->append_text("i18n_" . $custom[$n]);
@@ -635,6 +637,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     // Regular Processing: autoassign using the resource type - one resource was requested and no plugin is preventing this from running
     if($ref_is_resource && !is_null($manage_request_admin) && is_array($manage_request_admin) && !empty($manage_request_admin))
         {
+        debug('Auto-assign (one resource) using the resource type (config: $manage_request_admin)');
         $admin_notify_user = 0;
         $request_resource_type = $resourcedata["resource_type"];
         if(array_key_exists($request_resource_type, $manage_request_admin)) 
@@ -661,6 +664,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     // Regular Processing: autoassign using the resource type - collection request and no plugin is preventing this from running
     if(isset($collectiondata) && !is_null($manage_request_admin) && is_array($manage_request_admin) && !empty($manage_request_admin))
         {
+        debug('Auto-assign (collection request) using the resource type (config: $manage_request_admin)');
         $all_r_types = get_resource_types();
 
         $resources = get_collection_resources($collectiondata['ref']);
@@ -780,6 +784,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
     if($send_default_notifications)
         {
+        debug('Send default notifications');
         # Automatically notify the admin who was assigned the request if we set this earlier:
         $templatevars["request_id"]=$request;
         $templatevars["requesturl"]=$baseurl."/?q=".$request;
@@ -806,6 +811,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         # Legacy: Check if alternative request email notification address is set, only valid if collection contains resources of the same type
         if(isset($resource_type_request_emails) && !$can_use_owner_field)
             {
+            debug('[legacy] Check if alternative request email notification address is set (config: $resource_type_request_emails)');
             // Legacy support for $resource_type_request_emails
             $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection=?", array("i",$ref));
             $requestrestypes=array_unique($requestrestypes);
@@ -825,6 +831,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
         if(!$notification_sent && $can_use_owner_field)
             {
+            debug('Send notification to resource owner');
             $admin_notify_users = array_keys(get_notification_users_by_owner_field(get_notification_users("RESOURCE_ACCESS"), $colresources));
             $admin_notify_message->set_subject($applicationname . ": " );
             $admin_notify_message->append_subject("lang_requestcollection");
@@ -836,6 +843,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
         if(!$notification_sent)
             {
+            debug('Send notifications to admins that have no action appearing');
             $default_notify_users = get_notification_users("RESOURCE_ACCESS"); 
             // Exclude any users who will already have an action appearing
             $action_users = get_config_option_users("actions_resource_requests",true);
@@ -845,7 +853,16 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $admin_notify_message->append_subject("lang_requestcollection");
             $admin_notify_message->append_subject(" - " . $ref);
             $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
-            $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]];
+            $admin_notify_message->user_preference = [
+                "user_pref_resource_access_notifications" => [
+                    "requiredvalue" => true,
+                    "default" => $admin_resource_access_notifications,
+                ],
+                "actions_resource_requests" => [
+                    "requiredvalue" => false,
+                    "default" => true,
+                ],
+            ];
             send_user_notification($admin_notify_users,$admin_notify_message);
             }
         }

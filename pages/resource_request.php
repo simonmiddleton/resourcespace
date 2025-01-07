@@ -104,6 +104,7 @@ foreach($resource_field_data as $resource_field)
 
 if (getval("save","")!="" && enforcePostRequest(false))
     {
+    debug('Starting the (submit) process for resource request.');
     $antispamcode = getval('antispamcode', '');
     $antispam = getval('antispam', '');
     $antispamtime = getval('antispamtime', 0);
@@ -117,11 +118,13 @@ if (getval("save","")!="" && enforcePostRequest(false))
     // Check the anti-spam code is correct
     elseif($use_antispam && !verify_antispam($antispamcode, $antispam, $antispamtime))
         {
+        debug('[WARN] Incorrect anti-spam code');
         $result = false;
         $error = $lang["requiredantispam"];
         }
     elseif (!$internal_share_access || $user_is_anon || $userrequestmode==0)
         {
+        debug('Received a non-managed resource request (mode).');
         if ((!$internal_share_access || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
             {
             $result=false; # Required fields not completed.
@@ -136,6 +139,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
     else
         {
         # Request mode 1 : "Managed" mode via Manage Requests / Orders
+        debug('Received a managed resource request (mode).');
         $tmp = hook("manresourcerequest"); if($tmp): $result = $tmp; else:
         $result=managed_collection_request($ref,getval("request",""),true);
         endif;
