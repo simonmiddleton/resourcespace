@@ -73,7 +73,7 @@ if (getval("send","")!="" && enforcePostRequest(false))
         {
         get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message);         
         if (!$send_message) {
-            $continue;
+            continue;
         }        
         get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
         if($send_email && $notify_user["email"]!="")
