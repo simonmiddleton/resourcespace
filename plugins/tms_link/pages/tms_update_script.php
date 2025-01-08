@@ -147,7 +147,7 @@ foreach(tms_link_get_modules_mappings() as $module)
 
         for($t = $tmspointer; $t < ($tmspointer + $tms_link_query_chunk_size) && (($tmspointer + $t) < $tms_link_test_count) && $t < $current_tms_count; $t++)
             {
-            if(trim($tms_resources[$t]["identifier"]) != "")
+            if(is_int_loose($tms_resources[$t]["identifier"]) && $tms_resources[$t]["identifier"] > 0)
                 {
                 $tms_query_ids[] = $tms_resources[$t]["identifier"];
                 }

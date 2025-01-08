@@ -114,14 +114,17 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
             continue;
             }
 
-        if(is_array($tms_object_id))
-            {
-            $conditionsql = " WHERE {$module['tms_uid_field']} IN ('" . implode("','", $tms_object_id) . "')";
-            }    
-        else
-            {
-            $conditionsql = " WHERE {$module['tms_uid_field']} ='" . $tms_object_id . "'";
+        if(is_array($tms_object_id)) {
+            $tms_object_id = array_filter($tms_object_id,fn($v) => is_int_loose($v) && $v > 0);
+            if (empty($tms_object_id)) {
+                continue;
             }
+            $conditionsql = " WHERE {$module['tms_uid_field']} IN ('" . implode("','", $tms_object_id) . "')";
+        } else if (is_int_loose($tms_object_id) && $tms_object_id > 0) {
+            $conditionsql = " WHERE {$module['tms_uid_field']} ='" . $tms_object_id . "'";
+        } else {
+                continue;
+        }
 
         $tmscountsql = "SELECT Count(*) FROM {$module['module_name']} {$conditionsql};";
         debug('tms_link: tms count query to odbc: ' . $tmscountsql);
