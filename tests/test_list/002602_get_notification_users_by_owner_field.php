@@ -15,10 +15,12 @@ if($owner_rtf === false)
     }
 
 // Create Options for the owner_field
-$owner_A = set_node(null, $owner_rtf, 'Test 2602: Owner - Admins', null, 10);
-$owner_SA = set_node(null, $owner_rtf, 'Test 2602: Owner - Super Admins', null, 20);
-$owner_Others = set_node(null, $owner_rtf, 'Test 2602: Owner - Others', null, 30);
-foreach([$owner_A, $owner_SA, $owner_Others] as $node_ref)
+$owner_field_nodes_pool = [
+    'A' => set_node(null, $owner_rtf, 'Test 2602: Owner - Admins', null, 10),
+    'SA' => set_node(null, $owner_rtf, 'Test 2602: Owner - Super Admins', null, 20),
+    'Others' => set_node(null, $owner_rtf, 'Test 2602: Owner - Others', null, 30),
+];
+foreach($owner_field_nodes_pool as $node_ref)
     {
     if($node_ref === false)
         {
@@ -31,9 +33,9 @@ foreach([$owner_A, $owner_SA, $owner_Others] as $node_ref)
 // [1] => Administrators
 // [3] => Super Admin
 $GLOBALS['owner_field_mappings'] = [
-    $owner_A => 1,
-    $owner_SA => 3,
-    // $owner_Others ===> testing a missing mapping. (shown here just for clarity)
+    $owner_field_nodes_pool['A'] => 1,
+    $owner_field_nodes_pool['SA'] => 3,
+    // $owner_field_nodes_pool['Others'] ===> testing a missing mapping. (shown here just for clarity)
 ];
 
 // Create users
@@ -66,21 +68,22 @@ foreach($users_data as $user_details)
 
 
 // Create a pool of resources
+$resource_pool = [];
 $vars_suffixes = ['A', 'SA', 'Others', 'none1', 'none2'];
 foreach($vars_suffixes as $suffix)
     {
-    $var_name = "resource_owned_by_{$suffix}";
-    $node_var_name = "owner_{$suffix}";
-
-    // Create resource
-    $$var_name = create_resource(1, 0);
+    $name = "resource_owned_by_{$suffix}";
+    $resource_pool[$name] = create_resource(1, 0);
 
     // Quick update of owner field to something valid (when set)
     if(
         // failed to create resource
-        $$var_name === false
+        $resource_pool[$name] === false
         // failed to associate owner field value
-        || (isset($$node_var_name) && !add_resource_nodes($$var_name, [$$node_var_name], false, false))
+        || (
+            isset($owner_field_nodes_pool[$suffix])
+            && !add_resource_nodes($resource_pool[$name], [$owner_field_nodes_pool[$suffix]], false, false)
+        )
     )
         {
         echo 'Setting up the test: resources - ';
@@ -107,7 +110,7 @@ $test_2602_ucs = [
         'name' => 'Notify users responsible for resources managed by A',
         'input' => [
             'users' => $all_test_users,
-            'resources' => [$resource_owned_by_A, $resource_owned_by_none1],
+            'resources' => [$resource_pool['resource_owned_by_A'], $resource_pool['resource_owned_by_none1']],
         ],
         'expected' => $build_expected_list_of_users(['test_2602_A']),
     ],
@@ -115,7 +118,11 @@ $test_2602_ucs = [
         'name' => 'Notify users responsible for resources managed by A or SA',
         'input' => [
             'users' => $all_test_users,
-            'resources' => [$resource_owned_by_A, $resource_owned_by_SA, $resource_owned_by_none1],
+            'resources' => [
+                $resource_pool['resource_owned_by_A'],
+                $resource_pool['resource_owned_by_SA'],
+                $resource_pool['resource_owned_by_none1'],
+            ],
         ],
         'expected' => $build_expected_list_of_users(['test_2602_A', 'test_2602_SA']),
     ],
@@ -123,7 +130,7 @@ $test_2602_ucs = [
         'name' => 'Missing mapping for owner field option. (misconfiguration)',
         'input' => [
             'users' => $all_test_users,
-            'resources' => [$resource_owned_by_Others, $resource_owned_by_none1],
+            'resources' => [$resource_pool['resource_owned_by_Others'], $resource_pool['resource_owned_by_none1']],
         ],
         'expected' => [],
     ],
@@ -131,7 +138,7 @@ $test_2602_ucs = [
         'name' => "Unmanaged resources shouldn't filter out any users",
         'input' => [
             'users' => $all_test_users,
-            'resources' => [$resource_owned_by_none1, $resource_owned_by_none2],
+            'resources' => [$resource_pool['resource_owned_by_none1'], $resource_pool['resource_owned_by_none2']],
         ],
         'expected' => $build_expected_list_of_users(array_column($all_test_users, 'username')),
     ],
@@ -147,7 +154,11 @@ $test_2602_ucs = [
         'name' => 'No users to filter',
         'input' => [
             'users' => [],
-            'resources' => [$resource_owned_by_A, $resource_owned_by_SA, $resource_owned_by_Others],
+            'resources' => [
+                $resource_pool['resource_owned_by_A'],
+                $resource_pool['resource_owned_by_SA'],
+                $resource_pool['resource_owned_by_Others'],
+            ],
         ],
         'expected' => [],
     ],
@@ -156,7 +167,11 @@ $test_2602_ucs = [
         'config' => ['owner_field' => 0],
         'input' => [
             'users' => $all_test_users,
-            'resources' => [$resource_owned_by_A, $resource_owned_by_SA, $resource_owned_by_Others],
+            'resources' => [
+                $resource_pool['resource_owned_by_A'],
+                $resource_pool['resource_owned_by_SA'],
+                $resource_pool['resource_owned_by_Others'],
+            ],
         ],
         'expected' => $build_expected_list_of_users(array_column($all_test_users, 'username')),
     ],
@@ -175,7 +190,7 @@ foreach($test_2602_ucs as $uc)
     }
 
 // Tear down
-unset($owner_rtf, $owner_A, $owner_SA, $owner_Others, $users_data, $users_list, $user_2602, $vars_suffixes, $all_test_users);
+unset($owner_rtf, $owner_field_nodes_pool, $users_data, $users_list, $user_2602, $resource_pool, $vars_suffixes, $all_test_users);
 unset($test_2602_ucs, $build_expected_list_of_users);
 $GLOBALS['owner_field'] = 0;
 $GLOBALS['owner_field_mappings'] = [];
