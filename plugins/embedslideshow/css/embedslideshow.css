@@ -83,6 +83,8 @@ ul.embedslideshow_controls_custom
 .embedslideshow_preview img
 	{
 	vertical-align: top;
+	width: 100%;
+	object-fit: contain;
 	}
 .embedslideshow_controls_standard .fas
 	{

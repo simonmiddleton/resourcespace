@@ -42,7 +42,7 @@ ob_start();
         <div class="embedslideshow_player">
             <div class="embedslideshow_preview"
                 id="embedslideshow_preview"
-                style="position: relative;width:<?php echo (int) $player_width?>px;height:<?php echo (int) $player_height?>px;">
+                style="position: relative; height:<?php echo (int) $player_height?>px;">
                 <script type="text/javascript">
                     var embedslideshow_page=1;
                     var embedslideshow_x_offsets =  new Array();
