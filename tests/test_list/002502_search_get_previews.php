@@ -99,11 +99,12 @@ if(!isset($results["total"]) ||
     return false;    
     }
 
-// $fetchrows = 'foo,5,' - should return 0 rows
+// $fetchrows = 'foo,5,' should return blank suggestion
 $results = search_get_previews('text2502','','ref',0,'foo,5,');
-if($results != "text2502")
+if($results !== "")
     {
     echo "ERROR - SUBTEST G\n";
+    $debug_log=false;
     return false;    
     }
 

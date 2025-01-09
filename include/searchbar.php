@@ -32,6 +32,7 @@ else
         $quicksearch = $search;
         }
     }
+$origsearch = $quicksearch;
 if($basic_simple_search)
     {
     $restypes    = '';
@@ -71,6 +72,7 @@ for ($n=0;$n<count($fields);$n++)
             
 # Process all keywords, putting set fieldname/value pairs into an associative array ready for setting later.
 # Also build a quicksearch string.
+
 $quicksearch    = refine_searchstring($quicksearch);
 $keywords       = split_keywords($quicksearch,false,false,false,false,true);
 $set_fields     = array();
@@ -250,7 +252,7 @@ var categoryTreeChecksArray = [];
     if(!hook("replacesearchbox"))
         {
         ?>
-        <input id="ssearchbox" name="search" type="text" class="SearchWidth" value="<?php echo escape(stripslashes(@$quicksearch))?>" placeholder="<?php echo escape($lang["searchbutton"]); ?>" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
+        <input id="ssearchbox" name="search" type="text" class="SearchWidth" value="<?php echo escape(stripslashes($origsearch))?>" placeholder="<?php echo escape($lang["searchbutton"]); ?>" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
         <input id="ssearchhiddenfields" name="ssearchhiddenfields" type="hidden" value="<?php echo escape($ssearchhiddenfields); ?>">
         <button class="fas fa-search search-icon" type="submit" alt="<?php echo escape($lang['searchbutton']); ?>" title="<?php echo escape($lang['searchbutton']); ?>"></button>
         <script>

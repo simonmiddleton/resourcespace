@@ -572,6 +572,13 @@ function refine_searchstring($search)
 
     $keywords=split_keywords($search, false, false, false, false, true);
 
+    if (preg_match('/^[^\\s]+\\*/',$search)) {
+        // No spaces and a wildcard search - don't separate
+        $keywords = [$search];
+    } else {
+        $keywords=split_keywords($search, false, false, false, false, true);
+    }
+
     $orfields=get_OR_fields(); // leave checkbox type fields alone
     $dynamic_keyword_fields=ps_array("SELECT name value FROM resource_type_field where type=9", array(), "schema");
 
@@ -3241,114 +3248,118 @@ function update_search_from_request($search)
           $value = trim($value);
           }
 
-        if ($value!="" && substr($key,0,6)=="field_")
-            {
-            if ((string_ends_with($key,"-y")!==false)||(string_ends_with($key,"-m")!==false)||(string_ends_with($key,"_day")!==false))
+          if ($value != "") {
+            if (substr($key,0,6)=="field_")
                 {
-                # Date field
-
-                # Construct the date from the supplied dropdown values
-                $key_part=substr($key,0, strrpos($key, "-"));
-                $field=substr($key_part,6);
-                $value="";
-                if (strpos($search, $field.":")===false)
+                if ((string_ends_with($key,"-y")!==false)||(string_ends_with($key,"-m")!==false)||(string_ends_with($key,"_day")!==false))
                     {
-                    $key_year=$key_part."-y";
-                    $value_year=getval($key_year,"");
+                    # Date field
 
-                    if ($value_year != "") {
-                        $value = $value_year;
-                    } else {
-                        $value = "nnnn";
+                    # Construct the date from the supplied dropdown values
+                    $key_part=substr($key,0, strrpos($key, "-"));
+                    $field=substr($key_part,6);
+                    $value="";
+                    if (strpos($search, $field.":")===false)
+                        {
+                        $key_year=$key_part."-y";
+                        $value_year=getval($key_year,"");
+
+                        if ($value_year != "") {
+                            $value = $value_year;
+                        } else {
+                            $value = "nnnn";
+                        }
+
+                        $key_month=$key_part."-m";
+                        $value_month=getval($key_month,"");
+
+                        if ($value_month == "") {
+                            $value_month .= "nn";
+                        }
+
+                        $key_day=$key_part."-d";
+                        $value_day=getval($key_day,"");
+
+                        if ($value_day!="") {
+                            $value .= "|" . $value_month . "|" . $value_day;
+                        } elseif ($value_month!="nn") {
+                            $value .= "|" . $value_month;
+                        }
+
+                        $search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . $field . ":" . $value;
+                        }
+
                     }
-
-                    $key_month=$key_part."-m";
-                    $value_month=getval($key_month,"");
-
-                    if ($value_month == "") {
-                        $value_month .= "nn";
-                    }
-
-                    $key_day=$key_part."-d";
-                    $value_day=getval($key_day,"");
-
-                    if ($value_day!="") {
-                        $value .= "|" . $value_month . "|" . $value_day;
-                    } elseif ($value_month!="nn") {
-                        $value .= "|" . $value_month;
-                    }
-
-                    $search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . $field . ":" . $value;
-                    }
-
-                }
-            elseif (strpos($key,"_drop_")!==false)
-                {
-                # Dropdown field
-                # Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
-                $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,11) . ":" . $value;
-                }
-            elseif (strpos($key,"_cat_")!==false)
-                {
-                # Category tree field
-                # Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
-                $value=str_replace(",",";",$value);
-                if (substr($value,0,1)==";") {$value=substr($value,1);}
-
-                $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,10) . ":" . $value;
-                }
-            else
-                {
-                # Standard field
-                if(isset($resource_field_verbatim_keyword_regex[substr($key,6)])
-                    && preg_match($resource_field_verbatim_keyword_regex[substr($key,6)],str_replace('*', '', $value)))
+                elseif (strpos($key,"_drop_")!==false)
                     {
-                    $values =  explode(' ', mb_strtolower(trim_spaces(str_replace($config_separators, ' ', $value)), 'UTF-8'));
+                    # Dropdown field
+                    # Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
+                    $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,11) . ":" . $value;
+                    }
+                elseif (strpos($key,"_cat_")!==false)
+                    {
+                    # Category tree field
+                    # Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
+                    $value=str_replace(",",";",$value);
+                    if (substr($value,0,1)==";") {$value=substr($value,1);}
+
+                    $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,10) . ":" . $value;
                     }
                 else
                     {
-                    $values=[$value];
-                    }
-
-                foreach ($values as $value)
-                    {
                     # Standard field
-                    $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,6) . ":" . $value;
+                    if(isset($resource_field_verbatim_keyword_regex[substr($key,6)])
+                        && preg_match($resource_field_verbatim_keyword_regex[substr($key,6)],str_replace('*', '', $value)))
+                        {
+                        $values =  explode(' ', mb_strtolower(trim_spaces(str_replace($config_separators, ' ', $value)), 'UTF-8'));
+                        }
+                    else
+                        {
+                        $values=[$value];
+                        }
+
+                    foreach ($values as $value)
+                        {
+                        # Standard field
+                        $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,6) . ":" . $value;
+                        }
                     }
                 }
-            }
-        // Nodes can be searched directly when displayed on simple search bar
-        // Note: intially they come grouped by field as we need to know whether if
-        // there is a OR case involved (ie. @@101@@102)
-        elseif('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
-            {
-            $node_ref = '';
-
-            foreach($value as $searched_field_nodes)
+            // Nodes can be searched directly when displayed on simple search bar
+            // Note: intially they come grouped by field as we need to know whether if
+            // there is a OR case involved (ie. @@101@@102)
+            elseif('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
                 {
-                // Fields that are displayed as a dropdown will only pass one node ID
-                if(!is_array($searched_field_nodes) && '' == $searched_field_nodes)
-                    {
-                    continue;
-                    }
-                elseif(!is_array($searched_field_nodes))
-                    {
-                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
+                $node_ref = '';
 
-                    continue;
-                    }
-
-                // For fields that can pass multiple node IDs at a time
-                $node_ref .= ', ';
-
-                foreach($searched_field_nodes as $searched_node_ref)
+                foreach($value as $searched_field_nodes)
                     {
-                    $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
+                    // Fields that are displayed as a dropdown will only pass one node ID
+                    if(!is_array($searched_field_nodes) && '' == $searched_field_nodes)
+                        {
+                        continue;
+                        }
+                    elseif(!is_array($searched_field_nodes))
+                        {
+                        $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
+
+                        continue;
+                        }
+
+                    // For fields that can pass multiple node IDs at a time
+                    $node_ref .= ', ';
+
+                    foreach($searched_field_nodes as $searched_node_ref)
+                        {
+                        $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
+                        }
                     }
+                if ($node_ref !== '') {
+                    $search .= ", " . $node_ref;
                 }
-            $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
-            }
+                }
         }
+    }
 
     $year=getval("basicyear","");
     if ($year!="")

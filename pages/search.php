@@ -66,10 +66,18 @@ if(false !== strpos($search, TAG_EDITOR_DELIMITER))
 
 hook("moresearchcriteria");
 
-// When searching for specific field options we convert search into nodeID search format (@@nodeID)
-// This is done because if we also have the field displayed and we search for country:France this needs to 
-// convert to @@74 in order for the field to have this option selected
-$keywords = split_keywords($search, false, false, false, false, true);
+if (
+    preg_match('/^[^\\s]+\\*/',$search)
+    || preg_match('/^\\*[^\\s]+$/',$search)
+) {
+    // No spaces in string and wildcard search - only search for wildcard with whole string
+    $keywords = [$search];
+} else {
+    // When searching for specific field options we convert search into nodeID search format (@@nodeID)
+    // This is done because if we also have the field displayed and we search for country:France this needs to 
+    // convert to @@74 in order for the field to have this option selected
+    $keywords = split_keywords($search, false, false, false, false, true);
+}
 foreach($keywords as $keyword)
     {
     if('' == trim($keyword))
