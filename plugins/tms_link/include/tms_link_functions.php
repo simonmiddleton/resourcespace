@@ -124,7 +124,7 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
         } else if (is_positive_int_loose($tms_object_id)) {
             $conditionsql = " WHERE {$module['tms_uid_field']} ='" . $tms_object_id . "'";
         } else {
-            
+            debug('tms_link: Invalid tms object id(s): ' . json_encode($tms_object_id) . ' for resource: ' . $resource);
             continue;
         }
 
