@@ -190,13 +190,14 @@ function touch_category_tree_level($path_parts)
 
 function ProcessFolder($folder)
     {
-    global $lang, $syncdir, $nogo, $staticsync_max_files, $count, $done, $lastsync, $unoconv_extensions, 
-           $staticsync_autotheme, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $staticsync_mapped_category_tree, 
+    global $lang, $syncdir, $nogo, $staticsync_max_files, $count, $done, $lastsync, $unoconv_extensions,
+           $staticsync_autotheme, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $staticsync_mapped_category_tree,
            $staticsync_title_includes_path, $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix,
            $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
-           $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
+           $staticsync_extension_mapping_append_values_fields, $staticsync_extension_mapping_append_separator,
+           $view_title_field, $filename_field, $FIXED_LIST_FIELD_TYPES,
            $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents,
            $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age, $userref,
            $resource_type_extension_mapping_default, $resource_type_extension_mapping, $restypes;
@@ -655,7 +656,7 @@ function ProcessFolder($folder)
                                                         ]))
                                                     {
                                                     $existing_value  = get_data_by_field($r,$field);
-                                                    $values_to_add[$field] = $existing_value . " " . $value;
+                                                    $values_to_add[$field] = $existing_value . ($staticsync_extension_mapping_append_separator ?? " ") . $value;
                                                     }
                                                 }
                                             }

@@ -1748,6 +1748,8 @@ $staticsync_autotheme=true;
 $staticsync_extension_mapping_append_values=true;
 // Uncomment and set the next line to specify specific fields for $staticsync_extension_mapping_append_values
 //$staticsync_extension_mapping_append_values_fields=array();
+// Uncoment and set the next line to specify the separator when appending values, if not set a space will be used
+//$staticsync_extension_mapping_append_separator = ', ';
 // Should the generated resource title include the sync folder path?
 // This will not be used if $view_title_field is set to th same field as $filename_field.
 $staticsync_title_includes_path=true;
