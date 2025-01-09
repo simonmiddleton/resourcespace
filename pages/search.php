@@ -1438,7 +1438,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         $df_count = count($df);
         for ($x=0;$x<$df_count;$x++) {
             if ($is_special_search_duplicates) {
-                ?><th><?php echo escape($df[$x]['title']);?></th><?php
+                ?><th><?php echo escape($df[$x]['title']); ?></th><?php
             } else if ($order_by=="field".$df[$x]['ref']) {
                 ?>
                 <th class="Selected">
@@ -1470,7 +1470,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         hook("searchbeforeratingfieldtitlecolumn");
         if ($id_column) {
             if ($is_special_search_duplicates) {
-                ?><th><?php echo escape($lang['id']);?></th><?php
+                ?><th><?php echo escape($lang['id']); ?></th><?php
             } else if ($order_by=="resourceid") {?>
                 <th class="Selected">
                     <a
@@ -1497,7 +1497,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
 
         if ($resource_type_column) {
             if ($is_special_search_duplicates) {
-                ?><th><?php echo escape($lang['type']);?></th><?php
+                ?><th><?php echo escape($lang['type']); ?></th><?php
             } else if ($order_by == "resourcetype") {?>
                 <th class="Selected">
                     <a
@@ -1523,7 +1523,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         }
 
         if ($is_special_search_duplicates) {
-            ?><th><?php echo escape($lang['list_file_extension']);?></th><?php
+            ?><th><?php echo escape($lang['list_file_extension']); ?></th><?php
         } else if ($order_by == "extension") {?>
             <th class="Selected">
                 <a
@@ -1549,7 +1549,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
 
         if ($list_view_status_column) {
             if ($is_special_search_duplicates) {
-                ?><th><?php echo escape($lang['status']);?></th><?php
+                ?><th><?php echo escape($lang['status']); ?></th><?php
             } else if ($order_by == "status") {?>
                 <th class="Selected">
                     <a
@@ -1576,7 +1576,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
 
         if ($date_column) {
             if ($is_special_search_duplicates) {
-                ?><th><?php echo escape($lang['date']);?></th><?php
+                ?><th><?php echo escape($lang['date']); ?></th><?php
             } else if ($order_by == "date") {?>
                 <th class="Selected">
                     <a
