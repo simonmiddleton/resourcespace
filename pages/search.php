@@ -1434,20 +1434,174 @@ if (!hook("replacesearchheader")) # Always show search header now.
         <th><?php echo escape($lang["imagesize-thumbnail"]);?></th>
         <?php } # end hook listcheckboxesheader 
 
+        $is_special_search_duplicates = mb_substr($search, 0, 11) == '!duplicates';
         $df_count = count($df);
-        for ($x=0;$x<$df_count;$x++)
-            {?>
-            <?php if ($order_by=="field".$df[$x]['ref']) {?><th class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"field" . $df[$x]['ref'],"sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($df[$x]['title'])?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></th><?php } else { ?><th><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"field" . $df[$x]['ref'])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($df[$x]['title'])?></a></th><?php } ?>
-            <?php }
+        for ($x=0;$x<$df_count;$x++) {
+            if ($is_special_search_duplicates) {
+                ?><th><?php echo escape($df[$x]['title']);?></th><?php
+            } else if ($order_by=="field".$df[$x]['ref']) {
+                ?>
+                <th class="Selected">
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short."pages/search.php",
+                            $searchparams,
+                            array("order_by"=>"field" . $df[$x]['ref'], "sort"=>$revsort)
+                        ); ?>"
+                        onclick="return CentralSpaceLoad(this);"><?php echo escape($df[$x]['title']); ?></a>
+                    <div class="<?php echo urlencode($sort); ?>">&nbsp;</div>
+                </th>
+                <?php
+            } else {
+                ?>
+                <th>
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short."pages/search.php",
+                            $searchparams,
+                            array("order_by"=>"field" . $df[$x]['ref'])
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this);"><?php echo escape($df[$x]['title']); ?></a>
+                </th>
+                <?php
+            }
+        }
         
         hook("searchbeforeratingfieldtitlecolumn");
-        if ($id_column){?><?php if ($order_by=="resourceid"){?><th class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourceid","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["id"])?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></th><?php } else { ?><th><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourceid")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["id"])?></a></th><?php } ?><?php } ?>
-        <?php if ($resource_type_column){?><?php if ($order_by=="resourcetype"){?><th class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourcetype","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["type"])?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></th><?php } else { ?><th><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourcetype","sort"=>"ASC")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["type"])?></a></th><?php } ?><?php } ?>
-        <?php if ($order_by=="extension"){?><th class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"extension","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["list_file_extension"])?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></th><?php } else { ?><th><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"extension","sort"=>"ASC")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["list_file_extension"])?></a></th><?php } ?>
-        <?php if ($list_view_status_column){?><?php if ($order_by=="status"){?><th class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"status","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["status"])?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></th><?php } else { ?><th><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"status")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["status"])?></a></th><?php } ?><?php } ?>
-        <?php if ($date_column){?><?php if ($order_by=="date"){?><th class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"date","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["date"])?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></th><?php } else { ?><th><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"date")); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["date"])?></a></th><?php } ?><?php } ?>
-        <?php hook("addlistviewtitlecolumn");?>
-        <th><div class="ListTools"><?php echo escape($lang["tools"])?></div></th>
+        if ($id_column) {
+            if ($is_special_search_duplicates) {
+                ?><th><?php echo escape($lang['id']);?></th><?php
+            } else if ($order_by=="resourceid") {?>
+                <th class="Selected">
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short."pages/search.php",
+                            $searchparams,
+                            array("order_by"=>"resourceid","sort"=>$revsort)
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["id"]); ?></a>
+                    <div class="<?php echo urlencode($sort); ?>">&nbsp;</div>
+                </th><?php
+            } else {?>
+                <th>
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short."pages/search.php",
+                            $searchparams,
+                            array("order_by"=>"resourceid")
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["id"]); ?></a>
+                </th><?php
+            }
+        }
+
+        if ($resource_type_column) {
+            if ($is_special_search_duplicates) {
+                ?><th><?php echo escape($lang['type']);?></th><?php
+            } else if ($order_by == "resourcetype") {?>
+                <th class="Selected">
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short . "pages/search.php",
+                            $searchparams,
+                            array("order_by" => "resourcetype","sort" => $revsort)
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["type"]); ?></a>
+                    <div class="<?php echo urlencode($sort); ?>">&nbsp;</div>
+                </th><?php
+            } else {?>
+                <th>
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short . "pages/search.php",
+                            $searchparams,
+                            array("order_by" => "resourcetype","sort" => "ASC")
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["type"])?></a>
+                </th><?php
+            }
+        }
+
+        if ($is_special_search_duplicates) {
+            ?><th><?php echo escape($lang['list_file_extension']);?></th><?php
+        } else if ($order_by == "extension") {?>
+            <th class="Selected">
+                <a
+                    href="<?php echo generateURL(
+                        $baseurl_short . "pages/search.php",
+                        $searchparams,
+                        array("order_by" => "extension","sort" => $revsort)
+                    ); ?>"
+                    onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["list_file_extension"]); ?></a>
+                <div class="<?php echo urlencode($sort); ?>">&nbsp;</div>
+            </th><?php
+        } else {?>
+            <th>
+                <a
+                    href="<?php echo generateURL(
+                        $baseurl_short . "pages/search.php",
+                        $searchparams,
+                        array("order_by" => "extension","sort" => "ASC")
+                    ); ?>"
+                    onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["list_file_extension"]); ?></a>
+            </th><?php
+        }
+
+        if ($list_view_status_column) {
+            if ($is_special_search_duplicates) {
+                ?><th><?php echo escape($lang['status']);?></th><?php
+            } else if ($order_by == "status") {?>
+                <th class="Selected">
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short . "pages/search.php",
+                            $searchparams,
+                            array("order_by" => "status","sort" => $revsort)
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["status"]); ?></a>
+                    <div class="<?php echo urlencode($sort); ?>">&nbsp;</div>
+                </th><?php
+            } else {?>
+                <th>
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short . "pages/search.php",
+                            $searchparams,
+                            array("order_by" => "status")
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["status"]); ?></a>
+                </th><?php
+            }
+        }
+
+        if ($date_column) {
+            if ($is_special_search_duplicates) {
+                ?><th><?php echo escape($lang['date']);?></th><?php
+            } else if ($order_by == "date") {?>
+                <th class="Selected">
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short . "pages/search.php",
+                            $searchparams,
+                            array("order_by" => "date","sort" => $revsort)
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["date"]); ?></a>
+                    <div class="<?php echo urlencode($sort); ?>">&nbsp;</div>
+                </th><?php
+            } else {?>
+                <th>
+                    <a
+                        href="<?php echo generateURL(
+                            $baseurl_short . "pages/search.php",
+                            $searchparams,
+                            array("order_by" => "date")
+                        ); ?>"
+                        onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["date"]); ?></a>
+                </th><?php
+            }
+        }
+        hook("addlistviewtitlecolumn");?>
+        <th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
         </tr>
         <?php } ?> <!--end hook replace listviewtitlerow-->
         <?php
