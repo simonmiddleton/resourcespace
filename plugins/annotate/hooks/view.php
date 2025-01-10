@@ -80,7 +80,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
             <div id="wrapper" class="annotate-view-wrapper">
                 <div>
                 <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
-                 id="toAnnotate" onload="annotate(<?php echo (int) $ref?>,'<?php echo escape($k)?>', this, <?php echo escape(getval("annotate_toggle",true))?>, 1, <?php echo escape($modal); ?>);" src="<?php echo escape($imageurl)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+                 id="toAnnotate" onload="annotate(<?php echo (int) $ref?>,'<?php echo escape($k)?>', this, <?php echo escape(getval("annotate_toggle",true))?>, 1, <?php echo escape($modal); ?>);" src="<?php echo escape($imageurl . "&iaccept=on")?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
                 </div>
 
                 <div class="annotate-view-preview-links" >

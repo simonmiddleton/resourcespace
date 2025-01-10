@@ -139,16 +139,16 @@ if($resource['has_image'] === 0)
     }
 
 // Determine the appropriate preview sizes to look for. Access will be checked by get_resource_preview()
-if($resource_view_use_pre) {
-    $previewsizes = ["pre","scr"];
+if ($resource_view_use_pre) {
+    $previewsizes = ["pre", "scr"];
 } else {
-    $previewsizes = ["scr","pre"];
+    $previewsizes = ["scr", "pre"];
 }
 
 $imagepre = get_resource_preview($resource,$previewsizes, $access, $use_watermark, $page);
 if($imagepre)
     {
-    $url = $imagepre["url"];
+    $url = $imagepre["url"] . "&iaccept=on";
     }
 else
     {
@@ -159,16 +159,23 @@ else
 // The resulting values control the presence or otherwise of the navigation chevrons used for Next and Previous page browsing
 // Multi-page preview files for the second page onwards will either be "scr" or "pre" size. 
 // The size to look for here is governed by $resource_view_use_pre. If false then "scr" else true means "pre" 
-$multipagesize=$resource_view_use_pre?"pre":"scr";
 
-$previouspage=$page-1;
-if (!file_exists(get_resource_path($ref,true,$multipagesize,false,$ext,-1,$previouspage,$use_watermark,"",$alternative))
-    && !file_exists(get_resource_path($ref,true,"",false,$ext,-1,$previouspage,$use_watermark,"",$alternative))) {
-    $previouspage=-1;
+//Previous page check
+$previouspage = $page - 1;
+
+if (!file_exists(get_resource_path($ref,true,$previewsizes[0],false,$ext,-1,$previouspage,$use_watermark,"",$alternative))
+    && !file_exists(get_resource_path($ref,true,"",false,$ext,-1,$previouspage,$use_watermark,"",$alternative))
+    && !file_exists(get_resource_path($ref,true,$previewsizes[1],false,$ext,-1,$previouspage,$use_watermark,"",$alternative))) {        
+    
+    $previouspage = -1;        
 }
-$nextpage=$page+1;
-if (!file_exists(get_resource_path($ref,true,$multipagesize,false,$ext,-1,$nextpage,$use_watermark,"",$alternative))) {
-    $nextpage=-1;
+
+//Next page check
+$nextpage = $page + 1;
+if (!file_exists(get_resource_path($ref,true,$previewsizes[0],false,$ext,-1,$nextpage,$use_watermark,"",$alternative))
+    && !file_exists(get_resource_path($ref,true,$previewsizes[1],false,$ext,-1,$nextpage,$use_watermark,"",$alternative))) {
+    
+    $nextpage = -1;    
 }
 
 // get mp3 paths if necessary and set $use_mp3_player switch

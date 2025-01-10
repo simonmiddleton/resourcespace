@@ -9540,7 +9540,7 @@ function related_resource_pull(array $resource)
  * @param bool      $watermark  Look for watermarked versions?
  * @param int       $page       Page to look for
  *
- * @return string | bool        URL, or false if no image is found
+ * @return array | bool         array, or false if no image is found
  *
  */
 function get_resource_preview(array $resource,array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1)
