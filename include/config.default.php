@@ -1313,7 +1313,10 @@ $config_separators=array("/","_",".",";","-","(",")","'","\"","\\", "?", '’', 
 // Resource field verbatim keyword regex
 // Using the index value of [resource field], specifies regex criteria for adding verbatim strings to keywords.
 // It solves the problem, for example, indexing an entire "nnn.nnn.nnn" string value when '.' are used in $config_separators.
-// $resource_field_verbatim_keyword_regex[1] = '/\d+\.\d+\w\d+\.\d+/';       // this example would add 994.1a9.93 to indexed keywords for field 1.  This can be found using quoted search.
+// $resource_field_verbatim_keyword_regex[1] = '/\d+\.\d+\w\d+\.\d+/';
+// this example would add 994.1a9.93 to indexed keywords for field 1.  This can be found using quoted search.
+// If using verbatim keywords should the entire node be indexed in one part?
+// $resource_field_verbatim_keyword_regex_index_intact[1] = false;
 
 // Global permissions
 // Permissions that will be prefixed to all user group permissions
