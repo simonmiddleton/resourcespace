@@ -971,6 +971,13 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     i.setAttribute("name", "clear_selection_collection");
                     i.setAttribute("value", "no");
                     temp_form.appendChild(i);
+                    // Instruct search page to check the selection collection 
+                    // for any resources that have fallen out of search
+                    var c = document.createElement("input");
+                    c.setAttribute("type", "hidden");
+                    c.setAttribute("name", "check_selection_collection");
+                    c.setAttribute("value", "yes");
+                    temp_form.appendChild(c);
                     // Instruct search page not to load header
                     var ajx = document.createElement("input");
                     ajx.setAttribute("type", "hidden");

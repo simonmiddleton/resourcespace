@@ -294,6 +294,10 @@ rs_setcookie('per_page', $per_page,0,"","",false,false);
 $clear_selection_collection = (getval("clear_selection_collection", "") != "no");
 $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
 
+// After a batch edit, check if search has been instructed to check for resources in the selection collection that have 
+// fallen out of the results so should no longer be selected
+$check_selection_collection = (getval("check_selection_collection", "") != "no");
+
 // Preserve selection on display layout change (not available for map view).
 $displaytypes = array('xlthumbs', 'thumbs', 'strip', 'list');
 if (isset($_POST['display']))
@@ -560,7 +564,9 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        $full_search_results = do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, true, $editable_only, false, $search_access,false,true);
+        if ($use_selection_collection && $check_selection_collection) {
+            $full_search_results = do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, true, $editable_only, false, $search_access,false,true);
+        }
         $result=do_search($search,$restypes,$order_by,$archive,[max($offset-$colcount,0),$resourcestoretrieve],$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access,false,true);
         }
     }
@@ -642,8 +648,7 @@ if($k=="" || $internal_share_access)
     </script>
     <?php
     }
-if($use_selection_collection)
-    {
+if($use_selection_collection && $check_selection_collection) {
     // Clean up the user selection collection so that only resources in the current search can exist in the colleciton. 
     $selection_collection = do_search('!collection'. $USER_SELECTION_COLLECTION);
     $resource_not_in_search = array_diff(
@@ -667,7 +672,7 @@ if($use_selection_collection)
     var searchparams = <?php echo json_encode($searchparams); ?>;
     </script>
     <?php
-    }
+}
 
 // Allow Drag & Drop from collection bar to CentralSpace only when special search is "!collection"
 if($collectionsearch && collection_writeable(substr($search, 11)))
