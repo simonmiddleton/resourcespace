@@ -2,6 +2,7 @@ name: rse_workflow
 title: Advanced Workflow
 desc: Configure custom workflow states and actions beyond the defaults.
 icon: fa fa-check-square
+icon-colour: green
 author: Montala Limited
 version: 1.0
 default_priority: 100

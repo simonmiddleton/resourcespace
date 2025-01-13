@@ -2,7 +2,7 @@ name: simplesaml
 title: SAML
 desc: User authentication via SAML.
 icon: fa fa-key
-icon-colour : #777777
+icon-colour : goldenrod
 author: Montala Limited
 version: 1.0
 config_url: /plugins/simplesaml/pages/setup.php

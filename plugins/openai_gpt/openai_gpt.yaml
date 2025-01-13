@@ -3,7 +3,8 @@ title: OpenAI GPT integration
 author: Montala Limited
 version: 2.0
 desc: Automated processing of metadata and images using AI.
-icon: fa fa-tags
+icon: fa fa-cog
+icon-colour: seagreen
 config_url: /plugins/openai_gpt/pages/setup.php
 category: integrations
 info_url: https://www.resourcespace.com/knowledge-base/plugins/openai_gpt

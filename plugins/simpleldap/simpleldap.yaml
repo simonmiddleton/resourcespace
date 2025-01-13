@@ -4,7 +4,7 @@ author  : David Dwiggins, Montala Ltd.
 version : 1.2
 desc    : User authentication via LDAP.
 icon    : fa fa-key
-icon-colour: #777777
+icon-colour: goldenrod
 config_url: /plugins/simpleldap/pages/setup.php
 category: authentication
 disable_group_select: 1

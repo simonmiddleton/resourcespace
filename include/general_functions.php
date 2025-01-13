@@ -5713,31 +5713,6 @@ function isValidCssColor(string $colour)
     return preg_match($regex, trim($colour)) === 1;
     }
 
-
-/**
- * Generate a consistent HSL-based colour with a fixed brightness and saturation, but a random hue.
- *
- * This function hashes the input key (e.g., plugin name) to determine the hue,
- * while keeping the saturation and brightness fixed. The generated colour is
- * converted to a CSS hex colour code.
- *
- * @param string $key The input string (e.g., plugin name) to generate a colour for.
- * @param int $saturation The saturation percentage (0-100). Default is 70.
- * @param int $lightness The lightness percentage (0-100). Default is 50.
- * @return string The generated CSS hex colour code (e.g., #ff5733).
- */
-function generateConsistentColour($key, $saturation = 70, $lightness = 50) {
-    // Hash the key to get a consistent hue
-    $hash = md5($key);
-    $hue = hexdec(substr($hash, 0, 6)) % 360; // Use first 6 hex chars to determine hue
-
-    // Convert HSL to RGB
-    list($r, $g, $b) = hslToRgb($hue, $saturation / 100, $lightness / 100);
-
-    // Convert to a CSS hex colour
-    return sprintf('#%02x%02x%02x', $r, $g, $b);
-}
-
 /**
  * Convert HSL to RGB.
  *

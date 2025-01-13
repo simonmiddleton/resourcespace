@@ -3,7 +3,8 @@ title: Embed Slideshow
 author: Montala Limited
 version: 2.0
 desc: Provides a function to generate HTML for embeddable collection slideshows on remote sites.
-icon: fa fa-images
+icon: fa fa-images fa-regular
+icon-colour: black
 config_url: /plugins/embedslideshow/pages/setup.php
 category: Integrations
 info_url: https://www.resourcespace.com/knowledge-base/plugins/embed-slideshow

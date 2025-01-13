@@ -1716,7 +1716,7 @@ function RenderPlugin($plugin, $active = true)
     // Determine icon colour
     $icon_colour = isset($plugin["icon-colour"]) && isValidCssColor($plugin["icon-colour"])
         ? $plugin["icon-colour"]
-        : generateConsistentColour(substr($plugin["title"], 0, 3), 80, 30);
+        : "black";
 
     // Render the plugin display
     echo '<div class="PluginDisplay">';

@@ -4,6 +4,7 @@ author: Montala Ltd.
 version: 1.0
 desc: Search free/commercial image libraries from within ResourceSpace.
 icon: fa fa-camera
+icon-colour: black
 info_url: https://www.resourcespace.com/knowledge-base/plugins/image-banks
 config_url: /plugins/image_banks/pages/setup.php
 default_priority: 100

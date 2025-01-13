@@ -3,7 +3,8 @@ title   : Annotate
 author  : Tom Gleason
 version : 1.01
 desc    : Enables creation of jquery image annotations.
-icon    : fa fa-comment
+icon    : fa fa-comment fa-regular
+icon-colour: black
 config_url: /plugins/annotate/pages/setup.php
 default_priority: 999
 category: Collaboration
