@@ -7392,6 +7392,10 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     if ($allowed_sizes === []) {
         return;
     }
+    $modified_sizes = hook('modifyallowed_sizes', 'view', [$resource, $allowed_sizes]);
+    if ($modified_sizes !== false) {
+        $allowed_sizes = $modified_sizes;
+    }
 
     $use_selector = count($allowed_sizes) > 1;
     $render = function(bool $show_selector) use ($ns, $allowed_sizes, $resource): void {

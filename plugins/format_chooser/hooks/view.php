@@ -127,3 +127,52 @@ function HookFormat_chooserViewModifySizesArray ($resource, $sizes) : array
     {
     return get_image_sizes($resource['ref'],false,$resource['file_extension'],false);
     }
+
+function HookFormat_chooserViewModifyAllowed_Sizes ($resource, $sizes) : array 
+    {
+    global $lang, $ffmpeg_supported_extensions;    
+        
+    $original_size = get_original_imagesize($resource['ref'], get_resource_path($resource['ref'], true, '', true, $resource['file_extension']));
+    $original_width = $original_size[1];
+    $original_height = $original_size[2];
+
+    $sizes_info = ps_query('SELECT id, width, height FROM preview_size');
+    $preview_sizes = [];
+    foreach ($sizes_info as $size_info) {
+        $preview_sizes[$size_info['id']] = ['width' => $size_info['width'], 'height' => $size_info['height']];
+    }
+
+    foreach ($sizes as $id => $size_data) {
+        // File has not been generated for this size already so it will be missing data on the dimensions
+        if($size_data['width'] == 0 && $size_data['height'] == 0) {
+            if ($preview_sizes[$id]['width'] >= $original_width && $preview_sizes[$id]['height'] >= $original_height) {
+                $sizes[$id]['width'] = $original_width;
+                $sizes[$id]['height'] = $original_height;
+            } else {
+                $widthsf = $preview_sizes[$id]['width'] / $original_width;
+                $heightsf = $preview_sizes[$id]['height'] / $original_height;
+                $scale_factor = min($widthsf, $heightsf);
+                $sizes[$id]['width']  = round($original_width * $scale_factor);
+                $sizes[$id]['height'] =  round($original_height * $scale_factor); 
+            }
+            $mp = compute_megapixel($sizes[$id]['width'], $sizes[$id]['height']);
+            $sizes[$id]['html']['size_info']  = "<p>{$sizes[$id]['width']} &times; {$sizes[$id]['height']} " . escape($lang['pixels']) . " ({$mp} " . escape($lang['megapixel-short']) . ")</p>";
+
+            if (!isset($size['extension']) || !in_array(strtolower($size['extension']), $ffmpeg_supported_extensions)) {
+                compute_dpi($sizes[$id]['width'], $sizes[$id]['height'], $dpi, $dpi_unit, $dpi_w, $dpi_h);
+                $sizes[$id]['html']['size_info'] .= sprintf(
+                    '<p>%1$s %2$s &times; %3$s %2$s %4$s %5$s %6$s</p>',
+                    (int) $dpi_w,
+                    escape($dpi_unit),
+                    (int) $dpi_h,
+                    escape($lang['at-resolution']),
+                    (int) $dpi,
+                    escape($lang['ppi'])
+                );
+            }
+        }
+    }
+    //die(print_r($sizes));
+
+    return $sizes;
+    }
