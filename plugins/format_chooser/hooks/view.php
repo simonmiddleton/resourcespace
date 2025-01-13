@@ -158,7 +158,7 @@ function HookFormat_chooserViewModifyAllowed_Sizes ($resource, $sizes) : array
             $mp = compute_megapixel($sizes[$id]['width'], $sizes[$id]['height']);
             $sizes[$id]['html']['size_info']  = "<p>{$sizes[$id]['width']} &times; {$sizes[$id]['height']} " . escape($lang['pixels']) . " ({$mp} " . escape($lang['megapixel-short']) . ")</p>";
 
-            if (!isset($size['extension']) || !in_array(strtolower($size['extension']), $ffmpeg_supported_extensions)) {
+            if (!isset($resource['extension']) || !in_array(strtolower($resource['extension']), $ffmpeg_supported_extensions)) {
                 compute_dpi($sizes[$id]['width'], $sizes[$id]['height'], $dpi, $dpi_unit, $dpi_w, $dpi_h);
                 $sizes[$id]['html']['size_info'] .= sprintf(
                     '<p>%1$s %2$s &times; %3$s %2$s %4$s %5$s %6$s</p>',
