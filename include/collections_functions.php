@@ -3731,7 +3731,7 @@ function collection_min_access($collection)
         $params[]="s";$params[]=$k;
 
         // Don't check each resource as an access key only ever has one level of access
-        $minextaccess = ps_value("SELECT max(access) value FROM external_access_keys WHERE access_key = ? AND (expires IS NULL OR expires > NOW())", $params, -1);
+        $minextaccess = ps_value("SELECT access value FROM external_access_keys WHERE access_key = ? AND (expires IS NULL OR expires > NOW()) LIMIT 1", $params, -1);
         if ($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess)))) {
             return $minextaccess;
         }
