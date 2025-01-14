@@ -99,7 +99,7 @@ if('delete' == $action && 0 < $annotation_id && 0 !== count($annotation))
 // Get available fields (white listed) for annotations
 if('get_allowed_fields' == $action)
     {
-    foreach($annotate_fields as $annotate_field)
+    foreach(array_unique($annotate_fields, SORT_NUMERIC) as $annotate_field)
         {
         $field_data = get_resource_type_field($annotate_field);
 

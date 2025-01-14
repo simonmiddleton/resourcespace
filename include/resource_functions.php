@@ -8710,7 +8710,7 @@ function canSeeAnnotationsFields(): array
             }
         }
 
-    return $can_view_fields;
+    return array_unique($can_view_fields, SORT_NUMERIC);
     }
 
 
