@@ -786,11 +786,13 @@ if (($ffmpeg_fullpath!=false) && in_array($extension, $ffmpeg_audio_extensions))
     $cmd=$ffmpeg_fullpath . " -y -i " . escapeshellarg($file) . " " . $ffmpeg_audio_params . " " . escapeshellarg($mp3file);
     $output = run_command($cmd);
 
-    if(!file_exists($mp3file))
-        {
+    if (!file_exists($mp3file)) {
         ps_query("UPDATE resource SET preview_attempts=ifnull(preview_attempts,0) + 1 where ref=?",array("i",$ref));
         echo debug("Failed to process resource " . $ref . " - MP3 creation failed.");
-        }   
+    } else { 
+        $preview_preprocessing_success = true;
+    }
+
     }
 
 
