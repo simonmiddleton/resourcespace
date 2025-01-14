@@ -136,7 +136,7 @@ function HookFormat_chooserViewModifyAllowed_Sizes ($resource, $sizes) : array
     $original_width = $original_size[1];
     $original_height = $original_size[2];
 
-    $sizes_info = ps_query('SELECT id, width, height FROM preview_size');
+    $sizes_info = get_all_image_sizes();
     $preview_sizes = [];
     foreach ($sizes_info as $size_info) {
         $preview_sizes[$size_info['id']] = ['width' => $size_info['width'], 'height' => $size_info['height']];
@@ -172,7 +172,6 @@ function HookFormat_chooserViewModifyAllowed_Sizes ($resource, $sizes) : array
             }
         }
     }
-    //die(print_r($sizes));
 
     return $sizes;
     }
