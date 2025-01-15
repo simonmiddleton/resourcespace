@@ -151,11 +151,6 @@ parameters:
 			path: pages/collections.php
 
 		-
-			message: "#^Variable \\$allowed_extensions in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: pages/edit.php
-
-		-
 			message: "#^Variable \\$internal_share_access in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: pages/resource_request.php

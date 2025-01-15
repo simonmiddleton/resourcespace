@@ -1444,51 +1444,46 @@ hook("editbefresmetadata"); ?>
             <?php
             $types                = get_resource_types();
             $shown_resource_types = array();
-           
-            for($n = 0; $n < count($types); $n++)
-                {
-                if(trim((string) $types[$n]['allowed_extensions']) != "")
-                    {
-                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions'])); // As MIME types
-                    }
-                else
-                    {
-                    $allowed_extensions = array();
-                    }
-                // skip showing a resource type that we do not to have permission to change to 
-                // (unless it is currently set to that). Applies to upload only
-                if((0 > $ref || $upload_review_mode)
-                    && 
-                        (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
-                        ||
-                        (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
-                        ||
-                        (checkperm("XE" . $types[$n]['ref']))
-                        ||
-                        (trim((string) $resource["file_extension"]) != ""
-                            && isset($allowed_extensions)
-                            && count($allowed_extensions) > 0 
-                            && !in_array(allowed_type_mime(strtolower($resource["file_extension"])), $allowed_extensions))
-                    &&
-                        $resource['resource_type'] != $types[$n]['ref']
-                    )
-                    {
-                    continue;
-                    }
 
-                $shown_resource_types[] = $types[$n]['ref'];
-                ?>
-                <option value="<?php echo $types[$n]['ref']; ?>"
-                    <?php
-                    if(($resource['resource_type'] == $types[$n]['ref'] && getval("resource_type","") == "") || getval("resource_type","") == $types[$n]['ref'])
-                        {
-                        $selected_type = $types[$n]['ref'];
-                        ?>selected<?php
-                        }
-                        ?>
-                ><?php echo escape($types[$n]["name"])?></option>
-                <?php
+            foreach (get_resource_types() as $type) {
+                $allowed_extensions = trim((string) $type['allowed_extensions']) != ''
+                    ? explode(',',strtolower($type['allowed_extensions']))
+                    : [];
+
+                if (
+                    (
+                        // Skip showing a resource type that we do not to have permission to change to 
+                        // (unless it is currently set to that). Applies to upload only!
+                        (0 > $ref || $upload_review_mode)
+                        && (checkperm("XU{$type['ref']}") || in_array($type['ref'], $hide_resource_types))
+                        && $resource['resource_type'] != $type['ref']
+                    )
+                    || !acl_can_edit_in_resource_type($type['ref'])
+                    || (
+                        trim((string) $resource["file_extension"]) != ""
+                        && count($allowed_extensions) > 0 
+                        && !in_array(allowed_type_mime(strtolower($resource["file_extension"])), $allowed_extensions)
+                    )
+                ) {
+                    continue;
                 }
+
+                $shown_resource_types[] = $type['ref'];
+                $is_resource_type_selected = (
+                    ($resource['resource_type'] == $type['ref'] && getval('resource_type', '') == '')
+                    || getval("resource_type",'') == $type['ref']
+                );
+                if ($is_resource_type_selected) {
+                    $selected_type = $type['ref'];
+                }
+
+                echo render_dropdown_option(
+                    $type['ref'],
+                    $type['name'],
+                    [],
+                    $is_resource_type_selected ? 'selected' : ''
+                );
+            }
 
             // make sure the user template resource (edit template) has the correct resource type when they upload so they can see the correct specific fields
             if('' == getval('submitted', ''))
@@ -1527,17 +1522,16 @@ hook("editbefresmetadata"); ?>
             <label for="resourcetype"><?php echo escape($lang["resourcetype"])?></label>
             <select name="resource_type" id="resourcetype" class="stdwidth">
                 <?php
-                $types = get_resource_types();
-                for($n = 0; $n < count($types); $n++)
-                    {
-                    if(in_array($types[$n]['ref'], $hide_resource_types))
-                        {
-                        continue;
-                        }
-                    ?>
-                    <option value="<?php echo $types[$n]["ref"]; ?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($types[$n]["name"])?></option>
-                    <?php
+                foreach (get_resource_types() as $type) {
+                    if (acl_can_edit_in_resource_type($type['ref'])) {
+                        echo render_dropdown_option(
+                            $type['ref'],
+                            $type['name'],
+                            [],
+                            $resource["resource_type"] == $type["ref"] ? 'selected' : ''
+                        );
                     }
+                }
                 ?>
             </select>
             <div class="clearerleft"></div>
