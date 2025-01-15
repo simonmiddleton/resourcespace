@@ -104,8 +104,7 @@ $results = search_get_previews('text2502','','ref',0,'foo,5,');
 if($results !== "")
     {
     echo "ERROR - SUBTEST G\n";
-    $debug_log=false;
-    return false;    
+    return false;
     }
 
 return true;
