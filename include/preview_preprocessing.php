@@ -993,53 +993,54 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
 
             # Add a watermarked image too?
             global $watermark, $watermark_single_image;
-            if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative))){
-                if ($watermark !== '' && $alternative==-1) {
-                    $wmpath=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
-                    if (file_exists($wmpath)) {
-                        unlink($wmpath);
-                    }
+            if (
+                !hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative))
+                && $watermark !== '' 
+                && $alternative==-1
+            ){
+                $wmpath=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
+                if (file_exists($wmpath)) {
+                    unlink($wmpath);
+                }
 
-                    if(!isset($watermark_single_image)) {
-                        // Watermark is tiled
-                        $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $imagemagick_quality -resize " 
-                            . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermark) 
-                            . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($wmpath); 
-                        $output=run_command($command2);
+                if(!isset($watermark_single_image)) {
+                    // Watermark is tiled
+                    $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $imagemagick_quality -resize " 
+                        . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermark) 
+                        . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($wmpath); 
+                    $output=run_command($command2);
+                } else {
+                    // Watermark is a single image 
+                    // The watermark geometry will be based on the shortest scr dimension scaled to the configured percentage
+                    $wm_scale=$watermark_single_image['scale'] / 100;
+
+                    if($scr_width < $scr_height) {
+                        // Portrait; scaled length is based on width
+                        $wm_scaled_length = $scr_width * $wm_scale;
+                        $wm_geometry = "x{$wm_scaled_length}+0+0";
+                    }
+                    elseif($scr_width > $scr_height) {
+                        // Landscape; scaled length is based on height
+                        $wm_scaled_length = $scr_height * $wm_scale;
+                        $wm_geometry = "{$wm_scaled_length}x+0+0";
                     } else {
-                        // Watermark is a single image 
-                        // The watermark geometry will be based on the shortest scr dimension scaled to the configured percentage
-                        $wm_scale=$watermark_single_image['scale'] / 100;
-
-                        if($scr_width < $scr_height) {
-                            // Portrait; scaled length is based on width
-                            $wm_scaled_length = $scr_width * $wm_scale;
-                            $wm_geometry = "x{$wm_scaled_length}+0+0";
-                        }
-                        elseif($scr_width > $scr_height) {
-                            // Landscape; scaled length is based on height
-                            $wm_scaled_length = $scr_height * $wm_scale;
-                            $wm_geometry = "{$wm_scaled_length}x+0+0";
-                        } else {
-                            // Square; scaled length can be based on width or height; using width is purely arbitrary
-                            $wm_scaled_length = $scr_width * $wm_scale;
-                            $wm_geometry = "x{$wm_scaled_length}+0+0";
-                        }
-
-                        $command2_wm = sprintf(
-                            '%s %s[0] -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
-                            $convert_fullpath,
-                            escapeshellarg($target),
-                            escapeshellarg($watermark),
-                            escapeshellarg($watermark_single_image['position']),
-                            escapeshellarg("{$wm_geometry}"),
-                            escapeshellarg("{$scr_width}x{$scr_height}"),
-                            escapeshellarg($wmpath)
-                            );
-  
-                        $output=run_command($command2_wm);
-    
+                        // Square; scaled length can be based on width or height; using width is purely arbitrary
+                        $wm_scaled_length = $scr_width * $wm_scale;
+                        $wm_geometry = "x{$wm_scaled_length}+0+0";
                     }
+
+                    $command2_wm = sprintf(
+                        '%s %s[0] -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
+                        $convert_fullpath,
+                        escapeshellarg($target),
+                        escapeshellarg($watermark),
+                        escapeshellarg($watermark_single_image['position']),
+                        escapeshellarg("{$wm_geometry}"),
+                        escapeshellarg("{$scr_width}x{$scr_height}"),
+                        escapeshellarg($wmpath)
+                        );
+
+                    $output=run_command($command2_wm);
                     
                 }
             }

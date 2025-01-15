@@ -1760,14 +1760,17 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
                 $migrate_data = true;               
                 }
 
-            if($column == "type" && $val != $existingfield["type"] && $existingfield["type"] === FIELD_TYPE_CATEGORY_TREE)
-                {
+            if (
+                $column == "type" 
+                && $val != $existingfield["type"] 
+                && $existingfield["type"] === FIELD_TYPE_CATEGORY_TREE
+                && ($postdata['type'] == FIELD_TYPE_CHECK_BOX_LIST 
+                    || $postdata['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
+            ) {
                 // Need to deduplicate nodes if going from category tree to multiple value fixed field type
-                if ($postdata['type'] == FIELD_TYPE_CHECK_BOX_LIST || $postdata['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) 
-                    {
-                    $multiple_deduplicate = true;               
-                    }
-                }
+                $multiple_deduplicate = true;               
+                    
+            }
 
                 
             // Set shortname if not already set or invalid

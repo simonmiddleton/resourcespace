@@ -643,21 +643,22 @@ function ProcessFolder($folder)
                                             }
                                         else
                                             {
-                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
-                                                {
-                                                // Append the values if possible
-                                                if(in_array($field_info['type'],
+                                            if (
+                                                $staticsync_extension_mapping_append_values 
+                                                && (!isset($staticsync_extension_mapping_append_values_fields) 
+                                                    || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields))
+                                                && in_array($field_info['type'],
                                                         [
                                                         FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
                                                         FIELD_TYPE_TEXT_BOX_MULTI_LINE,
                                                         FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
                                                         FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
                                                         FIELD_TYPE_DATE,FIELD_TYPE_WARNING_MESSAGE,
-                                                        ]))
-                                                    {
-                                                    $existing_value  = get_data_by_field($r,$field);
-                                                    $values_to_add[$field] = $existing_value . ($staticsync_extension_mapping_append_separator ?? " ") . $value;
-                                                    }
+                                                        ])
+                                                ) {
+                                                // Append the values if possible
+                                                $existing_value  = get_data_by_field($r,$field);
+                                                $values_to_add[$field] = $existing_value . ($staticsync_extension_mapping_append_separator ?? " ") . $value;
                                                 }
                                             }
                                         }

@@ -389,12 +389,13 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
     }
     debug("checkname = {$checkname}");
 
-    if ($source_path_not_real) {
-        if (!(preg_match('/^(?!\.)(?!.*\.$)(?!.*\.\.)[a-zA-Z0-9_\-[:space:]\/:.]+$/', ($pathinfo['dirname'] ?? "")) && is_safe_basename($checkname))
-        ) {
-            debug('Invalid non-existing path');
-            return false;
-        }
+    if (
+        $source_path_not_real
+        && !(preg_match('/^(?!\.)(?!.*\.$)(?!.*\.\.)[a-zA-Z0-9_\-[:space:]\/:.]+$/', ($pathinfo['dirname'] ?? "")) 
+            && is_safe_basename($checkname))
+    ) {
+        debug('Invalid non-existing path');
+        return false;
     }
 
     // Check if path contains symlinks, if so don't use the value returned by realpath() as it is unlikely to match the expected paths

@@ -3205,10 +3205,11 @@ function suggest_dynamic_keyword_nodes(int $field, string $keyword, bool $readon
     $fielderror = false;
     if (!$exactmatch && !$readonly) {
         # Ensure regexp filter is honoured if one is present
-        if (strlen(trim((string)$fielddata["regexp_filter"])) >= 1) {
-            if (preg_match("#^" . str_replace($GLOBALS['regexp_slash_replace'], '\\', $fielddata["regexp_filter"]) . "$#",$keyword,$matches) <= 0) {
-                $fielderror = true;
-            }
+        if (
+            strlen(trim((string)$fielddata["regexp_filter"])) >= 1
+            && preg_match("#^" . str_replace($GLOBALS['regexp_slash_replace'], '\\', $fielddata["regexp_filter"]) . "$#",$keyword,$matches) <= 0
+        ) {
+            $fielderror = true;
         }
 
         if (!$fielderror) {

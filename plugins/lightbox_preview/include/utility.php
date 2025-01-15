@@ -56,11 +56,9 @@ function getPreviewURLForType($resource, $type, $alternative = -1, $page = 1)
 
 function getPreviewURL($resource, $alternative = -1, $page = 1)
     {
-    if ($alternative === -1 ) {
-        // We are looking for the resource image preview
-        if ((int) $resource['has_image'] === RESOURCE_PREVIEWS_NONE) {
-            return false;
-        }
+    // We are looking for the resource image preview
+    if ($alternative === -1 && (int) $resource['has_image'] === RESOURCE_PREVIEWS_NONE) {
+        return false;
     } // Otherwise we're looking for the alternative image preview, so we don't care about whether or not the resource has an image
 
     // Try 'scr' first

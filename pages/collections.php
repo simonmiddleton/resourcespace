@@ -723,35 +723,39 @@ elseif ($k != "" && !$internal_share_access)
         </div>
         <?php
         $min_access=collection_min_access($result);
-        if ($min_access==0) {
-            # Ability to download only if minimum access allows it
-            if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) {
-                if ($terms_download) {
-                    if ($download_usage) {
-                        $download_url = generateURL($baseurl_short . '/pages/terms.php', 
-                            [
-                                'k' => $k, 
-                                'collection' => $usercollection, 
-                                'url' => generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k])
-                            ]);
-                    } else {
-                        $download_url = generateURL($baseurl_short . '/pages/terms.php', 
-                            [ 
-                                'k' => $k, 
-                                'collection' => $usercollection, 
-                                'url'=> generateURL($baseurl_short .'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k])
-                            ]);
-                    }
-                } elseif ($download_usage) {
-                    $download_url = generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k]);
+        # Ability to download only if minimum access allows it
+        if (
+            (isset($zipcommand) 
+                || $collection_download) 
+            && $count_result>0 
+            && count($result)>0
+            && $min_access==0
+        ) {
+            if ($terms_download) {
+                if ($download_usage) {
+                    $download_url = generateURL($baseurl_short . '/pages/terms.php', 
+                        [
+                            'k' => $k, 
+                            'collection' => $usercollection, 
+                            'url' => generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k])
+                        ]);
                 } else {
-                    $download_url = generateURL($baseurl_short .'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k]);
+                    $download_url = generateURL($baseurl_short . '/pages/terms.php', 
+                        [ 
+                            'k' => $k, 
+                            'collection' => $usercollection, 
+                            'url'=> generateURL($baseurl_short .'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k])
+                        ]);
                 }
-                ?>
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $download_url;?>">
-                    <?php echo LINK_CARET ?><?php echo escape($lang["action-download"])?></a><br />
-            <?php 
+            } elseif ($download_usage) {
+                $download_url = generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k]);
+            } else {
+                $download_url = generateURL($baseurl_short .'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k]);
             }
+            ?>
+            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $download_url;?>">
+                <?php echo LINK_CARET ?><?php echo escape($lang["action-download"])?></a><br />
+        <?php 
         }
         if ($feedback) {?>
             <br><br>
