@@ -149,7 +149,7 @@ function <?php echo escape($autocomplete_user_scope); ?>addUser(event,ui)
         <?php
             if (isset($single_user_select_field_onchange))
                 {
-                echo escape($single_user_select_field_onchange);
+                echo $single_user_select_field_onchange;
                 }
         }
     ?>
