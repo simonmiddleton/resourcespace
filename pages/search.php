@@ -1676,7 +1676,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             for ($n=0;$n<$suggest_count;$n++)
                 {
                 if ($n>0) {echo ", ";}
-                ?><a  href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo  urlencode(strip_tags($suggest[$n])) ?>" onClick="return CentralSpaceLoad(this);"><?php echo stripslashes($suggest[$n]); ?></a><?php
+                ?><a  href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo  urlencode(strip_tags($suggest[$n])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo stripslashes($suggest[$n]); ?></a><?php
                 }
             ?></p><?php
             }
