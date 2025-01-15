@@ -24,6 +24,14 @@ if($collection === false)
     exit();
     }
 
+$upload_access_keys = get_external_shares(['share_collection' => $ref, 'share_type' => 1]);
+
+// Cannot create shares for a collection that has an upload share associated with it. 
+if (count($upload_access_keys) > 0) {
+    error_alert($lang['cannot_share-has_upload_share'], true, 403);
+    exit();
+}
+
 if($collection["type"] == COLLECTION_TYPE_FEATURED)
     {
     $collection_resources = get_collection_resources($collection["ref"]);
