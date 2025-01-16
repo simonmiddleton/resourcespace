@@ -296,7 +296,7 @@ $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
 
 // After a batch edit, check if search has been instructed to check for resources in the selection collection that have 
 // fallen out of the results so should no longer be selected
-$check_selection_collection = (getval("check_selection_collection", "") != "no");
+$check_selection_collection = getval("check_selection_collection", "") != "no";
 
 // Preserve selection on display layout change (not available for map view).
 $displaytypes = array('xlthumbs', 'thumbs', 'strip', 'list');
