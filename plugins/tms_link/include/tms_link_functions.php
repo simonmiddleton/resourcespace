@@ -67,7 +67,7 @@ function tms_convert_value($value, $key, array $module)
 
 function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum = "", $onlymodule="")
     {
-    global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password,$tms_int_object_ids;
+    global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password;
 
     debug('tms_link: tms_link_get_tms_data() $resource=' . $resource . ' $tms_object_id=' . json_encode($tms_object_id) . ' $resourcechecksum=' . $resourcechecksum . ' $onlymodule=' . $onlymodule);
 
