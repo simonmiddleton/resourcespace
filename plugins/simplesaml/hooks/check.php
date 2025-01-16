@@ -8,8 +8,11 @@ function HooksimplesamlCheckAddinstallationcheck()
         </td>
     </tr>
     <?php
+    display_extension_status('zlib');
     display_extension_status('openssl');
+    display_extension_status('mbstring');
     display_extension_status('ldap');
+    display_extension_status('cURL');
 
     if (isset($GLOBALS["simplesamlconfig"]["metadata"]) && $GLOBALS['simplesaml_check_idp_cert_expiry']) {
         // Check expiry date of IdP certificates
