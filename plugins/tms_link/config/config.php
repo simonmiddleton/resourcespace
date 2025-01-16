@@ -49,6 +49,7 @@ $tms_link_modules_saved_mappings = base64_encode(
             '5be2e8c2d0616' => array(
                 'module_name' => '',
                 'tms_uid_field' => 'ObjectID',
+                'tms_uid_field_int' => true,
                 'rs_uid_field' => 0,
                 'checksum_field' => 0,
                 'applicable_resource_types' => array(),

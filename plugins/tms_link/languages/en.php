@@ -60,6 +60,7 @@ $lang['tms_link_mediapaths_resource_reference_column']="Column to use in MediaMa
 $lang["tms_link_modules_mappings"] = "Synchronisation from extra modules (tables/ views)";
 $lang["tms_link_module"] = "Module";
 $lang["tms_link_tms_uid_field"] = "TMS UID field";
+$lang["tms_link_uid_field_int"] = "TMS Integer UIDs. Set to false to allow non integer UIDs.";
 $lang["tms_link_rs_uid_field"] = "ResourceSpace UID field";
 $lang["tms_link_applicable_rt"] = "Applicable resource type(s)";
 $lang["tms_link_modules_mappings_tools"] = "Tools";

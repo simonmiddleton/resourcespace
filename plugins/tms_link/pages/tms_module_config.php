@@ -27,6 +27,7 @@ $action = getval('action', '');
 $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
 $tms_link_module_name = getval('tms_link_module_name', '');
 $tms_link_tms_uid_field = getval('tms_link_tms_uid_field', '');
+$tms_link_uid_field_int = getval('tms_link_tms_uid_field_int', true);
 $tms_link_rs_uid_field = getval('tms_link_rs_uid_field', 0, true);
 $tms_link_checksum_field = getval('tms_link_checksum_field', 0, true);
 $tms_link_applicable_resource_types = getval('tms_link_applicable_resource_types', [], false, 'is_array');
@@ -48,6 +49,7 @@ if(getval('save', '') !== '' && enforcePostRequest(false))
     $tms_link_modules_mappings[$id] = array(
         'module_name'   => $tms_link_module_name,
         'tms_uid_field' => $tms_link_tms_uid_field,
+        'tms_uid_field_int' => $tms_link_uid_field_int,
         'rs_uid_field'  => $tms_link_rs_uid_field,
         'checksum_field'  => $tms_link_checksum_field,
         'applicable_resource_types' => $tms_link_applicable_resource_types,
@@ -78,6 +80,7 @@ if($id !== '' && array_key_exists($id, $tms_link_modules_mappings))
 
     $tms_link_module_name = $record['module_name'];
     $tms_link_tms_uid_field = $record['tms_uid_field'];
+    $tms_link_tms_uid_field_int = $record['tms_uid_field_int'] ?? true;
     $tms_link_rs_uid_field = $record['rs_uid_field'];
     $tms_link_checksum_field = $record['checksum_field'];
     $tms_link_applicable_resource_types = $record['applicable_resource_types'];
@@ -119,6 +122,11 @@ include '../../../include/header.php';
             <div class="clearerleft"></div>
         </div>
         <?php
+        config_boolean_select (
+            "tms_link_tms_uid_field_int",
+            $lang["tms_link_uid_field_int"],
+            $tms_link_tms_uid_field_int,
+        );
         render_field_selector_question(
             $lang["tms_link_rs_uid_field"],
             "tms_link_rs_uid_field",
