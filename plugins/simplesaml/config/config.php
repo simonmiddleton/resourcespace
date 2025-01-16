@@ -36,9 +36,9 @@ $simplesaml_check_idp_cert_expiry = true;
 
 // When using ResourceSpace to store SAML config these setttings are initialised and set in the following pages:-
 // plugins/simplesaml/lib/lib/_autoload.php
-// plugins/simplesaml/lib/resourcespace/config/config.php
-// plugins/simplesaml/lib/resourcespace/config/authsources.php
-// plugins/simplesaml/lib/resourcespace/metadata/saml20-idp-remote.php
+// plugins/simplesaml/include/resourcespace/config/config.php
+// plugins/simplesaml/include/resourcespace/config/authsources.php
+// plugins/simplesaml/include/resourcespace/metadata/saml20-idp-remote.php
 
 // Set some defaults to ease setup
 global $baseurl_short, $email_from, $application_name, $scramble_key, $storagedir;
