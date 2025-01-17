@@ -54,8 +54,16 @@ include '../../../include/header.php';
 
 // Get information to populate options later on
 $user_groups = get_usergroups();
-$user_groups = array_filter($user_groups, function($group){
-    if (in_array('R', explode(',', $group['permissions']))) {
+$ordered_groups = [];
+foreach($user_groups as $group) {
+        $ordered_groups[$group['ref']] = $group;
+}
+
+$user_groups = array_filter($ordered_groups, function($group) use ($ordered_groups){
+    if (
+        in_array('R', explode(',', $group['permissions']))
+        || in_array('R', explode(',', $ordered_groups[$group['parent']]['permissions'] ?? ''))
+    ) {
         return true;
     }
 });
