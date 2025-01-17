@@ -2825,3 +2825,7 @@ $lang["language-hi"]='হিন্দি';
 $lang["contact_sheet_footer_address"]='XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999';
 $lang["language-ru"]='রাশিয়ান';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["information-enable_complete_indexing"]='এই ক্ষেত্রের জন্য ইনডেক্স ক্ষেত্রের মানগুলোকে একটি অবিচ্ছিন্ন কীওয়ার্ড হিসেবে ইনডেক্স করুন। এই বিকল্পটি আংশিক ইনডেক্সিংয়ের সাথে অমিল।';
+$lang["property-enable_complete_indexing"]='সম্পূর্ণ সূচীকরণ সক্ষম করুন';
+$lang["cannot_share-has_upload_share"]='এই সংগ্রহের জন্য নন আপলোড শেয়ার তৈরি করা যাবে না কারণ এর জন্য একটি আপলোড শেয়ার বর্তমানে বিদ্যমান রয়েছে';
+$lang["welcome_generic"]='%applicationname-এ স্বাগতম';

@@ -707,7 +707,11 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             echo $on_change_js;
             }
         ?>
-            } else {jQuery('#<?php echo $name; ?>').attr('type','color');}
+            }
+        else
+            {
+            jQuery('#<?php echo $name; ?>').attr('type','color');
+            }
             " style="float: left;" />
         <div id="container_<?php echo $name; ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
             &nbsp;
