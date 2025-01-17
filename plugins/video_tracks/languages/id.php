@@ -27,4 +27,4 @@ $lang["video_tracks_select_generate_opt"]='Silakan pilih opsi generate';
 $lang["video_tracks_save_alt_not_perm"]='Tidak dapat menyimpan alternatif tanpa izin';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='PENTING! Plugin Video Tracks telah menghentikan pengaturan format output. Mereka hanya dapat diatur di config.php. Plugin tidak akan berfungsi sebagaimana mestinya sampai opsi konfigurasi disalin. Silakan salin yang berikut ini:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Jalur Video';
-$lang["plugin-video_tracks-desc"]='[Advanced] Tambahkan dukungan untuk opsi audio dan subtitle yang berbeda untuk sumber daya video';
+$lang["plugin-video_tracks-desc"]=' Tambahkan dukungan untuk opsi audio dan subtitle yang berbeda untuk sumber daya video';

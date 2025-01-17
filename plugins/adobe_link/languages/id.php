@@ -13,4 +13,4 @@ $lang["adobe_link_upload_document"]='Simpan';
 $lang["adobe_link_saving"]='Menyimpan..';
 $lang["adobe_link_saving_wait"]='Berkas sedang disimpan, mohon tunggu pesan konfirmasi. Anda mungkin perlu me-refresh halaman untuk memperbarui gambar pratinjau.';
 $lang["plugin-adobe_link-title"]='Tautan Adobe';
-$lang["plugin-adobe_link-desc"]='[Advanced] Izinkan pemasukan file Adobe dari ResourceSpace ke Adobe CC';
+$lang["plugin-adobe_link-desc"]=' Izinkan pemasukan file Adobe dari ResourceSpace ke Adobe CC';

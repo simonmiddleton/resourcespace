@@ -15,4 +15,4 @@ $lang["wordpress_sso_use_wp_login"]='Kirjaudu sisään WordPress-tilillä';
 $lang["wordpress_sso_retry"]='Klikkaa tästä yrittääksesi kirjautua uudelleen';
 $lang["origin_wordpress_sso"]='Wordpress SSO -liitännäinen';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
-$lang["plugin-wordpress_sso-desc"]='[Edistynyt] Mahdollistaa kertakirjautumisen Wordpress-asennuksen kanssa';
+$lang["plugin-wordpress_sso-desc"]=' Mahdollistaa kertakirjautumisen Wordpress-asennuksen kanssa';

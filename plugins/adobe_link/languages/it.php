@@ -13,4 +13,4 @@ $lang["adobe_link_upload_document"]='Salva';
 $lang["adobe_link_saving"]='Salvataggio in corso..';
 $lang["adobe_link_saving_wait"]='Il file sta venendo salvato, attendere il messaggio di conferma. Potrebbe essere necessario aggiornare la pagina per visualizzare l\'anteprima dell\'immagine.';
 $lang["plugin-adobe_link-title"]='Collegamento Adobe';
-$lang["plugin-adobe_link-desc"]='[Avanzato] Consenti l\'importazione di file Adobe da ResourceSpace in Adobe CC';
+$lang["plugin-adobe_link-desc"]=' Consenti l\'importazione di file Adobe da ResourceSpace in Adobe CC';

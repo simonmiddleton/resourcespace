@@ -67,4 +67,4 @@ $lang["csv_upload_force_offline"]='CSV yang besar ini mungkin memerlukan waktu y
 $lang["csv_upload_recommend_offline"]='CSV yang besar ini mungkin memerlukan waktu yang sangat lama untuk diproses. Disarankan untuk mengaktifkan pekerjaan luring jika Anda perlu memproses CSV yang besar';
 $lang["csv_upload_createdfromcsvupload"]='Dibuat dari plugin Unggah CSV';
 $lang["plugin-csv_upload-title"]='Unggah CSV';
-$lang["plugin-csv_upload-desc"]='[Advanced] Unggah metadata menggunakan file CSV.';
+$lang["plugin-csv_upload-desc"]=' Unggah metadata menggunakan file CSV.';

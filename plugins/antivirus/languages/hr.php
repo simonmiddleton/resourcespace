@@ -11,4 +11,4 @@ $lang["antivirus_deleting_file"]='Brisanje resursa [%resource_id%] i svih poveza
 $lang["antivirus_moving_file"]='Premještanje resursa [%resource_id%] u arhivsko stanje [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Putanja antivirusa nije postavljena!';
 $lang["plugin-antivirus-title"]='Antivirus';
-$lang["plugin-antivirus-desc"]='[Napredne] antivirusne mogućnosti integracijom s većinom poznatih antivirusnih motora koji mogu raditi putem naredbenog retka';
+$lang["plugin-antivirus-desc"]=' antivirusne mogućnosti integracijom s većinom poznatih antivirusnih motora koji mogu raditi putem naredbenog retka';

@@ -42,4 +42,4 @@ $lang["falcon_link_log_publish"]='Delt ressurs via Falcon';
 $lang["falcon_link_log_archive"]='Arkivert ressurs via Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Vennligst sjekk at beskrivelsen og taggene ikke er tomme';
 $lang["plugin-falcon_link-title"]='Falcon Link';
-$lang["plugin-falcon_link-desc"]='[Avansert] Publiser ressurser til Falcon.io';
+$lang["plugin-falcon_link-desc"]=' Publiser ressurser til Falcon.io';

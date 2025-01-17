@@ -11,4 +11,4 @@ $lang["antivirus_deleting_file"]='¡Eliminando el recurso [%resource_id%] y cual
 $lang["antivirus_moving_file"]='Moviendo el recurso [%resource_id%] al estado de archivo [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='¡Ruta del antivirus no configurada!';
 $lang["plugin-antivirus-title"]='Antivirus';
-$lang["plugin-antivirus-desc"]='[Avanzadas] Capacidades antivirus mediante la integración con la mayoría de los motores antivirus conocidos que pueden ejecutarse por línea de comandos';
+$lang["plugin-antivirus-desc"]=' Capacidades antivirus mediante la integración con la mayoría de los motores antivirus conocidos que pueden ejecutarse por línea de comandos';

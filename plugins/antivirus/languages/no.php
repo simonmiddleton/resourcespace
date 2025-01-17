@@ -11,4 +11,4 @@ $lang["antivirus_deleting_file"]='Sletter ressurs [%resource_id%] og eventuelle 
 $lang["antivirus_moving_file"]='Flytter ressurs [%resource_id%] til arkivtilstand [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Antivirus-sti ikke satt opp!';
 $lang["plugin-antivirus-title"]='Antivirus';
-$lang["plugin-antivirus-desc"]='[Avansert] Antivirus-funksjoner ved å integrere med de fleste kjente antivirusmotorer som kan kjøre kommandolinje';
+$lang["plugin-antivirus-desc"]=' Antivirus-funksjoner ved å integrere med de fleste kjente antivirusmotorer som kan kjøre kommandolinje';

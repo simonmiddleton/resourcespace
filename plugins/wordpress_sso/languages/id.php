@@ -15,4 +15,4 @@ $lang["wordpress_sso_use_wp_login"]='Masuk menggunakan akun WordPress';
 $lang["wordpress_sso_retry"]='Klik di sini untuk mencoba masuk kembali';
 $lang["origin_wordpress_sso"]='Plugin SSO Wordpress';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
-$lang["plugin-wordpress_sso-desc"]='[Advanced] Memungkinkan Single Sign On dengan instalasi Wordpress';
+$lang["plugin-wordpress_sso-desc"]=' Memungkinkan Single Sign On dengan instalasi Wordpress';

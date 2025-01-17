@@ -13,4 +13,4 @@ $lang["adobe_link_saving_wait"]='Het bestand wordt opgeslagen, wacht op het beve
 $lang["adobe_link_title"]='Adobe Link';
 $lang["adobe_link_configuration"]='Adobe-koppeling instellen';
 $lang["plugin-adobe_link-title"]='Adobe Link';
-$lang["plugin-adobe_link-desc"]='[Geavanceerd] Toestaan van het importeren van Adobe-bestanden van ResourceSpace naar Adobe CC';
+$lang["plugin-adobe_link-desc"]=' Toestaan van het importeren van Adobe-bestanden van ResourceSpace naar Adobe CC';

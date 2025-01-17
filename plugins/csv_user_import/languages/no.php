@@ -15,4 +15,4 @@ $lang["csv_user_import_condition3"]='Kolonner som vil inneholde verdier med komm
 $lang["csv_user_import_condition4"]='Tillatte kolonner: *brukernavn, *epost, passord, fullt navn, konto utløper, kommentarer, IP-begrensning, språk. Merk: Obligatoriske felt er markert med *';
 $lang["csv_user_import_condition5"]='Språket til brukeren vil automatisk gå tilbake til det som er satt ved bruk av "$defaultlanguage" konfigurasjonsalternativet hvis språkkolonnen ikke finnes eller ikke har en verdi';
 $lang["plugin-csv_user_import-title"]='CSV-brukerimport';
-$lang["plugin-csv_user_import-desc"]='[Avansert] Gir mulighet til å importere en gruppe brukere basert på en forhåndsformatert CSV-fil';
+$lang["plugin-csv_user_import-desc"]=' Gir mulighet til å importere en gruppe brukere basert på en forhåndsformatert CSV-fil';

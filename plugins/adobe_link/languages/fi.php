@@ -13,4 +13,4 @@ $lang["adobe_link_upload_document"]='Tallenna';
 $lang["adobe_link_saving"]='Tallennetaan...';
 $lang["adobe_link_saving_wait"]='Tiedostoa tallennetaan, odota vahvistusviestiä. Saatat joutua päivittämään sivun päivittääksesi esikatselukuvan.';
 $lang["plugin-adobe_link-title"]='Adobe-linkki';
-$lang["plugin-adobe_link-desc"]='[Edistynyt] Salli Adobe-tiedostojen tuonti ResourceSpacesta Adobe CC:hen';
+$lang["plugin-adobe_link-desc"]=' Salli Adobe-tiedostojen tuonti ResourceSpacesta Adobe CC:hen';

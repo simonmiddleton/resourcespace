@@ -11,4 +11,4 @@ $lang["antivirus_deleting_file"]='Poistetaan resurssi [%resource_id%] ja kaikki 
 $lang["antivirus_moving_file"]='Siirtämässä resurssia [%resource_id%] arkistotilaan [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Antiviruksen polkua ei ole määritetty!';
 $lang["plugin-antivirus-title"]='Virustorjunta';
-$lang["plugin-antivirus-desc"]='[Edistynyt] Virustorjuntatoiminnot integroimalla useimpiin tunnettuihin virustorjuntaohjelmiin, jotka voivat suorittaa komentorivin';
+$lang["plugin-antivirus-desc"]=' Virustorjuntatoiminnot integroimalla useimpiin tunnettuihin virustorjuntaohjelmiin, jotka voivat suorittaa komentorivin';

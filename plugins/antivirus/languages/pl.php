@@ -11,4 +11,4 @@ $lang["antivirus_deleting_file"]='Usuwanie zasobu [%resource_id%] i wszelkich po
 $lang["antivirus_moving_file"]='Przenoszenie zasobu [%resource_id%] do stanu archiwum [%archive_state%]';
 $lang["antivirus_av_not_setup_error"]='Ścieżka antywirusa nie została skonfigurowana!';
 $lang["plugin-antivirus-title"]='Antywirus';
-$lang["plugin-antivirus-desc"]='[Zaawansowane] możliwości antywirusowe poprzez integrację z większością znanych silników antywirusowych, które mogą działać z linii poleceń';
+$lang["plugin-antivirus-desc"]=' możliwości antywirusowe poprzez integrację z większością znanych silników antywirusowych, które mogą działać z linii poleceń';

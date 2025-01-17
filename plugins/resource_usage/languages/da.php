@@ -13,4 +13,4 @@ $lang["delete_usage"]='Slet brug af';
 $lang["resource_usage_configuration"]='Konfiguration af ressourceforbrug';
 $lang["resource_usage_mediums"]='Liste over tilgængelige brugsmuligheder (kommasepareret)';
 $lang["plugin-resource_usage-title"]='Ressourcebrug';
-$lang["plugin-resource_usage-desc"]='[Avanceret] Tilføjer muligheden for at logge ressourcebrug via ressourcevisningssiden';
+$lang["plugin-resource_usage-desc"]=' Tilføjer muligheden for at logge ressourcebrug via ressourcevisningssiden';
