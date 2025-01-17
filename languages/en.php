@@ -132,8 +132,10 @@ $lang["property-indexing"]="<b>Indexing</b>";
 $lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]="If you enable indexing below and the field already contains data, you will need to <a target=_blank href=../tools/reindex_field.php?field=%ref>reindex this field</a>."; # %ref will be replaced with the field id
 $lang["property-index_this_field"]="Index this field";
 $lang["information_index_warning"]="Please refer to the <a href='https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata' target='_blank'>Knowledge Base</a> for detailed information on field indexing.";
-$lang["information-enable_partial_indexing"]="Partial keyword indexing (prefix+infix indexing) should be used sparingly as it will significantly increase the index size. See the Knowledge Base for details.";
+$lang["information-enable_partial_indexing"]="Partial keyword indexing (prefix+infix indexing) should be used sparingly as it will significantly increase the index size. See the Knowledge Base for details. This option is incompatible with complete indexing.";
 $lang["property-enable_partial_indexing"]="Enable partial indexing";
+$lang["information-enable_complete_indexing"]="Index field values as one unbroken keyword for this field. This option is incompatible with partial indexing.";
+$lang["property-enable_complete_indexing"]="Enable complete indexing";
 $lang["information-shorthand_name"]="Important: Shorthand name must be set for the field to appear on the search bar, in Advanced search or to be used in search/edit filters. It must contain only lowercase alphabetical characters and/or numbers - no spaces or symbols.";
 $lang["property-shorthand_name"]="Shorthand name";
 $lang["property-display_field"]="Display field";

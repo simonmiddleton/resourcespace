@@ -1924,6 +1924,7 @@ function get_resource_type_field_columns()
         'tooltip_text'             => [$lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1],
         'tab'                      => [$lang['property-tab_name'], '', 0, 0],
         'partial_index'            => [$lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1],
+        'complete_index'           => [$lang['property-enable_complete_indexing'],$lang['information-enable_complete_indexing'],1,1],
         'iptc_equiv'               => [$lang['property-iptc_equiv'],'',0,1],                                  
         'display_template'         => [$lang['property-display_template'],'',2,1],
         'display_condition'        => [$lang['property-display_condition'],$lang['information-display_condition'],2,1],

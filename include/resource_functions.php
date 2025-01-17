@@ -8457,7 +8457,6 @@ function notify_resource_change($resource)
 function add_verbatim_keywords(&$keywords, $string, $resource_type_field, $called_from_search=false)
     {
     global $resource_field_verbatim_keyword_regex,$resource_field_checkbox_match_full;
-    global $resource_field_verbatim_keyword_regex_index_intact;
 
     // add ",<string>" if specified resource_type_field is found within $resource_field_checkbox_match_full array.
     if( !$called_from_search &&
@@ -8480,12 +8479,6 @@ function add_verbatim_keywords(&$keywords, $string, $resource_type_field, $calle
     if (!empty($resource_field_verbatim_keyword_regex[$resource_type_field]))
         {
         preg_match_all($resource_field_verbatim_keyword_regex[$resource_type_field], $string, $matches);
-        if (
-            isset($matches[0][0]) 
-            && ($resource_field_verbatim_keyword_regex_index_intact[$resource_type_field] ?? false)
-            ) {
-                $keywords = [];
-            }
         foreach ($matches as $match)
             {
             foreach ($match as $sub_match)

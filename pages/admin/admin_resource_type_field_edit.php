@@ -236,7 +236,22 @@ else
             if ($column=="partial_index") // Start the hidden advanced section here
                 {?>
                 <h2 id="showhiddenfields" class="CollapsibleSectionHead collapsed" ><?php echo escape($lang["admin_advanced_field_properties"]); ?></h2>
-                <div class="CollapsibleSection" id="admin_hidden_field_properties" >     
+                <div class="CollapsibleSection" id="admin_hidden_field_properties" >
+                <script>
+                function handleIndexOptions(currentId, otherId) {
+                    const otherCheckbox = document.getElementById(otherId);
+                    otherCheckbox.disabled = currentId.checked;
+                }
+                function initializeIndexOptions() {
+                    const partialIndex = document.getElementById('field_edit_partial_index');
+                    const completeIndex = document.getElementById('field_edit_complete_index');
+                    if (partialIndex.checked) {
+                        completeIndex.disabled=true;
+                    } else if (completeIndex.checked) {
+                        partialIndex.disabled=true;
+                    }
+                }
+                </script>
                 <?php
                 }
             admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],(int)$fielddata["type"],$system_date_field);
@@ -267,6 +282,7 @@ else
 
 <script>
    registerCollapsibleSections();
+   initializeIndexOptions();
 </script>
 
 
