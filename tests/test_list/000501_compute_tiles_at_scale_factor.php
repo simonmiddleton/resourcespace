@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -17,11 +18,10 @@ $source_height = 3744;
 
 // Request tiles for a scale factor bigger than the source. Expect an empty array - ie. unable to generate tiles
 $tiles = compute_tiles_at_scale_factor(8, $source_width, $source_height);
-if(!empty($tiles))
-    {
+if (!empty($tiles)) {
     echo 'Tile region greater than source - ';
     return false;
-    }
+}
 
 
 // Request tiles for a scale factor of 4. Expect 2 tiles (1 row, 2 columns)
@@ -30,11 +30,10 @@ $expected_tile_ids = [
     'tile_0_0_4096_3744',    # row 0, col 0
     'tile_4096_0_1520_3744', # row 0, col 1
 ];
-if($expected_tile_ids !== array_column($tiles, 'id'))
-    {
+if ($expected_tile_ids !== array_column($tiles, 'id')) {
     echo 'Scale factor 4 (1 row, 2 columns) - ';
     return false;
-    }
+}
 
 
 // Request tiles for a scale factor of 2. Expect 6 tiles (2 rows, 3 columns)
@@ -47,11 +46,10 @@ $expected_tile_ids = [
     'tile_2048_2048_2048_1696', # row 1, col 1
     'tile_4096_2048_1520_1696', # row 1, col 2
 ];
-if($expected_tile_ids !== array_column($tiles, 'id'))
-    {
+if ($expected_tile_ids !== array_column($tiles, 'id')) {
     echo 'Scale factor 2 (2 rows, 3 columns) - ';
     return false;
-    }
+}
 
 
 // Request tiles for a scale factor of 1. Expect 24 tiles (4 rows, 6 columns)
@@ -85,33 +83,27 @@ $expected_tile_ids = [
     'tile_4096_3072_1024_672', # row 3, col 4
     'tile_5120_3072_496_672',  # row 3, col 5
 ];
-if($expected_tile_ids !== array_column($tiles, 'id'))
-    {
+if ($expected_tile_ids !== array_column($tiles, 'id')) {
     echo 'Scale factor 1 (4 rows, 6 columns) - ';
     return false;
-    }
+}
 
 
 // Test DZI compliance. At a scale factor of 2, expect 6 tiles (2 rows, 3 columns) starting from 0,0 and ending at 1,2.
 $tiles = compute_tiles_at_scale_factor(2, $source_width, $source_height);
 $start_tile_region = false;
 $end_tile_region = false;
-foreach($tiles as $tile)
-    {
-    if($tile['row'] === 0 && $tile['column'] === 0)
-        {
+foreach ($tiles as $tile) {
+    if ($tile['row'] === 0 && $tile['column'] === 0) {
         $start_tile_region = true;
-        }
-    elseif($tile['row'] === 1 && $tile['column'] === 2)
-        {
+    } elseif ($tile['row'] === 1 && $tile['column'] === 2) {
         $end_tile_region = true;
-        }
     }
-if(!($start_tile_region && $end_tile_region))
-    {
+}
+if (!($start_tile_region && $end_tile_region)) {
     echo 'DZI compliance at scale factor 2 - ';
     return false;
-    }
+}
 
 
 

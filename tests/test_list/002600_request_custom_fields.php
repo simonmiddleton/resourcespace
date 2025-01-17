@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 $webroot = dirname(__DIR__, 2);
@@ -42,35 +43,30 @@ $missing_options_prop = array(
     )
 );
 
-if(!empty(get_valid_custom_fields($missing_id_prop)))
-    {
+if (!empty(get_valid_custom_fields($missing_id_prop))) {
     echo "missing_id_prop - ";
     return false;
-    }
+}
 
-if(!empty(get_valid_custom_fields($missing_title_prop)))
-    {
+if (!empty(get_valid_custom_fields($missing_title_prop))) {
     echo "missing_title_prop - ";
     return false;
-    }
+}
 
-if(!empty(get_valid_custom_fields($missing_type_prop)))
-    {
+if (!empty(get_valid_custom_fields($missing_type_prop))) {
     echo "missing_type_prop - ";
     return false;
-    }
+}
 
-if(!empty(get_valid_custom_fields($missing_required_prop)))
-    {
+if (!empty(get_valid_custom_fields($missing_required_prop))) {
     echo "missing_required_prop - ";
     return false;
-    }
+}
 
-if(!empty(get_valid_custom_fields($missing_options_prop)))
-    {
+if (!empty(get_valid_custom_fields($missing_options_prop))) {
     echo "missing_options_prop - ";
     return false;
-    }
+}
 
 $fields = array(
     array(
@@ -83,11 +79,10 @@ $fields = array(
 
 // Check HTML props are generated
 $html_props = gen_custom_fields_html_props(get_valid_custom_fields($fields), []);
-if(!isset($html_props[0]["html_properties"]) || !is_array($html_props[0]["html_properties"]))
-    {
+if (!isset($html_props[0]["html_properties"]) || !is_array($html_props[0]["html_properties"])) {
     echo "Generate HTML properties - ";
     return false;
-    }
+}
 
 // Tear down
 unset($missing_id_prop, $missing_title_prop, $missing_type_prop, $missing_required_prop, $fields);

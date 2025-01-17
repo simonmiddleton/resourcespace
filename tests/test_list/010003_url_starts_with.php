@@ -36,16 +36,14 @@ $use_cases = [
         'expected' => false,
     ],
 ];
-foreach($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     $result = url_starts_with('http://test.localhost', $uc['input']);
-    if($uc['expected'] !== $result)
-        {
+    if ($uc['expected'] !== $result) {
         echo "Use case: {$uc['name']} - ";
         test_log("result = {$result}");
         return false;
-        }
     }
+}
 
 // Tear down
 unset($use_cases, $result);

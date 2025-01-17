@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -35,16 +36,14 @@ $use_cases = [
         'expected' => false,
     ],
 ];
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     $userpermissions = $use_case['perms'];
     $GLOBALS['CACHE_FC_ACCESS_CONTROL'] = null;
-    if(can_reorder_featured_collections() !== $use_case['expected'])
-        {
+    if (can_reorder_featured_collections() !== $use_case['expected']) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 

@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 # Test temporary download keys are valid. Used by API e.g. api_get_resource_path() to authenticate download links in download.php

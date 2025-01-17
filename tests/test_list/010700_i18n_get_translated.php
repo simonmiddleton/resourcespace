@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 command_line_only();
 
 // --- Set up
@@ -6,8 +7,10 @@ $initial_defaultlanguage = $defaultlanguage;
 $initial_language = $language;
 $defaultlanguage = $language = 'en';
 
-$change_global = function($identifier, $value) {
-    return function() use ($identifier, $value) { $GLOBALS[$identifier] = $value; };
+$change_global = function ($identifier, $value) {
+    return function () use ($identifier, $value) {
+        $GLOBALS[$identifier] = $value;
+    };
 };
 
 
@@ -64,23 +67,20 @@ $use_cases = [
         'expected' => 'EnglishVariant',
     ],
 ];
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     // reset use case
     $language = $initial_language;
     $defaultlanguage = $initial_defaultlanguage;
 
-    if(isset($use_case['setup']))
-        {
+    if (isset($use_case['setup'])) {
         $use_case['setup']();
-        }
-    if($use_case['expected'] !== i18n_get_translated($use_case['input']))
-        {
+    }
+    if ($use_case['expected'] !== i18n_get_translated($use_case['input'])) {
         var_dump(i18n_get_translated($use_case['input']));
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 
@@ -88,5 +88,5 @@ foreach($use_cases as $use_case)
 $defaultlanguage = $initial_defaultlanguage;
 $language = $initial_language;
 unset($initial_defaultlanguage, $initial_language, $change_global, $use_cases);
- 
+
 return true;

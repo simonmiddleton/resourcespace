@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 // Save current settings
@@ -15,7 +16,7 @@ $parentgroupa = save_usergroup(0, $setoptions);
 $setoptions = array("permissions" => $testperm . ",u,t,s","permadmin", "name" => "1202adminunrestricted");
 $parentgroupb = save_usergroup(0, $setoptions);
 
-$setoptions = array("permissions" => $testperm . ",s", "name" => "1202child", "parent"=>$parentgroupa);
+$setoptions = array("permissions" => $testperm . ",s", "name" => "1202child", "parent" => $parentgroupa);
 $childgroupa = save_usergroup(0, $setoptions);
 
 // Create users
@@ -53,39 +54,35 @@ $udata_cache = [];
 $adminadata = get_user($admina);
 setup_user($adminadata);
 $result = get_users_by_permission([$testperm]);
-if(!is_array($result) || !match_values(array_column($result,'ref'),array($admina, $childa)))
-    {
+if (!is_array($result) || !match_values(array_column($result, 'ref'), array($admina, $childa))) {
     echo "ERROR - SUBTEST A\n";
     return false;
-    }
+}
 
 // Test C Get all users with $testperm permission, no restriction
 $adminbdata = get_user($adminb);
 setup_user($adminbdata);
 $result = get_users_by_permission([$testperm]);
-if(!is_array($result) || !match_values(array_column($result,'ref'),[$admina, $adminb, $childa]))
-    {
+if (!is_array($result) || !match_values(array_column($result, 'ref'), [$admina, $adminb, $childa])) {
     echo "ERROR - SUBTEST C\n";
     return false;
-    }
+}
 
 // Test D Get all users with a set of permissions, no restriction
 $result = get_users_by_permission([$testperm,"u","U","t","s"]);
-if(!is_array($result) || !match_values(array_column($result,'ref'),[$admina]))
-    {
+if (!is_array($result) || !match_values(array_column($result, 'ref'), [$admina])) {
     echo "ERROR - SUBTEST D\n";
     return false;
-    }
+}
 
 // Test E Get all users with $testperm as standard user (no results)
 $childadata = get_user($childa);
 setup_user($childadata);
 $result = get_users_by_permission([$testperm]);
-if(!empty($result))
-    {
+if (!empty($result)) {
     echo "ERROR - SUBTEST E\n";
     return false;
-    }
+}
 
 // Reset saved settings
 $usereditfilter = $saved_edit_filter;

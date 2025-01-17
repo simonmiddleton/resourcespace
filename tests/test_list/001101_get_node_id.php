@@ -1,4 +1,6 @@
-<?php command_line_only();
+<?php
+
+command_line_only();
 
 // --- Set up
 $rtf_text = create_resource_type_field('Test #1101 text', 1, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, 'test_1101_text', false);
@@ -45,14 +47,12 @@ $use_cases = [
         'expected' => false,
     ],
 ];
-foreach($use_cases as $uc)
-    {
-    if($uc['expected'] !== get_node_id($uc['input']['value'], $uc['input']['resource_type_field']))
-        {
+foreach ($use_cases as $uc) {
+    if ($uc['expected'] !== get_node_id($uc['input']['value'], $uc['input']['resource_type_field'])) {
         echo "Use case: {$uc['name']} - ";
         return false;
-        }
     }
+}
 
 
 

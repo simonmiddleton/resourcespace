@@ -94,18 +94,15 @@ $use_cases = [
 ];
 
 foreach ($use_cases as $use_case) {
-
     $output = html_break_long_words($use_case['input']['inputString'], $use_case['input']['length']);
 
     if ($use_case['expected'] !== $output) {
-
         echo "Use case: {$use_case['name']} - ";
         test_log("Output: " . $output);
         test_log("Expected = " . $use_case['expected']);
         test_log('--- ');
         return false;
     }
-
 }
 
 //Tests all pass so return true

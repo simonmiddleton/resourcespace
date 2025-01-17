@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -31,20 +32,18 @@ $annotorious_annotation = [
 
 // Simple use
 $annotation_ref = createAnnotation($annotorious_annotation);
-if($annotation_ref === false)
-    {
+if ($annotation_ref === false) {
     echo 'Unable to create annotation - ';
     return false;
-    }
+}
 
 // Create annotation with tags
 $annotation['tags'] = [$uk];
 $annotation_ref = createAnnotation($annotorious_annotation);
-if($annotation_ref === false)
-    {
+if ($annotation_ref === false) {
     echo 'Annotation w/ tags - ';
     return false;
-    }
+}
 
 // Tear down
 unset($annotate_fields, $resource_ref, $uk, $annotorious_annotation, $annotation_ref);

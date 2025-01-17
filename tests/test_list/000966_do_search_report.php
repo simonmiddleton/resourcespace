@@ -1,14 +1,15 @@
-<?php command_line_only();
+<?php
+
+command_line_only();
 
 // --- Set up
 $run_id = test_generate_random_ID(10);
 $original_userpermissions = $userpermissions;
 
 // Resources
-for ($i=0; $i < 5; $i++)
-    {
+for ($i = 0; $i < 5; $i++) {
     create_resource(1, 0, -1, "test_966-{$run_id}");
-    }
+}
 create_resource(2, 0, -1, "test_966-{$run_id}"); # A "Document" resource
 
 // Reports
@@ -78,7 +79,9 @@ $use_cases = [
     ],
     [
         'name' => 'Access control prevents user from viewing report as search results',
-        'setup' => function() { $GLOBALS['userpermissions'] = array_values(array_diff($GLOBALS['userpermissions'], ['t'])); },
+        'setup' => function () {
+            $GLOBALS['userpermissions'] = array_values(array_diff($GLOBALS['userpermissions'], ['t']));
+        },
         'input' => ["!report{$report_id_created_resources}"],
         'expected' => 0,
     ],
@@ -93,32 +96,34 @@ $use_cases = [
         'expected' => 1,
     ],
 ];
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     // Reset before testing this use case
     $userpermissions = $original_userpermissions;
 
     // Set up the use case environment
-    if(isset($use_case['setup']))
-        {
+    if (isset($use_case['setup'])) {
         $use_case['setup']();
-        }
- 
+    }
+
     $results = do_search(...$use_case['input']);
-    if(count($results) !== $use_case['expected'])
-        {
+    if (count($results) !== $use_case['expected']) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 
 // Tear down
 $userpermissions = $original_userpermissions;
 unset(
-    $run_id, $original_userpermissions, $report_id_created_resources, $report_id_ncsql, $report_id_pending_submissions,
-    $use_cases, $results
+    $run_id,
+    $original_userpermissions,
+    $report_id_created_resources,
+    $report_id_ncsql,
+    $report_id_pending_submissions,
+    $use_cases,
+    $results
 );
 
 return true;

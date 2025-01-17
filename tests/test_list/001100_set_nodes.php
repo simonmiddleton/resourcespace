@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -18,56 +19,50 @@ $node_id_7c = set_node(null, $resource_type_field, 'Same node name test', null, 
 
 // Have nodes been set? No other integrity check...
 $current_node = array();
-if(!get_node($node_id_1, $current_node) || !get_node($node_id_2, $current_node))
-    {
+if (!get_node($node_id_1, $current_node) || !get_node($node_id_2, $current_node)) {
     return false;
-    }
+}
 
 // Check node (expecting parent empty and order by 10)
 $current_node = array();
-if(get_node($node_id_1, $current_node)
+if (
+    get_node($node_id_1, $current_node)
     && ($resource_type_field != $current_node['resource_type_field'] || 'New option added via test' != $current_node['name'] || '' != $current_node['parent'] || 10 != $current_node['order_by'])
-)
-    {
+) {
     return false;
-    }
+}
 
 // Check node (expecting parent empty and order by 40
 $current_node = array();
-if(get_node($node_id_2, $current_node)
-   && ($resource_type_field != $current_node['resource_type_field'] || 'Option assigned order_by' != $current_node['name'] || '' != $current_node['parent'] || 40 != $current_node['order_by'])
-)
-    {
+if (
+    get_node($node_id_2, $current_node)
+    && ($resource_type_field != $current_node['resource_type_field'] || 'Option assigned order_by' != $current_node['name'] || '' != $current_node['parent'] || 40 != $current_node['order_by'])
+) {
     return false;
-    }
+}
 
 // Check cases when either resource_type_field or name are invalid, hence returning false
-if(false !== $node_id_3 || false !== $node_id_4 || false !== $node_id_5 || false !== $node_id_6)
-    {
+if (false !== $node_id_3 || false !== $node_id_4 || false !== $node_id_5 || false !== $node_id_6) {
     return false;
-    }
+}
 
 // Check cases for multiple nodes with the same name
 $i = 0;
-foreach(get_nodes($resource_type_field, null, false, null, null, 'Same node name test') as $node)
-    {
-    if('Same node name test' != $node['name'])
-        {
+foreach (get_nodes($resource_type_field, null, false, null, null, 'Same node name test') as $node) {
+    if ('Same node name test' != $node['name']) {
         continue;
-        }
+    }
 
-    if(!in_array($node['ref'], array($node_id_7a, $node_id_7b, $node_id_7c)))
-        {
+    if (!in_array($node['ref'], array($node_id_7a, $node_id_7b, $node_id_7c))) {
         return false;
-        }
+    }
 
     $i++;
-    }
+}
 // Something went wrong with creating these nodes
-if(0 === $i)
-    {
+if (0 === $i) {
     return false;
-    }
+}
 
 // Creating some nodes to be used as parents or children
 $resource_type_field = create_resource_type_field('nodes_testing_tree', 1, FIELD_TYPE_CATEGORY_TREE, 'nodes_testing_tree', false);
@@ -99,20 +94,17 @@ $parent_children_nodes = array(
     $child_node_id_33
 );
 
-if (in_array($child_node_id_34,$parent_children_nodes) || !in_array($child_node_id_35,$parent_children_nodes))
-    {
+if (in_array($child_node_id_34, $parent_children_nodes) || !in_array($child_node_id_35, $parent_children_nodes)) {
     return false;
-    }
+}
 
 $parent_children_nodes[] = $child_node_id_34;
 
-foreach(get_nodes($resource_type_field, null, true) as $nodes)
-    {
-    if(!in_array($nodes['ref'], $parent_children_nodes))
-        {
+foreach (get_nodes($resource_type_field, null, true) as $nodes) {
+    if (!in_array($nodes['ref'], $parent_children_nodes)) {
         return false;
-        }
     }
+}
 
 // TODO: check set_node() for updating capabilities (names, orders)
 

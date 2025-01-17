@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 command_line_only();
 
 // --- Set up
@@ -34,28 +35,25 @@ add_resource_to_collection($resource_b, $collection_ref);
 $resources_list = [$resource_a, $resource_b];
 
 // Assert helpers
-$assert_same_all_resources_fieldx = function($resources, $rtf)
-    {
+$assert_same_all_resources_fieldx = function ($resources, $rtf) {
     $data = [];
-    foreach($resources as $resource)
-        {
+    foreach ($resources as $resource) {
         $data[$resource] = get_resource_data($resource, false)["field{$rtf}"];
-        }
-    
+    }
+
     $fieldx_value = reset($data);
 
-    if(
+    if (
         count($data) > 1
         && count(array_unique($data)) === 1
         && $fieldx_value !== false
         && mb_strpos($fieldx_value, $GLOBALS['field_column_string_separator']) !== false
-    )
-        {
+    ) {
         return true;
-        }
+    }
 
     return false;
-    };
+};
 
 // Deactivate some nodes
 toggle_active_state_for_nodes([$ckb_opt_c, $drpd_opt_b]);
@@ -127,20 +125,17 @@ $use_cases = [
         'expected' => true,
     ],
 ];
-foreach ($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     // Set up the use case environment
-    if(isset($uc['setup']))
-        {
+    if (isset($uc['setup'])) {
         $uc['setup']();
-        }
+    }
 
-    if($uc['expected'] !== save_resource_data_multi($uc['input']['collection'], [], $uc['input']['postvals']))
-        {
+    if ($uc['expected'] !== save_resource_data_multi($uc['input']['collection'], [], $uc['input']['postvals'])) {
         echo "Use case: {$uc['name']} - ";
         return false;
-        }
     }
+}
 
 
 // Check field_column_string_separator is applied for fixed list fields
@@ -152,11 +147,10 @@ $_POST['nodes'][$rtf_checkbox] = [$ckb_opt_a, $ckb_opt_b];
 $_POST["editthis_field_{$rtf_checkbox}"] = 'yes';
 $_POST["modeselect_{$rtf_checkbox}"] = 'RT';
 save_resource_data_multi($collection_ref);
-if(!$assert_same_all_resources_fieldx($resources_list, $rtf_checkbox))
-    {
+if (!$assert_same_all_resources_fieldx($resources_list, $rtf_checkbox)) {
     echo "Use case (RT mode): use separator for storing multiple node values in the resource table (column fieldX) - ";
     return false;
-    }
+}
 
 
 // - Category tree
@@ -166,11 +160,10 @@ $_POST['nodes'][$rtf_cat_tree] = [$ct_opt_colors, $ct_opt_colors_red, $ct_opt_co
 $_POST["editthis_field_{$rtf_cat_tree}"] = 'yes';
 $_POST["modeselect_{$rtf_cat_tree}"] = 'RT';
 save_resource_data_multi($collection_ref);
-if(!$assert_same_all_resources_fieldx($resources_list, $rtf_cat_tree))
-    {
+if (!$assert_same_all_resources_fieldx($resources_list, $rtf_cat_tree)) {
     echo 'Use case (RT mode): use separator for storing multiple node paths for category tree in column fieldX - ';
     return false;
-    }
+}
 
 
 $cat_tree_fieldx_value = get_resource_data($resource_a, false)["field{$rtf_cat_tree}"];
@@ -181,7 +174,9 @@ $cat_tree_fieldX_values = array_intersect_key(
 $expected_cat_tree_fieldx_value = implode(
     $field_column_string_separator,
     array_map(
-        function(array $v): string { return implode('/', $v); },
+        function (array $v): string {
+            return implode('/', $v);
+        },
         [
             [$cat_tree_fieldX_values[$ct_opt_colors]],
             [$cat_tree_fieldX_values[$ct_opt_colors], $cat_tree_fieldX_values[$ct_opt_colors_black]],
@@ -189,12 +184,12 @@ $expected_cat_tree_fieldx_value = implode(
         ]
     )
 );
-if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
-)
-    {
+if (
+    $expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
+) {
     echo 'Use case (RT mode): column fieldX (category tree) having nodes resolved according to their order_by - ';
     return false;
-    }
+}
 
 
 // -- Append all text/options
@@ -203,11 +198,10 @@ $_POST['nodes'][$rtf_cat_tree] = [$ct_opt_numbers, $ct_opt_colors, $ct_opt_color
 $_POST["editthis_field_{$rtf_cat_tree}"] = 'yes';
 $_POST["modeselect_{$rtf_cat_tree}"] = 'AP';
 save_resource_data_multi($collection_ref);
-if(!$assert_same_all_resources_fieldx($resources_list, $rtf_cat_tree))
-    {
+if (!$assert_same_all_resources_fieldx($resources_list, $rtf_cat_tree)) {
     echo 'Use case (AP mode): use separator for storing multiple node paths for category tree in column fieldX - ';
     return false;
-    }
+}
 
 $cat_tree_fieldx_value = get_resource_data($resource_a, false)["field{$rtf_cat_tree}"];
 $cat_tree_fieldX_values = array_intersect_key(
@@ -217,7 +211,9 @@ $cat_tree_fieldX_values = array_intersect_key(
 $expected_cat_tree_fieldx_value = implode(
     $field_column_string_separator,
     array_map(
-        function(array $v): string { return implode('/', $v); },
+        function (array $v): string {
+            return implode('/', $v);
+        },
         [
             [$cat_tree_fieldX_values[$ct_opt_colors]],
             [$cat_tree_fieldX_values[$ct_opt_colors], $cat_tree_fieldX_values[$ct_opt_colors_black]],
@@ -226,12 +222,12 @@ $expected_cat_tree_fieldx_value = implode(
         ]
     )
 );
-if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
-)
-    {
+if (
+    $expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
+) {
     echo 'Use case (AP mode): column fieldX (category tree) having nodes resolved according to their order_by - ';
     return false;
-    }
+}
 
 
 
@@ -239,9 +235,23 @@ if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
 $field_column_string_separator = $initial_field_column_string_separator;
 $data_joins = $_POST = [];
 unset(
-    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $resource_a, $resource_b, $collection_ref, $resources_list, $rtf_date,
-    $assert_same_all_resources_fieldx, $cat_tree_fieldx_value, $cat_tree_fieldX_values, $expected_cat_tree_fieldx_value,
-    $use_cases, $rtf_dropdown, $ckb_opt_c, $drpd_opt_a, $drpd_opt_b
+    $rtf_checkbox,
+    $ckb_opt_a,
+    $ckb_opt_b,
+    $resource_a,
+    $resource_b,
+    $collection_ref,
+    $resources_list,
+    $rtf_date,
+    $assert_same_all_resources_fieldx,
+    $cat_tree_fieldx_value,
+    $cat_tree_fieldX_values,
+    $expected_cat_tree_fieldx_value,
+    $use_cases,
+    $rtf_dropdown,
+    $ckb_opt_c,
+    $drpd_opt_a,
+    $drpd_opt_b
 );
 
 return true;

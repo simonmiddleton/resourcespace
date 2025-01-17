@@ -1,8 +1,8 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
+
+if ('cli' != PHP_SAPI) {
     exit('This utility is command line only.');
-    }
+}
 
 // Set up
 $orig_userpermissions = $userpermissions;
@@ -16,31 +16,28 @@ $userpermissions = array_diff($userpermissions, ['a']);
 $deleted_tab = delete_tabs([$tab_1]);
 $userpermissions = $orig_userpermissions;
 $found = get_tabs_by_refs([$tab_1])[0]['ref'] ?? 0;
-if($deleted_tab || $found === 0)
-    {
+if ($deleted_tab || $found === 0) {
     echo 'Delete tabs (unauthorised) - ';
     return false;
-    }
+}
 
 
 // Check you can't delete the "Default" tab (always ref #1)
 $deleted_tab = delete_tabs([1]);
 $found = get_tabs_by_refs([1])[0]['ref'] ?? 0;
-if($found === 0)
-    {
+if ($found === 0) {
     echo 'Prevent deleting the "Default" tab - ';
     return false;
-    }
+}
 
 
 // Check delete tab functionality
 $deleted_tab = delete_tabs([$tab_1, $tab_2]);
 $found = get_tabs_by_refs([$tab_2])[0]['ref'] ?? 0;
-if($deleted_tab && $found > 0)
-    {
+if ($deleted_tab && $found > 0) {
     echo 'Delete tabs - ';
     return false;
-    }
+}
 
 
 

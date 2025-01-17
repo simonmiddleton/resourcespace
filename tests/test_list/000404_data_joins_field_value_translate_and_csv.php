@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 command_line_only();
 
 // --- Set up
@@ -49,19 +50,17 @@ $use_cases = [
         'expected' => 'Colors, Colors/red',
     ],
 ];
-foreach($use_cases as $use_case)
-    {
-    if($use_case['expected'] !== data_joins_field_value_translate_and_csv($use_case['input']))
-        {
+foreach ($use_cases as $use_case) {
+    if ($use_case['expected'] !== data_joins_field_value_translate_and_csv($use_case['input'])) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 
 // Tear down
 $field_column_string_separator = $initial_field_column_string_separator;
 unset($initial_field_column_string_separator, $use_cases);
- 
+
 return true;

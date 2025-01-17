@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 command_line_only();
 
 // --- Set up
@@ -25,16 +26,15 @@ $locked_fields = [$rtf_checkbox];
 $last_edited = $resource_a;
 copy_locked_fields($resource_b, $fields, $all_selected_nodes, $locked_fields, $last_edited, true);
 unset($fields, $all_selected_nodes, $locked_fields, $last_edited);
-if(mb_strpos(get_resource_data($resource_b, false)["field{$rtf_checkbox}"], $field_column_string_separator) === false)
-    {
+if (mb_strpos(get_resource_data($resource_b, false)["field{$rtf_checkbox}"], $field_column_string_separator) === false) {
     echo "Use case: use separator for storing multiple node values in the resource table (column fieldX) - ";
     return false;
-    }
+}
 
 
 
 // Tear down
 $data_joins = [];
 unset($rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $resource_a, $resource_b);
- 
+
 return true;

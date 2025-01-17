@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 // Check for searching using $search_all_workflow_states=false;
@@ -22,24 +23,22 @@ $search_all_workflow_states = false;
 // SUBTEST A
 // Add a new resource in pending archive state and check not returned
 $userref = 999;
-$resourcea = create_resource(1,1);
+$resourcea = create_resource(1, 1);
 $userref = 1;
 $userpermissions = array("s","g","f*");
 $results = do_search('');
-if(is_array($results) && count($results) != $basecount)
-    {
+if (is_array($results) && count($results) != $basecount) {
     echo "ERROR - SUBTEST A\n";
     return false;
-    }
+}
 
 // SUBTEST B
 $search_all_workflow_states = true;
 $results = do_search('');
-if(count($results) != $allcount + 1)
-    {
+if (count($results) != $allcount + 1) {
     echo "ERROR - SUBTEST B\n";
     return false;
-    }
+}
 
 // Update new total
 $allcount++;
@@ -48,33 +47,31 @@ $allcount++;
 // Add a new resource in pending review state and check not returned
 $userref = 999;
 $userpermissions = $savedpermissions;
-$resourceb = create_resource(1,-1);
+$resourceb = create_resource(1, -1);
 $userref = 1;
 $userpermissions = array("s","g","f*");
 $results = do_search('');
-if(is_array($results) && count($results) != $allcount)
-    {
+if (is_array($results) && count($results) != $allcount) {
     echo "ERROR - SUBTEST C\n";
     return false;
-    }
+}
 
 // SUBTEST E
 // Add a new resource in pending submission state and check it is not returned
-$userref=999;
+$userref = 999;
 $userpermissions = $savedpermissions;
-$resourceb=create_resource(1,-2);
-$userref=1;
+$resourceb = create_resource(1, -2);
+$userref = 1;
 $userpermissions = array("s","g","f*");
 $results = do_search('');
-if(count($results) != $allcount)
-    {
+if (count($results) != $allcount) {
     echo "ERROR - SUBTEST E\n";
     return false;
-    }
-       
+}
+
 // Reset to standard settings
 $userref = $saved_userref;
 $userpermissions = $savedpermissions;
-$search_all_workflow_states=false;
+$search_all_workflow_states = false;
 
 return true;

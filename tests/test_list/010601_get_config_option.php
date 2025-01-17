@@ -1,4 +1,6 @@
-<?php command_line_only();
+<?php
+
+command_line_only();
 /*
 The order of config loading (overriding) is:-
 - default
@@ -15,17 +17,16 @@ Note: this is mostly dealing with GLOBAL "config" variables. ResourceSpace has t
 // --- Set up
 $original_user_ref = $userref;
 
-$test_10601_setup_user = function(array $info)
-    {
+$test_10601_setup_user = function (array $info) {
     unset($GLOBALS['udata_cache']);
     return get_user(get_user_by_username($info['username']) ?: new_user($info['username'], $info['usergroup'] ?? 3));
-    };
+};
 
 $user_SA = $test_10601_setup_user(['username' => 'test_10601_user1']);
 
 $init_application_name = 'ResourceSpace - test #10601';
 $system_wide_application_name = "{$init_application_name} -- system wide";
-$system_wide_setup = function() use ($system_wide_application_name) {
+$system_wide_setup = function () use ($system_wide_application_name) {
     $GLOBALS['system_wide_config_options']['applicationname'] = $system_wide_application_name;
 };
 // --- End of Set up
@@ -39,10 +40,10 @@ $use_cases = [
         'expected' => ['value' => null, 'return' => false],
     ],
 
-    // System wide configs    
+    // System wide configs
     [
         'name' => 'Get system wide config option (globally, without using a default)',
-        'setup' => function() use ($system_wide_application_name) {
+        'setup' => function () use ($system_wide_application_name) {
             // The global scope is overriden with the system wide scope values (ie $GLOBALS['system_wide_config_options'])
             // Not an ideal scenario. We should aim to use the default if possible.
             $GLOBALS['applicationname'] = $system_wide_application_name;
@@ -63,7 +64,7 @@ $use_cases = [
     ],
     [
         'name' => 'No system wide config option, get default value',
-        'setup' => function() {
+        'setup' => function () {
             unset($GLOBALS['system_wide_config_options']['applicationname']);
         },
         'input' => ['user_id' => null, 'name' => 'applicationname', 'default' => 'test_10601_default_value'],
@@ -76,7 +77,7 @@ $use_cases = [
     // User preferences (configs)
     [
         'name' => 'Get user preference',
-        'setup' => function() use ($user_SA) {
+        'setup' => function () use ($user_SA) {
             set_config_option($user_SA, 'applicationname', 'RS-SA');
         },
         'input' => ['user_id' => $user_SA, 'name' => 'applicationname', 'default' => null],
@@ -84,7 +85,7 @@ $use_cases = [
     ],
     [
         'name' => 'No user preference, needs to get system wide value (provided as default)',
-        'setup' => function() use ($user_SA) {
+        'setup' => function () use ($user_SA) {
             ps_query("DELETE FROM user_preferences WHERE user = ? AND parameter = 'applicationname'", ['i', $user_SA]);
         },
         'input' => ['user_id' => $user_SA, 'name' => 'applicationname', 'default' => $system_wide_application_name],
@@ -92,32 +93,33 @@ $use_cases = [
     ],
     [
         'name' => 'Fallback to the user group config override value (last config override)',
-        'setup' => function() use ($test_10601_setup_user) {
-            // Mock that by default the config is disabled (not necessary but it may prevent the test from failing if 
+        'setup' => function () use ($test_10601_setup_user) {
+            // Mock that by default the config is disabled (not necessary but it may prevent the test from failing if
             // config.default will be changed)
             $GLOBALS['user_pref_resource_notifications'] = false;
             $GLOBALS['system_wide_config_options']['user_pref_resource_notifications'] = false;
 
             // Get user group with config overrides
             $usergroup_w_overrides = get_usergroup(array_key_first(get_usergroups(false, 'test_10601_usergroup', true)));
-            if($usergroup_w_overrides === false)
-                {
+            if ($usergroup_w_overrides === false) {
                 $new_ug = save_usergroup(0, [
                     'name' => 'test_10601_usergroup',
                     'config_options' => '$user_pref_resource_notifications = true;',
                 ]);
                 resign_all_code(false, false);
                 $usergroup_w_overrides = get_usergroup($new_ug);
-                }
+            }
 
             // Get a user for whom those group config overrides should apply
             $user_w_group_overrides = $test_10601_setup_user(['username' => 'test_10601_user2', 'usergroup' => $usergroup_w_overrides['ref']]);
             setup_user($user_w_group_overrides);
         },
-        'cleanup' => function() use ($original_user_ref) { setup_user(get_user($original_user_ref)); },
+        'cleanup' => function () use ($original_user_ref) {
+            setup_user(get_user($original_user_ref));
+        },
         'input' => [
             // Defer getting the user ID until after we've set up the use case (otherwise the user might not exist)
-            'user_id' => function() {
+            'user_id' => function () {
                 return get_user(get_user_by_username('test_10601_user2'))['ref'];
             },
             'name' => 'user_pref_resource_notifications',
@@ -126,17 +128,15 @@ $use_cases = [
         'expected' => ['value' => true, 'return' => false],
     ],
 ];
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     // Reset before testing this use case
     $GLOBALS['applicationname'] = $init_application_name;
     $system_wide_setup();
 
     // Set up the use case environment
-    if(isset($use_case['setup']))
-        {
+    if (isset($use_case['setup'])) {
         $use_case['setup']();
-        }
+    }
 
     $uci_user_id = is_callable($use_case['input']['user_id']) ? $use_case['input']['user_id']() : $use_case['input']['user_id'];
     $uci_name = $use_case['input']['name'];
@@ -161,24 +161,27 @@ config value | $js_returned_config_option_value | $js_value
 EOL);
 
     // Clean up the environment. Prevent follow-up cases from failing because a use case modified it heavily.
-    if(isset($use_case['cleanup']))
-        {
+    if (isset($use_case['cleanup'])) {
         $use_case['cleanup']();
-        }
+    }
 
-    if(!($use_case['expected']['return'] === $result && $use_case['expected']['value'] === $returned_config_option_value))
-        {
+    if (!($use_case['expected']['return'] === $result && $use_case['expected']['value'] === $returned_config_option_value)) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 
 // Tear down
 unset(
-    $original_user_ref, $test_10601_setup_user, $user_SA, $init_application_name, $system_wide_application_name,
-    $system_wide_setup, $use_cases
+    $original_user_ref,
+    $test_10601_setup_user,
+    $user_SA,
+    $init_application_name,
+    $system_wide_application_name,
+    $system_wide_setup,
+    $use_cases
 );
 
 return true;

@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -25,82 +26,72 @@ $pass_hmac_v3 = hash_hmac('sha256', $RS_madeup_pass, $scramble_key);
 // Hash a plain text password
 $rs_password_hash = rs_password_hash($plaintext_pass);
 $rs_password_hmac = hash_hmac('sha256', $plaintext_pass, $scramble_key);
-if(!($rs_password_hash !== false && password_verify($rs_password_hmac , $rs_password_hash)))
-    {
+if (!($rs_password_hash !== false && password_verify($rs_password_hmac, $rs_password_hash))) {
     echo 'Hash plain text password - ';
     return false;
-    }
+}
 
 
 // User password is not hashed at all (v0 - stored in plain text in the DB)
-if(!rs_password_verify($plaintext_pass, $plaintext_pass, $pass_data))
-    {
+if (!rs_password_verify($plaintext_pass, $plaintext_pass, $pass_data)) {
     echo 'Verify password hash v0 (plain text) - ';
     return false;
-    }
+}
 
 
 // User password is MD5 hashed (v1 - MD5 stored in the DB)
-if(!rs_password_verify($plaintext_pass, $pass_hash_v1, $pass_data))
-    {
+if (!rs_password_verify($plaintext_pass, $pass_hash_v1, $pass_data)) {
     echo 'Verify password hash v1 (MD5) - ';
     return false;
-    }
+}
 
 
 // User password is SHA256 hashed (v2 - SHA256 stored in the DB)
-if(!rs_password_verify($plaintext_pass, $pass_hash_v2, $pass_data))
-    {
+if (!rs_password_verify($plaintext_pass, $pass_hash_v2, $pass_data)) {
     echo 'Verify password hash v2 (SHA256) - ';
     return false;
-    }
+}
 
 
 // User password is hashed based on config (v3 - stored in the DB)
-if(!rs_password_verify($plaintext_pass, $pass_hash_v3, $pass_data))
-    {
+if (!rs_password_verify($plaintext_pass, $pass_hash_v3, $pass_data)) {
     echo 'Verify password hash v3 - ';
     return false;
-    }
+}
 
 
 // User provided a bad password
-if(rs_password_verify('some bad password', $pass_hash_v3, $pass_data))
-    {
+if (rs_password_verify('some bad password', $pass_hash_v3, $pass_data)) {
     echo 'Verify bad password - ';
     return false;
-    }
+}
 
 
 // User provided a password hash - by default this should return FALSE
-if(rs_password_verify($pass_hash_v3, $pass_hash_v3, $pass_data))
-    {
+if (rs_password_verify($pass_hash_v3, $pass_hash_v3, $pass_data)) {
     echo 'Verify password when user input hash - ';
     return false;
-    }
+}
 
 // User provided an old password hash - by default this should return FALSE
-if(rs_password_verify($pass_hash_v2, $pass_hash_v2, $pass_data))
-    {
+if (rs_password_verify($pass_hash_v2, $pass_hash_v2, $pass_data)) {
     echo 'Verify password when user input old v2 hash - ';
     return false;
-    }
+}
 
 
 // User provided a password hash - in a login context where we can impersonate a user (ie using the hash) - should return TRUE
 $extra_pass_data = ['impersonate_user' => true];
-if(!rs_password_verify($pass_hash_v3, $pass_hash_v3, array_merge($pass_data, $extra_pass_data)))
-    {
+if (!rs_password_verify($pass_hash_v3, $pass_hash_v3, array_merge($pass_data, $extra_pass_data))) {
     echo 'Verify password when user input hash (impersonating user) - ';
     return false;
-    }
+}
 
 // User provided a plain text password - in a login context where we can impersonate a user (ie using the hash) - should return TRUE
-if(!rs_password_verify($plaintext_pass, $plaintext_pass, array_merge($pass_data, $extra_pass_data)))
-    {
+if (!rs_password_verify($plaintext_pass, $plaintext_pass, array_merge($pass_data, $extra_pass_data))) {
     echo 'Verify password when user input plain text password (impersonating user) - ';
     return false;
-    }
+}
 
 
 // Tear down

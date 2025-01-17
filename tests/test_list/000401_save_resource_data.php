@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 command_line_only();
 
 // --- Set up
@@ -45,28 +46,25 @@ $use_cases = [
         'expected' => [$rtf_date => $lang['error_invalid_date'] . ' : 01-04-2022'], // it means it errored - see save_resource_data
     ],
 ];
-foreach ($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     $_POST["field_{$rtf_date}"] = $uc['post']['value'];
     $result = save_resource_data($uc['input']['ref'], false, $uc['input']['autosave_field']);
-    
-    if($uc['expected'] !== $result)
-        {
+
+    if ($uc['expected'] !== $result) {
         echo "Use case: {$uc['name']} - ";
         return false;
-        }
-    
+    }
+
     // Check (internal) saving behaviour (e.g for a date field, if input is invalid it shouldn't be saved)
     $saved_value = get_data_by_field($uc['input']['ref'], $uc['input']['autosave_field'], true);
-    if(
+    if (
         ($result === true && $uc['post']['value'] !== $saved_value)
         || (is_array($result) && $saved_value !== '')
-    )
-        {
+    ) {
         echo "Use case (data save): {$uc['name']} - ";
         return false;
-        }
     }
+}
 
 
 // Check field_column_string_separator is applied for fixed list fields
@@ -77,22 +75,20 @@ $data_joins[] = $rtf_checkbox;
 $_POST['nodes'][$rtf_checkbox] = [$ckb_opt_a, $ckb_opt_b];
 save_resource_data($resource_a, false, $rtf_checkbox);
 $ckb_fieldx_value = get_resource_data($resource_a, false)["field{$rtf_checkbox}"];
-if(mb_strpos($ckb_fieldx_value, $field_column_string_separator) === false)
-    {
+if (mb_strpos($ckb_fieldx_value, $field_column_string_separator) === false) {
     echo 'Use case: use separator for storing multiple node values in the resource table (column fieldX) - ';
     return false;
-    }
+}
 
 // - When field_column_string_separator is applied, nodes should be resolved according to their order_by
 $expected_fieldX_value = implode(
     $field_column_string_separator,
     array_intersect_key(array_column(get_nodes($rtf_checkbox), 'name', 'ref'), array_flip([$ckb_opt_b, $ckb_opt_a]))
 );
-if($ckb_fieldx_value !== $expected_fieldX_value)
-    {
+if ($ckb_fieldx_value !== $expected_fieldX_value) {
     echo 'Use case: column fieldX having nodes resolved according to their order_by - ';
     return false;
-    }
+}
 
 
 // - Category tree
@@ -100,11 +96,10 @@ $data_joins[] = $rtf_cat_tree;
 $_POST['nodes'][$rtf_cat_tree] = [$ct_opt_colors, $ct_opt_colors_red, $ct_opt_colors_black];
 save_resource_data($resource_a, false, $rtf_cat_tree);
 $cat_tree_fieldx_value = get_resource_data($resource_a, false)["field{$rtf_cat_tree}"];
-if(mb_strpos($cat_tree_fieldx_value, $field_column_string_separator) === false)
-    {
+if (mb_strpos($cat_tree_fieldx_value, $field_column_string_separator) === false) {
     echo 'Use case: use separator for storing multiple node paths for category tree in column fieldX - ';
     return false;
-    }
+}
 
 $cat_tree_fieldX_values = array_intersect_key(
     array_column(get_nodes($rtf_cat_tree, null, true), 'name', 'ref'),
@@ -113,7 +108,9 @@ $cat_tree_fieldX_values = array_intersect_key(
 $expected_cat_tree_fieldx_value = implode(
     $field_column_string_separator,
     array_map(
-        function(array $v): string { return implode('/', $v); },
+        function (array $v): string {
+            return implode('/', $v);
+        },
         [
             [$cat_tree_fieldX_values[$ct_opt_colors]],
             [$cat_tree_fieldX_values[$ct_opt_colors], $cat_tree_fieldX_values[$ct_opt_colors_black]],
@@ -121,44 +118,40 @@ $expected_cat_tree_fieldx_value = implode(
         ]
     )
 );
-if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value)
-    {
+if ($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value) {
     echo 'Use case: column fieldX (category tree) having nodes resolved according to their order_by - ';
     return false;
-    }
+}
 
 // Check disabled options use cases. Info: https://www.resourcespace.com/knowledge-base/developers/fixed-list-fields
 toggle_active_state_for_nodes([$ckb_opt_c, $drpd_opt_b]);
 // - Disabled options shouldn't be added to resources
 $_POST['nodes'][$rtf_checkbox] = [$ckb_opt_b, $ckb_opt_c];
 save_resource_data($resource_c, false, $rtf_checkbox);
-if(array_column(get_resource_nodes($resource_c, $rtf_checkbox, true), 'ref') !== [$ckb_opt_b])
-    {
+if (array_column(get_resource_nodes($resource_c, $rtf_checkbox, true), 'ref') !== [$ckb_opt_b]) {
     echo 'Use case: Adding disabled options - ';
     return false;
-    }
+}
 
 // - Disabled options shouldn't be removed (exceptions apply)
 delete_all_resource_nodes($resource_c);
 add_resource_nodes($resource_c, [$ckb_opt_c], false, false); # Pretend we already had it
 $_POST['nodes'][$rtf_checkbox] = [$ckb_opt_b];
 save_resource_data($resource_c, false, $rtf_checkbox);
-if(array_column(get_resource_nodes($resource_c, $rtf_checkbox, true), 'ref') !== [$ckb_opt_b, $ckb_opt_c])
-    {
+if (array_column(get_resource_nodes($resource_c, $rtf_checkbox, true), 'ref') !== [$ckb_opt_b, $ckb_opt_c]) {
     echo 'Use case: Removing disabled options - ';
     return false;
-    }
+}
 
 // - Allow changing (removing) a disabled fixed list field option for a type that can only hold one value (e.g dropdown)
 delete_all_resource_nodes($resource_c);
 add_resource_nodes($resource_c, [$drpd_opt_b], false, false); # Pretend we already had it
 $_POST['nodes'][$rtf_dropdown] = [$drpd_opt_a];
 save_resource_data($resource_c, false, $rtf_dropdown);
-if(array_column(get_resource_nodes($resource_c, $rtf_dropdown, true), 'ref') !== [$drpd_opt_a])
-    {
+if (array_column(get_resource_nodes($resource_c, $rtf_dropdown, true), 'ref') !== [$drpd_opt_a]) {
     echo 'Use case: Removing disabled options for a type that can only hold one value (e.g. dropdown) - ';
     return false;
-    }
+}
 
 
 
@@ -167,9 +160,23 @@ $field_column_string_separator = $initial_field_column_string_separator;
 $data_joins = $_POST = [];
 unset(
     $initial_field_column_string_separator,
-    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $ckb_opt_c, $rtf_date, $rtf_dropdown, $drpd_opt_a, $drpd_opt_b,
-    $rtf_cat_tree, $ct_opt_colors, $ct_opt_colors_red, $ct_opt_colors_black, $ct_opt_colors_blue, $ct_opt_numbers,
-    $resource_a, $resource_b, $resource_c,
+    $rtf_checkbox,
+    $ckb_opt_a,
+    $ckb_opt_b,
+    $ckb_opt_c,
+    $rtf_date,
+    $rtf_dropdown,
+    $drpd_opt_a,
+    $drpd_opt_b,
+    $rtf_cat_tree,
+    $ct_opt_colors,
+    $ct_opt_colors_red,
+    $ct_opt_colors_black,
+    $ct_opt_colors_blue,
+    $ct_opt_numbers,
+    $resource_a,
+    $resource_b,
+    $resource_c,
     $use_cases
 );
 

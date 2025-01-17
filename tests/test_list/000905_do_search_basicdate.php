@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -6,30 +7,30 @@ command_line_only();
 // Save current setings
 $saved_date_field = $date_field;
 
-$resourcea  = create_resource(1,0);
-$resourceb  = create_resource(1,0);
-$resourcec  = create_resource(1,0);
+$resourcea  = create_resource(1, 0);
+$resourceb  = create_resource(1, 0);
+$resourcec  = create_resource(1, 0);
 
 // create new date range field and use as date field
-$newdatefield   = create_resource_type_field("Basic date test",0,FIELD_TYPE_DATE,"testbasicdate");
+$newdatefield   = create_resource_type_field("Basic date test", 0, FIELD_TYPE_DATE, "testbasicdate");
 $date_field     = $newdatefield;
 
-update_field($resourcea,$newdatefield,"2017-07-15");
-update_field($resourceb,$newdatefield,"2017-07-02");
-update_field($resourcec,$newdatefield,"2017-04-08");
+update_field($resourcea, $newdatefield, "2017-07-15");
+update_field($resourceb, $newdatefield, "2017-07-02");
+update_field($resourcec, $newdatefield, "2017-04-08");
 
 $test_cases = [
     'SUBTEST A' => [
-        'year'   => '2017', 
-        'month'  => '07', 
-        'day'    => '15', 
+        'year'   => '2017',
+        'month'  => '07',
+        'day'    => '15',
         'search' => false,
         'result' => 'basicyear:2017, basicmonth:07, basicday:15'
     ],
     'SUBTEST B' => [
-        'year'   => '2017', 
-        'month'  => '07', 
-        'day'    => '15', 
+        'year'   => '2017',
+        'month'  => '07',
+        'day'    => '15',
         'search' => true,
         'result' => [
             'count'     => 1,
@@ -37,8 +38,8 @@ $test_cases = [
             ]
     ],
     'SUBTEST C' => [
-        'year'   => '2017', 
-        'month'  => '07', 
+        'year'   => '2017',
+        'month'  => '07',
         'search' => true,
         'result' => [
             'count'     => 2,
@@ -47,7 +48,7 @@ $test_cases = [
     ],
     'SUBTEST D' => [
         'month'  => '07',
-        'day'    => '02', 
+        'day'    => '02',
         'search' => true,
         'result' => [
             'count'     => 1,
@@ -56,7 +57,7 @@ $test_cases = [
     ],
     'SUBTEST E' => [
         'year'   => '2017',
-        'day'    => '08', 
+        'day'    => '08',
         'search' => true,
         'result' => [
             'count'     => 1,
@@ -89,8 +90,7 @@ $test_cases = [
     ]
 ];
 
-foreach ($test_cases as $test_name => $test_case) { 
-
+foreach ($test_cases as $test_name => $test_case) {
     $search = "";
     $_POST["basicyear"]     = $test_case['year'] ?? "";
     $_POST["basicmonth"]    = $test_case['month'] ?? "";
@@ -102,19 +102,19 @@ foreach ($test_cases as $test_name => $test_case) {
             echo 'ERROR - ' . $test_name . "\n";
             return false;
         }
-    } else { 
+    } else {
         $results = do_search($search);
         if (count($results) !== $test_case['result']['count']) {
             echo 'ERROR - ' . $test_name . "\n";
             return false;
-        } else { 
+        } else {
             $search_refs = array_column($results, 'ref');
-            foreach ($test_case['result']['contains'] as $ref) { 
+            foreach ($test_case['result']['contains'] as $ref) {
                 if (!in_array($ref, $search_refs)) {
                     echo 'ERROR - ' . $test_name . "\n";
                     return false;
                 }
-            } 
+            }
         }
     }
 }

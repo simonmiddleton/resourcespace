@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 $resourcea = create_resource(1, 0);
@@ -10,7 +11,8 @@ add_resource_nodes($resourcea, array($node996));
 
 ps_query(
     "UPDATE resource SET file_checksum='2d2d737cf0655b875a8f5649944779f8' WHERE ref IN (?,?,?)",
-    ["i",$resourcea,"i",$resourceb,"i",$resourcec]);
+    ["i",$resourcea,"i",$resourceb,"i",$resourcec]
+);
 
 $use_cases = [
     [
@@ -62,7 +64,7 @@ foreach ($use_cases as $use_case) {
         true
     );
 
-    $results=array_column($results,"ref");
+    $results = array_column($results, "ref");
     sort($results);
     sort($use_case["results"]);
     if ($results != $use_case["results"]) {
@@ -71,6 +73,6 @@ foreach ($use_cases as $use_case) {
     }
 }
 // Tear down
-unset($use_cases,$resourcea,$resourceb,$resourcec,$results);
+unset($use_cases, $resourcea, $resourceb, $resourcec, $results);
 
 return true;

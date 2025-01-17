@@ -1,4 +1,6 @@
-<?php command_line_only();
+<?php
+
+command_line_only();
 
 // --- Set up
 include_once dirname(__DIR__, 2) . '/include/reporting_functions.php';
@@ -86,14 +88,12 @@ $use_cases = [
         ],
     ],
 ];
-foreach($use_cases as $use_case)
-    {
-    if($use_case['expected'] !== report_process_period($use_case['input']))
-        {
+foreach ($use_cases as $use_case) {
+    if ($use_case['expected'] !== report_process_period($use_case['input'])) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 

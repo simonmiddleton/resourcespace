@@ -25,23 +25,21 @@ $use_cases = [
     ],
 ];
 $GLOBALS['use_error_exception'] = true;
-foreach($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     try {
         $result = escape_command_args($uc['cmd'], $uc['args']);
     } catch (Throwable $t) {
         $result = get_class($t);
     }
 
-    if($uc['expected'] !== $result)
-        {
+    if ($uc['expected'] !== $result) {
         echo "Use case: {$uc['name']} - ";
         test_log("CMD: " . $result);
         test_log("Expected = " . $uc['expected']);
         test_log('--- ');
         return false;
-        }
     }
+}
 
 // Tear down
 unset($use_cases, $result);

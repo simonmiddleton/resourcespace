@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 // --- Set up
@@ -63,30 +64,27 @@ $use_cases = [
         'expected' => [1, 2, 3, 4],
     ],
 ];
-foreach($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     unset($GLOBALS[$uc_generic_param_name]);
 
     // Set up the use case environment
-    if(isset($uc['setup']))
-        {
+    if (isset($uc['setup'])) {
         $uc['setup']();
-        }
+    }
 
     $result = !isset($uc['input']['type_check'])
         ? getval($uc['input']['param'], $uc['input']['default'], $uc['input']['force_numeric'])
         : getval($uc['input']['param'], $uc['input']['default'], $uc['input']['force_numeric'], $uc['input']['type_check']);
 
-    if($uc['expected'] !== $result)
-        {
+    if ($uc['expected'] !== $result) {
         printf(
             '%sUse case: %s - ',
             RS_TEST_DEBUG ? PHP_EOL : '',
             $uc['name'],
         );
         return false;
-        }
     }
+}
 
 
 

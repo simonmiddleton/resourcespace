@@ -1,8 +1,14 @@
-<?php command_line_only();
+<?php
+
+command_line_only();
 
 // --- Set up
-$branch_path_fct = function($carry, $item) { return "{$carry}/{$item["name"]}"; };
-$path = function($P) use ($branch_path_fct) { return array_reduce($P, $branch_path_fct, ""); };
+$branch_path_fct = function ($carry, $item) {
+    return "{$carry}/{$item["name"]}";
+};
+$path = function ($P) use ($branch_path_fct) {
+    return array_reduce($P, $branch_path_fct, "");
+};
 
 $tree = [
     ['ref' => 1, 'parent' => null, 'name' => 'A'],
@@ -48,14 +54,12 @@ $use_cases = [
         'expected' => '',
     ],
 ];
-foreach($use_cases as $use_case)
-    {
-    if($use_case['expected'] !== $path(compute_node_branch_path($tree, $use_case['id'])))
-        {
+foreach ($use_cases as $use_case) {
+    if ($use_case['expected'] !== $path(compute_node_branch_path($tree, $use_case['id']))) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 
