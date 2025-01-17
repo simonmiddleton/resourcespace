@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP -varmenteet';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname -sertifikaatti vanhenee %expiretime';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname -sertifikaatti vanhentui %expiretime';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname -sertifikaatti vanhenee %expiretime';
+$lang["simplesaml_check_idp_cert_expiry"]='Tarkista IdP-sertifikaatin vanhentuminen?';

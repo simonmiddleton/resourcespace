@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP-Zertifikate';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname Zertifikat läuft ab am %expiretime';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname Zertifikat ist am %expiretime abgelaufen';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname Zertifikat läuft ab am %expiretime';
+$lang["simplesaml_check_idp_cert_expiry"]='IdP-Zertifikatsablauf überprüfen?';

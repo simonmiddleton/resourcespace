@@ -2761,3 +2761,66 @@ $lang["error_invalid_field_type"]='ตัวแปรที่กำหนด %v
 $lang["facial-recognition"]='การจดจำใบหน้า';
 $lang["ui_removed_config_message"]='ต้องตั้งค่านี้ในไฟล์การกำหนดค่าเป็น %variable';
 $lang["welcome_generic"]='ยินดีต้อนรับสู่ %applicationname';
+$lang["listfile-argument-not-defined"]='$archiver_listfile_argument ไม่ได้ถูกกำหนด';
+$lang["to"]='ถึง';
+$lang["requestapprovedmail_email"]='[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>คลิกที่ลิงก์ด้านล่างเพื่อดูและดาวน์โหลดทรัพยากรที่ร้องขอ<br/><br/><a href=\'[url]\'>[url]</a>';
+$lang["map_stamentoner"]='Toner';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["comments_in-response-to-on"]='บน';
+$lang["admin_resource_type_field_migrate_separator"]='ตัวแบ่ง เช่น , - ; :';
+$lang["language-fr"]='French';
+$lang["language-hi"]='Hindi';
+$lang["language-uk"]='Ukrainian';
+$lang["collectionidprefix"]='Col_ID';
+$lang["sortorder-asc"]='ASC';
+$lang["sortorder-desc"]='คำอธิบาย';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-missinglang"]='[type] (ขาดภาษา)';
+$lang["square"]='สี่เหลี่ยม';
+$lang["either"]='อย่างใดอย่างหนึ่ง';
+$lang["notavailableshort"]='N/A';
+$lang["client-encoding"]='(client-encoding: %encoding)';
+$lang["db-default-encoding"]='(database-encoding: %encoding)';
+$lang["of"]='ของ';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["setup-if-smtpsecure"]='\'\', \'tls\' หรือ \'ssl\' สำหรับ Gmail จำเป็นต้องใช้ \'tls\' หรือ \'ssl\'';
+$lang["addremove"]='+/-';
+$lang["plugins-configvar"]='ตั้งค่าตัวแปรการกำหนดค่า: $%cvn';
+$lang["map_tfpioneer"]='Pioneer';
+$lang["report_periodic_email_option_me"]='ฉัน';
+$lang["period"]='ช่วงเวลา';
+$lang["centimetre-short"]='ซม.';
+$lang["cc-emailaddress"]='CC %emailaddress';
+$lang["error-405-method-not_allowed"]='405 Method Not Allowed';
+$lang["yyyy-mm-dd"]='YYYY-MM-DD';
+$lang["megabyte-symbol"]='MB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["contact_sheet_footer_address"]='XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999';
+$lang["contact_sheet_footer_copyright"]='&#0169; ResourceSpace. สงวนลิขสิทธิ์ทั้งหมด';
+$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved] [list] <br /> [lang_viewcontributedsubittedl] <br /><br /> <a href="[url]">[url]</a><br /><br /> [text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["dash"]='แดช';
+$lang["api-php-code"]='PHP code';
+$lang["filter_is_in"]='IS';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["language-pa"]='Punjabi';
+$lang["language-pl"]='ภาษาโปแลนด์';
+$lang["php-config-file"]='การกำหนดค่า PHP: \'%phpinifile\'';
+$lang["map_esriocean"]='มหาสมุทร';
+$lang["language-fa"]='เปอร์เซีย';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["language-bn"]='Bengali';
+$lang["map_tfneighbourhood"]='ย่านบ้าน';

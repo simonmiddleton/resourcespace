@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP-sertifikater';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname-sertifikat utløper kl %expiretime';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname-sertifikat utløp ved %expiretime';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname-sertifikat utløper kl %expiretime';
+$lang["simplesaml_check_idp_cert_expiry"]='Sjekk utløpsdato for IdP-sertifikat?';

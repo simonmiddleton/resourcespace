@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP 인증서';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname 인증서가 %expiretime에 만료됩니다';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname 인증서가 %expiretime에 만료되었습니다';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname 인증서가 %expiretime에 만료됩니다';
+$lang["simplesaml_check_idp_cert_expiry"]='IdP 인증서 만료 확인?';

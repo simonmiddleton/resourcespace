@@ -74,3 +74,4 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Kolom yang digunakan dal
 $lang["tms_link_write_to_debug_log"]='Sertakan kemajuan skrip dalam log debug sistem (memerlukan konfigurasi logging debug secara terpisah). Peringatan: Akan menyebabkan pertumbuhan cepat file log debug.';
 $lang["plugin-tms_link-title"]='Tautan TMS';
 $lang["plugin-tms_link-desc"]='[Advanced] Memungkinkan metadata sumber daya diekstraksi dari database TMS.';
+$lang["tms_link_uid_field_int"]='TMS Integer UID. Atur ke false untuk mengizinkan UID non-integer.';

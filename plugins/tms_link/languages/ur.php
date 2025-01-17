@@ -70,3 +70,4 @@ $lang["tms_link_not_deleted_error_detail"]='درخواست کردہ ماڈیول
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"]='کیا آپ واقعی اس ماڈیول کی تشکیل کو حذف کرنا چاہتے ہیں؟ یہ عمل واپس نہیں لیا جا سکتا!';
 $lang["tms_link_write_to_debug_log"]='اسکرپٹ کی پیشرفت کو سسٹم ڈیبگ لاگ میں شامل کریں (الگ سے ڈیبگ لاگنگ کی ترتیب کی ضرورت ہے)۔ احتیاط: یہ ڈیبگ لاگ فائل کی تیزی سے بڑھوتری کا سبب بنے گا۔';
+$lang["tms_link_uid_field_int"]='TMS عددی UID. غیر عددی UID کی اجازت دینے کے لیے false پر سیٹ کریں۔';

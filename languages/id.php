@@ -2993,3 +2993,5 @@ $lang["information-enable_complete_indexing"]='Indeks nilai bidang sebagai satu 
 $lang["property-enable_complete_indexing"]='Aktifkan pengindeksan lengkap';
 $lang["cannot_share-has_upload_share"]='Bagian berbagi non-upload dari koleksi ini tidak dapat dibuat karena bagian berbagi upload saat ini sudah ada untuknya';
 $lang["welcome_generic"]='Selamat datang di %applicationname';
+$lang["language-cy"]='Welsh';
+$lang["language-th"]='Thai';

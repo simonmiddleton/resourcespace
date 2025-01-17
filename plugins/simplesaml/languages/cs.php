@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP certifikáty';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname certifikát vyprší v %expiretime';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname certifikát vypršel v %expiretime';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname certifikát vyprší v %expiretime';
+$lang["simplesaml_check_idp_cert_expiry"]='Zkontrolovat vypršení platnosti certifikátu IdP?';

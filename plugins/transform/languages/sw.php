@@ -76,3 +76,4 @@ $lang["transform_update_preview"]='Sasisha hakikisho';
 $lang["transform_preset_sizes"]='Chagua kutoka kwa ukubwa wa lengo uliowekwa tayari';
 $lang["error_crop_invalid"]='Tafadhali chagua eneo la picha';
 $lang["px"]='px';
+$lang["transform-recrop"]='Punguza upya picha';

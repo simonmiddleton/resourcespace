@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP certifikati';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname certifikat istječe u %expiretime';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname certifikat je istekao u %expiretime';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname certifikat ističe u %expiretime';
+$lang["simplesaml_check_idp_cert_expiry"]='Provjeriti isteka li IdP certifikata?';

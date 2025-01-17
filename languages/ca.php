@@ -2936,3 +2936,4 @@ $lang["property-enable_complete_indexing"]='Habilitar la indexació completa';
 $lang["cannot_share-has_upload_share"]='No es poden crear comparticions d\'upload no per aquesta col·lecció ja que actualment existeix una compartició d\'upload per a ella';
 $lang["welcome_generic"]='Benvingut a %applicationname';
 $lang["language-cy"]='Welsh';
+$lang["language-th"]='Thai';

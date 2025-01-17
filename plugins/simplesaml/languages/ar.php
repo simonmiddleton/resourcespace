@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='شهادات SAML IdP';
 $lang["simplesaml_idp_cert_expiring"]='شهادة IdP %idpname تنتهي صلاحيتها في %expiretime';
 $lang["simplesaml_idp_cert_expired"]='انتهت صلاحية شهادة IdP %idpname في %expiretime';
 $lang["simplesaml_idp_cert_expires"]='شهادة IdP %idpname تنتهي صلاحيتها في %expiretime';
+$lang["simplesaml_check_idp_cert_expiry"]='التحقق من انتهاء صلاحية شهادة IdP؟';

@@ -2831,3 +2831,4 @@ $lang["property-enable_complete_indexing"]='Povolit úplné indexování';
 $lang["cannot_share-has_upload_share"]='Sdílení, které není nahráno, této kolekce nemůže být vytvořeno, protože pro ni již existuje sdílení nahrávání.';
 $lang["welcome_generic"]='Vítejte v %applicationname';
 $lang["language-cy"]='Welština';
+$lang["language-th"]='Thai';

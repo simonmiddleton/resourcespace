@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP 证书';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname 证书将于 %expiretime 到期';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname 证书于 %expiretime 过期';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname 证书将在 %expiretime 过期';
+$lang["simplesaml_check_idp_cert_expiry"]='检查 IdP 证书到期？';

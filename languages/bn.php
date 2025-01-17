@@ -2829,3 +2829,5 @@ $lang["information-enable_complete_indexing"]='এই ক্ষেত্রে�
 $lang["property-enable_complete_indexing"]='সম্পূর্ণ সূচীকরণ সক্ষম করুন';
 $lang["cannot_share-has_upload_share"]='এই সংগ্রহের জন্য নন আপলোড শেয়ার তৈরি করা যাবে না কারণ এর জন্য একটি আপলোড শেয়ার বর্তমানে বিদ্যমান রয়েছে';
 $lang["welcome_generic"]='%applicationname-এ স্বাগতম';
+$lang["language-cy"]='Welsh';
+$lang["language-th"]='Thai';

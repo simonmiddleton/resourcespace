@@ -74,3 +74,4 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Columna a utilitzar a la
 $lang["tms_link_write_to_debug_log"]='Inclou el progrés del script al registre de depuració del sistema (requereix la configuració de la depuració per separat). Precaució: Això farà que el fitxer de registre de depuració creixi ràpidament.';
 $lang["plugin-tms_link-title"]='Enllaç TMS';
 $lang["plugin-tms_link-desc"]='[Avançat] Permet extreure les metadades dels recursos de la base de dades TMS.';
+$lang["tms_link_uid_field_int"]='TMS Integer UIDs. Establiu a fals per permetre UIDs no enters.';

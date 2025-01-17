@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP 証明書';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname 証明書の有効期限が %expiretime に切れます';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname 証明書の有効期限が %expiretime に切れました';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname 証明書の有効期限は %expiretime です';
+$lang["simplesaml_check_idp_cert_expiry"]='IdP証明書の有効期限を確認しますか？';

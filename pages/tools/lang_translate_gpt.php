@@ -4,6 +4,9 @@ command_line_only();
 
 $restrict=$argv[1] ?? false;
 $model="gpt-4o-mini";
+// Try the below to clear any that couldn't be translated by the default model
+//$model="gpt-3.5-turbo";
+
 if (substr($restrict,0,6)=="model:") {$model=substr($restrict,6);$restrict=false;} // Option to set model
 
 function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens = 2048, $messages=array(), $uid="") {

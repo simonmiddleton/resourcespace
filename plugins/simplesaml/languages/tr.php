@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP sertifikaları';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname sertifikası %expiretime tarihinde sona eriyor';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname sertifikası %expiretime tarihinde süresi doldu';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname sertifikası %expiretime tarihinde sona eriyor';
+$lang["simplesaml_check_idp_cert_expiry"]='IdP sertifika süresinin dolup dolmadığını kontrol et?';

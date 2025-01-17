@@ -2833,3 +2833,9 @@ $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-b
 $lang["iiif"]='IIIF';
 $lang["language-hi"]='Hindi';
 $lang["contact_sheet_footer_address"]='XXX مین اسٹریٹ، سٹی، ABC 123 - ٹیلیفون: (111) 000-8888 - فیکس: (000) 111-9999';
+$lang["information-enable_complete_indexing"]='اس فیلڈ کے لیے فیلڈ کی قدروں کو ایک غیر منقطع کلیدی لفظ کے طور پر انڈیکس کریں۔ یہ آپشن جزوی انڈیکسنگ کے ساتھ مطابقت نہیں رکھتا۔';
+$lang["property-enable_complete_indexing"]='مکمل انڈیکسنگ کو فعال کریں';
+$lang["cannot_share-has_upload_share"]='اس مجموعہ کے غیر اپ لوڈ شیئرز نہیں بنائے جا سکتے کیونکہ اس کے لئے پہلے سے ایک اپ لوڈ شیئر موجود ہے۔';
+$lang["language-cy"]='Welsh';
+$lang["language-th"]='تھائی';
+$lang["welcome_generic"]='%applicationname میں خوش آمدید';

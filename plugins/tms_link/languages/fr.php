@@ -72,3 +72,4 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Colonne à utiliser dans
 $lang["tms_link_write_to_debug_log"]='Inclure la progression du script dans le journal de débogage du système (nécessite une configuration séparée du journal de débogage). Attention : Cela entraînera une croissance rapide du fichier de journal de débogage.';
 $lang["plugin-tms_link-title"]='Lien TMS';
 $lang["plugin-tms_link-desc"]='[Avancé] Permet d\'extraire les métadonnées des ressources depuis la base de données TMS.';
+$lang["tms_link_uid_field_int"]='TMS UIDs entiers. Définir sur faux pour autoriser les UIDs non entiers.';

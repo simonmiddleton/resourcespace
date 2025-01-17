@@ -2747,3 +2747,82 @@ $lang["error_invalid_field_type"]='Mae\'r %variable a gynhelir yn y math maes an
 $lang["facial-recognition"]='Cydnabod wynebau';
 $lang["ui_removed_config_message"]='Mae\'n rhaid i hyn nawr gael ei osod yn y ffeil gyfreithiol fel %variable';
 $lang["welcome_generic"]='Croeso i %applicationname';
+$lang["hidden"]='(calamat) The term "(hidden)" does not have a specific translation in the context of digital asset management software.';
+$lang["setup-include_not_writable"]='Ni ellir ysgrifennu \'/include\'. Dim ond yn ofynnol yn ystod gosod.';
+$lang["server_timezone_check_fail"]='Mae\'r parth amser PHP yn "%phptz%" a\'r parth amser MySQL yn "%mysqltz%"';
+$lang["language-ru"]='Russian';
+$lang["language-zh-CN"]='Tsieinëeg symlified';
+$lang["property-id"]='Id';
+$lang["collectionidprefix"]='Col_ID';
+$lang["listfile-argument-not-defined"]='Nid yw $archiver_listfile_argument wedi\'i ddiffinio.';
+$lang["sortorder-asc"]='ASC';
+$lang["sortorder-desc"]='DESC';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-missinglang"]='[type] (colli iaith)';
+$lang["notavailableshort"]='N/A';
+$lang["status-fail"]='METHU';
+$lang["softwarenotfound"]='\'?\' heb ei ganfod';
+$lang["of"]='o';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["collection_download_tar_applink"]='Methu agor ffeiliau TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Cael y 7-zip ffynhonnell agored yma</a>';
+$lang["php-config-file"]='PHP config: \'%phpinifile\'';
+$lang["setup-err_phar_injection"]='Canfuwyd Mewnosodiad Gwrthrych PHP Phar posibl.';
+$lang["setup-if-smtpsecure"]='\'\', \'tls\' neu \'ssl\'. Ar gyfer Gmail, mae angen \'tls\' neu \'ssl\'.';
+$lang["setup-if-smtphost"]='Enw\'r gwesteiwr, e.e. \'smtp.gmail.com\'.';
+$lang["ppi"]='PPI';
+$lang["addremove"]='+/-';
+$lang["plugins-configvar"]='Gosod newidyn ffurfweddu: $%cvn';
+$lang["map_osmhot"]='Humanitaraidd';
+$lang["map_stamentoner"]='Toner';
+$lang["report_periodic_email_option_me"]='fi';
+$lang["phpinivalue"]='PHP.INI gwerth ar gyfer \'?\'';
+$lang["on_date"]='ar';
+$lang["inch-short"]='mewn';
+$lang["centimetre-short"]='cm';
+$lang["cc-emailaddress"]='CC %emailaddress';
+$lang["error-csrf-verification-failed"]='Method CSRF wedi methu! Ceisiwch ail-lwytho\'r dudalen.';
+$lang["error-405-method-not_allowed"]='405 Dull Hebei Caniatáu.';
+$lang["error-type-mismatch"]='Mae\'n rhaid i ddadl \'%arg\' fod o\'r math %expected-type, %type a roddwyd';
+$lang["yyyy-mm-dd"]='YYYY-MM-DD';
+$lang["megabyte-symbol"]='MB';
+$lang["gigabyte-symbol"]='GB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["contact_sheet_footer_address"]='XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999';
+$lang["comments_in-response-to-on"]='ar';
+$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved] [list] [lang_viewcontributedsubittedl] <br /><br /> <a href="[url]">[url]</a><br /><br /> [text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["all__passwordnewemailhtml"]='[img_headerlogo][welcome]<br/><br/>Cliciwch ar y ddolen isod i osod cyfrinair newydd ar gyfer eich cyfrif.<br/><br/><a href="[url]" target="_blank" >[url]</a><br/><br/>Eich enw defnyddiwr newydd: [username]<br/><br/>[text_footer]';
+$lang["cpu_benchmark"]='meincnod CPU';
+$lang["report_breakdown_pie"]='Dadansoddiad pastai';
+$lang["api-php-code"]='PHP cod';
+$lang["filter_is_in"]='IS';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["csv_export_filename"]='metadata_export_[search]_[time]';
+$lang["language-bn"]='Bengali';
+$lang["language-el"]='Groeg';
+$lang["language-es"]='Spanish';
+$lang["language-fa"]='Perseg';
+$lang["language-fi"]='Ffinneg';
+$lang["language-hi"]='Hindi';
+$lang["language-jp"]='Japaneg';
+$lang["language-ko"]='Coreaeg';
+$lang["language-nl"]='Iseldireg';
+$lang["language-pa"]='Punjabi';
+$lang["language-pl"]='Pwyleg';
+$lang["language-th"]='Thai';
+$lang["language-uk"]='Ukrainian';
+$lang["client-encoding"]='(client-encoding: %encoding)';
+$lang["map_tfneighbourhood"]='Cymdogaeth';
+$lang["all__emailcontactadmin"]='Os gwelwch yn dda, cyfieithwch: <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';

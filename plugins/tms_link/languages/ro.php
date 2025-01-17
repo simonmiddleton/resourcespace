@@ -72,3 +72,4 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Coloana de utilizat în 
 $lang["tms_link_write_to_debug_log"]='Includeți progresul scriptului în jurnalul de depanare al sistemului (necesită configurarea separată a jurnalului de depanare). Atenție: Va cauza creșterea rapidă a fișierului jurnal de depanare.';
 $lang["plugin-tms_link-title"]='Link TMS';
 $lang["plugin-tms_link-desc"]='[Avansat] Permite extragerea metadatelor resursei din baza de date TMS.';
+$lang["tms_link_uid_field_int"]='TMS Integer UIDs. Setați la false pentru a permite UIDs non-integere.';

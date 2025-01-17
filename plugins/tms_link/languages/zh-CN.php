@@ -72,3 +72,4 @@ $lang["tms_link_mediapaths_resource_reference_column"]='在MediaMaster表中用�
 $lang["tms_link_write_to_debug_log"]='在系统调试日志中包含脚本进度（需要单独配置调试日志记录）。注意：将导致调试日志文件快速增长。';
 $lang["plugin-tms_link-title"]='TMS链接';
 $lang["plugin-tms_link-desc"]='[高级] 允许从TMS数据库提取资源元数据。';
+$lang["tms_link_uid_field_int"]='TMS 整数UID。设置为false以允许非整数UID。';

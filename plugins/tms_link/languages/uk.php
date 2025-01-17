@@ -70,3 +70,4 @@ $lang["tms_link_not_deleted_error_detail"]='Неможливо видалити 
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"]='Ви впевнені, що хочете видалити цю конфігурацію модуля? Цю дію не можна скасувати!';
 $lang["tms_link_write_to_debug_log"]='Включити прогрес скрипту в системний журнал налагодження (потрібно окремо налаштувати журнал налагодження). Увага: Це призведе до швидкого зростання файлу журналу налагодження.';
+$lang["tms_link_uid_field_int"]='TMS Цілі числа UID. Встановіть значення false, щоб дозволити нецілі числа UID.';

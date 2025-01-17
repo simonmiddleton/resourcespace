@@ -86,3 +86,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP प्रमाणपत्र';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname प्रमाणपत्र %expiretime पर समाप्त हो रहा है';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname प्रमाणपत्र %expiretime पर समाप्त हो गया';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname प्रमाणपत्र %expiretime पर समाप्त हो रहा है';
+$lang["simplesaml_check_idp_cert_expiry"]='IdP प्रमाणपत्र समाप्ति की जाँच करें?';

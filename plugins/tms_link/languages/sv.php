@@ -72,3 +72,4 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Kolumn att använda i Me
 $lang["tms_link_write_to_debug_log"]='Inkludera skriptframsteg i systemets felsökningslogg (kräver att felsökningsloggning konfigureras separat). Varning: Kommer att orsaka snabb tillväxt av felsökningsloggfilen.';
 $lang["plugin-tms_link-title"]='TMS-länk';
 $lang["plugin-tms_link-desc"]='[Avancerad] Tillåter att resursmetadata extraheras från TMS-databasen.';
+$lang["tms_link_uid_field_int"]='TMS Heltals-UID:er. Ställ in på falskt för att tillåta icke-heltals-UID:er.';

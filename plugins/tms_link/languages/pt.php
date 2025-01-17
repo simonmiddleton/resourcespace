@@ -74,3 +74,4 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Coluna a ser usada na ta
 $lang["tms_link_write_to_debug_log"]='Incluir progresso do script no log de depuração do sistema (requer configuração de log de depuração separadamente). Atenção: Causará crescimento rápido do arquivo de log de depuração.';
 $lang["plugin-tms_link-title"]='Link TMS';
 $lang["plugin-tms_link-desc"]='[Avançado] Permite que os metadados do recurso sejam extraídos do banco de dados TMS.';
+$lang["tms_link_uid_field_int"]='TMS Integer UIDs. Defina como falso para permitir UIDs não inteiros.';

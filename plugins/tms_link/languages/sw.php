@@ -70,3 +70,4 @@ $lang["tms_link_confirm_delete_module_config"]='Je, una uhakika unataka kufuta u
 $lang["tms_link_write_to_debug_log"]='Jumuisha maendeleo ya script katika logi ya utatuzi wa mfumo (inahitaji usanidi wa utatuzi wa logi tofauti). Tahadhari: Itasababisha ukuaji wa haraka wa faili ya logi ya utatuzi.';
 $lang["tms_link_upload_tms_field"]='Kitambulisho cha Kitu cha TMS';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
+$lang["tms_link_uid_field_int"]='TMS Integer UIDs. Weka kuwa uongo kuruhusu UIDs zisizo za nambari kamili.';

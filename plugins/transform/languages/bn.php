@@ -76,3 +76,4 @@ $lang["use_system_icc_profile_config"]='আইসিসি প্রোফাই
 $lang["transform_update_preview"]='প্রিভিউ আপডেট করুন';
 $lang["transform_preset_sizes"]='পূর্বনির্ধারিত লক্ষ্য আকার থেকে নির্বাচন করুন';
 $lang["error_crop_invalid"]='অনুগ্রহ করে ছবির একটি অঞ্চল নির্বাচন করুন';
+$lang["transform-recrop"]='ছবির পুনঃক্রপ করুন';

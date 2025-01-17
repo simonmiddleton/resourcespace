@@ -88,3 +88,4 @@ $lang["simplesaml_idp_certs"]='certificados SAML IdP';
 $lang["simplesaml_idp_cert_expiring"]='Certificado IdP %idpname expirando em %expiretime';
 $lang["simplesaml_idp_cert_expired"]='Certificado IdP %idpname expirou em %expiretime';
 $lang["simplesaml_idp_cert_expires"]='Certificado IdP %idpname expira em %expiretime';
+$lang["simplesaml_check_idp_cert_expiry"]='Verificar a expiração do certificado IdP?';
