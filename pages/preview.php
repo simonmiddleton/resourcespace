@@ -138,12 +138,8 @@ if($resource['has_image'] === 0)
         }
     }
 
-// Determine the appropriate preview sizes to look for. Access will be checked by get_resource_preview()
-if ($resource_view_use_pre) {
-    $previewsizes = ["pre", "scr"];
-} else {
-    $previewsizes = ["scr", "pre"];
-}
+// Full screen preview should always use screen size in preference to preview size if possible
+$previewsizes = ["scr", "pre"];
 
 $imagepre = get_resource_preview($resource,$previewsizes, $access, $use_watermark, $page);
 if($imagepre)
