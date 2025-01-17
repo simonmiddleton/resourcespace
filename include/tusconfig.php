@@ -1,4 +1,5 @@
 <?php
+
 global $scramble_key, $usersession;
 $cachepath = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . md5($scramble_key . $usersession) . DIRECTORY_SEPARATOR;
 return [
