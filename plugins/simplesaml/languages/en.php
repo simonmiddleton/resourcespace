@@ -86,3 +86,4 @@ $lang['simplesaml_idp_cert_expiring'] = "IdP %idpname certificate expiring at %e
 $lang['simplesaml_idp_cert_expired'] = "IdP %idpname certificate expired at %expiretime";
 $lang['simplesaml_idp_cert_expires'] = "IdP %idpname certificate expires at %expiretime";
 $lang['simplesaml_check_idp_cert_expiry'] = "Check IdP certificate expiration?";
+$lang['simplesaml_use_www_label'] = 'Allow SP metadata requests for "www" route? (changing to false will require IDP to re-exchange the SP metadata)';

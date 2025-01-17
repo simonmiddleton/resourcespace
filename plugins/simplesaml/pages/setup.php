@@ -38,6 +38,7 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
     $simplesaml['simplesaml_authorisation_claim_value'] = getval('simplesaml_authorisation_claim_value', '');
     $simplesaml['simplesaml_rsconfig'] = getval('simplesaml_rsconfig','');
     $simplesaml['simplesaml_check_idp_cert_expiry'] = getval('simplesaml_check_idp_cert_expiry','');
+    $simplesaml['simplesaml_use_www'] = (bool) getval('simplesaml_use_www', '1', false, 'is_int_loose');
 
     $samlgroups = $_REQUEST['samlgroup'];
     $rsgroups = $_REQUEST['rsgroup'];
@@ -200,9 +201,13 @@ jQuery("#simplesaml_rsconfig").change(function(event)
 </div>
 <?php
 
-$helptext = str_replace("%variable","\$simplesaml_lib_path",$lang['ui_removed_config_message']);
-$showval = $simplesaml_lib_path !== "" ? $simplesaml_lib_path : $lang["notavailableshort"];
-render_fixed_text_question($lang['simplesaml_lib_path_label'], $showval, $helptext, "question_simplesaml_lib_path");
+config_boolean_field('simplesaml_use_www', $lang['simplesaml_use_www_label'], $simplesaml_use_www);
+render_fixed_text_question(
+    $lang['simplesaml_lib_path_label'],
+    $simplesaml_lib_path !== "" ? $simplesaml_lib_path : $lang["notavailableshort"],
+    str_replace("%variable","\$simplesaml_lib_path",$lang['ui_removed_config_message']),
+    "question_simplesaml_lib_path"
+);
 
 config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp,false,420,false,null,false);
 

@@ -1,5 +1,5 @@
 <?php
-$simplesaml_version = "1.19.6";
+$simplesaml_version = "2.3.5";
 $simplesaml_check_phpversion = "8.0";
 $simplesaml_site_block=false;
 $simplesaml_login=true;
@@ -34,6 +34,15 @@ $simplesaml_authorisation_claim_value = '';
 $simplesaml_rsconfig = false;
 $simplesaml_check_idp_cert_expiry = true;
 
+/*
+To upgrade to version 2.3.5 without forcing the IDP to re-exchange the SP metadata the plugin will configure SSP with
+the old route usin www instead of public. See https://simplesamlphp.org/docs/devel/simplesamlphp-upgrade-notes-2.0.html
+
+The web server MUST still be capable of responding to requests for the www route for this to work by rewriting it to the
+public folder instead (an alias).
+*/
+$simplesaml_use_www = true;
+
 // When using ResourceSpace to store SAML config these setttings are initialised and set in the following pages:-
 // plugins/simplesaml/lib/lib/_autoload.php
 // plugins/simplesaml/include/resourcespace/config/config.php
@@ -45,23 +54,23 @@ global $baseurl_short, $email_from, $application_name, $scramble_key, $storagedi
 $samlid = hash('sha256', "saml" . $scramble_key);
 $samltempdir = get_temp_dir(false,"simplesaml");
 $simplesaml_config_defaults = array();
-$simplesaml_config_defaults["baseurlpath"] =  $baseurl_short . 'plugins/simplesaml/lib/www/';
+// todo: Move this because its logic depends on plugin config which will never use the end user selection if it's in the
+// same "process" where we define the default (see include_plugin_config).
+$simplesaml_config_defaults["baseurlpath"] = sprintf(
+    '%splugins/simplesaml/lib/%s/',
+    $baseurl_short,
+    $simplesaml_use_www ? 'www' : 'public'
+);
 $simplesaml_config_defaults["tempdir"] =  $samltempdir;
 $simplesaml_config_defaults["technicalcontact_name"] =  $application_name;
 $simplesaml_config_defaults["technicalcontact_email"] =  $email_from;
 $simplesaml_config_defaults["secretsalt"] =  $samlid;
 $simplesaml_config_defaults["loggingdir"] = $samltempdir;
 $simplesaml_config_defaults["logging.logfile"] = "saml_" . md5($samlid) . ".log";
+$simplesaml_config_defaults["logging.handler"] = "file";
 $simplesaml_config_defaults["admin.protectindexpage"] = true;
 $simplesaml_config_defaults["admin.protectmetadata"] = false;
 $simplesaml_config_defaults["enable.saml20-idp"] = true;
 $simplesaml_config_defaults["datadir"] = $storagedir . "/simplesamldata";
 $simplesaml_config_defaults["timezone"] = null;
 $simplesaml_config_defaults["session.cookie.secure"] = true;
-
-
-
-
-
-
-
