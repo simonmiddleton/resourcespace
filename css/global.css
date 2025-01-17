@@ -1875,11 +1875,6 @@ a.Enabled, a:visited.Enabled {
     margin: 1em 1em 0 0;
 }
 
-/* Colour picker */
-#tile_style_colour {
-    display: none;
-}
-
 .lockedQuestion .fieldset, .lockedQuestion table, .lockedQuestion input, .lockedQuestion select, .lockedQuestion textarea, .lockedQuestion .keywordselected, .lockedQuestion .CategoryBox{
    font-weight: bold;
 }

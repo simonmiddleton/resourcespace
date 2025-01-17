@@ -688,8 +688,15 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             jQuery('#container_<?php echo $name; ?>').toggle();
             if(!this.checked)
             {
+            // Unchecked, set the default. Must first change the type as a color picker can't hold the empty string.
+            jQuery('#<?php echo $name; ?>').attr('type','text');
             jQuery('#<?php echo $name; ?>').val('<?php echo $default; ?>');
-        <?php if ($autosave)
+            <?php
+            if(!empty($on_change_js))
+                {
+                echo $on_change_js;
+                }
+            if ($autosave)
             {
             ?>AutoSaveConfigOption('<?php echo $name; ?>');
                 jQuery('#<?php echo $name; ?>').trigger('change');
@@ -700,10 +707,11 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             echo $on_change_js;
             }
         ?>
-            }
+            } else {jQuery('#<?php echo $name; ?>').attr('type','color');}
             " style="float: left;" />
         <div id="container_<?php echo $name; ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
-            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="text" value="<?php echo escape($current); ?>" onchange="<?php
+            &nbsp;
+            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="color" value="<?php echo escape($current); ?>" onchange="<?php
             if ($autosave)
                 {
                 ?>AutoSaveConfigOption('<?php echo $name; ?>');<?php
@@ -713,14 +721,6 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
                 echo $on_change_js;
                 }
             ?>" default="<?php echo $default; ?>" />
-            <script>
-                jQuery('#<?php echo $name; ?>').spectrum({
-                    showAlpha: true,
-                    showInput: true,
-                    clickoutFiresChange: true,
-                    preferredFormat: 'rgb'
-                });
-            </script>
         </div>
         <div class="clearerleft"></div>
         </div>
@@ -1258,8 +1258,6 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
 function config_generate_html(array $page_def)
     {
     global $lang,$baseurl;
-    $included_colour_picker_library=false;
-
     foreach($page_def as $def)
         {
         if(!isset($def[0])){continue;}
@@ -1290,13 +1288,6 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'colouroverride_input':
-                if (!$included_colour_picker_library)
-                    {
-                    ?><script src="<?php echo $baseurl; ?>/lib/spectrum/spectrum.js"></script>
-                        <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/spectrum/spectrum.css" />
-                    <?php
-                    $included_colour_picker_library=true;
-                    }
                 config_colouroverride_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6],$def[7]);
                 break;
             case 'multi_rtype_select':

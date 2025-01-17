@@ -1624,17 +1624,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         }
         ?>
         <label for="tile_style_colour"><?php echo escape($lang['colour']); ?></label>
-        <script src="<?php echo $baseurl; ?>/lib/spectrum/spectrum.js"></script>
-        <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/spectrum/spectrum.css" />
-        <input id="tile_style_colour" name="tlstylecolour" type="text" onchange="update_tile_preview_colour(this.value);" value="<?php echo $tile_colour; ?>">
-        <script>
-            jQuery('#tile_style_colour').spectrum({
-                showAlpha: true,
-                showInput: true,
-                clickoutFiresChange: true,
-                preferredFormat: 'rgb'
-            });
-        </script>
+        <input id="tile_style_colour" name="tlstylecolour" type="color" onchange="update_tile_preview_colour(this.value);" value="<?php echo $tile_colour; ?>">
 
     <!-- Show/ hide colour picker/ selector -->
     <script>
