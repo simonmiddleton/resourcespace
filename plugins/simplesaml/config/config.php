@@ -55,13 +55,6 @@ global $baseurl_short, $email_from, $application_name, $scramble_key, $storagedi
 $samlid = hash('sha256', "saml" . $scramble_key);
 $samltempdir = get_temp_dir(false,"simplesaml");
 $simplesaml_config_defaults = array();
-// todo: Move this because its logic depends on plugin config which will never use the end user selection if it's in the
-// same "process" where we define the default (see include_plugin_config).
-$simplesaml_config_defaults["baseurlpath"] = sprintf(
-    '%splugins/simplesaml/lib/%s/',
-    $baseurl_short,
-    $simplesaml_use_www ? 'www' : 'public'
-);
 $simplesaml_config_defaults["tempdir"] =  $samltempdir;
 $simplesaml_config_defaults["technicalcontact_name"] =  $application_name;
 $simplesaml_config_defaults["technicalcontact_email"] =  $email_from;

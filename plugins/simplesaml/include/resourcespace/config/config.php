@@ -1,7 +1,16 @@
 <?php
+
 // This page is included if using ResourceSpace to store SAML configuration
 // Set SimpleSAML config
-global $simplesamlconfig, $simplesaml_config_defaults, $baseurl,$baseurl_short, $email_from;
+global $simplesamlconfig, $simplesaml_config_defaults, $baseurl, $email_from;
+
+// Configure SimpleSAMLPHP default settings IF the logic depends on the simplesaml plugin own settings.
+$simplesaml_config_defaults['baseurlpath'] = sprintf(
+    '%splugins/simplesaml/lib/%s/',
+    $GLOBALS['baseurl_short'],
+    $GLOBALS['simplesaml_use_www'] ? 'www' : 'public'
+);
+
 $config = array();
 foreach($simplesamlconfig["config"] as $option => $configvalue)
     {
@@ -17,10 +26,6 @@ foreach($simplesaml_config_defaults as $setting => $value)
         }
     }
 
-// if(!isset($simplesamlconfig["config"]["baseurlpath"]))
-//     {
-//     $config["baseurlpath"] = $baseurl_short . 'plugins/simplesaml/lib/www/';
-//     }
 // if(!isset($simplesamlconfig["config"]["tempdir"]))
 //     {
 //     $config["tempdir"] = get_temp_dir();
