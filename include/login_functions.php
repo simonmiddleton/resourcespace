@@ -20,6 +20,8 @@ function perform_login($loginuser="",$loginpass="")
         $username = trim($loginuser);
     }
 
+    $username_as_entered = $username; # The username supplied at login before update below via get_user_by_username();
+
     // If a special key is sent, which is a hash based on the username and scramble key, then allow a login
     // using this hash as the password. This is for the 'log in as this user' feature.
     $impersonate_user = hash_equals(getval('userkey', ''),hash_hmac("sha256", "login_as_user" . $loginuser . date("Ymd"), $scramble_key, true));
@@ -71,7 +73,7 @@ function perform_login($loginuser="",$loginpass="")
     $ip = get_ip();
 
     # This may change the $username, $password, and $password_hash
-    $externalresult=hook("externalauth","",array($username, $password)); #Attempt external auth if configured
+    $externalresult=hook("externalauth","",array($username_as_entered, $password)); #Attempt external auth if configured
     if($externalresult)
         {
         // Get user data as per old method
