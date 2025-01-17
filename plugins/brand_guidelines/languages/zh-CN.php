@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='创建新文本项';
 $lang["brand_guidelines_title_edit_text"]='编辑文本';
 $lang["brand_guidelines_title_select_resource"]='选择现有资源';
 $lang["brand_guidelines_err_invalid_input"]='无效的输入提交';
-$lang["brand_guidelines_err_miss_prev_size"]='资源缺少所选的预览大小';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='十六进制 (0-9A-F)。示例：#0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

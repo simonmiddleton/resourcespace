@@ -21,7 +21,6 @@ $lang["brand_guidelines_title_new_text"]='Opret nyt tekstobjekt';
 $lang["brand_guidelines_title_edit_text"]='Rediger tekst';
 $lang["brand_guidelines_title_select_resource"]='Vælg eksisterende ressource';
 $lang["brand_guidelines_err_invalid_input"]='Ugyldigt input indsendt';
-$lang["brand_guidelines_err_miss_prev_size"]='Ressourcen mangler den valgte forhåndsvisningsstørrelse';
 $lang["brand_guidelines_hex_help_txt"]='Hexadecimal (0-9A-F). Eksempler: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). Eksempel: 116,182,50';

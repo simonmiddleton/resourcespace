@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='新しいテキストアイテムを�
 $lang["brand_guidelines_title_edit_text"]='テキストを編集';
 $lang["brand_guidelines_title_select_resource"]='既存のリソースを選択してください';
 $lang["brand_guidelines_err_invalid_input"]='無効な入力が送信されました';
-$lang["brand_guidelines_err_miss_prev_size"]='リソースに選択したプレビューサイズがありません';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='16進数 (0-9A-F)。例: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

@@ -21,7 +21,6 @@ $lang["brand_guidelines_title_new_text"]='Crear nou element de text';
 $lang["brand_guidelines_title_edit_text"]='Editar text';
 $lang["brand_guidelines_title_select_resource"]='Selecciona un recurs existent';
 $lang["brand_guidelines_err_invalid_input"]='Entrada no vàlida enviada';
-$lang["brand_guidelines_err_miss_prev_size"]='El recurs no té la mida de vista prèvia seleccionada';
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Hexadecimal (0-9A-F). Exemples: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

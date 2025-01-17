@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Maak nieuw tekstitem';
 $lang["brand_guidelines_title_edit_text"]='Bewerk tekst';
 $lang["brand_guidelines_title_select_resource"]='Selecteer bestaande resource';
 $lang["brand_guidelines_err_invalid_input"]='Ongeldige invoer ingediend';
-$lang["brand_guidelines_err_miss_prev_size"]='Hulpbron mist de geselecteerde voorbeeldgrootte';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Hexadecimaal (0-9A-F). Voorbeelden: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

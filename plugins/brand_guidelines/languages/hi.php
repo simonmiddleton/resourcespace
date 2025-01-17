@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='नया पाठ आइटम ब�
 $lang["brand_guidelines_title_edit_text"]='पाठ संपादित करें';
 $lang["brand_guidelines_title_select_resource"]='मौजूदा संसाधन चुनें';
 $lang["brand_guidelines_err_invalid_input"]='अमान्य इनपुट प्रस्तुत किया गया';
-$lang["brand_guidelines_err_miss_prev_size"]='संसाधन चयनित पूर्वावलोकन आकार गायब है';
+
 $lang["brand_guidelines_hex_help_txt"]='हेक्साडेसिमल (0-9A-F)। उदाहरण: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). उदाहरण: 116,182,50';

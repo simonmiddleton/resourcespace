@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Vytvoriť novú textovú položku';
 $lang["brand_guidelines_title_edit_text"]='Upraviť text';
 $lang["brand_guidelines_title_select_resource"]='Vyberte existujúci zdroj';
 $lang["brand_guidelines_err_invalid_input"]='Neplatný zadaný vstup';
-$lang["brand_guidelines_err_miss_prev_size"]='Zdroje chýba vybraná veľkosť náhľadu';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Hexadecimálny (0-9A-F). Príklady: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

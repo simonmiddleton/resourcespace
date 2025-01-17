@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Utwórz nowy element tekstowy';
 $lang["brand_guidelines_title_edit_text"]='Edytuj tekst';
 $lang["brand_guidelines_title_select_resource"]='Wybierz istniejący zasób';
 $lang["brand_guidelines_err_invalid_input"]='Nieprawidłowe dane wejściowe zostały przesłane';
-$lang["brand_guidelines_err_miss_prev_size"]='Zasób nie ma wybranego rozmiaru podglądu';
+
 $lang["brand_guidelines_hex_help_txt"]='Szesnastkowy (0-9A-F). Przykłady: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). Przykład: 116,182,50';

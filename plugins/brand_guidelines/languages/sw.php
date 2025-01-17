@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Unda kipengele kipya cha maandiko';
 $lang["brand_guidelines_title_edit_text"]='Hariri maandiko';
 $lang["brand_guidelines_title_select_resource"]='Chagua rasilimali iliyopo';
 $lang["brand_guidelines_err_invalid_input"]='Ingizo lisilo sahihi limetumwa';
-$lang["brand_guidelines_err_miss_prev_size"]='Rasilimali inakosa saizi ya awali iliyochaguliwa';
+
 $lang["brand_guidelines_hex_help_txt"]='Hexadecimal (0-9A-F). Mifano: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). Mfano: 116,182,50';

@@ -21,7 +21,6 @@ $lang["brand_guidelines_title_new_text"]='নতুন টেক্সট আই
 $lang["brand_guidelines_title_edit_text"]='পাঠ্য সম্পাদনা করুন';
 $lang["brand_guidelines_title_select_resource"]='বিদ্যমান সম্পদ নির্বাচন করুন';
 $lang["brand_guidelines_err_invalid_input"]='অবৈধ ইনপুট জমা দেওয়া হয়েছে';
-$lang["brand_guidelines_err_miss_prev_size"]='সম্পদ নির্বাচিত প্রিভিউ আকারটি অনুপস্থিত';
 $lang["brand_guidelines_hex_help_txt"]='হেক্সাডেসিমাল (0-9A-F)। উদাহরণ: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255)। উদাহরণ: 116,182,50';

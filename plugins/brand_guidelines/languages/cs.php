@@ -21,7 +21,6 @@ $lang["brand_guidelines_title_new_text"]='Vytvořit novou textovou položku';
 $lang["brand_guidelines_title_edit_text"]='Upravit text';
 $lang["brand_guidelines_title_select_resource"]='Vyberte existující zdroj';
 $lang["brand_guidelines_err_invalid_input"]='Neplatný zadaný vstup';
-$lang["brand_guidelines_err_miss_prev_size"]='Zdroji chybí vybraná velikost náhledu';
 $lang["brand_guidelines_hex_help_txt"]='Hexadecimální (0-9A-F). Příklady: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). Příklad: 116,182,50';

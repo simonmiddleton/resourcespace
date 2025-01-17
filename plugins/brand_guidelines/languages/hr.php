@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Stvori novu tekstualnu stavku';
 $lang["brand_guidelines_title_edit_text"]='Uredi tekst';
 $lang["brand_guidelines_title_select_resource"]='Odaberite postojeći resurs';
 $lang["brand_guidelines_err_invalid_input"]='Nevažeći uneseni podaci';
-$lang["brand_guidelines_err_miss_prev_size"]='Resursu nedostaje odabrana veličina pregleda';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Heksadecimalni (0-9A-F). Primjeri: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

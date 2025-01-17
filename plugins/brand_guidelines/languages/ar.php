@@ -21,7 +21,6 @@ $lang["brand_guidelines_title_new_text"]='إنشاء عنصر نصي جديد';
 $lang["brand_guidelines_title_edit_text"]='تعديل النص';
 $lang["brand_guidelines_title_select_resource"]='اختر مورد موجود';
 $lang["brand_guidelines_err_invalid_input"]='إدخال غير صالح تم تقديمه';
-$lang["brand_guidelines_err_miss_prev_size"]='المورد يفتقر إلى حجم المعاينة المحدد';
 $lang["brand_guidelines_hex_help_txt"]='ست عشري (0-9A-F). أمثلة: #0FA، 0FA، 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). مثال: 116,182,50';

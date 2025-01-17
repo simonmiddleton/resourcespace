@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='آیتم متنی جدید ایجاد 
 $lang["brand_guidelines_title_edit_text"]='ویرایش متن';
 $lang["brand_guidelines_title_select_resource"]='منبع موجود را انتخاب کنید';
 $lang["brand_guidelines_err_invalid_input"]='ورودی نامعتبر ارسال شده است';
-$lang["brand_guidelines_err_miss_prev_size"]='منبع اندازه پیش‌نمایش انتخاب شده را ندارد';
+
 $lang["brand_guidelines_hex_help_txt"]='هگزادسیمال (۰-۹A-F). مثال‌ها: #0FA، 0FA، 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). مثال: 116,182,50';

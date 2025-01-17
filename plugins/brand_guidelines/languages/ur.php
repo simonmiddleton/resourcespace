@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='نیا متنی آئٹم بنائیں'
 $lang["brand_guidelines_title_edit_text"]='متن میں ترمیم کریں';
 $lang["brand_guidelines_title_select_resource"]='موجودہ وسائل منتخب کریں';
 $lang["brand_guidelines_err_invalid_input"]='غلط ان پٹ جمع کرائی گئی';
-$lang["brand_guidelines_err_miss_prev_size"]='وسائل کی منتخب کردہ پیش نظارہ سائز غائب ہے';
+
 $lang["brand_guidelines_hex_help_txt"]='ہیکسڈیسمل (0-9A-F). مثالیں: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). مثال: 116,182,50';

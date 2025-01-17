@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Skapa nytt textobjekt';
 $lang["brand_guidelines_title_edit_text"]='Redigera text';
 $lang["brand_guidelines_title_select_resource"]='Välj befintlig resurs';
 $lang["brand_guidelines_err_invalid_input"]='Ogiltig inmatning skickad';
-$lang["brand_guidelines_err_miss_prev_size"]='Resursen saknar den valda förhandsgranskningsstorleken';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Hexadecimal (0-9A-F). Exempel: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

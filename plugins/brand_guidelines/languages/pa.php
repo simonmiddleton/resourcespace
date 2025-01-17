@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='ਨਵਾਂ ਪਾਠ ਆਈਟਮ �
 $lang["brand_guidelines_title_edit_text"]='ਪਾਠ ਸੰਪਾਦਿਤ ਕਰੋ';
 $lang["brand_guidelines_title_select_resource"]='ਮੌਜੂਦ ਸਰੋਤ ਚੁਣੋ';
 $lang["brand_guidelines_err_invalid_input"]='ਗਲਤ ਇਨਪੁਟ ਭੇਜਿਆ ਗਿਆ';
-$lang["brand_guidelines_err_miss_prev_size"]='ਸੰਸਾਧਨ ਚੁਣੀ ਗਈ ਪੂਰਵਦ੍ਰਿਸ਼ਟੀ ਆਕਾਰ ਗੁਆ ਚੁੱਕੀ ਹੈ';
+
 $lang["brand_guidelines_hex_help_txt"]='ਹੈਕਸਾਡੇਸੀਮਲ (0-9A-F). ਉਦਾਹਰਨਾਂ: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_cmyk"]='CMYK';

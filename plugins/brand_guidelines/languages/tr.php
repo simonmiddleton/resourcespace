@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Yeni metin öğesi oluştur';
 $lang["brand_guidelines_title_edit_text"]='Metni düzenle';
 $lang["brand_guidelines_title_select_resource"]='Mevcut kaynağı seçin';
 $lang["brand_guidelines_err_invalid_input"]='Geçersiz giriş yapıldı';
-$lang["brand_guidelines_err_miss_prev_size"]='Kaynağın seçilen önizleme boyutu eksik';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Onaltılık (0-9A-F). Örnekler: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

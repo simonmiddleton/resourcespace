@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Δημιουργία νέου στοι
 $lang["brand_guidelines_title_edit_text"]='Επεξεργασία κειμένου';
 $lang["brand_guidelines_title_select_resource"]='Επιλέξτε υπάρχον πόρο';
 $lang["brand_guidelines_err_invalid_input"]='Μη έγκυρη είσοδος υποβλήθηκε';
-$lang["brand_guidelines_err_miss_prev_size"]='Ο πόρος λείπει από το επιλεγμένο μέγεθος προεπισκόπησης';
+
 $lang["brand_guidelines_hex_help_txt"]='Εξαδικό (0-9A-F). Παραδείγματα: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
 $lang["brand_guidelines_rgb_help_txt"]='RGB (0-255). Παράδειγμα: 116,182,50';

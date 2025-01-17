@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Luo uusi tekstikohde';
 $lang["brand_guidelines_title_edit_text"]='Muokkaa tekstiä';
 $lang["brand_guidelines_title_select_resource"]='Valitse olemassa oleva resurssi';
 $lang["brand_guidelines_err_invalid_input"]='Virheellinen syöte lähetetty';
-$lang["brand_guidelines_err_miss_prev_size"]='Resurssi ei sisällä valittua esikatselukokoa';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Heksadesimaalinen (0-9A-F). Esimerkit: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

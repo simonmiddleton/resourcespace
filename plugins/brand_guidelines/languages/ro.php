@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Creează un nou element de text';
 $lang["brand_guidelines_title_edit_text"]='Editează textul';
 $lang["brand_guidelines_title_select_resource"]='Selectați resursa existentă';
 $lang["brand_guidelines_err_invalid_input"]='Intrare invalidă trimisă';
-$lang["brand_guidelines_err_miss_prev_size"]='Resursa nu are dimensiunea de previzualizare selectată';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Hexazecimal (0-9A-F). Exemple: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

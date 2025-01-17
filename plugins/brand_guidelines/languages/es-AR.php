@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Crear nuevo elemento de texto';
 $lang["brand_guidelines_title_edit_text"]='Editar texto';
 $lang["brand_guidelines_title_select_resource"]='Seleccionar recurso existente';
 $lang["brand_guidelines_err_invalid_input"]='Entrada inválida enviada';
-$lang["brand_guidelines_err_miss_prev_size"]='El recurso no tiene el tamaño de vista previa seleccionado';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Hexadecimal (0-9A-F). Ejemplos: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

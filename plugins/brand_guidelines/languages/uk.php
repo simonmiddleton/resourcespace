@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Створити новий текст
 $lang["brand_guidelines_title_edit_text"]='Редагувати текст';
 $lang["brand_guidelines_title_select_resource"]='Виберіть існуючий ресурс';
 $lang["brand_guidelines_err_invalid_input"]='Недійсний введений дані';
-$lang["brand_guidelines_err_miss_prev_size"]='Ресурс не має вибраного розміру попереднього перегляду';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Шістнадцятковий (0-9A-F). Приклади: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';

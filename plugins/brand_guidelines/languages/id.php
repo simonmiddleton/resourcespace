@@ -21,7 +21,7 @@ $lang["brand_guidelines_title_new_text"]='Buat item teks baru';
 $lang["brand_guidelines_title_edit_text"]='Edit teks';
 $lang["brand_guidelines_title_select_resource"]='Pilih sumber yang ada';
 $lang["brand_guidelines_err_invalid_input"]='Input yang diajukan tidak valid';
-$lang["brand_guidelines_err_miss_prev_size"]='Sumber tidak memiliki ukuran pratayang yang dipilih';
+
 $lang["brand_guidelines_hex"]='HEX';
 $lang["brand_guidelines_hex_help_txt"]='Hexadesimal (0-9A-F). Contoh: #0FA, 0FA, 00FFAA';
 $lang["brand_guidelines_rgb"]='RGB';
