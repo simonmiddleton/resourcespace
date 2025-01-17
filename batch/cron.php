@@ -1,4 +1,5 @@
 <?php
+
 include_once __DIR__ . "/../include/boot.php";
 command_line_only();
 
@@ -21,23 +22,22 @@ $lastcrontime   = strtotime($lastcron);
 $sincelast      = time() - $lastcrontime;
 
 // grab a list of files to run as part of the upgrade process
-$new_system_version_files=array();
-$files=scandir(__DIR__ .  '/cron_jobs');
-$total_upgrade_files=0;
-for($i=0; $i<=999; $i++)
-    {
-    foreach($files as $file)
-        {
-        if(preg_match('/^' . str_pad($i,3,'0',STR_PAD_LEFT) . '_.*\.php/', $file))
-            {
+$new_system_version_files = array();
+$files = scandir(__DIR__ .  '/cron_jobs');
+$total_upgrade_files = 0;
+for ($i = 0; $i <= 999; $i++) {
+    foreach ($files as $file) {
+        if (preg_match('/^' . str_pad($i, 3, '0', STR_PAD_LEFT) . '_.*\.php/', $file)) {
             $this_job_start = date("Y-m-d H:i:s");
-            echo "{$this_job_start} {$baseurl} Executing job: " . $file  . $LINE_END;flush();ob_flush();
+            echo "{$this_job_start} {$baseurl} Executing job: " . $file  . $LINE_END;
+            flush();
+            ob_flush();
             include __DIR__ .  '/cron_jobs/' . $file;
-            }
         }
     }
+}
 
-    
+
 # Allow plugins to add their own cron jobs.
 hook("cron");
 
@@ -45,10 +45,4 @@ $this_run_end = date("Y-m-d H:i:s");
 echo PHP_EOL . "{$this_run_end} {$baseurl} All tasks complete" .  $LINE_END;
 
 # Update last cron date
-set_sysvar("last_cron",date("Y-m-d H:i:s"));
-
-
-
-
-
-
+set_sysvar("last_cron", date("Y-m-d H:i:s"));
