@@ -44,7 +44,8 @@ public folder instead (an alias).
 $simplesaml_use_www = true;
 
 // When using ResourceSpace to store SAML config these setttings are initialised and set in the following pages:-
-// plugins/simplesaml/lib/lib/_autoload.php
+// plugins/simplesaml/lib/lib/_autoload.php (normally a symlink for src/_autoload.php)
+// plugins/simplesaml/lib/src/_autoload.php
 // plugins/simplesaml/include/resourcespace/config/config.php
 // plugins/simplesaml/include/resourcespace/config/authsources.php
 // plugins/simplesaml/include/resourcespace/metadata/saml20-idp-remote.php

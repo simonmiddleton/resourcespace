@@ -18,3 +18,5 @@ if (file_exists(dirname(__FILE__, 2) . '/vendor/autoload.php')) {
 } else {
     throw new Exception('Unable to load Composer autoloader');
 }
+
+include_once dirname(__DIR__, 2) . '/include/resourcespace/config_loader.php';
