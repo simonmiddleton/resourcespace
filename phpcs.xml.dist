@@ -31,8 +31,6 @@
     <file>upgrade</file>
 
     <exclude-pattern>plugins/*/lib</exclude-pattern>
-    <exclude-pattern>plugins/*/languages</exclude-pattern>
-
 
     <!--
         ===== Coding Standard rules =====
