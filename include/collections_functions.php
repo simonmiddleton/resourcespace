@@ -2695,9 +2695,6 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 
     if (is_array($results["data"]))
         {       
-        if (is_array($modifyNotAdded)) {
-            $resourcesnotadded = $modifyNotAdded;
-        }
         $n = 0;
         foreach($results["data"] as $result)
             {
