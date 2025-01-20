@@ -5,31 +5,34 @@
 # ------------------------------------------------------------------------
 #
 
-$rating=$resource["user_rating"];
-$modified_user_rating=hook("modifyuserrating");
-if ($modified_user_rating){$result[$n]['user_rating']=$modified_user_rating;}
+$rating = $resource["user_rating"];
+$modified_user_rating = hook("modifyuserrating");
+if ($modified_user_rating) {
+    $result[$n]['user_rating'] = $modified_user_rating;
+}
 
-$rating_count=$resource["user_rating_count"];
-if ($rating=="") {$rating=0;}
-if ($rating_count=="") {$rating_count=0;}
+$rating_count = $resource["user_rating_count"];
+if ($rating == "") {
+    $rating = 0;
+}
+if ($rating_count == "") {
+    $rating_count = 0;
+}
 // for 'remove rating' tool, determine if user has a rating for this resource
 if ($user_rating_only_once) {
-    $ratings=array();
-    $ratings=ps_query("select user,rating from user_rating where ref=?",array("i",$ref));
-    $current="";
-    for ($n=0;$n<count($ratings);$n++) {
-        if ($ratings[$n]['user']==$userref) {
-            $current=$ratings[$n]['rating'];
+    $ratings = array();
+    $ratings = ps_query("select user,rating from user_rating where ref=?", array("i",$ref));
+    $current = "";
+    for ($n = 0; $n < count($ratings); $n++) {
+        if ($ratings[$n]['user'] == $userref) {
+            $current = $ratings[$n]['rating'];
         }
     }
-    $removeratingvis = ($current!="") ? "inline" : "none";
+    $removeratingvis = ($current != "") ? "inline" : "none";
 }
-if(!hook("replaceuser_ratingbr")){
 ?>
 <br />
-<?php } # end hook("replaceuser_ratingbr") ?>
 <script type="text/javascript">
-
 var UserRatingDone=false;
 
 function UserRatingDisplay(rating,hiclass)
@@ -81,27 +84,52 @@ function UserRatingSet(userref,ref,rating)
         document.getElementById('UserRatingMessage').innerHTML="<?php echo escape($lang["ratingthankyou"])?>";      
         }
     }
-
-
 </script>
-<?php hook("beforeuserratingtable");?>
+
 <table cellpadding="0" cellspacing="0" width="100%">
-<tr class="DownloadDBlend">
-<?php hook("beforeuserratingheader"); ?>
-<td id="UserRatingMessage"><?php echo escape($lang["ratethisresource"])?></td>
-<td width="33%" class="RatingStars" onMouseOut="UserRatingDisplay(<?php echo escape($rating) ?>,'StarCurrent');">
-<div class="RatingStarsContainer">
-<?php if ($user_rating_only_once) {?><a href="#" onClick="UserRatingSet(<?php echo $userref?>,<?php echo escape($ref) ?>,0);return false;" title="<?php echo escape($lang["ratingremovehover"])?>" style="display:<?php echo $removeratingvis;?>"><span id="RatingStarLink0">X&nbsp;&nbsp;</span></a><?php }?>
-<?php for ($n=1;$n<=5;$n++)
-    {
-    ?><a href="#" onMouseOver="UserRatingDisplay(<?php echo $n?>,'StarSelect');" onClick="UserRatingSet(<?php echo $userref?>,<?php echo escape($ref) ?>,<?php echo $n?>);return false;" id="RatingStarLink<?php echo $n?>"><span id="RatingStar<?php echo $n?>" class="Star<?php echo $n <= $rating ? "Current" : "Empty"; ?>"><img alt="" src="<?php echo $baseurl?>/gfx/interface/sp.gif" width="15" height="15"></span></a><?php
-    #&#9733;
-    }
-?>
-</div>
-<div class="RatingCount" id="RatingCount"><?php if ($user_rating_stats && $user_rating_only_once){?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/user_ratings.php?ref=<?php echo $ref?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>"><?php } ?><?php echo urlencode($rating_count) ?> <?php echo $rating_count == 1 ? escape($lang["rating_lowercase"]) : escape($lang["ratings"]); ?><?php if ($user_rating_stats && $user_rating_only_once){?></a><?php }?></div>
-</td>
-</tr>
-<?php if(!hook("replaceuserratingtableclose")){ ?>
+    <tr class="DownloadDBlend">
+        <td id="UserRatingMessage"><?php echo escape($lang["ratethisresource"])?></td>
+        <td width="33%" class="RatingStars" onMouseOut="UserRatingDisplay(<?php echo escape($rating) ?>,'StarCurrent');">
+            <div class="RatingStarsContainer">
+                <?php if ($user_rating_only_once) { ?>
+                    <a
+                        href="#"
+                        onClick="UserRatingSet(<?php echo $userref?>,<?php echo escape($ref) ?>,0);return false;"
+                        title="<?php echo escape($lang["ratingremovehover"])?>"
+                        style="display:<?php echo $removeratingvis;?>">
+                        <span id="RatingStarLink0">X&nbsp;&nbsp;</span>
+                    </a>
+                    <?php
+                }
+
+                for ($n = 1; $n <= 5; $n++) { ?>
+                    <a
+                        href="#"
+                        onMouseOver="UserRatingDisplay(<?php echo $n?>,'StarSelect');"
+                        onClick="UserRatingSet(<?php echo $userref?>,<?php echo escape($ref) ?>,<?php echo $n?>);return false;"
+                        id="RatingStarLink<?php echo $n?>">
+                        <span id="RatingStar<?php echo $n?>" class="Star<?php echo $n <= $rating ? "Current" : "Empty"; ?>">
+                            <img alt="" src="<?php echo $baseurl?>/gfx/interface/sp.gif" width="15" height="15">
+                        </span>
+                    </a>
+                    <?php
+                }
+                ?>
+            </div>
+
+            <div class="RatingCount" id="RatingCount">
+                <?php if ($user_rating_stats && $user_rating_only_once) { ?>
+                    <a
+                        onClick="return CentralSpaceLoad(this,true);"
+                        href="<?php echo $baseurl?>/pages/user_ratings.php?ref=<?php echo $ref?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>">
+                        <?php
+                }
+                echo urlencode($rating_count) . " " . $rating_count == 1 ? escape($lang["rating_lowercase"]) : escape($lang["ratings"]);
+                if ($user_rating_stats && $user_rating_only_once) { ?>
+                    </a>
+                    <?php
+                } ?>
+            </div>
+        </td>
+    </tr>
 </table>
-<?php } # end hook("replaceuserratingtableclose") ?>
