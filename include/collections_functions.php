@@ -290,6 +290,12 @@ function get_collection_resources($collection)
         {
         collection_cleanup_inaccessible_resources($collection);
         }
+    
+    $plugin_collection_resources=hook('replace_get_collection_resources', "", array($collection));
+    if(is_array($plugin_collection_resources))
+        {
+        return $plugin_collection_resources;
+        }
 
     return ps_array("SELECT resource value FROM collection_resource WHERE collection = ? ORDER BY sortorder ASC, date_added DESC, resource ASC",array("i",$collection)); 
     }
@@ -457,6 +463,12 @@ function add_resource_to_collection(
                 collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
                 }            
             }
+
+        ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
+        ps_query(
+            'INSERT INTO collection_resource(collection, resource, sortorder) VALUES (?, ?, ?)',
+            ['i', $collection, 'i', $resource, 'i', $sort_order ?: null]
+        );
         
         # Update the hitcounts for the search nodes (if search specified)
         if (strpos($search,NODE_TOKEN_PREFIX) !== false)
@@ -476,7 +488,6 @@ function add_resource_to_collection(
         }
     else
         {
-        hook("Addtocollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
         return $lang["cantmodifycollection"];
         }
     }
@@ -500,14 +511,9 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false)
 
     if ($smartadd || collection_writeable($collection))
         {   
-        hook("Removefromcollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-        
-        if(!hook("removefromcollectionsql", "", array( $resource,$collection)))
-            {
-            $delparams = ["i",$resource,"i",$collection];
-            ps_query("DELETE FROM collection_resource WHERE resource = ? AND collection = ?",$delparams);
-            ps_query("DELETE FROM external_access_keys WHERE resource = ? AND collection = ?",$delparams);
-            }
+        $delparams = ["i",$resource,"i",$collection];
+        ps_query("DELETE FROM collection_resource WHERE resource = ? AND collection = ?",$delparams);
+        ps_query("DELETE FROM external_access_keys WHERE resource = ? AND collection = ?",$delparams);
         
         // log this
         collection_log($collection,LOG_CODE_COLLECTION_REMOVED_RESOURCE,$resource);
@@ -520,7 +526,6 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false)
         }
     else
         {
-        hook("Removefromcollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
         return $lang["cantmodifycollection"];
         }
     }
@@ -890,7 +895,6 @@ function delete_collection($collection)
         return false;
         }
 
-    hook("beforedeletecollection","",array($ref));
     ps_query("DELETE FROM collection WHERE ref=?",array("i",$ref));
     ps_query("DELETE FROM collection_resource WHERE collection=?",array("i",$ref));
     ps_query("DELETE FROM collection_keyword WHERE collection=?",array("i",$ref));
@@ -1370,230 +1374,227 @@ function save_collection($ref, $coldata=array())
         }
         
     $oldcoldata = get_collection($ref);    
-
-    if (!hook('modifysavecollection'))
+    $sqlset = array();
+    foreach($coldata as $colopt => $colset)
         {
-        $sqlset = array();
-        foreach($coldata as $colopt => $colset)
+        // skip data that is not a collection property (e.g result_limit or deleteall) otherwise the $sqlset will have an
+        // incorrect SQL query for the update statement.
+        if(in_array($colopt, ['result_limit', 'relateall', 'removeall', 'deleteall', 'users']))
             {
-            // skip data that is not a collection property (e.g result_limit or deleteall) otherwise the $sqlset will have an
-            // incorrect SQL query for the update statement.
-            if(in_array($colopt, ['result_limit', 'relateall', 'removeall', 'deleteall', 'users']))
+            continue;
+            }
+
+        // Set type to public unless explicitly passed
+        if($colopt == "public" && $colset == 1 && !isset($coldata["type"]))
+            {
+            $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
+            }
+
+        // "featured_collections_changes" is determined by collection_edit.php page
+        // This is meant to override the type if collection has a parent. The order of $coldata elements matters!
+        if($colopt == "featured_collections_changes" && !empty($colset))
+            {
+            $sqlset["type"] = COLLECTION_TYPE_FEATURED;
+            $sqlset["parent"] = null;
+
+            if(isset($colset["update_parent"]))
+                {
+                $force_featured_collection_type = isset($colset["force_featured_collection_type"]);
+
+                // A FC root category is created directly from the collections_featured.php page so not having a parent, means it's just public
+                if($colset["update_parent"] == 0 && !$force_featured_collection_type)
+                    {
+                    $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
+                    }
+                else
+                    {
+                    $sqlset["parent"] = (int) $colset["update_parent"];
+                    }
+                }
+
+            if(isset($colset["thumbnail_selection_method"]))
+                {
+                $sqlset["thumbnail_selection_method"] = $colset["thumbnail_selection_method"];
+                }
+            
+            if(isset($colset["thumbnail_selection_method"]) || isset($colset["name"]))
+                {
+                // Prevent the parent from being changed if user only modified the thumbnail_selection_method or name
+                $sqlset["parent"] = (!isset($colset["update_parent"]) ? $oldcoldata["parent"] : $sqlset["parent"]);
+                }
+
+            // Prevent unnecessary changes
+            foreach(array("type", "parent", "thumbnail_selection_method") as $puc_to_prop)
+                {
+                if(isset($sqlset[$puc_to_prop]) && $oldcoldata[$puc_to_prop] == $sqlset[$puc_to_prop])
+                    {
+                    unset($sqlset[$puc_to_prop]);
+                    }
+                }
+
+            continue;
+            }
+        if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt])
+            {
+            $sqlset[$colopt] = $colset;
+            }
+        }
+
+    // If collection is set as private by caller code, disable incompatible properties used for COLLECTION_TYPE_FEATURED (set by the user or exsting)
+    if(isset($sqlset["public"]) && $sqlset["public"] == 0)
+        {
+        $sqlset["type"] = COLLECTION_TYPE_STANDARD;
+        $sqlset["parent"] = null;
+        $sqlset["thumbnail_selection_method"] = null;
+        $sqlset["bg_img_resource_ref"] = null;
+        }
+
+    /*
+    Order by is applicable only to featured collections.
+    Determine if we have to reset and, if required, re-order featured collections at the tree level
+
+    ----------------------------------------------------------------------------------------------------------------
+                                                    |     Old       |        Set        | 
+                                                    |---------------|-------------------|
+    Use cases                                       | Type | Parent | Type    | Parent  | Reset order_by? | Re-order?
+    ------------------------------------------------|------|--------|-----------------------------------------------
+    Move FC to private                              | 3    | null   | 0       | null    | yes             | no
+    Move FC to public                               | 3    | any    | 4       | null    | yes             | no
+    Move FC to new parent                           | 3    | null   | not set | X       | yes             | yes
+    Save FC but don’t change type or parent         | 3    | null   | not set | null    | no              | no
+    Save a child FC but don’t change type or parent | 3    | X      | not set | not set | no              | no
+    Move public to private                          | 4    | null   | 0       | null    | no              | no
+    Move public to FC (root)                        | 4    | null   | 3       | not set | yes             | yes
+    Move public to FC (others)                      | 4    | null   | 3       | X       | yes             | yes
+    Save public but don’t change type or parent     | 4    | null   | 4       | not set | no              | no
+    Create FC at root                               | 0    | null   | 3       | not set | yes             | yes
+    Create FC at other level                        | 0    | null   | 3       | X       | yes             | yes
+    ----------------------------------------------------------------------------------------------------------------
+    */
+    // Saving a featured collection without changing its type or parent
+    $rob_cond_fc_no_change = (
+        isset($oldcoldata['type']) && $oldcoldata['type'] === COLLECTION_TYPE_FEATURED
+        && !isset($sqlset['type'])
+        && (!isset($sqlset['parent']) || is_null($sqlset['parent']))
+    );
+    // Saving a public collection without changing it into a featured collection
+    $rob_cond_public_col_no_change = (
+        isset($oldcoldata['type'], $sqlset['type'])
+        && $oldcoldata['type'] === COLLECTION_TYPE_PUBLIC
+        && $sqlset["type"] !== COLLECTION_TYPE_FEATURED
+    );
+    if( !($rob_cond_fc_no_change || $rob_cond_public_col_no_change) )
+        {
+        $sqlset['order_by'] = 0;
+
+        if(
+            // Type changed to featured collection
+            (isset($sqlset['type']) && $sqlset['type'] === COLLECTION_TYPE_FEATURED)
+
+            // Featured collection moved in the tree (ie parent changed)
+            || ($oldcoldata['type'] === COLLECTION_TYPE_FEATURED && !isset($sqlset['type']) && isset($sqlset['parent']))
+        )
+            {
+            $reorder_fcs = true;
+            }
+        }
+
+
+    // Update collection record
+    if(count($sqlset) > 0)
+        {
+        $sqlupdate = "";
+        $clear_fc_query_cache = false;
+        $collection_columns = [
+            'name',
+            'user',
+            'created',
+            'public',
+            'allow_changes',
+            'cant_delete',
+            'keywords',
+            'savedsearch',
+            'home_page_publish',
+            'home_page_text',
+            'home_page_image',
+            'session_id',
+            'description',
+            'type',
+            'parent',
+            'thumbnail_selection_method',
+            'bg_img_resource_ref',
+            'order_by',
+        ];
+        $params = [];
+        foreach($sqlset as $colopt => $colset)
+            {
+            // Only valid collection columns should be processed
+            if(!in_array($colopt, $collection_columns))
                 {
                 continue;
                 }
 
-            // Set type to public unless explicitly passed
-            if($colopt == "public" && $colset == 1 && !isset($coldata["type"]))
+            if($sqlupdate != "")
                 {
-                $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
+                $sqlupdate .= ", ";    
                 }
 
-            // "featured_collections_changes" is determined by collection_edit.php page
-            // This is meant to override the type if collection has a parent. The order of $coldata elements matters!
-            if($colopt == "featured_collections_changes" && !empty($colset))
+            if(in_array($colopt, array("type", "parent", "thumbnail_selection_method", "bg_img_resource_ref")))
                 {
-                $sqlset["type"] = COLLECTION_TYPE_FEATURED;
-                $sqlset["parent"] = null;
+                $clear_fc_query_cache = true;
+                }
 
-                if(isset($colset["update_parent"]))
+            if(in_array($colopt, array("parent", "thumbnail_selection_method", "bg_img_resource_ref")))
+                {
+                $sqlupdate .= $colopt . " = ";
+                if($colset == 0){$sqlupdate .= 'NULL';}
+                else
                     {
-                    $force_featured_collection_type = isset($colset["force_featured_collection_type"]);
-
-                    // A FC root category is created directly from the collections_featured.php page so not having a parent, means it's just public
-                    if($colset["update_parent"] == 0 && !$force_featured_collection_type)
-                        {
-                        $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
-                        }
-                    else
-                        {
-                        $sqlset["parent"] = (int) $colset["update_parent"];
-                        }
-                    }
-
-                if(isset($colset["thumbnail_selection_method"]))
-                    {
-                    $sqlset["thumbnail_selection_method"] = $colset["thumbnail_selection_method"];
+                    $sqlupdate .= '?';
+                    $params = array_merge($params,['i', $colset]);
                     }
                 
-                if(isset($colset["thumbnail_selection_method"]) || isset($colset["name"]))
-                    {
-                    // Prevent the parent from being changed if user only modified the thumbnail_selection_method or name
-                    $sqlset["parent"] = (!isset($colset["update_parent"]) ? $oldcoldata["parent"] : $sqlset["parent"]);
-                    }
-
-                // Prevent unnecessary changes
-                foreach(array("type", "parent", "thumbnail_selection_method") as $puc_to_prop)
-                    {
-                    if(isset($sqlset[$puc_to_prop]) && $oldcoldata[$puc_to_prop] == $sqlset[$puc_to_prop])
-                        {
-                        unset($sqlset[$puc_to_prop]);
-                        }
-                    }
-
                 continue;
                 }
-            if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt])
+
+            if($colopt == 'allow_changes')
                 {
-                $sqlset[$colopt] = $colset;
+                $colset = (int) $colset;
                 }
+
+            $sqlupdate .= $colopt . " = ? ";
+            $params = array_merge($params, ['s', $colset]);
             }
-
-        // If collection is set as private by caller code, disable incompatible properties used for COLLECTION_TYPE_FEATURED (set by the user or exsting)
-        if(isset($sqlset["public"]) && $sqlset["public"] == 0)
+        if($sqlupdate !== '')
             {
-            $sqlset["type"] = COLLECTION_TYPE_STANDARD;
-            $sqlset["parent"] = null;
-            $sqlset["thumbnail_selection_method"] = null;
-            $sqlset["bg_img_resource_ref"] = null;
-            }
+            $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = ?";
+            ps_query($sql, array_merge($params, ['i', $ref]));
 
-        /*
-        Order by is applicable only to featured collections.
-        Determine if we have to reset and, if required, re-order featured collections at the tree level
-
-        ----------------------------------------------------------------------------------------------------------------
-                                                        |     Old       |        Set        | 
-                                                        |---------------|-------------------|
-        Use cases                                       | Type | Parent | Type    | Parent  | Reset order_by? | Re-order?
-        ------------------------------------------------|------|--------|-----------------------------------------------
-        Move FC to private                              | 3    | null   | 0       | null    | yes             | no
-        Move FC to public                               | 3    | any    | 4       | null    | yes             | no
-        Move FC to new parent                           | 3    | null   | not set | X       | yes             | yes
-        Save FC but don’t change type or parent         | 3    | null   | not set | null    | no              | no
-        Save a child FC but don’t change type or parent | 3    | X      | not set | not set | no              | no
-        Move public to private                          | 4    | null   | 0       | null    | no              | no
-        Move public to FC (root)                        | 4    | null   | 3       | not set | yes             | yes
-        Move public to FC (others)                      | 4    | null   | 3       | X       | yes             | yes
-        Save public but don’t change type or parent     | 4    | null   | 4       | not set | no              | no
-        Create FC at root                               | 0    | null   | 3       | not set | yes             | yes
-        Create FC at other level                        | 0    | null   | 3       | X       | yes             | yes
-        ----------------------------------------------------------------------------------------------------------------
-        */
-        // Saving a featured collection without changing its type or parent
-        $rob_cond_fc_no_change = (
-            isset($oldcoldata['type']) && $oldcoldata['type'] === COLLECTION_TYPE_FEATURED
-            && !isset($sqlset['type'])
-            && (!isset($sqlset['parent']) || is_null($sqlset['parent']))
-        );
-        // Saving a public collection without changing it into a featured collection
-        $rob_cond_public_col_no_change = (
-            isset($oldcoldata['type'], $sqlset['type'])
-            && $oldcoldata['type'] === COLLECTION_TYPE_PUBLIC
-            && $sqlset["type"] !== COLLECTION_TYPE_FEATURED
-        );
-        if( !($rob_cond_fc_no_change || $rob_cond_public_col_no_change) )
-            {
-            $sqlset['order_by'] = 0;
-
-            if(
-                // Type changed to featured collection
-                (isset($sqlset['type']) && $sqlset['type'] === COLLECTION_TYPE_FEATURED)
-
-                // Featured collection moved in the tree (ie parent changed)
-                || ($oldcoldata['type'] === COLLECTION_TYPE_FEATURED && !isset($sqlset['type']) && isset($sqlset['parent']))
-            )
+            if($clear_fc_query_cache)
                 {
-                $reorder_fcs = true;
+                clear_query_cache("featured_collections");
                 }
-            }
 
-
-        // Update collection record
-        if(count($sqlset) > 0)
-            {
-            $sqlupdate = "";
-            $clear_fc_query_cache = false;
-            $collection_columns = [
-                'name',
-                'user',
-                'created',
-                'public',
-                'allow_changes',
-                'cant_delete',
-                'keywords',
-                'savedsearch',
-                'home_page_publish',
-                'home_page_text',
-                'home_page_image',
-                'session_id',
-                'description',
-                'type',
-                'parent',
-                'thumbnail_selection_method',
-                'bg_img_resource_ref',
-                'order_by',
-            ];
-            $params = [];
+            // Log the changes
             foreach($sqlset as $colopt => $colset)
                 {
-                // Only valid collection columns should be processed
-                if(!in_array($colopt, $collection_columns))
+                switch($colopt)
                     {
-                    continue;
+                    case "public";
+                        collection_log($ref, LOG_CODE_COLLECTION_ACCESS_CHANGED, 0, $colset ? 'public' : 'private');
+                    break;    
+                    case "allow_changes";
+                        collection_log($ref, LOG_CODE_UNSPECIFIED, 0,  $colset ? 'true' : 'false' );
+                    break; 
+                    default;
+                        collection_log($ref, LOG_CODE_EDITED, 0,  $colopt  . " = " . $colset);
+                    break;
                     }
-
-                if($sqlupdate != "")
-                    {
-                    $sqlupdate .= ", ";    
-                    }
-
-                if(in_array($colopt, array("type", "parent", "thumbnail_selection_method", "bg_img_resource_ref")))
-                    {
-                    $clear_fc_query_cache = true;
-                    }
-
-                if(in_array($colopt, array("parent", "thumbnail_selection_method", "bg_img_resource_ref")))
-                    {
-                    $sqlupdate .= $colopt . " = ";
-                    if($colset == 0){$sqlupdate .= 'NULL';}
-                    else
-                        {
-                        $sqlupdate .= '?';
-                        $params = array_merge($params,['i', $colset]);
-                        }
                     
-                    continue;
-                    }
-
-                if($colopt == 'allow_changes')
-                    {
-                    $colset = (int) $colset;
-                    }
-
-                $sqlupdate .= $colopt . " = ? ";
-                $params = array_merge($params, ['s', $colset]);
-                }
-            if($sqlupdate !== '')
-                {
-                $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = ?";
-                ps_query($sql, array_merge($params, ['i', $ref]));
-
-                if($clear_fc_query_cache)
-                    {
-                    clear_query_cache("featured_collections");
-                    }
-
-                // Log the changes
-                foreach($sqlset as $colopt => $colset)
-                    {
-                    switch($colopt)
-                        {
-                        case "public";
-                            collection_log($ref, LOG_CODE_COLLECTION_ACCESS_CHANGED, 0, $colset ? 'public' : 'private');
-                        break;    
-                        case "allow_changes";
-                            collection_log($ref, LOG_CODE_UNSPECIFIED, 0,  $colset ? 'true' : 'false' );
-                        break; 
-                        default;
-                            collection_log($ref, LOG_CODE_EDITED, 0,  $colopt  . " = " . $colset);
-                        break;
-                        }
-                     
-                    }
                 }
             }
-        } # end replace hook - modifysavecollection
+        }
+
 
     index_collection($ref);
 
@@ -2694,7 +2695,6 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 
     if (is_array($results["data"]))
         {       
-        $modifyNotAdded = hook('modifynotaddedsearchitems', '', array($results["data"], $resourcesnotadded));
         if (is_array($modifyNotAdded)) {
             $resourcesnotadded = $modifyNotAdded;
         }
@@ -2794,7 +2794,6 @@ function allow_multi_edit($collection,$collectionid = 0)
 
         if($resultcount == $editcount)
             {
-            if(hook('denyaftermultiedit', '', array($collection))) { return false; }
             return true;
             }
 
@@ -3585,12 +3584,6 @@ function collection_log($collection,$type,$resource,$notes = "")
     global $userref;
 
     if (!is_numeric($collection)) {return false;}
-
-    $modifiedcollogtype=hook("modifycollogtype","",array($type,$resource));
-    if ($modifiedcollogtype) {$type=$modifiedcollogtype;}
-    
-    $modifiedcollognotes=hook("modifycollognotes","",array($type,$resource,$notes));
-    if ($modifiedcollognotes) {$notes=$modifiedcollognotes;}
 
     $user = ($userref ?: null);
     $resource = ($resource ?: null);

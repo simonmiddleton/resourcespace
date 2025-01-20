@@ -73,17 +73,6 @@ function get_resource_path(
         $size='pre';
         }
 
-    $override = hook(
-        'get_resource_path_override',
-        '',
-        array($ref, $getfilepath, $size, $generate, $extension, $scramble, $page, $watermarked, $file_modified, $alternative, $includemodified)
-    );
-
-    if(is_string($override))
-        {
-        return $override;
-        }
-
     $refresh_key='';
     // Determine v value early so that it can also be used when $hide_real_filepath is enabled
     if (!$getfilepath && $includemodified)
