@@ -31,6 +31,10 @@ $checksum_required = $job_data["checksum_required"] ?? true;
 // For messages
 $url = isset($job_data['resource']) ? "{$baseurl_short}?r={$job_data['resource']}" : '';
 
+if ($resource > 0) {
+    delete_previews($resource);
+}
+
 if ($resource > 0 && create_previews($resource, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ignoremaxsize, $ingested, $checksum_required)) {
     // Success - no message required
     # Update disk usage

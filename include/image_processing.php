@@ -1389,6 +1389,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             include __DIR__."/preview_preprocessing.php";
             // $created_previews will have been set in preview_preprocessing.php to indicate succces/failure
             if (!$preview_preprocessing_success) {
+                ps_query("UPDATE resource SET preview_attempts = ifnull(preview_attempts, 0) + 1 where ref = ?", array("i", $ref));
                 return false;
             }
         }
@@ -3630,7 +3631,7 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     }
 
     # Get image's dimensions.
-    $identoutput = run_command($identcommand,false,$params);
+    $identoutput = run_command($identcommand, false, $params, 30);
     if (strtolower($extension) == "svg") {
         list($w, $h) = getSvgSize($file);
     } elseif (!empty($identoutput)) {

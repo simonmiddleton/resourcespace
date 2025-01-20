@@ -289,6 +289,7 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
    ----------------------------------------
 */
 global $unoconv_extensions;
+$using_unoconv = false;
 if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoconv_path) && !isset($newfile))
     {
     $unocommand = get_utility_path('unoconvert');
@@ -303,6 +304,7 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
         exit("unoconv/unoconvert executable not found");
         }
 
+    $using_unoconv = true; # Prevent falling back to other less detailed preview options.
     $path_parts=pathinfo($file);
     $basename_minus_extension=remove_extension($path_parts['basename']);
     $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
@@ -407,6 +409,11 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
                 }
             }
         }
+    else
+        {
+        $preview_preprocessing_success = false;
+        debug("Preview preprocessing: Attempt to create previews with Unoconv for ref $ref failed.");
+        }
     }
     
 /* ----------------------------------------
@@ -461,7 +468,7 @@ if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($
     Try OpenDocument Format
    ----------------------------------------
 */
-if ((($extension=="odt") || ($extension=="ott") || ($extension=="odg") || ($extension=="otg") || ($extension=="odp") || ($extension=="otp") || ($extension=="ods") || ($extension=="ots") || ($extension=="odf") || ($extension=="otf") || ($extension=="odm") || ($extension=="oth")) && !isset($newfile))
+if (!$using_unoconv && (($extension=="odt") || ($extension=="ott") || ($extension=="odg") || ($extension=="otg") || ($extension=="odp") || ($extension=="otp") || ($extension=="ods") || ($extension=="ots") || ($extension=="odf") || ($extension=="otf") || ($extension=="odm") || ($extension=="oth")) && !isset($newfile))
 
     {
     $cmd="unzip -p ".escapeshellarg($file)." \"Thumbnails/thumbnail.png\" > $target";
@@ -480,7 +487,7 @@ if ((($extension=="odt") || ($extension=="ott") || ($extension=="odg") || ($exte
     so it will likely work in most cases, but I think the specs allow it to go anywhere.
    ----------------------------------------
 */
-if ((($extension=="docx") || ($extension=="xlsx") || ($extension=="pptx") || ($extension=="xps")) && !isset($newfile) && in_array($extension,$unoconv_extensions) )
+if (!$using_unoconv && (($extension=="docx") || ($extension=="xlsx") || ($extension=="pptx") || ($extension=="xps")) && !isset($newfile) && in_array($extension,$unoconv_extensions) )
     {
     $cmd="unzip -p ".escapeshellarg($file)." \"docProps/thumbnail.jpeg\" > $target";
     $output=run_command($cmd);
@@ -531,7 +538,7 @@ if ($extension=="blend" && isset($blender_path) && !isset($newfile))
     (note: this is very basic)
    ----------------------------------------
 */
-if ($extension=="doc" && isset($antiword_path) && isset($ghostscript_path) && !isset($newfile))
+if (!$using_unoconv && $extension=="doc" && isset($antiword_path) && isset($ghostscript_path) && !isset($newfile))
     {
     $command = get_utility_path('antiword');
     if(!$command)
@@ -787,7 +794,7 @@ if (($ffmpeg_fullpath!=false) && in_array($extension, $ffmpeg_audio_extensions))
     $output = run_command($cmd);
 
     if (!file_exists($mp3file)) {
-        ps_query("UPDATE resource SET preview_attempts=ifnull(preview_attempts,0) + 1 where ref=?",array("i",$ref));
+        $preview_preprocessing_success = false;
         echo debug("Failed to process resource " . $ref . " - MP3 creation failed.");
     } else { 
         $preview_preprocessing_success = true;
