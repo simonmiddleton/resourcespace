@@ -7,18 +7,13 @@ $collection = getval('collection', 0, true);
 
 $success = false;
 
-if($collection > 0)
-    {
+if ($collection > 0) {
     $success = unrelate_all_collection($collection, true);
-    }
+}
 
-if($success)
-    {
+if ($success) {
     exit("SUCCESS");
-    }
-else
-    {
+} else {
     http_response_code(403);
     exit(escape($lang["error-permissiondenied"]));
-    }
-
+}

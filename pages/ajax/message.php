@@ -1,150 +1,133 @@
 <?php
 
-    DEFINE ("MESSAGE_POLLING_ABSENT_USER_TIMEOUT_SECONDS",30);
-    DEFINE ("MESSAGE_FADEOUT_SECONDS",5);
+DEFINE("MESSAGE_POLLING_ABSENT_USER_TIMEOUT_SECONDS", 30);
+DEFINE("MESSAGE_FADEOUT_SECONDS", 5);
 
-    // check for callback, i.e. this file being called directly to get any new messages
-    if (basename(__FILE__)==basename($_SERVER['PHP_SELF']))
-        {
-        include_once __DIR__ . "/../../include/boot.php";
-        
-        include __DIR__ . "/../../include/authenticate.php";
-        if($actions_on)
-            {
-            include_once __DIR__ . "/../../include/action_functions.php";
-            include_once __DIR__ . "/../../include/request_functions.php";
-            }
+// check for callback, i.e. this file being called directly to get any new messages
+if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
+    include_once __DIR__ . "/../../include/boot.php";
+    include __DIR__ . "/../../include/authenticate.php";
+    
+    if ($actions_on) {
+        include_once __DIR__ . "/../../include/action_functions.php";
+        include_once __DIR__ . "/../../include/request_functions.php";
+    }
 
-        if(getval("check_upgrade_in_progress", "") != "")
-            {
-            $data["upgrade_in_progress"] = false;
-            if(is_process_lock("process_lock_upgrade_in_progress"))
-                {
-                $data["upgrade_in_progress"] = true;
-                }
-
-            echo json_encode(array(
-                "status" => "success",
-                "data" => $data));
-            exit();
-            }
-
-        $user            = getval('user', 0, true);
-        $seen            = getval('seen', 0, true);
-        $unseen          = getval('unseen', 0, true);
-        $allseen         = getval('allseen', 0, true);
-        $deleteselusrmsg = getval('deleteselusrmsg', "");
-        $selectedseen    = getval('selectedseen', "");
-        $selectedunseen  = getval('selectedunseen', "");
-        $getrefs         = getval('getrefs', 0, true);
-
-        if(0 < $user)
-            {
-            if(is_numeric($user) && !checkperm_user_edit($user))
-                {
-                exit($lang['error-permissiondenied']);
-                }
-            }
-        else
-            {
-            // no user specified so default to the current user
-            $user = $userref;
-            }
-
-        // It is an acknowledgement so set as seen and get out of here
-        if (0 < $seen)
-            {
-            message_seen($seen);
-            return;
-            }
-            
-        if (0 < $unseen)
-            {
-            message_unseen($unseen);
-            return;
-            }
-
-        // Acknowledgement all messages then get out of here
-        if (0 < $allseen)
-            {
-            message_seen_all($allseen);
-            return;
-            }
-
-        // Purge messages that have an expired TTL then get out of here
-        if ('' != getval('purge', ''))
-            {
-            message_purge();
-            return;
-            }
-
-        // Delete all selected messages
-        if ($deleteselusrmsg != "")
-            {
-            message_deleteselusrmsg($deleteselusrmsg);
-            return;
-            }
- 
-        // Mark all selected messages as seen
-        if ($selectedseen != "")
-            {
-            message_selectedseen($selectedseen);
-            return;
-            }
- 
-        // Mark all selected messages as unseen
-        if ($selectedunseen != "")
-            {
-            message_selectedunseen($selectedunseen);
-            return;
-            }
- 
-        // Return list of references of all messages
-        if ($getrefs > 0)
-            {
-            message_getrefs($getrefs);
-            return;
-            }
-
-        // Check if there are messages
-        $messages = array();
-        message_get($messages,$user);   // note: messages are passed by reference
-        
-        $extramessage = array('ref'=>0);
-        $extramessages = false;
-        if($actions_on)
-            {
-            $actioncount=get_user_actions(true);
-            if($actioncount>0)
-                {
-                $extramessage['actioncount'] = $actioncount;
-                $extramessages = true;
-                }
-            }
-        if($offline_job_queue)
-            {
-            $userfailedjobs = count(job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref)));
-            $allfailedjobs  = count(job_queue_get_jobs("",STATUS_ERROR));
-            $jobcounts      = [];
-
-            if($userfailedjobs > 0){$jobcounts['user'] = $userfailedjobs;}
-            if($allfailedjobs > 0){$jobcounts['all'] = $allfailedjobs;}
-
-            if(!empty($jobcounts))
-                {
-                $extramessage['failedjobcount'] = $jobcounts;
-                $extramessages = true;
-                }
-            }
-        if($extramessages)
-            {
-            $messages[] = $extramessage;
-            }
-
-        ob_clean(); // just in case we have any stray whitespace at the start of this file
-        echo json_encode($messages);
-        return;
+    if (getval("check_upgrade_in_progress", "") != "") {
+        $data["upgrade_in_progress"] = false;
+        if (is_process_lock("process_lock_upgrade_in_progress")) {
+            $data["upgrade_in_progress"] = true;
         }
+
+        echo json_encode(array(
+            "status" => "success",
+            "data" => $data));
+        exit();
+    }
+
+    $user            = getval('user', 0, true);
+    $seen            = getval('seen', 0, true);
+    $unseen          = getval('unseen', 0, true);
+    $allseen         = getval('allseen', 0, true);
+    $deleteselusrmsg = getval('deleteselusrmsg', "");
+    $selectedseen    = getval('selectedseen', "");
+    $selectedunseen  = getval('selectedunseen', "");
+    $getrefs         = getval('getrefs', 0, true);
+
+    if (0 < $user) {
+        if (is_numeric($user) && !checkperm_user_edit($user)) {
+            exit($lang['error-permissiondenied']);
+        }
+    } else {
+        // no user specified so default to the current user
+        $user = $userref;
+    }
+
+    // It is an acknowledgement so set as seen and get out of here
+    if (0 < $seen) {
+        message_seen($seen);
+        return;
+    }
+
+    if (0 < $unseen) {
+        message_unseen($unseen);
+        return;
+    }
+
+    // Acknowledgement all messages then get out of here
+    if (0 < $allseen) {
+        message_seen_all($allseen);
+        return;
+    }
+
+    // Purge messages that have an expired TTL then get out of here
+    if ('' != getval('purge', '')) {
+        message_purge();
+        return;
+    }
+
+    // Delete all selected messages
+    if ($deleteselusrmsg != "") {
+        message_deleteselusrmsg($deleteselusrmsg);
+        return;
+    }
+
+    // Mark all selected messages as seen
+    if ($selectedseen != "") {
+        message_selectedseen($selectedseen);
+        return;
+    }
+
+    // Mark all selected messages as unseen
+    if ($selectedunseen != "") {
+        message_selectedunseen($selectedunseen);
+        return;
+    }
+
+    // Return list of references of all messages
+    if ($getrefs > 0) {
+        message_getrefs($getrefs);
+        return;
+    }
+
+    // Check if there are messages
+    $messages = array();
+    message_get($messages, $user);   // note: messages are passed by reference
+
+    $extramessage = array('ref' => 0);
+    $extramessages = false;
+    if ($actions_on) {
+        $actioncount = get_user_actions(true);
+        if ($actioncount > 0) {
+            $extramessage['actioncount'] = $actioncount;
+            $extramessages = true;
+        }
+    }
+    if ($offline_job_queue) {
+        $userfailedjobs = count(job_queue_get_jobs("", STATUS_ERROR, (checkperm('a') ? 0 : $userref)));
+        $allfailedjobs  = count(job_queue_get_jobs("", STATUS_ERROR));
+        $jobcounts      = [];
+
+        if ($userfailedjobs > 0) {
+            $jobcounts['user'] = $userfailedjobs;
+        }
+        if ($allfailedjobs > 0) {
+            $jobcounts['all'] = $allfailedjobs;
+        }
+
+        if (!empty($jobcounts)) {
+            $extramessage['failedjobcount'] = $jobcounts;
+            $extramessages = true;
+        }
+    }
+    if ($extramessages) {
+        $messages[] = $extramessage;
+    }
+
+    ob_clean(); // just in case we have any stray whitespace at the start of this file
+    echo json_encode($messages);
+    return;
+}
 
 ?><script>
 
@@ -163,15 +146,14 @@
         }
         activeSeconds-=<?php echo $message_polling_interval_seconds; ?>;
         <?php
-        if ($message_polling_interval_seconds > 0)
-            {
+        if ($message_polling_interval_seconds > 0) {
             ?>if(activeSeconds < 0)
             {
                 message_timer = window.setTimeout(message_poll,<?php echo $message_polling_interval_seconds; ?> * 1000);
                 return;
             }
             <?php
-            }
+        }
         ?>
         jQuery.ajax({
             url: '<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true',
@@ -226,14 +208,13 @@
                                 {
                                 // Show message popup if configured
                                 <?php
-                                if($user_pref_show_notifications)
-                                    {
+                                if ($user_pref_show_notifications) {
                                     ?>
                                     message_display(message, url, ref, function (ref) {
                                     jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
                                     });
                                     <?php
-                                    }
+                                }
                                 ?>                                
                                 }                           
                             message_poll();
@@ -278,8 +259,7 @@
                     }
             }
         }).done(function() {
-            <?php if ($message_polling_interval_seconds > 0)
-            {
+            <?php if ($message_polling_interval_seconds > 0) {
                 ?>message_timer = window.setTimeout(message_poll,<?php echo $message_polling_interval_seconds; ?> * 1000);
                 <?php
             }
