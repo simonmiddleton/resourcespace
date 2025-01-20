@@ -42,57 +42,50 @@ HELP;
 
 $parameters = getopt('', array('help','field:','tree:','separator::','lang::'));
 
-if(array_key_exists('help', $parameters))
-    {
+if (array_key_exists('help', $parameters)) {
     exit($help_text . PHP_EOL);
-    }
+}
 
-if(!array_key_exists('field', $parameters) || !array_key_exists('tree', $parameters) || !is_numeric($parameters['field']) || $parameters['field'] == 0 || !in_array($parameters['tree'], array('yes', 'no')))
-    {
+if (!array_key_exists('field', $parameters) || !array_key_exists('tree', $parameters) || !is_numeric($parameters['field']) || $parameters['field'] == 0 || !in_array($parameters['tree'], array('yes', 'no'))) {
     exit('Error: Both --field and --tree parameters must be set. See --help for more details.' . PHP_EOL);
-    }
+}
 
 $resource_type_field = (int) $parameters['field'];
 $category_tree = $parameters['tree'] == 'yes';
 $separator = ', ';
-if (isset($parameters['separator']) && $parameters['separator'] !== false)
-    {
+if (isset($parameters['separator']) && $parameters['separator'] !== false) {
     $separator = $parameters['separator'];
-    }
-if (isset($parameters['lang']) && $parameters['lang'] !== false)
-    {
-    if (strlen($parameters['lang']) != 2)
-        {
+}
+if (isset($parameters['lang']) && $parameters['lang'] !== false) {
+    if (strlen($parameters['lang']) != 2) {
         exit('--lang requires a two letter language code e.g. en');
-        }
-    $GLOBALS['lang'] = strtolower($parameters['lang']);
     }
+    $GLOBALS['lang'] = strtolower($parameters['lang']);
+}
 
 global $TEXT_FIELD_TYPES;
 
 $check_field_type = ps_query("SELECT value_old, value_new FROM activity_log WHERE remote_table = 'resource_type_field' AND remote_ref = ? AND remote_column = 'type' ORDER BY ref DESC LIMIT 1;", array('i', $resource_type_field));
-if (count($check_field_type) == 0 || !in_array($check_field_type[0]['value_old'], array(FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST, FIELD_TYPE_CHECK_BOX_LIST)) ||
-    !in_array($check_field_type[0]['value_new'], $TEXT_FIELD_TYPES))
-    {
+if (
+    count($check_field_type) == 0 || !in_array($check_field_type[0]['value_old'], array(FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST, FIELD_TYPE_CHECK_BOX_LIST)) ||
+    !in_array($check_field_type[0]['value_new'], $TEXT_FIELD_TYPES)
+) {
     exit("Resource type field id $resource_type_field cannot be processed. Check the field to confirm it was previously a category tree, dynamic keyword list or check box list and that it has now been changed to a text field." . PHP_EOL);
-    }
+}
 
-if ($check_field_type[0]['value_old'] == FIELD_TYPE_CATEGORY_TREE && !$category_tree)
-    {
+if ($check_field_type[0]['value_old'] == FIELD_TYPE_CATEGORY_TREE && !$category_tree) {
     exit("Previous field type was category tree. Try processing with --tree yes" . PHP_EOL);
-    }
+}
 
 $resources = ps_array("SELECT `resource` AS 'value' FROM resource_node rn JOIN node n ON rn.node = n.ref WHERE n.resource_type_field = ? GROUP BY `resource` HAVING COUNT(`resource`) > 1 ORDER BY `resource` ASC;", array('i', $resource_type_field));
 echo 'Processing ' . count($resources) . ' resources.' . PHP_EOL;
 
-foreach ($resources as $resource)
-    {
+foreach ($resources as $resource) {
     $result = migrate_fixed_to_text($resource_type_field, $resource, $category_tree, $separator);
-    if (!$result)
-        {
+    if (!$result) {
         exit("An error occurred processing $resource." . PHP_EOL);
-        }
-    echo "Resource $resource updated." .  PHP_EOL;
     }
+    echo "Resource $resource updated." .  PHP_EOL;
+}
 
-echo 'Completed'. PHP_EOL;
+echo 'Completed' . PHP_EOL;

@@ -22,7 +22,7 @@ $cli_long_options  = [
 ];
 
 foreach (getopt('', $cli_long_options) as $option_name => $option_value) {
-    if($option_name=='help') {
+    if ($option_name == 'help') {
         echo $argv[0] . " - used to Check either resource file integrity or presence only depending on config.\n\n";
         echo "Script options\n\n";
         echo "    --lastchecked [number of days]\n    Only check resources not validated in the last X days\n\n";
@@ -31,9 +31,9 @@ foreach (getopt('', $cli_long_options) as $option_name => $option_value) {
         echo "    --update-old\n    Update resources that failed due to checksums generated with an old setup (i.e. \$file_checksums_50k)\n\n";
         echo "    --clear-lock\n    Clear the existing process lock\n\n";
         exit(1);
-    } elseif ($option_name=='lastchecked') {
+    } elseif ($option_name == 'lastchecked') {
         $lastchecked = (int) $option_value;
-    } elseif($option_name=='maxresources') {
+    } elseif ($option_name == 'maxresources') {
         $maxresources = (int) $option_value;
     } elseif ($option_name === 'silence-notices') {
         $silence_notices = true;
@@ -43,7 +43,6 @@ foreach (getopt('', $cli_long_options) as $option_name => $option_value) {
         $clear_lock = true;
     }
 }
-
 
 if ($clear_lock) {
     echo 'Clearing process lock' . PHP_EOL;
@@ -57,7 +56,7 @@ $resources = get_resources_to_validate($lastchecked);
 $current_config_fails = $negated_config_fails = $failures = [];
 if (count($resources) > 0) {
     if ($maxresources > 0) {
-        $resources = array_slice($resources,0,$maxresources);
+        $resources = array_slice($resources, 0, $maxresources);
     }
 
     /*
@@ -83,18 +82,18 @@ if (count($resources) > 0) {
         if (count($negated_config_fails) > 0) {
             logScript('The following resources failed: ' . implode(', ', $negated_config_fails));
         }
-        
+
         $resources_w_old_checksums = array_diff($current_config_fails, $negated_config_fails);
         if ($resources_w_old_checksums !== []) {
             logScript('The following resources have an old checksum recorded: ' . implode(', ', $resources_w_old_checksums));
             if ($update_old) {
                 logScript('Updating old checksums...');
-                foreach($resources as $resource) {
+                foreach ($resources as $resource) {
                     if (!in_array($resource['ref'], $resources_w_old_checksums)) {
                         continue;
                     }
 
-                    if(generate_file_checksum($resource['ref'], $resource['file_extension'], true)) {
+                    if (generate_file_checksum($resource['ref'], $resource['file_extension'], true)) {
                         logScript("- Key for {$resource['ref']} generated");
                     } else {
                         logScript("- Key for {$resource['ref']} NOT generated");

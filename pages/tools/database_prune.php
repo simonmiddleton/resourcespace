@@ -1,4 +1,5 @@
 <?php
+
 #
 # database_prune.php
 #
