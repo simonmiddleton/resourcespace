@@ -290,12 +290,6 @@ function get_collection_resources($collection)
         {
         collection_cleanup_inaccessible_resources($collection);
         }
-    
-    $plugin_collection_resources=hook('replace_get_collection_resources', "", array($collection));
-    if(is_array($plugin_collection_resources))
-        {
-        return $plugin_collection_resources;
-        }
 
     return ps_array("SELECT resource value FROM collection_resource WHERE collection = ? ORDER BY sortorder ASC, date_added DESC, resource ASC",array("i",$collection)); 
     }
@@ -462,17 +456,6 @@ function add_resource_to_collection(
                 );
                 collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
                 }            
-            }
-
-        hook("Addtocollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-
-        if(!hook("addtocollectionsql", "", array( $resource,$collection, $size)))
-            {
-            ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
-            ps_query(
-                'INSERT INTO collection_resource(collection, resource, sortorder) VALUES (?, ?, ?)',
-                ['i', $collection, 'i', $resource, 'i', $sort_order ?: null]
-            );
             }
         
         # Update the hitcounts for the search nodes (if search specified)
