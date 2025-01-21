@@ -66,7 +66,6 @@ $simplesaml_config_defaults = [
     'logging.handler' => 'file',
     'admin.protectindexpage' => true,
     'admin.protectmetadata' => false,
-    'enable.saml20-idp' => true,
     'timezone' => null,
     'session.cookie.secure' => true,
 ];
