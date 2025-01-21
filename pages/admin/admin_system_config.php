@@ -592,9 +592,8 @@ config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/a
 
 // In order to stop user preferences affecting values displayed on this page,
 // loop through every field about to be created for the admin page
-// excluding watermark as path is corrected for that field in boot.php
 foreach ($page_def as $page_item) {
-    if(($page_item[0] !== 'html' && $page_item[1] !== 'watermark')
+    if ($page_item[0] !== 'html'
             && isset($system_wide_config_options[$page_item[1]]) 
             && $GLOBALS[$page_item[1]] !== $system_wide_config_options[$page_item[1]]) {
         // Set the global variable back to the system value if it is different
@@ -602,6 +601,10 @@ foreach ($page_def as $page_item) {
 
     }
 }
+
+// Correct global watermark path variable to point to right file
+// so image upload function will work
+set_watermark_image();
 
 # $lang is not a config option! 
 unset($system_wide_config_options['lang']);
