@@ -17,6 +17,19 @@ if (isset($simplesamlconfig['authsources'])) {
                 $name
             );
         }
+
+        // SSP v2.0 configuration changes - https://simplesamlphp.org/docs/devel/simplesamlphp-upgrade-notes-2.0.html
+        if (isset($authsource['NameIDPolicy']) && !is_array($authsource['NameIDPolicy'])) {
+            debug("simplesaml: Invalid type for configuration 'NameIDPolicy' found for authsource '{$name}'. Now the value is an array - [ 'Format' => the format, 'AllowCreate' => true or false ]");
+            $authsource['NameIDPolicy'] = $authsource['NameIDPolicy'] === false
+                ? []
+                : ['Format' => $authsource['NameIDPolicy'], 'AllowCreate' => true];
+        }
+
+        if (isset($authsource['database.slaves'])) {
+            debug("simplesaml: Deprecated configuration 'database.slaves' found for authsource '{$name}'. Change it to 'database.secondaries'!");
+            $authsource['database.secondaries'] = $authsource['database.slaves'];
+        }
     }
 
     $config = $simplesamlconfig['authsources'];
