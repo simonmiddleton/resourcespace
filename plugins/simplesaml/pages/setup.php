@@ -127,6 +127,11 @@ else
     
     if($simplesaml_rsconfig && isset($simplesamlconfig["authsources"]))
         {
+        $ssp_base_url = sprintf(
+            '%s/plugins/simplesaml/lib/%s/module.php/saml/sp',
+            $baseurl,
+            $simplesaml_use_www ? 'www' : 'public'
+        );
         foreach($simplesamlconfig['authsources'] as $authsource=>$authdata)
             {
             if($authsource=="admin")
@@ -135,13 +140,13 @@ else
                 }
                         
             // Show the existing SP metadata
-            $spdata = array();
-            $spdata[$lang["simplesaml_acs_url"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/saml2-acs.php/" . $authsource;
-            $spdata[$lang["simplesaml_entity_id"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/metadata.php/" . $authsource;
-            $spdata[$lang["simplesaml_single_logout_url"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/saml2-logout.php/" . $authsource;
-            $spdata[$lang["simplesaml_start_url"]] = $baseurl;
-            $spdata[$lang["simplesaml_test_site_url"]] = $baseurl . "/plugins/simplesaml/lib/www";            
-            
+            $spdata = [
+                $lang["simplesaml_acs_url"] => "{$ssp_base_url}/saml2-acs.php/{$authsource}",
+                $lang["simplesaml_entity_id"] => "{$ssp_base_url}/metadata.php/{$authsource}",
+                $lang["simplesaml_single_logout_url"] => "{$ssp_base_url}/saml2-logout.php/{$authsource}",
+                $lang["simplesaml_start_url"] => $baseurl,
+                $lang["simplesaml_test_site_url"] => "{$baseurl}/plugins/simplesaml/lib/public/admin",
+            ];
             config_section_header($lang['simplesaml_sp_data'], '');
             echo "<div class='TableArray'>";
             foreach($spdata as $spsetting =>$spvalue)

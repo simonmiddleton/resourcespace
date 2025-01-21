@@ -2,16 +2,19 @@
 
 // This page is included if using ResourceSpace to store SAML configuration
 // Set SimpleSAML config
-global $simplesamlconfig, $simplesaml_config_defaults, $baseurl, $email_from;
+global $simplesamlconfig, $simplesaml_config_defaults;
 
-// Configure SimpleSAMLPHP default settings IF the logic depends on the simplesaml plugin own settings.
+// Configure SimpleSAMLPHP default settings because the logic depends on the simplesaml plugins' own settings.
+// Point to the canonical URL (source: https://simplesamlphp.org/docs/stable/simplesamlphp-install.html)
 $simplesaml_config_defaults['baseurlpath'] = sprintf(
-    '%splugins/simplesaml/lib/%s/',
-    $GLOBALS['baseurl_short'],
+    '%s/plugins/simplesaml/lib/%s/',
+    $GLOBALS['baseurl'],
     $GLOBALS['simplesaml_use_www'] ? 'www' : 'public'
 );
 
-$config = array();
+/** @var array $config */
+require dirname(__DIR__, 3) . '/lib/config/config.php.dist';
+
 foreach ($simplesamlconfig['config'] as $option => $configvalue) {
     // Plain-text admin-passwords are no longer allowed to be used in SSP (since v2.3) but ResourceSpace existing config
     // may use it so convert it now on the fly (let it use the best algorithm available)
@@ -23,7 +26,6 @@ foreach ($simplesamlconfig['config'] as $option => $configvalue) {
     $config[$option] = $configvalue;
 }
 
-// set defaults if not set in config
 foreach($simplesaml_config_defaults as $setting => $value)
     {
     if(!isset($simplesamlconfig["config"][$setting]))
@@ -31,12 +33,3 @@ foreach($simplesaml_config_defaults as $setting => $value)
         $config[$setting] = $value;
         }
     }
-
-// if(!isset($simplesamlconfig["config"]["tempdir"]))
-//     {
-//     $config["tempdir"] = get_temp_dir();
-//     }
-// if(!isset($simplesamlconfig["config"]["technicalcontact_email"]))
-//     {
-//     $config["technicalcontact_email"] = $email_from;
-//     }
