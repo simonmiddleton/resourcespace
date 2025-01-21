@@ -3,7 +3,6 @@
 // function to automatically migrate options lists to nodes
 function migrate_resource_type_field_check(&$resource_type_field)
 {
-
     if (
         !isset($resource_type_field['options']) ||
         is_null($resource_type_field['options']) ||
@@ -208,7 +207,6 @@ function migrate_filter($filtertext, $allowpartialmigration = false)
 
     return $filterid;
 }
-
 
 /**
 * Utility function to generate a random UTF8 character

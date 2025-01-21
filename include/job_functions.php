@@ -359,7 +359,6 @@ function job_queue_run_job($job, $clear_process_lock)
     clear_process_lock('job_' . $jobref);
 }
 
-
 /**
  * Get the default priority for a given job type
  *

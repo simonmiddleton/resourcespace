@@ -66,7 +66,6 @@ function log_activity($note = null, $log_code = LOG_CODE_UNSPECIFIED, $value_new
               VALUES (NOW()," . ps_param_insert(count($parameters) / 2) . ")", $parameters);
 }
 
-
 /**
 * Log script messages on screen and optionally in a file. If debug_log is enabled, it will also write the message in the
 * debug log file.
@@ -362,7 +361,6 @@ function get_user_downloads($userref, $user_dl_days)
         AND rl.user = ?
         AND TIMESTAMPDIFF(SECOND, date, now()) <= ?", $parameters, 0);
 }
-
 
 /**
 * Add detail of node changes to resource log

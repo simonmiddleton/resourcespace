@@ -711,7 +711,6 @@ function report_process_period(array $info): array
     ];
 }
 
-
 /**
  * Find and replace a reports' query placeholders with their values.
  *

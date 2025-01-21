@@ -8,7 +8,6 @@
 * @package ResourceSpace\Includes
 */
 
-
 /**
 * Run FITS on a file and get the output back
 *
@@ -40,7 +39,6 @@ function runFitsForFile($file_path)
     }
     return false;
 }
-
 
 /**
 * Get metadata value for a FITS field
@@ -90,7 +88,6 @@ function getFitsMetadataFieldValue(SimpleXMLElement $xml, $fits_field)
 
     return '';
 }
-
 
 /**
 * Extract FITS metadata from a file for a specific resource.
@@ -165,7 +162,6 @@ function extractFitsMetadata($file_path, $resource)
 
     return false;
 }
-
 
 /**
 * Check date conforms to "yyyy-mm-dd hh:mm" format or any valid partital of that e.g. yyyy-mm.
@@ -293,8 +289,6 @@ function check_view_display_condition($fields, $n, $fields_all)
     }
     return $displaycondition;
 }
-
-
 
 /**
 * updates the value of fieldx field further to a metadata field value update

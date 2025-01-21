@@ -51,7 +51,6 @@ function rsEncrypt($data, $key, $keylength = 128)
     return "{$nonce}@@{$cyphertext}@@{$mac}";
 }
 
-
 /**
 * Decrypts data
 *
@@ -87,7 +86,6 @@ function rsDecrypt($data, $key)
 
     return openssl_decrypt(hex2bin($cyphertext), $method, $enc_key, $options, $siv);
 }
-
 
 /**
 * Prior to eval() checks to make sure the code has been signed first, by the offline script / migration script.

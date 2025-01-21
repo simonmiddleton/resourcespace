@@ -1,4 +1,5 @@
 <?php
+
 include_once __DIR__ . '/login_functions.php';
 
 debug("[authenticate.php] Reached authenticate page...");
@@ -82,15 +83,16 @@ if (array_key_exists("user", $_COOKIE) || array_key_exists("user", $_GET) || iss
             && strlen(trim((string)$userdata[0]["last_active"])) > 0
             && $userdata[0]["idle_seconds"] > ($session_length * 60)
         ) {
-                debug("[authenticate.php] Session length expired!");
-                # Last active more than $session_length mins ago?
-                $al = "";
+            debug("[authenticate.php] Session length expired!");
+            # Last active more than $session_length mins ago?
+            $al = "";
+
             if (isset($anonymous_login)) {
                 $al = $anonymous_login;
             }
 
             if ($session_autologout && $username != $al) { # If auto logout enabled, but this is not the anonymous user, log them out.
-                    debug("[authenticate.php] Autologging out user.");
+                debug("[authenticate.php] Autologging out user.");
                 # Reached the end of valid session time, auto log out the user.
 
                 # Remove session
@@ -255,9 +257,7 @@ if (hook("replacesitetextloader")) {
     }
 }   /* end replacesitetextloader */
 
-    $GLOBALS['plugins'] = register_group_access_plugins($usergroup, $plugins ?? []);
-
-
+$GLOBALS['plugins'] = register_group_access_plugins($usergroup, $plugins ?? []);
 
 // Load user config options
 process_config_options($userref);

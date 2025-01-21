@@ -619,11 +619,7 @@ if (getval("ajax", "") == "") {
 
         window_width = jQuery(window).width();
         window_width_breakpoint = 1100;
-        simple_search_pills_view = <?php if ($simple_search_pills_view) {
-            echo "true";
-                                   } else {
-                                       echo "false";
-                                   } ?>;
+        simple_search_pills_view = <?php echo $simple_search_pills_view ? "true" : "false"; ?>
 
         /* Page load */
 

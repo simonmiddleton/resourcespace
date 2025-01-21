@@ -68,7 +68,6 @@ function initFacialRecognition()
     return true;
 }
 
-
 /**
 * Crops out a selected area of an image and makes it ready to be used by FaceRecognizer.
 *
@@ -132,7 +131,6 @@ function prepareFaceImage($image_path, $prepared_image_path, $x, $y, $width, $he
 
     return true;
 }
-
 
 /**
 * Use FaceRecognizer to predict the association between a face and a label (i.e person name)

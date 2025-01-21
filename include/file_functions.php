@@ -27,7 +27,6 @@ function safe_file_name($name)
     return $newname;
 }
 
-
 /**
 * Generate a UID for filnames that can be different from user to user (e.g. contact sheets)
 *
@@ -54,7 +53,6 @@ function generateUserFilenameUID($user_id)
     return substr(hash('sha256', $filename_uid . $scramble_key), 0, 15);
 }
 
-
 /**
 * Checks if a path is part of a whitelisted list of paths. This applies to both folders and files.
 *
@@ -75,7 +73,6 @@ function isPathWhitelisted($path, array $whitelisted_paths)
 
     return false;
 }
-
 
 /**
 * Return a checksum for the given file path.
@@ -103,7 +100,6 @@ function get_checksum($path, $forcefull = false)
     }
     return $checksum;
 }
-
 
 /**
  * Download remote file to the temp filestore location.
@@ -248,7 +244,6 @@ function remove_empty_temp_directory(string $path_to_file = "")
         rmdir($path_to_folder);
     }
 }
-
 
 /**
  * Confirm upload path is one of valid paths.

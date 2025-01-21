@@ -166,7 +166,6 @@ if ($system_download_config_force_obfuscation && !defined("SYSTEM_DOWNLOAD_CONFI
 # End of remote config support
 # ---------------------------------------------------------------------------------------------
 
-
 // Remove stream wrappers that aren't needed to reduce security vulnerabilities.
 $wrappers = stream_get_wrappers();
 foreach (UNREGISTER_WRAPPERS as $unregwrapper) {
@@ -238,7 +237,6 @@ $bs = explode("/", $baseurl);
 $bs = array_slice($bs, 3);
 $baseurl_short = "/" . join("/", $bs) . (count($bs) > 0 ? "/" : "");
 
-
 # statistics
 $querycount = 0;
 $querytime = 0;
@@ -299,7 +297,6 @@ for ($n = count($active_plugins) - 1; $n >= 0; $n--) {
         include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
     }
 }
-
 
 // Load system wide config options from database and then store them to distinguish between the system wide and user preference
 process_config_options();

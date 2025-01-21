@@ -170,7 +170,6 @@ function execute_api_call($query, $pretty = false)
     return $json_encoded_result;
 }
 
-
 /**
  * Return the session specific key for the given user.
  *

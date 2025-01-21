@@ -106,7 +106,6 @@ if ($generateall) {
     }
     run_command($shell_exec_cmd, false, $shell_exec_params);
 
-
     if (
         $ffmpeg_get_par
         && (

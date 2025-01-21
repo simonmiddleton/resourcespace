@@ -10,7 +10,6 @@ function acl_can_manage_tabs()
     return checkperm('a');
 }
 
-
 /**
  * Get entire tab records for a list of IDs
  *
@@ -31,7 +30,6 @@ function get_tabs_by_refs(array $refs)
 
     return [];
 }
-
 
 /**
  * Get tabs (paged) based on some criteria (currently only order by and limit).
@@ -65,7 +63,6 @@ function get_tabs_with_usage_count(array $criteria)
     return sql_limit_with_total_count($query, $per_page, $offset);
 }
 
-
 /**
  * Get all tab records, sorted by the order_by column
  * @return array
@@ -74,7 +71,6 @@ function get_all_tabs()
 {
     return ps_query('SELECT ref, `name`, order_by FROM tab ORDER BY order_by');
 }
-
 
 /**
  * Get list of all tabs sorted based on current configuration. This always adds a fake record (ref #0) to indicate no assignment.
@@ -87,7 +83,6 @@ function get_tab_name_options()
     $tabs = array_map('i18n_get_translated', [0 => ''] + array_column(get_all_tabs(), 'name', 'ref'));
     return sort_tabs_as_configured($tabs);
 }
-
 
 /**
  * Sort list of tab names (preserving their key ID)
@@ -104,7 +99,6 @@ function sort_tabs_as_configured(array $tabs)
 
     return $tabs;
 }
-
 
 /**
  * Create a new system tab record
@@ -137,7 +131,6 @@ function create_tab(array $tab)
 
     return false;
 }
-
 
 /**
  * Delete system tabs.
@@ -174,7 +167,6 @@ function delete_tabs(array $refs)
 
     return isset($return);
 }
-
 
 /**
  * Update an existing tab.

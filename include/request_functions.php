@@ -975,7 +975,6 @@ function email_resource_request($ref, $details)
     ps_query("UPDATE resource SET request_count=request_count+1 WHERE ref = ?", array("i",$ref));
 }
 
-
 /**
 * Get collection of valid custom fields. A valid fields has at least the expected field properties
 *

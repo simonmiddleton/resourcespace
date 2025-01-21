@@ -366,7 +366,6 @@ function rs_password_verify(string $password, string $hash, array $data)
     return false;
 }
 
-
 /**
 * Helper function to get the password hash information (algorithm and options) from the global scope.
 *

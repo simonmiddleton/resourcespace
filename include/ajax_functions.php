@@ -10,7 +10,6 @@
 *
 */
 
-
 /**
 * Returns a standard AJAX response for unauthorised access
 *
@@ -32,7 +31,6 @@ function ajax_permission_denied()
     exit();
 }
 
-
 /**
 * Send AJAX response back to the client together with the appropriate HTTP status code
 *
@@ -47,7 +45,6 @@ function ajax_send_response($code, array $response)
     echo json_encode($response);
     exit();
 }
-
 
 /**
 * Send AJAX text/html response back to the client together with the appropriate HTTP status code
@@ -64,7 +61,6 @@ function ajax_send_text_response($code, $response)
     exit();
 }
 
-
 /**
 * Builds the correct response expected for a success request where there is data to return (e.g getting search results)
 *
@@ -78,7 +74,6 @@ function ajax_response_ok(array $data)
         "status" => "success",
         "data" => $data);
 }
-
 
 /**
 * Builds the correct response expected for failures.
@@ -99,7 +94,6 @@ function ajax_response_fail(array $data)
         "data" => $data);
 }
 
-
 /**
 * Builds the correct response expected for a success request where there is no data to return (e.g when deleting a record)
 *
@@ -112,7 +106,6 @@ function ajax_response_ok_no_data()
         "data" => null);
 }
 
-
 /**
 * Returns a standard AJAX response for unauthorised access with a 401 HTTP status code
 *
@@ -123,7 +116,6 @@ function ajax_unauthorized()
     global $lang;
     ajax_send_response(401, ajax_response_fail(ajax_build_message($lang['error-permissiondenied'])));
 }
-
 
 /**
 * Builds a message to be used in an AJAX response

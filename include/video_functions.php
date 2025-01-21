@@ -36,7 +36,6 @@ function get_video_resolution($file)
         }
     }
 
-
     if (isset($video_info['streams']) && is_array($video_info['streams'])) {
         foreach ($video_info['streams'] as $stream) {
             if (!empty($stream['codec_type']) && 'video' === $stream['codec_type']) {

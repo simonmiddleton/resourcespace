@@ -140,7 +140,6 @@ define('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED', 'Z');
 define('LOG_CODE_COLLECTION_SHARED_UPLOAD', 'SEU');
 define('LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE', 'EEU');
 
-
 // validates LOG_CODE is legal
 function LOG_CODE_validate($log_code)
 {
@@ -226,7 +225,6 @@ define('FACIAL_RECOGNITION_CROP_SIZE_PREFIX', '_facial_recognition_crop_');
 define('FACIAL_RECOGNITION_PREPARED_IMAGE_EXT', 'pgm');
 // --------------------------------------------------------------------------------
 
-
 // ------------------------- FILTER (SEARCH, EDIT) LOGICAL OPERATORS -------------------------
 define('RS_FILTER_ALL', 1);
 define('RS_FILTER_NONE', 2);
@@ -258,39 +256,39 @@ $h264_profiles = array(
 
 // Array of default html tags that are permitted in field data
 $permitted_html_tags =  array(
-            'html',
-            'body',
-            'div',
-            'span',
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'br',
-            'em',
-            'strong',
-            'ol',
-            'ul',
-            'li',
-            'small',
-            'sub',
-            'ins',
-            'del',
-            'mark',
-            'b',
-            'u',
-            'p',
-            'i',
-            'big',
-            'cite',
-            'q',
-            'var',
-            'samp',
-            'kbd',
-            'tt'
-        );
+    'html',
+    'body',
+    'div',
+    'span',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'br',
+    'em',
+    'strong',
+    'ol',
+    'ul',
+    'li',
+    'small',
+    'sub',
+    'ins',
+    'del',
+    'mark',
+    'b',
+    'u',
+    'p',
+    'i',
+    'big',
+    'cite',
+    'q',
+    'var',
+    'samp',
+    'kbd',
+    'tt'
+);
 
 // Array of default html attributes that are permitted in field data
 $permitted_html_attributes = array('id', 'class', 'style');
@@ -307,7 +305,6 @@ define('ACTIONGROUP_EDIT', 3);
 define('ACTIONGROUP_SHARE', 4);
 define('ACTIONGROUP_RESEARCH', 5);
 define('ACTIONGROUP_ADVANCED', 6);
-
 
 // Global variable that contains variable names that reference metadata fields considered to be core to ResourceSpace
 // and shouldn't be deleted. Plugins can register their own with config_register_core_fieldvars()
@@ -340,8 +337,8 @@ $corefields = array(
         'iiif_sequence_field',
         'join_fields',
         'annotate_fields',
-        )
-    );
+    )
+);
 
 // Similar to $corefields but holds list of field refs we want the system to prevent from deleting. Mostly plugins will want
 // to register these IF the plugin is configured to use certain metadata fields.
@@ -371,7 +368,6 @@ $COLLECTION_PUBLIC_TYPES = array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURE
 // ----------------------------------------------
 // RESOURCE ACCESS TYPES
 // ----------------------------------------------
-
 define("RESOURCE_ACCESS_FULL", 0); # Full Access (download all sizes)
 define("RESOURCE_ACCESS_RESTRICTED", 1); # 1 = Restricted Access (download only those sizes that are set to allow restricted downloads)
 define("RESOURCE_ACCESS_CONFIDENTIAL", 2); # Confidential (no access)
@@ -457,7 +453,7 @@ $MARKER_COLORS = array(
     6 => 'Grey',
     7 => 'Violet',
     8 => 'Gold'
-    );
+);
 
 // Reports
 const REPORT_PLACEHOLDER_NON_CORRELATED_SQL = '[non_correlated_sql]';

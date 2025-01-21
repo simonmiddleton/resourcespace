@@ -24,7 +24,6 @@ if ($node_hitcount != "") {
     $sql_hitcount_select = "(SUM(" . $sql_hitcount_select . ") + SUM(" . $node_hitcount . ")) ";
 }
 
-
 $select .= ", " . $sql_hitcount_select . " total_hit_count";
 
 $sql_filter->sql  = $node_bucket_sql . $sql_filter->sql;

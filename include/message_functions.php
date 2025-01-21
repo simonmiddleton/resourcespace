@@ -568,7 +568,6 @@ function message_send_unread_emails()
         }
     }
 
-
     // Keep record of the current value for these config options. setup_user() may override them with the user group specific ones.
     $current_inactive_message_auto_digest_period = $inactive_message_auto_digest_period;
     $current_user_pref_inactive_digest = $user_pref_inactive_digest;
@@ -1070,8 +1069,6 @@ function get_user_message(int $ref, bool $checkaccess = true)
     return $message ? ["message" => $message[0]["message"],"url" => $message[0]["url"],"owner" => $message[0]["owner"]] : false;
 }
 
-
-
 /**
  * Send notifications about file integrity failures
  *
@@ -1119,7 +1116,6 @@ function send_integrity_failure_notices(array $failures): void
         set_sysvar("last_integrity_check_notify", date("Y-m-d H:i:s"));
     }
 }
-
 
 /**
  * Limit the length of !list special search url by adding a maximum of 650 characters of resource references per link including separators.

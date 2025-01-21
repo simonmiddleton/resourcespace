@@ -59,7 +59,6 @@ function create_debug_log_override($debug_user = -1, $debug_expires = 60)
     clear_query_cache("sysvars");
 }
 
-
 /**
 * Debug called function and its arguments
 *
@@ -105,7 +104,6 @@ function debug_function_call($name, array $args)
 
     return debug("{$name}( {$args_str} );");
 }
-
 
 /**
 * Stringify variables for use in the debug log. This is used more as fallback to json_encode() failing to maintain quick

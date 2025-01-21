@@ -97,7 +97,6 @@ function validate_user($user_select_sql, $getuserdata = true)
     return false;
 }
 
-
 /**
 *
 * Given an array of user data loaded from the user table, set up all necessary global variables for this user
@@ -245,7 +244,6 @@ function setup_user(array $userdata)
     hook('after_setup_user');
     return true;
 }
-
 
 /**
  * Returns a user list. Group or search term is optional. The standard user group names are translated using $lang. Custom user group names are i18n translated.
@@ -849,7 +847,6 @@ function save_user($ref)
     return true;
 }
 
-
 /**
  * E-mail the user the welcome message on account creation.
  *
@@ -1163,7 +1160,6 @@ function auto_create_user_account($hash = "")
 
     return true;
 }
-
 
 /**
 * Send user request to admins in form of notification messages and/or emails
@@ -2823,7 +2819,6 @@ function copy_usergroup_permissions(int $src_id, int $dst_id)
         return false;
     }
 
-
     $dst_group = ["permissions" => $src_group["permissions"]];
     return save_usergroup($dst_id, $dst_group);
 }
@@ -3039,7 +3034,6 @@ function emulate_user($user, $usergroup = "")
     global $userref, $userpermissions, $userrequestmode, $usersearchfilter, $userresourcedefaults;
     global $external_share_groups_config_options, $emulate_plugins_set, $plugins;
     global $username,$baseurl, $anonymous_login, $upload_link_workflow_state;
-
 
     if (!is_numeric($user) || ($usergroup != "" && !is_numeric($usergroup))) {
         return false;

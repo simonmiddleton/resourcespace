@@ -37,7 +37,6 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
     } # Performs an i18n translation (of probably a custom field name / value).
 }
 
-
 /**
  * For field names / values using the i18n syntax, return the version in the current user's language. Format is ~en:Somename~es:Someothername
  *
@@ -101,7 +100,6 @@ function i18n_get_translated($text, $lang_domain = null)
         return $text;
     }
 }
-
 
 /**
  * Translates collection names
@@ -217,7 +215,6 @@ function i18n_get_indexable($text)
     return $out;
 }
 
-
 /**
  * For a string in the language format, return all translations as an associative array
  * E.g. "en"->"English translation";
@@ -243,7 +240,6 @@ function i18n_get_translations($value)
     }
     return $return;
 }
-
 
 /**
  * Returns a string with all occurrences of the $mixedplaceholder in $subject replaced with the $mixedreplace.
@@ -349,7 +345,6 @@ function ucfirstletter($string)
     return preg_replace_callback("/[a-zA-Z].*/", "ucfirstletter_callback", $string);
 }
 
-
 /**
  * Callback used by ucfirstletter
  *
@@ -360,7 +355,6 @@ function ucfirstletter_callback($matches)
 {
     return ucfirst($matches[0]);
 }
-
 
 /**
  * Normalize the text if function available
@@ -391,7 +385,6 @@ function normalize_keyword($keyword, bool $user_language = false)
     }
     return $keyword;
 }
-
 
 /**
 * This function and seems_utf8 are reused from WordPress. See documentation/licenses/wordpress.txt for license information
@@ -535,7 +528,6 @@ function remove_accents($string)
     return $string;
 }
 
-
 /**
  * Looks for particular patterns to attempt to determine if the provided string is in UTF8 format
  *
@@ -573,9 +565,6 @@ function seems_utf8($str)
     }
     return true;
 }
-
-
-
 
 /**
  * Use the browser settings to determine the default / preferred language
@@ -677,7 +666,6 @@ function setLanguage()
     # Final case.
     return 'en';
 }
-
 
 /**
  * Load all site text for the given page and language into the global $lang array

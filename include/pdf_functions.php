@@ -48,7 +48,6 @@ function get_pdf_template_path($resource_type, $template_name = '')
     return $storagedir . '/system/pdf_templates/' . $template . '.html';
 }
 
-
 /**
 * Takes an HTML template suitable for HTML2PDF library and generates a PDF file if successfull
 *
@@ -168,7 +167,6 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
     return true;
 }
 
-
 /**
 * Returns the path to any template in the system.
 *
@@ -220,7 +218,6 @@ function get_template_path($template_name, $template_namespace)
     return $template_path;
 }
 
-
 /**
 * Function used to process a template
 *
@@ -254,7 +251,6 @@ function process_template($template_path, array $bind_placeholders = array())
 
     return ob_get_clean();
 }
-
 
 /**
 * Process a string (mainly HTML) which contains if statement placeholders and return the processed string
@@ -358,7 +354,6 @@ function resolve_pdf_language()
         }
     }
 }
-
 
 /**
 * Returns an array of available PDF template names

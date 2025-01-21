@@ -114,7 +114,6 @@ function get_editable_resource_sql()
     return do_search("", $searchable_restypes, 'resourceid', $actions_notify_states, -1, 'desc', false, 0, false, false, '', false, false, false, true, true);
 }
 
-
 /**
  * Get recent user actions, optionally for all users. For use by action notifications cron job.
  *

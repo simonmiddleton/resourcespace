@@ -22,7 +22,6 @@ function getAnnotation($ref)
     return $return;
 }
 
-
 /**
 * General annotations search functionality
 *
@@ -83,7 +82,6 @@ function getAnnotations($resource = 0, $resource_type_field = 0, $user = 0, $pag
         return ps_query("SELECT " . columns_in("annotation") . " FROM annotation {$sql_where_clause}", $parameters);
 }
 
-
 /**
 * Get number of annotations available for a resource.
 *
@@ -103,7 +101,6 @@ function getResourceAnnotationsCount($resource)
 
     return (int) ps_value("SELECT count(ref) AS `value` FROM annotation WHERE resource = ?", array("i",$resource), 0);
 }
-
 
 /**
 * Get annotations for a specific resource
@@ -129,7 +126,6 @@ function getResourceAnnotations($resource, $page = 0)
 
     return ps_query("SELECT " . columns_in("annotation") . " FROM annotation WHERE resource = ? {$sql_page_filter}", $parameters);
 }
-
 
 /**
 * Create an array of Annotorious annotation objects which can be JSON encoded and passed
@@ -186,7 +182,6 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
     return $annotations;
 }
 
-
 /**
 * Check if an annotation can be editable (add/ edit/ remove) by the user
 *
@@ -218,7 +213,6 @@ function annotationEditable(array $annotation)
     return (checkperm('a') || $non_admin_athz) && $field_edit_access;
 }
 
-
 /**
 * Get all tags of an annotation. Checks if a tag is attached to the resource,
 * allowing the user to search by it which is represented by the virtual column
@@ -240,7 +234,6 @@ function getAnnotationTags(array $annotation)
               FROM node AS n
              WHERE ref IN (SELECT node FROM annotation_node WHERE annotation = ?);", $parameters);
 }
-
 
 /**
 * Delete annotation
@@ -284,7 +277,6 @@ function deleteAnnotation(array $annotation)
 
     return true;
 }
-
 
 /**
 * Create new annotations based on Annotorious annotation
@@ -350,7 +342,6 @@ function createAnnotation(array $annotation)
 
     return $annotation_ref;
 }
-
 
 /**
 * Update annotation and its tags if needed
@@ -433,7 +424,6 @@ function updateAnnotation(array $annotation)
     return true;
 }
 
-
 /**
 * Add relations between annotation and nodes
 *
@@ -461,7 +451,6 @@ function addAnnotationNodes($annotation_ref, array $nodes)
 
     return true;
 }
-
 
 /**
 * Utility function which allows annotation tags to be prepared (i.e make sure they are all valid nodes)
