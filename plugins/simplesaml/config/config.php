@@ -64,7 +64,6 @@ $simplesaml_config_defaults = [
     'loggingdir' => $samltempdir,
     'logging.logfile' => 'saml_' . md5($samlid) . '.log',
     'logging.handler' => 'file',
-    'admin.protectindexpage' => true,
     'admin.protectmetadata' => false,
     'timezone' => null,
     'session.cookie.secure' => true,
