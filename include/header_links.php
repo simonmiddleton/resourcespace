@@ -188,7 +188,9 @@
     </nav>
 
     <script>
-    headerLinksDropdown();
+    jQuery(document).ready(function() {
+        headerLinksDropdown();
+    });
     </script>
 
 <?php } /* end replaceheadernav1 */
