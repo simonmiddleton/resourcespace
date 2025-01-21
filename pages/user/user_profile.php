@@ -3,7 +3,7 @@ include "../../include/boot.php";
 include "../../include/authenticate.php";
 
 # Get username.
-$username = getval("username","");
+$username = getval("username", "");
 # Resolve the username and make sure the user has access.
 $users = get_users(0, $username, "u.username", true, -1, "", false, "", true);
 

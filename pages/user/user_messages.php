@@ -3,24 +3,25 @@
 include "../../include/boot.php";
 include "../../include/authenticate.php";
 
-if (isset($anonymous_login) && $anonymous_login == $username)
-    {
+if (isset($anonymous_login) && $anonymous_login == $username) {
     die($lang["error-permissions-login"]);
-    }
+}
 
-$offset=getval("offset",0,true);
-$msg_order_by = getval("msg_order_by",getval("saved_msg_order_by", "created"));rs_setcookie('saved_msg_order_by', $msg_order_by);
-$sort = getval("sort",getval("saved_msg_sort", "DESC"));rs_setcookie('saved_msg_sort', $sort);
-$revsort = ($sort=="ASC") ? "DESC" : "ASC";
-$per_page = getval("per_page_list", $default_perpage_list, true);rs_setcookie('per_page_list', $per_page);
+$offset = getval("offset", 0, true);
+$msg_order_by = getval("msg_order_by", getval("saved_msg_order_by", "created"));
+rs_setcookie('saved_msg_order_by', $msg_order_by);
+$sort = getval("sort", getval("saved_msg_sort", "DESC"));
+rs_setcookie('saved_msg_sort', $sort);
+$revsort = ($sort == "ASC") ? "DESC" : "ASC";
+$per_page = getval("per_page_list", $default_perpage_list, true);
+rs_setcookie('per_page_list', $per_page);
 
 global $user_preferences;
 
-if (getval("allseen","")!="")
-    {
+if (getval("allseen", "") != "") {
     // Acknowledgement all messages
     message_seen_all($userref);
-    }
+}
 
 include "../../include/header.php";
 ?>
@@ -28,7 +29,8 @@ include "../../include/header.php";
     <div class="VerticalNav">
         <ul>
             <h1><?php echo escape($lang["mymessages"])?></h1>
-            <p><?php echo escape($lang["mymessages_introtext"]);render_help_link('user/messages'); ?></p>
+            <p><?php echo escape($lang["mymessages_introtext"]);
+            render_help_link('user/messages'); ?></p>
 
             <?php if ($user_preferences) { ?>
                 <li>
@@ -43,10 +45,9 @@ include "../../include/header.php";
                 </li>
             <?php }
 
-            $messages=array();
+            $messages = array();
             // If no messages get out of here with a message
-            if (!message_get($messages,$userref,true,$sort,$msg_order_by))      
-                {
+            if (!message_get($messages, $userref, true, $sort, $msg_order_by)) {
                 ?>
                 </ul>
                 </div> <!-- End of VerticalNav -->
@@ -55,24 +56,22 @@ include "../../include/header.php";
                 echo escape($lang['mymessages_youhavenomessages']);
                 include "../../include/footer.php";
                 return;
-                }
+            }
 
             $results = count($messages);
             $totalpages = ceil($results / $per_page);
             $curpage = floor($offset / $per_page) + 1;
             $jumpcount = 1;
-            
+
             $unread = false;
 
             // If there are unread messages show option to mark all as read
-            foreach ($messages as $message)     
-                {
-                if ($message['seen']==0)
-                    {
-                    $unread=true;
+            foreach ($messages as $message) {
+                if ($message['seen'] == 0) {
+                    $unread = true;
                     break;
-                    }
                 }
+            }
 
             if ($unread) { ?>
                 <li>
@@ -83,43 +82,36 @@ include "../../include/header.php";
         </ul>
     </div> <!-- End of VerticalNav -->
 
-    <?php 
-    $url = $baseurl_short . "pages/user/user_messages.php?paging=true&msg_order_by=" . urlencode($msg_order_by) . "&sort=". urlencode($sort);
+    <?php
+    $url = $baseurl_short . "pages/user/user_messages.php?paging=true&msg_order_by=" . urlencode($msg_order_by) . "&sort=" . urlencode($sort);
     ?>
  
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">
             <div class="InpageNavLeftBlock"><?php echo escape($lang["resultsdisplay"])?>:
-                <?php 
-                for ($n=0; $n<count($list_display_array); $n++)
-                    {
-                    if ($per_page == $list_display_array[$n])
-                        { ?>
+                <?php
+                for ($n = 0; $n < count($list_display_array); $n++) {
+                    if ($per_page == $list_display_array[$n]) { ?>
                         <span class="Selected"><?php echo escape($list_display_array[$n]) ?></span>
                         <?php
-                        }
-                    else
-                        { ?>
+                    } else { ?>
                         <a href="<?php echo $url; ?>&per_page_list=<?php echo urlencode($list_display_array[$n])?>" onClick="return CentralSpaceLoad(this);">
                             <?php echo escape($list_display_array[$n]) ?>
                         </a>
                         <?php
-                        } ?>&nbsp;|
+                    } ?>&nbsp;|
                     <?php
-                    }
- 
-                if ($per_page==99999)
-                    { ?>
+                }
+
+                if ($per_page == 99999) { ?>
                     <span class="Selected"><?php echo escape($lang["all"])?></span>
                     <?php
-                    }
-                else
-                    { ?>
+                } else { ?>
                     <a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);">
                         <?php echo escape($lang["all"])?>
                     </a>
                     <?php
-                    }
+                }
                 ?>
             </div>
         </div>
@@ -197,35 +189,31 @@ include "../../include/header.php";
                 <th><div class="ListTools"><?php echo escape($lang["tools"])?></div></th>
             </tr>
             <?php
-            for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++)
-                {
-                $message = $messages[$n]["message"]; 
+            for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++) {
+                $message = $messages[$n]["message"];
                 // Full message is retrieved via api to avoid long messages killing the page
-                if(mb_strlen($message) > 100)
-                    {
-                    $message = mb_strcut($messages[$n]["message"],0,70) . "...";
-                    }
-                $message = strip_tags_and_attributes($message); 
+                if (mb_strlen($message) > 100) {
+                    $message = mb_strcut($messages[$n]["message"], 0, 70) . "...";
+                }
+                $message = strip_tags_and_attributes($message);
                 $message = nl2br($message);
                 // Attempt to tidy up message text for action dates / expiry notification messages with embedded links.
                 $div_pos = mb_strpos($message, '<div');
-                if ($div_pos !== false)
-                    {
+                if ($div_pos !== false) {
                     $message = mb_substr($message, 0, $div_pos);
                     $message = str_replace(array('<p>', '</p>'), '', $message);
-                    }
+                }
                 $url_encoded = urlencode($messages[$n]["url"]);
                 $unread_css = ($messages[$n]["seen"] == 0 ? " MessageUnread" : "");
                 $userbyname = get_user_by_username($messages[$n]["owner"]);
                 $user = get_user($userbyname);
-                if(!$user)
-                    {
-                    $user = array('fullname'=> $applicationname,'groupname'=>'');
-                    }
+                if (!$user) {
+                    $user = array('fullname' => $applicationname,'groupname' => '');
+                }
                 ?>
                 <tr>
                     <td><input type="checkbox" class="message-checkbox" data-message="<?php echo (int)$messages[$n]['ref'];?>" id="message-checkbox-<?php echo (int)$messages[$n]['ref'];?>"></td>
-                    <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"],true, true, true); ?></td>
+                    <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"], true, true, true); ?></td>
                     <td class="<?php echo $unread_css; ?>"><?php echo escape((string)$messages[$n]["owner"]); ?></td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo escape((isset($user['fullname']) && trim($user['fullname']) != "") ? $user['fullname'] : $user['username']); ?></td>
                     <?php if ($messages_actions_usergroup) { ?>
@@ -239,19 +227,17 @@ include "../../include/header.php";
                     <td>
                         <div class="ListTools">
                             <?php
-                            if ($messages[$n]["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE)
-                                {
+                            if ($messages[$n]["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE) {
                                 $replyurl = $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$messages[$n]["ownerid"];
                                 ?>
                                 <a href="<?php echo $replyurl; ?>"><?php echo '<i class="fas fa-reply"></i>&nbsp;' . escape($lang["reply"]); ?></a>
                                 <?php
-                                }
+                            }
 
-                            if ($messages[$n]["url"]!="")
-                                { ?>
+                            if ($messages[$n]["url"] != "") { ?>
                                 <a href="<?php echo escape($messages[$n]["url"]); ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . escape($lang["link"]); ?></a>
                                 <?php
-                                } ?> 
+                            } ?> 
                         </div>
                     </td>
                 </tr>
