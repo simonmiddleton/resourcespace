@@ -875,6 +875,7 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
 
      # Create multiple pages.
         for ($n = 1; $n <= $pdf_pages; $n++) {
+            
             # Set up target file
             $size = "";
 
@@ -882,8 +883,12 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                 $size = "scr";
             }
 
-            $target = get_resource_path($ref, true, $size, false, "jpg", -1, $n, false, "", $alternative);
-
+            if ($extension == "eps" && in_array(strtolower($extension), $preview_keep_alpha_extensions)) {
+                $target = get_resource_path($ref, true, $size, false, "png", -1, $n, false, "", $alternative);
+            } else {
+                $target = get_resource_path($ref, true, $size, false, "jpg", -1, $n, false, "", $alternative);
+            }        
+            
             if (file_exists($target)) {
                 unlink($target);
             }
@@ -894,7 +899,13 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                 $dUseCIEColor = "";
             }
 
-            $gscommand2 = $ghostscript_fullpath . " -dBATCH -r" . $resolution . " " . $dUseCIEColor . " -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=" . $imagemagick_quality . " -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
+
+            if ($extension == "eps" && in_array(strtolower($extension), $preview_keep_alpha_extensions)) {
+                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
+            } else {
+                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=" . $imagemagick_quality . " -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
+            }
+        
             $output = run_command($gscommand2);
 
             # Stop trying when after the last page
@@ -1050,8 +1061,13 @@ if (isset($newfile) && file_exists($newfile)) {
         }
     }
 
-    $preview_preprocessing_success = create_previews($ref, false, "jpg", false, false, $alternative, $ignoremaxsize, true, $checksum_required, $onlysizes);
-    if (
+    if ($extension == "eps" && in_array(strtolower($extension), $preview_keep_alpha_extensions)) {
+        $preview_preprocessing_success = create_previews($ref, false, "png", false, false, $alternative, $ignoremaxsize, true, $checksum_required, $onlysizes);
+    } else {
+        $preview_preprocessing_success = create_previews($ref, false, "jpg", false, false, $alternative, $ignoremaxsize, true, $checksum_required, $onlysizes);
+    }
+
+    if(
         $GLOBALS['non_image_types_generate_preview_only']
         && in_array($extension, $GLOBALS['non_image_types'])
         && file_exists($file_used_for_previewonly)
