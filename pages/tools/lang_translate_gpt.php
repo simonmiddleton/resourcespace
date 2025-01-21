@@ -181,7 +181,7 @@ In the event that you cannot provide a translation (with the exception of the ca
             // Append it to the appropriate file.
             if (is_string($result) && strlen($result) > 0 && strpos(strtolower($result), "calamity") === false && strpos(strtolower($result), "[error]") === false) {
                 $f = fopen($langfile, "a");
-                fwrite($f, "\n\$lang[\"" . $mkey . "\"]=" . var_export($result, true) . ";");
+                fwrite($f, "\n\$lang[\"" . $mkey . "\"] = " . var_export($result, true) . ";");
                 fclose($f);
             } else {
                 $calamity++;

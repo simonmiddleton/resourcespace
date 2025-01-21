@@ -1,4 +1,5 @@
 <?php
+
 # English
 # Language File for the ResourceSpace Adobe Link Plugin
 # -------
