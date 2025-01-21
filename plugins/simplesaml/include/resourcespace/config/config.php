@@ -14,14 +14,9 @@ $simplesaml_config_defaults['baseurlpath'] = sprintf(
 $config = array();
 foreach ($simplesamlconfig['config'] as $option => $configvalue) {
     // Plain-text admin-passwords are no longer allowed to be used in SSP (since v2.3) but ResourceSpace existing config
-    // may use it so convert it now on the fly
+    // may use it so convert it now on the fly (let it use the best algorithm available)
     if ($option === 'auth.adminpassword' && is_null(password_get_info($configvalue)['algo'])) {
-        $hasher = new Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher(
-            4, // time cost
-            65536, // memory cost
-            null, // cost
-            PASSWORD_BCRYPT,
-        );
+        $hasher = new Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher(4, 65536, null, null);
         $configvalue = $hasher->hash($configvalue);
     }
 
