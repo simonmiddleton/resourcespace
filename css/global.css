@@ -252,6 +252,7 @@ select::-ms-expand
 h2#CollectionsPanelHeader {display:none;}
 .HeaderLink a {
     border-radius: 8px;
+    padding: 0 8px;
     margin: 2px;
     font-weight: 500;
 }
