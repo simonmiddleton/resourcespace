@@ -715,7 +715,7 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             " style="float: left;" />
         <div id="container_<?php echo $name; ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
             &nbsp;
-            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="color" value="<?php echo escape($current); ?>" onchange="<?php
+            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="<?php echo ($checked?"color":"text") ?>" value="<?php echo escape($current); ?>" onchange="<?php
             if ($autosave)
                 {
                 ?>AutoSaveConfigOption('<?php echo $name; ?>');<?php
