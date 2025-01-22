@@ -1,6 +1,6 @@
-<?php 
+<?php
 global $k;
-$k= $k??"";
+$k = $k ?? "";
 ?>
 <script type="text/javascript">
 
@@ -29,14 +29,16 @@ jQuery(document).ready(function() {
          switch (e.which) 
          {
 
-            <?php hook ("addhotkeys"); //this comes first so overriding the below is possible ?>
+            <?php hook("addhotkeys"); //this comes first so overriding the below is possible ?>
             // Left arrow
             case <?php echo $keyboard_navigation_prev; ?>:
                 if (jQuery('.prevLink').length > 0) {
                     jQuery('.prevLink').click();
                     break;
                 }
-                if (<?php if ($keyboard_navigation_pages_use_alt) {echo "modAlt&&";} ?>(jQuery('.prevPageLink').length > 0)) {
+                if (<?php if ($keyboard_navigation_pages_use_alt) {
+                    echo "modAlt&&";
+                    } ?>(jQuery('.prevPageLink').length > 0)) {
                     jQuery('.prevPageLink').click();
                     break;
                 }
@@ -46,7 +48,9 @@ jQuery(document).ready(function() {
                     jQuery('.nextLink').click();
                     break;
                 }
-                if (<?php if ($keyboard_navigation_pages_use_alt) {echo "modAlt&&";} ?>(jQuery('.nextPageLink').length > 0)) {
+                if (<?php if ($keyboard_navigation_pages_use_alt) {
+                    echo "modAlt&&";
+                    } ?>(jQuery('.nextPageLink').length > 0)) {
                     jQuery('.nextPageLink').click();
                     break;
                 } 
@@ -66,12 +70,11 @@ jQuery(document).ready(function() {
                      break;
             case <?php echo $keyboard_navigation_view_all; ?>: if(!modOn){CentralSpaceLoad('<?php echo $baseurl;?>/pages/search.php?search=!collection'+document.getElementById("currentusercollection").innerHTML+'&k='+share,true)};
                      break;
-            <?php if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || ($pagename=='preview' && $keyboard_navigation_video_preview)){?>
+            <?php if (($pagename == 'search' && $keyboard_navigation_video_search) || ($pagename == 'view' && $keyboard_navigation_video_view) || ($pagename == 'preview' && $keyboard_navigation_video_preview)) {?>
                 case <?php echo $keyboard_navigation_video_search_play_pause?>:
-                    <?php if($pagename=='view' || $pagename=='preview'){ ?>
+                    <?php if ($pagename == 'view' || $pagename == 'preview') { ?>
                         vidActive=document.getElementById('introvideo<?php echo $ref?>');
-                    <?php } 
-                    else{ ?>
+                    <?php } else { ?>
                         vidActive=document.getElementById('introvideo'+vidActiveRef);
                     <?php } ?>
                     //console.log("active="+vidActive);
@@ -96,7 +99,7 @@ jQuery(document).ready(function() {
                     //console.log("New playback rate is "+newPlayback);
                     vidActive.playbackRate(newPlayback);
                     break;
-                <?php } ?>
+            <?php } ?>
          }
 
      }

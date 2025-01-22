@@ -72,3 +72,4 @@ $lang["tms_link_confirm_delete_module_config"]='Opravdu chcete smazat tuto konfi
 $lang["tms_link_write_to_debug_log"]='Zahrnout průběh skriptu do systémového ladicího protokolu (vyžaduje samostatně nakonfigurované ladicí protokolování). Pozor: Způsobí rychlý růst souboru ladicího protokolu.';
 $lang["plugin-tms_link-title"]='Odkaz TMS';
 $lang["plugin-tms_link-desc"]='[Pokročilé] Umožňuje extrahovat metadata zdrojů z databáze TMS.';
+$lang["tms_link_uid_field_int"]='TMS Celá čísla UID. Nastavte na false pro povolení necelých čísel UID.';

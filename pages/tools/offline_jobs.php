@@ -1,7 +1,7 @@
 <?php
+
 include_once __DIR__ . "/../../include/boot.php";
 command_line_only();
-
 
 set_time_limit(0);
 
@@ -67,7 +67,6 @@ foreach ($options as $option_name => $option_value) {
 }
 
 if ($offline_job_queue) {
-
     $readonly_jobs = array(
         "collection_download",
         "create_download_file",
@@ -78,18 +77,18 @@ if ($offline_job_queue) {
     $gettypes = $system_read_only ? implode(",", $readonly_jobs) : "";
 
     // Mark any jobs that are still marked as in progress but have an old process lock as failed
-    $runningjobs=job_queue_get_jobs($gettypes,STATUS_INPROGRESS,"","","ref", "ASC");
+    $runningjobs = job_queue_get_jobs($gettypes, STATUS_INPROGRESS, "", "", "ref", "ASC");
 
     $jobcount = count($runningjobs);
     foreach ($runningjobs as $runningjob) {
-        $runningjob_data = json_decode($runningjob["job_data"],true);
+        $runningjob_data = json_decode($runningjob["job_data"], true);
         if (!is_process_lock("job_" . $runningjob["ref"])) {
             // No current lock in place. Check for presence of an old lock and mark as failed
             $saved_process_lock_max_seconds = $process_locks_max_seconds;
             $process_locks_max_seconds = 9999999;
             if (is_process_lock("job_" . $runningjob["ref"])) {
                 echo "Job is in progress (ID: " . $runningjob["ref"] . ") but has exceeded maximum lock time - marking as failed\n";
-                job_queue_update($runningjob["ref"],$runningjob_data,STATUS_ERROR);
+                job_queue_update($runningjob["ref"], $runningjob_data, STATUS_ERROR);
                 clear_process_lock("job_" . $runningjob["ref"]);
             }
             $process_locks_max_seconds = $saved_process_lock_max_seconds;
@@ -102,7 +101,7 @@ if ($offline_job_queue) {
 
     while (!isset($offlinejobs) || count($offlinejobs) > 0) {
         // Get jobs in small batches so that new higher priority jobs won't have to wait if there is a backlog
-        $offlinejobs = job_queue_get_jobs($gettypes, STATUS_ACTIVE, "","","priority,ref", "ASC","", false, 5, true);
+        $offlinejobs = job_queue_get_jobs($gettypes, STATUS_ACTIVE, "", "", "priority,ref", "ASC", "", false, 5, true);
         $offlinejob = array_shift($offlinejobs);
         if (
             !isset($offlinejob["start_date"])
@@ -115,7 +114,7 @@ if ($offline_job_queue) {
         if (PHP_SAPI == 'cli' && $clear_lock && in_array($offlinejob['ref'], $jobs)) {
             $clear_job_process_lock = true;
         }
-        if ($offlinejob["start_date"] > date('Y-m-d H:i:s',time())) {
+        if ($offlinejob["start_date"] > date('Y-m-d H:i:s', time())) {
             continue;
         }
         job_queue_run_job($offlinejob, $clear_job_process_lock);

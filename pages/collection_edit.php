@@ -459,8 +459,16 @@ else
         include "plugins/collection_edit.php";
         }
     ?>
-    <div class="QuestionSubmit">        
+    <div class="QuestionSubmit QuestionSticky">        
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" />
+        <span id="pagesaved" style="display: none;" class="AutoSaveStatus"><?php echo escape($lang["saved"]); ?></span>
+        <?php if (getval("submitted","")!="") { ?>
+            <script>
+                jQuery(document).ready(function (jQuery){
+                    jQuery('#pagesaved').show().fadeOut('slow');
+                });
+            </script>
+        <?php } ?>
     </div>
 </form>
 <?php } ?>

@@ -1,4 +1,5 @@
 <?php
+
 include __DIR__ . '/../../include/boot.php';
 command_line_only();
 ob_end_flush();
@@ -47,38 +48,32 @@ $overwrite_existing           = false;
 $no_previews_found_counter    = 0;
 $prepared_trainer_data        = '';
 
-if('' === $facial_recognition_face_recognizer_models_location)
-    {
+if ('' === $facial_recognition_face_recognizer_models_location) {
     echo 'Error: No location set for FaceRecognizer data!' . PHP_EOL;
     exit(1);
-    }
+}
 
-if(false === $convert_fullpath)
-    {
+if (false === $convert_fullpath) {
     echo 'Error: Could not find ImageMagick "convert" utility!' . PHP_EOL;
     exit(1);
-    }
+}
 
-if(false === $python_fullpath)
-    {
+if (false === $python_fullpath) {
     echo 'Error: Could not find Python!' . PHP_EOL;
     exit(1);
-    }
+}
 
 // CLI options check
-foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
-    {
-    if(in_array($option_name, array('h', 'help')))
-        {
+foreach (getopt($cli_short_options, $cli_long_options) as $option_name => $option_value) {
+    if (in_array($option_name, array('h', 'help'))) {
         echo $help_text;
         exit(0);
-        }
-
-    if('overwrite-existing' == $option_name)
-        {
-        $overwrite_existing = true;
-        }
     }
+
+    if ('overwrite-existing' == $option_name) {
+        $overwrite_existing = true;
+    }
+}
 
 // Step 1: Preparing the data
 $training_data_set_condition = $facial_recognition_mark_for_training_field > 0
@@ -93,7 +88,7 @@ $training_data_set_condition = $facial_recognition_mark_for_training_field > 0
     )
     : new PreparedStatementQuery();
 $annotations = ps_query(
-       "SELECT a.resource,
+    "SELECT a.resource,
                a.x,
                a.y,
                a.width,
@@ -109,8 +104,7 @@ $annotations = ps_query(
     array_merge(['i', $facial_recognition_tag_field], $training_data_set_condition->parameters)
 );
 
-foreach($annotations as $annotation)
-    {
+foreach ($annotations as $annotation) {
     $preview_image_path  = get_resource_path(
         $annotation['resource'],
         true,
@@ -119,12 +113,11 @@ foreach($annotations as $annotation)
         $annotation['resource_preview_ext']
     );
 
-    if(!file_exists($preview_image_path))
-        {
+    if (!file_exists($preview_image_path)) {
         echo "Could not find the preview image at '{$preview_image_path}'" . PHP_EOL;
         $no_previews_found_counter++;
         continue;
-        }
+    }
 
     $prepared_image_path = get_resource_path(
         $annotation['resource'],
@@ -146,42 +139,38 @@ foreach($annotations as $annotation)
         $overwrite_existing
     );
 
-    if(!$is_image_prepared)
-        {
+    if (!$is_image_prepared) {
         echo 'Warning: Could not prepare image' . PHP_EOL;
         continue;
-        }
+    }
 
     $prepared_trainer_data .= "{$prepared_image_path};{$annotation['node_id']}" . PHP_EOL;
-    }
+}
 
 
 // Do not proceed with the training if no previews could be found or no annotations are found
-if($no_previews_found_counter === count($annotations))
-    {
+if ($no_previews_found_counter === count($annotations)) {
     exit(1);
-    }
+}
 
 $prepared_data_path = "{$facial_recognition_face_recognizer_models_location}/prepared_data.csv";
 
 // Save prepared data to a CSV file
 $prepared_data_file = fopen($prepared_data_path, 'w+b');
 
-if(false === $prepared_data_file)
-    {
+if (false === $prepared_data_file) {
     exit(1);
-    }
+}
 
 fwrite($prepared_data_file, $prepared_trainer_data);
 fclose($prepared_data_file);
 
 
 // Step 2: Training FaceRecognizer
-if(!file_exists($prepared_data_path))
-    {
+if (!file_exists($prepared_data_path)) {
     echo 'Error: Could not find the prepared data CSV file for FaceRecognizer trainer!' . PHP_EOL;
     exit(1);
-    }
+}
 
 $command        = "{$python_fullpath} {$faceRecognizerTrainer_path} {$prepared_data_path}";
 $command_output = run_command($command);

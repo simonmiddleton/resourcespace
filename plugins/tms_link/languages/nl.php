@@ -71,4 +71,5 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Kolom te gebruiken in de
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_write_to_debug_log"]='Scriptvoortgang opnemen in systeemdebuglogboek (vereist afzonderlijke configuratie van debuglogging). Let op: Zal snelle groei van het debuglogboek veroorzaken.';
 $lang["plugin-tms_link-title"]='TMS Link';
-$lang["plugin-tms_link-desc"]='[Geavanceerd] Stelt in staat om resource-metadata uit de TMS-database te extraheren.';
+$lang["plugin-tms_link-desc"]=' Stelt in staat om resource-metadata uit de TMS-database te extraheren.';
+$lang["tms_link_uid_field_int"]='TMS Integer UIDs. Stel in op false om niet-integer UIDs toe te staan.';

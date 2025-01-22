@@ -3,50 +3,41 @@ include "../../include/boot.php";
 include "../../include/authenticate.php";
 
 // Do not allow access to anonymous users
-if (isset($anonymous_login) && ($anonymous_login == $username))
-    {
+if (isset($anonymous_login) && ($anonymous_login == $username)) {
     header('HTTP/1.1 401 Unauthorized');
     die('Permission denied!');
-    }
+}
 
 global $userref;
 
-if (getval("save", "") != "" && enforcePostRequest(false))
-    {
+if (getval("save", "") != "" && enforcePostRequest(false)) {
     $image_path = "";
     $profile_text = getval("profile_bio", "");
-    if ($_FILES['profile_image']['name'] != "")
-        {
+    if ($_FILES['profile_image']['name'] != "") {
         $pathinfo   = pathinfo($_FILES['profile_image']['name']);
         $extension  = $pathinfo['extension'] ?? "";
-        if(in_array(strtolower($extension), array("jpg","jpeg")))
-            {
+        if (in_array(strtolower($extension), array("jpg","jpeg"))) {
             $image_path = get_temp_dir(false) . '/' . $userref . '_' . uniqid() . ".jpg";
             $result = move_uploaded_file($_FILES['profile_image']['tmp_name'], $image_path);
-            if ($result === false)
-                {
+            if ($result === false) {
                 error_alert($lang["error_upload_failed"]);
                 exit();
-                }
             }
-        else
-            {
-            error_alert($lang["error_not_jpeg"],true);
+        } else {
+            error_alert($lang["error_not_jpeg"], true);
             exit();
-            }
         }
-    $result = set_user_profile($userref,$profile_text,$image_path);
-    if ($result === false)
-        {
+    }
+    $result = set_user_profile($userref, $profile_text, $image_path);
+    if ($result === false) {
         error_alert($lang["error_upload_failed"]);
         exit();
-        }
     }
+}
 
-if (getval("delete", "") != "" && enforcePostRequest(false))
-    {
+if (getval("delete", "") != "" && enforcePostRequest(false)) {
     delete_profile_image($userref);
-    }
+}
 
 $profile_text = get_profile_text($userref);
 $profile_image = get_profile_image($userref);

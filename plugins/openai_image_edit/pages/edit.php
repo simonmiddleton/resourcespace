@@ -3,9 +3,9 @@ include "../../../include/boot.php";
 include "../../../include/authenticate.php";
 
 
-if (!in_array("openai_gpt",$plugins)) 
+if (!in_array("openai_gpt" ,$plugins) || !in_array("openai_image_edit", $plugins))
     {
-    exit("The OpenAI GPT plugin must be enabled and configured.");
+    exit("The OpenAI GPT and OpenAI Image Editing plugins must be enabled and configured.");
     }
 
 // Find image

@@ -1,5 +1,5 @@
 <?php
-if (php_sapi_name()!=="cli") {
+if (php_sapi_name() !== "cli") {
     exit("This utility is command line only.");
 }
 
@@ -17,13 +17,13 @@ include_once __DIR__ . "/../include/boot.php";
 include_once __DIR__ . "/../include/test_functions.php";
 include_once __DIR__ . "/../include/image_processing.php";
 
-$suppress_headers=true;
-$argv=preg_replace('/^(-|--|\/)/','',$argv);    // remove leading /, -- or -
+$suppress_headers = true;
+$argv = preg_replace('/^(-|--|\/)/', '', $argv);    // remove leading /, -- or -
 
-define("RS_TEST_MODE",1);
+define("RS_TEST_MODE", 1);
 define('RS_TEST_DEBUG', array_search('debug', $argv) !== false);
 
-if(array_search('?',$argv)!==false || array_search('help',$argv)!==false) {
+if (array_search('?', $argv) !== false || array_search('help', $argv) !== false) {
     ?>
 
     Command line paramaters:
@@ -40,14 +40,14 @@ if(array_search('?',$argv)!==false || array_search('help',$argv)!==false) {
 }
 
 # Create an array of tests that were passed from the command line
-$specific_tests=array();
-$performancetest=false;
-$time=false;
-foreach($argv as $arg) {
-    if(is_numeric($arg)) {
-        array_push($specific_tests, str_pad($arg,6,'0',STR_PAD_LEFT));
-    } elseif($arg == "performance") {
-        $performancetest =true;
+$specific_tests = array();
+$performancetest = false;
+$time = false;
+foreach ($argv as $arg) {
+    if (is_numeric($arg)) {
+        array_push($specific_tests, str_pad($arg, 6, '0', STR_PAD_LEFT));
+    } elseif ($arg == "performance") {
+        $performancetest = true;
     } elseif ($arg == "time") {
         $time = true;
     }
@@ -65,10 +65,10 @@ function create_new_db($db_name)
 }
 
 // Used to check that search results return the expected resources
-function match_values( $arraya , $arrayb )
+function match_values($arraya, $arrayb)
 {
-    sort( $arraya );
-    sort( $arrayb );
+    sort($arraya);
+    sort($arrayb);
     return $arraya == $arrayb;
 }
 
@@ -91,17 +91,16 @@ $test_user_name = "admin";
 $test_user_password = "admin123";
 $inst_plugins = ps_query('SELECT name FROM plugins WHERE inst_version>=0 order by name');
 
-if(array_search('nosetup',$argv)===false)
-    {
+if (array_search('nosetup', $argv) === false) {
     $mysql_charset = 'utf8mb4';
     # this has to be done in its own function as it includes the config.php and don't want to scope those vars globally
     create_new_db($mysql_db);
-    }
+}
 
 // Reset any odd config settings by reapplying config.default and config.new_installs.php
 // Save any important settings e.g for mysql connections first
 $savedconfigs = array("mysql_db", 'mysql_charset',"mysql_server","mysql_server_port","mysql_username","mysql_password","read_only_db_username","read_only_db_password","imagemagick_path","ghostscript_path","exiftool_path");
-foreach($savedconfigs as $savedconfig) {
+foreach ($savedconfigs as $savedconfig) {
     $saved[$savedconfig] = $$savedconfig;
 }
 
@@ -113,13 +112,13 @@ eval(file_get_contents(__DIR__ . "/../include/config.new_installs.php"));
 $baseurl = $saved_url;
 $query_cache_enabled = false;
 
-foreach($saved as $key => $savedsetting) {
+foreach ($saved as $key => $savedsetting) {
     $$key = $savedsetting;
 }
 
 sql_connect();
 
-if(array_search('nosetup',$argv)===false) {
+if (array_search('nosetup', $argv) === false) {
     # Connect and create standard tables.
     echo "Creating default database tables...";
     ob_flush();
@@ -127,14 +126,13 @@ if(array_search('nosetup',$argv)===false) {
     echo "...done\n";
     # Insert a new user and run as them.
     $u = new_user($test_user_name);
-    ps_query("UPDATE `user` SET `password`=?",array("s",$test_user_password));
+    ps_query("UPDATE `user` SET `password`=?", array("s",$test_user_password));
 } else {
     # Try to retrieve the ref of the existing user
-    $u = ps_value("SELECT `ref` AS value FROM `user` WHERE `username`=?",array("s",$test_user_name),-1);
-    if ($u==-1)
-        {
+    $u = ps_value("SELECT `ref` AS value FROM `user` WHERE `username`=?", array("s",$test_user_name), -1);
+    if ($u == -1) {
         die("Could not find existing '{$test_user_name}' user");
-        }
+    }
 }
 
 
@@ -170,14 +168,14 @@ $test_dir = __DIR__ . "/" . ($performancetest ? "performance_tests" : "test_list
 $core_tests = scandir($test_dir);
 $core_tests = array_filter($core_tests, function ($string) {
     global $specific_tests;
-    if (substr($string,-4,4) != ".php") {
+    if (substr($string, -4, 4) != ".php") {
         return false;
     }
-    if (count($specific_tests)==0) {
+    if (count($specific_tests) == 0) {
         return true;
     }
-    foreach($specific_tests as $specific_test) {
-        if (strpos($string, $specific_test)!==false) {
+    foreach ($specific_tests as $specific_test) {
+        if (strpos($string, $specific_test) !== false) {
             return true;
         }
     }
@@ -190,7 +188,7 @@ $core_tests = array($test_dir => $core_tests);
 
 # Get a list of plugin tests
 $plugin_tests = array();
-if(!$performancetest) {
+if (!$performancetest) {
     foreach ($inst_plugins as $plugin) {
         if (file_exists(__DIR__ . '/../plugins/' . $plugin['name'] . '/tests')) {
             $plugin_tests[__DIR__ . '/../plugins/' . $plugin['name'] . '/tests'] = scandir(__DIR__ . '/../plugins/' . $plugin['name'] . '/tests');
@@ -199,10 +197,10 @@ if(!$performancetest) {
     foreach ($plugin_tests as $key => $tests) {
         $plugin_tests[$key] = array_filter($tests, function ($string) {
             global $specific_tests;
-            if (substr($string,-4,4) != ".php") {
+            if (substr($string, -4, 4) != ".php") {
                 return false;
             }
-            if (count($specific_tests)==0) {
+            if (count($specific_tests) == 0) {
                 return true;
             }
             return false;
@@ -219,42 +217,48 @@ if (!empty($plugin_tests)) {
 }
 
 # Run tests
-echo "-----\n";ob_flush();
+echo "-----\n";
+ob_flush();
 $testsfailed = false;
 foreach ($tests as $key => $test_stack) {
     foreach ($test_stack as $test) {
         $starttime = microtime(true);
         # ------------- RUN THE TEST ------------------------------------------------
-        echo "Running test " . str_pad($test,65," ") . " ";ob_flush();
+        echo "Running test " . str_pad($test, 65, " ") . " ";
+        ob_flush();
         try {
-            $result = include $key . '/'. $test;
+            $result = include $key . '/' . $test;
         } catch (Exception $e) {
             echo $e;
-            $result=false;
+            $result = false;
         }
         # -------------- Did it work? -----------------------------------------------
         if ($result === false) {
             $testsfailed = true;
-            echo "FAIL\n";ob_flush();
+            echo "FAIL\n";
+            ob_flush();
             if (isset($email_test_fails_to)) {
-                $svnrevision=trim(shell_exec("svnversion ."));
-                send_mail($email_test_fails_to,"Test $test has failed as of r" . $svnrevision,"Hi,\n\nAs of revision " . $svnrevision. " the test '" . $test . "' is failing.\n\nThis e-mail was sent from the installation at $baseurl.");
+                $svnrevision = trim(shell_exec("svnversion ."));
+                send_mail($email_test_fails_to, "Test $test has failed as of r" . $svnrevision, "Hi,\n\nAs of revision " . $svnrevision . " the test '" . $test . "' is failing.\n\nThis e-mail was sent from the installation at $baseurl.");
             }
-            if (substr($key,-9,9) == "test_list") {
-                echo "-----\n";ob_flush();
+            if (substr($key, -9, 9) == "test_list") {
+                echo "-----\n";
+                ob_flush();
                 break 2; # If a core test fails cancel all other tests
             } else {
                 break;  # If a plugin test fails abort tests for this plugin but continue
             }
         }
         $testtime = (microtime(true) - $starttime);
-        echo "OK   " . ($time?round($testtime,5) . "s":"") . "\n";ob_flush();
+        echo "OK   " . ($time ? round($testtime, 5) . "s" : "") . "\n";
+        ob_flush();
     }
-    echo "-----\n";ob_flush();
+    echo "-----\n";
+    ob_flush();
 }
 echo ($testsfailed ? "Tests failed" : "All tests complete.") . PHP_EOL;
 
-if(array_search('noteardown',$argv)===false) {
+if (array_search('noteardown', $argv) === false) {
     # Remove database
     ps_query("drop database `$mysql_db`");
     rcRmdir($storagedir);

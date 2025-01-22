@@ -71,4 +71,5 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Colonna da utilizzare ne
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_write_to_debug_log"]='Includi il progresso dello script nel registro di debug del sistema (richiede la configurazione separata del registro di debug). Attenzione: causerà una rapida crescita del file di registro di debug.';
 $lang["plugin-tms_link-title"]='Collegamento TMS';
-$lang["plugin-tms_link-desc"]='[Avanzato] Consente di estrarre i metadati delle risorse dal database TMS.';
+$lang["plugin-tms_link-desc"]=' Consente di estrarre i metadati delle risorse dal database TMS.';
+$lang["tms_link_uid_field_int"]='TMS Integer UIDs. Imposta su falso per consentire UIDs non interi.';

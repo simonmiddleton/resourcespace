@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -27,17 +28,15 @@ $use_cases = array(
 );
 
 $use_case_number = 1;
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     $limit = sql_limit($use_case['offset'], $use_case['rows']);
 
-    if($limit !== $use_case['expected_output'])
-        {
+    if ($limit !== $use_case['expected_output']) {
         echo "Use case {$use_case_number} - ";
         return false;
-        }
+    }
 
     $use_case_number++;
-    }
+}
 
 return true;

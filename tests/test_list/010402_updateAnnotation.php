@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -39,20 +40,18 @@ $annotation['tags'] = [$node_optionB];
 
 
 // Update tags but missing its ID
-if(updateAnnotation($annotation) !== false)
-    {
+if (updateAnnotation($annotation) !== false) {
     echo 'updateAnnotation (no ref) - ';
     return false;
-    }
+}
 
 
 // Update tags for an existing annotation
 $annotation['ref'] = $annotation_ref;
-if(updateAnnotation($annotation) === false)
-    {
+if (updateAnnotation($annotation) === false) {
     echo 'updateAnnotation - ';
     return false;
-    }
+}
 
 
 

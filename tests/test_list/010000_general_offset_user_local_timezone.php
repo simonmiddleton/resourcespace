@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -40,21 +41,19 @@ $use_cases = array(
 );
 
 $use_case_number = 1;
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     // Set php time zone
     date_default_timezone_set($use_case['server_tz']);
 
     // Set user local time zone
     $user_local_timezone = $use_case['user_local_tz'];
 
-    if(offset_user_local_timezone($date_time, 'Y-m-d H:i:s') != $use_case['expected_output'])
-        {
+    if (offset_user_local_timezone($date_time, 'Y-m-d H:i:s') != $use_case['expected_output']) {
         echo "Use case {$use_case_number} - ";
         return false;
-        }
+    }
 
     $use_case_number++;
-    }
+}
 
 return true;

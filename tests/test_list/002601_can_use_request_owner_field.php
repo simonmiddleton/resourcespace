@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 $webroot = dirname(__DIR__, 2);
@@ -7,11 +8,10 @@ include_once "{$webroot}/include/request_functions.php";
 
 // Set up
 $valid_owner_rtf = create_resource_type_field('owner_field (valid)', 0, FIELD_TYPE_DROP_DOWN_LIST, 'test_2601_valid_owner_field', false);
-if($valid_owner_rtf === false)
-    {
+if ($valid_owner_rtf === false) {
     echo 'Failed setting up the test!';
     return false;
-    }
+}
 
 
 
@@ -67,16 +67,14 @@ $test_2601_ucs = [
         'expected' => false,
     ],
 ];
-foreach($test_2601_ucs as $use_case)
-    {
+foreach ($test_2601_ucs as $use_case) {
     $GLOBALS['owner_field'] = $use_case['configs']['owner_field'];
     $GLOBALS['owner_field_mappings'] = $use_case['configs']['owner_field_mappings'];
-    if($use_case['expected'] !== can_use_owner_field())
-        {
+    if ($use_case['expected'] !== can_use_owner_field()) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 

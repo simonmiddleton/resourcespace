@@ -1,12 +1,14 @@
 <?php
+
 include "../../include/boot.php";
 include "../../include/api_functions.php";
 include "../../include/authenticate.php";
 
-$system = getval("system","");
+$system = getval("system", "");
 $remote_system = API_ISSUE_VALID_DESTINATIONS[$system] ?? false;
-if($remote_system) {
-    $state = getval($remote_system["stateparam"],"");
+
+if ($remote_system) {
+    $state = getval($remote_system["stateparam"], "");
     if (isset($_POST['submit']) && enforcePostRequest(false)) {
         // Send session key to remote system with the passed state string
         $postdata = http_build_query([
@@ -16,15 +18,15 @@ if($remote_system) {
         ]);
 
         $curl = curl_init($remote_system["url"]);
-        curl_setopt( $curl, CURLOPT_HEADER, "Content-Type: application/x-www-form-urlencoded");
-        curl_setopt( $curl, CURLOPT_POST, 1);
-        curl_setopt( $curl, CURLOPT_POSTFIELDS, $postdata);
-        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt($curl, CURLOPT_HEADER, "Content-Type: application/x-www-form-urlencoded");
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $curl_response = curl_exec($curl);
         $cerror = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        $response_json = json_decode($curl_response,true);
+        $response_json = json_decode($curl_response, true);
         if ($cerror == 200) {
             $message = $lang["user_api_session_grant_success"] . " " . ($response_json["message"] ?? $curl_response);
         } else {
@@ -36,27 +38,26 @@ if($remote_system) {
 }
 
 include "../../include/header.php";
-
 ?>
 <div class="BasicsBox">
 
     <h1><?php echo escape($lang["user_api_session_title"]); ?></h1>
-    <?php if (isset($message)) {?>
+    <?php if (isset($message)) { ?>
         <div class='PageInformal'><?php echo escape($message); ?></div>
         <?php
-    } elseif($remote_system) {?>
+    } elseif ($remote_system) { ?>
         <p>
-        <?php echo escape(str_replace(
-            ["[system]","[applicationname]"],
-            [$remote_system["name"],$applicationname],
-            $lang["user_api_session_text"]
-            ));?>
+            <?php echo escape(str_replace(
+                ["[system]","[applicationname]"],
+                [$remote_system["name"],$applicationname],
+                $lang["user_api_session_text"]
+            )); ?>
         </p>
 
-        <form method="post" 
+        <form
+            method="post" 
             action="<?php echo $baseurl_short . "pages/user/user_api_session.php?system=" . escape($system); ?>"
-            onsubmit="return CentralSpacePost(this,true);"
-            >        
+            onsubmit="return CentralSpacePost(this,true);">        
             <input type="hidden" name="state" value="<?php echo escape($state); ?>">
             <input type="hidden" name="system" value="<?php echo escape($system); ?>">
             <input type="hidden" name="submit" value="true">
@@ -71,7 +72,7 @@ include "../../include/header.php";
                 <div class="clearerleft"> </div>
             </div>
         </form>
-    <?php
+        <?php
     }
     ?>
 </div>

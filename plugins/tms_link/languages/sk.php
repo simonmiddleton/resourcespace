@@ -74,3 +74,4 @@ $lang["tms_link_mediapaths_resource_reference_column"]='Stolpec za uporabo v tab
 $lang["tms_link_write_to_debug_log"]='Vključi napredek skripta v sistemski dnevnik za odpravljanje napak (zahteva ločeno konfigurirano beleženje napak). Opozorilo: Povzroči hitro rast datoteke dnevnika za odpravljanje napak.';
 $lang["plugin-tms_link-title"]='Povezava TMS';
 $lang["plugin-tms_link-desc"]='[Pokročilo] Omogoča pridobivanje metapodatkov virov iz baze podatkov TMS.';
+$lang["tms_link_uid_field_int"]='TMS celoštevilski UIDs. Nastavite na false, da omogočite ne-celoštevilske UIDs.';

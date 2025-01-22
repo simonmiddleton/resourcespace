@@ -1,9 +1,10 @@
 <?php
+
 command_line_only();
 
 
 // Set up
-$fc_struct = function($name, $order_by, $is_categ = true) {
+$fc_struct = function ($name, $order_by, $is_categ = true) {
     return [
         'name' => $name,
         'order_by' => $order_by,
@@ -51,15 +52,13 @@ $test_1404_ucs = [
         'expected' => [$fc_A, $fc_categ_3, $fc_B, $fc_C, $fc_categ_1, $fc_categ_2, $fc_col_A, $fc_col_1],
     ],
 ];
-foreach($test_1404_ucs as $use_case)
-    {
+foreach ($test_1404_ucs as $use_case) {
     usort($use_case['input'], 'order_featured_collections');
-    if($use_case['expected'] !== $use_case['input'])
-        {
+    if ($use_case['expected'] !== $use_case['input']) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 

@@ -1,9 +1,10 @@
 <?php
+
 function HookAntivirusAllAfterpluploadfile($resource_id, $file_extension)
-    {
+{
     global $lang, $antivirus_action, $antivirus_quarantine_state;
 
-    if(!isset($GLOBALS['antivirus_path']) || trim($GLOBALS['antivirus_path']) == '') {
+    if (!isset($GLOBALS['antivirus_path']) || trim($GLOBALS['antivirus_path']) == '') {
         debug("[antivirus][ERROR] The Antivirus path is not set up!");
         return false;
     }
@@ -17,10 +18,8 @@ function HookAntivirusAllAfterpluploadfile($resource_id, $file_extension)
     $resource_path = get_resource_path($resource_id, true, '', false, $file_extension);
     $scan_output   = antivirus_scan($resource_path);
 
-    if('UNSAFE' === $scan_output)
-        {
-        switch($antivirus_action)
-            {
+    if ('UNSAFE' === $scan_output) {
+        switch ($antivirus_action) {
             case ANTIVIRUS_ACTION_DELETE:
                 // Delete permanently
                 delete_resource($resource_id);
@@ -46,10 +45,10 @@ function HookAntivirusAllAfterpluploadfile($resource_id, $file_extension)
                     $lang['antivirus_moving_file']
                 );
                 break;
-            }
-
-        return $response;
         }
 
-    return true;
+        return $response;
     }
+
+    return true;
+}

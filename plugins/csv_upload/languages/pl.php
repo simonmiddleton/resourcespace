@@ -67,4 +67,4 @@ $lang["csv_upload_force_offline"]='Ten duży plik CSV może wymagać długiego c
 $lang["csv_upload_recommend_offline"]='Ten duży plik CSV może wymagać bardzo długiego czasu przetwarzania. Zaleca się włączenie zadań offline, jeśli chcesz przetwarzać duże pliki CSV';
 $lang["csv_upload_createdfromcsvupload"]='Utworzono za pomocą wtyczki CSV Upload';
 $lang["plugin-csv_upload-title"]='Przesyłanie CSV';
-$lang["plugin-csv_upload-desc"]='[Zaawansowane] Prześlij metadane za pomocą pliku CSV.';
+$lang["plugin-csv_upload-desc"]=' Prześlij metadane za pomocą pliku CSV.';

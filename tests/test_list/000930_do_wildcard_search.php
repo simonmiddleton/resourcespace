@@ -1,25 +1,26 @@
 <?php
+
 command_line_only();
 
 
 // Check wildcard search e.g. 'sam*' and 'super*'
 
-$resourcea=create_resource(1,0);
-$resourceb=create_resource(1,0);
-$resourcec=create_resource(1,0);
+$resourcea = create_resource(1, 0);
+$resourceb = create_resource(1, 0);
+$resourcec = create_resource(1, 0);
 
 // Add new nodes to field, use dummy countries in case dbstruct changes
-$sambalandnode = set_node(null, 3, "Sambaland",'',1000);
-$superlandnode = set_node(null, 3, "Superland",'',1000);
+$sambalandnode = set_node(null, 3, "Sambaland", '', 1000);
+$superlandnode = set_node(null, 3, "Superland", '', 1000);
 
 // Add sambalandnode node to resource a
-add_resource_nodes($resourcea,array($sambalandnode));
+add_resource_nodes($resourcea, array($sambalandnode));
 // Add superlandnode node to resource b
-add_resource_nodes($resourceb,array($superlandnode));
+add_resource_nodes($resourceb, array($superlandnode));
 
 // Do search for 'sam*' (should return resource a)
 $results = do_search('sam*');
-if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
+if (count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
     return false;
 }
 
@@ -49,18 +50,18 @@ if (is_array($results)) {
 }
 
 // Add text to caption field for resources a and b and a node to resource c
-update_field($resourcea,8,"Supercilious");
-update_field($resourceb,8,"Samuel Taylor Coleridge");
-$sambucalandnode = set_node(null, 3, "Sambucaland",'',1000);
-add_resource_nodes($resourcec,array($sambucalandnode));
+update_field($resourcea, 8, "Supercilious");
+update_field($resourceb, 8, "Samuel Taylor Coleridge");
+$sambucalandnode = set_node(null, 3, "Sambucaland", '', 1000);
+add_resource_nodes($resourcec, array($sambucalandnode));
 
 // Do search for 'sam* super*' again(should return resources a, b and c)
 $results = do_search('sam* super*');
 if (
     count($results) != 3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref']) ||
-    ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea && $results[2]['ref']!=$resourcea) ||
-    ($results[0]['ref']!=$resourceb && $results[1]['ref']!=$resourceb && $results[2]['ref']!=$resourceb)||
-    ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec && $results[2]['ref']!=$resourcec)
+    ($results[0]['ref'] != $resourcea && $results[1]['ref'] != $resourcea && $results[2]['ref'] != $resourcea) ||
+    ($results[0]['ref'] != $resourceb && $results[1]['ref'] != $resourceb && $results[2]['ref'] != $resourceb) ||
+    ($results[0]['ref'] != $resourcec && $results[1]['ref'] != $resourcec && $results[2]['ref'] != $resourcec)
 ) {
     return false;
 }

@@ -1,4 +1,5 @@
 <?php
+
 $lang['antivirus_configuration'] = 'Antivirus configuration';
 
 // Setup labels

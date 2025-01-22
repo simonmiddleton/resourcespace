@@ -6667,6 +6667,32 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
             </select>
             <?php
             }
+        elseif($propertyname == 'partial_index')
+            {
+            ?>
+            <input 
+                id="field_edit_<?php echo escape((string) $propertyname); ?>"
+                name="<?php echo escape((string) $propertyname); ?>"
+                type="checkbox"
+                value="1"
+                <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>
+                onchange='handleIndexOptions(this, "field_edit_complete_index")'
+                >
+            <?php
+            }
+        elseif ($propertyname == 'complete_index')
+            {
+            ?>
+            <input 
+                id="field_edit_<?php echo escape((string) $propertyname); ?>"
+                name="<?php echo escape((string) $propertyname); ?>"
+                type="checkbox"
+                value="1"
+                <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>
+                onchange="handleIndexOptions(this, 'field_edit_partial_index')"
+                >
+            <?php
+            }
         elseif($type==1)
             {
             if ($propertyname=="advanced_search" && $system_date_field)

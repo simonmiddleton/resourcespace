@@ -34,4 +34,4 @@ $lang["emu_upload_nodata"]='Ingen EMu-data fundet for denne IRN:';
 $lang["emu_nodata_returned"]='Ingen EMu-data fundet for den angivne IRN.';
 $lang["emu_createdfromemu"]='Oprettet fra EMU-plugin';
 $lang["emu_api_server_port"]='Serverport';
-$lang["plugin-emu-desc"]='[Avanceret] Tillader udtrækning af ressource-metadata fra EMu-database.';
+$lang["plugin-emu-desc"]=' Tillader udtrækning af ressource-metadata fra EMu-database.';

@@ -115,17 +115,20 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
             }
 
         if(is_array($tms_object_id)) {
-            $tms_object_id = array_filter($tms_object_id,'is_positive_int_loose');
+            if ($module['tms_uid_field_int'] ?? true) {
+                $tms_object_id = array_filter($tms_object_id,'is_positive_int_loose');
+            }
             if (empty($tms_object_id)) {
                 debug('tms_link: Invalid tms object id(s): ' . json_encode($tms_object_id) . ' for resource: ' . $resource);
                 continue;
             }
             $conditionsql = " WHERE {$module['tms_uid_field']} IN ('" . implode("','", $tms_object_id) . "')";
-        } else if (is_positive_int_loose($tms_object_id)) {
-            $conditionsql = " WHERE {$module['tms_uid_field']} ='" . $tms_object_id . "'";
         } else {
-            debug('tms_link: Invalid tms object id(s): ' . json_encode($tms_object_id) . ' for resource: ' . $resource);
-            continue;
+            if (($module['tms_uid_field_int'] ?? true) && !is_positive_int_loose($tms_object_id)) {
+                debug('tms_link: Invalid tms object id(s): ' . json_encode($tms_object_id) . ' for resource: ' . $resource);
+                continue;
+            }
+            $conditionsql = " WHERE {$module['tms_uid_field']} ='" . $tms_object_id . "'";
         }
 
         $tmscountsql = "SELECT Count(*) FROM {$module['module_name']} {$conditionsql};";

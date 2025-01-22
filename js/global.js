@@ -1397,18 +1397,31 @@ function toggleFieldLock(field)
 * Places overflowing header links into a dropdown
 *
 */
-function headerLinksDropdown()
-    {
-    var containerWidth = jQuery("#HeaderLinksContainer").innerWidth() - 30;
+function headerLinksDropdown() {
+
+    if (jQuery(window).width() < 1200) {
+        return;
+    }
+
+    var menuBox = jQuery("#HeaderNav2");
+    var mb_offset = menuBox.offset();
+    var mb_width = menuBox.outerWidth(true);
+    var mb_rightedge = mb_offset.left + mb_width;
+    
+    var uploadBox = jQuery("#HeaderNav1");
+    var ub_offset = uploadBox.offset();
+    var ub_leftedge = ub_offset.left;
+
+    var containerTarget = jQuery("#HeaderLinksContainer");
+    var containerWidth = containerTarget.innerWidth();
+
+    var containerOverlap = mb_rightedge - ub_leftedge;
+    
     var links =  jQuery("#HeaderLinksContainer").find(".HeaderLink"); // get elements that are links in the header bar
     var linksWidth = 0;
     var caretCreated = false;
 
     jQuery("#OverFlowLinks").remove(); // remove the drop-down menu div
-    if (jQuery(window).width() < 1200)
-        {
-        return;
-        }
 
     if (jQuery('#OverflowListElement').is(':visible'))
         {
@@ -1419,7 +1432,7 @@ function headerLinksDropdown()
         {
         linksWidth += jQuery(links[i]).outerWidth();
 
-        if (linksWidth > containerWidth)
+        if (linksWidth > containerWidth-containerOverlap)
             {
             if (!caretCreated)
                 {
@@ -1433,7 +1446,7 @@ function headerLinksDropdown()
             jQuery(links[i]).appendTo('#HiddenLinks');
             }
         }
-    }
+}
 
 /*
 *

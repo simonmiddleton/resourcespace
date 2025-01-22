@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 command_line_only();
 
 
@@ -13,18 +14,18 @@ $user_with_T_perms = get_user(
             "name" => "Group for test_420-{$run_id}",
             "permissions" => 's,e-1,e-2,g,d,q,n,f*,j*,z1,z2,z3,T1_scr',
         ])
-    ));
+    )
+);
 $resource = create_resource(1, 0);
 // --- End of Set up
 
 
 
 setup_user($user_with_T_perms);
-if(resource_download_allowed($resource, 'scr', 1, -1) !== false)
-    {
+if (resource_download_allowed($resource, 'scr', 1, -1) !== false) {
     echo "Use case: Prevent download when 'T?_?' permission set on size (scr) - ";
     return false;
-    }
+}
 
 
 

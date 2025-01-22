@@ -27,4 +27,4 @@ $lang["video_tracks_select_generate_opt"]='Prosimo, izberite možnost generiranj
 $lang["video_tracks_save_alt_not_perm"]='Ni mogoče shraniti alternative brez dovoljenja';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='DŮLEŽITÉ! Plugin Video Tracks zastaral nastavení výstupních formátov. Môžu byť nastavené iba v config.php. Plugin nebude fungovať podľa očakávania, kým nebude možnosť konfigurácie skopírovaná. Prosím, skopírujte nasledujúce:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Video stopy';
-$lang["plugin-video_tracks-desc"]='[Advanced] Dodaj podporo za različne možnosti zvoka in podnapisov za video vire';
+$lang["plugin-video_tracks-desc"]=' Dodaj podporo za različne možnosti zvoka in podnapisov za video vire';

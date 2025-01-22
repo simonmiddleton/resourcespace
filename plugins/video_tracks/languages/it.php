@@ -27,4 +27,4 @@ $lang["video_tracks_select_generate_opt"]='Si prega di scegliere un\'opzione di 
 $lang["video_tracks_save_alt_not_perm"]='Impossibile salvare l\'alternativa senza permesso';
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='IMPORTANTE! Il plugin Video Tracks ha deprecato le impostazioni dei formati di output. Possono essere impostate solo in config.php. Il plugin non funzionerà come previsto fino a quando l\'opzione di configurazione non sarà stata copiata. Si prega di copiare quanto segue:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Tracce Video';
-$lang["plugin-video_tracks-desc"]='[Avanzato] Aggiungi supporto per diverse opzioni audio e sottotitoli per risorse video';
+$lang["plugin-video_tracks-desc"]=' Aggiungi supporto per diverse opzioni audio e sottotitoli per risorse video';

@@ -1,7 +1,5 @@
 <?php
 
-
-
 // Rename existing 'My collection' collections
 ps_query("UPDATE collection SET `name` = 'Default Collection' WHERE TRIM(`name`) = 'My Collection' AND `cant_delete`=1");
 echo 'Collections migrated' . PHP_EOL;

@@ -1,4 +1,5 @@
 <?php
+
 /*
 Job handler to process collection downloads
 
@@ -13,18 +14,15 @@ global $offline_job_delete_completed;
 
 $ref        = $job_data["ref"];
 $extension  = $job_data["extension"];
-$path       = $job_data["path"]??'';
+$path       = $job_data["path"] ?? '';
 
 extract_text($ref, $extension, $path);
 
 // May be needed elsewhere in the code further up
-if($offline_job_delete_completed)
-    {
+if ($offline_job_delete_completed) {
     job_queue_delete($jobref);
-    }
-else
-    {
+} else {
     job_queue_update($jobref, $job_data, STATUS_COMPLETE);
-    }
+}
 
-unset($ref,$extension,$path);
+unset($ref, $extension, $path);

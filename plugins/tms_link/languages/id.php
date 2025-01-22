@@ -73,4 +73,5 @@ $lang["tms_link_confirm_delete_module_config"]='Apakah Anda yakin ingin menghapu
 $lang["tms_link_mediapaths_resource_reference_column"]='Kolom yang digunakan dalam tabel MediaMaster untuk menyimpan ID Sumber Daya. Ini opsional dan digunakan untuk menghindari beberapa sumber daya menggunakan ID Media Master yang sama.';
 $lang["tms_link_write_to_debug_log"]='Sertakan kemajuan skrip dalam log debug sistem (memerlukan konfigurasi logging debug secara terpisah). Peringatan: Akan menyebabkan pertumbuhan cepat file log debug.';
 $lang["plugin-tms_link-title"]='Tautan TMS';
-$lang["plugin-tms_link-desc"]='[Advanced] Memungkinkan metadata sumber daya diekstraksi dari database TMS.';
+$lang["plugin-tms_link-desc"]=' Memungkinkan metadata sumber daya diekstraksi dari database TMS.';
+$lang["tms_link_uid_field_int"]='TMS Integer UID. Atur ke false untuk mengizinkan UID non-integer.';

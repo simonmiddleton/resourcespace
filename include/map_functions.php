@@ -15,8 +15,8 @@ use Gettext\Languages\Exporter\Php;
  *
  * @return string JavaScript code that initializes the OSM basemaps for Leaflet.
  */
-function leaflet_osm_basemaps() 
-    {
+function leaflet_osm_basemaps()
+{
     global $map_default_cache, $map_retina;
 
     return "<!--OpenStreetMap (OSM) basemap group-->
@@ -85,7 +85,7 @@ function leaflet_osm_basemaps()
             maxZoom: 17,
             attribution: osm_otm_attribute
         }); ";
-    }
+}
 
 /**
  * Generates ESRI basemaps for use in a Leaflet map.
@@ -96,7 +96,7 @@ function leaflet_osm_basemaps()
  * @return string JavaScript code that initializes the ESRI basemaps for Leaflet.
  */
 function leaflet_esri_basemaps() // ESRI basemaps.
-    {
+{
     global $map_default_cache, $map_retina;
 
     return "<!--ESRI basemap group-->
@@ -177,10 +177,10 @@ function leaflet_esri_basemaps() // ESRI basemaps.
             maxZoom: 16,
             attribution: esri_gray_attribute
         }); ";
-    }
+}
 
 function leaflet_stamen_basemaps() // Stamen basemaps.
-    {
+{
     global $map_layer_cache, $map_retina;
 
     return "<!--Stamen basemap group-->
@@ -248,7 +248,7 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
             ext: 'jpg',
             attribution: stamen_attribute
         }); ";
-    }
+}
 
 /**
  * Generates Hydda basemaps for use in a Leaflet map.
@@ -256,7 +256,7 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
  * @return string JavaScript code that initializes the Hydda basemaps for Leaflet.
  */
 function leaflet_hydda_basemaps() // Hydda basemaps.
-    {
+{
     global $map_layer_cache, $map_retina;
 
     return "<!--Hydda basemap group-->
@@ -275,7 +275,7 @@ function leaflet_hydda_basemaps() // Hydda basemaps.
             maxZoom: 18,
             attribution: hydda_attribute
         }); ";
-    }
+}
 
 /**
  * Generates NASA basemaps for use in a Leaflet map.
@@ -283,7 +283,7 @@ function leaflet_hydda_basemaps() // Hydda basemaps.
  * @return string JavaScript code that initializes the NASA basemaps for Leaflet.
  */
 function leaflet_nasa_basemaps() // NASA basemaps.
-    {
+{
     global $map_layer_cache, $map_retina;
 
     return "<!--NASA GIBS basemap group-->
@@ -315,7 +315,7 @@ function leaflet_nasa_basemaps() // NASA basemaps.
             format: 'jpg',
             attribution: nasa_attribute
         }); ";
-    }
+}
 
 /**
  * Generates USGS basemaps for use in a Leaflet map.
@@ -323,7 +323,7 @@ function leaflet_nasa_basemaps() // NASA basemaps.
  * @return string JavaScript code that initializes the USGS basemaps for Leaflet.
  */
 function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map basemaps.
-    {
+{
     global $map_layer_cache, $map_retina;
 
     return "<!--USGS The National Map basemaps group-->
@@ -346,7 +346,7 @@ function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map base
             detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: usgstnm_attribute
         }); ";
-    }
+}
 
 /**
  * Generates Thunderforest basemaps for use in a Leaflet map.
@@ -354,7 +354,7 @@ function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map base
  * @return string JavaScript code that initializes the Thunderforest basemaps for Leaflet.
  */
 function leaflet_thunderforest_basemaps() // Thunderforest basemaps.
-    {
+{
     global $map_layer_cache, $map_retina, $map_tfapi;
 
     return "<!--Thunderforest basemap group (requires an API key)-->
@@ -423,10 +423,10 @@ function leaflet_thunderforest_basemaps() // Thunderforest basemaps.
             maxZoom: 22,
             attribution: tf_attribute
         }); ";
-    }
+}
 
 function leaflet_mapbox_basemaps() // Mapbox basemaps.
-    {
+{
     global $map_layer_cache, $map_retina, $map_mapboxid, $map_mapboxtoken, $map_mapboxattribution;
 
     return "<!--Mapbox basemaps group (requires API keys)-->
@@ -437,7 +437,7 @@ function leaflet_mapbox_basemaps() // Mapbox basemaps.
             detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: '<?php echo $map_mapboxattribution?>'
         }); ";
-    }
+}
 
 /**
  * Generates Mapbox basemaps for use in a Leaflet map.
@@ -448,45 +448,35 @@ function leaflet_mapbox_basemaps() // Mapbox basemaps.
  * @return string JavaScript code that initializes the Mapbox basemap for Leaflet.
  */
 function leaflet_map_zoom($map_zoom)
-    {
+{
     global $resource, $geolocation_default_bounds;
 
     // If no zoom level is set or is non-numeric, define as 0 to enable automatic zoom assignment below.
     $zoom = trim((string) $map_zoom);
-    if (!is_int_loose($zoom))
-        {
+    if (!is_int_loose($zoom)) {
         $zoom = 2;
-        $arr_bounds = explode(",",$geolocation_default_bounds);
-        if (count($arr_bounds)==3) 
-            {
+        $arr_bounds = explode(",", $geolocation_default_bounds);
+        if (count($arr_bounds) == 3) {
             $zoom = end($arr_bounds);
-            }
         }
-
-    if (!($zoom >= 2 && $zoom <= 21))
-        {
-        $zoom = 16;
-        $siglon = round(100000 * abs($resource['geo_long']))%100000;
-        $siglat = round(100000 * abs($resource['geo_lat']))%100000;
-        if ($siglon%100000 == 0 && $siglat%100000 == 0)
-            {
-            $zoom = 3;
-            }
-        elseif ($siglon%10000 == 0 && $siglat%10000 == 0)
-            {
-            $zoom = 6;
-            }
-        elseif ($siglon%1000 == 0 && $siglat%1000 == 0)
-            {
-            $zoom = 10;
-            }
-        elseif ($siglon%100 == 0 && $siglat%100 == 0)
-            {
-            $zoom = 15;
-            }
-        }
-    return $zoom;
     }
+
+    if (!($zoom >= 2 && $zoom <= 21)) {
+        $zoom = 16;
+        $siglon = round(100000 * abs($resource['geo_long'])) % 100000;
+        $siglat = round(100000 * abs($resource['geo_lat'])) % 100000;
+        if ($siglon % 100000 == 0 && $siglat % 100000 == 0) {
+            $zoom = 3;
+        } elseif ($siglon % 10000 == 0 && $siglat % 10000 == 0) {
+            $zoom = 6;
+        } elseif ($siglon % 1000 == 0 && $siglat % 1000 == 0) {
+            $zoom = 10;
+        } elseif ($siglon % 100 == 0 && $siglat % 100 == 0) {
+            $zoom = 15;
+        }
+    }
+    return $zoom;
+}
 
 /**
  * Parses the resource polygon string to extract latitude and longitude bounds and formats the polygon string.
@@ -497,14 +487,13 @@ function leaflet_map_zoom($map_zoom)
  *               as well as the formatted polygon string for Leaflet display.
  */
 function leaflet_polygon_parsing($fields, $minmax = true)
-    {
+{
     global $map_polygon_field;
 
     // Search resource $fields array for the $map_polygon_field.
     $key1 = array_search($map_polygon_field, array_column($fields, 'ref'));
 
-    if ($minmax)
-        {
+    if ($minmax) {
         // Strip coordinate pair parathenses from polygon array.
         $values = str_replace(')', '', str_replace('(', '', explode(',', $fields[$key1]['value'])));
 
@@ -517,7 +506,7 @@ function leaflet_polygon_parsing($fields, $minmax = true)
         $long_values = array($values[1], $values[3], $values[5], $values[7]);
         $polygon['long_min'] = min($long_values);
         $polygon['long_max'] = max($long_values);
-        }
+    }
 
     // Format polygon string for Leaflet footprint display below.
     $polygon1 = str_replace('(', '[', $fields[$key1]['value']);
@@ -525,7 +514,7 @@ function leaflet_polygon_parsing($fields, $minmax = true)
     $polygon['values'] = '[' . $polygon1 . ']';
 
     return $polygon;
-    }
+}
 
 /**
  * Validates geolocation coordinates to ensure they are numeric and within acceptable bounds.
@@ -535,66 +524,58 @@ function leaflet_polygon_parsing($fields, $minmax = true)
  * @return bool True if the coordinate is valid; otherwise, false.
  */
 function leaflet_coordinate_check($coordinate, $type)
-    {
+{
     $check = false;
-    if (!is_numeric($coordinate))
-        {
+    if (!is_numeric($coordinate)) {
         return false;
-        }
+    }
 
-    if ($type == 'latitude' && $coordinate >= -20037508.34 && $coordinate <= 20037508.34)
-        {
+    if ($type == 'latitude' && $coordinate >= -20037508.34 && $coordinate <= 20037508.34) {
         $check = true;
-        }
+    }
 
-    if ($type == 'longitude' && $coordinate >= -20037508.34 && $coordinate <= 20037508.34)
-        {
+    if ($type == 'longitude' && $coordinate >= -20037508.34 && $coordinate <= 20037508.34) {
         $check = true;
-        }
+    }
 
     return $check;
-    }
+}
 
 /**
  * Creates a map color markers legend for Leaflet maps.
  *
- * This function generates HTML for a legend that displays markers with colors corresponding to resource types 
- * or custom metadata field values. If a custom metadata field is defined, the legend reflects that; otherwise, 
+ * This function generates HTML for a legend that displays markers with colors corresponding to resource types
+ * or custom metadata field values. If a custom metadata field is defined, the legend reflects that; otherwise,
  * it shows the default resource types and their associated colors.
  *
  * @return void Outputs the HTML for the legend.
  */
 function leaflet_markers_legend()
-    {
+{
     global $lang, $marker_metadata_field, $marker_metadata_array, $MARKER_COLORS;
 
-    if (!isset($marker_metadata_field) || $lang['custom_metadata_markers'] == '')
-        { ?>
+    if (!isset($marker_metadata_field) || $lang['custom_metadata_markers'] == '') { ?>
         <b> <?php echo escape($lang['legend_text']); ?>&nbsp;</b>
         <?php
         $restypes = get_resource_types();
-        foreach($restypes as $restype)
-            {
+        foreach ($restypes as $restype) {
             $markercolour = (isset($restype["colour"]) && $restype["colour"] > 0) ? (int)$restype["colour"] : ($restype['ref'] % count($MARKER_COLORS));
             echo "<img src='../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-" . strtolower($MARKER_COLORS[$markercolour])  . ".png' alt='" . $MARKER_COLORS[$markercolour] . " Icon' style='width:19px;height:31px;'>" . $restype["name"] . "&nbsp;";
-            }
         }
-    else // Custom metadata field color markers legend.
+    } else // Custom metadata field color markers legend.
         { ?>
         <b> <?php echo escape($lang['custom_metadata_markers']); ?>&nbsp;</b> <?php
 
         // Loop through and create the custom color marker legend text, ignoring the first 'unset' item
-        for ($i = 0; $i < count($marker_metadata_array); $i++)
-            {
+        for ($i = 0; $i < count($marker_metadata_array); $i++) {
             $ltext[$i] = $marker_metadata_array[$i]['min'] . "-" . $marker_metadata_array[$i]['max'];
-            }
+        }
 
-        for ($i = 0; $i < count($marker_metadata_array); $i++)
-            {
+        for ($i = 0; $i < count($marker_metadata_array); $i++) {
             ?> <img src="../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-<?php echo strtolower($MARKER_COLORS[$i])?>.png" alt="<?php echo $MARKER_COLORS[$i]; ?> Icon" style="width:19px;height:31px;"> <?php echo $ltext[$i]; ?> &nbsp; <?php
-            }
         }
     }
+}
 
 /**
  * Adds map providers for Leaflet maps.
@@ -606,7 +587,7 @@ function leaflet_markers_legend()
  * @return void Outputs the HTML and JavaScript for adding map providers to Leaflet.
  */
 function header_add_map_providers()
-    {
+{
     global $geo_leaflet_sources, $baseurl, $geo_tile_caching;
     ?>
     <script>
@@ -691,56 +672,47 @@ function header_add_map_providers()
         L.TileLayer.Provider.providers = {
 
         <?php
-        foreach($geo_leaflet_sources as $leaflet_source)
-            {
+        foreach ($geo_leaflet_sources as $leaflet_source) {
             echo escape($leaflet_source["code"])  . ": {\n";
-            if($geo_tile_caching)
-                {
+            if ($geo_tile_caching) {
                 // Is this the search page? If so need to get collection ID to authenticate external shares
                 $searchparts = explode(" ", getval("search", ""));
                 $collection = str_replace("!collection", "", $searchparts[0]);
-                $resource = getval("ref",""); // For resource view page
+                $resource = getval("ref", ""); // For resource view page
                 $urlparams = array(
                     "provider"  =>  $leaflet_source["code"],
                     "resource"  => $resource,
                     "collection"  => $collection,
-                    "k"  =>  getval("k",""),
+                    "k"  =>  getval("k", ""),
                     );
-                $sourceurl = generateURL($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
-                }
-            else
-                {
+                $sourceurl = generateURL($baseurl . "/pages/ajax/tiles.php", $urlparams) . "&x={x}&y={y}&z={z}";
+            } else {
                 $sourceurl =  $leaflet_source["url"];
-                }
+            }
             echo "        url: '" . $sourceurl . "',\n";
             echo "        options: {\n";
-            if(isset($leaflet_source["maxZoom"]) && is_int_loose($leaflet_source["maxZoom"]))
-                {
+            if (isset($leaflet_source["maxZoom"]) && is_int_loose($leaflet_source["maxZoom"])) {
                 echo "        maxZoom: " . (int)$leaflet_source["maxZoom"] . ",\n";
-                } 
-            if(isset($leaflet_source["attribution"]))
-                {
+            }
+            if (isset($leaflet_source["attribution"])) {
                 echo "        attribution: '" . $leaflet_source["attribution"] . "',\n";
-                }
+            }
             echo "    },\n"; // End of options
             echo "        variants: {\n";
-            foreach($leaflet_source["variants"] as $variant=>&$variantdata)
-                {
+            foreach ($leaflet_source["variants"] as $variant => &$variantdata) {
                 echo $variant  . ": {\n        ";
-                if(isset($variantdata["url"]))
-                    {
-                    if($geo_tile_caching)
-                        {
+                if (isset($variantdata["url"])) {
+                    if ($geo_tile_caching) {
                         $urlparams["variant"] = $variant;
-                        $variantdata["url"] = generateURL($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
-                        }
-                    echo "    url: '" . $variantdata["url"] . "'\n";
+                        $variantdata["url"] = generateURL($baseurl . "/pages/ajax/tiles.php", $urlparams) . "&x={x}&y={y}&z={z}";
                     }
+                    echo "    url: '" . $variantdata["url"] . "'\n";
+                }
                 echo "},\n";
-                }    
+            }
             echo "         },\n"; // End of variants
             echo "},\n"; // End of leaflet source
-            }
+        }
         ?>
         ResourceSpace: {
             url: '<?php echo $baseurl; ?>/pages/ajax/tiles.php?x={x}&y={y}&z={z}',
@@ -761,7 +733,7 @@ function header_add_map_providers()
     }));
     </script>
     <?php
-    }
+}
 
 /**
  * Checks the current page and includes necessary geolocation libraries for Leaflet maps.
@@ -772,7 +744,7 @@ function header_add_map_providers()
  * @return void Outputs the HTML and JavaScript for including geolocation libraries if applicable.
  */
 function get_geolibraries()
-    {
+{
     global $baseurl, $pagename, $map_default_cache, $map_layer_cache, $geo_leaflet_maps_sources,
     $map_zoomnavbar, $map_kml;
     $map_pages = array(
@@ -782,16 +754,15 @@ function get_geolibraries()
         "view",
         "edit",
         );
-    if(!in_array($pagename,$map_pages))
-        {
+    if (!in_array($pagename, $map_pages)) {
         return false;
-        }?>
+    }?>
 
     <!--Leaflet Control Geocoder 1.10.0 plugin files-->
     <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-control-geocoder-1.10.0/dist/Control.Geocoder.css"/>
     <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-control-geocoder-1.10.0/dist/Control.Geocoder.min.js"></script>
     <?php
-    }
+}
 
 /**
  *  Set bounds for default map view (geo_search.php and geo_edit.php)
@@ -799,12 +770,12 @@ function get_geolibraries()
  * @return void
  */
 function set_geo_map_centerview()
-    {
-    global $geolocation_default_bounds;    
-    $centerparts = explode(",",$geolocation_default_bounds);
+{
+    global $geolocation_default_bounds;
+    $centerparts = explode(",", $geolocation_default_bounds);
     echo "\n    mapcenterview= L.CRS.EPSG3857.unproject(L.point(" . $centerparts[0] . "," . $centerparts[1] . "));\n";
     echo "mapdefaultzoom = " . (int)$centerparts[2] . ";\n";
-    }
+}
 
 /**
  * Outputs the script tag for including additional Leaflet plugins.
@@ -815,9 +786,9 @@ function set_geo_map_centerview()
  * @return void Outputs the script tag for the Marker Cluster plugin.
  */
 function get_geo_maps_scripts()
-    {
+{
     global $baseurl;
     ?>
     <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/leaflet.markercluster.min.js"></script>
     <?php
-    }
+}

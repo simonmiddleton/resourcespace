@@ -27,15 +27,13 @@ $use_cases = [
         'expected' => [200, 200, 'auto'],
     ],
 ];
-foreach ($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     $result = calculate_image_display($uc['input']['imagedata'], $uc['input']['img_url'], $uc['input']['display']);
-    if($uc['expected'] != $result)
-        {
+    if ($uc['expected'] != $result) {
         echo "Use case: {$uc['name']} - ";
         return false;
-        }
     }
+}
 
 // Tear down
 unset($use_cases, $result, $image_data);

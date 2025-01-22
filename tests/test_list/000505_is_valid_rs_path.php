@@ -35,7 +35,7 @@ $use_cases = [
     ],
     [
         'name' => 'Allow resource files (filestore w/ symlink)',
-        'setup' => function() use ($resource_a, $link_name, $orig_storagedir) {
+        'setup' => function () use ($resource_a, $link_name, $orig_storagedir) {
             // Put file into alternative symlinked storagedir location, then revert before test
             $GLOBALS['storagedir'] = $link_name;
             file_put_contents(get_resource_path($resource_a, true, '', true, 'jpg'), '');
@@ -104,13 +104,11 @@ $use_cases = [
         'expected' => false,
     ],
 ];
-foreach($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     // Set up the use case environment
-    if(isset($uc['setup']))
-        {
+    if (isset($uc['setup'])) {
         $uc['setup']();
-        }
+    }
 
     $result = is_valid_rs_path(...$uc['input']);
 
@@ -119,16 +117,15 @@ foreach($use_cases as $uc)
         $uc['revert']();
     }
 
-    if($uc['expected'] !== $result)
-        {
+    if ($uc['expected'] !== $result) {
         echo "Use case: {$uc['name']} - ";
         test_log("Run ID - {$run_id}");
         test_log("test_tmp_dir - {$test_tmp_dir}");
         test_log("path - {$uc['input'][0]}");
         test_log('--- ');
         return false;
-        }
     }
+}
 
 // Tear down
 $storagedir = $orig_storagedir;

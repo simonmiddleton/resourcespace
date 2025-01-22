@@ -72,3 +72,4 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_write_to_debug_log"]='システムデバッグログにスクリプトの進行状況を含める（デバッグログの設定が別途必要です）。注意：デバッグログファイルが急速に増加します。';
 $lang["plugin-tms_link-title"]='TMSリンク';
 $lang["plugin-tms_link-desc"]='[高度] TMSデータベースからリソースメタデータを抽出することを許可します。';
+$lang["tms_link_uid_field_int"]='TMS 整数UID。非整数UIDを許可するにはfalseに設定します。';

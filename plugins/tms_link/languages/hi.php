@@ -72,3 +72,4 @@ $lang["tms_link_confirm_delete_module_config"]='क्या आप वाकई
 $lang["tms_link_write_to_debug_log"]='सिस्टम डिबग लॉग में स्क्रिप्ट प्रगति शामिल करें (अलग से डिबग लॉगिंग कॉन्फ़िगर की आवश्यकता है)। सावधानी: डिबग लॉग फ़ाइल का तेजी से बढ़ना होगा।';
 $lang["plugin-tms_link-title"]='टीएमएस लिंक';
 $lang["plugin-tms_link-desc"]='[उन्नत] संसाधन मेटाडेटा को TMS डेटाबेस से निकालने की अनुमति देता है।';
+$lang["tms_link_uid_field_int"]='TMS पूर्णांक UID. गैर-पूर्णांक UID की अनुमति देने के लिए false पर सेट करें।';

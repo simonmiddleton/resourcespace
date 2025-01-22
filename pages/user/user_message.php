@@ -2,31 +2,26 @@
 include "../../include/boot.php";
 include "../../include/authenticate.php";
 
-if (isset($anonymous_login) && $anonymous_login == $username)
-    {
+if (isset($anonymous_login) && $anonymous_login == $username) {
     die($lang["error-permissions-login"]);
-    }
+}
 
-$msgto  = getval("msgto",0,true);
-$msglimit   = getval("showcount",3,true);
-$text       = getval("messagetext","");
-if($msgto != 0)
-    {
-    $messages   = message_get_conversation($userref, array($msgto), array("limit"=>$msglimit,"sort_desc"=>true));
+$msgto  = getval("msgto", 0, true);
+$msglimit   = getval("showcount", 3, true);
+$text       = getval("messagetext", "");
+if ($msgto != 0) {
+    $messages   = message_get_conversation($userref, array($msgto), array("limit" => $msglimit,"sort_desc" => true));
     $to_user = get_user($msgto);
-    if(!$to_user)
-        {
-        error_alert($lang["error_invalid_user"],true,200);
+    if (!$to_user) {
+        error_alert($lang["error_invalid_user"], true, 200);
         exit();
-        }
+    }
     $to_username = isset($to_user["fullname"]) ? $to_user["fullname"] : $to_user["username"];
     $to_username = escape($to_username);
-    }
-else
-    {
+} else {
     $messages   = array();
-    $to_username= "";
-    }
+    $to_username = "";
+}
 
 
 include "../../include/header.php";
@@ -46,8 +41,7 @@ defaultimghtml =  jQuery("<i />", {
     });
 
 <?php
-if($userimage != "")
-    {
+if ($userimage != "") {
     ?>
     userimghtml =  jQuery("<img />", {
         title   : '<?php echo escape($userfullname); ?>',
@@ -56,14 +50,11 @@ if($userimage != "")
         src     : '<?php echo escape($userimage); ?>'
         });
     <?php
-    }
-else
-    {?>    
+} else { ?>    
     userimghtml = defaultimghtml;
-    <?php 
-    }
-if($usertoimage != "")
-    {
+    <?php
+}
+if ($usertoimage != "") {
     ?>
     usertoimghtml =  jQuery("<img />", {
         title   : '<?php echo escape($userfullname); ?>',
@@ -72,13 +63,11 @@ if($usertoimage != "")
         src     : '<?php echo escape($usertoimage); ?>'
         });
     <?php
-    }
-else
-    {?>    
+} else { ?>    
     usertoimghtml = defaultimghtml;
-    <?php 
-    }
-?>    
+    <?php
+}
+?>
 
 function sendMessage()
     {
@@ -161,104 +150,90 @@ function reloadMessages()
 <?php
 
 $links_trail = array();
-if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"team_user") !== false)
-    {    
+if (isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "team_user") !== false) {
     $links_trail[] = array(
         'title' => $lang["teamcentre"],
         'href'  => $baseurl_short . "pages/team/team_home.php",
         'menu' =>  true
-        );
+    );
     $links_trail[] = array(
         'title' => $lang["manageusers"],
         'href'  => $baseurl_short . "pages/team/team_user.php",
-        );
-    if($msgto != 0)
-        {
+    );
+    if ($msgto != 0) {
         $links_trail_user = array("title" => $to_username,"href" => $baseurl_short . "pages/team/team_user_edit.php?ref=" . escape($to_user["ref"]));
         $links_trail[] = $links_trail_user;
-        }
     }
-else
-    {
+} else {
     $links_trail[] = array(
         'title' => $lang["mymessages"],
         'href'  => $baseurl_short . "pages/user/user_messages.php",
-        );        
-    if($msgto != 0)
-        {
+    );
+    if ($msgto != 0) {
         $links_trail_user = array(
             "title" => $to_username,
             "href"  => $baseurl_short . "pages/user/user_profile.php?username=" . escape($to_user["username"]),
             "help"  => "user/messaging",
-            );
+        );
         $links_trail[] = $links_trail_user;
-        }
-    else
-        {
+    } else {
         $links_trail[] = array(
             'title' => $lang["new_message"],
             'help'  => "user/messaging",
-            );
-        }
+        );
     }
- 
+}
+
 ?>
 <div class="BasicsBox">
-<?php
-renderBreadcrumbs($links_trail);
+    <?php renderBreadcrumbs($links_trail); ?>
+    <form id="user_message_form" method="post" class = "FormWide" action="<?php echo $baseurl_short?>pages/user/user_message.php">
+        <?php
+        generateFormToken("myform");
 
-?>
-<form id="user_message_form" method="post" class = "FormWide" action="<?php echo $baseurl_short?>pages/user/user_message.php">
-    <?php
-    generateFormToken("myform");
-
-    if (isset($error)) { ?><div class="FormError"><?php echo $error?></div><?php } ?>
-
-    <?php 
-
-    if($msgto == 0)
-        {
-        echo "<div class='Question'><label>" . escape($lang["message_recipients"]) . "</label>";
-        $user_select_internal = true;
-        $user_select_class = "medwidth";
-        $autocomplete_user_scope = "message_";
-        include "../../include/user_select.php";
-        echo "<div class='clearerleft'> </div></div>";
+        if (isset($error)) {
+            ?>
+            <div class="FormError"><?php echo $error?></div>
+            <?php
         }
-    else
-        {
-        echo "<input type='hidden' id='message_users' name='message_users' value='" . $msgto . "'/>";
-        }
-    
 
-    // Show conversation
-    echo "<div id='message_conversation' class='message_conversation'>";
-    // Render in reverse order
-    for($n=count($messages)-1;$n>=0;$n--)
-        {
-        render_message($messages[$n]);
-        if($messages[$n]['user'] == $userref)
-            {
-            message_seen($messages[$n]['ref']);    
+        if ($msgto == 0) {
+            echo "<div class='Question'><label>" . escape($lang["message_recipients"]) . "</label>";
+            $user_select_internal = true;
+            $user_select_class = "medwidth";
+            $autocomplete_user_scope = "message_";
+            include "../../include/user_select.php";
+            echo "<div class='clearerleft'> </div></div>";
+        } else {
+            echo "<input type='hidden' id='message_users' name='message_users' value='" . $msgto . "'/>";
+        }
+
+        // Show conversation
+        echo "<div id='message_conversation' class='message_conversation'>";
+        // Render in reverse order
+        for ($n = count($messages) - 1; $n >= 0; $n--) {
+            render_message($messages[$n]);
+            if ($messages[$n]['user'] == $userref) {
+                message_seen($messages[$n]['ref']);
             }
         }
-    // Add template for new messages
-    echo "\n<template id='user_message_template'>";
-    render_message();
-    echo "</template>";
-    echo "<div class='clearer'> </div>";
-    echo "</div>";
-    ?>
-    <div class="Question">
-        <label for="messagetext"><?php echo escape($lang["message"]); ?></label>
-        <textarea id="messagetext" name="messagetext" class="stdwidth Inline required" rows=5 cols=50></textarea>
-        <div class="clearerleft"></div>
-    </div>
-    <div class="QuestionSubmit">        
-    <input name="send" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["send"]); ?>&nbsp;&nbsp;" onclick="sendMessage();return false;"/>
-    </div>
+        // Add template for new messages
+        echo "\n<template id='user_message_template'>";
+        render_message();
+        echo "</template>";
+        echo "<div class='clearer'> </div>";
+        echo "</div>";
+        ?>
+        <div class="Question">
+            <label for="messagetext"><?php echo escape($lang["message"]); ?></label>
+            <textarea id="messagetext" name="messagetext" class="stdwidth Inline required" rows=5 cols=50></textarea>
+            <div class="clearerleft"></div>
+        </div>
+        <div class="QuestionSubmit">        
+            <input name="send" type="submit" value="<?php echo escape($lang["send"]); ?>" onclick="sendMessage();return false;"/>
+        </div>
     </form>
 </div>
 
-<?php	  
+<?php
 include "../../include/footer.php";

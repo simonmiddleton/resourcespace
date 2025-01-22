@@ -1,4 +1,5 @@
 <?php
+
 include_once dirname(__DIR__, 2) . "/include/boot.php";
 
 $output_newline = PHP_EOL;
@@ -25,79 +26,81 @@ if (count($country_field) == 0 || $country_field[0]["ref"] == "") {
     # Build array of resource+country combinations where the resource has missing latitude or longitude coordinates
 
     # Build array for country metadata which is node based
-    $resource_countries = ps_query("SELECT DISTINCT rn.resource, UPPER(n.name) name
+    $resource_countries = ps_query(
+        "SELECT DISTINCT rn.resource, UPPER(n.name) name
                                              FROM resource_node rn
                                              JOIN node n ON n.ref=rn.node
                                              JOIN resource r ON r.ref=rn.resource
                                             WHERE n.resource_type_field = ?
                                               AND (r.geo_lat IS NULL OR r.geo_lat IS NULL)",
-                                 ['i', $country_ref]);
+        ['i', $country_ref]
+    );
 
-    $rc_array=array_column($resource_countries,"name","resource");
+    $rc_array = array_column($resource_countries, "name", "resource");
 
     # Sort the resource countries into country (value) sequence and then apply the latlong coordinates on change
     asort($rc_array);
     $last_country = "";
     $refs = array();
     foreach ($rc_array as $rckey => $rcvalue) {
-        if($rcvalue != $last_country) {
-            if($last_country != "") {
-                $coord_latlong = fetch_country_coords($last_country,$codes,$coords);
+        if ($rcvalue != $last_country) {
+            if ($last_country != "") {
+                $coord_latlong = fetch_country_coords($last_country, $codes, $coords);
 
-                echo escape(" - Country=" . $last_country . "; Refs=" . join(",",$refs)) . $output_newline;
+                echo escape(" - Country=" . $last_country . "; Refs=" . join(",", $refs)) . $output_newline;
 
-                update_country_coords($refs,$coord_latlong);
+                update_country_coords($refs, $coord_latlong);
             }
             $last_country = $rcvalue;
             unset($refs);
         }
         $refs[] = $rckey;
     }
-    if($last_country != "") {
-        $coord_latlong = fetch_country_coords($last_country,$codes,$coords);
+    if ($last_country != "") {
+        $coord_latlong = fetch_country_coords($last_country, $codes, $coords);
 
-        echo escape(" - Country=" . $last_country . "; Refs=" . join(",",$refs)) . $output_newline;
+        echo escape(" - Country=" . $last_country . "; Refs=" . join(",", $refs)) . $output_newline;
 
-        update_country_coords($refs,$coord_latlong);
+        update_country_coords($refs, $coord_latlong);
     }
 }
 
-function update_country_coords($refs,$latlong)
+function update_country_coords($refs, $latlong)
 {
-    if (count($latlong)== 2) {
+    if (count($latlong) == 2) {
         $chunks = array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
         foreach ($chunks as $chunk) {
             ps_query(
-                "UPDATE resource SET geo_lat= ?, geo_long= ? WHERE ref IN (". ps_param_insert(count($chunk)) .")",
+                "UPDATE resource SET geo_lat= ?, geo_long= ? WHERE ref IN (" . ps_param_insert(count($chunk)) . ")",
                 array_merge(['d', $latlong[0], 'd', $latlong[1]], ps_param_fill($chunk, 'i'))
-                );
-            }
+            );
         }
+    }
 }
 
-function fetch_country_coords($country_name,$codes,$coords)
+function fetch_country_coords($country_name, $codes, $coords)
 {
     # Resolve the country code for the given country name
     $latlong = array();
-    $found =false;
+    $found = false;
     reset($codes);
     foreach ($codes as $code) {
-        $s = explode(",",$code);
+        $s = explode(",", $code);
         if (
             count($s) == 2
-            && ((strtoupper($s[0]) == $country_name) || (strpos($country_name,"~EN:" . strtoupper($s[0])) !== false))
+            && ((strtoupper($s[0]) == $country_name) || (strpos($country_name, "~EN:" . strtoupper($s[0])) !== false))
         ) {
-            $found=true;
-            $code=$s[1];
+            $found = true;
+            $code = $s[1];
             break;
-            }
+        }
     }
     if ($found) {
         # Resolve the coordinates for the country code
         reset($coords);
         foreach ($coords as $coord) {
             # Each coord is country code, latitude, longitude
-            $s = explode(",",$coord);
+            $s = explode(",", $coord);
             if ($s[0] == trim($code)) {
                 $latlong[0] = $s[1];
                 $latlong[1] = $s[2];
@@ -110,7 +113,7 @@ function fetch_country_coords($country_name,$codes,$coords)
 
 function build_coords()
 {
-    return explode("\n","AD,42.5000,1.5000
+    return explode("\n", "AD,42.5000,1.5000
     AE,24.0000,54.0000
     AF,33.0000,65.0000
     AG,17.0500,-61.8000
@@ -355,7 +358,7 @@ function build_coords()
 
 function build_codes()
 {
-    return explode("\n","
+    return explode("\n", "
     AFGHANISTAN,AF
     ALAND ISLANDS,AX
     ALBANIA,AL
@@ -639,4 +642,4 @@ function build_codes()
     YEMEN,YE
     ZAMBIA,ZM
     ZIMBABWE,ZW");  // $codes
-    }
+}

@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -13,19 +14,17 @@ $lvl_1 = get_featured_collection_categories(0, array("access_control" => false))
 $lvl_2 = get_featured_collection_categories($fc_cat_1, array("access_control" => false));
 $fc_tree = array_merge($lvl_1, $lvl_2);
 $fc_tree = array_column($fc_tree, "ref");
-if(!empty(array_diff(array($fc_cat_1, $fc_cat_1_1), $fc_tree)))
-    {
+if (!empty(array_diff(array($fc_cat_1, $fc_cat_1_1), $fc_tree))) {
     echo "Create Featured Collection Categories - ";
     return false;
-    }
+}
 
 $public_col = create_collection($userref, "Test 1400 - Public collection", 0, 0, 0, true);
 $find_public_col = search_public_collections("Test 1400", "name", "ASC", true);
 $found_public_col = array_column($find_public_col, "ref");
-if(empty($found_public_col))
-    {
+if (empty($found_public_col)) {
     echo "Create Public Collection - ";
     return false;
-    }
+}
 
 return true;

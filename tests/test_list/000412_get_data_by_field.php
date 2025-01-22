@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 // --- Set up
@@ -28,12 +29,11 @@ add_resource_nodes($resource_b, [$dd_opt_b, $ct_opt_a, $ct_opt_a_a1, $ct_opt_a_a
 $resource_c = create_resource(1, 0);
 add_resource_nodes($resource_c, [$dd_opt_b, $ct_opt_b]);
 
-$t412_get_node = function(int $ref)
-    {
+$t412_get_node = function (int $ref) {
     $node = [];
     get_node($ref, $node);
     return $node;
-    };
+};
 // --- End of Set up
 
 
@@ -64,12 +64,16 @@ $use_cases = [
         'rtf' => $rtf_cat_tree,
         'expected' => implode(
             ', ',
-            get_node_strings([
+            get_node_strings(
+                [
                 $t412_get_node($ct_opt_b),
                 $t412_get_node($ct_opt_a),
                 $t412_get_node($ct_opt_a_a1),
                 $t412_get_node($ct_opt_a_a1_a11),
-            ], false)),
+                ],
+                false
+            )
+        ),
 
     ],
     [
@@ -106,27 +110,38 @@ $use_cases = [
     ],
 ];
 
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     $result = get_data_by_field($use_case['resource'], $use_case['rtf'], $use_case['flatten'] ?? true);
 
-    if($result instanceof Generator)
-        {
+    if ($result instanceof Generator) {
         $result = iterator_to_array($result);
-        }
+    }
 
-    if($use_case['expected'] !== $result)
-        {
+    if ($use_case['expected'] !== $result) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 // Tear down
 unset(
-    $rtf_text, $rtf_dropdown, $rtf_cat_tree, $dd_opt_a, $dd_opt_b, $ct_opt_a, $ct_opt_b, $ct_opt_a_a1, $ct_opt_a_a2, $ct_opt_a_a1_a11,
-    $resource_a, $resource_b, $resource_c,
-    $update_errors, $t412_get_node, $use_cases, $result
+    $rtf_text,
+    $rtf_dropdown,
+    $rtf_cat_tree,
+    $dd_opt_a,
+    $dd_opt_b,
+    $ct_opt_a,
+    $ct_opt_b,
+    $ct_opt_a_a1,
+    $ct_opt_a_a2,
+    $ct_opt_a_a1_a11,
+    $resource_a,
+    $resource_b,
+    $resource_c,
+    $update_errors,
+    $t412_get_node,
+    $use_cases,
+    $result
 );
 
 return true;

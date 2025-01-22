@@ -1,75 +1,65 @@
 <?php
 $pagename = "home";
 include "../../include/boot.php";
-
 include "../../include/authenticate.php";
 include "../../include/dash_functions.php";
 
 #If can't manage own dash return to user home.
-if(
+if (
     !hook("replace_dash_admin_permission_relocate")
     && !($home_dash && checkPermission_dashmanage())
-    ) {
-        {header("location: ".$baseurl_short."pages/user/user_home.php");exit;}
-    }
-if(getval("quicksave",false) && enforcePostRequest(false))
-    {
-    $tile = getval("tile","");
+) {
+    header("location: " . $baseurl_short . "pages/user/user_home.php");
+    exit;
+}
+
+if (getval("quicksave", false) && enforcePostRequest(false)) {
+    $tile = getval("tile", "");
     #If a valid tile value supplied
-    if(!empty($tile) && is_numeric($tile))
-        {
+    if (!empty($tile) && is_numeric($tile)) {
         #Tile available to this user?
-        $available = get_user_available_tiles($userref,$tile);
-        if(!empty($available))
-            {
+        $available = get_user_available_tiles($userref, $tile);
+        if (!empty($available)) {
             $tile = $available[0]["tile"];
             $usertile = $available[0]["usertile"];
-            if(get_user_tile($usertile,$userref))
-                {
+            if (get_user_tile($usertile, $userref)) {
                 #Delete if the user already has the tile
-                delete_user_dash_tile($usertile,$userref);
+                delete_user_dash_tile($usertile, $userref);
                 $dtiles_available = get_user_available_tiles($userref);
                 exit("negativeglow");
-                }
-            else
-                {
+            } else {
                 #Add to the front of the pile if the user already has the tile
-                add_user_dash_tile($userref,$tile,5);
+                add_user_dash_tile($userref, $tile, 5);
                 $dtiles_available = get_user_available_tiles($userref);
                 exit("positiveglow");
-                }
             }
         }
+    }
     exit("Save Failed");
-    }
+}
 
-if(getval("submit",false) && enforcePostRequest(false))
-    {
-    $tiles = getval("tiles","");
-    if(empty($tiles))
-        {
+if (getval("submit", false) && enforcePostRequest(false)) {
+    $tiles = getval("tiles", "");
+    if (empty($tiles)) {
         empty_user_dash($userref);
-        }
-    else
-        {
+    } else {
         #Start Fresh
-        empty_user_dash($userref,false);
+        empty_user_dash($userref, false);
         $order_by = 10;
-        foreach($tiles as $tile)
-            {
-            add_user_dash_tile($userref,$tile,$order_by);
-            $order_by+=10;
-            }
+        foreach ($tiles as $tile) {
+            add_user_dash_tile($userref, $tile, $order_by);
+            $order_by += 10;
         }
     }
-
+}
 
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
     <h1><?php echo escape($lang["manage_dash_tiles"]);?></h1>
     <p>
-        <?php echo escape($lang["manageowndashinto"]);render_help_link('user/create-dash-tile');?>
+        <?php echo escape($lang["manageowndashinto"]);
+        render_help_link('user/create-dash-tile');?>
     </p>
     <form class="Listview">
     <input type="hidden" name="submit" value="true" />
@@ -146,13 +136,12 @@ include "../../include/header.php";
     <div>
         <?php
         # Create New Tile (Has dtu or dta (hdta) permissions)
-        if($home_dash && checkPermission_dashcreate())
-            { ?>
+        if ($home_dash && checkPermission_dashcreate()) { ?>
             <p>
-                <a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&modifylink=true&freetext=Helpful%20tips%20here&nostyleoptions=true&all_users=0&link=https://resourcespace.com/knowledge-base/&title=Knowledge%20Base";?>"><?php echo LINK_CARET ?><?php echo escape($lang["createdashtilefreetext"]); ?></a>
+                <a href="<?php echo $baseurl . "/pages/dash_tile.php?create=true&tltype=ftxt&modifylink=true&freetext=Helpful%20tips%20here&nostyleoptions=true&all_users=0&link=https://resourcespace.com/knowledge-base/&title=Knowledge%20Base";?>"><?php echo LINK_CARET ?><?php echo escape($lang["createdashtilefreetext"]); ?></a>
             </p>
             <?php
-            } 
+        }
         hook('after_dash_admin_create_new_tile');
         ?>
     </div>

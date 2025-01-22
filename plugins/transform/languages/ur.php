@@ -76,3 +76,4 @@ $lang["use_system_icc_profile_config"]='آئی سی سی پروفائل پروس
 $lang["transform_update_preview"]='پیش نظارہ اپ ڈیٹ کریں';
 $lang["transform_preset_sizes"]='پہلے سے طے شدہ ہدف سائز میں سے انتخاب کریں';
 $lang["error_crop_invalid"]='براہ کرم تصویر کے ایک حصے کا انتخاب کریں';
+$lang["transform-recrop"]='تصویر کو دوبارہ تراشیں';

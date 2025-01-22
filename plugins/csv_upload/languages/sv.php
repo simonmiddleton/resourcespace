@@ -67,4 +67,4 @@ $lang["csv_upload_force_offline"]='Denna stora CSV-fil kan ta lång tid att bear
 $lang["csv_upload_recommend_offline"]='Denna stora CSV-fil kan ta mycket lång tid att bearbeta. Det rekommenderas att offline-jobb aktiveras om du behöver bearbeta stora CSV-filer';
 $lang["csv_upload_createdfromcsvupload"]='Skapad från CSV Uppladdningsplugin';
 $lang["plugin-csv_upload-title"]='CSV-uppladdning';
-$lang["plugin-csv_upload-desc"]='[Avancerad] Ladda upp metadata med en CSV-fil.';
+$lang["plugin-csv_upload-desc"]=' Ladda upp metadata med en CSV-fil.';

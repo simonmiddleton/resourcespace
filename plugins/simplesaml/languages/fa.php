@@ -84,3 +84,4 @@ $lang["simplesaml_idp_certs"]='گواهینامه‌های SAML IdP';
 $lang["simplesaml_idp_cert_expiring"]='گواهی IdP %idpname در %expiretime منقضی می‌شود';
 $lang["simplesaml_idp_cert_expired"]='گواهی IdP %idpname در %expiretime منقضی شد';
 $lang["simplesaml_idp_cert_expires"]='گواهی IdP %idpname در %expiretime منقضی می‌شود';
+$lang["simplesaml_check_idp_cert_expiry"]='بررسی انقضای گواهی IdP؟';

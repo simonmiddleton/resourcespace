@@ -1,8 +1,9 @@
 <?php
+
 command_line_only();
 
 $resource_portrait = create_resource(1, 0);
-ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 2000)",["i",$resource_portrait]);
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 2000)", ["i",$resource_portrait]);
 
 // Set default join and filter
 $sql_join = new PreparedStatementQuery();
@@ -24,16 +25,15 @@ $search = search_special(
     false,
     false
 );
-if(!(is_array($search) && count($search) > 0 && in_array($resource_portrait, array_column($search, 'ref'))))
-    {
+if (!(is_array($search) && count($search) > 0 && in_array($resource_portrait, array_column($search, 'ref')))) {
     echo "!propertiesorientation:portrait - ";
     return false;
-    }
+}
 
 $resource_landscape = create_resource(1, 0);
-ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 3000, 1500)",["i",$resource_landscape]);
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 3000, 1500)", ["i",$resource_landscape]);
 
-// Reset 
+// Reset
 $sql_join = new PreparedStatementQuery();
 $sql_filter = new PreparedStatementQuery();
 $sql_filter->sql = "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0";
@@ -54,15 +54,14 @@ $search = search_special(
     false,
     false
 );
-if(!(is_array($search) && count($search) > 0 && in_array($resource_landscape, array_column($search, 'ref'))))
-    {
+if (!(is_array($search) && count($search) > 0 && in_array($resource_landscape, array_column($search, 'ref')))) {
     echo "!propertiesorientation:landscape - ";
     return false;
-    }
+}
 
 $resource_square = create_resource(1, 0);
-ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 1000)",["i",$resource_square]);
-// Reset 
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 1000)", ["i",$resource_square]);
+// Reset
 $sql_join = new PreparedStatementQuery();
 $sql_filter = new PreparedStatementQuery();
 $sql_filter->sql = "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0";
@@ -82,16 +81,15 @@ $search = search_special(
     false,
     false
 );
-if(!(is_array($search) && count($search) > 0 && in_array($resource_square, array_column($search, 'ref'))))
-    {
+if (!(is_array($search) && count($search) > 0 && in_array($resource_square, array_column($search, 'ref')))) {
     echo "!propertiesorientation:square - ";
     return false;
-    }
+}
 
 
 $resource_height_null = create_resource(1, 0);
-ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (? , 1000, NULL)",array("i",$resource_height_null));
-// Reset 
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (? , 1000, NULL)", array("i",$resource_height_null));
+// Reset
 $sql_join = new PreparedStatementQuery();
 $sql_filter = new PreparedStatementQuery();
 $sql_filter->sql = "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0";
@@ -111,11 +109,10 @@ $search = search_special(
     false,
     false
 );
-if(!(is_array($search) && count($search) > 0 && in_array($resource_height_null, array_column($search, 'ref'))))
-    {
+if (!(is_array($search) && count($search) > 0 && in_array($resource_height_null, array_column($search, 'ref')))) {
     echo "Invalid dimensions - ";
     return false;
-    }
+}
 
 // Tear down
 delete_resource($resource_portrait);

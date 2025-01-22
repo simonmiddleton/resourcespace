@@ -1076,8 +1076,7 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
             add_node_keyword($node, $unstemmed, $position, $normalize,false);
             }
         }
-        
-        
+
     // $keyword should not be indexed if it can be found in the $noadd array, no need to continue
     if(in_array($unstemmed, $noadd))
         {
@@ -1180,16 +1179,22 @@ function check_node_indexed(array $node, $partial_index = false)
 */
 function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_date=false,bool $is_html=false)
     {
-    global $node_keyword_index_chars;
+    global $node_keyword_index_chars,$index_whole_field;
     if('' == trim($node['ref']) && '' == trim($node['name']) && '' == trim($node['resource_type_field']))
         {
         return false;
         }
 
+    $field_data = get_field($node['resource_type_field']);
+    if (isset($field_data['complete_index']) && $field_data['complete_index']) {
+        add_node_keyword($node['ref'], $node['name'], 0);
+        return true;
+    }
+
     // Client code does not know whether field is partially indexed or not
     if(is_null($partial_index))
         {
-        $field_data = get_field($node['resource_type_field']);
+        
 
         if(isset($field_data['partial_index']) && '' != trim($field_data['partial_index']))
             {

@@ -4,32 +4,32 @@ command_line_only();
 
 
 // create 3 new resources
-$resourcea=create_resource(1,0);
-$resourceb=create_resource(1,0);
-$resourcec=create_resource(1,0);
+$resourcea = create_resource(1, 0);
+$resourceb = create_resource(1, 0);
+$resourcec = create_resource(1, 0);
 debug("Resource A: " . $resourcea);
-debug("Resource B: " . $resourceb );
+debug("Resource B: " . $resourceb);
 debug("Resource C: " . $resourcec);
 
 // Add new nodes to field
-$joeynode = set_node(null, 73, "Joey",'',1000);
-$johnnynode = set_node(null, 73, "Johnny",'',1000);
-$deedeenode = set_node(null, 73, "Dee Dee",'',1000);
+$joeynode = set_node(null, 73, "Joey", '', 1000);
+$johnnynode = set_node(null, 73, "Johnny", '', 1000);
+$deedeenode = set_node(null, 73, "Dee Dee", '', 1000);
 debug("node1: " . $joeynode . "\n");
 debug("node2: " . $johnnynode . "\n");
 debug("node3: " . $deedeenode . "\n");
 
 // Add two nodes to resource a
-add_resource_nodes($resourcea,array($johnnynode, $deedeenode));
+add_resource_nodes($resourcea, array($johnnynode, $deedeenode));
 
 // Add Joey node to resource b
-add_resource_nodes($resourceb,array($joeynode));
+add_resource_nodes($resourceb, array($joeynode));
 
 // Add Johnny node to resource c
-add_resource_nodes($resourcec,array($johnnynode));
+add_resource_nodes($resourcec, array($johnnynode));
 
 // straight search of ref
-debug("searching for resource by ref " . $resourcea );
+debug("searching for resource by ref " . $resourcea);
 $results = do_search($resourcea);
 
 if (!isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
@@ -72,23 +72,23 @@ if (count($results) != $total - 1) {
 }
 debug("Successfully searched for resources excluding node");
 
-// search for 'Johnny' or 'Dee Dee', should get 2 results 
+// search for 'Johnny' or 'Dee Dee', should get 2 results
 $results = do_search('@@' . $johnnynode . '@@' . $deedeenode);
-if (count($results) !=2 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcec || $results[1]['ref'] != $resourcea) {
+if (count($results) != 2 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcec || $results[1]['ref'] != $resourcea) {
     return false;
 }
 debug("Successfully searched for resources with either of two nodes");
 
 // search for 'Johnny' and NOT 'Dee Dee' (should be resource c)
 $results = do_search('@@' . $johnnynode . ' @@!' . $deedeenode);
-if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcec) {
+if (count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcec) {
     return false;
 }
 debug("Successfully searched for resources with one node and NOT another node");
 
 // search for 'Dee Dee' (should be resource a)
 $results = do_search('"Dee Dee"');
-if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
+if (count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
     return false;
 }
 debug("Successfully searched for resources with quoted node string");
@@ -103,29 +103,33 @@ if (ps_value("SELECT count(*) value FROM node_keyword WHERE node=?", array("i",$
 
 // Check that searches work with $resource_field_verbatim_keyword_regex
 global $resource_field_verbatim_keyword_regex;
-$resource_field_verbatim_keyword_regex_cache = $resource_field_verbatim_keyword_regex??null;
+$resource_field_verbatim_keyword_regex_cache = $resource_field_verbatim_keyword_regex ?? null;
 $resource_field_verbatim_keyword_regex = [51 => "/.+/"];
 
 // search for 'Johnny' AND 'Dee Dee' (should be just resource a)
-$results=do_search('@@' . $johnnynode . ' @@' . $deedeenode);
-if(!is_array($results) || count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) 
-    {
+$results = do_search('@@' . $johnnynode . ' @@' . $deedeenode);
+if (!is_array($results) || count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
     echo "Verbatim keyword regex ";
     return false;
-    }
+}
 debug("Successfully searched for resources with two nodes");
 
-if($resource_field_verbatim_keyword_regex_cache == null){unset($resource_field_verbatim_keyword_regex);}
-else {$resource_field_verbatim_keyword_regex = $resource_field_verbatim_keyword_regex_cache;}
+if ($resource_field_verbatim_keyword_regex_cache == null) {
+    unset($resource_field_verbatim_keyword_regex);
+} else {
+    $resource_field_verbatim_keyword_regex = $resource_field_verbatim_keyword_regex_cache;
+}
 
 // Check that using update_field to add nodes to resource returns false
-$errors=array();
-$fixedfields=ps_array("select ref value from resource_type_field where type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")",array()); // No need to use PS params for constants
-foreach($fixedfields as $fixedfield)
-    {
-    update_field($resourcea,$fixedfield,'DUMMY STRING', $errors);
-    if(!is_array($errors)){echo "Using update_field should return false if updating a node field"; return false;}
+$errors = array();
+$fixedfields = ps_array("select ref value from resource_type_field where type in (" . implode(",", $FIXED_LIST_FIELD_TYPES) . ")", array()); // No need to use PS params for constants
+foreach ($fixedfields as $fixedfield) {
+    update_field($resourcea, $fixedfield, 'DUMMY STRING', $errors);
+    if (!is_array($errors)) {
+        echo "Using update_field should return false if updating a node field";
+        return false;
     }
+}
 
 
 return true;

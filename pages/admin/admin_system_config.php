@@ -590,6 +590,22 @@ if($ajax && getval('action', '') === 'create_debug_log_override' && enforcePostR
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
 
+// In order to stop user preferences affecting values displayed on this page,
+// loop through every field about to be created for the admin page
+foreach ($page_def as $page_item) {
+    if ($page_item[0] !== 'html'
+            && isset($system_wide_config_options[$page_item[1]]) 
+            && $GLOBALS[$page_item[1]] !== $system_wide_config_options[$page_item[1]]) {
+        // Set the global variable back to the system value if it is different
+        $GLOBALS[$page_item[1]] = $system_wide_config_options[$page_item[1]];
+
+    }
+}
+
+// Correct global watermark path variable to point to right file
+// so image upload function will work
+set_watermark_image();
+
 # $lang is not a config option! 
 unset($system_wide_config_options['lang']);
 foreach ($system_wide_config_options as $key => $value) {

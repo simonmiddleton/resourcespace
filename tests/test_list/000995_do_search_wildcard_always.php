@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 // Check $wildcard_always_applied search e.g. "cat" will always match "catch", "catalogue", "category"
@@ -27,7 +28,7 @@ if (is_array($results)) {
 $wildcard_always_applied = true;
 // Do search for 'trdpqts' (should return resource a as really searching for 'trdpqts*')
 $results = do_search('trdpqts');
-if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
+if (count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
     echo "ERROR - SUBTEST B\n";
     return false;
 }
@@ -47,7 +48,7 @@ if (is_array($results)) {
 $wildcard_always_applied = true;
 // Do search again for 'cvwqnth' - should now return resource b)
 $results = do_search('cvwqnth');
-if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourceb) {
+if (count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourceb) {
     echo "ERROR - SUBTEST D\n";
     return false;
 }

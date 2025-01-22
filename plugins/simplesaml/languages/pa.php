@@ -84,3 +84,4 @@ $lang["simplesaml_idp_certs"]='SAML IdP ਸਰਟੀਫਿਕੇਟਸ';
 $lang["simplesaml_idp_cert_expiring"]='IdP %idpname ਸਰਟੀਫਿਕੇਟ %expiretime \'ਤੇ ਸਮਾਪਤ ਹੋ ਰਿਹਾ ਹੈ';
 $lang["simplesaml_idp_cert_expired"]='IdP %idpname ਸਰਟੀਫਿਕੇਟ %expiretime \'ਤੇ ਸਮਾਪਤ ਹੋ ਗਿਆ';
 $lang["simplesaml_idp_cert_expires"]='IdP %idpname ਸਰਟੀਫਿਕੇਟ %expiretime \'ਤੇ ਸਮਾਪਤ ਹੁੰਦਾ ਹੈ';
+$lang["simplesaml_check_idp_cert_expiry"]='IdP ਸਰਟੀਫਿਕੇਟ ਦੀ ਮਿਆਦ ਖਤਮ ਹੋਣ ਦੀ ਜਾਂਚ ਕਰੋ?';

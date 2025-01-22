@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -14,26 +15,23 @@ $all = [$A, $B, $C];
 
 // Check a Super Admin sees their collections when searching for one
 $user_cols = array_column(get_user_collections($userref, 'test_1407', 'created', 'ASC'), 'ref');
-if(empty(array_intersect([$A, $B], $user_cols)))
-    {
+if (empty(array_intersect([$A, $B], $user_cols))) {
     echo 'Get user collections as Super Admin (default user) - ';
     return false;
-    }
+}
 
 
 // Check from a general user perspective. It should behave the same.
 $user_cols = array_column(get_user_collections($test_1407_user, 'test_1407', 'created', 'ASC'), 'ref');
-if(!in_array($C, $user_cols))
-    {
+if (!in_array($C, $user_cols)) {
     echo 'Get general user collections - ';
     return false;
-    }
+}
 // Users should only be seeing their own collections
-elseif($all === array_intersect($all, $user_cols))
-    {
+elseif ($all === array_intersect($all, $user_cols)) {
     echo "Get only this users' collections - ";
     return false;
-    }
+}
 
 
 

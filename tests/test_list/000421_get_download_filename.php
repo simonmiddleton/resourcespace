@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 command_line_only();
 
@@ -6,15 +6,14 @@ command_line_only();
 // --- Set up
 $original_state = $GLOBALS;
 $orig_plugins = $GLOBALS['plugins'];
-$setup_global_env = function() use ($original_state)
-    {
+$setup_global_env = function () use ($original_state) {
     $GLOBALS['download_filename_format'] = 'RS%resource';
     $GLOBALS['userpermissions'] = $original_state['userpermissions'];
 
     // Fake (re)loading plugins on the fly so we can add one when a use case requires it
     unset($GLOBALS['hook_cache']);
     $GLOBALS['plugins'] = [];
-    };
+};
 
 $rtf_text = create_resource_type_field("Test #421 text", 0, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "test_421_text", false);
 $rtf_text2 = create_resource_type_field("Test #421 text 2", 0, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "test_421_text2", false);
@@ -27,21 +26,19 @@ $file_jpg = create_random_image([
     'width' => 300,
     'height' => 150,
 ]);
-if (isset($file_jpg['error']))
-    {
+if (isset($file_jpg['error'])) {
     echo "{$file_jpg['error']} - ";
     return false;
-    }
+}
 
 $file_mp4 = create_random_video([
     'text' => "Resource #$resource_mp4_file",
 ]);
-if (isset($file_mp4['error']))
-    {
+if (isset($file_mp4['error'])) {
     // This is considered an environment issue, not a code one!
     echo "INFO: {$file_mp4['error']} - ";
     return true;
-    }
+}
 
 // Upload files (don't create previews, out of scope)
 $enable_thumbnail_creation_on_upload = false;
@@ -59,9 +56,9 @@ $resource_jpg_file_alt_ref = add_alternative_file(
 );
 
 function HookTestframeworkAllDownloadfilenamealt()
-    {
+{
     return 'Hook download filename.jpg';
-    }
+}
 // --- End of Set up
 
 
@@ -135,64 +132,57 @@ $use_cases = [
     ],
     [
         'name' => 'Format with %fieldXX placeholder',
-        'setup' => function() use ($resource_mp4_file, $rtf_text)
-            {
+        'setup' => function () use ($resource_mp4_file, $rtf_text) {
             update_field($resource_mp4_file, $rtf_text, 'Lorem ipsum dolor sit amet.');
             $GLOBALS['download_filename_format'] = "RS%resource-%field{$rtf_text}.%extension";
-            },
+        },
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
         'expected' => "RS{$resource_mp4_file}-Lorem ipsum dolor sit amet..mp4",
     ],
     [
         'name' => 'Format with %fieldXX placeholder (i18n value)',
-        'setup' => function() use ($resource_mp4_file, $rtf_text)
-            {
+        'setup' => function () use ($resource_mp4_file, $rtf_text) {
             update_field($resource_mp4_file, $rtf_text, '~en:Bird~fr:Oiseau');
             $GLOBALS['download_filename_format'] = "RS%resource-%field{$rtf_text}.%extension";
-            },
+        },
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
         'expected' => "RS{$resource_mp4_file}-Bird.mp4",
     ],
     [
         'name' => 'Format with multiple %fieldXX placeholders',
-        'setup' => function() use ($resource_mp4_file, $rtf_text, $rtf_text2)
-            {
+        'setup' => function () use ($resource_mp4_file, $rtf_text, $rtf_text2) {
             update_field($resource_mp4_file, $rtf_text, 'valueFromText1');
             update_field($resource_mp4_file, $rtf_text2, 'valueFromText2');
             $GLOBALS['download_filename_format'] = "RS%resource-%field{$rtf_text}-%field{$rtf_text2}.%extension";
-            },
+        },
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
         'expected' => "RS{$resource_mp4_file}-valueFromText1-valueFromText2.mp4",
     ],
     [
         'name' => 'Truncate the final filename (if > 255)',
-        'setup' => function() use ($resource_mp4_file, $rtf_text)
-            {
+        'setup' => function () use ($resource_mp4_file, $rtf_text) {
             update_field($resource_mp4_file, $rtf_text, str_repeat('X', 256));
             $GLOBALS['download_filename_format'] = "%field{$rtf_text}";
-            },
+        },
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
         'expected' => str_repeat('X', 251) . ".mp4",
     ],
     [
         'name' => 'Enforce access control for %fieldXX placeholder',
-        'setup' => function() use ($resource_mp4_file, $rtf_text)
-            {
+        'setup' => function () use ($resource_mp4_file, $rtf_text) {
             update_field($resource_mp4_file, $rtf_text, 'valueFromText2');
             $GLOBALS['userpermissions'][] = "f-{$rtf_text}";
             $GLOBALS['download_filename_format'] = "RS%resource-%field{$rtf_text}.%extension";
-            },
+        },
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
         'expected' => "RS{$resource_mp4_file}-.mp4",
     ],
 ];
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     $setup_global_env();
-    if(isset($use_case['setup']))
-        {
+    if (isset($use_case['setup'])) {
         $use_case['setup']();
-        }
+    }
 
     $result = get_download_filename(
         $use_case['input']['ref'],
@@ -200,13 +190,12 @@ foreach($use_cases as $use_case)
         $use_case['input']['alternative'],
         $use_case['input']['ext']
     );
-    if($use_case['expected'] !== $result)
-        {
+    if ($use_case['expected'] !== $result) {
         echo "Use case: {$use_case['name']} - ";
-        printf(PHP_EOL.'$result: %s = %s' . PHP_EOL, gettype($result), $result);
+        printf(PHP_EOL . '$result: %s = %s' . PHP_EOL, gettype($result), $result);
         return false;
-        }
     }
+}
 
 
 

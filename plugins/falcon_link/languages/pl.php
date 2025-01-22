@@ -42,4 +42,4 @@ $lang["falcon_link_log_publish"]='Udostępniony zasób za pośrednictwem Falcona
 $lang["falcon_link_log_archive"]='Zarchiwizowany zasób za pośrednictwem Falcona';
 $lang["falcon_link_error_falcon_check_tags"]='Proszę sprawdzić, czy opis i tagi nie są puste';
 $lang["plugin-falcon_link-title"]='Link do Sokoła';
-$lang["plugin-falcon_link-desc"]='[Zaawansowane] Publikuj zasoby na Falcon.io';
+$lang["plugin-falcon_link-desc"]=' Publikuj zasoby na Falcon.io';

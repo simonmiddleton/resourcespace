@@ -15,4 +15,4 @@ $lang["wordpress_sso_retry"]='Klikk her for å prøve å logge inn igjen';
 $lang["origin_wordpress_sso"]='Wordpress SSO-tillegg';
 $lang["wordpress_sso_configuration"]='WordPress SSO - Oppsett';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
-$lang["plugin-wordpress_sso-desc"]='[Avansert] Tillater Single Sign On med Wordpress-installasjon';
+$lang["plugin-wordpress_sso-desc"]=' Tillater Single Sign On med Wordpress-installasjon';

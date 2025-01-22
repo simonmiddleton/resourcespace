@@ -1,14 +1,12 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
+
+if ('cli' != PHP_SAPI) {
     http_response_code(401);
     exit('Access denied - Command line only!');
-    }
+}
 
 $webroot = dirname(__DIR__, 2);
 include_once "{$webroot}/include/boot.php";
-
-
 
 // Script options @see https://www.php.net/manual/en/function.getopt.php
 $cli_short_options = 'cdhn';
@@ -59,55 +57,49 @@ $options = getopt($cli_short_options, $cli_long_options);
 $html_decode = false;
 $copy_all = false;
 $preserve_newlines = false;
-foreach($options as $option_name => $option_value)
-    {
-    if(in_array($option_name, ['h', 'help']))
-        {
+foreach ($options as $option_name => $option_value) {
+    if (in_array($option_name, ['h', 'help'])) {
         fwrite(STDOUT, $help_text . PHP_EOL);
         exit(0);
-        }
-    
-    if(in_array($option_name, ['d','html-entity-decode']))
-        {
+    }
+
+    if (in_array($option_name, ['d','html-entity-decode'])) {
         fwrite(STDOUT, "Set option: decode HTML entities" . PHP_EOL);
         $html_decode = true;
         continue;
-        }
-    
+    }
+
     // Set options which accept only one value
-    if(in_array($option_name, ['encoding']) && is_string($option_value))
-        {
+    if (in_array($option_name, ['encoding']) && is_string($option_value)) {
         $$option_name = $option_value;
         fwrite(STDOUT, "Set option: {$option_name} - '{$option_value}'" . PHP_EOL);
         continue;
-        }
+    }
 
-    if(in_array($option_name, ['c','copy-all']))
-        {
+    if (in_array($option_name, ['c','copy-all'])) {
         fwrite(STDOUT, "Set option: copy all data" . PHP_EOL);
         $copy_all = true;
         continue;
-        }
-    
-    if(in_array($option_name, ['n','newlines']))
-        {
+    }
+
+    if (in_array($option_name, ['n','newlines'])) {
         fwrite(STDOUT, "Set option: preserve newlines (convert <br> to newlines)" . PHP_EOL);
         $preserve_newlines = true;
         continue;
-        }
+    }
 
-    if(is_numeric($option_value) && (int) $option_value > 0)
-        {
+    if (is_numeric($option_value) && (int) $option_value > 0) {
         $option_name = str_replace('-', '_', $option_name);
         $$option_name = $option_value;
         fwrite(STDOUT, "Set option: $option_name" . PHP_EOL);
         continue;
-        }
+    }
 
 
     fwrite(
         STDERR,
-        sprintf('ERROR: Option - %s - Invalid value provided, received type "%s"%s',
+        sprintf(
+            'ERROR: Option - %s - Invalid value provided, received type "%s"%s',
             $option_name,
             gettype($option_value),
             PHP_EOL
@@ -115,37 +107,31 @@ foreach($options as $option_name => $option_value)
     );
     fwrite(STDOUT, $help_text . PHP_EOL);
     exit(1);
-    }
-
-
+}
 
 // Make sure we have everything we need before moving forward
-if(!isset($html_field, $plaintext_field))
-    {
+if (!isset($html_field, $plaintext_field)) {
     fwrite(STDERR, 'ERROR: Missing mandatory options!' . PHP_EOL . PHP_EOL);
     fwrite(STDOUT, $help_text . PHP_EOL);
     exit(1);
-    }
+}
 
 fwrite(STDOUT, "Removing HTML from field #{$html_field} and saving result in field #{$plaintext_field}" . PHP_EOL);
 
 $html_rtf = get_resource_type_field($html_field);
-if($html_rtf === false)
-    {
+if ($html_rtf === false) {
     fwrite(STDERR, 'ERROR: Invalid metadata field for html-field option!' . PHP_EOL);
     exit(1);
-    }
+}
 
 $plain_rtf = get_resource_type_field($plaintext_field);
-if($plain_rtf === false || !in_array($plain_rtf["type"],$TEXT_FIELD_TYPES))
-    {
+if ($plain_rtf === false || !in_array($plain_rtf["type"], $TEXT_FIELD_TYPES)) {
     fwrite(STDERR, 'ERROR: Invalid metadata field for plaintext-field option!' . PHP_EOL);
     exit(1);
-    }
+}
 
 // Both fixed list fields and text fields are now using nodes underneath to store their values
-if(in_array($html_rtf['type'], array_merge($FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES)))
-    {
+if (in_array($html_rtf['type'], array_merge($FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES))) {
     $html_rtf_ref = $html_field;
     $q = "  SELECT rn.resource,
                    group_concat(n.`name` SEPARATOR ', ') AS `value`
@@ -154,55 +140,45 @@ if(in_array($html_rtf['type'], array_merge($FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_
              WHERE n.resource_type_field = ?
           GROUP BY rn.resource";
     $html_data = ps_query($q, ['i',$html_rtf_ref]);
-    }
+}
 $results = array_column($html_data ?? [], 'value', 'resource');
 
-foreach($results as $resource_ref => $html_value)
-    {
-    if ($preserve_newlines)
-        {
+foreach ($results as $resource_ref => $html_value) {
+    if ($preserve_newlines) {
         $html_value = str_replace('<br />', '\\n', $html_value);
-        }
+    }
 
     $plaintxt_val = strip_tags($html_value);
 
-    if ($html_decode)
-        {
-        if (isset($encoding))
-            {
-            $plaintxt_val = html_entity_decode($plaintxt_val, ENT_QUOTES, $encoding);    
-            }
-        else
-            {
+    if ($html_decode) {
+        if (isset($encoding)) {
+            $plaintxt_val = html_entity_decode($plaintxt_val, ENT_QUOTES, $encoding);
+        } else {
             $plaintxt_val = html_entity_decode($plaintxt_val, ENT_QUOTES);
-            }
         }
+    }
 
     if (
         !$copy_all
         && $html_value === $plaintxt_val
-        ) {
+    ) {
             continue;
-        }
+    }
 
-    if(trim($plaintxt_val) === '')
-        {
+    if (trim($plaintxt_val) === '') {
         fwrite(STDERR, "WARNING: Removing HTML for resource #{$resource_ref} results with no plain text data." . PHP_EOL);
         continue;
-        }
+    }
 
     $update_err = [];
-    if(update_field($resource_ref, $plaintext_field, $plaintxt_val, $update_err))
-        {
+    if (update_field($resource_ref, $plaintext_field, $plaintxt_val, $update_err)) {
         fwrite(STDOUT, "Updated resource #{$resource_ref}" . PHP_EOL);
-        }
-    else
-        {
+    } else {
         fwrite(
             STDERR,
             "ERROR: Failed to update resource #{$resource_ref} with plain text value. Reason(s): " . implode('; ', $update_err) . PHP_EOL
         );
-        }
     }
+}
 
 fwrite(STDOUT, 'Successfully processed all records.' . PHP_EOL);

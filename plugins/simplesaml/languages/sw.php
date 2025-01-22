@@ -84,3 +84,4 @@ $lang["simplesaml_idp_certs"]='Vyeti vya SAML IdP';
 $lang["simplesaml_idp_cert_expiring"]='Cheti cha IdP %idpname kinamalizika muda wake saa %expiretime';
 $lang["simplesaml_idp_cert_expired"]='Cheti cha IdP %idpname kilimalizika muda wake saa %expiretime';
 $lang["simplesaml_idp_cert_expires"]='Cheti cha IdP %idpname kinamalizika muda wake saa %expiretime';
+$lang["simplesaml_check_idp_cert_expiry"]='Angalia muda wa kuisha wa cheti cha IdP?';

@@ -1,7 +1,11 @@
 <?php
+
 include_once __DIR__ . "/../../include/boot.php";
 
-if (!$file_integrity_checks) {echo "Skipping file integrity checks.\n";return;}
+if (!$file_integrity_checks) {
+    echo "Skipping file integrity checks.\n";
+    return;
+}
 
 function check_valid_cron_time()
 {
@@ -10,12 +14,12 @@ function check_valid_cron_time()
     $curhour = date('H');
     if ($GLOBALS["file_integrity_verify_window"][0] <= $GLOBALS["file_integrity_verify_window"][1]) {
         // Second time is later than first or times are the same (off). Ensure time is not before the first or later than the second
-        if($curhour < $GLOBALS["file_integrity_verify_window"][0] || $curhour >= $GLOBALS["file_integrity_verify_window"][1]) {
+        if ($curhour < $GLOBALS["file_integrity_verify_window"][0] || $curhour >= $GLOBALS["file_integrity_verify_window"][1]) {
             $validtime = false;
         }
     } else {
         // First time is later than second (running through midnight). Ensure time is not before the first and after the second
-        if($curhour < $GLOBALS["file_integrity_verify_window"][0] && $curhour >= $GLOBALS["file_integrity_verify_window"][1]) {
+        if ($curhour < $GLOBALS["file_integrity_verify_window"][0] && $curhour >= $GLOBALS["file_integrity_verify_window"][1]) {
             $validtime = false;
         }
     }
@@ -38,9 +42,9 @@ set_process_lock("file_integrity_check");
 $resources = get_resources_to_validate(1);
 
 $allfailures = [];
-foreach (array_chunk($resources,1000) as $resources_chunk) {
-    $failures = check_resources($resources_chunk,true);
-    $allfailures = array_merge($allfailures,$failures);
+foreach (array_chunk($resources, 1000) as $resources_chunk) {
+    $failures = check_resources($resources_chunk, true);
+    $allfailures = array_merge($allfailures, $failures);
     if (check_valid_cron_time() === false) {
         // Reached end of window, quit
         break;

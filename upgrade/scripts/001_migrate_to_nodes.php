@@ -4,11 +4,10 @@
 
 
 $tables = ps_query("SHOW TABLES");
- if(!in_array("resource_data",array_column($tables,"Tables_in_" . $mysql_db)))
-    {
+if (!in_array("resource_data", array_column($tables, "Tables_in_" . $mysql_db))) {
     // Migration only required if resource_data table exists
     return true;
-    }
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Step 1.  Convert any missing fixed field type options to nodes (where not already deprecated)
@@ -17,33 +16,33 @@ $tables = ps_query("SHOW TABLES");
 // IMPORTANT! - Uncomment this line if you want to force migration of fixed field values
 // ps_query("update resource_type_field set options=replace(options,'!deprecated,','')");
 
-$check_options_column=ps_query('SHOW COLUMNS FROM `resource_type_field` LIKE \'OPTIONS\'');
-if(count($check_options_column)==0) {return true;}
-                                
-$resource_type_fields=ps_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' .
-    ps_param_insert(count($FIXED_LIST_FIELD_TYPES)) .
-    ") AND NOT `options` LIKE '!deprecated%' ORDER BY `ref`",ps_param_fill($FIXED_LIST_FIELD_TYPES,"i"));
+$check_options_column = ps_query('SHOW COLUMNS FROM `resource_type_field` LIKE \'OPTIONS\'');
+if (count($check_options_column) == 0) {
+    return true;
+}
 
-foreach($resource_type_fields as $resource_type_field)
-    {
+$resource_type_fields = ps_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' .
+    ps_param_insert(count($FIXED_LIST_FIELD_TYPES)) .
+    ") AND NOT `options` LIKE '!deprecated%' ORDER BY `ref`", ps_param_fill($FIXED_LIST_FIELD_TYPES, "i"));
+
+foreach ($resource_type_fields as $resource_type_field) {
     echo "Migrating resource_type_field {$resource_type_field['ref']}:{$resource_type_field['name']}" . PHP_EOL;
     ob_flush();
     migrate_resource_type_field_check($resource_type_field);
-    }
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Step 2.  Migrate any missing resource_data fixed fields only when not already existing in resource_node table
 // ---------------------------------------------------------------------------------------------------------------------
 
-foreach($resource_type_fields as $resource_type_field)
-    {
-    $out="Migrating resource_data {$resource_type_field['ref']}:{$resource_type_field['name']}";
-    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$out);
-    $resource_data_entries=ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field=?",array("i",$resource_type_field['ref']));
-    $out.=' (' . count($resource_data_entries) . ' rows found)';
-    echo str_pad($out,100,' ');
+foreach ($resource_type_fields as $resource_type_field) {
+    $out = "Migrating resource_data {$resource_type_field['ref']}:{$resource_type_field['name']}";
+    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, $out);
+    $resource_data_entries = ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field=?", array("i",$resource_type_field['ref']));
+    $out .= ' (' . count($resource_data_entries) . ' rows found)';
+    echo str_pad($out, 100, ' ');
     ob_flush();
-    $sql="INSERT INTO `resource_node`(`resource`,`node`,`hit_count`,`new_hit_count`)
+    $sql = "INSERT INTO `resource_node`(`resource`,`node`,`hit_count`,`new_hit_count`)
       SELECT
         `resource_data`.`resource`,
         `node`.`ref`,
@@ -70,9 +69,8 @@ foreach($resource_type_fields as $resource_type_field)
       GROUP BY
         `resource_data`.`resource`,
         `node`.`ref`";
-    ps_query($sql,array("i",$resource_type_field['ref'],"i",$resource_type_field['ref']));
+    ps_query($sql, array("i",$resource_type_field['ref'],"i",$resource_type_field['ref']));
     echo sql_affected_rows();
     echo " rows inserted." . PHP_EOL;
     ob_flush();
-    }
-
+}

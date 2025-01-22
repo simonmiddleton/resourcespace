@@ -207,7 +207,6 @@ select::-ms-expand
     margin:0;
     text-align:left;
     background-image:none;
-    display: block !important;
     /* z-index and overflow are required for MessageBox to appear */
     z-index: 1 !important;
     overflow: visible;
@@ -229,16 +228,19 @@ select::-ms-expand
     transition: background-image 1s linear;
 }
 #HeaderNav1, #HeaderNav2 {
-    padding: 0;
-    margin: 12px 0 0 0;
-    line-height: 35px;
+    padding: 5px;
+    margin: auto 0;
 }
 #HeaderNav1 {
-    float: right;
-    height:47px;
+    position: absolute;
+    top: 7px;
+    right: 10px;
 }
-#HeaderNav2 {padding-left: 30px;}
-#HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0;}
+#HeaderNav2 {
+    padding-top: 12px;
+    overflow: visible;
+    float: left;
+}
 .HeaderImgLink{
     float: left;
     height: 50px;
@@ -251,6 +253,7 @@ h2#CollectionsPanelHeader {display:none;}
 .HeaderLink a {
     border-radius: 8px;
     padding: 0 8px;
+    margin: 2px;
     font-weight: 500;
 }
 .HeaderLink a.current {
@@ -1873,11 +1876,6 @@ a.Enabled, a:visited.Enabled {
 
 .BreadcrumbsBox.BreadcrumbsBoxSlim {
     margin: 1em 1em 0 0;
-}
-
-/* Colour picker */
-#tile_style_colour {
-    display: none;
 }
 
 .lockedQuestion .fieldset, .lockedQuestion table, .lockedQuestion input, .lockedQuestion select, .lockedQuestion textarea, .lockedQuestion .keywordselected, .lockedQuestion .CategoryBox{

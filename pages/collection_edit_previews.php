@@ -74,6 +74,7 @@ if ($collection !== false) {
                     // No offline preview functionality enabled - to be created synchronously
                     foreach ($resources as $resource) {
                         $ingested = empty($resource['file_path']);
+                        delete_previews($resource);
                         create_previews($resource['ref'],false,$resource["file_extension"],false,false,-1,true,$ingested);
                         $message = $lang["complete"];
                     }

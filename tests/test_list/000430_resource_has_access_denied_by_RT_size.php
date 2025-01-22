@@ -1,12 +1,15 @@
-<?php 
+<?php
+
 command_line_only();
 
 
 // --- Set up
 $original_user_data = $userdata;
 $original_userpermissions = $userpermissions;
-$give_user_permission = function(string $perm) {
-    return function() use ($perm) { $GLOBALS['userpermissions'][] = $perm; };
+$give_user_permission = function (string $perm) {
+    return function () use ($perm) {
+        $GLOBALS['userpermissions'][] = $perm;
+    };
 };
 // --- End of Set up
 
@@ -37,24 +40,21 @@ $use_cases = [
         'expected' => true,
     ],
 ];
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     // Reset before testing this use case
     $userpermissions = $original_userpermissions;
 
     // Set up the use case environment
-    if(isset($use_case['setup']))
-        {
+    if (isset($use_case['setup'])) {
         $use_case['setup']();
-        }
+    }
 
     $result = resource_has_access_denied_by_RT_size($use_case['input']['resource_type'], $use_case['input']['size']);
-    if($use_case['expected'] !== $result)
-        {
+    if ($use_case['expected'] !== $result) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 

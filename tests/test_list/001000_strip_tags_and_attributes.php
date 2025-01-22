@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 $use_cases = [
@@ -128,7 +129,7 @@ $use_cases = [
             'html' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL,
         ],
         'expected' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
-    ],    
+    ],
     [
         'name' => 'HTML which has been through htmlspecialchars()',
         'input' => [
@@ -145,24 +146,21 @@ $use_cases = [
     ],
 ];
 
-foreach($use_cases as $use_case)
-    {
+foreach ($use_cases as $use_case) {
     $html = $use_case['input']['html'];
     $tags = $use_case['input']['tags'] ?? [];
     $attributes = $use_case['input']['attributes'] ?? [];
 
     $processed = strip_tags_and_attributes($html, $tags, $attributes);
-    if (isset($use_case['post-process']) && is_callable($use_case['post-process']))
-        {
+    if (isset($use_case['post-process']) && is_callable($use_case['post-process'])) {
         $processed = $use_case['post-process']($processed);
-        }
+    }
 
-    if ($processed !== $use_case['expected'])
-        {
+    if ($processed !== $use_case['expected']) {
         echo "Use case: {$use_case['name']} - ";
         return false;
-        }
     }
+}
 
 
 

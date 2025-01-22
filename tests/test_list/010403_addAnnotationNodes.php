@@ -1,4 +1,5 @@
 <?php
+
 command_line_only();
 
 
@@ -37,21 +38,19 @@ $annotation['ref'] = $annotation_ref;
 
 
 // No nodes to add
-if(addAnnotationNodes($annotation_ref, []) !== false)
-    {
+if (addAnnotationNodes($annotation_ref, []) !== false) {
     echo 'No nodes to add - ';
     return false;
-    }
+}
 
 // Add nodes to annotation
-if(
+if (
     addAnnotationNodes($annotation_ref, [$node_optionA, $node_optionB]) !== false
     && array_column(getAnnotationTags([$annotation][0]), 'ref') !== [$node_optionA['ref'], $node_optionB['ref']]
-)
-    {
+) {
     echo 'Adding nodes to annotation - ';
     return false;
-    }
+}
 
 
 

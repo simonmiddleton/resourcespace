@@ -36,4 +36,4 @@ $lang["emu_nodata_returned"]='No se encontraron datos de EMu para el IRN especif
 $lang["emu_createdfromemu"]='Creado desde el plugin EMU';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
 $lang["plugin-emu-title"]='EMu';
-$lang["plugin-emu-desc"]='[Avanzado] Permite extraer metadatos de recursos desde la base de datos EMu.';
+$lang["plugin-emu-desc"]=' Permite extraer metadatos de recursos desde la base de datos EMu.';

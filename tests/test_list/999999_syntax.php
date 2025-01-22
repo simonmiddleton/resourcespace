@@ -1,17 +1,20 @@
 <?php
-# Simple syntax check of pages 
+
+# Simple syntax check of pages
 command_line_only();
 
 
-$TestPage = function($page) {
+$TestPage = function ($page) {
     global $php_path;
-    if (!isset($php_path)) {$php_path="/usr/bin";} # fair assumption, if not specifically set; means it will work on many systems
- 
+    if (!isset($php_path)) {
+        $php_path = "/usr/bin";
+    } # fair assumption, if not specifically set; means it will work on many systems
+
     # Run PHP in lint mode against the file.
-    $result=exec("cd " . escapeshellarg(dirname($page)). ";" . $php_path . "/php -l " . escapeshellarg(basename($page)) );
-    return strpos($result,"No syntax errors") !== false;
+    $result = exec("cd " . escapeshellarg(dirname($page)) . ";" . $php_path . "/php -l " . escapeshellarg(basename($page)));
+    return strpos($result, "No syntax errors") !== false;
 };
- 
+
 $exclude_paths = array(
     "/lib/",
     "/filestore/",
@@ -20,41 +23,38 @@ $exclude_paths = array(
 );
 $Directory = new RecursiveDirectoryIterator(__DIR__ . "/../../");
 $Iterator = new RecursiveIteratorIterator($Directory);
-foreach ($Iterator as $i)
-    {
-    if($i->getExtension() !== "php")
-        {
+foreach ($Iterator as $i) {
+    if ($i->getExtension() !== "php") {
         continue;
-        }
+    }
 
     $path = $i->getPathName();
 
-    foreach($exclude_paths as $ex_path)
-        {
-        if(strpos($path, $ex_path) !== false)
-            {
+    foreach ($exclude_paths as $ex_path) {
+        if (strpos($path, $ex_path) !== false) {
             continue 2;
-            }
         }
-
-    $pages[] = $path; 
     }
+
+    $pages[] = $path;
+}
 
 $counter = 0;
 # Test each page.
 $shown_percent = -1;
-foreach ($pages as $page)
-    {
-    $new_percent = round($counter*100/count($pages));
-    if ($new_percent!=$shown_percent)
-	{
-	echo "\e[4D" . str_pad($new_percent,"3"," ",STR_PAD_LEFT) . "%";
+foreach ($pages as $page) {
+    $new_percent = round($counter * 100 / count($pages));
+    if ($new_percent != $shown_percent) {
+        echo "\e[4D" . str_pad($new_percent, "3", " ", STR_PAD_LEFT) . "%";
         ob_flush();
-	$shown_percent=$new_percent;
-        }
-    if (!$TestPage($page)) {echo $page;return false;}
-    $counter++;
+        $shown_percent = $new_percent;
     }
+    if (!$TestPage($page)) {
+        echo $page;
+        return false;
+    }
+    $counter++;
+}
     echo "\e[4D    ";
 // Teardown
 unset($TestPage);

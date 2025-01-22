@@ -72,3 +72,4 @@ $lang["tms_link_confirm_delete_module_config"]='이 모듈 구성을 삭제하�
 $lang["tms_link_write_to_debug_log"]='시스템 디버그 로그에 스크립트 진행 상황 포함 (디버그 로깅은 별도로 구성해야 함). 주의: 디버그 로그 파일이 빠르게 증가할 수 있음.';
 $lang["plugin-tms_link-title"]='TMS 링크';
 $lang["plugin-tms_link-desc"]='[고급] 리소스 메타데이터를 TMS 데이터베이스에서 추출할 수 있습니다.';
+$lang["tms_link_uid_field_int"]='TMS 정수 UID. 정수가 아닌 UID를 허용하려면 false로 설정하십시오.';
