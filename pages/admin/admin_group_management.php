@@ -3,75 +3,65 @@
 include "../../include/boot.php";
 include "../../include/authenticate.php";
 
-if (!checkperm("a"))
-    {
-    exit ("Permission denied.");
-    }
+if (!checkperm("a")) {
+    exit("Permission denied.");
+}
 
 include "../../include/header.php";
 
-$find = getval("find","");
+$find = getval("find", "");
 $filter_by_parent = getval("filterbyparent", "");
-$filter_by_permissions = getval("filterbypermissions","");
+$filter_by_permissions = getval("filterbypermissions", "");
 
 $sql_permission_filter_params = array();
 
-if ($filter_by_permissions != "")
-    {
-    foreach (explode(",",$filter_by_permissions) as $permission)
-        {
+if ($filter_by_permissions != "") {
+    foreach (explode(",", $filter_by_permissions) as $permission) {
         $permission = trim($permission);
-        if ($permission == "")
-            {
+        if ($permission == "") {
             continue;
-            }
-        if (isset ($sql_permission_filter))
-            {
-            $sql_permission_filter.=" and 
+        }
+        if (isset($sql_permission_filter)) {
+            $sql_permission_filter .= " and 
             ";
-            }
-        else
-            {
-            $sql_permission_filter="(";
-            }
+        } else {
+            $sql_permission_filter = "(";
+        }
         # The filter will include usergroups with this permission either at the usergroup level or (if permissions are inherited) at the parent usergroup level
         $sql_permission_filter .= " ( FIND_IN_SET(binary ?,usergroup.permissions) OR ( FIND_IN_SET('permissions', usergroup.inherit_flags) AND FIND_IN_SET(binary ?,parentusergroup.permissions) ) ) ";
         $sql_permission_filter_params = array_merge($sql_permission_filter_params, array("s",$permission, "s",$permission));
-        }
-    $sql_permission_filter .= ")";
     }
+    $sql_permission_filter .= ")";
+}
 
-$offset = getval("offset",0,true);
-$order_by = getval("orderby","name");
+$offset = getval("offset", 0, true);
+$order_by = getval("orderby", "name");
 
 $sql_where = "";
 $sql_params = array();
 
-if ($find != "")
-    {
+if ($find != "") {
     $sql_where = " and (usergroup.ref like ? or usergroup.name like ? or parentusergroup.name like ?)";
-    $sql_params = array_merge($sql_params, array("s", "%".$find."%", "s", "%".$find."%", "s", "%".$find."%"));
-    }
-if ($filter_by_parent != "")
-    {
+    $sql_params = array_merge($sql_params, array("s", "%" . $find . "%", "s", "%" . $find . "%", "s", "%" . $find . "%"));
+}
+if ($filter_by_parent != "") {
     $sql_where .= " and parentusergroup.ref = ?";
     $sql_params = array_merge($sql_params, array("i", $filter_by_parent));
-    }
-if ($filter_by_permissions != "")
-    {
+}
+if ($filter_by_permissions != "") {
     $sql_where .= " and $sql_permission_filter";
     $sql_params = array_merge($sql_params, $sql_permission_filter_params);
-    }
+}
 
-$offset = getval("offset",0,true);
-$order_by = getval("orderby","name");
+$offset = getval("offset", 0, true);
+$order_by = getval("orderby", "name");
 
-if (!in_array($order_by, array("ref","name","users","pname","ref desc","name desc","users desc","pname desc")))
-    {
+if (!in_array($order_by, array("ref","name","users","pname","ref desc","name desc","users desc","pname desc"))) {
     $order_by = "name";
-    }
+}
 
-$groups = ps_query("
+$groups = ps_query(
+    "
 	select 
 		usergroup.ref as ref,
 		usergroup.name as name,
@@ -89,16 +79,17 @@ $groups = ps_query("
 		usergroup.ref=user.usergroup where true" . $sql_where .
     " group by
 		usergroup.ref
-	order by {$order_by}"
-, $sql_params);
+	order by {$order_by}",
+    $sql_params
+);
 
 # pager
 $per_page = $default_perpage_list;
-$results=count($groups);
-$totalpages=ceil($results/$per_page);
-$curpage=floor($offset/$per_page)+1;
-$url="admin_group_management.php";
-$url_params = array("find"=>$find,"orderby"=>$order_by);
+$results = count($groups);
+$totalpages = ceil($results / $per_page);
+$curpage = floor($offset / $per_page) + 1;
+$url = "admin_group_management.php";
+$url_params = array("find" => $find,"orderby" => $order_by);
 
 function addColumnHeader($orderName, $labelKey)
 {
@@ -111,21 +102,30 @@ function addColumnHeader($orderName, $labelKey)
     } else {
         $image = '';
     }
+    ?>
 
-?>      <th>
-            <a href="<?php echo $baseurl ?>/pages/admin/admin_group_management.php?<?php
-                if ($find!="") { ?>&find=<?php echo escape($find); }
-                if ($filter_by_parent!="") { ?>&filterbyparent=<?php echo escape($filter_by_parent); }
-                if ($filter_by_permissions!="") { ?>&filterbypermissions=<?php echo escape($filter_by_permissions); }
-            ?>&orderby=<?php echo $orderName . ($order_by==$orderName ? '+desc' : ''); ?>"
-            onClick="return CentralSpaceLoad(this);"><?php echo escape($lang[$labelKey]) . $image ?></a>
-        </th>
-<?php
+    <th>
+        <a href="<?php echo $baseurl ?>/pages/admin/admin_group_management.php?<?php
+        if ($find != "") {
+            ?>&find=<?php echo escape($find);
+        }
+        if ($filter_by_parent != "") {
+            ?>&filterbyparent=<?php echo escape($filter_by_parent);
+        }
+        if ($filter_by_permissions != "") {
+            ?>&filterbypermissions=<?php echo escape($filter_by_permissions);
+        }
+        ?>&orderby=<?php echo $orderName . ($order_by == $orderName ? '+desc' : ''); ?>"
+            onClick="return CentralSpaceLoad(this);"><?php echo escape($lang[$labelKey]) . $image ?>
+        </a>
+    </th>
+    <?php
 }
+?>
 
-?><div class="BasicsBox">
-<h1><?php echo escape($lang["page-title_user_group_management"]); ?></h1>
-<?php
+<div class="BasicsBox">
+    <h1><?php echo escape($lang["page-title_user_group_management"]); ?></h1>
+    <?php
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],
@@ -138,16 +138,20 @@ function addColumnHeader($orderName, $labelKey)
     );
 
     renderBreadcrumbs($links_trail);
-?>
-    <p><?php echo escape($lang['page-subtitle_user_group_management']); render_help_link("systemadmin/creating-user-groups");?></p>
+    ?>
+    <p>
+        <?php
+        echo escape($lang['page-subtitle_user_group_management']);
+        render_help_link("systemadmin/creating-user-groups");
+        ?>
+    </p>
     
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">
             <div class="InpageNavLeftBlock">&nbsp;</div>        
         </div>
-<?php       
-        pager(false);       
-?>      <div class="clearerleft"></div>             
+        <?php pager(false); ?>
+        <div class="clearerleft"></div>             
     </div>
     
     <div class="Listview">
@@ -157,67 +161,82 @@ function addColumnHeader($orderName, $labelKey)
                 <?php addColumnHeader("name", "property-user_group"); ?>
                 <?php addColumnHeader("users", "users"); ?>
                 <?php addColumnHeader("pname", "property-user_group_parent"); ?>
-                <th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
+                <th>
+                    <div class="ListTools"><?php echo escape($lang["tools"]); ?></div>
+                </th>
             </tr>
-<?php
-        $url_params=
-            ($offset ? "&offset={$offset}" : "") .
-            ($order_by ? "&orderby={$order_by}" : "") .
-            ($filter_by_parent ? "&filterbyparent={$filter_by_parent}" : "") .
-            ($order_by ? "&find={$find}" : "") .
-            ($filter_by_permissions ? "&filterbypermissions={$filter_by_permissions}" : "");
 
-        for ($n=$offset;(($n<count($groups)) && ($n<($offset+$per_page)));$n++)
-            {
-            $edit_url="{$baseurl_short}pages/admin/admin_group_management_edit.php?ref={$groups[$n]["ref"]}{$url_params}";
-            $users_url="{$baseurl_short}pages/team/team_user.php?group={$groups[$n]["ref"]}&backlink=" . urlencode("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");
-?>          <tr>
-                <td>
-                    <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($groups[$n]["ref"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
-                </td>                   
-                <td>
-                    <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo strip_tags_and_attributes(str_highlight($groups[$n]["name"], $find, STR_HIGHLIGHT_SIMPLE)); ?></a>
-                </td>
+            <?php
+            $url_params =
+                ($offset ? "&offset={$offset}" : "") .
+                ($order_by ? "&orderby={$order_by}" : "") .
+                ($filter_by_parent ? "&filterbyparent={$filter_by_parent}" : "") .
+                ($order_by ? "&find={$find}" : "") .
+                ($filter_by_permissions ? "&filterbypermissions={$filter_by_permissions}" : "");
+
+            for ($n = $offset; (($n < count($groups)) && ($n < ($offset + $per_page))); $n++) {
+                $edit_url = "{$baseurl_short}pages/admin/admin_group_management_edit.php?ref={$groups[$n]["ref"]}{$url_params}";
+                $users_url = "{$baseurl_short}pages/team/team_user.php?group={$groups[$n]["ref"]}&backlink=" . urlencode("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");
+                ?>
+                <tr>
+                    <td>
+                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
+                            <?php echo str_highlight($groups[$n]["ref"], $find, STR_HIGHLIGHT_SIMPLE); ?>
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
+                            <?php echo strip_tags_and_attributes(str_highlight($groups[$n]["name"], $find, STR_HIGHLIGHT_SIMPLE)); ?>
+                        </a>
+                    </td>
                 
-                <td>                    
-                    <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $groups[$n]["users"]; ?></a>
-                </td>
+                    <td>                    
+                        <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);">
+                            <?php echo $groups[$n]["users"]; ?>
+                        </a>
+                    </td>
 
-                <td>
-                    <?php
-                    if ($groups[$n]["orphaned"])
-                        {
-                        ?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">&lt;<?php echo escape($groups[$n]["pname"]) ;?>&gt;</a>
-                        <?php
-                        }
-                    else
-                        {
-                        ?><a href="<?php echo $baseurl_short; ?>pages/admin/admin_group_management.php?filterbyparent=<?php echo $groups[$n]["pref"];
-                        ?>" onClick="return CentralSpaceLoad(this,false);"><?php echo strip_tags_and_attributes(str_highlight($groups[$n]["pname"], $find, STR_HIGHLIGHT_SIMPLE)); ?></a>
-                        <?php
-                        }
-                    ?>
-                </td>
+                    <td>
+                        <?php if ($groups[$n]["orphaned"]) { ?>
+                            <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
+                                &lt;<?php echo escape($groups[$n]["pname"]) ;?>&gt;
+                            </a>
+                        <?php } else { ?>
+                            <a
+                                href="<?php echo $baseurl_short; ?>pages/admin/admin_group_management.php?filterbyparent=<?php echo $groups[$n]["pref"]; ?>"
+                                onClick="return CentralSpaceLoad(this,false);">
+                                <?php echo strip_tags_and_attributes(str_highlight($groups[$n]["pname"], $find, STR_HIGHLIGHT_SIMPLE)); ?>
+                            </a>
+                        <?php } ?>
+                    </td>
 
-                <td>
-                    <div class="ListTools">
-                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
-                        &nbsp;
-                        <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-users"></i>&nbsp;<?php echo escape($lang["users"]); ?></a>
-                    </div>
-                </td>
-            </tr>
-<?php
+                    <td>
+                        <div class="ListTools">
+                            <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
+                                <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                            </a>
+                            &nbsp;
+                            <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);">
+                                <i class="fas fa-users"></i>&nbsp;<?php echo escape($lang["users"]); ?>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <?php
             }
-?>      </table>
+            ?>
+        </table>
     </div>
+
     <div class="BottomInpageNav">
-    <?php 
-    $url="admin_group_management.php";
-    $url_params = array("find"=>$find,"orderby"=>$order_by);
-    pager(false); 
-    ?></div>
-</div>      <!-- end of BasicsBox -->
+        <?php
+        $url = "admin_group_management.php";
+        $url_params = array("find" => $find,"orderby" => $order_by);
+        pager(false);
+        ?>
+    </div>
+</div><!-- end of BasicsBox -->
 
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_group_management.php" onSubmit="return CentralSpacePost(this,false);">
@@ -227,7 +246,7 @@ function addColumnHeader($orderName, $labelKey)
         <div class="Question">
             <label for="find"><?php echo escape($lang["property-search_filter"]); ?></label>
             <input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;">
+            <input name="save" type="submit" value="<?php echo escape($lang["searchbutton"]); ?>">
             <div class="clearerleft"></div>
         </div>
 
@@ -235,37 +254,44 @@ function addColumnHeader($orderName, $labelKey)
             <label for="filterbyparent"><?php echo escape($lang['action-title_filter_by_parent_group']); ?></label>
             <div class="tickset">
                 <select name="filterbyparent" class="medwidth" onchange="this.form.submit();">
-                    <option value="" ><?php if ($filter_by_parent != "") {echo escape($lang["removethisfilter"]);} ?></option>
-<?php	
+                    <option value="">
+                        <?php if ($filter_by_parent != "") {
+                            echo escape($lang["removethisfilter"]);
+                        } ?>
+                    </option>
 
-$groups=ps_query("
-	select 	distinct 	
-		parentusergroup.ref as ref,
-		parentusergroup.name as name
-	from 
-		usergroup 
-	left outer join usergroup parentusergroup
-	on 			
-		usergroup.parent=parentusergroup.ref		
-	where parentusergroup.ref is not null
-	order by usergroup.name"
-);
+                    <?php
+                    $groups = ps_query("
+                        SELECT 	distinct 	
+                            parentusergroup.ref AS ref,
+                            parentusergroup.name AS name
+                        FROM 
+                            usergroup 
+                        LEFT OUTER JOIN usergroup parentusergroup
+                        ON 			
+                            usergroup.parent=parentusergroup.ref		
+                        WHERE parentusergroup.ref IS NOT null
+                        ORDER BY usergroup.name");
 
-foreach ($groups as $group)
-    {
-?>                  <option <?php if ($filter_by_parent!="" && $filter_by_parent==$group['ref']) { ?> selected="true" <?php } ?>value="<?php echo $group['ref']; ?>"><?php echo $group['name']; ?></option>
-<?php
-    }
-?>              </select>
+                    foreach ($groups as $group) { ?>
+                        <option
+                            <?php if ($filter_by_parent != "" && $filter_by_parent == $group['ref']) { ?>
+                                selected="true"
+                            <?php } ?>
+                            value="<?php echo $group['ref']; ?>">
+                            <?php echo $group['name']; ?>
+                        </option>
+                        <?php
+                    } ?>
+                </select>
             </div>
-            <div class="clearerleft"> 
-            </div>
+            <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
             <label for="filterbypermissions"><?php echo escape($lang["action-title_filter_by_permissions"]); ?></label>
             <input name="filterbypermissions" type="text" class="medwidth" value="<?php echo escape($filter_by_permissions); ?>">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["action-title_apply"]); ?>&nbsp;&nbsp;">
+            <input name="save" type="submit" value="<?php echo escape($lang["action-title_apply"]); ?>">
             <div class="clearerleft"></div>
         </div>
 
@@ -273,16 +299,17 @@ foreach ($groups as $group)
             <div class="FormHelpInner"><?php echo escape($lang["fieldhelp-permissions_filter"]); ?></div>
         </div>
 
-<?php
-    if ($find!="" || $filter_by_permissions!="" || $filter_by_parent!="") {
-?>      <div class="QuestionSubmit">
-            <input name="buttonsave" type="submit"
-                   onclick="CentralSpaceLoad('admin_group_management.php?orderby=<?php echo $order_by;
-                   ?>',false);" value="&nbsp;&nbsp;<?php echo escape($lang["clearall"]); ?>&nbsp;&nbsp;">
-        </div>
-<?php
-    }
-?>  </form>
+        <?php if ($find != "" || $filter_by_permissions != "" || $filter_by_parent != "") { ?>
+            <div class="QuestionSubmit">
+                <input
+                    name="buttonsave"
+                    type="submit"
+                    onclick="CentralSpaceLoad('admin_group_management.php?orderby=<?php echo $order_by; ?>',false);"
+                    value="<?php echo escape($lang["clearall"]); ?>"
+                >
+            </div>
+        <?php } ?>
+    </form>
 </div>
 
 <div class="BasicsBox">
@@ -295,21 +322,23 @@ foreach ($groups as $group)
                     <input name="newusergroupname" type="text" value="" class="shrtwidth">  
                 </div>
                 <div class="Inline">
-                    <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"]); ?>&nbsp;&nbsp;" onclick="return (this.form.elements[0].value!='');">
+                    <input name="Submit" type="submit" value="<?php echo escape($lang["create"]); ?>" onclick="return (this.form.elements[0].value!='');">
                 </div>
             </div>          
             <div class="clearerleft"></div>     
         </div>
-<?php
-    if ($offset) 
-        {
-?>      <input type="hidden" name="offset" value="<?php echo $offset; ?>">
-<?php	  }
-    if ($order_by) 
-        {
-?>      <input type="hidden" name="order_by" value="<?php echo $order_by; ?>">
-<?php	  }
-?>  </form>
+
+        <?php if ($offset) { ?>
+            <input type="hidden" name="offset" value="<?php echo $offset; ?>">
+            <?php
+        }
+
+        if ($order_by) { ?>
+            <input type="hidden" name="order_by" value="<?php echo $order_by; ?>">
+            <?php
+        }
+        ?> 
+    </form>
 </div>
 
 <?php

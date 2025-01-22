@@ -1,6 +1,11 @@
 <?php
 include '../../include/boot.php';
-include '../../include/authenticate.php'; if(!checkperm('a')) { exit('Permission denied.'); }
+include '../../include/authenticate.php';
+
+if (!checkperm('a')) {
+    exit('Permission denied.');
+}
+
 include_once '../../include/config_functions.php';
 include_once '../../include/ajax_functions.php';
 
@@ -10,13 +15,13 @@ $ajax = getval('ajax', '') === 'true';
 $searching = (((getval("find", "") != "" && getval("clear_search", "") == "") || getval("only_modified", "no") == "yes") ? true : false);
 $find = getval("find", "");
 $only_modified = (getval('only_modified', 'no') == 'yes');
-if (!$searching) {$find = "";}
+if (!$searching) {
+    $find = "";
+}
 
 // Common config fields' options
 $enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
 $yes_no_options         = array($lang['no'], $lang['yes']);
-
-
 
 // System section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
@@ -30,7 +35,8 @@ $page_def[] = config_add_single_select(
     false,
     420,
     '',
-    true);
+    true
+);
 $page_def[] = config_add_text_input(
     'download_filename_format',
     $lang['setup-download_filename_format'],
@@ -44,23 +50,19 @@ $page_def[] = config_add_text_input(
 );
 $page_def[] = config_add_html('</div>');
 
-
 // User interface section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="SystemConfigUserInterfaceSection" class="CollapsibleSection">');
 
-
 // Font selection
-$fontsdir=scandir(__DIR__ . "/../../css/fonts/");
-$fonts=array();
-foreach ($fontsdir as $f)
-    {
-    if (strpos($f,".css")!==false) // Valid font CSS definition
-        {
-        $fn=substr($f,0,strlen($f)-4);
-        $fonts[$fn]=$fn;
-        }
+$fontsdir = scandir(__DIR__ . "/../../css/fonts/");
+$fonts = array();
+foreach ($fontsdir as $f) {
+    if (strpos($f, ".css") !== false) { // Valid font CSS definition
+        $fn = substr($f, 0, strlen($f) - 4);
+        $fonts[$fn] = $fn;
     }
-$page_def[] = config_add_single_select('global_font', $lang['font'], $fonts, true, 420, '', true,"jQuery('#global_font_link').attr('href','" .  $baseurl . "/css/fonts/' + this.value + '.css');");
+}
+$page_def[] = config_add_single_select('global_font', $lang['font'], $fonts, true, 420, '', true, "jQuery('#global_font_link').attr('href','" .  $baseurl . "/css/fonts/' + this.value + '.css');");
 
 $page_def[] = config_add_file_input(
     'custom_font',
@@ -181,36 +183,30 @@ $page_def[] = config_add_boolean_select('disable_languages', $lang['disable_lang
 $page_def[] = config_add_boolean_select('browser_language', $lang['systemconfig_browser_language_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
-
 // Search section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['searchcapability'] . '</h3><div id="SystemConfigSearchSection" class="CollapsibleSection">');
 
 $sort_order_fields = array('relevance' => $lang['relevance']);
 
-if($popularity_sort)
-    {
+if ($popularity_sort) {
     $sort_order_fields['popularity'] = $lang['popularity'];
-    }
+}
 
-if($orderbyrating)
-    {
+if ($orderbyrating) {
     $sort_order_fields['rating'] = $lang['rating'];
-    }
+}
 
-if($date_column)
-    {
+if ($date_column) {
     $sort_order_fields['date'] = $lang['date'];
-    }
+}
 
-if($colour_sort)
-    {
+if ($colour_sort) {
     $sort_order_fields['colour'] = $lang['colour'];
-    }
+}
 
-if($order_by_resource_id)
-    {
+if ($order_by_resource_id) {
     $sort_order_fields['resourceid'] = $lang['resourceid'];
-    }
+}
 
 $sort_order_fields['resourcetype'] = $lang['type'];
 
@@ -242,10 +238,9 @@ $page_def[] = config_add_single_select(
 );
 $default_display_array = array();
 $default_display_array['thumbs'] = $lang['largethumbstitle'];
-if($xlthumbs || $GLOBALS['default_display'] == 'xlthumbs')
-    {
+if ($xlthumbs || $GLOBALS['default_display'] == 'xlthumbs') {
     $default_display_array['xlthumbs'] = $lang['xlthumbstitle'];
-    }
+}
 $default_display_array['list'] = $lang['listtitle'];
 $default_display_array['strip']  = $lang['striptitle'];
 
@@ -305,7 +300,7 @@ $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . 
 $page_def[] = config_add_boolean_select('actions_enable', $lang['actions-enable'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests_default'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('actions_account_requests', $lang['actions_account_requests_default'], $enable_disable_options, 420, '', true);
-    
+
 $page_def[] = config_add_html('</div>');
 
 // Metadata section
@@ -313,7 +308,6 @@ $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . 
 $page_def[] = config_add_boolean_select('metadata_report', $lang['metadata-report'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('metadata_read_default', $lang['embedded_metadata'], array($lang['embedded_metadata_donot_extract_option'], $lang['embedded_metadata_extract_option']), 420, '', true);
 $page_def[] = config_add_html('</div>');
-
 
 // User accounts section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_user_accounts'] . '</h3><div id="SystemConfigUserAccountsSection" class="CollapsibleSection">');
@@ -323,7 +317,6 @@ $page_def[] = config_add_boolean_select('terms_login', $lang['systemconfig_terms
 $page_def[] = config_add_boolean_select('terms_upload', $lang['systemconfig_terms_upload_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('user_rating', $lang['systemconfig_user_rating_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
-
 
 // Security section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_security'] . '</h3><div id="SystemConfigSecuritySection" class="CollapsibleSection">');
@@ -371,7 +364,7 @@ $page_def[] = config_add_single_select(
     420,
     '',
     true
-);  
+);
 $page_def[] = config_add_single_select(
     'password_expiry',
     $lang['systemconfig_password_expiry_label'],
@@ -431,10 +424,6 @@ $page_def[] = config_add_boolean_select('search_engine_noindex', $lang['search_e
 $page_def[] = config_add_boolean_select('search_engine_noindex_external_shares', $lang['search_engine_noindex_external_shares'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
-
-
-
-
 // Debug section
 $page_def[] = config_add_html(
     '<h3 class="CollapsibleSectionHead collapsed">' . escape($lang['systemconfig_debug']) . '</h3>'
@@ -444,19 +433,16 @@ $page_def[] = config_add_html(
 // Determine the time left on debug log override
 $debug_log_default_duration = 300;
 $time_left = get_sysvar('debug_override_expires', time()) - time();
-if ($time_left > 0)
-    {
+if ($time_left > 0) {
     $debug_log_override_time_left = $time_left;
     $system_config_debug_log_duration_question_class = '';
     $debug_log_override_timer_active = true;
-    }
-else
-    {
-    // reset 
+} else {
+    // reset
     remove_config_option(null, 'system_config_debug_log_interim');
     $system_config_debug_log_duration_question_class = 'DisplayNone';
     $debug_log_override_timer_active = false;
-    }
+}
 $debug_log_override_time_left ??= $debug_log_default_duration;
 
 // "Faking" a config option so that we can apply some logic before deciding to override debug_log
@@ -466,11 +452,10 @@ $debug_log_options = [
     $lang['systemconfig_debug_log_on_specific_user'],
     $lang['off'],
 ];
-if ($debug_log)
-    {
+if ($debug_log) {
     $debug_log_options = [$lang['systemconsoleonpermallusers']];
     $system_config_debug_log_interim = $lang['systemconsoleonpermallusers'];
-    }
+}
 get_config_option(null, 'system_config_debug_log_interim', $system_config_debug_log_interim);
 
 $page_def[] = config_add_single_select(
@@ -520,34 +505,27 @@ $page_def[] = config_add_html($user_select_html);
 $page_def[] = config_add_html('</div>');
 // End of Debug section
 
-
-
 // Let plugins hook onto page definition and add their own configs if needed
 // or manipulate the list
 $plugin_specific_definition = hook('add_system_config_page_def', '', array($page_def));
-if(is_array($plugin_specific_definition) && !empty($plugin_specific_definition))
-    {
+if (is_array($plugin_specific_definition) && !empty($plugin_specific_definition)) {
     $page_def = $plugin_specific_definition;
-    }
+}
 
 // Strip out any configs that are blocked from being edited in the UI.
-if (count($system_config_hide)>0)
-    {
-    $new_page_def=array();
-    for($n=0;$n<count($page_def);$n++)
-        {
-        if (!in_array($page_def[$n][1],$system_config_hide)) {$new_page_def[]=$page_def[$n];} // Add if not blocked
-        }
-    $page_def=$new_page_def;
+if (count($system_config_hide) > 0) {
+    $new_page_def = array();
+    for ($n = 0; $n < count($page_def); $n++) {
+        if (!in_array($page_def[$n][1], $system_config_hide)) {
+            $new_page_def[] = $page_def[$n];
+        } // Add if not blocked
     }
-
-
-
+    $page_def = $new_page_def;
+}
 
 // Process autosaving requests
 // Note: $page_def must be defined by now in order to make sure we only save options that we've defined
-if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
-    {
+if ('true' === getval('ajax', '') && 'true' === getval('autosave', '')) {
     $response['success'] = true;
     $response['message'] = '';
 
@@ -557,48 +535,45 @@ if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
     // Search for the option name within our defined (allowed) options
     // if it is not there, error and don't allow saving it
     $page_def_option_index = array_search($autosave_option_name, array_column($page_def, 1));
-    if(false === $page_def_option_index)
-        {
+    if (false === $page_def_option_index) {
         $response['success'] = false;
         $response['message'] = $lang['systemconfig_option_not_allowed_error'];
 
         echo json_encode($response);
         exit();
-        }
+    }
 
-    if(!set_config_option(null, $autosave_option_name, $autosave_option_value))
-        {
+    if (!set_config_option(null, $autosave_option_name, $autosave_option_value)) {
         $response['success'] = false;
-        }
+    }
 
     echo json_encode($response);
     exit();
-    }
+}
 
-if($ajax && getval('action', '') === 'create_debug_log_override' && enforcePostRequest($ajax))
-    {
+if ($ajax && getval('action', '') === 'create_debug_log_override' && enforcePostRequest($ajax)) {
     $debug_user = getval('debug_override_user', '');
     $debug_expires = getval('debug_override_expires', '');
-    if ($debug_user !== '' && $debug_expires !== '')
-        {
+    if ($debug_user !== '' && $debug_expires !== '') {
         create_debug_log_override($debug_user, $debug_expires);
         unset($GLOBALS['debug_log_override']);
         ajax_send_response(200, ajax_response_ok_no_data());
-        }
-    ajax_send_response(400, ajax_response_fail(ajax_build_message($lang['error_invalid_input'])));
     }
+    ajax_send_response(400, ajax_response_fail(ajax_build_message($lang['error_invalid_input'])));
+}
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
 
 // In order to stop user preferences affecting values displayed on this page,
 // loop through every field about to be created for the admin page
 foreach ($page_def as $page_item) {
-    if ($page_item[0] !== 'html'
-            && isset($system_wide_config_options[$page_item[1]]) 
-            && $GLOBALS[$page_item[1]] !== $system_wide_config_options[$page_item[1]]) {
+    if (
+        $page_item[0] !== 'html'
+            && isset($system_wide_config_options[$page_item[1]])
+            && $GLOBALS[$page_item[1]] !== $system_wide_config_options[$page_item[1]]
+    ) {
         // Set the global variable back to the system value if it is different
         $GLOBALS[$page_item[1]] = $system_wide_config_options[$page_item[1]];
-
     }
 }
 
@@ -606,7 +581,7 @@ foreach ($page_def as $page_item) {
 // so image upload function will work
 set_watermark_image();
 
-# $lang is not a config option! 
+# $lang is not a config option!
 unset($system_wide_config_options['lang']);
 foreach ($system_wide_config_options as $key => $value) {
     // Some varible names are used multiple times, only get the first value
@@ -614,43 +589,35 @@ foreach ($system_wide_config_options as $key => $value) {
 }
 
 # Get user ref for use in header.php when loading profile image.
-if (!isset($userref))
-    {
+if (!isset($userref)) {
     $userref = $userdata[0]['ref'];
-    }
+}
 
-if ($searching)
-    {
+if ($searching) {
     // Check for search phrase in config. description.
-    if ($find !== '')
-        {
+    if ($find !== '') {
         $search_matches = array();
-        foreach ($page_def as $config_to_check)
-            {
-            if (isset($config_to_check[2]) && stripos($config_to_check[2], $find) !== false)
-                {
+        foreach ($page_def as $config_to_check) {
+            if (isset($config_to_check[2]) && stripos($config_to_check[2], $find) !== false) {
                 $search_matches[] = $config_to_check;
-                }
             }
-        $page_def = $search_matches;
         }
+        $page_def = $search_matches;
+    }
     // Filter results to only config which has been changed previously i.e. exists in user_preferences with null in user column.
-    if ($only_modified)
-        {
+    if ($only_modified) {
         $search_matches = array();
         $returned_options = array();
         get_config_options(null, $returned_options);
         $returned_options = array_column($returned_options, 'parameter');
-        foreach ($page_def as $config_to_check)
-            {
-            if (isset($config_to_check[1]) && in_array($config_to_check[1], $returned_options))
-                {
+        foreach ($page_def as $config_to_check) {
+            if (isset($config_to_check[1]) && in_array($config_to_check[1], $returned_options)) {
                 $search_matches[] = $config_to_check;
-                }
             }
-        $page_def = $search_matches;
         }
+        $page_def = $search_matches;
     }
+}
 
 include '../../include/header.php';
 ?>
@@ -660,20 +627,15 @@ include '../../include/header.php';
     <form id="SearchSystemPages" class="inline_config_search" method="post" onSubmit="return CentralSpacePost(this);">
         <?php generateFormToken("system_config_search"); ?>
         <div>
-        <input type="text" name="find" id="configsearch" value="<?php echo escape($find); ?>">
-        <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
-        <?php
-        if($searching)
-            {
-            ?>
-            <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onClick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
-            <?php
-            }
-        ?>
+            <input type="text" name="find" id="configsearch" value="<?php echo escape($find); ?>">
+            <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
+            <?php if ($searching) { ?>
+                <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onClick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
+            <?php } ?>
         </div>
         <div>
-        <input type="checkbox" name="only_modified" id="only_modified" value="yes" <?php  echo $only_modified ? 'checked="checked"' : ''; ?>>
-        <label for="only_modified"><?php echo escape($lang["systemconfig_only_show_modified"]); ?></label>
+            <input type="checkbox" name="only_modified" id="only_modified" value="yes" <?php echo $only_modified ? 'checked="checked"' : ''; ?>>
+            <label for="only_modified"><?php echo escape($lang["systemconfig_only_show_modified"]); ?></label>
         </div>
     </form>
 
@@ -694,72 +656,69 @@ include '../../include/header.php';
 
     <p><?php echo escape($lang['systemconfig_description']); ?></p>
     <div class="CollapsibleSections">
-    <?php
-    config_generate_html($page_def);
-    ?>
+        <?php config_generate_html($page_def); ?>
     </div>
+
     <script>registerCollapsibleSections(false);</script>
-    <?php 
-    if ($custom_font != "") 
-        {
-        ?><script>document.getElementById("question_global_font").hidden = true;</script>
-    <?php
-        } 
-    config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php'); 
+
+    <?php if ($custom_font != "") { ?>
+        <script>document.getElementById("question_global_font").hidden = true;</script>
+        <?php
+    }
+    config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php');
     ?>
+
     <script>
-    function debug_log_selector_onchange(el)
-        {
-        let value = jQuery(el).val();
-        let options_to_show_duration = <?php echo json_encode([
-            escape($lang['systemconsoleonallusers']),
-            escape($lang['systemconfig_debug_log_on_specific_user']),
-        ]);?>;
+        function debug_log_selector_onchange(el) {
+            let value = jQuery(el).val();
+            let options_to_show_duration = <?php echo json_encode([
+                escape($lang['systemconsoleonallusers']),
+                escape($lang['systemconfig_debug_log_on_specific_user']),
+            ]);?>;
 
-        // Display the user selection (if applicable)
-        if (value === '<?php echo escape($lang['systemconfig_debug_log_on_specific_user']); ?>') {
-            jQuery('#SystemConfigDebugForUser').removeClass('DisplayNone');
-        } else {
-            jQuery('#SystemConfigDebugForUser').addClass('DisplayNone');
+            // Display the user selection (if applicable)
+            if (value === '<?php echo escape($lang['systemconfig_debug_log_on_specific_user']); ?>') {
+                jQuery('#SystemConfigDebugForUser').removeClass('DisplayNone');
+            } else {
+                jQuery('#SystemConfigDebugForUser').addClass('DisplayNone');
+            }
+
+            // Display the timer
+            if (options_to_show_duration.includes(value)) {
+                jQuery('#question_system_config_debug_log_duration').removeClass('DisplayNone');
+                create_debug_log_override();
+            } else {
+                jQuery('#question_system_config_debug_log_duration').addClass('DisplayNone');
+            }
+
+            if (value === '<?php echo escape($lang['off']); ?>') {
+                create_debug_log_override(-1, -1);
+            }
+            return;
         }
 
-        // Display the timer
-        if (options_to_show_duration.includes(value)) {
-            jQuery('#question_system_config_debug_log_duration').removeClass('DisplayNone');
-            create_debug_log_override();
-        } else {
-            jQuery('#question_system_config_debug_log_duration').addClass('DisplayNone');
-        }
+        function create_debug_log_override(user_id, duration) {
+            user_id = Number(typeof user_id !== 'undefined' ? user_id : jQuery('#debug_override_user').val());
+            duration = Number(typeof duration !== 'undefined' ? duration : jQuery('#system_config_debug_log_duration_input').val());
 
-        if (value === '<?php echo escape($lang['off']); ?>') {
-            create_debug_log_override(-1, -1);
-        }
-        return;
-        }
+            // Clearing the user is the same as having this enabled for all users.
+            if (user_id === 0) {
+                user_id = -1;
+            }
+            console.debug('create_debug_log_override(user_id = %o, duration = %o)', user_id, duration);
 
-    function create_debug_log_override(user_id, duration)
-        {
-        user_id = Number(typeof user_id !== 'undefined' ? user_id : jQuery('#debug_override_user').val());
-        duration = Number(typeof duration !== 'undefined' ? duration : jQuery('#system_config_debug_log_duration_input').val());
-
-        // Clearing the user is the same as having this enabled for all users.
-        if (user_id === 0) {
-            user_id = -1;
-        }
-        console.debug('create_debug_log_override(user_id = %o, duration = %o)', user_id, duration);
-
-        jQuery.post(
-            baseurl + '/pages/admin/admin_system_config.php',
-            {
-                ajax: true,
-                action: 'create_debug_log_override',
-                debug_override_user: user_id,
-                debug_override_expires: duration,
-                <?php echo generateAjaxToken('create_debug_log_override'); ?>
-            },
-            null,
-            'json'
-        )
+            jQuery.post(
+                baseurl + '/pages/admin/admin_system_config.php',
+                {
+                    ajax: true,
+                    action: 'create_debug_log_override',
+                    debug_override_user: user_id,
+                    debug_override_expires: duration,
+                    <?php echo generateAjaxToken('create_debug_log_override'); ?>
+                },
+                null,
+                'json'
+            )
             .done(function(data) {
                 let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
                 if (system_config_debug_log_interim.data('timer_started')) {
@@ -770,74 +729,66 @@ include '../../include/header.php';
                     system_config_debug_log_interim.data('timer_started', true);
                 }
             })
-            .fail(function(jqXHR, textStatus, errorThrown)
-                {
+            .fail(function(jqXHR, textStatus, errorThrown) {
                 let response = typeof jqXHR.responseJSON.data.message !== 'undefined'
                     ? jqXHR.responseJSON.data.message
                     : textStatus;
                 console.error("create_debug_log_override: %s - %s", errorThrown, response);
-                });
+            });
 
-        return;
+            return;
         }
 
-    function debug_log_override_timer(time_left, update_el)
-        {
-        console.debug('debug_log_override_timer(time_left = %o, update_el = %o)', time_left, update_el);
-        return new Promise((resolve, reject) => {
-            var debug_log_override_timer = setInterval(() => {
+        function debug_log_override_timer(time_left, update_el) {
+            console.debug('debug_log_override_timer(time_left = %o, update_el = %o)', time_left, update_el);
+            return new Promise((resolve, reject) => {
+                var debug_log_override_timer = setInterval(() => {
+                    let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
+                    let reset_expiry = system_config_debug_log_interim.data('reset_expiry');
+
+                    // Reset the time left if the user changed settings while still running
+                    if (typeof reset_expiry !== 'undefined') {
+                        time_left = Number(reset_expiry);
+                        system_config_debug_log_interim.removeData('reset_expiry');
+                    }
+
+                    --time_left;
+
+                    document.getElementById(update_el).textContent = time_left;
+                    console.log('debug_log_override_timer: tick');
+
+                    if (time_left <= 0) {
+                        document.getElementById(update_el).textContent = 0;
+                        clearInterval(debug_log_override_timer);
+                        resolve(true);
+                    }
+                },
+                1000);
+            });
+        }
+
+        function debug_log_override_timer_done() {
+            console.debug('debug_log_override_timer_done');
+            let option_off = '<?php echo escape($lang['off']); ?>';
+            let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
+
+            system_config_debug_log_interim.removeData('timer_started');
+            
+            if (system_config_debug_log_interim.val() !== option_off) {
+                system_config_debug_log_interim.val(option_off).change();
+            }
+        }
+
+        <?php if ($debug_log_override_timer_active) { ?>
+            jQuery(function() {
                 let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
-                let reset_expiry = system_config_debug_log_interim.data('reset_expiry');
-
-                // Reset the time left if the user changed settings while still running
-                if (typeof reset_expiry !== 'undefined') {
-                    time_left = Number(reset_expiry);
-                    system_config_debug_log_interim.removeData('reset_expiry');
-                }
-
-                --time_left;
-
-                document.getElementById(update_el).textContent = time_left;
-                console.log('debug_log_override_timer: tick');
-
-                if (time_left <= 0) {
-                    document.getElementById(update_el).textContent = 0;
-                    clearInterval(debug_log_override_timer);
-                    resolve(true);
-                }
-            },
-            1000);
-        });
-        }
-
-    function debug_log_override_timer_done()
-        {
-        console.debug('debug_log_override_timer_done');
-        let option_off = '<?php echo escape($lang['off']); ?>';
-        let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
-
-        system_config_debug_log_interim.removeData('timer_started');
-        
-        if (system_config_debug_log_interim.val() !== option_off) {
-            system_config_debug_log_interim.val(option_off).change();
-        }
-        }
-
-<?php
-if ($debug_log_override_timer_active)
-    {
-    ?>
-    jQuery(function()
-        {
-        let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
-        debug_log_override_timer(<?php echo (int) $debug_log_override_time_left; ?>, 'DebugLogOverrideTimerText')
-            .then(debug_log_override_timer_done);
-        system_config_debug_log_interim.data('timer_started', true);
-        });
-    <?php
-    }
-?>
+                debug_log_override_timer(<?php echo (int) $debug_log_override_time_left; ?>, 'DebugLogOverrideTimerText')
+                    .then(debug_log_override_timer_done);
+                system_config_debug_log_interim.data('timer_started', true);
+            });
+        <?php } ?>
     </script>
 </div>
+
 <?php
 include '../../include/footer.php';
