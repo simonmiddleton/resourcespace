@@ -767,24 +767,30 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
         debug("PDF multi page preview generation starting", RESOURCE_LOG_APPEND_PREVIOUS);
         $preview_preprocessing_success = false;
 
-     # For EPS/PS/PDF files, use GS directly and allow multiple pages.
-     # EPS files are always single pages:
+        # For EPS/PS/PDF files, use GS directly and allow multiple pages.
+        # EPS files are always single pages:
         if (in_array($extension, ["eps","ai","ps"]) || !$generateall) {
             $pdf_pages = 1;
         }
+
         $resolution = $pdf_resolution;
 
-     # Get pre image dimensions
-        $pre_size = ps_query("select width,height from preview_size where id='pre'");
+        # Get preview sizes from DB
+        $preview_sizes = get_all_image_sizes(true);
 
-     # Get scr image dimensions
-        $scr_size = ps_query("select width,height from preview_size where id='scr'");
+        $pre_size = array_values(array_filter($preview_sizes, function ($var) {
+            return $var['id'] == 'pre';
+        }));
+
+        $scr_size = array_values(array_filter($preview_sizes, function ($var) {
+            return $var['id'] == 'scr';
+        }));
 
         $pre_width  = $pre_size[0]['width'];
         $pre_height = $pre_size[0]['height'];
 
-     # Since scr is not an application required size we can't assume there's a record for it
-     # so fallback to pre dimensions
+        # Since scr is not an application required size we can't assume there's a record for it
+        # so fallback to pre dimensions
         if (empty($scr_size)) {
             $scr_width  = $pre_size[0]['width'];
             $scr_height = $pre_size[0]['height'];
