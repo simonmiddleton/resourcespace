@@ -1,14 +1,15 @@
 <?php
+
 /**
 * @package ResourceSpace\Tools
-* 
+*
 * A tool to help administrators merge two ResourceSpace systems.
 */
-if('cli' != PHP_SAPI)
-    {
+
+if ('cli' != PHP_SAPI) {
     http_response_code(401);
     exit('Access denied - Command line only!');
-    }
+}
 
 $help_text = "NAME
     merge_rs_systems - a tool for merging two ResourceSpace systems.
@@ -56,7 +57,6 @@ EXAMPLES
     php /path/to/pages/tools/merge_rs_systems.php --clear-progress --spec-file=\"/path/to/spec.php\" --import /path/to/export_folder_from_src/
     " . PHP_EOL;
 
-
 $cli_short_options = "hu:l:";
 $cli_long_options  = array(
     "help",
@@ -77,64 +77,58 @@ $export = false;
 $import = false;
 $clear_progress = false;
 
-foreach($options as $option_name => $option_value)
-    {
-    if(in_array($option_name, array("h", "help")))
-        {
+foreach ($options as $option_name => $option_value) {
+    if (in_array($option_name, array("h", "help"))) {
         echo $help_text;
         exit(0);
-        }
+    }
 
-    if(in_array(
-        $option_name,
-        array(
+    if (
+        in_array(
+            $option_name,
+            array(
             "dry-run",
             "clear-progress",
             "export",
             "import",
-            "generate-spec-file")))
-        {
+            "generate-spec-file")
+        )
+    ) {
         fwrite(STDOUT, "Script running with '{$option_name}' option enabled!" . PHP_EOL);
 
         $option_name = str_replace("-", "_", $option_name);
         $$option_name = true;
-        }
+    }
 
-    if($option_name == "spec-file" && !is_array($option_value))
-        {
-        if(!file_exists($option_value))
-            {
+    if ($option_name == "spec-file" && !is_array($option_value)) {
+        if (!file_exists($option_value)) {
             fwrite(STDERR, "ERROR: Unable to open input file '{$option_value}'!" . PHP_EOL);
             exit(1);
-            }
-
-        $spec_file_path = $option_value;
         }
 
-    if(in_array($option_name, array("u", "user")) && !is_array($option_value))
-        {
-        if(!is_numeric($option_value) || (int) $option_value <= 0)
-            {
+        $spec_file_path = $option_value;
+    }
+
+    if (in_array($option_name, array("u", "user")) && !is_array($option_value)) {
+        if (!is_numeric($option_value) || (int) $option_value <= 0) {
             fwrite(STDERR, "ERROR: Invalid 'user' value provided: '{$option_value}' of type " . gettype($option_value) . PHP_EOL);
             fwrite(STDOUT, PHP_EOL . $help_text);
             exit(1);
-            }
-
-        $user = $option_value;
         }
 
-    if(in_array($option_name, ["l", "language"]))
-        {
-        if(is_array($option_value))
-            {
+        $user = $option_value;
+    }
+
+    if (in_array($option_name, ["l", "language"])) {
+        if (is_array($option_value)) {
             fwrite(STDERR, "ERROR: Language should only be set once. Use either -l or --language." . PHP_EOL);
             fwrite(STDOUT, PHP_EOL . $help_text);
             exit(1);
-            }
+        }
 
         $language = trim($option_value);
-        }
     }
+}
 
 $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/boot.php";
@@ -145,58 +139,48 @@ ps_query('SET session wait_timeout=86400;');
 $sql_session_wait_timeout = array_column(ps_query('SHOW SESSION VARIABLES LIKE "wait_timeout"'), 'Value', 'Variable_name');
 logScript("Database session 'wait_timeout' variable is set to {$sql_session_wait_timeout['wait_timeout']} seconds");
 
-$get_file_handler = function($file_path, $mode)
-    {
+$get_file_handler = function ($file_path, $mode) {
     $file_handler = fopen($file_path, $mode);
-    if($file_handler === false)
-        {
+    if ($file_handler === false) {
         logScript("ERROR: Unable to open output file '{$file_path}'!");
         exit(1);
-        }
+    }
 
     return $file_handler;
-    };
+};
 
-$json_decode_file_data = function($fh)
-    {
+$json_decode_file_data = function ($fh) {
     $input_lines = array();
-    while(($line = fgets($fh)) !== false)
-        {
-        if(trim($line) != "" &&  mb_check_encoding($line, "UTF-8"))
-            {
+    while (($line = fgets($fh)) !== false) {
+        if (trim($line) != "" &&  mb_check_encoding($line, "UTF-8")) {
             $input_lines[] = trim($line);
-            }
         }
+    }
     fclose($fh);
 
-    if(empty($input_lines))
-        {
+    if (empty($input_lines)) {
         logScript("WARNING: No data to import! To be safe, double check on the source side whether this is true.");
         return array();
-        }
+    }
 
     $json_decoded_data = array();
-    foreach($input_lines as $input_line)
-        {
+    foreach ($input_lines as $input_line) {
         $value = json_decode($input_line, true);
-        if(json_last_error() !== JSON_ERROR_NONE)
-            {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             logScript("ERROR: Unable to decode JSON because of the following error: " . json_last_error_msg());
             exit(100);
-            }
-        $json_decoded_data[] = $value;
         }
+        $json_decoded_data[] = $value;
+    }
 
     return $json_decoded_data;
-    };
+};
 
-if(isset($generate_spec_file) && $generate_spec_file)
-    {
+if (isset($generate_spec_file) && $generate_spec_file) {
     $spec_fpath = (getcwd() ?: dirname(__DIR__, 2)) . '/spec_file_example.php';
     $spec_fh = $get_file_handler($spec_fpath, "w+b");
     fwrite($spec_fh, '<?php
 // All of the following configuration options have the left side (keys) represent the SRC and DEST on the right (values)
-
 
 // User groups can be configured in three ways:
 // - map to an existing record in DEST system
@@ -212,13 +196,11 @@ $usergroups_spec = array(
     ),
 );
 
-
 // Archive states can either be mapped to an existing record or be created as a new state on the DEST system
 $archive_states_spec = array(
     0 => 0, # Active
     4 => null, # Marketing - new on DEST system
 );
-
 
 // Resource types can either be mapped to an existing record or be created as a new state on the DEST system
 $resource_types_spec = array(
@@ -227,7 +209,6 @@ $resource_types_spec = array(
     1 => 1, # Photo
     5 => null, # Case Study
 );
-
 
 /*
 Resource type fields can be configured in three ways:
@@ -301,14 +282,11 @@ fixed list rtf | yes             | no               | yes            | move only
 fixed list rtf | yes             | yes              | yes            | move only mapped nodes to their DEST node, everything else is moved to the mapped DEST field
 */
 
-
 // Metadata field to store the SRC resource ID. MUST be of type "Text box (single line)". Set to zero to disable.
 $rtf_src_resource_ref = 0;
 
-
 // Fixed list field options that will be applied to all imported SRC resources. List of node IDs.
 $nodes_applied_to_all_merged_resources = [];
-
 
 // A resource access moves across as is. Exception are resources with custom access which need to be converted to a
 // different access level (e.g open, restricted or confidential)
@@ -319,35 +297,31 @@ $custom_access_new_value_spec = RESOURCE_ACCESS_RESTRICTED;
     fclose($spec_fh);
     logScript("Successfully generated an example of the spec file. Location: '{$spec_fpath}'");
     exit(0);
-    }
+}
 
 // Advanced workflow plugin is required to be enabled
 $active_plugins = array_column(get_active_plugins(), 'name');
-if(!in_array('rse_workflow', $active_plugins))
-    {
+if (!in_array('rse_workflow', $active_plugins)) {
     logScript("ERROR: Missing requirement - 'Advanced workflow' plugin is not enabled.");
     exit(1);
-    }
+}
 
-if($import && !isset($user))
-    {
+if ($import && !isset($user)) {
     logScript("ERROR: You need to specify a user when importing. It is best if it is a Super Admin.");
     echo $help_text;
     exit(1);
-    }
+}
 
-if(isset($user))
-    {
+if (isset($user)) {
     $user_select_sql = new PreparedStatementQuery();
     $user_select_sql->sql = "u.ref = ?";
     $user_select_sql->parameters = ["i",$user];
     $user_data = validate_user($user_select_sql, true);
 
-    if(!is_array($user_data) || count($user_data) == 0)
-        {
+    if (!is_array($user_data) || count($user_data) == 0) {
         logScript("ERROR: Unable to validate user ID #{$user}!");
         exit(1);
-        }
+    }
 
     setup_user($user_data[0]);
     logScript("Running script as user '{$username}' (ID #{$userref})");
@@ -355,9 +329,8 @@ if(isset($user))
     // Reset any "maintenance mode" config options the system might be configured with
     $global_permissions_mask = "";
     $system_read_only = false;
-    }
+}
 logScript("Running script with language set to '{$language}'");
-
 
 /*
 For the following usage:
@@ -365,19 +338,16 @@ For the following usage:
  - php path/tools/merge_rs_systems.php [OPTION...] --import SRC
 Ensure DEST/SRC folder has been provided when exporting/importing data
 */
-if($export || $import)
-    {
+if ($export || $import) {
     $folder_path = end($argv);
-    if(!file_exists($folder_path) || !is_dir($folder_path))
-        {
+    if (!file_exists($folder_path) || !is_dir($folder_path)) {
         $folder_type = $export ? "DEST" : ($import ? "SRC" : "");
         logScript("ERROR: {$folder_type} MUST be an existing folder. Value provided: '{$folder_path}'");
         exit(1);
-        }
     }
+}
 
-if($export && isset($folder_path))
-    {
+if ($export && isset($folder_path)) {
     logScript('Script disabled $hide_real_filepath configuration option.');
     $hide_real_filepath = false;
 
@@ -406,13 +376,12 @@ if($export && isset($folder_path))
                     username IS NOT NULL AND trim(username) <> ''
                     AND usergroup IS NOT NULL AND trim(usergroup) <> ''",
             ),
-            "additional_process" => function($record) {
+            "additional_process" => function ($record) {
                 $user_preferences = array();
-                if(get_config_options($record["ref"], $user_preferences))
-                    {
+                if (get_config_options($record["ref"], $user_preferences)) {
                     logScript("Found user preferences");
                     $record["user_preferences"] = $user_preferences;
-                    }
+                }
                 return $record;
             },
         ),
@@ -467,17 +436,16 @@ if($export && isset($folder_path))
                     AND (file_extension IS NOT NULL AND trim(file_extension) <> '')
                     AND (preview_extension IS NOT NULL AND trim(preview_extension) <> '')",
             ),
-            "additional_process" => function($record) {
+            "additional_process" => function ($record) {
                 // new fake column used at import for ingesting the file in the DEST system
                 $record["merge_rs_systems_file_url"] = "";
 
                 $path = get_resource_path($record["ref"], true, "", false, $record["file_extension"]);
 
-                if(!file_exists($path))
-                    {
+                if (!file_exists($path)) {
                     logScript("WARNING: unable to get original file for resource #{$record["ref"]}");
                     return false;
-                    }
+                }
 
                 $record["merge_rs_systems_file_url"] = get_resource_path($record["ref"], false, "", false, $record["file_extension"]);
 
@@ -499,7 +467,7 @@ if($export && isset($folder_path))
                     AND (r.file_extension IS NOT NULL AND trim(r.file_extension) <> '')
                     AND (r.preview_extension IS NOT NULL AND trim(r.preview_extension) <> '')",
             ),
-            "additional_process" => function($record) {
+            "additional_process" => function ($record) {
                 // new fake column used at import for ingesting the file in the DEST system
                 $record["merge_rs_systems_file_url"] = "";
 
@@ -513,13 +481,13 @@ if($export && isset($folder_path))
                     1,
                     false,
                     "",
-                    $record["ref"]);
+                    $record["ref"]
+                );
 
-                if(!file_exists($path))
-                    {
+                if (!file_exists($path)) {
                     logScript("WARNING: unable to get original file for resource - alternative pair: #{$record["resource"]} - #{$record["ref"]}");
                     return false;
-                    }
+                }
 
                 $record["merge_rs_systems_file_url"] = get_resource_path(
                     $record["resource"],
@@ -531,7 +499,8 @@ if($export && isset($folder_path))
                     1,
                     false,
                     "",
-                    $record["ref"]);
+                    $record["ref"]
+                );
 
                 return $record;
             },
@@ -588,8 +557,7 @@ if($export && isset($folder_path))
         ),
     );
 
-    foreach($tables as $table)
-        {
+    foreach ($tables as $table) {
         logScript("");
         logScript("Exporting {$table["formatted_name"]}...");
 
@@ -600,55 +568,47 @@ if($export && isset($folder_path))
         $where = isset($table["sql"]["where"]) && trim($table["sql"]["where"]) != "" ? "WHERE {$table["sql"]["where"]}" : "";
         $additional_process = isset($table["additional_process"]) && is_callable($table["additional_process"]) ? $table["additional_process"] : null;
 
-        $records_count= ps_value("SELECT COUNT(*) value FROM {$from} {$where}", [], 0);
+        $records_count = ps_value("SELECT COUNT(*) value FROM {$from} {$where}", [], 0);
         $counter = 0;
-        while($counter<=$records_count)
-            {
+        while ($counter <= $records_count) {
             $records = ps_query("SELECT {$select} FROM {$from} {$where} LIMIT ?,5000", ['i', $counter]);
 
             if (
                 empty($records)
-                && $records_count==0
-                ) {
+                && $records_count == 0
+            ) {
                     logScript("WARNING: no data found!");
+            }
+
+            foreach ($records as $record) {
+                // Sometimes you want to provide feedback to the user to let him/ her know a particular record is being processed
+                if (isset($table["record_feedback"]) && !empty($table["record_feedback"])) {
+                    $log_msg = $table["record_feedback"]["text"];
+                    foreach ($table["record_feedback"]["placeholders"] as $placeholder) {
+                        $log_msg = str_replace("%{$placeholder}", $record["{$placeholder}"], $log_msg);
+                    }
+                    logScript($log_msg);
                 }
 
-            foreach($records as $record)
-                {
-                // Sometimes you want to provide feedback to the user to let him/ her know a particular record is being processed
-                if(isset($table["record_feedback"]) && !empty($table["record_feedback"]))
-                    {
-                    $log_msg = $table["record_feedback"]["text"];
-                    foreach($table["record_feedback"]["placeholders"] as $placeholder)
-                        {
-                        $log_msg = str_replace("%{$placeholder}", $record["{$placeholder}"], $log_msg);
-                        }
-                    logScript($log_msg);
-                    }
-
-                if(!is_null($additional_process))
-                    {
+                if (!is_null($additional_process)) {
                     $record = $additional_process($record);
 
                     // additional processing might determine we don't want to process this record at all
-                    if($record === false)
-                        {
+                    if ($record === false) {
                         continue;
-                        }
                     }
+                }
 
-                if($dry_run)
-                    {
+                if ($dry_run) {
                     continue;
-                    }
+                }
 
                 fwrite($export_fh, json_encode($record, JSON_NUMERIC_CHECK) . PHP_EOL);
-                }
-            $counter += 5000;
             }
-        fclose($export_fh);
+            $counter += 5000;
         }
-
+        fclose($export_fh);
+    }
 
     # ARCHIVE STATES
     ################
@@ -656,130 +616,108 @@ if($export && isset($folder_path))
     logScript("Exporting archive states...");
 
     $archive_states_export_fh = $get_file_handler($folder_path . DIRECTORY_SEPARATOR . "archive_states_export.json", "w+b");
-    foreach(get_workflow_states() as $archive_state)
-        {
-        if(!isset($lang["status{$archive_state}"]))
-            {
+    foreach (get_workflow_states() as $archive_state) {
+        if (!isset($lang["status{$archive_state}"])) {
             logScript("Warning: language not set for archive state #{$archive_state}");
             continue;
-            }
+        }
         $archive_state_text = $lang["status{$archive_state}"];
 
         logScript("Archive state '{$archive_state_text}' (ID #{$archive_state})");
 
-        if($dry_run)
-            {
+        if ($dry_run) {
             continue;
-            }
+        }
 
         $exported_archive_state = array(
             "ref"  => $archive_state,
             "lang" => $archive_state_text);
 
         fwrite($archive_states_export_fh, json_encode($exported_archive_state, JSON_NUMERIC_CHECK) . PHP_EOL);
-        }
-    fclose($archive_states_export_fh);
     }
+    fclose($archive_states_export_fh);
+}
 
-
-if($import && isset($folder_path))
-    {
-    if(!isset($spec_file_path) || trim($spec_file_path) == "")
-        {
+if ($import && isset($folder_path)) {
+    if (!isset($spec_file_path) || trim($spec_file_path) == "") {
         logScript("ERROR: Specification file not provided or empty!");
         exit(1);
-        }
+    }
     include_once $spec_file_path;
 
     // Quick spec file validation
-    if(!in_array($custom_access_new_value_spec, array_diff(RESOURCE_ACCESS_TYPES, [RESOURCE_ACCESS_CUSTOM_GROUP])))
-        {
+    if (!in_array($custom_access_new_value_spec, array_diff(RESOURCE_ACCESS_TYPES, [RESOURCE_ACCESS_CUSTOM_GROUP]))) {
         logScript('ERROR: Specification file - invalid $custom_access_new_value_spec');
         exit(1);
-        }
+    }
 
     /*
-    progress.php is used to override the specification file that was provided as original input by keeping track of new 
+    progress.php is used to override the specification file that was provided as original input by keeping track of new
     mappings created and saving them in the progress file.
     */
     $progress_fp = $folder_path . DIRECTORY_SEPARATOR . "progress.php";
     $progress_fh = $get_file_handler($progress_fp, "a+b");
     $php_tag_found = false;
-    while(($line = fgets($progress_fh)) !== false)
-        {
-        if(trim($line) != "" &&  mb_check_encoding($line, "UTF-8") && mb_strpos($line, "<?php") !== false)
-            {
+    while (($line = fgets($progress_fh)) !== false) {
+        if (trim($line) != "" &&  mb_check_encoding($line, "UTF-8") && mb_strpos($line, "<?php") !== false) {
             $php_tag_found = true;
-            }
         }
-    if(!$php_tag_found || $clear_progress)
-        {
+    }
+    if (!$php_tag_found || $clear_progress) {
         ftruncate($progress_fh, 0);
         fwrite($progress_fh, "<?php" . PHP_EOL);
-        }
+    }
     include_once $progress_fp;
 
     define("TX_SAVEPOINT", "merge_rs_systems_import");
-    if(!db_begin_transaction(TX_SAVEPOINT))
-        {
+    if (!db_begin_transaction(TX_SAVEPOINT)) {
         logScript("ERROR: MySQL - unable to begin transaction!");
         exit(1);
-        }
+    }
     db_end_transaction(TX_SAVEPOINT);
-
-
 
     # USER GROUPS
     #############
     logScript("");
     logScript("Importing user groups...");
-    if(!isset($usergroups_spec) || empty($usergroups_spec))
-        {
+    if (!isset($usergroups_spec) || empty($usergroups_spec)) {
         logScript("ERROR: Spec missing 'usergroups_spec'");
         exit(1);
-        }
+    }
     $processed_usergroups = (isset($processed_usergroups) ? $processed_usergroups : array());
     $usergroups_not_created = (isset($usergroups_not_created) ? $usergroups_not_created : array());
     $src_usergroups = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "usergroups_export.json", "r+b"));
     $dest_usergroups = get_usergroups(false, "", true);
-    foreach($src_usergroups as $src_ug)
-        {
-        if(in_array($src_ug["ref"], $processed_usergroups) || in_array($src_ug["ref"], $usergroups_not_created))
-            {
+    foreach ($src_usergroups as $src_ug) {
+        if (in_array($src_ug["ref"], $processed_usergroups) || in_array($src_ug["ref"], $usergroups_not_created)) {
             continue;
-            }
+        }
 
         logScript("Processing {$src_ug["name"]} (ID #{$src_ug["ref"]})...");
-        if(!array_key_exists($src_ug["ref"], $usergroups_spec))
-            {
+        if (!array_key_exists($src_ug["ref"], $usergroups_spec)) {
             logScript("WARNING: Specification for usergroups does not contain a mapping for this group! Skipping");
             $usergroups_not_created[] = $src_ug["ref"];
             fwrite($progress_fh, "\$usergroups_not_created[] = {$src_ug["ref"]};" . PHP_EOL);
             continue;
-            }
+        }
 
         $spec_cfg_value = $usergroups_spec[$src_ug["ref"]];
-        if(is_numeric($spec_cfg_value) && $spec_cfg_value > 0 && array_key_exists($spec_cfg_value, $dest_usergroups))
-            {
+        if (is_numeric($spec_cfg_value) && $spec_cfg_value > 0 && array_key_exists($spec_cfg_value, $dest_usergroups)) {
             logScript("Found direct 1:1 mapping to '{$dest_usergroups[$spec_cfg_value]}' (ID #{$spec_cfg_value})... Skipping");
             $processed_usergroups[] = $src_ug["ref"];
             fwrite($progress_fh, "\$processed_usergroups[] = {$src_ug["ref"]};" . PHP_EOL);
-            }
-        elseif(is_array($spec_cfg_value))
-            {
-            if(!isset($spec_cfg_value["create"]))
-                {
+        } elseif (is_array($spec_cfg_value)) {
+            if (!isset($spec_cfg_value["create"])) {
                 logScript("ERROR: usergroup specification config value is invalid. Required keys: create - true/false");
                 exit(1);
-                }
+            }
 
-            if ((bool) !$spec_cfg_value["create"])
-                {
+            if ((bool) !$spec_cfg_value["create"]) {
                 logScript("Skipping usergroup as per the specification record");
                 $usergroups_not_created[] = $src_ug["ref"];
                 fwrite($progress_fh, "\$usergroups_not_created[] = {$src_ug["ref"]};" . PHP_EOL);
                 continue;
-                }
+            }
 
             ps_query("INSERT INTO usergroup(name, request_mode) VALUES (?, '1')", ['s', $src_ug["name"]]);
             $new_ug_ref = sql_insert_id();
@@ -795,18 +733,15 @@ if($import && isset($folder_path))
                 "\$usergroups_spec[{$src_ug["ref"]}] = {$new_ug_ref};"
                 . PHP_EOL
                 . "\$processed_usergroups[] = {$src_ug["ref"]};"
-                . PHP_EOL);
-            }
-        else
-            {
+                . PHP_EOL
+            );
+        } else {
             logScript("ERROR: Invalid usergroup specification record for key #{$src_ug["ref"]}");
             exit(1);
-            }
-
         }
+    }
     unset($src_usergroups);
     unset($dest_usergroups);
-
 
     # USERS & USER PREFERENCES
     ##########################
@@ -816,57 +751,48 @@ if($import && isset($folder_path))
     $usernames_mapping = (isset($usernames_mapping) ? $usernames_mapping : array());
     $users_not_created = (isset($users_not_created) ? $users_not_created : array());
     $src_users = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "users_export.json", "r+b"));
-    $process_user_preferences = function($user_ref, $user_data) use ($progress_fh, &$usernames_mapping)
-        {
+    $process_user_preferences = function ($user_ref, $user_data) use ($progress_fh, &$usernames_mapping) {
         db_begin_transaction(TX_SAVEPOINT);
-        if(isset($user_data["user_preferences"]) && is_array($user_data["user_preferences"]) && !empty($user_data["user_preferences"]))
-            {
+        if (isset($user_data["user_preferences"]) && is_array($user_data["user_preferences"]) && !empty($user_data["user_preferences"])) {
             logScript("Processing user preferences (if no warning is showing, this is ok)");
-            foreach($user_data["user_preferences"] as $user_p)
-                {
-                if(!set_config_option($user_ref, $user_p["parameter"], $user_p["value"]))
-                    {
+            foreach ($user_data["user_preferences"] as $user_p) {
+                if (!set_config_option($user_ref, $user_p["parameter"], $user_p["value"])) {
                     logScript("ERROR: uanble to save user preference: {$user_p["parameter"]} = '{$user_p["value"]}'");
                     exit(1);
-                    }
                 }
             }
+        }
 
         $usernames_mapping[$user_data["ref"]] = $user_ref;
         fwrite($progress_fh, "\$usernames_mapping[{$user_data["ref"]}] = {$user_ref};" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
-        };
-    foreach($src_users as $user)
-        {
-        if(array_key_exists($user["ref"], $usernames_mapping) || in_array($user["ref"], $users_not_created))
-            {
+    };
+    foreach ($src_users as $user) {
+        if (array_key_exists($user["ref"], $usernames_mapping) || in_array($user["ref"], $users_not_created)) {
             continue;
-            }
+        }
 
         $found_uref = get_user_by_username($user["username"]);
-        if($found_uref !== false)
-            {
+        if ($found_uref !== false) {
             $found_udata = get_user($found_uref);
             logScript("Username '{$user["username"]}' found in current system as '{$found_udata["username"]}', full name '{$found_udata["fullname"]}'");
             $process_user_preferences($found_uref, $user);
             continue;
-            }
+        }
 
-        if(in_array($user["usergroup"], $usergroups_not_created))
-            {
+        if (in_array($user["usergroup"], $usergroups_not_created)) {
             logScript("WARNING: User '{$user["username"]}' belongs to a user group that was not created as per the specification file. Skipping");
             $users_not_created[] = $user["ref"];
             fwrite($progress_fh, "\$users_not_created[] = {$user["ref"]};" . PHP_EOL);
             continue;
-            }
+        }
 
         db_begin_transaction(TX_SAVEPOINT);
         $new_uref = new_user($user["username"], $usergroups_spec[$user["usergroup"]]);
-        if ($new_uref<=0)
-            {
+        if ($new_uref <= 0) {
             logScript("ERROR: User could not be created - check user limit or user name conflicts.");
             exit(1);
-            }
+        }
         logScript("Created new user '{$user["username"]}' (ID #{$new_uref} | User group ID: {$usergroups_spec[$user["usergroup"]]})");
 
         $_GET["username"] = $user["username"];
@@ -885,47 +811,40 @@ if($import && isset($folder_path))
         $save_user_status = save_user($new_uref);
         # Result can be === True which means save_user was successful
         # Otherwise it will be a string with an error message describing the reason for failure to save/email
-        if($save_user_status === true)
-            {
+        if ($save_user_status === true) {
             logScript("Saved user details");
-            }
-        else
-            {
+        } else {
             logScript("ERROR: failed to save user '{$user["username"]}'. Reason: '{$save_user_status}'");
             exit(1);
-            }
+        }
 
         $process_user_preferences($new_uref, $user);
-        }
+    }
     unset($src_users);
-
 
     # ARCHIVE STATES
     ################
     logScript("");
     logScript("Importing archive states...");
-    if(!isset($archive_states_spec) || empty($archive_states_spec))
-        {
+    if (!isset($archive_states_spec) || empty($archive_states_spec)) {
         logScript("ERROR: Spec missing 'archive_states_spec'");
         exit(1);
-        }
+    }
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_archive_states = (isset($processed_archive_states) ? $processed_archive_states : array());
     $src_archive_states = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "archive_states_export.json", "r+b"));
     $dest_archive_states = get_workflow_states();
-    foreach($src_archive_states as $archive_state)
-        {
-        if(in_array($archive_state["ref"], $processed_archive_states))
-            {
+    foreach ($src_archive_states as $archive_state) {
+        if (in_array($archive_state["ref"], $processed_archive_states)) {
             continue;
-            }
+        }
 
         logScript("Processing '{$archive_state["lang"]}' (ID #{$archive_state["ref"]})");
-        if(
+        if (
             array_key_exists($archive_state["ref"], $archive_states_spec)
             && in_array($archive_states_spec[$archive_state["ref"]], $dest_archive_states)
-            && !is_null($archive_states_spec[$archive_state["ref"]]))
-            {
+            && !is_null($archive_states_spec[$archive_state["ref"]])
+        ) {
             $lang_text = $lang["status{$archive_states_spec[$archive_state["ref"]]}"];
             logScript("Found direct 1:1 mapping to #{$archive_states_spec[$archive_state["ref"]]} - {$lang_text}");
 
@@ -933,75 +852,64 @@ if($import && isset($folder_path))
             fwrite($progress_fh, "\$processed_archive_states[] = {$archive_state["ref"]};" . PHP_EOL);
 
             continue;
-            }
-        elseif(
+        } elseif (
             array_key_exists($archive_state["ref"], $archive_states_spec)
-            && !in_array($archive_states_spec[$archive_state["ref"]], $dest_archive_states))
-            {
+            && !in_array($archive_states_spec[$archive_state["ref"]], $dest_archive_states)
+        ) {
             logScript("ERROR: Incorrect mapping? Attempted to map to workflow state #{$archive_states_spec[$archive_state["ref"]]}!");
             exit(1);
-            }
+        }
 
-        if(array_key_exists($archive_state["ref"], $archive_states_spec) && is_null($archive_states_spec[$archive_state["ref"]]))
-            {
+        if (array_key_exists($archive_state["ref"], $archive_states_spec) && is_null($archive_states_spec[$archive_state["ref"]])) {
             $new_archive_state = rse_workflow_create_state(['name' => $archive_state['lang']]);
-            if($new_archive_state === false)
-                {
+            if ($new_archive_state === false) {
                 logScript("ERROR: Unable to create new workflow state!");
                 exit(1);
-                }
+            }
             $dest_archive_states[] = $new_archive_state['code'];
             $processed_archive_states[] = $archive_state['ref'];
             fwrite($progress_fh, "\$processed_archive_states[] = {$archive_state['ref']};" . PHP_EOL);
             logScript("Created new workflow state with code #{$new_archive_state['code']}");
-            }
         }
+    }
     unset($src_archive_states);
     clear_query_cache('workflow');
-
 
     # RESOURCE TYPES
     ################
     logScript("");
     logScript("Importing resource types...");
-    if(!isset($resource_types_spec) || empty($resource_types_spec))
-        {
+    if (!isset($resource_types_spec) || empty($resource_types_spec)) {
         logScript("ERROR: Spec missing 'resource_types_spec'");
         exit(1);
-        }
+    }
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_resource_types = (isset($processed_resource_types) ? $processed_resource_types : array());
     $src_resource_types = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_types_export.json", "r+b"));
     $dest_resource_types = get_resource_types("", false);
-    foreach($src_resource_types as $resource_type)
-        {
-        if(in_array($resource_type["ref"], $processed_resource_types))
-            {
+    foreach ($src_resource_types as $resource_type) {
+        if (in_array($resource_type["ref"], $processed_resource_types)) {
             continue;
-            }
+        }
 
         logScript("Processing #{$resource_type["ref"]} '{$resource_type["name"]}'");
 
-        if(!array_key_exists($resource_type["ref"], $resource_types_spec))
-            {
+        if (!array_key_exists($resource_type["ref"], $resource_types_spec)) {
             logScript("ERROR: resource_types_spec does not have a record for this resource type");
             exit(1);
-            }
+        }
 
-        if(!is_null($resource_types_spec[$resource_type["ref"]]))
-            {
-            if(!is_numeric($resource_types_spec[$resource_type["ref"]]))
-                {
+        if (!is_null($resource_types_spec[$resource_type["ref"]])) {
+            if (!is_numeric($resource_types_spec[$resource_type["ref"]])) {
                 logScript("ERROR: Invalid mapped value!");
                 exit(1);
-                }
+            }
 
             $found_rt_index = array_search($resource_types_spec[$resource_type["ref"]], array_column($dest_resource_types, "ref"));
-            if($found_rt_index === false)
-                {
+            if ($found_rt_index === false) {
                 logScript("ERROR: Unable to find destination resource type!");
                 exit(1);
-                }
+            }
 
             $found_rt = $dest_resource_types[$found_rt_index];
             logScript("Found direct 1:1 mapping to #{$found_rt["ref"]} '{$found_rt["name"]}'");
@@ -1010,7 +918,7 @@ if($import && isset($folder_path))
             fwrite($progress_fh, "\$processed_resource_types[] = {$resource_type["ref"]};" . PHP_EOL);
 
             continue;
-            }
+        }
 
         // New record
         ps_query(
@@ -1039,21 +947,20 @@ if($import && isset($folder_path))
             "\$resource_types_spec[{$resource_type["ref"]}] = {$new_rt_ref};"
             . PHP_EOL
             . "\$processed_resource_types[] = {$resource_type["ref"]};"
-            . PHP_EOL);
-        }
+            . PHP_EOL
+        );
+    }
     unset($src_resource_types);
     unset($dest_resource_types);
-
 
     # RESOURCE TYPE FIELDS
     ######################
     logScript("");
     logScript("Importing resource type fields...");
-    if(!isset($resource_type_fields_spec) || empty($resource_type_fields_spec))
-        {
+    if (!isset($resource_type_fields_spec) || empty($resource_type_fields_spec)) {
         logScript("ERROR: Spec missing 'resource_type_fields_spec'");
         exit(1);
-        }
+    }
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_resource_type_fields = (isset($processed_resource_type_fields) ? $processed_resource_type_fields : array());
     $resource_type_fields_not_created = (isset($resource_type_fields_not_created) ? $resource_type_fields_not_created : array());
@@ -1075,43 +982,38 @@ if($import && isset($folder_path))
         FIELD_TYPE_WARNING_MESSAGE => array(FIELD_TYPE_WARNING_MESSAGE),
         FIELD_TYPE_DATE_RANGE => array(FIELD_TYPE_DATE_RANGE)
     );
-    foreach($src_resource_type_fields as $src_rtf)
-        {
-        if(in_array($src_rtf["ref"], $processed_resource_type_fields) || in_array($src_rtf["ref"], $resource_type_fields_not_created))
-            {
+    foreach ($src_resource_type_fields as $src_rtf) {
+        if (in_array($src_rtf["ref"], $processed_resource_type_fields) || in_array($src_rtf["ref"], $resource_type_fields_not_created)) {
             continue;
-            }
+        }
 
         logScript("Processing #{$src_rtf["ref"]} '{$src_rtf["title"]}'");
 
-        if(!array_key_exists($src_rtf["ref"], $resource_type_fields_spec))
-            {
+        if (!array_key_exists($src_rtf["ref"], $resource_type_fields_spec)) {
             logScript("WARNING: Specification missing mapping for this resource type field! Skipping");
             $resource_type_fields_not_created[] = $src_rtf["ref"];
             fwrite($progress_fh, "\$resource_type_fields_not_created[] = {$src_rtf["ref"]};" . PHP_EOL);
             continue;
-            }
+        }
 
         // Check if we need to create this field
-        if(!(isset($resource_type_fields_spec[$src_rtf["ref"]]["create"]) && is_bool($resource_type_fields_spec[$src_rtf["ref"]]["create"])))
-            {
+        if (!(isset($resource_type_fields_spec[$src_rtf["ref"]]["create"]) && is_bool($resource_type_fields_spec[$src_rtf["ref"]]["create"]))) {
             logScript("ERROR: invalid mapping configuration for mapped value. Expecting array type with index 'create' of type boolean.");
             exit(1);
-            }
-        if(!$resource_type_fields_spec[$src_rtf["ref"]]["create"])
-            {
+        }
+        if (!$resource_type_fields_spec[$src_rtf["ref"]]["create"]) {
             logScript("Mapping set to not be created. Skipping");
             $resource_type_fields_not_created[] = $src_rtf["ref"];
             fwrite($progress_fh, "\$resource_type_fields_not_created[] = {$src_rtf["ref"]};" . PHP_EOL);
             continue;
-            }
+        }
 
-        /* 
+        /*
         Check if we have a field mapped. Expected values:
             - integer when we have a direct mapping
             - null when a new field should be created
         */
-        if(
+        if (
             !(
                 (
                     isset($resource_type_fields_spec[$src_rtf["ref"]]["ref"])
@@ -1122,16 +1024,14 @@ if($import && isset($folder_path))
                 )
                 || is_null($resource_type_fields_spec[$src_rtf["ref"]]["ref"])
             )
-        )
-            {
+        ) {
             logScript("ERROR: invalid mapping configuration for mapped value. Expecting array type with index 'ref' of type integer OR use 'null' to create new field.");
             exit(1);
-            }
+        }
         $mapped_rtf_ref = $resource_type_fields_spec[$src_rtf["ref"]]["ref"];
 
         // This is merged as a new field
-        if(is_null($mapped_rtf_ref))
-            {
+        if (is_null($mapped_rtf_ref)) {
             $db_rtf_known_columns = array_column(ps_query('DESCRIBE resource_type_field', [], -1, false), 'Field');
 
             db_begin_transaction(TX_SAVEPOINT);
@@ -1140,40 +1040,37 @@ if($import && isset($folder_path))
                 $resource_types_spec[$src_rtf["resource_type"]],
                 $src_rtf["type"],
                 $src_rtf["name"],
-                $src_rtf["keywords_index"]);
+                $src_rtf["keywords_index"]
+            );
 
-            if($new_rtf_ref === false)
-                {
+            if ($new_rtf_ref === false) {
                 logScript("ERROR: unable to create new resource type field!");
                 exit(1);
-                }
+            }
 
             // IMPORTANT: we explicitly don't escape SQL values in this case as this should be the exact value stored in the SRC DB
             $sql = "";
-            foreach($src_rtf as $column => $value)
-                {
-                if(
+            foreach ($src_rtf as $column => $value) {
+                if (
                     // SRC may be very old and contain columns no longer in use which are unavailable on DEST
                     !in_array($column, $db_rtf_known_columns)
 
                     // Ignore columns that have been used for creating this field
                     || in_array($column, array("ref", "name", "title", "type", "keywords_index", "resource_type"))
-                )
-                    {
+                ) {
                     continue;
-                    }
+                }
 
-                if(trim($sql) != "")
-                    {
+                if (trim($sql) != "") {
                     $sql .= ", ";
-                    }
+                }
 
                 $col_val = trim($value) == "" ? null : $value;
                 $sql .= "`{$column}` = ?";
                 $sql_params[] = 'i';
                 $sql_params[] = $col_val;
                 log_activity(null, LOG_CODE_EDITED, $col_val, 'resource_type_field', $column, $new_rtf_ref);
-                }
+            }
             $sql_params[] = 'i';
             $sql_params[] = $new_rtf_ref;
             ps_query("UPDATE resource_type_field SET {$sql} WHERE ref = ?", $sql_params);
@@ -1186,7 +1083,8 @@ if($import && isset($folder_path))
                 "\$resource_type_fields_spec[{$src_rtf["ref"]}] = array(\"create\" => true, \"ref\" => {$new_rtf_ref});"
                 . PHP_EOL
                 . "\$processed_resource_type_fields[] = {$src_rtf["ref"]};"
-                . PHP_EOL);
+                . PHP_EOL
+            );
 
             $new_rtf_data = $src_rtf;
             $new_rtf_data["ref"] = $new_rtf_ref;
@@ -1197,38 +1095,33 @@ if($import && isset($folder_path))
             unset($new_rtf_data);
             db_end_transaction(TX_SAVEPOINT);
             continue;
-            }
+        }
 
         $found_rtf_index = array_search($mapped_rtf_ref, array_column($dest_resource_type_fields, "ref"));
-        if($found_rtf_index === false)
-            {
+        if ($found_rtf_index === false) {
             logScript("ERROR: Unable to find destination resource type field!");
             exit(1);
-            }
+        }
         $found_rtf = $dest_resource_type_fields[$found_rtf_index];
         logScript("Found direct 1:1 mapping to #{$found_rtf["ref"]} '{$found_rtf["title"]}'");
 
-        if(!in_array($found_rtf["type"], $compatible_rtf_types[$src_rtf["type"]]))
-            {
+        if (!in_array($found_rtf["type"], $compatible_rtf_types[$src_rtf["type"]])) {
             $compat_rtf_type_names_msg = '';
-            foreach($compatible_rtf_types[$found_rtf["type"]] as $compatible_rtf_type)
-                {
+            foreach ($compatible_rtf_types[$found_rtf["type"]] as $compatible_rtf_type) {
                 $compat_rtf_type_names_msg .= PHP_EOL . " - {$lang[$field_types[$compatible_rtf_type]]}";
-                }
+            }
             logScript("ERROR: incompatible types! Consider mapping to a field with one of these types: {$compat_rtf_type_names_msg}");
             exit(1);
-            }
+        }
 
         $processed_resource_type_fields[] = $src_rtf["ref"];
         fwrite($progress_fh, "\$processed_resource_type_fields[] = {$src_rtf["ref"]};" . PHP_EOL);
 
-        if($src_rtf["type"] == FIELD_TYPE_CATEGORY_TREE && $found_rtf["type"] != FIELD_TYPE_CATEGORY_TREE)
-            {
+        if ($src_rtf["type"] == FIELD_TYPE_CATEGORY_TREE && $found_rtf["type"] != FIELD_TYPE_CATEGORY_TREE) {
             logScript("WARNING: SRC field is a category type and DEST field is a different fixed list type. THIS WILL FLATTEN THE CATEGORY TREE!");
-            }
         }
+    }
     unset($src_resource_type_fields);
-
 
     # NODES
     #######
@@ -1239,90 +1132,76 @@ if($import && isset($folder_path))
     $new_nodes_mapping = $new_nodes_mapping ?? [];
     $nodes_not_created = $nodes_not_created ?? [];
     $src_nodes = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "nodes_export.json", "r+b"));
-    $dest_node_refs = ps_array('SELECT ref AS `value` FROM node',array());
-    foreach($src_nodes as $src_node)
-        {
-        if(array_key_exists($src_node['ref'], $new_nodes_mapping) || in_array($src_node['ref'], $nodes_not_created))
-            {
+    $dest_node_refs = ps_array('SELECT ref AS `value` FROM node', array());
+    foreach ($src_nodes as $src_node) {
+        if (array_key_exists($src_node['ref'], $new_nodes_mapping) || in_array($src_node['ref'], $nodes_not_created)) {
             continue;
-            }
+        }
 
         logScript("Processing #{$src_node["ref"]} '{$src_node["name"]}'");
 
         // Check if the specification has a mapping defined for this node to other DEST node(s).
-        if(isset($nodes_spec[$src_node['ref']]))
-            {
-            if(!is_array($nodes_spec[$src_node['ref']]))
-                {
+        if (isset($nodes_spec[$src_node['ref']])) {
+            if (!is_array($nodes_spec[$src_node['ref']])) {
                 logScript('ERROR: Invalid nodes specification! Reason: expected a list of nodes, received type is ' . gettype($nodes_spec[$src_node['ref']]));
                 exit(1);
-                }
+            }
 
             $nodes_spec[$src_node['ref']] = array_filter($nodes_spec[$src_node['ref']], 'is_int_loose');
-            if(empty($nodes_spec[$src_node['ref']]))
-                {
+            if (empty($nodes_spec[$src_node['ref']])) {
                 logScript('ERROR: Invalid nodes specification! Reason: no mapping defined.');
                 exit(1);
-                }
+            }
 
             // Safe check: error if any of the mappings for this node is invalid (ie ref doesn't exist).
             $found_invalid_nodes_map = array_diff($nodes_spec[$src_node['ref']], $dest_node_refs);
-            if(!empty($found_invalid_nodes_map))
-                {
+            if (!empty($found_invalid_nodes_map)) {
                 logScript('ERROR: Invalid DEST node(s) mapping found: ' . implode(', ', $found_invalid_nodes_map));
                 exit(1);
-                }
+            }
 
             logScript('Found direct mapping to DEST node(s): ' . implode(', ', $nodes_spec[$src_node['ref']]));
             continue;
-            }
+        }
 
         // If this nodes' resource type field was specified to not be created on the DEST system (via $resource_type_fields_spec), skip it
-        if(in_array($src_node["resource_type_field"], $resource_type_fields_not_created))
-            {
+        if (in_array($src_node["resource_type_field"], $resource_type_fields_not_created)) {
             logScript("Skipping as resource type field was not created on the destination system!");
             $nodes_not_created[] = $src_node["ref"];
             fwrite($progress_fh, "\$nodes_not_created[] = {$src_node["ref"]};" . PHP_EOL);
             continue;
-            }
+        }
 
         $mapped_rtf_ref = $resource_type_fields_spec[$src_node["resource_type_field"]]["ref"];
         $found_rtf_index = array_search($mapped_rtf_ref, array_column($dest_resource_type_fields, "ref"));
-        if($found_rtf_index === false)
-            {
+        if ($found_rtf_index === false) {
             logScript("ERROR: Unable to find destination resource type field!");
             exit(1);
-            }
+        }
         $found_rtf = $dest_resource_type_fields[$found_rtf_index];
 
         // Determine parent node
-        if(
+        if (
             $found_rtf["type"] == FIELD_TYPE_CATEGORY_TREE
             && (!is_null($src_node["parent"]) || trim($src_node["parent"]) != "")
             && in_array($src_node["parent"], $nodes_not_created)
-        )
-            {
+        ) {
             logScript("ERROR: Unable to create new node because its parent was not created!");
             exit(1);
-            }
-        elseif(
+        } elseif (
             $found_rtf["type"] == FIELD_TYPE_CATEGORY_TREE
             && (!is_null($src_node["parent"]) || trim($src_node["parent"]) != "")
             && !in_array($src_node["parent"], $nodes_not_created)
             && isset($new_nodes_mapping[$src_node["parent"]])
-        )
-            {
+        ) {
             $node_parent = $new_nodes_mapping[$src_node["parent"]];
             $node_parent_sql = ' AND parent = ?';
             $node_parent_sql_params = ['i', $node_parent];
-            }
-        else
-            {
+        } else {
             $node_parent = null;
             $node_parent_sql = '';
             $node_parent_sql_params = [];
-            }
-
+        }
 
         // Check if we can find an existing node for this metadata field (taking into account language translations as well)
         $all_nodes_for_rtf = ps_query(
@@ -1330,30 +1209,25 @@ if($import && isset($folder_path))
             array_merge(['i', $mapped_rtf_ref], $node_parent_sql_params)
         );
         $found_matching_node_i18n = get_node_by_name($all_nodes_for_rtf, $src_node['name'], true);
-        if(!empty($found_matching_node_i18n))
-            {
+        if (!empty($found_matching_node_i18n)) {
             logScript("Found matching node after translation: '{$found_matching_node_i18n['name']}'");
             $new_nodes_mapping[$src_node['ref']] = $found_matching_node_i18n['ref'];
             fwrite($progress_fh, "\$new_nodes_mapping[{$src_node['ref']}] = {$found_matching_node_i18n['ref']};" . PHP_EOL);
-            }
-        else
-            {
+        } else {
             db_begin_transaction(TX_SAVEPOINT);
             $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "");
-            if($new_node_ref === false)
-                {
+            if ($new_node_ref === false) {
                 logScript("ERROR: unable to create new node!");
                 exit(1);
-                }
+            }
 
             logScript("Created new node record #{$new_node_ref} '{$src_node["name"]}'. Node set for resource type field {$mapped_rtf_ref}");
             $new_nodes_mapping[$src_node["ref"]] = $new_node_ref;
             fwrite($progress_fh, "\$new_nodes_mapping[{$src_node["ref"]}] = {$new_node_ref};" . PHP_EOL);
             db_end_transaction(TX_SAVEPOINT);
-            }
         }
+    }
     unset($src_nodes, $dest_node_refs, $all_nodes_for_rtf);
-
 
     # RESOURCES
     ###########
@@ -1362,52 +1236,46 @@ if($import && isset($folder_path))
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $resources_mapping = (isset($resources_mapping) ? $resources_mapping : array());
     $src_resources = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resources_export.json", "r+b"));
-    foreach($src_resources as $src_resource)
-        {
-        if(array_key_exists($src_resource["ref"], $resources_mapping))
-            {
+    foreach ($src_resources as $src_resource) {
+        if (array_key_exists($src_resource["ref"], $resources_mapping)) {
             continue;
-            }
+        }
 
         logScript("Processing #{$src_resource["ref"]} | resource_type: {$src_resource["resource_type"]} | archive: {$src_resource["archive"]} | created_by: {$src_resource["created_by"]}");
 
-        if(
+        if (
             !array_key_exists($src_resource["archive"], $archive_states_spec)
-            || !in_array($archive_states_spec[$src_resource["archive"]], $dest_archive_states))
-            {
+            || !in_array($archive_states_spec[$src_resource["archive"]], $dest_archive_states)
+        ) {
             logScript("ERROR: Invalid resource archive state! Please check archive_states_spec or dest_archive_states.");
             exit(1);
-            }
+        }
 
         $created_by = $userref ?? -1;
-        if(!in_array($src_resource["created_by"], $users_not_created) && isset($usernames_mapping[$src_resource["created_by"]]))
-            {
+        if (!in_array($src_resource["created_by"], $users_not_created) && isset($usernames_mapping[$src_resource["created_by"]])) {
             $created_by = $usernames_mapping[$src_resource["created_by"]];
-            }
+        }
 
         db_begin_transaction(TX_SAVEPOINT);
         $new_resource_ref = create_resource(
             $resource_types_spec[$src_resource["resource_type"]],
             $archive_states_spec[$src_resource["archive"]],
             $created_by,
-            $lang["createdfrommergerssystems"]);
+            $lang["createdfrommergerssystems"]
+        );
 
-        if($new_resource_ref === false)
-            {
+        if ($new_resource_ref === false) {
             logScript("ERROR: unable to create new resource!");
             exit(1);
-            }
+        }
 
         // Move across the resource access. Custom access gets remapped.
-        if(in_array($src_resource['access'], RESOURCE_ACCESS_TYPES))
-            {
+        if (in_array($src_resource['access'], RESOURCE_ACCESS_TYPES)) {
             $new_resource_acccess = $src_resource['access'] == RESOURCE_ACCESS_CUSTOM_GROUP ? $custom_access_new_value_spec : $src_resource['access'];
-            }
-        else
-            {
+        } else {
             logScript("ERROR: unknown resource access type - '{$src_resource['access']}'");
             exit(1);
-            }
+        }
 
         $new_resource_data = [
             'creation_date' => $src_resource['creation_date'] ?: null,
@@ -1420,11 +1288,10 @@ if($import && isset($folder_path))
             'geo_long' => $src_resource['geo_long'] !== '' ? $src_resource['geo_long'] : null,
         ];
         $new_resource_data = array_diff($new_resource_data, array_filter($new_resource_data, 'is_null'));
-        if(!empty($new_resource_data) && !put_resource_data($new_resource_ref, $new_resource_data))
-            {
+        if (!empty($new_resource_data) && !put_resource_data($new_resource_ref, $new_resource_data)) {
             logScript("ERROR: unable to update the new resource properties!");
             exit(1);
-            }
+        }
 
         // we don't want to extract, revert or autorotate. This is a basic file pull into the DEST system from a remote SRC
         $job_data = array(
@@ -1439,18 +1306,16 @@ if($import && isset($folder_path))
             . str_replace(
                 array('%ref', '%title'),
                 array($new_resource_ref, ""),
-                $lang["ref-title"]);
+                $lang["ref-title"]
+            );
         $job_queue_added = job_queue_add("upload_processing", $job_data, $userref, "", "", $job_failure_lang, $job_code);
-        if($job_queue_added === false)
-            {
+        if ($job_queue_added === false) {
             logScript("ERROR: unable to create job queue for uploading (copying) resource original file from SRC system");
             exit(1);
-            }
-        elseif(is_string($job_queue_added) && trim($job_queue_added) != "")
-            {
+        } elseif (is_string($job_queue_added) && trim($job_queue_added) != "") {
             logScript("ERROR: unable to create job queue. Reason: '{$job_queue_added}'");
             exit(1);
-            }
+        }
 
         resource_log(
             $new_resource_ref,
@@ -1458,52 +1323,44 @@ if($import && isset($folder_path))
             "",
             "merge_rs_systems: SRC resource ref was #{$src_resource["ref"]}",
             $src_resource["ref"],
-            $new_resource_ref);
+            $new_resource_ref
+        );
 
         // If configured, also store the SRC resource ID in a text field
-        if($rtf_src_resource_ref > 0)
-            {
+        if ($rtf_src_resource_ref > 0) {
             $rtf_src_resource_ref_data = get_resource_type_field($rtf_src_resource_ref);
             $ursrr_errors = [];
-            if(
+            if (
                 $rtf_src_resource_ref_data !== false
                 && $rtf_src_resource_ref_data['type'] == FIELD_TYPE_TEXT_BOX_SINGLE_LINE
                 && !update_field($new_resource_ref, $rtf_src_resource_ref, $src_resource['ref'], $ursrr_errors)
-            )
-                {
+            ) {
                 logScript("WARNING: unable to update the new resource and store the source resource ID! Reason: " . implode('; ', $ursrr_errors));
-                }
             }
+        }
 
         logScript("Created new record #{$new_resource_ref}");
         $resources_mapping[$src_resource["ref"]] = $new_resource_ref;
         fwrite($progress_fh, "\$resources_mapping[{$src_resource["ref"]}] = {$new_resource_ref};" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
-        }
+    }
 
     // If specification is configured to add certain nodes to all imported resources, do it now
-    if(!empty($nodes_applied_to_all_merged_resources))
-        {
-        if(
+    if (!empty($nodes_applied_to_all_merged_resources)) {
+        if (
             !isset($processed_nodes_applied_to_all_merged_resources)
             && add_resource_nodes_multi(array_values($resources_mapping), $nodes_applied_to_all_merged_resources, false, true)
-        )
-            {
+        ) {
             logScript('Updated all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
             fwrite($progress_fh, '$processed_nodes_applied_to_all_merged_resources = true;' . PHP_EOL);
-            }
-        elseif(isset($processed_nodes_applied_to_all_merged_resources))
-            {
+        } elseif (isset($processed_nodes_applied_to_all_merged_resources)) {
             logScript('Nodes that should be applied to all merged resources have already been added. Skipping');
-            }
-        else
-            {
+        } else {
             logScript('ERROR: Failed to update all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
             exit(1);
-            }
         }
+    }
     unset($src_resources);
-
 
     # RESOURCE NODES
     ################
@@ -1512,56 +1369,48 @@ if($import && isset($folder_path))
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_resource_nodes = (isset($processed_resource_nodes) ? $processed_resource_nodes : array());
     $src_resource_nodes = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_nodes_export.json", "r+b"));
-    foreach($src_resource_nodes as $src_rn)
-        {
-        if(in_array("{$src_rn["resource"]}_{$src_rn["node"]}", $processed_resource_nodes))
-            {
+    foreach ($src_resource_nodes as $src_rn) {
+        if (in_array("{$src_rn["resource"]}_{$src_rn["node"]}", $processed_resource_nodes)) {
             continue;
-            }
+        }
 
         logScript("Processing SRC resource #{$src_rn["resource"]} and node #{$src_rn["node"]}");
 
-        if(!array_key_exists($src_rn["resource"], $resources_mapping))
-            {
+        if (!array_key_exists($src_rn["resource"], $resources_mapping)) {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
             $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
             fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
-            }
+        }
 
         // If specification defined a mapping for a SRC node, apply it
-        if(isset($nodes_spec[$src_rn['node']]))
-            {
-            if(add_resource_nodes($resources_mapping[$src_rn['resource']], $nodes_spec[$src_rn['node']], false, true))
-                {
+        if (isset($nodes_spec[$src_rn['node']])) {
+            if (add_resource_nodes($resources_mapping[$src_rn['resource']], $nodes_spec[$src_rn['node']], false, true)) {
                 logScript("Found direct mapping ==> added to DEST resource #{$resources_mapping[$src_rn['resource']]} the mapped DEST nodes: " . implode(', ', $nodes_spec[$src_rn['node']]));
                 $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
                 fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
-                }
-            else
-                {
+            } else {
                 logScript("WARNING: Failed to add found mapped DEST nodes to the resource (ie. resource_node)");
-                }
-            continue;
             }
+            continue;
+        }
 
-        if(in_array($src_rn["node"], $nodes_not_created))
-            {
+        if (in_array($src_rn["node"], $nodes_not_created)) {
             logScript("Skipping as the node was not created on the destination system!");
             $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
             fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
-            }
+        }
 
-        if(!isset($new_nodes_mapping[$src_rn["node"]]))
-            {
+        if (!isset($new_nodes_mapping[$src_rn["node"]])) {
             logScript("WARNING: unable to find a node mapping!");
             $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
             fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
-            }
+        }
 
-        ps_query("INSERT INTO resource_node (resource, node, hit_count, new_hit_count) VALUES (?, ?, ?, ?)",
+        ps_query(
+            "INSERT INTO resource_node (resource, node, hit_count, new_hit_count) VALUES (?, ?, ?, ?)",
             [
                 'i', $resources_mapping[$src_rn["resource"]],
                 'i', $new_nodes_mapping[$src_rn["node"]],
@@ -1571,9 +1420,8 @@ if($import && isset($folder_path))
         );
         $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
         fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
-        }
+    }
     unset($src_resource_nodes);
-
 
     # RESOURCE DATA
     ###############
@@ -1582,31 +1430,27 @@ if($import && isset($folder_path))
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_resource_data = (isset($processed_resource_data) ? $processed_resource_data : array());
     $src_resource_data = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_data_export.json", "r+b"));
-    foreach($src_resource_data as $src_rd)
-        {
+    foreach ($src_resource_data as $src_rd) {
         $process_rd_value = "{$src_rd["resource"]}_{$src_rd["resource_type_field"]}_" . md5($src_rd["value"]);
-        if(in_array($process_rd_value, $processed_resource_data))
-            {
+        if (in_array($process_rd_value, $processed_resource_data)) {
             continue;
-            }
+        }
 
         logScript("Processing data for resource #{$src_rd["resource"]} | resource_type_field: #{$src_rd["resource_type_field"]}");
 
-        if(!array_key_exists($src_rd["resource"], $resources_mapping))
-            {
+        if (!array_key_exists($src_rd["resource"], $resources_mapping)) {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
             $processed_resource_data[] = $process_rd_value;
             fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
             continue;
-            }
+        }
 
-        if(in_array($src_rd["resource_type_field"], $resource_type_fields_not_created))
-            {
+        if (in_array($src_rd["resource_type_field"], $resource_type_fields_not_created)) {
             logScript("WARNING: Resource type field was not created. Skipping");
             $processed_resource_data[] = $process_rd_value;
             fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
             continue;
-            }
+        }
 
         db_begin_transaction(TX_SAVEPOINT);
         $rd_import_errors = array();
@@ -1615,20 +1459,19 @@ if($import && isset($folder_path))
             $resource_type_fields_spec[$src_rd["resource_type_field"]]["ref"],
             $src_rd["value"],
             $rd_import_errors,
-            true);
+            true
+        );
 
-        if($update_field === false)
-            {
+        if ($update_field === false) {
             logScript("ERROR: unable to update field data! Found errors: " . implode(", " . PHP_EOL, $rd_import_errors));
             exit(1);
-            }
+        }
 
         $processed_resource_data[] = $process_rd_value;
         fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
-        }
+    }
     unset($src_resource_data);
-
 
     # RESOURCE DIMENSIONS
     #####################
@@ -1637,24 +1480,21 @@ if($import && isset($folder_path))
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_resource_dimensions = (isset($processed_resource_dimensions) ? $processed_resource_dimensions : array());
     $src_resource_dimensions = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_dimensions_export.json", "r+b"));
-    foreach($src_resource_dimensions as $src_rdms)
-        {
+    foreach ($src_resource_dimensions as $src_rdms) {
         $process_rdms_value = "{$src_rdms["resource"]}_{$src_rdms["width"]}_{$src_rdms["height"]}_"
         . md5("{$src_rdms["resource"]}|{$src_rdms["width"]}|{$src_rdms["height"]}|{$src_rdms["file_size"]}|{$src_rdms["resolution"]}|{$src_rdms["unit"]}|{$src_rdms["page_count"]}");
-        if(in_array($process_rdms_value, $processed_resource_dimensions))
-            {
+        if (in_array($process_rdms_value, $processed_resource_dimensions)) {
             continue;
-            }
+        }
 
         logScript("Processing dimensions for resource #{$src_rdms["resource"]} | width: {$src_rdms["width"]} | height: {$src_rdms["height"]} | page_count: #{$src_rdms["page_count"]}");
 
-        if(!array_key_exists($src_rdms["resource"], $resources_mapping))
-            {
+        if (!array_key_exists($src_rdms["resource"], $resources_mapping)) {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
             $processed_resource_dimensions[] = $process_rdms_value;
             fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
             continue;
-            }
+        }
 
         ps_query(
             "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -1671,9 +1511,8 @@ if($import && isset($folder_path))
 
         $processed_resource_dimensions[] = $process_rdms_value;
         fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
-        }
+    }
     unset($src_resource_dimensions);
-
 
     # RESOURCE RELATED
     ##################
@@ -1683,31 +1522,28 @@ if($import && isset($folder_path))
     $processed_resource_related = (isset($processed_resource_related) ? $processed_resource_related : array());
     $processed_resource_related = array_flip($processed_resource_related);
     $src_resource_related = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_related_export.json", "r+b"));
-    $src_resource_related_chunks = array_chunk($src_resource_related,2000);
+    $src_resource_related_chunks = array_chunk($src_resource_related, 2000);
 
-    foreach($src_resource_related_chunks as $src_resource_related_chunk)
-        {
+    foreach ($src_resource_related_chunks as $src_resource_related_chunk) {
         $insertvals = $insertvals_bparams = [];
         $temp_processed_related = [];
         $temp_processed_related_log  = "";
-        foreach($src_resource_related_chunk as $src_rr)
-            {
-            if(isset($processed_resource_related["{$src_rr["resource"]}_{$src_rr["related"]}"]))
-                {
+        foreach ($src_resource_related_chunk as $src_rr) {
+            if (isset($processed_resource_related["{$src_rr["resource"]}_{$src_rr["related"]}"])) {
                 continue;
-                }
+            }
 
             logScript("Processing resource related - resource: #{$src_rr["resource"]} | related: #{$src_rr["related"]}");
 
-            if(
+            if (
                 !array_key_exists($src_rr["resource"], $resources_mapping)
-                || !array_key_exists($src_rr["related"], $resources_mapping))
-                {
+                || !array_key_exists($src_rr["related"], $resources_mapping)
+            ) {
                 logScript("WARNING: Unable to find a resource mapping for either resource or related. Skipping");
                 $processed_resource_related["{$src_rr["resource"]}_{$src_rr["related"]}"] = true;
                 fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
                 continue;
-                }
+            }
 
             $insertvals[] = "(?, ?)";
             $insertvals_bparams = array_merge(
@@ -1717,16 +1553,14 @@ if($import && isset($folder_path))
 
             $temp_processed_related["{$src_rr["resource"]}_{$src_rr["related"]}"] = true;
             $temp_processed_related_log .= "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL;
-            }
-        if(count($insertvals) > 0)
-            {
-            ps_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",",$insertvals), $insertvals_bparams);
-            $processed_resource_related = array_merge($processed_resource_related,$temp_processed_related);
-            fwrite($progress_fh, $temp_processed_related_log);
-            }
         }
+        if (count($insertvals) > 0) {
+            ps_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",", $insertvals), $insertvals_bparams);
+            $processed_resource_related = array_merge($processed_resource_related, $temp_processed_related);
+            fwrite($progress_fh, $temp_processed_related_log);
+        }
+    }
     unset($src_resource_related);
-
 
     # RESOURCE ALTERNATIVE FILES
     ############################
@@ -1735,22 +1569,19 @@ if($import && isset($folder_path))
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_resource_alt_files = (isset($processed_resource_alt_files) ? $processed_resource_alt_files : array());
     $src_resource_alt_files = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_alt_files_export.json", "r+b"));
-    foreach($src_resource_alt_files as $src_raf)
-        {
-        if(in_array("{$src_raf["resource"]}_{$src_raf["ref"]}", $processed_resource_alt_files))
-            {
+    foreach ($src_resource_alt_files as $src_raf) {
+        if (in_array("{$src_raf["resource"]}_{$src_raf["ref"]}", $processed_resource_alt_files)) {
             continue;
-            }
+        }
 
         logScript("Processing resource alternative file - resource: #{$src_raf["resource"]} | alternative: #{$src_raf["ref"]}");
 
-        if(!array_key_exists($src_raf["resource"], $resources_mapping))
-            {
+        if (!array_key_exists($src_raf["resource"], $resources_mapping)) {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
             $processed_resource_alt_files[] = "{$src_raf["resource"]}_{$src_raf["ref"]}";
             fwrite($progress_fh, "\$processed_resource_alt_files[] = \"{$src_raf["resource"]}_{$src_raf["ref"]}\";" . PHP_EOL);
             continue;
-            }
+        }
 
         db_begin_transaction(TX_SAVEPOINT);
         $new_alternative_ref = add_alternative_file(
@@ -1760,7 +1591,8 @@ if($import && isset($folder_path))
             $src_raf["file_name"],
             $src_raf["file_extension"],
             $src_raf["file_size"],
-            $src_raf["alt_type"]);
+            $src_raf["alt_type"]
+        );
 
         // we don't want to extract, revert or autorotate. This is a basic file pull into the DEST system from a remote SRC
         $job_data = array(
@@ -1778,28 +1610,25 @@ if($import && isset($folder_path))
             . str_replace(
                 array('%ref', '%title'),
                 array($src_raf["ref"], ""),
-                $lang["ref-title"]);
+                $lang["ref-title"]
+            );
 
         $job_queue_added = job_queue_add("upload_processing", $job_data, $userref, "", "", $job_failure_lang, $job_code);
-        if($job_queue_added === false)
-            {
+        if ($job_queue_added === false) {
             logScript("ERROR: unable to create job queue for uploading (copying) resource alternative file from SRC system");
             exit(1);
-            }
-        elseif(is_string($job_queue_added) && trim($job_queue_added) != "")
-            {
+        } elseif (is_string($job_queue_added) && trim($job_queue_added) != "") {
             logScript("ERROR: unable to create job queue. Reason: '{$job_queue_added}'");
             exit(1);
-            }
+        }
 
         $processed_resource_alt_files[] = "{$src_raf["resource"]}_{$src_raf["ref"]}";
         fwrite($progress_fh, "\$processed_resource_alt_files[] = \"{$src_raf["resource"]}_{$src_raf["ref"]}\";" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
-        }
+    }
     unset($src_resource_alt_files);
-
 
     logScript("");
     logScript("Script ran successfully!");
     fclose($progress_fh);
-    }
+}

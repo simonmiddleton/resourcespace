@@ -1458,7 +1458,7 @@ hook("editbefresmetadata"); ?>
                         && (checkperm("XU{$type['ref']}") || in_array($type['ref'], $hide_resource_types))
                         && $resource['resource_type'] != $type['ref']
                     )
-                    || !acl_can_edit_in_resource_type($type['ref'])
+                    || !acl_can_edit_resource_of_type($type['ref'])
                     || (
                         trim((string) $resource["file_extension"]) != ""
                         && count($allowed_extensions) > 0 
@@ -1523,7 +1523,7 @@ hook("editbefresmetadata"); ?>
             <select name="resource_type" id="resourcetype" class="stdwidth">
                 <?php
                 foreach (get_resource_types() as $type) {
-                    if (acl_can_edit_in_resource_type($type['ref'])) {
+                    if (acl_can_edit_resource_of_type($type['ref'])) {
                         echo render_dropdown_option(
                             $type['ref'],
                             $type['name'],

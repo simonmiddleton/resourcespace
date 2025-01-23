@@ -5217,7 +5217,7 @@ function get_edit_access($resource, int $status = -999, array &$resourcedata = [
     # Must have edit permission to this resource first and foremost, before checking the filter.
     if (
         (!checkperm("e{$status}") && !checkperm("ert{$resourcedata['resource_type']}"))
-        || !acl_can_edit_in_resource_type($resourcedata['resource_type'])
+        || !acl_can_edit_resource_of_type($resourcedata['resource_type'])
     ) {
         return false;
     }
@@ -8853,12 +8853,12 @@ function get_resources_to_validate(int $days = 0): array
 }
 
 /**
- * Access control check that user can edit (a resource) in a particular Resource Type (RT). Main use is to hide
+ * Access control check that user can edit (a resource) of a particular Resource Type (RT). Main use is to hide
  * inapplicable RTs.
  *
  * @param int $ref Resource type ID
  */
-function acl_can_edit_in_resource_type(int $ref): bool
+function acl_can_edit_resource_of_type(int $ref): bool
 {
     return checkperm("ert{$ref}")
         || !(
