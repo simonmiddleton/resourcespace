@@ -109,21 +109,17 @@ if (getval('sp_submit', '') !== '' && enforcePostRequest(false)) {
 
     if ($metadata_xml != "") {
         require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
-        \SimpleSAML\Utils\XML::checkSAMLMessage($metadata_xml, 'saml-meta');
+        (new \SimpleSAML\Utils\XML())->checkSAMLMessage($metadata_xml, 'saml-meta');
         $entities = \SimpleSAML\Metadata\SAMLParser::parseDescriptorsString($metadata_xml);
-
-        // get all metadata for the entities
         foreach ($entities as &$entity) {
             $entity = [
-                'shib13-sp-remote'  => $entity->getMetadata1xSP(),
-                'shib13-idp-remote' => $entity->getMetadata1xIdP(),
                 'saml20-sp-remote'  => $entity->getMetadata20SP(),
                 'saml20-idp-remote' => $entity->getMetadata20IdP(),
             ];
         }
 
         // transpose from $entities[entityid][type] to $output[type][entityid]
-        $output = \SimpleSAML\Utils\Arrays::transpose($entities);
+        $output = (new \SimpleSAML\Utils\Arrays())->transpose($entities);
 
         // merge all metadata of each type to a single string which should be added to the corresponding file
         foreach ($output as $type => &$entities) {
