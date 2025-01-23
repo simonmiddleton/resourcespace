@@ -185,7 +185,9 @@ jQuery("#simplesaml_rsconfig").change(function(event)
 
 <div class='Question' id='sp_config_links'><div class='Fixed'>
     <?php
-    $samlphplink = $simplesaml_rsconfig ? $baseurl_short . "plugins/simplesaml/lib/www" : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/www");
+    $samlphplink = $simplesaml_rsconfig
+        ? "{$baseurl_short}plugins/simplesaml/lib/public/admin"
+        : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/public/admin");
     if (isset($simplesaml_lib_path) && file_exists($simplesaml_lib_path . "/config/authsources.php")) {
         echo "<a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate' target='_blank'>" . LINK_CARET . $lang["simplesaml_existing_config"] . "</a></br>";
     } else {
