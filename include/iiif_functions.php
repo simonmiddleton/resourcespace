@@ -1134,23 +1134,18 @@ final class IIIFRequest
             ($this->regionx + $this->regionw) === ($this->imagewidth)
             || ((int)$this->regiony + (int)$this->regionh) === ((int)$this->imageheight)
         ) {
-            // Size specified is not the standard tile width - only valid for right side or bottom edge of image
+            // Check this is a valid scale from the width/height requested.
+            // If using just e.g. "x," or ",y" then default to 1)
+            $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1;
+            $vscale = $this->getheight > 0 ? ceil($this->regionh / $this->getheight) : 1;
             if (
-                ($this->getwidth == 0 || fmod($this->regionw, $this->getwidth) == 0)
-                && ($this->getheight == 0 || fmod($this->regionh, $this->getheight) == 0)
+                ($this->getwidth === 0 || $this->getheight === 0 || $hscale == $vscale)
+                && count(array_diff([$hscale,$vscale], $this->preview_tile_scale_factors)) == 0
             ) {
-                // Check this is a valid scale from the width/height requested.
-                // If using just e.g. "x," or ",y" then default to 1)
-                $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1;
-                $vscale = $this->getheight > 0 ? ceil($this->regionh / $this->getheight) : 1;
-                if (
-                    ($this->getwidth === 0 || $this->getheight === 0 || $hscale == $vscale)
-                    && count(array_diff([$hscale,$vscale], $this->preview_tile_scale_factors)) == 0
-                ) {
-                    return true;
-                }
+                return true;
             }
         }
+        debug('IIIF invalid tile request');
         return false;
     }
 
