@@ -3563,7 +3563,7 @@ function can_set_admin_usergroup(?int $new_usergroup): bool
     }
 
     $new_usergroup_permissions = $can_set_admin_usergroup_perms_array[$new_usergroup];
-    $new_usergroup_permissions = explode(',', str_replace(' ', '', $new_usergroup_permissions));
+    $new_usergroup_permissions = explode(',', str_replace(' ', '', (string) $new_usergroup_permissions));
     if (!in_array('a', $new_usergroup_permissions)) {
         // New usergroup doesn't have 'a' permission.
         return true;
