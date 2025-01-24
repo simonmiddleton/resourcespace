@@ -299,8 +299,8 @@ if ($keysearch) {
                     $wildcards = false;
                     if (strpos($keyword, "*") !== false || $wildcard_always_applied) {
                         if ($wildcard_always_applied && strpos($keyword, "*") === false) {
-                            # Suffix asterisk if none supplied and using $wildcard_always_applied mode.
-                            $keyword = $keyword . "*";
+                            # Add asterisks if none supplied and using $wildcard_always_applied mode.
+                            $keyword = "*". $keyword . "*";
                         }
                         $wildcards = true;
                     }
@@ -551,7 +551,11 @@ if ($keysearch) {
                                             SELECT resource, [bit_or_condition] hit_count AS score
                                                 FROM resource_node rn[union_index]
                                                 WHERE rn[union_index].node IN
-                                                    (SELECT ref FROM `node` WHERE name LIKE ? "
+                                                    (SELECT n.ref
+                                                        FROM keyword k
+                                                        JOIN node_keyword nk ON nk.keyword=k.ref
+                                                        JOIN `node` n ON n.ref=nk.node
+                                                        WHERE k.keyword LIKE ? "
                                                 . $union_restriction_clause->sql . ")
                                             GROUP BY resource ";
                                 } else {

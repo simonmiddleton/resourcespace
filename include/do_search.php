@@ -128,7 +128,13 @@ function do_search(
     }
 
     if ($search_params != "") {
-        $keywords = split_keywords($search_params, false, false, false, false, true);
+        if (
+            (preg_match('/^[^\\s]+$/',$search) && ($wildcard_always_applied || strpos($search,"*") !== false))
+        ) {
+            $keywords = [$search_params];
+        } else {
+            $keywords = split_keywords($search_params, false, false, false, false, true);
+        }
     } else {
         $keywords = array();
     }

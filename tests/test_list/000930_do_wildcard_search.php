@@ -1,7 +1,7 @@
 <?php
 
 command_line_only();
-
+$wildcard_always_applied_cache = $wildcard_always_applied;
 
 // Check wildcard search e.g. 'sam*' and 'super*'
 
@@ -65,5 +65,41 @@ if (
 ) {
     return false;
 }
+
+$test_cases = [
+    ["search" => "a3ewd44a43-a80eha-a464t0-aba24r*", "node_value" => "a3ewd44a43-a80eha-a464t0-aba24r-acf2b011a0763w"],
+    ["search" => "ab123_*.jpg", "node_value" => "ab123_junk.jpg", "field" => 51],
+    ["search" => "title:book*", "node_value" => "booking form", "field" => 8],
+    ];
+
+foreach ($test_cases as $case) {
+    $wildcard_always_applied = true;
+    if (!test_wildcard_search($case["search"],$case["node_value"],$case["field"] ?? 8)) {
+        echo "ERROR - search: " . $case["search"];
+        return false;
+    }
+}
+
+function test_wildcard_search(string $search, string $node_value, int $field): bool {
+    global $wildcard_always_applied;
+    $resource = create_resource(1, 0);
+    update_field($resource, $field, $node_value);
+    $return = true;
+
+    for ($n=0;$n=0;$n++) {
+        $wildcard_always_applied = !$wildcard_always_applied;
+        $results = do_search($search);
+        foreach($results as $result) {
+            if ($result['ref'] == $resource) {
+                $return = true;
+            }
+        }
+    }
+
+    return $return;
+}
+
+// teardown
+$wildcard_always_applied = $wildcard_always_applied_cache;
 
 return true;

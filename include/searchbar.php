@@ -74,7 +74,11 @@ for ($n=0;$n<count($fields);$n++)
 # Also build a quicksearch string.
 
 $quicksearch    = refine_searchstring($quicksearch);
-$keywords       = split_keywords($quicksearch,false,false,false,false,true);
+if (preg_match('/^[^\\s]+$/',$quicksearch) && ($wildcard_always_applied || strpos($quicksearch,"*") !== false)) {
+    $keywords   = [$quicksearch];
+} else {
+    $keywords   = split_keywords($quicksearch,false,false,false,false,true);
+}
 $set_fields     = array();
 $simple         = array();
 $searched_nodes = array();
