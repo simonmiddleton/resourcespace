@@ -905,14 +905,19 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                 $dUseCIEColor = "";
             }
 
+            $cmdparams['%%RESOLUTION%%']    = new CommandPlaceholderArg((int) $resolution, 'is_positive_int_loose');
+            $cmdparams["%%TARGET%%"]        = new CommandPlaceholderArg($target, 'is_safe_basename');   
+            $cmdparams["%%PAGENUM%%"]       = new CommandPlaceholderArg($n, 'is_positive_int_loose');
+            $cmdparams["%%SOURCE%%"]        = new CommandPlaceholderArg($file, 'is_valid_rs_path');
 
             if ($extension == "eps" && in_array(strtolower($extension), $preview_keep_alpha_extensions)) {
-                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
-            } else {
-                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=" . $imagemagick_quality . " -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
+                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r%%RESOLUTION%% ".$dUseCIEColor." -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=%%TARGET%% -dFirstPage=%%PAGENUM%% -dLastPage=%%PAGENUM%% -dEPSCrop -dUseCropBox %%SOURCE%%";
+            } else {                
+                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r%%RESOLUTION%% ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=%%QUALITY%% -sOutputFile=%%TARGET%% -dFirstPage=%%PAGENUM%% -dLastPage=%%PAGENUM%% -dEPSCrop -dUseCropBox %%SOURCE%%";
+                $cmdparams["%%QUALITY%%"] = new CommandPlaceholderArg($imagemagick_quality, 'is_positive_int_loose');
             }
         
-            $output = run_command($gscommand2);
+            $output = run_command($gscommand2, false, $cmdparams);
 
             # Stop trying when after the last page
             if (strstr($output, 'FirstPage > LastPage')) {
