@@ -532,3 +532,25 @@ function prepareTags(array $dirty_tags)
 
     return $clean_tags;
 }
+
+
+/**
+* Add annotation count to a search result set
+*
+* @param array $items      Array of search results returned by do_search()
+*
+*/
+function search_add_annotation_count(&$result)
+{
+    $annotations = ps_query(
+        "SELECT resource, count(*) as annocount
+           FROM annotation
+          WHERE resource IN (" . ps_param_insert(count($result)) . ")
+       GROUP BY resource",
+        ps_param_fill(array_column($result, "ref"), "i")
+    );
+    $res_annotations = array_column($annotations, "annocount", "resource");
+    foreach ($result as &$resource) {
+        $resource["annotation_count"] = $res_annotations[$resource["ref"]] ?? 0;
+    }
+}

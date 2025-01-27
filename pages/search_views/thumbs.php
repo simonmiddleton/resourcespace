@@ -147,8 +147,8 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
         echo $workflow_html;
     }
 
-    if (count(canSeeAnnotationsFields()) > 0) {
-        $annotations_count = getResourceAnnotationsCount($ref);
+    if (isset($show_annotation_count) && $show_annotation_count) {
+        $annotations_count = $result[$n]["annotation_count"] ?? getResourceAnnotationsCount($ref);
         $message           = '';
 
         if (1 < $annotations_count) {
