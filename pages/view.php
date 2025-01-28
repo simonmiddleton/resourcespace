@@ -121,7 +121,8 @@ if($comments_resource_enable && $comments_view_panel_show_marker){
 
 $missing_original = false;
 if (
-    !in_array($resource["resource_type"],
+    $file_integrity_checks
+    && !in_array($resource["resource_type"],
         array_unique(array_merge($data_only_resource_types,$file_integrity_ignore_resource_types))
         )
     && !in_array($resource["archive"],$file_integrity_ignore_states)
