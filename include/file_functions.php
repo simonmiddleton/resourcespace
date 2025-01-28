@@ -438,13 +438,8 @@ function process_file_upload(SplFileInfo|array $source): bool|array
     A new function will be created to generate a random temporary file path under the tmp directory which callers can use before going through the rest of the workflow (ie move the uploaded file)
     Note: for resource files' (original or alternatives) destination path, get_resource_path will be used as per usual.
 
-    2) Limit the data format uploaded (see separate item)
-
-    3) Ensure the destination path is valid (for reasons outside this scope, through path traversals, the destination might be bad)
-
     4) If any checks fail, always deny the copy (moving the uploaded file).
     When moving the file, it's worth using the is_uploaded_file to detect if the file received was POSTd.
-
 
     Other file management functions to consider:
         is_valid_rs_path() - only for RS (accessible) file paths
@@ -455,14 +450,16 @@ function process_file_upload(SplFileInfo|array $source): bool|array
         check_valid_file_extension()
         get_temp_dir()
     */
-
-
     print_r($source);
+
+    // todo: consider converting $_FILE input to splfileinfo so we can work with one interface until we need the extra info
 
     if ($source instanceof SplFileInfo) {
         $source_file_name = $source->getFilename();
+        $source_file_ext = $source->getExtension();
     } else {
         $source_file_name = $source['name'];
+        $source_file_ext = pathinfo(basename($source_file_name), PATHINFO_EXTENSION);
     }
 
     // Source validation
@@ -490,6 +487,15 @@ function process_file_upload(SplFileInfo|array $source): bool|array
     //     - Double extensions, e.g. .jpg.php
     //     - Null bytes, e.g. .php%00.jpg, where .jpg gets truncated and .php becomes the new extension
     //     - Using Windows 8.3 feature, it's possible to replace existing files by using their shortname (e.g. ".htaccess" can be replaced by "HTACCE~1")
+    echo PHP_EOL.'Extension = ' . $source_file_ext . PHP_EOL;
+    
+
+
+
+
+    // if (!check_valid_file_extension()) {
+    //     return ['Invalid extension'];
+    // }
 
 
 
