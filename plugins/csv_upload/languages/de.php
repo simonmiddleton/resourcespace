@@ -67,4 +67,4 @@ $lang["csv_upload_force_offline"]='Diese große CSV-Datei kann lange dauern, um 
 $lang["csv_upload_recommend_offline"]='Diese große CSV-Datei kann sehr lange dauern, um verarbeitet zu werden. Es wird empfohlen, Offline-Jobs zu aktivieren, wenn Sie große CSV-Dateien verarbeiten müssen';
 $lang["csv_upload_createdfromcsvupload"]='Erstellt durch das CSV-Upload-Plugin';
 $lang["plugin-csv_upload-title"]='CSV-Upload';
-$lang["plugin-csv_upload-desc"]=' Metadaten mit einer CSV-Datei hochladen.';
+$lang["plugin-csv_upload-desc"]='Metadaten mit einer CSV-Datei hochladen.';

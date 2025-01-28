@@ -73,5 +73,5 @@ $lang["tms_link_confirm_delete_module_config"]='Czy na pewno chcesz usunąć kon
 $lang["tms_link_mediapaths_resource_reference_column"]='Kolumna do użycia w tabeli MediaMaster do przechowywania ID zasobu. Jest to opcjonalne i służy do uniknięcia używania tego samego ID Media Master przez wiele zasobów.';
 $lang["tms_link_write_to_debug_log"]='Uwzględnij postęp skryptu w dzienniku debugowania systemu (wymaga osobnej konfiguracji logowania debugowania). Uwaga: Spowoduje szybki wzrost pliku dziennika debugowania.';
 $lang["plugin-tms_link-title"]='Link TMS';
-$lang["plugin-tms_link-desc"]=' Umożliwia wyodrębnienie metadanych zasobu z bazy danych TMS.';
+$lang["plugin-tms_link-desc"]='Umożliwia wyodrębnienie metadanych zasobu z bazy danych TMS.';
 $lang["tms_link_uid_field_int"]='TMS Integer UIDs. Ustaw na false, aby zezwolić na niecałkowite UIDs.';

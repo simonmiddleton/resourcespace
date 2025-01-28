@@ -51,4 +51,4 @@ $lang["origin_simpleldap"]='EnkelLDAP-plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Kontroller ikke FQDN af serveren mod CN på certifikatet';
 $lang["port"]='Port';
 $lang["plugin-simpleldap-title"]='Enkel LDAP';
-$lang["plugin-simpleldap-desc"]=' Simpel implementering af ldap-autentificering, målrettet mod Active Directory men understøtter også Oracle directory';
+$lang["plugin-simpleldap-desc"]='Simpel implementering af ldap-autentificering, målrettet mod Active Directory men understøtter også Oracle directory';

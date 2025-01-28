@@ -34,4 +34,4 @@ $lang["emu_no_resource"]='कोई संसाधन आईडी निर्
 $lang["emu_upload_nodata"]='इस IRN के लिए कोई EMu डेटा नहीं मिला:';
 $lang["emu_nodata_returned"]='निर्दिष्ट IRN के लिए कोई EMu डेटा नहीं मिला।';
 $lang["emu_createdfromemu"]='EMU प्लगइन से बनाया गया';
-$lang["plugin-emu-desc"]=' संसाधन मेटाडेटा को EMu डेटाबेस से निकालने की अनुमति देता है।';
+$lang["plugin-emu-desc"]='संसाधन मेटाडेटा को EMu डेटाबेस से निकालने की अनुमति देता है।';

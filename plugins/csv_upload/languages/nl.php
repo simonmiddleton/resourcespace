@@ -67,4 +67,4 @@ $lang["csv_upload_force_offline"]='Deze grote CSV kan lang duren om te verwerken
 $lang["csv_upload_recommend_offline"]='Deze grote CSV kan erg lang duren om te verwerken. Het wordt aanbevolen om offline taken in te schakelen als je grote CSV\'s moet verwerken';
 $lang["csv_upload_createdfromcsvupload"]='Aangemaakt met de CSV Upload plugin';
 $lang["plugin-csv_upload-title"]='CSV Upload';
-$lang["plugin-csv_upload-desc"]=' Upload metadata met een CSV-bestand.';
+$lang["plugin-csv_upload-desc"]='Upload metadata met een CSV-bestand.';

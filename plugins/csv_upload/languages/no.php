@@ -67,4 +67,4 @@ $lang["csv_upload_force_offline"]='Denne store CSV-filen kan ta lang tid å beha
 $lang["csv_upload_recommend_offline"]='Denne store CSV-filen kan ta veldig lang tid å behandle. Det anbefales å aktivere offline-jobber hvis du trenger å behandle store CSV-filer';
 $lang["csv_upload_createdfromcsvupload"]='Opprettet fra CSV-opplastingsprogramtillegget';
 $lang["plugin-csv_upload-title"]='CSV-opplasting';
-$lang["plugin-csv_upload-desc"]=' Last opp metadata ved hjelp av en CSV-fil.';
+$lang["plugin-csv_upload-desc"]='Last opp metadata ved hjelp av en CSV-fil.';

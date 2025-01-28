@@ -36,4 +36,4 @@ $lang["emu_nodata_returned"]='Nie znaleziono danych EMu dla określonego numeru 
 $lang["emu_createdfromemu"]='Utworzono z wtyczki EMU';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
 $lang["plugin-emu-title"]='EMu';
-$lang["plugin-emu-desc"]=' Umożliwia wyodrębnienie metadanych zasobu z bazy danych EMu.';
+$lang["plugin-emu-desc"]='Umożliwia wyodrębnienie metadanych zasobu z bazy danych EMu.';

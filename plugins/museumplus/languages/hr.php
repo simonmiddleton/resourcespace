@@ -50,4 +50,4 @@ $lang["museumplus_error_invalid_association"]='Nevažeća povezanost modula. Mol
 $lang["museumplus_id_returns_multiple_records"]='Pronađeno je više zapisa - umjesto toga unesite tehnički ID';
 $lang["museumplus_error_module_no_field_maps"]='Nije moguće sinkronizirati podatke iz MuseumPlus-a. Razlog: modul \'%name\' nema konfigurirane mapiranja polja.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
-$lang["plugin-museumplus-desc"]=' Omogućuje izdvajanje metapodataka resursa iz MuseumPlus koristeći njegov REST API (MpRIA).';
+$lang["plugin-museumplus-desc"]='Omogućuje izdvajanje metapodataka resursa iz MuseumPlus koristeći njegov REST API (MpRIA).';

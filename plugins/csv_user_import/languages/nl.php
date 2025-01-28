@@ -15,4 +15,4 @@ $lang["csv_user_import_condition3"]='Kolom(men) die waarden bevatten met komma\'
 $lang["csv_user_import_condition4"]='Toegestane kolommen: *gebruikersnaam, *e-mail, wachtwoord, volledige naam, account verloopt, opmerkingen, IP-beperking, taal. Opmerking: verplichte velden zijn gemarkeerd met een *';
 $lang["csv_user_import_condition5"]='De taal van de gebruiker zal standaard terugkeren naar degene die is ingesteld met behulp van de "$defaultlanguage" configuratieoptie als de taalkolom niet wordt gevonden of geen waarde heeft';
 $lang["plugin-csv_user_import-title"]='CSV-gebruikersimport';
-$lang["plugin-csv_user_import-desc"]=' Biedt de mogelijkheid om een batch gebruikers te importeren op basis van een vooraf geformatteerd CSV-bestand';
+$lang["plugin-csv_user_import-desc"]='Biedt de mogelijkheid om een batch gebruikers te importeren op basis van een vooraf geformatteerd CSV-bestand';

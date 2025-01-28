@@ -42,4 +42,4 @@ $lang["falcon_link_log_archive"]='ファルコンを介してアーカイブさ�
 $lang["falcon_link_error_falcon_check_tags"]='説明とタグが空でないことを確認してください。';
 $lang["falcon_link_title"]='ファルコンリンク';
 $lang["plugin-falcon_link-title"]='ファルコンリンク';
-$lang["plugin-falcon_link-desc"]=' リソースをFalcon.ioに公開する';
+$lang["plugin-falcon_link-desc"]='リソースをFalcon.ioに公開する';

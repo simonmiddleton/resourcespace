@@ -67,4 +67,4 @@ $lang["csv_upload_force_offline"]='Ovaj veliki CSV datoteku može dugo trajati z
 $lang["csv_upload_recommend_offline"]='Ovaj veliki CSV može dugo trajati u obradi. Preporučuje se omogućavanje offline poslova ako trebate obrađivati velike CSV datoteke';
 $lang["csv_upload_createdfromcsvupload"]='Stvoreno pomoću dodatka za učitavanje CSV datoteka';
 $lang["plugin-csv_upload-title"]='CSV prijenos';
-$lang["plugin-csv_upload-desc"]=' Učitajte meta podatke koristeći CSV datoteku.';
+$lang["plugin-csv_upload-desc"]='Učitajte meta podatke koristeći CSV datoteku.';

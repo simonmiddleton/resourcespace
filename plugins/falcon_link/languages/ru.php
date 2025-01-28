@@ -42,4 +42,4 @@ $lang["falcon_link_log_archive"]='Архивированный ресурс че
 $lang["falcon_link_error_falcon_check_tags"]='Пожалуйста, проверьте, что описание и теги не пусты';
 $lang["falcon_link_api_key"]='Ключ API Falcon';
 $lang["plugin-falcon_link-title"]='Ссылка Falcon';
-$lang["plugin-falcon_link-desc"]=' Опубликовать ресурсы на Falcon.io';
+$lang["plugin-falcon_link-desc"]='Опубликовать ресурсы на Falcon.io';

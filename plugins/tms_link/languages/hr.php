@@ -73,5 +73,5 @@ $lang["tms_link_modules_mappings"]='Sinkronizacija iz dodatnih modula (tablica/p
 $lang["tms_link_mediapaths_resource_reference_column"]='Stupac za korištenje u MediaMaster tablici za pohranu ID-a resursa. Ovo je opcionalno i koristi se kako bi se izbjeglo korištenje istog Media Master ID-a za više resursa.';
 $lang["tms_link_write_to_debug_log"]='Uključi napredak skripte u sistemski debug zapisnik (zahtijeva zasebno konfigurirano debug zapisivanje). Oprez: Uzrokovat će brzo povećanje debug zapisnika.';
 $lang["plugin-tms_link-title"]='TMS Veza';
-$lang["plugin-tms_link-desc"]=' Omogućuje izdvajanje metapodataka resursa iz TMS baze podataka.';
+$lang["plugin-tms_link-desc"]='Omogućuje izdvajanje metapodataka resursa iz TMS baze podataka.';
 $lang["tms_link_uid_field_int"]='TMS Cjelobrojni UID-ovi. Postavite na false kako biste omogućili ne-cjelobrojne UID-ove.';

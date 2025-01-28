@@ -51,4 +51,4 @@ $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Jangan periksa FQDN server deng
 $lang["port"]='Port';
 $lang["simpleldap_domain"]='Domain';
 $lang["plugin-simpleldap-title"]='LDAP Sederhana';
-$lang["plugin-simpleldap-desc"]=' Implementasi lebih sederhana dari autentikasi ldap, ditargetkan pada Active Directory tetapi juga mendukung direktori Oracle';
+$lang["plugin-simpleldap-desc"]='Implementasi lebih sederhana dari autentikasi ldap, ditargetkan pada Active Directory tetapi juga mendukung direktori Oracle';

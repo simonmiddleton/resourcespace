@@ -67,4 +67,4 @@ $lang["csv_upload_force_offline"]='Questo grande file CSV potrebbe richiedere mo
 $lang["csv_upload_recommend_offline"]='Questa grande CSV potrebbe richiedere molto tempo per essere elaborata. Si consiglia di abilitare i lavori offline se si necessita di elaborare grandi CSV';
 $lang["csv_upload_createdfromcsvupload"]='Creato tramite il plugin di caricamento CSV';
 $lang["plugin-csv_upload-title"]='Caricamento CSV';
-$lang["plugin-csv_upload-desc"]=' Carica i metadati utilizzando un file CSV.';
+$lang["plugin-csv_upload-desc"]='Carica i metadati utilizzando un file CSV.';

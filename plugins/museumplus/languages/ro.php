@@ -52,4 +52,4 @@ $lang["museumplus_id_returns_multiple_records"]='Au fost găsite mai multe înre
 $lang["museumplus_error_module_no_field_maps"]='Imposibil de sincronizat datele din MuseumPlus. Motiv: modulul \'%name\' nu are configurate nicio mapare de câmpuri.';
 $lang["museumplus_api_user"]='Utilizator';
 $lang["plugin-museumplus-title"]='MuseumPlus';
-$lang["plugin-museumplus-desc"]=' Permite extragerea metadatelor resurselor din MuseumPlus folosind API-ul său REST (MpRIA).';
+$lang["plugin-museumplus-desc"]='Permite extragerea metadatelor resurselor din MuseumPlus folosind API-ul său REST (MpRIA).';

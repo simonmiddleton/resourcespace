@@ -42,4 +42,4 @@ $lang["falcon_link_log_publish"]='Recurso compartido a través de Falcon';
 $lang["falcon_link_log_archive"]='Recurso archivado a través de Falcon';
 $lang["falcon_link_error_falcon_check_tags"]='Por favor, verifica que la descripción y las etiquetas no estén vacías';
 $lang["plugin-falcon_link-title"]='Enlace Falcon';
-$lang["plugin-falcon_link-desc"]=' Publicar recursos en Falcon.io';
+$lang["plugin-falcon_link-desc"]='Publicar recursos en Falcon.io';
