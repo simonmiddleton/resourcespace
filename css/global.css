@@ -2581,11 +2581,11 @@ input[type="text"]#iconpicker-input {
 .PluginDisplay
     {
     width:400px;
-    height:115px;
+    height:150px;
     float: left;
     border-radius: 10px;
     margin: 10px 20px 10px 0;
-    padding: 20px;
+    padding: 15px 20px 20px 20px;
     }
 
 .PluginDisplay h2 
