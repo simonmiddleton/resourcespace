@@ -426,3 +426,106 @@ function is_safe_basename(string $val): bool
         safe_file_name($file_name) === str_replace(' ', '_', $file_name)
         && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION));
 }
+
+/**
+ * @param SplFileInfo|array{name: string, full_path: string, type: string, tmp_name: string, error: int, size: int} $source
+ * @return true|array
+ */
+function process_file_upload(SplFileInfo|array $source): bool|array
+{
+    /*
+    1) Always save uploaded files in a generated location (e.g random file name), never trusting the original uploaded file name or metadata.
+    A new function will be created to generate a random temporary file path under the tmp directory which callers can use before going through the rest of the workflow (ie move the uploaded file)
+    Note: for resource files' (original or alternatives) destination path, get_resource_path will be used as per usual.
+
+    2) Limit the data format uploaded (see separate item)
+
+    3) Ensure the destination path is valid (for reasons outside this scope, through path traversals, the destination might be bad)
+
+    4) If any checks fail, always deny the copy (moving the uploaded file).
+    When moving the file, it's worth using the is_uploaded_file to detect if the file received was POSTd.
+
+
+    Other file management functions to consider:
+        is_valid_rs_path() - only for RS (accessible) file paths
+        is_valid_upload_path()
+        is_safe_basename() - Should only be used for filenames originating in ResourceSpace;
+        safe_file_name()
+        is_banned_extension()
+        check_valid_file_extension()
+        get_temp_dir()
+    */
+
+
+    print_r($source);
+
+    if ($source instanceof SplFileInfo) {
+        $source_file_name = $source->getFilename();
+    } else {
+        $source_file_name = $source['name'];
+    }
+
+    // Source validation
+    if (is_array($source) && isset($source['tmp_name']) && !is_uploaded_file($source['tmp_name'])) {
+        throw new ValueError('Incorrect $source input');
+    }
+
+    // Limit the data format uploaded
+    // Check for "special" files
+    if (
+        array_intersect(
+            [
+                'crossdomain.xml',
+                'clientaccesspolicy.xml',
+                '.htaccess',
+                '.htpasswd',
+            ],
+            [$source_file_name]
+        ) !== []
+    ) {
+        return ['"Special" file detected which is not allowed'];
+    }
+
+    // 2) Validate/parse file name to prevent known security bypasses:
+    //     - Double extensions, e.g. .jpg.php
+    //     - Null bytes, e.g. .php%00.jpg, where .jpg gets truncated and .php becomes the new extension
+    //     - Using Windows 8.3 feature, it's possible to replace existing files by using their shortname (e.g. ".htaccess" can be replaced by "HTACCE~1")
+
+
+
+    echo PHP_EOL.PHP_EOL;
+
+
+    // Anything else in between
+    // $file = tmpfile();
+    // $path = stream_get_meta_data($file);
+    // print_r($path);
+
+    // $temp = tmpfile();
+    // print_r(stream_get_meta_data($temp));
+    // fwrite($temp, "writing to tempfile");
+    // fseek($temp, 0);
+    // echo fread($temp, 1024);
+    // fclose($temp); // this removes the file
+
+    // $GLOBALS["use_error_exception"] = true;
+    // try {
+    //     // $tmp_file = tempnam('/var/log/', 'RS'); # force a fail to write use case
+    //     // $tmp_file = tempnam(get_temp_dir(false, 'untrusted_upload_files'), 'RS');
+    //     $tmp_file = tempnam(sys_get_temp_dir(), 'RS');
+    // } catch (Throwable $t) {
+    //     debug("[Notice] {$t->getMessage()}");
+    //     $tmp_file = '';
+    // }
+    // unset($GLOBALS["use_error_exception"]);
+    // echo PHP_EOL . json_encode($tmp_file) . PHP_EOL;
+
+    // Destination processing
+    // validation: ensure control over the generated temp file path (never trust the original uploaded file name or metadata)
+    // validation: check for path traversals, allowed paths etc
+
+
+    // Carry out the final file move
+
+    return [];
+}
