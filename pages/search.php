@@ -296,7 +296,7 @@ $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
 
 // After a batch edit, check if search has been instructed to check for resources in the selection collection that have 
 // fallen out of the results so should no longer be selected
-$check_selection_collection = getval("check_selection_collection", "") == "yes";
+$check_selection_collection = getval("check_selection_collection", "no") == "yes";
 
 // Preserve selection on display layout change (not available for map view).
 $displaytypes = array('xlthumbs', 'thumbs', 'strip', 'list');
@@ -648,16 +648,24 @@ if($k=="" || $internal_share_access)
     </script>
     <?php
     }
-if($use_selection_collection && $check_selection_collection) {
-    // Clean up the user selection collection so that only resources in the current search can exist in the colleciton. 
-    $selection_collection = do_search('!collection'. $USER_SELECTION_COLLECTION);
-    $resource_not_in_search = array_diff(
-        array_column($selection_collection, 'ref'),
-        is_array($full_search_results)?array_column($full_search_results, 'ref'):[]
-    );
-    if (count($resource_not_in_search) > 0) {
-        collection_remove_resources($USER_SELECTION_COLLECTION, $resource_not_in_search);
+if($use_selection_collection) {
+
+    $resource_not_in_search = array();
+    
+    if($check_selection_collection) {
+        
+        // Clean up the user selection collection so that only resources in the current search can exist in the colleciton. 
+        $selection_collection = do_search('!collection'. $USER_SELECTION_COLLECTION);
+        $resource_not_in_search = array_diff(
+            array_column($selection_collection, 'ref'),
+            is_array($full_search_results)?array_column($full_search_results, 'ref'):[]
+        );
+
+        if (count($resource_not_in_search) > 0) {
+            collection_remove_resources($USER_SELECTION_COLLECTION, $resource_not_in_search);
+        }
     }
+
     ?>
     <script>
     <?php 

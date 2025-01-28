@@ -973,7 +973,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     temp_form.appendChild(i);
                     // Instruct search page to check the selection collection 
                     // for any resources that have fallen out of search
-                    let csc = document.createElement("input");
+                    var csc = document.createElement("input");
                     csc.setAttribute("type", "hidden");
                     csc.setAttribute("name", "check_selection_collection");
                     csc.setAttribute("value", "yes");
