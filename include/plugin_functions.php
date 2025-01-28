@@ -1722,7 +1722,7 @@ function RenderPlugin($plugin, $active = true)
     echo '<div class="PluginDisplay">';
     echo '<h2>';
     echo '<span class="plugin-header">';
-    echo '<i class="plugin-icon fa-2x ' . escape($plugin['icon']) . '" style="color:' . escape($icon_colour) . ';"></i>';
+    echo '<i class="plugin-icon fa-xl ' . escape($plugin['icon']) . '" style="color:' . escape($icon_colour) . ';"></i>';
     echo '<span class="plugin-title">' . escape($plugin['title'] ?: $plugin['name']) . '</span>';
     echo '</span>';
     echo '</h2>';
