@@ -1759,7 +1759,7 @@ function RenderPlugin($plugin, $active = true)
     }
 
     // Render configuration options link if available
-    if (!empty($plugin['config_url'])) {
+    if (!empty($plugin['config_url']) && $active) {
         $plugin_config_url = (substr($plugin['config_url'], 0, 8) === "/plugins")
             ? str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'], true), $plugin['config_url'])
             : $baseurl_short . $plugin['config_url'];

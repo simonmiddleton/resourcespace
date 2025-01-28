@@ -2,9 +2,8 @@ name    : user_preferences
 title   : User Preferences
 author  : Axel Dörfler
 version : 1.0
-desc    : Offers additional user preferences.
+desc    : Allows users to update their username, name and e-mail address.
 icon    : fa fa-cog
 icon-colour: silver
 config_url: /plugins/user_preferences/pages/setup.php
 category: User interface
-info_url: https://www.resourcespace.com/knowledge-base/user/preferences
