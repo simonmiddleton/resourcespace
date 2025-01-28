@@ -120,7 +120,7 @@ function i18n_get_collection_name($mixedcollection, $index = "name")
 
         # Check if it is a Smart Collection
         if (isset($mixedcollection['savedsearch']) && ($mixedcollection['savedsearch'] != null)) {
-            return escape($lang['smartcollection'] . ": " . escape(i18n_get_translated($name_untranslated)));
+            return escape($lang['smartcollection'] . ": " . i18n_get_translated($name_untranslated));
         }
     }
 
