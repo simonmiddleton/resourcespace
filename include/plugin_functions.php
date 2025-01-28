@@ -1742,7 +1742,7 @@ function RenderPlugin($plugin, $active = true)
     // Render "more info" link if available
     if (!empty($plugin['info_url'])) {
         echo '<a class="nowrap" href="' . escape($plugin['info_url']) . '" target="_blank">';
-        echo '<i class="fas fa-info"></i>&nbsp;' . escape($lang['plugins-moreinfo']);
+        echo '<i class="fas fa-book"></i>&nbsp;' . escape($lang['plugins-moreinfo']);
         echo '</a> ';
     }
 
