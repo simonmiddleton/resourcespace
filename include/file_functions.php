@@ -431,8 +431,8 @@ function is_safe_basename(string $val): bool
  * High level function which can handle processing file uploads.
  *
  * @param SplFileInfo|array{name: string, full_path: string, type: string, tmp_name: string, error: int, size: int} $source
- * @param array{extension: callable} $processor Processors which can override different parts of the main logic (e.g
- * use {@see check_valid_file_extension()} for the extension checks)
+ * @param array{extension: callable(string): bool} $processor Processors which can override different parts of the main
+ * logic (e.g use {@see check_valid_file_extension()} for the extension checks).
  *
  * @return true|array
  */
@@ -457,10 +457,10 @@ function process_file_upload(SplFileInfo|array $source, array $processor): bool|
     */
     print_r($source);
 
-    // todo: consider converting $_FILE input to splfileinfo so we can work with one interface until we need the extra info
-
     if ($source instanceof SplFileInfo) {
         $source_file_name = $source->getFilename();
+        $source_file_path = $source->getPathname();
+        $source_is_file = $source->isFile();
         // echo PHP_EOL . "Filename is: $source_file_name";
         // echo PHP_EOL . "Path is: {$source->getPath()}";
         // echo PHP_EOL . "Path name is: {$source->getPathname()}";
@@ -468,6 +468,8 @@ function process_file_upload(SplFileInfo|array $source, array $processor): bool|
 
     } else {
         $source_file_name = $source['name'];
+        $source_file_path = $source['tmp_name'];
+        $source_is_file = file_exists($source['tmp_name']);
     }
 
     // Source validation
@@ -499,10 +501,16 @@ function process_file_upload(SplFileInfo|array $source, array $processor): bool|
     if ($ext_check_fail($source_file_ext)) {
         return ["Invalid extension '{$source_file_ext}'"];
     }
-    echo PHP_EOL.'Extension = ' . $source_file_ext . PHP_EOL;
+    echo PHP_EOL.'Extension = ' . $source_file_ext;
     
-
-    // todo: check content type (MIME-type)
+    // Check content type (MIME type) based on the file received (don't trust the header from the upload)
+    $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
+    if (
+        $source_is_file
+        && $mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, true)
+    ) {
+        return ["MIME type mismatch for file '{$source_file_name}'"];
+    }
 
 
 
