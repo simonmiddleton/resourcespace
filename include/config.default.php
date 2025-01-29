@@ -1253,7 +1253,32 @@ $log_resource_views = false;
 
 // A list of file extensions that cannot be uploaded for security reasons.
 // For example; uploading a PHP file may allow arbirtary execution of code, depending on server security settings.
-$banned_extensions = array("php","cgi","pl","exe","asp","jsp", 'sh', 'bash', 'phtml', 'phps', 'phar', 'py', 'jar', 'crdownload');
+$banned_extensions = [
+    'php',
+    'cgi',
+    'pl',
+    'exe',
+    'asp',
+    'aspx',
+    'js',
+    'jsp',
+    'sh',
+    'bash',
+    'phtml',
+    'xhtml',
+    'rhtml',
+    'shtml',
+    'phps',
+    'phpt',
+    'phar',
+    'py',
+    'jar',
+    'crdownload',
+    'css',
+    'swf',
+    'htaccess', # redundant check, in case the extension is incorrectly parsed from a file name (unusual processing)
+    'htpasswd', # redundant check, in case the extension is incorrectly parsed from a file name (unusual processing)
+];
 
 //Set a default access value for the upload page. This will override the default resource template value.
 //Change the value of this option to the access id number

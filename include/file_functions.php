@@ -428,10 +428,15 @@ function is_safe_basename(string $val): bool
 }
 
 /**
+ * High level function which can handle processing file uploads.
+ *
  * @param SplFileInfo|array{name: string, full_path: string, type: string, tmp_name: string, error: int, size: int} $source
+ * @param array{extension: callable} $processor Processors which can override different parts of the main logic (e.g
+ * use {@see check_valid_file_extension()} for the extension checks)
+ *
  * @return true|array
  */
-function process_file_upload(SplFileInfo|array $source): bool|array
+function process_file_upload(SplFileInfo|array $source, array $processor): bool|array
 {
     /*
     1) Always save uploaded files in a generated location (e.g random file name), never trusting the original uploaded file name or metadata.
@@ -456,10 +461,13 @@ function process_file_upload(SplFileInfo|array $source): bool|array
 
     if ($source instanceof SplFileInfo) {
         $source_file_name = $source->getFilename();
-        $source_file_ext = $source->getExtension();
+        // echo PHP_EOL . "Filename is: $source_file_name";
+        // echo PHP_EOL . "Path is: {$source->getPath()}";
+        // echo PHP_EOL . "Path name is: {$source->getPathname()}";
+        // echo PHP_EOL . "Real path is: {$source->getRealPath()}";
+
     } else {
         $source_file_name = $source['name'];
-        $source_file_ext = pathinfo(basename($source_file_name), PATHINFO_EXTENSION);
     }
 
     // Source validation
@@ -483,19 +491,19 @@ function process_file_upload(SplFileInfo|array $source): bool|array
         return ['"Special" file detected which is not allowed'];
     }
 
-    // 2) Validate/parse file name to prevent known security bypasses:
-    //     - Double extensions, e.g. .jpg.php
-    //     - Null bytes, e.g. .php%00.jpg, where .jpg gets truncated and .php becomes the new extension
-    //     - Using Windows 8.3 feature, it's possible to replace existing files by using their shortname (e.g. ".htaccess" can be replaced by "HTACCE~1")
+    // Extension validation
+    $source_file_ext = parse_filename_extension($source_file_name);
+    $ext_check_fail = isset($processor['extension']) && is_callable($processor['extension'])
+        ? $processor['extension']
+        : is_banned_extension(...);
+    if ($ext_check_fail($source_file_ext)) {
+        return ["Invalid extension '{$source_file_ext}'"];
+    }
     echo PHP_EOL.'Extension = ' . $source_file_ext . PHP_EOL;
     
 
+    // todo: check content type (MIME-type)
 
-
-
-    // if (!check_valid_file_extension()) {
-    //     return ['Invalid extension'];
-    // }
 
 
 
@@ -534,4 +542,50 @@ function process_file_upload(SplFileInfo|array $source): bool|array
     // Carry out the final file move
 
     return [];
+}
+
+/**
+ * Parse file name (can include path, although it's unnecessary) to prevent known security bypasses associated with
+ * extensions, such as:
+ * - Double extensions, e.g. .jpg.php
+ * - Null bytes, e.g. .php%00.jpg, where .jpg gets truncated and .php becomes the new extension
+ * - Using Windows (DOS) 8.3 short path feature where it's possible to replace existing files by using their shortname
+ * (e.g. ".htaccess" can be replaced by "HTACCE~1")
+ */
+function parse_filename_extension(string $filename): string
+{
+    $GLOBALS["use_error_exception"] = true;
+    try {
+        $finfo = new SplFileInfo($filename);
+    } catch (Throwable $t) {
+        debug("[WARN] Bad file '{$filename}'. Reason: {$t->getMessage()}");
+        return '';
+    }
+    unset($GLOBALS["use_error_exception"]);
+
+    /*
+    Windows (DOS) 8.3 short paths (e.g. "HTACCE~1" = ".htaccess"). Example file info in such scenario:
+    Filename is: HTACCE~1
+    Path is: (note, depends if input is a file name with path)
+    Path name is: HTACCE~1
+    Real path is: C:\path\to\.htaccess
+    */
+    if (preg_match('/^[A-Z0-9]{1,6}~([A-Z0-9]?)(\.[A-Z0-9_]{1,3})?$/i', $finfo->getFilename()) === 1) {
+        if ($finfo->getRealPath() !== false && basename($finfo->getRealPath()) !== $finfo->getFilename()) {
+            return parse_filename_extension($finfo->getRealPath());
+        } else {
+            // Invalid if not a real file to avoid potential exploits
+            debug("[WARN] Windows (DOS) 8.3 short path for non-existent file '{$filename}' - considered invalid");
+            return '';
+        }
+    }
+
+    // Invalidate if it's a hidden file without an extension (e.g .htaccess or .htpasswd) which would be incorrectly
+    // picked up as an extension
+    if (trim($finfo->getBasename($finfo->getExtension())) === '.') {
+        debug("Hidden file '{$filename}' without an extension - considered invalid");
+        return '';
+    }
+
+    return $finfo->getExtension();
 }
