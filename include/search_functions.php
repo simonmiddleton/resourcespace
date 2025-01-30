@@ -1501,6 +1501,8 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
             $sql_filter->parameters = ps_param_fill($archive, "i");
             $sql_join->sql = " JOIN resource_type AS rty ON r.resource_type = rty.ref ";
             $sql_join->parameters = array();
+            // Remove reference to custom access
+            $select = str_replace(["rca.access", "rca2.access"], "0", $select);
         }
 
         $select = str_replace(",rca.access group_access,rca2.access user_access ", ",null group_access, null user_access ", $select);

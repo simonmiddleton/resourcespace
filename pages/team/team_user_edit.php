@@ -76,6 +76,9 @@ if (getval('loginas', '') === '') {
 
 // Log in as this user. A user key must be generated to enable login using a hash as the password.
 if (getval('loginas', '') != '') {
+    if (!checkperm_login_as_user(getval('ref', ''))) {
+        exit("permission denied");
+    }
     // Log user switch in the activity log for both sides (the user we moved from and the one we moved to)
     $log_activity_note = str_replace(
         array('%USERNAME_FROM', '%USERNAME_TO'),
@@ -460,7 +463,10 @@ if (getval('loginas', '') != '') {
             <?php
         }
 
-        if ($user["approved"] == 1) {
+        if (
+            $user["approved"] == 1
+            && (checkperm_login_as_user($user["ref"]))
+        ) {
             if (
                 trim((string) $user["origin"]) != "" ||
                     (($user['account_expires'] == "" ||

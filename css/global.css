@@ -2581,11 +2581,11 @@ input[type="text"]#iconpicker-input {
 .PluginDisplay
     {
     width:400px;
-    height:115px;
+    height:150px;
     float: left;
     border-radius: 10px;
     margin: 10px 20px 10px 0;
-    padding: 20px;
+    padding: 15px 20px 20px 20px;
     }
 
 .PluginDisplay h2 
@@ -2595,9 +2595,14 @@ input[type="text"]#iconpicker-input {
 
 .PluginDisplay .plugin-icon
     {
-    text-align: left;
-    padding-right: 10px;
+    text-align: center;
     vertical-align: middle; /* Align the icon within the container */
+    background-image: url('../gfx/interface/rs_outline.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding:9px;margin-right:0.5em;
+    width:40px;height:50px;
+    line-height:46px;
     }
 
 .PluginDisplay p   
@@ -2629,6 +2634,7 @@ input[type="text"]#iconpicker-input {
     display: inline-block; /* Makes the container fit its content */
     vertical-align: middle; /* Aligns the container relative to other elements */
     }
+
 
 /* TinyMCE fixes */
 button.tox-button {

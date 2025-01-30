@@ -1722,7 +1722,7 @@ function RenderPlugin($plugin, $active = true)
     echo '<div class="PluginDisplay">';
     echo '<h2>';
     echo '<span class="plugin-header">';
-    echo '<i class="plugin-icon fa-2x ' . escape($plugin['icon']) . '" style="color:' . escape($icon_colour) . ';"></i>';
+    echo '<i class="plugin-icon fa-xl ' . escape($plugin['icon']) . '" style="color:' . escape($icon_colour) . ';"></i>';
     echo '<span class="plugin-title">' . escape($plugin['title'] ?: $plugin['name']) . '</span>';
     echo '</span>';
     echo '</h2>';
@@ -1742,7 +1742,7 @@ function RenderPlugin($plugin, $active = true)
     // Render "more info" link if available
     if (!empty($plugin['info_url'])) {
         echo '<a class="nowrap" href="' . escape($plugin['info_url']) . '" target="_blank">';
-        echo '<i class="fas fa-info"></i>&nbsp;' . escape($lang['plugins-moreinfo']);
+        echo '<i class="fas fa-book"></i>&nbsp;' . escape($lang['plugins-moreinfo']);
         echo '</a> ';
     }
 
@@ -1759,7 +1759,7 @@ function RenderPlugin($plugin, $active = true)
     }
 
     // Render configuration options link if available
-    if (!empty($plugin['config_url'])) {
+    if (!empty($plugin['config_url']) && $active) {
         $plugin_config_url = (substr($plugin['config_url'], 0, 8) === "/plugins")
             ? str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'], true), $plugin['config_url'])
             : $baseurl_short . $plugin['config_url'];
