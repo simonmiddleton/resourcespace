@@ -424,7 +424,7 @@ function is_safe_basename(string $val): bool
     $file_name = pathinfo($val, PATHINFO_FILENAME);
     return
         safe_file_name($file_name) === str_replace(' ', '_', $file_name)
-        && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION));
+        && !is_banned_extension(parse_filename_extension($val));
 }
 
 /**
@@ -436,45 +436,45 @@ function is_safe_basename(string $val): bool
  *
  * @return true|array
  */
-function process_file_upload(SplFileInfo|array $source, array $processor): bool|array
+function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination, array $processor): bool|array
 {
     /*
     1) Always save uploaded files in a generated location (e.g random file name), never trusting the original uploaded file name or metadata.
     A new function will be created to generate a random temporary file path under the tmp directory which callers can use before going through the rest of the workflow (ie move the uploaded file)
     Note: for resource files' (original or alternatives) destination path, get_resource_path will be used as per usual.
 
-    4) If any checks fail, always deny the copy (moving the uploaded file).
-    When moving the file, it's worth using the is_uploaded_file to detect if the file received was POSTd.
-
     Other file management functions to consider:
-        is_valid_rs_path() - only for RS (accessible) file paths
-        is_valid_upload_path()
-        is_safe_basename() - Should only be used for filenames originating in ResourceSpace;
-        safe_file_name()
-        is_banned_extension()
         check_valid_file_extension()
         get_temp_dir()
     */
-    print_r($source);
+    // print_r($source);
+    // echo PHP_EOL . "Filename is: $source_file_name";
+    // echo PHP_EOL . "Path is: {$source->getPath()}";
+    // echo PHP_EOL . "Path name is: {$source->getPathname()}";
+    // echo PHP_EOL . "Real path is: {$source->getRealPath()}";
 
     if ($source instanceof SplFileInfo) {
         $source_file_name = $source->getFilename();
-        $source_file_path = $source->getPathname();
+        $source_file_path = $source->isFile() ? $source->getRealPath() : $source->getPathname();
         $source_is_file = $source->isFile();
-        // echo PHP_EOL . "Filename is: $source_file_name";
-        // echo PHP_EOL . "Path is: {$source->getPath()}";
-        // echo PHP_EOL . "Path name is: {$source->getPathname()}";
-        // echo PHP_EOL . "Real path is: {$source->getRealPath()}";
-
     } else {
         $source_file_name = $source['name'];
         $source_file_path = $source['tmp_name'];
         $source_is_file = file_exists($source['tmp_name']);
+
+        if (!is_uploaded_file($source['tmp_name'])) {
+            trigger_error('Invalid $source input. For files not uploaded via HTTP POST, please use SplFileInfo');
+        }
     }
 
     // Source validation
-    if (is_array($source) && isset($source['tmp_name']) && !is_uploaded_file($source['tmp_name'])) {
-        throw new ValueError('Incorrect $source input');
+    if (
+        !is_valid_upload_path(
+            $source_file_path,
+            [...$GLOBALS['valid_upload_paths'], ini_get('upload_tmp_dir'), sys_get_temp_dir()]
+        )
+    ) {
+        return ["Invalid upload path detected - {$source_file_path}"];
     }
 
     // Limit the data format uploaded
@@ -495,14 +495,14 @@ function process_file_upload(SplFileInfo|array $source, array $processor): bool|
 
     // Extension validation
     $source_file_ext = parse_filename_extension($source_file_name);
-    $ext_check_fail = isset($processor['extension']) && is_callable($processor['extension'])
+    // echo PHP_EOL.'Extension = ' . $source_file_ext;
+    $ext_check_ok = isset($processor['extension']) && is_callable($processor['extension'])
         ? $processor['extension']
-        : is_banned_extension(...);
-    if ($ext_check_fail($source_file_ext)) {
+        : static fn(string $V) => !is_banned_extension($V);
+    if (!$ext_check_ok($source_file_ext)) {
         return ["Invalid extension '{$source_file_ext}'"];
     }
-    echo PHP_EOL.'Extension = ' . $source_file_ext;
-    
+
     // Check content type (MIME type) based on the file received (don't trust the header from the upload)
     $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
     if (
@@ -512,22 +512,8 @@ function process_file_upload(SplFileInfo|array $source, array $processor): bool|
         return ["MIME type mismatch for file '{$source_file_name}'"];
     }
 
-
-
-
-    echo PHP_EOL.PHP_EOL;
-
-
     // Anything else in between
     // $file = tmpfile();
-    // $path = stream_get_meta_data($file);
-    // print_r($path);
-
-    // $temp = tmpfile();
-    // print_r(stream_get_meta_data($temp));
-    // fwrite($temp, "writing to tempfile");
-    // fseek($temp, 0);
-    // echo fread($temp, 1024);
     // fclose($temp); // this removes the file
 
     // $GLOBALS["use_error_exception"] = true;
@@ -542,13 +528,25 @@ function process_file_upload(SplFileInfo|array $source, array $processor): bool|
     // unset($GLOBALS["use_error_exception"]);
     // echo PHP_EOL . json_encode($tmp_file) . PHP_EOL;
 
+    echo PHP_EOL . "Filename is: {$destination->getFilename()}";
+    echo PHP_EOL . "Basename is: {$destination->getBasename()}";
+    echo PHP_EOL . "Path is: {$destination->getPath()}";
+    echo PHP_EOL . "Path name is: {$destination->getPathname()}";
+    echo PHP_EOL . "Real path is: {$destination->getRealPath()}";
+    echo PHP_EOL . "Is file: " . json_encode($destination->isFile());
     // Destination processing
     // validation: ensure control over the generated temp file path (never trust the original uploaded file name or metadata)
-    // validation: check for path traversals, allowed paths etc
+    $dest_path = $destination->isFile() ? $destination->getRealPath() : $destination->getPathname();
+    if ($destination->isDir()) {
+        return ['Destination path must be for a file, not a directory!'];
+    } elseif (!(is_valid_rs_path($dest_path) && is_safe_basename($destination->getBasename()))) {
+        return ['Destination not allowed'];
+    }
 
 
     // Carry out the final file move
 
+    echo PHP_EOL . PHP_EOL;
     return [];
 }
 
