@@ -3901,7 +3901,10 @@ function create_previews_using_im(
 
                     if ($imagemagick_mpr && $mpr_metadata_profiles !== '') {
                         $profile .= " +profile \"%%MPR_METADATA_PROFILES%%\",*\" ";
-                        $cmd_args["%%MPR_METADATA_PROFILES%%"] = new CommandPlaceholderArg($mpr_metadata_profiles, 'is_safe_basename');
+                        $cmd_args["%%MPR_METADATA_PROFILES%%"] = new CommandPlaceholderArg(
+                            $mpr_metadata_profiles,
+                            fn($m) => preg_match('/[^\\!,\w]/', $m) === 0
+                        );
                     }
                     $profile .= $icc_preview_profile_embed ? " " : " -strip ";
                     $cmdparams["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'is_valid_rs_path');
