@@ -304,6 +304,13 @@ function api_get_resource_path($ref, $not_used = null, $size = "", $generate = t
             $return[$ref] = "";
             continue;
         }
+
+        if (!$GLOBALS["hide_real_filepath"] && !$watermarked) {
+            // Check if watermarks are required - handled at download when $hide_real_filepath = true;
+            $GLOBALS['access'] = $resource['access'];
+            $watermarked = check_use_watermark();
+        }
+
         $return[$ref] = get_resource_path($ref, false, $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
         if ($GLOBALS["hide_real_filepath"]) {
             // Add a temporary key so the file can be accessed unauthenticated
