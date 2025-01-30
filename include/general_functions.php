@@ -751,7 +751,7 @@ function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): 
     global $mime_types_by_extension;
 
     if (empty($ext)) {
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $ext = parse_filename_extension($path);
     }
 
     if (!$file_based_detection && isset($mime_types_by_extension[$ext])) {
