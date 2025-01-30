@@ -5,7 +5,7 @@ command_line_only();
 // --- Set up
 $run_id = test_generate_random_ID(5);
 test_log("Run ID - {$run_id}");
-$new_tmp_txt_file = function () use ($run_id) {
+$new_tmp_txt_file = static function () use ($run_id) {
     $tmp = tmpfile();
     fwrite($tmp, "Run ID: {$run_id}");
     return $tmp;
@@ -36,7 +36,7 @@ $use_cases = [
     ],
     [
         'name' => 'JPG file (force file based detection, no predetermined extension)',
-        'setup' => function () use ($run_id) {
+        'setup' => static function () use ($run_id) {
             $img = create_random_image(['text' => "Run ID {$run_id}"]);
             return isset($img['path']) ? $img['path'] : $img['error'];
         },
