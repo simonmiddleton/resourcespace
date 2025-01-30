@@ -299,8 +299,8 @@ if ($keysearch) {
                     $wildcards = false;
                     if (strpos($keyword, "*") !== false || $wildcard_always_applied) {
                         if ($wildcard_always_applied && strpos($keyword, "*") === false) {
-                            # Add asterisks if none supplied and using $wildcard_always_applied mode.
-                            $keyword = "*". $keyword . "*";
+                            # Suffix asterisk if none supplied and using $wildcard_always_applied mode.
+                            $keyword = $keyword . "*";
                         }
                         $wildcards = true;
                     }
@@ -544,8 +544,10 @@ if ($keysearch) {
                                 $sql_keyword_union_or[] = false;
                             } elseif ($wildcards) {
                                 $union = new PreparedStatementQuery();
-                                if (substr($keyword, 0, 1) == "*" || preg_match('/\W/', str_replace("*", "", $keyword)) !== false) {
-                                    // Full text searching can't match anywhere except the start. It will also ignore non-word characters. Use a LIKE search
+                                if (substr($keyword, 0, 1) == "*" || preg_match('/\W/', str_replace("*" , "", $keyword)) !=0 || strlen(trim($keyword, '*')) < 3) {
+                                    // Full text searching can't match anywhere except the start. It will also ignore non-word characters.
+                                    // Normally the full text index will not index words less than 3 characters.
+                                    // Use a LIKE search.
                                     $keyword = str_replace("*", "%", $keyword);
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
