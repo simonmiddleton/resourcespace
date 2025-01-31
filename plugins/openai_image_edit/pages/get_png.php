@@ -1,6 +1,12 @@
 <?php
 include "../../../include/boot.php";
 include "../../../include/authenticate.php";
+
+if (count(array_intersect((array('openai_gpt', 'openai_image_edit')), $plugins)) !== 2)
+    {
+    exit("The OpenAI GPT and OpenAI Image Editing plugins must be enabled and configured.");
+    }
+
 // For the given resource return a PNG no larger than 1024x1024 pixels as required by OpenAI.
 
 $ref=getval("ref",0,true);
