@@ -1,4 +1,5 @@
 <?php
+
 // Global everything we need, in case called inside a function (e.g. for push_metadata support)
 global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount, $resource_hit_count_on_downloads,
        $show_contributed_by,$baseurl_short,$search,$enable_related_resources,$modal,
@@ -9,6 +10,7 @@ $modal = (getval("modal", "") == "true");
 
 // Check display conditions here to save checking in each loop
 $displaycheck = [];
+
 for ($i = 0; $i < count($fields); $i++) {
     $displaycheck[$fields[$i]["ref"]] = check_view_display_condition($fields, $i, $fields_all) ? true : false;
 }
@@ -22,20 +24,21 @@ $tabs_fields_assoc = [];
 // Do not show related resources in tabs for the pushed metadata
 $show_tab_resources = !(isset($GLOBALS["showing_pushed_metadata"]) && $GLOBALS["showing_pushed_metadata"]);
 $configured_resource_type_tabs = [];
+
 if (
     $show_tab_resources
     && isset($related_type_show_with_data)
     && !empty($related_type_show_with_data)
     && ($related_type_upload_link || count(get_related_resources($ref)) > 0)
 ) {
-        $configured_resource_type_tabs = ps_array(
-            "SELECT DISTINCT t.ref AS `value`
-                FROM resource_type AS rt
-            INNER JOIN tab AS t ON t.ref = rt.tab
-                WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
-            array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
-            'schema'
-        );
+    $configured_resource_type_tabs = ps_array(
+        "SELECT DISTINCT t.ref AS `value`
+            FROM resource_type AS rt
+        INNER JOIN tab AS t ON t.ref = rt.tab
+            WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
+        array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
+        'schema'
+    );
 }
 
 // Clean the tabs by removing the ones that would end up being empty
@@ -85,21 +88,16 @@ if ($disable_tabs) {
     $tabs_fields_assoc[1] = $tabs_fields_assoc[0];
     unset($tabs_fields_assoc[0]);
 }
+
 $fields_tab_names = array_intersect_key($system_tabs, $tabs_fields_assoc);
-$modified_view_tabs = hook("modified_view_tabs", "view", array($fields_tab_names));
-if ($modified_view_tabs !== '' && is_array($modified_view_tabs)) {
-    $fields_tab_names = $modified_view_tabs;
-}
+
 debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
 // -----------------------  END: Tab calculation -----------------
 ?>
 
 <div id="Metadata">
     <div class="NonMetadataProperties">
-        <?php
-        hook("beforefields");
-        if ($show_resourceid) {
-            ?>
+        <?php if ($show_resourceid) { ?>
             <div class="itemNarrow">
                 <h3><?php echo escape($lang["resourceid"]); ?></h3>
                 <p><?php echo escape($ref); ?></p>
@@ -133,14 +131,11 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
             </div>
             <?php
         }
-        hook("extrafields");
 
         // Contributed by
-        if (
-            !hook("replacecontributedbyfield")
-            && $show_contributed_by
-        ) {
-                $udata = get_user($resource["created_by"]);
+        if ($show_contributed_by) {
+            $udata = get_user($resource["created_by"]);
+
             if ($udata !== false) {
                 $udata_fullname = highlightkeywords(escape($udata["fullname"] ?? ""), $search);
                 $udata_a_tag_href = generateURL("{$baseurl_short}pages/team/team_user_edit.php", ['ref' => $udata["ref"]]);
@@ -150,16 +145,17 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
                     $udata_fullname
                 );
                 ?>
-                    <div class="itemNarrow">
-                        <h3><?php echo escape($lang["contributedby"]); ?></h3>
-                        <p><?php echo checkperm("u") ? $udata_a_tag : $udata_fullname; ?></p>
-                    </div>
-                    <?php
+                <div class="itemNarrow">
+                    <h3><?php echo escape($lang["contributedby"]); ?></h3>
+                    <p><?php echo checkperm("u") ? $udata_a_tag : $udata_fullname; ?></p>
+                </div>
+                <?php
             }
-        } // end hook replacecontributedby
+        }
         ?>
         <div class="clearerleft"></div>
     </div><!-- End of NonMetadataProperties -->
+
     <?php
     global $extra;
     $extra = "";
@@ -168,129 +164,130 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
     $tabname = "";
     $tabcount = 0;
 
-    $tmp = hook("tweakfielddisp", "", array($ref, $fields));
-    if ($tmp) {
-        $fields = $tmp;
-    }
-
     if ((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0) {
         ?>
         <div class="Title"><?php echo escape($lang['metadata']); ?></div>
         <div class="TabBar">
-        <?php
-        foreach ($fields_tab_names as $tab_name) {
-            $class_TabSelected = $tabcount == 0 ? ' TabSelected' : '';
-            if ($modal) {
-                $tabOnClick = "SelectMetaTab(" . $ref . "," . $tabcount . ",true);";
-            } else {
-                $tabOnClick = "SelectMetaTab(" . $ref . "," . $tabcount . ",false);";
+            <?php
+            foreach ($fields_tab_names as $tab_name) {
+                $class_TabSelected = $tabcount == 0 ? ' TabSelected' : '';
+                if ($modal) {
+                    $tabOnClick = "SelectMetaTab(" . $ref . "," . $tabcount . ",true);";
+                } else {
+                    $tabOnClick = "SelectMetaTab(" . $ref . "," . $tabcount . ",false);";
+                }
+                ?>
+
+                <div id="<?php echo $modal ? "Modal" : ""; ?>tabswitch<?php echo $tabcount . '-' . $ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
+                    <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo escape($tab_name); ?></a>
+                </div>
+                <?php
+                $tabcount++;
             }
             ?>
-            <div id="<?php echo $modal ? "Modal" : ""; ?>tabswitch<?php echo $tabcount . '-' . $ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
-                <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo escape($tab_name); ?></a>
-            </div>
-            <?php
-            $tabcount++;
-        }
-        ?>
         </div> <!-- end of TabBar -->
         <?php
     }
 
     $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-") . $ref; ?>
 
-    <div class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount > 0) {
-        ?> StyledTabbedPanel<?php
-                           } ?>" id="<?php echo ($modal ? "Modaltab0" : "tab0") . '-' . $ref; ?>">
+    <div
+        class="TabbedPanel<?php echo $tabModalityClass;
+        echo ($tabcount > 0) ? " StyledTabbedPanel" : ''; ?>"
+        id="<?php echo ($modal ? "Modaltab0" : "tab0") . '-' . $ref; ?>"
+    >
         <!-- START of FIRST TabbedPanel -->
-        <div class="clearerleft"> </div>
+        <div class="clearerleft"></div>
         <div class="TabbedPanelInner">
-        <?php
-        #  ----------------------------- Draw standard and template fields ------------------------
-        $tabname                        = '';
-        $tabcount                       = 0;
-        $extra                          = '';
-        $show_default_related_resources = true;
+            <?php
+            #  ----------------------------- Draw standard and template fields ------------------------
+            $tabname                        = '';
+            $tabcount                       = 0;
+            $extra                          = '';
+            $show_default_related_resources = true;
 
-        // Process each tab which has fields attached to a defined tab name or the Default tab
-        foreach ($fields_tab_names as $tab_ref => $tabname) {
-            for ($i = 0; $i < count($fields); $i++) {
-                if (
-                    (
-                        $fields[$i]["global"] == 1
-                        || in_array($resource['resource_type'], $arr_fieldrestypes[$fields[$i]['ref']])
-                        ||
+            // Process each tab which has fields attached to a defined tab name or the Default tab
+            foreach ($fields_tab_names as $tab_ref => $tabname) {
+                for ($i = 0; $i < count($fields); $i++) {
+                    if (
                         (
-                            isset($metadata_template_resource_type)
-                            && $resource['resource_type'] == $metadata_template_resource_type
+                            $fields[$i]["global"] == 1
+                            || in_array($resource['resource_type'], $arr_fieldrestypes[$fields[$i]['ref']])
+                            ||
+                            (
+                                isset($metadata_template_resource_type)
+                                && $resource['resource_type'] == $metadata_template_resource_type
+                            )
                         )
-                    )
-                    && ($displaycheck[$fields[$i]["ref"]] ?? false)
-                    && $tab_ref == $fields[$i]['tab']
-                    && !hook('renderfield', '', array($fields[$i], $resource))
-                ) {
+                        && ($displaycheck[$fields[$i]["ref"]] ?? false)
+                        && $tab_ref == $fields[$i]['tab']
+                        && !hook('renderfield', '', array($fields[$i], $resource))
+                    ) {
                         display_field_data($fields[$i]);
+                    }
                 }
-            }
 
-            // Fields without templates which are linked to the in-process tab have now all been rendered
-            // Those with templates which are linked to the in-process tab have had their markup appended to $extra
+                // Fields without templates which are linked to the in-process tab have now all been rendered
+                // Those with templates which are linked to the in-process tab have had their markup appended to $extra
 
-            // Show related resources which have the in-process tab name:
-            include '../include/related_resources.php';
+                // Show related resources which have the in-process tab name:
+                include '../include/related_resources.php';
 
-            // Now render any markup previously sidelined in $extra (eg. fields with a display template)
-            ?>
-            <div class="clearerleft"></div>
-                <?php echo $extra;
+                // Now render any markup previously sidelined in $extra (eg. fields with a display template)
+                ?>
+                <div class="clearerleft"></div>
+                <?php
+                echo $extra;
                 $extra = '';
                 ?>
-        </div><!-- END of TabbedPanelInner-->
-    </div> <!-- END of TabbedPanel (after extra rendered) -->
-            <?php
-    // All fields linked to the in-process tab are now rendered
-
-    // If this is not the last in-process tab then render the next TabbedPanel ready for the next tranche of fields
-            $tabcount++;
-            if ($tabcount != count($fields_tab_names)) {
-                ?>
-        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo $modal ? "Modal" : ""; ?>tab<?php echo $tabcount . '-' . $ref?>">
-        <!-- START of NEXT TabbedPanel -->
-        <div class="clearerleft"> </div>
-        <div>
+                </div><!-- END of TabbedPanelInner-->
+                </div> <!-- END of TabbedPanel (after extra rendered) -->
                 <?php
-            }
-        }
+                // All fields linked to the in-process tab are now rendered
 
-        if (empty($fields_tab_names)) {
-            // Sort the fields via order_by
-            foreach ($fields as $field) {
-                $fieldorders[$field["ref"]] = $field["order_by"];
-            }
-            array_multisort($fieldorders, SORT_ASC, $fields);
+                // If this is not the last in-process tab then render the next TabbedPanel ready for the next tranche of fields
+                $tabcount++;
 
-            for ($i = 0; $i < count($fields); $i++) {
-                if (
-                    ($displaycheck[$fields[$i]["ref"]] ?? false)
-                    && !hook('renderfield', "", array($fields[$i], $resource))
-                ) {
-                    display_field_data($fields[$i]);
+                if ($tabcount != count($fields_tab_names)) {
+                    ?>
+                    <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo $modal ? "Modal" : ""; ?>tab<?php echo $tabcount . '-' . $ref?>">
+                    <!-- START of NEXT TabbedPanel -->
+                    <div class="clearerleft"></div>
+                    <div>
+                    <?php
                 }
             }
-            // Close TabbedPanel - it is now opened before the $fields_tab_names loop even if no real tabs exist
+
+            if (empty($fields_tab_names)) {
+                // Sort the fields via order_by
+                foreach ($fields as $field) {
+                    $fieldorders[$field["ref"]] = $field["order_by"];
+                }
+
+                array_multisort($fieldorders, SORT_ASC, $fields);
+
+                for ($i = 0; $i < count($fields); $i++) {
+                    if (
+                        ($displaycheck[$fields[$i]["ref"]] ?? false)
+                        && !hook('renderfield', "", array($fields[$i], $resource))
+                    ) {
+                        display_field_data($fields[$i]);
+                    }
+                }
+                // Close TabbedPanel - it is now opened before the $fields_tab_names loop even if no real tabs exist
+                ?>
+                <div class="clearerleft"></div>
+                </div>
+                </div> <!-- END of TabbedPanel -->
+                <?php
+            }
             ?>
-    <div class="clearerleft"> </div>
-    </div>
-    </div> <!-- END of TabbedPanel -->
-            <?php
-        }
-        hook("extrafields2"); ?>
-<div class="clearerleft"></div>
-<?php if (!isset($related_type_show_with_data)) {
-    echo $extra;
-} ?>
-<div class="clearerleft"></div>
-<?php hook("renderafterresourcedetails"); ?>
-</div>
+
+            <div class="clearerleft"></div>
+            <?php if (!isset($related_type_show_with_data)) {
+                echo $extra;
+            } ?>
+            <div class="clearerleft"></div>
+        </div>
 <!-- End of Metadata-->
-<div class="clearerleft"></div>
+<div class="clearerleft MOZAMBIQUE"></div>
