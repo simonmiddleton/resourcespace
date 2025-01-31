@@ -22,7 +22,7 @@ function HookEmbedvideoViewAfterresourceactions()
         (
             $video_preview_original
             && strtolower($resource['file_extension']) == "mp4"
-        ) 
+        )
         || !file_exists(get_resource_path($ref, true, "pre", false, $ffmpeg_preview_extension))
     ) {
         $video_path = get_resource_path($ref, false, "", false, $resource['file_extension'], -1, 1, false, "", -1, false);
@@ -31,7 +31,7 @@ function HookEmbedvideoViewAfterresourceactions()
     }
 
     $video_path .= "&k=" . $key;
-    $thumb = get_resource_path($ref, false, "pre", false, "jpg"); 
+    $thumb = get_resource_path($ref, false, "pre", false, "jpg");
     $thumb .= "&k=" . $key;
 
     ?>
@@ -64,9 +64,11 @@ function HookEmbedvideoViewAfterresourceactions()
                 To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
             </p>';
         echo "\n";
-        $video_altfiles=get_alternative_files($ref);
+
+        $video_altfiles = get_alternative_files($ref);
+
         foreach ($video_altfiles as $video_altfile) {
-            if (mb_strtolower($video_altfile["file_extension"]) =="vtt") {
+            if (mb_strtolower($video_altfile["file_extension"]) == "vtt") {
                 $download_path = generateURL($baseurl . "/pages/download.php", ['ref' => $ref, 'alternative' => $video_altfile['ref'], 'ext' => 'vtt', 'k' => $key])
                 ?>
                 <track class="videojs_alt_track" kind="subtitles" src="<?php echo $download_path; ?>" label="<?php echo escape($video_altfile["description"]); ?>" ></track>
@@ -74,7 +76,7 @@ function HookEmbedvideoViewAfterresourceactions()
             }
         }
         echo "</video>";
-        ?>
+    ?>
     </textarea>
     <?php
     return true;
