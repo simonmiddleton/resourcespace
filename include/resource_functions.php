@@ -2999,15 +2999,16 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
 
     # Now fetch field values ensuring that multiple node values are ordered correctly
     $field_value_sql =
-    "SELECT rn.resource, n.resource_type_field `field`, rn.node, n.name 
+    "SELECT rn.resource, n.resource_type_field `field`, rn.node, n.name, n.order_by, n.parent
         FROM resource_node rn
     INNER JOIN node n on n.ref = rn.node and rn.resource=?
     ORDER BY n.resource_type_field, n.order_by";
 
     $field_values = ps_query($field_value_sql, array("i", $ref));
 
-    $field_node_list = array();
-    $field_ref_list = array();
+    $field_node_list = [];
+    $field_ref_list = [];
+    $arr_field_nodes = []; // For later re-ordering
     $last_field = null;
 
     # Assemble comma separated lists of node names and refs to attach to the fields array
@@ -3021,6 +3022,13 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
             $field_ref_list[$this_field]['refs'] = $field_value['node'];
             $last_field = $this_field;
         }
+        $arr_field_nodes[$this_field][] = [
+            "ref" => $field_value['node'],
+            "resource_type_field" => $this_field,
+            "name" => $field_value['name'],
+            "parent" => $field_value['parent'],
+            "order_by" => $field_value['order_by'],
+        ];
     }
 
     # Attach the lists of node names and refs to the corresponding fields array entry
@@ -3094,8 +3102,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
                 && $fields[$n]['type'] != FIELD_TYPE_CATEGORY_TREE
                 && trim($fields[$n]['nodes'] ?? "") != ""
             ) {
-                $fieldnoderefs = explode(",", $fields[$n]['nodes']);
-                $fieldnodes = get_nodes_by_refs($fieldnoderefs);
+                $fieldnodes = $arr_field_nodes[$fields[$n]["ref"]];
                 if ((bool) $fields[$n]['automatic_nodes_ordering']) {
                     $fieldnodes = reorder_nodes($fieldnodes);
                 }
