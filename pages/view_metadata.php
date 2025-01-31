@@ -7,6 +7,12 @@ global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hi
 // Is this a modal?
 $modal=(getval("modal","")=="true");
 
+// Check display conditions here to save checking in each loop
+$displaycheck = [];
+for ($i = 0; $i < count($fields); $i++) {
+    $displaycheck[$fields[$i]["ref"]] = check_view_display_condition($fields, $i, $fields_all) ? true : false;
+}
+
 // -----------------------  Tab calculation -----------------
 $disable_tabs = true;
 $system_tabs = get_tab_name_options();
@@ -51,7 +57,7 @@ foreach(array_keys($system_tabs) as $tab_ref)
             && $fields[$i]['value'] != ''
             && $fields[$i]['value'] != ','
             && ($access == 0 || ($access == 1 && !$fields[$i]['hide_when_restricted']))
-            && check_view_display_condition($fields, $i, $fields_all)
+            && ($displaycheck[$fields[$i]["ref"]] ?? false)
         );
 
         // Check if the field can show on this tab
@@ -224,19 +230,17 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
             {
             for($i = 0; $i < count($fields); $i++)
                 {
-                $displaycondition = check_view_display_condition($fields, $i, $fields_all);
-                debug(sprintf('Field #%s has $displaycondition = %s', $fields[$i]['ref'], json_encode($displaycondition)));
                 if(
                     (
                         $fields[$i]["global"] == 1 
                         || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) 
-                        || 
+                        ||
                         (
                             isset($metadata_template_resource_type) 
                             && $resource['resource_type'] == $metadata_template_resource_type
                         )
                     )
-                    && $displaycondition 
+                    && ($displaycheck[$fields[$i]["ref"]] ?? false)
                     && $tab_ref == $fields[$i]['tab']
                     && !hook('renderfield', '', array($fields[$i], $resource))
                     ) {
@@ -283,17 +287,14 @@ if(empty($fields_tab_names))
         }
     array_multisort($fieldorders, SORT_ASC, $fields);
 
-    for($i = 0; $i < count($fields); $i++)
-        {
-        $displaycondition = check_view_display_condition($fields, $i, $fields_all);
-
+    for ($i = 0; $i < count($fields); $i++) {
         if (
-            $displaycondition
+            ($displaycheck[$fields[$i]["ref"]] ?? false)
             && !hook('renderfield',"", array($fields[$i], $resource))
-            ) {
-                display_field_data($fields[$i]);
-            }
+        ) {
+            display_field_data($fields[$i]);
         }
+    }
     // Close TabbedPanel - it is now opened before the $fields_tab_names loop even if no real tabs exist
     ?>
     <div class="clearerleft"> </div>
