@@ -102,6 +102,16 @@ function test_wildcard_search(string $search, string $node_value, int $field): b
     return $return;
 }
 
+# Test case for keywords search where word part is less than 3 characters and so not in full text index.
+# Wildcard search for "look up above" should be full text index for "look" and "above" but use LIKE for "up".
+$resource = create_resource(1, 0);
+update_field($resource, 12, "look up above");
+$result = do_search("look up above");
+if (!is_array($result) || count($result) === 0) {
+    echo "Search failed for short word - ";
+    return false;
+    }
+
 // teardown
 $wildcard_always_applied = $wildcard_always_applied_cache;
 
