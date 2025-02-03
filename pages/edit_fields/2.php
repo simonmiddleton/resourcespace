@@ -15,10 +15,10 @@ if (!hook('customchkboxes', '', array($field))) {
         }
     }
 
-    $field['nodes'] = array_filter($field['nodes'], 'node_is_active');
+    $field['node_options'] = array_filter($field['node_options'], 'node_is_active');
 
     // Work out an appropriate number of columns based on the average length of the options.
-    $l = average_length(array_column($field['nodes'], 'name'));
+    $l = average_length(array_column($field['node_options'], 'name'));
     switch ($l) {
         case $l > 25:
             $cols = 1;
@@ -43,21 +43,21 @@ if (!hook('customchkboxes', '', array($field))) {
     }
 
     if ((bool) $field['automatic_nodes_ordering']) {
-        $field['nodes'] = reorder_nodes($field['nodes']);
+        $field['node_options'] = reorder_nodes($field['node_options']);
     }
 
     $new_node_order    = array();
     $order_by_resetter = 0;
-    foreach ($field['nodes'] as $node_index => $node) {
+    foreach ($field['node_options'] as $node_index => $node) {
         // Special case for vertically ordered checkboxes.
         // Order by needs to be reset as per the new order so that we can reshuffle them using the order by as a reference
         if ($checkbox_ordered_vertically) {
-            $field['nodes'][$node_index]['order_by'] = $order_by_resetter++;
+            $field['node_options'][$node_index]['order_by'] = $order_by_resetter++;
         }
     }
 
     $wrap = 0;
-    $rows = ceil(count($field['nodes']) / $cols);
+    $rows = ceil(count($field['node_options']) / $cols);
 
     if ($checkbox_ordered_vertically) {
         # ---------------- Vertical Ordering -----------
@@ -71,13 +71,13 @@ if (!hook('customchkboxes', '', array($field))) {
                         for ($j = 0; $j < $cols; $j++) {
                             $order_by = ($rows * $j) + $i;
 
-                            $node_index_to_be_reshuffled = array_search($order_by, array_column($field['nodes'], 'order_by', 'ref'));
+                            $node_index_to_be_reshuffled = array_search($order_by, array_column($field['node_options'], 'order_by', 'ref'));
 
                             if (false === $node_index_to_be_reshuffled) {
                                 continue;
                             }
 
-                            $node = $field['nodes'][$node_index_to_be_reshuffled];
+                            $node = $field['node_options'][$node_index_to_be_reshuffled];
                             ?>
                             <td>
                                 <input
@@ -129,7 +129,7 @@ if (!hook('customchkboxes', '', array($field))) {
             <table cellpadding="3" cellspacing="0">
                 <tr>
                     <?php
-                    foreach ($field['nodes'] as $node) {
+                    foreach ($field['node_options'] as $node) {
                         $wrap++;
                         if ($wrap > $cols) {
                             $wrap = 1;

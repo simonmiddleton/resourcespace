@@ -48,7 +48,7 @@ $add_searched_nodes_function_call = '';
     />
     <?php
 
-    $nodes_in_sequence = array_filter($field['nodes'], 'node_is_active');
+    $nodes_in_sequence = array_filter($field['node_options'], 'node_is_active');
 
     if ((bool) $field['automatic_nodes_ordering']) {
         uasort($nodes_in_sequence, "node_name_comparator");

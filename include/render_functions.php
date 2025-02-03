@@ -562,21 +562,21 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             $adjusted_dropdownoptions=hook("adjustdropdownoptions");
             if ($adjusted_dropdownoptions){$options=$adjusted_dropdownoptions;}
 
-            $node_options = array_column($field["nodes"], "name");
+            $node_options = array_column($field["node_options"], "name");
 
             if((bool) $field['automatic_nodes_ordering'])
                 {
-                $field['nodes'] = reorder_nodes($field['nodes']);
+                $field['node_options'] = reorder_nodes($field['node_options']);
                 }
 
             $order_by_resetter = 0;
-            foreach($field['nodes'] as $node_index => $node)
+            foreach($field['node_options'] as $node_index => $node)
                 {
                 // Special case for vertically ordered checkboxes.
                 // Order by needs to be reset as per the new order so that we can reshuffle them using the order by as a reference
                 if($checkbox_ordered_vertically)
                     {
-                    $field['nodes'][$node_index]['order_by'] = $order_by_resetter++;
+                    $field['node_options'][$node_index]['order_by'] = $order_by_resetter++;
                     }
                 }
 
@@ -590,7 +590,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                           if($forsearchbar){ ?>onChange="FilterBasicSearchOptions('<?php echo escape($field["name"]) ?>',<?php echo escape(($field["global"] == 1 ? "[0]" : "[" . escape((string)$field["resource_types"]) . "]")) ?>);" <?php } ?>>
                     <option value=""></option>
                 <?php
-                foreach($field['nodes'] as $node)
+                foreach($field['node_options'] as $node)
                     {
                     if('' != trim($node['name']))
                         {
@@ -623,7 +623,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     default:       $cols = 10;
                     }
 
-                $height = ceil(count($field['nodes']) / $cols);
+                $height = ceil(count($field['node_options']) / $cols);
 
                 global $checkbox_ordered_vertically, $checkbox_vertical_columns;
                 if($checkbox_ordered_vertically)
@@ -642,14 +642,14 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                         {
                                         $order_by = ($height * $j) + $i;
 
-                                        $node_index_to_be_reshuffled = array_search($order_by, array_column($field['nodes'], 'order_by', 'ref'));
+                                        $node_index_to_be_reshuffled = array_search($order_by, array_column($field['node_options'], 'order_by', 'ref'));
 
                                         if(false === $node_index_to_be_reshuffled)
                                             {
                                             continue;
                                             }
 
-                                        $node = $field['nodes'][$node_index_to_be_reshuffled];
+                                        $node = $field['node_options'][$node_index_to_be_reshuffled];
                                         ?>
                                         <td valign=middle>
                                             <input id="nodes_searched_<?php echo $node['ref']; ?>" class="nodes_input_checkbox" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
@@ -677,7 +677,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     <table cellpadding=4 cellspacing=0>
                         <tr>
                     <?php
-                    foreach($field['nodes'] as $node)
+                    foreach($field['node_options'] as $node)
                         {
                         $wrap++;
 
@@ -1921,7 +1921,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
-            $field['nodes'] = array_filter($field['nodes'], 'node_is_active');
+            $field['node_options'] = array_filter($field['node_options'], 'node_is_active');
             }
         }
     else
@@ -1958,7 +1958,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <!-- End of edit_multi_checkbox -->
 <?php
       }
-
   if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
       {
       # When editing multiple, give option to select Replace All Text or Find and Replace
@@ -2174,10 +2173,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
         
         // Establish the full set of selected nodes to be rendered for this field
         // Do this only if the field's selected nodes haven't previously been adjusted to take account of omit_when_copying
-        if(!$omit_when_copying_enacted)
-            {
-            $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
-            }
+
+        if (!$omit_when_copying_enacted && isset($field['nodes'])) {
+            $selected_nodes = array_unique(array_merge($selected_nodes, explode(",", $field['nodes'])));
+        }
 
         debug(sprintf('$selected_nodes = %s', json_encode($selected_nodes)));
 
@@ -2195,18 +2194,14 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 $name = "field_{$field['ref']}";
                 }
 
-            $field_nodes = array();
-            foreach($selected_nodes as $selected_node)
-                {
-                $node_data = array();
-                if(get_node($selected_node, $node_data) && $node_data["resource_type_field"] != $field["ref"])
-                    {
+            $field_nodes = [];
+            foreach ($selected_nodes as $selected_node) {
+                // Check node is valid                
+                if (!isset($field['node_options'][$selected_node])) {
                     continue;
-                    }
-
-                $field_nodes[] = $selected_node;
-                unset($node_data);
                 }
+                $field_nodes[] = $selected_node;
+            }
             sort($field_nodes);
             debug(sprintf('$field_nodes = %s', json_encode($field_nodes)));
             if(!$multiple && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
@@ -2217,11 +2212,11 @@ function display_field($n, $field, $newtab=false,$modal=false)
             }
         elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
             {
-            $field['nodes'] = get_nodes($field['ref'], null, false);
+            $field['node_options'] = get_nodes($field['ref'], null, false);
             $field_nodes = array();
             foreach($selected_nodes as $selected_node)
                 {
-                if(in_array($selected_node,array_column($field['nodes'],"ref")))
+                if(in_array($selected_node,array_column($field['node_options'],"ref")))
                     {
                     $field_nodes[] = $selected_node;
                     }
