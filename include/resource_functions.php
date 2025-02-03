@@ -3745,6 +3745,12 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         return array();
     }
 
+    // If there is no resource ID passed and the filters are also empty then
+    // return empty array
+    if (!$resource && empty($filters)) {
+        return array();
+    }
+
     $extrafields = hook('get_resource_log_extra_fields');
     $extrafields = is_a($extrafields, PreparedStatementQuery::class) ? $extrafields : new PreparedStatementQuery();
 

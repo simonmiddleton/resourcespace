@@ -94,6 +94,14 @@ $url_params = array(
     "search_go" => $go,
 );
 
+if ($ref === "") {
+    $error = $lang['resourcenotfound'];
+    include "../include/header.php";
+    $onload_message = array("title" => $lang["error"], "text" => $error);
+    include "../include/footer.php";    
+    exit();
+}
+
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
