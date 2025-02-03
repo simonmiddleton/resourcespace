@@ -757,6 +757,7 @@ final class IIIFRequest
                         && (
                             !$this->only_power_of_two_sizes
                             || (is_power_of_two($size['width']) && is_power_of_two($size['height']))
+                            || $size['id'] == 'pre'
                         )
                     ) {
                         $availsizes[] = [
