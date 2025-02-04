@@ -185,45 +185,34 @@ if (($extension == "cr2" || $extension == "nef" || $extension == "dng" || $exten
             ($extension == "dng" && $dng_thumb_extract) ||
             ($extension == "rw2" && $rw2_thumb_extract) ||
             ($extension == "raf" && $raf_thumb_extract) ||
-            ($extension == 'arw' && $arw_thumb_extract)
+            ($extension == "arw" && $arw_thumb_extract)
         ) &&
         $exiftool_fullpath != false
     ) {
-            // previews are stored in a couple places, and some nef files have large previews in -otherimage
-        if ($extension == "rw2") {
-            $bin_tag = " -jpgfromraw ";
-        }
-        if ($extension == "nef") {
-            $bin_tag = " -otherimage ";
-        }
-        if ($extension == "cr2" || $extension == "dng" || $extension == "raf" || 'arw' == $extension) {
-            $bin_tag = " -previewimage ";
+        
+        // Run command to output all previews in order of binary data size
+        $cmd_preview_list = $exiftool_fullpath . " %%FILE%% -preview:all";
+        $output_preview = run_command($cmd_preview_list, false, ['%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
+
+        if (str_starts_with($output_preview, "Jpg From Raw")) {
+            $bin_tag = "-jpgfromraw";
+        } elseif (str_starts_with($output_preview, "Other Image")) {
+            $bin_tag = "-otherimage";
+        } elseif (str_starts_with($output_preview, "Preview Image")) {
+            $bin_tag = "-previewimage";
+        } else {
+            $bin_tag = "-thumbnailimage";
         }
 
-            // Attempt extraction. Replaced ">" with -w since this has been seen to fail on some Windows servers
-            $cmd = $exiftool_fullpath . ' -b ' . $bin_tag . ' ' . escapeshellarg($file) . " ";
-            $cmd .= ($GLOBALS["config_windows"] ? WINDOWS_SHELL_REDIRECT : LINUX_SHELL_REDIRECT) . " %d%f.jpg";
-            $wait = run_command($cmd);
-            $extractedpreview = preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
+        // Attempt extraction
+        $cmd = $exiftool_fullpath . " -b %%BIN_TAG%% %%FILE%% -w %d%f.jpg";
+        $wait = run_command($cmd, false, ['%%FILE%%'    => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+                                          '%%BIN_TAG%%' => new CommandPlaceholderArg($bin_tag, [CommandPlaceholderArg::class, 'alwaysValid']),                                 
+                                         ]);
+        $extractedpreview = preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
+        
         if ($target != $extractedpreview && file_exists($extractedpreview)) {
             rename($extractedpreview, $target);
-        }
-
-        // check for nef -otherimage failure
-        if ($extension == "nef" && !filesize_unlimited($target) > 0) {
-            if (file_exists($target)) {
-                unlink($target);
-            }
-
-            $bin_tag = " -previewimage ";
-            //2nd attempt
-            $cmd = $exiftool_fullpath . ' -b ' . $bin_tag . ' ' . escapeshellarg($file) . " ";
-            $cmd .= ($GLOBALS["config_windows"] ? WINDOWS_SHELL_REDIRECT : LINUX_SHELL_REDIRECT) . " %d%f.jpg";
-            $wait = run_command($cmd);
-            $extractedpreview = preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
-            if ($target != $extractedpreview && file_exists($extractedpreview)) {
-                rename($extractedpreview, $target);
-            }
         }
 
         // NOTE: in case of failures, other suboptimal possibilities
@@ -242,8 +231,12 @@ if (($extension == "cr2" || $extension == "nef" || $extension == "dng" || $exten
             if ($orientation != 0) {
                 $mogrify_fullpath = get_utility_path("im-mogrify");
                 if ($mogrify_fullpath != false) {
-                    $command = $mogrify_fullpath . ' -rotate +' . $orientation . ' ' . $target;
-                    $wait = run_command($command);
+                    $command = $mogrify_fullpath . ' -rotate +%%ORIENTATION%% %%TARGET%%';
+                    $cmdparams = [
+                        "%%ORIENTATION%%" => new CommandPlaceholderArg($orientation, 'is_positive_int_loose'),
+                        "%%TARGET%%"      => new CommandPlaceholderArg($target, 'is_valid_rs_path')
+                    ];
+                    $wait = run_command($command, false, $cmdparams);
                 }
             }
             $newfile = $target;
