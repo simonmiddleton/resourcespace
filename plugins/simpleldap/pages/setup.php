@@ -110,7 +110,7 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
         ?>
         <div class="BasicsBox"> 
         <?php
-        echo "<h1>" . $lang["simpleldap_test"] . " " . $simpleldap['ldapserver'] . ":" . $simpleldap['port'] ."</h1>";
+        echo "<h1>" . escape($lang["simpleldap_test"]) . " " . escape($simpleldap['ldapserver']) . ":" . escape($simpleldap['port']) . "</h1>";
         
         debug("LDAP - Connecting to LDAP server: " . $simpleldap['ldapserver'] . " on port " . $simpleldap['port']);
         $dstestconn=  @fsockopen($simpleldap['ldapserver'], $simpleldap['port'], $errno, $errstr, 5);
@@ -229,10 +229,10 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
         <?php
         
         echo "<table class='InfoTable' style='width: 100%' ><tbody>";
-        echo "<tr><td width='40%'><h2>" .  $lang["simpleldap_test_title"] . "</h2></td><td width='60%'><h2>" . $lang["simpleldap_result"] . "</h2></td></tr>";
-        echo "<tr><td>" . $lang["simpleldap_connection"] . " " . $simpleldap['ldapserver'] . ":" . $simpleldap['port'] . "</td><td id='testconnectionresult'>" . (($dstestconn)?$lang["status-ok"]:$lang["status-fail"]) . "</td></tr>";
-        echo "<tr><td>" . $lang["simpleldap_bind"] . "</td><td id='testbindresult'></td></tr>";
-        echo "<tr><td>" . $lang["simpleldap_retrieve_user"] . "</td><td id='testgetuserresult'></td></tr>";
+        echo "<tr><td width='40%'><h2>" .  escape($lang["simpleldap_test_title"]) . "</h2></td><td width='60%'><h2>" . escape($lang["simpleldap_result"]) . "</h2></td></tr>";
+        echo "<tr><td>" . escape($lang["simpleldap_connection"]) . " " . escape($simpleldap['ldapserver']) . ":" . escape($simpleldap['port']) . "</td><td id='testconnectionresult'>" . escape(($dstestconn) ? $lang["status-ok"] : $lang["status-fail"]) . "</td></tr>";
+        echo "<tr><td>" . escape($lang["simpleldap_bind"]) . "</td><td id='testbindresult'></td></tr>";
+        echo "<tr><td>" . escape($lang["simpleldap_retrieve_user"]) . "</td><td id='testgetuserresult'></td></tr>";
         echo "<tr id='blankrow'><td colspan='2' ></td></tr>";               
         echo "</tbody></table>";
         ?>
@@ -250,7 +250,7 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
 <?php 
 if (!function_exists('ldap_connect'))
     {
-    echo "<div class=\"PageInformal\">" . $lang["simpleldap_externsion_required"] . "</div>";
+    echo "<div class=\"PageInformal\">" . escape($lang["simpleldap_externsion_required"]) . "</div>";
     }
     
 ?>
