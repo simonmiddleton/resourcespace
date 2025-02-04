@@ -7328,10 +7328,10 @@ function get_related_resources($ref)
  * @param bool  $nodeinfo               Get full node details?
  * @param bool  $skip_translation       Do not translate node name. Only relevant if $nodeinfo=false
  *
- * @return array Array of field options, either as a simple array or with full node details
+ * @return array|bool Array of field options, either as a simple array or with full node details
  *
  */
-function get_field_options(int $ref, bool $nodeinfo = false, bool $skip_translation = false): array
+function get_field_options(int $ref, bool $nodeinfo = false, bool $skip_translation = false)
 {
     global $FIXED_LIST_FIELD_TYPES, $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
