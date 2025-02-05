@@ -454,7 +454,10 @@ if (!$basic_simple_search && !$hide_search_resource_types)
         <?php if (((count($rt)==1) && ($rt[0]=="")) || ($restypes=="Global") || (in_array($types[$n]["ref"],$rt))) 
             {?> checked="checked"<?php } ?> 
             onClick="SimpleSearchFieldsHideOrShow(true);<?php echo $resetTickAllCall;?>">
-        <label for="TickBox<?php echo $types[$n]["ref"]; ?>">&nbsp;<?php echo escape($types[$n]["name"]) ?></label>
+        <label for="TickBox<?php echo $types[$n]["ref"]; ?>"><i class="fa fa-fw <?php echo escape($types[$n]["icon"]!=""?$types[$n]["icon"]:FONTAWESOME_EXTENSIONS["default"]) ?>"></i>    
+                <?php
+                
+            echo "&nbsp;" . escape($types[$n]["name"]) ?></label>
     </div>
     <?php 
     }
