@@ -1670,6 +1670,7 @@ function save_resource_type(int $ref, array $savedata)
         }
 
     clear_query_cache("schema");
+    clear_query_cache("resourcetypeicon");
     clear_restype_cache();
     return true;
     }

@@ -731,7 +731,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 else
                                     {?>
                                     <div id="previewimagewrapper">
-                                    <?php echo get_nopreview_html((string) $resource["file_extension"]); ?>
+                                    <?php echo get_nopreview_html((string) $resource["file_extension"], $resource["resource_type"]); ?>
                                     </div>
                                     <?php
                                     }

@@ -140,7 +140,7 @@ if ($errors != "") {
                                             </a>
                                             <?php
                                         } else {
-                                            echo get_nopreview_html((string) $result[$n]["file_extension"]);
+                                            echo get_nopreview_html((string) $result[$n]["file_extension"], $result[$n]["resource_type"]);
                                         }
                                         ?>
                                     </td>

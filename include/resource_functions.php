@@ -7531,10 +7531,14 @@ function get_OR_fields()
 *
 * @return string
 */
-function get_nopreview_html(string $extension): string
+function get_nopreview_html(string $extension, $resource_type = null): string
 {
     $extension = strtolower(trim($extension));
-    return "<i class='nopreview fa fa-solid " . (FONTAWESOME_EXTENSIONS[$extension] ?? FONTAWESOME_EXTENSIONS["default"]) . "'></i>";
+
+    // Get default for this resource type and cache it.
+    $default=ps_value("select icon value from resource_type where ref=?",["i",$resource_type],"","resourcetypeicon");
+    if ($default=="") {$default=FONTAWESOME_EXTENSIONS["default"];}
+     return "<i class='nopreview fa fa-solid " . (FONTAWESOME_EXTENSIONS[$extension] ?? $default) . "'></i>";
 }
 
 /**

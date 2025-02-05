@@ -6260,7 +6260,7 @@ function display_related_resources($context)
                                                             if ($thumbnail !== false) {
                                                                 render_resource_image($arr_related[$n], $thumbnail["url"], "collection");
                                                             } else {
-                                                                echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
+                                                                echo get_nopreview_html((string) $arr_related[$n]["file_extension"], $arr_related[$n]['resource_type']);
                                                             } ?>
                                                         </a>
                                                     </td>
@@ -6322,7 +6322,7 @@ function display_related_resources($context)
                                                             if ($thumbnail !== false) {
                                                                 render_resource_image($arr_related[$n], $thumbnail["url"], "collection");
                                                             } else {
-                                                                echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
+                                                                echo get_nopreview_html((string) $arr_related[$n]["file_extension"], $arr_related[$n]['resource_type']);
                                                             } ?>
                                                         </a>
                                                     </td>
@@ -6377,7 +6377,7 @@ function display_related_resources($context)
                                                     if ($thumbnail !== false) {
                                                         render_resource_image($arr_related[$n], $thumbnail["url"], "collection");
                                                     } else {
-                                                        echo get_nopreview_html((string) $arr_related[$n]["file_extension"]);
+                                                        echo get_nopreview_html((string) $arr_related[$n]["file_extension"], $arr_related[$n]['resource_type']);
                                                     }
                                                     ?>
                                                 </a>
@@ -7002,7 +7002,7 @@ function render_resource_view_image(array $resource, array $context)
         {
         ?>
         <div id="previewimagewrapper">
-        <?php echo get_nopreview_html((string) $resource["file_extension"]); ?>
+        <?php echo get_nopreview_html((string) $resource["file_extension"], $resource["resource_type"]); ?>
         </div>
         <?php 
         return true;

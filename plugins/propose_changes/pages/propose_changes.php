@@ -383,7 +383,7 @@ if(!$editaccess)
     else
         {
         # Show the no-preview icon
-        echo get_nopreview_html((string) $resource["file_extension"]);
+        echo get_nopreview_html((string) $resource["file_extension"], $resource["resource_type"]);
         }
     ?>
 

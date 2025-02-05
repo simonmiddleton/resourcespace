@@ -126,7 +126,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
                 <?php
             }
         } else {
-            echo get_nopreview_html((string) $result[$n]["file_extension"]);
+            echo get_nopreview_html((string) $result[$n]["file_extension"],$result[$n]['resource_type']);
         }
 
         hook("aftersearchimg", "", array($result[$n], $thumbnail["url"] ?? "", $display))
