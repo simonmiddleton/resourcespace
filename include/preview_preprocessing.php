@@ -194,11 +194,11 @@ if (($extension == "cr2" || $extension == "nef" || $extension == "dng" || $exten
         $cmd_preview_list = $exiftool_fullpath . " %%FILE%% -preview:all";
         $output_preview = run_command($cmd_preview_list, false, ['%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
 
-        if (str_starts_with($output_preview, "Jpg From Raw")) {
+        if (strpos($output_preview, "Jpg From Raw") === 0) {
             $bin_tag = "-jpgfromraw";
-        } elseif (str_starts_with($output_preview, "Other Image")) {
+        } elseif (strpos($output_preview, "Other Image") === 0) {
             $bin_tag = "-otherimage";
-        } elseif (str_starts_with($output_preview, "Preview Image")) {
+        } elseif (strpos($output_preview, "Preview Image") === 0) {
             $bin_tag = "-previewimage";
         } else {
             $bin_tag = "-thumbnailimage";
