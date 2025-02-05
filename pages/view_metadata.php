@@ -290,4 +290,4 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
             <div class="clearerleft"></div>
         </div>
 <!-- End of Metadata-->
-<div class="clearerleft MOZAMBIQUE"></div>
+<div class="clearerleft"></div>

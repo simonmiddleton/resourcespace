@@ -250,7 +250,7 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
 <?php 
 if (!function_exists('ldap_connect'))
     {
-    echo "<div class=\"PageInformal\">" . escape($lang["simpleldap_externsion_required"]) . "</div>";
+    echo "<div class=\"PageInformal\">" . escape($lang["simpleldap_extension_required"]) . "</div>";
     }
     
 ?>
