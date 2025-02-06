@@ -1,4 +1,4 @@
-Links fixed metadata nodes with resources, to store metadata for fixed metadata types such as dropdowns.
+Links nodes with resources, to store metadata against a resource.
 resource,int(11),
 node,int(11),
 hit_count,int(11),The live hitcount. This value is copied from the new_hit_count column. See copy_hitcount_to_live()

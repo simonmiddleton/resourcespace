@@ -1,24 +1,25 @@
 <?php
+
 # English
 # Language File for the csv_upload Plugin
 # -------
 # Note: when translating to a new language, preserve the original case if possible.
 
-$lang["csv_upload_nav_link"]="CSV upload";
-$lang["csv_upload_intro"]="This plugin allows you to create or update resources by uploading a CSV file. The format of the CSV is important";
-$lang["csv_upload_condition1"]="Make sure the CSV file is encoded using <b>UTF-8 without BOM</b>.";
-$lang["csv_upload_condition2"]="The CSV must have a header row";
-$lang["csv_upload_condition3"]="To be able to upload resource files later using batch replace functionality there should be a column named 'Original filename' and each file should have a unique filename";
-$lang["csv_upload_condition4"]="All mandatory fields for any newly created resources must be present in the CSV";
-$lang["csv_upload_condition5"]="For column(s) that have values containing <b>commas( , )</b>, make sure you format it as type \"text\" so you don't have to add quotes (\"\"). When saving as a csv file, make sure to check the option of quoting text type cells";
-$lang["csv_upload_condition6"]="You can download a CSV file example by clicking on <a href=\"../downloads/csv_upload_example.csv\">csv-upload-example.csv</a>";
-$lang["csv_upload_condition7"]="To update existing resource data you can download a CSV with the existing metadata by clicking on the 'CSV export - metadata' option from the collection or search results actions menu";
-$lang["csv_upload_condition8"]="You can re-use a previously configured CSV mapping file by clicking on 'Upload CSV configuration file'";
-$lang["csv_upload_error_no_permission"]="You do not have the correct permissions to upload a CSV file";
-$lang["check_line_count"]="At least two rows found in CSV file";
-$lang["csv_upload_file"]="Select CSV file";
-$lang["csv_upload_default"]="Default";
-$lang["csv_upload_error_no_header"]             ="No header row found in file";
+$lang["csv_upload_nav_link"] = "CSV upload";
+$lang["csv_upload_intro"] = "This plugin allows you to create or update resources by uploading a CSV file. The format of the CSV is important";
+$lang["csv_upload_condition1"] = "Make sure the CSV file is encoded using <b>UTF-8 without BOM</b>.";
+$lang["csv_upload_condition2"] = "The CSV must have a header row";
+$lang["csv_upload_condition3"] = "To be able to upload resource files later using batch replace functionality there should be a column named 'Original filename' and each file should have a unique filename";
+$lang["csv_upload_condition4"] = "All mandatory fields for any newly created resources must be present in the CSV";
+$lang["csv_upload_condition5"] = "For column(s) that have values containing <b>commas( , )</b>, make sure you format it as type \"text\" so you don't have to add quotes (\"\"). When saving as a csv file, make sure to check the option of quoting text type cells";
+$lang["csv_upload_condition6"] = "You can download a CSV file example by clicking on <a href=\"../downloads/csv_upload_example.csv\">csv-upload-example.csv</a>";
+$lang["csv_upload_condition7"] = "To update existing resource data you can download a CSV with the existing metadata by clicking on the 'CSV export - metadata' option from the collection or search results actions menu";
+$lang["csv_upload_condition8"] = "You can re-use a previously configured CSV mapping file by clicking on 'Upload CSV configuration file'";
+$lang["csv_upload_error_no_permission"] = "You do not have the correct permissions to upload a CSV file";
+$lang["check_line_count"] = "At least two rows found in CSV file";
+$lang["csv_upload_file"] = "Select CSV file";
+$lang["csv_upload_default"] = "Default";
+$lang["csv_upload_error_no_header"]             = "No header row found in file";
 $lang["csv_upload_update_existing"]             = "Update existing resources? If this is unchecked then new resources will be created based on the CSV data";
 $lang["csv_upload_update_existing_collection"]  = "Only update resources in a specific collection?";
 $lang["csv_upload_process"]                     = "Process";

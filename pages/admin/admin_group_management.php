@@ -167,16 +167,17 @@ function addColumnHeader($orderName, $labelKey)
             </tr>
 
             <?php
-            $url_params =
-                ($offset ? "&offset={$offset}" : "") .
-                ($order_by ? "&orderby={$order_by}" : "") .
-                ($filter_by_parent ? "&filterbyparent={$filter_by_parent}" : "") .
-                ($order_by ? "&find={$find}" : "") .
-                ($filter_by_permissions ? "&filterbypermissions={$filter_by_permissions}" : "");
+            $url_params = array(
+                "offset" => $offset ?? '',
+                "orderby" => $order_by ?? '',
+                "filterbyparent" => $filter_by_parent ?? '',
+                "find" => $find ?? '',
+                "filterbypermissions" => $filter_by_permissions ?? ''
+            );
 
             for ($n = $offset; (($n < count($groups)) && ($n < ($offset + $per_page))); $n++) {
-                $edit_url = "{$baseurl_short}pages/admin/admin_group_management_edit.php?ref={$groups[$n]["ref"]}{$url_params}";
-                $users_url = "{$baseurl_short}pages/team/team_user.php?group={$groups[$n]["ref"]}&backlink=" . urlencode("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");
+                $edit_url = generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php", array_merge(["ref" => $groups[$n]["ref"]], $url_params));
+                $users_url = generateURL($baseurl_short . "pages/team/team_user.php", ["group" => $groups[$n]["ref"], "backlink" => generateURL($baseurl_short . "pages/admin/admin_group_management.php", $url_params)]);
                 ?>
                 <tr>
                     <td>

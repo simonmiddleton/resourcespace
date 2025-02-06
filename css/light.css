@@ -776,3 +776,7 @@ a.HomePanel:hover {
     {
     background-color: #1679c0;
     }
+
+.tickbox:not(:checked) + label {
+    opacity: 0.5; /* Makes it look disabled */
+}

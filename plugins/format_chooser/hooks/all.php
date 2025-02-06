@@ -124,15 +124,17 @@ function HookFormat_chooserAllSize_is_available($resource, $path, $size)
 
 function HookFormat_chooserAllReplacedownloadextension($resource, $extension)
     {
-    global $format_chooser_output_formats, $job_ext;
+    global $format_chooser_output_formats, $job_ext, $offline_job_in_progress;
 
     $inputFormat = $resource['file_extension'];
 
-    if (!supportsInputFormat($inputFormat))
-        {
+    if (
+        !supportsInputFormat($inputFormat) 
+        || (!isset($job_ext) && $offline_job_in_progress)
+        ) {
         # Download the original file for this resource
         return $inputFormat;
-        }
+    }
         
     $reqext = (isset($job_ext) && $job_ext != "") ? $job_ext : getval("ext",getDefaultOutputFormat($inputFormat)); 
     $ext = strtoupper($reqext);

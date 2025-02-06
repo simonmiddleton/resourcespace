@@ -1,4 +1,5 @@
 <?php
+
 $lang['cookies_notification_configuration'] = 'Cookies notifications configuration';
 
 $lang['cookies_notification_use_cookies_message'] = 'This web application uses cookies and other tracking technologies to ensure you get the best experience.';

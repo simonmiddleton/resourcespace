@@ -976,7 +976,7 @@ else
                                 alt="<?php echo escape(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
                                 <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?>
                             />
-                        <?php } else { echo get_nopreview_html((string) $result[$n]["file_extension"]); }
+                        <?php } else { echo get_nopreview_html((string) $result[$n]["file_extension"], $result[$n]["resource_type"]); }
                         hook("aftersearchimg","",array($result[$n]))?>
                         </a></td>
                     </tr></table><?php

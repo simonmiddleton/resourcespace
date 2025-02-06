@@ -2640,3 +2640,7 @@ input[type="text"]#iconpicker-input {
 button.tox-button {
     min-width: unset;
 }
+
+.tickbox + label {
+    user-select: none; /* Prevents accidental text selection when clicking  labels*/
+}

@@ -2999,15 +2999,16 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
 
     # Now fetch field values ensuring that multiple node values are ordered correctly
     $field_value_sql =
-    "SELECT rn.resource, n.resource_type_field `field`, rn.node, n.name 
+    "SELECT rn.resource, n.resource_type_field `field`, rn.node, n.name, n.order_by, n.parent
         FROM resource_node rn
     INNER JOIN node n on n.ref = rn.node and rn.resource=?
     ORDER BY n.resource_type_field, n.order_by";
 
     $field_values = ps_query($field_value_sql, array("i", $ref));
 
-    $field_node_list = array();
-    $field_ref_list = array();
+    $field_node_list = [];
+    $field_ref_list = [];
+    $arr_field_nodes = []; // For later re-ordering
     $last_field = null;
 
     # Assemble comma separated lists of node names and refs to attach to the fields array
@@ -3021,6 +3022,13 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
             $field_ref_list[$this_field]['refs'] = $field_value['node'];
             $last_field = $this_field;
         }
+        $arr_field_nodes[$this_field][] = [
+            "ref" => $field_value['node'],
+            "resource_type_field" => $this_field,
+            "name" => $field_value['name'],
+            "parent" => $field_value['parent'],
+            "order_by" => $field_value['order_by'],
+        ];
     }
 
     # Attach the lists of node names and refs to the corresponding fields array entry
@@ -3094,8 +3102,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
                 && $fields[$n]['type'] != FIELD_TYPE_CATEGORY_TREE
                 && trim($fields[$n]['nodes'] ?? "") != ""
             ) {
-                $fieldnoderefs = explode(",", $fields[$n]['nodes']);
-                $fieldnodes = get_nodes_by_refs($fieldnoderefs);
+                $fieldnodes = $arr_field_nodes[$fields[$n]["ref"]];
                 if ((bool) $fields[$n]['automatic_nodes_ordering']) {
                     $fieldnodes = reorder_nodes($fieldnodes);
                 }
@@ -3735,6 +3742,12 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
     // Logs can sometimes contain confidential information and the user
     // looking at them must have admin permissions set
     if (!checkperm('v')) {
+        return array();
+    }
+
+    // If there is no resource ID passed and the filters are also empty then
+    // return empty array
+    if (!$resource && empty($filters)) {
         return array();
     }
 
@@ -7315,10 +7328,10 @@ function get_related_resources($ref)
  * @param bool  $nodeinfo               Get full node details?
  * @param bool  $skip_translation       Do not translate node name. Only relevant if $nodeinfo=false
  *
- * @return array Array of field options, either as a simple array or with full node details
+ * @return array|bool Array of field options, either as a simple array or with full node details
  *
  */
-function get_field_options(int $ref, bool $nodeinfo = false, bool $skip_translation = false): array
+function get_field_options(int $ref, bool $nodeinfo = false, bool $skip_translation = false)
 {
     global $FIXED_LIST_FIELD_TYPES, $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
@@ -7515,13 +7528,26 @@ function get_OR_fields()
 * Returns the HTML necessary to represent a resource with the given extension when no image preview exists.
 *
 * @param string     $extension       File extension
+* @param int        $resource_type   Optional, the resource type of the resource, used to find an icon at the resource type level if an icon for this extension is not defined.
 *
 * @return string
 */
-function get_nopreview_html(string $extension): string
+function get_nopreview_html(string $extension, $resource_type = null): string
 {
     $extension = strtolower(trim($extension));
-    return "<i class='nopreview fa fa-solid " . (FONTAWESOME_EXTENSIONS[$extension] ?? FONTAWESOME_EXTENSIONS["default"]) . "'></i>";
+
+    if (isset(FONTAWESOME_EXTENSIONS[$extension])) {
+        // Use the icon set for this file extension
+        $icon = FONTAWESOME_EXTENSIONS[$extension];
+    } else {
+        // No icon for this specific extension Get default for this resource type and cache it.
+        $icon = ps_value("select icon value from resource_type where ref=?", ["i",$resource_type], "", "resourcetypeicon");
+        if ($icon == "") {
+            $default = FONTAWESOME_EXTENSIONS["default"];
+        }
+    }
+
+    return "<i class='nopreview fa fa-solid " . $icon . "'></i>";
 }
 
 /**
@@ -8094,7 +8120,7 @@ function get_resource_table_joins()
     if ($additional_joins) {
         $joins = array_merge($joins, $additional_joins);
     }
-    
+
     $joins = array_unique($joins);
     $n = 0;
     foreach ($joins as $join) {

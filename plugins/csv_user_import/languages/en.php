@@ -1,4 +1,5 @@
 <?php
+
 $lang['csv_user_import_batch_user_import'] = 'Batch user import';
 $lang['csv_user_import_import'] = 'Import';
 $lang['csv_user_import'] = 'CSV user import';

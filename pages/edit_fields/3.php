@@ -6,7 +6,7 @@ Inactive nodes should be shown because this type of field can only hold one valu
 allowed to remove a disabled option for another (active) option.
 */
 
-$active_nodes = array_column(array_filter($field['nodes'], 'node_is_active'), 'ref');
+$active_nodes = array_column(array_filter($field['node_options'], 'node_is_active'), 'ref');
 
 // Selected nodes should be used most of the times.
 // When searching, an array of searched_nodes can be found instead
@@ -16,7 +16,7 @@ if (!isset($selected_nodes)) {
 }
 
 if ((bool) $field['automatic_nodes_ordering']) {
-    $field['nodes'] = reorder_nodes($field['nodes']);
+    $field['node_options'] = reorder_nodes($field['node_options']);
 }
 ?>
 
@@ -41,7 +41,7 @@ if ((bool) $field['automatic_nodes_ordering']) {
         <?php
     }
 
-    foreach ($field['nodes'] as $node) {
+    foreach ($field['node_options'] as $node) {
         if ('' != trim($node['name'])) {
             $selected = (
                 // When editing multiple resources, we don't want to preselect any options; the user must make the necessary selection

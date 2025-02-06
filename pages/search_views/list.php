@@ -51,7 +51,7 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
                 }
                 render_resource_image($result[$n], $thumbnail["url"], "list");
             } else {
-                echo get_nopreview_html((string) $result[$n]["file_extension"]);
+                echo get_nopreview_html((string) $result[$n]["file_extension"], $result[$n]["resource_type"]);
             }
             ?>
         </a>

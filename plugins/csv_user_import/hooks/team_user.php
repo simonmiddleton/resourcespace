@@ -1,6 +1,6 @@
 <?php
 function HookCsv_user_importTeam_userRender_options_to_create_users()
-    {
+{
     global $baseurl, $lang;
     ?>
     <div class="BasicsBox">
@@ -11,8 +11,8 @@ function HookCsv_user_importTeam_userRender_options_to_create_users()
                     <?php echo LINK_CARET . $lang['csv_user_import_import']; ?>
                 </a>
             </div>
-        <div class="clearerleft"></div>
+            <div class="clearerleft"></div>
         </div>
     </div>
     <?php
-    }
+}
