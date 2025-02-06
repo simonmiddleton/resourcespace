@@ -2511,6 +2511,9 @@ function delete_previews($resource, $alternative = -1)
         $resource = $resource["ref"];
     } else {
         $resource_data = get_resource_data($resource, false);
+        if (!$resource_data) {
+            return;
+        }
         $extension = $resource_data["file_extension"];
     }
 
