@@ -1,35 +1,30 @@
 <?php
 include '../include/boot.php';
 include '../include/authenticate.php';
-if(!checkperm('a'))
-    {
+
+if (!checkperm('a')) {
     error_alert($lang["error-permissiondenied"], false, 401);
     exit();
-    }
-$job = getval("job",0,true);
+}
 
+$job = getval("job", 0, true);
 $job_details = job_queue_get_job($job);
 $hide_data = array("failure_text","success_text");
 
-if(!is_array($job_details) || count($job_details) == 0)
-    {
+if (!is_array($job_details) || count($job_details) == 0) {
     exit("Invalid job reference");
-    }
+}
 
 ?>
 <div class="RecordBox">
     <div class="RecordPanel">
         <div class="RecordHeader">
-
             <div class="backtoresults"> 
-                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+                <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>
             <h1><?php echo escape($lang["job_text"] . " #" . $job_details["ref"]); ?></h1>
-
         </div>
-       
     </div>
-
 
     <div class="BasicsBox">
         <div class="Listview">
@@ -38,42 +33,36 @@ if(!is_array($job_details) || count($job_details) == 0)
                     <th><?php echo escape($lang["job_data"]); ?></th>
                     <th><?php echo escape($lang["job_value"]); ?></th>
                 </tr>
-                <?php foreach($job_details as $name => $value)
-                    {
-                    if(in_array($name,$hide_data))
-                        {
+                <?php
+                foreach ($job_details as $name => $value) {
+                    if (in_array($name, $hide_data)) {
                         continue;
-                        }
+                    }
+
                     echo "<tr><td width='50%'>";
                     echo escape($name);
                     echo "</td><td width='50%'>";
-                    if($name =="job_data")
-                        {
-                        $job_data= json_decode($value, true);
-                        foreach($job_data as $job_data_name => &$job_data_value)
-                            {
-                            if(is_array($job_data_value) && count($job_data_value) > 100)
-                                {
+                    
+                    if ($name == "job_data") {
+                        $job_data = json_decode($value, true);
+                        foreach ($job_data as $job_data_name => &$job_data_value) {
+                            if (is_array($job_data_value) && count($job_data_value) > 100) {
                                 $job_data_short = array();
                                 $job_data_count = count($job_data_value);
-                                $job_data_short[$job_data_name] = array_slice($job_data_value,0,10);
+                                $job_data_short[$job_data_name] = array_slice($job_data_value, 0, 10);
                                 $job_data_short["(additional elements)"] = $job_data_count . " total elements";
                                 $job_data_value = $job_data_short;
-                                }
-                            elseif(is_string($job_data_value) && strlen($job_data_value) > 100)
-                                {
+                            } elseif (is_string($job_data_value) && strlen($job_data_value) > 100) {
                                 // If a job data element is e.g. a search result set it can be very large
-                                $job_data_value = mb_strcut($job_data_value,0,100);
-                                }
+                                $job_data_value = mb_strcut($job_data_value, 0, 100);
                             }
+                        }
                         render_array_in_table_cells($job_data);
-                        }
-                    else
-                        {
+                    } else {
                         echo escape($value);
-                        }
-                    echo "</td></tr>";
                     }
+                    echo "</td></tr>";
+                }
                 ?>
             </table>
         </div>

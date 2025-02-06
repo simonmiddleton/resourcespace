@@ -1,10 +1,11 @@
 <?php
-include_once "../include/boot.php";
 
+include_once "../include/boot.php";
 include "../include/authenticate.php";
 include "../include/header.php";
 
 $content = getval("content", "");
+
 if ($content != "") {
     $content = text($content);
 } else {
@@ -18,17 +19,15 @@ $allowed_attributes = array_merge(array("href","target"), $permitted_html_attrib
 $content = strip_tags_and_attributes($content, $allowed_tags, $allowed_attributes);
 ?>
 
-<div class="BasicsBox"> 
-<?php
-if ($modal) {
+<div class="BasicsBox">
+    <?php if ($modal) { ?>
+        <div class="backtoresults">
+            <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+        </div>
+        <?php
+    }
+    echo $content;
     ?>
-    <div class="backtoresults">
-        <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
-    </div>
-    <?php
-}
-echo $content;
-?>
 </div>
 
 <?php
