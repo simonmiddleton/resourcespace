@@ -432,34 +432,35 @@ function is_safe_basename(string $val): bool
  *
  * @param SplFileInfo|array{name: string, full_path: string, type: string, tmp_name: string, error: int, size: int} $source
  * @param array{
- *      extension: callable(string): bool,
- *      file_move: 'move_uploaded_file'|'rename'|'copy',
- * } $processor Processors which can override different parts of the main
- * logic (e.g use {@see check_valid_file_extension()} for the extension checks).
+ *      allow_extensions?: list<string>
+ *      file_move?: 'move_uploaded_file'|'rename'|'copy',
+ * } $processor Processors which can override different parts of the main logic (e.g. allow specific extensions)
  *
  * @return array{success: bool, error?: string}
  */
 function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination, array $processor): array
 {
-    /*
-    Other file management functions to consider:
-        check_valid_file_extension()
-        get_temp_dir()
-    */
     if ($source instanceof SplFileInfo) {
         $source_file_name = $source->getFilename();
         $source_file_path = $source->isFile() ? $source->getRealPath() : $source->getPathname();
-        $source_is_file = $source->isFile();
+        $source_file_size = (int) $source->getSize();
         $file_move_processor = $processor['file_move'] ?? 'rename';
     } else {
         $source_file_name = $source['name'];
         $source_file_path = $source['tmp_name'];
-        $source_is_file = file_exists($source['tmp_name']);
         $file_move_processor = 'move_uploaded_file';
 
         if (!is_uploaded_file($source['tmp_name'])) {
             trigger_error('Invalid $source input. For files not uploaded via HTTP POST, please use SplFileInfo');
         }
+
+        $GLOBALS['use_error_exception'] = true;
+        try {
+            $source_file_size = filesize($source_file_name);
+        } catch (Throwable $t) {
+            $source_file_size = 0;
+        }
+        $GLOBALS['use_error_exception'] = false;
     }
 
     $fail_with_msg = static fn(string $msg): array => ['success' => false, 'error' => $msg];
@@ -493,9 +494,9 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 
     // Extension validation
     $source_file_ext = parse_filename_extension($source_file_name);
-    $ext_check_ok = isset($processor['extension']) && is_callable($processor['extension'])
-        ? $processor['extension']
-        : static fn(string $V) => !is_banned_extension($V);
+    $ext_check_ok = isset($processor['allow_extensions']) && $processor['allow_extensions'] !== []
+        ? static fn () => check_valid_file_extension(['name' => $source_file_name], $processor['allow_extensions'])
+        : static fn (string $V) => !is_banned_extension($V);
     if (!$ext_check_ok($source_file_ext)) {
         return $fail_with_msg("Invalid extension '{$source_file_ext}'");
     }
@@ -503,8 +504,9 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
     // Check content (MIME) type based on the file received (don't trust the header from the upload)
     $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
     if (
-        $source_is_file
-        && $mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, true)
+        ($source_file_size > 0 && $mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, true))
+        // todo: reconsider decision to allow uploading empty files (can't think of a genuine use case)
+        || false
     ) {
         debug("MIME type mismatch for file '{$source_file_name}'");
         return $fail_with_msg('MIME type mismatch');
@@ -535,7 +537,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         return $fail_with_msg('Destination path not allowed');
     } elseif (array_intersect(['move_uploaded_file', 'rename', 'copy'], [$file_move_processor]) === []) {
         trigger_error('Invalid upload (file move) processor');
-    } elseif($file_move_processor($source_file_path, $dest_path)) {
+    } elseif ($file_move_processor($source_file_path, $dest_path)) {
         return ['success' => true];
     } else {
         debug("Unable to move file uploaded FROM '{$source_file_path}' TO '$dest_path'");
