@@ -431,7 +431,10 @@ function is_safe_basename(string $val): bool
  * High level function which can handle processing file uploads.
  *
  * @param SplFileInfo|array{name: string, full_path: string, type: string, tmp_name: string, error: int, size: int} $source
- * @param array{extension: callable(string): bool} $processor Processors which can override different parts of the main
+ * @param array{
+ *      extension: callable(string): bool,
+ *      file_move: 'move_uploaded_file'|'rename'|'copy',
+ * } $processor Processors which can override different parts of the main
  * logic (e.g use {@see check_valid_file_extension()} for the extension checks).
  *
  * @return true|array
@@ -439,28 +442,20 @@ function is_safe_basename(string $val): bool
 function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination, array $processor): bool|array
 {
     /*
-    1) Always save uploaded files in a generated location (e.g random file name), never trusting the original uploaded file name or metadata.
-    A new function will be created to generate a random temporary file path under the tmp directory which callers can use before going through the rest of the workflow (ie move the uploaded file)
-    Note: for resource files' (original or alternatives) destination path, get_resource_path will be used as per usual.
-
     Other file management functions to consider:
         check_valid_file_extension()
         get_temp_dir()
     */
-    // print_r($source);
-    // echo PHP_EOL . "Filename is: $source_file_name";
-    // echo PHP_EOL . "Path is: {$source->getPath()}";
-    // echo PHP_EOL . "Path name is: {$source->getPathname()}";
-    // echo PHP_EOL . "Real path is: {$source->getRealPath()}";
-
     if ($source instanceof SplFileInfo) {
         $source_file_name = $source->getFilename();
         $source_file_path = $source->isFile() ? $source->getRealPath() : $source->getPathname();
         $source_is_file = $source->isFile();
+        $file_move_processor = $processor['file_move'] ?? 'rename';
     } else {
         $source_file_name = $source['name'];
         $source_file_path = $source['tmp_name'];
         $source_is_file = file_exists($source['tmp_name']);
+        $file_move_processor = 'move_uploaded_file';
 
         if (!is_uploaded_file($source['tmp_name'])) {
             trigger_error('Invalid $source input. For files not uploaded via HTTP POST, please use SplFileInfo');
@@ -495,7 +490,6 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 
     // Extension validation
     $source_file_ext = parse_filename_extension($source_file_name);
-    // echo PHP_EOL.'Extension = ' . $source_file_ext;
     $ext_check_ok = isset($processor['extension']) && is_callable($processor['extension'])
         ? $processor['extension']
         : static fn(string $V) => !is_banned_extension($V);
@@ -503,7 +497,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         return ["Invalid extension '{$source_file_ext}'"];
     }
 
-    // Check content type (MIME type) based on the file received (don't trust the header from the upload)
+    // Check content (MIME) type based on the file received (don't trust the header from the upload)
     $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
     if (
         $source_is_file
@@ -528,26 +522,26 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
     // unset($GLOBALS["use_error_exception"]);
     // echo PHP_EOL . json_encode($tmp_file) . PHP_EOL;
 
-    echo PHP_EOL . "Filename is: {$destination->getFilename()}";
-    echo PHP_EOL . "Basename is: {$destination->getBasename()}";
-    echo PHP_EOL . "Path is: {$destination->getPath()}";
-    echo PHP_EOL . "Path name is: {$destination->getPathname()}";
-    echo PHP_EOL . "Real path is: {$destination->getRealPath()}";
-    echo PHP_EOL . "Is file: " . json_encode($destination->isFile());
     // Destination processing
-    // validation: ensure control over the generated temp file path (never trust the original uploaded file name or metadata)
     $dest_path = $destination->isFile() ? $destination->getRealPath() : $destination->getPathname();
+    $allowed_file_move_processors = [
+        'move_uploaded_file',
+        'rename',
+        'copy',
+    ];
     if ($destination->isDir()) {
-        return ['Destination path must be for a file, not a directory!'];
+        trigger_error('Destination path must be for a file, not a directory!');
     } elseif (!(is_valid_rs_path($dest_path) && is_safe_basename($destination->getBasename()))) {
+        debug("Destination path '{$dest_path}' not allowed!");
         return ['Destination not allowed'];
+    } elseif (array_intersect($allowed_file_move_processors, [$file_move_processor]) === []) {
+        trigger_error('Invalid upload (file move) processor');
+    } elseif($file_move_processor($source_file_path, $dest_path)) {
+        return true;
+    } else {
+        debug("Unable to move file uploaded FROM '{$source_file_path}' TO '$dest_path'");
+        return ['Unable to move file uploaded'];
     }
-
-
-    // Carry out the final file move
-
-    echo PHP_EOL . PHP_EOL;
-    return [];
 }
 
 /**
