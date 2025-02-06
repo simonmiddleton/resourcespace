@@ -171,6 +171,7 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
             <?php
             foreach ($fields_tab_names as $tab_name) {
                 $class_TabSelected = $tabcount == 0 ? ' TabSelected' : '';
+                
                 if ($modal) {
                     $tabOnClick = "SelectMetaTab(" . $ref . "," . $tabcount . ",true);";
                 } else {
@@ -181,6 +182,7 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
                 <div id="<?php echo $modal ? "Modal" : ""; ?>tabswitch<?php echo $tabcount . '-' . $ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
                     <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo escape($tab_name); ?></a>
                 </div>
+
                 <?php
                 $tabcount++;
             }

@@ -437,7 +437,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 parent_element.find(this).parent().parent().children(".TabPanel").hide();
                 parent_element.find(this).parent().children(".Title").removeClass("Selected");
                 parent_element.find(this).addClass("Selected");
-                parent_element.find("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px").show();;
+                parent_element.find("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px").show();
                 if (jQuery(this).attr("panel")=="Comments") {
                     jQuery("#CommentsContainer").load(
                     "../pages/ajax/comments_handler.php?ref=<?php echo $ref; ?>", 
