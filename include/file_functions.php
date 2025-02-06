@@ -437,9 +437,9 @@ function is_safe_basename(string $val): bool
  * } $processor Processors which can override different parts of the main
  * logic (e.g use {@see check_valid_file_extension()} for the extension checks).
  *
- * @return true|array
+ * @return array{success: bool, error?: string}
  */
-function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination, array $processor): bool|array
+function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination, array $processor): array
 {
     /*
     Other file management functions to consider:
@@ -462,6 +462,8 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         }
     }
 
+    $fail_with_msg = static fn(string $msg): array => ['success' => false, 'error' => $msg];
+
     // Source validation
     if (
         !is_valid_upload_path(
@@ -469,7 +471,8 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
             [...$GLOBALS['valid_upload_paths'], ini_get('upload_tmp_dir'), sys_get_temp_dir()]
         )
     ) {
-        return ["Invalid upload path detected - {$source_file_path}"];
+        debug("[WARN] Invalid upload path detected - {$source_file_path}");
+        return $fail_with_msg('Invalid upload path detected');
     }
 
     // Limit the data format uploaded
@@ -485,7 +488,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
             [$source_file_name]
         ) !== []
     ) {
-        return ['"Special" file detected which is not allowed'];
+        return $fail_with_msg('"Special" file detected which is not allowed');
     }
 
     // Extension validation
@@ -494,7 +497,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         ? $processor['extension']
         : static fn(string $V) => !is_banned_extension($V);
     if (!$ext_check_ok($source_file_ext)) {
-        return ["Invalid extension '{$source_file_ext}'"];
+        return $fail_with_msg("Invalid extension '{$source_file_ext}'");
     }
 
     // Check content (MIME) type based on the file received (don't trust the header from the upload)
@@ -503,7 +506,8 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         $source_is_file
         && $mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, true)
     ) {
-        return ["MIME type mismatch for file '{$source_file_name}'"];
+        debug("MIME type mismatch for file '{$source_file_name}'");
+        return $fail_with_msg('MIME type mismatch');
     }
 
     // Anything else in between
@@ -524,23 +528,18 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 
     // Destination processing
     $dest_path = $destination->isFile() ? $destination->getRealPath() : $destination->getPathname();
-    $allowed_file_move_processors = [
-        'move_uploaded_file',
-        'rename',
-        'copy',
-    ];
     if ($destination->isDir()) {
         trigger_error('Destination path must be for a file, not a directory!');
     } elseif (!(is_valid_rs_path($dest_path) && is_safe_basename($destination->getBasename()))) {
         debug("Destination path '{$dest_path}' not allowed!");
-        return ['Destination not allowed'];
-    } elseif (array_intersect($allowed_file_move_processors, [$file_move_processor]) === []) {
+        return $fail_with_msg('Destination path not allowed');
+    } elseif (array_intersect(['move_uploaded_file', 'rename', 'copy'], [$file_move_processor]) === []) {
         trigger_error('Invalid upload (file move) processor');
     } elseif($file_move_processor($source_file_path, $dest_path)) {
-        return true;
+        return ['success' => true];
     } else {
         debug("Unable to move file uploaded FROM '{$source_file_path}' TO '$dest_path'");
-        return ['Unable to move file uploaded'];
+        return $fail_with_msg('Unable to move the uploaded file');
     }
 }
 
