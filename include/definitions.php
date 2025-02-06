@@ -905,6 +905,7 @@ $languages["es-AR"] = "Español (Argentina)";
 $languages["fi"] = "Suomi"; # Finnish
 $languages["fr"] = "Français"; # French
 $languages["hi"] = "आधुनिक मानक हिन्दी"; # Hindi
+$languages["hu"] = "Magyar"; # Hungarian
 $languages["hr"] = "Hrvatski"; # Croatian
 $languages["it"] = "Italiano"; # Italian
 $languages["jp"] = "日本語"; # Japanese
@@ -925,6 +926,7 @@ $languages["th"] = "ภาษาไทย"; # Thai
 $languages["tr"] = "Türkçe"; # Turkish
 $languages["uk"] = "українська мова"; # Ukranian
 $languages["ur"] = "اُردُو"; # Urdu
+$languages["vi"] = "Tiếng Việt"; # Vietnamese
 $languages["zh-CN"] = "简体字"; # Simplified Chinese
 
 # English stop words

@@ -2944,3 +2944,6 @@ $lang["cannot_share-has_upload_share"] = 'Niet-uploaddeeldelingen van deze colle
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Welkom bij %applicationname';
+
+$lang["language-vi"] = 'Vietnamese';
+$lang["language-hu"] = 'Hungaarse';

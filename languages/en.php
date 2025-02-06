@@ -3192,6 +3192,7 @@ $lang["language-fi"] = "Finnish";
 $lang["language-fr"] = "French";
 $lang["language-hi"] = "Hindi";
 $lang["language-hr"] = "Croatian";
+$lang["language-hu"] = "Hungarian";
 $lang["language-it"] = "Italian";
 $lang["language-jp"] = "Japanese";
 $lang["language-ko"] = "Korean";
@@ -3210,6 +3211,7 @@ $lang["language-th"] = "Thai";
 $lang["language-tr"] = "Turkish";
 $lang["language-uk"] = "Ukranian";
 $lang["language-ur"] = "Urdu";
+$lang["language-vi"] = "Vietnamese";
 $lang["language-zh-CN"] = "Simplified Chinese";
 
 $lang["workflow-actions-archive"] = "Archive";

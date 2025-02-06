@@ -2996,3 +2996,6 @@ $lang["cannot_share-has_upload_share"] = 'Bagian berbagi non-upload dari koleksi
 $lang["welcome_generic"] = 'Selamat datang di %applicationname';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
+
+$lang["language-hu"] = 'Hungaria';
+$lang["language-vi"] = 'Vietnamese';

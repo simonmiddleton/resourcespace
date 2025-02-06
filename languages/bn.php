@@ -2830,3 +2830,6 @@ $lang["cannot_share-has_upload_share"] = 'এই সংগ্রহের জন
 $lang["welcome_generic"] = '%applicationname-এ স্বাগতম';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
+
+$lang["language-vi"] = 'Vietnamese';
+$lang["language-hu"] = 'হাঙ্গেরিয়ান';

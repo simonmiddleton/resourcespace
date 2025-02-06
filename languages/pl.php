@@ -2963,3 +2963,6 @@ $lang["cannot_share-has_upload_share"] = 'Nie można utworzyć udostępnienia be
 $lang["language-cy"] = 'Walijski';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Witamy w %applicationname';
+
+$lang["language-hu"] = 'Węgierski';
+$lang["language-vi"] = 'Vietnamese';

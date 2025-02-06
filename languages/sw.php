@@ -2836,3 +2836,6 @@ $lang["cannot_share-has_upload_share"] = 'Huwezi kuunda ushiriki wa mkusanyiko h
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Karibu kwa %applicationname';
+
+$lang["language-vi"] = 'Vietnamese';
+$lang["language-hu"] = 'Hungarian';

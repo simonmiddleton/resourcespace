@@ -2840,3 +2840,6 @@ $lang["cannot_share-has_upload_share"] = '이 컬렉션의 업로드가 아닌 �
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = '%applicationname에 오신 것을 환영합니다';
+
+$lang["language-hu"] = '헝가리어';
+$lang["language-vi"] = '베트남어';

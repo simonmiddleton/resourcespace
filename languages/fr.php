@@ -2970,3 +2970,6 @@ $lang["cannot_share-has_upload_share"] = 'Les partages sans téléchargement de 
 $lang["language-cy"] = 'Gallois';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Bienvenue sur %applicationname';
+
+$lang["language-vi"] = 'Vietnamese';
+$lang["language-hu"] = 'Hongrois';

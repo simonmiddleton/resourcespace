@@ -2905,3 +2905,6 @@ $lang["cannot_share-has_upload_share"] = 'Δεν μπορούν να δημιο�
 $lang["language-cy"] = 'Ουαλικά';
 $lang["language-th"] = 'Ταϊλανδέζικα';
 $lang["welcome_generic"] = 'Καλώς ήρθατε στο %applicationname';
+
+$lang["language-hu"] = 'Hungarian';
+$lang["language-vi"] = 'Vietnamese';

@@ -2896,3 +2896,6 @@ $lang["cannot_share-has_upload_share"] = 'No se pueden crear comparticiones sin 
 $lang["language-cy"] = 'Galés';
 $lang["language-th"] = 'Tailandés';
 $lang["welcome_generic"] = 'Bienvenido a %applicationname';
+
+$lang["language-hu"] = 'Hungaro';
+$lang["language-vi"] = 'Vietnamese';

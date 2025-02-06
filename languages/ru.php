@@ -2920,3 +2920,6 @@ $lang["cannot_share-has_upload_share"] = 'Невозможно создать с
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Добро пожаловать в %applicationname';
+
+$lang["language-hu"] = 'Венгерский';
+$lang["language-vi"] = 'Vietnamese';

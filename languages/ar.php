@@ -3050,3 +3050,6 @@ $lang["cannot_share-has_upload_share"] = 'لا يمكن إنشاء مشاركا�
 $lang["welcome_generic"] = 'مرحبًا بك في %applicationname';
 $lang["language-cy"] = 'الويلزية';
 $lang["language-th"] = 'Thai';
+
+$lang["language-hu"] = 'هنغاري';
+$lang["language-vi"] = 'Vietnamese';
