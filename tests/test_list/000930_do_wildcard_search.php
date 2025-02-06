@@ -110,7 +110,7 @@ $result = do_search("look up above");
 if (!is_array($result) || count($result) === 0) {
     echo "Search failed for short word - ";
     return false;
-    }
+}
 
 // teardown
 $wildcard_always_applied = $wildcard_always_applied_cache;
