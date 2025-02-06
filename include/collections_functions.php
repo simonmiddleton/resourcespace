@@ -6555,3 +6555,325 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
 
     return $new_fcs_order;
 }
+
+
+function process_collection_download($dl_data)
+{
+    // $dl_data = [
+    //     "collection"            => $job_data['collection'],
+    //     "collectiondata"        => $job_data['collectiondata'],
+    //     "result"                => $job_data['result'],
+    //     "size"                  => $job_data['size'],
+    //     "exiftool_write_option" => $job_data['exiftool_write_option'],
+    //     "useoriginal"           => $job_data['useoriginal'],
+    //     "id"                    => $job_data['id'],
+    //     "includetext"           => $job_data['includetext'],
+    //     "count_data_only_types" => $job_data['count_data_only_types'],
+    //     "usage"                 => $job_data['usage'],
+    //     "usagecomment"          => $job_data['usagecomment'],
+    //     "settings_id"           => $job_data['settings_id'],
+    //     "include_csv_file"      => $job_data['include_csv_file'],
+    // ];
+    $collection             = (int) $dl_data['collection'] ?? 0;
+    $collectiondata         = $dl_data['collectiondata'] ?? [];
+    // Resources are not retrieved here as the collection may have changed since the download was requested 
+    $collection_resources   = $dl_data['collection_resources'] ?? [];
+    $size                   = (string) $dl_data['size'] ?? "";
+    $exiftool_write_option  = (bool) $dl_data['exiftool_write_option'] ?? false;
+    $useoriginal            = (bool) $dl_data['useoriginal'] ?? false;
+    $id                     = (string) $dl_data['id'] ?? uniqid("Col" . $collection);
+    $includetext            = (bool) $dl_data['includetext'] ?? false;
+    $count_data_only_types  = (int) $dl_data['count_data_only_types'] ?? 0;
+    $usage                  = (string) $dl_data['usage'] ?? "";
+    $usagecomment           = (string) $dl_data['usagecomment'] ?? "";
+    $settings_id            = (string) $dl_data['settings_id'] ?? "";
+    $include_csv_file       = (bool) $dl_data['include_csv_file'] ?? false;
+
+
+    if (empty($collectiondata) && $collection > 0) {
+        $collectiondata = get_collection($collection);
+    }
+    if (
+        !$collectiondata
+        || empty($collection_resources)
+        || !isset($GLOBALS["userref"]) // Downloads need to be linked to a user
+    ) {
+        return false;
+    }
+
+    // Initiate text file
+    if ($GLOBALS['zipped_collection_textfile'] && $includetext) {
+        $text = i18n_get_collection_name($collectiondata) . "\r\n" .
+        $GLOBALS["lang"]["downloaded"] . " " . nicedate(date("Y-m-d H:i:s"), true, true) . "\r\n\r\n" .
+        $GLOBALS["lang"]["contents"] . ":\r\n\r\n";
+    }
+
+    // Define the archive file
+    $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
+    $randstring = md5(rand() . microtime());
+    $zippath = get_temp_dir(false, 'user_downloads');
+    $zipfile = $zippath . "/" . $GLOBALS["userref"] . "_" . md5($GLOBALS["username"] . $randstring . $GLOBALS["scramble_key"]) . ".zip";
+    debug('Collection download : $zipfile =' . $zipfile);
+    $zip = new ZipArchive();
+    $zip->open($zipfile, ZIPARCHIVE::CREATE);
+
+    $path = "";
+    $deletion_array = [];
+    $filenames = []; // set up an array to store the filenames as they are found (to analyze dupes)
+    $used_resources = [];
+    $subbed_original_resources = [];
+    $allsizes = get_all_image_sizes(true);
+    for ($n = 0; $n < count($collection_resources); $n++) {
+        $ref = $collection_resources[$n]["ref"];
+        $resource_data = get_resource_data($ref);
+        $collection_resources[$n]["resource_type"] = $resource_data['resource_type']; // Update as used in other functions
+        resource_type_config_override($resource_data['resource_type'], false); # False means execute override for every resource
+
+        $copy = false;
+        $ref = $collection_resources[$n]['ref'];
+        $access = get_resource_access($resource_data);
+        $use_watermark = check_use_watermark();
+
+        // Do not download resources without proper access level
+        if ($access > 1) {
+            debug('Collection download : skipping resource ID ' . $ref . ' user ID ' . $GLOBALS["userref"] . ' does not have access to this resource');
+            continue;
+        }
+
+        // Get all possible sizes for this resource. 
+        // If largest available has been requested then include internal or user could end up with no file depite being able to see the preview
+        $sizes = array_filter($allsizes, function ($availsize) use ($access, $size) {
+            return 
+                ($availsize["allow_restricted"] || $access === 0)
+                && ((int) $availsize["internal"] === 0 || $size == "largest");
+        });
+
+        # Check availability of original file
+        $p = get_resource_path($ref, true, "", false, $resource_data["file_extension"]);
+        if (
+            file_exists($p) 
+            && (($access == 0) || ($access == 1 && $GLOBALS["restricted_full_download"]))
+            && resource_download_allowed($ref, '', $resource_data['resource_type'])
+        ) {
+            $available_sizes['original'][] = $ref;
+        }
+
+        // Check for the availability of each size and load it to the available_sizes array
+        foreach ($sizes as $sizeinfo) {
+            if (in_array($resource_data['file_extension'], $GLOBALS["ffmpeg_supported_extensions"])) {
+                $size_id = $sizeinfo['id'];
+                // Video files only have a 'pre' sized derivative so flesh out the sizes array using that.
+                $p = get_resource_path($ref, true, 'pre', false, $resource_data['file_extension']);
+                $size_id = 'pre';
+                if (
+                    resource_download_allowed($ref, $size_id, $resource_data['resource_type'])
+                    &&
+                    (
+                        hook('size_is_available', '', array($resource_data, $p, $size_id))
+                        || file_exists($p)
+                    )
+                ) {
+                    $available_sizes[$sizeinfo['id']][] = $ref;
+                }
+            } elseif (in_array($resource_data['file_extension'], array_merge($GLOBALS["ffmpeg_audio_extensions"], ['mp3']))) {
+                // Audio files are ported to mp3 and do not have different preview sizes
+                $p = get_resource_path($ref, true, '', false, 'mp3');
+                if (
+                    resource_download_allowed($ref, '', $resource_data['resource_type'])
+                    &&
+                    (
+                        hook('size_is_available', '', array($resource_data, $p, ''))
+                        || file_exists($p)
+                    )
+                ) {
+                        $available_sizes[$sizeinfo['id']][] = $ref;
+                }
+            } else {
+                $size_id = $sizeinfo['id'];
+                $size_extension = get_extension($resource_data, $size_id);
+                $p = get_resource_path($ref, true, $size_id, false, $size_extension);
+                if (
+                    resource_download_allowed($ref, $size_id, $resource_data['resource_type'])
+                    &&
+                    (
+                        hook('size_is_available', '', array($resource_data, $p, $size_id))
+                        || file_exists($p)
+                    )
+                ) {
+                    $available_sizes[$size_id][] = $ref;
+                }
+            }
+        }
+
+        // Check which size to use
+        if ($size == "largest") {
+            foreach ($available_sizes as $available_size => $resources) {
+                if (in_array($ref, $resources)) {
+                    $usesize = $available_size;
+                    if ($available_size == 'original') {
+                        $usesize = "";
+                        // Has access to the original so no need to check previews
+                        break;
+                    }
+                }
+            }
+        } else {
+            $usesize = ($size == 'original') ? "" : $size;
+        }
+
+        if (in_array($resource_data['file_extension'], $GLOBALS["ffmpeg_supported_extensions"]) && $usesize !== '') {
+            // Supported video formats will only have a pre sized derivative
+            $pextension = $GLOBALS["ffmpeg_preview_extension"];
+            $p = get_resource_path($ref, true, 'pre', false, $pextension, -1, 1);
+            $usesize = 'pre';
+        } elseif (in_array($resource_data['file_extension'], array_merge($GLOBALS["ffmpeg_audio_extensions"], ['mp3'])) && $usesize !== '') {
+            // Supported audio formats are ported to mp3
+            $pextension = 'mp3';
+            $p = get_resource_path($ref, true, '', false, 'mp3', -1, 1);
+            $usesize = '';
+        } else {
+            $pextension = get_extension($resource_data, $usesize);
+            $p = get_resource_path($ref, true, $usesize, false, $pextension, -1, 1, $use_watermark);
+        }
+
+        $subbed_original = false;
+        $target_exists = file_exists($p);
+        $replaced_file = false;
+
+        $new_file = hook('replacedownloadfile', '', array($resource_data, $usesize, $pextension, $target_exists));
+        if ($new_file != '' && $p != $new_file) {
+            $p = $new_file;
+            $deletion_array[] = $p;
+            $replaced_file = true;
+            $target_exists = file_exists($p);
+        } elseif (!$target_exists && $useoriginal == 'yes' && resource_download_allowed($ref, '', $resource_data['resource_type'])) {
+            // This size doesn't exist, so we'll try using the original instead
+            $p = get_resource_path($ref, true, '', false, $resource_data['file_extension'], -1, 1, $use_watermark);
+            $pextension = $resource_data['file_extension'];
+            $subbed_original_resources[] = $ref;
+            $subbed_original = true;
+            $target_exists = file_exists($p);
+        }
+
+        // Move to next resource if file doesn't exist or restricted access and user doesn't have access to the requested size
+        if (
+            !(
+                (
+                    ($target_exists && $access == 0)
+                    || (
+                        $target_exists
+                        && $access == 1
+                        && (image_size_restricted_access($size) || ($usesize == '' && $GLOBALS["restricted_full_download"]))
+                    )
+                )
+                && resource_download_allowed($ref, $usesize, $resource_data['resource_type'])
+            )
+        ) {
+            debug('Collection download : Skipping resource ID ' . (int) $ref
+                . ' file inaccessible to user - $target_exists = ' . $target_exists
+                . ', $access = ' . $access
+                . ', image_size_restricted_access(' . $size . ') = ' . image_size_restricted_access($size)
+                . ', $usesize = ' . $usesize
+                . ', $restricted_full_download = ' . $GLOBALS["restricted_full_download"]
+                . ', resource_download_allowed() = ' . resource_download_allowed($ref, $usesize, $resource_data['resource_type'])
+            );
+            continue;
+        }
+
+        $used_resources[] = $ref;
+        $tmpfile = false;
+
+        if ($exiftool_write_option) {
+            $tmpfile = write_metadata($p, $ref, $id);
+
+            if ($tmpfile !== false && file_exists($tmpfile)) {
+                // File already in tmp, just rename it
+                $p = $tmpfile; 
+            } elseif (!$replaced_file) {
+                // Copy the file from filestore rather than renaming
+                $copy = true; 
+            }
+        }
+
+        // If using original filenames when downloading, copy the file to new location so the name is included.
+        $filename = '';
+        # Compute a filename for this resource
+        $filename = get_download_filename($ref, $usesize, 0, $pextension);
+        collection_download_use_original_filenames_when_downloading($filename, $ref, false, $filenames, $id);
+
+        if (hook("downloadfilenamealt")) {
+            $filename = hook("downloadfilenamealt");
+        }
+
+        collection_download_process_text_file($ref, $collection, $filename);
+
+        hook('modifydownloadfile');
+
+        $path .= $p . "\r\n";
+
+        if ($GLOBALS['use_zip_extension']) {
+            $success = $zip->addFile($p, $filename);
+            debug('Collection download : Added resource ' . $ref . ' to zip archive = ' . ($success ? 'true' : 'false'));
+        }
+
+        collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize);
+    }
+
+    if (0 < $count_data_only_types) {
+        collection_download_process_data_only_types($collection_resources, $id, false, $usertempdir, $zip, $path, $deletion_array);
+    }
+
+    collection_download_process_summary_notes(
+        $collection_resources,
+        $available_sizes,
+        $text,
+        $subbed_original_resources,
+        $used_resources,
+        $id,
+        $collection,
+        $collectiondata,
+        false,
+        $usertempdir,
+        $filename,
+        $path,
+        $deletion_array,
+        $size,
+        $zip
+    );
+
+    if ($include_csv_file == 'yes') {
+        collection_download_process_csv_metadata_file(
+            array_column($collection_resources, "ref"),
+            $id,
+            $collection,
+            false,
+            $GLOBALS['use_zip_extension'],
+            $zip,
+            $path,
+            $deletion_array
+        );
+    }
+
+    collection_download_process_command_to_file($GLOBALS['use_zip_extension'], false, $id, $collection, $size, $path);
+
+    $archiver = ($GLOBALS["archiver_fullpath"] != false)
+        && (isset($GLOBALS["archiver_listfile_argument"]))
+        && (isset($GLOBALS["collection_download_settings"]) ? is_array($GLOBALS["collection_download_settings"]) : false);
+
+    if ($archiver) {
+        $suffix = '.' . $GLOBALS["collection_download_settings"][$settings_id]['extension'];
+    } else {
+        $suffix = '.zip';
+    }
+    $archivename = "";
+    collection_download_process_collection_download_name($archivename, $collection, $size, $suffix, $collectiondata);
+    collection_download_process_archive_command(false, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
+    collection_download_clean_temp_files($deletion_array);
+
+    return [
+        "filename" => $archivename,
+        "path" => $zipfile,
+        "id" => $randstring,
+    ];
+
+}
