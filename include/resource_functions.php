@@ -8892,3 +8892,9 @@ function acl_can_edit_resource_of_type(int $ref): bool
             || checkperm("XE") && !checkperm("XE-{$ref}")
         );
 }
+
+function resource_is_template(int $ref) : bool 
+{
+    global $fstemplate_alt_threshold;
+    return $ref < $fstemplate_alt_threshold && $fstemplate_alt_threshold > 0;
+}

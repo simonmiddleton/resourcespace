@@ -1277,8 +1277,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     $replace_upload_type=$top_nav_upload_type;
                                                     }
 
-                                                if (!(in_array($resource['resource_type'], $data_only_resource_types)) && !resource_file_readonly($ref) && (checkperm("c") || checkperm("d")))
-                                                    { ?>
+                                                if (
+                                                    !in_array($resource['resource_type'], $data_only_resource_types)
+                                                    && !resource_file_readonly($ref) 
+                                                    && (checkperm("c") || checkperm("d"))
+                                                    && !resource_is_template($ref)
+                                                ) { ?>
                                                     <li>
                                                         <a id="view_replace_link" href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php", $urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" 
                                                             onClick="if(jQuery('#uploader').length){return CentralSpaceLoad(this,true);} else {return ModalLoad(this,true);}">
@@ -1306,8 +1310,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     }
 
                                                 // Show the upload preview link
-                                                if (!resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
-                                                    { ?>
+                                                if (
+                                                    !resource_file_readonly($ref) 
+                                                    && !checkperm("F*") 
+                                                    && !$custompermshowfile 
+                                                    && !resource_is_template($ref)
+                                                ){ ?>
                                                     <li>
                                                         <a id="view_upload_preview_link" href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
                                                             <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo escape($lang["uploadpreview"]); ?>

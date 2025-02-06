@@ -13,7 +13,9 @@ $status = "";
 $error = false;
 $resource = get_resource_data($ref);
 
-if (!is_array($resource)) {
+if (resource_is_template($ref)) {
+    error_alert($lang['error-permissiondenied']);
+} elseif (!is_array($resource)) {
     error_alert($lang['resourcenotfound']);
     exit();
 } elseif (!get_edit_access($ref, $resource["archive"], $resource)) {
