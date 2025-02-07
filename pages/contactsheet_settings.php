@@ -6,7 +6,7 @@ include_once '../include/pdf_functions.php';
 $collection         = getval('ref', '', true);
 $collectiondata     = get_collection($collection);
 $ajax               = ('true' == getval('ajax', '') ? true : false);
-$sheetstyle         = getval('sheetstyle', 'thumbnails');
+$sheetstyle         = getval('sheetstyle', 'list');
 $field_value_limit  = getval('field_value_limit', 0);
 $filename_uid       = generateUserFilenameUID($userref);
 $error              = getval("error", "");
@@ -170,7 +170,9 @@ include '../include/header.php';
                                 var x;
                                 for (x in response_obj) {
                                     var contact_sheet_field_obj = response_obj[x];
-                                    contact_sheet_fields_selector.append('<option value="' + contact_sheet_field_obj.ref + '">' + contact_sheet_field_obj.title + '</option>');
+                                    contact_sheet_fields_selector.append('<option value="' + Number(contact_sheet_field_obj.ref) + '" ' 
+                                                                            + (Number(contact_sheet_field_obj.ref) == 0 ? 'selected>' : '>')
+                                                                            + contact_sheet_field_obj.title + '</option>');
                                 }
                                 return true;
                             }
@@ -342,7 +344,7 @@ include '../include/header.php';
                                 $selected = 'selected';
                             }
                             ?>
-                            <option value="<?php echo $contact_sheet_field['ref']; ?>"<?php echo $selected; ?>>
+                            <option value="<?php echo (int) $contact_sheet_field['ref']; ?>"<?php echo $selected; ?>>
                                 <?php echo i18n_get_translated($contact_sheet_field['title']); ?>
                             </option>
                             <?php
@@ -353,6 +355,7 @@ include '../include/header.php';
                 }
                 ?>
                 <div class="clearerleft"></div>
+                <a href="#" onclick="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>'); return false;"><i aria-hidden="true" class="fa fa-fw fa-arrows-rotate"></i> <?php echo escape($lang["reload"]); ?></a>
             </div>
 
             <div class="Question">

@@ -51,7 +51,7 @@ $contactsheet_header           = ('' != $includeheader ? filter_var($includehead
 $add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
 $contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : false);
-$selected_contact_sheet_fields = getval('selected_contact_sheet_fields', '');
+$selected_contact_sheet_fields = getval('selected_contact_sheet_fields', array(), false, fn(array $arr): bool => count($arr) === count(array_filter($arr, 'is_int_loose')));
 
 
 $pdf_properties = array();
@@ -91,7 +91,7 @@ if ($contactsheet_use_field_templates) {
 }
 
 // If user has specified which fields to show, then respect it
-if ('' != $selected_contact_sheet_fields && '' != $selected_contact_sheet_fields[0]) {
+if (!empty($selected_contact_sheet_fields) && $selected_contact_sheet_fields[0] != 0) {
     $getfields = $selected_contact_sheet_fields;
 }
 
