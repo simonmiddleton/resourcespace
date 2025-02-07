@@ -308,14 +308,12 @@ include "../../include/header.php";
                 DrawOption("b", $lang["enable_bottom_collection_bar"], true);
                 DrawOption("h", $lang["can_publish_collections_as_themes"], false, true);
                 DrawOption("exup", $lang["permission_share_upload_link"], false, true);
-
                 if (in_array('h', $permissions)) {
                     DrawOption('hdta', $lang['manage_all_dash_h'], true, false);
                     DrawOption('hdt_ug', $lang['manage_user_group_dash_tiles'], false, false);
                 } else {
                     DrawOption('dta', $lang['manage_all_dash_perm'], false, false);
                 }
-
                 DrawOption("dtu", $lang["manage_own_dash"], true, false);
 
                 # ------------ Access to featured collection categories

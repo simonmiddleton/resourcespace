@@ -1310,12 +1310,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     }
 
                                                 // Show the upload preview link
-                                                if (
-                                                    !resource_file_readonly($ref) 
-                                                    && !checkperm("F*") 
-                                                    && !$custompermshowfile 
-                                                    && !resource_is_template($ref)
-                                                ){ ?>
+                                                if (can_upload_preview_image($ref))
+                                                    { ?>
                                                     <li>
                                                         <a id="view_upload_preview_link" href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
                                                             <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo escape($lang["uploadpreview"]); ?>

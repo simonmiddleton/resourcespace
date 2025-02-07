@@ -4601,9 +4601,9 @@ function add_alternative_file($resource, $name, $description = "", $file_name = 
 
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
-
     ps_query(
-        "INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES (?, ?,now(), ?, ?, ?, ?, ?)",
+        "INSERT INTO resource_alt_files (resource, name, creation_date, description, file_name, file_extension, file_size, alt_type)
+              VALUES (?, ?, NOW(), ?, ?, ?, ?, ?)",
         [
         'i', $resource,
         's', $name,
@@ -4611,7 +4611,7 @@ function add_alternative_file($resource, $name, $description = "", $file_name = 
         's', $file_name,
         's', $file_extension,
         'i', $file_size,
-        's', $alt_type
+        's', $alt_type,
         ]
     );
     return sql_insert_id();
@@ -4713,19 +4713,40 @@ function get_alternative_file($resource, $ref)
  * Updates the details of an alternative file in the database.
  *
  * @param int $resource The resource ID associated with the alternative file.
- * @param int $ref The reference ID of the alternative file to update.
- * @return void
+ * @param int $ref      The reference ID of the alternative file to update.
+ * @param array $data   Array of data in name=>value format. If a column is to be left as is then it must not be included in the array
+ *
  */
-function save_alternative_file($resource, $ref)
+function save_alternative_file(int $resource, int $ref, array $data = []): void
 {
-    # Saves the 'alternative file' edit form back to the database
-    $name           = getval("name", "");
-    $description    = getval("description", "");
-    $alt_type       = getval("alt_type", "");
-    ps_query(
-        "UPDATE resource_alt_files SET name = ?,description = ?,alt_type = ? WHERE resource = ? AND ref = ?",
-        array("s",$name,"s",$description,"s",$alt_type,"i",$resource,"i",$ref)
-    );
+    $validcolumns = [
+        "name" => "s",
+        "description" => "s",
+        "alt_type" => "s",
+        "file_name" => "s",
+        "file_extension" => "s",
+        "file_size" => "i",
+        "unoconv" => "i",
+    ];
+    $setcolumns = [];
+    $setparams = [];
+    foreach ($validcolumns as $column => $type) {
+        if (isset($data[$column])) {
+            $setcolumns[] = $column;
+            $setparams[] = $type;
+            $setparams[] = $data[$column];
+        }
+    }
+    if (count($setcolumns) > 0) {
+        $setcolumnsql = implode(" = ?, ", $setcolumns) . " = ?";
+        $setparams = array_merge($setparams, ["i", $resource, "i", $ref]);
+        ps_query(
+            "UPDATE resource_alt_files
+                     SET $setcolumnsql
+                   WHERE resource = ? AND ref = ?",
+            $setparams
+        );
+    }
 }
 
 /**
@@ -8893,8 +8914,19 @@ function acl_can_edit_resource_of_type(int $ref): bool
         );
 }
 
-function resource_is_template(int $ref) : bool 
+function resource_is_template(int $ref): bool
 {
     global $fstemplate_alt_threshold;
     return $ref < $fstemplate_alt_threshold && $fstemplate_alt_threshold > 0;
+}
+
+/**
+ * Check if current user can upload a preview image
+ *
+ * @param int $ref  Resource ID
+ *
+ */
+function can_upload_preview_image(int $ref): bool
+{
+    return !resource_file_readonly($ref) && !checkperm("F*") && !checkperm("xupr") && !$GLOBALS['custompermshowfile'];
 }

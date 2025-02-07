@@ -1259,10 +1259,14 @@ function api_get_users_by_permission($permissions)
  * @param int $ref Resource ID
  * @param bool $no_exif Do not extract embedded metadata
  * @param bool $revert Delete all data and re-extract embedded data
+ * @param bool $previewonly Will use the uploaded file to replace preview image only
+ * @param int $alternative Use the uploaded file to replace the alternative file with the given ID
+ *            Note that api_add_alternative_file() must be called first if creating a new alternative file
+ *            If an $alternative identifier is specified then $previewonly is ignored and set to false
  *
  * @return array Returns JSend data back {@see ajax_functions.php} if upload failed, otherwise 204 HTTP status
  */
-function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
+function api_upload_multipart(int $ref, bool $no_exif, bool $revert, bool $previewonly = false, int $alternative = 0): array
 {
     $request_checks = [
         fn(): array => assert_post_request(true),
@@ -1310,19 +1314,81 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
         return ajax_response_fail(ajax_build_message($GLOBALS['lang']['disk_size_no_upload_explain']));
     }
 
-    // Check for duplicates
-    $duplicates = check_duplicate_checksum($_FILES['file']['tmp_name'], false);
-    if (count($duplicates) > 0) {
-        return ajax_response_fail(ajax_build_message(
-            str_replace('[resources]', implode(', ', $duplicates), $GLOBALS['lang']['error_upload_duplicate_file'])
-        ));
+    if ($alternative > 0) {
+        $previewonly = false;
     }
-
     // Set the userfile so upload_file can carry out the rest of the work as usual
     $_FILES['userfile'] = $_FILES['file'];
-    if (upload_file($ref, $no_exif, $revert)) {
-        http_response_code(204);
-        return ajax_response_ok_no_data();
+
+    if (!get_edit_access($ref)) {
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-permissiondenied']));
+    }
+
+    if ($previewonly) {
+        if (!can_upload_preview_image($ref)) {
+            return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-permissiondenied']));
+    }
+        $success = upload_preview($ref);
+        if ($success) {
+            http_response_code(204);
+            return ajax_response_ok_no_data();
+        } else {
+            http_response_code(500);
+            return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_failed']));
+        }
+    } elseif ($alternative > 0) {
+        if (checkperm('A')) {
+            // This is a negative permission. If you have it you can't manage alternative files
+            return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-permissiondenied']));
+        }
+        // Check this alternative is for the correct resource
+        $alternatives = get_alternative_files($ref);
+
+        if (!in_array($alternative, array_column($alternatives, "ref"))) {
+            return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_invalid_input']));
+        }
+        if (!can_upload_preview_image($ref)) {
+            return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-permissiondenied']));
+        }
+        $processfile = $_FILES['userfile'];
+        $extension = pathinfo($processfile['name'])["extension"] ?? "";
+        if(is_banned_extension($extension)) {
+            http_response_code(403);
+            return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_invalid_file']));
+        }
+
+        $altpath = get_resource_path($ref, true, "", true, $extension, -1, 1, false, "", $alternative);
+        if (move_uploaded_file($processfile['tmp_name'], $altpath)) {  chmod($altpath, 0777);
+            $file_size = filesize_unlimited($altpath);
+            // Update alternative file data.
+            $altdata = [
+                "name" => (string) $processfile["name"],
+                "file_name" => (string) $processfile["name"],
+                "file_extension" => (string) $extension,
+                "file_size" => (int) $file_size,
+            ];
+            save_alternative_file($ref, $alternative, $altdata);
+            create_previews($ref, false, $extension, false, false, $alternative);
+            http_response_code(204);
+            return ajax_response_ok_no_data();
+        }
+
+        http_response_code(500);
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_failed']));
+    } else {
+        // Main resource file upload
+        if($GLOBALS['file_upload_block_duplicates']) {
+            $duplicates = check_duplicate_checksum($_FILES['file']['tmp_name'], false);
+            if (count($duplicates) > 0) {
+                return ajax_response_fail(ajax_build_message(
+                    str_replace('[resources]', implode(', ', $duplicates), $GLOBALS['lang']['error_upload_duplicate_file'])
+                ));
+            }
+        }
+        if (upload_file($ref, $no_exif, $revert)) {
+            http_response_code(204);
+            return ajax_response_ok_no_data();
+        }
     }
 
     http_response_code(500);

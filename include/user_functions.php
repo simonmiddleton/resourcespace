@@ -3537,7 +3537,7 @@ $set_processing_message_first_call = true;
 function set_processing_message(string $message)
 {
     global $userref,$userprocessing_messages,$set_processing_message_first_call;
-    if (PHP_SAPI === "cli") {
+    if (PHP_SAPI === "cli" ||  defined("API_CALL")) {
         // Messages don't work unless using browser
         return;
     }
