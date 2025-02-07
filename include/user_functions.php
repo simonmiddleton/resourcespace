@@ -2733,13 +2733,13 @@ function checkperm_user_edit($user)
 
 /**
  * Check if the current user has sufficient permissions to log in as the specified user
- * 
+ *
  * The regex used is to check if the a permission is present in the permission string of the target user
  *
- * @param  mixd $user   Either a user reference or user array
+ * @param  mixed $user   Either a user reference or user array
  * @return bool
  */
-function checkperm_login_as_user($user)
+function checkperm_login_as_user($user): bool
 {
     if (!checkperm('u')) {    // does not have edit user permission
         return false;
