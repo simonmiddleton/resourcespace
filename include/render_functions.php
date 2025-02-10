@@ -1453,7 +1453,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                         {
                                         $return_to_search = getval("search","");
                                         ?>
-                                        CentralSpaceLoad('<?php echo $baseurl; ?>/pages/search.php?search=<?php echo urlencode($return_to_search); ?>');
+                                        CentralSpaceLoad(window.location.href, null, null, false);
                                         <?php
                                         }
                                     else
