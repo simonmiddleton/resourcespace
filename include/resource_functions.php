@@ -6175,6 +6175,7 @@ function delete_resources_in_collection($collection)
         || !allow_multi_edit($collection)
         || !collection_writeable($collection)
     ) {
+        debug("Unable to delete resources in collection: $collection");
         return false;
     }
 

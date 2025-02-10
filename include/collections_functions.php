@@ -3756,7 +3756,9 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
-           $system_read_only;
+           $system_read_only, $USER_SELECTION_COLLECTION;
+
+    $is_selection_collection = isset($collection_data['ref']) && $collection_data['ref'] == $USER_SELECTION_COLLECTION;
 
     #This is to properly render the actions drop down in the themes page
     if (isset($collection_data['ref']) && $pagename != "collections") {
@@ -4162,7 +4164,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Note: functionality moved from edit collection page
     if (
         ($k == "" || $internal_share_access)
-        && !$top_actions
+        && (!$top_actions || $is_selection_collection)
         && ((is_array($result) && count($result) != 0) || $count_result != 0)
         && collection_writeable($collection_data['ref'])
         && $allow_multi_edit

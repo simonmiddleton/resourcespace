@@ -1081,7 +1081,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         return;
         }
 
-    global $baseurl, $lang, $k, $pagename, $order_by, $sort;
+    global $baseurl, $lang, $k, $pagename, $order_by, $sort, $USER_SELECTION_COLLECTION;
+
+    $is_selection_collection = isset($collection_data['ref']) && $collection_data['ref'] == $USER_SELECTION_COLLECTION;
     
     // globals that could also be passed as a reference
     global $result /*search result*/;
@@ -1434,7 +1436,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
             <?php
-            if(!$top_actions)
+            if(!$top_actions || $is_selection_collection)
                 {
                 ?>
                 case 'delete_all_in_collection':
@@ -1445,13 +1447,40 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                             function(response)
                                 {
                                 console.debug('Deleted resources in collection');
-                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo (int) $collection_data["ref"]; ?>');
+                                if (response) {
+                                    <?php
+                                    if ($is_selection_collection)
+                                        {
+                                        $return_to_search = getval("search","");
+                                        ?>
+                                        CentralSpaceLoad('<?php echo $baseurl; ?>/pages/search.php?search=<?php echo urlencode($return_to_search); ?>');
+                                        <?php
+                                        }
+                                    else
+                                        {
+                                        ?>
+                                        CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo (int) $collection_data["ref"]; ?>');
+                                        <?php
+                                        }
+                                        ?>
+                                    }
+                                else
+                                    {
+                                    styledalert("<?php echo escape($lang["error"]); ?>", "<?php echo escape($lang["error-editpermissiondenied"]); ?>");
+                                    }
                                 },
                             <?php echo generate_csrf_js_object('delete_all_in_collection'); ?>
                         );
                         }
                     break;
+                <?php
+                }
+                ?>
 
+            <?php
+            if(!$top_actions)
+                {
+                ?>
                     case 'hide_collection':
                         var action = 'hidecollection';
                         var collection = <?php echo urlencode($collection_data['ref']);?>;
@@ -1471,7 +1500,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                             }
                         }); 
                         break;
-
                 <?php
                 }
                 ?>
@@ -3710,7 +3738,8 @@ function render_selected_collection_actions()
         "share_collection",
         "download_collection",
         "license_batch",
-        "consent_batch"
+        "consent_batch",
+        'delete_all_in_collection',
     );
 
     if($refs_to_remove > 0)
@@ -3737,6 +3766,8 @@ function render_selected_collection_actions()
     $lang["savesearchitemstocollection"] = $lang["add_selected_to_collection"];
     $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
     $lang["share"] = $lang["share_selected"];
+    $lang['deleteallresourcesfromcollection'] = $lang['deleteselectedfromcollection'];
+    $lang["deleteallsure"] = $lang['deleteallselectedsure'];
 
     render_actions($collection_data, true, false);
 
