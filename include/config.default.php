@@ -1468,10 +1468,6 @@ $upload_concurrent_limit = 5;
 // 3     Deleted (recommended)
 $resource_deletion_state = 3;
 
-// Does deleting resources require password entry? (single resource delete)
-// Off by default as resources are no longer really deleted by default, they are simply moved to a deleted state which is less dangerous - see $resource_deletion_state above.
-$delete_requires_password = false;
-
 # Are resources removed from collections when they are moved to the deleted state?
 $remove_deleted_resources_from_collections = true;
 
