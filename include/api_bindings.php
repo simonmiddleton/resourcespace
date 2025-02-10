@@ -1543,3 +1543,18 @@ function api_resource_file_readonly($ref): array
         return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_resource_id_non_numeric']));
     }
 }
+
+/**
+ * Exposing {@see delete_resources_in_collection} to the API
+ *
+ * @param  int  $collection   ID of collection containing resources to be deleted.
+ */
+function api_delete_resources_in_collection($collection): bool
+{
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
+    if (!empty($assert_post)) {
+        return false;
+    }
+
+    return delete_resources_in_collection($collection);
+}
