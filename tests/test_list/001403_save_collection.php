@@ -37,9 +37,10 @@ if (count(get_collection_resources($col_rr)) !== 0) {
 }
 
 // Test deleting all resources in a collection
+// Functionality has been moved out of save_collection(). Test updated to use new approach.
 add_resource_to_collection($rr_a, $col_rr);
 add_resource_to_collection($rr_b, $col_rr);
-save_collection($col_rr, ['deleteall' => 1]);
+delete_resources_in_collection($col_rr);
 $return = do_search('', '', 'relevance', "{$resource_deletion_state}", -1, 'desc', false, 0, false, false, '', false, true, true);
 $return = array_column($return, 'ref');
 if (array_intersect([$rr_a, $rr_b], $return) !== [$rr_a, $rr_b]) {

@@ -17,7 +17,6 @@ $redirection_endpoint = trim(urldecode(getval("redirection_endpoint", "")));
 $redirect = getval("redirect", "") != "";
 $name = getval("name", "");
 $public = getval("public", "");
-$delete_all = getval("deleteall", "") != "";
 
 # Does this user have edit access to collections? Variable will be found in functions below.
 $multi_edit = allow_multi_edit($ref);
@@ -62,7 +61,6 @@ if (getval("submitted", "") != "" && enforcePostRequest(false)) {
     $coldata["description"] = getval("description", "");
     $coldata["result_limit"] = getval("result_limit", 0, true);
     $coldata["users"] = getval("users", "");
-    $coldata["deleteall"] = $delete_all;
 
     if ($collection["public"] == 1 && getval("update_parent", "") == "true") {
         // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)

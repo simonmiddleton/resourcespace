@@ -1440,19 +1440,15 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 case 'delete_all_in_collection':
                     if(confirm('<?php echo escape($lang["deleteallsure"]); ?>'))
                         {
-                        var post_data = {
-                            submitted: true,
-                            ref: '<?php echo $collection_data["ref"]; ?>',
-                            name: <?php echo json_encode($collection_data["name"]); ?>,
-                            public: '<?php echo $collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0; ?>',
-                            deleteall: 'on',
-                            <?php echo generateAjaxToken("delete_all_in_collection"); ?>
-                        };
-
-                        jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
-                            {
-                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"]; ?>');
-                            });
+                        api('delete_resources_in_collection',
+                            {'collection': '<?php echo (int) $collection_data["ref"]; ?>'},
+                            function(response)
+                                {
+                                console.debug('Deleted resources in collection');
+                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo (int) $collection_data["ref"]; ?>');
+                                },
+                            <?php echo generate_csrf_js_object('delete_all_in_collection'); ?>
+                        );
                         }
                     break;
 

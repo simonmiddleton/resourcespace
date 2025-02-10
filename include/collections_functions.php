@@ -1271,7 +1271,6 @@ function save_collection($ref, $coldata = array())
         $coldata["result_limit"]        = getval("result_limit", 0, true);
         $coldata["relateall"]           = getval("relateall", "") != "";
         $coldata["removeall"]           = getval("removeall", "") != "";
-        $coldata["deleteall"]           = getval("deleteall", "") != "";
         $coldata["users"]               = getval("users", "");
 
         if (checkperm("h")) {
@@ -1287,9 +1286,9 @@ function save_collection($ref, $coldata = array())
     $oldcoldata = get_collection($ref);
     $sqlset = array();
     foreach ($coldata as $colopt => $colset) {
-        // skip data that is not a collection property (e.g result_limit or deleteall) otherwise the $sqlset will have an
+        // skip data that is not a collection property (e.g result_limit) otherwise the $sqlset will have an
         // incorrect SQL query for the update statement.
-        if (in_array($colopt, ['result_limit', 'relateall', 'removeall', 'deleteall', 'users'])) {
+        if (in_array($colopt, ['result_limit', 'relateall', 'removeall', 'users'])) {
             continue;
         }
 
@@ -1599,14 +1598,6 @@ function save_collection($ref, $coldata = array())
     # Remove all resources?
     if (isset($coldata["removeall"]) && $coldata["removeall"] != "") {
         remove_all_resources_from_collection($ref);
-    }
-
-    # Delete all resources?
-    if (
-        isset($coldata["deleteall"]) && $coldata["deleteall"] != "" && !checkperm("D")
-        && allow_multi_edit($ref)
-    ) {
-            delete_resources_in_collection($ref);
     }
 
     # Update limit count for saved search
