@@ -679,18 +679,18 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
         // This is how it was used on plugins setup page. Makes sense for developers when trying to debug and not much for non-technical users
         $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
         }
-    ?><div class="Question" style="min-height: 1.5em;" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-        <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
+    ?><div class="Question" style="min-height: 1.5em;" id="question_<?php echo escape($name); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
+        <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>"><?php echo escape($label); ?></label>
         <div class="AutoSaveStatus">
-            <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+            <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
         </div>
         <input type="checkbox" <?php if ($checked) { ?>checked="true" <?php } ?>onchange="
-            jQuery('#container_<?php echo $name; ?>').toggle();
+            jQuery('#container_<?php echo escape($name); ?>').toggle();
             if(!this.checked)
             {
             // Unchecked, set the default. Must first change the type as a color picker can't hold the empty string.
-            jQuery('#<?php echo $name; ?>').attr('type','text');
-            jQuery('#<?php echo $name; ?>').val('<?php echo $default; ?>');
+            jQuery('#<?php echo escape($name); ?>').attr('type','text');
+            jQuery('#<?php echo escape($name); ?>').val('<?php echo escape($default); ?>');
             <?php
             if(!empty($on_change_js))
                 {
@@ -698,8 +698,8 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
                 }
             if ($autosave)
             {
-            ?>AutoSaveConfigOption('<?php echo $name; ?>');
-                jQuery('#<?php echo $name; ?>').trigger('change');
+            ?>AutoSaveConfigOption('<?php echo escape($name); ?>');
+                jQuery('#<?php echo escape($name); ?>').trigger('change');
             <?php
             }
         if(!empty($on_change_js))
@@ -710,21 +710,21 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             }
         else
             {
-            jQuery('#<?php echo $name; ?>').attr('type','color');
+            jQuery('#<?php echo escape($name); ?>').attr('type','color');
             }
             " style="float: left;" />
-        <div id="container_<?php echo $name; ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
+        <div id="container_<?php echo escape($name); ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
             &nbsp;
-            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="<?php echo ($checked?"color":"text") ?>" value="<?php echo escape($current); ?>" onchange="<?php
+            <input id="<?php echo escape($name); ?>" name="<?php echo escape($name); ?>" type="<?php echo ($checked?"color":"text") ?>" value="<?php echo escape($current); ?>" onchange="<?php
             if ($autosave)
                 {
-                ?>AutoSaveConfigOption('<?php echo $name; ?>');<?php
+                ?>AutoSaveConfigOption('<?php echo escape($name); ?>');<?php
                 }
             if(!empty($on_change_js))
                 {
                 echo $on_change_js;
                 }
-            ?>" default="<?php echo $default; ?>" />
+            ?>" default="<?php echo escape($default); ?>" />
         </div>
         <div class="clearerleft"></div>
         </div>
