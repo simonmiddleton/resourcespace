@@ -19,74 +19,7 @@ if (time() - strtotime($last_delete_tmp_files) < 24 * 60 * 60) {
     return false;
 }
 
-// Set up array of folders to scan
-$folderstoscan = array();
-$folderstoscan[] = get_temp_dir(false);
-$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "tus";
-$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "querycache";
-$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "remote_files";
-
-$modified_folderstoscan = hook("add_folders_to_delete_from_temp", "", array($folderstoscan));
-if (is_array($modified_folderstoscan) && !empty($modified_folderstoscan)) {
-    $folderstoscan = $modified_folderstoscan;
-}
-
-// Set up array of folders to exclude
-$excludepaths = array();
-$excludepaths[] = "process_locks";
-$excludepaths[] = "user_downloads";
-
-// Set up arrays to hold items to delete
-$folderstodelete = array();
-$filestodelete = array();
-
-foreach ($folderstoscan as $foldertoscan) {
-    if (!file_exists($foldertoscan)) {
-        continue;
-    }
-    $foldercontents = new DirectoryIterator($foldertoscan);
-    foreach ($foldercontents as $objectindex => $object) {
-        if (time() - $object->getMTime() > $purge_temp_folder_age * 24 * 60 * 60) {
-            $tmpfilename = $object->getFilename();
-            if ($object->isDot() || in_array($tmpfilename, $excludepaths)) {
-                continue;
-            }
-            if ($object->isDir()) {
-                $folderstodelete[] = $foldertoscan . DIRECTORY_SEPARATOR . $tmpfilename;
-            } elseif ($object->isFile()) {
-                $filestodelete[] = $foldertoscan . DIRECTORY_SEPARATOR . $tmpfilename;
-            }
-        }
-    }
-}
-
-foreach ($folderstodelete as $foldertodelete) {
-    // Extra check that folder is in an expected path
-    if (strpos($foldertodelete, $storagedir) === false && strpos($foldertodelete, $tempdir) === false && strpos($foldertodelete, 'filestore/tmp') === false) {
-        continue;
-    }
-
-    $success = rcRmdir($foldertodelete);
-
-    if ('cli' == PHP_SAPI) {
-        echo __FILE__ . " - deleting directory " . $foldertodelete . " - " . ($success ? "SUCCESS" : "FAILED")  . $LINE_END;
-    }
-    debug(__FILE__ . " - deleting directory " . $foldertodelete . " - " . ($success ? "SUCCESS" : "FAILED"));
-}
-
-foreach ($filestodelete as $filetodelete) {
-    // Extra check that file is in an expected path
-    if (strpos($filetodelete, $storagedir) === false && strpos($filetodelete, $tempdir) === false && strpos($filetodelete, 'filestore/tmp') === false) {
-        continue;
-    }
-
-    $success = try_unlink($filetodelete);
-
-    if ('cli' == PHP_SAPI) {
-        echo __FILE__ . " - deleting file " . $filetodelete . " - " . ($success ? "SUCCESS" : "FAILED")  . $LINE_END;
-    }
-    debug(__FILE__ . " - deleting file " . $filetodelete . " - " . ($success ? "SUCCESS" : "FAILED"));
-}
+delete_temp_files();
 
 # Update last sent date/time.
 set_sysvar("last_delete_tmp_files", date("Y-m-d H:i:s"));
