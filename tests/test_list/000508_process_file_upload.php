@@ -44,7 +44,7 @@ $use_cases = [
     ],
     [
         'name' => 'Special files are forbidden',
-        'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/.htaccess', ''),
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/.htaccess', 'x'),
         'input' => [
             'source' => new SplFileInfo(sys_get_temp_dir() . '/.htaccess'),
             'destination' => $dest,
@@ -54,7 +54,7 @@ $use_cases = [
     ],
     [
         'name' => 'Banned extension',
-        'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_{$run_id}.php", ''),
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_{$run_id}.php", '<?php echo 508;'),
         'input' => [
             'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_{$run_id}.php"),
             'destination' => $dest,
@@ -64,7 +64,7 @@ $use_cases = [
     ],
     [
         'name' => 'Allow specific extension',
-        'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_{$run_id}.csv", ''),
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_{$run_id}.csv", 'x,y'),
         'input' => [
             'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_{$run_id}.csv"),
             'destination' => $dest,
@@ -72,21 +72,69 @@ $use_cases = [
         ],
         'expected' => ['success' => true],
     ],
-    // [
-    //     'name' => 'TEST',
-    //     // 'setup' => fn() => $GLOBALS['testXXX'] = true,
-    //     'input' => [
-    //         'source' => new SplFileInfo(__FILE__),
-    //         'destination' => $dest,
-    //         'processor' => [],
-    //     ],
-    //     'expected' => ['success' => false],
-    // ],
+    [
+        'name' => 'MIME type check',
+        'setup' => function () use ($run_id) {
+            $img = create_random_image(['text' => "Run ID {$run_id}"]);
+            if (!isset($img['path'])) {
+                return false;
+            }
+            return rename($img['path'], sys_get_temp_dir() . "/test_508_mime_check_{$run_id}.txt");
+        },
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_mime_check_{$run_id}.txt"),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => $expect_fail_msg('MIME type mismatch'),
+    ],
+    [
+        'name' => 'Check destination is not a directory',
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/test_508.txt', 'x'),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . '/test_508.txt'),
+            'destination' => new SplFileInfo(get_temp_dir(false)),
+            'processor' => [],
+        ],
+        'expected' => null,
+        'should_throw' => true,
+    ],
+    [
+        'name' => 'Check destination path is allowed',
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/test_508.txt', 'x'),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . '/test_508.txt'),
+            'destination' => new SplFileInfo(sys_get_temp_dir() . '/test_508_copy.txt'),
+            'processor' => [],
+        ],
+        'expected' => $expect_fail_msg('Destination path'),
+    ],
+    [
+        'name' => 'Check file move processor is allowed',
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/test_508.txt', 'x'),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . '/test_508.txt'),
+            'destination' => $dest,
+            'processor' => ['file_move' => 'unknown_value'],
+        ],
+        'expected' => null,
+        'should_throw' => true,
+    ],
+    [
+        'name' => 'Moving file from source to its destination',
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/test_508.txt', 'x'),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . '/test_508.txt'),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => ['success' => true],
+    ],
 ];
 foreach ($use_cases as $uc) {
-    // Set up the use case environment
-    if (isset($uc['setup'])) {
-        $uc['setup']();
+    if (isset($uc['setup']) && !$uc['setup']()) {
+        echo "[ENV] Set up '{$uc['name']}' use case - ";
+        return false;
     }
 
     $GLOBALS['use_error_exception'] = true;
@@ -106,5 +154,6 @@ foreach ($use_cases as $uc) {
 
 // Tear down
 unset($run_id, $use_cases, $result, $dest, $expect_fail_msg);
+array_map('unlink', glob(sys_get_temp_dir() . '/test_508*'));
 
 return true;

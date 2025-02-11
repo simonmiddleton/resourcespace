@@ -255,6 +255,7 @@ function remove_empty_temp_directory(string $path_to_file = "")
  */
 function is_valid_upload_path(string $file_path, array $valid_upload_paths): bool
 {
+    $orig_use_error_exception_val = $GLOBALS['use_error_exception'] ?? false;
     $GLOBALS["use_error_exception"] = true;
     try {
         $file_path = realpath($file_path);
@@ -262,7 +263,7 @@ function is_valid_upload_path(string $file_path, array $valid_upload_paths): boo
         debug("Invalid file path specified" . $e->getMessage());
         return false;
     }
-    unset($GLOBALS["use_error_exception"]);
+    $GLOBALS['use_error_exception'] = $orig_use_error_exception_val;
 
     foreach ($valid_upload_paths as $valid_upload_path) {
         if (is_dir($valid_upload_path)) {
@@ -454,13 +455,14 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
             trigger_error('Invalid $source input. For files not uploaded via HTTP POST, please use SplFileInfo');
         }
 
+        $orig_use_error_exception_val = $GLOBALS['use_error_exception'] ?? false;
         $GLOBALS['use_error_exception'] = true;
         try {
             $source_file_size = filesize($source_file_name);
         } catch (Throwable $t) {
             $source_file_size = 0;
         }
-        $GLOBALS['use_error_exception'] = false;
+        $GLOBALS['use_error_exception'] = $orig_use_error_exception_val;
     }
 
     $fail_with_msg = static fn(string $msg): array => ['success' => false, 'error' => $msg];
@@ -494,10 +496,14 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 
     // Extension validation
     $source_file_ext = parse_filename_extension($source_file_name);
-    $ext_check_ok = isset($processor['allow_extensions']) && $processor['allow_extensions'] !== []
-        ? static fn () => check_valid_file_extension(['name' => $source_file_name], $processor['allow_extensions'])
-        : static fn (string $V) => !is_banned_extension($V);
-    if (!$ext_check_ok($source_file_ext)) {
+    if (
+        (
+            isset($processor['allow_extensions'])
+            && $processor['allow_extensions'] !== []
+            && !check_valid_file_extension(['name' => $source_file_name], $processor['allow_extensions'])
+        )
+        || is_banned_extension($source_file_ext)
+    ) {
         return $fail_with_msg("Invalid extension '{$source_file_ext}'");
     }
 
@@ -555,6 +561,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
  */
 function parse_filename_extension(string $filename): string
 {
+    $orig_use_error_exception_val = $GLOBALS['use_error_exception'] ?? false;
     $GLOBALS["use_error_exception"] = true;
     try {
         $finfo = new SplFileInfo($filename);
@@ -562,7 +569,7 @@ function parse_filename_extension(string $filename): string
         debug("[WARN] Bad file '{$filename}'. Reason: {$t->getMessage()}");
         return '';
     }
-    unset($GLOBALS["use_error_exception"]);
+    $GLOBALS['use_error_exception'] = $orig_use_error_exception_val;
 
     /*
     Windows (DOS) 8.3 short paths (e.g. "HTACCE~1" = ".htaccess"). Example file info in such scenario:
