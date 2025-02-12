@@ -2423,7 +2423,7 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = n
     if (!is_array($userpermission)) {
         // We have been passed a specific type of administrator to find
         switch ($userpermission) {
-            case "USER_ADMIN";
+            case "USER_ADMIN":
                 $sql_approver_groups = '';
                 $sql_approver_groups_params = array();
                 global $usergroup_approval_mappings;
@@ -2445,10 +2445,10 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = n
 
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
                 $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup = ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'u', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'u', pg.permissions) <> 0)) and u.ref <> '' and u.approved = 1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . $sql_approver_groups, $sql_approver_groups_params);
-            return $notification_users_cache[$userpermissionindex];
+                return $notification_users_cache[$userpermissionindex];
             break;
 
-            case "RESOURCE_ACCESS";
+            case "RESOURCE_ACCESS":
             // Notify users who can grant access to resources, get all users in groups with R permissions without Rb permissions
                 $notification_users_cache[$userpermissionindex] =
                 ps_query("select u.ref, u.email from usergroup ug 
@@ -2461,26 +2461,26 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = n
                                 AND FIND_IN_SET(BINARY 'R', pg.permissions) <> 0 
                                 AND FIND_IN_SET(BINARY 'Rb', pg.permissions) = 0) 
                         AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
-            return $notification_users_cache[$userpermissionindex];
+                return $notification_users_cache[$userpermissionindex];
             break;
 
-            case "RESEARCH_ADMIN";
+            case "RESEARCH_ADMIN":
             // Notify research admins, get all users in groups with r permissions
                 $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'r', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'r', pg.permissions) <> 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
-            return $notification_users_cache[$userpermissionindex];
+                return $notification_users_cache[$userpermissionindex];
             break;
 
-            case "RESOURCE_ADMIN";
+            case "RESOURCE_ADMIN":
             // Get all users in groups with t and e0 permissions
                 $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 't', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 't', pg.permissions) <> 0)) AND (FIND_IN_SET(BINARY 'e0', ug.permissions) OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'e0', pg.permissions))) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
-            return $notification_users_cache[$userpermissionindex];
+                return $notification_users_cache[$userpermissionindex];
             break;
 
-            case "SYSTEM_ADMIN";
-            default;
+            case "SYSTEM_ADMIN":
+            default:
             // Get all users in groups with a permission (default if incorrect admin type has been passed)
                 $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'a', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'a', pg.permissions) <> 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
-            return $notification_users_cache[$userpermissionindex];
+                return $notification_users_cache[$userpermissionindex];
             break;
         }
     } else {
@@ -2729,6 +2729,31 @@ function checkperm_user_edit($user)
 
     // Return true if the target user we are checking is in one of the valid groups
     return in_array($editusergroup, $validgroups);
+}
+
+/**
+ * Check if the current user has sufficient permissions to log in as the specified user
+ *
+ * The regex used is to check if the a permission is present in the permission string of the target user
+ *
+ * @param  mixed $user   Either a user reference or user array
+ * @return bool
+ */
+function checkperm_login_as_user($user): bool
+{
+    if (!checkperm('u')) {    // does not have edit user permission
+        return false;
+    }
+    if (!is_array($user)) {       // allow for passing of user array or user ref to this function.
+        $user = get_user($user);
+    }
+
+    if (!checkperm("a") && preg_match("/(?:^|\\W|,)a(?:$|\\W|,)/", $user['permissions'])) {
+        // Target user has 'a' permission but current user does not
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -3512,7 +3537,7 @@ $set_processing_message_first_call = true;
 function set_processing_message(string $message)
 {
     global $userref,$userprocessing_messages,$set_processing_message_first_call;
-    if (PHP_SAPI === "cli") {
+    if (PHP_SAPI === "cli" ||  defined("API_CALL")) {
         // Messages don't work unless using browser
         return;
     }
@@ -3563,7 +3588,7 @@ function can_set_admin_usergroup(?int $new_usergroup): bool
     }
 
     $new_usergroup_permissions = $can_set_admin_usergroup_perms_array[$new_usergroup];
-    $new_usergroup_permissions = explode(',', str_replace(' ', '', $new_usergroup_permissions));
+    $new_usergroup_permissions = explode(',', str_replace(' ', '', (string) $new_usergroup_permissions));
     if (!in_array('a', $new_usergroup_permissions)) {
         // New usergroup doesn't have 'a' permission.
         return true;

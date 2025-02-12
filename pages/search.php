@@ -296,7 +296,7 @@ $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
 
 // After a batch edit, check if search has been instructed to check for resources in the selection collection that have 
 // fallen out of the results so should no longer be selected
-$check_selection_collection = getval("check_selection_collection", "") != "no";
+$check_selection_collection = getval("check_selection_collection", "no") == "yes";
 
 // Preserve selection on display layout change (not available for map view).
 $displaytypes = array('xlthumbs', 'thumbs', 'strip', 'list');
@@ -648,16 +648,24 @@ if($k=="" || $internal_share_access)
     </script>
     <?php
     }
-if($use_selection_collection && $check_selection_collection) {
-    // Clean up the user selection collection so that only resources in the current search can exist in the colleciton. 
-    $selection_collection = do_search('!collection'. $USER_SELECTION_COLLECTION);
-    $resource_not_in_search = array_diff(
-        array_column($selection_collection, 'ref'),
-        is_array($full_search_results)?array_column($full_search_results, 'ref'):[]
-    );
-    if (count($resource_not_in_search) > 0) {
-        collection_remove_resources($USER_SELECTION_COLLECTION, $resource_not_in_search);
+if($use_selection_collection) {
+
+    $resource_not_in_search = array();
+    
+    if($check_selection_collection) {
+        
+        // Clean up the user selection collection so that only resources in the current search can exist in the colleciton. 
+        $selection_collection = do_search('!collection'. $USER_SELECTION_COLLECTION);
+        $resource_not_in_search = array_diff(
+            array_column($selection_collection, 'ref'),
+            is_array($full_search_results)?array_column($full_search_results, 'ref'):[]
+        );
+
+        if (count($resource_not_in_search) > 0) {
+            collection_remove_resources($USER_SELECTION_COLLECTION, $resource_not_in_search);
+        }
     }
+
     ?>
     <script>
     <?php 
@@ -1693,10 +1701,14 @@ if (!hook("replacesearchheader")) # Always show search header now.
          * If there is a mix of resource_types in results, and there is a config option for a particular resource_type that overrides $annotate_enabled, then display of ResourcePanels in search.php is affected.
          * This line detects if $annotate_enabled == true in config, and ensures that all ResourcePanels have same height value 
          */
-        if ($annotate_enabled) 
-            {
+        if ($annotate_enabled)  {
             $annotate_enabled_adjust_size_all = true;
+            $show_annotation_count =  count(canSeeAnnotationsFields()) > 0;
+            if ($show_annotation_count) {
+                // Update the search results to include the annotation count
+                search_add_annotation_count($result);
             }
+        }
      
         # loop and display the results, unless map view
 

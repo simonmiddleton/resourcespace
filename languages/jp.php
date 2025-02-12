@@ -2978,3 +2978,6 @@ $lang["cannot_share-has_upload_share"] = 'このコレクションの非アッ�
 $lang["language-cy"] = 'ウェールズ語';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = '%applicationname へようこそ';
+
+$lang["language-hu"] = 'ハンガリー語';
+$lang["language-vi"] = 'ベトナム語';

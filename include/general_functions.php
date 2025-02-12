@@ -3705,7 +3705,8 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 }
 
 /**
-* Remove paragraph tags from start and end of text
+* Remove paragraph tags from start and end of text.
+* Inner paragraph tags are untouched
 *
 * @param string $text HTML string
 *
@@ -3713,7 +3714,11 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 */
 function strip_paragraph_tags(string $text): string
 {
-    return rtrim(ltrim($text, '<p>'), '</p>');
+    // Match either <p> exactly, or <p ... attributes> at the start of $text
+    // Match </p> exactly at the end of $text
+    // Everything else between is lazily matched across multiple lines, 
+    // so remains untouched
+    return preg_replace('/^<p\b[^>]*>(.*?)<\/p>$/s', '$1', $text);
 }
 
 /**

@@ -2831,3 +2831,6 @@ $lang["cannot_share-has_upload_share"] = 'Неможливо створити п
 $lang["language-cy"] = 'Валлійська';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Ласкаво просимо до %applicationname';
+
+$lang["language-hu"] = 'угорська';
+$lang["language-vi"] = 'В\'єтнамська';

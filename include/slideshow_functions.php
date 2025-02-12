@@ -62,7 +62,6 @@ function set_slideshow($ref, $resource_ref = null, $homepage_show = 1, $featured
         return $new_ref;
     }
 
-
     return false;
 }
 
@@ -88,7 +87,6 @@ function delete_slideshow($ref)
 
     // Clear cache
     clear_query_cache("slideshow");
-
 
     return true;
 }

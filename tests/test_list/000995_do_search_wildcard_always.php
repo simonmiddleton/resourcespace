@@ -53,14 +53,6 @@ if (count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != 
     return false;
 }
 
-// SUBTEST E
-// Do search for 'vwqnth' (should return 0 results)
-$results = do_search('vwqnth');
-if (is_array($results)) {
-    echo "ERROR - SUBTEST E\n";
-    return false;
-}
-
 $wildcard_always_applied = $wildcard_always_applied_cache;
 
 return true;

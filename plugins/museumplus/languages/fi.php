@@ -51,4 +51,4 @@ $lang["museumplus_error_invalid_association"]='Virheellinen moduulin liitos. Var
 $lang["museumplus_id_returns_multiple_records"]='Useita tietueita löydetty - syötä tekninen tunnus sen sijaan';
 $lang["museumplus_error_module_no_field_maps"]='Ei voida synkronoida tietoja MuseumPlus:sta. Syy: moduulilla \'%name\' ei ole määritetty kenttäkartoituksia.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
-$lang["plugin-museumplus-desc"]=' Mahdollistaa resurssin metatietojen poimimisen MuseumPlusista sen REST API:n (MpRIA) avulla.';
+$lang["plugin-museumplus-desc"]='Mahdollistaa resurssin metatietojen poimimisen MuseumPlusista sen REST API:n (MpRIA) avulla.';

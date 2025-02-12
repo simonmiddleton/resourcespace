@@ -802,7 +802,7 @@ $contact_sheet_preview_size = "500x500";
 // helvetica,times,courier (standard) and dejavusanscondensed for more Unicode support (but embedding/subsetting makes it slower).
 // There are also several other fonts included in the tcpdf lib (but not ResourceSpace), which provide unicode support
 // To embed more elaborate fonts, acquire the files from the TCPDF distribution or create your own using TCPDF utilities, and install them in the lib/html2pdf/vendor/tecnickcom/tcpdf/fonts folder.
-// If you encounter issues with chinese characters, use "arialunicid0" and make sure GhosScript has ArialUnicodeMS font (on Windows server, this should be there already)
+// If you encounter issues with Chinese characters, use "cid0cs" and make sure GhostScript has ArialUnicodeMS font (on Windows server, this should be there already)
 $contact_sheet_font = "helvetica";
 // Set font sizes for contactsheet
 $titlefontsize     = 20; // Contact Sheet Title
@@ -1446,7 +1446,7 @@ $top_nav_upload_user = false;
 $top_nav_upload_type = "batch"; // The upload type. Options are batch, ftp, local
 
 // Configure the maximum upload file size; this directly translates into upload's max_file_size if set
-// $upload_max_file_size = 50mb;
+// $upload_max_file_size = "50mb";
 
 // You can set the following line to ''  to disable chunking.
 $upload_chunk_size = '5mb';

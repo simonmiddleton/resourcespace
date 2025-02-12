@@ -474,9 +474,6 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'mysqli' => 'mysqli_init',
 ];
 
-const WINDOWS_SHELL_REDIRECT = '-w';
-const LINUX_SHELL_REDIRECT   = '>';
-
 // Chunking a list of IDs (with the highest ID length) in batches of this size should be well within the default max_allowed_packet size
 const SYSTEM_DATABASE_IDS_CHUNK_SIZE = 500;
 
@@ -908,6 +905,7 @@ $languages["es-AR"] = "Español (Argentina)";
 $languages["fi"] = "Suomi"; # Finnish
 $languages["fr"] = "Français"; # French
 $languages["hi"] = "आधुनिक मानक हिन्दी"; # Hindi
+$languages["hu"] = "Magyar"; # Hungarian
 $languages["hr"] = "Hrvatski"; # Croatian
 $languages["it"] = "Italiano"; # Italian
 $languages["jp"] = "日本語"; # Japanese
@@ -928,6 +926,7 @@ $languages["th"] = "ภาษาไทย"; # Thai
 $languages["tr"] = "Türkçe"; # Turkish
 $languages["uk"] = "українська мова"; # Ukranian
 $languages["ur"] = "اُردُو"; # Urdu
+$languages["vi"] = "Tiếng Việt"; # Vietnamese
 $languages["zh-CN"] = "简体字"; # Simplified Chinese
 
 # English stop words

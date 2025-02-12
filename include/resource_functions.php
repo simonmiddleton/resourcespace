@@ -2999,15 +2999,16 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
 
     # Now fetch field values ensuring that multiple node values are ordered correctly
     $field_value_sql =
-    "SELECT rn.resource, n.resource_type_field `field`, rn.node, n.name 
+    "SELECT rn.resource, n.resource_type_field `field`, rn.node, n.name, n.order_by, n.parent
         FROM resource_node rn
     INNER JOIN node n on n.ref = rn.node and rn.resource=?
     ORDER BY n.resource_type_field, n.order_by";
 
     $field_values = ps_query($field_value_sql, array("i", $ref));
 
-    $field_node_list = array();
-    $field_ref_list = array();
+    $field_node_list = [];
+    $field_ref_list = [];
+    $arr_field_nodes = []; // For later re-ordering
     $last_field = null;
 
     # Assemble comma separated lists of node names and refs to attach to the fields array
@@ -3021,6 +3022,13 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
             $field_ref_list[$this_field]['refs'] = $field_value['node'];
             $last_field = $this_field;
         }
+        $arr_field_nodes[$this_field][] = [
+            "ref" => $field_value['node'],
+            "resource_type_field" => $this_field,
+            "name" => $field_value['name'],
+            "parent" => $field_value['parent'],
+            "order_by" => $field_value['order_by'],
+        ];
     }
 
     # Attach the lists of node names and refs to the corresponding fields array entry
@@ -3094,8 +3102,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
                 && $fields[$n]['type'] != FIELD_TYPE_CATEGORY_TREE
                 && trim($fields[$n]['nodes'] ?? "") != ""
             ) {
-                $fieldnoderefs = explode(",", $fields[$n]['nodes']);
-                $fieldnodes = get_nodes_by_refs($fieldnoderefs);
+                $fieldnodes = $arr_field_nodes[$fields[$n]["ref"]];
                 if ((bool) $fields[$n]['automatic_nodes_ordering']) {
                     $fieldnodes = reorder_nodes($fieldnodes);
                 }
@@ -3735,6 +3742,12 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
     // Logs can sometimes contain confidential information and the user
     // looking at them must have admin permissions set
     if (!checkperm('v')) {
+        return array();
+    }
+
+    // If there is no resource ID passed and the filters are also empty then
+    // return empty array
+    if (!$resource && empty($filters)) {
         return array();
     }
 
@@ -4588,9 +4601,9 @@ function add_alternative_file($resource, $name, $description = "", $file_name = 
 
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
-
     ps_query(
-        "INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES (?, ?,now(), ?, ?, ?, ?, ?)",
+        "INSERT INTO resource_alt_files (resource, name, creation_date, description, file_name, file_extension, file_size, alt_type)
+              VALUES (?, ?, NOW(), ?, ?, ?, ?, ?)",
         [
         'i', $resource,
         's', $name,
@@ -4598,7 +4611,7 @@ function add_alternative_file($resource, $name, $description = "", $file_name = 
         's', $file_name,
         's', $file_extension,
         'i', $file_size,
-        's', $alt_type
+        's', $alt_type,
         ]
     );
     return sql_insert_id();
@@ -4700,19 +4713,40 @@ function get_alternative_file($resource, $ref)
  * Updates the details of an alternative file in the database.
  *
  * @param int $resource The resource ID associated with the alternative file.
- * @param int $ref The reference ID of the alternative file to update.
- * @return void
+ * @param int $ref      The reference ID of the alternative file to update.
+ * @param array $data   Array of data in name=>value format. If a column is to be left as is then it must not be included in the array
+ *
  */
-function save_alternative_file($resource, $ref)
+function save_alternative_file(int $resource, int $ref, array $data = []): void
 {
-    # Saves the 'alternative file' edit form back to the database
-    $name           = getval("name", "");
-    $description    = getval("description", "");
-    $alt_type       = getval("alt_type", "");
-    ps_query(
-        "UPDATE resource_alt_files SET name = ?,description = ?,alt_type = ? WHERE resource = ? AND ref = ?",
-        array("s",$name,"s",$description,"s",$alt_type,"i",$resource,"i",$ref)
-    );
+    $validcolumns = [
+        "name" => "s",
+        "description" => "s",
+        "alt_type" => "s",
+        "file_name" => "s",
+        "file_extension" => "s",
+        "file_size" => "i",
+        "unoconv" => "i",
+    ];
+    $setcolumns = [];
+    $setparams = [];
+    foreach ($validcolumns as $column => $type) {
+        if (isset($data[$column])) {
+            $setcolumns[] = $column;
+            $setparams[] = $type;
+            $setparams[] = $data[$column];
+        }
+    }
+    if (count($setcolumns) > 0) {
+        $setcolumnsql = implode(" = ?, ", $setcolumns) . " = ?";
+        $setparams = array_merge($setparams, ["i", $resource, "i", $ref]);
+        ps_query(
+            "UPDATE resource_alt_files
+                     SET $setcolumnsql
+                   WHERE resource = ? AND ref = ?",
+            $setparams
+        );
+    }
 }
 
 /**
@@ -7315,10 +7349,10 @@ function get_related_resources($ref)
  * @param bool  $nodeinfo               Get full node details?
  * @param bool  $skip_translation       Do not translate node name. Only relevant if $nodeinfo=false
  *
- * @return array Array of field options, either as a simple array or with full node details
+ * @return array|bool Array of field options, either as a simple array or with full node details
  *
  */
-function get_field_options(int $ref, bool $nodeinfo = false, bool $skip_translation = false): array
+function get_field_options(int $ref, bool $nodeinfo = false, bool $skip_translation = false)
 {
     global $FIXED_LIST_FIELD_TYPES, $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
@@ -7440,10 +7474,11 @@ function image_size_restricted_access($id)
 * Returns a list of fields with refs matching the supplied field refs.
 *
 * @param array $field_refs Array of field refs
+* @param bool  order_by_passed_refs Returns the array of fields in the order requested in $field_refs
 *
 * @return array
 */
-function get_fields($field_refs)
+function get_fields($field_refs, bool $order_by_passed_refs = false)
 {
     if (!is_array($field_refs)) {
         trigger_error("\$field_refs passed to get_fields() is not an array.");
@@ -7460,10 +7495,23 @@ function get_fields($field_refs)
          WHERE rtf.ref IN (" . ps_param_insert(count($field_refs)) . ")
       ORDER BY rtf.order_by", ps_param_fill($field_refs, "i"), "schema");
 
-    $return = array();
-    foreach ($fields as $field) {
-        if (metadata_field_view_access($field['ref'])) {
-            $return[] = $field;
+    $return = array();   
+
+    if ($order_by_passed_refs) {
+
+        $fields_array = array_column($fields, null, 'ref');
+
+        foreach ($field_refs as $field_ref) {
+            if (array_key_exists($field_ref, $fields_array) && metadata_field_view_access($field_ref)) {
+                $return[] = $fields_array[$field_ref];
+            }
+        }
+
+    } else {
+        foreach ($fields as $field) {
+            if (metadata_field_view_access($field['ref'])) {
+                $return[] = $field;
+            }
         }
     }
 
@@ -7515,13 +7563,26 @@ function get_OR_fields()
 * Returns the HTML necessary to represent a resource with the given extension when no image preview exists.
 *
 * @param string     $extension       File extension
+* @param int        $resource_type   Optional, the resource type of the resource, used to find an icon at the resource type level if an icon for this extension is not defined.
 *
 * @return string
 */
-function get_nopreview_html(string $extension): string
+function get_nopreview_html(string $extension, $resource_type = null): string
 {
     $extension = strtolower(trim($extension));
-    return "<i class='nopreview fa fa-solid " . (FONTAWESOME_EXTENSIONS[$extension] ?? FONTAWESOME_EXTENSIONS["default"]) . "'></i>";
+
+    if (isset(FONTAWESOME_EXTENSIONS[$extension])) {
+        // Use the icon set for this file extension
+        $icon = FONTAWESOME_EXTENSIONS[$extension];
+    } else {
+        // No icon for this specific extension Get default for this resource type and cache it.
+        $icon = ps_value("select icon value from resource_type where ref=?", ["i",$resource_type], "", "resourcetypeicon");
+        if ($icon == "") {
+            $default = FONTAWESOME_EXTENSIONS["default"];
+        }
+    }
+
+    return "<i class='nopreview fa fa-solid " . $icon . "'></i>";
 }
 
 /**
@@ -8094,7 +8155,7 @@ function get_resource_table_joins()
     if ($additional_joins) {
         $joins = array_merge($joins, $additional_joins);
     }
-    
+
     $joins = array_unique($joins);
     $n = 0;
     foreach ($joins as $join) {
@@ -8644,16 +8705,17 @@ function related_resource_pull(array $resource)
 /**
  * Get the largest available preview URL for the given resource and the given array of sizes
  *
- * @param array     $resource   Array of resource data from get_resource_data() or search results
- * @param int       $access     Resource access
- * @param array     $sizes      Array of size IDs to look through, in order of size. If not provied will use all sizes
- * @param bool      $watermark  Look for watermarked versions?
- * @param int       $page       Page to look for
+ * @param array     $resource               Array of resource data from get_resource_data() or search results
+ * @param int       $access                 Resource access
+ * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param bool      $watermark              Look for watermarked versions?
+ * @param int       $page                   Page to look for
+ * @param bool      $try_pulled_resource    Should we try to use an image from a pulled resource if the current resource doesn't have a usable preview
  *
  * @return array | bool         array, or false if no image is found
  *
  */
-function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1)
+function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1, bool $try_pulled_resource = true)
 {
     global $userref, $open_access_for_contributor;
     if (empty($sizes)) {
@@ -8667,14 +8729,6 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         $preview["height"] = $resource["thumb_height"];
         $preview["width"] = $resource["thumb_width"];
     } else {
-        if ((int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE) {
-            // If configured, try and use a preview from a related resource
-            $pullresource = related_resource_pull($resource);
-            if ($pullresource !== false) {
-                $resource = $pullresource;
-            }
-        }
-
         if ($access == -1) {
             $access = get_resource_access($resource);
         }
@@ -8720,6 +8774,15 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
                 unset($GLOBALS["use_error_exception"]);
                 break;
             }
+        }
+        if (!$validimage && (int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE && $try_pulled_resource) {
+            // If configured, try and use a preview from a related resource
+            $pullresource = related_resource_pull($resource);
+            if ($pullresource !== false) {
+                $resource = $pullresource;
+            }
+            $preview = get_resource_preview($resource, $sizes, $access, $watermark, $page, false);
+            $validimage = $preview !== false; 
         }
     }
     if (!$validimage) {
@@ -8865,4 +8928,21 @@ function acl_can_edit_resource_of_type(int $ref): bool
             checkperm("XE{$ref}")
             || checkperm("XE") && !checkperm("XE-{$ref}")
         );
+}
+
+function resource_is_template(int $ref): bool
+{
+    global $fstemplate_alt_threshold;
+    return $ref < $fstemplate_alt_threshold && $fstemplate_alt_threshold > 0;
+}
+
+/**
+ * Check if current user can upload a preview image
+ *
+ * @param int $ref  Resource ID
+ *
+ */
+function can_upload_preview_image(int $ref): bool
+{
+    return !resource_file_readonly($ref) && !checkperm("F*") && !checkperm("xupr") && !$GLOBALS['custompermshowfile'];
 }

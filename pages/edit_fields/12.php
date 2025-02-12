@@ -17,7 +17,7 @@ if (!isset($selected_nodes)) {
     }
 }
 
-$node_options = array_column($field['nodes'], 'name');
+$node_options = array_column($field['node_options'], 'name');
 $l = average_length($node_options);
 
 $cols = 10;
@@ -64,7 +64,7 @@ if (!isset($help_js)) {
 }
 
 if ($display_as_radiobuttons) {
-    $active_nodes = array_column(array_filter($field['nodes'], 'node_is_active'), 'ref');
+    $active_nodes = array_column(array_filter($field['node_options'], 'node_is_active'), 'ref');
     $field_ref_escaped = escape($field['ref']);
     ?>
 
@@ -75,7 +75,7 @@ if ($display_as_radiobuttons) {
                 $row = 1;
                 $col = 1;
 
-                foreach ($field['nodes'] as $node) {
+                foreach ($field['node_options'] as $node) {
                     if ($col > $cols) {
                         $col = 1;
                         $row++; ?>
@@ -140,7 +140,7 @@ if ($display_as_radiobuttons) {
                 $row = 1;
                 $col = 1;
 
-                foreach ($field['nodes'] as $node) {
+                foreach ($field['node_options'] as $node) {
                     if ($col > $cols) {
                         $col = 1;
                         $row++;
@@ -190,7 +190,7 @@ if ($display_as_radiobuttons) {
         <?php echo ($autoupdate) ? 'onChange="UpdateResultCount();"' : ''; ?>>
         <option value=""></option>
         <?php
-        foreach ($field['nodes'] as $node) {
+        foreach ($field['node_options'] as $node) {
             if ('' != trim($node['name'])) {
                 ?>
                 <option

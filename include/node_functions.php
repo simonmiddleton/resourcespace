@@ -941,25 +941,10 @@ function node_field_options_override(&$field, $resource_type_field = null)
 
     migrate_resource_type_field_check($field);
 
-    $field['nodes'] = array();          // setup new nodes associate array to be used by node-aware field renderers
-    $field['node_options'] = array();   // setup new node options list for render of flat fields such as drop down lists (saves another iteration through nodes to grab names)
-
-    if ($field['type'] == FIELD_TYPE_CATEGORY_TREE) {
-        $category_tree_nodes = get_nodes($field['ref'], null, false);
-        if (count($category_tree_nodes) > 0) {
-            foreach ($category_tree_nodes as $node) {
-                $field['nodes'][$node['ref']] = $node;
-            }
-        }
-    } else // normal comma separated options used for checkboxes, selects, etc.
-        {
-        $nodes = get_nodes($field['ref'], null, false, null, null, null, null, (bool)$field['automatic_nodes_ordering']);
-        if (count($nodes) > 0) {
-            foreach ($nodes as $node) {
-                $field['nodes'][$node['ref']] = $node;
-                array_push($field['node_options'], $node['name']);
-            }
-        }
+    $field['node_options'] = [];
+    $nodes = get_nodes($field['ref'], null, false, null, null, null, null, (bool)$field['automatic_nodes_ordering']);
+    foreach ($nodes as $node) {
+        $field['node_options'][$node['ref']] = $node;
     }
     return true;
 }

@@ -74,7 +74,11 @@ for ($n=0;$n<count($fields);$n++)
 # Also build a quicksearch string.
 
 $quicksearch    = refine_searchstring($quicksearch);
-$keywords       = split_keywords($quicksearch,false,false,false,false,true);
+if (preg_match('/^[^\\s]+$/',$quicksearch) && ($wildcard_always_applied || strpos($quicksearch,"*") !== false)) {
+    $keywords   = [$quicksearch];
+} else {
+    $keywords   = split_keywords($quicksearch,false,false,false,false,true);
+}
 $set_fields     = array();
 $simple         = array();
 $searched_nodes = array();
@@ -245,16 +249,39 @@ var categoryTreeChecksArray = [];
 
 <?php if (!hook("searchbarreplace")) { ?>
     
-    <form id="simple_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
+    <form
+        id="simple_search_form"
+        method="post"
+        action="<?php echo $baseurl; ?>/pages/search.php"
+        onSubmit="return CentralSpacePost(this,true);"
+    >
     <?php
     generateFormToken("simple_search_form");
 
     if(!hook("replacesearchbox"))
         {
         ?>
-        <input id="ssearchbox" name="search" type="text" class="SearchWidth" value="<?php echo escape(stripslashes($quicksearch))?>" placeholder="<?php echo escape($lang["searchbutton"]); ?>" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
-        <input id="ssearchhiddenfields" name="ssearchhiddenfields" type="hidden" value="<?php echo escape($ssearchhiddenfields); ?>">
-        <button class="fas fa-search search-icon" type="submit" alt="<?php echo escape($lang['searchbutton']); ?>" title="<?php echo escape($lang['searchbutton']); ?>"></button>
+        <input 
+            id="ssearchbox"
+            name="search"
+            type="text"
+            class="SearchWidth"
+            value="<?php echo escape(stripslashes($quicksearch)); ?>"
+            placeholder="<?php echo escape($lang["searchbutton"]); ?>"
+            aria-label="<?php echo escape($lang["simplesearch"]); ?>"
+        >
+        <input
+            id="ssearchhiddenfields"
+            name="ssearchhiddenfields"
+            type="hidden"
+            value="<?php echo escape($ssearchhiddenfields); ?>"
+        >
+        <button
+            class="fas fa-search search-icon"
+            type="submit"
+            alt="<?php echo escape($lang['searchbutton']); ?>"
+            title="<?php echo escape($lang['searchbutton']); ?>"
+        ></button>
         <script>
         <?php
         $autocomplete_src = '';
@@ -427,7 +454,10 @@ if (!$basic_simple_search && !$hide_search_resource_types)
         <?php if (((count($rt)==1) && ($rt[0]=="")) || ($restypes=="Global") || (in_array($types[$n]["ref"],$rt))) 
             {?> checked="checked"<?php } ?> 
             onClick="SimpleSearchFieldsHideOrShow(true);<?php echo $resetTickAllCall;?>">
-        <label for="TickBox<?php echo $types[$n]["ref"]; ?>">&nbsp;<?php echo escape($types[$n]["name"]) ?></label>
+        <label for="TickBox<?php echo $types[$n]["ref"]; ?>"><i class="fa fa-fw <?php echo escape($types[$n]["icon"]!=""?$types[$n]["icon"]:FONTAWESOME_EXTENSIONS["default"]) ?>"></i>    
+                <?php
+                
+            echo "&nbsp;" . escape($types[$n]["name"]) ?></label>
     </div>
     <?php 
     }
@@ -915,7 +945,7 @@ elseif($restypes=='')
   <br />
   <?php hook("searchbarbeforebottomlinks"); ?>
   <?php if (! $disable_geocoding) { ?><p><i aria-hidden="true" class="fa fa-fw fa-globe"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><?php echo escape($lang["geographicsearch"]) ?></a></p><?php } ?>
-  <?php if (! $advancedsearch_disabled) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo escape($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
+  <?php if (! $advancedsearch_disabled) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo strip_tags_and_attributes($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
 
   <?php hook("searchbarafterbuttons"); ?>
 

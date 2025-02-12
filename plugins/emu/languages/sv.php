@@ -35,4 +35,4 @@ $lang["emu_upload_nodata"]='Ingen EMu-data hittades för detta IRN:';
 $lang["emu_nodata_returned"]='Ingen EMu-data hittades för det angivna IRN-numret.';
 $lang["emu_createdfromemu"]='Skapad från EMU-tillägg';
 $lang["emu_upload_emu_field_label"]='EMu IRN';
-$lang["plugin-emu-desc"]=' Tillåter att resursmetadata extraheras från EMu-databasen.';
+$lang["plugin-emu-desc"]='Tillåter att resursmetadata extraheras från EMu-databasen.';

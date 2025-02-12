@@ -15,4 +15,4 @@ $lang["wordpress_sso_use_wp_login"]='Anmelden mit einem WordPress-Konto';
 $lang["wordpress_sso_retry"]='Hier klicken, um erneut anzumelden zu versuchen';
 $lang["origin_wordpress_sso"]='Wordpress SSO-Plugin';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
-$lang["plugin-wordpress_sso-desc"]=' Ermöglicht Single Sign-On mit Wordpress-Installation';
+$lang["plugin-wordpress_sso-desc"]='Ermöglicht Single Sign-On mit Wordpress-Installation';

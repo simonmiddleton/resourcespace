@@ -281,7 +281,7 @@ for ($i = 0; $i < count($simplesaml_groupmap) + 1; $i++) {
     }
     ?>
 <tr id='<?php echo $rowid; ?>'>
-   <td><input type='text' name='samlgroup[]' value='<?php echo $thegroup['samlgroup']; ?>' /></td>
+   <td><input type='text' name='samlgroup[]' value='<?php echo escape($thegroup['samlgroup']); ?>' /></td>
    <td><select name='rsgroup[]'><option value=''></option>
     <?php
     foreach ($rsgroups as $rsgroup) {
@@ -293,7 +293,7 @@ for ($i = 0; $i < count($simplesaml_groupmap) + 1; $i++) {
     }
     ?></select>
     </td>
-    <td><input type='text' name='priority[]' value='<?php echo $thegroup['priority']; ?>' /></td>
+    <td><input type='text' name='priority[]' value='<?php echo escape($thegroup['priority']); ?>' /></td>
 </tr>
 <?php } ?>
 </table>

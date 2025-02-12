@@ -2845,3 +2845,6 @@ $lang["cannot_share-has_upload_share"] = 'इस संग्रह के ग�
 $lang["language-cy"] = 'वेल्श';
 $lang["language-th"] = 'थाई';
 $lang["welcome_generic"] = '%applicationname में आपका स्वागत है';
+
+$lang["language-vi"] = 'वियतनामी';
+$lang["language-hu"] = 'हंगेरियन';

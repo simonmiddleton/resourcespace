@@ -15,4 +15,4 @@ $lang["wordpress_sso_use_wp_login"]='Iniciar sesión usando una cuenta de WordPr
 $lang["wordpress_sso_retry"]='Haga clic aquí para intentar iniciar sesión nuevamente';
 $lang["origin_wordpress_sso"]='Plugin de inicio de sesión único (SSO) para Wordpress';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
-$lang["plugin-wordpress_sso-desc"]=' Permite inicio de sesión único con instalación de Wordpress';
+$lang["plugin-wordpress_sso-desc"]='Permite inicio de sesión único con instalación de Wordpress';

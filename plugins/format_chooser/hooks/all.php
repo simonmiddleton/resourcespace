@@ -124,15 +124,17 @@ function HookFormat_chooserAllSize_is_available($resource, $path, $size)
 
 function HookFormat_chooserAllReplacedownloadextension($resource, $extension)
     {
-    global $format_chooser_output_formats, $job_ext;
+    global $format_chooser_output_formats, $job_ext, $offline_job_in_progress;
 
     $inputFormat = $resource['file_extension'];
 
-    if (!supportsInputFormat($inputFormat))
-        {
+    if (
+        !supportsInputFormat($inputFormat) 
+        || (!isset($job_ext) && $offline_job_in_progress)
+        ) {
         # Download the original file for this resource
         return $inputFormat;
-        }
+    }
         
     $reqext = (isset($job_ext) && $job_ext != "") ? $job_ext : getval("ext",getDefaultOutputFormat($inputFormat)); 
     $ext = strtoupper($reqext);
@@ -147,9 +149,12 @@ function HookFormat_chooserAllReplacedownloadextension($resource, $extension)
 function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
         $fileExists)
     {
-    if (!supportsInputFormat($resource['file_extension']))
+
+    $original_resource_path = get_resource_path($resource['ref'], true, '', false, $resource['file_extension'], -1, 1, false, '', -1);
+
+    if (!supportsInputFormat($resource['file_extension']) || !file_exists($original_resource_path))
         {
-        # Do not replace files we do not support
+        # Do not replace files we do not support and skip files that do not have an original file
         return false;
         }
 
@@ -168,15 +173,15 @@ function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
         }
 
     $target = $baseDirectory . '/' . get_download_filename($resource['ref'],$size,-1,$ext);
-    if (!file_exists($target)) {
-        return false;
-    }
     $format = getImageFormat($size);
     $width = (int)$format['width'];
     $height = (int)$format['height'];
 
     set_time_limit(0);
     convertImage($resource, 1, -1, $target, $width, $height, $profile);
+    if (!file_exists($target)) {
+        return false;
+    }
     return $target;
     }
 

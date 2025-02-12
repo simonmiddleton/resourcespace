@@ -2953,3 +2953,6 @@ $lang["cannot_share-has_upload_share"] = 'Não é possível criar compartilhamen
 $lang["language-cy"] = 'Galês';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Bem-vindo ao %applicationname';
+
+$lang["language-hu"] = 'Húngaro';
+$lang["language-vi"] = 'Vietnamese';

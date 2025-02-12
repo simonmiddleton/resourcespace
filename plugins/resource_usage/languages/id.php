@@ -13,4 +13,4 @@ $lang["delete_usage"]='Hapus penggunaan';
 $lang["resource_usage_configuration"]='Konfigurasi penggunaan sumber daya';
 $lang["resource_usage_mediums"]='Daftar opsi penggunaan yang tersedia (dipisahkan dengan koma)';
 $lang["plugin-resource_usage-title"]='Penggunaan Sumber Daya';
-$lang["plugin-resource_usage-desc"]=' Menambahkan kemampuan untuk mencatat penggunaan sumber daya melalui halaman tampilan sumber daya';
+$lang["plugin-resource_usage-desc"]='Menambahkan kemampuan untuk mencatat penggunaan sumber daya melalui halaman tampilan sumber daya';

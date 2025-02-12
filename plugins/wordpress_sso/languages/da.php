@@ -15,4 +15,4 @@ $lang["wordpress_sso_use_wp_login"]='Log ind ved hjælp af WordPress-kontoen';
 $lang["wordpress_sso_retry"]='Klik her for at forsøge at logge ind igen';
 $lang["origin_wordpress_sso"]='Wordpress SSO-plugin';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
-$lang["plugin-wordpress_sso-desc"]=' Tillader Single Sign On med Wordpress installation';
+$lang["plugin-wordpress_sso-desc"]='Tillader Single Sign On med Wordpress installation';

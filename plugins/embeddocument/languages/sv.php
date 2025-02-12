@@ -1,4 +1,5 @@
 <?php
+
 # Swedish
 # Language File for the EmbedDocument Plugin
 # Updated by Henrik Frizén 20131024 for svn r4998
@@ -18,6 +19,6 @@ $lang["embeddocument_heading"] = "Bädda in dokument – inställningar";
 $lang["embeddocument_specify_resourcetype"] = "Ange materialtypen som verktyget <b>Bädda in</b> ska visas för.";
 $lang["embeddocument_document_resourcetype"] = "Dokumentmaterialtyp:";
 
-$lang["embeddocument_embed_share"]='Bädda in dokument';
-$lang["plugin-embeddocument-title"]='Bädda in dokument';
-$lang["plugin-embeddocument-desc"]='Ger en funktion för att generera HTML för inbäddningsbara dokumentförhandsvisningar på externa webbplatser.';
+$lang["embeddocument_embed_share"] = 'Bädda in dokument';
+$lang["plugin-embeddocument-title"] = 'Bädda in dokument';
+$lang["plugin-embeddocument-desc"] = 'Ger en funktion för att generera HTML för inbäddningsbara dokumentförhandsvisningar på externa webbplatser.';

@@ -2825,3 +2825,6 @@ $lang["language-uk"] = 'Ukrainian';
 $lang["client-encoding"] = '(client-encoding: %encoding)';
 $lang["map_tfneighbourhood"] = 'Cymdogaeth';
 $lang["all__emailcontactadmin"] = 'Os gwelwch yn dda, cyfieithwch: <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+
+$lang["language-vi"] = 'Vietnamese';
+$lang["language-hu"] = 'Hungarian';

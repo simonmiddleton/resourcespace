@@ -50,4 +50,4 @@ $lang["museumplus_error_invalid_association"]='Ugyldig modultilknytning. Vennlig
 $lang["museumplus_id_returns_multiple_records"]='Flere poster funnet - vennligst skriv inn teknisk ID i stedet';
 $lang["museumplus_error_module_no_field_maps"]='Kan ikke synkronisere data fra MuseumPlus. Årsak: modulen \'%name\' har ingen feltavbildninger konfigurert.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
-$lang["plugin-museumplus-desc"]=' Tillater at ressursmetadata kan hentes fra MuseumPlus ved bruk av dens REST API (MpRIA).';
+$lang["plugin-museumplus-desc"]='Tillater at ressursmetadata kan hentes fra MuseumPlus ved bruk av dens REST API (MpRIA).';

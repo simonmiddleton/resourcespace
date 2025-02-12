@@ -131,15 +131,15 @@ $emu_rs_mappings_html = "
 
 $metadata_fields = get_resource_type_fields('', 'title, name');
 
-foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
+foreach($emu_rs_mappings as $emu_rs_mapping => $emu_module_columns)
     {
     foreach($emu_module_columns as $emu_module_column => $emu_rs_field)
         {
-        $row_id = 'row_' . escape("{$emu_module}_{$emu_module_column}");
+        $row_id = 'row_' . escape("{$emu_rs_mapping}_{$emu_module_column}");
 
         $emu_rs_mappings_html .= "
         <tr id ='{$row_id}'>
-            <td><input type='text' name='emu_module[]' value='{$emu_module}'></td>
+            <td><input type='text' name='emu_module[]' value='{$emu_rs_mapping}'></td>
             <td><input type='text' name='emu_column[]' value='{$emu_module_column}'></td>
             <td>
                 <select name='rs_field[]' style='width: 300px'>

@@ -15,4 +15,4 @@ $lang["wordpress_sso_use_wp_login"]='Prijava korištenjem WordPress računa';
 $lang["wordpress_sso_retry"]='Kliknite ovdje kako biste pokušali ponovno se prijaviti';
 $lang["origin_wordpress_sso"]='Wordpress SSO dodatak';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
-$lang["plugin-wordpress_sso-desc"]=' Omogućuje jedinstvenu prijavu s Wordpress instalacijom';
+$lang["plugin-wordpress_sso-desc"]='Omogućuje jedinstvenu prijavu s Wordpress instalacijom';

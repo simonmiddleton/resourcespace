@@ -3081,3 +3081,6 @@ $lang["cannot_share-has_upload_share"] = 'Tämän kokoelman ei-latausjakoja ei v
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Tervetuloa %applicationname';
+
+$lang["language-vi"] = 'Vietnamese';
+$lang["language-hu"] = 'Unkarilainen';

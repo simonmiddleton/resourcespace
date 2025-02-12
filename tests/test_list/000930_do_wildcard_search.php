@@ -1,7 +1,7 @@
 <?php
 
 command_line_only();
-
+$wildcard_always_applied_cache = $wildcard_always_applied;
 
 // Check wildcard search e.g. 'sam*' and 'super*'
 
@@ -65,5 +65,60 @@ if (
 ) {
     return false;
 }
+
+$test_cases = [
+    ["search" => "plant", "node_value" => "plant"],
+    ["search" => "a3ewd44a43-a80eha-a464t0-aba24r*", "node_value" => "a3ewd44a43-a80eha-a464t0-aba24r-acf2b011a0763w"],
+    ["search" => "ab123_*.jpg", "node_value" => "ab123_junk.jpg", "field" => 51],
+    ["search" => "title:book*", "node_value" => "booking form", "field" => 8],
+    ["search" => "originalfilename:dog_photo-1.jpg", "node_value" => "dog_photo-1.jpg", "field" => 51],
+    ["search" => "title:pumpkin.patch", "node_value" => "pumpkin.patch", "field" => 8],
+    ["search" => "title:up-at-em", "node_value" => "up-at-em", "field" => 8],
+    ];
+
+foreach ($test_cases as $case) {
+    $wildcard_always_applied = true;
+    if (!test_wildcard_search($case["search"], $case["node_value"], $case["field"] ?? 8)) {
+        echo "ERROR - search: " . $case["search"];
+        return false;
+    }
+}
+
+function test_wildcard_search(string $search, string $node_value, int $field): bool
+{
+    global $wildcard_always_applied;
+    $resource = create_resource(1, 0);
+    update_field($resource, $field, $node_value);
+    $success = 0;
+
+    for ($n = 0; $n <= 1; $n++) {
+        $wildcard_always_applied = !$wildcard_always_applied;
+        $results = do_search($search);
+        if (!is_array($results)) {
+            return false;
+        }
+        foreach ($results as $result) {
+            if ($result['ref'] == $resource) {
+                $success++;
+                break;
+            }
+        }
+    }
+
+    return $success > 1;
+}
+
+# Test case for keywords search where word part is less than 3 characters and so not in full text index.
+# Wildcard search for "look up above" should be full text index for "look" and "above" but use LIKE for "up".
+$resource = create_resource(1, 0);
+update_field($resource, 12, "look up above");
+$result = do_search("look up above");
+if (!is_array($result) || count($result) === 0) {
+    echo "Search failed for short word - ";
+    return false;
+}
+
+// teardown
+$wildcard_always_applied = $wildcard_always_applied_cache;
 
 return true;

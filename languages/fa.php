@@ -2839,3 +2839,6 @@ $lang["cannot_share-has_upload_share"] = 'اشتراک‌های غیر آپلو�
 $lang["language-cy"] = 'ولزی';
 $lang["language-th"] = 'تایلندی';
 $lang["welcome_generic"] = 'به %applicationname خوش آمدید';
+
+$lang["language-hu"] = 'مجاری';
+$lang["language-vi"] = 'ویتنامی';

@@ -164,7 +164,7 @@ if(
                             $deleted_proposed_value = implode(
                                 ', ',
                                 array_intersect_key(
-                                    array_column($proposefields[$n]['nodes'], 'translated_name', 'ref'),
+                                    array_column($proposefields[$n]['node_options'], 'translated_name', 'ref'),
                                     array_flip(array_filter(explode(', ', $proposed_change['value'])))
                                 )
                             );
@@ -383,7 +383,7 @@ if(!$editaccess)
     else
         {
         # Show the no-preview icon
-        echo get_nopreview_html((string) $resource["file_extension"]);
+        echo get_nopreview_html((string) $resource["file_extension"], $resource["resource_type"]);
         }
     ?>
 

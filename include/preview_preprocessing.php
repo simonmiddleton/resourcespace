@@ -185,45 +185,34 @@ if (($extension == "cr2" || $extension == "nef" || $extension == "dng" || $exten
             ($extension == "dng" && $dng_thumb_extract) ||
             ($extension == "rw2" && $rw2_thumb_extract) ||
             ($extension == "raf" && $raf_thumb_extract) ||
-            ($extension == 'arw' && $arw_thumb_extract)
+            ($extension == "arw" && $arw_thumb_extract)
         ) &&
         $exiftool_fullpath != false
     ) {
-            // previews are stored in a couple places, and some nef files have large previews in -otherimage
-        if ($extension == "rw2") {
-            $bin_tag = " -jpgfromraw ";
-        }
-        if ($extension == "nef") {
-            $bin_tag = " -otherimage ";
-        }
-        if ($extension == "cr2" || $extension == "dng" || $extension == "raf" || 'arw' == $extension) {
-            $bin_tag = " -previewimage ";
+        
+        // Run command to output all previews in order of binary data size
+        $cmd_preview_list = $exiftool_fullpath . " %%FILE%% -preview:all";
+        $output_preview = run_command($cmd_preview_list, false, ['%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
+
+        if (strpos($output_preview, "Jpg From Raw") === 0) {
+            $bin_tag = "-jpgfromraw";
+        } elseif (strpos($output_preview, "Other Image") === 0) {
+            $bin_tag = "-otherimage";
+        } elseif (strpos($output_preview, "Preview Image") === 0) {
+            $bin_tag = "-previewimage";
+        } else {
+            $bin_tag = "-thumbnailimage";
         }
 
-            // Attempt extraction. Replaced ">" with -w since this has been seen to fail on some Windows servers
-            $cmd = $exiftool_fullpath . ' -b ' . $bin_tag . ' ' . escapeshellarg($file) . " ";
-            $cmd .= ($GLOBALS["config_windows"] ? WINDOWS_SHELL_REDIRECT : LINUX_SHELL_REDIRECT) . " %d%f.jpg";
-            $wait = run_command($cmd);
-            $extractedpreview = preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
+        // Attempt extraction
+        $cmd = $exiftool_fullpath . " -b %%BIN_TAG%% %%FILE%% -w %d%f.jpg";
+        $wait = run_command($cmd, false, ['%%FILE%%'    => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+                                          '%%BIN_TAG%%' => new CommandPlaceholderArg($bin_tag, [CommandPlaceholderArg::class, 'alwaysValid']),                                 
+                                         ]);
+        $extractedpreview = preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
+        
         if ($target != $extractedpreview && file_exists($extractedpreview)) {
             rename($extractedpreview, $target);
-        }
-
-        // check for nef -otherimage failure
-        if ($extension == "nef" && !filesize_unlimited($target) > 0) {
-            if (file_exists($target)) {
-                unlink($target);
-            }
-
-            $bin_tag = " -previewimage ";
-            //2nd attempt
-            $cmd = $exiftool_fullpath . ' -b ' . $bin_tag . ' ' . escapeshellarg($file) . " ";
-            $cmd .= ($GLOBALS["config_windows"] ? WINDOWS_SHELL_REDIRECT : LINUX_SHELL_REDIRECT) . " %d%f.jpg";
-            $wait = run_command($cmd);
-            $extractedpreview = preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
-            if ($target != $extractedpreview && file_exists($extractedpreview)) {
-                rename($extractedpreview, $target);
-            }
         }
 
         // NOTE: in case of failures, other suboptimal possibilities
@@ -242,8 +231,12 @@ if (($extension == "cr2" || $extension == "nef" || $extension == "dng" || $exten
             if ($orientation != 0) {
                 $mogrify_fullpath = get_utility_path("im-mogrify");
                 if ($mogrify_fullpath != false) {
-                    $command = $mogrify_fullpath . ' -rotate +' . $orientation . ' ' . $target;
-                    $wait = run_command($command);
+                    $command = $mogrify_fullpath . ' -rotate +%%ORIENTATION%% %%TARGET%%';
+                    $cmdparams = [
+                        "%%ORIENTATION%%" => new CommandPlaceholderArg($orientation, 'is_positive_int_loose'),
+                        "%%TARGET%%"      => new CommandPlaceholderArg($target, 'is_valid_rs_path')
+                    ];
+                    $wait = run_command($command, false, $cmdparams);
                 }
             }
             $newfile = $target;
@@ -767,24 +760,30 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
         debug("PDF multi page preview generation starting", RESOURCE_LOG_APPEND_PREVIOUS);
         $preview_preprocessing_success = false;
 
-     # For EPS/PS/PDF files, use GS directly and allow multiple pages.
-     # EPS files are always single pages:
+        # For EPS/PS/PDF files, use GS directly and allow multiple pages.
+        # EPS files are always single pages:
         if (in_array($extension, ["eps","ai","ps"]) || !$generateall) {
             $pdf_pages = 1;
         }
+
         $resolution = $pdf_resolution;
 
-     # Get pre image dimensions
-        $pre_size = ps_query("select width,height from preview_size where id='pre'");
+        # Get preview sizes from DB
+        $preview_sizes = get_all_image_sizes(true);
 
-     # Get scr image dimensions
-        $scr_size = ps_query("select width,height from preview_size where id='scr'");
+        $pre_size = array_values(array_filter($preview_sizes, function ($var) {
+            return $var['id'] == 'pre';
+        }));
+
+        $scr_size = array_values(array_filter($preview_sizes, function ($var) {
+            return $var['id'] == 'scr';
+        }));
 
         $pre_width  = $pre_size[0]['width'];
         $pre_height = $pre_size[0]['height'];
 
-     # Since scr is not an application required size we can't assume there's a record for it
-     # so fallback to pre dimensions
+        # Since scr is not an application required size we can't assume there's a record for it
+        # so fallback to pre dimensions
         if (empty($scr_size)) {
             $scr_width  = $pre_size[0]['width'];
             $scr_height = $pre_size[0]['height'];
@@ -899,14 +898,19 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                 $dUseCIEColor = "";
             }
 
+            $cmdparams['%%RESOLUTION%%']    = new CommandPlaceholderArg((int) $resolution, 'is_positive_int_loose');
+            $cmdparams["%%TARGET%%"]        = new CommandPlaceholderArg($target, 'is_safe_basename');   
+            $cmdparams["%%PAGENUM%%"]       = new CommandPlaceholderArg($n, 'is_positive_int_loose');
+            $cmdparams["%%SOURCE%%"]        = new CommandPlaceholderArg($file, 'is_valid_rs_path');
 
             if ($extension == "eps" && in_array(strtolower($extension), $preview_keep_alpha_extensions)) {
-                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
-            } else {
-                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=" . $imagemagick_quality . " -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
+                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r%%RESOLUTION%% ".$dUseCIEColor." -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=%%TARGET%% -dFirstPage=%%PAGENUM%% -dLastPage=%%PAGENUM%% -dEPSCrop -dUseCropBox %%SOURCE%%";
+            } else {                
+                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r%%RESOLUTION%% ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=%%QUALITY%% -sOutputFile=%%TARGET%% -dFirstPage=%%PAGENUM%% -dLastPage=%%PAGENUM%% -dEPSCrop -dUseCropBox %%SOURCE%%";
+                $cmdparams["%%QUALITY%%"] = new CommandPlaceholderArg($imagemagick_quality, 'is_positive_int_loose');
             }
         
-            $output = run_command($gscommand2);
+            $output = run_command($gscommand2, false, $cmdparams);
 
             # Stop trying when after the last page
             if (strstr($output, 'FirstPage > LastPage')) {

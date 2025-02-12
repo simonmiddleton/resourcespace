@@ -2838,3 +2838,6 @@ $lang["cannot_share-has_upload_share"] = 'اس مجموعہ کے غیر اپ ل�
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'تھائی';
 $lang["welcome_generic"] = '%applicationname میں خوش آمدید';
+
+$lang["language-hu"] = 'Hungarian';
+$lang["language-vi"] = 'Vietnamese';

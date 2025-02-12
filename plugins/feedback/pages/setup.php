@@ -111,11 +111,11 @@ include "../../../include/header.php";
 
     <p>
 <?php echo escape($lang["feedback_text-html"]); ?><br/>
-   <textarea rows=3 cols=50 style="width:600px;" name="text_<?php echo $n?>"><?php echo $feedback_questions[$n]["text"]; ?></textarea>
+   <textarea rows=3 cols=50 style="width:600px;" name="text_<?php echo $n?>"><?php echo escape($feedback_questions[$n]["text"]); ?></textarea>
    </p>
     
     <p><?php echo escape($lang["feedback_options-comma_separated"]); ?> <br />
-    <textarea rows=2 cols=50 style="width:600px;" name="options_<?php echo $n?>"><?php echo $feedback_questions[$n]["options"]; ?></textarea>
+    <textarea rows=2 cols=50 style="width:600px;" name="options_<?php echo $n?>"><?php echo escape($feedback_questions[$n]["options"]); ?></textarea>
     </p>
    
     <hr />

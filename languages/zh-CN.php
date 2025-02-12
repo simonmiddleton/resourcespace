@@ -3046,3 +3046,6 @@ $lang["cannot_share-has_upload_share"] = '由于此集合当前存在上传共�
 $lang["language-cy"] = '威尔士语';
 $lang["language-th"] = '泰语';
 $lang["welcome_generic"] = '欢迎使用%applicationname';
+
+$lang["language-hu"] = '匈牙利语';
+$lang["language-vi"] = '越南语';
