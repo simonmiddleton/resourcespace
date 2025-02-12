@@ -1214,14 +1214,27 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
         // UPLOAD
         if(getval('upload_' . $config_name, '') !== '' && enforcePostRequest(false))
             {
+            die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
             if(isset($_FILES[$config_name]['tmp_name']) && is_uploaded_file($_FILES[$config_name]['tmp_name']))
                 {
-                $uploaded_file_pathinfo  = pathinfo($_FILES[$config_name]['name']);
-                $uploaded_file_extension = $uploaded_file_pathinfo['extension'];
+                // $uploaded_file_pathinfo  = pathinfo($_FILES[$config_name]['name']); #todo: delete after WIP
+                // $uploaded_file_extension = $uploaded_file_pathinfo['extension']; #todo: delete after WIP
+                $uploaded_file_extension = parse_filename_extension($_FILES[$config_name]['name']);
                 $uploaded_filename       = sprintf('%s/%s.%s', $file_server_location, $config_name, $uploaded_file_extension);
                 // We add a placeholder for storage_url so we can reach the file easily 
                 // without storing the full path in the database
                 $saved_filename          = sprintf('[storage_url]/%s/%s.%s', $file_location, $config_name, $uploaded_file_extension);
+
+                $process_file_upload = process_file_upload(
+                    $_FILES[$config_name],
+                    new SplFileInfo($uploaded_filename),
+                    ['allow_extensions' => $valid_extensions]
+                );
+
+                if (!$process_file_upload['success']) {
+                    unset($uploaded_filename);
+                    // todo: try and handle errors somehow
+                }
 
                 if(is_banned_extension($uploaded_file_extension))
                     {
