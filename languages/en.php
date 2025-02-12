@@ -1107,7 +1107,7 @@ $lang["contactsheetconfiguration"] = "Contact sheet configuration";
 $lang["contactsheet_data_field_value_limit"] = "Maximum characters per field";
 $lang["contactsheet_data_toolong"] = "There is too much data to fit on one page. Please reduce the maximum characters per field, the amount of fields shown or choose an alternative page view";
 $lang["thumbnails"] = "Thumbnails";
-$lang["contactsheetintrotext"] = "Please select the configuration options you'd like for your contact sheet PDF. The preview will update automatically when you change your options, unless you change the order of resources in the collection, in which case you'll need to press the \"Preview\" button to update.<br />When you're ready, press \"Create\" to generate and download your contact sheet PDF.";
+$lang["contactsheetintrotext"] = "Please select the configuration options you'd like for your contact sheet PDF. The preview will update automatically when you change your options. If you change the selected metadata fields or the order of resources in the collection you'll need to press the \"Update Preview\" button to update.<br />When you're ready, press \"Create\" to generate and download your contact sheet PDF.";
 $lang["size"] = "Size";
 $lang["orientation"] = "Orientation";
 $lang["requiredfield"] = "This is a required field";
@@ -2064,6 +2064,7 @@ $lang["contact_sheet-add_logo_option"] = "Add logo to top of each page?";
 $lang["contact_sheet-single_select_size"] = "Image quality";
 $lang['contact_sheet_footer_address'] = 'XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999';
 $lang['contact_sheet_footer_copyright'] = '&#0169; ResourceSpace. All Rights Reserved.';
+$lang['contact_sheet_update_preview'] = 'Update Preview';
 
 $lang["caps-lock-on"] = "Warning! Caps Lock is on";
 $lang["collectionnames"] = "Collection names";

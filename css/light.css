@@ -342,7 +342,7 @@ div.MessageBox a {
 /* Highlighting required fields in certain plugins */
 .highlighted {border: 3px solid #F00 !important;}
 
-#previewimage, #previewimagecopy {box-shadow: 0 2px 6px rgba(0,0,0,0.2 );}
+#previewimage, #previewimagecopy, #contact-sheet--previewimage {box-shadow: 0 2px 6px rgba(0,0,0,0.2 );}
 
 /* chosen collection div */
 #CollectionDiv #MinColDrop .chosen-single:hover, #CollectionDiv #colselect .chosen-single:hover {color:#444;}

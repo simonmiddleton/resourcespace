@@ -355,12 +355,12 @@ include '../include/header.php';
                 }
                 ?>
                 <div class="clearerleft"></div>
-                <a href="#" onclick="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>'); return false;"><i aria-hidden="true" class="fa fa-fw fa-arrows-rotate"></i> <?php echo escape($lang["reload"]); ?></a>
+                <a href="#" onclick="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>'); return false;"><i aria-hidden="true" class="fa fa-fw fa-arrows-rotate"></i> <?php echo escape($lang["contact_sheet_update_preview"]); ?></a>
             </div>
 
             <div class="Question">
                 <label for="size"><?php echo escape($lang["size"]); ?></label>
-                <select class="shrtwidth" name="size" id="size" onchange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
+                <select class="shrtwidth" name="size" id="size" style="width: 300px;" onchange="jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
                     <?php echo $papersize_select; ?>
                 </select>
                 <div class="clearerleft"> </div>
@@ -462,7 +462,7 @@ include '../include/header.php';
     if ($contact_sheet_previews) {
         ?>
         <div style="float:left;padding:0px -50px 15px 0;height:<?php echo escape($height) ?>px;margin-top:-15px;margin-right:-50px">
-            <img alt="" id="previewimage" name="previewimage" src=""/>
+            <img alt="" id="contact-sheet--previewimage" name="previewimage" src=""/>
         </div>
         <?php
     }
