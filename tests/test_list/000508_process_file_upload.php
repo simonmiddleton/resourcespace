@@ -178,10 +178,10 @@ if (!(
     return false;
 }
 // - make request and get (JSON encoded) response
-$ch = curl_init(generateURL(get_temp_dir(true) . "/{$test_endpoint_filename}", ['sign' => $test_signature]));
+$ch = curl_init(get_temp_dir(true) . "/{$test_endpoint_filename}");
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
 curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, ['file' => new CURLFile($test_source_file)]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, ['sign' => $test_signature, 'file' => new CURLFile($test_source_file)]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 $result = curl_exec($ch);
 $result_decoded = json_decode($result, true);
