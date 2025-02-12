@@ -152,8 +152,48 @@ foreach ($use_cases as $uc) {
     }
 }
 
+// Use case: HTTP file uploaded
+// (integration test so has to be handled separately to the above scenarios)
+$test_signature = generateSecureKey(32);
+$test_endpoint_filename = 'test_508_endpoint.php';
+$test_endpoint_content = <<<EOT
+<?php
+
+include dirname(__DIR__, 3) . '/include/boot.php';
+
+if (getval('sign', '') !== '{$test_signature}') {
+    exit;
+}
+
+echo json_encode(process_file_upload(\$_FILES['file'], new SplFileInfo('{$dest}'), []));
+
+EOT;
+$test_source_file = get_temp_dir(false) . '/test_508.txt';
+if (!(
+    file_put_contents(get_temp_dir(false) . "/{$test_endpoint_filename}", $test_endpoint_content)
+    && file_put_contents($test_source_file, "Source for {$run_id}")
+    && chmod($dest, 0777)
+)) {
+    echo "[ENV] Set up 'HTTP file uploaded' use case - ";
+    return false;
+}
+// - make request and get (JSON encoded) response
+$ch = curl_init(generateURL(get_temp_dir(true) . "/{$test_endpoint_filename}", ['sign' => $test_signature]));
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, ['file' => new CURLFile($test_source_file)]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+$result = curl_exec($ch);
+$result_decoded = json_decode($result, true);
+curl_close($ch);
+// - assert expectation
+if (!(is_array($result_decoded) && isset($result_decoded['success']) && $result_decoded['success'])) {
+    echo "Use case: HTTP file uploaded - ";
+    return false;
+}
+
 // Tear down
 unset($run_id, $use_cases, $result, $dest, $expect_fail_msg);
-array_map('unlink', glob(sys_get_temp_dir() . '/test_508*'));
+array_map('unlink', array_merge(glob(sys_get_temp_dir() . '/test_508*'), glob(get_temp_dir() . '/test_508*')));
 
 return true;
