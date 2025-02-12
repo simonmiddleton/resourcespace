@@ -17,7 +17,7 @@ update_field($resourcec, $daterangefield, "2015-03-08");
 
 // SUBTEST A
 // cover all dates - get all 3 resources
-$results = do_search('testdate:rangestart1970-02-02end2016-09-06');
+$results = do_search('testdate:rangestart1970-02-02end2016-09-06') ?: [];
 if (count($results) !=  3 || !in_array($resourcea, array_column($results, "ref")) || !in_array($resourceb, array_column($results, "ref")) || !in_array($resourcec, array_column($results, "ref"))) {
     echo "ERROR - SUBTEST A\n";
     return false;
