@@ -170,10 +170,20 @@ include '../include/header.php';
                                 var x;
                                 for (x in response_obj) {
                                     var contact_sheet_field_obj = response_obj[x];
-                                    contact_sheet_fields_selector.append('<option value="' + Number(contact_sheet_field_obj.ref) + '" ' 
-                                                                            + (Number(contact_sheet_field_obj.ref) == 0 ? 'selected>' : '>')
-                                                                            + contact_sheet_field_obj.title + '</option>');
+                                    
+                                    var fieldToAdd = '<span id="csf' + Number(contact_sheet_field_obj.ref) + '">';
+                                    fieldToAdd += '<input type="checkbox" ';
+                                    fieldToAdd += 'name="selected_contact_sheet_fields[]" ';
+                                    fieldToAdd += 'class="selected_contact_sheet_field' + (Number(contact_sheet_field_obj.ref) == 0 ? 'all" ' : '" ');                                    
+                                    fieldToAdd += 'value="' + contact_sheet_field_obj.ref + '" checked>';
+                                    fieldToAdd += '<label>' + contact_sheet_field_obj.title + '</label><br /></span>';
+
+                                    contact_sheet_fields_selector.append(fieldToAdd);
                                 }
+
+                                jQuery(".selected_contact_sheet_fieldall").bind("change", checkAll);
+                                jQuery(".selected_contact_sheet_field").bind("click", checkEachField);
+
                                 return true;
                             }
                         });
@@ -336,26 +346,72 @@ include '../include/header.php';
                     <?php
                 } else {
                     ?>
-                    <select id="selected_contact_sheet_fields" class="shrtwidth MultiSelect" name="selected_contact_sheet_fields[]" multiple>
+                    <fieldset name="selected_contact_sheet_fields[]" id="selected_contact_sheet_fields" class="MultiRTypeSelect" style="width:420px;">
                         <?php
                         foreach ($available_contact_sheet_fields as $contact_sheet_field) {
-                            $selected = '';
-                            if ('' == $contact_sheet_field['ref']) {
-                                $selected = 'selected';
-                            }
                             ?>
-                            <option value="<?php echo (int) $contact_sheet_field['ref']; ?>"<?php echo $selected; ?>>
-                                <?php echo i18n_get_translated($contact_sheet_field['title']); ?>
-                            </option>
-                            <?php
+                            <span id="csf<?php echo (int) $contact_sheet_field['ref']; ?>">
+                                <input
+                                    type="checkbox"
+                                    value="<?php echo $contact_sheet_field['ref']; ?>"
+                                    class="selected_contact_sheet_field<?php echo (int) $contact_sheet_field['ref'] == 0 ? 'all' : ''; ?>"
+                                    name="selected_contact_sheet_fields[]"
+                                    id="selected_contact_sheet_fields<?php echo (int) $contact_sheet_field['ref']; ?>"
+                                    checked="checked"
+                                />
+                                <label><?php echo i18n_get_translated($contact_sheet_field['title']); ?></label>
+                                <br />
+                            </span>
+                        <?php 
                         }
                         ?>
-                    </select>
+                    </fieldset>
+                    <script>
+                        function checkAll(e) {
+                            if (this.checked) {
+                                jQuery(".selected_contact_sheet_field").each(function() {
+                                    this.checked = true;
+                                })
+                            } else {
+                                jQuery(".selected_contact_sheet_field").each(function() {
+                                    this.checked = false;
+                                })
+                            }
+                        }
+
+                        function checkEachField(e) {
+                            if (jQuery(this).is(":checked")) {
+                                var isAllChecked = 0;
+                                jQuery(".selected_contact_sheet_field").each(function() {
+                                    if (!this.checked) {
+                                        isAllChecked = 1;
+                                    }
+                                });
+
+                                if (isAllChecked == 0) {
+                                    jQuery(".selected_contact_sheet_fieldall").prop("checked", true);
+                                }
+                            } else {
+                                jQuery(".selected_contact_sheet_fieldall").prop("checked", false);
+                            }
+                        }
+
+                        jQuery(document).ready(function() {
+                            jQuery(".selected_contact_sheet_fieldall").bind("change", checkAll);
+                            jQuery(".selected_contact_sheet_field").bind("click", checkEachField);
+                        });
+                    </script>
+
                     <?php
                 }
                 ?>
+                <div class="updatePreviewButton">
+                    <a href="#" onclick="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>'); return false;">
+                        <i aria-hidden="true" class="fa fa-fw fa-arrows-rotate"></i>
+                        <?php echo escape($lang["contact_sheet_update_preview"]); ?>
+                    </a>
+                </div>
                 <div class="clearerleft"></div>
-                <a href="#" onclick="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>'); return false;"><i aria-hidden="true" class="fa fa-fw fa-arrows-rotate"></i> <?php echo escape($lang["contact_sheet_update_preview"]); ?></a>
             </div>
 
             <div class="Question">
