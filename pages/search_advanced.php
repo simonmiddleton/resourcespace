@@ -313,11 +313,11 @@ include "../include/header.php";
                     document.getElementById(conditionalquestion.id).style.display = "";
                     console.debug("show " + conditionalquestion.id);
                 }
-            }
 
-            if (document.getElementById(conditionalquestion.id).style.display == '' && fieldvalidfortypes[0] !== "Global") {
-                // At least one resource type field is displayed so add the type specific fields section.
-                add_type_specific_header = true;
+                if (fieldvalidfortypes[0] !== "Global") {
+                    // Field either displayed or can be displayed, so add header so field can be visible.
+                    add_type_specific_header = true;
+                }
             }
         }
 
