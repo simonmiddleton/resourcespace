@@ -826,6 +826,7 @@ const API_NATIVE_WHITELIST = [
     'delete_alternative_file',
     'delete_resource',
     'delete_tabs',
+    'do_search',
     'get_collections_resource_count',
     'get_dash_search_data',
     'get_field_options',

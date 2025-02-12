@@ -1349,26 +1349,46 @@ if (!hook("replacesearchheader")) # Always show search header now.
     hook("beforesearchresults");
     
     # Archive link
-    if ((!$archivesearched) && (strpos($search,"!")===false) && $archive_search && $archive_standard) 
-        {        
-        $saved_archive_standard = $archive_standard;
-        $archive_standard = false;
-        // Search archive but don't log this to daily_stat
-        $arcresults=do_search($search,$restypes,$order_by,2,-1,'desc',false,0,false,false,'',false,false);
-        $archive_standard = $saved_archive_standard;
-        if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
-        if ($arcresults>0) 
-            {
-            ?>
-            <div class="SearchOptionNav"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("archive"=>2)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo escape($lang["view"]); ?> <span class="Selected"><?php echo number_format($arcresults); ?></span> <?php echo ($arcresults==1)?$lang["match"]:$lang["matches"]; ?> <?php echo escape($lang["inthearchive"]); ?></a></div>
-            <?php 
-            }
-        else
-            {
-            ?>
-            <div class="InpageNavLeftBlock"><?php echo LINK_CARET ?><?php echo escape($lang["nomatchesinthearchive"]); ?></div>
-            <?php 
-            }
+    if (
+        !$archivesearched
+        && strpos($search, "!") === false
+        && $archive_search
+        && $archive_standard
+    ) {?>
+        <div class="SearchOptionNav">
+            <a
+            href="<?php echo generateURL($baseurl_short . "pages/search.php", $searchparams, ["archive" => 2]); ?>"
+            onClick="return CentralSpaceLoad(this);"
+            >
+                <?php echo LINK_CARET . escape($lang["view"]); ?>
+                <span class="Selected">
+                    <?php echo escape($lang["matches"] . " " . $lang["inthearchive"]); ?>
+                </span>
+                <span
+                    id="ArchiveSearchCountPill"
+                    class="Pill"
+                    style="display: none;">
+                </span>
+            </a>
+        </div>
+        <script>
+            jQuery(document).ready(function(){
+                api("do_search",
+                    {
+                        "search": "<?php echo escape($search); ?>",
+                        "restypes": "<?php echo escape($restypes); ?>",
+                        "archive": "2",
+                        "fetchrows": "1,1",
+                    },
+                    function(response) {     
+                        console.log(response);
+                        jQuery('#ArchiveSearchCountPill').html(Number(response.total)).fadeIn();
+                        },
+                    <?php echo generate_csrf_js_object('do_search'); ?>
+                );
+            });
+        </script>
+        <?php 
         }
     echo $search_title_links;
     if($collectionsearch) // Fetch collection name 
