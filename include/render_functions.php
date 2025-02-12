@@ -411,7 +411,13 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     jQuery(idname<?php echo $field['ref']; ?>).slideToggle(function()
                         {
                         console.debug("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
-                        jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
+                        jQuery(this).clearQueue();
+
+                        // If field is being made visible, check if section is visible and trigger the parent slide if not
+                        if(newfield<?php echo $field['ref']; ?>status == 'block' && jQuery(this).parent().css('display') == 'none') {
+                            jQuery(this).parent().prev('h1').click();
+                        }
+
                         <?php 
                         if ($forsearchbar) {
                             if ($field['type'] == FIELD_TYPE_CATEGORY_TREE) { ?>
