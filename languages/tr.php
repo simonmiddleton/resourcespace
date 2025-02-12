@@ -2837,3 +2837,6 @@ $lang["cannot_share-has_upload_share"] = 'Bu koleksiyon için yükleme paylaşı
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = '%applicationname\'e hoş geldiniz';
+
+$lang["language-hu"] = 'Macarca';
+$lang["language-vi"] = 'Vietnamese';

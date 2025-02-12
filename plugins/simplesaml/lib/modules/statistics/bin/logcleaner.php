@@ -1,14 +1,17 @@
 #!/usr/bin/env php
 <?php
 
+declare(strict_types=1);
+
 // This is the base directory of the SimpleSAMLphp installation
-$baseDir = dirname(dirname(dirname(dirname(__FILE__))));
+$baseDir = dirname(__FILE__, 4);
 
 // Add library autoloader.
 require_once($baseDir . '/lib/_autoload.php');
 
 // Initialize the configuration.
-$configdir = \SimpleSAML\Utils\Config::getConfigDir();
+$configUtils = new \SimpleSAML\Utils\Config();
+$configdir = $configUtils->getConfigDir();
 \SimpleSAML\Configuration::setConfigDir($configdir);
 
 $progName = array_shift($argv);
@@ -70,9 +73,8 @@ if (!$dryrun) {
 
 /**
  * This function prints the help output.
- * @return void
  */
-function printHelp()
+function printHelp(): void
 {
     global $progName;
 

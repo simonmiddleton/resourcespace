@@ -2839,3 +2839,6 @@ $lang["cannot_share-has_upload_share"] = 'ਇਸ ਕਲੈਕਸ਼ਨ ਦੇ �
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'ਥਾਈ';
 $lang["welcome_generic"] = '%applicationname ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ';
+
+$lang["language-hu"] = 'ਹੰਗਰੀਅਨ';
+$lang["language-vi"] = 'ਵਿਯਤਨਾਮੀ';

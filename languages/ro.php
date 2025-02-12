@@ -2916,3 +2916,6 @@ $lang["cannot_share-has_upload_share"] = 'Nu se pot crea partajări fără înc�
 $lang["language-cy"] = 'Galeză';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Bine ați venit la %applicationname';
+
+$lang["language-hu"] = 'Hungarian';
+$lang["language-vi"] = 'Vietnamese';

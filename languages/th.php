@@ -2823,3 +2823,6 @@ $lang["language-fa"] = 'เปอร์เซีย';
 $lang["all__emailcontactadmin"] = '<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
 $lang["language-bn"] = 'Bengali';
 $lang["map_tfneighbourhood"] = 'ย่านบ้าน';
+
+$lang["language-hu"] = 'Hungarian';
+$lang["language-vi"] = 'Vietnamese';

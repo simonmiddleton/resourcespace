@@ -3246,3 +3246,6 @@ $lang["cannot_share-has_upload_share"] = 'Ne morejo se ustvariti delitve te zbir
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Vitajte v %applicationname';
+
+$lang["language-hu"] = 'Maďarský';
+$lang["language-vi"] = 'Vietnamese';

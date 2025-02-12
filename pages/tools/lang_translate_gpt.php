@@ -4,7 +4,9 @@ include "../../include/boot.php";
 command_line_only();
 
 $restrict = $argv[1] ?? false;
-$model = "gpt-4o-mini";
+// Models to use in the order to try them in. The same model can be attempted twice as results often differ between requests.
+$models=["gpt-4o-mini","gpt-4o-mini","gpt-4o","gpt-3.5-turbo"];
+
 // Try the below to clear any that couldn't be translated by the default model
 //$model="gpt-3.5-turbo";
 
@@ -151,10 +153,6 @@ foreach ($plugins as $plugin) {
             }
 
             $count++;
-            echo $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey (" . $lang_en_extended[$mkey] . ") for language $language\n\n";
-            flush();
-            ob_flush();
-
             $messages = array();
             $messages[] = array("role" => "system","content" => "Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads.
  Where there is not an obvious translation in the DAM context, use a general context or make a best guess. Don't add the period character at the start or end of the translation if one isn't at the start or end of the value being translated.
@@ -162,30 +160,41 @@ Text within square brackets indicates a system parameter that MUST NOT itself be
 In the event that you cannot provide a translation (with the exception of the cases listed above) return the word CALAMITY followed by the reason the translation could not be provided. Do not output anything that is not either a valid translation or the word CALAMITY with the reason.");
             $messages[] = array("role" => "user","content" => "Please translate: " . $lang_en_extended[$mkey]);
 
-            $result = generateChatCompletions($openai_key, $model, 0, 2048, $messages);
-            echo "\n";
-            print_r($result);
-            echo "\n\n";
+            foreach ($models as $model)
+                {
+                echo $model . ": " . $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey (" . $lang_en_extended[$mkey] . ") for language $language\n\n";
+                flush();
+                ob_flush();
+        
+                $result = generateChatCompletions($openai_key, $model, 0, 2048, $messages);
+                echo "\n";
+                print_r($result);
+                echo "\n\n";
 
-            // Check there are no bad parameters in the results by comparing with the master list.
-            preg_match_all("/\[([a-zA-Z0-9_]*)\]/", $result, $params);
-            $wrong = array_diff($params[0], $params_correct[0]);
-            if (count($wrong) > 0) {
-                echo "Bad parameters were generated: ";
-                print_r($wrong);
-                $bad_params++;
-                $bad_params_list[] = $mkey;
-                continue;
-            }
+                // Check there are no bad parameters in the results by comparing with the master list.
+                preg_match_all("/\[([a-zA-Z0-9_]*)\]/", $result, $params);
+                $wrong = array_diff($params[0], $params_correct[0]);
+                if (count($wrong) > 0) {
+                    echo "Bad parameters were generated: ";
+                    print_r($wrong);
+                    $bad_params++;
+                    $bad_params_list[] = $mkey;
+                    continue;
+                }
 
-            // Append it to the appropriate file.
-            if (is_string($result) && strlen($result) > 0 && strpos(strtolower($result), "calamity") === false && strpos(strtolower($result), "[error]") === false) {
-                $f = fopen($langfile, "a");
-                fwrite($f, "\n\$lang[\"" . $mkey . "\"] = " . var_export($result, true) . ";");
-                fclose($f);
-            } else {
-                $calamity++;
-                $calamities[] = $mkey;
+                // Append it to the appropriate file.
+                if (is_string($result) && strlen($result) > 0 && strpos(strtolower($result), "calamity") === false && strpos(strtolower($result), "[error]") === false) {
+                    $f = fopen($langfile, "a");
+                    fwrite($f, "\n\$lang[\"" . $mkey . "\"] = " . var_export($result, true) . ";");
+                    fclose($f);
+                    continue 2; // Jump out of the models loop
+                } else {
+                    if ($model==end($models))
+                        {
+                        $calamity++;
+                        $calamities[] = $mkey;
+                        }
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ $share_password = getval("share_password", "");
 if ($share_password != "" && getval("submit", "") != "" && enforcePostRequest(false)) {
     // Check the supplied password
     $check = check_share_password($k, $share_password, "");
+
     if ($check) {
         if ($return_url == "") {
             $return_url = $baseurl . "/?" . ($resource != "" ? "r=" . $resource : "c=" . $collection ) . "&k=" . $k;
@@ -29,6 +30,7 @@ if ($k == "") {
 
 include "../include/header.php";
 ?>
+
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short ?>pages/share_access.php">
         <?php generateFormToken("share_access"); ?>
@@ -45,7 +47,7 @@ include "../include/header.php";
         
         <div class="QuestionSubmit">
             <input type=hidden name="submit" value="true">
-            <input name="submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["proceed"]); ?>&nbsp;&nbsp;" />
+            <input name="submit" type="submit" value="<?php echo escape($lang["proceed"]); ?>" />
         </div>
     </form>
 </div>

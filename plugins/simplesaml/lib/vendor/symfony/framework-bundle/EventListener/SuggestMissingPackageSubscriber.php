@@ -32,15 +32,11 @@ final class SuggestMissingPackageSubscriber implements EventSubscriberInterface
             'mongodb' => ['DoctrineMongoDBBundle', 'doctrine/mongodb-odm-bundle'],
             '_default' => ['Doctrine ORM', 'symfony/orm-pack'],
         ],
-        'generate' => [
-            '_default' => ['SensioGeneratorBundle', 'sensio/generator-bundle'],
-        ],
         'make' => [
             '_default' => ['MakerBundle', 'symfony/maker-bundle --dev'],
         ],
         'server' => [
-            'dump' => ['Debug Bundle', 'symfony/debug-bundle --dev'],
-            '_default' => ['WebServerBundle', 'symfony/web-server-bundle --dev'],
+            '_default' => ['Debug Bundle', 'symfony/debug-bundle --dev'],
         ],
     ];
 

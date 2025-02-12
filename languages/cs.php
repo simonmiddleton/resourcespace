@@ -2831,3 +2831,6 @@ $lang["cannot_share-has_upload_share"] = 'Sdílení, které není nahráno, tét
 $lang["welcome_generic"] = 'Vítejte v %applicationname';
 $lang["language-cy"] = 'Welština';
 $lang["language-th"] = 'Thai';
+
+$lang["language-hu"] = 'Hungarian';
+$lang["language-vi"] = 'Vietnamese';

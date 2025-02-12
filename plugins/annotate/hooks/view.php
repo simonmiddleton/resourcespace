@@ -4,7 +4,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
     global $baseurl_short, $ajax, $ref, $ffmpeg_preview_extension, $resource, $k,
            $search, $offset, $order_by, $sort, $archive, $lang, $download_multisize,
            $baseurl, $annotate_ext_exclude, $annotate_rt_exclude, $annotate_public_view,
-           $annotate_pdf_output, $ffmpeg_audio_extensions, $view_title_field,$retina_mode,$resource_view_use_pre;
+           $annotate_pdf_output, $ffmpeg_audio_extensions, $view_title_field, $retina_mode, $resource_view_use_pre, $access;
 
     if(in_array($resource['file_extension'], $annotate_ext_exclude))
         {
@@ -49,7 +49,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
         </script>
         <?php
         $use_watermark = check_use_watermark();
-        $use_size      = ($retina_mode || !$resource_view_use_pre) ? 'scr' : 'pre';
+        $use_size      = (($retina_mode || !$resource_view_use_pre) && $access === 0) ? 'scr' : 'pre';
         $imagepath     = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], -1, 1, $use_watermark);
 
         if(!file_exists($imagepath))

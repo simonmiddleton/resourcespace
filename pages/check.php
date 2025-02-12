@@ -253,10 +253,9 @@ include "../include/header.php";
 
         <?php
         # Check PHP version
-        $phpversion = phpversion();
         $phpinifile = php_ini_loaded_file();
-        if ($phpversion < '7.4') {
-            $result = $lang["status-fail"] . ": " . str_replace("?", "7.4", $lang["shouldbeversion"]);
+        if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+            $result = $lang["status-fail"] . ": " . str_replace("?", "8.1", $lang["shouldbeversion"]);
         } else {
             $result = $lang["status-ok"];
         }
@@ -264,7 +263,7 @@ include "../include/header.php";
 
         <tr>
             <td><?php echo escape(str_replace("?", "PHP", $lang["softwareversion"])); ?></td>
-            <td><?php echo escape($phpversion) . '&ensp;&ensp;' . escape(str_replace("%file", $phpinifile, $lang["config_file"])); ?></td>
+            <td><?php echo escape(PHP_VERSION) . '&ensp;&ensp;' . escape(str_replace("%file", $phpinifile, $lang["config_file"])); ?></td>
             <td>
                 <b><?php echo escape($result); ?></b>
             </td>

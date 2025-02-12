@@ -162,7 +162,7 @@ if (getval("submitting", "") != "" && $api_function != "") {
             }
         }
         ?>
-
+        <pre class="codeoutput"><?php echo escape($output); ?></pre>
         <br />
         <br />
         <h2><?php echo escape($lang["api-php-code"]); ?></h2>

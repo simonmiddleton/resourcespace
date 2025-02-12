@@ -17,12 +17,14 @@
         },
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true,
             "simplesamlphp/composer-module-installer": true
         }
     },
     "autoload": {
         "psr-4": {
-            "SimpleSAML\\Module\\authorize\\": "lib/"
+            "SimpleSAML\\Module\\authorize\\": "src/"
         }
     },
     "autoload-dev": {
@@ -32,15 +34,16 @@
         }
     },
     "require": {
-        "php": ">=5.6",
-        "simplesamlphp/composer-module-installer": "~1.1"
+        "php": "^8.1",
+        "simplesamlphp/assert": "^1.0",
+        "simplesamlphp/simplesamlphp": "^2.1",
+        "symfony/http-foundation": "^6.4"
     },
     "require-dev": {
-        "simplesamlphp/simplesamlphp": "^1.17",
-        "phpunit/phpunit": "~5.7"
+        "simplesamlphp/simplesamlphp-test-framework": "^1.5"
     },
     "support": {
-        "issues": "https://github.com/tvdijen/simplesamlphp-module-authorize/issues",
-        "source": "https://github.com/tvdijen/simplesamlphp-module-authorize"
+        "issues": "https://github.com/simplesamlphp/simplesamlphp-module-authorize/issues",
+        "source": "https://github.com/simplesamlphp/simplesamlphp-module-authorize"
     }
 }

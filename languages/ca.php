@@ -2938,3 +2938,6 @@ $lang["cannot_share-has_upload_share"] = 'No es poden crear comparticions d\'upl
 $lang["welcome_generic"] = 'Benvingut a %applicationname';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
+
+$lang["language-hu"] = 'Hungarès';
+$lang["language-vi"] = 'Vietnamita';

@@ -1075,10 +1075,9 @@ else
                 <h2><?php echo escape($lang["installationcheck"]); ?></h2>
                 <?php 
                     $continue = true;
-                    $phpversion = PHP_VERSION;
-                    if(version_compare($phpversion, '5.3.0', '<='))
+                    if(version_compare(PHP_VERSION, '8.1.0', '<'))
                         {
-                        $result   = $lang["status-fail"] . ": " . str_replace('?', '5.3.0', $lang['shouldbeversion']);
+                        $result   = $lang["status-fail"] . ": " . str_replace('?', '8.1.0', $lang['shouldbeversion']);
                         $pass     = false;
                         $continue = false;
                         } 
@@ -1088,7 +1087,7 @@ else
                         $pass = true;
                         }
                 ?>
-                <p class="<?php echo $pass ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "PHP", $lang["softwareversion"]) . ": " . $phpversion) . (!$pass ? '<br />' : ' ') . "(" . escape($result) . ")"; ?></p>
+                <p class="<?php echo $pass ? '' : 'failure'; ?>"><?php echo escape(str_replace("?", "PHP", $lang["softwareversion"]) . ": " . PHP_VERSION) . (!$pass ? '<br />' : ' ') . "(" . escape($result) . ")"; ?></p>
                 <p><?php echo escape(str_replace("%phpinifile", php_ini_loaded_file(), $lang["php-config-file"])); ?></p>
                 <?php
                     if(function_exists('gd_info'))

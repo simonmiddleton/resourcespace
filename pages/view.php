@@ -437,7 +437,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 parent_element.find(this).parent().parent().children(".TabPanel").hide();
                 parent_element.find(this).parent().children(".Title").removeClass("Selected");
                 parent_element.find(this).addClass("Selected");
-                parent_element.find("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px").show();;
+                parent_element.find("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px").show();
                 if (jQuery(this).attr("panel")=="Comments") {
                     jQuery("#CommentsContainer").load(
                     "../pages/ajax/comments_handler.php?ref=<?php echo $ref; ?>", 
@@ -1277,8 +1277,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     $replace_upload_type=$top_nav_upload_type;
                                                     }
 
-                                                if (!(in_array($resource['resource_type'], $data_only_resource_types)) && !resource_file_readonly($ref) && (checkperm("c") || checkperm("d")))
-                                                    { ?>
+                                                if (
+                                                    !in_array($resource['resource_type'], $data_only_resource_types)
+                                                    && !resource_file_readonly($ref) 
+                                                    && (checkperm("c") || checkperm("d"))
+                                                    && !resource_is_template($ref)
+                                                ) { ?>
                                                     <li>
                                                         <a id="view_replace_link" href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php", $urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" 
                                                             onClick="if(jQuery('#uploader').length){return CentralSpaceLoad(this,true);} else {return ModalLoad(this,true);}">
@@ -1306,7 +1310,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     }
 
                                                 // Show the upload preview link
-                                                if (!resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
+                                                if (can_upload_preview_image($ref))
                                                     { ?>
                                                     <li>
                                                         <a id="view_upload_preview_link" href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">

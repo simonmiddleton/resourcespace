@@ -188,6 +188,10 @@ if ((!url_starts_with($baseurl, $redirecturl) && !hook("modifyredirecturl")) || 
     $redirecturl = '';
 }
 
+if (resource_is_template((int) $replace_resource)) {
+    error_alert($lang['error-permissiondenied']);
+}
+
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {
     $replace_resource = false;

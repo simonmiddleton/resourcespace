@@ -1,4 +1,4 @@
-<?php 
+<?php
 function HooksimplesamlCheckAddinstallationcheck()
 {
     ?>
@@ -8,8 +8,11 @@ function HooksimplesamlCheckAddinstallationcheck()
         </td>
     </tr>
     <?php
+    display_extension_status('zlib');
     display_extension_status('openssl');
+    display_extension_status('mbstring');
     display_extension_status('ldap');
+    display_extension_status('cURL');
 
     if (isset($GLOBALS["simplesamlconfig"]["metadata"]) && $GLOBALS['simplesaml_check_idp_cert_expiry']) {
         // Check expiry date of IdP certificates
@@ -38,13 +41,13 @@ function HooksimplesamlCheckAddinstallationcheck()
             // show status
             if ($latestexpiry < date("Y-m-d H:i")) {
                 $status  = 'FAIL';
-                $info = str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expired']);
-            } elseif ($latestexpiry < date("Y-m-d H:i", time()+60*60*24*7)) {
+                $info = str_replace($placeholders, $replace, $GLOBALS['lang']['simplesaml_idp_cert_expired']);
+            } elseif ($latestexpiry < date("Y-m-d H:i", time() + 60 * 60 * 24 * 7)) {
                 $status  = 'FAIL';
-                $info = str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expiring']);
+                $info = str_replace($placeholders, $replace, $GLOBALS['lang']['simplesaml_idp_cert_expiring']);
             } else {
                 $status  = 'OK';
-                $info = str_replace($placeholders,  $replace, $GLOBALS['lang']['simplesaml_idp_cert_expires']);
+                $info = str_replace($placeholders, $replace, $GLOBALS['lang']['simplesaml_idp_cert_expires']);
             }
             ?>
             <tr>
@@ -53,8 +56,7 @@ function HooksimplesamlCheckAddinstallationcheck()
                 <td><b><?php echo $status; ?></b></td>
             </tr>
             <?php
-        $idpindex++;
+            $idpindex++;
         }
     }
-
 }

@@ -116,7 +116,7 @@ class HTTPRedirect extends Binding
             throw new \Exception('Unknown SAMLEncoding: '.var_export($data['SAMLEncoding'], true));
         }
 
-        $message = base64_decode($message);
+        $message = base64_decode($message, true);
         if ($message === false) {
             throw new \Exception('Error while base64 decoding SAML message.');
         }
@@ -140,6 +140,15 @@ class HTTPRedirect extends Binding
         if (!array_key_exists('Signature', $data)) {
             return $message;
         }
+
+        /**
+         * 3.4.5.2 - SAML Bindings
+         *
+         * If the message is signed, the Destination XML attribute in the root SAML element of the protocol
+         * message MUST contain the URL to which the sender has instructed the user agent to deliver the
+         * message.
+         */
+        Assert::notNull($message->getDestination()); // Validation of the value must be done upstream
 
         if (!array_key_exists('SigAlg', $data)) {
             throw new \Exception('Missing signature algorithm.');

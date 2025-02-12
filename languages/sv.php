@@ -3121,3 +3121,6 @@ $lang["cannot_share-has_upload_share"] = 'Icke-uppladdningsdelningar av denna sa
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Välkommen till %applicationname';
+
+$lang["language-vi"] = 'Vietnamese';
+$lang["language-hu"] = 'Ungerska';

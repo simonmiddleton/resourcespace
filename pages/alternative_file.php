@@ -89,10 +89,20 @@ if ($modal) {
         $url_params["context"] = $context;
     }
 }
-
-if (getval("name", "") != "" && getval("tweak", "") == "" && enforcePostRequest(false)) { // do not do this during a tweak operation!
-    # Save file data
-    save_alternative_file($resource, $ref);
+$altname = getval("name", "");
+if (
+    $altname !== ""
+    && getval("tweak", "") == ""
+    && enforcePostRequest(false)
+) {
+    // Do not do this during a tweak operation!
+    hook("markmanualupload");
+    $alt_data = [
+        "name"          => (string) $altname,
+        "description"   => (string) getval("description", ""),
+        "alt_type"      => (string) getval("alt_type", ""),
+    ];
+    save_alternative_file($resource, $ref, $alt_data);
     // Check to see if we need to notify users of this change
     if ($notify_on_resource_change_days != 0) {
         notify_resource_change($resource);

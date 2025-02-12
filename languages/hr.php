@@ -2905,3 +2905,6 @@ $lang["cannot_share-has_upload_share"] = 'Ne mogu se stvoriti dijeljenja ove kol
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Dobrodošli u %applicationname';
+
+$lang["language-hu"] = 'Hungarian';
+$lang["language-vi"] = 'Vietnamese';

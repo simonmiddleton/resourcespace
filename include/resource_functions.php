@@ -4601,9 +4601,9 @@ function add_alternative_file($resource, $name, $description = "", $file_name = 
 
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
-
     ps_query(
-        "INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES (?, ?,now(), ?, ?, ?, ?, ?)",
+        "INSERT INTO resource_alt_files (resource, name, creation_date, description, file_name, file_extension, file_size, alt_type)
+              VALUES (?, ?, NOW(), ?, ?, ?, ?, ?)",
         [
         'i', $resource,
         's', $name,
@@ -4611,7 +4611,7 @@ function add_alternative_file($resource, $name, $description = "", $file_name = 
         's', $file_name,
         's', $file_extension,
         'i', $file_size,
-        's', $alt_type
+        's', $alt_type,
         ]
     );
     return sql_insert_id();
@@ -4713,19 +4713,40 @@ function get_alternative_file($resource, $ref)
  * Updates the details of an alternative file in the database.
  *
  * @param int $resource The resource ID associated with the alternative file.
- * @param int $ref The reference ID of the alternative file to update.
- * @return void
+ * @param int $ref      The reference ID of the alternative file to update.
+ * @param array $data   Array of data in name=>value format. If a column is to be left as is then it must not be included in the array
+ *
  */
-function save_alternative_file($resource, $ref)
+function save_alternative_file(int $resource, int $ref, array $data = []): void
 {
-    # Saves the 'alternative file' edit form back to the database
-    $name           = getval("name", "");
-    $description    = getval("description", "");
-    $alt_type       = getval("alt_type", "");
-    ps_query(
-        "UPDATE resource_alt_files SET name = ?,description = ?,alt_type = ? WHERE resource = ? AND ref = ?",
-        array("s",$name,"s",$description,"s",$alt_type,"i",$resource,"i",$ref)
-    );
+    $validcolumns = [
+        "name" => "s",
+        "description" => "s",
+        "alt_type" => "s",
+        "file_name" => "s",
+        "file_extension" => "s",
+        "file_size" => "i",
+        "unoconv" => "i",
+    ];
+    $setcolumns = [];
+    $setparams = [];
+    foreach ($validcolumns as $column => $type) {
+        if (isset($data[$column])) {
+            $setcolumns[] = $column;
+            $setparams[] = $type;
+            $setparams[] = $data[$column];
+        }
+    }
+    if (count($setcolumns) > 0) {
+        $setcolumnsql = implode(" = ?, ", $setcolumns) . " = ?";
+        $setparams = array_merge($setparams, ["i", $resource, "i", $ref]);
+        ps_query(
+            "UPDATE resource_alt_files
+                     SET $setcolumnsql
+                   WHERE resource = ? AND ref = ?",
+            $setparams
+        );
+    }
 }
 
 /**
@@ -7453,10 +7474,11 @@ function image_size_restricted_access($id)
 * Returns a list of fields with refs matching the supplied field refs.
 *
 * @param array $field_refs Array of field refs
+* @param bool  order_by_passed_refs Returns the array of fields in the order requested in $field_refs
 *
 * @return array
 */
-function get_fields($field_refs)
+function get_fields($field_refs, bool $order_by_passed_refs = false)
 {
     if (!is_array($field_refs)) {
         trigger_error("\$field_refs passed to get_fields() is not an array.");
@@ -7473,10 +7495,23 @@ function get_fields($field_refs)
          WHERE rtf.ref IN (" . ps_param_insert(count($field_refs)) . ")
       ORDER BY rtf.order_by", ps_param_fill($field_refs, "i"), "schema");
 
-    $return = array();
-    foreach ($fields as $field) {
-        if (metadata_field_view_access($field['ref'])) {
-            $return[] = $field;
+    $return = array();   
+
+    if ($order_by_passed_refs) {
+
+        $fields_array = array_column($fields, null, 'ref');
+
+        foreach ($field_refs as $field_ref) {
+            if (array_key_exists($field_ref, $fields_array) && metadata_field_view_access($field_ref)) {
+                $return[] = $fields_array[$field_ref];
+            }
+        }
+
+    } else {
+        foreach ($fields as $field) {
+            if (metadata_field_view_access($field['ref'])) {
+                $return[] = $field;
+            }
         }
     }
 
@@ -8670,16 +8705,17 @@ function related_resource_pull(array $resource)
 /**
  * Get the largest available preview URL for the given resource and the given array of sizes
  *
- * @param array     $resource   Array of resource data from get_resource_data() or search results
- * @param int       $access     Resource access
- * @param array     $sizes      Array of size IDs to look through, in order of size. If not provied will use all sizes
- * @param bool      $watermark  Look for watermarked versions?
- * @param int       $page       Page to look for
+ * @param array     $resource               Array of resource data from get_resource_data() or search results
+ * @param int       $access                 Resource access
+ * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param bool      $watermark              Look for watermarked versions?
+ * @param int       $page                   Page to look for
+ * @param bool      $try_pulled_resource    Should we try to use an image from a pulled resource if the current resource doesn't have a usable preview
  *
  * @return array | bool         array, or false if no image is found
  *
  */
-function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1)
+function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1, bool $try_pulled_resource = true)
 {
     global $userref, $open_access_for_contributor;
     if (empty($sizes)) {
@@ -8693,14 +8729,6 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         $preview["height"] = $resource["thumb_height"];
         $preview["width"] = $resource["thumb_width"];
     } else {
-        if ((int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE) {
-            // If configured, try and use a preview from a related resource
-            $pullresource = related_resource_pull($resource);
-            if ($pullresource !== false) {
-                $resource = $pullresource;
-            }
-        }
-
         if ($access == -1) {
             $access = get_resource_access($resource);
         }
@@ -8746,6 +8774,15 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
                 unset($GLOBALS["use_error_exception"]);
                 break;
             }
+        }
+        if (!$validimage && (int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE && $try_pulled_resource) {
+            // If configured, try and use a preview from a related resource
+            $pullresource = related_resource_pull($resource);
+            if ($pullresource !== false) {
+                $resource = $pullresource;
+            }
+            $preview = get_resource_preview($resource, $sizes, $access, $watermark, $page, false);
+            $validimage = $preview !== false; 
         }
     }
     if (!$validimage) {
@@ -8891,4 +8928,21 @@ function acl_can_edit_resource_of_type(int $ref): bool
             checkperm("XE{$ref}")
             || checkperm("XE") && !checkperm("XE-{$ref}")
         );
+}
+
+function resource_is_template(int $ref): bool
+{
+    global $fstemplate_alt_threshold;
+    return $ref < $fstemplate_alt_threshold && $fstemplate_alt_threshold > 0;
+}
+
+/**
+ * Check if current user can upload a preview image
+ *
+ * @param int $ref  Resource ID
+ *
+ */
+function can_upload_preview_image(int $ref): bool
+{
+    return !resource_file_readonly($ref) && !checkperm("F*") && !checkperm("xupr") && !$GLOBALS['custompermshowfile'];
 }
