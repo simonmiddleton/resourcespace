@@ -51,7 +51,7 @@ if (!$contactsheet_use_field_templates) {
     );
 }
 
-foreach (get_fields($sheetstyle_fields) as $field_data) {
+foreach (get_fields($sheetstyle_fields, true) as $field_data) {
     $available_contact_sheet_fields[] = $field_data;
 }
 
