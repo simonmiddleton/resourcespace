@@ -8930,6 +8930,11 @@ function acl_can_edit_resource_of_type(int $ref): bool
         );
 }
 
+/**
+ *  Check if a resource is a template resource, dictated by the $fstemplate_alt_threshold config
+ * 
+ *  @param int $ref resource ref to check
+ */
 function resource_is_template(int $ref): bool
 {
     global $fstemplate_alt_threshold;
