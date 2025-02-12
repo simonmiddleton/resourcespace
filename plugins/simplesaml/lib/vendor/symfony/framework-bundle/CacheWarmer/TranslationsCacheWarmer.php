@@ -12,9 +12,9 @@
 namespace Symfony\Bundle\FrameworkBundle\CacheWarmer;
 
 use Psr\Container\ContainerInterface;
-use Symfony\Bundle\FrameworkBundle\DependencyInjection\CompatibilityServiceSubscriberInterface as ServiceSubscriberInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -24,8 +24,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class TranslationsCacheWarmer implements CacheWarmerInterface, ServiceSubscriberInterface
 {
-    private $container;
-    private $translator;
+    private ContainerInterface $container;
+    private TranslatorInterface $translator;
 
     public function __construct(ContainerInterface $container)
     {
@@ -34,31 +34,27 @@ class TranslationsCacheWarmer implements CacheWarmerInterface, ServiceSubscriber
     }
 
     /**
-     * {@inheritdoc}
+     * @param string|null $buildDir
      */
-    public function warmUp($cacheDir)
+    public function warmUp(string $cacheDir /* , string $buildDir = null */): array
     {
-        if (null === $this->translator) {
-            $this->translator = $this->container->get('translator');
-        }
+        $this->translator ??= $this->container->get('translator');
 
         if ($this->translator instanceof WarmableInterface) {
-            $this->translator->warmUp($cacheDir);
+            $buildDir = 1 < \func_num_args() ? func_get_arg(1) : null;
+
+            return (array) $this->translator->warmUp($cacheDir, $buildDir);
         }
+
+        return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return [
             'translator' => TranslatorInterface::class,

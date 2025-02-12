@@ -2,7 +2,7 @@
 {% extends "base.twig" %}
 
 {% block preload %}
-    <link href="/{{ baseurlpath }}modules.php/statistics/assets/css/statistics.css" rel="stylesheet">
+    <link href="{{ asset('css/statistics.css', 'statistics') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -21,20 +21,20 @@
             <tr><td>Memory usage</td><td>{{ metadata.memory }} MB</td></tr>
         {% endif %}
 
-        {% if metadata.memory is defined %}
+        {% if metadata.time is defined %}
             <tr><td>Execution time</td><td>{{ metadata.time }} seconds</td></tr>
         {% endif %}
 
-        {% if metadata.memory is defined %}
+        {% if metadata.lastlinehash is defined %}
             <tr><td>SHA1 of last processed logline</td><td>{{ metadata.lastlinehash }}</td></tr>
         {% endif %}
 
-        {% if metadata.memory is defined %}
+        {% if metadata.lastline is defined %}
             <tr><td>Last processed logline</td><td>{{ metadata.lastline }}</td></tr>
         {% endif %}
     {% else %}
         <tr><td>No metadata found</td></tr>
     {% endif %}
     </table>
-    <p>[ <a href="/{{ baseurlpath }}module.php/statistics/showstats.php">Show statistics</a> ]</p>
+    <p>[ <a href="{{ moduleURL('statistics/') }}">Show statistics</a> ]</p>
 {% endblock %}

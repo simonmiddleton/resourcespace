@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["simplesaml_configuration"] = 'SimpleSAML konfiguráció';
 $lang["simplesaml_main_options"] = 'Használati lehetőségek';
 $lang["simplesaml_site_block"] = 'Használja a SAML-t a webhely teljes hozzáférésének blokkolására, ha igazra van állítva, akkor senki sem férhet hozzá a webhelyhez, még névtelenül sem, hitelesítés nélkül';
