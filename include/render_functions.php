@@ -259,7 +259,8 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             {
             // Is the governed field resource type ok; if not then no checking necessary as its already hidden
             const conditionalquestion = document.getElementById("question_<?php echo $n ?>");
-            if (conditionalquestion?.dataset?.resource_type_ok !="1") { return; }
+            if (Object.hasOwnProperty(conditionalquestion, 'dataset') 
+                && conditionalquestion.dataset.resource_type_ok !="1") { return; }
 
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
@@ -411,13 +412,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     jQuery(idname<?php echo $field['ref']; ?>).slideToggle(function()
                         {
                         console.debug("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
-                        jQuery(this).clearQueue();
-
-                        // If field is being made visible, check if section is visible and trigger the parent slide if not
-                        if(newfield<?php echo $field['ref']; ?>status == 'block' && jQuery(this).parent().css('display') == 'none') {
-                            jQuery(this).parent().prev('h1').click();
-                        }
-
+                        jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
                         <?php 
                         if ($forsearchbar) {
                             if ($field['type'] == FIELD_TYPE_CATEGORY_TREE) { ?>
@@ -6217,7 +6212,7 @@ function display_related_resources($context)
                     ) {
                         if (count(array_diff(array_column($arr_related, "resource_type"), $relatedtypes_shown)) > 0) {
                             ?>
-                            <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref); ?>"
+                            <a href="<?php echo generateURL($baseurl . '/pages/search.php', ['search' => "!related$ref", 'restypes' => '']); ?>"
                                 onClick="return CentralSpaceLoad(this,true);">
                                 <?php echo LINK_CARET . escape($lang["clicktoviewasresultset"]); ?>
                             </a>
