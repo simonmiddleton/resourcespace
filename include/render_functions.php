@@ -1451,7 +1451,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                     <?php
                                     if ($is_selection_collection)
                                         {
-                                        $return_to_search = getval("search","");
                                         ?>
                                         CentralSpaceLoad(window.location.href, null, null, false);
                                         <?php

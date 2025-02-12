@@ -6179,7 +6179,7 @@ function delete_resources_in_collection($collection)
         return false;
     }
 
-    global $resource_deletion_state,$userref,$lang;
+    global $resource_deletion_state, $lang;
 
     // Always find all resources in deleted state and delete them permanently:
     // Note: when resource_deletion_state is null it will find all resources in collection and delete them permanently
