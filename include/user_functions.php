@@ -944,12 +944,17 @@ function email_reset_link(string $email, bool $newuser = false)
             $welcome = str_replace("%applicationname", $applicationname, $lang["welcome_generic"]);
         }
 
+        if (hook("ssologindefault")) {
+            $loginurl = $baseurl . "/login.php";
+        } else {
+            $loginurl = $baseurl;
+        }
         $templatevars['welcome'] = i18n_get_translated($welcome) . "\n\n";
         if ($blockreset) {
-            $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
+            $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $loginurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
             $result = send_mail($email, $email_subject, $message);
         } else {
-            $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
+            $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $loginurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
             $result = send_mail($email, $email_subject, $message, "", "", "passwordnewemailhtml", $templatevars);
         }
     } else {
