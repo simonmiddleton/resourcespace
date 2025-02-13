@@ -136,7 +136,6 @@ $lang["clicklinkviewcollection"] = "Clica l'enllaç de sota per veure la col·le
 $lang["createnewresource"] = "Crear material nou";
 $lang["resourcetype"] = "Tipus de material";
 $lang["resourcetypes"] = "Tipus de material";
-$lang["deleteresource"] = "Eliminar material";
 $lang["downloadresource"] = "Descarregar material";
 $lang["rightclicktodownload"] = "Clica aquest enllaç amb el botó dret i selecciona 'Guardar com' per a descarregar el material...";
 $lang["downloadinprogress"] = "Descarregant";
@@ -340,7 +339,6 @@ $lang["key"] = "Clau"; # e.g. explanation of icons on search page
 $lang["languageselection"] = "Selecció d'idioma";
 $lang["language"] = "Idioma";
 $lang["changeyourpassword"] = "Canvia la contrasenya";
-$lang["yourpassword"] = "La teva contrasenya";
 $lang["newpassword"] = "Nova contrasenya";
 $lang["newpasswordretype"] = "Nova contrasenya (tornar a escriure)";
 $lang["passwordnotvalid"] = "Aqusta contrasenya no es vàlida";
@@ -526,7 +524,6 @@ $lang["uploadreplacementfile"] = "Carregar arxiu de substitució";
 
 
 $lang["resourceistranscoding"] = "El material esta sent codificat";
-$lang["cantdeletewhiletranscoding"] = "No pots esborrar materials mentre s'estan codificant";
 
 $lang["maxcollectionthumbsreached"] = "Hi ha masses materials en aquesta col·lecció, les vistes en miniatura no podran ser visualitzades.";
 
@@ -1289,7 +1286,6 @@ $lang["removethisfilter"] = '(elimina aquest filtre)';
 $lang["no_exif"] = 'No importis les metadades EXIF/IPTC/XMP incrustades per a aquesta pujada';
 $lang["difference"] = 'Diferència';
 $lang["viewdeletedresources"] = 'Veure recursos eliminats';
-$lang["finaldeletion"] = 'Aquest recurs ja es troba en l\'estat "eliminat". Aquesta acció eliminarà completament el recurs del sistema.';
 $lang["diskerror"] = 'Quota superada';
 $lang["nocookies"] = 'No s\'ha pogut establir correctament una galeta. Assegureu-vos que teniu les galetes habilitades a la configuració del vostre navegador.';
 $lang["selectedresourceslightroom"] = 'Recursos seleccionats (llista compatible amb Lightroom):';
@@ -1649,7 +1645,6 @@ $lang["list-recipients"] = 'Aquest missatge s\'ha enviat a les següents adreces
 $lang["sort"] = 'Ordenar';
 $lang["sortcollection"] = 'Ordenar col·lecció';
 $lang["emptycollection"] = 'Eliminar tots els recursos';
-$lang["deleteresources"] = 'Eliminar recursos';
 $lang["emptycollectionareyousure"] = 'Esteu segur que voleu eliminar tots els recursos d\'aquesta col·lecció?';
 $lang["error-cannoteditemptycollection"] = 'No podeu editar una col·lecció buida.';
 $lang["error-permissiondenied"] = 'Accés denegat.';
@@ -1986,7 +1981,6 @@ $lang["collection_manage__newcollection"] = 'Per crear una nova col·lecció, in
 $lang["collection_public__introtext"] = 'Les col·leccions públiques són creades per altres usuaris.';
 $lang["contact__contact"] = 'Les vostres dades de contacte aquí.';
 $lang["contribute__introtext"] = 'Podeu contribuir amb els vostres propis recursos. Quan creeu un recurs per primera vegada, es troba en l\'estat "Pendent d\'enviament". Quan hàgiu pujat el fitxer i editat els camps, establiu l\'estat del camp com a "Pendent de revisió". Així serà revisat pel equip de recursos.';
-$lang["delete__introtext"] = 'Si us plau, introdueix la teva contrasenya per confirmar que vols eliminar aquest recurs.';
 $lang["done__collection_email"] = 'S\'ha enviat un correu electrònic als usuaris que has especificat que conté un enllaç a la col·lecció.';
 $lang["done__deleted"] = 'El recurs ha estat eliminat.';
 $lang["done__research_request"] = 'Un membre de l\'equip de recerca serà assignat a la teva sol·licitud. Mantindrem contacte per correu electrònic durant tot el procés i, una vegada haguem completat la recerca, rebràs un correu electrònic amb un enllaç a tots els recursos que recomanem.';
@@ -2044,7 +2038,6 @@ $lang["prevent_user_group_sharing_externally"] = 'Prevenir que els usuaris compa
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Permetre la selecció del grup d\'usuaris per determinar el nivell d\'accés quan es comparteix externament';
 $lang["share_using_permissions_from_user_group"] = 'Compartir utilitzant permisos del grup d\'usuaris';
 $lang["externalshare_using_permissions_from_user_group"] = 'Si esteu enviant correus electrònics a usuaris externs, seleccioneu el grup d\'usuaris per utilitzar per a l\'accés';
-$lang["delete__nopassword"] = 'Si us plau, confirma que vols eliminar aquest recurs.';
 $lang["collection_download_too_large"] = 'Ho sentim, aquesta col·lecció és massa gran per descarregar en un sol fitxer. Proveu de reduir la mida de la col·lecció o seleccionar una mida d\'imatge més petita.';
 $lang["all__passwordnewemailhtml"] = 'Si us plau, feu clic a l\'enllaç següent per establir una nova contrasenya per al vostre compte.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />nom d\'usuari: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Pujada temporalment no disponible';

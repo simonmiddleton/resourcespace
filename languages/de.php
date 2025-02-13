@@ -374,7 +374,6 @@ $lang["clicklinkviewcollections"] = "Klicken Sie den untenstehenden Link an, um 
 $lang["createnewresource"] = "Neue Ressource erstellen";
 $lang["treeobjecttype-resource_type"] = $lang["resourcetype"] = "Ressourcen-Typ";
 $lang["resourcetypes"] = "Ressourcen-Typen";
-$lang["deleteresource"] = "Ressource löschen";
 $lang["downloadresource"] = "Ressource herunterladen";
 $lang["rightclicktodownload"] = "Klicken Sie die rechte Maustaste und wählen Sie 'Speichern unter...' um den Datei-Download zu starten...";
 $lang["downloadinprogress"] = "Download in Bearbeitung";
@@ -637,7 +636,6 @@ $lang["key"] = "Bedeutung:"; # e.g. explanation of icons on search page
 $lang["languageselection"] = "Sprache";
 $lang["language"] = "Sprache";
 $lang["changeyourpassword"] = "Passwort";
-$lang["yourpassword"] = "Ihr Passwort";
 $lang["currentpassword"] = "Aktuelles Passwort";
 $lang["newpassword"] = "Neues Passwort";
 $lang["newpasswordretype"] = "Neues Passwort (Eingabe wiederholen)";
@@ -917,7 +915,6 @@ $lang["backtomanagealternativefiles"] = "Zurück zu Alternative Dateien verwalte
 
 
 $lang["resourceistranscoding"] = "Ressource wird momentan umgewandelt";
-$lang["cantdeletewhiletranscoding"] = "Sie können Ressourcen nicht löschen, während Sie umgewandelt werden";
 
 $lang["maxcollectionthumbsreached"] = "Zu viele Ressourcen in dieser Kollektion, um Thumbnails anzuzeigen. Thumbnails werden jetzt versteckt.";
 
@@ -1115,7 +1112,6 @@ $lang["requestassignedtouser"] = "Ihre Ressourcenanfrage wurde % zur Überprüfu
  $lang["no_exif"] = "EXIF/IPTC/XMP Metadaten für diesen Upload nicht importieren";
  $lang["difference"] = "Unterschied";
  $lang["viewdeletedresources"] = "Gelöschte Ressourcen anzeigen";
- $lang["finaldeletion"] = "Diese Ressource ist bereits im Status 'gelöscht'. Diese Aktion wird die Ressource vollständig vom System entfernen.";
  $lang["diskerror"] = "Kein Speicherplatz verfügbar";
 
  $lang["nocookies"] = "Ein Cookie konnte nicht richtig gesetzt werden. Bitte stellen Sie sicher, dass Cookies in Ihrem Browser aktiviert sind.";
@@ -1439,7 +1435,6 @@ $lang["list-recipients"] = "Diese Nachricht wurde an die folgenden E-Mail Adress
 $lang["sort"] = "Sortieren";
 $lang["sortcollection"] = "Kollektion sortieren";
 $lang["emptycollection"] = "Leere Kollektion";
-$lang["deleteresources"] = "Ressourcen löschen";
 $lang["emptycollectionareyousure"] = "Sind Sie sicher, dass Sie alle Ressourcen aus dieser Kollektion entfernen wollen?";
 
 $lang["error-cannoteditemptycollection"] = "Sie können eine leere Kollektion nicht bearbeiten.";
@@ -1746,7 +1741,6 @@ $lang["collection_manage__newcollection"] = "Um eine neue Kollektion zu erstelle
 $lang["collection_public__introtext"] = "Öffentliche Kollektionen werden von anderen Benutzern erstellt und freigegeben.";
 $lang["contact__contact"] = "Ihre Kontaktdaten hier.";
 $lang["contribute__introtext"] = "Sie können Ihre eigenen Ressourcen hochladen. Wenn Sie eine Ressource erstellen, wird diese zunächst durch uns geprüft. Nachdem Sie die Datei hochgeladen und die Felder ausgefüllt haben, setzen Sie bitte den Status auf \"Benutzer-Beiträge: Überprüfung noch nicht erledigt\".";
-$lang["delete__introtext"] = "Bitte geben Sie Ihr Passwort ein, um zu bestätigen, dass Sie diese Ressource löschen wollen.";
 $lang["done__collection_email"] = "Eine E-Mail mit Link zur Kollektion wurde an die angegebenen Benutzer gesendet. Die Kollektion wurde zur Liste Ihrer Kollektionen hinzugefügt.";
 $lang["done__deleted"] = "Die Ressource wurde gelöscht.";
 $lang["done__research_request"] = "Ein Mitglied unseres Teams wird sich um Ihre Anfrage kümmern. Wir werden Sie per e-mail über den aktuellen Stand informieren. Wenn Ihre Anfrage bearbeitet ist, erhalten Sie eine e-mail mit einem Link zu den Ressourcen, die wir für Ihre Anfrage empfehlen.";
@@ -2312,7 +2306,6 @@ $lang["prevent_user_group_sharing_externally"] = 'Benutzer daran hindern, Ressou
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Erlaube die Auswahl der Benutzergruppe zur Bestimmung des Zugriffsniveaus beim externen Teilen';
 $lang["share_using_permissions_from_user_group"] = 'Teilen mit Berechtigungen aus Benutzergruppe';
 $lang["externalshare_using_permissions_from_user_group"] = 'Wenn Sie externe Benutzer per E-Mail kontaktieren, wählen Sie bitte die Benutzergruppe aus, die für den Zugriff verwendet werden soll';
-$lang["delete__nopassword"] = 'Bitte bestätigen Sie, dass Sie diese Ressource löschen möchten.';
 $lang["collection_download_too_large"] = 'Entschuldigung, diese Sammlung ist zu groß, um als eine Datei heruntergeladen zu werden. Versuchen Sie, die Größe der Sammlung zu reduzieren oder eine kleinere Bildgröße auszuwählen.';
 $lang["all__passwordnewemailhtml"] = 'Bitte klicken Sie auf den unten stehenden Link, um ein neues Passwort für Ihr Konto festzulegen.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Benutzername: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Das Hochladen ist vorübergehend nicht verfügbar';

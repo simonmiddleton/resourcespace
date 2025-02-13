@@ -350,7 +350,6 @@ $lang["ownedbyyou"] = "sinun omistamasi";
 $lang["createnewresource"] = "Luo uusi resurssi";
 $lang["treeobjecttype-resource_type"] = $lang["resourcetype"] = "Resurssityyppi";
 $lang["resourcetypes"] = "Resurssityypit";
-$lang["deleteresource"] = "Poista resurssi";
 $lang["downloadresource"] = "Lataa resurssi";
 $lang["rightclicktodownload"] = "Napsauta oikealla hiiren napilla tätä linkkiä ja valitse 'Tallenna nimellä' ladataksesi resurssin..."; # For Opera/IE browsers only
 $lang["downloadinprogress"] = "Lataus käynnissä";
@@ -599,7 +598,6 @@ $lang["key"] = "Avain:"; # e.g. explanation of icons on search page
 $lang["languageselection"] = "Kielen valinta";
 $lang["language"] = "Kieli";
 $lang["changeyourpassword"] = "Muuta salasanasi";
-$lang["yourpassword"] = "Salasanasi";
 $lang["newpassword"] = "Uusi salasana";
 $lang["newpasswordretype"] = "Uusi salasana (uudestaan)";
 $lang["passwordnotvalid"] = "Tämä ei ole kelvollinen salasana";
@@ -856,7 +854,6 @@ $lang["uploadreplacementfile"] = "Ladattu korvaava tiedosto";
 $lang["backtomanagealternativefiles"] = "Takaisin vaihtoehtoisten tiedostojen hallintaan";
 
 $lang["resourceistranscoding"] = "Resurssia transkoodataan parhaillaan";
-$lang["cantdeletewhiletranscoding"] = "Et voi poistaa resursseja transkoodauksen aikana";
 
 $lang["maxcollectionthumbsreached"] = "Tässä kokoelmassa on liikaa resursseja esikatselukuvien näyttämiseen. Esikatselukuvat on nyt piilotettu.";
 
@@ -1053,7 +1050,6 @@ $lang["removethisfilter"] = "(poista tämä suodatin)";
 $lang["no_exif"] = "Älä tuo tiedostoon liitettyjä EXIF/IPTC/XMP-metatietoja tässä latauksessa";
 $lang["difference"] = "Ero";
 $lang["viewdeletedresources"] = "Katso poistettuja resursseja";
-$lang["finaldeletion"] = "Tämä resurssi on jo 'poistettu'-tilassa. Tämä toiminto poistaa resurssin kokonaan järjestelmästä.";
 
 $lang["nocookies"] = "Evästettä ei voitu asentaa oikein. Varmista, että selaimen asetuksissa on sallittu evästeet.";
 
@@ -1352,7 +1348,6 @@ $lang["cc-emailaddress"] = "CC %emailaddress"; # %emailaddress will be replaced,
 $lang["sort"] = "Järjestä";
 $lang["sortcollection"] = "Järjestä kokoelma";
 $lang["emptycollection"] = "Tyhjennä kokoelma";
-$lang["deleteresources"] = "Poista resursseja";
 $lang["emptycollectionareyousure"] = "Oletko varma, että tahdot poistaa kaikki resurssit tästä kokoelmasta?";
 
 $lang["error-cannoteditemptycollection"] = "Et voi muokata tyhjää kokoelmaa.";
@@ -2177,7 +2172,6 @@ $lang["collection_manage__newcollection"] = 'Luodaksesi uuden kokoelman, syötä
 $lang["collection_public__introtext"] = 'Julkaistut kokoelmat on luotu muiden käyttäjien toimesta.';
 $lang["contact__contact"] = 'Ota yhteyttä -tiedot tässä.';
 $lang["contribute__introtext"] = 'Voit lisätä omia resurssejasi. Kun luot resurssin ensimmäistä kertaa, sen tila on "Odottaa lähetystä". Kun olet lähettänyt tiedoston ja muokannut kenttiä, aseta tilakenttä "Odottaa tarkistusta". Resurssi tarkistetaan sen jälkeen resurssitiimissä.';
-$lang["delete__introtext"] = 'Syötä salasanasi vahvistaaksesi, että haluat poistaa tämän resurssin.';
 $lang["done__collection_email"] = 'Sähköposti, joka sisältää linkin kokoelmaan, on lähetetty määrittelemillesi käyttäjille.';
 $lang["done__deleted"] = 'Resurssi on poistettu.';
 $lang["done__research_request"] = 'Tutkimustiimimme jäsen nimetään pyyntösi hoitajaksi. Pidämme yhteyttä sähköpostitse koko prosessin ajan, ja kun olemme suorittaneet tutkimuksen, saat sähköpostitse linkin kaikkiin suosittelemiimme resursseihin.';
@@ -2236,7 +2230,6 @@ $lang["prevent_user_group_sharing_externally"] = 'Estä käyttäjiä jakamasta r
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Salli käyttäjäryhmän valinta ulkoisen jakamisen käyttöoikeustason määrittämiseksi';
 $lang["share_using_permissions_from_user_group"] = 'Jaa käyttäjäryhmän käyttöoikeuksia käyttäen';
 $lang["externalshare_using_permissions_from_user_group"] = 'Jos lähetät sähköpostia ulkoisille käyttäjille, valitse käyttäjäryhmä, jota käytetään pääsyn antamiseen';
-$lang["delete__nopassword"] = 'Vahvista, että haluat poistaa tämän resurssin.';
 $lang["collection_download_too_large"] = 'Valitettavasti tämä kokoelma on liian suuri ladattavaksi yhtenä tiedostona. Yritä pienentää kokoelman kokoa tai valita pienempi kuvakoko.';
 $lang["all__passwordnewemailhtml"] = 'Ole hyvä ja klikkaa alla olevaa linkkiä asettaaksesi uuden salasanan tilillesi.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />käyttäjänimi: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Lataaminen ei ole tilapäisesti käytettävissä';

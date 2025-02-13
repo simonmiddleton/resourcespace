@@ -224,7 +224,6 @@ $lang["didnotinclude"] = "inkluderte ikke";
 $lang["createnewresource"] = "Opprett nytt materiale";
 $lang["resourcetype"] = "Filtype";
 $lang["resourcetypes"] = "Filtyper";
-$lang["deleteresource"] = "Slett fil";
 $lang["downloadresource"] = "Last ned fil";
 $lang["rightclicktodownload"] = "Klikk på denne lenken og velg 'Lagre som...' for å laste ned filen...";
 $lang["downloadinprogress"] = "Nedlasting pågår";
@@ -464,7 +463,6 @@ $lang["key"] = "Symbolforklaring:"; # e.g. explanation of icons on search page
 $lang["languageselection"] = "Språkvalg";
 $lang["language"] = "Språk";
 $lang["changeyourpassword"] = "Bytt passord";
-$lang["yourpassword"] = "Ditt passord";
 $lang["newpassword"] = "Nytt passord";
 $lang["newpasswordretype"] = "Nytt passord (gjenta)";
 $lang["passwordnotvalid"] = "Dette er ikke et gyldig passord";
@@ -689,7 +687,6 @@ $lang["backtomanagealternativefiles"] = "Tilbake til Behandle alternative filer"
 
 
 $lang["resourceistranscoding"] = "Filen blir for øyeblikket omkodet";
-$lang["cantdeletewhiletranscoding"] = "Du kan ikke slette filer mens de blir omkodet";
 
 $lang["maxcollectionthumbsreached"] = "Det er for mange filer i dette lysbordet til å vise miniatyrbilder. Miniatyrbildene vil nå bli skjult.";
 
@@ -889,7 +886,6 @@ $lang["removethisfilter"] = "(fjern dette filteret)";
 $lang["no_exif"] = "Ikke importer EXIF/IPTC/XMP metadata for denne opplastingen";
 $lang["difference"] = "Avvik";
 $lang["viewdeletedresources"] = "Se gjennom slettet materiell";
-$lang["finaldeletion"] = "Denne filen har allerede status som 'slettet'. Denne handlingen vil fjerne filen fullstendig fra systemet.";
 
 $lang["nocookies"] = "En informasjonskapsel (cookie) kunne ikke settes på riktig måte. Sjekk at informasjonskapsler er slått på i din nettleser.";
 
@@ -1798,7 +1794,6 @@ $lang["list-recipients"] = 'Denne meldingen ble sendt til følgende e-postadress
 $lang["sort"] = 'Sorter';
 $lang["sortcollection"] = 'Sorter samling';
 $lang["emptycollection"] = 'Fjern alle ressurser';
-$lang["deleteresources"] = 'Slett ressurser';
 $lang["emptycollectionareyousure"] = 'Er du sikker på at du vil fjerne alle ressurser fra denne samlingen?';
 $lang["error-cannoteditemptycollection"] = 'Du kan ikke redigere en tom samling.';
 $lang["error-permissiondenied"] = 'Tillatelse nektet.';
@@ -2139,7 +2134,6 @@ $lang["collection_manage__newcollection"] = 'For å opprette en ny samling, skri
 $lang["collection_public__introtext"] = 'Offentlige samlinger opprettes av andre brukere.';
 $lang["contact__contact"] = 'Dine kontaktdetaljer her.';
 $lang["contribute__introtext"] = 'Du kan bidra med dine egne ressurser. Når du oppretter en ressurs vil den i utgangspunktet være i statusen "Avventer innsending". Når du har lastet opp filen og redigert feltene, sett statusfeltet til "Avventer gjennomgang". Deretter vil den bli gjennomgått av ressursteamet.';
-$lang["delete__introtext"] = 'Vennligst skriv inn passordet ditt for å bekrefte at du ønsker å slette denne ressursen.';
 $lang["done__collection_email"] = 'En e-post som inneholder en lenke til samlingen har blitt sendt til brukerne du har spesifisert.';
 $lang["done__deleted"] = 'Ressursen har blitt slettet.';
 $lang["done__research_request"] = 'Et medlem av forskningsteamet vil bli tildelt forespørselen din. Vi vil holde kontakten via e-post gjennom hele prosessen, og når vi har fullført forskningen vil du motta en e-post med en lenke til alle ressursene vi anbefaler.';
@@ -2198,7 +2192,6 @@ $lang["prevent_user_group_sharing_externally"] = 'Forhindre brukere fra å dele 
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Tillat valg av brukergruppe for å bestemme tilgangsnivå når du deler eksternt';
 $lang["share_using_permissions_from_user_group"] = 'Del med tillatelser fra brukergruppe';
 $lang["externalshare_using_permissions_from_user_group"] = 'Hvis du sender e-post til eksterne brukere, vennligst velg brukergruppen som skal brukes for tilgang';
-$lang["delete__nopassword"] = 'Vennligst bekreft at du ønsker å slette denne ressursen.';
 $lang["collection_download_too_large"] = 'Beklager, denne samlingen er for stor til å lastes ned som én fil. Prøv å redusere størrelsen på samlingen eller velge en mindre bildestørrelse.';
 $lang["all__passwordnewemailhtml"] = 'Vennligst klikk på lenken nedenfor for å sette en nytt passord for kontoen din.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Brukernavn: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Opplasting midlertidig utilgjengelig';

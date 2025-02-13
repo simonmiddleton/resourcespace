@@ -439,7 +439,6 @@ $lang["clicklinkviewcollections"] = "Kliknutím na odkazy nižšie zobrazíte zb
 $lang["createnewresource"] = "Vytvoriť nový zdroj";
 $lang["treeobjecttype-resource_type"] = $lang["resourcetype"] = "Typ zdroja";
 $lang["resourcetypes"] = "Typy zdrojov";
-$lang["deleteresource"] = "Odstrániť zdroj";
 $lang["downloadresource"] = "Stiahnúť zdroj";
 $lang["rightclicktodownload"] = "Kliknite pravým tlačidlom myši na tento odkaz a vyberte možnosť \"Uložiť cieľ odkazu\""; # For Opera/IE browsers only
 $lang["downloadinprogress"] = "Prebieha sťahovanie";
@@ -751,7 +750,6 @@ $lang["default"] = "Predvolené";
 $lang["languageselection"] = "Výber jazyka";
 $lang["language"] = "Jazyk";
 $lang["changeyourpassword"] = "Zmeniť svoje heslo";
-$lang["yourpassword"] = "Vaše heslo";
 $lang["currentpassword"] = "Aktuálne heslo";
 $lang["newpassword"] = "Nové heslo";
 $lang["newpasswordretype"] = "Nové heslo (znovu)";
@@ -1076,7 +1074,6 @@ $lang["backtomanagealternativefiles"] = "Späť na správu alternatívnych súbo
 
 
 $lang["resourceistranscoding"] = "Prebieha transkódovanie zdroja";
-$lang["cantdeletewhiletranscoding"] = "Počas transkódovania nemôžete odstrániť zdroje";
 
 $lang["maxcollectionthumbsreached"] = "V tejto kolekcii je príliš veľa zdrojov na zobrazenie miniatúr. Miniatúry nebudú zobrazené.";
 
@@ -1306,7 +1303,6 @@ $lang["removethisfilter"] = "(odstrániť tento filter)";
 $lang["no_exif"] = "Neimportovať vložené metaúdaje EXIF/IPTC/XMP pre toto nahrávanie";
 $lang["difference"] = "Rozdiel";
 $lang["viewdeletedresources"] = "Zobraziť odstránené zdroje";
-$lang["finaldeletion"] = "Tento zdroj je už v stave „odstránený“. Táto akcia úplne odstráni súbory zdroja zo systému.";
 $lang["diskerror"] = "Kvóta bola prekročená";
 
 $lang["nocookies"] = "Nepodarilo sa správne nastaviť cookie. Uistite sa, že máte v nastaveniach prehliadača povolené súbory cookie.";
@@ -1649,7 +1645,6 @@ $lang["list-recipients"] = "Táto správa bola zaslaná na nasledujúce e-mailov
 $lang["sort"] = "Zoradiť";
 $lang["sortcollection"] = "Zoradiť zbierku";
 $lang["emptycollection"] = "Odobrať zdroje";
-$lang["deleteresources"] = "Odstrániť zdroje";
 $lang["emptycollectionareyousure"] = "Naozaj chcete odstrániť všetky zdroje z tejto zbierky?";
 
 $lang["error-cannoteditemptycollection"] = "Nemôžete upraviť prázdnu kolekciu.";
@@ -2045,7 +2040,6 @@ $lang["collection_manage__newcollection"] = "Ak chcete vytvoriť novú kolekciu,
 $lang["collection_public__introtext"] = "Verejné zbierky vytvárajú iní používatelia.";
 $lang["contact__contact"] = "Vaše kontaktné údaje.";
 $lang["contribute__introtext"] = "Môžete prispieť svojimi vlastnými zdrojmi. Keď vytvoríte zdroj, bude v stave \"Čakajúci na predloženie na schválenie\". Po nahratí súboru a úprave polí metadát, nastavte stav zdroja na \"Čaká na kontrolu \". Následne ho preskúma shvaľovateľ zdrojov.";
-$lang["delete__introtext"] = "Zadajte svoje heslo, aby ste potvrdili, že naozaj chcete tento prostriedok odstrániť.";
 $lang["done__collection_email"] = "Uvedeným používateľom bol odoslaný e-mail obsahujúci odkaz na zbierku.";
 $lang["done__deleted"] = "Zdroj bol odstránený.";
 $lang["done__research_request"] = "K Vašej žiadosti bol pridelený spracovateľ. Je možné, že Vás v prípade doplňujúcich otázok budeme kontaktovať prostredníctvom e-mailu. Po dokončení prieskumu dostanete e-mail s odkazom na všetky zdroje, týkajúce sa Vašej požiadavky, ktoré Vám odporúčame.";
@@ -2106,7 +2100,6 @@ $lang["prevent_user_group_sharing_externally"] = "Zabráňte používateľom zdi
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = "Povoliť skupine používateľov určenie úrovne prístupu pri zdieľaní externým používateľom ";
 $lang["share_using_permissions_from_user_group"] = "Zdieľať s pomocou oprávnení skupiny používateľov";
 $lang["externalshare_using_permissions_from_user_group"] = "Ak posielate e-mail externým používateľom, vyberte skupinu používateľov, pod oprávneniami ktorej budú prístupovať k zdroju";
-$lang["delete__nopassword"] = "Potvrďte, že chcete tento zdroj skutočne odstrániť.";
 
 $lang["collection_download_too_large"] = "Ľutujeme, táto zbierka je príliš veľká na stiahnutie vo forme jedného súboru. Skúste zmenšiť veľkosť zbierky alebo vyberte menšiu veľkosť obrázka.";
 $lang["all__passwordnewemailhtml"] = "[img_gfx/titles/title.gif]<br /><br /> Kliknutím na odkaz nižšie nastavíte nové heslo pre svoj účet. <br /><br /> URL: <a href=\"[url]\" target=\"_blank\" >[url]</a><br /> používateľské meno: [username]<br />[text_footer]" ;
