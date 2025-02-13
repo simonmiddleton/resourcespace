@@ -11,9 +11,10 @@ function meta_get_map()     // returns array of [resource_type][table][attribute
     foreach ($fields as $field) {
         # Get translated - support i18n - upload columns must be in user's local language.
         $field['name'] = trim(i18n_get_translated($field['name']));
-        $arr_fieldrestypes = explode(",", (string)$field['resource_types']);
+        $arr_fieldrestypes = explode(",", (int) $field['resource_types']);
         foreach ($arr_fieldrestypes as $fieldrestype) {
             if (!isset($meta[$fieldrestype])) {
+                /** @var array<int, array> */
                 $meta[$fieldrestype] = []; // make meta[<resource_type>] if does not exist
             }
             $meta[$fieldrestype][$field['name']]['remote_ref'] = $field['ref'];

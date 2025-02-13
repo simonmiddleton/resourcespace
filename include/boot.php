@@ -426,6 +426,8 @@ if ($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagen
 
         header("Origin: {$CSRF_target_origin}");
         header("Access-Control-Allow-Origin: {$CSRF_source_origin}");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+        header("Access-Control-Allow-Headers: Authorization, Content-Type");
     }
     header('Vary: Origin');
 }

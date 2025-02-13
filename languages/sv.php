@@ -370,7 +370,6 @@ $lang["clicklinkviewcollections"] = "Klicka på länkarna nedan om du vill visa 
 $lang["createnewresource"] = "Skapa nytt material";
 $lang["treeobjecttype-resource_type"] = $lang["resourcetype"] = "Materialtyp";
 $lang["resourcetypes"] = "Materialtyper";
-$lang["deleteresource"] = "Ta bort material";
 $lang["downloadresource"] = "Hämta material";
 $lang["rightclicktodownload"] = "Högerklicka på denna länk och välj <b>Spara&nbsp;mål&nbsp;som</b> för att hämta materialet."; # For Opera/IE browsers only
 $lang["downloadinprogress"] = "Hämtning pågår";
@@ -626,7 +625,6 @@ $lang["key"] = "Symbolförklaring:"; # e.g. explanation of icons on search page
 $lang["languageselection"] = "Språkval";
 $lang["language"] = "Språk";
 $lang["changeyourpassword"] = "Byt lösenord";
-$lang["yourpassword"] = "Lösenord";
 $lang["currentpassword"] = "Nuvarande lösenord";
 $lang["newpassword"] = "Nytt lösenord";
 $lang["newpasswordretype"] = "Nytt lösenord (repetera)";
@@ -902,7 +900,6 @@ $lang["backtomanagealternativefiles"] = "Tillbaka: Hantera alternativa filer";
 
 
 $lang["resourceistranscoding"] = "Detta material kodas just nu om";
-$lang["cantdeletewhiletranscoding"] = "Du kan inte ta bort material medan det kodas om";
 
 $lang["maxcollectionthumbsreached"] = "Det finns för många material i den här samlingen för att kunna visa miniatyrbilder. Miniatyrbilderna kommer nu därför att döljas.";
 
@@ -1100,7 +1097,6 @@ $lang["removethisfilter"] = "(avlägsna detta filter)";
 $lang["no_exif"] = "Extrahera inte exif-, IPTC- eller xmp-metadata vid denna överföring";
 $lang["difference"] = "Skillnad";
 $lang["viewdeletedresources"] = "Visa borttagna material";
-$lang["finaldeletion"] = "Detta material är redan markerat som borttaget. Om du fortsätter tas material bort permanent.";
 $lang["diskerror"] = "Lagringskvoten överskriden";
 
 $lang["nocookies"] = "En kaka kunde inte sparas korrekt. Kontrollera att webbläsaren tillåter kakor.";
@@ -1415,7 +1411,6 @@ $lang["cc-emailaddress"] = "Kopia till %emailaddress"; # %emailaddress will be r
 $lang["sort"] = "Sortera";
 $lang["sortcollection"] = "Sortera samling";
 $lang["emptycollection"] = "Avlägsna materialen";
-$lang["deleteresources"] = "Ta bort materialen";
 $lang["emptycollectionareyousure"] = "Vill du avlägsna alla material från den här samlingen?";
 
 $lang["error-cannoteditemptycollection"] = "Du kan inte redigera en tom samling.";
@@ -1624,7 +1619,6 @@ $lang["collection_manage__newcollection"] = "Fyll i ett samlingsnamn om du vill 
 $lang["collection_public__introtext"] = "Gemensamma samlingar är skapade av andra användare.";
 $lang["contact__contact"] = "Dina kontaktuppgifter …";
 $lang["contribute__introtext"] = "Du kan bidra med eget material. När du först skapar materialet får det statusen ’Under registrering’. Överför en eller flera filer och fyll i fälten med relevant metadata. Sätt statusen till ’Väntande på granskning’ när du är klar.";
-$lang["delete__introtext"] = "Du måste ange ditt lösenord för att bekräfta att du vill ta bort det här materialet.";
 $lang["done__collection_email"] = "Ett e-postmeddelande innehållande en webblänk har skickats till användarna du specificerade. Samlingen har lagts till i respektive användares panel <b>Mina&nbsp;samlingar</b>.";
 $lang["done__deleted"] = "Materialet har tagits bort.";
 $lang["done__research_request"] = "En medlem av researchteamet kommer att få i uppdrag att besvara din researchförfrågan. Vi kommer att hålla kontakt genom e-post under arbetets gång. När vi har slutfört arbetet kommer du att få ett e-postmeddelande med en webblänk till alla material vi rekommenderar.";
@@ -2269,7 +2263,6 @@ $lang["customaccesspreventshare"] = 'Du har inte tillåtelse att dela en eller f
 $lang["prevent_user_group_sharing_externally"] = 'Förhindra användare från att dela resurser med externa användare';
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Tillåt användargruppsval för att bestämma åtkomstnivå vid extern delning';
 $lang["share_using_permissions_from_user_group"] = 'Dela med behörigheter från användargrupp';
-$lang["delete__nopassword"] = 'Var god bekräfta att du vill ta bort denna resurs.';
 $lang["collection_download_too_large"] = 'Tyvärr, denna samling är för stor för att laddas ner som en fil. Försök minska storleken på samlingen eller välj en mindre bildstorlek.';
 $lang["all__passwordnewemailhtml"] = 'Vänligen klicka på länken nedan för att ställa in ett nytt lösenord för ditt konto.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Användarnamn: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Uppladdning tillfälligt otillgänglig';

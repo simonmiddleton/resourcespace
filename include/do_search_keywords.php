@@ -19,6 +19,7 @@ if ($keysearch) {
         $keyword = $keywords[$n];
         debug("do_search(): \$keyword = {$keyword}");
         $quoted_string = (substr($keyword, 0, 1) == "\""  || substr($keyword, 0, 2) == "-\"" ) && substr($keyword, -1, 1) == "\"";
+
         $quoted_field_match = false;
         $field_short_name_specified = false;
 
@@ -257,6 +258,17 @@ if ($keysearch) {
                         $keywordprocessed = true;
                     }
                 }
+            } elseif (
+                $field_short_name_specified
+                && !$quoted_string
+                && preg_match(
+                    '/^(?=[^ \\t\\n]*[!@#$%^&()_+\\-=\\[\\]{}\'\"\\\\,.<>\\/?])[^ \\t\\n]*$/',
+                    $keyword
+                ) === 1
+            ) {
+                    // Quote keywords that contain special characters and no spaces
+                    $keyword = "\"$keyword\"";
+                    $quoted_string = true;
             }
 
             if ($field_short_name_specified) { // Need this also for string matching in a named text field
@@ -591,7 +603,8 @@ if ($keysearch) {
                                                 WHERE rn[union_index].node IN
                                                     (SELECT ref FROM `node` WHERE name RLIKE ? "
                                                 . $union_restriction_clause->sql . ")
-                                                GROUP BY resource ";
+                                                GROUP BY resource " .
+                                                ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
                                 }
                                 $union->parameters = array_merge(["s",$keyword], $union_restriction_clause->parameters);
                                 if ($non_field_keyword_sql->sql != "") {

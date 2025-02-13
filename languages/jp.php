@@ -144,7 +144,6 @@ $lang["copycollectionremoveall"] = "コピーする前に全てのリソース�
 $lang["createnewresource"] = "新規リソース作成";
 $lang["resourcetype"] = "リソース・タイプ";
 $lang["resourcetypes"] = "リソース・タイプ";
-$lang["deleteresource"] = "リソースの削除";
 $lang["downloadresource"] = "リソースのダウンロード";
 $lang["rightclicktodownload"] = "本リンクを右クリックし'名前を付けてリンク先を保存'を選んでリソースをダウンロード..."; # For Opera browser only
 $lang["downloadinprogress"] = "ダウンロード中";
@@ -362,7 +361,6 @@ $lang["key"] = "キー"; # e.g. 検索ページのアイコンの説明
 $lang["languageselection"] = "言語選択";
 $lang["language"] = "言語";
 $lang["changeyourpassword"] = "あなたのパスワード変更";
-$lang["yourpassword"] = "あなたのパスワード";
 $lang["newpassword"] = "新パスワード";
 $lang["newpasswordretype"] = "新パスワード (確認)";
 $lang["passwordnotvalid"] = "有効なパスワードではありません";
@@ -548,7 +546,6 @@ $lang["uploadreplacementfile"] = "置換ファイルのアップロード";
 
 
 $lang["resourceistranscoding"] = "リソースは現在、変換中";
-$lang["cantdeletewhiletranscoding"] = "変換中はリソース削除できません";
 
 $lang["maxcollectionthumbsreached"] = "サムネイル表示するコレクション内のリソースが大量にあります。サムネイルは現在非表示となります。";
 
@@ -678,7 +675,6 @@ $lang["collection_manage__newcollection"] = "新規コレクションを作成�
 $lang["collection_public__introtext"] = "他のユーザによって作成された公開コレクション。";
 $lang["contact__contact"] = "★こちらにはあなたの連絡先を記入してください★";
 $lang["contribute__introtext"] = "あなたはあなた自身のリソースを投稿できます。 あなたがリソースを作成した直後は登録待ち状態にあります。 あなたのファイルをアップロードして、フィールドを編集後にはレビュー待ち状態に設定されます。 次にリソースチームによってレビューされるでしょう。";
-$lang["delete__introtext"] = "このリソースを削除するにはパスワードを入力して、確認してください。";
 $lang["done__collection_email"] = "コレクションへのリンクを含むメールをあなたが指定したユーザに送りました。 コレクションは\'コレクション\'リストに加えられます。";
 $lang["done__deleted"] = "リソースは削除されました。";
 $lang["done__research_request"] = "調査チームのメンバーがあなたの要求にアサインされるでしょう。 メールで私たちは途中経過をお知らせします。そして、私たちが調査を終了すると、あなたは私たちが推薦するすべてのリソースへのリンクをメールで受け取ります。";
@@ -1390,7 +1386,6 @@ $lang["removethisfilter"] = '（このフィルターを削除する）';
 $lang["no_exif"] = 'このアップロードに埋め込まれたEXIF/IPTC/XMPメタデータをインポートしないでください。';
 $lang["difference"] = '差異 (Saii)';
 $lang["viewdeletedresources"] = '削除されたリソースを表示する';
-$lang["finaldeletion"] = 'このリソースはすでに「削除済み」の状態です。このアクションにより、リソースはシステムから完全に削除されます。';
 $lang["diskerror"] = 'クオータが超過されました。';
 $lang["nocookies"] = 'クッキーを正しく設定できませんでした。ブラウザの設定でクッキーが有効になっていることを確認してください。';
 $lang["selectedresourceslightroom"] = '選択されたリソース（Lightroom互換リスト）：';
@@ -1751,7 +1746,6 @@ $lang["list-recipients"] = 'このメッセージは以下のメールアドレ�
 $lang["sort"] = '並べ替える';
 $lang["sortcollection"] = 'コレクションをソートする';
 $lang["emptycollection"] = 'すべてのリソースを削除する。';
-$lang["deleteresources"] = 'リソースを削除する';
 $lang["emptycollectionareyousure"] = 'このコレクションからすべてのリソースを削除してもよろしいですか？';
 $lang["error-cannoteditemptycollection"] = '空のコレクションを編集することはできません。';
 $lang["error-permissiondenied"] = 'アクセスが拒否されました。';
@@ -2099,7 +2093,6 @@ $lang["prevent_user_group_sharing_externally"] = '外部ユーザーとのリソ
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = '外部共有時のアクセスレベルを決定するためのユーザーグループ選択を許可する。';
 $lang["share_using_permissions_from_user_group"] = 'ユーザーグループの権限を使用して共有する。';
 $lang["externalshare_using_permissions_from_user_group"] = '外部ユーザーにメールを送信する場合は、アクセスに使用するユーザーグループを選択してください。';
-$lang["delete__nopassword"] = 'このリソースを削除してよろしいですか、確認してください。';
 $lang["collection_download_too_large"] = '申し訳ありませんが、このコレクションは1つのファイルとしてダウンロードするには大きすぎます。コレクションのサイズを減らすか、より小さい画像サイズを選択してください。';
 $lang["all__passwordnewemailhtml"] = '以下のリンクをクリックして、アカウントの新しいパスワードを設定してください。<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />ユーザー名: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'アップロードは一時的に利用できません。';

@@ -477,7 +477,6 @@ $lang["range_no_start"] = "Cannot end range without a start. Please release the 
 $lang["createnewresource"] = "Create new resource";
 $lang["treeobjecttype-resource_type"] = $lang["resourcetype"] = "Resource type";
 $lang["resourcetypes"] = "Resource types";
-$lang["deleteresource"] = "Delete resource";
 $lang["downloadresource"] = "Download resource";
 $lang["rightclicktodownload"] = "Right click this link and choose 'Save Target As' to download your resource..."; # For Opera/IE browsers only
 $lang["downloadinprogress"] = "Download in progress";
@@ -834,7 +833,6 @@ $lang["default"] = "Default";
 $lang["languageselection"] = "Language";
 $lang["language"] = "Language";
 $lang["changeyourpassword"] = "Change password";
-$lang["yourpassword"] = "Your password";
 $lang["currentpassword"] = "Current password";
 $lang["newpassword"] = "New password";
 $lang["newpasswordretype"] = "New password (retype)";
@@ -1043,7 +1041,9 @@ $lang["add_selected_to_collection"] = "Add selected to collection";
 $lang["removeallresourcesfromcollection"] = "Remove all resources from this collection";
 $lang["remove_selected_from_collection"] = "Remove selected from collection";
 $lang['deleteallresourcesfromcollection'] = 'Delete all resources';
+$lang['deleteselectedfromcollection'] = 'Delete selected resources';
 $lang["deleteallsure"] = "Are you sure you wish to DELETE these resources? This will delete the resources themselves, not just remove them from this collection.";
+$lang['deleteallselectedsure'] = 'Are you sure you wish to DELETE the selected resources? This will delete the resources themselves, not just remove them from these search results.';
 $lang["batchdonotaddcollection"] = "(do not add to a collection)";
 $lang["collectionsthemes"] = "Related featured and public collections";
 $lang["recent"] = "Recent";
@@ -1202,7 +1202,6 @@ $lang["backtomanagealternativefiles"] = "Back to manage alternative files";
 $lang["alternatetype"] = "Alternative type";
 
 $lang["resourceistranscoding"] = "Resource is currently being transcoded";
-$lang["cantdeletewhiletranscoding"] = "You can't delete resources while they are transcoding";
 
 $lang["maxcollectionthumbsreached"] = "There are too many resources in this collection to display thumbnails. Thumbnails will now be hidden.";
 
@@ -1448,7 +1447,6 @@ $lang["removethisfilter"] = "(remove this filter)";
 $lang["no_exif"] = "Do not import embedded EXIF/IPTC/XMP metadata for this upload";
 $lang["difference"] = "Difference";
 $lang["viewdeletedresources"] = "View deleted resources";
-$lang["finaldeletion"] = "This resource is already in the 'deleted' state. This action will completely remove the resource from the system.";
 $lang["diskerror"] = "Quota exceeded";
 
 $lang["nocookies"] = "A cookie could not be set correctly. Please make sure you have cookies enabled in your browser settings.";
@@ -1902,7 +1900,6 @@ $lang["list-recipients"] = "This message was sent to the following e-mail addres
 $lang["sort"] = "Sort";
 $lang["sortcollection"] = "Sort collection";
 $lang["emptycollection"] = "Remove all resources";
-$lang["deleteresources"] = "Delete resources";
 $lang["emptycollectionareyousure"] = "Are you sure you want to remove all resources from this collection?";
 
 $lang["error-cannoteditemptycollection"] = "You cannot edit an empty collection.";
@@ -2341,7 +2338,6 @@ $lang["collection_manage__newcollection"] = "To create a new collection, enter a
 $lang["collection_public__introtext"] = "Public collections are created by other users.";
 $lang["contact__contact"] = "Your contact details here.";
 $lang["contribute__introtext"] = "You can contribute your own resources. When you initially create a resource it is in the \"Pending Submission\" status. When you have uploaded your file and edited the fields, set the status field to \"Pending Review\". It will then be reviewed by the resources team.";
-$lang["delete__introtext"] = "Please enter your password to confirm that you would like to delete this resource.";
 $lang["done__collection_email"] = "An email containing a link to the collection has been sent to the users you specified.";
 $lang["done__deleted"] = "The resource has been deleted.";
 $lang["done__research_request"] = "A member of the research team will be assigned to your request. We'll keep in contact via email throughout the process, and once we've completed the research you'll receive an email with a link to all the resources that we recommend.";
@@ -2408,7 +2404,6 @@ $lang["prevent_user_group_sharing_externally"] = "Prevent users from sharing res
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = "Allow user group select for determining access level when sharing externally";
 $lang["share_using_permissions_from_user_group"] = "Share using permissions from user group";
 $lang["externalshare_using_permissions_from_user_group"] = "If you are e-mailing external users, please select the user group to use for access";
-$lang["delete__nopassword"] = "Please confirm that you would like to delete this resource.";
 
 $lang["collection_download_too_large"] = "Sorry, this collection is too large to download as one file. Try reducing the size of the collection or selecting a smaller image size.";
 $lang["all__passwordnewemailhtml"] = "[img_headerlogo][welcome]<br/><br/>Please click on the link below to set a new password for your account.<br/><br/><a href=\"[url]\" target=\"_blank\" >[url]</a><br/><br/>Your new username: [username]<br/><br/>[text_footer]" ;
