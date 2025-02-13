@@ -319,7 +319,8 @@ final class IIIFRequest
         if (in_array($resdata["file_extension"], array_merge($this->media_extensions))) {
             $media_path = get_resource_path($resource, true, $size, false, $resdata["file_extension"]);
         } else {
-            $media_path = get_resource_path($resource, true, $size, false);
+            $useextension = strtolower($resdata["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+            $media_path = get_resource_path($resource, true, $size, false, $useextension);
         }
 
         if (!file_exists($media_path)) {
@@ -543,7 +544,8 @@ final class IIIFRequest
             $media_path = get_resource_path($useimage["ref"], true, $size, false, $useimage["file_extension"]);
         } else {
             $size = $this->largest_jpg_size($useimage);
-            $media_path = get_resource_path($useimage["ref"], true, $size, false);
+            $useextension = strtolower($useimage["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+            $media_path = get_resource_path($useimage["ref"], true, $size, false, $useextension);
         }
         if (!file_exists($media_path)) {
             debug("IIIF: generateCanvas() No image available for identifier:" . $position);
@@ -735,8 +737,9 @@ final class IIIFRequest
             } else {
                 $fulljpgsize = $this->largest_jpg_size($resource);
             }
-            $img_path = get_resource_path($this->request["id"], true, $fulljpgsize, false, "jpg");
-            $image_size = get_original_imagesize($this->request["id"], $img_path, "jpg");
+            $useextension = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+            $img_path = get_resource_path($this->request["id"], true, $fulljpgsize, false, $useextension);
+            $image_size = get_original_imagesize($this->request["id"], $img_path, $useextension);
             if ($image_size === false) {
                 $this->errors[] = "No image available for this identifier";
                 $this->triggerError(404);
@@ -1209,7 +1212,8 @@ function iiif_get_canvases($identifier, $iiif_results, $sequencekeys = false)
             }
         }
         $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
-        $img_path = get_resource_path($useimage["ref"], true, $size, false);
+        $useextension = strtolower($useimage["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+        $img_path = get_resource_path($useimage["ref"], true, $size, false, $useextension);
         if (!file_exists($img_path)) {
             continue;
         }
@@ -1243,6 +1247,7 @@ function iiif_get_canvases($identifier, $iiif_results, $sequencekeys = false)
         $size_info = array(
             'identifier' => $size,
             'return_height_width' => false,
+            'original_file_extension' => $useextension
         );
         $canvases[$index]["images"][] = iiif_get_image($identifier, $useimage["ref"], $index, $size_info);
     }
@@ -1350,7 +1355,8 @@ function iiif_get_image($identifier, $resourceid, $position, array $size_info)
     $size = $size_info['identifier'];
     $return_height_width = $size_info['return_height_width'];
 
-    $img_path = get_resource_path($resourceid, true, $size, false);
+    $useextension = $size_info['original_file_extension'] ?? 'jpg';
+    $img_path = get_resource_path($resourceid, true, $size, false, $useextension);
     if (!file_exists($img_path)) {
         return false;
     }
