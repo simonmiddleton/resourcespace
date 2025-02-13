@@ -8790,9 +8790,9 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
             $pullresource = related_resource_pull($resource);
             if ($pullresource !== false) {
                 $resource = $pullresource;
+                $preview = get_resource_preview($resource, $sizes, get_resource_access($resource), $watermark, $page, false);
+                $validimage = $preview !== false; 
             }
-            $preview = get_resource_preview($resource, $sizes, $access, $watermark, $page, false);
-            $validimage = $preview !== false; 
         }
     }
     if (!$validimage) {
