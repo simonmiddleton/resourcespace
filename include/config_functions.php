@@ -1214,7 +1214,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
         // UPLOAD
         if(getval('upload_' . $config_name, '') !== '' && enforcePostRequest(false))
             {
-            if(isset($_FILES[$config_name]['tmp_name']) && is_uploaded_file($_FILES[$config_name]['tmp_name']))
+            if(isset($_FILES[$config_name]['tmp_name']))
                 {
                 $uploaded_file_extension = parse_filename_extension($_FILES[$config_name]['name']);
                 $uploaded_filename       = sprintf('%s/%s.%s', $file_server_location, $config_name, $uploaded_file_extension);
