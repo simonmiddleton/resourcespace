@@ -140,7 +140,7 @@ if($ajax && $process_action)
     ajax_send_response(200, ajax_response_ok(array_column($affected_resources, "ref")));
     }
 
-$form_action = generateURL($_SERVER['PHP_SELF'],
+$form_action = generateURL($baseurl_short . 'plugins/rse_workflow/pages/batch_action.php',
     array(
         "search" => $search,
         "restypes" => $restypes,
