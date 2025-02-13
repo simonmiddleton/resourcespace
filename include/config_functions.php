@@ -1214,11 +1214,8 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
         // UPLOAD
         if(getval('upload_' . $config_name, '') !== '' && enforcePostRequest(false))
             {
-            die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
             if(isset($_FILES[$config_name]['tmp_name']) && is_uploaded_file($_FILES[$config_name]['tmp_name']))
                 {
-                // $uploaded_file_pathinfo  = pathinfo($_FILES[$config_name]['name']); #todo: delete after WIP
-                // $uploaded_file_extension = $uploaded_file_pathinfo['extension']; #todo: delete after WIP
                 $uploaded_file_extension = parse_filename_extension($_FILES[$config_name]['name']);
                 $uploaded_filename       = sprintf('%s/%s.%s', $file_server_location, $config_name, $uploaded_file_extension);
                 // We add a placeholder for storage_url so we can reach the file easily 
@@ -1233,23 +1230,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
 
                 if (!$process_file_upload['success']) {
                     unset($uploaded_filename);
-                    // todo: try and handle errors somehow
                 }
-
-                if(is_banned_extension($uploaded_file_extension))
-                    {
-                    trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
-                    }
-                
-                if (count($valid_extensions) > 0 && !check_valid_file_extension($_FILES[$config_name], $valid_extensions))
-                    {
-                    trigger_error('File type not valid for this selection. Please choose from ' . implode(', ', $valid_extensions) . '.');
-                    }
-
-                if(!move_uploaded_file($_FILES[$config_name]['tmp_name'], $uploaded_filename))
-                    {
-                    unset($uploaded_filename);
-                    }
                 }
 
             if(isset($uploaded_filename) && set_config_option(null, $config_name, $saved_filename))

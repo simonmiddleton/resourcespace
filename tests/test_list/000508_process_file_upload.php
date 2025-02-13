@@ -107,7 +107,8 @@ $use_cases = [
             'destination' => new SplFileInfo(sys_get_temp_dir() . '/test_508_copy.txt'),
             'processor' => [],
         ],
-        'expected' => $expect_fail_msg('Destination path'),
+        'expected' => null,
+        'should_throw' => true,
     ],
     [
         'name' => 'Check file move processor is allowed',

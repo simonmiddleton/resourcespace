@@ -453,6 +453,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 
         if (!is_uploaded_file($source['tmp_name'])) {
             trigger_error('Invalid $source input. For files not uploaded via HTTP POST, please use SplFileInfo');
+            exit();
         }
 
         $orig_use_error_exception_val = $GLOBALS['use_error_exception'] ?? false;
@@ -538,11 +539,14 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
     $dest_path = $destination->isFile() ? $destination->getRealPath() : $destination->getPathname();
     if ($destination->isDir()) {
         trigger_error('Destination path must be for a file, not a directory!');
+        exit();
     } elseif (!(is_valid_rs_path($dest_path) && is_safe_basename($destination->getBasename()))) {
         debug("Destination path '{$dest_path}' not allowed!");
-        return $fail_with_msg('Destination path not allowed');
+        trigger_error('Destination path not allowed');
+        exit();
     } elseif (array_intersect(['move_uploaded_file', 'rename', 'copy'], [$file_move_processor]) === []) {
         trigger_error('Invalid upload (file move) processor');
+        exit();
     } elseif ($file_move_processor($source_file_path, $dest_path)) {
         return ['success' => true];
     } else {
