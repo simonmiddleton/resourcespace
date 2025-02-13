@@ -5,13 +5,8 @@ command_line_only();
 // --- Set up
 $run_id = test_generate_random_ID(5);
 $dest = new SplFileInfo(get_temp_dir(false) . "/test_508_{$run_id}.bin");
-$expect_fail_msg = static function (string $V): callable {
-    return static fn ($R): bool => (
-        is_array($R)
-        && !$R['success']
-        && isset($R['error'])
-        && mb_strpos($R['error'], $V) !== false
-    );
+$expect_fail_cond = static function (ProcessFileUploadErrorCondition $V): callable {
+    return static fn ($R): bool => (is_array($R) && !$R['success'] && isset($R['error']) && $R['error'] === $V);
 };
 // --- End of Set up
 
@@ -40,7 +35,7 @@ $use_cases = [
             'destination' => $dest,
             'processor' => [],
         ],
-        'expected' => $expect_fail_msg('Invalid upload path'),
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::InvalidUploadPath),
     ],
     [
         'name' => 'Special files are forbidden',
@@ -50,7 +45,7 @@ $use_cases = [
             'destination' => $dest,
             'processor' => [],
         ],
-        'expected' => $expect_fail_msg('"Special" file'),
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::SpecialFile),
     ],
     [
         'name' => 'Banned extension',
@@ -60,7 +55,7 @@ $use_cases = [
             'destination' => $dest,
             'processor' => [],
         ],
-        'expected' => $expect_fail_msg('Invalid extension'),
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::InvalidExtension),
     ],
     [
         'name' => 'Allow specific extension',
@@ -86,7 +81,7 @@ $use_cases = [
             'destination' => $dest,
             'processor' => [],
         ],
-        'expected' => $expect_fail_msg('MIME type mismatch'),
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::MimeTypeMismatch),
     ],
     [
         'name' => 'Check destination is not a directory',
@@ -194,7 +189,7 @@ if (!(is_array($result_decoded) && isset($result_decoded['success']) && $result_
 }
 
 // Tear down
-unset($run_id, $use_cases, $result, $dest, $expect_fail_msg);
+unset($run_id, $use_cases, $result, $dest, $expect_fail_cond);
 array_map('unlink', array_merge(glob(sys_get_temp_dir() . '/test_508*'), glob(get_temp_dir() . '/test_508*')));
 
 return true;

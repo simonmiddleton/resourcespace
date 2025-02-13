@@ -428,6 +428,25 @@ function is_safe_basename(string $val): bool
         && !is_banned_extension(parse_filename_extension($val));
 }
 
+enum ProcessFileUploadErrorCondition
+{
+    case InvalidUploadPath;
+    case SpecialFile;
+    case InvalidExtension;
+    case MimeTypeMismatch;
+    case FileMoveFailure;
+
+    /**
+     * Translate error condition to users' language.
+     * @param array $lang Language string mapping (i.e. the global $lang var)
+     * @return string The translated version or the conditions' name if not found in the map
+     */
+    public function i18n(array $lang): string
+    {
+        return $lang["error_file_upload_cond-{$this->name}"] ?? $this->name;
+    }
+}
+
 /**
  * High level function which can handle processing file uploads.
  *
@@ -437,7 +456,7 @@ function is_safe_basename(string $val): bool
  *      file_move?: 'move_uploaded_file'|'rename'|'copy',
  * } $processor Processors which can override different parts of the main logic (e.g. allow specific extensions)
  *
- * @return array{success: bool, error?: string}
+ * @return array{success: bool, error?: ProcessFileUploadErrorCondition}
  */
 function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination, array $processor): array
 {
@@ -466,7 +485,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         $GLOBALS['use_error_exception'] = $orig_use_error_exception_val;
     }
 
-    $fail_with_msg = static fn(string $msg): array => ['success' => false, 'error' => $msg];
+    $fail_due_to = static fn(ProcessFileUploadErrorCondition $cond): array => ['success' => false, 'error' => $cond];
 
     // Source validation
     if (
@@ -476,7 +495,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         )
     ) {
         debug("[WARN] Invalid upload path detected - {$source_file_path}");
-        return $fail_with_msg('Invalid upload path detected');
+        return $fail_due_to(ProcessFileUploadErrorCondition::InvalidUploadPath);
     }
 
     // Limit the data format uploaded
@@ -492,7 +511,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
             [$source_file_name]
         ) !== []
     ) {
-        return $fail_with_msg('"Special" file detected which is not allowed');
+        return $fail_due_to(ProcessFileUploadErrorCondition::SpecialFile);
     }
 
     // Extension validation
@@ -505,7 +524,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         )
         || is_banned_extension($source_file_ext)
     ) {
-        return $fail_with_msg("Invalid extension '{$source_file_ext}'");
+        return $fail_due_to(ProcessFileUploadErrorCondition::InvalidExtension);
     }
 
     // Check content (MIME) type based on the file received (don't trust the header from the upload)
@@ -516,7 +535,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         || false
     ) {
         debug("MIME type mismatch for file '{$source_file_name}'");
-        return $fail_with_msg('MIME type mismatch');
+        return $fail_due_to(ProcessFileUploadErrorCondition::MimeTypeMismatch);
     }
 
     // Anything else in between
@@ -551,7 +570,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         return ['success' => true];
     } else {
         debug("Unable to move file uploaded FROM '{$source_file_path}' TO '$dest_path'");
-        return $fail_with_msg('Unable to move the uploaded file');
+        return $fail_due_to(ProcessFileUploadErrorCondition::FileMoveFailure);
     }
 }
 
