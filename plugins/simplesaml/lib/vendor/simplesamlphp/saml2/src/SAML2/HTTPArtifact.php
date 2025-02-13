@@ -8,7 +8,7 @@ use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SimpleSAML\Configuration;
 use SimpleSAML\Metadata\MetaDataStorageHandler;
 use SimpleSAML\Module\saml\Message as MSG;
-use SimpleSAML\Store;
+use SimpleSAML\Store\StoreFactory;
 use SimpleSAML\Utils\HTTP;
 
 use SAML2\Utilities\Temporal;
@@ -38,7 +38,10 @@ class HTTPArtifact extends Binding
     public function getRedirectURL(Message $message) : string
     {
         /** @psalm-suppress UndefinedClass */
-        $store = Store::getInstance();
+        $config = Configuration::getInstance();
+
+        /** @psalm-suppress UndefinedClass */
+        $store = StoreFactory::getInstance($config->getString('store.type'));
         if ($store === false) {
             throw new \Exception('Unable to send artifact without a datastore configured.');
         }
@@ -97,7 +100,7 @@ class HTTPArtifact extends Binding
     public function receive(): Message
     {
         if (array_key_exists('SAMLart', $_REQUEST)) {
-            $artifact = base64_decode($_REQUEST['SAMLart']);
+            $artifact = base64_decode($_REQUEST['SAMLart'], true);
             $endpointIndex = bin2hex(substr($artifact, 2, 2));
             $sourceId = bin2hex(substr($artifact, 4, 20));
         } else {
@@ -145,8 +148,8 @@ class HTTPArtifact extends Binding
         $soap = new SOAPClient();
 
         // Send message through SoapClient
-        /** @var \SAML2\ArtifactResponse $artifactResponse */
-        $artifactResponse = $soap->send($ar, $this->spMetadata);
+        /** @var \SimpleSAML\SAML2\XML\samlp\ArtifactResponse $artifactResponse */
+        $artifactResponse = $soap->send($ar, $this->spMetadata, $idpMetadata);
 
         if (!$artifactResponse->isSuccess()) {
             throw new \Exception('Received error from ArtifactResolutionService.');

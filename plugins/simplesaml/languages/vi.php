@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["simplesaml_configuration"] = 'Cấu hình SimpleSAML';
 $lang["simplesaml_main_options"] = 'Tùy chọn sử dụng';
 $lang["simplesaml_site_block"] = 'Sử dụng SAML để chặn hoàn toàn quyền truy cập vào trang web, nếu được đặt thành true thì không ai có thể truy cập trang web, ngay cả khi ẩn danh, mà không cần xác thực';

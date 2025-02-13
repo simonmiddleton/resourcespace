@@ -211,11 +211,6 @@ parameters:
 			path: pages/view_metadata.php
 
 		-
-			message: "#^Offset 0 on array\\<string, array\\<int\\|string, array\\{remote_ref\\: mixed, nicename\\: mixed, required\\: mixed, type\\: mixed, missing\\: false, remote_table\\?\\: 'resource'\\}\\|array\\{remote_table\\: 'resource', remote_ref\\: null, required\\: bool, missing\\: false\\}\\>\\> in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: plugins/csv_upload/include/meta_functions.php
-
-		-
 			message: "#^Variable \\$preview_sizes on left side of \\?\\?\\= is never defined\\.$#"
 			count: 2
 			path: plugins/image_banks/providers/ResourceSpace.php

@@ -77,7 +77,7 @@ $page_def[] = config_add_file_input(
     $lang['systemconfig_linkedheaderimgsrc_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
     316,
-    array('gif','jpg','png'),
+    array('gif','jpg','png','svg'),
     true
 );
 $page_def[] = config_add_file_input(

@@ -6221,7 +6221,7 @@ function display_related_resources($context)
                     ) {
                         if (count(array_diff(array_column($arr_related, "resource_type"), $relatedtypes_shown)) > 0) {
                             ?>
-                            <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref); ?>"
+                            <a href="<?php echo generateURL($baseurl . '/pages/search.php', ['search' => "!related$ref", 'restypes' => '']); ?>"
                                 onClick="return CentralSpaceLoad(this,true);">
                                 <?php echo LINK_CARET . escape($lang["clicktoviewasresultset"]); ?>
                             </a>

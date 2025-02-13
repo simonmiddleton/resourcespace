@@ -6,7 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Twig_Extensions_' => array($vendorDir . '/twig/extensions/lib'),
-    'Twig_' => array($vendorDir . '/twig/twig/lib'),
-    'SimpleSamlPhp\\Composer' => array($vendorDir . '/simplesamlphp/composer-module-installer/src'),
+    'Crypt_CHAP_' => array($vendorDir . '/dapphp/radius/lib'),
 );

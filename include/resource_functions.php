@@ -7484,10 +7484,11 @@ function image_size_restricted_access($id)
 * Returns a list of fields with refs matching the supplied field refs.
 *
 * @param array $field_refs Array of field refs
+* @param bool  order_by_passed_refs Returns the array of fields in the order requested in $field_refs
 *
 * @return array
 */
-function get_fields($field_refs)
+function get_fields($field_refs, bool $order_by_passed_refs = false)
 {
     if (!is_array($field_refs)) {
         trigger_error("\$field_refs passed to get_fields() is not an array.");
@@ -7504,10 +7505,23 @@ function get_fields($field_refs)
          WHERE rtf.ref IN (" . ps_param_insert(count($field_refs)) . ")
       ORDER BY rtf.order_by", ps_param_fill($field_refs, "i"), "schema");
 
-    $return = array();
-    foreach ($fields as $field) {
-        if (metadata_field_view_access($field['ref'])) {
-            $return[] = $field;
+    $return = array();   
+
+    if ($order_by_passed_refs) {
+
+        $fields_array = array_column($fields, null, 'ref');
+
+        foreach ($field_refs as $field_ref) {
+            if (array_key_exists($field_ref, $fields_array) && metadata_field_view_access($field_ref)) {
+                $return[] = $fields_array[$field_ref];
+            }
+        }
+
+    } else {
+        foreach ($fields as $field) {
+            if (metadata_field_view_access($field['ref'])) {
+                $return[] = $field;
+            }
         }
     }
 
@@ -8701,16 +8715,17 @@ function related_resource_pull(array $resource)
 /**
  * Get the largest available preview URL for the given resource and the given array of sizes
  *
- * @param array     $resource   Array of resource data from get_resource_data() or search results
- * @param int       $access     Resource access
- * @param array     $sizes      Array of size IDs to look through, in order of size. If not provied will use all sizes
- * @param bool      $watermark  Look for watermarked versions?
- * @param int       $page       Page to look for
+ * @param array     $resource               Array of resource data from get_resource_data() or search results
+ * @param int       $access                 Resource access
+ * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param bool      $watermark              Look for watermarked versions?
+ * @param int       $page                   Page to look for
+ * @param bool      $try_pulled_resource    Should we try to use an image from a pulled resource if the current resource doesn't have a usable preview
  *
  * @return array | bool         array, or false if no image is found
  *
  */
-function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1)
+function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1, bool $try_pulled_resource = true)
 {
     global $userref, $open_access_for_contributor;
     if (empty($sizes)) {
@@ -8724,14 +8739,6 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         $preview["height"] = $resource["thumb_height"];
         $preview["width"] = $resource["thumb_width"];
     } else {
-        if ((int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE) {
-            // If configured, try and use a preview from a related resource
-            $pullresource = related_resource_pull($resource);
-            if ($pullresource !== false) {
-                $resource = $pullresource;
-            }
-        }
-
         if ($access == -1) {
             $access = get_resource_access($resource);
         }
@@ -8777,6 +8784,15 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
                 unset($GLOBALS["use_error_exception"]);
                 break;
             }
+        }
+        if (!$validimage && (int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE && $try_pulled_resource) {
+            // If configured, try and use a preview from a related resource
+            $pullresource = related_resource_pull($resource);
+            if ($pullresource !== false) {
+                $resource = $pullresource;
+            }
+            $preview = get_resource_preview($resource, $sizes, $access, $watermark, $page, false);
+            $validimage = $preview !== false; 
         }
     }
     if (!$validimage) {
@@ -8924,6 +8940,11 @@ function acl_can_edit_resource_of_type(int $ref): bool
         );
 }
 
+/**
+ *  Check if a resource is a template resource, dictated by the $fstemplate_alt_threshold config
+ * 
+ *  @param int $ref resource ref to check
+ */
 function resource_is_template(int $ref): bool
 {
     global $fstemplate_alt_threshold;

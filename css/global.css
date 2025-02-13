@@ -2330,6 +2330,12 @@ a.BrowseRefresh{
 
 .Question input[name="antispam_user_code"] { position: absolute; left: -2000px; }
 
+/* Update Preview button for MultiRTypeSelect */
+.Question .updatePreviewButton {
+    margin-top: 10px;
+    margin-left: 3px;
+}
+
 #ShareDeleteForm .ListViewBulkActions {
     padding-top: 20px;
     }

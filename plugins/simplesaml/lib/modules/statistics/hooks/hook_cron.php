@@ -1,42 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
+use Exception;
+use SimpleSAML\Assert\Assert;
+use SimpleSAML\Configuration;
+use SimpleSAML\Logger;
+use SimpleSAML\Module\statistics\Aggregator;
+
 /**
  * Hook to run a cron job.
  *
  * @param array &$croninfo  Output
- * @return void
  */
-function statistics_hook_cron(&$croninfo)
+function statistics_hook_cron(array &$croninfo): void
 {
-    assert(is_array($croninfo));
-    assert(array_key_exists('summary', $croninfo));
-    assert(array_key_exists('tag', $croninfo));
+    Assert::keyExists($croninfo, 'summary');
+    Assert::keyExists($croninfo, 'tag');
 
-    $statconfig = \SimpleSAML\Configuration::getConfig('module_statistics.php');
+    $statconfig = Configuration::getConfig('module_statistics.php');
 
-    if (is_null($statconfig->getValue('cron_tag', null))) {
+    if (is_null($statconfig->getOptionalValue('cron_tag', null))) {
         return;
     }
-    if ($statconfig->getValue('cron_tag', null) !== $croninfo['tag']) {
+    if ($statconfig->getOptionalValue('cron_tag', null) !== $croninfo['tag']) {
         return;
     }
 
-    $maxtime = $statconfig->getInteger('time_limit', null);
+    $maxtime = $statconfig->getOptionalInteger('time_limit', null);
     if ($maxtime) {
         set_time_limit($maxtime);
     }
 
     try {
-        $aggregator = new \SimpleSAML\Module\statistics\Aggregator();
+        $aggregator = new Aggregator();
         $results = $aggregator->aggregate();
         if (empty($results)) {
-            \SimpleSAML\Logger::notice('Output from statistics aggregator was empty.');
+            Logger::notice('Output from statistics aggregator was empty.');
         } else {
             $aggregator->store($results);
         }
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         $message = 'Loganalyzer threw exception: ' . $e->getMessage();
-        \SimpleSAML\Logger::warning($message);
+        Logger::warning($message);
         $croninfo['summary'][] = $message;
     }
 }

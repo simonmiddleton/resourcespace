@@ -309,7 +309,7 @@ if ($preview && isset($imagemagick_path)) {
         exit("Could not find ImageMagick 'convert' utility at location '{$imagemagick_path}'");
     }
 
-    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage=%%PREVIEWPAGE%% -o -r100 -dLastPage=%%PREVIEWPAGE%% -sOutputFile=%%CONTACT_SHEET_RIP%% %%PDF_FILENAME%%"
+    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage=%%PREVIEWPAGE%% -o -r300 -dJPEGQ=100 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dLastPage=%%PREVIEWPAGE%% -sOutputFile=%%CONTACT_SHEET_RIP%% %%PDF_FILENAME%%"
         . (($config_windows) ? '' : ' 2>&1');
     $cmdparams = [
         '%%PREVIEWPAGE%%' => $previewpage,

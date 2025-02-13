@@ -19,6 +19,7 @@ if ($keysearch) {
         $keyword = $keywords[$n];
         debug("do_search(): \$keyword = {$keyword}");
         $quoted_string = (substr($keyword, 0, 1) == "\""  || substr($keyword, 0, 2) == "-\"" ) && substr($keyword, -1, 1) == "\"";
+
         $quoted_field_match = false;
         $field_short_name_specified = false;
 
@@ -166,9 +167,8 @@ if ($keysearch) {
                     } elseif ('basicyear' == $kw[0]) {
                         $date_parts['year'] = $keystring;
                     }
-                }
-                # Additional date range filtering
-                elseif (count($datefieldinfo) && substr($keystring, 0, 5) == "range") {
+                } elseif (count($datefieldinfo) && substr($keystring, 0, 5) == "range") {
+                    # Additional date range filtering
                     $c++;
                     $rangestring = substr($keystring, 5);
                     if (strpos($rangestring, "start") !== false) {
@@ -235,9 +235,13 @@ if ($keysearch) {
 
                 array_push($sql_join->parameters, "i", $rangefield);
                 $keywordprocessed = true;
-            }
-            // Convert legacy fixed list field search to new format for nodes (@@NodeID)
-            elseif ($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES)) {
+            } elseif (
+                $field_short_name_specified
+                && !$ignore_filters
+                && isset($fieldinfo['type'])
+                && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES)
+            ) {
+                // Convert legacy fixed list field search to new format for nodes (@@NodeID)
                 // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
                 $field_nodes      = get_nodes($fieldinfo['ref'], null, false, true);
 
@@ -254,6 +258,17 @@ if ($keysearch) {
                         $keywordprocessed = true;
                     }
                 }
+            } elseif (
+                $field_short_name_specified
+                && !$quoted_string
+                && preg_match(
+                    '/^(?=[^ \\t\\n]*[!@#$%^&()_+\\-=\\[\\]{}\'\"\\\\,.<>\\/?])[^ \\t\\n]*$/',
+                    $keyword
+                ) === 1
+            ) {
+                    // Quote keywords that contain special characters and no spaces
+                    $keyword = "\"$keyword\"";
+                    $quoted_string = true;
             }
 
             if ($field_short_name_specified) { // Need this also for string matching in a named text field
@@ -544,10 +559,27 @@ if ($keysearch) {
                                 $sql_keyword_union_or[] = false;
                             } elseif ($wildcards) {
                                 $union = new PreparedStatementQuery();
-                                if (substr($keyword, 0, 1) == "*" || preg_match('/\W/', str_replace("*" , "", $keyword)) === 1 || strlen(trim($keyword, '*')) < 3) {
-                                    // Full text searching can't match anywhere except the start. It will also ignore non-word characters.
-                                    // Normally the full text index will not index words less than 3 characters.
-                                    // Use a LIKE search.
+                                if (
+                                    substr($keyword, 0, 1) != "*"
+                                    && strlen(trim($keyword, '*')) >= 3
+                                    && preg_match('/[-+@<>()]/', $keyword) !== 1
+                                ) {
+                                    // Use fulltext search as a preference, but not if
+                                    // there is a leading wildcard
+                                    // or the search is too short
+                                    // or the search contains any of +,-,@,<,>,(,)
+                                    $union->sql = "
+                                            SELECT resource, [bit_or_condition] hit_count AS score
+                                                FROM resource_node rn[union_index]
+                                                WHERE rn[union_index].node IN
+                                                    (SELECT ref FROM `node` WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE) "
+                                                . $union_restriction_clause->sql . ")
+                                            GROUP BY resource " .
+                                        ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
+                                } elseif (
+                                    preg_match('/\W/', str_replace("*", "", $keyword)) !== 1
+                                ) {
+                                    // Use a LIKE search, unless there is any whitespace
                                     $keyword = str_replace("*", "%", $keyword);
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
@@ -561,15 +593,18 @@ if ($keysearch) {
                                                 . $union_restriction_clause->sql . ")
                                             GROUP BY resource ";
                                 } else {
-                                    // Use fulltext search
+                                    // Use RLIKE to search between word boundaries in the node names
+                                    $keyword = str_replace(".", "\\.", $keyword);
+                                    $keyword = str_replace("*", ".*", $keyword);
+                                    $keyword = "\\b" . $keyword . "\\b";
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
                                                 FROM resource_node rn[union_index]
                                                 WHERE rn[union_index].node IN
-                                                    (SELECT ref FROM `node` WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE) "
+                                                    (SELECT ref FROM `node` WHERE name RLIKE ? "
                                                 . $union_restriction_clause->sql . ")
-                                            GROUP BY resource " .
-                                        ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
+                                                GROUP BY resource " .
+                                                ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
                                 }
                                 $union->parameters = array_merge(["s",$keyword], $union_restriction_clause->parameters);
                                 if ($non_field_keyword_sql->sql != "") {
@@ -601,7 +636,6 @@ if ($keysearch) {
                                 if ($non_field_keyword_sql->sql != "") {
                                     $union->parameters = array_merge($union->parameters, $non_field_keyword_sql->parameters);
                                 }
-
 
                                 $sql_keyword_union[] = $union;
 

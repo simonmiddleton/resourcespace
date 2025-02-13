@@ -1528,6 +1528,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         );
         $sql->sql .= $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters, $sql_filter->parameters);
+        $order_by = '';
     } elseif (substr($search, 0, 5) == "!list") {
         // Search for a list of resources
         // !listall = archive state is not applied as a filter to the list of resources.
@@ -1771,6 +1772,18 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         if ($returnsql) {
             return $sql;
         } else {
+            if ($return_refs_only) {
+                // Reformat order by as the new derived table wont have the same alias as the original query
+                $order_by = implode(',', array_map(function ($field) { 
+                    $field = trim($field);
+                    if(strpos($field, '.') !== false) { 
+                        $field = substr($field, strpos($field, '.') + 1);
+                    }
+                    return $field;
+                }, explode(',', $order_by)));
+                $sql->sql = "SELECT ref, resource_type, archive, created_by, access FROM ($sql->sql) as refs_only";
+                $sql->sql .= trim($order_by) !== '' ? " ORDER BY $order_by" : "";
+            }
             $count_sql = clone $sql;
             $count_sql->sql = str_replace("ORDER BY " . $order_by, "", $count_sql->sql);
             $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
@@ -1780,18 +1793,6 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
 
             $resultcount = $result["total"]  ?? 0;
             if ($resultcount > 0 && count($result["data"]) > 0) {
-                if ($return_refs_only) {
-                    // This needs to include archive and created_by columns too as often used to work out permission to edit collection
-                    $result["data"] = array_map(function ($val) {
-                        return [
-                            "ref"           => $val["ref"],
-                            "resource_type" => $val["resource_type"],
-                            "archive"       => $val["archive"],
-                            "created_by"    => $val["created_by"],
-                            "access"        => $val["access"],
-                                ];
-                    }, $result["data"]);
-                }
                 $return = $result['data'];
                 $resultcount -= count($return);
                 while ($resultcount > 0) {
