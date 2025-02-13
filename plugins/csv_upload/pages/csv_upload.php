@@ -416,7 +416,7 @@ if (!checkperm("c")) {
 
                     <div class="Question">
                         <label for="csv_update_col"><?php echo escape($lang["csv_upload_update_existing_collection"]); ?></label>
-                        <input id="csv_update_col" name="csv_update_col" type=hidden value="<?php echo $csv_set_options["csv_update_col"]; ?>">
+                        <input id="csv_update_col" name="csv_update_col" type=hidden value="<?php echo (int) $csv_set_options["csv_update_col"]; ?>">
                         <input
                             type="checkbox"
                             name="csv_update_col_select"
