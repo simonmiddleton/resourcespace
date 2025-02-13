@@ -144,7 +144,6 @@ $lang["copycollectionremoveall"] = "Hapuskan semua aset sebelum membuat duplikas
 $lang["createnewresource"] = "Ciptakan Aset Baru";
 $lang["resourcetype"] = "Tipe Aset";
 $lang["resourcetypes"] = "Tipe-Tipe Aset";
-$lang["deleteresource"] = "Hapus Aset";
 $lang["downloadresource"] = "Download Aset";
 $lang["rightclicktodownload"] = "Klik kanan pada link ini dan pilih 'Simpan Linked Content sebagai' untuk download resource anda..."; # Hanya Untuk browser Opera
 $lang["downloadinprogress"] = "Download dalam Proses ";
@@ -360,7 +359,6 @@ $lang["key"] = "Kunci"; # contoh penjelasan ikon pada halaman penelusuran
 $lang["languageselection"] = "Pilihan Bahasa";
 $lang["language"] = "Bahasa";
 $lang["changeyourpassword"] = "Ubah Kata Sandi Anda";
-$lang["yourpassword"] = "Kata Sandi Anda";
 $lang["newpassword"] = "Kata Sandi Baru";
 $lang["newpasswordretype"] = "Kata Sandi Baru (ketik ulang)";
 $lang["passwordnotvalid"] = "Ini bukan kata sandi yang berlaku";
@@ -549,7 +547,6 @@ $lang["uploadreplacementfile"] = "Upload file pengganti";
 
 
 $lang["resourceistranscoding"] = "Aset sedang di proses";
-$lang["cantdeletewhiletranscoding"] = "Anda tidak bisa menghapus aset dikala aset tersebut sedang di proses";
 
 $lang["maxcollectionthumbsreached"] = "Koleksi ini mempunyai terlalu banyak aset untuk melihatkan thumbnail. Thumbnail akan di sembunyikan.";
 
@@ -1371,7 +1368,6 @@ $lang["removethisfilter"] = '(hapus filter ini)';
 $lang["no_exif"] = 'Jangan mengimpor metadata EXIF/IPTC/XMP yang disematkan untuk unggahan ini';
 $lang["difference"] = 'Perbedaan';
 $lang["viewdeletedresources"] = 'Melihat sumber daya yang dihapus';
-$lang["finaldeletion"] = 'Sumber daya ini sudah dalam keadaan \'dihapus\'. Tindakan ini akan menghapuskan sumber daya dari sistem secara keseluruhan.';
 $lang["diskerror"] = 'Kuota melebihi batas';
 $lang["nocookies"] = 'Sebuah cookie tidak dapat diatur dengan benar. Pastikan Anda telah mengaktifkan cookie pada pengaturan browser Anda.';
 $lang["selectedresourceslightroom"] = 'Sumber daya yang dipilih (daftar kompatibel Lightroom):';
@@ -1723,7 +1719,6 @@ $lang["list-recipients-label"] = 'Daftar semua penerima dalam surel?';
 $lang["list-recipients"] = 'Pesan ini telah dikirim ke alamat email berikut:';
 $lang["sort"] = 'Mengurutkan';
 $lang["emptycollection"] = 'Hapus semua sumber daya';
-$lang["deleteresources"] = 'Hapus sumber daya';
 $lang["emptycollectionareyousure"] = 'Apakah Anda yakin ingin menghapus semua sumber daya dari koleksi ini?';
 $lang["error-cannoteditemptycollection"] = 'Anda tidak dapat mengedit koleksi yang kosong.';
 $lang["error-permissiondenied"] = 'Izin ditolak.';
@@ -2050,7 +2045,6 @@ $lang["collection_manage__newcollection"] = 'Untuk membuat koleksi baru, masukka
 $lang["collection_public__introtext"] = 'Koleksi publik dibuat oleh pengguna lain.';
 $lang["contact__contact"] = 'Detail kontak Anda di sini.';
 $lang["contribute__introtext"] = 'Anda dapat menyumbangkan sumber daya Anda sendiri. Ketika Anda pertama kali membuat sumber daya, statusnya adalah "Menunggu Pengajuan". Setelah Anda mengunggah file dan mengedit bidang-bidangnya, atur statusnya menjadi "Menunggu Ulasan". Kemudian tim sumber daya akan meninjau sumber daya tersebut.';
-$lang["delete__introtext"] = 'Silakan masukkan kata sandi Anda untuk mengonfirmasi bahwa Anda ingin menghapus sumber daya ini.';
 $lang["done__collection_email"] = 'Sebuah email yang berisi tautan ke koleksi telah dikirimkan kepada pengguna yang Anda tentukan.';
 $lang["done__deleted"] = 'Sumber daya telah dihapus.';
 $lang["done__research_request"] = 'Seorang anggota tim penelitian akan ditugaskan untuk permintaan Anda. Kami akan tetap berhubungan melalui email sepanjang proses, dan setelah kami menyelesaikan penelitian, Anda akan menerima email dengan tautan ke semua sumber daya yang kami rekomendasikan.';
@@ -2109,7 +2103,6 @@ $lang["prevent_user_group_sharing_externally"] = 'Mencegah pengguna untuk berbag
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Izinkan pemilihan grup pengguna untuk menentukan tingkat akses saat berbagi secara eksternal';
 $lang["share_using_permissions_from_user_group"] = 'Berbagi menggunakan izin dari grup pengguna';
 $lang["externalshare_using_permissions_from_user_group"] = 'Jika Anda mengirim email kepada pengguna eksternal, silakan pilih grup pengguna yang akan digunakan untuk akses';
-$lang["delete__nopassword"] = 'Silakan konfirmasi bahwa Anda ingin menghapus sumber daya ini.';
 $lang["collection_download_too_large"] = 'Maaf, koleksi ini terlalu besar untuk diunduh sebagai satu file. Coba kurangi ukuran koleksi atau pilih ukuran gambar yang lebih kecil.';
 $lang["all__passwordnewemailhtml"] = 'Silakan klik tautan di bawah ini untuk menetapkan kata sandi baru untuk akun Anda.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />nama pengguna: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Mengunggah sementara tidak tersedia';

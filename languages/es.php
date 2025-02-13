@@ -138,7 +138,6 @@ $lang["clicklinkviewcollection"] = "Clica el link de más abajo para ver la cole
 $lang["createnewresource"] = "Crear material nuevo";
 $lang["resourcetype"] = "Tipo de material";
 $lang["resourcetypes"] = "Tipos de material";
-$lang["deleteresource"] = "Eliminar material";
 $lang["downloadresource"] = "Descargar material";
 $lang["rightclicktodownload"] = "Clica este link con el botón derecho y selecciona 'Guardar como' para descargar tu material...";
 $lang["downloadinprogress"] = "Descargando";
@@ -342,7 +341,6 @@ $lang["key"] = "Clave"; # e.g. explanation of icons on search page
 $lang["languageselection"] = "Selección de idioma";
 $lang["language"] = "Idioma";
 $lang["changeyourpassword"] = "Cambia tu contraseña";
-$lang["yourpassword"] = "Tu contraseña";
 $lang["newpassword"] = "Nueva contraseña";
 $lang["newpasswordretype"] = "Nueva contraseña (volver a escribir)";
 $lang["passwordnotvalid"] = "Esta contraseña no es válida";
@@ -528,7 +526,6 @@ $lang["uploadreplacementfile"] = "Subir archivo sustituto";
 
 
 $lang["resourceistranscoding"] = "El material esta siendo transcodificado";
-$lang["cantdeletewhiletranscoding"] = "No puedes borrar materiales mientras se están transcodificando";
 
 $lang["maxcollectionthumbsreached"] = "Hay demasiados materiales en esta colección, las vistas en miniatura no podrán ser visualizadas y permanecerán ocultas.";
 
@@ -570,7 +567,6 @@ $lang["collection_manage__newcollection"] = "Para crear una nueva colección, in
 $lang["collection_public__introtext"] = "Encuentra una colección pública";
 $lang["contact__contact"] = "Introduce aquí tus datos de contacto.";
 $lang["contribute__introtext"] = "You can contribute your own resources. When you initially create a resource it is in the \"Pending Submission\" status. When you have uploaded your file and edited the fields, set the status field to \"Pending Review\". It will then be reviewed by the resources team.";
-$lang["delete__introtext"] = "";
 $lang["done__collection_email"] = "Los usuarios que quieras pueden recibir un correo con un enlace a la colección que les envíes. Esta recopilación se añade a su \"Lista de Colecciones\"";
 $lang["done__deleted"] = "The resource has been deleted.";
 $lang["done__research_request"] = "Un miembro del equipo del SERGI se asignará a tu petición. Te mantendremos informado durante el proceso. Una vez tengamos los resultados de tu petición te enviaremos un correo electrónico con un enlace a los contenidos seleccionados.";
@@ -1372,7 +1368,6 @@ $lang["removethisfilter"] = '(Quitar este filtro)';
 $lang["no_exif"] = 'No importar metadatos EXIF/IPTC/XMP incrustados para esta carga';
 $lang["difference"] = 'Diferencia';
 $lang["viewdeletedresources"] = 'Ver recursos eliminados';
-$lang["finaldeletion"] = 'Este recurso ya se encuentra en el estado \'eliminado\'. Esta acción eliminará completamente el recurso del sistema.';
 $lang["diskerror"] = 'Cuota excedida';
 $lang["nocookies"] = 'No se pudo establecer correctamente una cookie. Por favor, asegúrese de tener habilitadas las cookies en la configuración de su navegador.';
 $lang["selectedresourceslightroom"] = 'Recursos seleccionados (lista compatible con Lightroom):';
@@ -1725,7 +1720,6 @@ $lang["list-recipients"] = 'Este mensaje fue enviado a las siguientes direccione
 $lang["sort"] = 'Ordenar';
 $lang["sortcollection"] = 'Ordenar colección';
 $lang["emptycollection"] = 'Eliminar todos los recursos';
-$lang["deleteresources"] = 'Eliminar recursos';
 $lang["emptycollectionareyousure"] = '¿Estás seguro de que deseas eliminar todos los recursos de esta colección?';
 $lang["error-cannoteditemptycollection"] = 'No puedes editar una colección vacía.';
 $lang["error-permissiondenied"] = 'Permiso denegado.';
@@ -2067,7 +2061,6 @@ $lang["prevent_user_group_sharing_externally"] = 'Evitar que los usuarios compar
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Permitir la selección del grupo de usuarios para determinar el nivel de acceso al compartir externamente';
 $lang["share_using_permissions_from_user_group"] = 'Compartir utilizando permisos del grupo de usuarios';
 $lang["externalshare_using_permissions_from_user_group"] = 'Si está enviando correos electrónicos a usuarios externos, por favor seleccione el grupo de usuarios a utilizar para el acceso';
-$lang["delete__nopassword"] = 'Por favor, confirme si desea eliminar este recurso.';
 $lang["collection_download_too_large"] = 'Lo siento, esta colección es demasiado grande para descargarla como un solo archivo. Intente reducir el tamaño de la colección o seleccionar un tamaño de imagen más pequeño.';
 $lang["all__passwordnewemailhtml"] = 'Por favor, haga clic en el enlace de abajo para establecer una nueva contraseña para su cuenta.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />nombre de usuario: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Carga temporalmente no disponible';

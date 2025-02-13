@@ -147,7 +147,6 @@ $lang["copycollectionremoveall"] = "Remova todo o conteúdo antes de copiar";
 $lang["createnewresource"] = "Criar Novo Conteúdo";
 $lang["resourcetype"] = "Tipo do Conteúdo";
 $lang["resourcetypes"] = "Tipos do Conteúdo";
-$lang["deleteresource"] = "Apagar Conteúdo";
 $lang["downloadresource"] = "Download do Conteúdo";
 $lang["rightclicktodownload"] = "Clique com o botão direito do mouse e escolha \"Salvar Como...\" para baixar o conteúdo..."; # For Opera browser only
 $lang["downloadinprogress"] = "Download em Progresso";
@@ -365,7 +364,6 @@ $lang["key"] = "Legenda"; # e.g. explanation of icons on search page
 $lang["languageselection"] = "Seleção de Idioma";
 $lang["language"] = "Idioma";
 $lang["changeyourpassword"] = "Altere Sua Senha";
-$lang["yourpassword"] = "Sua Senha";
 $lang["newpassword"] = "Nova Senha";
 $lang["newpasswordretype"] = "Nova Senha (redigite)";
 $lang["passwordnotvalid"] = "Esta não é uma senha válida";
@@ -555,7 +553,6 @@ $lang["uploadreplacementfile"] = "Enviar um arquivo para reposição";
 
 
 $lang["resourceistranscoding"] = "O conteúdo está sendo transcodificado";
-$lang["cantdeletewhiletranscoding"] = "Você não pode apagar conteúdo que está em processo de transcodificação";
 
 $lang["maxcollectionthumbsreached"] = "Há muito conteúdo nesta coleção para mostrar as minaturas. Elas serão escondidas agora.";
 
@@ -1357,7 +1354,6 @@ $lang["removethisfilter"] = 'Por favor, remova este filtro';
 $lang["no_exif"] = 'Não importar metadados EXIF/IPTC/XMP incorporados para este upload';
 $lang["difference"] = 'Diferença';
 $lang["viewdeletedresources"] = 'Visualizar recursos excluídos';
-$lang["finaldeletion"] = 'Este recurso já está no estado \'excluído\'. Esta ação removerá completamente o recurso do sistema.';
 $lang["diskerror"] = 'Cota excedida';
 $lang["nocookies"] = 'Um cookie não pôde ser configurado corretamente. Por favor, certifique-se de que os cookies estão habilitados nas configurações do seu navegador.';
 $lang["selectedresourceslightroom"] = 'Recursos selecionados (lista compatível com o Lightroom):';
@@ -1723,7 +1719,6 @@ $lang["list-recipients"] = 'Esta mensagem foi enviada para os seguintes endereç
 $lang["sort"] = 'Classificar';
 $lang["sortcollection"] = 'Ordenar coleção';
 $lang["emptycollection"] = 'Remover todos os recursos';
-$lang["deleteresources"] = 'Excluir recursos';
 $lang["emptycollectionareyousure"] = 'Você tem certeza de que deseja remover todos os recursos desta coleção?';
 $lang["error-cannoteditemptycollection"] = 'Você não pode editar uma coleção vazia.';
 $lang["error-permissiondenied"] = 'Permissão negada.';
@@ -2064,7 +2059,6 @@ $lang["collection_manage__newcollection"] = 'Para criar uma nova coleção, digi
 $lang["collection_public__introtext"] = 'Coleções públicas são criadas por outros usuários.';
 $lang["contact__contact"] = 'Seus detalhes de contato aqui.';
 $lang["contribute__introtext"] = 'Você pode contribuir com seus próprios recursos. Quando você cria um recurso pela primeira vez, ele fica no status "Aguardando Envio". Depois de enviar o arquivo e editar os campos, defina o campo de status como "Aguardando Revisão". Em seguida, ele será revisado pela equipe de recursos.';
-$lang["delete__introtext"] = 'Por favor, digite sua senha para confirmar que você deseja excluir este recurso.';
 $lang["done__collection_email"] = 'Um e-mail contendo um link para a coleção foi enviado aos usuários que você especificou.';
 $lang["done__deleted"] = 'O recurso foi excluído.';
 $lang["done__research_request"] = 'Um membro da equipe de pesquisa será designado para sua solicitação. Manteremos contato por e-mail durante todo o processo e, assim que concluirmos a pesquisa, você receberá um e-mail com um link para todos os recursos que recomendamos.';
@@ -2122,7 +2116,6 @@ $lang["prevent_user_group_sharing_externally"] = 'Impedir que os usuários compa
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Permitir seleção de grupo de usuários para determinar o nível de acesso ao compartilhar externamente';
 $lang["share_using_permissions_from_user_group"] = 'Compartilhar usando permissões de grupo de usuários';
 $lang["externalshare_using_permissions_from_user_group"] = 'Se você está enviando e-mails para usuários externos, por favor selecione o grupo de usuários a ser utilizado para acesso';
-$lang["delete__nopassword"] = 'Por favor, confirme que deseja excluir este recurso.';
 $lang["collection_download_too_large"] = 'Desculpe, esta coleção é muito grande para ser baixada como um único arquivo. Tente reduzir o tamanho da coleção ou selecionar um tamanho de imagem menor.';
 $lang["all__passwordnewemailhtml"] = 'Por favor, clique no link abaixo para definir uma nova senha para sua conta.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />nome de usuário: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Upload temporariamente indisponível';

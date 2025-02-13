@@ -144,7 +144,6 @@ $lang["copycollectionremoveall"] = "Retirer tous les documents avant la copie";
 $lang["createnewresource"] = "Créer un nouveau document";
 $lang["resourcetype"] = "Type";
 $lang["resourcetypes"] = "Types";
-$lang["deleteresource"] = "Supprimer le document";
 $lang["downloadresource"] = "Télécharger le document";
 $lang["rightclicktodownload"] = "Cliquez droit sur ce lien et choisissez 'Enregistrer sous...' ou 'Enregistrer la cible du lien sous...' pour télécharger votre document...";
 $lang["downloadinprogress"] = "Téléchargement en cours";
@@ -361,7 +360,6 @@ $lang["key"] = "Clé"; # e.g. explanation of icons on search page
 $lang["languageselection"] = "Sélection de la langue";
 $lang["language"] = "Langue";
 $lang["changeyourpassword"] = "Changez votre mot de passe";
-$lang["yourpassword"] = "Votre mot de passe";
 $lang["newpassword"] = "Nouveau mot de passe";
 $lang["newpasswordretype"] = "Nouveau mot de passe (une deuxième fois)";
 $lang["passwordnotvalid"] = "Ceci n'est pas un mot de passe valide";
@@ -550,7 +548,6 @@ $lang["uploadreplacementfile"] = "Déposer un fichier de remplacement";
 
 
 $lang["resourceistranscoding"] = "Le document est en cours d'encodage";
-$lang["cantdeletewhiletranscoding"] = "Vous ne pouvez supprimer des documents pendant leur encodage";
 
 $lang["maxcollectionthumbsreached"] = "Il y a trop de documents dans cette collection pour afficher les aperçus. Ils sont maintenant masqués.";
 
@@ -661,7 +658,6 @@ $lang["collection_manage__newcollection"] = "Pour créer une nouvelle collection
 $lang["collection_public__introtext"] = "Les collections publiques sont créées par d\'autres utilisateurs";
 $lang["contact__contact"] = "Placez les détails pour vous contacter ici.";
 $lang["contribute__introtext"] = "Vous pouvez proposer vos propres documents. Quand vous créez un nouveau document, son statut est \"En attente de soumission\". Quand vous avez déposé votre fichier et modifié les champs, affectez la valeur \"En attente de validation\" au champ statut. Votre document sera alors vérifié par l\'équipe ressources.";
-$lang["delete__introtext"] = "Veuillez saisir votre mot de passe afin de confirmer la suppression de ce document.";
 $lang["done__collection_email"] = "Un mél contenant un lien vers la collection a été envoyé aux utilisateurs spécifiés. La collection a été ajoutée à leur liste de \'Collections\'.";
 $lang["done__deleted"] = "Le document a été supprimé.";
 $lang["done__research_request"] = "Un membre de l\'équipe documents sera assigné à votre demande. Nous resterons en contact par mél au cours du processus, et une fois la recherche terminée, vous recevrez par mél un lien vers tous les documents que nous recommandons.";
@@ -1377,7 +1373,6 @@ $lang["removethisfilter"] = '(supprimer ce filtre)';
 $lang["no_exif"] = 'Ne pas importer les métadonnées EXIF/IPTC/XMP intégrées pour ce téléchargement';
 $lang["difference"] = 'Différence';
 $lang["viewdeletedresources"] = 'Afficher les ressources supprimées';
-$lang["finaldeletion"] = 'Cette ressource est déjà dans l\'état "supprimé". Cette action supprimera complètement la ressource du système.';
 $lang["diskerror"] = 'Quota dépassé';
 $lang["nocookies"] = 'Un cookie n\'a pas pu être défini correctement. Veuillez vous assurer que les cookies sont activés dans les paramètres de votre navigateur.';
 $lang["selectedresourceslightroom"] = 'Ressources sélectionnées (liste compatible avec Lightroom) :';
@@ -1728,7 +1723,6 @@ $lang["list-recipients-label"] = 'Afficher la liste de tous les destinataires da
 $lang["list-recipients"] = 'Ce message a été envoyé aux adresses e-mail suivantes :';
 $lang["sort"] = 'Trier';
 $lang["emptycollection"] = 'Supprimer toutes les ressources';
-$lang["deleteresources"] = 'Supprimer des ressources';
 $lang["emptycollectionareyousure"] = 'Êtes-vous sûr(e) de vouloir supprimer toutes les ressources de cette collection ?';
 $lang["error-cannoteditemptycollection"] = 'Vous ne pouvez pas modifier une collection vide.';
 $lang["error-permissiondenied"] = 'Accès refusé.';
@@ -2072,7 +2066,6 @@ $lang["prevent_user_group_sharing_externally"] = 'Empêcher les utilisateurs de 
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'Autoriser la sélection de groupe d\'utilisateurs pour déterminer le niveau d\'accès lors du partage externe';
 $lang["share_using_permissions_from_user_group"] = 'Partager en utilisant les autorisations du groupe d\'utilisateurs';
 $lang["externalshare_using_permissions_from_user_group"] = 'Si vous envoyez un e-mail à des utilisateurs externes, veuillez sélectionner le groupe d\'utilisateurs à utiliser pour l\'accès';
-$lang["delete__nopassword"] = 'Veuillez confirmer que vous souhaitez supprimer cette ressource.';
 $lang["collection_download_too_large"] = 'Désolé, cette collection est trop volumineuse pour être téléchargée en un seul fichier. Essayez de réduire la taille de la collection ou de sélectionner une taille d\'image plus petite.';
 $lang["all__passwordnewemailhtml"] = 'Veuillez cliquer sur le lien ci-dessous pour définir un nouveau mot de passe pour votre compte.<br /><br />URL : <a href="[url]" target="_blank" >[url]</a><br />Nom d\'utilisateur : [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'Téléchargement temporairement indisponible';

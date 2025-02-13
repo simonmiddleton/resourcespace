@@ -6169,7 +6169,17 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
 
 function delete_resources_in_collection($collection)
 {
-    global $resource_deletion_state,$userref,$lang;
+    if (
+        !is_int_loose($collection)
+        || checkperm("D")
+        || !allow_multi_edit($collection)
+        || !collection_writeable($collection)
+    ) {
+        debug("Unable to delete resources in collection: $collection");
+        return false;
+    }
+
+    global $resource_deletion_state, $lang;
 
     // Always find all resources in deleted state and delete them permanently:
     // Note: when resource_deletion_state is null it will find all resources in collection and delete them permanently

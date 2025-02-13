@@ -842,7 +842,8 @@ const API_NATIVE_WHITELIST = [
     'update_related_resource',
     'toggle_active_state_for_nodes',
     'put_resource_data',
-    'get_processing_message'
+    'get_processing_message',
+    'delete_resources_in_collection',
 ];
 
 const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension';

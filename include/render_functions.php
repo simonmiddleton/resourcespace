@@ -1081,7 +1081,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         return;
         }
 
-    global $baseurl, $lang, $k, $pagename, $order_by, $sort;
+    global $baseurl, $lang, $k, $pagename, $order_by, $sort, $USER_SELECTION_COLLECTION;
+
+    $is_selection_collection = isset($collection_data['ref']) && $collection_data['ref'] == $USER_SELECTION_COLLECTION;
     
     // globals that could also be passed as a reference
     global $result /*search result*/;
@@ -1434,45 +1436,50 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
             <?php
-            if(!$top_actions)
+            if(!$top_actions || $is_selection_collection)
                 {
-                global $delete_requires_password;
                 ?>
                 case 'delete_all_in_collection':
                     if(confirm('<?php echo escape($lang["deleteallsure"]); ?>'))
-                        {<?php
-                        if ($delete_requires_password)
-                            {
-                            $delete_all_url_params = [
-                                "ref"       => $collection_data["ref"],
-                                "name"      => $collection_data["name"],
-                                "public"    => ($collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0),
-                                "deleteall" => 'on'
-                            ];
-                            $delete_all_url = generateURL("{$baseurl}/pages/collection_edit.php",$delete_all_url_params);
-                            echo "ModalLoad('$delete_all_url');";
-                            }
-                        else
-                            {
-                            ?>
-                            var post_data = {
-                                submitted: true,
-                                ref: '<?php echo $collection_data["ref"]; ?>',
-                                name: <?php echo json_encode($collection_data["name"]); ?>,
-                                public: '<?php echo $collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0; ?>',
-                                deleteall: 'on',
-                                <?php echo generateAjaxToken("delete_all_in_collection"); ?>
-                            };
-
-                            jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
+                        {
+                        api('delete_resources_in_collection',
+                            {'collection': '<?php echo (int) $collection_data["ref"]; ?>'},
+                            function(response)
                                 {
-                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"]; ?>');
-                                });
-                            <?php
-                            }?>
+                                console.debug('Deleted resources in collection');
+                                if (response) {
+                                    <?php
+                                    if ($is_selection_collection)
+                                        {
+                                        ?>
+                                        CentralSpaceLoad(window.location.href, null, null, false);
+                                        <?php
+                                        }
+                                    else
+                                        {
+                                        ?>
+                                        CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo (int) $collection_data["ref"]; ?>');
+                                        <?php
+                                        }
+                                        ?>
+                                    }
+                                else
+                                    {
+                                    styledalert("<?php echo escape($lang["error"]); ?>", "<?php echo escape($lang["error-editpermissiondenied"]); ?>");
+                                    }
+                                },
+                            <?php echo generate_csrf_js_object('delete_all_in_collection'); ?>
+                        );
                         }
                     break;
+                <?php
+                }
+                ?>
 
+            <?php
+            if(!$top_actions)
+                {
+                ?>
                     case 'hide_collection':
                         var action = 'hidecollection';
                         var collection = <?php echo urlencode($collection_data['ref']);?>;
@@ -1492,7 +1499,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                             }
                         }); 
                         break;
-
                 <?php
                 }
                 ?>
@@ -3731,7 +3737,8 @@ function render_selected_collection_actions()
         "share_collection",
         "download_collection",
         "license_batch",
-        "consent_batch"
+        "consent_batch",
+        'delete_all_in_collection',
     );
 
     if($refs_to_remove > 0)
@@ -3758,6 +3765,8 @@ function render_selected_collection_actions()
     $lang["savesearchitemstocollection"] = $lang["add_selected_to_collection"];
     $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
     $lang["share"] = $lang["share_selected"];
+    $lang['deleteallresourcesfromcollection'] = $lang['deleteselectedfromcollection'];
+    $lang["deleteallsure"] = $lang['deleteallselectedsure'];
 
     render_actions($collection_data, true, false);
 

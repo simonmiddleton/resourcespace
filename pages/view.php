@@ -1223,11 +1223,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         {
                                                         echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-trash'></i>&nbsp;" . escape($deletetext) . "</div>";
                                                         }
-                                                    elseif ($delete_requires_password)
-                                                        {
-                                                        $delete_url = generateURL($baseurl . "/pages/delete.php", $urlparams);
-                                                        echo "<a id='delete_link_" . $ref . "' href='" . $delete_url . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-trash'></i>&nbsp;" . escape($deletetext) . "</a>";
-                                                        }
                                                     else
                                                         {
                                                         $urlparams['text']='deleted';

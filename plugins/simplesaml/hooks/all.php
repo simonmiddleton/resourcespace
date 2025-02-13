@@ -26,9 +26,7 @@ function HookSimplesamlAllPreheaderoutput()
 
     if ($simplesaml_login && simplesaml_is_authenticated()) {
         // Prevent password change if SAML authenticated and signed in to RS with SAML
-        // Also ensure we don't ask the user to type in a password, since we don't have it!
-        global $allow_password_change, $delete_requires_password;
-        $delete_requires_password = false;
+        global $allow_password_change;
         $allow_password_change = false;
         return true;
     }
