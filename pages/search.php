@@ -1365,8 +1365,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                     <?php echo escape($lang["matches"] . " " . $lang["inthearchive"]); ?>
                 </span>
                 <span
-                    id="ArchiveSearchCountPill"
-                    class="Pill"
+                    id="ArchiveSearchCount"
                     style="display: none;">
                 </span>
             </a>
@@ -1380,10 +1379,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
                         "archive": "2",
                         "fetchrows": "1,1",
                     },
-                    function(response) {     
-                        console.log(response);
-                        jQuery('#ArchiveSearchCountPill').html(Number(response.total)).fadeIn();
-                        },
+                    function(response) {
+                        jQuery('#ArchiveSearchCount').html('(' + Number(response.total) + ')').fadeIn();
+                    },
                     <?php echo generate_csrf_js_object('do_search'); ?>
                 );
             });
