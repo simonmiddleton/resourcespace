@@ -71,7 +71,7 @@ if (count($xpath) == 1 && $xpath[0] == "") {
         if ($resource_access == 0 && !in_array($resource["file_extension"], config_merge_non_image_types())) {
             // Check resource actually exists and is active
             $fulljpgsize = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
-            $useextension = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+            $useextension = strtolower($resource["file_extension"]) == "jpeg" ? $resource["file_extension"] : "jpg";
             $img_path = get_resource_path($resourceid, true, $fulljpgsize, false, $useextension);
             $image_size = get_original_imagesize($resourceid, $img_path, $useextension);
             if ($image_size === false) {

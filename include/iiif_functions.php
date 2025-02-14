@@ -319,7 +319,7 @@ final class IIIFRequest
         if (in_array($resdata["file_extension"], array_merge($this->media_extensions))) {
             $media_path = get_resource_path($resource, true, $size, false, $resdata["file_extension"]);
         } else {
-            $useextension = strtolower($resdata["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+            $useextension = strtolower($resdata["file_extension"]) == "jpeg" ? $resdata["file_extension"] : "jpg";
             $media_path = get_resource_path($resource, true, $size, false, $useextension);
         }
 
@@ -544,7 +544,7 @@ final class IIIFRequest
             $media_path = get_resource_path($useimage["ref"], true, $size, false, $useimage["file_extension"]);
         } else {
             $size = $this->largest_jpg_size($useimage);
-            $useextension = strtolower($useimage["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+            $useextension = strtolower($useimage["file_extension"]) == "jpeg" ? $useimage["file_extension"] : "jpg";
             $media_path = get_resource_path($useimage["ref"], true, $size, false, $useextension);
         }
         if (!file_exists($media_path)) {
@@ -737,7 +737,7 @@ final class IIIFRequest
             } else {
                 $fulljpgsize = $this->largest_jpg_size($resource);
             }
-            $useextension = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+            $useextension = strtolower($resource["file_extension"]) == "jpeg" ? $resource["file_extension"] : "jpg";
             $img_path = get_resource_path($this->request["id"], true, $fulljpgsize, false, $useextension);
             $image_size = get_original_imagesize($this->request["id"], $img_path, $useextension);
             if ($image_size === false) {
@@ -1212,7 +1212,7 @@ function iiif_get_canvases($identifier, $iiif_results, $sequencekeys = false)
             }
         }
         $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
-        $useextension = strtolower($useimage["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+        $useextension = strtolower($useimage["file_extension"]) == "jpeg" ? $useimage["file_extension"] : "jpg";
         $img_path = get_resource_path($useimage["ref"], true, $size, false, $useextension);
         if (!file_exists($img_path)) {
             continue;
