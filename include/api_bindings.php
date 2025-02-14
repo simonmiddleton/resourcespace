@@ -1327,7 +1327,7 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert, bool $previ
     if ($previewonly) {
         if (!can_upload_preview_image($ref)) {
             return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-permissiondenied']));
-    }
+        }
         $success = upload_preview($ref);
         if ($success) {
             http_response_code(204);
@@ -1352,13 +1352,14 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert, bool $previ
         }
         $processfile = $_FILES['userfile'];
         $extension = pathinfo($processfile['name'])["extension"] ?? "";
-        if(is_banned_extension($extension)) {
+        if (is_banned_extension($extension)) {
             http_response_code(403);
             return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_invalid_file']));
         }
 
         $altpath = get_resource_path($ref, true, "", true, $extension, -1, 1, false, "", $alternative);
-        if (move_uploaded_file($processfile['tmp_name'], $altpath)) {  chmod($altpath, 0777);
+        if (move_uploaded_file($processfile['tmp_name'], $altpath)) {
+            chmod($altpath, 0777);
             $file_size = filesize_unlimited($altpath);
             // Update alternative file data.
             $altdata = [
@@ -1377,7 +1378,7 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert, bool $previ
         return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_failed']));
     } else {
         // Main resource file upload
-        if($GLOBALS['file_upload_block_duplicates']) {
+        if ($GLOBALS['file_upload_block_duplicates']) {
             $duplicates = check_duplicate_checksum($_FILES['file']['tmp_name'], false);
             if (count($duplicates) > 0) {
                 return ajax_response_fail(ajax_build_message(

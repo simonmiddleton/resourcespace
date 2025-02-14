@@ -4714,7 +4714,8 @@ function get_alternative_file($resource, $ref)
  *
  * @param int $resource The resource ID associated with the alternative file.
  * @param int $ref      The reference ID of the alternative file to update.
- * @param array $data   Array of data in name=>value format. If a column is to be left as is then it must not be included in the array
+ * @param array $data   Array of data in name=>value format, where name is the resource_alt_files column name.
+ *                      If a column is to be left as is then it must not be included in the array
  *
  */
 function save_alternative_file(int $resource, int $ref, array $data = []): void
@@ -8959,5 +8960,9 @@ function resource_is_template(int $ref): bool
  */
 function can_upload_preview_image(int $ref): bool
 {
-    return !resource_file_readonly($ref) && !checkperm("F*") && !checkperm("xupr") && !$GLOBALS['custompermshowfile'];
+    return !resource_file_readonly($ref)
+        && !checkperm("F*")
+        && !checkperm("xupr")
+        && !resource_is_template($ref) 
+        && !$GLOBALS['custompermshowfile'];
 }
