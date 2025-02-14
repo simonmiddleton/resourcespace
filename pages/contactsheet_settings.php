@@ -175,8 +175,9 @@ include '../include/header.php';
                                     fieldToAdd += '<input type="checkbox" ';
                                     fieldToAdd += 'name="selected_contact_sheet_fields[]" ';
                                     fieldToAdd += 'class="selected_contact_sheet_field' + (Number(contact_sheet_field_obj.ref) == 0 ? 'all" ' : '" ');                                    
-                                    fieldToAdd += 'value="' + contact_sheet_field_obj.ref + '" checked>';
-                                    fieldToAdd += '<label>' + contact_sheet_field_obj.title + '</label><br /></span>';
+                                    fieldToAdd += 'value="' + contact_sheet_field_obj.ref + '" ';
+                                    fieldToAdd += 'id="selected_contact_sheet_fields' + Number(contact_sheet_field_obj.ref) + '" checked>';
+                                    fieldToAdd += '<label for="selected_contact_sheet_fields' + Number(contact_sheet_field_obj.ref) + '">' + contact_sheet_field_obj.title + '</label><br /></span>';
 
                                     contact_sheet_fields_selector.append(fieldToAdd);
                                 }
@@ -359,7 +360,7 @@ include '../include/header.php';
                                     id="selected_contact_sheet_fields<?php echo (int) $contact_sheet_field['ref']; ?>"
                                     checked="checked"
                                 />
-                                <label><?php echo i18n_get_translated($contact_sheet_field['title']); ?></label>
+                                <label for="selected_contact_sheet_fields<?php echo (int) $contact_sheet_field['ref']; ?>"><?php echo i18n_get_translated($contact_sheet_field['title']); ?></label>
                                 <br />
                             </span>
                         <?php 
