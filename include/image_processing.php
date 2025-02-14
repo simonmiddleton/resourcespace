@@ -1923,34 +1923,27 @@ function upload_preview($ref)
 {
     hook("removeannotations", "", array($ref));
 
-    # Upload a preview image only.
-    $processfile = $_FILES['userfile'];
-    $filename = strtolower(str_replace(" ", "_", $processfile['name']));
+    $extension = parse_filename_extension($_FILES['userfile']['name']);
+    $temp_file = get_resource_path($ref, true, 'tmp', true, $extension);
 
-    # Work out extension
-    $extension = explode(".", $filename);
-    $extension = trim(strtolower($extension[count($extension) - 1]));
-    if ($extension == "jpeg") {
-        $extension = "jpg";
-    }
-
-    if ($extension != "jpg") {
+    if (
+        !process_file_upload(
+            $_FILES['userfile'],
+            new SplFileInfo($temp_file),
+            ['allow_extensions' => ['jpg', 'jpeg']]
+        )['success']
+    ) {
         return false;
     }
 
-    # Move uploaded file into position.
-    $filepath = get_resource_path($ref, true, "tmp", true, $extension);
-    $result = move_uploaded_file($processfile['tmp_name'], $filepath);
-    if ($result != false) {
-        chmod($filepath, 0777);
-    }
-
-    # Create previews
+    chmod($temp_file, 0777);
     create_previews($ref, false, $extension, true);
 
-    # Delete temporary file, if not transcoding.
-    if (file_exists($filepath) && !ps_value("SELECT is_transcoding value FROM resource WHERE ref = ?", array("i",$ref), false)) {
-        unlink($filepath);
+    if (
+        file_exists($temp_file)
+        && !ps_value('SELECT is_transcoding value FROM resource WHERE ref = ?', ['i', $ref], false)
+    ) {
+        unlink($temp_file);
     }
 
     return true;
