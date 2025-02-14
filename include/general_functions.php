@@ -4308,6 +4308,27 @@ function is_positive_int_loose($V): bool
 }
 
 /**
+ * Helper function to check if value is a positive or zero integer looking type.
+ *
+ * @param int|float|string $V Value to be tested
+ */
+function is_positive_or_zero_int_loose($V): bool
+{
+    return is_int_loose($V) && $V >= 0;
+}
+
+/**
+ * Helper function to check if value is an array containing only 
+ * positive or zero integer looking types
+ *
+ * @param mixed $var value to be tested
+ */
+function is_array_of_pos_or_zero_ints($var): bool 
+{
+    return is_array($var) && count($var) === count(array_filter($var, 'is_positive_or_zero_int_loose'));
+}
+
+/**
  * Helper function to check if a value is able to be cast to a string
  *
  * @param mixed $var value to be tested
