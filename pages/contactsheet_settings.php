@@ -354,13 +354,13 @@ include '../include/header.php';
                             <span id="csf<?php echo (int) $contact_sheet_field['ref']; ?>">
                                 <input
                                     type="checkbox"
-                                    value="<?php echo $contact_sheet_field['ref']; ?>"
+                                    value="<?php echo (int) $contact_sheet_field['ref']; ?>"
                                     class="selected_contact_sheet_field<?php echo (int) $contact_sheet_field['ref'] == 0 ? 'all' : ''; ?>"
                                     name="selected_contact_sheet_fields[]"
                                     id="selected_contact_sheet_fields<?php echo (int) $contact_sheet_field['ref']; ?>"
                                     checked="checked"
                                 />
-                                <label for="selected_contact_sheet_fields<?php echo (int) $contact_sheet_field['ref']; ?>"><?php echo i18n_get_translated($contact_sheet_field['title']); ?></label>
+                                <label for="selected_contact_sheet_fields<?php echo (int) $contact_sheet_field['ref']; ?>"><?php echo escape(i18n_get_translated($contact_sheet_field['title'])); ?></label>
                                 <br />
                             </span>
                         <?php 
