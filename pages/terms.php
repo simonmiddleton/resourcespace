@@ -121,7 +121,7 @@ include "../include/header.php";
             <input
                 type="button"
                 name="decline"
-                onclick="window.location='<?php echo generateURL($baseurl . '/login.php', ['logout' => true, 'nc' => time()])?>';"
+                onclick="window.history.go(-1);"
                 value="<?php echo escape($lang["idecline"]); ?>"
             />
         </div>
