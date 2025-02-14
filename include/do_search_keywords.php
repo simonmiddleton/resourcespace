@@ -266,9 +266,9 @@ if ($keysearch) {
                     $keyword
                 ) === 1
             ) {
-                    // Quote keywords that contain special characters and no spaces
-                    $keyword = "\"$keyword\"";
-                    $quoted_string = true;
+                // Quote field specific keywords that contain special characters and no spaces
+                $keyword = "\"$keyword\"";
+                $quoted_string = true;
             }
 
             if ($field_short_name_specified) { // Need this also for string matching in a named text field
