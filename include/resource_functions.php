@@ -8717,8 +8717,8 @@ function related_resource_pull(array $resource)
  * Get the largest available preview URL for the given resource and the given array of sizes
  *
  * @param array     $resource               Array of resource data from get_resource_data() or search results
- * @param int       $access                 Resource access
  * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param int       $access                 Resource access
  * @param bool      $watermark              Look for watermarked versions?
  * @param int       $page                   Page to look for
  * @param bool      $try_pulled_resource    Should we try to use an image from a pulled resource if the current resource doesn't have a usable preview
@@ -8728,7 +8728,7 @@ function related_resource_pull(array $resource)
  */
 function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1, bool $try_pulled_resource = true)
 {
-    global $userref, $open_access_for_contributor;
+    global $userref, $open_access_for_contributor, $sizes_always_allowed;
     if (empty($sizes)) {
         $sizes = array_reverse(array_column(get_all_image_sizes(), "id"));
     }
@@ -8745,6 +8745,11 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         }
 
         // Work out image to use.
+        // With restricted access not all sizes are available.
+        if ($access !== RESOURCE_ACCESS_FULL) {
+            $sizes = array_intersect($sizes, $sizes_always_allowed);
+        }
+
         if ($watermark !== '') {
             $use_watermark = check_use_watermark();
         } else {
