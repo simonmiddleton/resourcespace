@@ -2401,7 +2401,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         {
         // Use EDTF format for date input
         ?>      
-        <input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo escape($name); ?>_edtf" id="<?php echo escape($name); ?>_edtf" type="text" value="<?php echo ($startvalue!=""|$endvalue!="")?$startvalue . "/" . $endvalue:""; ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } elseif (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
+        <input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo escape($name); ?>_edtf" id="<?php echo escape($name); ?>_edtf" type="text" value="<?php echo escape(($startvalue != "" | $endvalue !="") ? $startvalue . "/" . $endvalue : ""); ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } elseif (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo (int) $field["ref"]; ?>');"<?php } ?>>
 <?php
         }?>
     <!--  date range search start -->
