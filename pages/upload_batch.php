@@ -25,9 +25,8 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']) && isset($_SERVER['HTTP_UPPY_AUTH_TOKEN
                     // Encoded by Uppy
                     $upfilename = base64_decode($upfilename);
                     }
-                $uploadpathinfo     = pathinfo($upfilename);
-                $uploaded_extension = $uploadpathinfo['extension'] ?? "";
-                if(is_banned_extension($uploaded_extension))
+
+                if(is_banned_extension(parse_filename_extension($upfilename)))
                     {
                     debug("upload_batch - invalid file extension received. File name: '" . $upfilename . "'");
                     http_response_code(401);
@@ -490,11 +489,9 @@ if ($processupload)
     debug("upload_batch - received file from user '" . $username . "',  filename: '" . $upfilename . "'");
 
     # Work out the extension
-    $parts=explode(".",$upfilename);
-    $origextension=trim($parts[count($parts)-1]);
-    $extension=strtolower($origextension);
-    if(count($parts) > 1){array_pop($parts);}
-    $filenameonly = implode('.', $parts);
+    $origextension = parse_filename_extension($upfilename);
+    $extension = mb_strtolower($origextension);
+    $filenameonly = basename($upfilename, ".{$origextension}");
 
      // Clean the filename
     $origuploadedfilename= $upfilename;
@@ -612,6 +609,7 @@ if ($processupload)
 
                 # Move the sent file to the alternative file location
                 $renamed=rename($upfilepath, $path);
+                todo: replace rename() with process_file_upload()
 
                 if ($renamed===false)
                     {
@@ -670,7 +668,7 @@ if ($processupload)
             if($upload_then_edit && (!($upload_here && $from_advanced_search) || !is_int_loose($resource_type)))
                 {
                 $resource_type_from_extension = get_resource_type_from_extension(
-                    pathinfo($upfilepath, PATHINFO_EXTENSION),
+                    parse_filename_extension($upfilepath),
                     $resource_type_extension_mapping,
                     $resource_type_extension_mapping_default
                 );
