@@ -200,18 +200,13 @@ function temp_local_download_remote_file(string $url, string $key = "")
 /**
  * Basic check of uploaded file against list of allowed extensions
  *
- * @param  array    $uploadedfile - an element from the $_FILES PHP reserved variable
- * @param  array    $validextensions   Array of valid extension strings
- * @return bool
+ * @param array{name: string} $uploadedfile An element from the $_FILES PHP reserved variable
+ * @param array $validextensions Array of valid extension strings
  */
-function check_valid_file_extension($uploadedfile, array $validextensions)
+function check_valid_file_extension(array $uploadedfile, array $validextensions): bool
 {
-    $pathinfo   = pathinfo($uploadedfile['name']);
-    $extension  = $pathinfo['extension'] ?? "";
-    if (in_array(strtolower($extension), array_map("strtolower", $validextensions)) && !is_banned_extension($extension)) {
-        return true;
-    }
-    return false;
+    $extension = parse_filename_extension($uploadedfile['name']);
+    return in_array(strtolower($extension), array_map("strtolower", $validextensions)) && !is_banned_extension($extension);
 }
 
 /**
