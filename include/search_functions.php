@@ -1179,6 +1179,10 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
     global $allow_smart_collections, $smart_collections_async;
     global $config_search_for_number,$userref;
 
+    if (trim((string) $sql_prefix) === "" && $return_refs_only) {
+        $select = "r.ref, r.resource_type, r.archive, r.created_by, r.access, r.hit_count `total_hit_count`";
+    }
+
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
     // Don't cache special searches by default as often used for special purposes
@@ -1340,8 +1344,11 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
                 }
             }
         }
-
-        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        if ($return_refs_only) { 
+            $sql->sql = "SELECT DISTINCT r.hit_count score, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by";
+        } else {
+            $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        }
         $sql->parameters = array_merge($colcustperm->parameters, ["i",$collection], $sql_filter->parameters);
         $collectionsearchsql = hook('modifycollectionsearchsql', '', array($sql));
 
@@ -1772,18 +1779,6 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         if ($returnsql) {
             return $sql;
         } else {
-            if ($return_refs_only) {
-                // Reformat order by as the new derived table wont have the same alias as the original query
-                $order_by = implode(',', array_map(function ($field) { 
-                    $field = trim($field);
-                    if(strpos($field, '.') !== false) { 
-                        $field = substr($field, strpos($field, '.') + 1);
-                    }
-                    return $field;
-                }, explode(',', $order_by)));
-                $sql->sql = "SELECT ref, resource_type, archive, created_by, access FROM ($sql->sql) as refs_only";
-                $sql->sql .= trim($order_by) !== '' ? " ORDER BY $order_by" : "";
-            }
             $count_sql = clone $sql;
             $count_sql->sql = str_replace("ORDER BY " . $order_by, "", $count_sql->sql);
             $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
@@ -1793,6 +1788,18 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
 
             $resultcount = $result["total"]  ?? 0;
             if ($resultcount > 0 && count($result["data"]) > 0) {
+                if ($return_refs_only) {
+                    // This needs to include archive and created_by columns too as often used to work out permission to edit collection
+                    $ref_only_fields = ['ref', 'resource_type', 'archive', 'created_by', 'access'];
+                    // Processing using reference to reduce memory usage when dealing with very large result sets
+                    foreach ($result['data'] as &$data) {
+                        foreach ($data as $field => $value) {
+                            if(!in_array($field, $ref_only_fields)){
+                                unset($data[$field]);
+                            }
+                        }
+                    }
+                }
                 $return = $result['data'];
                 $resultcount -= count($return);
                 while ($resultcount > 0) {

@@ -14,6 +14,21 @@ ps_query(
     ["i",$resourcea,"i",$resourceb,"i",$resourcec]
 );
 
+$search_orders = [
+    "relevance",
+    "popularity",
+    "rating",
+    "date",
+    "colour",
+    "title",
+    "file_path",
+    "resourceid",
+    "resourcetype",
+    "extension",
+    "status",
+    "modified",
+];
+
 $use_cases = [
     [
         "name"          => "!list search for single resource",
@@ -47,29 +62,30 @@ $use_cases = [
     ],
 ];
 foreach ($use_cases as $use_case) {
-    $results = do_search(
-        $use_case["search_string"],
-        "",
-        "relevance",
-        "0",
-        -1,
-        "desc",
-        false,
-        DEPRECATED_STARSEARCH,
-        false,
-        false,
-        "",
-        false,
-        true,
-        true
-    );
-
-    $results = array_column($results, "ref");
-    sort($results);
-    sort($use_case["results"]);
-    if ($results != $use_case["results"]) {
-        echo "ERROR - SUBTEST " . $use_case["name"] . "  ";
-        return false;
+    foreach ( $search_orders as $order_by) {
+        $results = do_search(
+            $use_case["search_string"],
+            "",
+            $order_by,
+            "0",
+            -1,
+            "desc",
+            false,
+            DEPRECATED_STARSEARCH,
+            false,
+            false,
+            "",
+            false,
+            true,
+            true
+        );
+        $results = array_column($results, "ref");
+        sort($results);
+        sort($use_case["results"]);
+        if ($results != $use_case["results"]) {
+            echo "ERROR - SUBTEST " . $use_case["name"] . "  ";
+            return false;
+        }
     }
 }
 // Tear down
