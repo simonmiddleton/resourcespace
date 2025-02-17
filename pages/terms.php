@@ -68,7 +68,21 @@ if ('' != $terms_save && enforcePostRequest(false)) {
     }
 }
 
-if (!$terms_download && !$terms_upload && getval("noredir", "") == "") {
+if (!
+    (
+        (
+            $terms_upload 
+            && strpos($url, 'edit.php') !== false
+            && strpos($url, 'upload_batch.php') !== false
+        )
+        || 
+        (
+            $terms_download 
+            && strpos($url, 'download') !== false
+        )
+        || getval("noredir", "") !== ""
+    )
+) {
     redirect($url);
 }
 
