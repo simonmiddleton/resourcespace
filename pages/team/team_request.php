@@ -75,7 +75,7 @@ $offset = getval("offset", 0, true);
                 ?>
                 <tr>
                     <td><?php echo escape($requests[$n]["ref"]); ?></td>
-                    <td><?php echo escape($requests[$n]["username"]); ?></td>
+                    <td><?php echo escape((string) $requests[$n]["username"]); ?></td>
                     <td><?php echo escape((string) $requests[$n]["fullname"]); ?></td>
                     <td><?php echo escape(nicedate($requests[$n]["created"], true, true, true));?></td>
                     <td><?php echo escape($requests[$n]["c"]); ?></td>
