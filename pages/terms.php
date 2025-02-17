@@ -72,6 +72,12 @@ if (!$terms_download && !$terms_upload && getval("noredir", "") == "") {
     redirect($url);
 }
 
+if ($useracceptedterms) {
+    $decline_link = "window.history.go(-1)";
+} else {
+    $decline_link = "window.location='" . generateURL($baseurl . '/login.php', ['logout' => true, 'nc' => time()]) . "'";
+}
+
 include "../include/header.php";
 ?>
 
@@ -121,7 +127,7 @@ include "../include/header.php";
             <input
                 type="button"
                 name="decline"
-                onclick="window.history.go(-1);"
+                onclick="<?php echo $decline_link; ?>"
                 value="<?php echo escape($lang["idecline"]); ?>"
             />
         </div>
