@@ -3606,7 +3606,7 @@ function can_set_admin_usergroup(?int $new_usergroup): bool
  * Checks if the origin matches a whitelist entry, supporting wildcards like "*.example.com".
  * 
  *  * @param  string  $origin      The URL to check.
- *  * @param  string  $whitelist   Array of valid URLs - can include wildcards.
+ *  * @param  array   $whitelist   Array of valid URLs - can include wildcards.
  */
 function cors_is_origin_allowed($origin, $whitelist) {
     foreach ($whitelist as $allowed) {
