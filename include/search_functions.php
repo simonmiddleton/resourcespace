@@ -1406,10 +1406,10 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
             $sql_self->parameters = array_merge($sql_join->parameters, ["i",$resource], $sql_filter->parameters);
         }
 
-        $sql->sql = $sql_prefix . $sql_self->sql . "SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.related=r.ref AND t.resource = ?) " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " GROUP BY r.ref
+        $sql->sql = $sql_prefix . $sql_self->sql . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " JOIN resource_related t ON (t.related = r.ref AND t.resource = ?)  WHERE " . $sql_filter->sql . " GROUP BY r.ref
         UNION
-        SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.resource=r.ref AND t.related = ?) " . $sql_join->sql  . " WHERE " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
-        $sql->parameters = array_merge($sql_self->parameters, ["i", $resource], $sql_join->parameters, $sql_filter->parameters, ["i", $resource], $sql_join->parameters, $sql_filter->parameters);
+        SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql  . " JOIN resource_related t ON (t.resource = r.ref AND t.related = ?) WHERE " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
+        $sql->parameters = array_merge($sql_self->parameters, $sql_join->parameters, ["i", $resource], $sql_filter->parameters, $sql_join->parameters, ["i", $resource], $sql_filter->parameters);
     }
 
     # Geographic search
