@@ -86,6 +86,7 @@ if (!
     redirect($url);
 }
 
+global $useracceptedterms;
 if ($useracceptedterms) {
     $decline_link = "window.history.go(-1)";
 } else {
