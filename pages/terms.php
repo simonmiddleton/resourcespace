@@ -87,7 +87,7 @@ if (!
 }
 
 global $useracceptedterms;
-if ($useracceptedterms) {
+if ($useracceptedterms || trim($k) !== '') {
     $decline_link = "window.history.go(-1)";
 } else {
     $decline_link = "window.location='" . generateURL($baseurl . '/login.php', ['logout' => true, 'nc' => time()]) . "'";
