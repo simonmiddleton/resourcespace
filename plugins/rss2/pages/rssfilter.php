@@ -110,6 +110,7 @@ $r = new RSSFeed($feed_title, $baseurl, xmlentities(str_replace("%search%", $sea
 $all_field_info=get_fields_for_search_display($rss_fields);
 
 $n=0;
+$df = [];
 foreach ($rss_fields as $display_field)
     {
     # Find field in selected list
