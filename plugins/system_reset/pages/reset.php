@@ -46,6 +46,8 @@ if (getval("submitted", "") != "") {
     if ($fstemplate_alt_threshold > 0) {
         ps_query("ALTER TABLE resource AUTO_INCREMENT = " . (int) $fstemplate_alt_threshold);
     }
+    resign_all_code(false, false);
+
     redirect("/login.php");
 }
 
