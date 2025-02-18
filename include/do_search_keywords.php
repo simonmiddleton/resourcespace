@@ -63,9 +63,18 @@ if ($keysearch) {
             // Resource type is no longer actually indexed but this will still honour the config by including in search
             $matchusers = get_users(0, $keyword, "u.username", true);
             if (count($matchusers) > 0) {
-                $non_field_keyword_sql->sql .= " UNION (SELECT r.ref AS resource, [bit_or_condition] 1 AS score FROM resource r WHERE r.created_by IN (" .  ps_param_insert(count($matchusers)) . ") AND r.ref >0)";
-                $userparams = ps_param_fill(array_column($matchusers, "ref"), "i");
-                $non_field_keyword_sql->parameters = array_merge($non_field_keyword_sql->parameters, $userparams);
+                $user_sql = get_users(0, $keyword, "u.username", true, -1, "", true);
+                $non_field_keyword_sql->sql .= " UNION (
+                    SELECT r.ref AS resource, [bit_or_condition] 1 AS score
+                    FROM resource r
+                    WHERE
+                        r.created_by IN (SELECT u.ref FROM (" . $user_sql->sql . " ) as u)
+                        AND r.ref >0
+                    )";
+                $non_field_keyword_sql->parameters = array_merge(
+                    $non_field_keyword_sql->parameters,
+                    $user_sql->parameters
+                );
                 $canskip = true;
             }
         }
@@ -266,9 +275,9 @@ if ($keysearch) {
                     $keyword
                 ) === 1
             ) {
-                    // Quote keywords that contain special characters and no spaces
-                    $keyword = "\"$keyword\"";
-                    $quoted_string = true;
+                // Quote field specific keywords that contain special characters and no spaces
+                $keyword = "\"$keyword\"";
+                $quoted_string = true;
             }
 
             if ($field_short_name_specified) { // Need this also for string matching in a named text field

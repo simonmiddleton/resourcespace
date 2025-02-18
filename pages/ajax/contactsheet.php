@@ -51,7 +51,7 @@ $contactsheet_header           = ('' != $includeheader ? filter_var($includehead
 $add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
 $contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : false);
-$selected_contact_sheet_fields = getval('selected_contact_sheet_fields', array(), false, fn(array $arr): bool => count($arr) === count(array_filter($arr, 'is_int_loose')));
+$selected_contact_sheet_fields = getval('selected_contact_sheet_fields', array(), false, 'is_array_of_pos_or_zero_ints');
 
 
 $pdf_properties = array();

@@ -68,8 +68,28 @@ if ('' != $terms_save && enforcePostRequest(false)) {
     }
 }
 
-if (!$terms_download && !$terms_upload && getval("noredir", "") == "") {
+if (!
+    (
+        (
+            $terms_upload 
+            && strpos($url, 'edit.php') !== false
+            && strpos($url, 'upload_batch.php') !== false
+        )
+        || 
+        (
+            $terms_download 
+            && strpos($url, 'download') !== false
+        )
+        || getval("noredir", "") !== ""
+    )
+) {
     redirect($url);
+}
+
+if ($useracceptedterms) {
+    $decline_link = "window.history.go(-1)";
+} else {
+    $decline_link = "window.location='" . generateURL($baseurl . '/login.php', ['logout' => true, 'nc' => time()]) . "'";
 }
 
 include "../include/header.php";
@@ -121,7 +141,7 @@ include "../include/header.php";
             <input
                 type="button"
                 name="decline"
-                onclick="window.location='<?php echo generateURL($baseurl . '/login.php', ['logout' => true, 'nc' => time()])?>';"
+                onclick="<?php echo $decline_link; ?>"
                 value="<?php echo escape($lang["idecline"]); ?>"
             />
         </div>

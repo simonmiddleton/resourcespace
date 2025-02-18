@@ -96,7 +96,6 @@ if (
     && enforcePostRequest(false)
 ) {
     // Do not do this during a tweak operation!
-    hook("markmanualupload");
     $alt_data = [
         "name"          => (string) $altname,
         "description"   => (string) getval("description", ""),

@@ -259,8 +259,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             {
             // Is the governed field resource type ok; if not then no checking necessary as its already hidden
             const conditionalquestion = document.getElementById("question_<?php echo $n ?>");
-            if (Object.hasOwnProperty(conditionalquestion, 'dataset') 
-                && conditionalquestion.dataset.resource_type_ok !="1") { return; }
+            if (conditionalquestion != null && conditionalquestion.dataset?.resource_type_ok != "1") { return; }
 
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
@@ -412,7 +411,12 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     jQuery(idname<?php echo $field['ref']; ?>).slideToggle(function()
                         {
                         console.debug("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
-                        jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
+                        jQuery(this).clearQueue();
+ 
+                        // If field is being made visible, check if section is visible and trigger the parent slide if not
+                        if(newfield<?php echo $field['ref']; ?>status == 'block' && jQuery(this).parent().css('display') == 'none') {
+                            jQuery(this).parent().prev('h1').click();
+                        }
                         <?php 
                         if ($forsearchbar) {
                             if ($field['type'] == FIELD_TYPE_CATEGORY_TREE) { ?>
@@ -2401,7 +2405,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         {
         // Use EDTF format for date input
         ?>      
-        <input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo escape($name); ?>_edtf" id="<?php echo escape($name); ?>_edtf" type="text" value="<?php echo ($startvalue!=""|$endvalue!="")?$startvalue . "/" . $endvalue:""; ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } elseif (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
+        <input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo escape($name); ?>_edtf" id="<?php echo escape($name); ?>_edtf" type="text" value="<?php echo escape(($startvalue != "" | $endvalue !="") ? $startvalue . "/" . $endvalue : ""); ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } elseif (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo (int) $field["ref"]; ?>');"<?php } ?>>
 <?php
         }?>
     <!--  date range search start -->

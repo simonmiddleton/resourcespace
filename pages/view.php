@@ -710,31 +710,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 </div>
                                 <?php
                                 // MP3 preview END 
-                            } elseif ($resource['has_image'] !== RESOURCE_PREVIEWS_NONE) {
+                            } else {
                                 render_resource_view_image($resource,[
                                     "access"=>$access,
                                     "edit_access"=>$edit_access,
                                     ]
-                                    );
-                            } else {
-                                // No preview. If configured, try and use a preview from a related resource
-                                $pullresource = related_resource_pull($resource);
-                                if($pullresource !== false)
-                                    {
-                                    $pull_access = get_resource_access($pullresource);
-                                    render_resource_view_image($pullresource,[
-                                        "access"=>$pull_access,
-                                        "edit_access"=>0, // No ability to modify e.g. annotations
-                                        ]
-                                        );
-                                    }
-                                else
-                                    {?>
-                                    <div id="previewimagewrapper">
-                                    <?php echo get_nopreview_html((string) $resource["file_extension"], $resource["resource_type"]); ?>
-                                    </div>
-                                    <?php
-                                    }
+                                );
                             }
                             } // Standard previews END
                     } /* End of replacerenderinnerresourcepreview hook and end of renderinnerresourcepreview hook */

@@ -734,3 +734,8 @@ function HookSimplesamlAllExtra_checks()
 
     return count($return) > 0 ? $return : false;
 }
+
+function HookSimplesamlAllSsologindefault()
+{
+    return !$GLOBALS["simplesaml_prefer_standard_login"];
+}

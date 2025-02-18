@@ -298,6 +298,7 @@ include "../../include/header.php";
                 DrawOption("D", $lang["can_delete_resources"], true);
                 DrawOption("i", $lang["can_manage_archive_resources"]);
                 DrawOption('A', $lang["can_manage_alternative_files"], true);
+                DrawOption("xupr", $lang["can_upload_preview_images"], true);
                 ?>
 
                 <tr class="ListviewTitleStyle">

@@ -4714,7 +4714,8 @@ function get_alternative_file($resource, $ref)
  *
  * @param int $resource The resource ID associated with the alternative file.
  * @param int $ref      The reference ID of the alternative file to update.
- * @param array $data   Array of data in name=>value format. If a column is to be left as is then it must not be included in the array
+ * @param array $data   Array of data in name=>value format, where name is the resource_alt_files column name.
+ *                      If a column is to be left as is then it must not be included in the array
  *
  */
 function save_alternative_file(int $resource, int $ref, array $data = []): void
@@ -8716,8 +8717,8 @@ function related_resource_pull(array $resource)
  * Get the largest available preview URL for the given resource and the given array of sizes
  *
  * @param array     $resource               Array of resource data from get_resource_data() or search results
- * @param int       $access                 Resource access
  * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param int       $access                 Resource access
  * @param bool      $watermark              Look for watermarked versions?
  * @param int       $page                   Page to look for
  * @param bool      $try_pulled_resource    Should we try to use an image from a pulled resource if the current resource doesn't have a usable preview
@@ -8727,7 +8728,7 @@ function related_resource_pull(array $resource)
  */
 function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1, bool $try_pulled_resource = true)
 {
-    global $userref, $open_access_for_contributor;
+    global $userref, $open_access_for_contributor, $sizes_always_allowed;
     if (empty($sizes)) {
         $sizes = array_reverse(array_column(get_all_image_sizes(), "id"));
     }
@@ -8744,6 +8745,11 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         }
 
         // Work out image to use.
+        // With restricted access not all sizes are available.
+        if ($access !== RESOURCE_ACCESS_FULL) {
+            $sizes = array_intersect($sizes, $sizes_always_allowed);
+        }
+
         if ($watermark !== '') {
             $use_watermark = check_use_watermark();
         } else {
@@ -8785,14 +8791,14 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
                 break;
             }
         }
-        if (!$validimage && (int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE && $try_pulled_resource) {
+        if (!$validimage && (int)$resource['has_image'] === RESOURCE_PREVIEWS_NONE && $try_pulled_resource) {
             // If configured, try and use a preview from a related resource
             $pullresource = related_resource_pull($resource);
             if ($pullresource !== false) {
                 $resource = $pullresource;
+                $preview = get_resource_preview($resource, $sizes, get_resource_access($resource), $watermark, $page, false);
+                $validimage = $preview !== false; 
             }
-            $preview = get_resource_preview($resource, $sizes, $access, $watermark, $page, false);
-            $validimage = $preview !== false; 
         }
     }
     if (!$validimage) {
@@ -8959,5 +8965,9 @@ function resource_is_template(int $ref): bool
  */
 function can_upload_preview_image(int $ref): bool
 {
-    return !resource_file_readonly($ref) && !checkperm("F*") && !checkperm("xupr") && !$GLOBALS['custompermshowfile'];
+    return !resource_file_readonly($ref)
+        && !checkperm("F*")
+        && !checkperm("xupr")
+        && !resource_is_template($ref) 
+        && !$GLOBALS['custompermshowfile'];
 }
