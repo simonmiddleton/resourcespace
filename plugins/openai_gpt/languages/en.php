@@ -17,3 +17,6 @@ $lang["openai_gpt_processing_resource"] = "Resource [resource]";
 $lang["openai_gpt_processing_field"] = "AI metadata generation for field '[field]'";
 
 $lang["property-gpt_source"]="GPT Source";
+
+$lang["openai_gpt_language"]              = "Output language";
+$lang["openai_gpt_language_user"]              = "The language of the current user";
