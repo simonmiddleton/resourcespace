@@ -608,13 +608,12 @@ if ($processupload)
                 $path=get_resource_path($alternative, true, "", true, $extension, -1, 1, false, "", $aref);
 
                 # Move the sent file to the alternative file location
-                $renamed=rename($upfilepath, $path);
-                todo: replace rename() with process_file_upload()
+                $process_file_upload = process_file_upload(new SplFileInfo($upfilepath), new SplFileInfo($path), []);
 
-                if ($renamed===false)
+                if (!$process_file_upload['success'])
                     {
                     $result["status"] = false;
-                    $result["message"] = $lang["error_upload_file_move_failed"];
+                    $result["message"] = $process_file_upload['error']->i18n($lang);
                     $result["error"] = 104;
                     die(json_encode($result));
                     }
