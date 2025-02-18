@@ -253,18 +253,26 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
     ) {
         if (!$after_upload_processing) {
             if ($file_path != "" && ($replace_batch_existing || !$deletesource)) {
-                $result = copy($file_path, $filepath);
+                $result = process_file_upload(
+                    new SplFileInfo($file_path),
+                    new SplFileInfo($filepath),
+                    ['file_move' => 'copy']
+                )['success'];
             } elseif (!$replace_batch_existing && $file_path != "") {
                 # File path has been specified. Let's use that directly.
                 if (file_exists($file_path)) {
-                    $result = rename($file_path, $filepath);
+                    $result = process_file_upload(
+                        new SplFileInfo($file_path),
+                        new SplFileInfo($filepath),
+                        []
+                    )['success'];
                 } else {
                     return false;
                 }
             } else {
                 # Standard upload.
                 if (!$revert) {
-                    $result = move_uploaded_file($processfile['tmp_name'], $filepath);
+                    $result = process_file_upload($processfile, new SplFileInfo($filepath), [])['success'];
                 } else {
                     $result = true;
                 }
