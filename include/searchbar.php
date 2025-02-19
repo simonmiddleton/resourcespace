@@ -945,7 +945,7 @@ elseif($restypes=='')
   <br />
   <?php hook("searchbarbeforebottomlinks"); ?>
   <?php if (! $disable_geocoding) { ?><p><i aria-hidden="true" class="fa fa-fw fa-globe"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><?php echo escape($lang["geographicsearch"]) ?></a></p><?php } ?>
-  <?php if (! $advancedsearch_disabled) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo strip_tags_and_attributes($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
+  <?php if (! $advancedsearch_disabled) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo escape($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
 
   <?php hook("searchbarafterbuttons"); ?>
 
