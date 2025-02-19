@@ -68,6 +68,10 @@ function do_search(
         $index_contributed_by, $max_results, $config_search_for_number,
         $category_tree_search_use_and_logic, $date_field, $FIXED_LIST_FIELD_TYPES, $userderestrictfilter;
 
+    if (!is_a($select, "PreparedStatementQuery")) {
+            $select = new PreparedStatementQuery($select ?? '', array());
+        }
+
     if ($editable_only && !$returnsql && trim((string) $k) != "" && !$internal_share_access) {
         return array();
     }
@@ -195,23 +199,24 @@ function do_search(
     }
 
     # Join thumbs_display_fields to resource table
-    $select = "r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified, r.file_size ";
+    $select->sql = "r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified, r.file_size ";
+    $select->parameters = array();
     $sql_hitcount_select = "r.hit_count";
 
     $modified_select = hook('modifyselect');
-    $select .= $modified_select ? $modified_select : '';      // modify select hook 1
+    $select->sql .= $modified_select ? $modified_select : '';      // modify select hook 1
 
     $modified_select2 = hook('modifyselect2');
-    $select .= $modified_select2 ? $modified_select2 : '';    // modify select hook 2
+    $select->sql .= $modified_select2 ? $modified_select2 : '';    // modify select hook 2
 
-    $select .= $return_disk_usage ? ',r.disk_usage' : '';      // disk usage
+    $select->sql .= $return_disk_usage ? ',r.disk_usage' : '';      // disk usage
 
     // Get custom group and user access rights if available to generate resultant_access,
     // otherwise select null values so columns can still be used regardless
     // This can then be passed through  to access checking functions in order to eliminate many single queries.
     if (!checkperm("v") && !$access_override) {
         // Get custom access
-        $select .= ",rca.access group_access,rca2.access user_access ";
+        $select->sql .= ",rca.access group_access,rca2.access user_access ";
         if (!checkperm("g") && !$internal_share_access) {
             // Restrict all resources by default
             if (is_int_loose($userderestrictfilter) && $userderestrictfilter > 0) {
@@ -219,32 +224,32 @@ function do_search(
                 $derestrict_filter_sql = get_filter_sql($userderestrictfilter);
                 if (is_a($derestrict_filter_sql, "PreparedStatementQuery")) {
                     $access_sql = "CASE WHEN " . $derestrict_filter_sql->sql . " THEN 0 ELSE 1 END";
-                    $select .= ", LEAST(IFNULL(rca.access, $access_sql), IFNULL(rca2.access, $access_sql)) resultant_access ";
+                    $select->sql .= ", LEAST(IFNULL(rca.access, $access_sql), IFNULL(rca2.access, $access_sql)) resultant_access ";
                     // Add node parameters to the start
-                    $sql_join->parameters = array_merge(
+                    $select->parameters = array_merge(
+                        $select->parameters,
                         $derestrict_filter_sql->parameters,
                         $derestrict_filter_sql->parameters,
-                        $sql_join->parameters
                     );
                 }
             } else {
                 // Set access to restricted unless custom access is set
-                $select .= ", LEAST(IFNULL(rca.access, 1), IFNULL(rca2.access, 1)) resultant_access ";
+                $select->sql .= ", LEAST(IFNULL(rca.access, 1), IFNULL(rca2.access, 1)) resultant_access ";
             }
         } else {
             // Standard resultant access for this user based on resource access and custom access
-            $select .= ", LEAST(IFNULL(rca.access, r.access), IFNULL(rca2.access, r.access)) resultant_access ";
+            $select->sql .= ", LEAST(IFNULL(rca.access, r.access), IFNULL(rca2.access, r.access)) resultant_access ";
         }
     } else {
-        $select .= ", null group_access, null user_access ";
-        $select .= ", r.access resultant_access ";
+        $select->sql .= ", null group_access, null user_access ";
+        $select->sql .= ", r.access resultant_access ";
     }
 
     # add 'joins' to select (only add fields if not returning the refs only)
     $joins = $return_refs_only === false || $GLOBALS["include_fieldx"] === true ? get_resource_table_joins() : array();
     foreach ($joins as $datajoin) {
         if (metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"]) {
-            $select .= ", r.field{$datajoin} ";
+            $select->sql .= ", r.field{$datajoin} ";
         }
     }
 
@@ -267,7 +272,7 @@ function do_search(
     //                                                      order by RESOURCE TYPE
     // *******************************************************************************
     $sql_join->sql .= " JOIN resource_type AS rty ON r.resource_type = rty.ref ";
-    $select .= ", rty.order_by ";
+    $select->sql .= ", rty.order_by ";
 
     // Search pipeline - each step handles an aspect of search and adds to the assembled SQL.
     $return = include "do_search_keywords.php";
@@ -310,8 +315,8 @@ function do_search(
     # --------------------------------------------------------------------------------
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------
-
-    $special_results = search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix, $order_by, $orig_order, $select, $sql_filter, $archive, $return_disk_usage, $return_refs_only, $returnsql);
+    $sql_select = clone $select;
+    $special_results = search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix, $order_by, $orig_order, $sql_select, $sql_filter, $archive, $return_disk_usage, $return_refs_only, $returnsql);
     if ($special_results !== false) {
         log_keyword_usage($keywords_used, $special_results);
         return $special_results;
@@ -348,8 +353,8 @@ function do_search(
 
     # Compile final SQL
     $results_sql = new PreparedStatementQuery();
-    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . " WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
-    $results_sql->parameters = array_merge($t->parameters, $t2->parameters, $sql->parameters);
+    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select->sql FROM resource r" . $t->sql . " WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
+    $results_sql->parameters = array_merge($select->parameters, $t->parameters, $t2->parameters, $sql->parameters);
 
     # Debug
     debug('$results_sql=' . $results_sql->sql . ", parameters: " . implode(",", $results_sql->parameters));

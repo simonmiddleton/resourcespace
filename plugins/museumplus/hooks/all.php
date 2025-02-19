@@ -172,8 +172,8 @@ function HookMuseumplusAllAddspecialsearch($search,$select,$sql_join,$sql_filter
 
     // @see mplus_validate_association() - this is where we decide if something is invalid
     $mplussql = new PreparedStatementQuery();
-    $mplussql->sql = "SELECT DISTINCT r.hit_count score, museumplus_data_md5, museumplus_technical_id, $select FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.museumplus_data_md5 IS NOT NULL AND r.museumplus_technical_id IS NULL AND " . $sql_filter->sql . " GROUP BY r.ref";
-    $mplussql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
+    $mplussql->sql = "SELECT DISTINCT r.hit_count score, museumplus_data_md5, museumplus_technical_id, $select->sql FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.museumplus_data_md5 IS NOT NULL AND r.museumplus_technical_id IS NULL AND " . $sql_filter->sql . " GROUP BY r.ref";
+    $mplussql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
     return $mplussql;
     }
 
