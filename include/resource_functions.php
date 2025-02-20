@@ -8717,7 +8717,7 @@ function related_resource_pull(array $resource)
  * Get the largest available preview URL for the given resource and the given array of sizes
  *
  * @param array     $resource               Array of resource data from get_resource_data() or search results
- * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provided will use all sizes
  * @param int       $access                 Resource access
  * @param bool      $watermark              Look for watermarked versions?
  * @param int       $page                   Page to look for
