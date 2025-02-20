@@ -4,15 +4,15 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
+class ComposerStaticInit16f42938e0bfbfc464984f1ea2a1b74c
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '89efb1254ef2d1c5d80096acd12c4098' => __DIR__ . '/..' . '/twig/twig/src/Resources/core.php',
@@ -37,7 +37,6 @@ class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
         'S' => 
         array (
             'Symfony\\Polyfill\\Php83\\' => 23,
-            'Symfony\\Polyfill\\Php81\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
             'Symfony\\Polyfill\\Intl\\Icu\\' => 26,
@@ -104,12 +103,9 @@ class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
             'Psr\\Cache\\' => 10,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'L' => 
-        array (
-            'League\\Uri\\' => 11,
-        ),
         'G' => 
         array (
+            'GuzzleHttp\\Psr7\\' => 16,
             'Gettext\\Languages\\' => 18,
             'Gettext\\' => 8,
         ),
@@ -135,10 +131,6 @@ class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
         'Symfony\\Polyfill\\Php83\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php83',
-        ),
-        'Symfony\\Polyfill\\Php81\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php81',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
@@ -377,9 +369,9 @@ class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'League\\Uri\\' => 
+        'GuzzleHttp\\Psr7\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces',
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
         'Gettext\\Languages\\' => 
         array (
@@ -387,8 +379,8 @@ class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
         ),
         'Gettext\\' => 
         array (
-            0 => __DIR__ . '/..' . '/gettext/gettext/src',
-            1 => __DIR__ . '/..' . '/gettext/translator/src',
+            0 => __DIR__ . '/..' . '/gettext/translator/src',
+            1 => __DIR__ . '/..' . '/gettext/gettext/src',
         ),
         'Dapphp\\Radius\\' => 
         array (
@@ -407,7 +399,6 @@ class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
     );
 
     public static $classMap = array (
-        'CURLStringFile' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/CURLStringFile.php',
         'Collator' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Resources/stubs/Collator.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
@@ -424,7 +415,6 @@ class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'NumberFormatter' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Resources/stubs/NumberFormatter.php',
         'Override' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/Override.php',
-        'ReturnTypeWillChange' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
         'SQLite3Exception' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/SQLite3Exception.php',
         '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
@@ -432,10 +422,10 @@ class ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4::$prefixesPsr0;
-            $loader->classMap = ComposerStaticIniteb8044a5f31df9017f83ac696a2e46a4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit16f42938e0bfbfc464984f1ea2a1b74c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit16f42938e0bfbfc464984f1ea2a1b74c::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit16f42938e0bfbfc464984f1ea2a1b74c::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit16f42938e0bfbfc464984f1ea2a1b74c::$classMap;
 
         }, null, ClassLoader::class);
     }
