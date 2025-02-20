@@ -577,10 +577,6 @@ foreach ($page_def as $page_item) {
     }
 }
 
-// Correct global watermark path variable to point to right file
-// so image upload function will work
-set_watermark_image();
-
 # $lang is not a config option!
 unset($system_wide_config_options['lang']);
 foreach ($system_wide_config_options as $key => $value) {
