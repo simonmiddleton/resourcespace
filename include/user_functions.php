@@ -3446,6 +3446,7 @@ function setup_command_line_user(array $setoptions = []): bool
     $dummyuserdata["ip_restrict_user"] = "";
     $dummyuserdata["ip_restrict_group"] = "";
     $dummyuserdata["current_collection_valid"] = 1;
+    $dummyuserdata["usergroup"] = 0;
 
     // Add any columns from user table, plus any extra array
     // elements normally obtained from get_user()
@@ -3462,6 +3463,7 @@ function setup_command_line_user(array $setoptions = []): bool
     foreach ($setoptions as $setoption => $setvalue) {
         $dummyuserdata[$setoption] = $setvalue;
     }
+
     return setup_user($dummyuserdata);
 }
 
