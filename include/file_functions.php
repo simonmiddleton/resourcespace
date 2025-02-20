@@ -423,6 +423,7 @@ function is_safe_basename(string $val): bool
         && !is_banned_extension(parse_filename_extension($val));
 }
 
+// phpcs:disable
 enum ProcessFileUploadErrorCondition
 {
     case MissingSourceFile;
@@ -443,7 +444,8 @@ enum ProcessFileUploadErrorCondition
         return $lang["error_file_upload_cond-{$this->name}"] ?? $this->name;
     }
 }
-// 
+// phpcs:enable
+
 /**
  * High level function which can handle processing file uploads.
  *
