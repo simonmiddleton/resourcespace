@@ -3463,7 +3463,6 @@ function setup_command_line_user(array $setoptions = []): bool
     foreach ($setoptions as $setoption => $setvalue) {
         $dummyuserdata[$setoption] = $setvalue;
     }
-
     return setup_user($dummyuserdata);
 }
 
