@@ -38,6 +38,28 @@ $use_cases = [
         'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::InvalidUploadPath),
     ],
     [
+        'name' => 'Missing source file (non-existent)',
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . '/test_508_missing.txt'),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::MissingSourceFile),
+    ],
+    [
+        'name' => 'Empty files not allowed',
+        'setup' => function () {
+            $fh = fopen(sys_get_temp_dir() . '/test_508_empty.txt', 'w');
+            return is_resource($fh) && fclose($fh);
+        },
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . '/test_508_empty.txt'),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::EmptySourceFile),
+    ],
+    [
         'name' => 'Special files are forbidden',
         'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/.htaccess', 'x'),
         'input' => [

@@ -425,6 +425,8 @@ function is_safe_basename(string $val): bool
 
 enum ProcessFileUploadErrorCondition
 {
+    case MissingSourceFile;
+    case EmptySourceFile;
     case InvalidUploadPath;
     case SpecialFile;
     case InvalidExtension;
@@ -441,7 +443,7 @@ enum ProcessFileUploadErrorCondition
         return $lang["error_file_upload_cond-{$this->name}"] ?? $this->name;
     }
 }
-
+// 
 /**
  * High level function which can handle processing file uploads.
  *
@@ -457,33 +459,32 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 {
     if ($source instanceof SplFileInfo) {
         $source_file_name = $source->getFilename();
-        $source_file_path = $source->isFile() ? $source->getRealPath() : $source->getPathname();
-        $source_file_size = (int) $source->getSize();
+        $source_file_path = $source->getRealPath();
+        $source_is_file = $source->isFile();
+        $source_file_size = $source_is_file ? $source->getSize() : 0;
         $file_move_processor = $processor['file_move'] ?? 'rename';
     } else {
         $source_file_name = $source['name'];
         $source_file_path = $source['tmp_name'];
+        $source_is_file = file_exists($source_file_path);
+        $source_file_size = $source_is_file ? filesize($source_file_path) : 0;
         $file_move_processor = 'move_uploaded_file';
 
         if (!is_uploaded_file($source['tmp_name'])) {
             trigger_error('Invalid $source input. For files not uploaded via HTTP POST, please use SplFileInfo');
             exit();
         }
-
-        $orig_use_error_exception_val = $GLOBALS['use_error_exception'] ?? false;
-        $GLOBALS['use_error_exception'] = true;
-        try {
-            $source_file_size = filesize($source_file_name);
-        } catch (Throwable $t) {
-            $source_file_size = 0;
-        }
-        $GLOBALS['use_error_exception'] = $orig_use_error_exception_val;
     }
 
     $fail_due_to = static fn(ProcessFileUploadErrorCondition $cond): array => ['success' => false, 'error' => $cond];
 
     // Source validation
-    if (
+    if (!$source_is_file) {
+        debug("Missing source file - {$source_file_path}");
+        return $fail_due_to(ProcessFileUploadErrorCondition::MissingSourceFile);
+    } elseif ($source_file_size === 0) {
+        return $fail_due_to(ProcessFileUploadErrorCondition::EmptySourceFile);
+    } elseif (
         !is_valid_upload_path(
             $source_file_path,
             [...$GLOBALS['valid_upload_paths'], ini_get('upload_tmp_dir'), sys_get_temp_dir()]
@@ -493,7 +494,6 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         return $fail_due_to(ProcessFileUploadErrorCondition::InvalidUploadPath);
     }
 
-    // Limit the data format uploaded
     // Check for "special" files
     if (
         array_intersect(
@@ -524,30 +524,10 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 
     // Check content (MIME) type based on the file received (don't trust the header from the upload)
     $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
-    if (
-        ($source_file_size > 0 && $mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, true))
-        // todo: reconsider decision to allow uploading empty files (can't think of a genuine use case)
-        || false
-    ) {
+    if ($mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, true)) {
         debug("MIME type mismatch for file '{$source_file_name}'");
         return $fail_due_to(ProcessFileUploadErrorCondition::MimeTypeMismatch);
     }
-
-    // Anything else in between
-    // $file = tmpfile();
-    // fclose($temp); // this removes the file
-
-    // $GLOBALS["use_error_exception"] = true;
-    // try {
-    //     // $tmp_file = tempnam('/var/log/', 'RS'); # force a fail to write use case
-    //     // $tmp_file = tempnam(get_temp_dir(false, 'untrusted_upload_files'), 'RS');
-    //     $tmp_file = tempnam(sys_get_temp_dir(), 'RS');
-    // } catch (Throwable $t) {
-    //     debug("[Notice] {$t->getMessage()}");
-    //     $tmp_file = '';
-    // }
-    // unset($GLOBALS["use_error_exception"]);
-    // echo PHP_EOL . json_encode($tmp_file) . PHP_EOL;
 
     // Destination processing
     $dest_path = $destination->isFile() ? $destination->getRealPath() : $destination->getPathname();
