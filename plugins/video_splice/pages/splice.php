@@ -500,6 +500,7 @@ include "../../../include/header.php";
             axis: "x",
             helper:"clone",
             items: ".splice_item",
+            distance: 20,
             stop: function(event, ui)
                 {
                 var idsInOrder = jQuery('#splice_reel').sortable("toArray");

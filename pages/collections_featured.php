@@ -239,6 +239,7 @@ include "../include/header.php";
 
             jQuery('.BasicsBox.FeaturedSimpleLinks').sortable({
                 items: '.SortableItem',
+                distance: 20,
                 update: function(event, ui) {
                     let html_ids_new_order = jQuery('.BasicsBox.FeaturedSimpleLinks').sortable('toArray');
                     let fcs_new_order = html_ids_new_order.map(id => jQuery('#' + id).data('fc-ref'));
