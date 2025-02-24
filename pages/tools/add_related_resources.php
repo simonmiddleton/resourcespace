@@ -59,8 +59,10 @@ if (!file_exists($csv_path)) {
 }
 
 ob_start();
-setup_command_line_user();
 
+# Command line user needs permission to update resources in all workflow states.
+$user_options["permissions"] = 'a,t,v,e' . implode(',e', get_workflow_states());
+setup_command_line_user($user_options);
 $csvfile = fopen($csv_path, "r");
 
 $errors = [];
