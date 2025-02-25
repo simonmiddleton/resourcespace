@@ -14,20 +14,13 @@ class ApcuStore extends AbstractCache
     {
         $contents = apcu_fetch($this->getActualCacheKey($key));
 
-        if (!$contents)
-            {
+        if ( ! $contents) {
             return null;
-            }
+        }
 
-        if ($withExpired)
-            {
+        if ($withExpired) {
             return $contents ?: null;
-            }
-
-        if (!isset($contents['expires_at']))
-            {
-            return null;
-            }
+        }
 
         $isExpired = Carbon::parse($contents['expires_at'])->lt(Carbon::now());
 
