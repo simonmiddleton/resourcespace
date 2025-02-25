@@ -62,3 +62,6 @@ $lang['rse_workflow_link_close'] = 'Close';
 $lang['rse_workflow_more_notes_title'] = 'Notes:';
 $lang['rse_workflow_email_from'] = 'Email address to send notification from (will use %EMAILFROM% if blank):';
 $lang['rse_workflow_bcc_admin'] = 'Notify system administrators when the contributor is notified';
+
+// System menu tool tip
+$lang["rse_workflow_manage_workflow-tooltip"] = "Create and manage workflow states";

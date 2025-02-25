@@ -14,3 +14,6 @@ $lang['news_body']          = 'Body content';
 $lang['news_nonewmessages'] = 'No new messages';
 $lang['title']              = 'Latest News...';
 $lang['title-too-long']      = 'The title field is longer than 50 characters allowed';
+
+// Admin menu tool tip
+$lang["news_manage-tooltip"] = "Add, edit or delete news items";

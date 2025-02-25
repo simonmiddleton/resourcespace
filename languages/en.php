@@ -3223,3 +3223,44 @@ $lang["facial-recognition"] =  "Facial recognition";
 
 $lang['ui_removed_config_message'] = 'This must now be set in the configuration file as %variable';
 $lang["welcome_generic"] = "Welcome to %applicationname";
+
+// User/System/Admin menu tool tips
+$lang["profile-tooltip"] = "Manage your bio and profile image";
+$lang["password-tooltip"] = "Change your account password";
+$lang["languageselection-tooltip"] = "Change your language for accessing ResourceSpace";
+$lang["mycontributions-tooltip"] = "View your contributed resources";
+$lang["mycollections-tooltip"] = "Manage your collections and perform actions on them";
+$lang["actions_myactions-tooltip"] = "View actions that require your attention";
+$lang["mymessages-tooltip"] = "Read and manage all messages sent to you";
+$lang["my_jobs-tooltip"] = "Check the status of your offline jobs";
+$lang["my_shares-tooltip"] = "Manage your external shares";
+$lang["dash-tooltip"] = "Manage dash tiles available for yur dash";
+$lang["userpreferences-tooltip"] = "Configure your personal preferences for using ResourceSpace";
+$lang["logout-tooltip"] = "Log out of ResourceSpace";
+$lang["manageresources-tooltip"] = "This is the primary area for resource management";
+$lang["managerequestsorders-tooltip"] = "Manage requests from users to access resources";
+$lang["manageresearchrequests-tooltip"] = "Organise and manage 'Research Requests'";
+$lang["manageusers-tooltip"] = "Create and manage user accounts";
+$lang["manage_dash_tiles-tooltip"] = "Manage default user dash tiles";
+$lang["manage_external_shares-tooltip"] = "View and manage external share links";
+$lang["rse_analytics-tooltip"] = "Produce charts of resource usage and statistics of system use";
+$lang["viewreports-tooltip"] = "View tables of data from the system";
+$lang["systemsetup-tooltip"] = "Create and configure your resource types and metadata fields from the system setup";
+$lang["page-title_user_group_management-tooltip"] = "Manage user groups and permissions";
+$lang["resource_types_manage-tooltip"] = "Configure resource types used by ResourceSpace";
+$lang["admin_resource_type_fields-tooltip"] = "Configure the metadata to be stored for resources";
+$lang["filter_manage-tooltip"] = "Create and edit search filters to control access to resources";
+$lang["page-title_report_management-tooltip"] = "Create or edit reports to run on the system";
+$lang["page-title_size_management-tooltip"] = "Manage sizes for previews and downloads";
+$lang["managecontent-tooltip"] = "Edit any text used by the ResourceSpace user interface";
+$lang["pluginssetup-tooltip"] = "Enable and configure plugins to add extra functionality";
+$lang["manage_slideshow-tooltip"] = "Configure a slideshow and where it can be viewed";
+$lang["manage_jobs-tooltip"] = "Check the status of offline jobs system wide";
+$lang["exportdata-tooltip"] = "Export system configuration data for troubleshooting";
+$lang["api-test-tool-tooltip"] = "Test ResourceSpace API commands and view the results";
+$lang["system_tabs-tooltip"] = "Manage tabs to group metadata for resources";
+$lang["installationcheck-tooltip"] = "Run and view an installation check for troubleshooting";
+$lang["systemlog-tooltip"] = "View the system log";
+$lang["system_performance-tooltip"] = "Run a performance benchmark";
+$lang["systemconfig-tooltip"] = "Configure system wide options for ResourceSpace";
+
