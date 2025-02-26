@@ -51,7 +51,7 @@ if ($csv_path === "") {
     show_script_help();
 }
 
-echo PHP_EOL . "Processing CV file: '" . $csv_path . "'" . PHP_EOL;
+echo PHP_EOL . "Processing CSV file: '" . $csv_path . "'" . PHP_EOL;
 echo "Dry run :     " . ($dryrun ? "TRUE" : "FALSE") . PHP_EOL . PHP_EOL;
 
 if (!file_exists($csv_path)) {
@@ -63,31 +63,45 @@ ob_start();
 # Command line user needs permission to update resources in all workflow states.
 $user_options["permissions"] = 'a,t,v,e' . implode(',e', get_workflow_states());
 setup_command_line_user($user_options);
+
+// Check for BOM and skip if present
+$bom = "\xef\xbb\xbf";
 $csvfile = fopen($csv_path, "r");
+if (fgets($csvfile, 4) !== $bom) {
+    // BOM not found
+    rewind($csvfile);
+}
 
 $errors = [];
 $completed = 0;
 $curline = 0;
 while (($line = fgetcsv($csvfile)) !== false) {
-        $curline++;
-    if (count($line) != 2) {  // check that the current row has the correct number of columns
-            $errors[] = "Incorrect number of columns(" . count($line) . ") found on line " . $curline . " (should be 2)";
+    $curline++;
+    if (count($line) != 2) {
+        // check that the current row has the correct number of columns
+        $errors[] = "Incorrect number of columns(" . count($line) . ") found on line " . $curline . " (should be 2)";
         continue;
     }
+    $resource = (int) trim($line[0], "\"");
+    $related = trim($line[1], "\"");
 
-        $resource = (int)$line[0];
-        $related = $line[1];
-
-        $resdata = get_resource_data($resource);
+    $resdata = get_resource_data($resource);
     if (!$resdata) {
         $errors[] = "Invalid resource ID: " . $resource . " specified on line " . $curline;
         continue;
     }
-        $torelate = explode(",", $related);
-        $torelate = array_filter($torelate, "is_int_loose");
+    $torelate = array_filter(explode(",", trim($related, "\"")), "is_int_loose");
+
+    $success = false;
+    if (!$dryrun) {
         $success = update_related_resource($resource, $torelate, true);
+    }
+
     if ($success) {
         echo " - Updated resource " . $resource . ". Added related resources: " . implode(",", $torelate) . PHP_EOL;
+        ++$completed;
+    } elseif ($dryrun) {
+        echo " - Update resource " . $resource . ". Add related resources: " . implode(",", $torelate) . PHP_EOL;
         ++$completed;
     } else {
         $errors[] = "Failed to update resource " . $resource . ". Possible invalid related resource ID specified in line " . $curline;
@@ -95,7 +109,11 @@ while (($line = fgetcsv($csvfile)) !== false) {
         ob_flush();
 }
 
-echo PHP_EOL . "Finished. Successfully updated " . $completed . " resources." . PHP_EOL;
+if (!$dryrun) {
+    echo PHP_EOL . "Finished. Successfully updated " . $completed . " resource(s)." . PHP_EOL;
+} else {
+    echo PHP_EOL . "Finished. Script would update " . $completed . " resource(s)." . PHP_EOL;
+}
 
 if (count($errors) > 0) {
     echo PHP_EOL . "There were " . count($errors) . " errors encountered: " . PHP_EOL . " - " . implode(PHP_EOL . " - ", $errors) . PHP_EOL;
