@@ -3223,3 +3223,44 @@ $lang["facial-recognition"] =  "Facial recognition";
 
 $lang['ui_removed_config_message'] = 'This must now be set in the configuration file as %variable';
 $lang["welcome_generic"] = "Welcome to %applicationname";
+
+// User/System/Admin menu tool tips
+$lang["profile-tooltip"] = "Manage your profile details";
+$lang["password-tooltip"] = "Change your account password";
+$lang["languageselection-tooltip"] = "Change the interface language";
+$lang["mycontributions-tooltip"] = "View your contributed resources";
+$lang["mycollections-tooltip"] = "Manage your collections and perform actions on them";
+$lang["actions_myactions-tooltip"] = "View actions that require your attention";
+$lang["mymessages-tooltip"] = "Read and manage all messages sent to you";
+$lang["my_jobs-tooltip"] = "Check the status of your offline jobs";
+$lang["my_shares-tooltip"] = "Manage your external shares";
+$lang["dash-tooltip"] = "Manage dash tiles available for your dash";
+$lang["userpreferences-tooltip"] = "Configure your personal preferences";
+$lang["logout-tooltip"] = "Log out of ResourceSpace";
+$lang["manageresources-tooltip"] = "Create, replace and view resources";
+$lang["managerequestsorders-tooltip"] = "Manage requests from users to access resources";
+$lang["manageresearchrequests-tooltip"] = "Organise and manage research requests";
+$lang["manageusers-tooltip"] = "Create and manage user accounts";
+$lang["manage_dash_tiles-tooltip"] = "Manage default user dash tiles";
+$lang["manage_external_shares-tooltip"] = "View and manage external share links";
+$lang["rse_analytics-tooltip"] = "Create charts of resource usage and system statistics";
+$lang["viewreports-tooltip"] = "View tables of data from the system";
+$lang["systemsetup-tooltip"] = "System setup area";
+$lang["page-title_user_group_management-tooltip"] = "Manage user groups and permissions";
+$lang["resource_types_manage-tooltip"] = "Create and configure resource types";
+$lang["admin_resource_type_fields-tooltip"] = "Create and configure metadata fields";
+$lang["filter_manage-tooltip"] = "Create and configure search filters to control access to resources";
+$lang["page-title_report_management-tooltip"] = "Create or edit reports to run on the system";
+$lang["page-title_size_management-tooltip"] = "Manage sizes for resource preview images";
+$lang["managecontent-tooltip"] = "Edit any text in the user interface";
+$lang["pluginssetup-tooltip"] = "Enable and configure plugins to add extra functionality";
+$lang["manage_slideshow-tooltip"] = "Configure slideshow images and where they can be viewed";
+$lang["manage_jobs-tooltip"] = "Check the status of offline jobs system wide";
+$lang["exportdata-tooltip"] = "Export system configuration data";
+$lang["api-test-tool-tooltip"] = "Test API functions and view the results";
+$lang["system_tabs-tooltip"] = "Manage tabs to group metadata for resources";
+$lang["installationcheck-tooltip"] = "Check the system setup and dependencies";
+$lang["systemlog-tooltip"] = "View the system log";
+$lang["system_performance-tooltip"] = "Run a performance benchmark";
+$lang["systemconfig-tooltip"] = "Configure system level options";
+

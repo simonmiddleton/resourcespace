@@ -7,3 +7,6 @@ $lang["system_reset_warning"]="Warning! This will delete all files and data incl
 $lang["system_reset_confirm"]="Are you sure? This cannot be undone.";
 
 $lang["system_reset_delete_all"]="Delete all data and files";
+
+// System menu tool tip
+$lang["system_reset-tooltip"] = "Perform a system reset to delete all files and data";

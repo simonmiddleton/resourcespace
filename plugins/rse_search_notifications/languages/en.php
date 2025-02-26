@@ -34,6 +34,6 @@ $lang["checknow"]="Check now";
 $lang["columnheader-enabled"]="Enabled";
 $lang["columnheader-last-found"]="Last found";
 
-
-
+// User menu tool tip
+$lang["search_notifications_watched_searches-tooltip"] = "Control your saved searches";
 

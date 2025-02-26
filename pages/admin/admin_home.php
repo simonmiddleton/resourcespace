@@ -16,42 +16,42 @@ include "../../include/header.php";
     <?php } ?>
     <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
         <ul>
-            <li>
+            <li title="<?php echo escape($lang['page-title_user_group_management-tooltip']); ?>">
                 <a href="<?php echo $baseurl_short?>pages/admin/admin_group_management.php" onclick="return CentralSpaceLoad(this,true);" >
                     <i aria-hidden="true" class="fa fa-fw fa-users"></i>
                     <br /><?php echo escape($lang['page-title_user_group_management']); ?>
                 </a>
             </li>
 
-            <li>
+            <li title="<?php echo escape($lang['resource_types_manage-tooltip']); ?>">
                 <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_types.php" onclick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="fa fa-fw fa-cubes"></i>
                     <br /><?php echo escape($lang["resource_types_manage"]); ?>
                 </a>
             </li>
 
-            <li>
+            <li title="<?php echo escape($lang['admin_resource_type_fields-tooltip']); ?>">
                 <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php" onclick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="fa fa-fw fa-bars"></i>
                     <br /><?php echo escape($lang["admin_resource_type_fields"]); ?>
                 </a>
             </li>
 
-            <li>
+            <li title="<?php echo escape($lang['filter_manage-tooltip']); ?>">
                 <a href="<?php echo $baseurl_short?>pages/admin/admin_filter_manage.php" onclick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="fa fa-fw fa-filter"></i>
                     <br /><?php echo escape($lang["filter_manage"]); ?>
                 </a>
             </li>
 
-            <li>
+            <li title="<?php echo escape($lang['page-title_report_management-tooltip']); ?>">
                 <a href="<?php echo $baseurl_short?>pages/admin/admin_report_management.php" onclick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="fa fa-fw fa-table"></i>
                     <br /><?php echo escape($lang['page-title_report_management']); ?>
                 </a>
             </li>
 
-            <li>
+            <li title="<?php echo escape($lang['page-title_size_management-tooltip']); ?>">
                 <a href="<?php echo $baseurl_short?>pages/admin/admin_size_management.php" onclick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="fa fa-fw fa-files-o"></i>
                     <br /><?php echo escape($lang["page-title_size_management"]); ?>
@@ -59,7 +59,7 @@ include "../../include/header.php";
             </li>
             
             <?php if (checkperm("o")) { ?>
-                <li>
+                <li title="<?php echo escape($lang['managecontent-tooltip']); ?>">
                     <a href="<?php echo $baseurl_short?>pages/admin/admin_content.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-pencil-square-o"></i>
                         <br /><?php echo escape($lang["managecontent"]); ?>
@@ -67,7 +67,7 @@ include "../../include/header.php";
                 </li>
             <?php } ?>
             
-            <li>
+            <li title="<?php echo escape($lang['pluginssetup-tooltip']); ?>">
                 <a href="<?php echo $baseurl_short?>pages/team/team_plugins.php" onClick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="fa fa-fw fa-plug"></i>
                     <br /><?php echo escape($lang["pluginssetup"]); ?>
@@ -79,14 +79,14 @@ include "../../include/header.php";
                 $failedjobs = job_queue_get_jobs("", STATUS_ERROR);
                 $failedjobcount = count($failedjobs);
                 ?>
-                <li>
+                <li title="<?php echo escape($lang['manage_slideshow-tooltip']); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/admin/admin_manage_slideshow.php" onClick="return CentralSpaceLoad(this, true);">
                         <i aria-hidden="true" class="fa fa-fw fa-picture-o"></i>
                         <br /><?php echo escape($lang['manage_slideshow']); ?>
                     </a>
                 </li>
 
-                <li>
+                <li title="<?php echo escape($lang['manage_jobs-tooltip']); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/manage_jobs.php" onClick="return CentralSpaceLoad(this, true);">
                         <i aria-hidden="true" class="fa fa-fw fa-tasks"></i>
                         <br /><?php echo escape($lang['manage_jobs']);?>
@@ -103,7 +103,7 @@ include "../../include/header.php";
             hook("customadminsetup");
 
             if ('' != $mysql_bin_path && $system_download_config) { ?>
-                <li>
+                <li title="<?php echo escape($lang['exportdata-tooltip']); ?>">
                     <a href="<?php echo $baseurl_short?>pages/admin/admin_download_config.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-database"></i>
                         <br /><?php echo escape($lang["exportdata"]); ?>
@@ -115,7 +115,7 @@ include "../../include/header.php";
             if (checkperm('a')) {
                 if ($enable_remote_apis) {
                     ?>
-                    <li>
+                    <li title="<?php echo escape($lang['api-test-tool-tooltip']); ?>">
                         <a href="<?php echo $baseurl_short?>pages/api_test.php" onClick="return CentralSpaceLoad(this,true);">
                             <i aria-hidden="true" class="fa fa-fw fa-stethoscope"></i>
                             <br /><?php echo escape($lang["api-test-tool"]); ?>
@@ -125,35 +125,35 @@ include "../../include/header.php";
                 }
                 ?>
 
-                <li>
+                <li title="<?php echo escape($lang['system_tabs-tooltip']); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/admin/tabs.php" onclick="return CentralSpaceLoad(this, true);">
                         <i aria-hidden="true" class="fa fa-window-restore"></i>
                         <br /><?php echo escape($lang['system_tabs']); ?>
                     </a>
                 </li>
 
-                <li>
+                <li title="<?php echo escape($lang['installationcheck-tooltip']); ?>">
                     <a href="<?php echo $baseurl_short?>pages/check.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-check-square"></i>
                         <br /><?php echo escape($lang["installationcheck"]); ?>
                     </a>
                 </li>
 
-                <li>
+                <li title="<?php echo escape($lang['systemlog-tooltip']); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/admin/admin_system_log.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-history"></i>
                         <br /><?php echo escape($lang["systemlog"]); ?>
                     </a>
                 </li>
 
-                <li>
+                <li title="<?php echo escape($lang['system_performance-tooltip']); ?>">
                     <a href="<?php echo $baseurl_short?>pages/admin/admin_system_performance.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-bolt"></i>
                         <br /><?php echo escape($lang["system_performance"]); ?>
                     </a>
                 </li>
 
-                <li>
+                <li title="<?php echo escape($lang['systemconfig-tooltip']); ?>">
                     <a href="<?php echo $baseurl; ?>/pages/admin/admin_system_config.php" onClick="return CentralSpaceLoad(this, true);">
                         <i aria-hidden="true" class="fa fa-fw fa-cog"></i>
                         <br /><?php echo escape($lang['systemconfig']); ?>
