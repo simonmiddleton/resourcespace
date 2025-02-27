@@ -89,12 +89,10 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
 
         if (
             (
-                (
                 isset($metadata_template_title_field)
                 && $df[$x]['ref'] != $metadata_template_title_field
-                )
-                || !isset($metadata_template_title_field)
             )
+            || !isset($metadata_template_title_field)
         ) {
             ?>
                 <td nowrap>

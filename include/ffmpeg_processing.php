@@ -15,9 +15,22 @@ if ($generateall) {
         set_processing_message(str_replace("[resource]", $ref, $lang["processing_preview_video"]));
     }
 
-    $snapshotsize = getimagesize($target);
-    $width = $snapshotsize[0];
-    $height = $snapshotsize[1];
+    if (file_exists($target)) {
+        $snapshotsize = getimagesize($target);
+        $width = $snapshotsize[0];
+        $height = $snapshotsize[1];
+    } else {
+        # Get preview sizes from DB
+        $preview_sizes = get_all_image_sizes(true);
+
+        $pre_size = array_values(array_filter($preview_sizes, function ($var) {
+            return $var['id'] == 'pre';
+        }));
+
+        $width = $pre_size[0]['width'];
+        $height = $pre_size[0]['height'];
+    }
+   
     $sourcewidth = $width;
     $sourceheight = $height;
     global $config_windows, $ffmpeg_get_par;
