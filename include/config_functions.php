@@ -2005,30 +2005,30 @@ function config_add_fixed_input(string $label, string $value, string $helptext =
  */
 function render_config_filter_by_search(string $find = '', string $only_modified = ''): void
 {
-global $lang;
+    global $lang;
 
-$only_modified = $only_modified == 'yes';
-$searching = $find != "" || $only_modified;
-if (!$searching) {
-    $find = "";
-}
+    $only_modified = $only_modified == 'yes';
+    $searching = $find != "" || $only_modified;
+    if (!$searching) {
+        $find = "";
+    }
 
-?>
-    <form id="SearchSystemPages" class="inline_config_search" method="post" onSubmit="return CentralSpacePost(this);">
+    ?>
+    <form id="SearchSystemPages" class="inline_config_search" method="post" onsubmit="return CentralSpacePost(this);">
     <?php generateFormToken("system_config_search"); ?>
-    <div>
-        <input type="text" name="find" id="configsearch" value="<?php echo escape($find); ?>">
-        <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
-        <?php if ($searching) { ?>
-            <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onClick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
-        <?php } ?>
-    </div>
-    <div>
-        <input type="checkbox" name="only_modified" id="only_modified" value="yes" <?php echo $only_modified ? 'checked="checked"' : ''; ?>>
-        <label for="only_modified"><?php echo escape($lang["systemconfig_only_show_modified"]); ?></label>
-    </div>
+        <div>
+            <input type="text" name="find" id="configsearch" value="<?php echo escape($find); ?>">
+            <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
+            <?php if ($searching) { ?>
+                <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
+            <?php } ?>
+        </div>
+        <div>
+            <input type="checkbox" name="only_modified" id="only_modified" value="yes" <?php echo $only_modified ? 'checked="checked"' : ''; ?>>
+            <label for="only_modified"><?php echo escape($lang["systemconfig_only_show_modified"]); ?></label>
+        </div>
     </form>
-<?php
+    <?php
 }
 
 /**
