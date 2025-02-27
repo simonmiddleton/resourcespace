@@ -16,7 +16,10 @@ $enable_disable_options = array($lang['userpreference_disable_option'], $lang['u
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-    <h1><?php echo escape($lang["userpreferences"]); ?></h1>
+    <h1 class="inline_config_search"><?php echo escape($lang["userpreferences"]); ?></h1>
+
+    <?php render_config_filter_by_search(getval("find", ""), getval("only_modified", "no")); ?>
+
     <p><?php echo escape($lang["modifyuserpreferencesintro"]); ?></p>
     
     <div class="CollapsibleSections">
@@ -289,6 +292,8 @@ include "../../include/header.php";
             echo json_encode($response);
             exit();
         }
+
+        $page_def = config_filter_by_search($page_def, $userref, getval("find", ""), getval("only_modified", "no"));
 
         config_generate_html($page_def);
         ?>
