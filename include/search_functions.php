@@ -1179,11 +1179,6 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
     global $allow_smart_collections, $smart_collections_async;
     global $config_search_for_number,$userref;
 
-    if (trim((string) $sql_prefix) === "" && $return_refs_only) {
-        $select->sql = "r.ref, r.resource_type, r.archive, r.created_by, r.access, r.hit_count `total_hit_count`";
-        $select->parameters = array();
-    }
-
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
     // Don't cache special searches by default as often used for special purposes
@@ -1345,11 +1340,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
                 }
             }
         }
-        if ($return_refs_only) { 
-            $sql->sql = "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by";
-        } else {
-            $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, $select->sql FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-        }
+        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, $select->sql FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($select->parameters, $colcustperm->parameters, ["i",$collection], $sql_filter->parameters);
         $collectionsearchsql = hook('modifycollectionsearchsql', '', array($sql));
 
@@ -1538,7 +1529,6 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         );
         $sql->sql .= $sql_suffix;
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
-        $order_by = '';
     } elseif (substr($search, 0, 5) == "!list") {
         // Search for a list of resources
         // !listall = archive state is not applied as a filter to the list of resources.
@@ -1793,15 +1783,15 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
             if ($resultcount > 0 && count($result["data"]) > 0) {
                 if ($return_refs_only) {
                     // This needs to include archive and created_by columns too as often used to work out permission to edit collection
-                    $ref_only_fields = ['ref', 'resource_type', 'archive', 'created_by', 'access'];
-                    // Processing using reference to reduce memory usage when dealing with very large result sets
-                    foreach ($result['data'] as &$data) {
-                        foreach ($data as $field => $value) {
-                            if(!in_array($field, $ref_only_fields)){
-                                unset($data[$field]);
-                            }
-                        }
-                    }
+                    $result["data"] = array_map(function ($val) {
+                        return [
+                            "ref"           => $val["ref"],
+                            "resource_type" => $val["resource_type"],
+                            "archive"       => $val["archive"],
+                            "created_by"    => $val["created_by"],
+                            "access"        => $val["access"],
+                                ];
+                    }, $result["data"]);
                 }
                 $return = $result['data'];
                 $resultcount -= count($return);
