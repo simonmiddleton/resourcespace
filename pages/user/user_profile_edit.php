@@ -84,11 +84,13 @@ function checkFileType(image_supplied)
         </div>
         
         <?php if ($enable_remote_apis) { ?>
-            <div class="Question"><label><?php echo escape($lang["api-key"]); ?></label>
+            <div class="Question">
+                <label><?php echo escape($lang["api-key"]); ?></label>
                 <div class="Fixed"><?php echo get_api_key($userref); ?></div>
                 <div class="clearerleft"></div>
             </div>
-            <div class="Question"><label><?php echo escape($lang["api-url"]); ?></label>
+            <div class="Question">
+                <label><?php echo escape($lang["api-url"]); ?></label>
                 <div class="Fixed"><?php echo escape($baseurl) ?>/api/</div>
                 <div class="clearerleft"></div>
             </div>
