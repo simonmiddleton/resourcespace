@@ -2777,6 +2777,8 @@ $lang["collection_restype_blocked"] = "The following resource types cannot be ad
 $lang["retina_mode"] = "Retina mode";
 
 $lang["private-api-key"] = "Private API key";
+$lang["api-key"] = "API key";
+$lang["api-url"] = "API URL";
 $lang["force_edit_resource_type"] = "Force edit access to resource type: ";
 
 // Responsive
