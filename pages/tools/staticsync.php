@@ -264,9 +264,8 @@ function ProcessFolder($folder)
             }
 
             # Work out extension
-            $fileparts  = pathinfo($file);
-            $extension  = isset($fileparts["extension"]) ? mb_strcut($fileparts["extension"], 0, 10) : '';
-            $filename   = $fileparts["filename"];
+            $extension = mb_strcut(parse_filename_extension($file), 0, 10);
+            $filename = pathinfo($file, PATHINFO_FILENAME);
 
             if (isset($staticsync_alternative_file_text) && strpos($file, $staticsync_alternative_file_text) !== false && !$staticsync_ingest_force) {
                 // Set a flag so we can process this later in case we don't process this along with a primary resource file (it may be a new alternative file for an existing resource)

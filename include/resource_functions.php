@@ -4390,20 +4390,26 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
 
             # Move the file
             if (!hook('update_resource_replace_ingest', '', array($r, $path, $extension))) {
+                $source_file = $syncdir . "/" . $path;
                 $destination = get_resource_path($r, true, "", true, $extension);
-                $result = copy($syncdir . "/" . $path, $destination); // Copy instead of rename so that permissions of filestore will be used
-                if ($result === false) {
+                $process_file_upload = process_file_upload(
+                    new SplFileInfo($source_file),
+                    new SplFileInfo($destination),
+                    // Copy instead of rename so that permissions of filestore will be used
+                    ['file_move' => 'copy']
+                );
+                if (!$process_file_upload['success']) {
                     # The copy failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
                     # If the file is still being copied then $staticsync_file_minimum_age can be set to prevent this error from occurring
                     # Delete the resouce just created and return false.
-                    debug("ERROR: Staticsync failed to copy file from: " .  $syncdir . "/" . $path);
+                    debug("ERROR: Staticsync failed ({$process_file_upload['error']->name}) to copy file from: {$source_file}");
                     delete_resource($r);
                     return false;
                 }
                 $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
                 $GLOBALS["use_error_exception"] = true;
                 try {
-                    unlink($syncdir . "/" . $path);
+                    unlink($source_file);
                     try {
                         chmod($destination, 0777);
                     } catch (Exception $e) {
@@ -4411,7 +4417,7 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
                         debug(" - ERROR: Staticsync failed to set permissions on ingested file: " .  $destination . PHP_EOL . " - Error message: " . $e->getMessage() . PHP_EOL);
                     }
                 } catch (Exception $e) {
-                    echo " - ERROR: failed to delete file from source. Please check correct permissions on: " .  $syncdir . "/" . $path . PHP_EOL . " - Error message: "  . $e->getMessage() . PHP_EOL;
+                    echo " - ERROR: failed to delete file from source. Please check correct permissions on: " .  $source_file . PHP_EOL . " - Error message: "  . $e->getMessage() . PHP_EOL;
                     return false;
                 }
 
