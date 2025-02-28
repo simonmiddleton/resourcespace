@@ -451,8 +451,9 @@ enum ProcessFileUploadErrorCondition
  *
  * @param SplFileInfo|array{name: string, full_path: string, type: string, tmp_name: string, error: int, size: int} $source
  * @param array{
- *      allow_extensions?: list<string>
+ *      allow_extensions?: list<string>,
  *      file_move?: 'move_uploaded_file'|'rename'|'copy',
+ *      mime_file_based_detection?: bool,
  * } $processor Processors which can override different parts of the main logic (e.g. allow specific extensions)
  *
  * @return array{success: bool, error?: ProcessFileUploadErrorCondition}
@@ -526,7 +527,8 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 
     // Check content (MIME) type based on the file received (don't trust the header from the upload)
     $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
-    if ($mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, true)) {
+    $mime_content_chk = $processor['mime_file_based_detection'] ?? true;
+    if ($mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, $mime_content_chk)) {
         debug("MIME type mismatch for file '{$source_file_name}'");
         return $fail_due_to(ProcessFileUploadErrorCondition::MimeTypeMismatch);
     }

@@ -174,6 +174,25 @@ foreach ($use_cases as $uc) {
 // (integration test so has to be handled separately to the above scenarios)
 $test_signature = generateSecureKey(32);
 $test_endpoint_filename = 'test_508_endpoint.php';
+$curl_post_file_response = function (string $file, array $processor = []) use ($test_endpoint_filename, $test_signature) {
+    $ch = curl_init(get_temp_dir(true) . "/{$test_endpoint_filename}");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt(
+        $ch,
+        CURLOPT_POSTFIELDS,
+        [
+            'sign' => $test_signature,
+            'file' => new CURLFile($file),
+            'processor' => json_encode($processor)
+        ]
+    );
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($ch);
+    $result_decoded = json_decode($result, true);
+    curl_close($ch);
+    return $result_decoded;
+};
 $test_endpoint_content = <<<EOT
 <?php
 
@@ -183,7 +202,15 @@ if (getval('sign', '') !== '{$test_signature}') {
     exit;
 }
 
-echo json_encode(process_file_upload(\$_FILES['file'], new SplFileInfo('{$dest}'), []));
+\$processor = json_decode(getval('processor', '', false, fn(string \$V) => json_decode(\$V, true) !== null), true);
+
+\$result = process_file_upload(\$_FILES['file'], new SplFileInfo('{$dest}'), \$processor);
+
+if (!\$result['success']) {
+    \$result['error'] = serialize(\$result['error']);
+}
+
+echo json_encode(\$result);
 
 EOT;
 $test_source_file = get_temp_dir(false) . '/test_508.txt';
@@ -192,21 +219,25 @@ if (!(
     && file_put_contents($test_source_file, "Source for {$run_id}")
     && chmod($dest, 0777)
 )) {
-    echo "[ENV] Set up 'HTTP file uploaded' use case - ";
+    echo "[ENV] Set up 'HTTP POST file upload' use case - ";
     return false;
 }
-// - make request and get (JSON encoded) response
-$ch = curl_init(get_temp_dir(true) . "/{$test_endpoint_filename}");
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, ['sign' => $test_signature, 'file' => new CURLFile($test_source_file)]);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-$result = curl_exec($ch);
-$result_decoded = json_decode($result, true);
-curl_close($ch);
-// - assert expectation
-if (!(is_array($result_decoded) && isset($result_decoded['success']) && $result_decoded['success'])) {
-    echo "Use case: HTTP file uploaded - ";
+
+// Integration case: HTTP POST file upload
+$result = $curl_post_file_response($test_source_file);
+if (!(is_array($result) && isset($result['success']) && $result['success'])) {
+    echo "Use case: HTTP POST file upload - ";
+    return false;
+}
+
+// Integration case: CSV file HTTP POST
+$csv_file = sys_get_temp_dir() . "/test_508_{$run_id}.csv";
+file_put_contents($csv_file, "x,y\n1,2");
+$result = $curl_post_file_response($csv_file, ['mime_file_based_detection' => false]);
+if (!(is_array($result) && isset($result['success']) && $result['success'])) {
+    echo "Use case: CSV file HTTP POST - ";
+    $result['error'] = unserialize($result['error']);
+    test_log('$result = ' . print_r($result, true));
     return false;
 }
 
