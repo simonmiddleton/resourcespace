@@ -214,11 +214,13 @@ echo json_encode(\$result);
 
 EOT;
 $test_source_file = get_temp_dir(false) . '/test_508.txt';
-if (!(
-    file_put_contents(get_temp_dir(false) . "/{$test_endpoint_filename}", $test_endpoint_content)
-    && file_put_contents($test_source_file, "Source for {$run_id}")
-    && chmod($dest, 0777)
-)) {
+if (
+    !(
+        file_put_contents(get_temp_dir(false) . "/{$test_endpoint_filename}", $test_endpoint_content)
+        && file_put_contents($test_source_file, "Source for {$run_id}")
+        && chmod($dest, 0777)
+    )
+) {
     echo "[ENV] Set up 'HTTP POST file upload' use case - ";
     return false;
 }
