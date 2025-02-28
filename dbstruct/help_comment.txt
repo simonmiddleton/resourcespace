@@ -10,3 +10,4 @@ fullname,varchar(100),External commenter's full name (anonymous access)
 email,varchar(100),Commenter's email (anonymous access)
 website_url,text,Commenter's website link (anonymous access)
 body,text,Comment text
+annotation,int(11),Link an annotations' text with a resource comment (if $annotate_text_adds_comment enabled)
