@@ -720,14 +720,15 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     }
                                     
                                 # Also check for regular expression match
-                                if (strlen(trim((string)$field["regexp_filter"]))>=1)
-                                    {
+                                if (
+                                    strlen(trim((string)$field["regexp_filter"])) >= 1
+                                    && trim($field["value"]) !== ""
+                                ) {
                                     global $regexp_slash_replace;
-                                    if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $field["regexp_filter"]) . "$#", (string) $field["value"], $matches) <= 0)
-                                        {
+                                    if (preg_match("#^" . str_replace($regexp_slash_replace, '\\', $field["regexp_filter"]) . "$#", (string) $field["value"], $matches) <= 0) {
                                         $fielderror = true;
-                                        }
                                     }
+                                }
                                 
                                 if($fielderror)
                                     {
