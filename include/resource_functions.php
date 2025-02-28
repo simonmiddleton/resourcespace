@@ -7804,6 +7804,7 @@ function metadata_field_edit_access($field)
  */
 function get_download_filename(int $ref, string $size, int $alternative, string $ext): string
 {
+    resource_type_config_override(get_resource_data($ref)['resource_type']);
     [$size, $ext, $dff] = array_map('trim', [$size, $ext, $GLOBALS['download_filename_format']]);
     $fallback_filename = "RS{$ref}.{$ext}";
     $formatted_str = $dff ?: DEFAULT_DOWNLOAD_FILENAME_FORMAT;

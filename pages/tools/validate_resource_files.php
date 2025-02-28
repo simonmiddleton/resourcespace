@@ -6,6 +6,10 @@ include_once __DIR__ . "/../../include/boot.php";
 include_once __DIR__ . "/../../include/image_processing.php";
 command_line_only();
 
+if (!$GLOBALS["file_integrity_checks"]) {
+    exit($GLOBALS["lang"]["function_not_enabled"] . " (\$file_integrity_checks = false)" . PHP_EOL);
+}
+
 // CLI options check
 $maxresources = 0;
 $lastchecked = 0;

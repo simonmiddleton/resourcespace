@@ -436,7 +436,7 @@ if ($user_purge) {
                 if ($n > 0) {
                     echo", ";
                 }
-                echo "<b><a href='" . $baseurl . "/pages/team/team_user_edit.php?ref=" . $active[$n]["ref"] . "&backurl=" . urlencode($url . "&offset=" . $offset) . "' onClick='return CentralSpaceLoad(this,true);'>" . escape($active[$n]["username"]) . "</a></b> (" . $active[$n]["t"] . ")";
+                echo "<b><a href='" . generateURL($baseurl . '/pages/team/team_user_edit.php', ['ref' => $active[$n]['ref'], 'backurl' => generateURL($url, ['offset' => $offset])]) . "' onClick='return CentralSpaceLoad(this,true);'>" . escape($active[$n]["username"]) . "</a></b> (" . escape($active[$n]["t"]) . ")";
             }
             ?>
         </div>

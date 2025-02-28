@@ -417,7 +417,7 @@ h2#dbaseconfig{  min-height: 32px;}
             # Set HTTPS URL if necessary
             $urlprefix = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
             $port = (isset($_SERVER["SERVER_PORT"]) && !in_array($_SERVER["SERVER_PORT"],array(80,443))) ? (":" . $_SERVER["SERVER_PORT"]) : "";
-            $baseurl = $urlprefix . "://" . $_SERVER['HTTP_HOST'] . escape(substr($_SERVER['PHP_SELF'], 0, strlen($_SERVER['PHP_SELF']) - 16)) . $port;
+            $baseurl = $urlprefix . "://" . $_SERVER['HTTP_HOST'] . substr($_SERVER['PHP_SELF'],0,strlen($_SERVER['PHP_SELF'])-16) . $port;
             }
         else
             {

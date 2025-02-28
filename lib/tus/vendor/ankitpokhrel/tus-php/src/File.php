@@ -11,7 +11,7 @@ use TusPhp\Exception\OutOfRangeException;
 class File
 {
     /** @const Max chunk size */
-    public const CHUNK_SIZE = 8192 * 128; // 1MiB - Increased due to performance issues on Windows based on https://github.com/ankitpokhrel/tus-php/issues/246
+    public const CHUNK_SIZE = 8192; // 8 kilobytes.
 
     /** @const Input stream */
     public const INPUT_STREAM = 'php://input';
@@ -21,6 +21,9 @@ class File
 
     /** @const Append binary mode */
     public const APPEND_BINARY = 'ab';
+
+    /** @const Read and write mode */
+    public const APPEND_WRITE = 'a+';
 
     /** @var string */
     protected $key;
@@ -423,8 +426,7 @@ class File
      */
     public function read($handle, int $chunkSize): string
     {
-        // Using stream_get_contents instead of fread due to performance issues on Windows based on https://github.com/ankitpokhrel/tus-php/issues/246 comments
-        $data = stream_get_contents($handle, $chunkSize);
+        $data = fread($handle, $chunkSize);
 
         if (false === $data) {
             throw new FileException('Cannot read file.');

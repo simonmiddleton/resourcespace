@@ -1840,7 +1840,7 @@ var ProcessingAPITimer=0;
 var ProcessingMessages;
 var ProcessingCount=-1;
 
-function CentralSpaceShowProcessing(delay = 1000, defaultmessage = '')
+function CentralSpaceShowProcessing(delay = 2000, defaultmessage = '')
     {
     if (ProcessingTimersActive) { return; }
 

@@ -1,6 +1,7 @@
 <?php
 include "../../include/boot.php";
 include "../../include/authenticate.php";
+include "../../include/api_functions.php";
 
 // Do not allow access to anonymous users
 if (isset($anonymous_login) && ($anonymous_login == $username)) {
@@ -81,6 +82,19 @@ function checkFileType(image_supplied)
             <div id="profile_image_validate" style="font-size:10; color:red;"></div>
             <div class="clearerleft"></div>
         </div>
+        
+        <?php if ($enable_remote_apis) { ?>
+            <div class="Question">
+                <label><?php echo escape($lang["api-key"]); ?></label>
+                <div class="Fixed"><?php echo get_api_key($userref); ?></div>
+                <div class="clearerleft"></div>
+            </div>
+            <div class="Question">
+                <label><?php echo escape($lang["api-url"]); ?></label>
+                <div class="Fixed"><?php echo escape($baseurl) ?>/api/</div>
+                <div class="clearerleft"></div>
+            </div>
+        <?php } ?>
 
         <div class="QuestionSubmit">
             <label for="save"></label>

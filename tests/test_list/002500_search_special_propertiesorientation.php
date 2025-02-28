@@ -6,10 +6,9 @@ $resource_portrait = create_resource(1, 0);
 ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 2000)", ["i",$resource_portrait]);
 
 // Set default join and filter
-$select = new PreparedStatementQuery();
+$select = new PreparedStatementQuery("r.ref, r.resource_type, r.archive, r.access, r.hit_count total_hit_count");
 $sql_join = new PreparedStatementQuery();
 $sql_filter = new PreparedStatementQuery();
-$select->sql = "r.ref, r.resource_type, r.archive, r.access, r.hit_count total_hit_count";
 $sql_filter->sql = "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0";
 
 $search = search_special(

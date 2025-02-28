@@ -191,7 +191,7 @@ class Server extends AbstractTus
 
         $key = $this->getRequest()->header('Upload-Key') ?? Uuid::uuid4()->toString();
 
-        if (empty($key) || !Uuid::isValid($key)) {
+        if (empty($key)) {
             return $this->response->send(null, HttpResponse::HTTP_BAD_REQUEST);
         }
 
@@ -354,9 +354,6 @@ class Server extends AbstractTus
         }
 
         $uploadKey = $this->getUploadKey();
-        if ($uploadKey instanceof HttpResponse) {
-            return $uploadKey;
-        }
         $filePath  = $this->uploadDir . '/' . $fileName;
 
         if ($this->getRequest()->isFinal()) {
@@ -499,9 +496,13 @@ class Server extends AbstractTus
             return $this->response->send(null, HttpResponse::HTTP_CONTINUE);
         }
 
+        if ( ! $meta = $this->cache->get($uploadKey)) {
+            return $this->response->send(null, HttpResponse::HTTP_GONE);
+        }
+
         return $this->response->send(null, HttpResponse::HTTP_NO_CONTENT, [
             'Content-Type' => self::HEADER_CONTENT_TYPE,
-            'Upload-Expires' => $this->cache->get($uploadKey)['expires_at'],
+            'Upload-Expires' => $meta['expires_at'],
             'Upload-Offset' => $offset,
         ]);
     }

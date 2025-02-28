@@ -366,7 +366,7 @@ $links_trail = array(
             axis: "y",
             cursor: 'move',
             opacity: 0.6, 
-            distance: 5,
+            distance: 20,
             stop: function(event, ui) {
                 <?php
                 if ($allow_reorder) {

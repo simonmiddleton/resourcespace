@@ -5043,18 +5043,15 @@ function command_line_only()
 /**
  * Helper function to quickly build a list of values, all prefixed the same way.
  *
- * Example use:
+ * ```php
  * $fieldXs = array_map(prefix_value('field'), [3, 88]);
+ * ```
  *
  * @param string $prefix Prefix value to prepend.
- *
- * @return Closure
  */
 function prefix_value(string $prefix): Closure
 {
-    return function (string $value) use ($prefix): string {
-        return $prefix . $value;
-    };
+    return static fn (string $value): string => $prefix . $value;
 }
 
 /**

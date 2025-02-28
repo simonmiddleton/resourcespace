@@ -706,7 +706,7 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             " style="float: left;" />
         <div id="container_<?php echo escape($name); ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
             &nbsp;
-            <input id="<?php echo escape($name); ?>" name="<?php echo escape($name); ?>" type="<?php echo ($checked?"color":"text") ?>" value="<?php echo escape($current); ?>" onchange="<?php
+            <input id="<?php echo escape($name); ?>" name="<?php echo escape($name); ?>" type="<?php echo $checked ? "color" : "text"; ?>" value="<?php echo escape($current); ?>" onchange="<?php
             if ($autosave)
                 {
                 ?>AutoSaveConfigOption('<?php echo escape($name); ?>');<?php
@@ -1994,4 +1994,82 @@ function check_removed_ui_config(string $option, $default = ""): bool
 function config_add_fixed_input(string $label, string $value, string $helptext = ""): array
 {
     return array('fixed_input', $label, $value, $helptext);
+}
+
+/**
+ * Add config option search to user preferences / system configuration page.
+ * Also requires config_filter_by_search() to process results. For examples, see the above pages.
+ *
+ * @param  string  $find            Value from getval("find", "")
+ * @param  string  $only_modified   Value from getval("only_modified", "no")
+ */
+function render_config_filter_by_search(string $find = '', string $only_modified = ''): void
+{
+    global $lang;
+
+    $only_modified = $only_modified == 'yes';
+    $searching = $find != "" || $only_modified;
+    if (!$searching) {
+        $find = "";
+    }
+
+    ?>
+    <form id="SearchSystemPages" class="inline_config_search" method="post" onsubmit="return CentralSpacePost(this);">
+    <?php generateFormToken("system_config_search"); ?>
+        <div>
+            <input type="text" name="find" id="configsearch" value="<?php echo escape($find); ?>">
+            <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
+            <?php if ($searching) { ?>
+                <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
+            <?php } ?>
+        </div>
+        <div>
+            <input type="checkbox" name="only_modified" id="only_modified" value="yes" <?php echo $only_modified ? 'checked="checked"' : ''; ?>>
+            <label for="only_modified"><?php echo escape($lang["systemconfig_only_show_modified"]); ?></label>
+        </div>
+    </form>
+    <?php
+}
+
+/**
+ * Process values from config search fields, see render_config_filter_by_search()
+ * Filter $page_def elements to show only those searched for.
+ *
+ * @param  array     $page_def        Array containing page definition, from functions config_add_ ...
+ * @param  null|int  $userref         null when checking system config or int representing user ref when getting user preferences.
+ * @param  string    $find            Value from getval("find", "")
+ * @param  string    $only_modified   Value from getval("only_modified", "no")
+ */
+function config_filter_by_search(array $page_def, ?int $userref = null, string $find = '', string $only_modified = ''): array
+{
+    $only_modified = $only_modified == 'yes';
+    $searching = $find != "" || $only_modified;
+
+    if ($searching) {
+        // Check for search phrase in config. description.
+        if ($find !== '') {
+            $search_matches = array();
+            foreach ($page_def as $config_to_check) {
+                if (isset($config_to_check[2]) && stripos($config_to_check[2], $find) !== false) {
+                    $search_matches[] = $config_to_check;
+                }
+            }
+            $page_def = $search_matches;
+        }
+        // Filter results to only config which has been changed previously i.e. exists in user_preferences with null in user column.
+        if ($only_modified) {
+            $search_matches = array();
+            $returned_options = array();
+            get_config_options($userref, $returned_options);
+            $returned_options = array_column($returned_options, 'parameter');
+            foreach ($page_def as $config_to_check) {
+                if (isset($config_to_check[1]) && in_array($config_to_check[1], $returned_options)) {
+                    $search_matches[] = $config_to_check;
+                }
+            }
+            $page_def = $search_matches;
+        }
+    }
+
+    return $page_def;
 }
