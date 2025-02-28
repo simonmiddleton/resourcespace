@@ -83,7 +83,14 @@ if (!file_exists($csvdir)) {
 
 $csvfile = $csvdir . DIRECTORY_SEPARATOR  . "csv_upload.csv";
 if (isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0) {
-    $process_file_upload = process_file_upload($_FILES[$fd], new SplFileInfo($csvfile), ['allow_extensions' => ['csv']]);
+    $process_file_upload = process_file_upload(
+        $_FILES[$fd],
+        new SplFileInfo($csvfile),
+        [
+            'allow_extensions' => ['csv'],
+            'mime_file_based_detection' => false,
+        ]
+    );
 
     if ($process_file_upload['success']) {
         $csv_set_options['csvchecksum'] = get_checksum($csvfile, true);
