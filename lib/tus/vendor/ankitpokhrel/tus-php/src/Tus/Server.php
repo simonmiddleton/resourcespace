@@ -191,7 +191,7 @@ class Server extends AbstractTus
 
         $key = $this->getRequest()->header('Upload-Key') ?? Uuid::uuid4()->toString();
 
-        if (empty($key)) {
+        if (empty($key) || !Uuid::isValid($key)) {
             return $this->response->send(null, HttpResponse::HTTP_BAD_REQUEST);
         }
 
@@ -354,6 +354,9 @@ class Server extends AbstractTus
         }
 
         $uploadKey = $this->getUploadKey();
+        if ($uploadKey instanceof HttpResponse) {
+            return $uploadKey;
+        }
         $filePath  = $this->uploadDir . '/' . $fileName;
 
         if ($this->getRequest()->isFinal()) {
