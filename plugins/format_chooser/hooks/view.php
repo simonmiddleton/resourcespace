@@ -123,9 +123,13 @@ function HookFormat_chooserViewAppend_to_updateDownloadLink_js(array $resource)
     <?php
 }
 
-function HookFormat_chooserViewModifySizesArray ($resource, $sizes) : array 
+function HookFormat_chooserViewModifySizesArray ($resource, $sizes)
     {
-    return get_image_sizes($resource['ref'],false,$resource['file_extension'],false);
+        global $format_chooser_input_formats;
+        if (in_array($resource['file_extension'], $format_chooser_input_formats)) {
+            return get_image_sizes($resource['ref'],false,$resource['file_extension'],false);
+        }
+        return false;
     }
 
 function HookFormat_chooserViewModifyAllowed_Sizes ($resource, $sizes) : array 
