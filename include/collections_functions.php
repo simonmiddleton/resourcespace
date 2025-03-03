@@ -4603,7 +4603,7 @@ function collection_download_process_data_only_types(array $dl_data, $id, $colle
                 $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
                 symlink($pdf_file_path, $usertempdir . DIRECTORY_SEPARATOR  . $pdf_filename);
             } elseif ($GLOBALS["use_zip_extension"]) {
-                debug("BANG Adding $pdf_file_path to " . $zip->filename);
+                debug("Adding $pdf_file_path to " . $zip->filename);
                 $zip->addFile($pdf_file_path, $pdf_filename);
             } else {
                 $path .= $pdf_file_path . "\r\n";
@@ -4696,7 +4696,7 @@ function collection_download_process_summary_notes(
             debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
             @symlink($textfile, $usertempdir . DIRECTORY_SEPARATOR . $collection . "-" . safe_file_name(i18n_get_collection_name($collectiondata)) . $sizetext . '.txt');
         } elseif ($use_zip_extension) {
-            debug("BANG Adding $textfile to " . $zip->filename);
+            debug("Adding $textfile to " . $zip->filename);
             $zip->addFile($textfile, $collection . "-" . safe_file_name(i18n_get_collection_name($collectiondata)) . $sizetext . ".txt");
         } else {
             $path .= $textfile . "\r\n";
@@ -4731,10 +4731,10 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     if ($collection_download_tar) {
         global $p, $usertempdir, $filename;
         debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
+        //TODO
         @symlink($csv_file, $usertempdir . DIRECTORY_SEPARATOR . 'Col-' . $collection . '-metadata-export.csv');
     } elseif ($use_zip_extension) {
-
-        debug("BANG Adding $csv_file to " . $zip->filename);
+        debug("Adding $csv_file to " . $zip->filename);
         $zip->addFile($csv_file, 'Col-' . $collection . '-metadata-export.csv');
     } else {
         $path .= $csv_file . "\r\n";
@@ -6587,6 +6587,10 @@ function process_collection_download(array $dl_data): mixed
     $include_alternatives       = (bool) $dl_data['include_alternatives'] ?? false;
     $collection_download_tar    = (bool) ($dl_data['collection_download_tar'] ?? false);
 
+
+
+    debug('BANG \$collection_download_tar =' . ($collection_download_tar ? "TRUE" : "FALSE"));
+
     if (empty($collectiondata) && $collection > 0) {
         $collectiondata = get_collection($collection);
     }
@@ -6605,13 +6609,16 @@ function process_collection_download(array $dl_data): mixed
     //     $GLOBALS["lang"]["downloaded"] . " " . nicedate(date("Y-m-d H:i:s"), true, true) . "\r\n\r\n" .
     //     $GLOBALS["lang"]["contents"] . ":\r\n\r\n";
     // }
-    $randstring = md5(rand() . microtime());
-    $zippath = get_temp_dir(false, 'user_downloads');
-    $zipfile = $zippath . "/" . $GLOBALS["userref"] . "_" . md5($GLOBALS["username"] . $randstring . $GLOBALS["scramble_key"]) . ".zip";
-    debug('BANG Collection download : $zipfile =' . $zipfile);
-    $zip = new ZipArchive();
-    $zip->open($zipfile, ZIPARCHIVE::CREATE);
-    
+
+    if (!$collection_download_tar) {
+        $randstring = md5(rand() . microtime());
+        $zippath = get_temp_dir(false, 'user_downloads');
+        $zipfile = $zippath . "/" . $GLOBALS["userref"] . "_" . md5($GLOBALS["username"] . $randstring . $GLOBALS["scramble_key"]) . ".zip";
+        debug('BANG Collection download : $zipfile =' . $zipfile);
+        $zip = new ZipArchive();
+        $zip->open($zipfile, ZIPARCHIVE::CREATE);
+    }
+
     $path = "";
     $deletion_array = [];
     $filenames = []; // set up an array to store the filenames as they are found (to analyze dupes)
@@ -6816,7 +6823,11 @@ function process_collection_download(array $dl_data): mixed
 
         $path .= $p . "\r\n";
 
-        if ($GLOBALS['use_zip_extension']) {
+        if ($collection_download_tar) {
+            $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
+            debug("BANG collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
+            @symlink($p, $usertempdir . DIRECTORY_SEPARATOR . $filename);
+        } elseif ($GLOBALS['use_zip_extension']) {
             debug("BANG Adding $p - ($filename) for ref " . $ref . " to " . $zip->filename);
             set_processing_message((string) ($n+1 . "/" . $rescount . " " . $GLOBALS["lang"]["filesaddedtozip"]));
             $success = $zip->addFile($p, $filename);
@@ -6863,9 +6874,14 @@ function process_collection_download(array $dl_data): mixed
 
                     debug("BANG Adding $p ($filename) for alternative ref " . $alternative["ref"]);
                     set_processing_message((string) ($n+1 . "/" . $rescount . " " . $GLOBALS["lang"]["filesaddedtozip"]));
-                    $success = $zip->addFile($p, $filename);
-                    sleep(5);
-                    debug('Collection download : Added resource ' . $ref . ' to zip archive = ' . ($success ? 'true' : 'false'));
+                    if ($collection_download_tar) {
+                        // $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
+                        debug("BANG collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
+                        @symlink($p, $usertempdir . DIRECTORY_SEPARATOR . $filename);
+                    } else {
+                        $success = $zip->addFile($p, $filename);
+                        debug('Collection download : Added resource ' . $ref . ' to zip archive = ' . ($success ? 'true' : 'false'));
+                    }
                 } else {
                     debug("No file found for alternative ref " . $alternative["ref"]);
 
