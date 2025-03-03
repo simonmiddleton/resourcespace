@@ -8758,10 +8758,7 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         }
         $validimage = false;
         foreach ($sizes as $size) {
-            if (
-                resource_has_access_denied_by_RT_size($resource['resource_type'], $size)
-                && !($open_access_for_contributor && $userref == $resource['created_by'])
-            ) {
+            if (!resource_download_allowed($resource['ref'], $size, $resource['resource_type'])) {
                 continue;
             }
 
