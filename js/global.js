@@ -977,7 +977,7 @@ function ModalCentre()
     // If modalfit is not specified default to the full modal dimensions
     if (modalalign == 'right') {
         modalmaxheight = Math.max(jQuery(window).height() - 100);
-        modalwidth = 500;
+        modalwidth = 550;
         if (!TileNav) {
             // Smaller menu if tile navigation disabled.
             modalwidth = 250;

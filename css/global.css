@@ -330,7 +330,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 
 
 .HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; overflow: hidden;font-size: 0;}
-.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0; font-size: 16px; line-height: 36px; zoom: 1;}
+.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0; font-size: 18px; line-height: 36px; zoom: 1;}
 .HorizontalNav a:link, .HorizontalNav a:visited {text-decoration:none;}
 .HorizontalNav a:hover, .HorizontalNav a:active {text-decoration:underline;}
 .HorizontalWhiteNav li:first-child {border-left:none;}
@@ -2235,7 +2235,7 @@ a.BrowseRefresh{
 /* Tile navigation used on top menus */
 
 .TileNav ul {list-style:none;padding:0;margin:0;}
-.TileNav li {padding:5px 5px 10px 5px;margin:0;width:105px;float:left;height:100px;text-align:center;position:relative;word-break:break-word}
+.TileNav li {padding:10px 5px 10px 5px;margin:0;width:117px;float:left;height:100px;text-align:center;position:relative;word-break:break-word}
 .TileNav a:hover {text-decoration:none;}
 .TileNav .fa {font-size:48px;padding-bottom:10px;}
 .TileNav .Pill {position:absolute; top:0; right:25px;border-radius:10px;font-size:115%;}
