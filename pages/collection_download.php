@@ -104,17 +104,6 @@ $archiver = (
     ? is_array($collection_download_settings)
     : false);
 
-// initiate text file
-if (
-    $zipped_collection_textfile
-    && $includetext
-    && hook('replacecollectiontextfile', '', array($collectiondata))
-    ) { 
-    $text = i18n_get_collection_name($collectiondata) . "\r\n" .
-    $lang["downloaded"] . " " . nicedate(date("Y-m-d H:i:s"), true, true) . "\r\n\r\n" .
-    $lang["contents"] . ":\r\n\r\n";
-}
-
 // This array will store all the available downloads.
 $available_sizes = array();
 $count_data_only_types = 0;
@@ -234,12 +223,16 @@ if ($submitted) {
         'include_csv_file'          => $include_csv_file,
         'include_alternatives'      => $include_alternatives,
         'collection_download_tar'   => $collection_download_tar,
+        'k'                         => $k,
     );
 
 
     if (!$collection_download_tar && $offline_job_queue) {
         // Only need to store resource IDS, not full search data
         $collection_download_data["result"] = array_column($result, "ref", "ref");
+
+        // Tar not an option with offline jobs
+        $collection_download_data['collection_download_tar'] = false;
         $modified_job_data = hook("collection_download_modify_job", "", [$collection_download_job_data]);
         if (is_array($modified_job_data)) {
             $collection_download_data = $modified_job_data;
