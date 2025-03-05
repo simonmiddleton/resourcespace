@@ -706,13 +706,13 @@ elseif($restypes=='')
                             case FIELD_TYPE_EXPIRY_DATE:
                             case FIELD_TYPE_DATE:
                                 ?>
-                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_year').value='';
-                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_month').value='';
+                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-y').value='';
+                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-m').value='';
                                 <?php
                                 if($searchbyday)
                                     {
                                     ?>
-                                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_day').value='';
+                                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-d').value='';
                                     <?php
                                     }
                                 break;
@@ -840,13 +840,13 @@ elseif($restypes=='')
                 case FIELD_TYPE_EXPIRY_DATE:
                 case FIELD_TYPE_DATE:
                     ?>
-                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_year').value='';
-                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_month').value='';
+                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-y').value='';
+                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-m').value='';
                     <?php
                     if($searchbyday)
                         {
                         ?>
-                        document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_day').value='';
+                        document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-d').value='';
                         <?php
                         }
                     break;
