@@ -33,3 +33,6 @@ $lang["confirmdeletelicensefile"]="Are you sure you wish to DELETE this file? Th
 $lang['license_manager_mediums']='License usage mediums';
 
 $lang["license_manager_access"]="Manage license data (where not already enabled via \"Can access the System Setup area\" permission)";
+
+// Admin menu tool tip
+$lang["managelicenses-tooltip"] = "Create and manage licenses for resources";

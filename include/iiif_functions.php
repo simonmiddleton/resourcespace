@@ -544,7 +544,7 @@ final class IIIFRequest
             $media_path = get_resource_path($useimage["ref"], true, $size, false, $useimage["file_extension"]);
         } else {
             $size = $this->largest_jpg_size($useimage);
-            $useextension = strtolower($useimage["file_extension"]) == "jpeg" ? $useimage["file_extension"] : "jpg";
+            $useextension = strtolower((string) $useimage["file_extension"]) == "jpeg" ? $useimage["file_extension"] : "jpg";
             $media_path = get_resource_path($useimage["ref"], true, $size, false, $useextension);
         }
         if (!file_exists($media_path)) {
@@ -1212,7 +1212,7 @@ function iiif_get_canvases($identifier, $iiif_results, $sequencekeys = false)
             }
         }
         $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
-        $useextension = strtolower($useimage["file_extension"]) == "jpeg" ? $useimage["file_extension"] : "jpg";
+        $useextension = strtolower((string) $useimage["file_extension"]) == "jpeg" ? $useimage["file_extension"] : "jpg";
         $img_path = get_resource_path($useimage["ref"], true, $size, false, $useextension);
         if (!file_exists($img_path)) {
             continue;

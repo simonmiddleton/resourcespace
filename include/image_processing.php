@@ -3633,7 +3633,7 @@ function create_previews_using_im(
 
                 $mpr_metadata_profiles = '';
                 if (!empty($imagemagick_mpr_preserve_metadata_profiles)) {
-                    $mpr_metadata_profiles = "!" . implode(",!", $imagemagick_mpr_preserve_metadata_profiles);
+                    $mpr_metadata_profiles = "!" . implode(",!", $imagemagick_mpr_preserve_metadata_profiles) . ",*";
                 }
             }
         }
@@ -3726,6 +3726,9 @@ function create_previews_using_im(
                                     $using_original = true;
                                     // Reset icc flag as still required when using original as source
                                     $icc_transform_complete = false;
+                                } else {
+                                    $using_original = false;
+                                    $icc_transform_complete = true;
                                 }
                                 debug("Using source file : '" . $pre_source  . "'");
                                 break;
@@ -3904,10 +3907,10 @@ function create_previews_using_im(
                     $profile = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% ";
 
                     if ($imagemagick_mpr && $mpr_metadata_profiles !== '') {
-                        $profile .= " +profile \"%%MPR_METADATA_PROFILES%%\",*\" ";
-                        $cmd_args["%%MPR_METADATA_PROFILES%%"] = new CommandPlaceholderArg(
+                        $profile .= " +profile %%MPR_METADATA_PROFILES%%";
+                        $cmdparams["%%MPR_METADATA_PROFILES%%"] = new CommandPlaceholderArg(
                             $mpr_metadata_profiles,
-                            fn($m) => preg_match('/[^\\!,\w]/', $m) === 0
+                            fn($m) => preg_match('/[^\\!\\*,\w]/', $m) === 0 // Allows word characters, !, * and commas only
                         );
                     }
                     $profile .= $icc_preview_profile_embed ? " " : " -strip ";

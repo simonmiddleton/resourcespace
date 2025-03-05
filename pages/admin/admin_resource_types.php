@@ -234,6 +234,7 @@ function addColumnHeader($orderName, $labelKey)
             axis: "y",
             cursor: 'move',
             opacity: 0.6, 
+            distance: 20,
             stop: function(event, ui) {
                 <?php if ($allow_reorder) { ?>
                     var idsInOrder = jQuery('#resource_type_table_body').sortable("toArray");

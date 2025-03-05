@@ -10,7 +10,6 @@ return array(
     'Twig\\Extra\\Intl\\' => array($vendorDir . '/twig/intl-extra'),
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Symfony\\Polyfill\\Php83\\' => array($vendorDir . '/symfony/polyfill-php83'),
-    'Symfony\\Polyfill\\Php81\\' => array($vendorDir . '/symfony/polyfill-php81'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Intl\\Normalizer\\' => array($vendorDir . '/symfony/polyfill-intl-normalizer'),
     'Symfony\\Polyfill\\Intl\\Icu\\' => array($vendorDir . '/symfony/polyfill-intl-icu'),
@@ -70,8 +69,8 @@ return array(
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
-    'League\\Uri\\' => array($vendorDir . '/league/uri-interfaces'),
+    'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'Gettext\\Languages\\' => array($vendorDir . '/gettext/languages/src'),
-    'Gettext\\' => array($vendorDir . '/gettext/gettext/src', $vendorDir . '/gettext/translator/src'),
+    'Gettext\\' => array($vendorDir . '/gettext/translator/src', $vendorDir . '/gettext/gettext/src'),
     'Dapphp\\Radius\\' => array($vendorDir . '/dapphp/radius/src'),
 );

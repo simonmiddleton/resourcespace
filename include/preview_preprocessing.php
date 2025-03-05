@@ -677,13 +677,14 @@ if (($ffmpeg_fullpath != false) && !isset($newfile) && in_array($extension, $ffm
     if (file_exists($target)) {
         $newfile = $target;
         debug('FFMPEG-VIDEO: $newfile = ' . $newfile);
-
-        if ($ffmpeg_preview && ($extension != $ffmpeg_preview_extension || $ffmpeg_preview_force)) {
-            debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
-            include __DIR__ . "/ffmpeg_processing.php";
-        }
     }
-        debug('FFMPEG-VIDEO: ####################################################################');
+
+    if ($ffmpeg_preview && ($extension != $ffmpeg_preview_extension || $ffmpeg_preview_force)) {
+        debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
+        include __DIR__ . "/ffmpeg_processing.php";
+    }
+    
+    debug('FFMPEG-VIDEO: ####################################################################');
 }
 
 /* ----------------------------------------

@@ -333,10 +333,10 @@ function add_resource_to_collection(
     $smartadd = false,
     $size = "",
     $addtype = "",
-    bool $col_access_control = null,
-    array $external_shares = null,
+    ?bool $col_access_control = null,
+    ?array $external_shares = null,
     string $search = '',
-    int $sort_order = null
+    ?int $sort_order = null
 ) {
     global $lang;
 

@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace SimpleSAML\Module\metarefresh\Controller;
 
 use Exception;
-use SimpleSAML\Auth;
 use SimpleSAML\Configuration;
 use SimpleSAML\Error;
 use SimpleSAML\Logger;
-use SimpleSAML\Module\metarefresh\MetaLoader;
-use SimpleSAML\Session;
 use SimpleSAML\Utils;
 use SimpleSAML\XHTML\Template;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller class for the metarefresh module.
@@ -26,6 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MetaRefresh
 {
+    /** @var \SimpleSAML\Configuration */
+    protected Configuration $config;
+
     /** @var \SimpleSAML\Configuration */
     protected Configuration $module_config;
 
@@ -45,8 +43,9 @@ class MetaRefresh
      * @throws \Exception
      */
     public function __construct(
-        protected Configuration $config
+        Configuration $config,
     ) {
+        $this->config = $config;
         $this->module_config = Configuration::getConfig('module_metarefresh.php');
         $this->authUtils = new Utils\Auth();
     }

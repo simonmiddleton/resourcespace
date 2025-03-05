@@ -3446,6 +3446,7 @@ function setup_command_line_user(array $setoptions = []): bool
     $dummyuserdata["ip_restrict_user"] = "";
     $dummyuserdata["ip_restrict_group"] = "";
     $dummyuserdata["current_collection_valid"] = 1;
+    $dummyuserdata["usergroup"] = 0;
 
     // Add any columns from user table, plus any extra array
     // elements normally obtained from get_user()
@@ -3599,5 +3600,26 @@ function can_set_admin_usergroup(?int $new_usergroup): bool
         return true;
     }
 
+    return false;
+}
+
+/**
+ * Checks if the origin matches a whitelist entry, supporting wildcards like "*.example.com".
+ * 
+ *  @param  string  $origin      The URL to check.
+ *  @param  array   $whitelist   Array of valid URLs - can include wildcards.
+ *  @return bool                 True if the origin is allowed, false otherwise.
+ */
+function cors_is_origin_allowed(string $origin, array $whitelist): bool  {
+    foreach ($whitelist as $allowed) {
+        // Escape dots and replace wildcard '*' with regex '.*'
+        $pattern = preg_quote($allowed, '/');
+        $pattern = str_replace('\*', '.*', $pattern); // Convert '*' to '.*' for wildcard matching
+        
+        // Ensure it matches the entire string (^...$)
+        if (preg_match("/^{$pattern}$/i", $origin)) {
+            return true;
+        }
+    }
     return false;
 }

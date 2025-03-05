@@ -1,6 +1,6 @@
 <?php
 
-$simplesaml_version = "2.3.5";
+$simplesaml_version = "2.3.6";
 $simplesaml_check_phpversion = "8.0";
 $simplesaml_site_block = false;
 $simplesaml_login = true;

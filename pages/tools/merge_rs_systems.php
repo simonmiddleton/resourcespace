@@ -506,18 +506,6 @@ if ($export && isset($folder_path)) {
             },
         ),
         array(
-            "name" => "resource_data",
-            "formatted_name" => "resource data",
-            "filename" => "resource_data",
-            "record_feedback" => array(),
-            "sql" => array(
-                "select"  => "rd.resource, rd.resource_type_field, rd. value",
-                "from"  => "resource_data AS rd
-                    RIGHT JOIN resource AS r ON rd.resource = r.ref",
-                "where" => "resource > 0 AND resource_type_field IN (SELECT ref FROM resource_type_field)",
-            ),
-        ),
-        array(
             "name" => "resource_node",
             "formatted_name" => "resource nodes",
             "filename" => "resource_nodes",
@@ -1422,56 +1410,6 @@ if ($import && isset($folder_path)) {
         fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
     }
     unset($src_resource_nodes);
-
-    # RESOURCE DATA
-    ###############
-    logScript("");
-    logScript("Importing resource data...");
-    fwrite($progress_fh, PHP_EOL . PHP_EOL);
-    $processed_resource_data = (isset($processed_resource_data) ? $processed_resource_data : array());
-    $src_resource_data = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_data_export.json", "r+b"));
-    foreach ($src_resource_data as $src_rd) {
-        $process_rd_value = "{$src_rd["resource"]}_{$src_rd["resource_type_field"]}_" . md5($src_rd["value"]);
-        if (in_array($process_rd_value, $processed_resource_data)) {
-            continue;
-        }
-
-        logScript("Processing data for resource #{$src_rd["resource"]} | resource_type_field: #{$src_rd["resource_type_field"]}");
-
-        if (!array_key_exists($src_rd["resource"], $resources_mapping)) {
-            logScript("WARNING: Unable to find a resource mapping. Skipping");
-            $processed_resource_data[] = $process_rd_value;
-            fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
-            continue;
-        }
-
-        if (in_array($src_rd["resource_type_field"], $resource_type_fields_not_created)) {
-            logScript("WARNING: Resource type field was not created. Skipping");
-            $processed_resource_data[] = $process_rd_value;
-            fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
-            continue;
-        }
-
-        db_begin_transaction(TX_SAVEPOINT);
-        $rd_import_errors = array();
-        $update_field = update_field(
-            $resources_mapping[$src_rd["resource"]],
-            $resource_type_fields_spec[$src_rd["resource_type_field"]]["ref"],
-            $src_rd["value"],
-            $rd_import_errors,
-            true
-        );
-
-        if ($update_field === false) {
-            logScript("ERROR: unable to update field data! Found errors: " . implode(", " . PHP_EOL, $rd_import_errors));
-            exit(1);
-        }
-
-        $processed_resource_data[] = $process_rd_value;
-        fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
-        db_end_transaction(TX_SAVEPOINT);
-    }
-    unset($src_resource_data);
 
     # RESOURCE DIMENSIONS
     #####################

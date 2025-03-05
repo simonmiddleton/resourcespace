@@ -7810,6 +7810,7 @@ function metadata_field_edit_access($field)
  */
 function get_download_filename(int $ref, string $size, int $alternative, string $ext): string
 {
+    resource_type_config_override(get_resource_data($ref)['resource_type']);
     [$size, $ext, $dff] = array_map('trim', [$size, $ext, $GLOBALS['download_filename_format']]);
     $fallback_filename = "RS{$ref}.{$ext}";
     $formatted_str = $dff ?: DEFAULT_DOWNLOAD_FILENAME_FORMAT;
@@ -8723,7 +8724,7 @@ function related_resource_pull(array $resource)
  * Get the largest available preview URL for the given resource and the given array of sizes
  *
  * @param array     $resource               Array of resource data from get_resource_data() or search results
- * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provided will use all sizes
  * @param int       $access                 Resource access
  * @param bool      $watermark              Look for watermarked versions?
  * @param int       $page                   Page to look for
@@ -8763,10 +8764,7 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         }
         $validimage = false;
         foreach ($sizes as $size) {
-            if (
-                resource_has_access_denied_by_RT_size($resource['resource_type'], $size)
-                && !($open_access_for_contributor && $userref == $resource['created_by'])
-            ) {
+            if (!resource_download_allowed($resource['ref'], $size, $resource['resource_type'])) {
                 continue;
             }
 

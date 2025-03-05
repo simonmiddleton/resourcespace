@@ -3,6 +3,8 @@
 command_line_only();
 
 $enable_thumbnail_creation_on_upload = false; // Don't need previews here
+$saved_file_integrity_checks = $GLOBALS["file_integrity_checks"];
+$GLOBALS["file_integrity_checks"] = true;
 $GLOBALS["valid_upload_paths"][] = realpath(__DIR__ . "/../../");
 ps_query("TRUNCATE resource");
 
@@ -100,4 +102,5 @@ if (!$found_log || !in_array($resource_ut, explode(', ', $script_result_matches[
     return false;
 }
 
+$GLOBALS["file_integrity_checks"] = $saved_file_integrity_checks;
 return true;

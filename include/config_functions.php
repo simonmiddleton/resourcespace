@@ -553,7 +553,7 @@ function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
 */
 function config_file_input($name, $label, $current, $form_action, $width = 420, $valid_extensions = array(), $file_preview = false)
     {
-    global $lang,$storagedir;
+    global $lang, $storagedir, $storageurl;
 
     if($current !=='')
         {
@@ -563,11 +563,13 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             # Current value may have originated in config.php - file uploader to consider this unset
             # to enable override of config.php by uploading a file.
             $current = '';
+            $current_file = '';
+            $current_file_url = '';
             }
         else
             {
-            $missing_file = str_replace('[storage_url]', $storagedir, $current);
-            $pathparts=explode("/",$current);
+            $current_file     = str_replace('[storage_url]', $storagedir, $current);
+            $current_file_url = str_replace('[storage_url]', $storageurl, $current);
             }
         }
 
@@ -579,7 +581,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
         </div>
         <?php
-        if($current !== '' && $pathparts[1]=="system" && !file_exists($missing_file))
+        if($current !== '' && !file_exists($current_file))
             {
             ?>
             <span><?php echo escape($lang['applogo_does_not_exists']); ?></span>
@@ -614,17 +616,16 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             }
         else
             {
-            $file_location = str_replace('[storage_url]', $storagedir, $current);
             if (function_exists('mime_content_type'))
                 {
-                $mime_type = explode("/", mime_content_type($file_location));
+                $mime_type = explode("/", mime_content_type($current_file));
                 }
             else
                 {
-                $mime_type = explode("/", get_mime_type($file_location));
+                $mime_type = explode("/", get_mime_type($current_file));
                 }
             $file_type = end($mime_type);
-            $file_size = str_replace("&nbsp;"," ",formatfilesize(filesize($file_location)));
+            $file_size = str_replace("&nbsp;"," ",formatfilesize(filesize($current_file)));
             ?>
             <span style="width: 316px;display: inline-block;"><?php echo escape("$file_type ($file_size)"); ?></span>
             <input type="submit" name="delete_<?php echo escape($name); ?>" value="<?php echo escape($lang['action-delete']); ?>">
@@ -634,21 +635,11 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             ?>
         </form>
         <?php
-        if ($file_preview && $current !== "") {
-            global $baseurl; 
-
-            $matches = array();
-
-            if (preg_match("/system\/config.*/", $current, $matches) && count($matches) == 1) {
-                $img_url = $baseurl . '/filestore/' . $matches[0];
-            } else {
-                $img_url = $baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current);
-            }
-
+        if ($file_preview && $current !== "" && file_exists($current_file)) {
             ?>
             <div id="preview_<?php echo escape($name); ?>">
                 <img class="config-image-preview"
-                    src="<?php echo escape($img_url) . '?v=' . date("s") ?>"
+                    src="<?php echo escape($current_file_url) . '?v=' . date("s") ?>"
                     alt="<?php echo escape($lang["preview"] . ' - ' . $label) ?>">
             </div>
             <?php
@@ -715,7 +706,7 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             " style="float: left;" />
         <div id="container_<?php echo escape($name); ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
             &nbsp;
-            <input id="<?php echo escape($name); ?>" name="<?php echo escape($name); ?>" type="<?php echo ($checked?"color":"text") ?>" value="<?php echo escape($current); ?>" onchange="<?php
+            <input id="<?php echo escape($name); ?>" name="<?php echo escape($name); ?>" type="<?php echo $checked ? "color" : "text"; ?>" value="<?php echo escape($current); ?>" onchange="<?php
             if ($autosave)
                 {
                 ?>AutoSaveConfigOption('<?php echo escape($name); ?>');<?php
@@ -1205,7 +1196,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                 $missing_file = str_replace('[storage_url]' . '/' . $file_location, $file_server_location, $missing_file);
                  if(!file_exists($missing_file))
                     {
-                    set_config_option(null, $config_name, '');
+                    delete_config_option(null, $config_name);
 
                     $redirect = true;
                     }
@@ -1997,4 +1988,82 @@ function check_removed_ui_config(string $option, $default = ""): bool
 function config_add_fixed_input(string $label, string $value, string $helptext = ""): array
 {
     return array('fixed_input', $label, $value, $helptext);
+}
+
+/**
+ * Add config option search to user preferences / system configuration page.
+ * Also requires config_filter_by_search() to process results. For examples, see the above pages.
+ *
+ * @param  string  $find            Value from getval("find", "")
+ * @param  string  $only_modified   Value from getval("only_modified", "no")
+ */
+function render_config_filter_by_search(string $find = '', string $only_modified = ''): void
+{
+    global $lang;
+
+    $only_modified = $only_modified == 'yes';
+    $searching = $find != "" || $only_modified;
+    if (!$searching) {
+        $find = "";
+    }
+
+    ?>
+    <form id="SearchSystemPages" class="inline_config_search" method="post" onsubmit="return CentralSpacePost(this);">
+    <?php generateFormToken("system_config_search"); ?>
+        <div>
+            <input type="text" name="find" id="configsearch" value="<?php echo escape($find); ?>">
+            <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
+            <?php if ($searching) { ?>
+                <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
+            <?php } ?>
+        </div>
+        <div>
+            <input type="checkbox" name="only_modified" id="only_modified" value="yes" <?php echo $only_modified ? 'checked="checked"' : ''; ?>>
+            <label for="only_modified"><?php echo escape($lang["systemconfig_only_show_modified"]); ?></label>
+        </div>
+    </form>
+    <?php
+}
+
+/**
+ * Process values from config search fields, see render_config_filter_by_search()
+ * Filter $page_def elements to show only those searched for.
+ *
+ * @param  array     $page_def        Array containing page definition, from functions config_add_ ...
+ * @param  null|int  $userref         null when checking system config or int representing user ref when getting user preferences.
+ * @param  string    $find            Value from getval("find", "")
+ * @param  string    $only_modified   Value from getval("only_modified", "no")
+ */
+function config_filter_by_search(array $page_def, ?int $userref = null, string $find = '', string $only_modified = ''): array
+{
+    $only_modified = $only_modified == 'yes';
+    $searching = $find != "" || $only_modified;
+
+    if ($searching) {
+        // Check for search phrase in config. description.
+        if ($find !== '') {
+            $search_matches = array();
+            foreach ($page_def as $config_to_check) {
+                if (isset($config_to_check[2]) && stripos($config_to_check[2], $find) !== false) {
+                    $search_matches[] = $config_to_check;
+                }
+            }
+            $page_def = $search_matches;
+        }
+        // Filter results to only config which has been changed previously i.e. exists in user_preferences with null in user column.
+        if ($only_modified) {
+            $search_matches = array();
+            $returned_options = array();
+            get_config_options($userref, $returned_options);
+            $returned_options = array_column($returned_options, 'parameter');
+            foreach ($page_def as $config_to_check) {
+                if (isset($config_to_check[1]) && in_array($config_to_check[1], $returned_options)) {
+                    $search_matches[] = $config_to_check;
+                }
+            }
+            $page_def = $search_matches;
+        }
+    }
+
+    return $page_def;
 }

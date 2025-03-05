@@ -702,7 +702,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     }
                                 else
                                     {
-                                    $thumb_url=$baseurl . "/gfx/no_preview/default.png";
+                                    $thumb_url=$baseurl . "/gfx/no_preview/audio.png";
                                     }
     
                                 include "mp3_play.php";

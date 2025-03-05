@@ -2873,7 +2873,12 @@ $CSRF_token_identifier = "CSRFToken";
 $CSRF_exempt_pages = array("login");
 // Allow other systems to make cross-origin requests. The elements of this configuration option should follow the
 // "<scheme>://<hostname>" syntax
-$CORS_whitelist = array();
+// By default allow Canva apps, needed for Canva integration.
+$CORS_whitelist =
+    [
+    "*.canva-apps.com",
+    "*.canva.com"
+    ];
 //
 //
 

@@ -977,7 +977,7 @@ function ModalCentre()
     // If modalfit is not specified default to the full modal dimensions
     if (modalalign == 'right') {
         modalmaxheight = Math.max(jQuery(window).height() - 100);
-        modalwidth = 500;
+        modalwidth = 550;
         if (!TileNav) {
             // Smaller menu if tile navigation disabled.
             modalwidth = 250;
@@ -1840,7 +1840,7 @@ var ProcessingAPITimer=0;
 var ProcessingMessages;
 var ProcessingCount=-1;
 
-function CentralSpaceShowProcessing(delay = 1000, defaultmessage = '')
+function CentralSpaceShowProcessing(delay = 2000, defaultmessage = '')
     {
     if (ProcessingTimersActive) { return; }
 
