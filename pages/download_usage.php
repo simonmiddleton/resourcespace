@@ -131,21 +131,18 @@ if (isset($download_usage_prevent_options)) { ?>
 
         if (!$remove_usage_textbox && !$usage_textbox_below) {
             echo html_usagecomments($usagecomment, $error);
-        } 
-        
-        $download_usage_options = get_usage_options(true);
-        ?>
+        } ?>
 
         <div class="Question">
             <label for="usage"><?php echo escape($lang["indicateusagemedium"]); ?></label>
             <select class="stdwidth" name="usage" id="usage" <?php echo (isset($download_usage_prevent_options)) ? 'onchange="checkvalidusage();"' : ''; ?>>
                 <option value=""><?php echo escape($lang["select"]); ?></option>
                 <?php
-                foreach ($download_usage_options as $ref => $option) {
-                    $selected = ($ref === $usage) ? "selected" : "";
+                for ($n = 0; $n < count($download_usage_options); $n++) {
+                    $selected = ($n === $usage) ? "selected" : "";
                     ?>
-                    <option <?php echo $selected; ?> value="<?php echo (int) $ref; ?>">
-                        <?php echo escape(i18n_get_translated($option)); ?>
+                    <option <?php echo $selected; ?> value="<?php echo $n; ?>">
+                        <?php echo escape(i18n_get_translated($download_usage_options[$n])); ?>
                     </option>
                     <?php
                 } ?>

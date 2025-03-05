@@ -1,7 +1,6 @@
 <?php
 $download_summary = download_summary($ref);
 $total = 0;
-$download_usage_options = get_usage_options(true);
 foreach ($download_summary as $usage) {
     if (array_key_exists($usage["usageoption"], $download_usage_options)) {
         $total += $usage["c"];
