@@ -1633,6 +1633,13 @@ $lang['metadata-report-fits_section'] = 'FITS tags mapped';
 
 $lang["indicateusage"] = "Please describe your planned use for this resource.";
 $lang["usage"] = "Usage";
+$lang["usage_options"] = "Usage options";
+$lang["manage-download_usage"] = "Create and manage download usage options";
+$lang["usage-option_name"] = "Name";
+$lang["usage-enabled"] = "Enabled";
+$lang["manage_usage_option_new"] = "Create a new usage option";
+$lang["manage_usage_option_create"] = "Create";
+$lang["manage_usage-error"] = "An unexpected error occured, please try again";
 $lang["usagecomments"] = "Usage";
 $lang["indicateusagemedium"] = "Usage medium";
 $lang["usageincorrect"] = "You must describe the planned usage and select a medium";

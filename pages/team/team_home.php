@@ -151,6 +151,17 @@ include "../../include/header.php";
                 </li>
                 <?php
             }
+
+            if (checkperm('a') && $download_usage) {
+                ?>
+                <li title="<?php echo escape($lang["manage-download_usage"]); ?>">
+                    <a href="<?php echo generateURL($baseurl_short . 'pages/team/team_manage_usage_options.php')?>" onClick="return CentralSpaceLoad(this, true)">
+                        <i aria-hidden="true" class="fa fa-fw fa-download"></i>
+                        <br /><?php echo escape($lang["usage_options"]); ?>
+                    </a>
+                </li>
+                <?php
+            }
             ?>
 
             <li title="<?php echo escape($lang["rse_analytics-tooltip"]); ?>">

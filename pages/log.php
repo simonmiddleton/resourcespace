@@ -231,6 +231,8 @@ include "../include/header.php";
         "data" => array()
     );
 
+    $download_usage_options = get_usage_options(true);
+
     for ($n = $offset; (($n < count($log)) && ($n < ($offset + $per_page))); $n++) {
         $logentry = array();
         $logentry["date"] = nicedate($log[$n]["date"], true, true, true);

@@ -49,6 +49,8 @@ if (!checkperm('v') && !$bypass_permission_check) {
                     <th><?php echo escape($lang["log_value"]); ?></th>
                 </tr>
                 <?php
+                $download_usage_options = get_usage_options(true);
+
                 foreach ($log_entry as $column => $value) {
                     $cleanval = true;
 
