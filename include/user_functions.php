@@ -3441,7 +3441,8 @@ function setup_command_line_user(array $setoptions = []): bool
     $dummyuserdata["username"] = $defaultusername;
     $dummyuserdata["fullname"] = $defaultusername;
     $dummyuserdata["groupname"] = $defaultusername;
-    $dummyuserdata["permissions"] = "a,t,v,e-2,e-1,e0,e1,e2,e3";
+    # Command line user needs permission to update resources in all workflow states.
+    $dummyuserdata["permissions"] = 'a,t,v,e' . implode(',e', get_workflow_states());
     $dummyuserdata["accepted_terms"] = 1;
     $dummyuserdata["ip_restrict_user"] = "";
     $dummyuserdata["ip_restrict_group"] = "";
