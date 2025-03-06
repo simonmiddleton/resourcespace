@@ -1997,7 +1997,7 @@ function config_add_fixed_input(string $label, string $value, string $helptext =
  * @param  string  $find            Value from getval("find", "")
  * @param  string  $only_modified   Value from getval("only_modified", "no")
  */
-function render_config_filter_by_search(string $find = '', string $only_modified = ''): void
+function render_config_filter_by_search(string $find, string $only_modified): void
 {
     global $lang;
 
@@ -2034,7 +2034,7 @@ function render_config_filter_by_search(string $find = '', string $only_modified
  * @param  string    $find            Value from getval("find", "")
  * @param  string    $only_modified   Value from getval("only_modified", "no")
  */
-function config_filter_by_search(array $page_def, ?int $userref = null, string $find = '', string $only_modified = ''): array
+function config_filter_by_search(array $page_def, ?int $userref, string $find, string $only_modified): array
 {
     $only_modified = $only_modified == 'yes';
     $searching = $find != "" || $only_modified;
