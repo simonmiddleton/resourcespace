@@ -2854,6 +2854,13 @@ $lang["error_upload_invalid_file"] = "Invalid file type: [filetype]";
 $lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: [resources]";
 $lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
 $lang["error_fail_save"] = "Unable to save";
+$lang['error_file_upload_cond-InvalidUploadPath'] = 'Invalid upload path detected';
+$lang['error_file_upload_cond-SpecialFile'] = '"Special" file detected which is not allowed';
+$lang['error_file_upload_cond-InvalidExtension'] = 'Invalid extension';
+$lang['error_file_upload_cond-MimeTypeMismatch'] = 'MIME type mismatch';
+$lang['error_file_upload_cond-FileMoveFailure'] = 'Unable to move the (uploaded) file';
+$lang['error_file_upload_cond-MissingSourceFile'] = 'The source file is missing. Please contact your system administrator';
+$lang['error_file_upload_cond-EmptySourceFile'] = 'Invalid source file because it is empty (has no content; file size is zero)';
 
 
 $lang['image_quality_100'] = "Maximum";

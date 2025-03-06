@@ -124,25 +124,26 @@ if (getval("submitted","")!="")
         
     # Handle file upload
     global $banned_extensions;
-    if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
-        {
-        # Work out the extension
-        $uploadfileparts=explode(".",$_FILES["file"]["name"]);
-        $uploadfileextension=trim($uploadfileparts[count($uploadfileparts)-1]);
-        $uploadfileextension=strtolower($uploadfileextension);
+    if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="") {
+        $process_file_upload = process_file_upload($_FILES['file'], new SplFileInfo($file_path), []);
 
-        if (in_array($uploadfileextension,$banned_extensions))
-            {
-            $error_extension = str_replace("[filetype]",$uploadfileextension,$lang["error_upload_invalid_file"]);
-            error_alert($error_extension, true);
-            exit();
-            }
-        else
-            {
-            move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
+        if ($process_file_upload['success']) {
             ps_query("UPDATE license set file=? where ref=?",array("s",$_FILES["file"]["name"], "i",$ref));
-            }
+        } else {
+            error_alert(
+                match ($process_file_upload['error']) {
+                    ProcessFileUploadErrorCondition::InvalidExtension => str_replace(
+                        '[filetype]',
+                        parse_filename_extension($_FILES['file']['name']),
+                        $lang['error_upload_invalid_file']
+                    ),
+                    default => $process_file_upload['error']->i18n($lang),
+                },
+                true
+            );
+            exit();
         }
+    }
 
     # Handle file clear
     if (getval("clear_file","")!="")

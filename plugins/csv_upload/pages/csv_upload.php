@@ -83,20 +83,30 @@ if (!file_exists($csvdir)) {
 
 $csvfile = $csvdir . DIRECTORY_SEPARATOR  . "csv_upload.csv";
 if (isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0) {
-    if (check_valid_file_extension($_FILES[$fd], array("csv"))) {
-        // We have a valid CSV, get a checksum and save it to a temporary location for processing
-        // Needs whole file checksum
-        $csvchecksum = get_checksum($_FILES[$fd]['tmp_name'], true);
-        $csv_set_options["csvchecksum"] = $csvchecksum;
-        $csv_set_options["csv_filename"] = $_FILES[$fd]["name"];
+    $process_file_upload = process_file_upload(
+        $_FILES[$fd],
+        new SplFileInfo($csvfile),
+        [
+            'allow_extensions' => ['csv'],
+            'mime_file_based_detection' => false,
+        ]
+    );
 
-        // Create target dir if necessary
-        if (!file_exists($csvdir)) {
-            mkdir($csvdir, 0777, true);
-        }
-        $result = move_uploaded_file($_FILES[$fd]['tmp_name'], $csvfile);
+    if ($process_file_upload['success']) {
+        $csv_set_options['csvchecksum'] = get_checksum($csvfile, true);
+        $csv_set_options['csv_filename'] = $_FILES[$fd]['name'];
     } else {
-        $onload_message = array("title" => $lang["error"],"text" => str_replace("%EXTENSIONS", ".csv", $lang["invalidextension_mustbe-extensions"]));
+        $onload_message = [
+            'title' => $lang['error'],
+            'text' => match ($process_file_upload['error']) {
+                ProcessFileUploadErrorCondition::InvalidExtension => str_replace(
+                    '%EXTENSIONS',
+                    'csv',
+                    $lang['invalidextension_mustbe-extensions']
+                ),
+                default => $process_file_upload['error']->i18n($lang),
+            },
+        ];
     }
 }
 rs_setcookie("saved_csv_options", json_encode($csv_set_options));

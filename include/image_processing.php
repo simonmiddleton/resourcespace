@@ -253,18 +253,26 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
     ) {
         if (!$after_upload_processing) {
             if ($file_path != "" && ($replace_batch_existing || !$deletesource)) {
-                $result = copy($file_path, $filepath);
+                $result = process_file_upload(
+                    new SplFileInfo($file_path),
+                    new SplFileInfo($filepath),
+                    ['file_move' => 'copy']
+                )['success'];
             } elseif (!$replace_batch_existing && $file_path != "") {
                 # File path has been specified. Let's use that directly.
                 if (file_exists($file_path)) {
-                    $result = rename($file_path, $filepath);
+                    $result = process_file_upload(
+                        new SplFileInfo($file_path),
+                        new SplFileInfo($filepath),
+                        []
+                    )['success'];
                 } else {
                     return false;
                 }
             } else {
                 # Standard upload.
                 if (!$revert) {
-                    $result = move_uploaded_file($processfile['tmp_name'], $filepath);
+                    $result = process_file_upload($processfile, new SplFileInfo($filepath), [])['success'];
                 } else {
                     $result = true;
                 }
@@ -1923,34 +1931,27 @@ function upload_preview($ref)
 {
     hook("removeannotations", "", array($ref));
 
-    # Upload a preview image only.
-    $processfile = $_FILES['userfile'];
-    $filename = strtolower(str_replace(" ", "_", $processfile['name']));
+    $extension = parse_filename_extension($_FILES['userfile']['name']);
+    $temp_file = get_resource_path($ref, true, 'tmp', true, $extension);
 
-    # Work out extension
-    $extension = explode(".", $filename);
-    $extension = trim(strtolower($extension[count($extension) - 1]));
-    if ($extension == "jpeg") {
-        $extension = "jpg";
-    }
-
-    if ($extension != "jpg") {
+    if (
+        !process_file_upload(
+            $_FILES['userfile'],
+            new SplFileInfo($temp_file),
+            ['allow_extensions' => ['jpg', 'jpeg']]
+        )['success']
+    ) {
         return false;
     }
 
-    # Move uploaded file into position.
-    $filepath = get_resource_path($ref, true, "tmp", true, $extension);
-    $result = move_uploaded_file($processfile['tmp_name'], $filepath);
-    if ($result != false) {
-        chmod($filepath, 0777);
-    }
-
-    # Create previews
+    chmod($temp_file, 0777);
     create_previews($ref, false, $extension, true);
 
-    # Delete temporary file, if not transcoding.
-    if (file_exists($filepath) && !ps_value("SELECT is_transcoding value FROM resource WHERE ref = ?", array("i",$ref), false)) {
-        unlink($filepath);
+    if (
+        file_exists($temp_file)
+        && !ps_value('SELECT is_transcoding value FROM resource WHERE ref = ?', ['i', $ref], false)
+    ) {
+        unlink($temp_file);
     }
 
     return true;
