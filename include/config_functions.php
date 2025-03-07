@@ -1098,16 +1098,22 @@ function config_generate_AutoSaveConfigOption_function($post_url)
         jQuery('#AutoSaveStatus-' + option_name).show();
 
         if (jQuery('input[name=' + option_name + ']').is(':checkbox')) {
-            var option_value = jQuery('input[name=' + option_name + ']:checked').map(function(){
-            return jQuery(this).val();
-          }).get().toString();
-        
+            let option_value = jQuery('input[name=' + option_name + ']:checked')
+                .map(() => jQuery(this).val())
+                .get()
+                .toString();
+        } else if (jQuery('input[name="' + option_name + '[]"]')) {
+            console.log(
+                jQuery('input[name="' + option_name + '[]"]:checked')
+                    // .map(() => jQuery(this).val())
+            );
+            let option_value = '';
+        } else {
+            let option_value = jQuery('#' + option_name).val();
         }
-        
-        else {
-            var option_value = jQuery('#' + option_name).val();
-        }
-        
+
+        return true; // Temporary - remove once done
+
         var post_url  = '<?php echo $post_url; ?>';
         var post_data = {
             ajax: true,
@@ -1271,7 +1277,11 @@ function config_generate_html(array $page_def)
             case 'single_select':
                 config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
-            
+
+            case 'multi_select':
+                config_multi_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                break;
+
              case 'checkbox_select':
                 config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;

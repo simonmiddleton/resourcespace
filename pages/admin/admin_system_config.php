@@ -150,6 +150,26 @@ $page_def[] = config_add_boolean_select(
 );
 $page_def[] = config_add_html('</div>');
 
+// Annotations section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . escape($lang['annotate_annotations_label']) . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
+$page_def[] = config_add_boolean_select('annotate_enabled', $lang['annotate_annotations_label'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_multi_select(
+    'annotate_fields',
+    $lang['annotate_tagging_fields'],
+    array_map(
+        static fn(string $title) => lang_or_i18n_get_translated($title, 'fieldtitle-'),
+        array_column(
+            get_resource_type_fields('', 'title, name', 'asc', '', $FIXED_LIST_FIELD_TYPES, true, false),
+            'title',
+            'ref'
+        )
+    ),
+    true,
+    412
+);
+$page_def[] = config_add_boolean_select('annotate_text_adds_comment', $lang['annotate_text_adds_comment'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_html('</div>');
+
 // Watermark section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['watermark_header'] . '</h3><div id="SystemConfigWatermarkSection" class="CollapsibleSection">');
 $page_def[] = config_add_file_input(
@@ -619,6 +639,8 @@ include '../../include/header.php';
     ?>
 
     <script>
+        jQuery('fieldset#annotate_fields :input:checkbox').change(() => AutoSaveConfigOption('annotate_fields'));
+
         function debug_log_selector_onchange(el) {
             let value = jQuery(el).val();
             let options_to_show_duration = <?php echo json_encode([

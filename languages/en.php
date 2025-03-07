@@ -2833,6 +2833,8 @@ $lang['annotate_text_link_label'] = 'Annotate mode toggle';
 $lang['annotate_annotation_label'] = 'Annotation';
 $lang['annotate_annotations_label'] = 'Annotations';
 $lang['annotate_select'] = 'Select field...';
+$lang['annotate_tagging_fields'] = 'Select tagging fields';
+$lang['annotate_text_adds_comment'] = 'Add comment for resource text annotations. (N/A for fixed list field annotations)';
 
 $lang["byte_prefix_mode_decimal"] = "Use decimal for file sizes (1000 multiples, KB/MB/GB/TB) as opposed to binary (1024 multiples , KiB/MiB/GiB/TiB)";
 

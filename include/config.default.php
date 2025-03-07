@@ -2714,6 +2714,9 @@ $annotate_enabled = false;
 // Specify which fields can be used to bind to annotations
 $annotate_fields = array();
 
+// Add comment for resource text annotations. (N/A for fixed list field annotations)
+$annotate_text_adds_comment = true;
+
 //
 //  IIIF:
 //

@@ -708,6 +708,9 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
     ?>
     <div class="Question">
         <label for="<?php echo escape($name);?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
+        <div class="AutoSaveStatus">
+            <span id="AutoSaveStatus-<?php echo escape($name);?>" style="display:none;"></span>
+        </div>
         <fieldset
             name="<?php echo escape($name);?>[]"
             id="<?php echo escape($name);?>"
@@ -730,7 +733,6 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
             <?php } ?>
             </div>
         </fieldset>
-
         <div class="clearerleft"></div>
     </div>
     <?php
