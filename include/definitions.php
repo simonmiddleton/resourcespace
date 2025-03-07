@@ -105,6 +105,7 @@ define('LOG_CODE_STATUS_CHANGED', 's');
 define('LOG_CODE_SYSTEM', 'S');
 define('LOG_CODE_TRANSFORMED', 't');
 define('LOG_CODE_UPLOADED', 'u');
+define('LOG_CODE_UPLOADED_PREVIEW', 'up');
 define('LOG_CODE_UNSPECIFIED', 'U');
 define('LOG_CODE_VIEWED', 'v');
 define('LOG_CODE_DELETED', 'x');

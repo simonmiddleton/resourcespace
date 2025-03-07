@@ -1944,6 +1944,7 @@ function upload_preview($ref)
         return false;
     }
 
+    resource_log($ref, LOG_CODE_UPLOADED_PREVIEW, '', $_FILES['userfile']['name']);
     chmod($temp_file, 0777);
     create_previews($ref, false, $extension, true);
 
