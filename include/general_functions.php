@@ -739,25 +739,28 @@ function filesize2bytes($str)
 /**
  * Get the mime type for a file on disk
  *
- * @param  string $path
- * @param  string $ext
- * @return string
+ * @param string $path
+ * @param string $ext
+ * @param ?bool $file_based_detection Determine the MIME type:
+ * - null: Check by extension or using exiftool
+ * - true: Only file based (uses exiftool)
+ * - false: Only based on extension
  */
-function get_mime_type($path, $ext = null)
+function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): string
 {
     global $mime_types_by_extension;
 
     if (empty($ext)) {
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $ext = parse_filename_extension($path);
     }
 
-    if (isset($mime_types_by_extension[$ext])) {
+    if (!$file_based_detection && isset($mime_types_by_extension[$ext])) {
         return $mime_types_by_extension[$ext];
     }
 
     # Get mime type via exiftool if possible
     $exiftool_fullpath = get_utility_path("exiftool");
-    if ($exiftool_fullpath != false) {
+    if (($file_based_detection || $file_based_detection === null) && $exiftool_fullpath != false) {
         $command = $exiftool_fullpath . " -s -s -s -t -mimetype " . escapeshellarg($path);
         return run_command($command);
     }

@@ -118,7 +118,13 @@ include '../../../include/header.php';
                     mkdir($csv_dir, 0777, true);
                 }
 
-                if (move_uploaded_file($_FILES[$fd]['tmp_name'], $csv_file)) {
+                if (
+                    process_file_upload(
+                        $_FILES[$fd],
+                        new SplFileInfo($csv_file),
+                        ['allow_extensions' => ['csv']]
+                    )['success']
+                ) {
                     ?>
                     <form method="post" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
                         <?php generateFormToken("csv_user_import"); ?>

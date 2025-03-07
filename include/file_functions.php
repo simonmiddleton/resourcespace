@@ -200,18 +200,13 @@ function temp_local_download_remote_file(string $url, string $key = "")
 /**
  * Basic check of uploaded file against list of allowed extensions
  *
- * @param  array    $uploadedfile - an element from the $_FILES PHP reserved variable
- * @param  array    $validextensions   Array of valid extension strings
- * @return bool
+ * @param array{name: string} $uploadedfile An element from the $_FILES PHP reserved variable
+ * @param array $validextensions Array of valid extension strings
  */
-function check_valid_file_extension($uploadedfile, array $validextensions)
+function check_valid_file_extension(array $uploadedfile, array $validextensions): bool
 {
-    $pathinfo   = pathinfo($uploadedfile['name']);
-    $extension  = $pathinfo['extension'] ?? "";
-    if (in_array(strtolower($extension), array_map("strtolower", $validextensions)) && !is_banned_extension($extension)) {
-        return true;
-    }
-    return false;
+    $extension = parse_filename_extension($uploadedfile['name']);
+    return in_array(strtolower($extension), array_map("strtolower", $validextensions)) && !is_banned_extension($extension);
 }
 
 /**
@@ -255,6 +250,7 @@ function remove_empty_temp_directory(string $path_to_file = "")
  */
 function is_valid_upload_path(string $file_path, array $valid_upload_paths): bool
 {
+    $orig_use_error_exception_val = $GLOBALS['use_error_exception'] ?? false;
     $GLOBALS["use_error_exception"] = true;
     try {
         $file_path = realpath($file_path);
@@ -262,7 +258,7 @@ function is_valid_upload_path(string $file_path, array $valid_upload_paths): boo
         debug("Invalid file path specified" . $e->getMessage());
         return false;
     }
-    unset($GLOBALS["use_error_exception"]);
+    $GLOBALS['use_error_exception'] = $orig_use_error_exception_val;
 
     foreach ($valid_upload_paths as $valid_upload_path) {
         if (is_dir($valid_upload_path)) {
@@ -424,5 +420,182 @@ function is_safe_basename(string $val): bool
     $file_name = pathinfo($val, PATHINFO_FILENAME);
     return
         safe_file_name($file_name) === str_replace(' ', '_', $file_name)
-        && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION));
+        && !is_banned_extension(parse_filename_extension($val));
+}
+
+// phpcs:disable
+enum ProcessFileUploadErrorCondition
+{
+    case MissingSourceFile;
+    case EmptySourceFile;
+    case InvalidUploadPath;
+    case SpecialFile;
+    case InvalidExtension;
+    case MimeTypeMismatch;
+    case FileMoveFailure;
+
+    /**
+     * Translate error condition to users' language.
+     * @param array $lang Language string mapping (i.e. the global $lang var)
+     * @return string The translated version or the conditions' name if not found in the map
+     */
+    public function i18n(array $lang): string
+    {
+        return $lang["error_file_upload_cond-{$this->name}"] ?? $this->name;
+    }
+}
+// phpcs:enable
+
+/**
+ * High level function which can handle processing file uploads.
+ *
+ * @param SplFileInfo|array{name: string, full_path: string, type: string, tmp_name: string, error: int, size: int} $source
+ * @param array{
+ *      allow_extensions?: list<string>,
+ *      file_move?: 'move_uploaded_file'|'rename'|'copy',
+ *      mime_file_based_detection?: bool,
+ * } $processor Processors which can override different parts of the main logic (e.g. allow specific extensions)
+ *
+ * @return array{success: bool, error?: ProcessFileUploadErrorCondition}
+ */
+function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination, array $processor): array
+{
+    if ($source instanceof SplFileInfo) {
+        $source_file_name = $source->getFilename();
+        $source_file_path = $source->getRealPath();
+        $source_is_file = $source->isFile();
+        $source_file_size = $source_is_file ? $source->getSize() : 0;
+        $file_move_processor = $processor['file_move'] ?? 'rename';
+    } else {
+        $source_file_name = $source['name'];
+        $source_file_path = $source['tmp_name'];
+        $source_is_file = file_exists($source_file_path);
+        $source_file_size = $source_is_file ? filesize($source_file_path) : 0;
+        $file_move_processor = 'move_uploaded_file';
+
+        if (!is_uploaded_file($source['tmp_name'])) {
+            trigger_error('Invalid $source input. For files not uploaded via HTTP POST, please use SplFileInfo');
+            exit();
+        }
+    }
+
+    $fail_due_to = static fn(ProcessFileUploadErrorCondition $cond): array => ['success' => false, 'error' => $cond];
+
+    // Source validation
+    if (!$source_is_file) {
+        debug("Missing source file - {$source_file_path}");
+        return $fail_due_to(ProcessFileUploadErrorCondition::MissingSourceFile);
+    } elseif ($source_file_size === 0) {
+        return $fail_due_to(ProcessFileUploadErrorCondition::EmptySourceFile);
+    } elseif (
+        !is_valid_upload_path(
+            $source_file_path,
+            [...$GLOBALS['valid_upload_paths'], ini_get('upload_tmp_dir'), sys_get_temp_dir()]
+        )
+    ) {
+        debug("[WARN] Invalid upload path detected - {$source_file_path}");
+        return $fail_due_to(ProcessFileUploadErrorCondition::InvalidUploadPath);
+    }
+
+    // Check for "special" files
+    if (
+        array_intersect(
+            [
+                'crossdomain.xml',
+                'clientaccesspolicy.xml',
+                '.htaccess',
+                '.htpasswd',
+            ],
+            [$source_file_name]
+        ) !== []
+    ) {
+        return $fail_due_to(ProcessFileUploadErrorCondition::SpecialFile);
+    }
+
+    // Extension validation
+    $source_file_ext = parse_filename_extension($source_file_name);
+    if (
+        (
+            isset($processor['allow_extensions'])
+            && $processor['allow_extensions'] !== []
+            && !check_valid_file_extension(['name' => $source_file_name], $processor['allow_extensions'])
+        )
+        || is_banned_extension($source_file_ext)
+    ) {
+        return $fail_due_to(ProcessFileUploadErrorCondition::InvalidExtension);
+    }
+
+    // Check content (MIME) type based on the file received (don't trust the header from the upload)
+    $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
+    $mime_content_chk = $processor['mime_file_based_detection'] ?? true;
+    if ($mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, $mime_content_chk)) {
+        debug("MIME type mismatch for file '{$source_file_name}'");
+        return $fail_due_to(ProcessFileUploadErrorCondition::MimeTypeMismatch);
+    }
+
+    // Destination processing
+    $dest_path = $destination->isFile() ? $destination->getRealPath() : $destination->getPathname();
+    if ($destination->isDir()) {
+        trigger_error('Destination path must be for a file, not a directory!');
+        exit();
+    } elseif (!(is_valid_rs_path($dest_path) && is_safe_basename($destination->getBasename()))) {
+        debug("Destination path '{$dest_path}' not allowed!");
+        trigger_error('Destination path not allowed');
+        exit();
+    } elseif (array_intersect(['move_uploaded_file', 'rename', 'copy'], [$file_move_processor]) === []) {
+        trigger_error('Invalid upload (file move) processor');
+        exit();
+    } elseif ($file_move_processor($source_file_path, $dest_path)) {
+        return ['success' => true];
+    } else {
+        debug("Unable to move file uploaded FROM '{$source_file_path}' TO '$dest_path'");
+        return $fail_due_to(ProcessFileUploadErrorCondition::FileMoveFailure);
+    }
+}
+
+/**
+ * Parse file name (can include path, although it's unnecessary) to prevent known security bypasses associated with
+ * extensions, such as:
+ * - Double extensions, e.g. .jpg.php
+ * - Null bytes, e.g. .php%00.jpg, where .jpg gets truncated and .php becomes the new extension
+ * - Using Windows (DOS) 8.3 short path feature where it's possible to replace existing files by using their shortname
+ * (e.g. ".htaccess" can be replaced by "HTACCE~1")
+ */
+function parse_filename_extension(string $filename): string
+{
+    $orig_use_error_exception_val = $GLOBALS['use_error_exception'] ?? false;
+    $GLOBALS["use_error_exception"] = true;
+    try {
+        $finfo = new SplFileInfo($filename);
+    } catch (Throwable $t) {
+        debug("[WARN] Bad file '{$filename}'. Reason: {$t->getMessage()}");
+        return '';
+    }
+    $GLOBALS['use_error_exception'] = $orig_use_error_exception_val;
+
+    /*
+    Windows (DOS) 8.3 short paths (e.g. "HTACCE~1" = ".htaccess"). Example file info in such scenario:
+    Filename is: HTACCE~1
+    Path is: (note, depends if input is a file name with path)
+    Path name is: HTACCE~1
+    Real path is: C:\path\to\.htaccess
+    */
+    if (preg_match('/^[A-Z0-9]{1,6}~([A-Z0-9]?)(\.[A-Z0-9_]{1,3})?$/i', $finfo->getFilename()) === 1) {
+        if ($finfo->getRealPath() !== false && basename($finfo->getRealPath()) !== $finfo->getFilename()) {
+            return parse_filename_extension($finfo->getRealPath());
+        } else {
+            // Invalid if not a real file to avoid potential exploits
+            debug("[WARN] Windows (DOS) 8.3 short path for non-existent file '{$filename}' - considered invalid");
+            return '';
+        }
+    }
+
+    // Invalidate if it's a hidden file without an extension (e.g .htaccess or .htpasswd) which would be incorrectly
+    // picked up as an extension
+    if (trim($finfo->getBasename($finfo->getExtension())) === '.') {
+        debug("Hidden file '{$filename}' without an extension - considered invalid");
+        return '';
+    }
+
+    return $finfo->getExtension();
 }

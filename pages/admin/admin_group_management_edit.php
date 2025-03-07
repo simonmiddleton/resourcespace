@@ -75,17 +75,27 @@ if (getval("save", false) && enforcePostRequest(false)) {
             mkdir($logo_dir, 0777, true);
         }
 
-        $logo_pathinfo = pathinfo($_FILES['grouplogo']['name']);
-        $logo_extension = $logo_pathinfo['extension'];
-        $logo_filename = "{$logo_dir}/group{$ref}.{$logo_extension}";
+        $logo_extension = parse_filename_extension($_FILES['grouplogo']['name']);
+        $process_file_upload = process_file_upload(
+            $_FILES['grouplogo'],
+            new SplFileInfo("{$logo_dir}/group{$ref}.{$logo_extension}"),
+            ['allow_extensions' => ['jpg', 'jpeg', 'gif', 'svg', 'png']]
+        );
 
-        if (!in_array(strtolower($logo_extension), array("jpg","jpeg","gif","svg","png"))) {
-            $error = true;
-            $onload_message = array("title" => $lang["error"],"text" => str_replace('%EXTENSIONS', "JPG, GIF, SVG, PNG", $lang["allowedextensions-extensions"]));
-        }
-
-        if ($error || !move_uploaded_file($_FILES['grouplogo']['tmp_name'], $logo_filename)) {        // this will overwrite if already existing
+        if (!$process_file_upload['success']) {
             unset($logo_extension);
+            $error = true;
+            $onload_message = [
+                'title' => $lang['error'],
+                'text' => match ($process_file_upload['error']) {
+                    ProcessFileUploadErrorCondition::InvalidExtension => str_replace(
+                        '%EXTENSIONS',
+                        'JPG, GIF, SVG, PNG',
+                        $lang['allowedextensions-extensions']
+                    ),
+                    default => $process_file_upload['error']->i18n($lang),
+                },
+            ];
         }
     }
 

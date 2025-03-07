@@ -1205,29 +1205,23 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
         // UPLOAD
         if(getval('upload_' . $config_name, '') !== '' && enforcePostRequest(false))
             {
-            if(isset($_FILES[$config_name]['tmp_name']) && is_uploaded_file($_FILES[$config_name]['tmp_name']))
+            if(isset($_FILES[$config_name]['tmp_name']))
                 {
-                $uploaded_file_pathinfo  = pathinfo($_FILES[$config_name]['name']);
-                $uploaded_file_extension = $uploaded_file_pathinfo['extension'];
+                $uploaded_file_extension = parse_filename_extension($_FILES[$config_name]['name']);
                 $uploaded_filename       = sprintf('%s/%s.%s', $file_server_location, $config_name, $uploaded_file_extension);
                 // We add a placeholder for storage_url so we can reach the file easily 
                 // without storing the full path in the database
                 $saved_filename          = sprintf('[storage_url]/%s/%s.%s', $file_location, $config_name, $uploaded_file_extension);
 
-                if(is_banned_extension($uploaded_file_extension))
-                    {
-                    trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
-                    }
-                
-                if (count($valid_extensions) > 0 && !check_valid_file_extension($_FILES[$config_name], $valid_extensions))
-                    {
-                    trigger_error('File type not valid for this selection. Please choose from ' . implode(', ', $valid_extensions) . '.');
-                    }
+                $process_file_upload = process_file_upload(
+                    $_FILES[$config_name],
+                    new SplFileInfo($uploaded_filename),
+                    ['allow_extensions' => $valid_extensions]
+                );
 
-                if(!move_uploaded_file($_FILES[$config_name]['tmp_name'], $uploaded_filename))
-                    {
+                if (!$process_file_upload['success']) {
                     unset($uploaded_filename);
-                    }
+                }
                 }
 
             if(isset($uploaded_filename) && set_config_option(null, $config_name, $saved_filename))
@@ -2003,7 +1997,7 @@ function config_add_fixed_input(string $label, string $value, string $helptext =
  * @param  string  $find            Value from getval("find", "")
  * @param  string  $only_modified   Value from getval("only_modified", "no")
  */
-function render_config_filter_by_search(string $find = '', string $only_modified = ''): void
+function render_config_filter_by_search(string $find, string $only_modified): void
 {
     global $lang;
 
@@ -2040,7 +2034,7 @@ function render_config_filter_by_search(string $find = '', string $only_modified
  * @param  string    $find            Value from getval("find", "")
  * @param  string    $only_modified   Value from getval("only_modified", "no")
  */
-function config_filter_by_search(array $page_def, ?int $userref = null, string $find = '', string $only_modified = ''): array
+function config_filter_by_search(array $page_def, ?int $userref, string $find, string $only_modified): array
 {
     $only_modified = $only_modified == 'yes';
     $searching = $find != "" || $only_modified;

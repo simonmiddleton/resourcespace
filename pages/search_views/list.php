@@ -96,20 +96,27 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
         ) {
             ?>
                 <td nowrap>
-                    <?php
-                    if ($x == 0) { // add link to first item only ?>
-                        <div class="ListTitle">
+                    <div
+                        <?php 
+                        echo ($x == 0) ? "class=\"ListTitle\"" : "";
+                        echo (strlen(i18n_get_translated($value)) > $results_title_trim) ? "title='" . escape(i18n_get_translated($value)) . "'" : ""; 
+                        ?>
+                    >
+                        <?php
+                        if ($x == 0) { // add link to first item only ?>
                             <a
                                 href="<?php echo $url?>" 
                                 onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"
                             >
-                        <?php
-                    } //end link conditional
-                    echo highlightkeywords(escape(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim)), $search, $df[$x]['partial_index'], $df[$x]['name'], $df[$x]['indexed']);
-                    if ($x == 0) { // add link to first item only ?>
-                        </a>
-                        <?php
-                    } //end link conditional ?>
+                        <?php } 
+                        
+                        echo highlightkeywords(escape(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim)), $search, $df[$x]['partial_index'], $df[$x]['name'], $df[$x]['indexed']);
+                        
+                        if ($x == 0) { ?>
+                            </a>
+                        <?php 
+                        } ?>
+
                     </div>
                 </td>
             <?php

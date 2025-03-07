@@ -462,7 +462,7 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
  * @param  int  $resource  ResourceSpace resource ID
  * @return bool|string      False if no ID found, otherwise the Media Master ID is returned
  */
-function tms_get_mediamasterid(bool $create=true,int $resource=null)
+function tms_get_mediamasterid(bool $create = true, ?int $resource = null)
   {
   global $conn, $errormessage, $tms_link_tms_loginid,$tms_link_mediapaths_resource_reference_column ;
   // Get the latest inserted ID that we have not used

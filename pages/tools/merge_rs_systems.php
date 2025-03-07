@@ -760,11 +760,16 @@ if ($import && isset($folder_path)) {
             continue;
         }
 
-        $found_uref = get_user_by_username($user["username"]);
-        if ($found_uref !== false) {
-            $found_udata = get_user($found_uref);
+        if (
+            (($found_udata = get_user((int) get_user_by_username($user['username']))) && $found_udata !== false)
+            || (
+                $user['email'] != ''
+                && ($found_udata = get_user((int) get_user_by_username($user['email'])))
+                && $found_udata !== false
+            )
+        ) {
             logScript("Username '{$user["username"]}' found in current system as '{$found_udata["username"]}', full name '{$found_udata["fullname"]}'");
-            $process_user_preferences($found_uref, $user);
+            $process_user_preferences($found_udata['ref'], $user);
             continue;
         }
 
