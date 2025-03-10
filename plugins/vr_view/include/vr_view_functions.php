@@ -19,10 +19,10 @@ function VrViewUseVR($resource)
         return false;
         }
         
-    if($vr_view_projection_field != 0)
+    if(!empty($vr_view_projection_field))
         {
         $fieldtype = get_resource_type_field($vr_view_projection_field);
-        if(in_array($fieldtype['type'],$NODE_FIELDS))
+        if(is_array($fieldtype) && in_array($fieldtype['type'],$NODE_FIELDS))
             {
             $resnodes = get_resource_nodes($resource["ref"], $vr_view_projection_field, true);
             $resvals = array_column($resnodes,"name");
@@ -55,10 +55,10 @@ function VrViewRenderPlayer($ref,$source, $isvideo = false,$width=852, $height=6
     
     // Check for stereo value 
     $stereo = false;
-    if($vr_view_stereo_field !=0 )
+    if(!empty($vr_view_stereo_field))
         {   
         $stereofieldtype = get_resource_type_field($vr_view_stereo_field);
-        if(in_array($stereofieldtype['type'],$NODE_FIELDS))
+        if(is_array($stereofieldtype) && in_array($stereofieldtype['type'],$NODE_FIELDS))
             {
             $resnodes = get_resource_nodes($ref, $vr_view_stereo_field, true);
             $resvals = array_column($resnodes,"name");
@@ -77,10 +77,10 @@ function VrViewRenderPlayer($ref,$source, $isvideo = false,$width=852, $height=6
         
     // Check for yaw only  value
     $yaw_only = false;
-    if($vr_view_yaw_only_field !=0 )
+    if(!empty($vr_view_yaw_only_field))
         {   
         $stereofieldtype = get_resource_type_field($vr_view_yaw_only_field);
-        if(in_array($stereofieldtype['type'],$NODE_FIELDS))
+        if(is_array($stereofieldtype) && in_array($stereofieldtype['type'],$NODE_FIELDS))
             {
             $resnodes = get_resource_nodes($ref, $vr_view_yaw_only_field, true);
             $resvals = array_column($resnodes,"name");

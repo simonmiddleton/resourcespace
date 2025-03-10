@@ -846,8 +846,12 @@ final class IIIFRequest
                             $this->errors[] = "Invalid tile size requested";
                             $this->triggerError(400);
                         }
-
-                        $this->request["getsize"] = "tile_" . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh;
+                        if ($this->getheight === 0) {
+                            $scale = ceil($this->regionw / $this->getwidth);
+                        } else {
+                            $scale = ceil($this->regionh / $this->getheight);
+                        }
+                        $this->request["getsize"] = "tile_" . $scale . "_" . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh;
                         debug("IIIF: " . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh);
                     } else {
                         if ($this->getheight == 0) {
@@ -875,7 +879,8 @@ final class IIIFRequest
                 } elseif ($this->request["size"] == "full"  || $this->request["size"] == "max" || $this->request["size"] == "thm") {
                     if ($tile_request) {
                         if ($this->request["size"] == "full"  || $this->request["size"] == "max") {
-                            $this->request["getsize"] = "tile_" . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh;
+                            $scale = ceil($this->regionw / $this->preview_tile_size);
+                            $this->request["getsize"] = "tile_" . $scale . "_" . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh;
                             $this->request["getext"] = "jpg";
                         } else {
                             $this->errors[] = "Invalid tile size requested";
@@ -920,6 +925,10 @@ final class IIIFRequest
                 if (!isset($this->errorcode)) {
                     // Request is supported, send the image
                     $imgpath = get_resource_path($this->request["id"], true, $this->request["getsize"], false, $this->request["getext"]);
+                    if ($tile_request && !file_exists($imgpath)) {
+                        // Support older tiles witout scale factor in ID that may not have been recreated
+                        $imgpath = preg_replace("/(tile_\\d+_)/", "tile_", $imgpath);
+                    }
                     $imgfound = false;
                     debug("IIIF: image path: " . $imgpath);
                     if (file_exists($imgpath)) {

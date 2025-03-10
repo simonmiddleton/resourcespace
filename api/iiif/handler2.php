@@ -223,12 +223,18 @@ if (count($xpath) == 1 && $xpath[0] == "") {
                                ($getheight == $preview_tile_size && $getwidth == $preview_tile_size)
                         ) {
                             $valid_tile = true;
+                            if ($getheight === 0) {
+                                $scale = ceil($regionw / $getwidth);
+                            } else {
+                                $scale = ceil($regionh / $getheight);
+                            }
+
                         } else {
                             $errors[] = "Invalid tile size requested";
                             iiif_error(400, $errors);
                         }
 
-                        $getsize = "tile_" . $regionx . "_" . $regiony . "_" . $regionw . "_" . $regionh;
+                        $getsize = "tile_" . $scale . "_" . $regionx . "_" . $regiony . "_" . $regionw . "_" . $regionh;
                         $getext = "jpg";
 
                         debug("IIIF" . $regionx . "_" . $regiony . "_" . $regionw . "_" . $regionh);
@@ -300,6 +306,10 @@ if (count($xpath) == 1 && $xpath[0] == "") {
                 if (!isset($errorcode)) {
                     // Request is supported, send the image
                     $imgpath = get_resource_path($resourceid, true, $getsize, false, $getext);
+                    if ($tile_request && !file_exists($imgpath)) {
+                        // Support older tiles witout scale factor in ID that may not have been recreated
+                        $imgpath = preg_replace("/(tile_\\d+_)/", "tile_", $imgpath);
+                    }
                     debug("IIIF: image path: " . $imgpath);
                     if (file_exists($imgpath)) {
                         $imgfound = true;
