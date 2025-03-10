@@ -707,13 +707,18 @@ function collection_readable($collection)
     $attached = ps_array("SELECT user value FROM user_collection WHERE collection = ?", ["i",$collection]);
     $attached_groups = ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection = ?", ["i",$collection]);
 
+    include_once 'request_functions.php';
+    $request_collections = array_column(get_requests(), 'collection');
+
     # Access if collection_commenting is enabled and request feedback checked
     # Access if it's a public collection (or featured collection to which user has access to)
+    # Access if the user is managing a request for a collection
     # Access if k is not empty or option to ignore collection access is enabled and k is empty
     if (
         ($collection_commenting && $collectiondata['request_feedback'] == 1)
         || $collectiondata['type'] == COLLECTION_TYPE_PUBLIC
         || ($collectiondata['type'] == COLLECTION_TYPE_FEATURED && featured_collection_check_access_control($collection))
+        || in_array($collection, $request_collections)
         || $k != ""
         || ($k == "" && $ignore_collection_access)
     ) {
@@ -3845,7 +3850,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     }
 
     // Download option
-    if ($min_access == 0) {
+    if ($min_access == 0 || ($min_access == 1 && collection_can_download($collection_data['ref'], ''))) {
         if ($download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0) {
             $download_url = generateURL($baseurl_short . "pages/download_usage.php", $urlparams);
             $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php", $urlparams, array("url" => $download_url));
@@ -6547,4 +6552,28 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
     sql_reorder_records('collection', $new_fcs_order);
 
     return $new_fcs_order;
+}
+
+/**
+ * Check whether an entire colleciton is eligible to be downloaded 
+ * 
+ */
+
+function collection_can_download($ref, $size) 
+{
+    $min_access = collection_min_access($ref);
+
+    if ($min_access == 0) {
+        return true;
+    }
+
+    $resources  = do_search("!collection{$ref}", '', 'relevance', 0, -1, 'desc', false, '', false, '', '', false, false, true);
+    $resourse_types = array_column($resources, 'resource_type');
+    foreach ($resourse_types as $type) {
+        if (checkperm('X' . $type . "_" . $size)) {
+            return false;
+        }
+    }
+
+    return true;
 }
