@@ -203,10 +203,11 @@ $used_resources=array();
 $subbed_original_resources = array();
 if ($submitted) {
     if ($exiftool_write && !$force_exiftool_write_metadata && !$collection_download_tar) {
-        $exiftool_write_option = getval('write_metadata_on_download', '') == "true";
+        $exiftool_write_option = getval('write_metadata_on_download', '') == "yes";
     }
 
-    $collection_download_data = array(
+    $collection_download_data = [
+        'archiver'                  => $archiver,
         'collection'                => $collection,
         'collectiondata'            => $collectiondata,
         'collection_resources'      => $result,
@@ -224,7 +225,7 @@ if ($submitted) {
         'include_alternatives'      => $include_alternatives,
         'collection_download_tar'   => $collection_download_tar,
         'k'                         => $k,
-    );
+    ];
 
 
     if (!$collection_download_tar && $offline_job_queue) {
@@ -254,142 +255,15 @@ if ($submitted) {
     
     $zipinfo = process_collection_download($collection_download_data);
 
-
-
-    //             # if the tmpfile is made, from here on we are working with that. 
-                
-    //             # If using original filenames when downloading, copy the file to new location so the name is included.
-    //             $filename=get_download_filename($ref,$usesize,0,$pextension);
-    //             collection_download_use_original_filenames_when_downloading($filename, $ref, $collection_download_tar, $filenames,$id);
-
-    //             if (hook("downloadfilenamealt")) {
-    //                 $filename = hook("downloadfilenamealt");
-    //             }
-
-    //             collection_download_process_text_file($ref, $collection, $filename);
-
-    //             hook('modifydownloadfile');
-                                
-    //             $path.=$p . "\r\n"; 
-                
-    //             if($collection_download_tar)
-    //                 {
-    //                 $ln_link_name = $usertempdir . DIRECTORY_SEPARATOR . $filename;
-
-    //                 /*
-    //                 There is unexpected behaviour when a folder contains more than 70,000 symbolic links/ files in it.
-    //                 By splitting result set in batches of 1000, this should address that problem. Up to 10,000 resources
-    //                 in a collection proved to work ok and relatively faster when not splitting in subfolders.
-    //                 */
-    //                 if(count($result) > 10000)
-    //                     {
-    //                     // Generate folder name
-    //                     $low_limit      = (floor($ref / 1000) * 1000) + 1;
-    //                     $high_limit     = (ceil($ref / 1000) * 1000);
-    //                     $symlink_folder = "{$usertempdir}" . DIRECTORY_SEPARATOR . "RS_{$low_limit}_to_{$high_limit}";
-
-    //                     if(!is_dir($symlink_folder))
-    //                         {
-    //                         mkdir($symlink_folder, 0777, true);
-    //                         }
-
-    //                     $ln_link_name = $symlink_folder . DIRECTORY_SEPARATOR . $filename;
-    //                     }
-
-    //                 // Add link to file for use by tar to prevent full paths being included.
-    //                 debug("collection_download adding symlink: {$p} - {$ln_link_name}");
-    //                 $GLOBALS["use_error_exception"] = true;
-    //                 try {
-    //                     symlink($p, $ln_link_name);
-    //                 } catch (Exception $e) {
-    //                     debug("collection_download symlink: {$p} - {$ln_link_name} ERROR-".$e->getMessage());
-    //                 }
-    //                 unset($GLOBALS["use_error_exception"]); 
-    //                 }
-    //             elseif ($use_zip_extension)
-    //                 {
-    //                 $zip->addFile($p,$filename);
-    //                 update_zip_progress_file("file ".$zip->numFiles);
-    //                 }
-    //             else
-    //                 {
-    //                 update_zip_progress_file("file ".$n);
-    //                 }
-
-    //             collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize, $email);
-    //             }
-    //         }
-
-    //     }
-    // // Collection contains data_only resource types
-    // if(0 < $count_data_only_types)
-    //     {
-    //     collection_download_process_data_only_types($result, $id, $collection_download_tar, $usertempdir, $zip, $path, $deletion_array);
-    //     }
-    // if('' == $path)
-    //     {
-    //     update_zip_progress_file('nothing_to_download');
-    //     exit(escape($lang['nothing_to_download']));
-    //     }
-
-    // collection_download_process_summary_notes(
-    //     $result,
-    //     $available_sizes,
-    //     $text,
-    //     $subbed_original_resources,
-    //     $used_resources,
-    //     $id,
-    //     $collection,
-    //     $collectiondata,
-    //     $collection_download_tar,
-    //     $usertempdir,
-    //     $filename,
-    //     $path,
-    //     $deletion_array,
-    //     $size,
-    //     $zip);
-
-    // if($include_csv_file)
-    //     {
-    //     collection_download_process_csv_metadata_file(
-    //         $result,
-    //         $id,
-    //         $collection,
-    //         $collection_download_tar,
-    //         $use_zip_extension,
-    //         $zip,
-    //         $path,
-    //         $deletion_array);
-    //     }
-
-    // collection_download_process_command_to_file($use_zip_extension, $collection_download_tar, $id, $collection, $size, $path);
-
-    // if ($collection_download_tar) {
-    //     $suffix = '.tar';
-    // } elseif ($archiver) {
-    //     $suffix = '.' . $collection_download_settings[$settings_id]['extension'];
-    // } else {
-    //     $suffix = '.zip';
-    // }
-
-    // collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
-        
-    // $completed = collection_download_process_archive_command($collection_download_tar, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
-
-
-
+    if (empty($zipinfo)) {
+        error_alert(escape($lang["download_limit_collection_error"]), true,200);
+    }
     if ($zipinfo["completed"] ?? false) {
         // A tar file was requested. Nothing further to do.
         collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", "tar - " . $size);
         exit();
     } else {
-
-        //TODO - move to function
-        //collection_download_clean_temp_files($deletion_array);
-
-        # Get the file size of the archive.
-
-        // exit($zipinfo["path"]);
+        // Get the file size of the archive.
         $filesize = filesize_unlimited($zipinfo["path"]);
 
         header("Content-Disposition: attachment; filename=" . $zipinfo["filename"]);
@@ -405,12 +279,9 @@ if ($submitted) {
 
         ignore_user_abort(true); // collection download has a problem with leaving junk files when this script is aborted client side. This seems to fix that by letting the process run its course.
         set_time_limit(0);
-
-        # New method
         $sent = 0;
         $handle = fopen($zipinfo["path"], "r");
-
-        // Now we need to loop through the file and echo out chunks of file data
+        // Now loop through the file and echo out chunks of file data
         while ($sent < $filesize) {
             echo fread($handle, $download_chunk_size);
             $sent += $download_chunk_size;
@@ -523,10 +394,7 @@ hook('collectiondownloadintro');
                 <?php
             }
 
-        if (
-            $zipped_collection_textfile == "true"
-            && !hook('collectiondownloadtextfile')
-            ) { 
+        if ($zipped_collection_textfile) { 
                 ?>
         <div class="Question">
         <label for="includetext"><?php echo escape($lang["zippedcollectiontextfile"]); ?></label>
