@@ -1308,6 +1308,17 @@ div.video-js {margin:auto;}
     background-color: transparent !important;
 }
 
+.video-js .vjs-loop-button .vjs-icon-placeholder:before {
+    font-family: VideoJS;
+    content: "\f116";
+    font-weight: 400;
+    font-style: normal;
+}
+
+.video-js .vjs-loop-button.vjs-loop-active .vjs-icon-placeholder:before {
+    border-bottom: 2px solid white; 
+}
+
 /* Modals */
 
 #modal_overlay {
