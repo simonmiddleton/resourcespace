@@ -116,7 +116,7 @@ for ($n=0;$n<count($result);$n++)
     $access=get_resource_access($result[$n]);
     
     # Get all possible sizes for this resource. If largest available has been requested then include internal or user could end up with no file depite being able to see the preview
-    $sizes=get_all_image_sizes($size=="largest",$access>=1);
+    $sizes = get_all_image_sizes($size=="largest",$access>=1);
 
     #check availability of original file 
     $p=get_resource_path($ref,true,"",false,$result[$n]["file_extension"]);

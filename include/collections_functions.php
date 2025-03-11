@@ -4487,12 +4487,11 @@ function collection_download_process_text_file(array $dl_data, int $ref, string 
  * @param  array    $dl_data                Array of collection download data passed from process_collection_download() 
  * @param  string   $tmpfile                Temp download file path
  * @param  integer  $ref                    The resource ID
- * @param  string   $size                   ID of size requested e.g. "" for original, "scr", "pre" etc.
  * @param  string   $email                  Email address of downloader
  *
  * @return void
  */
-function collection_download_log_resource_ready(array $dl_data, $tmpfile, $ref, $size, string $email = "")
+function collection_download_log_resource_ready(array $dl_data, $tmpfile, $ref, string $email = "")
 {
     // Build an array of paths so we can clean up any exiftool-modified files.
     if ($tmpfile !== false && file_exists($tmpfile)) {
@@ -4503,7 +4502,7 @@ function collection_download_log_resource_ready(array $dl_data, $tmpfile, $ref, 
     $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email : "";
     resource_log($ref, LOG_CODE_DOWNLOADED, 0, (string) $dl_data['usagecomment'] . $email_add_to_log, "", "", (int) $dl_data['usage']);
 
-    # update hit count if tracking downloads only
+    // Udate hit count if tracking downloads only
     if ($GLOBALS["resource_hit_count_on_downloads"]) {
         # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
         ps_query("UPDATE resource SET new_hit_count=GREATEST(hit_count,new_hit_count)+1 WHERE ref=?", ["i", $ref]);
@@ -4553,7 +4552,7 @@ function collection_download_process_data_only_types(array $dl_data, &$zip)
 
             // Go and add file to archive
             if ($dl_data['collection_download_tar']) {
-                // Add a link to pdf
+                // Add a link to the pdf
                 $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $dl_data['id']);
                 symlink($pdf_file_path, $usertempdir . DIRECTORY_SEPARATOR  . $pdf_filename);
             } elseif ($GLOBALS["use_zip_extension"]) {
@@ -4562,19 +4561,17 @@ function collection_download_process_data_only_types(array $dl_data, &$zip)
             } else {
                 $dl_data['includefiles'][] = $pdf_file_path . "\r\n";
             }
-             $dl_data['deletion_array'][] = $pdf_file_path;
+            $dl_data['deletion_array'][] = $pdf_file_path;
+            
+            daily_stat('Resource download', $result[$n]['ref']);
+            resource_log($result[$n]['ref'], 'd', 0, $GLOBALS['lang']['pdffile'] . " - " . $dl_data['usagecomment'], '', '',(int) $dl_data['usage']);
+
+            if ($GLOBALS["resource_hit_count_on_downloads"]) {
+                $resource_ref_escaped = $result[$n]['ref'];
+                ps_query("UPDATE resource SET new_hit_count = GREATEST(hit_count, new_hit_count) + 1 WHERE ref = ?", array("i",$resource_ref_escaped));
+            }
 
             continue;
-        }
-
-        daily_stat('Resource download', $result[$n]['ref']);
-        resource_log($result[$n]['ref'], 'd', 0, $dl_data['usagecomment'], '', '',(int) $dl_data['usage']);
-
-        if ($GLOBALS["resource_hit_count_on_downloads"]) {
-            /*greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero
-            to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).*/
-            $resource_ref_escaped = $result[$n]['ref'];
-            ps_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = ?", array("i",$resource_ref_escaped));
         }
     }
 }
@@ -6602,6 +6599,7 @@ function process_collection_download(array $dl_data): array
         }
     }
 
+    db_begin_transaction("collection_download"); // Ensure all log updates are committed at once
     for ($n = 0; $n < $rescount; $n++) {
         if (!isset($collection_resources[$n]["resource_type"])) {
             // Resource data is not present - e.g. an offline job
@@ -6883,25 +6881,15 @@ function process_collection_download(array $dl_data): array
             }
         }
 
-        collection_download_log_resource_ready($dl_data, $tmpfile, $ref, $usesize);
+        collection_download_log_resource_ready($dl_data, $tmpfile, $ref);
     }
 
     if (0 < $count_data_only_types) {
-        collection_download_process_data_only_types($dl_data, $id, false, $zip);
+        collection_download_process_data_only_types($dl_data, $zip);
     }
-
-
-    collection_download_process_summary_notes(
-        $dl_data,
-        $filename,
-        $zip
-    );
-
+    collection_download_process_summary_notes($dl_data, $filename, $zip);
     if ($include_csv_file == 'yes') {
-        collection_download_process_csv_metadata_file(
-            $dl_data,
-            $zip
-        );
+        collection_download_process_csv_metadata_file($dl_data, $zip);
     }
 
     $archiver = ($GLOBALS["archiver_fullpath"] != false)
@@ -6919,6 +6907,8 @@ function process_collection_download(array $dl_data): array
     collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
     $completed = collection_download_process_archive_command($dl_data, $zip, $filename, $archiver);
     collection_download_clean_temp_files($dl_data['deletion_array']);
+
+    db_end_transaction("collection_download");
 
     return [
         "filename"  => $filename,
