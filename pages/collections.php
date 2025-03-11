@@ -923,25 +923,20 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                                         >
                                             <?php
                                             $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                                            if (
-                                                $result[$n]['has_image'] !== RESOURCE_PREVIEWS_NONE
-                                                && ( ($open_access_for_contributor && $userref == $result[$n]['created_by'])
-                                                    || !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size) )
-                                                && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
-                                            ) {
-                                                $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
-                                                ?>
-                                                <img
-                                                    class="CollectionPanelThumb"
-                                                    border=0
-                                                    src="<?php echo $colimgpath; ?>"
-                                                    title="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
-                                                    alt="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
-                                                    <?php if ($retina_mode) { ?>
-                                                        onload="this.width/=2;this.onload=null;"
-                                                    <?php } ?>
-                                                />
-                                                <?php
+                                            $colimgpath = get_resource_preview($result[$n], [$colimg_preview_size]);
+                                            if ($colimgpath !== false) {
+                                            ?>
+                                            <img
+                                                class="CollectionPanelThumb"
+                                                border=0
+                                                src="<?php echo $colimgpath['url']; ?>"
+                                                title="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
+                                                alt="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
+                                                <?php if ($retina_mode) { ?>
+                                                    onload="this.width/=2;this.onload=null;"
+                                                <?php } ?>
+                                            />
+                                            <?php
                                             } else {
                                                 echo get_nopreview_html((string) $result[$n]["file_extension"], $result[$n]["resource_type"]);
                                             }
