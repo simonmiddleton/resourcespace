@@ -1649,12 +1649,12 @@ if($annotate_enabled)
     {
     ?>
     <!-- Annotorious -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css", ['v' => $css_reload_key]); ?>" />
+    <script src="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/annotorious.min.js", ['v' => $css_reload_key]); ?>"></script>
 
     <!-- Annotorious plugin(s) -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css", ['v' => $css_reload_key]); ?>" />
+    <script src="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js", ['v' => $css_reload_key]); ?>"></script>
     <?php
     if ($facial_recognition_active) {
         ?>
