@@ -3850,7 +3850,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     }
 
     // Download option
-    if ($min_access == 0 || ($min_access == 1 && collection_can_download($collection_data['ref'], ''))) {
+    if ($min_access == 0) {
         if ($download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0) {
             $download_url = generateURL($baseurl_short . "pages/download_usage.php", $urlparams);
             $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php", $urlparams, array("url" => $download_url));
@@ -6552,28 +6552,4 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
     sql_reorder_records('collection', $new_fcs_order);
 
     return $new_fcs_order;
-}
-
-/**
- * Check whether an entire colleciton is eligible to be downloaded 
- * 
- */
-
-function collection_can_download($ref, $size) 
-{
-    $min_access = collection_min_access($ref);
-
-    if ($min_access == 0) {
-        return true;
-    }
-
-    $resources  = do_search("!collection{$ref}", '', 'relevance', 0, -1, 'desc', false, '', false, '', '', false, false, true);
-    $resourse_types = array_column($resources, 'resource_type');
-    foreach ($resourse_types as $type) {
-        if (checkperm('X' . $type . "_" . $size)) {
-            return false;
-        }
-    }
-
-    return true;
 }
