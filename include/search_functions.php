@@ -2036,7 +2036,7 @@ function get_filter_sql($filterid)
     return false;
 }
 
-function split_keywords($search, $index = false, $partial_index = false, $is_date = false, $is_html = false, $keepquotes = false)
+function split_keywords($search, $index = false, $partial_index = false, $is_date = false, $is_html = false, $keepquotes = false, $preserve_separators = false)
 {
     # Takes $search and returns an array of individual keywords.
     global $permitted_html_tags, $permitted_html_attributes;
@@ -2090,7 +2090,7 @@ function split_keywords($search, $index = false, $partial_index = false, $is_dat
         } elseif (strpos($ns, "startdate") !== false || strpos($ns, "enddate") !== false) {
             $return = explode(",", $ns);
         } else {
-            $ns = cleanse_string($ns, false, !$index, $is_html);
+            $ns = cleanse_string($ns, $preserve_separators, !$index, $is_html);
             $return = explode(" ", $ns);
         }
         // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
@@ -2299,7 +2299,7 @@ function highlightkeywords($text, $search, $partial_index = false, $field_name =
         # Generate the cache of search keywords (no longer global so it can test against particular fields.
         # a search is a small array so I don't think there is much to lose by processing it.
         $hlkeycache = array();
-        $s = split_keywords($search);
+        $s = split_keywords($search, false, false, false, false, false, true);
     for ($n = 0; $n < count($s); $n++) {
         if (strpos($s[$n], ":") !== false) {
             $c = explode(":", $s[$n]);
