@@ -88,18 +88,19 @@ for ($n = 0; $n < $totalresources; $n++) {
 
     $parameters = array("i",$newref, "i",$ref);
     # Update the ref on following tables
-    ps_query("update resource set ref=? where ref=?", $parameters);
-    ps_query("update annotation set resource=? where resource=?", $parameters);
-    ps_query("update collection_resource set resource=? where resource=?", $parameters);
-    ps_query("update comment set resource_ref=? where resource_ref=?", $parameters);
-    ps_query("update resource_license set resource=? where resource=?", $parameters);
-    ps_query("update resource_alt_files set resource=? where resource=?", $parameters);
-    ps_query("update resource_consent set resource=? where resource=?", $parameters);
-    ps_query("update resource_custom_access set resource=? where resource=?", $parameters);
-    ps_query("update resource_data set resource=? where resource=?", $parameters);
-    ps_query("update resource_dimensions set resource=? where resource=?", $parameters);
-    ps_query("update resource_keyword set resource=? where resource=?", $parameters);
-    ps_query("update resource_log set resource=? where resource=?", $parameters);
-    ps_query("update resource_node set resource=? where resource=?", $parameters);
-    ps_query("update resource_related set resource=? where resource=?", $parameters);
+    ps_query("UPDATE resource SET ref=? WHERE ref=?", $parameters);
+    ps_query("UPDATE annotation SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE collection_resource SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE comment SET resource_ref=? WHERE resource_ref=?", $parameters);
+    ps_query("UPDATE resource_license SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_alt_files SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_consent SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_custom_access SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_dimensions SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_keyword SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_log SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_node SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_related SET resource=? WHERE resource=?", $parameters);
+    ps_query("UPDATE resource_related SET related=? WHERE related=?", $parameters);
+
 }
