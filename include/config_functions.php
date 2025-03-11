@@ -376,10 +376,11 @@ function process_config_options($user_id = null)
             $param_value = $config_option['value'];
 
             // Prepare the value since everything is stored as a string
-            if (is_numeric($param_value) && '' !== $param_value)
-                {
+            if (is_numeric($param_value) && '' !== $param_value) {
                 $param_value = (int) $param_value;
-                }
+            } elseif (validate_digit_csv($param_value)) {
+                $param_value = array_map('intval', explode(',', $param_value));
+            }
 
             $GLOBALS[$config_option['parameter']] = $param_value;
             }
@@ -1097,22 +1098,18 @@ function config_generate_AutoSaveConfigOption_function($post_url)
         jQuery('#AutoSaveStatus-' + option_name).html('<?php echo escape($lang["saving"]); ?>');
         jQuery('#AutoSaveStatus-' + option_name).show();
 
+        let option_value = jQuery('#' + option_name).val();
         if (jQuery('input[name=' + option_name + ']').is(':checkbox')) {
-            let option_value = jQuery('input[name=' + option_name + ']:checked')
+            option_value = jQuery('input[name=' + option_name + ']:checked')
                 .map(() => jQuery(this).val())
                 .get()
                 .toString();
         } else if (jQuery('input[name="' + option_name + '[]"]')) {
-            console.log(
-                jQuery('input[name="' + option_name + '[]"]:checked')
-                    // .map(() => jQuery(this).val())
-            );
-            let option_value = '';
-        } else {
-            let option_value = jQuery('#' + option_name).val();
+            option_value = jQuery('input[name="' + option_name + '[]"]:checked')
+                .map((idx, el) => jQuery(el).val())
+                .get()
+                .toString();
         }
-
-        return true; // Temporary - remove once done
 
         var post_url  = '<?php echo $post_url; ?>';
         var post_data = {
