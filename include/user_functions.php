@@ -3624,3 +3624,34 @@ function cors_is_origin_allowed(string $origin, array $whitelist): bool  {
     }
     return false;
 }
+
+/**
+ * Delete a user group and associated records.
+ *
+ * @param  int   $usergroup_ref
+ */
+function delete_usergroup(int $usergroup_ref): bool
+{
+    global $has_dependants;
+    if (is_null($has_dependants)) {
+        # Additional lookup if this data isn't already available. Don't allow user group deletion if it is a parent group or if it has users.
+        $dependant_user_count = ps_value("select count(*) as value from user where usergroup = ?", array("i", $usergroup_ref), 0);
+        $dependant_groups = ps_value("select count(*) as value from usergroup where parent = ?", array("i", $usergroup_ref), 0);
+        $has_dependants = $dependant_user_count + $dependant_groups > 0;
+    }
+
+    if ($has_dependants) {
+        return false;
+    }
+
+    ps_query("delete from usergroup where ref = ?", array("i", $usergroup_ref));
+    log_activity('', LOG_CODE_DELETED, null, 'usergroup', null, $usergroup_ref);
+
+    # No need to keep any records of language content for this user group
+    ps_query('DELETE FROM site_text WHERE specific_to_group = ?', array("i", $usergroup_ref));
+
+    # Remove dash tiles related to deleted user group. Don't delete from dash_tile as they maybe in use elsewhere.
+    ps_query("DELETE FROM usergroup_dash_tile WHERE usergroup = ?", ['i', $usergroup_ref]);
+
+    return true;
+}
