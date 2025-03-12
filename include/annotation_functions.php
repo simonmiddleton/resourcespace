@@ -303,7 +303,7 @@ function createAnnotation(array $annotation)
     $resource_type_field = $annotation['resource_type_field'];
     $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
     $tags                = $annotation['tags'] ?? [];
-    // todo: the text property is what holds the normal annotation comments.
+    // todo: the text property is what holds the normal annotation comments. It will be empty when used to search for a fields' options - it has double purpose
     // Note: tags will not exist in that case. Annotations comments and tagging with fields should be mutually exclusive - TBC.
     $text = $annotation['text'] ?? '';
 
@@ -571,4 +571,10 @@ function get_annotorious_lang(array $map): array
             'annotorious_type_to_search_field' => 1,
         ]
     );
+}
+
+/** Get all ResourceSpace config options relevant for the Annotorious (RSTagging) plugin functionality. */
+function get_annotorious_resourcespace_config(): array
+{
+    return array_intersect_key($GLOBALS, ['comments_resource_enable' => 1]);
 }

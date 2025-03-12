@@ -456,6 +456,7 @@ if(count(canSeeAnnotationsFields()) > 0 && isset($image_height) && isset($image_
                 resource            : <?php echo (int) $ref; ?>,
                 read_only           : false,
                 lang: <?php echo json_encode(get_annotorious_lang($lang)); ?>,
+                rs_config: <?php echo json_encode(get_annotorious_resourcespace_config()); ?>,
                 // First page of a document is exactly the same as the preview
                 page                : <?php echo 1 >= $page ? 0 : (int) $page; ?>,
                 // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
