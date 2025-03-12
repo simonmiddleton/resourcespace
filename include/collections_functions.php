@@ -6519,8 +6519,20 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
  * @return array            Array of data about the created file and the download file name i.e. 
  *                          [
  *                              "filename" => [the name of download file],
+ *                              "collection" => [Collection ID],
+ *                              "collection_resources" => [Resources to include in download],
+ *                              "collectiondata" => [Collection data],
  *                              "path" => [path to the zip file],
- *                              "id" => [unique identifier - used to create a download.php link that is specific to the user],
+ *                              "exiftool_write_option" => [Write exif data?],
+ *                              "useoriginal" => [Use original if requested size not available?],
+ *                              "id" => [unique identifier - [used to create a download.php link that is specific to the user],
+ *                              "size" => [Requested Download size ID],
+ *                              "settings_id" => [Index of selected option from $collection_download_settings],
+ *                              "deletion_array" => [Array of paths to delete],
+ *                              "include_csv_file" => [Include metadata CSV file?],
+ *                              "include_alternatives" => [Include alternative files?],
+ *                              "collection_download_tar" => [Generate a TAR file?],
+ *                              "count_data_only_types" => [Count of data only resources],
  *                          ];
  */
 function process_collection_download(array $dl_data): array
@@ -6540,8 +6552,6 @@ function process_collection_download(array $dl_data): array
     $include_csv_file           = (bool) $dl_data['include_csv_file'] ?? false;
     $include_alternatives       = (bool) $dl_data['include_alternatives'] ?? false;
     $collection_download_tar    = (bool) ($dl_data['collection_download_tar'] ?? false);
-
-    debug('\$collection_download_tar =' . ($collection_download_tar ? "TRUE" : "FALSE"));
 
     if (empty($collectiondata) && $collection > 0) {
         $collectiondata = get_collection($collection);
