@@ -55,10 +55,26 @@ if (!$has_dependants && getval("deleteme", false) && enforcePostRequest(false)) 
     exit;
 }
 
+$record = get_usergroup($ref);
+$selected_usergroup_permissions = explode(',', $record['permissions']);
+
 # Rendering of user group preferences area.
 $yes_no_options = array($lang['no'], $lang['yes']);
 $page_def[] = config_add_html('<h2 class="CollapsibleSectionHead collapsed">' . $lang["fieldtitle-usergroup_config"] . '</h2><div id="UsergroupConfig" class="CollapsibleSection">');
 $page_def[] = config_add_html('<p>' . $lang["action-title_usergroup_override_detail"] . '</p>');
+
+if ($record['parent']) { 
+    $page_def[] = config_add_html('
+        <div class="question"
+        <label for="usergroup_config_inherit">'. escape($lang["property-permissions_inherit"]) . '</label>
+        <input id="usergroup_config_inherit" name="inherit_flags[]" type="checkbox" value="preferences" onClick="if(jQuery(\'#usergroup_config_inherit\').is(\':checked\')){jQuery(\'#UsergroupConfigOptions\').slideUp();}else{jQuery(\'#UsergroupConfigOptions\').slideDown();}"' . ((in_array("preferences", $record['inherit'])) ? "checked" : '') . '>
+        </div>
+    ');
+}
+
+$page_def[] = config_add_html('<div id="UsergroupConfigOptions" ' . (in_array("preferences", $record['inherit']) ? 'style="display:none;"' : '') . '>');
+
+$enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
 
 // User interface section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="UsergroupConfigUserInterfaceSection" class="CollapsibleSection">');
@@ -68,10 +84,19 @@ $page_def[] = config_add_colouroverride_input('home_colour_style_override', $lan
 $page_def[] = config_add_colouroverride_input('collection_bar_background_override', $lang["setup-collectionbarbackground"], '', null, true);
 $page_def[] = config_add_colouroverride_input('collection_bar_foreground_override', $lang["setup-collectionbarforeground"], '', null, true);
 $page_def[] = config_add_colouroverride_input('button_colour_override', $lang["setup-buttoncolouroverride"], '', null, true);
+$page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 300, '', true);
+$page_def[] = config_add_boolean_select('basic_simple_search', $lang['userpreference_basic_simple_search_label'], $enable_disable_options, 300, '', true);
+$page_def[] = config_add_boolean_select('hide_search_resource_types', $lang['userpreference_hide_search_resource_types'], $enable_disable_options, 300, '', true);
+$page_def[] = config_add_single_select('upload_then_edit', $lang['upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 300, '', true);
+$page_def[] = config_add_boolean_select('modal_default', $lang['userpreference_modal_default'], $enable_disable_options, 300, '', true);
+$page_def[] = config_add_boolean_select('keyboard_navigation', $lang['userpreference_keyboard_navigation'], $enable_disable_options, 300, '', true);
+$page_def[] = config_add_boolean_select('tilenav', $lang['userpreference_tilenav'], $enable_disable_options, 300, '', true, 'TileNav=(value==1);');
+$page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 300, '', true);
+$page_def[] = config_add_single_select('user_local_timezone', $lang['systemconfig_user_local_timezone'], timezone_identifiers_list(), false, 300, '', true);
+$page_def[] = config_add_boolean_select('high_contrast_mode', $lang['userpreference_high_contrast_mode'], $enable_disable_options, 300, '', true, null, false, '', true);
 $page_def[] = config_add_html('</div>');
 
 // Search section
-$enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['searchcapability'] . '</h3><div id="SystemConfigSearchSection" class="CollapsibleSection">');
 
 $sort_order_fields = array('relevance' => $lang['relevance']);
@@ -120,32 +145,17 @@ $page_def[] = config_add_single_select('default_perpage', $lang['userpreference_
 $page_def[] = config_add_single_select('default_display', $lang['userpreference_default_display_label'], $default_display_array, true, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
-// User interface section
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="UsergroupUserInterfaceSection" class="CollapsibleSection">');
-$page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 300, '', true);
-$page_def[] = config_add_boolean_select('basic_simple_search', $lang['userpreference_basic_simple_search_label'], $enable_disable_options, 300, '', true);
-$page_def[] = config_add_boolean_select('hide_search_resource_types', $lang['userpreference_hide_search_resource_types'], $enable_disable_options, 300, '', true);
-$page_def[] = config_add_single_select('upload_then_edit', $lang['upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 300, '', true);
-$page_def[] = config_add_boolean_select('modal_default', $lang['userpreference_modal_default'], $enable_disable_options, 300, '', true);
-$page_def[] = config_add_boolean_select('keyboard_navigation', $lang['userpreference_keyboard_navigation'], $enable_disable_options, 300, '', true);
-$page_def[] = config_add_boolean_select('tilenav', $lang['userpreference_tilenav'], $enable_disable_options, 300, '', true, 'TileNav=(value==1);');
-
-$page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 300, '', true);
-$page_def[] = config_add_single_select('user_local_timezone', $lang['systemconfig_user_local_timezone'], timezone_identifiers_list(), false, 300, '', true);
-$page_def[] = config_add_boolean_select('high_contrast_mode', $lang['userpreference_high_contrast_mode'], $enable_disable_options, 300, '', true, null, false, '', true);
-$page_def[] = config_add_html('</div>');
-
 // System notifications section - used to disable system generated messages
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['mymessages'] . '</h3><div id="UsergroupMessageSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('user_pref_show_notifications', $lang['user_pref_show_notifications'], $enable_disable_options, 300, '', true);
 $page_def[] = config_add_boolean_select('user_pref_resource_notifications', $lang['userpreference_resource_notifications'], $enable_disable_options, 300, '', true);
-if (checkperm("a")) {
+if (in_array('a', $selected_usergroup_permissions)) {
     $page_def[] = config_add_boolean_select('user_pref_system_management_notifications', $lang['userpreference_system_management_notifications'], $enable_disable_options, 300, '', true);
 }
-if (checkperm("u")) {
+if (in_array('u', $selected_usergroup_permissions)) {
     $page_def[] = config_add_boolean_select('user_pref_user_management_notifications', $lang['userpreference_user_management_notifications'], $enable_disable_options, 300, '', true);
 }
-if (checkperm("R")) {
+if (in_array('R', $selected_usergroup_permissions)) {
     $page_def[] = config_add_boolean_select('user_pref_resource_access_notifications', $lang['userpreference_resource_access_notifications'], $enable_disable_options, 300, '', true);
 }
 $page_def[] = config_add_html('</div>');
@@ -164,16 +174,16 @@ if ($useremail != "") {
         $available_archive_states = array();
         $all_archive_states = array_merge(range(-2, 3), $additional_archive_states);
         foreach ($all_archive_states as $archive_state_ref) {
-            if (checkperm("e" . $archive_state_ref)) {
+            if (in_array('e' . $archive_state_ref, $selected_usergroup_permissions)) {
                 $available_archive_states[$archive_state_ref] = (isset($lang["status" . $archive_state_ref])) ? $lang["status" . $archive_state_ref] : $archive_state_ref;
             }
         }
 if ($actions_on) {
     $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['actions_myactions'] . '</h3><div id="UsergroupActionSection" class="CollapsibleSection">');
-    if (checkperm("R")) {
+    if (in_array('R', $selected_usergroup_permissions)) {
         $page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests'], $enable_disable_options, 300, '', true);
     }
-    if (checkperm("u")) {
+    if (in_array('u', $selected_usergroup_permissions)) {
         $statesjs = "if(jQuery(this).val()==1){
                         jQuery('#question_actions_approve_groups').slideDown();
                         }
@@ -218,7 +228,7 @@ $page_def[] = config_add_html('</div>');
 
 
 
-
+$page_def[] = config_add_html('</div>'); // closing id="UsergroupConfigOptions"
 $page_def[] = config_add_html('</div>');
 
 
@@ -328,6 +338,7 @@ if (getval("save", false) && enforcePostRequest(false)) {
     }
 
     save_usergroup($ref, $groupoptions);
+    clear_query_cache('usergroup');
 
     hook("usergroup_edit_add_form_save", "", array($ref));
     if (!$error) {
@@ -335,8 +346,6 @@ if (getval("save", false) && enforcePostRequest(false)) {
         exit;
     }
 }
-
-$record = get_usergroup($ref);
 
 include "../../include/header.php";
 
@@ -457,7 +466,7 @@ $url_params_edit = array(
     <div class="CollapsibleSections">
         <?php
         config_generate_html($page_def);
-        config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_group_management_edit.php?ref=' . (int) $ref);
+        config_generate_AutoSaveConfigOption_function(generateURL($baseurl . "/pages/admin/admin_group_management_edit.php", $url_params_edit));
         ?>
     </div>
 

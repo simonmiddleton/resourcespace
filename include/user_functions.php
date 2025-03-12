@@ -559,7 +559,7 @@ function get_usergroup($ref)
 {
     $return = ps_query("SELECT ref, name, permissions, parent, search_filter, search_filter_id, edit_filter, ip_restrict, resource_defaults, config_options, welcome_message, 
             request_mode, allow_registration_selection, derestrict_filter, group_specific_logo, inherit_flags, download_limit, download_log_days, edit_filter_id, derestrict_filter_id "
-            . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref = ?", array("i", $ref));
+            . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref = ?", array("i", $ref), 'usergroup');
     if (count($return) == 0) {
         return false;
     } else {

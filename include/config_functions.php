@@ -122,7 +122,7 @@ function set_config_option($user_id, $param_name, $param_value)
     $query = "INSERT INTO user_preferences (user,parameter,`value`) VALUES (?,?,?)";
    
     $current_param_value = null;
-    if(get_config_option($user_id, $param_name, $current_param_value))
+    if(get_config_option($user_id, $param_name, $current_param_value, null, 0))
         {
         if($current_param_value == $param_value)
             {
@@ -296,6 +296,8 @@ function remove_config_option(?int $user_id, string $name): bool
 *                                   there's nothing in the database.
 * @param  mixed    $default         Optionally used to set a default that may not be the current
 *                                   global setting e.g. for checking admin resource preferences
+* @param  ?integer $usergroup_id    User group id or 0 to only get user preferences (not including user group preferences), for example
+*                                   when adding / amending user preferences in set_config_option().
 *
 * @return boolean Indicates if the config option was found in the database or not.
 */
@@ -319,8 +321,13 @@ function get_config_option($user_id, $name, &$returned_value, $default = null, ?
         # Return user group preference if present (without considering current user).
         $user_query = 'usergroup = ? AND user IS NULL';
         $params[] = 'i'; $params[] = $usergroup_id;
+    } elseif ($usergroup_id === 0) {
+        # Special case when we want to check only user preference, not considering any user group values.
+        $user_query = 'user = ?';
+        $params[] = 'i'; $params[] = $user_id;
     } else {
         # Return user preference if present else user group preference if present.
+        $usergroup_id = get_usergroup_parent_for_flag($usergroup_id, 'preferences');
         $user_query = '(user = ? OR usergroup = ?) ORDER BY usergroup LIMIT 1';
         $params[] = 'i'; $params[] = $user_id;
         $params[] = 'i'; $params[] = $usergroup_id;
@@ -380,6 +387,7 @@ function get_config_options(?int $user_id, ?int $usergroup_id, array &$returned_
     if (is_null($user_id)) {
         $sql = 'user IS NULL AND usergroup IS NULL';
     } elseif ($user_id === 0 && !is_null($usergroup_id)) {
+        $usergroup_id = get_usergroup_parent_for_flag($usergroup_id, 'preferences');
         $sql = 'usergroup = ?';
         $params = ['i', $usergroup_id];
     } else {
@@ -411,6 +419,31 @@ function get_config_options(?int $user_id, ?int $usergroup_id, array &$returned_
     return true;
     }
 
+/**
+ * Check if the usergroup has a parent and the specified inherit flag is in use e.g. user group inherits permissions from parent.
+ *
+ * @param  int     $usergroup_id   User group of the current user / user group to test.
+ * @param  string  $inherit_flag   Inherit flag to test for.
+ * 
+ * @return int   User group id of parent if found and using supplied inherit flag else returns user group id supplied.
+ */
+function get_usergroup_parent_for_flag(int $usergroup_id, string $inherit_flag) :int
+{
+    if (isset($GLOBALS['get_usergroup_parent_for_flag'])) {
+        return $GLOBALS['get_usergroup_parent_for_flag'];
+    }
+
+    $result = $usergroup_id;
+
+    $usergroup_properties = get_usergroup($usergroup_id);
+
+    if ($usergroup_properties !== false && $usergroup_properties['parent'] > 0 && in_array($inherit_flag, $usergroup_properties['inherit'])) {
+        $result = $usergroup_properties['parent'];
+    }
+
+    $GLOBALS['get_usergroup_parent_for_flag'] = $result; # Cache value for subsequent calls to this function.
+    return $result;
+}
 
 /**
 * Process configuration options from database either system wide or user specific, setting the global variable.
