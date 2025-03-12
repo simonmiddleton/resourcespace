@@ -319,7 +319,8 @@ final class IIIFRequest
         if (in_array($resdata["file_extension"], array_merge($this->media_extensions))) {
             $media_path = get_resource_path($resource, true, $size, false, $resdata["file_extension"]);
         } else {
-            $media_path = get_resource_path($resource, true, $size, false);
+            $useextension = strtolower($resdata["file_extension"]) == "jpeg" ? $resdata["file_extension"] : "jpg";
+            $media_path = get_resource_path($resource, true, $size, false, $useextension);
         }
 
         if (!file_exists($media_path)) {
@@ -543,7 +544,8 @@ final class IIIFRequest
             $media_path = get_resource_path($useimage["ref"], true, $size, false, $useimage["file_extension"]);
         } else {
             $size = $this->largest_jpg_size($useimage);
-            $media_path = get_resource_path($useimage["ref"], true, $size, false);
+            $useextension = strtolower((string) $useimage["file_extension"]) == "jpeg" ? $useimage["file_extension"] : "jpg";
+            $media_path = get_resource_path($useimage["ref"], true, $size, false, $useextension);
         }
         if (!file_exists($media_path)) {
             debug("IIIF: generateCanvas() No image available for identifier:" . $position);
@@ -735,8 +737,9 @@ final class IIIFRequest
             } else {
                 $fulljpgsize = $this->largest_jpg_size($resource);
             }
-            $img_path = get_resource_path($this->request["id"], true, $fulljpgsize, false, "jpg");
-            $image_size = get_original_imagesize($this->request["id"], $img_path, "jpg");
+            $useextension = strtolower($resource["file_extension"]) == "jpeg" ? $resource["file_extension"] : "jpg";
+            $img_path = get_resource_path($this->request["id"], true, $fulljpgsize, false, $useextension);
+            $image_size = get_original_imagesize($this->request["id"], $img_path, $useextension);
             if ($image_size === false) {
                 $this->errors[] = "No image available for this identifier";
                 $this->triggerError(404);
@@ -843,8 +846,12 @@ final class IIIFRequest
                             $this->errors[] = "Invalid tile size requested";
                             $this->triggerError(400);
                         }
-
-                        $this->request["getsize"] = "tile_" . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh;
+                        if ($this->getheight === 0) {
+                            $scale = ceil($this->regionw / $this->getwidth);
+                        } else {
+                            $scale = ceil($this->regionh / $this->getheight);
+                        }
+                        $this->request["getsize"] = "tile_" . $scale . "_" . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh;
                         debug("IIIF: " . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh);
                     } else {
                         if ($this->getheight == 0) {
@@ -872,7 +879,8 @@ final class IIIFRequest
                 } elseif ($this->request["size"] == "full"  || $this->request["size"] == "max" || $this->request["size"] == "thm") {
                     if ($tile_request) {
                         if ($this->request["size"] == "full"  || $this->request["size"] == "max") {
-                            $this->request["getsize"] = "tile_" . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh;
+                            $scale = ceil($this->regionw / $this->preview_tile_size);
+                            $this->request["getsize"] = "tile_" . $scale . "_" . $this->regionx . "_" . $this->regiony . "_" . $this->regionw . "_" . $this->regionh;
                             $this->request["getext"] = "jpg";
                         } else {
                             $this->errors[] = "Invalid tile size requested";
@@ -917,6 +925,10 @@ final class IIIFRequest
                 if (!isset($this->errorcode)) {
                     // Request is supported, send the image
                     $imgpath = get_resource_path($this->request["id"], true, $this->request["getsize"], false, $this->request["getext"]);
+                    if ($tile_request && !file_exists($imgpath)) {
+                        // Support older tiles witout scale factor in ID that may not have been recreated
+                        $imgpath = preg_replace("/(tile_\\d+_)/", "tile_", $imgpath);
+                    }
                     $imgfound = false;
                     debug("IIIF: image path: " . $imgpath);
                     if (file_exists($imgpath)) {
@@ -1209,7 +1221,8 @@ function iiif_get_canvases($identifier, $iiif_results, $sequencekeys = false)
             }
         }
         $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
-        $img_path = get_resource_path($useimage["ref"], true, $size, false);
+        $useextension = strtolower((string) $useimage["file_extension"]) == "jpeg" ? $useimage["file_extension"] : "jpg";
+        $img_path = get_resource_path($useimage["ref"], true, $size, false, $useextension);
         if (!file_exists($img_path)) {
             continue;
         }
@@ -1243,6 +1256,7 @@ function iiif_get_canvases($identifier, $iiif_results, $sequencekeys = false)
         $size_info = array(
             'identifier' => $size,
             'return_height_width' => false,
+            'original_file_extension' => $useextension
         );
         $canvases[$index]["images"][] = iiif_get_image($identifier, $useimage["ref"], $index, $size_info);
     }
@@ -1350,7 +1364,8 @@ function iiif_get_image($identifier, $resourceid, $position, array $size_info)
     $size = $size_info['identifier'];
     $return_height_width = $size_info['return_height_width'];
 
-    $img_path = get_resource_path($resourceid, true, $size, false);
+    $useextension = $size_info['original_file_extension'] ?? 'jpg';
+    $img_path = get_resource_path($resourceid, true, $size, false, $useextension);
     if (!file_exists($img_path)) {
         return false;
     }

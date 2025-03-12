@@ -16,7 +16,7 @@ $introtext = text("introtext");
     <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
         <ul>
             <?php if (1 == $useracceptedterms || !$terms_login) { ?>
-                <li>
+                <li title="<?php echo escape($lang["profile-tooltip"]); ?>">
                     <a id="profile_link" href="<?php echo $baseurl_short?>pages/user/user_profile_edit.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-user-circle"></i>
                         <br /><?php echo escape($lang["profile"]); ?>
@@ -24,7 +24,7 @@ $introtext = text("introtext");
                 </li>
     
                 <?php if ($allow_password_change && !checkperm("p") && $userorigin == "") { ?>
-                    <li>
+                    <li title="<?php echo escape($lang["password-tooltip"]); ?>">
                         <a href="<?php echo $baseurl_short?>pages/user/user_change_password.php" onClick="return CentralSpaceLoad(this,true);">
                             <i aria-hidden="true" class="fa fa-fw fa-key"></i>
                             <br /><?php echo escape($lang["password"]); ?>
@@ -34,7 +34,7 @@ $introtext = text("introtext");
                 }
 
                 if (!$disable_languages && $show_language_chooser) { ?>
-                    <li>
+                    <li title="<?php echo escape($lang["languageselection-tooltip"]); ?>">
                         <a id="language_link" href="<?php echo $baseurl_short?>pages/change_language.php" onClick="return CentralSpaceLoad(this,true);">
                             <i aria-hidden="true" class="fa fa-fw fa-language"></i>
                             <br /><?php echo escape($lang["languageselection"]); ?>
@@ -44,7 +44,7 @@ $introtext = text("introtext");
                 }
 
                 if (!(!checkperm("d") && !(checkperm('c') && checkperm('e0')))) { ?>
-                    <li>
+                    <li title="<?php echo escape($lang["mycontributions-tooltip"]); ?>">
                         <a id="contribute_link" href="<?php echo $baseurl_short?>pages/contribute.php" onClick="return CentralSpaceLoad(this,true);">
                             <i aria-hidden="true" class="fa fa-fw fa-user-plus"></i>
                             <br /><?php echo escape($lang["mycontributions"]); ?>
@@ -54,7 +54,7 @@ $introtext = text("introtext");
                 }
 
                 if (!checkperm('b')) { ?>
-                    <li id="MyCollectionsUserMenuItem">
+                    <li id="MyCollectionsUserMenuItem" title="<?php echo escape($lang["mycollections-tooltip"]); ?>">
                         <a href="<?php echo $baseurl_short; ?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this, true);">
                             <i aria-hidden="true" class="fa fa-fw fa-shopping-bag"></i>
                             <br /><?php echo escape($lang['mycollections']); ?>
@@ -64,7 +64,7 @@ $introtext = text("introtext");
                 }
 
                 if ($actions_on) { ?>
-                    <li>
+                    <li title="<?php echo escape($lang["actions_myactions-tooltip"]); ?>">
                         <a id="user_actions_link" href="<?php echo $baseurl_short; ?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this, true);">
                             <i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i>
                             <br /><?php echo escape($lang['actions_myactions']); ?>
@@ -76,7 +76,7 @@ $introtext = text("introtext");
                 ?>
 
                 <script>message_poll();</script>
-                <li id="MyMessagesUserMenuItem">
+                <li id="MyMessagesUserMenuItem" title="<?php echo escape($lang["mymessages-tooltip"]); ?>">
                     <a id="messages_link" href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);">
                         <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>
                         <br /><?php echo escape($lang['mymessages']); ?>
@@ -88,17 +88,19 @@ $introtext = text("introtext");
                 if ($offline_job_queue) {
                     $failedjobs = job_queue_get_jobs("", STATUS_ERROR, $userref);
                     $failedjobcount = count($failedjobs);
-                    echo "<li><a id='user_jobs_link' href='" . generateURL("{$baseurl_short}pages/manage_jobs.php", ['job_user' => $userref]) . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . escape($lang['my_jobs']) . ($failedjobcount > 0 ? "&nbsp;<span class='FailedJobCountPill Pill'>" . escape($failedjobcount) . "</span>" : "") . "</a>";
+                    echo "<li title='" . escape($lang['my_jobs-tooltip']) . "'>";
+                    echo "<a id='user_jobs_link' href='" . generateURL("{$baseurl_short}pages/manage_jobs.php", ['job_user' => $userref]) . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . escape($lang['my_jobs']) . ($failedjobcount > 0 ? "&nbsp;<span class='FailedJobCountPill Pill'>" . escape($failedjobcount) . "</span>" : "") . "</a>";
                     echo "</li>";
                 }
 
                 if ($allow_share) {
-                    echo "<li><a id='manages_shares_link'  href='" . generateURL("{$baseurl_short}pages/manage_external_shares.php", ['share_user' => $userref]) . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-share-alt'></i><br />" . escape($lang['my_shares']) . "</a>";
+                    echo "<li title='" . escape($lang['my_shares-tooltip']) . "'>";
+                    echo "<a id='manages_shares_link'  href='" . generateURL("{$baseurl_short}pages/manage_external_shares.php", ['share_user' => $userref]) . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-share-alt'></i><br />" . escape($lang['my_shares']) . "</a>";
                     echo "</li>";
                 }
 
                 if ($home_dash && checkPermission_dashmanage()) { ?>
-                    <li>
+                    <li title="<?php echo escape($lang["dash-tooltip"]); ?>">
                         <a id='user_dash_edit_link'href="<?php echo $baseurl_short?>pages/user/user_dash_admin.php" onClick="return CentralSpaceLoad(this,true);">
                             <i aria-hidden="true" class="fa fa-fw fa-grip"></i>
                             <br /><?php echo escape($lang["dash"]);?>
@@ -108,7 +110,7 @@ $introtext = text("introtext");
                 }
 
                 if ($user_preferences) { ?>
-                    <li>
+                    <li title="<?php echo escape($lang["userpreferences-tooltip"]); ?>">
                         <a id='user_preferences_link' href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);">
                             <i aria-hidden="true" class="fa fa-fw fa-cog"></i>
                             <br /><?php echo escape($lang["userpreferences"]);?>
@@ -122,7 +124,7 @@ $introtext = text("introtext");
             }
 
             if (!isset($password_reset_mode) || !$password_reset_mode) { ?>
-                <li>
+                <li title="<?php echo escape($lang["logout-tooltip"]); ?>">
                     <a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>">
                         <i aria-hidden="true" class="fa fa-sign-out fa-fw"></i>
                         <br /><?php echo escape($lang["logout"]); ?>

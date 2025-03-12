@@ -105,6 +105,7 @@ define('LOG_CODE_STATUS_CHANGED', 's');
 define('LOG_CODE_SYSTEM', 'S');
 define('LOG_CODE_TRANSFORMED', 't');
 define('LOG_CODE_UPLOADED', 'u');
+define('LOG_CODE_UPLOADED_PREVIEW', 'up');
 define('LOG_CODE_UNSPECIFIED', 'U');
 define('LOG_CODE_VIEWED', 'v');
 define('LOG_CODE_DELETED', 'x');
@@ -826,6 +827,7 @@ const API_NATIVE_WHITELIST = [
     'delete_alternative_file',
     'delete_resource',
     'delete_tabs',
+    'do_search',
     'get_collections_resource_count',
     'get_dash_search_data',
     'get_field_options',
@@ -841,7 +843,8 @@ const API_NATIVE_WHITELIST = [
     'update_related_resource',
     'toggle_active_state_for_nodes',
     'put_resource_data',
-    'get_processing_message'
+    'get_processing_message',
+    'delete_resources_in_collection',
 ];
 
 const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension';
@@ -905,6 +908,7 @@ $languages["es-AR"] = "Español (Argentina)";
 $languages["fi"] = "Suomi"; # Finnish
 $languages["fr"] = "Français"; # French
 $languages["hi"] = "आधुनिक मानक हिन्दी"; # Hindi
+$languages["hu"] = "Magyar"; # Hungarian
 $languages["hr"] = "Hrvatski"; # Croatian
 $languages["it"] = "Italiano"; # Italian
 $languages["jp"] = "日本語"; # Japanese
@@ -925,6 +929,7 @@ $languages["th"] = "ภาษาไทย"; # Thai
 $languages["tr"] = "Türkçe"; # Turkish
 $languages["uk"] = "українська мова"; # Ukranian
 $languages["ur"] = "اُردُو"; # Urdu
+$languages["vi"] = "Tiếng Việt"; # Vietnamese
 $languages["zh-CN"] = "简体字"; # Simplified Chinese
 
 # English stop words

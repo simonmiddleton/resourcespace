@@ -39,6 +39,7 @@ else
 $page_def[] = config_add_text_input("openai_gpt_system_message",$lang["openai_gpt_system_message"]);
 $page_def[] = config_add_text_input("openai_gpt_temperature",$lang["openai_gpt_temperature"]);
 $page_def[] = config_add_text_input("openai_gpt_max_tokens",$lang["openai_gpt_max_tokens"]);
+$page_def[] = config_add_single_select("openai_gpt_language",$lang["openai_gpt_language"],array_merge([""=>$lang["openai_gpt_language_user"]],$languages));
 
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);

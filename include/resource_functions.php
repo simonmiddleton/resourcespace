@@ -4390,20 +4390,26 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
 
             # Move the file
             if (!hook('update_resource_replace_ingest', '', array($r, $path, $extension))) {
+                $source_file = $syncdir . "/" . $path;
                 $destination = get_resource_path($r, true, "", true, $extension);
-                $result = copy($syncdir . "/" . $path, $destination); // Copy instead of rename so that permissions of filestore will be used
-                if ($result === false) {
+                $process_file_upload = process_file_upload(
+                    new SplFileInfo($source_file),
+                    new SplFileInfo($destination),
+                    // Copy instead of rename so that permissions of filestore will be used
+                    ['file_move' => 'copy']
+                );
+                if (!$process_file_upload['success']) {
                     # The copy failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
                     # If the file is still being copied then $staticsync_file_minimum_age can be set to prevent this error from occurring
                     # Delete the resouce just created and return false.
-                    debug("ERROR: Staticsync failed to copy file from: " .  $syncdir . "/" . $path);
+                    debug("ERROR: Staticsync failed ({$process_file_upload['error']->name}) to copy file from: {$source_file}");
                     delete_resource($r);
                     return false;
                 }
                 $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
                 $GLOBALS["use_error_exception"] = true;
                 try {
-                    unlink($syncdir . "/" . $path);
+                    unlink($source_file);
                     try {
                         chmod($destination, 0777);
                     } catch (Exception $e) {
@@ -4411,7 +4417,7 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
                         debug(" - ERROR: Staticsync failed to set permissions on ingested file: " .  $destination . PHP_EOL . " - Error message: " . $e->getMessage() . PHP_EOL);
                     }
                 } catch (Exception $e) {
-                    echo " - ERROR: failed to delete file from source. Please check correct permissions on: " .  $syncdir . "/" . $path . PHP_EOL . " - Error message: "  . $e->getMessage() . PHP_EOL;
+                    echo " - ERROR: failed to delete file from source. Please check correct permissions on: " .  $source_file . PHP_EOL . " - Error message: "  . $e->getMessage() . PHP_EOL;
                     return false;
                 }
 
@@ -4601,9 +4607,9 @@ function add_alternative_file($resource, $name, $description = "", $file_name = 
 
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
-
     ps_query(
-        "INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES (?, ?,now(), ?, ?, ?, ?, ?)",
+        "INSERT INTO resource_alt_files (resource, name, creation_date, description, file_name, file_extension, file_size, alt_type)
+              VALUES (?, ?, NOW(), ?, ?, ?, ?, ?)",
         [
         'i', $resource,
         's', $name,
@@ -4611,7 +4617,7 @@ function add_alternative_file($resource, $name, $description = "", $file_name = 
         's', $file_name,
         's', $file_extension,
         'i', $file_size,
-        's', $alt_type
+        's', $alt_type,
         ]
     );
     return sql_insert_id();
@@ -4713,19 +4719,41 @@ function get_alternative_file($resource, $ref)
  * Updates the details of an alternative file in the database.
  *
  * @param int $resource The resource ID associated with the alternative file.
- * @param int $ref The reference ID of the alternative file to update.
- * @return void
+ * @param int $ref      The reference ID of the alternative file to update.
+ * @param array $data   Array of data in name=>value format, where name is the resource_alt_files column name.
+ *                      If a column is to be left as is then it must not be included in the array
+ *
  */
-function save_alternative_file($resource, $ref)
+function save_alternative_file(int $resource, int $ref, array $data = []): void
 {
-    # Saves the 'alternative file' edit form back to the database
-    $name           = getval("name", "");
-    $description    = getval("description", "");
-    $alt_type       = getval("alt_type", "");
-    ps_query(
-        "UPDATE resource_alt_files SET name = ?,description = ?,alt_type = ? WHERE resource = ? AND ref = ?",
-        array("s",$name,"s",$description,"s",$alt_type,"i",$resource,"i",$ref)
-    );
+    $validcolumns = [
+        "name" => "s",
+        "description" => "s",
+        "alt_type" => "s",
+        "file_name" => "s",
+        "file_extension" => "s",
+        "file_size" => "i",
+        "unoconv" => "i",
+    ];
+    $setcolumns = [];
+    $setparams = [];
+    foreach ($validcolumns as $column => $type) {
+        if (isset($data[$column])) {
+            $setcolumns[] = $column;
+            $setparams[] = $type;
+            $setparams[] = $data[$column];
+        }
+    }
+    if (count($setcolumns) > 0) {
+        $setcolumnsql = implode(" = ?, ", $setcolumns) . " = ?";
+        $setparams = array_merge($setparams, ["i", $resource, "i", $ref]);
+        ps_query(
+            "UPDATE resource_alt_files
+                     SET $setcolumnsql
+                   WHERE resource = ? AND ref = ?",
+            $setparams
+        );
+    }
 }
 
 /**
@@ -6168,7 +6196,17 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
 
 function delete_resources_in_collection($collection)
 {
-    global $resource_deletion_state,$userref,$lang;
+    if (
+        !is_int_loose($collection)
+        || checkperm("D")
+        || !allow_multi_edit($collection)
+        || !collection_writeable($collection)
+    ) {
+        debug("Unable to delete resources in collection: $collection");
+        return false;
+    }
+
+    global $resource_deletion_state, $lang;
 
     // Always find all resources in deleted state and delete them permanently:
     // Note: when resource_deletion_state is null it will find all resources in collection and delete them permanently
@@ -7473,10 +7511,11 @@ function image_size_restricted_access($id)
 * Returns a list of fields with refs matching the supplied field refs.
 *
 * @param array $field_refs Array of field refs
+* @param bool  order_by_passed_refs Returns the array of fields in the order requested in $field_refs
 *
 * @return array
 */
-function get_fields($field_refs)
+function get_fields($field_refs, bool $order_by_passed_refs = false)
 {
     if (!is_array($field_refs)) {
         trigger_error("\$field_refs passed to get_fields() is not an array.");
@@ -7493,10 +7532,23 @@ function get_fields($field_refs)
          WHERE rtf.ref IN (" . ps_param_insert(count($field_refs)) . ")
       ORDER BY rtf.order_by", ps_param_fill($field_refs, "i"), "schema");
 
-    $return = array();
-    foreach ($fields as $field) {
-        if (metadata_field_view_access($field['ref'])) {
-            $return[] = $field;
+    $return = array();   
+
+    if ($order_by_passed_refs) {
+
+        $fields_array = array_column($fields, null, 'ref');
+
+        foreach ($field_refs as $field_ref) {
+            if (array_key_exists($field_ref, $fields_array) && metadata_field_view_access($field_ref)) {
+                $return[] = $fields_array[$field_ref];
+            }
+        }
+
+    } else {
+        foreach ($fields as $field) {
+            if (metadata_field_view_access($field['ref'])) {
+                $return[] = $field;
+            }
         }
     }
 
@@ -7778,6 +7830,7 @@ function metadata_field_edit_access($field)
  */
 function get_download_filename(int $ref, string $size, int $alternative, string $ext): string
 {
+    resource_type_config_override(get_resource_data($ref)['resource_type']);
     [$size, $ext, $dff] = array_map('trim', [$size, $ext, $GLOBALS['download_filename_format']]);
     $fallback_filename = "RS{$ref}.{$ext}";
     $formatted_str = $dff ?: DEFAULT_DOWNLOAD_FILENAME_FORMAT;
@@ -8690,18 +8743,19 @@ function related_resource_pull(array $resource)
 /**
  * Get the largest available preview URL for the given resource and the given array of sizes
  *
- * @param array     $resource   Array of resource data from get_resource_data() or search results
- * @param int       $access     Resource access
- * @param array     $sizes      Array of size IDs to look through, in order of size. If not provied will use all sizes
- * @param bool      $watermark  Look for watermarked versions?
- * @param int       $page       Page to look for
+ * @param array     $resource               Array of resource data from get_resource_data() or search results
+ * @param array     $sizes                  Array of size IDs to look through, in order of size. If not provided will use all sizes
+ * @param int       $access                 Resource access
+ * @param bool      $watermark              Look for watermarked versions?
+ * @param int       $page                   Page to look for
+ * @param bool      $try_pulled_resource    Should we try to use an image from a pulled resource if the current resource doesn't have a usable preview
  *
  * @return array | bool         array, or false if no image is found
  *
  */
-function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1)
+function get_resource_preview(array $resource, array $sizes = [], int $access = -1, bool $watermark = false, int $page = 1, bool $try_pulled_resource = true)
 {
-    global $userref, $open_access_for_contributor;
+    global $userref, $open_access_for_contributor, $sizes_always_allowed;
     if (empty($sizes)) {
         $sizes = array_reverse(array_column(get_all_image_sizes(), "id"));
     }
@@ -8713,19 +8767,16 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         $preview["height"] = $resource["thumb_height"];
         $preview["width"] = $resource["thumb_width"];
     } else {
-        if ((int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE) {
-            // If configured, try and use a preview from a related resource
-            $pullresource = related_resource_pull($resource);
-            if ($pullresource !== false) {
-                $resource = $pullresource;
-            }
-        }
-
         if ($access == -1) {
             $access = get_resource_access($resource);
         }
 
         // Work out image to use.
+        // With restricted access not all sizes are available.
+        if ($access !== RESOURCE_ACCESS_FULL) {
+            $sizes = array_intersect($sizes, $sizes_always_allowed);
+        }
+
         if ($watermark !== '') {
             $use_watermark = check_use_watermark();
         } else {
@@ -8733,10 +8784,7 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
         }
         $validimage = false;
         foreach ($sizes as $size) {
-            if (
-                resource_has_access_denied_by_RT_size($resource['resource_type'], $size)
-                && !($open_access_for_contributor && $userref == $resource['created_by'])
-            ) {
+            if (!resource_download_allowed($resource['ref'], $size, $resource['resource_type'])) {
                 continue;
             }
 
@@ -8765,6 +8813,15 @@ function get_resource_preview(array $resource, array $sizes = [], int $access = 
                 }
                 unset($GLOBALS["use_error_exception"]);
                 break;
+            }
+        }
+        if (!$validimage && (int)$resource['has_image'] === RESOURCE_PREVIEWS_NONE && $try_pulled_resource) {
+            // If configured, try and use a preview from a related resource
+            $pullresource = related_resource_pull($resource);
+            if ($pullresource !== false) {
+                $resource = $pullresource;
+                $preview = get_resource_preview($resource, $sizes, get_resource_access($resource), $watermark, $page, false);
+                $validimage = $preview !== false; 
             }
         }
     }
@@ -8911,4 +8968,30 @@ function acl_can_edit_resource_of_type(int $ref): bool
             checkperm("XE{$ref}")
             || checkperm("XE") && !checkperm("XE-{$ref}")
         );
+}
+
+/**
+ *  Check if a resource is a template resource, dictated by the $fstemplate_alt_threshold config
+ * 
+ *  @param int $ref resource ref to check
+ */
+function resource_is_template(int $ref): bool
+{
+    global $fstemplate_alt_threshold;
+    return $ref < $fstemplate_alt_threshold && $fstemplate_alt_threshold > 0;
+}
+
+/**
+ * Check if current user can upload a preview image
+ *
+ * @param int $ref  Resource ID
+ *
+ */
+function can_upload_preview_image(int $ref): bool
+{
+    return !resource_file_readonly($ref)
+        && !checkperm("F*")
+        && !checkperm("xupr")
+        && !resource_is_template($ref) 
+        && !$GLOBALS['custompermshowfile'];
 }

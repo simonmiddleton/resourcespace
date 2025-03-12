@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Config\Definition\Builder;
 
+use Symfony\Component\Config\Definition\NodeInterface;
 use Symfony\Component\Config\Definition\VariableNode;
 
 /**
@@ -22,26 +23,21 @@ class VariableNodeDefinition extends NodeDefinition
 {
     /**
      * Instantiate a Node.
-     *
-     * @return VariableNode The node
      */
-    protected function instantiateNode()
+    protected function instantiateNode(): VariableNode
     {
         return new VariableNode($this->name, $this->parent, $this->pathSeparator);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function createNode()
+    protected function createNode(): NodeInterface
     {
         $node = $this->instantiateNode();
 
-        if (null !== $this->normalization) {
+        if (isset($this->normalization)) {
             $node->setNormalizationClosures($this->normalization->before);
         }
 
-        if (null !== $this->merge) {
+        if (isset($this->merge)) {
             $node->setAllowOverwrite($this->merge->allowOverwrite);
         }
 
@@ -54,9 +50,12 @@ class VariableNodeDefinition extends NodeDefinition
         $node->addEquivalentValue(true, $this->trueEquivalent);
         $node->addEquivalentValue(false, $this->falseEquivalent);
         $node->setRequired($this->required);
-        $node->setDeprecated($this->deprecationMessage);
 
-        if (null !== $this->validation) {
+        if ($this->deprecation) {
+            $node->setDeprecated($this->deprecation['package'], $this->deprecation['version'], $this->deprecation['message']);
+        }
+
+        if (isset($this->validation)) {
             $node->setFinalValidationClosures($this->validation->rules);
         }
 

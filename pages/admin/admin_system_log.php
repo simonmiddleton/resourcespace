@@ -250,7 +250,8 @@ include "../../include/header.php";
                     <?php foreach ($tables_data as $select_table => $select_table_data) { ?>
                         <option
                             value="<?php echo $select_table; ?>"
-                            <?php echo ($select_table == $table ? " selected" : ""); ?>>
+                            <?php echo $select_table == $table ? " selected" : ""; ?>
+                        >
                             <?php echo $select_table; ?>
                         </option>
                         <?php
@@ -260,7 +261,8 @@ include "../../include/header.php";
                         if (!isset($tables_data[$no_reference_data_table])) { ?>
                             <option
                                 value="<?php echo $no_reference_data_table; ?>"
-                                <?php echo ($no_reference_data_table == $table ? " selected" : ""); ?>>
+                                <?php echo $no_reference_data_table == $table ? " selected" : ""; ?>
+                            >
                                 <?php echo $no_reference_data_table; ?>
                             </option>
                             <?php

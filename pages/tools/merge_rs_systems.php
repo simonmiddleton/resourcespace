@@ -506,18 +506,6 @@ if ($export && isset($folder_path)) {
             },
         ),
         array(
-            "name" => "resource_data",
-            "formatted_name" => "resource data",
-            "filename" => "resource_data",
-            "record_feedback" => array(),
-            "sql" => array(
-                "select"  => "rd.resource, rd.resource_type_field, rd. value",
-                "from"  => "resource_data AS rd
-                    RIGHT JOIN resource AS r ON rd.resource = r.ref",
-                "where" => "resource > 0 AND resource_type_field IN (SELECT ref FROM resource_type_field)",
-            ),
-        ),
-        array(
             "name" => "resource_node",
             "formatted_name" => "resource nodes",
             "filename" => "resource_nodes",
@@ -772,11 +760,16 @@ if ($import && isset($folder_path)) {
             continue;
         }
 
-        $found_uref = get_user_by_username($user["username"]);
-        if ($found_uref !== false) {
-            $found_udata = get_user($found_uref);
+        if (
+            (($found_udata = get_user((int) get_user_by_username($user['username']))) && $found_udata !== false)
+            || (
+                $user['email'] != ''
+                && ($found_udata = get_user((int) get_user_by_username($user['email'])))
+                && $found_udata !== false
+            )
+        ) {
             logScript("Username '{$user["username"]}' found in current system as '{$found_udata["username"]}', full name '{$found_udata["fullname"]}'");
-            $process_user_preferences($found_uref, $user);
+            $process_user_preferences($found_udata['ref'], $user);
             continue;
         }
 
@@ -795,26 +788,32 @@ if ($import && isset($folder_path)) {
         }
         logScript("Created new user '{$user["username"]}' (ID #{$new_uref} | User group ID: {$usergroups_spec[$user["usergroup"]]})");
 
-        $_GET["username"] = $user["username"];
-        $_GET["password"] = $user["password"];
-        $_GET["fullname"] = $user["fullname"];
-        $_GET["email"] = $user["email"];
-        $_GET["expires"] = $user["account_expires"];
-        $_GET["usergroup"] = $usergroups_spec[$user["usergroup"]];
-        $_GET["ip_restrict"] = $user["ip_restrict"];
-        $_GET["search_filter_override"] = $user["search_filter_override"];
-        $_GET["search_filter_o_id"] = $user["search_filter_o_id"];
-        $_GET["comments"] = $user["comments"];
-        $_GET["suggest"] = "";
-        $_GET["emailresetlink"] = $user["password_reset_hash"];
-        $_GET["approved"] = $user["approved"];
-        $save_user_status = save_user($new_uref);
-        # Result can be === True which means save_user was successful
-        # Otherwise it will be a string with an error message describing the reason for failure to save/email
-        if ($save_user_status === true) {
+        $valid_user_tbl_cols = array_diff(columns_in('user', null, null, true), ['ref']);
+        $save_user_stm = new PreparedStatementQuery();
+        $log_act_user_edit = [];
+        foreach ($user as $col => $value) {
+            if (!in_array($col, $valid_user_tbl_cols)) {
+                continue;
+            }
+
+            $save_user_stm->sql .= ($save_user_stm->sql !== '' ? ', ' : '') . "`{$col}` = ?";
+            $save_user_stm->parameters[] = is_int_loose($value) ? 'i' : 's';
+            $save_user_stm->parameters[] = $value;
+
+            $log_act_user_edit[$col] = $value;
+        }
+
+        if ($save_user_stm->sql !== '') {
+            ps_query(
+                "UPDATE `user` SET {$save_user_stm->sql} WHERE ref = ?",
+                [...$save_user_stm->parameters, 'i', $new_uref]
+            );
+            foreach ($log_act_user_edit as $col => $value) {
+                log_activity(null, LOG_CODE_EDITED, $value, 'user', $col, $new_uref);
+            }
             logScript("Saved user details");
         } else {
-            logScript("ERROR: failed to save user '{$user["username"]}'. Reason: '{$save_user_status}'");
+            logScript("ERROR: failed to save user '{$user["username"]}'");
             exit(1);
         }
 
@@ -1422,56 +1421,6 @@ if ($import && isset($folder_path)) {
         fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
     }
     unset($src_resource_nodes);
-
-    # RESOURCE DATA
-    ###############
-    logScript("");
-    logScript("Importing resource data...");
-    fwrite($progress_fh, PHP_EOL . PHP_EOL);
-    $processed_resource_data = (isset($processed_resource_data) ? $processed_resource_data : array());
-    $src_resource_data = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_data_export.json", "r+b"));
-    foreach ($src_resource_data as $src_rd) {
-        $process_rd_value = "{$src_rd["resource"]}_{$src_rd["resource_type_field"]}_" . md5($src_rd["value"]);
-        if (in_array($process_rd_value, $processed_resource_data)) {
-            continue;
-        }
-
-        logScript("Processing data for resource #{$src_rd["resource"]} | resource_type_field: #{$src_rd["resource_type_field"]}");
-
-        if (!array_key_exists($src_rd["resource"], $resources_mapping)) {
-            logScript("WARNING: Unable to find a resource mapping. Skipping");
-            $processed_resource_data[] = $process_rd_value;
-            fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
-            continue;
-        }
-
-        if (in_array($src_rd["resource_type_field"], $resource_type_fields_not_created)) {
-            logScript("WARNING: Resource type field was not created. Skipping");
-            $processed_resource_data[] = $process_rd_value;
-            fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
-            continue;
-        }
-
-        db_begin_transaction(TX_SAVEPOINT);
-        $rd_import_errors = array();
-        $update_field = update_field(
-            $resources_mapping[$src_rd["resource"]],
-            $resource_type_fields_spec[$src_rd["resource_type_field"]]["ref"],
-            $src_rd["value"],
-            $rd_import_errors,
-            true
-        );
-
-        if ($update_field === false) {
-            logScript("ERROR: unable to update field data! Found errors: " . implode(", " . PHP_EOL, $rd_import_errors));
-            exit(1);
-        }
-
-        $processed_resource_data[] = $process_rd_value;
-        fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
-        db_end_transaction(TX_SAVEPOINT);
-    }
-    unset($src_resource_data);
 
     # RESOURCE DIMENSIONS
     #####################

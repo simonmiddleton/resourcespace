@@ -944,12 +944,17 @@ function email_reset_link(string $email, bool $newuser = false)
             $welcome = str_replace("%applicationname", $applicationname, $lang["welcome_generic"]);
         }
 
+        if (hook("ssologindefault")) {
+            $loginurl = $baseurl . "/login.php";
+        } else {
+            $loginurl = $baseurl;
+        }
         $templatevars['welcome'] = i18n_get_translated($welcome) . "\n\n";
         if ($blockreset) {
-            $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
+            $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $loginurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
             $result = send_mail($email, $email_subject, $message);
         } else {
-            $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
+            $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $loginurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
             $result = send_mail($email, $email_subject, $message, "", "", "passwordnewemailhtml", $templatevars);
         }
     } else {
@@ -2733,13 +2738,13 @@ function checkperm_user_edit($user)
 
 /**
  * Check if the current user has sufficient permissions to log in as the specified user
- * 
+ *
  * The regex used is to check if the a permission is present in the permission string of the target user
  *
- * @param  mixd $user   Either a user reference or user array
+ * @param  mixed $user   Either a user reference or user array
  * @return bool
  */
-function checkperm_login_as_user($user)
+function checkperm_login_as_user($user): bool
 {
     if (!checkperm('u')) {    // does not have edit user permission
         return false;
@@ -3436,11 +3441,13 @@ function setup_command_line_user(array $setoptions = []): bool
     $dummyuserdata["username"] = $defaultusername;
     $dummyuserdata["fullname"] = $defaultusername;
     $dummyuserdata["groupname"] = $defaultusername;
-    $dummyuserdata["permissions"] = "a,t,v,e-2,e-1,e0,e1,e2,e3";
+    # Command line user needs permission to update resources in all workflow states.
+    $dummyuserdata["permissions"] = 'a,t,v,e' . implode(',e', get_workflow_states());
     $dummyuserdata["accepted_terms"] = 1;
     $dummyuserdata["ip_restrict_user"] = "";
     $dummyuserdata["ip_restrict_group"] = "";
     $dummyuserdata["current_collection_valid"] = 1;
+    $dummyuserdata["usergroup"] = 0;
 
     // Add any columns from user table, plus any extra array
     // elements normally obtained from get_user()
@@ -3537,7 +3544,7 @@ $set_processing_message_first_call = true;
 function set_processing_message(string $message)
 {
     global $userref,$userprocessing_messages,$set_processing_message_first_call;
-    if (PHP_SAPI === "cli") {
+    if (PHP_SAPI === "cli" ||  defined("API_CALL")) {
         // Messages don't work unless using browser
         return;
     }
@@ -3594,5 +3601,26 @@ function can_set_admin_usergroup(?int $new_usergroup): bool
         return true;
     }
 
+    return false;
+}
+
+/**
+ * Checks if the origin matches a whitelist entry, supporting wildcards like "*.example.com".
+ * 
+ *  @param  string  $origin      The URL to check.
+ *  @param  array   $whitelist   Array of valid URLs - can include wildcards.
+ *  @return bool                 True if the origin is allowed, false otherwise.
+ */
+function cors_is_origin_allowed(string $origin, array $whitelist): bool  {
+    foreach ($whitelist as $allowed) {
+        // Escape dots and replace wildcard '*' with regex '.*'
+        $pattern = preg_quote($allowed, '/');
+        $pattern = str_replace('\*', '.*', $pattern); // Convert '*' to '.*' for wildcard matching
+        
+        // Ensure it matches the entire string (^...$)
+        if (preg_match("/^{$pattern}$/i", $origin)) {
+            return true;
+        }
+    }
     return false;
 }

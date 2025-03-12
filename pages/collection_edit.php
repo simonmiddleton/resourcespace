@@ -17,7 +17,6 @@ $redirection_endpoint = trim(urldecode(getval("redirection_endpoint", "")));
 $redirect = getval("redirect", "") != "";
 $name = getval("name", "");
 $public = getval("public", "");
-$delete_all = getval("deleteall", "") != "";
 
 # Does this user have edit access to collections? Variable will be found in functions below.
 $multi_edit = allow_multi_edit($ref);
@@ -62,23 +61,7 @@ if (getval("submitted", "") != "" && enforcePostRequest(false)) {
     $coldata["description"] = getval("description", "");
     $coldata["result_limit"] = getval("result_limit", 0, true);
     $coldata["users"] = getval("users", "");
-    $coldata["deleteall"] = $delete_all;
 
-    if ($coldata["deleteall"] && $delete_requires_password) {
-        if (!rs_password_verify(getval('password', ''), $userpassword, ['username' => $username])) {
-            $error = $lang['wrongpassword'];
-            error_alert($error, !$modal);
-            exit();
-        } elseif (!isset($error)) {
-            save_collection($ref, $coldata);
-            // Modal load done.php
-            $search_params = get_search_params();
-            $url_params = array_merge(["text" => "deleted","refreshcollection" => "true",], $search_params);
-            $done_url = generateURL("{$baseurl_short}pages/done.php", $url_params);
-            redirect($done_url);
-            exit();
-        }
-    }
     if ($collection["public"] == 1 && getval("update_parent", "") == "true") {
         // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
         $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
@@ -178,52 +161,7 @@ include "../include/header.php";
     <?php
     if (isset($error)) {
         render_top_page_error_style($error);
-    } elseif ($delete_requires_password && $delete_all) {
-        $form_action .= "&redirect=false";
-        ?>
-        <h1>
-            <?php
-            echo escape($lang["deleteresources"]);
-            render_help_link("user/deleting-resources");
-            ?>
-        </h1>
-        <p><?php text("introtext");?></p>
-        <form method="post" action="<?php echo $form_action;?>">
-            <input type=hidden name=ref value="<?php echo $ref; ?>">
-            <input type=hidden name=name value="<?php echo escape($name); ?>">
-            <input type=hidden name=public value="<?php echo escape($public); ?>">
-            <input type=hidden name=deleteall value="on">
-            <?php generateFormToken("delete_resource"); ?>
-
-            <div class="Question">
-                <label><?php echo escape($lang["collectionid"]); ?></label>
-                <div class="Fixed"><?php echo $ref; ?></div>
-                <div class="clearerleft"></div>
-            </div>
-            
-            <div class="Question">
-                <label for="password"><?php echo escape($lang["yourpassword"]); ?></label>
-                <input type=password class="shrtwidth" name="password" id="password" />
-                <div class="clearerleft"></div>
-            </div>
-
-            <div class="QuestionSubmit">
-                <input name="submitted" type="hidden" value=true />
-                <input 
-                    name="save" 
-                    type="submit" 
-                    value="<?php echo escape($lang["deleteresources"]); ?>"  
-                    onclick="return ModalPost(this.form,true);"
-                />
-                <input 
-                    name="cancel" 
-                    type="button" 
-                    value="<?php echo escape($lang["cancel"]); ?>"  
-                    onclick='return ModalClose();'
-                />
-            </div>
-        </form>
-    <?php } else { ?>
+    } else { ?>
         <h1><?php echo escape($lang["editcollection"]);
         render_help_link("user/edit-collection"); ?></h1>
         <p><?php echo text("introtext"); ?></p>

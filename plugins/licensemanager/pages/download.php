@@ -8,7 +8,7 @@ $resource=getval("resource",0,true);
 $file_path=get_license_file_path((int) $ref);
 
 # Check access
-if ($resource!="")
+if (is_positive_int_loose($resource))
     {
     $edit_access=get_edit_access($resource);
     if (!$edit_access && !checkperm("lm")) {exit("Access denied");} # Should never arrive at this page without edit access

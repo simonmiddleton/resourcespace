@@ -739,25 +739,28 @@ function filesize2bytes($str)
 /**
  * Get the mime type for a file on disk
  *
- * @param  string $path
- * @param  string $ext
- * @return string
+ * @param string $path
+ * @param string $ext
+ * @param ?bool $file_based_detection Determine the MIME type:
+ * - null: Check by extension or using exiftool
+ * - true: Only file based (uses exiftool)
+ * - false: Only based on extension
  */
-function get_mime_type($path, $ext = null)
+function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): string
 {
     global $mime_types_by_extension;
 
     if (empty($ext)) {
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $ext = parse_filename_extension($path);
     }
 
-    if (isset($mime_types_by_extension[$ext])) {
+    if (!$file_based_detection && isset($mime_types_by_extension[$ext])) {
         return $mime_types_by_extension[$ext];
     }
 
     # Get mime type via exiftool if possible
     $exiftool_fullpath = get_utility_path("exiftool");
-    if ($exiftool_fullpath != false) {
+    if (($file_based_detection || $file_based_detection === null) && $exiftool_fullpath != false) {
         $command = $exiftool_fullpath . " -s -s -s -t -mimetype " . escapeshellarg($path);
         return run_command($command);
     }
@@ -3705,7 +3708,8 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 }
 
 /**
-* Remove paragraph tags from start and end of text
+* Remove paragraph tags from start and end of text.
+* Inner paragraph tags are untouched
 *
 * @param string $text HTML string
 *
@@ -3713,7 +3717,11 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 */
 function strip_paragraph_tags(string $text): string
 {
-    return rtrim(ltrim($text, '<p>'), '</p>');
+    // Match either <p> exactly, or <p ... attributes> at the start of $text
+    // Match </p> exactly at the end of $text
+    // Everything else between is lazily matched across multiple lines, 
+    // so remains untouched
+    return preg_replace('/^<p\b[^>]*>(.*?)<\/p>$/s', '$1', $text);
 }
 
 /**
@@ -4300,6 +4308,27 @@ function is_int_loose($var)
 function is_positive_int_loose($V): bool
 {
     return is_int_loose($V) && $V > 0;
+}
+
+/**
+ * Helper function to check if value is a positive or zero integer looking type.
+ *
+ * @param int|float|string $V Value to be tested
+ */
+function is_positive_or_zero_int_loose($V): bool
+{
+    return is_int_loose($V) && $V >= 0;
+}
+
+/**
+ * Helper function to check if value is an array containing only 
+ * positive or zero integer looking types
+ *
+ * @param mixed $var value to be tested
+ */
+function is_array_of_pos_or_zero_ints($var): bool 
+{
+    return is_array($var) && count($var) === count(array_filter($var, 'is_positive_or_zero_int_loose'));
 }
 
 /**
@@ -5017,18 +5046,15 @@ function command_line_only()
 /**
  * Helper function to quickly build a list of values, all prefixed the same way.
  *
- * Example use:
+ * ```php
  * $fieldXs = array_map(prefix_value('field'), [3, 88]);
+ * ```
  *
  * @param string $prefix Prefix value to prepend.
- *
- * @return Closure
  */
 function prefix_value(string $prefix): Closure
 {
-    return function (string $value) use ($prefix): string {
-        return $prefix . $value;
-    };
+    return static fn (string $value): string => $prefix . $value;
 }
 
 /**

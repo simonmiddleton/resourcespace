@@ -9,18 +9,13 @@ if (is_array($url)) {
     $url = 'index.php';
 }
 
-$modifiedurl = hook("modifyloginurl", "", array($url));
-if ($modifiedurl) {
-    $url = $modifiedurl;
-}
-
 $modal = getval("modal", "");
 
 if ($modal || getval("ajax", "") != "") {
     # add the capslock lib because there's no header
     ?>
     <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
-<?php
+    <?php
 }
 
 # process log in
@@ -37,87 +32,86 @@ if (getval("nocookies", "") != "" && getval("cookiecheck", "") == "") {
     $error = $lang["nocookies"];
 }
 
-if (!hook("replaceauth")) {
 # First check that this IP address has not been locked out due to excessive attempts.
-    $ip = get_ip();
-    $lockouts = ps_value("select count(*) value from ip_lockout where ip = ? and tries >= ? and date_add(last_try, interval ? minute) > now()", array("s", $ip, "i", $max_login_attempts_per_ip, "i", $max_login_attempts_wait_minutes), 0);
+$ip = get_ip();
+$lockouts = ps_value("select count(*) value from ip_lockout where ip = ? and tries >= ? and date_add(last_try, interval ? minute) > now()", array("s", $ip, "i", $max_login_attempts_per_ip, "i", $max_login_attempts_wait_minutes), 0);
 
-    $username = getval("username", "");
-    if (is_array($username)) {
-        debug("[login.php] redirect to login because username is array");
-        redirect($baseurl . "/login.php");
-    }
+$username = getval("username", "");
+if (is_array($username)) {
+    debug("[login.php] redirect to login because username is array");
+    redirect($baseurl . "/login.php");
+}
 
-    $username = trim($username);
-    if ($case_insensitive_username) {
-        $username = ps_value("SELECT username value FROM user WHERE LOWER(username) = LOWER(?)", ["s", $username], $username);
-    }
+$username = trim($username);
+if ($case_insensitive_username) {
+    $username = ps_value("SELECT username value FROM user WHERE LOWER(username) = LOWER(?)", ["s", $username], $username);
+}
 
 # Also check that the username provided has not been locked out due to excessive login attempts.
-    $ulockouts = ps_value("select count(*) value from user where username = ? and login_tries >= ? and date_add(login_last_try, interval ? minute) > now()", array("s", $username, "i", $max_login_attempts_per_username, "i", $max_login_attempts_wait_minutes), 0);
+$ulockouts = ps_value("select count(*) value from user where username = ? and login_tries >= ? and date_add(login_last_try, interval ? minute) > now()", array("s", $username, "i", $max_login_attempts_per_username, "i", $max_login_attempts_wait_minutes), 0);
 
-    if ($lockouts > 0 || $ulockouts > 0) {
-        $error = str_replace("?", $max_login_attempts_wait_minutes, $lang["max_login_attempts_exceeded"]);
-        if ($ulockouts > 0) {
-            $log_message = 'Account locked';
-        } else {
-            $log_message = 'IP address locked';
+if ($lockouts > 0 || $ulockouts > 0) {
+    $error = str_replace("?", $max_login_attempts_wait_minutes, $lang["max_login_attempts_exceeded"]);
+    if ($ulockouts > 0) {
+        $log_message = 'Account locked';
+    } else {
+        $log_message = 'IP address locked';
+    }
+    $userref = get_user_by_username($username);
+    log_activity(
+        $log_message,                       # Note
+        LOG_CODE_FAILED_LOGIN_ATTEMPT,      # Log Code
+        $ip,                                # Value New
+        ($userref != "" ? "user"    : null),  # Remote Table
+        ($userref != "" ? "last_ip" : null),  # Remote Column
+        ($userref != "" ? $userref  : null),  # Remote Ref
+        null,                               # Ref Column Override
+        null,                               # Value Old
+        ($userref != "" ? $userref : null)  # User
+    );
+} elseif (array_key_exists("username", $_POST) && getval("langupdate", "") == "") {
+    debug("[login.php] Process the submitted login details...");
+
+    $password = trim(getval("password", ""));
+    $result = perform_login($username, $password);
+    if ($result['valid']) {
+        debug("[login.php] Performed login - valid result");
+
+        set_login_cookies($result["ref"], $session_hash, $language, $user_preferences);
+
+        # Set 'user_local_timezone' in cookie like 'user preferences page' does
+        $login_lang = getval("user_local_timezone", "");
+        rs_setcookie('user_local_timezone', $login_lang, 365);
+
+        # If the redirect URL is the collection frame, do not redirect to this as this will cause
+        # the collection frame to appear full screen.
+        if (strpos($url, "pages/collections.php") !== false) {
+            $url = "index.php";
         }
-        $userref = get_user_by_username($username);
-        log_activity(
-            $log_message,                       # Note
-            LOG_CODE_FAILED_LOGIN_ATTEMPT,      # Log Code
-            $ip,                                # Value New
-            ($userref != "" ? "user"    : null),  # Remote Table
-            ($userref != "" ? "last_ip" : null),  # Remote Column
-            ($userref != "" ? $userref  : null),  # Remote Ref
-            null,                               # Ref Column Override
-            null,                               # Value Old
-            ($userref != "" ? $userref : null)  # User
-        );
-    } elseif (array_key_exists("username", $_POST) && getval("langupdate", "") == "") {
-        debug("[login.php] Process the submitted login details...");
 
-        $password = trim(getval("password", ""));
-        $result = perform_login($username, $password);
-        if ($result['valid']) {
-            debug("[login.php] Performed login - valid result");
+        $accepted = ps_value("SELECT accepted_terms value FROM user WHERE ref = ?", array("i", (int)$result['ref']), 0);
 
-            set_login_cookies($result["ref"], $session_hash, $language, $user_preferences);
+        if (0 == $accepted && $terms_login && !checkperm('p')) {
+            $redirect_url = 'pages/terms.php?url=' . urlencode($url);
+        } else {
+            $redirect_url = $url;
+        }
 
-            # Set 'user_local_timezone' in cookie like 'user preferences page' does
-            $login_lang = getval("user_local_timezone", "");
-            rs_setcookie('user_local_timezone', $login_lang, 365);
+        debug("[login.php] Redirecting to $redirect_url");
 
-            # If the redirect URL is the collection frame, do not redirect to this as this will cause
-            # the collection frame to appear full screen.
-            if (strpos($url, "pages/collections.php") !== false) {
-                $url = "index.php";
-            }
-
-            $accepted = ps_value("SELECT accepted_terms value FROM user WHERE ref = ?", array("i", (int)$result['ref']), 0);
-            if (0 == $accepted && $terms_login && !checkperm('p')) {
-                $redirect_url = 'pages/terms.php?url=' . urlencode($url);
-            } else {
-                $redirect_url = $url;
-            }
-            debug("[login.php] Redirecting to $redirect_url");
-
-            if (!$modal) {
-                redirect($redirect_url);
-            } else {
-                ?>
+        if (!$modal) {
+            redirect($redirect_url);
+        } else {
+            ?>
             <script type="text/javascript">
                 CentralSpaceLoad('<?php echo $baseurl . "/" . escape($redirect_url)?>',true);
             </script>
-                <?php
-            }
-        } else {
-            sleep($password_brute_force_delay);
-
-            $error = $result['error'];
-            hook("dispcreateacct");
+            <?php
         }
+    } else {
+        sleep($password_brute_force_delay);
+
+        $error = $result['error'];
     }
 }
 
@@ -182,68 +176,72 @@ $aria_describedby_attr = $error == '' ? '' : ' aria-describedby="LoginError"';
 
 include "include/header.php";
 include "include/login_background.php";
+?>
 
-if (!hook("replaceloginform")) {
-    ?>
-    <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php"<?php echo $autocomplete_attr;
+<form
+    id="loginform"
+    method="post"
+    action="<?php echo $baseurl_short?>login.php"<?php
+        echo $autocomplete_attr;
     if ($modal) {
-        ?> onsubmit="return ModalPost(this,true,true);"<?php
-    } ?>>
-        <input type="hidden" name="langupdate" id="langupdate" value="">  
-        <input type="hidden" name="url" value="<?php echo escape($url)?>">
-        <input type="hidden" name="modal" value="<?php echo $modal == "true" ? "true" : ""; ?>">
+        ?>
+            onsubmit="return ModalPost(this,true,true);"
+        <?php
+    } ?>
+>
+    <input type="hidden" name="langupdate" id="langupdate" value="">  
+    <input type="hidden" name="url" value="<?php echo escape($url)?>">
+    <input type="hidden" name="modal" value="<?php echo $modal == "true" ? "true" : ""; ?>">
 
-        <?php $header_img_src = get_header_image(); ?>
-        <div id="LoginHeader">
-            <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname ?>">
-        </div>
+    <?php $header_img_src = get_header_image(); ?>
+    <div id="LoginHeader">
+        <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname ?>">
+    </div>
 
-        <h1><?php echo text("welcomelogin")?></h1>
+    <h1><?php echo text("welcomelogin")?></h1>
 
-        <p class="ExternalLoginLinks">
-            <?php hook("loginformlink") ?> 
-        </p>
+    <p class="ExternalLoginLinks">
+        <?php hook("loginformlink") ?> 
+    </p>
 
-        <?php if ($error != "") { ?>
-            <div class="FormIncorrect" id="LoginError" tabindex="-1"><?php echo strip_tags_and_attributes($error) ?></div>
-            <script>window.onload = function() { document.getElementById("LoginError").focus(); }</script>
-        <?php }?>
+    <?php if ($error != "") { ?>
+        <div class="FormIncorrect" id="LoginError" tabindex="-1"><?php echo strip_tags_and_attributes($error) ?></div>
+        <script>window.onload = function() { document.getElementById("LoginError").focus(); }</script>
+    <?php }?>
 
-        <div class="Question">
-            <label for="username"><?php echo escape($lang["email"] . " / " . $lang["username"]); ?> </label>
-            <input type="text" name="username" id="username" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?> value="<?php echo escape(getval("username", "")); ?>"/>
-            <div class="clearerleft"> </div>
-        </div>
+    <div class="Question">
+        <label for="username"><?php echo escape($lang["email"] . " / " . $lang["username"]); ?></label>
+        <input type="text" name="username" id="username" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?> value="<?php echo escape(getval("username", "")); ?>"/>
+        <div class="clearerleft"></div>
+    </div>
 
-        <div class="Question">
-            <label for="password"><?php echo escape($lang["password"]); ?> </label>
-            <input type="password" name="password" id="password" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?>/>
-            <div id="capswarning"><?php echo escape($lang["caps-lock-on"]); ?></div>
-            <div class="clearerleft"> </div>
-        </div>
+    <div class="Question">
+        <label for="password"><?php echo escape($lang["password"]); ?> </label>
+        <input type="password" name="password" id="password" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?>/>
+        <div id="capswarning"><?php echo escape($lang["caps-lock-on"]); ?></div>
+        <div class="clearerleft"></div>
+    </div>
 
-        <?php if (!$disable_languages) { ?>
-            <div class="Question HalfWidth">
-                <label for="language"><?php echo escape($lang["language"]); ?></label>
-                <select id="language" class="stdwidth" name="language" onBlur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
-                    <?php
-                    reset($languages);
-                    foreach ($languages as $key => $value) { ?>
-                        <option value="<?php echo escape($key); ?>"
-                            <?php if ($language == $key) { ?>selected<?php } ?>>
-                            <?php echo escape(get_display_language($key, $value)); ?>
-                        </option>
-                    <?php } ?>
-                </select>
-                <div class="clearerleft"> </div>
-            </div> 
-        <?php } ?>
-
+    <?php if (!$disable_languages) { ?>
         <div class="Question HalfWidth">
-            <label for="user_local_tz"><?php echo escape($lang["local_tz"]); ?></label>
-            <select id="user_local_tz" class="stdwidth" name="user_local_timezone">
-            <?php
+            <label for="language"><?php echo escape($lang["language"]); ?></label>
+            <select id="language" class="stdwidth" name="language" onblur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
+                <?php
+                reset($languages);
+                foreach ($languages as $key => $value) { ?>
+                    <option value="<?php echo escape($key); ?>" <?php echo ($language == $key) ? " selected" : ''; ?>>
+                        <?php echo escape(get_display_language($key, $value)); ?>
+                    </option>
+                <?php } ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div> 
+    <?php } ?>
 
+    <div class="Question HalfWidth">
+        <label for="user_local_tz"><?php echo escape($lang["local_tz"]); ?></label>
+        <select id="user_local_tz" class="stdwidth" name="user_local_timezone">
+            <?php
             $user_local_timezone = getval('user_local_timezone', '');
 
             foreach (timezone_identifiers_list() as $timezone) {
@@ -257,47 +255,49 @@ if (!hook("replaceloginform")) {
                     <?php
                 }
             }
-
             ?>
-            </select>
-            <script>
+        </select>
+        <script>
             jQuery(document).ready(function() {
                 var user_local_tz = detect_local_timezone();
-                <?php
-                if ($user_local_timezone === '') {
-                    ?>jQuery('#user_local_tz').val(user_local_tz);<?php
-                }
-                ?>
+                <?php if ($user_local_timezone === '') { ?>
+                    jQuery('#user_local_tz').val(user_local_tz);
+                <?php } ?>
             });
-            </script>
-            <div class="clearerleft"></div>
+        </script>
+        <div class="clearerleft"></div>
+    </div>
+
+    <?php if ($allow_keep_logged_in) { ?>
+        <div class="Question KeepLoggedIn">
+            <label for="remember"><?php echo escape($lang["keepmeloggedin"]); ?></label>
+            <input name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
+            <div class="clearer"> </div>
         </div>
+    <?php } ?>
 
-        <?php if ($allow_keep_logged_in) { ?>
-            <div class="Question KeepLoggedIn">
-                <label for="remember"><?php echo escape($lang["keepmeloggedin"]); ?></label>
-                <input name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
-                <div class="clearer"> </div>
-            </div>
-        <?php } ?>
+    <div class="QuestionSubmit">       
+        <input name="Submit" type="submit" value="<?php echo escape($lang["login"]); ?>" />
+    </div>
 
-        <div class="QuestionSubmit">       
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["login"]); ?>&nbsp;&nbsp;" />
-        </div>
-
-
-        <p class="LoginLinks">
+    <p class="LoginLinks">
         <?php if ($allow_account_request) { ?>
-            <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php"><i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo escape($lang["nopassword"]); ?></a>
-        <?php } ?>
-        <?php if ($allow_password_reset) { ?>
-            <br/><a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php"><i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo escape($lang["forgottenpassword"]); ?></a>
-        <?php } ?>
-        </p>
+            <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php">
+                <i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo escape($lang["nopassword"]); ?>
+            </a>
+        <?php }
 
-    </form>
+        if ($allow_password_reset) { ?>
+            <br/>
+            <a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php">
+                <i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo escape($lang["forgottenpassword"]); ?>
+            </a>
+            <?php
+        } ?>
+    </p>
+</form>
 
-    <script type="text/javascript">
+<script type="text/javascript">
     // Default the focus to the username box
     jQuery('#username').focus();
 
@@ -310,12 +310,15 @@ if (!hook("replaceloginform")) {
                 jQuery("#capswarning").show();
             }
         });
+
         jQuery(window).bind("capsOff capsUnknown", function(event) {
             jQuery("#capswarning").hide();
         });
+
         jQuery("#password").bind("focusout", function(event) {
             jQuery("#capswarning").hide();
         });
+
         jQuery("#password").bind("focusin", function(event) {
             if (jQuery(window).capslockstate("state") === true) {
                 jQuery("#capswarning").show();
@@ -327,41 +330,25 @@ if (!hook("replaceloginform")) {
         * Monitoring is happening at the window level.
         */
         jQuery(window).capslockstate();
-
     });
 
     /* Responsive Stylesheet inclusion based upon viewing device */
-    if(document.createStyleSheet)
-        {
+    if (document.createStyleSheet) {
         document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
-        }
-    else
-        {
+    } else {
         jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
-        }
+    }
 
-    if(!is_touch_device() && jQuery(window).width() <= 1280)
-        {
-        if(document.createStyleSheet)
-            {
+    if (!is_touch_device() && jQuery(window).width() <= 1280) {
+        if (document.createStyleSheet) {
             document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
-            }
-        else
-            {
+        } else {
             jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
-            }
         }
+    }
+</script>
 
-    </script>
+<div><!-- end of login_box -->
 
-    <?php
-}
-
-hook('afterlogin');
-
-//include_once "./include/footer.php"; AJAX Check Ignores Footer
-//Closing tags as the footer has not been included
-?>
-<div> <!-- end of login_box --><?php
-
+<?php
 include "include/footer.php";

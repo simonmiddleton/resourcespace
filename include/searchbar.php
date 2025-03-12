@@ -706,13 +706,13 @@ elseif($restypes=='')
                             case FIELD_TYPE_EXPIRY_DATE:
                             case FIELD_TYPE_DATE:
                                 ?>
-                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_year').value='';
-                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_month').value='';
+                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-y').value='';
+                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-m').value='';
                                 <?php
                                 if($searchbyday)
                                     {
                                     ?>
-                                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_day').value='';
+                                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-d').value='';
                                     <?php
                                     }
                                 break;
@@ -840,13 +840,13 @@ elseif($restypes=='')
                 case FIELD_TYPE_EXPIRY_DATE:
                 case FIELD_TYPE_DATE:
                     ?>
-                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_year').value='';
-                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_month').value='';
+                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-y').value='';
+                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-m').value='';
                     <?php
                     if($searchbyday)
                         {
                         ?>
-                        document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>_day').value='';
+                        document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-d').value='';
                         <?php
                         }
                     break;
@@ -945,7 +945,7 @@ elseif($restypes=='')
   <br />
   <?php hook("searchbarbeforebottomlinks"); ?>
   <?php if (! $disable_geocoding) { ?><p><i aria-hidden="true" class="fa fa-fw fa-globe"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><?php echo escape($lang["geographicsearch"]) ?></a></p><?php } ?>
-  <?php if (! $advancedsearch_disabled) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo strip_tags_and_attributes($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
+  <?php if (! $advancedsearch_disabled) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo escape($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
 
   <?php hook("searchbarafterbuttons"); ?>
 

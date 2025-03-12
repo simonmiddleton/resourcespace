@@ -4,6 +4,7 @@ include_once "../include/boot.php";
 include "../include/authenticate.php";
 
 $smart_theme = getval("smart_theme", 0, true);
+
 if ($smart_theme > 0) {
     $node = getval("node", 0, true);
     $smart_redirect_params = array(
@@ -34,6 +35,7 @@ $found_fc_categ_refs = ps_array(
 );
 
 $redirect_params = array();
+
 foreach ($found_fc_categ_refs as $found_fc_categ_ref) {
     $found_branch_path = get_featured_collection_category_branch_by_leaf($found_fc_categ_ref, array());
     $found_branch_path = array_column($found_branch_path, "name");

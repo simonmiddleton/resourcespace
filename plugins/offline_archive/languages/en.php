@@ -58,4 +58,6 @@ $lang["offline_archive_statustype"][0]="Pending";
 $lang["offline_archive_statustype"][1]="In progress";
 $lang["offline_archive_statustype"][2]="Completed";
 
+// Admin menu tool tip
+$lang["offline_archive_administer_archive-tooltip"] = "Relocate archived files to an offline location";
 

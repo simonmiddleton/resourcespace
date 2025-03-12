@@ -150,7 +150,6 @@ $lang["copycollectionremoveall"] = " إزالة كافة الموارد قبل �
 $lang["createnewresource"] = " إنشاء مورد جديد ";
 $lang["resourcetype"] = " نوع المورد ";
 $lang["resourcetypes"] = " أنواع الموارد ";
-$lang["deleteresource"] = " حذف الموارد ";
 $lang["downloadresource"] = " تنزيل من الموارد ";
 $lang["rightclicktodownload"] = " الحق فوق هذا الارتباط واختر 'حفظ المحتوى المرتبط باسم' لتحميل المورد الخاص بك... ";
 $lang["downloadinprogress"] = " جاري التحميل ";
@@ -376,7 +375,6 @@ $lang["key"] = " مفتاح ";
 $lang["languageselection"] = " اختيار اللغة ";
 $lang["language"] = " لغة ";
 $lang["changeyourpassword"] = " تغيير كلمة السر الخاصة بك ";
-$lang["yourpassword"] = " كلمة السر ";
 $lang["newpassword"] = " كلمة السر الجديدة ";
 $lang["newpasswordretype"] = " كلمة مرور جديدة (كتابة) ";
 $lang["passwordnotvalid"] = " هذه ليست كلمة السر الصحيحة ";
@@ -567,7 +565,6 @@ $lang["uploadreplacementfile"] = " تحميل استبدال الملف ";
 
 
 $lang["resourceistranscoding"] = " ويجري حاليا من الموارد المحولة ";
-$lang["cantdeletewhiletranscoding"] = " لا يمكنك حذف الموارد بينما هم تحويل الشفرة ";
 
 $lang["maxcollectionthumbsreached"] = " هناك الكثير من الموارد في هذه المجموعة لعرض الصور المصغرة. مصغرات الآن سوف تكون مخفية. ";
 
@@ -1378,7 +1375,6 @@ $lang["requestapprovedmail_email"] = '[img_headerlogo]<br/><br/>[message]<br/>[e
 $lang["requestdeclined_email"] = '[img_headerlogo]<br/><br/>[message]<br/><br/>انقر على الرابط أدناه لعرض الموارد المطلوبة.<br/><br/><a href=\'[url]\'>[url]</a>';
 $lang["resource_expiry_x_days"] = 'ينتهي صلاحية المورد الذي قمت بتنزيله سابقًا في %X يومًا';
 $lang["viewdeletedresources"] = 'عرض الموارد المحذوفة';
-$lang["finaldeletion"] = 'هذا المورد موجود بالفعل في حالة "حذف". سيؤدي هذا الإجراء إلى إزالة المورد بشكل كامل من النظام.';
 $lang["diskerror"] = 'تم تجاوز الحصة المسموح بها';
 $lang["nocookies"] = 'تعذر تعيين ملف تعريف الارتباط بشكل صحيح. يرجى التأكد من تمكين ملفات تعريف الارتباط في إعدادات المتصفح الخاص بك.';
 $lang["selectedresourceslightroom"] = 'الموارد المحددة (قائمة متوافقة مع لايت روم):';
@@ -1746,7 +1742,6 @@ $lang["list-recipients"] = 'تم إرسال هذه الرسالة إلى عنا�
 $lang["sort"] = 'فرز';
 $lang["sortcollection"] = 'ترتيب المجموعة';
 $lang["emptycollection"] = 'إزالة جميع الموارد';
-$lang["deleteresources"] = 'حذف الموارد';
 $lang["emptycollectionareyousure"] = 'هل أنت متأكد أنك تريد إزالة جميع الموارد من هذه المجموعة؟';
 $lang["error-cannoteditemptycollection"] = 'لا يمكنك تحرير مجموعة فارغة.';
 $lang["error-permissiondenied"] = 'الإذن مرفوض.';
@@ -2085,7 +2080,6 @@ $lang["collection_manage__newcollection"] = 'لإنشاء مجموعة جديد�
 $lang["collection_public__introtext"] = 'يتم إنشاء المجموعات العامة من قبل مستخدمين آخرين.';
 $lang["contact__contact"] = 'تفاصيل اتصالك هنا.';
 $lang["contribute__introtext"] = 'يمكنك المساهمة بمواردك الخاصة. عند إنشاء مورد جديد، يكون في حالة "قيد الانتظار"، وبعد رفع الملف وتحرير الحقول، يرجى تعيين حالة المورد إلى "قيد المراجعة"، وسيتم مراجعته من قبل فريق الموارد.';
-$lang["delete__introtext"] = 'يرجى إدخال كلمة المرور الخاصة بك لتأكيد رغبتك في حذف هذا المورد.';
 $lang["done__collection_email"] = 'تم إرسال بريد إلكتروني يحتوي على رابط للمجموعة إلى المستخدمين الذين حددتهم.';
 $lang["done__deleted"] = 'تم حذف المورد.';
 $lang["done__research_request"] = 'سيتم تعيين عضو في فريق البحث للعمل على طلبك. سنبقى على اتصال عبر البريد الإلكتروني طوال العملية، وعند الانتهاء من البحث، ستتلقى رسالة بريد إلكتروني تحتوي على رابط لجميع المصادر التي نوصي بها.';
@@ -2146,7 +2140,6 @@ $lang["prevent_user_group_sharing_externally"] = 'منع المستخدمين م
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = 'السماح باختيار مجموعة المستخدمين لتحديد مستوى الوصول عند المشاركة خارجيًا';
 $lang["share_using_permissions_from_user_group"] = 'مشاركة باستخدام أذونات من مجموعة المستخدمين';
 $lang["externalshare_using_permissions_from_user_group"] = 'إذا كنت ترسل رسائل بريد إلكتروني للمستخدمين الخارجيين، يرجى اختيار مجموعة المستخدمين المناسبة للوصول';
-$lang["delete__nopassword"] = 'يرجى تأكيد رغبتك في حذف هذا المورد.';
 $lang["collection_download_too_large"] = 'عذرًا، هذه المجموعة كبيرة جدًا للتنزيل كملف واحد. يرجى تقليل حجم المجموعة أو اختيار حجم صورة أصغر.';
 $lang["all__passwordnewemailhtml"] = 'يرجى النقر على الرابط أدناه لتعيين كلمة مرور جديدة لحسابك. <br /><br />الرابط: <a href="[url]" target="_blank" >[url]</a><br />اسم المستخدم: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = 'الرفع غير متاح مؤقتًا';
@@ -3050,3 +3043,6 @@ $lang["cannot_share-has_upload_share"] = 'لا يمكن إنشاء مشاركا�
 $lang["welcome_generic"] = 'مرحبًا بك في %applicationname';
 $lang["language-cy"] = 'الويلزية';
 $lang["language-th"] = 'Thai';
+
+$lang["language-hu"] = 'هنغاري';
+$lang["language-vi"] = 'Vietnamese';

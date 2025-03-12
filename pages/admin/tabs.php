@@ -208,6 +208,7 @@ include '../../include/header.php';
             items: 'tr:not(:first-child)',
             handle: 'td > i.fa-sort',
             containment: 'div.SystemTabs > table',
+            distance: 20,
             update: function(event, ui) {
                 let tabs_new_order = jQuery(event.target)
                     .find('tr:not(:first-child) > td:nth-child(2)')

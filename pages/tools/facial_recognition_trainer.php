@@ -19,6 +19,8 @@ OPTIONS SUMMARY
 
     -h, --help                  Display this help text and exit
     --overwrite-existing        Allows the trainer to recreate the prepared data (tag) image
+    --force-processing          Allows for this tool to be run without setting the $facial_recognition_mark_for_training_field config.
+                                It is advised that you set the config to minimize the resources being processed.
 
 EXAMPLES
     # Update training data
@@ -31,12 +33,38 @@ $cli_short_options = 'h';
 $cli_long_options  = [
     'help',
     'overwrite-existing',
+    'force-processing'
 ];
+
+// CLI options check
+$overwrite_existing = false;
+$force_processing   = false;
+foreach (getopt($cli_short_options, $cli_long_options) as $option_name => $option_value) {
+    if (in_array($option_name, array('h', 'help'))) {
+        echo $help_text;
+        exit(0);
+    } elseif ('overwrite-existing' == $option_name) {
+        $overwrite_existing = true;
+    } elseif ('force-processing' == $option_name) {
+        $force_processing = true;
+    }
+}
 
 if (!$facial_recognition_active) {
     echo 'Error: Facial recognition is not enabled!' . PHP_EOL;
     exit(1);
 }
+
+if (
+    (
+        !is_positive_int_loose($facial_recognition_mark_for_training_field)
+        || $facial_recognition_mark_for_training_field == 0
+    )
+    && !$force_processing
+) { 
+    echo 'Error: Please set the $facial_recognition_mark_for_training_field config option before trying to run this tool. Alternativly use the force-processing option';
+    exit(1);
+} 
 
 // Init
 $convert_fullpath             = get_utility_path('im-convert');
@@ -44,7 +72,6 @@ $python_fullpath              = get_utility_path('python');
 $faceRecognizerTrainer_path   = __DIR__ . '/../../lib/facial_recognition/faceRecognizerTrainer.py';
 $facial_recognition_tag_field = (int) $facial_recognition_tag_field;
 $allow_training               = false;
-$overwrite_existing           = false;
 $no_previews_found_counter    = 0;
 $prepared_trainer_data        = '';
 
@@ -61,18 +88,6 @@ if (false === $convert_fullpath) {
 if (false === $python_fullpath) {
     echo 'Error: Could not find Python!' . PHP_EOL;
     exit(1);
-}
-
-// CLI options check
-foreach (getopt($cli_short_options, $cli_long_options) as $option_name => $option_value) {
-    if (in_array($option_name, array('h', 'help'))) {
-        echo $help_text;
-        exit(0);
-    }
-
-    if ('overwrite-existing' == $option_name) {
-        $overwrite_existing = true;
-    }
 }
 
 // Step 1: Preparing the data

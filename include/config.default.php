@@ -802,7 +802,7 @@ $contact_sheet_preview_size = "500x500";
 // helvetica,times,courier (standard) and dejavusanscondensed for more Unicode support (but embedding/subsetting makes it slower).
 // There are also several other fonts included in the tcpdf lib (but not ResourceSpace), which provide unicode support
 // To embed more elaborate fonts, acquire the files from the TCPDF distribution or create your own using TCPDF utilities, and install them in the lib/html2pdf/vendor/tecnickcom/tcpdf/fonts folder.
-// If you encounter issues with Chinese characters, use "cid0cs" and make sure GhostScript has ArialUnicodeMS font (on Windows server, this should be there already)
+// If you encounter issues with special characters, use "dajavusans" and make sure GhostScript has ArialUnicodeMS font (on Windows server, this should be there already)
 $contact_sheet_font = "helvetica";
 // Set font sizes for contactsheet
 $titlefontsize     = 20; // Contact Sheet Title
@@ -1253,7 +1253,32 @@ $log_resource_views = false;
 
 // A list of file extensions that cannot be uploaded for security reasons.
 // For example; uploading a PHP file may allow arbirtary execution of code, depending on server security settings.
-$banned_extensions = array("php","cgi","pl","exe","asp","jsp", 'sh', 'bash', 'phtml', 'phps', 'phar', 'py', 'jar', 'crdownload');
+$banned_extensions = [
+    'php',
+    'cgi',
+    'pl',
+    'exe',
+    'asp',
+    'aspx',
+    'js',
+    'jsp',
+    'sh',
+    'bash',
+    'phtml',
+    'xhtml',
+    'rhtml',
+    'shtml',
+    'phps',
+    'phpt',
+    'phar',
+    'py',
+    'jar',
+    'crdownload',
+    'css',
+    'swf',
+    'htaccess', # redundant check, in case the extension is incorrectly parsed from a file name (unusual processing)
+    'htpasswd', # redundant check, in case the extension is incorrectly parsed from a file name (unusual processing)
+];
 
 //Set a default access value for the upload page. This will override the default resource template value.
 //Change the value of this option to the access id number
@@ -1446,7 +1471,7 @@ $top_nav_upload_user = false;
 $top_nav_upload_type = "batch"; // The upload type. Options are batch, ftp, local
 
 // Configure the maximum upload file size; this directly translates into upload's max_file_size if set
-// $upload_max_file_size = 50mb;
+// $upload_max_file_size = "50mb";
 
 // You can set the following line to ''  to disable chunking.
 $upload_chunk_size = '5mb';
@@ -1467,10 +1492,6 @@ $upload_concurrent_limit = 5;
 // 2     Archived
 // 3     Deleted (recommended)
 $resource_deletion_state = 3;
-
-// Does deleting resources require password entry? (single resource delete)
-// Off by default as resources are no longer really deleted by default, they are simply moved to a deleted state which is less dangerous - see $resource_deletion_state above.
-$delete_requires_password = false;
 
 # Are resources removed from collections when they are moved to the deleted state?
 $remove_deleted_resources_from_collections = true;
@@ -2852,7 +2873,12 @@ $CSRF_token_identifier = "CSRFToken";
 $CSRF_exempt_pages = array("login");
 // Allow other systems to make cross-origin requests. The elements of this configuration option should follow the
 // "<scheme>://<hostname>" syntax
-$CORS_whitelist = array();
+// By default allow Canva apps, needed for Canva integration.
+$CORS_whitelist =
+    [
+    "*.canva-apps.com",
+    "*.canva.com"
+    ];
 //
 //
 

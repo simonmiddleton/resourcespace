@@ -51,7 +51,7 @@ $contactsheet_header           = ('' != $includeheader ? filter_var($includehead
 $add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
 $contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : false);
-$selected_contact_sheet_fields = getval('selected_contact_sheet_fields', '');
+$selected_contact_sheet_fields = getval('selected_contact_sheet_fields', array(), false, 'is_array_of_pos_or_zero_ints');
 
 
 $pdf_properties = array();
@@ -91,7 +91,7 @@ if ($contactsheet_use_field_templates) {
 }
 
 // If user has specified which fields to show, then respect it
-if ('' != $selected_contact_sheet_fields && '' != $selected_contact_sheet_fields[0]) {
+if (!empty($selected_contact_sheet_fields) && $selected_contact_sheet_fields[0] != 0) {
     $getfields = $selected_contact_sheet_fields;
 }
 
@@ -309,7 +309,7 @@ if ($preview && isset($imagemagick_path)) {
         exit("Could not find ImageMagick 'convert' utility at location '{$imagemagick_path}'");
     }
 
-    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage=%%PREVIEWPAGE%% -o -r100 -dLastPage=%%PREVIEWPAGE%% -sOutputFile=%%CONTACT_SHEET_RIP%% %%PDF_FILENAME%%"
+    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage=%%PREVIEWPAGE%% -o -r300 -dJPEGQ=100 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dLastPage=%%PREVIEWPAGE%% -sOutputFile=%%CONTACT_SHEET_RIP%% %%PDF_FILENAME%%"
         . (($config_windows) ? '' : ' 2>&1');
     $cmdparams = [
         '%%PREVIEWPAGE%%' => $previewpage,

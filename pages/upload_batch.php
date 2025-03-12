@@ -25,9 +25,8 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']) && isset($_SERVER['HTTP_UPPY_AUTH_TOKEN
                     // Encoded by Uppy
                     $upfilename = base64_decode($upfilename);
                     }
-                $uploadpathinfo     = pathinfo($upfilename);
-                $uploaded_extension = $uploadpathinfo['extension'] ?? "";
-                if(is_banned_extension($uploaded_extension))
+
+                if(is_banned_extension(parse_filename_extension($upfilename)))
                     {
                     debug("upload_batch - invalid file extension received. File name: '" . $upfilename . "'");
                     http_response_code(401);
@@ -186,6 +185,10 @@ $attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != 
 $redirecturl = urldecode(getval("redirecturl",""));
 if ((!url_starts_with($baseurl, $redirecturl) && !hook("modifyredirecturl")) || !is_safe_url($redirecturl)) {
     $redirecturl = '';
+}
+
+if ($replace_resource !== "" && resource_is_template((int) $replace_resource)) {
+    error_alert($lang['error-permissiondenied']);
 }
 
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
@@ -486,11 +489,9 @@ if ($processupload)
     debug("upload_batch - received file from user '" . $username . "',  filename: '" . $upfilename . "'");
 
     # Work out the extension
-    $parts=explode(".",$upfilename);
-    $origextension=trim($parts[count($parts)-1]);
-    $extension=strtolower($origextension);
-    if(count($parts) > 1){array_pop($parts);}
-    $filenameonly = implode('.', $parts);
+    $origextension = parse_filename_extension($upfilename);
+    $extension = mb_strtolower($origextension);
+    $filenameonly = basename($upfilename, ".{$origextension}");
 
      // Clean the filename
     $origuploadedfilename= $upfilename;
@@ -607,12 +608,12 @@ if ($processupload)
                 $path=get_resource_path($alternative, true, "", true, $extension, -1, 1, false, "", $aref);
 
                 # Move the sent file to the alternative file location
-                $renamed=rename($upfilepath, $path);
+                $process_file_upload = process_file_upload(new SplFileInfo($upfilepath), new SplFileInfo($path), []);
 
-                if ($renamed===false)
+                if (!$process_file_upload['success'])
                     {
                     $result["status"] = false;
-                    $result["message"] = $lang["error_upload_file_move_failed"];
+                    $result["message"] = $process_file_upload['error']->i18n($lang);
                     $result["error"] = 104;
                     die(json_encode($result));
                     }
@@ -666,7 +667,7 @@ if ($processupload)
             if($upload_then_edit && (!($upload_here && $from_advanced_search) || !is_int_loose($resource_type)))
                 {
                 $resource_type_from_extension = get_resource_type_from_extension(
-                    pathinfo($upfilepath, PATHINFO_EXTENSION),
+                    parse_filename_extension($upfilepath),
                     $resource_type_extension_mapping,
                     $resource_type_extension_mapping_default
                 );

@@ -14,8 +14,6 @@ $preview_tile_scale_factors = [1, 2, 4, 8];
 $source_width = 5616;
 $source_height = 3744;
 
-
-
 // Request tiles for a scale factor bigger than the source. Expect an empty array - ie. unable to generate tiles
 $tiles = compute_tiles_at_scale_factor(8, $source_width, $source_height);
 if (!empty($tiles)) {
@@ -27,8 +25,8 @@ if (!empty($tiles)) {
 // Request tiles for a scale factor of 4. Expect 2 tiles (1 row, 2 columns)
 $tiles = compute_tiles_at_scale_factor(4, $source_width, $source_height);
 $expected_tile_ids = [
-    'tile_0_0_4096_3744',    # row 0, col 0
-    'tile_4096_0_1520_3744', # row 0, col 1
+    'tile_4_0_0_4096_3744',    # row 0, col 0
+    'tile_4_4096_0_1520_3744', # row 0, col 1
 ];
 if ($expected_tile_ids !== array_column($tiles, 'id')) {
     echo 'Scale factor 4 (1 row, 2 columns) - ';
@@ -39,12 +37,12 @@ if ($expected_tile_ids !== array_column($tiles, 'id')) {
 // Request tiles for a scale factor of 2. Expect 6 tiles (2 rows, 3 columns)
 $tiles = compute_tiles_at_scale_factor(2, $source_width, $source_height);
 $expected_tile_ids = [
-    'tile_0_0_2048_2048',       # row 0, col 0
-    'tile_2048_0_2048_2048',    # row 0, col 1
-    'tile_4096_0_1520_2048',    # row 0, col 2
-    'tile_0_2048_2048_1696',    # row 1, col 0
-    'tile_2048_2048_2048_1696', # row 1, col 1
-    'tile_4096_2048_1520_1696', # row 1, col 2
+    'tile_2_0_0_2048_2048',       # row 0, col 0
+    'tile_2_2048_0_2048_2048',    # row 0, col 1
+    'tile_2_4096_0_1520_2048',    # row 0, col 2
+    'tile_2_0_2048_2048_1696',    # row 1, col 0
+    'tile_2_2048_2048_2048_1696', # row 1, col 1
+    'tile_2_4096_2048_1520_1696', # row 1, col 2
 ];
 if ($expected_tile_ids !== array_column($tiles, 'id')) {
     echo 'Scale factor 2 (2 rows, 3 columns) - ';
@@ -55,33 +53,33 @@ if ($expected_tile_ids !== array_column($tiles, 'id')) {
 // Request tiles for a scale factor of 1. Expect 24 tiles (4 rows, 6 columns)
 $tiles = compute_tiles_at_scale_factor(1, $source_width, $source_height);
 $expected_tile_ids = [
-    'tile_0_0_1024_1024',       # row 0, col 0
-    'tile_1024_0_1024_1024',    # row 0, col 1
-    'tile_2048_0_1024_1024',    # row 0, col 2
-    'tile_3072_0_1024_1024',    # row 0, col 3
-    'tile_4096_0_1024_1024',    # row 0, col 4
-    'tile_5120_0_496_1024',     # row 0, col 5
+    'tile_1_0_0_1024_1024',       # row 0, col 0
+    'tile_1_1024_0_1024_1024',    # row 0, col 1
+    'tile_1_2048_0_1024_1024',    # row 0, col 2
+    'tile_1_3072_0_1024_1024',    # row 0, col 3
+    'tile_1_4096_0_1024_1024',    # row 0, col 4
+    'tile_1_5120_0_496_1024',     # row 0, col 5
 
-    'tile_0_1024_1024_1024',    # row 1, col 0
-    'tile_1024_1024_1024_1024', # row 1, col 1
-    'tile_2048_1024_1024_1024', # row 1, col 2
-    'tile_3072_1024_1024_1024', # row 1, col 3
-    'tile_4096_1024_1024_1024', # row 1, col 4
-    'tile_5120_1024_496_1024',  # row 1, col 5
+    'tile_1_0_1024_1024_1024',    # row 1, col 0
+    'tile_1_1024_1024_1024_1024', # row 1, col 1
+    'tile_1_2048_1024_1024_1024', # row 1, col 2
+    'tile_1_3072_1024_1024_1024', # row 1, col 3
+    'tile_1_4096_1024_1024_1024', # row 1, col 4
+    'tile_1_5120_1024_496_1024',  # row 1, col 5
 
-    'tile_0_2048_1024_1024',    # row 2, col 0
-    'tile_1024_2048_1024_1024', # row 2, col 1
-    'tile_2048_2048_1024_1024', # row 2, col 2
-    'tile_3072_2048_1024_1024', # row 2, col 3
-    'tile_4096_2048_1024_1024', # row 2, col 4
-    'tile_5120_2048_496_1024',  # row 2, col 5
+    'tile_1_0_2048_1024_1024',    # row 2, col 0
+    'tile_1_1024_2048_1024_1024', # row 2, col 1
+    'tile_1_2048_2048_1024_1024', # row 2, col 2
+    'tile_1_3072_2048_1024_1024', # row 2, col 3
+    'tile_1_4096_2048_1024_1024', # row 2, col 4
+    'tile_1_5120_2048_496_1024',  # row 2, col 5
 
-    'tile_0_3072_1024_672',    # row 3, col 0
-    'tile_1024_3072_1024_672', # row 3, col 1
-    'tile_2048_3072_1024_672', # row 3, col 2
-    'tile_3072_3072_1024_672', # row 3, col 3
-    'tile_4096_3072_1024_672', # row 3, col 4
-    'tile_5120_3072_496_672',  # row 3, col 5
+    'tile_1_0_3072_1024_672',    # row 3, col 0
+    'tile_1_1024_3072_1024_672', # row 3, col 1
+    'tile_1_2048_3072_1024_672', # row 3, col 2
+    'tile_1_3072_3072_1024_672', # row 3, col 3
+    'tile_1_4096_3072_1024_672', # row 3, col 4
+    'tile_1_5120_3072_496_672',  # row 3, col 5
 ];
 if ($expected_tile_ids !== array_column($tiles, 'id')) {
     echo 'Scale factor 1 (4 rows, 6 columns) - ';

@@ -1,16 +1,20 @@
 #!/usr/bin/env php
 <?php
 
+declare(strict_types=1);
+
 // This is the base directory of the SimpleSAMLphp installation
-$baseDir = dirname(dirname(dirname(dirname(__FILE__))));
+$baseDir = dirname(__FILE__, 4);
 
 // Add library autoloader.
 require_once($baseDir . '/lib/_autoload.php');
 
 // Initialize the configuration.
-$configdir = \SimpleSAML\Utils\Config::getConfigDir();
+$configUtils = new \SimpleSAML\Utils\Config();
+$timeUtils = new \SimpleSAML\Utils\Time();
+$configdir = $configUtils->getConfigDir();
 \SimpleSAML\Configuration::setConfigDir($configdir);
-\SimpleSAML\Utils\Time::initTimezone();
+$timeUtils->initTimezone();
 
 $progName = array_shift($argv);
 $debug = false;
@@ -70,9 +74,8 @@ foreach ($results as $slot => $val) {
 
 /**
  * This function prints the help output.
- * @return void
  */
-function printHelp()
+function printHelp(): void
 {
     global $progName;
 

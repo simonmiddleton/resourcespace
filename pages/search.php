@@ -1349,26 +1349,44 @@ if (!hook("replacesearchheader")) # Always show search header now.
     hook("beforesearchresults");
     
     # Archive link
-    if ((!$archivesearched) && (strpos($search,"!")===false) && $archive_search && $archive_standard) 
-        {        
-        $saved_archive_standard = $archive_standard;
-        $archive_standard = false;
-        // Search archive but don't log this to daily_stat
-        $arcresults=do_search($search,$restypes,$order_by,2,-1,'desc',false,0,false,false,'',false,false);
-        $archive_standard = $saved_archive_standard;
-        if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
-        if ($arcresults>0) 
-            {
-            ?>
-            <div class="SearchOptionNav"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("archive"=>2)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo escape($lang["view"]); ?> <span class="Selected"><?php echo number_format($arcresults); ?></span> <?php echo ($arcresults==1)?$lang["match"]:$lang["matches"]; ?> <?php echo escape($lang["inthearchive"]); ?></a></div>
-            <?php 
-            }
-        else
-            {
-            ?>
-            <div class="InpageNavLeftBlock"><?php echo LINK_CARET ?><?php echo escape($lang["nomatchesinthearchive"]); ?></div>
-            <?php 
-            }
+    if (
+        !$archivesearched
+        && strpos($search, "!") === false
+        && $archive_search
+        && $archive_standard
+    ) {?>
+        <div class="SearchOptionNav">
+            <a
+            href="<?php echo generateURL($baseurl_short . "pages/search.php", $searchparams, ["archive" => 2]); ?>"
+            onClick="return CentralSpaceLoad(this);"
+            >
+                <?php echo LINK_CARET . escape($lang["view"]); ?>
+                <span class="Selected">
+                    <?php echo escape($lang["matches"] . " " . $lang["inthearchive"]); ?>
+                </span>
+                <span
+                    id="ArchiveSearchCount"
+                    style="display: none;">
+                </span>
+            </a>
+        </div>
+        <script>
+            jQuery(document).ready(function(){
+                api("do_search",
+                    {
+                        "search": "<?php echo escape($search); ?>",
+                        "restypes": "<?php echo escape($restypes); ?>",
+                        "archive": "2",
+                        "fetchrows": "1,1",
+                    },
+                    function(response) {
+                        jQuery('#ArchiveSearchCount').html('(' + Number(response.total) + ')').fadeIn();
+                    },
+                    <?php echo generate_csrf_js_object('do_search'); ?>
+                );
+            });
+        </script>
+        <?php 
         }
     echo $search_title_links;
     if($collectionsearch) // Fetch collection name 
@@ -1460,7 +1478,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         for ($x=0;$x<$df_count;$x++) {
             if ($is_special_search_duplicates) {
                 ?><th><?php echo escape($df[$x]['title']); ?></th><?php
-            } else if ($order_by=="field".$df[$x]['ref']) {
+            } elseif ($order_by=="field".$df[$x]['ref']) {
                 ?>
                 <th class="Selected">
                     <a
@@ -1492,7 +1510,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         if ($id_column) {
             if ($is_special_search_duplicates) {
                 ?><th><?php echo escape($lang['id']); ?></th><?php
-            } else if ($order_by=="resourceid") {?>
+            } elseif ($order_by=="resourceid") {?>
                 <th class="Selected">
                     <a
                         href="<?php echo generateURL(
@@ -1519,7 +1537,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         if ($resource_type_column) {
             if ($is_special_search_duplicates) {
                 ?><th><?php echo escape($lang['type']); ?></th><?php
-            } else if ($order_by == "resourcetype") {?>
+            } elseif ($order_by == "resourcetype") {?>
                 <th class="Selected">
                     <a
                         href="<?php echo generateURL(
@@ -1545,7 +1563,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
 
         if ($is_special_search_duplicates) {
             ?><th><?php echo escape($lang['list_file_extension']); ?></th><?php
-        } else if ($order_by == "extension") {?>
+        } elseif ($order_by == "extension") {?>
             <th class="Selected">
                 <a
                     href="<?php echo generateURL(
@@ -1571,7 +1589,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         if ($list_view_status_column) {
             if ($is_special_search_duplicates) {
                 ?><th><?php echo escape($lang['status']); ?></th><?php
-            } else if ($order_by == "status") {?>
+            } elseif ($order_by == "status") {?>
                 <th class="Selected">
                     <a
                         href="<?php echo generateURL(
@@ -1598,7 +1616,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         if ($date_column) {
             if ($is_special_search_duplicates) {
                 ?><th><?php echo escape($lang['date']); ?></th><?php
-            } else if ($order_by == "date") {?>
+            } elseif ($order_by == "date") {?>
                 <th class="Selected">
                     <a
                         href="<?php echo generateURL(

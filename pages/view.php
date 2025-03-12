@@ -437,7 +437,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 parent_element.find(this).parent().parent().children(".TabPanel").hide();
                 parent_element.find(this).parent().children(".Title").removeClass("Selected");
                 parent_element.find(this).addClass("Selected");
-                parent_element.find("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px").show();;
+                parent_element.find("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px").show();
                 if (jQuery(this).attr("panel")=="Comments") {
                     jQuery("#CommentsContainer").load(
                     "../pages/ajax/comments_handler.php?ref=<?php echo $ref; ?>", 
@@ -702,7 +702,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     }
                                 else
                                     {
-                                    $thumb_url=$baseurl . "/gfx/no_preview/default.png";
+                                    $thumb_url=$baseurl . "/gfx/no_preview/audio.png";
                                     }
     
                                 include "mp3_play.php";
@@ -710,31 +710,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 </div>
                                 <?php
                                 // MP3 preview END 
-                            } elseif ($resource['has_image'] !== RESOURCE_PREVIEWS_NONE) {
+                            } else {
                                 render_resource_view_image($resource,[
                                     "access"=>$access,
                                     "edit_access"=>$edit_access,
                                     ]
-                                    );
-                            } else {
-                                // No preview. If configured, try and use a preview from a related resource
-                                $pullresource = related_resource_pull($resource);
-                                if($pullresource !== false)
-                                    {
-                                    $pull_access = get_resource_access($pullresource);
-                                    render_resource_view_image($pullresource,[
-                                        "access"=>$pull_access,
-                                        "edit_access"=>0, // No ability to modify e.g. annotations
-                                        ]
-                                        );
-                                    }
-                                else
-                                    {?>
-                                    <div id="previewimagewrapper">
-                                    <?php echo get_nopreview_html((string) $resource["file_extension"], $resource["resource_type"]); ?>
-                                    </div>
-                                    <?php
-                                    }
+                                );
                             }
                             } // Standard previews END
                     } /* End of replacerenderinnerresourcepreview hook and end of renderinnerresourcepreview hook */
@@ -1223,11 +1204,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         {
                                                         echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-trash'></i>&nbsp;" . escape($deletetext) . "</div>";
                                                         }
-                                                    elseif ($delete_requires_password)
-                                                        {
-                                                        $delete_url = generateURL($baseurl . "/pages/delete.php", $urlparams);
-                                                        echo "<a id='delete_link_" . $ref . "' href='" . $delete_url . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-trash'></i>&nbsp;" . escape($deletetext) . "</a>";
-                                                        }
                                                     else
                                                         {
                                                         $urlparams['text']='deleted';
@@ -1277,8 +1253,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     $replace_upload_type=$top_nav_upload_type;
                                                     }
 
-                                                if (!(in_array($resource['resource_type'], $data_only_resource_types)) && !resource_file_readonly($ref) && (checkperm("c") || checkperm("d")))
-                                                    { ?>
+                                                if (
+                                                    !in_array($resource['resource_type'], $data_only_resource_types)
+                                                    && !resource_file_readonly($ref) 
+                                                    && (checkperm("c") || checkperm("d"))
+                                                    && !resource_is_template($ref)
+                                                ) { ?>
                                                     <li>
                                                         <a id="view_replace_link" href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php", $urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" 
                                                             onClick="if(jQuery('#uploader').length){return CentralSpaceLoad(this,true);} else {return ModalLoad(this,true);}">
@@ -1306,7 +1286,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     }
 
                                                 // Show the upload preview link
-                                                if (!resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
+                                                if (can_upload_preview_image($ref))
                                                     { ?>
                                                     <li>
                                                         <a id="view_upload_preview_link" href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">

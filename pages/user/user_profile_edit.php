@@ -1,6 +1,7 @@
 <?php
 include "../../include/boot.php";
 include "../../include/authenticate.php";
+include "../../include/api_functions.php";
 
 // Do not allow access to anonymous users
 if (isset($anonymous_login) && ($anonymous_login == $username)) {
@@ -14,17 +15,21 @@ if (getval("save", "") != "" && enforcePostRequest(false)) {
     $image_path = "";
     $profile_text = getval("profile_bio", "");
     if ($_FILES['profile_image']['name'] != "") {
-        $pathinfo   = pathinfo($_FILES['profile_image']['name']);
-        $extension  = $pathinfo['extension'] ?? "";
-        if (in_array(strtolower($extension), array("jpg","jpeg"))) {
-            $image_path = get_temp_dir(false) . '/' . $userref . '_' . uniqid() . ".jpg";
-            $result = move_uploaded_file($_FILES['profile_image']['tmp_name'], $image_path);
-            if ($result === false) {
-                error_alert($lang["error_upload_failed"]);
-                exit();
-            }
-        } else {
-            error_alert($lang["error_not_jpeg"], true);
+        $image_path = get_temp_dir(false) . '/' . $userref . '_' . uniqid() . ".jpg";
+        $process_file_upload = process_file_upload(
+            $_FILES['profile_image'],
+            new SplFileInfo($image_path),
+            ['allow_extensions' => ['jpg', 'jpeg']]
+        );
+
+        if (!$process_file_upload['success']) {
+            error_alert(
+                match ($process_file_upload['error']) {
+                    ProcessFileUploadErrorCondition::InvalidExtension => $lang['error_not_jpeg'],
+                    default => $process_file_upload['error']->i18n($lang),
+                },
+                true
+            );
             exit();
         }
     }
@@ -81,6 +86,19 @@ function checkFileType(image_supplied)
             <div id="profile_image_validate" style="font-size:10; color:red;"></div>
             <div class="clearerleft"></div>
         </div>
+        
+        <?php if ($enable_remote_apis) { ?>
+            <div class="Question">
+                <label><?php echo escape($lang["api-key"]); ?></label>
+                <div class="Fixed"><?php echo escape(get_api_key($userref)); ?></div>
+                <div class="clearerleft"></div>
+            </div>
+            <div class="Question">
+                <label><?php echo escape($lang["api-url"]); ?></label>
+                <div class="Fixed"><?php echo escape($baseurl) ?>/api/</div>
+                <div class="clearerleft"></div>
+            </div>
+        <?php } ?>
 
         <div class="QuestionSubmit">
             <label for="save"></label>

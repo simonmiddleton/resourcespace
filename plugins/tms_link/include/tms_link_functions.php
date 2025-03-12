@@ -43,9 +43,13 @@ function tms_convert_value($value, $key, array $module)
     $tms_rs_mapping_index = array_search($key, array_column($module['tms_rs_mappings'], 'tms_column'));
     if($tms_rs_mapping_index !== false)
         {
-    $mappings=$module['tms_rs_mappings'];
-    $mappings=array_values($mappings);
-        if(strtoupper($mappings[$tms_rs_mapping_index]["encoding"]) != "UTF-8")
+        $mappings=$module['tms_rs_mappings'];
+        $mappings=array_values($mappings);
+        if (strtoupper($mappings[$tms_rs_mapping_index]["encoding"]) == "AUTODETECT")
+            {
+            return mb_convert_encoding((string) $value, 'UTF-8', mb_detect_encoding((string) $value, getEncodingOrder()));
+            }
+        elseif(strtoupper($mappings[$tms_rs_mapping_index]["encoding"]) != "UTF-8")
             {
             return mb_convert_encoding((string) $value, 'UTF-8', $mappings[$tms_rs_mapping_index]['encoding']);
             }
@@ -458,7 +462,7 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
  * @param  int  $resource  ResourceSpace resource ID
  * @return bool|string      False if no ID found, otherwise the Media Master ID is returned
  */
-function tms_get_mediamasterid(bool $create=true,int $resource=null)
+function tms_get_mediamasterid(bool $create = true, ?int $resource = null)
   {
   global $conn, $errormessage, $tms_link_tms_loginid,$tms_link_mediapaths_resource_reference_column ;
   // Get the latest inserted ID that we have not used
@@ -475,7 +479,7 @@ function tms_get_mediamasterid(bool $create=true,int $resource=null)
           debug('tms_link: $tms_link_mediapaths_resource_reference_column can only contain letters, numbers or underscore.');
           return false;
           }
-      $tmssql .= " AND $tms_link_mediapaths_resource_reference_column = ?";
+      $tmssql .= " AND $tms_link_mediapaths_resource_reference_column = CAST(CAST(? AS VARCHAR(20)) AS INT)";
       $tmssql_params = array_merge($tmssql_params, array($resource));
       }
 

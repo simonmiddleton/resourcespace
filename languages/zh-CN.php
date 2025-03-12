@@ -155,7 +155,6 @@ $lang["collectionsdeleteemptyareyousure"] = "你确定要删除空白的收藏�
 $lang["createnewresource"] = "建立新资源";
 $lang["resourcetype"] = "资源类型";
 $lang["resourcetypes"] = "资源类型";
-$lang["deleteresource"] = "删除资源";
 $lang["downloadresource"] = "下载资源";
 $lang["rightclicktodownload"] = "单击右键并选取‘存档为’已储存资料"; # 只限 Opera/IE
 $lang["downloadinprogress"] = "下载中";
@@ -386,7 +385,6 @@ $lang["key"] = "要诀"; # e.g. 搜索页面图标的解释
 $lang["languageselection"] = "语言选项";
 $lang["language"] = "语言";
 $lang["changeyourpassword"] = "更改你的密码";
-$lang["yourpassword"] = "你的密码";
 $lang["newpassword"] = "新密码";
 $lang["newpasswordretype"] = "新密码 (重新输入)";
 $lang["passwordnotvalid"] = "这不是一个有效的密码";
@@ -586,7 +584,6 @@ $lang["backtomanagealternativefiles"] = "返回‘管理可替用的文件　’
 
 
 $lang["resourceistranscoding"] = "资源转码中";
-$lang["cantdeletewhiletranscoding"] = "资源转码中，您不能删除此资源";
 
 $lang["maxcollectionthumbsreached"] = "此收藏夹中有太多的资源以缩图的方式显示. 缩图可能被隐藏.";
 
@@ -736,7 +733,6 @@ $lang["removethisfilter"] = "(移除该过滤)";
 $lang["no_exif"] = "Do not import embedded EXIF/IPTC/XMP metadata for this upload";
 $lang["difference"] = "差别";
 $lang["viewdeletedresources"] = "查看被删除的资源";
-$lang["finaldeletion"] = "该资源已在删除的状态中. 您的指示会使资源完全中系统中删除.";
 
 $lang["nocookies"] = "未能正确设立网页缓存. 请确定你的浏览器容许它的设立.";
 
@@ -1716,7 +1712,6 @@ $lang["list-recipients"] = '此消息已发送至以下电子邮件地址：';
 $lang["sort"] = '排序';
 $lang["sortcollection"] = '排序集合';
 $lang["emptycollection"] = '删除所有资源。';
-$lang["deleteresources"] = '删除资源';
 $lang["emptycollectionareyousure"] = '你确定要从此集合中删除所有资源吗？';
 $lang["error-cannoteditemptycollection"] = '您无法编辑空集合。';
 $lang["error-permissiondenied"] = '权限被拒绝。';
@@ -2056,7 +2051,6 @@ $lang["collection_manage__newcollection"] = '创建新集合，请输入一个�
 $lang["collection_public__introtext"] = '公共收藏是由其他用户创建的。';
 $lang["contact__contact"] = '您的联系方式在此。';
 $lang["contribute__introtext"] = '您可以贡献您自己的资源。当您最初创建资源时，它处于“待提交”状态。当您上传文件并编辑字段后，请将状态字段设置为“待审核”。然后，资源团队将对其进行审核。';
-$lang["delete__introtext"] = '请输入您的密码以确认您要删除此资源。';
 $lang["done__collection_email"] = '已向您指定的用户发送包含集合链接的电子邮件。';
 $lang["done__deleted"] = '资源已被删除。';
 $lang["done__research_request"] = '研究团队的一名成员将被指派处理您的请求。在整个过程中，我们将通过电子邮件保持联系，一旦完成研究，您将收到一封电子邮件，其中包含我们推荐的所有资源的链接。';
@@ -2113,7 +2107,6 @@ $lang["prevent_user_group_sharing_externally"] = '防止用户与外部用户共
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = '允许用户组选择以确定在外部共享时的访问级别。';
 $lang["share_using_permissions_from_user_group"] = '使用用户组权限共享';
 $lang["externalshare_using_permissions_from_user_group"] = '如果您要给外部用户发送电子邮件，请选择用于访问的用户组。';
-$lang["delete__nopassword"] = '请确认您是否要删除此资源。';
 $lang["collection_download_too_large"] = '抱歉，此集合文件过大，无法作为一个文件下载。请尝试减小集合大小或选择较小的图像大小。';
 $lang["all__passwordnewemailhtml"] = '请点击下面的链接为您的账户设置新密码。<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />用户名: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"] = '上传暂时不可用。';
@@ -3046,3 +3039,6 @@ $lang["cannot_share-has_upload_share"] = '由于此集合当前存在上传共�
 $lang["language-cy"] = '威尔士语';
 $lang["language-th"] = '泰语';
 $lang["welcome_generic"] = '欢迎使用%applicationname';
+
+$lang["language-hu"] = '匈牙利语';
+$lang["language-vi"] = '越南语';

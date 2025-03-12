@@ -25,6 +25,9 @@ $openai_gpt_message_output_json = "a JSON encoded list of values as if provided 
 
 $openai_gpt_temperature = 0;
 
+// Language to use for translations. If set to the empty string then the user's own language setting is used.
+$openai_gpt_language = "";
+
 // The following can't be changed from the plugin setup page
 $openai_gpt_endpoint = "https://api.openai.com/v1/chat/completions";
 $openai_gpt_max_tokens = 1000;

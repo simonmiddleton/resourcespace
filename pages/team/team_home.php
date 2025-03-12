@@ -48,7 +48,7 @@ include "../../include/header.php";
     <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
         <ul>
             <?php if (checkperm("c")) { ?>
-                <li>
+                <li title="<?php echo escape($lang["manageresources-tooltip"]); ?>">
                     <a
                         href="<?php echo $baseurl_short?>pages/team/team_resource.php"
                         <?php if (getval("modal", "") != "") {
@@ -67,7 +67,7 @@ include "../../include/header.php";
             }
 
             if (checkperm("R")) { ?>
-                <li>
+                <li title="<?php echo escape($lang["managerequestsorders-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i>
                         <br /><?php echo escape($lang["managerequestsorders"]); ?>
@@ -94,7 +94,7 @@ include "../../include/header.php";
             <?php } ?>
 
             <?php if (checkperm("r") && $research_request) { ?>
-                <li>
+                <li title="<?php echo escape($lang["manageresearchrequests-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>
                         <br /><?php echo escape($lang["manageresearchrequests"]); ?>
@@ -111,7 +111,7 @@ include "../../include/header.php";
 
             if (checkperm('u')) {
                 ?>
-                <li>
+                <li title="<?php echo escape($lang["manageusers-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/team/team_user.php" onClick="return CentralSpaceLoad(this, true);">
                         <i aria-hidden="true" class="fa fa-fw fa-users"></i>
                         <br /><?php echo escape($lang['manageusers']); ?>
@@ -131,7 +131,7 @@ include "../../include/header.php";
                 )
             ) {
                 ?>
-                <li>
+                <li title="<?php echo escape($lang["manage_dash_tiles-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);">
                         <i aria-hidden="true" class="fa fa-fw fa-grip"></i>
                         <br /><?php echo escape($lang['manage_dash_tiles']); ?>
@@ -143,7 +143,7 @@ include "../../include/header.php";
             // Manage external shares
             if (checkperm('ex') || checkperm('a')) {
                 ?>
-                <li>
+                <li title="<?php echo escape($lang["manage_external_shares-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/manage_external_shares.php" onClick="return CentralSpaceLoad(this, true);">
                         <i aria-hidden="true" class="fa fa-fw fa-share-alt"></i>
                         <br /><?php echo escape($lang['manage_external_shares']); ?>
@@ -153,14 +153,14 @@ include "../../include/header.php";
             }
             ?>
 
-            <li>
+            <li title="<?php echo escape($lang["rse_analytics-tooltip"]); ?>">
                 <a href="<?php echo $baseurl_short?>pages/team/team_analytics.php" onClick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="fa fa-fw fa-pie-chart"></i>
                     <br /><?php echo escape($lang["rse_analytics"]); ?>
                 </a>
             </li>
             
-            <li>
+            <li title="<?php echo escape($lang["viewreports-tooltip"]); ?>">
                 <a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="fa fa-fw fa-table"></i>
                     <br /><?php echo escape($lang["viewreports"]); ?>
@@ -174,7 +174,7 @@ include "../../include/header.php";
             $pending = count(job_queue_get_jobs("", STATUS_ERROR, 0));
             # Include a link to the System Setup area for those with the appropriate permissions.
             if (checkperm("a")) { ?>
-                <li>
+                <li title="<?php echo escape($lang["systemsetup-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short?>pages/admin/admin_home.php"
                         <?php if (getval("modal", "") != "") {
                             # If a modal, open in the same modal

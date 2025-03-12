@@ -63,7 +63,7 @@ foreach ($use_cases as $use_case) {
         true,
         true
     );
-
+    
     $results = array_column($results, "ref");
     sort($results);
     sort($use_case["results"]);

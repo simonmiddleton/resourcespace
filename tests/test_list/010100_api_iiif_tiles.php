@@ -16,9 +16,9 @@ $preview_tile_scale_factors = array(1,2,4);
 create_previews($tileresource, false, "jpg", false, false, -1, true, false, false, ["tiles"]);
 
 $tile_checks = array();
-$tile_checks[] = get_resource_path($tileresource, true, 'tile_0_0_256_256');
-$tile_checks[] = get_resource_path($tileresource, true, 'tile_0_0_512_512');
-$tile_checks[] = get_resource_path($tileresource, true, 'tile_0_0_1024_1024');
+$tile_checks[] = get_resource_path($tileresource, true, 'tile_1_0_0_256_256');
+$tile_checks[] = get_resource_path($tileresource, true, 'tile_2_0_0_512_512');
+$tile_checks[] = get_resource_path($tileresource, true, 'tile_4_0_0_1024_1024');
 
 foreach ($tile_checks as $tile_check) {
     if (!file_exists($tile_check)) {

@@ -335,10 +335,10 @@ function add_resource_to_collection(
     $smartadd = false,
     $size = "",
     $addtype = "",
-    bool $col_access_control = null,
-    array $external_shares = null,
+    ?bool $col_access_control = null,
+    ?array $external_shares = null,
     string $search = '',
-    int $sort_order = null
+    ?int $sort_order = null
 ) {
     global $lang;
 
@@ -709,13 +709,18 @@ function collection_readable($collection)
     $attached = ps_array("SELECT user value FROM user_collection WHERE collection = ?", ["i",$collection]);
     $attached_groups = ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection = ?", ["i",$collection]);
 
+    include_once 'request_functions.php';
+    $request_collections = array_column(get_requests(), 'collection');
+
     # Access if collection_commenting is enabled and request feedback checked
     # Access if it's a public collection (or featured collection to which user has access to)
+    # Access if the user is managing a request for a collection
     # Access if k is not empty or option to ignore collection access is enabled and k is empty
     if (
         ($collection_commenting && $collectiondata['request_feedback'] == 1)
         || $collectiondata['type'] == COLLECTION_TYPE_PUBLIC
         || ($collectiondata['type'] == COLLECTION_TYPE_FEATURED && featured_collection_check_access_control($collection))
+        || in_array($collection, $request_collections)
         || $k != ""
         || ($k == "" && $ignore_collection_access)
     ) {
@@ -1273,7 +1278,6 @@ function save_collection($ref, $coldata = array())
         $coldata["result_limit"]        = getval("result_limit", 0, true);
         $coldata["relateall"]           = getval("relateall", "") != "";
         $coldata["removeall"]           = getval("removeall", "") != "";
-        $coldata["deleteall"]           = getval("deleteall", "") != "";
         $coldata["users"]               = getval("users", "");
 
         if (checkperm("h")) {
@@ -1289,9 +1293,9 @@ function save_collection($ref, $coldata = array())
     $oldcoldata = get_collection($ref);
     $sqlset = array();
     foreach ($coldata as $colopt => $colset) {
-        // skip data that is not a collection property (e.g result_limit or deleteall) otherwise the $sqlset will have an
+        // skip data that is not a collection property (e.g result_limit) otherwise the $sqlset will have an
         // incorrect SQL query for the update statement.
-        if (in_array($colopt, ['result_limit', 'relateall', 'removeall', 'deleteall', 'users'])) {
+        if (in_array($colopt, ['result_limit', 'relateall', 'removeall', 'users'])) {
             continue;
         }
 
@@ -1601,14 +1605,6 @@ function save_collection($ref, $coldata = array())
     # Remove all resources?
     if (isset($coldata["removeall"]) && $coldata["removeall"] != "") {
         remove_all_resources_from_collection($ref);
-    }
-
-    # Delete all resources?
-    if (
-        isset($coldata["deleteall"]) && $coldata["deleteall"] != "" && !checkperm("D")
-        && allow_multi_edit($ref)
-    ) {
-            delete_resources_in_collection($ref);
     }
 
     # Update limit count for saved search
@@ -2401,7 +2397,7 @@ function add_saved_search_items(
     global $collection_share_warning, $collection_allow_not_approved_share, $userref, $collection_block_restypes, $search_all_workflow_states;
 
     # Adds resources from a search to the collection.
-    if ($search_all_workflow_states && 0 != $archivesearch) {
+    if ($search_all_workflow_states && trim($archivesearch) !== "" && $archivesearch != 0) {
         $search_all_workflow_states = false;
     }
 
@@ -3767,7 +3763,9 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
-           $system_read_only;
+           $system_read_only, $USER_SELECTION_COLLECTION;
+
+    $is_selection_collection = isset($collection_data['ref']) && $collection_data['ref'] == $USER_SELECTION_COLLECTION;
 
     #This is to properly render the actions drop down in the themes page
     if (isset($collection_data['ref']) && $pagename != "collections") {
@@ -4173,7 +4171,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Note: functionality moved from edit collection page
     if (
         ($k == "" || $internal_share_access)
-        && !$top_actions
+        && (!$top_actions || $is_selection_collection)
         && ((is_array($result) && count($result) != 0) || $count_result != 0)
         && collection_writeable($collection_data['ref'])
         && $allow_multi_edit

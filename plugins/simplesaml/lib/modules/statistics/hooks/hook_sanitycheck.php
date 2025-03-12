@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
+use SimpleSAML\Assert\Assert;
+use SimpleSAML\Configuration;
+
 /**
  * Hook to do sanity checks
  *
  * @param array &$hookinfo  hookinfo
- * @return void
  */
-function statistics_hook_sanitycheck(&$hookinfo)
+function statistics_hook_sanitycheck(array &$hookinfo): void
 {
-    assert(is_array($hookinfo));
-    assert(array_key_exists('errors', $hookinfo));
-    assert(array_key_exists('info', $hookinfo));
+    Assert::keyExists($hookinfo, 'errors');
+    Assert::keyExists($hookinfo, 'info');
 
     try {
-        $statconfig = \SimpleSAML\Configuration::getConfig('module_statistics.php');
+        $statconfig = Configuration::getConfig('module_statistics.php');
     } catch (Exception $e) {
         $hookinfo['errors'][] = '[statistics] Could not get configuration: ' . $e->getMessage();
         return;

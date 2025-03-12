@@ -477,7 +477,6 @@ $lang["range_no_start"] = "Cannot end range without a start. Please release the 
 $lang["createnewresource"] = "Create new resource";
 $lang["treeobjecttype-resource_type"] = $lang["resourcetype"] = "Resource type";
 $lang["resourcetypes"] = "Resource types";
-$lang["deleteresource"] = "Delete resource";
 $lang["downloadresource"] = "Download resource";
 $lang["rightclicktodownload"] = "Right click this link and choose 'Save Target As' to download your resource..."; # For Opera/IE browsers only
 $lang["downloadinprogress"] = "Download in progress";
@@ -640,17 +639,18 @@ $lang["log-b"] = "Created alternate";
 $lang["log-y"] = "Deleted alternate";
 $lang["log-rtchange"] = "Edited resource type";
 $lang["log-missinglang"] = "[type] (missing lang)"; # [type] will be replaced.
-$lang['log-adminpermissionsrequired'] = 'Full admin permission required!';
-$lang['log-removedcustomuseraccess'] = 'Removed custom access for user: ';
-$lang['log-deleted_all'] = 'All resources of this collection deleted (moved to state %ARCHIVE)';
-$lang['log-f'] = "Replaced file";
-$lang['log-X'] = "Locked resource";
-$lang['log-Y'] = "Unlocked resource";
-$lang['log-XK'] = "Deleted external access key";
-$lang['log-EUP'] = "External share upload";
-$lang['log-NOFIL'] = "Marked as having no file";
-$lang['log-FIL'] = "Marked as having file";
-$lang['log-EDT'] = "Edited resource";
+$lang["log-adminpermissionsrequired"] = "Full admin permission required!";
+$lang["log-removedcustomuseraccess"] = "Removed custom access for user: ";
+$lang["log-deleted_all"] = "All resources of this collection deleted (moved to state %ARCHIVE)";
+$lang["log-f"] = "Replaced file";
+$lang["log-X"] = "Locked resource";
+$lang["log-Y"] = "Unlocked resource";
+$lang["log-XK"] = "Deleted external access key";
+$lang["log-EUP"] = "External share upload";
+$lang["log-NOFIL"] = "Marked as having no file";
+$lang["log-FIL"] = "Marked as having file";
+$lang["log-EDT"] = "Edited resource";
+$lang["log-up"] = "Uploaded preview image";
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"] = "Access changed";
@@ -834,7 +834,6 @@ $lang["default"] = "Default";
 $lang["languageselection"] = "Language";
 $lang["language"] = "Language";
 $lang["changeyourpassword"] = "Change password";
-$lang["yourpassword"] = "Your password";
 $lang["currentpassword"] = "Current password";
 $lang["newpassword"] = "New password";
 $lang["newpasswordretype"] = "New password (retype)";
@@ -1043,7 +1042,9 @@ $lang["add_selected_to_collection"] = "Add selected to collection";
 $lang["removeallresourcesfromcollection"] = "Remove all resources from this collection";
 $lang["remove_selected_from_collection"] = "Remove selected from collection";
 $lang['deleteallresourcesfromcollection'] = 'Delete all resources';
+$lang['deleteselectedfromcollection'] = 'Delete selected resources';
 $lang["deleteallsure"] = "Are you sure you wish to DELETE these resources? This will delete the resources themselves, not just remove them from this collection.";
+$lang['deleteallselectedsure'] = 'Are you sure you wish to DELETE the selected resources? This will delete the resources themselves, not just remove them from these search results.';
 $lang["batchdonotaddcollection"] = "(do not add to a collection)";
 $lang["collectionsthemes"] = "Related featured and public collections";
 $lang["recent"] = "Recent";
@@ -1108,7 +1109,7 @@ $lang["contactsheetconfiguration"] = "Contact sheet configuration";
 $lang["contactsheet_data_field_value_limit"] = "Maximum characters per field";
 $lang["contactsheet_data_toolong"] = "There is too much data to fit on one page. Please reduce the maximum characters per field, the amount of fields shown or choose an alternative page view";
 $lang["thumbnails"] = "Thumbnails";
-$lang["contactsheetintrotext"] = "Please select the configuration options you'd like for your contact sheet PDF. The preview will update automatically when you change your options, unless you change the order of resources in the collection, in which case you'll need to press the \"Preview\" button to update.<br />When you're ready, press \"Create\" to generate and download your contact sheet PDF.";
+$lang["contactsheetintrotext"] = "Please select the configuration options you'd like for your contact sheet PDF. The preview will update automatically when you change your options. If you change the selected metadata fields or the order of resources in the collection you'll need to press the \"Update Preview\" button to update.<br />When you're ready, press \"Create\" to generate and download your contact sheet PDF.";
 $lang["size"] = "Size";
 $lang["orientation"] = "Orientation";
 $lang["requiredfield"] = "This is a required field";
@@ -1203,7 +1204,6 @@ $lang["backtomanagealternativefiles"] = "Back to manage alternative files";
 $lang["alternatetype"] = "Alternative type";
 
 $lang["resourceistranscoding"] = "Resource is currently being transcoded";
-$lang["cantdeletewhiletranscoding"] = "You can't delete resources while they are transcoding";
 
 $lang["maxcollectionthumbsreached"] = "There are too many resources in this collection to display thumbnails. Thumbnails will now be hidden.";
 
@@ -1449,7 +1449,6 @@ $lang["removethisfilter"] = "(remove this filter)";
 $lang["no_exif"] = "Do not import embedded EXIF/IPTC/XMP metadata for this upload";
 $lang["difference"] = "Difference";
 $lang["viewdeletedresources"] = "View deleted resources";
-$lang["finaldeletion"] = "This resource is already in the 'deleted' state. This action will completely remove the resource from the system.";
 $lang["diskerror"] = "Quota exceeded";
 
 $lang["nocookies"] = "A cookie could not be set correctly. Please make sure you have cookies enabled in your browser settings.";
@@ -1822,6 +1821,7 @@ $lang["edit_access_to_workflow_state"] = "Edit access to workflow state";
 $lang["edit_access_to_access"] = "Edit access to access state '[state]'";
 $lang["can_create_resources_and_upload_files-admins"] = "Can create resources / upload files<br>(admin users; resources go to 'Active' state)";
 $lang["can_create_resources_and_upload_files-general_users"] = "Can create resources / upload files<br>(normal users; resources go to 'Pending Submission' state via My Contributions)";
+$lang["can_upload_preview_images"] = "Can upload preview images";
 $lang["can_delete_resources"] = "Can delete resources<br>(to which the user has write access)";
 $lang["can_manage_archive_resources"] = "Can manage archive resources";
 $lang["can_manage_alternative_files"] = "Can manage alternative files";
@@ -1903,7 +1903,6 @@ $lang["list-recipients"] = "This message was sent to the following e-mail addres
 $lang["sort"] = "Sort";
 $lang["sortcollection"] = "Sort collection";
 $lang["emptycollection"] = "Remove all resources";
-$lang["deleteresources"] = "Delete resources";
 $lang["emptycollectionareyousure"] = "Are you sure you want to remove all resources from this collection?";
 
 $lang["error-cannoteditemptycollection"] = "You cannot edit an empty collection.";
@@ -2065,6 +2064,7 @@ $lang["contact_sheet-add_logo_option"] = "Add logo to top of each page?";
 $lang["contact_sheet-single_select_size"] = "Image quality";
 $lang['contact_sheet_footer_address'] = 'XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999';
 $lang['contact_sheet_footer_copyright'] = '&#0169; ResourceSpace. All Rights Reserved.';
+$lang['contact_sheet_update_preview'] = 'Update Preview';
 
 $lang["caps-lock-on"] = "Warning! Caps Lock is on";
 $lang["collectionnames"] = "Collection names";
@@ -2341,7 +2341,6 @@ $lang["collection_manage__newcollection"] = "To create a new collection, enter a
 $lang["collection_public__introtext"] = "Public collections are created by other users.";
 $lang["contact__contact"] = "Your contact details here.";
 $lang["contribute__introtext"] = "You can contribute your own resources. When you initially create a resource it is in the \"Pending Submission\" status. When you have uploaded your file and edited the fields, set the status field to \"Pending Review\". It will then be reviewed by the resources team.";
-$lang["delete__introtext"] = "Please enter your password to confirm that you would like to delete this resource.";
 $lang["done__collection_email"] = "An email containing a link to the collection has been sent to the users you specified.";
 $lang["done__deleted"] = "The resource has been deleted.";
 $lang["done__research_request"] = "A member of the research team will be assigned to your request. We'll keep in contact via email throughout the process, and once we've completed the research you'll receive an email with a link to all the resources that we recommend.";
@@ -2408,7 +2407,6 @@ $lang["prevent_user_group_sharing_externally"] = "Prevent users from sharing res
 $lang["allow_user_group_selection_for_access_when_sharing_externally"] = "Allow user group select for determining access level when sharing externally";
 $lang["share_using_permissions_from_user_group"] = "Share using permissions from user group";
 $lang["externalshare_using_permissions_from_user_group"] = "If you are e-mailing external users, please select the user group to use for access";
-$lang["delete__nopassword"] = "Please confirm that you would like to delete this resource.";
 
 $lang["collection_download_too_large"] = "Sorry, this collection is too large to download as one file. Try reducing the size of the collection or selecting a smaller image size.";
 $lang["all__passwordnewemailhtml"] = "[img_headerlogo][welcome]<br/><br/>Please click on the link below to set a new password for your account.<br/><br/><a href=\"[url]\" target=\"_blank\" >[url]</a><br/><br/>Your new username: [username]<br/><br/>[text_footer]" ;
@@ -2781,6 +2779,8 @@ $lang["collection_restype_blocked"] = "The following resource types cannot be ad
 $lang["retina_mode"] = "Retina mode";
 
 $lang["private-api-key"] = "Private API key";
+$lang["api-key"] = "API key";
+$lang["api-url"] = "API URL";
 $lang["force_edit_resource_type"] = "Force edit access to resource type: ";
 
 // Responsive
@@ -2856,6 +2856,13 @@ $lang["error_upload_invalid_file"] = "Invalid file type: [filetype]";
 $lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: [resources]";
 $lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
 $lang["error_fail_save"] = "Unable to save";
+$lang['error_file_upload_cond-InvalidUploadPath'] = 'Invalid upload path detected';
+$lang['error_file_upload_cond-SpecialFile'] = '"Special" file detected which is not allowed';
+$lang['error_file_upload_cond-InvalidExtension'] = 'Invalid extension';
+$lang['error_file_upload_cond-MimeTypeMismatch'] = 'MIME type mismatch';
+$lang['error_file_upload_cond-FileMoveFailure'] = 'Unable to move the (uploaded) file';
+$lang['error_file_upload_cond-MissingSourceFile'] = 'The source file is missing. Please contact your system administrator';
+$lang['error_file_upload_cond-EmptySourceFile'] = 'Invalid source file because it is empty (has no content; file size is zero)';
 
 
 $lang['image_quality_100'] = "Maximum";
@@ -3193,6 +3200,7 @@ $lang["language-fi"] = "Finnish";
 $lang["language-fr"] = "French";
 $lang["language-hi"] = "Hindi";
 $lang["language-hr"] = "Croatian";
+$lang["language-hu"] = "Hungarian";
 $lang["language-it"] = "Italian";
 $lang["language-jp"] = "Japanese";
 $lang["language-ko"] = "Korean";
@@ -3211,6 +3219,7 @@ $lang["language-th"] = "Thai";
 $lang["language-tr"] = "Turkish";
 $lang["language-uk"] = "Ukranian";
 $lang["language-ur"] = "Urdu";
+$lang["language-vi"] = "Vietnamese";
 $lang["language-zh-CN"] = "Simplified Chinese";
 
 $lang["workflow-actions-archive"] = "Archive";
@@ -3225,3 +3234,44 @@ $lang["facial-recognition"] =  "Facial recognition";
 
 $lang['ui_removed_config_message'] = 'This must now be set in the configuration file as %variable';
 $lang["welcome_generic"] = "Welcome to %applicationname";
+
+// User/System/Admin menu tool tips
+$lang["profile-tooltip"] = "Manage your profile details";
+$lang["password-tooltip"] = "Change your account password";
+$lang["languageselection-tooltip"] = "Change the interface language";
+$lang["mycontributions-tooltip"] = "View your contributed resources";
+$lang["mycollections-tooltip"] = "Manage your collections and perform actions on them";
+$lang["actions_myactions-tooltip"] = "View actions that require your attention";
+$lang["mymessages-tooltip"] = "Read and manage all messages sent to you";
+$lang["my_jobs-tooltip"] = "Check the status of your offline jobs";
+$lang["my_shares-tooltip"] = "Manage your external shares";
+$lang["dash-tooltip"] = "Manage dash tiles available for your dash";
+$lang["userpreferences-tooltip"] = "Configure your personal preferences";
+$lang["logout-tooltip"] = "Log out of ResourceSpace";
+$lang["manageresources-tooltip"] = "Create, replace and view resources";
+$lang["managerequestsorders-tooltip"] = "Manage requests from users to access resources";
+$lang["manageresearchrequests-tooltip"] = "Organise and manage research requests";
+$lang["manageusers-tooltip"] = "Create and manage user accounts";
+$lang["manage_dash_tiles-tooltip"] = "Manage default user dash tiles";
+$lang["manage_external_shares-tooltip"] = "View and manage external share links";
+$lang["rse_analytics-tooltip"] = "Create charts of resource usage and system statistics";
+$lang["viewreports-tooltip"] = "View tables of data from the system";
+$lang["systemsetup-tooltip"] = "System setup area";
+$lang["page-title_user_group_management-tooltip"] = "Manage user groups and permissions";
+$lang["resource_types_manage-tooltip"] = "Create and configure resource types";
+$lang["admin_resource_type_fields-tooltip"] = "Create and configure metadata fields";
+$lang["filter_manage-tooltip"] = "Create and configure search filters to control access to resources";
+$lang["page-title_report_management-tooltip"] = "Create or edit reports to run on the system";
+$lang["page-title_size_management-tooltip"] = "Manage sizes for resource preview images";
+$lang["managecontent-tooltip"] = "Edit any text in the user interface";
+$lang["pluginssetup-tooltip"] = "Enable and configure plugins to add extra functionality";
+$lang["manage_slideshow-tooltip"] = "Configure slideshow images and where they can be viewed";
+$lang["manage_jobs-tooltip"] = "Check the status of offline jobs system wide";
+$lang["exportdata-tooltip"] = "Export system configuration data";
+$lang["api-test-tool-tooltip"] = "Test API functions and view the results";
+$lang["system_tabs-tooltip"] = "Manage tabs to group metadata for resources";
+$lang["installationcheck-tooltip"] = "Check the system setup and dependencies";
+$lang["systemlog-tooltip"] = "View the system log";
+$lang["system_performance-tooltip"] = "Run a performance benchmark";
+$lang["systemconfig-tooltip"] = "Configure system level options";
+

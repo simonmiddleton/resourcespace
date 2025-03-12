@@ -339,6 +339,7 @@ if (isset($filename)) {
 // We declare the downloaded content mime type
 $mime = get_mime_type($path);
 header("Content-Type: {$mime}");
+header('X-Content-Type-Options: nosniff');
 
 debug("PAGES/DOWNLOAD.PHP: Set MIME type to '{$mime}'");
 
