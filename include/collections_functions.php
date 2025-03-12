@@ -2910,7 +2910,7 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
         $ref = $ref_rt['ref'];
         $resource_type = $ref_rt['resource_type'];
 
-        if (file_exists(get_resource_path($ref, true, $size, false)) && resource_download_allowed($ref, $size, $resource_type)) {
+        if (file_exists(get_resource_path($ref, true, $size, false)) && resource_download_allowed($ref, $size, $resource_type, -1, true)) {
             $images[] = ["ref" => $ref, "path" => get_resource_path($ref, false, $size, false)];
         }
     }
@@ -6533,11 +6533,11 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
  *                              "k" => External access key from download request if set
  *                          ];
  * 
- * @return array            Array of data about the created file and the download file name i.e. 
+ * @return array            Array of data about the created file and the download file nam, or the TAR status i.e. 
  *                          [
  *                              "filename" => [the name of download file],
  *                              "path" => [path to the zip file],
- *                              "id" => [unique identifier - used to create a download.php link that is specific to the user],
+ *                              "completed" => [Set to true if a tar has been sent],
  *                          ];
  */
 function process_collection_download(array $dl_data): array
@@ -6557,6 +6557,7 @@ function process_collection_download(array $dl_data): array
     $include_csv_file           = (bool) $dl_data['include_csv_file'] ?? false;
     $include_alternatives       = (bool) $dl_data['include_alternatives'] ?? false;
     $collection_download_tar    = (bool) ($dl_data['collection_download_tar'] ?? false);
+    $archiver                   = (bool) ($dl_data["archiver"] ?? false);
 
     if (empty($collectiondata) && $collection > 0) {
         $collectiondata = get_collection($collection);
@@ -6571,16 +6572,10 @@ function process_collection_download(array $dl_data): array
     }
 
     $zip = false;
-    $dl_data['zipfile'] = "";
     if (!$collection_download_tar) {
         // Generate a randomised path for zip file
-        $randstring = md5(rand() . microtime());
-        $zipfile = get_temp_dir(false, '/user_downloads/')
-            . $GLOBALS["userref"] . "_" . md5($GLOBALS["username"]
-            . $randstring . $GLOBALS["scramble_key"]) . ".zip";
-
+        $zipfile = get_temp_dir(false, 'user_downloads') . DIRECTORY_SEPARATOR . $GLOBALS["userref"] . "_" . md5($GLOBALS["username"] . $id . $GLOBALS["scramble_key"]) . ".zip";
         debug('Collection download : $zipfile =' . $zipfile);
-        $dl_data['zipfile'] = $zipfile;
         if ($GLOBALS['use_zip_extension']) {
             $zip = new ZipArchive();
             $zip->open($zipfile, ZIPARCHIVE::CREATE);
@@ -6640,7 +6635,7 @@ function process_collection_download(array $dl_data): array
         if (
             file_exists($p) 
             && (($access == 0) || ($access == 1 && $GLOBALS["restricted_full_download"]))
-            && resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'])
+            && resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'], -1, true)
         ) {
             $dl_data['available_sizes']['original'][] = $ref;
         }
@@ -6653,7 +6648,7 @@ function process_collection_download(array $dl_data): array
                 $p = get_resource_path($ref, true, 'pre', false, $collection_resources[$n]['file_extension']);
                 $size_id = 'pre';
                 if (
-                    resource_download_allowed($ref, $size_id, $collection_resources[$n]['resource_type'])
+                    resource_download_allowed($ref, $size_id, $collection_resources[$n]['resource_type'], -1, true)
                     &&
                     (
                         hook('size_is_available', '', array($collection_resources[$n], $p, $size_id))
@@ -6666,7 +6661,7 @@ function process_collection_download(array $dl_data): array
                 // Audio files are ported to mp3 and do not have different preview sizes
                 $p = get_resource_path($ref, true, '', false, 'mp3');
                 if (
-                    resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'])
+                    resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'], -1, true)
                     &&
                     (
                         hook('size_is_available', '', array($collection_resources[$n], $p, ''))
@@ -6680,7 +6675,7 @@ function process_collection_download(array $dl_data): array
                 $size_extension = get_extension($collection_resources[$n], $size_id);
                 $p = get_resource_path($ref, true, $size_id, false, $size_extension);
                 if (
-                    resource_download_allowed($ref, $size_id, $collection_resources[$n]['resource_type'])
+                    resource_download_allowed($ref, $size_id, $collection_resources[$n]['resource_type'], -1, true)
                     &&
                     (
                         hook('size_is_available', '', array($collection_resources[$n], $p, $size_id))
@@ -6738,7 +6733,7 @@ function process_collection_download(array $dl_data): array
         } elseif (
             !$target_exists
             && $useoriginal
-            && resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'])
+            && resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'], -1, true)
         ) {
             // This size doesn't exist, so we'll try using the original instead
             $p = get_resource_path($ref, true, '', false, $collection_resources[$n]['file_extension'], -1, 1, $use_watermark);
@@ -6759,7 +6754,7 @@ function process_collection_download(array $dl_data): array
                         && (image_size_restricted_access($size) || ($usesize == '' && $GLOBALS["restricted_full_download"]))
                     )
                 )
-                && resource_download_allowed($ref, $usesize, $collection_resources[$n]['resource_type'])
+                && resource_download_allowed($ref, $usesize, $collection_resources[$n]['resource_type'], -1, true)
             )
         ) {
             debug('Collection download : Skipping resource ID ' . (int) $ref
@@ -6768,7 +6763,7 @@ function process_collection_download(array $dl_data): array
                 . ', image_size_restricted_access(' . $size . ') = ' . image_size_restricted_access($size)
                 . ', $usesize = ' . $usesize
                 . ', $restricted_full_download = ' . $GLOBALS["restricted_full_download"]
-                . ', resource_download_allowed() = ' . resource_download_allowed($ref, $usesize, $collection_resources[$n]['resource_type'])
+                . ', resource_download_allowed() = ' . resource_download_allowed($ref, $usesize, $collection_resources[$n]['resource_type'], -1, true)
             );
             continue;
         }        
@@ -6838,7 +6833,7 @@ function process_collection_download(array $dl_data): array
                 if (
                     !$target_exists
                     && $useoriginal
-                    && resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'], $alternative["ref"])
+                    && resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'], $alternative["ref"], true)
                 ) {
                     debug("Using original file {$alternative['ref']} for resource $ref");
                     // This size doesn't exist, so we'll try using the original instead
@@ -6897,10 +6892,6 @@ function process_collection_download(array $dl_data): array
         collection_download_process_csv_metadata_file($dl_data, $zip);
     }
 
-    $archiver = ($GLOBALS["archiver_fullpath"] != false)
-        && (isset($GLOBALS["archiver_listfile_argument"]))
-        && (isset($GLOBALS["collection_download_settings"]) ? is_array($GLOBALS["collection_download_settings"]) : false);
-
     if ($collection_download_tar) {
         $suffix = '.tar';
     } elseif ($archiver) {
@@ -6918,7 +6909,6 @@ function process_collection_download(array $dl_data): array
     return [
         "filename"  => $filename,
         "path"      => $zipfile,
-        "id"        => $randstring,
         "completed" => $completed,
     ];
 }

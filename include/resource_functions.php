@@ -5148,15 +5148,16 @@ function edit_resource_external_access($key, $access = -1, $expires = "", $group
  * @param  string  $size            ID of size
  * @param  int     $resource_type   ID of resource type
  * @param  int     $alternative     Use alternative?
+ * @param  bool    $usecache        Use cached result if available?
  *
  * @return boolean
  */
-function resource_download_allowed($resource, $size, $resource_type, $alternative = -1)
+function resource_download_allowed($resource, $size, $resource_type, $alternative = -1, $usecache = false)
 {
     global $userref, $usergroup, $user_dl_limit, $user_dl_days, $sizes_always_allowed, $download_access_cache;
 
     $cacheid = $resource . "_" . $size;
-    if (isset($download_access_cache[$cacheid])) {
+    if ($usecache && isset($download_access_cache[$cacheid])) {
         return $download_access_cache[$cacheid];
     }
 

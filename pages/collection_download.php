@@ -111,7 +111,7 @@ for ($n = 0; $n < count($result); $n++) {
 
     // Check availability of original file
     $p = get_resource_path($ref, true, "", false, $result[$n]["file_extension"]);
-    if (file_exists($p) && (($access == 0) || ($access == 1 && $restricted_full_download)) && resource_download_allowed($ref, '', $result[$n]['resource_type'])) {
+    if (file_exists($p) && (($access == 0) || ($access == 1 && $restricted_full_download)) && resource_download_allowed($ref, '', $result[$n]['resource_type'], -1, true)) {
         $available_sizes['original'][] = $ref;
     }
 
@@ -123,7 +123,7 @@ for ($n = 0; $n < count($result); $n++) {
             $p = get_resource_path($ref, true, 'pre', false, $result[$n]['file_extension']);
             $size_id = 'pre';
             if (
-                resource_download_allowed($ref, $size_id, $result[$n]['resource_type'])
+                resource_download_allowed($ref, $size_id, $result[$n]['resource_type'], -1, true)
                 && (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
             ) {
                 $available_sizes[$sizeinfo['id']][] = $ref;
@@ -132,7 +132,7 @@ for ($n = 0; $n < count($result); $n++) {
             // Audio files are ported to mp3 and do not have different preview sizes
             $p = get_resource_path($ref, true, '', false, 'mp3');
             if (
-                resource_download_allowed($ref, '', $result[$n]['resource_type'])
+                resource_download_allowed($ref, '', $result[$n]['resource_type'], -1, true)
                 && (hook('size_is_available', '', array($result[$n], $p, '')) || file_exists($p))
             ) {
                 $available_sizes[$sizeinfo['id']][] = $ref;
@@ -142,7 +142,7 @@ for ($n = 0; $n < count($result); $n++) {
             $size_extension = get_extension($result[$n], $size_id);
             $p = get_resource_path($ref, true, $size_id, false, $size_extension);
             if (
-                resource_download_allowed($ref, $size_id, $result[$n]['resource_type'])
+                resource_download_allowed($ref, $size_id, $result[$n]['resource_type'], -1, true)
                 && (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
             ) {
                 $available_sizes[$size_id][] = $ref;
@@ -210,7 +210,7 @@ if ($submitted) {
 
         // tar files are not an option with offline jobs
         $collection_download_data['collection_download_tar'] = false;
-        $modified_job_data = hook("collection_download_modify_job", "", [$collection_download_job_data]);
+        $modified_job_data = hook("collection_download_modify_job", "", [$collection_download_data]);
         if (is_array($modified_job_data)) {
             $collection_download_data = $modified_job_data;
         }
@@ -224,60 +224,65 @@ if ($submitted) {
             '',
             JOB_PRIORITY_USER
         );
-        exit();
-    }
+        $job_created = true;
+        $onload_message = [
+            "title" => $lang['collection_download'],
+            "text" => $lang['jq_notify_user_preparing_archive'],
+        ];
 
-    $zipinfo = process_collection_download($collection_download_data);
-
-    if (empty($zipinfo)) {
-        error_alert(escape($lang["download_limit_collection_error"]), true, 200);
-    }
-    if ($zipinfo["completed"] ?? false) {
-        // A tar file was requested and sent. Nothing further to do.
-        collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", "tar - " . $size);
-        exit();
     } else {
-        // Get the file size of the archive.
-        $filesize = filesize_unlimited($zipinfo["path"]);
+        $zipinfo = process_collection_download($collection_download_data);
 
-        header("Content-Disposition: attachment; filename=" . $zipinfo["filename"]);
-        if ($archiver) {
-            header("Content-Type: " . $collection_download_settings[$settings_id]["mime"]);
+        if (empty($zipinfo)) {
+            error_alert(escape($lang["download_limit_collection_error"]), true, 200);
+        }
+        if ($zipinfo["completed"] ?? false) {
+            // A tar file was requested and sent. Nothing further to do.
+            collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", "tar - " . $size);
+            exit();
         } else {
-            header("Content-Type: application/zip");
-        }
-        if ($use_zip_extension) {
-            header("Content-Transfer-Encoding: binary");
-        }
-        header("Content-Length: " . $filesize);
+            // Get the file size of the archive.
+            $filesize = filesize_unlimited($zipinfo["path"]);
 
-        ignore_user_abort(true); // collection download has a problem with leaving junk files when this script is aborted client side. This seems to fix that by letting the process run its course.
-        set_time_limit(0);
-        $sent = 0;
-        $handle = fopen($zipinfo["path"], "r");
-        // Now loop through the file and echo out chunks of file data
-        while ($sent < $filesize) {
-            echo fread($handle, $download_chunk_size);
-            $sent += $download_chunk_size;
-        }
-
-        // File send complete, log to daily stat
-        daily_stat('Downloaded KB', 0, floor($sent / 1024));
-
-        // Remove archive.
-        if ($use_zip_extension || $archiver) {
-            $GLOBALS["use_error_exception"] = true;
-            try {
-                $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
-                rmdir($usertempdir);
-            } catch (Exception $e) {
-                debug("collection_download: Attempt delete temp folder failed. Reason: {$e->getMessage()}");
+            header("Content-Disposition: attachment; filename=" . $zipinfo["filename"]);
+            if ($archiver) {
+                header("Content-Type: " . $collection_download_settings[$settings_id]["mime"]);
+            } else {
+                header("Content-Type: application/zip");
             }
-            unset($GLOBALS["use_error_exception"]);
+            if ($use_zip_extension) {
+                header("Content-Transfer-Encoding: binary");
+            }
+            header("Content-Length: " . $filesize);
+
+            ignore_user_abort(true); // collection download has a problem with leaving junk files when this script is aborted client side. This seems to fix that by letting the process run its course.
+            set_time_limit(0);
+            $sent = 0;
+            $handle = fopen($zipinfo["path"], "r");
+            // Now loop through the file and echo out chunks of file data
+            while ($sent < $filesize) {
+                echo fread($handle, $download_chunk_size);
+                $sent += $download_chunk_size;
+            }
+
+            // File send complete, log to daily stat
+            daily_stat('Downloaded KB', 0, floor($sent / 1024));
+
+            // Remove archive.
+            if ($use_zip_extension || $archiver) {
+                $GLOBALS["use_error_exception"] = true;
+                try {
+                    $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
+                    rmdir($usertempdir);
+                } catch (Exception $e) {
+                    debug("collection_download: Attempt delete temp folder failed. Reason: {$e->getMessage()}");
+                }
+                unset($GLOBALS["use_error_exception"]);
+            }
+            collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
+            hook('beforedownloadcollectionexit');
+            exit();
         }
-        collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
-        hook('beforedownloadcollectionexit');
-        exit();
     }
 }
 
@@ -374,8 +379,8 @@ include "../include/header.php";
         if ($zipped_collection_textfile == "true") {
             ?>
             <div class="Question">
-                <label for="text"><?php echo escape($lang["zippedcollectiontextfile"]); ?></label>
-                <select name="text" class="shrtwidth" id="text"<?php echo (!empty($submitted)) ? ' disabled="disabled"' : ''; ?>>
+                <label for="includetext"><?php echo escape($lang["zippedcollectiontextfile"]); ?></label>
+                <select name="includetext" class="shrtwidth" id="includetext"<?php echo (!empty($submitted)) ? ' disabled="disabled"' : ''; ?>>
                     <?php if ($zipped_collection_textfile_default_no) { ?>
                         <option value="false"><?php echo escape($lang["no"]); ?></option>
                         <option value="true"><?php echo escape($lang["yes"]); ?></option>
@@ -469,8 +474,10 @@ include "../include/header.php";
             <label for="download"> </label>
             <input
                 type="submit"
-                onclick="ajax_download(<?php echo $offline_job_queue ? 'true' : 'false'; ?>, tar); return false;"
                 value="<?php echo escape($lang["action-download"]); ?>"
+                <?php if ($job_created ?? false) {
+                    echo "disabled";
+                } ?>
             />
             <div class="clearerleft"></div>
         </div>
