@@ -7217,6 +7217,7 @@ function render_resource_view_image(array $resource, array $context)
                                     nodes_endpoint      : '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/get_nodes.php',
                                     resource            : <?php echo (int) $resource["ref"]; ?>,
                                     read_only           : <?php echo $edit_access ? 'false' : 'true'; ?>,
+                                    lang: <?php echo json_encode(get_annotorious_lang($lang)); ?>,
                                     // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                                     csrf_identifier: '<?php echo $GLOBALS["CSRF_token_identifier"]; ?>',
                                     <?php echo generateAjaxToken('RSTagging'); ?>

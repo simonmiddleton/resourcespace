@@ -303,6 +303,9 @@ function createAnnotation(array $annotation)
     $resource_type_field = $annotation['resource_type_field'];
     $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
     $tags                = $annotation['tags'] ?? [];
+    // todo: the text property is what holds the normal annotation comments.
+    // Note: tags will not exist in that case. Annotations comments and tagging with fields should be mutually exclusive - TBC.
+    $text = $annotation['text'] ?? '';
 
     // Annotorious annotation
     $x      = $annotation['shapes'][0]['geometry']['x'];
@@ -553,4 +556,19 @@ function search_add_annotation_count(&$result)
     foreach ($result as &$resource) {
         $resource["annotation_count"] = $res_annotations[$resource["ref"]] ?? 0;
     }
+}
+
+/**
+ * Get all translations relevant to the Annotorious (RSTagging) plugin.
+ * @param array<string, string> $map Language strings map
+ */
+function get_annotorious_lang(array $map): array
+{
+    return array_intersect_key(
+        $map,
+        [
+            'annotorious_add_a_comment' => 1,
+            'annotorious_type_to_search_field' => 1,
+        ]
+    );
 }

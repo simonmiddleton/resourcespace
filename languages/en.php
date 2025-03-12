@@ -2835,6 +2835,8 @@ $lang['annotate_annotations_label'] = 'Annotations';
 $lang['annotate_select'] = 'Select field...';
 $lang['annotate_tagging_fields'] = 'Tagging fields';
 $lang['annotate_text_adds_comment'] = 'Add comment for resource text annotations. (N/A for fixed list field annotations)';
+$lang['annotorious_add_a_comment'] = 'Add a Comment...';
+$lang['annotorious_type_to_search_field'] = 'Type to search field...';
 
 $lang["byte_prefix_mode_decimal"] = "Use decimal for file sizes (1000 multiples, KB/MB/GB/TB) as opposed to binary (1024 multiples , KiB/MiB/GiB/TiB)";
 
