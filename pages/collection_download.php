@@ -15,7 +15,7 @@ include_once __DIR__ . "/../include/pdf_functions.php";
 ob_end_clean();
 $collection = getval("collection","",true);
 $id = uniqid("Col" . $collection);
-if ($k!="") {
+if ($k != "") {
     $usercollection = $collection;
 }
 $size = getval("size", "");
@@ -32,7 +32,6 @@ if ($k != "" || (isset($anonymous_login) && $username == $anonymous_login)) {
     // Disable offline jobs as there is currently no way to notify the user upon job completion
     $offline_job_queue = false;
 }
-
 
 /// Get collection resources
 $result = do_search("!collection" . $collection);
@@ -414,22 +413,6 @@ hook('collectiondownloadintro');
 
         <?php
         }
-        
-        # Archiver settings
-        if ($archiver && count($collection_download_settings)>1)
-            { ?>
-            <div class="Question" id="archivesettings_question" <?php if($collection_download_tar){echo "style=\"display:none\"";}?>>
-            <label for="archivesettings"><?php echo escape($lang["archivesettings"]); ?></label>
-            <div class="tickset">
-            <select name="settings" class="stdwidth" id="archivesettings"<?php if ($submitted) {echo ' disabled="disabled"';} ?>><?php
-            foreach ($collection_download_settings as $key=>$value)
-                { ?>
-                <option value="<?php echo escape($key) ?>"><?php echo lang_or_i18n_get_translated($value["name"],"archive-") ?></option><?php
-                } ?>
-            </select>
-            <div class="clearerleft"></div></div><br />
-            </div><?php
-            }
 
         if(!hook('replacecsvfile'))
             { ?>
@@ -466,8 +449,21 @@ hook('collectiondownloadintro');
             {
             ?><input type="hidden" name="email" value="<?php echo escape($email); ?>"/><?php
             }
-        ?>
-        <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
+        // Legacy archiver settings
+        if ($archiver && count($collection_download_settings)>1) { ?>
+            <div class="Question" id="archivesettings_question" <?php if ($collection_download_tar) {echo "style=\"display:none\"";}?>>
+                <label for="archivesettings"><?php echo escape($lang["archivesettings"]); ?></label>
+                <div class="tickset">
+                    <select name="settings" class="stdwidth" id="archivesettings"<?php if ($submitted) {echo ' disabled="disabled"';} ?>><?php
+                    foreach ($collection_download_settings as $key=>$value) { ?>
+                        <option value="<?php echo escape($key) ?>"><?php echo lang_or_i18n_get_translated($value["name"],"archive-") ?></option><?php
+                    } ?>
+                    </select>
+                </div>
+                <div class="clearerleft"></div>
+            </div><?php
+        } ?>
+        <div class="Question"  <?php if (!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
             <label for="tardownload"><?php echo escape($lang["collection_download_format"]); ?></label>
             <div class="tickset">
                 <select

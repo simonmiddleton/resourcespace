@@ -6510,29 +6510,36 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
     return $new_fcs_order;
 }
 
-
 /**
  * Generate a collection download ZIP file and the download filename
  *
  * @param  array $dl_data   Array of collection download options passed from collection_download.php or from the offline job
- * 
- * @return array            Array of data about the created file and the download file name i.e. 
+ *                          This array will be updated and passed to subsidiary functions to keep track of processed file, generate text etc.
+ *                          Could be moved to an object later
  *                          [
  *                              "filename" => [the name of download file],
  *                              "collection" => [Collection ID],
  *                              "collection_resources" => [Resources to include in download],
- *                              "collectiondata" => [Collection data],
- *                              "path" => [path to the zip file],
+ *                              "collectiondata" => [Collection data - from get_collection()],
  *                              "exiftool_write_option" => [Write exif data?],
  *                              "useoriginal" => [Use original if requested size not available?],
- *                              "id" => [unique identifier - [used to create a download.php link that is specific to the user],
  *                              "size" => [Requested Download size ID],
  *                              "settings_id" => [Index of selected option from $collection_download_settings],
  *                              "deletion_array" => [Array of paths to delete],
  *                              "include_csv_file" => [Include metadata CSV file?],
  *                              "include_alternatives" => [Include alternative files?],
+ *                              "includetext" => Include text file?,
  *                              "collection_download_tar" => [Generate a TAR file?],
  *                              "count_data_only_types" => [Count of data only resources],
+ *                              "id" => [Optional unique identifier - [used to create a download.php link that is specific to the user],
+ *                              "k" => External access key from download request if set
+ *                          ];
+ * 
+ * @return array            Array of data about the created file and the download file name i.e. 
+ *                          [
+ *                              "filename" => [the name of download file],
+ *                              "path" => [path to the zip file],
+ *                              "id" => [unique identifier - used to create a download.php link that is specific to the user],
  *                          ];
  */
 function process_collection_download(array $dl_data): array
@@ -6540,8 +6547,8 @@ function process_collection_download(array $dl_data): array
     $collection                 = (int) ($dl_data['collection'] ?? 0);
     $collectiondata             = $dl_data['collectiondata'] ?? [];
     // Please note re: collection_resources - the current collection resources are not retrieved here as
-    // these may have changed since the download was requested 
-    $collection_resources       = $dl_data['collection_resources'] ?? [];
+    // these may have changed since the download was requested. Used to be stored as "result" element
+    $collection_resources       = $dl_data['collection_resources'] ?? ($dl_data['result'] ?? []);
     $size                       = (string) $dl_data['size'] ?? "";
     $exiftool_write_option      = (bool) $dl_data['exiftool_write_option'] ?? false;
     $useoriginal                = (bool) $dl_data['useoriginal'] ?? false;
@@ -6564,13 +6571,6 @@ function process_collection_download(array $dl_data): array
         debug("Missing collection data, Unable to proceed with collection download");
         return [];
     }
-
-    // // Initiate text file
-    // if ($GLOBALS['zipped_collection_textfile'] && $includetext) {
-    //     $text = i18n_get_collection_name($collectiondata) . "\r\n" .
-    //     $GLOBALS["lang"]["downloaded"] . " " . nicedate(date("Y-m-d H:i:s"), true, true) . "\r\n\r\n" .
-    //     $GLOBALS["lang"]["contents"] . ":\r\n\r\n";
-    // }
 
     $zip = false;
     $dl_data['zipfile'] = "";
@@ -6790,8 +6790,6 @@ function process_collection_download(array $dl_data): array
         }
 
         // If using original filenames when downloading, copy the file to new location so the name is included.
-        $filename = '';
-        // Compute a filename for this resource
         $filename = get_download_filename($ref, $usesize, 0, $pextension);
         collection_download_use_original_filenames_when_downloading(
             $dl_data,
@@ -6890,7 +6888,6 @@ function process_collection_download(array $dl_data): array
                 }
             }
         }
-
         collection_download_log_resource_ready($dl_data, $tmpfile, $ref);
     }
 

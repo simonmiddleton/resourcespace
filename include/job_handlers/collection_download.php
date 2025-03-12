@@ -4,51 +4,32 @@
 Job handler to process collection downloads
 
 Requires the following job data:
-$job_data['collection'] -
-$job_data['collectiondata'] -
-$job_data['result'] - Search result of !collectionX
-$job_data['size'] - Requested size
-$job_data['exiftool_write_option']
-$job_data['useoriginal'] -
-$job_data['id'] -
-$job_data['includetext'] -
-$job_data['count_data_only_types'] -
-$job_data['usage'] -
-$job_data['usagecomment'] -
-$job_data['settings_id'] -
-$job_data['include_csv_file'] - User input opting to include the CSV file in the downloaded archive
+$job_data['collection']                 Collection ID
+$job_data['collectiondata']             Collection data from get_collection()
+$job_data['collection_resources']       Resources to include in download (was previously 'result')
+$job_data['size']                       Requested size
+$job_data['exiftool_write_option']      Write embedded data (not for TAR downloads)
+$job_data['useoriginal']                Use original if requested size not available?
+$job_data['id']                         Unique identifier - used to create a download.php link that is specific to the user
+$job_data['includetext']                Include text file in download (config $zipped_collection_textfile)
+$job_data['count_data_only_types']      Count of data only resources
+$job_data['usage']                      Download usage (selected index of $download_usage)
+$job_data['usagecomment']               Download usage comment
+$job_data['settings_id']                Index of selected option from $collection_download_settings array
+$job_data['include_csv_file']           Include metadata CSV file?
+$job_data['include_alternatives']       Include alternative files?
+$job_data['k']                          External access key if set
 */
+
 include_once __DIR__ . '/../pdf_functions.php';
 include_once __DIR__ . '/../csv_export_functions.php';
-
-global $lang, $baseurl, $baseurl_short, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
-$text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument, $ffmpeg_preview_extension,
-$collection_download_settings,$restricted_full_download, $ffmpeg_supported_extensions, $ffmpeg_audio_extensions;
-
-// $dl_data = [
-//     "collection"            => (int) $job_data['collection'],
-//     "collectiondata"        => $job_data['collectiondata'],
-//     "collection_resources"  => $job_data['collection_resources'],
-//     "size"                  => (string) $job_data['size'],
-//     "exiftool_write_option" => (bool) $job_data['exiftool_write_option'],
-//     "useoriginal"           => (bool) $job_data['useoriginal'],
-//     "id"                    => (string) $job_data['id'],
-//     "includetext"           => (bool) $job_data['includetext'],
-//     "text"                  => (bool) $job_data['includetext'],
-//     "count_data_only_types" => (bool) $job_data['count_data_only_types'],
-//     "usage"                 => (string) $job_data['usage'],
-//     "usagecomment"          => (string) $job_data['usagecomment'],
-//     "settings_id"           => (string) $job_data['settings_id'],
-//     "include_csv_file"      => (bool) $job_data['include_csv_file'],
-//     "include_alternatives"  => (bool) $job_data['include_alternatives'],
-// ];
 
 // Used by format chooser
 if (isset($job_data["ext"])) {
     global $job_ext;
     $job_ext = $job_data["ext"];
 }
-$GLOBALS["debug_log"] = true;
+
 // Set up the user who requested the collection download as it needs to be processed in its name
 $user_select_sql = new PreparedStatementQuery();
 $user_select_sql->sql = "u.ref = ?";
@@ -71,13 +52,13 @@ if (!is_valid_rs_path($zipinfo["path"])) {
     return;
 }
 
-if ($offline_job_delete_completed) {
+if ($GLOBALS['offline_job_delete_completed']) {
     job_queue_delete($jobref);
 } else {
     job_queue_update($jobref, $job_data, STATUS_COMPLETE);
 }
 
-$download_url   = $baseurl_short . "pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $zipinfo["id"] . ".zip&filename=" . pathinfo($zipinfo["filename"], PATHINFO_FILENAME);
+$download_url   = $GLOBALS['baseurl_short'] . "pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $zipinfo["id"] . ".zip&filename=" . pathinfo($zipinfo["filename"], PATHINFO_FILENAME);
 message_add($job["user"], $job_success_text, $download_url);
 
 $delete_job_data = [];
