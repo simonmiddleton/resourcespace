@@ -578,3 +578,10 @@ function get_annotorious_resourcespace_config(): array
 {
     return array_intersect_key($GLOBALS, ['comments_resource_enable' => 1]);
 }
+
+/** Get list of allowed field types to be configured for te "annotate_fields" option */
+function get_valid_annotate_field_types(): array
+{
+    // IMPORTANT: due to their multiplicity nature, annotations can't bind to single value fields (e.g. text, dropdown)
+    return [FIELD_TYPE_DYNAMIC_KEYWORDS_LIST, FIELD_TYPE_CHECK_BOX_LIST];
+}

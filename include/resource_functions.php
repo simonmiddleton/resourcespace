@@ -7937,10 +7937,7 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
 function canSeePreviewTools()
 {
     global $image_preview_zoom;
-
-    $visible_annotate_fields = canSeeAnnotationsFields();
-
-    return count($visible_annotate_fields) > 0 || $image_preview_zoom;
+    return count(canSeeAnnotationsFields()) > 0 || $image_preview_zoom;
 }
 
 /**
@@ -7954,11 +7951,10 @@ function canSeeAnnotationsFields(): array
 
     $can_view_fields = array();
     if ($annotate_enabled && $k == "") {
-        foreach ($annotate_fields as $annotate_field) {
-            if (metadata_field_view_access($annotate_field)) {
-                $can_view_fields[] = $annotate_field;
-            }
-        }
+        $can_view_fields = array_intersect(
+            array_filter($annotate_fields, metadata_field_view_access(...)),
+            array_column(get_resource_type_fields('', 'ref', 'asc', '', get_valid_annotate_field_types(), false), 'ref')
+        );
     }
 
     return array_unique($can_view_fields, SORT_NUMERIC);

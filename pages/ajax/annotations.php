@@ -90,13 +90,12 @@ if ('delete' == $action && 0 < $annotation_id && 0 !== count($annotation)) {
 
 // Get available fields (allowed) for annotations
 if ('get_allowed_fields' == $action) {
+    $valid_annotate_field_types = get_valid_annotate_field_types();
+
     foreach (array_unique($annotate_fields, SORT_NUMERIC) as $annotate_field) {
         $field_data = get_resource_type_field($annotate_field);
 
-        if (
-            in_array($field_data['type'], $GLOBALS['FIXED_LIST_FIELD_TYPES'])
-            && metadata_field_view_access($annotate_field)
-        ) {
+        if (in_array($field_data['type'], $valid_annotate_field_types) && metadata_field_view_access($annotate_field)) {
             $return['data'][] =
                 array(
                     "ref" => $annotate_field,

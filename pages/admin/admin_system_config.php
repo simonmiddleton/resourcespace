@@ -8,6 +8,7 @@ if (!checkperm('a')) {
 
 include_once '../../include/config_functions.php';
 include_once '../../include/ajax_functions.php';
+include_once '../../include/annotation_functions.php';
 
 $ajax = getval('ajax', '') === 'true';
 
@@ -159,7 +160,7 @@ $page_def[] = config_add_multi_select(
     array_map(
         static fn(string $title) => lang_or_i18n_get_translated($title, 'fieldtitle-'),
         array_column(
-            get_resource_type_fields('', 'title, name', 'asc', '', $FIXED_LIST_FIELD_TYPES, true, false),
+            get_resource_type_fields('', 'title, name', 'asc', '', get_valid_annotate_field_types(), false),
             'title',
             'ref'
         )
