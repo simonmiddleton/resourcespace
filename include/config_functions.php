@@ -180,26 +180,22 @@ function set_usergroup_config_option(int $usergroup_id, string $param_name, ?str
     $query = "INSERT INTO user_preferences (usergroup, parameter, `value`) VALUES (?, ?, ?)";
    
     $current_param_value = null;
-    if(get_config_option($usergroup_id, $param_name, $current_param_value)) {
+    if(get_config_option(0, $param_name, $current_param_value, null, $usergroup_id)) {
         if($current_param_value == $param_value) {
             return true;
         }
 
         $params[] = 's'; $params[] = $param_value;
+        $user_query = 'usergroup = ?';
+        $params[] = 'i'; $params[] = $usergroup_id;
 
-        if(is_null($usergroup_id)) {
-            $user_query = 'usergroup IS NULL';
-        } else {
-            $user_query = 'usergroup = ?';
-            $params[] = 'i'; $params[] = $usergroup_id;
-        }
-
-        $query = "UPDATE user_preferences SET `value` = ? WHERE ". $user_query ." AND parameter = ?";
+        $query = "UPDATE user_preferences SET `value` = ? WHERE usergroup = ? AND parameter = ?";
         $params[] = "s"; $params[] = $param_name;
 
     } else {
         $params  = ["i", $usergroup_id, "s", $param_name, "s", $param_value];
     }
+
     ps_query($query, $params);
 
     // Clear disk cache
@@ -292,7 +288,8 @@ function remove_config_option(?int $user_id, string $name): bool
 * Where a user is specified (i.e. not null), the user group preference will be returned if set and the user
 * has no preference of their own to override it.
 * 
-* @param  ?integer $user_id         Current user ID. Use NULL to get the system wide setting.
+* @param  ?integer $user_id         Current user ID. Use NULL to get the system wide setting. Use 0 when getting user group preferences
+*                                   without applying user preferences e.g. administration of user group preferences.
 * @param  string   $name            Parameter name
 * @param  string   $returned_value  The config value will be returned through this parameter which is passed by reference.
 *                                   IMPORTANT: it falls back (defaults) to the globally scoped config option value if 
@@ -302,7 +299,7 @@ function remove_config_option(?int $user_id, string $name): bool
 *
 * @return boolean Indicates if the config option was found in the database or not.
 */
-function get_config_option($user_id, $name, &$returned_value, $default = null)
+function get_config_option($user_id, $name, &$returned_value, $default = null, ?int $usergroup_id = null)
     {
     if(trim($name) === '')
         {
@@ -311,18 +308,23 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
 
     $params[] = "s"; $params[] = $name;
 
-    if(is_null($user_id))
-        {
-        $user_query = 'user IS NULL AND usergroup IS NULL';
-        }
-    else
-        {
-        # Return user preference if present else user group preference if present.
+    if (is_null($usergroup_id)) {
         global $usergroup;
+        $usergroup_id = $usergroup;
+    }
+
+    if(is_null($user_id)) {
+        $user_query = 'user IS NULL AND usergroup IS NULL';
+    } elseif ($user_id === 0) {
+        # Return user group preference if present (without considering current user).
+        $user_query = 'usergroup = ? AND user IS NULL';
+        $params[] = 'i'; $params[] = $usergroup_id;
+    } else {
+        # Return user preference if present else user group preference if present.
         $user_query = '(user = ? OR usergroup = ?) ORDER BY usergroup LIMIT 1';
         $params[] = 'i'; $params[] = $user_id;
-        $params[] = 'i'; $params[] = $usergroup;
-        }
+        $params[] = 'i'; $params[] = $usergroup_id;
+    }
 
     $query = "SELECT `value` FROM user_preferences WHERE parameter = ? AND " . $user_query;
     $config_option = ps_value($query,$params, null, "preferences");
@@ -360,10 +362,10 @@ function get_config_option_users($option,$value)
 * Get config option from database for a specific user, system wide or user group.
 * To get system wide config, $user_id must be null and $usergroup_id must be null.
 * To get user specific config, $user_id must be int and $usergroup_id must be null.
-* To get user group config, $user_id must be int and $usergroup_id must be int.
+* To get user group config, $user_id must be 0 and $usergroup_id must be int.
 * 
-* @param  integer  $user_id           Current user ID. Can also be null to retrieve system wide config options
-* @param  integer  $usergroup_id      Current usergroup ID. 
+* @param  integer  $user_id           Current user ID. Can also be null to retrieve system wide config options. 0 to get user group options.
+* @param  integer  $usergroup_id      Current usergroup ID. Required when getting user group preferences. $user_id must be 0.
 * @param  array    $returned_options  If a value does exist it will be returned through
 *                                     this parameter which is passed by reference
 * @return boolean
@@ -377,7 +379,7 @@ function get_config_options(?int $user_id, ?int $usergroup_id, array &$returned_
     $params = [];
     if (is_null($user_id)) {
         $sql = 'user IS NULL AND usergroup IS NULL';
-    } elseif (!is_null($user_id) && !is_null($usergroup_id)) {
+    } elseif ($user_id === 0 && !is_null($usergroup_id)) {
         $sql = 'usergroup = ?';
         $params = ['i', $usergroup_id];
     } else {
@@ -427,7 +429,7 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
     $config_options = array();
 
     # Processing for user group preferences.
-    if(!is_null($user_id) && get_config_options($user_id, $usergroup_id, $config_options)) {
+    if(!is_null($user_id) && get_config_options(0, $usergroup_id, $config_options)) {
         foreach($config_options as $config_option) {
             $param_value = $config_option['value'];
 
@@ -442,6 +444,12 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
 
     // If the user doesn't have the ability to set his/her own preferences, then don't load it either
     if(!is_null($user_id) && !$user_preferences) {
+        return;
+    }
+
+    if ($user_id === 0) {
+        # Special case when trying to load only user group specific preferences over system preferences.
+        # Applies when the administrator edits user group preferences to avoid displaying their own user preferences.
         return;
     }
 

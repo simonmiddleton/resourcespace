@@ -2208,6 +2208,7 @@ $lang['page-title_user_group_management_edit'] = "Edit user group";
 $lang['page-subtitle_user_group_management_edit'] = "Use this section to modify user group properties.";
 $lang["action-title_remove_user_group_logo"] = "Tick to remove user group logo";
 $lang["action-title_see_wiki_for_user_group_advanced_options"] = "Please refer to the <a href='https://www.resourcespace.com/knowledge-base/systemadmin/advanced-user-group-options'>Knowledge Base</a> for further help with Advanced options.";
+$lang["action-title_usergroup_override_detail"] = 'Any settings configured here will override the system defaults for users in this group.';
 
 # admin web edit
 $lang['page-title_web_edit'] = "Edit file";
@@ -2280,6 +2281,7 @@ $lang["fieldhelp-add_to_config_override"] = "Select config override to view help
 $lang["fieldhelp-no_config_override_help"] = "There is no help for this config item";
 $lang["fieldhelp-tick_to_delete_group"] = "You are not allowed to delete user groups that contain active users or are the parent of other groups";
 $lang["fieldtitle-add_to_config_override"] = "Add to config override";
+$lang["fieldtitle-usergroup_config"] = "Group overrides";
 $lang["fieldtitle-advanced_options"] = "Advanced options";
 $lang["fieldtitle-derestrict_filter"] = "Derestrict filter";
 $lang["fieldtitle-group_logo"] = "Group specific logo";
