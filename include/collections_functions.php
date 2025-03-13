@@ -6541,23 +6541,33 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
  *                          ];
  */
 function process_collection_download(array $dl_data): array
-{    
+{
+    // Set eleemnts that may not have been set e.g. a job created in an earlier version
+    foreach (['archiver', 'collection_download_tar', 'include_alternatives', 'k'] as $unset_var)
+    if (!isset($dl_data[$unset_var])) {
+        $dl_data[$unset_var] = false;
+    }
+
     $collection                 = (int) ($dl_data['collection'] ?? 0);
     $collectiondata             = $dl_data['collectiondata'] ?? [];
     // Please note re: collection_resources - the current collection resources are not retrieved here as
     // these may have changed since the download was requested. Used to be stored as "result" element
     $collection_resources       = $dl_data['collection_resources'] ?? ($dl_data['result'] ?? []);
-    $size                       = (string) $dl_data['size'] ?? "";
-    $exiftool_write_option      = (bool) $dl_data['exiftool_write_option'] ?? false;
-    $useoriginal                = (bool) $dl_data['useoriginal'] ?? false;
-    $id                         = (string) $dl_data['id'] ?? uniqid("Col" . $collection);
-    $includetext                = (bool) $dl_data['includetext'] ?? false;
-    $count_data_only_types      = (int) $dl_data['count_data_only_types'] ?? 0;
-    $settings_id                = (string) $dl_data['settings_id'] ?? "";
-    $include_csv_file           = (bool) $dl_data['include_csv_file'] ?? false;
-    $include_alternatives       = (bool) $dl_data['include_alternatives'] ?? false;
+    $size                       = (string) ($dl_data['size'] ?? "");
+    $useoriginal                = (bool) ($dl_data['useoriginal'] ?? false);
+    $id                         = (string) ($dl_data['id'] ?? uniqid("Col" . $collection));
+    $includetext                = (bool) ($dl_data['includetext'] ?? false);
+    $count_data_only_types      = (int) ($dl_data['count_data_only_types'] ?? 0);
+    $settings_id                = (string) ($dl_data['settings_id'] ?? "");
+    $include_csv_file           = (bool) ($dl_data['include_csv_file'] ?? false);
+    $include_alternatives       = (bool) ($dl_data['include_alternatives'] ?? false);
     $collection_download_tar    = (bool) ($dl_data['collection_download_tar'] ?? false);
     $archiver                   = (bool) ($dl_data["archiver"] ?? false);
+
+    // Set this as global -  required by write_metadata()
+    global $exiftool_write_option;
+    $saved_exiftool_write_option = $exiftool_write_option;
+    $exiftool_write_option = $dl_data['exiftool_write_option'];
 
     if (empty($collectiondata) && $collection > 0) {
         $collectiondata = get_collection($collection);
@@ -6604,9 +6614,10 @@ function process_collection_download(array $dl_data): array
 
     db_begin_transaction("collection_download"); // Ensure all log updates are committed at once
     for ($n = 0; $n < $rescount; $n++) {
-        if (!isset($collection_resources[$n]["resource_type"])) {
+        if (!isset($collection_resources[$n]['resource_type'])) {
             // Resource data is not present - e.g. an offline job
-            $dl_data['collection_resources'][$n] = get_resource_data($collection_resources[$n]["ref"]);
+            $collection_resources[$n] = get_resource_data($collection_resources[$n]["ref"]);
+            $dl_data['collection_resources'][$n] = $collection_resources[$n]; // Update so will be passed to other functions
         }
         resource_type_config_override($collection_resources[$n]['resource_type'], false); # False means execute override for every resource
 
@@ -6905,6 +6916,9 @@ function process_collection_download(array $dl_data): array
     collection_download_clean_temp_files($dl_data['deletion_array']);
 
     db_end_transaction("collection_download");
+
+    // Reset global 
+    $exiftool_write_option = $saved_exiftool_write_option;
 
     return [
         "filename"  => $filename,
