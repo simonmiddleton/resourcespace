@@ -204,9 +204,9 @@ function redirect(string $url)
 
     if (substr($url, 0, 1) == "/") {
         # redirect to an absolute URL
-        header("Location: " . str_replace('/[\\\/]/D', "", $baseurl) . str_replace($baseurl_short, "/", $url));
+        header("Location: " . $baseurl . str_replace($baseurl_short, "/", $url));
     } else {
-        if (strpos($url, $baseurl) === 0) {
+        if (url_starts_with($baseurl, $url)) {
             // Base url has already been added
             header("Location: " . $url);
             exit();
