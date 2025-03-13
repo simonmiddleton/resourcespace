@@ -59,6 +59,7 @@ if (getval("save", false) && enforcePostRequest(false)) {
     $error = false;
     $logo_dir = "{$storagedir}/admin/groupheaderimg/";
 
+    // Remove group specific logo
     if (isset($_POST['removelogo'])) {
         $logo_extension = ps_value("select group_specific_logo as value from usergroup where ref = ?", array("i", $ref), false);
         $logo_filename = "{$logo_dir}/group{$ref}.{$logo_extension}";
@@ -70,6 +71,19 @@ if (getval("save", false) && enforcePostRequest(false)) {
         }
     }
 
+    // Remove group specific logo - dark
+    if (isset($_POST['removelogodark'])) {
+        $logo_dark_extension = ps_value("select group_specific_logo_dark as value from usergroup where ref = ?", array("i", $ref), false);
+        $logo_dark_filename = "{$logo_dir}/group{$ref}_dark.{$logo_dark_extension}";
+
+        if ($logo_dark_extension && file_exists($logo_dark_filename) && unlink($logo_dark_filename)) {
+            $logo_dark_extension = "";
+        } else {
+            unset($logo_dark_extension);
+        }
+    }
+
+    // Upload group specific logo
     if (isset($_FILES['grouplogo']['tmp_name']) && is_uploaded_file($_FILES['grouplogo']['tmp_name'])) {
         if (!(file_exists($logo_dir) && is_dir($logo_dir))) {
             mkdir($logo_dir, 0777, true);
@@ -84,8 +98,30 @@ if (getval("save", false) && enforcePostRequest(false)) {
             $onload_message = array("title" => $lang["error"],"text" => str_replace('%EXTENSIONS', "JPG, GIF, SVG, PNG", $lang["allowedextensions-extensions"]));
         }
 
-        if ($error || !move_uploaded_file($_FILES['grouplogo']['tmp_name'], $logo_filename)) {        // this will overwrite if already existing
+        if ($error || !move_uploaded_file($_FILES['grouplogo']['tmp_name'], $logo_filename)) {
+            // this will overwrite if already existing
             unset($logo_extension);
+        }
+    }
+
+    // Upload group specific logo - dark
+    if (isset($_FILES['grouplogodark']['tmp_name']) && is_uploaded_file($_FILES['grouplogodark']['tmp_name'])) {
+        if (!(file_exists($logo_dir) && is_dir($logo_dir))) {
+            mkdir($logo_dir, 0777, true);
+        }
+
+        $logo_dark_pathinfo = pathinfo($_FILES['grouplogodark']['name']);
+        $logo_dark_extension = $logo_dark_pathinfo['extension'];
+        $logo_dark_filename = "{$logo_dir}/group{$ref}_dark.{$logo_dark_extension}";
+
+        if (!in_array(strtolower($logo_dark_extension), array("jpg","jpeg","gif","svg","png"))) {
+            $error = true;
+            $onload_message = array("title" => $lang["error"],"text" => str_replace('%EXTENSIONS', "JPG, GIF, SVG, PNG", $lang["allowedextensions-extensions"]));
+        }
+
+        if ($error || !move_uploaded_file($_FILES['grouplogodark']['tmp_name'], $logo_dark_filename)) {
+            // this will overwrite if already existing
+            unset($logo_dark_extension);
         }
     }
 
@@ -94,11 +130,16 @@ if (getval("save", false) && enforcePostRequest(false)) {
         log_activity(null, null, null, 'usergroup', 'group_specific_logo', $ref);
     }
 
+    if (isset($logo_dark_extension)) {
+        ps_query("UPDATE usergroup SET group_specific_logo_dark = ? WHERE ref = ?", array("s", $logo_dark_extension, "i", $ref));
+        log_activity(null, null, null, 'usergroup', 'group_specific_logo_dark', $ref);
+    }
+
     $update_sql_params = array();
     foreach (
         array("name","permissions","parent","search_filter","search_filter_id","edit_filter","edit_filter_id","derestrict_filter",
-                    "derestrict_filter_id","resource_defaults","config_options","welcome_message","ip_restrict","request_mode",
-                    "allow_registration_selection","inherit_flags", "download_limit","download_log_days") as $column
+            "derestrict_filter_id","resource_defaults","config_options","welcome_message","ip_restrict","request_mode",
+            "allow_registration_selection","inherit_flags", "download_limit","download_log_days") as $column
     ) {
         if ($execution_lockout && $column == "config_options") {
             # Do not allow config overrides to be changed from UI if $execution_lockout is set.
@@ -444,10 +485,36 @@ $url_params_edit = array(
                 <input name="grouplogo" type="file">
                 <div class="clearerleft"></div>
             </div>
-            <?php
-        }
-        ?>
-    </div>      <!-- end of advanced options -->
+        <?php } ?>
+
+        <?php if ($record['group_specific_logo_dark']) {
+            $linkedheaderimgsrc_dark = (isset($storageurl) ? $storageurl : $baseurl . "/filestore") . "/admin/groupheaderimg/group" . $record['ref'] . "_dark." . $record["group_specific_logo_dark"];
+            ?>
+            <div class="Question">
+                <label for="grouplogodarkcurrent"><?php echo escape($lang["fieldtitle-group_logo_dark"]); ?></label>
+                <img src="<?php echo $linkedheaderimgsrc_dark;?>" alt="Group logo - Dark" height='126'>
+            </div>
+
+            <div class="Question">
+                <label for="grouplogodark"><?php echo escape($lang["fieldtitle-group_logo_dark_replace"]); ?></label>
+                <input name="grouplogodark" type="file">
+                <div class="clearerleft"></div>
+            </div>
+
+            <div class="Question">
+                <label for="removelogodark"><?php echo escape($lang["action-title_remove_user_group_logo_dark"]); ?></label>
+                <input name="removelogodark" type="checkbox" value="1">
+                <div class="clearerleft"></div>
+            </div>
+
+        <?php } else { ?>
+            <div class="Question">
+                <label for="grouplogodark"><?php echo escape($lang["fieldtitle-group_logo_dark"]); ?></label>
+                <input name="grouplogodark" type="file">
+                <div class="clearerleft"></div>
+            </div>
+        <?php } ?>
+    </div><!-- end of advanced options -->
 
     <div class="BasicsBox">
         <div class="Question">

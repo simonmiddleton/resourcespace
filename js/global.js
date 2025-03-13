@@ -2220,3 +2220,23 @@ function registerResourceSelectDeselectHandlers() {
         UpdateSelColSearchFilterBar();
     });
 }
+
+// Set a cookie to store the user's prefers-color-scheme value
+function setThemePreference() {
+    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    SetCookie('css_color_scheme', darkMode, 1000);
+}
+
+// Dynamically update header image using Ajax 
+function updateHeaderImage() {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";
+    const ajax_url = baseurl_short + 'pages/ajax/header_image.php?force_appearance=' + encodeURIComponent(isDarkMode);
+
+    jQuery.ajax({
+        type: "GET",
+        url: ajax_url,
+        success: function(data) {
+            jQuery('#HeaderImg').attr("src", DOMPurify.sanitize(data, { SAFE_FOR_URL: true }));
+        }
+    });
+}
