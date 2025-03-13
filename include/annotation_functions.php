@@ -1,5 +1,19 @@
 <?php
 
+/** Get (viewable) "annotate_fields" config. The configs' value is validated (e.g. supported type, active RTF). */
+function get_annotate_fields(): array
+{
+    return array_unique([
+        // Zero is a pseudo-RTF used for comment (text) annotations (i.e not field bound)
+        ...($GLOBALS['comments_resource_enable'] ? [0] : []),
+        ...array_intersect(
+            array_filter($GLOBALS['annotate_fields'], metadata_field_view_access(...)),
+            array_column(get_resource_type_fields('', 'ref', 'asc', '', get_valid_annotate_field_types(), false), 'ref')
+        ),
+        SORT_NUMERIC
+    ]);
+}
+
 /**
 * Get annotation by ID
 *
@@ -141,7 +155,7 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
     global $baseurl;
 
     $annotations = array();
-    $can_view_fields = canSeeAnnotationsFields();
+    $can_view_fields = get_annotate_fields();
 
     /*
     Build an annotations array of Annotorious annotation objects
@@ -576,7 +590,11 @@ function get_annotorious_lang(array $map): array
 /** Get all ResourceSpace config options relevant for the Annotorious (RSTagging) plugin functionality. */
 function get_annotorious_resourcespace_config(): array
 {
-    return array_intersect_key($GLOBALS, ['comments_resource_enable' => 1]);
+    return [
+        ...array_intersect_key($GLOBALS, ['comments_resource_enable' => 1]),
+        // Custom configuration (overload)
+        'check_annotate_enabled_can_view_annotations' => check_annotate_enabled_can_view_annotations(),
+    ];
 }
 
 /** Get list of allowed field types to be configured for the "annotate_fields" option */

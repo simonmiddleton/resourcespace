@@ -2711,7 +2711,7 @@ $upload_then_process = false;
 // Annotations are linked to nodes, the user needs to specify which field a note is bind to.
 $annotate_enabled = false;
 
-// Specify which fields can be used to bind to annotations
+// Specify which fields can be used to bind to annotations - only multi-value fixed list fields (DKL, checkbox)
 $annotate_fields = array();
 
 // Add comment for resource text annotations. (N/A for fixed list field annotations)

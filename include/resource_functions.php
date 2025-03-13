@@ -7931,13 +7931,19 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
 /**
 * Helper function for Preview tools feature. Checks all necessary permissions or options
 * in order to tell the system whether PreviewTools panel should be displayed
-*
-* @return boolean
 */
-function canSeePreviewTools()
+function canSeePreviewTools(): bool
 {
     global $image_preview_zoom;
-    return count(canSeeAnnotationsFields()) > 0 || $image_preview_zoom;
+    // todo: annotations can work if comments enabled and no binding fields - change this logic
+    return check_annotate_enabled_can_view_annotations() || $image_preview_zoom;
+}
+
+/** Check if annotate feature is enabled (either to add comments OR to tag resources via bound fields) */
+function check_annotate_enabled_can_view_annotations(): bool
+{
+    global $annotate_enabled, $comments_resource_enable, $k;
+    return $annotate_enabled && ($comments_resource_enable || get_annotate_fields() !== []) && $k == '';
 }
 
 /**
