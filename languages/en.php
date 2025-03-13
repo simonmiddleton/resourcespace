@@ -3273,4 +3273,5 @@ $lang["installationcheck-tooltip"] = "Check the system setup and dependencies";
 $lang["systemlog-tooltip"] = "View the system log";
 $lang["system_performance-tooltip"] = "Run a performance benchmark";
 $lang["systemconfig-tooltip"] = "Configure system level options";
+$lang["error-processlock-aborting"] = "Process already running. Exiting";
 

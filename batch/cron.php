@@ -7,6 +7,11 @@ include_once __DIR__ . "/../include/reporting_functions.php";
 include_once __DIR__ . "/../include/action_functions.php";
 include_once __DIR__ . "/../include/request_functions.php";
 
+if (is_process_lock("cron")) {
+    exit($lang["error-processlock-aborting"] . PHP_EOL);
+}
+set_process_lock("cron");
+
 $LINE_END = ('cli' == PHP_SAPI) ? PHP_EOL : "<br>";
 set_time_limit($cron_job_time_limit);
 ob_end_flush();
@@ -37,7 +42,6 @@ for ($i = 0; $i <= 999; $i++) {
     }
 }
 
-
 # Allow plugins to add their own cron jobs.
 hook("cron");
 
@@ -46,3 +50,4 @@ echo PHP_EOL . "{$this_run_end} {$baseurl} All tasks complete" .  $LINE_END;
 
 # Update last cron date
 set_sysvar("last_cron", date("Y-m-d H:i:s"));
+clear_process_lock("cron");
