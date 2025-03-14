@@ -100,7 +100,7 @@ function render_text_option($fieldname, $value, $size=20, $units=''){
 
 
 /**
-* Save/ Update config option
+* Save/ Update config option for user preference or system config. For user group config see set_usergroup_config_option().
 *
 * @param  integer  $user_id      Current user ID. Use NULL for system wide config options
 * @param  string   $param_name   Parameter name
@@ -122,7 +122,14 @@ function set_config_option($user_id, $param_name, $param_value)
     $query = "INSERT INTO user_preferences (user,parameter,`value`) VALUES (?,?,?)";
    
     $current_param_value = null;
-    if(get_config_option($user_id, $param_name, $current_param_value, null, 0))
+
+    if (is_null($user_id)) {
+        $config_type = array(); # System config.
+    } else {
+        $config_type = array('user' => $user_id); # User config.
+    }
+
+    if(get_config_option($config_type, $param_name, $current_param_value, null))
         {
         if($current_param_value == $param_value)
             {
@@ -180,7 +187,7 @@ function set_usergroup_config_option(int $usergroup_id, string $param_name, ?str
     $query = "INSERT INTO user_preferences (usergroup, parameter, `value`) VALUES (?, ?, ?)";
    
     $current_param_value = null;
-    if(get_config_option(0, $param_name, $current_param_value, null, $usergroup_id)) {
+    if(get_config_option(['usergroup' => $usergroup_id], $param_name, $current_param_value, null)) {
         if($current_param_value == $param_value) {
             return true;
         }
@@ -304,7 +311,8 @@ function remove_config_option(?int $user_id, string $name): bool
 *                                   array('usergroup' => 2) - Supply 'usergroup' with the integer user group reference to return a user group config value.
 *                                   array('user' => 1) - Supply 'user' with the integer user reference to return a user config value.
 *                                   array('user' => 1, 'usergroup' => 2) - Supply 'user' with the integer user reference and 'usergroup' with the integer 
-*                                   user group reference to return the result of user group config overridden with user preference.
+*                                   user group reference to return the result of user group config overridden with user preference. Usergroup should always be
+*                                   that of the supplied user. Don't supply parent group as this will be checked.
 * @param  string   $name            Parameter name
 * @param  string   $returned_value  The config value will be returned through this parameter which is passed by reference.
 *                                   IMPORTANT: it falls back (defaults) to the globally scoped config option value if 
@@ -453,8 +461,8 @@ function get_config_options(array $config_type, array &$returned_options)
  */
 function get_usergroup_parent_for_inherit_flag(int $usergroup_id, string $inherit_flag) :int
 {
-    if (isset($GLOBALS['usergroup_parent_for_inherit_flag'])) {
-        return $GLOBALS['usergroup_parent_for_inherit_flag'];
+    if (isset($GLOBALS['usergroup_parent_for_inherit_flag'][$usergroup_id])) {
+        return $GLOBALS['usergroup_parent_for_inherit_flag'][$usergroup_id];
     }
 
     $result = $usergroup_id;
@@ -465,7 +473,7 @@ function get_usergroup_parent_for_inherit_flag(int $usergroup_id, string $inheri
         $result = $usergroup_properties['parent'];
     }
 
-    $GLOBALS['usergroup_parent_for_inherit_flag'] = $result; # Cache value for subsequent calls to this function.
+    $GLOBALS['usergroup_parent_for_inherit_flag'][$usergroup_id] = $result; # Cache value for subsequent calls to this function.
     return $result;
 }
 
@@ -727,7 +735,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             <input type="submit" name="clear_<?php echo escape($name); ?>" value="<?php echo escape($lang["clearbutton"]); ?>">
             <?php
             }
-        elseif('' === $current || !get_config_option(null, $name, $current_option) || $current_option === '')
+        elseif('' === $current || !get_config_option([], $name, $current_option) || $current_option === '')
             {
             ?>
             <input type="file" name="<?php echo escape($name); ?>" style="width:<?php echo (int) $width; ?>px">

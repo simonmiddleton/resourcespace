@@ -40,7 +40,7 @@ foreach ($recentactions as $notifyuser => $user_actions) {
 
     // Set timezone if required
     $default_user_local_timezone = $user_local_timezone;
-    get_config_option($notifyuser, 'user_local_timezone', $user_local_timezone, $default_user_local_timezone);
+    get_config_option(['user' => $notifyuser, 'usergroup' => $actionuser['usergroup']], 'user_local_timezone', $user_local_timezone, $default_user_local_timezone);
 
     if (!filter_var($usermail, FILTER_VALIDATE_EMAIL)) {
         logScript(" - Skipping action notification email for user ref " . $notifyuser . " due to invalid email:  " . $usermail);

@@ -448,7 +448,7 @@ if ($debug_log) {
     $debug_log_options = [$lang['systemconsoleonpermallusers']];
     $system_config_debug_log_interim = $lang['systemconsoleonpermallusers'];
 }
-get_config_option(null, 'system_config_debug_log_interim', $system_config_debug_log_interim);
+get_config_option([], 'system_config_debug_log_interim', $system_config_debug_log_interim);
 
 $page_def[] = config_add_single_select(
     'system_config_debug_log_interim',

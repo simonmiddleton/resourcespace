@@ -142,7 +142,7 @@ foreach ($use_cases as $use_case) {
     $uci_name = $use_case['input']['name'];
     $uci_default = $use_case['input']['default'];
     $returned_config_option_value = null;
-    $result = get_config_option($uci_user_id, $uci_name, $returned_config_option_value, $uci_default);
+    $result = get_config_option($uci_user_id, $uci_name, $returned_config_option_value, $uci_default); # THIS WILL NEED UPDATING FOR USERGROUP PREFERENCES CHANGES
 
     // Debug use case
     $padding = 45;

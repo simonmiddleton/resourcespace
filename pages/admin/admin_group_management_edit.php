@@ -196,7 +196,7 @@ if ($actions_on) {
 
     // Make sure all states are unchecked if they had the deprecated option $actions_resource_review set to false.
     // Also only show this option if it is disabled
-    get_config_option($userref, 'actions_resource_review', $legacy_resource_review, true);
+    get_config_option(['usergroup' => $ref], 'actions_resource_review', $legacy_resource_review, true);
     if (!$legacy_resource_review) {
         $page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review'], $enable_disable_options, 300, '', true);
     }
