@@ -146,7 +146,7 @@ $page_def[] = config_add_single_select('default_display', $lang['userpreference_
 $page_def[] = config_add_html('</div>');
 
 // System notifications section - used to disable system generated messages
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['mymessages'] . '</h3><div id="UsergroupMessageSection" class="CollapsibleSection">');
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['mymessages'] . '</h3><div id="UsergroupMessageSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('user_pref_show_notifications', $lang['user_pref_show_notifications'], $enable_disable_options, 300, '', true);
 $page_def[] = config_add_boolean_select('user_pref_resource_notifications', $lang['userpreference_resource_notifications'], $enable_disable_options, 300, '', true);
 if (in_array('a', $selected_usergroup_permissions)) {
@@ -162,7 +162,7 @@ $page_def[] = config_add_html('</div>');
 
 // Email section, only show if user has got an email address
 if ($useremail != "") {
-    $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['email'] . '</h3><div id="UsergroupEmailSection" class="CollapsibleSection">');
+    $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['email'] . '</h3><div id="UsergroupEmailSection" class="CollapsibleSection">');
     $page_def[] = config_add_boolean_select('email_user_notifications', $lang['userpreference_email_me_label'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_boolean_select('email_and_user_notifications', $lang['user_pref_email_and_user_notifications'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_boolean_select('user_pref_daily_digest', $lang['user_pref_daily_digest'], $enable_disable_options, 300, '', true);
@@ -179,7 +179,7 @@ if ($useremail != "") {
             }
         }
 if ($actions_on) {
-    $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['actions_myactions'] . '</h3><div id="UsergroupActionSection" class="CollapsibleSection">');
+    $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['actions_myactions'] . '</h3><div id="UsergroupActionSection" class="CollapsibleSection">');
     if (in_array('R', $selected_usergroup_permissions)) {
         $page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests'], $enable_disable_options, 300, '', true);
     }
@@ -232,34 +232,34 @@ $page_def[] = config_add_html('</div>'); // closing id="UsergroupConfigOptions"
 $page_def[] = config_add_html('</div>');
 
 
-         // Process autosaving requests
-        // Note: $page_def must be defined by now in order to make sure we only save options that we've defined
-        if ('true' === getval('ajax', '') && 'true' === getval('autosave', '')) {
-            $response['success'] = true;
-            $response['message'] = '';
+    // Process autosaving requests
+// Note: $page_def must be defined by now in order to make sure we only save options that we've defined
+if ('true' === getval('ajax', '') && 'true' === getval('autosave', '')) {
+    $response['success'] = true;
+    $response['message'] = '';
 
-            $autosave_option_name  = getval('autosave_option_name', '');
-            $autosave_option_value = getval('autosave_option_value', '');
+    $autosave_option_name  = getval('autosave_option_name', '');
+    $autosave_option_value = getval('autosave_option_value', '');
 
-            // Search for the option name within our defined (allowed) options
-            // if it is not there, error and don't allow saving it
-            $page_def_option_index = array_search($autosave_option_name, array_column($page_def, 1));
-            if (false === $page_def_option_index) {
-                $response['success'] = false;
-                $response['message'] = $lang['systemconfig_option_not_allowed_error'];
+    // Search for the option name within our defined (allowed) options
+    // if it is not there, error and don't allow saving it
+    $page_def_option_index = array_search($autosave_option_name, array_column($page_def, 1));
+    if (false === $page_def_option_index) {
+        $response['success'] = false;
+        $response['message'] = $lang['systemconfig_option_not_allowed_error'];
 
-                echo json_encode($response);
-                exit();
-            }
+        echo json_encode($response);
+        exit();
+    }
 
-            if (!set_usergroup_config_option($ref, $autosave_option_name, $autosave_option_value)) {
-                $response['success'] = false;
-            }
+    if (!set_usergroup_config_option($ref, $autosave_option_name, $autosave_option_value)) {
+        $response['success'] = false;
+    }
 
-            echo json_encode($response);
-            exit();
-        }
-        
+    echo json_encode($response);
+    exit();
+}
+
 if (getval("save", false) && enforcePostRequest(false)) {
     $error = false;
     $logo_dir = "{$storagedir}/admin/groupheaderimg/";
