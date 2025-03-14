@@ -2771,7 +2771,6 @@ $lang["report_breakdown_pie"] = 'Разбивка в виде круговой �
 $lang["actions_email_new_actions_title"] = 'Новые действия';
 $lang["actions_email_new_actions_intro"] = 'Есть новые действия, которые нужно выполнить.';
 $lang["email_actions_truncated"] = 'Показаны только последние 1000 действий. У вас [total] действий. Войдите в [application_name], чтобы просмотреть все.';
-$lang["annotate_select"] = 'Выберите поле...';
 $lang["error_upload_replace_file_fail_invalid_collection"] = 'Не удалось заменить файл ресурса. Указанная ссылка на коллекцию недействительна.';
 $lang["systemconfig_api"] = 'API';
 $lang["iiif"] = 'IIIF';

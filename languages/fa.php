@@ -2488,7 +2488,6 @@ $lang["set_metadata_then_upload"] = 'ابتدا فراداده را تنظیم �
 $lang["annotate_text_link_label"] = 'تغییر حالت حاشیه‌نویسی';
 $lang["annotate_annotation_label"] = 'حاشیه‌نویسی';
 $lang["annotate_annotations_label"] = 'حاشیه‌نویسی‌ها';
-$lang["annotate_select"] = 'انتخاب فیلد...';
 $lang["byte_prefix_mode_decimal"] = 'استفاده از اعشار برای اندازه‌های فایل (ضرب در 1000، کیلوبایت/مگابایت/گیگابایت/ترابایت) به جای باینری (ضرب در 1024، کیبی‌بایت/میبی‌بایت/گیبی‌بایت/تیبی‌بایت)';
 $lang["error_upload_resource_alternatives_batch"] = 'هنگام استفاده از این ویژگی (به $upload_alternatives_suffix مراجعه کنید) فایل اصلی شما باید اولین فایل در صف باشد!';
 $lang["error_upload_resource_not_found"] = 'شناسه منبع پیدا نشد!';

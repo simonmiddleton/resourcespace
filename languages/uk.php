@@ -2484,7 +2484,6 @@ $lang["set_metadata_then_upload"] = 'Спочатку встановіть ме�
 $lang["annotate_text_link_label"] = 'Перемикач режиму анотацій';
 $lang["annotate_annotation_label"] = 'Анотація';
 $lang["annotate_annotations_label"] = 'Анотації';
-$lang["annotate_select"] = 'Виберіть поле...';
 $lang["byte_prefix_mode_decimal"] = 'Використовуйте десяткову систему для розмірів файлів (множники 1000, КБ/МБ/ГБ/ТБ) на відміну від двійкової (множники 1024, КіБ/МіБ/ГіБ/ТіБ)';
 $lang["error_upload_resource_alternatives_batch"] = 'Під час використання цієї функції (див. $upload_alternatives_suffix) ваш оригінальний файл ПОВИНЕН бути першим у черзі!';
 $lang["error_upload_resource_not_found"] = 'Не вдалося знайти ID ресурсу!';

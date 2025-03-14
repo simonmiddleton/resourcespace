@@ -2879,7 +2879,6 @@ $lang["report_breakdown_pie"] = 'Nedbrytningsdiagram';
 $lang["actions_email_new_actions_title"] = 'Nye handlinger';
 $lang["actions_email_new_actions_intro"] = 'Det er nye handlinger som må fullføres.';
 $lang["email_actions_truncated"] = 'Bare de siste 1000 handlingene vises her. Du har [total] handlinger. Logg inn på [application_name] for å se alle.';
-$lang["annotate_select"] = 'Velg felt...';
 $lang["error_upload_replace_file_fail_invalid_collection"] = 'Kunne ikke erstatte ressursfil. Samlingsreferansen som er oppgitt, er ugyldig.';
 $lang["error_upload_replace_multiple_matching_files"] = 'Flere gyldige ressurser funnet med filnavn [filename]';
 $lang["systemconfig_api"] = 'API';

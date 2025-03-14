@@ -2849,7 +2849,6 @@ $lang["actions_email_new_actions_intro"] = '有新的操作需要完成。';
 $lang["actions_resource_types_hide"] = '不要显示以下类型的可编辑资源';
 $lang["actions_approve_hide_groups"] = '不显示以下组的账户请求';
 $lang["email_actions_truncated"] = '这里只显示最近的1000个操作。您有[total]个操作。登录[application_name]查看全部。';
-$lang["annotate_select"] = '选择字段...';
 $lang["byte_prefix_mode_decimal"] = '使用十进制文件大小（1000倍数，KB/MB/GB/TB）而不是二进制（1024倍数，KiB/MiB/GiB/TiB）';
 $lang["error_upload_replace_file_fail_invalid_collection"] = '无法替换资源文件。提供的集合引用无效。';
 $lang["systemconfig_api"] = 'API';

@@ -2781,7 +2781,6 @@ $lang["report_breakdown_pie"] = 'Desglose en gráfico circular';
 $lang["report_total"] = 'Total';
 $lang["actions_email_new_actions_title"] = 'Nuevas acciones';
 $lang["actions_email_new_actions_intro"] = 'Hay nuevas acciones por completar.';
-$lang["annotate_select"] = 'Seleccionar campo...';
 $lang["error_upload_replace_file_fail_invalid_collection"] = 'No se pudo reemplazar el archivo del recurso. La referencia de la colección proporcionada no es válida.';
 $lang["image_quality_50"] = 'Bajo';
 $lang["systemconfig_api"] = 'API';

@@ -2421,7 +2421,6 @@ $lang["set_metadata_then_upload"] = 'Setiwch y metadata yn gyntaf, yna uwchlwyth
 $lang["annotate_text_link_label"] = 'Toglo modd nodi';
 $lang["annotate_annotation_label"] = 'Nodiad';
 $lang["annotate_annotations_label"] = 'Nodiadau';
-$lang["annotate_select"] = 'Dewiswch faes...';
 $lang["byte_prefix_mode_decimal"] = 'Defnyddiwch ddegol ar gyfer maint ffeiliau (mynediadau 1000, KB/MB/GB/TB) yn hytrach na\'r deuaidd (mynediadau 1024, KiB/MiB/GiB/TiB)';
 $lang["error_upload_resource_alternatives_batch"] = 'Pan fyddwch yn defnyddio\'r nodwedd hon (gweler $upload_alternatives_suffix) mae\'n GYFRAITH i\'r ffeil wreiddiol fod y cyntaf yn y ciw!';
 $lang["error_upload_resource_not_found"] = 'Ni chafwyd ID adnodd!';

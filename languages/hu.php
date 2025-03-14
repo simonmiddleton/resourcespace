@@ -2438,7 +2438,6 @@ $lang["set_metadata_then_upload"] = 'Állítsa be a metaadatokat először, majd
 $lang["annotate_text_link_label"] = 'Annotálás mód váltó';
 $lang["annotate_annotation_label"] = 'Megjegyzés';
 $lang["annotate_annotations_label"] = 'Megjegyzések';
-$lang["annotate_select"] = 'Válassza ki a mezőt...';
 $lang["byte_prefix_mode_decimal"] = 'Használjon tizedes számot a fájlméretekhez (1000-es szorzók, KB/MB/GB/TB) a bináris (1024-es szorzók, KiB/MiB/GiB/TiB) helyett';
 $lang["error_upload_resource_alternatives_batch"] = 'Amikor ezt a funkciót használja (lásd $upload_alternatives_suffix), az eredeti fájlnak KELL az elsőnek lennie a sorban!';
 $lang["error_upload_resource_not_found"] = 'Nem található erőforrás-azonosító!';

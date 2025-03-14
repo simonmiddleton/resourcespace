@@ -2457,7 +2457,6 @@ $lang["responsive_main_menu"] = 'Menu';
 $lang["actions_email_new_actions_title"] = 'Nowe akcje';
 $lang["actions_email_new_actions_intro"] = 'Są nowe działania do wykonania.';
 $lang["email_actions_truncated"] = 'Wyświetlane są tylko ostatnie 1000 działań. Masz [total] działań. Zaloguj się do [application_name], aby zobaczyć wszystkie.';
-$lang["annotate_select"] = 'Wybierz pole...';
 $lang["error_upload_replace_file_fail_invalid_collection"] = 'Nie udało się zastąpić pliku zasobu. Podany odnośnik do kolekcji jest nieprawidłowy.';
 $lang["systemconfig_api"] = 'API';
 $lang["iiif"] = 'IIIF';

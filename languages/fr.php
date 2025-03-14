@@ -2787,7 +2787,6 @@ $lang["actions_email_new_actions_title"] = 'Nouvelles actions';
 $lang["actions_email_new_actions_intro"] = 'Il y a de nouvelles actions à accomplir.';
 $lang["email_actions_truncated"] = 'Seules les 1000 actions les plus récentes sont affichées ici. Vous avez [total] actions. Connectez-vous à [application_name] pour les voir toutes.';
 $lang["annotate_annotations_label"] = 'Annotations';
-$lang["annotate_select"] = 'Sélectionner le champ...';
 $lang["error_upload_replace_file_fail_invalid_collection"] = 'Échec du remplacement du fichier de ressource. La référence de la collection fournie est invalide.';
 $lang["image_quality_80"] = 'Web';
 $lang["systemconfig_api"] = 'API';

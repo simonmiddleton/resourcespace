@@ -2774,7 +2774,6 @@ $lang["responsive_main_menu"] = 'Menu';
 $lang["actions_email_new_actions_title"] = 'Novas ações';
 $lang["actions_email_new_actions_intro"] = 'Há novas ações a serem concluídas.';
 $lang["email_actions_truncated"] = 'Apenas as 1000 ações mais recentes são mostradas aqui. Você tem [total] ações. Faça login em [application_name] para visualizá-las todas.';
-$lang["annotate_select"] = 'Selecionar campo...';
 $lang["error_upload_replace_file_fail_invalid_collection"] = 'Falha ao substituir o arquivo do recurso. A referência da coleção fornecida é inválida.';
 $lang["image_quality_80"] = 'Web';
 $lang["image_quality_50"] = 'Baixo';

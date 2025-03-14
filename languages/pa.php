@@ -2477,7 +2477,6 @@ $lang["set_metadata_then_upload"] = 'ਪਹਿਲਾਂ ਮੈਟਾਡੇਟਾ
 $lang["annotate_text_link_label"] = 'ਐਨੋਟੇਟ ਮੋਡ ਟੌਗਲ';
 $lang["annotate_annotation_label"] = 'ਟਿੱਪਣੀ';
 $lang["annotate_annotations_label"] = 'ਟਿੱਪਣੀਆਂ';
-$lang["annotate_select"] = 'ਖੇਤਰ ਚੁਣੋ...';
 $lang["byte_prefix_mode_decimal"] = 'ਫਾਈਲ ਆਕਾਰਾਂ ਲਈ ਦਸ਼ਮਲਵ ਦੀ ਵਰਤੋਂ ਕਰੋ (1000 ਗੁਣਾ, KB/MB/GB/TB) ਬਾਈਨਰੀ (1024 ਗੁਣਾ, KiB/MiB/GiB/TiB) ਦੇ ਵਿਰੁੱਧ.';
 $lang["error_upload_resource_alternatives_batch"] = 'ਇਸ ਫੀਚਰ ਨੂੰ ਵਰਤਦੇ ਸਮੇਂ (ਵੇਖੋ $upload_alternatives_suffix) ਤੁਹਾਡੀ ਮੂਲ ਫਾਈਲ ਕਤਾਰ ਵਿੱਚ ਸਭ ਤੋਂ ਪਹਿਲੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ!';
 $lang["error_upload_resource_not_found"] = 'ਇੱਕ ਸਰੋਤ ID ਨਹੀਂ ਮਿਲ ਸਕੀ!';

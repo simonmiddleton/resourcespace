@@ -2490,7 +2490,6 @@ $lang["set_metadata_then_upload"] = 'पहले मेटाडेटा स�
 $lang["annotate_text_link_label"] = 'एनोटेट मोड टॉगल';
 $lang["annotate_annotation_label"] = 'टिप्पणी';
 $lang["annotate_annotations_label"] = 'टिप्पणियाँ';
-$lang["annotate_select"] = 'फ़ील्ड चुनें...';
 $lang["byte_prefix_mode_decimal"] = 'फ़ाइल आकारों के लिए दशमलव का उपयोग करें (1000 गुणक, KB/MB/GB/TB) बाइनरी (1024 गुणक, KiB/MiB/GiB/TiB) के विपरीत';
 $lang["error_upload_resource_alternatives_batch"] = 'इस सुविधा का उपयोग करते समय (देखें $upload_alternatives_suffix) आपकी मूल फ़ाइल कतार में सबसे पहले होनी चाहिए!';
 $lang["error_upload_resource_not_found"] = 'संसाधन आईडी नहीं मिल सकी!';

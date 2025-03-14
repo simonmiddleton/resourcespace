@@ -2488,7 +2488,6 @@ $lang["set_metadata_then_upload"] = 'Đặt siêu dữ liệu trước, sau đó
 $lang["annotate_text_link_label"] = 'Chuyển đổi chế độ chú thích';
 $lang["annotate_annotation_label"] = 'Chú thích';
 $lang["annotate_annotations_label"] = 'Chú thích';
-$lang["annotate_select"] = 'Chọn trường...';
 $lang["byte_prefix_mode_decimal"] = 'Sử dụng số thập phân cho kích thước tệp (bội số 1000, KB/MB/GB/TB) thay vì nhị phân (bội số 1024, KiB/MiB/GiB/TiB)';
 $lang["error_upload_resource_alternatives_batch"] = 'Khi sử dụng tính năng này (xem $upload_alternatives_suffix) tệp gốc của bạn PHẢI là tệp đầu tiên trong hàng đợi!';
 $lang["error_upload_resource_not_found"] = 'Không tìm thấy ID tài nguyên!';

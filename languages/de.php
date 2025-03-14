@@ -2976,7 +2976,6 @@ $lang["report_breakdown_pie"] = 'Aufschlüsselungstorte';
 $lang["actions_email_new_actions_title"] = 'Neue Aktionen';
 $lang["actions_email_new_actions_intro"] = 'Es gibt neue Aktionen, die abgeschlossen werden müssen.';
 $lang["email_actions_truncated"] = 'Es werden nur die letzten 1000 Aktionen angezeigt. Sie haben [total] Aktionen. Melden Sie sich bei [application_name] an, um alle anzuzeigen.';
-$lang["annotate_select"] = 'Feld auswählen...';
 $lang["error_upload_replace_file_fail_invalid_collection"] = 'Fehler beim Ersetzen der Ressourcendatei. Die angegebene Sammlungsreferenz ist ungültig.';
 $lang["image_quality_50"] = 'Niedrig';
 $lang["systemconfig_api"] = 'API';

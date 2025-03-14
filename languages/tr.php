@@ -2478,7 +2478,6 @@ $lang["set_metadata_then_upload"] = 'Önce meta veriyi ayarlayın, sonra yükley
 $lang["annotate_text_link_label"] = 'Ek açıklama modu geçişi';
 $lang["annotate_annotation_label"] = 'Açıklama';
 $lang["annotate_annotations_label"] = 'Açıklamalar';
-$lang["annotate_select"] = 'Alan seç...';
 $lang["byte_prefix_mode_decimal"] = 'Dosya boyutları için ondalık kullan (1000 katları, KB/MB/GB/TB) ikili yerine (1024 katları, KiB/MiB/GiB/TiB)';
 $lang["error_upload_resource_alternatives_batch"] = 'Bu özelliği kullanırken (bkz. $upload_alternatives_suffix) orijinal dosyanız sırada ilk olmalıdır!';
 $lang["error_upload_resource_not_found"] = 'Bir kaynak kimliği bulunamadı!';

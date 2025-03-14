@@ -2432,7 +2432,6 @@ $lang["set_metadata_then_upload"] = 'ตั้งค่าข้อมูลเ�
 $lang["annotate_text_link_label"] = 'สลับโหมดการบันทึกหมายเหตุ';
 $lang["annotate_annotation_label"] = 'คำอธิบาย';
 $lang["annotate_annotations_label"] = 'คำอธิบาย';
-$lang["annotate_select"] = 'เลือกฟิลด์...';
 $lang["byte_prefix_mode_decimal"] = 'ใช้ทศนิยมสำหรับขนาดไฟล์ (1000 เท่า, KB/MB/GB/TB) แทนที่จะเป็นแบบไบนารี (1024 เท่า, KiB/MiB/GiB/TiB)';
 $lang["error_upload_resource_alternatives_batch"] = 'เมื่อใช้ฟีเจอร์นี้ (ดู $upload_alternatives_suffix) ไฟล์ต้นฉบับของคุณจะต้องเป็นไฟล์แรกในคิว!';
 $lang["error_upload_resource_not_found"] = 'ไม่พบรหัสทรัพยากร!';

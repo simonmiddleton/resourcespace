@@ -2714,7 +2714,6 @@ $lang["responsive_main_menu"] = 'Menu';
 $lang["actions_email_new_actions_title"] = 'Nye handlinger';
 $lang["actions_email_new_actions_intro"] = 'Der er nye handlinger, der skal udføres.';
 $lang["email_actions_truncated"] = 'Kun de seneste 1000 handlinger vises her. Du har [total] handlinger. Log ind på [application_name] for at se dem alle.';
-$lang["annotate_select"] = 'Vælg felt...';
 $lang["error_upload_replace_file_fail_invalid_collection"] = 'Kunne ikke erstatte ressourcefil. Den angivne samlingsreference er ugyldig.';
 $lang["systemconfig_api"] = 'API';
 $lang["iiif"] = 'IIIF';
