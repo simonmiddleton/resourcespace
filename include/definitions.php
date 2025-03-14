@@ -1041,5 +1041,5 @@ const FONTAWESOME_EXTENSIONS = [
 
 const FIELD_SORT_METHODS = [
     'default' => 0,
-    'dot_notation' => 1,
+    'dot-notation' => 1,
 ];

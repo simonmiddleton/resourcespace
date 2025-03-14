@@ -3362,7 +3362,7 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
         );
         # Establish sort order (numeric or otherwise)
         # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
-        if ($field_order_check["sort_type"] = FIELD_SORT_METHODS['dot_notation']) {
+        if ($field_order_check["sort_type"] = FIELD_SORT_METHODS['dot-notation']) {
             $order[$order_by] =
                 "ISNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+')) $sort,
                 IFNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+'), '') $sort,
