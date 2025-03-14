@@ -9,7 +9,7 @@ function get_annotate_fields(): array
     return array_unique(
         array_merge(
             // Zero is a pseudo-RTF used for comment (text) annotations (i.e not field bound)
-            $GLOBALS['comments_resource_enable'] ? [0] : [],
+            $GLOBALS['annotate_text_adds_comment'] ? [0] : [],
             array_intersect(
                 array_filter($GLOBALS['annotate_fields'], metadata_field_view_access(...)),
                 array_column(
@@ -598,7 +598,7 @@ function get_annotorious_lang(array $map): array
 /** Get all ResourceSpace config options relevant for the Annotorious (RSTagging) plugin functionality. */
 function get_annotorious_resourcespace_config(): array
 {
-    return array_intersect_key($GLOBALS, ['comments_resource_enable' => 1]);
+    return array_intersect_key($GLOBALS, ['annotate_text_adds_comment' => 1]);
 }
 
 /** Get list of allowed field types to be configured for the "annotate_fields" option */
