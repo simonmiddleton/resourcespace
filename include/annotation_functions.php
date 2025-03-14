@@ -146,7 +146,18 @@ function getResourceAnnotations($resource, $page = 0)
         $parameters = array_merge($parameters, array("i",$page));
     }
 
-    return ps_query("SELECT " . columns_in("annotation") . " FROM annotation WHERE resource = ? {$sql_page_filter}", $parameters);
+    return ps_query(
+        sprintf(
+              'SELECT %s, c.body AS "text"
+                 FROM annotation AS a
+            LEFT JOIN `comment` AS c ON a.ref = c.annotation
+                WHERE resource = ?
+                %s',
+            columns_in('annotation', 'a'),
+            $sql_page_filter
+        ),
+        $parameters
+    );
 }
 
 /**
@@ -160,7 +171,7 @@ function getResourceAnnotations($resource, $page = 0)
 */
 function getAnnotoriousResourceAnnotations($resource, $page = 0)
 {
-    global $baseurl;
+    global $baseurl, $annotate_text_adds_comment;
 
     $annotations = array();
     $can_view_fields = canSeeAnnotationsFields();
@@ -177,7 +188,7 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
         if (in_array($annotation['resource_type_field'], $can_view_fields)) {
             $annotations[] = array(
                 'src'    => "{$baseurl}/annotation/resource/{$resource}",
-                'text'   => '',
+                'text' => $annotate_text_adds_comment ? (string) $annotation['text'] : '',
                 'shapes' => array(
                     array(
                         'type'     => 'rect',
