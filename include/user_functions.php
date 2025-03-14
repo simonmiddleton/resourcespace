@@ -3632,13 +3632,9 @@ function cors_is_origin_allowed(string $origin, array $whitelist): bool  {
  */
 function delete_usergroup(int $usergroup_ref): bool
 {
-    global $has_dependants;
-    if (is_null($has_dependants)) {
-        # Additional lookup if this data isn't already available. Don't allow user group deletion if it is a parent group or if it has users.
-        $dependant_user_count = ps_value("select count(*) as value from user where usergroup = ?", array("i", $usergroup_ref), 0);
-        $dependant_groups = ps_value("select count(*) as value from usergroup where parent = ?", array("i", $usergroup_ref), 0);
-        $has_dependants = $dependant_user_count + $dependant_groups > 0;
-    }
+    $dependant_user_count = ps_value("select count(*) as value from user where usergroup = ?", array("i", $usergroup_ref), 0);
+    $dependant_groups = ps_value("select count(*) as value from usergroup where parent = ?", array("i", $usergroup_ref), 0);
+    $has_dependants = $dependant_user_count + $dependant_groups > 0;
 
     if ($has_dependants) {
         return false;

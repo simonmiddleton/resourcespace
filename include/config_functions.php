@@ -210,38 +210,50 @@ function set_usergroup_config_option(int $usergroup_id, string $param_name, ?str
  * Used by system preferences page when deleting a file to allow fallback to value (if set) in config.php instead
  * of replacing it with blank from user_preference value.
  *
- * @param  int|null   $user_id      User ID. Use NULL for system wide config options.
+ * @param  array      $config_type  The type of config to delete supplied as an array. The following are possible:
+*                                   array() - Supply an empty array to delete a system config value.
+*                                   array('user' => 1) - Supply 'user' with the integer user reference to delete a user config value.
+*                                   array('usergroup' => 2) - Supply 'user' with the integer user reference to delete a user group config value.
  * @param  string     $param_name   Parameter name
  * 
  * @return bool       True if preference was deleted else false.
  */
-function delete_config_option(?int $user_id, string $param_name) : bool
+function delete_config_option(array $config_type, string $param_name) : bool
     {
-    if(empty($param_name))
-        {
+    if(empty($param_name)) {
         return false;
+    }
+
+    if (isset($config_type['user']) && isset($config_type['usergroup'])) {
+        return false; # Both user and usergroup cannot be supplied.
+    }
+
+    foreach($config_type as $type_value) {
+        if (!is_int_loose($type_value)) {
+            return false;
         }
+    }
 
     $current_param_value = null;
-    if(get_config_option($user_id, $param_name, $current_param_value))
-        {
-        if(is_null($user_id))
-            {
-            $user_query = 'user IS NULL';
-            }
-        else
-            {
+    if(get_config_option($config_type, $param_name, $current_param_value)) {
+        if(isset($config_type['usergroup'])) {
+            $user_query = 'usergroup = ?';
+            $params[] = 'i'; $params[] = $config_type['usergroup'];
+        }
+        else if (isset($config_type['user'])) {
             $user_query = 'user = ?';
-            $params[] = 'i'; $params[] = $user_id;
-            }
+            $params[] = 'i'; $params[] = $config_type['user'];
+        } else {
+            $user_query = 'user IS NULL';
+        }
 
         $query = "DELETE FROM user_preferences WHERE ". $user_query ." AND parameter = ?";
         $params[] = "s"; $params[] = $param_name;
 
-        if (is_null($user_id))      // only log activity for system changes, i.e. when user not specified
-            {
+        if (count($config_type) === 0) {
+            // only log activity for system changes, i.e. when user not specified
             log_activity(null, LOG_CODE_DELETED, null, 'user_preferences', 'value', "parameter='" . $param_name . "'", null, $current_param_value);
-            }
+        }
 
         ps_query($query,$params);
 
@@ -249,7 +261,7 @@ function delete_config_option(?int $user_id, string $param_name) : bool
         clear_query_cache("preferences");
 
         return true;
-        }
+    }
 
     return false;
     }
@@ -284,53 +296,56 @@ function remove_config_option(?int $user_id, string $name): bool
 
 
 /**
-* Get config option value from the database (system wide -or- a user preference).
-* Where a user is specified (i.e. not null), the user group preference will be returned if set and the user
-* has no preference of their own to override it.
+* Get config option value from the database. This maybe a system wide config, a user group preference, a user preference, or the result of
+* overriding a user group preference with a user preference if any are present.
 * 
-* @param  ?integer $user_id         Current user ID. Use NULL to get the system wide setting. Use 0 when getting user group preferences
-*                                   without applying user preferences e.g. administration of user group preferences.
+* @param  array    $config_type     The type of config to retrieve supplied as an array. The following combinations are possible:
+*                                   array() - Supply an empty array to return a system config value.
+*                                   array('usergroup' => 2) - Supply 'usergroup' with the integer user group reference to return a user group config value.
+*                                   array('user' => 1) - Supply 'user' with the integer user reference to return a user config value.
+*                                   array('user' => 1, 'usergroup' => 2) - Supply 'user' with the integer user reference and 'usergroup' with the integer 
+*                                   user group reference to return the result of user group config overridden with user preference.
 * @param  string   $name            Parameter name
 * @param  string   $returned_value  The config value will be returned through this parameter which is passed by reference.
 *                                   IMPORTANT: it falls back (defaults) to the globally scoped config option value if 
 *                                   there's nothing in the database.
 * @param  mixed    $default         Optionally used to set a default that may not be the current
 *                                   global setting e.g. for checking admin resource preferences
-* @param  ?integer $usergroup_id    User group id or 0 to only get user preferences (not including user group preferences), for example
-*                                   when adding / amending user preferences in set_config_option().
 *
 * @return boolean Indicates if the config option was found in the database or not.
 */
-function get_config_option($user_id, $name, &$returned_value, $default = null, ?int $usergroup_id = null)
+function get_config_option(array $config_type, $name, &$returned_value, $default = null)
     {
-    if(trim($name) === '')
-        {
+    if(trim($name) === '') {
         return false;
+    }
+
+    foreach($config_type as $type_value) {
+        if (!is_int_loose($type_value)) {
+            return false;
         }
+    }
 
     $params[] = "s"; $params[] = $name;
 
-    if (is_null($usergroup_id)) {
-        global $usergroup;
-        $usergroup_id = $usergroup;
-    }
-
-    if(is_null($user_id)) {
+    if(count($config_type) === 0) {
+        # Return system config.
         $user_query = 'user IS NULL AND usergroup IS NULL';
-    } elseif ($user_id === 0) {
+    } elseif (isset($config_type['usergroup']) && !isset($config_type['user'])) {
         # Return user group preference if present (without considering current user).
+        # Also don't consider parent user group.
         $user_query = 'usergroup = ? AND user IS NULL';
-        $params[] = 'i'; $params[] = $usergroup_id;
-    } elseif ($usergroup_id === 0) {
+        $params[] = 'i'; $params[] = $config_type['usergroup'];
+    } elseif (isset($config_type['user']) && !isset($config_type['usergroup'])) {
         # Special case when we want to check only user preference, not considering any user group values.
         $user_query = 'user = ?';
-        $params[] = 'i'; $params[] = $user_id;
+        $params[] = 'i'; $params[] = $config_type['user'];
     } else {
         # Return user preference if present else user group preference if present.
-        $usergroup_id = get_usergroup_parent_for_flag($usergroup_id, 'preferences');
+        $usergroup_id = get_usergroup_parent_for_inherit_flag($config_type['usergroup'], 'preferences');
         $user_query = '(user = ? OR usergroup = ?) ORDER BY usergroup LIMIT 1';
-        $params[] = 'i'; $params[] = $user_id;
-        $params[] = 'i'; $params[] = $usergroup_id;
+        $params[] = 'i'; $params[] = $config_type['user'];
+        $params[] = 'i'; $params[] = $config_type['usergroup'];
     }
 
     $query = "SELECT `value` FROM user_preferences WHERE parameter = ? AND " . $user_query;
@@ -367,32 +382,41 @@ function get_config_option_users($option,$value)
 
 /**
 * Get config option from database for a specific user, system wide or user group.
-* To get system wide config, $user_id must be null and $usergroup_id must be null.
-* To get user specific config, $user_id must be int and $usergroup_id must be null.
-* To get user group config, $user_id must be 0 and $usergroup_id must be int.
 * 
-* @param  integer  $user_id           Current user ID. Can also be null to retrieve system wide config options. 0 to get user group options.
-* @param  integer  $usergroup_id      Current usergroup ID. Required when getting user group preferences. $user_id must be 0.
+* @param  array    $config_type       The type of config to retrieve supplied as an array. The following combinations are possible:
+*                                     array() - Supply an empty array to return a system config value.
+*                                     array('user' => 1) - Supply 'user' with the integer user reference to return user config values.
+*                                     array('usergroup' => 2) - Supply 'user' with the integer user reference to return user group config values.
+*                                     Note: Supplying both 'user' and 'usergroup' is invalid.
 * @param  array    $returned_options  If a value does exist it will be returned through
 *                                     this parameter which is passed by reference
 * @return boolean
 */
-function get_config_options(?int $user_id, ?int $usergroup_id, array &$returned_options)
+function get_config_options(array $config_type, array &$returned_options)
     {
-    if (is_null($user_id) && !is_null($usergroup_id)) {
-        return false; # Both user ID and user group ID are required when getting user group preferences.
+    if (isset($config_type['user']) && isset($config_type['usergroup'])) {
+        return false; # Both user and usergroup cannot be supplied.
+    }
+
+    foreach($config_type as $type_value) {
+        if (!is_int_loose($type_value)) {
+            return false;
+        }
     }
     
     $params = [];
-    if (is_null($user_id)) {
-        $sql = 'user IS NULL AND usergroup IS NULL';
-    } elseif ($user_id === 0 && !is_null($usergroup_id)) {
-        $usergroup_id = get_usergroup_parent_for_flag($usergroup_id, 'preferences');
+    if (isset($config_type['user'])) {
+        # Return user preferences.
+        $sql = 'user = ?';
+        $params = ['i', $config_type['user']];
+    } elseif (isset($config_type['usergroup'])) {
+        # Return user group config.
+        $usergroup_id = get_usergroup_parent_for_inherit_flag($config_type['usergroup'], 'preferences');
         $sql = 'usergroup = ?';
         $params = ['i', $usergroup_id];
     } else {
-        $sql = 'user = ?';
-        $params = ['i', $user_id];
+        # Return system config.
+        $sql = 'user IS NULL AND usergroup IS NULL';
     }
 
     $query = 'SELECT parameter, `value` FROM user_preferences WHERE ' . $sql;
@@ -404,7 +428,7 @@ function get_config_options(?int $user_id, ?int $usergroup_id, array &$returned_
 
     // Strip out any system configs that are blocked from being edited in the UI that might have been set previously.
     global $system_config_hide;
-    if (is_null($user_id) && count($system_config_hide) > 0) {
+    if (count($config_type) === 0 && count($system_config_hide) > 0) {
         $new_config_options=array();
         for($n=0;$n<count($config_options);$n++) {
             if (!in_array($config_options[$n]["parameter"], $system_config_hide)) {
@@ -427,10 +451,10 @@ function get_config_options(?int $user_id, ?int $usergroup_id, array &$returned_
  * 
  * @return int   User group id of parent if found and using supplied inherit flag else returns user group id supplied.
  */
-function get_usergroup_parent_for_flag(int $usergroup_id, string $inherit_flag) :int
+function get_usergroup_parent_for_inherit_flag(int $usergroup_id, string $inherit_flag) :int
 {
-    if (isset($GLOBALS['get_usergroup_parent_for_flag'])) {
-        return $GLOBALS['get_usergroup_parent_for_flag'];
+    if (isset($GLOBALS['usergroup_parent_for_inherit_flag'])) {
+        return $GLOBALS['usergroup_parent_for_inherit_flag'];
     }
 
     $result = $usergroup_id;
@@ -441,7 +465,7 @@ function get_usergroup_parent_for_flag(int $usergroup_id, string $inherit_flag) 
         $result = $usergroup_properties['parent'];
     }
 
-    $GLOBALS['get_usergroup_parent_for_flag'] = $result; # Cache value for subsequent calls to this function.
+    $GLOBALS['usergroup_parent_for_inherit_flag'] = $result; # Cache value for subsequent calls to this function.
     return $result;
 }
 
@@ -462,7 +486,7 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
     $config_options = array();
 
     # Processing for user group preferences.
-    if(!is_null($user_id) && get_config_options(0, $usergroup_id, $config_options)) {
+    if(!is_null($user_id) && get_config_options(array('usergroup' => $usergroup_id), $config_options)) {
         foreach($config_options as $config_option) {
             $param_value = $config_option['value'];
 
@@ -487,7 +511,7 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
     }
 
     # Processing for user / system preferences.
-    if(get_config_options($user_id, null, $config_options)) {
+    if(get_config_options(array('user' => $user_id), $config_options)) {
         foreach($config_options as $config_option) {
             $param_value = $config_option['value'];
 
@@ -1290,7 +1314,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
         if (
             getval('delete_' . $config_name, '') !== '' 
             && enforcePostRequest(false)
-            && get_config_option(null, $config_name, $delete_filename)
+            && get_config_option([], $config_name, $delete_filename)
             ) {
                 $delete_filename = str_replace('[storage_url]' . '/' . $file_location, $file_server_location, $delete_filename);
 
@@ -1299,19 +1323,19 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                     unlink($delete_filename);
                     hook("configdeletefilesuccess",'',array($delete_filename));
                     }
-                delete_config_option(null, $config_name);
+                delete_config_option([], $config_name);
                 $redirect = true;
             }
         // CLEAR
         if (
             getval('clear_' . $config_name, '') !== '' 
             && enforcePostRequest(false)
-            && get_config_option(null, $config_name, $missing_file)
+            && get_config_option([], $config_name, $missing_file)
             ) {
                 $missing_file = str_replace('[storage_url]' . '/' . $file_location, $file_server_location, $missing_file);
                  if(!file_exists($missing_file))
                     {
-                    delete_config_option(null, $config_name);
+                    delete_config_option([], $config_name);
 
                     $redirect = true;
                     }
@@ -2169,7 +2193,7 @@ function config_filter_by_search(array $page_def, ?int $userref, string $find, s
         if ($only_modified) {
             $search_matches = array();
             $returned_options = array();
-            get_config_options($userref, null, $returned_options);
+            get_config_options(array('user' => $userref), $returned_options);
             $returned_options = array_column($returned_options, 'parameter');
             foreach ($page_def as $config_to_check) {
                 if (isset($config_to_check[1]) && in_array($config_to_check[1], $returned_options)) {

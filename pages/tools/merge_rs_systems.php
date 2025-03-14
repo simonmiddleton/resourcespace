@@ -378,7 +378,7 @@ if ($export && isset($folder_path)) {
             ),
             "additional_process" => function ($record) {
                 $user_preferences = array();
-                if (get_config_options($record["ref"], null, $user_preferences)) {
+                if (get_config_options(array('user' => $record["ref"]), $user_preferences)) {
                     logScript("Found user preferences");
                     $record["user_preferences"] = $user_preferences;
                 }
