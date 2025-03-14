@@ -2833,7 +2833,6 @@ $lang["set_metadata_then_upload"] = "Set metadata first, then upload";
 $lang['annotate_text_link_label'] = 'Annotate mode toggle';
 $lang['annotate_annotation_label'] = 'Annotation';
 $lang['annotate_annotations_label'] = 'Annotations';
-$lang['annotate_select'] = 'Select field...';
 $lang['annotate_tagging_fields'] = 'Tagging fields';
 $lang['annotate_text_adds_comment'] = 'Add comment for resource text annotations. (N/A for fixed list field annotations)';
 $lang['annotorious_add_a_comment'] = 'Add a Comment...';
