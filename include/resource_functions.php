@@ -7935,15 +7935,7 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
 function canSeePreviewTools(): bool
 {
     global $image_preview_zoom;
-    // todo: annotations can work if comments enabled and no binding fields - change this logic
-    return check_annotate_enabled_can_view_annotations() || $image_preview_zoom;
-}
-
-/** Check if annotate feature is enabled (either to add comments OR to tag resources via bound fields) */
-function check_annotate_enabled_can_view_annotations(): bool
-{
-    global $annotate_enabled, $comments_resource_enable, $k;
-    return $annotate_enabled && ($comments_resource_enable || get_annotate_fields() !== []) && $k == '';
+    return count(canSeeAnnotationsFields()) > 0 || $image_preview_zoom;
 }
 
 /**
@@ -7953,17 +7945,8 @@ function check_annotate_enabled_can_view_annotations(): bool
  */
 function canSeeAnnotationsFields(): array
 {
-    global $annotate_enabled, $annotate_fields, $k;
-
-    $can_view_fields = array();
-    if ($annotate_enabled && $k == "") {
-        $can_view_fields = array_intersect(
-            array_filter($annotate_fields, metadata_field_view_access(...)),
-            array_column(get_resource_type_fields('', 'ref', 'asc', '', get_valid_annotate_field_types(), false), 'ref')
-        );
-    }
-
-    return array_unique($can_view_fields, SORT_NUMERIC);
+    global $annotate_enabled, $k;
+    return ($annotate_enabled && $k == "") ? get_annotate_fields() : [];
 }
 
 /**

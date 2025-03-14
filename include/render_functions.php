@@ -7188,7 +7188,7 @@ function render_resource_view_image(array $resource, array $context)
 
                 <div id="PreviewToolsOptionsWrapper">
                     <?php
-                    if(check_annotate_enabled_can_view_annotations() && file_exists($imagepath))
+                    if($GLOBALS["annotate_enabled"] && file_exists($imagepath) && canSeeAnnotationsFields())
                         {
                         ?>
                         <a class="ToolsOptionLink AnnotationsOption" href="#" onclick="toggleAnnotationsOption(this); return false;">

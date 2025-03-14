@@ -90,21 +90,32 @@ if ('delete' == $action && 0 < $annotation_id && 0 !== count($annotation)) {
 
 // Get available fields (allowed) for annotations
 if ('get_allowed_fields' == $action) {
-    $valid_annotate_field_types = get_valid_annotate_field_types();
+    $valid_annotate_fields = canSeeAnnotationsFields();
 
-    foreach (array_unique($annotate_fields, SORT_NUMERIC) as $annotate_field) {
-        $field_data = get_resource_type_field($annotate_field);
-
-        if (in_array($field_data['type'], $valid_annotate_field_types) && metadata_field_view_access($annotate_field)) {
-            $return['data'][] =
-                array(
-                    "ref" => $annotate_field,
-                    "title" => i18n_get_translated($field_data['title']),
-                    "name" => $field_data['name'],
-                    "order_by" => $field_data['order_by'],
-                    "type" => $field_data['type']
-                );
+    foreach ($valid_annotate_fields as $annotate_field) {
+        if ($annotate_field === 0) {
+            $return['data'][] = [
+                'ref' => $annotate_field,
+                'title' => 'Pseudo field for comment (text) annotations',
+                'name' => 'pseudo-rtf-zero',
+                'order_by' => '',
+                'type' => 0,
+            ];
+            continue;
         }
+
+        $field_data = get_resource_type_field($annotate_field);
+        if (!is_array($field_data)) {
+            continue;
+        }
+
+        $return['data'][] = [
+            'ref' => $annotate_field,
+            'title' => i18n_get_translated($field_data['title']),
+            'name' => $field_data['name'],
+            'order_by' => $field_data['order_by'],
+            'type' => $field_data['type'],
+        ];
     }
 
     if (!isset($return['data'])) {
