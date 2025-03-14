@@ -16,8 +16,7 @@ if ($share_password != "" && getval("submit", "") != "" && enforcePostRequest(fa
         if ($return_url == "") {
             $return_url = $baseurl . "/?" . ($resource != "" ? "r=" . $resource : "c=" . $collection ) . "&k=" . $k;
         }
-        header("Location: {$return_url}");
-        exit();
+        redirect($return_url);
     } else {
         sleep(5);
         $onload_message = array("title" => $lang["error"],"text" => $lang["share-invalid"]);

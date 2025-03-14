@@ -1944,6 +1944,7 @@ function upload_preview($ref)
         return false;
     }
 
+    resource_log($ref, LOG_CODE_UPLOADED_PREVIEW, '', $_FILES['userfile']['name']);
     chmod($temp_file, 0777);
     create_previews($ref, false, $extension, true);
 
@@ -2800,7 +2801,7 @@ function compute_tiles_at_scale_factor(int $sf, int $sw, int $sh)
                 $tilew = $sw - $x;
             }
 
-            $tile_id = sprintf('%s_%s_%s_%s', $x, $y, $tilew, $tileh);
+            $tile_id = sprintf('%s_%s_%s_%s_%s', $sf, $x, $y, $tilew, $tileh);
             $tile = [
                 'id' => "tile_{$tile_id}",
                 'x' => $x,
@@ -3674,7 +3675,10 @@ function create_previews_using_im(
         if ($imagemagick_mpr) {
             // Order of generation matters with MPR mode - need HPR and tiles first or the watermark command sections interfere with the tiles
             usort($ps, function ($a, $b) {
-                return ($a["id"] === "hpr" || (substr($a["id"], 0, 4) === "tile" && $b["id"] !== "hpr")) ?  -1 : 1;
+                return (
+                    ($a["id"] === "hpr" || (substr($a["id"], 0, 4) === "tile" && $b["id"] !== "hpr")) // HPR and tiles first
+                    || ($a["width"] > $b["width"])  // Order by size descending
+                ) ?  -1 : 1;
             });
         }
         for ($n = 0; $n < count($ps); $n++) {

@@ -788,26 +788,32 @@ if ($import && isset($folder_path)) {
         }
         logScript("Created new user '{$user["username"]}' (ID #{$new_uref} | User group ID: {$usergroups_spec[$user["usergroup"]]})");
 
-        $_GET["username"] = $user["username"];
-        $_GET["password"] = $user["password"];
-        $_GET["fullname"] = $user["fullname"];
-        $_GET["email"] = $user["email"];
-        $_GET["expires"] = $user["account_expires"];
-        $_GET["usergroup"] = $usergroups_spec[$user["usergroup"]];
-        $_GET["ip_restrict"] = $user["ip_restrict"];
-        $_GET["search_filter_override"] = $user["search_filter_override"];
-        $_GET["search_filter_o_id"] = $user["search_filter_o_id"];
-        $_GET["comments"] = $user["comments"];
-        $_GET["suggest"] = "";
-        $_GET["emailresetlink"] = $user["password_reset_hash"];
-        $_GET["approved"] = $user["approved"];
-        $save_user_status = save_user($new_uref);
-        # Result can be === True which means save_user was successful
-        # Otherwise it will be a string with an error message describing the reason for failure to save/email
-        if ($save_user_status === true) {
+        $valid_user_tbl_cols = array_diff(columns_in('user', null, null, true), ['ref']);
+        $save_user_stm = new PreparedStatementQuery();
+        $log_act_user_edit = [];
+        foreach ($user as $col => $value) {
+            if (!in_array($col, $valid_user_tbl_cols)) {
+                continue;
+            }
+
+            $save_user_stm->sql .= ($save_user_stm->sql !== '' ? ', ' : '') . "`{$col}` = ?";
+            $save_user_stm->parameters[] = is_int_loose($value) ? 'i' : 's';
+            $save_user_stm->parameters[] = $value;
+
+            $log_act_user_edit[$col] = $value;
+        }
+
+        if ($save_user_stm->sql !== '') {
+            ps_query(
+                "UPDATE `user` SET {$save_user_stm->sql} WHERE ref = ?",
+                [...$save_user_stm->parameters, 'i', $new_uref]
+            );
+            foreach ($log_act_user_edit as $col => $value) {
+                log_activity(null, LOG_CODE_EDITED, $value, 'user', $col, $new_uref);
+            }
             logScript("Saved user details");
         } else {
-            logScript("ERROR: failed to save user '{$user["username"]}'. Reason: '{$save_user_status}'");
+            logScript("ERROR: failed to save user '{$user["username"]}'");
             exit(1);
         }
 
