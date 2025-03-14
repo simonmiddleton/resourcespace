@@ -1104,7 +1104,7 @@ function config_generate_AutoSaveConfigOption_function($post_url)
                 .map(() => jQuery(this).val())
                 .get()
                 .toString();
-        } else if (jQuery('input[name="' + option_name + '[]"]')) {
+        } else if (jQuery('input[name="' + option_name + '[]"]').length > 0) {
             option_value = jQuery('input[name="' + option_name + '[]"]:checked')
                 .map((idx, el) => jQuery(el).val())
                 .get()
