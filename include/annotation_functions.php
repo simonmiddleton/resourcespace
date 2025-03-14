@@ -321,13 +321,13 @@ function createAnnotation(array $annotation)
     debug('[annotations][fct=createAnnotation] attempting to create annotation...');
 
     // ResourceSpace specific properties
-    $resource            = $annotation['resource'];
-    $resource_type_field = $annotation['resource_type_field'];
-    $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
-    $tags                = $annotation['tags'] ?? [];
-    // todo: the text property is what holds the normal annotation comments. It will be empty when used to search for a fields' options - it has double purpose
-    // Note: tags will not exist in that case. Annotations comments and tagging with fields should be mutually exclusive - TBC.
-    $text = $annotation['text'] ?? '';
+    $resource = $annotation['resource'];
+    $resource_type_field = (int) $annotation['resource_type_field'];
+    $page = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
+    // Comment (text) annotations and tagging fields are mutually exclusive
+    $comment_text_mode = $GLOBALS['annotate_text_adds_comment'] && $resource_type_field === 0;
+    $tags = !$comment_text_mode && isset($annotation['tags']) ? $annotation['tags'] : [];
+    $text = $comment_text_mode && isset($annotation['text']) ? trim($annotation['text']) : '';
 
     // Annotorious annotation
     $x      = $annotation['shapes'][0]['geometry']['x'];
@@ -354,6 +354,13 @@ function createAnnotation(array $annotation)
     if (0 == $annotation_ref) {
         debug('[annotations][fct=createAnnotation][warn] Unable to create annotation');
         return false;
+    }
+
+    if ($text !== '') {
+        $_POST['resource_ref'] = $resource;
+        $_POST['annotation_ref'] = $annotation_ref;
+        $_POST['body'] = $text;
+        comments_submit();
     }
 
     // Prepare tags before association by adding new nodes to dynamic keywords list (if permissions allow it)

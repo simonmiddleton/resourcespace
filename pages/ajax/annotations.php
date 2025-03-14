@@ -1,9 +1,10 @@
 <?php
 
 include __DIR__ . '/../../include/boot.php';
-include __DIR__ . '/../../include/authenticate.php';
-include_once __DIR__ . '/../../include/node_functions.php';
-include_once __DIR__ . '/../../include/annotation_functions.php';
+include RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
+include_once RESOURCESPACE_BASE_PATH . '/include/node_functions.php';
+include_once RESOURCESPACE_BASE_PATH . '/include/annotation_functions.php';
+include_once RESOURCESPACE_BASE_PATH . '/include/comment_functions.php';
 
 if (!$annotate_enabled) {
     header('HTTP/1.1 401 Unauthorized');

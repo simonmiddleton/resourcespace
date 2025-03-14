@@ -110,6 +110,17 @@ function comments_submit()
         $sql_values = array("i", (int)$userref);
     }
 
+    if(
+        $GLOBALS['annotate_enabled']
+        && $GLOBALS['annotate_text_adds_comment']
+        && ($annotation_ref = getval('annotation_ref', 0, false, is_positive_int_loose(...)))
+        && $annotation_ref > 0
+    ) {
+        $sql_fields .= ', annotation';
+        $sql_values[] = 'i';
+        $sql_values[] = $annotation_ref;
+    }
+
     $body = getval("body", "");
     if (strlen($body) > $comments_max_characters) {
         $body = substr($body, 0, $comments_max_characters); // just in case not caught in submit form
