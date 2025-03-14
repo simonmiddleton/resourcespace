@@ -96,8 +96,8 @@ if ('get_allowed_fields' == $action) {
         if ($annotate_field === 0) {
             $return['data'][] = [
                 'ref' => $annotate_field,
-                'title' => 'Pseudo field for comment (text) annotations',
-                'name' => 'pseudo-rtf-zero',
+                'title' => $lang['annotate_pseudo_rtf_comment_title'],
+                'name' => 'pseudo-rtf-zero-comment',
                 'order_by' => '',
                 'type' => 0,
             ];
