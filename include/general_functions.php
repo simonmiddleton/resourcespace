@@ -2216,7 +2216,7 @@ function format_display_field($value)
     $string = i18n_get_translated($value);
     $string = TidyList($string);
 
-    if (isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
+    if (isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE) {
         $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes
     } else {
         $string = escape($string);

@@ -9,7 +9,7 @@ command_line_only();
 $resourcea = create_resource(1, 0);
 
 // create new html field
-$htmlfield = create_resource_type_field("HTML test", 0, FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR, "htmltest", 1);
+$htmlfield = create_resource_type_field("HTML test", 0, FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE, "htmltest", 1);
 
 $htmldata = "<div id='header'>
   <ul>

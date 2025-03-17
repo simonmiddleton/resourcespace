@@ -237,7 +237,7 @@ foreach(tms_link_get_modules_mappings() as $module)
                         $existingval = get_data_by_field($tms_resources[$ri]["resource"], $tms_link_field_id);                                                                     
                         $newval     =$tmsresult[$tms_link_column_name];
                         $resource_type_field_data = get_resource_type_field($tms_link_field_id);
-                        if($resource_type_field_data!==false && $resource_type_field_data['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR)
+                        if($resource_type_field_data!==false && $resource_type_field_data['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE)
                             {
                             $newval = str_replace('&nbsp;', ' ', $tmsresult[$tms_link_column_name]);
                             }

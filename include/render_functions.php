@@ -508,7 +508,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
         case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
-        case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
+        case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE:
         case $forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown:
         case FIELD_TYPE_WARNING_MESSAGE:
         # Dynamic keyword list behaviour replaced with regular input field under these circumstances
@@ -4376,13 +4376,13 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # ckeditor that have not yet been edited.
         if(
-            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && !in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
-            || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value == strip_tags($value))
+            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value == strip_tags($value))
             )
             {
             $value = nl2br(escape($value));
             }
-        elseif($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value != strip_tags($value))
+        elseif($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value != strip_tags($value))
             {
             $value = strip_tags_and_attributes($value, ['a'], ['href', 'target']);
             }
