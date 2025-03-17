@@ -3366,7 +3366,7 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
             $order[$order_by] =
                 "ISNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+')) $sort,
                 IFNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+'), '') $sort,
-                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX($order_by, '.', 1), '[0-9]', -1) AS UNSIGNED) $sort,";
+                CAST(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[0-9]+') AS UNSIGNED) $sort,";
             for ($n = 2; $n <= 10; $n++) {
                 $order[$order_by] .= "\nCAST(SUBSTRING_INDEX(SUBSTRING_INDEX($order_by, '.', $n), '.', -1) AS UNSIGNED) $sort,";
             }
