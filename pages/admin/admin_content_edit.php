@@ -170,33 +170,8 @@ include "../../include/header.php";
         ?>
 
         <div class="Question">
-            <?php if ($site_text_use_ckeditor) { ?>
                 <label for="text"><?php echo escape($lang['text']); ?></label>
                 <textarea id="text" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
-                <script type="text/javascript">
-                    <?php if (!hook('ckeditorinit')) { ?>
-                        var editor = CKEDITOR.instances['text'];
-                        if (editor) {
-                            editor.destroy(true);
-                        }
-
-                        CKEDITOR.replace('text', {
-                            toolbar : [ <?php global $ckeditor_content_toolbars;
-                            echo $ckeditor_content_toolbars; ?> ],
-                            height: "600"
-                        });
-                        
-                        var editor = CKEDITOR.instances['text'];
-                        
-                        CKEDITOR.config.autoParagraph = false;
-                        <?php
-                    }
-                    ?>
-                </script>
-            <?php } else { ?>
-                <label for="text"><?php echo escape($lang['text']); ?></label>
-                <textarea id="text" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
-            <?php } ?>
             <div class="clearerleft"></div>
         </div>
 
@@ -258,12 +233,7 @@ include "../../include/header.php";
 
     // Manually check HTML:
     jQuery('#checkhtml').click(function(e) {
-        var ckeditor = '<?php echo $site_text_use_ckeditor; ?>';
-        if (ckeditor == true) {
-            var checktext = editor.getData();
-        } else {
-            var checktext = jQuery('#text').val();
-        }
+        var checktext = jQuery('#text').val();
 
         jQuery.post(
             '../tools/check_html.php', 
