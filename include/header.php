@@ -109,14 +109,6 @@ if ($ajax == "") {
             var ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
         </script>
 
-        <?php
-        global $enable_ckeditor;
-        if ($enable_ckeditor) { ?>
-            <script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script>
-            <?php
-        }
-        ?>
-
         <script src="<?php echo $baseurl;?>/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
         <script src="<?php echo $baseurl; ?>/lib/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
 
