@@ -180,30 +180,41 @@ function sendFile($filename, string $download_filename, $usage = -1, $usagecomme
     redirect($user_download_url);
     }
 
-function showProfileChooser($class = '', $disabled = false, $ns = '')
-    {
+/**
+ * Show colour profile selector based on $format_chooser_profiles config 
+ *
+ * @param string    $class          CSS class for select
+ * @param string    $disabledtext   Text to disable and hide inputs
+ * @param string    $ns             Select ID
+ * 
+ */
+function showProfileChooser(string $class = '', string $disabledtext = '', string $ns = ''): void
+{
     global $format_chooser_profiles, $lang;
 
     if (empty($format_chooser_profiles)) {
         return;
     }
-
-    ?><select name="profile" id="<?php echo escape($ns); ?>profile" <?php if (!empty($class)) {echo 'class="' . escape($class) . '"';}
-            echo $disabled ? ' disabled="disabled"' : ''; ?>>
-        <option value="" selected="selected"><?php
-                echo escape($lang['format_chooser_keep_profile']); ?></option><?php
-
-    $index = 0;
-    foreach (array_keys($format_chooser_profiles) as $name)
-        {
-        if (empty($name)) {
-            $name = $lang['format_chooser_remove_profile'];
+    ?>
+    <select
+        name="profile"
+        id="<?php echo escape($ns); ?>_downloadprofile"
+        <?php if (!empty($class)) {
+            echo ' class="' . escape($class) . '"';
         }
-        ?><option value="<?php echo $index++ ?>"><?php echo i18n_get_translated($name) ?></option><?php
-        }
-
-    ?></select><?php
-    }
+        echo escape($disabledtext) ; ?>
+    >
+        <option value="" selected="selected"><?php echo escape($lang['format_chooser_keep_profile']); ?></option><?php
+        $index = 0;
+        foreach (array_keys($format_chooser_profiles) as $name) {
+            if (empty($name)) {
+                $name = $lang['format_chooser_remove_profile'];
+            }
+            ?><option value="<?php echo $index++ ?>"><?php echo escape(i18n_get_translated($name)); ?></option><?php
+        } ?>
+    </select>
+    <?php
+}
 
 function getProfileFileName($profile)
     {

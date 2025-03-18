@@ -6614,6 +6614,8 @@ function process_collection_download(array $dl_data): array
 
     db_begin_transaction("collection_download"); // Ensure all log updates are committed at once
     for ($n = 0; $n < $rescount; $n++) {
+        // Set a flag to indicate whether file should be included
+        $skipresource = false; 
         if (!isset($collection_resources[$n]['resource_type'])) {
             // Resource data is not present - e.g. an offline job
             $collection_resources[$n] = get_resource_data($collection_resources[$n]["ref"]);
@@ -6776,60 +6778,63 @@ function process_collection_download(array $dl_data): array
                 . ', $restricted_full_download = ' . $GLOBALS["restricted_full_download"]
                 . ', resource_download_allowed() = ' . resource_download_allowed($ref, $usesize, $collection_resources[$n]['resource_type'], -1, true)
             );
-            continue;
+            // Set to skip, although alternative files may still be available
+            $skipresource = true;
         }        
         
-        $dl_data['used_resources'][] = $ref;
         $tmpfile = false;
+        if (!$skipresource) {
+            $dl_data['used_resources'][] = $ref;
 
-        if ($exiftool_write_option && !$collection_download_tar) {
-            $tmpfile = write_metadata($p, $ref, $id);
-            if ($tmpfile !== false && file_exists($tmpfile)) {
-                // File already in tmp, just rename it
-                $p = $tmpfile; 
-            } elseif (!$replaced_file) {
-                // Copy the file from filestore rather than renaming
-                $copy = true; 
+            if ($exiftool_write_option && !$collection_download_tar) {
+                $tmpfile = write_metadata($p, $ref, $id);
+                if ($tmpfile !== false && file_exists($tmpfile)) {
+                    // File already in tmp, just rename it
+                    $p = $tmpfile; 
+                } elseif (!$replaced_file) {
+                    // Copy the file from filestore rather than renaming
+                    $copy = true; 
+                }
             }
-        }
 
-        // If using original filenames when downloading, copy the file to new location so the name is included.
-        $filename = get_download_filename($ref, $usesize, 0, $pextension);
-        collection_download_use_original_filenames_when_downloading(
-            $dl_data,
-            $filename,
-            $ref,
-            $pextension,
-            $p,
-            $copy,
-        );
+            // If using original filenames when downloading, copy the file to new location so the name is included.
+            $filename = get_download_filename($ref, $usesize, 0, $pextension);
+            collection_download_use_original_filenames_when_downloading(
+                $dl_data,
+                $filename,
+                $ref,
+                $pextension,
+                $p,
+                $copy,
+            );
 
-        if (hook("downloadfilenamealt")) {
-            $filename = hook("downloadfilenamealt");
-        }
-        if ($includetext) {
-            $addtext = collection_download_process_text_file($dl_data, $ref, $filename, $subbed_original);
-            $dl_data['text'] .= $addtext;
-        }
-
-        hook('modifydownloadfile');
-        $dl_data['paths'] = $p;
-        if ($collection_download_tar) {
-            $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
-            debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
-            $GLOBALS["use_error_exception"] = true;
-            try {
-                symlink($p, $usertempdir . DIRECTORY_SEPARATOR . $filename);
-            } catch (Throwable $e) {
-                debug("process_collection_download(): Unable to create symlink for resource $ref {$e->getMessage()}");
-                return [];
+            if (hook("downloadfilenamealt")) {
+                $filename = hook("downloadfilenamealt");
             }
-            unset($GLOBALS["use_error_exception"]);
-        } elseif ($GLOBALS['use_zip_extension']) {
-            debug("Adding $p - ($filename) for ref " . $ref . " to " . $zip->filename);
-            set_processing_message((string) ($n+1 . "/" . $rescount . " " . $GLOBALS["lang"]["filesaddedtozip"]));
-            $success = $zip->addFile($p, $filename);
-            debug('Collection download : Added resource ' . $ref . ' to zip archive = ' . ($success ? 'true' : 'false'));
+            if ($includetext) {
+                $addtext = collection_download_process_text_file($dl_data, $ref, $filename, $subbed_original);
+                $dl_data['text'] .= $addtext;
+            }
+
+            hook('modifydownloadfile');
+            $dl_data['paths'] = $p;
+            if ($collection_download_tar) {
+                $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
+                debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
+                $GLOBALS["use_error_exception"] = true;
+                try {
+                    symlink($p, $usertempdir . DIRECTORY_SEPARATOR . $filename);
+                } catch (Throwable $e) {
+                    debug("process_collection_download(): Unable to create symlink for resource $ref {$e->getMessage()}");
+                    return [];
+                }
+                unset($GLOBALS["use_error_exception"]);
+            } elseif ($GLOBALS['use_zip_extension']) {
+                debug("Adding $p - ($filename) for ref " . $ref . " to " . $zip->filename);
+                set_processing_message((string) ($n+1 . "/" . $rescount . " " . $GLOBALS["lang"]["filesaddedtozip"]));
+                $success = $zip->addFile($p, $filename);
+                debug('Collection download : Added resource ' . $ref . ' to zip archive = ' . ($success ? 'true' : 'false'));
+            }
         }
 
         if ($include_alternatives) {
@@ -6843,14 +6848,16 @@ function process_collection_download(array $dl_data): array
                 $target_exists = file_exists($p);
                 if (
                     !$target_exists
-                    && $useoriginal
+                    && ($useoriginal || in_array("format_chooser", $GLOBALS["plugins"]))
                     && resource_download_allowed($ref, '', $collection_resources[$n]['resource_type'], $alternative["ref"], true)
                 ) {
-                    debug("Using original file {$alternative['ref']} for resource $ref");
+                    debug("Using original alternative file for alternative file {$alternative['ref']}");
                     // This size doesn't exist, so we'll try using the original instead
-                    $p = get_resource_path($ref, true, '', false, $alternative['file_extension'], -1, 1, $use_watermark);
+                    // Always use original if using format chooser as the option is not then available and dynamically generating custom sizes is not supported for alternatives
+                    $p = get_resource_path($ref, true, '', false, $alternative['file_extension'], -1, 1, $use_watermark, '', $alternative["ref"]);
                     $pextension = $alternative['file_extension'];
                     $target_exists = file_exists($p);
+                    $usesize = "";
                 }
 
                 debug("Using filepath $p for alternative ref " . $alternative["ref"]);

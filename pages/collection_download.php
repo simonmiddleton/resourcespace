@@ -289,6 +289,25 @@ if ($submitted) {
 include "../include/header.php";
 
 ?>
+<script>
+    jQuery(document).ready(function() {
+        jQuery('#tardownload').on('change', function(){
+            if (this.value == 'off') {
+                console.log('Enabling');
+                jQuery('#exiftool_question').slideDown();
+                jQuery('#write_metadata_on_download').prop('disabled', false);
+                jQuery('#archivesettings_question').slideDown();
+                jQuery('#archivesettings').prop('disabled', false);
+            } else {
+                console.log('Disabling');
+                jQuery('#exiftool_question').slideUp();
+                jQuery('#write_metadata_on_download').prop('disabled', 'disabled');
+                jQuery('#archivesettings_question').slideUp();
+                jQuery('#archivesettings').prop('disabled', 'disabled');
+            }
+        });
+    });
+</script>
 <div class="BasicsBox">
 <?php if ($k != "") {
     $urlparams = [
@@ -451,7 +470,7 @@ include "../include/header.php";
         <div class="Question" <?php echo (!$collection_download_tar) ? "style=\"display:none;\"" : ''; ?>>
             <label for="tardownload"><?php echo escape($lang["collection_download_format"]); ?></label>
             <div class="tickset">
-                <select name="tardownload" class="stdwidth" id="tardownload" onchange="if(jQuery(this).val()=='off'){tar=false;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=true;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
+                <select name="tardownload" class="stdwidth" id="tardownload" >
                     <option value="off"><?php echo escape($lang["collection_download_no_tar"]); ?></option>
                     <option value="on" <?php echo ($collection_download_tar_option) ? " selected" : ''; ?>>
                         <?php echo escape($lang["collection_download_use_tar"]); ?>
