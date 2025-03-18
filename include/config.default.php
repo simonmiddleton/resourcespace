@@ -3196,3 +3196,9 @@ $search_all_workflow_states = false;
 // Array of preview sizes to be created at upload when minimal preview creation is enabled.
 // Limit to essential sizes only to reduce delay.
 $minimal_previews_sizes = array('pre', 'col', 'thm');
+
+// Plugins for TinyMCE to load
+$tinymce_plugins = "autoresize lists link";
+
+// Toolbar entries to be added to TinyMCE
+$tinymce_toolbar = "styles | bold italic underline removeformat | fontsize | forecolor backcolor | bullist numlist link | outdent indent";
