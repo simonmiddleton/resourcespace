@@ -86,7 +86,29 @@ if ('update' == $action && 0 < $resource) {
 
 // Delete annotation
 if ('delete' == $action && 0 < $annotation_id && 0 !== count($annotation)) {
-    $return['data'] = deleteAnnotation($annotation);
+    $delete_linked_comment = false;
+    cast_echo_to_string(static function () use ($annotation, &$delete_linked_comment) {
+        if (!annotationEditable($annotation)) {
+            return;
+        }
+
+        $linked_comment = ps_query(
+            'SELECT ref, resource_ref FROM `comment` WHERE annotation = ? LIMIT 1',
+            ['i', $annotation['ref']]
+        );
+
+        if ($linked_comment === []) {
+            return;
+        }
+
+        $_POST['ref'] = $linked_comment[0]['resource_ref'];
+        $_POST['comment_to_hide'] = $linked_comment[0]['ref'];
+        comments_submit();
+        $delete_linked_comment = true;
+        return;
+    });
+
+    $return['data'] = $delete_linked_comment ?: deleteAnnotation($annotation);
 }
 
 // Get available fields (allowed) for annotations

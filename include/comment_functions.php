@@ -1,5 +1,7 @@
 <?php
 
+include_once __DIR__ . '/annotation_functions.php';
+
 /**
  * Write comments to the database, also deals with hiding and flagging comments
  *
@@ -21,9 +23,21 @@ function comments_submit()
 
     if (($comment_to_hide != 0) && (checkPerm("o"))) {
         $root = find_root_comment($comment_to_hide);
+        $linked_annotation = getAnnotation(ps_value(
+            'SELECT annotation AS `value` FROM `comment` WHERE ref = ?',
+            ['i', $comment_to_hide],
+            0
+        ));
+
+        if ($linked_annotation !== [] && deleteAnnotation($linked_annotation)) {
+            $comment_update_extra_cols = ', annotation = null';
+        } else {
+            $comment_update_extra_cols = '';
+        }
+
         // Does this comment have any child comments?
         if (ps_value("SELECT ref AS value FROM comment WHERE ref_parent = ?", array("i",$comment_to_hide), '') != '') {
-            ps_query("UPDATE comment SET hide = 1 WHERE ref = ?", array("i",$comment_to_hide));
+            ps_query("UPDATE `comment` SET hide = 1{$comment_update_extra_cols} WHERE ref = ?", ['i', $comment_to_hide]);
         } else {
             ps_query("DELETE FROM comment WHERE ref = ?", array("i",$comment_to_hide));
         }
