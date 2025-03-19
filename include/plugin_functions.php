@@ -1701,30 +1701,26 @@ function register_group_access_plugins(?int $usergroup=-1,array $plugins = []): 
  * @param  array $plugins   Enabled Plugins
  * @return array
  */
-function register_all_group_access_plugins(array $plugins = []): array
+function register_all_group_access_plugins(array $plugins): array
 {
     # Load group specific plugins and reorder plugins list
     $active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
 
-    foreach($active_plugins as $plugin)
-        {
+    foreach ($active_plugins as $plugin) {
         #Get Yaml
-        $py="";
+        $py = "";
         $py = get_plugin_yaml($plugin["name"], false);
 
         # Check group access and applicable for this user in the group, only if group access is permitted as otherwise will have been processed already
-        if(!$py['disable_group_select'] && $plugin['enabled_groups'] != '')
-            {
-                include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
-                register_plugin($plugin['name']);
-                register_plugin_language($plugin['name']);
-                $plugins[]=$plugin['name'];
-            }
-        else
-            {
-            $plugins[]=$plugin['name'];
-            }
+        if (!$py['disable_group_select'] && $plugin['enabled_groups'] != '') {
+            include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
+            register_plugin($plugin['name']);
+            register_plugin_language($plugin['name']);
+            $plugins[] = $plugin['name'];
+        } else {
+            $plugins[] = $plugin['name'];
         }
+    }
 
     return array_values(array_unique($plugins));
 }
