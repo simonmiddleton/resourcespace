@@ -339,7 +339,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         @media (max-width: 1200px) {
             #Header .HorizontalNav ul li a {
                 background: #545454 !important;
-                color: white; 
+                color: white !important; 
                 border: none !important;
             }
             #Header .HorizontalNav ul li.UploadButton a {
