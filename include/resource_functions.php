@@ -464,15 +464,11 @@ function put_resource_data($resource, $data)
 {
     global $edit_contributed_by;
 
-    // Check access
     if (!get_edit_access($resource)) {
         return false;
     }
 
-    // Get current resource data
     $currentdata = get_resource_data($resource);
-
-    // Define safe columns
     $safe_columns = ["resource_type","creation_date","rating","user_rating","archive","access","mapzoom","modified","geo_lat","geo_long","no_file"];
     $log_columns = [
         "resource_type" => LOG_CODE_EDITED_RESOURCE,
@@ -514,7 +510,7 @@ function put_resource_data($resource, $data)
         if (isset($log_columns[$column])) {
             // Set log value and type
             $logupdates[] = [
-                $log_columns[$column][$value] ?? $log_columns[$column], // Log code
+                $log_columns[$column], // Log code
                 $column, // Log note
                 $currentdata[$column], // From value
                 $value, // To value
@@ -524,7 +520,8 @@ function put_resource_data($resource, $data)
 
     if ($sql == "") {
         return false;
-    } // Nothing to do.
+    }
+
     $params[] = "i";
     $params[] = $resource;
     ps_query("UPDATE resource SET $sql WHERE ref=?", $params);
