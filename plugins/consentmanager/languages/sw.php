@@ -23,3 +23,5 @@ $lang["notes"] = 'Vidokezo';
 $lang["confirmdeleteconsentfile"] = 'Je, una uhakika unataka KUFUTA faili hili? Hili haliwezi kubatilishwa.';
 $lang["consent_manager_mediums"] = 'Njia za matumizi ya idhini';
 $lang["consent_manager_access"] = 'Dhibiti data ya ridhaa (ambapo haijawezeshwa tayari kupitia ruhusa ya "Inaweza kufikia eneo la Usanidi wa Mfumo")';
+
+$lang["manageconsent-tooltip"] = 'Unda na simamia rekodi za idhini za rasilimali';

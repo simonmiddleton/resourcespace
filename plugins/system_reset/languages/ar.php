@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='هل أنت متأكد؟ لا يمكن الترا
 $lang["system_reset_delete_all"]='حذف جميع البيانات والملفات';
 $lang["plugin-system_reset-title"]='إعادة تعيين النظام';
 $lang["plugin-system_reset-desc"]='يضيف خيارًا إلى المسؤول/النظام لمسح جميع البيانات';
+$lang["system_reset-tooltip"] = 'قم بإجراء إعادة تعيين للنظام لحذف جميع الملفات والبيانات';

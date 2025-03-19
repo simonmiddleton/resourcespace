@@ -28,3 +28,4 @@ $lang["confirmdeletelicensefile"]='ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਸ
 $lang["license_manager_mediums"]='ਲਾਇਸੰਸ ਵਰਤੋਂ ਮਾਧਿਅਮ';
 $lang["license_manager_access"]='ਲਾਇਸੈਂਸ ਡਾਟਾ ਪ੍ਰਬੰਧਿਤ ਕਰੋ (ਜਿੱਥੇ "ਸਿਸਟਮ ਸੈਟਅੱਪ ਖੇਤਰ ਤੱਕ ਪਹੁੰਚ ਸਕਦੇ ਹਨ" ਅਧਿਕਾਰ ਰਾਹੀਂ ਪਹਿਲਾਂ ਹੀ ਸਮਰਥਿਤ ਨਹੀਂ ਹੈ)';
 $lang["license_usage-tv"]='TV';
+$lang["managelicenses-tooltip"] = 'ਸਾਧਨਾਂ ਲਈ ਲਾਇਸੈਂਸ ਬਣਾਓ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰੋ';

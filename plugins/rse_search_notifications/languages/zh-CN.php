@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='启用 (Qǐyòng)';
 $lang["columnheader-last-found"]='最后发现';
 $lang["plugin-rse_search_notifications-title"]='搜索通知';
 $lang["plugin-rse_search_notifications-desc"]='当已保存的搜索发生更改时通知用户';
+$lang["search_notifications_watched_searches-tooltip"] = '控制您的保存搜索';

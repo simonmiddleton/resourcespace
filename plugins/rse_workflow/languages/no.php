@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Brukere vil se ressurser i denne tilsta
 $lang["rse_workflow_introduction"]='For å endre arbeidsflyttilstander og handlinger, bruk \'Administrer arbeidsflythandlinger\' og \'Administrer arbeidsflyttilstander\' fra Admin. Klikk [link_param] for å gå til Admin';
 $lang["plugin-rse_workflow-title"]='Avansert arbeidsflyt';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbeidsflyt';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Opprett og administrer arbeidsflytstatus';

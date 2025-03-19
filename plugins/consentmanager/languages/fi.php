@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Suostumuksen käyttövälineet';
 $lang["consent_manager_access"] = 'Hallinnoi suostumustietoja (jos ei ole jo käytössä "Pääsy järjestelmän asetusten alueelle" -oikeuden kautta)';
 $lang["plugin-consentmanager-title"] = 'Suostumusten hallinta';
 $lang["plugin-consentmanager-desc"] = 'Lisää mahdollisuuden hallita suostumusta, jonka media-tiedostoissasi esiintyvät henkilöt ovat antaneet';
+
+$lang["manageconsent-tooltip"] = 'Luo ja hallinnoi suostumusrekistereitä resursseille';

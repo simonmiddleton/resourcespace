@@ -16,3 +16,5 @@ $lang["openai_gpt_processing_field"]='ਫੀਲਡ \'[field]\' ਲਈ AI ਮੈ�
 $lang["property-gpt_source"]='GPT ਸਰੋਤ';
 $lang["property-openai_gpt_prompt"]='GPT Prompt';
 $lang["property-openai_gpt_input_field"]='GPT Input';
+$lang["openai_gpt_language"] = 'ਨਿਕਾਸ ਭਾਸ਼ਾ';
+$lang["openai_gpt_language_user"] = 'ਮੌਜੂਦਾ ਉਪਭੋਗਤਾ ਦੀ ਭਾਸ਼ਾ';

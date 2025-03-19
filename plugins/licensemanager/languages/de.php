@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Nutzungsmedien der Lizenz';
 $lang["license_manager_access"]='Verwalten Sie Lizenzdaten (sofern nicht bereits über die Berechtigung "Zugriff auf den System-Setup-Bereich" aktiviert)';
 $lang["plugin-licensemanager-title"]='Lizenzmanager';
 $lang["plugin-licensemanager-desc"]='Fügt die Möglichkeit hinzu, Ressourcenlizenzen zu verwalten';
+$lang["managelicenses-tooltip"] = 'Lizenzen für Ressourcen erstellen und verwalten';

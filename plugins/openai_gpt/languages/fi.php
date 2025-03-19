@@ -18,3 +18,5 @@ $lang["openai_gpt_processing_multiple_resources"]='Useita resursseja';
 $lang["openai_gpt_processing_resource"]='Resurssi [resource]';
 $lang["openai_gpt_processing_field"]='AI-käsittely kentälle \'[field]\'';
 $lang["property-gpt_source"]='GPT-lähde';
+$lang["openai_gpt_language"] = 'Tulostuskieli';
+$lang["openai_gpt_language_user"] = 'Nykyisen käyttäjän kieli';

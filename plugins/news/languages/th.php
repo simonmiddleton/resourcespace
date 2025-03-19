@@ -12,3 +12,4 @@ $lang["news_body"]='เนื้อหาหลัก';
 $lang["news_nonewmessages"]='ไม่มีข้อความใหม่';
 $lang["title"]='ข่าวล่าสุด';
 $lang["title-too-long"]='ฟิลด์ชื่อยาวเกิน 50 ตัวอักษรที่อนุญาต';
+$lang["news_manage-tooltip"] = 'เพิ่ม แก้ไข หรือ ลบข่าวสาร';

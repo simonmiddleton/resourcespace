@@ -12,3 +12,4 @@ $lang["news_body"]='محتوای بدنه';
 $lang["news_nonewmessages"]='پیام جدیدی وجود ندارد';
 $lang["title"]='آخرین اخبار...';
 $lang["title-too-long"]='فیلد عنوان بیش از ۵۰ کاراکتر مجاز است';
+$lang["news_manage-tooltip"] = 'افزودن، ویرایش یا حذف موارد خبری';

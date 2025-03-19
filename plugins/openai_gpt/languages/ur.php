@@ -16,3 +16,5 @@ $lang["openai_gpt_processing_multiple_resources"]='متعدد وسائل';
 $lang["openai_gpt_processing_resource"]='وسیلہ [resource]';
 $lang["openai_gpt_processing_field"]='فیلڈ \'[field]\' کے لیے AI میٹا ڈیٹا جنریشن';
 $lang["property-gpt_source"]='جی پی ٹی ماخذ';
+$lang["openai_gpt_language"] = 'آؤٹ پٹ زبان';
+$lang["openai_gpt_language_user"] = 'موجودہ صارف کی زبان';

@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Penggunaan Lisensi Media';
 $lang["license_manager_access"]='Mengelola data lisensi (jika belum diaktifkan melalui izin "Dapat mengakses area Pengaturan Sistem")';
 $lang["plugin-licensemanager-title"]='Manajer Lisensi';
 $lang["plugin-licensemanager-desc"]='Menambahkan kemampuan untuk mengelola lisensi sumber daya';
+$lang["managelicenses-tooltip"] = 'Buat dan kelola lisensi untuk sumber daya';

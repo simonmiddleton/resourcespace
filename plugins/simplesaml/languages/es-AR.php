@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Certificado de IdP %idpname expira a la
 $lang["simplesaml_idp_cert_expired"] = 'El certificado de IdP %idpname expiró a las %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'El certificado de IdP %idpname expira el %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = '¿Verificar la expiración del certificado IdP?';
+
+$lang["simplesaml_use_www_label"] = '¿Permitir solicitudes de metadatos SP para la ruta "www"? (cambiar a falso requerirá que el IdP vuelva a intercambiar los metadatos SP)';
+$lang["simplesaml_use_www_error"] = '¡Advertencia! El complemento está utilizando las rutas "www" heredadas. Si esta es una instalación nueva, ¡cámbialo ahora! De lo contrario, coordina con el administrador del IdP para que pueda actualizar los metadatos del SP en consecuencia.';

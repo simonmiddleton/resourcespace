@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"]='Cau';
 $lang["rse_workflow_more_notes_title"]='Nodau';
 $lang["rse_workflow_email_from"]='Cyfeiriad e-bost i anfon hysbysiad oddi wrth (bydd yn defnyddio %EMAILFROM% os yn wag):';
 $lang["rse_workflow_bcc_admin"]='Hysbysu gweinyddwyr y system pan fydd y cyfrannwr yn cael ei hysbysu';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Creu a rheoli cyflwr llif gwaith';

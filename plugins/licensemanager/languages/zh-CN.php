@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='许可证使用介质';
 $lang["license_manager_access"]='管理许可证数据（如果尚未通过“可以访问系统设置区域”权限启用）';
 $lang["plugin-licensemanager-title"]='许可证管理器';
 $lang["plugin-licensemanager-desc"]='增加管理资源许可的功能';
+$lang["managelicenses-tooltip"] = '创建和管理资源的许可证';

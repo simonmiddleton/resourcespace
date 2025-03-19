@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Consentimiento para el uso de medios';
 $lang["consent_manager_access"] = 'Administrar datos de consentimiento (donde no estén habilitados mediante el permiso "Puede acceder al área de configuración del sistema")';
 $lang["plugin-consentmanager-title"] = 'Gestor de Consentimiento';
 $lang["plugin-consentmanager-desc"] = 'Añade la capacidad de gestionar el consentimiento dado por los sujetos que aparecen en tus archivos multimedia';
+
+$lang["manageconsent-tooltip"] = 'Crear y gestionar registros de consentimiento para recursos';

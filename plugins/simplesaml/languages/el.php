@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Πιστοποιητικό IdP %idpname
 $lang["simplesaml_idp_cert_expired"] = 'Το πιστοποιητικό του IdP %idpname έληξε στις %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'Το πιστοποιητικό IdP %idpname λήγει στις %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Έλεγχος λήξης πιστοποιητικού IdP;';
+
+$lang["simplesaml_use_www_label"] = 'Επιτρέπεται η αίτηση μεταδεδομένων SP για τη διαδρομή "www"; (η αλλαγή σε ψευδές θα απαιτήσει από τον IdP να επαναλάβει την ανταλλαγή των μεταδεδομένων SP)';
+$lang["simplesaml_use_www_error"] = '[Warning] Το πρόσθετο χρησιμοποιεί τις παλιές διαδρομές "www". Αν αυτή είναι μια νέα εγκατάσταση, αλλάξτε το τώρα! Διαφορετικά, συντονιστείτε με τον διαχειριστή του IdP ώστε να μπορέσει να ενημερώσει τα μεταδεδομένα του SP αναλόγως.';

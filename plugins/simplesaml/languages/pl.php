@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Certyfikat IdP %idpname wygasa o %expir
 $lang["simplesaml_idp_cert_expired"] = 'Certyfikat IdP %idpname wygasł o %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'Certyfikat IdP %idpname wygasa o %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Sprawdź wygaśnięcie certyfikatu IdP?';
+
+$lang["simplesaml_use_www_label"] = 'Zezwolić na żądania metadanych SP dla trasy "www"? (zmiana na fałsz wymusi ponowne wymienienie metadanych SP przez IdP)';
+$lang["simplesaml_use_www_error"] = '[Warning] Wtyczka używa przestarzałych tras "www". Jeśli to jest nowe ustawienie, zmień to teraz! W przeciwnym razie skoordynuj z administratorem IdP, aby mogli zaktualizować metadane SP odpowiednio.';

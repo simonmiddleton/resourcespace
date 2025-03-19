@@ -14,3 +14,4 @@ $lang["title"]='ताज़ा समाचार...';
 $lang["title-too-long"]='शीर्षक फ़ील्ड 50 वर्णों की अनुमति से अधिक लंबा है';
 $lang["plugin-news-title"]='समाचार';
 $lang["plugin-news-desc"]='मुख पृष्ठ समाचार आइटम जोड़ता है';
+$lang["news_manage-tooltip"] = 'समाचार आइटम जोड़ें, संपादित करें या हटाएं';

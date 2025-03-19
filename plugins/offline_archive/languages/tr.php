@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='Arşivden geri yükleme t
 $lang["offline_archive_resource_restore"]='Kaynakları geri yükle';
 $lang["plugin-offline_archive-title"]='Çevrimdışı Arşiv';
 $lang["plugin-offline_archive-desc"]='Arşivlenmiş dosyaların çevrimdışı bir konuma taşınmasını sağlar';
+$lang["offline_archive_administer_archive-tooltip"] = 'Arşivlenmiş dosyaları çevrimdışı bir konuma taşıyın';

@@ -14,3 +14,4 @@ $lang["title"]='Najnowsze wiadomości...';
 $lang["title-too-long"]='Pole tytułu jest dłuższe niż dozwolone 50 znaków';
 $lang["plugin-news-title"]='Aktualności';
 $lang["plugin-news-desc"]='Dodaje elementy wiadomości na stronie głównej';
+$lang["news_manage-tooltip"] = 'Dodaj, edytuj lub usuń elementy wiadomości';

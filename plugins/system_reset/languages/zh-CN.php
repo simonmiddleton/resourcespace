@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='你确定吗？这将无法撤销。';
 $lang["system_reset_delete_all"]='删除所有数据和文件';
 $lang["plugin-system_reset-title"]='系统重置';
 $lang["plugin-system_reset-desc"]='添加一个选项到管理员/系统以擦除所有数据';
+$lang["system_reset-tooltip"] = '执行系统重置以删除所有文件和数据';

@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Uporabniki bodo videli vire v tem stanj
 $lang["rse_workflow_introduction"]='Če želite spremeniti stanja in dejanja delovnega toka, uporabite \'Upravljanje dejanj delovnega toka\' in \'Upravljanje stanj delovnega toka\' v sklopu Skrbnik. Kliknite [link_param], da odprete Skrbnik';
 $lang["plugin-rse_workflow-title"]='Napredni potek dela';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Pracovni tok';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Vytvorte a spravujte stavy pracovného postupu';

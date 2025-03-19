@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='Permintaan pemulihan dari
 $lang["offline_archive_resource_restore"]='Memulihkan sumber daya';
 $lang["plugin-offline_archive-title"]='Arsip Offline';
 $lang["plugin-offline_archive-desc"]='Memungkinkan relokasi file yang diarsipkan ke lokasi offline';
+$lang["offline_archive_administer_archive-tooltip"] = 'Pindahkan file arsip ke lokasi offline';

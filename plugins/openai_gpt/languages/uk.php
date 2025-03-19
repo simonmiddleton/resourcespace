@@ -16,3 +16,5 @@ $lang["openai_gpt_processing_multiple_resources"]='Кілька ресурсів
 $lang["openai_gpt_processing_resource"]='Ресурс [resource]';
 $lang["openai_gpt_processing_field"]='Генерація метаданих за допомогою ШІ для поля \'[field]\'';
 $lang["property-gpt_source"]='Джерело GPT';
+$lang["openai_gpt_language"] = 'Мова виводу';
+$lang["openai_gpt_language_user"] = 'Мова поточного користувача';

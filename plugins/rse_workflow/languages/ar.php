@@ -56,3 +56,4 @@ $lang["rse_workflow_action_status_from"]='من الحالة';
 $lang["rse_workflow_state_notify_help"]='سيشاهد المستخدمون الموارد في هذه الحالة كإجراءات بدلاً من تلقي إشعارات بسيطة';
 $lang["plugin-rse_workflow-title"]='سير العمل المتقدم';
 $lang["plugin-rse_workflow-desc"]='ريزورس سبيس إنتربرايز - سير العمل';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'إنشاء وإدارة حالات سير العمل';

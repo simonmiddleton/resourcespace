@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='Habilitat';
 $lang["columnheader-last-found"]='Última trobada';
 $lang["plugin-rse_search_notifications-title"]='Notificacions de cerca';
 $lang["plugin-rse_search_notifications-desc"]='Notificar a l\'usuari quan es produeixin canvis en una cerca desada';
+$lang["search_notifications_watched_searches-tooltip"] = 'Controla les teves cerques desades';

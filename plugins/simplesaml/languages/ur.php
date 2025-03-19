@@ -84,3 +84,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname سرٹیفکیٹ %expireti
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname سرٹیفکیٹ %expiretime پر ختم ہو گیا ہے';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname سرٹیفکیٹ %expiretime پر ختم ہو رہا ہے';
 $lang["simplesaml_check_idp_cert_expiry"] = 'IdP سرٹیفکیٹ کی میعاد ختم ہونے کی جانچ کریں؟';
+
+$lang["simplesaml_use_www_label"] = 'کیا "www" راستے کے لیے SP میٹاڈیٹا کی درخواستوں کی اجازت دیں؟ (جھوٹا کرنے سے IdP کو SP میٹاڈیٹا کا دوبارہ تبادلہ کرنے کی ضرورت ہوگی)';
+$lang["simplesaml_use_www_error"] = '[Warning] پلگ ان پرانے "www" راستوں کا استعمال کر رہا ہے۔ اگر یہ ایک نیا سیٹ اپ ہے تو اسے ابھی تبدیل کریں! بصورت دیگر، IdP ایڈمن کے ساتھ ہم آہنگی کریں تاکہ وہ SP میٹا ڈیٹا کو مناسب طریقے سے اپ ڈیٹ کر سکیں۔';

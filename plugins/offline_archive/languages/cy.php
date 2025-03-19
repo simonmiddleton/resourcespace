@@ -41,3 +41,4 @@ $lang["offline_archive_resource_log_restore_set"]='Arwyddwyd ar gyfer adfer o ar
 $lang["offline_archive_resource_log_restore_removed"]='Ail-adfer wedi\'i ganslo o\'r archif';
 $lang["offline_archive_resource_log_restore_request"]='Cais adfer o archif';
 $lang["offline_archive_resource_restore"]='Adfer adnoddau';
+$lang["offline_archive_administer_archive-tooltip"] = 'Dymchwel ffeiliau archifedig i leoliad all-lein';

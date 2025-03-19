@@ -56,3 +56,4 @@ $lang["rse_workflow_bcc_admin"]='投稿者に通知が送信された場合、�
 $lang["rse_workflow_state_notify_help"]='ユーザーは、この状態のリソースを単純な通知として受け取るのではなく、アクションとして表示されます';
 $lang["plugin-rse_workflow-title"]='高度なワークフロー';
 $lang["plugin-rse_workflow-desc"]='ResourceSpaceエンタープライズ - ワークフロー';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'ワークフローステートを作成および管理する';

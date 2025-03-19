@@ -28,3 +28,4 @@ $lang["selectlicence"]='Dewiswch ID Trwydded os gwelwch yn dda';
 $lang["confirmdeletelicensefile"]='A ydych yn siŵr eich bod am DDIWEDDARU\'r ffeil hon? Ni ellir ei ddychwelyd.';
 $lang["license_manager_mediums"]='Cyfryngau defnydd trwydded';
 $lang["license_manager_access"]='Rheoli data trwydded (lle nad yw eisoes wedi\'i galluogi trwy\'r caniatâd "Gall gael mynediad i\'r ardal Gosod System")';
+$lang["managelicenses-tooltip"] = 'Creu a rheoli trwyddedau ar gyfer adnoddau';
