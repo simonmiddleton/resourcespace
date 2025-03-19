@@ -350,7 +350,7 @@ function get_config_option(array $config_type, $name, &$returned_value, $default
         $params[] = 'i'; $params[] = $config_type['user'];
     } else {
         # Return user preference if present else user group preference if present.
-        $usergroup_id = get_usergroup_parent_for_inherit_flag($config_type['usergroup'], 'preferences');
+        $config_type['usergroup'] = get_usergroup_parent_for_inherit_flag($config_type['usergroup'], 'preferences');
         $user_query = '(user = ? OR usergroup = ?) ORDER BY usergroup LIMIT 1';
         $params[] = 'i'; $params[] = $config_type['user'];
         $params[] = 'i'; $params[] = $config_type['usergroup'];
