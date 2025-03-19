@@ -1,4 +1,5 @@
 <?php
+
 # Hindi
 $lang["canva_user_consent_configuration"] = "Canva उपयोगकर्ता सहमति | सेटअप";
 $lang["canva_user_consent_ref_id"] = "संदर्भ आईडी";

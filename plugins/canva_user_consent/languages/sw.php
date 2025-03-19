@@ -1,4 +1,5 @@
 <?php
+
 # Swahili
 $lang["canva_user_consent_configuration"] = "Uidhini wa mtumiaji wa Canva | Usanidi";
 $lang["canva_user_consent_ref_id"] = "Kitambulisho cha Rejea";

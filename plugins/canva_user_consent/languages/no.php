@@ -1,4 +1,5 @@
 <?php
+
 # Norwegian
 $lang["canva_user_consent_configuration"] = "Canva-brukersamtykke | Oppsett";
 $lang["canva_user_consent_ref_id"] = "Referanse-ID";

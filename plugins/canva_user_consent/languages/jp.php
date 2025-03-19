@@ -1,4 +1,5 @@
 <?php
+
 # Japanese
 $lang["canva_user_consent_configuration"] = "Canvaユーザー同意 | セットアップ";
 $lang["canva_user_consent_ref_id"] = "参照ID";

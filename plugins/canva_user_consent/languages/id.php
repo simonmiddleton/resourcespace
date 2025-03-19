@@ -1,4 +1,5 @@
 <?php
+
 # Indonesian
 $lang["canva_user_consent_configuration"] = "Persetujuan Pengguna Canva | Pengaturan";
 $lang["canva_user_consent_ref_id"] = "ID Referensi";

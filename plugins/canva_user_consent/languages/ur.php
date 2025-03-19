@@ -1,4 +1,5 @@
 <?php
+
 # Urdu
 $lang["canva_user_consent_configuration"] = "Canva صارف کی رضامندی | سیٹ اپ";
 $lang["canva_user_consent_ref_id"] = "ریفرنس ID";

@@ -1,4 +1,5 @@
 <?php
+
 # Persian
 $lang["canva_user_consent_configuration"] = "رضایت کاربر Canva | تنظیمات";
 $lang["canva_user_consent_ref_id"] = "شناسه مرجع";

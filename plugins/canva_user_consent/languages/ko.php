@@ -1,4 +1,5 @@
 <?php
+
 # Korean
 $lang["canva_user_consent_configuration"] = "Canva 사용자 동의 | 설정";
 $lang["canva_user_consent_ref_id"] = "참조 ID";

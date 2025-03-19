@@ -1,4 +1,5 @@
 <?php
+
 # Chinese (Simplified)
 $lang["canva_user_consent_configuration"] = "Canva 用户同意 | 设置";
 $lang["canva_user_consent_ref_id"] = "参考ID";

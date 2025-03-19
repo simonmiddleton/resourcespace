@@ -1,4 +1,5 @@
 <?php
+
 # Dutch
 $lang["canva_user_consent_configuration"] = "Canva gebruikersgoedkeuring | Instellingen";
 $lang["canva_user_consent_ref_id"] = "Referentie-ID";

@@ -1,4 +1,5 @@
 <?php
+
 # Ukrainian
 $lang["canva_user_consent_configuration"] = "Згода користувача Canva | Налаштування";
 $lang["canva_user_consent_ref_id"] = "Реф. ID";

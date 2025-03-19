@@ -1,4 +1,5 @@
 <?php
+
 # Bengali
 $lang["canva_user_consent_configuration"] = "Canva ব্যবহারকারীর সম্মতি | সেটআপ";
 $lang["canva_user_consent_ref_id"] = "রেফারেন্স আইডি";

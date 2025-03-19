@@ -1,4 +1,5 @@
 <?php
+
 # Arabic
 $lang["canva_user_consent_configuration"] = "موافقة مستخدم Canva | الإعداد";
 $lang["canva_user_consent_ref_id"] = "معرف المرجع";

@@ -1,4 +1,5 @@
 <?php
+
 # Czech
 $lang["canva_user_consent_configuration"] = "Souhlas uživatele Canva | Nastavení";
 $lang["canva_user_consent_ref_id"] = "Referenční ID";

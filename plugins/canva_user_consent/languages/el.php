@@ -1,4 +1,5 @@
 <?php
+
 # Greek
 $lang["canva_user_consent_configuration"] = "Συναίνεση χρήστη Canva | Ρύθμιση";
 $lang["canva_user_consent_ref_id"] = "Αναγνωριστικό αναφοράς";

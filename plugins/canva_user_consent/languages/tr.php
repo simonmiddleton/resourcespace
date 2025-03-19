@@ -1,4 +1,5 @@
 <?php
+
 # Turkish
 $lang["canva_user_consent_configuration"] = "Canva kullanıcı izni | Kurulum";
 $lang["canva_user_consent_ref_id"] = "Referans ID";

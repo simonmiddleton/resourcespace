@@ -1,4 +1,5 @@
 <?php
+
 # Danish
 $lang["canva_user_consent_configuration"] = "Canva brugerens samtykke | Opsætning";
 $lang["canva_user_consent_ref_id"] = "Reference-ID";

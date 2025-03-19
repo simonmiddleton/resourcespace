@@ -1,4 +1,5 @@
 <?php
+
 # Finnish
 $lang["canva_user_consent_configuration"] = "Canva-käyttäjän suostumus | Asetukset";
 $lang["canva_user_consent_ref_id"] = "Viite-ID";

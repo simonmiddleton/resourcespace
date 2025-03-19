@@ -1,4 +1,5 @@
 <?php
+
 # Croatian
 $lang["canva_user_consent_configuration"] = "Suhlas korisnika Canva | Postavke";
 $lang["canva_user_consent_ref_id"] = "Referentni ID";
