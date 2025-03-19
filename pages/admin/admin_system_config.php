@@ -581,7 +581,7 @@ if (!isset($userref)) {
     $userref = $userdata[0]['ref'];
 }
 
-$page_def = config_filter_by_search($page_def, null, getval("find", ""), getval("only_modified", "no"));
+$page_def = config_filter_by_search($page_def, [], getval("filter", ""), getval("only_modified", "no"));
 
 include '../../include/header.php';
 ?>
@@ -589,7 +589,7 @@ include '../../include/header.php';
     <h1 class="inline_config_search"><?php echo escape($lang["systemconfig"]); ?></h1>
 
     <?php
-    render_config_filter_by_search(getval("find", ""), getval("only_modified", "no"));
+    render_config_filter_by_search(getval("filter", ""), getval("only_modified", "no"));
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],

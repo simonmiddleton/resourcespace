@@ -91,6 +91,7 @@ $lang["property-reference"] = "Reference";
 $lang["property-name"] = "Name";
 $lang["property-permissions"] = "Permissions";
 $lang["property-permissions_inherit"] = "Inherit from parent group";
+$lang["group_config_inherit"] = "Group config is inherited from parent user group. Nothing to configure here.";
 $lang["information-permissions"] = "NOTE: Global permissions from config may also be in effect";
 $lang["property-fixed_theme"] = "Fixed theme";
 $lang["property-parent"] = "Parent";
@@ -99,6 +100,7 @@ $lang["property-edit_filter"] = "Edit filter";
 $lang["property-resource_defaults"] = "Resource defaults";
 $lang["property-override_config_options"] = "Override config options";
 $lang["property-config_inherit"] = "Inherit from parent group";
+$lang["property-group_preferences_inherit"] = "Inherit from parent group";
 $lang["property-email_welcome_message"] = "Email welcome message";
 $lang["information-ip_address_restriction"] = "Wildcards are supported for IP address restrictions, e.g. 128.124.*";
 $lang["property-ip_address_restriction"] = "IP address restriction";
@@ -1784,6 +1786,7 @@ $lang["item_deleted"] = "Item deleted";
 $lang["viewing_version_created_by"] = "Viewing version created by";
 $lang["on_date"] = "on";
 $lang["launchpermissionsmanager"] = "Launch permissions manager";
+$lang["editgroupconfigoverrides"] = "Edit group config overrides";
 $lang["confirm-deletion"] = "Are you sure you want to delete?";
 $lang["accept_png_gif_only"] = "Only .png or .gif extensions accepted";
 $lang["ensure_file_extension_match"] = "Ensure file and extension match";
@@ -2208,7 +2211,6 @@ $lang['page-title_user_group_management_edit'] = "Edit user group";
 $lang['page-subtitle_user_group_management_edit'] = "Use this section to modify user group properties.";
 $lang["action-title_remove_user_group_logo"] = "Tick to remove user group logo";
 $lang["action-title_see_wiki_for_user_group_advanced_options"] = "Please refer to the <a href='https://www.resourcespace.com/knowledge-base/systemadmin/advanced-user-group-options'>Knowledge Base</a> for further help with Advanced options.";
-$lang["action-title_usergroup_override_detail"] = 'Any settings configured here will override the system defaults for users in this group.';
 
 # admin web edit
 $lang['page-title_web_edit'] = "Edit file";
@@ -2217,6 +2219,11 @@ $lang['page-subtitle_web_edit'] = "Use this section to directly edit files - use
 # User group permissions
 $lang['page-title_user_group_permissions_edit'] = "Edit user group permissions";
 $lang['page-subtitle_user_group_permissions_edit'] = "Use this section to modify user group permissions.";
+
+# User group config
+$lang["fieldtitle-usergroup_config"] = "Group overrides";
+$lang["page-title_usergroup_config"] = "Edit group config overrides";
+$lang["action-title_usergroup_override_detail"] = 'Any settings configured here will override the system defaults for users in this group.';
 
 # Report management
 $lang['page-title_report_management'] = "Report editor";
@@ -2281,7 +2288,6 @@ $lang["fieldhelp-add_to_config_override"] = "Select config override to view help
 $lang["fieldhelp-no_config_override_help"] = "There is no help for this config item";
 $lang["fieldhelp-tick_to_delete_group"] = "You are not allowed to delete user groups that contain active users or are the parent of other groups";
 $lang["fieldtitle-add_to_config_override"] = "Add to config override";
-$lang["fieldtitle-usergroup_config"] = "Group overrides";
 $lang["fieldtitle-advanced_options"] = "Advanced options";
 $lang["fieldtitle-derestrict_filter"] = "Derestrict filter";
 $lang["fieldtitle-group_logo"] = "Group specific logo";

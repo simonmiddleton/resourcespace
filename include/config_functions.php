@@ -2141,24 +2141,24 @@ function config_add_fixed_input(string $label, string $value, string $helptext =
  * Add config option search to user preferences / system configuration page.
  * Also requires config_filter_by_search() to process results. For examples, see the above pages.
  *
- * @param  string  $find            Value from getval("find", "")
+ * @param  string  $filter          Value from getval("filter", "")
  * @param  string  $only_modified   Value from getval("only_modified", "no")
  */
-function render_config_filter_by_search(string $find, string $only_modified): void
+function render_config_filter_by_search(string $filter, string $only_modified): void
 {
     global $lang;
 
     $only_modified = $only_modified == 'yes';
-    $searching = $find != "" || $only_modified;
+    $searching = $filter != "" || $only_modified;
     if (!$searching) {
-        $find = "";
+        $filter = "";
     }
 
     ?>
     <form id="SearchSystemPages" class="inline_config_search" method="post" onsubmit="return CentralSpacePost(this);">
     <?php generateFormToken("system_config_search"); ?>
         <div>
-            <input type="text" name="find" id="configsearch" value="<?php echo escape($find); ?>">
+            <input type="text" name="filter" id="configsearch" value="<?php echo escape($filter); ?>">
             <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
             <?php if ($searching) { ?>
                 <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
@@ -2177,11 +2177,14 @@ function render_config_filter_by_search(string $find, string $only_modified): vo
  * Filter $page_def elements to show only those searched for.
  *
  * @param  array     $page_def        Array containing page definition, from functions config_add_ ...
- * @param  null|int  $userref         null when checking system config or int representing user ref when getting user preferences.
+ * @param  array     $config_type     Array representing the type of config to check:
+ *                                    array() - empty array for system config
+ *                                    array('user' => 1) - key 'user' and int representing user ref to check user preferences
+ *                                    array('usergroup' => 2) - key 'usergroup' and int representing usergroup ref to check user group preferences
  * @param  string    $find            Value from getval("find", "")
  * @param  string    $only_modified   Value from getval("only_modified", "no")
  */
-function config_filter_by_search(array $page_def, ?int $userref, string $find, string $only_modified): array
+function config_filter_by_search(array $page_def, array $config_type, string $find, string $only_modified): array
 {
     $only_modified = $only_modified == 'yes';
     $searching = $find != "" || $only_modified;
@@ -2201,7 +2204,7 @@ function config_filter_by_search(array $page_def, ?int $userref, string $find, s
         if ($only_modified) {
             $search_matches = array();
             $returned_options = array();
-            get_config_options(array('user' => $userref), $returned_options);
+            get_config_options($config_type, $returned_options);
             $returned_options = array_column($returned_options, 'parameter');
             foreach ($page_def as $config_to_check) {
                 if (isset($config_to_check[1]) && in_array($config_to_check[1], $returned_options)) {

@@ -18,7 +18,7 @@ include "../../include/header.php";
 <div class="BasicsBox"> 
     <h1 class="inline_config_search"><?php echo escape($lang["userpreferences"]); ?></h1>
 
-    <?php render_config_filter_by_search(getval("find", ""), getval("only_modified", "no")); ?>
+    <?php render_config_filter_by_search(getval("filter", ""), getval("only_modified", "no")); ?>
 
     <p><?php echo escape($lang["modifyuserpreferencesintro"]); ?></p>
     
@@ -293,7 +293,7 @@ include "../../include/header.php";
             exit();
         }
 
-        $page_def = config_filter_by_search($page_def, $userref, getval("find", ""), getval("only_modified", "no"));
+        $page_def = config_filter_by_search($page_def, ['user' => $userref], getval("filter", ""), getval("only_modified", "no"));
 
         config_generate_html($page_def);
         ?>
