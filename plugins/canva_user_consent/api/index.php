@@ -5,6 +5,13 @@ include_once "../../../include/login_functions.php";
 include_once '../../../include/api_functions.php';
 include_once dirname(__FILE__)."/../include/canva_user_consent_functions.php";
 
+global $plugins;
+if (!in_array("canva_user_consent",$plugins))
+    {
+    header("Status: 403 plugin not activated");
+    exit($lang["error-plugin-not-activated"]);
+    }
+
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
