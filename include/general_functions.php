@@ -5305,6 +5305,8 @@ function is_safe_url($url): bool
     $url_parts = parse_url($url);
     if ($url_parts === false) {
         return false;
+    } elseif (!in_array($url_parts['scheme'], ['http', 'https'])) {
+        return false;
     }
 
     // Check URL components (except the port and query strings) don't contain XSS payloads
