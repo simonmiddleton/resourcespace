@@ -335,6 +335,20 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .ui-widget-content {
             border: 1px solid #878787;
         }
+        /* Responsive mode */
+        @media (max-width: 1200px) {
+            #Header .HorizontalNav ul li a {
+                background: #545454 !important;
+                color: white; 
+                border: none !important;
+            }
+            #Header .HorizontalNav ul li.UploadButton a {
+                background: #1378BF !important;
+            }
+        }
+        .ResponsiveButton {
+            box-shadow: none !important;
+        }
         <?php
     }
 

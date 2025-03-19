@@ -200,10 +200,16 @@ if ($type != "summary") {
                                 <?php } else { ?>
                                     color: '<?php echo $graph_dark_mode ? "white": "default"; ?>',
                                 <?php } ?>
+                            },
+                            grid: {
+                                color: '<?php echo $from_dash ? "#00000033" : ($graph_dark_mode ? "dimgray": "lightgray"); ?>'
                             }
                         },
                         y: {
                             ticks: {color: '<?php echo $from_dash ? '#FFFFFF' : ($graph_dark_mode ? "white": "default"); ?>',},
+                            grid: {
+                                color: '<?php echo $from_dash ? "#00000033" : ($graph_dark_mode ? "dimgray": "lightgray"); ?>'
+                            }
                         }
                     }
                 };
