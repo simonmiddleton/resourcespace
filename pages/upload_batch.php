@@ -283,6 +283,12 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
 
     # Set the redirect after upload to the start of the edit process
     rs_setcookie('lockedfields', '', 1);
+
+    if ($upload_here && is_numeric($collection_add)) {
+        // After edit redirect to collection uploaded to.
+        $redirecturl = generateURL($baseurl . '/pages/search.php', array('search' => '!collection' . $collection_add));
+    }
+
     $redirecturl = generateURL(
         "{$baseurl}/pages/edit.php",
         array(
