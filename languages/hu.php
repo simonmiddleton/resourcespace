@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["usergroup-administrators"] = 'Adminisztrátorok';
 $lang["usergroup-general_users"] = 'Általános felhasználók';
 $lang["usergroup-super_admin"] = 'Szuper Admin';

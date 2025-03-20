@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["usergroup-administrators"] = 'Quản trị viên';
 $lang["usergroup-general_users"] = 'Người dùng chung';
 $lang["usergroup-super_admin"] = 'Quản trị viên siêu cấp';
