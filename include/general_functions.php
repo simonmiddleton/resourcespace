@@ -3614,6 +3614,53 @@ function hook($name, $pagename = "", $params = array(), $last_hook_value_wins = 
     return hook($name, $pagename, $params, $last_hook_value_wins);
 }
 
+
+function html_find_and_replace_recurse(string $findstring, string $replacestring, DOMNode $node) {
+    
+    if($node->nodeName == '#text') {
+        $node->textContent = str_replace($findstring, $replacestring, $node->textContent);
+    } elseif($node->childNodes->count() > 0) {
+        foreach($node->childNodes as $cn) {
+            html_find_and_replace_recurse($findstring, $replacestring, $cn);
+        }
+    }
+}
+
+function html_find_and_replace($findstring, $replacestring, $html) {
+
+    libxml_use_internal_errors(true);
+
+    $doc           = new DOMDocument();
+    $doc->encoding = 'UTF-8';
+
+    $process_html = $doc->loadHTML($html);
+
+    if ($process_html) {
+
+        foreach ($doc->getElementsByTagName('*') as $element) {
+
+            html_find_and_replace_recurse($findstring, $replacestring, $element);
+        }
+
+        $output_html = $doc->saveHTML();
+
+        if (false !== strpos($output_html, '<body>')) {
+            $body_o_tag_pos = strpos($output_html, '<body>');
+            $body_c_tag_pos = strpos($output_html, '</body>');
+
+            $output_html = substr($output_html, $body_o_tag_pos + 6, $body_c_tag_pos - ($body_o_tag_pos + 6));
+        }
+
+        return $output_html;
+
+    } else {
+        return $html;
+    }
+
+}
+
+
+
 /**
 * Utility function to remove unwanted HTML tags and attributes.
 * Note: if $html is a full page, developers should allow html and body tags.

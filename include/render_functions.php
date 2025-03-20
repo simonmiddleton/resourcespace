@@ -1976,8 +1976,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
           {
           $onchangejs = 'setActionPromptText(' . (int) $n . '); ';
           }
-      $onchangejs .= "var fr=document.getElementById('findreplace_" . (int) $n . "');\n";
-      $onchangejs .= "var q=document.getElementById('question_" . (int) $n . "');\n";
+      $onchangejs .= "var fr = document.getElementById('findreplace_" . (int) $n . "');\n";
+      $onchangejs .= "var q =  document.getElementById('question_" . (int) $n . "');\n";
       if ($field["type"] == FIELD_TYPE_CATEGORY_TREE)
         {
         $onchangejs .= "if (this.value=='RM'){branch_limit_field['field_" . $field["ref"] . "']=1;}else{branch_limit_field['field_" . $field["ref"] . "']=0;}";
@@ -1985,19 +1985,50 @@ function display_field($n, $field, $newtab=false,$modal=false)
       elseif (in_array($field["type"], $TEXT_FIELD_TYPES ))
         {
         $onchangejs .= "
-        var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');
-            if (this.value=='CF')
-                {
-                cf.style.display='block';q.style.display='none';fr.style.display='none';
-                }
-            else if (this.value=='FR')
-                {
-                fr.style.display='block';q.style.display='none';cf.style.display='none';
-                }
-            else
-                {
-                fr.style.display='none';cf.style.display='none';q.style.display='block';
-                }";
+        var cf  = document.getElementById('copy_from_field_" . $field["ref"] . "');";
+
+        if ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE) {
+            $onchangejs .= "
+            var rff = document.getElementById('remove_from_field_" . (int) $n . "');
+            
+            if (this.value == 'CF') {
+                cf.style.display  = 'block';
+                fr.style.display  = 'none';
+                q.style.display   = 'none';
+                rff.style.display = 'none';
+            } else if (this.value == 'FR') {
+                fr.style.display  = 'block';
+                cf.style.display  = 'none';
+                q.style.display   = 'none';
+                rff.style.display = 'none';
+            } else if (this.value == 'RM') {
+                fr.style.display  = 'none';
+                cf.style.display  = 'none';
+                q.style.display   = 'none';
+                rff.style.display = 'block';
+            } else {
+                fr.style.display  = 'none';
+                cf.style.display  = 'none';
+                q.style.display   = 'block';
+                rff.style.display = 'none';
+            }";
+        } else {
+            $onchangejs .= "
+            if (this.value == 'CF') {
+                cf.style.display  = 'block';
+                fr.style.display  = 'none';
+                q.style.display   = 'none';
+            } else if (this.value == 'FR') {
+                fr.style.display  = 'block';
+                cf.style.display  = 'none';
+                q.style.display   = 'none';
+            } else {
+                fr.style.display  = 'none';
+                cf.style.display  = 'none';
+                q.style.display   = 'block';
+            }";
+        }          
+
         }
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
@@ -2049,6 +2080,26 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <?php echo escape($lang["andreplacewith"])?> <input type="text" name="replace_<?php echo $field["ref"]; ?>" class="shrtwidth">
       </div><!-- End of findreplace_<?php echo $n?> -->
 
+
+    <?php 
+    if ($field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $field['required'] == 0) {
+    ?>
+      <div class="Question" id="remove_from_field_<?php echo $n?>" style="display:none;border-top:none;">
+        <label>&nbsp;</label>
+        <textarea
+            class="stdwidth MultiLine"
+            rows=6
+            cols=50
+            name="remove_<?php echo $field["ref"]; ?>"
+            id="remove_<?php echo $field["ref"]; ?>"
+         ></textarea>
+      </div><!-- End of remove_from_field_<?php echo $n?> -->
+    <?php
+    }?>
+
+
+
+
       <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
       }
 
@@ -2092,12 +2143,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
      <?php
         }
      $labelname = $name;
-
-     // For batch editing, CKEditor renders as a text box, as it does not work at all well when appending / prepending (it expects to work with HTML only)
-     if ($field['type'] == 8 && $multiple)
-        {
-        $field['type']=1;
-        }
       
      // Add _selector to label so it will keep working:
      if($field['type'] == 9)

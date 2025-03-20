@@ -1458,6 +1458,7 @@ function batch_edit_toggle_edit_multi_checkbox_question(question_ref)
     var modeselect = document.getElementById('modeselect_' + question_ref);
     var findreplace = document.getElementById('findreplace_' + question_ref);
     var revert = document.getElementById('revert_' + question_ref);
+    var remove = document.getElementById('remove_from_field_' + question_ref);
 
     // The copy_from_field is rendered with an id of the resource_type_field ref, not the question_ref (seq number) passed in here
     // The resource_type_field ref is however the last digits of the checkbox name attribute, so use that to get the copyfrom element
@@ -1492,6 +1493,12 @@ function batch_edit_toggle_edit_multi_checkbox_question(question_ref)
             {
             copyfrom.style.display = 'none';
             }
+        // remove is not always present, but if it is then hide it
+        if(remove)
+            {
+            remove.style.display = 'none';
+            }
+
         // Only present for fixed list fields.
         if(displayexisting)
             {
