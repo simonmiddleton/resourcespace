@@ -12,10 +12,12 @@ $title_prefix = sprintf('Test #%s-%s', test_get_file_id(__FILE__), $run_id);
 $cache_globals = [
     'userpermissions' => $userpermissions,
     'annotate_fields' => $annotate_fields ?? [],
+    'annotate_text_adds_comment' => $annotate_text_adds_comment,
 ];
-$reset_globals = function (array $cache) {
+$reset_globals = static function (array $cache) {
     $GLOBALS['userpermissions'] = $cache['userpermissions'];
     $GLOBALS['annotate_fields'] = $cache['annotate_fields'];
+    $GLOBALS['annotate_text_adds_comment'] = $cache['annotate_text_adds_comment'];
 };
 
 $fake_annotation = static function (array $with) {
@@ -41,7 +43,7 @@ $annotate_fields = [$rtf_dkl];
 
 /* 
 todo: new use cases
-- create new text anno
+DONE - create new text anno
 - edit my text anno
 - edit user A text anno (me having o perm)
 */
@@ -54,9 +56,24 @@ $use_cases = [
     ],
     [
         'name' => 'Non-admin can create annotation (field bound)',
-        'setup' => fn() => $GLOBALS['userpermissions'] = $without_permission(['a']),
+        'setup' => static fn() => $GLOBALS['userpermissions'] = $without_permission(['a']),
         'input' => $fake_annotation(['resource_type_field' => $rtf_dkl]),
         'expected' => true,
+    ],
+    [
+        'name' => 'Non-admin can create text annotation',
+        'setup' => static function () use ($without_permission) {
+            $GLOBALS['userpermissions'] = $without_permission(['a']);
+            $GLOBALS['annotate_text_adds_comment'] = true;
+        },
+        'input' => $fake_annotation(['resource_type_field' => 0]),
+        'expected' => true,
+    ],
+    [
+        'name' => 'Text annotation not allowed if confid disabled (any user)',
+        'setup' => static fn() => $GLOBALS['annotate_text_adds_comment'] = false,
+        'input' => $fake_annotation(['resource_type_field' => 0]),
+        'expected' => false,
     ],
     // Edit - Own records
     [
@@ -66,19 +83,28 @@ $use_cases = [
     ],
     [
         'name' => 'Non-admin can edit their own annotation (field bound; w/ access)',
-        'setup' => fn() => $GLOBALS['userpermissions'] = $without_permission(['a']),
+        'setup' => static fn() => $GLOBALS['userpermissions'] = $without_permission(['a']),
         'input' => $fake_annotation(['resource_type_field' => $rtf_dkl, 'user' => $userref]),
         'expected' => true,
     ],
     [
-        'name' => "Admin can't edit their own annotation (field bound; w/o access)",
-        'setup' => fn() => $GLOBALS['userpermissions'][] = "F{$rtf_dkl}",
+        'name' => "Admin shouldn't edit their own annotation (field bound; w/o access)",
+        'setup' => static fn() => $GLOBALS['userpermissions'][] = "F{$rtf_dkl}",
         'input' => $fake_annotation(['resource_type_field' => $rtf_dkl, 'user' => $userref]),
         'expected' => false,
     ],
+    // [
+    //     'name' => "Admin can edit another user text annotation (w/ content manage access)",
+    //     'setup' => static function () {
+    //         $GLOBALS['userpermissions'][] = 'o';
+    //         $GLOBALS['annotate_text_adds_comment'] = true;
+    //     },
+    //     'input' => $fake_annotation(['resource_type_field' => 0, 'user' => 300]),
+    //     'expected' => true,
+    // ],
     [
-        'name' => "Non-admin can't edit their own annotation (field bound; w/o access)",
-        'setup' => function () use ($rtf_dkl, $without_permission) {
+        'name' => "Non-admin shouldn't edit their own annotation (field bound; w/o access)",
+        'setup' => static function () use ($rtf_dkl, $without_permission) {
             $GLOBALS['userpermissions'] = $without_permission(['a']);
             $GLOBALS['userpermissions'][] = "F{$rtf_dkl}"; # can't edit the field
         },
@@ -92,9 +118,36 @@ $use_cases = [
         'expected' => true,
     ],
     [
-        'name' => "Non-admin can't edit another user annotation (field bound)",
-        'setup' => fn() => $GLOBALS['userpermissions'] = $without_permission(['a']),
+        'name' => "Non-admin shouldn't edit another user annotation (field bound)",
+        'setup' => static fn() => $GLOBALS['userpermissions'] = $without_permission(['a']),
         'input' => $fake_annotation(['resource_type_field' => $rtf_dkl, 'user' => 300]),
+        'expected' => false,
+    ],
+    [
+        'name' => "Non-admin shouldn't edit another user text annotation",
+        'setup' => static function () use ($without_permission) {
+            $GLOBALS['userpermissions'] = $without_permission(['a', 'o']);
+            $GLOBALS['annotate_text_adds_comment'] = true;
+        },
+        'input' => $fake_annotation(['resource_type_field' => 0, 'user' => 300]),
+        'expected' => false,
+    ],
+    [
+        'name' => "Admin can edit another user text annotation (w/ content manage access)",
+        'setup' => static function () {
+            $GLOBALS['userpermissions'][] = 'o';
+            $GLOBALS['annotate_text_adds_comment'] = true;
+        },
+        'input' => $fake_annotation(['resource_type_field' => 0, 'user' => 300]),
+        'expected' => true,
+    ],
+    [
+        'name' => "Admin shouldn't edit another user text annotation (w/o content manage access)",
+        'setup' => static function () use ($without_permission) {
+            $GLOBALS['userpermissions'] = $without_permission(['o']);
+            $GLOBALS['annotate_text_adds_comment'] = true;
+        },
+        'input' => $fake_annotation(['resource_type_field' => 0, 'user' => 300]),
         'expected' => false,
     ],
 ];

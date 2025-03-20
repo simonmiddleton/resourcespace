@@ -179,8 +179,6 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
     /*
     Build an annotations array of Annotorious annotation objects
 
-    IMPORTANT: until ResourceSpace will have text fields implemented as nodes, text should be left blank.
-
     NOTE: src attribute is generated per resource (dummy source) to avoid issues when source is
     loaded from download.php
     */
@@ -221,20 +219,27 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
 * @uses checkPermission_anonymoususer()
 *
 * @param array $annotation
-*
-* @return boolean
 */
-function annotationEditable(array $annotation)
+function annotationEditable(array $annotation): bool
 {
     debug(sprintf('[annotations][fct=annotationEditable] $annotation = %s', json_encode($annotation)));
-    global $userref;
+    global $userref, $annotate_text_adds_comment;
 
     $add_operation = !isset($annotation['user']);
     $field_edit_access = metadata_field_edit_access($annotation['resource_type_field']);
 
+    // todo: add authz for text annotations
+    if ($annotation['resource_type_field'] == 0) {
+        if (!$annotate_text_adds_comment) {
+            return false;
+        }
+
+        return ($add_operation || checkperm('o')) && !checkPermission_anonymoususer();
+    }
+
     /* Non-admin edit authorisation is valid when:
-        - user is just adding a new annotation
-        - when editing/removing an existing annotation, the annotation was created by the user itself
+        - user is just adding a new (field bound) annotation
+        - when editing/removing an existing annotation, the annotation was created by the same user
     */
     $non_admin_athz = ($add_operation || $userref == $annotation['user']);
 
