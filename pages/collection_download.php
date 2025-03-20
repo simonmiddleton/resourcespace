@@ -389,7 +389,14 @@ include "../include/header.php";
                     <br />
                     <?php display_size_option('original', $lang['original'], false); ?>
                 </label>
-                <input type=checkbox id="use_original" name="use_original" value="yes">
+                <input type=checkbox
+                    id="use_original"
+                    name="use_original"
+                    value="yes"
+                    <?php if ($useoriginal) {
+                        echo "checked";
+                    } ?>
+                >
                 <div class="clearerleft"></div>
             </div>
             <?php
@@ -416,13 +423,27 @@ include "../include/header.php";
         <!-- Add CSV file with the metadata of all the resources found in this collection -->
         <div class="Question">
             <label for="include_csv_file"><?php echo escape($lang['csvAddMetadataCSVToArchive']); ?></label>
-            <input type="checkbox" id="include_csv_file" name="include_csv_file" value="yes">
+            <input type="checkbox"
+                id="include_csv_file"
+                name="include_csv_file"
+                value="yes"
+                <?php if ($include_csv_file) {
+                    echo "checked";
+                } ?>
+            >
             <div class="clearerleft"></div>
         </div>
         <!-- Alternatives? -->
         <div class="Question">
             <label for="include_alternatives"><?php echo escape($lang['collection_download_include_alternatives']); ?></label>
-            <input type="checkbox" id="include_alternatives" name="include_alternatives" value="yes">
+            <input type="checkbox"
+                id="include_alternatives"
+                name="include_alternatives"
+                value="yes"
+                <?php if ($include_alternatives) {
+                    echo "checked";
+                } ?>
+            >
             <div class="clearerleft"></div>
         </div>
 
@@ -430,7 +451,14 @@ include "../include/header.php";
             <!-- Let user say (if allowed - ie. not enforced by system admin) whether metadata should be written to the file or not -->
             <div class="Question" id="exiftool_question" <?php echo $collection_download_tar_option ? "style=\"display:none;\"" : ''; ?>>
                 <label for="write_metadata_on_download"><?php echo escape($lang['collection_download__write_metadata_on_download_label']); ?></label>
-                <input type="checkbox" id="write_metadata_on_download" name="write_metadata_on_download" value="yes">
+                <input type="checkbox"
+                    id="write_metadata_on_download"
+                    name="write_metadata_on_download"
+                    value="yes"
+                    <?php if (getval('write_metadata_on_download', '') !== '') {
+                        echo "checked";
+                    } ?>
+                >
                 <div class="clearerleft"></div>
             </div>
             <?php
@@ -445,7 +473,7 @@ include "../include/header.php";
         // Legacy archiver settings
         if ($archiver && count($collection_download_settings) > 1) { ?>
             <div class="Question" id="archivesettings_question"
-            <?php if ($collection_download_tar) {
+            <?php if ($collection_download_tar_option) {
                 echo "style=\"display:none\"";
             } ?>
             >

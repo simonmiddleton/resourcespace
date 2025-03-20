@@ -58,7 +58,12 @@ if ($GLOBALS['offline_job_delete_completed']) {
     job_queue_update($jobref, $job_data, STATUS_COMPLETE);
 }
 
-$download_url   = $GLOBALS['baseurl_short'] . "pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $job_data["id"] . ".zip&filename=" . pathinfo($zipinfo["filename"], PATHINFO_FILENAME);
+$extension = "zip";
+if (isset($job_data["archiver"]) && isset($job_data["settings_id"])) {
+    $extension = $GLOBALS["collection_download_settings"][$job_data["settings_id"]]['extension'] ?? "zip";
+}
+
+$download_url   = $GLOBALS['baseurl_short'] . "pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $job_data["id"] . "." . $extension . "&filename=" . pathinfo($zipinfo["filename"], PATHINFO_FILENAME);
 message_add($job["user"], $job_success_text, $download_url);
 
 $delete_job_data = [];

@@ -4362,7 +4362,7 @@ function GetThemesFromRequest($levels)
  * @param string    $filename           Filename (passed by reference)
  * @param int       $ref                Resource ID
  * @param string    $pextension         File extension
- * @param string    $p                  Path to download file
+ * @param string    $p                  Path to download file = passed by reference as may be replaced with a copy file
  * @param bool      $copy               Copy the file from filestore rather than renaming?
  * 
  */
@@ -4371,13 +4371,12 @@ function collection_download_use_original_filenames_when_downloading (
     string &$filename,
     int $ref,
     string $pextension,
-    string $p,
+    string &$p,
     bool $copy
 ): void {
     if (trim($filename) === '') {
         return;
     }
-
 
     # Only perform the copy if an original filename is set.
 
@@ -4393,7 +4392,7 @@ function collection_download_use_original_filenames_when_downloading (
         isset($pathparts['extension'])
         && strtolower($pathparts['extension']) == $pextension
     ) {
-            $pextension = $pathparts['extension'];
+        $pextension = $pathparts['extension'];
     }
 
     $fs = explode("/", $filename);
@@ -4404,9 +4403,8 @@ function collection_download_use_original_filenames_when_downloading (
     # this is for extra efficiency to reduce copying and disk usage
 
     if (!($dl_data['collection_download_tar'] || $GLOBALS['use_zip_extension'])) {
-        // the copy or rename to the filename is not necessary using the zip extension since the archived filename can be specified.
+        // The copy or rename to the filename is not necessary using the zip extension since the archived filename can be specified.
         $newpath = get_temp_dir(false, $dl_data['id']) . '/' . $filename;
-
         if (!$copy && $GLOBALS['exiftool_write_option']) {
             rename($p, $newpath);
         } else {
@@ -4418,10 +4416,6 @@ function collection_download_use_original_filenames_when_downloading (
 
         # Set p so now we are working with this new file
         $p = $newpath;
-    }
-
-    if (empty($filename)) {
-        $filename = get_download_filename($ref, $dl_data['size'], 0, $pextension);
     }
 }
 
@@ -4674,7 +4668,7 @@ function collection_download_process_summary_notes(array &$dl_data, string $file
  * 
  * @return  void
  */
-function collection_download_process_csv_metadata_file(array $dl_data, &$zip)
+function collection_download_process_csv_metadata_file(array &$dl_data, &$zip)
 {
     // Include the CSV file with the metadata of the resources found in this collection
     $result = $dl_data['collection_resources'];
@@ -4683,7 +4677,6 @@ function collection_download_process_csv_metadata_file(array $dl_data, &$zip)
         $result = array_column($result, "ref");
     }
     generateResourcesMetadataCSV($result, false, false, $csv_file);
-
     // Add link to file for use by tar to prevent full paths being included.
     if ($dl_data['collection_download_tar']) {
         $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $dl_data['id']);
@@ -4700,7 +4693,8 @@ function collection_download_process_csv_metadata_file(array $dl_data, &$zip)
         debug("Adding $csv_file to " . $zip->filename);
         $zip->addFile($csv_file, 'Col-' . $dl_data['collection'] . '-metadata-export.csv');
     } else {
-        $dl_data['paths'][] = $csv_file;;
+        debug("collection_download_process_csv_metadata_file: ". $csv_file);
+        $dl_data['includefiles'][] = $csv_file;
     }
     $dl_data['deletion_array'][] = $csv_file;
 }
@@ -4780,24 +4774,34 @@ function collection_download_process_archive_command(array &$dl_data, &$zip, $fi
         // Create a list of files to include
         $listfile = get_temp_dir(false, $dl_data['id']) . "/zipcmd" . $dl_data['collection'] . "-" . $dl_data['size'] . ".txt";
         //  Remove Windows line endings - fixes an issue with using tar command - somehow the file has got Windows line breaks
+
         $filepaths = implode(
             ($GLOBALS["config_windows"] ? "\n" : "\r\n"),
-            $dl_data['paths']
+            $dl_data['includefiles']
         );
         file_put_contents($listfile, $filepaths);
 
         // Set up command line 
-        $command = get_utility_path("archiver") . " %ARGUMENTS %ZIPFILE %LISTFILEARG %LISTFILE";
+        $command = get_utility_path("archiver") . " [ARGUMENTS] %ZIPFILE %LISTFILEARG%LISTFILE";
         $cmdparams = [];
-        $cmdparams["%ARGUMENTS"] = new CommandPlaceholderArg(
-            $archiver_settings["arguments"],
-            fn($m) => preg_match('/[^\\-\w]/', $m) === 0 // Allows word characters, '@', '<' and '-' only
-        );
-        $cmdparams["%ZIPFILE"] = new CommandPlaceholderArg($dl_data['zipfile'], 'is_valid_rs_path');
+        // Likely be more than one argument e.g. 'a -tzip' so will need to be quoted individually
+        $arguments = explode(" ", $archiver_settings["arguments"]);
+        $arr_arguments = [];
+        for($n = 0; $n < count($arguments); $n++) {
+            $argumentstring = "%ARGUMENT{$n}";
+            $arr_arguments[] = $argumentstring;
+            $cmdparams[$argumentstring] = new CommandPlaceholderArg(
+                $arguments[$n],
+                fn($m) => preg_match('/[^\@\-\w]/', $m) === 0 // Allows word characters, '@', and '-' only
+            );
+        }
+        $command = str_replace("[ARGUMENTS]", implode(" ", $arr_arguments), $command);
+
+        $cmdparams["%ZIPFILE"] = new CommandPlaceholderArg($zipfile, 'is_valid_rs_path');
 
         $cmdparams["%LISTFILEARG"] = new CommandPlaceholderArg(
             $GLOBALS["archiver_listfile_argument"],
-            fn($m) => preg_match('/[^\\-\w]/', $m) === 0 // Allows word characters and '-' only
+            fn($m) => preg_match('/[^\@\-\w]/', $m) === 0 // Allows word characters, '@', and '-' only
         );
         $cmdparams["%LISTFILE"] = new CommandPlaceholderArg($listfile, 'is_valid_rs_path');
         
@@ -6563,7 +6567,6 @@ function process_collection_download(array $dl_data): array
     $include_alternatives       = (bool) ($dl_data['include_alternatives'] ?? false);
     $collection_download_tar    = (bool) ($dl_data['collection_download_tar'] ?? false);
     $archiver                   = (bool) ($dl_data["archiver"] ?? false);
-
     // Set this as global -  required by write_metadata()
     global $exiftool_write_option;
     $saved_exiftool_write_option = $exiftool_write_option;
@@ -6582,9 +6585,10 @@ function process_collection_download(array $dl_data): array
     }
 
     $zip = false;
-    if (!$collection_download_tar) {
+    if (!$collection_download_tar) {    
         // Generate a randomised path for zip file
-        $zipfile = get_temp_dir(false, 'user_downloads') . DIRECTORY_SEPARATOR . $GLOBALS["userref"] . "_" . md5($GLOBALS["username"] . $id . $GLOBALS["scramble_key"]) . ".zip";
+        $extension = $archiver ? $GLOBALS["collection_download_settings"][$settings_id]["extension"] : "zip";
+        $zipfile = get_temp_dir(false, 'user_downloads') . DIRECTORY_SEPARATOR . $GLOBALS["userref"] . "_" . md5($GLOBALS["username"] . $id . $GLOBALS["scramble_key"]) . "." . $extension;
         debug('Collection download : $zipfile =' . $zipfile);
         if ($GLOBALS['use_zip_extension']) {
             $zip = new ZipArchive();
@@ -6785,7 +6789,6 @@ function process_collection_download(array $dl_data): array
         $tmpfile = false;
         if (!$skipresource) {
             $dl_data['used_resources'][] = $ref;
-
             if ($exiftool_write_option && !$collection_download_tar) {
                 $tmpfile = write_metadata($p, $ref, $id);
                 if ($tmpfile !== false && file_exists($tmpfile)) {
@@ -6817,7 +6820,6 @@ function process_collection_download(array $dl_data): array
             }
 
             hook('modifydownloadfile');
-            $dl_data['paths'] = $p;
             if ($collection_download_tar) {
                 $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
                 debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
@@ -6834,6 +6836,8 @@ function process_collection_download(array $dl_data): array
                 set_processing_message((string) ($n+1 . "/" . $rescount . " " . $GLOBALS["lang"]["filesaddedtozip"]));
                 $success = $zip->addFile($p, $filename);
                 debug('Collection download : Added resource ' . $ref . ' to zip archive = ' . ($success ? 'true' : 'false'));
+            } else {
+                $dl_data['includefiles'][] = $p;
             }
         }
 
@@ -6873,7 +6877,16 @@ function process_collection_download(array $dl_data): array
                         );
                     }
                     $filename = get_download_filename($ref, $usesize, $alternative["ref"], $pextension);
-                    $GLOBALS["download_filename_format"] = $download_filename_format_saved; 
+                    $GLOBALS["download_filename_format"] = $download_filename_format_saved;
+
+                    collection_download_use_original_filenames_when_downloading(
+                        $dl_data,
+                        $filename,
+                        $ref,
+                        $pextension,
+                        $p,
+                        $copy,
+                    );
 
                     debug("Adding $p ($filename) for alternative ref " . $alternative["ref"]);
                     set_processing_message((string) ($n+1 . "/" . $rescount . " " . $GLOBALS["lang"]["filesaddedtozip"]));
@@ -6889,6 +6902,8 @@ function process_collection_download(array $dl_data): array
                             continue;
                         }
                         unset($GLOBALS["use_error_exception"]);
+                    } elseif($archiver) {
+                        $dl_data["includefiles"][] = $p;
                     } else {
                         $success = $zip->addFile($p, $filename);
                         debug('Collection download : Added resource ' . $ref . ' to zip archive = ' . ($success ? 'true' : 'false'));
@@ -6919,7 +6934,7 @@ function process_collection_download(array $dl_data): array
     }
     $filename = "";
     collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
-    $completed = collection_download_process_archive_command($dl_data, $zip, $filename, $archiver);
+    $completed = collection_download_process_archive_command($dl_data, $zip, $filename, $zipfile);
     collection_download_clean_temp_files($dl_data['deletion_array']);
 
     db_end_transaction("collection_download");
