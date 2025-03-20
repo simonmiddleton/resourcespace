@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Dopušteni mediji korištenja';
 $lang["consent_manager_access"] = 'Upravljaj podacima o suglasnosti (gdje nije već omogućeno putem dozvole "Može pristupiti području postavljanja sustava")';
 $lang["plugin-consentmanager-title"] = 'Upravitelj pristanka';
 $lang["plugin-consentmanager-desc"] = 'Dodaje mogućnost upravljanja pristankom danim od strane subjekata prikazanih u vašim medijskim datotekama';
+
+$lang["manageconsent-tooltip"] = 'Stvorite i upravljajte zapisima o pristanku za resurse';

@@ -18,3 +18,5 @@ $lang["openai_gpt_processing_multiple_resources"]='Beberapa sumber daya';
 $lang["openai_gpt_processing_resource"]='Sumber [resource]';
 $lang["openai_gpt_processing_field"]='Pemrosesan AI untuk bidang \'[field]\'';
 $lang["property-gpt_source"]='Sumber GPT';
+$lang["openai_gpt_language"] = 'Bahasa keluaran';
+$lang["openai_gpt_language_user"] = 'Bahasa pengguna saat ini';

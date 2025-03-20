@@ -84,3 +84,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Chứng chỉ IdP %idpname sẽ hết h
 $lang["simplesaml_idp_cert_expired"] = 'Chứng chỉ IdP %idpname đã hết hạn vào %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'Chứng chỉ IdP %idpname sẽ hết hạn vào %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Kiểm tra thời hạn chứng chỉ IdP?';
+
+$lang["simplesaml_use_www_label"] = 'Cho phép yêu cầu metadata SP cho đường dẫn "www"? (thay đổi thành false sẽ yêu cầu IdP trao đổi lại metadata SP)';
+$lang["simplesaml_use_www_error"] = '[Cảnh báo] Plugin đang sử dụng các đường dẫn "www" cũ. Nếu đây là một thiết lập mới, hãy thay đổi ngay bây giờ! Nếu không, hãy phối hợp với quản trị viên IdP để họ có thể cập nhật metadata SP cho phù hợp.';

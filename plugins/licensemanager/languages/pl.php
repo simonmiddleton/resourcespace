@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Wykorzystanie licencji na nośniki';
 $lang["license_manager_access"]='Zarządzaj danymi licencji (jeśli nie są już włączone za pomocą uprawnienia "Może uzyskać dostęp do obszaru konfiguracji systemu")';
 $lang["plugin-licensemanager-title"]='Menedżer Licencji';
 $lang["plugin-licensemanager-desc"]='Dodaje możliwość zarządzania licencjonowaniem zasobów';
+$lang["managelicenses-tooltip"] = 'Twórz i zarządzaj licencjami dla zasobów';

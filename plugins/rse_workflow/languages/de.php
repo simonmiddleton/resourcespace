@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Benutzer werden Ressourcen in diesem Zu
 $lang["rse_workflow_introduction"]='Um Workflow-Zustände und -Aktionen zu ändern, verwenden Sie \'Workflow-Aktionen verwalten\' und \'Workflow-Zustände verwalten\' im Admin-Bereich. Klicken Sie auf [link_param], um zum Admin-Bereich zu gelangen';
 $lang["plugin-rse_workflow-title"]='Erweiterter Workflow';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbeitsablauf';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Workflow-Zustände erstellen und verwalten';

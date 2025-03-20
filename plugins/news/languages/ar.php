@@ -14,3 +14,4 @@ $lang["title"]='آخر الأخبار...';
 $lang["title-too-long"]='حقل العنوان أطول من 50 حرف المسموح به';
 $lang["plugin-news-title"]='أخبار';
 $lang["plugin-news-desc"]='يضيف عناصر الأخبار إلى الصفحة الرئيسية';
+$lang["news_manage-tooltip"] = 'إضافة أو تعديل أو حذف عناصر الأخبار';

@@ -56,3 +56,4 @@ $lang["rse_workflow_email_from"]='알림을 보낼 이메일 주소 (비워두�
 $lang["rse_workflow_bcc_admin"]='기여자가 알림을 받을 때 시스템 관리자에게 알림';
 $lang["plugin-rse_workflow-title"]='고급 워크플로우';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace 엔터프라이즈 - 워크플로우';
+$lang["rse_workflow_manage_workflow-tooltip"] = '워크플로우 상태 생성 및 관리';

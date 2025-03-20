@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname 인증서가 %expiretime�
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname 인증서가 %expiretime에 만료되었습니다';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname 인증서가 %expiretime에 만료됩니다';
 $lang["simplesaml_check_idp_cert_expiry"] = 'IdP 인증서 만료 확인?';
+
+$lang["simplesaml_use_www_label"] = '"www" 경로에 대한 SP 메타데이터 요청을 허용하시겠습니까? (false로 변경하면 IdP가 SP 메타데이터를 다시 교환해야 합니다)';
+$lang["simplesaml_use_www_error"] = '[경고] 플러그인이 구식 "www" 경로를 사용하고 있습니다. 만약 이것이 새로 설정한 것이라면 지금 변경하세요! 그렇지 않으면 IdP 관리자와 조정하여 SP 메타데이터를 적절히 업데이트할 수 있도록 하세요.';

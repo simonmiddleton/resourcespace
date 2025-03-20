@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Oletko varma? Tätä ei voi peruuttaa.';
 $lang["system_reset_delete_all"]='Poista kaikki tiedot ja tiedostot';
 $lang["plugin-system_reset-title"]='Järjestelmän nollaus';
 $lang["plugin-system_reset-desc"]='Lisää vaihtoehdon admin/järjestelmään kaikkien tietojen poistamiseksi';
+$lang["system_reset-tooltip"] = 'Suorita järjestelmän nollaus poistaaksesi kaikki tiedostot ja tiedot';

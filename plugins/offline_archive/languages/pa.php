@@ -41,3 +41,4 @@ $lang["offline_archive_resource_log_restore_set"]='ਆਰਕਾਈਵ ਤੋਂ 
 $lang["offline_archive_resource_log_restore_removed"]='ਆਰਕਾਈਵ ਤੋਂ ਰੀਸਟੋਰ ਰੱਦ ਕੀਤਾ ਗਿਆ';
 $lang["offline_archive_resource_log_restore_request"]='ਆਰਕਾਈਵ ਤੋਂ ਪੁਨਰਸਥਾਪਨਾ ਦੀ ਮੰਗ ਕੀਤੀ';
 $lang["offline_archive_resource_restore"]='ਸਰੋਤਾਂ ਨੂੰ ਮੁੜ ਸਥਾਪਿਤ ਕਰੋ';
+$lang["offline_archive_administer_archive-tooltip"] = 'ਆਰਕਾਈਵ ਕੀਤੀਆਂ ਫਾਈਲਾਂ ਨੂੰ ਆਫਲਾਈਨ ਸਥਾਨ \'ਤੇ ਮੁੜ ਸਥਾਨਾਂਤਰਿਤ ਕਰੋ';

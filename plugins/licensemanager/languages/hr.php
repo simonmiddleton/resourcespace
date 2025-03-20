@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Korištenje licencijskih medija';
 $lang["license_manager_access"]='Upravljajte podacima o licencama (ako već nisu omogućeni putem dozvole "Može pristupiti području postavljanja sustava")';
 $lang["plugin-licensemanager-title"]='Upravitelj licenci';
 $lang["plugin-licensemanager-desc"]='Dodaje mogućnost upravljanja licenciranjem resursa';
+$lang["managelicenses-tooltip"] = 'Stvorite i upravljajte licencama za resurse';

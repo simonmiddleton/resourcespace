@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Lisans kullanım ortamları';
 $lang["license_manager_access"]='Lisans verilerini yönet (zaten "Sistem Kurulum alanına erişebilir" izni ile etkinleştirilmemişse)';
 $lang["plugin-licensemanager-title"]='Lisans Yöneticisi';
 $lang["plugin-licensemanager-desc"]='Kaynak lisanslamasını yönetme yeteneği ekler';
+$lang["managelicenses-tooltip"] = 'Kaynaklar için lisanslar oluşturun ve yönetin';

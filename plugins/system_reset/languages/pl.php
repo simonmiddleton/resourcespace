@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Jesteś pewien? Tego nie da się cofnąć.';
 $lang["system_reset_delete_all"]='Usuń wszystkie dane i pliki';
 $lang["plugin-system_reset-title"]='Reset systemu';
 $lang["plugin-system_reset-desc"]='Dodaje opcję do admin/system do usunięcia wszystkich danych';
+$lang["system_reset-tooltip"] = 'Wykonaj reset systemu, aby usunąć wszystkie pliki i dane';

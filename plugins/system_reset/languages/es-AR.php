@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='¿Estás seguro? Esto no se puede deshacer.';
 $lang["system_reset_delete_all"]='Eliminar todos los datos y archivos';
 $lang["plugin-system_reset-title"]='Reinicio del Sistema';
 $lang["plugin-system_reset-desc"]='Agrega una opción a admin/sistema para borrar todos los datos';
+$lang["system_reset-tooltip"] = 'Realizar un reinicio del sistema para eliminar todos los archivos y datos';

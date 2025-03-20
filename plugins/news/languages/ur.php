@@ -12,3 +12,4 @@ $lang["news_body"]='مواد کا متن';
 $lang["news_nonewmessages"]='کوئی نیا پیغام نہیں';
 $lang["title"]='تازہ ترین خبریں...';
 $lang["title-too-long"]='عنوان کا فیلڈ 50 حروف کی اجازت سے زیادہ لمبا ہے۔';
+$lang["news_manage-tooltip"] = 'خبریں شامل کریں، ترمیم کریں یا حذف کریں';

@@ -16,3 +16,5 @@ $lang["property-gpt_source"]='GPT Source';
 $lang["openai_gpt_model"]='ชื่อของโมเดล API ที่จะใช้ (เช่น \'gpt-4o\')';
 $lang["property-openai_gpt_prompt"]='โปรมป์ GPT';
 $lang["property-openai_gpt_input_field"]='โปรแกรม GPT ที่รับเข้า';
+$lang["openai_gpt_language"] = 'ภาษาเอาต์พุต';
+$lang["openai_gpt_language_user"] = 'ภาษาของผู้ใช้ปัจจุบัน';

@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='Forespurt gjenoppretting 
 $lang["offline_archive_resource_restore"]='Gjenopprett ressurser';
 $lang["plugin-offline_archive-title"]='Frakoblet arkiv';
 $lang["plugin-offline_archive-desc"]='Aktiverer flytting av arkiverte filer til en offline plassering';
+$lang["offline_archive_administer_archive-tooltip"] = 'Flytt arkiverte filer til en offline plassering';

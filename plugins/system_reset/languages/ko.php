@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='확실합니까? 이 작업은 되돌릴 수 없�
 $lang["system_reset_delete_all"]='모든 데이터 및 파일 삭제';
 $lang["plugin-system_reset-title"]='시스템 재설정';
 $lang["plugin-system_reset-desc"]='관리자/시스템에 모든 데이터를 삭제하는 옵션 추가';
+$lang["system_reset-tooltip"] = '시스템 재설정을 수행하여 모든 파일과 데이터를 삭제합니다';

@@ -15,3 +15,4 @@ $lang['title']              = 'Senaste Nytt...';
 $lang["title-too-long"]='Titelfältet är längre än de tillåtna 50 tecknen';
 $lang["plugin-news-title"]='Nyheter';
 $lang["plugin-news-desc"]='Lägger till nyhetsartiklar på hemsidan';
+$lang["news_manage-tooltip"] = 'Lägg till, redigera eller ta bort nyhetsartiklar';

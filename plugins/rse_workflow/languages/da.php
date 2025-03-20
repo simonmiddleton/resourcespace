@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Brugere vil se ressourcer i denne tilst
 $lang["rse_workflow_introduction"]='For at ændre arbejdsgangstilstande og handlinger, brug \'Administrer arbejdsgangshandlinger\' og \'Administrer arbejdsgangstilstande\' fra Admin. Klik [link_param] for at gå til Admin';
 $lang["plugin-rse_workflow-title"]='Avanceret Arbejdsgang';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbejdsgang';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Opret og administrer arbejdsflow-tilstande';

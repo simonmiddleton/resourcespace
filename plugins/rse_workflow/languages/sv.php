@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Användare kommer att se resurser i det
 $lang["rse_workflow_introduction"]='För att ändra arbetsflödesstatusar och åtgärder, använd \'Hantera arbetsflödesåtgärder\' och \'Hantera arbetsflödesstatusar\' från Admin. Klicka [här] för att gå till Admin';
 $lang["plugin-rse_workflow-title"]='Avancerat arbetsflöde';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbetsflöde';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Skapa och hantera arbetsflödesstatusar';

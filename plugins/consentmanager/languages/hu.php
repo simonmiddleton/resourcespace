@@ -24,3 +24,4 @@ $lang["notes"] = 'Megjegyzések';
 $lang["confirmdeleteconsentfile"] = 'Biztos benne, hogy törölni szeretné ezt a fájlt? Ezt nem lehet visszavonni.';
 $lang["consent_manager_mediums"] = 'Hozzájárulás felhasználási médiumok';
 $lang["consent_manager_access"] = 'Hozzájárulási adatok kezelése (ahol még nem engedélyezett a "Hozzáférhet a Rendszerbeállítások területhez" engedély révén)';
+$lang["manageconsent-tooltip"] = 'Hozzon létre és kezeljen hozzájárulási nyilvántartásokat az erőforrásokhoz';

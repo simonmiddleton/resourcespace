@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Emin misiniz? Bu geri alınamaz.';
 $lang["system_reset_delete_all"]='Tüm verileri ve dosyaları sil';
 $lang["plugin-system_reset-title"]='Sistem Sıfırlama';
 $lang["plugin-system_reset-desc"]='Yönetici/sistem için tüm verileri silme seçeneği ekler';
+$lang["system_reset-tooltip"] = 'Sistem sıfırlaması yaparak tüm dosyaları ve verileri silin';

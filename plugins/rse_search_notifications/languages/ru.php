@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='Активировано';
 $lang["columnheader-last-found"]='Последнее найденное';
 $lang["plugin-rse_search_notifications-title"]='Уведомления о поиске';
 $lang["plugin-rse_search_notifications-desc"]='Уведомлять пользователя при изменениях в сохраненном поиске';
+$lang["search_notifications_watched_searches-tooltip"] = 'Управляйте своими сохранёнными поисками';

@@ -16,3 +16,5 @@ $lang["openai_gpt_processing_field"]='Cynhyrchu metadata AI ar gyfer maes \'[fie
 $lang["property-gpt_source"]='GPT Source';
 $lang["property-openai_gpt_prompt"]='GPT Prompt';
 $lang["property-openai_gpt_input_field"]='GPT Input';
+$lang["openai_gpt_language"] = 'Iaith allbwn';
+$lang["openai_gpt_language_user"] = 'Iaith y defnyddiwr presennol';

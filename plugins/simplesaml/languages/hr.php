@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname certifikat istječe u %exp
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname certifikat je istekao u %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname certifikat ističe u %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Provjeriti isteka li IdP certifikata?';
+
+$lang["simplesaml_use_www_label"] = 'Dopusti SP zahtjeve za metapodatke za "www" put? (promjena na false će zahtijevati da IdP ponovo razmijeni SP metapodatke)';
+$lang["simplesaml_use_www_error"] = 'Upozorenje! Plugin koristi zastarjele "www" rute. Ako je ovo nova instalacija, promijenite to odmah! Inače, koordinirajte s administratorom IdP-a kako bi mogli ažurirati SP metapodatke u skladu s tim.';

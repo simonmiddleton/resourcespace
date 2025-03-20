@@ -18,3 +18,5 @@ $lang["openai_gpt_processing_multiple_resources"]='Více zdrojů';
 $lang["openai_gpt_processing_resource"]='Zdroj [resource]';
 $lang["openai_gpt_processing_field"]='Zpracování AI pro pole \'[field]\'';
 $lang["property-gpt_source"]='Zdroj GPT';
+$lang["openai_gpt_language"] = 'Jazyk výstupu';
+$lang["openai_gpt_language_user"] = 'Jazyk aktuálního uživatele';

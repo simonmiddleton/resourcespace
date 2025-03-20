@@ -84,3 +84,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Cheti cha IdP %idpname kinamalizika mud
 $lang["simplesaml_idp_cert_expired"] = 'Cheti cha IdP %idpname kilimalizika muda wake saa %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'Cheti cha IdP %idpname kinamalizika muda wake saa %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Angalia muda wa kuisha wa cheti cha IdP?';
+
+$lang["simplesaml_use_www_label"] = 'Ruhusu maombi ya metadata ya SP kwa njia ya "www"? (kubadilisha kuwa uongo kutahitaji IdP kubadilishana tena metadata ya SP)';
+$lang["simplesaml_use_www_error"] = '[Warning] Plugin inatumia njia za zamani "www". Ikiwa hii ni mipangilio mpya, ibadilishe sasa! Vinginevyo, shirikiana na msimamizi wa IdP ili waweze kuboresha metadata ya SP ipasavyo.';

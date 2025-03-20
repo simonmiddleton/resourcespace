@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='Pyydetty palautus arkisto
 $lang["offline_archive_resource_restore"]='Palauta resurssit';
 $lang["plugin-offline_archive-title"]='Offline-arkisto';
 $lang["plugin-offline_archive-desc"]='Mahdollistaa arkistoitujen tiedostojen siirtämisen offline-sijaintiin';
+$lang["offline_archive_administer_archive-tooltip"] = 'Siirrä arkistoituja tiedostoja offline-sijaintiin';

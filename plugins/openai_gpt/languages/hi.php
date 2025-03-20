@@ -18,3 +18,5 @@ $lang["openai_gpt_processing_multiple_resources"]='कई संसाधन';
 $lang["openai_gpt_processing_resource"]='संसाधन [resource]';
 $lang["openai_gpt_processing_field"]='फ़ील्ड \'[field]\' के लिए एआई प्रोसेसिंग';
 $lang["property-gpt_source"]='जीपीटी स्रोत';
+$lang["openai_gpt_language"] = 'आउटपुट भाषा';
+$lang["openai_gpt_language_user"] = 'वर्तमान उपयोगकर्ता की भाषा';

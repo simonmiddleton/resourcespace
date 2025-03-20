@@ -18,3 +18,5 @@ $lang["openai_gpt_processing_multiple_resources"]='多个资源';
 $lang["openai_gpt_processing_resource"]='资源 [resource]';
 $lang["openai_gpt_processing_field"]='字段 \'[field]\' 的AI处理';
 $lang["property-gpt_source"]='GPT来源';
+$lang["openai_gpt_language"] = '输出语言';
+$lang["openai_gpt_language_user"] = '当前用户的语言';

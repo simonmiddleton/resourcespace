@@ -24,3 +24,4 @@ $lang["notes"] = 'Ghi chú';
 $lang["confirmdeleteconsentfile"] = 'Bạn có chắc chắn muốn XÓA tệp này không? Hành động này không thể hoàn tác.';
 $lang["consent_manager_mediums"] = 'Phương tiện sử dụng đồng ý';
 $lang["consent_manager_access"] = 'Quản lý dữ liệu đồng ý (nơi chưa được kích hoạt thông qua quyền "Có thể truy cập khu vực Cài đặt Hệ thống")';
+$lang["manageconsent-tooltip"] = 'Tạo và quản lý hồ sơ đồng ý cho tài nguyên';

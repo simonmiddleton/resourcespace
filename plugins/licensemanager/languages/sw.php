@@ -28,3 +28,4 @@ $lang["selectlicence"]='Tafadhali chagua Kitambulisho cha Leseni';
 $lang["confirmdeletelicensefile"]='Je, una uhakika unataka KUFUTA faili hili? Hili haliwezi kubatilishwa.';
 $lang["license_manager_mediums"]='Vyombo vya matumizi ya leseni';
 $lang["license_manager_access"]='Dhibiti data ya leseni (ambapo haijawezeshwa tayari kupitia ruhusa ya "Inaweza kufikia eneo la Usanidi wa Mfumo")';
+$lang["managelicenses-tooltip"] = 'Unda na simamia leseni za rasilimali';

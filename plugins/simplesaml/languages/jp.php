@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname 証明書の有効期限�
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname 証明書の有効期限が %expiretime に切れました';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname 証明書の有効期限は %expiretime です';
 $lang["simplesaml_check_idp_cert_expiry"] = 'IdP証明書の有効期限を確認しますか？';
+
+$lang["simplesaml_use_www_label"] = '"www"ルートのSPメタデータリクエストを許可しますか？（falseに変更すると、IdPはSPメタデータを再交換する必要があります）';
+$lang["simplesaml_use_www_error"] = '[警告] プラグインは古い「www」ルートを使用しています。これが新しいセットアップである場合は、今すぐ変更してください！そうでない場合は、IdP管理者と調整して、SPメタデータを適切に更新できるようにしてください。';

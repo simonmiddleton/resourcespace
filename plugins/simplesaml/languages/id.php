@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Sertifikat IdP %idpname akan kedaluwars
 $lang["simplesaml_idp_cert_expired"] = 'Sertifikat IdP %idpname kedaluwarsa pada %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'Sertifikat IdP %idpname berakhir pada %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Periksa kedaluwarsa sertifikat IdP?';
+
+$lang["simplesaml_use_www_label"] = 'Izinkan permintaan metadata SP untuk rute "www"? (mengubah menjadi false akan mengharuskan IdP untuk menukar kembali metadata SP)';
+$lang["simplesaml_use_www_error"] = '[Warning] Plugin ini menggunakan rute "www" yang lama. Jika ini adalah pengaturan baru, ubah sekarang! Jika tidak, koordinasikan dengan admin IdP agar mereka dapat memperbarui metadata SP sesuai.';

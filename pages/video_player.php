@@ -186,10 +186,10 @@ global $css_reload_key,$context;
     });
 
     videojs.registerPlugin('loopToggle', function() {
-        var player = this;
-        var Button = videojs.getComponent('Button');
+        let player = this;
+        let Button = videojs.getComponent('Button');
 
-        var LoopButton = videojs.extend(Button, {
+        let LoopButton = videojs.extend(Button, {
             constructor: function() {
                 Button.apply(this, arguments);
                 this.controlText('Loop');
@@ -197,12 +197,12 @@ global $css_reload_key,$context;
                 this.updateLoopState();
             },
             handleClick: function() {
-                var videoEl = player.el().querySelector('video');
+                let videoEl = player.el().querySelector('video');
                 videoEl.loop = !videoEl.loop;
                 this.updateLoopState();
             },
             updateLoopState: function() {
-                var videoEl = player.el().querySelector('video');
+                let videoEl = player.el().querySelector('video');
                 if (videoEl.loop) {
                     this.addClass('vjs-loop-active');
                 } else {
@@ -214,13 +214,13 @@ global $css_reload_key,$context;
         videojs.registerComponent('LoopButton', LoopButton);
 
         player.ready(function() {
-            var controlBar = player.getChild('controlBar');
+            let controlBar = player.getChild('controlBar');
             controlBar.addChild('LoopButton', {}, controlBar.children().length - 1);
         });
     });
 
     // Initialize Video.js with the plugin
-    videojs('<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref?>', {
+    videojs('<?php echo escape($context); ?>_<?php echo escape((string) $display); ?>_introvideo<?php echo escape($ref); ?>', {
         plugins: {
             loopToggle: {}
         }

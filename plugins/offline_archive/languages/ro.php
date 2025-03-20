@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='Solicitare de restaurare 
 $lang["offline_archive_resource_restore"]='Restabilire resurse';
 $lang["plugin-offline_archive-title"]='Arhivă Offline';
 $lang["plugin-offline_archive-desc"]='Permite relocarea fișierelor arhivate într-o locație offline';
+$lang["offline_archive_administer_archive-tooltip"] = 'Relocați fișierele arhivate într-o locație offline';

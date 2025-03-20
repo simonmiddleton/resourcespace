@@ -30,3 +30,4 @@ $lang["license_manager_access"]='Gerenciar dados de licença (onde ainda não es
 $lang["action-unlink"]='Desvincular';
 $lang["plugin-licensemanager-title"]='Gerenciador de Licenças';
 $lang["plugin-licensemanager-desc"]='Adiciona a capacidade de gerenciar licenciamento de recursos';
+$lang["managelicenses-tooltip"] = 'Criar e gerenciar licenças para recursos';

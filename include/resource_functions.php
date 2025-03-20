@@ -514,7 +514,9 @@ function put_resource_data($resource, $data)
         if (isset($log_columns[$column])) {
             // Set log value and type
             $logupdates[] = [
-                $log_columns[$column][$value] ?? $log_columns[$column], // Log code
+                is_array($log_columns[$column]) && isset($log_columns[$column][$value])
+                    ? $log_columns[$column][$value]
+                    : $log_columns[$column], // Log code
                 $column, // Log note
                 $currentdata[$column], // From value
                 $value, // To value

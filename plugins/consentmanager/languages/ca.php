@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Consentiment per a l\'ús de mitjans';
 $lang["consent_manager_access"] = 'Gestionar les dades de consentiment (on no estigui habilitat a través del permís "Pot accedir a l\'àrea de configuració del sistema")';
 $lang["plugin-consentmanager-title"] = 'Gestor de Consentiments';
 $lang["plugin-consentmanager-desc"] = 'Afegeix la capacitat de gestionar el consentiment donat pels subjectes que apareixen als teus fitxers multimèdia';
+
+$lang["manageconsent-tooltip"] = 'Crea i gestiona registres de consentiment per a recursos';

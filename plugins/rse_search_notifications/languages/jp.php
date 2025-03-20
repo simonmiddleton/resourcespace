@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='有効化されました。';
 $lang["columnheader-last-found"]='最後に見つかった。';
 $lang["plugin-rse_search_notifications-title"]='検索通知';
 $lang["plugin-rse_search_notifications-desc"]='保存された検索に変更があった場合にユーザーに通知する';
+$lang["search_notifications_watched_searches-tooltip"] = '保存した検索を管理する';

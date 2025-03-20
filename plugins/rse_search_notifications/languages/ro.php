@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='Activat';
 $lang["columnheader-last-found"]='Ultima găsită';
 $lang["plugin-rse_search_notifications-title"]='Notificări de căutare';
 $lang["plugin-rse_search_notifications-desc"]='Notifică utilizatorul când apar modificări la o căutare salvată';
+$lang["search_notifications_watched_searches-tooltip"] = 'Controlează căutările tale salvate';

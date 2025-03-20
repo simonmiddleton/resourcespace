@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='استخدام وسائط الترخيص';
 $lang["license_manager_access"]='إدارة بيانات الترخيص (حيث لم يتم تمكينها بالفعل عبر إذن "الوصول إلى منطقة إعداد النظام")';
 $lang["plugin-licensemanager-title"]='مدير التراخيص';
 $lang["plugin-licensemanager-desc"]='يضيف القدرة على إدارة تراخيص الموارد';
+$lang["managelicenses-tooltip"] = 'إنشاء وإدارة التراخيص للموارد';

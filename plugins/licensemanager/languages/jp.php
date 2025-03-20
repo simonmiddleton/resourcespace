@@ -30,3 +30,4 @@ $lang["license_usage-web"]='Web';
 $lang["inbound"]='インバウンド';
 $lang["plugin-licensemanager-title"]='ライセンスマネージャー';
 $lang["plugin-licensemanager-desc"]='リソースライセンス管理機能を追加します';
+$lang["managelicenses-tooltip"] = 'リソースのライセンスを作成および管理する';
