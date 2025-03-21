@@ -160,23 +160,20 @@ $use_cases = [
         'expected' => false,
     ],
 ];
-foreach($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     // Set up the use case environment
-    if(isset($uc['setup']))
-        {
+    if (isset($uc['setup'])) {
         $uc['setup']();
-        }
+    }
 
     $result = annotationEditable($uc['input']);
-    if($uc['expected'] !== $result)
-        {
+    if ($uc['expected'] !== $result) {
         echo "Use case: {$uc['name']} - ";
         return false;
-        }
+    }
 
     $reset_globals($cache_globals);
-    }
+}
 
 // Tear down
 $reset_globals($cache_globals);
