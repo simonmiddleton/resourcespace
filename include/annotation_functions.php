@@ -228,13 +228,11 @@ function annotationEditable(array $annotation): bool
     $add_operation = !isset($annotation['user']);
     $field_edit_access = metadata_field_edit_access($annotation['resource_type_field']);
 
-    // todo: add authz for text annotations
+    // Text (comment) annotations
     if ($annotation['resource_type_field'] == 0) {
-        if (!$annotate_text_adds_comment) {
-            return false;
-        }
-
-        return ($add_operation || checkperm('o')) && !checkPermission_anonymoususer();
+        return $annotate_text_adds_comment
+            ? (($add_operation || checkperm('o')) && !checkPermission_anonymoususer())
+            : false;
     }
 
     /* Non-admin edit authorisation is valid when:
