@@ -328,6 +328,9 @@ if ($ajax == "") {
                 if (!empty($curr_group["group_specific_logo"])) {
                     $linkedheaderimgsrc = (isset($storageurl) ? $storageurl : $baseurl . "/filestore") . "/admin/groupheaderimg/group" . $usergroup . "." . $curr_group["group_specific_logo"];
                 }
+                if (!empty($curr_group["group_specific_logo_dark"])) {
+                    $linkedheaderimgsrc_dark = (isset($storageurl) ? $storageurl : $baseurl . "/filestore") . "/admin/groupheaderimg/group" . $usergroup . "_dark." . $curr_group["group_specific_logo_dark"];
+                }
             }
 
             $linkUrl = isset($header_link_url) ? $header_link_url : $homepage_url;
@@ -339,7 +342,7 @@ if ($ajax == "") {
             >
                 <div id="HeaderResponsive">
                     <?php
-                    $header_img_src = get_header_image();
+                    $header_img_src = get_header_image(false, true);
 
                     if ($header_link && ($k == "" || $internal_share_access)) { ?>
                         <a href="<?php echo $linkUrl; ?>" onclick="return CentralSpaceLoad(this,true);" class="HeaderImgLink">
@@ -622,6 +625,7 @@ if (!$disable_geocoding) {
 
     jQuery(document).ready(function() {
         ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
+        setThemePreference();
 
         jQuery(document).mouseup(function(e)  {
             var linksContainer = jQuery("#DropdownCaret");
@@ -629,6 +633,14 @@ if (!$disable_geocoding) {
                 jQuery('#OverFlowLinks').hide();
             }
         });
+
+        <?php if (isset($user_pref_appearance) && $user_pref_appearance == "device") { ?>
+            // Run on page load if using device default for appearance
+            updateHeaderImage();
+            // Listen for changes to colour scheme
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateHeaderImage);
+        <?php } ?>
+
     });
 
     window.onresize = function() {

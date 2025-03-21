@@ -1419,33 +1419,39 @@ function config_custom_select($name, $label, $available, $value)
     }
 
 function get_plugin_css()
-    {
+{
     global $plugins,$baseurl,$language,$css_reload_key;
 
-    $plugincss="";
-    for ($n=count($plugins)-1;$n>=0;$n--)
-    {
-    if (!isset($plugins[$n])) { continue; }
-    $csspath=get_plugin_path($plugins[$n]) . "/css/style.css";
-    if (file_exists($csspath))
-        {
-        $plugincss.='<link href="'.get_plugin_path($plugins[$n],true).'/css/style.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
-        ';
+    $plugincss = "";
+    for ($n = count($plugins) - 1; $n >= 0; $n--) {
+        if (!isset($plugins[$n])) {
+            continue;
+        }
+
+        // Standard plugin CSS file
+        $csspath = get_plugin_path($plugins[$n]) . "/css/style.css";
+        if (file_exists($csspath)) {
+            $plugincss .= '<link href="' . get_plugin_path($plugins[$n], true) . '/css/style.css?css_reload_key=' . $css_reload_key . '" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
+        }
+
+        // Dark mode CSS file
+        $csspath_dark = get_plugin_path($plugins[$n]) . "/css/style-dark.php";
+        if (file_exists($csspath_dark)) {
+            $plugincss .= '<link href="' . get_plugin_path($plugins[$n], true) . '/css/style-dark.php?css_reload_key=' . $css_reload_key . '" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
         }
 
         # Allow language specific CSS files
-        $csspath=get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
-        if (file_exists($csspath))
-            {
-            $plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
-            }
+        $csspath = get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
+        if (file_exists($csspath)) {
+            $plugincss .= '<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key=' . $css_reload_key . '" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
+        }
 
         # additional plugin css functionality
-        $plugincss.=hook('moreplugincss','',array($plugins, $n));
-
-        }
-    return $plugincss;
+        $plugincss .= hook('moreplugincss','',array($plugins, $n));
     }
+
+    return $plugincss;
+}
 /*
 Activate language and configuration for plugins for use on setup page if plugin is not enabled for user group
 
@@ -1746,13 +1752,15 @@ function RenderPlugin($plugin, $active = true)
     // Determine icon colour
     $icon_colour = isset($plugin["icon-colour"]) && isValidCssColor($plugin["icon-colour"])
         ? $plugin["icon-colour"]
-        : "black";
+        : "";
 
     // Render the plugin display
     echo '<div class="PluginDisplay">';
     echo '<h2>';
     echo '<span class="plugin-header">';
-    echo '<i class="plugin-icon fa-xl ' . escape($plugin['icon']) . '" style="color:' . escape($icon_colour) . ';"></i>';
+    echo '<i class="plugin-icon fa-xl ' . escape($plugin['icon']) . '"';
+    echo $icon_colour != "" ? ' style="color:' . escape($icon_colour) . ';"' : '';
+    echo '></i>';
     echo '<span class="plugin-title">' . escape($plugin['title'] ?: $plugin['name']) . '</span>';
     echo '</span>';
     echo '</h2>';

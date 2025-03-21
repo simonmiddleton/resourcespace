@@ -18,6 +18,347 @@ header("Content-type: text/css");
 global $header_colour_style_override, $header_link_style_override, $home_colour_style_override,
 $collection_bar_background_override, $collection_bar_foreground_override, $button_colour_override;
 
+// Dark mode styling
+if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contrast_mode)) {
+    if ($user_pref_appearance == "device") {
+        ?>
+        @media (prefers-color-scheme: dark) {
+        <?php
+    }
+    if ($user_pref_appearance == "dark" || $user_pref_appearance == "device") {
+        ?>
+        /* Core elements */
+        body, html {
+            color: white;
+            background: #262626;
+        }
+        h1, h2 {
+            color: white;
+        }
+        /* Tables */
+        .Listview {
+            background-color: #545454;
+        }
+        .ListviewStyle tr {
+            background-color: #545454;
+        }
+        .ListviewStyle thead, .ListviewTitleStyle, .ListviewStyle tr.ListviewTitleStyle {
+            background-color: #444;
+        }
+        .ListviewStyle tr:nth-child(even):not(.ListviewTitleStyle) {
+            background-color: #5e5e5e;
+        }
+        .ListviewStyle tr:hover {
+            background-color: #424242 !important;
+        }
+        .tableRowEven {
+            background-color: #545454 !important;
+        }
+        .tableRowOdd {
+            background-color: #5e5e5e !important;
+        }
+        a:visited {
+            color: #e9e9e9;
+        }
+        a:link {
+            color: white;
+        }
+        /* Header */
+        #Header {
+            background: #404040;
+        }
+        #Header li a {
+            color: white;
+        }
+        
+        .BasicsBox.SearchSticky {
+            background-color: #262626;
+            border-bottom: 1px solid #ffffff00;
+            box-shadow: 0 12px 10px -12px #000000;
+        }
+        .TopInpageNav select {
+            background-color: #545454;
+            color: white;
+        }
+        .icondisplay {
+            background-color: #545454;
+        }
+        .update_result_order_button {
+            background-color: #545454;
+        }
+        .ResourcePanel {
+            background-color: #545454;
+        }
+        .ResourcePanel .nopreview {
+            color: white;
+        }
+        .thumbs-file-extension,
+        .ResourceTypeIcon.fa-fw {
+            background: #383838;
+        }
+        #modal {
+            background-color: #262626;
+        }
+        .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge, div#Metadata div.Title {
+            background-color: #393939;
+        }
+        #modal .RecordHeader h1, #modal .BasicsBox h1 {
+            color: white;
+        }
+        .TabBar {
+            background-color: #393939;
+        }
+        .Tab a {
+            font-weight: 600;
+            background-color: #484848;
+        }
+        .TabSelected a {
+            background: #545454;
+            border-bottom: 1px solid #545454;
+        }
+        .RecordDownloadSpace {
+            background: #545454;
+        }
+        .RecordPanel .RecordDownloadSpace .DownloadDBlend, .toolbox {
+            background: #545454;
+        }
+        .RecordTools {
+        background: #545454;
+        }
+        .RecordPanel .RecordDownload .DownloadDBlend td {
+            color: white;
+            border-top: 1px solid #7c7c7c;
+        }
+        .RecordPanel .RecordDownloadSpace .DownloadDBlend p {
+            color: #cbcbcb;
+        }
+        .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {
+            color: white;
+        }
+        #Metadata {
+            background-color: #545454;
+        }
+        .StyledTabbedPanel {
+            background: #545454;
+        }
+        .comment_form_container {
+            background: #545454;
+            border: none;
+        }
+        .NavUnderline, .Question {
+            border-bottom: 1px solid #3f3f3f;
+        }
+        .HorizontalWhiteNav a:link, .HorizontalWhiteNav a:visited, .HorizontalWhiteNav a:active, .BasicsBox .VerticalNav a:link, .BasicsBox .VerticalNav a:visited, .BasicsBox .VerticalNav a:active, .ListTitle a:link, .ListTitle a:visited, .ListTitle a:active {
+            color: white;
+        }
+        .BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited {
+            color: white;
+        }
+        .SearchBreadcrumbs > span {
+            color: #c5c5c5;
+        }
+        .HeaderLink a.current {
+            background: #c3c3c31a;
+        }
+        .PluginDisplay {
+            background-color: #545454;
+        }
+        select, .sp-replacer {
+            background-color: #545454;
+            color: white;
+        }
+        .MultiRTypeSelect {
+            background-color: #545454;
+        }
+        input[type="text"], input[type="password"], input[type="number"], input[type="email"], textarea, select, .sp-replacer {
+            background-color: #545454;
+            color: white;
+        }
+        .search-icon, .search-icon:hover, .search-icon:active {
+            background-color: #404040;
+        }
+        #ssearchbox::placeholder,
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder,
+        input[type="number"]::placeholder,
+        input[type="email"]::placeholder {
+            color: #b1b1b1;
+        }
+        /* Category trees */
+        .CategoryBox, .MiniCategoryBox {
+            background-color: #545454;
+        }
+        .CategoryBox span, .MiniCategoryBox span {
+            color: white;
+        }
+        /* Comments */
+        .CommentFormBody {
+            background-color: #626262;
+        }
+        .CommentFormBody::placeholder {
+            color: #b1b1b1;
+        }
+        .CommentEntry {
+            background-color: #545454;
+            border: 1px solid #6e6e6e;
+        }
+        .CommentBody {
+            color: white;
+        }
+        .skip-to-main-content {
+            background-color: #545454;
+        }
+        .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {
+            font-weight: 600;
+        }
+        .Question.QuestionStickyRight,
+        .QuestionSubmit.QuestionSticky {
+            background-color: #262626;
+        }
+        .Question.QuestionStickyRight {
+            border-left: unset; 
+            box-shadow: -12px 0px 15px -12px black;
+        }
+        .QuestionSubmit.QuestionSticky {
+            border-top: unset;
+            box-shadow: 0 -12px 15px -12px black;
+        }
+        .FormHelpInner {
+            background-color: #6c6c6c;
+        }
+        select, .sp-replacer {
+            box-shadow: 0 1px 3px 1px #00000026;
+        }
+        .RecordPanel .RecordDownload .DownloadDBlend td.Picker select {
+            background-color: #727272;
+        }
+
+        .smalllisticon{background: url(../gfx/interface/listicondark.svg) no-repeat 0; opacity: 0.65;}
+        .smalllisticonactive {background: url(../gfx/interface/listiconactivedark.svg) no-repeat 0;}
+        .xlthumbsicon{background: url(../gfx/interface/xlicondark.svg) no-repeat 0; opacity: 0.65;}
+        .xlthumbsiconactive {background: url(../gfx/interface/xliconactivedark.svg) no-repeat 0;}
+        .largethumbsicon{background: url(../gfx/interface/largeicondark.svg) no-repeat 0; opacity: 0.65;}
+        .largethumbsiconactive{background: url(../gfx/interface/largeiconactivedark.svg) no-repeat 0;}
+        .stripicon{background: url(../gfx/interface/stripicondark.svg) no-repeat 0; opacity: 0.65;}
+        .stripiconactive{background: url(../gfx/interface/stripiconactivedark.svg) no-repeat 0;}
+
+        .icondisplay .fa-map {
+            color: #cccccc;
+        }
+        .icondisplay .fas.fa-map {
+            color: white;
+        }
+        .NoFind {
+            background: #404040;
+        }
+        [data-uppy-theme=dark] .uppy-Dashboard-browse {
+            color: white;
+        }
+        [data-uppy-theme=dark] .uppy-DashboardContent-back {
+            color: white;
+        }
+        [data-uppy-theme=dark] .uppy-DashboardContent-addMore {
+            color: white;
+        }
+        [data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
+        [data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload {
+            background-color: #1988d7;
+        }
+        .lockedQuestion {
+            background-color: #404040;
+        }
+        .ResourcePanelInfo {
+            color: white;
+        }
+        .PageInformal {
+            background: #404040;
+        }
+        #ProcessingBox{
+            background-color: #404040;
+            color: white;
+        }
+        /* Analytics */
+        .ReportSheet {
+            background-color: #262626;
+            border: none;
+            color: white;
+        }
+        .ReportSheet h2,
+        .ReportMetric,
+        .ReportSummary td {
+            color: white; 
+        }
+        .ReportSummary {
+            background-color: #262626;
+        }
+        /* Reports / Installation check */
+        .InfoTable {
+            background: #404040;
+        }
+        /* Chosen library */
+        .chosen-container, .chosen-container-multi .chosen-choices {
+            background-color: #545454 !important;
+            background-image: none !important;
+        }
+        .chosen-container-active .chosen-choices li.search-field input[type=text] {
+            color: white !important;
+        }
+        /* Selection collection link */
+        .SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited, .MessageBox {
+            color: white; 
+        }
+        /* Icon picker */
+        #iconpicker-button {
+            background-color: #404040;
+        }
+        #iconpicker-container {
+            background: #404040;
+        }
+        /* API Test tool */
+        .codeexample {
+            background-color: #404040;
+            color: white;
+        }
+        /* jQuery UI dialog */
+        .ui-widget-content,
+        .delete-dialog .ui-dialog-titlebar,
+        .ui-dialog-titlebar,
+        .ui-dialog .ui-dialog-title {
+            background: #545454;
+        }
+        .ui-dialog .ui-dialog-content, .ui-dialog .ui-dialog-title {
+            color: white; 
+        }
+        .ui-widget.ui-widget-content {
+            border: none; 
+        }
+        .ui-widget-content {
+            border: 1px solid #878787;
+        }
+        /* Responsive mode */
+        @media (max-width: 1200px) {
+            #Header .HorizontalNav ul li a {
+                background: #545454 !important;
+                color: white !important; 
+                border: none !important;
+            }
+            #Header .HorizontalNav ul li.UploadButton a {
+                background: #1378BF !important;
+            }
+        }
+        .ResponsiveButton {
+            box-shadow: none !important;
+        }
+        <?php
+    }
+
+    if ($user_pref_appearance == "device") {
+        ?>
+        }
+        <?php
+    }
+}
+
 # Override the header background colour
 if (isset($header_colour_style_override) && $header_colour_style_override != '') { ?>
     #Header, #OverFlowLinks, #LoginHeader {
@@ -376,3 +717,4 @@ if ($simple_search_pills_view) { ?>
         margin-left: 221px;
     } <?php
 }
+

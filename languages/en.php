@@ -2207,6 +2207,7 @@ $lang['download_limit_request_text'] = "Download limit reached: [downloaded]/[li
 $lang['page-title_user_group_management_edit'] = "Edit user group";
 $lang['page-subtitle_user_group_management_edit'] = "Use this section to modify user group properties.";
 $lang["action-title_remove_user_group_logo"] = "Tick to remove user group logo";
+$lang["action-title_remove_user_group_logo_dark"] = "Tick to remove user group logo - Dark";
 $lang["action-title_see_wiki_for_user_group_advanced_options"] = "Please refer to the <a href='https://www.resourcespace.com/knowledge-base/systemadmin/advanced-user-group-options'>Knowledge Base</a> for further help with Advanced options.";
 
 # admin web edit
@@ -2284,6 +2285,8 @@ $lang["fieldtitle-advanced_options"] = "Advanced options";
 $lang["fieldtitle-derestrict_filter"] = "Derestrict filter";
 $lang["fieldtitle-group_logo"] = "Group specific logo";
 $lang["fieldtitle-group_logo_replace"] = "Replace group specific logo";
+$lang["fieldtitle-group_logo_dark"] = "Group specific logo - Dark";
+$lang["fieldtitle-group_logo_dark_replace"] = "Replace group specific logo - Dark";
 $lang["fieldtitle-tick_to_delete_group"] = "Tick to delete this group";
 $lang["property-contains"] = "Contains";
 $lang["property-groups"] = "Groups";
@@ -2561,6 +2564,7 @@ $lang['systemconfig'] = 'Configuration';
 $lang['systemconfig_customfont_label'] = 'Custom font file';
 $lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: [extensions]";
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
+$lang['systemconfig_linkedheaderimgsrc_dark_label'] = 'Application logo - Dark';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
 $lang['watermark_header'] = 'Watermark';
 $lang['watermark_label'] = 'Watermark image - Recreate previews after changing watermark to update existing resources. Removing file will disable watermarking.';
@@ -3274,3 +3278,8 @@ $lang["systemlog-tooltip"] = "View the system log";
 $lang["system_performance-tooltip"] = "Run a performance benchmark";
 $lang["systemconfig-tooltip"] = "Configure system level options";
 $lang["error-processlock-aborting"] = "Process already running. Exiting";
+
+$lang["user_pref_appearance"] = "Appearance";
+$lang["user_pref_appearance_light"] = "Light";
+$lang["user_pref_appearance_dark"] = "Dark";
+$lang["user_pref_appearance_device"] = "Device default";

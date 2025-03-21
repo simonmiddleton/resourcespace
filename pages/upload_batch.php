@@ -1260,7 +1260,19 @@ jQuery(document).ready(function () {
         showSelectedFiles: true,
         showRemoveButtonAfterComplete: false,
         browserBackButtonClose: false,
-        theme: 'light',
+        theme: '<?php
+            if (isset($user_pref_appearance)) {
+                if ($user_pref_appearance == "dark") {
+                    echo "dark";
+                } elseif ($user_pref_appearance == "device") {
+                    echo "auto";
+                } else {
+                    echo "light";
+                }
+            } else {
+                echo "light";
+            }
+            ?>',
         doneButtonHandler: null,
         });
 

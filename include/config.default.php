@@ -188,9 +188,10 @@ $header_link = true;
 $header_include_username = false;
 
 // Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
-
 $linkedheaderimgsrc = "";
-// END SLIM HEADER
+
+// Custom dark header image if displaying in dark mode
+$linkedheaderimgsrc_dark = "";
 
 // Change the Header Logo link to another address by uncommenting and setting the variable below
 // $header_link_url=http://my-alternative-header-link
@@ -2545,6 +2546,9 @@ $user_pref_daily_digest_mark_read = true;
 
 // Accompanying user preference option
 $user_pref_inactive_digest = false;
+
+// User preference - UI appearance, light, dark or device default. 
+$user_pref_appearance = "light";
 
 /*
 Resource types that cannot upload files. They are only being used to store information. Use resource type ID as values for this array.
