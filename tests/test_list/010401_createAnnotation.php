@@ -2,9 +2,7 @@
 
 command_line_only();
 
-
 include_once dirname(__FILE__, 3) . '/include/annotation_functions.php';
-
 
 // Set up
 $annotate_fields = [3]; # Make Country an annotateable field
@@ -28,8 +26,6 @@ $annotorious_annotation = [
     ],
 ];
 
-
-
 // Simple use
 $annotation_ref = createAnnotation($annotorious_annotation);
 if ($annotation_ref === false) {
@@ -45,7 +41,18 @@ if ($annotation_ref === false) {
     return false;
 }
 
+// User (without edit access) shoudn't create an annotation with tags
+$cache_userpermissions = $userpermissions;
+$userpermissions = array_values(array_diff($userpermissions, ['F3']));
+echo '<pre>';print_r($uk);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
+$annotation['tags'] = [$uk];
+if (createAnnotation($annotorious_annotation)) {
+    echo "Use case: User (w/o edit access) shoudn't create an annotation w/ tags - ";
+    return false;
+}
+$userpermissions = $cache_userpermissions;
+
 // Tear down
-unset($annotate_fields, $resource_ref, $uk, $annotorious_annotation, $annotation_ref);
+unset($annotate_fields, $resource_ref, $uk, $annotorious_annotation, $annotation_ref, $cache_userpermissions);
 
 return true;
