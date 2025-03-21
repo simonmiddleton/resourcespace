@@ -7214,7 +7214,18 @@ function render_resource_view_image(array $resource, array $context)
                                     annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
                                     nodes_endpoint      : '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/get_nodes.php',
                                     resource            : <?php echo (int) $resource["ref"]; ?>,
-                                    read_only           : <?php echo $edit_access ? 'false' : 'true'; ?>,
+                                    read_only: <?php
+                                        echo (
+                                            $edit_access
+                                            || (
+                                                !$edit_access
+                                                && $GLOBALS['annotate_text_adds_comment']
+                                                && !checkPermission_anonymoususer()
+                                            )
+                                        )
+                                            ? 'false'
+                                            : 'true';
+                                    ?>,
                                     lang: <?php echo json_encode(get_annotorious_lang($lang)); ?>,
                                     rs_config: <?php echo json_encode(get_annotorious_resourcespace_config()); ?>,
                                     // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
