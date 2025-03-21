@@ -152,14 +152,16 @@ if ('get_allowed_fields' == $action) {
     }
 }
 
-// Check if this user can add new tags to a field
+// Check if this user can create new options (nodes) for a field
 // REQUIRES: check if field is dynamic keyword list and user has bermission to add new fields
 if ('check_allow_new_tags' == $action) {
     $resource_type_field = getval('resource_type_field', 0, true);
 
-    if (0 == $resource_type_field || !in_array($resource_type_field, $annotate_fields)) {
+    if (
+        $resource_type_field == 0
+        || !in_array($resource_type_field, array_filter(canSeeAnnotationsFields(), metadata_field_edit_access(...)))
+    ) {
         $return['data'] = false;
-
         echo json_encode($return);
         exit();
     }
