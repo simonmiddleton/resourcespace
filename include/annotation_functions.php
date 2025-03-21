@@ -226,7 +226,6 @@ function annotationEditable(array $annotation): bool
     global $userref, $annotate_text_adds_comment;
 
     $add_operation = !isset($annotation['user']);
-    $field_edit_access = metadata_field_edit_access($annotation['resource_type_field']);
 
     // Text (comment) annotations
     if ($annotation['resource_type_field'] == 0) {
@@ -235,11 +234,15 @@ function annotationEditable(array $annotation): bool
             : false;
     }
 
-    /* Non-admin edit authorisation is valid when:
+    /* 
+    # Field bound annotations
+
+    Non-admin edit authorisation is valid when:
         - user is just adding a new (field bound) annotation
         - when editing/removing an existing annotation, the annotation was created by the same user
     */
     $non_admin_athz = ($add_operation || $userref == $annotation['user']);
+    $field_edit_access = metadata_field_edit_access($annotation['resource_type_field']);
 
     // Anonymous users cannot edit by default. They can only edit if they are allowed CRUD operations
     if (checkPermission_anonymoususer()) {
