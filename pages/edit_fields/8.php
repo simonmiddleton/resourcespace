@@ -36,7 +36,29 @@ if (mb_strpos($tinymce_plugins, 'autoresize') === false) {
         promotion: false,
         branding: false,
         setup: (editor) => {
-            editor.on('blur', (e) => tinymce.triggerSave());
+            editor.on('blur', function(e) {
+                <?php
+                if ($edit_autosave) {
+                ?>
+                if (tinymce.activeEditor.isDirty()) {
+                    tinymce.activeEditor.save();
+                    AutoSave('<?php echo $field["ref"]; ?>');                
+                };
+                <?php
+                } else {
+                ?>
+                tinymce.activeEditor.save();
+                <?php    
+                }
+                ?>
+            });
+            // Ensure that help text is shown when given focus
+            editor.on('focus', function(e) {
+                ShowHelp('<?php echo $field["ref"]; ?>');
+            });
+            editor.on('blur', function(e) {
+                HideHelp('<?php echo $field["ref"]; ?>');
+            });  
         },
     });
 
