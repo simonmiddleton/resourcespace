@@ -214,12 +214,13 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
 }
 
 /**
-* Check if an annotation can be editable (add/ edit/ remove) by the user
-*
-* @uses checkPermission_anonymoususer()
-*
-* @param array $annotation
-*/
+ * Check if an annotation can be editable (add/ edit + remove) by the user. Please note that Annotorious JS library is
+ * treating edit & remove as the same under the "editable" property.
+ *
+ * @uses checkPermission_anonymoususer()
+ *
+ * @param array $annotation
+ */
 function annotationEditable(array $annotation): bool
 {
     debug(sprintf('[annotations][fct=annotationEditable] $annotation = %s', json_encode($annotation)));
@@ -393,7 +394,8 @@ function createAnnotation(array $annotation)
 }
 
 /**
-* Update annotation and its tags if needed
+* Update (field bound) annotation and its tags, if applicable.
+* Text (comment) annotatins can't be updated (same as the comments logic for those with o perm).
 *
 * @uses annotationEditable()
 * @uses getAnnotationTags()
@@ -404,10 +406,8 @@ function createAnnotation(array $annotation)
 * @uses db_end_transaction()
 *
 * @param array $annotation
-*
-* @return boolean
 */
-function updateAnnotation(array $annotation)
+function updateAnnotation(array $annotation): bool
 {
     debug(sprintf('[annotations][fct=updateAnnotation] Param $annotation = %s', json_encode($annotation)));
     if (!isset($annotation['ref']) || !annotationEditable($annotation)) {
@@ -422,6 +422,11 @@ function updateAnnotation(array $annotation)
     $resource            = $annotation['resource'];
     $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
     $tags                = $annotation['tags'] ?? [];
+
+    if ($resource_type_field == 0) {
+        // Text (comment) annotations are not to be updated (same as the comments logic for those with o perm)
+        return false;
+    }
 
     // Annotorious annotation
     $x      = $annotation['shapes'][0]['geometry']['x'];
