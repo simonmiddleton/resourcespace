@@ -125,7 +125,7 @@ include '../../../include/header.php';
         config_boolean_select (
             "tms_link_tms_uid_field_int",
             $lang["tms_link_uid_field_int"],
-            $tms_link_tms_uid_field_int,
+            $tms_link_tms_uid_field_int ?? true,
         );
         render_field_selector_question(
             $lang["tms_link_rs_uid_field"],
