@@ -481,7 +481,9 @@ function get_usergroup_parent_for_inherit_flag(int $usergroup_id, string $inheri
 * Process configuration options from database either system wide or user specific, setting the global variable.
 * Three modes are possible: 1. User ID is null to get system preferences.
 *                           2. User ID and user group ID are supplied. User group preferences are overridden by user preferences.
-*                           3. Where user_preferences are disabled, only user group preferences are retrieved.
+*                           3. User ID is 0 and user group ID supplied. Only user group preferences are retrieved.
+* Note: calling this function will not revert user preferences applied previously e.g. during initialisation as a different user.
+* If the current user's preferences shouldn't be shown, consider using $system_wide_config_options to reapply selected system values.
 *
 * @param  int   $user_id        User ID when getting user preferences. NULL when getting system preferences.
 * @param  int   $usergroup_id   User group ID used when getting user preferences.
@@ -513,8 +515,7 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
     }
 
     if ($user_id === 0) {
-        # Special case when trying to load only user group specific preferences over system preferences.
-        # Applies when the administrator edits user group preferences to avoid displaying their own user preferences.
+        # Special case to only load user group preferences.
         return;
     }
 
@@ -2216,4 +2217,24 @@ function config_filter_by_search(array $page_def, array $config_type, string $fi
     }
 
     return $page_def;
+}
+
+/**
+ * Remove user preferences by resetting to system preferences. Used to display system config or user group config
+ * without the current user's preferences changing the values.
+ *
+ * @param  array  $page_def   Array containing page definition, from functions config_add_ ...
+ */
+function config_remove_user_preferences(array $page_def): void {
+    global $system_wide_config_options;
+
+    // loop through every field about to be created
+    foreach ($page_def as $page_item) {
+        if ($page_item[0] !== 'html'
+                && isset($system_wide_config_options[$page_item[1]]) 
+                && $GLOBALS[$page_item[1]] !== $system_wide_config_options[$page_item[1]]) {
+            // Set the global variable back to the system value if it is different
+            $GLOBALS[$page_item[1]] = $system_wide_config_options[$page_item[1]];
+        }
+    }
 }

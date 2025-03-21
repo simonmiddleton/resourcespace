@@ -37,11 +37,6 @@ if ($filter_by_permissions) {
     $url_params['filterbypermissions'] = $filter_by_permissions;
 }
 
-# Reload system preferences and override any changed by user group preferences.
-# This avoids the user group preferences showing the user preferences of the admin user.
-process_config_options(null);
-process_config_options(0, $ref);
-
 $group = get_usergroup($ref);
 $selected_usergroup_permissions = explode(',', $group['permissions']);
 $enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
@@ -202,6 +197,11 @@ if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
     $page_def[] = config_add_boolean_select('enable_themes', $lang['systemconfig_enable_themes'], $yes_no_options, 420, '', true);
     $page_def[] = config_add_boolean_select('themes_simple_view', $lang['systemconfig_themes_simple_view'], $yes_no_options, 420, '', true);
     $page_def[] = config_add_html('</div>');
+
+    config_remove_user_preferences($page_def);
+
+    // Get user group config.
+    process_config_options(0, $ref);
 }
 
 // Process autosaving requests

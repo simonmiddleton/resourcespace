@@ -38,11 +38,6 @@ if ($ref === 0) {
     exit('No user group ref supplied.');
 }
 
-# Reload system preferences and override any changed by user group preferences.
-# This avoids the user group preferences showing the user preferences of the admin user.
-process_config_options(null);
-process_config_options(0, $ref);
-
 if (!ps_value("select ref as value from usergroup where ref = ?", array("i", $ref), false)) {
     redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // fail safe by returning to the user group management page if duff ref passed
     exit;
