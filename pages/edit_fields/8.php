@@ -30,6 +30,8 @@ if (mb_strpos($tinymce_plugins, 'autoresize') === false) {
         menubar: '',
         toolbar: "<?php echo escape($tinymce_toolbar); ?>",
         min_height: 400,
+        invalid_elements: 'script,iframe,embed,object,applet,meta,frame,frameset,link', //Explicitly removes Javascript-based elements
+        invalid_attributes: 'on*', // Removes all 'on' event attributes
         license_key: 'gpl',
         promotion: false,
         branding: false,
