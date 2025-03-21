@@ -4317,8 +4317,14 @@ function write_metadata($path, $ref, $uniqid = "")
 */
 function delete_exif_tmpfile($tmpfile)
 {
-    if (file_exists($tmpfile)) {
+    $tempdir = get_temp_dir();
+    if (
+        file_exists($tmpfile)
+        && strpos($tmpfile, realpath($tempdir)) === 0 
+    ) {
         unlink($tmpfile);
+    } else {
+        debug("WARNING - Attempt to delete a file not in the configured temporary directory: {$tmpfile}");
     }
 }
 
