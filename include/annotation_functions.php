@@ -374,7 +374,7 @@ function createAnnotation(array $annotation)
         return false;
     }
 
-    if ($text !== '') {
+    if ($resource_type_field === 0 && $text !== '') {
         $_POST['resource_ref'] = $resource;
         $_POST['annotation_ref'] = $annotation_ref;
         $_POST['body'] = $text;
