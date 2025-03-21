@@ -2080,7 +2080,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <?php echo escape($lang["andreplacewith"])?> <input type="text" name="replace_<?php echo $field["ref"]; ?>" class="shrtwidth">
       </div><!-- End of findreplace_<?php echo $n?> -->
 
-
     <?php 
     if ($field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $field['required'] == 0) {
     ?>
@@ -2096,9 +2095,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
       </div><!-- End of remove_from_field_<?php echo $n?> -->
     <?php
     }?>
-
-
-
 
       <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
       }

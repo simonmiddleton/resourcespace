@@ -3614,36 +3614,59 @@ function hook($name, $pagename = "", $params = array(), $last_hook_value_wins = 
     return hook($name, $pagename, $params, $last_hook_value_wins);
 }
 
-
-function html_find_and_replace_recurse(string $findstring, string $replacestring, DOMNode $node) {
+/**
+ * Performs a string replace once a text-only node is encountered, 
+ * otherwise loops and calls itself to iterate over child nodes
+ * Not intended to be called directly - use html_find_and_replace
+ *
+ * @param  string $findstring
+ * @param  string $replacestring can be blank if using for removal
+ * @param  DOMNode $node
+ * @return void
+ */
+function html_find_and_replace_node(string $findstring, string $replacestring, DOMNode $node): void {
     
     if($node->nodeName == '#text') {
         $node->textContent = str_replace($findstring, $replacestring, $node->textContent);
     } elseif($node->childNodes->count() > 0) {
         foreach($node->childNodes as $cn) {
-            html_find_and_replace_recurse($findstring, $replacestring, $cn);
+            html_find_and_replace_node($findstring, $replacestring, $cn);
         }
     }
 }
 
-function html_find_and_replace($findstring, $replacestring, $html) {
+/**
+ * Loads HTML fragment into a DOMDocument instance to parse and 
+ * perform a recursive find/replace on text-only nodes. 
+ * Returns modified HTML if possible, otherwise the original HTML.
+ *
+ * @param  string $findstring
+ * @param  string $replacestring can be blank if using for removal
+ * @param  string $html
+ * @return string
+ */
+function html_find_and_replace($findstring, $replacestring, $html): string {
 
     libxml_use_internal_errors(true);
 
+    // Load the fragment into DOMDocument object
     $doc           = new DOMDocument();
     $doc->encoding = 'UTF-8';
 
     $process_html = $doc->loadHTML($html);
 
+    // If DOMDocumment can parse the fragment, attempt to search through and replace
     if ($process_html) {
 
         foreach ($doc->getElementsByTagName('*') as $element) {
 
-            html_find_and_replace_recurse($findstring, $replacestring, $element);
+            // Call the recursive find/replace function for each element
+            html_find_and_replace_node($findstring, $replacestring, $element);
         }
 
         $output_html = $doc->saveHTML();
 
+        // Remove the extraneous tags added when loading fragment into DOMDocument object
         if (false !== strpos($output_html, '<body>')) {
             $body_o_tag_pos = strpos($output_html, '<body>');
             $body_c_tag_pos = strpos($output_html, '</body>');
@@ -3658,8 +3681,6 @@ function html_find_and_replace($findstring, $replacestring, $html) {
     }
 
 }
-
-
 
 /**
 * Utility function to remove unwanted HTML tags and attributes.
