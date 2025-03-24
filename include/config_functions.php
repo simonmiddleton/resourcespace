@@ -138,7 +138,7 @@ function set_config_option($user_id, $param_name, $param_value)
         $params[] = 's'; $params[] = $param_value;
         if(is_null($user_id))
             {
-            $user_query = 'user IS NULL';
+            $user_query = 'user IS NULL AND usergroup IS NULL';
             }
         else    
             {
@@ -496,7 +496,7 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
     $config_options = array();
 
     # Processing for user group preferences.
-    if(!is_null($user_id) && get_config_options(array('usergroup' => $usergroup_id), $config_options)) {
+    if (!is_null($user_id) && get_config_options(array('usergroup' => $usergroup_id), $config_options)) {
         foreach($config_options as $config_option) {
             $param_value = $config_option['value'];
 
@@ -510,7 +510,7 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
     }
 
     // If the user doesn't have the ability to set his/her own preferences, then don't load it either
-    if(!is_null($user_id) && !$user_preferences) {
+    if (!is_null($user_id) && !$user_preferences) {
         return;
     }
 
@@ -520,7 +520,12 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
     }
 
     # Processing for user / system preferences.
-    if(get_config_options(array('user' => $user_id), $config_options)) {
+    if (is_null($user_id)) {
+        $system_or_user = array(); # System preference required.
+    } else {
+        $system_or_user = array('user' => $user_id);
+    }
+    if (get_config_options($system_or_user, $config_options)) {
         foreach($config_options as $config_option) {
             $param_value = $config_option['value'];
 

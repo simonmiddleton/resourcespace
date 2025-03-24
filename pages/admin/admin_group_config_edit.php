@@ -197,11 +197,6 @@ if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
     $page_def[] = config_add_boolean_select('enable_themes', $lang['systemconfig_enable_themes'], $yes_no_options, 420, '', true);
     $page_def[] = config_add_boolean_select('themes_simple_view', $lang['systemconfig_themes_simple_view'], $yes_no_options, 420, '', true);
     $page_def[] = config_add_html('</div>');
-
-    config_remove_user_preferences($page_def);
-
-    // Get user group config.
-    process_config_options(0, $ref);
 }
 
 // Process autosaving requests
@@ -260,9 +255,19 @@ include "../../include/header.php";
         );
         renderBreadcrumbs($links_trail);
         $page_def = config_filter_by_search($page_def, ['usergroup' => $ref], getval("filter", ""), getval("only_modified", "no"));
-        config_generate_html($page_def);
-        config_generate_AutoSaveConfigOption_function(generateURL($baseurl . "/pages/admin/admin_group_config_edit.php", $url_params));
-        ?>
+
+    config_remove_user_preferences($page_def);
+
+    // Get user group config after page loads, header.php etc.
+    process_config_options(0, $ref);
+
+    config_generate_html($page_def);
+    config_generate_AutoSaveConfigOption_function(generateURL($baseurl . "/pages/admin/admin_group_config_edit.php", $url_params));
+
+    // Put back system / user preferences to avoid applying user group config for admin
+    process_config_options();
+    process_config_options($userref, $usergroup);
+    ?>
     </div>
 </div>
 <script>
