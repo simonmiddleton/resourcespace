@@ -1038,3 +1038,25 @@ const FONTAWESOME_EXTENSIONS = [
     // Default to 'file' for unrecognized extensions
     'default' => 'fa-file',
 ];
+
+const TINYMCE_VALID_PLUGINS = [
+    'autolink'  => 'Autolink',
+    'autoresize' => 'Autoresize',
+    'charmap' => 'Character Map',
+    'code' => 'Code',
+    'directionality' => 'Directionality',
+    'emoticons' => 'Emoticons',
+    'fullscreen' => 'Full Screen',
+    'help' => 'Help',
+    'insertdatetime' => 'Insert Date/Time',
+    'link' => 'Link',
+    'lists' => 'Lists',
+    'advlist' => 'List Styles',
+    'nonbreaking' => 'Nonbreaking Space',
+    'preview' => 'Preview',
+    'quickbars' => 'Quick Toolbars',
+    'searchreplace' => 'Search and Replace',
+    'visualblocks' => 'Visual Blocks',    
+    'visualchars' => 'Visual Characters',
+    'wordcount' => 'Word Count',
+];

@@ -5527,3 +5527,37 @@ function hslToRgb($h, $s, $l)
         (int)(($b + $m) * 255)
     ];
 }
+
+/**
+ * Check TinyMCE plugin list against an array of valid options
+ * The passed list is checked against TINYMCE_VALID_PLUGINS.
+ * The autoresize plugin is also included by default.
+ * 
+ * @param string $plugins A comma-separated list of plugins for TinyMCE
+ * @return string The list of plugins with any invalid options removed
+ */
+function check_tinymce_plugins(string $plugins = ""): string {
+
+    // Ensure autoresize plugin is included so min_height can be used
+    if (mb_strpos($plugins, 'autoresize') === false) {
+        $plugins .= ',autoresize';
+    }
+
+    $configured_plugins = array_map('trim', explode(',', $plugins));
+    $valid_plugins = array_intersect_key(TINYMCE_VALID_PLUGINS, array_flip($configured_plugins));
+
+    return implode(', ', array_keys($valid_plugins));
+}
+
+/**
+ * Check TinyMCE toolbar configuration to ensure 
+ * it contains only alphanumeric characters, spaces and 
+ * the pipe (|) symbol.
+ * 
+ * @param string $toolbar The requested configuration for the toolbar
+ * @return string The configured toolbar with any invalid characters removed
+ */
+function check_tinymce_toolbar(string $toolbar = ""): string {
+    //Remove anything non-alphanumeric, pipes or spaces
+    return preg_replace('/[^a-zA-Z0-9|\s]/', '', $toolbar);
+}

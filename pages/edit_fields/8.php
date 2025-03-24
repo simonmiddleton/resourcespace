@@ -2,11 +2,6 @@
 
 global $tinymce_plugins, $tinymce_toolbar;
 
-// Ensure autoresize plugin is included so min_height can be used
-if (mb_strpos($tinymce_plugins, 'autoresize') === false) {
-    $tinymce_plugins .= ' autoresize';
-}
-
 ?>
 
 <div style="display: inline-block; width: 100%;">
@@ -26,9 +21,9 @@ if (mb_strpos($tinymce_plugins, 'autoresize') === false) {
     tinymce.remove('textarea#<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . $name?>');
     tinymce.init({
         selector: 'textarea#<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . $name?>',
-        plugins: '<?php echo escape($tinymce_plugins); ?>',
+        plugins: '<?php echo escape(check_tinymce_plugins($tinymce_plugins)); ?>',
         menubar: '',
-        toolbar: "<?php echo escape($tinymce_toolbar); ?>",
+        toolbar: "<?php echo escape(check_tinymce_toolbar($tinymce_toolbar)); ?>",
         min_height: 400,
         invalid_elements: 'script,iframe,embed,object,applet,meta,frame,frameset,link', //Explicitly removes Javascript-based elements
         invalid_attributes: 'on*', // Removes all 'on' event attributes
