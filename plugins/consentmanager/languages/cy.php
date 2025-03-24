@@ -23,3 +23,5 @@ $lang["notes"] = 'Nodau';
 $lang["confirmdeleteconsentfile"] = 'A ydych yn siŵr eich bod am DDIWEDDARU\'r ffeil hon? Ni ellir ei ddychwelyd.';
 $lang["consent_manager_mediums"] = 'Cydsyniad ar gyfryngau defnydd';
 $lang["consent_manager_access"] = 'Rheoli data cydsyniad (lle nad yw eisoes wedi\'i galluogi trwy\'r caniatâd "Gall gael mynediad i\'r ardal Gosod System")';
+
+$lang["manageconsent-tooltip"] = 'Creu a rheoli cofrestriadau cydsyniad ar gyfer adnoddau';

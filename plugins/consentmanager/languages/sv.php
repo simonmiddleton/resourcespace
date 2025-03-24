@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Samtycke för användningsmedier';
 $lang["consent_manager_access"] = 'Hantera samtyckesdata (där det inte redan är aktiverat via behörigheten "Kan komma åt Systeminställningar")';
 $lang["plugin-consentmanager-title"] = 'Samtyckesansvarig';
 $lang["plugin-consentmanager-desc"] = 'Lägger till möjligheten att hantera samtycke som ges av personer som förekommer i dina mediefiler';
+
+$lang["manageconsent-tooltip"] = 'Skapa och hantera samtyckesregister för resurser';

@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Zgoda na wykorzystanie mediów';
 $lang["consent_manager_access"] = 'Zarządzaj danymi zgody (jeśli nie jest to już włączone za pomocą uprawnienia "Może uzyskać dostęp do obszaru konfiguracji systemu")';
 $lang["plugin-consentmanager-title"] = 'Menedżer Zgód';
 $lang["plugin-consentmanager-desc"] = 'Dodaje możliwość zarządzania zgodami udzielonymi przez osoby przedstawione w Twoich plikach multimedialnych';
+
+$lang["manageconsent-tooltip"] = 'Utwórz i zarządzaj rekordami zgody dla zasobów';

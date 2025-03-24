@@ -16,3 +16,5 @@ $lang["openai_gpt_processing_multiple_resources"] = 'Több erőforrás';
 $lang["openai_gpt_processing_resource"] = 'Erőforrás [resource]';
 $lang["openai_gpt_processing_field"] = 'AI metaadat-generálás a \'[field]\' mezőhöz';
 $lang["property-gpt_source"] = 'GPT Source';
+$lang["openai_gpt_language"] = 'Kimeneti nyelv';
+$lang["openai_gpt_language_user"] = 'A jelenlegi felhasználó nyelve';

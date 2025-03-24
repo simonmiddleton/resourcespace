@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Pengguna akan melihat sumber daya dalam
 $lang["rse_workflow_introduction"]='Untuk mengubah status dan tindakan alur kerja, gunakan \'Kelola tindakan alur kerja\' dan \'Kelola status alur kerja\' dari Admin. Klik [di sini] untuk pergi ke Admin';
 $lang["plugin-rse_workflow-title"]='Alur Kerja Lanjutan';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Alur Kerja';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Buat dan kelola status alur kerja';

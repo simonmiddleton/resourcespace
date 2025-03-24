@@ -90,3 +90,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Certificatul IdP %idpname expiră la %e
 $lang["simplesaml_idp_cert_expired"] = 'Certificatul IdP %idpname a expirat la %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'Certificatul IdP %idpname expiră la %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Verificați expirarea certificatului IdP?';
+
+$lang["simplesaml_use_www_label"] = 'Permiteți cererile de metadate SP pentru ruta "www"? (schimbarea în fals va necesita ca IdP să re-exchangeze metadatele SP)';
+$lang["simplesaml_use_www_error"] = '[Atenție] Pluginul folosește rutele vechi "www". Dacă aceasta este o instalare nouă, schimbă-o acum! În caz contrar, coordonează-te cu administratorul IdP pentru a putea actualiza metadatele SP în consecință.';

@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='Αιτήθηκε ανάκ
 $lang["offline_archive_resource_restore"]='Επαναφορά πόρων';
 $lang["plugin-offline_archive-title"]='Αποσυνδεδεμένο Αρχείο';
 $lang["plugin-offline_archive-desc"]='Επιτρέπει τη μετακίνηση των αρχειοθετημένων αρχείων σε μια εκτός σύνδεσης τοποθεσία';
+$lang["offline_archive_administer_archive-tooltip"] = 'Μεταφορά αρχείων που έχουν αρχειοθετηθεί σε εκτός σύνδεσης τοποθεσία';

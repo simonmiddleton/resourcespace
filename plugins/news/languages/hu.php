@@ -12,3 +12,4 @@ $lang["news_body"] = 'Tartalom';
 $lang["news_nonewmessages"] = 'Nincsenek új üzenetek';
 $lang["title"] = 'Legfrissebb hírek...';
 $lang["title-too-long"] = 'A címmező hosszabb, mint az engedélyezett 50 karakter.';
+$lang["news_manage-tooltip"] = 'Hírek hozzáadása, szerkesztése vagy törlése';

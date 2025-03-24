@@ -1,0 +1,9 @@
+ref,int(11),NO,PRI,,auto_increment
+user,int(11),YES,,,
+created,datetime,YES,,,
+status,int(11),NO,,0,
+canva_id,text,NO,,,
+username,text,YES,,,
+hit,int(11),NO,,0,
+last_used,datetime,YES,,,
+approved,int(11),YES,,0,

@@ -18,3 +18,5 @@ $lang["openai_gpt_processing_multiple_resources"]='Múltiples recursos';
 $lang["openai_gpt_processing_resource"]='Recurs [resource]';
 $lang["openai_gpt_processing_field"]='Processament d\'IA per al camp \'[field]\'';
 $lang["property-gpt_source"]='Font GPT';
+$lang["openai_gpt_language"] = 'Idioma d\'exportació';
+$lang["openai_gpt_language_user"] = 'La llengua de l\'usuari actual';

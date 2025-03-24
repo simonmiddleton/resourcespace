@@ -28,3 +28,4 @@ $lang["selectlicence"] = 'Vui lòng chọn một ID Giấy phép';
 $lang["confirmdeletelicensefile"] = 'Bạn có chắc chắn muốn XÓA tệp này không? Hành động này không thể hoàn tác.';
 $lang["license_manager_mediums"] = 'Các phương tiện sử dụng giấy phép';
 $lang["license_manager_access"] = 'Quản lý dữ liệu giấy phép (nơi chưa được kích hoạt thông qua quyền "Có thể truy cập khu vực Cài đặt Hệ thống")';
+$lang["managelicenses-tooltip"] = 'Tạo và quản lý giấy phép cho tài nguyên';

@@ -43,3 +43,4 @@ $lang["offline_archive_resource_restore"]='Restaurar recursos';
 $lang["offline_archive_request_restore"]='Sol·licitud de restauració';
 $lang["plugin-offline_archive-title"]='Arxiu fora de línia';
 $lang["plugin-offline_archive-desc"]='Permet la reubicació dels fitxers arxivats a una ubicació fora de línia';
+$lang["offline_archive_administer_archive-tooltip"] = 'Reubiqueu els fitxers arxivats a una ubicació fora de línia';

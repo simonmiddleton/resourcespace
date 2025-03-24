@@ -56,3 +56,4 @@ $lang["rse_workflow_email_from"]='E-mailová adresa pro odeslání oznámení (p
 $lang["rse_workflow_bcc_admin"]='Upozornit správce systému, když je přispěvatel upozorněn';
 $lang["plugin-rse_workflow-title"]='Pokročilý pracovní postup';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Pracovní postup';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Vytvořit a spravovat stavy pracovního postupu';

@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Użytkownicy zobaczą zasoby w tym stan
 $lang["rse_workflow_introduction"]='Aby zmienić stany i działania przepływu pracy, użyj opcji \'Zarządzaj działaniami przepływu pracy\' i \'Zarządzaj stanami przepływu pracy\' w Admin. Kliknij [link_param], aby przejść do Admin';
 $lang["plugin-rse_workflow-title"]='Zaawansowany Workflow';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Przepływ pracy';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Utwórz i zarządzaj stanami przepływu pracy';

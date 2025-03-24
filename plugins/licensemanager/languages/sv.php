@@ -38,3 +38,4 @@ $lang["license_manager_mediums"]='Licensanvändningsmedier';
 $lang["license_manager_access"]='Hantera licensdata (där det inte redan är aktiverat via "Kan komma åt Systeminställningar"-behörighet)';
 $lang["plugin-licensemanager-title"]='Licenshanterare';
 $lang["plugin-licensemanager-desc"]='Lägger till möjligheten att hantera resurslicensiering';
+$lang["managelicenses-tooltip"] = 'Skapa och hantera licenser för resurser';

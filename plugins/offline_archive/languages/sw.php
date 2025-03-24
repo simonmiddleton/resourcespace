@@ -41,3 +41,4 @@ $lang["offline_archive_resource_log_restore_set"]='Imewekwa alama kwa urejeshaji
 $lang["offline_archive_resource_log_restore_removed"]='Imeghairiwa kurejesha kutoka kwenye jalada';
 $lang["offline_archive_resource_log_restore_request"]='Imeombwa kurejesha kutoka kwenye jalada';
 $lang["offline_archive_resource_restore"]='Rejesha rasilimali';
+$lang["offline_archive_administer_archive-tooltip"] = 'Hamisha faili zilizohifadhiwa kwenda mahali pasipo mtandao';

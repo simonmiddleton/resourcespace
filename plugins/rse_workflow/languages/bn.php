@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"]='বন্ধ করুন';
 $lang["rse_workflow_more_notes_title"]='নোট:';
 $lang["rse_workflow_email_from"]='বিজ্ঞপ্তি পাঠানোর জন্য ইমেইল ঠিকানা (ফাঁকা থাকলে %EMAILFROM% ব্যবহার করা হবে):';
 $lang["rse_workflow_bcc_admin"]='অবদানকারীকে অবহিত করা হলে সিস্টেম প্রশাসকদের অবহিত করুন';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'কর্মপ্রবাহের অবস্থাসমূহ তৈরি এবং পরিচালনা করুন';

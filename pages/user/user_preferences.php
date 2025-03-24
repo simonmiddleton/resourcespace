@@ -150,6 +150,22 @@ include "../../include/header.php";
             '',
             true
         );
+        $page_def[] = config_add_single_select(
+            'user_pref_appearance',
+            $lang['user_pref_appearance'],
+            array(
+                'light' => $lang['user_pref_appearance_light'],
+                'dark' => $lang['user_pref_appearance_dark'],
+                'device' => $lang['user_pref_appearance_device']
+            ),
+            true,
+            300,
+            null,
+            true,
+            "setThemePreference();",
+            false,
+            true
+        );
         $page_def[] = config_add_boolean_select(
             'high_contrast_mode',
             $lang['userpreference_high_contrast_mode'],

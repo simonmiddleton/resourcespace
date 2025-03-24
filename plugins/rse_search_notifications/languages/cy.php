@@ -23,3 +23,4 @@ $lang["enable"]='Galluogi';
 $lang["checknow"]='Gwirio nawr';
 $lang["columnheader-enabled"]='Wedi\'i actifadu';
 $lang["columnheader-last-found"]='Dewis diwethaf';
+$lang["search_notifications_watched_searches-tooltip"] = 'Rheoli eich chwiliadau arbededig';

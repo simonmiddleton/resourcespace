@@ -41,3 +41,4 @@ $lang["offline_archive_resource_log_restore_set"]='علامت‌گذاری شد�
 $lang["offline_archive_resource_log_restore_removed"]='لغو بازیابی از آرشیو';
 $lang["offline_archive_resource_log_restore_request"]='درخواست بازیابی از آرشیو';
 $lang["offline_archive_resource_restore"]='بازیابی منابع';
+$lang["offline_archive_administer_archive-tooltip"] = 'فایل‌های آرشیو شده را به یک مکان آفلاین منتقل کنید';

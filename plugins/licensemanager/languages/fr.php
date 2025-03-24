@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Utilisation des licences sur les supports';
 $lang["license_manager_access"]='Gérer les données de licence (lorsqu\'elles ne sont pas déjà activées via l\'autorisation "Peut accéder à la zone de configuration du système")';
 $lang["plugin-licensemanager-title"]='Gestionnaire de licences';
 $lang["plugin-licensemanager-desc"]='Ajoute la capacité de gérer les licences des ressources';
+$lang["managelicenses-tooltip"] = 'Créer et gérer des licences pour les ressources';

@@ -14,3 +14,4 @@ $lang["title"]='Últimes notícies...';
 $lang["title-too-long"]='El camp de títol és més llarg dels 50 caràcters permesos';
 $lang["plugin-news-title"]='Notícies';
 $lang["plugin-news-desc"]='Afegeix elements de notícies a la pàgina d\'inici';
+$lang["news_manage-tooltip"] = 'Afegir, editar o eliminar articles de notícies';

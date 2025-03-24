@@ -233,10 +233,13 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
     // set 'name' to either user.fullname, comment.fullname or default 'Anonymous'
 
     $sql =  "select c.ref thisref, c.ref_parent, c.hide, c.created, c.body, c.website_url, c.email, u.username, u.ref, u.profile_image, parent.created 'responseToDateTime', " .
-            "IFNULL(IFNULL(c.fullname, u.fullname), '" . $lang['comments_anonymous-user'] . "') 'name' ," .
-            "IFNULL(IFNULL(parent.fullname, uparent.fullname), '" . $lang['comments_anonymous-user'] . "') 'responseToName' " .
+            "IFNULL(IFNULL(c.fullname, u.fullname), ?) 'name' ," .
+            "IFNULL(IFNULL(parent.fullname, uparent.fullname), ?) 'responseToName' " .
             "from comment c left join (user u) on (c.user_ref = u.ref) left join (comment parent) on (c.ref_parent = parent.ref) left join (user uparent) on (parent.user_ref = uparent.ref) ";
-    $sql_values = array();
+    $sql_values = [
+        's', $lang['comments_anonymous-user'],
+        's', $lang['comments_anonymous-user'],
+    ];
     $collection_ref = ($bcollection_mode) ? $ref : "";
     $resource_ref = ($bcollection_mode) ? "" : $ref;
 

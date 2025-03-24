@@ -756,7 +756,7 @@ function config_add_file_input($config_var, $label, $form_action, $width = 420, 
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  */
-function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null,$hidden=false)
+function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null,$hidden=false, bool $reload_page = false)
 {
     global $lang;
     
@@ -778,7 +778,7 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
         <select id="<?php echo escape($name); ?>"
             name="<?php echo escape($name); ?>"
             <?php if ($autosave) { ?>
-                onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>');"
+                onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>'<?php echo $reload_page ? ", true" : ""?>);"
             <?php } ?>
             style="width:<?php echo (int) $width; ?>px">
             <?php foreach ($choices as $key => $choice) {
@@ -810,9 +810,9 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
  *          the user sees. Defaulted to true.
  * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null, $hidden=false)
+function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null, $hidden=false, bool $reload_page = false)
     {
-    return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave, $on_change_js, $hidden);
+    return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave, $on_change_js, $hidden, $reload_page);
     }
 
 
@@ -1269,7 +1269,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'single_select':
-                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
+                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9], $def[10]);
                 break;
             
              case 'checkbox_select':
@@ -1317,45 +1317,74 @@ function config_merge_non_image_types()
                 $ghostscript_extensions)));
     }
 
-function get_header_image($full = false)
-    {
-    global $linkedheaderimgsrc, $baseurl_short, $baseurl, $storageurl;
+/**
+ * Retrieves the header image URL based on the user's appearance preference and system configuration.
+ *
+ * @param bool $full Whether to return the full URL including the base URL.
+ * @param bool $for_header Whether the image is being displayed in the header.
+ * @param string $force_appearance Optionally force the appearance mode ('dark' or 'light').
+ *
+ * @return string The resolved URL for the header image.
+ */
+function get_header_image(bool $full = false, bool $for_header = false, string $force_appearance = ""): string
+{
+    global $linkedheaderimgsrc, $linkedheaderimgsrc_dark, $baseurl_short, $baseurl, $storageurl, $user_pref_appearance;
 
-    if(trim($linkedheaderimgsrc) != "")
-        {
-        $header_img_src = $linkedheaderimgsrc;
-        if(substr($header_img_src, 0, 4) !== 'http')
-            {
-            // Set via System Config page?
-            if (substr($header_img_src, 0, 13) == '[storage_url]')
-                {
-                // Parse and replace the storage URL
-                $header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
-                }
-            else
-                {
-                // Set via config.php
-                // if image source already has the baseurl short, then remove it and add it here
-                if(substr($header_img_src, 0, 1) === '/')
-                    {
-                    $header_img_src = substr($header_img_src, 1);
-                    }
-                $header_img_src = $baseurl_short . $header_img_src;
-                }
+    $css_color_scheme = $_COOKIE['css_color_scheme'] ?? 'light';
 
-            if($full && substr($header_img_src, 0, 1) === '/')
-                {
-                $header_img_src = $baseurl . substr($header_img_src, 1);
-                }
-            }
-        }
-    else 
-        {
-        $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
+    // Use custom header image
+    if (trim($linkedheaderimgsrc) != "" || trim($linkedheaderimgsrc_dark) != "") {
+        if ($force_appearance == "dark") {
+            $header_img_src = trim($linkedheaderimgsrc_dark) != "" ? $linkedheaderimgsrc_dark : $linkedheaderimgsrc;
+        } elseif ($force_appearance == "light") {
+            $header_img_src = trim($linkedheaderimgsrc) != "" ? $linkedheaderimgsrc : $linkedheaderimgsrc_dark;
+        } elseif ($user_pref_appearance == "light" && trim($linkedheaderimgsrc) != "") {
+            $header_img_src = $linkedheaderimgsrc;
+        } elseif ($user_pref_appearance == "dark" && trim($linkedheaderimgsrc_dark) != "" || ($user_pref_appearance == "device" && $css_color_scheme == "dark")) {
+            $header_img_src = $linkedheaderimgsrc_dark;
+        } else {
+            $header_img_src = trim($linkedheaderimgsrc) != "" ? $linkedheaderimgsrc : $linkedheaderimgsrc_dark;
         }
         
-    return $header_img_src;
+        if (substr($header_img_src, 0, 4) !== 'http') {
+            // Set via System Config page?
+            if (substr($header_img_src, 0, 13) == '[storage_url]') {
+                // Parse and replace the storage URL
+                $header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
+            } else {
+                // Set via config.php
+                // if image source already has the baseurl short, then remove it and add it here
+                if (substr($header_img_src, 0, 1) === '/') {
+                    $header_img_src = substr($header_img_src, 1);
+                }
+                $header_img_src = $baseurl_short . $header_img_src;
+            }
+
+            if ($full && substr($header_img_src, 0, 1) === '/') {
+                $header_img_src = $baseurl . substr($header_img_src, 1);
+            }
+        }
+    } else {
+        // Use default ResourceSpace logo
+        if ($for_header) {
+            // If displaying in header then take into account user appearance preference
+            if ($force_appearance == "dark") {
+                $header_img_src = $baseurl.'/gfx/titles/title.svg';
+            } elseif ($force_appearance == "light") {
+                $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
+            } elseif ($user_pref_appearance == 'dark' || ($user_pref_appearance == "device" && $css_color_scheme == "dark")) {
+                $header_img_src = $baseurl.'/gfx/titles/title.svg';
+            } else {
+                $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
+            }
+        } else {
+            // When displaying in other places simply return the default logo
+            $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
+        }
     }
+        
+    return $header_img_src;
+}
 
 /**
 * Used to block deletion of 'core' fields. Any variable added to the $corefields array will be checked before a field is deleted and if the field is referenced by one of these core variables the deletion will be blocked

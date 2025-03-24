@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Jeste li sigurni? Ovo se ne može poništiti.';
 $lang["system_reset_delete_all"]='Obriši sve podatke i datoteke';
 $lang["plugin-system_reset-title"]='Ponovno postavljanje sustava';
 $lang["plugin-system_reset-desc"]='Dodaje opciju za admin/sustav za brisanje svih podataka';
+$lang["system_reset-tooltip"] = 'Izvršite resetiranje sustava za brisanje svih datoteka i podataka';

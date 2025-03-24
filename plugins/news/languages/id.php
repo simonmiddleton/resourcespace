@@ -14,3 +14,4 @@ $lang["title"]='Berita Terbaru...';
 $lang["title-too-long"]='Bidang judul lebih panjang dari 50 karakter yang diizinkan';
 $lang["plugin-news-title"]='Berita';
 $lang["plugin-news-desc"]='Menambahkan item berita halaman utama';
+$lang["news_manage-tooltip"] = 'Tambahkan, edit, atau hapus item berita';

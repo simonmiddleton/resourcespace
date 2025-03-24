@@ -23,3 +23,4 @@ $lang["enable"]='সক্রিয় করুন';
 $lang["checknow"]='এখনই পরীক্ষা করুন';
 $lang["columnheader-enabled"]='সক্রিয়';
 $lang["columnheader-last-found"]='সর্বশেষ পাওয়া গেছে';
+$lang["search_notifications_watched_searches-tooltip"] = 'আপনার সংরক্ষিত অনুসন্ধানগুলি নিয়ন্ত্রণ করুন';

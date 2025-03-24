@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Certificato IdP %idpname in scadenza il
 $lang["simplesaml_idp_cert_expired"] = 'Certificato IdP %idpname scaduto il %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'Il certificato IdP %idpname scade il %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Controllare la scadenza del certificato IdP?';
+
+$lang["simplesaml_use_www_label"] = 'Consentire richieste di metadata SP per il percorso "www"? (cambiare in falso richiederà all\'IdP di rieseguire lo scambio dei metadata SP)';
+$lang["simplesaml_use_www_error"] = 'Attenzione! Il plugin sta utilizzando i percorsi "www" legacy. Se si tratta di una nuova configurazione, cambialo ora! Altrimenti, coordina con l\'amministratore dell\'IdP affinché possa aggiornare i metadati SP di conseguenza.';

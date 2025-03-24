@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='Ενεργοποιημένο (Energoποιημέ�
 $lang["columnheader-last-found"]='Τελευταία εύρεση';
 $lang["plugin-rse_search_notifications-title"]='Ειδοποιήσεις Αναζήτησης';
 $lang["plugin-rse_search_notifications-desc"]='Ειδοποίηση χρήστη όταν γίνονται αλλαγές σε αποθηκευμένη αναζήτηση';
+$lang["search_notifications_watched_searches-tooltip"] = 'Ελέγξτε τις αποθηκευμένες αναζητήσεις σας';

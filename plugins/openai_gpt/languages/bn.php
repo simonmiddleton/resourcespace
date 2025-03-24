@@ -16,3 +16,5 @@ $lang["openai_gpt_processing_field"]='ক্ষেত্র \'[field]\' এর �
 $lang["property-gpt_source"]='GPT উৎস';
 $lang["property-openai_gpt_input_field"]='GPT ইনপুট';
 $lang["property-openai_gpt_prompt"]='GPT প্রম্পট';
+$lang["openai_gpt_language"] = 'আউটপুট ভাষা';
+$lang["openai_gpt_language_user"] = 'বর্তমান ব্যবহারকারীর ভাষা';

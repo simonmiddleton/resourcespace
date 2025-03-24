@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Los usuarios verán los recursos en est
 $lang["rse_workflow_introduction"]='Para modificar los estados y acciones del flujo de trabajo, utiliza \'Gestionar acciones del flujo de trabajo\' y \'Gestionar estados del flujo de trabajo\' desde Admin. Haz clic [aquí] para ir a Admin';
 $lang["plugin-rse_workflow-title"]='Flujo de Trabajo Avanzado';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Flujo de trabajo';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Crear y gestionar estados de flujo de trabajo';

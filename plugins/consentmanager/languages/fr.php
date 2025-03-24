@@ -25,3 +25,5 @@ $lang["consent_manager_access"] = 'Gérer les données de consentement (lorsqu\'
 $lang["notes"] = 'Notes';
 $lang["plugin-consentmanager-title"] = 'Gestionnaire de consentement';
 $lang["plugin-consentmanager-desc"] = 'Ajoute la capacité de gérer le consentement donné par les sujets figurant dans vos fichiers multimédias';
+
+$lang["manageconsent-tooltip"] = 'Créer et gérer des enregistrements de consentement pour les ressources';

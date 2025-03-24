@@ -84,3 +84,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'گواهی IdP %idpname در %expiretim
 $lang["simplesaml_idp_cert_expired"] = 'گواهی IdP %idpname در %expiretime منقضی شد';
 $lang["simplesaml_idp_cert_expires"] = 'گواهی IdP %idpname در %expiretime منقضی می‌شود';
 $lang["simplesaml_check_idp_cert_expiry"] = 'بررسی انقضای گواهی IdP؟';
+
+$lang["simplesaml_use_www_label"] = 'آیا درخواست‌های متادیتای SP برای مسیر "www" مجاز است؟ (تغییر به نادرست نیاز به تبادل مجدد متادیتای SP با IdP خواهد داشت)';
+$lang["simplesaml_use_www_error"] = '[Warning] این افزونه از مسیرهای قدیمی "www" استفاده می‌کند. اگر این یک راه‌اندازی جدید است، اکنون آن را تغییر دهید! در غیر این صورت با مدیر IdP هماهنگ شوید تا بتوانند متاداده SP را به‌روزرسانی کنند.';

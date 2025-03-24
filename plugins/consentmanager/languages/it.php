@@ -25,3 +25,5 @@ $lang["consent_manager_access"] = 'Gestire i dati di consenso (dove non già abi
 $lang["consent_id"] = 'ID di consenso';
 $lang["plugin-consentmanager-title"] = 'Gestore del Consenso';
 $lang["plugin-consentmanager-desc"] = 'Aggiunge la capacità di gestire il consenso dato dai soggetti presenti nei tuoi file multimediali';
+
+$lang["manageconsent-tooltip"] = 'Crea e gestisci i registri di consenso per le risorse';

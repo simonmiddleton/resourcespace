@@ -23,3 +23,4 @@ $lang["enable"]='فعال کردن';
 $lang["checknow"]='اکنون بررسی کنید';
 $lang["columnheader-enabled"]='فعال شد';
 $lang["columnheader-last-found"]='آخرین یافت شده';
+$lang["search_notifications_watched_searches-tooltip"] = 'جستجوهای ذخیره شده خود را کنترل کنید';

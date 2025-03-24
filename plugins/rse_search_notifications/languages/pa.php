@@ -23,3 +23,4 @@ $lang["enable"]='ਸਮਰਥਿਤ ਕਰੋ';
 $lang["checknow"]='ਹੁਣੇ ਚੈੱਕ ਕਰੋ';
 $lang["columnheader-enabled"]='ਸਮਰਥਿਤ';
 $lang["columnheader-last-found"]='ਆਖਰੀ ਵਾਰ ਲੱਭਿਆ';
+$lang["search_notifications_watched_searches-tooltip"] = 'ਆਪਣੀਆਂ ਸੁਰੱਖਿਅਤ ਖੋਜਾਂ ਨੂੰ ਨਿਯੰਤਰਿਤ ਕਰੋ';

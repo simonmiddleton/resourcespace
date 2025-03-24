@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"]='بستن';
 $lang["rse_workflow_more_notes_title"]='یادداشت‌ها:';
 $lang["rse_workflow_email_from"]='آدرس ایمیلی که اعلان از آن ارسال می‌شود (در صورت خالی بودن از %EMAILFROM% استفاده خواهد شد):';
 $lang["rse_workflow_bcc_admin"]='هنگامی که به مشارکت‌کننده اطلاع داده می‌شود، به مدیران سیستم اطلاع دهید';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'ایجاد و مدیریت وضعیت‌های گردش کار';

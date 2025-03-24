@@ -18,3 +18,5 @@ $lang["openai_gpt_processing_multiple_resources"]='Meerdere bronnen';
 $lang["openai_gpt_processing_resource"]='Bron [resource]';
 $lang["openai_gpt_processing_field"]='AI-verwerking voor veld \'[field]\'';
 $lang["property-gpt_source"]='GPT Bron';
+$lang["openai_gpt_language"] = 'Uitvoertaal';
+$lang["openai_gpt_language_user"] = 'De taal van de huidige gebruiker';

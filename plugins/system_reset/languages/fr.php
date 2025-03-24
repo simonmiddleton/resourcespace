@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Êtes-vous sûr(e) ? Cela ne peut pas être annul
 $lang["system_reset_delete_all"]='Supprimer toutes les données et les fichiers';
 $lang["plugin-system_reset-title"]='Réinitialisation du système';
 $lang["plugin-system_reset-desc"]='Ajoute une option à l\'admin/système pour effacer toutes les données';
+$lang["system_reset-tooltip"] = 'Effectuer une réinitialisation du système pour supprimer tous les fichiers et données';

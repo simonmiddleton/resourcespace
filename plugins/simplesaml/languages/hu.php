@@ -84,3 +84,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname tanúsítvány lejár %exp
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname tanúsítványának lejárati ideje: %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname tanúsítványának lejárata: %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Ellenőrizze az IdP tanúsítvány lejáratát?';
+
+$lang["simplesaml_use_www_label"] = 'Engedélyezi az SP metaadatok kéréseit a "www" útvonalon? (ha hamisra változtatja, az IdP-t arra kényszeríti, hogy újra cserélje az SP metaadatokat)';
+$lang["simplesaml_use_www_error"] = '[Figyelmeztetés] A bővítmény a régi "www" útvonalakat használja. Ha ez egy új telepítés, változtassa meg most! Ellenkező esetben koordináljon az IdP adminisztrátorával, hogy frissíthesse az SP metaadatokat ennek megfelelően.';

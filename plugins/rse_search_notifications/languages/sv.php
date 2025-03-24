@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='Aktiverad';
 $lang["columnheader-last-found"]='Senast hittad';
 $lang["plugin-rse_search_notifications-title"]='Söknotifikationer';
 $lang["plugin-rse_search_notifications-desc"]='Meddela användaren när ändringar sker i en sparad sökning';
+$lang["search_notifications_watched_searches-tooltip"] = 'Kontrollera dina sparade sökningar';

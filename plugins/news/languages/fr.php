@@ -14,3 +14,4 @@ $lang["title"]='Dernières actualités...';
 $lang["title-too-long"]='Le champ de titre est plus long que les 50 caractères autorisés';
 $lang["plugin-news-title"]='Actualités';
 $lang["plugin-news-desc"]='Ajoute des actualités sur la page d\'accueil';
+$lang["news_manage-tooltip"] = 'Ajouter, modifier ou supprimer des articles de nouvelles';

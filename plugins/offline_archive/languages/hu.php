@@ -41,3 +41,4 @@ $lang["offline_archive_resource_log_restore_set"] = 'Javításra kijelölve az a
 $lang["offline_archive_resource_log_restore_removed"] = 'Törölt helyreállítás az archívumból';
 $lang["offline_archive_resource_log_restore_request"] = 'Kért helyreállítás az archívumból';
 $lang["offline_archive_resource_restore"] = 'Erőforrások visszaállítása';
+$lang["offline_archive_administer_archive-tooltip"] = 'Archív fájlok áthelyezése offline helyre';

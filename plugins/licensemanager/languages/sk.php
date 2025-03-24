@@ -30,3 +30,4 @@ $lang["license_manager_access"]='Spravovať údaje o licenciách (ak nie sú už
 $lang["inbound"]='Prichodný';
 $lang["plugin-licensemanager-title"]='Upravitelj licenc';
 $lang["plugin-licensemanager-desc"]='Dodaja možnost upravljanja licenciranja virov';
+$lang["managelicenses-tooltip"] = 'Vytvorte a spravujte licencie pre zdroje';
