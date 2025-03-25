@@ -34,7 +34,7 @@ function HookVr_viewViewReplacepreviewlink()
     <div id="previewimagewrapper">
         <a id="previewimagelink"
            class="enterLink"
-           href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>"
+           href="<?php echo escape(generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl")); ?>"
            title="<?php echo escape($lang["fullscreenpreview"]); ?>"
            style="position:relative;"
            onclick="return ModalLoad(this,false,true,top);">

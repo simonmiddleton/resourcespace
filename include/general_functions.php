@@ -1542,7 +1542,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                 <a
                     class="prevPageLink"
                     title="<?php echo escape($lang["previous"]) ?>"
-                    href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go" => "prev","offset" => ($offset - $per_page)));?>"
+                    href="<?php echo escape(generateURL($url, (isset($url_params) ? $url_params : array()), array("go" => "prev","offset" => ($offset - $per_page)))); ?>"
                     onclick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);"
                 >
             <?php } ?>
@@ -1564,7 +1564,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                             if (jumpto > <?php echo $totalpages?>) {
                                 jumpto = <?php echo $totalpages?>;
                             };
-                            <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go" => "page")); ?>&amp;offset=' + ((jumpto - 1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);
+                            <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo escape(generateURL($url, (isset($url_params) ? $url_params : array()), array("go" => "page"))); ?>&amp;offset=' + ((jumpto - 1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);
                         }">
                 &nbsp;
                 <a
@@ -1593,7 +1593,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                 <a
                     class="nextPageLink"
                     title="<?php echo escape($lang["next"]) ?>"
-                    href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go" => "next","offset" => ($offset + $per_page)));?>"
+                    href="<?php echo escape(generateURL($url, (isset($url_params) ? $url_params : array()), array("go" => "next","offset" => ($offset + $per_page)))); ?>"
                     onclick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);">
             <?php } ?>
             

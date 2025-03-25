@@ -257,7 +257,7 @@ if (!checkperm("c")) {
                         <div class="Question">
                             <label for="clear"><?php echo escape($lang["csv_upload_using_config"]); ?></label>
                             <div class="fixed" >
-                                <a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("resetconfig" => "1")); ?>" onclick="return CentralSpaceLoad(this,false);">
+                                <a href="<?php echo escape(generateURL($_SERVER["SCRIPT_NAME"], array("resetconfig" => "1"))); ?>" onclick="return CentralSpaceLoad(this,false);">
                                     <?php echo LINK_CARET . $lang["csv_upload_upload_config_clear"]; ?>
                                 </a>
                             </div>
@@ -405,7 +405,7 @@ if (!checkperm("c")) {
                     </div>               
 
                     <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                        <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1)); ?>',true);return false;" > 
+                        <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo escape(generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1))); ?>',true);return false;" > 
                         <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">
                         <div class="clearerleft"></div>
                     </div>   
@@ -576,7 +576,7 @@ if (!checkperm("c")) {
                     </div>
 
                     <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                        <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1)); ?>',true);return false;"> 
+                        <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo escape(generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1))); ?>',true);return false;"> 
                         <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">
                         <div class="clearerleft"></div>
                     </div>
@@ -694,7 +694,7 @@ if (!checkperm("c")) {
                             <?php } ?>
 
                             <div class="Question">
-                                <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>" onclick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1)); ?>',true);return false;" > 
+                                <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>" onclick="CentralSpaceLoad('<?php echo escape(generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1))); ?>',true);return false;" > 
                                 <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">
                                 <div class="clearerleft"></div>
                             </div>
@@ -760,7 +760,7 @@ if (!checkperm("c")) {
                     <input type="hidden" id="csvstep" name="csvstep" value="5"> 
 
                     <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                        <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1)); ?>',true);return false;" > 
+                        <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo escape(generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1))); ?>',true);return false;" > 
                         <input
                             type="submit"
                             id="submit"
@@ -844,10 +844,10 @@ if (!checkperm("c")) {
                 <div class="VerticalNav">
                     <ul>
                         <li>
-                            <a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("getconfig" => "1")); ?>"><?php echo LINK_CARET . $lang["csv_upload_download_config"]; ?></a>
+                            <a href="<?php echo escape(generateURL($_SERVER["SCRIPT_NAME"], array("getconfig" => "1"))); ?>"><?php echo LINK_CARET . $lang["csv_upload_download_config"]; ?></a>
                         </li>
                         <li>
-                            <a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("step" => "1")); ?>"><?php echo LINK_CARET . $lang["csv_upload_upload_another"]; ?></a>
+                            <a href="<?php echo escape(generateURL($_SERVER["SCRIPT_NAME"], array("step" => "1"))); ?>"><?php echo LINK_CARET . $lang["csv_upload_upload_another"]; ?></a>
                         </li>
                     </ul>
                 </div>
