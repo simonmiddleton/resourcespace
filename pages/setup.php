@@ -157,7 +157,7 @@ if(get_post_bool('ajax'))
     $response['success'] = false;
     $response['error']   = '';
 
-    $admin_password             = get_post('admin_password');
+    $admin_password             = html_entity_decode(get_post('admin_password'));
     $password_validation_result = check_password($admin_password);
 
     if('' !== $admin_password && true === $password_validation_result)
