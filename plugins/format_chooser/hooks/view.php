@@ -123,7 +123,7 @@ function HookFormat_chooserViewAppend_to_updateDownloadLink_js(array $resource)
     <?php
 }
 
-function HookFormat_chooserViewModifySizesArray ($resource, $sizes)
+function HookFormat_chooserViewModifySizesArray ($resource, $sizes) : array|false 
     {
         global $format_chooser_input_formats;
         if (in_array($resource['file_extension'], $format_chooser_input_formats)) {

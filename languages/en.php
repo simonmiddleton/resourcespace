@@ -1059,6 +1059,7 @@ $lang["collection_download_use_tar"] = "TAR archive";
 $lang["collection_download_tar_info"] = "TAR files will start downloading instantly. If you do not use this option you may find that your download is limited.";
 $lang["collection_download_tar_started"] = "TAR files will start downloading shortly.";
 $lang["collection_download_tar_applink"] = "Can't open TAR files? <a href='http://www.7-zip.org/download.html' target='_blank'>Get the open source 7-zip here</a>";
+$lang["collection_download_include_alternatives"] = "Include alternative files?";
 $lang["downloadsize"] = "Download size";
 $lang["existingkeywords"] = "Existing keywords:";
 $lang["extrakeywords"] = "Extra keywords";

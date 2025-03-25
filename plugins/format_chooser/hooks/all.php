@@ -54,31 +54,39 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 
 function HookFormat_chooserAllReplaceuseoriginal()
     {
-    global $format_chooser_output_formats, $format_chooser_profiles, $lang, $use_zip_extension;
+    global $format_chooser_output_formats, $format_chooser_profiles, $lang, $use_zip_extension, $collection_download_tar, $collection_download_tar_option;
 
     $disabled = '';
     $submitted = getval('submitted', null);
-    if (!empty($submitted)) {
-        $disabled = ' disabled="disabled"';
+    if (!empty($submitted) || $collection_download_tar_option) {
+        $disabled = ' disabled="disabled "';
+    }
+    $context = getval("ajax", '') !== "" ? "Modal" : "CentralSpace";
+    # Replace the existing ajax_download() with our own that disables our widgets, too
+    if ($use_zip_extension) {
+        ?><script>
+            jQuery(document).ready(function() {
+                jQuery('#tardownload').on('change', function(){
+                    if (this.value == 'off') {
+                        jQuery('#<?php echo escape($context); ?>_question_downloadformat').slideDown();
+                        jQuery('#<?php echo escape($context); ?>_downloadformat').prop('disabled', false);
+                        jQuery('#<?php echo escape($context); ?>_question_downloadprofile').slideDown();
+                        jQuery('#<?php echo escape($context); ?>_downloadprofile').prop('disabled', false);
+                    } else {
+                        jQuery('#<?php echo escape($context); ?>_question_downloadformat').slideUp();
+                        jQuery('#<?php echo escape($context); ?>_downloadformat').prop('disabled', 'disabled');
+                        jQuery('#<?php echo escape($context); ?>_question_downloadprofile').slideUp();
+                        jQuery('#<?php echo escape($context); ?>_downloadprofile').prop('disabled', 'disabled');
+                    }
+                });
+            });
+        </script><?php
     }
 
-    # Replace the existing ajax_download() with our own that disables our widgets, too
-    if ($use_zip_extension)
-        {
-        ?><script>
-            var originalDownloadFunction = ajax_download;
-            ajax_download = function(download_offline) {
-                originalDownloadFunction(download_offline,tar);
-                jQuery('#downloadformat').attr('disabled', 'disabled');
-                jQuery('#profile').attr('disabled', 'disabled');
-            }
-        </script><?php
-        }
-
-    ?><div class="Question">
+    ?><div class="Question" id="<?php echo escape($context); ?>_question_downloadformat">
     <input type=hidden name="useoriginal" value="yes" />
-    <label for="downloadformat"><?php echo escape($lang["downloadformat"]); ?></label>
-    <select name="ext" class="stdwidth" id="downloadformat"<?php echo $disabled ?>>
+    <label for="<?php echo escape($context); ?>_downloadformat"><?php echo escape($lang["downloadformat"]); ?></label>
+    <select name="ext" class="stdwidth" id="<?php echo escape($context); ?>_downloadformat" <?php echo $disabled ?>>
         <option value="" selected="selected"><?php echo escape($lang['format_chooser_keep_format']); ?></option>
     <?php
     foreach ($format_chooser_output_formats as $format)
@@ -90,9 +98,9 @@ function HookFormat_chooserAllReplaceuseoriginal()
     if (!empty($format_chooser_profiles))
         {
         ?>
-        <div class="Question">
+        <div class="Question" id="<?php echo escape($context); ?>_question_downloadprofile">
         <label for="profile"><?php echo escape($lang['format_chooser_choose_profile']); ?></label>
-        <?php showProfileChooser('stdwidth') ?>
+        <?php showProfileChooser('stdwidth', $disabled, $context) ?>
         <div class="clearerleft"> </div></div><?php
         }
     return true;
@@ -127,7 +135,6 @@ function HookFormat_chooserAllReplacedownloadextension($resource, $extension)
     global $format_chooser_output_formats, $job_ext, $offline_job_in_progress;
 
     $inputFormat = $resource['file_extension'];
-
     if (
         !supportsInputFormat($inputFormat) 
         || (!isset($job_ext) && $offline_job_in_progress)
@@ -186,15 +193,15 @@ function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
     }
 
 function HookFormat_chooserAllCollection_download_modify_job($job_data=array())
-    {
-
+{
+    $profile = getval("profile","");
     $ext = getval("ext","");
-    if(trim($ext) != "")
-        {
+    if (trim($profile) !== "" || trim($ext) !== "") {
         // Add requested extension to offline job data
         $job_data["ext"] = $ext;
+        $job_data["profile"] = $profile;
         return $job_data;
-        }
+    }
 
     return false;
-    }
+}

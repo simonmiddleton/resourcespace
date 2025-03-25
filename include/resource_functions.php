@@ -5156,17 +5156,24 @@ function edit_resource_external_access($key, $access = -1, $expires = "", $group
  * @param  string  $size            ID of size
  * @param  int     $resource_type   ID of resource type
  * @param  int     $alternative     Use alternative?
+ * @param  bool    $usecache        Use cached result if available?
  *
  * @return boolean
  */
-function resource_download_allowed($resource, $size, $resource_type, $alternative = -1)
+function resource_download_allowed($resource, $size, $resource_type, $alternative = -1, $usecache = false)
 {
-    global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach, $sizes_always_allowed;
+    global $userref, $usergroup, $user_dl_limit, $user_dl_days, $sizes_always_allowed, $download_access_cache;
+
+    $cacheid = $resource . "_" . $size;
+    if ($usecache && isset($download_access_cache[$cacheid])) {
+        return $download_access_cache[$cacheid];
+    }
 
     $access = get_resource_access($resource);
 
     if (resource_has_access_denied_by_RT_size($resource_type, $size)) {
-        return false;
+        $download_access_cache[$cacheid] = false;
+        return $download_access_cache[$cacheid];
     }
 
     if (checkperm('X' . $resource_type . "_" . $size) && $alternative == -1) {
@@ -5178,20 +5185,23 @@ function resource_download_allowed($resource, $size, $resource_type, $alternativ
             ($usercustomaccess === false || $usercustomaccess !== 0) &&
             ($usergroupcustomaccess === false || $usergroupcustomaccess !== 0)
         ) {
-            return false;
+            $download_access_cache[$cacheid] = false;
+            return $download_access_cache[$cacheid];
         }
     }
 
     if (($size == "" || $size == "hpr" || getval("noattach", "") == "")  && intval($user_dl_limit) > 0) {
         $download_limit_check = get_user_downloads($userref, $user_dl_days);
         if ($download_limit_check >= $user_dl_limit) {
-            return false;
+            $download_access_cache[$cacheid] = false;
+            return $download_access_cache[$cacheid];
         }
     }
 
     # Full access
     if ($access == 0) {
-        return true;
+        $download_access_cache[$cacheid] = true;
+        return $download_access_cache[$cacheid];
     }
 
     # Restricted
@@ -5202,23 +5212,34 @@ function resource_download_allowed($resource, $size, $resource_type, $alternativ
 
         if ('' == $size) {
             # Original file - access depends on the 'restricted_full_download' config setting.
-            global $restricted_full_download;
-            return $restricted_full_download;
+            $download_access_cache[$cacheid] = $GLOBALS["restricted_full_download"];
+            return $download_access_cache[$cacheid];
         } elseif ('' != $size && in_array($size, $sizes_always_allowed)) {
-            return true;
+            $download_access_cache[$cacheid] = true;
+            return $download_access_cache[$cacheid];
         } else {
             # Return the restricted access setting for this resource type.
-            return ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0, "schema") == 1;
+            $download_access_cache[$cacheid] = ps_value("
+                SELECT allow_restricted value
+                  FROM preview_size
+                 WHERE id = ?",
+                ["s", $size],
+                0,
+                "schema")
+                == 1;
+                return $download_access_cache[$cacheid];
         }
     }
 
     # Confidential
     if ($access == 2) {
-        return false;
+        $download_access_cache[$cacheid] = false;
+        return $download_access_cache[$cacheid];
     }
 
     # Unable to determine access
-    return false;
+    $download_access_cache[$cacheid] = false;
+    return $download_access_cache[$cacheid];
 }
 
 /**
