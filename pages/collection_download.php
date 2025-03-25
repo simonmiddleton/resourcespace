@@ -402,7 +402,7 @@ include "../include/header.php";
             <?php
         }
 
-        if ($zipped_collection_textfile == "true") {
+        if ($zipped_collection_textfile) {
             ?>
             <div class="Question">
                 <label for="includetext"><?php echo escape($lang["zippedcollectiontextfile"]); ?></label>

@@ -4780,6 +4780,7 @@ function collection_download_process_archive_command(array &$dl_data, &$zip, $fi
             $dl_data['includefiles']
         );
         file_put_contents($listfile, $filepaths);
+        $dl_data['deletion_array'][] = $listfile;
 
         // Set up command line 
         $command = get_utility_path("archiver") . " [ARGUMENTS] %ZIPFILE %LISTFILEARG%LISTFILE";
@@ -6744,7 +6745,7 @@ function process_collection_download(array $dl_data): array
             && $p != $new_file
         ) {
             $p = $new_file;
-             $dl_data['deletion_array'][] = $p;
+            $dl_data['deletion_array'][] = $p;
             $replaced_file = true;
             $target_exists = file_exists($p);
         } elseif (
