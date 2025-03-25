@@ -28,4 +28,17 @@ if (escape("invalid -\x80- char") !== "invalid -\u{FFFD}- char") {
     return false;
 }
 
+$url = generateURL($baseurl, ['foo' => 'bar']);
+if (escape($url) !== $url) {
+    echo 'Use case: Simple URL should be left alone - ';
+    return false;
+}
+
+$url = generateURL($baseurl, ['"onmouseover=\'alert(803)\'"' => '']);
+$url_escaped = escape($url);
+if (mb_strpos($url_escaped, '&quot;') === false || mb_strpos($url_escaped, '&#039;') === false) {
+    echo 'Use case: Bad URL param name should be encoded - ';
+    return false;
+}
+
 return true;
