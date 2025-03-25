@@ -127,7 +127,7 @@ foreach($bind_placeholders['resources'] as $resource_ref => $resource)
             // If field contains richtext...
             if ($contact_sheet_field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
                 // ...output in the same way as view.php, without escaping
-                $csf_output .= '<br>' . strip_paragraph_tags(strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target']));
+                $csf_output .= '<br>' . strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target']);
             } else {
                 $csf_output .=  escape($contact_sheet_field['value']);
             }
@@ -174,7 +174,7 @@ foreach($bind_placeholders['resources'] as $resource_ref => $resource)
                 // If field contains richtext...
                 if ($contact_sheet_field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
                     // ...output in the same way as view.php, without escaping
-                    $csf_output = strip_paragraph_tags(strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target']));
+                    $csf_output = strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target']);
                     echo '<br>' . html_break_long_words($csf_output, (int)($bind_placeholders['column_width']/7)) . '<br></span>';
                 } else {
                     echo html_break_long_words(escape($contact_sheet_field['value']), (int)($bind_placeholders['column_width']/7)) . '<br></span>';
