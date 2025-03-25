@@ -2872,3 +2872,13 @@ $lang["systemlog-tooltip"] = 'ดูบันทึกระบบ';
 $lang["system_performance-tooltip"] = 'ทำการทดสอบประสิทธิภาพ';
 $lang["systemconfig-tooltip"] = 'กำหนดค่าตัวเลือกระดับระบบ';
 $lang["error-processlock-aborting"] = 'กระบวนการกำลังทำงานอยู่แล้ว กำลังออก';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'ติ๊กเพื่อลบโลโก้กลุ่มผู้ใช้ - มืด';
+$lang["fieldtitle-group_logo_dark"] = 'โลโก้เฉพาะกลุ่ม - มืด';
+$lang["fieldtitle-group_logo_dark_replace"] = 'เปลี่ยนโลโก้เฉพาะกลุ่ม - มืด';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'โลโก้แอปพลิเคชัน - มืด';
+$lang["user_pref_appearance"] = 'รูปลักษณ์';
+$lang["user_pref_appearance_light"] = 'แสง';
+$lang["user_pref_appearance_dark"] = 'มืด';
+$lang["user_pref_appearance_device"] = 'ค่าเริ่มต้นของอุปกรณ์';
+$lang["collection_download_include_alternatives"] = 'รวมไฟล์ทางเลือกหรือไม่?';

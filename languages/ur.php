@@ -2887,3 +2887,13 @@ $lang["systemlog-tooltip"] = 'سسٹم لاگ دیکھیں';
 $lang["system_performance-tooltip"] = 'کارکردگی کا بینچ مارک چلائیں';
 $lang["systemconfig-tooltip"] = 'نظام کی سطح کے اختیارات ترتیب دیں';
 $lang["error-processlock-aborting"] = 'عملیات پہلے ہی جاری ہے۔ باہر نکل رہے ہیں۔';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'صارف گروپ کا لوگو ہٹانے کے لیے نشان لگائیں - سیاہ';
+$lang["fieldtitle-group_logo_dark"] = 'گروپ مخصوص لوگو - تاریک';
+$lang["fieldtitle-group_logo_dark_replace"] = 'گروپ کے مخصوص لوگو کو تبدیل کریں - سیاہ';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'درخواست کا لوگو - تاریک';
+$lang["user_pref_appearance"] = 'ظاہری شکل';
+$lang["user_pref_appearance_light"] = 'روشنی';
+$lang["user_pref_appearance_dark"] = 'تاریک';
+$lang["user_pref_appearance_device"] = 'آلہ کی ڈیفالٹ';
+$lang["collection_download_include_alternatives"] = 'متبادل فائلیں شامل کریں؟';

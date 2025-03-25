@@ -2965,3 +2965,13 @@ $lang["systemlog-tooltip"] = 'Vizualizați jurnalul sistemului';
 $lang["system_performance-tooltip"] = 'Efectuează un benchmark de performanță';
 $lang["systemconfig-tooltip"] = 'Configurează opțiunile la nivel de sistem';
 $lang["error-processlock-aborting"] = 'Procesul este deja în execuție. Ieșire';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Bifează pentru a elimina logo-ul grupului de utilizatori - Întunecat';
+$lang["fieldtitle-group_logo_dark"] = 'Logo specific grup - Întunecat';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Înlocuiți logo-ul specific grupului - Întunecat';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Logo aplicație - Întunecat';
+$lang["user_pref_appearance"] = 'Aspect';
+$lang["user_pref_appearance_light"] = 'Lumină';
+$lang["user_pref_appearance_dark"] = 'Întunecat';
+$lang["user_pref_appearance_device"] = 'Implicitul dispozitivului';
+$lang["collection_download_include_alternatives"] = 'Include fișiere alternative?';

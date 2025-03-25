@@ -2878,3 +2878,13 @@ $lang["systemlog-tooltip"] = 'Rendszer napló megtekintése';
 $lang["system_performance-tooltip"] = 'Futtasson egy teljesítmény-ellenőrzést';
 $lang["systemconfig-tooltip"] = 'Rendszer szintű beállítások konfigurálása';
 $lang["error-processlock-aborting"] = 'A folyamat már fut. Kilépés';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Jelölje be a felhasználói csoport logójának eltávolításához - Sötét';
+$lang["fieldtitle-group_logo_dark"] = 'Csoportspecifikus logó - Sötét';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Csoport-specifikus logó cseréje - Sötét';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Alkalmazás logó - Sötét';
+$lang["user_pref_appearance"] = 'Megjelenés';
+$lang["user_pref_appearance_light"] = 'Fény';
+$lang["user_pref_appearance_dark"] = 'Sötét';
+$lang["user_pref_appearance_device"] = 'Eszköz alapértelmezett';
+$lang["collection_download_include_alternatives"] = 'Tartalmazza az alternatív fájlokat?';

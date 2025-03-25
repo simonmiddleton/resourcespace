@@ -3027,3 +3027,13 @@ $lang["systemlog-tooltip"] = 'システムログを表示';
 $lang["system_performance-tooltip"] = 'パフォーマンスベンチマークを実行する';
 $lang["systemconfig-tooltip"] = 'システムレベルのオプションを設定する';
 $lang["error-processlock-aborting"] = 'プロセスはすでに実行中です。終了します';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'ユーザーグループロゴを削除するにはチェックを入れてください - ダーク';
+$lang["fieldtitle-group_logo_dark"] = 'グループ専用ロゴ - ダーク';
+$lang["fieldtitle-group_logo_dark_replace"] = 'グループ特有のロゴを置き換える - ダーク';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'アプリケーションロゴ - ダーク';
+$lang["user_pref_appearance"] = '外観';
+$lang["user_pref_appearance_light"] = '光';
+$lang["user_pref_appearance_dark"] = '暗い';
+$lang["user_pref_appearance_device"] = 'デバイスのデフォルト';
+$lang["collection_download_include_alternatives"] = '代替ファイルを含めますか？';

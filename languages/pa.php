@@ -2888,3 +2888,13 @@ $lang["systemlog-tooltip"] = 'ਸਿਸਟਮ ਲੌਗ ਵੇਖੋ';
 $lang["system_performance-tooltip"] = 'ਕਾਰਗੁਜ਼ਾਰੀ ਬੈਂਚਮਾਰਕ ਚਲਾਓ';
 $lang["systemconfig-tooltip"] = 'ਸਿਸਟਮ ਪੱਧਰ ਦੇ ਵਿਕਲਪਾਂ ਨੂੰ ਸੰਰਚਿਤ ਕਰੋ';
 $lang["error-processlock-aborting"] = 'ਪ੍ਰਕਿਰਿਆ ਪਹਿਲਾਂ ਹੀ ਚੱਲ ਰਹੀ ਹੈ। ਬਾਹਰ ਨਿਕਲ ਰਹੇ ਹਾਂ';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'ਯੂਜ਼ਰ ਗਰੁੱਪ ਲੋਗੋ ਹਟਾਉਣ ਲਈ ਟਿਕ ਕਰੋ - ਡਾਰਕ';
+$lang["fieldtitle-group_logo_dark"] = 'ਗਰੁੱਪ ਵਿਸ਼ੇਸ਼ ਲੋਗੋ - ਹਨੇਰਾ';
+$lang["fieldtitle-group_logo_dark_replace"] = 'ਗਰੁੱਪ ਵਿਸ਼ੇਸ਼ ਲੋਗੋ ਬਦਲੋ - ਡਾਰਕ';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'ਐਪਲੀਕੇਸ਼ਨ ਲੋਗੋ - ਡਾਰਕ';
+$lang["user_pref_appearance"] = 'ਦਿੱਖ';
+$lang["user_pref_appearance_light"] = 'ਰੋਸ਼ਨੀ';
+$lang["user_pref_appearance_dark"] = 'ਗੂੜ੍ਹਾ';
+$lang["user_pref_appearance_device"] = 'ਉਪਕਰਨ ਡਿਫਾਲਟ';
+$lang["collection_download_include_alternatives"] = 'ਵਿਕਲਪਿਕ ਫਾਈਲਾਂ ਸ਼ਾਮਲ ਕਰੀਏ?';

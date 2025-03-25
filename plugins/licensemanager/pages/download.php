@@ -24,6 +24,27 @@ $license=ps_query("select outbound,holder,license_usage,description,expires,file
 if (count($license)==0) {exit("License record not found.");}
 $license=$license[0];
 
-header('Content-Type: application/octet-stream');
-header('Content-Disposition: attachment; filename="' . $license["file"] . '"');
-readfile($file_path);
+// Get the file extension (convert to lowercase for case-insensitive comparison)
+$file_extension = strtolower(pathinfo($license["file"], PATHINFO_EXTENSION));
+
+if (array_key_exists($file_extension, INLINE_VIEWABLE_TYPES)) {
+    // Set the Content-Type header for inline viewing
+    header('Content-Type: ' . INLINE_VIEWABLE_TYPES[$file_extension]);
+    // Set the Content-Disposition header to inline
+    header('Content-Disposition: inline; filename="' . $license["file"]  . '"');
+    // Set Content-Length for better browser handling
+    header('Content-Length: ' . filesize($file_path));
+    // Prevent caching
+    header('Cache-Control: public, must-revalidate, max-age=0');
+    header('Pragma: public');
+    header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); // A date in the past
+    readfile($file_path);
+    exit; 
+} else {
+    // For other file types, force download (your original behavior)
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="' . $license["file"] . '"');
+    header('Content-Length: ' . filesize($file_path));
+    readfile($file_path);
+    exit; // Important to stop further script execution
+}

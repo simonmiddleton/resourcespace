@@ -2889,3 +2889,13 @@ $lang["systemlog-tooltip"] = '시스템 로그 보기';
 $lang["system_performance-tooltip"] = '성능 벤치마크 실행';
 $lang["systemconfig-tooltip"] = '시스템 수준 옵션 구성';
 $lang["error-processlock-aborting"] = '프로세스가 이미 실행 중입니다. 종료합니다.';
+
+$lang["action-title_remove_user_group_logo_dark"] = '사용자 그룹 로고 제거를 위한 체크 - 다크';
+$lang["fieldtitle-group_logo_dark"] = '그룹 전용 로고 - 어두운';
+$lang["fieldtitle-group_logo_dark_replace"] = '그룹 전용 로고 교체 - 어두운';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = '애플리케이션 로고 - 다크';
+$lang["user_pref_appearance"] = '모양';
+$lang["user_pref_appearance_light"] = '빛';
+$lang["user_pref_appearance_dark"] = '어두운';
+$lang["user_pref_appearance_device"] = '장치 기본값';
+$lang["collection_download_include_alternatives"] = '대체 파일 포함 여부?';

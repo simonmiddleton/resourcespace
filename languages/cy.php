@@ -2874,3 +2874,13 @@ $lang["systemlog-tooltip"] = 'Gweld y log system';
 $lang["system_performance-tooltip"] = 'Rhedeg mesur perfformiad';
 $lang["systemconfig-tooltip"] = 'Ffurfiwch opsiynau lefel system';
 $lang["error-processlock-aborting"] = 'Mae\'r broses eisoes yn rhedeg. Yn gadael';
+
+$lang["collection_download_include_alternatives"] = 'Ydych chi am gynnwys ffeiliau amgen?';
+$lang["action-title_remove_user_group_logo_dark"] = 'Ticiwch i ddileu logo grŵp defnyddiwr - Tywyll';
+$lang["fieldtitle-group_logo_dark"] = 'Logo penodol grŵp - Tywyll';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Disodli logo penodol y grŵp - Tywyll';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Logo cais - Tywyll';
+$lang["user_pref_appearance"] = 'Ymddangosiad';
+$lang["user_pref_appearance_light"] = 'Golau';
+$lang["user_pref_appearance_dark"] = 'Tywyll';
+$lang["user_pref_appearance_device"] = 'Diffyg dyfais';

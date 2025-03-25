@@ -2880,3 +2880,13 @@ $lang["systemlog-tooltip"] = 'Zobrazit systémový protokol';
 $lang["system_performance-tooltip"] = 'Proveďte výkonnostní benchmark';
 $lang["systemconfig-tooltip"] = 'Nastavit možnosti na úrovni systému';
 $lang["error-processlock-aborting"] = 'Proces již běží. Ukončuji';
+
+$lang["collection_download_include_alternatives"] = 'Zahrnout alternativní soubory?';
+$lang["action-title_remove_user_group_logo_dark"] = 'Zaškrtněte pro odstranění loga uživatelské skupiny - Tmavé';
+$lang["fieldtitle-group_logo_dark"] = 'Logo specifické pro skupinu - Tmavé';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Nahraďte logo specifické pro skupinu - Tmavé';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Logo aplikace - Tmavé';
+$lang["user_pref_appearance"] = 'Vzhled';
+$lang["user_pref_appearance_light"] = 'Světlo';
+$lang["user_pref_appearance_dark"] = 'Tmavý';
+$lang["user_pref_appearance_device"] = 'Výchozí zařízení';
