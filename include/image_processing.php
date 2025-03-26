@@ -1162,11 +1162,6 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
     $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
 
     if (($extension == "jpg") || ($extension == "jpeg") || ($extension == "png") || ($extension == "gif" && !$ffmpeg_preview_gif)) {
-        # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
-        # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
-        if ((list($sw,$sh) = try_getimagesize($file)) === false) {
-            return false;
-        }
         if (isset($imagemagick_path)) {
             return create_previews_using_im($ref, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ingested, $onlysizes);
         } else {
@@ -1174,6 +1169,11 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
             # Use the GD library to perform the resize
             # ----------------------------------------
 
+            // Determine dimensions of the image, if it fails return 
+            // false as future GD functions won't work either
+            if ((list($sw,$sh) = try_getimagesize($file)) === false) {
+                return false;   
+            }
 
             # For resource $ref, (re)create the various preview sizes listed in the table preview_sizes
             # Only create previews where the target size IS LESS THAN OR EQUAL TO the source size.

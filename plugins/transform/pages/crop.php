@@ -116,7 +116,7 @@ if(file_exists($originalpath))
         }
     else
         {
-        $origsizes  = getimagesize($originalpath);
+        $origsizes  = try_getimagesize($originalpath);
         if ($origsizes === false)
             {
             $identify_path = get_utility_path('im-identify');
@@ -162,7 +162,7 @@ if(!file_exists($org))
     }
 
 // Check if preview is same aspect ratio as original
-$predims = getimagesize($previewsourcepath);
+$predims = try_getimagesize($previewsourcepath);
 $preratio = round($predims[0]/$predims[1],1);
 $origratio = round($origwidth/$origheight,1);
 if($preratio !== $origratio)
@@ -214,18 +214,27 @@ elseif(!$generated)
     error_alert($lang["transform_preview_gen_error"]);
     exit();
     }
-    
+
+$cropsizes = false;
+
 if(file_exists($crop_pre_file))
     {
-    $cropsizes  = getimagesize($crop_pre_file);
+    $cropsizes  = try_getimagesize($crop_pre_file);
     }
 else
     {
     $errors[] = "Unable to find preview image";
     }
 
-$cropwidth  = $cropsizes[0];
-$cropheight = $cropsizes[1];
+if($cropsizes)
+    {
+    $cropwidth  = $cropsizes[0];
+    $cropheight = $cropsizes[1];
+    }
+else
+    {
+    $errors[] = "Unable to determine preview image dimensions";
+    }
 
 # check that crop width and crop height are > 0
 if ($cropwidth == 0 || $cropheight == 0)
@@ -347,7 +356,7 @@ if ($saveaction != '' && enforcePostRequest(false))
         {
         // get final pixel dimensions of resulting file
         $newfilesize = filesize_unlimited($newpath);
-        $newfiledimensions = getimagesize($newpath);
+        $newfiledimensions = try_getimagesize($newpath);
         $newfilewidth = $newfiledimensions[0];
         $newfileheight = $newfiledimensions[1];
 
@@ -507,7 +516,7 @@ if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
         error_alert($lang['noimagefound']);
         exit();
         }
-    $origpresizes = getimagesize($crop_pre_file);
+    $origpresizes = try_getimagesize($crop_pre_file);
     $origprewidth = $origpresizes[0];
     $origpreheight = $origpresizes[1];
     }
