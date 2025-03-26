@@ -25,7 +25,7 @@ if (count($license)==0) {exit("License record not found.");}
 $license=$license[0];
 
 // Get the file extension (convert to lowercase for case-insensitive comparison)
-$file_extension = strtolower(pathinfo($license["file"], PATHINFO_EXTENSION));
+$file_extension = strtolower(parse_filename_extension($license["file"]));
 
 if (array_key_exists($file_extension, INLINE_VIEWABLE_TYPES)) {
     // Set the Content-Type header for inline viewing
