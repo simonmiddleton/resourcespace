@@ -1,44 +1,66 @@
 <?php
 
-if ('cli' != PHP_SAPI) {
-    exit('This utility is command line only.');
-}
-
+command_line_only();
 
 $use_cases = [
-    'Simple value' => 'Foo bar',
-    'Value with double quotes' => 'Foo "bar"',
-    'Value with single quotes' => "Foo 'bar'",
-    'Value beginning with a double quote' => '"Foo',
-    'Value beginning with a single quote' => "'Bar",
+    ['Simple text should be left alone', 'Foo bar', 'Foo bar'],
+    ['Ampersand should be encoded', '&', '&amp;'],
+    ['Less then sign should be encoded', '<', '&lt;'],
+    ['Greater then sign should be encoded', '>', '&gt;'],
+    ['Double quotes should be encoded', '"', '&quot;'],
+    ['Single quotes should be encoded', "'", '&#039;'],
+
+    // We want to show invalid characters to be able to detect encoding issues!
+    ["Invalid character (\x80) should be encoded", "\x80", "\u{FFFD}"],
+
+    [
+        'Simple URL should be left alone',
+        generateURL($baseurl, ['foo' => 'bar']) . '#fragment',
+        generateURL($baseurl, ['foo' => 'bar']) . '#fragment',
+    ],
+    [
+        'Bad URL param name should be encoded',
+        generateURL($baseurl, ['"onmouseover=\'alert(803)\'"' => '']),
+        "{$baseurl}?&quot;onmouseover=&#039;alert(803)&#039;&quot;=",
+    ],
+    ['Relative paths should be left alone', '/path/to/page.php', '/path/to/page.php'],
+    [
+        'Text with URI schema keywords should be left alone',
+        'Text that may contain URI keywords like -- data: test ',
+        'Text that may contain URI keywords like -- data: test ',
+    ],
+    ['Invalid URI schemes (javascript:)', "javascript:alert('XSS')", 'javascript%3Aalert(&#039;XSS&#039;)'],
+    ['Invalid URI schemes (data:)', 'data:,Foo%2C%20Bar%21', 'data%3A,Foo%2C%20Bar%21'],
+    ['Invalid URI scheme (embedded tab)', "jav\tascript:alert('XSS')", "jav\tascript%3Aalert(&#039;XSS&#039;)"],
+    [
+        'Invalid URI scheme (embedded encoded tab)',
+        "jav&#x09;ascript:alert('XSS')",
+        "jav&amp;#x09;ascript%3Aalert(&#039;XSS&#039;)"
+    ],
+    [
+        'Invalid URI schemes (spaces and meta characters)',
+        " &#14;  javascript:alert('XSS')",
+        ' &amp;#14;  javascript%3Aalert(&#039;XSS&#039;)'
+    ],
+    [
+        'Invalid URI schemes (inline CSS style)',
+        'background-image: url(javascript:alert(\'XSS\'));',
+        'background-image: url(javascript%3Aalert(&#039;XSS&#039;));',
+    ],
 ];
-foreach ($use_cases as $use_case_name => $input) {
-    $output_double_quotes = sprintf('test="%s"', escape($input));
-    $output_single_quotes = sprintf("test='%s'", escape($input));
-
-    if (mb_strpos($output_double_quotes, '""') !== false || mb_strpos($output_single_quotes, "''") !== false) {
-        echo "Use case: {$use_case_name} - ";
+foreach($use_cases as [$use_case, $input, $expected])
+    {
+    $result = escape($input);
+    if($expected !== $result)
+        {
+        echo "Use case: {$use_case} - ";
+        test_log("expected >>>{$expected}<<<");
+        test_log("result   >>>{$result}<<<");
         return false;
+        }
     }
-}
 
-// We want to show invalid characters to be able to detect encoding issues!
-if (escape("invalid -\x80- char") !== "invalid -\u{FFFD}- char") {
-    echo "Use case: Invalid character (\x80) - ";
-    return false;
-}
-
-$url = generateURL($baseurl, ['foo' => 'bar']);
-if (escape($url) !== $url) {
-    echo 'Use case: Simple URL should be left alone - ';
-    return false;
-}
-
-$url = generateURL($baseurl, ['"onmouseover=\'alert(803)\'"' => '']);
-$url_escaped = escape($url);
-if (mb_strpos($url_escaped, '&quot;') === false || mb_strpos($url_escaped, '&#039;') === false) {
-    echo 'Use case: Bad URL param name should be encoded - ';
-    return false;
-}
+// Tear down
+unset($use_cases, $result);
 
 return true;
