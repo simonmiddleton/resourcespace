@@ -3669,6 +3669,21 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
             foreach ($tag->attributes as $attribute) {
                 if (!in_array($attribute->nodeName, $allowed_attributes)) {
                     $tag->removeAttribute($attribute->nodeName);
+                } elseif (
+                    preg_match_all(
+                        // Check for dangerous URI (lookalikes)
+                        '/[a-zA-Z][a-zA-Z\d+\-.]*:(\/\/)?[^\s]+/im',
+                        $attribute->value,
+                        $matches,
+                        PREG_SET_ORDER
+                    )
+                ) {
+                    foreach ($matches as $uri_match) {
+                        if (!preg_match('/^(https?):/i', $uri_match[0])) {
+                            $tag->removeAttribute($attribute->nodeName);
+                            break;
+                        }
+                    }
                 }
             }
         }
