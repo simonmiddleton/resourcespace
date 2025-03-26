@@ -48,17 +48,15 @@ $use_cases = [
         'background-image: url(javascript%3Aalert(&#039;XSS&#039;));',
     ],
 ];
-foreach($use_cases as [$use_case, $input, $expected])
-    {
+foreach ($use_cases as [$use_case, $input, $expected]) {
     $result = escape($input);
-    if($expected !== $result)
-        {
+    if ($expected !== $result) {
         echo "Use case: {$use_case} - ";
         test_log("expected >>>{$expected}<<<");
         test_log("result   >>>{$result}<<<");
         return false;
-        }
     }
+}
 
 // Tear down
 unset($use_cases, $result);
