@@ -8885,9 +8885,33 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
 
         db_begin_transaction("checkresources");
         if (count($failed) > 0) {
-            $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($failed)) . ")";
-            $failed_params = ps_param_fill($failed, "i");
-            ps_query($failed_sql, $failed_params);
+            if ($presenceonly) {
+                // Check if resources have ever actually had a file uploaded
+                $arr_uploads = ps_array("
+                     SELECT DISTINCT resource value 
+                       FROM resource_log
+                      WHERE resource IN (" . ps_param_insert(count($failed)) . ")
+                        AND type = ?",
+                    array_merge(ps_param_fill($failed, 'i'), ['s', LOG_CODE_UPLOADED])
+                );
+                $arr_nouploads = array_diff($failed, $arr_uploads);
+
+                if (count($arr_nouploads) > 0) {
+                    // No evidence of a file ever being uploaded. Mark these as having no_file
+                    ps_query("
+                        UPDATE resource 
+                        SET no_file = 1
+                        WHERE ref IN (" . ps_param_insert(count($arr_nouploads)) . ")",
+                        ps_param_fill($arr_nouploads, "i")
+                    );
+                }
+                $failed = array_diff($failed, $arr_nouploads);
+            }
+            if (count($failed) > 0) {
+                $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($failed)) . ")";
+                $failed_params = ps_param_fill($failed, "i");
+                ps_query($failed_sql, $failed_params);
+            }
         }
         if (count($succeeded) > 0) {
             $success_sql = "UPDATE resource SET integrity_fail = 0,no_file=0, last_verified=NOW() WHERE ref IN (" . ps_param_insert(count($succeeded)) . ")";
