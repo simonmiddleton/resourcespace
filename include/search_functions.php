@@ -3365,7 +3365,8 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
         # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
         if ($field_order_check["sort_method"] == FIELD_SORT_METHODS['dot-notation']) {
             $order[$order_by] =
-                "ISNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+')) $sort,
+                "CASE WHEN TRIM($order_by) = '' THEN 0 ELSE 1 END $sort,
+                ISNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+')) $sort,
                 IFNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+'), '') $sort,
                 CAST(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[0-9]+') AS UNSIGNED) $sort,";
             for ($n = 2; $n <= 10; $n++) {

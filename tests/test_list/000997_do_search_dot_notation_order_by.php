@@ -24,12 +24,16 @@ $test_values = [
     "ab23.456.789",
     "123.42.98",
     "8.99.99",
+    "",
 ];
 
 for ($n = 0; $n < count($test_values); $n++) {
     $resources[$n] = create_resource(1, 0);
-    $nodes[$n] = set_node(null, $dot_notation_field, $test_values[$n], '', 1000);
-    add_resource_nodes($resources[$n], array($title_node,$nodes[$n]));
+    add_resource_nodes($resources[$n], [$title_node]);
+    if ($test_values[$n] !== "") {
+        $nodes[$n] = set_node(null, $dot_notation_field, $test_values[$n], '', 1000);
+        add_resource_nodes($resources[$n], [$nodes[$n]]);
+    }
 }
 
 update_fieldx($dot_notation_field);
@@ -46,12 +50,14 @@ $test_cases = [
             $resources[3],
             $resources[4],
             $resources[5],
+            $resources[6],
         ]
     ],
     "B" => [
         "sort" => "field$dot_notation_field",
         "order_by" => "asc",
         "expected_result" => [
+            $resources[6],      // empty
             $resources[3],      // ab23.456.789
             $resources[0],      // ab123.456.789
             $resources[5],      // 8.99.99
@@ -70,6 +76,7 @@ $test_cases = [
             $resources[5],
             $resources[0],
             $resources[3],
+            $resources[6],
         ]
     ],
 ];
