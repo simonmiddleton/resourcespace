@@ -14,9 +14,9 @@ $use_cases = [
     ["Invalid character (\x80) should be encoded", "\x80", "\u{FFFD}"],
 
     [
-        'Simple URL should be left alone',
-        generateURL($baseurl, ['foo' => 'bar']) . '#fragment',
-        generateURL($baseurl, ['foo' => 'bar']) . '#fragment',
+        'URL query string should be encoded (see ampersand use case)',
+        generateURL($baseurl, ['param1' => 'val1', 'param2' => 'val2']) . '#fragment',
+        str_replace('&', '&amp;', generateURL($baseurl, ['param1' => 'val1', 'param2' => 'val2']) . '#fragment'),
     ],
     [
         'Bad URL param name should be encoded',
