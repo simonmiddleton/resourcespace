@@ -4578,17 +4578,17 @@ function EditNav()
     <?php
     if(!$disablenavlinks && !$upload_review_mode)
         {?>
-        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo escape(generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous"))); ?>" title="<?php echo escape($lang["previous"]); ?>"></a>
+        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape($lang["previous"]); ?>"></a>
    
-        <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo escape(generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous"))); ?>"><?php echo escape($lang["viewallresults"])?></a>
+        <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo escape($lang["viewallresults"])?></a>
    
-        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo escape(generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next"))); ?>" title="<?php echo escape($lang["next"]); ?>"></a>
+        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape($lang["next"]); ?>"></a>
    
         <?php
         }
     if ($modal)
         { ?>
-        &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo escape(generateURL($baseurl_short . "pages/edit.php",$urlparams)); ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
+        &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
         &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
         <?php
         } ?>
@@ -6981,7 +6981,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                     }
                 else
                     {
-                    ?><a href="<?php echo escape(generateURL($baseurl . "/pages/resource_request.php",$urlparams)); ?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                    ?><a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
                     }
                 echo escape($lang["action-request"]) ?>
                 </a>

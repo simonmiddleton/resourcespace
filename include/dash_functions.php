@@ -1276,7 +1276,7 @@ function get_user_dash($user)
                 jQuery(function(){
                     var height = jQuery("#contents_user_tile<?php echo escape($tile["user_tile"]);?>").height();
                     var width = jQuery("#contents_user_tile<?php echo escape($tile["user_tile"]);?>").width();
-                    jQuery('#contents_user_tile<?php echo escape($tile["user_tile"]) ?>').load("<?php echo escape(generateURL($baseurl .'/'. $url_page, array_merge($buildstring, ['tile' => $tile['tile'], 'user_tile' => $tile['user_tile']]))); ?>&tlwidth="+width+"&tlheight="+height);
+                    jQuery('#contents_user_tile<?php echo escape($tile["user_tile"]) ?>').load("<?php echo generateURL($baseurl .'/'. $url_page, array_merge($buildstring, ['tile' => $tile['tile'], 'user_tile' => $tile['user_tile']]));?>&tlwidth="+width+"&tlheight="+height);
                 });
                 </script>
             </div>
