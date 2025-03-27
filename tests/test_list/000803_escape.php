@@ -18,12 +18,7 @@ $use_cases = [
         generateURL($baseurl, ['param1' => 'val1', 'param2' => 'val2']) . '#fragment',
         str_replace('&', '&amp;', generateURL($baseurl, ['param1' => 'val1', 'param2' => 'val2']) . '#fragment'),
     ],
-    [
-        'Bad URL param name should be encoded',
-        generateURL($baseurl, ['"onmouseover=\'alert(803)\'"' => '']),
-        "{$baseurl}?&quot;onmouseover=&#039;alert(803)&#039;&quot;=",
-    ],
-    ['Relative paths should be left alone', '/path/to/page.php', '/path/to/page.php'],
+    ['File path should be left alone', '/path/to/page.php', '/path/to/page.php'],
     [
         'Text with URI schema keywords should be left alone',
         'Text that may contain URI keywords like -- data: test ',

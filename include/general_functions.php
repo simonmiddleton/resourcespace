@@ -2883,10 +2883,8 @@ function validate_html($html)
 * @param  string  $url
 * @param  array   $parameters  Default query string params (e.g "k", which appears on most of ResourceSpace URLs)
 * @param  array   $set_params  Override existing query string params
-*
-* @return string
 */
-function generateURL($url, array $parameters = array(), array $set_params = array())
+function generateURL(string $url, array $parameters = array(), array $set_params = array()): string
 {
     foreach ($set_params as $set_param => $set_value) {
         if ('' != $set_param) {
@@ -2898,7 +2896,7 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
 
     foreach ($parameters as $parameter => $parameter_value) {
         if (!is_array($parameter_value)) {
-            $query_string_params[] = $parameter . '=' . urlencode((string) $parameter_value);
+            $query_string_params[$parameter] = (string) $parameter_value;
         }
     }
 
@@ -2908,7 +2906,7 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
         $url = $hookurl;
     }
 
-    return $url . '?' . implode('&', $query_string_params);
+    return $url . '?' . http_build_query($query_string_params, encoding_type: PHP_QUERY_RFC1738);
 }
 
 /**
