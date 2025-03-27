@@ -931,6 +931,7 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                     $new_checksums[$fields[$n]['ref']] = md5($val);
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                 } else {
+
                     # Set the value exactly as sent.
                     $val = getval("field_" . $fields[$n]["ref"], "");
                     $rawval = getval("field_" . $fields[$n]["ref"], "");
@@ -947,6 +948,13 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                         continue;
                     }
+
+                    if ($fields[$n]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE
+                        && $val !== strip_tags_and_attributes($val, array("a"), array("href","target"))) {
+                        $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid"];
+                        continue;
+                    }
+
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                 }
@@ -1797,28 +1805,6 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
                         $val = str_replace($findstring, $replacestring, $existing);
                     }
 
-                    // if (html_entity_decode($existing, ENT_QUOTES | ENT_HTML401) != $existing) {
-                    //     // Need to replace html characters with html characters
-                    //     // CkEditor converts some characters to the HTML entity code, in order to use and replace these, we need the
-                    //     // $rich_field_characters array below so the stored in the database value e.g. &#39; corresponds to "'"
-                    //     // that the user typed in the search and replace box
-                    //     // This array could possibly be expanded to include more such conversions
-
-                    //     $rich_field_characters_replace = array("'","’");
-                    //     $rich_field_characters_sub = array("&#39;","&rsquo;");
-
-                    //     // Set up array of strings to match as we may have a number of variations in the existing value
-                    //     $html_entity_strings = array();
-                    //     $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, escape($findstring));
-                    //     $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, htmlentities($findstring));
-                    //     $html_entity_strings[] = htmlentities($findstring);
-                    //     $html_entity_strings[] = escape($findstring);
-
-                    //     // Just need one replace string
-                    //     $replacestring = escape($replacestring);
-
-                    //     $val = str_replace($html_entity_strings, $replacestring, $val);
-                    // }
                 }
 
                 # Append text/option(s) mode?
