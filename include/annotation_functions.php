@@ -229,7 +229,7 @@ function annotationEditable(array $annotation): bool
     $add_operation = !isset($annotation['user']);
 
     // Text (comment) annotations
-    if ($annotation['resource_type_field'] == 0) {
+    if ((int) $annotation['resource_type_field'] === 0) {
         return $annotate_text_adds_comment
             ? (($add_operation || checkperm('o')) && !checkPermission_anonymoususer())
             : false;
@@ -244,13 +244,14 @@ function annotationEditable(array $annotation): bool
     */
     $non_admin_athz = ($add_operation || $userref == $annotation['user']);
     $field_edit_access = metadata_field_edit_access($annotation['resource_type_field']);
+    $resource_edit_access = get_edit_access($annotation['resource']);
 
     // Anonymous users cannot edit by default. They can only edit if they are allowed CRUD operations
     if (checkPermission_anonymoususer()) {
-        return $non_admin_athz && $field_edit_access;
+        return $non_admin_athz && $field_edit_access && $resource_edit_access;
     }
 
-    return (checkperm('a') || $non_admin_athz) && $field_edit_access;
+    return (checkperm('a') || $non_admin_athz) && $field_edit_access && $resource_edit_access;
 }
 
 /**

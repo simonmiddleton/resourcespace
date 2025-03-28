@@ -34,25 +34,16 @@ if ($annotation_ref === false) {
 }
 
 // Create annotation with tags
+$annotation = $annotorious_annotation;
 $annotation['tags'] = [$uk];
-$annotation_ref = createAnnotation($annotorious_annotation);
-if ($annotation_ref === false) {
+$annotation_ref = createAnnotation($annotation);
+$resource_field_data = array_column(get_resource_field_data($annotation['resource']), 'value', 'ref');
+if (!($annotation_ref > 0 && $resource_field_data[$annotation['resource_type_field']] === $uk['name'])) {
     echo 'Annotation w/ tags - ';
     return false;
 }
 
-// User (without edit access) shoudn't create an annotation with tags
-$cache_userpermissions = $userpermissions;
-$userpermissions = array_values(array_diff($userpermissions, ['F3']));
-echo '<pre>';print_r($uk);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
-$annotation['tags'] = [$uk];
-if (createAnnotation($annotorious_annotation)) {
-    echo "Use case: User (w/o edit access) shoudn't create an annotation w/ tags - ";
-    return false;
-}
-$userpermissions = $cache_userpermissions;
-
 // Tear down
-unset($annotate_fields, $resource_ref, $uk, $annotorious_annotation, $annotation_ref, $cache_userpermissions);
+unset($annotate_fields, $resource_ref, $uk, $annotorious_annotation, $annotation_ref);
 
 return true;
