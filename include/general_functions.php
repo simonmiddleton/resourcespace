@@ -3647,13 +3647,28 @@ function html_find_and_replace_node(string $findstring, string $replacestring, D
  */
 function html_find_and_replace($findstring, $replacestring, $html): string {
 
+    if (!is_string($html) || 0 === strlen($html)) {
+        return $html;
+    }
+
+    $html = htmlspecialchars_decode($html);
+    // Return character codes for non-ASCII characters (UTF-8 characters more than a single byte - 0x80 / 128 decimal or greater).
+    // This will prevent them being lost when loaded into libxml.
+    // Second parameter represents convert mappings array - in UTF-8 convert characters of 2,3 and 4 bytes, 0x80 to 0x10FFFF, with no offset and add mask to return character code.
+    $html = mb_encode_numericentity($html, array(0x80, 0x10FFFF, 0, 0xFFFFFF), 'UTF-8');
+
+    
     libxml_use_internal_errors(true);
 
     // Load the fragment into DOMDocument object
     $doc           = new DOMDocument();
     $doc->encoding = 'UTF-8';
 
-    $process_html = $doc->loadHTML($html);
+    $process_html = false;
+
+    if($html != strip_tags($html)) {
+        $process_html = $doc->loadHTML($html);
+    }    
 
     // If DOMDocumment can parse the fragment, attempt to search through and replace
     if ($process_html) {
@@ -3673,6 +3688,8 @@ function html_find_and_replace($findstring, $replacestring, $html): string {
 
             $output_html = substr($output_html, $body_o_tag_pos + 6, $body_c_tag_pos - ($body_o_tag_pos + 6));
         }
+
+        $output_html = html_entity_decode($output_html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
 
         return $output_html;
 
