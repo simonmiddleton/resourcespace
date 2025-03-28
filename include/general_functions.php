@@ -2906,7 +2906,7 @@ function generateURL(string $url, array $parameters = array(), array $set_params
         $url = $hookurl;
     }
 
-    return $url . '?' . http_build_query($query_string_params, encoding_type: PHP_QUERY_RFC1738);
+    return $url . '?' . http_build_query($query_string_params);
 }
 
 /**
