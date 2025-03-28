@@ -2987,3 +2987,13 @@ $lang["systemlog-tooltip"] = 'Veure el registre del sistema';
 $lang["system_performance-tooltip"] = 'Executar un banc de proves de rendiment';
 $lang["systemconfig-tooltip"] = 'Configura opcions a nivell de sistema';
 $lang["error-processlock-aborting"] = 'El procés ja s\'està executant. Sortint';
+
+$lang["collection_download_include_alternatives"] = 'Incloure fitxers alternatius?';
+$lang["action-title_remove_user_group_logo_dark"] = 'Marqueu per eliminar el logo del grup d\'usuaris - Fosc';
+$lang["fieldtitle-group_logo_dark"] = 'Logotip específic del grup - Fosc';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Substitueix el logo específic del grup - Fosc';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Logotip de l\'aplicació - Fosc';
+$lang["user_pref_appearance"] = 'Aparença';
+$lang["user_pref_appearance_light"] = 'Llum';
+$lang["user_pref_appearance_dark"] = 'Fosc';
+$lang["user_pref_appearance_device"] = 'Predeterminat del dispositiu';

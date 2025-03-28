@@ -3130,3 +3130,13 @@ $lang["systemlog-tooltip"] = 'Näytä järjestelmälokit';
 $lang["system_performance-tooltip"] = 'Suorita suorituskykyvertailu';
 $lang["systemconfig-tooltip"] = 'Määritä järjestelmän tason asetukset';
 $lang["error-processlock-aborting"] = 'Prosessi on jo käynnissä. Poistutaan';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Ruksaa poistaaksesi käyttäjäryhmän logon - Tumma';
+$lang["fieldtitle-group_logo_dark"] = 'Ryhmäkohtainen logo - Tumma';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Korvaa ryhmäkohtainen logo - Tumma';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Sovelluksen logo - Tumma';
+$lang["user_pref_appearance"] = 'Ulkoasu';
+$lang["user_pref_appearance_light"] = 'Valo';
+$lang["user_pref_appearance_dark"] = 'Tumma';
+$lang["user_pref_appearance_device"] = 'Laitteen oletus';
+$lang["collection_download_include_alternatives"] = 'Sisällytä vaihtoehtoiset tiedostot?';

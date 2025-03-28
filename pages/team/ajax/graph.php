@@ -118,6 +118,19 @@ if ($external == 0) {
     $condition .= " and external=0";
 }
 
+$css_color_scheme = $_COOKIE['css_color_scheme'] ?? 'light';
+$graph_dark_mode = false;
+
+if (
+    isset($user_pref_appearance)
+    && (
+        $user_pref_appearance == "dark" ||
+        ($user_pref_appearance == "device" && $css_color_scheme == "dark")
+    )
+) {
+    $graph_dark_mode = true;
+}
+
 if (!$from_dash) {
     $title = get_translated_activity_type($activity_type);
     if (isset($lang["report-graph-by-" . $type])) {
@@ -185,12 +198,18 @@ if ($type != "summary") {
                                 <?php if ($from_dash) { ?>
                                     display: false,
                                 <?php } else { ?>
-                                    color: 'default',
+                                    color: '<?php echo $graph_dark_mode ? "white": "default"; ?>',
                                 <?php } ?>
+                            },
+                            grid: {
+                                color: '<?php echo $from_dash ? "#00000033" : ($graph_dark_mode ? "dimgray": "lightgray"); ?>'
                             }
                         },
                         y: {
-                            ticks: {color: '<?php echo $from_dash ? '#FFFFFF' : 'default'?>',},
+                            ticks: {color: '<?php echo $from_dash ? '#FFFFFF' : ($graph_dark_mode ? "white": "default"); ?>',},
+                            grid: {
+                                color: '<?php echo $from_dash ? "#00000033" : ($graph_dark_mode ? "dimgray": "lightgray"); ?>'
+                            }
                         }
                     }
                 };

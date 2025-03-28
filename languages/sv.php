@@ -3170,3 +3170,13 @@ $lang["systemlog-tooltip"] = 'Visa systemloggen';
 $lang["system_performance-tooltip"] = 'Kör en prestandatest';
 $lang["systemconfig-tooltip"] = 'Konfigurera systemnivåalternativ';
 $lang["error-processlock-aborting"] = 'Processen körs redan. Avslutar';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Kryssa för att ta bort användargruppens logotyp - Mörk';
+$lang["fieldtitle-group_logo_dark"] = 'Gruppspecifik logotyp - Mörk';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Ersätt gruppspecifik logotyp - Mörk';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Applikationslogotyp - Mörk';
+$lang["user_pref_appearance"] = 'Utseende';
+$lang["user_pref_appearance_light"] = 'Ljus';
+$lang["user_pref_appearance_dark"] = 'Mörk';
+$lang["user_pref_appearance_device"] = 'Enhetsstandard';
+$lang["collection_download_include_alternatives"] = 'Inkludera alternativa filer?';

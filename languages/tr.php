@@ -2886,3 +2886,13 @@ $lang["systemlog-tooltip"] = 'Sistem günlüğünü görüntüle';
 $lang["system_performance-tooltip"] = 'Performans kıyaslaması yapın';
 $lang["systemconfig-tooltip"] = 'Sistem düzeyi seçeneklerini yapılandırın';
 $lang["error-processlock-aborting"] = 'İşlem zaten çalışıyor. Çıkılıyor';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Kullanıcı grubu logosunu kaldırmak için işaretleyin - Koyu';
+$lang["fieldtitle-group_logo_dark"] = 'Grup spesifik logosu - Koyu';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Grup spesifik logosunu değiştir - Koyu';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Uygulama logosu - Koyu';
+$lang["user_pref_appearance"] = 'Görünüm';
+$lang["user_pref_appearance_light"] = 'Işık';
+$lang["user_pref_appearance_dark"] = 'Karanlık';
+$lang["user_pref_appearance_device"] = 'Cihaz varsayılanı';
+$lang["collection_download_include_alternatives"] = 'Alternatif dosyaları dahil et?';

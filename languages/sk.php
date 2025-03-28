@@ -3295,3 +3295,13 @@ $lang["systemlog-tooltip"] = 'Zobraziť systémový protokol';
 $lang["system_performance-tooltip"] = 'Spustiť výkonový benchmark';
 $lang["systemconfig-tooltip"] = 'Nastavte možnosti na úrovni systému';
 $lang["error-processlock-aborting"] = 'Proces už beží. Ukončujem';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Zaškrtnite na odstránenie loga skupiny používateľov - Tmavé';
+$lang["fieldtitle-group_logo_dark"] = 'Logo špecifické pre skupinu - Tmavé';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Nahradiť logo špecifické pre skupinu - Tmavé';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Logo aplikácie - Tmavé';
+$lang["user_pref_appearance"] = 'Vzhľad';
+$lang["user_pref_appearance_light"] = 'Svetlo';
+$lang["user_pref_appearance_dark"] = 'Tmavý';
+$lang["user_pref_appearance_device"] = 'Predvolené zariadenie';
+$lang["collection_download_include_alternatives"] = 'Zahrnúť alternatívne súbory?';

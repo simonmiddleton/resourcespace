@@ -804,8 +804,23 @@ const WORKFLOW_DEFAULT_ICONS = [
     '3'     => 'fa-solid fa-trash',
     ];
 
-// Alternative file extensions that can be natively viewed in the browser
+// File extensions that can be natively viewed in the browser
 const VIEW_IN_BROWSER_EXTENSIONS = ['pdf', 'mp3'];
+
+
+// Array of file extensions and their corresponding MIME types supported for browser inline viewing
+const INLINE_VIEWABLE_TYPES = [
+    'pdf' => 'application/pdf',
+    'jpg' => 'image/jpeg',
+    'jpeg' => 'image/jpeg',
+    'png' => 'image/png',
+    'gif' => 'image/gif',
+    'bmp' => 'image/bmp',
+    'webp' => 'image/webp',
+    'svg' => 'image/svg+xml',
+    'txt' => 'text/plain',
+];
+
 
 // PHP stream wrappers that will be blocked when attempting uploads by URL via the API.
 const BLOCKED_STREAM_WRAPPERS = ['php', 'file'];

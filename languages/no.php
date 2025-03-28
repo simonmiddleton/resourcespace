@@ -3124,3 +3124,13 @@ $lang["systemlog-tooltip"] = 'Vis systemloggen';
 $lang["system_performance-tooltip"] = 'Kjør en ytelsestest';
 $lang["systemconfig-tooltip"] = 'Konfigurer systemnivåalternativer';
 $lang["error-processlock-aborting"] = 'Prosess kjører allerede. Avslutter';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Kryss av for å fjerne brukergruppe-logo - Mørk';
+$lang["fieldtitle-group_logo_dark"] = 'Gruppe spesifikk logo - Mørk';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Erstatt gruppe-spesifikk logo - Mørk';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Applikasjonslogo - Mørk';
+$lang["user_pref_appearance"] = 'Utseende';
+$lang["user_pref_appearance_light"] = 'Lys';
+$lang["user_pref_appearance_dark"] = 'Mørk';
+$lang["user_pref_appearance_device"] = 'Enhetsstandard';
+$lang["collection_download_include_alternatives"] = 'Inkluder alternative filer?';

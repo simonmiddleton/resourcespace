@@ -43,6 +43,7 @@ if ($downloads != 3) {
     return false;
 }
 
+echo "test: $downloads" . PHP_EOL;
 // Call resource_download_allowed() again - should return false
 if (resource_download_allowed($resourced, "", 1, -1)) {
     echo "ERROR - SUBTEST C ";

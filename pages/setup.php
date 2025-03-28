@@ -157,7 +157,7 @@ if(get_post_bool('ajax'))
     $response['success'] = false;
     $response['error']   = '';
 
-    $admin_password             = get_post('admin_password');
+    $admin_password             = html_entity_decode(get_post('admin_password'));
     $password_validation_result = check_password($admin_password);
 
     if('' !== $admin_password && true === $password_validation_result)
@@ -658,7 +658,7 @@ h2#dbaseconfig{  min-height: 32px;}
         $admin_fullname = get_post('admin_fullname');
         $admin_email    = get_post('admin_email');
         $admin_username = get_post('admin_username');
-        $admin_password = get_post('admin_password');
+        $admin_password = html_entity_decode(get_post('admin_password'));
 
         if('' === trim($admin_fullname))
             {

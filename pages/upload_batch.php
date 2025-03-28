@@ -283,6 +283,12 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
 
     # Set the redirect after upload to the start of the edit process
     rs_setcookie('lockedfields', '', 1);
+
+    if ($upload_here && is_numeric($collection_add)) {
+        // After edit redirect to collection uploaded to.
+        $redirecturl = generateURL($baseurl . '/pages/search.php', array('search' => '!collection' . $collection_add));
+    }
+
     $redirecturl = generateURL(
         "{$baseurl}/pages/edit.php",
         array(
@@ -746,7 +752,7 @@ if ($processupload)
                     {
                     // If extracting embedded metadata than expect the date to be overriden as it would be if
                     // upload_then_edit = false
-                    update_field($ref, $reset_date_field, date('Y-m-d H:i'));
+                    update_field($ref, $reset_date_field, date('Y-m-d H:i:s'));
                     }
 
                 # Log this
@@ -1254,7 +1260,19 @@ jQuery(document).ready(function () {
         showSelectedFiles: true,
         showRemoveButtonAfterComplete: false,
         browserBackButtonClose: false,
-        theme: 'light',
+        theme: '<?php
+            if (isset($user_pref_appearance)) {
+                if ($user_pref_appearance == "dark") {
+                    echo "dark";
+                } elseif ($user_pref_appearance == "device") {
+                    echo "auto";
+                } else {
+                    echo "light";
+                }
+            } else {
+                echo "light";
+            }
+            ?>',
         doneButtonHandler: null,
         });
 

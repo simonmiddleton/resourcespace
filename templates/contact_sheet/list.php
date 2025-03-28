@@ -134,7 +134,7 @@ if(isset($bind_placeholders['contact_sheet_footer']))
                     // If field contains richtext...
                     if ($contact_sheet_field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
                         // ...output in the same way as view.php, without escaping
-                        echo strip_paragraph_tags(strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target'])) . '<br></span>';
+                        echo strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target']) . '<br></span>';
                     } else {
                         echo escape($contact_sheet_field['value']) . '<br></span>';
                     }

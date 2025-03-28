@@ -2954,3 +2954,13 @@ $lang["systemlog-tooltip"] = 'Δείτε το αρχείο καταγραφής 
 $lang["system_performance-tooltip"] = 'Εκτέλεση δοκιμής απόδοσης';
 $lang["systemconfig-tooltip"] = 'Ρυθμίστε τις επιλογές σε επίπεδο συστήματος';
 $lang["error-processlock-aborting"] = 'Η διαδικασία εκτελείται ήδη. Έξοδος';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Επιλέξτε για να αφαιρέσετε το λογότυπο της ομάδας χρηστών - Σκοτεινό';
+$lang["fieldtitle-group_logo_dark"] = 'Λογότυπο συγκεκριμένης ομάδας - Σκοτεινό';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Αντικαταστήστε το λογότυπο συγκεκριμένης ομάδας - Σκοτεινό';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Λογότυπο εφαρμογής - Σκοτεινό';
+$lang["user_pref_appearance"] = 'Εμφάνιση';
+$lang["user_pref_appearance_light"] = 'Φως';
+$lang["user_pref_appearance_dark"] = 'Σκοτεινός';
+$lang["user_pref_appearance_device"] = 'Προεπιλογή συσκευής';
+$lang["collection_download_include_alternatives"] = 'Συμπεριλάβετε εναλλακτικά αρχεία;';

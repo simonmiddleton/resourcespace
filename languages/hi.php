@@ -2894,3 +2894,13 @@ $lang["systemlog-tooltip"] = 'सिस्टम लॉग देखें';
 $lang["system_performance-tooltip"] = 'प्रदर्शन बेंचमार्क चलाएँ';
 $lang["systemconfig-tooltip"] = 'सिस्टम स्तर के विकल्प कॉन्फ़िगर करें';
 $lang["error-processlock-aborting"] = 'प्रक्रिया पहले से चल रही है। बाहर निकल रहा है';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'उपयोगकर्ता समूह का लोगो हटाने के लिए टिक करें - डार्क';
+$lang["fieldtitle-group_logo_dark"] = 'समूह विशेष लोगो - गहरा';
+$lang["fieldtitle-group_logo_dark_replace"] = 'समूह विशेष लोगो बदलें - गहरा';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'आवेदन लोगो - डार्क';
+$lang["user_pref_appearance"] = 'दृश्यता';
+$lang["user_pref_appearance_light"] = 'रोशनी';
+$lang["user_pref_appearance_dark"] = 'अंधेरा';
+$lang["user_pref_appearance_device"] = 'डिवाइस डिफ़ॉल्ट';
+$lang["collection_download_include_alternatives"] = 'वैकल्पिक फ़ाइलें शामिल करें?';

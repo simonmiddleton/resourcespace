@@ -2993,3 +2993,13 @@ $lang["systemlog-tooltip"] = 'Bekijk het systeemlogboek';
 $lang["system_performance-tooltip"] = 'Voer een prestatiebenchmark uit';
 $lang["systemconfig-tooltip"] = 'Configure systeemniveau-opties';
 $lang["error-processlock-aborting"] = 'Proces is al aan het draaien. Afsluiten';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Vink aan om het logo van de gebruikersgroep te verwijderen - Donker';
+$lang["fieldtitle-group_logo_dark"] = 'Groepsspecifiek logo - Donker';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Vervang groepsspecifiek logo - Donker';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Toepassingslogo - Donker';
+$lang["user_pref_appearance"] = 'Uiterlijk';
+$lang["user_pref_appearance_light"] = 'Licht';
+$lang["user_pref_appearance_dark"] = 'Donker';
+$lang["user_pref_appearance_device"] = 'Apparaat standaard';
+$lang["collection_download_include_alternatives"] = 'Alternatieve bestanden opnemen?';
