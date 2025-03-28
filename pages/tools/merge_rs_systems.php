@@ -293,6 +293,16 @@ $nodes_applied_to_all_merged_resources = [];
 // Acceptable values are: RESOURCE_ACCESS_FULL -or- RESOURCE_ACCESS_RESTRICTED -or- RESOURCE_ACCESS_CONFIDENTIAL
 $custom_access_new_value_spec = RESOURCE_ACCESS_RESTRICTED;
 
+// SRC API details. Currently used to generate the SRC file (or alternatives) for the upload_processing job which, when
+// run, will pull it in the DEST system.
+$src_api = [
+    \'base_url\' => \'\',
+    \'username\' => \'\',
+    \'key\' => \'\',
+    \'http_options\' => [
+        // \'timeout\' => 5, # in seconds, default is 60
+    ],
+];
 ' . PHP_EOL);
     fclose($spec_fh);
     logScript("Successfully generated an example of the spec file. Location: '{$spec_fpath}'");
@@ -348,9 +358,6 @@ if ($export || $import) {
 }
 
 if ($export && isset($folder_path)) {
-    logScript('Script disabled $hide_real_filepath configuration option.');
-    $hide_real_filepath = false;
-
     $tables = array(
         array(
             "name" => "usergroup",
@@ -436,19 +443,11 @@ if ($export && isset($folder_path)) {
                     AND (file_extension IS NOT NULL AND trim(file_extension) <> '')
                     AND (preview_extension IS NOT NULL AND trim(preview_extension) <> '')",
             ),
-            "additional_process" => function ($record) {
-                // new fake column used at import for ingesting the file in the DEST system
-                $record["merge_rs_systems_file_url"] = "";
-
-                $path = get_resource_path($record["ref"], true, "", false, $record["file_extension"]);
-
-                if (!file_exists($path)) {
+            "additional_process" => static function ($record) {
+                if (!file_exists(get_resource_path($record["ref"], true, "", false, $record["file_extension"]))) {
                     logScript("WARNING: unable to get original file for resource #{$record["ref"]}");
                     return false;
                 }
-
-                $record["merge_rs_systems_file_url"] = get_resource_path($record["ref"], false, "", false, $record["file_extension"]);
-
                 return $record;
             },
         ),
@@ -467,41 +466,26 @@ if ($export && isset($folder_path)) {
                     AND (r.file_extension IS NOT NULL AND trim(r.file_extension) <> '')
                     AND (r.preview_extension IS NOT NULL AND trim(r.preview_extension) <> '')",
             ),
-            "additional_process" => function ($record) {
-                // new fake column used at import for ingesting the file in the DEST system
-                $record["merge_rs_systems_file_url"] = "";
-
-                $path = get_resource_path(
-                    $record["resource"],
-                    true,
-                    "",
-                    false,
-                    $record["file_extension"],
-                    true,
-                    1,
-                    false,
-                    "",
-                    $record["ref"]
-                );
-
-                if (!file_exists($path)) {
+            "additional_process" => static function ($record) {
+                if (
+                    !file_exists(
+                        get_resource_path(
+                            $record["resource"],
+                            true,
+                            "",
+                            false,
+                            $record["file_extension"],
+                            true,
+                            1,
+                            false,
+                            "",
+                            $record["ref"]
+                        )
+                    )
+                ) {
                     logScript("WARNING: unable to get original file for resource - alternative pair: #{$record["resource"]} - #{$record["ref"]}");
                     return false;
                 }
-
-                $record["merge_rs_systems_file_url"] = get_resource_path(
-                    $record["resource"],
-                    false,
-                    "",
-                    false,
-                    $record["file_extension"],
-                    true,
-                    1,
-                    false,
-                    "",
-                    $record["ref"]
-                );
-
                 return $record;
             },
         ),
@@ -663,6 +647,59 @@ if ($import && isset($folder_path)) {
         exit(1);
     }
     db_end_transaction(TX_SAVEPOINT);
+
+    $call_src_api = static function (string $function, array $data) use ($src_api) {
+        $query = http_build_query(
+            array_merge(
+                [
+                    'user' => $src_api['username'],
+                    'language' => $GLOBALS['language'] ?? $GLOBALS['defaultlanguage'],
+                    'function' => $function,
+                ],
+                $data
+            )
+        );
+        logScript("[SRC API] Query: {$query}");
+        $sign = hash('sha256', $src_api['key'] . $query);
+        $response = file_get_contents(
+            "{$src_api['base_url']}/api/?$query&sign=$sign",
+            false,
+            stream_context_create([
+                'http' => array_merge(
+                    $src_api['http_options'],
+                    [
+                        'ignore_errors' => true,
+                        'user_agent' => sprintf('ResourceSpace-Merge-Script/1.0 (%s)', $GLOBALS['baseurl']),
+                    ]
+                ),
+            ])
+        );
+        $status_code = preg_match('/\d{3}/', $http_response_header[0], $match) ? (int) $match[0] : 0;
+        $results = json_decode($response, true);
+
+        if ($status_code === 401) {
+            throw new RuntimeException('Unauthorised');
+        } elseif ($status_code !== 200 && JSON_ERROR_NONE !== json_last_error()) {
+            // Handle generic fails (simple string responses)
+            throw new RuntimeException($response);
+        } elseif ($status_code !== 200 && isset($results['error']['detail'])) {
+            // Handle generic (structured) errors (usually done using ajax_functions.php)
+            throw new RuntimeException($results['error']['detail']);
+        } elseif ($status_code === 200 && JSON_ERROR_NONE !== json_last_error()) {
+            throw new RuntimeException('(JSON) ' . json_last_error_msg());
+        } else {
+            return $results;
+        }
+    };
+
+    // Check API credentials. Any errors require further investigation before moving forward.
+    logScript('Checking the SRC API details');
+    try {
+        $call_src_api('get_system_status', []);
+    } catch (RuntimeException $e) {
+        logScript("ERROR: Bad SRC API details! Response: {$e->getMessage()}");
+        exit(1);
+    }
 
     # USER GROUPS
     #############
@@ -1292,13 +1329,33 @@ if ($import && isset($folder_path)) {
             exit(1);
         }
 
+        try {
+            $src_file_url = $call_src_api(
+                'get_resource_path',
+                [
+                    'ref' => $src_resource['ref'],
+                    'size' => '',
+                    'generate' => 0,
+                    'extension' => $src_resource['file_extension'],
+                ]
+            );
+        } catch (RuntimeException $e) {
+            logScript("Response: {$e->getMessage()}");
+            $src_file_url = '';
+        }
+
+        if ($src_file_url === '') {
+            logScript('ERROR: unable to fetch the original SRC file!');
+            exit(1);
+        }
+
         // we don't want to extract, revert or autorotate. This is a basic file pull into the DEST system from a remote SRC
         $job_data = array(
             "resource" => $new_resource_ref,
             "extract" => false,
             "revert" => false,
             "autorotate" => false,
-            "upload_file_by_url" => $src_resource["merge_rs_systems_file_url"],
+            "upload_file_by_url" => $src_file_url,
         );
         $job_code = "merge_rs_systems_{$src_resource["ref"]}_{$new_resource_ref}_" . md5("{$src_resource["ref"]}_{$new_resource_ref}");
         $job_failure_lang = "Merge RS systems - upload processing fail "
@@ -1472,7 +1529,6 @@ if ($import && isset($folder_path)) {
     $processed_resource_related = array_flip($processed_resource_related);
     $src_resource_related = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_related_export.json", "r+b"));
     $src_resource_related_chunks = array_chunk($src_resource_related, 2000);
-
     foreach ($src_resource_related_chunks as $src_resource_related_chunk) {
         $insertvals = $insertvals_bparams = [];
         $temp_processed_related = [];
@@ -1543,6 +1599,27 @@ if ($import && isset($folder_path)) {
             $src_raf["alt_type"]
         );
 
+        try {
+            $src_alt_file_url = $call_src_api(
+                'get_resource_path',
+                [
+                    'ref' => $src_raf['resource'],
+                    'size' => '',
+                    'generate' => 0,
+                    'extension' => $src_raf['file_extension'],
+                    'alternative' => $src_raf['ref'],
+                ]
+            );
+        } catch (RuntimeException $e) {
+            logScript("Response: {$e->getMessage()}");
+            $src_alt_file_url = '';
+        }
+
+        if ($src_alt_file_url === '') {
+            logScript('ERROR: unable to fetch the SRC alternative (original) file!');
+            exit(1);
+        }
+
         // we don't want to extract, revert or autorotate. This is a basic file pull into the DEST system from a remote SRC
         $job_data = array(
             "resource" => $resources_mapping[$src_raf["resource"]],
@@ -1550,7 +1627,7 @@ if ($import && isset($folder_path)) {
             "revert" => false,
             "autorotate" => false,
             "alternative" => $new_alternative_ref,
-            "upload_file_by_url" => $src_raf["merge_rs_systems_file_url"],
+            "upload_file_by_url" => $src_alt_file_url,
             "extension" => $src_raf["file_extension"],
         );
         $job_code = "merge_rs_systems_{$src_raf["ref"]}_{$resources_mapping[$src_raf["resource"]]}_"
