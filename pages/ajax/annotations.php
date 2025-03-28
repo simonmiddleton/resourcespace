@@ -114,6 +114,9 @@ if ('delete' == $action && 0 < $annotation_id && 0 !== count($annotation)) {
 // Get available fields (allowed) for annotations
 if ('get_allowed_fields' == $action) {
     $valid_annotate_fields = canSeeAnnotationsFields();
+    if (!get_edit_access($resource)) {
+        $valid_annotate_fields = array_intersect($valid_annotate_fields, [0]);
+    }
 
     foreach ($valid_annotate_fields as $annotate_field) {
         if ($annotate_field === 0) {
@@ -128,7 +131,7 @@ if ('get_allowed_fields' == $action) {
         }
 
         $field_data = get_resource_type_field($annotate_field);
-        if (!is_array($field_data)) {
+        if (!(is_array($field_data) && metadata_field_edit_access($annotate_field))) {
             continue;
         }
 
