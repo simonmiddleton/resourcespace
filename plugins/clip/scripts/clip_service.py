@@ -134,6 +134,56 @@ async def search(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search error: {e}")
 
+
+@app.post("/similar")
+async def find_similar(
+    db: str = Form(...),
+    resource: int = Form(...),
+    top_k: int = Form(5)
+):
+    vectors, resource_ids = load_vectors_for_db(db)
+
+    if len(resource_ids) == 0:
+        return JSONResponse(content=[])
+
+    try:
+        # Connect to DB to fetch the vector for the specified resource
+        conn = mysql.connector.connect(**DB_CONFIG, database=db)
+        cursor = conn.cursor()
+        cursor.execute("SELECT vector FROM resource_clip_vector WHERE resource = %s", (resource,))
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            raise HTTPException(status_code=404, detail=f"Vector not found for resource {resource}")
+
+        query_vector = np.array(eval(row[0]), dtype=np.float32)
+        query_vector /= np.linalg.norm(query_vector)
+
+        # Calculate cosine similarity against all vectors
+        sims = vectors @ query_vector
+
+        # Exclude the query resource itself
+        filtered = [
+            (i, sim) for i, sim in enumerate(sims)
+            if resource_ids[i] != resource
+        ]
+
+        # Get top matches
+        top_matches = sorted(filtered, key=lambda x: x[1], reverse=True)[:top_k]
+
+        results = [
+            {"resource": int(resource_ids[i]), "score": float(sim)}
+            for i, sim in top_matches
+        ]
+
+        return JSONResponse(content=results)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Similarity error: {e}")
+
+
+
 # Start the server
 if __name__ == "__main__":
     uvicorn.run(app, host=args.host, port=args.port, log_level="info")
