@@ -11,10 +11,18 @@ include_once dirname(__FILE__) . '/../../include/image_processing.php';
 command_line_only();
 setup_command_line_user();
 
+
 // Settings
 $resource_type = 1; // Adjust to your desired type
 $title_field = 8;   // Adjust to your 'Title' field ref
 $image_size = 400; // Image size in pixels to request
+
+
+// Disable output buffering
+while (ob_get_level() > 0) {
+    ob_end_flush();
+}
+ob_implicit_flush(true);
 
 
 
@@ -55,7 +63,7 @@ echo "Importing $number_to_import images from Wikimedia Commons...\n";
 function get_random_commons_images($count)
 {
     global $image_size;
-    
+
     $url = 'https://commons.wikimedia.org/w/api.php?' . http_build_query([
         'action' => 'query',
         'generator' => 'random',
@@ -92,52 +100,67 @@ function get_random_commons_images($count)
     return $images;
 }
 
-// Fetch image info
-$images = get_random_commons_images($number_to_import);
+$imported_count = 0;
+$batch_size = 10;
 
-foreach ($images as $img) {
-    echo "Processing: {$img['title']}\n";
+while ($imported_count < $number_to_import) {
+    $remaining = $number_to_import - $imported_count;
+    $fetch_count = min($batch_size, $remaining);
 
-    // Skip non-JPEGs based on file extension
-    $ext = strtolower(pathinfo(parse_url($img['url'], PHP_URL_PATH), PATHINFO_EXTENSION));
-    if (!in_array($ext, ['jpg', 'jpeg'])) {
-        echo "  Skipping non-JPEG file (.$ext).\n";
-        continue;
-    }
+    $images = get_random_commons_images($fetch_count);
 
-    // Download the image
-    $tmp_file = get_temp_dir() . '/' . uniqid('commons_') . '.jpg';
-    $image_data = download_file_with_user_agent($img['url']);
-    if ($image_data === false) {
-        echo "  Failed to download image.\n";
-        continue;
-    }
+    foreach ($images as $img) {
+        echo "Processing: {$img['title']}\n";
 
-    file_put_contents($tmp_file, $image_data);
+        // Skip non-JPEGs based on file extension
+        $ext = strtolower(pathinfo(parse_url($img['url'], PHP_URL_PATH), PATHINFO_EXTENSION));
+        if (!in_array($ext, ['jpg', 'jpeg'])) {
+            echo "  Skipping non-JPEG file (.$ext).\n";
+            continue;
+        }
 
-    // Create new resource
-    $ref = create_resource($resource_type, 0); 
-    if ($ref <= 0) {
-        echo "  Failed to create resource.\n";
-        unlink($tmp_file);
-        continue;
-    }
+        // Download the image
+        $tmp_file = get_temp_dir() . '/' . uniqid('commons_') . '.jpg';
+        $image_data = download_file_with_user_agent($img['url']);
+        if ($image_data === false) {
+            echo "  Failed to download image.\n";
+            continue;
+        }
 
-    echo "  Uploading from $tmp_file\n";
+        file_put_contents($tmp_file, $image_data);
 
-    // Upload file to resource
-    $result = upload_file($ref, true, false, false, $tmp_file, false);
-    if ($result !== false) {
-        // Set title
-        // Strip "File:" prefix and file extension
-        $clean_title = preg_replace('/^File:/', '', $img['title']);
-        $clean_title = preg_replace('/\.[^.]+$/', '', $clean_title); // Remove extension
-        update_field($ref, $title_field, $clean_title);
+        // Create new resource
+        $ref = create_resource($resource_type, 0); 
+        if ($ref <= 0) {
+            echo "  Failed to create resource.\n";
+            unlink($tmp_file);
+            continue;
+        }
 
-        echo "  Resource $ref created and image uploaded.\n";
-    } else {
-        echo "  Failed to upload image to resource $ref.\n";
-        delete_resource($ref);
+        echo "  Uploading from $tmp_file\n";
+
+        // Upload file to resource
+        $result = upload_file($ref, true, false, false, $tmp_file, false);
+        if ($result !== false) {
+            // Set title
+            $clean_title = preg_replace('/^File:/', '', $img['title']);
+            $clean_title = preg_replace('/\.[^.]+$/', '', $clean_title);
+            update_field($ref, $title_field, $clean_title);
+
+            echo "  Resource $ref created and image uploaded.\n";
+            $imported_count++;
+            echo "  Imported so far: $imported_count / $number_to_import\n";
+        } else {
+            echo "  Failed to upload image to resource $ref.\n";
+            delete_resource($ref);
+        }
+
+        if (file_exists($tmp_file))  {unlink($tmp_file);}
+
+        if ($imported_count >= $number_to_import) {
+            break; // Exit early if we hit the target mid-batch
+        }
     }
 }
 
+echo "✅ Import complete: $imported_count JPEG images added.\n";
