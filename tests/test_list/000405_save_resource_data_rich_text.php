@@ -10,6 +10,8 @@ $rich_text_field = create_resource_type_field('Test #405 rich text field', 1, FI
 // Resources
 $resource_a = create_resource(1, 0);
 $resource_b = create_resource(1, 0);
+$resource_c = create_resource(1, 0);
+$resource_d = create_resource(1, 0);
 // --- End of Set up
 
 
@@ -25,6 +27,18 @@ $use_cases = [
         'name' => 'Attempt to save invalid content from TinyMCE',
         'input' => ['ref' => $resource_b, 'autosave_field' => $rich_text_field],
         'post' => ['value' => '<p>This is some invalid content!</p><script>alert(\'XSS!\');</script>'],
+        'expected' => [$rich_text_field => 'Test #405 rich text field: ' . $lang['save-error-invalid']], // it means it errored - see save_resource_data
+    ],
+    [
+        'name' => 'Attempt to save invalid content from TinyMCE - onclick',
+        'input' => ['ref' => $resource_c, 'autosave_field' => $rich_text_field],
+        'post' => ['value' => '<p>This is some invalid content!<a href="#" onclick="alert(\'XSS!\')">Click me</a>'],
+        'expected' => [$rich_text_field => 'Test #405 rich text field: ' . $lang['save-error-invalid']], // it means it errored - see save_resource_data
+    ],
+    [
+        'name' => 'Attempt to save invalid content from TinyMCE - Javascript URI',
+        'input' => ['ref' => $resource_d, 'autosave_field' => $rich_text_field],
+        'post' => ['value' => '<p>This is some invalid content!<a href="javascript:alert(\'XSS!\')">Click me</a>'],
         'expected' => [$rich_text_field => 'Test #405 rich text field: ' . $lang['save-error-invalid']], // it means it errored - see save_resource_data
     ],
 ];
@@ -55,6 +69,8 @@ unset(
     $rich_text_field,
     $resource_a,
     $resource_b,
+    $resource_c,
+    $resource_d,
     $use_cases
 );
 
