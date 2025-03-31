@@ -3202,7 +3202,7 @@ $search_all_workflow_states = false;
 $minimal_previews_sizes = array('pre', 'col', 'thm');
 
 // Plugins for TinyMCE to load
-$tinymce_plugins = "autoresize,lists,link";
+$tinymce_plugins = "autoresize,code,lists,link";
 
 // Toolbar entries to be added to TinyMCE
-$tinymce_toolbar = "styles | bold italic underline removeformat | fontsize | forecolor backcolor | bullist numlist link | outdent indent";
+$tinymce_toolbar = "styles | bold italic underline removeformat | fontsize | forecolor backcolor | bullist numlist link | outdent indent | code";
