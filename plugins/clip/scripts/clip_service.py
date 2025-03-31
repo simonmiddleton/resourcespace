@@ -39,38 +39,57 @@ model, preprocess = clip.load("ViT-B/32", device=device)
 print("✅ Model loaded.")
 
 cached_vectors = {}  # { db_name: (vectors_np, resource_ids) }
+loaded_max_ref = {}  # { db_name: max_ref }
 
-def load_vectors_for_db(db_name):
-    if db_name in cached_vectors:
+def load_vectors_for_db(db_name, force_reload=False):
+    global cached_vectors, loaded_max_ref
+
+    if db_name in cached_vectors and not force_reload:
         return cached_vectors[db_name]
 
     print(f"🔄 Loading vectors from DB: {db_name}")
     try:
         conn = mysql.connector.connect(**DB_CONFIG, database=db_name)
         cursor = conn.cursor()
-        cursor.execute("SELECT resource, vector FROM resource_clip_vector")
+
+        # Track last max ref to only load new
+        last_ref = loaded_max_ref.get(db_name, 0)
+        cursor.execute(
+            "SELECT resource, vector FROM resource_clip_vector WHERE resource > %s ORDER BY resource",
+            (last_ref,)
+        )
         rows = cursor.fetchall()
         conn.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"DB error: {e}")
 
-    resource_ids = []
-    vectors = []
+    if not rows:
+        return cached_vectors.get(db_name, (np.empty((0, 512)), []))
+
+    # Load new vectors
+    new_vectors = []
+    new_ids = []
 
     for resource, vector_json in rows:
         vector = np.array(eval(vector_json), dtype=np.float32)
         vector /= np.linalg.norm(vector)
-        vectors.append(vector)
-        resource_ids.append(resource)
+        new_vectors.append(vector)
+        new_ids.append(resource)
 
-    if vectors:
-        vectors_np = np.stack(vectors)
+    if db_name in cached_vectors:
+        old_vectors, old_ids = cached_vectors[db_name]
+        all_vectors = np.vstack([old_vectors, new_vectors])
+        all_ids = old_ids + new_ids
     else:
-        vectors_np = np.empty((0, 512), dtype=np.float32)
+        all_vectors = np.stack(new_vectors)
+        all_ids = new_ids
 
-    cached_vectors[db_name] = (vectors_np, resource_ids)
-    print(f"✅ Cached {len(resource_ids)} vectors for DB: {db_name}")
+    cached_vectors[db_name] = (all_vectors, all_ids)
+    loaded_max_ref[db_name] = max(all_ids)
+
+    print(f"✅ Updated cache: {len(all_ids)} vectors for DB: {db_name}")
     return cached_vectors[db_name]
+
 
 @app.post("/vector")
 async def generate_vector(
@@ -181,6 +200,28 @@ async def find_similar(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Similarity error: {e}")
+
+
+
+
+import threading
+import time
+
+def background_vector_loader():
+    while True:
+        time.sleep(30)
+        try:
+            for db_name in cached_vectors.keys():
+                load_vectors_for_db(db_name, force_reload=True)
+        except Exception as e:
+            print(f"⚠️ Background update failed: {e}")
+
+@app.on_event("startup")
+def start_background_task():
+    print("🌀 Starting background vector refresher thread...")
+    thread = threading.Thread(target=background_vector_loader, daemon=True)
+    thread.start()
+
 
 
 

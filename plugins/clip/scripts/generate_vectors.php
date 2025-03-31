@@ -3,6 +3,12 @@ include_once dirname(__FILE__, 4) . '/include/db.php';
 include_once dirname(__FILE__, 4) . '/include/resource_functions.php';
 command_line_only();
 
+// Disable output buffering
+while (ob_get_level() > 0) {
+    ob_end_flush();
+}
+ob_implicit_flush(true);
+
 
 // Python CLIP service endpoint
 $clip_service_url = 'http://localhost:8000/vector';

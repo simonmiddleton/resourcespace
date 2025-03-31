@@ -35,6 +35,7 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
 
     # FStemplate support - do not allow samples from the template to be replaced
     if (resource_file_readonly($ref)) {
+        debug("Resource record is read only - template.");
         return false;
     }
 
@@ -54,17 +55,19 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
     }
 
     if (!$after_upload_processing && !(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override'))) {
+        debug("User does not have permission to upload.");
         return false;
     }
 
     $resource_data = get_resource_data($ref);
 
     if (!is_array($resource_data)) {
-        # No valid resource found.
+        debug("No valid resource found.");
         return false;
     }
 
     if (isset($resource_data["lock_user"]) && $resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref) {
+        debug("Resource locked.");
         return false;
     }
 
@@ -191,16 +194,19 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
                     $extension = str_replace(" ", "_", trim(strtolower($file_type_by_exiftool)));
                     $filename = $filename . "." . $extension;
                 } else {
+                    debug("File type unknown.");
                     return false;
                 }
             }
             # if no clue of extension by now, return false
             else {
+                debug("File extension unknown.");
                 return false;
             }
         }
 
         if (is_banned_extension($extension)) {
+            debug("Banned extension.");
             return false;
         }
 
@@ -267,6 +273,7 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
                         []
                     )['success'];
                 } else {
+                    debug("File does not exist.");
                     return false;
                 }
             } else {
@@ -279,6 +286,7 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
             }
 
             if (!$result) {
+                debug("File processing faulure.");
                 return false;
             }
         }

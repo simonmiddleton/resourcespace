@@ -155,7 +155,7 @@ while ($imported_count < $number_to_import) {
             delete_resource($ref);
         }
 
-        if (file_exists($tmp_file))  {unlink($tmp_file);}
+        if (file_exists($tmp_file)) {unlink($tmp_file);}
 
         if ($imported_count >= $number_to_import) {
             break; // Exit early if we hit the target mid-batch
