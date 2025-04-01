@@ -55,8 +55,6 @@ $annotation = array_merge($annotorious_annotation, ['resource_type_field' => 0, 
 $annotation_ref = createAnnotation($annotation);
 if ($annotation_ref > 0 && $get_annotation_text($annotation_ref) !== $annotation['text']) {
     echo 'Text annotation - ';
-    test_log(" - expected: {$annotation['text']}");
-    test_log(" - result:   " . $get_annotation_text($annotation_ref));
     return false;
 }
 
