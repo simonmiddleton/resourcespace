@@ -343,7 +343,7 @@ function createAnnotation(array $annotation)
     $resource = $annotation['resource'];
     $resource_type_field = (int) $annotation['resource_type_field'];
     $page = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
-    // Comment (text) annotations and tagging fields are mutually exclusive
+    // Text (comment) annotations and tagging (bound) fields are mutually exclusive
     $comment_text_mode = $GLOBALS['annotate_text_adds_comment'] && $resource_type_field === 0;
     $tags = !$comment_text_mode && isset($annotation['tags']) ? $annotation['tags'] : [];
     $text = $comment_text_mode && isset($annotation['text']) ? trim($annotation['text']) : '';
@@ -419,12 +419,14 @@ function updateAnnotation(array $annotation): bool
 
     // ResourceSpace specific properties
     $annotation_ref      = $annotation['ref'];
-    $resource_type_field = $annotation['resource_type_field'];
+    $resource_type_field = (int) $annotation['resource_type_field'];
     $resource            = $annotation['resource'];
     $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
-    $tags                = $annotation['tags'] ?? [];
+    // Text (comment) annotations and tagging (bound) fields are mutually exclusive
+    $comment_text_mode = $resource_type_field === 0;
+    $tags = !$comment_text_mode && isset($annotation['tags']) ? $annotation['tags'] : [];
 
-    if ($resource_type_field == 0) {
+    if ($comment_text_mode) {
         // Text (comment) annotations are not to be updated (same as the comments logic for those with o perm)
         return false;
     }

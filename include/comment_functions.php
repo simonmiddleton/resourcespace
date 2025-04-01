@@ -105,7 +105,7 @@ function comments_submit()
         (getval("body", "") == "")
         || (
             (getval("collection_ref", "") == "")
-            && (getval("resource_ref", "") == "")
+            && (getval("resource_ref", "", false, is_positive_int_loose(...)) == "")
             && (getval("ref_parent", "") == "")
         )
     ) {
