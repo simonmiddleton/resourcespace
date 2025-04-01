@@ -1255,27 +1255,21 @@ function config_generate_html(array $page_def)
             case 'html':
                 config_html($def[1]);
                 break;
-
             case 'text_input':
                 config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
-
             case 'file_input':
                 config_file_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6]);
                 break;
-
             case 'boolean_select':
                 config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9], $def[10]);
                 break;
-
             case 'single_select':
                 config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9], $def[10]);
                 break;
-            
              case 'checkbox_select':
                 config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
-
             case 'colouroverride_input':
                 config_colouroverride_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6],$def[7]);
                 break;
@@ -1290,6 +1284,9 @@ function config_generate_html(array $page_def)
                 break;
             case 'fixed_input':
                 render_fixed_text_question($def[1], $def[2], $def[3]);
+                break;
+            case 'percent_range':
+                config_percent_range($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
                 break;
             default:
                 break;
@@ -2096,3 +2093,88 @@ function config_filter_by_search(array $page_def, ?int $userref, string $find, s
 
     return $page_def;
 }
+
+
+
+/**
+ * Generate a percentage range input
+ *
+ * @param string    $name       The name of the configuration variable to be added.
+ * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
+ * @param string    $current    The current value of the config variable being set.
+ * @param int       $width      The width of the input field in pixels. Default: 420.
+ * @param string    $title      The title attribute of the element
+ * @param string    $help_link  Help link to be displayed alongside the label.
+ */
+function config_percent_range($name, $label, $current, $width = 420, $title = null, $help_link = "")
+{
+    global $lang;
+    if (is_null($title)) {
+        $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
+    }
+
+    // Convert stored 0–1 value to percentage for display
+    $percent = round($current * 100);
+    $escaped_name = escape($name);
+    ?>
+
+    <div class="Question" id="question_<?php echo $escaped_name; ?>">
+        <label for="<?php echo $escaped_name; ?>" title="<?php echo escape($title); ?>">
+            <?php
+            echo strip_tags_and_attributes($label, ['a'], ['href', 'target']);
+            if ($help_link !== "") {
+                render_help_link($help_link);
+            }
+            ?>
+        </label>
+
+        <!-- Range slider (dummy input for user interaction) -->
+        <input type="range"
+            id="<?php echo $escaped_name; ?>_range"
+            min="1" max="100"
+            value="<?php echo $percent; ?>"
+            style="width:<?php echo (int) $width; ?>px"
+            oninput="update_<?php echo $escaped_name; ?>(this.value)" />
+
+        <!-- Live display of percentage -->
+        <span id="<?php echo $escaped_name; ?>_display"><?php echo $percent; ?>%</span>
+
+        <!-- Actual value (0–1) for form submission -->
+        <input type="hidden"
+            id="<?php echo $escaped_name; ?>"
+            name="<?php echo $escaped_name; ?>"
+            value="<?php echo escape((string) $current); ?>" />
+
+        <script>
+        function update_<?php echo $escaped_name; ?>(val) {
+            // Update displayed percent
+            document.getElementById('<?php echo $escaped_name; ?>_display').textContent = val + '%';
+            // Update hidden 0–1 value
+            document.getElementById('<?php echo $escaped_name; ?>').value = (val / 100).toFixed(2);
+        }
+        </script>
+
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
+
+
+/**
+ * Return a data structure that will instruct the configuration page generator functions to
+ * add a text entry configuration variable to the setup page.
+ *
+ * @param string    $config_var The name of the configuration variable to be added.
+ * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
+ * @param bool      $password   Whether this is a "normal" text-entry field or a password-style field.
+ * @param int       $width      The width of the input field in pixels. Default: 420.
+ * @param bool      $textarea   Render as a HTML <textarea>
+ * @param string    $title      The title attribute of the element
+ * @param bool      $autosave   Enable auto-saving of changes when focus is lost
+ * @param bool      $hidden     Whether field is hidden on the page
+ * @param string    $help_link  Help link to be displayed alongside the label.
+ */
+function config_add_percent_range($config_var, $label, $width = 420, $title = null, string $help_link = "")
+    {    
+    return array('percent_range', $config_var, $label, $width, $title, $help_link);
+    }

@@ -14,19 +14,20 @@ function HookClipSearchSearch_pipeline_setup($search,$select,$sql_join,$sql_filt
 
 function HookClipSearchAddspecialsearch($search,$select,$sql_join,$sql_filter)
     {
+    global $clip_search_cutoff, $clip_similar_cutoff;
     if(substr($search, 0, 11) == '!clipsearch') 
         {
         $function="search";
         $search=substr($search,12);
         $search="A photo of a " . $search;
-        $min_score = 0.25; // TODO - config
+        $min_score = $clip_search_cutoff; // TODO - config
         }
     elseif (substr($search, 0, 12) == '!clipsimilar') 
         {
         $function="similar";
         $resource=substr($search,12);
         if (!is_numeric($resource)) {return false;}
-        $min_score = 0.6; // TODO - config
+        $min_score = $clip_similar_cutoff; // TODO - config
         }
     else
         {

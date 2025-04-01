@@ -6,4 +6,5 @@ desc: AI natural language search, visual search, similarity matching, duplicate 
 icon: fa fa-brain
 icon-colour: seagreen
 category: search
+config_url: /plugins/clip/pages/setup.php
 info_url: https://www.resourcespace.com/knowledge-base/plugins/clip

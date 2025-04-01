@@ -625,6 +625,10 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
             case 'fixed_input':
                 render_fixed_text_question($def[1], $def[2], $def[3]);
                 break;
+            case 'percent_range':
+                config_percent_range($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                break;
+
             default:
                 break;
             }
