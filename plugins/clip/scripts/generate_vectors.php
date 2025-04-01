@@ -77,9 +77,8 @@ foreach($resources as $resource)
     $text = preg_replace('/\d+/', '', $text);
     $text = trim(preg_replace('/\s+/', ' ', $text));
     $vector_text=get_vector(true,$text,$ref);
-    */
-
     if ($vector_text===false) {continue;}
+    */
 
     // Store both vectors in DB
     ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
