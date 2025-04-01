@@ -24,3 +24,14 @@ function HookClipSearchBeforesearchresults()
     <?php
     return false; # Allow further custom panels
     }
+
+function HookClipSearchEndofsearchpage()
+    {
+    global $clip_query_time;
+    if (isset($clip_query_time))
+        {
+        ?>
+        <p>CLIP query took <?php echo $clip_query_time ?>ms.</p>
+        <?php
+        }
+    }

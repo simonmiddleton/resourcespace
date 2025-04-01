@@ -154,7 +154,9 @@ async def search(
         query_np = query_vector.cpu().numpy().flatten()
 
         sims = vectors @ query_np
-        top_indices = sims.argsort()[-top_k:][::-1]
+        top_indices = np.argpartition(sims, -top_k)[-top_k:]
+        top_indices = top_indices[np.argsort(sims[top_indices])[::-1]]
+
 
         results = [
             {"resource": int(resource_ids[i]), "score": float(sims[i])}

@@ -13,7 +13,7 @@ function HookClipAllAftersearchbox()
 
 function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     {
-    global $clip_search_cutoff, $clip_similar_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url;
+    global $clip_search_cutoff, $clip_similar_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url, $clip_query_time;
     if(substr($search, 0, 11) == '!clipsearch') 
         {
         $function="search";
@@ -59,8 +59,11 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
         ]);
     }
 
+    $start_time = microtime(true);
     $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $end_time = microtime(true);
+    $clip_query_time = round(($end_time - $start_time) * 1000);
     curl_close($ch);
 
     if ($http_code !== 200 || empty($response))
