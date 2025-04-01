@@ -93,7 +93,16 @@ function sendMessage()
                 api(
                     "send_user_message",
                     postdata,
-                    reloadMessages(),
+                    function(response) {
+                        if (typeof response == 'string')
+                            {
+                            styledalert('<?php echo escape($lang['error']); ?>', response);
+                            }
+                        else
+                            {
+                            reloadMessages(response);
+                            }
+                        },
                     <?php echo generate_csrf_js_object('send_user_message'); ?>
                 );
                 return true;
@@ -107,7 +116,16 @@ function sendMessage()
         api(
             "send_user_message",
             postdata,
-            showUserMessage(messagetext,true),
+            function(response) {
+                if (typeof response == 'string')
+                    {
+                    styledalert('<?php echo escape($lang['error']); ?>', response);
+                    }
+                else
+                    {
+                    showUserMessage(messagetext, true);
+                    }
+                },
             <?php echo generate_csrf_js_object('send_user_message'); ?>
         );
         }
