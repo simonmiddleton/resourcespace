@@ -9,6 +9,7 @@ from PIL import Image
 import numpy as np
 import io
 import mysql.connector
+from typing import Optional
 
 # Command-line arguments
 parser = argparse.ArgumentParser(description="CLIP search service for ResourceSpace")
@@ -93,22 +94,34 @@ def load_vectors_for_db(db_name, force_reload=False):
 
 @app.post("/vector")
 async def generate_vector(
-    image: UploadFile = File(...),
+    image: Optional[UploadFile] = File(None),
+    text: Optional[str] = Form(None),
 ):
+    if image is None and text is None:
+        raise HTTPException(status_code=400, detail="Provide either 'image' or 'text'")
+
     try:
-        contents = await image.read()
-        img = Image.open(io.BytesIO(contents)).convert("RGB")
-        img_input = preprocess(img).unsqueeze(0).to(device)
+        if image:
+            contents = await image.read()
+            img = Image.open(io.BytesIO(contents)).convert("RGB")
+            img_input = preprocess(img).unsqueeze(0).to(device)
 
-        with torch.no_grad():
-            vector = model.encode_image(img_input)
-            vector = vector / vector.norm(dim=-1, keepdim=True)
-            vector_np = vector.cpu().numpy().flatten().tolist()
+            with torch.no_grad():
+                vector = model.encode_image(img_input)
+        else:
+            tokens = clip.tokenize([text]).to(device)
+            with torch.no_grad():
+                vector = model.encode_text(tokens)
 
+        # Normalise and return vector
+        vector = vector / vector.norm(dim=-1, keepdim=True)
+        vector_np = vector.cpu().numpy().flatten().tolist()
         return JSONResponse(content=vector_np)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Vector generation error: {e}")
+
+
 
 @app.post("/search")
 async def search(
