@@ -11,7 +11,7 @@ ob_implicit_flush(true);
 
 
 // Python CLIP service endpoint
-$clip_service_url = 'http://localhost:8000/vector';
+$clip_service_url = $clip_service_url . '/vector';
 
 // Get the current database name
 global $mysql_db;

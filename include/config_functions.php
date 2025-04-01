@@ -2174,7 +2174,7 @@ function config_percent_range($name, $label, $current, $width = 420, $title = nu
  * @param bool      $hidden     Whether field is hidden on the page
  * @param string    $help_link  Help link to be displayed alongside the label.
  */
-function config_add_percent_range($config_var, $label, $width = 420, $title = null, string $help_link = "")
+function config_add_percent_range($config_var, $label, $width = 380, $title = null, string $help_link = "")
     {    
     return array('percent_range', $config_var, $label, $width, $title, $help_link);
     }

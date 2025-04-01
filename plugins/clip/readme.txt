@@ -36,6 +36,7 @@ Install required Python packages:
 pip install fastapi uvicorn torch torchvision ftfy regex tqdm
 pip install git+https://github.com/openai/CLIP.git
 pip install mysql-connector-python
+pip install python-multipart
 
 Start the CLIP service:
 

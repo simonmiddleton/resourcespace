@@ -11,3 +11,103 @@ function HookClipAllAftersearchbox()
     }
 */
 
+function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
+    {
+    global $clip_search_cutoff, $clip_similar_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url;
+    if(substr($search, 0, 11) == '!clipsearch') 
+        {
+        $function="search";
+        $search=substr($search,12);
+        $search="A photo of a " . $search;
+        $min_score = $clip_search_cutoff; 
+        }
+    elseif (substr($search, 0, 12) == '!clipsimilar') 
+        {
+        $function="similar";
+        $resource=substr($search,12);
+        if (!is_numeric($resource)) {return false;}
+        $min_score = $clip_similar_cutoff; 
+        }
+    else
+        {
+        return false;
+        }
+
+    $clip_service_url = $clip_service_url . "/" . $function;
+    global $mysql_db;
+
+    // Send search to Python service
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $clip_service_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+
+    if ($function=="search")
+    {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'db' => $mysql_db,
+            'text' => $search,
+            'top_k' => $clip_results_limit_search
+        ]);
+    }
+    if ($function=="similar")
+    {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'db' => $mysql_db,
+            'resource' => $resource,
+            'top_k' => $clip_results_limit_similar
+        ]);
+    }
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($http_code !== 200 || empty($response))
+    {
+        echo "Error from CLIP service (HTTP $http_code)\n";
+        exit(1);
+    }
+
+    $results = json_decode($response, true);
+    if (!is_array($results))
+    {
+        echo "Invalid response from CLIP service.\n";
+        exit(1);
+    }
+
+    // Filter out results with score below the threshold
+    $results = array_filter($results, function($result) use ($min_score) {
+        return isset($result['score']) && $result['score'] >= $min_score;
+    });
+    if (count($results)==0) return true;
+
+    // Fetch titles from the resource table
+    $ids = array_column($results, 'resource');
+    
+
+    $params = [];
+    foreach ($ids as $id)
+    {
+        $params[] = 'i';
+        $params[] = $id;
+    }
+
+    $in_sql = implode(',', array_fill(0, count($ids), '?'));
+
+    $clipsql = new PreparedStatementQuery();
+    $clipsql->sql = "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.ref in ($in_sql) AND " . $sql_filter->sql . " ORDER BY FIELD(r.ref, $in_sql)";
+    $clipsql->parameters = array_merge($select->parameters, $sql_join->parameters, $params, $sql_filter->parameters, $params);
+    return $clipsql;
+    }
+
+function HookClipAllSearch_pipeline_setup($search,$select,$sql_join,$sql_filter)
+    {
+    if(substr($search, 0, 11) != '!clipsearch' && (substr($search, 0, 12) != '!clipsimilar') ) 
+        {
+        return false;
+        }
+    
+    global $keysearch;
+    $keysearch=false; // Disable keyword searching if using natural language search
+    }
