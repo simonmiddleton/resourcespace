@@ -282,7 +282,11 @@ if (in_array($extension, $unoconv_extensions) && $extension != 'pdf' && isset($u
     $using_unoconv = true; # Prevent falling back to other less detailed preview options.
     $path_parts = pathinfo($file);
     $basename_minus_extension = remove_extension($path_parts['basename']);
-    $pdffile = $path_parts['dirname'] . "/" . $basename_minus_extension . ".pdf";
+    $pdffile = new CommandPlaceholderArg(
+        $path_parts['dirname'] . "/" . $basename_minus_extension . ".pdf",
+        'is_valid_rs_path'
+    );
+    $file = new CommandPlaceholderArg($file, 'is_valid_rs_path');
 
     if ($unoconvert) {
         // Use newer unoconvert utility (note - does not have a verbose mode)

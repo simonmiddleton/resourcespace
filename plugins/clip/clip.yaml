@@ -1,0 +1,9 @@
+name: clip
+title: CLIP AI Smart Search
+author: Montala Limited
+version: 1.0
+desc: AI natural language search, visual search, similarity matching, duplicate matching.
+icon: fa fa-brain
+icon-colour: seagreen
+category: search
+info_url: https://www.resourcespace.com/knowledge-base/plugins/clip

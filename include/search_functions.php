@@ -1300,6 +1300,8 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
                 if (checkperm("R")) {
                     include_once 'request_functions.php';
                     $request_collections = array_column(get_requests(), 'collection');
+                    $externally_requested_collections = array_column(ps_query('SELECT ref FROM collection WHERE user = -2'), 'ref');
+                    $request_collections = array_merge($request_collections, $externally_requested_collections);
                 }
                 # include collections of research resources
                 $research_collections = array();
