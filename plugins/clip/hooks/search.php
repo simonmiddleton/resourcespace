@@ -25,6 +25,7 @@ function HookClipSearchBeforesearchresults()
     return false; # Allow further custom panels
     }
 
+/*
 function HookClipSearchEndofsearchpage()
     {
     global $clip_query_time;
@@ -35,3 +36,4 @@ function HookClipSearchEndofsearchpage()
         <?php
         }
     }
+*/

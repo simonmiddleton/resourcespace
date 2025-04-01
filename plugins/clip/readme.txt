@@ -37,6 +37,8 @@ pip install fastapi uvicorn torch torchvision ftfy regex tqdm
 pip install git+https://github.com/openai/CLIP.git
 pip install mysql-connector-python
 pip install python-multipart
+pip install faiss-cpu
+
 
 Start the CLIP service:
 

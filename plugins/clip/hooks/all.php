@@ -41,6 +41,11 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     curl_setopt($ch, CURLOPT_URL, $clip_service_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Connection: keep-alive',
+        'Expect:' // Prevents "100-continue" delay
+    ]);
+
 
     if ($function=="search")
     {
