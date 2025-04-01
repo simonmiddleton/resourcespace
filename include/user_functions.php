@@ -2821,6 +2821,7 @@ function save_usergroup($ref, $groupoptions)
         }
         $sql = "UPDATE usergroup SET " . implode(",", $sqlsetvals) . " WHERE ref = ?";
         ps_query($sql, array_merge(ps_param_fill($sqlvals, "s"), array("i", (int) $ref)));
+        clear_query_cache('usergroup');
         return true;
     } else {
         $sqlsetvals = array();
@@ -2829,6 +2830,7 @@ function save_usergroup($ref, $groupoptions)
         }
         $sql = "INSERT INTO usergroup (" . implode(",", $sqlcols) . ") VALUES (" . ps_param_insert(count($sqlvals)) . ")";
         ps_query($sql, ps_param_fill($sqlvals, "s"));
+        clear_query_cache('usergroup');
         return sql_insert_id();
     }
 }
