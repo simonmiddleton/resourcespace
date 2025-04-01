@@ -72,7 +72,11 @@ foreach($resources as $resource)
     }
     
     $text = implode(' ', $text_parts);
+    // Remove all numbers (including standalone and in words) and tidy up spacing. Numbers are unlikely to add meaning.
+    $text = preg_replace('/\d+/', '', $text);
+    $text = trim(preg_replace('/\s+/', ' ', $text));
     $vector_text=get_vector(true,$text,$ref);
+    
     if ($vector_text===false) {continue;}
 
     // Store both vectors in DB
