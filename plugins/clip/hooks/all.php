@@ -107,7 +107,6 @@ function HookClipAllSearch_pipeline_setup($search,$select,$sql_join,$sql_filter)
         {
         return false;
         }
-    
     global $keysearch;
     $keysearch=false; // Disable keyword searching if using natural language search
     }

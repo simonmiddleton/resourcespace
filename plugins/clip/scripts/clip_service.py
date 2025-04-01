@@ -56,7 +56,7 @@ def load_vectors_for_db(db_name, force_reload=False):
         # Track last max ref to only load new
         last_ref = loaded_max_ref.get(db_name, 0)
         cursor.execute(
-            "SELECT resource, vector FROM resource_clip_vector WHERE resource > %s ORDER BY resource",
+            "SELECT resource, vector FROM resource_clip_vector WHERE is_text=0 and resource > %s ORDER BY resource",
             (last_ref,)
         )
         rows = cursor.fetchall()

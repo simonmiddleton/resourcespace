@@ -22,15 +22,15 @@ $sql = "
     SELECT r.ref, r.file_extension, r.file_checksum
     FROM resource r
     LEFT JOIN resource_clip_vector v_image ON v_image.is_text=0 and r.ref = v_image.resource
-    LEFT JOIN resource_clip_vector v_text  ON v_text.is_text=1  and r.ref = v_text.resource
+    /* LEFT JOIN resource_clip_vector v_text  ON v_text.is_text=1  and r.ref = v_text.resource */
 
     WHERE r.has_image = 1
       AND r.file_checksum IS NOT NULL
       AND 
         (
         (v_image.checksum IS NULL OR v_image.checksum != r.file_checksum)
-        OR
-        (v_text.checksum IS NULL OR v_text.created < r.modified)
+        /* OR
+        (v_text.checksum IS NULL OR v_text.created < r.modified) */
         )
       ORDER BY r.ref ASC
     LIMIT {$limit}";
@@ -63,6 +63,7 @@ foreach($resources as $resource)
     if ($vector===false) {continue;}
 
     // Calculate vectors - text
+    /*
     $text_parts = [];
     foreach ($clip_text_search_fields as $fieldref) {
         $value = get_data_by_field($ref, $fieldref);
@@ -76,7 +77,8 @@ foreach($resources as $resource)
     $text = preg_replace('/\d+/', '', $text);
     $text = trim(preg_replace('/\s+/', ' ', $text));
     $vector_text=get_vector(true,$text,$ref);
-    
+    */
+
     if ($vector_text===false) {continue;}
 
     // Store both vectors in DB
@@ -85,10 +87,12 @@ foreach($resources as $resource)
         "INSERT INTO resource_clip_vector (resource, vector, checksum, is_text) VALUES (?, ?, ?, false)",
         ['i', $ref, 's', json_encode($vector), 's', $checksum]
     );
+    /*
     ps_query(
         "INSERT INTO resource_clip_vector (resource, vector, checksum, is_text) VALUES (?, ?, ?, true)",
         ['i', $ref, 's', json_encode($vector_text), 's', $checksum]
     );
+    */
 
     echo "✓ Vector stored for resource $ref\n";
 }
