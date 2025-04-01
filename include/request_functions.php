@@ -282,7 +282,7 @@ function email_collection_request($ref, $details, $external_email): bool
     # The user cannot then gain access to further resources by adding them to their original collection as the
     # shared collection is a copy.
     # A complicated scenario that is best avoided using 'managed requests'.
-    $newcopy = create_collection(-1, $lang["requestcollection"]);
+    $newcopy = create_collection(-2, $lang["requestcollection"]);
     copy_collection($ref, $newcopy);
 
     // Make sure a collection does not include resources that may have been hidden from the user due
