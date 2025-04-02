@@ -4788,7 +4788,7 @@ function collection_download_process_archive_command(array &$dl_data, &$zip, $fi
             $arr_arguments[] = $argumentstring;
             $cmdparams[$argumentstring] = new CommandPlaceholderArg(
                 $arguments[$n],
-                fn($m) => preg_match('/[^\@\-\w]/', $m) === 0 // Allows word characters, '@', and '-' only
+                "permitted_archiver_arguments"
             );
         }
         $command = str_replace("[ARGUMENTS]", implode(" ", $arr_arguments), $command);
@@ -4797,7 +4797,7 @@ function collection_download_process_archive_command(array &$dl_data, &$zip, $fi
 
         $cmdparams["%LISTFILEARG"] = new CommandPlaceholderArg(
             $GLOBALS["archiver_listfile_argument"],
-            fn($m) => preg_match('/[^\@\-\w]/', $m) === 0 // Allows word characters, '@', and '-' only
+            "permitted_archiver_arguments"
         );
         $cmdparams["%LISTFILE"] = new CommandPlaceholderArg($listfile, 'is_valid_rs_path');
         
@@ -6542,7 +6542,7 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
  */
 function process_collection_download(array $dl_data): array
 {
-    // Set eleemnts that may not have been set e.g. a job created in an earlier version
+    // Set elements that may not have been set e.g. a job created in an earlier version
     foreach (['archiver', 'collection_download_tar', 'include_alternatives', 'k'] as $unset_var)
     if (!isset($dl_data[$unset_var])) {
         $dl_data[$unset_var] = false;

@@ -696,3 +696,16 @@ function delete_temp_files(): void
         debug(" - deleting file " . $filetodelete . " - " . ($success ? "SUCCESS" : "FAILED"));
     }
 }
+
+/**
+ * Are the arguments set in $archiver_settings["arguments"] permitted?
+ * Allows word characters, '@', and '-' only
+ * 
+ * @param string    Argument string
+ * 
+ */
+function permitted_archiver_arguments($string): bool
+{
+    return preg_match('/[^\@\-\w]/', $string) === 0;
+}
+
