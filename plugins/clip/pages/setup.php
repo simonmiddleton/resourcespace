@@ -21,6 +21,11 @@ $page_def[] = config_add_percent_range("clip_similar_cutoff",$lang["clip_similar
 $page_def[] = config_add_text_input("clip_results_limit_similar",$lang["clip_results_limit_similar"]);
 
 
+$page_def[] = config_add_section_header($lang["clip-duplicate-images"]);
+$page_def[] = config_add_percent_range("clip_duplicate_cutoff",$lang["clip_duplicate_cutoff"]);
+
+
+
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

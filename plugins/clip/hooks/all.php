@@ -13,7 +13,7 @@ function HookClipAllAftersearchbox()
 
 function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     {
-    global $clip_search_cutoff, $clip_similar_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url, $clip_query_time;
+    global $clip_search_cutoff, $clip_similar_cutoff, $clip_duplicate_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url, $clip_query_time;
     if(substr($search, 0, 11) == '!clipsearch') 
         {
         $function="search";
@@ -27,6 +27,13 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
         $resource=substr($search,12);
         if (!is_numeric($resource)) {return false;}
         $min_score = $clip_similar_cutoff; 
+        }
+    elseif (substr($search, 0, 14) == '!clipduplicate') 
+        {
+        $function="similar";
+        $resource=substr($search,14);
+        if (!is_numeric($resource)) {return false;}
+        $min_score = $clip_duplicate_cutoff;
         }
     else
         {
@@ -88,11 +95,12 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     $results = array_filter($results, function($result) use ($min_score) {
         return isset($result['score']) && $result['score'] >= $min_score;
     });
-    if (count($results)==0) return true;
 
     // Fetch titles from the resource table
     $ids = array_column($results, 'resource');
     
+    // No results - we must still run a query but one that returns no results.
+    if (count($ids)==0) {$ids=[-1];}
 
     $params = [];
     foreach ($ids as $id)
