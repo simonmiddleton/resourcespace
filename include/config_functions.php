@@ -1945,6 +1945,7 @@ function get_resource_type_field_columns()
         'exiftool_filter'          => [$lang['property-exiftool_filter'],'',2,1],
         'value_filter'             => [$lang['property-value_filter'],'',2,1],
         'onchange_macro'           => [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1],
+        'sort_method'              => [$lang['property-sort_method'], $lang['information-sort_method'], 0, 1],
     ]);
 
     $modify_resource_type_field_definitions=hook("modifyresourcetypefieldcolumns","",array($resource_type_field_column_definitions));

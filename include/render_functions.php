@@ -6733,7 +6733,22 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                 onchange="handleIndexOptions(this, 'field_edit_partial_index')"
                 >
             <?php
-            }
+        } elseif ($propertyname == 'sort_method') {
+            ?>
+            <select class="stdwidth" name="<?php echo escape($propertyname); ?>">
+            <?php 
+            foreach(FIELD_SORT_METHODS as $method => $value) {
+                $selected = $value === $currentvalue ? 'selected' : '';
+                ?>
+                <option
+                    value="<?php echo (int) $value; ?>" <?php echo $selected; ?>
+                    ><?php echo escape($lang["sort-method_$method"]); ?>
+                </option>
+            <?php }
+            ?>
+            </select>
+            <?php
+        }
         elseif($type==1)
             {
             if ($propertyname=="advanced_search" && $system_date_field)

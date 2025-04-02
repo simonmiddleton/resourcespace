@@ -1053,3 +1053,8 @@ const FONTAWESOME_EXTENSIONS = [
     // Default to 'file' for unrecognized extensions
     'default' => 'fa-file',
 ];
+
+const FIELD_SORT_METHODS = [
+    'default' => 0,
+    'dot-notation' => 1,
+];

@@ -1224,19 +1224,15 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         $order_by = str_replace("r.rating", "rating", $order_by);
         $sql->sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select->sql FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
-    }
-
-    // View Resources With No Downloads
-    elseif (substr($search, 0, 12) == "!nodownloads") {
+    } elseif (substr($search, 0, 12) == "!nodownloads") {
+        // View Resources With No Downloads
         if ($orig_order == "relevance") {
             $order_by = "ref DESC";
         }
         $sql->sql = $sql_prefix . "SELECT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
-    }
-
-    // Duplicate Resources (based on file_checksum)
-    elseif (substr($search, 0, 11) == "!duplicates") {
+    } elseif (substr($search, 0, 11) == "!duplicates") {
+        // Duplicate Resources (based on file_checksum)
         // Extract the resource ID
         $ref = explode(" ", $search);
         $ref = str_replace("!duplicates", "", $ref[0]);
@@ -1273,10 +1269,8 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
             $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " AND file_checksum IN (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE file_checksum <> '' AND file_checksum IS NOT null GROUP BY file_checksum having count(file_checksum)>1)r2) ORDER BY file_checksum, ref" . $sql_suffix;
             $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
         }
-    }
-
-    # View Collection
-    elseif (substr($search, 0, 11) == '!collection') {
+    } elseif (substr($search, 0, 11) == '!collection') {
+        # View Collection
         global $userref,$ignore_collection_access;
 
         $colcustperm = $sql_join;
@@ -1349,10 +1343,8 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         if ($collectionsearchsql) {
             $sql = $collectionsearchsql;
         }
-    }
-
-    # View Related - Pushed Metadata (for the view page)
-    elseif (substr($search, 0, 14) == "!relatedpushed") {
+    } elseif (substr($search, 0, 14) == "!relatedpushed") {
+        # View Related - Pushed Metadata (for the view page)
         # Extract the resource number
         $resource = explode(" ", $search);
         $resource = str_replace("!relatedpushed", "", $resource[0]);
@@ -1386,10 +1378,8 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
             $sql_join->parameters,
             $sql_filter->parameters
         );
-    }
-
-    # View Related
-    elseif (substr($search, 0, 8) == "!related") {
+    } elseif (substr($search, 0, 8) == "!related") {
+        # View Related
         # Extract the resource number
         $resource = explode(" ", $search);
         $resource = str_replace("!related", "", $resource[0]);
@@ -1406,10 +1396,8 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         UNION
         SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql  . " JOIN resource_related t ON (t.resource = r.ref AND t.related = ?) WHERE " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_self->parameters, $select->parameters, $sql_join->parameters, ["i", $resource], $sql_filter->parameters, $select->parameters, $sql_join->parameters, ["i", $resource], $sql_filter->parameters);
-    }
-
-    # Geographic search
-    elseif (substr($search, 0, 4) == "!geo") {
+    } elseif (substr($search, 0, 4) == "!geo") {
+        # Geographic search
         $geo = explode("t", str_replace(array("m","p"), array("-","."), substr($search, 4))); # Specially encoded string to avoid keyword splitting
         if (!isset($geo[0]) || empty($geo[0]) || !isset($geo[1]) || empty($geo[1])) {
             exit($lang["geographicsearchmissing"]);
@@ -1426,20 +1414,16 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
 
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, ["d",$bl[0],"d",$tr[0],"d",$bl[1],"d",$tr[1]], $sql_filter->parameters);
         $sql->sql = $sql_prefix . $sql->sql . $sql_suffix;
-    }
-
-    # Similar to a colour by key
-    elseif (substr($search, 0, 10) == "!colourkey") {
+    } elseif (substr($search, 0, 10) == "!colourkey") {
+        # Similar to a colour by key
         # Extract the colour key
         $colourkey = explode(" ", $search);
         $colourkey = str_replace("!colourkey", "", $colourkey[0]);
         $sql = new PreparedStatementQuery();
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE has_image > 0 AND LEFT(colour_key,4) = ? AND " . $sql_filter->sql . " GROUP BY r.ref" . $sql_suffix;
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, ["s",$colourkey], $sql_filter->parameters);
-    }
-
-    # Colour search
-    elseif (substr($search, 0, 7) == "!colour") {
+    } elseif (substr($search, 0, 7) == "!colour") {
+        # Colour search
         $colour = explode(" ", $search);
         $colour = str_replace("!colour", "", $colour[0]);
         $sql = new PreparedStatementQuery();
@@ -1454,10 +1438,8 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, ["s",$colour . "%","s","_" . $colour . "%"], $sql_filter->parameters);
         $searchsql = $sql_prefix . $sql->sql . $sql_suffix;
         $sql->sql  = $searchsql;
-    }
-
-    # Similar to a colour
-    elseif (substr($search, 0, 4) == "!rgb") {
+    } elseif (substr($search, 0, 4) == "!rgb") {
+        // Similar to a colour
         $rgb = explode(":", $search);
         $rgb = explode(",", $rgb[1]);
         $searchsql = new PreparedStatementQuery();
@@ -1673,10 +1655,8 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         // Search for resources where the file integrity has been marked as problematic or the file is missing
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE integrity_fail=1 AND no_file=0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
-    }
-
-    # Search for locked resources
-    elseif ($search == "!locked") {
+    } elseif ($search == "!locked") {
+        // Search for locked resources
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
     } elseif (preg_match('/^!report(\d+)(p[-1\d]+)?(d\d+)?(fy\d{4})?(fm\d{2})?(fd\d{2})?(ty\d{4})?(tm\d{2})?(td\d{2})?/i', $search, $report_search_data)) {
@@ -3017,11 +2997,10 @@ function update_search_from_request($search)
                         $search = (($search == "") ? "" : join(", ", split_keywords($search, false, false, false, false, true)) . ", ") . substr($key, 6) . ":" . $value;
                     }
                 }
-            }
-            // Nodes can be searched directly when displayed on simple search bar
-            // Note: intially they come grouped by field as we need to know whether if
-            // there is a OR case involved (ie. @@101@@102)
-            elseif ('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched') {
+            } elseif ('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched') {
+                // Nodes can be searched directly when displayed on simple search bar
+                // Note: intially they come grouped by field as we need to know whether if
+                // there is a OR case involved (ie. @@101@@102)
                 $node_ref = '';
 
                 foreach ($value as $searched_field_nodes) {
@@ -3375,10 +3354,28 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
         # If fieldx is being used this will be needed in the inner select to be used in ordering
         $GLOBALS["include_fieldx"] = true;
         # Check for field type
-        $field_order_check = ps_value("SELECT field_constraint value FROM resource_type_field WHERE ref = ?", ["i",str_replace("field", "", $order_by)], "", "schema");
+        $field_order_check = ps_query(
+            "SELECT field_constraint, sort_method
+            FROM resource_type_field
+            WHERE ref = ?
+            LIMIT 1",
+            ["i",str_replace("field", "", $order_by)],
+            "",
+            "schema"
+        )[0];
         # Establish sort order (numeric or otherwise)
         # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
-        if ($field_order_check == 1) {
+        if ($field_order_check["sort_method"] == FIELD_SORT_METHODS['dot-notation']) {
+            $order[$order_by] =
+                "CASE WHEN TRIM($order_by) = '' THEN 0 ELSE 1 END $sort,
+                ISNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+')) $sort,
+                IFNULL(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[^0-9]+'), '') $sort,
+                CAST(REGEXP_SUBSTR(SUBSTRING_INDEX($order_by, '.', 1), '[0-9]+') AS UNSIGNED) $sort,";
+            for ($n = 2; $n <= 10; $n++) {
+                $order[$order_by] .= "\nCAST(SUBSTRING_INDEX(SUBSTRING_INDEX($order_by, '.', $n), '.', -1) AS UNSIGNED) $sort,";
+            }
+            $order[$order_by] .= "\nref $sort";
+        } elseif ($field_order_check["field_constraint"] == 1) {
             $order[$order_by] = "$order_by +0 $sort,r.ref $sort";
         } else {
             $order[$order_by] = "$order_by $sort,r.ref $sort";
