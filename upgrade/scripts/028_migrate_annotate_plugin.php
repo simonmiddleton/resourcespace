@@ -14,8 +14,50 @@ if ($annotate_plugin_config === null) {
     return;
 }
 
-set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Start migrating the Annotate plugin to the base annotations');
+// Migrate plugin settings
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin settings');
+$set_system_wide_config = ['annotate_enabled' => 1];
 
+if (
+    isset($annotate_plugin_config['annotate_resource_type_field'])
+    && $annotate_plugin_config['annotate_resource_type_field'] > 0
+    && !in_array($annotate_plugin_config['annotate_resource_type_field'], $annotate_fields)
+) {
+    $annotate_fields[] = $annotate_plugin_config['annotate_resource_type_field'];
+    $set_system_wide_config['annotate_fields'] = implode(',', $annotate_fields);
+}
+
+/*
+todo: migrate the following settings
+WIP - $annotate_public_view - todo: add base logic first for it
+- $annotate_exclude_restypes
+- $annotate_show_author
+- $annotate_font
+
+
+*/
+print_r($annotate_plugin_config);
+
+$sysadmin_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
+foreach ($set_system_wide_config as $name => $value) {
+    if (!set_config_option(null, $name, $value)) {
+        message_add(
+            $sysadmin_users,
+            sprintf(
+                '%s #028: %s',
+                $lang['upgrade_script'],
+                str_replace(['%name%', '%value%'], [$name, $value], $lang['upgrade_028_notify_config_not_set'])
+            ),
+            "{$baseurl}/pages/admin/admin_system_config.php",
+            null,
+            MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,
+            MESSAGE_DEFAULT_TTL_SECONDS
+        );
+    }
+}
+die(PHP_EOL.'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__.PHP_EOL); #todo: drop once done
+
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin records as base annotations');
 $annotations = ps_query(
     sprintf(
         'SELECT an.ref AS `resource`, n.ref, %s, %s FROM annotate_notes AS an LEFT JOIN node AS n ON an.node = n.ref',
@@ -73,37 +115,6 @@ foreach ($annotations as $annotation) {
     );
     set_node($annotation['node'], $annotation['resource_type_field'], $an_note, $annotation['parent'], $annotation['order_by']);
     db_end_transaction('upgrade_28');
-}
-
-// Migrate plugin settings
-set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin settings');
-$set_system_wide_config = ['annotate_enabled' => 1];
-
-if (
-    isset($annotate_plugin_config['annotate_resource_type_field'])
-    && $annotate_plugin_config['annotate_resource_type_field'] > 0
-    && !in_array($annotate_plugin_config['annotate_resource_type_field'], $annotate_fields)
-) {
-    $annotate_fields[] = $annotate_plugin_config['annotate_resource_type_field'];
-    $set_system_wide_config['annotate_fields'] = implode(',', $annotate_fields);
-}
-
-$sysadmin_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
-foreach ($set_system_wide_config as $name => $value) {
-    if (!set_config_option(null, $name, $value)) {
-        message_add(
-            $sysadmin_users,
-            sprintf(
-                '%s #028: %s',
-                $lang['upgrade_script'],
-                str_replace(['%name%', '%value%'], [$name, $value], $lang['upgrade_028_notify_config_not_set'])
-            ),
-            "{$baseurl}/pages/admin/admin_system_config.php",
-            null,
-            MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,
-            MESSAGE_DEFAULT_TTL_SECONDS
-        );
-    }
 }
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Uninstalling the Annotate plugin');
