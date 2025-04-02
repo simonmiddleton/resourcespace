@@ -28,7 +28,6 @@ foreach ($annotations as $annotation) {
         SYSVAR_UPGRADE_PROGRESS_SCRIPT,
         "Processing annotation for resource #{$annotation['resource']} with node #{$annotation['node']}"
     );
-    print_r($annotation);
 
     // Parse the old "username: note" syntax
     $parsed_annotation = explode(': ', (string) $annotation['name']);
@@ -77,8 +76,8 @@ foreach ($annotations as $annotation) {
 }
 
 // Migrate plugin settings
-$set_system_wide_config = [];
-print_r($annotate_plugin_config);
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin settings');
+$set_system_wide_config = ['annotate_enabled' => 1];
 
 if (
     isset($annotate_plugin_config['annotate_resource_type_field'])
