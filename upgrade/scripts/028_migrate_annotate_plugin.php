@@ -1,7 +1,6 @@
 <?php
 
 include dirname(__FILE__, 3) . '/include/boot.php'; #todo: remove once done dev/test
-// include RESOURCESPACE_BASE_PATH . '/include/boot.php'; #todo: remove once done dev/test
 command_line_only(); #todo: remove once done dev/test
 
 if (!is_plugin_activated('annotate')) {
@@ -19,45 +18,60 @@ $annotations = ps_query(
     )
 );
 
-
 foreach ($annotations as $annotation) {
+    set_sysvar(
+        SYSVAR_UPGRADE_PROGRESS_SCRIPT,
+        "Processing annotation for resource #{$annotation['resource']} with node #{$annotation['node']}"
+    );
     print_r($annotation);
 
     // Parse the old "username: note" syntax
-    $an_noteparts = explode(": ", $annotation["name"] ?? "");
+    $parsed_annotation = explode(': ', (string) $annotation['name']);
+    if (count($parsed_annotation) !== 2) {
+        // todo: reconsider this logic
+        debug("Invalid annotation note (node) syntax - {$annotation['name']}");
+        continue;
+    }
+    [$an_username, $an_note] = $parsed_annotation;
 
-    echo "name: '" . $annotation["name"] . "'" . PHP_EOL;
-    $an_username = $an_noteparts[0];
-    echo "user: '" . $an_username . "'" . PHP_EOL;
-    $an_note = $an_noteparts[1] ?? "";
-    $an_userid = get_user_by_username($an_username);
-    echo "userid: '" . $an_userid . "'" . PHP_EOL;
-    if ($an_userid === false) {
+    logScript("- Note = {$annotation['name']}");
+    logScript("- an_username = {$an_username}");
+    logScript("- an_note = {$an_note}");
+
+    $an_userref = get_user_by_username($an_username);
+    logScript('- user ID = ' . json_encode($an_userref));
+    if ($an_userref === false) {
         // No matching user found - maybe username has changed. Keep original note
-        $an_userid = 0;
-        $an_note = $annotation["name"];
+        $an_userref = 0;
+        $an_note = $annotation['name'];
     }
 
-    $annotorious_annotation = [
-        'resource' => $annotation['resource'],
-        'resource_type_field' => $annotation['resource_type_field'],
-        'page' => (int) $annotation['page'] > 1 ? $annotation['page'] : null,
-        'tags' => [], # optional
-        'shapes' => [
-            [
-                'type' => 'rect',
-                'geometry' => [
-                    'x' => (int) $annotation['left_pos'] / (int) $annotation['preview_width'],
-                    'y' => (int) $annotation['top_pos'] / (int) $annotation['preview_height'],
-                    'width' => (int) $annotation['width'] / (int) $annotation['preview_width'],
-                    'height' => (int) $annotation['height'] / (int) $annotation['preview_height'],
-                ],
-            ]
-        ],
-    ];
+    db_begin_transaction('upgrade_28');
+    ps_query(
+        'INSERT INTO annotation (`resource`, resource_type_field, user, x, y, width, height, `page`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            'i', $annotation['resource'],
+            'i', $annotation['resource_type_field'],
+            'i', $an_userref,
+            'd', (int) $annotation['left_pos'] / (int) $annotation['preview_width'],
+            'd', (int) $annotation['top_pos'] / (int) $annotation['preview_height'],
+            'd', (int) $annotation['width'] / (int) $annotation['preview_width'],
+            'd', (int) $annotation['height'] / (int) $annotation['preview_height'],
+            'i', (int) $annotation['page'] > 1 ? $annotation['page'] : null,
+        ]
+    );
+    $new_annotation_ref = sql_insert_id();
 
-print_r($annotorious_annotation);
-die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
+    // Add/update annotation_node record
+    ps_query(
+        'INSERT IGNORE INTO annotation_node (annotation, node) VALUES (?, ?)',
+        ['i', $new_annotation_ref, 'i', $annotation['node']]
+    );
+    set_node($annotation['node'], $annotation['resource_type_field'], $an_note, $annotation['parent'], $annotation['order_by']);
+    db_end_transaction('upgrade_28');
 }
+
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Uninstalling the Annotate plugin');
+deactivate_plugin('annotate');
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Finished migrating the Annotate plugin to the base annotations!');
