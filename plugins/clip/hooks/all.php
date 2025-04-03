@@ -52,12 +52,12 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
         return false;
         }
 
-    $clip_service_url = $clip_service_url . "/" . $function;
+    $clip_service_call = $clip_service_url . "/" . $function;
     global $mysql_db;
 
     // Send search to Python service
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $clip_service_url);
+    curl_setopt($ch, CURLOPT_URL, $clip_service_call);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [

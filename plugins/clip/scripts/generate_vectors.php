@@ -43,6 +43,32 @@ if(empty($resources))
     exit;
 }
 
+function vector_visualise(array $vector): string
+{
+    $chars = str_split(" .:;i1tfLCG08@"); 
+    $out = "";
+    $chunks = array_chunk($vector, 8);
+
+    foreach ($chunks as $chunk)
+    {
+        $mean = array_sum($chunk) / count($chunk);
+        $sum_squares = 0;
+        foreach ($chunk as $v)
+            $sum_squares += pow($v - $mean, 2);
+        $std_dev = sqrt($sum_squares / count($chunk));
+
+        // Clamp & scale std dev for visualisation (tune this if needed)
+        $scaled = min(1.0, $std_dev * 5); // exaggerate a bit
+        $index = (int)round($scaled * (count($chars) - 1));
+        $out .= $chars[$index];
+    }
+
+    return $out;
+}
+
+
+
+
 foreach($resources as $resource)
 {
     $ref = $resource['ref'];
@@ -97,7 +123,7 @@ foreach($resources as $resource)
     );
     */
 
-    echo "✓ Vector stored for resource $ref Vector length: " . count($vector) . ", blob size: " . strlen($blob) . "\n";
+    echo "✓ Vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob) . "\n";
 }
 
 echo "Done.\n";
