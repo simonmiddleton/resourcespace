@@ -42,7 +42,7 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
         }
     elseif (substr($search, 0, 14) == '!clipduplicate') 
         {
-        $function="similar";
+        $function="search";
         $resource=substr($search,14);
         if (!is_numeric($resource)) {return false;}
         $min_score = $clip_duplicate_cutoff;
