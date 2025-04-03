@@ -4,7 +4,7 @@
 
 
 
-function HookClipSearchBeforesearchresults()
+function HookClipSearchSearch_header_after_actions()
     {
     global $lang,$ref,$baseurl,$search;
 
@@ -15,13 +15,9 @@ function HookClipSearchBeforesearchresults()
     if (preg_match('/[^a-zA-Z0-9 ,.\-]/', $search)) {return false;}
 
     $search_url=generateURL("{$baseurl}/pages/search.php", array("search" => "!clipsearch {$search}"));
-    ?>
-    <p>
-        <a href="<?php echo $search_url ?>" onClick="return CentralSpaceLoad(this,true);">
-        <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo $lang["clip-natural-language-search"]; ?>
-        </a>
-    </p>    
-    <?php
+    $icon="<i class='fa fa-brain'></i> &nbsp;";
+
+    render_filter_bar_button($lang["clip-natural-language-search"],'onClick="return CentralSpaceLoad(\'' . $search_url . '\');"',$icon);
     return false; # Allow further custom panels
     }
 

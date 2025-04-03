@@ -1,6 +1,6 @@
 <?php
 
-$lang["clip-natural-language-search"]="Natural language search";
+$lang["clip-natural-language-search"]="AI visual search";
 $lang["clip-configuration"]="CLIP configuration";
 $lang["clip-ai-smart-search"]="AI Smart Search";
 $lang["clip-visually-similar-images"]="Visually similar images";
