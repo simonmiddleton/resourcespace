@@ -23,9 +23,16 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
         }
     elseif (substr($search, 0, 12) == '!clipsimilar') 
         {
-        $function="similar";
+        $function="search";
         $resource=substr($search,12);
         if (!is_numeric($resource)) {return false;}
+        $min_score = $clip_similar_cutoff; 
+        }
+    elseif (substr($search, 0, 13) == '!clipspecific') 
+        {
+        $function="search";
+        $ref=substr($search,13);
+        if (!is_numeric($ref)) {return false;}
         $min_score = $clip_similar_cutoff; 
         }
     elseif (substr($search, 0, 15) == '!clipduplicates') 
@@ -66,7 +73,7 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     ]);
 
 
-    if ($function=="search")
+    if ($function=="search" && !isset($resource) && !isset($ref))
     {
         curl_setopt($ch, CURLOPT_POSTFIELDS, [
             'db' => $mysql_db,
@@ -74,11 +81,19 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
             'top_k' => $clip_results_limit_search
         ]);
     }
-    if ($function=="similar")
+    if ($function=="search" && isset($resource))
     {
         curl_setopt($ch, CURLOPT_POSTFIELDS, [
             'db' => $mysql_db,
             'resource' => $resource,
+            'top_k' => $clip_results_limit_similar
+        ]);
+    }
+    if ($function=="search" && isset($ref))
+    {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'db' => $mysql_db,
+            'ref' => $ref,
             'top_k' => $clip_results_limit_similar
         ]);
     }
@@ -144,4 +159,13 @@ function HookClipAllSearch_pipeline_setup($search,$select,$sql_join,$sql_filter)
         }
     global $keysearch;
     $keysearch=false; // Disable keyword searching if using natural language search
+    }
+
+
+function HookClipAllSearchbarafterbuttons()
+    {
+    global $lang,$baseurl;
+    ?>
+    <p><i aria-hidden="true" class="fa fa-fw fa-brain"></i>&nbsp;<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl ?>/plugins/clip/pages/search.php"><?php echo escape($lang["clip-ai-smart-search"]) ?></a></p>
+    <?php
     }

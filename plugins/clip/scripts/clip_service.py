@@ -173,13 +173,14 @@ async def search(
     db: str = Form(...),
     text: str = Form(None),
     image: UploadFile = File(None),
+    resource: int = Form(None),
+    ref: str = Form(None),
     top_k: int = Form(5)
 ):
-    if not text and not image:
-        raise HTTPException(status_code=400, detail="Provide either text or image")
+    if not any([text, image, resource, ref]):
+        raise HTTPException(status_code=400, detail="Provide one of: text, image, resource, or ref")
 
     print(f"▶️ SEARCH: db={db}, top_k={top_k}")
-
     vectors, resource_ids = load_vectors_for_db(db)
     print(f"🧠 Vectors loaded: {len(resource_ids)} resources")
 
@@ -187,12 +188,18 @@ async def search(
         return JSONResponse(content=[])
 
     try:
+        index = faiss_indexes.get(db)
+        if not index:
+            raise HTTPException(status_code=500, detail="FAISS index not found")
+
+        # --- Create query vector ---
         if text:
             print("🔤 Text query")
             tokens = clip.tokenize([text]).to(device)
             with torch.no_grad():
                 query_vector = model.encode_text(tokens)
-        else:
+
+        elif image:
             print("🖼️ Image query")
             contents = await image.read()
             img = Image.open(io.BytesIO(contents)).convert("RGB")
@@ -200,26 +207,63 @@ async def search(
             with torch.no_grad():
                 query_vector = model.encode_image(img_input)
 
+        elif resource is not None or ref is not None:
+            # Determine which field to query
+            column = "resource" if resource is not None else "ref"
+            value = resource if resource is not None else ref
+            print(f"🔁 Query from DB vector: {column} = {value}")
+
+            conn = mysql.connector.connect(**DB_CONFIG, database=db)
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT vector_blob FROM resource_clip_vector WHERE {column} = %s AND is_text=0", (value,))
+            row = cursor.fetchone()
+            conn.close()
+
+            if not row or not row[0] or len(row[0]) != 2048:
+                raise HTTPException(status_code=404, detail=f"Valid vector_blob not found for {column}={value}")
+
+            query_vector = np.frombuffer(row[0], dtype=np.float32).copy()
+            if query_vector.shape != (512,):
+                raise HTTPException(status_code=400, detail="Malformed vector shape")
+            norm = np.linalg.norm(query_vector)
+            if norm == 0 or np.isnan(norm):
+                raise HTTPException(status_code=400, detail="Invalid vector norm")
+            query_vector = torch.tensor(query_vector).unsqueeze(0)
+
+        else:
+            raise HTTPException(status_code=400, detail="Invalid input combination")
+
+        # --- Search ---
         query_vector = query_vector / query_vector.norm(dim=-1, keepdim=True)
         query_np = query_vector.cpu().numpy().flatten()
         print("✅ Query vector created")
 
-        index = faiss_indexes.get(db)
-        if not index:
-            raise HTTPException(status_code=500, detail="FAISS index not found")
-
         print("🔍 Performing FAISS search")
         print(f"FAISS index size: {index.ntotal}")
         start = time.time()
-        D, I = index.search(query_np.reshape(1, -1), top_k)
+        D, I = index.search(query_np.reshape(1, -1), top_k + 1)
         elapsed_ms = round((time.time() - start) * 1000)
         print(f"FAISS search took {elapsed_ms}ms")
         print(f"🎯 Search results: {I[0]}")
 
-        results = [
-            {"resource": int(resource_ids[i]), "score": float(D[0][j])}
-            for j, i in enumerate(I[0])
-        ]
+        results = []
+        for i, score in zip(I[0], D[0]):
+            if i < 0:
+                continue
+            candidate_id = int(resource_ids[i])
+
+            # Skip self-match for resource/ref queries
+            if (resource is not None and candidate_id == resource) or \
+               (ref is not None and candidate_id == ref):
+                continue
+
+            results.append({
+                "resource": candidate_id,
+                "score": float(score)
+            })
+
+            if len(results) == top_k:
+                break
 
         print("Returning", len(results), "results")
         return JSONResponse(content=results)
@@ -228,67 +272,6 @@ async def search(
         print(f"❌ Exception in /search: {e}")
         raise HTTPException(status_code=500, detail=f"Search error: {e}")
 
-
-
-@app.post("/similar")
-async def find_similar(
-    db: str = Form(...),
-    resource: int = Form(...),
-    top_k: int = Form(5)
-):
-    vectors, resource_ids = load_vectors_for_db(db)
-
-    if len(resource_ids) == 0:
-        return JSONResponse(content=[])
-
-    try:
-        # Connect to DB to fetch the binary vector
-        conn = mysql.connector.connect(**DB_CONFIG, database=db)
-        cursor = conn.cursor()
-        cursor.execute("SELECT vector_blob FROM resource_clip_vector WHERE resource = %s AND is_text=0", (resource,))
-        row = cursor.fetchone()
-        conn.close()
-
-        if not row or not row[0] or len(row[0]) != 2048:
-            raise HTTPException(status_code=404, detail=f"Valid vector_blob not found for resource {resource}")
-
-        # Convert from binary to numpy vector
-        query_vector = np.frombuffer(row[0], dtype=np.float32).copy()
-
-        if query_vector.shape != (512,):
-            raise HTTPException(status_code=400, detail=f"Malformed vector shape: {query_vector.shape}")
-
-        norm = np.linalg.norm(query_vector)
-        if norm == 0 or np.isnan(norm):
-            raise HTTPException(status_code=400, detail="Invalid vector norm")
-
-        query_vector /= norm
-
-        index = faiss_indexes.get(db)
-        if not index:
-            raise HTTPException(status_code=500, detail="FAISS index not found")
-
-        # Perform similarity search
-        D, I = index.search(query_vector.reshape(1, -1), top_k + 1)  # +1 to skip self
-        top_indices = I[0]
-        sims = D[0]
-
-        results = []
-        for i, score in zip(top_indices, sims):
-            candidate_id = int(resource_ids[i])
-            if candidate_id == resource:
-                continue  # Skip the same resource
-            results.append({
-                "resource": candidate_id,
-                "score": float(score)
-            })
-            if len(results) == top_k:
-                break
-
-        return JSONResponse(content=results)
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Similarity error: {e}")
 
 
 

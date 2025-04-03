@@ -1,7 +1,7 @@
 <?php
 
 $clip_search_cutoff=0.25;
-$clip_similar_cutoff=0.7;
+$clip_similar_cutoff=0.5;
 $clip_duplicate_cutoff=0.9;
 $clip_results_limit_search=120;
 $clip_results_limit_similar=120;

@@ -1,13 +1,16 @@
 <?php
 
 $lang["clip-natural-language-search"]="AI visual search";
+$lang["clip-natural-language-search-help"]="Enter a natural language description of the image e.g. 'A red sports car'.";
 $lang["clip-configuration"]="CLIP configuration";
 $lang["clip-ai-smart-search"]="AI Smart Search";
 $lang["clip-visually-similar-images"]="Visually similar images";
 $lang["clip-duplicate-images"]="Duplicate images";
+$lang["clip-duplicate-images-all"]="View all images with duplicates";
+$lang["clip-search-upload-image"]="Search by providing an image";
 
 $lang["clip_search_cutoff"]="Natural Language Search vector distance cutoff (suggested 25%; increase to focus search, decrease to expand search)";
-$lang["clip_similar_cutoff"]="Similar Images vector distance cutoff (suggested 70%; increase to focus search, decrease to expand search)";
+$lang["clip_similar_cutoff"]="Similar Images vector distance cutoff (suggested 50%; increase to focus search, decrease to expand search)";
 $lang["clip_duplicate_cutoff"]="Duplicate Images vector distance cutoff (suggested 90%; increase to focus search, decrease to expand search)";
 
 $lang["clip_results_limit_search"]="Number of search results to display";
