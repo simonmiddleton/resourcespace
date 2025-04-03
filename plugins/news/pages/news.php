@@ -100,10 +100,19 @@ include __DIR__."/../../../include/header.php";
 </div>
 </form> 
 
-<div class="BasicsBox" id ="NewsDisplayBox"> 
+<div class="BasicsBox" id="NewsDisplayBox"> 
     <h1><?php echo escape($newsdisplay[0]["title"]);?></h1>
     <hr>
-    <div id="NewsBodyDisplay" ><p><?php echo nl2br(escape($newsdisplay[0]["body"])); ?></p> </div>
+    <div id="NewsBodyDisplay">
+        <p>
+            <?php
+            // If the news item contains HTML we don't need to use nl2br
+            echo $newsdisplay[0]["body"] !== strip_tags($newsdisplay[0]["body"])
+                ? strip_tags_and_attributes($newsdisplay[0]["body"])
+                : nl2br(escape($newsdisplay[0]["body"]));
+            ?>
+        </p>
+    </div>
     <h2><?php echo $newsdisplay[0]["date"];?></h2>
 </div>
 
