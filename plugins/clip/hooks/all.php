@@ -28,12 +28,24 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
         if (!is_numeric($resource)) {return false;}
         $min_score = $clip_similar_cutoff; 
         }
+    elseif (substr($search, 0, 15) == '!clipduplicates') 
+        {
+        $function="duplicates";
+        $min_score = $clip_duplicate_cutoff;
+        }
     elseif (substr($search, 0, 14) == '!clipduplicate') 
         {
         $function="similar";
         $resource=substr($search,14);
         if (!is_numeric($resource)) {return false;}
         $min_score = $clip_duplicate_cutoff;
+
+        if (checkperm("a"))
+            {
+            // Admin only - show resources in all states
+            $sql_filter->parameters=[];
+            $sql_filter->sql="true";
+            }
         }
     else
         {
@@ -68,6 +80,13 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
             'db' => $mysql_db,
             'resource' => $resource,
             'top_k' => $clip_results_limit_similar
+        ]);
+    }
+    if ($function=="duplicates")
+    {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'db' => $mysql_db,
+            'threshold' => $clip_duplicate_cutoff
         ]);
     }
 
