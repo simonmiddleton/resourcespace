@@ -3458,7 +3458,6 @@ function collection_min_access($collection)
 
     if ($k != "") {
         # External access - check how this was shared. If internal share access and share is more open than the user's access return that
-        $params = ps_param_fill(array_column($result, "ref"), "i");
         $params[] = "s";
         $params[] = $k;
 
