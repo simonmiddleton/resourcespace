@@ -2217,7 +2217,7 @@ function format_display_field($value)
     $string = TidyList($string);
 
     if (isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE) {
-        $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes
+        $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes, no links
     } else {
         $string = escape($string);
     }

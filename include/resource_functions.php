@@ -950,7 +950,7 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                     }
 
                     if ($fields[$n]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE
-                        && $val !== strip_tags_and_attributes($val, array("a"), array("href","target"))) {
+                        && $val !== strip_tags_and_attributes($val, array("a"), array("href","target","rel"))) {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid"];
                         continue;
                     }

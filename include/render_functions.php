@@ -2180,7 +2180,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
       <?php
       } 
     # Define some Javascript for help actions (applies to all fields)
-    # Help actions for CKEditor fields are set in pages/edit_fields/8.php
+    # Help actions for TinyMCE fields are set in pages/edit_fields/8.php
      if (trim($field["help_text"]=="")) 
        {
         # No helptext; so no javascript for toggling
@@ -4415,7 +4415,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         }
 
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
-        # ckeditor that have not yet been edited.
+        # TinyMCE that have not yet been edited.
         if(
             ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value == strip_tags($value))
@@ -4425,7 +4425,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             }
         elseif($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value != strip_tags($value))
             {
-            $value = strip_tags_and_attributes($value, ['a'], ['href', 'target']);
+            $value = strip_tags_and_attributes($value, ['a'], ['href', 'target','rel']);
             }
 
         $modified_value = hook('display_field_modified_value', '', array($field));
