@@ -3038,6 +3038,10 @@ $owner_field_mappings = [];
 // The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder, $tempdir - these don't need to be added to the array
 // $valid_upload_paths = [];
 
+// Allow uploading remote files from these sources. Note: you can use just the base URL and, if needed, a partial path
+// too. Example: ['https://example.tld', 'https://example2.tld/pages/download.php']
+$valid_upload_remote_sources = [];
+
 // Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode
 $thumbs_display_archive_state = false;
 

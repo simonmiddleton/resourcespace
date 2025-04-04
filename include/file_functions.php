@@ -132,8 +132,17 @@ function temp_local_download_remote_file(string $url, string $key = "")
     $extension = $path_parts['extension'] ?? '';
     $filename .= ($extension !== '' ? ".{$extension}" : '');
 
-    if (strpos($filename, ".") === false && filter_var($url_original, FILTER_VALIDATE_URL)) {
-        // $filename not valid, try and get from HTTP header
+    // When the filename isn't valid, try and get from the HTTP header
+    $check_in_header = strpos($filename, ".") === false && filter_var($url_original, FILTER_VALIDATE_URL);
+    foreach ($GLOBALS['valid_upload_remote_sources'] as $valid_upload_remote_src) {
+        // Support dynamic remote URL that may otherwise be mistaken with a file (e.g. pages/download.php)
+        if (url_starts_with($valid_upload_remote_src, $url_original)) {
+            $check_in_header = true;
+            break;
+        }
+    }
+
+    if ($check_in_header) {
         $urlinfo = parse_url($url);
         if (!isset($urlinfo["scheme"]) || !in_array($urlinfo["scheme"], ["http","https"])) {
             return false;
