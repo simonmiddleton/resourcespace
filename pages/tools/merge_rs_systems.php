@@ -730,8 +730,7 @@ if ($import && isset($folder_path)) {
             }
 
             db_begin_transaction(TX_SAVEPOINT);
-            ps_query("INSERT INTO usergroup(name, request_mode) VALUES (?, '1')", ['s', $src_ug["name"]]);
-            $new_ug_ref = sql_insert_id();
+            $new_ug_ref = save_usergroup(0, array('name' => $src_ug["name"], 'request_mode' => 1));
             log_activity(null, LOG_CODE_CREATED, null, 'usergroup', null, $new_ug_ref);
             log_activity(null, LOG_CODE_CREATED, $src_ug["name"], 'usergroup', 'name', $new_ug_ref, null, '');
             log_activity(null, LOG_CODE_CREATED, '1', 'usergroup', 'request_mode', $new_ug_ref, null, '');

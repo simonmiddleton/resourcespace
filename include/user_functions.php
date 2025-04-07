@@ -2773,7 +2773,7 @@ function internal_share_access()
 }
 
 /**
- * Save or create usergroup
+ * Save changes to a usergroup or create usergroup
  *
  * @param  int              $ref    Group ref. Set to 0 to create a new group
  * @param  array            $groupoptions array of options to set for group in the form array("columnname" => $value)
@@ -3650,6 +3650,8 @@ function delete_usergroup(int $usergroup_ref): bool
 
     # Remove dash tiles related to deleted user group. Don't delete from dash_tile as they maybe in use elsewhere.
     ps_query("DELETE FROM usergroup_dash_tile WHERE usergroup = ?", ['i', $usergroup_ref]);
+
+    clear_query_cache('usergroup');
 
     return true;
 }

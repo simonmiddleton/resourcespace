@@ -13,7 +13,7 @@ function test_edit_filter_text_update($user, $group, $filtertext)
 {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    ps_query("UPDATE usergroup SET edit_filter=?, edit_filter_id=NULL WHERE ref=?", ["s",$filtertext,"i",$group]);
+    save_usergroup($group, array('edit_filter' => $filtertext, 'edit_filter_id' => 0));
     $userdata = get_user($user);
     setup_user($userdata);
     $userdata = [$userdata];
@@ -23,19 +23,23 @@ function test_edit_filter_id_update($user, $group, $filterid)
 {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?", ["i",$filterid,"i",$group]);
+    save_usergroup($group, array('edit_filter_id' => $filterid));
     $userdata = get_user($user);
     setup_user($userdata);
     $userdata = [$userdata];
 }
 // Create a new user in a new group so we can test edit access for resources
 $editor = new_user("editor");
-ps_query(
-    "INSERT INTO usergroup (name,permissions,edit_filter,derestrict_filter,edit_filter_id,derestrict_filter_id) 
-        SELECT 'testeditgroup',permissions,'','',NULL,NULL 
-        FROM usergroup WHERE ref='3';"
-);
-$testeditgroup = sql_insert_id();
+$superadmin_permissions = ps_value('SELECT permissions `value` FROM usergroup WHERE ref = ?;', array('i', 3), 's,g,c,a,t,h,hdt_ug,u,r,i,e-2,e-1,e0,e1,e2,e3,o,m,g,v,q,f*,j*,k,R,Ra,x,ex');
+$usergroup_values = array(
+    'name' => 'testeditgroup',
+    'permissions' => $superadmin_permissions,
+    'edit_filter' => '',
+    'derestrict_filter' => '',
+    'edit_filter_id' => 0,
+    'derestrict_filter_id' => 0
+    );
+$testeditgroup = save_usergroup(0, $usergroup_values);
 user_set_usergroup($editor, $testeditgroup);
 
 // create 5 new resources

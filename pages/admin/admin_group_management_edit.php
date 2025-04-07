@@ -102,6 +102,7 @@ if (getval("save", false) && enforcePostRequest(false)) {
     if (isset($logo_extension)) {
         ps_query("UPDATE usergroup SET group_specific_logo = ? WHERE ref = ?", array("s", $logo_extension, "i", $ref));
         log_activity(null, null, null, 'usergroup', 'group_specific_logo', $ref);
+        clear_query_cache('usergroup');
     }
 
     $groupoptions = array();
@@ -133,7 +134,6 @@ if (getval("save", false) && enforcePostRequest(false)) {
     }
 
     save_usergroup($ref, $groupoptions);
-    clear_query_cache('usergroup');
 
     hook("usergroup_edit_add_form_save", "", array($ref));
     if (!$error) {
