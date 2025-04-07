@@ -2800,6 +2800,7 @@ $facial_recognition_face_recognizer_models_location = '';
 
 // Metadata field ID which can mark a resource as being part of the training set.
 // Note: all facial recognition resource annotations will be used (i.e. you can't pick annotations).
+// This is important because tagging e.g. the side of a face or the back of a head may be useful for users but using those annotations to train the software will pollute your training set and make facial recognition ineffective. Set this to -1 to override and use all annotations
 $facial_recognition_mark_for_training_field = 0;
 //
 //
