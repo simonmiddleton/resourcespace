@@ -172,7 +172,7 @@ function set_config_option($user_id, $param_name, $param_value)
  *
  * @param  int     $usergroup_id   User group id
  * @param  string  $param_name     Config parameter name
- * @param  string  $param_value    Config paramter value
+ * @param  string  $param_value    Config parameter value
  */
 function set_usergroup_config_option(int $usergroup_id, string $param_name, ?string $param_value) : bool
 {
@@ -193,7 +193,6 @@ function set_usergroup_config_option(int $usergroup_id, string $param_name, ?str
         }
 
         $params[] = 's'; $params[] = $param_value;
-        $user_query = 'usergroup = ?';
         $params[] = 'i'; $params[] = $usergroup_id;
 
         $query = "UPDATE user_preferences SET `value` = ? WHERE usergroup = ? AND parameter = ?";
