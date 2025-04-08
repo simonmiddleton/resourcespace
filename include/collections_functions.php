@@ -2574,15 +2574,12 @@ function allow_multi_edit($collection, $collectionid = 0)
         }
         if (is_array($collection)) {
             $resultcount = count($collection);
-            $all_resource_refs = array_column($collection, "ref");
         }
         $editcount = 0;
-        $editable_resource_refs = array();
         # Editable_only=true (so returns editable resources only)
         $editresults =  do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true, true);
         if (is_array($editresults)) {
             $editcount = count($editresults);
-            $editable_resource_refs = array_column($editresults, "ref");
         }
 
         if ($resultcount == $editcount) {
@@ -2590,6 +2587,8 @@ function allow_multi_edit($collection, $collectionid = 0)
         }
 
         # Counts differ meaning there are non-editable resources
+        $all_resource_refs = array_column($collection, "ref");
+        $editable_resource_refs = array_column($editresults, "ref");
         $non_editable_resource_refs = array_diff($all_resource_refs, $editable_resource_refs);
 
         # Is grant edit present for all non-editables?
