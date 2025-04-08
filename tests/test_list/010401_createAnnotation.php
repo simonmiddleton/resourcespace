@@ -34,7 +34,7 @@ $get_annotation_text = static fn (int $id): string => ps_value(
 );
 
 // Simple use
-$annotation_ref = createAnnotation($annotorious_annotation);
+$annotation_ref = createAnnotation($annotorious_annotation, []);
 if ($annotation_ref === false) {
     echo 'Unable to create annotation - ';
     return false;
@@ -43,7 +43,7 @@ if ($annotation_ref === false) {
 // Create annotation with tags
 $annotation = $annotorious_annotation;
 $annotation['tags'] = [$uk];
-$annotation_ref = createAnnotation($annotation);
+$annotation_ref = createAnnotation($annotation, []);
 $resource_field_data = array_column(get_resource_field_data($annotation['resource']), 'value', 'ref');
 if (!($annotation_ref > 0 && $resource_field_data[$annotation['resource_type_field']] === $uk['name'])) {
     echo 'Annotation w/ tags - ';
@@ -52,7 +52,7 @@ if (!($annotation_ref > 0 && $resource_field_data[$annotation['resource_type_fie
 
 // Create text annotation
 $annotation = array_merge($annotorious_annotation, ['resource_type_field' => 0, 'text' => 'Lorem ipsum']);
-$annotation_ref = createAnnotation($annotation);
+$annotation_ref = createAnnotation($annotation, []);
 if ($annotation_ref > 0 && $get_annotation_text($annotation_ref) !== $annotation['text']) {
     echo 'Text annotation - ';
     return false;
@@ -67,7 +67,7 @@ $annotation = array_merge(
         'tags' => [$uk],
     ]
 );
-$annotation_ref = createAnnotation($annotation);
+$annotation_ref = createAnnotation($annotation, []);
 $resource_field_data = array_column(get_resource_field_data($annotation['resource']), 'value', 'ref');
 if (
     $annotation_ref > 0

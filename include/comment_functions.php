@@ -29,7 +29,8 @@ function comments_submit()
             0
         ));
 
-        if ($linked_annotation !== [] && deleteAnnotation($linked_annotation)) {
+        // $request_ctx originates from pages/ajax/annotations.php
+        if ($linked_annotation !== [] && deleteAnnotation($linked_annotation, $GLOBALS['request_ctx'] ?? [])) {
             $comment_update_extra_cols = ', annotation = null';
         } else {
             $comment_update_extra_cols = '';

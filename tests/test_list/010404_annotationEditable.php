@@ -10,16 +10,17 @@ test_log("Run ID - {$run_id}");
 
 $cache_globals = [
     'userpermissions' => $userpermissions,
-    'annotate_fields' => $annotate_fields ?? [],
     'annotate_text_adds_comment' => $annotate_text_adds_comment,
+    'annotate_public_view' => $annotate_public_view,
 ];
 $reset_globals = static function (array $cache) {
-    $GLOBALS['userpermissions'] = $cache['userpermissions'];
-    $GLOBALS['annotate_fields'] = $cache['annotate_fields'];
-    $GLOBALS['annotate_text_adds_comment'] = $cache['annotate_text_adds_comment'];
+    foreach ($cache as $name => $value) {
+        $GLOBALS[$name] = $value;
+    }
+    unset($_POST['k']);
 };
 
-$fake_annotation = static function (array $with) {
+$fake_annotation = static function (array $with): array {
     return array_merge(
         [
             'resource' => create_resource(1, 0),
@@ -33,15 +34,23 @@ $fake_annotation = static function (array $with) {
         $with
     );
 };
-$without_permission = static fn (array $codes) => array_values(array_diff($userpermissions, $codes));
+$without_permission = static fn (array $codes): array => array_values(array_diff($userpermissions, $codes));
+$external_share_uc_setup = static function (array $uc_input) use ($userref) {
+    $_POST['k'] = generate_resource_access_key(
+        $uc_input['resource'],
+        $userref,
+        RESOURCE_ACCESS_FULL,
+        '',
+        'test'
+    ) ?: '';
+    $GLOBALS['annotate_public_view'] = true;
+};
 
 $rtf_dkl = create_resource_type_field(
     sprintf('Test #%s-%s DKL', test_get_file_id(__FILE__), $run_id),
     0,
     FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
 );
-
-$annotate_fields = [$rtf_dkl];
 // --- End of Set up
 
 $use_cases = [
@@ -91,6 +100,18 @@ $use_cases = [
         'name' => 'Text annotation not allowed if confid disabled (any user)',
         'setup' => static fn() => $GLOBALS['annotate_text_adds_comment'] = false,
         'input' => $fake_annotation(['resource_type_field' => 0]),
+        'expected' => false,
+    ],
+    [
+        'name' => 'Users should not create text annotation in an external share context',
+        'setup' => $external_share_uc_setup,
+        'input' => $fake_annotation(['resource_type_field' => 0]),
+        'expected' => false,
+    ],
+    [
+        'name' => 'Users should not create an annotation in an external share context',
+        'setup' => $external_share_uc_setup,
+        'input' => $fake_annotation(['resource_type_field' => $rtf_dkl]),
         'expected' => false,
     ],
     // Edit - Own records
@@ -154,6 +175,12 @@ $use_cases = [
         'expected' => false,
     ],
     [
+        'name' => "Users shouldn't edit other annotations (external share context)",
+        'setup' => $external_share_uc_setup,
+        'input' => $fake_annotation(['resource_type_field' => $rtf_dkl, 'user' => 300]),
+        'expected' => false,
+    ],
+    [
         'name' => "Non-admin shouldn't edit another user annotation (field bound)",
         'setup' => static fn() => $GLOBALS['userpermissions'] = $without_permission(['a']),
         'input' => $fake_annotation(['resource_type_field' => $rtf_dkl, 'user' => 300]),
@@ -165,6 +192,12 @@ $use_cases = [
             $GLOBALS['userpermissions'] = $without_permission(['a', 'o']);
             $GLOBALS['annotate_text_adds_comment'] = true;
         },
+        'input' => $fake_annotation(['resource_type_field' => 0, 'user' => 300]),
+        'expected' => false,
+    ],
+    [
+        'name' => "Users shouldn't edit another user text annotation (external share context)",
+        'setup' => $external_share_uc_setup,
         'input' => $fake_annotation(['resource_type_field' => 0, 'user' => 300]),
         'expected' => false,
     ],
@@ -190,10 +223,10 @@ $use_cases = [
 foreach ($use_cases as $uc) {
     // Set up the use case environment
     if (isset($uc['setup'])) {
-        $uc['setup']();
+        $uc['setup']($uc['input']);
     }
 
-    $result = annotationEditable($uc['input']);
+    $result = annotationEditable($uc['input'], array_intersect_key($_POST, ['k' => '']));
     if ($uc['expected'] !== $result) {
         echo "Use case: {$uc['name']} - ";
         return false;

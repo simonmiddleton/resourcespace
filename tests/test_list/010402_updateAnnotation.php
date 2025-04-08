@@ -33,20 +33,20 @@ $annotorious_annotation = [
         ]
     ],
 ];
-$annotation_ref = createAnnotation($annotorious_annotation);
+$annotation_ref = createAnnotation($annotorious_annotation, []);
 
 $annotation = $annotorious_annotation;
 $annotation['tags'] = [$node_optionB];
 
 // Update tags but missing its ID
-if (updateAnnotation($annotation) !== false) {
+if (updateAnnotation($annotation, []) !== false) {
     echo 'updateAnnotation (no ref) - ';
     return false;
 }
 
 // Update tags for an existing annotation
 $annotation['ref'] = $annotation_ref;
-if (updateAnnotation($annotation) === false) {
+if (updateAnnotation($annotation, []) === false) {
     echo 'updateAnnotation - ';
     return false;
 }
@@ -60,9 +60,9 @@ $annotorious_text_annotation = array_merge(
         'text' => 'Init value',
     ]
 );
-$annotorious_text_annotation['ref'] = createAnnotation($annotorious_text_annotation);
+$annotorious_text_annotation['ref'] = createAnnotation($annotorious_text_annotation, []);
 $annotorious_text_annotation['text'] = 'Updated value';
-if (updateAnnotation($annotorious_text_annotation)) {
+if (updateAnnotation($annotorious_text_annotation, [])) {
     echo "Use case: Admins (can manage content) shoudn't update text annotations - ";
     return false;
 }

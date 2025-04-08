@@ -9,7 +9,9 @@ function get_annotate_fields(): array
     return array_unique(
         array_merge(
             // Zero is a pseudo-RTF used for comment (text) annotations (i.e not field bound)
-            $GLOBALS['annotate_text_adds_comment'] ? [0] : [],
+            $GLOBALS['annotate_text_adds_comment'] && (!$GLOBALS['annotate_public_view'] || $GLOBALS['k'] === '')
+                ? [0]
+                : [],
             array_intersect(
                 array_filter($GLOBALS['annotate_fields'], metadata_field_view_access(...)),
                 array_column(
@@ -166,10 +168,11 @@ function getResourceAnnotations($resource, $page = 0)
 *
 * @param integer $resource Resource ID
 * @param integer $page     Page number of a document
+* @param array{k?: string} $ctx Environment context (e.g. external share)
 *
 * @return array
 */
-function getAnnotoriousResourceAnnotations($resource, $page = 0)
+function getAnnotoriousResourceAnnotations($resource, $page = 0, array $ctx)
 {
     global $baseurl, $annotate_text_adds_comment;
 
@@ -198,7 +201,7 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
                         )
                     )
                 ),
-                'editable' => annotationEditable($annotation),
+                'editable' => annotationEditable($annotation, $ctx),
 
                 // Custom ResourceSpace properties for Annotation object
                 'ref'                 => (int) $annotation['ref'],
@@ -220,11 +223,17 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
  * @uses checkPermission_anonymoususer()
  *
  * @param array $annotation
+ * @param array{k?: string} $ctx Environment context (e.g. external share)
  */
-function annotationEditable(array $annotation): bool
+function annotationEditable(array $annotation, array $ctx): bool
 {
     debug(sprintf('[annotations][fct=annotationEditable] $annotation = %s', json_encode($annotation)));
-    global $userref, $annotate_text_adds_comment;
+    global $userref, $annotate_text_adds_comment, $annotate_public_view;
+
+    // Read-only annotations in an external share context (when allowed to view publicly)
+    if ($annotate_public_view && ($ctx['k'] ?? '') !== '') {
+        return false;
+    }
 
     $add_operation = !isset($annotation['user']);
 
@@ -288,12 +297,13 @@ function getAnnotationTags(array $annotation)
 * @uses db_end_transaction()
 *
 * @param array $annotation Annotation array as returned by getAnnotation()
+* @param array{k?: string} $ctx Environment context (e.g. external share)
 *
 * @return boolean
 */
-function deleteAnnotation(array $annotation)
+function deleteAnnotation(array $annotation, array $ctx)
 {
-    if (!annotationEditable($annotation)) {
+    if (!annotationEditable($annotation, $ctx)) {
         return false;
     }
 
@@ -325,15 +335,16 @@ function deleteAnnotation(array $annotation)
 * NOTE: Annotorious annotation shape is an array but at the moment they use only the first shape found
 *
 * @param array $annotation
+* @param array{k?: string} $ctx Environment context (e.g. external share)
 *
 * @return boolean|integer Returns false on failure OR the ref of the newly created annotation
 */
-function createAnnotation(array $annotation)
+function createAnnotation(array $annotation, array $ctx)
 {
     debug(sprintf('[annotations][fct=createAnnotation] Param $annotation = %s', json_encode($annotation)));
     global $userref;
 
-    if (!annotationEditable($annotation)) {
+    if (!annotationEditable($annotation, $ctx)) {
         debug('[annotations][fct=createAnnotation][warn] annotation not editable');
         return false;
     }
@@ -407,11 +418,12 @@ function createAnnotation(array $annotation)
 * @uses db_end_transaction()
 *
 * @param array $annotation
+* @param array{k?: string} $ctx Environment context (e.g. external share)
 */
-function updateAnnotation(array $annotation): bool
+function updateAnnotation(array $annotation, array $ctx): bool
 {
     debug(sprintf('[annotations][fct=updateAnnotation] Param $annotation = %s', json_encode($annotation)));
-    if (!isset($annotation['ref']) || !annotationEditable($annotation)) {
+    if (!isset($annotation['ref']) || !annotationEditable($annotation, $ctx)) {
         return false;
     }
 

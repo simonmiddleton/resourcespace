@@ -7231,7 +7231,7 @@ function render_resource_view_image(array $resource, array $context)
                                 {
                                 anno.addPlugin('RSTagging',
                                     {
-                                    annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
+                                    annotations_endpoint: '<?php echo generateURL("{$GLOBALS['baseurl']}/pages/ajax/annotations.php", ['k' => $GLOBALS['k']]); ?>',
                                     nodes_endpoint      : '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/get_nodes.php',
                                     resource            : <?php echo (int) $resource["ref"]; ?>,
                                     read_only: <?php

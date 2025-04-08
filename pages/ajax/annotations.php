@@ -1,7 +1,6 @@
 <?php
 
 include __DIR__ . '/../../include/boot.php';
-include RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
 include_once RESOURCESPACE_BASE_PATH . '/include/node_functions.php';
 include_once RESOURCESPACE_BASE_PATH . '/include/annotation_functions.php';
 include_once RESOURCESPACE_BASE_PATH . '/include/comment_functions.php';
@@ -17,10 +16,17 @@ if (!$annotate_enabled) {
     exit();
 }
 
+$resource = getval('resource', 0, false, is_positive_int_loose(...));
+
+// Authentication (with external share access support)
+$k = getval('k', '');
+if ($k === '' || !check_access_key($resource, $k)) {
+    include RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
+}
+
 $return   = array();
 
 $action   = getval('action', '');
-$resource = getval('resource', 0, true);
 $page     = getval('page', 0, true);
 
 // Get annotation data if an ID has been provided
@@ -33,8 +39,10 @@ if (0 < $annotation_id) {
     $annotation = getAnnotation($annotation_id);
 }
 
+$request_ctx = ['k' => $k];
+
 if ('get_resource_annotations' == $action) {
-    $return['data'] = getAnnotoriousResourceAnnotations($resource, $page);
+    $return['data'] = getAnnotoriousResourceAnnotations($resource, $page, $request_ctx);
 }
 
 // Create new annotation
@@ -52,7 +60,7 @@ if ('create' == $action && 0 < $resource) {
         exit();
     }
 
-    $annotation_id = createAnnotation($annotation);
+    $annotation_id = createAnnotation($annotation, $request_ctx);
     debug('[annotations][annotations.php] newly created annotation_id = ' . json_encode($annotation_id));
 
     if (false === $annotation_id) {
@@ -81,14 +89,14 @@ if ('update' == $action && 0 < $resource) {
         exit();
     }
 
-    $return['data'] = updateAnnotation($annotation);
+    $return['data'] = updateAnnotation($annotation, $request_ctx);
 }
 
 // Delete annotation
 if ('delete' == $action && 0 < $annotation_id && 0 !== count($annotation)) {
     $delete_linked_comment = false;
-    cast_echo_to_string(static function () use ($annotation, &$delete_linked_comment) {
-        if (!annotationEditable($annotation)) {
+    cast_echo_to_string(static function () use ($annotation, &$delete_linked_comment, $request_ctx) {
+        if (!annotationEditable($annotation, $request_ctx)) {
             return;
         }
 
@@ -108,7 +116,7 @@ if ('delete' == $action && 0 < $annotation_id && 0 !== count($annotation)) {
         return;
     });
 
-    $return['data'] = $delete_linked_comment ?: deleteAnnotation($annotation);
+    $return['data'] = $delete_linked_comment ?: deleteAnnotation($annotation, $request_ctx);
 }
 
 // Get available fields (allowed) for annotations

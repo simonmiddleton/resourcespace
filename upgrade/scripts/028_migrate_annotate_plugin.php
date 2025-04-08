@@ -1,6 +1,7 @@
 <?php
 
 include dirname(__FILE__, 3) . '/include/boot.php'; #todo: remove once done dev/test
+require_once dirname(__FILE__, 3) . '/include/annotation_functions.php';
 command_line_only(); #todo: remove once done dev/test
 
 if (!is_plugin_activated('annotate')) {
@@ -8,8 +9,8 @@ if (!is_plugin_activated('annotate')) {
     return;
 }
 
-$annotate_plugin_config = get_plugin_config('annotate');
-if ($annotate_plugin_config === null) {
+$plugin_config = get_plugin_config('annotate');
+if ($plugin_config === null) {
     set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Annotate plugin was not configured. Skipping...');
     return;
 }
@@ -19,24 +20,31 @@ set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin settin
 $set_system_wide_config = ['annotate_enabled' => 1];
 
 if (
-    isset($annotate_plugin_config['annotate_resource_type_field'])
-    && $annotate_plugin_config['annotate_resource_type_field'] > 0
-    && !in_array($annotate_plugin_config['annotate_resource_type_field'], $annotate_fields)
+    isset($plugin_config['annotate_resource_type_field'])
+    && $plugin_config['annotate_resource_type_field'] > 0
+    && !in_array($plugin_config['annotate_resource_type_field'], $annotate_fields)
+    && in_array(
+        $plugin_config['annotate_resource_type_field'],
+        array_column(get_resource_type_fields('', 'ref', 'asc', '', get_valid_annotate_field_types(), false), 'ref')
+    )
 ) {
-    $annotate_fields[] = $annotate_plugin_config['annotate_resource_type_field'];
+    $annotate_fields[] = $plugin_config['annotate_resource_type_field'];
     $set_system_wide_config['annotate_fields'] = implode(',', $annotate_fields);
+}
+
+if (isset($plugin_config['annotate_public_view'])) {
+    $set_system_wide_config['annotate_public_view'] = (int) $plugin_config['annotate_public_view'];
 }
 
 /*
 todo: migrate the following settings
-WIP - $annotate_public_view - todo: add base logic first for it
 - $annotate_exclude_restypes
 - $annotate_show_author
 - $annotate_font
 
 
 */
-print_r($annotate_plugin_config);
+print_r($plugin_config);
 
 $sysadmin_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
 foreach ($set_system_wide_config as $name => $value) {
