@@ -43,3 +43,4 @@ $lang["offline_archive_resource_restore"]='Restaurar recursos';
 $lang["offline_archive_archivefield"]='Por favor, seleccione el campo de metadatos que contendrá el código de referencia de archivo';
 $lang["plugin-offline_archive-title"]='Archivo Offline';
 $lang["plugin-offline_archive-desc"]='Permite la reubicación de archivos archivados a una ubicación fuera de línea';
+$lang["offline_archive_administer_archive-tooltip"] = 'Reubicar archivos archivados a una ubicación fuera de línea';

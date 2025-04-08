@@ -184,6 +184,47 @@ global $css_reload_key,$context;
     jQuery('.video-js').bind('contextmenu', function() {
         return false;
     });
+
+    videojs.registerPlugin('loopToggle', function() {
+        let player = this;
+        let Button = videojs.getComponent('Button');
+
+        let LoopButton = videojs.extend(Button, {
+            constructor: function() {
+                Button.apply(this, arguments);
+                this.controlText('Loop');
+                this.addClass('vjs-loop-button');
+                this.updateLoopState();
+            },
+            handleClick: function() {
+                let videoEl = player.el().querySelector('video');
+                videoEl.loop = !videoEl.loop;
+                this.updateLoopState();
+            },
+            updateLoopState: function() {
+                let videoEl = player.el().querySelector('video');
+                if (videoEl.loop) {
+                    this.addClass('vjs-loop-active');
+                } else {
+                    this.removeClass('vjs-loop-active');
+                }
+            }
+        });
+
+        videojs.registerComponent('LoopButton', LoopButton);
+
+        player.ready(function() {
+            let controlBar = player.getChild('controlBar');
+            controlBar.addChild('LoopButton', {}, controlBar.children().length - 1);
+        });
+    });
+
+    // Initialize Video.js with the plugin
+    videojs('<?php echo escape($context); ?>_<?php echo escape((string) $display); ?>_introvideo<?php echo escape($ref); ?>', {
+        plugins: {
+            loopToggle: {}
+        }
+    });
 </script>
 
 <!-- END VIDEOJS -->

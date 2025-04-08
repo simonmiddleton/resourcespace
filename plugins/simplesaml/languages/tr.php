@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname sertifikası %expiretime t
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname sertifikası %expiretime tarihinde süresi doldu';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname sertifikası %expiretime tarihinde sona eriyor';
 $lang["simplesaml_check_idp_cert_expiry"] = 'IdP sertifika süresinin dolup dolmadığını kontrol et?';
+
+$lang["simplesaml_use_www_label"] = '"www" rotası için SP meta verisi isteklerine izin verilsin mi? (false olarak değiştirmek, IdP\'nin SP meta verisini yeniden değiştirmesini gerektirecektir)';
+$lang["simplesaml_use_www_error"] = '[Uyarı] Eklenti, eski "www" yollarını kullanıyor. Eğer bu yeni bir kurulumsa, hemen değiştirin! Aksi takdirde, SP meta verilerini güncelleyebilmeleri için IdP yöneticisi ile koordine olun.';

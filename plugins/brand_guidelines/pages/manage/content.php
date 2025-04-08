@@ -305,6 +305,21 @@ tinymce.init({
     plugins: 'lists, link',
     toolbar: 'h2 h3 bold italic underline strikethrough removeformat | bullist numlist link | outdent indent',
     menubar: '',
+    <?php
+    if (isset($user_pref_appearance)) {
+        if ($user_pref_appearance == "dark") {
+            ?>
+            skin: "oxide-dark",
+            content_css: "dark",
+            <?php
+        } elseif ($user_pref_appearance == "device") {
+            ?>
+            skin: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oxide-dark" : "oxide"),
+            content_css: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default"),
+            <?php
+        }
+    }
+    ?>
     setup: (editor) => {
         editor.on('blur', (e) => tinymce.triggerSave());
     },

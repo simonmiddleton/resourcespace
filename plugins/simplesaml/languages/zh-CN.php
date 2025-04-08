@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname 证书将于 %expiretime �
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname 证书于 %expiretime 过期';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname 证书将在 %expiretime 过期';
 $lang["simplesaml_check_idp_cert_expiry"] = '检查 IdP 证书到期？';
+
+$lang["simplesaml_use_www_label"] = '允许“www”路由的SP元数据请求吗？（更改为false将要求IdP重新交换SP元数据）';
+$lang["simplesaml_use_www_error"] = '[警告] 插件正在使用旧版 "www" 路由。如果这是一个全新的设置，请立即更改！否则，请与 IdP 管理员协调，以便他们可以相应地更新 SP 元数据。';

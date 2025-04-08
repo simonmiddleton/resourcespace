@@ -16,3 +16,5 @@ $lang["openai_gpt_processing_resource"]='منبع [resource]';
 $lang["openai_gpt_processing_field"]='تولید ابرداده هوش مصنوعی برای فیلد \'[field]\'';
 $lang["property-gpt_source"]='منبع GPT';
 $lang["property-openai_gpt_prompt"]='GPT Prompt';
+$lang["openai_gpt_language"] = 'زبان خروجی';
+$lang["openai_gpt_language_user"] = 'زبان کاربر فعلی';

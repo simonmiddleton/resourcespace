@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Licensbrug medier';
 $lang["license_manager_access"]='Administrer licensdata (hvor det ikke allerede er aktiveret via tilladelsen "Kan få adgang til Systemopsætningsområdet")';
 $lang["plugin-licensemanager-title"]='Licensadministrator';
 $lang["plugin-licensemanager-desc"]='Tilføjer muligheden for at administrere ressource-licensering';
+$lang["managelicenses-tooltip"] = 'Opret og administrer licenser for ressourcer';

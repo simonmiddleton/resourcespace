@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'شهادة IdP %idpname تنتهي صل
 $lang["simplesaml_idp_cert_expired"] = 'انتهت صلاحية شهادة IdP %idpname في %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'شهادة IdP %idpname تنتهي صلاحيتها في %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'التحقق من انتهاء صلاحية شهادة IdP؟';
+
+$lang["simplesaml_use_www_label"] = 'هل تسمح بطلبات بيانات التعريف الخاصة بـ SP لمسار "www"؟ (التغيير إلى "خطأ" سيتطلب من IdP إعادة تبادل بيانات تعريف SP)';
+$lang["simplesaml_use_www_error"] = '[تحذير] الإضافة تستخدم مسارات "www" القديمة. إذا كانت هذه إعدادًا جديدًا، قم بتغييرها الآن! خلاف ذلك، تنسيق مع مسؤول IdP حتى يتمكنوا من تحديث بيانات SP الوصفية وفقًا لذلك.';

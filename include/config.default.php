@@ -188,9 +188,10 @@ $header_link = true;
 $header_include_username = false;
 
 // Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
-
 $linkedheaderimgsrc = "";
-// END SLIM HEADER
+
+// Custom dark header image if displaying in dark mode
+$linkedheaderimgsrc_dark = "";
 
 // Change the Header Logo link to another address by uncommenting and setting the variable below
 // $header_link_url=http://my-alternative-header-link
@@ -802,7 +803,7 @@ $contact_sheet_preview_size = "500x500";
 // helvetica,times,courier (standard) and dejavusanscondensed for more Unicode support (but embedding/subsetting makes it slower).
 // There are also several other fonts included in the tcpdf lib (but not ResourceSpace), which provide unicode support
 // To embed more elaborate fonts, acquire the files from the TCPDF distribution or create your own using TCPDF utilities, and install them in the lib/html2pdf/vendor/tecnickcom/tcpdf/fonts folder.
-// If you encounter issues with Chinese characters, use "cid0cs" and make sure GhostScript has ArialUnicodeMS font (on Windows server, this should be there already)
+// If you encounter issues with special characters, use "dajavusans" and make sure GhostScript has ArialUnicodeMS font (on Windows server, this should be there already)
 $contact_sheet_font = "helvetica";
 // Set font sizes for contactsheet
 $titlefontsize     = 20; // Contact Sheet Title
@@ -2546,6 +2547,9 @@ $user_pref_daily_digest_mark_read = true;
 // Accompanying user preference option
 $user_pref_inactive_digest = false;
 
+// User preference - UI appearance, light, dark or device default. 
+$user_pref_appearance = "light";
+
 /*
 Resource types that cannot upload files. They are only being used to store information. Use resource type ID as values for this array.
 By default the preview will default to "No preview" icon. In order to get a resource type specific one, make sure you add it to gfx/no_preview/resource_type/
@@ -2796,6 +2800,7 @@ $facial_recognition_face_recognizer_models_location = '';
 
 // Metadata field ID which can mark a resource as being part of the training set.
 // Note: all facial recognition resource annotations will be used (i.e. you can't pick annotations).
+// This is important because tagging e.g. the side of a face or the back of a head may be useful for users but using those annotations to train the software will pollute your training set and make facial recognition ineffective. Set this to -1 to override and use all annotations
 $facial_recognition_mark_for_training_field = 0;
 //
 //
@@ -3033,6 +3038,10 @@ $owner_field_mappings = [];
 // Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
 // The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder, $tempdir - these don't need to be added to the array
 // $valid_upload_paths = [];
+
+// Allow uploading remote files from these sources. Note: you can use just the base URL and, if needed, a partial path
+// too. Example: ['https://example.tld', 'https://example2.tld/pages/download.php']
+$valid_upload_remote_sources = [];
 
 // Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode
 $thumbs_display_archive_state = false;

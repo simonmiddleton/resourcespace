@@ -12,3 +12,4 @@ $lang["news_body"]='Cynnwys corff';
 $lang["news_nonewmessages"]='Dim negeseuon newydd';
 $lang["title"]='Newyddion Diweddar...';
 $lang["title-too-long"]='Mae\'r maes teitl yn hirach na\'r 50 cymeriad a ganiateir';
+$lang["news_manage-tooltip"] = 'Ychwanegu, golygu neu ddileu eitemau newyddion';

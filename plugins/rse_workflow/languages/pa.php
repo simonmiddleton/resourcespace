@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"]='ਬੰਦ ਕਰੋ';
 $lang["rse_workflow_more_notes_title"]='ਨੋਟਸ:';
 $lang["rse_workflow_email_from"]='ਸੂਚਨਾ ਭੇਜਣ ਲਈ ਈਮੇਲ ਪਤਾ (ਜੇ ਖਾਲੀ ਹੋਵੇ ਤਾਂ %EMAILFROM% ਵਰਤਿਆ ਜਾਵੇਗਾ):';
 $lang["rse_workflow_bcc_admin"]='ਯਦੋਂ ਯੋਗਦਾਨਕਰਤਾ ਨੂੰ ਸੂਚਿਤ ਕੀਤਾ ਜਾਂਦਾ ਹੈ ਤਾਂ ਪ੍ਰਣਾਲੀ ਪ੍ਰਸ਼ਾਸਕਾਂ ਨੂੰ ਸੂਚਿਤ ਕਰੋ।';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'ਵਰਕਫਲੋ ਸਟੇਟ ਬਣਾਓ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰੋ';

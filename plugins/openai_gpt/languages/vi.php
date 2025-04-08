@@ -16,3 +16,5 @@ $lang["openai_gpt_processing_multiple_resources"] = 'Nhiều tài nguyên';
 $lang["openai_gpt_processing_resource"] = 'Tài nguyên [resource]';
 $lang["openai_gpt_processing_field"] = 'Tạo metadata AI cho trường \'[field]\'';
 $lang["property-gpt_source"] = 'GPT Source';
+$lang["openai_gpt_language"] = 'Ngôn ngữ đầu ra';
+$lang["openai_gpt_language_user"] = 'Ngôn ngữ của người dùng hiện tại';

@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Ste si istý? Toto sa nedá vrátiť späť.';
 $lang["system_reset_delete_all"]='Zmazať všetky údaje a súbory';
 $lang["plugin-system_reset-title"]='Ponastavitev sistema';
 $lang["plugin-system_reset-desc"]='Dodaja možnost za skrbnika/sistem za izbris vseh podatkov';
+$lang["system_reset-tooltip"] = 'Vykonajte resetovanie systému na vymazanie všetkých súborov a údajov';

@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Sunteți sigur? Aceasta nu poate fi anulată.';
 $lang["system_reset_delete_all"]='Ștergeți toate datele și fișierele';
 $lang["plugin-system_reset-title"]='Resetare sistem';
 $lang["plugin-system_reset-desc"]='Adaugă o opțiune pentru admin/sistem pentru a șterge toate datele';
+$lang["system_reset-tooltip"] = 'Efectuează o resetare a sistemului pentru a șterge toate fișierele și datele';

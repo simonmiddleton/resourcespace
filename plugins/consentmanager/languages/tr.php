@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Onay kullanım ortamları';
 $lang["consent_manager_access"] = 'Onay verilerini yönet (zaten "Sistem Kurulum alanına erişebilir" izni ile etkinleştirilmemişse)';
 $lang["plugin-consentmanager-title"] = 'Onay Yöneticisi';
 $lang["plugin-consentmanager-desc"] = 'Medya dosyalarınızda yer alan konular tarafından verilen onayı yönetme yeteneği ekler';
+
+$lang["manageconsent-tooltip"] = 'Kaynaklar için onay kayıtları oluşturun ve yönetin';

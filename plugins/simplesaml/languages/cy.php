@@ -84,3 +84,6 @@ $lang["simplesaml_custom_attribute_label"] = 'atribwt SSO';
 $lang["simplesaml_authorisation_version_error"] = 'PWYSIG: Mae angen diweddaru eich ffurfweddiad SimpleSAML. Cyfeiriwch at adran \'<a href=\'https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate\' target=\'_blank\'> Mudo\'r SP i ddefnyddio ffurfweddiad ResourceSpace</a>\' o\'r Gofod Gwybodaeth am ragor o wybodaeth';
 $lang["simplesaml_sp_auth.adminpassword"] = 'SP Test site admin password';
 $lang["simplesaml_acs_url"] = 'ACS URL / Reply URL';
+
+$lang["simplesaml_use_www_label"] = 'Caniatáu ceisiadau metadata SP ar gyfer llwybr "www"? (newid i ffug fydd yn gofyn i\'r IdP ail-fyw\'r metadata SP)';
+$lang["simplesaml_use_www_error"] = 'Rhybudd! Mae\'r plugin yn defnyddio\'r llwybrau "www" hen. Os yw hwn yn gosodiad newydd, newidwch ef nawr! Fel arall, cydweithiwch gyda\'r gweinyddwr IdP fel y gallant ddiweddaru\'r metadata SP yn unol â hynny.';

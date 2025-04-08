@@ -12,3 +12,4 @@ $lang["news_body"] = 'Nội dung chính';
 $lang["news_nonewmessages"] = 'Không có tin nhắn mới';
 $lang["title"] = 'Tin tức mới nhất';
 $lang["title-too-long"] = 'Trường tiêu đề dài hơn 50 ký tự cho phép';
+$lang["news_manage-tooltip"] = 'Thêm, chỉnh sửa hoặc xóa mục tin tức';

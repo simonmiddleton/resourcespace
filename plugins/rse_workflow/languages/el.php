@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Οι χρήστες θα βλέπουν
 $lang["rse_workflow_introduction"]='Για να τροποποιήσετε τις καταστάσεις και τις ενέργειες της ροής εργασίας, χρησιμοποιήστε τις επιλογές \'Διαχείριση ενεργειών ροής εργασίας\' και \'Διαχείριση καταστάσεων ροής εργασίας\' από το Admin. Κάντε κλικ [εδώ] για να μεταβείτε στο Admin';
 $lang["plugin-rse_workflow-title"]='Προηγμένη Ροή Εργασιών';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Ροή Εργασιών';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Δημιουργία και διαχείριση καταστάσεων ροής εργασίας';

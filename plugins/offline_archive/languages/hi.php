@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='संग्रह से
 $lang["offline_archive_resource_restore"]='संसाधनों को पुनर्स्थापित करें';
 $lang["plugin-offline_archive-title"]='ऑफ़लाइन संग्रह';
 $lang["plugin-offline_archive-desc"]='संग्रहीत फ़ाइलों को ऑफ़लाइन स्थान पर स्थानांतरित करने की अनुमति देता है';
+$lang["offline_archive_administer_archive-tooltip"] = 'आर्काइव की गई फ़ाइलों को ऑफ़लाइन स्थान पर स्थानांतरित करें';

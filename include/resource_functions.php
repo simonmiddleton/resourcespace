@@ -514,7 +514,9 @@ function put_resource_data($resource, $data)
         if (isset($log_columns[$column])) {
             // Set log value and type
             $logupdates[] = [
-                $log_columns[$column][$value] ?? $log_columns[$column], // Log code
+                is_array($log_columns[$column]) && isset($log_columns[$column][$value])
+                    ? $log_columns[$column][$value]
+                    : $log_columns[$column], // Log code
                 $column, // Log note
                 $currentdata[$column], // From value
                 $value, // To value
@@ -4315,8 +4317,14 @@ function write_metadata($path, $ref, $uniqid = "")
 */
 function delete_exif_tmpfile($tmpfile)
 {
-    if (file_exists($tmpfile)) {
+    $tempdir = get_temp_dir();
+    if (
+        file_exists($tmpfile)
+        && strpos($tmpfile, realpath($tempdir)) === 0 
+    ) {
         unlink($tmpfile);
+    } else {
+        debug("WARNING - Attempt to delete a file not in the configured temporary directory: {$tmpfile}");
     }
 }
 
@@ -5148,17 +5156,24 @@ function edit_resource_external_access($key, $access = -1, $expires = "", $group
  * @param  string  $size            ID of size
  * @param  int     $resource_type   ID of resource type
  * @param  int     $alternative     Use alternative?
+ * @param  bool    $usecache        Use cached result if available?
  *
  * @return boolean
  */
-function resource_download_allowed($resource, $size, $resource_type, $alternative = -1)
+function resource_download_allowed($resource, $size, $resource_type, $alternative = -1, $usecache = false)
 {
-    global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach, $sizes_always_allowed;
+    global $userref, $usergroup, $user_dl_limit, $user_dl_days, $sizes_always_allowed, $download_access_cache;
+
+    $cacheid = $resource . "_" . $size;
+    if ($usecache && isset($download_access_cache[$cacheid])) {
+        return $download_access_cache[$cacheid];
+    }
 
     $access = get_resource_access($resource);
 
     if (resource_has_access_denied_by_RT_size($resource_type, $size)) {
-        return false;
+        $download_access_cache[$cacheid] = false;
+        return $download_access_cache[$cacheid];
     }
 
     if (checkperm('X' . $resource_type . "_" . $size) && $alternative == -1) {
@@ -5170,20 +5185,23 @@ function resource_download_allowed($resource, $size, $resource_type, $alternativ
             ($usercustomaccess === false || $usercustomaccess !== 0) &&
             ($usergroupcustomaccess === false || $usergroupcustomaccess !== 0)
         ) {
-            return false;
+            $download_access_cache[$cacheid] = false;
+            return $download_access_cache[$cacheid];
         }
     }
 
     if (($size == "" || $size == "hpr" || getval("noattach", "") == "")  && intval($user_dl_limit) > 0) {
         $download_limit_check = get_user_downloads($userref, $user_dl_days);
         if ($download_limit_check >= $user_dl_limit) {
-            return false;
+            $download_access_cache[$cacheid] = false;
+            return $download_access_cache[$cacheid];
         }
     }
 
     # Full access
     if ($access == 0) {
-        return true;
+        $download_access_cache[$cacheid] = true;
+        return $download_access_cache[$cacheid];
     }
 
     # Restricted
@@ -5194,23 +5212,34 @@ function resource_download_allowed($resource, $size, $resource_type, $alternativ
 
         if ('' == $size) {
             # Original file - access depends on the 'restricted_full_download' config setting.
-            global $restricted_full_download;
-            return $restricted_full_download;
+            $download_access_cache[$cacheid] = $GLOBALS["restricted_full_download"];
+            return $download_access_cache[$cacheid];
         } elseif ('' != $size && in_array($size, $sizes_always_allowed)) {
-            return true;
+            $download_access_cache[$cacheid] = true;
+            return $download_access_cache[$cacheid];
         } else {
             # Return the restricted access setting for this resource type.
-            return ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0, "schema") == 1;
+            $download_access_cache[$cacheid] = ps_value("
+                SELECT allow_restricted value
+                  FROM preview_size
+                 WHERE id = ?",
+                ["s", $size],
+                0,
+                "schema")
+                == 1;
+                return $download_access_cache[$cacheid];
         }
     }
 
     # Confidential
     if ($access == 2) {
-        return false;
+        $download_access_cache[$cacheid] = false;
+        return $download_access_cache[$cacheid];
     }
 
     # Unable to determine access
-    return false;
+    $download_access_cache[$cacheid] = false;
+    return $download_access_cache[$cacheid];
 }
 
 /**
@@ -8856,9 +8885,33 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
 
         db_begin_transaction("checkresources");
         if (count($failed) > 0) {
-            $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($failed)) . ")";
-            $failed_params = ps_param_fill($failed, "i");
-            ps_query($failed_sql, $failed_params);
+            if ($presenceonly) {
+                // Check if resources have ever actually had a file uploaded
+                $arr_uploads = ps_array("
+                     SELECT DISTINCT resource value 
+                       FROM resource_log
+                      WHERE resource IN (" . ps_param_insert(count($failed)) . ")
+                        AND type = ?",
+                    array_merge(ps_param_fill($failed, 'i'), ['s', LOG_CODE_UPLOADED])
+                );
+                $arr_nouploads = array_diff($failed, $arr_uploads);
+
+                if (count($arr_nouploads) > 0) {
+                    // No evidence of a file ever being uploaded. Mark these as having no_file
+                    ps_query("
+                        UPDATE resource 
+                        SET no_file = 1
+                        WHERE ref IN (" . ps_param_insert(count($arr_nouploads)) . ")",
+                        ps_param_fill($arr_nouploads, "i")
+                    );
+                }
+                $failed = array_diff($failed, $arr_nouploads);
+            }
+            if (count($failed) > 0) {
+                $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($failed)) . ")";
+                $failed_params = ps_param_fill($failed, "i");
+                ps_query($failed_sql, $failed_params);
+            }
         }
         if (count($succeeded) > 0) {
             $success_sql = "UPDATE resource SET integrity_fail = 0,no_file=0, last_verified=NOW() WHERE ref IN (" . ps_param_insert(count($succeeded)) . ")";

@@ -23,3 +23,4 @@ $lang["enable"]='เปิดใช้งาน';
 $lang["checknow"]='ตรวจสอบตอนนี้';
 $lang["columnheader-enabled"]='เปิดใช้งาน';
 $lang["columnheader-last-found"]='พบล่าสุด';
+$lang["search_notifications_watched_searches-tooltip"] = 'ควบคุมการค้นหาที่บันทึกไว้ของคุณ';

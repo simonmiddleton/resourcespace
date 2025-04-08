@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Вы уверены? Это действие не
 $lang["system_reset_delete_all"]='Удалить все данные и файлы';
 $lang["plugin-system_reset-title"]='Сброс системы';
 $lang["plugin-system_reset-desc"]='Добавляет опцию в админ/систему для удаления всех данных';
+$lang["system_reset-tooltip"] = 'Выполните сброс системы, чтобы удалить все файлы и данные';

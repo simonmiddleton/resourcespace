@@ -12,3 +12,4 @@ $lang["news_body"]='Maudhui ya mwili';
 $lang["news_nonewmessages"]='Hakuna ujumbe mpya';
 $lang["title"]='Habari za Hivi Punde...';
 $lang["title-too-long"]='Sehemu ya kichwa ni ndefu kuliko herufi 50 zinazoruhusiwa';
+$lang["news_manage-tooltip"] = 'Ongeza, hariri au futa vitu vya habari';

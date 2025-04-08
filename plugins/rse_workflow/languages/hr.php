@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Korisnici će vidjeti resurse u ovom st
 $lang["rse_workflow_introduction"]='Za izmjenu stanja i radnji tijeka rada, koristite \'Upravljanje radnjama tijeka rada\' i \'Upravljanje stanjima tijeka rada\' iz Admin. Kliknite [link_param] za odlazak na Admin';
 $lang["plugin-rse_workflow-title"]='Napredni tijek rada';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Radni tijek';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Stvaranje i upravljanje stanjima radnog toka';

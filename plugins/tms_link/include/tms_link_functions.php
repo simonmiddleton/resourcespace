@@ -479,7 +479,7 @@ function tms_get_mediamasterid(bool $create = true, ?int $resource = null)
           debug('tms_link: $tms_link_mediapaths_resource_reference_column can only contain letters, numbers or underscore.');
           return false;
           }
-      $tmssql .= " AND $tms_link_mediapaths_resource_reference_column = ?";
+      $tmssql .= " AND $tms_link_mediapaths_resource_reference_column = CAST(CAST(? AS VARCHAR(20)) AS INT)";
       $tmssql_params = array_merge($tmssql_params, array($resource));
       }
 

@@ -56,3 +56,4 @@ $lang["rse_workflow_state_notify_help"]='Gebruikers zullen bronnen in deze staat
 $lang["rse_workflow_introduction"]='Om workflow-statussen en acties te wijzigen, gebruik \'Beheer workflow-acties\' en \'Beheer workflow-statussen\' vanuit Beheer. Klik op [link_param] om naar Beheer te gaan';
 $lang["plugin-rse_workflow-title"]='Geavanceerde Workflow';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Workflow';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Creëer en beheer workflowstatussen';

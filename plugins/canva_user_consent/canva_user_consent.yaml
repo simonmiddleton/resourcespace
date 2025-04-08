@@ -1,0 +1,11 @@
+name: canva_user_consent
+title: Canva User Consent
+desc: Required for Canva integration - manages key exchange with the ResourceSpace Canva app
+icon: fa-solid fa-key
+icon-colour: #9D00FF
+author: Montala Limited / Augurs Technologies
+version: 1.0
+config_url: /plugins/canva_user_consent/pages/setup.php
+info_url: https://www.resourcespace.com/knowledge-base/systemadmin/canva
+category: authentication
+disable_group_select: 1

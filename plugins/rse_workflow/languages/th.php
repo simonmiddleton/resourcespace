@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"]='ปิด';
 $lang["rse_workflow_more_notes_title"]='หมายเหตุ:';
 $lang["rse_workflow_email_from"]='ที่อยู่อีเมลสำหรับส่งการแจ้งเตือน (จะใช้ %EMAILFROM% หากว่างเปล่า):';
 $lang["rse_workflow_bcc_admin"]='แจ้งผู้ดูแลระบบเมื่อผู้มีส่วนร่วมได้รับการแจ้งเตือน';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'สร้างและจัดการสถานะการทำงาน';

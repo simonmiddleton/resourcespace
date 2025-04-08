@@ -41,3 +41,4 @@ $lang["offline_archive_resource_log_restore_set"]='ทำเครื่อง�
 $lang["offline_archive_resource_log_restore_removed"]='ยกเลิกการกู้คืนจากคลังข้อมูล';
 $lang["offline_archive_resource_log_restore_request"]='ขอคืนค่าจากคลังข้อมูล';
 $lang["offline_archive_resource_restore"]='กู้คืนทรัพยากร';
+$lang["offline_archive_administer_archive-tooltip"] = 'ย้ายไฟล์ที่เก็บถาวรไปยังตำแหน่งออฟไลน์';

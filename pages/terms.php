@@ -60,12 +60,7 @@ if ('' != $terms_save && enforcePostRequest(false)) {
         rs_setcookie("acceptedterms", true, 1);
     }
 
-    if (false !== strpos($url, 'http')) {
-        header("Location: {$url}");
-        exit();
-    } else {
-        redirect($url);
-    }
+    redirect($url);
 }
 
 if (!

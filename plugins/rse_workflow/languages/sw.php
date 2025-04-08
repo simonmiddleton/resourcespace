@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"]='Funga';
 $lang["rse_workflow_more_notes_title"]='Vidokezo:';
 $lang["rse_workflow_email_from"]='Anwani ya barua pepe ya kutuma arifa kutoka (itatumia %EMAILFROM% ikiwa tupu):';
 $lang["rse_workflow_bcc_admin"]='Arifu wasimamizi wa mfumo wakati mchangiaji anapofahamishwa';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Unda na simamia hali za mtiririko wa kazi';

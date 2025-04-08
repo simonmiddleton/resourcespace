@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname -sertifikaatti vanhenee %e
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname -sertifikaatti vanhentui %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname -sertifikaatti vanhenee %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Tarkista IdP-sertifikaatin vanhentuminen?';
+
+$lang["simplesaml_use_www_label"] = 'Salli SP-metadata-pyynnöt "www"-reitille? (vaihtaminen epätodeksi vaatii IdP:ltä SP-metadata:n uudelleenvaihtoa)';
+$lang["simplesaml_use_www_error"] = '[Warning] Liitännäinen käyttää vanhoja "www" reittejä. Jos tämä on uusi asennus, muuta se nyt! Muussa tapauksessa koordinoi IdP-järjestelmänvalvojan kanssa, jotta he voivat päivittää SP-metadataa vastaavasti.';

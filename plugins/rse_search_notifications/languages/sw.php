@@ -23,3 +23,4 @@ $lang["enable"]='Wezesha';
 $lang["checknow"]='Angalia sasa';
 $lang["columnheader-enabled"]='Imewezeshwa';
 $lang["columnheader-last-found"]='Iliyopatikana mwisho';
+$lang["search_notifications_watched_searches-tooltip"] = 'Dhibiti utafutaji wako uliohifadhiwa';

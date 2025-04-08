@@ -56,3 +56,4 @@ $lang["rse_workflow_email_from"]='Bildirim göndermek için e-posta adresi (boş
 $lang["rse_workflow_bcc_admin"]='Katkıda bulunan kişi bilgilendirildiğinde sistem yöneticilerini bilgilendir';
 $lang["plugin-rse_workflow-title"]='Gelişmiş İş Akışı';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Kurumsal - İş Akışı';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'İş akışı durumlarını oluşturun ve yönetin';

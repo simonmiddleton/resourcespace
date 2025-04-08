@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Média použití licence';
 $lang["license_manager_access"]='Spravovat licenční údaje (pokud již není povoleno oprávněním "Může přistupovat do oblasti nastavení systému")';
 $lang["plugin-licensemanager-title"]='Správce licencí';
 $lang["plugin-licensemanager-desc"]='Přidává možnost spravovat licencování zdrojů';
+$lang["managelicenses-tooltip"] = 'Vytvořte a spravujte licence pro zdroje';

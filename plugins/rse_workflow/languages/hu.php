@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"] = 'Bezárás';
 $lang["rse_workflow_more_notes_title"] = 'Megjegyzések:';
 $lang["rse_workflow_email_from"] = 'Értesítések küldéséhez használt e-mail cím (ha üres, a %EMAILFROM% értéket használja):';
 $lang["rse_workflow_bcc_admin"] = 'Értesítse a rendszeradminisztrátorokat, amikor a hozzájárulót értesítik';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Hozzon létre és kezelje a munkafolyamat állapotokat';

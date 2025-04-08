@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='Povoleno';
 $lang["columnheader-last-found"]='Naposledy nalezeno';
 $lang["plugin-rse_search_notifications-title"]='Oznámení o vyhledávání';
 $lang["plugin-rse_search_notifications-desc"]='Upozornit uživatele, když dojde ke změnám v uloženém vyhledávání';
+$lang["search_notifications_watched_searches-tooltip"] = 'Ovládejte své uložené vyhledávání';

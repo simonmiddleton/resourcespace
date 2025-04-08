@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='라이선스 사용 매체';
 $lang["license_manager_access"]='라이선스 데이터 관리 (이미 "시스템 설정 영역에 접근할 수 있는" 권한을 통해 활성화되지 않은 경우)';
 $lang["plugin-licensemanager-title"]='라이선스 관리자';
 $lang["plugin-licensemanager-desc"]='리소스 라이선스 관리를 할 수 있는 기능 추가';
+$lang["managelicenses-tooltip"] = '리소스에 대한 라이센스를 생성하고 관리합니다';

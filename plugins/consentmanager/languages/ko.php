@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = '동의 사용 매체';
 $lang["consent_manager_access"] = '동의 데이터 관리 (이미 "시스템 설정 영역에 접근할 수 있는" 권한을 통해 활성화되지 않은 경우)';
 $lang["plugin-consentmanager-title"] = '동의 관리자';
 $lang["plugin-consentmanager-desc"] = '미디어 파일에 등장하는 주제의 동의 관리를 할 수 있는 기능을 추가합니다';
+
+$lang["manageconsent-tooltip"] = '리소스에 대한 동의 기록 생성 및 관리';

@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='Diaktifkan';
 $lang["columnheader-last-found"]='Terakhir ditemukan';
 $lang["plugin-rse_search_notifications-title"]='Pemberitahuan Pencarian';
 $lang["plugin-rse_search_notifications-desc"]='Beri tahu pengguna ketika terjadi perubahan pada pencarian yang disimpan';
+$lang["search_notifications_watched_searches-tooltip"] = 'Kontrol pencarian yang disimpan Anda';

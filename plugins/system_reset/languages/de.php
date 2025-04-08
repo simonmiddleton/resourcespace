@@ -7,3 +7,4 @@ $lang["system_reset_confirm"]='Sind Sie sicher? Dies kann nicht rückgängig gem
 $lang["system_reset_delete_all"]='Alle Daten und Dateien löschen';
 $lang["plugin-system_reset-title"]='Systemzurücksetzung';
 $lang["plugin-system_reset-desc"]='Fügt eine Option zu Admin/System hinzu, um alle Daten zu löschen';
+$lang["system_reset-tooltip"] = 'Führen Sie einen Systemreset durch, um alle Dateien und Daten zu löschen';

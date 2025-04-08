@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='Begärd återställning f
 $lang["offline_archive_resource_restore"]='Återställ resurser';
 $lang["plugin-offline_archive-title"]='Offlinearkiv';
 $lang["plugin-offline_archive-desc"]='Möjliggör flyttning av arkiverade filer till en offline-plats';
+$lang["offline_archive_administer_archive-tooltip"] = 'Flytta arkiverade filer till en offline plats';

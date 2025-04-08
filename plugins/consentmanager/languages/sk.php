@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Súhlas s použitím médií';
 $lang["consent_manager_access"] = 'Spravovať údaje o súhlase (ak nie sú už povolené prostredníctvom oprávnenia "Môže pristupovať k oblasti nastavenia systému")';
 $lang["plugin-consentmanager-title"] = 'Upravitelj soglasij';
 $lang["plugin-consentmanager-desc"] = 'Dodaja možnost upravljanja soglasij, ki jih dajejo subjekti, predstavljeni v vaših medijskih datotekah';
+
+$lang["manageconsent-tooltip"] = 'Vytvorte a spravujte záznamy o súhlase pre zdroje';

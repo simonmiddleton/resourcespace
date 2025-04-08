@@ -41,3 +41,4 @@ $lang["offline_archive_resource_log_restore_set"]='Позначено для в�
 $lang["offline_archive_resource_log_restore_removed"]='Скасовано відновлення з архіву';
 $lang["offline_archive_resource_log_restore_request"]='Запит на відновлення з архіву';
 $lang["offline_archive_resource_restore"]='Відновити ресурси';
+$lang["offline_archive_administer_archive-tooltip"] = 'Перемістіть архівовані файли в офлайн-локацію';

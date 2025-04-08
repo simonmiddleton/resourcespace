@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname Zertifikat läuft ab am %e
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname Zertifikat ist am %expiretime abgelaufen';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname Zertifikat läuft ab am %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'IdP-Zertifikatsablauf überprüfen?';
+
+$lang["simplesaml_use_www_label"] = 'Erlauben Sie SP-Metadatenanfragen für die "www"-Route? (Ändern auf falsch erfordert, dass der IdP die SP-Metadaten erneut austauscht)';
+$lang["simplesaml_use_www_error"] = 'Warnung! Das Plugin verwendet die veralteten "www" Routen. Wenn dies eine frische Installation ist, ändern Sie es jetzt! Andernfalls koordinieren Sie sich mit dem IdP-Administrator, damit dieser die SP-Metadaten entsprechend aktualisieren kann.';

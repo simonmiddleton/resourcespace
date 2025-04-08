@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = '同意使用媒介';
 $lang["consent_manager_access"] = '管理同意数据（如果尚未通过“可以访问系统设置区域”权限启用）';
 $lang["plugin-consentmanager-title"] = '同意管理器';
 $lang["plugin-consentmanager-desc"] = '增加了管理媒体文件中出现的主体所提供的同意的功能';
+
+$lang["manageconsent-tooltip"] = '创建和管理资源的同意记录';

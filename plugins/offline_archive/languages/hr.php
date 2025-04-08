@@ -43,3 +43,4 @@ $lang["offline_archive_resource_log_restore_request"]='Zahtjev za vraćanje iz a
 $lang["offline_archive_resource_restore"]='Obnovi resurse';
 $lang["plugin-offline_archive-title"]='Izvanmrežna arhiva';
 $lang["plugin-offline_archive-desc"]='Omogućuje premještanje arhiviranih datoteka na izvanmrežnu lokaciju';
+$lang["offline_archive_administer_archive-tooltip"] = 'Premjestite arhivirane datoteke na offline lokaciju';

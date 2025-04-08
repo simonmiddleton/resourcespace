@@ -30,3 +30,4 @@ $lang["license_manager_mediums"]='Lisenssin käyttövälineet';
 $lang["license_manager_access"]='Hallinnoi lisenssitietoja (jos ei ole jo käytössä "Pääsy järjestelmän asetusten alueelle" -oikeuden kautta)';
 $lang["plugin-licensemanager-title"]='Lisenssinhallinta';
 $lang["plugin-licensemanager-desc"]='Lisää mahdollisuuden hallita resurssilisenssejä';
+$lang["managelicenses-tooltip"] = 'Luo ja hallinnoi lisenssejä resursseille';

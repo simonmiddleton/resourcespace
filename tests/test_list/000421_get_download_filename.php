@@ -177,6 +177,19 @@ $use_cases = [
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
         'expected' => "RS{$resource_mp4_file}-.mp4",
     ],
+    [
+        'name' => 'Set download filename based on resource type',
+        'setup' => function () use ($resource_jpg_file) {
+            $rt = get_resource_data($resource_jpg_file)['resource_type'];
+            $lockout = $GLOBALS['execution_lockout'];
+            $GLOBALS['execution_lockout'] = false;
+            save_resource_type($rt, ['config_options' => '$download_filename_format="RT_specific_name.%extension";']);
+            resign_all_code(false, false);
+            $GLOBALS['execution_lockout'] = $lockout;
+        },
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => "RT_specific_name.jpg",
+    ],
 ];
 foreach ($use_cases as $use_case) {
     $setup_global_env();

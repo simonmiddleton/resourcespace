@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = 'Izin penggunaan media';
 $lang["consent_manager_access"] = 'Mengelola data persetujuan (jika belum diaktifkan melalui izin "Dapat mengakses area Pengaturan Sistem")';
 $lang["plugin-consentmanager-title"] = 'Manajer Persetujuan';
 $lang["plugin-consentmanager-desc"] = 'Menambahkan kemampuan untuk mengelola persetujuan yang diberikan oleh subjek yang ditampilkan dalam file media Anda';
+
+$lang["manageconsent-tooltip"] = 'Buat dan kelola catatan persetujuan untuk sumber daya';

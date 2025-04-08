@@ -30,3 +30,4 @@ $lang["license_manager_access"]='Beheer licentiegegevens (indien nog niet ingesc
 $lang["outbound_license_description"]='Wij zijn de auteursrechthebbenden';
 $lang["plugin-licensemanager-title"]='Licentiebeheerder';
 $lang["plugin-licensemanager-desc"]='Voegt de mogelijkheid toe om resource-licenties te beheren';
+$lang["managelicenses-tooltip"] = 'Licenties voor middelen aanmaken en beheren';

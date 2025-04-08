@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname certifikat udløber kl. %e
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname certifikat udløb kl. %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname certifikat udløber kl. %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Kontroller IdP-certifikatets udløb?';
+
+$lang["simplesaml_use_www_label"] = 'Tillad SP metadata anmodninger for "www" ruten? (ændring til falsk vil kræve, at IdP skal genudveksle SP metadata)';
+$lang["simplesaml_use_www_error"] = 'Advarsel! Plugin\'en bruger de gamle "www" ruter. Hvis dette er en ny opsætning, så ændr det nu! Ellers koordiner med IdP-administratoren, så de kan opdatere SP-metadataene i overensstemmelse hermed.';

@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'IdP %idpname certifikat poteče ob %exp
 $lang["simplesaml_idp_cert_expired"] = 'IdP %idpname certifikat je potekel ob %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'IdP %idpname certifikat poteče ob %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Skontrolovať vypršanie platnosti IdP certifikátu?';
+
+$lang["simplesaml_use_www_label"] = 'Povoliť požiadavky na SP metadata pre "www" cestu? (zmena na false si vyžaduje, aby IdP znovu vymenil SP metadata)';
+$lang["simplesaml_use_www_error"] = '[Warning] Plugin používa zastarané "www" trasy. Ak ide o novú inštaláciu, zmeňte to teraz! Inak sa dohodnite s administrátorom IdP, aby mohli aktualizovať SP metadata podľa toho.';

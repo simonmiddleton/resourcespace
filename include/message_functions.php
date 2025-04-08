@@ -879,7 +879,9 @@ function message_get_conversation(int $user, $msgusers = array(), $filteropts = 
 function send_user_message($users, $text)
 {
     global $userref, $lang;
+    $users = remove_groups_smart_from_userlist($users);
     $users = explode(",", resolve_userlist_groups($users));
+    
     for ($n = 0; $n < count($users); $n++) {
         if (!is_int_loose($users[$n])) {
             $uref = get_user_by_username(trim($users[$n]));

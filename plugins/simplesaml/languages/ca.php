@@ -86,3 +86,6 @@ $lang["simplesaml_idp_cert_expiring"] = 'Certificat IdP %idpname caduca a %expir
 $lang["simplesaml_idp_cert_expired"] = 'El certificat de l\'IdP %idpname va expirar a les %expiretime';
 $lang["simplesaml_idp_cert_expires"] = 'El certificat de l\'IdP %idpname caduca a %expiretime';
 $lang["simplesaml_check_idp_cert_expiry"] = 'Comprovar la caducitat del certificat IdP?';
+
+$lang["simplesaml_use_www_label"] = 'Permetre sol·licituds de metadades SP per a la ruta "www"? (canviar a fals requerirà que l\'IdP torni a intercanviar les metadades SP)';
+$lang["simplesaml_use_www_error"] = '[Advertència] El complement està utilitzant les rutes "www" llegades. Si aquesta és una configuració nova, canvia-ho ara! Si no, coordina\'t amb l\'administrador de l\'IdP perquè pugui actualitzar els metadades de l\'SP en conseqüència.';

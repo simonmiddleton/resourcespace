@@ -23,3 +23,4 @@ $lang["enable"]='Увімкнути';
 $lang["checknow"]='Перевірити зараз';
 $lang["columnheader-enabled"]='Увімкнено';
 $lang["columnheader-last-found"]='Останнє знайдене';
+$lang["search_notifications_watched_searches-tooltip"] = 'Керуйте своїми збереженими пошуками';

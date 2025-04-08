@@ -73,6 +73,14 @@ $page_def[] = config_add_file_input(
     true
 );
 $page_def[] = config_add_file_input(
+    'linkedheaderimgsrc_dark',
+    $lang['systemconfig_linkedheaderimgsrc_dark_label'],
+    $baseurl . '/pages/admin/admin_system_config.php',
+    316,
+    array('gif','jpg','png','svg'),
+    true
+);
+$page_def[] = config_add_file_input(
     'header_favicon',
     $lang['systemconfig_header_favicon_label'],
     $baseurl . '/pages/admin/admin_system_config.php',

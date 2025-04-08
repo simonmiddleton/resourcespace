@@ -625,6 +625,10 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
             case 'fixed_input':
                 render_fixed_text_question($def[1], $def[2], $def[3]);
                 break;
+            case 'percent_range':
+                config_percent_range($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                break;
+
             default:
                 break;
             }
@@ -1419,33 +1423,39 @@ function config_custom_select($name, $label, $available, $value)
     }
 
 function get_plugin_css()
-    {
+{
     global $plugins,$baseurl,$language,$css_reload_key;
 
-    $plugincss="";
-    for ($n=count($plugins)-1;$n>=0;$n--)
-    {
-    if (!isset($plugins[$n])) { continue; }
-    $csspath=get_plugin_path($plugins[$n]) . "/css/style.css";
-    if (file_exists($csspath))
-        {
-        $plugincss.='<link href="'.get_plugin_path($plugins[$n],true).'/css/style.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
-        ';
+    $plugincss = "";
+    for ($n = count($plugins) - 1; $n >= 0; $n--) {
+        if (!isset($plugins[$n])) {
+            continue;
+        }
+
+        // Standard plugin CSS file
+        $csspath = get_plugin_path($plugins[$n]) . "/css/style.css";
+        if (file_exists($csspath)) {
+            $plugincss .= '<link href="' . get_plugin_path($plugins[$n], true) . '/css/style.css?css_reload_key=' . $css_reload_key . '" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
+        }
+
+        // Dark mode CSS file
+        $csspath_dark = get_plugin_path($plugins[$n]) . "/css/style-dark.php";
+        if (file_exists($csspath_dark)) {
+            $plugincss .= '<link href="' . get_plugin_path($plugins[$n], true) . '/css/style-dark.php?css_reload_key=' . $css_reload_key . '" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
         }
 
         # Allow language specific CSS files
-        $csspath=get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
-        if (file_exists($csspath))
-            {
-            $plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
-            }
+        $csspath = get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
+        if (file_exists($csspath)) {
+            $plugincss .= '<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key=' . $css_reload_key . '" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
+        }
 
         # additional plugin css functionality
-        $plugincss.=hook('moreplugincss','',array($plugins, $n));
-
-        }
-    return $plugincss;
+        $plugincss .= hook('moreplugincss','',array($plugins, $n));
     }
+
+    return $plugincss;
+}
 /*
 Activate language and configuration for plugins for use on setup page if plugin is not enabled for user group
 
@@ -1694,6 +1704,36 @@ function register_group_access_plugins(?int $usergroup=-1,array $plugins = []): 
     return array_values(array_unique($plugins));
 }
 
+/**
+ * Load ALL group specific plugins and reorder plugins list
+ * This will bypass any group access controls for use with CLI scripts
+ *
+ * @param  array $plugins   Enabled Plugins
+ * @return array
+ */
+function register_all_group_access_plugins(array $plugins): array
+{
+    # Load group specific plugins and reorder plugins list
+    $active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
+
+    foreach ($active_plugins as $plugin) {
+        #Get Yaml
+        $py = "";
+        $py = get_plugin_yaml($plugin["name"], false);
+
+        # Check group access and applicable for this user in the group, only if group access is permitted as otherwise will have been processed already
+        if (!$py['disable_group_select'] && $plugin['enabled_groups'] != '') {
+            include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
+            register_plugin($plugin['name']);
+            register_plugin_language($plugin['name']);
+            $plugins[] = $plugin['name'];
+        } else {
+            $plugins[] = $plugin['name'];
+        }
+    }
+
+    return array_values(array_unique($plugins));
+}
 
 /**
  * Render the plugin in the Plugin Manager with options to activate and configure.
@@ -1716,13 +1756,15 @@ function RenderPlugin($plugin, $active = true)
     // Determine icon colour
     $icon_colour = isset($plugin["icon-colour"]) && isValidCssColor($plugin["icon-colour"])
         ? $plugin["icon-colour"]
-        : "black";
+        : "";
 
     // Render the plugin display
     echo '<div class="PluginDisplay">';
     echo '<h2>';
     echo '<span class="plugin-header">';
-    echo '<i class="plugin-icon fa-xl ' . escape($plugin['icon']) . '" style="color:' . escape($icon_colour) . ';"></i>';
+    echo '<i class="plugin-icon fa-xl ' . escape($plugin['icon']) . '"';
+    echo $icon_colour != "" ? ' style="color:' . escape($icon_colour) . ';"' : '';
+    echo '></i>';
     echo '<span class="plugin-title">' . escape($plugin['title'] ?: $plugin['name']) . '</span>';
     echo '</span>';
     echo '</h2>';

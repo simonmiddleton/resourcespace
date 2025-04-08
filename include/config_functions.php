@@ -908,7 +908,7 @@ function config_add_file_input($config_var, $label, $form_action, $width = 420, 
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  */
-function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null,$hidden=false)
+function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null,$hidden=false, bool $reload_page = false)
 {
     global $lang;
     
@@ -930,7 +930,7 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
         <select id="<?php echo escape($name); ?>"
             name="<?php echo escape($name); ?>"
             <?php if ($autosave) { ?>
-                onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>');"
+                onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>'<?php echo $reload_page ? ", true" : ""?>);"
             <?php } ?>
             style="width:<?php echo (int) $width; ?>px">
             <?php foreach ($choices as $key => $choice) {
@@ -962,9 +962,9 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
  *          the user sees. Defaulted to true.
  * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null, $hidden=false)
+function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null, $hidden=false, bool $reload_page = false)
     {
-    return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave, $on_change_js, $hidden);
+    return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave, $on_change_js, $hidden, $reload_page);
     }
 
 
@@ -1407,27 +1407,21 @@ function config_generate_html(array $page_def)
             case 'html':
                 config_html($def[1]);
                 break;
-
             case 'text_input':
                 config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
-
             case 'file_input':
                 config_file_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6]);
                 break;
-
             case 'boolean_select':
                 config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9], $def[10]);
                 break;
-
             case 'single_select':
-                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
+                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9], $def[10]);
                 break;
-            
              case 'checkbox_select':
                 config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
-
             case 'colouroverride_input':
                 config_colouroverride_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6],$def[7]);
                 break;
@@ -1442,6 +1436,9 @@ function config_generate_html(array $page_def)
                 break;
             case 'fixed_input':
                 render_fixed_text_question($def[1], $def[2], $def[3]);
+                break;
+            case 'percent_range':
+                config_percent_range($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
                 break;
             default:
                 break;
@@ -1469,45 +1466,74 @@ function config_merge_non_image_types()
                 $ghostscript_extensions)));
     }
 
-function get_header_image($full = false)
-    {
-    global $linkedheaderimgsrc, $baseurl_short, $baseurl, $storageurl;
+/**
+ * Retrieves the header image URL based on the user's appearance preference and system configuration.
+ *
+ * @param bool $full Whether to return the full URL including the base URL.
+ * @param bool $for_header Whether the image is being displayed in the header.
+ * @param string $force_appearance Optionally force the appearance mode ('dark' or 'light').
+ *
+ * @return string The resolved URL for the header image.
+ */
+function get_header_image(bool $full = false, bool $for_header = false, string $force_appearance = ""): string
+{
+    global $linkedheaderimgsrc, $linkedheaderimgsrc_dark, $baseurl_short, $baseurl, $storageurl, $user_pref_appearance;
 
-    if(trim($linkedheaderimgsrc) != "")
-        {
-        $header_img_src = $linkedheaderimgsrc;
-        if(substr($header_img_src, 0, 4) !== 'http')
-            {
-            // Set via System Config page?
-            if (substr($header_img_src, 0, 13) == '[storage_url]')
-                {
-                // Parse and replace the storage URL
-                $header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
-                }
-            else
-                {
-                // Set via config.php
-                // if image source already has the baseurl short, then remove it and add it here
-                if(substr($header_img_src, 0, 1) === '/')
-                    {
-                    $header_img_src = substr($header_img_src, 1);
-                    }
-                $header_img_src = $baseurl_short . $header_img_src;
-                }
+    $css_color_scheme = $_COOKIE['css_color_scheme'] ?? 'light';
 
-            if($full && substr($header_img_src, 0, 1) === '/')
-                {
-                $header_img_src = $baseurl . substr($header_img_src, 1);
-                }
-            }
-        }
-    else 
-        {
-        $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
+    // Use custom header image
+    if (trim($linkedheaderimgsrc) != "" || trim($linkedheaderimgsrc_dark) != "") {
+        if ($force_appearance == "dark") {
+            $header_img_src = trim($linkedheaderimgsrc_dark) != "" ? $linkedheaderimgsrc_dark : $linkedheaderimgsrc;
+        } elseif ($force_appearance == "light") {
+            $header_img_src = trim($linkedheaderimgsrc) != "" ? $linkedheaderimgsrc : $linkedheaderimgsrc_dark;
+        } elseif ($user_pref_appearance == "light" && trim($linkedheaderimgsrc) != "") {
+            $header_img_src = $linkedheaderimgsrc;
+        } elseif ($user_pref_appearance == "dark" && trim($linkedheaderimgsrc_dark) != "" || ($user_pref_appearance == "device" && $css_color_scheme == "dark")) {
+            $header_img_src = $linkedheaderimgsrc_dark;
+        } else {
+            $header_img_src = trim($linkedheaderimgsrc) != "" ? $linkedheaderimgsrc : $linkedheaderimgsrc_dark;
         }
         
-    return $header_img_src;
+        if (substr($header_img_src, 0, 4) !== 'http') {
+            // Set via System Config page?
+            if (substr($header_img_src, 0, 13) == '[storage_url]') {
+                // Parse and replace the storage URL
+                $header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
+            } else {
+                // Set via config.php
+                // if image source already has the baseurl short, then remove it and add it here
+                if (substr($header_img_src, 0, 1) === '/') {
+                    $header_img_src = substr($header_img_src, 1);
+                }
+                $header_img_src = $baseurl_short . $header_img_src;
+            }
+
+            if ($full && substr($header_img_src, 0, 1) === '/') {
+                $header_img_src = $baseurl . substr($header_img_src, 1);
+            }
+        }
+    } else {
+        // Use default ResourceSpace logo
+        if ($for_header) {
+            // If displaying in header then take into account user appearance preference
+            if ($force_appearance == "dark") {
+                $header_img_src = $baseurl.'/gfx/titles/title.svg';
+            } elseif ($force_appearance == "light") {
+                $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
+            } elseif ($user_pref_appearance == 'dark' || ($user_pref_appearance == "device" && $css_color_scheme == "dark")) {
+                $header_img_src = $baseurl.'/gfx/titles/title.svg';
+            } else {
+                $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
+            }
+        } else {
+            // When displaying in other places simply return the default logo
+            $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
+        }
     }
+        
+    return $header_img_src;
+}
 
 /**
 * Used to block deletion of 'core' fields. Any variable added to the $corefields array will be checked before a field is deleted and if the field is referenced by one of these core variables the deletion will be blocked
@@ -2071,6 +2097,7 @@ function get_resource_type_field_columns()
         'exiftool_filter'          => [$lang['property-exiftool_filter'],'',2,1],
         'value_filter'             => [$lang['property-value_filter'],'',2,1],
         'onchange_macro'           => [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1],
+        'sort_method'              => [$lang['property-sort_method'], $lang['information-sort_method'], 0, 1],
     ]);
 
     $modify_resource_type_field_definitions=hook("modifyresourcetypefieldcolumns","",array($resource_type_field_column_definitions));
@@ -2223,22 +2250,87 @@ function config_filter_by_search(array $page_def, array $config_type, string $fi
     return $page_def;
 }
 
-/**
- * Remove user preferences by resetting to system preferences. Used to display system config or user group config
- * without the current user's preferences changing the values.
- *
- * @param  array  $page_def   Array containing page definition, from functions config_add_ ...
- */
-function config_remove_user_preferences(array $page_def): void {
-    global $system_wide_config_options;
 
-    // loop through every field about to be created
-    foreach ($page_def as $page_item) {
-        if ($page_item[0] !== 'html'
-                && isset($system_wide_config_options[$page_item[1]]) 
-                && $GLOBALS[$page_item[1]] !== $system_wide_config_options[$page_item[1]]) {
-            // Set the global variable back to the system value if it is different
-            $GLOBALS[$page_item[1]] = $system_wide_config_options[$page_item[1]];
-        }
+
+/**
+ * Generate a percentage range input
+ *
+ * @param string    $name       The name of the configuration variable to be added.
+ * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
+ * @param string    $current    The current value of the config variable being set.
+ * @param int       $width      The width of the input field in pixels. Default: 420.
+ * @param string    $title      The title attribute of the element
+ * @param string    $help_link  Help link to be displayed alongside the label.
+ */
+function config_percent_range($name, $label, $current, $width = 420, $title = null, $help_link = "")
+{
+    global $lang;
+    if (is_null($title)) {
+        $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
     }
+
+    // Convert stored 0–1 value to percentage for display
+    $percent = round($current * 100);
+    $escaped_name = escape($name);
+    ?>
+
+    <div class="Question" id="question_<?php echo $escaped_name; ?>">
+        <label for="<?php echo $escaped_name; ?>" title="<?php echo escape($title); ?>">
+            <?php
+            echo strip_tags_and_attributes($label, ['a'], ['href', 'target']);
+            if ($help_link !== "") {
+                render_help_link($help_link);
+            }
+            ?>
+        </label>
+
+        <!-- Range slider (dummy input for user interaction) -->
+        <input type="range"
+            id="<?php echo $escaped_name; ?>_range"
+            min="1" max="100"
+            value="<?php echo $percent; ?>"
+            style="width:<?php echo (int) $width; ?>px"
+            oninput="update_<?php echo $escaped_name; ?>(this.value)" />
+
+        <!-- Live display of percentage -->
+        <span id="<?php echo $escaped_name; ?>_display"><?php echo $percent; ?>%</span>
+
+        <!-- Actual value (0–1) for form submission -->
+        <input type="hidden"
+            id="<?php echo $escaped_name; ?>"
+            name="<?php echo $escaped_name; ?>"
+            value="<?php echo escape((string) $current); ?>" />
+
+        <script>
+        function update_<?php echo $escaped_name; ?>(val) {
+            // Update displayed percent
+            document.getElementById('<?php echo $escaped_name; ?>_display').textContent = val + '%';
+            // Update hidden 0–1 value
+            document.getElementById('<?php echo $escaped_name; ?>').value = (val / 100).toFixed(2);
+        }
+        </script>
+
+        <div class="clearerleft"></div>
+    </div>
+    <?php
 }
+
+
+/**
+ * Return a data structure that will instruct the configuration page generator functions to
+ * add a text entry configuration variable to the setup page.
+ *
+ * @param string    $config_var The name of the configuration variable to be added.
+ * @param string    $label      The user text displayed to label the text block. Usually a $lang string.
+ * @param bool      $password   Whether this is a "normal" text-entry field or a password-style field.
+ * @param int       $width      The width of the input field in pixels. Default: 420.
+ * @param bool      $textarea   Render as a HTML <textarea>
+ * @param string    $title      The title attribute of the element
+ * @param bool      $autosave   Enable auto-saving of changes when focus is lost
+ * @param bool      $hidden     Whether field is hidden on the page
+ * @param string    $help_link  Help link to be displayed alongside the label.
+ */
+function config_add_percent_range($config_var, $label, $width = 380, $title = null, string $help_link = "")
+    {    
+    return array('percent_range', $config_var, $label, $width, $title, $help_link);
+    }

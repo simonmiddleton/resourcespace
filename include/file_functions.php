@@ -132,8 +132,17 @@ function temp_local_download_remote_file(string $url, string $key = "")
     $extension = $path_parts['extension'] ?? '';
     $filename .= ($extension !== '' ? ".{$extension}" : '');
 
-    if (strpos($filename, ".") === false && filter_var($url_original, FILTER_VALIDATE_URL)) {
-        // $filename not valid, try and get from HTTP header
+    // When the filename isn't valid, try and get from the HTTP header
+    $check_in_header = strpos($filename, ".") === false && filter_var($url_original, FILTER_VALIDATE_URL);
+    foreach ($GLOBALS['valid_upload_remote_sources'] as $valid_upload_remote_src) {
+        // Support dynamic remote URL that may otherwise be mistaken with a file (e.g. pages/download.php)
+        if (url_starts_with($valid_upload_remote_src, $url_original)) {
+            $check_in_header = true;
+            break;
+        }
+    }
+
+    if ($check_in_header) {
         $urlinfo = parse_url($url);
         if (!isset($urlinfo["scheme"]) || !in_array($urlinfo["scheme"], ["http","https"])) {
             return false;
@@ -599,3 +608,113 @@ function parse_filename_extension(string $filename): string
 
     return $finfo->getExtension();
 }
+
+
+/**
+ * Delete old files and folders from tempo directory based on the configured $purge_temp_folder_age value
+ * Affects filestore/tmp, $storagedir/tmp or the configured $tempdir directory
+ */
+function delete_temp_files(): void
+{
+    if ($GLOBALS["purge_temp_folder_age"] === 0) {
+        // Disabled
+        return;
+    }
+    // Set up array of folders to scan
+    $folderstoscan = [];
+    $folderstoscan[] = get_temp_dir();
+    
+    $modified_folderstoscan = hook("add_folders_to_delete_from_temp", "", array($folderstoscan));
+    if (is_array($modified_folderstoscan) && !empty($modified_folderstoscan)) {
+        $folderstoscan = $modified_folderstoscan;
+    }
+
+    // Set up array of folders to exclude
+    $excludepaths = [];
+    if (isset($GLOBALS["geo_tile_cache_directory"])) {
+        $excludepaths[] = $GLOBALS["geo_tile_cache_directory"];
+    } else {
+        $excludepaths[] = get_temp_dir() . "tiles";
+    }
+    if (DOWNLOAD_FILE_LIFETIME > $GLOBALS["purge_temp_folder_age"]) {
+        $excludepaths[] = get_temp_dir(false, "user_downloads");
+    }
+
+    // Set up arrays to hold items to delete
+    $folderstodelete = [];
+    $filestodelete = [];
+
+    foreach ($folderstoscan as $foldertoscan) {
+        if (!file_exists($foldertoscan)) {
+            continue;
+        }
+        $foldercontents = new DirectoryIterator($foldertoscan);
+        foreach ($foldercontents as $object) {
+            if (time() - $object->getMTime() > $GLOBALS["purge_temp_folder_age"] * 24 * 60 * 60) {
+                $tmpfilename = $object->getFilename();
+                if ($object->isDot()) {
+                    continue;
+                }
+                foreach ($excludepaths as $excludepath) {
+                    if (
+                        ($tmpfilename == $excludepath)
+                        || strpos($object->getRealPath(), $excludepath) == 0
+                    ) {
+                        continue 2;
+                    }
+                }
+                if ($object->isDir()) {
+                    $folderstodelete[] = $foldertoscan . DIRECTORY_SEPARATOR . $tmpfilename;
+                } elseif ($object->isFile()) {
+                    $filestodelete[] = $foldertoscan . DIRECTORY_SEPARATOR . $tmpfilename;
+                }
+            }
+        }
+    }
+
+    foreach ($folderstodelete as $foldertodelete) {
+        // Extra check that folder is in an expected path
+        if (strpos($foldertodelete, $GLOBALS["storagedir"]) === false
+            && strpos($foldertodelete, $GLOBALS["tempdir"]) === false
+            && strpos($foldertodelete, 'filestore/tmp') === false
+        ) {
+            continue;
+        }
+
+        $success = rcRmdir($foldertodelete);
+        if ('cli' == PHP_SAPI) {
+            echo " - deleting directory " . $foldertodelete . " - " . ($success ? "SUCCESS" : "FAILED")  . PHP_EOL;
+        }
+        debug(" - deleting directory " . $foldertodelete . " - " . ($success ? "SUCCESS" : "FAILED"));
+    }
+
+    foreach ($filestodelete as $filetodelete) {
+        // Extra check that file is in an expected path
+        if (strpos($filetodelete, $GLOBALS["storagedir"]) === false
+            && strpos($filetodelete, $GLOBALS["tempdir"]) === false
+            && strpos($filetodelete, 'filestore/tmp') === false
+        ) {
+            continue;
+        }
+
+        $success = try_unlink($filetodelete);
+
+        if ('cli' == PHP_SAPI) {
+            echo " - deleting file " . $filetodelete . " - " . ($success ? "SUCCESS" : "FAILED")  . PHP_EOL;
+        }
+        debug(" - deleting file " . $filetodelete . " - " . ($success ? "SUCCESS" : "FAILED"));
+    }
+}
+
+/**
+ * Are the arguments set in $archiver_settings["arguments"] permitted?
+ * Allows word characters, '@', and '-' only
+ * 
+ * @param string    Argument string
+ * 
+ */
+function permitted_archiver_arguments($string): bool
+{
+    return preg_match('/[^\@\-\w]/', $string) === 0;
+}
+

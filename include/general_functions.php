@@ -204,9 +204,9 @@ function redirect(string $url)
 
     if (substr($url, 0, 1) == "/") {
         # redirect to an absolute URL
-        header("Location: " . str_replace('/[\\\/]/D', "", $baseurl) . str_replace($baseurl_short, "/", $url));
+        header("Location: " . $baseurl . str_replace($baseurl_short, "/", $url));
     } else {
-        if (strpos($url, $baseurl) === 0) {
+        if (url_starts_with($baseurl, $url)) {
             // Base url has already been added
             header("Location: " . $url);
             exit();
@@ -2883,10 +2883,8 @@ function validate_html($html)
 * @param  string  $url
 * @param  array   $parameters  Default query string params (e.g "k", which appears on most of ResourceSpace URLs)
 * @param  array   $set_params  Override existing query string params
-*
-* @return string
 */
-function generateURL($url, array $parameters = array(), array $set_params = array())
+function generateURL(string $url, array $parameters = array(), array $set_params = array()): string
 {
     foreach ($set_params as $set_param => $set_value) {
         if ('' != $set_param) {
@@ -2898,7 +2896,7 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
 
     foreach ($parameters as $parameter => $parameter_value) {
         if (!is_array($parameter_value)) {
-            $query_string_params[] = $parameter . '=' . urlencode((string) $parameter_value);
+            $query_string_params[$parameter] = (string) $parameter_value;
         }
     }
 
@@ -2908,7 +2906,7 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
         $url = $hookurl;
     }
 
-    return $url . '?' . implode('&', $query_string_params);
+    return $url . '?' . http_build_query($query_string_params);
 }
 
 /**
@@ -3669,6 +3667,21 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
             foreach ($tag->attributes as $attribute) {
                 if (!in_array($attribute->nodeName, $allowed_attributes)) {
                     $tag->removeAttribute($attribute->nodeName);
+                } elseif (
+                    preg_match_all(
+                        // Check for dangerous URI (lookalikes)
+                        '/[a-zA-Z][a-zA-Z\d+\-.]*:(\/\/)?[^\s]+/im',
+                        $attribute->value,
+                        $matches,
+                        PREG_SET_ORDER
+                    )
+                ) {
+                    foreach ($matches as $uri_match) {
+                        if (!preg_match('/^(https?):/i', $uri_match[0])) {
+                            $tag->removeAttribute($attribute->nodeName);
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -5304,6 +5317,8 @@ function is_safe_url($url): bool
 
     $url_parts = parse_url($url);
     if ($url_parts === false) {
+        return false;
+    } elseif (!in_array($url_parts['scheme'], ['http', 'https'])) {
         return false;
     }
 

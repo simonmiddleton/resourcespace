@@ -18,3 +18,5 @@ $lang["openai_gpt_processing_multiple_resources"]='Več virov';
 $lang["openai_gpt_processing_resource"]='Zdroj [resource]';
 $lang["openai_gpt_processing_field"]='AI obdelava za polje \'[field]\'';
 $lang["property-gpt_source"]='GPT Vir';
+$lang["openai_gpt_language"] = 'Jazyk výstupu';
+$lang["openai_gpt_language_user"] = 'Jazyk aktuálneho používateľa';

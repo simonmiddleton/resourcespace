@@ -25,3 +25,4 @@ $lang["columnheader-enabled"]='Aktiveret';
 $lang["columnheader-last-found"]='Senest fundet';
 $lang["plugin-rse_search_notifications-title"]='Søgeunderretninger';
 $lang["plugin-rse_search_notifications-desc"]='Underret bruger, når der sker ændringer i en gemt søgning';
+$lang["search_notifications_watched_searches-tooltip"] = 'Kontroller dine gemte søgninger';

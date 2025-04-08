@@ -25,3 +25,5 @@ $lang["consent_manager_mediums"] = '同意の使用メディア';
 $lang["consent_manager_access"] = '同意データを管理する（「システム設定エリアにアクセスできる」権限で既に有効になっていない場合）。';
 $lang["plugin-consentmanager-title"] = '同意マネージャー';
 $lang["plugin-consentmanager-desc"] = 'メディアファイルに登場する被写体からの同意を管理する機能を追加します';
+
+$lang["manageconsent-tooltip"] = 'リソースの同意記録を作成および管理する';

@@ -12,3 +12,4 @@ $lang["news_body"]='ਬਾਡੀ ਸਮੱਗਰੀ';
 $lang["news_nonewmessages"]='ਕੋਈ ਨਵੇਂ ਸੁਨੇਹੇ ਨਹੀਂ';
 $lang["title"]='ਤਾਜ਼ਾ ਖ਼ਬਰਾਂ...';
 $lang["title-too-long"]='ਸਿਰਲੇਖ ਖੇਤਰ 50 ਅੱਖਰਾਂ ਦੀ ਇਜਾਜ਼ਤ ਤੋਂ ਵੱਧ ਲੰਮਾ ਹੈ';
+$lang["news_manage-tooltip"] = 'ਨਵੀਂਆਂ ਆਈਟਮਾਂ ਸ਼ਾਮਲ ਕਰੋ, ਸੰਪਾਦਿਤ ਕਰੋ ਜਾਂ ਹਟਾਓ';

@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"]='Закрити';
 $lang["rse_workflow_more_notes_title"]='Примітки:';
 $lang["rse_workflow_email_from"]='Адреса електронної пошти для відправки сповіщення (буде використано %EMAILFROM%, якщо залишити порожнім):';
 $lang["rse_workflow_bcc_admin"]='Повідомити системних адміністраторів, коли повідомляється автор внеску';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Створити та керувати станами робочого процесу';

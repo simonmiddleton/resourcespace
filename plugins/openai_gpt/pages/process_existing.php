@@ -3,6 +3,9 @@ include __DIR__ . '/../../../include/boot.php';
 
 command_line_only();
 
+// Add group access controlled plugins to list
+$plugins = register_all_group_access_plugins($plugins ?? []);
+
 if(!in_array("openai_gpt",$plugins))
     {
     exit("OpenAI GPT plugin not enabled. Exiting\n");

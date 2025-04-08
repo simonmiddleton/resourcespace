@@ -28,3 +28,4 @@ $lang["selectlicence"] = 'Kérjük, válasszon egy Licencazonosítót';
 $lang["confirmdeletelicensefile"] = 'Biztos benne, hogy törölni szeretné ezt a fájlt? Ezt nem lehet visszavonni.';
 $lang["license_manager_mediums"] = 'Licenchasználati médiumok';
 $lang["license_manager_access"] = 'Licencadatok kezelése (ahol még nincs engedélyezve a "Hozzáférés a Rendszerbeállítások területhez" jogosultság révén)';
+$lang["managelicenses-tooltip"] = 'Licenciek létrehozása és kezelése az erőforrásokhoz';

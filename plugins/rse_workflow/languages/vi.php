@@ -54,3 +54,4 @@ $lang["rse_workflow_link_close"] = 'Đóng';
 $lang["rse_workflow_more_notes_title"] = 'Ghi chú:';
 $lang["rse_workflow_email_from"] = 'Địa chỉ email để gửi thông báo từ (sẽ sử dụng %EMAILFROM% nếu để trống):';
 $lang["rse_workflow_bcc_admin"] = 'Thông báo cho quản trị viên hệ thống khi người đóng góp được thông báo';
+$lang["rse_workflow_manage_workflow-tooltip"] = 'Tạo và quản lý trạng thái quy trình làm việc';
