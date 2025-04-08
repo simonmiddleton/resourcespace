@@ -20,11 +20,11 @@ if (!isset($sysvars["EDIT_FILTER_MIGRATION"]) || $sysvars["EDIT_FILTER_MIGRATION
             if (is_numeric($migrateresult)) {
                 message_add(array_column($notification_users, "ref"), $lang["filter_migrate_success"] . ": '" . $filtertext . "'", generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php", array("ref" => $group["ref"])));
                 // Successfully migrated - now use the new filter
-                ps_query("UPDATE usergroup SET " . $filtertype . "_id= ? WHERE ref= ?", ['i', $migrateresult, 'i', $group['ref']]);
+                save_usergroup($group['ref'], array($filtertype . '_id' => $migrateresult));
             } elseif (is_array($migrateresult)) {
                 debug("FILTER MIGRATION: Error migrating filter: '" . $filtertext . "' - " . implode('\n', $migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure to be sorted manually
-                ps_query("UPDATE usergroup SET " . $filtertype . "_id='0' WHERE ref= ?", ['i', $group["ref"]]);
+                save_usergroup($group['ref'], array($filtertype . '_id' => 0));
                 message_add(array_column($notification_users, "ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n', $migrateresult), generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php", array("ref" => $group["ref"])));
             }
         }

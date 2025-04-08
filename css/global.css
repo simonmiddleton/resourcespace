@@ -544,6 +544,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 }
 
 .FormWide .Question label{width: 20%}
+#UsergroupActionSection label {width: 300px}
 .FormWide .Question .Inline label { width: auto; }
 .FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 70%; max-width: 625px;}
 .FormWide .Question .tickset .stdwidth{width: 99%}

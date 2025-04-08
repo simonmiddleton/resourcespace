@@ -86,7 +86,7 @@ foreach ($all_ugs as $ug) {
     if ($update_permissions) {
         $permissions_str = join(",", $permissions);
         logScript("New format permissions: " . $permissions_str);
-        ps_query("UPDATE usergroup SET permissions = ? WHERE ref = ?", ['s', $permissions_str, 'i', $ug["ref"]]);
+        save_usergroup($ug["ref"], array('permissions' => $permissions_str));
     }
 }
 

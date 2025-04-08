@@ -18,7 +18,7 @@ include "../../include/header.php";
 <div class="BasicsBox"> 
     <h1 class="inline_config_search"><?php echo escape($lang["userpreferences"]); ?></h1>
 
-    <?php render_config_filter_by_search(getval("find", ""), getval("only_modified", "no")); ?>
+    <?php render_config_filter_by_search(getval("filter", ""), getval("only_modified", "no")); ?>
 
     <p><?php echo escape($lang["modifyuserpreferencesintro"]); ?></p>
     
@@ -231,7 +231,7 @@ include "../../include/header.php";
 
             // Make sure all states are unchecked if they had the deprecated option $actions_resource_review set to false.
             // Also only show this option if it is disabled
-            get_config_option($userref, 'actions_resource_review', $legacy_resource_review, true);
+            get_config_option(['user' => $userref, 'usergroup' => $usergroup], 'actions_resource_review', $legacy_resource_review, true);
             if (!$legacy_resource_review) {
                 $page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review'], $enable_disable_options, 300, '', true);
             }
@@ -309,7 +309,7 @@ include "../../include/header.php";
             exit();
         }
 
-        $page_def = config_filter_by_search($page_def, $userref, getval("find", ""), getval("only_modified", "no"));
+        $page_def = config_filter_by_search($page_def, ['user' => $userref], getval("filter", ""), getval("only_modified", "no"));
 
         config_generate_html($page_def);
         ?>

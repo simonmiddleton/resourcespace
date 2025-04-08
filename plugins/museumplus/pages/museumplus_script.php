@@ -165,8 +165,8 @@ $notify_users = get_notification_users('SYSTEM_ADMIN');
 $message_users = array();
 foreach($notify_users as $notify_user)
     {
-    get_config_option($notify_user['ref'], 'user_pref_show_notifications', $show_notifications);
-    get_config_option($notify_user['ref'], 'user_pref_system_management_notifications', $sys_mgmt_notifications);
+    get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'user_pref_show_notifications', $show_notifications);
+    get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'user_pref_system_management_notifications', $sys_mgmt_notifications);
     if(!$show_notifications || !$sys_mgmt_notifications) { continue; }
     $message_users[] = $notify_user['ref'];
     }

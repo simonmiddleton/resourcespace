@@ -64,11 +64,11 @@ if (getval("send", "") != "" && enforcePostRequest(false)) {
     $admin_notify_users = array();
     $notify_users = get_notification_users("RESOURCE_ADMIN");
     foreach ($notify_users as $notify_user) {
-        get_config_option($notify_user['ref'], 'user_pref_resource_notifications', $send_message);
+        get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'user_pref_resource_notifications', $send_message);
         if (!$send_message) {
             continue;
         }
-        get_config_option($notify_user['ref'], 'email_user_notifications', $send_email);
+        get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'email_user_notifications', $send_email);
         if ($send_email && $notify_user["email"] != "") {
             $admin_notify_emails[] = $notify_user['email'];
         } else {

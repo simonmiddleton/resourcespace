@@ -1053,9 +1053,9 @@ function search_public_collections($search = "", $order_by = "name", $sort = "AS
         # Form a list of all applicable groups
         $groups = array($usergroup); # Start with user's own group
         $usergroupparams = ["i",$usergroup];
-        $groups = array_merge($groups, ps_array("SELECT ref value FROM usergroup WHERE parent=?", $usergroupparams)); # Children
-        $groups = array_merge($groups, ps_array("SELECT parent value FROM usergroup WHERE ref=?", $usergroupparams)); # Parent
-        $groups = array_merge($groups, ps_array("SELECT ref value FROM usergroup WHERE parent<>0 AND parent=(SELECT parent FROM usergroup WHERE ref=?)", $usergroupparams)); # Siblings (same parent)
+        $groups = array_merge($groups, ps_array("SELECT ref value FROM usergroup WHERE parent=?", $usergroupparams, 'usergroup')); # Children
+        $groups = array_merge($groups, ps_array("SELECT parent value FROM usergroup WHERE ref=?", $usergroupparams, 'usergroup')); # Parent
+        $groups = array_merge($groups, ps_array("SELECT ref value FROM usergroup WHERE parent<>0 AND parent=(SELECT parent FROM usergroup WHERE ref=?)", $usergroupparams, 'usergroup')); # Siblings (same parent)
 
         $sql .= " AND u.usergroup IN (" . ps_param_insert(count($groups)) . ")";
         $sql_params = array_merge($sql_params, ps_param_fill($groups, "i"));
@@ -3162,7 +3162,7 @@ function send_collection_feedback($collection, $comment)
         $body .= "\n\n" . $lang["selectedresourceslightroom"] . "\n" . $file_list;
     }
     $cc = getval("email", "");
-    get_config_option($user['ref'], 'email_user_notifications', $send_email);
+    get_config_option(['user' => $user['ref'], 'usergroup' => $user['usergroup']], 'email_user_notifications', $send_email);
     // Always send a mail for the feedback whatever the user preference, since the  feedback may be very long so can then refer to the CC'd email
     if (filter_var($cc, FILTER_VALIDATE_EMAIL)) {
         send_mail($user["email"], $applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"], $body, "", "", "", null, "", $cc);
@@ -6130,6 +6130,7 @@ function external_upload_notify($collection, $k, $tempcollection)
         debug("external_upload_notify() - unable to find external share details: " . func_get_args());
     }
     $user               = $upload_share[0]["user"];
+    $usergroup          = $upload_share[0]["usergroup"];
     $templatevars       = array();
     $url                = $baseurl . "/?c=" . (int)$collection;
     $templatevars['url'] = $url;
@@ -6138,7 +6139,7 @@ function external_upload_notify($collection, $k, $tempcollection)
     $notificationmessage = $lang["notify_upload_share_new"];
 
     // Does the user want an email or notification?
-    get_config_option($user, 'email_user_notifications', $send_email);
+    get_config_option(['user' => $user, 'usergroup' => $usergroup], 'email_user_notifications', $send_email);
     if ($send_email) {
         $notify_email = ps_value("select email value from user where ref=?", array("i",$user), "");
         if ($notify_email != '') {
@@ -6272,11 +6273,11 @@ function send_collection_to_admin(int $collection)
     $admin_notify_users = array();
     $notify_users = get_notification_users(array("e-1","e0"));
     foreach ($notify_users as $notify_user) {
-        get_config_option($notify_user['ref'], 'user_pref_resource_notifications', $send_message, $admin_resource_access_notifications);
+        get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'user_pref_resource_notifications', $send_message, $admin_resource_access_notifications);
         if (!$send_message) {
             continue;
         }
-        get_config_option($notify_user['ref'], 'email_user_notifications', $send_email);
+        get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'email_user_notifications', $send_email);
         if ($send_email && $notify_user["email"] != "") {
             $admin_notify_emails[] = $notify_user['email'];
         } else {
