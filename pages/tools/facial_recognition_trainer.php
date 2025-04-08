@@ -38,7 +38,7 @@ $cli_long_options  = [
 
 // CLI options check
 $overwrite_existing = false;
-$force_processing   = false;
+$force_processing   = $facial_recognition_mark_for_training_field == -1; // System wide override option
 foreach (getopt($cli_short_options, $cli_long_options) as $option_name => $option_value) {
     if (in_array($option_name, array('h', 'help'))) {
         echo $help_text;
@@ -55,14 +55,8 @@ if (!$facial_recognition_active) {
     exit(1);
 }
 
-if (
-    (
-        !is_positive_int_loose($facial_recognition_mark_for_training_field)
-        || $facial_recognition_mark_for_training_field == 0
-    )
-    && !$force_processing
-) { 
-    echo 'Error: Please set the $facial_recognition_mark_for_training_field config option before trying to run this tool. Alternativly use the force-processing option';
+if (!is_positive_int_loose($facial_recognition_mark_for_training_field) && !$force_processing) { 
+    echo 'Error: Please set the $facial_recognition_mark_for_training_field config option before trying to run this tool. Alternatively use the force-processing option' . PHP_EOL;
     exit(1);
 } 
 

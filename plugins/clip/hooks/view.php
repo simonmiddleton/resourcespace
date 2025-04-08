@@ -7,13 +7,18 @@ function HookClipViewCustompanels()
     if ($vectors==0) {return false;} // No vectors yet.
 
     $search_url=generateURL("{$baseurl}/pages/search.php", array("search" => "!clipsimilar{$ref}"));
+    $duplicate_url=generateURL("{$baseurl}/pages/search.php", array("search" => "!clipduplicate{$ref}"));
     ?>
     <div class="RecordBox">
         <div class="RecordPanel">
             <div class="Title"><?php echo escape($lang["clip-ai-smart-search"]); ?></div>
                 <p>
                     <a href="<?php echo $search_url ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <i class="fa fa-fw fa-search"></i><?php echo $lang["clip-visually-similar-images"]; ?>
+                    <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo $lang["clip-visually-similar-images"]; ?>
+                    </a>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="<?php echo $duplicate_url ?>" onClick="return CentralSpaceLoad(this,true);">
+                    <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo $lang["clip-duplicate-images"]; ?>
                     </a>
                 </p>    
         </div>

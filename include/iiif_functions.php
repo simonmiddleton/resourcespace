@@ -353,6 +353,10 @@ final class IIIFRequest
             ) ? "Sound" : "Video";
             $media["format"] = $GLOBALS["mime_types_by_extension"][$resdata["file_extension"]] ?? "application/octet-stream";
             $size = "";
+            $iiif_thumb = $this->getThumbnail($resource);
+            if ($iiif_thumb) {
+                $media["thumbnail"][] = $iiif_thumb;
+            }
         } else {
             $media["id"] = $this->rootimageurl . $resource . "/full/max/0/default.jpg";
             $media["type"] = "Image";

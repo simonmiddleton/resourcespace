@@ -2574,15 +2574,12 @@ function allow_multi_edit($collection, $collectionid = 0)
         }
         if (is_array($collection)) {
             $resultcount = count($collection);
-            $all_resource_refs = array_column($collection, "ref");
         }
         $editcount = 0;
-        $editable_resource_refs = array();
         # Editable_only=true (so returns editable resources only)
         $editresults =  do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true, true);
         if (is_array($editresults)) {
             $editcount = count($editresults);
-            $editable_resource_refs = array_column($editresults, "ref");
         }
 
         if ($resultcount == $editcount) {
@@ -2590,6 +2587,8 @@ function allow_multi_edit($collection, $collectionid = 0)
         }
 
         # Counts differ meaning there are non-editable resources
+        $all_resource_refs = array_column($collection, "ref");
+        $editable_resource_refs = array_column($editresults, "ref");
         $non_editable_resource_refs = array_diff($all_resource_refs, $editable_resource_refs);
 
         # Is grant edit present for all non-editables?
@@ -3458,7 +3457,6 @@ function collection_min_access($collection)
 
     if ($k != "") {
         # External access - check how this was shared. If internal share access and share is more open than the user's access return that
-        $params = ps_param_fill(array_column($result, "ref"), "i");
         $params[] = "s";
         $params[] = $k;
 
@@ -4788,7 +4786,7 @@ function collection_download_process_archive_command(array &$dl_data, &$zip, $fi
             $arr_arguments[] = $argumentstring;
             $cmdparams[$argumentstring] = new CommandPlaceholderArg(
                 $arguments[$n],
-                fn($m) => preg_match('/[^\@\-\w]/', $m) === 0 // Allows word characters, '@', and '-' only
+                "permitted_archiver_arguments"
             );
         }
         $command = str_replace("[ARGUMENTS]", implode(" ", $arr_arguments), $command);
@@ -4797,7 +4795,7 @@ function collection_download_process_archive_command(array &$dl_data, &$zip, $fi
 
         $cmdparams["%LISTFILEARG"] = new CommandPlaceholderArg(
             $GLOBALS["archiver_listfile_argument"],
-            fn($m) => preg_match('/[^\@\-\w]/', $m) === 0 // Allows word characters, '@', and '-' only
+            "permitted_archiver_arguments"
         );
         $cmdparams["%LISTFILE"] = new CommandPlaceholderArg($listfile, 'is_valid_rs_path');
         
@@ -6542,7 +6540,7 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
  */
 function process_collection_download(array $dl_data): array
 {
-    // Set eleemnts that may not have been set e.g. a job created in an earlier version
+    // Set elements that may not have been set e.g. a job created in an earlier version
     foreach (['archiver', 'collection_download_tar', 'include_alternatives', 'k'] as $unset_var)
     if (!isset($dl_data[$unset_var])) {
         $dl_data[$unset_var] = false;
