@@ -178,6 +178,7 @@ $page_def[] = config_add_multi_select(
 );
 $page_def[] = config_add_boolean_select('annotate_text_adds_comment', $lang['annotate_text_adds_comment'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_boolean_select('annotate_public_view', $lang['annotate_public_view'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_boolean_select('annotate_show_author', $lang['annotate_show_author'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
 // Watermark section

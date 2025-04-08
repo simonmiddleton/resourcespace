@@ -2721,8 +2721,11 @@ $annotate_fields = array();
 // Add comment for resource text annotations. (N/A for fixed list field annotations)
 $annotate_text_adds_comment = true;
 
-// Make annotations publicly visible (e.g. collections external share)
+// Make annotations publicly visible (e.g. external share)
 $annotate_public_view = false;
+
+// Display annotation author?
+$annotate_show_author = false;
 
 //
 //  IIIF:

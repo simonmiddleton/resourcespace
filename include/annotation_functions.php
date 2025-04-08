@@ -174,7 +174,7 @@ function getResourceAnnotations($resource, $page = 0)
 */
 function getAnnotoriousResourceAnnotations($resource, $page = 0, array $ctx)
 {
-    global $baseurl, $annotate_text_adds_comment;
+    global $baseurl, $annotate_text_adds_comment, $annotate_show_author;
 
     $annotations = array();
     $can_view_fields = canSeeAnnotationsFields();
@@ -204,11 +204,14 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0, array $ctx)
                 'editable' => annotationEditable($annotation, $ctx),
 
                 // Custom ResourceSpace properties for Annotation object
-                'ref'                 => (int) $annotation['ref'],
-                'resource'            => (int) $annotation['resource'],
+                'ref' => (int) $annotation['ref'],
+                'resource' => (int) $annotation['resource'],
                 'resource_type_field' => (int) $annotation['resource_type_field'],
-                'page'                => (int) $annotation['page'],
-                'tags'                => getAnnotationTags($annotation),
+                'page' => (int) $annotation['page'],
+                'tags' => getAnnotationTags($annotation),
+                'author' => $annotate_show_author && ($user_data = get_user($annotation['user'])) && $user_data !== false
+                    ? ($user_data['fullname'] ?: $user_data['username'])
+                    : '',
             );
         }
     }
@@ -642,7 +645,13 @@ function get_annotorious_lang(array $map): array
 /** Get all ResourceSpace config options relevant for the Annotorious (RSTagging) plugin functionality. */
 function get_annotorious_resourcespace_config(): array
 {
-    return array_intersect_key($GLOBALS, ['annotate_text_adds_comment' => 1, 'annotate_public_view' => 1]);
+    return array_intersect_key(
+        $GLOBALS,
+        [
+            'annotate_text_adds_comment' => 1,
+            'annotate_public_view' => 1,
+            'annotate_show_author' => 1,
+        ]);
 }
 
 /** Get list of allowed field types to be configured for the "annotate_fields" option */

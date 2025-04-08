@@ -36,13 +36,13 @@ if (isset($plugin_config['annotate_public_view'])) {
     $set_system_wide_config['annotate_public_view'] = (int) $plugin_config['annotate_public_view'];
 }
 
+if (isset($plugin_config['annotate_show_author'])) {
+    $set_system_wide_config['annotate_show_author'] = (int) $plugin_config['annotate_show_author'];
+}
+
 /*
 todo: migrate the following settings
 - $annotate_exclude_restypes
-- $annotate_show_author
-- $annotate_font
-
-
 */
 print_r($plugin_config);
 
