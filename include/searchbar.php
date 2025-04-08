@@ -392,6 +392,7 @@ var categoryTreeChecksArray = [];
 $types=get_resource_types("",true,false,true);
 
 $simpleSearchFieldsAreHidden = hook("simplesearchfieldsarehidden");
+hook("aftersearchbox");
 
 if (!$basic_simple_search && !$hide_search_resource_types)
     {

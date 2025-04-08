@@ -2885,3 +2885,13 @@ $lang["systemlog-tooltip"] = 'Tazama kumbukumbu za mfumo';
 $lang["system_performance-tooltip"] = 'Fanya kipimo cha utendaji';
 $lang["systemconfig-tooltip"] = 'Sanifu chaguzi za kiwango cha mfumo';
 $lang["error-processlock-aborting"] = 'Mchakato tayari unakimbia. Kuondoka';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Chagua kuondoa nembo ya kundi la watumiaji - Giza';
+$lang["fieldtitle-group_logo_dark"] = 'Nembo maalum ya kikundi - Giza';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Badilisha nembo maalum ya kikundi - Giza';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Nembo ya programu - Giza';
+$lang["user_pref_appearance"] = 'Muonekano';
+$lang["user_pref_appearance_light"] = 'Mwanga';
+$lang["user_pref_appearance_dark"] = 'Giza';
+$lang["user_pref_appearance_device"] = 'Kipanga cha kifaa';
+$lang["collection_download_include_alternatives"] = 'Jumuisha faili mbadala?';

@@ -1,31 +1,59 @@
 <?php
 
-if ('cli' != PHP_SAPI) {
-    exit('This utility is command line only.');
-}
-
+command_line_only();
 
 $use_cases = [
-    'Simple value' => 'Foo bar',
-    'Value with double quotes' => 'Foo "bar"',
-    'Value with single quotes' => "Foo 'bar'",
-    'Value beginning with a double quote' => '"Foo',
-    'Value beginning with a single quote' => "'Bar",
-];
-foreach ($use_cases as $use_case_name => $input) {
-    $output_double_quotes = sprintf('test="%s"', escape($input));
-    $output_single_quotes = sprintf("test='%s'", escape($input));
+    ['Simple text should be left alone', 'Foo bar', 'Foo bar'],
+    ['Ampersand should be encoded', '&', '&amp;'],
+    ['Less then sign should be encoded', '<', '&lt;'],
+    ['Greater then sign should be encoded', '>', '&gt;'],
+    ['Double quotes should be encoded', '"', '&quot;'],
+    ['Single quotes should be encoded', "'", '&#039;'],
 
-    if (mb_strpos($output_double_quotes, '""') !== false || mb_strpos($output_single_quotes, "''") !== false) {
-        echo "Use case: {$use_case_name} - ";
+    // We want to show invalid characters to be able to detect encoding issues!
+    ["Invalid character (\x80) should be encoded", "\x80", "\u{FFFD}"],
+
+    [
+        'URL query string should be encoded (see ampersand use case)',
+        generateURL($baseurl, ['param1' => 'val1', 'param2' => 'val2']) . '#fragment',
+        str_replace('&', '&amp;', generateURL($baseurl, ['param1' => 'val1', 'param2' => 'val2']) . '#fragment'),
+    ],
+    ['File path should be left alone', '/path/to/page.php', '/path/to/page.php'],
+    [
+        'Text with URI schema keywords should be left alone',
+        'Text that may contain URI keywords like -- data: test ',
+        'Text that may contain URI keywords like -- data: test ',
+    ],
+    ['Invalid URI schemes (javascript:)', "javascript:alert('XSS')", 'javascript%3Aalert(&#039;XSS&#039;)'],
+    ['Invalid URI schemes (data:)', 'data:,Foo%2C%20Bar%21', 'data%3A,Foo%2C%20Bar%21'],
+    ['Invalid URI scheme (embedded tab)', "jav\tascript:alert('XSS')", "jav\tascript%3Aalert(&#039;XSS&#039;)"],
+    [
+        'Invalid URI scheme (embedded encoded tab)',
+        "jav&#x09;ascript:alert('XSS')",
+        "jav&amp;#x09;ascript%3Aalert(&#039;XSS&#039;)"
+    ],
+    [
+        'Invalid URI schemes (spaces and meta characters)',
+        " &#14;  javascript:alert('XSS')",
+        ' &amp;#14;  javascript%3Aalert(&#039;XSS&#039;)'
+    ],
+    [
+        'Invalid URI schemes (inline CSS style)',
+        'background-image: url(javascript:alert(\'XSS\'));',
+        'background-image: url(javascript%3Aalert(&#039;XSS&#039;));',
+    ],
+];
+foreach ($use_cases as [$use_case, $input, $expected]) {
+    $result = escape($input);
+    if ($expected !== $result) {
+        echo "Use case: {$use_case} - ";
+        test_log("expected >>>{$expected}<<<");
+        test_log("result   >>>{$result}<<<");
         return false;
     }
 }
 
-// We want to show invalid characters to be able to detect encoding issues!
-if (escape("invalid -\x80- char") !== "invalid -\u{FFFD}- char") {
-    echo "Use case: Invalid character (\x80) - ";
-    return false;
-}
+// Tear down
+unset($use_cases, $result);
 
 return true;

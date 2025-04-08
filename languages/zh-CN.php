@@ -3095,3 +3095,13 @@ $lang["systemlog-tooltip"] = '查看系统日志';
 $lang["system_performance-tooltip"] = '运行性能基准测试';
 $lang["systemconfig-tooltip"] = '配置系统级选项';
 $lang["error-processlock-aborting"] = '进程已在运行。正在退出';
+
+$lang["action-title_remove_user_group_logo_dark"] = '勾选以移除用户组徽标 - 深色';
+$lang["fieldtitle-group_logo_dark"] = '组特定徽标 - 深色';
+$lang["fieldtitle-group_logo_dark_replace"] = '替换组特定徽标 - 深色';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = '应用程序徽标 - 深色';
+$lang["user_pref_appearance"] = '外观';
+$lang["user_pref_appearance_light"] = '光';
+$lang["user_pref_appearance_dark"] = '黑暗';
+$lang["user_pref_appearance_device"] = '设备默认';
+$lang["collection_download_include_alternatives"] = '是否包含备用文件？';

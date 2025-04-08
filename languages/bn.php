@@ -2879,3 +2879,13 @@ $lang["systemlog-tooltip"] = 'সিস্টেম লগ দেখুন';
 $lang["system_performance-tooltip"] = 'একটি কর্মক্ষমতা বেঞ্চমার্ক চালান';
 $lang["systemconfig-tooltip"] = 'সিস্টেম স্তরের বিকল্পগুলি কনফিগার করুন';
 $lang["error-processlock-aborting"] = 'প্রক্রিয়া ইতিমধ্যে চলছে। বের হচ্ছি';
+
+$lang["collection_download_include_alternatives"] = 'বিকল্প ফাইল অন্তর্ভুক্ত করবেন?';
+$lang["action-title_remove_user_group_logo_dark"] = 'ব্যবহারকারী গ্রুপের লোগো মুছে ফেলার জন্য টিক দিন - ডার্ক';
+$lang["fieldtitle-group_logo_dark"] = 'গ্রুপ নির্দিষ্ট লোগো - অন্ধকার';
+$lang["fieldtitle-group_logo_dark_replace"] = 'গোষ্ঠী নির্দিষ্ট লোগো প্রতিস্থাপন করুন - অন্ধকার';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'অ্যাপ্লিকেশন লোগো - ডার্ক';
+$lang["user_pref_appearance"] = 'চেহারা';
+$lang["user_pref_appearance_light"] = 'আলো';
+$lang["user_pref_appearance_dark"] = 'গা dark';
+$lang["user_pref_appearance_device"] = 'যন্ত্রের ডিফল্ট';

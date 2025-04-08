@@ -18,6 +18,8 @@ $usersgroup_subordinates = get_approver_usergroups($usergroup);
 $usersgroup_approvers = get_usergroup_approvers($usergroup);
 
 $ignoregroups = (getval("nogroups", "") != "") ? true : false;
+$ignoresmartgroups = (getval("nosmartgroups", "") != "") ? true : false;
+
 $first = true;
 ?> [ <?php
 
@@ -57,7 +59,7 @@ if (!$ignoregroups) {
     }
 }
 
-if (!$ignoregroups) {
+if (!$ignoregroups && !$ignoresmartgroups) {
     if (!isset($groups)) {
         $groups = get_usergroups(true, $find);
     }

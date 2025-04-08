@@ -2785,6 +2785,7 @@ $facial_recognition_face_recognizer_models_location = '';
 
 // Metadata field ID which can mark a resource as being part of the training set.
 // Note: all facial recognition resource annotations will be used (i.e. you can't pick annotations).
+// This is important because tagging e.g. the side of a face or the back of a head may be useful for users but using those annotations to train the software will pollute your training set and make facial recognition ineffective. Set this to -1 to override and use all annotations
 $facial_recognition_mark_for_training_field = 0;
 //
 //
@@ -3022,6 +3023,10 @@ $owner_field_mappings = [];
 // Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
 // The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder, $tempdir - these don't need to be added to the array
 // $valid_upload_paths = [];
+
+// Allow uploading remote files from these sources. Note: you can use just the base URL and, if needed, a partial path
+// too. Example: ['https://example.tld', 'https://example2.tld/pages/download.php']
+$valid_upload_remote_sources = [];
 
 // Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode
 $thumbs_display_archive_state = false;

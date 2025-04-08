@@ -2985,3 +2985,13 @@ $lang["systemlog-tooltip"] = 'Ver el registro del sistema';
 $lang["system_performance-tooltip"] = 'Ejecutar un benchmark de rendimiento';
 $lang["systemconfig-tooltip"] = 'Configurar opciones a nivel de sistema';
 $lang["error-processlock-aborting"] = 'Proceso ya en ejecución. Saliendo';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Marcar para eliminar el logo del grupo de usuarios - Oscuro';
+$lang["fieldtitle-group_logo_dark"] = 'Logo específico del grupo - Oscuro';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Reemplazar logo específico del grupo - Oscuro';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Logo de la aplicación - Oscuro';
+$lang["user_pref_appearance"] = 'Apariencia';
+$lang["user_pref_appearance_light"] = 'Luz';
+$lang["user_pref_appearance_dark"] = 'Oscuro';
+$lang["user_pref_appearance_device"] = 'Predeterminado del dispositivo';
+$lang["collection_download_include_alternatives"] = '¿Incluir archivos alternativos?';

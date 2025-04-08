@@ -144,6 +144,40 @@ $use_cases = [
         ],
         'expected' => 'Multi byte characters: © è å 泉',
     ],
+    [
+        'name' => 'Dangerous URI scheme in attribute value should be removed',
+        'input' => [
+            'html' => '<a onmouseover="javascript:alert(\'XSS\')">Test</a>',
+            'tags' => ['a'],
+            'attributes' => ['onmouseover'],
+        ],
+        'expected' => '<a>Test</a>',
+    ],
+    [
+        'name' => 'Dangerous URI scheme in the "style" attribute value should be removed',
+        'input' => [
+            'html' => '<div style="background-image: url(javascript:alert(\'XSS\'));">Test</div>',
+        ],
+        'expected' => '<div>Test</div>',
+    ],
+    [
+        'name' => 'Allowed URI scheme, i.e http(s), should be left alone',
+        'input' => [
+            'html' => sprintf('<a href="%s">Test</a>', generateURL($baseurl, ['foo' => 'bar']) . '#fragment'),
+            'tags' => ['a'],
+            'attributes' => ['href'],
+        ],
+        'expected' => sprintf('<a href="%s">Test</a>', generateURL($baseurl, ['foo' => 'bar']) . '#fragment'),
+    ],
+    [
+        'name' => 'Dangerous URI scheme (embedded encoded tab) in attribute value should be removed',
+        'input' => [
+            'html' => '<a onmouseover="jav&#x09;ascript:alert(\'XSS\')">Test</a>',
+            'tags' => ['a'],
+            'attributes' => ['onmouseover'],
+        ],
+        'expected' => '<a>Test</a>',
+    ],
 ];
 
 foreach ($use_cases as $use_case) {
@@ -158,13 +192,13 @@ foreach ($use_cases as $use_case) {
 
     if ($processed !== $use_case['expected']) {
         echo "Use case: {$use_case['name']} - ";
+        test_log("- expected >>>{$use_case['expected']}<<<");
+        test_log("- result   >>>{$processed}<<<");
         return false;
     }
 }
 
-
-
 // Tear down
-unset($use_cases, $html, $tags, $attributes);
+unset($use_cases, $html, $tags, $attributes, $processed);
 
 return true;

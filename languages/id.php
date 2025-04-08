@@ -3045,3 +3045,13 @@ $lang["systemlog-tooltip"] = 'Lihat log sistem';
 $lang["system_performance-tooltip"] = 'Jalankan tolok ukur kinerja';
 $lang["systemconfig-tooltip"] = 'Konfigurasi opsi tingkat sistem';
 $lang["error-processlock-aborting"] = 'Proses sudah berjalan. Keluar';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Centang untuk menghapus logo grup pengguna - Gelap';
+$lang["fieldtitle-group_logo_dark"] = 'Logo spesifik grup - Gelap';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Ganti logo spesifik grup - Gelap';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Logo aplikasi - Gelap';
+$lang["user_pref_appearance"] = 'Tampilan';
+$lang["user_pref_appearance_light"] = 'Cahaya';
+$lang["user_pref_appearance_dark"] = 'Gelap';
+$lang["user_pref_appearance_device"] = 'Default perangkat';
+$lang["collection_download_include_alternatives"] = 'Sertakan file alternatif?';

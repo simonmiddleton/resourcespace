@@ -35,6 +35,7 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
 
     # FStemplate support - do not allow samples from the template to be replaced
     if (resource_file_readonly($ref)) {
+        debug("Resource record is read only - template.");
         return false;
     }
 
@@ -54,17 +55,19 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
     }
 
     if (!$after_upload_processing && !(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override'))) {
+        debug("User does not have permission to upload.");
         return false;
     }
 
     $resource_data = get_resource_data($ref);
 
     if (!is_array($resource_data)) {
-        # No valid resource found.
+        debug("No valid resource found.");
         return false;
     }
 
     if (isset($resource_data["lock_user"]) && $resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref) {
+        debug("Resource locked.");
         return false;
     }
 
@@ -191,16 +194,19 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
                     $extension = str_replace(" ", "_", trim(strtolower($file_type_by_exiftool)));
                     $filename = $filename . "." . $extension;
                 } else {
+                    debug("File type unknown.");
                     return false;
                 }
             }
             # if no clue of extension by now, return false
             else {
+                debug("File extension unknown.");
                 return false;
             }
         }
 
         if (is_banned_extension($extension)) {
+            debug("Banned extension.");
             return false;
         }
 
@@ -267,6 +273,7 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
                         []
                     )['success'];
                 } else {
+                    debug("File does not exist.");
                     return false;
                 }
             } else {
@@ -279,6 +286,7 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
             }
 
             if (!$result) {
+                debug("File processing faulure.");
                 return false;
             }
         }
@@ -1162,11 +1170,6 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
     $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
 
     if (($extension == "jpg") || ($extension == "jpeg") || ($extension == "png") || ($extension == "gif" && !$ffmpeg_preview_gif)) {
-        # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
-        # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
-        if ((list($sw,$sh) = try_getimagesize($file)) === false) {
-            return false;
-        }
         if (isset($imagemagick_path)) {
             return create_previews_using_im($ref, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ingested, $onlysizes);
         } else {
@@ -1174,6 +1177,11 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
             # Use the GD library to perform the resize
             # ----------------------------------------
 
+            // Determine dimensions of the image, if it fails return 
+            // false as future GD functions won't work either
+            if ((list($sw,$sh) = try_getimagesize($file)) === false) {
+                return false;   
+            }
 
             # For resource $ref, (re)create the various preview sizes listed in the table preview_sizes
             # Only create previews where the target size IS LESS THAN OR EQUAL TO the source size.

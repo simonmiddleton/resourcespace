@@ -2954,3 +2954,13 @@ $lang["systemlog-tooltip"] = 'Pogledajte sustavnu evidenciju';
 $lang["system_performance-tooltip"] = 'Izvrši benchmark performansi';
 $lang["systemconfig-tooltip"] = 'Konfigurirajte opcije na razini sustava';
 $lang["error-processlock-aborting"] = 'Proces već radi. Izlazim';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Označite za uklanjanje logotipa korisničke grupe - Tamno';
+$lang["fieldtitle-group_logo_dark"] = 'Logo specifičan za grupu - Tamno';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Zamijeni grupni specifični logo - Tamno';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Logo aplikacije - Tamno';
+$lang["user_pref_appearance"] = 'Izgled';
+$lang["user_pref_appearance_light"] = 'Svjetlo';
+$lang["user_pref_appearance_dark"] = 'Tamno';
+$lang["user_pref_appearance_device"] = 'Zadano uređaj';
+$lang["collection_download_include_alternatives"] = 'Uključiti alternativne datoteke?';

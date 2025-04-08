@@ -181,9 +181,19 @@ if (!isset($autocomplete_user_scope)) {
         return false;
     }
 
+    <?php
+    # Limit results - default is users, groups and smart groups.
+    $limit_results = '';
+    if (isset($single_user_select_field_id)) {
+        $limit_results = '?nogroups=true';
+    } elseif (isset($no_smart_groups)) {
+        $limit_results = '?nosmartgroups=true';
+    }
+    ?>
+
     jQuery(document).ready(function () {
         jQuery('#<?php echo escape($autocomplete_user_scope); ?>autocomplete').autocomplete({
-            source: "<?php echo $baseurl; ?>/pages/ajax/autocomplete_user.php<?php echo (isset($single_user_select_field_id)) ? "?nogroups=true" : ''; ?>",
+            source: "<?php echo $baseurl; ?>/pages/ajax/autocomplete_user.php<?php echo escape($limit_results); ?>",
             select: <?php echo escape($autocomplete_user_scope); ?>addUser,
             classes: {
                 "ui-autocomplete": "userselect"

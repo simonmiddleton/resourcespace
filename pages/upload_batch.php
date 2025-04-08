@@ -752,7 +752,7 @@ if ($processupload)
                     {
                     // If extracting embedded metadata than expect the date to be overriden as it would be if
                     // upload_then_edit = false
-                    update_field($ref, $reset_date_field, date('Y-m-d H:i'));
+                    update_field($ref, $reset_date_field, date('Y-m-d H:i:s'));
                     }
 
                 # Log this

@@ -3099,3 +3099,13 @@ $lang["systemlog-tooltip"] = 'عرض سجل النظام';
 $lang["system_performance-tooltip"] = 'قم بتشغيل اختبار أداء';
 $lang["systemconfig-tooltip"] = 'تكوين خيارات مستوى النظام';
 $lang["error-processlock-aborting"] = 'العملية قيد التشغيل بالفعل. الخروج';
+
+$lang["collection_download_include_alternatives"] = 'هل تريد تضمين ملفات بديلة؟';
+$lang["action-title_remove_user_group_logo_dark"] = 'قم بتحديد لإزالة شعار مجموعة المستخدمين - داكن';
+$lang["fieldtitle-group_logo_dark"] = 'شعار خاص بالمجموعة - داكن';
+$lang["fieldtitle-group_logo_dark_replace"] = 'استبدال شعار المجموعة المحدد - داكن';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'شعار التطبيق - داكن';
+$lang["user_pref_appearance"] = 'المظهر';
+$lang["user_pref_appearance_light"] = 'ضوء';
+$lang["user_pref_appearance_dark"] = 'داكن';
+$lang["user_pref_appearance_device"] = 'الإعدادات الافتراضية للجهاز';

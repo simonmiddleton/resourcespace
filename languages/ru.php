@@ -2969,3 +2969,13 @@ $lang["systemlog-tooltip"] = 'Просмотреть системный журн
 $lang["system_performance-tooltip"] = 'Запустите тест производительности';
 $lang["systemconfig-tooltip"] = 'Настроить параметры уровня системы';
 $lang["error-processlock-aborting"] = 'Процесс уже запущен. Выход.';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Снимите галочку, чтобы удалить логотип группы пользователей - Темный';
+$lang["fieldtitle-group_logo_dark"] = 'Логотип группы - Темный';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Заменить логотип группы - Темный';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Логотип приложения - Темный';
+$lang["user_pref_appearance"] = 'Внешний вид';
+$lang["user_pref_appearance_light"] = 'Свет';
+$lang["user_pref_appearance_dark"] = 'Темный';
+$lang["user_pref_appearance_device"] = 'Устройство по умолчанию';
+$lang["collection_download_include_alternatives"] = 'Включить альтернативные файлы?';

@@ -2888,3 +2888,13 @@ $lang["systemlog-tooltip"] = 'مشاهده لاگ سیستم';
 $lang["system_performance-tooltip"] = 'اجرای یک معیار عملکرد';
 $lang["systemconfig-tooltip"] = 'تنظیم گزینه‌های سطح سیستم';
 $lang["error-processlock-aborting"] = 'فرایند در حال اجرا است. در حال خروج';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'علامت بزنید تا لوگوی گروه کاربری حذف شود - تیره';
+$lang["fieldtitle-group_logo_dark"] = 'لوگوی خاص گروه - تیره';
+$lang["fieldtitle-group_logo_dark_replace"] = 'جایگزینی لوگوی خاص گروه - تیره';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'لوگوی برنامه - تیره';
+$lang["user_pref_appearance"] = 'ظاهر';
+$lang["user_pref_appearance_light"] = 'نور';
+$lang["user_pref_appearance_dark"] = 'تاریک';
+$lang["user_pref_appearance_device"] = 'پیش‌فرض دستگاه';
+$lang["collection_download_include_alternatives"] = 'آیا فایل‌های جایگزین را شامل می‌شود؟';

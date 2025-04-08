@@ -261,6 +261,7 @@ function do_search(
     $score = "";
 
     # Do not process if a numeric search is provided (resource ID)
+    global $keysearch;
     $keysearch = !($config_search_for_number && is_numeric($search));
 
     # Fetch a list of fields that are not available to the user - these must be omitted from the search.
@@ -271,6 +272,8 @@ function do_search(
     // *******************************************************************************
     $sql_join->sql .= " JOIN resource_type AS rty ON r.resource_type = rty.ref ";
     $select->sql .= ", rty.order_by ";
+
+    hook("search_pipeline_setup", "", array($search, $select, $sql_join , $sql_filter, $sql));
 
     // Search pipeline - each step handles an aspect of search and adds to the assembled SQL.
     $return = include "do_search_keywords.php";

@@ -2877,3 +2877,13 @@ $lang["systemlog-tooltip"] = 'Xem nhật ký hệ thống';
 $lang["system_performance-tooltip"] = 'Chạy một bài kiểm tra hiệu suất';
 $lang["systemconfig-tooltip"] = 'Cấu hình các tùy chọn cấp hệ thống';
 $lang["error-processlock-aborting"] = 'Quá trình đã chạy. Đang thoát';
+
+$lang["action-title_remove_user_group_logo_dark"] = 'Đánh dấu để xóa logo nhóm người dùng - Tối';
+$lang["fieldtitle-group_logo_dark"] = 'Logo nhóm cụ thể - Tối';
+$lang["fieldtitle-group_logo_dark_replace"] = 'Thay thế logo nhóm cụ thể - Tối';
+$lang["systemconfig_linkedheaderimgsrc_dark_label"] = 'Biểu trưng ứng dụng - Tối';
+$lang["user_pref_appearance"] = 'Hình thức';
+$lang["user_pref_appearance_light"] = 'Ánh sáng';
+$lang["user_pref_appearance_dark"] = 'Tối';
+$lang["user_pref_appearance_device"] = 'Mặc định thiết bị';
+$lang["collection_download_include_alternatives"] = 'Có bao gồm các tệp thay thế không?';
