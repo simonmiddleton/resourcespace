@@ -642,7 +642,7 @@ function get_annotorious_lang(array $map): array
 /** Get all ResourceSpace config options relevant for the Annotorious (RSTagging) plugin functionality. */
 function get_annotorious_resourcespace_config(): array
 {
-    return array_intersect_key($GLOBALS, ['annotate_text_adds_comment' => 1]);
+    return array_intersect_key($GLOBALS, ['annotate_text_adds_comment' => 1, 'annotate_public_view' => 1]);
 }
 
 /** Get list of allowed field types to be configured for the "annotate_fields" option */
