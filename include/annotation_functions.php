@@ -24,6 +24,27 @@ function get_annotate_fields(): array
     );
 }
 
+function get_all_viable_annotate_metadata_fields(array $exclude_resource_types): array
+{
+    $resource_types = [];
+    if ($exclude_resource_types !== []) {
+        $all_resource_types = array_column(get_all_resource_types(), 'ref');
+        $resource_types = array_values(array_diff($all_resource_types, $exclude_resource_types));
+    }
+
+    return array_column(
+        get_resource_type_fields(
+            restypes: $resource_types,
+            field_order_by: 'ref',
+            field_sort: 'asc',
+            find: '',
+            fieldtypes: get_valid_annotate_field_types(),
+            include_inactive: false
+        ),
+        'ref'
+    );
+}
+
 /**
 * Get annotation by ID
 *

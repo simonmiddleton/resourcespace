@@ -371,6 +371,8 @@ function process_config_options($user_id = null)
 
     if(get_config_options($user_id, $config_options))
         {
+        // todo: to honour types, check type in the global scope (as it should be defined already BUT do check it exists) and ensure it's correct!
+        // print_r($config_options);die;
         foreach($config_options as $config_option)
             {
             $param_value = $config_option['value'];

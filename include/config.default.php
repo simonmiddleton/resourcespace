@@ -2727,6 +2727,10 @@ $annotate_public_view = false;
 // Display annotation author?
 $annotate_show_author = false;
 
+// Specify resource types that cannot be annotated (side effect: inapplicable metadata fields will be ignored at runtime
+// and users will also no longer be able to select inapplicable fields)
+$annotate_exclude_restypes = [];
+
 //
 //  IIIF:
 //

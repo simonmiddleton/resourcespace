@@ -162,6 +162,7 @@ $page_def[] = config_add_html('</div>');
 // Annotations section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . escape($lang['annotate_annotations_label']) . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('annotate_enabled', $lang['annotate_annotations_label'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_multi_rtype_select('annotate_exclude_restypes', $lang['annotate_exclude_restypes'], 420);
 $page_def[] = config_add_multi_select(
     'annotate_fields',
     $lang['annotate_tagging_fields'],
@@ -639,18 +640,32 @@ include '../../include/header.php';
     <div class="CollapsibleSections">
         <?php config_generate_html($page_def); ?>
     </div>
+    <template id="autosave_tpl">
+        <div class="AutoSaveStatus">
+            <span id="AutoSaveStatus-option_name" style="display:none;"></span>
+        </div>
+    </template>
 
     <script>registerCollapsibleSections(false);</script>
-
     <?php if ($custom_font != "") { ?>
         <script>document.getElementById("question_global_font").hidden = true;</script>
         <?php
     }
     config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php');
     ?>
-
     <script>
         jQuery('fieldset#annotate_fields :input:checkbox').change(() => AutoSaveConfigOption('annotate_fields'));
+
+        // Provide Autosave status container (so that AutoSaveConfigOption() can be useful) to page definitions that
+        // don't support it
+        const autosave_tpl_clone = document.querySelector('#autosave_tpl').content.cloneNode(true);
+        let autosave_span = autosave_tpl_clone.querySelector('span#AutoSaveStatus-option_name');
+        autosave_span.setAttribute('id', 'AutoSaveStatus-annotate_exclude_restypes');
+        jQuery('fieldset#annotate_exclude_restypes').before(autosave_tpl_clone);
+        jQuery('fieldset#annotate_exclude_restypes :input:checkbox')
+            .change(() => AutoSaveConfigOption('annotate_exclude_restypes'));
+
+        // todo: based on annotate_exclude_restypes disable annotate_fields' available options (DON'T change its value!)
 
         function debug_log_selector_onchange(el) {
             let value = jQuery(el).val();

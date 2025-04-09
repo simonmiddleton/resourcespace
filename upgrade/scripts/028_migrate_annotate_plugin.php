@@ -19,32 +19,51 @@ if ($plugin_config === null) {
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin settings');
 $set_system_wide_config = ['annotate_enabled' => 1];
 
-if (
-    isset($plugin_config['annotate_resource_type_field'])
-    && $plugin_config['annotate_resource_type_field'] > 0
-    && !in_array($plugin_config['annotate_resource_type_field'], $annotate_fields)
-    && in_array(
-        $plugin_config['annotate_resource_type_field'],
-        array_column(get_resource_type_fields('', 'ref', 'asc', '', get_valid_annotate_field_types(), false), 'ref')
-    )
-) {
-    $annotate_fields[] = $plugin_config['annotate_resource_type_field'];
-    $set_system_wide_config['annotate_fields'] = implode(',', $annotate_fields);
-}
+print_r($annotate_exclude_restypes);die;
+$settings_to_migrate = array_intersect_key(
+    $plugin_config,
+    array_flip([
+        'annotate_resource_type_field',
+        'annotate_public_view',
+        'annotate_show_author',
+        'annotate_rt_exclude',
+    ])
+);
+foreach ($settings_to_migrate as $name => $value) {
+    if (
+        $name === 'annotate_resource_type_field'
+        && $value > 0
+        && !in_array($value, $annotate_fields)
+        && in_array($value, get_all_viable_annotate_metadata_fields($annotate_exclude_restypes))
+    ) {
+        $annotate_fields[] = $value;
+        $set_system_wide_config['annotate_fields'] = implode(',', $annotate_fields);
+    } elseif (in_array($name, ['annotate_public_view', 'annotate_show_author'])) {
+        $set_system_wide_config[$name] = (int) ($value > 0);
+    } elseif (
+        $name === 'annotate_rt_exclude'
+        && ($all_resource_types = array_column(get_all_resource_types(), 'ref'))
+        && ($exclude_restypes = array_values(array_intersect($all_resource_types, $value)))
+        && $exclude_restypes !== []
+    ) {
+        $annotate_exclude_restypes = $exclude_restypes;
+        $set_system_wide_config['annotate_exclude_restypes'] = implode(',', $exclude_restypes);
 
-if (isset($plugin_config['annotate_public_view'])) {
-    $set_system_wide_config['annotate_public_view'] = (int) $plugin_config['annotate_public_view'];
+        // Update annotate_fields based on this setting
+        $annotate_fields = array_intersect(
+            get_all_viable_annotate_metadata_fields($exclude_restypes),
+            $annotate_fields
+        );
+        $set_system_wide_config['annotate_fields'] = implode(',', $annotate_fields);
+    }
 }
-
-if (isset($plugin_config['annotate_show_author'])) {
-    $set_system_wide_config['annotate_show_author'] = (int) $plugin_config['annotate_show_author'];
-}
+print_r($set_system_wide_config);
+die;
 
 /*
 todo: migrate the following settings
-- $annotate_exclude_restypes
+WIP - $annotate_exclude_restypes
 */
-print_r($plugin_config);
 
 $sysadmin_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
 foreach ($set_system_wide_config as $name => $value) {

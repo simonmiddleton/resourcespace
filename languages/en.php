@@ -2846,6 +2846,7 @@ $lang['annotate_tagging_fields'] = 'Tagging fields';
 $lang['annotate_text_adds_comment'] = 'Add comment for resource text annotations. (N/A for fixed list field annotations)';
 $lang['annotate_public_view'] = 'Are annotations publicly visible (e.g. external shares)?';
 $lang['annotate_show_author'] = 'Display annotation author?';
+$lang['annotate_exclude_restypes'] = 'Resource Types to exclude (tick to exclude and not be annotated)';
 $lang['annotate_pseudo_rtf_comment_title'] = 'Comments (mode)';
 $lang['annotorious_add_a_comment'] = 'Add a Comment...';
 $lang['annotorious_type_to_search_field'] = 'Type to search field...';
