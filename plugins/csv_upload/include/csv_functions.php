@@ -877,3 +877,51 @@ function get_csv_line_matching_resources(int $field, string $csv_value): array
     $allmatches = array_column($allmatches, "ref");
     return $allmatches;
 }
+
+/**
+ * Checks if a passed csv file is valid for being processed - no BOM and UTF-8 only.
+ *
+ * @param   string  $filename    Path to csv file
+ *
+ * @return  array   Return an array with whether the file passed the check and a message
+ */
+function csv_check_utf8(string $filename): array {
+
+    global $lang;
+    
+    // Check if file exists
+    if (!file_exists($filename)) {
+        return ['success' => false, 'message' => $lang["csv_upload_check_file_error"]];
+    }
+
+    // Open file in binary mode
+    $handle = fopen($filename, 'rb');
+    if (!$handle) {
+        return ['success' => false, 'message' => $lang["csv_upload_check_file_error"]];
+    }
+
+    // Check for BOM (first three bytes)
+    $firstBytes = fread($handle, 3);
+    if ($firstBytes === "\xEF\xBB\xBF") {
+        fclose($handle);
+        return ['success' => false, 'message' => $lang["csv_upload_check_invalidbom"]];
+    }
+
+    // Rewind back to the beginning if no BOM
+    rewind($handle);
+
+    $line_count = 1;
+
+    while (($line = fgets($handle)) !== false) {
+        if (!mb_check_encoding($line, 'UTF-8')) {
+            fclose($handle);
+            return ['success' => false, 'message' => $lang["csv_upload_check_utf_error"] . $line_count];
+        }
+        $line_count++;
+    }
+
+    fclose($handle);
+
+    return ['success' => true, 'message' => ''];
+
+}

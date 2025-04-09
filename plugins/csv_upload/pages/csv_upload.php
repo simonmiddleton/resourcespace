@@ -90,11 +90,25 @@ if (isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0) {
             'allow_extensions' => ['csv'],
             'mime_file_based_detection' => false,
         ]
-    );
+    );    
 
     if ($process_file_upload['success']) {
-        $csv_set_options['csvchecksum'] = get_checksum($csvfile, true);
-        $csv_set_options['csv_filename'] = $_FILES[$fd]['name'];
+
+        // Check if file is valid UTF-8
+        $csv_utf_check = csv_check_utf8($csvfile);
+
+        if ($csv_utf_check['success']) {
+            $csv_set_options['csvchecksum'] = get_checksum($csvfile, true);
+            $csv_set_options['csv_filename'] = $_FILES[$fd]['name'];
+        } else {
+            // File is not valid to process - remove the CSV and the directory created earlier
+            try_unlink($csvfile);
+            rmdir($csvdir);
+            $onload_message = [
+                'title' => $lang['error'],
+                'text'  => $csv_utf_check['message'],
+            ];
+        }
     } else {
         $onload_message = [
             'title' => $lang['error'],
