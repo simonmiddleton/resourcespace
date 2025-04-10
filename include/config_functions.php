@@ -246,7 +246,7 @@ function delete_config_option(array $config_type, string $param_name) : bool
             $user_query = 'usergroup = ?';
             $params[] = 'i'; $params[] = $config_type['usergroup'];
         }
-        else if (isset($config_type['user'])) {
+        elseif (isset($config_type['user'])) {
             $user_query = 'user = ?';
             $params[] = 'i'; $params[] = $config_type['user'];
         } else {
