@@ -4555,8 +4555,6 @@ function collection_download_process_data_only_types(array $dl_data, &$zip)
                 $resource_ref_escaped = $result[$n]['ref'];
                 ps_query("UPDATE resource SET new_hit_count = GREATEST(hit_count, new_hit_count) + 1 WHERE ref = ?", array("i",$resource_ref_escaped));
             }
-
-            continue;
         }
     }
 }
