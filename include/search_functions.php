@@ -2018,7 +2018,7 @@ function get_filter_sql($filterid)
     return false;
 }
 
-function split_keywords($search, $index = false, $partial_index = false, $is_date = false, $is_html = false, $keepquotes = false, $preserve_separators = false)
+function split_keywords($search, $index = false, $partial_index = false, $is_date = false, $is_html = false, $keepquotes = false, bool $preserve_separators = false)
 {
     # Takes $search and returns an array of individual keywords.
     global $permitted_html_tags, $permitted_html_attributes;
