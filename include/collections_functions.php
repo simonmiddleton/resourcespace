@@ -6540,9 +6540,10 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
 function process_collection_download(array $dl_data): array
 {
     // Set elements that may not have been set e.g. a job created in an earlier version
-    foreach (['archiver', 'collection_download_tar', 'include_alternatives', 'k'] as $unset_var)
-    if (!isset($dl_data[$unset_var])) {
-        $dl_data[$unset_var] = false;
+    foreach (['archiver', 'collection_download_tar', 'include_alternatives', 'k'] as $unset_var) {
+        if (!isset($dl_data[$unset_var])) {
+            $dl_data[$unset_var] = false;
+        }
     }
 
     $collection                 = (int) ($dl_data['collection'] ?? 0);
