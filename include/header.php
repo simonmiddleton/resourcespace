@@ -640,11 +640,15 @@ if (!$disable_geocoding) {
         <?php if (isset($user_pref_appearance) && $user_pref_appearance == "device" && !$ajax) { ?>
             // Run on page load if using device default for appearance
             updateHeaderImage();
-            
+
             // Listen for changes to colour scheme
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateHeaderImage);
         <?php } ?>
     });
+    
+    window.onresize = function() {
+        ReloadLinks();
+    }
 </script>
 
 <?php
