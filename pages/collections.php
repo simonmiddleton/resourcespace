@@ -929,7 +929,7 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                                             <img
                                                 class="CollectionPanelThumb"
                                                 border=0
-                                                src="<?php echo $colimgpath['url']; ?>"
+                                                src="<?php echo escape($colimgpath['url']); ?>"
                                                 title="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
                                                 alt="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
                                                 <?php if ($retina_mode) { ?>
