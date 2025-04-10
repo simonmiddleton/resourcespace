@@ -118,9 +118,10 @@ function job_queue_delete($ref)
  * @param  bool   $returnsql    Return raw SQL
  * @param  int    $maxjobs      Maximum number of jobs to return
  * @param  bool   $overdue      Only return overdue jobs?
+ * @param array $find_by_job_ref Find queued jobs by their ref
  * @return mixed                Resulting array of requests or an SQL query object
  */
-function job_queue_get_jobs($type = "", $status = -1, $user = "", $job_code = "", $job_order_by = "priority", $job_sort = "asc", $find = "", $returnsql = false, int $maxjobs = 0, bool $overdue = false)
+function job_queue_get_jobs($type = "", $status = -1, $user = "", $job_code = "", $job_order_by = "priority", $job_sort = "asc", $find = "", $returnsql = false, int $maxjobs = 0, bool $overdue = false, array $find_by_job_ref = [])
 {
     global $userref;
     $condition = array();
@@ -183,6 +184,12 @@ function job_queue_get_jobs($type = "", $status = -1, $user = "", $job_code = ""
     if ($find != "") {
         $find = '%' . $find . '%';
         $condition[] = " (j.ref LIKE ? OR j.job_data LIKE ? OR j.success_text LIKE ? OR j.failure_text LIKE ? OR j.user LIKE ? OR u.username LIKE ? OR u.fullname LIKE ?)";
+    }
+
+    $find_by_job_ref = array_values(array_filter($find_by_job_ref, is_positive_int_loose(...)));
+    if ($find_by_job_ref !== []) {
+        $condition[] = 'j.ref IN (' . ps_param_insert(count($find_by_job_ref)) . ')';
+        $parameters = array_merge($parameters, ps_param_fill($find_by_job_ref, 'i'));
     }
 
     $conditional_sql = "";
