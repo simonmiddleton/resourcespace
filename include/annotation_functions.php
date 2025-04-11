@@ -2,14 +2,14 @@
 
 /**
  * Get (viewable) "annotate_fields" config. The configs' value is validated (e.g. view access, supported type,
- * active RTF).
+ * active RTF, excluded RT, etc.).
  */
 function get_annotate_fields(): array
 {
     return array_unique(
         array_merge(
             // Zero is a pseudo-RTF used for comment (text) annotations (i.e not field bound)
-            $GLOBALS['annotate_text_adds_comment'] && (!$GLOBALS['annotate_public_view'] || $GLOBALS['k'] === '')
+            $GLOBALS['annotate_text_adds_comment'] && (!$GLOBALS['annotate_public_view'] || ($GLOBALS['k'] ?? '') === '')
                 ? [0]
                 : [],
             array_intersect(

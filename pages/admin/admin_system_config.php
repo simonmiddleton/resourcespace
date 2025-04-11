@@ -654,18 +654,39 @@ include '../../include/header.php';
     config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php');
     ?>
     <script>
-        jQuery('fieldset#annotate_fields :input:checkbox').change(() => AutoSaveConfigOption('annotate_fields'));
-
         // Provide Autosave status container (so that AutoSaveConfigOption() can be useful) to page definitions that
         // don't support it
         const autosave_tpl_clone = document.querySelector('#autosave_tpl').content.cloneNode(true);
         let autosave_span = autosave_tpl_clone.querySelector('span#AutoSaveStatus-option_name');
         autosave_span.setAttribute('id', 'AutoSaveStatus-annotate_exclude_restypes');
         jQuery('fieldset#annotate_exclude_restypes').before(autosave_tpl_clone);
-        jQuery('fieldset#annotate_exclude_restypes :input:checkbox')
-            .change(() => AutoSaveConfigOption('annotate_exclude_restypes'));
 
-        // todo: based on annotate_exclude_restypes disable annotate_fields' available options (DON'T change its value!)
+        jQuery('fieldset#annotate_fields :input:checkbox').on('change', () => AutoSaveConfigOption('annotate_fields'));
+
+        jQuery('fieldset#annotate_exclude_restypes :input:checkbox').on('change', function() {
+            AutoSaveConfigOption('annotate_exclude_restypes');
+
+            const resource_type_val = jQuery(this).val();
+            const map_rt_fields = <?php 
+                echo json_encode(
+                    array_map(
+                        static fn (string $V): array => explode(',', $V),
+                        array_column(get_all_resource_types(), 'resource_type_field', 'ref')
+                    ),
+                    JSON_NUMERIC_CHECK
+                );
+            ?>;
+
+            if (!map_rt_fields.hasOwnProperty(resource_type_val)) {
+                return;
+            }
+
+            // (En/Dis)able annotate_fields (DON'T change its value!) options associated with an excluded resource type.
+            // Inapplicable fields get filtered at runtime (@see get_annotate_fields()) so no need to save the change.
+            jQuery('fieldset#annotate_fields :input:checkbox')
+                .filter((i, el) => jQuery.inArray(parseInt(jQuery(el).val()), map_rt_fields[resource_type_val]) > -1)
+                .prop('disabled', jQuery(this).is(':checked'));
+        });
 
         function debug_log_selector_onchange(el) {
             let value = jQuery(el).val();
