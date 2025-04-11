@@ -80,7 +80,11 @@ if ($id !== '' && array_key_exists($id, $tms_link_modules_mappings)) {
 // Generate back to setup page of tms plugin link
 $plugin_yaml = get_plugin_yaml('tms_link', false);
 $back_to_url = $baseurl . '/' . $plugin_yaml['config_url'];
-$back_to_link_name = LINK_CARET_BACK . str_replace('%area', $lang['tms_link_configuration'], $lang["back_to"]);
+$back_to_link_name = LINK_CARET_BACK . str_replace(
+    '%area',
+    escape($lang['tms_link_configuration']),
+    escape($lang["back_to"])
+);
 
 include '../../../include/header.php';
 ?>
@@ -95,7 +99,7 @@ include '../../../include/header.php';
     <h1><?php echo escape($lang["tms_link_tms_module_configuration"]); ?></h1>
     <?php
     if (isset($error)) {
-        echo "<div class=\"PageInformal\">{$error}</div>";
+        echo "<div class=\"PageInformal\">{" . escape($error) . "}</div>";
     }
 
     $form_action = generateURL(
@@ -162,7 +166,7 @@ include '../../../include/header.php';
                         <th><strong><?php echo escape($lang["tms_link_column_name"]); ?></strong></th>
                         <th><strong><?php echo escape($lang["tms_link_resourcespace_field"]); ?></strong></th>
                         <th><strong
-                            ><?php echo "{$lang["tms_link_column_name"]} {$lang["tms_link_encoding"]}"; ?>
+                            ><?php echo escape("{$lang["tms_link_column_name"]} {$lang["tms_link_encoding"]}"); ?>
                         </strong></th>
                         <th><strong></strong></th>
                     </tr>
@@ -171,15 +175,15 @@ include '../../../include/header.php';
                     ?>
                     <tr>
                         <td>
-                            <input class="medwidth"
+                            <input class="medwidth" 
                                    type="text"
-                                   name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][tms_column]"
+                                   name="tms_rs_mappings[<?php echo (int) $tms_rs_mapping_index; ?>][tms_column]"
                                    value="<?php echo escape($tms_rs_mapping['tms_column']); ?>">
                         </td>
                         <td>
                             <select
                                 class="medwidth"
-                                name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][rs_field]"
+                                name="tms_rs_mappings[<?php echo (int) $tms_rs_mapping_index; ?>][rs_field]"
                                 >
                                 <option value=""><?php echo escape($lang['select']); ?></option>
                         <?php
@@ -189,9 +193,9 @@ include '../../../include/header.php';
                             $option_text = lang_or_i18n_get_translated($field['title'], 'fieldtitle-');
                             ?>
                             <option
-                                value="<?php echo $field['ref']; ?>"
+                                value="<?php echo (int) $field['ref']; ?>"
                                 <?php echo $selected; ?>
-                                ><?php echo $option_text; ?>
+                                ><?php echo escape($option_text); ?>
                             </option>
                             <?php
                         }
@@ -202,7 +206,7 @@ include '../../../include/header.php';
                             <input
                                 class="srtwidth"
                                 type="text"
-                                name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][encoding]"
+                                name="tms_rs_mappings[<?php echo (int) $tms_rs_mapping_index; ?>][encoding]"
                                 value="<?php echo escape($tms_rs_mapping['encoding']); ?>">
                         </td>
                         <td>
@@ -248,7 +252,10 @@ include '../../../include/header.php';
                 foreach ($fields as $field) {
                     $option_text = lang_or_i18n_get_translated($field['title'], 'fieldtitle-');
                     ?>
-                    new_row_html += '<option value="<?php echo $field['ref']; ?>"><?php echo $option_text; ?></option>';
+                    new_row_html += '<option';
+                    new_row_html += '    value="<?php echo (int) $field['ref']; ?>"';
+                    new_row_html += '><?php echo escape($option_text); ?>';
+                    new_row_html += '</option>';
                     <?php
                 }
                 ?>
