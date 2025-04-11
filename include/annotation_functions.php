@@ -14,16 +14,19 @@ function get_annotate_fields(): array
                 : [],
             array_intersect(
                 array_filter($GLOBALS['annotate_fields'], metadata_field_view_access(...)),
-                array_column(
-                    get_resource_type_fields('', 'ref', 'asc', '', get_valid_annotate_field_types(), false),
-                    'ref'
-                )
+                get_all_viable_annotate_metadata_fields($GLOBALS['annotate_exclude_restypes'])
             )
         ),
         SORT_NUMERIC
     );
 }
 
+/**
+ * Get all metadata fields which could be used for the annotate feature. Removes inapplicable fields when excluding
+ * specific resource types.
+ *
+ * @param list<int> $exclude_resource_types List of Resource types to exclude
+ */
 function get_all_viable_annotate_metadata_fields(array $exclude_resource_types): array
 {
     $resource_types = [];
