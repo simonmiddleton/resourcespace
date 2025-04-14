@@ -527,19 +527,21 @@ function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
     if (get_config_options($system_or_user, $config_options)) {
         foreach($config_options as $config_option) {
             $param_value = $config_option['value'];
+            $global_type =  isset($GLOBALS[$config_option['parameter']])
+                ? gettype($GLOBALS[$config_option['parameter']])
+                : '';
 
             // Everything is stored as a string so try and cast to the expected type
-            if (
-                isset($GLOBALS[$config_option['parameter']])
-                && gettype($GLOBALS[$config_option['parameter']]) === 'array'
-            ) {
+            if ($global_type === 'array') {
                 if (trim($param_value) === '') {
                     $param_value = [];
                 } elseif (validate_digit_csv($param_value)) {
                     $param_value = array_map(intval(...), explode(',', $param_value));
                 } else {
-                    // Not implemented - we don't currently support non-list (array) structures - undefined behaviour!
+                    // Not implemented - we don't support setting non-list (array) structures - undefined behaviour!
                 }
+            } elseif ($global_type === 'boolean') {
+                $param_value = (bool) $param_value;
             } elseif (is_numeric($param_value) && '' !== $param_value) {
                 $param_value = (int) $param_value;
             }
