@@ -188,11 +188,11 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
         );
     }
 
-    $notify_users = ps_query("SELECT ref, email FROM user WHERE email=?", array("s",$simplesaml_multiple_email_notify));
+    $notify_users = ps_query("SELECT ref, email, usergroup FROM user WHERE email = ?", array("s", $simplesaml_multiple_email_notify));
     $message_users = array();
     foreach ($notify_users as $notify_user) {
         get_config_option(
-            $notify_user['ref'],
+            ['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']],
             'user_pref_user_management_notifications',
             $send_message,
             $user_pref_user_management_notifications
@@ -201,7 +201,7 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
             continue;
         }
 
-        get_config_option($notify_user['ref'], 'email_user_notifications', $send_email, $email_user_notifications);
+        get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'email_user_notifications', $send_email, $email_user_notifications);
         if ($send_email && filter_var($notify_user["email"], FILTER_VALIDATE_EMAIL)) {
             send_mail(
                 $notify_user['email'],

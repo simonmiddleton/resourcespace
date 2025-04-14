@@ -53,8 +53,9 @@ function vector_visualise(array $vector): string
     {
         $mean = array_sum($chunk) / count($chunk);
         $sum_squares = 0;
-        foreach ($chunk as $v)
+        foreach ($chunk as $v) {
             $sum_squares += pow($v - $mean, 2);
+        }
         $std_dev = sqrt($sum_squares / count($chunk));
 
         // Clamp & scale std dev for visualisation (tune this if needed)

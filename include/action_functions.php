@@ -16,11 +16,11 @@
  */
 function get_user_actions($countonly = false, $type = "", $order_by = "date", $sort = "DESC")
 {
-    global $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,$userref,
-    $actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on, $messages_actions_usergroup, $actions_notify_states;
+    global $default_display, $list_display_fields, $search_all_workflow_states, $actions_approve_hide_groups, $userref, $usergroup,
+    $actions_resource_requests, $actions_account_requests, $view_title_field, $actions_on, $messages_actions_usergroup, $actions_notify_states;
 
     // Make sure all states are excluded if they had the legacy option $actions_resource_review set to false.
-    get_config_option($userref, 'actions_resource_review', $actions_resource_review, true);
+    get_config_option(['user' => $userref, 'usergroup' => $usergroup], 'actions_resource_review', $actions_resource_review, true);
     if (!$actions_resource_review) {
         $actions_notify_states = "";
     }
@@ -208,7 +208,7 @@ function get_user_actions_recent(int $minutes, bool $allusers): array
 function actions_filter_by_user(int $actionuser, array $actions): array
 {
     debug_function_call(__FUNCTION__, func_get_args());
-    global $userref, $actions_resource_requests, $actions_account_requests, $actions_approve_hide_groups;
+    global $userref, $usergroup, $actions_resource_requests, $actions_account_requests, $actions_approve_hide_groups;
 
     $return = [];
 
@@ -220,17 +220,17 @@ function actions_filter_by_user(int $actionuser, array $actions): array
     foreach ($actions as $actiontype => $typeactions) {
         switch ($actiontype) {
             case "resourcereview":
-                get_config_option($userref, 'actions_resource_review', $actions_resource_review, true);
+                get_config_option(['user' => $userref, 'usergroup' => $usergroup], 'actions_resource_review', $actions_resource_review, true);
                 if (!$actions_resource_review) {
                     $arrnotifystates = [];
                 } else {
-                    get_config_option($userref, "actions_notify_states", $notifystates);
+                    get_config_option(['user' => $userref, 'usergroup' => $usergroup], "actions_notify_states", $notifystates);
                     if (is_null($notifystates)) {
                         $arrnotifystates = get_default_notify_states();
                     } else {
                         $arrnotifystates = explode(",", $notifystates);
                     }
-                    get_config_option($userref, "actions_resource_types_hide", $ignoretypes, "");
+                    get_config_option(['user' => $userref, 'usergroup' => $usergroup], "actions_resource_types_hide", $ignoretypes, "");
                     $arrignoretypes = explode(",", $ignoretypes);
                 }
                 foreach ($typeactions as $typeaction) {

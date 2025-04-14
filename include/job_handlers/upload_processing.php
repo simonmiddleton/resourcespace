@@ -56,26 +56,41 @@ elseif ($resource !== false && !is_null($alternative) && $alternative > 0 && $ex
     $alt_path = get_resource_path($job_data["resource"], true, "", true, $extension, -1, 1, false, "", $alternative);
 
     if (is_null($file_path) && $upload_file_by_url != "") {
-        copy($upload_file_by_url, $alt_path);
+        $tmp_file_path = temp_local_download_remote_file(
+            $upload_file_by_url,
+            uniqid("{$job_data['resource']}_{$alternative}_")
+        );
+        $file_to_upload = new SplFileInfo($tmp_file_path ?: '');
     } elseif (!is_null($file_path) && $file_path != "") {
-        $result = rename($file_path, $alt_path);
-        if ($result === false) {
-            job_queue_update($jobref, $job_data, STATUS_ERROR);
-        }
+        $file_to_upload = new SplFileInfo($file_path);
     } else {
-        job_queue_update($jobref, $job_data, STATUS_ERROR);
+        $file_to_upload = new SplFileInfo('');
     }
 
-    chmod($alt_path, 0777);
+    // Move the provided file to the alternative file location
+    $process_file_upload = process_file_upload(
+        new SplFileInfo($file_to_upload),
+        new SplFileInfo($alt_path),
+        ['mime_file_based_detection' => false]
+    );
 
-    global $alternative_file_previews;
-    if ($alternative_file_previews) {
-        create_previews($job_data["resource"], false, $extension, false, false, $alternative);
+    if ($process_file_upload['success']) {
+        chmod($alt_path, 0777);
+
+        if (isset($job_data['autorotate']) && $job_data['autorotate']) {
+            AutoRotateImage($alt_path);
+        }
+
+        if ($GLOBALS['alternative_file_previews']) {
+            create_previews($job_data['resource'], false, $extension, false, false, $alternative);
+        }
+
+        update_disk_usage($job_data['resource']);
+
+        $status = true;
+    } else {
+        $job_failure_text .= $process_file_upload['error']->i18n($GLOBALS['lang']);
     }
-
-    update_disk_usage($job_data["resource"]);
-
-    $status = true;
 }
 
 global $baseurl, $offline_job_delete_completed, $baseurl_short;

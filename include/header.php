@@ -625,8 +625,11 @@ if (!$disable_geocoding) {
 
     jQuery(document).ready(function() {
         ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
-        setThemePreference();
 
+        <?php if (!$ajax) { ?>
+            setThemePreference();
+        <?php } ?>
+        
         jQuery(document).mouseup(function(e)  {
             var linksContainer = jQuery("#DropdownCaret");
             if (linksContainer.has(e.target).length === 0 && !linksContainer.is(e.target))  {
@@ -634,15 +637,15 @@ if (!$disable_geocoding) {
             }
         });
 
-        <?php if (isset($user_pref_appearance) && $user_pref_appearance == "device") { ?>
+        <?php if (isset($user_pref_appearance) && $user_pref_appearance == "device" && !$ajax) { ?>
             // Run on page load if using device default for appearance
             updateHeaderImage();
+
             // Listen for changes to colour scheme
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateHeaderImage);
         <?php } ?>
-
     });
-
+    
     window.onresize = function() {
         ReloadLinks();
     }

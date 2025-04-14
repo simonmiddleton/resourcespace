@@ -35,12 +35,12 @@ if (count($expired_resources) > 0) {
     } else {
         $notify_users = get_notification_users("RESOURCE_ADMIN");
         foreach ($notify_users as $notify_user) {
-            get_config_option($notify_user['ref'], 'user_pref_resource_notifications', $send_message);
+            get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'user_pref_resource_notifications', $send_message);
             if (!$send_message) {
                 continue;
             }
 
-            get_config_option($notify_user['ref'], 'email_user_notifications', $send_email);
+            get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'email_user_notifications', $send_email);
             if ($send_email && $notify_user["email"] != "") {
                 echo "Sending email to " . $notify_user["email"] . "\r\n";
                 $admin_notify_emails[] = $notify_user['email'];
@@ -74,7 +74,8 @@ if (isset($notify_on_resource_expiry_days)) {
     $data = ps_query(
         'SELECT rl.`user`,
                  rte.ref AS `resource`,
-                 u.email
+                 u.email,
+                 u.usergroup
             FROM resource_log AS rl
             JOIN (
                      SELECT r.ref
@@ -104,7 +105,7 @@ if (isset($notify_on_resource_expiry_days)) {
             return $v['resource'] === $resource_ref;
         });
         foreach ($users_who_dld as $dld_record) {
-            get_config_option($dld_record['user'], 'email_user_notifications', $send_email);
+            get_config_option(['user' => $dld_record['user'], 'usergroup' => $dld_record['usergroup']], 'email_user_notifications', $send_email);
             if ($send_email && $dld_record['email'] !== '') {
                 send_mail($dld_record['email'], "{$applicationname}: {$lang['resourceexpiry']}", $email_body);
             } else {

@@ -573,9 +573,8 @@ function edit_filter_to_restype_permission($filtertext, $usergroup, $existingper
     }
     $newperms = array_diff($addpermissions, $existingperms);
     if (count($newperms) > 0) {
-        ps_query("UPDATE usergroup SET permissions = CONCAT(permissions," . ps_param_insert(count($newperms)) . ") WHERE ref = ?", array_merge(ps_param_fill(array_map(function ($v) {
-            return ',' . $v;
-        }, $newperms), "s"), array("i", $usergroup)));
+        save_usergroup($usergroup, array('permissions' => $currentgroup["permissions"] . ',' . implode(',', $newperms)));
+        clear_query_cache('usergroup');
     }
     if ($updatecurrent) {
         $userpermissions = array_merge($userpermissions, $newperms);

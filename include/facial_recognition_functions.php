@@ -162,7 +162,14 @@ function faceRecognizerPredict($model_file_path, $test_image_path)
 
     $faceRecognizer_path = __DIR__ . '/../lib/facial_recognition/faceRecognizer.py';
     $cmdparams = [
-        '[MODEL_PATH]' => new CommandPlaceholderArg($model_file_path, 'is_valid_rs_path'),
+        '[MODEL_PATH]' => new CommandPlaceholderArg(
+            $model_file_path,
+            fn($p) => is_valid_rs_path($p,
+                [
+                $GLOBALS['storagedir'],
+                $GLOBALS['facial_recognition_face_recognizer_models_location'],
+            ])
+        ),
         '[IMAGE_PATH]' => new CommandPlaceholderArg($test_image_path, 'is_valid_rs_path'),
     ];
     

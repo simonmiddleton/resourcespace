@@ -73,3 +73,7 @@ $lang["csv_upload_force_offline"]               = "This large CSV may take a lon
 $lang["csv_upload_recommend_offline"]           = "This large CSV may take a very long time to process. It is recommended that offline jobs are enabled if you need to process large CSVs";
 
 $lang["csv_upload_createdfromcsvupload"]        = "Created from CSV Upload plugin";
+
+$lang["csv_upload_check_invalidbom"]            = "CSV file has BOM so can't be loaded";
+$lang["csv_upload_check_file_error"]            = "CSV file can't be opened or read";
+$lang["csv_upload_check_utf_error"]             = "CSV file is not valid UTF-8. Invalid character on line ";

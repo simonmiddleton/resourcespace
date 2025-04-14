@@ -91,6 +91,7 @@ $lang["property-reference"] = "Reference";
 $lang["property-name"] = "Name";
 $lang["property-permissions"] = "Permissions";
 $lang["property-permissions_inherit"] = "Inherit from parent group";
+$lang["group_config_inherit"] = "Group config is inherited from parent user group. Nothing to configure here.";
 $lang["information-permissions"] = "NOTE: Global permissions from config may also be in effect";
 $lang["property-fixed_theme"] = "Fixed theme";
 $lang["property-parent"] = "Parent";
@@ -99,6 +100,7 @@ $lang["property-edit_filter"] = "Edit filter";
 $lang["property-resource_defaults"] = "Resource defaults";
 $lang["property-override_config_options"] = "Override config options";
 $lang["property-config_inherit"] = "Inherit from parent group";
+$lang["property-group_preferences_inherit"] = "Inherit from parent group";
 $lang["property-email_welcome_message"] = "Email welcome message";
 $lang["information-ip_address_restriction"] = "Wildcards are supported for IP address restrictions, e.g. 128.124.*";
 $lang["property-ip_address_restriction"] = "IP address restriction";
@@ -1786,6 +1788,7 @@ $lang["item_deleted"] = "Item deleted";
 $lang["viewing_version_created_by"] = "Viewing version created by";
 $lang["on_date"] = "on";
 $lang["launchpermissionsmanager"] = "Launch permissions manager";
+$lang["editgroupconfigoverrides"] = "Edit group config overrides";
 $lang["confirm-deletion"] = "Are you sure you want to delete?";
 $lang["accept_png_gif_only"] = "Only .png or .gif extensions accepted";
 $lang["ensure_file_extension_match"] = "Ensure file and extension match";
@@ -2221,6 +2224,11 @@ $lang['page-subtitle_web_edit'] = "Use this section to directly edit files - use
 # User group permissions
 $lang['page-title_user_group_permissions_edit'] = "Edit user group permissions";
 $lang['page-subtitle_user_group_permissions_edit'] = "Use this section to modify user group permissions.";
+
+# User group config
+$lang["fieldtitle-usergroup_config"] = "Group overrides";
+$lang["page-title_usergroup_config"] = "Edit group config overrides";
+$lang["action-title_usergroup_override_detail"] = 'Any settings configured here will override the system defaults for users in this group.';
 
 # Report management
 $lang['page-title_report_management'] = "Report editor";

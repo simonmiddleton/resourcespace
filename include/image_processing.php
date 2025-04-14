@@ -3299,6 +3299,7 @@ function get_sizes_to_generate(
         $ps[$o]['id'] = $onlysizes[0];
         $ps[$o]['width'] = $customx;
         $ps[$o]["height"] = $customy;
+        $ps[$o]['type'] = 'resize';
     }
     return $ps;
 }
@@ -3939,7 +3940,7 @@ function create_previews_using_im(
                     if (
                         ($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles)
                         && !in_array($id, ["thm", "col", "pre", "scr"])
-                        && (!isset($ps[$n]['type']) || $ps[$n]['type'] !== "tile")
+                        && (!isset($ps[$n]['type']) || !in_array($ps[$n]['type'], array('tile', 'resize')))
                     ) {
                         $profile = "";
                     } elseif (!empty($default_icc_file)) {

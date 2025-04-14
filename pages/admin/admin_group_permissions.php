@@ -81,8 +81,8 @@ if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') =
     ));
     $perms_csv = join(',', $perms);
 
+    save_usergroup($ref, array('permissions' => $perms_csv));
     log_activity(null, LOG_CODE_EDITED, $perms_csv, 'usergroup', 'permissions', $ref, null, null, null, true);
-    ps_query("UPDATE usergroup SET permissions = ? WHERE ref = ?", ["s",$perms_csv, "i",$ref]);
 
     ajax_send_response(200, ajax_response_ok_no_data());
 } elseif ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', '') == 'true')) {

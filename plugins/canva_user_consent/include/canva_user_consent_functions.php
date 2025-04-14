@@ -27,8 +27,7 @@ function base64UrlDecode($data)
  */
 function get_canva_users()
 {
-    $data = ps_query("SELECT * FROM canva_user_consent");
-    return $data;
+    return ps_query("SELECT * FROM canva_user_consent");
 }
 
 /**
@@ -39,8 +38,7 @@ function get_canva_users()
  */
 function delete_canva_users($ref)
 {
-    $status = ps_query("DELETE FROM canva_user_consent WHERE ref = ?", array("s", $ref));
-    return $status;
+    return ps_query("DELETE FROM canva_user_consent WHERE ref = ?", array("s", $ref));
 }
 
 /**

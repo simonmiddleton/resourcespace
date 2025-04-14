@@ -5067,13 +5067,13 @@ function get_resource_access($resource)
             global $userdata, $lang, $baseurl;
             if (is_numeric($migrateresult)) {
                 // Successfully migrated - now use the new filter
-                ps_query("UPDATE usergroup SET derestrict_filter_id=? WHERE ref=?", array("i",$migrateresult,"i",$usergroup));
+                save_usergroup($usergroup, array('derestrict_filter_id' => $migrateresult));
                 debug("FILTER MIGRATION: Migrated derestrict_filter_id filter - '" . $userderestrictfilter . "' filter id#" . $migrateresult);
                 $userderestrictfilter = $migrateresult;
             } elseif (is_array($migrateresult)) {
                 debug("FILTER MIGRATION: Error migrating filter: '" . $userderestrictfilter . "' - " . implode('\n', $migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure
-                ps_query("UPDATE usergroup SET derestrict_filter_id='-1' WHERE ref=?", array("i",$usergroup));
+                save_usergroup($usergroup, array('derestrict_filter_id' => -1));
                 message_add(array_column($notification_users, "ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n', $migrateresult), generateURL($baseurl . "/pages/admin/admin_group_management_edit.php", array("ref" => $usergroup)));
             }
         }
@@ -5331,13 +5331,13 @@ function get_edit_access($resource, int $status = -999, array &$resourcedata = [
         $notification_users = get_notification_users();
         if (is_numeric($migrateresult)) {
             // Successfully migrated - now use the new filter
-            ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?", array("i",$migrateresult,"i",$usergroup));
+            save_usergroup($usergroup, array('edit_filter_id' => $migrateresult));
             debug("FILTER MIGRATION: Migrated edit filter - '" . $usereditfilter . "' filter id#" . $migrateresult);
             $usereditfilter = $migrateresult;
         } elseif (is_array($migrateresult)) {
             debug("FILTER MIGRATION: Error migrating filter: '" . $usereditfilter . "' - " . implode('\n', $migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure
-            ps_query("UPDATE usergroup SET edit_filter_id='0' WHERE ref=?", array("i",$usergroup));
+            save_usergroup($usergroup, array('edit_filter_id' => 0));
             message_add(array_column($notification_users, "ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n', $migrateresult), generateURL($baseurl . "/pages/admin/admin_group_management_edit.php", array("ref" => $usergroup)));
         }
     }
