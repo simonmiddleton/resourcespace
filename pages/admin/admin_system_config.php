@@ -643,15 +643,9 @@ include '../../include/header.php';
     config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php');
     ?>
     <script>
-        // Provide Autosave status container (so that AutoSaveConfigOption() can be useful) to page definitions that
-        // don't support it
-        const autosave_tpl_clone = document.querySelector('#autosave_tpl').content.cloneNode(true);
-        let autosave_span = autosave_tpl_clone.querySelector('span#AutoSaveStatus-option_name');
-        autosave_span.setAttribute('id', 'AutoSaveStatus-annotate_exclude_restypes');
-        jQuery('fieldset#annotate_exclude_restypes').before(autosave_tpl_clone);
-
         jQuery('fieldset#annotate_fields :input:checkbox').on('change', () => AutoSaveConfigOption('annotate_fields'));
 
+        dom_add_autosave_status_container('fieldset#annotate_exclude_restypes', 'annotate_exclude_restypes');
         jQuery('fieldset#annotate_exclude_restypes :input:checkbox').on('change', function() {
             AutoSaveConfigOption('annotate_exclude_restypes');
             return disable_annotate_fields_by_excl_resource_type(this);
@@ -803,6 +797,19 @@ include '../../include/header.php';
                 system_config_debug_log_interim.data('timer_started', true);
             });
         <?php } ?>
+
+        /**
+         * Provide Autosave status container (so that AutoSaveConfigOption() can be useful) to page definitions that
+         * don't support it.
+         * @param {string} selector HTML selector before which the Autosave container should be added to
+         * @param {string} identifier The same identifier used by the AutoSaveConfigOption() 
+         */
+        function dom_add_autosave_status_container(selector, identifier) {
+            const autosave_tpl_clone = document.querySelector('#autosave_tpl').content.cloneNode(true);
+            let autosave_span = autosave_tpl_clone.querySelector('span#AutoSaveStatus-option_name');
+            autosave_span.setAttribute('id', `AutoSaveStatus-${identifier}`);
+            jQuery(selector).before(autosave_tpl_clone);
+        }
     </script>
 </div>
 
