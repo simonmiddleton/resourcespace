@@ -371,17 +371,24 @@ function process_config_options($user_id = null)
 
     if(get_config_options($user_id, $config_options))
         {
-        // todo: to honour types, check type in the global scope (as it should be defined already BUT do check it exists) and ensure it's correct!
-        // print_r($config_options);die;
         foreach($config_options as $config_option)
             {
             $param_value = $config_option['value'];
 
-            // Prepare the value since everything is stored as a string
-            if (is_numeric($param_value) && '' !== $param_value) {
+            // Everything is stored as a string so try and cast to the expected type
+            if (
+                isset($GLOBALS[$config_option['parameter']])
+                && gettype($GLOBALS[$config_option['parameter']]) === 'array'
+            ) {
+                if (trim($param_value) === '') {
+                    $param_value = [];
+                } elseif (validate_digit_csv($param_value)) {
+                    $param_value = array_map(intval(...), explode(',', $param_value));
+                } else {
+                    // Not implemented - we don't currently support non-list (array) structures - undefined behaviour!
+                }
+            } elseif (is_numeric($param_value) && '' !== $param_value) {
                 $param_value = (int) $param_value;
-            } elseif (validate_digit_csv($param_value)) {
-                $param_value = array_map('intval', explode(',', $param_value));
             }
 
             $GLOBALS[$config_option['parameter']] = $param_value;
@@ -1100,17 +1107,16 @@ function config_generate_AutoSaveConfigOption_function($post_url)
         jQuery('#AutoSaveStatus-' + option_name).html('<?php echo escape($lang["saving"]); ?>');
         jQuery('#AutoSaveStatus-' + option_name).show();
 
+        const cast_to_digit_csv = (obj) => obj
+            .map((idx, el) => jQuery(el).val())
+            .get()
+            .toString();
         let option_value = jQuery('#' + option_name).val();
+
         if (jQuery('input[name=' + option_name + ']').is(':checkbox')) {
-            option_value = jQuery('input[name=' + option_name + ']:checked')
-                .map(() => jQuery(this).val())
-                .get()
-                .toString();
+            option_value = cast_to_digit_csv(jQuery('input[name=' + option_name + ']:checked'));
         } else if (jQuery('input[name="' + option_name + '[]"]').length > 0) {
-            option_value = jQuery('input[name="' + option_name + '[]"]:checked')
-                .map((idx, el) => jQuery(el).val())
-                .get()
-                .toString();
+            option_value = cast_to_digit_csv(jQuery('input[name="' + option_name + '[]"]:checked'));
         }
 
         var post_url  = '<?php echo $post_url; ?>';

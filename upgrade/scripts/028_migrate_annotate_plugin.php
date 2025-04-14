@@ -19,12 +19,6 @@ if ($plugin_config === null) {
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin settings');
 $set_system_wide_config = ['annotate_enabled' => 1];
 
-// issues:
-// - when only one value, it's not seen as an array but just a number
-// - when no options, it saves an empty string
-// todo: change process_config_options() to better convert back to the same type as the config default or investigate save issues
-var_dump($annotate_exclude_restypes);
-die;
 $settings_to_migrate = array_intersect_key(
     $plugin_config,
     array_flip([
