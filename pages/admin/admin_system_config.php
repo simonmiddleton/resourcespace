@@ -665,8 +665,16 @@ include '../../include/header.php';
 
         jQuery('fieldset#annotate_exclude_restypes :input:checkbox').on('change', function() {
             AutoSaveConfigOption('annotate_exclude_restypes');
+            return disable_annotate_fields_by_excl_resource_type(this);
+        });
 
-            const resource_type_val = jQuery(this).val();
+        jQuery(document).ready(function () {
+            jQuery('fieldset#annotate_exclude_restypes input:checked')
+                .each((i, el) => disable_annotate_fields_by_excl_resource_type(el));
+        });
+
+        function disable_annotate_fields_by_excl_resource_type(resource_type_el) {
+            const resource_type_ref = jQuery(resource_type_el).val();
             const map_rt_fields = <?php 
                 echo json_encode(
                     array_map(
@@ -677,16 +685,16 @@ include '../../include/header.php';
                 );
             ?>;
 
-            if (!map_rt_fields.hasOwnProperty(resource_type_val)) {
+            if (!map_rt_fields.hasOwnProperty(resource_type_ref)) {
                 return;
             }
 
             // (En/Dis)able annotate_fields (DON'T change its value!) options associated with an excluded resource type.
             // Inapplicable fields get filtered at runtime (@see get_annotate_fields()) so no need to save the change.
             jQuery('fieldset#annotate_fields :input:checkbox')
-                .filter((i, el) => jQuery.inArray(parseInt(jQuery(el).val()), map_rt_fields[resource_type_val]) > -1)
-                .prop('disabled', jQuery(this).is(':checked'));
-        });
+                .filter((i, el) => jQuery.inArray(parseInt(jQuery(el).val()), map_rt_fields[resource_type_ref]) > -1)
+                .prop('disabled', jQuery(resource_type_el).is(':checked'));
+        }
 
         function debug_log_selector_onchange(el) {
             let value = jQuery(el).val();
