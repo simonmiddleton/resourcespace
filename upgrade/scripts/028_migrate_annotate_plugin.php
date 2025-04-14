@@ -56,8 +56,6 @@ foreach ($settings_to_migrate as $name => $value) {
         $set_system_wide_config['annotate_fields'] = implode(',', $annotate_fields);
     }
 }
-print_r($set_system_wide_config);
-die;
 
 $sysadmin_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
 foreach ($set_system_wide_config as $name => $value) {
@@ -76,7 +74,6 @@ foreach ($set_system_wide_config as $name => $value) {
         );
     }
 }
-die(PHP_EOL.'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__.PHP_EOL); #todo: drop once done
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin records as base annotations');
 $annotations = ps_query(
@@ -92,21 +89,24 @@ foreach ($annotations as $annotation) {
         "Processing annotation for resource #{$annotation['resource']} with node #{$annotation['node']}"
     );
 
+    logScript("- Note = {$annotation['name']}"); #todo: delete once done
+
     // Parse the old "username: note" syntax
     $parsed_annotation = explode(': ', (string) $annotation['name']);
     if (count($parsed_annotation) !== 2) {
-        // todo: reconsider this logic
-        debug("Invalid annotation note (node) syntax - {$annotation['name']}");
+        log_activity(
+            "Upgrade script #28: Invalid resource (#{$annotation['resource']}) annotation note (node #{$annotation['node']}) syntax - {$annotation['name']}",
+            LOG_CODE_SYSTEM,
+        );
         continue;
     }
     [$an_username, $an_note] = $parsed_annotation;
 
-    logScript("- Note = {$annotation['name']}");
-    logScript("- an_username = {$an_username}");
-    logScript("- an_note = {$an_note}");
+    logScript("- an_username = {$an_username}"); #todo: delete once done
+    logScript("- an_note = {$an_note}"); #todo: delete once done
 
     $an_userref = get_user_by_username($an_username);
-    logScript('- user ID = ' . json_encode($an_userref));
+    logScript('- user ID = ' . json_encode($an_userref)); #todo: delete once done
     if ($an_userref === false) {
         // No matching user found - maybe username has changed. Keep original note
         $an_userref = 0;
