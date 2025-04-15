@@ -310,7 +310,7 @@ render_content_menu();
 
         // Check if target menu will go outside container boundaries to have a better UX by always having the menu in
         // sight
-        if ((btn_bb.left + off_left + menu_bb.width) > container_bb.right) {
+        if ((btn_bb.left + off_left + menu_bb.width + 5) > container_bb.right) {
             off_left = off_left_rev;
         } else if (target != 'menu-individual' && (btn_bb.top + off_top + menu_bb.height) > container_bb.bottom) {
             off_top = off_top_rev;
