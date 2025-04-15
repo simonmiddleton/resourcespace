@@ -7975,7 +7975,7 @@ function canSeePreviewTools(): bool
 function canSeeAnnotationsFields(): array
 {
     global $annotate_enabled, $k, $annotate_public_view;
-    return ($annotate_enabled && ($annotate_public_view || $k === '')) ? get_annotate_fields() : [];
+    return ($annotate_enabled && ($annotate_public_view || $k == '')) ? get_annotate_fields() : [];
 }
 
 /**
