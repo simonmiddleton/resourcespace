@@ -2859,9 +2859,16 @@ function delete_resource($ref)
     $extensions = array_unique($extensions);
 
     foreach ($extensions as $extension) {
-        $sizes = get_image_sizes($ref, true, $extension);
+        if (in_array(strtolower($extension), ['jpg', 'jpeg'])) {
+            $sizes = get_image_sizes($ref, true, $extension);
+        } else {
+            $sizes = [['path' => get_resource_path($ref, true, '', false, $extension)]];
+        }
         foreach ($sizes as $size) {
-            if (file_exists($size['path']) && ($staticsync_allow_syncdir_deletion || false !== strpos($size['path'], $storagedir))) { // Only delete if file is in filestore
+            if (
+                file_exists($size['path'])
+                && ($staticsync_allow_syncdir_deletion || false !== strpos($size['path'], $storagedir))
+            ) { // Only delete if file is in filestore
                 $pathtofile = realpath($size['path']); // avoid passing relative path to unlink function to prevent error on removal of file.
                 unlink($pathtofile);
             }
