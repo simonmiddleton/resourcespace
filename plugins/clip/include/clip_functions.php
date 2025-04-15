@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Sends an image file or text input to the CLIP vector service and returns the resulting vector.
+ *
+ * @param bool   $is_text   Whether the input is text (true) or an image file (false).
+ * @param string $input     Either the text string or the path to the image file.
+ * @param int    $ref       The resource ID (used for logging/debugging purposes only).
+ *
+ * @return array|false      Returns a 512-float array representing the CLIP vector,
+ *                          or false if the service failed or returned invalid data.
+ */
 function get_vector($is_text, $input, $ref)
 {
     global $clip_service_url;
