@@ -2858,6 +2858,9 @@ $lang['annotate_exclude_restypes'] = 'Resource Types to exclude (tick to exclude
 $lang['annotate_pseudo_rtf_comment_title'] = 'Comments (mode)';
 $lang['annotorious_add_a_comment'] = 'Add a Comment...';
 $lang['annotorious_type_to_search_field'] = 'Type to search field...';
+$lang['annotate_pdf_sheet_tool'] = 'Annotations PDF';
+$lang['annotate_pdf_intro_text'] = 'Select the page size for your Annotations PDF.';
+$lang['annotate_pdf_no_annotations'] = 'There are no annotations.';
 
 $lang["byte_prefix_mode_decimal"] = "Use decimal for file sizes (1000 multiples, KB/MB/GB/TB) as opposed to binary (1024 multiples , KiB/MiB/GiB/TiB)";
 
