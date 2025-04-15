@@ -92,7 +92,7 @@ foreach ($annotations as $annotation) {
     logScript("- Note = {$annotation['name']}"); #todo: delete once done
 
     // Parse the old "username: note" syntax
-    $parsed_annotation = explode(': ', (string) $annotation['name']);
+    $parsed_annotation = explode(': ', (string) $annotation['name'], 2);
     if (count($parsed_annotation) !== 2) {
         log_activity(
             "Upgrade script #28: Invalid resource (#{$annotation['resource']}) annotation note (node #{$annotation['node']}) syntax - {$annotation['name']}",
