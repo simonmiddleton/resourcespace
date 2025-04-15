@@ -126,7 +126,7 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     }
 
     // Filter out results with score below the threshold
-    $results = array_filter($results, function($result) use ($min_score) {
+    $results = array_filter($results, static function($result) use ($min_score) {
         return isset($result['score']) && $result['score'] >= $min_score;
     });
 
