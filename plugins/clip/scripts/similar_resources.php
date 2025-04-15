@@ -1,5 +1,5 @@
 <?php
-include_once dirname(__FILE__, 4) . '/include/db.php';
+include_once dirname(__FILE__, 4) . '/include/boot.php';
 command_line_only();
 
 if ($argc < 2)
@@ -44,14 +44,8 @@ if (!is_array($results) || empty($results))
 
 // Fetch titles for the returned resource IDs
 $ids = array_column($results, 'resource');
-$in_sql = implode(',', array_fill(0, count($ids), '?'));
-$params = [];
-foreach ($ids as $id)
-{
-    $params[] = 'i';
-    $params[] = $id;
-}
-
+$in_sql=ps_param_insert(count($ids));
+$params=ps_param_fill($ids,"i");
 $sql = "SELECT ref, field8 AS title FROM resource WHERE ref IN ($in_sql)";
 $resources = ps_query($sql, $params);
 

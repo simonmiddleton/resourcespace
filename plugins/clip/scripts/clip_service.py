@@ -1,7 +1,5 @@
 import argparse
 import getpass
-import torch
-import clip
 import uvicorn
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.responses import JSONResponse
@@ -13,6 +11,8 @@ from typing import Optional
 import time
 import faiss
 import threading
+import torch
+import clip
 
 
 # Command-line arguments

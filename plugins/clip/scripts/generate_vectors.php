@@ -1,6 +1,5 @@
 <?php
-include_once dirname(__FILE__, 4) . '/include/db.php';
-include_once dirname(__FILE__, 4) . '/include/resource_functions.php';
+include_once dirname(__FILE__, 4) . '/include/boot.php';
 include_once dirname(__FILE__, 2) . '/include/clip_functions.php';
 
 command_line_only();
