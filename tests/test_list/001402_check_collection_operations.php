@@ -106,8 +106,21 @@ if ($min_access !== RESOURCE_ACCESS_RESTRICTED) {
     return false;
 }
 
-// Restrict access to a single resource - should get 1 as minimum access
+// Restrict access to a resource type and a single resource
 $userpermissions[] = "g";
+
+// Restrict access to a resource type - should get 1 as minimum access
+$userpermissions[] = "X1";
+$GLOBALS["resource_access_cache"] = [];
+$GLOBALS["get_resource_data_cache"] = [];
+$min_access = collection_min_access($collection_ref);
+if ($min_access !== RESOURCE_ACCESS_RESTRICTED) {
+    echo "collection_min_access with 'X1' permission and restricted resource type - ";
+    return false;
+}
+$userpermissions = array_values(array_diff($userpermissions, ['X1']));
+
+// Restrict access to a resource type - should get 1 as minimum access
 ps_query("UPDATE resource SET access=? WHERE ref=?", ["i", RESOURCE_ACCESS_RESTRICTED, "i", $resource_list[0]]);
 $GLOBALS["resource_access_cache"] = [];
 $GLOBALS["get_resource_data_cache"] = [];
