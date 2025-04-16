@@ -642,6 +642,10 @@ function save_resource_data($ref, $multi, $autosave_field = "")
     // NOTE: this should NOT apply to upload.
     $check_edit_checksums = true;
 
+    if ($upload_review_mode) {
+        $check_edit_checksums = false;
+    }
+
     // Save resource defaults (functionality available for upload only)
     // Call it here so that if users have access to the field and want
     // to override it, they can do so
@@ -1089,7 +1093,7 @@ function save_resource_data($ref, $multi, $autosave_field = "")
             # Add any onchange code if new checksum for field shows that it has changed
             if (
                 isset($fields[$n]["onchange_macro"]) && $fields[$n]["onchange_macro"] !== ""
-                    && $post_cs !== ""
+                    && ($post_cs !== "" || (!$check_edit_checksums && $new_checksums[$fields[$n]["ref"]] != md5(trim(preg_replace('/\s\s+/', ' ', (string) $fields[$n]['value'] ?? '')))))
                     && isset($new_checksums[$fields[$n]["ref"]])
                     && $post_cs !== $new_checksums[$fields[$n]["ref"]]
             ) {
