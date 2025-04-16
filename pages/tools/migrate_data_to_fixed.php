@@ -6,28 +6,79 @@ if (isset($_POST["submit"])) {
 }
 
 include "../../include/boot.php";
-include_once "../../include/authenticate.php";
-if (!checkperm("a")) {
-    exit("Access denied");
+
+if ('cli' != PHP_SAPI) {
+    include_once "../../include/authenticate.php";
+    if (!checkperm("a")) {
+        exit("Access denied");
+    }
+
+    // Set flag to indicate whether we can show progress using server side events (SSE)
+    $showprogress   = strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), "TRIDENT") === false && strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), "MSIE") === false;
+    $command_line   = false;
+    $migrate_field  = getval("field", 0, true);
+    $field_info     = get_resource_type_field($migrate_field);
+    $splitvalue     = getval("splitchar", "");
+    $maxrows        = getval("maxrows", 0, true);
+    $modal          = (getval("modal", "") == "true");
+    $dryrun         = getval("dryrun", "") != "";
+    $deletedata     = getval("deletedata", "") == "true";
+    $backurl = getval("backurl", "");
+
+    if ($backurl == "") {
+        $backurl = $baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $migrate_field;
+    }
+
+
+} else {
+
+    $help_text = <<<'HELP'
+    NAME
+        migrate_data_to_fixed.php - # Manually migrate resource type field data from text field to fixed list fields that can allow multiple values.
+    
+    SYNOPSIS
+        php /path/to/pages/tools/migrate_data_to_fixed.php --field [FIELD REFERENCE] --separator [separator] [OPTIONS]
+    
+    DESCRIPTION
+        This tool provides a method for administrators (via the command line) to manually migrate data from a text field type to a fixed list type.
+    
+        Some fixed list field types including dynamic keywords list, category tree and checkbox list allow multiple values to be saved. Each is recorded by applying a node value to
+        the intended resource. When switching to text type fields such as text single or multi-line, only one value is allowed. This script will process the nodes on each resource
+        for the resource type field who's type has been changed. It'll convert the existing singlenode into multiple nodes by exploding existing data on a defined separator.
+    
+        Before running this script, the field type should have already been changed to a fixed list type.
+    
+    OPTIONS SUMMARY
+    
+        --help         Display this help text and exit.
+        --field        Required parameter to specify a resource type field (metadata field) who's type has been changed from a fixed list to text type.
+        --separator    Optional parameter to change the separator used to concatenate the data. The default if not set will be ", " e.g. "Value1, Value2".
+        --maxrows      Optional parameter to limit the number of nodes processed.
+        --dryrun       Optional parameter to run the script without editing existing data.
+        --deletedata   Optional parameter to delete depricated nodes once they have been processed.
+    
+    EXAMPLES
+        php migrate_fixed_to_text.php --field 96 --separator=" - "
+                                        ^ The resource type field who's type was changed from text to fixed list.
+                                                   ^ Optional change of default separator to " - ".
+    HELP;
+
+    $parameters = getopt('', ['help','field:','separator:','maxrows::','dryrun','deletedata']);
+    if (array_key_exists('help', $parameters) || !array_key_exists('field', $parameters) || !array_key_exists('separator', $parameters)) {
+        exit($help_text . PHP_EOL);
+    }
+
+    $command_line   = true;
+    $showprogress   = false;
+    $migrate_field  = $parameters["field"];
+    $field_info     = get_resource_type_field($migrate_field);
+    $splitvalue     = $parameters["separator"];
+    $maxrows        = $parameters["maxrows"] ?? 0;
+    $dryrun         = $parameters["dryrun"] ?? false;
+    $deletedata     = $parameters["deletedata"] ?? false;
 }
 
 set_time_limit(0);
-
-// Set flag to indicate whether we can show progress using server side events (SSE)
-$showprogress   = strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), "TRIDENT") === false && strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), "MSIE") === false;
-$migrate_field  = getval("field", 0, true);
-$field_info     = get_resource_type_field($migrate_field);
-$splitvalue     = getval("splitchar", "");
-$maxrows        = getval("maxrows", 0, true);
-$modal          = (getval("modal", "") == "true");
-$dryrun         = getval("dryrun", "") != "";
-$deletedata     = getval("deletedata", "") == "true";
-$backurl = getval("backurl", "");
-
-if ($backurl == "") {
-    $backurl = $baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $migrate_field;
-}
-
 function send_event_update($message, $progress, $url = "")
 {
     $output = array('message' => $message, 'progress' => $progress);
@@ -41,7 +92,8 @@ function send_event_update($message, $progress, $url = "")
     flush();
 }
 
-if (getval("submit", "") != "") {
+
+if (getval("submit", "") != "" || $command_line) {
     ob_start();
 
     $valid_fields = ps_array("SELECT ref value FROM resource_type_field WHERE type IN (" . ps_param_insert(count($FIXED_LIST_FIELD_TYPES)) . ")", ps_param_fill($FIXED_LIST_FIELD_TYPES, 'i'));
@@ -60,8 +112,16 @@ if (getval("submit", "") != "") {
     $completion = 0;
     $now = date(time());
     // Set up logging
-    $logfile = get_temp_dir(false, '') . "/migrate-data_" . $userref . "_" . md5($username . $now . $scramble_key) . ".txt";
-    $logurl = $baseurl . "/pages/download.php?tempfile=migrate-data_" . $userref . "_" . $now . ".txt";
+    if ($command_line) {
+        $logfile = get_temp_dir(false, '') . "/migrate-data_" . md5($now . $scramble_key) . ".txt";
+        $logurl = $baseurl . "/pages/download.php?tempfile=migrate-data_" . $now . ".txt";
+
+        echo "Script started at " . date("Y-m-d H:i", time()) . PHP_EOL;
+        echo "Migrating data from text field '" . $field_info["title"] . "' ID #" . $migrate_field . PHP_EOL;
+    } else {
+        $logfile = get_temp_dir(false, '') . "/migrate-data_" . $userref . "_" . md5($username . $now . $scramble_key) . ".txt";
+        $logurl = $baseurl . "/pages/download.php?tempfile=migrate-data_" . $userref . "_" . $now . ".txt";
+    }
     $fp = fopen($logfile, 'a');
     fwrite($fp, "<pre>Script started at " . date("Y-m-d H:i", time()) . PHP_EOL);
     fwrite($fp, "Migrating data from text field '" . $field_info["title"] . "' ID #" . $migrate_field . PHP_EOL);
@@ -169,12 +229,18 @@ if (getval("submit", "") != "") {
             $fp = fopen($logfile, 'a');
             fwrite($fp, $logtext);
             fclose($fp);
+            if ($command_line) {
+                echo $logtext . PHP_EOL;
+            }
 
             if (connection_aborted() != 0) {
                 $logtext = ($dryrun ? "TESTING: " : "") . " Connection aborted" . PHP_EOL;
                 $fp = fopen($logfile, 'a');
                 fwrite($fp, $logtext);
                 fclose($fp);
+                if ($command_line) {
+                    echo $logtext . PHP_EOL;
+                }
                 exit();
             }
         }
@@ -184,6 +250,9 @@ if (getval("submit", "") != "") {
             $fp = fopen($logfile, 'a');
             fwrite($fp, $logtext);
             fclose($fp);
+            if ($command_line) {
+                echo $logtext . PHP_EOL;
+            }
             exit();
         }
     }
@@ -193,17 +262,24 @@ if (getval("submit", "") != "") {
     $fp = fopen($logfile, 'a');
     fwrite($fp, $logtext);
     fclose($fp);
+    if ($command_line) {
+        echo $logtext . PHP_EOL;
+    }
 
     $completemessage = ($dryrun ? "TESTING: " : "") . "Completed at " . date("Y-m-d H:i", time()) . ". " . $migrated . " rows migrated out of " . $total . "</pre>";
 
-    // Send a message to the user
-    message_add($userref, $lang["admin_resource_type_field_migrate_data"] . ": " . $completemessage, $logurl);
-
-    // Always send the completion event
-    if ($showprogress) {
-        send_event_update($completemessage . PHP_EOL, "100", $logurl);
+    if ($command_line) {
+        echo "DONE" . PHP_EOL;
     } else {
-        echo json_encode(array("message" => $completemessage,"url" => $logurl));
+        // Send a message to the user
+        message_add($userref, $lang["admin_resource_type_field_migrate_data"] . ": " . $completemessage, $logurl);
+
+        // Always send the completion event
+        if ($showprogress) {
+            send_event_update($completemessage . PHP_EOL, "100", $logurl);
+        } else {
+            echo json_encode(array("message" => $completemessage,"url" => $logurl));
+        }
     }
     exit();
 }
