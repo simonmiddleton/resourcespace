@@ -742,8 +742,8 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
         $resourcedata = get_resource_data($ref);
         $resources = do_search("!list$ref");
     }
-
     search_add_annotation_count($resources);
+
     $size = mb_strtolower($size);
     if (count($resources) == 0) {
         echo "nothing";
@@ -834,8 +834,11 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
                 $imageheight = $imagewidth * $hwratio;
             }
 
+            $image_x = (($width - 1) / 2) - (($imagewidth - 1) / 2); # Center image horizontally
+            $image_y = 1;
+
             $pdf->Text(.5, .5, i18n_get_translated($resourcedata['field' . $view_title_field]) . ' ' . $date);
-            $pdf->Image($imgpath, ((($width - 1) / 2) - ($imagewidth - 1) / 2), 1, $imagewidth, $imageheight, "jpg", $baseurl . '/?r=' . $ref);
+            $pdf->Image($imgpath, $image_x, $image_y, $imagewidth, $imageheight, 'jpg', "{$baseurl}/?r={$ref}");
 
             // set color for background
             $pdf->SetFillColor(255, 255, 200);
@@ -846,8 +849,10 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
             $pdf->SetY($ypos);
             unset($notes);
             if ($resources[$n]['annotation_count'] != 0) {
-                $notes = ps_query("SELECT a.ref,top_pos,left_pos,width,height,preview_width,preview_height,note,note_id,user,page, name `value` 
-                                FROM annotate_notes a JOIN node n ON a.node = n.ref WHERE a.ref=? AND page=?", array("i",$ref,"i",$page));
+                $notes = getResourceAnnotations(
+                    $ref,
+                    $page > 1 ? $page : 0 # Supporting legacy logic (from annotate plugin). See upgrade script #28
+                );
                 $notepages = 1; // Normally notes will all fit on one page, but may not
                 foreach ($notes as $note) {
                     // If the notes took us to a new page, return to the image page before marking annotation
@@ -855,27 +860,33 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
                         $pdf->setPage($currentpdfpage);
                     }
 
-                    $ratio = $imagewidth / $note['preview_width'];
-                    $note_y = $note['top_pos'] * $ratio;
-                    $note_x = $note['left_pos'] * $ratio;
-                    $note_width = $note['width'] * $ratio;
-                    $note_height = $note['height'] * $ratio;
+                    // Flatten bound field tags to a text representation so we can add it to the table.
+                    if ($note['text'] == '') {
+                        $note['text'] = implode('; ', array_column(getAnnotationTags($note), 'name'));
+                    }
+
+                    // Convert normalised (0-1) coordinates
+                    $note_x = $note['x'] * $imagewidth;
+                    $note_y = $note['y'] * $imageheight;
+                    $note_width = $note['width'] * $imagewidth;
+                    $note_height = $note['height'] * $imageheight;
+
                     $pdf->SetLineStyle($style1);
-                    $pdf->Rect(((($width - 1) / 2) - ($imagewidth - 1) / 2) + $note_x, $note_y + 1, $note_width, $note_height);
-                    $pdf->Rect(((($width - 1) / 2) - ($imagewidth - 1) / 2) + $note_x, $note_y + 1, .1, .1, 'DF', $style1, array(255,255,0));
+                    $pdf->Rect($image_x + $note_x, $image_y + $note_y, $note_width, $note_height);
+                    $pdf->Rect($image_x + $note_x, $image_y + $note_y, .1, .1, 'DF', $style1, array(255,255,0));
                     $ypos = $pdf->GetY();
-                    $pdf->Text(((($width - 1) / 2) - ($imagewidth - 1) / 2) + $note_x - .01, $note_y + .99, $m, false, false, true, 0, 0, 'L');
+                    $pdf->Text($image_x + $note_x - .01, $image_y + $note_y - .01, $m, false, false, true, 0, 0, 'L');
 
                     $pdf->SetY($ypos);
                     $note_user = get_user($note['user']);
                     $pdf->SetLineStyle($style);
-                    $noteparts = explode(":", $note['value'], 2);
+
                     // If the notes went over the page, we  went back to image for annotation, so we need to return to the page with the last row of the table before adding next row
                     if ($notepages > 1) {
                         $pdf->setPage($currentpdfpage + ($notepages - 1));
                     }
 
-                    $pdf->multiRow($m, trim($noteparts[1]) . " - " . $note_user['fullname']);
+                    $pdf->multiRow($m, trim($note['text']) . " - " . $note_user['fullname']);
                     // Check if this new table row has moved us to a new page, in which case we need to record this and go back to image page before the next annotation
                     if (isset($notepos)) {
                         $lastnotepos = $notepos;
