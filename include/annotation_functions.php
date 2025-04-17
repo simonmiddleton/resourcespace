@@ -860,10 +860,9 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
                         $pdf->setPage($currentpdfpage);
                     }
 
-                    // Flatten bound field tags to a text representation so we can add it to the table.
-                    if ($note['text'] == '') {
-                        $note['text'] = implode('; ', array_column(getAnnotationTags($note), 'name'));
-                    }
+                    $note['value'] = $note['text'] == ''
+                        ? implode("\n", array_map(prefix_value('- '), array_column(getAnnotationTags($note), 'name')))
+                        : $note['text'];
 
                     // Convert normalised (0-1) coordinates
                     $note_x = $note['x'] * $imagewidth;
@@ -886,7 +885,7 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
                         $pdf->setPage($currentpdfpage + ($notepages - 1));
                     }
 
-                    $pdf->multiRow($m, trim($note['text']) . " - " . $note_user['fullname']);
+                    $pdf->multiRow($m, trim($note['value']) . " @" . $note_user['fullname']);
                     // Check if this new table row has moved us to a new page, in which case we need to record this and go back to image page before the next annotation
                     if (isset($notepos)) {
                         $lastnotepos = $notepos;
