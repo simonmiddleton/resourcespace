@@ -294,12 +294,12 @@ function message_add($users, $text, $url = "", $owner = null, $notification_type
     foreach ($users as $user) {
         ps_query("INSERT INTO `user_message` (`user`, `message`) VALUES (?, ?)", array("i",(int)$user,"i",$message_ref));
 
+        $user_info = get_user($user);
         // send an email if the user has notifications and emails setting and the message hasn't already been sent via email
         if (~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL) {
-            get_config_option($user, 'email_and_user_notifications', $notifications_always_email, $GLOBALS['system_wide_config_options']['email_and_user_notifications']);
+            get_config_option(['user' => $user_info['ref'], 'usergroup' => $user_info['usergroup']], 'email_and_user_notifications', $notifications_always_email, $GLOBALS['system_wide_config_options']['email_and_user_notifications']);
             if ($notifications_always_email) {
-                $email_to = ps_value("SELECT email value FROM user WHERE ref = ?", array("i",$user), "");
-                if ($email_to !== '') {
+                if ($user_info['email'] !== '') {
                     if (substr($url, 0, 1) == "/") {
                         // If a relative link is provided make sure we add the full URL when emailing
                         $parsed_url = parse_url($baseurl);
@@ -319,7 +319,7 @@ function message_add($users, $text, $url = "", $owner = null, $notification_type
                         // Add the URL to the message if not already present
                         $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                     }
-                    send_mail($email_to, $applicationname . ": " . $lang['notification_email_subject'], $headerimghtml . $message_text);
+                    send_mail($user_info['email'], $applicationname . ": " . $lang['notification_email_subject'], $headerimghtml . $message_text);
                 }
             }
         }
@@ -588,8 +588,8 @@ function message_send_unread_emails()
         setup_user($messageuser);
 
         $pref_msg_user_for_inactive_digest = $pref_msg_user_pref_daily_digest = null;
-        get_config_option($digestuser, 'user_pref_inactive_digest', $pref_msg_user_for_inactive_digest);
-        get_config_option($digestuser, 'user_pref_daily_digest', $pref_msg_user_pref_daily_digest);
+        get_config_option(['user' => $messageuser['ref'], 'usergroup' => $messageuser['usergroup']], 'user_pref_inactive_digest', $pref_msg_user_for_inactive_digest);
+        get_config_option(['user' => $messageuser['ref'], 'usergroup' => $messageuser['usergroup']], 'user_pref_daily_digest', $pref_msg_user_pref_daily_digest);
 
         if ($inactive_message_auto_digest_period == 0 || (!$pref_msg_user_for_inactive_digest && !$pref_msg_user_pref_daily_digest)) {
             debug("Skipping email digest for user ref " . $digestuser . " as user or group preference disabled");
@@ -719,7 +719,7 @@ function message_send_unread_emails()
             send_mail($usermail, $applicationname . ": " . $lang["email_daily_digest_subject"], $message);
         }
 
-        get_config_option($digestuser, 'user_pref_daily_digest_mark_read', $mark_read);
+        get_config_option(['user' => $messageuser['ref'], 'usergroup' => $messageuser['usergroup']], 'user_pref_daily_digest_mark_read', $mark_read);
         if ($mark_read && count($messagerefs) > 0) {
             $parameters = array("i",MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL);
             $parameters = array_merge($parameters, ps_param_fill($messagerefs, "i"));
@@ -775,11 +775,11 @@ function system_notification($message, $url = "")
     $notify_users = get_notification_users("SYSTEM_ADMIN");
     $subject = str_replace("[application_name]", $applicationname, $lang["system_notification"]);
     foreach ($notify_users as $notify_user) {
-        get_config_option($notify_user['ref'], 'user_pref_system_management_notifications', $send_message);
+        get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'user_pref_system_management_notifications', $send_message);
         if (!$send_message) {
             continue;
         }
-        get_config_option($notify_user['ref'], 'email_user_notifications', $send_email);
+        get_config_option(['user' => $notify_user['ref'], 'usergroup' => $notify_user['usergroup']], 'email_user_notifications', $send_email);
         if ($send_email && $notify_user["email"] != "") {
             $admin_notify_emails[] = $notify_user['email'];
         } else {
@@ -945,7 +945,7 @@ function send_user_notification(array $users, $notifymessage, $forcemail = false
                 if ($preference != "") {
                     $requiredvalue  = (bool)$vals["requiredvalue"];
                     $default        = (bool)$vals["default"];
-                    get_config_option($userdetails['ref'], $preference, $check_pref, $default);
+                    get_config_option(['user' => $userdetails['ref'], 'usergroup' => $userdetails['usergroup']], $preference, $check_pref, $default);
                     debug(" - Required preference: " . $preference . " = " . ($requiredvalue ? "TRUE" : "FALSE"));
                     debug(" - User preference value: " . $preference . " = " . ($check_pref ? "TRUE" : "FALSE"));
                     if ($check_pref != $requiredvalue) {
@@ -959,7 +959,7 @@ function send_user_notification(array $users, $notifymessage, $forcemail = false
             continue;
         }
         debug("Sending notification to user #" . $userdetails["ref"]);
-        get_config_option($userdetails['ref'], 'email_user_notifications', $send_email);
+        get_config_option(['user' => $userdetails['ref'], 'usergroup' => $userdetails['usergroup']], 'email_user_notifications', $send_email);
         if (!isset($userlanguages[$userdetails['lang']])) {
             $userlanguages[$userdetails['lang']] = [];
             $userlanguages[$userdetails['lang']]["emails"] = [];

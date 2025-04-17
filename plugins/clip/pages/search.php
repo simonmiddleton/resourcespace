@@ -139,7 +139,7 @@ document.getElementById('clip-upload').addEventListener('change', function (even
          <hr /><h2><?php echo escape($lang["clip-duplicate-images"]) ?></h2>
          <p>
             <a href="<?php echo $duplicate_url ?>" onClick="return CentralSpaceLoad(this,true);">
-            <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo $lang["clip-duplicate-images-all"]; ?>
+            <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo escape($lang["clip-duplicate-images-all"]); ?>
             </a>
          </p>    
       

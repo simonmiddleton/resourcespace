@@ -33,7 +33,10 @@ if ($new_group_name != "" && enforcePostRequest(false)) {
     exit;
 }
 
-$ref = getval("ref", "");
+$ref = (int) getval('ref', 0, true, 'is_int_loose');
+if ($ref === 0) {
+    exit('No user group ref supplied.');
+}
 
 if (!ps_value("select ref as value from usergroup where ref = ?", array("i", $ref), false)) {
     redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // fail safe by returning to the user group management page if duff ref passed
@@ -45,15 +48,12 @@ $dependant_groups = ps_value("select count(*) as value from usergroup where pare
 $has_dependants = $dependant_user_count + $dependant_groups > 0;
 
 if (!$has_dependants && getval("deleteme", false) && enforcePostRequest(false)) {
-    ps_query("delete from usergroup where ref = ?", array("i", $ref));
-    log_activity('', LOG_CODE_DELETED, null, 'usergroup', null, $ref);
-
-    // No need to keep any records of language content for this user group
-    ps_query('DELETE FROM site_text WHERE specific_to_group = ?', array("i", $ref));
-
+    delete_usergroup($ref);
     redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // return to the user group management page
     exit;
 }
+
+$record = get_usergroup($ref);
 
 if (getval("save", false) && enforcePostRequest(false)) {
     $error = false;
@@ -146,6 +146,7 @@ if (getval("save", false) && enforcePostRequest(false)) {
     if (isset($logo_extension)) {
         ps_query("UPDATE usergroup SET group_specific_logo = ? WHERE ref = ?", array("s", $logo_extension, "i", $ref));
         log_activity(null, null, null, 'usergroup', 'group_specific_logo', $ref);
+        clear_query_cache('usergroup');
     }
 
     if (isset($logo_dark_extension)) {
@@ -165,71 +166,28 @@ if (getval("save", false) && enforcePostRequest(false)) {
         }
 
         if (in_array($column, array("allow_registration_selection"))) {
-            $val = getval($column, "0") ? "1" : "0";
-            $update_sql_params = array_merge($update_sql_params, array("i", $val));
+            $groupoptions[$column] = getval($column, "0") ? "1" : "0";
         } elseif ($column == "inherit_flags" && getval($column, [], false, 'is_array') !== []) {
-            $val = implode(',', getval($column, [], false, 'is_array'));
-            $update_sql_params = array_merge($update_sql_params, array("s", $val));
+            $groupoptions[$column] = implode(',', getval($column, [], false, 'is_array'));
         } elseif (in_array($column, array("parent","download_limit","download_log_days","search_filter_id","edit_filter_id","derestrict_filter_id"))) {
-            $val = getval($column, 0, true);
-            $update_sql_params = array_merge($update_sql_params, array("i", $val));
+            $groupoptions[$column] = getval($column, 0, true);
         } elseif ($column == "request_mode") {
-            $val = getval($column, 1, true);
-            $update_sql_params = array_merge($update_sql_params, array("i", $val));
+            $groupoptions[$column] = getval($column, 1, true);
         } else {
-            $val = getval($column, "");
-            $update_sql_params = array_merge($update_sql_params, array("s", $val));
+            $groupoptions[$column] = getval($column, "");
         }
-
-        if (isset($sql)) {
-            $sql .= ",";
-        } else {
-            $sql = "update usergroup set ";
-        }
-        $sql .= "{$column} = ?";
-        log_activity(null, LOG_CODE_EDITED, $val, 'usergroup', $column, $ref);
     }
 
-    $sql .= " where ref = ?";
-    $update_sql_params = array_merge($update_sql_params, array("i", $ref));
-    ps_query($sql, $update_sql_params);
+    foreach ($groupoptions as $column_name => $column_value) {
+        log_activity(null, LOG_CODE_EDITED, $column_value, 'usergroup', $column_name, $ref);
+    }
+
+    save_usergroup($ref, $groupoptions);
 
     hook("usergroup_edit_add_form_save", "", array($ref));
     if (!$error) {
         redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // return to the user group management page
         exit;
-    }
-}
-
-$record = get_usergroup($ref);
-
-# prints out an option tag per config.default.php file and moves any comments to the label attribute.
-function dump_config_default_options()
-{
-    global $baseurl_short;
-
-    $config_defaults = file_get_contents("../../include/config.default.php");
-    $config_defaults = preg_replace("/\<\?php|\?\>/s", "", $config_defaults);     // remove php open and close tags
-    $config_defaults = preg_replace("/\/\*.*?\*\//s", "", $config_defaults);      // remove multi-line comments
-
-    preg_match_all("/\n(\S*?)(\\$.*?\=.*?\;)(.*?)\n/s", $config_defaults, $matches);
-
-    for ($i = 0; $i < count($matches[0]); $i++) {
-        $matches[1][$i] = preg_replace('/\#|(\/\/)/s', '', $matches[1][$i]);        // hashes and double forward slash comments
-        $matches[1][$i] = preg_replace('/\n\s+/s', "\n", $matches[1][$i]);      // white space at the start of new lines
-        $matches[1][$i] = preg_replace('/^\s*/s', '', $matches[1][$i]);     // leading white space
-        $matches[1][$i] = preg_replace('/\s*$/s', '', $matches[1][$i]);     // trailing white space
-
-        $matches[3][$i] = preg_replace('/\#|(\/\/)/s', '', $matches[3][$i]);        // hashes and double forward slash comments
-        $matches[3][$i] = preg_replace('/\n\s+/s', "\n", $matches[3][$i]);      // white space at the start of new lines
-        $matches[3][$i] = preg_replace('/^\s*/s', '', $matches[3][$i]);     // leading white space
-        $matches[3][$i] = preg_replace('/\s*$/s', '', $matches[3][$i]);     // trailing white space
-
-        if ($matches[1][$i] != "" && $matches[3][$i] != "") {
-            $matches[1][$i] .= "\n";
-        }
-
-        echo "<option value=\"" . nl2br(htmlentities($matches[1][$i] . $matches[3][$i], ENT_COMPAT)) . "\">" . htmlentities($matches[2][$i]) . "</option>\n";
     }
 }
 
@@ -243,7 +201,9 @@ $url_params_edit = array(
     "find" => $find,
     "filterbypermissions" => $filter_by_permissions
 );
+
 ?>
+
 
 <form
     method="post"
@@ -319,6 +279,22 @@ $url_params_edit = array(
                 <textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo escape((string) $record['permissions']); ?></textarea>
                 <div class="clearerleft"></div>
             </div> <!-- End of permissions_area -->
+        </div>
+
+        <div class="Question">
+            <label for="group_override_config"><?php echo escape($lang["fieldtitle-usergroup_config"]); ?></label>
+
+            <?php if ($record['parent']) { ?>
+                <label for="group_override_config_inherit"><?php echo escape($lang["property-group_preferences_inherit"]); ?></label>
+                <input id="group_override_config_inherit" name="inherit_flags[]" type="checkbox" value="preferences" onClick="if(jQuery('#group_override_config_inherit').is(':checked')){jQuery('#group_override_config_area').slideUp();}else{jQuery('#group_override_config_area').slideDown();}" <?php echo (in_array("preferences", $record['inherit'])) ? "checked" : ''; ?>>
+                <div class="clearerleft"></div> 
+                <?php
+            } ?>
+
+            <div id ="group_override_config_area" <?php echo (in_array("preferences", $record['inherit'])) ? 'style="display:none;"' : ''; ?>>
+                <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_config_edit.php?ref=<?php echo escape($ref . $url_params); ?>',true);" value="<?php echo escape($lang["editgroupconfigoverrides"]); ?>"></input>
+                <div class="clearerleft"></div>
+            </div>
         </div>
 
         <div class="Question">

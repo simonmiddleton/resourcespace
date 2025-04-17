@@ -1,6 +1,5 @@
 <?php
-include_once dirname(__FILE__, 4) . '/include/db.php';
-include_once dirname(__FILE__, 4) . '/include/resource_functions.php';
+include_once dirname(__FILE__, 4) . '/include/boot.php';
 include_once dirname(__FILE__, 2) . '/include/clip_functions.php';
 
 command_line_only();
@@ -41,29 +40,6 @@ if(empty($resources))
 {
     echo "No resources needing vector update.\n";
     exit;
-}
-
-function vector_visualise(array $vector): string
-{
-    $chars = str_split(" .:;i1tfLCG08@"); 
-    $out = "";
-    $chunks = array_chunk($vector, 8);
-
-    foreach ($chunks as $chunk)
-    {
-        $mean = array_sum($chunk) / count($chunk);
-        $sum_squares = 0;
-        foreach ($chunk as $v)
-            $sum_squares += pow($v - $mean, 2);
-        $std_dev = sqrt($sum_squares / count($chunk));
-
-        // Clamp & scale std dev for visualisation (tune this if needed)
-        $scaled = min(1.0, $std_dev * 5); // exaggerate a bit
-        $index = (int)round($scaled * (count($chars) - 1));
-        $out .= $chars[$index];
-    }
-
-    return $out;
 }
 
 

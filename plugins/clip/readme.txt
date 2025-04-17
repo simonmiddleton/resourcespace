@@ -43,7 +43,6 @@ pip install faiss-cpu
 Start the CLIP service:
 
 cd /path/to/resourcespace/plugins/clip/scripts
-source ../../../../clip-env/bin/activate
 python clip_service.py --dbuser [mysql_user] --dbpass [mysql_password]
 You should see:
 
@@ -62,19 +61,6 @@ This will:
 Detect resources that need new vectors (based on file_checksum)
 Send the image to the Python service
 Store the 512-dim vector in the resource_clip_vector table
-
-OPTIONAL: Test Command-Line Search
-To test semantic search from the command line:
-
-php /plugins/clip/scripts/search_vectors.php "a red car driving through snow"
-
-This will:
-
-Send the search query to the Python service
-
-Fetch matching resource IDs and titles (field8)
-
-Print the results
 
 TROUBLESHOOTING
 If the Python script says ModuleNotFoundError: No module named 'fastapi', make sure you activated your virtual environment.

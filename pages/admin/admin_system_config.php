@@ -456,7 +456,7 @@ if ($debug_log) {
     $debug_log_options = [$lang['systemconsoleonpermallusers']];
     $system_config_debug_log_interim = $lang['systemconsoleonpermallusers'];
 }
-get_config_option(null, 'system_config_debug_log_interim', $system_config_debug_log_interim);
+get_config_option([], 'system_config_debug_log_interim', $system_config_debug_log_interim);
 
 $page_def[] = config_add_single_select(
     'system_config_debug_log_interim',
@@ -564,18 +564,7 @@ if ($ajax && getval('action', '') === 'create_debug_log_override' && enforcePost
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
 
-// In order to stop user preferences affecting values displayed on this page,
-// loop through every field about to be created for the admin page
-foreach ($page_def as $page_item) {
-    if (
-        $page_item[0] !== 'html'
-            && isset($system_wide_config_options[$page_item[1]])
-            && $GLOBALS[$page_item[1]] !== $system_wide_config_options[$page_item[1]]
-    ) {
-        // Set the global variable back to the system value if it is different
-        $GLOBALS[$page_item[1]] = $system_wide_config_options[$page_item[1]];
-    }
-}
+config_remove_user_preferences($page_def);
 
 # $lang is not a config option!
 unset($system_wide_config_options['lang']);
@@ -589,7 +578,7 @@ if (!isset($userref)) {
     $userref = $userdata[0]['ref'];
 }
 
-$page_def = config_filter_by_search($page_def, null, getval("find", ""), getval("only_modified", "no"));
+$page_def = config_filter_by_search($page_def, [], getval("filter", ""), getval("only_modified", "no"));
 
 include '../../include/header.php';
 ?>
@@ -597,7 +586,7 @@ include '../../include/header.php';
     <h1 class="inline_config_search"><?php echo escape($lang["systemconfig"]); ?></h1>
 
     <?php
-    render_config_filter_by_search(getval("find", ""), getval("only_modified", "no"));
+    render_config_filter_by_search(getval("filter", ""), getval("only_modified", "no"));
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],

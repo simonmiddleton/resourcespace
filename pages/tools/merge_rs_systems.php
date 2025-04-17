@@ -366,7 +366,15 @@ if ($export && isset($folder_path)) {
             "record_feedback" => array(
                 "text" => "User group #%ref '%name'",
                 "placeholders" => array("ref", "name")
-            )
+            ),
+            "additional_process" => function ($record) {
+                $usergroup_preferences = array();
+                if (get_config_options(array('usergroup' => $record["ref"]), $usergroup_preferences)) {
+                    logScript("Found user group preferences");
+                    $record["usergroup_preferences"] = $usergroup_preferences;
+                }
+                return $record;
+            }
         ),
         array(
             "name" => "user",
@@ -385,7 +393,7 @@ if ($export && isset($folder_path)) {
             ),
             "additional_process" => function ($record) {
                 $user_preferences = array();
-                if (get_config_options($record["ref"], $user_preferences)) {
+                if (get_config_options(array('user' => $record["ref"]), $user_preferences)) {
                     logScript("Found user preferences");
                     $record["user_preferences"] = $user_preferences;
                 }
@@ -713,6 +721,20 @@ if ($import && isset($folder_path)) {
     $usergroups_not_created = (isset($usergroups_not_created) ? $usergroups_not_created : array());
     $src_usergroups = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "usergroups_export.json", "r+b"));
     $dest_usergroups = get_usergroups(false, "", true);
+    $process_usergroup_preferences = static function ($usergroup_ref, $usergroup_data) {
+        db_begin_transaction(TX_SAVEPOINT);
+        if (isset($usergroup_data["usergroup_preferences"]) && is_array($usergroup_data["usergroup_preferences"]) && !empty($usergroup_data["usergroup_preferences"])) {
+            logScript("Processing user group preferences (if no warning is showing, this is ok)");
+            foreach ($usergroup_data["usergroup_preferences"] as $usergroup_p) {
+                if (!set_usergroup_config_option($usergroup_ref, $usergroup_p["parameter"], $usergroup_p["value"])) {
+                    logScript("ERROR: uanble to save user group preference: {$usergroup_p["parameter"]} = '{$usergroup_p["value"]}'");
+                    exit(1);
+                }
+            }
+        }
+        db_end_transaction(TX_SAVEPOINT);
+    };
+
     foreach ($src_usergroups as $src_ug) {
         if (in_array($src_ug["ref"], $processed_usergroups) || in_array($src_ug["ref"], $usergroups_not_created)) {
             continue;
@@ -744,11 +766,13 @@ if ($import && isset($folder_path)) {
                 continue;
             }
 
-            ps_query("INSERT INTO usergroup(name, request_mode) VALUES (?, '1')", ['s', $src_ug["name"]]);
-            $new_ug_ref = sql_insert_id();
+            db_begin_transaction(TX_SAVEPOINT);
+            $new_ug_ref = save_usergroup(0, array('name' => $src_ug["name"], 'request_mode' => 1));
             log_activity(null, LOG_CODE_CREATED, null, 'usergroup', null, $new_ug_ref);
             log_activity(null, LOG_CODE_CREATED, $src_ug["name"], 'usergroup', 'name', $new_ug_ref, null, '');
             log_activity(null, LOG_CODE_CREATED, '1', 'usergroup', 'request_mode', $new_ug_ref, null, '');
+
+            $process_usergroup_preferences($new_ug_ref, $src_ug);
 
             logScript("Created new user group '{$src_ug["name"]}' (ID #{$new_ug_ref})");
             $usergroups_spec[$src_ug["ref"]] = $new_ug_ref;

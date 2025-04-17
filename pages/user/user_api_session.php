@@ -56,7 +56,7 @@ include "../../include/header.php";
 
         <form
             method="post" 
-            action="<?php echo $baseurl_short . "pages/user/user_api_session.php?system=" . escape($system); ?>"
+            action="<?php echo generateURL("{$baseurl_short}pages/user/user_api_session.php", ['system' => $system]); ?>"
             onsubmit="return CentralSpacePost(this,true);">        
             <input type="hidden" name="state" value="<?php echo escape($state); ?>">
             <input type="hidden" name="system" value="<?php echo escape($system); ?>">

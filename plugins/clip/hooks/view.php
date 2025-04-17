@@ -14,11 +14,11 @@ function HookClipViewCustompanels()
             <div class="Title"><?php echo escape($lang["clip-ai-smart-search"]); ?></div>
                 <p>
                     <a href="<?php echo $search_url ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo $lang["clip-visually-similar-images"]; ?>
+                    <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo escape($lang["clip-visually-similar-images"]); ?>
                     </a>
                     &nbsp;&nbsp;&nbsp;
                     <a href="<?php echo $duplicate_url ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo $lang["clip-duplicate-images"]; ?>
+                    <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo escape($lang["clip-duplicate-images"]); ?>
                     </a>
                 </p>    
         </div>

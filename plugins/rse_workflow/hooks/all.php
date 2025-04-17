@@ -203,7 +203,7 @@ function HookRse_workflowAllAfter_setup_user()
     // Replaces notify group messaging - now replaced by actions
     global $userref, $usergroup;
     
-    get_config_option($userref,'user_pref_resource_notifications', $addwfactions);        
+    get_config_option(['user' => $userref, 'usergroup' => $usergroup],'user_pref_resource_notifications', $addwfactions);
     if (!$addwfactions)
         {
         // No notifications were sent so actions shouldn't appear either

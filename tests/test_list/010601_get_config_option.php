@@ -36,7 +36,7 @@ $system_wide_setup = function () use ($system_wide_application_name) {
 $use_cases = [
     [
         'name' => 'Bad config option name',
-        'input' => ['user_id' => $user_SA, 'name' => '', 'default' => null],
+        'input' => ['user_array' => $user_SA, 'name' => '', 'default' => null],
         'expected' => ['value' => null, 'return' => false],
     ],
 
@@ -48,7 +48,7 @@ $use_cases = [
             // Not an ideal scenario. We should aim to use the default if possible.
             $GLOBALS['applicationname'] = $system_wide_application_name;
         },
-        'input' => ['user_id' => null, 'name' => 'applicationname', 'default' => null],
+        'input' => ['user_array' => null, 'name' => 'applicationname', 'default' => null],
         'expected' => [
             'value' => $system_wide_application_name,
             'return' => false
@@ -56,7 +56,7 @@ $use_cases = [
     ],
     [
         'name' => 'Get the default value instead of the current (global) config option value',
-        'input' => ['user_id' => null, 'name' => 'applicationname', 'default' => 'DefaultTakesPrecedence'],
+        'input' => ['user_array' => null, 'name' => 'applicationname', 'default' => 'DefaultTakesPrecedence'],
         'expected' => [
             'value' => 'DefaultTakesPrecedence',
             'return' => false
@@ -67,28 +67,37 @@ $use_cases = [
         'setup' => function () {
             unset($GLOBALS['system_wide_config_options']['applicationname']);
         },
-        'input' => ['user_id' => null, 'name' => 'applicationname', 'default' => 'test_10601_default_value'],
+        'input' => ['user_array' => null, 'name' => 'applicationname', 'default' => 'test_10601_default_value'],
         'expected' => [
             'value' => 'test_10601_default_value',
             'return' => false
         ],
     ],
+    [
+        'name' => 'Get user group preference',
+        'setup' => function () use ($user_SA) {
+            set_usergroup_config_option($user_SA['usergroup'], 'applicationname', 'RS-SA-UG');
+        },
+        'input' => ['user_array' => $user_SA, 'name' => 'applicationname', 'default' => null],
+        'expected' => ['value' => 'RS-SA-UG', 'return' => true],
+    ],
 
     // User preferences (configs)
     [
-        'name' => 'Get user preference',
+        'name' => 'Get user preference (overrides user group preference)',
         'setup' => function () use ($user_SA) {
-            set_config_option($user_SA, 'applicationname', 'RS-SA');
+            set_config_option($user_SA['ref'], 'applicationname', 'RS-SA');
         },
-        'input' => ['user_id' => $user_SA, 'name' => 'applicationname', 'default' => null],
+        'input' => ['user_array' => $user_SA, 'name' => 'applicationname', 'default' => null],
         'expected' => ['value' => 'RS-SA', 'return' => true],
     ],
     [
         'name' => 'No user preference, needs to get system wide value (provided as default)',
         'setup' => function () use ($user_SA) {
-            ps_query("DELETE FROM user_preferences WHERE user = ? AND parameter = 'applicationname'", ['i', $user_SA]);
+            ps_query("DELETE FROM user_preferences WHERE user = ? AND parameter = 'applicationname'", ['i', $user_SA['ref']]);
+            ps_query("DELETE FROM user_preferences WHERE usergroup = ? AND parameter = 'applicationname'", ['i', $user_SA['usergroup']]);
         },
-        'input' => ['user_id' => $user_SA, 'name' => 'applicationname', 'default' => $system_wide_application_name],
+        'input' => ['user_array' => $user_SA, 'name' => 'applicationname', 'default' => $system_wide_application_name],
         'expected' => ['value' => $system_wide_application_name, 'return' => false],
     ],
     [
@@ -119,7 +128,7 @@ $use_cases = [
         },
         'input' => [
             // Defer getting the user ID until after we've set up the use case (otherwise the user might not exist)
-            'user_id' => function () {
+            'user_array' => function () {
                 return get_user(get_user_by_username('test_10601_user2'))['ref'];
             },
             'name' => 'user_pref_resource_notifications',
@@ -128,6 +137,8 @@ $use_cases = [
         'expected' => ['value' => true, 'return' => false],
     ],
 ];
+
+
 foreach ($use_cases as $use_case) {
     // Reset before testing this use case
     $GLOBALS['applicationname'] = $init_application_name;
@@ -138,11 +149,20 @@ foreach ($use_cases as $use_case) {
         $use_case['setup']();
     }
 
-    $uci_user_id = is_callable($use_case['input']['user_id']) ? $use_case['input']['user_id']() : $use_case['input']['user_id'];
+    $uci_user_id = is_callable($use_case['input']['user_array']) ? $use_case['input']['user_array']() : $use_case['input']['user_array'];
+
     $uci_name = $use_case['input']['name'];
     $uci_default = $use_case['input']['default'];
     $returned_config_option_value = null;
-    $result = get_config_option($uci_user_id, $uci_name, $returned_config_option_value, $uci_default);
+    $config_type = array();
+    if (isset($uci_user_id['ref'])) {
+        $config_type['user'] = $uci_user_id['ref'];
+    }
+    if (isset($uci_user_id['usergroup'])) {
+        $config_type['usergroup'] = $uci_user_id['usergroup'];
+    }
+
+    $result = get_config_option($config_type, $uci_name, $returned_config_option_value, $uci_default);
 
     // Debug use case
     $padding = 45;

@@ -126,7 +126,7 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     }
 
     // Filter out results with score below the threshold
-    $results = array_filter($results, function($result) use ($min_score) {
+    $results = array_filter($results, static function($result) use ($min_score) {
         return isset($result['score']) && $result['score'] >= $min_score;
     });
 
@@ -136,15 +136,8 @@ function HookClipAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     // No results - we must still run a query but one that returns no results.
     if (count($ids)==0) {$ids=[-1];}
 
-    $params = [];
-    foreach ($ids as $id)
-    {
-        $params[] = 'i';
-        $params[] = $id;
-    }
-
-    $in_sql = implode(',', array_fill(0, count($ids), '?'));
-
+    $in_sql=ps_param_insert(count($ids));
+    $params=ps_param_fill($ids,"i");
     $clipsql = new PreparedStatementQuery();
     $clipsql->sql = "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.ref in ($in_sql) AND " . $sql_filter->sql . " ORDER BY FIELD(r.ref, $in_sql)";
     $clipsql->parameters = array_merge($select->parameters, $sql_join->parameters, $params, $sql_filter->parameters, $params);

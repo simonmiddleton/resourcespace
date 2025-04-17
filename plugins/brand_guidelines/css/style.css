@@ -67,7 +67,7 @@
 
 .guidelines-content h1 { font-size: 1.7rem; }
 .guidelines-content h2 { font-size: 1.3rem; }
-.guidelines-content .top-right-menu { float: right; }
+.guidelines-content .top-right-menu { float: right; z-index: 1;}
 .guidelines-content button.new {
     margin-top: 0px;
     margin-left: 0px;

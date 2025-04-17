@@ -642,6 +642,10 @@ function save_resource_data($ref, $multi, $autosave_field = "")
     // NOTE: this should NOT apply to upload.
     $check_edit_checksums = true;
 
+    if ($upload_review_mode) {
+        $check_edit_checksums = false;
+    }
+
     // Save resource defaults (functionality available for upload only)
     // Call it here so that if users have access to the field and want
     // to override it, they can do so
@@ -1097,7 +1101,7 @@ function save_resource_data($ref, $multi, $autosave_field = "")
             # Add any onchange code if new checksum for field shows that it has changed
             if (
                 isset($fields[$n]["onchange_macro"]) && $fields[$n]["onchange_macro"] !== ""
-                    && $post_cs !== ""
+                    && ($post_cs !== "" || (!$check_edit_checksums && $new_checksums[$fields[$n]["ref"]] != md5(trim(preg_replace('/\s\s+/', ' ', (string) $fields[$n]['value'] ?? '')))))
                     && isset($new_checksums[$fields[$n]["ref"]])
                     && $post_cs !== $new_checksums[$fields[$n]["ref"]]
             ) {
@@ -2859,9 +2863,16 @@ function delete_resource($ref)
     $extensions = array_unique($extensions);
 
     foreach ($extensions as $extension) {
-        $sizes = get_image_sizes($ref, true, $extension);
+        if (in_array(strtolower($extension), ['jpg', 'jpeg'])) {
+            $sizes = get_image_sizes($ref, true, $extension);
+        } else {
+            $sizes = [['path' => get_resource_path($ref, true, '', false, $extension)]];
+        }
         foreach ($sizes as $size) {
-            if (file_exists($size['path']) && ($staticsync_allow_syncdir_deletion || false !== strpos($size['path'], $storagedir))) { // Only delete if file is in filestore
+            if (
+                file_exists($size['path'])
+                && ($staticsync_allow_syncdir_deletion || false !== strpos($size['path'], $storagedir))
+            ) { // Only delete if file is in filestore
                 $pathtofile = realpath($size['path']); // avoid passing relative path to unlink function to prevent error on removal of file.
                 unlink($pathtofile);
             }
@@ -5067,13 +5078,13 @@ function get_resource_access($resource)
             global $userdata, $lang, $baseurl;
             if (is_numeric($migrateresult)) {
                 // Successfully migrated - now use the new filter
-                ps_query("UPDATE usergroup SET derestrict_filter_id=? WHERE ref=?", array("i",$migrateresult,"i",$usergroup));
+                save_usergroup($usergroup, array('derestrict_filter_id' => $migrateresult));
                 debug("FILTER MIGRATION: Migrated derestrict_filter_id filter - '" . $userderestrictfilter . "' filter id#" . $migrateresult);
                 $userderestrictfilter = $migrateresult;
             } elseif (is_array($migrateresult)) {
                 debug("FILTER MIGRATION: Error migrating filter: '" . $userderestrictfilter . "' - " . implode('\n', $migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure
-                ps_query("UPDATE usergroup SET derestrict_filter_id='-1' WHERE ref=?", array("i",$usergroup));
+                save_usergroup($usergroup, array('derestrict_filter_id' => -1));
                 message_add(array_column($notification_users, "ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n', $migrateresult), generateURL($baseurl . "/pages/admin/admin_group_management_edit.php", array("ref" => $usergroup)));
             }
         }
@@ -5331,13 +5342,13 @@ function get_edit_access($resource, int $status = -999, array &$resourcedata = [
         $notification_users = get_notification_users();
         if (is_numeric($migrateresult)) {
             // Successfully migrated - now use the new filter
-            ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?", array("i",$migrateresult,"i",$usergroup));
+            save_usergroup($usergroup, array('edit_filter_id' => $migrateresult));
             debug("FILTER MIGRATION: Migrated edit filter - '" . $usereditfilter . "' filter id#" . $migrateresult);
             $usereditfilter = $migrateresult;
         } elseif (is_array($migrateresult)) {
             debug("FILTER MIGRATION: Error migrating filter: '" . $usereditfilter . "' - " . implode('\n', $migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure
-            ps_query("UPDATE usergroup SET edit_filter_id='0' WHERE ref=?", array("i",$usergroup));
+            save_usergroup($usergroup, array('edit_filter_id' => 0));
             message_add(array_column($notification_users, "ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n', $migrateresult), generateURL($baseurl . "/pages/admin/admin_group_management_edit.php", array("ref" => $usergroup)));
         }
     }

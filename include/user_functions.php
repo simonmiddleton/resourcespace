@@ -229,10 +229,10 @@ function setup_user(array $userdata)
     override_rs_variables_by_eval($GLOBALS, $config_options, 'usergroup');
 
     // Set default workflow states to show actions for, if not manually set by user
-    get_config_option($userref, 'actions_notify_states', $user_actions_notify_states, false);
+    get_config_option(['user' => $userref, 'usergroup' => $usergroup], 'actions_notify_states', $user_actions_notify_states, false);
 
     // Check if user has already explicitly asked not to see these
-    get_config_option($userref, 'actions_resource_review', $legacy_resource_review, true); // Deprecated option
+    get_config_option(['user' => $userref, 'usergroup' => $usergroup], 'actions_resource_review', $legacy_resource_review, true); // Deprecated option
     if ($user_actions_notify_states === false && $legacy_resource_review) {
         $default_notify_states = get_default_notify_states();
         $GLOBALS['actions_notify_states'] = implode(",", $default_notify_states);
@@ -559,7 +559,7 @@ function get_usergroup($ref)
 {
     $return = ps_query("SELECT ref, name, permissions, parent, search_filter, search_filter_id, edit_filter, ip_restrict, resource_defaults, config_options, welcome_message, 
             request_mode, allow_registration_selection, derestrict_filter, group_specific_logo, inherit_flags, download_limit, download_log_days, edit_filter_id, derestrict_filter_id, group_specific_logo_dark "
-            . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref = ?", array("i", $ref));
+            . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref = ?", array("i", $ref), 'usergroup');
     if (count($return) == 0) {
         return false;
     } else {
@@ -2421,7 +2421,7 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = n
 
     if (is_array($email_notify_usergroups) && count($email_notify_usergroups) > 0) {
         // If email_notify_usergroups is set we use these over everything else, as long as they have an email address set
-        $notification_users_cache[$userpermissionindex] = ps_query("select ref, email, lang from user where usergroup in (" . ps_param_insert(count($email_notify_usergroups)) . ") and email <> '' AND approved = 1 AND (account_expires IS NULL OR account_expires > NOW())", ps_param_fill($email_notify_usergroups, "i"));
+        $notification_users_cache[$userpermissionindex] = ps_query("select ref, email, lang, usergroup from user where usergroup in (" . ps_param_insert(count($email_notify_usergroups)) . ") and email <> '' AND approved = 1 AND (account_expires IS NULL OR account_expires > NOW())", ps_param_fill($email_notify_usergroups, "i"));
         return $notification_users_cache[$userpermissionindex];
     }
 
@@ -2449,14 +2449,14 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = n
                 }
 
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-                $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup = ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'u', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'u', pg.permissions) <> 0)) and u.ref <> '' and u.approved = 1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . $sql_approver_groups, $sql_approver_groups_params);
+                $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.lang, u.usergroup from usergroup ug join user u on u.usergroup = ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'u', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'u', pg.permissions) <> 0)) and u.ref <> '' and u.approved = 1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . $sql_approver_groups, $sql_approver_groups_params);
                 return $notification_users_cache[$userpermissionindex];
             break;
 
             case "RESOURCE_ACCESS":
             // Notify users who can grant access to resources, get all users in groups with R permissions without Rb permissions
                 $notification_users_cache[$userpermissionindex] =
-                ps_query("select u.ref, u.email from usergroup ug 
+                ps_query("select u.ref, u.email, u.usergroup from usergroup ug 
                         join user u on u.usergroup=ug.ref 
                         left join usergroup pg on ug.parent = pg.ref 
                         where (FIND_IN_SET('permissions', coalesce(ug.inherit_flags,'')) = 0 
@@ -2471,20 +2471,20 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = n
 
             case "RESEARCH_ADMIN":
             // Notify research admins, get all users in groups with r permissions
-                $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'r', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'r', pg.permissions) <> 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
+                $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.usergroup from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'r', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'r', pg.permissions) <> 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
                 return $notification_users_cache[$userpermissionindex];
             break;
 
             case "RESOURCE_ADMIN":
             // Get all users in groups with t and e0 permissions
-                $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 't', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 't', pg.permissions) <> 0)) AND (FIND_IN_SET(BINARY 'e0', ug.permissions) OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'e0', pg.permissions))) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
+                $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.usergroup from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 't', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 't', pg.permissions) <> 0)) AND (FIND_IN_SET(BINARY 'e0', ug.permissions) OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'e0', pg.permissions))) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
                 return $notification_users_cache[$userpermissionindex];
             break;
 
             case "SYSTEM_ADMIN":
             default:
             // Get all users in groups with a permission (default if incorrect admin type has been passed)
-                $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'a', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'a', pg.permissions) <> 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
+                $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.usergroup from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'a', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'a', pg.permissions) <> 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
                 return $notification_users_cache[$userpermissionindex];
             break;
         }
@@ -2499,7 +2499,7 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = n
             $condition .= "find_in_set(binary ?, ug.permissions) <> 0 AND u.approved = 1 AND (u.account_expires IS NULL OR u.account_expires > NOW())";
             $condition_sql_params = array_merge($condition_sql_params, array("s", $permission));
         }
-        $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup = ug.ref where $condition", $condition_sql_params);
+        $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.usergroup from usergroup ug join user u on u.usergroup = ug.ref where $condition", $condition_sql_params);
         return $notification_users_cache[$userpermissionindex];
     }
 }
@@ -2773,7 +2773,7 @@ function internal_share_access()
 }
 
 /**
- * Save or create usergroup
+ * Save changes to a usergroup or create usergroup
  *
  * @param  int              $ref    Group ref. Set to 0 to create a new group
  * @param  array            $groupoptions array of options to set for group in the form array("columnname" => $value)
@@ -2821,6 +2821,7 @@ function save_usergroup($ref, $groupoptions)
         }
         $sql = "UPDATE usergroup SET " . implode(",", $sqlsetvals) . " WHERE ref = ?";
         ps_query($sql, array_merge(ps_param_fill($sqlvals, "s"), array("i", (int) $ref)));
+        clear_query_cache('usergroup');
         return true;
     } else {
         $sqlsetvals = array();
@@ -2829,6 +2830,7 @@ function save_usergroup($ref, $groupoptions)
         }
         $sql = "INSERT INTO usergroup (" . implode(",", $sqlcols) . ") VALUES (" . ps_param_insert(count($sqlvals)) . ")";
         ps_query($sql, ps_param_fill($sqlvals, "s"));
+        clear_query_cache('usergroup');
         return sql_insert_id();
     }
 }
@@ -3623,4 +3625,33 @@ function cors_is_origin_allowed(string $origin, array $whitelist): bool  {
         }
     }
     return false;
+}
+
+/**
+ * Delete a user group and associated records.
+ *
+ * @param  int   $usergroup_ref
+ */
+function delete_usergroup(int $usergroup_ref): bool
+{
+    $dependant_user_count = ps_value("select count(*) as value from user where usergroup = ?", array("i", $usergroup_ref), 0);
+    $dependant_groups = ps_value("select count(*) as value from usergroup where parent = ?", array("i", $usergroup_ref), 0);
+    $has_dependants = $dependant_user_count + $dependant_groups > 0;
+
+    if ($has_dependants) {
+        return false;
+    }
+
+    ps_query("delete from usergroup where ref = ?", array("i", $usergroup_ref));
+    log_activity('', LOG_CODE_DELETED, null, 'usergroup', null, $usergroup_ref);
+
+    # No need to keep any records of language content for this user group
+    ps_query('DELETE FROM site_text WHERE specific_to_group = ?', array("i", $usergroup_ref));
+
+    # Remove dash tiles related to deleted user group. Don't delete from dash_tile as they maybe in use elsewhere.
+    ps_query("DELETE FROM usergroup_dash_tile WHERE usergroup = ?", ['i', $usergroup_ref]);
+
+    clear_query_cache('usergroup');
+
+    return true;
 }

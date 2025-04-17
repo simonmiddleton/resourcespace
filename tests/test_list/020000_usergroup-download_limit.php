@@ -7,9 +7,13 @@ ps_query("TRUNCATE resource");
 ps_query("TRUNCATE resource_log");
 
 // Set up group with limit
-ps_query("insert into usergroup (name, permissions) VALUES ('Limited group', 's,e-1,e-2,g,d,q,n,f*,j*,z1,z2,z3')");
-$groupref = sql_insert_id();
-ps_query("UPDATE usergroup set download_limit='3', download_log_days='10' WHERE ref ='$groupref'");
+$usergroup_values = array(
+    'name' => 'Limited group',
+    'permissions' => 's,e-1,e-2,g,d,q,n,f*,j*,z1,z2,z3',
+    'download_limit' => 3,
+    'download_log_days' => 10
+);
+$groupref = save_usergroup(0, $usergroup_values);
 
 // Create a user
 $limiteduser = new_user("limiteduser", $groupref);
