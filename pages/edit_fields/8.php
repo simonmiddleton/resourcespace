@@ -25,6 +25,7 @@ global $tinymce_plugins, $tinymce_toolbar;
         menubar: '',
         toolbar: "<?php echo escape(check_tinymce_toolbar($tinymce_toolbar)); ?>",
         min_height: 400,
+        max_height: 400,
         invalid_elements: 'script,iframe,embed,object,applet,meta,frame,frameset,link', //Explicitly removes Javascript-based elements
         invalid_attributes: 'on*', // Removes all 'on' event attributes
         license_key: 'gpl',
