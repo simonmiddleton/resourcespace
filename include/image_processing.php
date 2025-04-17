@@ -1081,6 +1081,11 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
     global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge, $lang, $ffmpeg_preview_gif;
     global $previews_allow_enlarge, $offline_job_queue, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
+    if (is_null($extension)) {
+        debug("create_previews - failed for resource $ref - extension provided is null.");
+        return false;
+    }
+
     # FStemplate support - do not allow previews from the template to be changed
     if (resource_file_readonly($ref)) {
         return false;
