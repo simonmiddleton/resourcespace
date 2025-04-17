@@ -369,7 +369,7 @@ function db_rollback_transaction($name)
  * Execute a prepared statement and return the results as an array.
  *
  * @param  string $sql                      The SQL to execute
- * @param  string $parameters               An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d",3.14)
+ * @param  array $parameters               An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d",3.14)
  * @param  string $cache                        Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
  * @param  integer $fetchrows                   set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
  * @param  boolean $dbstruct                    Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop

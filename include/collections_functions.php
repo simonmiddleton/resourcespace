@@ -3426,9 +3426,8 @@ function collection_min_access($collection)
     if (is_array($collection)) {
         $result = $collection;
     } else {
-        $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '', '', false, false);
+        $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '', '', false, false, true);
     }
-
     if (!is_array($result) || empty($result)) {
         return 2;
     }

@@ -40,5 +40,10 @@
         "forum": "https://groups.google.com/g/resourcespace",
         "issues": "https://www.resourcespace.com/bug_report",
         "security": "https://www.resourcespace.com/bug_report"
+    },
+    "config": {
+        "allow-plugins": {
+            "codewithkyrian/platform-package-installer": true
+        }
     }
 }
