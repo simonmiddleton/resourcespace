@@ -1,9 +1,5 @@
 <?php
 
-include dirname(__FILE__, 3) . '/include/boot.php'; #todo: remove once done dev/test
-require_once dirname(__FILE__, 3) . '/include/annotation_functions.php';
-command_line_only(); #todo: remove once done dev/test
-
 if (!is_plugin_activated('annotate')) {
     set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Annotate plugin is disabled. Skipping...');
     return;
@@ -89,8 +85,6 @@ foreach ($annotations as $annotation) {
         "Processing annotation for resource #{$annotation['resource']} with node #{$annotation['node']}"
     );
 
-    logScript("- Note = {$annotation['name']}"); #todo: delete once done
-
     // Parse the old "username: note" syntax
     $parsed_annotation = explode(': ', (string) $annotation['name'], 2);
     if (count($parsed_annotation) !== 2) {
@@ -102,13 +96,9 @@ foreach ($annotations as $annotation) {
     }
     [$an_username, $an_note] = $parsed_annotation;
 
-    logScript("- an_username = {$an_username}"); #todo: delete once done
-    logScript("- an_note = {$an_note}"); #todo: delete once done
-
     $an_userref = get_user_by_username($an_username);
-    logScript('- user ID = ' . json_encode($an_userref)); #todo: delete once done
     if ($an_userref === false) {
-        // No matching user found - maybe username has changed. Keep original note
+        // No matching user found - maybe username has changed. Keep the original note.
         $an_userref = 0;
         $an_note = $annotation['name'];
     }
