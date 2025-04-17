@@ -7,7 +7,7 @@ if (canSeeAnnotationsFields() === []) {
 }
 
 $ref = getval("ref", 0, true);
-$col = getval("col", 0, true);
+$col = getval('collection', 0, false, is_positive_int_loose(...));
 $previewpage = getval("previewpage", 1, true);
 
 if ($col != 0) {

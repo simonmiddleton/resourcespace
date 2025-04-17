@@ -772,6 +772,8 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
     #configuring the sheet:
     $pagesize[0] = $width;
     $pagesize[1] = $height;
+    debug("width = {$width}");
+    debug("height = {$height}");
 
     $mypdf = annotation_pdf_class();
     $pdf = new $mypdf("portrait", "in", $size, true, 'UTF-8', false);
@@ -799,6 +801,8 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
             $currentpdfpage = $pdf->getPage();
             $resourcedata = $resources[$n];
             $ref = $resources[$n]['ref'];
+            debug("ref = {$ref}");
+            debug("currentpdfpage = {$currentpdfpage}");
             $access = get_resource_access($resources[$n]['ref']); // feed get_resource_access the resource array rather than the ref, since access is included.
             $use_watermark = check_use_watermark();
 
@@ -857,6 +861,7 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
                 foreach ($notes as $note) {
                     // If the notes took us to a new page, return to the image page before marking annotation
                     if ($notepages > 1) {
+                        debug('Return to the image page');
                         $pdf->setPage($currentpdfpage);
                     }
 
@@ -888,12 +893,15 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
                     $pdf->multiRow($m, trim($note['value']) . " @" . $note_user['fullname']);
                     // Check if this new table row has moved us to a new page, in which case we need to record this and go back to image page before the next annotation
                     if (isset($notepos)) {
+                        debug('The new (notes) table row moved us to a new page');
                         $lastnotepos = $notepos;
+                        debug("lastnotepos = {$lastnotepos}");
                     }
                     $notepos = $pdf->GetY();
                     if (isset($lastnotepos) && $notepos < $lastnotepos) {
                         unset($lastnotepos);
                         $notepages++;
+                        debug('$notepages++');
                     }
                     $ypos = $ypos + .5;
                     $m++;
@@ -905,9 +913,11 @@ function create_annotated_pdf($ref, $is_collection = false, $size = "letter", $c
             unset($notepos);
             unset($lastnotepos);
             $totalpages++;
+            debug('$totalpages++');
         }
 
         $page++;
+        debug('$page++');
     } while ($page <= $totalpages);
 
     // reset pointer to the last page
