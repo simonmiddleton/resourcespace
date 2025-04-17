@@ -950,7 +950,7 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                     }
 
                     if ($fields[$n]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE
-                        && html_entity_decode($val, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8') !== strip_tags_and_attributes($val, array("a"), array("href","target","rel"))) {
+                        && html_entity_decode($val, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8') !== strip_tags_and_attributes($val, array("a"), array("href","target","rel","title"))) {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid"];
                         continue;
                     }

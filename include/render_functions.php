@@ -4425,7 +4425,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             }
         elseif($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value != strip_tags($value))
             {
-            $value = strip_tags_and_attributes($value, ['a'], ['href', 'target','rel']);
+            $value = strip_tags_and_attributes($value, ['a'], ['href', 'target', 'rel', 'title']);
             }
 
         $modified_value = hook('display_field_modified_value', '', array($field));
@@ -4451,7 +4451,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 }
 
             # Use a display template to render this field
-            $template = strip_tags_and_attributes($field['display_template'], array("a"), array("href", "target"));
+            $template = strip_tags_and_attributes($field['display_template'], array("a"), ['href', 'target', 'rel', 'title']);
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', $value, $template);
             $template = str_replace(['[url]', '%5Burl%5D'], escape($value_for_url), $template);
