@@ -122,7 +122,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         remove_node_keyword_mappings(array('ref' => $current_node['ref'], 'resource_type_field' => $current_node['resource_type_field'], 'name' => $current_node['name']), null);
         if ($resource_type_field_data["keywords_index"] == 1) {
             $is_date = in_array($resource_type_field_data['type'], [FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE,FIELD_TYPE_DATE_RANGE]);
-            $is_html = ($resource_type_field_data["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);
+            $is_html = ($resource_type_field_data["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE);
             add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), null, $is_date, $is_html);
         }
     }

@@ -327,7 +327,7 @@ Note: this honours $exiftool_write so if that option is false, this will not wor
 $force_exiftool_write_metadata = false;
 $exiftool_write_option         = false;
 
-//Option to strip tags from rich fields when downloading metadata, by default is FALSE (keeping the tags added by CKEDITOR)
+//Option to strip tags from rich fields when downloading metadata, by default is FALSE (keeping the tags added)
 $strip_rich_field_tags = false;
 
 // Set metadata_read to false to omit the option to extract metadata.
@@ -2236,18 +2236,6 @@ $smtp_debug_lvl = 2;
 
 $sharing_userlists = false; // enable users to save/select predefined lists of users/groups when sharing collections and resources.
 
-$enable_ckeditor = true;
-$ckeditor_toolbars = "'Styles', 'Bold', 'Italic', 'Underline','FontSize', 'RemoveFormat', 'TextColor','BGColor'";
-$ckeditor_content_toolbars = "
-{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','RemoveFormat' ] },
-{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ] },
-{ name: 'styles', items : [ 'Format' ] },
-{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
-{ name: 'links', items : [ 'Link','Unlink' ] },
-{ name: 'insert', items : [ 'Image','HorizontalRule'] },
-{ name: 'tools', items : [ 'Source', 'Maximize' ] }
-";
-
 // Automatically save the edit form after making changes?
 $edit_autosave = true;
 
@@ -2286,9 +2274,6 @@ $ajax_loading_timer = 500;
 
 // Allow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by = false;
-
-// Use CKEditor for site content?
-$site_text_use_ckeditor = false;
 
 // Upload Options at top of Edit page (Collection, import metadata checkbox) at top of edit page, rather than the bottom (default).
 $edit_upload_options_at_top = false;
@@ -3220,3 +3205,9 @@ $search_all_workflow_states = false;
 // Array of preview sizes to be created at upload when minimal preview creation is enabled.
 // Limit to essential sizes only to reduce delay.
 $minimal_previews_sizes = array('pre', 'col', 'thm');
+
+// Plugins for TinyMCE to load
+$tinymce_plugins = "autoresize,code,lists,link";
+
+// Toolbar entries to be added to TinyMCE
+$tinymce_toolbar = "styles | bold italic underline removeformat | fontsize | forecolor backcolor | bullist numlist link | outdent indent | code";

@@ -24,10 +24,10 @@ DESCRIPTION
 
     IMPORTANT: supports only text fields!
 
-    Please note joining a FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR with any text field will result in plain HTML 
+    Please note joining a FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE with any text field will result in plain HTML 
     displayed. This is not a fault, you can either:
      - run pages/tools/remove_html.php, or
-     - IF you care about rendering actual HTML, then make sure the result of the join is saved into a FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR
+     - IF you care about rendering actual HTML, then make sure the result of the join is saved into a FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE
 
 OPTIONS SUMMARY
 

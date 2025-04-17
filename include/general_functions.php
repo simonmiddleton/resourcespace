@@ -2216,8 +2216,8 @@ function format_display_field($value)
     $string = i18n_get_translated($value);
     $string = TidyList($string);
 
-    if (isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
-        $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes
+    if (isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE) {
+        $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes, no links
     } else {
         $string = escape($string);
     }
@@ -3610,6 +3610,91 @@ function hook($name, $pagename = "", $params = array(), $last_hook_value_wins = 
 
     # do a callback to run the function(s) - this will not cause an infinite loop as we have just added to cache for execution.
     return hook($name, $pagename, $params, $last_hook_value_wins);
+}
+
+/**
+ * Performs a string replace once a text-only node is encountered, 
+ * otherwise loops and calls itself to iterate over child nodes
+ * Not intended to be called directly - use html_find_and_replace
+ *
+ * @param  string $findstring
+ * @param  string $replacestring can be blank if using for removal
+ * @param  DOMNode $node
+ * @return void
+ */
+function html_find_and_replace_node(string $findstring, string $replacestring, DOMNode $node): void {
+    
+    if($node->nodeName == '#text') {
+        $node->textContent = str_replace($findstring, $replacestring, $node->textContent);
+    } elseif($node->childNodes->count() > 0) {
+        foreach($node->childNodes as $cn) {
+            html_find_and_replace_node($findstring, $replacestring, $cn);
+        }
+    }
+}
+
+/**
+ * Loads HTML fragment into a DOMDocument instance to parse and 
+ * perform a recursive find/replace on text-only nodes. 
+ * Returns modified HTML if possible, otherwise the original HTML.
+ *
+ * @param  string $findstring
+ * @param  string $replacestring can be blank if using for removal
+ * @param  string $html
+ * @return string
+ */
+function html_find_and_replace($findstring, $replacestring, $html): string {
+
+    if (!is_string($html) || 0 === strlen($html)) {
+        return $html;
+    }
+
+    $html = htmlspecialchars_decode($html);
+    // Return character codes for non-ASCII characters (UTF-8 characters more than a single byte - 0x80 / 128 decimal or greater).
+    // This will prevent them being lost when loaded into libxml.
+    // Second parameter represents convert mappings array - in UTF-8 convert characters of 2,3 and 4 bytes, 0x80 to 0x10FFFF, with no offset and add mask to return character code.
+    $html = mb_encode_numericentity($html, array(0x80, 0x10FFFF, 0, 0xFFFFFF), 'UTF-8');
+
+    
+    libxml_use_internal_errors(true);
+
+    // Load the fragment into DOMDocument object
+    $doc           = new DOMDocument();
+    $doc->encoding = 'UTF-8';
+
+    $process_html = false;
+
+    if($html != strip_tags($html)) {
+        $process_html = $doc->loadHTML($html);
+    }    
+
+    // If DOMDocumment can parse the fragment, attempt to search through and replace
+    if ($process_html) {
+
+        foreach ($doc->getElementsByTagName('*') as $element) {
+
+            // Call the recursive find/replace function for each element
+            html_find_and_replace_node($findstring, $replacestring, $element);
+        }
+
+        $output_html = $doc->saveHTML();
+
+        // Remove the extraneous tags added when loading fragment into DOMDocument object
+        if (false !== strpos($output_html, '<body>')) {
+            $body_o_tag_pos = strpos($output_html, '<body>');
+            $body_c_tag_pos = strpos($output_html, '</body>');
+
+            $output_html = substr($output_html, $body_o_tag_pos + 6, $body_c_tag_pos - ($body_o_tag_pos + 6));
+        }
+
+        $output_html = html_entity_decode($output_html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
+
+        return $output_html;
+
+    } else {
+        return $html;
+    }
+
 }
 
 /**
@@ -5471,4 +5556,38 @@ function hslToRgb($h, $s, $l)
         (int)(($g + $m) * 255),
         (int)(($b + $m) * 255)
     ];
+}
+
+/**
+ * Check TinyMCE plugin list against an array of valid options
+ * The passed list is checked against TINYMCE_VALID_PLUGINS.
+ * The autoresize plugin is also included by default.
+ * 
+ * @param string $plugins A comma-separated list of plugins for TinyMCE
+ * @return string The list of plugins with any invalid options removed
+ */
+function check_tinymce_plugins(string $plugins = ""): string {
+
+    // Ensure autoresize plugin is included so min_height can be used
+    if (mb_strpos($plugins, 'autoresize') === false) {
+        $plugins .= ',autoresize';
+    }
+
+    $configured_plugins = array_map('trim', explode(',', $plugins));
+    $valid_plugins = array_intersect_key(TINYMCE_VALID_PLUGINS, array_flip($configured_plugins));
+
+    return implode(', ', array_keys($valid_plugins));
+}
+
+/**
+ * Check TinyMCE toolbar configuration to ensure 
+ * it contains only alphanumeric characters, spaces and 
+ * the pipe (|) symbol.
+ * 
+ * @param string $toolbar The requested configuration for the toolbar
+ * @return string The configured toolbar with any invalid characters removed
+ */
+function check_tinymce_toolbar(string $toolbar = ""): string {
+    //Remove anything non-alphanumeric, pipes or spaces
+    return preg_replace('/[^a-zA-Z0-9|\s]/', '', $toolbar);
 }

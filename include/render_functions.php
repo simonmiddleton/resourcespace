@@ -508,7 +508,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
         case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
-        case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
+        case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE:
         case $forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown:
         case FIELD_TYPE_WARNING_MESSAGE:
         # Dynamic keyword list behaviour replaced with regular input field under these circumstances
@@ -1976,8 +1976,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
           {
           $onchangejs = 'setActionPromptText(' . (int) $n . '); ';
           }
-      $onchangejs .= "var fr=document.getElementById('findreplace_" . (int) $n . "');\n";
-      $onchangejs .= "var q=document.getElementById('question_" . (int) $n . "');\n";
+      $onchangejs .= "var fr = document.getElementById('findreplace_" . (int) $n . "');\n";
+      $onchangejs .= "var q =  document.getElementById('question_" . (int) $n . "');\n";
       if ($field["type"] == FIELD_TYPE_CATEGORY_TREE)
         {
         $onchangejs .= "if (this.value=='RM'){branch_limit_field['field_" . $field["ref"] . "']=1;}else{branch_limit_field['field_" . $field["ref"] . "']=0;}";
@@ -1985,19 +1985,50 @@ function display_field($n, $field, $newtab=false,$modal=false)
       elseif (in_array($field["type"], $TEXT_FIELD_TYPES ))
         {
         $onchangejs .= "
-        var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');
-            if (this.value=='CF')
-                {
-                cf.style.display='block';q.style.display='none';fr.style.display='none';
-                }
-            else if (this.value=='FR')
-                {
-                fr.style.display='block';q.style.display='none';cf.style.display='none';
-                }
-            else
-                {
-                fr.style.display='none';cf.style.display='none';q.style.display='block';
-                }";
+        var cf  = document.getElementById('copy_from_field_" . $field["ref"] . "');";
+
+        if ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE) {
+            $onchangejs .= "
+            var rff = document.getElementById('remove_from_field_" . (int) $n . "');
+            
+            if (this.value == 'CF') {
+                cf.style.display  = 'block';
+                fr.style.display  = 'none';
+                q.style.display   = 'none';
+                rff.style.display = 'none';
+            } else if (this.value == 'FR') {
+                fr.style.display  = 'block';
+                cf.style.display  = 'none';
+                q.style.display   = 'none';
+                rff.style.display = 'none';
+            } else if (this.value == 'RM') {
+                fr.style.display  = 'none';
+                cf.style.display  = 'none';
+                q.style.display   = 'none';
+                rff.style.display = 'block';
+            } else {
+                fr.style.display  = 'none';
+                cf.style.display  = 'none';
+                q.style.display   = 'block';
+                rff.style.display = 'none';
+            }";
+        } else {
+            $onchangejs .= "
+            if (this.value == 'CF') {
+                cf.style.display  = 'block';
+                fr.style.display  = 'none';
+                q.style.display   = 'none';
+            } else if (this.value == 'FR') {
+                fr.style.display  = 'block';
+                cf.style.display  = 'none';
+                q.style.display   = 'none';
+            } else {
+                fr.style.display  = 'none';
+                cf.style.display  = 'none';
+                q.style.display   = 'block';
+            }";
+        }          
+
         }
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
@@ -2049,6 +2080,22 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <?php echo escape($lang["andreplacewith"])?> <input type="text" name="replace_<?php echo $field["ref"]; ?>" class="shrtwidth">
       </div><!-- End of findreplace_<?php echo $n?> -->
 
+    <?php 
+    if ($field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $field['required'] == 0) {
+    ?>
+      <div class="Question" id="remove_from_field_<?php echo $n?>" style="display:none;border-top:none;">
+        <label>&nbsp;</label>
+        <textarea
+            class="stdwidth MultiLine"
+            rows=6
+            cols=50
+            name="remove_<?php echo $field["ref"]; ?>"
+            id="remove_<?php echo $field["ref"]; ?>"
+         ></textarea>
+      </div><!-- End of remove_from_field_<?php echo $n?> -->
+    <?php
+    }?>
+
       <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
       }
 
@@ -2092,12 +2139,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
      <?php
         }
      $labelname = $name;
-
-     // For batch editing, CKEditor renders as a text box, as it does not work at all well when appending / prepending (it expects to work with HTML only)
-     if ($field['type'] == 8 && $multiple)
-        {
-        $field['type']=1;
-        }
       
      // Add _selector to label so it will keep working:
      if($field['type'] == 9)
@@ -2139,7 +2180,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
       <?php
       } 
     # Define some Javascript for help actions (applies to all fields)
-    # Help actions for CKEditor fields are set in pages/edit_fields/8.php
+    # Help actions for TinyMCE fields are set in pages/edit_fields/8.php
      if (trim($field["help_text"]=="")) 
        {
         # No helptext; so no javascript for toggling
@@ -4374,17 +4415,17 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         }
 
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
-        # ckeditor that have not yet been edited.
+        # TinyMCE that have not yet been edited.
         if(
-            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && !in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
-            || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value == strip_tags($value))
+            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value == strip_tags($value))
             )
             {
             $value = nl2br(escape($value));
             }
-        elseif($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value != strip_tags($value))
+        elseif($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value != strip_tags($value))
             {
-            $value = strip_tags_and_attributes($value, ['a'], ['href', 'target']);
+            $value = strip_tags_and_attributes($value, ['a'], ['href', 'target', 'rel', 'title']);
             }
 
         $modified_value = hook('display_field_modified_value', '', array($field));
@@ -4410,7 +4451,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 }
 
             # Use a display template to render this field
-            $template = strip_tags_and_attributes($field['display_template'], array("a"), array("href", "target"));
+            $template = strip_tags_and_attributes($field['display_template'], array("a"), ['href', 'target', 'rel', 'title']);
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', $value, $template);
             $template = str_replace(['[url]', '%5Burl%5D'], escape($value_for_url), $template);

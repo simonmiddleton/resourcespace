@@ -442,20 +442,6 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
     let CentralSpaceCtID = typeof container_id !== "undefined" ? container_id : 'CentralSpace';
     var CentralSpace=jQuery('#' + CentralSpaceCtID);// for ajax targeting top div
 
-    for(instance in CKEDITOR.instances)
-        {
-        // Because CKEDITOR keeps track of instances in a global way, sometimes you can end up with some elements not
-        // being defined anymore. For this reason, we need to first check if the element still is within DOM
-        // CKEditor needs to update textareas before any posting is done otherwise it will post null values
-        if(document.body.contains(document.getElementById(instance)))
-            {
-            CKEDITOR.instances[instance].updateElement();
-            }
-
-        // Clean CKEDITOR of any instances that are not valid anymore
-        CKEDITOR.instances[instance].destroy(true);
-        }
-
     formdata = jQuery(form).serialize();
     if (typeof modal=='undefined') {modal=false;}
     if (!modal)
@@ -1472,6 +1458,7 @@ function batch_edit_toggle_edit_multi_checkbox_question(question_ref)
     var modeselect = document.getElementById('modeselect_' + question_ref);
     var findreplace = document.getElementById('findreplace_' + question_ref);
     var revert = document.getElementById('revert_' + question_ref);
+    var remove = document.getElementById('remove_from_field_' + question_ref);
 
     // The copy_from_field is rendered with an id of the resource_type_field ref, not the question_ref (seq number) passed in here
     // The resource_type_field ref is however the last digits of the checkbox name attribute, so use that to get the copyfrom element
@@ -1506,6 +1493,12 @@ function batch_edit_toggle_edit_multi_checkbox_question(question_ref)
             {
             copyfrom.style.display = 'none';
             }
+        // remove is not always present, but if it is then hide it
+        if(remove)
+            {
+            remove.style.display = 'none';
+            }
+
         // Only present for fixed list fields.
         if(displayexisting)
             {

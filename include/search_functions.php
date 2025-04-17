@@ -252,7 +252,7 @@ function search_form_to_search_query($fields, $fromsearchbar = false)
         switch ($fields[$n]["type"]) {
             case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
             case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
-            case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
+            case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE:
                 $name = "field_" . $fields[$n]["ref"];
                 $value = getval($name, "");
                 if ($value != "") {
