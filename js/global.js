@@ -1316,7 +1316,17 @@ function LoadActions(pagename,id,type,ref, extra_data)
                 {
                 console.debug('[LoadActions] actionspace.html(response)');
                 actionspace.html(response);
-                actionspace.attr('data-actions-loaded','1');
+                
+                // If type is selection collection, set attribute to 1 to prevent further reloading (not needed as selection 
+                // collection actions won't change unless selection is cleared which is handled in ajax_collections.js)
+                if(type == "selection_collection") 
+                    {
+                    actionspace.attr('data-actions-loaded','1');
+                    } 
+                else 
+                    {
+                    actionspace.attr('data-actions-loaded','0');
+                    }
 
                 // The following hack is required for Chrome (tested in version 111). When rendering dropdowns in the
                 // lower part of the screen that slide upwards, the new options fail to show until the dropdown is reopened.

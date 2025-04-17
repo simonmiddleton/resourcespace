@@ -1107,7 +1107,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
             {?>
     
             <div class="ActionsContainer  <?php if($top_actions) { echo 'InpageNavLeftBlock'; } ?>"
-                data-actions-loaded="0"
+                data-actions-loaded="<?php echo (int) $is_selection_collection; ?>"
             >
                 <?php
         
