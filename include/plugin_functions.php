@@ -15,29 +15,25 @@
  * @see deactivate_plugin
  */
 function activate_plugin($name)
-    {
+{
     $plugin_dir = get_plugin_path($name);
-    if (file_exists($plugin_dir))
-        {
+    if (file_exists($plugin_dir)) {
         $plugin_yaml = get_plugin_yaml($name, false);
         # If no yaml, or yaml file but no description present, attempt to read an 'about.txt' file
-        if ('' == $plugin_yaml['desc'])
-            {
+        if ('' == $plugin_yaml['desc']) {
             $about = $plugin_dir . $name . '/about.txt';
-            if(file_exists($about))
-                {
+            if (file_exists($about)) {
                 $plugin_yaml['desc'] = substr(file_get_contents($about), 0, 95) . '...';
-                }
             }
+        }
 
         # Add/Update plugin information.
         # Check if the plugin is already in the table.
         $c = ps_value("SELECT name as value FROM plugins WHERE name = ?", array("s", $name), '');
 
-        if ($c == '')
-            {
+        if ($c == '') {
             ps_query("INSERT INTO plugins (name) VALUE (?)", array("s", $name));
-            }
+        }
 
         ps_query("UPDATE plugins SET config_url = ?, descrip = ?, author = ?, inst_version = ?, priority = ?, update_url = ?, info_url = ?, disable_group_select = ?,
         title = ?, icon = ? WHERE name = ?", array("s", $plugin_yaml['config_url'], "s", $plugin_yaml['desc'], "s", $plugin_yaml['author'], "d", $plugin_yaml['version'],
@@ -49,14 +45,12 @@ function activate_plugin($name)
         // Clear query cache
         clear_query_cache("plugins");
 
-        hook("after_activate_plugin","",array($name));
+        hook("after_activate_plugin", "", array($name));
         return true;
-        }
-    else
-        {
+    } else {
         return false;
-        }
     }
+}
 /**
  * Deactivate a named plugin.
  *
@@ -68,21 +62,19 @@ function activate_plugin($name)
  * @see activate_plugin
  */
 function deactivate_plugin($name): void
-    {
+{
     $inst_version = ps_value("SELECT inst_version AS value FROM plugins WHERE name = ?", array("s", $name), '');
 
-    if($inst_version >= 0)
-        {
+    if ($inst_version >= 0) {
         # Remove the version field. Leaving the rest of the plugin information.  This allows for a config column to remain (future).
         ps_query("UPDATE plugins SET inst_version = NULL WHERE name = ?", array("s", $name));
 
         log_activity(null, LOG_CODE_DISABLED, '', 'plugins', 'inst_version', $name, 'name', $inst_version, null, true);
-        }
+    }
 
     // Clear query cache
     clear_query_cache("plugins");
-
-    }
+}
 
 /**
  * Purge configuration of a plugin.
@@ -95,12 +87,12 @@ function deactivate_plugin($name): void
  * @category PluginAuthors
  */
 function purge_plugin_config($name)
-    {
+{
     ps_query("UPDATE plugins SET config = NULL, config_json = NULL where name = ?", array("s", $name));
 
     // Clear query cache
     clear_query_cache("plugins");
-    }
+}
 /**
  * Load plugin .yaml file.
  *
@@ -113,7 +105,7 @@ function purge_plugin_config($name)
  * @return array|bool Associative array of yaml values. If validate is false, this function will return an array of
  *                    blank values if a yaml isn't available
  */
-function get_plugin_yaml($plugin, $validate=true, $translate=true)
+function get_plugin_yaml($plugin, $validate = true, $translate = true)
 {
 
     # We're not using a full YAML structure, so this parsing function will do
@@ -129,9 +121,11 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
     $plugin_yaml['title'] = '';
     $plugin_yaml['icon'] = '';
     $plugin_yaml['icon-colour'] = '';
-    
+
     // Validate plugin name (prevent path traversal when getting .yaml)
-    if (!ctype_alnum(str_replace(["_","-"],"",$plugin))) { return $validate ? false : $plugin_yaml;}
+    if (!ctype_alnum(str_replace(["_","-"], "", $plugin))) {
+        return $validate ? false : $plugin_yaml;
+    }
 
     // Find plugin YAML
     $path = get_plugin_path($plugin) . "/" . $plugin . ".yaml";
@@ -145,10 +139,10 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
         while (($line = fgets($yaml_file_ptr)) != '') {
             if (
                 $line[0] != '#'
-                && ($pos = strpos($line,':')) != false
+                && ($pos = strpos($line, ':')) != false
             ) {
                 # Exclude comments from parsing
-                $plugin_yaml[trim(substr($line,0,$pos))] = trim(substr($line, $pos+1));
+                $plugin_yaml[trim(substr($line, 0, $pos))] = trim(substr($line, $pos + 1));
             }
         }
 
@@ -160,7 +154,7 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
         fclose($yaml_file_ptr);
 
         if ($validate) {
-            if (isset($plugin_yaml['name']) && $plugin_yaml['name']==basename($path,'.yaml') && isset($plugin_yaml['version'])) {
+            if (isset($plugin_yaml['name']) && $plugin_yaml['name'] == basename($path, '.yaml') && isset($plugin_yaml['version'])) {
                 return $plugin_yaml;
             } else {
                 return false;
@@ -172,25 +166,24 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
 
     // Handle translations for base plugins
     global $language,$languages,$lang;
-    if ($translate && $language!="en" && $language!="")
-        {
+    if ($translate && $language != "en" && $language != "") {
         // Include relevant language file and use the translations instead, if set.
-        if (!array_key_exists($language,$languages)) {exit("Invalid language");} // Prevent path traversal
-        $plugin_lang_file=__DIR__ . "/../plugins/" . $plugin_yaml["name"] . "/languages/" . $language . ".php";
-        if (file_exists($plugin_lang_file))
-            {
+        if (!array_key_exists($language, $languages)) {
+            exit("Invalid language");
+        } // Prevent path traversal
+        $plugin_lang_file = __DIR__ . "/../plugins/" . $plugin_yaml["name"] . "/languages/" . $language . ".php";
+        if (file_exists($plugin_lang_file)) {
             include_once $plugin_lang_file;
-            if (isset($lang["plugin-" . $plugin_yaml["name"] . "-title"]))
-                {
+            if (isset($lang["plugin-" . $plugin_yaml["name"] . "-title"])) {
                 // Append the translated title so the English title is still visible, this is so it's still possible to find the relevant plugin
                 // in the Knowledge Base (until we have Knowledge Base translations down the line)
-                $plugin_yaml["title"].=" (" . ($lang["plugin-" . $plugin_yaml["name"] . "-title"] ?? $plugin_yaml["title"]) . ")";
-                }
-            $plugin_yaml["desc"]= $lang["plugin-" . $plugin_yaml["name"] . "-desc"]  ?? $plugin_yaml["desc"];
+                $plugin_yaml["title"] .= " (" . ($lang["plugin-" . $plugin_yaml["name"] . "-title"] ?? $plugin_yaml["title"]) . ")";
             }
-        $param="plugin-category-" . strtolower(str_replace(" ","-",$plugin_yaml["category"] ?? ""));
-        $plugin_yaml["category"]= $lang[$param] ?? $plugin_yaml["category"] ?? "";
+            $plugin_yaml["desc"] = $lang["plugin-" . $plugin_yaml["name"] . "-desc"]  ?? $plugin_yaml["desc"];
         }
+        $param = "plugin-category-" . strtolower(str_replace(" ", "-", $plugin_yaml["category"] ?? ""));
+        $plugin_yaml["category"] = $lang[$param] ?? $plugin_yaml["category"] ?? "";
+    }
 
     return $plugin_yaml;
 }
@@ -208,52 +201,43 @@ function get_plugin_yaml($plugin, $validate=true, $translate=true)
  *         capabilities to encode
  */
 function config_json_encode($config)
-    {
-    $i=0;
+{
+    $i = 0;
     $simple_keys = true;
-    foreach ($config as $name => $value)
-        {
-        if (!is_numeric($name) || ($name != $i++))
-            {
+
+    foreach ($config as $name => $value) {
+        if (!is_numeric($name) || ($name != $i++)) {
             $simple_keys = false;
             break;
-            }
         }
-    $output = $simple_keys?'[':'{';
-    foreach ($config as $name => $value)
-        {
-        if (!$simple_keys)
-            {
-            $output .= '"' . config_encode($name) . '":';
-            }
-        if (is_string($value))
-            {
-            $output .= '"' . config_encode($value) . '"';
-            }
-        elseif (is_bool($value))
-            {
-            $output .= $value?'true':'false';
-            }
-        elseif (is_numeric($value))
-            {
-            $output .= strval($value);
-            }
-        elseif (is_array($value))
-            {
-            $output .= config_json_encode($value);
-            }
-        else
-            {
-            return null; // Give up; beyond our capabilities
-            }
-        $output .= ', ';
-        }
-    if (substr($output, -2) == ', ')
-        {
-        $output = substr($output, 0, -2);
-        }
-    return $output . ($simple_keys?']':'}');
     }
+
+    $output = $simple_keys ? '[' : '{';
+
+    foreach ($config as $name => $value) {
+        if (!$simple_keys) {
+            $output .= '"' . config_encode($name) . '":';
+        }
+        if (is_string($value)) {
+            $output .= '"' . config_encode($value) . '"';
+        } elseif (is_bool($value)) {
+            $output .= $value ? 'true' : 'false';
+        } elseif (is_numeric($value)) {
+            $output .= strval($value);
+        } elseif (is_array($value)) {
+            $output .= config_json_encode($value);
+        } else {
+            return null; // Give up; beyond our capabilities
+        }
+        $output .= ', ';
+    }
+
+    if (substr($output, -2) == ', ') {
+        $output = substr($output, 0, -2);
+    }
+
+    return $output . ($simple_keys ? ']' : '}');
+}
 
 /**
  * Utility function to encode the passed string to something that conforms to
@@ -267,27 +251,23 @@ function config_json_encode($config)
  * @return an encoded version of $input
  */
 function config_encode($input)
-    {
+{
     $output = '';
-    for ($i = 0; $i < strlen($input); $i++)
-        {
+
+    for ($i = 0; $i < strlen($input); $i++) {
         $char = substr($input, $i, 1);
-        if (ord($char) < 32)
-            {
-            $char = '\\u' . substr('0000' . dechex(ord($char)),-4);
-            }
-        elseif ($char == '"')
-            {
+        if (ord($char) < 32) {
+            $char = '\\u' . substr('0000' . dechex(ord($char)), -4);
+        } elseif ($char == '"') {
             $char = '\\"';
-            }
-        elseif ($char == '\\')
-            {
+        } elseif ($char == '\\') {
             $char = '\\\\';
-            }
-        $output .= $char;
         }
-    return $output;
+        $output .= $char;
     }
+
+    return $output;
+}
 
 /**
  * Return plugin config stored in plugins table for a given plugin name.
@@ -300,29 +280,24 @@ function config_encode($input)
  * @return mixed|null Returns config data or null if no config.
  * @see set_plugin_config
  */
-function get_plugin_config($name){
+function get_plugin_config($name)
+{
     global $mysql_charset;
 
     # Need verbatim queries here
     $configs = ps_query("SELECT config, config_json from plugins where name = ?", array("s", $name), 'plugins');
     $configs = $configs[0] ?? [];
-    if (!array_key_exists('config', $configs) || is_null($configs['config_json']))
-        {
-        return null;
-        }
-    elseif (array_key_exists('config_json', $configs) && function_exists('json_decode'))
-        {
-        if (!isset($mysql_charset))
-            {
-            $configs['config_json'] = iconv('ISO-8859-1', 'UTF-8', $configs['config_json']);
-            }
-            return json_decode($configs['config_json'], true);
 
+    if (!array_key_exists('config', $configs) || is_null($configs['config_json'])) {
+        return null;
+    } elseif (array_key_exists('config_json', $configs) && function_exists('json_decode')) {
+        if (!isset($mysql_charset)) {
+            $configs['config_json'] = iconv('ISO-8859-1', 'UTF-8', $configs['config_json']);
         }
-    else
-        {
+            return json_decode($configs['config_json'], true);
+    } else {
         return unserialize(base64_decode($configs['config']));
-        }
+    }
 }
 
 /**
@@ -343,15 +318,15 @@ function get_plugin_config($name){
  * @see get_plugin_config
  */
 function set_plugin_config($plugin_name, $config)
-    {
+{
     global $db, $mysql_charset;
     $config = config_clean($config);
     $config_ser_bin =  base64_encode(serialize($config));
     $config_ser_json = config_json_encode($config);
-    if (!isset($mysql_charset))
-        {
+
+    if (!isset($mysql_charset)) {
         $config_ser_json = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $config_ser_json);
-        }
+    }
 
     // We record the activity before running the query because log_activity() is trying to be clever and figure out the old value
     // which will make the new value also show up (incorrectly) as the old value.
@@ -363,7 +338,7 @@ function set_plugin_config($plugin_name, $config)
     clear_query_cache("plugins");
 
     return true;
-    }
+}
 
 /**
  * Check if a plugin is activated.
@@ -374,10 +349,10 @@ function set_plugin_config($plugin_name, $config)
  * @return bool Returns true is plugin is activated.
  */
 function is_plugin_activated($name)
-    {
+{
     $activated = ps_query("SELECT name FROM plugins WHERE name = ? and inst_version IS NOT NULL", array("s", $name), "plugins");
-    return is_array($activated) && count($activated)>0;
-    }
+    return is_array($activated) && count($activated) > 0;
+}
 
 
 /**
@@ -386,9 +361,9 @@ function is_plugin_activated($name)
  * @return array
  */
 function get_active_plugins()
-    {
+{
     return ps_query('SELECT name, enabled_groups, config, config_json FROM plugins WHERE inst_version >= 0 ORDER BY priority', array(), 'plugins');
-    }
+}
 
 /**
  * Generate the first half of the "guts" of a plugin setup page from a page definition array. This
@@ -415,37 +390,32 @@ function get_active_plugins()
  * @param $plugin_name string the name of the plugin for which the function is being invoked.
  * @return void|string Returns NULL
  */
-function config_gen_setup_post($page_def,$plugin_name)
-    {
-    if((getval('submit', '') != '' || getval('save','') != '') && enforcePostRequest(false))
-        {
-        $config=array();
-        foreach ($page_def as $def)
-            {
-            $array_offset="";
-            if(preg_match("/\[[\"|']?\w+[\"|']?\]/",$def[1],$array_offset))
-                {
-                $array=preg_replace("/\[[\"|']?\w+[\"|']?\]/","",$def[1]);
-                preg_match("/[\"|']?\w+[\"|']?/",$array_offset[0],$array_offset);
-                }
+function config_gen_setup_post($page_def, $plugin_name)
+{
+    if ((getval('submit', '') != '' || getval('save', '') != '') && enforcePostRequest(false)) {
+        $config = array();
+        foreach ($page_def as $def) {
+            $array_offset = "";
+            if (preg_match("/\[[\"|']?\w+[\"|']?\]/", $def[1], $array_offset)) {
+                $array = preg_replace("/\[[\"|']?\w+[\"|']?\]/", "", $def[1]);
+                preg_match("/[\"|']?\w+[\"|']?/", $array_offset[0], $array_offset);
+            }
+
             $omit = false;
-            if(!empty($array_offset))
-                {
-                $curr_post=getval($array,"");
-                if($curr_post==""){continue;} //Ignore if Array already handled or blank
-                foreach($curr_post as $key => $val)
-                    {
+            if (!empty($array_offset)) {
+                $curr_post = getval($array, "");
+                if ($curr_post == "") {
+                    continue;
+                } //Ignore if Array already handled or blank
+                foreach ($curr_post as $key => $val) {
                     $config[$array][$key] = explode(',', $val);
                     $GLOBALS[$array][$key] = explode(',', $val);
-                    }
-                unset($_POST[$array]); //Unset once array has been handled to prevent duplicate changes
-                $omit=true;
                 }
-            else
-                {
-                $config_global=(isset($GLOBALS[$def[1]]) ? $GLOBALS[$def[1]] :false);
-                switch ($def[0])
-                    {
+                unset($_POST[$array]); //Unset once array has been handled to prevent duplicate changes
+                $omit = true;
+            } else {
+                $config_global = (isset($GLOBALS[$def[1]]) ? $GLOBALS[$def[1]] : false);
+                switch ($def[0]) {
                     case 'html':
                     case 'fixed_input':
                         $omit = true;
@@ -454,8 +424,8 @@ function config_gen_setup_post($page_def,$plugin_name)
                         $omit = true;
                         break;
                     case 'text_list':
-                        $pval = getval($def[1],'');
-                        $GLOBALS[$def[1]] = (trim($pval) != '') ? explode(',',$pval) : array();
+                        $pval = getval($def[1], '');
+                        $GLOBALS[$def[1]] = (trim($pval) != '') ? explode(',', $pval) : array();
                         break;
                     case 'hidden_param':
                         break;
@@ -468,20 +438,23 @@ function config_gen_setup_post($page_def,$plugin_name)
                             $def1_is_array ? 'is_array' : null
                         );
                         break;
-                    }
+                }
 
                 hook('custom_config_post', '', array($def, $config, $omit, $config_global));
-
-                }
-            if (!$omit)
-                {
-                $config[$def[1]]=$GLOBALS[$def[1]];
-                }
             }
-        set_plugin_config($plugin_name,$config);
-        if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
+
+            if (!$omit) {
+                $config[$def[1]] = $GLOBALS[$def[1]];
+            }
+        }
+
+        set_plugin_config($plugin_name, $config);
+
+        if (getval('submit', '') != '') {
+            redirect('pages/team/team_plugins.php');
         }
     }
+}
 
 /**
  * Generate the second half of the "guts" of a plugin setup page from a page definition array. The
@@ -508,141 +481,134 @@ function config_gen_setup_post($page_def,$plugin_name)
  * @param $plugin_page_frontm string front matter for the setup page in html format. This material is
  *          placed after the page heading and before the form. Default: '' (i.e., no front matter).
  */
-function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_page_heading,$plugin_page_frontm='')
-    {
+function config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading, $plugin_page_frontm = '')
+{
     global $lang,$baseurl_short;
-?>
+    ?>
     <div class="BasicsBox">
-    <h1><?php echo strip_tags_and_attributes($plugin_page_heading, ['a'], ['href', 'target']); ?></h1>
-<?php
-    $links_trail = array(
-        array(
-            'title' => $lang["systemsetup"],
-            'href'  => $baseurl_short . "pages/admin/admin_home.php",
-            'menu' =>  true
-        ),
-        array(
-            'title' => $lang["pluginmanager"],
-            'href'  => $baseurl_short . "pages/team/team_plugins.php"
-        ),
-        array(
-            'title' => $plugin_page_heading
-        )
-    );
-    renderBreadcrumbs($links_trail);
+        <h1><?php echo strip_tags_and_attributes($plugin_page_heading, ['a'], ['href', 'target']); ?></h1>
+        <?php
+        $links_trail = array(
+            array(
+                'title' => $lang["systemsetup"],
+                'href'  => $baseurl_short . "pages/admin/admin_home.php",
+                'menu' =>  true
+            ),
+            array(
+                'title' => $lang["pluginmanager"],
+                'href'  => $baseurl_short . "pages/team/team_plugins.php"
+            ),
+            array(
+                'title' => $plugin_page_heading
+            )
+        );
 
-    if ($plugin_page_frontm!='')
-        {
-        echo $plugin_page_frontm;
-        }
-?>
-        <form id="form1" name="form1" method="post" action="<?php echo escape($_SERVER["PHP_SELF"]); ?>">
-    <?php
-    generateFormToken("form1");
+        renderBreadcrumbs($links_trail);
 
-    foreach ($page_def as $def)
-        {
-        $array_offset="";
-        if(preg_match("/\[[\"|']?\w+[\"|']?\]/",$def[1],$array_offset))
-            {
-            $array=preg_replace("/\[[\"|']?\w+[\"|']?\]/","",$def[1]);
-            preg_match("/[\"|']?\w+[\"|']?/",$array_offset[0],$array_offset);
-            }
-
-        hook ("custom_config_def", '', array($def)); //this comes first so overriding the below is possible
-
-        switch ($def[0])
-            {
-            case 'section_header':
-                 config_section_header($def[1], $def[2]);
-                 break;
-            case 'html':
-                 config_html($def[1]);
-                 break;
-            case 'text_input':
-                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
-                break;
-            case 'text_hidden_input':
-                $value = (trim($def[2]) !== '' ? $def[2] : $GLOBALS[$def[1]]);
-                render_hidden_input($def[1], $value);
-                break;
-            case 'text_list':
-            if (!empty($array_offset))
-                {
-                config_text_input($def[1], $def[2], implode(',', $GLOBALS[$array][$array_offset[0]]), $def[3], $def[4]);
-                }
-            else
-                {
-                config_text_input($def[1], $def[2], implode(',', $GLOBALS[$def[1]]), $def[3], $def[4]);
-                }
-
-                break;
-            case 'boolean_select':
-                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4]);
-                break;
-            case 'single_select':
-                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
-                break;
-            case 'multi_select':
-                config_multi_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
-                break;
-            case 'single_user_select':
-                config_single_user_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
-                break;
-            case 'multi_user_select':
-                config_multi_user_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
-                break;
-            case 'single_ftype_select':
-                config_single_ftype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6]);
-                break;
-            case 'multi_ftype_select':
-                config_multi_ftype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3],$def[4], $def[5]);
-                break;
-            case 'single_rtype_select':
-                config_single_rtype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
-                break;
-            case 'multi_rtype_select':
-                config_multi_rtype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
-                break;
-            case 'db_single_select':
-                config_db_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
-                break;
-            case 'db_multi_select':
-                config_db_multi_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
-                break;
-            case 'single_group_select':
-                config_single_group_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
-                break;
-            case 'multi_group_select':
-                config_multi_group_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
-                break;
-            case 'checkbox_select':
-                config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
-                break;
-            case 'multi_archive_select':
-                config_multi_archive_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
-                break;
-            case 'fixed_input':
-                render_fixed_text_question($def[1], $def[2], $def[3]);
-                break;
-            case 'percent_range':
-                config_percent_range($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
-                break;
-
-            default:
-                break;
-            }
+        if ($plugin_page_frontm != '') {
+            echo $plugin_page_frontm;
         }
         ?>
-        <div class="Question">
-          <input type="submit" name="save" id="save" value="<?php echo escape($lang['plugins-saveconfig']); ?>">
-          <input type="submit" name="submit" id="submit" value="<?php echo escape($lang['plugins-saveandexit']); ?>">
-          <div class="clearerleft"></div>
-        </div>
-      </form>
+        
+        <form id="form1" name="form1" method="post" action="<?php echo escape($_SERVER["PHP_SELF"]); ?>">
+            <?php
+            generateFormToken("form1");
+
+            foreach ($page_def as $def) {
+                $array_offset = "";
+                if (preg_match("/\[[\"|']?\w+[\"|']?\]/", $def[1], $array_offset)) {
+                    $array = preg_replace("/\[[\"|']?\w+[\"|']?\]/", "", $def[1]);
+                    preg_match("/[\"|']?\w+[\"|']?/", $array_offset[0], $array_offset);
+                }
+
+                hook("custom_config_def", '', array($def)); //this comes first so overriding the below is possible
+
+                switch ($def[0]) {
+                    case 'section_header':
+                        config_section_header($def[1], $def[2]);
+                        break;
+                    case 'html':
+                        config_html($def[1]);
+                        break;
+                    case 'text_input':
+                        config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
+                        break;
+                    case 'text_hidden_input':
+                        $value = (trim($def[2]) !== '' ? $def[2] : $GLOBALS[$def[1]]);
+                        render_hidden_input($def[1], $value);
+                        break;
+                    case 'text_list':
+                        if (!empty($array_offset)) {
+                            config_text_input($def[1], $def[2], implode(',', $GLOBALS[$array][$array_offset[0]]), $def[3], $def[4]);
+                        } else {
+                            config_text_input($def[1], $def[2], implode(',', $GLOBALS[$def[1]]), $def[3], $def[4]);
+                        }
+                        break;
+                    case 'boolean_select':
+                        config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4]);
+                        break;
+                    case 'single_select':
+                        config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                        break;
+                    case 'multi_select':
+                        config_multi_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                        break;
+                    case 'single_user_select':
+                        config_single_user_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
+                        break;
+                    case 'multi_user_select':
+                        config_multi_user_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
+                        break;
+                    case 'single_ftype_select':
+                        config_single_ftype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6]);
+                        break;
+                    case 'multi_ftype_select':
+                        config_multi_ftype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                        break;
+                    case 'single_rtype_select':
+                        config_single_rtype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
+                        break;
+                    case 'multi_rtype_select':
+                        config_multi_rtype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
+                        break;
+                    case 'db_single_select':
+                        config_db_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
+                        break;
+                    case 'db_multi_select':
+                        config_db_multi_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
+                        break;
+                    case 'single_group_select':
+                        config_single_group_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
+                        break;
+                    case 'multi_group_select':
+                        config_multi_group_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
+                        break;
+                    case 'checkbox_select':
+                        config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
+                        break;
+                    case 'multi_archive_select':
+                        config_multi_archive_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
+                        break;
+                    case 'fixed_input':
+                        render_fixed_text_question($def[1], $def[2], $def[3]);
+                        break;
+                    case 'percent_range':
+                        config_percent_range($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            ?>
+            <div class="Question">
+                <input type="submit" name="save" id="save" value="<?php echo escape($lang['plugins-saveconfig']); ?>">
+                <input type="submit" name="submit" id="submit" value="<?php echo escape($lang['plugins-saveandexit']); ?>">
+                <div class="clearerleft"></div>
+            </div>
+        </form>
     </div>
-<?php
-    }
+    <?php
+}
 
 /**
  * Generate an html text section header
@@ -671,11 +637,10 @@ function config_section_header($title, $description)
  * @param string $title the title of the section.
  * @param string $description Usually a $lang string.
  */
-function config_add_section_header($title, $description='')
-    {
+function config_add_section_header($title, $description = '')
+{
     return array('section_header',$title,$description);
-    }
-
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -687,10 +652,10 @@ function config_add_section_header($title, $description='')
  *          field. Defaulted to false.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_text_list_input($config_var, $label, $password=false, $width=300)
-    {
+function config_add_text_list_input($config_var, $label, $password = false, $width = 300)
+{
     return array('text_list', $config_var, $label, $password, $width);
-    }
+}
 
 /**
  * Generate an html multi-select + options block
@@ -706,7 +671,7 @@ function config_add_text_list_input($config_var, $label, $password=false, $width
  *          and the text the user sees. Defaulted to true.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_multi_select($name, $label, $current, $choices, $usekeys=true, $width=300)
+function config_multi_select($name, $label, $current, $choices, $usekeys = true, $width = 300)
 {
     global $lang;
     ?>
@@ -716,22 +681,24 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
             name="<?php echo escape($name);?>[]"
             id="<?php echo escape($name);?>"
             class="MultiRTypeSelect"
-            style="width:<?php echo (int) $width; ?>px">
+            style="width:<?php echo (int) $width; ?>px"
+        >
             <div class="MultiRtypeSelectContainer">
-            <?php foreach($choices as $key => $choice) {
-                $value = $usekeys ? $key : $choice; ?>
-                <span id="option<?php echo escape($value);?>">
-                    <input
-                        type="checkbox"
-                        value="<?php echo escape($value); ?>"
-                        name="<?php echo escape($name); ?>[]"
-                        id="<?php echo escape($name.$choice); ?>"
-                        <?php echo (in_array($value, $current)) ? ' checked="checked"' : ''; ?>>
-                        <?php echo escape($choice);?>
-                    </input>
-                    <br />
-                </span>
-            <?php } ?>
+                <?php foreach ($choices as $key => $choice) {
+                    $value = $usekeys ? $key : $choice; ?>
+                    <span id="option<?php echo escape($value);?>">
+                        <input
+                            type="checkbox"
+                            value="<?php echo escape($value); ?>"
+                            name="<?php echo escape($name); ?>[]"
+                            id="<?php echo escape($name . $choice); ?>"
+                            <?php echo (in_array($value, $current)) ? ' checked="checked"' : ''; ?>
+                        >
+                            <?php echo escape($choice);?>
+                        </input>
+                        <br />
+                    </span>
+                <?php } ?>
             </div>
         </fieldset>
 
@@ -754,10 +721,10 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
  *          and the text the user sees. Defaulted to true.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_multi_select($config_var, $label, $choices, $usekeys=true, $width=300)
-    {
+function config_add_multi_select($config_var, $label, $choices, $usekeys = true, $width = 300)
+{
     return array('multi_select', $config_var, $label, $choices, $usekeys, $width);
-    }
+}
 
 /**
  * Generate an html single-select block for selecting one of the RS users.
@@ -778,14 +745,15 @@ function config_single_user_select($name, $label, $current = array(), $width = 3
         <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
             <?php echo escape($label); ?>
         </label>
-        <select name="<?php echo escape($name); ?>"
+        <select
+            name="<?php echo escape($name); ?>"
             id="<?php echo escape($name); ?>"
-            style="width:<?php echo (int) $width; ?>px">
+            style="width:<?php echo (int) $width; ?>px"
+        >
             <?php
             $users = get_users();
             foreach ($users as $user) { ?>
-                <option value="<?php echo (int) $user['ref']; ?>"
-                    <?php echo $user['ref'] == $current ? ' selected' : ''; ?>>
+                <option value="<?php echo (int) $user['ref']; ?>" <?php echo $user['ref'] == $current ? ' selected' : ''; ?>>
                     <?php echo escape($user['fullname'] . ' (' . $user['email'] . ')'); ?>
                 </option>
             <?php } ?>
@@ -803,10 +771,10 @@ function config_single_user_select($name, $label, $current = array(), $width = 3
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_single_user_select($config_var, $label, $width=300)
-    {
+function config_add_single_user_select($config_var, $label, $width = 300)
+{
     return array('single_user_select', $config_var,$label, $width);
-    }
+}
 
 /**
  * Generate an html multi-select block for selecting from among RS users.
@@ -819,7 +787,7 @@ function config_add_single_user_select($config_var, $label, $width=300)
  * @param integer array $current the current value of the config variable being set.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_multi_user_select($name, $label, $current=array(), $width=420)
+function config_multi_user_select($name, $label, $current = array(), $width = 420)
 {
     global $lang;
     ?>
@@ -832,7 +800,8 @@ function config_multi_user_select($name, $label, $current=array(), $width=420)
             id="<?php echo escape($name); ?>"
             class="MultiRTypeSelect"
             style="width:<?php echo (int) $width; ?>px">
-            <div class="MultiRtypeSelectContainer">
+            <div class="MultiRtypeSelectContainer"
+        >
             <?php
             $users = get_users();
             foreach ($users as $user) { ?>
@@ -841,13 +810,15 @@ function config_multi_user_select($name, $label, $current=array(), $width=420)
                         type="checkbox"
                         value="<?php echo (int) $user['ref']; ?>"
                         name="<?php echo escape($name); ?>[]"
-                        id="<?php echo escape($name.$user['ref']); ?>"
-                        <?php echo in_array($user['ref'], $current) ? ' checked="checked"' : ''; ?>>
+                        id="<?php echo escape($name . $user['ref']); ?>"
+                        <?php echo in_array($user['ref'], $current) ? ' checked="checked"' : ''; ?>
+                    >
                         <?php echo escape($user['fullname'] . ' (' . $user['email'] . ')'); ?>
-                </input>
+                    </input>
+                </span>
                 <br />
             <?php } ?>
-        </select></div>
+        </fieldset>
         <div class="clearerleft"></div>
     </div>
     <?php
@@ -861,10 +832,10 @@ function config_multi_user_select($name, $label, $current=array(), $width=420)
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_multi_user_select($config_var, $label, $width=420)
-    {
+function config_add_multi_user_select($config_var, $label, $width = 420)
+{
     return array('multi_user_select', $config_var, $label, $width);
-    }
+}
 
 /**
  * Generate an html single-select block for selecting from among RS user groups.
@@ -874,7 +845,7 @@ function config_add_multi_user_select($config_var, $label, $width=420)
  * @param integer array $current the current value of the config variable being set.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_single_group_select($name, $label, $current=array(), $width=300)
+function config_single_group_select($name, $label, $current = array(), $width = 300)
 {
     global $lang;
     ?>
@@ -882,14 +853,15 @@ function config_single_group_select($name, $label, $current=array(), $width=300)
         <label for="<?php echo escape($name); ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>">
             <?php echo escape($label); ?>
         </label>
-        <select name="<?php echo escape($name); ?>"
+        <select
+            name="<?php echo escape($name); ?>"
             id="<?php echo escape($name); ?>"
-            style="width:<?php echo (int) $width; ?>px">
+            style="width:<?php echo (int) $width; ?>px"
+        >
             <?php
             $usergroups = get_usergroups();
             foreach ($usergroups as $usergroup) { ?>
-                <option value="<?php echo (int) $usergroup['ref']; ?>"
-                    <?php echo $usergroup['ref'] == $current ? ' selected' : ''; ?>>
+                <option value="<?php echo (int) $usergroup['ref']; ?>" <?php echo $usergroup['ref'] == $current ? ' selected' : ''; ?>>
                     <?php echo escape($usergroup['name']); ?>
                 </option>
             <?php } ?>
@@ -907,10 +879,10 @@ function config_single_group_select($name, $label, $current=array(), $width=300)
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_single_group_select($config_var, $label, $width=300)
-    {
+function config_add_single_group_select($config_var, $label, $width = 300)
+{
     return array('single_group_select', $config_var, $label, $width);
-    }
+}
 
 /**
  * Generate an html multi-select block for selecting from among RS user groups.
@@ -923,7 +895,7 @@ function config_add_single_group_select($config_var, $label, $width=300)
  * @param integer array $current the current value of the config variable being set.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_multi_group_select($name, $label, $current=array(), $width=420)
+function config_multi_group_select($name, $label, $current = array(), $width = 420)
 {
     global $lang;
     ?>
@@ -972,10 +944,10 @@ function config_multi_group_select($name, $label, $current=array(), $width=420)
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_multi_group_select($config_var, $label, $width=420)
-    {
+function config_add_multi_group_select($config_var, $label, $width = 420)
+{
     return array('multi_group_select', $config_var, $label, $width);
-    }
+}
 
 /**
  * Generate an html multi-select + options block for selecting multiple RS field types. The
@@ -1010,36 +982,38 @@ function config_multi_ftype_select($name, $label, $current, $width = 300, $size 
             name="<?php echo escape($name); ?>[]"
             id="<?php echo escape($name); ?>"
             class="MultiRTypeSelect"
-            style="width:<?php echo (int) $width; ?>px;">
+            style="width:<?php echo (int) $width; ?>px;"
+        >
             <div style="height:<?php echo (int) $size * 21;?>px;overflow:auto">
-            <?php
-            foreach ($fields as $field) {
-                $str_restypes = "";
-                $fieldrestypes = explode(",", (string) $field["resource_types"]);
-                $fieldrestypenames = [];
+                <?php
+                foreach ($fields as $field) {
+                    $str_restypes = "";
+                    $fieldrestypes = explode(",", (string) $field["resource_types"]);
+                    $fieldrestypenames = [];
 
-                if ($field["global"] != 1) {
-                    foreach ($fieldrestypes as $fieldrestype) {
-                        $fieldrestypenames[] = i18n_get_translated($resource_types[$fieldrestype]);
-                    }
+                    if ($field["global"] != 1) {
+                        foreach ($fieldrestypes as $fieldrestype) {
+                            $fieldrestypenames[] = i18n_get_translated($resource_types[$fieldrestype]);
+                        }
 
-                    if (count($fieldrestypes) < count($all_resource_types) - 2) {
-                        // Don't show this if they are linked to all but one resource types
-                        $str_restypes = " (" .  implode(",", $fieldrestypenames) . ")";
-                    }
-                } ?>
-                <span id="ftype<?php echo (int) $field['ref'];?>">
-                    <input
-                        type="checkbox"
-                        value="<?php echo (int) $field['ref']; ?>"
-                        name="<?php echo escape($name); ?>[]"
-                        id="<?php echo escape($name.$field['ref']); ?>"
-                        <?php echo in_array($field['ref'], $current) ? ' checked="checked"':''; ?>>
-                        <?php echo escape(lang_or_i18n_get_translated($field['title'], 'fieldtitle-') .  $str_restypes); ?>
-                    </input>
-                    <br />
-                </span>
-            <?php } ?>
+                        if (count($fieldrestypes) < count($all_resource_types) - 2) {
+                            // Don't show this if they are linked to all but one resource types
+                            $str_restypes = " (" .  implode(",", $fieldrestypenames) . ")";
+                        }
+                    } ?>
+                    <span id="ftype<?php echo (int) $field['ref'];?>">
+                        <input
+                            type="checkbox"
+                            value="<?php echo (int) $field['ref']; ?>"
+                            name="<?php echo escape($name); ?>[]"
+                            id="<?php echo escape($name . $field['ref']); ?>"
+                            <?php echo in_array($field['ref'], $current) ? ' checked="checked"' : ''; ?>
+                        >
+                            <?php echo escape(lang_or_i18n_get_translated($field['title'], 'fieldtitle-') .  $str_restypes); ?>
+                        </input>
+                        <br />
+                    </span>
+                <?php } ?>
             </div>
         </fieldset>
         <div class="clearerleft"></div>
@@ -1055,10 +1029,10 @@ function config_multi_ftype_select($name, $label, $current, $width = 300, $size 
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_multi_ftype_select($config_var, $label, $width=300,$size=7,$ftype=false)
-    {
+function config_add_multi_ftype_select($config_var, $label, $width = 300, $size = 7, $ftype = false)
+{
     return array('multi_ftype_select',$config_var, $label, $width,$size,$ftype);
-    }
+}
 
 /**
  * Generate an html single-select + options block for selecting one of the RS resource types. The
@@ -1081,8 +1055,7 @@ function config_single_rtype_select($name, $label, $current, $width = 300)
         <select name="<?php echo escape($name); ?>" id="<?php echo escape($name); ?>" style="width:<?php echo (int) $width; ?>px">
             <?php
             foreach ($rtypes as $rtype) { ?>
-                <option value="<?php echo (int) $rtype['ref']; ?>"
-                    <?php echo $current == $rtype['ref'] ? ' selected' : ''; ?>>
+                <option value="<?php echo (int) $rtype['ref']; ?>" <?php echo $current == $rtype['ref'] ? ' selected' : ''; ?>>
                     <?php echo escape(lang_or_i18n_get_translated($rtype['name'], 'resourcetype-')); ?>
                 </option>
             <?php } ?>
@@ -1100,10 +1073,10 @@ function config_single_rtype_select($name, $label, $current, $width = 300)
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_single_rtype_select($config_var, $label, $width=300)
-    {
+function config_add_single_rtype_select($config_var, $label, $width = 300)
+{
     return array('single_rtype_select',$config_var, $label, $width);
-    }
+}
 
 /**
  * Generate an html multi-select check boxes block for selecting multiple the RS resource types. The
@@ -1115,28 +1088,30 @@ function config_add_single_rtype_select($config_var, $label, $width=300)
  * @param integer array $current the current value of the config variable being set
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_multi_rtype_select($name, $label, $current, $width=300)
-    {
+function config_multi_rtype_select($name, $label, $current, $width = 300)
+{
     global $lang;
-    $rtypes=get_resource_types();
+    $rtypes = get_resource_types();
     ?>
     <div class="Question">
         <label for="<?php echo escape($name) ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])) ?>"><?php echo escape($label) ?></label>
         <fieldset id="<?php echo escape($name) ?>" class="MultiRTypeSelect">
-            <?php foreach($rtypes as $rtype) { ?>
-                <input type="checkbox"
+            <?php foreach ($rtypes as $rtype) { ?>
+                <input
+                    type="checkbox"
                     value="<?php echo escape($rtype['ref']) ?>"
                     name="<?php echo escape($name) ?>[]"
                     id="<?php echo escape($name . $rtype['ref']) ?>"
-                    <?php echo in_array($rtype['ref'],$current) ? ' checked="checked"' : '' ?>>
-                <label for="<?php echo escape($name . $rtype['ref']) ?>"><?php echo escape(lang_or_i18n_get_translated($rtype['name'],'resourcetype-')) ?></label>
+                    <?php echo in_array($rtype['ref'], $current) ? ' checked="checked"' : '' ?>
+                >
+                <label for="<?php echo escape($name . $rtype['ref']) ?>"><?php echo escape(lang_or_i18n_get_translated($rtype['name'], 'resourcetype-')) ?></label>
                 <br />
             <?php } ?>
         </fieldset>
         <div class="clearerleft"></div>
     </div>
     <?php
-    }
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -1146,10 +1121,10 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_multi_rtype_select($config_var, $label, $width=300)
-    {
+function config_add_multi_rtype_select($config_var, $label, $width = 300)
+{
     return array('multi_rtype_select', $config_var, $label, $width);
-    }
+}
 
 
 /**
@@ -1162,20 +1137,21 @@ function config_add_multi_rtype_select($config_var, $label, $width=300)
  * @param integer array $current the current value of the config variable being set
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_multi_archive_select($name, $label, $current, $choices, $width=300)
-    {
+function config_multi_archive_select($name, $label, $current, $choices, $width = 300)
+{
     global $lang;
     ?>
     <div class="Question">
         <label for="<?php echo escape($name)?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar']))?>"><?php echo escape($label)?></label>
         <fieldset id="<?php echo escape($name)?>" class="MultiRTypeSelect">
-            <?php foreach($choices as $statekey => $statename) { ?>
+            <?php foreach ($choices as $statekey => $statename) { ?>
                 <span id="archivestate<?php echo escape($statekey) ?>">
                     <input type="checkbox"
                         value="<?php echo escape($statekey) ?>"
                         name="<?php echo escape($name) . '[]' ?>"
                         id="<?php echo escape($name . $statekey) ?>"
-                        <?php echo isset($current) && $current != '' && in_array($statekey,$current) ? ' checked="checked"' : '' ?>>
+                        <?php echo isset($current) && $current != '' && in_array($statekey, $current) ? ' checked="checked"' : '' ?>
+                    >
                     <label for="<?php echo escape($name . $statekey) ?>"><?php echo escape($statename) ?></label>
                     <br />
                 </span>
@@ -1184,7 +1160,7 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
         <div class="clearerleft"></div>
     </div>
     <?php
-    }
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -1194,9 +1170,9 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_multi_archive_select($config_var, $label, $choices, $width=300)
+function config_add_multi_archive_select($config_var, $label, $choices, $width = 300)
 {
-return array('multi_archive_select', $config_var, $label, $choices, $width);
+    return array('multi_archive_select', $config_var, $label, $choices, $width);
 }
 
 /**
@@ -1237,8 +1213,7 @@ function config_db_single_select($name, $label, $current, $choices, $ixcol = 're
                 } else {
                     $usertext = $item[$dispcolA];
                 } ?>
-                <option value="<?php echo escape($item[$ixcol]); ?>"
-                    <?php echo $item[$ixcol] == $current ? ' selected' : ''; ?>>
+                <option value="<?php echo escape($item[$ixcol]); ?>" <?php echo $item[$ixcol] == $current ? ' selected' : ''; ?>>
                     <?php echo escape($usertext); ?>
                 </option>
             <?php } ?>
@@ -1268,10 +1243,10 @@ function config_db_single_select($name, $label, $current, $choices, $ixcol = 're
  *          displaying as: $choices[i][$dispcolA] . '(' . $choices[i][$dispcolB] . ')'
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_db_single_select($config_var, $label, $choices, $ixcol='ref', $dispcolA='name', $dispcolB='', $fmt='', $width=300)
-    {
+function config_add_db_single_select($config_var, $label, $choices, $ixcol = 'ref', $dispcolA = 'name', $dispcolB = '', $fmt = '', $width = 300)
+{
     return array('db_single_select', $config_var, $label, $choices, $ixcol, $dispcolA, $dispcolB, $fmt, $width);
-    }
+}
 
 /**
  * Generate an html multi-select + options block for selecting from among rows returned by a
@@ -1306,31 +1281,32 @@ function config_db_multi_select($name, $label, $current, $choices, $ixcol = 'ref
         <fieldset
             id="<?php echo escape($name); ?>"
             class="MultiRTypeSelect"
-            >
+        >
             <div class="MultiRtypeSelectContainer">
-            <?php
-            foreach ($choices as $item) {
-                if ($dispcolB != '') {
-                    $usertext = str_replace(
-                        array('%A', '%B'),
-                        array($item[$dispcolA], $item[$dispcolB]),
-                        $fmt == '' ? $lang['plugin_field_fmt'] : $fmt
-                    );
-                } else {
-                    $usertext = $item[$dispcolA];
-                } ?>
-                <span id="<?php echo escape($name . $item[$ixcol]); ?>">
-                    <input
-                        type="checkbox"
-                        value="<?php echo escape($item[$ixcol]); ?>"
-                        name="<?php echo escape($name); ?>[]"
-                        id="<?php echo escape($name.$item[$ixcol]); ?>"
-                        <?php echo in_array($item[$ixcol], $current) ? ' checked="checked"' : ''; ?>>
-                        <?php echo escape($usertext); ?>
-                    </input>
-                    <br />
-                </span>
-            <?php } ?>
+                <?php
+                foreach ($choices as $item) {
+                    if ($dispcolB != '') {
+                        $usertext = str_replace(
+                            array('%A', '%B'),
+                            array($item[$dispcolA], $item[$dispcolB]),
+                            $fmt == '' ? $lang['plugin_field_fmt'] : $fmt
+                        );
+                    } else {
+                        $usertext = $item[$dispcolA];
+                    } ?>
+                    <span id="<?php echo escape($name . $item[$ixcol]); ?>">
+                        <input
+                            type="checkbox"
+                            value="<?php echo escape($item[$ixcol]); ?>"
+                            name="<?php echo escape($name); ?>[]"
+                            id="<?php echo escape($name . $item[$ixcol]); ?>"
+                            <?php echo in_array($item[$ixcol], $current) ? ' checked="checked"' : ''; ?>
+                        >
+                            <?php echo escape($usertext); ?>
+                        </input>
+                        <br />
+                    </span>
+                <?php } ?>
             </div>
         </fieldset>
         <div class="clearerleft"></div>
@@ -1358,10 +1334,10 @@ function config_db_multi_select($name, $label, $current, $choices, $ixcol = 'ref
  *          displaying as: $choices[i][$dispcolA] . '(' . $choices[i][$dispcolB] . ')'
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_db_multi_select($config_var, $label, $choices, $ixcol='ref', $dispcolA='name', $dispcolB='',  $fmt='', $width=300)
-    {
+function config_add_db_multi_select($config_var, $label, $choices, $ixcol = 'ref', $dispcolA = 'name', $dispcolB = '', $fmt = '', $width = 300)
+{
     return array('db_multi_select', $config_var, $label, $choices, $ixcol, $dispcolA, $dispcolB, $fmt, $width);
-    }
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -1370,57 +1346,57 @@ function config_add_db_multi_select($config_var, $label, $choices, $ixcol='ref',
  * @param string $config_var the name of the configuration variable to be added.
  */
 function config_add_hidden($config_var)
-    {
+{
     return array('hidden_param', $config_var);
-    }
+}
 
 /**
  *  Deprecated -- use config_text_input instead
  */
-function config_text_field($name, $label, $value, $size='30')
-    {
-    config_text_input($name, $label, $value, false, $size*10);
-    }
+function config_text_field($name, $label, $value, $size = '30')
+{
+    config_text_input($name, $label, $value, false, $size * 10);
+}
 
 /**
  *  Deprecated -- use config_multi_user_select instead
  */
-function config_userselect_field($name, $label, $values=array())
-    {
+function config_userselect_field($name, $label, $values = array())
+{
     config_multi_user_select($name, $label, $values);
-    }
+}
 
 /**
  *  Deprecated -- use config_single_ftype_select instead
  */
 function config_field_select($name, $label, $value)
-    {
+{
     config_single_ftype_select($name, $label, $value);
-    }
+}
 
 /**
  *  Deprecated -- use config_boolean_select instead
  */
 function config_boolean_field($name, $label, $value)
-    {
-    config_boolean_select($name,$label,$value,array('False','True'));
-    }
+{
+    config_boolean_select($name, $label, $value, array('False','True'));
+}
 
 /**
  *  Deprecated -- use config_db_multi_select instead
  */
-function config_custom_select_multi($name, $label, $available, $values, $index='ref', $nameindex='name', $additional='')
-    {
+function config_custom_select_multi($name, $label, $available, $values, $index = 'ref', $nameindex = 'name', $additional = '')
+{
     config_db_multi_select($name, $label, $values, $available, $index, $nameindex, $additional, '%A(%B)');
-    }
+}
 
 /**
  *  Deprecated -- use config_single_select instead
  */
 function config_custom_select($name, $label, $available, $value)
-    {
+{
     config_single_select($name, $label, $value, $available, false);
-    }
+}
 
 function get_plugin_css()
 {
@@ -1447,11 +1423,11 @@ function get_plugin_css()
         # Allow language specific CSS files
         $csspath = get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
         if (file_exists($csspath)) {
-            $plugincss .= '<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key=' . $css_reload_key . '" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
+            $plugincss .= '<link href="' . get_plugin_path($plugins[$n], true) . '/css/style-' . $language . '.css?css_reload_key=' . $css_reload_key . '" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
         }
 
         # additional plugin css functionality
-        $plugincss .= hook('moreplugincss','',array($plugins, $n));
+        $plugincss .= hook('moreplugincss', '', array($plugins, $n));
     }
 
     return $plugincss;
@@ -1462,27 +1438,29 @@ Activate language and configuration for plugins for use on setup page if plugin 
 @param string $plugin_name the name of the plugin to activate
 */
 function plugin_activate_for_setup($plugin_name)
-    {
+{
     // Add language file
     register_plugin_language($plugin_name);
 
     // Include <plugin>/hooks/all.php case functions are included here
-    $pluginpath=get_plugin_path($plugin_name);
-    $hookpath=$pluginpath . "/hooks/all.php";
-    if (file_exists($hookpath)) {include_once $hookpath;}
+    $pluginpath = get_plugin_path($plugin_name);
+    $hookpath = $pluginpath . "/hooks/all.php";
+
+    if (file_exists($hookpath)) {
+        include_once $hookpath;
+    }
 
     // Include plugin configuration for displaying on Options page
     $active_plugin = ps_query("SELECT `name`, enabled_groups, config, config_json FROM plugins WHERE `name` = ? AND inst_version >= 0 order by priority", array("s", $plugin_name));
-    if (empty($active_plugin))
-        {
+
+    if (empty($active_plugin)) {
         include_plugin_config($plugin_name);
-        }
-        else
-        {
+    } else {
         include_plugin_config($plugin_name, $active_plugin[0]['config'], $active_plugin[0]['config_json']);
-        }
-    return true;
     }
+
+    return true;
+}
 
 /**
  * Includes configuration files for a specified plugin.
@@ -1492,7 +1470,7 @@ function plugin_activate_for_setup($plugin_name)
  * @param string $config_json Optional JSON-encoded configuration string.
  * @return void This function does not return a value; it modifies global variables.
  */
-function include_plugin_config($plugin_name,$config="",$config_json="")
+function include_plugin_config($plugin_name, $config = "", $config_json = "")
 {
     global $mysql_charset;
 
@@ -1538,46 +1516,42 @@ function include_plugin_config($plugin_name,$config="",$config_json="")
 
 /**
  * Registers the language files for a specified plugin.
- * 
+ *
  * @param string $plugin The name of the plugin for which to register language files.
  * @return void This function does not return a value; it modifies the global $lang variable.
  */
 function register_plugin_language($plugin)
-    {
+{
     global $plugins,$language,$pagename,$lang,$applicationname,$customsitetext;
 
     # Include language file
     $langpath = get_plugin_path($plugin) . "/languages/";
 
-    if (file_exists($langpath . "en.php"))
-        {
+    if (file_exists($langpath . "en.php")) {
         include $langpath . "en.php";
-        }
+    }
 
-    if ($language != "en")
-        {
+    if ($language != "en") {
         if (
             substr($language, 2, 1) == '-'
             && substr($language, 0, 2) != 'en'
             && file_exists($langpath . safe_file_name(substr($language, 0, 2)) .  ".php")
-            ) {
-                include $langpath . safe_file_name(substr($language, 0, 2)) . ".php";
-            }
-        if (file_exists($langpath . safe_file_name($language) . ".php"))
-            {
-            include $langpath . safe_file_name($language) . ".php";
-            }
+        ) {
+            include $langpath . safe_file_name(substr($language, 0, 2)) . ".php";
         }
 
-    // If we have custom text created from Manage Content we need to reset this
-    if(isset($customsitetext))
-        {
-        foreach ($customsitetext as $customsitetextname=>$customsitetextentry)
-            {
-            $lang[$customsitetextname] = $customsitetextentry;
-            }
+        if (file_exists($langpath . safe_file_name($language) . ".php")) {
+            include $langpath . safe_file_name($language) . ".php";
         }
     }
+
+    // If we have custom text created from Manage Content we need to reset this
+    if (isset($customsitetext)) {
+        foreach ($customsitetext as $customsitetextname => $customsitetextentry) {
+            $lang[$customsitetextname] = $customsitetextentry;
+        }
+    }
+}
 
 /**
  * Retrieves the file path for a specified plugin.
@@ -1589,25 +1563,29 @@ function register_plugin_language($plugin)
  * @param bool $url Optional. If true, return the URL to the plugin instead of the file path. Default is false.
  * @return string|false The path to the plugin on disk or the URL to the plugin, or false if the plugin is not found.
  */
-function get_plugin_path($plugin,$url=false)
-    {
+function get_plugin_path($plugin, $url = false)
+{
     # For the given plugin shortname, return the path on disk
     # Supports plugins being in the filestore folder (for user uploaded plugins)
     global $baseurl_short,$storagedir,$storageurl;
 
     # Sanitise $plugin
-    $plugin=safe_file_name($plugin);
+    $plugin = safe_file_name($plugin);
 
     # Standard location
-    $pluginpath=__DIR__ . "/../plugins/" . $plugin;
-    if (file_exists($pluginpath)) {return $url ? $baseurl_short . "plugins/" . $plugin : $pluginpath;}
+    $pluginpath = __DIR__ . "/../plugins/" . $plugin;
+    if (file_exists($pluginpath)) {
+        return $url ? $baseurl_short . "plugins/" . $plugin : $pluginpath;
+    }
 
     # Filestore location
-    $pluginpath=$storagedir . "/plugins/" . $plugin;
-    if (file_exists($pluginpath)) {return $url ? $storageurl . "/plugins/" . $plugin : $pluginpath;}
+    $pluginpath = $storagedir . "/plugins/" . $plugin;
+    if (file_exists($pluginpath)) {
+        return $url ? $storageurl . "/plugins/" . $plugin : $pluginpath;
+    }
 
     return false;
-    }
+}
 
 /**
  * Registers a specified plugin by including its hooks and API bindings.
@@ -1619,27 +1597,35 @@ function get_plugin_path($plugin,$url=false)
  * @return bool Always returns true after attempting to include the relevant files.
  */
 function register_plugin($plugin)
-    {
+{
     global $plugins,$language,$pagename,$lang,$applicationname;
 
     # Also include plugin hook file for this page.
-    if ($pagename=="collections_frameless_loader"){$pagename="collections";}
+    if ($pagename == "collections_frameless_loader") {
+        $pagename = "collections";
+    }
 
-    $pluginpath=get_plugin_path($plugin);
+    $pluginpath = get_plugin_path($plugin);
 
-    $hookpath=$pluginpath . "/hooks/" . $pagename . ".php";
-    if (file_exists($hookpath)) {include_once $hookpath;}
+    $hookpath = $pluginpath . "/hooks/" . $pagename . ".php";
+    if (file_exists($hookpath)) {
+        include_once $hookpath;
+    }
 
     # Support an 'all' hook
-    $hookpath=$pluginpath . "/hooks/all.php";
-    if (file_exists($hookpath)) {include_once $hookpath;}
+    $hookpath = $pluginpath . "/hooks/all.php";
+    if (file_exists($hookpath)) {
+        include_once $hookpath;
+    }
 
     # Support standard location for API bindings
-    $api_bindings_path=$pluginpath . "/api/api_bindings.php";
-    if (file_exists($api_bindings_path)) {include_once $api_bindings_path;}
+    $api_bindings_path = $pluginpath . "/api/api_bindings.php";
+    if (file_exists($api_bindings_path)) {
+        include_once $api_bindings_path;
+    }
 
     return true;
-    }
+}
 
 /**
 * Encode complex plugin configuration (e.g mappings defined by users on plugins' setup page)
@@ -1649,9 +1635,9 @@ function register_plugin($plugin)
 * @return string
 */
 function plugin_encode_complex_configs($c)
-    {
+{
     return base64_encode(serialize($c));
-    }
+}
 
 /**
 * Decode complex plugin configuration (e.g mappings defined by users on plugins' setup page)
@@ -1661,9 +1647,9 @@ function plugin_encode_complex_configs($c)
 * @return mixed
 */
 function plugin_decode_complex_configs(string $b64sc)
-    {
+{
     return unserialize(base64_decode($b64sc));
-    }
+}
 
 /**
  * Load group specific plugins and reorder plugins list
@@ -1672,34 +1658,29 @@ function plugin_decode_complex_configs(string $b64sc)
  * @param  array $plugins   Enabled Plugins
  * @return array
  */
-function register_group_access_plugins(?int $usergroup=-1,array $plugins = []): array
+function register_group_access_plugins(?int $usergroup = -1, array $plugins = []): array
 {
     # Load group specific plugins and reorder plugins list
     $active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
 
-    foreach($active_plugins as $plugin)
-        {
-        #Get Yaml
-        $py="";
+    foreach ($active_plugins as $plugin) {
+        # Get Yaml
+        $py = "";
         $py = get_plugin_yaml($plugin["name"], false);
 
         # Check group access and applicable for this user in the group, only if group access is permitted as otherwise will have been processed already
-        if(!$py['disable_group_select'] && $plugin['enabled_groups'] != '')
-            {
-            $s=explode(",",$plugin['enabled_groups']);
-            if (in_array($usergroup,$s))
-                {
-                include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
+        if (!$py['disable_group_select'] && $plugin['enabled_groups'] != '') {
+            $s = explode(",", $plugin['enabled_groups']);
+            if (in_array($usergroup, $s)) {
+                include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
                 register_plugin($plugin['name']);
                 register_plugin_language($plugin['name']);
-                $plugins[]=$plugin['name'];
-                }
+                $plugins[] = $plugin['name'];
             }
-        else
-            {
-            $plugins[]=$plugin['name'];
-            }
+        } else {
+            $plugins[] = $plugin['name'];
         }
+    }
 
     return array_values(array_unique($plugins));
 }
@@ -1794,7 +1775,7 @@ function RenderPlugin($plugin, $active = true)
         echo $baseurl_short . 'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']);
         echo '"><i class="fas fa-users"></i>&nbsp;' . escape($lang['groupaccess']);
         if (!empty(trim((string) $plugin['enabled_groups']))) {
-            $s=explode(",",$plugin['enabled_groups']);
+            $s = explode(",", $plugin['enabled_groups']);
             echo ' <span class="Pill">' . count($s) . '</span>';
         }
         echo '</a> ';
