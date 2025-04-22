@@ -467,10 +467,9 @@ function tms_get_mediamasterid(bool $create = true, ?int $resource = null)
   global $conn, $errormessage, $tms_link_tms_loginid,$tms_link_mediapaths_resource_reference_column ;
   // Get the latest inserted ID that we have not used
   $tmssql = "SELECT MediaMasterID FROM MediaMaster 
-      WHERE LoginID = ? 
-        AND DisplayRendID='-1' 
+      WHERE LoginID = " . (int) $tms_link_tms_loginid . "
+        AND DisplayRendID='-1'
         AND PrimaryRendID='-1'";
-  $tmssql_params = array($tms_link_tms_loginid);
 
   if ($tms_link_mediapaths_resource_reference_column != "" && $resource !=null)
       {
@@ -479,23 +478,21 @@ function tms_get_mediamasterid(bool $create = true, ?int $resource = null)
           debug('tms_link: $tms_link_mediapaths_resource_reference_column can only contain letters, numbers or underscore.');
           return false;
           }
-      $tmssql .= " AND $tms_link_mediapaths_resource_reference_column = CAST(CAST(? AS VARCHAR(20)) AS INT)";
-      $tmssql_params = array_merge($tmssql_params, array($resource));
+      $tmssql .= " AND $tms_link_mediapaths_resource_reference_column = CAST(CAST(" . (int) $resource . " AS VARCHAR(20)) AS INT)";
       }
 
-  $tmsps = odbc_prepare($conn, $tmssql);
-  $mediamasterresult = odbc_execute($tmsps, $tmssql_params);
+  $mediamasterresult = odbc_exec($conn, $tmssql);
 
   if(!$mediamasterresult)
     {
-    debug("tms_link: SQL = " . $tmssql . " PARAMS = " . implode(', ', $tmssql_params));
+    debug("tms_link: SQL = " . $tmssql);
     $errormessage=odbc_errormsg();
     debug("tms_link: ERROR = " . $errormessage);
     return false;
     }
   $mediamasterids=array();
 
-  while($row = odbc_fetch_array($tmsps))
+  while($row = odbc_fetch_array($mediamasterresult))
     {
     $mediamasterids[] = $row["MediaMasterID"];
     }
@@ -656,7 +653,7 @@ function tms_check_thumb($pathid,$filepath,$filename)
     exit($errormessage);
     }
   $thumbids=array();
-  $row = odbc_fetch_array($tms_checkthumb_result);
+  while($row = odbc_fetch_array($tms_checkthumb_result))
     {
     $thumbids[] = $row;
     }
