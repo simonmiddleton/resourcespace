@@ -5,7 +5,7 @@ include_once dirname(__FILE__, 2) . '/include/faces_functions.php';
 command_line_only();
 
 // Get all resources that haven't had faces processed yet
-$resources = ps_query("SELECT ref, file_extension FROM resource WHERE (faces_processed is null or faces_processed=0)");
+$resources = ps_query("SELECT ref, file_extension FROM resource WHERE (faces_processed is null or faces_processed=0) ORDER BY ref desc");
 
 foreach ($resources as $resource)
     {
@@ -31,7 +31,7 @@ foreach ($resources as $resource)
     $postfields = ['file' => $cfile];
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => $faces_service_endpoint,
+        CURLOPT_URL => $faces_service_endpoint . "/extract_faces",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => $postfields,
