@@ -13,6 +13,8 @@ foreach ($resources as $resource)
     $ext = $resource['file_extension'];
     $file_path = get_resource_path($ref, true, 'scr', false, "jpg");
 
+    flush();ob_flush();
+    
     if (!file_exists($file_path))
         {
         // Try full size JPEG as a fallback (for small images only where SCR wasn't generated)

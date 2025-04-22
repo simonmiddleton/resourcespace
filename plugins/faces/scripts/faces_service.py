@@ -63,16 +63,19 @@ def load_vectors(db_name):
 
     for ref, resource, blob in results:
         vector = np.frombuffer(blob, dtype=np.float32)
+        # Normalize the vector for cosine similarity
+        vector = vector / np.linalg.norm(vector)
         vectors.append(vector)
         index_to_metadata.append({"ref": ref, "resource": resource})
 
     d = len(vectors[0])
-    index = faiss.IndexFlatL2(d)
+    index = faiss.IndexFlatIP(d)  # Use Inner Product for cosine similarity
     index.add(np.array(vectors).astype('float32'))
 
     db_indexes[db_name] = {
         "index": index,
-        "metadata": index_to_metadata
+        "metadata": index_to_metadata,
+        "vectors": np.array(vectors).astype('float32')
     }
     print(f"Loaded {len(vectors)} vectors for database '{db_name}'.")
 
@@ -80,7 +83,6 @@ def load_vectors(db_name):
 class FaceSearchRequest(BaseModel):
     ref: int
     db: str
-    threshold: float = 0.6
     k: int = 10
 
 @app.post("/extract_faces")
@@ -123,11 +125,14 @@ async def find_similar_faces(request: FaceSearchRequest):
     if not row:
         raise HTTPException(status_code=404, detail="Face vector not found")
 
-    query_vector = np.frombuffer(row[0], dtype=np.float32).reshape(1, -1)
+    query_vector = np.frombuffer(row[0], dtype=np.float32)
+    query_vector = query_vector / np.linalg.norm(query_vector)
+    query_vector = query_vector.reshape(1, -1)
+
     face_index = db_indexes[db_name]["index"]
     metadata = db_indexes[db_name]["metadata"]
 
-    distances, indices = face_index.search(query_vector, request.k)
+    distances, indices = face_index.search(query_vector, request.k + 1)
 
     matches = []
     for dist, idx in zip(distances[0], indices[0]):
@@ -140,15 +145,12 @@ async def find_similar_faces(request: FaceSearchRequest):
         if match["ref"] == request.ref:
             continue
 
-        match["distance"] = float(dist)
+        match["similarity"] = float(round(dist, 4))  # Cosine similarity score
         matches.append(match)
 
-        print(f"Match: ref={match['ref']} distance={dist:.2f}")
+        print(f"Match: ref={match['ref']} similarity={match['similarity']:.4f}")
 
-
-
-
-    matches.sort(key=lambda x: x["distance"])
+    matches.sort(key=lambda x: -x["similarity"])
     return matches
 
 if __name__ == "__main__":

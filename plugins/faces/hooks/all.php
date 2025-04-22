@@ -15,6 +15,7 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
 
     $faces_service_call = $faces_service_endpoint. "/" . $function;
     global $mysql_db;
+    $min_score=0.3;
 
     // Send search to Python service
     $ch = curl_init();
@@ -61,12 +62,11 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     }
 
     // Filter out results with score below the threshold
-    /*
     $results = array_filter($results, static function($result) use ($min_score) {
-        return isset($result['score']) && $result['score'] >= $min_score;
+        return isset($result['similarity']) && $result['similarity'] >= $min_score;
     });
-    */
-    // print_r($results);
+    
+    //print_r($results);
     $ids = array_column($results, 'resource');
     
     // No results - we must still run a query but one that returns no results.
