@@ -59,7 +59,7 @@ set_time_limit(0);
 convertImage($resource, $page, $alternative, $target, $width, $height, $profile);
 
 daily_stat('Resource download', $ref);
-resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['format_chooser'], '',  $size);
+resource_log($ref, LOG_CODE_DOWNLOADED, 0, $lang['format_chooser'] . ' ' . $usagecomment, '', $size, $usage);
 
 if(file_exists($target))
     {
