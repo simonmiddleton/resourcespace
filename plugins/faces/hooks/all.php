@@ -1,7 +1,7 @@
 <?php
 function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     {
-    global $faces_service_endpoint;
+    global $faces_service_endpoint, $faces_match_threshold;
 
     if(substr($search, 0, 5) == '!face') 
         {
@@ -15,7 +15,6 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
 
     $faces_service_call = $faces_service_endpoint. "/" . $function;
     global $mysql_db;
-    $min_score=0.3;
 
     // Send search to Python service
     $ch = curl_init();
@@ -62,8 +61,8 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     }
 
     // Filter out results with score below the threshold
-    $results = array_filter($results, static function($result) use ($min_score) {
-        return isset($result['similarity']) && $result['similarity'] >= $min_score;
+    $results = array_filter($results, static function($result) use ($faces_match_threshold) {
+        return isset($result['similarity']) && $result['similarity'] >= $faces_match_threshold;
     });
     
     //print_r($results);
@@ -80,3 +79,12 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     return $clipsql;
     }
 
+/*
+Update the named person for a given face when using the dropdown.
+*/
+function api_faces_tag($face,$node)
+    {
+    debug("API: faces_tag(" . $face . ", " . $node);
+    ps_query("update resource_face set node=? where ref=?",["i",$node,"i",$face]);
+    return true;
+    }

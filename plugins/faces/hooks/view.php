@@ -1,9 +1,9 @@
 <?php
 function HookFacesViewCustompanels()
     {
-    global $lang,$ref,$baseurl;
+    global $lang,$ref,$baseurl,$faces_tag_field;
 
-    $faces=ps_query("select ref,det_score,bbox from resource_face where resource=? order by ref",["i",$ref]);
+    $faces=ps_query("select ref,det_score,bbox,node from resource_face where resource=? order by ref",["i",$ref]);
     if (count($faces)==0) {return false;} // No face vectors yet.
 
     $face_path = get_resource_path($ref, true, "scr", false, "jpg");
@@ -24,7 +24,8 @@ list($image_width, $image_height) = getimagesize($face_path);
         <table class="ListviewStyle">
             <tr>
                 <th><?php echo escape($lang["faces-detected-face"]) ?></th>
-                <th><?php echo escape($lang["faces-confidence"]) ?></th>
+                <!--<th><?php echo escape($lang["faces-confidence"]) ?></th>-->
+                <th><?php echo escape($lang["faces-name"]) ?></th>
                 <th><?php echo escape($lang["actions"]) ?></th>
             </tr>
 
@@ -72,7 +73,23 @@ list($image_width, $image_height) = getimagesize($face_path);
                     <td>
                         <div style="<?php echo $style ?>"></div>
                     </td>
-                    <td><?php echo round($face["det_score"] * 100, 2) ?>%</td>
+                    <!--<td><?php echo round($face["det_score"] * 100, 2) ?>%</td>-->
+                    <td>
+                        <select onChange="FacesUpdateTag(<?php echo escape($face["ref"]) ?>,this.value);">
+                        <option value="0"><?php echo escape($lang["select"]) ?></option>
+                        <?php 
+                        $nodes = get_resource_nodes($ref,$faces_tag_field,true);
+                        foreach ($nodes as $node)
+                            {
+                            ?>
+                            <option value="<?php echo escape($node["ref"]) ?>"
+                            <?php if ($face["node"]==$node["ref"]) { ?>selected <?php } ?>
+                            ><?php echo escape($node["translated_name"]) ?></option>
+                            <?php
+                            }
+                        ?>
+                        </select>
+                    </td>
                     <td>
                     <?php $search_url=generateURL("{$baseurl}/pages/search.php", array("search" => "!face" . $face["ref"])); ?>
                     <a href="<?php echo $search_url ?>" onClick="return CentralSpaceLoad(this,true);">
@@ -86,6 +103,14 @@ list($image_width, $image_height) = getimagesize($face_path);
         </div>
     </div>
     </div>
+
+    <script>
+    function FacesUpdateTag(face,node)
+        {
+        //alert(face + ", " + node);
+        api("faces_tag",{'face': face, 'node': node},null,<?php echo generate_csrf_js_object('faces_tag'); ?>);
+        }
+    </script>
     <?php
     return false; # Allow further custom panels
     }
