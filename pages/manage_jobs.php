@@ -44,7 +44,7 @@ if ($deletejob > 0 && enforcePostRequest(true)) {
     }
 } elseif ($job_boost > 0 && enforcePostRequest(true) && checkperm('a')) {
     clear_process_lock("job_{$job_boost}");
-    job_queue_update($job_boost, array(), 1, '', JOB_PRIORITY_IMMEDIATE);
+    job_queue_update($job_boost, array(), 1, date('Y-m-d H:i:s'), JOB_PRIORITY_IMMEDIATE);
 } elseif (getval("purge_jobs", '') != '' && enforcePostRequest(true) && checkperm('a')) {
     job_queue_purge(STATUS_COMPLETE);
     job_queue_purge(STATUS_ERROR);

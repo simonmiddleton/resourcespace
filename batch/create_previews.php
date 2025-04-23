@@ -129,17 +129,27 @@ if ($multiprocess) {
     pcntl_signal(SIGALRM, 'sigalrm_handler');
     pcntl_signal(SIGCHLD, 'sigchld_handler');
 }
+$sql = "SELECT ref,
+               file_extension,
+               IFNULL(preview_attempts, 1) preview_attempts,
+               creation_date
+          FROM resource 
+         WHERE ref > 0
+           AND no_file <> 1
+           AND (preview_attempts < ? OR preview_attempts IS NULL)
+           AND file_extension IS NOT NULL
+           AND LENGTH(file_extension) > 0
+           AND LOWER(file_extension) NOT IN (" . ps_param_insert(count($no_preview_extensions)) . ")";
+$params = array_merge(["i", SYSTEM_MAX_PREVIEW_ATTEMPTS], ps_param_fill($no_preview_extensions, "s"));
 
-
-// We fetch the list of resources to process.
-global  $no_preview_extensions;
-$condition = "resource.has_image != " . RESOURCE_PREVIEWS_ALL . " AND";
-if ($noimage) {
-    $condition = "";
+$extraconditions = "";
+if (!$noimage) {
+    $extraconditions .= " AND has_image != ? ";
+    $params[] = "i";
+    $params[] = RESOURCE_PREVIEWS_ALL;
 }
-$resources = ps_query("SELECT resource.ref, resource.file_extension, IFNULL(resource.preview_attempts, 1) preview_attempts, creation_date FROM resource 
-    WHERE $condition resource.ref > 0 AND (resource.preview_attempts < 5 OR resource.preview_attempts IS NULL) AND file_extension IS NOT NULL AND LENGTH(file_extension) > 0 
-	AND lower(file_extension) NOT IN (" . ps_param_insert(count($no_preview_extensions)) . ")", ps_param_fill($no_preview_extensions, "s"));
+
+$resources = ps_query($sql . $extraconditions, $params);
 
 foreach ($resources as $resource) { // For each resources
   // We wait for a fork emplacement to be freed.

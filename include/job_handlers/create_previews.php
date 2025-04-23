@@ -37,15 +37,30 @@ if ($resource > 0) {
 
 if ($resource > 0 && create_previews($resource, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ignoremaxsize, $ingested, $checksum_required)) {
     // Success - no message required
-    # Update disk usage
     update_disk_usage($resource);
+    if ($offline_job_delete_completed) {
+        job_queue_delete($jobref);
+    } else {
+        job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+    }
 } else {
-    // fail
-    job_queue_update($jobref, $job_data, STATUS_ERROR);
-    $create_previews_job_failure_text = str_replace('%RESOURCE', $resource, $lang['jq_create_previews_failure_text']);
-    $message = $job_failure_text != '' ? $job_failure_text : $create_previews_job_failure_text;
-
-    message_add($job['user'], $message, $url, 0);
+    // Fail
+    $resdata = get_resource_data($resource);
+    $preview_attempts = $resdata["preview_attempts"];
+    if ($preview_attempts < SYSTEM_MAX_PREVIEW_ATTEMPTS) {
+        // Reschedule job to try again later in the event that 3rd party processing has failed e.g. Unoserver
+        // Increase gap between subsequent attempts
+        $retry_date = date('Y-m-d H:i:s', time() + (60 * 60  * pow(2, $preview_attempts + 1)));
+        job_queue_update($jobref, $job_data, STATUS_ACTIVE, $retry_date);
+    } else {
+        job_queue_update($jobref, $job_data, STATUS_ERROR);
+        get_config_option(['user' => $job['user']], 'user_pref_resource_notifications', $send_notifications, false);
+        if ($send_notifications) {
+            $create_previews_job_failure_text = str_replace('%RESOURCE', $resource, $lang['jq_create_previews_failure_text']);
+            $message = $job["failure_text"] != '' ? $job["failure_text"] : $create_previews_job_failure_text;
+            message_add($job['user'], $message, $url, 0);
+        }
+    }
 }
 
 unset(
@@ -59,9 +74,3 @@ unset(
     $ingested,
     $checksum_required
 );
-
-if ($offline_job_delete_completed) {
-    job_queue_delete($jobref);
-} else {
-    job_queue_update($jobref, $job_data, STATUS_COMPLETE);
-}
