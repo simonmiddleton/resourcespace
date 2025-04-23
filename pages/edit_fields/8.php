@@ -24,6 +24,7 @@ global $tinymce_plugins, $tinymce_toolbar;
         plugins: '<?php echo escape(check_tinymce_plugins($tinymce_plugins)); ?>',
         menubar: '',
         toolbar: "<?php echo escape(check_tinymce_toolbar($tinymce_toolbar)); ?>",
+        font_size_formats: '5pt 5.5pt 6.5pt 7.5pt 8pt 9pt 10pt 10.5pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 26pt 28pt 36pt 48pt 72pt',
         min_height: 400,
         max_height: 400,
         invalid_elements: 'script,iframe,embed,object,applet,meta,frame,frameset,link', //Explicitly removes Javascript-based elements
