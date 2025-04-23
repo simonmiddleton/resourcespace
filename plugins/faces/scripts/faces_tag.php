@@ -5,7 +5,7 @@ include_once dirname(__FILE__, 2) . '/include/faces_functions.php';
 command_line_only();
 
 // Find all faces that have not been identified.
-$faces = ps_query("SELECT ref,resource FROM resource_face WHERE (node is null or node=0) and resource=35147 ORDER BY ref desc");
+$faces = ps_query("SELECT ref,resource FROM resource_face WHERE (node is null or node=0) ORDER BY ref desc");
 
 foreach ($faces as $face)
     {
