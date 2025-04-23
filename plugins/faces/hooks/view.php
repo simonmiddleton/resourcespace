@@ -1,4 +1,29 @@
 <?php
+/**
+ * Adds a custom panel to the resource view page displaying detected faces and tagging options.
+ *
+ * This hook is is triggered during the `view.php` rendering process.
+ * It queries the `resource_face` table for any faces detected in the current resource, and if found,
+ * renders a table showing cropped face previews along with a dropdown to tag the face with a named person.
+ * It also includes a link to perform a face similarity search (`!face<ID>`).
+ *
+ * Image dimensions are used to correctly crop and scale face previews for display using CSS background properties.
+ * Tagging actions invoke the `faces_tag` API via JavaScript to persist the selected person name (node) for each face.
+ *
+ * @return bool  Returns false to allow further custom panels to be rendered after this one.
+ *
+ * @global array  $lang              Global language strings.
+ * @global int    $ref               Resource ID being viewed.
+ * @global string $baseurl           Base URL of the ResourceSpace installation.
+ * @global int    $faces_tag_field   The metadata field used to tag faces with person names.
+ *
+ * @uses ps_query()
+ * @uses get_resource_path()
+ * @uses getimagesize()
+ * @uses get_resource_nodes()
+ * @uses generateURL()
+ * @uses generate_csrf_js_object()
+ */
 function HookFacesViewCustompanels()
     {
     global $lang,$ref,$baseurl,$faces_tag_field;

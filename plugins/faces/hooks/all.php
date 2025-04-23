@@ -1,4 +1,24 @@
 <?php
+/**
+ * Hook that enables special search syntax to find resources with visually similar faces to a given resource.
+ *
+ * This hook listens for the special search syntax `!face<ID>`, where `<ID>` is the `ref` of a face
+ * in the `resource_face` table. It queries an external Python service via HTTP to retrieve a list
+ * of resource references with matching faces above a configurable similarity threshold. The results
+ * are then integrated into ResourceSpace’s standard search mechanism.
+ *
+ * @param string $search        The search string input, expected to be in the format '!face<ID>' if this is a search we're interested in.
+ * @param object $select        An object containing the SQL SELECT clause and its parameters.
+ * @param object $sql_join      An object containing any necessary SQL JOIN clauses and parameters.
+ * @param object $sql_filter    An object containing additional SQL filter conditions and parameters.
+ *
+ * @return PreparedStatementQuery|false  Returns a prepared SQL query to fetch matching resources if
+ *                                       the search matches the `!face` pattern; otherwise, returns false.
+ *
+ * @global string $faces_service_endpoint  Endpoint URL of the Python face recognition service.
+ * @global float  $faces_match_threshold   Similarity threshold for face matches (default 0.3).
+ * @global string $mysql_db                Name of the current MySQL database (for namespacing service queries).
+ */
 function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     {
     global $faces_service_endpoint, $faces_match_threshold;
@@ -74,9 +94,20 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     return $sql;
     }
 
-/*
-Update the named person for a given face when using the dropdown.
-*/
+/**
+ * API function to update the named person tag for a specific face using the provided node value.
+ *
+ * Typically triggered when selecting a name from a dropdown, this function assigns a metadata node
+ * (e.g. representing a person) to a face record in the `resource_face` table by updating the `node` field.
+ *
+ * @param int $face  The unique reference ID of the face to update (from `resource_face.ref`).
+ * @param int $node  The node ID to assign to the face (typically corresponds to a controlled vocabulary entry).
+ *
+ * @return bool  Returns true on successful update.
+ *
+ * @uses ps_query()
+ * @uses debug()
+ */
 function api_faces_tag($face,$node)
     {
     debug("API: faces_tag(" . $face . ", " . $node);
