@@ -83,7 +83,6 @@ function logScript($message, $file = null)
 
     if (PHP_SAPI == 'cli') {
         echo "{$date_time} {$message}" . PHP_EOL;
-        flush();ob_flush();
     }
 
     // Log in debug as well, with extended information to show the backtrace
