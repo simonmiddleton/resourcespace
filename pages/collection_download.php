@@ -328,7 +328,7 @@ include "../include/header.php";
     $intro = text("introtext");
     if ($intro != "") {
         ?>
-        <p><?php echo $intro; ?></p>
+        <p><?php echo strip_tags_and_attributes($intro); ?></p>
         <?php
     }
     ?>
@@ -485,7 +485,7 @@ include "../include/header.php";
                     } ?>
                     > <?php
                     foreach ($collection_download_settings as $key => $value) { ?>
-                        <option value="<?php echo escape($key); ?>"><?php echo lang_or_i18n_get_translated($value["name"], "archive-"); ?>
+                        <option value="<?php echo escape($key); ?>"><?php echo escape(lang_or_i18n_get_translated($value["name"], "archive-")); ?>
                         </option><?php
                     } ?>
                     </select>

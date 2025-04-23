@@ -2,6 +2,7 @@
 
 /**
  * Ensures the filename cannot leave the directory set.
+ * Only to be used for internal ResourceSpace paths as only a limited character set is supported
  *
  * @param string $name
  * @return string

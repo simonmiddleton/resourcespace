@@ -6884,7 +6884,6 @@ function process_collection_download(array $dl_data): array
                     debug("Adding $p ($filename) for alternative ref " . $alternative["ref"]);
                     set_processing_message((string) ($n+1 . "/" . $rescount . " " . $GLOBALS["lang"]["filesaddedtozip"]));
                     if ($collection_download_tar) {
-                        // $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
                         debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
                         $GLOBALS["use_error_exception"] = true;
                         try {

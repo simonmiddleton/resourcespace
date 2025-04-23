@@ -5234,10 +5234,7 @@ function resource_download_allowed($resource, $size, $resource_type, $alternativ
                 SELECT allow_restricted value
                   FROM preview_size
                  WHERE id = ?",
-                ["s", $size],
-                0,
-                "schema")
-                == 1;
+                ["s", $size], 0, "schema") == 1;
                 return $download_access_cache[$cacheid];
         }
     }
