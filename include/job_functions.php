@@ -286,6 +286,8 @@ function job_queue_run_job($job, $clear_process_lock)
         return;
     }
     setup_user($jobuserdata);
+    $job_success_text = $job["success_text"];
+    $job_failure_text = $job["failure_text"];
 
     // Variable used to avoid spinning off offline jobs from an already existing job.
     // Example: create_previews() is using extract_text() and both can run offline.
