@@ -30,8 +30,8 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
         'db' => $mysql_db,
         'ref' => (int)$face,
-        'threshold' => 0.0,
-        'k' => 20
+        'threshold' => $faces_match_threshold,
+        'k' => 200
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
@@ -44,7 +44,7 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $end_time = microtime(true);
-    $clip_query_time = round(($end_time - $start_time) * 1000);
+    $query_time = round(($end_time - $start_time) * 1000);
     curl_close($ch);
 
     if ($http_code !== 200 || empty($response))
@@ -59,11 +59,6 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
         echo "Invalid response from faces_service.\n";
         exit(1);
     }
-
-    // Filter out results with score below the threshold
-    $results = array_filter($results, static function($result) use ($faces_match_threshold) {
-        return isset($result['similarity']) && $result['similarity'] >= $faces_match_threshold;
-    });
     
     //print_r($results);
     $ids = array_column($results, 'resource');
@@ -73,10 +68,10 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
 
     $in_sql=ps_param_insert(count($ids));
     $params=ps_param_fill($ids,"i");
-    $clipsql = new PreparedStatementQuery();
-    $clipsql->sql = "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.ref in ($in_sql) AND " . $sql_filter->sql . " ORDER BY FIELD(r.ref, $in_sql)";
-    $clipsql->parameters = array_merge($select->parameters, $sql_join->parameters, $params, $sql_filter->parameters, $params);
-    return $clipsql;
+    $sql = new PreparedStatementQuery();
+    $sql->sql = "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.ref in ($in_sql) AND " . $sql_filter->sql . " ORDER BY FIELD(r.ref, $in_sql)";
+    $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $params, $sql_filter->parameters, $params);
+    return $sql;
     }
 
 /*

@@ -9,6 +9,7 @@ import uvicorn
 import faiss
 import argparse
 import mysql.connector
+from datetime import datetime, timedelta
 
 # Command-line arguments
 parser = argparse.ArgumentParser()
@@ -50,7 +51,7 @@ def get_mysql_connection(db_name):
 def load_vectors(db_name):
     conn = get_mysql_connection(db_name)
     cursor = conn.cursor()
-    cursor.execute("SELECT ref, resource, vector_blob FROM resource_face")
+    cursor.execute("SELECT ref, resource, vector_blob, node FROM resource_face")
     results = cursor.fetchall()
     conn.close()
 
@@ -60,22 +61,25 @@ def load_vectors(db_name):
 
     vectors = []
     index_to_metadata = []
+    max_ref = 0
 
-    for ref, resource, blob in results:
+    for ref, resource, blob, node in results:
         vector = np.frombuffer(blob, dtype=np.float32)
-        # Normalize the vector for cosine similarity
         vector = vector / np.linalg.norm(vector)
         vectors.append(vector)
-        index_to_metadata.append({"ref": ref, "resource": resource})
+        index_to_metadata.append({"ref": ref, "resource": resource, "node": node})
+        max_ref = max(max_ref, ref)
 
     d = len(vectors[0])
-    index = faiss.IndexFlatIP(d)  # Use Inner Product for cosine similarity
+    index = faiss.IndexFlatIP(d)
     index.add(np.array(vectors).astype('float32'))
 
     db_indexes[db_name] = {
         "index": index,
         "metadata": index_to_metadata,
-        "vectors": np.array(vectors).astype('float32')
+        "vectors": np.array(vectors).astype('float32'),
+        "last_used": datetime.utcnow(),
+        "max_ref": max_ref
     }
     print(f"Loaded {len(vectors)} vectors for database '{db_name}'.")
 
@@ -83,6 +87,7 @@ def load_vectors(db_name):
 class FaceSearchRequest(BaseModel):
     ref: int
     db: str
+    threshold: float = 0.0
     k: int = 10
 
 @app.post("/extract_faces")
@@ -108,13 +113,39 @@ async def extract_faces(file: UploadFile = File(...)):
 @app.post("/find_similar_faces")
 async def find_similar_faces(request: FaceSearchRequest):
     db_name = request.db
+    now = datetime.utcnow()
 
-    # Load index if not already in memory
+    # Determine if the cache should be refreshed
+    should_reload = False
+
     if db_name not in db_indexes:
+        should_reload = True
+    else:
+        last_used = db_indexes[db_name].get("last_used")
+        max_known_ref = db_indexes[db_name].get("max_ref", 0)
+
+        if now - last_used > timedelta(hours=1):
+            print(f"Cache for '{db_name}' is older than 1 hour. Refreshing.")
+            should_reload = True
+        else:
+            # Check if there are new face entries
+            conn = get_mysql_connection(db_name)
+            cursor = conn.cursor()
+            cursor.execute("SELECT MAX(ref) FROM resource_face")
+            row = cursor.fetchone()
+            conn.close()
+            latest_ref = row[0] if row and row[0] is not None else 0
+            if latest_ref > max_known_ref:
+                print(f"New faces detected in '{db_name}'. Reloading vectors.")
+                should_reload = True
+
+    if should_reload:
         load_vectors(db_name)
 
     if db_name not in db_indexes:
         raise HTTPException(status_code=500, detail=f"Unable to load vector index for database '{db_name}'")
+
+    db_indexes[db_name]["last_used"] = now
 
     conn = get_mysql_connection(db_name)
     cursor = conn.cursor()
@@ -141,14 +172,14 @@ async def find_similar_faces(request: FaceSearchRequest):
 
         match = metadata[idx].copy()
 
-        # Skip the query face itself
         if match["ref"] == request.ref:
             continue
 
-        match["similarity"] = float(round(dist, 4))  # Cosine similarity score
-        matches.append(match)
-
-        print(f"Match: ref={match['ref']} similarity={match['similarity']:.4f}")
+        similarity = float(round(dist, 4))
+        if similarity >= request.threshold:
+            match["similarity"] = similarity
+            matches.append(match)
+            print(f"Match: ref={match['ref']} similarity={match['similarity']:.4f}")
 
     matches.sort(key=lambda x: -x["similarity"])
     return matches
