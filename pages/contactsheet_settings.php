@@ -104,7 +104,13 @@ include '../include/header.php';
         <?php generateFormToken("contactsheetform"); ?>
         <input type=hidden name="c" value="<?php echo escape($collection); ?>">
         <input type=hidden name="field_value_limit" value="<?php echo escape($field_value_limit); ?>">
-        <input type=hidden name="order_by" value="<?php echo escape($order_by); ?>">
+        <?php
+        if (!$contactsheet_sorting) {
+            ?>
+            <input type=hidden name="order_by" value="<?php echo escape($order_by); ?>">
+            <?php
+        }
+        ?>
         <div class="BasicsBox" style="width:450px;float:left;margin-top:0;" >
             <div class="Question">
                 <label><?php echo escape($lang["collectionname"]); ?></label>
@@ -429,8 +435,8 @@ include '../include/header.php';
                 ?>
                 <div class="Question">
                     <label for="orderby"><?php echo escape($lang["sortorder"]); ?></label>
-                    <select class="shrtwidth" name="orderby" id="orderby" onchange="jQuery().rsContactSheet('preview','<?php echo (int) $collection; ?>','<?php echo $filename_uid; ?>');">
-                        <option value="relevance" selected><?php echo escape($lang["collection-order"]); ?></option>
+                    <select class="shrtwidth" name="order_by" id="orderby" onchange="jQuery().rsContactSheet('preview','<?php echo (int) $collection; ?>','<?php echo $filename_uid; ?>');">
+                        <option value="collection" selected><?php echo escape($lang["collection-order"]); ?></option>
                         <option value="date"><?php echo escape($lang["date"]); ?></option>
                         <option value="colour"><?php echo escape($lang["colour"]); ?></option>
                         <option value="resourceid"><?php echo escape($lang["resourceid"]); ?></option>

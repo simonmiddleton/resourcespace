@@ -22,7 +22,7 @@ if (strpos($size, "x") !== false) {
     $size = strtoupper($size);
 }
 $columns           = getval('columns', 1);
-$order_by          = getval('order_by', 'relevance');
+$order_by          = getval('order_by', 'collection');
 $sort              = getval('sort', 'asc');
 $orientation       = getval('orientation', '');
 $sheetstyle        = getval('sheetstyle', 'thumbnails');
