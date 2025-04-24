@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["clip-natural-language-search"] = 'Chwilio iaith naturiol';
 $lang["clip-configuration"] = 'Cynllun CLIP';
 $lang["clip-ai-smart-search"] = 'AI Chwilio Clyfar';

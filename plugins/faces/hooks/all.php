@@ -23,12 +23,12 @@
 function HookFacesAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
 {
     global $faces_service_endpoint, $faces_match_threshold;
-
+    
     if (substr($search, 0, 5) == '!face') {
         $function = "find_similar_faces";
         $face = substr($search, 5);
     } else {
-        return false;
+        return null;
     }
 
     $faces_service_call = $faces_service_endpoint . "/" . $function;

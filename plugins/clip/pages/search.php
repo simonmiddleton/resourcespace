@@ -3,14 +3,12 @@ include __DIR__ . "/../../../include/boot.php";
 include __DIR__ . "/../../../include/authenticate.php";
 $is_admin = checkperm("t");
 
-$search=getval("search","");
-if ($search!="")
-    {
-    redirect(generateURL("/pages/search.php",["search"=>"!clipsearch " . $search]));
-    }
-$clip_image_base64=getval("clip_image_base64","");
-if ($clip_image_base64!="")
-    {
+$search = getval("search", "");
+if ($search != "") {
+    redirect(generateURL("/pages/search.php", ["search" => "!clipsearch " . $search]));
+}
+$clip_image_base64 = getval("clip_image_base64", "");
+if ($clip_image_base64 != "") {
     // Search by image. First get the image.
 
     $binary = base64_decode($clip_image_base64);
@@ -31,11 +29,10 @@ if ($clip_image_base64!="")
     curl_close($ch);
     unlink($tmpfile);
 
-    if ($http_code != 200)
-        {
+    if ($http_code != 200) {
         echo "CLIP vector request failed (HTTP $http_code)\n";
         exit;
-        }
+    }
 
     $vector = json_decode($response, true);
     $vector = array_map('floatval', $vector); // ensure float values
@@ -46,9 +43,9 @@ if ($clip_image_base64!="")
         "INSERT INTO resource_clip_vector (user, vector_blob, is_text) VALUES (?, ?, false)",
         ['i', $userref, 's', $blob]
     ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
-    $record=sql_insert_id();
-    redirect(generateURL($baseurl . "/pages/search.php",["search"=>"!clipspecific" . $record]));
-    }
+    $record = sql_insert_id();
+    redirect(generateURL($baseurl . "/pages/search.php", ["search" => "!clipspecific" . $record]));
+}
 
 include __DIR__ . "/../../../include/header.php";
 ?>
@@ -134,8 +131,8 @@ document.getElementById('clip-upload').addEventListener('change', function (even
 
 
     <?php if (checkperm("a")) {
-         $duplicate_url=generateURL("{$baseurl}/pages/search.php", array("search" => "!clipduplicates"));
-         ?>
+         $duplicate_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!clipduplicates"));
+        ?>
          <hr /><h2><?php echo escape($lang["clip-duplicate-images"]) ?></h2>
          <p>
             <a href="<?php echo $duplicate_url ?>" onClick="return CentralSpaceLoad(this,true);">

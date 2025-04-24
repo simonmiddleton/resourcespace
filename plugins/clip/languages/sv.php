@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["clip-natural-language-search"] = 'Naturlig språk sökning';
 $lang["clip-configuration"] = 'KLIPP-konfiguration';
 $lang["clip-ai-smart-search"] = 'AI Smart Search';

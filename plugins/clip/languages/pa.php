@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["clip-natural-language-search"] = 'ਕੁਦਰਤੀ ਭਾਸ਼ਾ ਖੋਜ';
 $lang["clip-configuration"] = 'ਕਲਿੱਪ ਸੰਰਚਨਾ';
 $lang["clip-ai-smart-search"] = 'ਏਆਈ ਸਮਾਰਟ ਖੋਜ';

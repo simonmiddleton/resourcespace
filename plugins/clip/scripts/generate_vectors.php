@@ -1,4 +1,5 @@
 <?php
+
 include_once dirname(__FILE__, 4) . '/include/boot.php';
 include_once dirname(__FILE__, 2) . '/include/clip_functions.php';
 
@@ -36,8 +37,7 @@ $sql = "
 
 $resources = ps_query($sql);
 
-if(empty($resources))
-{
+if (empty($resources)) {
     echo "No resources needing vector update.\n";
     exit;
 }
@@ -45,8 +45,7 @@ if(empty($resources))
 
 
 
-foreach($resources as $resource)
-{
+foreach ($resources as $resource) {
     $ref = $resource['ref'];
     $ext = "jpg";
     $size = "pre";
@@ -54,15 +53,16 @@ foreach($resources as $resource)
 
     $image_path = get_resource_path($ref, true, $size, false, $ext);
 
-    if(!file_exists($image_path))
-    {
+    if (!file_exists($image_path)) {
         echo "⚠ Resource $ref: file not found at $image_path\n";
         continue;
     }
 
     // Calculate vectors - image
-    $vector=get_vector(false,$image_path,$ref);
-    if ($vector===false) {continue;}
+    $vector = get_vector(false, $image_path, $ref);
+    if ($vector === false) {
+        continue;
+    }
 
     // Calculate vectors - text
     /*
@@ -73,7 +73,7 @@ foreach($resources as $resource)
             $text_parts[] = $value;
         }
     }
-    
+
     $text = implode(' ', $text_parts);
     // Remove all numbers (including standalone and in words) and tidy up spacing. Numbers are unlikely to add meaning.
     $text = preg_replace('/\d+/', '', $text);
@@ -91,7 +91,7 @@ foreach($resources as $resource)
         "INSERT INTO resource_clip_vector (resource, vector_blob, checksum, is_text) VALUES (?, ?, ?, false)",
         ['i', $ref, 's', $blob, 's', $checksum]
     ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
-    
+
     /*
     ps_query(
         "INSERT INTO resource_clip_vector (resource, vector, checksum, is_text) VALUES (?, ?, ?, true)",

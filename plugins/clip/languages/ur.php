@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["clip-natural-language-search"] = 'قدرتی زبان کی تلاش';
 $lang["clip-configuration"] = 'CLIP کی تشکیل';
 $lang["clip-ai-smart-search"] = 'AI سمارٹ تلاش';

@@ -18,33 +18,28 @@ function get_vector(bool $is_text, string $input, int $ref): array|false
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    if (!$is_text)
-        {
+    if (!$is_text) {
         $post_fields = [
             'image' => new CURLFile($input)
         ];
-        }
-    else
-        {
+    } else {
         $post_fields = [
             'text' => $input
         ];
-        }
+    }
 
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
     $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    if($http_code !== 200 || empty($response))
-    {
+    if ($http_code !== 200 || empty($response)) {
         echo "❌ Resource $ref: error from CLIP service (HTTP $http_code)\n";
         return false;
     }
 
     $vector = json_decode($response, true);
-    if(!is_array($vector) || count($vector) !== 512)
-    {
+    if (!is_array($vector) || count($vector) !== 512) {
         echo "❌ Resource $ref: invalid vector returned\n";
         return false;
     }
@@ -64,12 +59,11 @@ function get_vector(bool $is_text, string $input, int $ref): array|false
  */
 function vector_visualise(array $vector): string
 {
-    $chars = str_split(" .:;i1tfLCG08@"); 
+    $chars = str_split(" .:;i1tfLCG08@");
     $out = "";
     $chunks = array_chunk($vector, 8);
 
-    foreach ($chunks as $chunk)
-    {
+    foreach ($chunks as $chunk) {
         $mean = array_sum($chunk) / count($chunk);
         $sum_squares = 0;
         foreach ($chunk as $v) {

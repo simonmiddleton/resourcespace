@@ -1,13 +1,15 @@
 <?php
 function HookClipViewCustompanels()
-    {
+{
     global $lang,$ref,$baseurl;
 
-    $vectors=ps_value("select count(*) value from resource_clip_vector where resource=?",["i",$ref],0);
-    if ($vectors==0) {return false;} // No vectors yet.
+    $vectors = ps_value("select count(*) value from resource_clip_vector where resource=?", ["i",$ref], 0);
+    if ($vectors == 0) {
+        return false;
+    } // No vectors yet.
 
-    $search_url=generateURL("{$baseurl}/pages/search.php", array("search" => "!clipsimilar{$ref}"));
-    $duplicate_url=generateURL("{$baseurl}/pages/search.php", array("search" => "!clipduplicate{$ref}"));
+    $search_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!clipsimilar{$ref}"));
+    $duplicate_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!clipduplicate{$ref}"));
     ?>
     <div class="RecordBox">
         <div class="RecordPanel">
@@ -25,4 +27,4 @@ function HookClipViewCustompanels()
     </div>
     <?php
     return false; # Allow further custom panels
-    }
+}

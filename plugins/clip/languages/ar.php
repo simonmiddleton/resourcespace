@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["clip-natural-language-search"] = 'البحث بلغة طبيعية';
 $lang["clip-configuration"] = 'تكوين CLIP';
 $lang["clip-ai-smart-search"] = 'البحث الذكي بالذكاء الاصطناعي';
