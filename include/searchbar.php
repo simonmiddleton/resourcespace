@@ -439,16 +439,16 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 <div class="<?php echo $tickBoxClass; ?>">
                                     <input
                                         class="<?php echo $inputBoxClass; ?>"
-                                        id="TickBox<?php echo $types[$n]["ref"]; ?>" 
+                                        id="TickBox<?php echo (int) $types[$n]["ref"]; ?>" 
                                         type="checkbox"
                                         value="yes"
-                                        name="resource<?php echo $types[$n]["ref"]; ?>"  
+                                        name="resource<?php echo (int) $types[$n]["ref"]; ?>"  
                                         <?php if (((count($rt) == 1) && ($rt[0] == "")) || ($restypes == "Global") || (in_array($types[$n]["ref"], $rt))) { ?>
                                             checked="checked"
                                         <?php } ?> 
                                         onclick="SimpleSearchFieldsHideOrShow(true);<?php echo $resetTickAllCall; ?>"
                                     >
-                                    <label for="TickBox<?php echo $types[$n]["ref"]; ?>">
+                                    <label for="TickBox<?php echo (int) $types[$n]["ref"]; ?>">
                                         <i class="fa fa-fw <?php echo escape($types[$n]["icon"] != "" ? $types[$n]["icon"] : FONTAWESOME_EXTENSIONS["default"]); ?>"></i>    
                                         <?php echo "&nbsp;" . escape($types[$n]["name"]); ?>
                                     </label>
@@ -625,12 +625,10 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                     }
 
                                     <?php for ($n = 0; $n < count($types); $n++) { ?>
-                                        if (resourcetypes.indexOf('<?php echo $types[$n]["ref"]; ?>') == -1) {
-                                            jQuery("#TickBox<?php echo $types[$n]["ref"]; ?>").prop('checked', false);
-                                        }
-
-                                        else if (allselected){
-                                            jQuery("#TickBox<?php echo $types[$n]["ref"]; ?>").prop('checked', true);
+                                        if (resourcetypes.indexOf('<?php echo (int) $types[$n]["ref"]; ?>') == -1) {
+                                            jQuery("#TickBox<?php echo (int) $types[$n]["ref"]; ?>").prop('checked', false);
+                                        } else if (allselected) {
+                                            jQuery("#TickBox<?php echo (int) $types[$n]["ref"]; ?>").prop('checked', true);
                                         }
                                     <?php } ?>
 

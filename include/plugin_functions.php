@@ -799,25 +799,26 @@ function config_multi_user_select($name, $label, $current = array(), $width = 42
             name="<?php echo escape($name); ?>[]"
             id="<?php echo escape($name); ?>"
             class="MultiRTypeSelect"
-            style="width:<?php echo (int) $width; ?>px">
-            <div class="MultiRtypeSelectContainer"
+            style="width:<?php echo (int) $width; ?>px"
         >
-            <?php
-            $users = get_users();
-            foreach ($users as $user) { ?>
-                <span id="user<?php echo (int) $user['ref'];?>">
-                    <input
-                        type="checkbox"
-                        value="<?php echo (int) $user['ref']; ?>"
-                        name="<?php echo escape($name); ?>[]"
-                        id="<?php echo escape($name . $user['ref']); ?>"
-                        <?php echo in_array($user['ref'], $current) ? ' checked="checked"' : ''; ?>
-                    >
-                        <?php echo escape($user['fullname'] . ' (' . $user['email'] . ')'); ?>
-                    </input>
-                </span>
-                <br />
-            <?php } ?>
+            <div class="MultiRtypeSelectContainer">
+                <?php
+                $users = get_users();
+                foreach ($users as $user) { ?>
+                    <span id="user<?php echo (int) $user['ref'];?>">
+                        <input
+                            type="checkbox"
+                            value="<?php echo (int) $user['ref']; ?>"
+                            name="<?php echo escape($name); ?>[]"
+                            id="<?php echo escape($name . $user['ref']); ?>"
+                            <?php echo in_array($user['ref'], $current) ? ' checked="checked"' : ''; ?>
+                        >
+                            <?php echo escape($user['fullname'] . ' (' . $user['email'] . ')'); ?>
+                        </input>
+                    </span>
+                    <br />
+                <?php } ?>
+            </div>
         </fieldset>
         <div class="clearerleft"></div>
     </div>
