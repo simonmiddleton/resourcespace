@@ -4359,7 +4359,13 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                     $treenodenames[] = ["ref" => $treenode["ref"], "name" => $treenode["translated_path"]];
                     }
                 }
-            $value = render_fixed_list_as_pills($treenodenames);
+
+                // Render as plain text if the user is not authenticated as they will not be able to use the node searches from the pills view
+                if (is_authenticated()) {
+                    $value = render_fixed_list_as_pills($treenodenames);
+                } else {
+                    $value = implode(', ', array_column($treenodenames, 'name'));
+                }
             }
     
     if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
@@ -4407,7 +4413,8 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         }
 
         // Handle the rest of the fixed list fields, category trees have their own section
-        if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE) {
+        // Only render the pills view if the user is authenicated as unauthenticated users will not be able to preform the node searches
+        if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE && is_authenticated()) {
             $nodes = $field_nodes_translated ?? array_map(function($ref, $name) {
                 return ['ref' => $ref, 'name' => $name];
             }, array_keys($field['nodes_values']), $field['nodes_values']);
@@ -4417,7 +4424,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # TinyMCE that have not yet been edited.
         if(
-            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !(in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && is_authenticated()))
             || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value == strip_tags($value))
             )
             {
