@@ -465,9 +465,15 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
 function tms_get_mediamasterid(bool $create = true, ?int $resource = null)
   {
   global $conn, $errormessage, $tms_link_tms_loginid,$tms_link_mediapaths_resource_reference_column ;
+
+  if (!preg_match('/^[a-zA-Z0-9_]*$/', $tms_link_tms_loginid)) {
+          debug('tms_link: $tms_link_tms_loginid can only contain letters, numbers or underscore.');
+          return false;
+        }
+
   // Get the latest inserted ID that we have not used
   $tmssql = "SELECT MediaMasterID FROM MediaMaster 
-      WHERE LoginID = " . (int) $tms_link_tms_loginid . "
+      WHERE LoginID = " . $tms_link_tms_loginid . "
         AND DisplayRendID='-1'
         AND PrimaryRendID='-1'";
 
