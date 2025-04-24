@@ -482,54 +482,29 @@ function get_usergroup_parent_for_inherit_flag(int $usergroup_id, string $inheri
 }
 
 /**
-* Process configuration options from database either system wide or user specific, setting the global variable.
-* Three modes are possible: 1. User ID is null to get system preferences.
-*                           2. User ID and user group ID are supplied. User group preferences are overridden by user preferences.
-*                           3. User ID is 0 and user group ID supplied. Only user group preferences are retrieved.
+* Process configuration options from database either system wide, user group or user specific, setting the global variable.
+* Three modes are possible: array() - Supply an empty array to load system config values.
+*                           array('user' => 1) - Supply 'user' with the integer user reference to load user config values.
+*                           array('usergroup' => 2) - Supply 'user' with the integer user reference to load user group config values.
+*                           Note: Supplying both 'user' and 'usergroup' is invalid.
+* In some scenarios, calling this function twice will be required e.g. load user group config then override with user config.
 * Note: calling this function will not revert user preferences applied previously e.g. during initialisation as a different user.
 * If the current user's preferences shouldn't be shown, consider using $system_wide_config_options to reapply selected system values.
 *
-* @param  int   $user_id        User ID when getting user preferences. NULL when getting system preferences.
-* @param  int   $usergroup_id   User group ID used when getting user preferences.
+* @param  array   $config_type   Specify the type of config to be loaded. See details above.
 *
-* @return void
 */
-function process_config_options(?int $user_id = null, ?int $usergroup_id = null)
+function process_config_options(array $config_type): void
 {
     global $user_preferences;
     $config_options = array();
 
-    # Processing for user group preferences.
-    if (!is_null($user_id) && get_config_options(array('usergroup' => $usergroup_id), $config_options)) {
-        foreach ($config_options as $config_option) {
-            $param_value = $config_option['value'];
-
-            // Prepare the value since everything is stored as a string
-            if (is_numeric($param_value) && '' !== $param_value) {
-                $param_value = (int) $param_value;
-            }
-
-            $GLOBALS[$config_option['parameter']] = $param_value;
-        }
-    }
-
     // If the user doesn't have the ability to set his/her own preferences, then don't load it either
-    if (!is_null($user_id) && !$user_preferences) {
+    if (isset($config_type['user']) && !$user_preferences) {
         return;
     }
 
-    if ($user_id === 0) {
-        # Special case to only load user group preferences.
-        return;
-    }
-
-    # Processing for user / system preferences.
-    if (is_null($user_id)) {
-        $system_or_user = array(); # System preference required.
-    } else {
-        $system_or_user = array('user' => $user_id);
-    }
-    if (get_config_options($system_or_user, $config_options)) {
+    if (get_config_options($config_type, $config_options)) {
         foreach ($config_options as $config_option) {
             $param_value = $config_option['value'];
 

@@ -299,7 +299,7 @@ for ($n = count($active_plugins) - 1; $n >= 0; $n--) {
 }
 
 // Load system wide config options from database and then store them to distinguish between the system wide and user preference
-process_config_options();
+process_config_options(array());
 $system_wide_config_options = get_defined_vars();
 
 # Include the appropriate language file

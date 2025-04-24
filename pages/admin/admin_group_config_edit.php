@@ -259,14 +259,15 @@ include "../../include/header.php";
     config_remove_user_preferences($page_def);
 
     // Get user group config after page loads, header.php etc.
-    process_config_options(0, $ref);
+    process_config_options(array('usergroup' => $ref));
 
     config_generate_html($page_def);
     config_generate_AutoSaveConfigOption_function(generateURL($baseurl . "/pages/admin/admin_group_config_edit.php", $url_params));
 
     // Put back system / user preferences to avoid applying user group config for admin
-    process_config_options();
-    process_config_options($userref, $usergroup);
+    process_config_options(array());
+    process_config_options(array('usergroup' => $usergroup));
+    process_config_options(array('user' => $userref));
     ?>
     </div>
 </div>
