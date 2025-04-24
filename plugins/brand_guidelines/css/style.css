@@ -1,6 +1,7 @@
 .guidelines-container {
     display: grid;
     grid-template-columns: 20% 1fr;
+    min-height: 300px;
 }
 .guidelines-sidebar {
     margin: 20px 20px 0 20px;
