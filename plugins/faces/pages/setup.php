@@ -2,19 +2,22 @@
 
 // Do the include and authorization checking ritual
 include '../../../include/boot.php';
-include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
+include '../../../include/authenticate.php';
+if (!checkperm('a')) {
+    exit($lang['error-permissiondenied']);
+}
 
-$plugin_name="faces";
+$plugin_name = "faces";
 $page_heading = $lang['faces-configuration'];
 $page_intro = "";
 
-$page_def[] = config_add_text_input("faces_service_endpoint",$lang["faces-service-endpoint"]);
+$page_def[] = config_add_text_input("faces_service_endpoint", $lang["faces-service-endpoint"]);
 
 // Build configuration variable descriptions
-$page_def[] = config_add_percent_range("faces_match_threshold",$lang["faces-match-threshold"]);
-$page_def[] = config_add_percent_range("faces_tag_threshold",$lang["faces-tag-threshold"]);
+$page_def[] = config_add_percent_range("faces_match_threshold", $lang["faces-match-threshold"]);
+$page_def[] = config_add_percent_range("faces_tag_threshold", $lang["faces-tag-threshold"]);
 
-$page_def[]= config_add_single_ftype_select("faces_tag_field", $lang["faces-tag-field"],300,false,$FIXED_LIST_FIELD_TYPES); 
+$page_def[] = config_add_single_ftype_select("faces_tag_field", $lang["faces-tag-field"], 300, false, $FIXED_LIST_FIELD_TYPES);
 
 
 // Do the page generation ritual

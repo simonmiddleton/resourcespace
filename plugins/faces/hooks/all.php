@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Hook that enables special search syntax to find resources with visually similar faces to a given resource.
  *
@@ -19,21 +20,18 @@
  * @global float  $faces_match_threshold   Similarity threshold for face matches (default 0.3).
  * @global string $mysql_db                Name of the current MySQL database (for namespacing service queries).
  */
-function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
-    {
+function HookFacesAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
+{
     global $faces_service_endpoint, $faces_match_threshold;
 
-    if(substr($search, 0, 5) == '!face') 
-        {
-        $function="find_similar_faces";
-        $face=substr($search,5);
-        }
-    else
-        {
+    if (substr($search, 0, 5) == '!face') {
+        $function = "find_similar_faces";
+        $face = substr($search, 5);
+    } else {
         return false;
-        }
+    }
 
-    $faces_service_call = $faces_service_endpoint. "/" . $function;
+    $faces_service_call = $faces_service_endpoint . "/" . $function;
     global $mysql_db;
 
     // Send search to Python service
@@ -58,7 +56,7 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
         'Connection: keep-alive',
         'Expect:'
     ]);
-    
+
 
     $start_time = microtime(true);
     $response = curl_exec($ch);
@@ -67,32 +65,31 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     $query_time = round(($end_time - $start_time) * 1000);
     curl_close($ch);
 
-    if ($http_code !== 200 || empty($response))
-    {
+    if ($http_code !== 200 || empty($response)) {
         echo "Error from faces_service (HTTP $http_code)\n";
         exit(1);
     }
 
     $results = json_decode($response, true);
-    if (!is_array($results))
-    {
+    if (!is_array($results)) {
         echo "Invalid response from faces_service.\n";
         exit(1);
     }
-    
-    //print_r($results);
-    $ids = array_column($results, 'resource');
-    
-    // No results - we must still run a query but one that returns no results.
-    if (count($ids)==0) {$ids=[-1];}
 
-    $in_sql=ps_param_insert(count($ids));
-    $params=ps_param_fill($ids,"i");
+    $ids = array_column($results, 'resource');
+
+    // No results - we must still run a query but one that returns no results.
+    if (count($ids) == 0) {
+        $ids = [-1];
+    }
+
+    $in_sql = ps_param_insert(count($ids));
+    $params = ps_param_fill($ids, "i");
     $sql = new PreparedStatementQuery();
     $sql->sql = "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.ref in ($in_sql) AND " . $sql_filter->sql . " ORDER BY FIELD(r.ref, $in_sql)";
     $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $params, $sql_filter->parameters, $params);
     return $sql;
-    }
+}
 
 /**
  * API function to update the named person tag for a specific face using the provided node value.
@@ -108,9 +105,9 @@ function HookFacesAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
  * @uses ps_query()
  * @uses debug()
  */
-function api_faces_tag($face,$node)
-    {
+function api_faces_tag($face, $node)
+{
     debug("API: faces_tag(" . $face . ", " . $node);
-    ps_query("update resource_face set node=? where ref=?",["i",$node,"i",$face]);
+    ps_query("update resource_face set node=? where ref=?", ["i",$node,"i",$face]);
     return true;
-    }
+}

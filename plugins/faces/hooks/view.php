@@ -25,22 +25,24 @@
  * @uses generate_csrf_js_object()
  */
 function HookFacesViewCustompanels()
-    {
+{
     global $lang,$ref,$baseurl,$faces_tag_field;
 
-    $faces=ps_query("select ref,det_score,bbox,node from resource_face where resource=? order by ref",["i",$ref]);
-    if (count($faces)==0) {return false;} // No face vectors yet.
+    $faces = ps_query("select ref,det_score,bbox,node from resource_face where resource=? order by ref", ["i",$ref]);
+    if (count($faces) == 0) {
+        return false;
+    } // No face vectors yet.
 
     $face_path = get_resource_path($ref, true, "scr", false, "jpg");
-$face_url  = get_resource_path($ref, false, "scr", false, "jpg");
-if (!file_exists($face_path)) {
-    $face_path = get_resource_path($ref, true, "", false, "jpg");
-    $face_url  = get_resource_path($ref, false, "", false, "jpg");
-}
+    $face_url  = get_resource_path($ref, false, "scr", false, "jpg");
+    if (!file_exists($face_path)) {
+        $face_path = get_resource_path($ref, true, "", false, "jpg");
+        $face_url  = get_resource_path($ref, false, "", false, "jpg");
+    }
 
 // Get dimensions of the image
-list($image_width, $image_height) = getimagesize($face_path);
-?>
+    list($image_width, $image_height) = getimagesize($face_path);
+    ?>
 <div class="RecordBox">
     <div class="RecordPanel">
         <div class="Title"><?php echo escape($lang["faces-detected-faces"]); ?></div>
@@ -54,9 +56,11 @@ list($image_width, $image_height) = getimagesize($face_path);
                 <th><?php echo escape($lang["actions"]) ?></th>
             </tr>
 
-            <?php foreach ($faces as $face):
+            <?php foreach ($faces as $face) :
                 $bbox = json_decode($face["bbox"], true);
-                if (!is_array($bbox) || count($bbox) !== 4) { continue; }
+                if (!is_array($bbox) || count($bbox) !== 4) {
+                    continue;
+                }
 
                 list($x1, $y1, $x2, $y2) = $bbox;
 
@@ -93,7 +97,7 @@ list($image_width, $image_height) = getimagesize($face_path);
                     $bg_size_x,
                     $bg_size_y
                 );
-            ?>
+                ?>
                 <tr>
                     <td>
                         <div style="<?php echo $style ?>"></div>
@@ -102,21 +106,22 @@ list($image_width, $image_height) = getimagesize($face_path);
                     <td>
                         <select onChange="FacesUpdateTag(<?php echo escape($face["ref"]) ?>,this.value);">
                         <option value="0"><?php echo escape($lang["select"]) ?></option>
-                        <?php 
-                        $nodes = get_resource_nodes($ref,$faces_tag_field,true);
-                        foreach ($nodes as $node)
-                            {
+                        <?php
+                        $nodes = get_resource_nodes($ref, $faces_tag_field, true);
+                        foreach ($nodes as $node) {
                             ?>
                             <option value="<?php echo escape($node["ref"]) ?>"
-                            <?php if ($face["node"]==$node["ref"]) { ?>selected <?php } ?>
+                            <?php if ($face["node"] == $node["ref"]) {
+                                ?>selected <?php
+                            } ?>
                             ><?php echo escape($node["translated_name"]) ?></option>
                             <?php
-                            }
+                        }
                         ?>
                         </select>
                     </td>
                     <td>
-                    <?php $search_url=generateURL("{$baseurl}/pages/search.php", array("search" => "!face" . $face["ref"])); ?>
+                    <?php $search_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!face" . $face["ref"])); ?>
                     <a href="<?php echo $search_url ?>" onClick="return CentralSpaceLoad(this,true);">
                     <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo escape($lang["faces-find-matching"]); ?>
                     </a>
@@ -130,12 +135,17 @@ list($image_width, $image_height) = getimagesize($face_path);
     </div>
 
     <script>
+    /**
+     * Assigns a metadata node (tag) to a detected face using the ResourceSpace API in native mode.
+     *
+     * @param {number} face - The ID of the face to tag.
+     * @param {number} node - The node ID to assign to the face.
+     */
     function FacesUpdateTag(face,node)
         {
-        //alert(face + ", " + node);
         api("faces_tag",{'face': face, 'node': node},null,<?php echo generate_csrf_js_object('faces_tag'); ?>);
         }
     </script>
     <?php
     return false; # Allow further custom panels
-    }
+}
