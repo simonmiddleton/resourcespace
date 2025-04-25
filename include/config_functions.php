@@ -221,7 +221,7 @@ function set_usergroup_config_option(int $usergroup_id, string $param_name, ?str
  * @param  array      $config_type  The type of config to delete supplied as an array. The following are possible:
 *                                   array() - Supply an empty array to delete a system config value.
 *                                   array('user' => 1) - Supply 'user' with the integer user reference to delete a user config value.
-*                                   array('usergroup' => 2) - Supply 'user' with the integer user reference to delete a user group config value.
+*                                   array('usergroup' => 2) - Supply 'usergroup' with the integer user reference to delete a user group config value.
  * @param  string     $param_name   Parameter name
  *
  * @return bool       True if preference was deleted else false.
@@ -398,7 +398,7 @@ function get_config_option_users($option, $value)
 * @param  array    $config_type       The type of config to retrieve supplied as an array. The following combinations are possible:
 *                                     array() - Supply an empty array to return a system config value.
 *                                     array('user' => 1) - Supply 'user' with the integer user reference to return user config values.
-*                                     array('usergroup' => 2) - Supply 'user' with the integer user reference to return user group config values.
+*                                     array('usergroup' => 2) - Supply 'usergroup' with the integer user reference to return user group config values.
 *                                     Note: Supplying both 'user' and 'usergroup' is invalid.
 * @param  array    $returned_options  If a value does exist it will be returned through
 *                                     this parameter which is passed by reference
@@ -485,7 +485,7 @@ function get_usergroup_parent_for_inherit_flag(int $usergroup_id, string $inheri
 * Process configuration options from database either system wide, user group or user specific, setting the global variable.
 * Three modes are possible: array() - Supply an empty array to load system config values.
 *                           array('user' => 1) - Supply 'user' with the integer user reference to load user config values.
-*                           array('usergroup' => 2) - Supply 'user' with the integer user reference to load user group config values.
+*                           array('usergroup' => 2) - Supply 'usergroup' with the integer user reference to load user group config values.
 *                           Note: Supplying both 'user' and 'usergroup' is invalid.
 * In some scenarios, calling this function twice will be required e.g. load user group config then override with user config.
 * Note: calling this function will not revert user preferences applied previously e.g. during initialisation as a different user.
