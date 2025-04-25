@@ -1806,21 +1806,6 @@ function get_node_id($value, $resource_type_field)
 }
 
 /**
-* Comparator function for uasort to allow sorting of node array by name
-*
-* @param array   $n1 Node one to compare
-* @param string  $n2 Node two to compare
-*
-* @return        0 means $n1 equals $n2
-*               <0 means $n1 less than $n2
-*               >0 means $n1 greater than $n2
-*/
-function node_name_comparator($n1, $n2)
-{
-    return strcmp($n1["name"], $n2["name"]);
-}
-
-/**
 * Comparator function for uasort to allow sorting of node array by translated name
 *
 * @param array   $n1 Node one to compare
