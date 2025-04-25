@@ -9,7 +9,7 @@ global $tinymce_plugins, $tinymce_toolbar;
     <textarea
         class="stdwidth"
         name="<?php echo $name?>"
-        id="<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . $name?>"
+        id="<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . escape($name); ?>"
         <?php echo $help_js; ?>
     ><?php if ($value == strip_tags($value)) {
         $value = nl2br($value);
@@ -18,9 +18,9 @@ global $tinymce_plugins, $tinymce_toolbar;
 </div>
 
 <script type="text/javascript">
-    tinymce.remove('textarea#<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . $name?>');
+    tinymce.remove('textarea#<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . escape($name); ?>');
     tinymce.init({
-        selector: 'textarea#<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . $name?>',
+        selector: 'textarea#<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . escape($name); ?>',
         plugins: '<?php echo escape(check_tinymce_plugins($tinymce_plugins)); ?>',
         menubar: '',
         toolbar: "<?php echo escape(check_tinymce_toolbar($tinymce_toolbar)); ?>",

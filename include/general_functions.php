@@ -3622,7 +3622,8 @@ function hook($name, $pagename = "", $params = array(), $last_hook_value_wins = 
  * @param  DOMNode $node
  * @return void
  */
-function html_find_and_replace_node(string $findstring, string $replacestring, DOMNode $node): void {
+function html_find_and_replace_node(string $findstring, string $replacestring, DOMNode $node): void 
+{
     
     if($node->nodeName == '#text') {
         $node->textContent = str_replace($findstring, $replacestring, $node->textContent);
@@ -3643,7 +3644,8 @@ function html_find_and_replace_node(string $findstring, string $replacestring, D
  * @param  string $html
  * @return string
  */
-function html_find_and_replace($findstring, $replacestring, $html): string {
+function html_find_and_replace(string $findstring, string $replacestring, string $html): string 
+{
 
     if (!is_string($html) || 0 === strlen($html)) {
         return $html;
@@ -5566,7 +5568,8 @@ function hslToRgb($h, $s, $l)
  * @param string $plugins A comma-separated list of plugins for TinyMCE
  * @return string The list of plugins with any invalid options removed
  */
-function check_tinymce_plugins(string $plugins = ""): string {
+function check_tinymce_plugins(string $plugins = ""): string 
+{
 
     // Ensure autoresize plugin is included so min_height can be used
     if (mb_strpos($plugins, 'autoresize') === false) {
@@ -5587,7 +5590,8 @@ function check_tinymce_plugins(string $plugins = ""): string {
  * @param string $toolbar The requested configuration for the toolbar
  * @return string The configured toolbar with any invalid characters removed
  */
-function check_tinymce_toolbar(string $toolbar = ""): string {
+function check_tinymce_toolbar(string $toolbar = ""): string 
+{
     //Remove anything non-alphanumeric, pipes or spaces
     return preg_replace('/[^a-zA-Z0-9|\s]/', '', $toolbar);
 }
