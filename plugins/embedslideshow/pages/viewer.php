@@ -193,7 +193,7 @@ ob_start();
                 <?php if ($width > 100) { ?>
                     <li class="embedslideshow_end"
                         style="cursor: pointer;"
-                        onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_pages.length-1,false,false);return false;">
+                        onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo (int) $maxpages ?>,false,false);return false;">
                         <i class="fas fa-step-forward"></i>
                     </li>
                 <?php } ?>
