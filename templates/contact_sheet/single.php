@@ -24,7 +24,16 @@ global $contact_sheet_field_name, $contact_sheet_field_name_bold;
 foreach($bind_placeholders['resources'] as $resource_ref => $resource)
     {
     ?>
-<page backtop="25mm" backbottom="25mm">
+<page
+    <?php
+    if (isset($bind_placeholders['contactsheet_header'])) {
+        echo ' backtop="25mm"';
+    }
+    if (isset($bind_placeholders['contact_sheet_footer'])) {
+        echo ' backbottom="25mm"';
+    }
+    ?>
+    >
 <?php
 if(isset($bind_placeholders['contactsheet_header']))
     {
