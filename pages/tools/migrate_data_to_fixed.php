@@ -44,22 +44,22 @@ if ('cli' != PHP_SAPI) {
     
         Some fixed list field types including dynamic keywords list, category tree and checkbox list allow multiple values to be saved. Each is recorded by applying a node value to
         the intended resource. When switching to text type fields such as text single or multi-line, only one value is allowed. This script will process the nodes on each resource
-        for the resource type field who's type has been changed. It'll convert the existing singlenode into multiple nodes by exploding existing data on a defined separator.
+        for the resource type field whose type has been changed. It'll convert the existing single node into multiple nodes by exploding existing data on a defined separator.
     
         Before running this script, the field type should have already been changed to a fixed list type.
     
     OPTIONS SUMMARY
     
         --help         Display this help text and exit.
-        --field        Required parameter to specify a resource type field (metadata field) who's type has been changed from a fixed list to text type.
+        --field        Required parameter to specify a resource type field (metadata field) whose type has been changed from a fixed list to text type.
         --separator    Optional parameter to change the separator used to concatenate the data. The default if not set will be ", " e.g. "Value1, Value2".
         --maxrows      Optional parameter to limit the number of nodes processed.
         --dryrun       Optional parameter to run the script without editing existing data.
-        --deletedata   Optional parameter to delete depricated nodes once they have been processed.
+        --deletedata   Optional parameter to delete deprecated nodes once they have been processed.
     
     EXAMPLES
         php migrate_fixed_to_text.php --field 96 --separator=" - "
-                                        ^ The resource type field who's type was changed from text to fixed list.
+                                        ^ The resource type field whose type was changed from text to fixed list.
                                                    ^ Optional change of default separator to " - ".
     HELP;
 
