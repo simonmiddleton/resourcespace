@@ -13,7 +13,9 @@ if(isset($bind_placeholders['titlefontsize']))
     #pageTitle { font-size: <?php echo (int) $bind_placeholders['titlefontsize']; ?>px; }
     <?php
     }
-    ?>
+
+$add_header = isset($bind_placeholders['contactsheet_header']) && ($bind_placeholders['contact_sheet_include_applicationname'] || isset($bind_placeholders['add_contactsheet_logo']));
+?>
 
 #logo { height: 50px; max-width: 100%; }
 .centeredText { text-align: center; }
@@ -25,7 +27,7 @@ if(isset($bind_placeholders['titlefontsize']))
 </style>
 <page
     <?php
-    if (isset($bind_placeholders['contactsheet_header'])) {
+    if ($add_header) {
         echo ' backtop="25mm"';
     }
     if (isset($bind_placeholders['contact_sheet_footer'])) {
@@ -34,7 +36,7 @@ if(isset($bind_placeholders['titlefontsize']))
     ?>
     >
 <?php
-if(isset($bind_placeholders['contactsheet_header']))
+if($add_header)
     {
     ?>
     <page_header>
