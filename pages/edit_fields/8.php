@@ -8,7 +8,7 @@ global $tinymce_plugins, $tinymce_toolbar;
     <br />
     <textarea
         class="stdwidth"
-        name="<?php echo $name?>"
+        name="<?php echo escape($name); ?>"
         id="<?php echo ((isset($modal) && $modal) ? "Modal_" : "CentralSpace_") . escape($name); ?>"
         <?php echo $help_js; ?>
     ><?php if ($value == strip_tags($value)) {
