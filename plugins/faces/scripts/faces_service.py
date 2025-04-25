@@ -185,4 +185,4 @@ async def find_similar_faces(request: FaceSearchRequest):
     return matches
 
 if __name__ == "__main__":
-    uvicorn.run("faces_service:app", host="0.0.0.0", port=args.port)
+    uvicorn.run("faces_service:app", host="127.0.0.1", port=args.port)
