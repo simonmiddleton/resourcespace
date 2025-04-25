@@ -920,16 +920,16 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                                             style="position:relative;" 
                                             onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
                                             href="<?php echo $thumb_url ?>"
-                                        >
+                                    >
                                             <?php
                                             $colimg_preview_size = $retina_mode ? 'thm' : 'col';
                                             $colimgpath = get_resource_preview($result[$n], [$colimg_preview_size]);
-                                            if ($colimgpath !== false) {
+                                            if ($colimgpath !== false && is_safe_url($colimgpath['url'])) {
                                             ?>
                                             <img
                                                 class="CollectionPanelThumb"
                                                 border=0
-                                                src="<?php echo escape($colimgpath['url']); ?>"
+                                                src="<?php echo $colimgpath['url']; ?>"
                                                 title="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
                                                 alt="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
                                                 <?php if ($retina_mode) { ?>
