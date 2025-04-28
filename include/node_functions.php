@@ -428,10 +428,12 @@ function is_parent_node($ref, bool $active_only = false): bool
     }
 
     $query = $active_only
-        ? 'SELECT exists (SELECT ref from node WHERE parent = ? AND active = 1) AS `value`'
-        : 'SELECT exists (SELECT ref from node WHERE parent = ?) AS `value`';
+        ? 'SELECT DISTINCT parent `value` from node WHERE active = 1'
+        : 'SELECT DISTINCT parent `value` from node';
 
-    return ps_value($query, ['i', $ref], 0) > 0;
+    $parents = ps_array($query, [], 0, 'schema');
+
+    return is_array($parents) && in_array($ref, $parents); 
 }
 
 /**
