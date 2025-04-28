@@ -7,3 +7,4 @@ $clip_results_limit_search = 120;
 $clip_results_limit_similar = 120;
 $clip_service_url = "http://127.0.0.1:8000";
 $clip_text_search_fields = [8];
+$clip_vector_on_upload = true;
