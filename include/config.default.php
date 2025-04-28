@@ -1475,7 +1475,7 @@ $top_nav_upload_type = "batch"; // The upload type. Options are batch, ftp, loca
 // $upload_max_file_size = "50mb";
 
 // You can set the following line to ''  to disable chunking.
-$upload_chunk_size = '5mb';
+$upload_chunk_size = '50mb';
 
 // This is the maximum number of concurrent file uploads allowed. Set to 1 to force single thread.
 $upload_concurrent_limit = 5;
