@@ -20,6 +20,10 @@ $page_def[] = config_add_percent_range("faces_tag_threshold", $lang["faces-tag-t
 $page_def[] = config_add_single_ftype_select("faces_tag_field", $lang["faces-tag-field"], 300, false, $FIXED_LIST_FIELD_TYPES);
 
 
+$page_def[] = config_add_boolean_select("faces_detect_on_upload", $lang["faces-detect-on-upload"]);
+$page_def[] = config_add_boolean_select("faces_tag_on_upload", $lang["faces-tag-on-upload"]);
+
+
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

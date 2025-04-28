@@ -10,3 +10,7 @@ $lang["faces-match-threshold"] = "Face match threshold: what level of similarity
 $lang["faces-tag-threshold"] = "Face tag threshold: what level of similarity is considered a match when automatically tagging faces? Suggested 50%.";
 $lang["faces-tag-field"] = "The field containing the names of the tagged individuals. This should be a Dynamic Dropdown field.";
 $lang["faces-name"] = "Name";
+$lang["faces-detect-on-upload"] = "Scan for faces on upload?";
+$lang["faces-tag-on-upload"] = "Tag recognised faces on upload?";
+$lang["faces-detecting"] = "Scanning for faces in resource:";
+$lang["faces-tagging"] = "Tagging detected faces in resource:";
