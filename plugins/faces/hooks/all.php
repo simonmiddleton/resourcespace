@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__FILE__, 2) . '/include/faces_functions.php';
+
 /**
  * Hook that enables special search syntax to find resources with visually similar faces to a given resource.
  *
@@ -23,7 +25,7 @@
 function HookFacesAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
 {
     global $faces_service_endpoint, $faces_match_threshold;
-    
+
     if (substr($search, 0, 5) == '!face') {
         $function = "find_similar_faces";
         $face = substr($search, 5);
@@ -91,23 +93,33 @@ function HookFacesAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
     return $sql;
 }
 
+
 /**
- * API function to update the named person tag for a specific face using the provided node value.
+ * Runs face detection and tagging automatically after preview creation, if configured.
  *
- * Typically triggered when selecting a name from a dropdown, this function assigns a metadata node
- * (e.g. representing a person) to a face record in the `resource_face` table by updating the `node` field.
+ * This function is triggered after a resource's preview image has been generated.
+ * If configured, it will perform face detection and/or tagging on the main resource file
+ * (ignoring alternative files). Progress messages are displayed during processing.
  *
- * @param int $face  The unique reference ID of the face to update (from `resource_face.ref`).
- * @param int $node  The node ID to assign to the face (typically corresponds to a controlled vocabulary entry).
+ * @param int $resource    The resource reference ID that has just had previews created.
+ * @param int $alternative The alternative file ID, or -1 if processing the main resource.
  *
- * @return bool  Returns true on successful update.
- *
- * @uses ps_query()
- * @uses debug()
+ * @return void
  */
-function api_faces_tag($face, $node)
+function HookFacesAllAfterpreviewcreation($resource, $alternative)
 {
-    debug("API: faces_tag(" . $face . ", " . $node);
-    ps_query("update resource_face set node=? where ref=?", ["i",$node,"i",$face]);
-    return true;
+    global $faces_detect_on_upload,$faces_tag_on_upload,$lang;
+
+    if ($alternative === -1 && $faces_detect_on_upload) {
+        // Nothing to do for alternatives; face processing is for the main file only.
+        // Detect images on upload if configured
+        set_processing_message($lang["faces-detecting"] . " " . $resource);
+        faces_detect($resource);
+    }
+    if ($alternative === -1 && $faces_tag_on_upload) {
+        // Nothing to do for alternatives; face processing is for the main file only.
+        // Tag images on upload if configured
+        set_processing_message($lang["faces-tagging"] . " " . $resource);
+        faces_tag($resource);
+    }
 }
