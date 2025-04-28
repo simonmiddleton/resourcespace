@@ -1,4 +1,5 @@
 <?php
+include_once dirname(__FILE__, 2) . '/include/clip_functions.php';
 
 /*
 function HookClipAllAftersearchbox()
@@ -150,4 +151,28 @@ function HookClipAllSearchbarafterbuttons()
     ?>
     <p><i aria-hidden="true" class="fa fa-fw fa-brain"></i>&nbsp;<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl ?>/plugins/clip/pages/search.php"><?php echo escape($lang["clip-ai-smart-search"]) ?></a></p>
     <?php
+}
+
+/**
+ * Runs vector generation automatically after preview creation, if configured.
+ *
+ * This function is triggered after a resource's preview image has been generated.
+ * If configured, it will perform CLIP generation on the main resource file
+ * (ignoring alternative files). Progress messages are displayed during processing.
+ *
+ * @param int $resource    The resource reference ID that has just had previews created.
+ * @param int $alternative The alternative file ID, or -1 if processing the main resource.
+ *
+ * @return void
+ */
+function HookClipAllAfterpreviewcreation($resource, $alternative)
+{
+    global $clip_vector_on_upload,$lang;
+
+    if ($alternative === -1 && $clip_vector_on_upload) {
+        // Nothing to do for alternatives; face processing is for the main file only.
+        // Detect images on upload if configured
+        set_processing_message($lang["clip-generating"] . " " . $resource);
+        clip_generate_vector($resource);
+    }
 }

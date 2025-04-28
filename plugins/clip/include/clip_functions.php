@@ -34,13 +34,13 @@ function get_vector(bool $is_text, string $input, int $ref): array|false
     curl_close($ch);
 
     if ($http_code !== 200 || empty($response)) {
-        echo "❌ Resource $ref: error from CLIP service (HTTP $http_code)\n";
+        logScript("❌ Resource $ref: error from CLIP service (HTTP $http_code)");
         return false;
     }
 
     $vector = json_decode($response, true);
     if (!is_array($vector) || count($vector) !== 512) {
-        echo "❌ Resource $ref: invalid vector returned\n";
+        logScript("❌ Resource $ref: invalid vector returned");
         return false;
     }
 
@@ -78,4 +78,53 @@ function vector_visualise(array $vector): string
     }
 
     return $out;
+}
+
+/**
+ * Generates and stores a CLIP vector for a given resource.
+ *
+ * This function:
+ * - Loads the specified resource data.
+ * - Attempts to locate a resized (pre) version of the resource image.
+ * - Sends the image to the CLIP service to obtain a 512-float vector.
+ * - Stores the resulting vector as a binary blob in the database.
+ *
+ * @param int $ref The resource ID for which to generate the vector.
+ *
+ * @return array|false Returns the ID of the stored vector row on success,
+ *                     or false on failure (e.g., file missing or vector generation error).
+ */
+function clip_generate_vector($ref)
+{
+        $resource = get_resource_data($ref);
+        $ext = "jpg";
+        $size = "pre";
+        $checksum = $resource['file_checksum'];
+
+        $image_path = get_resource_path($ref, true, $size, false, $ext);
+
+    if (!file_exists($image_path)) {
+        logScript("⚠ Resource $ref: file not found at $image_path");
+        return false;
+    }
+
+        // Calculate vectors - image
+        $vector = get_vector(false, $image_path, $ref);
+    if ($vector === false) {
+        return false;
+    }
+
+        // Store vector in DB
+        $vector = array_map('floatval', $vector); // ensure float values
+        $blob = pack('f*', ...$vector);
+
+        ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
+        ps_query(
+            "INSERT INTO resource_clip_vector (resource, vector_blob, checksum, is_text) VALUES (?, ?, ?, false)",
+            ['i', $ref, 's', $blob, 's', $checksum]
+        ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
+        $return = sql_insert_id();
+
+        logScript("✓ Vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
+        return $return;
 }

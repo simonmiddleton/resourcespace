@@ -18,3 +18,5 @@ $lang["clip_results_limit_similar"] = "Number of similar resources to display";
 $lang["clip_service_url"] = "CLIP service URL";
 
 $lang["clip_text_search_fields"] = "Metadata fields to combine for the text vector. Select only those fields that will help to structure a short meaningful description. Excessive fields will dilute meaning. Suggestion: title only. Do not include fields containing codes.";
+$lang["clip-vector-on-upload"] = "Generate CLIP vector on file upload";
+$lang["clip-generating"] = "Generating CLIP vectors for resource: ";
