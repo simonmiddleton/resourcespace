@@ -307,11 +307,9 @@ crying
 crystal
 cup
 cycle
-daisy
 dance
 dancer
 dancing
-debate
 deck
 defence
 defendant
@@ -819,7 +817,6 @@ pearl
 pen
 penalty
 people
-pepper
 percent
 perfect
 performance
@@ -1402,11 +1399,8 @@ wasting
 watch
 watching
 water
-waters
-watson
 wave
 way
-wayne
 ways
 weakness
 wealth

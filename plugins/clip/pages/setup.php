@@ -29,6 +29,14 @@ $page_def[] = config_add_text_input("clip_results_limit_similar", $lang["clip_re
 $page_def[] = config_add_section_header($lang["clip-duplicate-images"]);
 $page_def[] = config_add_percent_range("clip_duplicate_cutoff", $lang["clip_duplicate_cutoff"]);
 
+$page_def[] = config_add_section_header($lang["clip-automatic-tagging"]);
+
+$page_def[] = config_add_single_ftype_select("clip_title_field", $lang["clip-title-field"], 300, false, $TEXT_FIELD_TYPES);
+$page_def[] = config_add_text_input("clip_title_url", $lang["clip-title-url"], false, 600);
+
+$page_def[] = config_add_single_ftype_select("clip_keyword_field", $lang["clip-keyword-field"], 300, false, $FIXED_LIST_FIELD_TYPES);
+$page_def[] = config_add_text_input("clip_keyword_url", $lang["clip-keyword-url"], false, 600);
+$page_def[] = config_add_text_input("clip_keyword_count", $lang["clip-keyword-count"]);
 
 
 // Do the page generation ritual

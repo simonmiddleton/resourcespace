@@ -128,3 +128,74 @@ function clip_generate_vector($ref)
         logScript("✓ Vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
         return $return;
 }
+
+
+/**
+ * Auto-tags and titles a resource using CLIP vector search.
+ *
+ * This function sends the resource ID to the external CLIP-based Python service
+ * to retrieve suggested keywords and a title based on the resource's content.
+ * 
+ * It populates:
+ * - A keyword metadata field (multiple nodes created)
+ * - A title metadata field (single text string)
+ *
+ * Global configuration variables (all available on the plugin's setup page)
+ * - $clip_service_url: Base URL for the CLIP service
+ * - $mysql_db: Current MySQL database name
+ * - $clip_keyword_field: Field ID for keywords (node-based)
+ * - $clip_keyword_url: URL of tag database for keywords
+ * - $clip_keyword_count: Number of keyword suggestions to fetch
+ * - $clip_title_field: Field ID for title (text field)
+ * - $clip_title_url: URL of tag database for titles
+ *
+ * @param int $resource Resource ID to tag and title.
+ * @return bool Always returns true after processing.
+ */
+function clip_tag(int $resource)
+{
+    global $clip_service_url, $mysql_db, $clip_keyword_field, $clip_keyword_url, $clip_keyword_count, $clip_title_field, $clip_title_url;
+    $clip_service_call = $clip_service_url . "/tag";
+
+    if (is_numeric($clip_keyword_field) && $clip_keyword_field > 0) {
+        // Keywords
+
+        // Send search to Python service
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $clip_service_call);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Connection: keep-alive',
+            'Expect:' // Prevents "100-continue" delay
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+                'db' => $mysql_db,
+                'resource' => $resource,
+                'url' => $clip_keyword_url,
+                'top_k' => $clip_keyword_count,
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        foreach (json_decode($response) as $result) {
+            # Create new or fetch existing node
+            $nodes[] = set_node(null, $clip_keyword_field, ucfirst($result->tag), null, 9999);
+        }
+        add_resource_nodes($resource, $nodes);
+    }
+
+    if (is_numeric($clip_title_field) && $clip_title_field > 0) {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'db' => $mysql_db,
+            'resource' => $resource,
+            'url' => $clip_title_url,
+            'top_k' => 1,
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $title = urldecode(json_decode($response)[0]->tag);
+        update_field($resource, $clip_title_field, $title);
+    }
+
+    return true;
+}
