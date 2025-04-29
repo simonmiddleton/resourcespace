@@ -431,7 +431,7 @@ function is_parent_node($ref, bool $active_only = false): bool
         ? 'SELECT DISTINCT parent `value` from node WHERE active = 1'
         : 'SELECT DISTINCT parent `value` from node';
 
-    $parents = ps_array($query, [], 0, 'schema');
+    $parents = ps_array($query, [], 'schema');
 
     return is_array($parents) && in_array($ref, $parents); 
 }
