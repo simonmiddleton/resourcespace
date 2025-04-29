@@ -13,7 +13,7 @@ import faiss
 import threading
 import torch
 import clip
-
+import requests
 
 # Command-line arguments
 parser = argparse.ArgumentParser(description="CLIP search service for ResourceSpace")
@@ -46,6 +46,8 @@ print("✅ Model loaded.")
 cached_vectors = {}       # { db_name: (vectors_np, resource_ids) }
 loaded_max_ref = {}       # { db_name: max_ref }
 faiss_indexes = {}        # { db_name: faiss.IndexFlatIP }
+tag_vector_cache = {}        # { url: (tag_list, tag_vectors) }
+tag_faiss_index_cache = {}   # { url: faiss.IndexFlatIP }
 
 def load_vectors_for_db(db_name, force_reload=False):
     global cached_vectors, loaded_max_ref, faiss_indexes
@@ -311,6 +313,90 @@ async def find_duplicates(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Duplicate detection error: {e}")
+
+
+
+
+@app.post("/tag")
+async def tag_search(
+    db: str = Form(...),
+    resource: int = Form(...),
+    url: str = Form(...),
+    top_k: int = Form(5)
+):
+    # Load and cache tag vectors
+    if url not in tag_vector_cache:
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            lines = response.text.strip().split('\n')
+            tags = []
+            vectors = []
+            for line in lines:
+                parts = line.strip().split()
+                if len(parts) != 513:
+                    continue  # Skip malformed lines
+                tag = parts[0]
+                vector = np.array([float(x) for x in parts[1:]], dtype=np.float32)
+                norm = np.linalg.norm(vector)
+                if norm == 0 or np.isnan(norm):
+                    continue  # Skip invalid vectors
+                vector /= norm
+                tags.append(tag)
+                vectors.append(vector)
+            if not vectors:
+                raise ValueError("No valid tag vectors found.")
+            tag_vectors = np.stack(vectors)
+            tag_vector_cache[url] = (tags, tag_vectors)
+            index = faiss.IndexFlatIP(512)
+            index.add(tag_vectors)
+            tag_faiss_index_cache[url] = index
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to load tag vectors: {e}")
+
+    tags, tag_vectors = tag_vector_cache[url]
+    index = tag_faiss_index_cache[url]
+
+    # Retrieve resource vector from the database
+    try:
+        conn = mysql.connector.connect(**DB_CONFIG, database=db)
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT vector_blob FROM resource_clip_vector WHERE resource = %s AND is_text = 0",
+            (resource,)
+        )
+        row = cursor.fetchone()
+        conn.close()
+        if not row or not row[0] or len(row[0]) != 2048:
+            raise HTTPException(status_code=404, detail="Valid vector_blob not found for the specified resource.")
+        resource_vector = np.frombuffer(row[0], dtype=np.float32).copy()
+        if resource_vector.shape != (512,):
+            raise HTTPException(status_code=400, detail="Malformed vector shape.")
+        norm = np.linalg.norm(resource_vector)
+        if norm == 0 or np.isnan(norm):
+            raise HTTPException(status_code=400, detail="Invalid vector norm.")
+        resource_vector /= norm
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error retrieving resource vector: {e}")
+
+    # Perform similarity search
+    try:
+        D, I = index.search(resource_vector.reshape(1, -1), top_k)
+        results = []
+        for idx, score in zip(I[0], D[0]):
+            if idx < 0 or idx >= len(tags):
+                continue
+            results.append({
+                "tag": tags[idx],
+                "score": float(score)
+            })
+        return JSONResponse(content=results)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during similarity search: {e}")
+
+
+
+
 
 
 
