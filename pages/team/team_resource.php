@@ -130,6 +130,15 @@ include "../../include/header.php";
                     </a>
                 </li>
 
+                <?php if (checkperm('a')) { ?>
+                    <li>
+                        <i aria-hidden="true" class="fas fa-file-circle-question"></i>&nbsp;
+                        <a href="<?php echo $baseurl_short?>pages/search.php?search=!noningested" onClick="return CentralSpaceLoad(this,true);" title="<?php echo escape($lang["team_resource_non_ingested_search"]); ?>">
+                            <?php echo escape($lang["team_resource_non_ingested_search"]); ?>
+                        </a>
+                    </li><?php
+                } ?>
+
                 <li>
                     <i aria-hidden="true" class="fas fa-exclamation-triangle"></i>&nbsp;
                     <a href="<?php echo $baseurl_short?>pages/search.php?search=!integrityfail" onClick="return CentralSpaceLoad(this,true);" title="<?php echo escape($lang["team_resource_integrity_fail_info"]); ?>">
