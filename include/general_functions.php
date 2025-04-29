@@ -4919,11 +4919,15 @@ function get_system_status(bool $basic = false)
         'total_approved' => get_total_approved_users()
     ];
 
-    // Return current number of resources
+    // Return current number of resources including count of 
+    // non-ingested resources (staticsync)
+
+
     $return['results']['resource_count'] = [
         'status' => 'OK',
         'total' => get_total_resources(),
         'active' => get_total_resources(0),
+        'non_ingested' => get_non_ingested_resources(),        
     ];
 
     // Return bandwidth usage last 30 days
@@ -5594,4 +5598,15 @@ function check_tinymce_toolbar(string $toolbar = ""): string
 {
     //Remove anything non-alphanumeric, pipes or spaces
     return preg_replace('/[^a-zA-Z0-9|\s]/', '', $toolbar);
+}
+
+
+/**
+ * Return the number of resources in the system that are not ingested into the filestore i.e. with 'file_path' set
+ *
+ * @return int                  Number of non-ingested resources in the system
+ */
+function get_non_ingested_resources(): int
+{
+    return ps_value("SELECT COUNT(*) value FROM resource WHERE file_path IS NOT NULL", [], 0);
 }
