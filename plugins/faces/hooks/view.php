@@ -27,6 +27,8 @@
 function HookFacesViewCustompanels()
 {
     global $lang,$ref,$baseurl,$faces_tag_field;
+    $edit_access = get_edit_access($ref);
+    $nodes = get_resource_nodes($ref, $faces_tag_field, true);
 
     $faces = ps_query("select ref,det_score,bbox,node from resource_face where resource=? order by ref", ["i",$ref]);
     if (count($faces) == 0) {
@@ -104,10 +106,18 @@ function HookFacesViewCustompanels()
                     </td>
                     <!--<td><?php echo round($face["det_score"] * 100, 2) ?>%</td>-->
                     <td>
-                        <select onChange="FacesUpdateTag(<?php echo escape($face["ref"]) ?>,this.value);">
+                        <?php if (!$edit_access) {
+                            $value = "";
+                            foreach ($nodes as $node) {
+                                if ($face["node"] == $node["ref"]) {
+                                    $value = $node["translated_name"];
+                                }
+                            }
+                            echo escape($value);
+                        } else { ?>
+                        <select onChange="FacesUpdateTag(<?php echo escape($ref) ?>,<?php echo escape($face["ref"]) ?>,this.value);">
                         <option value="0"><?php echo escape($lang["select"]) ?></option>
                         <?php
-                        $nodes = get_resource_nodes($ref, $faces_tag_field, true);
                         foreach ($nodes as $node) {
                             ?>
                             <option value="<?php echo escape($node["ref"]) ?>"
@@ -119,6 +129,7 @@ function HookFacesViewCustompanels()
                         }
                         ?>
                         </select>
+            <?php } ?>
                     </td>
                     <td>
                     <?php $search_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!face" . $face["ref"])); ?>
@@ -128,7 +139,7 @@ function HookFacesViewCustompanels()
                     </td>
 
                 </tr>
-            <?php endforeach; ?>
+<?php endforeach; ?>
         </table>
         </div>
     </div>
@@ -141,11 +152,11 @@ function HookFacesViewCustompanels()
      * @param {number} face - The ID of the face to tag.
      * @param {number} node - The node ID to assign to the face.
      */
-    function FacesUpdateTag(face,node)
+    function FacesUpdateTag(resource, face,node)
         {
-        api("faces_tag",{'face': face, 'node': node},null,<?php echo generate_csrf_js_object('faces_tag'); ?>);
+        api("faces_tag",{'resource': resource, 'face': face, 'node': node},null,<?php echo generate_csrf_js_object('faces_tag'); ?>);
         }
     </script>
     <?php
     return false; # Allow further custom panels
-}
+    }
