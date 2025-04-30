@@ -4413,7 +4413,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         }
 
         // Handle the rest of the fixed list fields, category trees have their own section
-        // Only render the pills view if the user is authenicated as unauthenticated users will not be able to preform the node searches
+        // Only render the pills view if the user is authenticated as unauthenticated users will not be able to perform the node searches
         if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && $field['type'] != FIELD_TYPE_CATEGORY_TREE && is_authenticated()) {
             $nodes = $field_nodes_translated ?? array_map(function($ref, $name) {
                 return ['ref' => $ref, 'name' => $name];
