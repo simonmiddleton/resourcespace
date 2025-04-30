@@ -8,6 +8,7 @@ import numpy as np
 import io
 import mysql.connector
 from typing import Optional
+import json
 import time
 import faiss
 import threading
@@ -320,9 +321,10 @@ async def find_duplicates(
 @app.post("/tag")
 async def tag_search(
     db: str = Form(...),
-    resource: int = Form(...),
     url: str = Form(...),
-    top_k: int = Form(5)
+    top_k: int = Form(5),
+    resource: Optional[int] = Form(None),
+    vector: Optional[str] = Form(None)
 ):
     # Load and cache tag vectors
     if url not in tag_vector_cache:
@@ -337,13 +339,13 @@ async def tag_search(
                 if len(parts) != 513:
                     continue  # Skip malformed lines
                 tag = parts[0]
-                vector = np.array([float(x) for x in parts[1:]], dtype=np.float32)
-                norm = np.linalg.norm(vector)
+                vector_arr = np.array([float(x) for x in parts[1:]], dtype=np.float32)
+                norm = np.linalg.norm(vector_arr)
                 if norm == 0 or np.isnan(norm):
-                    continue  # Skip invalid vectors
-                vector /= norm
+                    continue
+                vector_arr /= norm
                 tags.append(tag)
-                vectors.append(vector)
+                vectors.append(vector_arr)
             if not vectors:
                 raise ValueError("No valid tag vectors found.")
             tag_vectors = np.stack(vectors)
@@ -357,27 +359,42 @@ async def tag_search(
     tags, tag_vectors = tag_vector_cache[url]
     index = tag_faiss_index_cache[url]
 
-    # Retrieve resource vector from the database
-    try:
-        conn = mysql.connector.connect(**DB_CONFIG, database=db)
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT vector_blob FROM resource_clip_vector WHERE resource = %s AND is_text = 0",
-            (resource,)
-        )
-        row = cursor.fetchone()
-        conn.close()
-        if not row or not row[0] or len(row[0]) != 2048:
-            raise HTTPException(status_code=404, detail="Valid vector_blob not found for the specified resource.")
-        resource_vector = np.frombuffer(row[0], dtype=np.float32).copy()
-        if resource_vector.shape != (512,):
-            raise HTTPException(status_code=400, detail="Malformed vector shape.")
-        norm = np.linalg.norm(resource_vector)
-        if norm == 0 or np.isnan(norm):
-            raise HTTPException(status_code=400, detail="Invalid vector norm.")
-        resource_vector /= norm
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error retrieving resource vector: {e}")
+    # Determine vector source: passed-in vector or DB
+    if vector:
+        try:
+            vector_list = json.loads(vector)
+            resource_vector = np.array(vector_list, dtype=np.float32)
+            if resource_vector.shape != (512,):
+                raise HTTPException(status_code=400, detail="Malformed input vector shape")
+            norm = np.linalg.norm(resource_vector)
+            if norm == 0 or np.isnan(norm):
+                raise HTTPException(status_code=400, detail="Invalid input vector norm")
+            resource_vector /= norm
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Invalid 'vector' input: {e}")
+    elif resource is not None:
+        try:
+            conn = mysql.connector.connect(**DB_CONFIG, database=db)
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT vector_blob FROM resource_clip_vector WHERE resource = %s AND is_text = 0",
+                (resource,)
+            )
+            row = cursor.fetchone()
+            conn.close()
+            if not row or not row[0] or len(row[0]) != 2048:
+                raise HTTPException(status_code=404, detail="Valid vector_blob not found for the specified resource.")
+            resource_vector = np.frombuffer(row[0], dtype=np.float32).copy()
+            if resource_vector.shape != (512,):
+                raise HTTPException(status_code=400, detail="Malformed vector shape.")
+            norm = np.linalg.norm(resource_vector)
+            if norm == 0 or np.isnan(norm):
+                raise HTTPException(status_code=400, detail="Invalid vector norm.")
+            resource_vector /= norm
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error retrieving resource vector: {e}")
+    else:
+        raise HTTPException(status_code=400, detail="Either 'resource' or 'vector' must be provided.")
 
     # Perform similarity search
     try:
@@ -392,7 +409,7 @@ async def tag_search(
             })
         return JSONResponse(content=results)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error during similarity search: {e}")
+        raise HTTPException(status_code=500, detail=f"Error during tagging: {e}")
 
 
 

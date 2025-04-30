@@ -185,6 +185,14 @@ function clip_tag(int $resource)
     }
 
     if (is_numeric($clip_title_field) && $clip_title_field > 0) {
+        $ch = curl_init(); // ✅ new handle for the title request
+        curl_setopt($ch, CURLOPT_URL, $clip_service_call);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Connection: keep-alive',
+            'Expect:'
+        ]);
         curl_setopt($ch, CURLOPT_POSTFIELDS, [
             'db' => $mysql_db,
             'resource' => $resource,
@@ -193,6 +201,7 @@ function clip_tag(int $resource)
         ]);
         $response = curl_exec($ch);
         curl_close($ch);
+    
         $title = urldecode(json_decode($response)[0]->tag);
         update_field($resource, $clip_title_field, $title);
     }
