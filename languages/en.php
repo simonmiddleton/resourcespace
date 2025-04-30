@@ -1630,6 +1630,7 @@ $lang["exiftooltag"] = "Exiftool tag";
 $lang["error"] = "Error";
 $lang["success"] = "Success";
 $lang["exiftoolnotfound"] = "Could not find Exiftool";
+$lang["exiftoolconflictingversions"] = "Conflicting versions of Exiftool detected";
 $lang["existing_tags"] = "Existing Exiftool tags";
 $lang["new_tags"] = "New Exiftool tags (which will be added upon download)";
 $lang["date_of_download"] = "[Date of download]";

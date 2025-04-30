@@ -5088,6 +5088,35 @@ function check_imagemagick_cli_version_found(string $version_output, array $util
 }
 
 /**
+ * Check CLI version found for Exiftool is as expected.
+ *
+ * @param string $version_output The version output for ImageMagick
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ *
+ * @return array Returns array as expected by the check.php page
+ * - utility - New utility value for its display name
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ * - error_message - optional error message if an issue is detected
+ */
+function check_exiftool_cli_version_found(string $version_output, array $utility): array
+{
+    global $lang;
+
+    if (preg_match('/Warning: Library/', $version_output) === 1) {
+        return [
+            'utility' => $utility,
+            'found' => false,
+            'error_message' => "{$lang['status-warning']}: {$lang['exiftoolconflictingversions']}<br /> {$version_output}",
+        ];        
+    } else {
+        return [
+            'utility' => $utility,
+            'found' => preg_match("/^([0-9]+)+\.([0-9]+)/", $version_output) === 1,
+        ];
+    }
+}
+
+/**
  * Check CLI numeric version found for a utility is as expected.
  *
  * @param string $version_output The version output

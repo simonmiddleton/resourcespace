@@ -617,7 +617,7 @@ const RS_SYSTEM_UTILITIES = [
         'version_check' => [
             'argument' => '-ver',
             'callback' => [
-                'fct_name' => 'check_numeric_cli_version_found',
+                'fct_name' => 'check_exiftool_cli_version_found',
                 'args' => [],
             ],
         ],
