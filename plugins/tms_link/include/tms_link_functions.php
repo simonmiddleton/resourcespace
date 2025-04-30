@@ -473,7 +473,7 @@ function tms_get_mediamasterid(bool $create = true, ?int $resource = null)
 
   // Get the latest inserted ID that we have not used
   $tmssql = "SELECT MediaMasterID FROM MediaMaster 
-      WHERE LoginID = " . $tms_link_tms_loginid . "
+      WHERE LoginID = '" . $tms_link_tms_loginid . "'
         AND DisplayRendID='-1'
         AND PrimaryRendID='-1'";
 
