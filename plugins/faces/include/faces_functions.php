@@ -197,9 +197,16 @@ function faces_tag($resource)
  * @uses ps_query()
  * @uses debug()
  */
-function api_faces_tag($face, $node)
+function api_faces_tag($resource, $face, $node)
 {
     debug("API: faces_tag(" . $face . ", " . $node);
+
+    // Permission check
+    $edit_access = get_edit_access($resource);
+    if (!$edit_access) {
+        return false;
+    }
+
     ps_query("update resource_face set node=? where ref=?", ["i",$node,"i",$face]);
     return true;
 }
