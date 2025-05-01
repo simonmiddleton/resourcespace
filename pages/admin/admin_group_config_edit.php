@@ -65,7 +65,6 @@ if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
     $page_def[] = config_add_boolean_select('tilenav', $lang['userpreference_tilenav'], $enable_disable_options, 300, '', true, 'TileNav=(value==1);');
     $page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_single_select('user_local_timezone', $lang['systemconfig_user_local_timezone'], timezone_identifiers_list(), false, 300, '', true);
-    $page_def[] = config_add_boolean_select('high_contrast_mode', $lang['userpreference_high_contrast_mode'], $enable_disable_options, 300, '', true, null, false, '', true);
     $page_def[] = config_add_html('</div>');
 
     // Search section

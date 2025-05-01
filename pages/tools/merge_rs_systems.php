@@ -727,7 +727,7 @@ if ($import && isset($folder_path)) {
             logScript("Processing user group preferences (if no warning is showing, this is ok)");
             foreach ($usergroup_data["usergroup_preferences"] as $usergroup_p) {
                 if (!set_usergroup_config_option($usergroup_ref, $usergroup_p["parameter"], $usergroup_p["value"])) {
-                    logScript("ERROR: uanble to save user group preference: {$usergroup_p["parameter"]} = '{$usergroup_p["value"]}'");
+                    logScript("ERROR: unable to save user group preference: {$usergroup_p["parameter"]} = '{$usergroup_p["value"]}'");
                     exit(1);
                 }
             }
@@ -806,7 +806,7 @@ if ($import && isset($folder_path)) {
             logScript("Processing user preferences (if no warning is showing, this is ok)");
             foreach ($user_data["user_preferences"] as $user_p) {
                 if (!set_config_option($user_ref, $user_p["parameter"], $user_p["value"])) {
-                    logScript("ERROR: uanble to save user preference: {$user_p["parameter"]} = '{$user_p["value"]}'");
+                    logScript("ERROR: unable to save user preference: {$user_p["parameter"]} = '{$user_p["value"]}'");
                     exit(1);
                 }
             }
