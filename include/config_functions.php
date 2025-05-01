@@ -304,7 +304,7 @@ function remove_config_option(?int $user_id, string $name): bool
 }
 
 /**
-* Get config option value from the database. This maybe a system wide config, a user group preference, a user preference, or the result of
+* Get config option value from the database. This may be a system wide config, a user group preference, a user preference, or the result of
 * overriding a user group preference with a user preference if any are present.
 *
 * @param  array    $config_type     The type of config to retrieve supplied as an array. The following combinations are possible:

@@ -3634,15 +3634,15 @@ function cors_is_origin_allowed(string $origin, array $whitelist): bool  {
  */
 function delete_usergroup(int $usergroup_ref): bool
 {
-    $dependant_user_count = ps_value("select count(*) as value from user where usergroup = ?", array("i", $usergroup_ref), 0);
-    $dependant_groups = ps_value("select count(*) as value from usergroup where parent = ?", array("i", $usergroup_ref), 0);
+    $dependant_user_count = ps_value("SELECT COUNT(*) AS `value` FROM user WHERE usergroup = ?", array("i", $usergroup_ref), 0);
+    $dependant_groups = ps_value("SELECT COUNT(*) AS `value` FROM usergroup WHERE parent = ?", array("i", $usergroup_ref), 0);
     $has_dependants = $dependant_user_count + $dependant_groups > 0;
 
     if ($has_dependants) {
         return false;
     }
 
-    ps_query("delete from usergroup where ref = ?", array("i", $usergroup_ref));
+    ps_query("DELETE FROM usergroup WHERE ref = ?", array("i", $usergroup_ref));
     log_activity('', LOG_CODE_DELETED, null, 'usergroup', null, $usergroup_ref);
 
     # No need to keep any records of language content for this user group
