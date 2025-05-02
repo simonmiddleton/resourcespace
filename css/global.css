@@ -2350,6 +2350,9 @@ a.BrowseRefresh{
     padding-top: 20px;
     }
 
+#contact-sheet--collectionname > label { float: unset; }
+#contact-sheet--collectionname > span { display: block; font-weight: bold; }
+
 /* Resource type icon picker */
 
 #iconpicker-question {display: inline-block;}
