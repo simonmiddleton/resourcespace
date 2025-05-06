@@ -96,37 +96,60 @@ function vector_visualise(array $vector): string
  */
 function clip_generate_vector($ref)
 {
-        $resource = get_resource_data($ref);
-        $ext = "jpg";
-        $size = "pre";
-        $checksum = $resource['file_checksum'];
+    $resource = get_resource_data($ref);
+    $ext = "jpg";
+    $size = "pre";
+    $checksum = $resource['file_checksum'];
 
-        $image_path = get_resource_path($ref, true, $size, false, $ext);
+    // Remove existing vectors
+    ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
 
+
+    // Store image vector
+    $image_path = get_resource_path($ref, true, $size, false, $ext);
     if (!file_exists($image_path)) {
         logScript("⚠ Resource $ref: file not found at $image_path");
         return false;
     }
-
-        // Calculate vectors - image
-        $vector = get_vector(false, $image_path, $ref);
-    if ($vector === false) {
-        return false;
-    }
-
+    $vector = get_vector(false, $image_path, $ref);
+    if ($vector !== false) {
         // Store vector in DB
         $vector = array_map('floatval', $vector); // ensure float values
         $blob = pack('f*', ...$vector);
 
-        ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
         ps_query(
             "INSERT INTO resource_clip_vector (resource, vector_blob, checksum, is_text) VALUES (?, ?, ?, false)",
             ['i', $ref, 's', $blob, 's', $checksum]
         ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
         $return = sql_insert_id();
 
-        logScript("✓ Vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
-        return $return;
+        logScript("✓ Image vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
+    }
+
+    // Store a vector for video snapshots also
+    $snapshots = get_video_snapshots($ref, true, false);
+    $frame_number = 0;
+    foreach ($snapshots as $snapshot) {
+        $frame_number++;
+
+        $vector = get_vector(false, $snapshot, $ref);
+        if ($vector !== false) {
+            // Store vector in DB
+            $vector = array_map('floatval', $vector); // ensure float values
+            $blob = pack('f*', ...$vector);
+
+            ps_query(
+                "INSERT INTO resource_clip_vector (resource, vector_blob, frame_number, checksum, is_text) VALUES (?, ?, ?, ?, false)",
+                ['i', $ref, 's', $blob, 'i', $frame_number, 's', $checksum]
+            ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
+            $return = sql_insert_id();
+
+            logScript("✓ Video snapshot vector stored for resource $ref frame $frame_number [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
+        }
+    }
+
+
+    return $return;
 }
 
 
@@ -135,7 +158,7 @@ function clip_generate_vector($ref)
  *
  * This function sends the resource ID to the external CLIP-based Python service
  * to retrieve suggested keywords and a title based on the resource's content.
- * 
+ *
  * It populates:
  * - A keyword metadata field (multiple nodes created)
  * - A title metadata field (single text string)
@@ -201,7 +224,7 @@ function clip_tag(int $resource)
         ]);
         $response = curl_exec($ch);
         curl_close($ch);
-    
+
         $title = urldecode(json_decode($response)[0]->tag);
         update_field($resource, $clip_title_field, $title);
     }
