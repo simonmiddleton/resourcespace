@@ -73,7 +73,7 @@ if (getval("save", '') != '' && enforcePostRequest(false)) {
             parse_str(explode('?', $url)[1], $url_parts);
         }
 
-        if (strpos($url, 'download.php') !== false && count($url_parts) > 0 && $url_parts['noattach'] == true) {
+        if (strpos($url, 'download.php') !== false && count($url_parts) > 0 && isset($url_parts['noattach']) && $url_parts['noattach'] == true) {
             $redirect_url = $url;
         } elseif (strpos($url, 'download.php') !== false && (strpos($url, $baseurl_short) !== false || strpos($url, $baseurl) !== false)) {
             $download_url_suffix_params['url'] = $url;
