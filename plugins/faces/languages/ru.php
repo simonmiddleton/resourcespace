@@ -1,0 +1,17 @@
+<?php
+
+
+$lang["faces-detected-faces"] = 'Обнаруженные лица';
+$lang["faces-detected-face"] = 'Обнаруженное лицо';
+$lang["faces-confidence"] = 'Уверенность';
+$lang["faces-find-matching"] = 'Найдите совпадающие лица';
+$lang["faces-configuration"] = 'Конфигурация AI Faces';
+$lang["faces-service-endpoint"] = 'Python FastAPI сервис URL';
+$lang["faces-match-threshold"] = 'Порог совпадения лиц: какой уровень сходства считается совпадением при поиске лиц? Рекомендуется 30%.';
+$lang["faces-tag-threshold"] = 'Порог тегирования лиц: какой уровень сходства считается совпадением при автоматическом тегировании лиц? Рекомендуется 50%.';
+$lang["faces-tag-field"] = 'Поле, содержащее имена отмеченных пользователей. Это должно быть полем динамического выпадающего списка.';
+$lang["faces-name"] = 'Имя';
+$lang["faces-detect-on-upload"] = 'Сканировать лица при загрузке?';
+$lang["faces-tag-on-upload"] = 'Помечать распознанные лица при загрузке?';
+$lang["faces-detecting"] = 'Сканирование лиц в ресурсе:';
+$lang["faces-tagging"] = 'Тегирование обнаруженных лиц в ресурсе:';

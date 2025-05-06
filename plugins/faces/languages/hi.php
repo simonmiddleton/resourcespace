@@ -1,0 +1,17 @@
+<?php
+
+
+$lang["faces-detected-faces"] = 'पाई गई चेहरे';
+$lang["faces-detected-face"] = 'पहचान की गई चेहरा';
+$lang["faces-confidence"] = 'आत्मविश्वास';
+$lang["faces-find-matching"] = 'मेल खाने वाले चेहरे खोजें';
+$lang["faces-configuration"] = 'एआई चेहरे कॉन्फ़िगरेशन';
+$lang["faces-service-endpoint"] = 'Python FastAPI सेवा URL';
+$lang["faces-match-threshold"] = 'चेहरे का मिलान थ्रेशोल्ड: चेहरों की खोज करते समय किस समानता के स्तर को मिलान माना जाता है? सुझावित 30%।';
+$lang["faces-tag-threshold"] = 'चेहरे के टैग थ्रेशोल्ड: चेहरे को स्वचालित रूप से टैग करते समय समानता का कौन सा स्तर मेल माना जाता है? सुझाया गया 50%।';
+$lang["faces-tag-field"] = 'टैग किए गए व्यक्तियों के नामों को समाहित करने वाला क्षेत्र। यह एक गतिशील ड्रॉपडाउन क्षेत्र होना चाहिए।';
+$lang["faces-name"] = 'नाम';
+$lang["faces-detect-on-upload"] = 'अपलोड पर चेहरों के लिए स्कैन करें?';
+$lang["faces-tag-on-upload"] = 'अपलोड पर पहचानी गई चेहरों को टैग करें?';
+$lang["faces-detecting"] = 'संसाधन में चेहरों के लिए स्कैनिंग:';
+$lang["faces-tagging"] = 'संसाधन में पहचानी गई चेहरों को टैग करना:';

@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Questa grande CSV potrebbe richiedere m
 $lang["csv_upload_createdfromcsvupload"] = 'Creato tramite il plugin di caricamento CSV';
 $lang["plugin-csv_upload-title"] = 'Caricamento CSV';
 $lang["plugin-csv_upload-desc"] = 'Carica i metadati utilizzando un file CSV.';
+
+$lang["csv_upload_check_invalidbom"] = 'Il file CSV ha un BOM quindi non può essere caricato';
+$lang["csv_upload_check_file_error"] = 'Il file CSV non può essere aperto o letto';
+$lang["csv_upload_check_utf_error"] = 'Il file CSV non è un UTF-8 valido. Carattere non valido alla riga';

@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Deze grote CSV kan erg lang duren om te
 $lang["csv_upload_createdfromcsvupload"] = 'Aangemaakt met de CSV Upload plugin';
 $lang["plugin-csv_upload-title"] = 'CSV Upload';
 $lang["plugin-csv_upload-desc"] = 'Upload metadata met een CSV-bestand.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV-bestand heeft BOM, dus kan niet worden geladen';
+$lang["csv_upload_check_file_error"] = 'CSV-bestand kan niet worden geopend of gelezen';
+$lang["csv_upload_check_utf_error"] = 'CSV-bestand is geen geldige UTF-8. Ongeldig teken op regel';

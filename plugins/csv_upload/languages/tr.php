@@ -67,3 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'CSV Yükleme eklentisinden oluşturu
 $lang["csv_upload_create_new_notes"] = 'Yeni kaynaklar oluşturmak için gerekli seçenekleri seçin';
 $lang["plugin-csv_upload-title"] = 'CSV Yükleme';
 $lang["plugin-csv_upload-desc"] = '[İleri] Meta verileri bir CSV dosyası kullanarak yükleyin.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV dosyası BOM içeriyor, bu nedenle yüklenemiyor';
+$lang["csv_upload_check_file_error"] = 'CSV dosyası açılamıyor veya okunamıyor';
+$lang["csv_upload_check_utf_error"] = 'CSV dosyası geçerli bir UTF-8 değil. Satırda geçersiz karakter';

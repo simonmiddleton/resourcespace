@@ -1,0 +1,17 @@
+<?php
+
+
+$lang["faces-detected-faces"] = 'Rostres detectats';
+$lang["faces-detected-face"] = 'Cara detectada';
+$lang["faces-confidence"] = 'Confiança';
+$lang["faces-find-matching"] = 'Troba cares coincidents';
+$lang["faces-configuration"] = 'Configuració de cares d\'IA';
+$lang["faces-service-endpoint"] = 'Python FastAPI service URL';
+$lang["faces-match-threshold"] = 'Límit de coincidència facial: quin nivell de similitud es considera una coincidència en cercar cares? Suggerit 30%.';
+$lang["faces-tag-threshold"] = 'Llimite de etiqueta facial: quin nivell de similitud es considera una coincidència quan s\'etiqueten automàticament cares? Suggerit 50%.';
+$lang["faces-tag-field"] = 'El camp que conté els noms dels individus etiquetats. Això hauria de ser un camp de desplegable dinàmic.';
+$lang["faces-name"] = 'Nom';
+$lang["faces-detect-on-upload"] = 'Escanejar per cares en pujar?';
+$lang["faces-tag-on-upload"] = 'Etiquetar cares reconegudes en pujar?';
+$lang["faces-detecting"] = 'Escanejant cares en el recurs:';
+$lang["faces-tagging"] = 'Etiquetant cares detectades en el recurs:';

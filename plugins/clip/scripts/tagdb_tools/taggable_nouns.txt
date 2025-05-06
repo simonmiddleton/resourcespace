@@ -535,8 +535,6 @@ health
 hearing
 heart
 hearts
-heat
-heather
 heaven
 heavens
 helicopter
@@ -947,7 +945,6 @@ question
 questioning
 rabbit
 race
-rachel
 racing
 radar
 radiation

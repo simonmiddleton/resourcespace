@@ -65,3 +65,7 @@ $lang["csv_upload_process_offline_quick"] = 'Пропустити перевір
 $lang["csv_upload_force_offline"] = 'Цей великий CSV може зайняти багато часу для обробки, тому буде виконаний офлайн. Ви отримаєте повідомлення через ResourceSpace, коли обробка буде завершена';
 $lang["csv_upload_recommend_offline"] = 'Цей великий CSV може зайняти дуже багато часу для обробки. Рекомендується увімкнути офлайн-завдання, якщо вам потрібно обробляти великі CSV.';
 $lang["csv_upload_createdfromcsvupload"] = 'Створено за допомогою плагіна завантаження CSV';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV файл має BOM, тому не може бути завантажений';
+$lang["csv_upload_check_file_error"] = 'Файл CSV не можна відкрити або прочитати';
+$lang["csv_upload_check_utf_error"] = 'Файл CSV не є дійсним UTF-8. Неправильний символ на рядку';

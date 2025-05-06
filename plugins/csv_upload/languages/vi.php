@@ -66,3 +66,6 @@ $lang["csv_upload_process_offline_quick"] = 'Bỏ qua xác thực và xử lý t
 $lang["csv_upload_force_offline"] = 'Tệp CSV lớn này có thể mất nhiều thời gian để xử lý nên sẽ được thực hiện ngoại tuyến. Bạn sẽ được thông báo qua tin nhắn ResourceSpace khi quá trình xử lý hoàn tất';
 $lang["csv_upload_recommend_offline"] = 'Tệp CSV lớn này có thể mất rất nhiều thời gian để xử lý. Nên bật các công việc ngoại tuyến nếu bạn cần xử lý các tệp CSV lớn';
 $lang["csv_upload_createdfromcsvupload"] = 'Được tạo từ plugin Tải lên CSV';
+$lang["csv_upload_check_invalidbom"] = 'Tệp CSV có BOM nên không thể tải lên';
+$lang["csv_upload_check_file_error"] = 'Tệp CSV không thể được mở hoặc đọc';
+$lang["csv_upload_check_utf_error"] = 'Tệp CSV không phải là UTF-8 hợp lệ. Ký tự không hợp lệ ở dòng';

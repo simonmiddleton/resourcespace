@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Tämän suuren CSV-tiedoston käsittely
 $lang["csv_upload_createdfromcsvupload"] = 'Luotu CSV-latausliitännäisestä';
 $lang["plugin-csv_upload-title"] = 'CSV-lataus';
 $lang["plugin-csv_upload-desc"] = '[Lisäasetukset] Lataa metatiedot CSV-tiedostolla.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV-tiedostossa on BOM, joten sitä ei voida ladata';
+$lang["csv_upload_check_file_error"] = 'CSV-tiedostoa ei voi avata tai lukea';
+$lang["csv_upload_check_utf_error"] = 'CSV-tiedosto ei ole voimassa olevaa UTF-8:aa. Virheellinen merkki rivillä';

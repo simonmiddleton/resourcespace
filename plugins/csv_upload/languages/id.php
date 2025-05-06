@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'CSV yang besar ini mungkin memerlukan w
 $lang["csv_upload_createdfromcsvupload"] = 'Dibuat dari plugin Unggah CSV';
 $lang["plugin-csv_upload-title"] = 'Unggah CSV';
 $lang["plugin-csv_upload-desc"] = 'Unggah metadata menggunakan file CSV.';
+
+$lang["csv_upload_check_invalidbom"] = 'File CSV memiliki BOM sehingga tidak dapat dimuat';
+$lang["csv_upload_check_file_error"] = 'File CSV tidak dapat dibuka atau dibaca';
+$lang["csv_upload_check_utf_error"] = 'File CSV tidak valid UTF-8. Karakter tidak valid pada baris';

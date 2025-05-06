@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Denne store CSV-fil kan tage meget lang
 $lang["csv_upload_createdfromcsvupload"] = 'Oprettet fra CSV Upload-plugin';
 $lang["plugin-csv_upload-title"] = 'CSV Upload';
 $lang["plugin-csv_upload-desc"] = 'Upload metadata ved hjælp af en CSV-fil.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV-fil har BOM, så den kan ikke indlæses';
+$lang["csv_upload_check_file_error"] = 'CSV-filen kan ikke åbnes eller læses';
+$lang["csv_upload_check_utf_error"] = 'CSV-filen er ikke gyldig UTF-8. Ugyldigt tegn på linje';

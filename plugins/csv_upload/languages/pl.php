@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Ten duży plik CSV może wymagać bardz
 $lang["csv_upload_createdfromcsvupload"] = 'Utworzono za pomocą wtyczki CSV Upload';
 $lang["plugin-csv_upload-title"] = 'Przesyłanie CSV';
 $lang["plugin-csv_upload-desc"] = 'Prześlij metadane za pomocą pliku CSV.';
+
+$lang["csv_upload_check_invalidbom"] = 'Plik CSV ma BOM, więc nie może być załadowany';
+$lang["csv_upload_check_file_error"] = 'Plik CSV nie może być otwarty ani odczytany';
+$lang["csv_upload_check_utf_error"] = 'Plik CSV nie jest ważnym UTF-8. Nieprawidłowy znak w wierszu';

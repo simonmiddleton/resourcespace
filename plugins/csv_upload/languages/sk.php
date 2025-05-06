@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Tento veľký CSV súbor môže trvať 
 $lang["csv_upload_createdfromcsvupload"] = 'Vytvorené pomocou doplnku pre nahrávanie CSV súborov';
 $lang["plugin-csv_upload-title"] = 'Nalaganje CSV';
 $lang["plugin-csv_upload-desc"] = 'Naloži meta podatke z uporabo CSV datoteke.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV súbor má BOM, takže ho nie je možné načítať';
+$lang["csv_upload_check_file_error"] = 'CSV súbor sa nedá otvoriť ani prečítať';
+$lang["csv_upload_check_utf_error"] = 'CSV súbor nie je platný UTF-8. Neplatný znak na riadku';

@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Acest fișier CSV mare poate dura foart
 $lang["csv_upload_createdfromcsvupload"] = 'Creat prin intermediul plugin-ului de încărcare CSV';
 $lang["plugin-csv_upload-title"] = 'Încărcare CSV';
 $lang["plugin-csv_upload-desc"] = 'Încărcați metadate folosind un fișier CSV.';
+
+$lang["csv_upload_check_invalidbom"] = 'Fișierul CSV are BOM, așa că nu poate fi încărcat';
+$lang["csv_upload_check_file_error"] = 'Fișierul CSV nu poate fi deschis sau citit';
+$lang["csv_upload_check_utf_error"] = 'Fișierul CSV nu este un UTF-8 valid. Caracter invalid pe linia';

@@ -65,3 +65,7 @@ $lang["csv_upload_process_offline_quick"] = 'رد شدن از اعتبارسنج
 $lang["csv_upload_force_offline"] = 'این فایل CSV بزرگ ممکن است زمان زیادی برای پردازش نیاز داشته باشد، بنابراین به صورت آفلاین اجرا خواهد شد. پس از اتمام پردازش، از طریق یک پیام ResourceSpace به شما اطلاع داده خواهد شد.';
 $lang["csv_upload_recommend_offline"] = 'این فایل CSV بزرگ ممکن است زمان زیادی برای پردازش نیاز داشته باشد. توصیه می‌شود که اگر نیاز به پردازش فایل‌های CSV بزرگ دارید، کارهای آفلاین فعال شوند.';
 $lang["csv_upload_createdfromcsvupload"] = 'ایجاد شده از افزونه بارگذاری CSV';
+
+$lang["csv_upload_check_invalidbom"] = 'فایل CSV دارای BOM است بنابراین نمی‌تواند بارگذاری شود';
+$lang["csv_upload_check_file_error"] = 'فایل CSV قابل باز کردن یا خواندن نیست';
+$lang["csv_upload_check_utf_error"] = 'فایل CSV معتبر UTF-8 نیست. کاراکتر نامعتبر در خط';

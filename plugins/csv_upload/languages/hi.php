@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'यह बड़ा CSV संसाध
 $lang["csv_upload_createdfromcsvupload"] = 'CSV अपलोड प्लगइन से बनाया गया';
 $lang["plugin-csv_upload-title"] = 'CSV अपलोड';
 $lang["plugin-csv_upload-desc"] = '[उन्नत] CSV फ़ाइल का उपयोग करके मेटा डेटा अपलोड करें।';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV फ़ाइल में BOM है इसलिए इसे लोड नहीं किया जा सकता';
+$lang["csv_upload_check_file_error"] = 'CSV फ़ाइल को खोला या पढ़ा नहीं जा सकता';
+$lang["csv_upload_check_utf_error"] = 'CSV फ़ाइल मान्य UTF-8 नहीं है। पंक्ति पर अमान्य वर्ण';

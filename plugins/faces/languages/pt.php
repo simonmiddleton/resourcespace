@@ -1,0 +1,17 @@
+<?php
+
+
+$lang["faces-detected-faces"] = 'Faces detectadas';
+$lang["faces-detected-face"] = 'Rosto detectado';
+$lang["faces-confidence"] = 'Confiança';
+$lang["faces-find-matching"] = 'Encontrar rostos correspondentes';
+$lang["faces-configuration"] = 'Configuração de Faces de IA';
+$lang["faces-service-endpoint"] = 'Python FastAPI service URL';
+$lang["faces-match-threshold"] = 'Limite de correspondência facial: qual nível de semelhança é considerado uma correspondência ao procurar rostos? Sugerido 30%.';
+$lang["faces-tag-threshold"] = 'Limite de tag de rosto: qual nível de semelhança é considerado uma correspondência ao marcar automaticamente rostos? Sugerido 50%.';
+$lang["faces-tag-field"] = 'O campo contendo os nomes dos indivíduos marcados. Este deve ser um campo de Dropdown Dinâmico.';
+$lang["faces-name"] = 'Nome';
+$lang["faces-detect-on-upload"] = 'Escanear rostos ao fazer upload?';
+$lang["faces-tag-on-upload"] = 'Marcar rostos reconhecidos ao fazer upload?';
+$lang["faces-detecting"] = 'Escaneando em busca de rostos no recurso:';
+$lang["faces-tagging"] = 'Marcação de rostos detectados no recurso:';

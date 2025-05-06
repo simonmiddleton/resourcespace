@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Aquest gran CSV pot trigar molt de temp
 $lang["csv_upload_createdfromcsvupload"] = 'Creat per l\'extensió de càrrega de CSV';
 $lang["plugin-csv_upload-title"] = 'Pujada CSV';
 $lang["plugin-csv_upload-desc"] = '[Avançat] Carrega les metadades utilitzant un fitxer CSV.';
+
+$lang["csv_upload_check_invalidbom"] = 'El fitxer CSV té BOM així que no es pot carregar';
+$lang["csv_upload_check_file_error"] = 'No es pot obrir o llegir el fitxer CSV';
+$lang["csv_upload_check_utf_error"] = 'El fitxer CSV no és un UTF-8 vàlid. Caràcter invàlid a la línia';

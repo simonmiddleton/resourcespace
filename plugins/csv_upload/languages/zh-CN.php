@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = '这个大型 CSV 文件可能需要很�
 $lang["csv_upload_createdfromcsvupload"] = '从CSV上传插件创建';
 $lang["plugin-csv_upload-title"] = 'CSV上传';
 $lang["plugin-csv_upload-desc"] = '[高级] 使用CSV文件上传元数据';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV 文件包含 BOM，因此无法加载';
+$lang["csv_upload_check_file_error"] = '无法打开或读取CSV文件';
+$lang["csv_upload_check_utf_error"] = 'CSV文件不是有效的UTF-8。行上有无效字符';

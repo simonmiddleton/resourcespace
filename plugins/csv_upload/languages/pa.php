@@ -65,3 +65,7 @@ $lang["csv_upload_process_offline_quick"] = 'ਵੈਧਤਾ ਨੂੰ ਛੱਡ
 $lang["csv_upload_force_offline"] = 'ਇਹ ਵੱਡਾ CSV ਪ੍ਰਕਿਰਿਆ ਕਰਨ ਵਿੱਚ ਲੰਮਾ ਸਮਾਂ ਲੈ ਸਕਦਾ ਹੈ ਇਸ ਲਈ ਇਸਨੂੰ ਆਫਲਾਈਨ ਚਲਾਇਆ ਜਾਵੇਗਾ। ਜਦੋਂ ਪ੍ਰਕਿਰਿਆ ਪੂਰੀ ਹੋ ਜਾਵੇਗੀ ਤਾਂ ਤੁਹਾਨੂੰ ResourceSpace ਸੁਨੇਹੇ ਰਾਹੀਂ ਸੂਚਿਤ ਕੀਤਾ ਜਾਵੇਗਾ।';
 $lang["csv_upload_recommend_offline"] = 'ਇਹ ਵੱਡਾ CSV ਪ੍ਰਕਿਰਿਆ ਕਰਨ ਲਈ ਬਹੁਤ ਜ਼ਿਆਦਾ ਸਮਾਂ ਲੈ ਸਕਦਾ ਹੈ। ਜੇ ਤੁਹਾਨੂੰ ਵੱਡੇ CSV ਪ੍ਰਕਿਰਿਆ ਕਰਨ ਦੀ ਲੋੜ ਹੈ ਤਾਂ ਇਹ ਸਿਫਾਰਸ਼ ਕੀਤੀ ਜਾਂਦੀ ਹੈ ਕਿ ਆਫਲਾਈਨ ਜ਼ੋਬਸ ਨੂੰ ਯੋਗ ਕੀਤਾ ਜਾਵੇ।';
 $lang["csv_upload_createdfromcsvupload"] = 'ਸੀਐਸਵੀ ਅਪਲੋਡ ਪਲੱਗਇਨ ਤੋਂ ਬਣਾਇਆ ਗਿਆ';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV ਫਾਈਲ ਵਿੱਚ BOM ਹੈ ਇਸ ਲਈ ਲੋਡ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ';
+$lang["csv_upload_check_file_error"] = 'CSV ਫਾਈਲ ਖੁੱਲ ਨਹੀਂ ਸਕਦੀ ਜਾਂ ਪੜ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕਦੀ';
+$lang["csv_upload_check_utf_error"] = 'CSV ਫਾਈਲ ਵੈਧ UTF-8 ਨਹੀਂ ਹੈ। ਲਾਈਨ \'ਤੇ ਗਲਤ ਅੱਖਰ';
