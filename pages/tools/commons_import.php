@@ -137,16 +137,16 @@ while ($imported_count < $number_to_import) {
             continue;
         }
 
+        // Set title
+        $clean_title = preg_replace('/^File:/', '', $img['title']);
+        $clean_title = preg_replace('/\.[^.]+$/', '', $clean_title);
+        update_field($ref, $title_field, $clean_title);
+
         echo "  Uploading from $tmp_file\n";
 
         // Upload file to resource
         $result = upload_file($ref, true, false, false, $tmp_file, false);
         if ($result !== false) {
-            // Set title
-            $clean_title = preg_replace('/^File:/', '', $img['title']);
-            $clean_title = preg_replace('/\.[^.]+$/', '', $clean_title);
-            update_field($ref, $title_field, $clean_title);
-
             echo "  Resource $ref created and image uploaded.\n";
             $imported_count++;
             echo "  Imported so far: $imported_count / $number_to_import\n";
