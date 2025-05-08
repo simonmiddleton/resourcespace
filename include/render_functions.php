@@ -6274,6 +6274,8 @@ function display_related_resources($context)
     global $baseurl, $baseurl_short, $lang, $view_title_field, $sort_relations_by_filetype, $related_resources_title_trim, $sort_relations_by_restype, $metadata_template_title_field, $metadata_template_resource_type;
 
     $allrestypes = get_resource_types();
+    $allrestypes_names = array_column($allrestypes, 'name', 'ref');
+
     if ($ref == 0 || count(array_diff(array_column($allrestypes, "ref"), $relatedtypes_shown)) == 0) {
         return;
     }
@@ -6370,7 +6372,7 @@ function display_related_resources($context)
                                     continue;
                                 }
                                 ?>
-                                <h4><?php echo escape($allrestypes[$rtype]["name"]); ?></h4>
+                                <h4><?php echo escape($allrestypes_names[$rtype]); ?></h4>
                                 <?php
                                 // Loop and display the results by file extension
                                 for ($n = 0; $n < count($arr_related); $n++) {
