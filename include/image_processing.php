@@ -1147,6 +1147,12 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
         return false;
     }
 
+    if (!$ingested) {
+        // When creating previews for non-ingested static sync files, they're already on the system so there's not much
+        // to validate for at this point
+        $GLOBALS['preview_preprocessing_file_validator'] = CommandPlaceholderArg::alwaysValid(...);
+    }
+
     # If configured, make sure the file is within the size limit for preview generation
     if (isset($preview_generate_max_file_size) && !$ignoremaxsize) {
         $filesize = filesize_unlimited($file) / (1024 * 1024);# Get filesize in MB
