@@ -1310,9 +1310,12 @@ function columns_in($table, $alias = null, $plugin = null, bool $return_list = f
     foreach ($plugins as $plugin_entry) {
         $plugin_file = get_plugin_path($plugin_entry) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
         if (file_exists($plugin_file)) {
-            $structure = explode("\n", trim(file_get_contents($plugin_file)));
-            foreach ($structure as $column) {
-                $columns[] = explode(",", $column)[0];
+            $plugin_file_contents = trim(file_get_contents($plugin_file));
+            if ($plugin_file_contents !== "") {
+                $structure = explode("\n", $plugin_file_contents);
+                foreach ($structure as $column) {
+                    $columns[] = explode(",", $column)[0];
+                }
             }
         }
     }
