@@ -423,11 +423,16 @@ if ($editing && !$editexternalurl) {
                         return false;
                     }
 
-                    function resourceShareDeleteUserCustomAccess(user) {
+                    function resourceShareDeleteUserCustomAccess(event, user) {
                         if (confirm('<?php echo escape($lang["confirmdeleteusercustomaccessresource"]) ?>')) {
-                            document.getElementById('deleteusercustomaccess').value = 'yes';
-                            document.getElementById('user').value = user;
-                            document.getElementById('resourceshareform').submit(); 
+
+                            // Detect closest parent form
+                            const link = event.target;
+                            const form = link.closest('form');
+
+                            form.querySelector('#deleteusercustomaccess').value = 'yes';
+                            form.querySelector('#user').value = user;
+                            form.submit();
                         }
                         return false;
                     }
@@ -470,7 +475,7 @@ if ($editing && !$editexternalurl) {
                                 <td><?php echo escape($custaccess); ?></td>
                                 <td>
                                     <div class="ListTools">
-                                        <a href="#" onclick="return resourceShareDeleteUserCustomAccess(<?php echo get_user_by_username($ca["user"]) ?>);">
+                                        <a href="#" onclick="return resourceShareDeleteUserCustomAccess(event, <?php echo get_user_by_username($ca["user"]) ?>);">
                                             <?php echo LINK_CARET . escape($lang["action-delete"]); ?>
                                         </a>
                                     </div>
