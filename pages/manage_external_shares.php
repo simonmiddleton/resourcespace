@@ -153,6 +153,8 @@ if (!checkperm('a')) {
     unset($tabledata["headers"]["fullname"]);
 }
 
+$alert_icon_offset = false;
+
 for ($n = 0; $n < $sharecount; $n++) {
     if ($n >= $offset && ($n < $offset + $per_page)) {
         $colshare = is_int_loose($shares[$n]["collection"]) && $shares[$n]["collection"] > 0;
@@ -190,6 +192,7 @@ for ($n = 0; $n < $sharecount; $n++) {
             $expiredshares++;
             $tableshare["alerticon"] = "fas fa-exclamation-triangle";
             $tableshare["alerticontitle"] = $lang["share_expired_icon_title"];
+            $alert_icon_offset = true;
         }
 
         $tableshare["upload"] = (bool)$shares[$n]["upload"] ? $lang["share_type_upload"] : $lang["share_type_view"];
@@ -289,7 +292,7 @@ include '../include/header.php';
             var table_row_cols = jQuery("#"+access_key_id).children();
             var alert_row_col_adjust = 0;
 
-            <?php if (isset($tableshare["alerticon"])) { ?>
+            <?php if ($alert_icon_offset) { ?>
                 alert_row_col_adjust = 1;
             <?php } ?>
 
