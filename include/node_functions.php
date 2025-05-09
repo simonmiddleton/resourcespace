@@ -944,7 +944,7 @@ function node_field_options_override(&$field, $resource_type_field = null)
     migrate_resource_type_field_check($field);
 
     $field['node_options'] = [];
-    $nodes = get_nodes($field['ref'], null, false, null, null, null, null, (bool)$field['automatic_nodes_ordering']);
+    $nodes = get_nodes($field['ref'], null, $field['type'] == FIELD_TYPE_CATEGORY_TREE, null, null, null, null, (bool)$field['automatic_nodes_ordering']);
     foreach ($nodes as $node) {
         $field['node_options'][$node['ref']] = $node;
     }
