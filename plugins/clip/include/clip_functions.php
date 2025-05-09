@@ -180,6 +180,8 @@ function clip_tag(int $resource)
     global $clip_service_url, $mysql_db, $clip_keyword_field, $clip_keyword_url, $clip_keyword_count, $clip_title_field, $clip_title_url;
     $clip_service_call = $clip_service_url . "/tag";
 
+    logScript ("Calling CLIP service at $clip_service_call to tag resource $resource");
+
     if (is_numeric($clip_keyword_field) && $clip_keyword_field > 0) {
         // Keywords
 
@@ -199,12 +201,14 @@ function clip_tag(int $resource)
                 'top_k' => $clip_keyword_count,
         ]);
         $response = curl_exec($ch);
+        logScript ("CLIP service response: " . $response);
         curl_close($ch);
         foreach (json_decode($response) as $result) {
             # Create new or fetch existing node
             $nodes[] = set_node(null, $clip_keyword_field, ucfirst($result->tag), null, 9999);
         }
         add_resource_nodes($resource, $nodes);
+        logScript ("CLIP suggested keywords resolved to nodes: " . join(", ", $nodes));
     }
 
     if (is_numeric($clip_title_field) && $clip_title_field > 0) {
@@ -227,6 +231,7 @@ function clip_tag(int $resource)
 
         $title = urldecode(json_decode($response)[0]->tag);
         update_field($resource, $clip_title_field, $title);
+        logScript ("CLIP suggested title: " . $title);
     }
 
     return true;

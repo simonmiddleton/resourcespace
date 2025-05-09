@@ -15,6 +15,8 @@ import threading
 import torch
 import clip
 import requests
+import hashlib, os, time
+
 
 # Command-line arguments
 parser = argparse.ArgumentParser(description="CLIP search service for ResourceSpace")
@@ -326,18 +328,45 @@ async def tag_search(
     resource: Optional[int] = Form(None),
     vector: Optional[str] = Form(None)
 ):
-    # Load and cache tag vectors
-    if url not in tag_vector_cache:
+    CACHE_DIR = os.path.expanduser("~/.clip_tag_cache")
+    os.makedirs(CACHE_DIR, exist_ok=True)
+
+    def get_cache_filename(url):
+        hash = hashlib.sha256(url.encode()).hexdigest()
+        return os.path.join(CACHE_DIR, f"{hash}.tagdb")
+
+    cache_path = get_cache_filename(url)
+    cache_expiry_secs = 30 * 86400  # 30 days
+
+    use_disk_cache = (
+        os.path.exists(cache_path) and
+        (time.time() - os.path.getmtime(cache_path)) < cache_expiry_secs
+    )
+
+    if not use_disk_cache:
         try:
+            start = time.time()
             response = requests.get(url)
             response.raise_for_status()
-            lines = response.text.strip().split('\n')
+            with open(cache_path, 'w', encoding='utf-8') as f:
+                f.write(response.text)
+            elapsed = int((time.time() - start) * 1000)
+            print(f"📡 Downloaded tag database from URL in {elapsed}ms: {url}")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to download tag vectors: {e}")
+
+    if url not in tag_vector_cache:
+        try:
+            start = time.time()
+            with open(cache_path, 'r', encoding='utf-8') as f:
+                lines = f.read().strip().split('\n')
+
             tags = []
             vectors = []
             for line in lines:
                 parts = line.strip().split()
                 if len(parts) != 513:
-                    continue  # Skip malformed lines
+                    continue
                 tag = parts[0]
                 vector_arr = np.array([float(x) for x in parts[1:]], dtype=np.float32)
                 norm = np.linalg.norm(vector_arr)
@@ -346,20 +375,24 @@ async def tag_search(
                 vector_arr /= norm
                 tags.append(tag)
                 vectors.append(vector_arr)
+
             if not vectors:
                 raise ValueError("No valid tag vectors found.")
+
             tag_vectors = np.stack(vectors)
             tag_vector_cache[url] = (tags, tag_vectors)
             index = faiss.IndexFlatIP(512)
             index.add(tag_vectors)
             tag_faiss_index_cache[url] = index
+            elapsed = int((time.time() - start) * 1000)
+            print(f"💾 Loaded tag database from disk cache in {elapsed}ms: {url}")
+
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Failed to load tag vectors: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to load tag vectors from cache: {e}")
 
     tags, tag_vectors = tag_vector_cache[url]
     index = tag_faiss_index_cache[url]
 
-    # Determine vector source: passed-in vector or DB
     if vector:
         try:
             vector_list = json.loads(vector)
@@ -372,6 +405,7 @@ async def tag_search(
             resource_vector /= norm
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Invalid 'vector' input: {e}")
+
     elif resource is not None:
         try:
             conn = mysql.connector.connect(**DB_CONFIG, database=db)
@@ -393,10 +427,10 @@ async def tag_search(
             resource_vector /= norm
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error retrieving resource vector: {e}")
+
     else:
         raise HTTPException(status_code=400, detail="Either 'resource' or 'vector' must be provided.")
 
-    # Perform similarity search
     try:
         D, I = index.search(resource_vector.reshape(1, -1), top_k)
         results = []
@@ -410,12 +444,6 @@ async def tag_search(
         return JSONResponse(content=results)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during tagging: {e}")
-
-
-
-
-
-
 
 
 
