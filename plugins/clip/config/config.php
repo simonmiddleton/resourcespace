@@ -10,7 +10,7 @@ $clip_text_search_fields = [8];
 $clip_vector_on_upload = true;
 
 $clip_title_field = 8;
-$clip_title_url = "https://www.resourcespace.com/downloads/clip/titles.tagdb";
+$clip_title_url = "https://www.resourcespace.com/downloads/clip/titles_textonly.tagdb";
 
 $clip_keyword_field = 84;
 $clip_keyword_url = "https://www.resourcespace.com/downloads/clip/taggable_nouns.tagdb";

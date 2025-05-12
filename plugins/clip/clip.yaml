@@ -1,8 +1,8 @@
 name: clip
-title: CLIP AI Smart Search
+title: CLIP AI Smart Search and Tagging
 author: Montala Limited
 version: 1.0
-desc: AI natural language search, visual search, similarity matching, duplicate matching.
+desc: AI natural language search, visual search, similarity matching, duplicate matching, tagging, title generation
 icon: fa fa-brain
 icon-colour: seagreen
 category: search
