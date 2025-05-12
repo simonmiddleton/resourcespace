@@ -220,7 +220,7 @@ global $css_reload_key,$context;
     });
 
     // Initialize Video.js with the plugin
-    videojs('<?php echo escape($context); ?>_<?php echo escape((string) $display); ?>_introvideo<?php echo escape($ref); ?>', {
+    videojs('<?php echo escape((string) $context); ?>_<?php echo escape((string) $display); ?>_introvideo<?php echo escape($ref); ?>', {
         plugins: {
             loopToggle: {}
         }
