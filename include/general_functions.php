@@ -754,8 +754,8 @@ function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): 
         $ext = parse_filename_extension($path);
     }
 
-    if (!$file_based_detection && isset($mime_types_by_extension[$ext])) {
-        return $mime_types_by_extension[$ext];
+    if (!$file_based_detection && isset($mime_types_by_extension[strtolower($ext)])) {
+        return $mime_types_by_extension[strtolower($ext)];
     }
 
     # Get mime type via exiftool if possible
