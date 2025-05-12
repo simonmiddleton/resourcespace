@@ -85,7 +85,7 @@ if($generate && enforcePostRequest(false)) {
         $message=$lang["video_tracks_select_generate_opt"];
         $continue=false;
     } 
-    if($track_save_alt && !checkperm("A") )  {
+    if($track_save_alt && checkperm("A") )  {
         $message=$lang["video_tracks_save_alt_not_perm"];
         $continue=false;
     } 
