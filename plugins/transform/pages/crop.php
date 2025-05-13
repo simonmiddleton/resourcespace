@@ -338,7 +338,7 @@ if ($saveaction != '' && enforcePostRequest(false))
     $newpath = "$tmpdir/transform_plugin/download_" . $ref . uniqid() . "." . $new_ext;
 
     // Preserve original file preview (source) in case transforms are used for previews
-    if(!file_exists($org))
+    if(!file_exists($org) && $saveaction != "original")
         {
         debug("[transform][pages/crop] copy($previewsourcepath, $org)");
         copy($previewsourcepath, $org);
@@ -417,6 +417,14 @@ if ($saveaction != '' && enforcePostRequest(false))
             if (!$success)
                 {
                 $onload_message = array("title" => $lang["error"],"text" =>str_replace("%res",$ref,$lang['error-transform-failed']));
+                }
+            else
+                {
+                // Original file has been updated so remove original_copy as invalid now
+                if (file_exists($org)) 
+                    {
+                    unlink($org);
+                    }
                 }
             hook("transformcropafterreplaceoriginal");
 
