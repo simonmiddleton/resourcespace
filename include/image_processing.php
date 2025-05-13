@@ -2569,6 +2569,7 @@ function delete_previews($resource, $alternative = -1)
     }
 
     $delete_prefixes = [];
+    $delete_prefixes[] = "original_copy_";
     $delete_prefixes[] = "resized_";
     $delete_prefixes[] = "tile_";
     $delete_prefixes[] = "tmp_";
