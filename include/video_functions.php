@@ -99,7 +99,7 @@ function generate_videojs_options(bool $view_as_gif, bool $play_on_hover, array 
 {
     global $videojs_resolution_selection, $videojs_resolution_selection_default_res;
 
-    $data_setup = ["playbackRates" => [0.5, 1, 1.5, 2], "plugins" => ["loopToggle" => []]];
+    $data_setup = ["playbackRates" => [0.5, 1, 1.5, 2]];
 
     if ($view_as_gif) {
         $data_setup = array_merge($data_setup, [
@@ -128,7 +128,7 @@ function generate_videojs_options(bool $view_as_gif, bool $play_on_hover, array 
     }
 
     if (isset($videojs_resolution_selection) && count($video_preview_sources) > 0 && !$view_as_gif) {
-        $data_setup = array_merge_recursive($data_setup, [
+        $data_setup = array_merge($data_setup, [
             "plugins" => [
                 "videoJsResolutionSwitcher" => [
                     "default" => $videojs_resolution_selection_default_res

@@ -218,6 +218,8 @@ global $css_reload_key,$context;
             controlBar.addChild('LoopButton', {}, controlBar.children().length - 1);
         });
     });
+
+    videojs('<?php echo escape((string) $context); ?>_<?php echo escape((string) $display); ?>_introvideo<?php echo escape($ref); ?>').loopToggle();
 </script>
 
 <!-- END VIDEOJS -->
