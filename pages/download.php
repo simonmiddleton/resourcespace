@@ -246,7 +246,11 @@ if ('' != $userfiledownload) {
 
     if (!file_exists($path) && $noattach) {
         # Return icon for file (for previews)
-        $path = '../gfx/no_preview/default.png';
+        if(in_array($size,["thm","col"])) {
+            $path = '../gfx/no_preview/default_thm.png';
+        } else {            
+            $path = '../gfx/no_preview/default.png';
+        }
     }
 
     if ($noattach) {
