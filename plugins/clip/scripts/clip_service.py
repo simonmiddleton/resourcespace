@@ -16,7 +16,7 @@ import torch
 import clip
 import requests
 import hashlib, os, time
-
+import tempfile
 
 # Command-line arguments
 parser = argparse.ArgumentParser(description="CLIP search service for ResourceSpace")
@@ -328,7 +328,7 @@ async def tag_search(
     resource: Optional[int] = Form(None),
     vector: Optional[str] = Form(None)
 ):
-    CACHE_DIR = os.path.expanduser("~/.clip_tag_cache")
+    CACHE_DIR = os.path.join(tempfile.gettempdir(), "clip_tag_cache")
     os.makedirs(CACHE_DIR, exist_ok=True)
 
     def get_cache_filename(url):
