@@ -4545,6 +4545,10 @@ function render_fixed_list_as_pills($nodes):string
     $display_html = "";
     if (count($nodes) > 0) {
         foreach ($nodes as $nodedata) {
+            // Add zero width spaces to break up strings on non alphanumeric characters to allow for text wrapping
+            $nodedata["name"] = preg_replace_callback('/[^a-zA-Z0-9]/', function($matches) {
+                return $matches[0] . "\u{200B}";
+            }, $nodedata["name"]);
             $search_url = generateURL($baseurl . '/pages/search.php', ['search' => NODE_TOKEN_PREFIX . $nodedata['ref']]);
             $display_html .= "<a href=\"{$search_url}\" onclick=\"CentralSpaceLoad(this)\">";
             $display_html .= "<div class=\"fixedlistnodepill\">" . escape($nodedata["name"]) . "</div>";
