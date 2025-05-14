@@ -126,14 +126,18 @@ function HookFormat_chooserViewAppend_to_updateDownloadLink_js(array $resource)
 function HookFormat_chooserViewModifySizesArray ($resource, $sizes) : array|false 
     {
         global $format_chooser_input_formats;
-        if (in_array($resource['file_extension'], $format_chooser_input_formats)) {
+        if (in_array($resource['file_extension'], $format_chooser_input_formats) && !failed_format_chooser_checks($resource)) {
             return get_image_sizes($resource['ref'],false,$resource['file_extension'],false);
         }
         return false;
     }
 
-function HookFormat_chooserViewModifyAllowed_Sizes ($resource, $sizes) : array 
+function HookFormat_chooserViewModifyAllowed_Sizes ($resource, $sizes) : array|false 
     {
+    if (failed_format_chooser_checks($resource)) {
+        return false;
+    }
+
     global $lang, $ffmpeg_supported_extensions;    
         
     $original_size = get_original_imagesize($resource['ref'], get_resource_path($resource['ref'], true, '', true, $resource['file_extension']));
