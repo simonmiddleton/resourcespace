@@ -6093,28 +6093,9 @@ function render_fixed_text_question(string $label, string $text, string $helptex
  */
 function escape(string $unsafe): string
 {
-    return htmlspecialchars(
-        (string) preg_replace_callback(
-            // Dangerous URI (lookalikes) will have the colon encoded. Not applicable to http(s) scheme.
-            '/[a-zA-Z][a-zA-Z\d+\-.]*:(\/\/)?[^\s]+/im',
-            regex_callback_non_http_uri_encode_colon(...),
-            $unsafe
-        ),
-        ENT_QUOTES | ENT_SUBSTITUTE
-    );
+    return htmlspecialchars($unsafe, ENT_QUOTES | ENT_SUBSTITUTE);
 }
 
-/**
- * Regular expression replace callback to encode colon for any non-http(s) URI schemes.
- * @param array $matches The same data structure provided by the preg_replace_callback function.
- */
-function regex_callback_non_http_uri_encode_colon(array $matches): string
-{
-    // The colon is URL encoded because it's technically in a URL context. If we were to replace it with the HTML entity
-    // (i.e. &#58;), unless it's encoded again (i.e. &amp;#58;), it will not have the desired effect and the code can
-    // still be executed.
-    return preg_match('/^(https?):/i', $matches[0]) ? $matches[0] : str_replace(':', '%3A', $matches[0]);
-}
 
 /**
  * HTML aware function to break up long words onto multiple lines for

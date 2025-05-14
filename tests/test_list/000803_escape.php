@@ -23,25 +23,7 @@ $use_cases = [
         'Text with URI schema keywords should be left alone',
         'Text that may contain URI keywords like -- data: test ',
         'Text that may contain URI keywords like -- data: test ',
-    ],
-    ['Invalid URI schemes (javascript:)', "javascript:alert('XSS')", 'javascript%3Aalert(&#039;XSS&#039;)'],
-    ['Invalid URI schemes (data:)', 'data:,Foo%2C%20Bar%21', 'data%3A,Foo%2C%20Bar%21'],
-    ['Invalid URI scheme (embedded tab)', "jav\tascript:alert('XSS')", "jav\tascript%3Aalert(&#039;XSS&#039;)"],
-    [
-        'Invalid URI scheme (embedded encoded tab)',
-        "jav&#x09;ascript:alert('XSS')",
-        "jav&amp;#x09;ascript%3Aalert(&#039;XSS&#039;)"
-    ],
-    [
-        'Invalid URI schemes (spaces and meta characters)',
-        " &#14;  javascript:alert('XSS')",
-        ' &amp;#14;  javascript%3Aalert(&#039;XSS&#039;)'
-    ],
-    [
-        'Invalid URI schemes (inline CSS style)',
-        'background-image: url(javascript:alert(\'XSS\'));',
-        'background-image: url(javascript%3Aalert(&#039;XSS&#039;));',
-    ],
+    ]
 ];
 foreach ($use_cases as [$use_case, $input, $expected]) {
     $result = escape($input);
