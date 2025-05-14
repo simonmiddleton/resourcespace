@@ -55,14 +55,14 @@ include __DIR__ . "/../../../include/header.php";
     
     <h1><?php echo escape($lang["clip-ai-smart-search"]); ?></h1>
 
-    <form method=post id="clipformnatural" action="<?php echo $baseurl_short ?>plugins/clip/pages/search.php" onSubmit="CentralSpacePost(this);return false;">
+    <form method=post id="clipformnatural" action="<?php echo $baseurl ?>/plugins/clip/pages/search.php" onSubmit="CentralSpacePost(this);return false;">
     <?php generateFormToken("clipform"); ?>   
     <hr /><h2><?php echo escape($lang["clip-natural-language-search"]) ?></h2>
     <p><?php echo escape($lang["clip-natural-language-search-help"]) ?></p>
     <input type="text" name="search">&nbsp;<input type="submit" name="search" value="<?php echo escape($lang["searchbutton"]) ?>"> 
     </form>
 
-    <form method=post id="clipform" action="<?php echo $baseurl_short ?>/plugins/clip/pages/search.php" onSubmit="CentralSpacePost(this);return false;">
+    <form method=post id="clipform" action="<?php echo $baseurl ?>/plugins/clip/pages/search.php" onSubmit="CentralSpacePost(this);return false;">
     <?php generateFormToken("clipform"); ?>   
     <hr /><h2><?php echo escape($lang["clip-search-upload-image"]) ?></h2>
     <label for="clip-upload">Choose an image:</label>
