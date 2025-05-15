@@ -2389,12 +2389,9 @@ function update_field($resource, $field, $value, array &$errors = array(), $log 
             if (strpos($value, NODE_NAME_STRING_SEPARATOR) !== false) {
                 $newvalues = array_map('trim', explode(NODE_NAME_STRING_SEPARATOR, $value));
             } else {
-                if (
-                    strlen($value) > 0 && (($value[0] == "'" && $value[strlen($value) - 1] == "'")
-                    ||
-                    ($value[0] == "\"" && $value[strlen($value) - 1] == "\""))
-                ) {
+                if (strlen($value) > 0 && (($value[0] == "'" && $value[strlen($value) - 1] == "'"))) {
                     // Quoted value - don't attempt to split on comma.
+                    // Quoting should normally use double quotes however accepting the whole string quoted with single quotes for legacy support.
                     $newvalues[] = substr($value, 1, -1);
                 } else {
                     $newvalues = trim_array(str_getcsv($value));
