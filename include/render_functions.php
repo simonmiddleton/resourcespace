@@ -131,7 +131,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                             var wto;
                             jQuery(document).ready(function()
                                 {
-                                jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
+                                jQuery('#<?php echo $forsearchbar ? "SearchBox" : "CentralSpace" ?>').on('categoryTreeChanged', function(e,node)
                                     {
                                     // Debounce multiple events fired by the category tree
                                     clearTimeout(wto);
