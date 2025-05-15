@@ -1961,6 +1961,7 @@ function search_get_previews($search, $restypes = "", $order_by = "relevance", $
 
     $total = $results["total"] ?? count($results);
     $resultset = $results["data"] ?? $results;
+    $use_watermark = check_use_watermark();
 
     if (is_array($resultset) && is_array($getsizes) && count($getsizes) > 0) {
         $available = get_all_image_sizes(true, ($access == 1));
@@ -1969,13 +1970,13 @@ function search_get_previews($search, $restypes = "", $order_by = "relevance", $
             if (!isset($resultset[$n]) || $resultset[$n] == 0) {
                 continue;
             }
+            
+            $access = $resultset[$n]["resultant_access"] ?? get_resource_access($resultset[$n]);
 
-            $access = get_resource_access($resultset[$n]);
-            $use_watermark = check_use_watermark();
-
-            if ($resultset[$n]["access"] == 2) {
+            if ($access == 2) {
+                // No images for confidential resources
                 continue;
-            } // No images for confidential resources
+            }
             foreach ($getsizes as $getsize) {
                 if (!(in_array($getsize, array_column($available, "id")))) {
                     continue;
