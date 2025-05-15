@@ -96,35 +96,143 @@ function vector_visualise(array $vector): string
  */
 function clip_generate_vector($ref)
 {
-        $resource = get_resource_data($ref);
-        $ext = "jpg";
-        $size = "pre";
-        $checksum = $resource['file_checksum'];
+    $resource = get_resource_data($ref);
+    $ext = "jpg";
+    $size = "pre";
+    $checksum = $resource['file_checksum'];
 
-        $image_path = get_resource_path($ref, true, $size, false, $ext);
+    // Remove existing vectors
+    ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
 
+
+    // Store image vector
+    $image_path = get_resource_path($ref, true, $size, false, $ext);
     if (!file_exists($image_path)) {
         logScript("⚠ Resource $ref: file not found at $image_path");
         return false;
     }
-
-        // Calculate vectors - image
-        $vector = get_vector(false, $image_path, $ref);
-    if ($vector === false) {
-        return false;
-    }
-
+    $vector = get_vector(false, $image_path, $ref);
+    if ($vector !== false) {
         // Store vector in DB
         $vector = array_map('floatval', $vector); // ensure float values
         $blob = pack('f*', ...$vector);
 
-        ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
         ps_query(
             "INSERT INTO resource_clip_vector (resource, vector_blob, checksum, is_text) VALUES (?, ?, ?, false)",
             ['i', $ref, 's', $blob, 's', $checksum]
         ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
         $return = sql_insert_id();
 
-        logScript("✓ Vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
-        return $return;
+        logScript("✓ Image vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
+    }
+
+    // Store a vector for video snapshots also
+    $snapshots = get_video_snapshots($ref, true, false);
+    $frame_number = 0;
+    foreach ($snapshots as $snapshot) {
+        $frame_number++;
+
+        $vector = get_vector(false, $snapshot, $ref);
+        if ($vector !== false) {
+            // Store vector in DB
+            $vector = array_map('floatval', $vector); // ensure float values
+            $blob = pack('f*', ...$vector);
+
+            ps_query(
+                "INSERT INTO resource_clip_vector (resource, vector_blob, frame_number, checksum, is_text) VALUES (?, ?, ?, ?, false)",
+                ['i', $ref, 's', $blob, 'i', $frame_number, 's', $checksum]
+            ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
+            $return = sql_insert_id();
+
+            logScript("✓ Video snapshot vector stored for resource $ref frame $frame_number [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
+        }
+    }
+
+
+    return $return;
+}
+
+
+/**
+ * Auto-tags and titles a resource using CLIP vector search.
+ *
+ * This function sends the resource ID to the external CLIP-based Python service
+ * to retrieve suggested keywords and a title based on the resource's content.
+ *
+ * It populates:
+ * - A keyword metadata field (multiple nodes created)
+ * - A title metadata field (single text string)
+ *
+ * Global configuration variables (all available on the plugin's setup page)
+ * - $clip_service_url: Base URL for the CLIP service
+ * - $mysql_db: Current MySQL database name
+ * - $clip_keyword_field: Field ID for keywords (node-based)
+ * - $clip_keyword_url: URL of tag database for keywords
+ * - $clip_keyword_count: Number of keyword suggestions to fetch
+ * - $clip_title_field: Field ID for title (text field)
+ * - $clip_title_url: URL of tag database for titles
+ *
+ * @param int $resource Resource ID to tag and title.
+ * @return bool Always returns true after processing.
+ */
+function clip_tag(int $resource)
+{
+    global $clip_service_url, $mysql_db, $clip_keyword_field, $clip_keyword_url, $clip_keyword_count, $clip_title_field, $clip_title_url;
+    $clip_service_call = $clip_service_url . "/tag";
+
+    logScript ("Calling CLIP service at $clip_service_call to tag resource $resource");
+
+    if (is_numeric($clip_keyword_field) && $clip_keyword_field > 0) {
+        // Keywords
+
+        // Send search to Python service
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $clip_service_call);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Connection: keep-alive',
+            'Expect:' // Prevents "100-continue" delay
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+                'db' => $mysql_db,
+                'resource' => $resource,
+                'url' => $clip_keyword_url,
+                'top_k' => $clip_keyword_count,
+        ]);
+        $response = curl_exec($ch);
+        logScript ("CLIP service response: " . $response);
+        curl_close($ch);
+        foreach (json_decode($response) as $result) {
+            # Create new or fetch existing node
+            $nodes[] = set_node(null, $clip_keyword_field, ucfirst($result->tag), null, 9999);
+        }
+        add_resource_nodes($resource, $nodes);
+        logScript ("CLIP suggested keywords resolved to nodes: " . join(", ", $nodes));
+    }
+
+    if (is_numeric($clip_title_field) && $clip_title_field > 0) {
+        $ch = curl_init(); // ✅ new handle for the title request
+        curl_setopt($ch, CURLOPT_URL, $clip_service_call);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Connection: keep-alive',
+            'Expect:'
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'db' => $mysql_db,
+            'resource' => $resource,
+            'url' => $clip_title_url,
+            'top_k' => 1,
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $title = urldecode(json_decode($response)[0]->tag);
+        update_field($resource, $clip_title_field, $title);
+        logScript ("CLIP suggested title: " . $title);
+    }
+
+    return true;
 }

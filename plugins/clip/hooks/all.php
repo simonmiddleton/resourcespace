@@ -174,5 +174,7 @@ function HookClipAllAfterpreviewcreation($resource, $alternative)
         // Detect images on upload if configured
         set_processing_message($lang["clip-generating"] . " " . $resource);
         clip_generate_vector($resource);
+        set_processing_message($lang["clip-tagging"] . " " . $resource);
+        clip_tag($resource);
     }
 }

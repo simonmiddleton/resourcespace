@@ -1,7 +1,7 @@
 <?php
 function HookClipViewCustompanels()
 {
-    global $lang,$ref,$baseurl;
+    global $lang,$ref,$baseurl,$clip_service_url,$mysql_db;
 
     $vectors = ps_value("select count(*) value from resource_clip_vector where resource=?", ["i",$ref], 0);
     if ($vectors == 0) {
