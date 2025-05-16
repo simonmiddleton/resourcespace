@@ -282,3 +282,15 @@
         return $url;
 
         }
+
+ /**
+  * Delete all watched searches by user
+  *
+  * @param int  $user User ID
+  * 
+  * @return void
+  */
+ function search_notification_delete_by_owner($user): void
+{
+    ps_query("DELETE FROM search_saved WHERE owner = ?", array("i", $user));    
+}

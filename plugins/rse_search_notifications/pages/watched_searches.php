@@ -9,7 +9,7 @@ include_once "../include/search_notifications_functions.php";
 
 $plugin_name            = "rse_search_notifications";
 $plugin_active          = in_array($plugin_name, $plugins); // is the plugin active?
-if (!$plugin_active)
+if (!$plugin_active || is_anonymous_user())
     {
     redirect("pages/home.php");
     }
