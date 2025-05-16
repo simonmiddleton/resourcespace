@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Gesichter beim Hochladen scannen?';
 $lang["faces-tag-on-upload"] = 'Gesichtserkennung beim Hochladen kennzeichnen?';
 $lang["faces-detecting"] = 'Gesichtserkennung im Ressource wird durchgeführt:';
 $lang["faces-tagging"] = 'Tagging erkannte Gesichter in Ressource:';
+$lang["faces-confidence-threshold"] = 'Gesichtswertschwelle: Wie sicher sollte das Modell sein, dass es ein menschliches Gesicht gefunden hat? Vorgeschlagen 70% (Werte darunter werden verdeckte Gesichter und keine Gesichter zuordnen)';

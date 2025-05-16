@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Skanna efter ansikten vid uppladdning?';
 $lang["faces-tag-on-upload"] = 'Tagga igenkända ansikten vid uppladdning?';
 $lang["faces-detecting"] = 'Skannar efter ansikten i resurs:';
 $lang["faces-tagging"] = 'Taggning av upptäckta ansikten i resurs:';
+$lang["faces-confidence-threshold"] = 'Ansiktskonfidensgräns: Hur säker bör modellen vara på att den har funnit ett mänskligt ansikte? Föreslagen 70% (värden under detta kommer att matcha dolda ansikten och icke-ansikten)';

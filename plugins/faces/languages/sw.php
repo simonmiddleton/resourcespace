@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Je, unataka kutafuta nyuso wakati wa kupakia?
 $lang["faces-tag-on-upload"] = 'Je, kuweka alama uso ulio tambuliwa wakati wa kupakia?';
 $lang["faces-detecting"] = 'Kuchunguza uso katika rasilimali:';
 $lang["faces-tagging"] = 'Kuweka lebo kwenye nyuso zilizogunduliwa katika rasilimali:';
+$lang["faces-confidence-threshold"] = 'Kiwango cha kujiamini cha uso: Je, mfano unapaswa kuwa na uhakika kiasi gani kwamba umepata uso wa binadamu? Inapendekezwa 70% (thamani chini ya hii zitakubaliana na nyuso zilizofichwa na zisizo za uso)';

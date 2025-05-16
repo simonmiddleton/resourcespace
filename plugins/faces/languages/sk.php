@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Skenovať tváre pri nahrávaní?';
 $lang["faces-tag-on-upload"] = 'Označiť rozpoznané tváre pri nahrávaní?';
 $lang["faces-detecting"] = 'Skenovanie tvárí v zdroji:';
 $lang["faces-tagging"] = 'Označovanie rozpoznaných tvárí v zdroji:';
+$lang["faces-confidence-threshold"] = 'Prahová hodnota dôvery v tvár: Ako dôveryhodný by mal byť model, že našiel ľudskú tvár? Odporúčané 70% (hodnoty pod touto úrovňou budú zodpovedať zakrytým tváram a netváram';

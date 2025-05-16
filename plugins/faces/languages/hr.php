@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Skeniraj lica prilikom učitavanja?';
 $lang["faces-tag-on-upload"] = 'Označi prepoznate lica prilikom učitavanja?';
 $lang["faces-detecting"] = 'Skeniranje lica u resursu:';
 $lang["faces-tagging"] = 'Označavanje prepoznatih lica u resursu:';
+$lang["faces-confidence-threshold"] = 'Prag povjerenja za lice: Koliko bi model trebao biti siguran da je pronašao ljudsko lice? Preporučeno 70% (vrijednosti ispod ovoga će odgovarati zaklonjenim licima i ne-licima';

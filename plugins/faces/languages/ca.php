@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Escanejar per cares en pujar?';
 $lang["faces-tag-on-upload"] = 'Etiquetar cares reconegudes en pujar?';
 $lang["faces-detecting"] = 'Escanejant cares en el recurs:';
 $lang["faces-tagging"] = 'Etiquetant cares detectades en el recurs:';
+$lang["faces-confidence-threshold"] = 'Llimite de confiança de la cara: Quina confiança ha de tenir el model que ha trobat una cara humana? Suggerit 70% (valors per sota d\'això coincidiran amb cares ocultes i no cares';

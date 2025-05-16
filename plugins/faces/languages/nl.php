@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Scannen op gezichten bij upload?';
 $lang["faces-tag-on-upload"] = 'Gezichten met tags herkennen bij uploaden?';
 $lang["faces-detecting"] = 'Gezichten scannen in resource:';
 $lang["faces-tagging"] = 'Taggen van gedetecteerde gezichten in resource:';
+$lang["faces-confidence-threshold"] = 'Drempel voor gezichtsvertrouwen: Hoe zeker moet het model zijn dat het een menselijk gezicht heeft gevonden? Voorgesteld 70% (waarden onder deze drempel zullen overeenkomen met bedekte gezichten en geen gezichten)';

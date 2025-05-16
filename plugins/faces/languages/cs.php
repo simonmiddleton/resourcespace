@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Skenovat obličeje při nahrávání?';
 $lang["faces-tag-on-upload"] = 'Označit rozpoznané tváře při nahrávání?';
 $lang["faces-detecting"] = 'Skenování obličejů v zdroji:';
 $lang["faces-tagging"] = 'Označování detekovaných obličejů v prostředku:';
+$lang["faces-confidence-threshold"] = 'Prahová hodnota důvěry pro obličeje: Jakou důvěru by měl model mít, že našel lidský obličej? Doporučeno 70 % (hodnoty pod tímto prahem budou odpovídat zakrytým obličejům a neobličejům)';

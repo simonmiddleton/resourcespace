@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = '¿Escanear en busca de rostros al subir?';
 $lang["faces-tag-on-upload"] = '¿Etiquetar caras reconocidas al subir?';
 $lang["faces-detecting"] = 'Escaneando en busca de rostros en el recurso:';
 $lang["faces-tagging"] = 'Etiquetando caras detectadas en el recurso:';
+$lang["faces-confidence-threshold"] = 'Umbral de confianza de la cara: ¿Qué tan seguro debe estar el modelo de que ha encontrado una cara humana? Sugerido 70% (valores por debajo de esto coincidirán con caras ocultas y no caras)';

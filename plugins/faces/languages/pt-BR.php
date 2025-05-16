@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Escanear por rostos ao fazer upload?';
 $lang["faces-tag-on-upload"] = 'Marcar rostos reconhecidos ao fazer upload?';
 $lang["faces-detecting"] = 'Escaneando em busca de rostos no recurso:';
 $lang["faces-tagging"] = 'Marcação de rostos detectados no recurso:';
+$lang["faces-confidence-threshold"] = 'Limite de confiança facial: Quão confiante o modelo deve estar de que encontrou um rosto humano? Sugerido 70% (valores abaixo disso corresponderão a rostos obscuros e não rostos)';

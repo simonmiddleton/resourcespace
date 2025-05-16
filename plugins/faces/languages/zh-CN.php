@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = '上传时扫描面孔吗？';
 $lang["faces-tag-on-upload"] = '上传时标记识别的人脸？';
 $lang["faces-detecting"] = '正在扫描资源中的面孔：';
 $lang["faces-tagging"] = '在资源中标记检测到的面孔：';
+$lang["faces-confidence-threshold"] = '人脸信心阈值：模型应该对找到人脸的信心有多高？建议70%（低于此值将匹配模糊的人脸和非人脸）';

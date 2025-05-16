@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Arcfelismerés a feltöltés során?';
 $lang["faces-tag-on-upload"] = 'Címkézze a felismert arcokat feltöltéskor?';
 $lang["faces-detecting"] = 'Arcok keresése az erőforrásban:';
 $lang["faces-tagging"] = 'Arcfelismerések címkézése az erőforrásban:';
+$lang["faces-confidence-threshold"] = 'Arc arcosság küszöb: Mennyire legyen biztos a modell abban, hogy emberi arcot talált? Javasolt 70% (az ennél alacsonyabb értékek elmosódott arcokat és nem arcokat fognak egyezni)';

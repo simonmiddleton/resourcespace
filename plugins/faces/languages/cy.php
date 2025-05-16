@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = 'Sganio am wynebau wrth lwytho i fyny?';
 $lang["faces-tag-on-upload"] = 'Tagiwch wynebau a adnabuwyd ar lwytho?';
 $lang["faces-detecting"] = 'Sganio am wynebau yn y gr resource:';
 $lang["faces-tagging"] = 'Tagio wynebau a ddarganfuwyd yn y gr resource:';
+$lang["faces-confidence-threshold"] = 'Trothwy hyder wyneb: Pa mor hyderus ddylai\'r model fod ei fod wedi dod o hyd i wyneb dynol? Argymhellir 70% (mae gwerthoedd islaw hyn yn cyfateb i wynebau cuddiedig a wynebau nad ydynt yn wynebau)';

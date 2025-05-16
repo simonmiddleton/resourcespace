@@ -15,7 +15,7 @@
  */
 function faces_detect(int $ref)
 {
-    global $faces_service_endpoint;
+    global $faces_service_endpoint, $faces_confidence_threshold;
     $file_path = get_resource_path($ref, true, 'scr', false, "jpg");
 
     flush();
@@ -62,11 +62,15 @@ function faces_detect(int $ref)
     }
 
     foreach ($faces as $face) {
-        $bbox = isset($face['bbox']) ? json_encode($face['bbox']) : null;
-        $score = isset($face['det_score']) ? (float)$face['det_score'] : null;
+        $bbox = isset($face['bbox']) ? json_encode($face['bbox']) : null; // Bounding box data
+        $score = isset($face['det_score']) ? (float)$face['det_score'] : null; // Confidence score
         $vector = isset($face['embedding']) ? pack("f*", ...$face['embedding']) : null;
 
         if ($vector === null) {
+            continue;
+        }
+
+        if ($score < $faces_confidence_threshold) {
             continue;
         }
 
