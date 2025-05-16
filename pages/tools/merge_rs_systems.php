@@ -423,12 +423,32 @@ if ($export && isset($folder_path)) {
             "formatted_name" => "resource type field resource types",
             "filename" => "resource_type_field_resource_type",
             "record_feedback" => array(
-                "text" => "Resource type field -> Resource type mappings",
+                "text" => "Resource type field (#%resource_type_field) -> Resource type (#%resource_type) mappings",
                 "placeholders" => array("resource_type_field", "resource_type"),
             ),
             "sql" => array(
-                    "where" => "resource_type_field IN (SELECT ref FROM resource_type_field)",
+                "where" => "resource_type_field IN (SELECT ref FROM resource_type_field)",
+                "order_by" => 'resource_type_field ASC, resource_type ASC',
+            ),
+            "pagination" => [
+                "cursor_sql" => new PreparedStatementQuery(
+                    '(
+                        resource_type_field > ? 
+                        OR (resource_type_field = ? AND resource_type > ?)
+                    )',
+                    ['i', 0, 'i', 0, 'i', 0]
                 ),
+                "last_page_cursor_sql" => static function (PreparedStatementQuery $cursor, array $record): PreparedStatementQuery {
+                    return new PreparedStatementQuery(
+                        $cursor->sql,
+                        [
+                            'i',$record['resource_type_field'],
+                            'i',$record['resource_type_field'],
+                            'i',$record['resource_type'],
+                        ]
+                    );
+                },
+            ],
         ),
         array(
             "name" => "node",
@@ -473,7 +493,11 @@ if ($export && isset($folder_path)) {
                     AND r.archive IN (SELECT `code` FROM archive_states)
                     AND (r.file_extension IS NOT NULL AND trim(r.file_extension) <> '')
                     AND (r.preview_extension IS NOT NULL AND trim(r.preview_extension) <> '')",
+                "order_by" => 'raf.ref ASC',
             ),
+            "pagination" => [
+                "cursor_sql" => new PreparedStatementQuery('raf.ref > ?', ['i', 0]),
+            ],
             "additional_process" => static function ($record) {
                 if (
                     !file_exists(
@@ -513,7 +537,27 @@ if ($export && isset($folder_path)) {
                     AND (r.file_extension IS NOT NULL AND trim(r.file_extension) <> '')
                     AND (r.preview_extension IS NOT NULL AND trim(r.preview_extension) <> '')
                     AND n.resource_type_field IN (SELECT ref FROM resource_type_field)",
+                "order_by" => 'resource ASC, node ASC',
             ),
+            "pagination" => [
+                "cursor_sql" => new PreparedStatementQuery(
+                    '(
+                        resource > ? 
+                        OR (resource = ? AND node > ?)
+                    )',
+                    ['i', 0, 'i', 0, 'i', 0]
+                ),
+                "last_page_cursor_sql" => static function (PreparedStatementQuery $cursor, array $record): PreparedStatementQuery {
+                    return new PreparedStatementQuery(
+                        $cursor->sql,
+                        [
+                            'i',$record['resource'],
+                            'i',$record['resource'],
+                            'i',$record['node'],
+                        ]
+                    );
+                },
+            ],
         ),
         array(
             "name" => "resource_dimensions",
@@ -522,7 +566,14 @@ if ($export && isset($folder_path)) {
             "record_feedback" => array(),
             "sql" => array(
                 "where" => "resource > 0 AND EXISTS(SELECT ref FROM resource WHERE ref = resource_dimensions.resource)",
+                "order_by" => 'resource ASC',
             ),
+            "pagination" => [
+                "cursor_sql" => new PreparedStatementQuery('resource > ?', ['i', 0]),
+                "last_page_cursor_sql" => static function (PreparedStatementQuery $cursor, array $record): PreparedStatementQuery {
+                    return new PreparedStatementQuery($cursor->sql, ['i', $record['resource']]);
+                },
+            ],
         ),
         array(
             "name" => "resource_related",
@@ -533,7 +584,27 @@ if ($export && isset($folder_path)) {
                 "where" => "resource > 0
                     AND EXISTS(SELECT ref FROM resource WHERE ref = resource_related.resource)
                     AND EXISTS(SELECT ref FROM resource WHERE ref = resource_related.related)",
+                "order_by" => 'resource ASC, related ASC',
             ),
+            "pagination" => [
+                "cursor_sql" => new PreparedStatementQuery(
+                    '(
+                        resource > ? 
+                        OR (resource = ? AND related > ?)
+                    )',
+                    ['i', 0, 'i', 0, 'i', 0]
+                ),
+                "last_page_cursor_sql" => static function (PreparedStatementQuery $cursor, array $record): PreparedStatementQuery {
+                    return new PreparedStatementQuery(
+                        $cursor->sql,
+                        [
+                            'i',$record['resource'],
+                            'i',$record['resource'],
+                            'i',$record['related'],
+                        ]
+                    );
+                },
+            ],
         ),
     );
 
@@ -548,19 +619,42 @@ if ($export && isset($folder_path)) {
         $where = isset($table["sql"]["where"]) && trim($table["sql"]["where"]) != "" ? "WHERE {$table["sql"]["where"]}" : "";
         $additional_process = isset($table["additional_process"]) && is_callable($table["additional_process"]) ? $table["additional_process"] : null;
 
-        $records_count = ps_value("SELECT COUNT(*) value FROM {$from} {$where}", [], 0);
-        $counter = 0;
-        while ($counter <= $records_count) {
-            $records = ps_query("SELECT {$select} FROM {$from} {$where} LIMIT ?,5000", ['i', $counter]);
+        // Keyset (cursor-based) pagination. Please note it requires a data set with deterministic order (the order_by 
+        // is tightly coupled with the cursor logic).
+        $order_by = isset($table['sql']['order_by']) && trim($table['sql']['order_by']) != '' ? "{$table["sql"]["order_by"]}" : 'ref ASC';
+        $cursor_sql = isset($table['pagination'], $table['pagination']['cursor_sql'])
+            ? $table['pagination']['cursor_sql']
+            : new PreparedStatementQuery('ref > ?', ['i', 0]);
+        $cursor_sql->sql = $where === '' ? "WHERE {$cursor_sql->sql}" : "AND {$cursor_sql->sql}";
+        $last_page_cursor = $cursor_sql;
+        $last_page_cursor_key = isset($table['pagination'], $table['pagination']['last_page_cursor_sql'])
+            ? $table['pagination']['last_page_cursor_sql']
+            : static function (PreparedStatementQuery $cursor, array $record): PreparedStatementQuery {
+                return new PreparedStatementQuery($cursor->sql, ['i', $record['ref']]);
+            };
+        $chunk_size = 5000;
+        // end of pagination
 
-            if (
-                empty($records)
-                && $records_count == 0
-            ) {
-                    logScript("WARNING: no data found!");
+        do {
+            $records = ps_query(
+                "SELECT {$select} FROM {$from} {$where} {$last_page_cursor->sql} ORDER BY {$order_by} LIMIT ?",
+                array_merge($last_page_cursor->parameters, ['i', $chunk_size])
+            );
+
+            // Check if no records were found for the first page. Note: cursor key(s) will be zero.
+            $cursor_key_values = array_filter(
+                $last_page_cursor->parameters,
+                static fn($_, $key) => $key % 2 === 1, ARRAY_FILTER_USE_BOTH
+            );
+            if (empty($records) && array_filter($cursor_key_values, is_positive_int_loose(...)) === []) {
+                logScript("WARNING: no data found!");
+                break;
             }
 
+            // Process the current chunk
             foreach ($records as $record) {
+                $last_page_cursor = $last_page_cursor_key($last_page_cursor, $record);
+
                 // Sometimes you want to provide feedback to the user to let him/ her know a particular record is being processed
                 if (isset($table["record_feedback"]) && !empty($table["record_feedback"])) {
                     $log_msg = $table["record_feedback"]["text"];
@@ -585,8 +679,9 @@ if ($export && isset($folder_path)) {
 
                 fwrite($export_fh, json_encode($record, JSON_NUMERIC_CHECK) . PHP_EOL);
             }
-            $counter += 5000;
-        }
+
+        } while (count($records) === $chunk_size);
+
         fclose($export_fh);
     }
 
