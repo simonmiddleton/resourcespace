@@ -22,8 +22,11 @@ function faces_detect(int $ref)
     ob_flush();
 
     if (!file_exists($file_path)) {
-        // Try full size JPEG as a fallback (for small images only where SCR wasn't generated)
-        $file_path = get_resource_path($ref, true, '', false, "jpg");
+        $resource_data = get_resource_data($ref);
+        if ($resource_data['file_extension'] == 'jpg' || $resource_data['file_extension'] == 'jpeg') {
+            // Try full size JPEG as a fallback (for small images only where SCR wasn't generated)
+            $file_path = get_resource_path($ref, true, '', false, $resource_data['file_extension']);
+        }
     }
 
     if (!file_exists($file_path)) {
