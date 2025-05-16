@@ -14,6 +14,8 @@ $page_intro = "";
 $page_def[] = config_add_text_input("faces_service_endpoint", $lang["faces-service-endpoint"]);
 
 // Build configuration variable descriptions
+
+$page_def[] = config_add_percent_range("faces_confidence_threshold", $lang["faces-confidence-threshold"]);
 $page_def[] = config_add_percent_range("faces_match_threshold", $lang["faces-match-threshold"]);
 $page_def[] = config_add_percent_range("faces_tag_threshold", $lang["faces-tag-threshold"]);
 
