@@ -40,7 +40,7 @@ function get_vector(bool $is_text, string $input, int $ref): array|false
 
     $vector = json_decode($response, true);
     if (!is_array($vector) || count($vector) !== 512) {
-        logScript("❌ Resource $ref: invalid vector returned");
+        logScript("❌ Resource $ref: invalid CLIP vector returned");
         return false;
     }
 
@@ -100,6 +100,7 @@ function clip_generate_vector($ref)
     $ext = "jpg";
     $size = "pre";
     $checksum = $resource['file_checksum'];
+    $return = false;
 
     // Remove existing vectors
     ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
@@ -112,19 +113,19 @@ function clip_generate_vector($ref)
         return false;
     }
     $vector = get_vector(false, $image_path, $ref);
-    if ($vector !== false) {
-        // Store vector in DB
-        $vector = array_map('floatval', $vector); // ensure float values
-        $blob = pack('f*', ...$vector);
+    if ($vector === false) { return false; } // Stop processing if issue with FastAPI server
 
-        ps_query(
-            "INSERT INTO resource_clip_vector (resource, vector_blob, checksum, is_text) VALUES (?, ?, ?, false)",
-            ['i', $ref, 's', $blob, 's', $checksum]
-        ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
-        $return = sql_insert_id();
+    // Store vector in DB
+    $vector = array_map('floatval', $vector); // ensure float values
+    $blob = pack('f*', ...$vector);
 
-        logScript("✓ Image vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
-    }
+    ps_query(
+        "INSERT INTO resource_clip_vector (resource, vector_blob, checksum, is_text) VALUES (?, ?, ?, false)",
+        ['i', $ref, 's', $blob, 's', $checksum]
+    ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
+    $return = sql_insert_id();
+
+    logScript("✓ Image vector stored for resource $ref [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
 
     // Store a vector for video snapshots also
     $snapshots = get_video_snapshots($ref, true, false);
@@ -133,23 +134,20 @@ function clip_generate_vector($ref)
         $frame_number++;
 
         $vector = get_vector(false, $snapshot, $ref);
-        if ($vector !== false) {
-            // Store vector in DB
-            $vector = array_map('floatval', $vector); // ensure float values
-            $blob = pack('f*', ...$vector);
+        if ($vector === false) { return false; } // Stop processing if issue with FastAPI server
+        // Store vector in DB
+        $vector = array_map('floatval', $vector); // ensure float values
+        $blob = pack('f*', ...$vector);
 
-            ps_query(
-                "INSERT INTO resource_clip_vector (resource, vector_blob, frame_number, checksum, is_text) VALUES (?, ?, ?, ?, false)",
-                ['i', $ref, 's', $blob, 'i', $frame_number, 's', $checksum]
-            ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
-            $return = sql_insert_id();
-
-            logScript("✓ Video snapshot vector stored for resource $ref frame $frame_number [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
-        }
+        ps_query(
+            "INSERT INTO resource_clip_vector (resource, vector_blob, frame_number, checksum, is_text) VALUES (?, ?, ?, ?, false)",
+            ['i', $ref, 's', $blob, 'i', $frame_number, 's', $checksum]
+        ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
+        
+        logScript("✓ Video snapshot vector stored for resource $ref frame $frame_number [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
+        
     }
-
-
-    return $return;
+    return true; // Vector processing complete.
 }
 
 
@@ -203,6 +201,9 @@ function clip_tag(int $resource)
         $response = curl_exec($ch);
         logScript ("CLIP service response: " . $response);
         curl_close($ch);
+
+        if (strlen($response)==0) { return false; } // CLIP server unresponsive
+
         foreach (json_decode($response) as $result) {
             # Create new or fetch existing node
             $nodes[] = set_node(null, $clip_keyword_field, ucfirst($result->tag), null, 9999);
