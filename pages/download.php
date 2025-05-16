@@ -84,7 +84,7 @@ if ($ref > 0 && $override_temp_key !== '') {
 // Is this a user specific download?
 if ('' != $userfiledownload) {
     $noattach       = false;
-    $log_download   = false;
+    $log_download   = true;
     // Provide a way of overriding $exiftool_write = false depending on download source e.g. from format chooser
     if ($exiftool_write && $write_exif_data) {
         $exiftool_write = true;
