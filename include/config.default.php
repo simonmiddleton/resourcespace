@@ -2882,7 +2882,7 @@ $CORS_whitelist =
 $csp_frame_ancestors = [];
 
 /* Font selection */
-$global_font = "Montserrat";
+$global_font = "Inter";
 
 // Sort tabs alphabetically
 $sort_tabs = true;
