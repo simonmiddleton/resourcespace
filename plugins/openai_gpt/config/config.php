@@ -45,3 +45,6 @@ $valid_ai_field_types = [
     FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE,
     ];
 
+// Allow plugin to overwrite existing data (e.g. exif data)
+$openai_gpt_overwrite_data = false;
+
