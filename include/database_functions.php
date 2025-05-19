@@ -94,7 +94,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
                     <hr style="margin-top:20px;">
                     <?php
                     if ($show_detailed_errors) { ?>
-                        <p style="font-size:11px;color:black;"><?php echo escape($error_info); ?></p>
+                        <p style="font-size:11px;color:black;"><?php debug_print_backtrace(); echo  PHP_EOL . PHP_EOL . escape($error_info) . PHP_EOL . PHP_EOL  ?></p>
                         <?php
                     }
                 } ?>
