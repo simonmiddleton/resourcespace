@@ -122,22 +122,15 @@ function HookFacesViewCustompanels()
                                 }
                             }
                             echo escape($value);
-                        } else { ?>
-                        <select onChange="FacesUpdateTag(<?php echo escape($ref) ?>,<?php echo escape($face["ref"]) ?>,this.value);">
-                        <option value="0"><?php echo escape($lang["select"]) ?></option>
-                        <?php
-                        foreach ($nodes as $node) {
-                            ?>
-                            <option value="<?php echo escape($node["ref"]) ?>"
-                            <?php if ($face["node"] == $node["ref"]) {
-                                ?>selected <?php
-                            } ?>
-                            ><?php echo escape($node["translated_name"]) ?></option>
-                            <?php
-                        }
-                        ?>
-                        </select>
-            <?php } ?>
+                        } else { 
+                        // Render dynamic keywords field
+                        $field=get_resource_type_field($faces_tag_field);
+                        $field['node_options'] = get_nodes($field['ref'], null, false);
+                        $name="face_" . $face["ref"];
+                        $selected_nodes=array($face["node"]);
+                        $multiple=false;
+                        include dirname(__FILE__, 4) . '/pages/edit_fields/9.php';
+                    } ?>
                     </td>
                     <td>
                     <?php $search_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!face" . $face["ref"])); ?>
@@ -162,7 +155,52 @@ function HookFacesViewCustompanels()
      */
     function FacesUpdateTag(resource, face,node)
         {
-        api("faces_tag",{'resource': resource, 'face': face, 'node': node},null,<?php echo generate_csrf_js_object('faces_tag'); ?>);
+        api("faces_set_node",{'resource': resource, 'face': face, 'node': node},null,<?php echo generate_csrf_js_object('faces_tag'); ?>);
+        }
+
+    /**
+     * Assigns a metadata node (tag) to a detected face using the ResourceSpace API in native mode.
+     *
+     * @param {number} face - The ID of the face to tag.
+     * @param {number} node - The node ID to assign to the face.
+     */
+    function FacesUpdateTag(resource, face,node)
+        {
+        api("faces_set_node",{'resource': resource, 'face': face, 'node': node},null,<?php echo generate_csrf_js_object('faces_tag'); ?>);
+        }
+
+    // Catch the AutoSave() call from the included dynamic keywords field and save all selected values
+    function AutoSave(field)
+        {
+        // Blank the existing field.
+        api("update_field",{'resource': <?php echo escape($ref) ?>, 'field': <?php echo escape($faces_tag_field) ?>, 'value': ''},function () {SaveFaces();},<?php echo generate_csrf_js_object('faces_autosave'); ?>);
+        }
+
+    function SaveFaces()
+        {
+        <?php foreach ($faces as $face) { ?>
+        // Find selected value
+        parentDiv = document.getElementById('face_<?php echo escape($face["ref"]) ?>_selected');
+        var children = parentDiv.querySelectorAll('.keywordselected');
+
+        if (children.length === 0) {
+            // No keyword selected - reset
+            FacesUpdateTag(<?php echo escape($ref) ?>, <?php echo escape($face["ref"]) ?>, 0);
+        }
+        else if (children.length > 1) {
+            alert('<?php echo escape($lang["faces-oneface"]) ?>');
+            // Remove all but the first keywordselected element
+            for (var i = 1; i < children.length; i++) {
+                children[i].remove();
+            }
+        }
+        else
+        {
+            var firstChild = children[0];
+            var node = firstChild.id.match(/\d+$/); // Match numeric suffix at end
+            FacesUpdateTag(<?php echo escape($ref) ?>, <?php echo escape($face["ref"]) ?>, node[0]);
+        }
+        <?php } ?>
         }
     </script>
     <?php

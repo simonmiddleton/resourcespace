@@ -204,7 +204,7 @@ function faces_tag($resource)
  * @uses ps_query()
  * @uses debug()
  */
-function api_faces_tag($resource, $face, $node)
+function api_faces_set_node($resource, $face, $node)
 {
     debug("API: faces_tag(" . $face . ", " . $node);
 
@@ -214,6 +214,10 @@ function api_faces_tag($resource, $face, $node)
         return false;
     }
 
+    // Set metadata
+    add_resource_nodes($resource,array($node));
+
+    // Assign to face
     ps_query("update resource_face set node=? where ref=?", ["i",$node,"i",$face]);
     return true;
 }
