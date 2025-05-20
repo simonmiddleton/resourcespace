@@ -61,11 +61,13 @@ function get_user_collections($user, $find = "", $order_by = "name", $sort = "AS
 
     if ($themes_in_my_collections) {
         // If we show featured collections, remove the categories
-        $keysql .= " WHERE (clist.`type` IN (?,?) OR (clist.`type` = ? AND clist.`count` > 0))";
+        $keysql .= " WHERE (clist.`type` IN (?,?,?) OR (clist.`type` = ? AND clist.`count` > 0))";
         $keyparams[] = "i";
         $keyparams[] = COLLECTION_TYPE_STANDARD;
         $keyparams[] = "i";
         $keyparams[] = COLLECTION_TYPE_PUBLIC;
+        $keyparams[] = "i";
+        $keyparams[] = COLLECTION_TYPE_REQUEST;
         $keyparams[] = "i";
         $keyparams[] = COLLECTION_TYPE_FEATURED;
     }
