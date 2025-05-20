@@ -15,3 +15,4 @@ $lang["faces-detect-on-upload"] = "Scan for faces on upload?";
 $lang["faces-tag-on-upload"] = "Tag recognised faces on upload?";
 $lang["faces-detecting"] = "Scanning for faces in resource:";
 $lang["faces-tagging"] = "Tagging detected faces in resource:";
+$lang["faces-oneface"] = "Please select only one option for each face.";
