@@ -335,6 +335,9 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .ui-widget-content {
             border: 1px solid #878787;
         }
+        .ui-menu .ui-menu-item {
+            color: white;
+        }
         /* Responsive mode */
         @media (max-width: 1200px) {
             #Header .HorizontalNav ul li a {
