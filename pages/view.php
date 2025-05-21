@@ -774,7 +774,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             # Restricted access? Show the request link.
 
                                             # List all sizes and allow the user to download them
-                                            $sizes = get_image_sizes($ref,false,$resource["file_extension"]);
+                                            $onlyifexists = true;
+                                            if (hook('modifycheckifexists')) {
+                                                $onlyifexists = false;
+                                            }
+                                            $sizes = get_image_sizes($ref, false, $resource["file_extension"], $onlyifexists);
 
                                             if ($missing_original && (int) $resource["no_file"] === 0 && array_search(1,array_column($sizes,"original")) === false) {
                                                 // Need to display the missing file size info
