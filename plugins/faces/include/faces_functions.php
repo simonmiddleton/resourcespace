@@ -13,7 +13,7 @@
  * @return bool Returns true if face detection and storage were successful,
  *              or false if the file was missing, the service failed, or invalid data was returned.
  */
-function faces_detect(int $ref)
+function faces_detect(int $ref): bool
 {
     global $faces_service_endpoint, $faces_confidence_threshold;
     $file_path = get_resource_path($ref, true, 'scr', false, "jpg");
@@ -100,7 +100,7 @@ function faces_detect(int $ref)
  * @return bool Returns true on successful processing, or false if any service errors
  *              or invalid responses are encountered.
  */
-function faces_tag($resource)
+function faces_tag(int $resource): bool
 {
     global $faces_service_endpoint, $mysql_db, $faces_tag_threshold;
 
@@ -204,7 +204,7 @@ function faces_tag($resource)
  * @uses ps_query()
  * @uses debug()
  */
-function api_faces_set_node($resource, $face, $node)
+function api_faces_set_node(int $resource, int $face, int $node): bool
 {
     debug("API: faces_tag(" . $face . ", " . $node);
 
