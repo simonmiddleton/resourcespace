@@ -339,3 +339,14 @@ function consentmanager_get_all_consents(string $findtext = "")
 
     return ps_query("select " . columns_in('consent', null, 'consentmanager') . " from consent $sql order by ref", $params);
 }
+
+
+function consentmanager_save_file(int $consent, string $filename, string $filedata)
+    {
+    if (!(checkperm("t") || checkperm("cm"))) {return false;}
+    $file_path = get_consent_file_path($consent);
+    file_put_contents($file_path,$filedata);
+    if (is_banned_extension(pathinfo($filename, PATHINFO_EXTENSION))) {return false;}
+    ps_query("UPDATE consent set file= ? where ref= ?", ['s', $filename, 'i', $consent]);
+    return true;
+    }
