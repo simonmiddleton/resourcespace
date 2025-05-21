@@ -1,7 +1,7 @@
 <?php
 include "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
-include "../include/file_functions.php";
+include_once "../include/file_functions.php";
 
 $ref = getval("ref", "");
 if (!is_numeric($ref)) {

@@ -1,5 +1,6 @@
 <?php
 include_once __DIR__ . "/../include/consent_functions.php";
+include_once __DIR__ . "/../include/file_functions.php";
 
 function HookConsentmanagerAllExport_add_tables()
 {
