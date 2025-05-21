@@ -70,7 +70,13 @@ foreach ($foldercontents as $objectindex => $object) {
             $valid_resource = $valid_resources[0];
             // A single resource has been found with the same filename
             $rsfile = get_resource_path($valid_resource, true, '', true, $extension);
-            $success = @copy($full_path, $rsfile);
+            try {
+                copy($full_path, $rsfile);
+                $success = filesize_unlimited($full_path) == filesize_unlimited($rsfile);
+            } catch (Exception $e) {
+                $success = false;
+                $errors[] = "ERROR - Copy operation failed for {$full_path} : " . $e->getMessage();
+            }
             if ($success) {
                 ps_query("update resource set file_extension = lower(?) where ref = ?", array("s", $extension, "i", $valid_resource));
                 resource_log($valid_resource, "u", 0);
@@ -92,9 +98,16 @@ foreach ($foldercontents as $objectindex => $object) {
         } else {
             // Multiple resources found with the same filename
             if ($replace_batch_existing) {
+                $copy_error = false;
                 foreach ($valid_resources as $valid_resource) {
                     $rsfile = get_resource_path($valid_resource, true, '', true, $extension);
-                    $success = @copy($full_path, $rsfile);
+                    try {
+                        copy($full_path, $rsfile);
+                        $success = filesize_unlimited($full_path) == filesize_unlimited($rsfile);
+                    } catch (Exception $e) {
+                        $success = false;
+                        $errors[] = "ERROR - Copy operation failed for {$full_path} : " . $e->getMessage();
+                    }
                     if ($success) {
                         ps_query("update resource set file_extension = lower(?) where ref = ?", array("s", $extension, "i", $valid_resource));
                         resource_log($valid_resource, "u", 0);
@@ -108,10 +121,13 @@ foreach ($foldercontents as $objectindex => $object) {
                         $replaced[] = $valid_resource;
                     } else {
                         $errors[] = "Failed to copy file from : " .  $filepath;
+                        $copy_error = true;
                     }
                 }
                 // Attempt to delete
-                try_unlink($full_path);
+                if (!$copy_error) {
+                    try_unlink($full_path);
+                }
             } else {
                 // Multiple resources found with the same filename
                 $resourcelist = implode(",", $valid_resources);
@@ -123,7 +139,13 @@ foreach ($foldercontents as $objectindex => $object) {
         $targetresource = $object->getBasename("." . $extension);
         if ((string)(int)($targetresource) == (string)$targetresource && in_array($targetresource, $replace_resources) && !resource_file_readonly($targetresource)) {
             $rsfile = get_resource_path($targetresource, true, '', true, $extension);
-            $success = @copy($full_path, $rsfile);
+            try {
+                copy($full_path, $rsfile);
+                $success = filesize_unlimited($full_path) == filesize_unlimited($rsfile);
+            } catch (Exception $e) {
+                $success = false;
+                $errors[] = "ERROR - Copy operation failed for {$full_path} : " . $e->getMessage();
+            }
             if ($success) {
                 ps_query("update resource set file_extension = lower(?) where ref = ?", array("s", $extension, "i", $targetresource));
                 resource_log($targetresource, "u", 0);
