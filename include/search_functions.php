@@ -1396,7 +1396,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         global $pagename, $related_search_show_self;
         $sql_self = new PreparedStatementQuery();
         $select->sql = "DISTINCT r.hit_count score, {$select->sql}";
-        if ($related_search_show_self && $pagename == 'search') {
+        if ($related_search_show_self && ($pagename == 'search' || $pagename == 'collections')) {
             $sql_self->sql = " SELECT [SELECT_SQL] FROM resource r " . $sql_join->sql . " WHERE r.ref = ? AND " . $sql_filter->sql . " GROUP BY r.ref UNION ";
             $sql_self->parameters = array_merge($select->parameters, $sql_join->parameters, ["i",$resource], $sql_filter->parameters);
         }
