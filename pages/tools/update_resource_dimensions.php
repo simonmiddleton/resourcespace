@@ -33,8 +33,8 @@ if (PHP_SAPI != 'cli') {
     OPTIONS SUMMARY
     
         -h, --help          Display this help text and exit
-        -s, --start         Ref of alternative resource to start from
-        -e, --end           Ref of alternative resource to end
+        -s, --start         Ref of resource to start from
+        -e, --end           Ref of resource to end
         -c, --collection    Ref of Collection to run on
     
     EXAMPLES
