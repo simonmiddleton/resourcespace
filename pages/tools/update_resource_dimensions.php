@@ -33,8 +33,8 @@ if (PHP_SAPI != 'cli') {
     OPTIONS SUMMARY
     
         -h, --help          Display this help text and exit
-        -s, --start         Ref of alternative resource to start from
-        -e, --end           Ref of alternative resource to end
+        -s, --start         Ref of resource to start from
+        -e, --end           Ref of resource to end
         -c, --collection    Ref of Collection to run on
     
     EXAMPLES
@@ -59,11 +59,11 @@ if (PHP_SAPI != 'cli') {
         }
         if ($option_name == 'start' || $option_name == 's') {
             $start =  (int) $option_value;
-            echo "Starting with alternative ref #" . $start . PHP_EOL;
+            echo "Starting with ref #" . $start . PHP_EOL;
         }
         if ($option_name == 'end' || $option_name == 'e') {
             $end =  (int) $option_value;
-            echo "Ending with alternative ref #" . $end . PHP_EOL;
+            echo "Ending with ref #" . $end . PHP_EOL;
         }
         if ($option_name == 'collection' || $option_name == 'c') {
             $col = (int) $option_value;
