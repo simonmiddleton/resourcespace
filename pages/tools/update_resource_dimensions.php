@@ -59,11 +59,11 @@ if (PHP_SAPI != 'cli') {
         }
         if ($option_name == 'start' || $option_name == 's') {
             $start =  (int) $option_value;
-            echo "Starting with alternative ref #" . $start . PHP_EOL;
+            echo "Starting with ref #" . $start . PHP_EOL;
         }
         if ($option_name == 'end' || $option_name == 'e') {
             $end =  (int) $option_value;
-            echo "Ending with alternative ref #" . $end . PHP_EOL;
+            echo "Ending with ref #" . $end . PHP_EOL;
         }
         if ($option_name == 'collection' || $option_name == 'c') {
             $col = (int) $option_value;
