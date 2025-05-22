@@ -271,6 +271,12 @@ function check_view_display_condition($fields, $n, $fields_all)
                     $validvalues = array_map("i18n_get_translated", $validvalues);
                     $validvalues = array_map("strtoupper", $validvalues);
                     $v = trim_array(explode(",", $fields_all[$cf]["value"] ?? ""));
+                    if ($fields_all[$cf]['type'] == FIELD_TYPE_CATEGORY_TREE) {
+                        $tree_values = array_merge(...array_map(function($value){
+                            return explode('/', $value);
+                        }, $v));
+                        $v = array_unique(array_merge($v, $tree_values));
+                    } 
                     $v = array_map("i18n_get_translated", $v);
                     $v = array_map("strtoupper", $v);
                     foreach ($validvalues as $validvalue) {
