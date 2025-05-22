@@ -1,7 +1,7 @@
 <?php
 
-$lang["clip-natural-language-search"] = "AI visual search";
-$lang["clip-natural-language-search-help"] = "Enter a natural language description of the image e.g. 'A red sports car'.";
+$lang["clip-natural-language-search"] = "Search by description";
+$lang["clip-natural-language-search-help"] = "Enter a description of the image e.g. 'A red sports car'.";
 $lang["clip-configuration"] = "CLIP configuration";
 $lang["clip-ai-smart-search"] = "AI Smart Search";
 $lang["clip-visually-similar-images"] = "Visually similar images";
