@@ -61,14 +61,12 @@ $error_text = "";
 // Set up array to render all values
 foreach ($saml_settings as $saml_setting => $configvalue) {
     $curvalue = isset($simplesamlconfig["config"][$saml_setting]) ? $simplesamlconfig["config"][$saml_setting] : "";
-    $samlvalue = getval($saml_setting, $curvalue);
-
+    $samlvalue = getval(str_replace(".", "_", $saml_setting), $curvalue); // PHP converts '.' to '_' in POST
     debug("saml_generate_config " . $saml_setting . "="  .  print_r($samlvalue, true));
     if ($saml_setting == "auth.adminpassword" && trim($samlvalue) == "") {
         $samlvalue = generateSecureKey(12);
     }
     $simplesamlconfig["config"][$saml_setting] = $samlvalue;
-
     if (
         (isset($simplesaml_config_defaults[$saml_setting]) && $samlvalue == $simplesaml_config_defaults[$saml_setting])
         || $saml_setting == "metadatadir"
@@ -77,7 +75,19 @@ foreach ($saml_settings as $saml_setting => $configvalue) {
         // Don't need to add defaults or metadatadir to config
         continue;
     }
-    $spconfig[$saml_setting] = "\$simplesamlconfig[\"config\"][\"" . $saml_setting . "\"] = '" . escape($samlvalue) . "';";
+    $configval = $samlvalue;
+    if ($saml_setting == "auth.adminpassword") {
+        // Hash value for use in config
+        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
+        $hasher = new Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher(
+            4, // time cost
+            65536, // memory cost
+            null, // cost
+            PASSWORD_ARGON2ID,
+        );
+        $configval = $hasher->hash(trim($samlvalue));
+    }
+    $spconfig[$saml_setting] = "\$simplesamlconfig[\"config\"][\"" . $saml_setting . "\"] = '" . escape($configval) . "';";
 }
 
 if (getval('sp_submit', '') !== '' && enforcePostRequest(false)) {
