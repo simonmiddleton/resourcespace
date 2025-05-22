@@ -125,31 +125,8 @@ function HookAnnotateViewRenderinnerresourcepreview()
     }
 
 function HookAnnotateViewpreviewlinkbar()
-    {
-        global $sizes, $downloadthissize, $data_viewsize, $n, $lang, $userrequestmode, $baseurl, $resource, $urlparams;
-        if ($downloadthissize && $sizes[$n]["allow_preview"]==1)
-        { 
-        $data_viewsize=$sizes[$n]["id"];
-        $data_viewsizeurl=hook('getpreviewurlforsize');
-        $preview_with_sizename=str_replace('%sizename', $sizes[$n]["name"], $lang['previewithsizename']);
-        ?> 
-        <tr class="DownloadDBlend">
-            <td class="DownloadFileName">
-                <h2><?php echo escape($lang["preview"])?></h2>
-                <p><?php echo escape($preview_with_sizename); ?></p>
-            </td>
-            <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]; ?></td>
-            <td class="DownloadButton">
-                <a class="enterLink previewsize-<?php echo escape($data_viewsize); ?>" 
-                    id="previewlink"
-                    data-viewsize="<?php echo escape($data_viewsize); ?>"
-                    data-viewsizeurl="<?php echo escape($data_viewsizeurl); ?>"  
-                    href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>">
-                    <?php echo escape($lang["action-view"]); ?>
-                </a>
-            </td>
-        </tr>
-        <?php
-        return true;
-        }
-    }
+{
+    // Remove View links from drop down on view page.
+    // Annotate plugin will add "Full screen preview" link instead.
+    return true;
+}
