@@ -373,10 +373,17 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
     // Check if path contains symlinks, if so don't use the value returned by realpath() as it is unlikely to match the expected paths
     $symlink = false;
     $path_parts = array_filter(explode("/", $path));
-    $checkpath = "";
+
+    if ($GLOBALS["config_windows"]) {
+        $checkpath = "";
+    } else {
+        $checkpath = "/";
+    }
+
     foreach ($path_parts as $path_part) {
-        $checkpath .= "/" . $path_part;
-        if (is_link($checkpath)) {
+        $checkpath .=  $path_part . "/";
+        if (is_link($checkpath) || ($GLOBALS["config_windows"] && stat($checkpath) != lstat($checkpath))) {
+            // is_link() returns false for junction links on Windows so check if stat and lstat return identical info
             debug("{$checkpath} is a symlink");
             $symlink = true;
             break;
