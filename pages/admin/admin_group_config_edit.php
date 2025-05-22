@@ -43,7 +43,7 @@ $enable_disable_options = array($lang['userpreference_disable_option'], $lang['u
 $yes_no_options = array($lang['no'], $lang['yes']);
 
 # Rendering of user group preferences area.
-if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) { 
+if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
     $page_def[] = config_add_html('<p>' . $lang["group_config_inherit"] . '</p>');
 } else {
     $page_def[] = config_add_html('<p>' . $lang["action-title_usergroup_override_detail"] . '</p>');
@@ -51,7 +51,7 @@ if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
     // User interface section
     $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="UsergroupConfigUserInterfaceSection" class="CollapsibleSection">');
     $page_def[] = config_add_colouroverride_input('header_colour_style_override', $lang["setup-headercolourstyleoverride"], '', null, true);
-    $page_def[] = config_add_colouroverride_input( 'header_link_style_override', $lang["setup-headerlinkstyleoverride"], '', null, true);
+    $page_def[] = config_add_colouroverride_input('header_link_style_override', $lang["setup-headerlinkstyleoverride"], '', null, true);
     $page_def[] = config_add_colouroverride_input('home_colour_style_override', $lang["setup-homecolourstyleoverride"], '', null, true);
     $page_def[] = config_add_colouroverride_input('collection_bar_background_override', $lang["setup-collectionbarbackground"], '', null, true);
     $page_def[] = config_add_colouroverride_input('collection_bar_foreground_override', $lang["setup-collectionbarforeground"], '', null, true);
@@ -141,14 +141,14 @@ if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
     }
 
     // Actions section - used to configure the alerts that appear in 'My actions'
-            // Create an array for the archive states
-            $available_archive_states = array();
-            $all_archive_states = array_merge(range(-2, 3), $additional_archive_states);
-            foreach ($all_archive_states as $archive_state_ref) {
-                if (in_array('e' . $archive_state_ref, $selected_usergroup_permissions)) {
-                    $available_archive_states[$archive_state_ref] = (isset($lang["status" . $archive_state_ref])) ? $lang["status" . $archive_state_ref] : $archive_state_ref;
-                }
-            }
+    // Create an array for the archive states
+    $available_archive_states = array();
+    $all_archive_states = array_merge(range(-2, 3), $additional_archive_states);
+    foreach ($all_archive_states as $archive_state_ref) {
+        if (in_array('e' . $archive_state_ref, $selected_usergroup_permissions)) {
+            $available_archive_states[$archive_state_ref] = (isset($lang["status" . $archive_state_ref])) ? $lang["status" . $archive_state_ref] : $archive_state_ref;
+        }
+    }
     if ($actions_on) {
         $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['actions_myactions'] . '</h3><div id="UsergroupActionSection" class="CollapsibleSection">');
         if (in_array('R', $selected_usergroup_permissions)) {
@@ -183,7 +183,7 @@ if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
         $page_def[] = config_add_html('</div>');
 
         // End of actions section
-            }
+    }
 
     // Browse Bar section
     $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_browse_bar_section'] . '</h3><div id="UsergroupFeaturedCollectionSection" class="CollapsibleSection">');
@@ -255,19 +255,19 @@ include "../../include/header.php";
         renderBreadcrumbs($links_trail);
         $page_def = config_filter_by_search($page_def, ['usergroup' => $ref], getval("filter", ""), getval("only_modified", "no"));
 
-    config_remove_user_preferences($page_def);
+        config_remove_user_preferences($page_def);
 
-    // Get user group config after page loads, header.php etc.
-    process_config_options(array('usergroup' => $ref));
+        // Get user group config after page loads, header.php etc.
+        process_config_options(array('usergroup' => $ref));
 
-    config_generate_html($page_def);
-    config_generate_AutoSaveConfigOption_function(generateURL($baseurl . "/pages/admin/admin_group_config_edit.php", $url_params));
+        config_generate_html($page_def);
+        config_generate_AutoSaveConfigOption_function(generateURL($baseurl . "/pages/admin/admin_group_config_edit.php", $url_params));
 
-    // Put back system / user preferences to avoid applying user group config for admin
-    process_config_options(array());
-    process_config_options(array('usergroup' => $usergroup));
-    process_config_options(array('user' => $userref));
-    ?>
+        // Put back system / user preferences to avoid applying user group config for admin
+        process_config_options(array());
+        process_config_options(array('usergroup' => $usergroup));
+        process_config_options(array('user' => $userref));
+        ?>
     </div>
 </div>
 <script>
