@@ -135,6 +135,33 @@ $use_cases = [
         'expected' => ['success' => true],
     ],
     [
+        // We use the run_id as an invalid unique extension so it can handle correctly when run w/ -nosetup
+        'name' => 'Unknown file types log (activity) and skip content based checks',
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_{$run_id}.{$run_id}", 'Lorem ipsum'),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_{$run_id}.{$run_id}"),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => static function ($result) use ($run_id): bool {
+            // Temporary: at some point after v10.6+ we should stop skipping content checks so we'll expect it to fail!
+            $op_ok = is_array($result) && $result['success'];
+            $log_found = (bool) ps_value(
+                 'SELECT EXISTS (
+                      SELECT value_new
+                        FROM activity_log
+                       WHERE BINARY(`activity_log`.`log_code`) = "S"
+                         AND note = ?
+                    ORDER BY ref DESC
+                ) AS `value`',
+                ['s', "Unknown MIME type for file extension '{$run_id}'"],
+                false
+            );
+
+            return $op_ok && $log_found;
+        },
+    ],
+    [
         'name' => 'Check destination is not a directory',
         'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/test_508.txt', 'x'),
         'input' => [
