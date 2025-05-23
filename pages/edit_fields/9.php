@@ -101,7 +101,7 @@ $add_searched_nodes_function_call = '';
 
             html += '<div class="keywordselected" id="nodeselected' + keyword_index + '">' + keyword_value;
             html += '<a href="#" class="RemoveKeyword"';
-            html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + escape(keyword_index) + '\', true); return false;"';
+            html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + keyword_index + '\', true); return false;"';
             html += '>x</a></div>';
             
             keyword_count ++;
