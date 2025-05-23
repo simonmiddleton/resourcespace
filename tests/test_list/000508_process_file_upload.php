@@ -106,6 +106,35 @@ $use_cases = [
         'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::MimeTypeMismatch),
     ],
     [
+        'name' => 'File can match against multiple MIME types',
+        'setup' => static function () use ($run_id) {
+            // We'll create an MP4 file that only has the audio channel (i.e. no video) => the type is audio/mp4.
+            $ffmpeg = get_utility_path('ffmpeg');
+            if ($ffmpeg === false) {
+                return false;
+            }
+
+            $cmd_output = run_command(
+                "{$ffmpeg} -f lavfi -i 'sine=frequency=1000:duration=5' -c:a aac -b:a 128k -vn %outfile",
+                true,
+                ['%outfile' => sys_get_temp_dir() . "/test_508_mime_check_{$run_id}.mp4"],
+            );
+
+            if (mb_strpos($cmd_output, ' Error ') !== false) {
+                test_log("FFMPeg command failed: {$cmd_output}");
+                return false;
+            }
+
+            return true;
+        },
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_mime_check_{$run_id}.mp4"),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => ['success' => true],
+    ],
+    [
         'name' => 'Check destination is not a directory',
         'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/test_508.txt', 'x'),
         'input' => [

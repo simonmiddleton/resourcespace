@@ -16,23 +16,23 @@ $use_cases = [
     [
         'name' => 'Non-existent JPG file',
         'input' => ['/tmp/test.jpg'],
-        'expected' => 'image/jpeg',
+        'expected' => ['image/jpeg'],
     ],
     [
         'name' => 'Non-existent JPG file (with extension predetermined)',
         'input' => ['/tmp/test.jpg', 'jpg'],
-        'expected' => 'image/jpeg',
+        'expected' => ['image/jpeg'],
     ],
     [
         'name' => 'When unsure, default to octet-stream',
         'input' => ['/tmp/test_default', null, false],
-        'expected' => 'application/octet-stream',
+        'expected' => ['application/octet-stream'],
     ],
     [
         'name' => 'Text file (force file based detection)',
         'setup' => $new_tmp_txt_file,
         'input' => ['txt', true],
-        'expected' => 'text/plain',
+        'expected' => ['text/plain'],
     ],
     [
         'name' => 'JPG file (force file based detection, no predetermined extension)',
@@ -41,13 +41,18 @@ $use_cases = [
             return isset($img['path']) ? $img['path'] : $img['error'];
         },
         'input' => [null, true],
-        'expected' => 'image/jpeg',
+        'expected' => ['image/jpeg'],
     ],
     [
         'name' => 'Detect only based on the extension',
         'setup' => $new_tmp_txt_file,
         'input' => ['jpg', false],
-        'expected' => 'image/jpeg',
+        'expected' => ['image/jpeg'],
+    ],
+    [
+        'name' => 'Support file matching multiple types',
+        'input' => ['/tmp/test.mp4', 'mp4'],
+        'expected' => ['video/mp4', 'audio/mp4'],
     ],
 ];
 foreach ($use_cases as $uc) {
@@ -70,7 +75,7 @@ foreach ($use_cases as $uc) {
     $result = get_mime_type(...$input);
     if ($uc['expected'] !== $result) {
         echo "Use case: {$uc['name']} - ";
-        test_log("result = $result" . PHP_EOL);
+        test_log('result = ' . print_r($result, true) . PHP_EOL);
         return false;
     }
 
@@ -81,6 +86,8 @@ foreach ($use_cases as $uc) {
         } elseif (file_exists($setup)) {
             unlink($setup);
         }
+
+        unset($setup);
     }
 }
 

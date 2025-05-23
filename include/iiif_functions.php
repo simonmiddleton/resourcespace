@@ -351,7 +351,11 @@ final class IIIFRequest
                 strtolower($resdata["file_extension"]),
                 array_merge($GLOBALS["ffmpeg_audio_extensions"], ["mp3"])
             ) ? "Sound" : "Video";
-            $media["format"] = $GLOBALS["mime_types_by_extension"][$resdata["file_extension"]] ?? "application/octet-stream";
+
+            /** {@see include/mime_types.php} */
+            $found_types = get_mime_types_by_extension($resdata['file_extension']);
+            $media["format"] = $found_types === [] ? 'application/octet-stream' : reset($found_types);
+
             $size = "";
             $iiif_thumb = $this->getThumbnail($resource);
             if ($iiif_thumb) {
@@ -981,7 +985,7 @@ final class IIIFRequest
         header("Access-Control-Allow-Origin: *");
         header('Content-Disposition: inline;');
         header('Content-Transfer-Encoding: binary');
-        $mime = get_mime_type($this->response["image"]);
+        $mime = get_mime_type($this->response["image"])[0];
         header("Content-Type: {$mime}");
         $sent = 0;
         while ($sent < $file_size) {

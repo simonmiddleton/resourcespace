@@ -1,11 +1,13 @@
 <?php
 
+// When the extension can match multiple types, if applicable, we'll always pick the first type as that should be the
+// recommended option by IANA or a relevant IETF's RFC.
 $mime_types_by_extension = array(
    '123' => 'application/vnd.lotus-1-2-3',
    '3dml' => 'text/vnd.in3d.3dml',
    '3ds' => 'image/x-3ds',
-   '3g2' => 'video/3gpp2',
-   '3gp' => 'video/3gpp',
+   '3g2' => ['video/3gpp2', 'audio/3gpp2'],
+   '3gp' => ['video/3gpp', 'audio/3gpp'],
    '7z' => 'application/x-7z-compressed',
    'aab' => 'application/x-authorware-bin',
    'aac' => 'audio/aac',
@@ -32,6 +34,7 @@ $mime_types_by_extension = array(
    'apk' => 'application/vnd.android.package-archive',
    'appcache' => 'text/cache-manifest',
    'application' => 'application/x-ms-application',
+   'apng' => 'image/apng',
    'apr' => 'application/vnd.lotus-approach',
    'arc' => 'application/x-freearc',
    'arw' => 'image/x-sony-arw',
@@ -47,6 +50,7 @@ $mime_types_by_extension = array(
    'atx' => 'application/vnd.antix.game-component',
    'au' => 'audio/basic',
    'avi' => 'video/x-msvideo',
+   'avif' => 'image/avif',
    'aw' => 'application/applixware',
    'azf' => 'application/vnd.airzip.filesecure.azf',
    'azs' => 'application/vnd.airzip.filesecure.azs',
@@ -298,6 +302,10 @@ $mime_types_by_extension = array(
    'gv' => 'text/vnd.graphviz',
    'gxf' => 'application/gxf',
    'gxt' => 'application/vnd.geonext',
+   'gz' => [
+       'application/gzip',
+       'application/x-gzip', # Note: Windows and macOS upload files with this non-standard MIME type
+   ],
    'h' => 'text/x-c',
    'h261' => 'video/h261',
    'h263' => 'video/h263',
@@ -439,8 +447,8 @@ $mime_types_by_extension = array(
    'mft' => 'application/rpki-manifest',
    'mgp' => 'application/vnd.osgeo.mapguide.package',
    'mgz' => 'application/vnd.proteus.magazine',
-   'mid' => 'audio/midi',
-   'midi' => 'audio/midi',
+   'mid' => ['audio/midi', 'audio/x-midi'],
+   'midi' => ['audio/midi', 'audio/x-midi'],
    'mie' => 'application/x-mie',
    'mif' => 'application/vnd.mif',
    'mime' => 'message/rfc822',
@@ -464,7 +472,7 @@ $mime_types_by_extension = array(
    'mp21' => 'application/mp21',
    'mp2a' => 'audio/mpeg',
    'mp3' => 'audio/mpeg',
-   'mp4' => 'video/mp4',
+   'mp4' => ['video/mp4', 'audio/mp4'],
    'mp4a' => 'audio/mp4',
    'mp4s' => 'application/mp4',
    'mp4v' => 'video/mp4',
@@ -958,7 +966,10 @@ $mime_types_by_extension = array(
    'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
    'xlw' => 'application/vnd.ms-excel',
    'xm' => 'audio/xm',
-   'xml' => 'application/xml',
+   'xml' => [
+       'application/xml', # recommended as of RFC 7303 (section 4.1)
+       'text/xml', # is still used sometimes
+   ],
    'xo' => 'application/vnd.olpc-sugar',
    'xop' => 'application/xop+xml',
    'xpi' => 'application/x-xpinstall',
@@ -989,7 +1000,10 @@ $mime_types_by_extension = array(
    'z7' => 'application/x-zmachine',
    'z8' => 'application/x-zmachine',
    'zaz' => 'application/vnd.zzazz.deck+xml',
-   'zip' => 'application/zip',
+   'zip' => [
+       'application/zip',
+       'application/x-zip-compressed', # Note: Windows uploads files with this non-standard MIME type
+   ],
    'zir' => 'application/vnd.zul',
    'zirz' => 'application/vnd.zul',
    'zmm' => 'application/vnd.handheld-entertainment+xml'

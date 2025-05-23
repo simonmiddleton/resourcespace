@@ -5898,7 +5898,7 @@ function get_original_imagesize($ref = "", $path = "", $extension = "jpg", $forc
     if (function_exists('mime_content_type')) {
         $mime_content_type = mime_content_type($file);
     } else {
-        $mime_content_type = get_mime_type($file);
+        $mime_content_type = get_mime_type($file)[0];
     }
 
     $o_size = ps_query("SELECT " . columns_in("resource_dimensions") . " FROM resource_dimensions WHERE resource=?", array("i",$ref));
@@ -8511,10 +8511,8 @@ function update_resource_type_order($neworder)
  * Check if file can be rendered in browser via download.php
  *
  * @param  string $path Path to file
- *
- * @return bool
  */
-function allow_in_browser($path)
+function allow_in_browser($path): bool
 {
     if (!file_exists($path) || is_dir($path)) {
         return false;
@@ -8535,23 +8533,17 @@ function allow_in_browser($path)
     }
 
     if (function_exists('mime_content_type')) {
-        $type = mime_content_type($path);
+        $type = array_values(array_filter([mime_content_type($path)]));
     } else {
         $type = get_mime_type($path);
     }
-    if ($type == "application/octet-stream") {
-        # Not properly detected, try and get mime type via exiftool if possible
-        $exiftool_fullpath = get_utility_path("exiftool");
-        if ($exiftool_fullpath != false) {
-            $command = $exiftool_fullpath . " -s -s -s -t -mimetype %PATH";
-            $cmd_args['%PATH'] = $path;
-            $type = run_command($command, false, $cmd_args);
-        }
+
+    // Unsure? Try and get mime type via exiftool if possible
+    if ($type === ['application/octet-stream']) {
+        $type = get_mime_type($path, null, true);
     }
-    if (in_array($type, $permitted_mime)) {
-        return true;
-    }
-    return false;
+
+    return array_intersect($permitted_mime, $type) !== [];
 }
 
 /**

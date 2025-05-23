@@ -746,26 +746,45 @@ function filesize2bytes($str)
  * - true: Only file based (uses exiftool)
  * - false: Only based on extension
  */
-function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): string
+function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): array
 {
-    global $mime_types_by_extension;
-
     if (empty($ext)) {
         $ext = parse_filename_extension($path);
     }
 
-    if (!$file_based_detection && isset($mime_types_by_extension[strtolower($ext)])) {
-        return $mime_types_by_extension[strtolower($ext)];
+    if (!$file_based_detection && ($found_by_ext = get_mime_types_by_extension($ext)) && $found_by_ext !== []) {
+        return $found_by_ext;
     }
 
     # Get mime type via exiftool if possible
     $exiftool_fullpath = get_utility_path("exiftool");
     if (($file_based_detection || $file_based_detection === null) && $exiftool_fullpath != false) {
         $command = $exiftool_fullpath . " -s -s -s -t -mimetype " . escapeshellarg($path);
-        return run_command($command);
+        $file_mime_type = trim(run_command($command));
+
+        if ($file_mime_type !== '') {
+            return [$file_mime_type];
+        }
     }
 
-    return "application/octet-stream";
+    return ['application/octet-stream'];
+}
+
+/**
+ * Find matching MIME type(s) for a file extension.
+ *
+ * @param string $extension
+ * @return list<string>
+ */
+function get_mime_types_by_extension(string $extension): array
+{
+    $extension = mb_strtolower(trim($extension));
+    $mime_types = $GLOBALS['mime_types_by_extension'] ?? [];
+    $matches = isset($mime_types[$extension])
+        ? (is_string($mime_types[$extension]) ? [$mime_types[$extension]] : $mime_types[$extension])
+        : [];
+
+    return array_values(array_filter(array_map(trim(...), $matches)));
 }
 
 /**
@@ -776,11 +795,11 @@ function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): 
  */
 function allowed_type_mime($allowedtype)
 {
-    global $mime_types_by_extension;
     if (strpos($allowedtype, "/") === false) {
-        // Get extended list of mime types to convert legacy extensions
-        // to Uppy mime type syntax
-        return $mime_types_by_extension[$allowedtype] ?? $allowedtype;
+        // Get extended list of mime types to convert legacy extensions to Uppy mime type syntax.
+        $found_types = get_mime_types_by_extension($allowedtype);
+        /** {@see include/mime_types.php} */
+        return $found_types === [] ? $allowedtype : reset($found_types);
     } else {
         // already a mime type
         return $allowedtype;
@@ -1068,7 +1087,7 @@ function send_mail($email, $subject, $message, $from = "", $reply_to = "", $html
 function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply_to = "", $html_template = "", $templatevars = array(), $from_name = "", $cc = "", $bcc = "", $files = array())
 {
     # Include footer
-    global $header_colour_style_override, $mime_types_by_extension, $email_from;
+    global $header_colour_style_override, $email_from;
     include_once __DIR__ . '/../lib/PHPMailer/PHPMailer.php';
     include_once __DIR__ . '/../lib/PHPMailer/Exception.php';
     include_once __DIR__ . '/../lib/PHPMailer/SMTP.php';
@@ -1326,12 +1345,9 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
 
     if (isset($images)) {
         foreach ($images as $image) {
-            $image_extension = pathinfo($image, PATHINFO_EXTENSION);
-
-            // Set mime type based on the image extension
-            if (array_key_exists($image_extension, $mime_types_by_extension)) {
-                $mime_type = $mime_types_by_extension[$image_extension];
-            }
+            /** {@see include/mime_types.php} */
+            $found_types = get_mime_types_by_extension(parse_filename_extension($image));
+            $mime_type = $found_types === [] ? '' : reset($found_types);
 
             $mail->AddEmbeddedImage($image, basename($image), basename($image), 'base64', $mime_type);
         }

@@ -30,7 +30,7 @@ ob_end_clean();
 
 \$filename = basename('$file');
 header("Content-Disposition: attachment; filename=\"{\$filename}\"");
-header('Content-Type: ' . get_mime_type('$file'));
+header('Content-Type: ' . get_mime_type('$file')[0]);
 header('Content-Length: ' . filesize_unlimited('$file'));
 echo file_get_contents('$file');
 

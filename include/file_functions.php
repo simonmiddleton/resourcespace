@@ -545,7 +545,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
     // Check content (MIME) type based on the file received (don't trust the header from the upload)
     $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
     $mime_content_chk = $processor['mime_file_based_detection'] ?? true;
-    if ($mime_type_by_ext !== get_mime_type($source_file_path, $source_file_ext, $mime_content_chk)) {
+    if (array_intersect($mime_type_by_ext, get_mime_type($source_file_path, $source_file_ext, $mime_content_chk)) === []) {
         debug("MIME type mismatch for file '{$source_file_name}'");
         return $fail_due_to(ProcessFileUploadErrorCondition::MimeTypeMismatch);
     }
