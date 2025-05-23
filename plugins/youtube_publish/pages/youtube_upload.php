@@ -251,16 +251,22 @@ echo "</p>";
     
         <label for="video_status"><?php echo escape($lang["youtube_publish_access"]); ?></label>
         <select name="video_status">
-        <option value="public" <?php if ($video_status == "public") {
-            echo "selected";
-                               } ?>><?php echo escape($lang["youtube_publish_public"]) . "&nbsp;&nbsp;" ?></option>
-        <option value="private" <?php if ($video_status == "private") {
-            echo "selected";
-                                } ?>><?php echo escape($lang["youtube_publish_private"]) . "&nbsp;&nbsp;" ?></option>
-        <option value="unlisted" <?php if ($video_status == "unlisted") {
-            echo "selected";
-                                 } ?> ><?php echo escape($lang["youtube_publish_unlisted"]) . "&nbsp;&nbsp;" ?></option>      
-        
+        <option 
+            value="public"
+            <?php echo ($video_status == "public" ? "selected" : "");?>
+            ><?php echo escape($lang["youtube_publish_public"]) . "&nbsp;&nbsp;" ?>
+        </option>
+        <option 
+            value="private"
+            <?php echo ($video_status == "private" ? "selected" : "");?>
+            ><?php echo escape($lang["youtube_publish_private"]) . "&nbsp;&nbsp;" ?>
+        </option>
+        <option
+            value="unlisted"
+            <?php echo ($video_status == "unlisted" ? "selected" : "");?>
+            ><?php echo escape($lang["youtube_publish_unlisted"]) . "&nbsp;&nbsp;" ?>
+        </option>
+
         </select>
         </p>
     </div>  
