@@ -543,9 +543,25 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
     }
 
     // Check content (MIME) type based on the file received (don't trust the header from the upload)
-    $mime_type_by_ext = get_mime_type($source_file_path, $source_file_ext, false);
-    $mime_content_chk = $processor['mime_file_based_detection'] ?? true;
-    if (array_intersect($mime_type_by_ext, get_mime_type($source_file_path, $source_file_ext, $mime_content_chk)) === []) {
+    $mime_file_based_detection = $processor['mime_file_based_detection'] ?? true;
+    $mime_type_by_ext = get_mime_types_by_extension($source_file_ext);
+
+    if ($mime_type_by_ext === []) {
+        log_activity(
+            "Unknown MIME type for file extension '{$source_file_ext}'",
+            LOG_CODE_SYSTEM,
+            get_mime_type($source_file_path, $source_file_ext, true)[0]
+        );
+        /* todo: Drop this overriding once we have a better MIME type database (e.g. in 3 releases from now based on the
+        activity log entries). This was temporarily added for v10.6 to avoid multiple failed uploads due to this new
+        check. */
+        $mime_file_based_detection = false;
+    }
+
+    if (
+        $mime_file_based_detection
+        && array_intersect($mime_type_by_ext, get_mime_type($source_file_path, $source_file_ext, true)) === []
+    ) {
         debug("MIME type mismatch for file '{$source_file_name}'");
         return $fail_due_to(ProcessFileUploadErrorCondition::MimeTypeMismatch);
     }
