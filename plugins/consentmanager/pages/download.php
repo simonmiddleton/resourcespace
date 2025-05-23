@@ -46,7 +46,7 @@ if (array_key_exists($file_extension, INLINE_VIEWABLE_TYPES)) {
     header('Pragma: public');
     header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); // A date in the past
     readfile($file_path);
-    exit; 
+    exit;
 } else {
     // For other file types, force download (your original behavior)
     header('Content-Type: application/octet-stream');

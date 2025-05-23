@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["consent_management"] = 'Hozzájárulás kezelése';
 $lang["new_consent"] = 'Új hozzájárulás';
 $lang["edit_consent"] = 'Hozzájárulás szerkesztése';

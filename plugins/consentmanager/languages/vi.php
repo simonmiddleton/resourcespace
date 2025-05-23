@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["consent_management"] = 'Quản lý sự đồng ý';
 $lang["new_consent"] = 'Sự đồng ý mới';
 $lang["edit_consent"] = 'Chỉnh sửa sự đồng ý';
