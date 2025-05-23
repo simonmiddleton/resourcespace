@@ -13,8 +13,7 @@
         "ext-zip": "*",
         "ext-gd": "*",
         "ext-mysqli": "*",
-        "ext-json": "*",
-        "codewithkyrian/whisper.php": "^1.1"
+        "ext-json": "*"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8",
@@ -41,10 +40,5 @@
         "forum": "https://groups.google.com/g/resourcespace",
         "issues": "https://www.resourcespace.com/bug_report",
         "security": "https://www.resourcespace.com/bug_report"
-    },
-    "config": {
-        "allow-plugins": {
-            "codewithkyrian/platform-package-installer": true
-        }
     }
 }
