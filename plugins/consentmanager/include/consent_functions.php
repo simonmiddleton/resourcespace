@@ -340,13 +340,30 @@ function consentmanager_get_all_consents(string $findtext = "")
     return ps_query("select " . columns_in('consent', null, 'consentmanager') . " from consent $sql order by ref", $params);
 }
 
-
-function consentmanager_save_file(int $consent, string $filename, string $filedata)
-    {
-    if (!(checkperm("t") || checkperm("cm"))) {return false;}
+/**
+ * Save a file associated with a consent record
+ *
+ * This function saves a file (typically a consent form or related document) to the file system
+ * and updates the associated consent record in the database with the filename. The function
+ * checks user permissions and blocks the upload if the file extension is banned.
+ *
+ * @param int    $consent   The ID of the consent record to associate the file with.
+ * @param string $filename  The name of the file to be saved (including extension).
+ * @param string $filedata  The raw file data (contents) to be written to disk.
+ *
+ * @return bool  Returns true if the file was saved and the database updated successfully;
+ *               returns false if the user lacks permission or the file extension is not allowed.
+ */
+function consentmanager_save_file(int $consent, string $filename, string $filedata): bool
+{
+    if (!(checkperm("t") || checkperm("cm"))) {
+        return false;
+    }
     $file_path = get_consent_file_path($consent);
-    file_put_contents($file_path,$filedata);
-    if (is_banned_extension(pathinfo($filename, PATHINFO_EXTENSION))) {return false;}
+    file_put_contents($file_path, $filedata);
+    if (is_banned_extension(parse_filename_extension($filename))) {
+        return false;
+    }
     ps_query("UPDATE consent set file= ? where ref= ?", ['s', $filename, 'i', $consent]);
     return true;
-    }
+}
