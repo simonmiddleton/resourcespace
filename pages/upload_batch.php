@@ -542,11 +542,12 @@ if ($processupload)
             $allowedmime = array_map("allowed_type_mime",$allowedmime);
             }
 
-        if(!in_array($filemime,$allowedmime))
+        if (array_intersect($allowedmime, $filemime) === [])
             {
-            debug("upload_batch - invalid file received from user " . $username . ",  filename " . $upfilename . ", mime type: " . $filemime);
+            $filemime_as_csv = implode(', ', $filemime);
+            debug("upload_batch - invalid file received from user " . $username . ",  filename " . $upfilename . ", mime type(s): " . $filemime_as_csv);
             $result["status"] = false;
-            $result["message"] = str_replace("[filetype]", $upfilename . " (" . $filemime . ")",$lang["error_upload_invalid_file"]);
+            $result["message"] = str_replace("[filetype]", $upfilename . " (" . $filemime_as_csv . ")",$lang["error_upload_invalid_file"]);
             $result["error"] = 105;
             unlink($upfilepath);
             die(json_encode($result));

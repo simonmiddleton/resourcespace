@@ -73,12 +73,13 @@ $z = intval(getval('z', 0, true));
 
 $file = $tilecache . "/{$z}_{$x}_$y.png";
 $gettile = true;
+$allowed_types = ['image/png', 'image/jpeg'];
 
 while (
     (
         !is_file($file)
         || (filemtime($file) < time() - $geo_tile_cache_lifetime)
-        || !in_array(get_mime_type($file), array("image/png","image/jpeg"))
+        || array_intersect($allowed_types, get_mime_type($file)) === []
     )
     && $gettile
 ) {
@@ -156,7 +157,7 @@ while (
     }
 }
 
-if (!is_file($file) || !in_array(get_mime_type($file), array("image/png","image/jpeg"))) {
+if (!is_file($file) || array_intersect($allowed_types, get_mime_type($file)) === []) {
     // No tiles available at requested resolution
     http_response_code(404);
     exit($lang["error-geotile-server-error"]);

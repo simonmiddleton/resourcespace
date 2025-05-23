@@ -341,7 +341,7 @@ if (isset($filename)) {
 }
 
 // We declare the downloaded content mime type
-$mime = get_mime_type($path);
+$mime = get_mime_type($path)[0];
 header("Content-Type: {$mime}");
 header('X-Content-Type-Options: nosniff');
 

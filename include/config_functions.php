@@ -747,7 +747,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
                 if (function_exists('mime_content_type')) {
                     $mime_type = explode("/", mime_content_type($current_file));
                 } else {
-                    $mime_type = explode("/", get_mime_type($current_file));
+                    $mime_type = explode("/", get_mime_type($current_file)[0]);
                 }
                 $file_type = end($mime_type);
                 $file_size = str_replace("&nbsp;", " ", formatfilesize(filesize($current_file)));

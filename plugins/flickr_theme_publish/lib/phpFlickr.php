@@ -429,7 +429,7 @@ if ( !class_exists('phpFlickr') ) {
                 
                 $photofilename = mb_basename($photo);
                 $photo = realpath($photo);
-                $mime_type = get_mime_type($photo);
+                $mime_type = get_mime_type($photo)[0];
                 $args['photo'] = curl_file_create($photo, $mime_type, $photofilename);
                 
                 $curl = curl_init($this->upload_endpoint);
