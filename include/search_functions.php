@@ -1357,8 +1357,13 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         $resource = str_replace("!relatedpushed", "", $resource[0]);
 
         if (isset($GLOBALS["related_pushed_order_by"])) {
-            $related_order = is_int_loose($GLOBALS["related_pushed_order_by"]) ? "field" . $GLOBALS["related_pushed_order_by"] : $GLOBALS["related_pushed_order_by"];
-            $order_by = set_search_order_by($search, $related_order, "ASC");
+            if (is_int_loose($GLOBALS["related_pushed_order_by"])) {
+                if (metadata_field_view_access($GLOBALS["related_pushed_order_by"])) {
+                    $order_by = set_search_order_by($search, "field" . $GLOBALS["related_pushed_order_by"], "ASC");
+                }
+            } else {
+                $order_by = set_search_order_by($search, $GLOBALS["related_pushed_order_by"], "ASC");
+            }
         }
 
         $order_by = str_replace("r.", "", $order_by); # UNION below doesn't like table aliases in the ORDER BY.
