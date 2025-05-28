@@ -48,11 +48,7 @@ function get_resource_path(
     global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
     $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
     $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
-    $baseurl, $k, $get_resource_path_extra_download_query_string_params, $resource_path_pull_cache;
-
-    if (isset($resource_path_pull_cache[$ref]) && strtolower((string)$extension) == 'jpg') {
-        $ref = $resource_path_pull_cache[$ref]["ref"];
-    }
+    $baseurl, $k, $get_resource_path_extra_download_query_string_params;
 
     $size = safe_file_name((string) $size);
     $extension = safe_file_name((string) $extension);
