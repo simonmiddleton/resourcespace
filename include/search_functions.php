@@ -1687,7 +1687,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
     }  elseif (checkperm('a') && $search == "!noningested") {
         // System admins only - search for resources that have not been ingested - unfiltered
         $select->sql = "DISTINCT r.hit_count score, {$select->sql}";
-        $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r " . $sql_join->sql . " WHERE file_path IS NOT NULL [GROUP_BY_SQL] [ORDER_BY_SQL] {$sql_suffix}";
+        $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r " . $sql_join->sql . " WHERE file_path IS NOT NULL AND file_path <> '' [GROUP_BY_SQL] [ORDER_BY_SQL] {$sql_suffix}";
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters);
     } elseif (preg_match('/^!report(\d+)(p[-1\d]+)?(d\d+)?(fy\d{4})?(fm\d{2})?(fd\d{2})?(ty\d{4})?(tm\d{2})?(td\d{2})?/i', $search, $report_search_data)) {
         /*
