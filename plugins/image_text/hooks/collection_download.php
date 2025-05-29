@@ -14,9 +14,9 @@ function HookImage_textCollection_downloadReplaceuseoriginal()
     return false;        
     }
 
-function HookImage_textCollection_downloadModifydownloadfile()
+function HookImage_textCollection_downloadModifydownloadfile($resource)
 {
-    global $result, $n, $p, $newpath, $userref, $usergroup, $pextension,
+    global $p, $newpath, $userref, $usergroup, $pextension,
     $image_text_restypes, $image_text_override_groups, $image_text_filetypes,
     $usesize, $pextension, $use_watermark, $alternative, $tmpfile,
     $filename, $image_text_height_proportion, $image_text_max_height,
@@ -25,8 +25,8 @@ function HookImage_textCollection_downloadModifydownloadfile()
 
     # Return if not configured for this resource type or if user has requested no overlay and is permitted this
     if (
-        !in_array($result[$n]['resource_type'], $image_text_restypes)
-        || !in_array(strtoupper($result[$n]['file_extension']), $image_text_filetypes)
+        !in_array($resource['resource_type'], $image_text_restypes)
+        || !in_array(strtoupper($resource['file_extension']), $image_text_filetypes)
         || (getval("nooverlay","") != "" && in_array($usergroup, $image_text_override_groups))
         || $use_watermark
     ) {
@@ -35,7 +35,7 @@ function HookImage_textCollection_downloadModifydownloadfile()
 
      # Get text from field
     global $image_text_field_select, $image_text_default_text;
-    $overlaytext=get_data_by_field($result[$n]["ref"], $image_text_field_select);
+    $overlaytext=get_data_by_field($resource["ref"], $image_text_field_select);
     if ($overlaytext=="") {
         if ($image_text_default_text != "") {
             $overlaytext=$image_text_default_text;
@@ -45,7 +45,7 @@ function HookImage_textCollection_downloadModifydownloadfile()
     }
 
     # If this is not a temporary file having metadata written see if we already have a suitable size with the correct text
-    $image_text_saved_file=get_resource_path($result[$n]["ref"],true,$usesize . "_image_text_" . md5($overlaytext . $image_text_height_proportion . $image_text_max_height . $image_text_min_height . $image_text_font . $image_text_position . $image_text_banner_position) . "_" ,false,$pextension,-1,1);
+    $image_text_saved_file=get_resource_path($resource["ref"],true,$usesize . "_image_text_" . md5($overlaytext . $image_text_height_proportion . $image_text_max_height . $image_text_min_height . $image_text_font . $image_text_position . $image_text_banner_position) . "_" ,false,$pextension,-1,1);
 
     if ($p!=$tmpfile && $p!=$newpath && file_exists($image_text_saved_file)) {
         $p=$image_text_saved_file;
@@ -77,7 +77,7 @@ function HookImage_textCollection_downloadModifydownloadfile()
         exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");
     }
 
-    $tmpolfile= get_temp_dir() . "/" . $result[$n]["ref"] . "_image_text_" . $userref . "." . $pextension;
+    $tmpolfile= get_temp_dir() . "/" . $resource["ref"] . "_image_text_" . $userref . "." . $pextension;
 
     $createolcommand = $convert_fullpath . ' -background [BACKCOLOUR] -fill white -gravity [POSITION] -font [FONT] -size [WIDTHxHEIGHT] caption:[CAPTION] [TMPOLFILE]';
     $cmdparams =  [
@@ -91,7 +91,7 @@ function HookImage_textCollection_downloadModifydownloadfile()
     ];
     run_command($createolcommand, false, $cmdparams);
 
-    $newdlfile = get_temp_dir() . "/" . $result[$n]["ref"] . "_image_text_result_" . $userref . "." . $pextension;
+    $newdlfile = get_temp_dir() . "/" . $resource["ref"] . "_image_text_result_" . $userref . "." . $pextension;
 
     if ($image_text_banner_position == "bottom") {
         $convertcommand = $convert_fullpath . " [FILE] [TMPOLFILE] -append [NEWDLFILE]";

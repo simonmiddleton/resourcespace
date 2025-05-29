@@ -6562,8 +6562,8 @@ function process_collection_download(array $dl_data): array
     $include_alternatives       = (bool) ($dl_data['include_alternatives'] ?? false);
     $collection_download_tar    = (bool) ($dl_data['collection_download_tar'] ?? false);
     $archiver                   = (bool) ($dl_data["archiver"] ?? false);
-    // Set this as global -  required by write_metadata()
-    global $exiftool_write_option;
+    // Set this as global -  required by write_metadata() and hooks
+    global $exiftool_write_option, $p, $pextension;
     $saved_exiftool_write_option = $exiftool_write_option;
     $exiftool_write_option = $dl_data['exiftool_write_option'];
 
@@ -6755,6 +6755,10 @@ function process_collection_download(array $dl_data): array
             $target_exists = file_exists($p);
         }
 
+        if (!isset($pextension) || trim($pextension) == "") {
+            $pextension = pathinfo($p, PATHINFO_EXTENSION);
+        }
+
         // Move to next resource if file doesn't exist or restricted access and user doesn't have access to the requested size
         if (
             !(
@@ -6814,7 +6818,7 @@ function process_collection_download(array $dl_data): array
                 $dl_data['text'] .= $addtext;
             }
 
-            hook('modifydownloadfile');
+            hook('modifydownloadfile', "", [$collection_resources[$n]]);
             if ($collection_download_tar) {
                 $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
                 debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
