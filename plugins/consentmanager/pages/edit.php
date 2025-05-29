@@ -194,17 +194,19 @@ include "../../../include/header.php";
                     ?>
                     <tr>
                         <td>
-                            <input
-                                type="checkbox"
-                                class="consent_usage"
-                                name="consent_usage[]"
-                                value="<?php echo $medium ?>"
-                                <?php if (in_array($medium, $s)) { ?>
-                                    checked
-                                <?php } else {
-                                    $allchecked = false;
-                                } ?>
-                            >&nbsp;<?php echo lang_or_i18n_get_translated($medium, "consent_usage-") ?>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    class="consent_usage"
+                                    name="consent_usage[]"
+                                    value="<?php echo $medium ?>"
+                                    <?php if (in_array($medium, $s)) { ?>
+                                        checked
+                                    <?php } else {
+                                        $allchecked = false;
+                                    } ?>
+                                >&nbsp;<?php echo lang_or_i18n_get_translated($medium, "consent_usage-") ?>
+                            </label>
                         </td>
                     </tr>
                     <?php
@@ -214,8 +216,10 @@ include "../../../include/header.php";
                 <tr>
                     <td>
                         <!-- Option to tick all mediums -->
-                        <input type="checkbox" onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php echo ($allchecked) ? " checked" : ''; ?> />
-                        <?php echo escape($lang["selectall"]); ?>
+                        <label>
+                            <input type="checkbox" onChange="jQuery('.consent_usage').prop('checked',this.checked);" <?php echo ($allchecked) ? " checked" : ''; ?> />
+                            <?php echo escape($lang["selectall"]); ?>
+                        </label>
                     </td>
                 </tr>
             </table>

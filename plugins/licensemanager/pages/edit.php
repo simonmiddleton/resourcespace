@@ -222,17 +222,26 @@ $allchecked=true;
 foreach ($license_usage_mediums as $medium)
     {
     ?>
-    <tr><td>
-    <input type="checkbox" class="license_usage" name="license_usage[]" value="<?php echo $medium ?>" <?php if (in_array($medium, $s)) { ?>checked<?php } else {$allchecked=false;} ?>>&nbsp;<?php echo lang_or_i18n_get_translated($medium, "license_usage-") ?>
-    </td></tr>
+    <tr>
+        <td>
+            <label>
+                <input type="checkbox" class="license_usage" name="license_usage[]" value="<?php echo $medium ?>" <?php if (in_array($medium, $s)) { ?>checked<?php } else {$allchecked=false;} ?>>&nbsp;<?php echo lang_or_i18n_get_translated($medium, "license_usage-") ?>
+            </label>
+        </td>
+    </tr>
     <?php
     }
 ?>
 
-    <!-- Option to tick all mediums -->
-    <tr><td>
-        <input type="checkbox" onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>/><?php echo escape($lang["selectall"]); ?>
-    </td></tr>
+<!-- Option to tick all mediums -->
+<tr>
+    <td>
+        <label>
+            <input type="checkbox" onChange="jQuery('.license_usage').prop('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>/>
+            <?php echo escape($lang["selectall"]); ?>
+        </label>
+    </td>
+</tr>
 
 </table>
 
