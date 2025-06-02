@@ -1106,8 +1106,6 @@ function auto_create_user_account($hash = "")
     }
     if ($approve) {
         email_reset_link($user_email, true);
-        redirect($baseurl . "/pages/done.php?text=user_request");
-        exit();
     } else {
         # Managed approving
         # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
