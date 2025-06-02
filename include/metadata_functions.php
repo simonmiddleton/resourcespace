@@ -272,11 +272,11 @@ function check_view_display_condition($fields, $n, $fields_all)
                     $validvalues = array_map("strtoupper", $validvalues);
                     $v = trim_array(explode(",", $fields_all[$cf]["value"] ?? ""));
                     if ($fields_all[$cf]['type'] == FIELD_TYPE_CATEGORY_TREE) {
-                        $tree_values = array_merge(...array_map(function($value){
+                        $tree_values = array_merge(...array_map(function ($value) {
                             return explode('/', $value);
                         }, $v));
                         $v = array_unique(array_merge($v, $tree_values));
-                    } 
+                    }
                     $v = array_map("i18n_get_translated", $v);
                     $v = array_map("strtoupper", $v);
                     foreach ($validvalues as $validvalue) {
@@ -362,7 +362,8 @@ function update_fieldx(int $metadata_field_ref): void
 function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
 {
     $exiftool_fullpath = get_utility_path("exiftool");
-    $command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit " . escapeshellarg($file_path);
+    $command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit ";
+    $command .= escapeshellarg($file_path);
     $dimensions_resolution_unit = explode("\t", run_command($command));
 
     # if dimensions resolution and unit could be extracted, add them to the database.
@@ -384,18 +385,15 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
                 's', $filesize
             ];
 
-            if (count($dimensions_resolution_unit) >= 2) {
-                $resolution = $dimensions_resolution_unit[1];
-                $sql_insert .= ",resolution";
-                $sql_params[] = 's';
-                $sql_params[] = $resolution;
-
-                if (count($dimensions_resolution_unit) >= 3) {
-                    $unit = $dimensions_resolution_unit[2];
+            for ($n = 1; $n < count($dimensions_resolution_unit); $n++) {
+                if (is_int_loose($dimensions_resolution_unit[$n])) {
+                    $sql_insert .= ",resolution";
+                    $sql_params[] = 'i';
+                } else {
                     $sql_insert .= ",unit";
                     $sql_params[] = 's';
-                    $sql_params[] = $unit;
                 }
+                $sql_params[] = $dimensions_resolution_unit[$n];
             }
 
             $sql_insert .= ")";
