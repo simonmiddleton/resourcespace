@@ -6573,7 +6573,6 @@ function process_collection_download(array $dl_data): array
     if (
         empty($collectiondata)
         || empty($collection_resources)
-        || !isset($GLOBALS["userref"]) // Downloads need to be linked to a user
     ) {
         debug("Missing collection data, Unable to proceed with collection download");
         return [];
