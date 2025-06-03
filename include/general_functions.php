@@ -4937,8 +4937,6 @@ function get_system_status(bool $basic = false)
 
     // Return current number of resources including count of 
     // non-ingested resources (staticsync)
-
-
     $return['results']['resource_count'] = [
         'status' => 'OK',
         'total' => get_total_resources(),
@@ -5649,9 +5647,9 @@ function check_tinymce_toolbar(string $toolbar = ""): string
 /**
  * Return the number of resources in the system that are not ingested into the filestore i.e. with 'file_path' set
  *
- * @return int                  Number of non-ingested resources in the system
+ * @return int  Number of non-ingested resources in the system
  */
 function get_non_ingested_resources(): int
 {
-    return ps_value("SELECT COUNT(*) value FROM resource WHERE file_path IS NOT NULL", [], 0);
+    return ps_value("SELECT COUNT(*) value FROM resource WHERE file_path IS NOT NULL AND file_path <> ''", [], 0);
 }
