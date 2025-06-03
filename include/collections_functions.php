@@ -6755,7 +6755,7 @@ function process_collection_download(array $dl_data): array
         }
 
         if (!isset($pextension) || trim($pextension) == "") {
-            $pextension = pathinfo($p, PATHINFO_EXTENSION);
+            $pextension = parse_filename_extension($p);
         }
 
         // Move to next resource if file doesn't exist or restricted access and user doesn't have access to the requested size
