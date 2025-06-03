@@ -1773,7 +1773,8 @@ if ($import && isset($folder_path)) {
     }
     unset($src_resource_alt_files);
 
-    logScript("");
-    logScript("Script ran successfully!");
     fclose($progress_fh);
 }
+
+logScript("");
+logScript("Script ran successfully!");
