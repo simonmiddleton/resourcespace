@@ -4546,7 +4546,7 @@ function render_fixed_list_as_pills($nodes):string
     if (count($nodes) > 0) {
         foreach ($nodes as $nodedata) {
             // Add zero width spaces to break up strings on non alphanumeric characters to allow for text wrapping
-            $nodedata["name"] = preg_replace_callback('/[^a-zA-Z0-9]/', function($matches) {
+            $nodedata["name"] = preg_replace_callback('/[^a-zA-Z0-9]/u', function($matches) {
                 return $matches[0] . "\u{200B}";
             }, $nodedata["name"]);
             $search_url = generateURL($baseurl . '/pages/search.php', ['search' => NODE_TOKEN_PREFIX . $nodedata['ref']]);
