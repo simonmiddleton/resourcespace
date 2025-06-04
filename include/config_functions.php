@@ -1441,7 +1441,7 @@ function config_merge_non_image_types()
  *
  * @return string The resolved URL for the header image.
  */
-function get_header_image(bool $full = false, bool $for_header = false, string $force_appearance = ""): string
+function get_header_image(bool $full = false, bool $for_header = false, string $force_appearance = "", bool $for_login = false): string
 {
     global $linkedheaderimgsrc, $linkedheaderimgsrc_dark, $baseurl_short, $baseurl, $storageurl, $user_pref_appearance;
 
@@ -1493,6 +1493,9 @@ function get_header_image(bool $full = false, bool $for_header = false, string $
             } else {
                 $header_img_src = $baseurl . '/gfx/titles/title-black.svg';
             }
+        } elseif ($for_login) {
+            // When displaying in login return logo with white text
+            $header_img_src = $baseurl . '/gfx/titles/title.svg';
         } else {
             // When displaying in other places simply return the default logo
             $header_img_src = $baseurl . '/gfx/titles/title-black.svg';

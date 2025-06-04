@@ -193,7 +193,7 @@ include "include/login_background.php";
     <input type="hidden" name="url" value="<?php echo escape($url)?>">
     <input type="hidden" name="modal" value="<?php echo $modal == "true" ? "true" : ""; ?>">
 
-    <?php $header_img_src = get_header_image(); ?>
+    <?php $header_img_src = get_header_image(for_login: true); ?>
     <div id="LoginHeader">
         <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname ?>">
     </div>
