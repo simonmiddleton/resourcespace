@@ -1341,7 +1341,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
             }
         }
 
-        $select->sql = "c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, {$select->sql}";
+        $select->sql = "DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, {$select->sql}";
         $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r JOIN collection_resource c ON r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") [ORDER_BY_SQL] {$sql_suffix}";
         $sql->parameters = array_merge($select->parameters, $colcustperm->parameters, ["i",$collection], $sql_filter->parameters);
 
