@@ -1184,12 +1184,17 @@ function email_user_request()
 
     $user_limit_reached = user_limit_reached();
 
+    $usergroup = 0;
+    if ($account_email_exists_notify) {
+        $usergroup = ps_value("SELECT usergroup AS `value` FROM user WHERE email = ?", ["s", $email], 0);
+    }
+
     $user_registration_opt_in_message = "";
     if ($user_registration_opt_in && getval("login_opt_in", "") == "yes") {
         $user_registration_opt_in_message .= $lang["user_registration_opt_in_message"];
     }
     $requestedgroup = getval("usergroup", 0, true);
-    $approval_notify_users = get_notification_users("USER_ADMIN", $requestedgroup != 0 ? $requestedgroup : null);
+    $approval_notify_users = get_notification_users("USER_ADMIN", $usergroup ?: $requestedgroup);
     $message = new ResourceSpaceUserNotification();
     $message->set_subject($applicationname . ": ");
     $message->append_subject("lang_requestuserlogin");
