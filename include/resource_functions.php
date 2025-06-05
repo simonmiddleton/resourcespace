@@ -1097,9 +1097,9 @@ function save_resource_data($ref, $multi, $autosave_field = "")
             # Add any onchange code if new checksum for field shows that it has changed
             if (
                 isset($fields[$n]["onchange_macro"]) && $fields[$n]["onchange_macro"] !== ""
-                    && ($post_cs !== "" || (!$check_edit_checksums && $new_checksums[$fields[$n]["ref"]] != md5(trim(preg_replace('/\s\s+/', ' ', (string) $fields[$n]['value'] ?? '')))))
                     && isset($new_checksums[$fields[$n]["ref"]])
                     && $post_cs !== $new_checksums[$fields[$n]["ref"]]
+                    && ($post_cs !== "" || (!$check_edit_checksums && $new_checksums[$fields[$n]["ref"]] != md5(trim(preg_replace('/\s\s+/', ' ', (string) $fields[$n]['value'] ?? '')))))
             ) {
                 $macro_resource_id = $ref;
                 eval(eval_check_signed($fields[$n]["onchange_macro"]));
