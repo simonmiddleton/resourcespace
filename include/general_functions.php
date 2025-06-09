@@ -364,7 +364,7 @@ function newlines($text)
  */
 function get_all_site_text($findpage = "", $findname = "", $findtext = "")
 {
-    global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;
+    global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder, $language;
 
     $findname = trim($findname);
     $findpage = trim($findpage);
@@ -375,8 +375,10 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
     // en should always be included as it is the fallback language of the system
     $search_languages = array('en');
 
-    if ('en' != $defaultlanguage) {
-        $search_languages[] = $defaultlanguage;
+    if ('en' == $language) {
+        $search_languages = array('en');
+    } else {
+        $search_languages = array($language, 'en');
     }
 
     // When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
@@ -494,7 +496,8 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
     $unique_returned_records = array();
     $existing_lang_names     = array();
     $i                       = 0;
-    foreach (array_reverse($return) as $returned_record) {
+
+    foreach ($return as $returned_record) {
         if (!in_array($returned_record['name'], $existing_lang_names)) {
             $existing_lang_names[$i]     = $returned_record['name'];
             $unique_returned_records[$i] = $returned_record;
@@ -503,7 +506,7 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
         $i++;
     }
     // Reverse again so that the default language appears first in results
-    return array_values(array_reverse($unique_returned_records));
+    return array_values($unique_returned_records);
 }
 
 /**
