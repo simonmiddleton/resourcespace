@@ -4944,6 +4944,12 @@ function get_system_status(bool $basic = false)
         'non_ingested' => get_non_ingested_resources(),        
     ];
 
+    // Return last API access
+    $return['results']['last_api_access'] = [
+        'status' => 'OK',
+        'info' => get_sysvar("last_api_access")
+    ];
+
     // Return bandwidth usage last 30 days
     $return['results']['download_bandwidth_last_30_days_gb'] = [
         'status' => 'OK',
