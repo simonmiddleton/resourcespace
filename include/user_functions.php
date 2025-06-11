@@ -3664,7 +3664,7 @@ function delete_usergroup(int $usergroup_ref): bool
  */
 function browser_check()
 {
-    global $browser_check_key, $applicationname, $disable_browser_check;
+    global $browser_check_key, $applicationname, $disable_browser_check, $baseurl_short, $browser_check_message;
     
     // Exceptions
     if (PHP_SAPI == 'cli') {return;}
@@ -3687,6 +3687,29 @@ function browser_check()
     window.location.reload(true);
     }, 2000);
     </script>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: ubuntu,arial,sans-serif;
+            background: #f0f0f0;
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.5em;margin-top: 2em;
+        }
+    </style>
+</head>
+    <body>
+        <div>
+        <div class="logo"><img src="<?php echo $baseurl_short ?>gfx/titles/title-black.svg" /></div> 
+            <h1><?php echo escape($browser_check_message) ?></h1><?php /* Note - can't be translated - language files not loaded, this is intentionally very early in the process */ ?>
+        </div>
+    </body>
     </head></html>
     <?php
     exit();    
