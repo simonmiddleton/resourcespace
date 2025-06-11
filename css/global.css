@@ -237,7 +237,8 @@ select::-ms-expand
     right: 10px;
 }
 #HeaderNav2 {
-    padding-top: 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     overflow: visible;
     float: left;
 }

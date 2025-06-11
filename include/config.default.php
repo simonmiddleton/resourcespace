@@ -3229,3 +3229,5 @@ $tinymce_toolbar = "styles | bold italic underline removeformat | fontsize | for
 // Browser check - guard against basic DDOS - execute JS on the client to solve a problem, and only allow access for the valid answer.
 $browser_check=false;
 $browser_check_key="c899a58b100c94fb907fac1f29e2d0fd"; // Randomise this.
+$browser_check_message="Performing browser checks..."; // Message to display when checking browser. This cannot be translated as is displayed before languages are loaded, so is provided as a configuration so it can be localised if desired.
+
