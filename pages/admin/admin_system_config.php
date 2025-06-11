@@ -662,7 +662,7 @@ include '../../include/header.php';
                 echo json_encode(
                     array_map(
                         static fn (string $V): array => explode(',', $V),
-                        array_column(get_all_resource_types(), 'resource_type_field', 'ref')
+                        array_filter(array_column(get_all_resource_types(), 'resource_type_field', 'ref'))
                     ),
                     JSON_NUMERIC_CHECK
                 );
