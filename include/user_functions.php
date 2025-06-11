@@ -3660,3 +3660,56 @@ function delete_usergroup(int $usergroup_ref): bool
 
     return true;
 }
+
+/**
+ * Check that this is a real browser by executing JS to set an expected cookie.
+ */
+function browser_check()
+{
+    global $browser_check_key, $applicationname, $disable_browser_check;
+    
+    // Exceptions
+    if (PHP_SAPI == 'cli') {return;}
+    if (isset($disable_browser_check) && $disable_browser_check) {return;} // e.g. API/IIIF
+
+    $ip=$_SERVER["REMOTE_ADDR"]; // Use real IP, do not trust forwarded IP as could be faked
+    $question_key=hash_hmac("sha512", "{$ip}" . date('Ymd'), $browser_check_key);
+    $answer_key=xor_base64_encode($question_key);
+
+    // Look for the answer already set as a cookie
+    if (getval("browser_check_cookie","")==$answer_key) {return;} // We're good
+
+    // Output the JS to calculate the answer and set the cookie
+    ?>
+    <html><title><?php echo escape($applicationname) ?></title><head>
+    <script>
+    function x9Zq(str){var a=[90,51,127],b='',c=0;for(var d=0;d<str.length;d++)b+=String.fromCharCode(str.charCodeAt(d)^a[c++%3]);return btoa(b);}
+    document.cookie = "browser_check_cookie=" + x9Zq(<?php echo json_encode($question_key) ?>) + "; path=/; max-age=172800";
+    setTimeout(function() {
+    window.location.reload(true);
+    }, 2000);
+    </script>
+    </head></html>
+    <?php
+    exit();    
+}
+
+/**
+ * Obfuscates a string using a fixed XOR pattern and encodes it in Base64.
+ *
+ * This function performs a basic transformation by XOR-ing each character of the input
+ * with a repeating fixed byte pattern, then encodes the result in Base64.
+ * Designed to be mirrored easily in JavaScript for lightweight bot detection.
+ *
+ * @param string $str The input string to obfuscate.
+ * @return string The Base64-encoded, XOR-obfuscated string.
+ */
+function xor_base64_encode($str) {
+    $pattern = [0x5A, 0x33, 0x7F]; // Fixed XOR byte pattern
+    $out = '';
+    for ($i = 0; $i < strlen($str); $i++) {
+        $xor_byte = $pattern[$i % count($pattern)];
+        $out .= chr(ord($str[$i]) ^ $xor_byte);
+    }
+    return base64_encode($out);
+}

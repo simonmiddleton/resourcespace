@@ -1,4 +1,5 @@
 <?php
+$disable_browser_check = true;
 
 include "../include/boot.php";
 header('Content-Type: application/json');

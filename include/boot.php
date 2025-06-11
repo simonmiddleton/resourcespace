@@ -76,6 +76,9 @@ ini_set("zend.exception_ignore_args", "Off");
 
 error_reporting($config_error_reporting);
 
+// Check this is a real browser.
+if ($browser_check) {browser_check();}
+
 # -------------------------------------------------------------------------------------------
 # Remote config support - possibility to load the configuration from a remote system.
 #
