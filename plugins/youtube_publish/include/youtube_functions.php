@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../lib/Google/vendor/autoload.php';
 
 function youtube_publish_initialize()
-    {
+{
     global $ref, $userref, $baseurl, $youtube_publish_client_id, $youtube_publish_client_secret,$language, $client,$youtube;
 
     $client = new Google_Client();
@@ -16,87 +16,69 @@ function youtube_publish_initialize()
     $client->setScopes('https://www.googleapis.com/auth/youtube.force-ssl');
     $redirect = $baseurl . "/plugins/youtube_publish/pages/youtube_upload.php";
     $client->setRedirectUri($redirect);
-    
+
     $client->setAccessType('offline');
     $client->setApprovalPrompt('force');
-    
+
     $access_tokens = ps_query("SELECT youtube_access_token,youtube_refresh_token FROM user WHERE ref = ?", array("i", $userref));
-    $access_token=$access_tokens[0]["youtube_access_token"];
-    $refresh_token=$access_tokens[0]["youtube_refresh_token"];
-    
-    if ($access_token=="" ||  $refresh_token=="")
-        {
-        if(getval("code","")=="")
-            {
+    $access_token = (string) $access_tokens[0]["youtube_access_token"];
+    $refresh_token = (string) $access_tokens[0]["youtube_refresh_token"];
+    $GLOBALS["use_error_exception"] = true;
+
+    if (trim($access_token) == "" ||  trim($refresh_token) == "") {
+        if (getval("code", "") == "") {
             get_youtube_authorization_code();
             exit();
-            }
-        else
-            { 
+        } else {
             global $youtube_publish_client_id, $youtube_publish_client_secret;
-          
-            $authresponse=$client->authenticate(getval("code",""));
-            
-            $access_token_array = json_decode($authresponse);
-            
-            $access_token = $access_token_array->access_token; 
-            if (isset($access_token_array->refresh_token))
-                {
-                $refresh_token = $access_token_array->refresh_token;
+
+            $authresponse = $client->authenticate(getval("code", ""));
+
+            $access_token = $authresponse['access_token'];
+            if (isset($authresponse['refresh_token'])) {
+                $refresh_token = $authresponse['refresh_token'];
                 debug("YouTube plugin: Refresh token: " . $refresh_token);
                 ps_query("UPDATE user SET youtube_refresh_token = ? WHERE ref = ?", array("s", $refresh_token, "i", $userref));
-                }
-            else
-                {
+            } else {
                 delete_youtube_tokens();
                 get_youtube_authorization_code();
                 exit();
-                }
-            
-            debug("YouTube plugin: Retrieved access token: " . $access_token);               
+            }
+            debug("YouTube plugin: Retrieved access token: " . $access_token);
             ps_query("UPDATE user SET youtube_access_token = ? WHERE ref = ?", array("s", $access_token, "i", $userref));
-            }
         }
+    }
 
-    try
-        {
-        $client->setAccessToken(json_encode(array("access_token"=>$access_token)));
-        }
-    catch (Google_Service_Exception $e)
-        {
-        $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        escape($e->getMessage()));
-        }
-    catch (Google_Exception $e)
-        {
-        $errortext = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        escape($e->getMessage()));
-        }
-       
-    if($client->isAccessTokenExpired())
-        {
-        try
-            {
+    try {
+        $client->setAccessToken(json_encode(array("access_token" => $access_token)));
+    } catch (Google_Service_Exception $e) {
+        $errortext = sprintf(
+            '<p>A service error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
+    } catch (Google_Exception $e) {
+        $errortext = sprintf(
+            '<p>A client error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
+    }
+
+    if ($client->isAccessTokenExpired()) {
+        try {
             $client->refreshToken($refresh_token);
-            }
-        catch (Google_Service_Exception $e)
-            {
+        } catch (Google_Service_Exception $e) {
             delete_youtube_tokens();
             get_youtube_authorization_code();
             exit();
-            }
-        catch (Google_Exception $e)
-            {
+        } catch (Google_Exception $e) {
             delete_youtube_tokens();
             get_youtube_authorization_code();
             exit();
-            }
-
         }
-    
+    }
+
     // Define an object that will be used to make all API requests.
-    try
-        {
+    try {
         $youtube = new Google_Service_YouTube($client);
         # Get user account details and store these so we can tell which account they will be uploading to
 
@@ -104,61 +86,69 @@ function youtube_publish_initialize()
         $listResponse = $youtube->channels->listChannels('snippet', array(
                  'mine' => 'true',
               ));
-
-        $youtube_username = $listResponse[0]['snippet']['title'];
-        ps_query("UPDATE user SET youtube_username = ? WHERE ref = ?", array("s", $youtube_username, "i", $userref));
+        if (isset($listResponse[0]['snippet']['title'])) {
+            $youtube_username = $listResponse[0]['snippet']['title'];
+            ps_query("UPDATE user SET youtube_username = ? WHERE ref = ?", array("s", $youtube_username, "i", $userref));
+        } else {
+            throw new Exception('No Youtube user found for account.');
         }
-    catch (Google_Service_Exception $e)
-        {
-        $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        escape($e->getMessage()));
-        }
-    catch (Google_Exception $e)
-        {
-        $errortext = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        escape($e->getMessage()));
-        }
-        
-    if(isset($errortext))
-        {
-        return array(false,$errortext);
-        }   
-    return array(true,"");
+    } catch (Google_Service_Exception $e) {
+        $errortext = sprintf(
+            '<p>A service error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
+    } catch (Google_Exception $e) {
+        $errortext = sprintf(
+            '<p>A client error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
+    } catch (Exception $e) {
+        $errortext = sprintf(
+            '<p>An error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
     }
 
+    unset($GLOBALS["use_error_exception"]);
+
+    if (isset($errortext)) {
+        return array(false,$errortext);
+    }
+    return array(true,"");
+}
+
 function get_youtube_authorization_code()
-    {
-    global $ref, $baseurl, $youtube_publish_client_id, $youtube_publish_client_secret,$language, $client,$youtube;  
-              
+{
+    global $ref, $baseurl, $youtube_publish_client_id, $youtube_publish_client_secret,$language, $client,$youtube;
+
     // If the user hasn't authorized the app, initiate the OAuth flow
     $state = $ref;
     $client->setState($state);
     $_SESSION['state'] = $state;
     $authUrl = $client->createAuthUrl();
-             
+
     header("Location: " . $authUrl);
-            
-    }
+}
 
 function delete_youtube_tokens()
-    {
+{
     global $userref;
     ps_query("UPDATE user SET youtube_access_token = '', youtube_refresh_token = '' WHERE ref = ?", array("i", $userref));
-    }
+}
 
 function upload_video()
-    {
+{
     global $lang, $video_title, $video_description, $video_keywords, $video_category, $filename, $ref, $video_status, $youtube_video_url, $youtube_publish_developer_key,$youtube_chunk_size, $client,$youtube;
     debug("youtube_publish: uploading video resource ID:" . $ref);
-    $errortext="";
-    try {           
+    $errortext = "";
+    try {
         # Get file info for upload
-        $resource=get_resource_data($ref);
-        $alternative=-1;
-        $ext=$resource["file_extension"];
+        $resource = get_resource_data($ref);
+        $alternative = -1;
+        $ext = $resource["file_extension"];
 
-        $videoPath=get_resource_path($ref,true,"",false,$ext,-1,1,false,"",$alternative);
-                    
+        $videoPath = get_resource_path($ref, true, "", false, $ext, -1, 1, false, "", $alternative);
+
         // Create a snippet with title, description, tags and category ID
         // Create an asset resource and set its snippet metadata and type.
         // This example sets the video's title, description, keyword tags, and
@@ -168,8 +158,8 @@ function upload_video()
         $snippet->setDescription($video_description);
         $snippet->setTags(array($video_keywords));
 
-        // Numeric video category. See                
-        // https://developers.google.com/youtube/v3/docs/videoCategories/list 
+        // Numeric video category. See
+        // https://developers.google.com/youtube/v3/docs/videoCategories/list
         $snippet->setCategoryId($video_category);
 
         // Set the video's status to "public". Valid statuses are "public",
@@ -185,7 +175,9 @@ function upload_video()
         // Specify the size of each chunk of data, in bytes. Set a higher value for
         // reliable connection as fewer chunks lead to faster uploads. Set a lower
         // value for better recovery on less reliable connections.
-        if(!is_numeric($youtube_chunk_size)){$youtube_chunk_size=10;}
+        if (!is_numeric($youtube_chunk_size)) {
+            $youtube_chunk_size = 10;
+        }
 
         $chunkSizeBytes = intval($youtube_chunk_size) * 1024 * 1024;
 
@@ -210,72 +202,66 @@ function upload_video()
         // Read the media file and upload it chunk by chunk.
         $status = false;
         $handle = fopen($videoPath, "rb");
-        while (!$status && !feof($handle)) 
-            {
+        while (!$status && !feof($handle)) {
             $chunk = fread($handle, $chunkSizeBytes);
             $status = $media->nextChunk($chunk);
-            }
+        }
 
         fclose($handle);
 
         // If you want to make other calls after the file upload, set setDefer back to false
         $client->setDefer(true);
-                
+
         $youtube_new_url = "https://www.youtube.com/watch?v=" . $status['id'];
 
         return array(true,$youtube_new_url);
-        }
-    catch (Google_Service_Exception $e)
-        {
-        $htmlBody = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        escape($e->getMessage()));
+    } catch (Google_Service_Exception $e) {
+        $htmlBody = sprintf(
+            '<p>A service error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
         exit($htmlBody);
-        }
-    catch (Google_Exception $e)
-        {
-        $htmlBody = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        escape($e->getMessage()));
+    } catch (Google_Exception $e) {
+        $htmlBody = sprintf(
+            '<p>A client error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
         exit($htmlBody);
-        }     
-        
-    if(isset($errortext))
-        {
-        return array(false,$errortext);
-        }    
     }
-        
+
+    if (isset($errortext)) {
+        return array(false,$errortext);
+    }
+}
+
 function youtube_upload_get_categories()
-    {
+{
     global $client,$youtube;
-    
-    try
-        {
+
+    try {
         $listResponse = $youtube->videoCategories->listVideoCategories('snippet', array(
                 'regionCode' => 'GB',
             ));
-        }
-    catch (Google_Service_Exception $e)
-        {
-        $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        escape($e->getMessage()));
-        }
-    catch (Google_Exception $e)
-        {
-        $errortext = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        escape($e->getMessage()));
-        }        
-        
-    if(isset($errortext))
-        {
-        return $errortext;
-        }
-            
-    $categories=$listResponse['items'];
-    $availablecategories=array();
-    foreach($categories as $category)
-        {
-        $availablecategories[$category["id"]]=$category["snippet"]["title"];
-        }
-    return $availablecategories;
+    } catch (Google_Service_Exception $e) {
+        $errortext = sprintf(
+            '<p>A service error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
+    } catch (Google_Exception $e) {
+        $errortext = sprintf(
+            '<p>A client error occurred: <code>%s</code></p>',
+            escape($e->getMessage())
+        );
     }
-    
+
+    if (isset($errortext)) {
+        return $errortext;
+    }
+
+    $categories = $listResponse['items'];
+    $availablecategories = array();
+    foreach ($categories as $category) {
+        $availablecategories[$category["id"]] = $category["snippet"]["title"];
+    }
+    return $availablecategories;
+}

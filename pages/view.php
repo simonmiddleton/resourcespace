@@ -571,10 +571,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                         }
                     }
 
-                    if (!hook('replaceviewtitle'))
-                        {
-                        echo highlightkeywords(escape(i18n_get_translated(get_data_by_field($resource['ref'], $title_field))), $search);
-                        } /* end hook replaceviewtitle */
+                    if (!hook('replaceviewtitle')) {
+                        // Title should already be present in $fields array, if not use get_data_by_field()
+                        $idxtitle = array_search($title_field, array_column($fields, "resource_type_field"));
+                        $resourcetitle = $idxtitle ? $fields[$idxtitle]["value"] : get_data_by_field($resource['ref'], $title_field);
+                        echo highlightkeywords(escape(i18n_get_translated($resourcetitle)), $search);
+                    }
                     ?>
                     &nbsp;
                 </h1>
@@ -772,7 +774,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             # Restricted access? Show the request link.
 
                                             # List all sizes and allow the user to download them
-                                            $sizes = get_image_sizes($ref,false,$resource["file_extension"]);
+                                            $onlyifexists = true;
+                                            if (hook('modifycheckifexists')) {
+                                                $onlyifexists = false;
+                                            }
+                                            $sizes = get_image_sizes($ref, false, $resource["file_extension"], $onlyifexists);
 
                                             if ($missing_original && (int) $resource["no_file"] === 0 && array_search(1,array_column($sizes,"original")) === false) {
                                                 // Need to display the missing file size info

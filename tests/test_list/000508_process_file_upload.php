@@ -106,6 +106,62 @@ $use_cases = [
         'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::MimeTypeMismatch),
     ],
     [
+        'name' => 'File can match against multiple MIME types',
+        'setup' => static function () use ($run_id) {
+            // We'll create an MP4 file that only has the audio channel (i.e. no video) => the type is audio/mp4.
+            $ffmpeg = get_utility_path('ffmpeg');
+            if ($ffmpeg === false) {
+                return false;
+            }
+
+            $cmd_output = run_command(
+                "{$ffmpeg} -f lavfi -i 'sine=frequency=1000:duration=5' -c:a aac -b:a 128k -vn %outfile",
+                true,
+                ['%outfile' => sys_get_temp_dir() . "/test_508_mime_check_{$run_id}.mp4"],
+            );
+
+            if (mb_strpos($cmd_output, ' Error ') !== false) {
+                test_log("FFMPeg command failed: {$cmd_output}");
+                return false;
+            }
+
+            return true;
+        },
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_mime_check_{$run_id}.mp4"),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => ['success' => true],
+    ],
+    [
+        // We use the run_id as an invalid unique extension so it can handle correctly when run w/ -nosetup
+        'name' => 'Unknown file types log (activity) and skip content based checks',
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_{$run_id}.{$run_id}", 'Lorem ipsum'),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_{$run_id}.{$run_id}"),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => static function ($result) use ($run_id): bool {
+            // Temporary: at some point after v10.6+ we should stop skipping content checks so we'll expect it to fail!
+            $op_ok = is_array($result) && $result['success'];
+            $log_found = (bool) ps_value(
+                 'SELECT EXISTS (
+                      SELECT value_new
+                        FROM activity_log
+                       WHERE BINARY(`activity_log`.`log_code`) = "S"
+                         AND note = ?
+                    ORDER BY ref DESC
+                ) AS `value`',
+                ['s', "Unknown MIME type for file extension '{$run_id}'"],
+                false
+            );
+
+            return $op_ok && $log_found;
+        },
+    ],
+    [
         'name' => 'Check destination is not a directory',
         'setup' => fn() => file_put_contents(sys_get_temp_dir() . '/test_508.txt', 'x'),
         'input' => [

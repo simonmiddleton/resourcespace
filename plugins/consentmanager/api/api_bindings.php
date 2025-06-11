@@ -49,3 +49,8 @@ function api_consentmanager_get_all_consents_by_collection($collection)
 {
     return consentmanager_get_all_consents_by_collection($collection);
 }
+
+function api_consentmanager_save_file($consent, $filename, $filedata)
+{
+    return consentmanager_save_file($consent, $filename, $filedata);
+}

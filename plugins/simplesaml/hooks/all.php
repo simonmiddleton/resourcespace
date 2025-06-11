@@ -314,10 +314,17 @@ function HookSimplesamlAllProvideusercredentials()
         $groups = $attributes[$simplesaml_group_attribute];
     }
 
-        $userid = 0;
-        $update_hash = false; // Only update password hash if necessary as computationally intensive
-        $currentuser = ps_query("SELECT ref, usergroup, last_active FROM user WHERE username=?", array("s",$username));
-        $legacy_username_used = false;
+    $userid = 0;
+    $update_hash = false; // Only update password hash if necessary as computationally intensive
+    $legacy_username_used = false;
+    
+    if (isset($GLOBALS['saml_current_user_cache'][$username])) {
+        // Prevent multiple queries of db for getting user information when initialising page.
+        $currentuser = $GLOBALS['saml_current_user_cache'][$username];
+    } else {
+        $currentuser = ps_query('SELECT ref, usergroup, last_active, origin, username, `password`, fullname, email, comments, simplesaml_custom_attributes FROM user WHERE username = ?', array('s', $username));
+        $GLOBALS['saml_current_user_cache'][$username] = $currentuser;
+    }
 
     // Attempt one more time with ".sso" suffix. Legacy way of distinguishing between SSO accounts and normal accounts
     if (is_array($currentuser) && count($currentuser) == 0) {
@@ -438,54 +445,77 @@ function HookSimplesamlAllProvideusercredentials()
             build_usergroup_dash($group, $userid);
             $update_hash = true;
         }
+        $currentuser = ps_query('SELECT ref, usergroup, last_active, origin, username, `password`, fullname, email, comments, simplesaml_custom_attributes FROM user WHERE ref = ?', array('i', $userid));
     }
 
     if ($userid > 0) {
-        // Update user info
         global $simplesaml_update_group, $session_autologout;
-        $sql = "UPDATE user SET origin='simplesaml', username=?,";
-        $params = array("s",$username);
+        // Update user info only for items which have changed.
+        $update_user_info_sql = array();
+        $update_user_info_params = array();
+
+        if ($currentuser[0]['origin'] !== 'simplesaml') {
+            $update_user_info_sql[] = 'origin = ?';
+            $update_user_info_params[] = 's';
+            $update_user_info_params[] = 'simplesaml';
+        }
+
+        if ($currentuser[0]['username'] !== $username) {
+            $update_user_info_sql[] = 'username = ?';
+            $update_user_info_params[] = 's';
+            $update_user_info_params[] = $username;
+        }
 
         if ($update_hash) {
             $password_hash = rs_password_hash('RSSAML' . generateSecureKey(64) . $username);
-            $sql .= "password = ?, ";
-            $params[] = "s";
-            $params[] = $password_hash;
+            $update_user_info_sql[] = 'password = ?';
+            $update_user_info_params[] = 's';
+            $update_user_info_params[] = $password_hash;
         }
 
-        $sql .= " fullname=?";
-        $params[] = "s";
-        $params[] = $displayname;
+        if ($currentuser[0]['fullname'] !== $displayname) {
+            $update_user_info_sql[] = 'fullname = ?';
+            $update_user_info_params[] = 's';
+            $update_user_info_params[] = $displayname;
+        }
 
-        if (isset($email) && $email != "") {
+        if (isset($email) && $email != "" && $currentuser[0]['email'] !== $email) {
             // Only set email if provided. Allows accounts without an email address to have one set by the admin without it getting overwritten
-            $sql .= ", email=?";
-            $params[] = "s";
-            $params[] = $email;
+            $update_user_info_sql[] = 'email = ?';
+            $update_user_info_params[] = 's';
+            $update_user_info_params[] = $email;
         }
-        if (isset($comment)) {
-            $sql .= ",comments=concat(comments,?)";
-            $params[] = "s";
-            $params[] = "\n" . date("Y-m-d") . " " . $comment;
+
+        if (isset($comment) && $currentuser[0]['comments'] !== $comment) {
+            $update_user_info_sql[] = 'comments = concat(comments, ?)';
+            $update_user_info_params[] = 's';
+            $update_user_info_params[] = "\n" . date("Y-m-d") . " " . $comment;
 
             log_activity($comment, LOG_CODE_UNSPECIFIED, 'simplesaml', 'user', 'origin', $userid, null, (isset($origin) ? $origin : null), $userid);
         }
+
         if ($simplesaml_update_group || (isset($currentuser[0]["usergroup"]) && $currentuser[0]["usergroup"] == "")) {
-            $sql .= ", usergroup = ?";
-            $params[] = "i";
-            $params[] = $group;
-        }
-        if (0 < count($custom_attributes)) {
-            $custom_attributes = json_encode($custom_attributes);
-            $sql .= ",simplesaml_custom_attributes = ?";
-            $params[] = "s";
-            $params[] = $custom_attributes;
+            $update_user_info_sql[] = 'usergroup = ?';
+            $update_user_info_params[] = 'i';
+            $update_user_info_params[] = $group;
         }
 
-        $sql .= " WHERE ref = ?";
-        $params[] = "i";
-        $params[] = $userid;
-        ps_query($sql, $params);
+        if (0 < count($custom_attributes) && $currentuser[0]['simplesaml_custom_attributes'] !== json_encode($custom_attributes)) {
+            $custom_attributes = json_encode($custom_attributes);
+            $update_user_info_sql[] = 'simplesaml_custom_attributes = ?';
+            $update_user_info_params[] = 's';
+            $update_user_info_params[] = $custom_attributes;
+        }
+
+        if (count($update_user_info_sql) > 0) {
+            $sql = 'UPDATE user SET ';
+            $sql .= implode(', ', $update_user_info_sql);
+            $sql .= " WHERE ref = ?";
+            $update_user_info_params[] = 'i';
+            $update_user_info_params[] = $userid;
+            ps_query($sql, $update_user_info_params);
+            unset($GLOBALS['saml_current_user_cache'][$username]);
+        }
 
         $user_select_sql = new PreparedStatementQuery();
         $user_select_sql->sql = "u.username = ?";

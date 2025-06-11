@@ -335,6 +335,9 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .ui-widget-content {
             border: 1px solid #878787;
         }
+        .ui-menu .ui-menu-item {
+            color: white;
+        }
         /* Responsive mode */
         @media (max-width: 1200px) {
             #Header .HorizontalNav ul li a {
@@ -694,18 +697,6 @@ if (isset($high_contrast_mode) && $high_contrast_mode) { ?>
         background: black;
         color: white;
         text-decoration: underline;
-    }
-    /* CKEditor */
-    .ckeditorEdit .cke_chrome {
-        border: 1px solid black;
-    }
-    .ckeditorEdit .cke_top {
-        border-bottom: 1px solid black;
-        background: white;
-    }
-    .ckeditorEdit .cke_bottom {
-        border-top: 1px solid black;
-        background: white;
     } <?php
 }
 

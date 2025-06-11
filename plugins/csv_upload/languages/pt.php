@@ -67,3 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Criado a partir do plugin de upload 
 $lang["csv_upload_processing_complete"] = 'Processamento concluído em [time] ([hours] horas, [minutes] minutos, [seconds] segundos)';
 $lang["plugin-csv_upload-title"] = 'Upload de CSV';
 $lang["plugin-csv_upload-desc"] = '[Avançado] Carregar metadados usando um arquivo CSV.';
+
+$lang["csv_upload_check_invalidbom"] = 'O arquivo CSV tem BOM, portanto não pode ser carregado';
+$lang["csv_upload_check_file_error"] = 'O arquivo CSV não pode ser aberto ou lido';
+$lang["csv_upload_check_utf_error"] = 'O arquivo CSV não é um UTF-8 válido. Caractere inválido na linha';

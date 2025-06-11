@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Αυτό το μεγάλο αρχείο
 $lang["csv_upload_createdfromcsvupload"] = 'Δημιουργήθηκε από το πρόσθετο μεταφόρτωσης CSV';
 $lang["plugin-csv_upload-title"] = 'Μεταφόρτωση CSV';
 $lang["plugin-csv_upload-desc"] = '[Προχωρημένο] Μεταφόρτωση μεταδεδομένων χρησιμοποιώντας ένα αρχείο CSV.';
+
+$lang["csv_upload_check_invalidbom"] = 'Το αρχείο CSV έχει BOM, οπότε δεν μπορεί να φορτωθεί';
+$lang["csv_upload_check_file_error"] = 'Το αρχείο CSV δεν μπορεί να ανοιχτεί ή να διαβαστεί';
+$lang["csv_upload_check_utf_error"] = 'Το αρχείο CSV δεν είναι έγκυρο UTF-8. Μη έγκυρος χαρακτήρας στη γραμμή';

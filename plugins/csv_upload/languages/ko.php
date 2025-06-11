@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = '이 큰 CSV는 처리하는 데 매우 
 $lang["csv_upload_createdfromcsvupload"] = 'CSV 업로드 플러그인에서 생성됨';
 $lang["plugin-csv_upload-title"] = 'CSV 업로드';
 $lang["plugin-csv_upload-desc"] = '[고급] CSV 파일을 사용하여 메타데이터 업로드.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV 파일에 BOM이 포함되어 있어 로드할 수 없습니다';
+$lang["csv_upload_check_file_error"] = 'CSV 파일을 열거나 읽을 수 없습니다';
+$lang["csv_upload_check_utf_error"] = 'CSV 파일이 유효한 UTF-8이 아닙니다. 줄에 잘못된 문자';

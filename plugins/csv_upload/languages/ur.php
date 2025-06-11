@@ -65,3 +65,7 @@ $lang["csv_upload_process_offline_quick"] = 'تصدیق کو چھوڑیں اور
 $lang["csv_upload_force_offline"] = 'یہ بڑا CSV فائل پروسیس کرنے میں کافی وقت لے سکتا ہے، اس لیے یہ آف لائن چلایا جائے گا۔ جب پروسیسنگ مکمل ہو جائے گی تو آپ کو ResourceSpace پیغام کے ذریعے مطلع کیا جائے گا۔';
 $lang["csv_upload_recommend_offline"] = 'یہ بڑا CSV پروسیس کرنے میں بہت زیادہ وقت لے سکتا ہے۔ یہ تجویز کیا جاتا ہے کہ اگر آپ کو بڑے CSVs پروسیس کرنے کی ضرورت ہو تو آف لائن جابز کو فعال کریں۔';
 $lang["csv_upload_createdfromcsvupload"] = 'CSV اپلوڈ پلگ ان سے تخلیق کیا گیا';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV فائل میں BOM ہے اس لیے لوڈ نہیں کی جا سکتی';
+$lang["csv_upload_check_file_error"] = 'CSV فائل کو کھولا یا پڑھا نہیں جا سکتا';
+$lang["csv_upload_check_utf_error"] = 'CSV فائل درست UTF-8 نہیں ہے۔ لائن پر غلط کردار';

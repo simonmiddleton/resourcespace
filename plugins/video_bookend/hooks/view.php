@@ -13,7 +13,7 @@ function HookVideo_bookendViewAfterresourceactions()
             }
         else
             {
-            $original_file_mime_type = get_mime_type($original_file_path);
+            $original_file_mime_type = get_mime_type($original_file_path)[0];
             }
             
         if ($access==0 && (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE && substr($original_file_mime_type,0,6)=="video/")

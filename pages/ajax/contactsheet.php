@@ -22,7 +22,7 @@ if (strpos($size, "x") !== false) {
     $size = strtoupper($size);
 }
 $columns           = getval('columns', 1);
-$order_by          = getval('order_by', 'relevance');
+$order_by          = getval('order_by', 'collection');
 $sort              = getval('sort', 'asc');
 $orientation       = getval('orientation', '');
 $sheetstyle        = getval('sheetstyle', 'thumbnails');
@@ -195,7 +195,7 @@ foreach ($results as $result_data) {
                 $contact_sheet_value = tidylist($contact_sheet_value);
             }
                 $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] =
-                                            array(  "title" => $contact_sheet_field['title'],
+                                            array(  "title" => i18n_get_translated($contact_sheet_field['title']),
                                                     "value" => tidylist(i18n_get_translated($contact_sheet_value)),
                                                     "type"  => $contact_sheet_field["type"]);
         }

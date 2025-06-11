@@ -41,3 +41,4 @@ active,tinyint(1),Set to 1 to have field active, 0 to be disabled.
 full_width,tinyint(1),Set to 1 to have the field be displayed full width on the view page.
 tab,int(11),Reference to a system tab. See the "tab" table.
 complete_index,int(11),Index field values as one unbroken keyword. Incompatible with partial indexing.
+sort_method,int(11),Sort method used when ordering by this field in search results. Alphanumeric by default. 

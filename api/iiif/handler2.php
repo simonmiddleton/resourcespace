@@ -652,7 +652,7 @@ if ($validrequest) {
         header("Access-Control-Allow-Headers: Accept");
         header('Content-Disposition: inline;');
         header('Content-Transfer-Encoding: binary');
-        $mime = get_mime_type($response_image);
+        $mime = get_mime_type($response_image)[0];
         header("Content-Type: {$mime}");
         $sent = 0;
         while ($sent < $file_size) {

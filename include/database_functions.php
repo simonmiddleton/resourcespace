@@ -94,7 +94,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
                     <hr style="margin-top:20px;">
                     <?php
                     if ($show_detailed_errors) { ?>
-                        <p style="font-size:11px;color:black;"><?php echo escape($error_info); ?></p>
+                        <p style="font-size:11px;color:black;"><?php debug_print_backtrace(); echo  PHP_EOL . PHP_EOL . escape($error_info) . PHP_EOL . PHP_EOL  ?></p>
                         <?php
                     }
                 } ?>
@@ -369,7 +369,7 @@ function db_rollback_transaction($name)
  * Execute a prepared statement and return the results as an array.
  *
  * @param  string $sql                      The SQL to execute
- * @param  string $parameters               An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d",3.14)
+ * @param  array $parameters               An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d",3.14)
  * @param  string $cache                        Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
  * @param  integer $fetchrows                   set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
  * @param  boolean $dbstruct                    Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
@@ -1310,9 +1310,12 @@ function columns_in($table, $alias = null, $plugin = null, bool $return_list = f
     foreach ($plugins as $plugin_entry) {
         $plugin_file = get_plugin_path($plugin_entry) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
         if (file_exists($plugin_file)) {
-            $structure = explode("\n", trim(file_get_contents($plugin_file)));
-            foreach ($structure as $column) {
-                $columns[] = explode(",", $column)[0];
+            $plugin_file_contents = trim(file_get_contents($plugin_file));
+            if ($plugin_file_contents !== "") {
+                $structure = explode("\n", $plugin_file_contents);
+                foreach ($structure as $column) {
+                    $columns[] = explode(",", $column)[0];
+                }
             }
         }
     }

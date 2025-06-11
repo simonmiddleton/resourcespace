@@ -45,8 +45,13 @@ if (!$exiftool_fullpath) {
     $writable_tags = strtolower(str_replace("\n", "", $writable_tags));
     $writable_tags_array = explode(" ", $writable_tags);
 
-    $command = $exiftool_fullpath . " -ver";
+    $command = $exiftool_fullpath . " -ver"; 
     $exiftool_version = run_command($command);
+
+    if (preg_match('/Warning: Library/', $exiftool_version) === 1) {
+        echo escape($lang["exiftoolconflictingversions"]);
+        exit();
+    }
 
     if ($exiftool_version >= 7.4) {
     #build array of writable formats

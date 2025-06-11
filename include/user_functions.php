@@ -1106,8 +1106,6 @@ function auto_create_user_account($hash = "")
     }
     if ($approve) {
         email_reset_link($user_email, true);
-        redirect($baseurl . "/pages/done.php?text=user_request");
-        exit();
     } else {
         # Managed approving
         # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
@@ -1184,12 +1182,17 @@ function email_user_request()
 
     $user_limit_reached = user_limit_reached();
 
+    $usergroup = 0;
+    if ($account_email_exists_notify) {
+        $usergroup = ps_value("SELECT usergroup AS `value` FROM user WHERE email = ?", ["s", $email], 0);
+    }
+
     $user_registration_opt_in_message = "";
     if ($user_registration_opt_in && getval("login_opt_in", "") == "yes") {
         $user_registration_opt_in_message .= $lang["user_registration_opt_in_message"];
     }
     $requestedgroup = getval("usergroup", 0, true);
-    $approval_notify_users = get_notification_users("USER_ADMIN", $requestedgroup != 0 ? $requestedgroup : null);
+    $approval_notify_users = get_notification_users("USER_ADMIN", $usergroup ?: $requestedgroup);
     $message = new ResourceSpaceUserNotification();
     $message->set_subject($applicationname . ": ");
     $message->append_subject("lang_requestuserlogin");
@@ -3634,15 +3637,15 @@ function cors_is_origin_allowed(string $origin, array $whitelist): bool  {
  */
 function delete_usergroup(int $usergroup_ref): bool
 {
-    $dependant_user_count = ps_value("select count(*) as value from user where usergroup = ?", array("i", $usergroup_ref), 0);
-    $dependant_groups = ps_value("select count(*) as value from usergroup where parent = ?", array("i", $usergroup_ref), 0);
+    $dependant_user_count = ps_value("SELECT COUNT(*) AS `value` FROM user WHERE usergroup = ?", array("i", $usergroup_ref), 0);
+    $dependant_groups = ps_value("SELECT COUNT(*) AS `value` FROM usergroup WHERE parent = ?", array("i", $usergroup_ref), 0);
     $has_dependants = $dependant_user_count + $dependant_groups > 0;
 
     if ($has_dependants) {
         return false;
     }
 
-    ps_query("delete from usergroup where ref = ?", array("i", $usergroup_ref));
+    ps_query("DELETE FROM usergroup WHERE ref = ?", array("i", $usergroup_ref));
     log_activity('', LOG_CODE_DELETED, null, 'usergroup', null, $usergroup_ref);
 
     # No need to keep any records of language content for this user group
@@ -3654,4 +3657,57 @@ function delete_usergroup(int $usergroup_ref): bool
     clear_query_cache('usergroup');
 
     return true;
+}
+
+/**
+ * Check that this is a real browser by executing JS to set an expected cookie.
+ */
+function browser_check()
+{
+    global $browser_check_key, $applicationname, $disable_browser_check;
+    
+    // Exceptions
+    if (PHP_SAPI == 'cli') {return;}
+    if (isset($disable_browser_check) && $disable_browser_check) {return;} // e.g. API/IIIF
+
+    $ip=$_SERVER["REMOTE_ADDR"]; // Use real IP, do not trust forwarded IP as could be faked
+    $question_key=hash_hmac("sha512", "{$ip}" . date('Ymd'), $browser_check_key);
+    $answer_key=xor_base64_encode($question_key);
+
+    // Look for the answer already set as a cookie
+    if (getval("browser_check_cookie","")==$answer_key) {return;} // We're good
+
+    // Output the JS to calculate the answer and set the cookie
+    ?>
+    <html><title><?php echo escape($applicationname) ?></title><head>
+    <script>
+    function x9Zq(str){var a=[90,51,127],b='',c=0;for(var d=0;d<str.length;d++)b+=String.fromCharCode(str.charCodeAt(d)^a[c++%3]);return btoa(b);}
+    document.cookie = "browser_check_cookie=" + x9Zq(<?php echo json_encode($question_key) ?>) + "; path=/; max-age=172800";
+    setTimeout(function() {
+    window.location.reload(true);
+    }, 2000);
+    </script>
+    </head></html>
+    <?php
+    exit();    
+}
+
+/**
+ * Obfuscates a string using a fixed XOR pattern and encodes it in Base64.
+ *
+ * This function performs a basic transformation by XOR-ing each character of the input
+ * with a repeating fixed byte pattern, then encodes the result in Base64.
+ * Designed to be mirrored easily in JavaScript for lightweight bot detection.
+ *
+ * @param string $str The input string to obfuscate.
+ * @return string The Base64-encoded, XOR-obfuscated string.
+ */
+function xor_base64_encode($str) {
+    $pattern = [0x5A, 0x33, 0x7F]; // Fixed XOR byte pattern
+    $out = '';
+    for ($i = 0; $i < strlen($str); $i++) {
+        $xor_byte = $pattern[$i % count($pattern)];
+        $out .= chr(ord($str[$i]) ^ $xor_byte);
+    }
+    return base64_encode($out);
 }

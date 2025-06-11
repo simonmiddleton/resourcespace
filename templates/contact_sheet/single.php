@@ -13,7 +13,9 @@ if(isset($bind_placeholders['titlefontsize']))
     #pageTitle { font-size: <?php echo (int) $bind_placeholders['titlefontsize']; ?>px; }
     <?php
     }
-    ?>
+
+$add_header = isset($bind_placeholders['contactsheet_header']) && ($bind_placeholders['contact_sheet_include_applicationname'] || isset($bind_placeholders['add_contactsheet_logo']));
+?>
 
 #logo { height: 50px; max-width: 100%; }
 .centeredText { text-align: center; }
@@ -24,9 +26,18 @@ global $contact_sheet_field_name, $contact_sheet_field_name_bold;
 foreach($bind_placeholders['resources'] as $resource_ref => $resource)
     {
     ?>
-<page backtop="25mm" backbottom="25mm">
+<page
+    <?php
+    if ($add_header) {
+        echo ' backtop="25mm"';
+    }
+    if (isset($bind_placeholders['contact_sheet_footer'])) {
+        echo ' backbottom="25mm"';
+    }
+    ?>
+    >
 <?php
-if(isset($bind_placeholders['contactsheet_header']))
+if($add_header)
     {
     ?>
     <page_header>
@@ -131,7 +142,7 @@ if(isset($bind_placeholders['contact_sheet_footer']))
             }
 
             // If field contains richtext...
-            if ($contact_sheet_field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
+            if ($contact_sheet_field['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE) {
                 // ...output in the same way as view.php, without escaping
                 echo strip_tags_and_attributes($contact_sheet_field['value'], ['a'], ['href', 'target']) . '<br></span>';
             } else {

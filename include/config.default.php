@@ -327,7 +327,7 @@ Note: this honours $exiftool_write so if that option is false, this will not wor
 $force_exiftool_write_metadata = false;
 $exiftool_write_option         = false;
 
-//Option to strip tags from rich fields when downloading metadata, by default is FALSE (keeping the tags added by CKEDITOR)
+//Option to strip tags from rich fields when downloading metadata, by default is FALSE (keeping the tags added)
 $strip_rich_field_tags = false;
 
 // Set metadata_read to false to omit the option to extract metadata.
@@ -1475,7 +1475,7 @@ $top_nav_upload_type = "batch"; // The upload type. Options are batch, ftp, loca
 // $upload_max_file_size = "50mb";
 
 // You can set the following line to ''  to disable chunking.
-$upload_chunk_size = '5mb';
+$upload_chunk_size = '50mb';
 
 // This is the maximum number of concurrent file uploads allowed. Set to 1 to force single thread.
 $upload_concurrent_limit = 5;
@@ -2236,18 +2236,6 @@ $smtp_debug_lvl = 2;
 
 $sharing_userlists = false; // enable users to save/select predefined lists of users/groups when sharing collections and resources.
 
-$enable_ckeditor = true;
-$ckeditor_toolbars = "'Styles', 'Bold', 'Italic', 'Underline','FontSize', 'RemoveFormat', 'TextColor','BGColor'";
-$ckeditor_content_toolbars = "
-{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','RemoveFormat' ] },
-{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ] },
-{ name: 'styles', items : [ 'Format' ] },
-{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
-{ name: 'links', items : [ 'Link','Unlink' ] },
-{ name: 'insert', items : [ 'Image','HorizontalRule'] },
-{ name: 'tools', items : [ 'Source', 'Maximize' ] }
-";
-
 // Automatically save the edit form after making changes?
 $edit_autosave = true;
 
@@ -2286,9 +2274,6 @@ $ajax_loading_timer = 500;
 
 // Allow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by = false;
-
-// Use CKEditor for site content?
-$site_text_use_ckeditor = false;
 
 // Upload Options at top of Edit page (Collection, import metadata checkbox) at top of edit page, rather than the bottom (default).
 $edit_upload_options_at_top = false;
@@ -2910,7 +2895,7 @@ $CORS_whitelist =
 $csp_frame_ancestors = [];
 
 /* Font selection */
-$global_font = "Montserrat";
+$global_font = "Inter";
 
 // Sort tabs alphabetically
 $sort_tabs = true;
@@ -3159,6 +3144,7 @@ $vendor_tus_cache_adapter = 'file';
 
 // $related_pushed_order_by - This is an optional setting to order resources differently when displaying 'pushed' related metadata
 // This can be set to either a metadata field ID or a valid search 'order by' string (e.g. 'resourcetype', 'extension', 'colour' etc.)
+// When ordering by a metadata field ID, the order will only be applied for users who have read access to the field specified.
 // See https://www.resourcespace.com/knowledge-base/resourceadmin/push-metadata for more information
 // $related_pushed_order_by = 0;
 
@@ -3233,3 +3219,13 @@ $search_all_workflow_states = false;
 // Array of preview sizes to be created at upload when minimal preview creation is enabled.
 // Limit to essential sizes only to reduce delay.
 $minimal_previews_sizes = array('pre', 'col', 'thm');
+
+// Plugins for TinyMCE to load
+$tinymce_plugins = "autoresize,code,lists,link";
+
+// Toolbar entries to be added to TinyMCE
+$tinymce_toolbar = "styles | bold italic underline removeformat | fontsize | forecolor backcolor | bullist numlist link | outdent indent | code";
+
+// Browser check - guard against basic DDOS - execute JS on the client to solve a problem, and only allow access for the valid answer.
+$browser_check=false;
+$browser_check_key="c899a58b100c94fb907fac1f29e2d0fd"; // Randomise this.

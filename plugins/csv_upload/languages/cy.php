@@ -65,3 +65,7 @@ $lang["csv_upload_process_offline_quick"] = 'Aros i ddilysu a phrosesu ffeil CSV
 $lang["csv_upload_force_offline"] = 'Gall y CSV mawr hwn gymryd amser hir i\'w brosesu felly bydd yn cael ei redeg yn offline. Byddwch yn cael gwybodaeth trwy neges ResourceSpace unwaith y bydd y broses wedi\'i chwblhau';
 $lang["csv_upload_recommend_offline"] = 'Gall y CSV mawr hwn gymryd amser hir iawn i\'w brosesu. Argymhellir bod swyddi all-lein yn cael eu galluogi os oes angen i chi brosesu CSVs mawr';
 $lang["csv_upload_createdfromcsvupload"] = 'Creuodd o\'r plugin Uwchlwytho CSV';
+
+$lang["csv_upload_check_invalidbom"] = 'Mae gan y ffeil CSV BOM felly ni ellir ei llwytho.';
+$lang["csv_upload_check_file_error"] = 'Ni ellir agor nac darllen ffeil CSV';
+$lang["csv_upload_check_utf_error"] = 'Nid yw\'r ffeil CSV yn UTF-8 dilys. Cymeriad annilys ar linell';

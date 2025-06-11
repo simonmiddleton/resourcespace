@@ -189,7 +189,6 @@ if (($extension == "cr2" || $extension == "nef" || $extension == "dng" || $exten
         ) &&
         $exiftool_fullpath != false
     ) {
-        
         // Run command to output all previews in order of binary data size
         $cmd_preview_list = $exiftool_fullpath . " %%FILE%% -preview:all";
         $output_preview = run_command($cmd_preview_list, false, ['%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
@@ -207,24 +206,13 @@ if (($extension == "cr2" || $extension == "nef" || $extension == "dng" || $exten
         // Attempt extraction
         $cmd = $exiftool_fullpath . " -b %%BIN_TAG%% %%FILE%% -w %d%f.jpg";
         $wait = run_command($cmd, false, ['%%FILE%%'    => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
-                                          '%%BIN_TAG%%' => new CommandPlaceholderArg($bin_tag, [CommandPlaceholderArg::class, 'alwaysValid']),                                 
+                                          '%%BIN_TAG%%' => new CommandPlaceholderArg($bin_tag, [CommandPlaceholderArg::class, 'alwaysValid']),
                                          ]);
         $extractedpreview = preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
-        
+
         if ($target != $extractedpreview && file_exists($extractedpreview)) {
             rename($extractedpreview, $target);
         }
-
-        // NOTE: in case of failures, other suboptimal possibilities
-        // may be explored in the future such as -thumbnailimage and -jpgfromraw, like this:
-        // //check for failure
-        //if (!filesize_unlimited($target)>0)
-            //{
-            //unlink($target);
-            //$bin_tag=" -thumbnailimage ";
-            //attempt
-            //$wait=run_command($exiftool_fullpath.' -b '.$bin_tag.' '.$file.' > '.$target);
-            //}
 
         if (filesize_unlimited($target) > 0) {
             $orientation = get_image_orientation($file);
@@ -282,11 +270,10 @@ if (in_array($extension, $unoconv_extensions) && $extension != 'pdf' && isset($u
     $using_unoconv = true; # Prevent falling back to other less detailed preview options.
     $path_parts = pathinfo($file);
     $basename_minus_extension = remove_extension($path_parts['basename']);
-    $pdffile = new CommandPlaceholderArg(
-        $path_parts['dirname'] . "/" . $basename_minus_extension . ".pdf",
-        'is_valid_rs_path'
-    );
-    $file = new CommandPlaceholderArg($file, 'is_valid_rs_path');
+    $file_validator = $GLOBALS['preview_preprocessing_file_validator'] ?? is_valid_rs_path(...);
+    $pdffile = new CommandPlaceholderArg("{$path_parts['dirname']}/{$basename_minus_extension}.pdf", $file_validator);
+    $file = new CommandPlaceholderArg($file, $file_validator);
+    unset($GLOBALS['preview_preprocessing_file_validator']);
 
     if ($unoconvert) {
         // Use newer unoconvert utility (note - does not have a verbose mode)
@@ -372,8 +359,8 @@ if (in_array($extension, $unoconv_extensions) && $extension != 'pdf' && isset($u
             }
         }
     } else {
-        $preview_preprocessing_success = false;
         debug("Preview preprocessing: Attempt to create previews with Unoconv for ref $ref failed.");
+        $using_unoconv = false; // Try and use e.g. Antiword
     }
 }
 
@@ -489,9 +476,10 @@ if ($extension == "blend" && isset($blender_path) && !isset($newfile)) {
 if (!$using_unoconv && $extension == "doc" && isset($antiword_path) && isset($ghostscript_path) && !isset($newfile)) {
     $command = get_utility_path('antiword');
     if (!$command) {
-        exit("Antiword executable not found at '$antiword_path'");
+        debug("Antiword executable not found at '$antiword_path'");
+        $preview_preprocessing_success = false;
+        return;
     }
-
     $output = run_command(
         "{$command} -p a4 %file > %target",
         false,
@@ -501,7 +489,7 @@ if (!$using_unoconv && $extension == "doc" && isset($antiword_path) && isset($gh
         ]
     );
 
-    if (file_exists($target . ".ps")) {
+    if (file_exists($target . ".ps") && filesize($target . ".ps") > 0) {
         # Postscript file exists
         $gscommand = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=jpeg -r150 -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=1 -dLastPage=1 -dEPSCrop " . escapeshellarg($target . ".ps");
         $output = run_command($gscommand);
@@ -510,6 +498,9 @@ if (!$using_unoconv && $extension == "doc" && isset($antiword_path) && isset($gh
             # A JPEG was created. Set as the file to process.
             $newfile = $target;
         }
+    } else {
+        $preview_preprocessing_success = false;
+        return;
     }
 }
 
@@ -687,7 +678,7 @@ if (($ffmpeg_fullpath != false) && !isset($newfile) && in_array($extension, $ffm
         debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
         include __DIR__ . "/ffmpeg_processing.php";
     }
-    
+
     debug('FFMPEG-VIDEO: ####################################################################');
 }
 
@@ -879,7 +870,6 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
 
      # Create multiple pages.
         for ($n = 1; $n <= $pdf_pages; $n++) {
-            
             # Set up target file
             $size = "";
 
@@ -891,8 +881,8 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
                 $target = get_resource_path($ref, true, $size, false, "png", -1, $n, false, "", $alternative);
             } else {
                 $target = get_resource_path($ref, true, $size, false, "jpg", -1, $n, false, "", $alternative);
-            }        
-            
+            }
+
             if (file_exists($target)) {
                 unlink($target);
             }
@@ -904,17 +894,17 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
             }
 
             $cmdparams['%%RESOLUTION%%']    = new CommandPlaceholderArg((int) $resolution, 'is_positive_int_loose');
-            $cmdparams["%%TARGET%%"]        = new CommandPlaceholderArg($target, 'is_safe_basename');   
+            $cmdparams["%%TARGET%%"]        = new CommandPlaceholderArg($target, 'is_safe_basename');
             $cmdparams["%%PAGENUM%%"]       = new CommandPlaceholderArg($n, 'is_positive_int_loose');
             $cmdparams["%%SOURCE%%"]        = new CommandPlaceholderArg($file, 'is_valid_rs_path');
 
             if ($extension == "eps" && in_array(strtolower($extension), $preview_keep_alpha_extensions)) {
-                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r%%RESOLUTION%% ".$dUseCIEColor." -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=%%TARGET%% -dFirstPage=%%PAGENUM%% -dLastPage=%%PAGENUM%% -dEPSCrop -dUseCropBox %%SOURCE%%";
-            } else {                
-                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r%%RESOLUTION%% ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=%%QUALITY%% -sOutputFile=%%TARGET%% -dFirstPage=%%PAGENUM%% -dLastPage=%%PAGENUM%% -dEPSCrop -dUseCropBox %%SOURCE%%";
+                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r%%RESOLUTION%% " . $dUseCIEColor . " -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=%%TARGET%% -dFirstPage=%%PAGENUM%% -dLastPage=%%PAGENUM%% -dEPSCrop -dUseCropBox %%SOURCE%%";
+            } else {
+                $gscommand2 = $ghostscript_fullpath . " -dBATCH -r%%RESOLUTION%% " . $dUseCIEColor . " -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=%%QUALITY%% -sOutputFile=%%TARGET%% -dFirstPage=%%PAGENUM%% -dLastPage=%%PAGENUM%% -dEPSCrop -dUseCropBox %%SOURCE%%";
                 $cmdparams["%%QUALITY%%"] = new CommandPlaceholderArg($imagemagick_quality, 'is_positive_int_loose');
             }
-        
+
             $output = run_command($gscommand2, false, $cmdparams);
 
             # Stop trying when after the last page
@@ -1076,7 +1066,7 @@ if (isset($newfile) && file_exists($newfile)) {
         $preview_preprocessing_success = create_previews($ref, false, "jpg", false, false, $alternative, $ignoremaxsize, true, $checksum_required, $onlysizes);
     }
 
-    if(
+    if (
         $GLOBALS['non_image_types_generate_preview_only']
         && in_array($extension, $GLOBALS['non_image_types'])
         && file_exists($file_used_for_previewonly)

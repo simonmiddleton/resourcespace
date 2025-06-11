@@ -65,3 +65,7 @@ $lang["csv_upload_process_offline_quick"] = 'Ruka uthibitishaji na usindike fail
 $lang["csv_upload_force_offline"] = 'CSV hii kubwa inaweza kuchukua muda mrefu kuchakatwa hivyo itafanywa nje ya mtandao. Utaarifiwa kupitia ujumbe wa ResourceSpace mara uchakataji utakapokamilika.';
 $lang["csv_upload_recommend_offline"] = 'CSV kubwa hii inaweza kuchukua muda mrefu sana kusindika. Inapendekezwa kuwa kazi za nje ya mtandao ziwezeshwe ikiwa unahitaji kusindika CSV kubwa.';
 $lang["csv_upload_createdfromcsvupload"] = 'Imeundwa kutoka kwa programu-jalizi ya Kupakia CSV';
+
+$lang["csv_upload_check_invalidbom"] = 'Fail ya CSV ina BOM hivyo haiwezi kupakiwa';
+$lang["csv_upload_check_file_error"] = 'Faili la CSV haliwezi kufunguliwa au kusomwa';
+$lang["csv_upload_check_utf_error"] = 'Faili la CSV halina UTF-8 halali. Karakteri isiyo halali kwenye mstari';

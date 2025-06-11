@@ -34,6 +34,12 @@ $tables_data = array(
         'get_data_function' => 'get_resource_data',
         'get_data_function_params' => array($table_reference),
     ),
+    'collection' => array(
+        'display_title' => $lang['collection'],
+        'title_column' => 'name',
+        'get_data_function' => 'get_collection',
+        'get_data_function_params' => array($table_reference),
+    )
 );
 
 // TODO: over time, these can be put under tables_data once we can use the referenced information (ie. if there is a function to do so - see examples above)
@@ -356,21 +362,34 @@ include "../../include/header.php";
                             $ref = escape((string) $record['table_reference']);
 
                             switch ($record['column']) {
-                                // if this is resource ref, then add link to view resource
                                 case "ref":
-                                    if ($record['table'] == "resource") { // only display links where ref field is in resource table
+                                    if ($record['table'] == "resource") {
                                         ?>
                                         <td>
-                                            <a href="<?php echo "$baseurl/pages/view.php?search=&order_by=&ref=$ref" ?>" title="View resource" onclick="return ModalLoad(this,true);">
-                                            <?php echo $ref ?>
-                                        </a>
-                                    </td>
+                                            <a
+                                                href="<?php echo "$baseurl/pages/view.php?ref=$ref" ?>"
+                                                title="View resource"
+                                                onclick="return ModalLoad(this,true);"
+                                                ><?php echo $ref ?>
+                                            </a>
+                                        </td>
+                                        <?php
+                                    } elseif ($record['table'] == "collection") {
+                                        ?>
+                                        <td>
+                                            <a
+                                                href="<?php echo "$baseurl/pages/search.php?search=!$ref" ?>"
+                                                title="View collection"
+                                                onclick="return CentralSpaceLoad(this,true);"
+                                                ><?php echo $ref ?>
+                                            </a>
+                                        </td>
                                         <?php
                                     }
                                     break;
 
                                 default:
-                                    print "<td>$ref</td>";
+                                    echo "<td>$ref</td>";
                                     break;
                             }
                         }

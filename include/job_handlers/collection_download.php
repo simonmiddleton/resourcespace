@@ -63,7 +63,11 @@ if (isset($job_data["archiver"]) && isset($job_data["settings_id"])) {
     $extension = $GLOBALS["collection_download_settings"][$job_data["settings_id"]]['extension'] ?? "zip";
 }
 
-$download_url   = $GLOBALS['baseurl_short'] . "pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $job_data["id"] . "." . $extension . "&filename=" . pathinfo($zipinfo["filename"], PATHINFO_FILENAME);
+$urlparams = [
+   "userfile" => $user_data[0]["ref"] . "_" . $job_data["id"] . "." . $extension,
+   "filename" => pathinfo($zipinfo["filename"], PATHINFO_FILENAME),
+];
+$download_url = generateURL($GLOBALS['baseurl_short'] . "pages/download.php", $urlparams);
 message_add($job["user"], $job_success_text, $download_url);
 
 $delete_job_data = [];

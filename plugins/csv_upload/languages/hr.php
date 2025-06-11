@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Ovaj veliki CSV može dugo trajati u ob
 $lang["csv_upload_createdfromcsvupload"] = 'Stvoreno pomoću dodatka za učitavanje CSV datoteka';
 $lang["plugin-csv_upload-title"] = 'CSV prijenos';
 $lang["plugin-csv_upload-desc"] = 'Učitajte meta podatke koristeći CSV datoteku.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV datoteka ima BOM pa se ne može učitati';
+$lang["csv_upload_check_file_error"] = 'CSV datoteka se ne može otvoriti ili pročitati';
+$lang["csv_upload_check_utf_error"] = 'CSV datoteka nije valjani UTF-8. Nevaljani znak na retku';

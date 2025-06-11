@@ -364,7 +364,7 @@ function newlines($text)
  */
 function get_all_site_text($findpage = "", $findname = "", $findtext = "")
 {
-    global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;
+    global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder, $language;
 
     $findname = trim($findname);
     $findpage = trim($findpage);
@@ -375,8 +375,10 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
     // en should always be included as it is the fallback language of the system
     $search_languages = array('en');
 
-    if ('en' != $defaultlanguage) {
-        $search_languages[] = $defaultlanguage;
+    if ('en' == $language) {
+        $search_languages = array('en');
+    } else {
+        $search_languages = array($language, 'en');
     }
 
     // When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
@@ -494,7 +496,8 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
     $unique_returned_records = array();
     $existing_lang_names     = array();
     $i                       = 0;
-    foreach (array_reverse($return) as $returned_record) {
+
+    foreach ($return as $returned_record) {
         if (!in_array($returned_record['name'], $existing_lang_names)) {
             $existing_lang_names[$i]     = $returned_record['name'];
             $unique_returned_records[$i] = $returned_record;
@@ -503,7 +506,7 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
         $i++;
     }
     // Reverse again so that the default language appears first in results
-    return array_values(array_reverse($unique_returned_records));
+    return array_values($unique_returned_records);
 }
 
 /**
@@ -746,26 +749,45 @@ function filesize2bytes($str)
  * - true: Only file based (uses exiftool)
  * - false: Only based on extension
  */
-function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): string
+function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): array
 {
-    global $mime_types_by_extension;
-
     if (empty($ext)) {
         $ext = parse_filename_extension($path);
     }
 
-    if (!$file_based_detection && isset($mime_types_by_extension[$ext])) {
-        return $mime_types_by_extension[$ext];
+    if (!$file_based_detection && ($found_by_ext = get_mime_types_by_extension($ext)) && $found_by_ext !== []) {
+        return $found_by_ext;
     }
 
     # Get mime type via exiftool if possible
     $exiftool_fullpath = get_utility_path("exiftool");
     if (($file_based_detection || $file_based_detection === null) && $exiftool_fullpath != false) {
         $command = $exiftool_fullpath . " -s -s -s -t -mimetype " . escapeshellarg($path);
-        return run_command($command);
+        $file_mime_type = trim(run_command($command));
+
+        if ($file_mime_type !== '') {
+            return [$file_mime_type];
+        }
     }
 
-    return "application/octet-stream";
+    return ['application/octet-stream'];
+}
+
+/**
+ * Find matching MIME type(s) for a file extension.
+ *
+ * @param string $extension
+ * @return list<string>
+ */
+function get_mime_types_by_extension(string $extension): array
+{
+    $extension = mb_strtolower(trim($extension));
+    $mime_types = $GLOBALS['mime_types_by_extension'] ?? [];
+    $matches = isset($mime_types[$extension])
+        ? (is_string($mime_types[$extension]) ? [$mime_types[$extension]] : $mime_types[$extension])
+        : [];
+
+    return array_values(array_filter(array_map(trim(...), $matches)));
 }
 
 /**
@@ -776,11 +798,11 @@ function get_mime_type($path, $ext = null, ?bool $file_based_detection = null): 
  */
 function allowed_type_mime($allowedtype)
 {
-    global $mime_types_by_extension;
     if (strpos($allowedtype, "/") === false) {
-        // Get extended list of mime types to convert legacy extensions
-        // to Uppy mime type syntax
-        return $mime_types_by_extension[$allowedtype] ?? $allowedtype;
+        // Get extended list of mime types to convert legacy extensions to Uppy mime type syntax.
+        $found_types = get_mime_types_by_extension($allowedtype);
+        /** {@see include/mime_types.php} */
+        return $found_types === [] ? $allowedtype : reset($found_types);
     } else {
         // already a mime type
         return $allowedtype;
@@ -1068,7 +1090,7 @@ function send_mail($email, $subject, $message, $from = "", $reply_to = "", $html
 function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply_to = "", $html_template = "", $templatevars = array(), $from_name = "", $cc = "", $bcc = "", $files = array())
 {
     # Include footer
-    global $header_colour_style_override, $mime_types_by_extension, $email_from;
+    global $header_colour_style_override, $email_from;
     include_once __DIR__ . '/../lib/PHPMailer/PHPMailer.php';
     include_once __DIR__ . '/../lib/PHPMailer/Exception.php';
     include_once __DIR__ . '/../lib/PHPMailer/SMTP.php';
@@ -1326,12 +1348,9 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
 
     if (isset($images)) {
         foreach ($images as $image) {
-            $image_extension = pathinfo($image, PATHINFO_EXTENSION);
-
-            // Set mime type based on the image extension
-            if (array_key_exists($image_extension, $mime_types_by_extension)) {
-                $mime_type = $mime_types_by_extension[$image_extension];
-            }
+            /** {@see include/mime_types.php} */
+            $found_types = get_mime_types_by_extension(parse_filename_extension($image));
+            $mime_type = $found_types === [] ? '' : reset($found_types);
 
             $mail->AddEmbeddedImage($image, basename($image), basename($image), 'base64', $mime_type);
         }
@@ -2216,8 +2235,8 @@ function format_display_field($value)
     $string = i18n_get_translated($value);
     $string = TidyList($string);
 
-    if (isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR) {
-        $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes
+    if (isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE) {
+        $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes, no links
     } else {
         $string = escape($string);
     }
@@ -3613,6 +3632,93 @@ function hook($name, $pagename = "", $params = array(), $last_hook_value_wins = 
 }
 
 /**
+ * Performs a string replace once a text-only node is encountered, 
+ * otherwise loops and calls itself to iterate over child nodes
+ * Not intended to be called directly - use html_find_and_replace
+ *
+ * @param  string $findstring
+ * @param  string $replacestring can be blank if using for removal
+ * @param  DOMNode $node
+ * @return void
+ */
+function html_find_and_replace_node(string $findstring, string $replacestring, DOMNode $node): void 
+{
+    
+    if($node->nodeName == '#text') {
+        $node->textContent = str_replace($findstring, $replacestring, $node->textContent);
+    } elseif($node->childNodes->count() > 0) {
+        foreach($node->childNodes as $cn) {
+            html_find_and_replace_node($findstring, $replacestring, $cn);
+        }
+    }
+}
+
+/**
+ * Loads HTML fragment into a DOMDocument instance to parse and 
+ * perform a recursive find/replace on text-only nodes. 
+ * Returns modified HTML if possible, otherwise the original HTML.
+ *
+ * @param  string $findstring
+ * @param  string $replacestring can be blank if using for removal
+ * @param  string $html
+ * @return string
+ */
+function html_find_and_replace(string $findstring, string $replacestring, string $html): string 
+{
+
+    if (!is_string($html) || 0 === strlen($html)) {
+        return $html;
+    }
+
+    $html = htmlspecialchars_decode($html);
+    // Return character codes for non-ASCII characters (UTF-8 characters more than a single byte - 0x80 / 128 decimal or greater).
+    // This will prevent them being lost when loaded into libxml.
+    // Second parameter represents convert mappings array - in UTF-8 convert characters of 2,3 and 4 bytes, 0x80 to 0x10FFFF, with no offset and add mask to return character code.
+    $html = mb_encode_numericentity($html, array(0x80, 0x10FFFF, 0, 0xFFFFFF), 'UTF-8');
+
+    
+    libxml_use_internal_errors(true);
+
+    // Load the fragment into DOMDocument object
+    $doc           = new DOMDocument();
+    $doc->encoding = 'UTF-8';
+
+    $process_html = false;
+
+    if($html != strip_tags($html)) {
+        $process_html = $doc->loadHTML($html);
+    }    
+
+    // If DOMDocumment can parse the fragment, attempt to search through and replace
+    if ($process_html) {
+
+        foreach ($doc->getElementsByTagName('*') as $element) {
+
+            // Call the recursive find/replace function for each element
+            html_find_and_replace_node($findstring, $replacestring, $element);
+        }
+
+        $output_html = $doc->saveHTML();
+
+        // Remove the extraneous tags added when loading fragment into DOMDocument object
+        if (false !== strpos($output_html, '<body>')) {
+            $body_o_tag_pos = strpos($output_html, '<body>');
+            $body_c_tag_pos = strpos($output_html, '</body>');
+
+            $output_html = substr($output_html, $body_o_tag_pos + 6, $body_c_tag_pos - ($body_o_tag_pos + 6));
+        }
+
+        $output_html = html_entity_decode($output_html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
+
+        return $output_html;
+
+    } else {
+        return $html;
+    }
+
+}
+
+/**
 * Utility function to remove unwanted HTML tags and attributes.
 * Note: if $html is a full page, developers should allow html and body tags.
 *
@@ -4832,11 +4938,19 @@ function get_system_status(bool $basic = false)
         'total_approved' => get_total_approved_users()
     ];
 
-    // Return current number of resources
+    // Return current number of resources including count of 
+    // non-ingested resources (staticsync)
     $return['results']['resource_count'] = [
         'status' => 'OK',
         'total' => get_total_resources(),
         'active' => get_total_resources(0),
+        'non_ingested' => get_non_ingested_resources(),        
+    ];
+
+    // Return last API access
+    $return['results']['last_api_access'] = [
+        'status' => 'OK',
+        'info' => get_sysvar("last_api_access")
     ];
 
     // Return bandwidth usage last 30 days
@@ -4994,6 +5108,35 @@ function check_imagemagick_cli_version_found(string $version_output, array $util
         'utility' => $utility,
         'found' => in_array($utility['display_name'], $expected),
     ];
+}
+
+/**
+ * Check CLI version found for Exiftool is as expected.
+ *
+ * @param string $version_output The version output for ImageMagick
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ *
+ * @return array Returns array as expected by the check.php page
+ * - utility - New utility value for its display name
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ * - error_message - optional error message if an issue is detected
+ */
+function check_exiftool_cli_version_found(string $version_output, array $utility): array
+{
+    global $lang;
+
+    if (preg_match('/Warning: Library/', $version_output) === 1) {
+        return [
+            'utility' => $utility,
+            'found' => false,
+            'error_message' => "{$lang['status-warning']}: {$lang['exiftoolconflictingversions']}<br /> {$version_output}",
+        ];        
+    } else {
+        return [
+            'utility' => $utility,
+            'found' => preg_match("/^([0-9]+)+\.([0-9]+)/", $version_output) === 1,
+        ];
+    }
 }
 
 /**
@@ -5471,4 +5614,51 @@ function hslToRgb($h, $s, $l)
         (int)(($g + $m) * 255),
         (int)(($b + $m) * 255)
     ];
+}
+
+/**
+ * Check TinyMCE plugin list against an array of valid options
+ * The passed list is checked against TINYMCE_VALID_PLUGINS.
+ * The autoresize plugin is also included by default.
+ * 
+ * @param string $plugins A comma-separated list of plugins for TinyMCE
+ * @return string The list of plugins with any invalid options removed
+ */
+function check_tinymce_plugins(string $plugins = ""): string 
+{
+
+    // Ensure autoresize plugin is included so min_height can be used
+    if (mb_strpos($plugins, 'autoresize') === false) {
+        $plugins .= ',autoresize';
+    }
+
+    $configured_plugins = array_map('trim', explode(',', $plugins));
+    $valid_plugins = array_intersect_key(TINYMCE_VALID_PLUGINS, array_flip($configured_plugins));
+
+    return implode(', ', array_keys($valid_plugins));
+}
+
+/**
+ * Check TinyMCE toolbar configuration to ensure 
+ * it contains only alphanumeric characters, spaces and 
+ * the pipe (|) symbol.
+ * 
+ * @param string $toolbar The requested configuration for the toolbar
+ * @return string The configured toolbar with any invalid characters removed
+ */
+function check_tinymce_toolbar(string $toolbar = ""): string 
+{
+    //Remove anything non-alphanumeric, pipes or spaces
+    return preg_replace('/[^a-zA-Z0-9|\s]/', '', $toolbar);
+}
+
+
+/**
+ * Return the number of resources in the system that are not ingested into the filestore i.e. with 'file_path' set
+ *
+ * @return int  Number of non-ingested resources in the system
+ */
+function get_non_ingested_resources(): int
+{
+    return ps_value("SELECT COUNT(*) value FROM resource WHERE file_path IS NOT NULL AND file_path <> ''", [], 0);
 }

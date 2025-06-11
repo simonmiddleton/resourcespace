@@ -174,7 +174,7 @@ function do_search(
     $sql_prefix = "";
     $sql_suffix = "";
     if ($return_disk_usage) {
-        $sql_prefix = "SELECT sum(disk_usage) total_disk_usage,count(*) total_resources, resourcelist.ref, resourcelist.score, resourcelist.user_rating, resourcelist.total_hit_count FROM (";
+        $sql_prefix = "SELECT sum(disk_usage) total_disk_usage, count(*) total_resources, resourcelist.ref, resourcelist.score, resourcelist.user_rating, resourcelist.total_hit_count FROM (";
         $sql_suffix = ") resourcelist";
     }
 
@@ -235,8 +235,25 @@ function do_search(
                 $select->sql .= ", LEAST(IFNULL(rca.access, 1), IFNULL(rca2.access, 1)) resultant_access ";
             }
         } else {
-            // Standard resultant access for this user based on resource access and custom access
+            // Consider X permission else apply standard resultant_access for this user based on resource access and custom access
+            $sql_restricted_types = array();
+            foreach ($restypenames as $res_check_type) {
+                if (checkperm('X' . $res_check_type['ref'])) {
+                    $sql_restricted_types[] = $res_check_type['ref'];
+                }
+            }
+            // Custom access can override X permission. Note: rows not returned for custom access "Confidential" so X can't increase access here.
+            if (count($sql_restricted_types) > 0) {
+                $select->sql .= ", CASE ";
+                foreach ($sql_restricted_types as $sql_restricted_type) {
+                    $select->sql .= "WHEN resource_type = ? THEN LEAST(IFNULL(rca.access, 1), IFNULL(rca2.access, 1)) ";
+                    $select->parameters[] = 'i';
+                    $select->parameters[] = $sql_restricted_type;
+                }
+                $select->sql .= "ELSE LEAST(IFNULL(rca.access, r.access), IFNULL(rca2.access, r.access)) END resultant_access ";
+            } else {
             $select->sql .= ", LEAST(IFNULL(rca.access, r.access), IFNULL(rca2.access, r.access)) resultant_access ";
+            }
         }
     } else {
         $select->sql .= ", null group_access, null user_access ";
@@ -354,7 +371,7 @@ function do_search(
 
     # Compile final SQL
     $results_sql = new PreparedStatementQuery();
-    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select->sql FROM resource r" . $t->sql . " WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
+    $results_sql->sql = $sql_prefix . "SELECT DISTINCT $score score, $select->sql FROM resource r" . $t->sql . " WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
     $results_sql->parameters = array_merge($select->parameters, $t->parameters, $t2->parameters, $sql->parameters);
 
     # Debug

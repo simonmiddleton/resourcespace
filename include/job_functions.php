@@ -323,8 +323,6 @@ function job_queue_run_job($job, $clear_process_lock)
         job_queue_update($jobref, $job_data, STATUS_INPROGRESS);
         $offline_job_in_progress = true;
         include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
-        // Update to mark job as complete and reset priority to the default according to job type
-        job_queue_update($jobref, $job_data, STATUS_COMPLETE, date('Y-m-d H:i:s'), JOB_PRIORITY_COMPLETED);
     } else {
         // Check for handler in plugin
         $offline_plugins = $plugins;
@@ -346,7 +344,6 @@ function job_queue_run_job($job, $clear_process_lock)
                 job_queue_update($jobref, $job_data, STATUS_INPROGRESS);
                 $offline_job_in_progress = true;
                 include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php";
-                job_queue_update($jobref, $job_data, STATUS_COMPLETE, date('Y-m-d H:i:s'), JOB_PRIORITY_COMPLETED);
                 break;
             }
         }

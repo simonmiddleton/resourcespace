@@ -165,7 +165,7 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $
 * @param  integer $table_reference  ID of the record in the referred table
 * @param  boolean $count  Switch for if the result should be a single count or the result set
 *
-* @return array
+* @return array|integer
 */
 function get_activity_log($search, $offset, $rows, array $where_statements, $table, $table_reference, $count = false)
 {

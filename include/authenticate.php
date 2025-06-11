@@ -260,7 +260,8 @@ if (hook("replacesitetextloader")) {
 $GLOBALS['plugins'] = register_group_access_plugins($usergroup, $plugins ?? []);
 
 // Load user config options
-process_config_options($userref, $usergroup);
+process_config_options(array('usergroup' => $usergroup));
+process_config_options(array('user' => $userref));
 
 // Once system wide/user preferences and user group config overrides have loaded, any config based dependencies should be checked and loaded.
 if (!$disable_geocoding) {

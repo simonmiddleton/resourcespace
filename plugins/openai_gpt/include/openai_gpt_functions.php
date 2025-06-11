@@ -186,26 +186,28 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
         }
 
     $results = [];
-    foreach($resources as $resource)
-        {
-        if(isset($openai_gpt_processed[$resource . "_" . $target_field["ref"]]))
-            {
-            // This resource/field has already been processed
-            continue;
+    foreach ($resources as $resource) {
+        $valuepresent = false;
+        if (!$GLOBALS["openai_gpt_overwrite_data"]) {
+            $current_data = get_data_by_field($resource, $target_field["ref"]);
+            if (trim((string) $current_data) !== '') {
+                $valuepresent = true;
             }
-        if($valid_response)
-            {
+        }
+        if (isset($openai_gpt_processed[$resource . "_" . $target_field["ref"]]) || $valuepresent) {
+            // This resource/field has already been processed, or already has data present
+            continue;
+        }
+        if ($valid_response) {
             debug("openai_gpt_update_field() - resource # " . $resource . ", target field #" . $target_field["ref"]);
             // Set a flag to prevent any possibility of infinite recursion within update_field()
             $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
             $result = update_field($resource,$target_field["ref"],$newvalue);
             $results[$resource] = $result;
-            }
-        else
-            {
+        } else {
             $results[$resource] = false;
-            }
         }
+    }
     return $results;
     }
 

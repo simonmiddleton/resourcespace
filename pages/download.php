@@ -5,6 +5,7 @@ from outputting stray characters that will mess up the binary download
 we will clear the buffer and start over right before we download the file*/
 ob_start();
 $nocache = true;
+$disable_browser_check = true;
 include_once __DIR__ . '/../include/boot.php';
 include_once __DIR__ . '/../include/image_processing.php';
 ob_end_clean();
@@ -84,7 +85,7 @@ if ($ref > 0 && $override_temp_key !== '') {
 // Is this a user specific download?
 if ('' != $userfiledownload) {
     $noattach       = false;
-    $log_download   = false;
+    $log_download   = true;
     // Provide a way of overriding $exiftool_write = false depending on download source e.g. from format chooser
     if ($exiftool_write && $write_exif_data) {
         $exiftool_write = true;
@@ -246,7 +247,11 @@ if ('' != $userfiledownload) {
 
     if (!file_exists($path) && $noattach) {
         # Return icon for file (for previews)
-        $path = '../gfx/no_preview/default.png';
+        if(in_array($size,["thm","col"])) {
+            $path = '../gfx/no_preview/default_thm.png';
+        } else {            
+            $path = '../gfx/no_preview/default.png';
+        }
     }
 
     if ($noattach) {
@@ -337,7 +342,7 @@ if (isset($filename)) {
 }
 
 // We declare the downloaded content mime type
-$mime = get_mime_type($path);
+$mime = get_mime_type($path)[0];
 header("Content-Type: {$mime}");
 header('X-Content-Type-Options: nosniff');
 

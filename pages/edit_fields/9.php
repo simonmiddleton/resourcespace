@@ -22,7 +22,7 @@ if ('search_advanced' == $pagename || checkperm('bdk' . $field['ref'])) {
 
 $is_search                        = (isset($is_search) ? $is_search : false);
 $hidden_input_elements_name       = ($is_search ? 'nodes_searched' : 'nodes');
-$js_keywords_suffix               = "{$hidden_input_elements_name}_{$field['ref']}";
+$js_keywords_suffix               = "{$hidden_input_elements_name}_{$field['ref']}_" . md5($name);
 $add_searched_nodes_function_call = '';
 ?>
 
@@ -51,7 +51,7 @@ $add_searched_nodes_function_call = '';
     $nodes_in_sequence = array_filter($field['node_options'], 'node_is_active');
 
     if ((bool) $field['automatic_nodes_ordering']) {
-        uasort($nodes_in_sequence, "node_name_comparator");
+        uasort($nodes_in_sequence, "node_translated_name_comparator");
     } else {
         uasort($nodes_in_sequence, "node_orderby_comparator");
     }
@@ -99,9 +99,9 @@ $add_searched_nodes_function_call = '';
             
             hidden_input_elements += '<input id="<?php echo $hidden_input_elements_name; ?>_' + keyword_index + '" type="hidden" name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]" value="' + keyword_index + '">';
 
-            html += '<div class="keywordselected">' + keyword_value;
+            html += '<div class="keywordselected" id="nodeselected' + keyword_index + '">' + keyword_value;
             html += '<a href="#" class="RemoveKeyword"';
-            html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + escape(keyword_index) + '\', true); return false;"';
+            html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + keyword_index + '\', true); return false;"';
             html += '>x</a></div>';
             
             keyword_count ++;

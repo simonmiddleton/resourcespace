@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Этот большой CSV файл м
 $lang["csv_upload_createdfromcsvupload"] = 'Создано с помощью плагина загрузки CSV';
 $lang["plugin-csv_upload-title"] = 'Загрузка CSV';
 $lang["plugin-csv_upload-desc"] = '[Расширенный] Загрузить метаданные с помощью CSV файла.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV файл имеет BOM, поэтому не может быть загружен';
+$lang["csv_upload_check_file_error"] = 'Файл CSV не может быть открыт или прочитан';
+$lang["csv_upload_check_utf_error"] = 'CSV файл не является действительным UTF-8. Неверный символ на строке';

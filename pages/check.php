@@ -517,8 +517,15 @@ function get_utility_version(string $utilityname)
 
     if (!$expected) {
         # There was a correct path but the version check failed - unexpected output when executing the command.
-        $error_msg = "{$lang["status-fail"]}:<br />"
+        # Check if version command returned a custom error message
+
+        if (isset($version_check['error_message'])) {
+            $error_msg = $version_check['error_message'];
+        } else {
+            $error_msg = "{$lang["status-fail"]}:<br />"
             . str_replace(['%command', '%output'], [$version_command, $version], $lang['execution_failed']);
+        }
+        
         return array("name" => $name, "version" => "", "success" => false, "error" => $error_msg);
     } else {
         # There was a working path and the output was the expected - the version is returned.

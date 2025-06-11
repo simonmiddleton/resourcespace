@@ -141,7 +141,7 @@ if($resource['has_image'] === 0)
 // Full screen preview should always use screen size in preference to preview size if possible
 $previewsizes = ["scr", "pre"];
 
-$imagepre = get_resource_preview($resource,$previewsizes, $access, $use_watermark, $page);
+$imagepre = get_resource_preview($resource,$previewsizes, $access, $use_watermark, $page, true, $alternative);
 if($imagepre)
     {
     $url = $imagepre["url"] . "&iaccept=on";

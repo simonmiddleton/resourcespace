@@ -67,3 +67,7 @@ $lang["csv_upload_recommend_offline"] = 'Tento velký CSV soubor může trvat ve
 $lang["csv_upload_createdfromcsvupload"] = 'Vytvořeno z pluginu pro nahrávání CSV';
 $lang["plugin-csv_upload-title"] = 'Nahrání CSV';
 $lang["plugin-csv_upload-desc"] = '[Pokročilé] Nahrát metadata pomocí CSV souboru.';
+
+$lang["csv_upload_check_invalidbom"] = 'CSV soubor má BOM, takže nemůže být načten';
+$lang["csv_upload_check_file_error"] = 'CSV soubor nelze otevřít nebo přečíst';
+$lang["csv_upload_check_utf_error"] = 'CSV soubor není platný UTF-8. Neplatný znak na řádku';

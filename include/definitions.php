@@ -23,7 +23,7 @@ define('FIELD_TYPE_DATE_AND_OPTIONAL_TIME', 4);
 define('FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE', 5);
 define('FIELD_TYPE_EXPIRY_DATE', 6);
 define('FIELD_TYPE_CATEGORY_TREE', 7);
-define('FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR', 8);
+define('FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE', 8);
 define('FIELD_TYPE_DYNAMIC_KEYWORDS_LIST', 9);
 define('FIELD_TYPE_DATE', 10);
 define('FIELD_TYPE_RADIO_BUTTONS', 12);
@@ -39,7 +39,7 @@ $field_types = array(
     FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE        => "fieldtype-text_box_large_multi-line",
     FIELD_TYPE_EXPIRY_DATE                      => "fieldtype-expiry_date",
     FIELD_TYPE_CATEGORY_TREE                    => "fieldtype-category_tree",
-    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR  => "fieldtype-text_box_formatted_and_ckeditor",
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE   => "fieldtype-text_box_formatted_and_tinymce",
     FIELD_TYPE_DYNAMIC_KEYWORDS_LIST            => "fieldtype-dynamic_keywords_list",
     FIELD_TYPE_DATE                             => "fieldtype-date",
     FIELD_TYPE_RADIO_BUTTONS                    => "fieldtype-radio_buttons",
@@ -59,7 +59,7 @@ $TEXT_FIELD_TYPES = array(
     FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
     FIELD_TYPE_TEXT_BOX_MULTI_LINE,
     FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
-    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE,
     FIELD_TYPE_WARNING_MESSAGE
 );
 
@@ -275,6 +275,11 @@ $permitted_html_tags =  array(
     'li',
     'small',
     'sub',
+    'sup',
+    'code',
+    'blockquote',
+    'pre',
+    's',
     'ins',
     'del',
     'mark',
@@ -612,7 +617,7 @@ const RS_SYSTEM_UTILITIES = [
         'version_check' => [
             'argument' => '-ver',
             'callback' => [
-                'fct_name' => 'check_numeric_cli_version_found',
+                'fct_name' => 'check_exiftool_cli_version_found',
                 'args' => [],
             ],
         ],
@@ -861,6 +866,8 @@ const API_NATIVE_WHITELIST = [
     'get_processing_message',
     'delete_resources_in_collection',
     'checkperm',
+    'faces_set_node',
+    'update_field'
 ];
 
 const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension';
@@ -1055,7 +1062,33 @@ const FONTAWESOME_EXTENSIONS = [
     'default' => 'fa-file',
 ];
 
+const TINYMCE_VALID_PLUGINS = [
+    'autolink'  => 'Autolink',
+    'autoresize' => 'Autoresize',
+    'charmap' => 'Character Map',
+    'code' => 'Code',
+    'directionality' => 'Directionality',
+    'emoticons' => 'Emoticons',
+    'fullscreen' => 'Full Screen',
+    'help' => 'Help',
+    'insertdatetime' => 'Insert Date/Time',
+    'link' => 'Link',
+    'lists' => 'Lists',
+    'advlist' => 'List Styles',
+    'nonbreaking' => 'Nonbreaking Space',
+    'preview' => 'Preview',
+    'quickbars' => 'Quick Toolbars',
+    'searchreplace' => 'Search and Replace',
+    'visualblocks' => 'Visual Blocks',    
+    'visualchars' => 'Visual Characters',
+    'wordcount' => 'Word Count',
+];
+
 const FIELD_SORT_METHODS = [
     'default' => 0,
     'dot-notation' => 1,
 ];
+
+// How many times should the system attempt to generate previews? 
+// The preview attempts for a resource are reset if preview generation is manually initiated
+const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;

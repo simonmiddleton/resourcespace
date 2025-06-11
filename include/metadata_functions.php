@@ -271,6 +271,12 @@ function check_view_display_condition($fields, $n, $fields_all)
                     $validvalues = array_map("i18n_get_translated", $validvalues);
                     $validvalues = array_map("strtoupper", $validvalues);
                     $v = trim_array(explode(",", $fields_all[$cf]["value"] ?? ""));
+                    if ($fields_all[$cf]['type'] == FIELD_TYPE_CATEGORY_TREE) {
+                        $tree_values = array_merge(...array_map(function ($value) {
+                            return explode('/', $value);
+                        }, $v));
+                        $v = array_unique(array_merge($v, $tree_values));
+                    }
                     $v = array_map("i18n_get_translated", $v);
                     $v = array_map("strtoupper", $v);
                     foreach ($validvalues as $validvalue) {
@@ -345,7 +351,8 @@ function update_fieldx(int $metadata_field_ref): void
 }
 
 /**
- * Set resource dimensions using data from exiftool.
+ * Extract and store dimensions, resolution, and unit (if available) from exif data
+ * Exiftool output format (tab delimited): widthxheight resolution unit (e.g., 1440x1080 300 inches)
  *
  * @param  string   $file_path         Path to the original file.
  * @param  int      $ref               Reference of the resource.
@@ -356,16 +363,15 @@ function update_fieldx(int $metadata_field_ref): void
 function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
 {
     $exiftool_fullpath = get_utility_path("exiftool");
-    $command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit " . escapeshellarg($file_path);
-    $dimensions_resolution_unit = explode("\t", run_command($command));
+    $command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit ";
+    $command .= escapeshellarg($file_path);
+    $exif_output = explode("\t", run_command($command));
 
-    # if dimensions resolution and unit could be extracted, add them to the database.
-    # they can be used in view.php to give more accurate data.
-    if (count($dimensions_resolution_unit) >= 1 && $dimensions_resolution_unit[0] != '') {
+    if (count($exif_output) >= 1 && $exif_output[0] != '') {
         if ($remove_original) {
             ps_query("DELETE FROM resource_dimensions WHERE resource= ?", ['i', $ref]);
         }
-        $wh = explode("x", $dimensions_resolution_unit[0]);
+        $wh = explode("x", $exif_output[0]);
         if (count($wh) > 1) {
             $width = $wh[0];
             $height = $wh[1];
@@ -378,18 +384,16 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
                 's', $filesize
             ];
 
-            if (count($dimensions_resolution_unit) >= 2) {
-                $resolution = $dimensions_resolution_unit[1];
-                $sql_insert .= ",resolution";
-                $sql_params[] = 's';
-                $sql_params[] = $resolution;
-
-                if (count($dimensions_resolution_unit) >= 3) {
-                    $unit = $dimensions_resolution_unit[2];
+            for ($n = 1; $n < count($exif_output); $n++) {
+                # Resolution may be omitted if not set; check values by type
+                if (is_int_loose($exif_output[$n])) {
+                    $sql_insert .= ",resolution";
+                    $sql_params[] = 'i';
+                } else {
                     $sql_insert .= ",unit";
                     $sql_params[] = 's';
-                    $sql_params[] = $unit;
                 }
+                $sql_params[] = $exif_output[$n];
             }
 
             $sql_insert .= ")";

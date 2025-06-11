@@ -67,3 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'تم إنشاؤها باستخدام
 $lang["csv_upload_resource_match_column"] = 'يرجى اختيار العمود الذي يحتوي على مُعرف المورد';
 $lang["plugin-csv_upload-title"] = 'تحميل CSV';
 $lang["plugin-csv_upload-desc"] = '[متقدم] تحميل البيانات الوصفية باستخدام ملف CSV.';
+
+$lang["csv_upload_check_invalidbom"] = 'ملف CSV يحتوي على BOM لذا لا يمكن تحميله';
+$lang["csv_upload_check_file_error"] = 'لا يمكن فتح أو قراءة ملف CSV';
+$lang["csv_upload_check_utf_error"] = 'ملف CSV ليس UTF-8 صالحًا. حرف غير صالح في السطر';

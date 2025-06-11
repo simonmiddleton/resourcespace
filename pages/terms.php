@@ -67,8 +67,11 @@ if (!
     (
         (
             $terms_upload 
-            && strpos($url, 'edit.php') !== false
-            && strpos($url, 'upload_batch.php') !== false
+            && 
+            (
+                strpos($url, 'edit.php') !== false
+                || strpos($url, 'upload_batch.php') !== false
+            )
         )
         || 
         (

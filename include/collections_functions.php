@@ -61,11 +61,13 @@ function get_user_collections($user, $find = "", $order_by = "name", $sort = "AS
 
     if ($themes_in_my_collections) {
         // If we show featured collections, remove the categories
-        $keysql .= " WHERE (clist.`type` IN (?,?) OR (clist.`type` = ? AND clist.`count` > 0))";
+        $keysql .= " WHERE (clist.`type` IN (?,?,?) OR (clist.`type` = ? AND clist.`count` > 0))";
         $keyparams[] = "i";
         $keyparams[] = COLLECTION_TYPE_STANDARD;
         $keyparams[] = "i";
         $keyparams[] = COLLECTION_TYPE_PUBLIC;
+        $keyparams[] = "i";
+        $keyparams[] = COLLECTION_TYPE_REQUEST;
         $keyparams[] = "i";
         $keyparams[] = COLLECTION_TYPE_FEATURED;
     }
@@ -3426,9 +3428,8 @@ function collection_min_access($collection)
     if (is_array($collection)) {
         $result = $collection;
     } else {
-        $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '', '', false, false);
+        $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '', '', false, false, true);
     }
-
     if (!is_array($result) || empty($result)) {
         return 2;
     }
@@ -6573,8 +6574,8 @@ function process_collection_download(array $dl_data): array
     $include_alternatives       = (bool) ($dl_data['include_alternatives'] ?? false);
     $collection_download_tar    = (bool) ($dl_data['collection_download_tar'] ?? false);
     $archiver                   = (bool) ($dl_data["archiver"] ?? false);
-    // Set this as global -  required by write_metadata()
-    global $exiftool_write_option;
+    // Set this as global -  required by write_metadata() and hooks
+    global $exiftool_write_option, $p, $pextension;
     $saved_exiftool_write_option = $exiftool_write_option;
     $exiftool_write_option = $dl_data['exiftool_write_option'];
 
@@ -6584,7 +6585,6 @@ function process_collection_download(array $dl_data): array
     if (
         empty($collectiondata)
         || empty($collection_resources)
-        || !isset($GLOBALS["userref"]) // Downloads need to be linked to a user
     ) {
         debug("Missing collection data, Unable to proceed with collection download");
         return [];
@@ -6766,6 +6766,10 @@ function process_collection_download(array $dl_data): array
             $target_exists = file_exists($p);
         }
 
+        if (!isset($pextension) || trim($pextension) == "") {
+            $pextension = parse_filename_extension($p);
+        }
+
         // Move to next resource if file doesn't exist or restricted access and user doesn't have access to the requested size
         if (
             !(
@@ -6825,7 +6829,7 @@ function process_collection_download(array $dl_data): array
                 $dl_data['text'] .= $addtext;
             }
 
-            hook('modifydownloadfile');
+            hook('modifydownloadfile', "", [$collection_resources[$n]]);
             if ($collection_download_tar) {
                 $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
                 debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
@@ -6897,7 +6901,6 @@ function process_collection_download(array $dl_data): array
                     debug("Adding $p ($filename) for alternative ref " . $alternative["ref"]);
                     set_processing_message((string) ($n+1 . "/" . $rescount . " " . $GLOBALS["lang"]["filesaddedtozip"]));
                     if ($collection_download_tar) {
-                        // $usertempdir = get_temp_dir(false, "rs_" . $GLOBALS["userref"] . "_" . $id);
                         debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
                         $GLOBALS["use_error_exception"] = true;
                         try {

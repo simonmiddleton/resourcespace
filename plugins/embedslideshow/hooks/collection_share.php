@@ -121,8 +121,8 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
             );
 
             $embed .= "
-            <div id=\"embedslideshow_back_$ref\" style=\"display:none;position:absolute;top:0;left:0;width:100%;height:100%;min-height: 100%;background-color:#000;opacity: .5;filter: alpha(opacity=50);\"></div>
-            <div id=\"embedslideshow_minimise_$ref\" style=\"position:absolute;top:5px;left:20px;background-color:white;border:1px solid black;display:none;color:black\"><a style=\"color:#000\" href=\"#\" onClick=\"
+            <div id=\"embedslideshow_back_$ref\" style=\"display:none;position:absolute;top:0;left:0;width:100%;height:100%;min-height: 100%;background-color:#000;opacity: .5;filter: alpha(opacity=50); z-index: 100\"></div>
+            <div id=\"embedslideshow_minimise_$ref\" style=\"position:absolute;top:5px;left:20px;background-color:white;border:1px solid black;display:none;color:black;z-index:1000;\"><a style=\"color:#000\" href=\"#\" onClick=\"
             var ed=document.getElementById('embedslideshow_$ref');
             ed.width='$width_w_border';
             ed.height='$height';

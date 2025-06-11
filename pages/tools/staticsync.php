@@ -600,7 +600,7 @@ function ProcessFolder($folder)
                                                         FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
                                                         FIELD_TYPE_TEXT_BOX_MULTI_LINE,
                                                         FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
-                                                        FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+                                                        FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE,
                                                         FIELD_TYPE_DATE,FIELD_TYPE_WARNING_MESSAGE,
                                                     ]
                                                 )

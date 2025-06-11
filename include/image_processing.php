@@ -1081,6 +1081,11 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
     global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge, $lang, $ffmpeg_preview_gif;
     global $previews_allow_enlarge, $offline_job_queue, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
+    if (is_null($extension)) {
+        debug("create_previews - failed for resource $ref - extension provided is null.");
+        return false;
+    }
+
     # FStemplate support - do not allow previews from the template to be changed
     if (resource_file_readonly($ref)) {
         return false;
@@ -1140,6 +1145,12 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
     if (!file_exists($file)) {
         ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref= ?", ['i', $ref]);
         return false;
+    }
+
+    if (!$ingested) {
+        // When creating previews for non-ingested static sync files, they're already on the system so there's not much
+        // to validate for at this point
+        $GLOBALS['preview_preprocessing_file_validator'] = CommandPlaceholderArg::alwaysValid(...);
     }
 
     # If configured, make sure the file is within the size limit for preview generation
@@ -2558,6 +2569,7 @@ function delete_previews($resource, $alternative = -1)
     }
 
     $delete_prefixes = [];
+    $delete_prefixes[] = "original_copy_";
     $delete_prefixes[] = "resized_";
     $delete_prefixes[] = "tile_";
     $delete_prefixes[] = "tmp_";

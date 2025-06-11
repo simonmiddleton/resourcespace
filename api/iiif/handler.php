@@ -1,6 +1,8 @@
 <?php
 
 $suppress_headers = true;
+$disable_browser_check = true;
+
 include_once __DIR__ . "/../../include/boot.php";
 include_once __DIR__ . "/../../include/image_processing.php";
 include_once __DIR__ . "/../../include/video_functions.php";

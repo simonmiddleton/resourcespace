@@ -122,7 +122,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         remove_node_keyword_mappings(array('ref' => $current_node['ref'], 'resource_type_field' => $current_node['resource_type_field'], 'name' => $current_node['name']), null);
         if ($resource_type_field_data["keywords_index"] == 1) {
             $is_date = in_array($resource_type_field_data['type'], [FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE,FIELD_TYPE_DATE_RANGE]);
-            $is_html = ($resource_type_field_data["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);
+            $is_html = ($resource_type_field_data["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE);
             add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), null, $is_date, $is_html);
         }
     }
@@ -386,7 +386,7 @@ function get_nodes(
 
     if ($recursive) {
         // Need to reorder so that parents are ordered by first, with children between (query will have returned them all according to the passed order_by)
-        $return_nodes = order_tree_nodes($return_nodes);
+        $return_nodes = order_tree_nodes($return_nodes, $order_by_translated_name);
     }
 
     return $return_nodes;
@@ -428,10 +428,12 @@ function is_parent_node($ref, bool $active_only = false): bool
     }
 
     $query = $active_only
-        ? 'SELECT exists (SELECT ref from node WHERE parent = ? AND active = 1) AS `value`'
-        : 'SELECT exists (SELECT ref from node WHERE parent = ?) AS `value`';
+        ? 'SELECT DISTINCT parent `value` from node WHERE active = 1'
+        : 'SELECT DISTINCT parent `value` from node';
 
-    return ps_value($query, ['i', $ref], 0) > 0;
+    $parents = ps_array($query, [], 'schema');
+
+    return is_array($parents) && in_array($ref, $parents); 
 }
 
 /**
@@ -942,7 +944,7 @@ function node_field_options_override(&$field, $resource_type_field = null)
     migrate_resource_type_field_check($field);
 
     $field['node_options'] = [];
-    $nodes = get_nodes($field['ref'], null, false, null, null, null, null, (bool)$field['automatic_nodes_ordering']);
+    $nodes = get_nodes($field['ref'], null, $field['type'] == FIELD_TYPE_CATEGORY_TREE, null, null, null, null, (bool)$field['automatic_nodes_ordering']);
     foreach ($nodes as $node) {
         $field['node_options'][$node['ref']] = $node;
     }
@@ -1806,7 +1808,7 @@ function get_node_id($value, $resource_type_field)
 }
 
 /**
-* Comparator function for uasort to allow sorting of node array by name
+* Comparator function for uasort to allow sorting of node array by translated name
 *
 * @param array   $n1 Node one to compare
 * @param string  $n2 Node two to compare
@@ -1815,11 +1817,13 @@ function get_node_id($value, $resource_type_field)
 *               <0 means $n1 less than $n2
 *               >0 means $n1 greater than $n2
 */
-function node_name_comparator($n1, $n2)
+function node_translated_name_comparator($n1, $n2)
 {
-    return strcmp($n1["name"], $n2["name"]);
+    return strcmp(
+        $n1["translated_name"] ?: i18n_get_translated($n1["name"]),
+        $n2["translated_name"] ?: i18n_get_translated($n2["name"])
+    );
 }
-
 /**
 * Comparator function for uasort to allow sorting of node array by order_by field
 *
@@ -2465,10 +2469,16 @@ function update_resource_node_hitcount($resource, $nodes)
  * @return array            Full nodes in order
  *
  */
-function order_tree_nodes($nodes)
+function order_tree_nodes($nodes, $order_by_translated_name = false)
 {
     if (count($nodes) == 0) {
         return [];
+    }
+
+    if ($order_by_translated_name) {
+        $sort = 'node_translated_name_comparator';
+    } else {
+        $sort = 'node_orderby_comparator';
     }
     // Find parent nodes first
     $parents = array_column($nodes, "parent");
@@ -2476,7 +2486,11 @@ function order_tree_nodes($nodes)
     $orderednodes = array_values(array_filter($nodes, function ($node) use ($toplevels) {
         return in_array((int)$node["parent"], $toplevels);
     }));
-    usort($orderednodes, 'node_orderby_comparator');
+
+    if (!$order_by_translated_name) {
+        usort($orderednodes, $sort);
+    }
+
     for ($n = 0; $n < count($orderednodes); $n++) {
         $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
         if (!isset($orderednodes[$n]["translated_name"]) || is_i18n_language_string($orderednodes[$n]["translated_name"])) {
@@ -2498,7 +2512,7 @@ function order_tree_nodes($nodes)
                     return (int)$node["parent"] == $orderednodes[$n]["ref"];
                 });
                 // Set order
-                uasort($children, "node_orderby_comparator");
+                uasort($children, $sort);
                 $children = array_values($children);
                 for ($c = 0; $c < count($children); $c++) {
                     $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
