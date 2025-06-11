@@ -3664,7 +3664,7 @@ function delete_usergroup(int $usergroup_ref): bool
  */
 function browser_check()
 {
-    global $browser_check_key, $applicationname;
+    global $browser_check_key, $applicationname, $disable_browser_check;
     
     // Exceptions
     if (PHP_SAPI == 'cli') {return;}
