@@ -3212,3 +3212,7 @@ $tinymce_plugins = "autoresize,code,lists,link";
 
 // Toolbar entries to be added to TinyMCE
 $tinymce_toolbar = "styles | bold italic underline removeformat | fontsize | forecolor backcolor | bullist numlist link | outdent indent | code";
+
+// Browser check - guard against basic DDOS - execute JS on the client to solve a problem, and only allow access for the valid answer.
+$browser_check=false;
+$browser_check_key="c899a58b100c94fb907fac1f29e2d0fd"; // Randomise this.
