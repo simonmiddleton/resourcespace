@@ -7228,7 +7228,7 @@ function render_resource_view_image(array $resource, array $context)
             include_once RESOURCESPACE_BASE_PATH . '/include/annotation_functions.php';
         }
 
-        if (canSeePreviewTools())
+        if (canSeePreviewTools($resource))
             {
             ?>
             <!-- Available tools to manipulate previews -->

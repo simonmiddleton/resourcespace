@@ -259,8 +259,13 @@ function annotationEditable(array $annotation, array $ctx): bool
     debug(sprintf('[annotations][fct=annotationEditable] $annotation = %s', json_encode($annotation)));
     global $userref, $annotate_text_adds_comment, $annotate_public_view;
 
-    // Read-only annotations in an external share context (when allowed to view publicly)
-    if ($annotate_public_view && ($ctx['k'] ?? '') !== '') {
+    // Read-only annotations when:
+    if (
+        // - allowed to view publicly, in an external share context
+        ($annotate_public_view && ($ctx['k'] ?? '') !== '')
+        // - the resource is inapplicable because its type is excluded (via $annotate_exclude_restypes)
+        || !resource_can_be_annotated($annotation['resource'])
+    ) {
         return false;
     }
 
@@ -1033,4 +1038,23 @@ function annotation_pdf_class()
             $this->SetXY($this->GetX(), $ynew);
         }
     };
+}
+
+/**
+ * Check if a resource can be annotated
+ * @param int $ref Resource ID
+ */
+function resource_can_be_annotated(int $ref): bool
+{
+    $resource_data = get_resource_data($ref);
+    return $resource_data !== false && resource_type_applicable_for_annotations($resource_data['resource_type']);
+}
+
+/**
+ * Check if a given resource type is applicable for annotations
+ * @param int $ref Resource type ID
+ */
+function resource_type_applicable_for_annotations(int $ref): bool
+{
+    return !in_array($ref, $GLOBALS['annotate_exclude_restypes']);
 }

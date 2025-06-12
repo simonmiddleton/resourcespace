@@ -12,6 +12,7 @@ $cache_globals = [
     'userpermissions' => $userpermissions,
     'annotate_text_adds_comment' => $annotate_text_adds_comment,
     'annotate_public_view' => $annotate_public_view,
+    'annotate_exclude_restypes' => $annotate_exclude_restypes,
 ];
 $reset_globals = static function (array $cache) {
     foreach ($cache as $name => $value) {
@@ -114,6 +115,12 @@ $use_cases = [
         'input' => $fake_annotation(['resource_type_field' => $rtf_dkl]),
         'expected' => false,
     ],
+    [
+        'name' => 'Users should not create an annotation for inapplicable resources (by type)',
+        'setup' => static fn() => $GLOBALS['annotate_exclude_restypes'] = [1], # exclude Photos
+        'input' => $fake_annotation(['resource_type_field' => $rtf_dkl]),
+        'expected' => false,
+    ],
     // Edit - Own records
     [
         'name' => 'Admin can edit their own annotation (field bound; w/ access)',
@@ -159,6 +166,18 @@ $use_cases = [
             $GLOBALS['annotate_text_adds_comment'] = true;
             $GLOBALS['userpermissions'] = $without_permission(['a', 'o']);
         },
+        'input' => $fake_annotation(['resource_type_field' => 0, 'user' => $userref]),
+        'expected' => false,
+    ],
+    [
+        'name' => "Users shouldn't edit their annotations (field bound; inapplicable resource type)",
+        'setup' => static fn() => $GLOBALS['annotate_exclude_restypes'] = [1], # exclude Photos
+        'input' => $fake_annotation(['resource_type_field' => $rtf_dkl, 'user' => $userref]),
+        'expected' => false,
+    ],
+    [
+        'name' => "Users shouldn't edit their text annotation (inapplicable resource type)",
+        'setup' => static fn() => $GLOBALS['annotate_exclude_restypes'] = [1], # exclude Photos
         'input' => $fake_annotation(['resource_type_field' => 0, 'user' => $userref]),
         'expected' => false,
     ],

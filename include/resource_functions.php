@@ -7961,11 +7961,14 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
 /**
 * Helper function for Preview tools feature. Checks all necessary permissions or options
 * in order to tell the system whether PreviewTools panel should be displayed
+*
+* @param array $resource Resource data structure
 */
-function canSeePreviewTools(): bool
+function canSeePreviewTools(array $resource): bool
 {
     global $image_preview_zoom;
-    return count(canSeeAnnotationsFields()) > 0 || $image_preview_zoom;
+    return (resource_type_applicable_for_annotations($resource['resource_type']) && canSeeAnnotationsFields() !== [])
+        || $image_preview_zoom;
 }
 
 /**

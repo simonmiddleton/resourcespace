@@ -1349,7 +1349,10 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 <?php 
                                                 }
 
-                                            if (canSeeAnnotationsFields() !== []) { ?>
+                                            if (
+                                                resource_type_applicable_for_annotations($resource['resource_type'])
+                                                && canSeeAnnotationsFields() !== []
+                                            ) { ?>
                                                 <li>
                                                     <a href="<?php echo generateURL("{$baseurl}/pages/annotate_pdf_config.php", $urlparams); ?>" onclick="return CentralSpaceLoad(this);">
                                                         <?php echo "<i class='fa-solid fa-file-pdf'></i>&nbsp;" . escape($lang['annotate_pdf_sheet_tool']); ?>
