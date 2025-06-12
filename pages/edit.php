@@ -1447,10 +1447,9 @@ hook("editbefresmetadata"); ?>
             $shown_resource_types = array();
 
             foreach (get_resource_types() as $type) {
-                $allowed_extensions = trim((string) $type['allowed_extensions']) != ''
+                $allowed_mime_types = trim((string) $type['allowed_extensions']) != ''
                     ? explode(',',strtolower($type['allowed_extensions']))
                     : [];
-
                 if (
                     (
                         // Skip showing a resource type that we do not to have permission to change to 
@@ -1462,9 +1461,10 @@ hook("editbefresmetadata"); ?>
                     || !acl_can_edit_resource_of_type($type['ref'])
                     || (
                         trim((string) $resource["file_extension"]) != ""
-                        && count($allowed_extensions) > 0 
-                        && !in_array(allowed_type_mime(strtolower($resource["file_extension"])), $allowed_extensions)
+                        && count($allowed_mime_types) > 0 
+                        && !in_array(allowed_type_mime(strtolower($resource["file_extension"])), $allowed_mime_types)
                     )
+                    && $resource['resource_type'] != $type['ref']
                 ) {
                     continue;
                 }
