@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'การอัปโหลด CSV';
 $lang["csv_upload_intro"] = 'ปลั๊กอินนี้ช่วยให้คุณสร้างหรืออัปเดตทรัพยากรโดยการอัปโหลดไฟล์ CSV รูปแบบของไฟล์ CSV มีความสำคัญ';
-$lang["csv_upload_condition1"] = 'โปรดตรวจสอบว่าไฟล์ CSV ถูกเข้ารหัสโดยใช้ <b>UTF-8 โดยไม่มี BOM</b>';
 $lang["csv_upload_condition2"] = 'ไฟล์ CSV ต้องมีแถวหัวข้อ';
 $lang["csv_upload_condition3"] = 'เพื่อที่จะสามารถอัปโหลดไฟล์ทรัพยากรในภายหลังโดยใช้ฟังก์ชันการแทนที่แบบกลุ่ม จะต้องมีคอลัมน์ชื่อ \'ชื่อไฟล์ต้นฉบับ\' และแต่ละไฟล์จะต้องมีชื่อไฟล์ที่ไม่ซ้ำกัน';
 $lang["csv_upload_condition4"] = 'ทุกฟิลด์ที่จำเป็นสำหรับทรัพยากรที่สร้างใหม่จะต้องมีอยู่ใน CSV';
@@ -66,6 +65,5 @@ $lang["csv_upload_force_offline"] = 'ไฟล์ CSV ขนาดใหญ่�
 $lang["csv_upload_recommend_offline"] = 'ไฟล์ CSV ขนาดใหญ่เช่นนี้อาจใช้เวลานานมากในการประมวลผล แนะนำให้เปิดใช้งานงานออฟไลน์หากคุณต้องการประมวลผลไฟล์ CSV ขนาดใหญ่';
 $lang["csv_upload_createdfromcsvupload"] = 'สร้างจากปลั๊กอินการอัปโหลด CSV';
 
-$lang["csv_upload_check_invalidbom"] = 'ไฟล์ CSV มี BOM ดังนั้นไม่สามารถโหลดได้';
 $lang["csv_upload_check_file_error"] = 'ไม่สามารถเปิดหรืออ่านไฟล์ CSV ได้';
 $lang["csv_upload_check_utf_error"] = 'ไฟล์ CSV ไม่ใช่ UTF-8 ที่ถูกต้อง ตัวอักษรไม่ถูกต้องในบรรทัด';

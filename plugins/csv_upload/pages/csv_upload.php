@@ -94,7 +94,7 @@ if (isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0) {
 
     if ($process_file_upload['success']) {
 
-        // Check if file is valid UTF-8
+        // Check if file is valid UTF-8, remove BOM if present
         $csv_utf_check = csv_check_utf8($csvfile);
 
         if ($csv_utf_check['success']) {

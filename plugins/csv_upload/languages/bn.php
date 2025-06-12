@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV আপলোড';
 $lang["csv_upload_intro"] = 'এই প্লাগইনটি আপনাকে একটি CSV ফাইল আপলোড করে রিসোর্স তৈরি বা আপডেট করতে দেয়। CSV এর ফরম্যাট গুরুত্বপূর্ণ।';
-$lang["csv_upload_condition1"] = 'নিশ্চিত করুন যে CSV ফাইলটি <b>UTF-8 without BOM</b> ব্যবহার করে এনকোড করা হয়েছে।';
 $lang["csv_upload_condition2"] = 'CSV-এ একটি শিরোনাম সারি থাকতে হবে';
 $lang["csv_upload_condition3"] = 'পরে ব্যাচ প্রতিস্থাপন কার্যকারিতা ব্যবহার করে রিসোর্স ফাইল আপলোড করতে সক্ষম হতে হলে একটি কলাম \'Original filename\' নামে থাকা উচিত এবং প্রতিটি ফাইলের একটি অনন্য ফাইলনাম থাকা উচিত।';
 $lang["csv_upload_condition4"] = 'নতুনভাবে তৈরি করা যেকোনো রিসোর্সের জন্য সমস্ত বাধ্যতামূলক ক্ষেত্রগুলি CSV তে উপস্থিত থাকতে হবে।';
@@ -66,6 +65,5 @@ $lang["csv_upload_force_offline"] = 'এই বড় CSV প্রক্রি�
 $lang["csv_upload_recommend_offline"] = 'এই বড় CSV প্রক্রিয়া করতে অনেক সময় লাগতে পারে। যদি আপনাকে বড় CSV প্রক্রিয়া করতে হয় তবে অফলাইন কাজগুলি সক্রিয় করার সুপারিশ করা হয়।';
 $lang["csv_upload_createdfromcsvupload"] = 'CSV আপলোড প্লাগইন থেকে তৈরি করা হয়েছে';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV ফাইলের BOM আছে তাই এটি লোড করা যাবে না';
 $lang["csv_upload_check_file_error"] = 'CSV ফাইলটি খোলা বা পড়া যাচ্ছে না';
 $lang["csv_upload_check_utf_error"] = 'CSV ফাইলটি বৈধ UTF-8 নয়। লাইনে অকার্যকর অক্ষর';

@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV ਅਪਲੋਡ';
 $lang["csv_upload_intro"] = 'ਇਹ ਪਲੱਗਇਨ ਤੁਹਾਨੂੰ CSV ਫਾਈਲ ਅਪਲੋਡ ਕਰਕੇ ਸਰੋਤ ਬਣਾਉਣ ਜਾਂ ਅਪਡੇਟ ਕਰਨ ਦੀ ਆਗਿਆ ਦਿੰਦਾ ਹੈ। CSV ਦਾ ਫਾਰਮੈਟ ਮਹੱਤਵਪੂਰਨ ਹੈ।';
-$lang["csv_upload_condition1"] = 'ਸੁਨਿਸ਼ਚਿਤ ਕਰੋ ਕਿ CSV ਫਾਈਲ ਨੂੰ <b>UTF-8 ਬਿਨਾਂ BOM</b> ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਐਨਕੋਡ ਕੀਤਾ ਗਿਆ ਹੈ।';
 $lang["csv_upload_condition2"] = 'CSV ਵਿੱਚ ਇੱਕ ਹੈਡਰ ਕਤਾਰ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ';
 $lang["csv_upload_condition3"] = 'ਬਾਚ ਰੀਪਲੇਸ ਫੰਕਸ਼ਨਲਿਟੀ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਰਿਸੋਰਸ ਫਾਈਲਾਂ ਅਪਲੋਡ ਕਰਨ ਦੇ ਯੋਗ ਹੋਣ ਲਈ, ਇੱਕ ਕਾਲਮ \'Original filename\' ਨਾਮਕ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਹਰ ਫਾਈਲ ਦਾ ਇੱਕ ਵਿਲੱਖਣ ਫਾਈਲਨਾਮ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।';
 $lang["csv_upload_condition4"] = 'ਕਿਸੇ ਵੀ ਨਵੇਂ ਬਣਾਏ ਗਏ ਸਰੋਤਾਂ ਲਈ ਸਾਰੇ ਲਾਜ਼ਮੀ ਖੇਤਰ CSV ਵਿੱਚ ਮੌਜੂਦ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ।';
@@ -66,6 +65,5 @@ $lang["csv_upload_force_offline"] = 'ਇਹ ਵੱਡਾ CSV ਪ੍ਰਕਿਰ�
 $lang["csv_upload_recommend_offline"] = 'ਇਹ ਵੱਡਾ CSV ਪ੍ਰਕਿਰਿਆ ਕਰਨ ਲਈ ਬਹੁਤ ਜ਼ਿਆਦਾ ਸਮਾਂ ਲੈ ਸਕਦਾ ਹੈ। ਜੇ ਤੁਹਾਨੂੰ ਵੱਡੇ CSV ਪ੍ਰਕਿਰਿਆ ਕਰਨ ਦੀ ਲੋੜ ਹੈ ਤਾਂ ਇਹ ਸਿਫਾਰਸ਼ ਕੀਤੀ ਜਾਂਦੀ ਹੈ ਕਿ ਆਫਲਾਈਨ ਜ਼ੋਬਸ ਨੂੰ ਯੋਗ ਕੀਤਾ ਜਾਵੇ।';
 $lang["csv_upload_createdfromcsvupload"] = 'ਸੀਐਸਵੀ ਅਪਲੋਡ ਪਲੱਗਇਨ ਤੋਂ ਬਣਾਇਆ ਗਿਆ';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV ਫਾਈਲ ਵਿੱਚ BOM ਹੈ ਇਸ ਲਈ ਲੋਡ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ';
 $lang["csv_upload_check_file_error"] = 'CSV ਫਾਈਲ ਖੁੱਲ ਨਹੀਂ ਸਕਦੀ ਜਾਂ ਪੜ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕਦੀ';
 $lang["csv_upload_check_utf_error"] = 'CSV ਫਾਈਲ ਵੈਧ UTF-8 ਨਹੀਂ ਹੈ। ਲਾਈਨ \'ਤੇ ਗਲਤ ਅੱਖਰ';
