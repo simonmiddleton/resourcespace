@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = 'Taguer les visages reconnus lors du télécharge
 $lang["faces-detecting"] = 'Recherche de visages dans la ressource :';
 $lang["faces-tagging"] = 'Étiquetage des visages détectés dans la ressource :';
 $lang["faces-confidence-threshold"] = 'Seuil de confiance du visage : À quel point le modèle doit-il être sûr d\'avoir trouvé un visage humain ? Suggéré 70 % (les valeurs en dessous de cela correspondront à des visages obscurcis et à des non-visages';
+$lang["faces-oneface"] = 'Veuillez sélectionner une seule option pour chaque face.';

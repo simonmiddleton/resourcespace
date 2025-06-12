@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[Avançado] Enviar metadados usando um arquiv
 
 $lang["csv_upload_check_file_error"] = 'O arquivo CSV não pode ser aberto ou lido';
 $lang["csv_upload_check_utf_error"] = 'O arquivo CSV não é um UTF-8 válido. Caractere inválido na linha';
+$lang["csv_upload_condition1"] = 'Certifique-se de que o arquivo CSV esteja codificado usando <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'O arquivo CSV tem BOM que não pôde ser removido';

@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = 'Gán thẻ cho các khuôn mặt nhận diện k
 $lang["faces-detecting"] = 'Đang quét khuôn mặt trong tài nguyên:';
 $lang["faces-tagging"] = 'Gán thẻ cho các khuôn mặt được phát hiện trong tài nguyên:';
 $lang["faces-confidence-threshold"] = 'Ngưỡng độ tin cậy của khuôn mặt: Mô hình nên tự tin như thế nào rằng nó đã tìm thấy một khuôn mặt con người? Đề xuất 70% (các giá trị dưới mức này sẽ khớp với các khuôn mặt bị che khuất và không phải khuôn mặt)';
+$lang["faces-oneface"] = 'Vui lòng chỉ chọn một tùy chọn cho mỗi mặt.';

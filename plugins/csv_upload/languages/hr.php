@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = 'Učitajte meta podatke koristeći CSV datotek
 
 $lang["csv_upload_check_file_error"] = 'CSV datoteka se ne može otvoriti ili pročitati';
 $lang["csv_upload_check_utf_error"] = 'CSV datoteka nije valjani UTF-8. Nevaljani znak na retku';
+$lang["csv_upload_condition1"] = 'Provjerite je li CSV datoteka kodirana koristeći <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV datoteka ima BOM koji nije mogao biti uklonjen';

@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = '업로드 시 인식된 얼굴에 태그 추가?
 $lang["faces-detecting"] = '리소스에서 얼굴 스캔 중:';
 $lang["faces-tagging"] = '리소스에서 감지된 얼굴 태그 지정:';
 $lang["faces-confidence-threshold"] = '얼굴 신뢰 임계값: 모델이 인간 얼굴을 찾았다고 얼마나 확신해야 합니까? 제안된 값 70% (이 값보다 낮은 값은 가려진 얼굴과 비얼굴에 일치합니다)';
+$lang["faces-oneface"] = '각 면에 대해 하나의 옵션만 선택해 주십시오.';

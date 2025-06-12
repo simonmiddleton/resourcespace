@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[Расширенный] Загрузить �
 
 $lang["csv_upload_check_file_error"] = 'Файл CSV не может быть открыт или прочитан';
 $lang["csv_upload_check_utf_error"] = 'CSV файл не является действительным UTF-8. Неверный символ на строке';
+$lang["csv_upload_condition1"] = 'Убедитесь, что файл CSV закодирован с использованием <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV файл содержит BOM, который не удалось удалить';

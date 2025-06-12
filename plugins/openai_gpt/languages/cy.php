@@ -18,3 +18,4 @@ $lang["property-openai_gpt_prompt"]='GPT Prompt';
 $lang["property-openai_gpt_input_field"]='GPT Input';
 $lang["openai_gpt_language"] = 'Iaith allbwn';
 $lang["openai_gpt_language_user"] = 'Iaith y defnyddiwr presennol';
+$lang["openai_gpt_overwrite_data"] = 'Ailywio data presennol yn y meysydd wedi\'u cyfarwyddo?';

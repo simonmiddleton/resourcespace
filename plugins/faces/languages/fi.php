@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = 'Tunnista kasvot ja lisää tunnisteet latauksen 
 $lang["faces-detecting"] = 'Kasvojen skannaus resurssissa:';
 $lang["faces-tagging"] = 'Kasvotunnistuksen merkitseminen resurssissa:';
 $lang["faces-confidence-threshold"] = 'Kasvojen luottamuskynnys: Kuinka varma mallin tulisi olla siitä, että se on löytänyt ihmiskasvon? Suositeltu 70% (arvot tämän alapuolella vastaavat peitettyjä kasvoja ja ei-kasvoja)';
+$lang["faces-oneface"] = 'Valitse vain yksi vaihtoehto jokaiselle kasvoille.';

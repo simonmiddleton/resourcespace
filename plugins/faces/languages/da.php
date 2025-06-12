@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = 'Tag genkendte ansigtter ved upload?';
 $lang["faces-detecting"] = 'Scanning efter ansigtstræk i ressource:';
 $lang["faces-tagging"] = 'Tagging af registrerede ansigtstræk i ressource:';
 $lang["faces-confidence-threshold"] = 'Ansigt tillidstærskel: Hvor sikker skal modellen være på, at den har fundet et menneskeligt ansigt? Foreslået 70% (værdier under dette vil matche skjulte ansigtstræk og ikke-ansigtstræk';
+$lang["faces-oneface"] = 'Vælg venligst kun én mulighed for hver ansigt.';

@@ -67,3 +67,5 @@ $lang["csv_upload_createdfromcsvupload"] = 'Imeundwa kutoka kwa programu-jalizi 
 
 $lang["csv_upload_check_file_error"] = 'Faili la CSV haliwezi kufunguliwa au kusomwa';
 $lang["csv_upload_check_utf_error"] = 'Faili la CSV halina UTF-8 halali. Karakteri isiyo halali kwenye mstari';
+$lang["csv_upload_condition1"] = 'Hakikisha faili la CSV limeandikwa kwa kutumia <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Faili la CSV lina BOM ambalo haliwezi kuondolewa';

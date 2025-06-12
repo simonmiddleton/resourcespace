@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[高级] 使用CSV文件上传元数据';
 
 $lang["csv_upload_check_file_error"] = '无法打开或读取CSV文件';
 $lang["csv_upload_check_utf_error"] = 'CSV文件不是有效的UTF-8。行上有无效字符';
+$lang["csv_upload_condition1"] = '确保CSV文件使用<b>UTF-8</b>编码。';
+$lang["csv_upload_check_removebom"] = 'CSV 文件包含无法删除的 BOM';

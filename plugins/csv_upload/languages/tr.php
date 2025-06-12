@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[İleri] Meta verileri bir CSV dosyası kulla
 
 $lang["csv_upload_check_file_error"] = 'CSV dosyası açılamıyor veya okunamıyor';
 $lang["csv_upload_check_utf_error"] = 'CSV dosyası geçerli bir UTF-8 değil. Satırda geçersiz karakter';
+$lang["csv_upload_condition1"] = 'CSV dosyasının <b>UTF-8</b> kullanılarak kodlandığından emin olun.';
+$lang["csv_upload_check_removebom"] = 'CSV dosyası, kaldırılamayan BOM içeriyor';

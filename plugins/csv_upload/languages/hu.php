@@ -68,3 +68,5 @@ $lang["csv_upload_createdfromcsvupload"] = 'CSV feltöltő bővítményből lét
 
 $lang["csv_upload_check_file_error"] = 'A CSV fájl nem nyitható meg vagy olvasható.';
 $lang["csv_upload_check_utf_error"] = 'A CSV fájl nem érvényes UTF-8. Érvénytelen karakter a soron';
+$lang["csv_upload_condition1"] = 'Győződjön meg arról, hogy a CSV fájl <b>UTF-8</b> kódolással készült.';
+$lang["csv_upload_check_removebom"] = 'A CSV fájl BOM-ot tartalmaz, amelyet nem sikerült eltávolítani';

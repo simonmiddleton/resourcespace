@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='\'[field]\' alanı için AI işleme';
 $lang["property-gpt_source"]='GPT Kaynağı';
 $lang["openai_gpt_language"] = 'Çıktı dili';
 $lang["openai_gpt_language_user"] = 'Mevcut kullanıcının dili';
+$lang["openai_gpt_overwrite_data"] = 'Yapılandırılmış alanlardaki mevcut verileri üzerine yazmak ister misiniz?';

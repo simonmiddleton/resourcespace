@@ -67,3 +67,5 @@ $lang["csv_upload_createdfromcsvupload"] = 'ایجاد شده از افزونه 
 
 $lang["csv_upload_check_file_error"] = 'فایل CSV قابل باز کردن یا خواندن نیست';
 $lang["csv_upload_check_utf_error"] = 'فایل CSV معتبر UTF-8 نیست. کاراکتر نامعتبر در خط';
+$lang["csv_upload_condition1"] = 'اطمینان حاصل کنید که فایل CSV با استفاده از <b>UTF-8</b> کدگذاری شده است.';
+$lang["csv_upload_check_removebom"] = 'فایل CSV دارای BOM است که نتوانسته‌ام آن را حذف کنم';

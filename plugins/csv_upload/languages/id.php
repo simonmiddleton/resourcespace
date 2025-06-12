@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = 'Unggah metadata menggunakan file CSV.';
 
 $lang["csv_upload_check_file_error"] = 'File CSV tidak dapat dibuka atau dibaca';
 $lang["csv_upload_check_utf_error"] = 'File CSV tidak valid UTF-8. Karakter tidak valid pada baris';
+$lang["csv_upload_condition1"] = 'Pastikan file CSV dikodekan menggunakan <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'File CSV memiliki BOM yang tidak dapat dihapus';

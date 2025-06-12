@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[Avançat] Carrega les metadades utilitzant u
 
 $lang["csv_upload_check_file_error"] = 'No es pot obrir o llegir el fitxer CSV';
 $lang["csv_upload_check_utf_error"] = 'El fitxer CSV no és un UTF-8 vàlid. Caràcter invàlid a la línia';
+$lang["csv_upload_condition1"] = 'Assegureu-vos que el fitxer CSV estigui codificat amb <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'El fitxer CSV té BOM que no s\'ha pogut eliminar';

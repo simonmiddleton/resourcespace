@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = 'Metadaten mit einer CSV-Datei hochladen.';
 
 $lang["csv_upload_check_file_error"] = 'CSV-Datei kann nicht geöffnet oder gelesen werden';
 $lang["csv_upload_check_utf_error"] = 'CSV-Datei ist kein gültiges UTF-8. Ungültiges Zeichen in Zeile';
+$lang["csv_upload_condition1"] = 'Stellen Sie sicher, dass die CSV-Datei mit <b>UTF-8</b> codiert ist.';
+$lang["csv_upload_check_removebom"] = 'CSV-Datei hat BOM, die nicht entfernt werden konnte';

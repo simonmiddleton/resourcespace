@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = 'Yükleme sırasında tanınan yüzleri etiketle?
 $lang["faces-detecting"] = 'Kaynak içinde yüzleri tarama:';
 $lang["faces-tagging"] = 'Kaynak içindeki tespit edilen yüzlere etiketleme:';
 $lang["faces-confidence-threshold"] = 'Yüz güven eşiği: Modelin bir insan yüzü bulduğundan ne kadar emin olması gerekir? Önerilen %70 (bunun altındaki değerler, gizlenmiş yüzleri ve yüz olmayanları eşleştirecektir)';
+$lang["faces-oneface"] = 'Lütfen her yüz için yalnızca bir seçenek seçin.';

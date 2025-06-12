@@ -18,3 +18,4 @@ $lang["property-openai_gpt_input_field"]='GPT ইনপুট';
 $lang["property-openai_gpt_prompt"]='GPT প্রম্পট';
 $lang["openai_gpt_language"] = 'আউটপুট ভাষা';
 $lang["openai_gpt_language_user"] = 'বর্তমান ব্যবহারকারীর ভাষা';
+$lang["openai_gpt_overwrite_data"] = 'কনফিগার করা ক্ষেত্রগুলিতে বিদ্যমান ডেটা ওভাররাইট করবেন?';

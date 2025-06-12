@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = 'Tagga i volti riconosciuti al caricamento?';
 $lang["faces-detecting"] = 'Scansione dei volti nella risorsa:';
 $lang["faces-tagging"] = 'Tagging dei volti rilevati nella risorsa:';
 $lang["faces-confidence-threshold"] = 'Soglia di fiducia del volto: Quanto deve essere sicuro il modello di aver trovato un volto umano? Suggerito 70% (valori al di sotto di questo corrisponderanno a volti oscurati e non volti)';
+$lang["faces-oneface"] = 'Si prega di selezionare solo un\'opzione per ogni faccia.';

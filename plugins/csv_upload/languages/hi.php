@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[उन्नत] CSV फ़ाइल का 
 
 $lang["csv_upload_check_file_error"] = 'CSV फ़ाइल को खोला या पढ़ा नहीं जा सकता';
 $lang["csv_upload_check_utf_error"] = 'CSV फ़ाइल मान्य UTF-8 नहीं है। पंक्ति पर अमान्य वर्ण';
+$lang["csv_upload_condition1"] = 'सुनिश्चित करें कि CSV फ़ाइल <b>UTF-8</b> का उपयोग करके एन्कोड की गई है।';
+$lang["csv_upload_check_removebom"] = 'CSV फ़ाइल में BOM है जिसे हटाया नहीं जा सका';

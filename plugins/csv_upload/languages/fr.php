@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[Avancé] Télécharger les métadonnées en 
 
 $lang["csv_upload_check_file_error"] = 'Le fichier CSV ne peut pas être ouvert ou lu';
 $lang["csv_upload_check_utf_error"] = 'Le fichier CSV n\'est pas un UTF-8 valide. Caractère invalide à la ligne';
+$lang["csv_upload_condition1"] = 'Assurez-vous que le fichier CSV est encodé en <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Le fichier CSV a un BOM qui n\'a pas pu être supprimé';

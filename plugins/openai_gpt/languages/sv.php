@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='AI-bearbetning för fältet \'[field]\'';
 $lang["property-gpt_source"]='GPT Källa';
 $lang["openai_gpt_language"] = 'Utmatningsspråk';
 $lang["openai_gpt_language_user"] = 'Den aktuella användarens språk';
+$lang["openai_gpt_overwrite_data"] = 'Överskriv befintliga data i konfigurerade fält?';

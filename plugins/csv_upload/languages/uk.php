@@ -67,3 +67,5 @@ $lang["csv_upload_createdfromcsvupload"] = 'Створено за допомог
 
 $lang["csv_upload_check_file_error"] = 'Файл CSV не можна відкрити або прочитати';
 $lang["csv_upload_check_utf_error"] = 'Файл CSV не є дійсним UTF-8. Неправильний символ на рядку';
+$lang["csv_upload_condition1"] = 'Переконайтеся, що файл CSV закодований за допомогою <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV файл має BOM, який не вдалося видалити';

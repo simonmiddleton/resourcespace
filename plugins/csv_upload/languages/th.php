@@ -67,3 +67,5 @@ $lang["csv_upload_createdfromcsvupload"] = 'สร้างจากปลั๊
 
 $lang["csv_upload_check_file_error"] = 'ไม่สามารถเปิดหรืออ่านไฟล์ CSV ได้';
 $lang["csv_upload_check_utf_error"] = 'ไฟล์ CSV ไม่ใช่ UTF-8 ที่ถูกต้อง ตัวอักษรไม่ถูกต้องในบรรทัด';
+$lang["csv_upload_condition1"] = 'โปรดตรวจสอบว่าไฟล์ CSV ถูกเข้ารหัสโดยใช้ <b>UTF-8</b>';
+$lang["csv_upload_check_removebom"] = 'ไฟล์ CSV มี BOM ซึ่งไม่สามารถลบออกได้';

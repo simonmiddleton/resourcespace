@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = '¿Etiquetar caras reconocidas al subir?';
 $lang["faces-detecting"] = 'Escaneando en busca de rostros en el recurso:';
 $lang["faces-tagging"] = 'Etiquetando caras detectadas en el recurso:';
 $lang["faces-confidence-threshold"] = 'Umbral de confianza de rostro: ¿Qué tan seguro debe estar el modelo de que ha encontrado un rostro humano? Sugerido 70% (valores por debajo de esto coincidirán con rostros ocultos y no rostros)';
+$lang["faces-oneface"] = 'Por favor, seleccione solo una opción para cada cara.';

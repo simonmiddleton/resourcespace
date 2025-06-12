@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='Traitement IA pour le champ \'[field]\'';
 $lang["property-gpt_source"]='Source GPT';
 $lang["openai_gpt_language"] = 'Langue de sortie';
 $lang["openai_gpt_language_user"] = 'La langue de l\'utilisateur actuel';
+$lang["openai_gpt_overwrite_data"] = 'Écraser les données existantes dans les champs configurés ?';

@@ -67,3 +67,5 @@ $lang["csv_upload_createdfromcsvupload"] = 'CSV আপলোড প্লাগ�
 
 $lang["csv_upload_check_file_error"] = 'CSV ফাইলটি খোলা বা পড়া যাচ্ছে না';
 $lang["csv_upload_check_utf_error"] = 'CSV ফাইলটি বৈধ UTF-8 নয়। লাইনে অকার্যকর অক্ষর';
+$lang["csv_upload_condition1"] = 'CSV ফাইলটি <b>UTF-8</b> ব্যবহার করে এনকোড করা হয়েছে তা নিশ্চিত করুন।';
+$lang["csv_upload_check_removebom"] = 'CSV ফাইলের BOM রয়েছে যা অপসারণ করা সম্ভব হয়নি';

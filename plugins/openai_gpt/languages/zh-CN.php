@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='字段 \'[field]\' 的AI处理';
 $lang["property-gpt_source"]='GPT来源';
 $lang["openai_gpt_language"] = '输出语言';
 $lang["openai_gpt_language_user"] = '当前用户的语言';
+$lang["openai_gpt_overwrite_data"] = '是否覆盖已配置字段中的现有数据？';

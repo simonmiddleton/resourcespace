@@ -70,3 +70,5 @@ $lang["plugin-csv_upload-desc"] = '[متقدم] تحميل البيانات ال
 
 $lang["csv_upload_check_file_error"] = 'لا يمكن فتح أو قراءة ملف CSV';
 $lang["csv_upload_check_utf_error"] = 'ملف CSV ليس UTF-8 صالحًا. حرف غير صالح في السطر';
+$lang["csv_upload_condition1"] = 'تأكد من أن ملف CSV مشفر باستخدام <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'ملف CSV يحتوي على BOM ولم يكن من الممكن إزالته';

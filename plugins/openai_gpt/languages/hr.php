@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='AI obrada za polje \'[field]\'';
 $lang["property-gpt_source"]='Izvor GPT';
 $lang["openai_gpt_language"] = 'Izlazni jezik';
 $lang["openai_gpt_language_user"] = 'Jezik trenutnog korisnika';
+$lang["openai_gpt_overwrite_data"] = 'Zamijeniti postojeće podatke u konfiguriranim poljima?';

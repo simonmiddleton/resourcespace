@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = 'アップロード時に認識された顔にタ
 $lang["faces-detecting"] = 'リソース内の顔をスキャンしています:';
 $lang["faces-tagging"] = 'リソース内の検出された顔にタグ付け:';
 $lang["faces-confidence-threshold"] = '顔の信頼度閾値: モデルは人間の顔を見つけたとどれだけ自信を持つべきですか？ 推奨70%（この値未満は隠れた顔や非顔に一致します）';
+$lang["faces-oneface"] = '各面については1つのオプションのみを選択してください。';

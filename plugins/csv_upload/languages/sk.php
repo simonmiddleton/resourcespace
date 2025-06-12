@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = 'Naloži meta podatke z uporabo CSV datoteke.'
 
 $lang["csv_upload_check_file_error"] = 'CSV súbor sa nedá otvoriť ani prečítať';
 $lang["csv_upload_check_utf_error"] = 'CSV súbor nie je platný UTF-8. Neplatný znak na riadku';
+$lang["csv_upload_condition1"] = 'Uistite sa, že súbor CSV je kódovaný pomocou <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV súbor má BOM, ktorý sa nepodarilo odstrániť';

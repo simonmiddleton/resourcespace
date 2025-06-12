@@ -18,3 +18,4 @@ $lang["property-openai_gpt_prompt"]='GPT Prompt';
 $lang["property-openai_gpt_input_field"]='GPT Ingizo';
 $lang["openai_gpt_language"] = 'Lugha ya matokeo';
 $lang["openai_gpt_language_user"] = 'Lugha ya mtumiaji wa sasa';
+$lang["openai_gpt_overwrite_data"] = 'Je, unataka kufuta data zilizopo katika maeneo yaliyo pangwa?';

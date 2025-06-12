@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = 'Prześlij metadane za pomocą pliku CSV.';
 
 $lang["csv_upload_check_file_error"] = 'Plik CSV nie może być otwarty ani odczytany';
 $lang["csv_upload_check_utf_error"] = 'Plik CSV nie jest ważnym UTF-8. Nieprawidłowy znak w wierszu';
+$lang["csv_upload_condition1"] = 'Upewnij się, że plik CSV jest zakodowany przy użyciu <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Plik CSV zawiera BOM, który nie mógł zostać usunięty';

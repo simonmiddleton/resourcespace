@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='AI-käsittely kentälle \'[field]\'';
 $lang["property-gpt_source"]='GPT-lähde';
 $lang["openai_gpt_language"] = 'Tulostuskieli';
 $lang["openai_gpt_language_user"] = 'Nykyisen käyttäjän kieli';
+$lang["openai_gpt_overwrite_data"] = 'Korvataanko olemassa olevat tiedot määritetyissä kentissä?';

@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[高度な] CSVファイルを使用してメ
 
 $lang["csv_upload_check_file_error"] = 'CSVファイルを開くことも読み取ることもできません';
 $lang["csv_upload_check_utf_error"] = 'CSVファイルは有効なUTF-8ではありません。行に無効な文字があります';
+$lang["csv_upload_condition1"] = 'CSVファイルが<b>UTF-8</b>でエンコードされていることを確認してください。';
+$lang["csv_upload_check_removebom"] = 'CSVファイルにBOMが含まれており、削除できませんでした';

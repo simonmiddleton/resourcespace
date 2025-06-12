@@ -67,3 +67,5 @@ $lang["csv_upload_createdfromcsvupload"] = 'ਸੀਐਸਵੀ ਅਪਲੋਡ �
 
 $lang["csv_upload_check_file_error"] = 'CSV ਫਾਈਲ ਖੁੱਲ ਨਹੀਂ ਸਕਦੀ ਜਾਂ ਪੜ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕਦੀ';
 $lang["csv_upload_check_utf_error"] = 'CSV ਫਾਈਲ ਵੈਧ UTF-8 ਨਹੀਂ ਹੈ। ਲਾਈਨ \'ਤੇ ਗਲਤ ਅੱਖਰ';
+$lang["csv_upload_condition1"] = 'ਯਕੀਨੀ ਬਣਾਓ ਕਿ CSV ਫਾਈਲ <b>UTF-8</b> ਦੀ ਕੋਡਿੰਗ ਦੀ ਵਰਤੋਂ ਕਰਦੀ ਹੈ।';
+$lang["csv_upload_check_removebom"] = 'CSV ਫਾਈਲ ਵਿੱਚ BOM ਹੈ ਜਿਸਨੂੰ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਿਆ';

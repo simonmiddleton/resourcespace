@@ -69,3 +69,5 @@ $lang["plugin-csv_upload-desc"] = '[Προχωρημένο] Μεταφόρτωσ
 
 $lang["csv_upload_check_file_error"] = 'Το αρχείο CSV δεν μπορεί να ανοιχτεί ή να διαβαστεί';
 $lang["csv_upload_check_utf_error"] = 'Το αρχείο CSV δεν είναι έγκυρο UTF-8. Μη έγκυρος χαρακτήρας στη γραμμή';
+$lang["csv_upload_condition1"] = 'Βεβαιωθείτε ότι το αρχείο CSV είναι κωδικοποιημένο χρησιμοποιώντας <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Το αρχείο CSV έχει BOM το οποίο δεν μπόρεσε να αφαιρεθεί';
