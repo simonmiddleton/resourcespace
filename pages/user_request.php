@@ -304,7 +304,7 @@ include "../include/login_background.php";
         <?php
         if ($completed) {
             echo "jQuery(document).ready(function() {
-                ModalLoad('" . $baseurl . "/pages/done.php?text=user_request',false,true);
+                window.location.href = '" . $baseurl . "/pages/done.php?text=user_request';
             });";
         } ?>
 
