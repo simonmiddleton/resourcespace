@@ -14,8 +14,10 @@ ob_implicit_flush(true);
 // Get the current database name
 global $mysql_db;
 
-// Limit the number of resources processed in one run (optional safety limit)
-$limit = 10000;
+// Limit the number of resources processed in one run (optional safety limit). Default is 10000 resources.
+// Supply parameter --limit to vary limit e.g. for 50000 resources: php generate_vectors.php --limit 50000
+$parameters = getopt('', ['limit:']);
+$limit = $parameters["limit"] ?? 10000;
 
 // Get resources needing vector generation or update - look at the modified date vs. the creation date on the text vector, and also the image checksum on the vector vs the one on the resource record. This catches both metadata and image updates.
 $sql = "
@@ -33,9 +35,9 @@ $sql = "
         (v_text.checksum IS NULL OR v_text.created < r.modified) */
         )
       ORDER BY r.ref ASC
-    LIMIT {$limit}";
+    LIMIT ?";
 
-$resources = ps_array($sql);
+$resources = ps_array($sql, array('i', (int) $limit));
 
 if (empty($resources)) {
     echo "No resources needing vector update.\n";
