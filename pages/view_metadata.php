@@ -3,7 +3,7 @@
 // Global everything we need, in case called inside a function (e.g. for push_metadata support)
 global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount, $resource_hit_count_on_downloads,
        $show_contributed_by,$baseurl_short,$search,$enable_related_resources,$modal,
-       $sort_tabs, $arr_fieldrestypes;
+       $sort_tabs, $arr_fieldrestypes, $display_check_data;
 
 // Is this a modal?
 $modal = (getval("modal", "") == "true");
@@ -11,8 +11,9 @@ $modal = (getval("modal", "") == "true");
 // Check display conditions here to save checking in each loop
 $displaycheck = [];
 
+$display_check_data = $fields_all;
 for ($i = 0; $i < count($fields); $i++) {
-    $displaycheck[$fields[$i]["ref"]] = check_view_display_condition($fields, $i, $fields_all) ? true : false;
+    $displaycheck[$fields[$i]["ref"]] = check_display_condition($i, $fields[$i], $fields_all, false, $resource['ref']) ? true : false;
 }
 
 // -----------------------  Tab calculation -----------------
