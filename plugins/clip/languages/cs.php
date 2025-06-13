@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Externí vektorová databáze pro názvy';
 $lang["clip-keyword-field"] = 'Pole pro nejbližší shodující se klíčová slova v externí vektorové databázi';
 $lang["clip-keyword-url"] = 'Externí vektorová databáze pro klíčová slova';
 $lang["clip-keyword-count"] = 'Počet klíčových slov k nastavení (x nejbližších klíčových slov podle kosinové podobnosti)';
+$lang["clip_show_on_searchbar"] = 'Zobrazit funkce CLIP na vyhledávacím panelu';
+$lang["clip_show_on_view"] = 'Zobrazit funkce CLIP na stránce zobrazení zdroje';
+$lang["clip_resource_types"] = 'Vytvořit vektory (povolit vyhledávání těchto typů zdrojů)';

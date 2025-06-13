@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Ulkoinen vektoritietokanta nimille';
 $lang["clip-keyword-field"] = 'Kenttä lähimpien vastaavien avainsanojen hakemiseksi ulkoisesta vektoritietokannasta';
 $lang["clip-keyword-url"] = 'Ulkoisen vektoritietokannan avainsanoille';
 $lang["clip-keyword-count"] = 'Avainsanojen määrä asetettavaksi (x lähintä avainsanaa kosinietäisyyden mukaan)';
+$lang["clip_show_on_searchbar"] = 'Näytä CLIP-ominaisuudet hakupalkissa';
+$lang["clip_show_on_view"] = 'Näytä CLIP-ominaisuudet resurssin näkymäsivulla';
+$lang["clip_resource_types"] = 'Luo vektoreita (ota käyttöön näiden resurssityyppien hakeminen)';

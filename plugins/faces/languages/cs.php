@@ -17,3 +17,4 @@ $lang["faces-detecting"] = 'Skenování obličejů v zdroji:';
 $lang["faces-tagging"] = 'Označování detekovaných obličejů v prostředku:';
 $lang["faces-confidence-threshold"] = 'Prahová hodnota důvěry pro obličeje: Jakou důvěru by měl model mít, že našel lidský obličej? Doporučeno 70 % (hodnoty pod tímto prahem budou odpovídat zakrytým obličejům a neobličejům)';
 $lang["faces-oneface"] = 'Prosím vyberte pouze jednu možnost pro každou stranu.';
+$lang["faces-show-view"] = 'Zobrazit funkci AI Faces na stránce zobrazení.';

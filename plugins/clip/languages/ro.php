@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Bază de date vectorială externă pentru titluri';
 $lang["clip-keyword-field"] = 'Câmp pentru cele mai apropiate cuvinte cheie corespunzătoare în baza de date vectorială externă';
 $lang["clip-keyword-url"] = 'Bază de date externă vectorială pentru cuvinte cheie';
 $lang["clip-keyword-count"] = 'Numărul de cuvinte cheie de setat (x cele mai apropiate cuvinte cheie prin similaritate cosinus)';
+$lang["clip_show_on_searchbar"] = 'Afișați caracteristicile CLIP pe bara de căutare';
+$lang["clip_show_on_view"] = 'Afișați caracteristicile CLIP pe pagina de vizualizare a resursei';
+$lang["clip_resource_types"] = 'Creează vectori (activează căutarea acestor tipuri de resurse)';

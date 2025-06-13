@@ -17,3 +17,4 @@ $lang["faces-detecting"] = 'Skanner etter ansikter i ressurs:';
 $lang["faces-tagging"] = 'Merking av oppdagede ansikter i ressurs:';
 $lang["faces-confidence-threshold"] = 'Ansikt tillitsterskel: Hvor sikker bør modellen være på at den har funnet et menneskelig ansikt? Anbefalt 70% (verdier under dette vil matche skjulte ansikter og ikke-ansikter';
 $lang["faces-oneface"] = 'Vennligst velg bare ett alternativ for hver ansikt.';
+$lang["faces-show-view"] = 'Vis AI Faces-funksjonaliteten på visningssiden.';

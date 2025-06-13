@@ -17,3 +17,4 @@ $lang["faces-detecting"] = 'Skenovanie tvárí v zdroji:';
 $lang["faces-tagging"] = 'Označovanie rozpoznaných tvárí v zdroji:';
 $lang["faces-confidence-threshold"] = 'Prahová hodnota dôvery v tvár: Ako dôveryhodný by mal byť model, že našiel ľudskú tvár? Odporúčané 70% (hodnoty pod touto úrovňou budú zodpovedať zakrytým tváram a netváram';
 $lang["faces-oneface"] = 'Prosím, vyberte iba jednu možnosť pre každú tvár.';
+$lang["faces-show-view"] = 'Zobraziť funkciu AI Faces na stránke zobrazenia.';

@@ -17,3 +17,4 @@ $lang["faces-detecting"] = '正在扫描资源中的面孔：';
 $lang["faces-tagging"] = '在资源中标记检测到的面孔：';
 $lang["faces-confidence-threshold"] = '人脸信心阈值：模型应该对找到人脸的信心有多高？建议70%（低于此值将匹配模糊的人脸和非人脸）';
 $lang["faces-oneface"] = '请为每个面只选择一个选项。';
+$lang["faces-show-view"] = '在查看页面上显示AI人脸功能。';

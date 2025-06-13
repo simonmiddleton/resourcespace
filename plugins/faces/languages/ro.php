@@ -17,3 +17,4 @@ $lang["faces-detecting"] = 'Scanare pentru fețe în resursă:';
 $lang["faces-tagging"] = 'Etichetarea fețelor detectate în resursă:';
 $lang["faces-confidence-threshold"] = 'Prag de încredere pentru fețe: Cât de încrezător ar trebui să fie modelul că a găsit o față umană? Sugerat 70% (valorile sub aceasta vor corespunde fețelor obscure și non-fețe)';
 $lang["faces-oneface"] = 'Vă rugăm să selectați doar o singură opțiune pentru fiecare față.';
+$lang["faces-show-view"] = 'Afișați funcționalitatea AI Faces pe pagina de vizualizare.';

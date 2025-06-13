@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Base de données vectorielle externe pour les titres'
 $lang["clip-keyword-field"] = 'Champ pour les mots-clés correspondants les plus proches dans la base de données vectorielle externe';
 $lang["clip-keyword-url"] = 'Base de données vectorielle externe pour les mots-clés';
 $lang["clip-keyword-count"] = 'Nombre de mots-clés à définir (x mots-clés les plus proches par similarité cosinus)';
+$lang["clip_show_on_searchbar"] = 'Afficher les fonctionnalités CLIP sur la barre de recherche';
+$lang["clip_show_on_view"] = 'Afficher les fonctionnalités CLIP sur la page de vue de la ressource';
+$lang["clip_resource_types"] = 'Créer des vecteurs (activer la recherche de) ces types de ressources';

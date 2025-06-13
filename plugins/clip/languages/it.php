@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Database vettoriale esterna per titoli';
 $lang["clip-keyword-field"] = 'Campo per le parole chiave corrispondenti più vicine nel database vettoriale esterno';
 $lang["clip-keyword-url"] = 'Database vettoriale esterna per parole chiave';
 $lang["clip-keyword-count"] = 'Numero di parole chiave da impostare (x parole chiave più vicine per similarità coseno)';
+$lang["clip_show_on_searchbar"] = 'Mostra le funzionalità CLIP sulla barra di ricerca';
+$lang["clip_show_on_view"] = 'Mostra le funzionalità CLIP nella pagina di visualizzazione delle risorse';
+$lang["clip_resource_types"] = 'Crea vettori (abilita la ricerca di) questi tipi di risorse';

@@ -17,3 +17,4 @@ $lang["faces-detecting"] = 'Arcok keresése az erőforrásban:';
 $lang["faces-tagging"] = 'Arcfelismerések címkézése az erőforrásban:';
 $lang["faces-confidence-threshold"] = 'Arc arcosság küszöb: Mennyire legyen biztos a modell abban, hogy emberi arcot talált? Javasolt 70% (az ennél alacsonyabb értékek elmosódott arcokat és nem arcokat fognak egyezni)';
 $lang["faces-oneface"] = 'Kérjük, válasszon csak egy lehetőséget minden egyes archoz.';
+$lang["faces-show-view"] = 'Mutassa az AI Faces funkciót a nézet oldalon.';

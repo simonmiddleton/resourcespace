@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Cơ sở dữ liệu vector bên ngoài cho tiêu đ�
 $lang["clip-keyword-field"] = 'Trường cho các từ khóa phù hợp nhất trong cơ sở dữ liệu vector bên ngoài';
 $lang["clip-keyword-url"] = 'Cơ sở dữ liệu vector bên ngoài cho từ khóa';
 $lang["clip-keyword-count"] = 'Số lượng từ khóa để thiết lập (x từ khóa gần nhất theo độ tương đồng cosine)';
+$lang["clip_show_on_searchbar"] = 'Hiển thị các tính năng CLIP trên thanh tìm kiếm';
+$lang["clip_show_on_view"] = 'Hiển thị các tính năng CLIP trên trang xem tài nguyên';
+$lang["clip_resource_types"] = 'Tạo vector (bật tìm kiếm) cho các loại tài nguyên này';
