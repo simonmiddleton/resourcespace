@@ -6844,8 +6844,8 @@ function process_collection_download(array $dl_data): array
             // Process alternatives
             $alternatives = get_alternative_files($ref);
             foreach ($alternatives as $alternative) {
-                debug("Processing alternative file {$alternative['ref']} for resource $ref, extension: $size_extension");
                 $pextension = get_extension($alternative, $usesize);
+                debug("Processing alternative file {$alternative['ref']} for resource $ref, extension: $pextension");
                 $p = get_resource_path($ref, true, $usesize, false, $pextension, true, 1, $use_watermark, '', $alternative["ref"]);
                 $target_exists = file_exists($p);
                 if (
