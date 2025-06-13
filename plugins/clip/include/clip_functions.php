@@ -237,3 +237,36 @@ function clip_tag(int $resource)
 
     return true;
 }
+
+function clip_generate_missing_vectors($limit)
+{
+    // Get resources needing vector generation or update - look at the modified date vs. the creation date on the text vector, and also the image checksum on the vector vs the one on the resource record. This catches both metadata and image updates.
+    global $clip_resource_types;
+
+    // Ensure only one instance of this.
+    if (is_process_lock(__FUNCTION__)) {return false;}
+    set_process_lock(__FUNCTION__);
+
+    $sql = "
+        SELECT r.ref value
+        FROM resource r
+        LEFT JOIN resource_clip_vector v_image ON v_image.is_text=0 and r.ref = v_image.resource
+        /* LEFT JOIN resource_clip_vector v_text  ON v_text.is_text=1  and r.ref = v_text.resource */
+
+        WHERE r.has_image = 1
+        AND r.resource_type in (" . ps_param_insert(count($clip_resource_types)) . ")
+        AND r.file_checksum IS NOT NULL
+        AND 
+            (v_image.checksum IS NULL OR v_image.checksum != r.file_checksum)
+        ORDER BY r.ref ASC
+        LIMIT ?";
+
+    $resources = ps_array($sql, array_merge(ps_param_fill($clip_resource_types, "i"),array('i', (int) $limit)));
+
+    foreach ($resources as $resource) {
+        clip_generate_vector($resource);
+    }
+
+    clear_process_lock(__FUNCTION__);
+    return count($resources);
+}

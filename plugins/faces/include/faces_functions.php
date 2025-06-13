@@ -221,3 +221,28 @@ function api_faces_set_node(int $resource, int $face, int $node): bool
     ps_query("update resource_face set node=? where ref=?", ["i",$node,"i",$face]);
     return true;
 }
+
+/**
+ * Detect faces in resources that have not yet been processed
+ *
+ * @return int       A count of the resources processed.
+ *
+ * @uses ps_query()
+ * @uses debug()
+ */
+function faces_detect_missing() {
+    // Get all resources that haven't had faces processed yet
+
+    // Ensure only one instance of this.
+    if (is_process_lock(__FUNCTION__)) {return false;}
+    set_process_lock(__FUNCTION__);
+
+    $resources = ps_array("SELECT ref value FROM resource WHERE (faces_processed is null or faces_processed=0) ORDER BY ref desc");
+
+    foreach ($resources as $resource) {
+        faces_detect($resource);
+    }
+
+    clear_process_lock(__FUNCTION__);
+    return count($resources);
+}

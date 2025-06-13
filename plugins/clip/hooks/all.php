@@ -181,3 +181,9 @@ function HookClipAllAfterpreviewcreation($resource, $alternative)
         clip_tag($resource);
     }
 }
+
+function HookClipCronCron()
+{
+    global $clip_cron_generate_batch;
+    clip_generate_missing_vectors($clip_cron_generate_batch);
+}
