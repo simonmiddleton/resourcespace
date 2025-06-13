@@ -124,6 +124,11 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
+        curl_setopt(
+            $ch,
+            CURLOPT_USERAGENT,
+            sprintf('ResourceSpace/%s Remote config for %s', mb_strcut($productversion, 4), $host)
+        );
         $r = curl_exec($ch);
 
         if (!curl_errno($ch)) {
