@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Base de dades vectorial externa per a títols';
 $lang["clip-keyword-field"] = 'Camp per a les paraules clau més properes que coincideixen a la base de dades de vectors externa';
 $lang["clip-keyword-url"] = 'Base de dades vectorial externa per a paraules clau';
 $lang["clip-keyword-count"] = 'Nombre de paraules clau a establir (x paraules clau més properes per similitud cosinus)';
+$lang["clip_show_on_searchbar"] = 'Mostra les funcions de CLIP a la barra de cerca';
+$lang["clip_show_on_view"] = 'Mostra les funcions de CLIP a la pàgina de visualització del recurs';
+$lang["clip_resource_types"] = 'Crea vectors (habilita la cerca de) aquests tipus de recursos';

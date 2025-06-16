@@ -14,6 +14,8 @@ $page_intro = "";
 $page_def[] = config_add_text_input("clip_service_url", $lang["clip_service_url"]);
 
 $page_def[] = config_add_boolean_select("clip_vector_on_upload", $lang["clip-vector-on-upload"]);
+$page_def[] = config_add_multi_rtype_select("clip_resource_types",$lang["clip_resource_types"]);
+
 
 // Build configuration variable descriptions
 $page_def[] = config_add_section_header($lang["clip-natural-language-search"]);

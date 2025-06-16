@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Basis data vektor eksternal untuk judul';
 $lang["clip-keyword-field"] = 'Field untuk kata kunci yang paling cocok di basis data vektor eksternal';
 $lang["clip-keyword-url"] = 'Basis data vektor eksternal untuk kata kunci';
 $lang["clip-keyword-count"] = 'Jumlah kata kunci yang akan diatur (x kata kunci terdekat berdasarkan kesamaan kosinus)';
+$lang["clip_show_on_searchbar"] = 'Tampilkan fitur CLIP di bilah pencarian';
+$lang["clip_show_on_view"] = 'Tampilkan fitur CLIP di halaman tampilan sumber';
+$lang["clip_resource_types"] = 'Buat vektor (aktifkan pencarian) jenis sumber daya ini';

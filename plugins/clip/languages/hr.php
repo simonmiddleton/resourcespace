@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Vanjska vektorska baza podataka za naslove';
 $lang["clip-keyword-field"] = 'Polje za najbliže odgovarajuće ključne riječi u vanjskoj vektorskoj bazi podataka';
 $lang["clip-keyword-url"] = 'Vanjska vektorska baza podataka za ključne riječi';
 $lang["clip-keyword-count"] = 'Broj ključnih riječi za postavljanje (x najbližih ključnih riječi prema kosinusnoj sličnosti)';
+$lang["clip_show_on_searchbar"] = 'Prikaži CLIP značajke na traci za pretraživanje';
+$lang["clip_show_on_view"] = 'Prikaži CLIP značajke na stranici pregleda resursa';
+$lang["clip_resource_types"] = 'Stvorite vektore (omogućite pretraživanje) ovih vrsta resursa';

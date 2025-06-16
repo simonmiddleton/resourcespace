@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Külső vektordatabase a címekhez';
 $lang["clip-keyword-field"] = 'Mező a legközelebbi illeszkedő kulcsszavak számára a külső vektordatabázisban';
 $lang["clip-keyword-url"] = 'Külső vektordatabase a kulcsszavakhoz';
 $lang["clip-keyword-count"] = 'Kulcsszavak száma beállításhoz (x legközelebbi kulcsszó koszinusz hasonlóság alapján)';
+$lang["clip_show_on_searchbar"] = 'CLIP funkciók megjelenítése a keresősávon';
+$lang["clip_show_on_view"] = 'CLIP funkciók megjelenítése az erőforrás nézet oldalán';
+$lang["clip_resource_types"] = 'Hozzon létre vektorokat (keresés engedélyezése) ezekhez a forrástípusokhoz';

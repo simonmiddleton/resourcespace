@@ -16,3 +16,4 @@ $lang["faces-tag-on-upload"] = "Tag recognised faces on upload?";
 $lang["faces-detecting"] = "Scanning for faces in resource:";
 $lang["faces-tagging"] = "Tagging detected faces in resource:";
 $lang["faces-oneface"] = "Please select only one option for each face.";
+$lang["faces-show-view"] = "Show the AI Faces functionality on the view page.";

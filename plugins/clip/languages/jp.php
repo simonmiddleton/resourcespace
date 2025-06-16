@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'タイトル用の外部ベクターデータベー�
 $lang["clip-keyword-field"] = '外部ベクターデータベースで最も一致するキーワードのフィールド';
 $lang["clip-keyword-url"] = 'キーワードのための外部ベクターデータベース';
 $lang["clip-keyword-count"] = 'キーワードを設定する数（コサイン類似度によるx個の近いキーワード）';
+$lang["clip_show_on_searchbar"] = '検索バーにCLIP機能を表示';
+$lang["clip_show_on_view"] = 'リソースビューページにCLIP機能を表示する';
+$lang["clip_resource_types"] = 'これらのリソースタイプのベクターを作成する（検索を有効にする）';

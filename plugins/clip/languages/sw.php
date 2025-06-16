@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Hifadhidata ya nje ya vector kwa vichwa';
 $lang["clip-keyword-field"] = 'Uwanja wa maneno muhimu yanayofanana zaidi katika hifadhidata ya nje ya vector';
 $lang["clip-keyword-url"] = 'Hifadhidata ya nje ya vector kwa maneno muhimu';
 $lang["clip-keyword-count"] = 'Idadi ya maneno muhimu ya kuweka (maneno muhimu x ya karibu zaidi kwa ufanano wa cosine)';
+$lang["clip_show_on_searchbar"] = 'Onyesha vipengele vya CLIP kwenye upau wa kutafuta';
+$lang["clip_show_on_view"] = 'Onyesha vipengele vya CLIP kwenye ukurasa wa maoni ya rasilimali';
+$lang["clip_resource_types"] = 'Unda vektors (wezesha kutafuta) aina hizi za rasilimali';

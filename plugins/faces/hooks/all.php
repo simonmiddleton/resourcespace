@@ -123,3 +123,13 @@ function HookFacesAllAfterpreviewcreation($resource, $alternative)
         faces_tag($resource);
     }
 }
+
+/**
+ * Add face detection to the cron.
+ *
+ * @return void
+ */
+function HookFacesCronCron()
+{
+    faces_detect_missing();
+}

@@ -16,3 +16,5 @@ $lang["faces-tag-on-upload"] = 'Taguj rozpoznane twarze podczas przesyłania?';
 $lang["faces-detecting"] = 'Skanowanie twarzy w zasobie:';
 $lang["faces-tagging"] = 'Tagowanie wykrytych twarzy w zasobie:';
 $lang["faces-confidence-threshold"] = 'Próg pewności twarzy: Jak pewny powinien być model, że znalazł ludzką twarz? Sugerowane 70% (wartości poniżej tego będą pasować do zasłoniętych twarzy i nie-twarzy';
+$lang["faces-oneface"] = 'Proszę wybrać tylko jedną opcję dla każdej twarzy.';
+$lang["faces-show-view"] = 'Pokaż funkcjonalność AI Faces na stronie widoku.';

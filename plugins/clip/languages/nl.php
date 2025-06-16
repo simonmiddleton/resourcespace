@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Externe vector database voor titels';
 $lang["clip-keyword-field"] = 'Veld voor de dichtstbijzijnde overeenkomende zoekwoorden in de externe vector database';
 $lang["clip-keyword-url"] = 'Externe vector database voor trefwoorden';
 $lang["clip-keyword-count"] = 'Aantal trefwoorden in te stellen (x dichtstbijzijnde trefwoorden op basis van cosinusovereenstemming)';
+$lang["clip_show_on_searchbar"] = 'Toon CLIP-functies op de zoekbalk';
+$lang["clip_show_on_view"] = 'Toon CLIP-functies op de resourceweergavepagina';
+$lang["clip_resource_types"] = 'Maak vectoren (schakel zoeken in) deze resourcetypen';

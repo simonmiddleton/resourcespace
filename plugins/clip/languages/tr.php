@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Dış vektör veritabanı başlıklar için';
 $lang["clip-keyword-field"] = 'Dış vektör veritabanındaki en yakın eşleşen anahtar kelimeler için alan';
 $lang["clip-keyword-url"] = 'Anahtar kelimeler için harici vektör veritabanı';
 $lang["clip-keyword-count"] = 'Anahtar kelime sayısını ayarlayın (kosinüs benzerliğine göre x en yakın anahtar kelime)';
+$lang["clip_show_on_searchbar"] = 'Arama çubuğunda CLIP özelliklerini göster';
+$lang["clip_show_on_view"] = 'Kaynak görüntüleme sayfasında CLIP özelliklerini göster';
+$lang["clip_resource_types"] = 'Bu kaynak türlerinin vektörlerini oluşturun (arama yapılmasını etkinleştirin)';

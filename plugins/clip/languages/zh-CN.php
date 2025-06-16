@@ -25,3 +25,6 @@ $lang["clip-title-url"] = '外部矢量数据库用于标题';
 $lang["clip-keyword-field"] = '外部向量数据库中最接近匹配关键词的字段';
 $lang["clip-keyword-url"] = '外部矢量数据库用于关键词';
 $lang["clip-keyword-count"] = '设置的关键词数量（按余弦相似度的 x 个最近关键词）';
+$lang["clip_show_on_searchbar"] = '在搜索栏上显示CLIP功能';
+$lang["clip_show_on_view"] = '在资源查看页面上显示CLIP功能';
+$lang["clip_resource_types"] = '创建向量（启用搜索）这些资源类型';

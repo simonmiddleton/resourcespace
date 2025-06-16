@@ -24,3 +24,6 @@ $lang["clip-title-url"] = "External vector database for titles";
 $lang["clip-keyword-field"] = "Field for the closest matching keywords in the external vector database";
 $lang["clip-keyword-url"] = "External vector database for keywords";
 $lang["clip-keyword-count"] = "Number of keywords to set (x nearest keywords by cosine similarity)";
+$lang["clip_show_on_searchbar"]="Show CLIP features on the search bar";
+$lang["clip_show_on_view"]="Show CLIP features on the resource view page";
+$lang["clip_resource_types"]="Create vectors (enable searching of) these resource types";

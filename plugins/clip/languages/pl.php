@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Zewnętrzna baza danych wektorowych dla tytułów';
 $lang["clip-keyword-field"] = 'Pole dla najbliżej pasujących słów kluczowych w zewnętrznej bazie wektorowej';
 $lang["clip-keyword-url"] = 'Zewnętrzna baza danych wektorów dla słów kluczowych';
 $lang["clip-keyword-count"] = 'Liczba słów kluczowych do ustawienia (x najbliższych słów kluczowych według podobieństwa kosinusowego)';
+$lang["clip_show_on_searchbar"] = 'Pokaż funkcje CLIP na pasku wyszukiwania';
+$lang["clip_show_on_view"] = 'Pokaż funkcje CLIP na stronie widoku zasobu';
+$lang["clip_resource_types"] = 'Utwórz wektory (włącz wyszukiwanie tych typów zasobów)';

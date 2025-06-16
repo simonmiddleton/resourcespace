@@ -30,6 +30,8 @@ function HookFacesViewCustompanels()
     $edit_access = get_edit_access($ref);
     $nodes = get_resource_nodes($ref, $faces_tag_field, true);
 
+    if (checkperm("faces-v")) {return false;}
+    
     $faces = ps_query("select ref,det_score,bbox,node from resource_face where resource=? order by ref", ["i",$ref]);
     if (count($faces) == 0) {
         return false;

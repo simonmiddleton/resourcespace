@@ -25,3 +25,6 @@ $lang["clip-title-url"] = 'Extern vektordatabas för titlar';
 $lang["clip-keyword-field"] = 'Fält för de närmaste matchande nyckelorden i den externa vektordatabasen';
 $lang["clip-keyword-url"] = 'Extern vektordatabas för nyckelord';
 $lang["clip-keyword-count"] = 'Antal nyckelord att ställa in (x närmaste nyckelord efter kosinuslikhet)';
+$lang["clip_show_on_searchbar"] = 'Visa CLIP-funktioner på sökfältet';
+$lang["clip_show_on_view"] = 'Visa CLIP-funktioner på resursvisningssidan';
+$lang["clip_resource_types"] = 'Skapa vektorer (aktivera sökning av) dessa resurstyper';

@@ -25,3 +25,6 @@ $lang["clip-title-url"] = '제목을 위한 외부 벡터 데이터베이스';
 $lang["clip-keyword-field"] = '외부 벡터 데이터베이스에서 가장 일치하는 키워드에 대한 필드';
 $lang["clip-keyword-url"] = '키워드를 위한 외부 벡터 데이터베이스';
 $lang["clip-keyword-count"] = '키워드 설정 수 (코사인 유사도에 의한 x개의 가장 가까운 키워드)';
+$lang["clip_show_on_searchbar"] = '검색창에 CLIP 기능 표시';
+$lang["clip_show_on_view"] = '리소스 보기 페이지에서 CLIP 기능 표시';
+$lang["clip_resource_types"] = '이 리소스 유형의 벡터 생성(검색 가능하도록)';

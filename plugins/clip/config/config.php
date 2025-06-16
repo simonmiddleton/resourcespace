@@ -15,3 +15,6 @@ $clip_title_url = "https://www.resourcespace.com/downloads/clip/titles_textonly.
 $clip_keyword_field = 0;
 $clip_keyword_url = "https://www.resourcespace.com/downloads/clip/taggable_nouns.tagdb";
 $clip_keyword_count = 5;
+$clip_resource_types=array(1,3); // Default resource types to index
+
+$clip_cron_generate_batch=10000; // Vectors to generate each batch run.
