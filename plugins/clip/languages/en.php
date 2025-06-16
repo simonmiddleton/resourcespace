@@ -27,3 +27,6 @@ $lang["clip-keyword-count"] = "Number of keywords to set (x nearest keywords by 
 $lang["clip_show_on_searchbar"]="Show CLIP features on the search bar";
 $lang["clip_show_on_view"]="Show CLIP features on the resource view page";
 $lang["clip_resource_types"]="Create vectors (enable searching of) these resource types";
+$lang["clip_count_vectors"]="Vector count";
+$lang["clip_missing_vectors"]="Vectors missing";
+$lang["clip-vector-generation"]="Vector generation";

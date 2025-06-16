@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Taggen van gedetecteerde gezichten in resource:';
 $lang["faces-confidence-threshold"] = 'Drempel voor gezichtsvertrouwen: Hoe zeker moet het model zijn dat het een menselijk gezicht heeft gevonden? Voorgesteld 70% (waarden onder deze drempel zullen overeenkomen met bedekte gezichten en geen gezichten)';
 $lang["faces-oneface"] = 'Selecteer alstublieft slechts één optie voor elk gezicht.';
 $lang["faces-show-view"] = 'Toon de AI Faces functionaliteit op de weergavepagina.';
+$lang["faces_count_faces"] = 'Totaal aantal gezichten gedetecteerd';
+$lang["faces_count_missing"] = 'Afbeeldingen te verwerken';

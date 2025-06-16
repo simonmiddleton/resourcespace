@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Αριθμός λέξεων-κλειδιών πρ
 $lang["clip_show_on_searchbar"] = 'Εμφάνιση χαρακτηριστικών CLIP στη γραμμή αναζήτησης';
 $lang["clip_show_on_view"] = 'Εμφάνιση χαρακτηριστικών CLIP στη σελίδα προβολής πόρου';
 $lang["clip_resource_types"] = 'Δημιουργήστε διανύσματα (επιτρέψτε την αναζήτηση αυτών των τύπων πόρων)';
+$lang["clip_count_vectors"] = 'Αριθμός διανυσμάτων';
+$lang["clip_missing_vectors"] = 'Λείπουν οι διανύσματα';
+$lang["clip-vector-generation"] = 'Δημιουργία διανύσματος';

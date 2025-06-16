@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Antal nyckelord att ställa in (x närmaste nycke
 $lang["clip_show_on_searchbar"] = 'Visa CLIP-funktioner på sökfältet';
 $lang["clip_show_on_view"] = 'Visa CLIP-funktioner på resursvisningssidan';
 $lang["clip_resource_types"] = 'Skapa vektorer (aktivera sökning av) dessa resurstyper';
+$lang["clip_count_vectors"] = 'Vektorräkning';
+$lang["clip_missing_vectors"] = 'Vektorer saknas';
+$lang["clip-vector-generation"] = 'Vektorgenerering';

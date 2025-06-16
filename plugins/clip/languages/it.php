@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Numero di parole chiave da impostare (x parole ch
 $lang["clip_show_on_searchbar"] = 'Mostra le funzionalità CLIP sulla barra di ricerca';
 $lang["clip_show_on_view"] = 'Mostra le funzionalità CLIP nella pagina di visualizzazione delle risorse';
 $lang["clip_resource_types"] = 'Crea vettori (abilita la ricerca di) questi tipi di risorse';
+$lang["clip_count_vectors"] = 'Conteggio vettoriale';
+$lang["clip_missing_vectors"] = 'Vettori mancanti';
+$lang["clip-vector-generation"] = 'Generazione vettoriale';

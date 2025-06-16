@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = '키워드 설정 수 (코사인 유사도에 의�
 $lang["clip_show_on_searchbar"] = '검색창에 CLIP 기능 표시';
 $lang["clip_show_on_view"] = '리소스 보기 페이지에서 CLIP 기능 표시';
 $lang["clip_resource_types"] = '이 리소스 유형의 벡터 생성(검색 가능하도록)';
+$lang["clip_count_vectors"] = '벡터 수';
+$lang["clip_missing_vectors"] = '벡터가 누락되었습니다';
+$lang["clip-vector-generation"] = '벡터 생성';

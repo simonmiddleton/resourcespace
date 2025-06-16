@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Tagio wynebau a ddarganfuwyd yn y gr resource:';
 $lang["faces-confidence-threshold"] = 'Trothwy hyder wyneb: Pa mor hyderus ddylai\'r model fod ei fod wedi dod o hyd i wyneb dynol? Argymhellir 70% (mae gwerthoedd islaw hyn yn cyfateb i wynebau cuddiedig a wynebau nad ydynt yn wynebau)';
 $lang["faces-oneface"] = 'Dewiswch dim ond un opsiwn ar gyfer pob wyneb.';
 $lang["faces-show-view"] = 'Dangoswch y swyddogaeth Wynebau AI ar y dudalen golygfa.';
+$lang["faces_count_faces"] = 'Cyfanswm wynebau a ddarganfuwyd';
+$lang["faces_count_missing"] = 'Delweddau i\'w prosesu';

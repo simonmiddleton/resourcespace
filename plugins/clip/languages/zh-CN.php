@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = '设置的关键词数量（按余弦相似度的 
 $lang["clip_show_on_searchbar"] = '在搜索栏上显示CLIP功能';
 $lang["clip_show_on_view"] = '在资源查看页面上显示CLIP功能';
 $lang["clip_resource_types"] = '创建向量（启用搜索）这些资源类型';
+$lang["clip_count_vectors"] = '矢量计数';
+$lang["clip_missing_vectors"] = '缺少矢量';
+$lang["clip-vector-generation"] = '矢量生成';

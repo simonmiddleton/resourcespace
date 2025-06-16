@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Aantal trefwoorden in te stellen (x dichtstbijzij
 $lang["clip_show_on_searchbar"] = 'Toon CLIP-functies op de zoekbalk';
 $lang["clip_show_on_view"] = 'Toon CLIP-functies op de resourceweergavepagina';
 $lang["clip_resource_types"] = 'Maak vectoren (schakel zoeken in) deze resourcetypen';
+$lang["clip_count_vectors"] = 'Vector telling';
+$lang["clip_missing_vectors"] = 'Vectoren ontbreken';
+$lang["clip-vector-generation"] = 'Vector generatie';

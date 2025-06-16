@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Etiquetando caras detectadas en el recurso:';
 $lang["faces-confidence-threshold"] = 'Umbral de confianza de rostro: ¿Qué tan seguro debe estar el modelo de que ha encontrado un rostro humano? Sugerido 70% (valores por debajo de esto coincidirán con rostros ocultos y no rostros)';
 $lang["faces-oneface"] = 'Por favor, seleccione solo una opción para cada cara.';
 $lang["faces-show-view"] = 'Mostrar la funcionalidad de Caras AI en la página de vista.';
+$lang["faces_count_faces"] = 'Total de rostros detectados';
+$lang["faces_count_missing"] = 'Imágenes para procesar';

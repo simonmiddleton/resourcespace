@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'リソース内の検出された顔にタグ付け:';
 $lang["faces-confidence-threshold"] = '顔の信頼度閾値: モデルは人間の顔を見つけたとどれだけ自信を持つべきですか？ 推奨70%（この値未満は隠れた顔や非顔に一致します）';
 $lang["faces-oneface"] = '各面については1つのオプションのみを選択してください。';
 $lang["faces-show-view"] = '表示ページでAI Faces機能を表示する。';
+$lang["faces_count_faces"] = '検出された顔の合計';
+$lang["faces_count_missing"] = '処理する画像';

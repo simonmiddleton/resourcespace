@@ -18,3 +18,5 @@ $lang["faces-tagging"] = '리소스에서 감지된 얼굴 태그 지정:';
 $lang["faces-confidence-threshold"] = '얼굴 신뢰 임계값: 모델이 인간 얼굴을 찾았다고 얼마나 확신해야 합니까? 제안된 값 70% (이 값보다 낮은 값은 가려진 얼굴과 비얼굴에 일치합니다)';
 $lang["faces-oneface"] = '각 면에 대해 하나의 옵션만 선택해 주십시오.';
 $lang["faces-show-view"] = '보기 페이지에서 AI Faces 기능을 표시합니다.';
+$lang["faces_count_faces"] = '감지된 총 얼굴 수';
+$lang["faces_count_missing"] = '처리할 이미지';

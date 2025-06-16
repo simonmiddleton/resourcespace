@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Označavanje prepoznatih lica u resursu:';
 $lang["faces-confidence-threshold"] = 'Prag povjerenja za lice: Koliko bi model trebao biti siguran da je pronašao ljudsko lice? Preporučeno 70% (vrijednosti ispod ovoga će odgovarati zaklonjenim licima i ne-licima';
 $lang["faces-oneface"] = 'Molimo odaberite samo jednu opciju za svako lice.';
 $lang["faces-show-view"] = 'Prikaži funkcionalnost AI Faces na stranici pregleda.';
+$lang["faces_count_faces"] = 'Ukupno otkrivenih lica';
+$lang["faces_count_missing"] = 'Slike za obradu';

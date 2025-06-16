@@ -237,7 +237,7 @@ function faces_detect_missing() {
     if (is_process_lock(__FUNCTION__)) {return false;}
     set_process_lock(__FUNCTION__);
 
-    $resources = ps_array("SELECT ref value FROM resource WHERE (faces_processed is null or faces_processed=0) ORDER BY ref desc");
+    $resources = ps_array("SELECT ref value FROM resource WHERE has_image=1 and (faces_processed is null or faces_processed=0) ORDER BY ref desc");
 
     foreach ($resources as $resource) {
         faces_detect($resource);
@@ -245,4 +245,22 @@ function faces_detect_missing() {
 
     clear_process_lock(__FUNCTION__);
     return count($resources);
+}
+
+/**
+ * Return count of images to process
+ *
+ * @return int       The count
+ */
+function faces_count_missing() {
+    return ps_value("SELECT count(*) value FROM resource WHERE has_image=1 and (faces_processed is null or faces_processed=0)",[],0);
+}
+
+/**
+ * Return a count of the detected faces
+ *
+ * @return int       The count
+ */
+function faces_count_faces() {
+    return ps_value("SELECT count(*) value FROM resource_face",[],0);
 }

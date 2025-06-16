@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Marcação de rostos detectados no recurso:';
 $lang["faces-confidence-threshold"] = 'Limite de confiança facial: Quão confiante o modelo deve estar de que encontrou um rosto humano? Sugerido 70% (valores abaixo disso corresponderão a rostos obscuros e não rostos)';
 $lang["faces-oneface"] = 'Por favor, selecione apenas uma opção para cada face.';
 $lang["faces-show-view"] = 'Mostrar a funcionalidade AI Faces na página de visualização.';
+$lang["faces_count_faces"] = 'Total de rostos detectados';
+$lang["faces_count_missing"] = 'Imagens a processar';

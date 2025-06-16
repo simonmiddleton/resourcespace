@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'キーワードを設定する数（コサイン�
 $lang["clip_show_on_searchbar"] = '検索バーにCLIP機能を表示';
 $lang["clip_show_on_view"] = 'リソースビューページにCLIP機能を表示する';
 $lang["clip_resource_types"] = 'これらのリソースタイプのベクターを作成する（検索を有効にする）';
+$lang["clip_count_vectors"] = 'ベクター数';
+$lang["clip_missing_vectors"] = 'ベクターが見つかりません';
+$lang["clip-vector-generation"] = 'ベクター生成';
