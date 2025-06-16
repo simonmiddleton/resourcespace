@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Kulcsszavak száma beállításhoz (x legközeleb
 $lang["clip_show_on_searchbar"] = 'CLIP funkciók megjelenítése a keresősávon';
 $lang["clip_show_on_view"] = 'CLIP funkciók megjelenítése az erőforrás nézet oldalán';
 $lang["clip_resource_types"] = 'Hozzon létre vektorokat (keresés engedélyezése) ezekhez a forrástípusokhoz';
+$lang["clip_count_vectors"] = 'Vektorok száma';
+$lang["clip_missing_vectors"] = 'Vektorok hiányoznak';
+$lang["clip-vector-generation"] = 'Vektor generálás';

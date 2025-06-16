@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Tagging erkannte Gesichter in Ressource:';
 $lang["faces-confidence-threshold"] = 'Gesichtswertschwelle: Wie sicher sollte das Modell sein, dass es ein menschliches Gesicht gefunden hat? Vorgeschlagen 70% (Werte darunter werden verdeckte Gesichter und keine Gesichter zuordnen)';
 $lang["faces-oneface"] = 'Bitte wählen Sie für jede Seite nur eine Option aus.';
 $lang["faces-show-view"] = 'Zeige die AI Faces-Funktionalität auf der Ansichtseite.';
+$lang["faces_count_faces"] = 'Gesamtanzahl der erkannten Gesichter';
+$lang["faces_count_missing"] = 'Bilder zur Verarbeitung';

@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Idadi ya maneno muhimu ya kuweka (maneno muhimu x
 $lang["clip_show_on_searchbar"] = 'Onyesha vipengele vya CLIP kwenye upau wa kutafuta';
 $lang["clip_show_on_view"] = 'Onyesha vipengele vya CLIP kwenye ukurasa wa maoni ya rasilimali';
 $lang["clip_resource_types"] = 'Unda vektors (wezesha kutafuta) aina hizi za rasilimali';
+$lang["clip_count_vectors"] = 'Idadi ya vector';
+$lang["clip_missing_vectors"] = 'Vikosi vinavyokosekana';
+$lang["clip-vector-generation"] = 'Uundaji wa vector';

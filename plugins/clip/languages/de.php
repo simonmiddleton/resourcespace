@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Anzahl der Schlüsselwörter festlegen (x nächst
 $lang["clip_show_on_searchbar"] = 'CLIP-Funktionen in der Suchleiste anzeigen';
 $lang["clip_show_on_view"] = 'CLIP-Funktionen auf der Ressourcenansichtsseite anzeigen';
 $lang["clip_resource_types"] = 'Erstellen Sie Vektoren (Aktivieren der Suche nach) diesen Ressourcentypen';
+$lang["clip_count_vectors"] = 'Vektoranzahl';
+$lang["clip_missing_vectors"] = 'Vektoren fehlen';
+$lang["clip-vector-generation"] = 'Vektorgenerierung';

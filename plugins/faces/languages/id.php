@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Menandai wajah yang terdeteksi dalam sumber:';
 $lang["faces-confidence-threshold"] = 'Ambang kepercayaan wajah: Seberapa yakin model harus bahwa ia telah menemukan wajah manusia? Disarankan 70% (nilai di bawah ini akan mencocokkan wajah yang terhalang dan bukan wajah)';
 $lang["faces-oneface"] = 'Silakan pilih hanya satu opsi untuk setiap wajah.';
 $lang["faces-show-view"] = 'Tampilkan fungsionalitas AI Faces di halaman tampilan';
+$lang["faces_count_faces"] = 'Total wajah terdeteksi';
+$lang["faces_count_missing"] = 'Gambar untuk diproses';

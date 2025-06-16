@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Kaynak içindeki tespit edilen yüzlere etiketleme:';
 $lang["faces-confidence-threshold"] = 'Yüz güven eşiği: Modelin bir insan yüzü bulduğundan ne kadar emin olması gerekir? Önerilen %70 (bunun altındaki değerler, gizlenmiş yüzleri ve yüz olmayanları eşleştirecektir)';
 $lang["faces-oneface"] = 'Lütfen her yüz için yalnızca bir seçenek seçin.';
 $lang["faces-show-view"] = 'Görüntü sayfasında AI Faces işlevselliğini göster.';
+$lang["faces_count_faces"] = 'Toplam tespit edilen yüzler';
+$lang["faces_count_missing"] = 'İşlenecek görüntüler';

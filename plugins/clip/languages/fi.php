@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Avainsanojen määrä asetettavaksi (x lähintä 
 $lang["clip_show_on_searchbar"] = 'Näytä CLIP-ominaisuudet hakupalkissa';
 $lang["clip_show_on_view"] = 'Näytä CLIP-ominaisuudet resurssin näkymäsivulla';
 $lang["clip_resource_types"] = 'Luo vektoreita (ota käyttöön näiden resurssityyppien hakeminen)';
+$lang["clip_count_vectors"] = 'Vektorin määrä';
+$lang["clip_missing_vectors"] = 'Vektorit puuttuvat';
+$lang["clip-vector-generation"] = 'Vektorigenerointi';

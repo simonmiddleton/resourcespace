@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'ਕੀਵਰਡ ਸੈਟ ਕਰਨ ਲਈ ਸੰ
 $lang["clip_show_on_searchbar"] = 'ਖੋਜ ਬਾਰ \'ਤੇ CLIP ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਦਿਖਾਓ';
 $lang["clip_show_on_view"] = 'ਸਾਧਨ ਦੇ ਦ੍ਰਿਸ਼ਟੀ ਪੰਨੇ \'ਤੇ CLIP ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਦਿਖਾਓ';
 $lang["clip_resource_types"] = 'ਇਹ ਸਰੋਤ ਕਿਸਮਾਂ ਦੇ ਲਈ ਵੇਕਟਰ ਬਣਾਓ (ਖੋਜ ਕਰਨ ਦੀ ਆਗਿਆ ਦਿਓ)';
+$lang["clip_count_vectors"] = 'ਵੇਕਟਰ ਗਿਣਤੀ';
+$lang["clip_missing_vectors"] = 'ਵੇਕਟਰ ਗੁਆਂਢ ਹਨ';
+$lang["clip-vector-generation"] = 'ਵੇਕਟਰ ਪੈਦਾ ਕਰਨਾਂ';

@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Kuweka lebo kwenye nyuso zilizogunduliwa katika rasili
 $lang["faces-confidence-threshold"] = 'Kiwango cha kujiamini cha uso: Je, mfano unapaswa kuwa na uhakika kiasi gani kwamba umepata uso wa binadamu? Inapendekezwa 70% (thamani chini ya hii zitakubaliana na nyuso zilizofichwa na zisizo za uso)';
 $lang["faces-oneface"] = 'Tafadhali chagua chaguo moja tu kwa kila uso.';
 $lang["faces-show-view"] = 'Onyesha kazi ya AI Faces kwenye ukurasa wa maoni.';
+$lang["faces_count_faces"] = 'Jumla ya nyuso zilizogunduliwa';
+$lang["faces_count_missing"] = 'Picha za kushughulikia';

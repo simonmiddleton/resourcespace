@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Nifer o eiriau allweddol i\'w gosod (x eiriau all
 $lang["clip_show_on_searchbar"] = 'Dangos nodweddion CLIP ar y bar chwilio';
 $lang["clip_show_on_view"] = 'Dangos nodweddion CLIP ar dudalen golwg y gr resource';
 $lang["clip_resource_types"] = 'Creu fectorau (galluogi chwilio am) y mathau adnodd hyn';
+$lang["clip_count_vectors"] = 'Cyfrif fector';
+$lang["clip_missing_vectors"] = 'Mae fectorau ar goll';
+$lang["clip-vector-generation"] = 'Cynhyrchu fector';

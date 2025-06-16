@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Jumlah kata kunci yang akan diatur (x kata kunci 
 $lang["clip_show_on_searchbar"] = 'Tampilkan fitur CLIP di bilah pencarian';
 $lang["clip_show_on_view"] = 'Tampilkan fitur CLIP di halaman tampilan sumber';
 $lang["clip_resource_types"] = 'Buat vektor (aktifkan pencarian) jenis sumber daya ini';
+$lang["clip_count_vectors"] = 'Jumlah vektor';
+$lang["clip_missing_vectors"] = 'Vektor hilang';
+$lang["clip-vector-generation"] = 'Generasi vektor';

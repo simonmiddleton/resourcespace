@@ -18,3 +18,5 @@ $lang["faces-tagging"] = 'Kasvotunnistuksen merkitseminen resurssissa:';
 $lang["faces-confidence-threshold"] = 'Kasvojen luottamuskynnys: Kuinka varma mallin tulisi olla siitä, että se on löytänyt ihmiskasvon? Suositeltu 70% (arvot tämän alapuolella vastaavat peitettyjä kasvoja ja ei-kasvoja)';
 $lang["faces-oneface"] = 'Valitse vain yksi vaihtoehto jokaiselle kasvoille.';
 $lang["faces-show-view"] = 'Näytä AI Faces -toiminto katselusivulla.';
+$lang["faces_count_faces"] = 'Yhteensä havaittuja kasvoja';
+$lang["faces_count_missing"] = 'Kuvia käsiteltäväksi';

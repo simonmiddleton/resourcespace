@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Broj klju훾nih rije훾i za postavljanje (x najbli�
 $lang["clip_show_on_searchbar"] = 'Prika탑i CLIP zna훾ajke na traci za pretra탑ivanje';
 $lang["clip_show_on_view"] = 'Prika탑i CLIP zna훾ajke na stranici pregleda resursa';
 $lang["clip_resource_types"] = 'Stvorite vektore (omogu훶ite pretra탑ivanje) ovih vrsta resursa';
+$lang["clip_count_vectors"] = 'Broj vektora';
+$lang["clip_missing_vectors"] = 'Vektori nedostaju';
+$lang["clip-vector-generation"] = 'Generiranje vektora';

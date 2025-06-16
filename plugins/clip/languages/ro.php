@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Numărul de cuvinte cheie de setat (x cele mai ap
 $lang["clip_show_on_searchbar"] = 'Afișați caracteristicile CLIP pe bara de căutare';
 $lang["clip_show_on_view"] = 'Afișați caracteristicile CLIP pe pagina de vizualizare a resursei';
 $lang["clip_resource_types"] = 'Creează vectori (activează căutarea acestor tipuri de resurse)';
+$lang["clip_count_vectors"] = 'Numărul vectorilor';
+$lang["clip_missing_vectors"] = 'Vectori lipsă';
+$lang["clip-vector-generation"] = 'Generare vectori';

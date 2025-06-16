@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Кількість ключових слів дл
 $lang["clip_show_on_searchbar"] = 'Показати функції CLIP на панелі пошуку';
 $lang["clip_show_on_view"] = 'Показати функції CLIP на сторінці перегляду ресурсу';
 $lang["clip_resource_types"] = 'Створити вектори (увімкнути пошук цих типів ресурсів)';
+$lang["clip_count_vectors"] = 'Кількість векторів';
+$lang["clip_missing_vectors"] = 'Вектори відсутні';
+$lang["clip-vector-generation"] = 'Генерація векторів';

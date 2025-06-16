@@ -28,3 +28,6 @@ $lang["clip-keyword-count"] = 'Počet klíčových slov k nastavení (x nejbliž
 $lang["clip_show_on_searchbar"] = 'Zobrazit funkce CLIP na vyhledávacím panelu';
 $lang["clip_show_on_view"] = 'Zobrazit funkce CLIP na stránce zobrazení zdroje';
 $lang["clip_resource_types"] = 'Vytvořit vektory (povolit vyhledávání těchto typů zdrojů)';
+$lang["clip_count_vectors"] = 'Počet vektorů';
+$lang["clip_missing_vectors"] = 'Chybějící vektory';
+$lang["clip-vector-generation"] = 'Generování vektorů';
