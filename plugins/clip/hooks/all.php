@@ -182,7 +182,7 @@ function HookClipAllAfterpreviewcreation($resource, $alternative)
     }
 }
 
-function HookClipCronCron()
+function HookClipAllCron()
 {
     global $clip_cron_generate_batch;
     clip_generate_missing_vectors($clip_cron_generate_batch);
