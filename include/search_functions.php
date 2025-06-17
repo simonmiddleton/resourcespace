@@ -1815,10 +1815,14 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         ];
 
         $reducedselect = $select->sql;
-        foreach ($removecolumns as $removecolumn) {
-            $reducedselect = preg_replace("/(,\s?" . $removecolumn . ")/", "", $reducedselect);
+
+        // Only reduce columns if an sql prefix is not set, this is to ensure compatibility with any encapsulating query that might be present. I.e. disk usage
+        if (trim((string) $sql_prefix) == "") {
+            foreach ($removecolumns as $removecolumn) {
+                $reducedselect = preg_replace("/(,\s?" . $removecolumn . ")/", "", $reducedselect);
+            }
+            $reducedselect = preg_replace("/(,\s?r\\.field\\d+)/", "", $reducedselect); // remove any fieldXX columns from select
         }
-        $reducedselect = preg_replace("/(,\s?r\\.field\\d+)/", "", $reducedselect); // remove any fieldXX columns from select
 
         $reduced_sql = clone $sql;
         $reduced_sql->sql = str_replace(
