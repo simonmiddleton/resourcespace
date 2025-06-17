@@ -67,7 +67,7 @@ def load_vectors_for_db(db_name, force_reload=False):
 
         start = time.time()
         cursor.execute(
-            "SELECT resource, vector_blob FROM resource_clip_vector WHERE is_text=0 AND resource > %s ORDER BY resource",
+            "SELECT ref, resource, vector_blob FROM resource_clip_vector WHERE is_text=0 AND ref > %s ORDER BY resource",
             (last_ref,)
         )
         rows = cursor.fetchall()
@@ -85,22 +85,24 @@ def load_vectors_for_db(db_name, force_reload=False):
     new_vectors = []
     new_ids = []
 
-    for resource, blob in rows:
+    for ref, resource, blob in rows:
+        if resource is None:
+            print(f"❌ Skipping ref {ref}: resource is None")
+            continue
+
         if len(blob) != 2048:
-            print(f"❌ Skipping resource {resource}: blob is {len(blob)} bytes, expected 2048")
+            print(f"❌ Skipping ref {ref} (resource {resource}): blob is {len(blob)} bytes, expected 2048")
             continue
 
         try:
             vector = np.frombuffer(blob, dtype=np.float32).copy()
-
-
             if vector.shape != (512,):
-                print(f"❌ Skipping resource {resource}: vector shape {vector.shape}, expected (512,)")
+                print(f"❌ Skipping ref {ref} (resource {resource}): vector shape {vector.shape}, expected (512,)")
                 continue
 
             norm = np.linalg.norm(vector)
             if norm == 0 or np.isnan(norm):
-                print(f"⚠️  Skipping resource {resource}: invalid norm ({norm})")
+                print(f"⚠️  Skipping ref {ref} (resource {resource}): invalid norm ({norm})")
                 continue
 
             vector /= norm
@@ -108,7 +110,7 @@ def load_vectors_for_db(db_name, force_reload=False):
             new_ids.append(resource)
 
         except Exception as e:
-            print(f"❌ Exception parsing vector for resource {resource}: {e}")
+            print(f"❌ Exception parsing vector for ref {ref} (resource {resource}): {e}")
             continue
 
     if db_name in cached_vectors:
@@ -121,7 +123,7 @@ def load_vectors_for_db(db_name, force_reload=False):
 
     cached_vectors[db_name] = (vectors, ids)
     if ids:
-        loaded_max_ref[db_name] = max(ids)
+        loaded_max_ref[db_name] = max(ref for ref, _, _ in rows)
 
     # Rebuild or update FAISS index
     if db_name not in faiss_indexes:
@@ -252,6 +254,8 @@ async def search(
         print(f"🎯 Search results: {I[0]}")
 
         results = []
+        ref_int = int(ref) if ref not in (None, "") else None
+
         for i, score in zip(I[0], D[0]):
             if i < 0:
                 continue
@@ -259,8 +263,9 @@ async def search(
 
             # Skip self-match for resource/ref queries
             if (resource is not None and candidate_id == resource) or \
-               (ref is not None and candidate_id == ref):
+               (ref_int is not None and candidate_id == ref_int):
                 continue
+
 
             results.append({
                 "resource": candidate_id,
