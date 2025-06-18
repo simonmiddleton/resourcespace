@@ -2756,7 +2756,7 @@ function checkperm_login_as_user($user): bool
         $user = get_user($user);
     }
 
-    if (!checkperm("a") && preg_match("/(?:^|\\W|,)a(?:$|\\W|,)/", $user['permissions'])) {
+    if (!checkperm("a") && preg_match("/(?:^|\\W|,)a(?:$|\\W|,)/", (string) $user['permissions'])) {
         // Target user has 'a' permission but current user does not
         return false;
     }
