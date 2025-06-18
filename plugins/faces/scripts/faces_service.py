@@ -182,6 +182,11 @@ async def find_similar_faces(request: FaceSearchRequest):
             print(f"Match: ref={match['ref']} similarity={match['similarity']:.4f}")
 
     matches.sort(key=lambda x: -x["similarity"])
+
+    # Filter out matches where "node" is not set, if requested
+    if request.tagged_only:
+        matches = [m for m in matches if isinstance(m.get("node"), int) and m["node"] > 0]
+
     return matches
 
 if __name__ == "__main__":

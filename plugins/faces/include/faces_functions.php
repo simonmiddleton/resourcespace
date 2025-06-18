@@ -136,6 +136,7 @@ function faces_tag(int $resource): bool
             'db' => $mysql_db,
             'ref' => (int)$face,
             'threshold' => $faces_tag_threshold,
+            'tagged_only' => true,
             'k' => 200
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
