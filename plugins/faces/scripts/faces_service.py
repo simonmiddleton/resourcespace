@@ -88,6 +88,7 @@ class FaceSearchRequest(BaseModel):
     ref: int
     db: str
     threshold: float = 0.0
+    tagged_only: bool = False
     k: int = 10
 
 @app.post("/extract_faces")
