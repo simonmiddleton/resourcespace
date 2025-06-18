@@ -169,7 +169,7 @@ function faces_tag(int $resource): bool
 
         // Filter out non-numeric or null values
         $filtered_nodes = array_filter($nodes, static function ($value) {
-            return is_numeric($value);
+            return is_numeric($value) && $value > 0;
         });
 
         // Check if the filtered list is empty
