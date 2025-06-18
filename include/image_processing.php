@@ -1309,7 +1309,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
         ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
     }
 
-    hook('afterpreviewcreation', '', array($ref, $alternative));
+    hook('afterpreviewcreation', '', array($ref, $alternative, $generateall));
     return true;
 }
 
@@ -4210,7 +4210,7 @@ function create_previews_using_im(
                 "ingested" => $ingested],
             );
         }
-        hook('afterpreviewcreation', '', array($ref, $alternative));
+        hook('afterpreviewcreation', '', array($ref, $alternative, $generateall));
         return true;
     } else {
         return false;
