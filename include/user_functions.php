@@ -3679,7 +3679,7 @@ function browser_check()
 
     // Output the JS to calculate the answer and set the cookie
     ?>
-    <html><title><?php echo escape($applicationname) ?></title><head>
+    <html><head><title><?php echo escape($applicationname) ?></title>
     <script>
     function x9Zq(str){var a=[90,51,127],b='',c=0;for(var d=0;d<str.length;d++)b+=String.fromCharCode(str.charCodeAt(d)^a[c++%3]);return btoa(b);}
     document.cookie = "browser_check_cookie=" + x9Zq(<?php echo json_encode($question_key) ?>) + "; path=/; max-age=172800";
@@ -3703,14 +3703,14 @@ function browser_check()
             font-size: 1.5em;margin-top: 2em;
         }
     </style>
-</head>
+    </head>
     <body>
         <div>
         <div class="logo"><img src="<?php echo $baseurl_short ?>gfx/titles/title-black.svg" /></div> 
             <h1><?php echo escape($browser_check_message) ?></h1><?php /* Note - can't be translated - language files not loaded, this is intentionally very early in the process */ ?>
         </div>
     </body>
-    </head></html>
+    </html>
     <?php
     exit();    
 }
