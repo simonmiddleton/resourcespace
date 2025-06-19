@@ -10,6 +10,7 @@ $lang["faces-tag-threshold"] = "Face tag threshold: what level of similarity is 
 $lang["faces-confidence-threshold"] = "Face confidence threshold: How confident should the model be that it has found a human face? Suggested 70% (values below this will match obscured faces and non faces)";
 $lang["faces-confidence"] = "Confidence this is a face";
 $lang["faces-tag-field"] = "The field containing the names of the tagged individuals. This should be a Dynamic Keyword List field.";
+$lang["faces-tag-field-not-set"] = "Tagging field is not configured.";
 $lang["faces-name"] = "Name";
 $lang["faces-detect-on-upload"] = "Scan for faces on upload?";
 $lang["faces-tag-on-upload"] = "Tag recognised faces on upload?";
