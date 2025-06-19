@@ -3670,8 +3670,8 @@ function browser_check()
     if (PHP_SAPI == 'cli') {return;}
     if (isset($disable_browser_check) && $disable_browser_check) {return;} // e.g. API/IIIF
 
-    $ip=$_SERVER["REMOTE_ADDR"]; // Use real IP, do not trust forwarded IP as could be faked
-    $question_key=hash_hmac("sha512", "{$ip}" . date('Ymd'), $browser_check_key);
+    if (!isset($_SERVER["HTTP_USER_AGENT"])) {exit();} // Terminate requests that do not specify a user agent
+    $question_key=hash_hmac("sha512", $_SERVER["HTTP_USER_AGENT"] . date('Ymd'), $browser_check_key);
     $answer_key=xor_base64_encode($question_key);
 
     // Look for the answer already set as a cookie
