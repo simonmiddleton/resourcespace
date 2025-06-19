@@ -21,6 +21,13 @@ function faces_detect(int $ref): bool
     flush();
     ob_flush();
 
+    $faces_processed = ps_value("SELECT faces_processed value FROM resource WHERE ref = ?", ["i", $ref], 1);
+
+    if ($faces_processed == "1") {
+        logScript("Faces already processed for resource $ref");
+        return false;
+    }
+
     if (!file_exists($file_path)) {
         $resource_data = get_resource_data($ref);
         if ($resource_data['file_extension'] == 'jpg' || $resource_data['file_extension'] == 'jpeg') {
@@ -162,7 +169,7 @@ function faces_tag(int $resource): bool
 
         // Filter out non-numeric or null values
         $filtered_nodes = array_filter($nodes, static function ($value) {
-            return is_numeric($value);
+            return is_numeric($value) && $value > 0;
         });
 
         // Check if the filtered list is empty
