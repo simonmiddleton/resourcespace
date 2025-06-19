@@ -18,8 +18,10 @@ function faces_detect(int $ref): bool
     global $faces_service_endpoint, $faces_confidence_threshold;
     $file_path = get_resource_path($ref, true, 'scr', false, "jpg");
 
-    flush();
-    ob_flush();
+    if ('cli' == PHP_SAPI) {
+        flush();
+        ob_flush();
+    }
 
     $faces_processed = ps_value("SELECT faces_processed value FROM resource WHERE ref = ?", ["i", $ref], 1);
 
@@ -111,8 +113,10 @@ function faces_tag(int $resource): bool
 {
     global $faces_service_endpoint, $mysql_db, $faces_tag_threshold;
 
-    flush();
-    ob_flush();
+    if ('cli' == PHP_SAPI) {
+        flush();
+        ob_flush();
+    }
 
     // Find untagged faces for this resource
     $faces = ps_array("SELECT ref value FROM resource_face WHERE resource=? and (node is null or node=0) ORDER BY ref desc", ["i", $resource]);
