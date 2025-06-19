@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Creează vectori (activează căutarea acestor t
 $lang["clip_count_vectors"] = 'Numărul vectorilor';
 $lang["clip_missing_vectors"] = 'Vectori lipsă';
 $lang["clip-vector-generation"] = 'Generare vectori';
+$lang["clip_vector-statistics"] = 'Statistici vectoriale';
+$lang["clip-vector-cleanup"] = 'Șterge vectorii orfani';
+$lang["clip-vector-cleanup-description"] = 'Eliminați vectorii care aparțin resurselor care nu mai există sau care nu sunt unul dintre tipurile de resurse selectate mai sus';

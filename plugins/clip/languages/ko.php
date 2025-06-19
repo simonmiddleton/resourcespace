@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = '이 리소스 유형의 벡터 생성(검색 가
 $lang["clip_count_vectors"] = '벡터 수';
 $lang["clip_missing_vectors"] = '벡터가 누락되었습니다';
 $lang["clip-vector-generation"] = '벡터 생성';
+$lang["clip_vector-statistics"] = '벡터 통계';
+$lang["clip-vector-cleanup"] = '고아 벡터 삭제';
+$lang["clip-vector-cleanup-description"] = '존재하지 않거나 위에서 선택한 리소스 유형 중 하나가 아닌 리소스에 속하는 벡터를 제거하십시오.';

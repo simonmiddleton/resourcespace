@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Utwórz wektory (włącz wyszukiwanie tych typó
 $lang["clip_count_vectors"] = 'Liczba wektorów';
 $lang["clip_missing_vectors"] = 'Brak wektorów';
 $lang["clip-vector-generation"] = 'Generowanie wektorów';
+$lang["clip_vector-statistics"] = 'Statystyki wektorów';
+$lang["clip-vector-cleanup"] = 'Usuń osierocone wektory';
+$lang["clip-vector-cleanup-description"] = 'Usuń wektory, które należą do zasobów, które już nie istnieją lub nie są jednym z powyżej wybranych typów zasobów';

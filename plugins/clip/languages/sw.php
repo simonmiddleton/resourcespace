@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Unda vektors (wezesha kutafuta) aina hizi za ras
 $lang["clip_count_vectors"] = 'Idadi ya vector';
 $lang["clip_missing_vectors"] = 'Vikosi vinavyokosekana';
 $lang["clip-vector-generation"] = 'Uundaji wa vector';
+$lang["clip_vector-statistics"] = 'Takwimu za vector';
+$lang["clip-vector-cleanup"] = 'Futa vektori zisizo na mzazi';
+$lang["clip-vector-cleanup-description"] = 'Ondoa vektors ambazo ni za rasilimali ambazo hazipo tena au si mojawapo ya aina za rasilimali zilizochaguliwa hapo juu';

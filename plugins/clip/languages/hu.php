@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Hozzon létre vektorokat (keresés engedélyezé
 $lang["clip_count_vectors"] = 'Vektorok száma';
 $lang["clip_missing_vectors"] = 'Vektorok hiányoznak';
 $lang["clip-vector-generation"] = 'Vektor generálás';
+$lang["clip_vector-statistics"] = 'Vektor statisztikák';
+$lang["clip-vector-cleanup"] = 'Törölje az árván maradt vektorokat';
+$lang["clip-vector-cleanup-description"] = 'Távolítsa el azokat a vektorokat, amelyek olyan erőforrásokhoz tartoznak, amelyek már nem léteznek, vagy nem az előzőleg kiválasztott erőforrás típusok egyike.';

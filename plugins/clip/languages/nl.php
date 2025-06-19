@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Maak vectoren (schakel zoeken in) deze resourcet
 $lang["clip_count_vectors"] = 'Vector telling';
 $lang["clip_missing_vectors"] = 'Vectoren ontbreken';
 $lang["clip-vector-generation"] = 'Vector generatie';
+$lang["clip_vector-statistics"] = 'Vectorstatistieken';
+$lang["clip-vector-cleanup"] = 'Verwijder weesvectoren';
+$lang["clip-vector-cleanup-description"] = 'Verwijder vectoren die behoren tot bronnen die niet meer bestaan of niet een van de hierboven geselecteerde brontypen zijn';

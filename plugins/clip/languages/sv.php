@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Skapa vektorer (aktivera sökning av) dessa resu
 $lang["clip_count_vectors"] = 'Vektorräkning';
 $lang["clip_missing_vectors"] = 'Vektorer saknas';
 $lang["clip-vector-generation"] = 'Vektorgenerering';
+$lang["clip_vector-statistics"] = 'Vektorstatistik';
+$lang["clip-vector-cleanup"] = 'Ta bort föräldralösa vektorer';
+$lang["clip-vector-cleanup-description"] = 'Ta bort vektorer som tillhör resurser som inte längre finns eller som inte är en av de ovan valda resurstyperna';

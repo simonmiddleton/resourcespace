@@ -7,6 +7,11 @@ if (!checkperm('a')) {
     exit($lang['error-permissiondenied']);
 }
 
+if (getval("cleanup","")!="") {
+    // Vector cleanup
+    clip_vector_cleanup();
+}
+
 $plugin_name = "clip";
 $page_heading = $lang['clip-configuration'];
 $page_intro = "";
@@ -18,8 +23,9 @@ $page_def[] = config_add_section_header($lang["clip-vector-generation"]);
 $page_def[] = config_add_boolean_select("clip_vector_on_upload", $lang["clip-vector-on-upload"]);
 $page_def[] = config_add_multi_rtype_select("clip_resource_types",$lang["clip_resource_types"]);
 
-$page_def[] = config_add_html("<br />" . $lang["clip_count_vectors"] . ": " . clip_count_vectors());
-$page_def[] = config_add_html("<br />" . $lang["clip_missing_vectors"] . ": " . clip_missing_vectors());
+$page_def[] = config_add_html("<br /><div class='Question'><label>" . escape($lang["clip_vector-statistics"]). "</label>" . escape($lang["clip_count_vectors"]) . ": " . clip_count_vectors() . "<br />" . escape($lang["clip_missing_vectors"]) . ": " . clip_missing_vectors() . "<div class='clearerleft'></div></div>");
+
+$page_def[] = config_add_html("<br /><div class='Question'><label>" . escape($lang["clip-vector-cleanup-description"]) . "</label><input type='submit' name='cleanup' value='" . escape($lang["clip-vector-cleanup"]) . "' /><div class='clearerleft'></div></div>");
 
 // Build configuration variable descriptions
 $page_def[] = config_add_section_header($lang["clip-natural-language-search"]);

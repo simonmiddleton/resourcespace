@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Buat vektor (aktifkan pencarian) jenis sumber da
 $lang["clip_count_vectors"] = 'Jumlah vektor';
 $lang["clip_missing_vectors"] = 'Vektor hilang';
 $lang["clip-vector-generation"] = 'Generasi vektor';
+$lang["clip_vector-statistics"] = 'Statistik vektor';
+$lang["clip-vector-cleanup"] = 'Hapus vektor yatim';
+$lang["clip-vector-cleanup-description"] = 'Hapus vektor yang termasuk dalam sumber daya yang tidak lagi ada atau bukan salah satu dari jenis sumber daya yang dipilih di atas';

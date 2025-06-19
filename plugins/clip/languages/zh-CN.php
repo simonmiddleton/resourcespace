@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = '创建向量（启用搜索）这些资源类型
 $lang["clip_count_vectors"] = '矢量计数';
 $lang["clip_missing_vectors"] = '缺少矢量';
 $lang["clip-vector-generation"] = '矢量生成';
+$lang["clip_vector-statistics"] = '矢量统计';
+$lang["clip-vector-cleanup"] = '删除孤立的矢量';
+$lang["clip-vector-cleanup-description"] = '删除属于不再存在或不是上述所选资源类型的资源的矢量';

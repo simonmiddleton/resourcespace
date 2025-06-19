@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Luo vektoreita (ota käyttöön näiden resurssi
 $lang["clip_count_vectors"] = 'Vektorin määrä';
 $lang["clip_missing_vectors"] = 'Vektorit puuttuvat';
 $lang["clip-vector-generation"] = 'Vektorigenerointi';
+$lang["clip_vector-statistics"] = 'Vektori tilastot';
+$lang["clip-vector-cleanup"] = 'Poista orvot vektorit';
+$lang["clip-vector-cleanup-description"] = 'Poista vektorit, jotka kuuluvat resursseille, joita ei enää ole tai jotka eivät ole yllä valittuja resurssityyppejä';

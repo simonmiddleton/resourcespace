@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Bu kaynak türlerinin vektörlerini oluşturun (
 $lang["clip_count_vectors"] = 'Vektör sayısı';
 $lang["clip_missing_vectors"] = 'Vektörler eksik';
 $lang["clip-vector-generation"] = 'Vektör oluşturma';
+$lang["clip_vector-statistics"] = 'Vektör istatistikleri';
+$lang["clip-vector-cleanup"] = 'Yetim vektörleri sil';
+$lang["clip-vector-cleanup-description"] = 'Mevcut olmayan veya yukarıda seçilen kaynak türlerinden biri olmayan kaynaklara ait vektörleri kaldırın';
