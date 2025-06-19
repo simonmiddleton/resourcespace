@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Creu fectorau (galluogi chwilio am) y mathau adn
 $lang["clip_count_vectors"] = 'Cyfrif fector';
 $lang["clip_missing_vectors"] = 'Mae fectorau ar goll';
 $lang["clip-vector-generation"] = 'Cynhyrchu fector';
+$lang["clip_vector-statistics"] = 'Ystadegau fector';
+$lang["clip-vector-cleanup"] = 'Dileu fectorau digyswllt';
+$lang["clip-vector-cleanup-description"] = 'Tynnwch fectorau sy\'n perthyn i adnoddau nad ydynt yn bodoli mwyach neu nad ydynt yn un o\'r mathau adnoddau a ddewiswyd uchod';

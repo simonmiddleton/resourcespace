@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Opret vektorer (aktiver søgning af) disse resso
 $lang["clip_count_vectors"] = 'Vektortælling';
 $lang["clip_missing_vectors"] = 'Vektorer mangler';
 $lang["clip-vector-generation"] = 'Vektorgenerering';
+$lang["clip_vector-statistics"] = 'Vektorstatistik';
+$lang["clip-vector-cleanup"] = 'Slet forældreløse vektorer';
+$lang["clip-vector-cleanup-description"] = 'Fjern vektorer, der tilhører ressourcer, som ikke længere eksisterer, eller som ikke er en af de ovenfor valgte ressource typer';

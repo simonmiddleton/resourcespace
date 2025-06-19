@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Vytvorte vektory (povoľte vyhľadávanie) tých
 $lang["clip_count_vectors"] = 'Počet vektorov';
 $lang["clip_missing_vectors"] = 'Chýbajúce vektory';
 $lang["clip-vector-generation"] = 'Generovanie vektorov';
+$lang["clip_vector-statistics"] = 'Štatistika vektorov';
+$lang["clip-vector-cleanup"] = 'Odstrániť osirelé vektory';
+$lang["clip-vector-cleanup-description"] = 'Odstráňte vektory, ktoré patria k zdrojom, ktoré už neexistujú alebo nie sú jedným z vyššie vybraných typov zdrojov';

@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Δημιουργήστε διανύσματα (�
 $lang["clip_count_vectors"] = 'Αριθμός διανυσμάτων';
 $lang["clip_missing_vectors"] = 'Λείπουν οι διανύσματα';
 $lang["clip-vector-generation"] = 'Δημιουργία διανύσματος';
+$lang["clip_vector-statistics"] = 'Στατιστικά διανυσμάτων';
+$lang["clip-vector-cleanup"] = 'Διαγραφή ορφανών διανυσμάτων';
+$lang["clip-vector-cleanup-description"] = 'Αφαιρέστε τα διανύσματα που ανήκουν σε πόρους που δεν υπάρχουν πια ή δεν είναι ένας από τους παραπάνω επιλεγμένους τύπους πόρων';

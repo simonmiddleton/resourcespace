@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Stvorite vektore (omogućite pretraživanje) ovi
 $lang["clip_count_vectors"] = 'Broj vektora';
 $lang["clip_missing_vectors"] = 'Vektori nedostaju';
 $lang["clip-vector-generation"] = 'Generiranje vektora';
+$lang["clip_vector-statistics"] = 'Statistika vektora';
+$lang["clip-vector-cleanup"] = 'Izbriši napuštene vektore';
+$lang["clip-vector-cleanup-description"] = 'Uklonite vektore koji pripadaju resursima koji više ne postoje ili nisu jedan od gore odabranih tipova resursa';

@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Crea vectors (habilita la cerca de) aquests tipu
 $lang["clip_count_vectors"] = 'Recompte de vectors';
 $lang["clip_missing_vectors"] = 'Vectors perduts';
 $lang["clip-vector-generation"] = 'Generació de vectors';
+$lang["clip_vector-statistics"] = 'Estadístiques de vectors';
+$lang["clip-vector-cleanup"] = 'Eliminar vectors orfes';
+$lang["clip-vector-cleanup-description"] = 'Elimina vectors que pertanyen a recursos que ja no existeixen o que no són un dels tipus de recursos seleccionats anteriorment';

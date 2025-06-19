@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Vytvořit vektory (povolit vyhledávání těcht
 $lang["clip_count_vectors"] = 'Počet vektorů';
 $lang["clip_missing_vectors"] = 'Chybějící vektory';
 $lang["clip-vector-generation"] = 'Generování vektorů';
+$lang["clip_vector-statistics"] = 'Statistiky vektorů';
+$lang["clip-vector-cleanup"] = 'Smazat osamělé vektory';
+$lang["clip-vector-cleanup-description"] = 'Odstranit vektory, které patří k prostředkům, které již neexistují, nebo nejsou jedním z výše vybraných typů prostředků';

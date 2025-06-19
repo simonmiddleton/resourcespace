@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'これらのリソースタイプのベクター
 $lang["clip_count_vectors"] = 'ベクター数';
 $lang["clip_missing_vectors"] = 'ベクターが見つかりません';
 $lang["clip-vector-generation"] = 'ベクター生成';
+$lang["clip_vector-statistics"] = 'ベクター統計';
+$lang["clip-vector-cleanup"] = '孤立したベクターを削除';
+$lang["clip-vector-cleanup-description"] = '存在しないリソースに属するベクターまたは上記で選択されたリソースタイプのいずれでもないベクターを削除してください';

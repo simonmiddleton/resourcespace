@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Создать векторы (включить 
 $lang["clip_count_vectors"] = 'Количество векторов';
 $lang["clip_missing_vectors"] = 'Векторы отсутствуют';
 $lang["clip-vector-generation"] = 'Генерация векторов';
+$lang["clip_vector-statistics"] = 'Векторная статистика';
+$lang["clip-vector-cleanup"] = 'Удалить сиротские векторы';
+$lang["clip-vector-cleanup-description"] = 'Удалить векторы, которые принадлежат ресурсам, которые больше не существуют или не являются одним из вышеуказанных типов ресурсов';

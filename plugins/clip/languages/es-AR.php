@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Crear vectores (habilitar la búsqueda de) estos
 $lang["clip_count_vectors"] = 'Conteo de vectores';
 $lang["clip_missing_vectors"] = 'Vectores faltantes';
 $lang["clip-vector-generation"] = 'Generación de vectores';
+$lang["clip_vector-statistics"] = 'Estadísticas de vectores';
+$lang["clip-vector-cleanup"] = 'Eliminar vectores huérfanos';
+$lang["clip-vector-cleanup-description"] = 'Eliminar vectores que pertenecen a recursos que ya no existen o que no son uno de los tipos de recursos seleccionados anteriormente';

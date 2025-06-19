@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'Tạo vector (bật tìm kiếm) cho các loại
 $lang["clip_count_vectors"] = 'Số lượng vector';
 $lang["clip_missing_vectors"] = 'Thiếu vector';
 $lang["clip-vector-generation"] = 'Tạo vector';
+$lang["clip_vector-statistics"] = 'Thống kê vector';
+$lang["clip-vector-cleanup"] = 'Xóa các vector mồ côi';
+$lang["clip-vector-cleanup-description"] = 'Xóa các vector thuộc về các tài nguyên không còn tồn tại hoặc không phải là một trong các loại tài nguyên đã chọn ở trên';

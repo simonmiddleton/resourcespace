@@ -31,3 +31,6 @@ $lang["clip_resource_types"] = 'ان وسائل کی اقسام کے لیے وی
 $lang["clip_count_vectors"] = 'ویکٹر کی تعداد';
 $lang["clip_missing_vectors"] = 'ویکٹرز غائب ہیں';
 $lang["clip-vector-generation"] = 'ویکٹر کی تخلیق';
+$lang["clip_vector-statistics"] = 'ویکٹر کے اعداد و شمار';
+$lang["clip-vector-cleanup"] = 'یتیم ویکٹرز کو حذف کریں';
+$lang["clip-vector-cleanup-description"] = 'ان ویکٹروں کو ہٹا دیں جو ان وسائل سے تعلق رکھتے ہیں جو اب موجود نہیں ہیں یا اوپر منتخب کردہ وسائل کی اقسام میں سے نہیں ہیں';

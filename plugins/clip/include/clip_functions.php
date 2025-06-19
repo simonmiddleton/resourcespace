@@ -301,3 +301,15 @@ function clip_missing_vectors() {
 
     return ps_value($sql, ps_param_fill($clip_resource_types, "i"),0);
 }
+
+
+/**
+ * Removes orphaned vectors - those that do not have a valid resource specified either because the resource has been removed or because
+ * the list of resource types for which vectors are created has been changed.
+ * 
+ * @return void
+ */
+function clip_vector_cleanup() {
+    global $clip_resource_types;
+    ps_query("delete from resource_clip_vector where resource not in (select ref from resource where resource_type in (" . ps_param_insert(count($clip_resource_types)) . "))",ps_param_fill($clip_resource_types, "i"));
+}
