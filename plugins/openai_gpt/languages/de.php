@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='KI-Verarbeitung für Feld \'[field]\'';
 $lang["property-gpt_source"]='GPT-Quelle';
 $lang["openai_gpt_language"] = 'Ausgabesprache';
 $lang["openai_gpt_language_user"] = 'Die Sprache des aktuellen Benutzers';
+$lang["openai_gpt_overwrite_data"] = 'Vorhandene Daten in konfigurierten Feldern überschreiben?';

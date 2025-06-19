@@ -7,7 +7,7 @@
 
 $lang["csv_upload_nav_link"] = "CSV upload";
 $lang["csv_upload_intro"] = "This plugin allows you to create or update resources by uploading a CSV file. The format of the CSV is important";
-$lang["csv_upload_condition1"] = "Make sure the CSV file is encoded using <b>UTF-8 without BOM</b>.";
+$lang["csv_upload_condition1"] = "Make sure the CSV file is encoded using <b>UTF-8</b>.";
 $lang["csv_upload_condition2"] = "The CSV must have a header row";
 $lang["csv_upload_condition3"] = "To be able to upload resource files later using batch replace functionality there should be a column named 'Original filename' and each file should have a unique filename";
 $lang["csv_upload_condition4"] = "All mandatory fields for any newly created resources must be present in the CSV";
@@ -74,6 +74,6 @@ $lang["csv_upload_recommend_offline"]           = "This large CSV may take a ver
 
 $lang["csv_upload_createdfromcsvupload"]        = "Created from CSV Upload plugin";
 
-$lang["csv_upload_check_invalidbom"]            = "CSV file has BOM so can't be loaded";
 $lang["csv_upload_check_file_error"]            = "CSV file can't be opened or read";
 $lang["csv_upload_check_utf_error"]             = "CSV file is not valid UTF-8. Invalid character on line ";
+$lang["csv_upload_check_removebom"]             = "CSV file has BOM which was not able to be removed";

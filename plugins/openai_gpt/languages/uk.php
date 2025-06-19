@@ -18,3 +18,4 @@ $lang["openai_gpt_processing_field"]='Генерація метаданих за
 $lang["property-gpt_source"]='Джерело GPT';
 $lang["openai_gpt_language"] = 'Мова виводу';
 $lang["openai_gpt_language_user"] = 'Мова поточного користувача';
+$lang["openai_gpt_overwrite_data"] = 'Перезаписати існуючі дані в налаштованих полях?';

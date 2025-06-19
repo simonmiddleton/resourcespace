@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Nahrávanie CSV súboru';
 $lang["csv_upload_intro"] = 'Tento plugin umožňuje vytvárať alebo aktualizovať zdroje nahratím súboru CSV. Formát CSV súboru je dôležitý';
-$lang["csv_upload_condition1"] = 'Uistite sa, že CSV súbor je zakódovaný pomocou <b>UTF-8 bez BOM</b>.';
 $lang["csv_upload_condition2"] = 'CSV musí obsahovať riadok s hlavičkou';
 $lang["csv_upload_condition3"] = 'Aby bolo možné neskôr nahrať súbory zdrojov pomocou funkcie hromadnej náhrady, musí byť stĺpec s názvom "Pôvodný názov súboru" a každý súbor musí mať jedinečný názov.';
 $lang["csv_upload_condition4"] = 'V CSV súbore pre novovytvorené zdroje musia byť prítomné všetky povinné polia';
@@ -67,3 +66,8 @@ $lang["csv_upload_recommend_offline"] = 'Tento veľký CSV súbor môže trvať 
 $lang["csv_upload_createdfromcsvupload"] = 'Vytvorené pomocou doplnku pre nahrávanie CSV súborov';
 $lang["plugin-csv_upload-title"] = 'Nalaganje CSV';
 $lang["plugin-csv_upload-desc"] = 'Naloži meta podatke z uporabo CSV datoteke.';
+
+$lang["csv_upload_check_file_error"] = 'CSV súbor sa nedá otvoriť ani prečítať';
+$lang["csv_upload_check_utf_error"] = 'CSV súbor nie je platný UTF-8. Neplatný znak na riadku';
+$lang["csv_upload_condition1"] = 'Uistite sa, že súbor CSV je kódovaný pomocou <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV súbor má BOM, ktorý sa nepodarilo odstrániť';

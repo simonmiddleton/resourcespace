@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV اپلوڈ';
 $lang["csv_upload_intro"] = 'یہ پلگ ان آپ کو CSV فائل اپ لوڈ کرکے وسائل بنانے یا اپ ڈیٹ کرنے کی اجازت دیتا ہے۔ CSV کا فارمیٹ اہم ہے۔';
-$lang["csv_upload_condition1"] = 'یقینی بنائیں کہ CSV فائل کو <b>UTF-8 بغیر BOM</b> کے ساتھ انکوڈ کیا گیا ہے۔';
 $lang["csv_upload_condition2"] = 'CSV میں ایک ہیڈر قطار ہونی چاہیے';
 $lang["csv_upload_condition3"] = 'بعد میں بیچ ریپلیس فنکشنالٹی کا استعمال کرتے ہوئے وسائل کی فائلیں اپ لوڈ کرنے کے قابل ہونے کے لیے، ایک کالم \'Original filename\' کے نام سے ہونا چاہیے اور ہر فائل کا ایک منفرد نام ہونا چاہیے۔';
 $lang["csv_upload_condition4"] = 'کسی بھی نئے بنائے گئے وسائل کے لیے تمام لازمی فیلڈز کو CSV میں موجود ہونا چاہیے۔';
@@ -65,3 +64,8 @@ $lang["csv_upload_process_offline_quick"] = 'تصدیق کو چھوڑیں اور
 $lang["csv_upload_force_offline"] = 'یہ بڑا CSV فائل پروسیس کرنے میں کافی وقت لے سکتا ہے، اس لیے یہ آف لائن چلایا جائے گا۔ جب پروسیسنگ مکمل ہو جائے گی تو آپ کو ResourceSpace پیغام کے ذریعے مطلع کیا جائے گا۔';
 $lang["csv_upload_recommend_offline"] = 'یہ بڑا CSV پروسیس کرنے میں بہت زیادہ وقت لے سکتا ہے۔ یہ تجویز کیا جاتا ہے کہ اگر آپ کو بڑے CSVs پروسیس کرنے کی ضرورت ہو تو آف لائن جابز کو فعال کریں۔';
 $lang["csv_upload_createdfromcsvupload"] = 'CSV اپلوڈ پلگ ان سے تخلیق کیا گیا';
+
+$lang["csv_upload_check_file_error"] = 'CSV فائل کو کھولا یا پڑھا نہیں جا سکتا';
+$lang["csv_upload_check_utf_error"] = 'CSV فائل درست UTF-8 نہیں ہے۔ لائن پر غلط کردار';
+$lang["csv_upload_condition1"] = 'یقینی بنائیں کہ CSV فائل <b>UTF-8</b> کوڈنگ کا استعمال کرتی ہے۔';
+$lang["csv_upload_check_removebom"] = 'CSV فائل میں BOM ہے جسے ہٹایا نہیں جا سکا';

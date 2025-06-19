@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='AI-verwerking voor veld \'[field]\'';
 $lang["property-gpt_source"]='GPT Bron';
 $lang["openai_gpt_language"] = 'Uitvoertaal';
 $lang["openai_gpt_language_user"] = 'De taal van de huidige gebruiker';
+$lang["openai_gpt_overwrite_data"] = 'Overschrijven van bestaande gegevens in geconfigureerde velden?';

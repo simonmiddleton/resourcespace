@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='Επεξεργασία AI για το πε
 $lang["property-gpt_source"]='Πηγή GPT';
 $lang["openai_gpt_language"] = 'Γλώσσα εξόδου';
 $lang["openai_gpt_language_user"] = 'Η γλώσσα του τρέχοντος χρήστη';
+$lang["openai_gpt_overwrite_data"] = 'Θα αντικατασταθούν τα υπάρχοντα δεδομένα στα ρυθμισμένα πεδία;';

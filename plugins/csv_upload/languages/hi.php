@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV अपलोड';
 $lang["csv_upload_intro"] = 'यह प्लगइन आपको CSV फ़ाइल अपलोड करके संसाधनों को बनाने या अपडेट करने की अनुमति देता है। CSV का प्रारूप महत्वपूर्ण है';
-$lang["csv_upload_condition1"] = 'सुनिश्चित करें कि CSV फ़ाइल को <b>UTF-8 बिना BOM</b> के साथ एन्कोड किया गया है।';
 $lang["csv_upload_condition2"] = 'CSV में एक हेडर पंक्ति होनी चाहिए';
 $lang["csv_upload_condition3"] = 'बाद में बैच रिप्लेस कार्यक्षमता का उपयोग करके संसाधन फ़ाइलें अपलोड करने में सक्षम होने के लिए, एक कॉलम \'मूल फ़ाइलनाम\' नामक होना चाहिए और प्रत्येक फ़ाइल का एक अद्वितीय फ़ाइलनाम होना चाहिए';
 $lang["csv_upload_condition4"] = 'किसी भी नए बनाए गए संसाधनों के लिए सभी अनिवार्य फ़ील्ड्स CSV में मौजूद होने चाहिए';
@@ -67,3 +66,8 @@ $lang["csv_upload_recommend_offline"] = 'यह बड़ा CSV संसाध
 $lang["csv_upload_createdfromcsvupload"] = 'CSV अपलोड प्लगइन से बनाया गया';
 $lang["plugin-csv_upload-title"] = 'CSV अपलोड';
 $lang["plugin-csv_upload-desc"] = '[उन्नत] CSV फ़ाइल का उपयोग करके मेटा डेटा अपलोड करें।';
+
+$lang["csv_upload_check_file_error"] = 'CSV फ़ाइल को खोला या पढ़ा नहीं जा सकता';
+$lang["csv_upload_check_utf_error"] = 'CSV फ़ाइल मान्य UTF-8 नहीं है। पंक्ति पर अमान्य वर्ण';
+$lang["csv_upload_condition1"] = 'सुनिश्चित करें कि CSV फ़ाइल <b>UTF-8</b> का उपयोग करके एन्कोड की गई है।';
+$lang["csv_upload_check_removebom"] = 'CSV फ़ाइल में BOM है जिसे हटाया नहीं जा सका';

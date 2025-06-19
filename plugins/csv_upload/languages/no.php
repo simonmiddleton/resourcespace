@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV-opplasting';
 $lang["csv_upload_intro"] = 'Dette tillegget lar deg opprette eller oppdatere ressurser ved å laste opp en CSV-fil. Formatet på CSV-filen er viktig';
-$lang["csv_upload_condition1"] = 'Sørg for at CSV-filen er kodet med <b>UTF-8 uten BOM</b>.';
 $lang["csv_upload_condition2"] = 'CSV-filen må ha en overskriftsrad';
 $lang["csv_upload_condition3"] = 'For å kunne laste opp ressursfiler senere ved hjelp av funksjonaliteten for masseerstattning, bør det være en kolonne som heter \'Opprinnelig filnavn\', og hver fil bør ha et unikt filnavn.';
 $lang["csv_upload_condition4"] = 'Alle obligatoriske felt for nyopprettede ressurser må være til stede i CSV-filen';
@@ -67,3 +66,8 @@ $lang["csv_upload_recommend_offline"] = 'Denne store CSV-filen kan ta veldig lan
 $lang["csv_upload_createdfromcsvupload"] = 'Opprettet fra CSV-opplastingsprogramtillegget';
 $lang["plugin-csv_upload-title"] = 'CSV-opplasting';
 $lang["plugin-csv_upload-desc"] = 'Last opp metadata ved hjelp av en CSV-fil.';
+
+$lang["csv_upload_check_file_error"] = 'CSV-filen kan ikke åpnes eller leses';
+$lang["csv_upload_check_utf_error"] = 'CSV-filen er ikke gyldig UTF-8. Ugyldig tegn på linje';
+$lang["csv_upload_condition1"] = 'Sørg for at CSV-filen er kodet med <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV-filen har BOM som ikke kunne fjernes';

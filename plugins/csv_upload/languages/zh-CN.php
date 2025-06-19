@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV上传';
 $lang["csv_upload_intro"] = '该插件允许您通过上传CSV文件来创建或更新资源。CSV的格式非常重要。';
-$lang["csv_upload_condition1"] = '请确保 CSV 文件使用 <b>UTF-8 无 BOM</b> 编码。';
 $lang["csv_upload_condition2"] = 'CSV 必须有一个标题行。';
 $lang["csv_upload_condition3"] = '为了能够使用批量替换功能后上传资源文件，每个文件都应该有一个唯一的文件名，并且应该有一个名为“原始文件名”的列';
 $lang["csv_upload_condition4"] = '任何新创建的资源的所有必填字段都必须在CSV中存在';
@@ -67,3 +66,8 @@ $lang["csv_upload_recommend_offline"] = '这个大型 CSV 文件可能需要很�
 $lang["csv_upload_createdfromcsvupload"] = '从CSV上传插件创建';
 $lang["plugin-csv_upload-title"] = 'CSV上传';
 $lang["plugin-csv_upload-desc"] = '[高级] 使用CSV文件上传元数据';
+
+$lang["csv_upload_check_file_error"] = '无法打开或读取CSV文件';
+$lang["csv_upload_check_utf_error"] = 'CSV文件不是有效的UTF-8。行上有无效字符';
+$lang["csv_upload_condition1"] = '确保CSV文件使用<b>UTF-8</b>编码。';
+$lang["csv_upload_check_removebom"] = 'CSV 文件包含无法删除的 BOM';

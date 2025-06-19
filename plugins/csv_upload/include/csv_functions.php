@@ -879,13 +879,15 @@ function get_csv_line_matching_resources(int $field, string $csv_value): array
 }
 
 /**
- * Checks if a passed csv file is valid for being processed - no BOM and UTF-8 only.
+ * Checks if a passed csv file is valid for being processed, needs to be UTF-8 and if
+ * a BOM is present it will be stripped out before processing.
  *
  * @param   string  $filename    Path to csv file
  *
  * @return  array   Return an array with whether the file passed the check and a message
  */
-function csv_check_utf8(string $filename): array {
+function csv_check_utf8(string $filename): array
+{
 
     global $lang;
     
@@ -903,11 +905,21 @@ function csv_check_utf8(string $filename): array {
     // Check for BOM (first three bytes)
     $firstBytes = fread($handle, 3);
     if ($firstBytes === "\xEF\xBB\xBF") {
-        fclose($handle);
-        return ['success' => false, 'message' => $lang["csv_upload_check_invalidbom"]];
+        // Close file handle before attempting to strip BOM bytes
+        fclose($handle);        
+        $strip_bom = csv_strip_bom($filename);
+        if(!$strip_bom) {            
+            return ['success' => false, 'message' => $lang["csv_upload_check_removebom"]];
+        } else {
+            // Reopen file
+            $handle = fopen($filename, 'rb');
+            if (!$handle) {
+                return ['success' => false, 'message' => $lang["csv_upload_check_file_error"]];
+            }
+        }
     }
 
-    // Rewind back to the beginning if no BOM
+    // Rewind back to beginning if needed
     rewind($handle);
 
     $line_count = 1;
@@ -924,4 +936,47 @@ function csv_check_utf8(string $filename): array {
 
     return ['success' => true, 'message' => ''];
 
+}
+
+/**
+ * Attempt to strip out BOM from passed csv file if present. Replaces the original file.
+ *
+ * @param   string  $filename    Path to csv file
+ *
+ * @return  bool   Return whether BOM was able to be stripped or not
+ */
+function csv_strip_bom(string $filename): bool
+{
+    
+    $temp_file = $filename . '.tmp';
+
+    $in_handle = fopen($filename, 'r');
+    $out_handle = fopen($temp_file, 'w');
+
+    if (!$in_handle || !$out_handle) {
+        return false;
+    }
+
+    // Read and clean the first line
+    $firstline = fgets($in_handle);
+    if (substr($firstline, 0, 3) === "\xEF\xBB\xBF") {
+        $firstline = substr($firstline, 3); // Strip BOM
+    }
+    fwrite($out_handle, $firstline);
+
+    // Write the rest of the file
+    while (($line = fgets($in_handle)) !== false) {
+        fwrite($out_handle, $line);
+    }
+
+    fclose($in_handle);
+    fclose($out_handle);
+
+    // Replace the original file with the cleaned version
+    if (!rename($temp_file, $filename)) {
+        unlink($temp_file); // cleanup tmp file if rename fails
+        return false;
+    }
+
+    return true;
 }
