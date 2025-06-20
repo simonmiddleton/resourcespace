@@ -18,3 +18,5 @@ $clip_keyword_count = 5;
 $clip_resource_types=array(1,3); // Default resource types to index
 
 $clip_cron_generate_batch=10000; // Vectors to generate each batch run.
+
+$clip_enable_full_duplicate_search = false; // EXPERIMENTAL: Enable "all duplicate images" on AI Smart Search page

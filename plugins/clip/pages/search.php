@@ -126,7 +126,7 @@ include __DIR__ . "/../../../include/header.php";
     </script>
 
     <?php
-    if (checkperm("a")) {
+    if (checkperm("a") && $clip_enable_full_duplicate_search) {
         $duplicate_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!clipduplicates"));
         ?>
         <div class="BasicsBoxCard">
