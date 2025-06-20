@@ -1305,7 +1305,11 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
     # Flag database so a thumbnail appears on the site
     if ($alternative == -1) {
         // Not for alternatives
-        $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+        if (!isset($has_image)) {
+            # preview_preprocessing.php may provide a value e.g. 0 for file type where no image is expected but preview creation successful.
+            # For example, a .wma file is expected to produce an .mp3 preview and this has no image.
+            $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+        }
         ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
     }
 
@@ -3222,6 +3226,7 @@ function start_previews(int $ref, string $extension = ""): int
         return 2;
     }
     // No offline preview creation - create the full set of previews immediately
+    ps_query("UPDATE `resource` SET has_image = 0, preview_attempts = 0 WHERE ref = ?;", ['i', $ref]);
     $success = create_previews($ref, false, $resource_data["file_extension"], false, false, -1, false, $ingested);
     return $success ? 1 : 0;
 }
