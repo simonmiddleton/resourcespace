@@ -127,11 +127,15 @@ function HookFacesViewCustompanels()
                         } else { 
                         // Render dynamic keywords field
                         $field=get_resource_type_field($faces_tag_field);
+                        if (!$field || $field['type'] != FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                            echo escape($lang["faces-tag-field-not-set"]);
+                        } else {
                         $field['node_options'] = get_nodes($field['ref'], null, false);
                         $name="face_" . $face["ref"];
                         $selected_nodes=array($face["node"]);
                         $multiple=false;
                         include dirname(__FILE__, 4) . '/pages/edit_fields/9.php';
+                        }
                     } ?>
                     </td>
                     <td>
