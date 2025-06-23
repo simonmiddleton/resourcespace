@@ -209,19 +209,19 @@ $links_trail = array(
                         class="resource_type_field_row <?php echo ($fields[$n]["active"] == 0) ? "FieldDisabled" : ''; ?>"
                         id="field_sort_<?php echo $fields[$n]["ref"];?>">
                         <td>
-                            <?php echo str_highlight($fields[$n]["ref"], escape($find), STR_HIGHLIGHT_SIMPLE); ?>
+                            <?php echo escape($fields[$n]["ref"]); ?>
                         </td>   
                         <td>
                             <div class="ListTitle">
                                 <a
                                     href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php", $url_params, array("ref" => $fields[$n]["ref"],"backurl" => $url)); ?>"
                                     onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);">
-                                    <span><?php echo str_highlight(i18n_get_translated($fields[$n]["title"]), escape($find), STR_HIGHLIGHT_SIMPLE); ?></span>
+                                    <span><?php echo escape(i18n_get_translated($fields[$n]["title"])); ?></span>
                                 </a>
                             </div>
                         </td>
                         <td>
-                            <?php echo str_highlight($fields[$n]["name"], escape($find), STR_HIGHLIGHT_SIMPLE); ?>
+                            <?php echo escape($fields[$n]["name"]); ?>
                         </td>
                         <td>
                             <?php
@@ -245,7 +245,7 @@ $links_trail = array(
 
                         <?php if (!hook('replacetabnamecolumn')) { ?>
                             <td>
-                                <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', escape($find), STR_HIGHLIGHT_SIMPLE); ?>
+                                <?php echo escape($system_tabs[(int) $fields[$n]['tab']] ?? ''); ?>
                             </td>
                         <?php } ?>
 

@@ -2221,7 +2221,7 @@ function error_alert($error, $back = true, $code = 403)
 }
 
 /**
- * When displaying metadata, applies trim/wordwrap/highlights.
+ * When displaying metadata, applies trim/wordwrap.
  *
  * @param  string $value
  * @return string
@@ -2240,8 +2240,6 @@ function format_display_field($value)
     } else {
         $string = escape($string);
     }
-
-    $string = highlightkeywords($string, $search, $df[$x]['partial_index'], $df[$x]['name'], $df[$x]['indexed']);
 
     return $string;
 }

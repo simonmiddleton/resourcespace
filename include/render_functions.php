@@ -4448,9 +4448,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             {
             debug('Include display_template');
             $value_for_url=$value;
-            # Highlight keywords
-            $value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
-            
+           
             $value_mod_after_highlight=hook('value_mod_after_highlight', '', array($field,$value));
             if($value_mod_after_highlight)
                 {
@@ -4496,9 +4494,6 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 {
                 debug('Draw this field normally...');
                 # Draw this field normally. - value has already been sanitized by htmlspecialchars
-                # Highlight keywords
-                $value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
-                
                 $value_mod_after_highlight=hook('value_mod_after_highlight', '', array($field,$value));
                 if($value_mod_after_highlight)
                     {

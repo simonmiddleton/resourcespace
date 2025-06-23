@@ -9,7 +9,7 @@ function HookTms_linkViewRenderfield($field)
 
     if (tms_link_is_rs_uid_field($field["ref"]) && $field["value"] != "") {
         $tmsid = $field["value"];
-        $value = highlightkeywords(escape($tmsid), escape($search), $field["partial_index"], $field["name"], $field["keywords_index"]);
+        $value = escape($tmsid);
         $title = escape($field["title"]);
         $a_href = generateURL(
             "{$baseurl}/plugins/tms_link/pages/tms_details.php",

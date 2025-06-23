@@ -663,12 +663,12 @@ include "../include/header.php";
                                         href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>"
                                         onclick="return CentralSpaceLoad(this);"
                                     >
-                                        <?php echo strip_tags_and_attributes(highlightkeywords(htmlspecialchars_decode(i18n_get_collection_name($collections[$n])), $find)); ?>
+                                        <?php echo strip_tags_and_attributes(htmlspecialchars_decode(i18n_get_collection_name($collections[$n]))); ?>
                                     </a>
                                 </div>
                             </td>
-                            <td class="fullname"><?php echo strip_tags_and_attributes(highlightkeywords($colusername, $find)); ?></td>
-                            <td class="ref"><?php echo strip_tags_and_attributes(highlightkeywords($collections[$n]["ref"], $find)); ?></td>
+                            <td class="fullname"><?php echo strip_tags_and_attributes($colusername); ?></td>
+                            <td class="ref"><?php echo strip_tags_and_attributes($collections[$n]["ref"]); ?></td>
                             <td class="created"><?php echo nicedate($collections[$n]["created"], true); ?></td>
                             <td class="count"><?php echo $collections[$n]["count"]; ?></td>
                             <td class="access">

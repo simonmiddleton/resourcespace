@@ -225,8 +225,8 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                 $view_search_url = search_notification_make_url($ws);
                 ?><tr>
                     <td><?php echo nicedate(escape($ws["created"]), true, true, true); ?></td>
-                    <td><?php echo highlightkeywords(escape($ws["username"]),$find); ?></td>
-                    <td><a href="<?php echo $view_search_url; ?>"><?php echo highlightkeywords(escape($ws["title"]),$find); ?></a></td>
+                    <td><?php echo escape($ws["username"]); ?></td>
+                    <td><a href="<?php echo $view_search_url; ?>"><?php echo escape($ws["title"]); ?></a></td>
                     <td><a href="<?php echo $view_search_url; ?>"><?php echo escape($ws["checksum_matches"]); ?></a></td>
                     <td><?php
                         if ($ws["enabled"])

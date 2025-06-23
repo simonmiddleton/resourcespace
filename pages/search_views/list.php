@@ -110,7 +110,7 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
                             >
                         <?php } 
                         
-                        echo highlightkeywords(escape(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim)), $search, $df[$x]['partial_index'], $df[$x]['name'], $df[$x]['indexed']);
+                        echo escape(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim));
                         
                         if ($x == 0) { ?>
                             </a>

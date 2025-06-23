@@ -89,7 +89,7 @@ include "../../include/header.php";
                                 <td>
                                     <div class="ListTitle">
                                         <a href="<?php echo generateURL($filter_edit_url, $params, array("filter" => $filters[$n]["ref"])); ?>" onclick="return CentralSpaceLoad(this);">
-                                            <?php echo str_highlight(i18n_get_translated($filters[$n]["name"]), $filterfind, STR_HIGHLIGHT_SIMPLE); ?>
+                                            <?php echo escape(i18n_get_translated($filters[$n]["name"])); ?>
                                         </a>
                                     </div>
                                 </td>

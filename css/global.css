@@ -1711,8 +1711,6 @@ form.FormFilter button.ClearButton {
 /* Subtext */
 .sub {font-size:0.8em;}
 
-.Highlight {background:#FFFF00;}
-
 /* Pagers (Search, Collections, Shares etc.) */
 .TeamExternalSharesPager {
     width: 240px;

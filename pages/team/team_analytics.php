@@ -86,7 +86,7 @@ include __DIR__ . "/../../include/header.php";
                     <td>
                         <div class="ListTitle">
                             <a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">
-                                <?php echo highlightkeywords($reports[$n]["name"], $findtext, true);?>
+                                <?php echo escape($reports[$n]["name"]);?>
                             </a>
                         </div>
                     </td>

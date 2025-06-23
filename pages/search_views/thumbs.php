@@ -244,7 +244,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
                     >
                     <?php
                 } //end link
-                echo highlightkeywords(escape(tidy_trim(TidyList(i18n_get_translated($value)), $resolved_title_trim)), $search, $df[$x]['partial_index'], $df[$x]['name'], $df[$x]['indexed']);
+                echo escape(tidy_trim(TidyList(i18n_get_translated($value)), $resolved_title_trim));
                 if ($x == 0) { // add link if necessary ?>
                     </a>
                     <?php

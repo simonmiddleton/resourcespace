@@ -182,19 +182,19 @@ function addColumnHeader($orderName, $labelKey)
                 <tr>
                     <td>
                         <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo str_highlight($groups[$n]["ref"], $find, STR_HIGHLIGHT_SIMPLE); ?>
+                            <?php echo escape($groups[$n]["ref"]); ?>
                         </a>
                     </td>
 
                     <td>
                         <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo strip_tags_and_attributes(str_highlight($groups[$n]["name"], $find, STR_HIGHLIGHT_SIMPLE)); ?>
+                            <?php echo escape($groups[$n]["name"]); ?>
                         </a>
                     </td>
                 
                     <td>                    
                         <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo $groups[$n]["users"]; ?>
+                            <?php echo escape($groups[$n]["users"]); ?>
                         </a>
                     </td>
 
@@ -207,7 +207,7 @@ function addColumnHeader($orderName, $labelKey)
                             <a
                                 href="<?php echo $baseurl_short; ?>pages/admin/admin_group_management.php?filterbyparent=<?php echo $groups[$n]["pref"]; ?>"
                                 onClick="return CentralSpaceLoad(this,false);">
-                                <?php echo strip_tags_and_attributes(str_highlight($groups[$n]["pname"], $find, STR_HIGHLIGHT_SIMPLE)); ?>
+                                <?php echo escape($groups[$n]["pname"]); ?>
                             </a>
                         <?php } ?>
                     </td>

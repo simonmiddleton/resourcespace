@@ -163,9 +163,9 @@ foreach($results as $result)
         "field{$view_title_field}" => $title,
     );
 
-    $title_link_text  = function() use ($title, $search_results_title_trim, $search)
+    $title_link_text  = function() use ($title, $search_results_title_trim)
         {
-        echo highlightkeywords(tidy_trim(tidylist(strip_tags_and_attributes($title)), $search_results_title_trim), $search);
+        echo tidy_trim(tidylist(strip_tags_and_attributes($title)), $search_results_title_trim);
         };
     ?>
     <div class="ResourcePanel ImageBanksResourcePanel">

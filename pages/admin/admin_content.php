@@ -93,7 +93,7 @@ include "../../include/header.php";
                     <td>
                         <div class="ListTitle">
                             <a href="<?php echo $url ?>">
-                                <?php echo highlightkeywords(($text[$n]["page"] == "" || $text[$n]["page"] == "all" ? $lang["all"] : $text[$n]["page"]), escape($findpage), true);?>
+                                <?php echo escape($text[$n]["page"] == "" || $text[$n]["page"] == "all" ? $lang["all"] : $text[$n]["page"]);?>
                             </a>
                         </div>
                     </td>
@@ -101,7 +101,7 @@ include "../../include/header.php";
                     <td>
                         <div class="ListTitle">
                             <a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);">
-                                <?php echo highlightkeywords($text[$n]["name"], escape($findname), true)?>
+                                <?php echo escape($text[$n]["name"])?>
                             </a>
                         </div>
                     </td>
@@ -128,7 +128,7 @@ include "../../include/header.php";
                     
                     <td>
                         <a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo highlightkeywords(tidy_trim(escape($text[$n]["text"]), 100), escape($findtext), true, '', 1, STR_HIGHLIGHT_SIMPLE & STR_HIGHLIGHT_STRIPLINKS); ?>
+                            <?php echo escape(tidy_trim($text[$n]["text"], 100)); ?>
                         </a>
                     </td>
                     
