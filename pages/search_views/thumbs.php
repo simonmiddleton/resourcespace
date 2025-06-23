@@ -61,16 +61,17 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
     style="height: <?php echo (int)$thumbs_displayed_fields_height; ?>px;">
     <div class="ResourcePanelTop">
         <?php
-        if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
-            <div class="thumbs-file-extension">
-                <?php echo strtoupper(escape($result[$n]['file_extension'])) ?>
-            </div>
-            <?php
-        }
+
 
         foreach ($types as $type) {
             if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
-                echo '<div class="ResourceTypeIcon fa-fw ' . escape($type["icon"]) . '" title="' . escape($type["name"]) . '"></div>';
+                echo '<div class="ResourceTypeIcon ThumbIcon" title="' . escape($type["name"]) . '"><i class="fa-fw ' . escape($type["icon"]) . '"></i>';
+                        if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
+                <?php echo strtoupper(escape($result[$n]['file_extension'])) ?>
+            <?php
+        }
+                
+                echo '</div>';
             }
         }
         ?>

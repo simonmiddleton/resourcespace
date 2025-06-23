@@ -7,7 +7,7 @@
  */
 
 /* Default text and background colour */
-body,html {color:#474747;background: #efefef;}
+body,html {color:#474747;background: #ececec;}
 
 h1, h2 {color: #000000;}
 a:link {color:#666666;}
@@ -66,10 +66,9 @@ input[readonly] {
 }
 .ResourcePanel {
     background-color: white;
-    border-radius: 6px;
+    border-radius: 10px;
     transition: all 0.1s ease-in-out;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border: 3px solid rgba(255, 255, 255, 0);
 }
 .ResourcePanel:hover {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
@@ -81,10 +80,12 @@ input[readonly] {
 .ResourcePanelInfo a {
     color: #414141;
 }
-.ResourcePanel.Selected { border: 3px solid #2E99E6; }
+.ResourcePanel.Selected { outline: 3px solid #2E99E6; }
 tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of #2e99e6 which is used for .ResourcePanel.Selected */ }
 
 .ResourcePanelIcons a.fa-minus-circle { color: #e91d1d }
+
+.ImageWrapper {background-color: #f6f6f6;}
 
 #SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2, .SearchSpace h2{color: #fff;}
 
@@ -415,6 +416,9 @@ input:checked + .customFieldLabel, .keywordselected {
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.35);border-radius: 6px;}
 ::-webkit-scrollbar-thumb:active{background:rgba(0,0,0,0.4);border-radius: 6px;}
 
+.ResourceTypeIcon.ThumbIcon{
+    background: #ffffff; 
+}
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2
     {
