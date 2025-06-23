@@ -1482,6 +1482,18 @@ div.MessageBox a {
     background: none;  
 }
 
+.FeaturedImageTile
+{
+    width:77px;
+    height:56px;
+    background-size: cover;
+    margin: 0;
+    float: left;
+    margin: 3px;
+    border-radius: 8px;
+
+}
+
 .FeaturedSimpleLinks .FeaturedSimpleTileContents {
     width:100%;
     height:100%;

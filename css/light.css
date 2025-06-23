@@ -349,8 +349,8 @@ div.MessageBox a {
 #CollectionDiv .ActionsContainer .chosen-single:hover {color:#999;}
 
 .FeaturedSimpleTile {
-    background: rgba(30, 30, 30, 0.70);
-    color:#FFF;
+    background: white;
+    color:#eee;
 }
 
 /* Highlight selected keywords */
@@ -418,13 +418,14 @@ input:checked + .customFieldLabel, .keywordselected {
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2
     {
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.6);
     padding-bottom: 5px;
     text-shadow: 0px 1px 5px #000000;
     }
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents .FeaturedSimpleTileText h2 {
     background-color: unset;
+    color: #666;
 }
 
 .SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited, .MessageBox { color: #474747; }

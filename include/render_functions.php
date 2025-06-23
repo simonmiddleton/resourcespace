@@ -5137,24 +5137,15 @@ function render_featured_collection(array $ctx, array $fc)
          style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?> >
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
             <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+            <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
             <?php
             foreach($theme_images as $i => $theme_image)
                 {
-                $gap = 200 / count($theme_images);
-                $space = $i * $gap;
-                $style = array(
-                    "left: {$space}px;",
-                    "transform: rotate(" . (20 - ($i * 12)) . "deg);"
-                );
                 ?>
-                <img src="<?php echo $theme_image['path']; ?>" 
-                     alt="<?php echo escape($theme_image['alt_text'] ?? ""); ?>" 
-                     class="TileGroupImageBase" 
-                     style="<?php echo implode(" ", $style); ?>" >
+                <div class="FeaturedImageTile" style="background-image: url('<?php echo $theme_image['path']; ?>')"></div>
                 <?php
                 }
                 ?>
-                <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
             </div>
         </a>
     <?php

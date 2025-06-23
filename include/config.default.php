@@ -1627,9 +1627,6 @@ $featured_collection_static_bg = false;
 // IMPORTANT: access control must still be enforced through permissions. DO NOT rely on this configuration to hide featured collections from users!
 $featured_collections_root_collection = 0;
 
-// Enable to have a background image when $themes_simple_view is enabled
-$themes_show_background_image = false;
-
 // Ask the user the intended usage when downloading
 $download_usage = false;
 // include email address field in download usage form

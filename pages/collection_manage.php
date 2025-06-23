@@ -50,7 +50,7 @@ if ('' != $name && can_create_collections() && enforcePostRequest(false)) {
             "featured_collections_changes" => array(
                 "update_parent" => $parent,
                 "force_featured_collection_type" => true,
-                "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+                "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"],
             ),
         );
         $redirect_params = ($parent == 0 ? array() : array("parent" => $parent));
