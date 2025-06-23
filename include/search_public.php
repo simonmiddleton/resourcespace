@@ -56,7 +56,7 @@ if ((substr($search, 0, 11) != "!collection") && ($collections != "") && is_arra
                             <a onClick="return CentralSpaceLoad(this, true);"
                                 href="<?php echo $pub_url?>"
                                 title="<?php echo escape(str_replace(array("\"", "'"), "", i18n_get_collection_name($collections[$n]))) ?>">
-                                <?php echo escape(tidy_trim(i18n_get_collection_name($collections[$n]), 32), $search)?>
+                                <?php echo escape(tidy_trim(i18n_get_collection_name($collections[$n]), 32)) ?>
                             </a>
                         <?php } ?>
                         &nbsp;
