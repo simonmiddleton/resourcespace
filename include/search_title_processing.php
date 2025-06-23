@@ -212,15 +212,7 @@ if ($search_titles) {
         $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $baseurl_short . 'pages/search.php?search=" onClick="return CentralSpaceLoad(this,true);">' . escape($searchtitle) . '</a></div></div> ';
     } elseif (substr($search, 0, 1) == "!") {
         // Special searches
-        if (substr($search, 0, 5) == "!last") {
-            $searchq = substr($search, 5);
-            $searchq = explode(",", $searchq);
-            $searchq = $searchq[0];
-            if (!is_numeric($searchq)) {
-                $searchq = 1000;
-            }  # 'Last' must be a number. SQL injection filter.
-            $title_string = str_replace('%qty', $searchq, $lang["n_recent"]);
-        } elseif (substr($search, 0, 8) == "!related") {
+        if (substr($search, 0, 8) == "!related") {
             $resource = substr($search, 8);
             $resource = explode(",", $resource);
             $resource = $resource[0];
