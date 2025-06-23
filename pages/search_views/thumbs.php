@@ -5,7 +5,6 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
 # Establish various metrics for use in thumbnail rendering
 $resolved_title_trim = 0;
 $field_height = 24;
-$resource_id_height = 21;
 $workflow_state_height = 31;
 
 if ($display == "xlthumbs") {
@@ -38,10 +37,6 @@ if (isset($search_result_title_height)) {
 
 hook('thumbs_resourceshell_height');
 
-if ($display_resource_id_in_thumbnail) {
-    $thumbs_displayed_fields_height += $resource_id_height;
-    $br = '<br />';
-}
 if ($thumbs_display_archive_state) {
     $thumbs_displayed_fields_height += $workflow_state_height;
 }
@@ -282,7 +277,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
         }
 
         if ($display_resource_id_in_thumbnail && $ref > 0) {
-            echo "<label for='check" . escape($ref) . "'" . "class='ResourcePanelResourceID'>" . escape($ref) . "</label>$br";
+            echo "<label for='check" . escape($ref) . "'" . "class='ResourcePanelResourceID'>" . escape($ref) . "</label>";
         }
 
         include "resource_tools.php";

@@ -416,10 +416,6 @@ input:checked + .customFieldLabel, .keywordselected {
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.35);border-radius: 6px;}
 ::-webkit-scrollbar-thumb:active{background:rgba(0,0,0,0.4);border-radius: 6px;}
 
-.ResourceTypeIcon.ThumbIcon{
-    background: #ffffff; 
-}
-
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2
     {
     background-color: rgba(0,0,0,0.4);
