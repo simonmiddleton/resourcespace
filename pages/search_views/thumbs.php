@@ -59,23 +59,6 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
     class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo $display == 'xlthumbs' ? 'ResourcePanelLarge' : ''; ?> ArchiveState<?php echo $result[$n]['archive'];?> ResourceType<?php echo $result[$n]['resource_type']; ?>"
     id="ResourceShell<?php echo escape($ref)?>"
     style="height: <?php echo (int)$thumbs_displayed_fields_height; ?>px;">
-    <div class="ResourcePanelTop">
-        <?php
-
-
-        foreach ($types as $type) {
-            if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
-                echo '<div class="ResourceTypeIcon ThumbIcon" title="' . escape($type["name"]) . '"><i class="fa-fw ' . escape($type["icon"]) . '"></i>';
-                        if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
-                <?php echo strtoupper(escape($result[$n]['file_extension'])) ?>
-            <?php
-        }
-                
-                echo '</div>';
-            }
-        }
-        ?>
-    </div>
 
     <?php hook("resourcethumbtop"); ?>
 
@@ -262,6 +245,18 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
     <!-- Checkboxes -->
     <div class="ResourcePanelIcons">
         <?php
+        echo '<div class="ResourceTypeIcon ThumbIcon">';
+        foreach ($types as $type) {
+            if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
+                echo '<i title="' . escape($type["name"]) . '" class="fa-fw ' . escape($type["icon"]) . '"></i>';
+                }
+            }
+        if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
+            <?php echo strtoupper(escape($result[$n]['file_extension'])) ?>
+            <?php
+        }
+        echo '</div>';
+        
         if ($use_selection_collection) {
             if (!in_array($result[$n]['resource_type'], $collection_block_restypes)) { ?>
                 <input 
