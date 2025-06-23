@@ -1,6 +1,7 @@
 <?php
 
 command_line_only();
+$disable_browser_check = true;
 
 // --- Set up
 $cache_hide_real_file_path = $hide_real_filepath;
@@ -25,7 +26,9 @@ $generate_dld_endpoint_content = static fn (string $file): string => <<<EOT
 <?php
 ob_start();
 \$nocache = true;
+\$disable_browser_check = true;
 include dirname(__DIR__, 4) . '/include/boot.php';
+
 ob_end_clean();
 
 \$filename = basename('$file');
@@ -100,7 +103,7 @@ $use_cases = [
                 get_temp_dir(false, $test_id_str) . "/{$test_id_str}_download_endpoint.php",
                 $generate_dld_endpoint_content($img['path'])
             );
-            if (!$dld_endpoint) {
+            if (!$dld_endpoint) {echo "HERE";
                 return false;
             }
 
