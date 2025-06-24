@@ -3664,9 +3664,11 @@ function delete_usergroup(int $usergroup_ref): bool
  */
 function browser_check()
 {
-    global $browser_check_key, $applicationname, $disable_browser_check, $baseurl_short, $browser_check_message;
-    
-    // Exceptions
+    global $browser_check_key, $applicationname, $disable_browser_check, $browser_check_message;
+    $webRoot = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__); // Calculate web root. This runs early so $baseurl can't be used.
+    $ajax=getval("ajax","")=="true"; // AJAX request?
+
+     // Exceptions
     if (PHP_SAPI == 'cli') {return;}
     if (isset($disable_browser_check) && $disable_browser_check) {return;} // e.g. API/IIIF
 
@@ -3678,15 +3680,10 @@ function browser_check()
     if (getval("browser_check_cookie","")==$answer_key) {return;} // We're good
 
     // Output the JS to calculate the answer and set the cookie
+    
+    if (!$ajax) { 
     ?>
     <html><head><title><?php echo escape($applicationname) ?></title>
-    <script>
-    function x9Zq(str){var a=[90,51,127],b='',c=0;for(var d=0;d<str.length;d++)b+=String.fromCharCode(str.charCodeAt(d)^a[c++%3]);return btoa(b);}
-    document.cookie = "browser_check_cookie=" + x9Zq(<?php echo json_encode($question_key) ?>) + "; path=/; max-age=172800";
-    setTimeout(function() {
-    window.location.reload(true);
-    }, 2000);
-    </script>
     <style>
         body {
             margin: 0;
@@ -3706,12 +3703,22 @@ function browser_check()
     </head>
     <body>
         <div>
-        <div class="logo"><img src="<?php echo $baseurl_short ?>gfx/titles/title-black.svg" /></div> 
+        <div class="logo"><img src="<?php echo $webRoot ?>/../gfx/titles/title-black.svg" /></div> 
+    <?php } ?>
+            <script>
+            function x9Zq(str){var a=[90,51,127],b='',c=0;for(var d=0;d<str.length;d++)b+=String.fromCharCode(str.charCodeAt(d)^a[c++%3]);return btoa(b);}
+            document.cookie = "browser_check_cookie=" + x9Zq(<?php echo json_encode($question_key) ?>) + "; path=/; max-age=172800";
+            setTimeout(function() {
+            window.location.reload(true);
+            }, 1000);
+            </script>
             <h1><?php echo escape($browser_check_message) ?></h1><?php /* Note - can't be translated - language files not loaded, this is intentionally very early in the process */ ?>
+    <?php if (!$ajax) {  ?>
         </div>
     </body>
     </html>
     <?php
+    }
     exit();    
 }
 
