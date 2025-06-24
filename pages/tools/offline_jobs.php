@@ -95,9 +95,22 @@ if ($offline_job_queue) {
             $jobcount--;
         }
     }
-    if ($jobcount >= $max_jobs) {
-        exit("There are currently " . $jobcount . " jobs in progress. Exiting\n");
+
+    # Extra check for current running instances
+    $instances = 0;
+    foreach (glob(get_temp_dir() . '/process_locks/offlinejobs_*') as $lock_file) {
+        $lock_file_name = substr($lock_file, strrpos($lock_file, '/') +1);
+        if (is_process_lock($lock_file_name)) {
+            $instances ++;
+        }
     }
+
+    if ($jobcount >= $max_jobs || $instances >= $max_jobs) {
+        exit("There are currently " . $max_jobs . " jobs in progress. Exiting\n");
+    }
+
+    $lock_name = 'offlinejobs_' . time();
+    set_process_lock($lock_name);
 
     while (!isset($offlinejobs) || count($offlinejobs) > 0) {
         // Get jobs in small batches so that new higher priority jobs won't have to wait if there is a backlog
@@ -117,9 +130,14 @@ if ($offline_job_queue) {
         if ($offlinejob["start_date"] > date('Y-m-d H:i:s', time())) {
             continue;
         }
-        job_queue_run_job($offlinejob, $clear_job_process_lock);
+        if (job_queue_run_job($offlinejob, $clear_job_process_lock) == 'Process lock') {
+            # Process lock when running job. Give some extra time to finish before checking again.
+            sleep(2);
+        }
     }
     echo $lang["complete"] . ' ' . date('Y-m-d H:i:s') . PHP_EOL;
 } else {
     echo $lang["offline_processing_disabled"] . PHP_EOL;
 }
+
+clear_process_lock($lock_name);

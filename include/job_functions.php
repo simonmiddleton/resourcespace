@@ -260,7 +260,7 @@ function job_queue_purge($status = 0)
 * @param  array    $job                 Metadata of the queued job as returned by job_queue_get_jobs()
 * @param  boolean  $clear_process_lock  Clear process lock for this job
 *
-* @return void
+* @return void|string   String 'Process lock' returned to indicate that a process lock was encountered.
 */
 function job_queue_run_job($job, $clear_process_lock)
 {
@@ -298,7 +298,7 @@ function job_queue_run_job($job, $clear_process_lock)
         $logmessage =  " - Process lock for job #{$jobref}" . PHP_EOL;
         echo $logmessage;
         debug($logmessage);
-        return;
+        return 'Process lock';
     } elseif ($clear_process_lock) {
         $logmessage =  " - Clearing process lock for job #{$jobref}" . PHP_EOL;
         echo $logmessage;
