@@ -14,7 +14,7 @@ function HookClipAllAftersearchbox()
 
 function HookClipAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
 {
-    global $clip_search_cutoff, $clip_similar_cutoff, $clip_duplicate_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url, $clip_query_time;
+    global $clip_search_cutoff, $clip_similar_cutoff, $clip_duplicate_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url, $clip_query_time, $clip_enable_full_duplicate_search;
     if (substr($search, 0, 11) == '!clipsearch') {
         $function = "search";
         $search = substr($search, 12);
@@ -34,7 +34,7 @@ function HookClipAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
             return false;
         }
         $min_score = $clip_similar_cutoff;
-    } elseif (substr($search, 0, 15) == '!clipduplicates') {
+    } elseif (substr($search, 0, 15) == '!clipduplicates' && $clip_enable_full_duplicate_search) {
         $function = "duplicates";
         $min_score = $clip_duplicate_cutoff;
     } elseif (substr($search, 0, 14) == '!clipduplicate') {
