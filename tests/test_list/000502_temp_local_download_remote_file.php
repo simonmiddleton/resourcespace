@@ -103,7 +103,7 @@ $use_cases = [
                 get_temp_dir(false, $test_id_str) . "/{$test_id_str}_download_endpoint.php",
                 $generate_dld_endpoint_content($img['path'])
             );
-            if (!$dld_endpoint) {echo "HERE";
+            if (!$dld_endpoint) {
                 return false;
             }
 
