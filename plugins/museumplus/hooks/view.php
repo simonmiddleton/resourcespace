@@ -91,7 +91,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
         ?>
         <div class="itemNarrow">
             <h3><?php echo escape($field['title']); ?></h3>
-            <p><?php echo $value; ?></p>
+            <p><?php echo escape($value); ?></p>
             <?php
             if(isset($mplus_module_url) && $mplus_module_url !== '')
                 {
