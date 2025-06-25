@@ -254,7 +254,6 @@ if (isset($show_error)) { ?>
                 <?php
                 # Flag to prevent duplicate rendering of the "generateinternalurl" text and associated input field
                 $generateinternalurl_rendered = false;
-                $upload_access_keys = get_external_shares(['share_collection' => $ref, 'share_type' => 1]);
                 $url_params = [
                     'ref'           => $ref,
                     'search'        => $search,
@@ -270,7 +269,7 @@ if (isset($show_error)) { ?>
                 ];
 
                 if (!$editing || $editexternalurl) {
-                    if ($email_sharing && count($upload_access_keys) == 0) {
+                    if ($email_sharing) {
                         ?>
                         <li>
                             <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;
@@ -295,7 +294,7 @@ if (isset($show_error)) { ?>
                         <?php
                     }
 
-                    if (!$internal_share_only && count($upload_access_keys) == 0) {
+                    if (!$internal_share_only) {
                         ?>
                         <li>
                             <i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;
@@ -326,112 +325,107 @@ if (isset($show_error)) { ?>
                 }
 
                 if (!$internal_share_only && ($editing || $generateurl)) {
-                    if (count($upload_access_keys) == 0) {
-                        if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl) && $collection["public"] == 1 || $ignore_collection_access) {
-                            # Only render "generateinternalurl" text and associated input field if it hasn't already been rendered
-                            if (!$generateinternalurl_rendered) {
-                                ?>
-                                <p><?php echo escape($lang["generateurlinternal"])?></p>
-                                <p>
-                                    <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
-                                    <?php $generateinternalurl_rendered = true; ?>
-                                </p>
-                                <?php
-                            }
-                        }
-
-                        if ($access == -1 || ($editing && !$editexternalurl)) {
+                    if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl) && $collection["public"] == 1 || $ignore_collection_access) {
+                        # Only render "generateinternalurl" text and associated input field if it hasn't already been rendered
+                        if (!$generateinternalurl_rendered) {
                             ?>
+                            <p><?php echo escape($lang["generateurlinternal"])?></p>
                             <p>
-                                <?php if (!$editing || $editexternalurl) {
-                                    echo strip_tags_and_attributes($lang["selectgenerateurlexternal"]);
-                                } ?>
+                                <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
+                                <?php $generateinternalurl_rendered = true; ?>
                             </p>
-
                             <?php
-                            if ($editing) {
-                                echo "<div class='Question'><label>"
-                                    . escape($lang["collectionname"])
-                                    . "</label><div class='Fixed'>"
-                                    . i18n_get_collection_name($collection)
-                                    . "</div><div class='clearerleft'></div></div>";
-                            }
+                        }
+                    }
 
-                            $shareoptions = array(
-                                "password"          => ($sharepwd != "" ? true : false),
-                                "editaccesslevel"   => $access,
-                                "editexpiration"    => $expires,
-                                "editgroup"         => $group,
-                                );
+                    if ($access == -1 || ($editing && !$editexternalurl)) {
+                        ?>
+                        <p>
+                            <?php if (!$editing || $editexternalurl) {
+                                echo strip_tags_and_attributes($lang["selectgenerateurlexternal"]);
+                            } ?>
+                        </p>
 
-                            render_share_options($shareoptions);
+                        <?php
+                        if ($editing) {
+                            echo "<div class='Question'><label>"
+                                . escape($lang["collectionname"])
+                                . "</label><div class='Fixed'>"
+                                . i18n_get_collection_name($collection)
+                                . "</div><div class='clearerleft'></div></div>";
+                        }
+
+                        $shareoptions = array(
+                            "password"          => ($sharepwd != "" ? true : false),
+                            "editaccesslevel"   => $access,
+                            "editexpiration"    => $expires,
+                            "editgroup"         => $group,
+                            );
+
+                        render_share_options($shareoptions);
+                        ?>
+                        
+                        <div class="QuestionSubmit">
+                            <?php if ($editing && !$editexternalurl) { ?>
+                                <input
+                                    name="editexternalurl"
+                                    type="submit"
+                                    onclick="<?php
+                                    if ($share_password_required) {
+                                        echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; ';
+                                    } ?>"
+                                    value="<?php echo escape($lang["save"]); ?>"
+                                />
+                            <?php } else { ?>
+                                <input
+                                    name="generateurl"
+                                    type="submit"
+                                    onclick="<?php
+                                    if ($share_password_required) {
+                                        echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; ';
+                                    } ?>"
+                                    value="<?php echo escape($lang["generateexternalurl"]); ?>"
+                                />
+                            <?php } ?>
+                        </div>
+
+                        <?php
+                    } elseif ($editaccess == "" && !($editing && $editexternalurl)) {
+                        // Access has been selected. Generate a new URL.
+                        $generated_access_key = '';
+
+                        enforceSharePassword($sharepwd);
+
+                        if (empty($allowed_external_share_groups) || (!empty($allowed_external_share_groups) && in_array($user_group, $allowed_external_share_groups))) {
+                            $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $user_group, $sharepwd);
+                        } elseif (!empty($allowed_external_share_groups) && !in_array($usergroup, $allowed_external_share_groups)) {
+                            // Not allowed to select usergroup but this usergroup can not be used, default to the first entry in allowed_external_share_groups
+                            $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $allowed_external_share_groups[0], $sharepwd);
+                        }
+
+                        if ('' != $generated_access_key) {
                             ?>
-                            
-                            <div class="QuestionSubmit">
-                                <?php if ($editing && !$editexternalurl) { ?>
-                                    <input
-                                        name="editexternalurl"
-                                        type="submit"
-                                        onclick="<?php
-                                        if ($share_password_required) {
-                                            echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; ';
-                                        } ?>"
-                                        value="<?php echo escape($lang["save"]); ?>"
-                                    />
-                                <?php } else { ?>
-                                    <input
-                                        name="generateurl"
-                                        type="submit"
-                                        onclick="<?php
-                                        if ($share_password_required) {
-                                            echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; ';
-                                        } ?>"
-                                        value="<?php echo escape($lang["generateexternalurl"]); ?>"
-                                    />
-                                <?php } ?>
-                            </div>
-
+                            <p><?php echo escape($lang['generateurlexternal']); ?></p>
+                            <p>
+                                <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>&k=<?php echo $generated_access_key; ?>">
+                            </p>
                             <?php
-                        } elseif ($editaccess == "" && !($editing && $editexternalurl)) {
-                            // Access has been selected. Generate a new URL.
-                            $generated_access_key = '';
-
-                            enforceSharePassword($sharepwd);
-
-                            if (empty($allowed_external_share_groups) || (!empty($allowed_external_share_groups) && in_array($user_group, $allowed_external_share_groups))) {
-                                $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $user_group, $sharepwd);
-                            } elseif (!empty($allowed_external_share_groups) && !in_array($usergroup, $allowed_external_share_groups)) {
-                                // Not allowed to select usergroup but this usergroup can not be used, default to the first entry in allowed_external_share_groups
-                                $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $allowed_external_share_groups[0], $sharepwd);
-                            }
-
-                            if ('' != $generated_access_key) {
-                                ?>
-                                <p><?php echo escape($lang['generateurlexternal']); ?></p>
-                                <p>
-                                    <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>&k=<?php echo $generated_access_key; ?>">
-                                </p>
-                                <?php
-                            } else {
-                                ?>
-                                <div class="PageInformal"><?php echo escape($lang['error_generating_access_key']); ?></div>
-                                <?php
-                            }
+                        } else {
+                            ?>
+                            <div class="PageInformal"><?php echo escape($lang['error_generating_access_key']); ?></div>
+                            <?php
                         }
+                    }
 
-                        # Process editing of external share
-                        if ($editexternalurl) {
-                            enforceSharePassword($sharepwd);
-                            $editsuccess = edit_collection_external_access($editaccess, $access, $expires, getval("usergroup", ""), $sharepwd);
-                            if ($editsuccess) {
-                                echo "<span style='font-weight:bold;'>"
-                                    . escape($lang['changessaved'])
-                                    . " - <em>" . escape($editaccess) . "</em>";
-                            }
+                    # Process editing of external share
+                    if ($editexternalurl) {
+                        enforceSharePassword($sharepwd);
+                        $editsuccess = edit_collection_external_access($editaccess, $access, $expires, getval("usergroup", ""), $sharepwd);
+                        if ($editsuccess) {
+                            echo "<span style='font-weight:bold;'>"
+                                . escape($lang['changessaved'])
+                                . " - <em>" . escape($editaccess) . "</em>";
                         }
-                    } elseif (count($upload_access_keys) > 0) {
-                        //User got here erroneously, shouldn't be able to create a viewing share of a collection that already has an upload share
-                        $onload_message = ['title' => $lang['error'],'text' => $lang['cannot_share-has_upload_share']];
                     }
                 }
                 ?>
