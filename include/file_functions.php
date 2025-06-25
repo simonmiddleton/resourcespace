@@ -569,6 +569,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
     // Destination processing
     $dest_path = $destination->isFile() ? $destination->getRealPath() : $destination->getPathname();
     if ($destination->isDir()) {
+        debug("Destination path '{$dest_path}' is a directory not a file");
         trigger_error('Destination path must be for a file, not a directory!');
         exit();
     } elseif (!(is_valid_rs_path($dest_path) && is_safe_basename($destination->getBasename()))) {
@@ -576,6 +577,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
         trigger_error('Destination path not allowed');
         exit();
     } elseif (array_intersect(['move_uploaded_file', 'rename', 'copy'], [$file_move_processor]) === []) {
+        debug("Invalid upload (file move) processor '" . print_r($file_move_processor, true) . "'");
         trigger_error('Invalid upload (file move) processor');
         exit();
     } elseif ($file_move_processor($source_file_path, $dest_path)) {
@@ -647,7 +649,7 @@ function delete_temp_files(): void
     // Set up array of folders to scan
     $folderstoscan = [];
     $folderstoscan[] = get_temp_dir();
-    
+
     $modified_folderstoscan = hook("add_folders_to_delete_from_temp", "", array($folderstoscan));
     if (is_array($modified_folderstoscan) && !empty($modified_folderstoscan)) {
         $folderstoscan = $modified_folderstoscan;
@@ -698,7 +700,8 @@ function delete_temp_files(): void
 
     foreach ($folderstodelete as $foldertodelete) {
         // Extra check that folder is in an expected path
-        if (strpos($foldertodelete, $GLOBALS["storagedir"]) === false
+        if (
+            strpos($foldertodelete, $GLOBALS["storagedir"]) === false
             && strpos($foldertodelete, $GLOBALS["tempdir"]) === false
             && strpos($foldertodelete, 'filestore/tmp') === false
         ) {
@@ -714,7 +717,8 @@ function delete_temp_files(): void
 
     foreach ($filestodelete as $filetodelete) {
         // Extra check that file is in an expected path
-        if (strpos($filetodelete, $GLOBALS["storagedir"]) === false
+        if (
+            strpos($filetodelete, $GLOBALS["storagedir"]) === false
             && strpos($filetodelete, $GLOBALS["tempdir"]) === false
             && strpos($filetodelete, 'filestore/tmp') === false
         ) {
@@ -733,12 +737,11 @@ function delete_temp_files(): void
 /**
  * Are the arguments set in $archiver_settings["arguments"] permitted?
  * Allows word characters, '@', and '-' only
- * 
+ *
  * @param string    Argument string
- * 
+ *
  */
 function permitted_archiver_arguments($string): bool
 {
     return preg_match('/[^\@\-\w]/', $string) === 0;
 }
-
