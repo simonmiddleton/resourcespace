@@ -201,13 +201,13 @@ function addColumnHeader($orderName, $labelKey)
                     <td>
                         <?php if ($groups[$n]["orphaned"]) { ?>
                             <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
-                                &lt;<?php echo escape($groups[$n]["pname"]) ;?>&gt;
+                                &lt;<?php echo escape((string)$groups[$n]["pname"]) ;?>&gt;
                             </a>
                         <?php } else { ?>
                             <a
                                 href="<?php echo $baseurl_short; ?>pages/admin/admin_group_management.php?filterbyparent=<?php echo $groups[$n]["pref"]; ?>"
                                 onClick="return CentralSpaceLoad(this,false);">
-                                <?php echo escape($groups[$n]["pname"]); ?>
+                                <?php echo escape((string)$groups[$n]["pname"]); ?>
                             </a>
                         <?php } ?>
                     </td>
