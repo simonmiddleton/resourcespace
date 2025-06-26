@@ -74,8 +74,7 @@ foreach ($set_system_wide_config as $name => $value) {
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Migrating the Annotate plugin records as base annotations');
 $annotations = ps_query(
     sprintf(
-        'SELECT an.ref AS `resource`, n.ref, %s, %s FROM annotate_notes AS an LEFT JOIN node AS n ON an.node = n.ref',
-        columns_in('annotate_notes', 'an', 'annotate'),
+        'SELECT an.ref AS `resource`, n.ref, an.ref, an.top_pos, an.left_pos, an.width, an.height, an.preview_width, an.preview_height, an.note, an.note_id, an.user, an.page, an.node, %s FROM annotate_notes AS an LEFT JOIN node AS n ON an.node = n.ref',
         columns_in('node', 'n')
     )
 );
