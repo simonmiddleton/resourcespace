@@ -989,7 +989,6 @@ $lang["plugin_field_fmt"] = "%A (%B)"; // %A and %B are replaced by content defi
 $lang["share"] = "Share";
 $lang["share_selected"] = "Share selected";
 $lang["sharecollection"] = "Share collection";
-$lang["cannot_share-has_upload_share"] = "Non upload shares of this collection cannot be created as an upload share currently exists for it";
 $lang["sharecollection-name"] = "Share collection - %collectionname"; # %collectionname will be replaced, e.g. Share Collection - Cars
 $lang["share_theme_category"] = "Share featured collection category";
 $lang["share_theme_category_subcategories"] = "Include featured collections in subcategories for external users?";
