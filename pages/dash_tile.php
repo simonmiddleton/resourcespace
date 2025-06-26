@@ -392,7 +392,7 @@ if ($create) {
             $freetext = false;
         }
 
-        $promoted_resource = isset($buildstring["promimg"]) ? (int) $buildstring["promimg"] : false;
+        $promoted_resource = isset($buildstring["promimg"]) ? (int) $buildstring["promimg"] : true;
 
         $tlsize = (isset($buildstring['tlsize']) && 'double' === $buildstring['tlsize'] ? $buildstring['tlsize'] : '');
 
