@@ -679,6 +679,7 @@ if (!$validpage) {
                 if (jQuery('#dash_tile_audience_user_group').prop('checked')) {
                     jQuery('#specific_user_groups').show();
                 }
+                jQuery('.tlstyle').trigger('change');
             });
 
             jQuery('input:radio[name="tile_audience"]').change(function() {
