@@ -5768,7 +5768,7 @@ function get_page_count($resource, $alternative = -1)
 function update_disk_usage($resource)
 {
     # we're also going to record the size of the primary resource here before we do the entire folder
-    $ext = ps_value("SELECT file_extension value FROM resource where ref = ? AND file_path IS NULL", array("i",$resource), 'jpg');
+    $ext = ps_value("SELECT file_extension `value` FROM `resource` WHERE ref = ?", array("i", $resource), 'jpg');
     $path = get_resource_path($resource, true, '', false, $ext);
     if (file_exists($path)) {
         $rsize = filesize_unlimited($path);
