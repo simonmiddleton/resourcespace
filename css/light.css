@@ -23,7 +23,7 @@ input[readonly] {
 
 /* Header styling */
 #Header {background: #fff;transform: translate3d(0, 0, 0);border: none;}
-#Header li a {color:#000; opacity:0.7;}
+#Header li a:not(:has(img)) {color:#000; opacity:0.7;}
 #Header .SearchResultsDisabled,
 #Header .SearchResultsDisabled:hover,
 .DisabledLink,
