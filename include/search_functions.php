@@ -1618,7 +1618,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
                         break;
                     case "fmax":
                         // Need to convert MB value to bytes
-                        $propertiessql->sql .= $sql_filter_properties_and . " r.file_size <= ?";
+                        $propertiessql->sql .= $sql_filter_properties_and . " COALESCE(r.file_size, 0) <= ?";
                         array_push($propertiessql->parameters, "i", floatval($propertyval) * 1024 * 1024);
                         break;
                     case "fext":
