@@ -698,6 +698,8 @@ if (($ffmpeg_fullpath != false) && in_array($extension, $ffmpeg_audio_extensions
         echo debug("Failed to process resource " . $ref . " - MP3 creation failed.");
     } else {
         $preview_preprocessing_success = true;
+        # Preview creation successful for mp3 alternative. No image is expected in this scenario.
+        $has_image = 0;
     }
 }
 
