@@ -151,7 +151,7 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
                 
                 if(!$flickr_nice_progress)
                     {
-                    echo "<li>" . str_replace("%photoid", (string) $photoid, $lang["photo-uploaded"]);
+                    echo "<li>" . escape(str_replace("%photoid", (string) $photoid, $lang["photo-uploaded"]));
                     }
                 else
                     {
