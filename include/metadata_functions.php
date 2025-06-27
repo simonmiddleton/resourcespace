@@ -321,15 +321,15 @@ function update_fieldx(int $metadata_field_ref): void
 function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
 {
     $exiftool_fullpath = get_utility_path("exiftool");
-    $command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit ";
+    $command = $exiftool_fullpath . " -s -s -s %s ";
     $command .= escapeshellarg($file_path);
-    $exif_output = explode("\t", run_command($command));
+    $exif_output = run_command(sprintf($command, "-composite:imagesize"));
 
-    if (count($exif_output) >= 1 && $exif_output[0] != '') {
+    if ($exif_output != '') {
         if ($remove_original) {
             ps_query("DELETE FROM resource_dimensions WHERE resource= ?", ['i', $ref]);
         }
-        $wh = explode("x", $exif_output[0]);
+        $wh = explode("x", $exif_output);
         if (count($wh) > 1) {
             $width = $wh[0];
             $height = $wh[1];
@@ -342,17 +342,10 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
                 's', $filesize
             ];
 
-            for ($n = 1; $n < count($exif_output); $n++) {
-                # Resolution may be omitted if not set; check values by type
-                if (is_int_loose($exif_output[$n])) {
-                    $sql_insert .= ",resolution";
-                    $sql_params[] = 'i';
-                } else {
-                    $sql_insert .= ",unit";
-                    $sql_params[] = 's';
-                }
-                $sql_params[] = $exif_output[$n];
-            }
+            $exif_resolution = run_command(sprintf($command, '-xresolution'));
+            $exif_unit = run_command(sprintf($command, '-resolutionunit'));
+            $sql_insert .= ',resolution,unit';
+            $sql_params = array_merge($sql_params, ['s', $exif_resolution, 's' , $exif_unit]);
 
             $sql_insert .= ")";
             $sql_values = "values (" . ps_param_insert((count($sql_params) / 2)) . ")";
