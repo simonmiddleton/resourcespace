@@ -1427,11 +1427,12 @@ foreach ($pushed as $pushed_resource)
 
 function RenderPushedMetadata($resource, $field_data, $all_field_data)
     {
-    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access, $userpermissions, $upload_then_edit, $urlparams;
+    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $fields, $ref, $access, $userpermissions, $upload_then_edit, $urlparams;
     // Save currentt resource data
     $reset_ref          = $ref;
     $reset_access       = $access;
     $reset_fields_all   = $fields_all;
+    $reset_fields       = $fields;
 
     $ref                = $resource["ref"];
     if(!array_key_exists('hit_count', $resource))
@@ -1441,7 +1442,7 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     // Ensure that this pushed resource honours any resource type overrides
     resource_type_config_override($resource["resource_type"]);
 
-    $fields         = get_resource_field_data($ref,true,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
+    $fields         = isset($field_data[$ref]) ? $field_data[$ref] : get_resource_field_data($ref,true,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
     $fields_all     = isset($all_field_data[$ref]) ? $all_field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
     $access         = get_resource_access($resource);
     ?>
@@ -1461,6 +1462,7 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     $ref        = $reset_ref;
     $access     = $reset_access;
     $fields_all = $reset_fields_all;
+    $fields     = $reset_fields;
     }
 /*
 End of pushed metadata support

@@ -3240,6 +3240,7 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
 
         $field_node_list = array();
         $field_ref_list = array();
+        $field_node_values = array();
         $last_resource = null;
         $last_field = null;
 
@@ -3262,6 +3263,7 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                     $field_ref_list[$this_field]['refs'] = $field_value['node'];
                     $last_field = $this_field;
                 }
+                $field_node_values[$this_field][$field_value['node']] = $field_value['name'];
             } else {
                 # Change of resource
                 if (!is_null($last_resource)) {
@@ -3277,18 +3279,21 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                         if (isset($field_node_list[$this_base_field])) {
                             $data_for_this_field['value'] = $field_node_list[$this_base_field]['values'];
                             $data_for_this_field['nodes'] = $field_ref_list[$this_base_field]['refs'];
+                            $data_for_this_field['nodes_values'] = $field_node_values[$this_base_field];
                             # The data for this resource field is ready so attach it to the final result array for this chunk
                             $fields[] = $data_for_this_field;
                         } else {
                             # Empty fields are not attached
                             $data_for_this_field['value'] = null;
                             $data_for_this_field['nodes'] = null;
+                            $data_for_this_field['node_values'] = null;
                         }
                     }
 
                     # Clear node list and ref list for new resource
                     $field_node_list = array();
                     $field_ref_list = array();
+                    $field_node_values[] = array();
                     $last_field = null;
                     if ($this_resource === null) {
                         break;
@@ -3305,6 +3310,7 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                     $field_ref_list[$this_field]['refs'] = $field_value['node'];
                     $last_field = $this_field;
                 }
+                $field_node_values[$this_field][$field_value['node']] = $field_value['name'];
                 $last_resource = $this_resource;
             }
         } # End of allresources for this chunk
