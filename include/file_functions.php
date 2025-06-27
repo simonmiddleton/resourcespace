@@ -382,8 +382,7 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
 
     foreach ($path_parts as $path_part) {
         $checkpath .=  $path_part . "/";
-        if (is_link($checkpath) || ($GLOBALS["config_windows"] && stat($checkpath) != lstat($checkpath))) {
-            // is_link() returns false for junction links on Windows so check if stat and lstat return identical info
+        if (check_symlink($checkpath)) {
             debug("{$checkpath} is a symlink");
             $symlink = true;
             break;
@@ -744,4 +743,21 @@ function delete_temp_files(): void
 function permitted_archiver_arguments($string): bool
 {
     return preg_match('/[^\@\-\w]/', $string) === 0;
+}
+
+/**
+ * Check if a given path is absolute or contains a symlink or junction
+ * is_link() does not accurately detect junction links on Windows systems
+ * instead we check if the output from stat() and lstat() differ.
+ *
+ * @param  string $checkpath
+ * @return bool
+ */
+function check_symlink(string $checkpath): bool
+{
+    if ($GLOBALS["config_windows"]) {
+        return stat($checkpath) != lstat($checkpath);
+    } else {
+        return is_link($checkpath);
+    }
 }
