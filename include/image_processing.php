@@ -2045,6 +2045,15 @@ function extract_text($ref, $extension, $path = "")
         while (strpos($text, "\n\n") !== false) {
             $text = str_replace("\n\n", "\n", $text);
         } # condense multiple line breaks
+
+        # Replace XML encoded characters with the correct unencoded variants
+        $text = strtr($text, [
+            '&quot;' => '"',
+            '&apos;' => "'",
+            '&amp;'  => '&',
+            '&lt;'   => '<',
+            '&gt;'   => '>'
+        ]);
     }
 
     # OpenOffice Text (ODT)
@@ -2060,6 +2069,15 @@ function extract_text($ref, $extension, $path = "")
         while (strpos($text, "\n\n") !== false) {
             $text = str_replace("\n\n", "\n", $text);
         } # condense multiple line breaks
+
+        # Replace XML encoded characters with the correct unencoded variants
+        $text = strtr($text, [
+            '&quot;' => '"',
+            '&apos;' => "'",
+            '&amp;'  => '&',
+            '&lt;'   => '<',
+            '&gt;'   => '>'
+        ]);
     }
 
     # PDF extraction using pdftotext (part of the XPDF project)
