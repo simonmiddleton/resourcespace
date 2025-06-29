@@ -886,6 +886,7 @@ const RESOURCE_PREVIEWS_MINIMAL = 2;
 # Normalizer::NFKC; Normalization Form KC (NFKC) - Compatibility Decomposition, followed by Canonical Composition
 # See https://www.php.net/manual/en/class.normalizer.php for more information
 $language_normalize_mapping = [
+    "en" => Normalizer::NFD,
     "fr" => Normalizer::NFD,
     "sv" => Normalizer::NFC,
 ];
