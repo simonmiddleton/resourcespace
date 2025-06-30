@@ -217,7 +217,7 @@ include "include/login_background.php";
 
     <div class="Question">
         <label for="password"><?php echo escape($lang["password"]); ?> </label>
-        <input type="password" name="password" id="password" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?>/>
+        <input type="password" name="password" id="password" autocomplete="current-password" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?>/>
         <div id="capswarning"><?php echo escape($lang["caps-lock-on"]); ?></div>
         <div class="clearerleft"></div>
     </div>
