@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = 'Állítsa be a többfaktoros hitelesítést (MFA)';
 $lang["totp_set_up_details"] = 'Kérjük, olvassa be az alábbi QR-kódot egy TOTP alkalmazással a mobil eszközén, például a Google Authenticatorral, amely elérhető az alkalmazásboltban. Miután sikeresen beolvasta a kódot, adja meg az alkalmazás által megjelenített hat számjegyet a telepítés ellenőrzéséhez. A következő bejelentkezésekkor kérni fogják a kódot az alkalmazásból.';
 $lang["totp_code"] = 'Hitelesítő kód';

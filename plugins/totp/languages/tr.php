@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = 'Çok faktörlü kimlik doğrulamasını (MFA) ayarlayın';
 $lang["totp_set_up_details"] = 'Aşağıdaki QR kodunu mobil cihazınızdaki bir TOTP uygulaması ile tarayın, örneğin uygulama mağazasında bulunan Google Authenticator. Kodu başarıyla taradıktan sonra, kurulumu doğrulamak için uygulama tarafından gösterilen altı rakamı girin. Sonraki girişlerde uygulamadan kod istenecektir.';
 $lang["totp_code"] = 'Doğrulayıcı kodu';

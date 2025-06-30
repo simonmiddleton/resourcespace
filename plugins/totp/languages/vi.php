@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = 'Thiết lập xác thực đa yếu tố (MFA)';
 $lang["totp_set_up_details"] = 'Quét mã QR bên dưới bằng ứng dụng TOTP trên thiết bị di động của bạn, chẳng hạn như Google Authenticator có sẵn trong cửa hàng ứng dụng. Khi bạn đã quét mã thành công, hãy nhập sáu chữ số được hiển thị bởi ứng dụng để xác minh cài đặt. Trong các lần đăng nhập tiếp theo, bạn sẽ được yêu cầu mã từ ứng dụng.';
 $lang["totp_code"] = 'Mã xác thực';

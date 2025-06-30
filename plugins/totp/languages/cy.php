@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = 'Sefydlu dilysu aml-factor (MFA)';
 $lang["totp_set_up_details"] = 'Sganwch y cod QR isod gyda chymhwysiad TOTP ar eich dyfais symudol, er enghraifft Google Authenticator sydd ar gael yn y siop apiau. Pan fyddwch wedi sganio\'r cod yn llwyddiannus, rhowch y chwe digid a ddangosir gan y cymhwysiad i wirio\'r gosodiad. Ar logins dilynol, byddwch yn cael eich gofyn am y cod o\'r cymhwysiad.';
 $lang["totp_code"] = 'Cod dilysu';

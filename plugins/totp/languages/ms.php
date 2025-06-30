@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = 'Tetapkan pengesahan pelbagai faktor (MFA)';
 $lang["totp_set_up_details"] = 'Sila imbas kod QR di bawah dengan aplikasi TOTP pada peranti mudah alih anda, contohnya Google Authenticator yang tersedia di gedung aplikasi. Apabila anda telah berjaya mengimbas kod tersebut, masukkan enam digit yang dipaparkan oleh aplikasi untuk mengesahkan pemasangan. Pada log masuk seterusnya, anda akan diminta untuk kod dari aplikasi.';
 $lang["totp_code"] = 'Kod pengesah';

@@ -1,4 +1,5 @@
 <?php
+
 include_once dirname(__FILE__) . "/../lib/GoogleAuthenticator.php";
 
 /**
@@ -9,14 +10,15 @@ include_once dirname(__FILE__) . "/../lib/GoogleAuthenticator.php";
  *
  * @return bool  True if the code is valid, false otherwise.
  */
-function TOTP_validate(string $code, int $user_ref): bool {
+function TOTP_validate(string $code, int $user_ref): bool
+{
     $g = new GoogleAuthenticator();
 
     # Work out the secret
-    $secret=TOTP_get_secret($user_ref);
+    $secret = TOTP_get_secret($user_ref);
 
     # Check against provided code
-    return $g->checkCode($secret,$code);
+    return $g->checkCode($secret, $code);
 }
 
 /**
@@ -26,7 +28,8 @@ function TOTP_validate(string $code, int $user_ref): bool {
  *
  * @return string  A SHA-256 hash used for TOTP cookie validation.
  */
-function TOTP_cookie(int $user_ref): string {
+function TOTP_cookie(int $user_ref): string
+{
     global $scramble_key;
     return hash('sha256', date("Ymd") . $user_ref . $scramble_key);
 }
@@ -38,8 +41,9 @@ function TOTP_cookie(int $user_ref): string {
  *
  * @return bool  True if TOTP is set up, false otherwise.
  */
-function TOTP_is_user_set_up(int $user_ref): bool {
-    return ps_value("select totp value from user where ref=?",["i",$user_ref],0)==1;
+function TOTP_is_user_set_up(int $user_ref): bool
+{
+    return ps_value("select totp value from user where ref=?", ["i",$user_ref], 0) == 1;
 }
 
 /**
@@ -49,10 +53,11 @@ function TOTP_is_user_set_up(int $user_ref): bool {
  *
  * @return string  A base32-encoded TOTP secret.
  */
-function TOTP_get_secret(int $user_ref): string {
+function TOTP_get_secret(int $user_ref): string
+{
     global $scramble_key;
-    $secret=substr(hash('sha256',$user_ref . "_TOTP_" . $scramble_key),0,10);
-    $base32 = new FixedBitNotation(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', TRUE, TRUE);
+    $secret = substr(hash('sha256', $user_ref . "_TOTP_" . $scramble_key), 0, 10);
+    $base32 = new FixedBitNotation(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', true, true);
     return $base32->encode($secret);
 }
 
@@ -63,7 +68,8 @@ function TOTP_get_secret(int $user_ref): string {
  *
  * @return string  The otpauth URL used to generate a QR code in authenticator apps.
  */
-function TOTP_get_url(int $user_ref): string {
+function TOTP_get_url(int $user_ref): string
+{
     global $applicationname;
     return "otpauth://totp/" . $applicationname . "?secret=" . TOTP_get_secret($user_ref) . "&issuer=ResourceSpace";
 }
@@ -75,8 +81,9 @@ function TOTP_get_url(int $user_ref): string {
  *
  * @return void
  */
-function TOTP_setup_complete(int $user_ref): void {
-    ps_query("update user set totp=1,totp_tries=0 where ref=?",["i",$user_ref]);
+function TOTP_setup_complete(int $user_ref): void
+{
+    ps_query("update user set totp=1,totp_tries=0 where ref=?", ["i",$user_ref]);
 }
 
 /**
@@ -86,9 +93,10 @@ function TOTP_setup_complete(int $user_ref): void {
  *
  * @return int  The number of TOTP validation attempts.
  */
-function TOTP_tries(int $user_ref): int {
-    return ps_value("select totp_tries value from user where ref=?",["i",$user_ref],0);
-    }
+function TOTP_tries(int $user_ref): int
+{
+    return ps_value("select totp_tries value from user where ref=?", ["i",$user_ref], 0);
+}
 
 /**
  * Increments the TOTP attempt counter for the specified user.
@@ -97,6 +105,7 @@ function TOTP_tries(int $user_ref): int {
  *
  * @return void
  */
-function TOTP_increase_tries(int $user_ref): void {
-    ps_query("update user set totp_tries=totp_tries+1 where ref=?",["i",$user_ref]);
+function TOTP_increase_tries(int $user_ref): void
+{
+    ps_query("update user set totp_tries=totp_tries+1 where ref=?", ["i",$user_ref]);
 }

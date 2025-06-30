@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = '设置多因素身份验证 (MFA)';
 $lang["totp_set_up_details"] = '请使用您的移动设备上的 TOTP 应用程序扫描下面的二维码，例如在应用商店中可用的 Google Authenticator。成功扫描代码后，输入应用程序显示的六位数字以验证安装。在后续登录时，系统会要求您输入应用程序中的代码。';
 $lang["totp_code"] = '身份验证器代码';

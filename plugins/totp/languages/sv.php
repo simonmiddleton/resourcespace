@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = 'Ställ in flerfaktorsautentisering (MFA)';
 $lang["totp_set_up_details"] = 'Skanna QR-koden nedan med en TOTP-applikation på din mobila enhet, till exempel Google Authenticator som finns i appbutiken. När du har skannat koden framgångsrikt, ange de sex siffror som visas av appen för att verifiera installationen. Vid efterföljande inloggningar kommer du att bli ombedd att ange koden från appen.';
 $lang["totp_code"] = 'Authenticator-kod';

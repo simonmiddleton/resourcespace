@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = 'Skonfiguruj uwierzytelnianie wieloskładnikowe (MFA)';
 $lang["totp_set_up_details"] = 'Skanuj kod QR poniżej za pomocą aplikacji TOTP na swoim urządzeniu mobilnym, na przykład Google Authenticator dostępnej w sklepie z aplikacjami. Gdy pomyślnie zeskanujesz kod, wprowadź sześć cyfr wyświetlanych przez aplikację, aby zweryfikować instalację. Przy kolejnych logowaniach będziesz proszony o kod z aplikacji.';
 $lang["totp_code"] = 'Kod uwierzytelniający';

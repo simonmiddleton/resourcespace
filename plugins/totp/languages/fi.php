@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["totp_set_up"] = 'Aseta monivaiheinen todennus (MFA)';
 $lang["totp_set_up_details"] = 'Skannaa alla oleva QR-koodi TOTP-sovelluksella mobiililaitteellasi, esimerkiksi Google Authenticator, joka on saatavilla sovelluskaupassa. Kun olet onnistuneesti skannannut koodin, syötä sovelluksen näyttämät kuusi numeroa asennuksen vahvistamiseksi. Seuraavilla kirjautumiskerroilla sinulta kysytään koodia sovelluksesta.';
 $lang["totp_code"] = 'Vahvistuskoodi';
