@@ -88,3 +88,7 @@ $lang['simplesaml_idp_cert_expires'] = "IdP %idpname certificate expires at %exp
 $lang['simplesaml_check_idp_cert_expiry'] = "Check IdP certificate expiration?";
 $lang['simplesaml_use_www_label'] = 'Allow SP metadata requests for "www" route? (changing to false will require IdP to re-exchange the SP metadata)';
 $lang['simplesaml_use_www_error'] = 'Warning! The plugin is using the legacy "www" routes. If this is a fresh setup, change it now! Otherwise co-ordinate with the IdP admin so they can update the SP metadata accordingly.';
+$lang['simplesaml_config_source_label'] = "Select the IdP configuration source";
+$lang['simplesaml_config_source_url'] = "Metadata XML URL";
+$lang['simplesaml_config_source_rs_config'] = "ResourceSpace configuration file (config.php)";
+$lang['simplesaml_config_source_legacy'] = "Local SAML configuration files (legacy)";

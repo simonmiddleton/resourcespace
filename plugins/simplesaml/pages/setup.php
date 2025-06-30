@@ -39,9 +39,15 @@ if ((getval('submit', '') != '' || getval('save', '') != '') && enforcePostReque
     $simplesaml['simplesaml_custom_attributes'] = getval('simplesaml_custom_attributes', '');
     $simplesaml['simplesaml_authorisation_claim_name'] = getval('simplesaml_authorisation_claim_name', '');
     $simplesaml['simplesaml_authorisation_claim_value'] = getval('simplesaml_authorisation_claim_value', '');
-    $simplesaml['simplesaml_rsconfig'] = getval('simplesaml_rsconfig', '');
     $simplesaml['simplesaml_check_idp_cert_expiry'] = getval('simplesaml_check_idp_cert_expiry', '');
     $simplesaml['simplesaml_use_www'] = (bool) getval('simplesaml_use_www', '1', false, 'is_int_loose');
+
+    $simplesaml['simplesaml_metadata_url'] = getval('simplesaml_metadata_url', '');
+    if (trim($simplesaml['simplesaml_metadata_url']) !== "") {
+        $simplesaml['simplesaml_rsconfig'] = 2;
+    } else {
+        $simplesaml['simplesaml_rsconfig'] = getval('simplesaml_rsconfig', 1, true);
+    }
 
     $samlgroups = $_REQUEST['samlgroup'];
     $rsgroups = $_REQUEST['rsgroup'];
@@ -120,7 +126,9 @@ if ($simplesaml_use_www) {
     render_top_page_error_style($lang['simplesaml_use_www_error']);
 }
 
-if (($simplesaml_rsconfig && !isset($simplesamlconfig)) || (!$simplesaml_rsconfig && !(file_exists(simplesaml_get_lib_path() . '/config/config.php')))) {
+if (!$simplesaml_rsconfig
+    && !(file_exists(simplesaml_get_lib_path() . '/config/config.php'))
+) {
     echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . "</div>";
 } else {
     require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
@@ -128,35 +136,44 @@ if (($simplesaml_rsconfig && !isset($simplesamlconfig)) || (!$simplesaml_rsconfi
         echo "<div class='PageInfoMessage'>" . $lang['simplesaml_authorisation_version_error'] . "</div>";
     }
 
-    if ($simplesaml_rsconfig && isset($simplesamlconfig["authsources"])) {
-        $ssp_base_url = sprintf(
-            '%s/plugins/simplesaml/lib/%s/module.php/saml/sp',
-            $baseurl,
-            $simplesaml_use_www ? 'www' : 'public'
-        );
-        foreach ($simplesamlconfig['authsources'] as $authsource => $authdata) {
-            if ($authsource == "admin") {
-                continue;
+    if ($simplesaml_rsconfig !== 0) {
+        if (isset($simplesamlconfig["authsources"])) {
+            $ssp_base_url = sprintf(
+                '%s/plugins/simplesaml/lib/%s/module.php/saml/sp',
+                $baseurl,
+                $simplesaml_use_www ? 'www' : 'public'
+            );
+            foreach ($simplesamlconfig['authsources'] as $authsource => $authdata) {
+                if ($authsource == "admin") {
+                    continue;
+                }
+            $useauthsource = $authsource;
             }
 
-            // Show the existing SP metadata
-            $spdata = [
-                $lang["simplesaml_acs_url"] => "{$ssp_base_url}/saml2-acs.php/{$authsource}",
-                $lang["simplesaml_entity_id"] => "{$ssp_base_url}/metadata.php/{$authsource}",
-                $lang["simplesaml_single_logout_url"] => "{$ssp_base_url}/saml2-logout.php/{$authsource}",
-                $lang["simplesaml_start_url"] => $baseurl,
-                $lang["simplesaml_test_site_url"] => "{$baseurl}/plugins/simplesaml/lib/public/admin",
-            ];
-            config_section_header($lang['simplesaml_sp_data'], '');
-            echo "<div class='TableArray'>";
-            foreach ($spdata as $spsetting => $spvalue) {
-                echo "<div class='Question'>";
-                echo "<label>" . escape($spsetting) . "</label>";
-                echo "<div class='Fixed'>" . escape($spvalue) . "</div>";
-                echo "<div class='clearerleft'></div></div>";
-            }
-            echo "</div>";
+        } else {
+            // This is now the default
+            $ssp_base_url =  $baseurl . '/plugins/simplesaml/lib/public/module.php/saml/sp';
+            $useauthsource = 'resourcespace-sp';
         }
+
+        $spdata = [
+            $lang["simplesaml_acs_url"] => "{$ssp_base_url}/saml2-acs.php/{$useauthsource}",
+            $lang["simplesaml_entity_id"] => "{$ssp_base_url}/metadata.php/{$useauthsource}",
+            $lang["simplesaml_single_logout_url"] => "{$ssp_base_url}/saml2-logout.php/{$useauthsource}",
+            $lang["simplesaml_start_url"] => $baseurl,
+            $lang["simplesaml_test_site_url"] => "{$baseurl}/plugins/simplesaml/lib/public/admin",
+        ];
+
+        // Show the existing SP metadata
+        config_section_header($lang['simplesaml_sp_data'], '');
+        echo "<div class='TableArray'>";
+        foreach ($spdata as $spsetting => $spvalue) {
+            echo "<div class='Question'>";
+            echo "<label>" . escape($spsetting) . "</label>";
+            echo "<div class='Fixed'>" . escape($spvalue) . "</div>";
+            echo "<div class='clearerleft'></div></div>";
+        }
+        echo "</div>";
     }
 }
 
@@ -166,24 +183,54 @@ if (($simplesaml_rsconfig && !isset($simplesamlconfig)) || (!$simplesaml_rsconfi
 generateFormToken("simplesaml_form");
 config_section_header($lang['simplesaml_sp_config'], '');
 
-config_boolean_field("simplesaml_rsconfig", $lang['simplesaml_rsconfig'], $simplesaml_rsconfig);
+$simplesaml_config_options = [
+    0 => $lang['simplesaml_config_source_legacy'],
+    1 => $lang['simplesaml_config_source_rs_config'],
+    2 => $lang['simplesaml_config_source_url'],
+];
+
+config_single_select('simplesaml_rsconfig', $lang['simplesaml_config_source_label'], $simplesaml_rsconfig, $simplesaml_config_options);
+config_text_input("simplesaml_metadata_url", $lang['simplesaml_config_source_url'], $simplesaml_metadata_url);
 config_boolean_field("simplesaml_check_idp_cert_expiry", $lang['simplesaml_check_idp_cert_expiry'], $simplesaml_check_idp_cert_expiry);
 
 ?>
 <script>
-jQuery("#simplesaml_rsconfig").change(function(event)
-    {
-    if(jQuery(this).val()=="1")
-        {
-        jQuery("#question_simplesaml_lib_path").slideUp(0);
-        jQuery("#generate_sp_config_link").slideUp(0);
-        }
-    else
-        {
+
+function showhidesamlconfigs(option) {
+     if (option == "0") {
         jQuery("#question_simplesaml_lib_path").slideDown(0);
         jQuery("#generate_sp_config_link").slideDown(0);
+        jQuery("#question_simplesaml_use_www").slideUp(0);
+        jQuery("#question_simplesaml_sp").slideDown(0);
+        jQuery("#question_simplesaml_check_idp_cert_expiry").slideDown(0);
+        jQuery("#question_simplesaml_metadata_url").slideUp(0);
+    } else {
+        if (option == "1") {
+            jQuery("#question_simplesaml_use_www").slideDown(0);
+            jQuery("#question_simplesaml_sp").slideDown(0);
+            jQuery("#generate_sp_config_link").slideDown(0);
+            jQuery("#question_simplesaml_check_idp_cert_expiry").slideDown(0);
+            jQuery("#question_simplesaml_metadata_url").slideUp(0);
+        } else {
+            jQuery("#question_simplesaml_use_www").slideUp(0);
+            jQuery("#question_simplesaml_sp").slideUp(0);
+            jQuery("#generate_sp_config_link").slideUp(0);
+            jQuery("#sp_config_links").slideUp(0);
+            jQuery("#question_simplesaml_check_idp_cert_expiry").slideUp(0);
+            jQuery("#question_simplesaml_metadata_url").slideDown(0);
         }
+        jQuery("#question_simplesaml_lib_path").slideUp(0);
+        jQuery("#generate_sp_config_link").slideUp(0);
+    }
+}
+
+jQuery(document).ready(function() {
+    showhidesamlconfigs(<?php echo (int) $simplesaml_rsconfig; ?>);
+
+    jQuery("#simplesaml_rsconfig").change(function(event) {
+        showhidesamlconfigs(jQuery(this).val());
     });
+});
 </script>
 
 

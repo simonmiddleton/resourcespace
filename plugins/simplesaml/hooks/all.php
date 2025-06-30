@@ -12,6 +12,72 @@ function HookSimplesamlAllInitialise()
         set_plugin_config('simplesaml', $simplesaml_config);
     }
     check_removed_ui_config("simplesaml_lib_path");
+
+    if (isset($GLOBALS["metadata_xml_url"])) {
+        global $simplesamlconfig;
+        // Get IdP data from sysvars
+        $storedsamlconfig = get_sysvar("saml_idp_metadata");
+        $simplesamlconfig['metadata'] = json_decode($storedsamlconfig, true);
+        if (trim($storedsamlconfig) == "" || $simplesamlconfig['metadata'] === false) {
+            // Invalid metadata
+            debug("simplesaml- invalid metadata");
+
+            $GLOBALS['use_error_exception'] = true;
+            try {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $GLOBALS["metadata_xml_url"]);
+                curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                // curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+                $response = curl_exec($ch);
+                $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+            } catch (Throwable $t) {               
+                debug("simplesaml - unable to retrieve metadata: " .  $t->getMessage());
+                return false;
+            }
+            unset($GLOBALS['use_error_exception']);
+            if ($response_status_code !== 200) {
+                debug("simplesaml - unable to retrieve metadata ");
+            }
+        
+            $metadata_xml =  $response;
+                       
+            // header("Content-Type: text/xml; charset=utf-8");
+            // exit($metadata_xml);
+
+            require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
+            $entities = \SimpleSAML\Metadata\SAMLParser::parseDescriptorsString($metadata_xml);
+            
+
+            $idpindex = array_key_first($entities);
+            $parsedmetadata = $entities[$idpindex]->getMetadata20IdP();
+            // exit($idpindex);
+            $simplesamlconfig['metadata'] = [];
+            $simplesamlconfig['metadata'][$idpindex] = $parsedmetadata;
+            set_sysvar("saml_idp_metadata", json_encode($simplesamlconfig['metadata']));
+
+            // exit(print_r($simplesamlconfig));
+        }
+
+        $simplesamlconfig['authsources']['admin'] = ['core:AdminPassword'];
+        $simplesamlconfig['authsources']['resourcespace-sp'] = [
+            'saml:SP',
+            'entityID' => sprintf(
+                '%s/plugins/simplesaml/lib/%s/module.php/saml/sp/metadata.php/resourcespace-sp',
+                $GLOBALS['baseurl'],
+                $GLOBALS['simplesaml_use_www'] ? 'www' : 'public',
+            ),
+            'idp' =>  array_key_first($simplesamlconfig['metadata']),
+            'discoURL' => null,
+        ];
+    }
+
+    // exit(print_r($simplesamlconfig));
+
 }
 
 function HookSimplesamlAllPreheaderoutput()
