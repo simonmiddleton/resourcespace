@@ -605,7 +605,14 @@ if ($keysearch) {
                                     // Use RLIKE to search between word boundaries in the node names
                                     $keyword = str_replace(".", "\\.", $keyword);
                                     $keyword = str_replace("*", ".*", $keyword);
-                                    $keyword = "\\b" . $keyword . "\\b";
+                                    if (preg_match('/\w/', $keyword) === 0) {
+                                        // Use lookaheads/lookbehinds for boundary-like behavior when the keyword consists of non-word characters (e.g. ,, &, -)
+                                        // because \b only works for transitions between word characters (letters, digits, _) and non-word characters.
+                                        $keyword = "(?<!\w)" . $keyword . "(?!\w)";
+                                    } else {
+                                        $keyword = "\\b" . $keyword . "\\b";
+                                    }
+
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
                                                 FROM resource_node rn[union_index]
