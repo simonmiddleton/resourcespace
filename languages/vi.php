@@ -892,7 +892,6 @@ $lang["statusandrelationships"] = 'Trạng thái và mối quan hệ';
 $lang["share"] = 'Chia sẻ';
 $lang["share_selected"] = 'Chia sẻ đã chọn';
 $lang["sharecollection"] = 'Chia sẻ bộ sưu tập';
-$lang["cannot_share-has_upload_share"] = 'Không thể tạo chia sẻ không tải lên của bộ sưu tập này vì hiện tại đã có một chia sẻ tải lên cho nó';
 $lang["sharecollection-name"] = 'Chia sẻ bộ sưu tập - %collectionname';
 $lang["share_theme_category"] = 'Chia sẻ danh mục bộ sưu tập nổi bật';
 $lang["share_theme_category_subcategories"] = 'Có bao gồm các bộ sưu tập nổi bật trong các danh mục con cho người dùng bên ngoài không?';

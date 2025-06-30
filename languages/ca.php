@@ -2927,7 +2927,6 @@ $lang["language-sw"] = 'Swahili';
 $lang["language-ur"] = 'Urdu';
 $lang["information-enable_complete_indexing"] = 'Indexa els valors del camp com una sola paraula clau ininterrompuda per a aquest camp. Aquesta opció és incompatible amb la indexació parcial.';
 $lang["property-enable_complete_indexing"] = 'Habilitar la indexació completa';
-$lang["cannot_share-has_upload_share"] = 'No es poden crear comparticions d\'upload no per aquesta col·lecció ja que actualment existeix una compartició d\'upload per a ella';
 $lang["welcome_generic"] = 'Benvingut a %applicationname';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';

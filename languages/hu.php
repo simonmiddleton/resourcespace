@@ -897,7 +897,6 @@ $lang["statusandrelationships"] = 'Állapot és kapcsolatok';
 $lang["share"] = 'Megosztás';
 $lang["share_selected"] = 'Kiválasztott megosztása';
 $lang["sharecollection"] = 'Gyűjtemény megosztása';
-$lang["cannot_share-has_upload_share"] = 'A gyűjtemény feltöltési megosztása nem hozható létre, mivel jelenleg már létezik egy feltöltési megosztás hozzá.';
 $lang["sharecollection-name"] = 'Ossza meg a gyűjteményt - %collectionname';
 $lang["share_theme_category"] = 'Ossza meg a kiemelt gyűjtemény kategóriát';
 $lang["share_theme_category_subcategories"] = 'Tartalmazza a kiemelt gyűjteményeket az almappákban külső felhasználók számára?';

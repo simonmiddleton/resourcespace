@@ -2894,7 +2894,6 @@ $lang["language-sw"] = 'Swahili';
 $lang["language-ur"] = 'Urdu';
 $lang["information-enable_complete_indexing"] = 'Indeksiraj vrijednosti polja kao jednu neprekinutu ključnu riječ za ovo polje. Ova opcija nije kompatibilna s djelomičnim indeksiranjem.';
 $lang["property-enable_complete_indexing"] = 'Omogući potpuno indeksiranje';
-$lang["cannot_share-has_upload_share"] = 'Ne mogu se stvoriti dijeljenja ove kolekcije bez mogućnosti prijenosa jer trenutno postoji dijeljenje s mogućnošću prijenosa za nju';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Dobrodošli u %applicationname';

@@ -2828,7 +2828,6 @@ $lang["map_tfneighbourhood"] = 'ਪੜੋਸ';
 $lang["language-uk"] = 'ਯੂਕਰੇਨੀਅਨ';
 $lang["information-enable_complete_indexing"] = 'ਇਸ ਫੀਲਡ ਲਈ ਮੁੱਲਾਂ ਨੂੰ ਇੱਕ ਅਟੁੱਟ ਕੀਵਰਡ ਵਜੋਂ ਸੂਚੀਬੱਧ ਕਰੋ। ਇਹ ਵਿਕਲਪ ਅਧੂਰੀ ਸੂਚੀਬੱਧਤਾ ਨਾਲ ਅਸੰਗਤ ਹੈ।';
 $lang["property-enable_complete_indexing"] = 'ਪੂਰੀ ਇੰਡੈਕਸਿੰਗ ਨੂੰ ਯੋਗ ਕਰੋ';
-$lang["cannot_share-has_upload_share"] = 'ਇਸ ਕਲੈਕਸ਼ਨ ਦੇ ਗੈਰ-ਅਪਲੋਡ ਸਾਂਝੇ ਨਹੀਂ ਬਣਾਏ ਜਾ ਸਕਦੇ ਕਿਉਂਕਿ ਇਸ ਲਈ ਇੱਕ ਅਪਲੋਡ ਸਾਂਝਾ ਮੌਜੂਦ ਹੈ।';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'ਥਾਈ';
 $lang["welcome_generic"] = '%applicationname ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ';

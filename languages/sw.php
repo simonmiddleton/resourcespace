@@ -2825,7 +2825,6 @@ $lang["map_tfneighbourhood"] = 'Jirani';
 $lang["all__emailcontactadmin"] = 'Tafadhali tafsiri: <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
 $lang["information-enable_complete_indexing"] = 'Weka thamani za uwanja kama neno moja lisilovunjika kwa uwanja huu. Chaguo hili haliendani na kuorodhesha kwa sehemu.';
 $lang["property-enable_complete_indexing"] = 'Wezesha kuorodhesha kamili';
-$lang["cannot_share-has_upload_share"] = 'Huwezi kuunda ushiriki wa mkusanyiko huu usio wa kupakia kwa sababu ushiriki wa kupakia tayari upo kwa ajili yake.';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Karibu kwa %applicationname';

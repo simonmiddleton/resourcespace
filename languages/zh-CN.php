@@ -3035,7 +3035,6 @@ $lang["language-sw"] = '斯瓦希里语';
 $lang["language-ur"] = '乌尔都语';
 $lang["information-enable_complete_indexing"] = '将字段值索引为此字段的一个不间断关键词。此选项与部分索引不兼容。';
 $lang["property-enable_complete_indexing"] = '启用完整索引';
-$lang["cannot_share-has_upload_share"] = '由于此集合当前存在上传共享，因此无法创建非上传共享。';
 $lang["language-cy"] = '威尔士语';
 $lang["language-th"] = '泰语';
 $lang["welcome_generic"] = '欢迎使用%applicationname';

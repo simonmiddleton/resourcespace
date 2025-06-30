@@ -3129,7 +3129,6 @@ $lang["language-sw"] = 'Swahili';
 $lang["language-ur"] = 'Urdu';
 $lang["information-enable_complete_indexing"] = 'Indexieren Sie Feldwerte als ein ununterbrochenes Schlüsselwort für dieses Feld. Diese Option ist mit der Teilindexierung nicht kompatibel.';
 $lang["property-enable_complete_indexing"] = 'Vollständige Indexierung aktivieren';
-$lang["cannot_share-has_upload_share"] = 'Nicht-Upload-Freigaben dieser Sammlung können nicht erstellt werden, da derzeit eine Upload-Freigabe dafür existiert.';
 $lang["language-cy"] = 'Walisisch';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Willkommen bei %applicationname';

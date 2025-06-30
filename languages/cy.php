@@ -893,7 +893,6 @@ $lang["statusandrelationships"] = 'Statws a chysylltiadau';
 $lang["share"] = 'Rhannu';
 $lang["share_selected"] = 'Rhannwch y rhai a ddewiswyd';
 $lang["sharecollection"] = 'Rhannu casgliad';
-$lang["cannot_share-has_upload_share"] = 'Ni ellir creu rhannau cyfanwerthol nad ydynt yn llwytho i fyny ar gyfer y casgliad hwn gan fod rhannau cyfanwerthol llwytho i fyny yn bodoli ar hyn o bryd ar ei gyfer';
 $lang["sharecollection-name"] = 'Rhannwch gasgliad - %collectionname';
 $lang["share_theme_category"] = 'Rhannu categori casgliad nodweddiadol';
 $lang["share_theme_category_subcategories"] = 'Ydych chi\'n cynnwys casgliadau nodweddiadol mewn is-gategorïau ar gyfer defnyddwyr allanol?';

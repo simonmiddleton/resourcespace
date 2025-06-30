@@ -3070,7 +3070,6 @@ $lang["language-sw"] = 'Swahili';
 $lang["language-ur"] = 'Urdu';
 $lang["information-enable_complete_indexing"] = 'Indeksoi kentän arvot yhtenä katkeamattomana avainsanana tälle kentälle. Tämä vaihtoehto ei ole yhteensopiva osittaisen indeksoinnin kanssa.';
 $lang["property-enable_complete_indexing"] = 'Ota käyttöön täydellinen indeksointi';
-$lang["cannot_share-has_upload_share"] = 'Tämän kokoelman ei-latausjakoja ei voida luoda, koska sille on jo olemassa latausjako.';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Tervetuloa %applicationname';

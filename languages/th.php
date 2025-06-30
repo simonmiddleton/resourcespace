@@ -895,7 +895,6 @@ $lang["statusandrelationships"] = 'สถานะและความสัม
 $lang["share"] = 'แชร์';
 $lang["share_selected"] = 'แชร์ที่เลือก';
 $lang["sharecollection"] = 'แชร์คอลเลกชัน';
-$lang["cannot_share-has_upload_share"] = 'ไม่สามารถสร้างการแชร์ที่ไม่ใช่การอัปโหลดของคอลเลกชันนี้ได้ เนื่องจากมีการแชร์การอัปโหลดอยู่แล้ว';
 $lang["sharecollection-name"] = 'แชร์คอลเลกชัน - %collectionname';
 $lang["share_theme_category"] = 'แชร์หมวดหมู่คอลเลกชันที่โดดเด่น';
 $lang["share_theme_category_subcategories"] = 'รวมคอลเลกชันที่โดดเด่นในหมวดหมู่ย่อยสำหรับผู้ใช้งานภายนอกหรือไม่?';

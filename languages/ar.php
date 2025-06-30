@@ -3039,7 +3039,6 @@ $lang["language-sw"] = 'السواحيلية';
 $lang["language-ur"] = 'اردو';
 $lang["information-enable_complete_indexing"] = 'قم بفهرسة قيم الحقل ككلمة مفتاحية واحدة غير منقطعة لهذا الحقل. هذا الخيار غير متوافق مع الفهرسة الجزئية.';
 $lang["property-enable_complete_indexing"] = 'تمكين الفهرسة الكاملة';
-$lang["cannot_share-has_upload_share"] = 'لا يمكن إنشاء مشاركات غير التحميل لهذه المجموعة حيث توجد مشاركة تحميل حالياً لها';
 $lang["welcome_generic"] = 'مرحبًا بك في %applicationname';
 $lang["language-cy"] = 'الويلزية';
 $lang["language-th"] = 'Thai';

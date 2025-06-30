@@ -2826,7 +2826,6 @@ $lang["language-sw"] = 'Swahili';
 $lang["language-ur"] = 'Urduca';
 $lang["information-enable_complete_indexing"] = 'Bu alan için alan değerlerini tek bir kesintisiz anahtar kelime olarak indeksle. Bu seçenek kısmi indeksleme ile uyumsuzdur.';
 $lang["property-enable_complete_indexing"] = 'Tam indekslemeyi etkinleştir';
-$lang["cannot_share-has_upload_share"] = 'Bu koleksiyon için yükleme paylaşımı mevcut olduğundan, yükleme olmayan paylaşımlar oluşturulamaz.';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = '%applicationname\'e hoş geldiniz';

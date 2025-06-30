@@ -3235,7 +3235,6 @@ $lang["language-ur"] = 'Urdu';
 $lang["language-sw"] = 'Swahili';
 $lang["information-enable_complete_indexing"] = 'Indexujte hodnoty polí ako jedno nepretržité kľúčové slovo pre toto pole. Táto možnosť je nekompatibilná s čiastočným indexovaním.';
 $lang["property-enable_complete_indexing"] = 'Omogoči popolno indeksiranje';
-$lang["cannot_share-has_upload_share"] = 'Ne morejo se ustvariti delitve te zbirke brez nalaganja, ker trenutno za njo že obstaja delitev z nalaganjem';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Vitajte v %applicationname';
