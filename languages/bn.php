@@ -964,7 +964,7 @@ $lang["deleteallsure"] = 'আপনি কি নিশ্চিত যে আ�
 $lang["batchdonotaddcollection"] = '(একটি সংগ্রহে যোগ করবেন না)';
 $lang["collectionsthemes"] = 'সম্পর্কিত বৈশিষ্ট্যযুক্ত এবং সর্বজনীন সংগ্রহসমূহ';
 $lang["recent"] = 'সাম্প্রতিক';
-$lang["n_recent"] = '%qty সম্প্রতি যোগ করা রিসোর্সসমূহ';
+
 $lang["batchcopyfrom"] = 'নিচের ডেটা আইডি সহ রিসোর্স থেকে কপি করুন';
 $lang["copy"] = 'কপি';
 $lang["zipall"] = 'ডাউনলোড';
@@ -2901,3 +2901,5 @@ $lang["fieldtitle-usergroup_config"] = 'গ্রুপ ওভাররাইড
 $lang["page-title_usergroup_config"] = 'গোষ্ঠী কনফিগারেশন ওভাররাইড সম্পাদনা করুন';
 $lang["action-title_usergroup_override_detail"] = 'এই স্থানে কনফিগার করা যেকোনো সেটিংস এই গ্রুপের ব্যবহারকারীদের জন্য সিস্টেম ডিফল্টগুলিকে অতিক্রম করবে।';
 $lang["team_resource_non_ingested_search"] = 'অবহিত না করা সম্পদ দেখুন';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

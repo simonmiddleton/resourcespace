@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Selecteer alstublieft slechts één optie voor elk gez
 $lang["faces-show-view"] = 'Toon de AI Faces functionaliteit op de weergavepagina.';
 $lang["faces_count_faces"] = 'Totaal aantal gezichten gedetecteerd';
 $lang["faces_count_missing"] = 'Afbeeldingen te verwerken';
+$lang["faces-tag-field-not-set"] = 'Taggingveld is niet geconfigureerd.';

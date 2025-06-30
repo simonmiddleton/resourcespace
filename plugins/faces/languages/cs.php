@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Prosím vyberte pouze jednu možnost pro každou stran
 $lang["faces-show-view"] = 'Zobrazit funkci AI Faces na stránce zobrazení.';
 $lang["faces_count_faces"] = 'Celkový počet detekovaných obličejů';
 $lang["faces_count_missing"] = 'Obrázky k zpracování';
+$lang["faces-tag-field-not-set"] = 'Pole pro označování není nakonfigurováno.';

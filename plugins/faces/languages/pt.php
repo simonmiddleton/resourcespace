@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Por favor, selecione apenas uma opção para cada face
 $lang["faces-show-view"] = 'Mostrar a funcionalidade AI Faces na página de visualização.';
 $lang["faces_count_faces"] = 'Total de rostos detectados';
 $lang["faces_count_missing"] = 'Imagens a processar';
+$lang["faces-tag-field-not-set"] = 'O campo de marcação não está configurado.';

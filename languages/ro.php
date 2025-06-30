@@ -929,7 +929,7 @@ $lang["deleteallresourcesfromcollection"] = 'Ștergeți toate resursele';
 $lang["deleteallsure"] = 'Sunteți sigur că doriți să ȘTERGEȚI aceste resurse? Aceasta va șterge resursele în sine, nu doar le va elimina din această colecție.';
 $lang["batchdonotaddcollection"] = '(nu adăuga la o colecție)';
 $lang["collectionsthemes"] = 'Coleții conexe recomandate și publice';
-$lang["n_recent"] = '%qty Resurse adăugate recent';
+
 $lang["batchcopyfrom"] = 'Copiați datele de mai jos din resursa cu ID-ul';
 $lang["copy"] = 'Copie';
 $lang["zipall"] = 'Descărcare';
@@ -2987,3 +2987,5 @@ $lang["fieldtitle-usergroup_config"] = 'Suprascrieri de grup';
 $lang["page-title_usergroup_config"] = 'Editați suprascrierile de configurare a grupului';
 $lang["action-title_usergroup_override_detail"] = 'Orice setări configurate aici vor suprascrie valorile implicite ale sistemului pentru utilizatorii din acest grup.';
 $lang["team_resource_non_ingested_search"] = 'Vizualizați resursele neprocesate';
+$lang["language-ms"] = 'Malay (limba)';
+$lang["language-tl"] = 'Filipineză';

@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Παρακαλώ επιλέξτε μόνο μία επ
 $lang["faces-show-view"] = 'Εμφάνιση της λειτουργίας AI Faces στη σελίδα προβολής.';
 $lang["faces_count_faces"] = 'Συνολικοί ανιχνευθέντες πρόσωποι';
 $lang["faces_count_missing"] = 'Εικόνες προς επεξεργασία';
+$lang["faces-tag-field-not-set"] = 'Το πεδίο ετικετών δεν είναι ρυθμισμένο.';

@@ -978,7 +978,7 @@ $lang["deleteallsure"] = 'Tem certeza de que deseja EXCLUIR esses recursos? Isso
 $lang["batchdonotaddcollection"] = '(não adicionar a uma coleção)';
 $lang["collectionsthemes"] = 'Coleções em destaque e públicas relacionadas';
 $lang["recent"] = 'Recente';
-$lang["n_recent"] = '%qty Recursos adicionados recentemente';
+
 $lang["batchcopyfrom"] = 'Copiar os dados abaixo do recurso com ID';
 $lang["copy"] = 'Copiar';
 $lang["zipall"] = 'Baixar';
@@ -3024,3 +3024,5 @@ $lang["fieldtitle-usergroup_config"] = 'Substituições de grupo';
 $lang["page-title_usergroup_config"] = 'Editar substituições de configuração do grupo';
 $lang["action-title_usergroup_override_detail"] = 'Quaisquer configurações configuradas aqui substituirão as configurações padrão do sistema para os usuários deste grupo.';
 $lang["team_resource_non_ingested_search"] = 'Ver recursos não ingeridos';
+$lang["language-ms"] = 'Malaio';
+$lang["language-tl"] = 'Filipino';

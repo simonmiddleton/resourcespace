@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'براہ کرم ہر چہرے کے لیے صرف ای�
 $lang["faces-show-view"] = 'دیکھنے کے صفحے پر AI Faces کی فعالیت دکھائیں۔';
 $lang["faces_count_faces"] = 'کل چہرے شناخت کیے گئے';
 $lang["faces_count_missing"] = 'پروسیس کرنے کے لیے تصاویر';
+$lang["faces-tag-field-not-set"] = 'ٹیگنگ کا میدان ترتیب نہیں دیا گیا۔';

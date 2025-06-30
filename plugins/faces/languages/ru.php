@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Пожалуйста, выберите только о
 $lang["faces-show-view"] = 'Показать функциональность AI Faces на странице просмотра.';
 $lang["faces_count_faces"] = 'Общее количество обнаруженных лиц';
 $lang["faces_count_missing"] = 'Изображения для обработки';
+$lang["faces-tag-field-not-set"] = 'Поле тегирования не настроено.';

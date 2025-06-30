@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Molimo odaberite samo jednu opciju za svako lice.';
 $lang["faces-show-view"] = 'Prikaži funkcionalnost AI Faces na stranici pregleda.';
 $lang["faces_count_faces"] = 'Ukupno otkrivenih lica';
 $lang["faces_count_missing"] = 'Slike za obradu';
+$lang["faces-tag-field-not-set"] = 'Polje za označavanje nije konfigurirano.';

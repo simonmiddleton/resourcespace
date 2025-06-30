@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Si us plau, seleccioneu només una opció per a cada c
 $lang["faces-show-view"] = 'Mostra la funcionalitat AI Faces a la pàgina de visualització.';
 $lang["faces_count_faces"] = 'Total de cares detectades';
 $lang["faces_count_missing"] = 'Imatges a processar';
+$lang["faces-tag-field-not-set"] = 'El camp de etiquetatge no està configurat.';

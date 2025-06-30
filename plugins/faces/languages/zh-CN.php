@@ -20,3 +20,4 @@ $lang["faces-oneface"] = '请为每个面只选择一个选项。';
 $lang["faces-show-view"] = '在查看页面上显示AI人脸功能。';
 $lang["faces_count_faces"] = '检测到的总面数';
 $lang["faces_count_missing"] = '待处理的图像';
+$lang["faces-tag-field-not-set"] = '标记字段未配置。';

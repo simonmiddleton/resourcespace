@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'দয়া করে প্রতিটি মুখ
 $lang["faces-show-view"] = 'দেখুন AI Faces কার্যকারিতা ভিউ পৃষ্ঠায়।';
 $lang["faces_count_faces"] = 'মোট মুখ সনাক্ত করা হয়েছে';
 $lang["faces_count_missing"] = 'প্রক্রিয়া করার জন্য ছবি';
+$lang["faces-tag-field-not-set"] = 'ট্যাগিং ক্ষেত্র কনফিগার করা হয়নি।';

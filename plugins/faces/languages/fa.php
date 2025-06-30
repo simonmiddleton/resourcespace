@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'لطفاً فقط یک گزینه برای هر چهر
 $lang["faces-show-view"] = 'عملکرد AI Faces را در صفحه مشاهده نمایش دهید.';
 $lang["faces_count_faces"] = 'تعداد کل چهره‌های شناسایی شده';
 $lang["faces_count_missing"] = 'تصاویر برای پردازش';
+$lang["faces-tag-field-not-set"] = 'فیلد برچسب‌گذاری پیکربندی نشده است.';

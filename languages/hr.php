@@ -1112,7 +1112,7 @@ $lang["access_key_deleted"] = 'Obrisana je ključna riječ za pristup \'%access_
 $lang["email_error_user_list_not_valid"] = 'Nema valjanih e-pošta za slanje (korisnici možda nisu odobreni)';
 $lang["add_selected_to_collection"] = 'Dodaj odabrano u kolekciju';
 $lang["remove_selected_from_collection"] = 'Ukloni odabrano iz kolekcije';
-$lang["n_recent"] = '%qty Nedavno dodani resursi';
+
 $lang["collection_download_format"] = 'Preuzmi format datoteke';
 $lang["collection_download_no_tar"] = 'Standardno preuzimanje arhive';
 $lang["collection_download_use_tar"] = 'TAR arhiva';
@@ -2976,3 +2976,5 @@ $lang["fieldtitle-usergroup_config"] = 'Zamjene grupe';
 $lang["page-title_usergroup_config"] = 'Uredi konfiguraciju preklapanja grupe';
 $lang["action-title_usergroup_override_detail"] = 'Bilo koja podešavanja konfigurirana ovdje će nadjačati sistemske zadane postavke za korisnike u ovoj grupi.';
 $lang["team_resource_non_ingested_search"] = 'Pogledaj neunesene resurse';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

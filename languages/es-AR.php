@@ -872,7 +872,7 @@ $lang["metadatawritewillbeattempted"] = "Se intentará escribir la metadata";
 $lang["minute-abbreviated"] = "MM";
 $lang["mycollection_notpublic"] = "No puede convertir \"Mi colección\" en una colección publica o tema. Por favor cree una nueva colección para este propósito.";
 $lang["myrequests"] = "Mis Solicitudes";
-$lang["n_recent"] = "%qty Materiales recientemente agregados";
+
 $lang["never"] = "Nunca";
 $lang["new_resource"] = "nuevo material";
 $lang["nodownloads"] = "No hay descargas";
@@ -2967,3 +2967,5 @@ $lang["fieldtitle-usergroup_config"] = 'Anulaciones de grupo';
 $lang["page-title_usergroup_config"] = 'Editar configuraciones de grupo sobrescritas';
 $lang["action-title_usergroup_override_detail"] = 'Cualquier configuración realizada aquí anulará los valores predeterminados del sistema para los usuarios en este grupo.';
 $lang["team_resource_non_ingested_search"] = 'Ver recursos no ingeridos';
+$lang["language-ms"] = 'Malayo';
+$lang["language-tl"] = 'Filipino';

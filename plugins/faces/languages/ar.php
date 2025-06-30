@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'يرجى اختيار خيار واحد فقط لكل 
 $lang["faces-show-view"] = 'عرض وظيفة الوجوه الذكية في صفحة العرض';
 $lang["faces_count_faces"] = 'إجمالي الوجوه المكتشفة';
 $lang["faces_count_missing"] = 'صور للمعالجة';
+$lang["faces-tag-field-not-set"] = 'حقل الوسم غير مُهيأ';

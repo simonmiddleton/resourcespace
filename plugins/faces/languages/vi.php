@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Vui lòng chỉ chọn một tùy chọn cho mỗi m�
 $lang["faces-show-view"] = 'Hiển thị chức năng AI Faces trên trang xem.';
 $lang["faces_count_faces"] = 'Tổng số khuôn mặt được phát hiện';
 $lang["faces_count_missing"] = 'Hình ảnh cần xử lý';
+$lang["faces-tag-field-not-set"] = 'Trường gán thẻ chưa được cấu hình.';

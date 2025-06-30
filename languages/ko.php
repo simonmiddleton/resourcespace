@@ -960,7 +960,7 @@ $lang["deleteallsure"] = '이 리소스를 삭제하시겠습니까? 이는 이 
 $lang["batchdonotaddcollection"] = '(컬렉션에 추가하지 않음)';
 $lang["collectionsthemes"] = '관련 추천 및 공개 컬렉션';
 $lang["recent"] = '최근';
-$lang["n_recent"] = '%qty 최근에 추가된 리소스';
+
 $lang["batchcopyfrom"] = '아래 데이터를 ID가 있는 리소스에서 복사하십시오';
 $lang["copy"] = '복사';
 $lang["zipall"] = '다운로드';
@@ -2911,3 +2911,5 @@ $lang["fieldtitle-usergroup_config"] = '그룹 재정의';
 $lang["page-title_usergroup_config"] = '그룹 구성 재정의 편집';
 $lang["action-title_usergroup_override_detail"] = '이곳에 설정된 모든 설정은 이 그룹의 사용자에 대한 시스템 기본값을 무시합니다.';
 $lang["team_resource_non_ingested_search"] = '비소화 자원 보기';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Vänligen välj endast ett alternativ för varje ansik
 $lang["faces-show-view"] = 'Visa AI Faces-funktionen på visningssidan.';
 $lang["faces_count_faces"] = 'Totalt antal ansikten upptäckta';
 $lang["faces_count_missing"] = 'Bilder att bearbeta';
+$lang["faces-tag-field-not-set"] = 'Taggningsfältet är inte konfigurerat.';

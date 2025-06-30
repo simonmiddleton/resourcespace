@@ -948,7 +948,7 @@ $lang["deleteallsure"] = 'A ydych yn siŵr eich bod am DDIWEDDARU\'r adnoddau hy
 $lang["batchdonotaddcollection"] = '(peidiwch â ychwanegu at gasgliad)';
 $lang["collectionsthemes"] = 'Casgliadau cyhoeddus a nodweddion cysylltiedig';
 $lang["recent"] = 'Diweddar';
-$lang["n_recent"] = '%qty Adnoddau a ychwanegwyd yn ddiweddar';
+
 $lang["batchcopyfrom"] = 'Copiwch y data isod o\'r adnodd gyda\'r ID';
 $lang["copy"] = 'Copi';
 $lang["zipall"] = 'Lawrlwytho';
@@ -2896,3 +2896,5 @@ $lang["fieldtitle-usergroup_config"] = 'Goruchwyliau grŵp';
 $lang["page-title_usergroup_config"] = 'Golygu gorchmynion config grŵp';
 $lang["action-title_usergroup_override_detail"] = 'Bydd unrhyw osodiadau a gynhelir yma yn gorchymyn y gosodiadau system ar gyfer defnyddwyr yn y grŵp hwn.';
 $lang["team_resource_non_ingested_search"] = 'Gweld adnoddau nad ydynt wedi\'u hymgorffori';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

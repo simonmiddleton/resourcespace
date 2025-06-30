@@ -778,7 +778,7 @@ $lang["deleteallsure"] = "Vill du ta bort de här materialen? Om du väljer att 
 $lang["batchdonotaddcollection"] = "(Lägg inte till i någon samling)";
 $lang["collectionsthemes"] = "Relaterade teman och gemensamma samlingar";
 $lang["recent"] = "Nyaste";
-$lang["n_recent"] = "%qty nyaste";
+
 $lang["batchcopyfrom"] = "Kopiera metadata från material med nummer";
 $lang["copy"] = "Kopiera";
 $lang["zipall"] = "Hämta samling";
@@ -3192,3 +3192,5 @@ $lang["fieldtitle-usergroup_config"] = 'Gruppöverskrivningar';
 $lang["page-title_usergroup_config"] = 'Redigera gruppkonfigurationsöverskrivningar';
 $lang["action-title_usergroup_override_detail"] = 'Eventuella inställningar som konfigureras här kommer att åsidosätta systemstandarderna för användare i denna grupp.';
 $lang["team_resource_non_ingested_search"] = 'Visa icke-inmatade resurser';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

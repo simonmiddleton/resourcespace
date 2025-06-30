@@ -1225,7 +1225,7 @@ $lang["access_key_deleted"] = 'アクセスキー \'%access_key\' は削除さ�
 $lang["email_error_user_list_not_valid"] = '送信する有効なメールがありません（ユーザーが承認されていない可能性があります）。';
 $lang["add_selected_to_collection"] = '選択したものをコレクションに追加する。';
 $lang["remove_selected_from_collection"] = 'コレクションから選択されたものを削除する。';
-$lang["n_recent"] = '最近追加されたリソース %qty 件';
+
 $lang["collection_download_format"] = 'ファイル形式のダウンロード';
 $lang["collection_download_no_tar"] = '標準的なアーカイブのダウンロード';
 $lang["collection_download_use_tar"] = 'TARアーカイブ';
@@ -3049,3 +3049,5 @@ $lang["fieldtitle-usergroup_config"] = 'グループオーバーライド';
 $lang["page-title_usergroup_config"] = 'グループ設定のオーバーライドを編集する';
 $lang["action-title_usergroup_override_detail"] = 'この設定は、グループ内のユーザーに対するシステムのデフォルト設定を上書きします。';
 $lang["team_resource_non_ingested_search"] = '非取り込みリソースを表示';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

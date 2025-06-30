@@ -735,7 +735,7 @@ $lang["deleteallsure"] = "Oletko varma, että tahdot POISTAA nämä resurssit? T
 $lang["batchdonotaddcollection"] = "(älä lisää kokoelmaan)";
 $lang["collectionsthemes"] = "Aiheeseen liittyvät teemat ja julkiset kokoelmat";
 $lang["recent"] = "Viimeaikaiset";
-$lang["n_recent"] = "%qty viimeaikaista";
+
 $lang["batchcopyfrom"] = "Kopioi tiedot alla resurssilta tunnuksella";
 $lang["copy"] = "Kopioi";
 $lang["zipall"] = "Zip-pakkaa kaikki";
@@ -3152,3 +3152,5 @@ $lang["fieldtitle-usergroup_config"] = 'Ryhmän ohitukset';
 $lang["page-title_usergroup_config"] = 'Muokkaa ryhmän kokoonpanon ylityksiä';
 $lang["action-title_usergroup_override_detail"] = 'Kaikki täällä määritetyt asetukset ohittavat järjestelmän oletusasetukset tämän ryhmän käyttäjille.';
 $lang["team_resource_non_ingested_search"] = 'Näytä ei-otettuja resursseja';
+$lang["language-ms"] = 'Malaiji';
+$lang["language-tl"] = 'Filipino';

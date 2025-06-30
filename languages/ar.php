@@ -1266,7 +1266,7 @@ $lang["access_key_deleted"] = 'تم حذف مفتاح الوصول \'%access_key
 $lang["email_error_user_list_not_valid"] = 'لا يوجد بريد إلكتروني صالح للإرسال (قد لا يكون المستخدمون موافقين)';
 $lang["add_selected_to_collection"] = 'إضافة المحدد إلى المجموعة';
 $lang["remove_selected_from_collection"] = 'إزالة المحدد من المجموعة';
-$lang["n_recent"] = '%qty الموارد التي تمت إضافتها مؤخرًا';
+
 $lang["collection_download_format"] = 'تنسيق ملف التحميل';
 $lang["collection_download_no_tar"] = 'تنزيل الأرشيف القياسي';
 $lang["collection_download_use_tar"] = 'أرشيف TAR';
@@ -3121,3 +3121,5 @@ $lang["fieldtitle-usergroup_config"] = 'تجاوزات المجموعة';
 $lang["page-title_usergroup_config"] = 'تحرير إعدادات المجموعة';
 $lang["action-title_usergroup_override_detail"] = 'أي إعدادات تم تكوينها هنا ستتجاوز الإعدادات الافتراضية للنظام للمستخدمين في هذه المجموعة.';
 $lang["team_resource_non_ingested_search"] = 'عرض الموارد غير المدخلة';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

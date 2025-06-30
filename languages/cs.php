@@ -958,7 +958,7 @@ $lang["deleteallsure"] = 'Opravdu chcete TYTO ZDROJE SMAZAT? Tímto se smažou s
 $lang["batchdonotaddcollection"] = '(nepřidávat do kolekce)';
 $lang["collectionsthemes"] = 'Související doporučené a veřejné kolekce';
 $lang["recent"] = 'Nedávné';
-$lang["n_recent"] = '%qty Nedávno přidané zdroje';
+
 $lang["batchcopyfrom"] = 'Zkopírujte níže uvedená data z prostředku s ID';
 $lang["copy"] = 'Kopírovat';
 $lang["zipall"] = 'Stáhnout';
@@ -2902,3 +2902,5 @@ $lang["fieldtitle-usergroup_config"] = 'Přepsání skupiny';
 $lang["page-title_usergroup_config"] = 'Upravit přepsání konfigurace skupiny';
 $lang["action-title_usergroup_override_detail"] = 'Jakákoli nastavení nakonfigurovaná zde přepíší systémové výchozí hodnoty pro uživatele v této skupině.';
 $lang["team_resource_non_ingested_search"] = 'Zobrazit neimportované zdroje';
+$lang["language-ms"] = 'Malajština';
+$lang["language-tl"] = 'Filipino';

@@ -1312,7 +1312,7 @@ $lang["access_key_deleted"] = '访问密钥 \'%access_key\' 已删除。';
 $lang["email_error_user_list_not_valid"] = '没有有效的电子邮件可以发送（用户可能未经批准）';
 $lang["add_selected_to_collection"] = '添加所选到集合。';
 $lang["remove_selected_from_collection"] = '从集合中移除所选项。';
-$lang["n_recent"] = '最近添加的%qty个资源';
+
 $lang["collection_download_format"] = '下载文件格式';
 $lang["collection_download_no_tar"] = '标准归档下载';
 $lang["collection_download_use_tar"] = 'TAR归档文件';
@@ -3117,3 +3117,5 @@ $lang["fieldtitle-usergroup_config"] = '组覆盖';
 $lang["page-title_usergroup_config"] = '编辑组配置覆盖';
 $lang["action-title_usergroup_override_detail"] = '在此配置的任何设置将覆盖该组用户的系统默认设置。';
 $lang["team_resource_non_ingested_search"] = '查看未导入的资源';
+$lang["language-ms"] = '马来语';
+$lang["language-tl"] = '菲律宾语';

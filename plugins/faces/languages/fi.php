@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Valitse vain yksi vaihtoehto jokaiselle kasvoille.';
 $lang["faces-show-view"] = 'Näytä AI Faces -toiminto katselusivulla.';
 $lang["faces_count_faces"] = 'Yhteensä havaittuja kasvoja';
 $lang["faces_count_missing"] = 'Kuvia käsiteltäväksi';
+$lang["faces-tag-field-not-set"] = 'Tagging-kenttä ei ole konfiguroitu.';

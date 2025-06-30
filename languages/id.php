@@ -1213,7 +1213,7 @@ $lang["access_key_deleted"] = 'Kunci akses \'%access_key\' dihapus';
 $lang["email_error_user_list_not_valid"] = 'Tidak ada alamat email yang valid untuk dikirimkan (pengguna mungkin belum disetujui)';
 $lang["add_selected_to_collection"] = 'Tambahkan yang dipilih ke dalam koleksi';
 $lang["remove_selected_from_collection"] = 'Menghapus yang dipilih dari koleksi';
-$lang["n_recent"] = '%qty Sumber Daya yang Baru Ditambahkan';
+
 $lang["collection_download_format"] = 'Format unduhan file';
 $lang["collection_download_no_tar"] = 'Unduhan arsip standar';
 $lang["collection_download_use_tar"] = 'Arsip TAR';
@@ -3067,3 +3067,5 @@ $lang["fieldtitle-usergroup_config"] = 'Penggantian grup';
 $lang["page-title_usergroup_config"] = 'Edit konfigurasi grup yang menimpa';
 $lang["action-title_usergroup_override_detail"] = 'Setelan apa pun yang dikonfigurasi di sini akan menggantikan pengaturan default sistem untuk pengguna dalam grup ini.';
 $lang["team_resource_non_ingested_search"] = 'Lihat sumber yang tidak diambil';
+$lang["language-ms"] = 'Melayu';
+$lang["language-tl"] = 'Filipino';

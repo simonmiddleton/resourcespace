@@ -1510,7 +1510,7 @@ $lang["access_key_deleted"] = 'Tilgangsnøkkel \'%access_key\' slettet';
 $lang["email_error_user_list_not_valid"] = 'Ingen gyldige e-postadresser å sende til (brukere kan være ikke godkjent)';
 $lang["add_selected_to_collection"] = 'Legg til valgte i samling';
 $lang["remove_selected_from_collection"] = 'Fjern valgte fra samlingen';
-$lang["n_recent"] = '%qty Nylig tilføyde ressurser';
+
 $lang["collection_download_format"] = 'Nedlastingsfilformat';
 $lang["collection_download_no_tar"] = 'Standard arkivnedlasting';
 $lang["collection_download_use_tar"] = 'TAR-arkiv';
@@ -3146,3 +3146,5 @@ $lang["fieldtitle-usergroup_config"] = 'Gruppeoverstyringer';
 $lang["page-title_usergroup_config"] = 'Rediger gruppe konfigurasjonsoverskrifter';
 $lang["action-title_usergroup_override_detail"] = 'Enhver innstilling konfigurert her vil overstyre systemstandardene for brukere i denne gruppen.';
 $lang["team_resource_non_ingested_search"] = 'Vis ikke-innhentede ressurser';
+$lang["language-ms"] = 'Malayisk';
+$lang["language-tl"] = 'Filipino';

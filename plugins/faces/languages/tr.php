@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Lütfen her yüz için yalnızca bir seçenek seçin.'
 $lang["faces-show-view"] = 'Görüntü sayfasında AI Faces işlevselliğini göster.';
 $lang["faces_count_faces"] = 'Toplam tespit edilen yüzler';
 $lang["faces_count_missing"] = 'İşlenecek görüntüler';
+$lang["faces-tag-field-not-set"] = 'Etiketleme alanı yapılandırılmamış.';

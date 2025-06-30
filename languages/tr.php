@@ -960,7 +960,7 @@ $lang["deleteallsure"] = 'Bu kaynakları SİLMEK istediğinizden emin misiniz? B
 $lang["batchdonotaddcollection"] = '(bir koleksiyona eklemeyin)';
 $lang["collectionsthemes"] = 'İlgili öne çıkan ve genel koleksiyonlar';
 $lang["recent"] = 'Son Eklenenler';
-$lang["n_recent"] = '%qty Yeni eklenen kaynaklar';
+
 $lang["batchcopyfrom"] = 'Aşağıdaki verileri kimlik numarası ile kaynaktan kopyala';
 $lang["copy"] = 'Kopyala';
 $lang["zipall"] = 'İndir';
@@ -2908,3 +2908,5 @@ $lang["fieldtitle-usergroup_config"] = 'Grup geçersiz kılmaları';
 $lang["page-title_usergroup_config"] = 'Grup yapılandırma geçersiz kılmalarını düzenle';
 $lang["action-title_usergroup_override_detail"] = 'Bu alanda yapılandırılan herhangi bir ayar, bu gruptaki kullanıcılar için sistem varsayılanlarını geçersiz kılacaktır.';
 $lang["team_resource_non_ingested_search"] = 'İşlenmemiş kaynakları görüntüle';
+$lang["language-ms"] = 'Malayça';
+$lang["language-tl"] = 'Filipinli';

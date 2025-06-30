@@ -790,7 +790,7 @@ $lang["deleteallsure"] = "Sind Sie sicher, dass Sie diese Ressourcen LÖSCHEN m�
 $lang["batchdonotaddcollection"] = "(keiner Kollektion hinzufügen)";
 $lang["collectionsthemes"] = "Verwandte Themen und öffentliche Kollektionen";
 $lang["recent"] = "Neueste";
-$lang["n_recent"] = "%qty neueste";
+
 $lang["batchcopyfrom"] = "Daten von der Ressource (ID) kopieren";
 $lang["copy"] = "kopieren";
 $lang["zipall"] = "alle komprimieren (zip)";
@@ -3211,3 +3211,5 @@ $lang["fieldtitle-usergroup_config"] = 'Gruppenüberschreibungen';
 $lang["page-title_usergroup_config"] = 'Gruppenkonfigurationseinstellungen bearbeiten';
 $lang["action-title_usergroup_override_detail"] = 'Alle hier konfigurierten Einstellungen überschreiben die Systemstandardeinstellungen für Benutzer in dieser Gruppe.';
 $lang["team_resource_non_ingested_search"] = 'Nicht ingestierte Ressourcen anzeigen';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

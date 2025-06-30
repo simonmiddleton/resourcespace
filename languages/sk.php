@@ -933,7 +933,7 @@ $lang["deleteallsure"] = "Naozaj chcete ODSTRÁNIŤ tieto zdroje? Týmto sa odst
 $lang["batchdonotaddcollection"] = "(nepridať do zbierky)";
 $lang["collectionsthemes"] = "Súvisiace odporúčané a verejné zbierky";
 $lang["recent"] = "Nedávne";
-$lang["n_recent"] = "%qty Nedávno pridaných zdrojov";
+
 $lang["batchcopyfrom"] = "Skopírujte nižšie uvedené údaje zo zdroja s ID";
 $lang["copy"] = "Kopírovať";
 $lang["zipall"] = "Stiahnuť";
@@ -3317,3 +3317,5 @@ $lang["fieldtitle-usergroup_config"] = 'Prekrytia skupiny';
 $lang["page-title_usergroup_config"] = 'Upraviť prekonania konfigurácie skupiny';
 $lang["action-title_usergroup_override_detail"] = 'Akékoľvek nastavenia nakonfigurované tu prepisujú systémové predvolené hodnoty pre používateľov v tejto skupine.';
 $lang["team_resource_non_ingested_search"] = 'Zobraziť neimportované zdroje';
+$lang["language-ms"] = 'Malajščina';
+$lang["language-tl"] = 'Filipínčina';

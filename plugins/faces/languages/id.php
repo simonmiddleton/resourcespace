@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Silakan pilih hanya satu opsi untuk setiap wajah.';
 $lang["faces-show-view"] = 'Tampilkan fungsionalitas AI Faces di halaman tampilan';
 $lang["faces_count_faces"] = 'Total wajah terdeteksi';
 $lang["faces_count_missing"] = 'Gambar untuk diproses';
+$lang["faces-tag-field-not-set"] = 'Bidang penandaan tidak dikonfigurasi';

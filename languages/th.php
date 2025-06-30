@@ -950,7 +950,7 @@ $lang["deleteallsure"] = 'คุณแน่ใจหรือว่าต้อ
 $lang["batchdonotaddcollection"] = '(ไม่เพิ่มไปยังคอลเลกชัน)';
 $lang["collectionsthemes"] = 'คอลเลกชันที่เกี่ยวข้องที่โดดเด่นและสาธารณะ';
 $lang["recent"] = 'ล่าสุด';
-$lang["n_recent"] = '%qty ทรัพยากรที่เพิ่มเข้ามาใหม่';
+
 $lang["batchcopyfrom"] = 'คัดลอกข้อมูลด้านล่างจากทรัพยากรที่มี ID';
 $lang["copy"] = 'คัดลอก';
 $lang["zipall"] = 'ดาวน์โหลด';
@@ -2894,3 +2894,5 @@ $lang["fieldtitle-usergroup_config"] = 'การแทนที่กลุ่�
 $lang["page-title_usergroup_config"] = 'แก้ไขการตั้งค่ากลุ่มที่แทนที่';
 $lang["action-title_usergroup_override_detail"] = 'การตั้งค่าทั้งหมดที่กำหนดไว้ที่นี่จะมีผลเหนือกว่าค่าพื้นฐานของระบบสำหรับผู้ใช้ในกลุ่มนี้';
 $lang["team_resource_non_ingested_search"] = 'ดูทรัพยากรที่ไม่ได้ถูกนำเข้า';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

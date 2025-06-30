@@ -918,7 +918,7 @@ $lang["access_key_deleted"] = 'Usunięto klucz dostępu \'%access_key\'';
 $lang["email_error_user_list_not_valid"] = 'Brak prawidłowych adresów e-mail do wysłania (użytkownicy mogą nie być zatwierdzeni)';
 $lang["add_selected_to_collection"] = 'Dodaj wybrane do kolekcji';
 $lang["remove_selected_from_collection"] = 'Usuń wybrane z kolekcji';
-$lang["n_recent"] = '%qty Ostatnio dodanych zasobów';
+
 $lang["collection_download_format"] = 'Format pliku do pobrania';
 $lang["collection_download_no_tar"] = 'Standardowe pobieranie archiwum';
 $lang["collection_download_use_tar"] = 'Archiwum TAR';
@@ -3034,3 +3034,5 @@ $lang["fieldtitle-usergroup_config"] = 'Nadpisy grupy';
 $lang["page-title_usergroup_config"] = 'Edytuj nadpisy konfiguracji grupy';
 $lang["action-title_usergroup_override_detail"] = 'Wszelkie ustawienia skonfigurowane tutaj będą miały pierwszeństwo przed domyślnymi ustawieniami systemu dla użytkowników w tej grupie.';
 $lang["team_resource_non_ingested_search"] = 'Wyświetl zasoby, które nie zostały zaimportowane';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

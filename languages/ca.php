@@ -1053,7 +1053,7 @@ $lang["access_key_deleted"] = 'Clau d\'accés \'%access_key\' eliminada';
 $lang["email_error_user_list_not_valid"] = 'No hi ha correus electrònics vàlids per enviar (els usuaris podrien no estar aprovats)';
 $lang["add_selected_to_collection"] = 'Afegir la selecció a la col·lecció';
 $lang["remove_selected_from_collection"] = 'Eliminar la selecció de la col·lecció';
-$lang["n_recent"] = '%qty Recursos afegits recentment';
+
 $lang["collection_download_format"] = 'Format de descàrrega de fitxer';
 $lang["collection_download_no_tar"] = 'Descàrrega d\'arxiu estàndard d\'arxiu';
 $lang["collection_download_use_tar"] = 'Arxiu TAR';
@@ -3009,3 +3009,5 @@ $lang["fieldtitle-usergroup_config"] = 'Overrides de grup';
 $lang["page-title_usergroup_config"] = 'Edita les sobrescripts de configuració del grup';
 $lang["action-title_usergroup_override_detail"] = 'Qualsevol configuració establerta aquí substituirà els valors predeterminats del sistema per als usuaris d\'aquest grup.';
 $lang["team_resource_non_ingested_search"] = 'Veure recursos no ingestats';
+$lang["language-ms"] = 'Malaià';
+$lang["language-tl"] = 'Filipí';

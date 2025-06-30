@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Vă rugăm să selectați doar o singură opțiune pen
 $lang["faces-show-view"] = 'Afișați funcționalitatea AI Faces pe pagina de vizualizare.';
 $lang["faces_count_faces"] = 'Total fețe detectate';
 $lang["faces_count_missing"] = 'Imagini de procesat';
+$lang["faces-tag-field-not-set"] = 'Câmpul de etichetare nu este configurat.';

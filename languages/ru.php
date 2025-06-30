@@ -403,7 +403,7 @@ $lang["deleteallsure"] = "Вы уверены, что хотите удалит�
 $lang["batchdonotaddcollection"] = "(не добавить в коллекцию)";
 $lang["collectionsthemes"] = "Похожие темы и публичные коллекции";
 $lang["recent"] = "Новые объекты";
-$lang["n_recent"] = "%qty Недавно добавленных объектов";
+
 $lang["batchcopyfrom"] = "Скопируйте данные из объекта со следующим ID";
 $lang["copy"] = "Копировать";
 $lang["zipall"] = "Скачать коллекцию архивом";
@@ -2991,3 +2991,5 @@ $lang["fieldtitle-usergroup_config"] = 'Переопределения груп�
 $lang["page-title_usergroup_config"] = 'Редактировать переопределения конфигурации группы';
 $lang["action-title_usergroup_override_detail"] = 'Любые настройки, сконфигурированные здесь, будут иметь приоритет над системными настройками для пользователей в этой группе.';
 $lang["team_resource_non_ingested_search"] = 'Просмотреть неинтегрированные ресурсы';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

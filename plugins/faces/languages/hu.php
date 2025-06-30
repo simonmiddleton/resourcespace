@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Kérjük, válasszon csak egy lehetőséget minden egy
 $lang["faces-show-view"] = 'Mutassa az AI Faces funkciót a nézet oldalon.';
 $lang["faces_count_faces"] = 'Összes észlelt arc';
 $lang["faces_count_missing"] = 'Képek feldolgozásra';
+$lang["faces-tag-field-not-set"] = 'A címkéző mező nincs konfigurálva.';

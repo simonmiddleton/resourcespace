@@ -961,7 +961,7 @@ $lang["deleteallsure"] = 'क्या आप वाकई इन संसा�
 $lang["batchdonotaddcollection"] = '(कलेक्शन में न जोड़ें)';
 $lang["collectionsthemes"] = 'संबंधित विशेष और सार्वजनिक संग्रह';
 $lang["recent"] = 'हाल का';
-$lang["n_recent"] = '%qty हाल ही में जोड़े गए संसाधन';
+
 $lang["batchcopyfrom"] = 'नीचे दिए गए डेटा को संसाधन आईडी के साथ कॉपी करें';
 $lang["copy"] = 'कॉपी';
 $lang["zipall"] = 'डाउनलोड';
@@ -2916,3 +2916,5 @@ $lang["fieldtitle-usergroup_config"] = 'समूह ओवरराइड्स
 $lang["page-title_usergroup_config"] = 'समूह कॉन्फ़िगरेशन ओवरराइड संपादित करें';
 $lang["action-title_usergroup_override_detail"] = 'यहाँ कॉन्फ़िगर की गई कोई भी सेटिंग इस समूह के उपयोगकर्ताओं के लिए सिस्टम डिफ़ॉल्ट्स को ओवरराइड कर देगी।';
 $lang["team_resource_non_ingested_search"] = 'गैर-इंजेस्टेड संसाधनों को देखें';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'फिलिपिनो';

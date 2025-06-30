@@ -963,7 +963,7 @@ $lang["deleteallsure"] = 'آیا مطمئن هستید که می‌خواهید 
 $lang["batchdonotaddcollection"] = '(به یک مجموعه اضافه نکنید)';
 $lang["collectionsthemes"] = 'مجموعه‌های ویژه و عمومی مرتبط';
 $lang["recent"] = 'اخیر';
-$lang["n_recent"] = '%qty منابع اخیراً اضافه شده';
+
 $lang["batchcopyfrom"] = 'کپی کردن داده‌های زیر از منبع با شناسه';
 $lang["copy"] = 'کپی';
 $lang["zipall"] = 'دانلود';
@@ -2910,3 +2910,5 @@ $lang["fieldtitle-usergroup_config"] = 'تغییرات گروه';
 $lang["page-title_usergroup_config"] = 'ویرایش پیکربندی گروه های جایگزین';
 $lang["action-title_usergroup_override_detail"] = 'هر تنظیماتی که در اینجا پیکربندی شود، تنظیمات پیش‌فرض سیستم را برای کاربران در این گروه نادیده می‌گیرد.';
 $lang["team_resource_non_ingested_search"] = 'مشاهده منابع غیر وارد شده';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

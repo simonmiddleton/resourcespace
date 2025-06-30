@@ -20,3 +20,4 @@ $lang["faces-oneface"] = '各面については1つのオプションのみを�
 $lang["faces-show-view"] = '表示ページでAI Faces機能を表示する。';
 $lang["faces_count_faces"] = '検出された顔の合計';
 $lang["faces_count_missing"] = '処理する画像';
+$lang["faces-tag-field-not-set"] = 'タグ付けフィールドが設定されていません。';

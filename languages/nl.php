@@ -1008,7 +1008,7 @@ $lang["access_key_deleted"] = 'Toegangssleutel \'%access_key\' verwijderd';
 $lang["email_error_user_list_not_valid"] = 'Geen geldige e-mails om naar te verzenden (gebruikers zijn mogelijk niet goedgekeurd)';
 $lang["add_selected_to_collection"] = 'Toevoegen aan collectie';
 $lang["remove_selected_from_collection"] = 'Verwijder geselecteerde items uit collectie';
-$lang["n_recent"] = '%qty Recent toegevoegde bronnen';
+
 $lang["collection_download_format"] = 'Bestandsformaat downloaden';
 $lang["collection_download_no_tar"] = 'Standaard archief download';
 $lang["collection_download_use_tar"] = 'TAR-archief';
@@ -3015,3 +3015,5 @@ $lang["fieldtitle-usergroup_config"] = 'Groep overschrijvingen';
 $lang["page-title_usergroup_config"] = 'Bewerk groepsconfiguratie overschrijvingen';
 $lang["action-title_usergroup_override_detail"] = 'Alle instellingen die hier zijn geconfigureerd, overschrijven de systeemeisen voor gebruikers in deze groep.';
 $lang["team_resource_non_ingested_search"] = 'Bekijk niet-geïngesteerde middelen';
+$lang["language-ms"] = 'Maleisisch';
+$lang["language-tl"] = 'Filipino';

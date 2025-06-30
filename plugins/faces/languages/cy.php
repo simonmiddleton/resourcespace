@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'Dewiswch dim ond un opsiwn ar gyfer pob wyneb.';
 $lang["faces-show-view"] = 'Dangoswch y swyddogaeth Wynebau AI ar y dudalen golygfa.';
 $lang["faces_count_faces"] = 'Cyfanswm wynebau a ddarganfuwyd';
 $lang["faces_count_missing"] = 'Delweddau i\'w prosesu';
+$lang["faces-tag-field-not-set"] = 'Nid yw\'r maes tagio wedi\'i ffurfweddu.';

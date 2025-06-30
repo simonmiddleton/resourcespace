@@ -20,3 +20,4 @@ $lang["faces-oneface"] = 'กรุณาเลือกเพียงหนึ
 $lang["faces-show-view"] = 'แสดงฟังก์ชัน AI Faces บนหน้ามุมมอง';
 $lang["faces_count_faces"] = 'จำนวนใบหน้าทั้งหมดที่ตรวจพบ';
 $lang["faces_count_missing"] = 'ภาพที่จะประมวลผล';
+$lang["faces-tag-field-not-set"] = 'ฟิลด์แท็กไม่ได้ถูกกำหนดค่า';

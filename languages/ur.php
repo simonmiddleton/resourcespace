@@ -963,7 +963,7 @@ $lang["deleteallsure"] = 'کیا آپ واقعی ان وسائل کو حذف ک�
 $lang["batchdonotaddcollection"] = '(کلیکشن میں شامل نہ کریں)';
 $lang["collectionsthemes"] = 'متعلقہ نمایاں اور عوامی مجموعے';
 $lang["recent"] = 'حالیہ';
-$lang["n_recent"] = '%qty حال ہی میں شامل کردہ وسائل';
+
 $lang["batchcopyfrom"] = 'ذیل میں موجود ڈیٹا کو آئی ڈی کے ساتھ وسائل سے کاپی کریں';
 $lang["copy"] = 'نقل کریں';
 $lang["zipall"] = 'ڈاؤن لوڈ';
@@ -2909,3 +2909,5 @@ $lang["fieldtitle-usergroup_config"] = 'گروپ اووررائیڈز';
 $lang["page-title_usergroup_config"] = 'گروپ کی ترتیب کی اووررائیڈز میں ترمیم کریں';
 $lang["action-title_usergroup_override_detail"] = 'یہاں ترتیب دی گئی کوئی بھی سیٹنگز اس گروپ کے صارفین کے لیے نظام کی ڈیفالٹس کو اووررائیڈ کر دیں گی۔';
 $lang["team_resource_non_ingested_search"] = 'غیر شامل کردہ وسائل دیکھیں';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

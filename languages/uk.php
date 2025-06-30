@@ -962,7 +962,7 @@ $lang["deleteallsure"] = 'Ви впевнені, що хочете ВИДАЛИ�
 $lang["batchdonotaddcollection"] = '(не додавати до колекції)';
 $lang["collectionsthemes"] = 'Пов\'язані рекомендовані та публічні колекції';
 $lang["recent"] = 'Недавні';
-$lang["n_recent"] = '%qty Нещодавно додані ресурси';
+
 $lang["batchcopyfrom"] = 'Скопіюйте дані нижче з ресурсу з ID';
 $lang["copy"] = 'Копіювати';
 $lang["zipall"] = 'Завантажити';
@@ -2902,3 +2902,5 @@ $lang["fieldtitle-usergroup_config"] = 'Перевизначення групи'
 $lang["page-title_usergroup_config"] = 'Редагувати налаштування групи';
 $lang["action-title_usergroup_override_detail"] = 'Будь-які налаштування, сконфігуровані тут, переважатимуть системні значення за замовчуванням для користувачів у цій групі.';
 $lang["team_resource_non_ingested_search"] = 'Переглянути неінгестовані ресурси';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

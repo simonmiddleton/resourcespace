@@ -959,7 +959,7 @@ $lang["deleteallsure"] = 'ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹ ਸਰ�
 $lang["batchdonotaddcollection"] = '(ਕਿਸੇ ਕਲੈਕਸ਼ਨ ਵਿੱਚ ਨਾ ਸ਼ਾਮਲ ਕਰੋ)';
 $lang["collectionsthemes"] = 'ਸੰਬੰਧਿਤ ਫੀਚਰਡ ਅਤੇ ਜਨਤਕ ਕਲੇਕਸ਼ਨਜ਼';
 $lang["recent"] = 'ਹਾਲੀਆ';
-$lang["n_recent"] = '%qty ਹਾਲ ਹੀ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤੇ ਗਏ ਸਰੋਤ';
+
 $lang["batchcopyfrom"] = 'ਹੇਠਾਂ ਦਿੱਤੇ ਡਾਟਾ ਨੂੰ ID ਵਾਲੇ ਸਰੋਤ ਤੋਂ ਕਾਪੀ ਕਰੋ';
 $lang["copy"] = 'ਕਾਪੀ ਕਰੋ';
 $lang["zipall"] = 'ਡਾਊਨਲੋਡ';
@@ -2910,3 +2910,5 @@ $lang["fieldtitle-usergroup_config"] = 'ਗਰੁੱਪ ਓਵਰਰਾਈਡز'
 $lang["page-title_usergroup_config"] = 'ਗਰੁੱਪ ਸੰਰਚਨਾ ਓਵਰਰਾਈਡਸ ਸੰਪਾਦਿਤ ਕਰੋ';
 $lang["action-title_usergroup_override_detail"] = 'ਇੱਥੇ ਸੰਰਚਿਤ ਕੀਤੀਆਂ ਕੋਈ ਵੀ ਸੈਟਿੰਗਜ਼ ਇਸ ਗਰੁੱਪ ਦੇ ਉਪਭੋਗਤਾਵਾਂ ਲਈ ਸਿਸਟਮ ਦੇ ਡਿਫਾਲਟ ਨੂੰ ਓਵਰਰਾਈਡ ਕਰ ਦੇਣਗੀਆਂ।';
 $lang["team_resource_non_ingested_search"] = 'ਗੈਰ-ਖਪਤ ਕੀਤੀਆਂ ਸੰਸਾਧਨਾਂ ਨੂੰ ਵੇਖੋ';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'ਫਿਲੀਪੀਨੋ';

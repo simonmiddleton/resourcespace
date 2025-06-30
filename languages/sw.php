@@ -959,7 +959,7 @@ $lang["deleteallsure"] = 'Je, una uhakika unataka KUFUTA rasilimali hizi? Hii it
 $lang["batchdonotaddcollection"] = '(usiongeze kwenye mkusanyiko)';
 $lang["collectionsthemes"] = 'Makusanyo yanayohusiana yaliyoangaziwa na ya umma';
 $lang["recent"] = 'Hivi karibuni';
-$lang["n_recent"] = '%qty Rasilimali zilizoongezwa hivi karibuni';
+
 $lang["batchcopyfrom"] = 'Nakili data hapa chini kutoka kwa rasilimali yenye Kitambulisho (ID)';
 $lang["copy"] = 'Nakili';
 $lang["zipall"] = 'Pakua';
@@ -2907,3 +2907,5 @@ $lang["fieldtitle-usergroup_config"] = 'Mabadiliko ya kikundi';
 $lang["page-title_usergroup_config"] = 'Hariri mipangilio ya kikundi';
 $lang["action-title_usergroup_override_detail"] = 'Mipangilio yoyote iliyowekwa hapa itachukua nafasi ya mipangilio ya mfumo kwa watumiaji katika kundi hili.';
 $lang["team_resource_non_ingested_search"] = 'Tazama rasilimali zisizopokelewa';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

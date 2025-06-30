@@ -1109,7 +1109,7 @@ $lang["access_key_deleted"] = 'Adgangsnøgle \'%access_key\' slettet';
 $lang["email_error_user_list_not_valid"] = 'Ingen gyldige e-mails at sende til (brugere er måske ikke godkendt)';
 $lang["add_selected_to_collection"] = 'Tilføj valgte til samling';
 $lang["remove_selected_from_collection"] = 'Fjern markerede fra samling';
-$lang["n_recent"] = '%qty Nyligt tilføjede ressourcer';
+
 $lang["collection_download_format"] = 'Download filformat';
 $lang["collection_download_no_tar"] = 'Standard arkiv download';
 $lang["collection_download_use_tar"] = 'TAR-arkiv';
@@ -2972,3 +2972,5 @@ $lang["fieldtitle-usergroup_config"] = 'Gruppeoverstyringer';
 $lang["page-title_usergroup_config"] = 'Rediger gruppe konfigurationsoverskrivninger';
 $lang["action-title_usergroup_override_detail"] = 'Enhver indstilling, der er konfigureret her, vil overskrive systemstandarderne for brugere i denne gruppe.';
 $lang["team_resource_non_ingested_search"] = 'Vis ikke-indtagne ressourcer';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

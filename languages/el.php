@@ -1103,7 +1103,7 @@ $lang["access_key_deleted"] = 'Ο κλειδί πρόσβασης \'%access_key\
 $lang["email_error_user_list_not_valid"] = 'Δεν υπάρχουν έγκυρες διευθύνσεις email για αποστολή (οι χρήστες ενδέχεται να μην έχουν εγκριθεί)';
 $lang["add_selected_to_collection"] = 'Προσθήκη επιλεγμένων στη συλλογή';
 $lang["remove_selected_from_collection"] = 'Αφαίρεση των επιλεγμένων από τη συλλογή';
-$lang["n_recent"] = '%qty Πρόσφατα προστέθηκαν αντικείμενα';
+
 $lang["collection_download_format"] = 'Μορφή αρχείου λήψης';
 $lang["collection_download_no_tar"] = 'Κατεβάστε το αρχείο αποθήκευσης σε μορφή προτύπου';
 $lang["collection_download_use_tar"] = 'Αρχείο TAR';
@@ -2976,3 +2976,5 @@ $lang["fieldtitle-usergroup_config"] = 'Αντιστάθμιση ομάδας';
 $lang["page-title_usergroup_config"] = 'Επεξεργασία παραμετροποιήσεων ομάδας';
 $lang["action-title_usergroup_override_detail"] = 'Οποιεσδήποτε ρυθμίσεις έχουν ρυθμιστεί εδώ θα αντικαταστήσουν τις προεπιλεγμένες ρυθμίσεις του συστήματος για τους χρήστες σε αυτήν την ομάδα.';
 $lang["team_resource_non_ingested_search"] = 'Δείτε πόρους που δεν έχουν εισαχθεί';
+$lang["language-ms"] = 'Μαλαισιανά';
+$lang["language-tl"] = 'Filipino';

@@ -947,7 +947,7 @@ $lang["deleteallsure"] = 'Bạn có chắc chắn muốn XÓA những tài nguy�
 $lang["batchdonotaddcollection"] = '(không thêm vào bộ sưu tập)';
 $lang["collectionsthemes"] = 'Các bộ sưu tập nổi bật và công khai liên quan';
 $lang["recent"] = 'Gần đây';
-$lang["n_recent"] = '%qty Tài nguyên mới được thêm gần đây';
+
 $lang["batchcopyfrom"] = 'Sao chép dữ liệu bên dưới từ tài nguyên có ID';
 $lang["copy"] = 'Sao chép';
 $lang["zipall"] = 'Tải xuống';
@@ -2899,3 +2899,5 @@ $lang["fieldtitle-usergroup_config"] = 'Ghi đè nhóm';
 $lang["page-title_usergroup_config"] = 'Chỉnh sửa cấu hình nhóm thay thế';
 $lang["action-title_usergroup_override_detail"] = 'Bất kỳ cài đặt nào được cấu hình ở đây sẽ ghi đè các mặc định của hệ thống cho người dùng trong nhóm này.';
 $lang["team_resource_non_ingested_search"] = 'Xem tài nguyên chưa được nhập khẩu';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';
