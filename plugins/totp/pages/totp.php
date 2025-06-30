@@ -98,20 +98,50 @@ if (!TOTP_is_user_set_up($userref)) {
                 }
                 form {
                     width:500px;
-                    box-shadow: 5px 5px 10px grey;
-                    border-radius: 10px;
-                    padding:20px;text-align:center;
-                    margin:100px auto 0 auto;
+                    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+                    border-radius: 20px;
+                    padding: 30px;
+                    text-align: center;
+                    margin: 100px auto 0 auto;
                     background: #fff;
                 }
                 label {
-                    width:300px;
+                    width: 300px;
                 }
                 img {
                     max-width: 400px;
                     max-height: 80px;
                     display: block;
                     margin: 0 auto;
+                }
+                input[type="code"] {
+                    border-radius: 5px;
+                    padding: 4px 6px 4px 6px;
+                    border: 1px solid rgba(0,0,0,0.25);
+                    box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.1);
+                    font-size: 1em;
+                    min-height: 32px;
+                    width: 120px;
+                    letter-spacing: 2px;
+                }
+                input[type="submit"] {
+                    background-color: #1679c0;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+                    padding: 6px 14px;
+                    min-height: 32px;
+                    min-width: 120px;
+                    border-radius: 5px;
+                    border: 1px solid transparent;
+                    color: white;
+                    cursor: pointer;
+                    font-weight: 600;
+                    font-size: 0.875rem;
+                }
+                input[type="submit"]:hover {
+                    filter: brightness(1.08);
+                }
+                input[type="submit"]:active {
+                    filter: brightness(0.92);
                 }
             </style>
             <script>
@@ -128,15 +158,15 @@ if (!TOTP_is_user_set_up($userref)) {
                 <?php generateFormToken("totpform"); ?>
                 <svg width="80" height="120" viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
                     <rect x="10" y="5" width="60" height="110" rx="10" fill="#e0e0e0" stroke="#999" stroke-width="2"/>
-                    <rect x="20" y="25" width="40" height="20" fill="#ccc" rx="2"/>
+                    <rect x="15" y="25" width="50" height="20" fill="#ccc" rx="2"/>
                     <text x="40" y="40" font-size="12" text-anchor="middle" fill="#333" font-family="sans-serif">123 456</text>
                     <circle cx="40" cy="100" r="4" fill="#666"/>
                 </svg>
                 <p><?php echo escape($lang["totp_code_details"]);?></p>
                 <p><input type="code" name="code" id="code" class="shrtwidth" inputmode="numeric" pattern="[0-9]*" maxlength="6" /></p>
-                <?php if ($tries > 0) {
-                    echo 10 - $tries . " " . escape($lang["totp_tries_left"]);
-                } ?>
+                <?php if ($tries > 0) { ?>
+                    <p><?php echo 10 - $tries . " " . escape($lang["totp_tries_left"]); ?></p>
+                <?php } ?>
                 <div class="QuestionSubmit">       
                     <input name="Submit" type="submit" value="<?php echo escape($lang["totp_confirm"]); ?>" />
                 </div>
