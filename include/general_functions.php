@@ -5660,3 +5660,25 @@ function get_non_ingested_resources(): int
 {
     return ps_value("SELECT COUNT(*) value FROM resource WHERE file_path IS NOT NULL AND file_path <> ''", [], 0);
 }
+
+/**
+ * Return URL of the application favicon
+ *
+ * @return string  Favicon URL
+ */
+function get_favicon_url(): string
+{
+    global $header_favicon, $baseurl, $storageurl;
+
+    if ($header_favicon == '') {
+        $header_favicon = 'gfx/interface/favicon.png';
+    }
+
+    $favicon = "{$baseurl}/{$header_favicon}";
+
+    if (strpos($header_favicon, '[storage_url]') !== false) {
+        $favicon = str_replace('[storage_url]', $storageurl, $header_favicon);
+    }
+
+    return $favicon;
+}

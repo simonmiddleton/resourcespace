@@ -89,6 +89,7 @@ if (!TOTP_is_user_set_up($userref)) {
     ?>
     <html>
         <head>
+            <link rel="icon" type="image/png" href="<?php echo get_favicon_url(); ?>" />
             <title><?php echo escape($applicationname); ?></title>
             <style>
                 html, body {
