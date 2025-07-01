@@ -42,8 +42,8 @@ if ((getval('submit', '') != '' || getval('save', '') != '') && enforcePostReque
     $simplesaml['simplesaml_check_idp_cert_expiry'] = getval('simplesaml_check_idp_cert_expiry', '');
     $simplesaml['simplesaml_use_www'] = (bool) getval('simplesaml_use_www', '1', false, 'is_int_loose');
 
-    $simplesaml['simplesaml_metadata_url'] = getval('simplesaml_metadata_url', '');
-    if (trim($simplesaml['simplesaml_metadata_url']) !== "") {
+    $simplesaml['simplesaml_metadata_url'] = trim(getval('simplesaml_metadata_url', ''));
+    if ($simplesaml['simplesaml_metadata_url'] !== '') {
         $simplesaml['simplesaml_rsconfig'] = 2;
     } else {
         $simplesaml['simplesaml_rsconfig'] = getval('simplesaml_rsconfig', 1, true);
@@ -79,11 +79,7 @@ if ((getval('submit', '') != '' || getval('save', '') != '') && enforcePostReque
     }
 }
 
-
-global $baseurl;
-
-// Retrieve list of groups for use in mapping dropdown
-$rsgroups = ps_query('select ref, name from usergroup order by name asc', array());
+$rsgroupoptions = get_usergroups(false, '', true);
 
 // If any new values aren't set yet, fudge them so we don't get an undefined error
 // this is important for updates to the plugin that introduce new variables
@@ -214,8 +210,8 @@ function showhidesamlconfigs(option) {
         } else {
             jQuery("#question_simplesaml_use_www").slideUp(0);
             jQuery("#question_simplesaml_sp").slideUp(0);
-            jQuery("#generate_sp_config_link").slideUp(0);
-            jQuery("#sp_config_links").slideUp(0);
+            // jQuery("#generate_sp_config_link").slideUp(0);
+            // jQuery("#sp_config_links").slideUp(0);
             jQuery("#question_simplesaml_check_idp_cert_expiry").slideUp(0);
             jQuery("#question_simplesaml_metadata_url").slideDown(0);
         }
@@ -234,18 +230,20 @@ jQuery(document).ready(function() {
 </script>
 
 
-<div class='Question' id='sp_config_links'><div class='Fixed'>
-    <?php
-    $samlphplink = $simplesaml_rsconfig
-        ? "{$baseurl_short}plugins/simplesaml/lib/public/admin"
-        : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/public/admin");
-    if (isset($simplesaml_lib_path) && file_exists($simplesaml_lib_path . "/config/authsources.php")) {
-        echo "<a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate' target='_blank'>" . LINK_CARET . $lang["simplesaml_existing_config"] . "</a></br>";
-    } else {
-        echo "<a href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a></br>";
-    }
-    echo "<a href='" . $samlphplink . "' target='_blank'>" . LINK_CARET . $lang["simplesaml_sp_samlphp_link"] . "</a></li>";
-    ?>
+<div class='Question' id='sp_config_links'>
+    <div class='Fixed'>
+        <?php
+        $samlphplink = $simplesaml_rsconfig
+            ? "{$baseurl_short}plugins/simplesaml/lib/public/admin"
+            : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/public/admin");
+
+        if (isset($simplesaml_lib_path) && file_exists($simplesaml_lib_path . "/config/authsources.php")) {
+            echo "<a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate' target='_blank'>" . LINK_CARET . $lang["simplesaml_existing_config"] . "</a>";
+        } 
+        echo "<a id='generate_sp_config_link' href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a><br>";
+        // Show link to SimpleSAMLphp test site
+        echo "<a href='" . $samlphplink . "' target='_blank'>" . LINK_CARET . $lang["simplesaml_sp_samlphp_link"] . "</a></li>";
+        ?>
     </div>
     <div class='clearerleft'></div>
 </div>
@@ -294,12 +292,7 @@ config_text_input("simplesaml_fullname_separator", $lang['simplesaml_fullname_se
 config_text_input("simplesaml_email_attribute", $lang['simplesaml_email_attribute'], $simplesaml_email_attribute);
 config_text_input("simplesaml_group_attribute", $lang['simplesaml_group_attribute'], $simplesaml_group_attribute);
 
-$rsgroupoption = array();
-foreach ($rsgroups as $rsgroup) {
-    $rsgroupoption[$rsgroup["ref"]] = $rsgroup["name"];
-}
-
-config_single_select("simplesaml_fallback_group", $lang['simplesaml_fallback_group'], $simplesaml_fallback_group, $rsgroupoption, true);
+config_single_select("simplesaml_fallback_group", $lang['simplesaml_fallback_group'], $simplesaml_fallback_group, $rsgroupoptions, true);
 config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attributes'], $simplesaml_custom_attributes);
 ?>
 <div class="Question">
@@ -331,12 +324,12 @@ for ($i = 0; $i < count($simplesaml_groupmap) + 1; $i++) {
    <td><input type='text' name='samlgroup[]' value='<?php echo escape($thegroup['samlgroup']); ?>' /></td>
    <td><select name='rsgroup[]'><option value=''></option>
     <?php
-    foreach ($rsgroups as $rsgroup) {
-        echo  "<option value='" . $rsgroup['ref'] . "'";
-        if ($thegroup['rsgroup'] == $rsgroup['ref']) {
+    foreach ($rsgroupoptions as $groupref => $groupname) {
+        echo  "<option value='" . (int) $groupref . "'";
+        if ($thegroup['rsgroup'] == $groupref) {
             echo " selected";
         }
-        echo ">" . $rsgroup['name'] . "</option>\n";
+        echo ">" . escape($groupname) . "</option>\n";
     }
     ?></select>
     </td>

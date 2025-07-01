@@ -13,54 +13,18 @@ function HookSimplesamlAllInitialise()
     }
     check_removed_ui_config("simplesaml_lib_path");
 
-    if (isset($GLOBALS["metadata_xml_url"])) {
+    if (isset($GLOBALS["simplesaml_metadata_url"]) && trim($GLOBALS["simplesaml_metadata_url"]) !== '') {
         global $simplesamlconfig;
         // Get IdP data from sysvars
         $storedsamlconfig = get_sysvar("saml_idp_metadata");
         $simplesamlconfig['metadata'] = json_decode($storedsamlconfig, true);
         if (trim($storedsamlconfig) == "" || $simplesamlconfig['metadata'] === false) {
             // Invalid metadata
-            debug("simplesaml- invalid metadata");
-
-            $GLOBALS['use_error_exception'] = true;
-            try {
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $GLOBALS["metadata_xml_url"]);
-                curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                // curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-                // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-                $response = curl_exec($ch);
-                $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
-            } catch (Throwable $t) {               
-                debug("simplesaml - unable to retrieve metadata: " .  $t->getMessage());
+            debug("simplesaml - invalid metadata");
+            $success = simplesaml_update_metadata();
+            if(!$success) {
                 return false;
             }
-            unset($GLOBALS['use_error_exception']);
-            if ($response_status_code !== 200) {
-                debug("simplesaml - unable to retrieve metadata ");
-            }
-        
-            $metadata_xml =  $response;
-                       
-            // header("Content-Type: text/xml; charset=utf-8");
-            // exit($metadata_xml);
-
-            require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
-            $entities = \SimpleSAML\Metadata\SAMLParser::parseDescriptorsString($metadata_xml);
-            
-
-            $idpindex = array_key_first($entities);
-            $parsedmetadata = $entities[$idpindex]->getMetadata20IdP();
-            // exit($idpindex);
-            $simplesamlconfig['metadata'] = [];
-            $simplesamlconfig['metadata'][$idpindex] = $parsedmetadata;
-            set_sysvar("saml_idp_metadata", json_encode($simplesamlconfig['metadata']));
-
-            // exit(print_r($simplesamlconfig));
         }
 
         $simplesamlconfig['authsources']['admin'] = ['core:AdminPassword'];
@@ -834,4 +798,31 @@ function HookSimplesamlAllExtra_checks()
 function HookSimplesamlAllSsologindefault()
 {
     return !$GLOBALS["simplesaml_prefer_standard_login"];
+}
+
+function HookSimplesamlAllCron()
+{
+    // Get IdP data from sysvars
+    $storedsamlconfig = get_sysvar("saml_idp_metadata");
+    $simplesamlconfig['metadata'] = json_decode($storedsamlconfig, true);
+
+    // Check when last updated
+    $lastupdate = get_sysvar("saml_idp_metadata_last_updated");
+
+    if (
+        trim($storedsamlconfig) == "" 
+        || $simplesamlconfig['metadata'] === false
+        || time() - $lastupdate > 60*60*12 // Don't update if valid and updated in last 12 hours
+    ) {
+        // Invalid metadata
+        debug("simplesaml - invalid metadata");
+        echo "Updating SAML metadata" . PHP_EOL;
+        $result = simplesaml_update_metadata();
+        if($result !== true) {
+            $message = "Failed to update SAML metadata" . $result;
+            echo $message . PHP_EOL;
+            return;
+        }
+        echo "Successfully updated SAML metadata" . PHP_EOL;
+    }
 }
