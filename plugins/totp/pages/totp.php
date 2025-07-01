@@ -34,10 +34,10 @@ if (!TOTP_is_user_set_up($userref)) {
     include dirname(__DIR__, 3) . "/include/header.php";
     ?>
 
-    <div class="BasicsBox">
+    <div class="BasicsBox BasicsBoxPadded">
         <h1><?php echo escape($lang["totp_set_up"]); ?></h1>
-        <p><?php echo escape($lang["totp_set_up_details"]); ?></p>
-        <div id="qrcode"></div>
+        <p><?php echo strip_tags_and_attributes($lang["totp_set_up_details"]); ?></p>
+        <div id="qrcode" style="display: inline-block;"></div>
         <script>
             var qrcode = new QRCode("qrcode", {
                 text: "<?php echo TOTP_get_url($userref) ?>",
@@ -62,8 +62,8 @@ if (!TOTP_is_user_set_up($userref)) {
             <?php } ?>
 
             <div class="Question">
-                <label for="code" style="width:138px;"><?php echo escape($lang["totp_code"]); ?></label>
-                <input type="code" name="code" id="code" class="shrtwidth" inputmode="numeric" pattern="[0-9]*" maxlength="6" />
+                <label for="code" style="width: 142px;"><?php echo escape($lang["totp_code"]); ?></label>
+                <input type="text" name="code" id="code" class="shrtwidth" inputmode="numeric" pattern="[0-9]*" maxlength="6" />
                 <div class="clearerleft"></div>
             </div>
 
@@ -97,7 +97,7 @@ if (!TOTP_is_user_set_up($userref)) {
                     background: #eee;
                 }
                 form {
-                    width:500px;
+                    width: 250px;
                     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
                     border-radius: 20px;
                     padding: 30px;
@@ -109,27 +109,27 @@ if (!TOTP_is_user_set_up($userref)) {
                     width: 300px;
                 }
                 img {
-                    max-width: 400px;
+                    max-width: 250px;
                     max-height: 80px;
                     display: block;
                     margin: 0 auto;
                 }
                 input[type="code"] {
                     border-radius: 5px;
-                    padding: 4px 6px 4px 6px;
+                    padding: 4px 6px 4px 8px;
                     border: 1px solid rgba(0,0,0,0.25);
                     box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.1);
                     font-size: 1em;
                     min-height: 32px;
-                    width: 120px;
+                    width: 250px;
                     letter-spacing: 2px;
                 }
                 input[type="submit"] {
                     background-color: #1679c0;
                     box-shadow: 0 1px 3px rgba(0,0,0,0.25);
                     padding: 6px 14px;
-                    min-height: 32px;
-                    min-width: 120px;
+                    height: 32px;
+                    width: 250px;
                     border-radius: 5px;
                     border: 1px solid transparent;
                     color: white;
