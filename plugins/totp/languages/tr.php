@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'Maksimum deneme sayısını aştınız. Bir yön
 $lang["totp_tries_left"] = 'kalan deneme sayısı';
 $lang["totp_code_details"] = 'Lütfen kimlik doğrulayıcı uygulamanızdan kodu girin.';
 $lang["totp_reset"] = 'Bu kullanıcının TOTP/MFA durumunu sıfırlayın; tekrar TOTP ayarlamaları istenecektir.';
+
+$lang["totp_date_binding"] = 'Kullanıcılardan ... sonunda bir TOTP kodunu yeniden girmeleri istenecek.';
+$lang["totp_date_binding_d"] = 'Mevcut gün';
+$lang["totp_date_binding_w"] = 'Mevcut hafta (Pazartesi günü başlayan)';
+$lang["totp_date_binding_m"] = 'Mevcut ay';
+$lang["totp_date_binding_y"] = 'Mevcut yıl';

@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'Rydych wedi gorffen y nifer mwyaf o geisiadau. C
 $lang["totp_tries_left"] = 'ceisiadau sy\'n weddill';
 $lang["totp_code_details"] = 'Os gwelwch yn dda, rhowch y cod o\'ch ap dilysydd.';
 $lang["totp_reset"] = 'Ail-osodwch statws TOTP/MFA ar gyfer y defnyddiwr hwn; byddant yn cael eu hannog i sefydlu TOTP eto.';
+
+$lang["totp_date_binding"] = 'Bydd defnyddwyr yn cael eu gofyn i ailosod cod TOTP ar ôl diwedd...';
+$lang["totp_date_binding_d"] = 'Y dydd presennol';
+$lang["totp_date_binding_w"] = 'Yr wythnos bresennol (sy\'n dechrau ar ddydd Llun)';
+$lang["totp_date_binding_m"] = 'Y mis presennol';
+$lang["totp_date_binding_y"] = 'Y flwyddyn bresennol';

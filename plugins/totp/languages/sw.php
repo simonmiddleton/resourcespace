@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'Umepita idadi ya juu ya majaribio. Wasiliana na 
 $lang["totp_tries_left"] = 'jaribio lililosalia';
 $lang["totp_code_details"] = 'Tafadhali ingiza msimbo kutoka kwa programu yako ya uthibitishaji.';
 $lang["totp_reset"] = 'Rekebisha hali ya TOTP/MFA kwa mtumiaji huyu; wataombwa kuweka TOTP tena.';
+
+$lang["totp_date_binding"] = 'Watumiaji wataombwa kuingiza tena nambari ya TOTP baada ya kumalizika kwa...';
+$lang["totp_date_binding_d"] = 'Siku ya leo';
+$lang["totp_date_binding_w"] = 'Wiki hii ya sasa (ikianza Jumatatu)';
+$lang["totp_date_binding_m"] = 'Mwezi wa sasa';
+$lang["totp_date_binding_y"] = 'Mwaka wa sasa';

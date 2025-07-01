@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'Nalampasan mo na ang pinakamataas na bilang ng m
 $lang["totp_tries_left"] = 'natitirang pagtatangkang';
 $lang["totp_code_details"] = 'Pakisok ang code mula sa iyong authenticator app.';
 $lang["totp_reset"] = 'I-reset ang TOTP/MFA na katayuan para sa gumagamit na ito; sila ay hihikayatin na muling i-set up ang TOTP.';
+
+$lang["totp_date_binding"] = 'Hihilingin sa mga gumagamit na muling ipasok ang TOTP code pagkatapos ng...';
+$lang["totp_date_binding_d"] = 'Ang kasalukuyang araw';
+$lang["totp_date_binding_w"] = 'Ang kasalukuyang linggo (nagsisimula sa Lunes)';
+$lang["totp_date_binding_m"] = 'Ang kasalukuyang buwan';
+$lang["totp_date_binding_y"] = 'Ang kasalukuyang taon';

@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'U heeft het maximale aantal pogingen overschrede
 $lang["totp_tries_left"] = 'pogingen overgebleven';
 $lang["totp_code_details"] = 'Voer de code in van uw authenticator-app.';
 $lang["totp_reset"] = 'Reset de TOTP/MFA-status voor deze gebruiker; ze worden gevraagd om TOTP opnieuw in te stellen.';
+
+$lang["totp_date_binding"] = 'Gebruikers worden gevraagd om een TOTP-code opnieuw in te voeren na het einde van...';
+$lang["totp_date_binding_d"] = 'De huidige dag';
+$lang["totp_date_binding_w"] = 'De huidige week (beginnende op een maandag)';
+$lang["totp_date_binding_m"] = 'De huidige maand';
+$lang["totp_date_binding_y"] = 'Het huidige jaar';

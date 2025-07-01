@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'Anda telah melebihi jumlah percubaan maksimum. H
 $lang["totp_tries_left"] = 'cuba yang tinggal';
 $lang["totp_code_details"] = 'Sila masukkan kod dari aplikasi pengesah anda.';
 $lang["totp_reset"] = 'Tetapkan semula status TOTP/MFA untuk pengguna ini; mereka akan diminta untuk menetapkan TOTP semula.';
+
+$lang["totp_date_binding"] = 'Pengguna akan diminta untuk memasukkan semula kod TOTP selepas akhir...';
+$lang["totp_date_binding_d"] = 'Hari ini';
+$lang["totp_date_binding_w"] = 'Minggu semasa (bermula pada hari Isnin)';
+$lang["totp_date_binding_m"] = 'Bulan semasa';
+$lang["totp_date_binding_y"] = 'Tahun semasa';

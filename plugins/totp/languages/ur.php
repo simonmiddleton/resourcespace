@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'آپ نے کوششوں کی زیادہ سے زی
 $lang["totp_tries_left"] = 'باقی کوششیں';
 $lang["totp_code_details"] = 'براہ کرم اپنے توثیق کنندہ ایپ سے کوڈ درج کریں۔';
 $lang["totp_reset"] = 'اس صارف کے لیے TOTP/MFA کی حیثیت کو دوبارہ ترتیب دیں؛ انہیں دوبارہ TOTP ترتیب دینے کے لیے کہا جائے گا۔';
+
+$lang["totp_date_binding"] = 'استعمال کنندگان سے کہا جائے گا کہ وہ ... کے اختتام کے بعد دوبارہ TOTP کوڈ داخل کریں۔';
+$lang["totp_date_binding_d"] = 'موجودہ دن';
+$lang["totp_date_binding_w"] = 'موجودہ ہفتہ (پیر سے شروع ہوتا ہے)';
+$lang["totp_date_binding_m"] = 'موجودہ مہینہ';
+$lang["totp_date_binding_y"] = 'موجودہ سال';

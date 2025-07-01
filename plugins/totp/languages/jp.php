@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = '最大試行回数を超えました。管理者
 $lang["totp_tries_left"] = '残りの試行回数';
 $lang["totp_code_details"] = '認証アプリからのコードを入力してください。';
 $lang["totp_reset"] = 'このユーザーのTOTP/MFAステータスをリセットします。再度TOTPの設定を促されます。';
+
+$lang["totp_date_binding"] = 'ユーザーは、終了後にTOTPコードを再入力するよう求められます...';
+$lang["totp_date_binding_d"] = '現在の日';
+$lang["totp_date_binding_w"] = '今週（月曜日から始まる）';
+$lang["totp_date_binding_m"] = '今月';
+$lang["totp_date_binding_y"] = '現在の年';

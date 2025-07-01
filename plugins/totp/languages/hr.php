@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'Prešli ste maksimalni broj pokušaja. Kontaktir
 $lang["totp_tries_left"] = 'preostalih pokušaja';
 $lang["totp_code_details"] = 'Molimo unesite kod iz vaše aplikacije za autentifikaciju.';
 $lang["totp_reset"] = 'Ponovno postavite TOTP/MFA status za ovog korisnika; bit će zatraženo da ponovno postavi TOTP.';
+
+$lang["totp_date_binding"] = 'Korisnici će biti zamoljeni da ponovo unesu TOTP kod nakon završetka...';
+$lang["totp_date_binding_d"] = 'Trenutni dan';
+$lang["totp_date_binding_w"] = 'Tekući tjedan (počinjajući od ponedjeljka)';
+$lang["totp_date_binding_m"] = 'Tekući mjesec';
+$lang["totp_date_binding_y"] = 'Tekuća godina';

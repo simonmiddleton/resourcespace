@@ -9,3 +9,9 @@ $lang["totp_tries_exceeded"] = 'لقد تجاوزت الحد الأقصى لعد
 $lang["totp_tries_left"] = 'محاولات متبقية';
 $lang["totp_code_details"] = 'يرجى إدخال الرمز من تطبيق المصادقة الخاص بك.';
 $lang["totp_reset"] = 'إعادة تعيين حالة TOTP/MFA لهذا المستخدم؛ سيتم مطالبتهم بإعداد TOTP مرة أخرى.';
+
+$lang["totp_date_binding"] = 'سيُطلب من المستخدمين إعادة إدخال رمز TOTP بعد انتهاء...';
+$lang["totp_date_binding_d"] = 'اليوم الحالي';
+$lang["totp_date_binding_w"] = 'الأسبوع الحالي (يبدأ يوم الاثنين)';
+$lang["totp_date_binding_m"] = 'الشهر الحالي';
+$lang["totp_date_binding_y"] = 'السنة الحالية';
