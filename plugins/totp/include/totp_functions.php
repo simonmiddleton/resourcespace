@@ -30,8 +30,8 @@ function TOTP_validate(string $code, int $user_ref): bool
  */
 function TOTP_cookie(int $user_ref): string
 {
-    global $scramble_key;
-    return hash('sha256', date("Ymd") . $user_ref . $scramble_key);
+    global $scramble_key, $totp_date_binding;
+    return hash('sha256', date($totp_date_binding) . $user_ref . $scramble_key);
 }
 
 /**

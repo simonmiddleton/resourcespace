@@ -5,4 +5,5 @@ version: 1.0
 desc: TFA/MFA support via Google Authenticator
 icon: fa fa-qrcode
 category: authentication
+config_url: /plugins/totp/pages/setup.php
 info_url: https://www.resourcespace.com/knowledge-base/plugins/totp
