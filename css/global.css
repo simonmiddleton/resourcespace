@@ -1859,7 +1859,7 @@ a.Enabled, a:visited.Enabled {
     margin: 2px
 }
 
-.ReportSheet {padding:10px;}
+.ReportSheet {padding:20px;}
 .ReportSummary td {padding:10px;}
 .ReportMetric {font-size:200%;padding-left:5px;}
 .ReportAddToDash {font-size:65%;}
