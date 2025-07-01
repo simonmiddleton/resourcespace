@@ -3637,17 +3637,18 @@ function copy_resource($from, $resource_type = -1, $origin = '')
  * @param   mixed      $fromvalue - original value (int or string)         -- resource_log.previous_value
  * @param   mixed      $tovalue - new value (int or string)
  * @param   int        $usage                                              -- resource_log.usageoption
+ * @param   int        $alt_ref - ref of alt file                          -- resource_log.alt_ref
  *
  * @return int (or false)
  */
 
-function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $tovalue = "", $usage = -1)
+function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $tovalue = "", $usage = -1, $alt_ref = -1)
 {
     global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
     // Param type checks
     $param_str = array($type,$notes);
-    $param_num = array($resource,$usage);
+    $param_num = array($resource,$usage,$alt_ref);
 
     foreach ($param_str as $par) {
         if (!is_string($par)) {
@@ -3720,10 +3721,11 @@ function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $t
         return $resource_log_previous_ref;
     } else {
         ps_query(
-            "INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO `resource_log` (`date`, `user`, `resource`, `alt_ref`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
             'i', (($userref != "" && $type !== LOG_CODE_SYSTEM) ? $userref : null),
             'i', $resource,
+            'i', $alt_ref > 0 ?: null,
             's', $type,
             'i', (($field == "" || !is_numeric($field)) ? null : $field),
             's', $notes,
@@ -3782,6 +3784,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
     $sql_query = new PreparedStatementQuery(
         "SELECT r.ref,
                         r.resource,
+                        r.alt_ref,
                         r.date,
                         u.username,
                         u.fullname,
