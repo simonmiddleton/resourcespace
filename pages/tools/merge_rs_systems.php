@@ -492,7 +492,18 @@ if ($export && isset($folder_path)) {
                     AND r.resource_type IN (SELECT ref FROM resource_type)
                     AND r.archive IN (SELECT `code` FROM archive_states)
                     AND (r.file_extension IS NOT NULL AND trim(r.file_extension) <> '')
-                    AND (r.preview_extension IS NOT NULL AND trim(r.preview_extension) <> '')",
+                    AND (r.preview_extension IS NOT NULL AND trim(r.preview_extension) <> '')"
+                    . (
+                        in_array('rse_version', $active_plugins)
+                            ? "\r\n AND raf.ref NOT IN (
+                                SELECT previous_file_alt_ref 
+                                FROM resource_log
+                                WHERE previous_file_alt_ref IS NOT null
+                                AND type = 'u'
+                                AND resource = r.ref
+                            )\r\n"
+                            : ''
+                    ),
                 "order_by" => 'raf.ref ASC',
             ),
             "pagination" => [
