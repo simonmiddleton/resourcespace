@@ -31,6 +31,12 @@ $checksum_required = $job_data["checksum_required"] ?? true;
 // For messages
 $url = isset($job_data['resource']) ? "{$baseurl_short}?r={$job_data['resource']}" : '';
 
+$resdata = get_resource_data($resource);
+if (!$resdata) {
+    job_queue_update($jobref, $job_data, STATUS_DISABLED);
+    return;
+}
+
 if ($resource > 0) {
     delete_previews($resource);
 }
@@ -45,7 +51,6 @@ if ($resource > 0 && create_previews($resource, $thumbonly, $extension, $preview
     }
 } else {
     // Fail
-    $resdata = get_resource_data($resource);
     $preview_attempts = $resdata["preview_attempts"];
     if ($preview_attempts < SYSTEM_MAX_PREVIEW_ATTEMPTS) {
         // Reschedule job to try again later in the event that 3rd party processing has failed e.g. Unoserver
