@@ -351,7 +351,13 @@ div.MessageBox a {
 .FeaturedSimpleTile {
     background: white;
     color:#eee;
+       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
 }
+.FeaturedSimpleTile:hover {
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
+}
+
 
 /* Highlight selected keywords */
 input:checked + .customFieldLabel, .keywordselected {
@@ -768,7 +774,7 @@ a.HomePanel:hover {
 .PluginDisplay
     {
     background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
     border: 3px solid rgba(255, 255, 255, 0);
     }
 
