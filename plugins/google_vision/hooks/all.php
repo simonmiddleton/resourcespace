@@ -6,7 +6,7 @@ function HookGoogle_visionAllInitialise()
     config_register_core_fieldvars("Google vision plugin",$google_vision_fieldvars);
 }
 
-function HookGoogle_visionAllAfterpreviewcreation($resource, $alternative, $generateall = false)
+function HookGoogle_visionAllAfterpreviewcreation(int $resource, int $alternative, bool $generate_all = false): void
 {
     global $google_vision_blocked_by_script;
     if (isset($google_vision_blocked_by_script) && $google_vision_blocked_by_script) {

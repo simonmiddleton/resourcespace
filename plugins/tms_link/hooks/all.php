@@ -114,7 +114,7 @@ function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
     }
 
 
-function HookTms_linkAllAfterpreviewcreation($ref, $alternative=-1, $generateall = false)
-    {
+function HookTms_linkAllAfterpreviewcreation(int $ref, int $alternative=-1, $generate_all = false): void
+{
     tms_link_check_preview($ref, $alternative);
-    }
+}

@@ -163,11 +163,11 @@ function HookClipAllSearchbarafterbuttons()
  *
  * @param int $resource    The resource reference ID that has just had previews created.
  * @param int $alternative The alternative file ID, or -1 if processing the main resource.
- * @param bool $generateall Flag to indicate if hook has been triggered during full preview creation process
+ * @param bool $generate_all Flag to indicate if hook has been triggered during full preview creation process
  *
  * @return void
  */
-function HookClipAllAfterpreviewcreation($resource, $alternative, $generateall = false)
+function HookClipAllAfterpreviewcreation(int $resource, int $alternative, bool $generate_all = false): void
 {
     global $clip_vector_on_upload,$lang,$clip_resource_types;
 

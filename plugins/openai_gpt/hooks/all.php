@@ -197,7 +197,7 @@ function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_node
  * @return bool Success if field is updated
  * 
  */
-function HookOpenai_gptAllAfterpreviewcreation($ref, $alternative, $generateall = false): bool
+function HookOpenai_gptAllAfterpreviewcreation(int $ref, int $alternative, bool $generate_all = false): bool
     {    
     debug("openai_gpt after preview creation - resource: " . $ref . ", alternative: ", $alternative);
     if ($alternative>0)
