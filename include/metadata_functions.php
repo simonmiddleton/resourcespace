@@ -343,9 +343,18 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
             ];
 
             $exif_resolution = run_command(sprintf($command, '-xresolution'));
+            if (is_positive_int_loose($exif_resolution)) {
+                $sql_insert .= ',resolution';
+                $sql_params[] = 'i';
+                $sql_params[] = $exif_resolution;
+            }
+
             $exif_unit = run_command(sprintf($command, '-resolutionunit'));
-            $sql_insert .= ',resolution,unit';
-            $sql_params = array_merge($sql_params, ['s', $exif_resolution, 's' , $exif_unit]);
+            if ($exif_unit != '') {
+                $sql_insert .= ',unit';
+                $sql_params[] = 's';
+                $sql_params[] = $exif_unit;
+            }
 
             $sql_insert .= ")";
             $sql_values = "values (" . ps_param_insert((count($sql_params) / 2)) . ")";
