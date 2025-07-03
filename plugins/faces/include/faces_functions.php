@@ -19,6 +19,10 @@ function faces_detect(int $ref): bool
     $file_path = get_resource_path($ref, true, 'scr', false, "jpg");
 
     if ('cli' == PHP_SAPI) {
+        if (ob_get_level() == 0) {
+            ob_start();
+            $ob_started = true;
+        }
         flush();
         ob_flush();
     }
@@ -92,6 +96,9 @@ function faces_detect(int $ref): bool
     // Mark resource as processed
     ps_query("UPDATE resource SET faces_processed = 1 WHERE ref = ?", ["i", $ref]);
     logScript("Processed resource $ref and found " . count($faces) . " faces.");
+    if ($ob_started ?? false) {
+        ob_get_clean();
+    }
     return true;
 }
 
@@ -114,6 +121,10 @@ function faces_tag(int $resource): bool
     global $faces_service_endpoint, $mysql_db, $faces_tag_threshold;
 
     if ('cli' == PHP_SAPI) {
+        if (ob_get_level() == 0) {
+            ob_start();
+            $ob_started = true;
+        }
         flush();
         ob_flush();
     }
@@ -198,6 +209,10 @@ function faces_tag(int $resource): bool
 
         logScript("Tagged with node: " . $most_common_node);
     }
+
+    if ($ob_started ?? false) {
+        ob_get_clean();
+    }
     return true;
 }
 
@@ -226,7 +241,7 @@ function api_faces_set_node(int $resource, int $face, int $node): bool
     }
 
     // Set metadata
-    add_resource_nodes($resource,array($node));
+    add_resource_nodes($resource, array($node));
 
     // Assign to face
     ps_query("update resource_face set node=? where ref=?", ["i",$node,"i",$face]);
@@ -241,11 +256,14 @@ function api_faces_set_node(int $resource, int $face, int $node): bool
  * @uses ps_query()
  * @uses debug()
  */
-function faces_detect_missing() {
+function faces_detect_missing()
+{
     // Get all resources that haven't had faces processed yet
 
     // Ensure only one instance of this.
-    if (is_process_lock(__FUNCTION__)) {return false;}
+    if (is_process_lock(__FUNCTION__)) {
+        return false;
+    }
     set_process_lock(__FUNCTION__);
 
     $resources = ps_array("SELECT ref value FROM resource WHERE has_image=1 and (faces_processed is null or faces_processed=0) ORDER BY ref desc");
@@ -263,8 +281,9 @@ function faces_detect_missing() {
  *
  * @return int       The count
  */
-function faces_count_missing() {
-    return ps_value("SELECT count(*) value FROM resource WHERE has_image=1 and (faces_processed is null or faces_processed=0)",[],0);
+function faces_count_missing()
+{
+    return ps_value("SELECT count(*) value FROM resource WHERE has_image=1 and (faces_processed is null or faces_processed=0)", [], 0);
 }
 
 /**
@@ -272,6 +291,7 @@ function faces_count_missing() {
  *
  * @return int       The count
  */
-function faces_count_faces() {
-    return ps_value("SELECT count(*) value FROM resource_face",[],0);
+function faces_count_faces()
+{
+    return ps_value("SELECT count(*) value FROM resource_face", [], 0);
 }
