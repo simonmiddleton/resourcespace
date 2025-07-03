@@ -121,6 +121,10 @@ function faces_tag(int $resource): bool
     global $faces_service_endpoint, $mysql_db, $faces_tag_threshold;
 
     if ('cli' == PHP_SAPI) {
+        if (ob_get_level() == 0) {
+            ob_start();
+            $ob_started = true;
+        }
         flush();
         ob_flush();
     }
@@ -205,6 +209,10 @@ function faces_tag(int $resource): bool
         ps_query("update resource_face set node=? where ref=?", ["i",$most_common_node,"i",$face]); // Attach the node to this face
 
         logScript("Tagged with node: " . $most_common_node);
+    }
+
+    if ($ob_started ?? false) {
+        ob_get_clean();
     }
     return true;
 }
