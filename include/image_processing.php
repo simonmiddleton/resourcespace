@@ -1954,8 +1954,7 @@ function upload_preview($ref)
 {
     hook("removeannotations", "", array($ref));
 
-    $extension = parse_filename_extension($_FILES['userfile']['name']);
-    $temp_file = get_resource_path($ref, true, 'tmp', true, $extension);
+    $temp_file = get_resource_path($ref, true, 'tmp', true, 'jpg');
 
     if (
         !process_file_upload(
@@ -1969,7 +1968,7 @@ function upload_preview($ref)
 
     resource_log($ref, LOG_CODE_UPLOADED_PREVIEW, '', $_FILES['userfile']['name']);
     chmod($temp_file, 0777);
-    create_previews($ref, false, $extension, true);
+    create_previews($ref, false, 'jpg', true);
 
     if (
         file_exists($temp_file)
