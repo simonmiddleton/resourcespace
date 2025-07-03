@@ -4754,7 +4754,7 @@ function get_system_status(bool $basic = false)
             $exclude_params = array_merge($exclude_params, ps_param_fill($exclude_types, "i"));
         }
         if (count($GLOBALS["file_integrity_ignore_states"]) > 0) {
-            $exclude_sql[] = "resource_type NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
+            $exclude_sql[] = "archive NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
             $exclude_params = array_merge($exclude_params, ps_param_fill($GLOBALS["file_integrity_ignore_states"], "i"));
         }
         $failedquery = "SELECT COUNT(*) value FROM resource WHERE ref>0 AND integrity_fail=1 AND no_file=0"
