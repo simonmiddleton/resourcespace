@@ -571,7 +571,7 @@ if ($keysearch) {
                                 if (
                                     substr($keyword, 0, 1) != "*"
                                     && strlen(trim($keyword, '*')) >= 3
-                                    && preg_match('/[-+@<>()]/', $keyword) !== 1
+                                    && preg_match('/[-+@<>().]/', $keyword) !== 1
                                 ) {
                                     // Use fulltext search as a preference, but not if
                                     // there is a leading wildcard
@@ -605,7 +605,7 @@ if ($keysearch) {
                                 } else {
                                     // Use RLIKE to search between word boundaries in the node names
                                     $keyword = preg_quote($keyword);
-                                    $keyword = str_replace('\*', '.?', $keyword);
+                                    $keyword = str_replace('\*', '.*?', $keyword);
                                     if (preg_match('/\w/', $keyword) === 0) {
                                         // Use lookaheads/lookbehinds for boundary-like behavior when the keyword consists of non-word characters (e.g. ,, &, -)
                                         // because \b only works for transitions between word characters (letters, digits, _) and non-word characters.
