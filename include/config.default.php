@@ -2703,8 +2703,21 @@ $upload_then_process = false;
 // Annotations are linked to nodes, the user needs to specify which field a note is bind to.
 $annotate_enabled = false;
 
-// Specify which fields can be used to bind to annotations
+// Specify which fields can be used to bind to annotations - only multi-value fixed list fields (DKL, checkbox)
 $annotate_fields = array();
+
+// Add comment for resource text annotations. (N/A for fixed list field annotations)
+$annotate_text_adds_comment = true;
+
+// Make annotations publicly visible (e.g. external share)
+$annotate_public_view = false;
+
+// Display annotation author?
+$annotate_show_author = false;
+
+// Specify resource types that cannot be annotated (side effect: inapplicable metadata fields will be ignored at runtime
+// and users will also no longer be able to select those fields)
+$annotate_exclude_restypes = [];
 
 //
 //  IIIF:

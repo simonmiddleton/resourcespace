@@ -1,78 +1,57 @@
 <?php
-include "../../../include/boot.php";
-include_once "../include/annotate_functions.php";
-include "../../../include/authenticate.php"; 
+include dirname(__DIR__) . '/include/boot.php';
+include RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
 
-global $plugins;
-if (!in_array("annotate",$plugins))
-    {
-    header("Status: 403 plugin not activated");
-    exit($lang["error-plugin-not-activated"]);
-    }
+if (canSeeAnnotationsFields() === []) {
+    exit($lang['error-permissiondenied']);
+}
 
-$ref=getval("ref",0,true);
-$col=getval("col",0,true);
-$previewpage=getval("previewpage",1,true);
+$ref = getval("ref", 0, true);
+$col = getval('collection', 0, false, is_positive_int_loose(...));
+$previewpage = getval("previewpage", 1, true);
 
-if ($col!=0)
-    {
-    $is_collection=true;
-    $collection=get_collection($col);
-    $resources=do_search("!collection".$col);
-    set_user_collection($userref,$col);
+if ($col != 0) {
+    $is_collection = true;
+    $collection = get_collection($col);
+    $resources = do_search("!collection" . $col);
+    set_user_collection($userref, $col);
     refresh_collection_frame();
-    $ref="C".$col;$realref=$col; // C allows us to distinguish a collection from a resource in the JS without adding extra params.
-    } 
-else
-    { 
-    $is_collection=false;
-    $resources=do_search("!list".$ref);
-    $realref=$ref;
-    }
+    $ref = "C" . $col;
+    $realref = $col; // C allows us to distinguish a collection from a resource in the JS without adding extra params.
+} else {
+    $is_collection = false;
+    $resources = do_search("!list" . $ref);
+    $realref = $ref;
+}
 
-// prune unnannotated resources if necessary
-$annotate=true;
-
-if ($annotate_pdf_output_only_annotated)
-    {
-    $resources_modified=array();
-    $x=0;
-    for ($n=0;$n<count($resources);$n++)
-        {
-        unset($notes);
-        if ($annotate_pdf_output_only_annotated && $resources[$n]['annotation_count']!=0)
-            {
-            $resources_modified[$x]=$resources[$n];
-            $x++;
-            } 
-        }
-    $resources=$resources_modified;
-    }
-
-if (count($resources)==0){$annotate=false;}
+$annotate = count($resources) > 0;
 
 # Fetch search details (for next/back browsing and forwarding of search params)
-$search=getval("search","");
-$order_by=getval("order_by","relevance");
-$offset=getval("offset",0,true);
-$restypes=getval("restypes","");
-if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getval("archive",0,true);
+$search = getval("search", "");
+$order_by = getval("order_by", "relevance");
+$offset = getval("offset", 0, true);
+$restypes = getval("restypes", "");
+if (strpos($search, "!") !== false) {
+    $restypes = "";
+}
+$archive = getval("archive", 0, true);
 
-$default_sort_direction="DESC";
-if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
-$sort=getval("sort",$default_sort_direction);
+$default_sort_direction = "DESC";
+if (substr($order_by, 0, 5) == "field") {
+    $default_sort_direction = "ASC";
+}
+$sort = getval("sort", $default_sort_direction);
 
-include "../../../include/header.php";
+include RESOURCESPACE_BASE_PATH . '/include/header.php';
 
-// a unique id allows us to isolate this page's temporary files.    
-$annotateid=uniqid($ref);
+// a unique id allows us to isolate this page's temporary files.
+$annotateid = uniqid($ref);
 
-$jpghttppath=get_annotate_file_path($realref,false,"jpg");
+$jpghttppath = get_annotate_file_path($realref, false, "jpg");
 
 ?>
 
-<?php if ($annotate){?>
+<?php if ($annotate) {?>
 <script type="text/javascript" language="JavaScript">
 var annotate_previewimage_prefix = "";
 
@@ -81,7 +60,7 @@ var annotate_previewimage_prefix = "";
      var methods = {
         
         preview : function() { 
-            var url = '<?php echo $baseurl_short?>plugins/annotate/pages/annotate_pdf_gen.php';
+            var url = '<?php echo $baseurl_short; ?>pages/annotate_pdf_gen.php';
 
             var formdata = jQuery('#annotateform').serialize() + '&preview=true'; 
 
@@ -155,39 +134,39 @@ function loadIt() {
 
 <div class="BasicsBox" style="float:left;">
 
-    <?php 
-    
+    <?php
+
     $urlparams = [
-        'ref' => $ref, 
-        'search' => $search, 
-        'offset' => $offset, 
-        'order_by' => $order_by, 
-        'sort' => $sort, 
+        'ref' => $ref,
+        'search' => $search,
+        'offset' => $offset,
+        'order_by' => $order_by,
+        'sort' => $sort,
         'archive' => $archive
     ];
-    
-    if (!$is_collection){?>
+
+    if (!$is_collection) {?>
     <p><a href="<?php echo generateURL($baseurl_short . 'pages/view.php', $urlparams, ['annotate' => 'true'])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"])?></a></p>
     <?php } else {?>
-    <p><a href="<?php echo generateURL($baseurl_short . 'pages/search.php?', $urlparams, ['search' => '!collection' . substr($ref,1)])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresults"])?></a></p>
+    <p><a href="<?php echo generateURL($baseurl_short . 'pages/search.php?', $urlparams, ['search' => '!collection' . substr($ref, 1)])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresults"])?></a></p>
     <?php } ?>
 
-    <h1><?php echo escape($lang["annotatepdfconfig"]); ?></h1>
+    <h1><?php echo escape($lang['annotate_pdf_sheet_tool']); ?></h1>
 
-    <?php if ($annotate){?>
+    <?php if ($annotate) {?>
     <div id="heading" style="float:left;margin-bottom:0;" >
-        <p id="introtext"><?php echo escape($lang["annotatepdfintrotext"])?></p>
+        <p id="introtext"><?php echo escape($lang['annotate_pdf_intro_text'])?></p>
     </div>
     <div style="clear:left;"></div>
 
     <div id="configform" >
 
-        <form method=post name="annotateform" id="annotateform" action="<?php echo $baseurl_short?>plugins/annotate/pages/annotate_pdf_gen.php" >
+        <form method=post name="annotateform" id="annotateform" action="<?php echo $baseurl_short; ?>pages/annotate_pdf_gen.php" >
         <input type=hidden name="ref" value="<?php echo escape($ref)?>">
         <input type=hidden name="annotateid" value="<?php echo escape($annotateid)?>">
         <?php
         generateFormToken("annotateform");
-        if ($is_collection){?>
+        if ($is_collection) {?>
         <div class="Question">
         <label><?php echo escape($lang["collection"])?></label><div class="Fixed"><?php echo escape(i18n_get_collection_name($collection))?></div>
         <div class="clearerleft"> </div>
@@ -195,7 +174,7 @@ function loadIt() {
 
         <?php } else { ?>
         <div class="Question">
-        <label><?php echo escape($lang["resourcetitle"])?></label><div class="Fixed"><?php echo escape(i18n_get_translated($resources[0]['field'.$view_title_field]))?></div>
+        <label><?php echo escape($lang["resourcetitle"])?></label><div class="Fixed"><?php echo escape(i18n_get_translated($resources[0]['field' . $view_title_field]))?></div>
         <div class="clearerleft"> </div>
         </div>
         <?php } ?>
@@ -212,8 +191,6 @@ function loadIt() {
         <select class="shrtwidth" name="previewpage" id="previewpage" onChange="jQuery().annotate('preview');   ">
         </select>
         </div>
-        <?php if ($annotate_debug){?><div name="error" id="error"></div><?php } ?>
-        <?php if ($annotate_debug){?><div name="error2" id="error2"></div><?php } ?>
         <div class="QuestionSubmit">    
         <input name="preview" type="button" value="&nbsp;&nbsp;<?php echo escape($lang["preview"])?>&nbsp;&nbsp;" onClick="jQuery().annotate('preview');    "/>
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"])?>&nbsp;&nbsp;" />
@@ -229,14 +206,17 @@ function loadIt() {
     </div>
 </div>
 
-<?php }
- ?>
-<div <?php if ($annotate){?>style="display:none;"<?php } ?> id="noannotations"><?php if (!$annotate){?>There are no annotations.<?php } ?></div></div>
-<?php if ($annotate){?>
+    <?php }
+    ?>
+<div <?php if ($annotate) {
+    ?>style="display:none;"<?php
+     } ?> id="noannotations"><?php if (!$annotate) {
+    echo escape($lang['annotate_pdf_no_annotations']);
+     } ?></div></div>
+<?php if ($annotate) {?>
 <script>
     jQuery().annotate('preview');
 </script>
 <?php } ?>
-<?php	  
-include "../../../include/footer.php";
-?>
+<?php
+include RESOURCESPACE_BASE_PATH . '/include/footer.php';

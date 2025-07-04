@@ -7971,15 +7971,13 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
 * Helper function for Preview tools feature. Checks all necessary permissions or options
 * in order to tell the system whether PreviewTools panel should be displayed
 *
-* @return boolean
+* @param array $resource Resource data structure
 */
-function canSeePreviewTools()
+function canSeePreviewTools(array $resource): bool
 {
     global $image_preview_zoom;
-
-    $visible_annotate_fields = canSeeAnnotationsFields();
-
-    return count($visible_annotate_fields) > 0 || $image_preview_zoom;
+    return (resource_type_applicable_for_annotations($resource['resource_type']) && canSeeAnnotationsFields() !== [])
+        || $image_preview_zoom;
 }
 
 /**
@@ -7989,18 +7987,8 @@ function canSeePreviewTools()
  */
 function canSeeAnnotationsFields(): array
 {
-    global $annotate_enabled, $annotate_fields, $k;
-
-    $can_view_fields = array();
-    if ($annotate_enabled && $k == "") {
-        foreach ($annotate_fields as $annotate_field) {
-            if (metadata_field_view_access($annotate_field)) {
-                $can_view_fields[] = $annotate_field;
-            }
-        }
-    }
-
-    return array_unique($can_view_fields, SORT_NUMERIC);
+    global $annotate_enabled, $k, $annotate_public_view;
+    return ($annotate_enabled && ($annotate_public_view || $k == '')) ? get_annotate_fields() : [];
 }
 
 /**

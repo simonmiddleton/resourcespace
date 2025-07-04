@@ -1349,6 +1349,17 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 <?php 
                                                 }
 
+                                            if (
+                                                resource_type_applicable_for_annotations($resource['resource_type'])
+                                                && canSeeAnnotationsFields() !== []
+                                            ) { ?>
+                                                <li>
+                                                    <a href="<?php echo generateURL("{$baseurl}/pages/annotate_pdf_config.php", $urlparams); ?>" onclick="return CentralSpaceLoad(this);">
+                                                        <?php echo "<i class='fa-solid fa-file-pdf'></i>&nbsp;" . escape($lang['annotate_pdf_sheet_tool']); ?>
+                                                    </a>
+                                                </li>
+                                            <?php }
+
                                             } /* End replaceresourceactions */ 
 
                                         hook("afterresourceactions", "", array($ref));
@@ -1657,12 +1668,12 @@ if($annotate_enabled)
     {
     ?>
     <!-- Annotorious -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css", ['v' => $css_reload_key]); ?>" />
+    <script src="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/annotorious.min.js", ['v' => $css_reload_key]); ?>"></script>
 
     <!-- Annotorious plugin(s) -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css", ['v' => $css_reload_key]); ?>" />
+    <script src="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js", ['v' => $css_reload_key]); ?>"></script>
     <?php
     if ($facial_recognition_active) {
         ?>

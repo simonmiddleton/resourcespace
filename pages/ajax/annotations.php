@@ -1,9 +1,9 @@
 <?php
 
 include __DIR__ . '/../../include/boot.php';
-include __DIR__ . '/../../include/authenticate.php';
-include_once __DIR__ . '/../../include/node_functions.php';
-include_once __DIR__ . '/../../include/annotation_functions.php';
+include_once RESOURCESPACE_BASE_PATH . '/include/node_functions.php';
+include_once RESOURCESPACE_BASE_PATH . '/include/annotation_functions.php';
+include_once RESOURCESPACE_BASE_PATH . '/include/comment_functions.php';
 
 if (!$annotate_enabled) {
     header('HTTP/1.1 401 Unauthorized');
@@ -16,10 +16,17 @@ if (!$annotate_enabled) {
     exit();
 }
 
+$resource = getval('resource', 0, false, is_positive_int_loose(...));
+
+// Authentication (with external share access support)
+$k = getval('k', '');
+if ($k === '' || !check_access_key($resource, $k)) {
+    include RESOURCESPACE_BASE_PATH . '/include/authenticate.php';
+}
+
 $return   = array();
 
 $action   = getval('action', '');
-$resource = getval('resource', 0, true);
 $page     = getval('page', 0, true);
 
 // Get annotation data if an ID has been provided
@@ -32,8 +39,10 @@ if (0 < $annotation_id) {
     $annotation = getAnnotation($annotation_id);
 }
 
+$request_ctx = ['k' => $k];
+
 if ('get_resource_annotations' == $action) {
-    $return['data'] = getAnnotoriousResourceAnnotations($resource, $page);
+    $return['data'] = getAnnotoriousResourceAnnotations($resource, $page, $request_ctx);
 }
 
 // Create new annotation
@@ -51,7 +60,7 @@ if ('create' == $action && 0 < $resource) {
         exit();
     }
 
-    $annotation_id = createAnnotation($annotation);
+    $annotation_id = createAnnotation($annotation, $request_ctx);
     debug('[annotations][annotations.php] newly created annotation_id = ' . json_encode($annotation_id));
 
     if (false === $annotation_id) {
@@ -80,30 +89,67 @@ if ('update' == $action && 0 < $resource) {
         exit();
     }
 
-    $return['data'] = updateAnnotation($annotation);
+    $return['data'] = updateAnnotation($annotation, $request_ctx);
 }
 
 // Delete annotation
 if ('delete' == $action && 0 < $annotation_id && 0 !== count($annotation)) {
-    $return['data'] = deleteAnnotation($annotation);
+    $delete_linked_comment = false;
+    cast_echo_to_string(static function () use ($annotation, &$delete_linked_comment, $request_ctx) {
+        if (!annotationEditable($annotation, $request_ctx)) {
+            return;
+        }
+
+        $linked_comment = ps_query(
+            'SELECT ref, resource_ref FROM `comment` WHERE annotation = ? LIMIT 1',
+            ['i', $annotation['ref']]
+        );
+
+        if ($linked_comment === []) {
+            return;
+        }
+
+        $_POST['ref'] = $linked_comment[0]['resource_ref'];
+        $_POST['comment_to_hide'] = $linked_comment[0]['ref'];
+        comments_submit();
+        $delete_linked_comment = true;
+        return;
+    });
+
+    $return['data'] = $delete_linked_comment ?: deleteAnnotation($annotation, $request_ctx);
 }
 
-// Get available fields (white listed) for annotations
+// Get available fields (allowed) for annotations
 if ('get_allowed_fields' == $action) {
-    foreach (array_unique($annotate_fields, SORT_NUMERIC) as $annotate_field) {
-        $field_data = get_resource_type_field($annotate_field);
+    $valid_annotate_fields = canSeeAnnotationsFields();
+    if (!get_edit_access($resource)) {
+        $valid_annotate_fields = array_intersect($valid_annotate_fields, [0]);
+    }
 
-        // Make sure user has access to this field
-        if (metadata_field_view_access($annotate_field)) {
-            $return['data'][] =
-                array(
-                    "ref" => $annotate_field,
-                    "title" => i18n_get_translated($field_data['title']),
-                    "name" => $field_data['name'],
-                    "order_by" => $field_data['order_by'],
-                    "type" => $field_data['type']
-                );
+    foreach ($valid_annotate_fields as $annotate_field) {
+        if ($annotate_field === 0) {
+            $return['data'][] = [
+                'ref' => $annotate_field,
+                'title' => $lang['annotate_pseudo_rtf_comment_title'],
+                'name' => 'pseudo-rtf-zero-comment',
+                'order_by' => '',
+                'type' => 0,
+            ];
+            continue;
         }
+
+        $field_data = get_resource_type_field($annotate_field);
+        if (!(is_array($field_data) && metadata_field_edit_access($annotate_field))) {
+            continue;
+        }
+
+        $return['data'][] = [
+            'ref' => $annotate_field,
+            'title' => i18n_get_translated($field_data['title']),
+            'name' => $field_data['name'],
+            'order_by' => $field_data['order_by'],
+            'type' => $field_data['type'],
+        ];
     }
 
     if (!isset($return['data'])) {
@@ -117,14 +163,16 @@ if ('get_allowed_fields' == $action) {
     }
 }
 
-// Check if this user can add new tags to a field
+// Check if this user can create new options (nodes) for a field
 // REQUIRES: check if field is dynamic keyword list and user has bermission to add new fields
 if ('check_allow_new_tags' == $action) {
     $resource_type_field = getval('resource_type_field', 0, true);
 
-    if (0 == $resource_type_field || !in_array($resource_type_field, $annotate_fields)) {
+    if (
+        $resource_type_field == 0
+        || !in_array($resource_type_field, array_filter(canSeeAnnotationsFields(), metadata_field_edit_access(...)))
+    ) {
         $return['data'] = false;
-
         echo json_encode($return);
         exit();
     }

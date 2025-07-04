@@ -3,7 +3,7 @@
 define('RESOURCESPACE_BASE_PATH', dirname(__DIR__));
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 27);
+define('SYSTEM_UPGRADE_LEVEL', 28);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID')) {
@@ -860,6 +860,7 @@ const API_NATIVE_WHITELIST = [
     'put_resource_data',
     'get_processing_message',
     'delete_resources_in_collection',
+    'checkperm',
     'faces_set_node',
     'update_field'
 ];

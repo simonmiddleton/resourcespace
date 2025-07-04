@@ -8,6 +8,7 @@ if (!checkperm('a')) {
 
 include_once '../../include/config_functions.php';
 include_once '../../include/ajax_functions.php';
+include_once '../../include/annotation_functions.php';
 
 $ajax = getval('ajax', '') === 'true';
 
@@ -156,6 +157,29 @@ $page_def[] = config_add_boolean_select(
     false,
     $lang['systemconfig_native_date_input_no_partials_supported'],
 );
+$page_def[] = config_add_html('</div>');
+
+// Annotations section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . escape($lang['annotate_annotations_label']) . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
+$page_def[] = config_add_boolean_select('annotate_enabled', $lang['annotate_annotations_label'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_multi_rtype_select('annotate_exclude_restypes', $lang['annotate_exclude_restypes'], 420);
+$page_def[] = config_add_multi_select(
+    'annotate_fields',
+    $lang['annotate_tagging_fields'],
+    array_map(
+        static fn(string $title) => lang_or_i18n_get_translated($title, 'fieldtitle-'),
+        array_column(
+            get_resource_type_fields('', 'title, name', 'asc', '', get_valid_annotate_field_types(), false),
+            'title',
+            'ref'
+        )
+    ),
+    true,
+    412
+);
+$page_def[] = config_add_boolean_select('annotate_text_adds_comment', $lang['annotate_text_adds_comment'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_boolean_select('annotate_public_view', $lang['annotate_public_view'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_boolean_select('annotate_show_author', $lang['annotate_show_author'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
 // Watermark section
@@ -605,17 +629,56 @@ include '../../include/header.php';
     <div class="CollapsibleSections">
         <?php config_generate_html($page_def); ?>
     </div>
+    <template id="autosave_tpl">
+        <div class="AutoSaveStatus">
+            <span id="AutoSaveStatus-option_name" style="display:none;"></span>
+        </div>
+    </template>
 
     <script>registerCollapsibleSections(false);</script>
-
     <?php if ($custom_font != "") { ?>
         <script>document.getElementById("question_global_font").hidden = true;</script>
         <?php
     }
     config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php');
     ?>
-
     <script>
+        jQuery('fieldset#annotate_fields :input:checkbox').on('change', () => AutoSaveConfigOption('annotate_fields'));
+
+        dom_add_autosave_status_container('fieldset#annotate_exclude_restypes', 'annotate_exclude_restypes');
+        jQuery('fieldset#annotate_exclude_restypes :input:checkbox').on('change', function() {
+            AutoSaveConfigOption('annotate_exclude_restypes');
+            return disable_annotate_fields_by_excl_resource_type(this);
+        });
+
+        jQuery(document).ready(function () {
+            jQuery('fieldset#annotate_exclude_restypes input:checked')
+                .each((i, el) => disable_annotate_fields_by_excl_resource_type(el));
+        });
+
+        function disable_annotate_fields_by_excl_resource_type(resource_type_el) {
+            const resource_type_ref = jQuery(resource_type_el).val();
+            const map_rt_fields = <?php 
+                echo json_encode(
+                    array_map(
+                        static fn (string $V): array => explode(',', $V),
+                        array_filter(array_column(get_all_resource_types(), 'resource_type_field', 'ref'))
+                    ),
+                    JSON_NUMERIC_CHECK
+                );
+            ?>;
+
+            if (!map_rt_fields.hasOwnProperty(resource_type_ref)) {
+                return;
+            }
+
+            // (En/Dis)able annotate_fields (DON'T change its value!) options associated with an excluded resource type.
+            // Inapplicable fields get filtered at runtime (@see get_annotate_fields()) so no need to save the change.
+            jQuery('fieldset#annotate_fields :input:checkbox')
+                .filter((i, el) => jQuery.inArray(parseInt(jQuery(el).val()), map_rt_fields[resource_type_ref]) > -1)
+                .prop('disabled', jQuery(resource_type_el).is(':checked'));
+        }
+
         function debug_log_selector_onchange(el) {
             let value = jQuery(el).val();
             let options_to_show_duration = <?php echo json_encode([
@@ -734,6 +797,19 @@ include '../../include/header.php';
                 system_config_debug_log_interim.data('timer_started', true);
             });
         <?php } ?>
+
+        /**
+         * Provide Autosave status container (so that AutoSaveConfigOption() can be useful) to page definitions that
+         * don't support it.
+         * @param {string} selector HTML selector before which the Autosave container should be added to
+         * @param {string} identifier The same identifier used by the AutoSaveConfigOption() 
+         */
+        function dom_add_autosave_status_container(selector, identifier) {
+            const autosave_tpl_clone = document.querySelector('#autosave_tpl').content.cloneNode(true);
+            let autosave_span = autosave_tpl_clone.querySelector('span#AutoSaveStatus-option_name');
+            autosave_span.setAttribute('id', `AutoSaveStatus-${identifier}`);
+            jQuery(selector).before(autosave_tpl_clone);
+        }
     </script>
 </div>
 

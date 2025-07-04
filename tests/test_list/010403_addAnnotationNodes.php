@@ -32,7 +32,7 @@ $annotation = [
         ]
     ],
 ];
-$annotation_ref = createAnnotation($annotation);
+$annotation_ref = createAnnotation($annotation, []);
 $annotation['ref'] = $annotation_ref;
 
 

@@ -4251,6 +4251,18 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $o++;
     }
 
+    // Annotations PDF
+    if ($count_result > 0 && canSeeAnnotationsFields() !== []) {
+        $options[$o]['value'] = 'annotations_pdf';
+        $options[$o]['label'] = $lang['annotate_pdf_sheet_tool'];
+        $options[$o]['data_attr'] = [
+            'url' => generateURL("{$baseurl_short}pages/annotate_pdf_config.php", $urlparams)
+        ];
+        $options[$o]['category'] = ACTIONGROUP_ADVANCED;
+        $options[$o]['order_by']  = 300;
+        $o++;
+    }
+
     // Add extra collection actions and manipulate existing actions through plugins
     $modified_options = hook('render_actions_add_collection_option', '', array($top_actions,$options,$collection_data, $urlparams));
     if (is_array($modified_options) && !empty($modified_options)) {

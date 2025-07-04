@@ -967,7 +967,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 #CommentProfileImage { float:left; width:40px; height:40px; border-radius:40px; margin-right:10px}
 .CommentEntryInfoCommenterEmail { font-size: 0.75em;}
 .CommentEntryInfoCommenterWebsite{ font-size: 0.75em;}
-.CommentEntryInfoDetails { display: table-cell; font-size: 0.75em;}
+.CommentEntryInfoDetails { display: table-cell; font-size: 13px;}
 .CommentEntryInfoFlag{display: inline-flex;}
 .CommentFlag{display: inline; margin-right: 12px;}
 .CommentFlagged{display: inline; margin-right: 10px;}

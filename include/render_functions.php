@@ -7210,14 +7210,13 @@ function render_resource_view_image(array $resource, array $context)
                 }
             }
 
-        if (canSeePreviewTools())
-            {
-            if ($GLOBALS["annotate_enabled"])
-                {
-                include_once '../include/annotation_functions.php';
-                }
-                ?>
+        if ($GLOBALS["annotate_enabled"]) {
+            include_once RESOURCESPACE_BASE_PATH . '/include/annotation_functions.php';
+        }
 
+        if (canSeePreviewTools($resource))
+            {
+            ?>
             <!-- Available tools to manipulate previews -->
             <div id="PreviewTools" >
                 <script>
@@ -7268,11 +7267,23 @@ function render_resource_view_image(array $resource, array $context)
                                 {
                                 anno.addPlugin('RSTagging',
                                     {
-                                    select              : '<?php echo escape($lang['annotate_select'])?>',
-                                    annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
+                                    annotations_endpoint: '<?php echo generateURL("{$GLOBALS['baseurl']}/pages/ajax/annotations.php", ['k' => $GLOBALS['k']]); ?>',
                                     nodes_endpoint      : '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/get_nodes.php',
                                     resource            : <?php echo (int) $resource["ref"]; ?>,
-                                    read_only           : <?php echo $edit_access ? 'false' : 'true'; ?>,
+                                    read_only: <?php
+                                        echo (
+                                            $edit_access
+                                            || (
+                                                !$edit_access
+                                                && $GLOBALS['annotate_text_adds_comment']
+                                                && !checkPermission_anonymoususer()
+                                            )
+                                        )
+                                            ? 'false'
+                                            : 'true';
+                                    ?>,
+                                    lang: <?php echo json_encode(get_annotorious_lang($lang)); ?>,
+                                    rs_config: <?php echo json_encode(get_annotorious_resourcespace_config()); ?>,
                                     // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                                     csrf_identifier: '<?php echo $GLOBALS["CSRF_token_identifier"]; ?>',
                                     <?php echo generateAjaxToken('RSTagging'); ?>
