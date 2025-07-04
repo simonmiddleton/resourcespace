@@ -101,16 +101,17 @@ function HookFacesAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
  * If configured, it will perform face detection and/or tagging on the main resource file
  * (ignoring alternative files). Progress messages are displayed during processing.
  *
- * @param int $resource    The resource reference ID that has just had previews created.
- * @param int $alternative The alternative file ID, or -1 if processing the main resource.
+ * @param int  $resource    The resource reference ID that has just had previews created.
+ * @param int  $alternative The alternative file ID, or -1 if processing the main resource.
+ * @param bool $generate_all Flag to indicate if hook has been triggered during full preview creation process
  *
  * @return void
  */
-function HookFacesAllAfterpreviewcreation($resource, $alternative)
+function HookFacesAllAfterpreviewcreation(int $resource, int $alternative, bool $generate_all = false): void
 {
-    global $faces_detect_on_upload,$faces_tag_on_upload,$lang;
+    global $faces_detect_on_upload, $faces_tag_on_upload, $lang;
 
-    if ($alternative === -1 && $faces_detect_on_upload) {
+    if ($alternative === -1 && $faces_detect_on_upload && $generate_all) {
         // Nothing to do for alternatives; face processing is for the main file only.
         // Detect images on upload if configured
         set_processing_message($lang["faces-detecting"] . " " . $resource);
@@ -122,4 +123,14 @@ function HookFacesAllAfterpreviewcreation($resource, $alternative)
         set_processing_message($lang["faces-tagging"] . " " . $resource);
         faces_tag($resource);
     }
+}
+
+/**
+ * Add face detection to the cron.
+ *
+ * @return void
+ */
+function HookFacesAllCron()
+{
+    faces_detect_missing();
 }

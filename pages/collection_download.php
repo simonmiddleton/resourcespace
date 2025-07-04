@@ -45,7 +45,9 @@ if (in_array($size, ['original', 'largest'])) {
         $totalsize += $result[$n]['file_size'];
     }
     if ($totalsize > $collection_download_max_size) {
-        error_alert($lang["collection_download_too_large"], true);
+        include "../include/header.php";
+        $onload_message = array("title" => $lang["error"], "text" => $lang["collection_download_too_large"]);
+        include "../include/footer.php";
         exit();
     }
 }

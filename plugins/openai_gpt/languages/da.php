@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='AI-behandling for feltet \'[field]\'';
 $lang["property-gpt_source"]='GPT Kilde';
 $lang["openai_gpt_language"] = 'Udgivelsessprog';
 $lang["openai_gpt_language_user"] = 'Sproget for den nuværende bruger';
+$lang["openai_gpt_overwrite_data"] = 'Overskriv eksisterende data i konfigurerede felter?';

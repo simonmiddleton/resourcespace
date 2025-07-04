@@ -404,11 +404,6 @@ DEFINE("MESSAGE_DEFAULT_TTL_SECONDS", 60 * 60 * 24 * 7);        // 7 days
 define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX', '!deprecated');
 define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE', "-1,,!deprecated\n");
 
-# For str_highlight ().
-define('STR_HIGHLIGHT_SIMPLE', 1);
-define('STR_HIGHLIGHT_WHOLEWD', 2);
-define('STR_HIGHLIGHT_CASESENS', 4);
-define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
 // ----------------------------------------------
 // DEPRECATED PARAMETERS
@@ -892,6 +887,7 @@ const RESOURCE_PREVIEWS_MINIMAL = 2;
 # Normalizer::NFKC; Normalization Form KC (NFKC) - Compatibility Decomposition, followed by Canonical Composition
 # See https://www.php.net/manual/en/class.normalizer.php for more information
 $language_normalize_mapping = [
+    "en" => Normalizer::NFD,
     "fr" => Normalizer::NFD,
     "sv" => Normalizer::NFC,
 ];
@@ -936,6 +932,7 @@ $languages["hr"] = "Hrvatski"; # Croatian
 $languages["it"] = "Italiano"; # Italian
 $languages["jp"] = "日本語"; # Japanese
 $languages["ko"] = "한국어"; # Korean
+$languages["ms"] = "Bahasa Melayu"; # Malay
 $languages["nl"] = "Nederlands"; # Dutch
 $languages["no"] = "Norsk"; # Norwegian
 $languages["fa"] = "فارسی"; # Persian
@@ -949,6 +946,7 @@ $languages["sk"] = "Slovenčina"; # Slovak
 $languages["sv"] = "Svenska"; # Swedish
 $languages["sw"] = "Kiswahili"; # Swahili
 $languages["th"] = "ภาษาไทย"; # Thai
+$languages["tl"] = "Filipino"; # Filipino
 $languages["tr"] = "Türkçe"; # Turkish
 $languages["uk"] = "українська мова"; # Ukranian
 $languages["ur"] = "اُردُو"; # Urdu

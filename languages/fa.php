@@ -963,7 +963,7 @@ $lang["deleteallsure"] = 'آیا مطمئن هستید که می‌خواهید 
 $lang["batchdonotaddcollection"] = '(به یک مجموعه اضافه نکنید)';
 $lang["collectionsthemes"] = 'مجموعه‌های ویژه و عمومی مرتبط';
 $lang["recent"] = 'اخیر';
-$lang["n_recent"] = '%qty منابع اخیراً اضافه شده';
+
 $lang["batchcopyfrom"] = 'کپی کردن داده‌های زیر از منبع با شناسه';
 $lang["copy"] = 'کپی';
 $lang["zipall"] = 'دانلود';
@@ -2828,7 +2828,6 @@ $lang["help__introtext"] = '<iframe src="https://www.resourcespace.com/knowledge
 $lang["language-hi"] = 'Hindi';
 $lang["information-enable_complete_indexing"] = 'مقادیر فیلد را به عنوان یک کلمه کلیدی پیوسته برای این فیلد ایندکس کنید. این گزینه با ایندکس‌گذاری جزئی ناسازگار است.';
 $lang["property-enable_complete_indexing"] = 'فعال‌سازی فهرست‌بندی کامل';
-$lang["cannot_share-has_upload_share"] = 'اشتراک‌های غیر آپلود این مجموعه نمی‌توانند ایجاد شوند زیرا در حال حاضر یک اشتراک آپلود برای آن وجود دارد';
 $lang["language-cy"] = 'ولزی';
 $lang["language-th"] = 'تایلندی';
 $lang["welcome_generic"] = 'به %applicationname خوش آمدید';
@@ -2911,3 +2910,5 @@ $lang["fieldtitle-usergroup_config"] = 'تغییرات گروه';
 $lang["page-title_usergroup_config"] = 'ویرایش پیکربندی گروه های جایگزین';
 $lang["action-title_usergroup_override_detail"] = 'هر تنظیماتی که در اینجا پیکربندی شود، تنظیمات پیش‌فرض سیستم را برای کاربران در این گروه نادیده می‌گیرد.';
 $lang["team_resource_non_ingested_search"] = 'مشاهده منابع غیر وارد شده';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

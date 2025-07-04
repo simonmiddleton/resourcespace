@@ -32,6 +32,7 @@ global $tinymce_plugins, $tinymce_toolbar;
         license_key: 'gpl',
         promotion: false,
         branding: false,
+        contextmenu: false, // Required to enable native copy and pasting
         setup: (editor) => {
             editor.on('blur', function(e) {
                 <?php

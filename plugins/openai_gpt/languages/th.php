@@ -18,3 +18,4 @@ $lang["property-openai_gpt_prompt"]='โปรมป์ GPT';
 $lang["property-openai_gpt_input_field"]='โปรแกรม GPT ที่รับเข้า';
 $lang["openai_gpt_language"] = 'ภาษาเอาต์พุต';
 $lang["openai_gpt_language_user"] = 'ภาษาของผู้ใช้ปัจจุบัน';
+$lang["openai_gpt_overwrite_data"] = 'เขียนทับข้อมูลที่มีอยู่ในฟิลด์ที่กำหนดไว้หรือไม่?';

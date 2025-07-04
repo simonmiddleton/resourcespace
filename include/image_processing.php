@@ -1305,11 +1305,15 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
     # Flag database so a thumbnail appears on the site
     if ($alternative == -1) {
         // Not for alternatives
-        $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+        if (!isset($has_image)) {
+            # preview_preprocessing.php may provide a value e.g. 0 for file type where no image is expected but preview creation successful.
+            # For example, a .wma file is expected to produce an .mp3 preview and this has no image.
+            $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+        }
         ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
     }
 
-    hook('afterpreviewcreation', '', array($ref, $alternative));
+    hook('afterpreviewcreation', '', array($ref, $alternative, $generateall));
     return true;
 }
 
@@ -1950,8 +1954,7 @@ function upload_preview($ref)
 {
     hook("removeannotations", "", array($ref));
 
-    $extension = parse_filename_extension($_FILES['userfile']['name']);
-    $temp_file = get_resource_path($ref, true, 'tmp', true, $extension);
+    $temp_file = get_resource_path($ref, true, 'tmp', true, 'jpg');
 
     if (
         !process_file_upload(
@@ -1965,7 +1968,7 @@ function upload_preview($ref)
 
     resource_log($ref, LOG_CODE_UPLOADED_PREVIEW, '', $_FILES['userfile']['name']);
     chmod($temp_file, 0777);
-    create_previews($ref, false, $extension, true);
+    create_previews($ref, false, 'jpg', true);
 
     if (
         file_exists($temp_file)
@@ -2041,6 +2044,15 @@ function extract_text($ref, $extension, $path = "")
         while (strpos($text, "\n\n") !== false) {
             $text = str_replace("\n\n", "\n", $text);
         } # condense multiple line breaks
+
+        # Replace XML encoded characters with the correct unencoded variants
+        $text = strtr($text, [
+            '&quot;' => '"',
+            '&apos;' => "'",
+            '&amp;'  => '&',
+            '&lt;'   => '<',
+            '&gt;'   => '>'
+        ]);
     }
 
     # OpenOffice Text (ODT)
@@ -2056,6 +2068,15 @@ function extract_text($ref, $extension, $path = "")
         while (strpos($text, "\n\n") !== false) {
             $text = str_replace("\n\n", "\n", $text);
         } # condense multiple line breaks
+
+        # Replace XML encoded characters with the correct unencoded variants
+        $text = strtr($text, [
+            '&quot;' => '"',
+            '&apos;' => "'",
+            '&amp;'  => '&',
+            '&lt;'   => '<',
+            '&gt;'   => '>'
+        ]);
     }
 
     # PDF extraction using pdftotext (part of the XPDF project)
@@ -3222,6 +3243,7 @@ function start_previews(int $ref, string $extension = ""): int
         return 2;
     }
     // No offline preview creation - create the full set of previews immediately
+    ps_query("UPDATE `resource` SET has_image = 0, preview_attempts = 0 WHERE ref = ?;", ['i', $ref]);
     $success = create_previews($ref, false, $resource_data["file_extension"], false, false, -1, false, $ingested);
     return $success ? 1 : 0;
 }
@@ -4210,7 +4232,7 @@ function create_previews_using_im(
                 "ingested" => $ingested],
             );
         }
-        hook('afterpreviewcreation', '', array($ref, $alternative));
+        hook('afterpreviewcreation', '', array($ref, $alternative, $generateall));
         return true;
     } else {
         return false;

@@ -3240,6 +3240,7 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
 
         $field_node_list = array();
         $field_ref_list = array();
+        $field_node_values = array();
         $last_resource = null;
         $last_field = null;
 
@@ -3262,6 +3263,7 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                     $field_ref_list[$this_field]['refs'] = $field_value['node'];
                     $last_field = $this_field;
                 }
+                $field_node_values[$this_field][$field_value['node']] = $field_value['name'];
             } else {
                 # Change of resource
                 if (!is_null($last_resource)) {
@@ -3277,18 +3279,21 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                         if (isset($field_node_list[$this_base_field])) {
                             $data_for_this_field['value'] = $field_node_list[$this_base_field]['values'];
                             $data_for_this_field['nodes'] = $field_ref_list[$this_base_field]['refs'];
+                            $data_for_this_field['nodes_values'] = $field_node_values[$this_base_field];
                             # The data for this resource field is ready so attach it to the final result array for this chunk
                             $fields[] = $data_for_this_field;
                         } else {
                             # Empty fields are not attached
                             $data_for_this_field['value'] = null;
                             $data_for_this_field['nodes'] = null;
+                            $data_for_this_field['node_values'] = null;
                         }
                     }
 
                     # Clear node list and ref list for new resource
                     $field_node_list = array();
                     $field_ref_list = array();
+                    $field_node_values[] = array();
                     $last_field = null;
                     if ($this_resource === null) {
                         break;
@@ -3305,6 +3310,7 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                     $field_ref_list[$this_field]['refs'] = $field_value['node'];
                     $last_field = $this_field;
                 }
+                $field_node_values[$this_field][$field_value['node']] = $field_value['name'];
                 $last_resource = $this_resource;
             }
         } # End of allresources for this chunk
@@ -3631,17 +3637,18 @@ function copy_resource($from, $resource_type = -1, $origin = '')
  * @param   mixed      $fromvalue - original value (int or string)         -- resource_log.previous_value
  * @param   mixed      $tovalue - new value (int or string)
  * @param   int        $usage                                              -- resource_log.usageoption
+ * @param   int        $alt_ref - ref of alt file                          -- resource_log.alt_ref
  *
  * @return int (or false)
  */
 
-function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $tovalue = "", $usage = -1)
+function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $tovalue = "", $usage = -1, $alt_ref = -1)
 {
     global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
     // Param type checks
     $param_str = array($type,$notes);
-    $param_num = array($resource,$usage);
+    $param_num = array($resource,$usage,$alt_ref);
 
     foreach ($param_str as $par) {
         if (!is_string($par)) {
@@ -3714,10 +3721,11 @@ function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $t
         return $resource_log_previous_ref;
     } else {
         ps_query(
-            "INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO `resource_log` (`date`, `user`, `resource`, `alt_ref`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
             'i', (($userref != "" && $type !== LOG_CODE_SYSTEM) ? $userref : null),
             'i', $resource,
+            'i', $alt_ref > 0 ?: null,
             's', $type,
             'i', (($field == "" || !is_numeric($field)) ? null : $field),
             's', $notes,
@@ -3776,6 +3784,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
     $sql_query = new PreparedStatementQuery(
         "SELECT r.ref,
                         r.resource,
+                        r.alt_ref,
                         r.date,
                         u.username,
                         u.fullname,
@@ -5768,7 +5777,7 @@ function get_page_count($resource, $alternative = -1)
 function update_disk_usage($resource)
 {
     # we're also going to record the size of the primary resource here before we do the entire folder
-    $ext = ps_value("SELECT file_extension value FROM resource where ref = ? AND file_path IS NULL", array("i",$resource), 'jpg');
+    $ext = ps_value("SELECT file_extension `value` FROM `resource` WHERE ref = ?", array("i", $resource), 'jpg');
     $path = get_resource_path($resource, true, '', false, $ext);
     if (file_exists($path)) {
         $rsize = filesize_unlimited($path);

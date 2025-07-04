@@ -3,7 +3,8 @@
 function HookClipSearchSearch_header_after_actions()
 {
     global $lang,$ref,$baseurl,$search;
-
+    if (checkperm("clip-sb")) {return false;}
+    
     // Don't display for search terms containing larger numbers - this is for natural search only
     if (preg_match('/\d{2,}/', $search)) {
         return false;

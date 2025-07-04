@@ -31,6 +31,9 @@ if (array_key_exists("user", $_COOKIE) || array_key_exists("user", $_GET) || iss
     } elseif (isset($anonymous_login)) {
         $username = $anonymous_login;
         $rs_session = get_rs_session_id(true);
+
+        // Always check the browser for anonymous access
+        browser_check();
     }
 
     if (!is_string($session_hash)) {

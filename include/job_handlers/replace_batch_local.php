@@ -90,7 +90,7 @@ foreach ($foldercontents as $objectindex => $object) {
                 $replaced[] = $valid_resource;
                 try_unlink($full_path);
             } else {
-                $errors[] = "Failed to copy file from : " .  $filepath;
+                $errors[] = "Failed to copy file from : " .  $full_path;
             }
         } elseif (count($valid_resources) == 0) {
             // No resource found with the same filename
@@ -120,7 +120,7 @@ foreach ($foldercontents as $objectindex => $object) {
                         }
                         $replaced[] = $valid_resource;
                     } else {
-                        $errors[] = "Failed to copy file from : " .  $filepath;
+                        $errors[] = "Failed to copy file from : " .  $full_path;
                         $copy_error = true;
                     }
                 }

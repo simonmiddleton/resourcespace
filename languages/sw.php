@@ -959,7 +959,7 @@ $lang["deleteallsure"] = 'Je, una uhakika unataka KUFUTA rasilimali hizi? Hii it
 $lang["batchdonotaddcollection"] = '(usiongeze kwenye mkusanyiko)';
 $lang["collectionsthemes"] = 'Makusanyo yanayohusiana yaliyoangaziwa na ya umma';
 $lang["recent"] = 'Hivi karibuni';
-$lang["n_recent"] = '%qty Rasilimali zilizoongezwa hivi karibuni';
+
 $lang["batchcopyfrom"] = 'Nakili data hapa chini kutoka kwa rasilimali yenye Kitambulisho (ID)';
 $lang["copy"] = 'Nakili';
 $lang["zipall"] = 'Pakua';
@@ -2825,7 +2825,6 @@ $lang["map_tfneighbourhood"] = 'Jirani';
 $lang["all__emailcontactadmin"] = 'Tafadhali tafsiri: <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
 $lang["information-enable_complete_indexing"] = 'Weka thamani za uwanja kama neno moja lisilovunjika kwa uwanja huu. Chaguo hili haliendani na kuorodhesha kwa sehemu.';
 $lang["property-enable_complete_indexing"] = 'Wezesha kuorodhesha kamili';
-$lang["cannot_share-has_upload_share"] = 'Huwezi kuunda ushiriki wa mkusanyiko huu usio wa kupakia kwa sababu ushiriki wa kupakia tayari upo kwa ajili yake.';
 $lang["language-cy"] = 'Welsh';
 $lang["language-th"] = 'Thai';
 $lang["welcome_generic"] = 'Karibu kwa %applicationname';
@@ -2908,3 +2907,5 @@ $lang["fieldtitle-usergroup_config"] = 'Mabadiliko ya kikundi';
 $lang["page-title_usergroup_config"] = 'Hariri mipangilio ya kikundi';
 $lang["action-title_usergroup_override_detail"] = 'Mipangilio yoyote iliyowekwa hapa itachukua nafasi ya mipangilio ya mfumo kwa watumiaji katika kundi hili.';
 $lang["team_resource_non_ingested_search"] = 'Tazama rasilimali zisizopokelewa';
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

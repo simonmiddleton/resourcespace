@@ -70,8 +70,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
             {
             return false;
             }
-
-        $value = highlightkeywords($mpid, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
+        $value = $mpid;
 
         // Generate the MuseumPlus URL for this module record only if we have a valid association
         $computed_md5 = mplus_compute_data_md5([$resource['ref'] => $mpid], $module_name);
@@ -92,7 +91,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
         ?>
         <div class="itemNarrow">
             <h3><?php echo escape($field['title']); ?></h3>
-            <p><?php echo $value; ?></p>
+            <p><?php echo escape($value); ?></p>
             <?php
             if(isset($mplus_module_url) && $mplus_module_url !== '')
                 {

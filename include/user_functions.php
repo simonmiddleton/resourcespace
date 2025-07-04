@@ -2756,7 +2756,7 @@ function checkperm_login_as_user($user): bool
         $user = get_user($user);
     }
 
-    if (!checkperm("a") && preg_match("/(?:^|\\W|,)a(?:$|\\W|,)/", $user['permissions'])) {
+    if (!checkperm("a") && preg_match("/(?:^|\\W|,)a(?:$|\\W|,)/", (string) $user['permissions'])) {
         // Target user has 'a' permission but current user does not
         return false;
     }
@@ -3664,29 +3664,26 @@ function delete_usergroup(int $usergroup_ref): bool
  */
 function browser_check()
 {
-    global $browser_check_key, $applicationname, $disable_browser_check, $baseurl_short, $browser_check_message;
-    
-    // Exceptions
+    global $browser_check_key, $applicationname, $disable_browser_check, $browser_check_message;
+    $webRoot = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__); // Calculate web root. This runs early so $baseurl can't be used.
+    $ajax=getval("ajax","")=="true"; // AJAX request?
+
+     // Exceptions
     if (PHP_SAPI == 'cli') {return;}
     if (isset($disable_browser_check) && $disable_browser_check) {return;} // e.g. API/IIIF
 
-    $ip=$_SERVER["REMOTE_ADDR"]; // Use real IP, do not trust forwarded IP as could be faked
-    $question_key=hash_hmac("sha512", "{$ip}" . date('Ymd'), $browser_check_key);
+    if (!isset($_SERVER["HTTP_USER_AGENT"])) {exit();} // Terminate requests that do not specify a user agent
+    $question_key=hash_hmac("sha512", $_SERVER["HTTP_USER_AGENT"] . date('Ymd'), $browser_check_key);
     $answer_key=xor_base64_encode($question_key);
 
     // Look for the answer already set as a cookie
     if (getval("browser_check_cookie","")==$answer_key) {return;} // We're good
 
     // Output the JS to calculate the answer and set the cookie
+    
+    if (!$ajax) { 
     ?>
-    <html><title><?php echo escape($applicationname) ?></title><head>
-    <script>
-    function x9Zq(str){var a=[90,51,127],b='',c=0;for(var d=0;d<str.length;d++)b+=String.fromCharCode(str.charCodeAt(d)^a[c++%3]);return btoa(b);}
-    document.cookie = "browser_check_cookie=" + x9Zq(<?php echo json_encode($question_key) ?>) + "; path=/; max-age=172800";
-    setTimeout(function() {
-    window.location.reload(true);
-    }, 2000);
-    </script>
+    <html><head><title><?php echo escape($applicationname) ?></title>
     <style>
         body {
             margin: 0;
@@ -3703,15 +3700,25 @@ function browser_check()
             font-size: 1.5em;margin-top: 2em;
         }
     </style>
-</head>
+    </head>
     <body>
         <div>
-        <div class="logo"><img src="<?php echo $baseurl_short ?>gfx/titles/title-black.svg" /></div> 
+        <div class="logo"><img src="<?php echo $webRoot ?>/../gfx/titles/title-black.svg" /></div> 
+    <?php } ?>
+            <script>
+            function x9Zq(str){var a=[90,51,127],b='',c=0;for(var d=0;d<str.length;d++)b+=String.fromCharCode(str.charCodeAt(d)^a[c++%3]);return btoa(b);}
+            document.cookie = "browser_check_cookie=" + x9Zq(<?php echo json_encode($question_key) ?>) + "; path=/; max-age=172800";
+            setTimeout(function() {
+            window.location.reload(true);
+            }, 1000);
+            </script>
             <h1><?php echo escape($browser_check_message) ?></h1><?php /* Note - can't be translated - language files not loaded, this is intentionally very early in the process */ ?>
+    <?php if (!$ajax) {  ?>
         </div>
     </body>
-    </head></html>
+    </html>
     <?php
+    }
     exit();    
 }
 

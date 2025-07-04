@@ -46,18 +46,25 @@ update_field($resourcec, $fruitfield, "Mango");
 update_field($resourced, $fruitfield, "Apple");
 update_field($resourcee, $fruitfield, "Banana");
 
-$alldata = get_resource_field_data_batch([$resourcea,$resourceb,$resourcec,$resourced,$resourcee]);
+$all_resources = [$resourcea,$resourceb,$resourcec,$resourced,$resourcee];
+
+$alldata = get_resource_field_data_batch($all_resources);
+
+foreach ($all_resources as $resource) {
+    $alldata[$resource] = array_column($alldata[$resource], 'value', 'resource_type_field');
+}
+
 if (
-    $alldata[$resourcea][0]["value"] != "Comedy, Action"
-    || $alldata[$resourcea][1]["value"] != "Lemon"
-    || $alldata[$resourceb][0]["value"] != "Comedy, Horror"
-    || $alldata[$resourceb][1]["value"] != "Orange"
-    || $alldata[$resourcec][0]["value"] != "Comedy, Action, Horror"
-    || $alldata[$resourcec][1]["value"] != "Mango"
-    || $alldata[$resourced][0]["value"] != "Action"
-    || $alldata[$resourced][1]["value"] != "Apple"
-    || $alldata[$resourcee][0]["value"] != "Horror"
-    || $alldata[$resourcee][1]["value"] != "Banana"
+    $alldata[$resourcea][$genrefield] != "Comedy, Action"
+    || $alldata[$resourcea][$fruitfield] != "Lemon"
+    || $alldata[$resourceb][$genrefield] != "Comedy, Horror"
+    || $alldata[$resourceb][$fruitfield] != "Orange"
+    || $alldata[$resourcec][$genrefield] != "Comedy, Action, Horror"
+    || $alldata[$resourcec][$fruitfield] != "Mango"
+    || $alldata[$resourced][$genrefield] != "Action"
+    || $alldata[$resourced][$fruitfield] != "Apple"
+    || $alldata[$resourcee][$genrefield] != "Horror"
+    || $alldata[$resourcee][$fruitfield] != "Banana"
 ) {
     return false;
 }

@@ -2,9 +2,10 @@ name: faces
 title: AI Faces - InsightFace
 author: Montala Limited
 version: 1.0
-desc: Automatic face detection and similarity-based face recognition for identifying the same individuals across images.
+desc: State-of-the-art automatic face detection and tagging. Search by face.
 icon: fa fa-user-tag
 icon-colour: seagreen
 category: search
 config_url: /plugins/faces/pages/setup.php
 info_url: https://www.resourcespace.com/knowledge-base/plugins/faces
+disable_group_select: 1

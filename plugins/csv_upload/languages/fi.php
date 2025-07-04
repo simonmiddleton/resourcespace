@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV-tiedoston lataus';
 $lang["csv_upload_intro"] = 'Tämä liitännäinen mahdollistaa resurssien luomisen tai päivittämisen CSV-tiedoston lataamalla. CSV-tiedoston muoto on tärkeä';
-$lang["csv_upload_condition1"] = 'Varmista, että CSV-tiedosto on koodattu käyttäen <b>UTF-8 ilman BOM-merkkiä</b>';
 $lang["csv_upload_condition2"] = 'CSV-tiedoston ensimmäisellä rivillä on oltava otsikkorivi';
 $lang["csv_upload_condition3"] = 'Jotta voit ladata resurssitiedostoja myöhemmin käyttäen eräkorvaustoimintoa, tulee olla sarakkeen nimi \'Alkuperäinen tiedostonimi\' ja jokaisella tiedostolla tulee olla uniikki tiedostonimi';
 $lang["csv_upload_condition4"] = 'Kaikki pakolliset kentät uusille resursseille on oltava läsnä CSV-tiedostossa';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Luotu CSV-latausliitännäisestä';
 $lang["plugin-csv_upload-title"] = 'CSV-lataus';
 $lang["plugin-csv_upload-desc"] = '[Lisäasetukset] Lataa metatiedot CSV-tiedostolla.';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV-tiedostossa on BOM, joten sitä ei voida ladata';
 $lang["csv_upload_check_file_error"] = 'CSV-tiedostoa ei voi avata tai lukea';
 $lang["csv_upload_check_utf_error"] = 'CSV-tiedosto ei ole voimassa olevaa UTF-8:aa. Virheellinen merkki rivillä';
+$lang["csv_upload_condition1"] = 'Varmista, että CSV-tiedosto on koodattu käyttäen <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV-tiedostossa on BOM, jota ei voitu poistaa';

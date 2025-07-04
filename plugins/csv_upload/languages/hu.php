@@ -3,7 +3,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV feltöltés';
 $lang["csv_upload_intro"] = 'Ez a bővítmény lehetővé teszi, hogy erőforrásokat hozzon létre vagy frissítsen CSV fájl feltöltésével. A CSV formátuma fontos';
-$lang["csv_upload_condition1"] = 'Győződjön meg arról, hogy a CSV fájl <b>UTF-8 BOM nélkül</b> kódolással készült.';
 $lang["csv_upload_condition2"] = 'A CSV-nek tartalmaznia kell egy fejlécsort';
 $lang["csv_upload_condition3"] = 'Ahhoz, hogy később a tételes cserélési funkcióval tudjunk erőforrás fájlokat feltölteni, szükség van egy \'Eredeti fájlnév\' nevű oszlopra, és minden fájlnak egyedi fájlnevének kell lennie.';
 $lang["csv_upload_condition4"] = 'Minden kötelező mezőnek, amely bármely újonnan létrehozott erőforráshoz tartozik, jelen kell lennie a CSV fájlban';
@@ -66,6 +65,8 @@ $lang["csv_upload_process_offline_quick"] = 'Hagyja figyelmen kívül az érvén
 $lang["csv_upload_force_offline"] = 'Ez a nagy CSV hosszú ideig tarthat a feldolgozása, ezért offline módon fog futni. Értesítést fog kapni egy ResourceSpace üzenetben, amint a feldolgozás befejeződik.';
 $lang["csv_upload_recommend_offline"] = 'Ez a nagy CSV fájl nagyon hosszú ideig tarthat a feldolgozása. Ajánlott, hogy offline feladatok legyenek engedélyezve, ha nagy CSV fájlokat kell feldolgoznia.';
 $lang["csv_upload_createdfromcsvupload"] = 'CSV feltöltő bővítményből létrehozva';
-$lang["csv_upload_check_invalidbom"] = 'A CSV fájl BOM-ot tartalmaz, ezért nem lehet betölteni';
+
 $lang["csv_upload_check_file_error"] = 'A CSV fájl nem nyitható meg vagy olvasható.';
 $lang["csv_upload_check_utf_error"] = 'A CSV fájl nem érvényes UTF-8. Érvénytelen karakter a soron';
+$lang["csv_upload_condition1"] = 'Győződjön meg arról, hogy a CSV fájl <b>UTF-8</b> kódolással készült.';
+$lang["csv_upload_check_removebom"] = 'A CSV fájl BOM-ot tartalmaz, amelyet nem sikerült eltávolítani';

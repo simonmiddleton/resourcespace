@@ -7,7 +7,7 @@
  */
 
 /* Default text and background colour */
-body,html {color:#474747;background: #efefef;}
+body,html {color:#474747;background: #ececec;}
 
 h1, h2 {color: #000000;}
 a:link {color:#666666;}
@@ -23,7 +23,7 @@ input[readonly] {
 
 /* Header styling */
 #Header {background: #fff;transform: translate3d(0, 0, 0);border: none;}
-#Header li a {color:#000; opacity:0.7;}
+#Header li a:not(:has(img)) {color:#000; opacity:0.7;}
 #Header .SearchResultsDisabled,
 #Header .SearchResultsDisabled:hover,
 .DisabledLink,
@@ -66,10 +66,9 @@ input[readonly] {
 }
 .ResourcePanel {
     background-color: white;
-    border-radius: 6px;
+    border-radius: 10px;
     transition: all 0.1s ease-in-out;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border: 3px solid rgba(255, 255, 255, 0);
 }
 .ResourcePanel:hover {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
@@ -81,10 +80,12 @@ input[readonly] {
 .ResourcePanelInfo a {
     color: #414141;
 }
-.ResourcePanel.Selected { border: 3px solid #2E99E6; }
+.ResourcePanel.Selected { outline: 3px solid #2E99E6; }
 tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of #2e99e6 which is used for .ResourcePanel.Selected */ }
 
 .ResourcePanelIcons a.fa-minus-circle { color: #e91d1d }
+
+.ImageWrapper {background-color: #f6f6f6;}
 
 #SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2, .SearchSpace h2{color: #fff;}
 
@@ -210,7 +211,6 @@ div.autocomplete ul li {color: #000;}
 
 .Listview .ListViewSubTable,.Listview .ListViewSubTable td,.Listview .ListViewSubTable tr {background-image: none;}
 .Listview {background-color: white;}
-.highlight {color: #000;background-color: #ff0;}
 .Tab a {padding: 8px 1rem;background: rgba(255, 255, 255, 0.4);}
 .TabBar { background-color: #ededed; }
 #BasicsBoxTabs > .TabBar { background-color: #f2f2f2;} /* On Edit page w/ $tabs_on_edit  */
@@ -349,9 +349,15 @@ div.MessageBox a {
 #CollectionDiv .ActionsContainer .chosen-single:hover {color:#999;}
 
 .FeaturedSimpleTile {
-    background: rgba(30, 30, 30, 0.70);
-    color:#FFF;
+    background: white;
+    color:#eee;
+       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
 }
+.FeaturedSimpleTile:hover {
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
+}
+
 
 /* Highlight selected keywords */
 input:checked + .customFieldLabel, .keywordselected {
@@ -364,7 +370,7 @@ input:checked + .customFieldLabel, .keywordselected {
     color:black;
 }
 
-.ReportSheet {background-color:#fff;border:1px solid black;color:black;}
+.ReportSheet {background-color:#fff;       box-shadow: 0 1px 3px rgba(0,0,0,0.1);;color:black;}
 .ReportSheet  h2 {color:black;}
 .ReportSheet  p {color:black;}
 .ReportSummary {background-color:white;color:black;border-collapse:collapse;}
@@ -416,16 +422,16 @@ input:checked + .customFieldLabel, .keywordselected {
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.35);border-radius: 6px;}
 ::-webkit-scrollbar-thumb:active{background:rgba(0,0,0,0.4);border-radius: 6px;}
 
-
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2
     {
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.6);
     padding-bottom: 5px;
     text-shadow: 0px 1px 5px #000000;
     }
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents .FeaturedSimpleTileText h2 {
     background-color: unset;
+    color: #666;
 }
 
 .SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited, .MessageBox { color: #474747; }
@@ -768,7 +774,7 @@ a.HomePanel:hover {
 .PluginDisplay
     {
     background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
     border: 3px solid rgba(255, 255, 255, 0);
     }
 

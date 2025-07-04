@@ -20,3 +20,4 @@ $lang["openai_gpt_processing_field"]='フィールド \'[field]\' のAI処理';
 $lang["property-gpt_source"]='GPTソース';
 $lang["openai_gpt_language"] = '出力言語';
 $lang["openai_gpt_language_user"] = '現在のユーザーの言語';
+$lang["openai_gpt_overwrite_data"] = '設定されたフィールドの既存データを上書きしますか？';

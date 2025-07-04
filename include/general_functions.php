@@ -2221,7 +2221,7 @@ function error_alert($error, $back = true, $code = 403)
 }
 
 /**
- * When displaying metadata, applies trim/wordwrap/highlights.
+ * When displaying metadata, applies trim/wordwrap.
  *
  * @param  string $value
  * @return string
@@ -2240,8 +2240,6 @@ function format_display_field($value)
     } else {
         $string = escape($string);
     }
-
-    $string = highlightkeywords($string, $search, $df[$x]['partial_index'], $df[$x]['name'], $df[$x]['indexed']);
 
     return $string;
 }
@@ -4756,7 +4754,7 @@ function get_system_status(bool $basic = false)
             $exclude_params = array_merge($exclude_params, ps_param_fill($exclude_types, "i"));
         }
         if (count($GLOBALS["file_integrity_ignore_states"]) > 0) {
-            $exclude_sql[] = "resource_type NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
+            $exclude_sql[] = "archive NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
             $exclude_params = array_merge($exclude_params, ps_param_fill($GLOBALS["file_integrity_ignore_states"], "i"));
         }
         $failedquery = "SELECT COUNT(*) value FROM resource WHERE ref>0 AND integrity_fail=1 AND no_file=0"
@@ -5661,4 +5659,26 @@ function check_tinymce_toolbar(string $toolbar = ""): string
 function get_non_ingested_resources(): int
 {
     return ps_value("SELECT COUNT(*) value FROM resource WHERE file_path IS NOT NULL AND file_path <> ''", [], 0);
+}
+
+/**
+ * Return URL of the application favicon
+ *
+ * @return string  Favicon URL
+ */
+function get_favicon_url(): string
+{
+    global $header_favicon, $baseurl, $storageurl;
+
+    if ($header_favicon == '') {
+        $header_favicon = 'gfx/interface/favicon.png';
+    }
+
+    $favicon = "{$baseurl}/{$header_favicon}";
+
+    if (strpos($header_favicon, '[storage_url]') !== false) {
+        $favicon = str_replace('[storage_url]', $storageurl, $header_favicon);
+    }
+
+    return $favicon;
 }

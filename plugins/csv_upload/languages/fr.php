@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Téléchargement CSV';
 $lang["csv_upload_intro"] = 'Ce plugin vous permet de créer ou de mettre à jour des ressources en téléchargeant un fichier CSV. Le format du CSV est important';
-$lang["csv_upload_condition1"] = 'Assurez-vous que le fichier CSV est encodé en utilisant <b>UTF-8 sans BOM</b>.';
 $lang["csv_upload_condition2"] = 'Le CSV doit avoir une ligne d\'en-tête';
 $lang["csv_upload_condition3"] = 'Pour pouvoir télécharger des fichiers de ressources ultérieurement en utilisant la fonctionnalité de remplacement par lots, il doit y avoir une colonne nommée "Nom de fichier d\'origine" et chaque fichier doit avoir un nom de fichier unique';
 $lang["csv_upload_condition4"] = 'Tous les champs obligatoires pour toutes les ressources nouvellement créées doivent être présents dans le CSV';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Créé à partir du plugin de télé
 $lang["plugin-csv_upload-title"] = 'Téléversement CSV';
 $lang["plugin-csv_upload-desc"] = '[Avancé] Télécharger les métadonnées en utilisant un fichier CSV.';
 
-$lang["csv_upload_check_invalidbom"] = 'Le fichier CSV a un BOM, donc il ne peut pas être chargé';
 $lang["csv_upload_check_file_error"] = 'Le fichier CSV ne peut pas être ouvert ou lu';
 $lang["csv_upload_check_utf_error"] = 'Le fichier CSV n\'est pas un UTF-8 valide. Caractère invalide à la ligne';
+$lang["csv_upload_condition1"] = 'Assurez-vous que le fichier CSV est encodé en <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Le fichier CSV a un BOM qui n\'a pas pu être supprimé';

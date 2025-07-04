@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Pakia CSV';
 $lang["csv_upload_intro"] = 'Programu-jalizi hii inakuruhusu kuunda au kusasisha rasilimali kwa kupakia faili ya CSV. Muundo wa CSV ni muhimu';
-$lang["csv_upload_condition1"] = 'Hakikisha faili la CSV limekodishwa kwa kutumia <b>UTF-8 bila BOM</b>.';
 $lang["csv_upload_condition2"] = 'CSV lazima iwe na safu ya kichwa cha habari';
 $lang["csv_upload_condition3"] = 'Ili uweze kupakia faili za rasilimali baadaye kwa kutumia utendakazi wa kubadilisha kwa kundi, inapaswa kuwa na safu iliyo na jina \'Jina la faili asili\' na kila faili inapaswa kuwa na jina la kipekee.';
 $lang["csv_upload_condition4"] = 'Lazima mashamba yote ya lazima kwa rasilimali yoyote mpya iliyoundwa yawepo kwenye CSV';
@@ -66,6 +65,7 @@ $lang["csv_upload_force_offline"] = 'CSV hii kubwa inaweza kuchukua muda mrefu k
 $lang["csv_upload_recommend_offline"] = 'CSV kubwa hii inaweza kuchukua muda mrefu sana kusindika. Inapendekezwa kuwa kazi za nje ya mtandao ziwezeshwe ikiwa unahitaji kusindika CSV kubwa.';
 $lang["csv_upload_createdfromcsvupload"] = 'Imeundwa kutoka kwa programu-jalizi ya Kupakia CSV';
 
-$lang["csv_upload_check_invalidbom"] = 'Fail ya CSV ina BOM hivyo haiwezi kupakiwa';
 $lang["csv_upload_check_file_error"] = 'Faili la CSV haliwezi kufunguliwa au kusomwa';
 $lang["csv_upload_check_utf_error"] = 'Faili la CSV halina UTF-8 halali. Karakteri isiyo halali kwenye mstari';
+$lang["csv_upload_condition1"] = 'Hakikisha faili la CSV limeandikwa kwa kutumia <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Faili la CSV lina BOM ambalo haliwezi kuondolewa';

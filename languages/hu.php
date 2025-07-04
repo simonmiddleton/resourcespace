@@ -897,7 +897,6 @@ $lang["statusandrelationships"] = 'Állapot és kapcsolatok';
 $lang["share"] = 'Megosztás';
 $lang["share_selected"] = 'Kiválasztott megosztása';
 $lang["sharecollection"] = 'Gyűjtemény megosztása';
-$lang["cannot_share-has_upload_share"] = 'A gyűjtemény feltöltési megosztása nem hozható létre, mivel jelenleg már létezik egy feltöltési megosztás hozzá.';
 $lang["sharecollection-name"] = 'Ossza meg a gyűjteményt - %collectionname';
 $lang["share_theme_category"] = 'Ossza meg a kiemelt gyűjtemény kategóriát';
 $lang["share_theme_category_subcategories"] = 'Tartalmazza a kiemelt gyűjteményeket az almappákban külső felhasználók számára?';
@@ -952,7 +951,7 @@ $lang["deleteallsure"] = 'Biztos vagy benne, hogy törölni szeretnéd ezeket az
 $lang["batchdonotaddcollection"] = '(ne adja hozzá a gyűjteményhez)';
 $lang["collectionsthemes"] = 'Kapcsolódó kiemelt és nyilvános gyűjtemények';
 $lang["recent"] = 'Legutóbb hozzáadott';
-$lang["n_recent"] = '%qty legutóbb hozzáadott erőforrás';
+
 $lang["batchcopyfrom"] = 'Metaadatok másolása (ID alapján)';
 $lang["copy"] = 'Másolás';
 $lang["zipall"] = 'Letöltés';
@@ -2904,3 +2903,6 @@ $lang["fieldtitle-usergroup_config"] = 'Csoport felülbírálatok';
 $lang["page-title_usergroup_config"] = 'Csoport konfigurációs felülírások szerkesztése';
 $lang["action-title_usergroup_override_detail"] = 'Bármely itt konfigurált beállítás felülírja a rendszer alapértelmezett beállításait ennek a csoportnak a felhasználói számára.';
 $lang["team_resource_non_ingested_search"] = 'Nézd meg a nem feldolgozott erőforrásokat';
+
+$lang["language-ms"] = 'Malay';
+$lang["language-tl"] = 'Filipino';

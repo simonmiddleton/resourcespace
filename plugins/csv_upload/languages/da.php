@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV-upload';
 $lang["csv_upload_intro"] = 'Dette plugin giver dig mulighed for at oprette eller opdatere ressourcer ved at uploade en CSV-fil. Formatet af CSV-filen er vigtigt';
-$lang["csv_upload_condition1"] = '<li>Sørg for, at CSV-filen er kodet ved hjælp af <b>UTF-8 uden BOM</b>.</li>';
 $lang["csv_upload_condition2"] = '<li>CSV\'en skal have en overskriftsrække</li>';
 $lang["csv_upload_condition3"] = '<li>For at kunne uploade ressourcefiler senere ved hjælp af batch-erstatningsfunktionaliteten, skal der være en kolonne med navnet \'Originalt filnavn\', og hver fil skal have et unikt filnavn.</li>';
 $lang["csv_upload_condition4"] = '<li>Alle obligatoriske felter for nyligt oprettede ressourcer skal være til stede i CSV\'en</li>';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Oprettet fra CSV Upload-plugin';
 $lang["plugin-csv_upload-title"] = 'CSV Upload';
 $lang["plugin-csv_upload-desc"] = 'Upload metadata ved hjælp af en CSV-fil.';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV-fil har BOM, så den kan ikke indlæses';
 $lang["csv_upload_check_file_error"] = 'CSV-filen kan ikke åbnes eller læses';
 $lang["csv_upload_check_utf_error"] = 'CSV-filen er ikke gyldig UTF-8. Ugyldigt tegn på linje';
+$lang["csv_upload_condition1"] = 'Sørg for, at CSV-filen er kodet med <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV-filen har BOM, som ikke kunne fjernes';

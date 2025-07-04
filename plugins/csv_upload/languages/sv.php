@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV-uppladdning';
 $lang["csv_upload_intro"] = 'Detta tillägg gör det möjligt att skapa eller uppdatera resurser genom att ladda upp en CSV-fil. Formatet på CSV-filen är viktigt';
-$lang["csv_upload_condition1"] = 'Säkerställ att CSV-filen är kodad med <b>UTF-8 utan BOM</b>.';
 $lang["csv_upload_condition2"] = 'CSV-filen måste ha en rubrikrad';
 $lang["csv_upload_condition3"] = 'För att kunna ladda upp resursfiler senare med hjälp av funktionen för batchutbyte, bör det finnas en kolumn som heter "Ursprungligt filnamn" och varje fil bör ha ett unikt filnamn.';
 $lang["csv_upload_condition4"] = 'Alla obligatoriska fält för nyskapade resurser måste finnas i CSV-filen';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Skapad från CSV Uppladdningsplugin'
 $lang["plugin-csv_upload-title"] = 'CSV-uppladdning';
 $lang["plugin-csv_upload-desc"] = 'Ladda upp metadata med en CSV-fil.';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV-filen har BOM så den kan inte laddas';
 $lang["csv_upload_check_file_error"] = 'CSV-filen kan inte öppnas eller läsas';
 $lang["csv_upload_check_utf_error"] = 'CSV-filen är inte giltig UTF-8. Ogiltig tecken på rad';
+$lang["csv_upload_condition1"] = 'Se till att CSV-filen är kodad med <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV-filen har BOM som inte kunde tas bort';

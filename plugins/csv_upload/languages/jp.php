@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSVアップロード';
 $lang["csv_upload_intro"] = 'このプラグインを使用すると、CSVファイルをアップロードしてリソースを作成または更新できます。CSVの形式が重要です。';
-$lang["csv_upload_condition1"] = 'CSVファイルが <b>BOMなしUTF-8</b>でエンコードされていることを確認してください。';
 $lang["csv_upload_condition2"] = 'CSVはヘッダー行を持っている必要があります。';
 $lang["csv_upload_condition3"] = 'バッチ置換機能を使用して後でリソースファイルをアップロードできるようにするには、「元のファイル名」という名前の列が必要であり、各ファイルにはユニークなファイル名が必要です。';
 $lang["csv_upload_condition4"] = '新しく作成されたリソースのすべての必須フィールドはCSVに存在している必要があります。';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'CSVアップロードプラグイン
 $lang["plugin-csv_upload-title"] = 'CSVアップロード';
 $lang["plugin-csv_upload-desc"] = '[高度な] CSVファイルを使用してメタデータをアップロードします。';
 
-$lang["csv_upload_check_invalidbom"] = 'CSVファイルにBOMが含まれているため、読み込むことができません';
 $lang["csv_upload_check_file_error"] = 'CSVファイルを開くことも読み取ることもできません';
 $lang["csv_upload_check_utf_error"] = 'CSVファイルは有効なUTF-8ではありません。行に無効な文字があります';
+$lang["csv_upload_condition1"] = 'CSVファイルが<b>UTF-8</b>でエンコードされていることを確認してください。';
+$lang["csv_upload_check_removebom"] = 'CSVファイルにBOMが含まれており、削除できませんでした';

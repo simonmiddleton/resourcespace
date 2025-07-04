@@ -18,7 +18,6 @@ $themes_simple_view=true;
 $stemming=true;
 $case_insensitive_username=true;
 $user_pref_user_management_notifications=true;
-$themes_show_background_image = true;
 
 $use_zip_extension=true;
 $collection_download=true;

@@ -18,3 +18,4 @@ $lang["property-gpt_source"]='منبع GPT';
 $lang["property-openai_gpt_prompt"]='GPT Prompt';
 $lang["openai_gpt_language"] = 'زبان خروجی';
 $lang["openai_gpt_language_user"] = 'زبان کاربر فعلی';
+$lang["openai_gpt_overwrite_data"] = 'آیا می‌خواهید داده‌های موجود در فیلدهای پیکربندی شده را بازنویسی کنید؟';

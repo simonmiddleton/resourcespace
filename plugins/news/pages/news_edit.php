@@ -75,11 +75,11 @@ for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
     {
     ?>
     <tr>
-    <td><div class="ListTitle"><?php echo highlightkeywords($news[$n]["date"],escape($findtext),true);?></div></td>
+    <td><div class="ListTitle"><?php echo escape($news[$n]["date"]);?></div></td>
     
-    <td><div class="ListTitle"><?php echo "<a href=\"" . $baseurl . "/plugins/news/pages/news.php?ref=" . $news[$n]["ref"] . "\">" . highlightkeywords($news[$n]["title"],escape($findtext),true);?></a></div></td>
+    <td><div class="ListTitle"><?php echo "<a href=\"" . $baseurl . "/plugins/news/pages/news.php?ref=" . $news[$n]["ref"] . "\">" . escape($news[$n]["title"]);?></a></div></td>
     
-    <td><?php echo highlightkeywords(tidy_trim(escape($news[$n]["body"]),100),$findtext,true)?></td>
+    <td><?php echo escape(tidy_trim($news[$n]["body"],100)) ?></td>
     
     <td>
     <div class="ListTools">

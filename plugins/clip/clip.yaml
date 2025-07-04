@@ -8,3 +8,4 @@ icon-colour: seagreen
 category: search
 config_url: /plugins/clip/pages/setup.php
 info_url: https://www.resourcespace.com/knowledge-base/plugins/clip
+disable_group_select: 1

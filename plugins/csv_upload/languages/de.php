@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV-Upload';
 $lang["csv_upload_intro"] = 'Dieses Plugin ermöglicht es Ihnen, Ressourcen durch Hochladen einer CSV-Datei zu erstellen oder zu aktualisieren. Das Format der CSV-Datei ist wichtig';
-$lang["csv_upload_condition1"] = '<li>Stellen Sie sicher, dass die CSV-Datei mit <b>UTF-8 ohne BOM</b> codiert ist.</li>';
 $lang["csv_upload_condition2"] = '<li>Die CSV-Datei muss eine Kopfzeile haben</li>';
 $lang["csv_upload_condition3"] = '<li>Um später Ressourcendateien mithilfe der Batch-Ersetzungsfunktion hochladen zu können, sollte eine Spalte mit dem Namen "Ursprünglicher Dateiname" vorhanden sein und jede Datei sollte einen eindeutigen Dateinamen haben.</li>';
 $lang["csv_upload_condition4"] = '<li>Alle Pflichtfelder für neu erstellte Ressourcen müssen im CSV vorhanden sein.</li>';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Erstellt durch das CSV-Upload-Plugin
 $lang["plugin-csv_upload-title"] = 'CSV-Upload';
 $lang["plugin-csv_upload-desc"] = 'Metadaten mit einer CSV-Datei hochladen.';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV-Datei hat BOM und kann daher nicht geladen werden';
 $lang["csv_upload_check_file_error"] = 'CSV-Datei kann nicht geöffnet oder gelesen werden';
 $lang["csv_upload_check_utf_error"] = 'CSV-Datei ist kein gültiges UTF-8. Ungültiges Zeichen in Zeile';
+$lang["csv_upload_condition1"] = 'Stellen Sie sicher, dass die CSV-Datei mit <b>UTF-8</b> codiert ist.';
+$lang["csv_upload_check_removebom"] = 'CSV-Datei hat BOM, die nicht entfernt werden konnte';

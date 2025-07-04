@@ -74,17 +74,25 @@ $test_cases = [
     ["search" => "originalfilename:dog_photo-1.jpg", "node_value" => "dog_photo-1.jpg", "field" => 51],
     ["search" => "title:pumpkin.patch", "node_value" => "pumpkin.patch", "field" => 8],
     ["search" => "title:up-at-em", "node_value" => "up-at-em", "field" => 8],
+    ["search" => "123.1*", "node_value" => "123.124.125"],
+    ["search" => "1998.327.3.*", "node_value" => "1998", "include_resource" => false],
+    ["search" => "2010.69*", "node_value" => "2010.70", "include_resource" => false],
     ];
 
 foreach ($test_cases as $case) {
     $wildcard_always_applied = true;
-    if (!test_wildcard_search($case["search"], $case["node_value"], $case["field"] ?? 8)) {
+    if (!test_wildcard_search(
+        $case["search"],
+        $case["node_value"],
+        $case["field"] ?? 8,
+        $case["include_resource"] ?? true
+        )) {
         echo "ERROR - search: " . $case["search"];
         return false;
     }
 }
 
-function test_wildcard_search(string $search, string $node_value, int $field): bool
+function test_wildcard_search(string $search, string $node_value, int $field, bool $include_resource = true): bool
 {
     global $wildcard_always_applied;
     $resource = create_resource(1, 0);
@@ -93,15 +101,12 @@ function test_wildcard_search(string $search, string $node_value, int $field): b
 
     for ($n = 0; $n <= 1; $n++) {
         $wildcard_always_applied = !$wildcard_always_applied;
-        $results = do_search($search);
-        if (!is_array($results)) {
+        $results = is_array($search_result = do_search($search)) ? $search_result : [];
+
+        if (in_array($resource,array_column($results,'ref')) ^ $include_resource) {
             return false;
-        }
-        foreach ($results as $result) {
-            if ($result['ref'] == $resource) {
-                $success++;
-                break;
-            }
+        } else {
+            $success++;
         }
     }
 

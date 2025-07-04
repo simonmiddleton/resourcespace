@@ -5,7 +5,6 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
 # Establish various metrics for use in thumbnail rendering
 $resolved_title_trim = 0;
 $field_height = 24;
-$resource_id_height = 21;
 $workflow_state_height = 31;
 
 if ($display == "xlthumbs") {
@@ -38,10 +37,6 @@ if (isset($search_result_title_height)) {
 
 hook('thumbs_resourceshell_height');
 
-if ($display_resource_id_in_thumbnail) {
-    $thumbs_displayed_fields_height += $resource_id_height;
-    $br = '<br />';
-}
 if ($thumbs_display_archive_state) {
     $thumbs_displayed_fields_height += $workflow_state_height;
 }
@@ -59,22 +54,6 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
     class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo $display == 'xlthumbs' ? 'ResourcePanelLarge' : ''; ?> ArchiveState<?php echo $result[$n]['archive'];?> ResourceType<?php echo $result[$n]['resource_type']; ?>"
     id="ResourceShell<?php echo escape($ref)?>"
     style="height: <?php echo (int)$thumbs_displayed_fields_height; ?>px;">
-    <div class="ResourcePanelTop">
-        <?php
-        if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
-            <div class="thumbs-file-extension">
-                <?php echo strtoupper(escape($result[$n]['file_extension'])) ?>
-            </div>
-            <?php
-        }
-
-        foreach ($types as $type) {
-            if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
-                echo '<div class="ResourceTypeIcon fa-fw ' . escape($type["icon"]) . '" title="' . escape($type["name"]) . '"></div>';
-            }
-        }
-        ?>
-    </div>
 
     <?php hook("resourcethumbtop"); ?>
 
@@ -244,7 +223,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
                     >
                     <?php
                 } //end link
-                echo highlightkeywords(escape(tidy_trim(TidyList(i18n_get_translated($value)), $resolved_title_trim)), $search, $df[$x]['partial_index'], $df[$x]['name'], $df[$x]['indexed']);
+                echo escape(tidy_trim(TidyList(i18n_get_translated($value)), $resolved_title_trim));
                 if ($x == 0) { // add link if necessary ?>
                     </a>
                     <?php
@@ -261,6 +240,18 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
     <!-- Checkboxes -->
     <div class="ResourcePanelIcons">
         <?php
+        echo '<div class="ResourceTypeIcon ThumbIcon">';
+        foreach ($types as $type) {
+            if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
+                echo '<i title="' . escape($type["name"]) . '" class="fa-fw ' . escape($type["icon"]) . '"></i>';
+                }
+            }
+        if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
+            <?php echo strtoupper(escape($result[$n]['file_extension'])) ?>
+            <?php
+        }
+        echo '</div>';
+        
         if ($use_selection_collection) {
             if (!in_array($result[$n]['resource_type'], $collection_block_restypes)) { ?>
                 <input 
@@ -286,7 +277,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
         }
 
         if ($display_resource_id_in_thumbnail && $ref > 0) {
-            echo "<label for='check" . escape($ref) . "'" . "class='ResourcePanelResourceID'>" . escape($ref) . "</label>$br";
+            echo "<label for='check" . escape($ref) . "'" . "class='ResourcePanelResourceID'>" . escape($ref) . "</label>";
         }
 
         include "resource_tools.php";

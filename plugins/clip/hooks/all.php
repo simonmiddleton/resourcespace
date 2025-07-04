@@ -14,7 +14,7 @@ function HookClipAllAftersearchbox()
 
 function HookClipAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
 {
-    global $clip_search_cutoff, $clip_similar_cutoff, $clip_duplicate_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url, $clip_query_time;
+    global $clip_search_cutoff, $clip_similar_cutoff, $clip_duplicate_cutoff, $clip_results_limit_search, $clip_results_limit_similar, $clip_service_url, $clip_query_time, $clip_enable_full_duplicate_search;
     if (substr($search, 0, 11) == '!clipsearch') {
         $function = "search";
         $search = substr($search, 12);
@@ -34,7 +34,7 @@ function HookClipAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
             return false;
         }
         $min_score = $clip_similar_cutoff;
-    } elseif (substr($search, 0, 15) == '!clipduplicates') {
+    } elseif (substr($search, 0, 15) == '!clipduplicates' && $clip_enable_full_duplicate_search) {
         $function = "duplicates";
         $min_score = $clip_duplicate_cutoff;
     } elseif (substr($search, 0, 14) == '!clipduplicate') {
@@ -148,6 +148,7 @@ function HookClipAllSearch_pipeline_setup($search, $select, $sql_join, $sql_filt
 function HookClipAllSearchbarafterbuttons()
 {
     global $lang,$baseurl;
+    if (checkperm("clip-sb")) {return false;}
     ?>
     <p><i aria-hidden="true" class="fa fa-fw fa-brain"></i>&nbsp;<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl ?>/plugins/clip/pages/search.php"><?php echo escape($lang["clip-ai-smart-search"]) ?></a></p>
     <?php
@@ -162,14 +163,17 @@ function HookClipAllSearchbarafterbuttons()
  *
  * @param int $resource    The resource reference ID that has just had previews created.
  * @param int $alternative The alternative file ID, or -1 if processing the main resource.
+ * @param bool $generate_all Flag to indicate if hook has been triggered during full preview creation process
  *
  * @return void
  */
-function HookClipAllAfterpreviewcreation($resource, $alternative)
+function HookClipAllAfterpreviewcreation(int $resource, int $alternative, bool $generate_all = false): void
 {
-    global $clip_vector_on_upload,$lang;
+    global $clip_vector_on_upload,$lang,$clip_resource_types;
 
-    if ($alternative === -1 && $clip_vector_on_upload) {
+    $resource_type=get_resource_data($resource)["resource_type"];
+
+    if ($alternative === -1 && $clip_vector_on_upload && in_array($resource_type,$clip_resource_types)) {
         // Nothing to do for alternatives; face processing is for the main file only.
         // Detect images on upload if configured
         set_processing_message($lang["clip-generating"] . " " . $resource);
@@ -177,4 +181,10 @@ function HookClipAllAfterpreviewcreation($resource, $alternative)
         set_processing_message($lang["clip-tagging"] . " " . $resource);
         clip_tag($resource);
     }
+}
+
+function HookClipAllCron()
+{
+    global $clip_cron_generate_batch;
+    clip_generate_missing_vectors($clip_cron_generate_batch);
 }

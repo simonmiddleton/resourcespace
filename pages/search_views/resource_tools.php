@@ -4,6 +4,8 @@
 // when displaying many resources. As such this is a convenience feature for users that have system-wide edit access to the given
 // access level.
 if (
+    $thumbs_edit
+    &&
     (
     checkperm("e" . $result[$n]["archive"])
     || ($edit_access_for_contributor && $userref == $result[$n]["created_by"])
@@ -39,7 +41,8 @@ if (
 
 // Preview icon
 if (
-    !hook("replacefullscreenpreviewicon")
+    $thumbs_expand 
+    && !hook("replacefullscreenpreviewicon")
     && (int) $result[$n]["has_image"] !== RESOURCE_PREVIEWS_NONE
 ) {
     ?>
@@ -53,7 +56,7 @@ if (
 } /* end hook replacefullscreenpreviewicon */
 
 // Share icon
-if ($allow_share && ($k == "" || $internal_share_access)) { ?>
+if ($thumbs_share && $allow_share && ($k == "" || $internal_share_access)) { ?>
     <a class="fa fa-share-alt"
         href="<?php echo generateURL($baseurl_short . 'pages/resource_share.php', ['ref' => $ref,'search' => $search,'offset' => $offset,'order_by' => $order_by,'sort' => $sort,'archive' => $archive,'k' => $k]); ?>"
         onClick="return CentralSpaceLoad(this,true);"  

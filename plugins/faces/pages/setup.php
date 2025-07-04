@@ -25,6 +25,8 @@ $page_def[] = config_add_single_ftype_select("faces_tag_field", $lang["faces-tag
 $page_def[] = config_add_boolean_select("faces_detect_on_upload", $lang["faces-detect-on-upload"]);
 $page_def[] = config_add_boolean_select("faces_tag_on_upload", $lang["faces-tag-on-upload"]);
 
+$page_def[] = config_add_html("<p><br />" . $lang["faces_count_faces"] . ": " . faces_count_faces());
+$page_def[] = config_add_html("<br />" . $lang["faces_count_missing"] . ": " . faces_count_missing() . "</p>");
 
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);

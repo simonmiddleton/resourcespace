@@ -162,12 +162,13 @@ In the event that you cannot provide a translation (with the exception of the ca
 
             foreach ($models as $model)
                 {
-                echo $model . ": " . $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey (" . $lang_en_extended[$mkey] . ") for language $language\n\n";
+                echo $model . ": " . $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey for language $language\n\n";
                 flush();
                 ob_flush();
         
+		echo "English       : " . $lang_en_extended[$mkey] . "\n";
+		echo str_pad(substr($lang_name,0,13),13) . " : ";
                 $result = generateChatCompletions($openai_key, $model, 0, 2048, $messages);
-                echo "\n";
                 print_r($result);
                 echo "\n\n";
 

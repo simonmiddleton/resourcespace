@@ -56,9 +56,8 @@ function HookFalcon_linkViewRenderfield($field)
         {
         $value = $field["value"];
         $falconurl=str_replace("[id]",$value,$falcon_link_template_url);
-        $value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
         $title=escape($field["title"]);   
-        ?><div class="itemNarrow"><h3><?php echo escape($title) ?></h3><p><a href="<?php echo escape($falconurl) ?>" title="<?php echo escape($lang["falcon_link_view_in_falcon"]); ?>" target="_blank" ><?php echo $value?></a></p></div><?php
+        ?><div class="itemNarrow"><h3><?php echo escape($title) ?></h3><p><a href="<?php echo escape($falconurl) ?>" title="<?php echo escape($lang["falcon_link_view_in_falcon"]); ?>" target="_blank" ><?php echo escape($value) ?></a></p></div><?php
         return true;
         }
     return false;

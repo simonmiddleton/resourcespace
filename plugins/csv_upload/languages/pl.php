@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Przesyłanie pliku CSV';
 $lang["csv_upload_intro"] = 'Ten plugin umożliwia tworzenie lub aktualizowanie zasobów poprzez przesyłanie pliku CSV. Format pliku CSV jest ważny';
-$lang["csv_upload_condition1"] = 'Upewnij się, że plik CSV jest zakodowany w <b>UTF-8 bez BOM</b>.';
 $lang["csv_upload_condition2"] = 'CSV musi mieć wiersz nagłówka';
 $lang["csv_upload_condition3"] = 'Aby móc później przesłać pliki zasobów za pomocą funkcji wsadowej zamiany, powinna istnieć kolumna o nazwie "Oryginalna nazwa pliku", a każdy plik powinien mieć unikalną nazwę pliku';
 $lang["csv_upload_condition4"] = 'Wszystkie obowiązkowe pola dla nowo utworzonych zasobów muszą być obecne w pliku CSV';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Utworzono za pomocą wtyczki CSV Upl
 $lang["plugin-csv_upload-title"] = 'Przesyłanie CSV';
 $lang["plugin-csv_upload-desc"] = 'Prześlij metadane za pomocą pliku CSV.';
 
-$lang["csv_upload_check_invalidbom"] = 'Plik CSV ma BOM, więc nie może być załadowany';
 $lang["csv_upload_check_file_error"] = 'Plik CSV nie może być otwarty ani odczytany';
 $lang["csv_upload_check_utf_error"] = 'Plik CSV nie jest ważnym UTF-8. Nieprawidłowy znak w wierszu';
+$lang["csv_upload_condition1"] = 'Upewnij się, że plik CSV jest zakodowany przy użyciu <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Plik CSV zawiera BOM, który nie mógł zostać usunięty';

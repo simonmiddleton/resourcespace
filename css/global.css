@@ -415,9 +415,9 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .PoweredByPanel img {max-width: 215px; margin-top: 8px;}
 
 /*Resource Panel layout*/
-.ResourcePanel {padding:0;margin:0 14px 14px 0;width: 200px;float:left;position:relative; overflow: hidden;}
+.ResourcePanel {padding:0;margin:0 14px 14px 0;width: 200px;float:left;position:relative; overflow: hidden;border:3px transarent;}
 .ResourcePanelPreview {height: 156px;width: 156px;margin: 3px;}
-.ResourcePanelInfo {margin: 0;overflow:hidden;white-space:nowrap;padding:5px 5px 0 5px;text-align:justify;text-overflow: ellipsis; font-size: 13px; min-height: 19px;}
+.ResourcePanelInfo {margin: 0;overflow:hidden;white-space:nowrap;padding:5px 8px 0 8px;text-align:justify;text-overflow: ellipsis; font-size: 13px; min-height: 19px;}
 .ResourcePanelInfo.ResourcePanelTitle {font-size: 15px; min-height: 21px;}
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0;float: left;clear: left;display:inline;}
 .ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;font-size:0;} 
@@ -432,7 +432,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ImageStripLink .nopreview {font-size:150px;position: relative; left:-100px;left: -1em;top: -0.2em;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
-.ResourceTypeIcon.fa-fw {height: 16px;float:right;margin: 3px; background: #ffffffcc; padding: 3px 4px 2px 4px; border-radius: 3px;}
+.ResourceTypeIcon.ThumbIcon {float:left;font-size: 14px;margin-left:3px;}
 .ResourcePanelShell a:link, .ResourcePanelShell a:visited {text-decoration:none;}
 .ResourcePanelShell a:hover, .ResourcePanelShell a:active {text-decoration:underline;}
 .ResourcePanelShell.ui-draggable {text-align: left;}
@@ -448,8 +448,8 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
 .ResourcePanelIcons a, .CollectionPanelTools a  {text-decoration:none; font-size: 16px;}
-.ResourcePanelIcons a {padding: 5px;}
-.ResourcePanelResourceID {font-size: 15px; text-align:left; display: block; }
+.ResourcePanelIcons a {padding: 3px;}
+.ResourcePanelResourceID {font-size: 14px; float: left;margin-left:5px;}
 .CollectionPanelTools .fa, .CollectionPanelTools .fas {font-size: 13px;}
 .ListTools a {float: right;margin-left: 10px;text-decoration:none;}
 .ResourcePanelIcons a:hover {text-decoration:none;}
@@ -461,17 +461,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .IconUserRatingSpace    {width:7px;height:10px;padding: 0;margin-bottom:6px;display: block;float: left;}
 .ASC {display: inline;padding-right: 10px;}
 .DESC {display: inline;padding-right: 10px;}
-
-.thumbs-file-extension {
-    font-weight: 600;
-    background: #ffffffcc;
-    border-radius: 3px;
-    font-size: 12px;
-    padding: 3px 4px 1px 4px;
-    margin: 3px;
-    cursor: default;
-    float: left;
-}
 
 /*Resource Panel layout*/
 .Listview {overflow-x:auto; margin: 0 0 25px 0; clear:both;border-radius:8px;}
@@ -676,6 +665,8 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .BasicsBox .VerticalNav li {padding:0 0.35em 0 0;margin:0 0.5em 0.5em 0;}
 .nopadding,.nopadding .VerticalNav ul {padding:0;margin:0;}
 .nopad, .BasicsBox .nopad {padding:0;}
+.BasicsBoxPadded {padding: 10px 15px 0 15px;}
+.BasicsBoxPadded h1 {margin-bottom: 5px;font-size: 2em;}
 
 /* Themes */
 .ThemeBox {float: left;width: 250px;margin: 0 15px 15px 0;padding: 0;}
@@ -1493,6 +1484,17 @@ div.MessageBox a {
     background: none;  
 }
 
+.FeaturedImageTile
+{
+    width:77px;
+    height:56px;
+    background-size: cover;
+    float: left;
+    margin: 3px;
+    border-radius: 8px;
+
+}
+
 .FeaturedSimpleLinks .FeaturedSimpleTileContents {
     width:100%;
     height:100%;
@@ -1711,8 +1713,6 @@ form.FormFilter button.ClearButton {
 /* Subtext */
 .sub {font-size:0.8em;}
 
-.Highlight {background:#FFFF00;}
-
 /* Pagers (Search, Collections, Shares etc.) */
 .TeamExternalSharesPager {
     width: 240px;
@@ -1833,7 +1833,7 @@ a.Enabled, a:visited.Enabled {
     text-decoration: underline;
 }
 
-.checkselect {float:left;padding-left:5px;}
+.checkselect {float:right;padding-left:5px;}
 
 .checkselectmedium {
     -moz-transform: scale(1.3); /* FF */
@@ -1859,7 +1859,7 @@ a.Enabled, a:visited.Enabled {
     margin: 2px
 }
 
-.ReportSheet {padding:10px;}
+.ReportSheet {padding:20px;}
 .ReportSummary td {padding:10px;}
 .ReportMetric {font-size:200%;padding-left:5px;}
 .ReportAddToDash {font-size:65%;}

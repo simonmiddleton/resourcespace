@@ -3,7 +3,6 @@
 
 $lang["csv_upload_nav_link"] = 'Tải lên CSV';
 $lang["csv_upload_intro"] = 'Plugin này cho phép bạn tạo hoặc cập nhật tài nguyên bằng cách tải lên một tệp CSV. Định dạng của tệp CSV là rất quan trọng';
-$lang["csv_upload_condition1"] = 'Hãy chắc chắn rằng tệp CSV được mã hóa bằng <b>UTF-8 không có BOM</b>.';
 $lang["csv_upload_condition2"] = 'Dòng đầu tiên của CSV phải có tiêu đề';
 $lang["csv_upload_condition3"] = 'Để có thể tải lên các tệp tài nguyên sau này bằng cách sử dụng chức năng thay thế hàng loạt, cần có một cột có tên \'Tên tệp gốc\' và mỗi tệp phải có một tên tệp duy nhất';
 $lang["csv_upload_condition4"] = 'Tất cả các trường bắt buộc cho bất kỳ tài nguyên mới nào được tạo ra phải có trong tệp CSV';
@@ -66,6 +65,8 @@ $lang["csv_upload_process_offline_quick"] = 'Bỏ qua xác thực và xử lý t
 $lang["csv_upload_force_offline"] = 'Tệp CSV lớn này có thể mất nhiều thời gian để xử lý nên sẽ được thực hiện ngoại tuyến. Bạn sẽ được thông báo qua tin nhắn ResourceSpace khi quá trình xử lý hoàn tất';
 $lang["csv_upload_recommend_offline"] = 'Tệp CSV lớn này có thể mất rất nhiều thời gian để xử lý. Nên bật các công việc ngoại tuyến nếu bạn cần xử lý các tệp CSV lớn';
 $lang["csv_upload_createdfromcsvupload"] = 'Được tạo từ plugin Tải lên CSV';
-$lang["csv_upload_check_invalidbom"] = 'Tệp CSV có BOM nên không thể tải lên';
+
 $lang["csv_upload_check_file_error"] = 'Tệp CSV không thể được mở hoặc đọc';
 $lang["csv_upload_check_utf_error"] = 'Tệp CSV không phải là UTF-8 hợp lệ. Ký tự không hợp lệ ở dòng';
+$lang["csv_upload_condition1"] = 'Hãy chắc chắn rằng tệp CSV được mã hóa bằng <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Tệp CSV có BOM mà không thể xóa được';
