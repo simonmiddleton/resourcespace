@@ -1747,6 +1747,8 @@ function resolve_users($users)
  */
 function check_access_key($resources, $key, $checkcollection = true)
 {
+    global $anonymous_login;
+
     if (trim($key) == '') {
         return false;
     }
@@ -1780,6 +1782,7 @@ function check_access_key($resources, $key, $checkcollection = true)
     $keys = ps_query(
         "
             SELECT k.user,
+                   u.username,
                    k.usergroup,
                    k.expires,
                    k.password_hash, 
@@ -1794,6 +1797,11 @@ function check_access_key($resources, $key, $checkcollection = true)
                ORDER BY k.access",
         array_merge(array("s", $key), ps_param_fill($resources, "i"))
     );
+
+    // Filter out keys belonging to anon users to reduce processing. 
+    $keys = array_filter($keys, function ($key) use ($anonymous_login){
+        return $key['username'] !== $anonymous_login;
+    });
 
     if (count($keys) == 0 || count(array_diff($resources, array_column($keys, "resource"))) > 0) {
         // Check if this is a request for a resource uploaded to an upload_share
@@ -1955,6 +1963,8 @@ function check_access_key($resources, $key, $checkcollection = true)
 */
 function check_access_key_collection($collection, $key, $checkresource = true)
 {
+    global $anonymous_login;
+
     if (!is_int_loose($collection)) {
         return false;
     }
@@ -1978,15 +1988,22 @@ function check_access_key_collection($collection, $key, $checkresource = true)
 
     // Get key info
     $keyinfo = ps_query("
-                    SELECT user,
-                           usergroup,
-                           expires,
-                           upload,
-                           password_hash,
-                           collection
-                      FROM external_access_keys
+                    SELECT eak.user,
+                           u.username,
+                           eak.usergroup,
+                           eak.expires,
+                           eak.upload,
+                           eak.password_hash,
+                           eak.collection
+                      FROM external_access_keys eak
+                      LEFT JOIN user u ON eak.user = u.username
                      WHERE access_key = ?
                        AND (expires IS NULL OR expires > now())", array("s", $key));
+
+    // Filter out keys belonging to anon users to reduce processing. 
+    $keyinfo = array_filter($keyinfo, function ($key) use ($anonymous_login){
+        return $key['username'] !== $anonymous_login;
+    });
 
     if (count($keyinfo) == 0) {
         return false;

@@ -5,13 +5,14 @@ function HookEmbedvideoViewAfterresourceactions()
     include_once __DIR__ . '../../../../include/video_functions.php';
 
     global $embedvideo_resourcetype, $ffmpeg_preview_extension, $resource, $ref, $ffmpeg_preview_max_width,
-    $ffmpeg_preview_max_height, $baseurl, $lang, $preload, $video_preview_original, $access;
+    $ffmpeg_preview_max_height, $baseurl, $lang, $preload, $video_preview_original, $access, $anonymous_login, $username;
 
     if (
         $resource["resource_type"] != $embedvideo_resourcetype
         || !$GLOBALS["allow_share"]
         || checkperm("noex")
         || get_resource_access($ref) != 0
+        || (isset($anonymous_login) && $username == $anonymous_login)
     ) {
         return false;
     }

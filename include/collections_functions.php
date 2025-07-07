@@ -1968,20 +1968,26 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
                 collection_log($reflist[$nx2], LOG_CODE_COLLECTION_EMAILED_COLLECTION, 0, $emails[$nx1]);
             }
         } else {
+            $fc_key = "";
             // E-mail external share, generate the access key based on the FC category. Each sub-collection will have the same key.
             if ($key_required[$nx1] && $themeshare && !is_null($fc_category_ref)) {
                 $k = generate_collection_access_key($fc_category_ref, $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd, $reflist);
-                $fc_key = "&k={$k}";
+                if ($k !== false) {
+                    $fc_key = "&k={$k}";
+                }
             }
 
             for ($nx2 = 0; $nx2 < count($reflist); $nx2++) {
                 $key = "";
+                $fc_key = "";
                 $emailcollectionmessageexternal = false;
 
                 # Do we need to add an external access key for this user (e-mail specified rather than username)?
                 if ($key_required[$nx1] && !$themeshare) {
                     $k = generate_collection_access_key($reflist[$nx2], $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd);
-                    $key = "&k=" . $k;
+                    if ($k !== false) {
+                        $fc_key = "&k={$k}";
+                    }
                     $emailcollectionmessageexternal = true;
                 }
                 // If FC category, the key is valid across all sub-featured collections. See generate_collection_access_key()
@@ -2108,7 +2114,12 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
  */
 function generate_collection_access_key($collection, $feedback = 0, $email = "", $access = -1, $expires = "", $group = "", $sharepwd = "", array $sub_fcs = array())
 {
-    global $userref, $usergroup, $scramble_key;
+    global $userref, $usergroup, $scramble_key, $username, $anonymous_login;
+
+    if (isset($anonymous_login) && $username === $anonymous_login) {
+        // Block anon users from generating keys as they're unneeded.
+        return false;
+    }
 
     // Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
     if ($group == "" || !checkperm("x")) {

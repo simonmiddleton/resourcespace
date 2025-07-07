@@ -338,7 +338,11 @@ if (isset($show_error)) { ?>
                         }
                     }
 
-                    if ($access == -1 || ($editing && !$editexternalurl)) {
+                    if (
+                        ($access == -1 || ($editing && !$editexternalurl)) 
+                        && isset($anonymous_login) 
+                        && $username !== $anonymous_login
+                    ) {
                         ?>
                         <p>
                             <?php if (!$editing || $editexternalurl) {
@@ -403,11 +407,22 @@ if (isset($show_error)) { ?>
                             $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $allowed_external_share_groups[0], $sharepwd);
                         }
 
-                        if ('' != $generated_access_key) {
-                            ?>
+                        if (
+                            '' != $generated_access_key 
+                            || (
+                                isset($anonymous_login) 
+                                && $generated_access_key === false 
+                                && $username = $anonymous_login
+                            )
+                        ) {
+                            $url_params = ['c' => $ref];
+                            if ($generated_access_key != false) {
+                                $url_params['k'] = $generated_access_key;
+                            }
+                            ?>  
                             <p><?php echo escape($lang['generateurlexternal']); ?></p>
                             <p>
-                                <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>&k=<?php echo $generated_access_key; ?>">
+                                <input class="URLDisplay" type="text" value="<?php echo generateURL($baseurl, $url_params);; ?>">
                             </p>
                             <?php
                         } else {

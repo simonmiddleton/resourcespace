@@ -6053,7 +6053,9 @@ function get_original_imagesize($ref = "", $path = "", $extension = "jpg", $forc
  */
 function generate_resource_access_key($resource, $userref, $access, $expires, $email, $group = "", $sharepwd = "")
 {
-    if (checkperm("noex")) {
+    global $username, $anonymous_login;
+
+    if (checkperm("noex") || (isset($anonymous_login) && $username == $anonymous_login)) {
         // Shouldn't ever happen, but catch in case not already checked
         return false;
     }
