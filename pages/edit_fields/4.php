@@ -6,48 +6,64 @@ global $reset_date_upload_template, $reset_date_field, $blank_date_upload_templa
 $dy = "";
 $dm = $dd = $dh = $di = -1;
 
+$y = getval("$name-y", "");
+$m = getval("$name-m", "");
+$d = getval("$name-d", "");
+$h = getval("$name-h", "");
+$i = getval("$name-i", "");
+
 if (
     (
         !$blank_date_upload_template
         || $ref > 0
         || '' != getval('submitted', '')
     )
-    && $value != ""
+    && !empty(array_filter([$value, $y, $m, $d, $h, $i], 'strlen'))
 ) {
-    #fetch the date parts from the value
-    $sd = explode(" ", $value);
-    if (count($sd) >= 2) {
-        # Attempt to extract hours and minutes from second part.
-        $st = explode(":", $sd[1]);
-        if (count($st) >= 2) {
-            $dh = intval($st[0]);
-            $di = intval($st[1]);
-        }
-    }
-    # Extract date parts taking account of BCE dates which have a leading -
-    $value = $sd[0];
-    $sd = explode("-", $value);
-
-    if (substr($value, 0, 1) === "-") {
+    if ($value != "") {
+        #fetch the date parts from the value
+        $sd = explode(" ", $value);
         if (count($sd) >= 2) {
-            $dy = "-" . $sd[1];
+            # Attempt to extract hours and minutes from second part.
+            $st = explode(":", $sd[1]);
+            if (count($st) >= 2) {
+                $dh = intval($st[0]);
+                $di = intval($st[1]);
+            }
         }
-        if (count($sd) >= 3) {
-            $dm = intval($sd[2]);
-        }
-        if (count($sd) >= 4) {
-            $dd = intval($sd[3]);
+
+        # Extract date parts taking account of BCE dates which have a leading -
+        $value = $sd[0];
+        $sd = explode("-", $value);
+
+        if (substr($value, 0, 1) === "-") {
+            if (count($sd) >= 2) {
+                $dy = "-" . $sd[1];
+            }
+            if (count($sd) >= 3) {
+                $dm = intval($sd[2]);
+            }
+            if (count($sd) >= 4) {
+                $dd = intval($sd[3]);
+            }
+        } else {
+            if (count($sd) >= 1) {
+                $dy = $sd[0];
+            }
+            if (count($sd) >= 2) {
+                $dm = intval($sd[1]);
+            }
+            if (count($sd) >= 3) {
+                $dd = intval($sd[2]);
+            }
         }
     } else {
-        if (count($sd) >= 1) {
-            $dy = $sd[0];
-        }
-        if (count($sd) >= 2) {
-            $dm = intval($sd[1]);
-        }
-        if (count($sd) >= 3) {
-            $dd = intval($sd[2]);
-        }
+        # values from incomplete uploads may be present even if no value is set
+        $dy = $y;
+        $dm = $m;
+        $dd = $d;
+        $dh = $h;
+        $di = $i;
     }
 }
 
