@@ -82,8 +82,9 @@ if (isset($notify_on_resource_expiry_days)) {
                        FROM resource AS r
                   LEFT JOIN resource_node AS rn ON r.ref = rn.resource
                   LEFT JOIN node n ON n.ref=rn.node
-                  LEFT JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref AND rtf.type = ?
-                      WHERE n.`name` <> ""
+                  LEFT JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
+                      WHERE rtf.type = ?
+                        AND n.`name` <> ""
                         AND DATE(n.`name`) = DATE(DATE_ADD(NOW(), INTERVAL ? DAY))
                  ) AS rte ON rte.ref = rl.resource
             JOIN user AS u ON u.ref = rl.user
