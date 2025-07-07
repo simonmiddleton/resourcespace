@@ -271,7 +271,7 @@ if ($editing && !$editexternalurl) {
                             || (
                                 isset($anonymous_login) 
                                 && $generated_access_key === false 
-                                && $username = $anonymous_login
+                                && $username === $anonymous_login
                             )
                         ) {
                             $url_params = ['r' => $ref];
