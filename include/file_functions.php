@@ -381,12 +381,16 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
     }
 
     foreach ($path_parts as $path_part) {
-        $checkpath .=  $path_part . "/";
+        $checkpath .=  $path_part;
+        if (!file_exists($checkpath)) {
+            break;
+        }
         if (check_symlink($checkpath)) {
             debug("{$checkpath} is a symlink");
             $symlink = true;
             break;
         }
+        $checkpath .= "/";
     }
     $path_to_validate = ($source_path_not_real || $symlink) ? $path : $sourcerealpath;
     debug("path_to_validate = {$path_to_validate}");
