@@ -114,8 +114,9 @@ function setup_user(array $userdata)
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
-           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION, $plugins, $userprocessing_messages;
-
+           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION, $plugins, $userprocessing_messages,
+           $search_includes_themes;
+    debug("BANG " . __LINE__);
     # Hook to modify user permissions
     if (hook("userpermissions")) {
         $userdata["permissions"] = hook("userpermissions");
@@ -181,6 +182,11 @@ function setup_user(array $userdata)
             // Not a valid collection - switch to user's primary collection if there is one
             $usercollection = get_default_user_collection(true);
         }
+    }
+
+    if ($search_includes_themes && in_array(compute_featured_collections_access_control(), [false, []], true)) {
+        // Check at least one featured collection exists and is visible to user
+        $search_includes_themes = false;
     }
 
     $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
