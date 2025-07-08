@@ -343,9 +343,9 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
             ];
 
             $exif_resolution = run_command(sprintf($command, '-xresolution'));
-            if (is_positive_int_loose($exif_resolution)) {
+            if (is_numeric($exif_resolution) && $exif_resolution > 0) {
                 $sql_insert .= ',resolution';
-                $sql_params[] = 'i';
+                $sql_params[] = 'd';
                 $sql_params[] = $exif_resolution;
             }
 
