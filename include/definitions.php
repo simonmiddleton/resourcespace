@@ -872,6 +872,14 @@ const SEVERITY_CRITICAL = 0;
 const SEVERITY_WARNING = 1;
 const SEVERITY_NOTICE = 2;
 
+// get_system_status() debug log warning config
+// Trigger a warning if debug log has been enabled over this duration
+// Default: 3 days (3 * 24 * 60 * 60 seconds)
+$debug_log_warning_duration = 3 * 24 * 60 * 60; 
+// Trigger a warning if debug log has exceeded this file size
+// Default: 50MB (50 * 1024 * 1024 bytes)
+$debug_log_warning_size = 50 * 1024 * 1024;
+
 // ------------ PREVIEW IMAGE STATUS CODES (the resource table has_image  column)  ----------
 const RESOURCE_PREVIEWS_NONE = 0;
 const RESOURCE_PREVIEWS_ALL = 1;
