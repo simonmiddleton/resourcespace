@@ -3725,7 +3725,7 @@ function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $t
             [
             'i', (($userref != "" && $type !== LOG_CODE_SYSTEM) ? $userref : null),
             'i', $resource,
-            'i', $alt_ref > 0 ?: null,
+            'i', $alt_ref > 0 ? $alt_ref : null,
             's', $type,
             'i', (($field == "" || !is_numeric($field)) ? null : $field),
             's', $notes,
