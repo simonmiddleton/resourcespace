@@ -1856,7 +1856,8 @@ a.Enabled, a:visited.Enabled {
     padding: 2px 6px;
     line-height: 20px;
     display: inline-block;
-    margin: 2px
+    margin: 2px;
+    word-break: break-word;
 }
 
 .ReportSheet {padding:20px;}
