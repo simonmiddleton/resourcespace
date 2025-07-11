@@ -5003,7 +5003,7 @@ function get_system_status(bool $basic = false)
                 // Debug logging duration OK - proceed to check filesize
                 $debug_log_location = $GLOBALS['debug_log_location'] ?? get_debug_log_dir() . '/debug.txt';
 
-                if (file_exists($debug_log_location) && is_readable($debug_log_location)) {
+                if (file_exists($debug_log_location)) {
                     $debug_log_size = filesize_unlimited($debug_log_location);
                 } else {
                     $debug_log_size = false;
