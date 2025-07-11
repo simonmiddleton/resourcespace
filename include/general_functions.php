@@ -4994,7 +4994,7 @@ function get_system_status(bool $basic = false)
                 // Debug logging has been switched on for too long or cannot be determined
                 $return['results']['debug_log'] = [
                     'status'        => 'FAIL',
-                    'info'          => 'Debug Log is enabled - time/size',
+                    'info'          => 'Debug Log is enabled - time',
                     'severity'      => SEVERITY_WARNING,
                     'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
                 ];
@@ -5013,7 +5013,7 @@ function get_system_status(bool $basic = false)
                     // Debug log file size is too large or cannot be determined
                     $return['results']['debug_log'] = [
                         'status'        => 'FAIL',
-                        'info'          => 'Debug Log is enabled - time/size',
+                        'info'          => 'Debug Log is enabled - size',
                         'severity'      => SEVERITY_WARNING,
                         'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
                     ];
