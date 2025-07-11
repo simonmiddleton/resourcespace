@@ -166,7 +166,9 @@ include "../../include/header.php";
                     </li>
                     <?php
                 }
-            } ?>
+            }
+        hook("menuitem");
+        ?>
         </ul>
     </div>
 </div>
