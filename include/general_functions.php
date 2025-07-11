@@ -3772,7 +3772,8 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
                 if (!in_array($attribute->nodeName, $allowed_attributes)) {
                     $tag->removeAttribute($attribute->nodeName);
                 } elseif (
-                    preg_match_all(
+                    in_array($attribute->nodeName, ['src', 'href', 'action', 'onmouseover', 'style'])
+                    && preg_match_all(
                         // Check for dangerous URI (lookalikes)
                         '/[a-zA-Z][a-zA-Z\d+\-.]*:(\/\/)?[^\s]+/im',
                         $attribute->value,
