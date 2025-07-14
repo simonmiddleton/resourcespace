@@ -414,22 +414,22 @@ function simplesaml_update_metadata()
         curl_setopt($ch, CURLOPT_URL, $GLOBALS["simplesaml_metadata_url"]);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
         $response = curl_exec($ch);
         $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
     } catch (Throwable $t) {
-        $error = "Unable to retrieve metadata: " .  $t->getMessage();
+        $error = str_replace("%error%", $t->getMessage(), $GLOBALS['lang']['simplesaml_update_metadata_error']);
         debug("simplesaml - " . $error);
         set_sysvar("saml_idp_metadata_error", $error);
         return false;
     }
     unset($GLOBALS['use_error_exception']);
     if ($response_status_code !== 200) {
-        $error = "Invalid response from URL: " .  $response_status_code;
+        $error = str_replace("%error%", $response_status_code, $GLOBALS['lang']['simplesaml_update_metadata_invalid_response']);
         debug("simplesaml - " . $error);
         set_sysvar("saml_idp_metadata_error", $error);
     }
@@ -440,7 +440,7 @@ function simplesaml_update_metadata()
     try {
         $entities = \SimpleSAML\Metadata\SAMLParser::parseDescriptorsString($metadata_xml);
     } catch (Exception $e) {
-        $error = "Unable to parse metadata. " . $e->getMessage() . ".Check metadata URL";
+        $error = str_replace("%error%", $e->getMessage(), $GLOBALS['lang']['simplesaml_update_metadata_parse_error']);
         debug("simplesaml - " . $error);
         set_sysvar("saml_idp_metadata_error", $error);
         return false;

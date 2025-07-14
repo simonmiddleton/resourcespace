@@ -92,3 +92,7 @@ $lang['simplesaml_config_source_label'] = "Select the IdP configuration source";
 $lang['simplesaml_config_source_url'] = "Metadata XML URL";
 $lang['simplesaml_config_source_rs_config'] = "ResourceSpace configuration file (config.php)";
 $lang['simplesaml_config_source_legacy'] = "Local SAML configuration files (legacy)";
+$lang['simplesaml_update_metadata_now'] = "Update now";
+$lang['simplesaml_update_metadata_error'] = "Unable to parse metadata '%%error%' - check metadata URL";
+$lang['simplesaml_update_metadata_invalid_response'] = "Invalid response from URL: '%error%' - check metadata URL";
+$lang['simplesaml_update_metadata_parse_error'] = "Unable to retrieve metadata: '%error%' - check metadata URL";

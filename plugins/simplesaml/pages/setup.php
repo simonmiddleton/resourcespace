@@ -9,14 +9,24 @@ if (!checkperm('a')) {
     exit($lang['error-permissiondenied']);
 }
 include_once __DIR__ . '/../include/simplesaml_functions.php';
-
+include '../../../include/ajax_functions.php';
 $plugin_name = 'simplesaml';
 if (!in_array($plugin_name, $plugins)) {
     plugin_activate_for_setup($plugin_name);
     check_removed_ui_config("simplesaml_lib_path");
 }
 
-if ((getval('submit', '') != '' || getval('save', '') != '') && enforcePostRequest(false)) {
+if (getval('updatemetadata', '') !== '' && enforcePostRequest(true)) {
+    $result = simplesaml_update_metadata();
+    if ($result !== true) {
+        $errormessage = get_sysvar("saml_idp_metadata_error");
+        // is_string($result) ? $result : $lang['error'];
+        ajax_send_response(200, ajax_response_fail(ajax_build_message($errormessage)));
+    } else {
+        $returntext = date("l F jS Y @ H:i:s", time());
+        ajax_send_response(200, ajax_response_ok(ajax_build_message($returntext)));
+    }
+} elseif ((getval('submit', '') != '' || getval('save', '') != '') && enforcePostRequest(false)) {
     $simplesaml['simplesaml_site_block'] = getval('simplesaml_site_block', '');
     $simplesaml['simplesaml_login'] = getval('simplesaml_login', '');
     $simplesaml['simplesaml_allow_public_shares'] = getval('simplesaml_allow_public_shares', '');
@@ -80,6 +90,8 @@ if ((getval('submit', '') != '' || getval('save', '') != '') && enforcePostReque
 }
 
 $rsgroupoptions = get_usergroups(false, '', true);
+$scriptlastran = get_sysvar("saml_idp_metadata_last_updated", "");
+$errormessage = get_sysvar("saml_idp_metadata_error");
 
 // If any new values aren't set yet, fudge them so we don't get an undefined error
 // this is important for updates to the plugin that introduce new variables
@@ -186,10 +198,30 @@ $simplesaml_config_options = [
 ];
 
 config_single_select('simplesaml_rsconfig', $lang['simplesaml_config_source_label'], $simplesaml_rsconfig, $simplesaml_config_options);
-config_text_input("simplesaml_metadata_url", $lang['simplesaml_config_source_url'], $simplesaml_metadata_url);
 config_boolean_field("simplesaml_check_idp_cert_expiry", $lang['simplesaml_check_idp_cert_expiry'], $simplesaml_check_idp_cert_expiry);
-
 ?>
+<div class='simplesaml_metadata_url_options'>
+    <?php
+    config_text_input("simplesaml_metadata_url", $lang['simplesaml_config_source_url'], $simplesaml_metadata_url);
+    $lastupdatetext = $scriptlastran != "" ? date("l F jS Y @ H:i:s", $scriptlastran): $lang["status-never"];
+    ?>
+    <div class='Question'>
+        <label for='lastmetadataupdate'><?php echo escape($lang["lastupdated"]); ?></label>
+        <div id='lastmetadataupdate' class='Fixed'><?php echo escape($lastupdatetext); ?></div>
+        <input 
+            type='submit' 
+            name='updatemetadata'
+            onclick='updateMetadata();return false;'
+            value='<?php echo $lang['simplesaml_update_metadata_now']; ?>'
+        />
+        <div class="clearerleft"></div>
+    </div>
+    <div class='Question' id='question_update_error'>
+        <label for='updateerror'><?php echo escape($lang["error"]); ?></label>
+        <div id='updateerror' class='Fixed'><?php echo escape($errormessage); ?></div>
+        <div class="clearerleft"></div>
+    </div>
+</div>
 <script>
 
 function showhidesamlconfigs(option) {
@@ -199,21 +231,21 @@ function showhidesamlconfigs(option) {
         jQuery("#question_simplesaml_use_www").slideUp(0);
         jQuery("#question_simplesaml_sp").slideDown(0);
         jQuery("#question_simplesaml_check_idp_cert_expiry").slideDown(0);
-        jQuery("#question_simplesaml_metadata_url").slideUp(0);
+        jQuery(".simplesaml_metadata_url_options").slideUp(0);
     } else {
         if (option == "1") {
             jQuery("#question_simplesaml_use_www").slideDown(0);
             jQuery("#question_simplesaml_sp").slideDown(0);
             jQuery("#generate_sp_config_link").slideDown(0);
             jQuery("#question_simplesaml_check_idp_cert_expiry").slideDown(0);
-            jQuery("#question_simplesaml_metadata_url").slideUp(0);
+            jQuery(".simplesaml_metadata_url_options").slideUp(0);
         } else {
             jQuery("#question_simplesaml_use_www").slideUp(0);
             jQuery("#question_simplesaml_sp").slideUp(0);
             // jQuery("#generate_sp_config_link").slideUp(0);
             // jQuery("#sp_config_links").slideUp(0);
             jQuery("#question_simplesaml_check_idp_cert_expiry").slideUp(0);
-            jQuery("#question_simplesaml_metadata_url").slideDown(0);
+            jQuery(".simplesaml_metadata_url_options").slideDown(0);
         }
         jQuery("#question_simplesaml_lib_path").slideUp(0);
         jQuery("#generate_sp_config_link").slideUp(0);
@@ -227,13 +259,50 @@ jQuery(document).ready(function() {
         showhidesamlconfigs(jQuery(this).val());
     });
 });
+
+function updateMetadata()
+{
+    jQuery.ajax({
+        type: 'POST',
+        url: '<?php echo $baseurl ?>/plugins/simplesaml/pages/setup.php',
+        data:
+            {
+            updatemetadata: true,
+            ajax: 1,
+            dataType: 'json',
+            <?php echo generateAjaxToken('updatemetadata'); ?>
+            },
+        success: function(response) {
+            jsonResponse = JSON.parse(response);
+            if (jsonResponse.status == "success") {
+                jQuery('#lastmetadataupdate').html(jsonResponse.data.message);
+                jQuery('#updateerror').html('');
+                jQuery('#question_update_error').hide();
+            } else {
+                jQuery('#updateerror').html(jsonResponse.data.message);
+                jQuery('#question_update_error').show();
+            }
+        },
+        error: function (response) {
+            jsonResponse = JSON.parse(response);
+            if (jsonResponse.data && jsonResponse.data.message) {
+                errormessage = jsonResponse.data.message;
+            } else {
+                errormessage = jsonResponse;
+            }
+            jQuery('#updateerror').html(errormessage);
+            jQuery('#question_update_error').show();
+        }
+    });
+}
+
 </script>
 
 
 <div class='Question' id='sp_config_links'>
     <div class='Fixed'>
         <?php
-        $samlphplink = $simplesaml_rsconfig
+        $samlphplink = (int) $simplesaml_rsconfig > 0
             ? "{$baseurl_short}plugins/simplesaml/lib/public/admin"
             : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/public/admin");
 
