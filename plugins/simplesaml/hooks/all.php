@@ -805,6 +805,7 @@ function HookSimplesamlAllCron()
     // Get IdP data from sysvars
     $storedsamlconfig = get_sysvar("saml_idp_metadata");
     $simplesamlconfig['metadata'] = json_decode($storedsamlconfig, true);
+    $errormessage = get_sysvar("saml_idp_metadata_error");
 
     // Check when last updated
     $lastupdate = get_sysvar("saml_idp_metadata_last_updated");
@@ -812,17 +813,18 @@ function HookSimplesamlAllCron()
     if (
         trim($storedsamlconfig) == "" 
         || $simplesamlconfig['metadata'] === false
+        || trim($errormessage) !== ""
         || time() - $lastupdate > 60*60*12 // Don't update if valid and updated in last 12 hours
     ) {
         // Invalid metadata
         debug("simplesaml - invalid metadata");
-        echo "Updating SAML metadata" . PHP_EOL;
+        echo " - Updating SAML metadata" . PHP_EOL;
         $result = simplesaml_update_metadata();
         if($result !== true) {
-            $message = "Failed to update SAML metadata" . $result;
+            $message = " - Failed to update SAML metadata" . $result;
             echo $message . PHP_EOL;
             return;
         }
-        echo "Successfully updated SAML metadata" . PHP_EOL;
+        echo " - Successfully updated SAML metadata" . PHP_EOL;
     }
 }
