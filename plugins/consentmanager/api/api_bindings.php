@@ -52,5 +52,6 @@ function api_consentmanager_get_all_consents_by_collection($collection)
 
 function api_consentmanager_save_file($consent, $filename, $filedata)
 {
+    $filedata=getval("filedata","");// Receive the file data via post. It will be too long to include in the query.
     return consentmanager_save_file($consent, $filename, $filedata);
 }
