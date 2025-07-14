@@ -3297,4 +3297,5 @@ $lang["user_pref_appearance_light"] = "Light";
 $lang["user_pref_appearance_dark"] = "Dark";
 $lang["user_pref_appearance_device"] = "Device default";
 $lang["team_resource_non_ingested_search"] = "View non-ingested resources";
-
+$lang['action_update_now'] = "Update now";
+$lang['errors'] = "Errors";

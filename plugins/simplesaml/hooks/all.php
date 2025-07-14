@@ -792,6 +792,29 @@ function HookSimplesamlAllExtra_checks()
         }
     }
 
+    if ($GLOBALS['simplesaml_rsconfig'] === 2) { 
+        // Check automatic metadata updates
+        $lastupdate = get_sysvar("saml_idp_metadata_last_updated");
+        $errormessage = (string) get_sysvar("saml_idp_metadata_error");
+        $lastupdatetext = $lastupdate != "" ? date("l F jS Y @ H:i:s", $lastupdate) : $GLOBALS['lang']["status-never"];
+        if ($errormessage !== ''
+            || $lastupdate == ''
+            || time() - $lastupdate > 60*60*24*7
+        ) {
+            $return[$GLOBALS["lang"]['simplesaml_metadata_updates']] = [
+                'status' => 'WARN',
+                'info' => str_replace("%date%", $lastupdatetext, $GLOBALS['lang']['simplesaml_metadata_warning']) . ". " . $GLOBALS['lang']['errors'] . ": " . $errormessage,
+                'severity' => SEVERITY_WARNING,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+            ];
+        } else {
+            $return[$GLOBALS["lang"]['simplesaml_metadata_updates']] = [
+                'status' => 'OK',
+                'info' => $lastupdatetext,
+            ];
+        }
+    }
+
     return count($return) > 0 ? $return : false;
 }
 

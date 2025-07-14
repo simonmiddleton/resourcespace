@@ -212,7 +212,7 @@ config_boolean_field("simplesaml_check_idp_cert_expiry", $lang['simplesaml_check
             type='submit' 
             name='updatemetadata'
             onclick='updateMetadata();return false;'
-            value='<?php echo $lang['simplesaml_update_metadata_now']; ?>'
+            value='<?php echo escape($lang['action_update_now']); ?>'
         />
         <div class="clearerleft"></div>
     </div>
