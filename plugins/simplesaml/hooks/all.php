@@ -804,7 +804,7 @@ function HookSimplesamlAllExtra_checks()
                 'severity' => SEVERITY_WARNING,
                 'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
             ];
-        } elseif (!isset($simplesamlconfig['metadata']) || count($simplesamlconfig['metadata']) < 1) {
+        } elseif (!isset($GLOBALS["simplesamlconfig"]['metadata']) || count($GLOBALS["simplesamlconfig"]['metadata']) < 1) {
             // Metadata was not parsed successfully
             $return[$GLOBALS["lang"]['simplesaml_metadata_updates']] = [
                 'status' => 'FAIL',
