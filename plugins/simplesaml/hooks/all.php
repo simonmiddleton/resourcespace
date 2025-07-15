@@ -13,7 +13,7 @@ function HookSimplesamlAllInitialise()
     }
     check_removed_ui_config("simplesaml_lib_path");
 
-    if (isset($GLOBALS["simplesaml_metadata_url"]) && trim($GLOBALS["simplesaml_metadata_url"]) !== '') {
+    if ($GLOBALS['simplesaml_rsconfig'] === 2 && isset($GLOBALS["simplesaml_metadata_url"]) && trim($GLOBALS["simplesaml_metadata_url"]) !== '') {
         global $simplesamlconfig;
         // Get IdP data from sysvars
         $storedsamlconfig = get_sysvar("saml_idp_metadata");
@@ -39,9 +39,6 @@ function HookSimplesamlAllInitialise()
             'discoURL' => null,
         ];
     }
-
-    // exit(print_r($simplesamlconfig));
-
 }
 
 function HookSimplesamlAllPreheaderoutput()
@@ -804,6 +801,14 @@ function HookSimplesamlAllExtra_checks()
             $return[$GLOBALS["lang"]['simplesaml_metadata_updates']] = [
                 'status' => 'WARN',
                 'info' => str_replace("%date%", $lastupdatetext, $GLOBALS['lang']['simplesaml_metadata_warning']) . ". " . $GLOBALS['lang']['errors'] . ": " . $errormessage,
+                'severity' => SEVERITY_WARNING,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+            ];
+        } elseif (!isset($simplesamlconfig['metadata']) || count($simplesamlconfig['metadata']) < 1) {
+            // Metadata was not parsed successfully
+            $return[$GLOBALS["lang"]['simplesaml_metadata_updates']] = [
+                'status' => 'FAIL',
+                'info' => $GLOBALS['lang']['simplesaml_metadata_invalid'],
                 'severity' => SEVERITY_WARNING,
                 'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
             ];

@@ -17,9 +17,19 @@ function HooksimplesamlCheckAddinstallationcheck()
     if ($GLOBALS['simplesaml_rsconfig'] === 2) { 
         // Check updates from metadata URL
         $lastupdate = get_sysvar("saml_idp_metadata_last_updated");
-        $errormessage = get_sysvar("saml_idp_metadata_error");
+        $errormessage = trim((string) get_sysvar("saml_idp_metadata_error"));
         $lastupdatetext = $lastupdate != "" ? date("l F jS Y @ H:i:s", $lastupdate): $GLOBALS['lang']["status-never"];
-        $metadatastatus = time() - $lastupdate > 60*60*24*7 ? $GLOBALS['lang']['status-fail'] : $GLOBALS['lang']['status-ok'];
+        $updatestatus = time() - $lastupdate > 60*60*24*7 ? $GLOBALS['lang']['status-fail'] : $GLOBALS['lang']['status-ok'];
+        $idpname = isset($GLOBALS['simplesamlconfig']['metadata']) && count($GLOBALS['simplesamlconfig']['metadata']) > 0
+            ? array_key_first($GLOBALS['simplesamlconfig']['metadata'])
+            : $GLOBALS['lang']['notavailableshort'];
+        $metadatastatus = (
+            time() - $lastupdate > 60*60*24*7
+            || !isset($GLOBALS['simplesamlconfig']['metadata'])
+            || count($GLOBALS['simplesamlconfig']['metadata']) < 1
+        )
+            ? $GLOBALS['lang']['status-fail']
+            : $GLOBALS['lang']['status-ok'];
         ?>
         <tr>
             <td colspan='3'>
@@ -30,6 +40,11 @@ function HooksimplesamlCheckAddinstallationcheck()
         <tr>
             <td><?php echo escape($GLOBALS['lang']['lastupdated']); ?></td>
             <td><?php echo escape($lastupdatetext); ?></td>
+            <td><b><?php echo escape($updatestatus); ?></b></td>
+        </tr>
+        <tr>
+            <td><?php echo escape($GLOBALS['lang']['simplesaml_idp_configuration']); ?></td>
+            <td><?php echo escape($idpname); ?></td>
             <td><b><?php echo escape($metadatastatus); ?></b></td>
         </tr><?php
 

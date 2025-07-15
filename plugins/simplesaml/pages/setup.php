@@ -19,7 +19,7 @@ if (!in_array($plugin_name, $plugins)) {
 if (getval('updatemetadata', '') !== '' && enforcePostRequest(true)) {
     $result = simplesaml_update_metadata();
     if ($result !== true) {
-        $errormessage = get_sysvar("saml_idp_metadata_error");
+        $errormessage = trim((string) get_sysvar("saml_idp_metadata_error"));
         // is_string($result) ? $result : $lang['error'];
         ajax_send_response(200, ajax_response_fail(ajax_build_message($errormessage)));
     } else {
@@ -51,6 +51,14 @@ if (getval('updatemetadata', '') !== '' && enforcePostRequest(true)) {
     $simplesaml['simplesaml_authorisation_claim_value'] = getval('simplesaml_authorisation_claim_value', '');
     $simplesaml['simplesaml_check_idp_cert_expiry'] = getval('simplesaml_check_idp_cert_expiry', '');
     $simplesaml['simplesaml_use_www'] = (bool) getval('simplesaml_use_www', '1', false, 'is_int_loose');
+    // Reset SAML admin site password hash if passed
+    $submittedpassword = getval('set_simplesaml_admin_password', '');
+    if (trim($submittedpassword) !== '') {
+        $hasher = new Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher(4, 65536, null, null);
+        $simplesaml['config']['auth.adminpassword'] = $hasher->hash($submittedpassword);
+        set_sysvar('simplesaml_auth.adminpassword_hash', $simplesaml['config']['auth.adminpassword']);
+        $simplesaml_admin_password = '';
+    }
 
     $simplesaml['simplesaml_metadata_url'] = trim(getval('simplesaml_metadata_url', ''));
     if ($simplesaml['simplesaml_metadata_url'] !== '') {
@@ -91,7 +99,7 @@ if (getval('updatemetadata', '') !== '' && enforcePostRequest(true)) {
 
 $rsgroupoptions = get_usergroups(false, '', true);
 $scriptlastran = get_sysvar("saml_idp_metadata_last_updated", "");
-$errormessage = get_sysvar("saml_idp_metadata_error");
+$errormessage = trim((string) get_sysvar("saml_idp_metadata_error"));
 
 // If any new values aren't set yet, fudge them so we don't get an undefined error
 // this is important for updates to the plugin that introduce new variables
@@ -216,9 +224,9 @@ config_boolean_field("simplesaml_check_idp_cert_expiry", $lang['simplesaml_check
         />
         <div class="clearerleft"></div>
     </div>
-    <div class='Question' id='question_update_error'>
-        <label for='updateerror'><?php echo escape($lang["error"]); ?></label>
-        <div id='updateerror' class='Fixed'><?php echo escape($errormessage); ?></div>
+    <div class='Question' id='question_update_status'>
+        <label for='update_status'><?php echo escape($lang["status"]); ?></label>
+        <div id='update_status' class='Fixed'><?php echo escape($errormessage !== "" ? $errormessage : $lang["ok"]); ?></div>
         <div class="clearerleft"></div>
     </div>
 </div>
@@ -242,13 +250,11 @@ function showhidesamlconfigs(option) {
         } else {
             jQuery("#question_simplesaml_use_www").slideUp(0);
             jQuery("#question_simplesaml_sp").slideUp(0);
-            // jQuery("#generate_sp_config_link").slideUp(0);
-            // jQuery("#sp_config_links").slideUp(0);
             jQuery("#question_simplesaml_check_idp_cert_expiry").slideUp(0);
             jQuery(".simplesaml_metadata_url_options").slideDown(0);
+            jQuery("#generate_sp_config_link").slideUp(0);
         }
         jQuery("#question_simplesaml_lib_path").slideUp(0);
-        jQuery("#generate_sp_config_link").slideUp(0);
     }
 }
 
@@ -276,11 +282,9 @@ function updateMetadata()
             jsonResponse = JSON.parse(response);
             if (jsonResponse.status == "success") {
                 jQuery('#lastmetadataupdate').html(jsonResponse.data.message);
-                jQuery('#updateerror').html('');
-                jQuery('#question_update_error').hide();
+                jQuery('#update_status').html('<?php echo escape($lang['ok']); ?>');
             } else {
-                jQuery('#updateerror').html(jsonResponse.data.message);
-                jQuery('#question_update_error').show();
+                jQuery('#update_status').html(jsonResponse.data.message);
             }
         },
         error: function (response) {
@@ -290,8 +294,7 @@ function updateMetadata()
             } else {
                 errormessage = jsonResponse;
             }
-            jQuery('#updateerror').html(errormessage);
-            jQuery('#question_update_error').show();
+            jQuery('#update_status').html(errormessage);
         }
     });
 }
@@ -299,6 +302,9 @@ function updateMetadata()
 </script>
 
 
+<?php
+config_text_input('set_simplesaml_admin_password', $lang['simplesaml_admin_password_reset'], '');
+?>
 <div class='Question' id='sp_config_links'>
     <div class='Fixed'>
         <?php

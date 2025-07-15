@@ -98,3 +98,5 @@ $lang['simplesaml_update_metadata_invalid_response'] = "Invalid response from UR
 $lang['simplesaml_update_metadata_parse_error'] = "Unable to retrieve metadata: '%error%' - check metadata URL";
 $lang['simplesaml_metadata_updates'] = "SimpleSAML metadata updates";
 $lang['simplesaml_metadata_warning'] = "Metadata has not been updated since %date%";
+$lang['simplesaml_metadata_invalid'] = "IdP metadata invalid or unavailable";
+$lang['simplesaml_admin_password_reset'] = "Reset SimpleSAML test site admin password (optional)";
