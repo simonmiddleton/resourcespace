@@ -224,3 +224,15 @@ function HookRse_workflowAllAfter_setup_user()
         $GLOBALS['actions_notify_states'] .= "," . implode(",",$extra_notify_states);
         }
     }
+
+/**
+ * Check if supplied archive state code (e.g. 0 = Active) allows required field checking to be skipped when a resource is
+ * moved to this archive state.
+ *
+ * @param  int  $archive_state   Integer of destination archive state i.e. the state the resource will be moved to.
+
+ */
+function HookRse_workflowAllArchive_skip_required_fields($archive_state)
+{
+    return ps_value('SELECT skip_required_fields AS `value` FROM archive_states WHERE code = ?;', array('i', $archive_state), 0, 'workflow') == 1;
+}

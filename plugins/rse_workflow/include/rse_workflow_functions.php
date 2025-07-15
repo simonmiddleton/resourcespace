@@ -86,21 +86,11 @@ if (!function_exists("rse_workflow_delete_action")){
 if (!function_exists("rse_workflow_get_archive_states")){
     function rse_workflow_get_archive_states()
             {
-            $rawstates=ps_query("
-                    SELECT code,
-                           name,
-                           notify_group,
-                           more_notes_flag,
-                           notify_user_flag,
-                           email_from,
-                           bcc_admin,
-                           simple_search_flag,
-                           icon
-                      FROM archive_states
-                  ORDER BY code ASC",array(),"workflow");
+            $rawstates = ps_query('SELECT ' . columns_in('archive_states') . ' FROM archive_states ORDER BY code ASC;', array(), "workflow");
 
             global $additional_archive_states, $lang;
             $states=array();
+
             foreach($rawstates as $rawstate)
                 {
                 // Reformat into new array
@@ -112,6 +102,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                 $states[$rawstate['code']]['rse_workflow_bcc_admin']=$rawstate['bcc_admin'];
                 $states[$rawstate['code']]['simple_search_flag'] = $rawstate['simple_search_flag'];
                 $states[$rawstate['code']]['icon'] = $rawstate['icon'] != "" ? $rawstate['icon'] : (WORKFLOW_DEFAULT_ICONS[$rawstate['code']] ?? WORKFLOW_DEFAULT_ICON);
+                $states[$rawstate['code']]['skip_required_fields']=$rawstate['skip_required_fields'];
                 // Identify states that are set in config.php and cannot be deleted from plugin
                 if(in_array($rawstate['code'],$additional_archive_states))
                     {

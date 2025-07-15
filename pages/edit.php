@@ -1238,10 +1238,18 @@ jQuery(document).ready(function()
                         for (var i in saveresult['errors']) 
                             {
                             saveerrors += saveresult['errors'][i] + "<br />";
+                            if (i.substring(0,6) == 'status')
+                                {
+                                original_value = i.substring(6);
+                                }
                             }
                         }
                     jQuery('#AutoSaveStatus' + field).html('<?php echo escape($lang["save-error"]) ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
+                    if (field == 'Status' && original_value != '')
+                        {
+                        jQuery('#status').val(original_value);
+                        }
                     styledalert('<?php echo escape($lang["error"]) ?>',saveerrors);
                     }
                 })
@@ -1675,7 +1683,6 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
 </div>
 <?php   
 }
-
 # Resource aliasing.
 # 'Copy from' or 'Metadata template' been supplied? Load data from this resource instead.
 $originalref=$use;
