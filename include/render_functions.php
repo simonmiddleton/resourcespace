@@ -4978,12 +4978,10 @@ function render_featured_collections(array $ctx, array $items)
                     "text" => $lang["add_to_dash"]);
                 }
 
-            if(checkperm("h"))
-                {
-                $render_ctx["tools"][] = array(
-                    "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                    "text" => $lang["share"]);
-                }
+            $render_ctx["tools"][] = array(
+                "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                "text" => $lang["share"]);
+
 
             if(!$fc_category_has_children && collection_readable($fc['ref']))
                 {
