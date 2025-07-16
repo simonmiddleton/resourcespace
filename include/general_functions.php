@@ -4968,6 +4968,67 @@ function get_system_status(bool $basic = false)
         'status' => 'OK',
         'total' => ps_query("select file_extension,count(*) `count`,round(sum(disk_usage)/power(1024,3),2) disk_usage_gb from resource where length(file_extension)>0 group by file_extension order by `count` desc;", [])
     ];
+
+    // Debug log check
+    if (isset($GLOBALS['debug_log']) && $GLOBALS['debug_log']) {
+
+        $debug_log_sysvar = get_sysvar("debug_log_enabled");
+
+        if (!$debug_log_sysvar) {
+            // Add debug_log_enabled sysvar
+            set_sysvar("debug_log_enabled", date('Y-m-d H:i:s'));
+        } else {
+            // Compare debug_log_enabled to current time
+            $debug_log_enabled_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $debug_log_sysvar);
+            $errors = DateTime::getLastErrors();
+            $date_parse_error  = ($debug_log_enabled_datetime === 0 
+                                    || (is_array($errors) && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)));
+
+            if (!$date_parse_error) {
+                $now = new DateTime();            
+                $seconds_elapsed = abs($now->getTimestamp() - $debug_log_enabled_datetime->getTimestamp());
+            } else {
+                $seconds_elapsed = false;
+            }   
+
+            if ($seconds_elapsed === false || $seconds_elapsed > $GLOBALS['debug_log_warning_duration']) {
+                // Debug logging has been switched on for too long or cannot be determined
+                $return['results']['debug_log'] = [
+                    'status'        => 'FAIL',
+                    'info'          => 'Debug Log is enabled - time',
+                    'severity'      => SEVERITY_WARNING,
+                    'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+                ];
+                ++$fail_tests;
+            } else {
+                // Debug logging duration OK - proceed to check filesize
+                $debug_log_location = $GLOBALS['debug_log_location'] ?? get_debug_log_dir() . '/debug.txt';
+
+                if (file_exists($debug_log_location)) {
+                    $debug_log_size = filesize_unlimited($debug_log_location);
+                } else {
+                    $debug_log_size = false;
+                }
+
+                if ($debug_log_size === false || $debug_log_size > $GLOBALS['debug_log_warning_size']) {
+                    // Debug log file size is too large or cannot be determined
+                    $return['results']['debug_log'] = [
+                        'status'        => 'FAIL',
+                        'info'          => 'Debug Log is enabled - size',
+                        'severity'      => SEVERITY_WARNING,
+                        'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+                    ];
+                    ++$fail_tests;
+                }
+
+            }
+        }
+
+    } else {
+        // debug_log has been switched off, blank the sysvar
+        set_sysvar("debug_log_enabled");
+    }
+
     // Check if plugins have any warnings
     $extra_checks = hook('extra_checks');
     if ($extra_checks !== false && is_array($extra_checks)) {
