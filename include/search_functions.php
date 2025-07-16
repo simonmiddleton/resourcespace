@@ -1342,7 +1342,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         }
 
         $select->sql = "DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, {$select->sql}";
-        $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r JOIN collection_resource c ON r.ref=c.resource " . 
+        $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r JOIN collection_resource c ON r.ref=c.resource " .
         $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") [GROUP_BY_SQL] [ORDER_BY_SQL] {$sql_suffix}";
 
         $sql->parameters = array_merge($select->parameters, $colcustperm->parameters, ["i",$collection], $sql_filter->parameters);
@@ -1450,7 +1450,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
                     " WHERE colour_key LIKE ? " .
                         "OR  colour_key LIKE ? " .
                        "AND " . $sql_filter->sql .
-                       " [GROUP_BY_SQL] [ORDER_BY_SQL]"; 
+                       " [GROUP_BY_SQL] [ORDER_BY_SQL]";
 
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, ["s",$colour . "%","s","_" . $colour . "%"], $sql_filter->parameters);
         $searchsql = $sql_prefix . $sql->sql . $sql_suffix;
@@ -1686,7 +1686,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         $select->sql = "DISTINCT r.hit_count score, {$select->sql}";
         $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " [GROUP_BY_SQL] [ORDER_BY_SQL] {$sql_suffix}";
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
-    }  elseif (checkperm('a') && $search == "!noningested") {
+    } elseif (checkperm('a') && $search == "!noningested") {
         // System admins only - search for resources that have not been ingested - unfiltered
         $select->sql = "DISTINCT r.hit_count score, {$select->sql}";
         $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r " . $sql_join->sql . " WHERE file_path IS NOT NULL AND file_path <> '' [GROUP_BY_SQL] [ORDER_BY_SQL] {$sql_suffix}";
@@ -1709,7 +1709,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
          - Last 23 days: !report18p0d23
          - Between 2000-01-06 & 2023-03-16: !report18p-1fy2000fm01fd06ty2023tm03td16
         */
-        debug('[search_special] Running a "!report" search...');        
+        debug('[search_special] Running a "!report" search...');
         $select->sql = "DISTINCT r.hit_count score, {$select->sql}";
         $no_results_sql = new PreparedStatementQuery(
             $sql_prefix . "SELECT [SELECT_SQL] FROM resource AS r "
@@ -1981,7 +1981,7 @@ function search_get_previews($search, $restypes = "", $order_by = "relevance", $
             if (!isset($resultset[$n]) || $resultset[$n] == 0) {
                 continue;
             }
-            
+
             $access = $resultset[$n]["resultant_access"] ?? get_resource_access($resultset[$n]);
 
             if ($access == 2) {
@@ -3207,6 +3207,8 @@ function log_keyword_usage($keywords, $search_result)
  */
 function set_search_order_by(string $search, string $order_by, string $sort): string
 {
+    global $lang;
+
     if (!validate_sort_value($sort)) {
         $sort = 'asc';
     }
@@ -3260,8 +3262,8 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
 
     # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
     if (!in_array($order_by, $order) && (substr($order_by, 0, 5) == "field")) {
-        if (!is_numeric(str_replace("field", "", $order_by))) {
-            exit("Order field incorrect.");
+        if (!validate_sort_field(substr($order_by, 5))) {
+            exit($lang['error_invalid_input'] . ":- <pre>order_by : " . escape($order_by) . "</pre>");
         }
         # If fieldx is being used this will be needed in the inner select to be used in ordering
         $GLOBALS["include_fieldx"] = true;
