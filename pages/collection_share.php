@@ -340,8 +340,7 @@ if (isset($show_error)) { ?>
 
                     if (
                         ($access == -1 || ($editing && !$editexternalurl)) 
-                        && isset($anonymous_login) 
-                        && $username !== $anonymous_login
+                        && (!isset($anonymous_login) || $username !== $anonymous_login)
                     ) {
                         ?>
                         <p>

@@ -2002,7 +2002,7 @@ function check_access_key_collection($collection, $key, $checkresource = true)
                            eak.password_hash,
                            eak.collection
                       FROM external_access_keys eak
-                      LEFT JOIN user u ON eak.user = u.username
+                      LEFT JOIN user u ON eak.user = u.ref
                      WHERE access_key = ?
                        AND (expires IS NULL OR expires > now())", array("s", $key));
 
