@@ -319,7 +319,7 @@ if ($log_download) {
     // Log this activity (download only, not preview)
     daily_stat('Resource download', $ref);
     $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email : "";
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage);
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage, $alternative);
 
     hook('moredlactions');
 
