@@ -15,12 +15,12 @@ $collection = getval("collection", "", true);
 if ($k != "") {
     $usercollection = $collection;
 }
-$size = getval("size", "");
+$size = getval("size", "original");
 $submitted = getval("submitted", "") !== "";
 $includetext = getval("includetext", "") === "true";
 $useoriginal = getval("use_original", "") !== "";
 $collectiondata = get_collection($collection);
-$tardisabled = getval("tardownload", "") == "off";
+$tardownload = getval("tardownload", "");
 $include_csv_file = getval("include_csv_file", "") !== "";
 $include_alternatives = getval("include_alternatives", "") !== "";
 $email = getval('email', '');
@@ -39,28 +39,38 @@ if (is_array($modified_result)) {
 
 // Check size?
 $totalsize = 0;
+$totalsizeerror = false;
+
 if (in_array($size, ['original', 'largest'])) {
     // Estimate the total volume of files to zip if using largest or originals
     for ($n = 0; $n < count($result); $n++) {
         $totalsize += $result[$n]['file_size'];
     }
-    if ($totalsize > $collection_download_max_size) {
-        include "../include/header.php";
+    if ($submitted && $totalsize > $collection_download_max_size) {
+        $totalsizeerror = true;
         $onload_message = array("title" => $lang["error"], "text" => $lang["collection_download_too_large"]);
-        include "../include/footer.php";
-        exit();
     }
 }
 
-$collection_download_tar = true;
-// Has tar been disabled or is it not available
-if ($collection_download_tar_size === 0 || $config_windows || $tardisabled) {
-    $collection_download_tar = false;
-} elseif (
-    !$collection_download_tar_option
-    && ($totalsize >= $collection_download_tar_size * 1024 * 1024)
-) {
-    $collection_download_tar_option = true;
+$show_download_format_selector = true;
+
+// Determine if the download format selector should be shown
+if ($collection_download_tar_size === 0 || $config_windows) {
+    $show_download_format_selector = false;
+}
+
+// Determine if TAR should be the default option
+if ($show_download_format_selector && ($collection_download_tar_option || ($totalsize >= $collection_download_tar_size * 1024 * 1024))) {
+    $tar_as_default = true;
+} else {
+    $tar_as_default = false;
+}
+
+// Determine selected download format selector value if submitted
+if ($submitted && $show_download_format_selector) {
+    $tar_selected = ($tardownload == 'on');
+} else {
+    $tar_selected = $tar_as_default;
 }
 
 $settings_id = (isset($collection_download_settings) && count($collection_download_settings) > 1) ? getval("settings", "") : 0;
@@ -174,14 +184,14 @@ if (isset($user_dl_limit) && intval($user_dl_limit) > 0) {
 }
 
 if (count($available_sizes) === 0 && $count_data_only_types === 0) {
-    error_alert($lang["nodownloadcollection"],);
+    error_alert($lang["nodownloadcollection"], false);
     exit();
 }
 
 $used_resources = array();
 $subbed_original_resources = array();
-if ($submitted) {
-    if ($exiftool_write && !$force_exiftool_write_metadata && !$collection_download_tar) {
+if ($submitted & !$totalsizeerror) {
+    if ($exiftool_write && !$force_exiftool_write_metadata && !$tar_selected) {
         $exiftool_write_option = getval('write_metadata_on_download', '') == "yes";
     }
     $id = uniqid("Col" . $collection);
@@ -202,11 +212,11 @@ if ($submitted) {
         'settings_id'               => $settings_id,
         'include_csv_file'          => $include_csv_file,
         'include_alternatives'      => $include_alternatives,
-        'collection_download_tar'   => $collection_download_tar,
+        'collection_download_tar'   => $tar_selected,
         'k'                         => $k,
     ];
 
-    if (!$collection_download_tar && $offline_job_queue) {
+    if ($offline_job_queue) {
         // Only need to store resource IDS, not full search data
         $collection_download_data["result"] = array_column($result, "ref", "ref");
 
@@ -335,7 +345,7 @@ include "../include/header.php";
     }
     ?>
 
-    <form id='collection_download_form' action="<?php echo $baseurl_short; ?>pages/collection_download.php"  method=post>
+    <form id='collection_download_form' action="<?php echo $baseurl_short; ?>pages/collection_download.php?collection=<?php echo escape($collection . (($k != '') ? '&k=' . $k : '')); ?>"  method=post>
         <?php generateFormToken("collection_download_form"); ?>
         <input type=hidden name="collection" value="<?php echo escape($collection); ?>">
         <input type=hidden name="usage" value="<?php echo escape($usage); ?>">
@@ -357,18 +367,18 @@ include "../include/header.php";
 
                     // Analyze available sizes and present options
                     ?>
-                    <select name="size" class="stdwidth" id="downloadsize"<?php echo (!empty($submitted)) ? ' disabled="disabled"' : ''; ?>>
+                    <select name="size" class="stdwidth" id="downloadsize">
                         <?php
                         if (array_key_exists('original', $available_sizes)) {
-                            display_size_option('original', $lang['original'], true);
+                            display_size_option('original', $lang['original'], true, $size == 'original');
                         }
 
-                        display_size_option('largest', $lang['imagesize-largest'], true);
+                        display_size_option('largest', $lang['imagesize-largest'], true, $size == 'largest');
 
                         foreach ($available_sizes as $key => $value) {
-                            foreach ($sizes as $size) {
-                                if ($size['id'] == $key) {
-                                    display_size_option($key, $size['name'], true);
+                            foreach ($sizes as $size_row) {
+                                if ($size_row['id'] == $key) {
+                                    display_size_option($key, $size_row['name'], true, $key == $size);
                                     break;
                                 }
                             }
@@ -497,12 +507,14 @@ include "../include/header.php";
         } ?>
 
         <!-- Tar file download option -->
-        <div class="Question" <?php echo (!$collection_download_tar) ? "style=\"display:none;\"" : ''; ?>>
+        <div class="Question" <?php echo (!$show_download_format_selector) ? "style=\"display:none;\"" : ''; ?>>
             <label for="tardownload"><?php echo escape($lang["collection_download_format"]); ?></label>
             <div class="tickset">
                 <select name="tardownload" class="stdwidth" id="tardownload" >
-                    <option value="off"><?php echo escape($lang["collection_download_no_tar"]); ?></option>
-                    <option value="on" <?php echo ($collection_download_tar_option) ? " selected" : ''; ?>>
+                    <option value="off" <?php echo (!$tar_selected) ? " selected" : ''; ?>>
+                        <?php echo escape($lang["collection_download_no_tar"]); ?>
+                    </option>
+                    <option value="on" <?php echo ($tar_selected) ? " selected" : ''; ?>>
                         <?php echo escape($lang["collection_download_use_tar"]); ?>
                     </option>
                 </select>

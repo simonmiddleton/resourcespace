@@ -116,7 +116,7 @@ function setup_user(array $userdata)
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
            $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION, $plugins, $userprocessing_messages,
            $search_includes_themes;
-    debug("BANG " . __LINE__);
+
     # Hook to modify user permissions
     if (hook("userpermissions")) {
         $userdata["permissions"] = hook("userpermissions");

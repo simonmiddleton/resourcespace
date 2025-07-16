@@ -4723,13 +4723,13 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
  * @param  mixed $fordropdown
  * @return void
  */
-function display_size_option($sizeID, $sizeName, $fordropdown=true)
+function display_size_option($sizeID, $sizeName, $fordropdown=true, $selected=false)
     {
     global $available_sizes, $lang, $result;
     if(!hook('replace_display_size_option','',array($sizeID, $sizeName, $fordropdown))){
         if ($fordropdown)
             {
-            ?><option value="<?php echo escape($sizeID) ?>"><?php
+            ?><option value="<?php echo escape($sizeID) ?>" <?php echo ($selected) ? 'selected' : ''; ?>><?php
             echo $sizeName;
             }
         if(isset($available_sizes[$sizeID]))

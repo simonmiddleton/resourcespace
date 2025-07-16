@@ -683,6 +683,12 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     color: #fff;
 }
 
+input[type="submit"]:disabled {
+    color: #666666;
+    background: white;
+    box-shadow: unset;
+}
+
 .ToolsOptionLink:link, .ToolsOptionLink:visited {
     color: #FFF;
 }

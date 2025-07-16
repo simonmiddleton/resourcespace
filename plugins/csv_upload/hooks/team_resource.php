@@ -1,16 +1,17 @@
 <?php
 
-function HookCsv_uploadUpload_batchBeforeuploadform()
+function HookCsv_uploadTeam_resourceMenuitem()
 {
     global $baseurl,$lang;
 
     if (checkperm("c")) {
         ?>
-        <p style="float:right;margin:10px;">
+        <li>
+            <?php echo UPLOAD_ICON ?>&nbsp;
             <a href="<?php echo $baseurl ?>/plugins/csv_upload/pages/csv_upload.php" onClick="CentralSpaceLoad(this,true);return false;">
-                <?php echo UPLOAD_ICON . escape($lang["csv_upload_nav_link"]); ?>
+            <?php echo escape($lang["csv_upload_nav_link"]); ?>
             </a>
-        </p>
+        </li>
         <?php
     }
 }

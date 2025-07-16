@@ -462,11 +462,16 @@ function ps_query($sql, array $parameters = array(), $cache = "", $fetchrows = -
             if (!isset($prepared_statement_cache)) {
                 $prepared_statement_cache = array();
             }
+
+            $use_error_exception_cache = $GLOBALS['use_error_exception'] ?? false;
             try {
                 $prepared_statement_cache[$sql] = $db_connection->prepare($sql);
-            } catch (Exception $e) {
+            } catch (Throwable $t) {
                 $prepared_statement_cache[$sql] = false;
+                debug("Failed to prepare the database statement. {$t}");
             }
+            $GLOBALS['use_error_exception'] = $use_error_exception_cache;
+
             if ($prepared_statement_cache[$sql] === false) {
                 if ($dbstruct) {
                     // Clear out the cache for this query before running check_db_structs()
