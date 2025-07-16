@@ -370,7 +370,7 @@ input:checked + .customFieldLabel, .keywordselected {
     color:black;
 }
 
-.ReportSheet {background-color:#fff;       box-shadow: 0 1px 3px rgba(0,0,0,0.1);;color:black;}
+.ReportSheet {background-color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: black;}
 .ReportSheet  h2 {color:black;}
 .ReportSheet  p {color:black;}
 .ReportSummary {background-color:white;color:black;border-collapse:collapse;}
