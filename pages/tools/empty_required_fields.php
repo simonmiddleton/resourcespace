@@ -10,6 +10,12 @@ include "../../include/boot.php";
 include "../../include/authenticate.php";
 include "../../include/header.php";
 
+if (!checkperm("t")) {
+    echo escape($lang["error-permissiondenied"]);
+    include "../../include/footer.php";
+    exit();
+}
+
 $collection_ref = getval("col", '', true, 'is_int_loose');
 
 ?>
