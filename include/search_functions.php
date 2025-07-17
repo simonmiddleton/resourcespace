@@ -2509,7 +2509,7 @@ function get_simple_search_fields()
     global $FIXED_LIST_FIELD_TYPES, $country_search;
 
     # First get all the fields
-    $allfields = get_resource_type_fields("", "global,order_by");
+    $allfields = get_resource_type_fields("", "order_by");
 
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
