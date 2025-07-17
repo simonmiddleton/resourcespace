@@ -732,7 +732,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 
                                 if($fielderror)
                                     {
-                                    $field_visibility_status=getval("field_".$fields[$n]['ref']."_displayed","");
+                                    $field_visibility_status=getval("field_".$field['ref']."_displayed","");
                                     # Register an error only if the empty required field was actually displayed
                                     if ($field_visibility_status=="block")
                                         {
