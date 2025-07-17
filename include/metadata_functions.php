@@ -371,11 +371,18 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
  */
 function get_required_fields(int $resource_type): array
 {
+    if (isset($GLOBALS['get_required_fields'][$resource_type])) {
+        return $GLOBALS['get_required_fields'][$resource_type];
+    }
+
     $allfields = get_resource_type_fields([$resource_type]);
 
-    return array_values(array_filter($allfields, function($field) {
+    $result = array_values(array_filter($allfields, function($field) {
         return $field['required'] == 1;
         }));
+    $GLOBALS['get_required_fields'][$resource_type] = $result;
+
+    return $result;
 }
 
 /**
@@ -438,7 +445,14 @@ function update_archive_required_fields_check(int|array $resource, int $archive_
         return array();
     }
 
-    if (hook(('archive_skip_required_fields'), '', array($archive_state))) {
+    if (!isset($GLOBALS['update_archive_required_fields_check_hook'][$archive_state])) {
+        $check_not_required = hook(('archive_skip_required_fields'), '', array($archive_state));
+        $GLOBALS['update_archive_required_fields_check_hook'][$archive_state] = $check_not_required;
+    } else {
+        $check_not_required = $GLOBALS['update_archive_required_fields_check_hook'][$archive_state];
+    }
+
+    if ($check_not_required) {
         # Workflow states destination archive allows for required fields checking to be skipped.
         return array();
     }

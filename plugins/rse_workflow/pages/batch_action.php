@@ -111,7 +111,7 @@ if(is_array($result) && count($result) > 0)
 
 
 $affected_resources = array();
-$missing_required_fields;
+$missing_required_fields = array();
 foreach ($resources as $resource) {
     if (rse_workflow_validate_action($action, $resource)) {
         $required_fields_check = update_archive_required_fields_check($resource, $action['statusto']);

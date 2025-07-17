@@ -21,17 +21,34 @@ if (count($result) != count($required_fields)) {
     return false;
 }
 
-# 2. Exclude pending review state from required field checking and try again.
-ps_query('UPDATE archive_states SET skip_required_fields = 1 WHERE code = -1;');
+# 2. Attempt to move resource with blank required field to deleted state.
 unset($GLOBALS['update_archive_required_fields_check'][$resource_ref]);
-clear_query_cache("workflow");
-$result = update_archive_required_fields_check($resource_ref, -1);
+$result = update_archive_required_fields_check($resource_ref, $resource_deletion_state);
 if (count($result) != 0) {
     echo 'Test 2 ';
     return false;
 }
 
-# 3. Set required fields and check again moving to pending review where it requires no missed required fields.
+# 3. Attempt to move resource with blank required field to pending submission state.
+unset($GLOBALS['update_archive_required_fields_check'][$resource_ref]);
+$result = update_archive_required_fields_check($resource_ref, -2);
+if (count($result) != 0) {
+    echo 'Test 3 ';
+    return false;
+}
+
+# 4. Exclude pending review state from required field checking and try again.
+ps_query('UPDATE archive_states SET skip_required_fields = 1 WHERE code = -1;');
+unset($GLOBALS['update_archive_required_fields_check'][$resource_ref]);
+unset($GLOBALS['update_archive_required_fields_check_hook'][-1]);
+clear_query_cache("workflow");
+$result = update_archive_required_fields_check($resource_ref, -1);
+if (count($result) != 0) {
+    echo 'Test 4 ';
+    return false;
+}
+
+# 5. Set required fields and check again moving to pending review where it requires no missed required fields.
 ps_query('UPDATE archive_states SET skip_required_fields = 0 WHERE code = -1;');
 unset($GLOBALS['update_archive_required_fields_check'][$resource_ref]);
 clear_query_cache("workflow");
@@ -40,7 +57,7 @@ foreach($required_fields as $field) {
 }
 $result = update_archive_required_fields_check($resource_ref, -1);
 if (count($result) != 0) {
-    echo 'Test 3 ';
+    echo 'Test 5 ';
     return false;
 }
 
