@@ -13,7 +13,9 @@ $alltables = odbc_tables($conn);
 while (odbc_fetch_row($alltables)) {
     $type = odbc_result($alltables, 4);
     if ($type == "TABLE" || $type == "VIEW") {
-        $tablename = odbc_result($alltables, 3);
+        // Add "table schema" prefix to all table names
+        $schema = odbc_result($alltables, 2);
+        $tablename = ((!empty($schema)) ? $schema . '.' : '') . odbc_result($alltables, 3);
         $arrtables[$tablename] = $tablename;
     }
 }
@@ -37,6 +39,10 @@ if (getval('save', '') !== '' && enforcePostRequest(false)) {
         } while (array_key_exists($new_id, $tms_link_modules_mappings));
 
         $id = $new_id;
+    }
+
+    if ($tms_link_module_name == escape($lang["select"])) {
+        $tms_link_module_name = $tms_link_modules_mappings[$id]['module_name'];
     }
 
     $tms_link_modules_mappings[$id] = array(
@@ -77,6 +83,14 @@ if ($id !== '' && array_key_exists($id, $tms_link_modules_mappings)) {
     $tms_link_tms_rs_mappings = $record['tms_rs_mappings'];
 }
 
+$current_module_missing = false;
+if ($tms_link_module_name != '' && !in_array($tms_link_module_name, $arrtables)) {
+    $current_module_missing = true;
+    # Show "Select..." in drop down rather than displaying the first result.
+    $arrtables = array_merge(array($lang["select"] => $lang["select"]), $arrtables);
+}
+
+
 // Generate back to setup page of tms plugin link
 $plugin_yaml = get_plugin_yaml('tms_link', false);
 $back_to_url = $baseurl . '/' . $plugin_yaml['config_url'];
@@ -112,6 +126,17 @@ include '../../../include/header.php';
     <form id="TmsModuleConfigForm" method="post" action="<?php echo $form_action; ?>">
         <?php
         generateFormToken("tms_module_config");
+
+        if ($current_module_missing) {
+            ?>
+            <div class="Question">
+            <p><span style="color:red;"><?php echo escape($lang["status-warning"]) . ':  '; ?></span><?php echo(escape(str_replace('%%MODULE%%', $tms_link_module_name, $lang['tms_link_selected_module_missing'])));?></p>
+            <div class="clearerleft"></div>
+            </div>
+            <?php
+            $tms_link_module_name = escape($lang["select"]);
+        }
+
         render_dropdown_question(
             $lang["tms_link_tms_module_name"],
             "tms_link_module_name",
