@@ -69,10 +69,9 @@ if (getval("save", "") != "" && enforcePostRequest(false) && $collection_ref > 0
             sort($field_resources, SORT_NUMERIC);
             $field_resources = implode(', ', $field_resources);
             ?>
-            <div class="Question">
-                <label><?php echo escape($field_name); ?></label>
+            <div class="BasicsBox">
+                <h2><?php echo escape($field_name); ?></h2>
                 <div class="Fixed"><?php echo escape($field_resources); ?></div>
-                <div class="clearerleft"></div>
             </div>
         <?php
         }
