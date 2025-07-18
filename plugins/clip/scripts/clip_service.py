@@ -42,9 +42,9 @@ DB_CONFIG = {
 # Set up FastAPI app and in-memory cache
 app = FastAPI()
 device = "cpu"
-print("🔌 Loading CLIP model...")
+print("Loading CLIP model...")
 model, preprocess = clip.load("ViT-B/32", device=device)
-print("✅ Model loaded.")
+print("Model loaded.")
 
 cached_vectors = {}       # { db_name: (vectors_np, resource_ids) }
 loaded_max_ref = {}       # { db_name: max_ref }
@@ -58,7 +58,7 @@ def load_vectors_for_db(db_name, force_reload=False):
     if db_name in cached_vectors and not force_reload:
         return cached_vectors[db_name]
 
-    print(f"🔄 Loading vectors from DB: {db_name}")
+    print(f"Loading vectors from DB: {db_name}")
     try:
         conn = mysql.connector.connect(**DB_CONFIG, database=db_name)
         cursor = conn.cursor()
@@ -73,7 +73,7 @@ def load_vectors_for_db(db_name, force_reload=False):
         rows = cursor.fetchall()
         conn.close()
         elapsed_ms = round((time.time() - start) * 1000)
-        print(f"📥 Vector load from MySQL took {elapsed_ms}ms")
+        print(f"Vector load from MySQL took {elapsed_ms}ms")
         start = time.time()
 
     except Exception as e:
@@ -87,22 +87,22 @@ def load_vectors_for_db(db_name, force_reload=False):
 
     for ref, resource, blob in rows:
         if resource is None:
-            print(f"❌ Skipping ref {ref}: resource is None")
+            print(f"Skipping ref {ref}: resource is None")
             continue
 
         if len(blob) != 2048:
-            print(f"❌ Skipping ref {ref} (resource {resource}): blob is {len(blob)} bytes, expected 2048")
+            print(f"Skipping ref {ref} (resource {resource}): blob is {len(blob)} bytes, expected 2048")
             continue
 
         try:
             vector = np.frombuffer(blob, dtype=np.float32).copy()
             if vector.shape != (512,):
-                print(f"❌ Skipping ref {ref} (resource {resource}): vector shape {vector.shape}, expected (512,)")
+                print(f"Skipping ref {ref} (resource {resource}): vector shape {vector.shape}, expected (512,)")
                 continue
 
             norm = np.linalg.norm(vector)
             if norm == 0 or np.isnan(norm):
-                print(f"⚠️  Skipping ref {ref} (resource {resource}): invalid norm ({norm})")
+                print(f"Skipping ref {ref} (resource {resource}): invalid norm ({norm})")
                 continue
 
             vector /= norm
@@ -110,7 +110,7 @@ def load_vectors_for_db(db_name, force_reload=False):
             new_ids.append(resource)
 
         except Exception as e:
-            print(f"❌ Exception parsing vector for ref {ref} (resource {resource}): {e}")
+            print(f"Exception parsing vector for ref {ref} (resource {resource}): {e}")
             continue
 
     if db_name in cached_vectors:
@@ -136,8 +136,8 @@ def load_vectors_for_db(db_name, force_reload=False):
             faiss_indexes[db_name].add(np.stack(new_vectors))
 
     elapsed_ms = round((time.time() - start) * 1000)
-    print(f"⚙️  Vector processing and indexing took {elapsed_ms}ms")
-    print(f"✅ Cached {len(ids)} vectors for DB: {db_name}")
+    print(f"Vector processing and indexing took {elapsed_ms}ms")
+    print(f"Cached {len(ids)} vectors for DB: {db_name}")
     return cached_vectors[db_name]
 
 
@@ -187,9 +187,9 @@ async def search(
     if not any([text, image, resource, ref]):
         raise HTTPException(status_code=400, detail="Provide one of: text, image, resource, or ref")
 
-    print(f"▶️ SEARCH: db={db}, top_k={top_k}")
+    print(f"SEARCH: db={db}, top_k={top_k}")
     vectors, resource_ids = load_vectors_for_db(db)
-    print(f"🧠 Vectors loaded: {len(resource_ids)} resources")
+    print(f"Vectors loaded: {len(resource_ids)} resources")
 
     if len(resource_ids) == 0:
         return JSONResponse(content=[])
@@ -201,13 +201,13 @@ async def search(
 
         # --- Create query vector ---
         if text:
-            print("🔤 Text query")
+            print("Text query")
             tokens = clip.tokenize([text]).to(device)
             with torch.no_grad():
                 query_vector = model.encode_text(tokens)
 
         elif image:
-            print("🖼️ Image query")
+            print("Image query")
             contents = await image.read()
             img = Image.open(io.BytesIO(contents)).convert("RGB")
             img_input = preprocess(img).unsqueeze(0).to(device)
@@ -218,7 +218,7 @@ async def search(
             # Determine which field to query
             column = "resource" if resource is not None else "ref"
             value = resource if resource is not None else ref
-            print(f"🔁 Query from DB vector: {column} = {value}")
+            print(f"Query from DB vector: {column} = {value}")
 
             conn = mysql.connector.connect(**DB_CONFIG, database=db)
             cursor = conn.cursor()
@@ -243,15 +243,15 @@ async def search(
         # --- Search ---
         query_vector = query_vector / query_vector.norm(dim=-1, keepdim=True)
         query_np = query_vector.cpu().numpy().flatten()
-        print("✅ Query vector created")
+        print("Query vector created")
 
-        print("🔍 Performing FAISS search")
+        print("Performing FAISS search")
         print(f"FAISS index size: {index.ntotal}")
         start = time.time()
         D, I = index.search(query_np.reshape(1, -1), top_k + 1)
         elapsed_ms = round((time.time() - start) * 1000)
         print(f"FAISS search took {elapsed_ms}ms")
-        print(f"🎯 Search results: {I[0]}")
+        print(f"Search results: {I[0]}")
 
         results = []
         ref_int = int(ref) if ref not in (None, "") else None
@@ -279,7 +279,7 @@ async def search(
         return JSONResponse(content=results)
 
     except Exception as e:
-        print(f"❌ Exception in /search: {e}")
+        print(f"Exception in /search: {e}")
         raise HTTPException(status_code=500, detail=f"Search error: {e}")
 
 
@@ -356,7 +356,7 @@ async def tag_search(
             with open(cache_path, 'w', encoding='utf-8') as f:
                 f.write(response.text)
             elapsed = int((time.time() - start) * 1000)
-            print(f"📡 Downloaded tag database from URL in {elapsed}ms: {url}")
+            print(f"Downloaded tag database from URL in {elapsed}ms: {url}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to download tag vectors: {e}")
 
@@ -390,7 +390,7 @@ async def tag_search(
             index.add(tag_vectors)
             tag_faiss_index_cache[url] = index
             elapsed = int((time.time() - start) * 1000)
-            print(f"💾 Loaded tag database from disk cache in {elapsed}ms: {url}")
+            print(f"Loaded tag database from disk cache in {elapsed}ms: {url}")
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to load tag vectors from cache: {e}")
@@ -461,11 +461,11 @@ def background_vector_loader():
             for db_name in cached_vectors.keys():
                 load_vectors_for_db(db_name, force_reload=True)
         except Exception as e:
-            print(f"⚠️ Background update failed: {e}")
+            print(f"Background update failed: {e}")
 
 @app.on_event("startup")
 def start_background_task():
-    print("🌀 Starting background vector refresher thread...")
+    print("Starting background vector refresher thread...")
     thread = threading.Thread(target=background_vector_loader, daemon=True)
     thread.start()
 
