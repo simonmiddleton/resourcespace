@@ -4,7 +4,7 @@ function HookTransformViewAfterresourceactions (){
     global $ref,$access,$lang,$resource,$cropper_allowed_extensions,$baseurl_short,$search,$offset,
     $order_by,$sort,$k,$imagemagick_path;
 
-    if(!isset($imagemagick_path) || resource_is_template($ref))
+    if(!isset($imagemagick_path))
         {
         return false;
         }

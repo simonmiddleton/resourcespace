@@ -1086,13 +1086,18 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
         return false;
     }
 
-    # FStemplate support - do not allow previews from the template to be changed
-    if (resource_file_readonly($ref)) {
+    # FStemplate support - do not allow previews from the template to be changed.
+    # Exception for the creation of alternative file previews which don't affect the template system.
+    $is_resource_template = resource_file_readonly($ref);
+    if ($alternative == -1 && $is_resource_template ) {
         return false;
     }
 
-    # Used to preemptively create folder
-    get_resource_path($ref, true, "pre", true);
+    # Used to preemptively create folder e.g. when using $originals_separate_storage
+    # Not for template resources as will create empty folder based on template scramble key.
+    if (!$is_resource_template){
+        get_resource_path($ref, true, "pre", true);
+    }
 
     if (!is_numeric($ref)) {
         trigger_error("Parameter 'ref' must be numeric!");
