@@ -118,6 +118,8 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
             continue;
             }
 
+        $tms_object_id = preg_split('/[,\s]+/', $tms_object_id);
+
         if(is_array($tms_object_id)) {
             if ($module['tms_uid_field_int'] ?? true) {
                 $tms_object_id = array_filter($tms_object_id,'is_positive_int_loose');
@@ -127,12 +129,6 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
                 continue;
             }
             $conditionsql = " WHERE {$module['tms_uid_field']} IN ('" . implode("','", $tms_object_id) . "')";
-        } else {
-            if (($module['tms_uid_field_int'] ?? true) && !is_positive_int_loose($tms_object_id)) {
-                debug('tms_link: Invalid tms object id(s): ' . json_encode($tms_object_id) . ' for resource: ' . $resource);
-                continue;
-            }
-            $conditionsql = " WHERE {$module['tms_uid_field']} ='" . $tms_object_id . "'";
         }
 
         $tmscountsql = "SELECT Count(*) FROM {$module['module_name']} {$conditionsql};";
@@ -211,7 +207,7 @@ function tms_link_get_tms_resources(array $module)
 
     return ps_query(
         "   SELECT rn.resource,
-                   max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS identifier,
+                   GROUP_CONCAT(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END SEPARATOR ', ') AS identifier,
                    max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS `checksum`
               FROM resource_node AS rn
         INNER JOIN node AS n ON rn.node = n.ref AND n.resource_type_field IN ({$sql_rtf_in})

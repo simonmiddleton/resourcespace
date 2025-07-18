@@ -8,7 +8,7 @@ include_once "../include/tms_link_functions.php";
 
 
 $ref = getval("ref", 0, true);
-$tmsid = getval("tmsid", 0, true);
+$tmsid = getval("tmsid", 0);
 
 if($ref == 0 && $tmsid == 0)
     {
@@ -16,6 +16,7 @@ if($ref == 0 && $tmsid == 0)
     }
 
 $tmsdata = tms_link_get_tms_data($ref, $tmsid);
+$modules_mappings = array_column(array_values(tms_link_get_modules_mappings()), 'tms_uid_field', 'module_name');
 
 include "../../../include/header.php";
 ?>
@@ -38,13 +39,15 @@ include "../../../include/header.php";
         <table class="ListviewStyle">
             <?php
             foreach ($tmsdata as $module_name => $module_tms_data) {
+                foreach ($module_tms_data as $index => $tms_object) {
                 ?>
                 <tr class="ListviewTitleStyle">
                     <th><?php echo escape($module_name); ?></th>
-                    <th><?php echo escape($tmsid); ?></th>
+                    <th><?php echo escape($tms_object[$modules_mappings[$module_name]] ?? "") ?></th>
                 </tr>
                 <?php
-                foreach ($module_tms_data as $tms_column => $tms_value) {
+
+                foreach ($tms_object as $tms_column => $tms_value) {
                     ?>
                     <tr> 
                         <td><strong><?php echo escape($tms_column); ?></strong></td>
@@ -52,7 +55,7 @@ include "../../../include/header.php";
                     </tr>
                     <?php
                 }
-            }?>
+            }}?>
             </table>
         </div>
         <?php
