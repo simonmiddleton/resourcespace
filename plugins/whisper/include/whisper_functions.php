@@ -2,6 +2,16 @@
 // Included from preview_preprocessing.php
 use Montala\ResourceSpace\CommandPlaceholderArg;
 
+/**
+ * Processes all unprocessed audio/video resources supported by Whisper.
+ *
+ * This function:
+ * - Prevents concurrent execution via process locking.
+ * - Selects resources with supported file extensions that have not yet been transcribed.
+ * - Invokes whisper_process() for each selected resource.
+ *
+ * @return int|false Returns the number of resources processed, or false if a process lock is active.
+ */
 function whisper_process_unprocessed() {
     // Process all resources that haven't had text extracted yet.
     global $whisper_extensions;
@@ -26,6 +36,19 @@ function whisper_process_unprocessed() {
     return count($resources);
 }
 
+/**
+ * Converts a media file to audio, transcribes it using Whisper, and stores the transcript in a metadata field.
+ *
+ * This function:
+ * - Converts the original media file to mono, 16kHz WAV using ffmpeg.
+ * - Runs Whisper transcription with an optional initial prompt.
+ * - Saves the generated text into the configured resource field.
+ * - Optionally adds a generated subtitle file as an alternative file.
+ * - Marks the resource as processed by setting `whisper_processed = 1`.
+ *
+ * @param   int     $resource The resource ID to process.
+ * @return  bool    True on successful processing, false if any step fails.
+ */
 function whisper_process($resource)
     {
     global $lang, $whisper_prompt, $whisper_field, $whisper_subtitles;
