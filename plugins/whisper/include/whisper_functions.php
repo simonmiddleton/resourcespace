@@ -87,7 +87,7 @@ function whisper_process($resource)
             "%%PROMPT%%" => new CommandPlaceholderArg($whisper_prompt, [CommandPlaceholderArg::class, 'alwaysValid']) // Sanitised above
         ];
     logScript("Whisper: Starting Whisper...");
-    //run_command($shell_exec_cmd, false, $shell_exec_params);
+    run_command($shell_exec_cmd, false, $shell_exec_params);
     $text_file=dirname($file_path) . "/whisper.txt";
     if (!file_exists($text_file)) {
         logScript("Whisper: Text file was not created.");
@@ -117,6 +117,6 @@ function whisper_process($resource)
     }
 
     // Set processed
-    //ps_query("update resource set whisper_processed=1 where ref=?",["i",$resource]);
+    ps_query("update resource set whisper_processed=1 where ref=?",["i",$resource]);
     return true;
 }
