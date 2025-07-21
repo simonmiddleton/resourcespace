@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='Sisällytä skriptin eteneminen järjestel
 $lang["plugin-tms_link-title"]='TMS-linkki';
 $lang["plugin-tms_link-desc"]='Mahdollistaa resurssin metatietojen poimimisen TMS-tietokannasta.';
 $lang["tms_link_uid_field_int"]='TMS kokonaislukutunnukset. Aseta epätodeksi salliaksesi ei-kokonaislukutunnukset.';
+$lang["tms_link_selected_module_missing"] = 'TMS-moduulin nimi on tällä hetkellä asetettu "%%MODULE%%", mutta tämä ei ole saatavilla oleva vaihtoehto. Tarkista avattavat vaihtoehdot ja päivitä alla.';

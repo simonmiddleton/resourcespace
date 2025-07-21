@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='在系统调试日志中包含脚本进度
 $lang["plugin-tms_link-title"]='TMS链接';
 $lang["plugin-tms_link-desc"]='[高级] 允许从TMS数据库提取资源元数据。';
 $lang["tms_link_uid_field_int"]='TMS 整数UID。设置为false以允许非整数UID。';
+$lang["tms_link_selected_module_missing"] = 'TMS模块名称当前设置为“%%MODULE%%”，但这不是可用选项。请查看下拉选项并在下面更新。';

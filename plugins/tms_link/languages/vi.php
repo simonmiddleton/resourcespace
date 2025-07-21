@@ -71,3 +71,4 @@ $lang["tms_link_not_deleted_error_detail"] = 'Không thể xóa cấu hình mô-
 $lang["tms_link_uid_field"] = 'TMS %module_name %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"] = 'Bạn có chắc chắn muốn xóa cấu hình mô-đun này không? Hành động này không thể hoàn tác!';
 $lang["tms_link_write_to_debug_log"] = 'Bao gồm tiến trình kịch bản trong nhật ký gỡ lỗi hệ thống (cần cấu hình gỡ lỗi riêng biệt). Cảnh báo: Sẽ gây ra sự gia tăng nhanh chóng của tệp nhật ký gỡ lỗi.';
+$lang["tms_link_selected_module_missing"] = 'Tên mô-đun TMS hiện đang được đặt là "%%MODULE%%" nhưng đây không phải là một tùy chọn có sẵn. Vui lòng xem lại các tùy chọn trong danh sách thả xuống và cập nhật bên dưới.';

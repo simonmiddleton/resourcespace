@@ -71,3 +71,4 @@ $lang["tms_link_not_deleted_error_detail"] = 'Hindi ma-delete ang hinihinging co
 $lang["tms_link_uid_field"] = 'TMS %module_name %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"] = 'Sigurado ka bang nais mong tanggalin ang configuration ng module na ito? Ang aksyong ito ay hindi maibabalik!';
 $lang["tms_link_write_to_debug_log"] = 'Isama ang progreso ng script sa log ng system debug (kailangan ng hiwalay na nakatakdang pag-log ng debug). Mag-ingat: Magdudulot ito ng mabilis na paglaki ng file ng log ng debug.';
+$lang["tms_link_selected_module_missing"] = 'Ang pangalan ng TMS module ay kasalukuyang nakatakda sa "%%MODULE%%" ngunit ito ay hindi isang magagamit na pagpipilian. Suriin ang mga pagpipilian sa dropdown at i-update sa ibaba.';
