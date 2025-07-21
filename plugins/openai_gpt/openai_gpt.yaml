@@ -6,5 +6,5 @@ desc: Automated processing of metadata and images using AI.
 icon: fa fa-cog
 icon-colour: seagreen
 config_url: /plugins/openai_gpt/pages/setup.php
-category: integrations
+category: AI
 info_url: https://www.resourcespace.com/knowledge-base/plugins/openai_gpt
