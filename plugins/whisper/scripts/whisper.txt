@@ -1,0 +1,7 @@
+The Public Access functionality in Resource Space allows anyone with the URL of your system
+to access certain content. A specific user group is configured so that anyone visiting the site
+without a login will inherit the permissions of that user group. That means you have complete
+control over the resources they can see, their Dash, Featured Collections and Search functionality.
+You'll also be able to customise the system logo and welcome text.
+Of course, you can specify whether content should be downloadable or not too.
+This allows you to create a bespoke, public-facing window to your digital assets.
