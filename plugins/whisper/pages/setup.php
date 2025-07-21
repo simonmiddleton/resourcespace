@@ -15,6 +15,7 @@ $page_def[] = config_add_single_ftype_select("whisper_field", $lang["whisper_fie
 $page_def[] = config_add_text_input("whisper_extensions", $lang["whisper_extensions"], false, 600);
 $page_def[] = config_add_text_input("whisper_prompt", $lang["whisper_prompt"], false, 600,true);
 $page_def[] = config_add_boolean_select("whisper_subtitles", $lang["whisper_subtitles"], '', 600);
+$page_def[] = config_add_boolean_select("whisper_transcript", $lang["whisper_transcript"], '', 600);
 
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);

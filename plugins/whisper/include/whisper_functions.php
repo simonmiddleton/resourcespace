@@ -51,7 +51,7 @@ function whisper_process_unprocessed() {
  */
 function whisper_process($resource)
     {
-    global $lang, $whisper_prompt, $whisper_field, $whisper_subtitles;
+    global $lang, $whisper_prompt, $whisper_field, $whisper_subtitles, $whisper_transcript;
 
     logScript("Whisper: processing resource " . $resource);
     $data=get_resource_data($resource);
@@ -87,7 +87,7 @@ function whisper_process($resource)
             "%%PROMPT%%" => new CommandPlaceholderArg($whisper_prompt, [CommandPlaceholderArg::class, 'alwaysValid']) // Sanitised above
         ];
     logScript("Whisper: Starting Whisper...");
-    run_command($shell_exec_cmd, false, $shell_exec_params);
+    //run_command($shell_exec_cmd, false, $shell_exec_params);
     $text_file=dirname($file_path) . "/whisper.txt";
     if (!file_exists($text_file)) {
         logScript("Whisper: Text file was not created.");
@@ -99,6 +99,14 @@ function whisper_process($resource)
     update_field($resource,$whisper_field,$text);
     logScript("Whisper: Updated field with value.");
 
+    if ($whisper_transcript) {
+        $alt=add_alternative_file($resource,$lang["whisper_transcript_name"],"TXT file",$resource . ".txt","txt",filesize($text_file));
+        logScript("Whisper: Alternative file added with ref " . $alt);
+        $alt_path=get_resource_path($resource,true,'',true, "txt", true, 1, false, '', $alt);
+        logScript("Whisper: Alternative file path is " . $alt_path);
+        copy($text_file,$alt_path);
+    }
+
     $subtitle_path=$folder . "/whisper.srt";
     if ($whisper_subtitles && file_exists($subtitle_path)) {
         $alt=add_alternative_file($resource,$lang["whisper_subtitles_name"],"SRT file",$resource . ".srt","srt",filesize($subtitle_path));
@@ -109,6 +117,6 @@ function whisper_process($resource)
     }
 
     // Set processed
-    ps_query("update resource set whisper_processed=1 where ref=?",["i",$resource]);
+    //ps_query("update resource set whisper_processed=1 where ref=?",["i",$resource]);
     return true;
 }
