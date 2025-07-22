@@ -3681,11 +3681,13 @@ function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $t
     } else {
         switch ($type) {
             case LOG_CODE_STATUS_CHANGED:
+                $from = $lang["status" . $fromvalue] ?? $lang["statusinvalid"];
                 $diff = $lang["status" . $fromvalue] . " -> " . $lang["status" . $tovalue];
                 break;
 
             case LOG_CODE_ACCESS_CHANGED:
-                $diff = $lang["access" . $fromvalue] . " -> " . $lang["access" . $tovalue];
+                $from = $lang["access" . $fromvalue] ?? $lang["accessinvalid"];
+                $diff = $from . " -> " . $lang["access" . $tovalue];
                 break;
 
             // do not do a diff, just dump out whole new value (this is so we can cleanly append transform output)

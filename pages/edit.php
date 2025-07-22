@@ -2142,32 +2142,37 @@ else
           $resource["access"] = $access_submitted; // Keep value chosen on form when a required field wasn't completed.
           }
 
-      if(($ea0 && $resource["access"]==0) || ($ea1 && $resource["access"]==1) || ($ea2 && $resource["access"]==2) || ($ea3 && $resource["access"]==3))
-      {
-        if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums)
-            {
+      if(
+        ($ea0 && $resource["access"]==0)
+        || ($ea1 && $resource["access"]==1)
+        || ($ea2 && $resource["access"]==2)
+        || ($ea3 && $resource["access"]==3)
+        ) {
+        if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums) {
             echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
-            }?>
+        }?>
         <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"]; ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
-                    if($ea0)    //0 - open
-                    {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
-                    if($ea1)    //1 - restricted
-                    {$n=1;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
-                    if($ea2)    //2 - confidential
-                    {$n=2;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
-                    if($ea3)    //3 - custom
-                    {$n=3;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
-                    ?>
-                 </select>
-                 <?php
-              }
-              else
-              {
-                 ?>
-                 <label class="stdwidth" id="access"><?php echo escape($lang["access" .$resource["access"]]);?></label>
-                 <?php
-              }
+            if($ea0)    //0 - open
+            {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
+            if($ea1)    //1 - restricted
+            {$n=1;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
+            if($ea2)    //2 - confidential
+            {$n=2;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
+            if($ea3)    //3 - custom
+            {$n=3;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
+            ?>
+            </select>
+            <?php
+        } else {
+            ?>
+            <label
+                class="stdwidth"
+                id="access"
+                ><?php echo escape($lang["access" .$resource["access"]] ?? $lang["accessinvalid"]);?>
+            </label>
+            <?php
+        }
               ?>
               <div class="clearerleft"> </div>
               <?php

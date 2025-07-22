@@ -696,6 +696,7 @@ $lang["status0"] = "Active";
 $lang["status1"] = "Waiting to be archived";
 $lang["status2"] = "Archived";
 $lang["status3"] = "Deleted";
+$lang["statusinvalid"] = "Invalid";
 
 # Charts
 $lang["activity"] = "Activity";
@@ -975,6 +976,7 @@ $lang["access0"] = "Open";
 $lang["access1"] = "Restricted";
 $lang["access2"] = "Confidential";
 $lang["access3"] = "Custom";
+$lang["accessinvalid"] = "Invalid";
 $lang["statusandrelationships"] = "Status and relationships";
 
 # Lists
