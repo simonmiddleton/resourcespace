@@ -125,6 +125,12 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
         if ($processcsv && 0 === $error_count) {
             // Create new user if we can process it and don't have any errors
             $new_user_id = new_user($user_creation_data['username']);
+
+            if ($new_user_id === -2) {
+                array_push($messages, 'Error: User(s) could not be imported: user limit exceeded');
+                return false;
+            }
+            
             array_push($messages, 'Info: Created new user "' . $user_creation_data['username'] . '" with ID "' . $new_user_id . '"');
 
             foreach ($user_creation_data as $key => $value) {

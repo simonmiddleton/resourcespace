@@ -2906,3 +2906,15 @@ $lang["team_resource_non_ingested_search"] = 'Nézd meg a nem feldolgozott erőf
 
 $lang["language-ms"] = 'Malay';
 $lang["language-tl"] = 'Filipino';
+$lang["upgrade_028_notify_config_not_set"] = 'Nem lehet beállítani a (rendszerszintű) konfigurációs opciót %name% %value%-ra';
+$lang["annotate_tagging_fields"] = 'Címkéző mezők';
+$lang["annotate_text_adds_comment"] = 'Hozzáadás megjegyzés a forráshoz szöveges annotációkhoz. (N/A a rögzített lista mező annotációkhoz)';
+$lang["annotate_public_view"] = 'A megjegyzések nyilvánosan láthatók (pl. külső megosztások)?';
+$lang["annotate_show_author"] = 'Annotációs szerző megjelenítése?';
+$lang["annotate_exclude_restypes"] = 'Kizárandó erőforrástípusok (jelölje be a kizáráshoz és ne legyen annotálva)';
+$lang["annotate_pseudo_rtf_comment_title"] = 'Megjegyzések (mód)';
+$lang["annotorious_add_a_comment"] = 'Hozzáadás egy megjegyzést...';
+$lang["annotorious_type_to_search_field"] = 'Írja be a keresési mezőbe...';
+$lang["annotate_pdf_sheet_tool"] = 'Megjegyzések PDF';
+$lang["annotate_pdf_intro_text"] = 'Válassza ki az oldalméretet az Annotations PDF-hez.';
+$lang["annotate_pdf_no_annotations"] = 'Nincsenek annotációk.';

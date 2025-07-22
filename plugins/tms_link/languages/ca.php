@@ -75,3 +75,4 @@ $lang["tms_link_write_to_debug_log"]='Inclou el progrés del script al registre 
 $lang["plugin-tms_link-title"]='Enllaç TMS';
 $lang["plugin-tms_link-desc"]='[Avançat] Permet extreure les metadades dels recursos de la base de dades TMS.';
 $lang["tms_link_uid_field_int"]='TMS Integer UIDs. Establiu a fals per permetre UIDs no enters.';
+$lang["tms_link_selected_module_missing"] = 'El nom del mòdul TMS està actualment configurat com a "%%MODULE%%", però aquesta no és una opció disponible. Revisa les opcions del menú desplegable i actualitza a continuació.';

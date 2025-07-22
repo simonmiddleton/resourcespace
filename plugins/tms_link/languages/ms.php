@@ -71,3 +71,4 @@ $lang["tms_link_not_deleted_error_detail"] = 'Tidak dapat memadam konfigurasi mo
 $lang["tms_link_uid_field"] = 'TMS %module_name %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"] = 'Adakah anda pasti ingin memadam konfigurasi modul ini? Tindakan ini tidak boleh dibatalkan!';
 $lang["tms_link_write_to_debug_log"] = 'Sertakan kemajuan skrip dalam log debug sistem (memerlukan konfigurasi log debug secara berasingan). Amaran: Akan menyebabkan pertumbuhan pesat fail log debug.';
+$lang["tms_link_selected_module_missing"] = 'Nama modul TMS kini ditetapkan kepada "%%MODULE%%" tetapi ini bukan pilihan yang tersedia. Semak pilihan dalam senarai dan kemas kini di bawah.';

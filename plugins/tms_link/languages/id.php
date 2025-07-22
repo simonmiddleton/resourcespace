@@ -75,3 +75,4 @@ $lang["tms_link_write_to_debug_log"]='Sertakan kemajuan skrip dalam log debug si
 $lang["plugin-tms_link-title"]='Tautan TMS';
 $lang["plugin-tms_link-desc"]='Memungkinkan metadata sumber daya diekstraksi dari database TMS.';
 $lang["tms_link_uid_field_int"]='TMS Integer UID. Atur ke false untuk mengizinkan UID non-integer.';
+$lang["tms_link_selected_module_missing"] = 'Nama modul TMS saat ini diatur ke "%%MODULE%%" tetapi ini bukan opsi yang tersedia. Tinjau opsi di dropdown dan perbarui di bawah.';

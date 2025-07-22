@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='Inkluder scriptfremskridt i systemets fejl
 $lang["plugin-tms_link-title"]='TMS Link';
 $lang["plugin-tms_link-desc"]='Tillader udtrækning af ressource-metadata fra TMS-database.';
 $lang["tms_link_uid_field_int"]='TMS Integer UIDs. Indstil til falsk for at tillade ikke-integer UIDs.';
+$lang["tms_link_selected_module_missing"] = 'TMS modulnavn er i øjeblikket indstillet til "%%MODULE%%", men dette er ikke en tilgængelig mulighed. Gennemgå dropdown-mulighederne og opdater nedenfor.';
