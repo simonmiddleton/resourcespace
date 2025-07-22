@@ -100,20 +100,29 @@ function whisper_process($resource)
     logScript("Whisper: Updated field with value.");
 
     if ($whisper_transcript) {
-        $alt=add_alternative_file($resource,$lang["whisper_transcript_name"],"TXT file",$resource . ".txt","txt",filesize($text_file));
-        logScript("Whisper: Alternative file added with ref " . $alt);
+        $alt=add_alternative_file($resource,str_replace("?","TXT",$lang["fileoftype"]),$lang["whisper_transcript_name"],$resource . ".txt","txt",filesize($text_file));
+        logScript("Whisper: TXT alternative file added with ref " . $alt);
         $alt_path=get_resource_path($resource,true,'',true, "txt", true, 1, false, '', $alt);
-        logScript("Whisper: Alternative file path is " . $alt_path);
+        logScript("Whisper: TXT alternative file path is " . $alt_path);
         copy($text_file,$alt_path);
     }
 
     $subtitle_path=$folder . "/whisper.srt";
     if ($whisper_subtitles && file_exists($subtitle_path)) {
-        $alt=add_alternative_file($resource,$lang["whisper_subtitles_name"],"SRT file",$resource . ".srt","srt",filesize($subtitle_path));
-        logScript("Whisper: Alternative file added with ref " . $alt);
+        $alt=add_alternative_file($resource,str_replace("?","SRT",$lang["fileoftype"]),$lang["whisper_subtitles_name"],$resource . ".srt","srt",filesize($subtitle_path));
+        logScript("Whisper: SRT alternative file added with ref " . $alt);
         $alt_path=get_resource_path($resource,true,'',true, "srt", true, 1, false, '', $alt);
-        logScript("Whisper: Alternative file path is " . $alt_path);
+        logScript("Whisper: SRT alternative file path is " . $alt_path);
         copy($subtitle_path,$alt_path);
+    }
+
+    $vtt_path=$folder . "/whisper.vtt";
+    if ($whisper_subtitles && file_exists($vtt_path)) {
+        $alt=add_alternative_file($resource,str_replace("?","VTT",$lang["fileoftype"]),$lang["whisper_subtitles_name"],$resource . ".vtt","vtt",filesize($vtt_path));
+        logScript("Whisper: VTT alternative file added with ref " . $alt);
+        $alt_path=get_resource_path($resource,true,'',true, "vtt", true, 1, false, '', $alt);
+        logScript("Whisper: VTT alternative file path is " . $alt_path);
+        copy($vtt_path,$alt_path);
     }
 
     // Set processed
