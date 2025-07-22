@@ -2,7 +2,7 @@
 include_once dirname(__FILE__, 2) . '/include/whisper_functions.php';
 
 /**
- * Add whisper processinng to the cron.
+ * Add whisper processing to the cron.
  *
  * @return void
  */
