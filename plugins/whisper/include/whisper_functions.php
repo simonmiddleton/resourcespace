@@ -79,7 +79,7 @@ function whisper_process($resource)
     logScript("Whisper: Audio proxy created at " . $audio_file);
 
     // Audio file created. Proceed to prcess using Whisper.
-    $whisper_prompt=preg_replace('/[^a-zA-Z0-9 \.\,\?\!\:\'\"\-\(\)]/', '', $whisper_prompt); // Sanitise prompt.
+    $whisper_prompt=preg_replace('/[^a-zA-Z0-9 \.\,\?\!\:\-\(\)]/', '', $whisper_prompt); // Sanitise prompt.
     $shell_exec_cmd = "whisper %%FILE%% --output_dir %%DIR%% --initial_prompt %%PROMPT%%";
         $shell_exec_params = [
             "%%FILE%%" => new CommandPlaceholderArg($audio_file, 'is_safe_basename'),
