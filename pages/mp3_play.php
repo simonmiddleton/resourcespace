@@ -1,4 +1,6 @@
 <?php
+include_once __DIR__ . '/../include/video_functions.php';
+
 if ($pagename == "search" || $pagename == "view") {
     # VideoJS audio player - plays the mp3 preview file created to preview audio resources.
 
@@ -85,6 +87,8 @@ if ($pagename == "search" || $pagename == "view") {
         >
             <source src="<?php echo $mp3path?>" type="audio/mp3" >
             <p class="vjs-no-js">To hear this audio please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 audio</a></p>
+
+            <?php display_video_subtitles($ref, $GLOBALS['access']); ?>
         </audio>
     </div>
 
