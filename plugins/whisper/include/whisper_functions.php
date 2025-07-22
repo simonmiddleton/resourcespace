@@ -125,6 +125,9 @@ function whisper_process($resource)
         copy($vtt_path,$alt_path);
     }
 
+    // Clean up audio proxy
+    unlink($audio_file);
+
     // Set processed
     ps_query("update resource set whisper_processed=1 where ref=?",["i",$resource]);
     return true;
