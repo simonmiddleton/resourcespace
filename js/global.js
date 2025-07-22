@@ -1106,12 +1106,13 @@ function styledalert(title,text,minwidth){
         dialogClass: 'no-close',
         modal: true,
         maxHeight:500,
-         buttons: [{
-                  text: oktext,
-                  click: function() {
-                    jQuery( this ).dialog( "close" );
-                  }
-                }],
+        buttons: [{
+            // Decode the text label (see header.php) because jquery.dialog internally will also use textContent (safe sink)
+            text: new DOMParser().parseFromString(oktext, 'text/html').documentElement.textContent,
+            click: function() {
+            jQuery( this ).dialog( "close" );
+            }
+        }],
         create: function(event, ui)
             {
             if (title == '')
