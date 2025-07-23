@@ -114,13 +114,19 @@ function HookClipAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
         exit(1);
     }
 
+    debug('clipsearch: ' . count($results) . ' results found for search phrase: "' . $search . '"');
+
     // Filter out results with score below the threshold
     $results = array_filter($results, static function ($result) use ($min_score) {
         return isset($result['score']) && $result['score'] >= $min_score;
     });
 
+    debug('clipsearch: ' . count($results) . ' results found for search phrase: "' . $search . '" after filtering by $min_score: ' . $min_score);
+
     // Fetch titles from the resource table
     $ids = array_column($results, 'resource');
+
+    debug('clipsearch: Resources found: ' . implode(', ', $ids));
 
     // No results - we must still run a query but one that returns no results.
     if (count($ids) == 0) {
