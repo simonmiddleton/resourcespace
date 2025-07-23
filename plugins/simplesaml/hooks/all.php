@@ -15,18 +15,12 @@ function HookSimplesamlAllInitialise()
 
     if ($GLOBALS['simplesaml_rsconfig'] === 2 && isset($GLOBALS["simplesaml_metadata_url"]) && trim($GLOBALS["simplesaml_metadata_url"]) !== '') {
         global $simplesamlconfig;
-        // Get IdP data from sysvars
-        $storedsamlconfig = get_sysvar("saml_idp_metadata");
-        $simplesamlconfig['metadata'] = json_decode($storedsamlconfig, true);
-        if (trim($storedsamlconfig) == "" || $simplesamlconfig['metadata'] === false) {
-            // Invalid metadata
-            debug("simplesaml - invalid metadata");
-            $success = simplesaml_update_metadata();
-            if(!$success) {
-                return false;
-            }
+        // Get IdP data
+        $latestdata = get_saml_metadata();
+        if(!$latestdata) {
+            return false;
         }
-
+        $simplesamlconfig['metadata'] = $latestdata;
         $simplesamlconfig['authsources']['admin'] = ['core:AdminPassword'];
         $simplesamlconfig['authsources']['resourcespace-sp'] = [
             'saml:SP',
@@ -830,18 +824,17 @@ function HookSimplesamlAllSsologindefault()
 
 function HookSimplesamlAllCron()
 {
-    // Get IdP data from sysvars
-    $storedsamlconfig = get_sysvar("saml_idp_metadata");
-    $simplesamlconfig['metadata'] = json_decode($storedsamlconfig, true);
+    $storedsamlconfig = get_saml_metadata();
+    if (!$storedsamlconfig) {
+        return false;
+    }
+    $simplesamlconfig['metadata'] = $storedsamlconfig;
     $errormessage = get_sysvar("saml_idp_metadata_error");
 
     // Check when last updated
     $lastupdate = get_sysvar("saml_idp_metadata_last_updated");
 
-    if (
-        trim($storedsamlconfig) == "" 
-        || $simplesamlconfig['metadata'] === false
-        || trim($errormessage) !== ""
+    if (trim($errormessage) !== ""
         || time() - $lastupdate > 60*60*12 // Don't update if valid and updated in last 12 hours
     ) {
         // Invalid metadata
@@ -849,7 +842,7 @@ function HookSimplesamlAllCron()
         echo " - Updating SAML metadata" . PHP_EOL;
         $result = simplesaml_update_metadata();
         if($result !== true) {
-            $message = " - Failed to update SAML metadata" . $result;
+            $message = " - Failed to update SAML metadata: " .$result;
             echo $message . PHP_EOL;
             return;
         }

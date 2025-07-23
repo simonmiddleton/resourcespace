@@ -457,3 +457,27 @@ function simplesaml_update_metadata()
     set_sysvar("saml_idp_metadata_last_updated", time());
     return true;
 }
+
+/**
+ * Get SAML IdP metadata from sysvars, updating if necessary
+ * 
+ * @param bool $retry       Retry if invalid. Default true
+ * 
+ * @return array|false      Metadata if successful, false if failed
+ */
+function get_saml_metadata($retry = true)
+{
+    $storedsamlconfig = get_sysvar("saml_idp_metadata");
+    $metadata = json_decode($storedsamlconfig, true);
+    if ((trim($storedsamlconfig) == "" || $metadata === false) && $retry) {
+        // Invalid metadata
+        debug("simplesaml - invalid metadata in sysvars. Updating");
+        $success = simplesaml_update_metadata();
+        if($success !== true) {
+            debug("simplesaml - invalid metadata. Update failed");
+            return false;
+        }
+        return get_saml_metadata(false);
+    }
+    return $metadata;
+}
