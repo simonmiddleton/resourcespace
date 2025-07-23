@@ -118,6 +118,7 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
             continue;
             }
 
+        // Split on white space and commas for multiple tms object IDs
         $tms_object_id = preg_split('/[,\s]+/', $tms_object_id);
 
         if(is_array($tms_object_id)) {

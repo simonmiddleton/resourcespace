@@ -39,7 +39,7 @@ include "../../../include/header.php";
         <table class="ListviewStyle">
             <?php
             foreach ($tmsdata as $module_name => $module_tms_data) {
-                foreach ($module_tms_data as $index => $tms_object) {
+                foreach ($module_tms_data as $tms_object) {
                 ?>
                 <tr class="ListviewTitleStyle">
                     <th><?php echo escape($module_name); ?></th>
