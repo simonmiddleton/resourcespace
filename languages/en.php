@@ -3299,3 +3299,4 @@ $lang["user_pref_appearance_device"] = "Device default";
 $lang["team_resource_non_ingested_search"] = "View non-ingested resources";
 $lang['action_update_now'] = "Update now";
 $lang['errors'] = "Errors";
+$lang['error_savefirst'] = "Please save your changes";

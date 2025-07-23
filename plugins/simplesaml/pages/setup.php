@@ -218,6 +218,7 @@ config_boolean_field("simplesaml_check_idp_cert_expiry", $lang['simplesaml_check
         <div id='lastmetadataupdate' class='Fixed'><?php echo escape($lastupdatetext); ?></div>
         <input 
             type='submit' 
+            id='updatemetadata'
             name='updatemetadata'
             onclick='updateMetadata();return false;'
             value='<?php echo escape($lang['action_update_now']); ?>'
@@ -264,6 +265,12 @@ jQuery(document).ready(function() {
     jQuery("#simplesaml_rsconfig").change(function(event) {
         showhidesamlconfigs(jQuery(this).val());
     });
+    jQuery("#simplesaml_metadata_url").change(function(event) {
+        savefirsttext = '<?php echo escape($lang['error_savefirst']); ?>';
+        jQuery('#updatemetadata').attr('onclick','styledalert(errortext, savefirsttext);return false;')
+    });
+
+    
 });
 
 function updateMetadata()
