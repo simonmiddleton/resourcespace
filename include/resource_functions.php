@@ -6057,7 +6057,7 @@ function generate_resource_access_key($resource, $userref, $access, $expires, $e
 {
     global $username, $anonymous_login;
 
-    if (checkperm("noex") || (isset($anonymous_login) && $username == $anonymous_login)) {
+    if (checkperm("noex") || is_anonymous_user()) {
         // "noex" users shouldn't ever get here, but catch in case not already checked
         // also block anon users from generating keys as they're unneeded.
         return false;

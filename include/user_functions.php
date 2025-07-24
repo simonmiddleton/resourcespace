@@ -1785,6 +1785,13 @@ function check_access_key($resources, $key, $checkcollection = true)
         }
     }
 
+    $anon_sql = '';
+    $anon_params = [];
+    if (isset($anonymous_login) && trim($anonymous_login) !== '') {
+        $anon_sql    = ' AND u.username != ?';
+        $anon_params = ['s', $anonymous_login];
+    }
+
     $keys = ps_query(
         "
             SELECT k.user,
@@ -1799,10 +1806,9 @@ function check_access_key($resources, $key, $checkcollection = true)
             WHERE k.access_key = ?
                AND k.resource IN (" . ps_param_insert(count($resources)) . ")
                AND (k.expires IS NULL OR k.expires > now())
-               AND u.approved = 1
-               AND u.username != ?
+               AND u.approved = 1 {$anon_sql}
                ORDER BY k.access",
-        array_merge(array("s", $key), ps_param_fill($resources, "i"), array("s", $anonymous_login))
+        array_merge(array("s", $key), ps_param_fill($resources, "i"), $anon_params)
     );
 
     if (count($keys) == 0 || count(array_diff($resources, array_column($keys, "resource"))) > 0) {
@@ -1988,6 +1994,13 @@ function check_access_key_collection($collection, $key, $checkresource = true)
         return false;
     }
 
+    $anon_sql = '';
+    $anon_params = [];
+    if (isset($anonymous_login) && trim($anonymous_login) !== '') {
+        $anon_sql    = ' AND u.username != ?';
+        $anon_params = ['s', $anonymous_login];
+    }
+
     // Get key info
     $keyinfo = ps_query("
                     SELECT eak.user,
@@ -1999,13 +2012,8 @@ function check_access_key_collection($collection, $key, $checkresource = true)
                            eak.collection
                       FROM external_access_keys eak
                       LEFT JOIN user u ON eak.user = u.ref
-                     WHERE access_key = ?
-                       AND (expires IS NULL OR expires > now())", array("s", $key));
-
-    // Filter out keys belonging to anon users to reduce processing. 
-    $keyinfo = array_filter($keyinfo, function ($key) use ($anonymous_login){
-        return $key['username'] !== $anonymous_login;
-    });
+                     WHERE access_key = ? {$anon_sql}
+                       AND (expires IS NULL OR expires > now())", array_merge(array("s", $key), $anon_params));
 
     if (count($keyinfo) == 0) {
         return false;
@@ -3309,7 +3317,7 @@ function get_users_by_permission(array $permissions)
 function is_anonymous_user(): bool
 {
     global $anonymous_login, $username;
-    return isset($anonymous_login) && $username == $anonymous_login;
+    return isset($anonymous_login) && trim($anonymous_login) !== '' && $username == $anonymous_login;
 }
 
 /**
