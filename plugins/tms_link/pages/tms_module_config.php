@@ -134,7 +134,7 @@ include '../../../include/header.php';
             <div class="clearerleft"></div>
             </div>
             <?php
-            $tms_link_module_name = escape($lang["select"]);
+            $tms_link_module_name = $lang["select"];
         }
 
         render_dropdown_question(
