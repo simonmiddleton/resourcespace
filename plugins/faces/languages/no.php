@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Oppdagede ansikter';
 $lang["faces-detected-face"] = 'Oppdaget ansikt';
 $lang["faces-confidence"] = 'Tillit';

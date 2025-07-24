@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = '检测到的面孔';
 $lang["faces-detected-face"] = '检测到的面孔';
 $lang["faces-confidence"] = '信心';

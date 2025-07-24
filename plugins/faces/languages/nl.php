@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Gevonden gezichten';
 $lang["faces-detected-face"] = 'Gedetecteerd gezicht';
 $lang["faces-confidence"] = 'Vertrouwen';

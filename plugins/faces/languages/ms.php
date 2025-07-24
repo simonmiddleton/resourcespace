@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Wajah yang dikesan';
 $lang["faces-detected-face"] = 'Wajah dikesan';
 $lang["faces-find-matching"] = 'Cari wajah yang sepadan';
