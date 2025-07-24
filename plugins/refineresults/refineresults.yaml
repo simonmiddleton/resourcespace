@@ -4,5 +4,5 @@ author: Montala Limited
 version: 1.0
 desc: An option to refine search results, above the search result display.
 icon: fa fa-filter
-category: user interface
+category: User Interface
 info_url: https://www.resourcespace.com/knowledge-base/plugins/refine-results

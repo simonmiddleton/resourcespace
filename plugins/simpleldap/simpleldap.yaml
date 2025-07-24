@@ -6,6 +6,6 @@ desc    : User authentication via LDAP.
 icon    : fa fa-key
 icon-colour: goldenrod
 config_url: /plugins/simpleldap/pages/setup.php
-category: authentication
+category: Authentication
 disable_group_select: 1
 info_url: https://www.resourcespace.com/knowledge-base/plugins/simpleldap

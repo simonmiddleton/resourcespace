@@ -6,5 +6,5 @@ desc: Post-process the filename and save the newly processed value in a separate
 icon: fa fa-bars
 config_url: /plugins/custom_filename/pages/setup.php
 default_priority: 100
-category: asset processing
+category: Asset Processing
 disable_group_select: 1

@@ -6,4 +6,4 @@ desc    : Allows users to update their username, name and e-mail address.
 icon    : fa fa-cog
 icon-colour: silver
 config_url: /plugins/user_preferences/pages/setup.php
-category: User interface
+category: User Interface

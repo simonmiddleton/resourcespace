@@ -7,6 +7,6 @@ icon: fa fa-cookie
 icon-colour: #964B00
 config_url: /plugins/cookies_notification/pages/setup.php
 default_priority: 100
-category: asset processing
+category: Asset Processing
 disable_group_select: 1
 info_url: https://www.resourcespace.com/knowledge-base/plugins/cookie-notification

@@ -8,5 +8,5 @@ icon-colour: lightseagreen
 info_url: https://www.resourcespace.com/knowledge-base/plugins/antivirus
 config_url: /plugins/antivirus/pages/setup.php
 default_priority: 100
-category: asset processing
+category: Asset Processing
 disable_group_select: 1
