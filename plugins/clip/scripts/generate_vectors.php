@@ -19,11 +19,10 @@ global $mysql_db;
 $parameters = getopt('', ['limit:']);
 $limit = $parameters["limit"] ?? 10000;
 
-$count=clip_generate_missing_vectors($limit);
+$count = clip_generate_missing_vectors($limit);
 
-if ($count==0) {
-  echo "No resources needing vector update.\n";
+if ($count == 0) {
+    echo "No resources needing vector update.\n";
 } else {
-  echo "Done.\n";
+    echo "Done.\n";
 }
-

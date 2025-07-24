@@ -7,6 +7,6 @@ function HookClipAdmin_group_permissionsAdditionalperms()
     <th colspan=3 class="permheader"><?php echo escape($lang["clip-ai-smart-search"]); ?></th>
     </tr>
     <?php
-    DrawOption("clip-sb",$lang["clip_show_on_searchbar"],true);
-    DrawOption("clip-v",$lang["clip_show_on_view"],true);
+    DrawOption("clip-sb", $lang["clip_show_on_searchbar"], true);
+    DrawOption("clip-v", $lang["clip_show_on_view"], true);
 }

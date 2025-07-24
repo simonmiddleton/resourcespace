@@ -154,7 +154,9 @@ function HookClipAllSearch_pipeline_setup($search, $select, $sql_join, $sql_filt
 function HookClipAllSearchbarafterbuttons()
 {
     global $lang,$baseurl;
-    if (checkperm("clip-sb")) {return false;}
+    if (checkperm("clip-sb")) {
+        return false;
+    }
     ?>
     <p><i aria-hidden="true" class="fa fa-fw fa-brain"></i>&nbsp;<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl ?>/plugins/clip/pages/search.php"><?php echo escape($lang["clip-ai-smart-search"]) ?></a></p>
     <?php
@@ -177,9 +179,9 @@ function HookClipAllAfterpreviewcreation(int $resource, int $alternative, bool $
 {
     global $clip_vector_on_upload,$lang,$clip_resource_types;
 
-    $resource_type=get_resource_data($resource)["resource_type"];
+    $resource_type = get_resource_data($resource)["resource_type"];
 
-    if ($alternative === -1 && $clip_vector_on_upload && in_array($resource_type,$clip_resource_types)) {
+    if ($alternative === -1 && $clip_vector_on_upload && in_array($resource_type, $clip_resource_types)) {
         // Nothing to do for alternatives; face processing is for the main file only.
         // Detect images on upload if configured
         set_processing_message($lang["clip-generating"] . " " . $resource);

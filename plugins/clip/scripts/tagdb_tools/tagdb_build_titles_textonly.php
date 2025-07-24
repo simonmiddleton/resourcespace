@@ -13,11 +13,11 @@ ob_implicit_flush(true);
 
 // Blank file
 file_put_contents("titles_textonly.tagdb", "");
-$prefix="A photo of a ";
+$prefix = "A photo of a ";
 
 // Assuming field8 is OK - this is just a dev tool to build the .tagdb file hosted on the ResourceSpace website.
 $titles = ps_array("select distinct field8 value from resource");
-$c=0;
+$c = 0;
 foreach ($titles as $title) {
     $c++;
     if (!preg_match('/^[a-zA-Z -]+$/', $title)) {
@@ -33,5 +33,4 @@ foreach ($titles as $title) {
     file_put_contents("titles_textonly.tagdb", urlencode($title) . " " . implode(' ', array_map('strval', $vector)) . "\n", FILE_APPEND | LOCK_EX);
 
     echo vector_visualise($vector) . " (" . $c . "/" . count($titles) . ")\n";
-
 }

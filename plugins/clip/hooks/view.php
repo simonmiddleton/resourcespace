@@ -2,7 +2,9 @@
 function HookClipViewCustompanels()
 {
     global $lang,$ref,$baseurl,$clip_service_url,$mysql_db;
-    if (checkperm("clip-v")) {return false;}
+    if (checkperm("clip-v")) {
+        return false;
+    }
 
     $vectors = ps_value("select count(*) value from resource_clip_vector where resource=?", ["i",$ref], 0);
     if ($vectors == 0) {

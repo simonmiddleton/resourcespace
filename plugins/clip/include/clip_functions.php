@@ -113,7 +113,9 @@ function clip_generate_vector($ref)
         return false;
     }
     $vector = get_vector(false, $image_path, $ref);
-    if ($vector === false) { return false; } // Stop processing if issue with FastAPI server
+    if ($vector === false) {
+        return false;
+    } // Stop processing if issue with FastAPI server
 
     // Store vector in DB
     $vector = array_map('floatval', $vector); // ensure float values
@@ -134,7 +136,9 @@ function clip_generate_vector($ref)
         $frame_number++;
 
         $vector = get_vector(false, $snapshot, $ref);
-        if ($vector === false) { return false; } // Stop processing if issue with FastAPI server
+        if ($vector === false) {
+            return false;
+        } // Stop processing if issue with FastAPI server
         // Store vector in DB
         $vector = array_map('floatval', $vector); // ensure float values
         $blob = pack('f*', ...$vector);
@@ -143,9 +147,8 @@ function clip_generate_vector($ref)
             "INSERT INTO resource_clip_vector (resource, vector_blob, frame_number, checksum, is_text) VALUES (?, ?, ?, ?, false)",
             ['i', $ref, 's', $blob, 'i', $frame_number, 's', $checksum]
         ); // Note the blob must be inserted as 's' type as ps_query() does not correctly handle 'b' yet (send_long_data() is needed)
-        
+
         logScript("✓ Video snapshot vector stored for resource $ref frame $frame_number [" . vector_visualise($vector) . "] length: " . count($vector) . ", blob size: " . strlen($blob));
-        
     }
     return true; // Vector processing complete.
 }
@@ -178,7 +181,7 @@ function clip_tag(int $resource)
     global $clip_service_url, $mysql_db, $clip_keyword_field, $clip_keyword_url, $clip_keyword_count, $clip_title_field, $clip_title_url;
     $clip_service_call = $clip_service_url . "/tag";
 
-    logScript ("Calling CLIP service at $clip_service_call to tag resource $resource");
+    logScript("Calling CLIP service at $clip_service_call to tag resource $resource");
 
     if (is_numeric($clip_keyword_field) && $clip_keyword_field > 0) {
         // Keywords
@@ -199,17 +202,19 @@ function clip_tag(int $resource)
                 'top_k' => $clip_keyword_count,
         ]);
         $response = curl_exec($ch);
-        logScript ("CLIP service response: " . $response);
+        logScript("CLIP service response: " . $response);
         curl_close($ch);
 
-        if (strlen($response)==0) { return false; } // CLIP server unresponsive
+        if (strlen($response) == 0) {
+            return false;
+        } // CLIP server unresponsive
 
         foreach (json_decode($response) as $result) {
             # Create new or fetch existing node
             $nodes[] = set_node(null, $clip_keyword_field, ucfirst($result->tag), null, 9999);
         }
         add_resource_nodes($resource, $nodes);
-        logScript ("CLIP suggested keywords resolved to nodes: " . join(", ", $nodes));
+        logScript("CLIP suggested keywords resolved to nodes: " . join(", ", $nodes));
     }
 
     if (is_numeric($clip_title_field) && $clip_title_field > 0) {
@@ -232,7 +237,7 @@ function clip_tag(int $resource)
 
         $title = urldecode(json_decode($response)[0]->tag);
         update_field($resource, $clip_title_field, $title);
-        logScript ("CLIP suggested title: " . $title);
+        logScript("CLIP suggested title: " . $title);
     }
 
     return true;
@@ -244,7 +249,9 @@ function clip_generate_missing_vectors($limit)
     global $clip_resource_types;
 
     // Ensure only one instance of this.
-    if (is_process_lock(__FUNCTION__)) {return false;}
+    if (is_process_lock(__FUNCTION__)) {
+        return false;
+    }
     set_process_lock(__FUNCTION__);
 
     $sql = "
@@ -260,7 +267,7 @@ function clip_generate_missing_vectors($limit)
         ORDER BY r.ref ASC
         LIMIT ?";
 
-    $resources = ps_array($sql, array_merge(ps_param_fill($clip_resource_types, "i"),array('i', (int) $limit)));
+    $resources = ps_array($sql, array_merge(ps_param_fill($clip_resource_types, "i"), array('i', (int) $limit)));
 
     foreach ($resources as $resource) {
         clip_generate_vector($resource);
@@ -272,21 +279,23 @@ function clip_generate_missing_vectors($limit)
 
 
 /**
- * Returns a count of vectors in the system 
- * 
+ * Returns a count of vectors in the system
+ *
  * @return int The total
  */
-function clip_count_vectors() {
-    return ps_value("SELECT count(*) value from resource_clip_vector ", [],0);
+function clip_count_vectors()
+{
+    return ps_value("SELECT count(*) value from resource_clip_vector ", [], 0);
 }
 
 
 /**
  * Returns a count of vectors missing
- * 
+ *
  * @return int The total
  */
-function clip_missing_vectors() {
+function clip_missing_vectors()
+{
     global $clip_resource_types;
     $sql = "
     SELECT count(*) value
@@ -299,17 +308,18 @@ function clip_missing_vectors() {
     AND 
         (v_image.checksum IS NULL OR v_image.checksum != r.file_checksum)";
 
-    return ps_value($sql, ps_param_fill($clip_resource_types, "i"),0);
+    return ps_value($sql, ps_param_fill($clip_resource_types, "i"), 0);
 }
 
 
 /**
  * Removes orphaned vectors - those that do not have a valid resource specified either because the resource has been removed or because
  * the list of resource types for which vectors are created has been changed.
- * 
+ *
  * @return void
  */
-function clip_vector_cleanup() {
+function clip_vector_cleanup()
+{
     global $clip_resource_types;
-    ps_query("delete from resource_clip_vector where resource not in (select ref from resource where resource_type in (" . ps_param_insert(count($clip_resource_types)) . "))",ps_param_fill($clip_resource_types, "i"));
+    ps_query("delete from resource_clip_vector where resource not in (select ref from resource where resource_type in (" . ps_param_insert(count($clip_resource_types)) . "))", ps_param_fill($clip_resource_types, "i"));
 }
