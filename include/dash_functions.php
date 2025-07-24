@@ -2194,7 +2194,8 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
                 let tile_corner_box = jQuery('div#' + TILE_ID + ' p.tile_corner_box');
 
                 if (SHOW_RESOURCE_COUNT) {
-                    tile_corner_box.append(response.count);
+                    tile_corner_box.find('.DisplayResourceCount').remove();
+                    tile_corner_box.append(`<span class="DisplayResourceCount">${response.count}</span>`);
                     tile_corner_box.removeClass('DisplayNone');
                 } else if(response.count == 0) {
                     jQuery('div#' + TILE_ID + ' p.no_resources').removeClass('DisplayNone');
