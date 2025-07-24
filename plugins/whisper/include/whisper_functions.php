@@ -49,7 +49,7 @@ function whisper_process_unprocessed() {
  * @param   int     $resource The resource ID to process.
  * @return  bool    True on successful processing, false if any step fails.
  */
-function whisper_process($resource)
+function whisper_process(int $resource): bool
     {
     global $lang, $whisper_prompt, $whisper_field, $whisper_subtitles, $whisper_transcript;
 
