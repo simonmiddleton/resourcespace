@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Konfigurasi Whisper';
 $lang["whisper_field"] = 'Medan untuk menyimpan teks yang diekstrak - kandungan akan ditimpa jadi sediakan medan baru khusus untuk fungsi ini';
 $lang["whisper_extensions"] = 'Sambungan fail untuk diproses';

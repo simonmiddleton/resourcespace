@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Fısıldama Yapılandırması';
 $lang["whisper_field"] = 'Çıkarılan metni depolamak için alan - içerikler üzerine yazılacak, bu işlev için özel olarak yeni bir alan oluşturun';
 $lang["whisper_extensions"] = 'İşlenecek dosya uzantıları';

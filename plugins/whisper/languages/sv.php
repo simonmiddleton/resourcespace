@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Viska Konfiguration';
 $lang["whisper_field"] = 'Fältet där den extraherade texten ska lagras - innehållet kommer att skrivas över så skapa ett nytt fält specifikt för denna funktion';
 $lang["whisper_extensions"] = 'Filändelser att bearbeta';

@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Hviskerkonfigurasjon';
 $lang["whisper_field"] = 'Feltet der den utdragne teksten skal lagres - innholdet vil bli overskrevet, så opprett et nytt felt spesifikt for denne funksjonen';
 $lang["whisper_extensions"] = 'Filtyper å behandle';

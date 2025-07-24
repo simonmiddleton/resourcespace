@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = '속삭임 구성';
 $lang["whisper_field"] = '추출된 텍스트를 저장할 필드 - 내용이 덮어씌워지므로 이 기능을 위해 특별히 새로운 필드를 설정하십시오';
 $lang["whisper_extensions"] = '처리할 파일 확장자';

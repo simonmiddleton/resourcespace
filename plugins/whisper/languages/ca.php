@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Configuració de Whisper';
 $lang["whisper_field"] = 'El camp on emmagatzemar el text extret - el contingut serà sobreescrit, així que configureu un nou camp específicament per a aquesta funció';
 $lang["whisper_extensions"] = 'Extensions de fitxer a processar';

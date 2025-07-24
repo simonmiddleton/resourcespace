@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Konfiguracja Whisper';
 $lang["whisper_field"] = 'Pole, w którym należy przechowywać wyodrębniony tekst - zawartość zostanie nadpisana, więc utwórz nowe pole specjalnie do tej funkcji';
 $lang["whisper_extensions"] = 'Rozszerzenia plików do przetworzenia';

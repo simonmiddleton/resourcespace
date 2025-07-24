@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Configuração do Whisper';
 $lang["whisper_field"] = 'O campo no qual armazenar o texto extraído - o conteúdo será sobrescrito, então configure um novo campo especificamente para esta função';
 $lang["whisper_extensions"] = 'Extensões de arquivo a processar';

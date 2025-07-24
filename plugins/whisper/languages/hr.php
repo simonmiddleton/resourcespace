@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Konfiguracija šapta';
 $lang["whisper_field"] = 'Polje u kojem će se pohraniti izvučeni tekst - sadržaj će biti prepisan, stoga postavite novo polje posebno za ovu funkciju';
 $lang["whisper_extensions"] = 'Ekstenzije datoteka za obradu';

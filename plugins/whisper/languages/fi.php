@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Kuiskauksen asetukset';
 $lang["whisper_field"] = 'Kenttä, johon tallennetaan purettu teksti - sisältö korvataan, joten määritä uusi kenttä erityisesti tätä toimintoa varten';
 $lang["whisper_extensions"] = 'Tiedostopäätteet käsiteltäväksi';

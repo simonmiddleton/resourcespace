@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Mipangilio ya Whisper';
 $lang["whisper_field"] = 'Uwanja wa kuhifadhi maandiko yaliyotolewa - maudhui yatabadilishwa hivyo weka uwanja mpya mahsusi kwa ajili ya kazi hii';
 $lang["whisper_extensions"] = 'Upanuzi wa faili wa kushughulikia';

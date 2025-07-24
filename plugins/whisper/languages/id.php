@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Konfigurasi Whisper';
 $lang["whisper_field"] = 'Bidang untuk menyimpan teks yang diekstrak - konten akan ditimpa jadi siapkan bidang baru khusus untuk fungsi ini';
 $lang["whisper_extensions"] = 'Ekstensi file untuk diproses';

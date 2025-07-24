@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Configurare Whisper';
 $lang["whisper_field"] = 'Câmpul în care să stocați textul extras - conținutul va fi suprascris, așa că configurați un nou câmp special pentru această funcție';
 $lang["whisper_extensions"] = 'Extensii de fișiere de procesat';

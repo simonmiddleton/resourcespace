@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Konfigurácia Whisper';
 $lang["whisper_field"] = 'Pole, v ktorom sa má uložiť extrahovaný text - obsah bude prepísaný, preto nastavte nové pole špecificky pre túto funkciu';
 $lang["whisper_extensions"] = 'Prípony súborov na spracovanie';

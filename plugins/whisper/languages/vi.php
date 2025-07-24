@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Cấu hình Whisper';
 $lang["whisper_field"] = 'Trường để lưu trữ văn bản đã trích xuất - nội dung sẽ bị ghi đè nên hãy thiết lập một trường mới dành riêng cho chức năng này';
 $lang["whisper_extensions"] = 'Các định dạng tệp để xử lý';

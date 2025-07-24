@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Flüsteren Configuratie';
 $lang["whisper_field"] = 'Het veld waarin de geëxtraheerde tekst moet worden opgeslagen - de inhoud zal worden overschreven, dus stel een nieuw veld in dat specifiek voor deze functie is bedoeld';
 $lang["whisper_extensions"] = 'Bestandsextensies om te verwerken';

@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Gosodiad Sibrwd';
 $lang["whisper_field"] = 'Y maes i storio\'r testun a dynnwyd - bydd y cynnwys yn cael ei droswriteg felly sefydlwch faes newydd yn benodol ar gyfer y swyddogaeth hon';
 $lang["whisper_extensions"] = 'Estyniadau ffeil i brosesu';

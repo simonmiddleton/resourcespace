@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Pagsasaayos ng Whisper';
 $lang["whisper_field"] = 'Ang larangan kung saan itatago ang nakuha na teksto - ang nilalaman ay mapapalitan kaya\'t mag-set up ng bagong larangan na partikular para sa function na ito';
 $lang["whisper_extensions"] = 'Mga extension ng file na iproseso';

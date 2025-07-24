@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'Suttogás konfiguráció';
 $lang["whisper_field"] = 'A mező, amelybe a kinyert szöveget tárolni kell - a tartalom felül lesz írva, ezért hozzon létre egy új mezőt kifejezetten ehhez a funkcióhoz';
 $lang["whisper_extensions"] = 'Feldolgozandó fájlkiterjesztések';

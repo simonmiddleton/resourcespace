@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["whisper_configuration"] = 'ウィスパー設定';
 $lang["whisper_field"] = '抽出されたテキストを保存するためのフィールド - 内容は上書きされるため、この機能専用の新しいフィールドを設定してください';
 $lang["whisper_extensions"] = '処理するファイル拡張子';
