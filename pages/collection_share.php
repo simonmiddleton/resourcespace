@@ -421,7 +421,7 @@ if (isset($show_error)) { ?>
                             ?>  
                             <p><?php echo escape($lang['generateurlexternal']); ?></p>
                             <p>
-                                <input class="URLDisplay" type="text" value="<?php echo generateURL($baseurl, $url_params);; ?>">
+                                <input class="URLDisplay" type="text" value="<?php echo generateURL($baseurl, $url_params); ?>">
                             </p>
                             <?php
                         } else {

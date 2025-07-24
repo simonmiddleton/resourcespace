@@ -1800,14 +1800,10 @@ function check_access_key($resources, $key, $checkcollection = true)
                AND k.resource IN (" . ps_param_insert(count($resources)) . ")
                AND (k.expires IS NULL OR k.expires > now())
                AND u.approved = 1
+               AND u.username != ?
                ORDER BY k.access",
-        array_merge(array("s", $key), ps_param_fill($resources, "i"))
+        array_merge(array("s", $key), ps_param_fill($resources, "i"), array("s", $anonymous_login))
     );
-
-    // Filter out keys belonging to anon users to reduce processing. 
-    $keys = array_filter($keys, function ($key) use ($anonymous_login){
-        return $key['username'] !== $anonymous_login;
-    });
 
     if (count($keys) == 0 || count(array_diff($resources, array_column($keys, "resource"))) > 0) {
         // Check if this is a request for a resource uploaded to an upload_share
