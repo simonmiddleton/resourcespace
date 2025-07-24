@@ -829,7 +829,7 @@ function HookSimplesamlAllCron()
         return false;
     }
     $simplesamlconfig['metadata'] = $storedsamlconfig;
-    $errormessage = get_sysvar("saml_idp_metadata_error");
+    $errormessage = get_sysvar("saml_idp_metadata_error", '');
 
     // Check when last updated
     $lastupdate = get_sysvar("saml_idp_metadata_last_updated");
