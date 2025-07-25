@@ -364,7 +364,7 @@ function newlines($text)
  */
 function get_all_site_text($findpage = "", $findname = "", $findtext = "")
 {
-    global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;
+    global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder, $language;
 
     $findname = trim($findname);
     $findpage = trim($findpage);
@@ -375,8 +375,10 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
     // en should always be included as it is the fallback language of the system
     $search_languages = array('en');
 
-    if ('en' != $defaultlanguage) {
-        $search_languages[] = $defaultlanguage;
+    if ('en' == $language) {
+        $search_languages = array('en');
+    } else {
+        $search_languages = array($language, 'en');
     }
 
     // When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
@@ -494,7 +496,8 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
     $unique_returned_records = array();
     $existing_lang_names     = array();
     $i                       = 0;
-    foreach (array_reverse($return) as $returned_record) {
+
+    foreach ($return as $returned_record) {
         if (!in_array($returned_record['name'], $existing_lang_names)) {
             $existing_lang_names[$i]     = $returned_record['name'];
             $unique_returned_records[$i] = $returned_record;
@@ -503,7 +506,7 @@ function get_all_site_text($findpage = "", $findname = "", $findtext = "")
         $i++;
     }
     // Reverse again so that the default language appears first in results
-    return array_values(array_reverse($unique_returned_records));
+    return array_values($unique_returned_records);
 }
 
 /**
@@ -2218,7 +2221,7 @@ function error_alert($error, $back = true, $code = 403)
 }
 
 /**
- * When displaying metadata, applies trim/wordwrap/highlights.
+ * When displaying metadata, applies trim/wordwrap.
  *
  * @param  string $value
  * @return string
@@ -2237,8 +2240,6 @@ function format_display_field($value)
     } else {
         $string = escape($string);
     }
-
-    $string = highlightkeywords($string, $search, $df[$x]['partial_index'], $df[$x]['name'], $df[$x]['indexed']);
 
     return $string;
 }
@@ -3771,7 +3772,8 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
                 if (!in_array($attribute->nodeName, $allowed_attributes)) {
                     $tag->removeAttribute($attribute->nodeName);
                 } elseif (
-                    preg_match_all(
+                    in_array($attribute->nodeName, ['src', 'href', 'action', 'onmouseover', 'style'])
+                    && preg_match_all(
                         // Check for dangerous URI (lookalikes)
                         '/[a-zA-Z][a-zA-Z\d+\-.]*:(\/\/)?[^\s]+/im',
                         $attribute->value,
@@ -4753,7 +4755,7 @@ function get_system_status(bool $basic = false)
             $exclude_params = array_merge($exclude_params, ps_param_fill($exclude_types, "i"));
         }
         if (count($GLOBALS["file_integrity_ignore_states"]) > 0) {
-            $exclude_sql[] = "resource_type NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
+            $exclude_sql[] = "archive NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
             $exclude_params = array_merge($exclude_params, ps_param_fill($GLOBALS["file_integrity_ignore_states"], "i"));
         }
         $failedquery = "SELECT COUNT(*) value FROM resource WHERE ref>0 AND integrity_fail=1 AND no_file=0"
@@ -4944,6 +4946,12 @@ function get_system_status(bool $basic = false)
         'non_ingested' => get_non_ingested_resources(),        
     ];
 
+    // Return last API access
+    $return['results']['last_api_access'] = [
+        'status' => 'OK',
+        'info' => get_sysvar("last_api_access")
+    ];
+
     // Return bandwidth usage last 30 days
     $return['results']['download_bandwidth_last_30_days_gb'] = [
         'status' => 'OK',
@@ -4960,6 +4968,67 @@ function get_system_status(bool $basic = false)
         'status' => 'OK',
         'total' => ps_query("select file_extension,count(*) `count`,round(sum(disk_usage)/power(1024,3),2) disk_usage_gb from resource where length(file_extension)>0 group by file_extension order by `count` desc;", [])
     ];
+
+    // Debug log check
+    if (isset($GLOBALS['debug_log']) && $GLOBALS['debug_log']) {
+
+        $debug_log_sysvar = get_sysvar("debug_log_enabled");
+
+        if (!$debug_log_sysvar) {
+            // Add debug_log_enabled sysvar
+            set_sysvar("debug_log_enabled", date('Y-m-d H:i:s'));
+        } else {
+            // Compare debug_log_enabled to current time
+            $debug_log_enabled_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $debug_log_sysvar);
+            $errors = DateTime::getLastErrors();
+            $date_parse_error  = ($debug_log_enabled_datetime === 0 
+                                    || (is_array($errors) && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)));
+
+            if (!$date_parse_error) {
+                $now = new DateTime();            
+                $seconds_elapsed = abs($now->getTimestamp() - $debug_log_enabled_datetime->getTimestamp());
+            } else {
+                $seconds_elapsed = false;
+            }   
+
+            if ($seconds_elapsed === false || $seconds_elapsed > $GLOBALS['debug_log_warning_duration']) {
+                // Debug logging has been switched on for too long or cannot be determined
+                $return['results']['debug_log'] = [
+                    'status'        => 'FAIL',
+                    'info'          => 'Debug Log is enabled - time',
+                    'severity'      => SEVERITY_WARNING,
+                    'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+                ];
+                ++$fail_tests;
+            } else {
+                // Debug logging duration OK - proceed to check filesize
+                $debug_log_location = $GLOBALS['debug_log_location'] ?? get_debug_log_dir() . '/debug.txt';
+
+                if (file_exists($debug_log_location)) {
+                    $debug_log_size = filesize_unlimited($debug_log_location);
+                } else {
+                    $debug_log_size = false;
+                }
+
+                if ($debug_log_size === false || $debug_log_size > $GLOBALS['debug_log_warning_size']) {
+                    // Debug log file size is too large or cannot be determined
+                    $return['results']['debug_log'] = [
+                        'status'        => 'FAIL',
+                        'info'          => 'Debug Log is enabled - size',
+                        'severity'      => SEVERITY_WARNING,
+                        'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+                    ];
+                    ++$fail_tests;
+                }
+
+            }
+        }
+
+    } else {
+        // debug_log has been switched off, blank the sysvar
+        set_sysvar("debug_log_enabled");
+    }
+
     // Check if plugins have any warnings
     $extra_checks = hook('extra_checks');
     if ($extra_checks !== false && is_array($extra_checks)) {
@@ -5486,6 +5555,19 @@ function validate_sort_value($val): bool
 }
 
 /**
+ * Input validation helper function to check that the field requested exists and is available for search ordering
+ * @param  mixed $val Field ref to be validated
+ */
+function validate_sort_field($val): bool
+{
+    if (substr($val, 0, 5) == "field") {
+            $val = substr($val, 5);
+    }
+
+    return is_positive_int_loose($val) && get_field($val) && in_array($val, $GLOBALS["sort_fields"]);
+}
+
+/**
  * Input validation helper function for a CSV of integers (mostly used for IDs).
  * @param mixed $val User input value to be validated
  */
@@ -5652,4 +5734,26 @@ function check_tinymce_toolbar(string $toolbar = ""): string
 function get_non_ingested_resources(): int
 {
     return ps_value("SELECT COUNT(*) value FROM resource WHERE file_path IS NOT NULL AND file_path <> ''", [], 0);
+}
+
+/**
+ * Return URL of the application favicon
+ *
+ * @return string  Favicon URL
+ */
+function get_favicon_url(): string
+{
+    global $header_favicon, $baseurl, $storageurl;
+
+    if ($header_favicon == '') {
+        $header_favicon = 'gfx/interface/favicon.png';
+    }
+
+    $favicon = "{$baseurl}/{$header_favicon}";
+
+    if (strpos($header_favicon, '[storage_url]') !== false) {
+        $favicon = str_replace('[storage_url]', $storageurl, $header_favicon);
+    }
+
+    return $favicon;
 }

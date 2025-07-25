@@ -575,7 +575,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                         // Title should already be present in $fields array, if not use get_data_by_field()
                         $idxtitle = array_search($title_field, array_column($fields, "resource_type_field"));
                         $resourcetitle = $idxtitle ? $fields[$idxtitle]["value"] : get_data_by_field($resource['ref'], $title_field);
-                        echo highlightkeywords(escape(i18n_get_translated($resourcetitle)), $search);
+                        echo escape(i18n_get_translated($resourcetitle));
                     }
                     ?>
                     &nbsp;
@@ -1349,6 +1349,17 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 <?php 
                                                 }
 
+                                            if (
+                                                resource_type_applicable_for_annotations($resource['resource_type'])
+                                                && canSeeAnnotationsFields() !== []
+                                            ) { ?>
+                                                <li>
+                                                    <a href="<?php echo generateURL("{$baseurl}/pages/annotate_pdf_config.php", $urlparams); ?>" onclick="return CentralSpaceLoad(this);">
+                                                        <?php echo "<i class='fa-solid fa-file-pdf'></i>&nbsp;" . escape($lang['annotate_pdf_sheet_tool']); ?>
+                                                    </a>
+                                                </li>
+                                            <?php }
+
                                             } /* End replaceresourceactions */ 
 
                                         hook("afterresourceactions", "", array($ref));
@@ -1427,11 +1438,12 @@ foreach ($pushed as $pushed_resource)
 
 function RenderPushedMetadata($resource, $field_data, $all_field_data)
     {
-    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access, $userpermissions, $upload_then_edit, $urlparams;
+    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $fields, $ref, $access, $userpermissions, $upload_then_edit, $urlparams;
     // Save currentt resource data
     $reset_ref          = $ref;
     $reset_access       = $access;
     $reset_fields_all   = $fields_all;
+    $reset_fields       = $fields;
 
     $ref                = $resource["ref"];
     if(!array_key_exists('hit_count', $resource))
@@ -1441,7 +1453,7 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     // Ensure that this pushed resource honours any resource type overrides
     resource_type_config_override($resource["resource_type"]);
 
-    $fields         = get_resource_field_data($ref,true,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
+    $fields         = isset($field_data[$ref]) ? $field_data[$ref] : get_resource_field_data($ref,true,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
     $fields_all     = isset($all_field_data[$ref]) ? $all_field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
     $access         = get_resource_access($resource);
     ?>
@@ -1461,6 +1473,7 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     $ref        = $reset_ref;
     $access     = $reset_access;
     $fields_all = $reset_fields_all;
+    $fields     = $reset_fields;
     }
 /*
 End of pushed metadata support
@@ -1655,12 +1668,12 @@ if($annotate_enabled)
     {
     ?>
     <!-- Annotorious -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css", ['v' => $css_reload_key]); ?>" />
+    <script src="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/annotorious.min.js", ['v' => $css_reload_key]); ?>"></script>
 
     <!-- Annotorious plugin(s) -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css", ['v' => $css_reload_key]); ?>" />
+    <script src="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js", ['v' => $css_reload_key]); ?>"></script>
     <?php
     if ($facial_recognition_active) {
         ?>

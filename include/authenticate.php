@@ -31,6 +31,9 @@ if (array_key_exists("user", $_COOKIE) || array_key_exists("user", $_GET) || iss
     } elseif (isset($anonymous_login)) {
         $username = $anonymous_login;
         $rs_session = get_rs_session_id(true);
+
+        // Always check the browser for anonymous access
+        browser_check();
     }
 
     if (!is_string($session_hash)) {
@@ -223,37 +226,7 @@ if (hook("replacesitetextloader")) {
     $site_text = hook("replacesitetextloader");
 } else {
     if (isset($usergroup)) {
-        // Fetch user group specific content.
-        $site_text_query = "
-				SELECT `name`,
-				       `text`,
-				       `page` 
-				  FROM site_text 
-				 WHERE language = ?
-				   AND specific_to_group = ?
-			";
-        $parameters = array
-            (
-            "s",$language,
-            "i",$usergroup
-            );
-
-        if ($pagename != "admin_content") { // Load all content on the admin_content page to allow management.
-            $site_text_query .= "AND (page = ? OR page = 'all' OR page = '' " .  (($pagename == "dash_tile") ? " OR page = 'home'" : "") . ")";
-            $parameters[] = "s";
-            $parameters[] = $pagename;
-        }
-
-        $results = ps_query($site_text_query, $parameters, "sitetext", -1, true, 0);
-
-        for ($n = 0; $n < count($results); $n++) {
-            if ($results[$n]['page'] == '') {
-                $lang[$results[$n]['name']] = $results[$n]['text'];
-                $customsitetext[$results[$n]['name']] = $results[$n]['text'];
-            } else {
-                $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
-            }
-        }
+        load_site_text_for_usergroup($usergroup);
     }
 }   /* end replacesitetextloader */
 

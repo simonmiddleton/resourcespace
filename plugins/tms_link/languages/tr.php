@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='Sistem hata ayıklama günlüğüne betik 
 $lang["plugin-tms_link-title"]='TMS Bağlantısı';
 $lang["plugin-tms_link-desc"]='[Gelişmiş] Kaynak meta verilerinin TMS veritabanından çıkarılmasına izin verir.';
 $lang["tms_link_uid_field_int"]='TMS Tam Sayı UID\'leri. Tam sayı olmayan UID\'lere izin vermek için false olarak ayarlayın.';
+$lang["tms_link_selected_module_missing"] = 'TMS modül adı şu anda "%%MODULE%%" olarak ayarlanmış, ancak bu mevcut bir seçenek değil. Aşağıdaki açılır seçenekleri gözden geçirin ve güncelleyin.';

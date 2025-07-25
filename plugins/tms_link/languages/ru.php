@@ -75,3 +75,4 @@ $lang["tms_link_write_to_debug_log"]='Включить прогресс скри
 $lang["plugin-tms_link-title"]='Ссылка TMS';
 $lang["plugin-tms_link-desc"]='[Расширенный] Позволяет извлекать метаданные ресурса из базы данных TMS.';
 $lang["tms_link_uid_field_int"]='TMS Целочисленные UID. Установите значение false, чтобы разрешить нецелочисленные UID.';
+$lang["tms_link_selected_module_missing"] = 'Имя модуля TMS в настоящее время установлено на "%%MODULE%%", но это не доступный вариант. Просмотрите варианты в выпадающем списке и обновите ниже.';

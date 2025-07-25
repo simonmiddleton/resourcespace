@@ -33,3 +33,8 @@
 #RSTagging-field-selector {
     width: 100%;
 }
+
+#RSTagging-author {
+    color: #eee;
+    text-align: end;
+}

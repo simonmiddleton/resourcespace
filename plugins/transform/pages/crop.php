@@ -252,9 +252,16 @@ $return_to_url = getval('return_to_url', '');
 
 $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
+$is_resource_template = resource_is_template($ref);
+
 if ($saveaction != '' && enforcePostRequest(false))
     {
     debug("[transform][pages/crop] save action triggered - $saveaction");
+
+    if ($is_resource_template && !in_array($saveaction, array('download', 'slideshow', 'alternative'))) {
+        exit(escape($lang['error-permissiondenied']));
+    }
+
     $imgactions["repage"] = $cropper_use_repage;
 
     // Get values from jcrop selection
@@ -1086,11 +1093,11 @@ renderBreadcrumbs($links_trail);
         {
         $saveactions["alternative"] = $lang['savealternative'];
         }
-    if($cropper_transform_original && !$cropperestricted)
+    if(!$is_resource_template && $cropper_transform_original && !$cropperestricted)
         {
         $saveactions["original"] = $lang['transform_original'];
         }
-    if($edit_access)
+    if(!$is_resource_template && $edit_access)
         {
         $saveactions["preview"] = $lang['useaspreviewimage'];
         }

@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV yükleme';
 $lang["csv_upload_intro"] = 'Bu eklenti, bir CSV dosyası yükleyerek kaynaklar oluşturmanıza veya güncellemenize olanak tanır. CSV formatı önemlidir';
-$lang["csv_upload_condition1"] = 'CSV dosyasının <b>UTF-8 BOM\'suz</b> kodlamasıyla olduğundan emin olun.';
 $lang["csv_upload_condition2"] = 'CSV\'nin bir başlık satırı olmalı';
 $lang["csv_upload_condition3"] = 'Kaynak dosyalarını daha sonra toplu değiştirme işlevini kullanarak yükleyebilmek için \'Orijinal dosya adı\' adında bir sütun olmalı ve her dosyanın benzersiz bir dosya adı olmalıdır.';
 $lang["csv_upload_condition4"] = 'Yeni oluşturulan kaynaklar için tüm zorunlu alanlar CSV\'de bulunmalıdır';
@@ -68,6 +67,7 @@ $lang["csv_upload_create_new_notes"] = 'Yeni kaynaklar oluşturmak için gerekli
 $lang["plugin-csv_upload-title"] = 'CSV Yükleme';
 $lang["plugin-csv_upload-desc"] = '[İleri] Meta verileri bir CSV dosyası kullanarak yükleyin.';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV dosyası BOM içeriyor, bu nedenle yüklenemiyor';
 $lang["csv_upload_check_file_error"] = 'CSV dosyası açılamıyor veya okunamıyor';
 $lang["csv_upload_check_utf_error"] = 'CSV dosyası geçerli bir UTF-8 değil. Satırda geçersiz karakter';
+$lang["csv_upload_condition1"] = 'CSV dosyasının <b>UTF-8</b> kullanılarak kodlandığından emin olun.';
+$lang["csv_upload_check_removebom"] = 'CSV dosyası, kaldırılamayan BOM içeriyor';

@@ -18,3 +18,4 @@ $lang["openai_gpt_processing_field"] = 'AI metaadat-generálás a \'[field]\' me
 $lang["property-gpt_source"] = 'GPT Source';
 $lang["openai_gpt_language"] = 'Kimeneti nyelv';
 $lang["openai_gpt_language_user"] = 'A jelenlegi felhasználó nyelve';
+$lang["openai_gpt_overwrite_data"] = 'Felülírja a meglévő adatokat a konfigurált mezőkben?';

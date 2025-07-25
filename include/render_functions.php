@@ -4460,9 +4460,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
             {
             debug('Include display_template');
             $value_for_url=$value;
-            # Highlight keywords
-            $value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
-            
+           
             $value_mod_after_highlight=hook('value_mod_after_highlight', '', array($field,$value));
             if($value_mod_after_highlight)
                 {
@@ -4508,9 +4506,6 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 {
                 debug('Draw this field normally...');
                 # Draw this field normally. - value has already been sanitized by htmlspecialchars
-                # Highlight keywords
-                $value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
-                
                 $value_mod_after_highlight=hook('value_mod_after_highlight', '', array($field,$value));
                 if($value_mod_after_highlight)
                     {
@@ -4740,13 +4735,13 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
  * @param  mixed $fordropdown
  * @return void
  */
-function display_size_option($sizeID, $sizeName, $fordropdown=true)
+function display_size_option($sizeID, $sizeName, $fordropdown=true, $selected=false)
     {
     global $available_sizes, $lang, $result;
     if(!hook('replace_display_size_option','',array($sizeID, $sizeName, $fordropdown))){
         if ($fordropdown)
             {
-            ?><option value="<?php echo escape($sizeID) ?>"><?php
+            ?><option value="<?php echo escape($sizeID) ?>" <?php echo ($selected) ? 'selected' : ''; ?>><?php
             echo $sizeName;
             }
         if(isset($available_sizes[$sizeID]))
@@ -4995,12 +4990,10 @@ function render_featured_collections(array $ctx, array $items)
                     "text" => $lang["add_to_dash"]);
                 }
 
-            if(checkperm("h"))
-                {
-                $render_ctx["tools"][] = array(
-                    "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                    "text" => $lang["share"]);
-                }
+            $render_ctx["tools"][] = array(
+                "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                "text" => $lang["share"]);
+
 
             if(!$fc_category_has_children && collection_readable($fc['ref']))
                 {
@@ -5154,24 +5147,15 @@ function render_featured_collection(array $ctx, array $fc)
          style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?> >
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
             <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+            <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
             <?php
             foreach($theme_images as $i => $theme_image)
                 {
-                $gap = 200 / count($theme_images);
-                $space = $i * $gap;
-                $style = array(
-                    "left: {$space}px;",
-                    "transform: rotate(" . (20 - ($i * 12)) . "deg);"
-                );
                 ?>
-                <img src="<?php echo $theme_image['path']; ?>" 
-                     alt="<?php echo escape($theme_image['alt_text'] ?? ""); ?>" 
-                     class="TileGroupImageBase" 
-                     style="<?php echo implode(" ", $style); ?>" >
+                <div class="FeaturedImageTile" style="background-image: url('<?php echo $theme_image['path']; ?>')"></div>
                 <?php
                 }
                 ?>
-                <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
             </div>
         </a>
     <?php
@@ -7236,14 +7220,13 @@ function render_resource_view_image(array $resource, array $context)
                 }
             }
 
-        if (canSeePreviewTools())
-            {
-            if ($GLOBALS["annotate_enabled"])
-                {
-                include_once '../include/annotation_functions.php';
-                }
-                ?>
+        if ($GLOBALS["annotate_enabled"]) {
+            include_once RESOURCESPACE_BASE_PATH . '/include/annotation_functions.php';
+        }
 
+        if (canSeePreviewTools($resource))
+            {
+            ?>
             <!-- Available tools to manipulate previews -->
             <div id="PreviewTools" >
                 <script>
@@ -7294,11 +7277,23 @@ function render_resource_view_image(array $resource, array $context)
                                 {
                                 anno.addPlugin('RSTagging',
                                     {
-                                    select              : '<?php echo escape($lang['annotate_select'])?>',
-                                    annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
+                                    annotations_endpoint: '<?php echo generateURL("{$GLOBALS['baseurl']}/pages/ajax/annotations.php", ['k' => $GLOBALS['k']]); ?>',
                                     nodes_endpoint      : '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/get_nodes.php',
                                     resource            : <?php echo (int) $resource["ref"]; ?>,
-                                    read_only           : <?php echo $edit_access ? 'false' : 'true'; ?>,
+                                    read_only: <?php
+                                        echo (
+                                            $edit_access
+                                            || (
+                                                !$edit_access
+                                                && $GLOBALS['annotate_text_adds_comment']
+                                                && !checkPermission_anonymoususer()
+                                            )
+                                        )
+                                            ? 'false'
+                                            : 'true';
+                                    ?>,
+                                    lang: <?php echo json_encode(get_annotorious_lang($lang)); ?>,
+                                    rs_config: <?php echo json_encode(get_annotorious_resourcespace_config()); ?>,
                                     // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                                     csrf_identifier: '<?php echo $GLOBALS["CSRF_token_identifier"]; ?>',
                                     <?php echo generateAjaxToken('RSTagging'); ?>

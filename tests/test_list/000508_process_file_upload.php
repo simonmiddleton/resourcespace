@@ -1,6 +1,7 @@
 <?php
 
 command_line_only();
+$disable_browser_check = true;
 
 // --- Set up
 $run_id = test_generate_random_ID(5);
@@ -251,8 +252,9 @@ $curl_post_file_response = function (string $file, array $processor = []) use ($
 };
 $test_endpoint_content = <<<EOT
 <?php
-
+\$disable_browser_check = true;
 include dirname(__DIR__, 3) . '/include/boot.php';
+
 
 if (getval('sign', '') !== '{$test_signature}') {
     exit;

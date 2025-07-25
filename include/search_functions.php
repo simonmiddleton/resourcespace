@@ -1342,7 +1342,9 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         }
 
         $select->sql = "DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, {$select->sql}";
-        $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r JOIN collection_resource c ON r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") [ORDER_BY_SQL] {$sql_suffix}";
+        $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r JOIN collection_resource c ON r.ref=c.resource " .
+        $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") [GROUP_BY_SQL] [ORDER_BY_SQL] {$sql_suffix}";
+
         $sql->parameters = array_merge($select->parameters, $colcustperm->parameters, ["i",$collection], $sql_filter->parameters);
 
         $collectionsearchsql = hook('modifycollectionsearchsql', '', array($sql));
@@ -1448,7 +1450,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
                     " WHERE colour_key LIKE ? " .
                         "OR  colour_key LIKE ? " .
                        "AND " . $sql_filter->sql .
-                       " [GROUP_BY_SQL] [ORDER_BY_SQL]"; 
+                       " [GROUP_BY_SQL] [ORDER_BY_SQL]";
 
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, ["s",$colour . "%","s","_" . $colour . "%"], $sql_filter->parameters);
         $searchsql = $sql_prefix . $sql->sql . $sql_suffix;
@@ -1618,7 +1620,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
                         break;
                     case "fmax":
                         // Need to convert MB value to bytes
-                        $propertiessql->sql .= $sql_filter_properties_and . " r.file_size <= ?";
+                        $propertiessql->sql .= $sql_filter_properties_and . " COALESCE(r.file_size, 0) <= ?";
                         array_push($propertiessql->parameters, "i", floatval($propertyval) * 1024 * 1024);
                         break;
                     case "fext":
@@ -1684,7 +1686,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         $select->sql = "DISTINCT r.hit_count score, {$select->sql}";
         $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " [GROUP_BY_SQL] [ORDER_BY_SQL] {$sql_suffix}";
         $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $sql_filter->parameters);
-    }  elseif (checkperm('a') && $search == "!noningested") {
+    } elseif (checkperm('a') && $search == "!noningested") {
         // System admins only - search for resources that have not been ingested - unfiltered
         $select->sql = "DISTINCT r.hit_count score, {$select->sql}";
         $sql->sql = $sql_prefix . "SELECT [SELECT_SQL] FROM resource r " . $sql_join->sql . " WHERE file_path IS NOT NULL AND file_path <> '' [GROUP_BY_SQL] [ORDER_BY_SQL] {$sql_suffix}";
@@ -1707,7 +1709,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
          - Last 23 days: !report18p0d23
          - Between 2000-01-06 & 2023-03-16: !report18p-1fy2000fm01fd06ty2023tm03td16
         */
-        debug('[search_special] Running a "!report" search...');        
+        debug('[search_special] Running a "!report" search...');
         $select->sql = "DISTINCT r.hit_count score, {$select->sql}";
         $no_results_sql = new PreparedStatementQuery(
             $sql_prefix . "SELECT [SELECT_SQL] FROM resource AS r "
@@ -1816,10 +1818,14 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
         ];
 
         $reducedselect = $select->sql;
-        foreach ($removecolumns as $removecolumn) {
-            $reducedselect = preg_replace("/(,\s?" . $removecolumn . ")/", "", $reducedselect);
+
+        // Only reduce columns if an sql prefix is not set, this is to ensure compatibility with any encapsulating query that might be present. I.e. disk usage
+        if (trim((string) $sql_prefix) == "") {
+            foreach ($removecolumns as $removecolumn) {
+                $reducedselect = preg_replace("/(,\s?" . $removecolumn . ")/", "", $reducedselect);
+            }
+            $reducedselect = preg_replace("/(,\s?r\\.field\\d+)/", "", $reducedselect); // remove any fieldXX columns from select
         }
-        $reducedselect = preg_replace("/(,\s?r\\.field\\d+)/", "", $reducedselect); // remove any fieldXX columns from select
 
         $reduced_sql = clone $sql;
         $reduced_sql->sql = str_replace(
@@ -1976,7 +1982,7 @@ function search_get_previews($search, $restypes = "", $order_by = "relevance", $
             if (!isset($resultset[$n]) || $resultset[$n] == 0) {
                 continue;
             }
-            
+
             $access = $resultset[$n]["resultant_access"] ?? get_resource_access($resultset[$n]);
 
             if ($access == 2) {
@@ -2333,183 +2339,6 @@ function add_partial_index($keywords)
     return $return;
 }
 
-/**
- * Highlights keywords in the given text based on the search query.
- *
- * This function scans the provided text for keywords specified in the search string
- * and wraps them in HTML markup to highlight them.
- *
- * @param string $text The text in which to highlight keywords.
- * @param string $search The search query containing keywords to highlight.
- * @param bool $partial_index Indicates whether partial indexing is used (default: false).
- * @param string $field_name Optional. The name of the field being searched.
- * @param int $keywords_index Indicates the indexing status of the field (default: 1).
- * @param int $str_highlight_options Options for highlighting (default: STR_HIGHLIGHT_SIMPLE).
- * @return string The text with highlighted keywords.
- */
-function highlightkeywords($text, $search, $partial_index = false, $field_name = "", $keywords_index = 1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
-{
-    global $noadd;
-    # do not highlight if the field is not indexed, so it is clearer where results came from.
-    if ($keywords_index != 1) {
-        return $text;
-    }
-
-    # Highlight searched keywords in $text
-    global $stemming;
-    # Situations where we do not need to do this.
-    if ($search == "" || $text == "") {
-        return $text;
-    }
-
-        # Generate the cache of search keywords (no longer global so it can test against particular fields.
-        # a search is a small array so I don't think there is much to lose by processing it.
-        $hlkeycache = array();
-        $s = split_keywords($search, false, false, false, false, false, true);
-    for ($n = 0; $n < count($s); $n++) {
-        if (strpos($s[$n], ":") !== false) {
-            $c = explode(":", $s[$n]);
-            // Only add field specific keywords
-            if ($field_name != "" && $c[0] == $field_name) {
-                $hlkeycache[] = $c[1];
-            }
-        } else {
-            // Add general keywords
-            $keyword = $s[$n];
-            if (in_array($keyword, $noadd)) { # skip common words that are excluded from indexing
-                continue;
-            }
-            if ($stemming && function_exists("GetStem")) { // Stemming enabled. Highlight any words matching the stem.
-                $keyword = GetStem($keyword);
-            }
-            if (strpos($keyword, "*") !== false) {
-                $keyword = str_replace("*", "", $keyword);
-            }
-            $hlkeycache[] = $keyword;
-        }
-    }
-    # Parse and replace.
-    return str_highlight($text, $hlkeycache, $str_highlight_options);
-}
-
-/**
- * Highlight the relevant text in a string
- *
- * @param  string $text         Text to search
- * @param  string $needle       Text to highlight
- * @param  int  $options        String highlight options - See include/definitions.php
- * @param  string $highlight    Optional custom highlight code
- * @return string
- */
-function str_highlight($text, $needle, $options = null, $highlight = null)
-{
-    $text = (string) $text;
-
-    # If search text contains HTML entities, convert the search phrase to allow matching of entities e.g. &amp;
-    if (htmlspecialchars_decode($text) != $text) {
-        if (is_array($needle)) {
-            $needle = array_map('escape', $needle);
-        } else {
-            $needle = escape($needle);
-        }
-    }
-
-    /*
-    this function requires that needle array does not contain any of the following characters: "(" ")"
-    */
-    $remove_from_needle = array("(", ")");
-    $needle = str_replace($remove_from_needle, "", $needle);
-    /*
-    Sometimes the text can contain HTML entities and can break the highlighting feature
-    Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string
-    */
-    $htmltext = htmlspecialchars_decode($text);
-    // If text contains HTML tags then ignore them
-    if ($htmltext != strip_tags($htmltext)) {
-        $options = $options & STR_HIGHLIGHT_STRIPLINKS;
-    }
-
-    # Thanks to Aidan Lister <aidan@php.net>
-    # Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
-    # As of 2020-09-07 code is now at https://github.com/aidanlister/code/blob/master/function.str_highlight.php
-    # The GitHub code repository README states: "The code resides entirely in the public domain."
-    # https://github.com/aidanlister/code
-
-    $text = str_replace("_", "♠", $text);// underscores are considered part of words, so temporarily replace them for better \b search.
-    $text = str_replace("#zwspace;", "♣", $text);
-
-    // Default highlighting. This used to use '<' and '>' characters as placeholders but now changed as they were being removed by strip_tags
-    if ($highlight === null) {
-        $highlight = '\(\1\)';
-    }
-
-    // Select pattern to use
-    if ($options & STR_HIGHLIGHT_SIMPLE) {
-        $pattern = '#(%s)#';
-        $sl_pattern = '#(%s)#';
-    } else {
-        $pattern = '#(?!<.*?)(%s)(?![^<>]*?>)#';
-        $sl_pattern = '#<a\s(?:.*?)>(%s)</a>#';
-    }
-
-    // Case sensitivity
-    if (!($options & STR_HIGHLIGHT_CASESENS)) {
-        $pattern .= 'i';
-        $sl_pattern .= 'i';
-    }
-
-    $needle = (array) $needle;
-
-    usort($needle, "sorthighlights");
-
-    foreach ($needle as $needle_s) {
-        if (strlen($needle_s) > 0) {
-            $needle_s = preg_quote($needle_s, "#");
-
-            // Escape needle with optional whole word check
-            if ($options & STR_HIGHLIGHT_WHOLEWD) {
-                $needle_s = '\b' . $needle_s . '\b';
-            }
-
-            // Strip links
-            if ($options & STR_HIGHLIGHT_STRIPLINKS) {
-                $sl_regex = sprintf($sl_pattern, $needle_s);
-                $text = preg_replace($sl_regex, '\1', $text);
-            }
-
-            $regex = sprintf($pattern, $needle_s);
-            $text = preg_replace($regex, $highlight, $text);
-        }
-    }
-    $text = str_replace("♠", "_", $text);
-    $text = str_replace("♣", "#zwspace;", $text);
-
-    # Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
-    $text = str_replace("\(", '<span class="highlight">', $text);
-    $text = str_replace("\)", '</span>', $text);
-    return $text;
-}
-
-/**
- * Comparison function for sorting highlights by their length.
- *
- * This function is used to sort keyword highlights for the `str_highlight` function.
- * It ensures that keywords are sorted based on their length, with shorter keywords
- * coming before longer ones. If the lengths are equal, it sorts them alphabetically.
- *
- * This fixes an odd problem for str_highlight related to the order of keywords.
- *
- * @param string $a The first string to compare.
- * @param string $b The second string to compare.
- * @return int Returns 0 if lengths are equal, -1 if $a is shorter than $b, and 1 if $a is longer than $b.
- */
-function sorthighlights($a, $b)
-{
-    if (strlen($a) < strlen($b)) {
-        return 0;
-    }
-    return ($a < $b) ? -1 : 1;
-}
 
 /**
  * Suggests complete existing keywords based on a partial search term.
@@ -2681,7 +2510,7 @@ function get_simple_search_fields()
     global $FIXED_LIST_FIELD_TYPES, $country_search;
 
     # First get all the fields
-    $allfields = get_resource_type_fields("", "global,order_by");
+    $allfields = get_resource_type_fields("", "order_by");
 
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
@@ -3379,6 +3208,8 @@ function log_keyword_usage($keywords, $search_result)
  */
 function set_search_order_by(string $search, string $order_by, string $sort): string
 {
+    global $lang;
+
     if (!validate_sort_value($sort)) {
         $sort = 'asc';
     }
@@ -3432,8 +3263,8 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
 
     # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
     if (!in_array($order_by, $order) && (substr($order_by, 0, 5) == "field")) {
-        if (!is_numeric(str_replace("field", "", $order_by))) {
-            exit("Order field incorrect.");
+        if (!validate_sort_field(substr($order_by, 5))) {
+            exit($lang['error_invalid_input'] . ":- <pre>order_by : " . escape($order_by) . "</pre>");
         }
         # If fieldx is being used this will be needed in the inner select to be used in ordering
         $GLOBALS["include_fieldx"] = true;

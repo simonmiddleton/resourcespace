@@ -124,12 +124,12 @@ $reports = ps_query("SELECT ref, `name`, support_non_correlated_sql FROM report 
                 <tr>
                     <td>
                         <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo str_highlight($report["ref"], escape($find), STR_HIGHLIGHT_SIMPLE); ?>
+                            <?php echo escape($report["ref"]); ?>
                         </a>
                     </td>
                     <td>
                         <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo str_highlight($report["name"], escape($find), STR_HIGHLIGHT_SIMPLE); ?>
+                            <?php echo escape($report["name"]); ?>
                         </a>
                     </td>
                     <td><?php echo escape($support_non_correlated_sql ? $lang['yes'] : $lang['no']); ?></td>

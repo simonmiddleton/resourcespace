@@ -2,7 +2,11 @@
 
 function HookEmbedslideshowCollection_shareExtra_share_options()
 {
-    global $ref,$lang,$baseurl,$embedslideshow_min_size,$embedslideshow_max_size, $embedslideshow_dynamic_size;
+    global $ref,$lang,$baseurl,$embedslideshow_min_size,$embedslideshow_max_size, $embedslideshow_dynamic_size, $anonymous_login, $username;
+
+    if (isset($anonymous_login) && $username == $anonymous_login) {
+        return false;
+    }
     ?>
     <li>
         <i aria-hidden="true" class="fa fa-fw fa-slideshare"></i>&nbsp;

@@ -86,7 +86,7 @@ $introtext = text("introtext");
 
                 <?php
                 if ($offline_job_queue) {
-                    $failedjobs = job_queue_get_jobs("", STATUS_ERROR, $userref);
+                    $failedjobs = job_queue_get_jobs("", STATUS_ERROR, (checkperm('a') ? 0 : $userref));
                     $failedjobcount = count($failedjobs);
                     echo "<li title='" . escape($lang['my_jobs-tooltip']) . "'>";
                     echo "<a id='user_jobs_link' href='" . generateURL("{$baseurl_short}pages/manage_jobs.php", ['job_user' => $userref]) . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . escape($lang['my_jobs']) . ($failedjobcount > 0 ? "&nbsp;<span class='FailedJobCountPill Pill'>" . escape($failedjobcount) . "</span>" : "") . "</a>";

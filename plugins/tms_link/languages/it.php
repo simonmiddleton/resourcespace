@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='Includi il progresso dello script nel regi
 $lang["plugin-tms_link-title"]='Collegamento TMS';
 $lang["plugin-tms_link-desc"]='Consente di estrarre i metadati delle risorse dal database TMS.';
 $lang["tms_link_uid_field_int"]='TMS Integer UIDs. Imposta su falso per consentire UIDs non interi.';
+$lang["tms_link_selected_module_missing"] = 'Il nome del modulo TMS è attualmente impostato su "%%MODULE%%" ma questa non è un\'opzione disponibile. Controlla le opzioni a discesa e aggiorna qui sotto.';

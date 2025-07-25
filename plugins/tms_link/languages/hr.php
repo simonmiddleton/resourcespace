@@ -75,3 +75,4 @@ $lang["tms_link_write_to_debug_log"]='Uključi napredak skripte u sistemski debu
 $lang["plugin-tms_link-title"]='TMS Veza';
 $lang["plugin-tms_link-desc"]='Omogućuje izdvajanje metapodataka resursa iz TMS baze podataka.';
 $lang["tms_link_uid_field_int"]='TMS Cjelobrojni UID-ovi. Postavite na false kako biste omogućili ne-cjelobrojne UID-ove.';
+$lang["tms_link_selected_module_missing"] = 'Naziv TMS modula trenutno je postavljen na "%%MODULE%%", ali to nije dostupna opcija. Pregledajte opcije u padajućem izborniku i ažurirajte u nastavku.';

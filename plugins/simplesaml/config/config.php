@@ -32,7 +32,7 @@ $simplesaml_multiple_email_notify = "";
 $simplesaml_authorisation_claim_name = '';
 $simplesaml_authorisation_claim_value = '';
 
-$simplesaml_rsconfig = false;
+$simplesaml_rsconfig = 2;
 $simplesaml_check_idp_cert_expiry = true;
 
 /*
@@ -68,3 +68,5 @@ $simplesaml_config_defaults = [
     'timezone' => null,
     'session.cookie.secure' => true,
 ];
+
+$simplesaml_metadata_url = "";

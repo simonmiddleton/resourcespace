@@ -7,5 +7,5 @@ author: Montala Limited
 version: 1.0
 config_url: /plugins/simplesaml/pages/setup.php
 info_url: https://www.resourcespace.com/knowledge-base/plugins/simplesaml
-category: authentication
+category: Authentication
 disable_group_select: 1

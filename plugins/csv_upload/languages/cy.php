@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'lwytho i fyny CSV';
 $lang["csv_upload_intro"] = 'Mae\'r ategyn hwn yn caniatáu i chi greu neu ddiweddaru adnoddau trwy uwchlwytho ffeil CSV. Mae fformat y CSV yn bwysig';
-$lang["csv_upload_condition1"] = 'Gwnewch yn siŵr bod y ffeil CSV wedi\'i chynnwys gan ddefnyddio <b>UTF-8 heb BOM</b>.';
 $lang["csv_upload_condition2"] = 'Mae\'n rhaid i\'r CSV gael rhestr benawd.';
 $lang["csv_upload_condition3"] = 'I fod yn gallu i uwchlwytho ffeiliau adnodd yn ddiweddarach gan ddefnyddio swyddogaeth disodli swp, dylai fod colofn o\'r enw \'Enw ffeil gwreiddiol\' a dylai pob ffeil gael enw ffeil unigryw.';
 $lang["csv_upload_condition4"] = 'Mae\'n rhaid i\'r holl faes gorfodol ar gyfer unrhyw adnoddau newydd a grëwyd fod yn bresennol yn y CSV';
@@ -66,6 +65,7 @@ $lang["csv_upload_force_offline"] = 'Gall y CSV mawr hwn gymryd amser hir i\'w b
 $lang["csv_upload_recommend_offline"] = 'Gall y CSV mawr hwn gymryd amser hir iawn i\'w brosesu. Argymhellir bod swyddi all-lein yn cael eu galluogi os oes angen i chi brosesu CSVs mawr';
 $lang["csv_upload_createdfromcsvupload"] = 'Creuodd o\'r plugin Uwchlwytho CSV';
 
-$lang["csv_upload_check_invalidbom"] = 'Mae gan y ffeil CSV BOM felly ni ellir ei llwytho.';
 $lang["csv_upload_check_file_error"] = 'Ni ellir agor nac darllen ffeil CSV';
 $lang["csv_upload_check_utf_error"] = 'Nid yw\'r ffeil CSV yn UTF-8 dilys. Cymeriad annilys ar linell';
+$lang["csv_upload_condition1"] = 'Gwnewch yn siŵr bod y ffeil CSV wedi\'i chynnwys gan ddefnyddio <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Mae gan y ffeil CSV BOM nad oedd yn bosibl ei ddileu';

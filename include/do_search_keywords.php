@@ -571,12 +571,12 @@ if ($keysearch) {
                                 if (
                                     substr($keyword, 0, 1) != "*"
                                     && strlen(trim($keyword, '*')) >= 3
-                                    && preg_match('/[-+@<>()]/', $keyword) !== 1
+                                    && preg_match('/[-+@<>().]/', $keyword) !== 1
                                 ) {
                                     // Use fulltext search as a preference, but not if
                                     // there is a leading wildcard
                                     // or the search is too short
-                                    // or the search contains any of +,-,@,<,>,(,)
+                                    // or the search contains any of +,-,@,<,>,(,),.
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
                                                 FROM resource_node rn[union_index]
@@ -585,6 +585,7 @@ if ($keysearch) {
                                                 . $union_restriction_clause->sql . ")
                                             GROUP BY resource " .
                                         ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
+                                    $keyword = "+" . $keyword;
                                 } elseif (
                                     preg_match('/\W/', str_replace("*", "", $keyword)) !== 1
                                 ) {
@@ -603,9 +604,16 @@ if ($keysearch) {
                                             GROUP BY resource ";
                                 } else {
                                     // Use RLIKE to search between word boundaries in the node names
-                                    $keyword = str_replace(".", "\\.", $keyword);
-                                    $keyword = str_replace("*", ".*", $keyword);
-                                    $keyword = "\\b" . $keyword . "\\b";
+                                    $keyword = preg_quote($keyword);
+                                    $keyword = str_replace('\*', '.*?', $keyword);
+                                    if (preg_match('/\w/', $keyword) === 0) {
+                                        // Use lookaheads/lookbehinds for boundary-like behavior when the keyword consists of non-word characters (e.g. ,, &, -)
+                                        // because \b only works for transitions between word characters (letters, digits, _) and non-word characters.
+                                        $keyword = "(?<!\w)" . $keyword . "(?!\w)";
+                                    } else {
+                                        $keyword = "\\b" . $keyword . "\\b";
+                                    }
+
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
                                                 FROM resource_node rn[union_index]

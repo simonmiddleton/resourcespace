@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'تم الكشف عن الوجوه';
 $lang["faces-detected-face"] = 'وجه تم اكتشافه';
 $lang["faces-confidence"] = 'ثقة';
@@ -16,3 +15,8 @@ $lang["faces-tag-on-upload"] = 'هل يجب وضع علامات على الوج�
 $lang["faces-detecting"] = 'جارٍ البحث عن الوجوه في المورد:';
 $lang["faces-tagging"] = 'تحديد الوجوه المكتشفة في المورد:';
 $lang["faces-confidence-threshold"] = 'عتبة ثقة الوجه: ما مدى ثقة النموذج في أنه قد وجد وجه إنسان؟ مقترح 70% (القيم التي تقل عن ذلك ستطابق الوجوه المحجوبة وغير الوجوه)';
+$lang["faces-oneface"] = 'يرجى اختيار خيار واحد فقط لكل وجه.';
+$lang["faces-show-view"] = 'عرض وظيفة الوجوه الذكية في صفحة العرض';
+$lang["faces_count_faces"] = 'إجمالي الوجوه المكتشفة';
+$lang["faces_count_missing"] = 'صور للمعالجة';
+$lang["faces-tag-field-not-set"] = 'حقل الوسم غير مُهيأ';

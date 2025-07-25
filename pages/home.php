@@ -50,9 +50,6 @@ foreach ($slideshow_files_holder as $slideshow_file) {
 if ($homeimages > 0) {
     ?>
     <script>
-        <?php if ($themes_show_background_image) { ?>
-            DeactivateSlideshow();
-        <?php } ?>  
 
         var SlideshowImages = new Array();
         var SlideshowCurrent = -1;

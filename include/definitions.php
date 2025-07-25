@@ -3,7 +3,7 @@
 define('RESOURCESPACE_BASE_PATH', dirname(__DIR__));
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 27);
+define('SYSTEM_UPGRADE_LEVEL', 28);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID')) {
@@ -404,11 +404,6 @@ DEFINE("MESSAGE_DEFAULT_TTL_SECONDS", 60 * 60 * 24 * 7);        // 7 days
 define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX', '!deprecated');
 define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE', "-1,,!deprecated\n");
 
-# For str_highlight ().
-define('STR_HIGHLIGHT_SIMPLE', 1);
-define('STR_HIGHLIGHT_WHOLEWD', 2);
-define('STR_HIGHLIGHT_CASESENS', 4);
-define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
 // ----------------------------------------------
 // DEPRECATED PARAMETERS
@@ -865,6 +860,7 @@ const API_NATIVE_WHITELIST = [
     'put_resource_data',
     'get_processing_message',
     'delete_resources_in_collection',
+    'checkperm',
     'faces_set_node',
     'update_field'
 ];
@@ -875,6 +871,14 @@ const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension'
 const SEVERITY_CRITICAL = 0;
 const SEVERITY_WARNING = 1;
 const SEVERITY_NOTICE = 2;
+
+// get_system_status() debug log warning config
+// Trigger a warning if debug log has been enabled over this duration
+// Default: 3 days (3 * 24 * 60 * 60 seconds)
+$debug_log_warning_duration = 3 * 24 * 60 * 60; 
+// Trigger a warning if debug log has exceeded this file size
+// Default: 50MB (50 * 1024 * 1024 bytes)
+$debug_log_warning_size = 50 * 1024 * 1024;
 
 // ------------ PREVIEW IMAGE STATUS CODES (the resource table has_image  column)  ----------
 const RESOURCE_PREVIEWS_NONE = 0;
@@ -891,6 +895,7 @@ const RESOURCE_PREVIEWS_MINIMAL = 2;
 # Normalizer::NFKC; Normalization Form KC (NFKC) - Compatibility Decomposition, followed by Canonical Composition
 # See https://www.php.net/manual/en/class.normalizer.php for more information
 $language_normalize_mapping = [
+    "en" => Normalizer::NFD,
     "fr" => Normalizer::NFD,
     "sv" => Normalizer::NFC,
 ];
@@ -935,6 +940,7 @@ $languages["hr"] = "Hrvatski"; # Croatian
 $languages["it"] = "Italiano"; # Italian
 $languages["jp"] = "日本語"; # Japanese
 $languages["ko"] = "한국어"; # Korean
+$languages["ms"] = "Bahasa Melayu"; # Malay
 $languages["nl"] = "Nederlands"; # Dutch
 $languages["no"] = "Norsk"; # Norwegian
 $languages["fa"] = "فارسی"; # Persian
@@ -948,6 +954,7 @@ $languages["sk"] = "Slovenčina"; # Slovak
 $languages["sv"] = "Svenska"; # Swedish
 $languages["sw"] = "Kiswahili"; # Swahili
 $languages["th"] = "ภาษาไทย"; # Thai
+$languages["tl"] = "Filipino"; # Filipino
 $languages["tr"] = "Türkçe"; # Turkish
 $languages["uk"] = "українська мова"; # Ukranian
 $languages["ur"] = "اُردُو"; # Urdu

@@ -2,8 +2,9 @@
 
 command_line_only();
 
-
-include_once dirname(__FILE__, 3) . '/include/annotation_functions.php';
+$web_root = dirname(__FILE__, 3);
+include_once "{$web_root}/include/annotation_functions.php";
+include_once "{$web_root}/include/comment_functions.php";
 
 // Set up
 $rtf_tags = create_resource_type_field('test_010402', 0, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST);
@@ -32,28 +33,39 @@ $annotorious_annotation = [
         ]
     ],
 ];
-$annotation_ref = createAnnotation($annotorious_annotation);
+$annotation_ref = createAnnotation($annotorious_annotation, []);
 
 $annotation = $annotorious_annotation;
 $annotation['tags'] = [$node_optionB];
 
-
-
 // Update tags but missing its ID
-if (updateAnnotation($annotation) !== false) {
+if (updateAnnotation($annotation, []) !== false) {
     echo 'updateAnnotation (no ref) - ';
     return false;
 }
 
-
 // Update tags for an existing annotation
 $annotation['ref'] = $annotation_ref;
-if (updateAnnotation($annotation) === false) {
+if (updateAnnotation($annotation, []) === false) {
     echo 'updateAnnotation - ';
     return false;
 }
 
-
+// Update a text (comment) annotation
+$annotorious_text_annotation = array_merge(
+    $annotorious_annotation,
+    [
+        'resource_type_field' => 0,
+        'tags' => [],
+        'text' => 'Init value',
+    ]
+);
+$annotorious_text_annotation['ref'] = createAnnotation($annotorious_text_annotation, []);
+$annotorious_text_annotation['text'] = 'Updated value';
+if (updateAnnotation($annotorious_text_annotation, [])) {
+    echo "Use case: Admins (can manage content) shoudn't update text annotations - ";
+    return false;
+}
 
 // Tear down
 unset($rtf_tags, $node_optionA, $node_optionB, $resource_ref, $annotorious_annotation, $annotation);

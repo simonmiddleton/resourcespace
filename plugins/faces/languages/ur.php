@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'پہچانی گئی چہرے';
 $lang["faces-detected-face"] = 'چہرہ دریافت ہوا';
 $lang["faces-confidence"] = 'اعتماد';
@@ -16,3 +15,8 @@ $lang["faces-tag-on-upload"] = 'کیا اپ لوڈ پر پہچانی گئی چہ
 $lang["faces-detecting"] = 'وسائل میں چہروں کی تلاش کر رہے ہیں:';
 $lang["faces-tagging"] = 'وسائل میں شناخت شدہ چہروں کی ٹیگنگ:';
 $lang["faces-confidence-threshold"] = 'چہرے کی اعتماد کی حد: ماڈل کو یہ کتنا یقین ہونا چاہیے کہ اس نے ایک انسانی چہرہ پایا ہے؟ تجویز کردہ 70% (اس سے کم کی قیمتیں چھپے ہوئے چہروں اور غیر چہروں سے ملیں گی)';
+$lang["faces-oneface"] = 'براہ کرم ہر چہرے کے لیے صرف ایک آپشن منتخب کریں۔';
+$lang["faces-show-view"] = 'دیکھنے کے صفحے پر AI Faces کی فعالیت دکھائیں۔';
+$lang["faces_count_faces"] = 'کل چہرے شناخت کیے گئے';
+$lang["faces_count_missing"] = 'پروسیس کرنے کے لیے تصاویر';
+$lang["faces-tag-field-not-set"] = 'ٹیگنگ کا میدان ترتیب نہیں دیا گیا۔';

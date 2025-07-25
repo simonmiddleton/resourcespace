@@ -1,4 +1,5 @@
 <?php
+$disable_browser_check = true;
 
 include "../include/boot.php";
 header('Content-Type: application/json');
@@ -81,6 +82,7 @@ if ($function != "login") {
             );
         }
         update_user_access(0, ["last_browser" => isset($_SERVER["HTTP_USER_AGENT"]) ? substr($_SERVER["HTTP_USER_AGENT"], 0, 250) : "API"]);
+        set_sysvar("last_api_access",date("Y-m-d H:i"));
     }
 }
 

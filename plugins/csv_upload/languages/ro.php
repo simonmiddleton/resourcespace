@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Încărcare CSV';
 $lang["csv_upload_intro"] = 'Acest plugin vă permite să creați sau să actualizați resurse prin încărcarea unui fișier CSV. Formatul CSV este important';
-$lang["csv_upload_condition1"] = 'Asigurați-vă că fișierul CSV este codificat folosind <b>UTF-8 fără BOM</b>';
 $lang["csv_upload_condition2"] = 'CSV-ul trebuie să aibă o linie antet';
 $lang["csv_upload_condition3"] = 'Pentru a putea încărca fișiere de resurse ulterior folosind funcționalitatea de înlocuire în lot, trebuie să existe o coloană numită "Numele original al fișierului" și fiecare fișier trebuie să aibă un nume unic';
 $lang["csv_upload_condition4"] = 'Toate câmpurile obligatorii pentru orice resursă nou creată trebuie să fie prezente în fișierul CSV';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Creat prin intermediul plugin-ului d
 $lang["plugin-csv_upload-title"] = 'Încărcare CSV';
 $lang["plugin-csv_upload-desc"] = 'Încărcați metadate folosind un fișier CSV.';
 
-$lang["csv_upload_check_invalidbom"] = 'Fișierul CSV are BOM, așa că nu poate fi încărcat';
 $lang["csv_upload_check_file_error"] = 'Fișierul CSV nu poate fi deschis sau citit';
 $lang["csv_upload_check_utf_error"] = 'Fișierul CSV nu este un UTF-8 valid. Caracter invalid pe linia';
+$lang["csv_upload_condition1"] = 'Asigurați-vă că fișierul CSV este codificat folosind <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'Fișierul CSV are BOM care nu a putut fi eliminat';

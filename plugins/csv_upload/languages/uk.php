@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Завантаження CSV';
 $lang["csv_upload_intro"] = 'Цей плагін дозволяє створювати або оновлювати ресурси шляхом завантаження файлу CSV. Формат CSV є важливим';
-$lang["csv_upload_condition1"] = 'Переконайтеся, що файл CSV закодовано за допомогою <b>UTF-8 без BOM</b>.';
 $lang["csv_upload_condition2"] = 'CSV-файл повинен мати рядок заголовка';
 $lang["csv_upload_condition3"] = 'Щоб мати можливість завантажувати файли ресурсів пізніше, використовуючи функцію пакетної заміни, повинна бути колонка з назвою \'Original filename\', і кожен файл повинен мати унікальну назву файлу';
 $lang["csv_upload_condition4"] = 'Усі обов\'язкові поля для будь-яких новостворених ресурсів повинні бути присутніми в CSV';
@@ -66,6 +65,7 @@ $lang["csv_upload_force_offline"] = 'Цей великий CSV може зайн
 $lang["csv_upload_recommend_offline"] = 'Цей великий CSV може зайняти дуже багато часу для обробки. Рекомендується увімкнути офлайн-завдання, якщо вам потрібно обробляти великі CSV.';
 $lang["csv_upload_createdfromcsvupload"] = 'Створено за допомогою плагіна завантаження CSV';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV файл має BOM, тому не може бути завантажений';
 $lang["csv_upload_check_file_error"] = 'Файл CSV не можна відкрити або прочитати';
 $lang["csv_upload_check_utf_error"] = 'Файл CSV не є дійсним UTF-8. Неправильний символ на рядку';
+$lang["csv_upload_condition1"] = 'Переконайтеся, що файл CSV закодований за допомогою <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV файл має BOM, який не вдалося видалити';

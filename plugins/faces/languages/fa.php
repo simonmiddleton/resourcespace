@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'چهره‌های شناسایی شده';
 $lang["faces-detected-face"] = 'چهره شناسایی شده';
 $lang["faces-confidence"] = 'اعتماد';
@@ -16,3 +15,8 @@ $lang["faces-tag-on-upload"] = 'آیا چهره‌های شناسایی شده �
 $lang["faces-detecting"] = 'در حال اسکن چهره‌ها در منبع:';
 $lang["faces-tagging"] = 'برچسب‌گذاری چهره‌های شناسایی شده در منبع:';
 $lang["faces-confidence-threshold"] = 'آستانه اعتماد به چهره: مدل باید چقدر مطمئن باشد که یک چهره انسانی را پیدا کرده است؟ پیشنهاد 70% (مقادیر زیر این مقدار با چهره‌های پنهان و غیر چهره‌ها مطابقت خواهند داشت)';
+$lang["faces-oneface"] = 'لطفاً فقط یک گزینه برای هر چهره انتخاب کنید.';
+$lang["faces-show-view"] = 'عملکرد AI Faces را در صفحه مشاهده نمایش دهید.';
+$lang["faces_count_faces"] = 'تعداد کل چهره‌های شناسایی شده';
+$lang["faces_count_missing"] = 'تصاویر برای پردازش';
+$lang["faces-tag-field-not-set"] = 'فیلد برچسب‌گذاری پیکربندی نشده است.';

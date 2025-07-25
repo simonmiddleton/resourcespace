@@ -71,3 +71,4 @@ $lang["tms_link_write_to_debug_log"]='Jumuisha maendeleo ya script katika logi y
 $lang["tms_link_upload_tms_field"]='Kitambulisho cha Kitu cha TMS';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_uid_field_int"]='TMS Integer UIDs. Weka kuwa uongo kuruhusu UIDs zisizo za nambari kamili.';
+$lang["tms_link_selected_module_missing"] = 'Jina la moduli ya TMS kwa sasa limewekwa kama "%%MODULE%%" lakini hii si chaguo linalopatikana. Angalia chaguo za kushuka na sasisha hapa chini.';

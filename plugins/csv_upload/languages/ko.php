@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV 업로드';
 $lang["csv_upload_intro"] = '이 플러그인은 CSV 파일을 업로드하여 리소스를 생성하거나 업데이트할 수 있게 해줍니다. CSV의 형식이 중요합니다';
-$lang["csv_upload_condition1"] = 'CSV 파일이 <b>UTF-8 without BOM</b>으로 인코딩되었는지 확인하세요.';
 $lang["csv_upload_condition2"] = 'CSV 파일에는 헤더 행이 있어야 합니다';
 $lang["csv_upload_condition3"] = '나중에 일괄 교체 기능을 사용하여 리소스 파일을 업로드할 수 있으려면 \'원본 파일명\'이라는 열이 있어야 하며 각 파일은 고유한 파일명을 가져야 합니다';
 $lang["csv_upload_condition4"] = '새로 생성된 리소스의 모든 필수 필드는 CSV에 있어야 합니다';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'CSV 업로드 플러그인에서 생
 $lang["plugin-csv_upload-title"] = 'CSV 업로드';
 $lang["plugin-csv_upload-desc"] = '[고급] CSV 파일을 사용하여 메타데이터 업로드.';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV 파일에 BOM이 포함되어 있어 로드할 수 없습니다';
 $lang["csv_upload_check_file_error"] = 'CSV 파일을 열거나 읽을 수 없습니다';
 $lang["csv_upload_check_utf_error"] = 'CSV 파일이 유효한 UTF-8이 아닙니다. 줄에 잘못된 문자';
+$lang["csv_upload_condition1"] = 'CSV 파일이 <b>UTF-8</b>로 인코딩되어 있는지 확인하세요.';
+$lang["csv_upload_check_removebom"] = 'CSV 파일에 제거할 수 없는 BOM이 있습니다';

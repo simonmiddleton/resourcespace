@@ -393,3 +393,91 @@ function get_saml_metadata_expiry($entityid): string
         return $expiry;
     }
 }
+
+
+/**
+ * Get the latest metadata from the configured IdP Metadata URL
+ * 
+ * @return bool|string     True if successful, otherwise error message
+ */
+function simplesaml_update_metadata()
+{
+    if (($GLOBALS["simplesaml_metadata_url"]) === ''
+        || !is_safe_url($GLOBALS["simplesaml_metadata_url"])
+    ) {
+        return "Invalid metadata URL configured";
+    }
+    debug("Updating SAML metadata from '" . $GLOBALS["simplesaml_metadata_url"] . "'");
+    $GLOBALS['use_error_exception'] = true;
+    try {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $GLOBALS["simplesaml_metadata_url"]);
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+        $response = curl_exec($ch);
+        $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    } catch (Throwable $t) {
+        $error = str_replace("%error%", $t->getMessage(), $GLOBALS['lang']['simplesaml_update_metadata_error']);
+        debug("simplesaml - " . $error);
+        set_sysvar("saml_idp_metadata_error", $error);
+        return false;
+    }
+    unset($GLOBALS['use_error_exception']);
+    if ($response_status_code !== 200) {
+        $error = str_replace("%error%", $response_status_code, $GLOBALS['lang']['simplesaml_update_metadata_invalid_response']);
+        debug("simplesaml - " . $error);
+        set_sysvar("saml_idp_metadata_error", $error);
+    }
+
+    $metadata_xml =  $response;
+    require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
+
+    try {
+        $entities = \SimpleSAML\Metadata\SAMLParser::parseDescriptorsString($metadata_xml);
+    } catch (Exception $e) {
+        $error = str_replace("%error%", $e->getMessage(), $GLOBALS['lang']['simplesaml_update_metadata_parse_error']);
+        debug("simplesaml - " . $error);
+        set_sysvar("saml_idp_metadata_error", $error);
+        return false;
+    }
+    
+    set_sysvar("saml_idp_metadata_error", "");
+    $idpindex = array_key_first($entities);
+    $parsedmetadata = $entities[$idpindex]->getMetadata20IdP();
+    if (!isset($simplesamlconfig['metadata']) || reset($simplesamlconfig['metadata']) !== $parsedmetadata) {
+        $simplesamlconfig['metadata'] = [];
+        $simplesamlconfig['metadata'][$idpindex] = $parsedmetadata;
+        set_sysvar("saml_idp_metadata", json_encode($simplesamlconfig['metadata']));
+    }
+    set_sysvar("saml_idp_metadata_last_updated", time());
+    return true;
+}
+
+/**
+ * Get SAML IdP metadata from sysvars, updating if necessary
+ * 
+ * @param bool $retry       Retry if invalid. Default true
+ * 
+ * @return array|false      Metadata if successful, false if failed
+ */
+function get_saml_metadata($retry = true)
+{
+    $storedsamlconfig = get_sysvar("saml_idp_metadata");
+    $metadata = json_decode($storedsamlconfig, true);
+    if ((trim($storedsamlconfig) == "" || $metadata === false) && $retry) {
+        // Invalid metadata
+        debug("simplesaml - invalid metadata in sysvars. Updating");
+        $success = simplesaml_update_metadata();
+        if($success !== true) {
+            debug("simplesaml - invalid metadata. Update failed");
+            return false;
+        }
+        return get_saml_metadata(false);
+    }
+    return $metadata;
+}

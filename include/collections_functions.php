@@ -1968,20 +1968,26 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
                 collection_log($reflist[$nx2], LOG_CODE_COLLECTION_EMAILED_COLLECTION, 0, $emails[$nx1]);
             }
         } else {
+            $fc_key = "";
             // E-mail external share, generate the access key based on the FC category. Each sub-collection will have the same key.
             if ($key_required[$nx1] && $themeshare && !is_null($fc_category_ref)) {
                 $k = generate_collection_access_key($fc_category_ref, $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd, $reflist);
-                $fc_key = "&k={$k}";
+                if ($k !== false) {
+                    $fc_key = "&k={$k}";
+                }
             }
 
             for ($nx2 = 0; $nx2 < count($reflist); $nx2++) {
                 $key = "";
+                $fc_key = "";
                 $emailcollectionmessageexternal = false;
 
                 # Do we need to add an external access key for this user (e-mail specified rather than username)?
                 if ($key_required[$nx1] && !$themeshare) {
                     $k = generate_collection_access_key($reflist[$nx2], $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd);
-                    $key = "&k=" . $k;
+                    if ($k !== false) {
+                        $fc_key = "&k={$k}";
+                    }
                     $emailcollectionmessageexternal = true;
                 }
                 // If FC category, the key is valid across all sub-featured collections. See generate_collection_access_key()
@@ -2108,7 +2114,12 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
  */
 function generate_collection_access_key($collection, $feedback = 0, $email = "", $access = -1, $expires = "", $group = "", $sharepwd = "", array $sub_fcs = array())
 {
-    global $userref, $usergroup, $scramble_key;
+    global $userref, $usergroup, $scramble_key, $username, $anonymous_login;
+
+    if (is_anonymous_user()) {
+        // Block anon users from generating keys as they're unneeded.
+        return false;
+    }
 
     // Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
     if ($group == "" || !checkperm("x")) {
@@ -4248,6 +4259,18 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['label'] = $lang['unrelateallresources'];
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
+        $o++;
+    }
+
+    // Annotations PDF
+    if ($count_result > 0 && canSeeAnnotationsFields() !== []) {
+        $options[$o]['value'] = 'annotations_pdf';
+        $options[$o]['label'] = $lang['annotate_pdf_sheet_tool'];
+        $options[$o]['data_attr'] = [
+            'url' => generateURL("{$baseurl_short}pages/annotate_pdf_config.php", $urlparams)
+        ];
+        $options[$o]['category'] = ACTIONGROUP_ADVANCED;
+        $options[$o]['order_by']  = 300;
         $o++;
     }
 
@@ -6844,8 +6867,8 @@ function process_collection_download(array $dl_data): array
             // Process alternatives
             $alternatives = get_alternative_files($ref);
             foreach ($alternatives as $alternative) {
-                debug("Processing alternative file {$alternative['ref']} for resource $ref, extension: $size_extension");
                 $pextension = get_extension($alternative, $usesize);
+                debug("Processing alternative file {$alternative['ref']} for resource $ref, extension: $pextension");
                 $p = get_resource_path($ref, true, $usesize, false, $pextension, true, 1, $use_watermark, '', $alternative["ref"]);
                 $target_exists = file_exists($p);
                 if (

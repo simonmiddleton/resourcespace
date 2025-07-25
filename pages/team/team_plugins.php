@@ -268,7 +268,7 @@ include "../../include/header.php"; ?>
             }
 
             if (isset($p["category"])) {
-                $p["category"] = trim(strtolower($p["category"]));
+                $p["category"] = trim($p["category"]);
                 #Check for category lists
                 if (preg_match("/.*,.*/", $p["category"])) {
                     $p_cats = explode(",", $p["category"]);

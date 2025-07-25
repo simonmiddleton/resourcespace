@@ -5,6 +5,6 @@ version : 1.0
 desc    : Web to print (W2P) / Dynamic Publishing functionality using SVG template files.
 icon    : fa fa-hat-wizard
 default_priority: 998
-category: Asset processing
+category: Asset Processing
 config_url: /plugins/stencilvg/pages/setup.php
 info_url: https://www.resourcespace.com/knowledge-base/plugins/stencilvg

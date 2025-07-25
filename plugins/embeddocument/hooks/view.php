@@ -2,13 +2,14 @@
 
 function HookEmbeddocumentViewAfterresourceactions2()
 {
-    global $embeddocument_resourcetype,$resource,$ref,$baseurl,$lang,$access;
+    global $embeddocument_resourcetype,$resource,$ref,$baseurl,$lang,$access, $username, $anonymous_login;
 
     if (
         $resource["resource_type"] != $embeddocument_resourcetype
         || !$GLOBALS["allow_share"]
         || checkperm("noex")
         || get_resource_access($resource) != 0
+        || (isset($anonymous_login) && $username == $anonymous_login)
     ) {
         return false;
     }

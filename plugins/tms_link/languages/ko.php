@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='시스템 디버그 로그에 스크립트
 $lang["plugin-tms_link-title"]='TMS 링크';
 $lang["plugin-tms_link-desc"]='[고급] 리소스 메타데이터를 TMS 데이터베이스에서 추출할 수 있습니다.';
 $lang["tms_link_uid_field_int"]='TMS 정수 UID. 정수가 아닌 UID를 허용하려면 false로 설정하십시오.';
+$lang["tms_link_selected_module_missing"] = 'TMS 모듈 이름이 현재 "%%MODULE%%"로 설정되어 있지만, 이는 사용 가능한 옵션이 아닙니다. 드롭다운 옵션을 검토하고 아래에서 업데이트하십시오.';

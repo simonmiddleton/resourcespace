@@ -273,11 +273,11 @@ include "../include/header.php";
                         <td class="name">
                             <div class="ListTitle">
                                 <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onclick="return CentralSpaceLoad(this,true);">
-                                    <?php echo highlightkeywords(i18n_get_collection_name($collections[$n]), $find); ?>
+                                    <?php echo escape(i18n_get_collection_name($collections[$n])); ?>
                                 </a>
                             </div>
                         </td>
-                        <td class="ref"><?php echo highlightkeywords($collections[$n]["ref"], $find); ?></td>
+                        <td class="ref"><?php echo escape($collections[$n]["ref"]); ?></td>
                         <td class="created"><?php echo nicedate($collections[$n]["created"], true); ?></td>
                         <td class="count"><?php echo $collections[$n]["count"]; ?></td>
                             <?php

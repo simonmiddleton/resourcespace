@@ -254,48 +254,6 @@ function check_date_parts($parts)
     }
 }
 
-function check_view_display_condition($fields, $n, $fields_all)
-{
-    #Check if field has a display condition set
-    $displaycondition = true;
-    if ($fields[$n]["display_condition"] != "") {
-        $s = explode(";", $fields[$n]["display_condition"]);
-        $condref = 0;
-        foreach ($s as $condition) { # Check each condition
-            $displayconditioncheck = false;
-            $s = explode("=", $condition);
-            for ($cf = 0; $cf < count($fields_all); $cf++) { # Check each field to see if needs to be checked
-                if ($s[0] == $fields_all[$cf]["name"]) { # this field needs to be checked
-                    $checkvalues = $s[1];
-                    $validvalues = explode("|", $checkvalues);
-                    $validvalues = array_map("i18n_get_translated", $validvalues);
-                    $validvalues = array_map("strtoupper", $validvalues);
-                    $v = trim_array(explode(",", $fields_all[$cf]["value"] ?? ""));
-                    if ($fields_all[$cf]['type'] == FIELD_TYPE_CATEGORY_TREE) {
-                        $tree_values = array_merge(...array_map(function ($value) {
-                            return explode('/', $value);
-                        }, $v));
-                        $v = array_unique(array_merge($v, $tree_values));
-                    }
-                    $v = array_map("i18n_get_translated", $v);
-                    $v = array_map("strtoupper", $v);
-                    foreach ($validvalues as $validvalue) {
-                        if (in_array($validvalue, $v)) {
-                            $displayconditioncheck = true;
-                        } # this is  a valid value
-                    }
-                    if (!$displayconditioncheck) {
-                        $displaycondition = false;
-                    }
-                }
-            } # see if next field needs to be checked
-
-            $condref++;
-        } # check next condition
-    }
-    return $displaycondition;
-}
-
 /**
 * updates the value of fieldx field further to a metadata field value update
 *
@@ -363,15 +321,15 @@ function update_fieldx(int $metadata_field_ref): void
 function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
 {
     $exiftool_fullpath = get_utility_path("exiftool");
-    $command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit ";
+    $command = $exiftool_fullpath . " -s -s -s %s ";
     $command .= escapeshellarg($file_path);
-    $exif_output = explode("\t", run_command($command));
+    $exif_output = run_command(sprintf($command, "-composite:imagesize"));
 
-    if (count($exif_output) >= 1 && $exif_output[0] != '') {
+    if ($exif_output != '') {
         if ($remove_original) {
             ps_query("DELETE FROM resource_dimensions WHERE resource= ?", ['i', $ref]);
         }
-        $wh = explode("x", $exif_output[0]);
+        $wh = explode("x", $exif_output);
         if (count($wh) > 1) {
             $width = $wh[0];
             $height = $wh[1];
@@ -384,16 +342,18 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
                 's', $filesize
             ];
 
-            for ($n = 1; $n < count($exif_output); $n++) {
-                # Resolution may be omitted if not set; check values by type
-                if (is_int_loose($exif_output[$n])) {
-                    $sql_insert .= ",resolution";
-                    $sql_params[] = 'i';
-                } else {
-                    $sql_insert .= ",unit";
-                    $sql_params[] = 's';
-                }
-                $sql_params[] = $exif_output[$n];
+            $exif_resolution = run_command(sprintf($command, '-xresolution'));
+            if (is_numeric($exif_resolution) && $exif_resolution > 0) {
+                $sql_insert .= ',resolution';
+                $sql_params[] = 'd';
+                $sql_params[] = $exif_resolution;
+            }
+
+            $exif_unit = run_command(sprintf($command, '-resolutionunit'));
+            if ($exif_unit != '') {
+                $sql_insert .= ',unit';
+                $sql_params[] = 's';
+                $sql_params[] = $exif_unit;
             }
 
             $sql_insert .= ")";

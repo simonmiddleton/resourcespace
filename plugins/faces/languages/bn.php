@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'সনাক্ত করা মুখগুলি';
 $lang["faces-detected-face"] = 'সনাক্ত করা মুখ';
 $lang["faces-confidence"] = 'আত্মবিশ্বাস';
@@ -16,3 +15,8 @@ $lang["faces-tag-on-upload"] = 'আপলোডের সময় চিহ্�
 $lang["faces-detecting"] = 'সম্পদে মুখের জন্য স্ক্যান করা:';
 $lang["faces-tagging"] = 'সম্পদে সনাক্ত করা মুখগুলোর ট্যাগিং:';
 $lang["faces-confidence-threshold"] = 'মুখের আত্মবিশ্বাসের থ্রেশহোল্ড: মডেলটি কতটা আত্মবিশ্বাসী হওয়া উচিত যে এটি একটি মানব মুখ খুঁজে পেয়েছে? প্রস্তাবিত 70% (এর নিচের মানগুলি আবৃত মুখ এবং অ-মুখের সাথে মিলে যাবে)';
+$lang["faces-oneface"] = 'দয়া করে প্রতিটি মুখের জন্য শুধুমাত্র একটি বিকল্প নির্বাচন করুন।';
+$lang["faces-show-view"] = 'দেখুন AI Faces কার্যকারিতা ভিউ পৃষ্ঠায়।';
+$lang["faces_count_faces"] = 'মোট মুখ সনাক্ত করা হয়েছে';
+$lang["faces_count_missing"] = 'প্রক্রিয়া করার জন্য ছবি';
+$lang["faces-tag-field-not-set"] = 'ট্যাগিং ক্ষেত্র কনফিগার করা হয়নি।';

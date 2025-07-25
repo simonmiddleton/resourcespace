@@ -260,9 +260,9 @@ function job_queue_purge($status = 0)
 * @param  array    $job                 Metadata of the queued job as returned by job_queue_get_jobs()
 * @param  boolean  $clear_process_lock  Clear process lock for this job
 *
-* @return void
+* @return string   'Process lock', 'Error' or 'Complete'.
 */
-function job_queue_run_job($job, $clear_process_lock)
+function job_queue_run_job($job, $clear_process_lock): string
 {
     // Runs offline job using defined job handler
     $jobref = $job["ref"];
@@ -274,7 +274,7 @@ function job_queue_run_job($job, $clear_process_lock)
         echo $logmessage;
         debug($logmessage);
         job_queue_update($jobref, $job_data, STATUS_ERROR);
-        return;
+        return 'Error';
     }
 
     $jobuserdata = get_user($jobuser);
@@ -283,7 +283,7 @@ function job_queue_run_job($job, $clear_process_lock)
         echo $logmessage;
         debug($logmessage);
         job_queue_update($jobref, $job_data, STATUS_ERROR);
-        return;
+        return 'Error';
     }
     setup_user($jobuserdata);
     $job_success_text = $job["success_text"];
@@ -298,7 +298,7 @@ function job_queue_run_job($job, $clear_process_lock)
         $logmessage =  " - Process lock for job #{$jobref}" . PHP_EOL;
         echo $logmessage;
         debug($logmessage);
-        return;
+        return 'Process lock';
     } elseif ($clear_process_lock) {
         $logmessage =  " - Clearing process lock for job #{$jobref}" . PHP_EOL;
         echo $logmessage;
@@ -361,6 +361,7 @@ function job_queue_run_job($job, $clear_process_lock)
     debug($logmessage);
 
     clear_process_lock('job_' . $jobref);
+    return 'Complete';
 }
 
 /**

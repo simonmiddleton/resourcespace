@@ -76,8 +76,8 @@ function getCookie(c_name)
     var i,x,y,ARRcookies=document.cookie.split("; ");
     for (i=0;i<ARRcookies.length;i++)
     {
-        x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-        y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+        x=ARRcookies[i].slice(0,ARRcookies[i].indexOf("="));
+        y=ARRcookies[i].slice(ARRcookies[i].indexOf("=")+1);
         x=x.replace(/^\s+|\s+$/g,"");
         if (x==c_name)
         {
@@ -1106,12 +1106,13 @@ function styledalert(title,text,minwidth){
         dialogClass: 'no-close',
         modal: true,
         maxHeight:500,
-         buttons: [{
-                  text: oktext,
-                  click: function() {
-                    jQuery( this ).dialog( "close" );
-                  }
-                }],
+        buttons: [{
+            // Decode the text label (see header.php) because jquery.dialog internally will also use textContent (safe sink)
+            text: new DOMParser().parseFromString(oktext, 'text/html').documentElement.textContent,
+            click: function() {
+            jQuery( this ).dialog( "close" );
+            }
+        }],
         create: function(event, ui)
             {
             if (title == '')

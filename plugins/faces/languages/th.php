@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'ตรวจพบใบหน้า';
 $lang["faces-detected-face"] = 'ตรวจพบใบหน้า';
 $lang["faces-confidence"] = 'ความมั่นใจ';
@@ -16,3 +15,8 @@ $lang["faces-tag-on-upload"] = 'แท็กใบหน้าที่รู้
 $lang["faces-detecting"] = 'กำลังสแกนหาหน้าในทรัพยากร:';
 $lang["faces-tagging"] = 'การติดแท็กใบหน้าที่ตรวจพบในทรัพยากร:';
 $lang["faces-confidence-threshold"] = 'เกณฑ์ความมั่นใจของใบหน้า: โมเดลควรมีความมั่นใจแค่ไหนว่ามันได้พบใบหน้าของมนุษย์? แนะนำ 70% (ค่าต่ำกว่านี้จะตรงกับใบหน้าที่ถูกบดบังและไม่ใช่ใบหน้า)';
+$lang["faces-oneface"] = 'กรุณาเลือกเพียงหนึ่งตัวเลือกสำหรับแต่ละหน้า';
+$lang["faces-show-view"] = 'แสดงฟังก์ชัน AI Faces บนหน้ามุมมอง';
+$lang["faces_count_faces"] = 'จำนวนใบหน้าทั้งหมดที่ตรวจพบ';
+$lang["faces_count_missing"] = 'ภาพที่จะประมวลผล';
+$lang["faces-tag-field-not-set"] = 'ฟิลด์แท็กไม่ได้ถูกกำหนดค่า';

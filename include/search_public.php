@@ -56,7 +56,7 @@ if ((substr($search, 0, 11) != "!collection") && ($collections != "") && is_arra
                             <a onClick="return CentralSpaceLoad(this, true);"
                                 href="<?php echo $pub_url?>"
                                 title="<?php echo escape(str_replace(array("\"", "'"), "", i18n_get_collection_name($collections[$n]))) ?>">
-                                <?php echo highlightkeywords(tidy_trim(i18n_get_collection_name($collections[$n]), 32), $search)?>
+                                <?php echo escape(tidy_trim(i18n_get_collection_name($collections[$n]), 32)) ?>
                             </a>
                         <?php } ?>
                         &nbsp;
@@ -99,7 +99,7 @@ if ((substr($search, 0, 11) != "!collection") && ($collections != "") && is_arra
                 <td nowrap>
                     <div class="ListTitle">
                         <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo str_replace(array("\"","'"), "", $collection_prefix . i18n_get_collection_name($collections[$n]))?>">
-                            <?php echo $collection_prefix . highlightkeywords(tidy_trim(i18n_get_collection_name($collections[$n]), 45), $search)?>
+                            <?php echo escape($collection_prefix . tidy_trim(i18n_get_collection_name($collections[$n]), 45)) ?>
                         </a>
                     </div>
                 </td>

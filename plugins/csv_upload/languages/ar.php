@@ -2,7 +2,7 @@
 
 $lang["csv_upload_nav_link"] = 'تحميل CSV';
 $lang["csv_upload_intro"] = 'هذه الإضافة تسمح لك بإنشاء أو تحديث الموارد عن طريق تحميل ملف CSV. تنسيق ملف CSV مهم';
-$lang["csv_upload_condition1"] = '<li>تأكد من ترميز ملف CSV باستخدام <b>UTF-8 بدون BOM</b>.</li>';
+
 $lang["csv_upload_condition2"] = 'يجب أن يحتوي ملف CSV على صف رأس';
 $lang["csv_upload_condition3"] = '<li>لكي تتمكن من تحميل ملفات الموارد لاحقًا باستخدام وظيفة الاستبدال الجماعي ، يجب أن يكون هناك عمود يحمل اسم "اسم الملف الأصلي" ويجب أن يكون لكل ملف اسم مميز</li>';
 $lang["csv_upload_condition4"] = '<li>يجب أن تكون جميع الحقول الإلزامية لأي مورد جديد تم إنشاؤه موجودة في ملف CSV</li>';
@@ -68,6 +68,7 @@ $lang["csv_upload_resource_match_column"] = 'يرجى اختيار العمود 
 $lang["plugin-csv_upload-title"] = 'تحميل CSV';
 $lang["plugin-csv_upload-desc"] = '[متقدم] تحميل البيانات الوصفية باستخدام ملف CSV.';
 
-$lang["csv_upload_check_invalidbom"] = 'ملف CSV يحتوي على BOM لذا لا يمكن تحميله';
 $lang["csv_upload_check_file_error"] = 'لا يمكن فتح أو قراءة ملف CSV';
 $lang["csv_upload_check_utf_error"] = 'ملف CSV ليس UTF-8 صالحًا. حرف غير صالح في السطر';
+$lang["csv_upload_condition1"] = 'تأكد من أن ملف CSV مشفر باستخدام <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'ملف CSV يحتوي على BOM ولم يكن من الممكن إزالته';

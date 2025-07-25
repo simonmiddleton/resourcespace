@@ -3,7 +3,7 @@
 include_once __DIR__ . '/../include/video_functions.php';
 global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,
 $keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
-$resource, $ffmpeg_preview_gif, $videojs_resolution_selection;
+$resource, $ffmpeg_preview_gif, $videojs_resolution_selection, $hide_real_filepath;
 
 # Check for search page and the use of an alt file for video playback
 $use_video_alts = false;

@@ -71,3 +71,4 @@ $lang["tms_link_not_deleted_error_detail"] = 'Nem lehet törölni a kért modul 
 $lang["tms_link_uid_field"] = 'TMS %module_name %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"] = 'Biztos benne, hogy törölni szeretné ezt a modul konfigurációt? Ez a művelet nem vonható vissza!';
 $lang["tms_link_write_to_debug_log"] = 'A rendszer hibakeresési naplózásába be kell vonni a szkript előrehaladását (külön kell konfigurálni a hibakeresési naplózást). Figyelem: Gyors növekedést okoz a hibakeresési naplófájlban.';
+$lang["tms_link_selected_module_missing"] = 'A TMS modul neve jelenleg "%%MODULE%%"-ra van beállítva, de ez nem elérhető opció. Ellenőrizze a legördülő lehetőségeket, és frissítse az alábbiakat.';

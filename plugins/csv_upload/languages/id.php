@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Unggah CSV';
 $lang["csv_upload_intro"] = 'Plugin ini memungkinkan Anda untuk membuat atau memperbarui sumber daya dengan mengunggah file CSV. Format CSV sangat penting';
-$lang["csv_upload_condition1"] = 'Pastikan file CSV di-encode menggunakan <b>UTF-8 tanpa BOM</b>. ';
 $lang["csv_upload_condition2"] = 'CSV harus memiliki baris header';
 $lang["csv_upload_condition3"] = 'Untuk dapat mengunggah file sumber nanti menggunakan fungsi penggantian batch, harus ada kolom bernama \'Nama file asli\' dan setiap file harus memiliki nama file yang unik';
 $lang["csv_upload_condition4"] = 'Semua kolom wajib untuk sumber daya yang baru dibuat harus ada dalam CSV';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Dibuat dari plugin Unggah CSV';
 $lang["plugin-csv_upload-title"] = 'Unggah CSV';
 $lang["plugin-csv_upload-desc"] = 'Unggah metadata menggunakan file CSV.';
 
-$lang["csv_upload_check_invalidbom"] = 'File CSV memiliki BOM sehingga tidak dapat dimuat';
 $lang["csv_upload_check_file_error"] = 'File CSV tidak dapat dibuka atau dibaca';
 $lang["csv_upload_check_utf_error"] = 'File CSV tidak valid UTF-8. Karakter tidak valid pada baris';
+$lang["csv_upload_condition1"] = 'Pastikan file CSV dikodekan menggunakan <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'File CSV memiliki BOM yang tidak dapat dihapus';

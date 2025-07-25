@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'CSV upload vertaling: CSV uploaden';
 $lang["csv_upload_intro"] = 'Dit plugin stelt je in staat om resources te creëren of bij te werken door middel van het uploaden van een CSV-bestand. Het formaat van de CSV is belangrijk';
-$lang["csv_upload_condition1"] = 'Zorg ervoor dat het CSV-bestand is gecodeerd met <b>UTF-8 zonder BOM</b>.';
 $lang["csv_upload_condition2"] = 'De CSV moet een kopregel hebben';
 $lang["csv_upload_condition3"] = 'Om later bronbestanden te kunnen uploaden met behulp van de batchvervangingsfunctionaliteit, moet er een kolom zijn met de naam \'Originele bestandsnaam\' en moet elk bestand een unieke bestandsnaam hebben';
 $lang["csv_upload_condition4"] = 'Alle verplichte velden voor nieuw aangemaakte resources moeten aanwezig zijn in de CSV';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Aangemaakt met de CSV Upload plugin'
 $lang["plugin-csv_upload-title"] = 'CSV Upload';
 $lang["plugin-csv_upload-desc"] = 'Upload metadata met een CSV-bestand.';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV-bestand heeft BOM, dus kan niet worden geladen';
 $lang["csv_upload_check_file_error"] = 'CSV-bestand kan niet worden geopend of gelezen';
 $lang["csv_upload_check_utf_error"] = 'CSV-bestand is geen geldige UTF-8. Ongeldig teken op regel';
+$lang["csv_upload_condition1"] = 'Zorg ervoor dat het CSV-bestand is gecodeerd met <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV-bestand heeft BOM dat niet kon worden verwijderd';

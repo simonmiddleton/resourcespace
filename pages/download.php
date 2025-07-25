@@ -5,6 +5,7 @@ from outputting stray characters that will mess up the binary download
 we will clear the buffer and start over right before we download the file*/
 ob_start();
 $nocache = true;
+$disable_browser_check = true;
 include_once __DIR__ . '/../include/boot.php';
 include_once __DIR__ . '/../include/image_processing.php';
 ob_end_clean();
@@ -318,7 +319,7 @@ if ($log_download) {
     // Log this activity (download only, not preview)
     daily_stat('Resource download', $ref);
     $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email : "";
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage);
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage, $alternative);
 
     hook('moredlactions');
 

@@ -1,6 +1,7 @@
 <?php
 
 command_line_only();
+$disable_browser_check = true;
 
 // --- Set up
 $cache_hide_real_file_path = $hide_real_filepath;
@@ -25,7 +26,9 @@ $generate_dld_endpoint_content = static fn (string $file): string => <<<EOT
 <?php
 ob_start();
 \$nocache = true;
+\$disable_browser_check = true;
 include dirname(__DIR__, 4) . '/include/boot.php';
+
 ob_end_clean();
 
 \$filename = basename('$file');

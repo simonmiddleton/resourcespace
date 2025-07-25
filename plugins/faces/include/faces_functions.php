@@ -18,8 +18,21 @@ function faces_detect(int $ref): bool
     global $faces_service_endpoint, $faces_confidence_threshold;
     $file_path = get_resource_path($ref, true, 'scr', false, "jpg");
 
-    flush();
-    ob_flush();
+    if ('cli' == PHP_SAPI) {
+        if (ob_get_level() == 0) {
+            ob_start();
+            $ob_started = true;
+        }
+        flush();
+        ob_flush();
+    }
+
+    $faces_processed = ps_value("SELECT faces_processed value FROM resource WHERE ref = ?", ["i", $ref], 1);
+
+    if ($faces_processed == "1") {
+        logScript("Faces already processed for resource $ref");
+        return false;
+    }
 
     if (!file_exists($file_path)) {
         $resource_data = get_resource_data($ref);
@@ -83,6 +96,9 @@ function faces_detect(int $ref): bool
     // Mark resource as processed
     ps_query("UPDATE resource SET faces_processed = 1 WHERE ref = ?", ["i", $ref]);
     logScript("Processed resource $ref and found " . count($faces) . " faces.");
+    if ($ob_started ?? false) {
+        ob_get_clean();
+    }
     return true;
 }
 
@@ -104,8 +120,14 @@ function faces_tag(int $resource): bool
 {
     global $faces_service_endpoint, $mysql_db, $faces_tag_threshold;
 
-    flush();
-    ob_flush();
+    if ('cli' == PHP_SAPI) {
+        if (ob_get_level() == 0) {
+            ob_start();
+            $ob_started = true;
+        }
+        flush();
+        ob_flush();
+    }
 
     // Find untagged faces for this resource
     $faces = ps_array("SELECT ref value FROM resource_face WHERE resource=? and (node is null or node=0) ORDER BY ref desc", ["i", $resource]);
@@ -129,6 +151,7 @@ function faces_tag(int $resource): bool
             'db' => $mysql_db,
             'ref' => (int)$face,
             'threshold' => $faces_tag_threshold,
+            'tagged_only' => true,
             'k' => 200
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -162,7 +185,7 @@ function faces_tag(int $resource): bool
 
         // Filter out non-numeric or null values
         $filtered_nodes = array_filter($nodes, static function ($value) {
-            return is_numeric($value);
+            return is_numeric($value) && $value > 0;
         });
 
         // Check if the filtered list is empty
@@ -186,6 +209,10 @@ function faces_tag(int $resource): bool
         ps_query("update resource_face set node=? where ref=?", ["i",$most_common_node,"i",$face]); // Attach the node to this face
 
         logScript("Tagged with node: " . $most_common_node);
+    }
+
+    if ($ob_started ?? false) {
+        ob_get_clean();
     }
     return true;
 }
@@ -215,9 +242,57 @@ function api_faces_set_node(int $resource, int $face, int $node): bool
     }
 
     // Set metadata
-    add_resource_nodes($resource,array($node));
+    add_resource_nodes($resource, array($node));
 
     // Assign to face
     ps_query("update resource_face set node=? where ref=?", ["i",$node,"i",$face]);
     return true;
+}
+
+/**
+ * Detect faces in resources that have not yet been processed
+ *
+ * @return int       A count of the resources processed.
+ *
+ * @uses ps_query()
+ * @uses debug()
+ */
+function faces_detect_missing()
+{
+    // Get all resources that haven't had faces processed yet
+
+    // Ensure only one instance of this.
+    if (is_process_lock(__FUNCTION__)) {
+        return false;
+    }
+    set_process_lock(__FUNCTION__);
+
+    $resources = ps_array("SELECT ref value FROM resource WHERE has_image=1 and (faces_processed is null or faces_processed=0) ORDER BY ref desc");
+
+    foreach ($resources as $resource) {
+        faces_detect($resource);
+    }
+
+    clear_process_lock(__FUNCTION__);
+    return count($resources);
+}
+
+/**
+ * Return count of images to process
+ *
+ * @return int       The count
+ */
+function faces_count_missing()
+{
+    return ps_value("SELECT count(*) value FROM resource WHERE has_image=1 and (faces_processed is null or faces_processed=0)", [], 0);
+}
+
+/**
+ * Return a count of the detected faces
+ *
+ * @return int       The count
+ */
+function faces_count_faces()
+{
+    return ps_value("SELECT count(*) value FROM resource_face", [], 0);
 }

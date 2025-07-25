@@ -547,7 +547,7 @@ function ProcessFolder($folder)
                                     } elseif (is_int_loose($field)) {
                                         # Save the value
                                         $value = $path_parts[$level - 1];
-                                        $modifiedval = hook('staticsync_mapvalue', '', array($r, $value));
+                                        $modifiedval = hook('staticsync_mapvalue', '', array($r, $value, $field));
                                         if ($modifiedval) {
                                             $value = $modifiedval;
                                         }

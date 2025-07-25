@@ -1,7 +1,7 @@
 <?php
 
 // When the extension can match multiple types, if applicable, we'll always pick the first type as that should be the
-// recommended option by IANA or a relevant IETF's RFC.
+// recommended option by IANA or a relevant IETF's RFC. https://www.iana.org/assignments/media-types/media-types.xhtml
 $mime_types_by_extension = array(
    '123' => 'application/vnd.lotus-1-2-3',
    '3dml' => 'text/vnd.in3d.3dml',
@@ -143,7 +143,7 @@ $mime_types_by_extension = array(
    'csp' => 'application/vnd.commonspace',
    'css' => 'text/css',
    'cst' => 'application/x-director',
-   'csv' => 'text/csv',
+   'csv' => ['text/csv', 'text/plain'],
    'cu' => 'application/cu-seeme',
    'curl' => 'text/vnd.curl',
    'cww' => 'application/prs.cww',
@@ -472,7 +472,11 @@ $mime_types_by_extension = array(
    'mp21' => 'application/mp21',
    'mp2a' => 'audio/mpeg',
    'mp3' => 'audio/mpeg',
-   'mp4' => ['video/mp4', 'audio/mp4'],
+   'mp4' => [
+        'video/mp4',
+        'audio/mp4', 
+        'video/x-m4v', # Non-standard type which we'll consider valid for now. References: https://www.iana.org/assignments/media-types/media-types.xhtml and https://stackoverflow.com/a/15279480
+        ],
    'mp4a' => 'audio/mp4',
    'mp4s' => 'application/mp4',
    'mp4v' => 'video/mp4',
@@ -534,7 +538,7 @@ $mime_types_by_extension = array(
    'oa3' => 'application/vnd.fujitsu.oasys3',
    'oas' => 'application/vnd.fujitsu.oasys',
    'obd' => 'application/x-msbinder',
-   'obj' => 'application/x-tgif',
+   'obj' => ['application/x-tgif', 'text/plain'],
    'oda' => 'application/oda',
    'odb' => 'application/vnd.oasis.opendocument.database',
    'odc' => 'application/vnd.oasis.opendocument.chart',
@@ -755,7 +759,7 @@ $mime_types_by_extension = array(
    'spx' => 'audio/ogg',
    'sql' => 'application/x-sql',
    'src' => 'application/x-wais-source',
-   'srt' => 'application/x-subrip',
+   'srt' => ['application/x-subrip', 'text/plain'],
    'sru' => 'application/sru+xml',
    'srx' => 'application/sparql-results+xml',
    'ssdl' => 'application/ssdl+xml',
@@ -768,7 +772,7 @@ $mime_types_by_extension = array(
    'stf' => 'application/vnd.wt.stf',
    'sti' => 'application/vnd.sun.xml.impress.template',
    'stk' => 'application/hyperstudio',
-   'stl' => 'application/vnd.ms-pki.stl',
+   'stl' => ['application/vnd.ms-pki.stl', 'application/octet-stream'],
    'str' => 'application/vnd.pg.format',
    'stw' => 'application/vnd.sun.xml.writer.template',
    'sub' => 'text/vnd.dvb.subtitle',

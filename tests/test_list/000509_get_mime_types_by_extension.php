@@ -11,7 +11,7 @@ $use_cases = [
     [
         'name' => 'Extension matching multiple types',
         'input' => 'mp4',
-        'expected' => ['video/mp4', 'audio/mp4'],
+        'expected' => ['video/mp4', 'audio/mp4', 'video/x-m4v'],
     ],
     [
         'name' => 'Unknown/missing type returns an empty array',

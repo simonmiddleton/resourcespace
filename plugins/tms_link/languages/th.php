@@ -71,3 +71,4 @@ $lang["tms_link_write_to_debug_log"]='รวมความก้าวหน้
 $lang["tms_link_media_path"]='เส้นทางรากไปยังที่เก็บไฟล์ที่จะถูกเก็บใน TMS เช่น \\RS_SERVERilestore\\ โปรดตรวจสอบให้แน่ใจว่ามีเครื่องหมายทับท้ายรวมอยู่ด้วย ชื่อไฟล์ที่เก็บใน TMS จะรวมถึงเส้นทางสัมพัทธ์จากรากที่เก็บไฟล์';
 $lang["tms_link_tms_module_name"]='ชื่อโมดูล TMS';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
+$lang["tms_link_selected_module_missing"] = 'ชื่อโมดูล TMS ปัจจุบันตั้งค่าเป็น "%%MODULE%%" แต่ไม่ใช่ตัวเลือกที่มีอยู่ กรุณาตรวจสอบตัวเลือกในรายการแบบเลื่อนลงและอัปเดตด้านล่าง';

@@ -6,6 +6,6 @@ desc    : Allows resource metadata to be extracted from TMS database.
 icon    : fa fa-university
 icon-colour: #B64B00
 config_url: /plugins/tms_link/pages/setup.php
-category: integrations
+category: Integrations
 disable_group_select: 1
 info_url: https://www.resourcespace.com/knowledge-base/plugins/tms-link

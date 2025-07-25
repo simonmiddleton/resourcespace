@@ -266,11 +266,22 @@ if ($editing && !$editexternalurl) {
                             $generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $allowed_external_share_groups[0], $sharepwd);
                         }
 
-                        if ('' != $generated_access_key) {
+                        if (
+                            '' != $generated_access_key
+                            || (
+                                isset($anonymous_login) 
+                                && $generated_access_key === false 
+                                && $username === $anonymous_login
+                            )
+                        ) {
+                            $url_params = ['r' => $ref];
+                            if ($generated_access_key != false) {
+                                $url_params['k'] = $generated_access_key;
+                            }
                             ?>
                             <p><?php echo escape($lang['generateurlexternal']); ?></p>
                             <p>
-                                <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?r=<?php echo urlencode($ref) ?>&k=<?php echo $generated_access_key; ?>">
+                                <input class="URLDisplay" type="text" value="<?php echo generateURL($baseurl, $url_params); ?>">
                             </p>
                             <?php
                         } else {

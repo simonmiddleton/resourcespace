@@ -1417,11 +1417,17 @@ $partial_index_min_word_length = 3;
 // Search Display
 // Thumbs Display Fields: array of fields to display on the large thumbnail view.
 $thumbs_display_fields = array(8); // ** SEE NOTE (1)
+
 // array of defined thumbs_display_fields to apply CSS modifications to (via $search_results_title_wordwrap, $search_results_title_height, $search_results_title_trim)
 $thumbs_display_extended_fields = array();
     # $search_result_title_height=26;
     $search_results_title_trim = 30;
     $search_results_title_wordwrap = 100; // Force breaking up of very large titles so they wrap to multiple lines (useful when using multi line titles with $search_result_title_height). By default this is set very high so that breaking doesn't occur. If you use titles that have large unbroken words (e.g. filenames with no spaces) then it may be useful to set this value to something lower, e.g. 20
+
+// Shortcut icons on the thumbnails. Adds clutter but some users may prefer the direct link.
+$thumbs_edit=false;
+$thumbs_expand=false;
+$thumbs_share=false;
 
 // Enable extra large thumbnails option for search screen
 $xlthumbs = true;
@@ -1620,9 +1626,6 @@ $featured_collection_static_bg = false;
 // Used mainly in combination with "$use_theme_as_home = true;"
 // IMPORTANT: access control must still be enforced through permissions. DO NOT rely on this configuration to hide featured collections from users!
 $featured_collections_root_collection = 0;
-
-// Enable to have a background image when $themes_simple_view is enabled
-$themes_show_background_image = false;
 
 // Ask the user the intended usage when downloading
 $download_usage = false;
@@ -2700,8 +2703,21 @@ $upload_then_process = false;
 // Annotations are linked to nodes, the user needs to specify which field a note is bind to.
 $annotate_enabled = false;
 
-// Specify which fields can be used to bind to annotations
+// Specify which fields can be used to bind to annotations - only multi-value fixed list fields (DKL, checkbox)
 $annotate_fields = array();
+
+// Add comment for resource text annotations. (N/A for fixed list field annotations)
+$annotate_text_adds_comment = true;
+
+// Make annotations publicly visible (e.g. external share)
+$annotate_public_view = false;
+
+// Display annotation author?
+$annotate_show_author = false;
+
+// Specify resource types that cannot be annotated (side effect: inapplicable metadata fields will be ignored at runtime
+// and users will also no longer be able to select those fields)
+$annotate_exclude_restypes = [];
 
 //
 //  IIIF:
@@ -3212,3 +3228,11 @@ $tinymce_plugins = "autoresize,code,lists,link";
 
 // Toolbar entries to be added to TinyMCE
 $tinymce_toolbar = "styles | bold italic underline removeformat | fontsize | forecolor backcolor | bullist numlist link | outdent indent | code";
+
+// Browser check - guard against basic DDOS - execute JS on the client to solve a problem, and only allow access for the valid answer.
+// Note that this always happens for anonymous access regardless of the $browser_check setting.
+$browser_check=false;
+$browser_check_key="c899a58b100c94fb907fac1f29e2d0fd"; // Randomise this.
+$browser_check_message="Performing browser checks..."; // Message to display when checking browser. This cannot be translated as is displayed before languages are loaded, so is provided as a configuration so it can be localised if desired.
+
+

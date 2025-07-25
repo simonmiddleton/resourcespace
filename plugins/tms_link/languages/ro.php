@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='Includeți progresul scriptului în jurnal
 $lang["plugin-tms_link-title"]='Link TMS';
 $lang["plugin-tms_link-desc"]='Permite extragerea metadatelor resursei din baza de date TMS.';
 $lang["tms_link_uid_field_int"]='TMS Integer UIDs. Setați la false pentru a permite UIDs non-integere.';
+$lang["tms_link_selected_module_missing"] = 'Numele modulului TMS este setat în prezent la "%%MODULE%%", dar aceasta nu este o opțiune disponibilă. Revizuiește opțiunile din lista derulantă și actualizează mai jos.';

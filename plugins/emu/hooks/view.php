@@ -11,12 +11,12 @@ function HookEmuViewRenderfield($field, $resource)
     if($field['ref'] == $emu_irn_field && in_array($resource['resource_type'], $emu_resource_types))
         {
         $emu_irn = $field['value'];
-        $value   = highlightkeywords($emu_irn, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
+        $value   = $emu_irn;
         ?>
         <div class="itemNarrow">
             <h3><?php echo escape($field['title']); ?></h3>
             <p>
-                <a href="<?php echo $baseurl; ?>/plugins/emu/pages/emu_object_details.php?ref=<?php echo $ref; ?>&irn=<?php echo $emu_irn; ?>"><?php echo $value; ?></a>
+                <a href="<?php echo $baseurl; ?>/plugins/emu/pages/emu_object_details.php?ref=<?php echo $ref; ?>&irn=<?php echo urlencode($emu_irn); ?>"><?php echo escape($value); ?></a>
             </p>
         </div>
         <?php

@@ -114,7 +114,8 @@ function setup_user(array $userdata)
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
-           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION, $plugins, $userprocessing_messages;
+           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION, $plugins, $userprocessing_messages,
+           $search_includes_themes;
 
     # Hook to modify user permissions
     if (hook("userpermissions")) {
@@ -181,6 +182,11 @@ function setup_user(array $userdata)
             // Not a valid collection - switch to user's primary collection if there is one
             $usercollection = get_default_user_collection(true);
         }
+    }
+
+    if ($search_includes_themes && in_array(compute_featured_collections_access_control(), [false, []], true)) {
+        // Check at least one featured collection exists and is visible to user
+        $search_includes_themes = false;
     }
 
     $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
@@ -858,6 +864,7 @@ function email_user_welcome(string $email, string $username, int $usergroup): vo
 {
     global $applicationname, $baseurl,$lang;
 
+    load_site_text_for_usergroup($usergroup);
     # Fetch any welcome message for this user group
     $welcome = ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?", ["i",$usergroup], "");
     if (trim($welcome) === "") {
@@ -869,6 +876,7 @@ function email_user_welcome(string $email, string $username, int $usergroup): vo
     $templatevars['url'] = $baseurl;
     $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" . $templatevars['url'];
     send_mail($email, $applicationname . ": " . $lang["youraccountdetails"], $message, "", "", "emaillogindetails", $templatevars);
+    load_site_text_for_usergroup(null);
 }
 
 /**
@@ -933,6 +941,8 @@ function email_reset_link(string $email, bool $newuser = false)
         $password_reset_url_key = create_password_reset_key($details['username']);
         $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
     }
+
+    load_site_text_for_usergroup($details['usergroup']);
     $templatevars['username'] = $details["username"];
     $email_subject = $applicationname . ": " . $lang["youraccountdetails"];
 
@@ -968,6 +978,9 @@ function email_reset_link(string $email, bool $newuser = false)
             $result = send_mail($email, $applicationname . ": " . $lang["resetpassword"], $message, "", "", "password_reset_email_html", $templatevars);
         }
     }
+
+    global $usergroup;
+    load_site_text_for_usergroup($usergroup);
 
     // Pass any e-mail errors back, or return true if successful
     return $result;
@@ -1747,6 +1760,8 @@ function resolve_users($users)
  */
 function check_access_key($resources, $key, $checkcollection = true)
 {
+    global $anonymous_login;
+
     if (trim($key) == '') {
         return false;
     }
@@ -1777,9 +1792,17 @@ function check_access_key($resources, $key, $checkcollection = true)
         }
     }
 
+    $anon_sql = '';
+    $anon_params = [];
+    if (isset($anonymous_login) && trim($anonymous_login) !== '') {
+        $anon_sql    = ' AND u.username != ?';
+        $anon_params = ['s', $anonymous_login];
+    }
+
     $keys = ps_query(
         "
             SELECT k.user,
+                   u.username,
                    k.usergroup,
                    k.expires,
                    k.password_hash, 
@@ -1790,9 +1813,9 @@ function check_access_key($resources, $key, $checkcollection = true)
             WHERE k.access_key = ?
                AND k.resource IN (" . ps_param_insert(count($resources)) . ")
                AND (k.expires IS NULL OR k.expires > now())
-               AND u.approved = 1
+               AND u.approved = 1 {$anon_sql}
                ORDER BY k.access",
-        array_merge(array("s", $key), ps_param_fill($resources, "i"))
+        array_merge(array("s", $key), ps_param_fill($resources, "i"), $anon_params)
     );
 
     if (count($keys) == 0 || count(array_diff($resources, array_column($keys, "resource"))) > 0) {
@@ -1955,6 +1978,8 @@ function check_access_key($resources, $key, $checkcollection = true)
 */
 function check_access_key_collection($collection, $key, $checkresource = true)
 {
+    global $anonymous_login;
+
     if (!is_int_loose($collection)) {
         return false;
     }
@@ -1976,17 +2001,26 @@ function check_access_key_collection($collection, $key, $checkresource = true)
         return false;
     }
 
+    $anon_sql = '';
+    $anon_params = [];
+    if (isset($anonymous_login) && trim($anonymous_login) !== '') {
+        $anon_sql    = ' AND u.username != ?';
+        $anon_params = ['s', $anonymous_login];
+    }
+
     // Get key info
     $keyinfo = ps_query("
-                    SELECT user,
-                           usergroup,
-                           expires,
-                           upload,
-                           password_hash,
-                           collection
-                      FROM external_access_keys
-                     WHERE access_key = ?
-                       AND (expires IS NULL OR expires > now())", array("s", $key));
+                    SELECT eak.user,
+                           u.username,
+                           eak.usergroup,
+                           eak.expires,
+                           eak.upload,
+                           eak.password_hash,
+                           eak.collection
+                      FROM external_access_keys eak
+                      LEFT JOIN user u ON eak.user = u.ref
+                     WHERE access_key = ? {$anon_sql}
+                       AND (expires IS NULL OR expires > now())", array_merge(array("s", $key), $anon_params));
 
     if (count($keyinfo) == 0) {
         return false;
@@ -2756,7 +2790,7 @@ function checkperm_login_as_user($user): bool
         $user = get_user($user);
     }
 
-    if (!checkperm("a") && preg_match("/(?:^|\\W|,)a(?:$|\\W|,)/", $user['permissions'])) {
+    if (!checkperm("a") && preg_match("/(?:^|\\W|,)a(?:$|\\W|,)/", (string) $user['permissions'])) {
         // Target user has 'a' permission but current user does not
         return false;
     }
@@ -3290,7 +3324,7 @@ function get_users_by_permission(array $permissions)
 function is_anonymous_user(): bool
 {
     global $anonymous_login, $username;
-    return isset($anonymous_login) && $username == $anonymous_login;
+    return isset($anonymous_login) && trim($anonymous_login) !== '' && $username == $anonymous_login;
 }
 
 /**
@@ -3657,4 +3691,136 @@ function delete_usergroup(int $usergroup_ref): bool
     clear_query_cache('usergroup');
 
     return true;
+}
+
+/**
+ * Check that this is a real browser by executing JS to set an expected cookie.
+ */
+function browser_check()
+{
+    global $browser_check_key, $applicationname, $disable_browser_check, $browser_check_message;
+    $webRoot = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__); // Calculate web root. This runs early so $baseurl can't be used.
+    $ajax=getval("ajax","")=="true"; // AJAX request?
+
+     // Exceptions
+    if (PHP_SAPI == 'cli') {return;}
+    if (isset($disable_browser_check) && $disable_browser_check) {return;} // e.g. API/IIIF
+
+    if (!isset($_SERVER["HTTP_USER_AGENT"])) {exit();} // Terminate requests that do not specify a user agent
+    $question_key=hash_hmac("sha512", $_SERVER["HTTP_USER_AGENT"] . date('Ymd'), $browser_check_key);
+    $answer_key=xor_base64_encode($question_key);
+
+    // Look for the answer already set as a cookie
+    if (getval("browser_check_cookie","")==$answer_key) {return;} // We're good
+
+    // Output the JS to calculate the answer and set the cookie
+    
+    if (!$ajax) { 
+    ?>
+    <html><head><title><?php echo escape($applicationname) ?></title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: ubuntu,arial,sans-serif;
+            background: #f0f0f0;
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.5em;margin-top: 2em;
+        }
+    </style>
+    </head>
+    <body>
+        <div>
+        <div class="logo"><img src="<?php echo $webRoot ?>/../gfx/titles/title-black.svg" /></div> 
+    <?php } ?>
+            <script>
+            function x9Zq(str){var a=[90,51,127],b='',c=0;for(var d=0;d<str.length;d++)b+=String.fromCharCode(str.charCodeAt(d)^a[c++%3]);return btoa(b);}
+            document.cookie = "browser_check_cookie=" + x9Zq(<?php echo json_encode($question_key) ?>) + "; path=/; max-age=172800";
+            setTimeout(function() {
+            window.location.reload(true);
+            }, 1000);
+            </script>
+            <h1><?php echo escape($browser_check_message) ?></h1><?php /* Note - can't be translated - language files not loaded, this is intentionally very early in the process */ ?>
+    <?php if (!$ajax) {  ?>
+        </div>
+    </body>
+    </html>
+    <?php
+    }
+    exit();    
+}
+
+/**
+ * Obfuscates a string using a fixed XOR pattern and encodes it in Base64.
+ *
+ * This function performs a basic transformation by XOR-ing each character of the input
+ * with a repeating fixed byte pattern, then encodes the result in Base64.
+ * Designed to be mirrored easily in JavaScript for lightweight bot detection.
+ *
+ * @param string $str The input string to obfuscate.
+ * @return string The Base64-encoded, XOR-obfuscated string.
+ */
+function xor_base64_encode($str) {
+    $pattern = [0x5A, 0x33, 0x7F]; // Fixed XOR byte pattern
+    $out = '';
+    for ($i = 0; $i < strlen($str); $i++) {
+        $xor_byte = $pattern[$i % count($pattern)];
+        $out .= chr(ord($str[$i]) ^ $xor_byte);
+    }
+    return base64_encode($out);
+}
+
+/**
+ * load_site_text_for_usergroup
+ *
+ * @param  int  $group   $usergroup value. Normally int however maybe null for activity before login e.g. load user group site text for an activity by
+ *                       supplying a user group id and then return to the defaults by supplying null. Supplying the $usergroup global value would be
+ *                       more common to return to the site text of the logged in user.
+ */
+function load_site_text_for_usergroup(int|null $group): void
+{
+    global $language, $pagename, $lang;
+
+    if (is_null($group) && is_array($GLOBALS['load_site_text_for_usergroup'])) {
+        $results = $GLOBALS['load_site_text_for_usergroup'];
+    } elseif (is_int($group)) {
+        // Fetch user group specific content.
+        $site_text_query = "SELECT `name`, `text`, `page` FROM site_text WHERE language = ? AND specific_to_group = ?";
+        $parameters = array("s", $language, "i", $group);
+
+        if ($pagename != "admin_content") { // Load all content on the admin_content page to allow management.
+            $site_text_query .= " AND (page = ? OR page = 'all' OR page = '' " .  (($pagename == "dash_tile") ? " OR page = 'home'" : "") . ")";
+            $parameters[] = "s";
+            $parameters[] = $pagename;
+        }
+
+        $results = ps_query($site_text_query, $parameters, "sitetext", -1, true, 0);
+    } elseif (is_null($group)) {
+        return;
+    }
+
+    $original_values = array();
+
+    for ($n = 0; $n < count($results); $n++) {
+        if ($results[$n]['page'] == '') {
+            $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['name']], 'page' => $results[$n]['page']);
+            $lang[$results[$n]['name']] = $results[$n]['text'];
+            $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+        } else {
+            $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['page'] . '__' . $results[$n]['name']], 'page' => $results[$n]['page']);
+            $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+        }
+    }
+
+    if (!isset($GLOBALS['load_site_text_for_usergroup'])) {
+        // Store the original values the first time this function is called. This provides a way to restore the earlier value where we don't have another user group ref
+        // such as activity before login. Providing null as $group will then pickup this cached value.
+        $GLOBALS['load_site_text_for_usergroup'] = $original_values;
+    }
 }

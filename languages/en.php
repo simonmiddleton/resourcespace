@@ -696,6 +696,7 @@ $lang["status0"] = "Active";
 $lang["status1"] = "Waiting to be archived";
 $lang["status2"] = "Archived";
 $lang["status3"] = "Deleted";
+$lang["statusinvalid"] = "Invalid";
 
 # Charts
 $lang["activity"] = "Activity";
@@ -975,6 +976,7 @@ $lang["access0"] = "Open";
 $lang["access1"] = "Restricted";
 $lang["access2"] = "Confidential";
 $lang["access3"] = "Custom";
+$lang["accessinvalid"] = "Invalid";
 $lang["statusandrelationships"] = "Status and relationships";
 
 # Lists
@@ -989,7 +991,6 @@ $lang["plugin_field_fmt"] = "%A (%B)"; // %A and %B are replaced by content defi
 $lang["share"] = "Share";
 $lang["share_selected"] = "Share selected";
 $lang["sharecollection"] = "Share collection";
-$lang["cannot_share-has_upload_share"] = "Non upload shares of this collection cannot be created as an upload share currently exists for it";
 $lang["sharecollection-name"] = "Share collection - %collectionname"; # %collectionname will be replaced, e.g. Share Collection - Cars
 $lang["share_theme_category"] = "Share featured collection category";
 $lang["share_theme_category_subcategories"] = "Include featured collections in subcategories for external users?";
@@ -1051,7 +1052,7 @@ $lang['deleteallselectedsure'] = 'Are you sure you wish to DELETE the selected r
 $lang["batchdonotaddcollection"] = "(do not add to a collection)";
 $lang["collectionsthemes"] = "Related featured and public collections";
 $lang["recent"] = "Recent";
-$lang["n_recent"] = "%qty Recently added resources";
+
 $lang["batchcopyfrom"] = "Copy the data below from resource with ID";
 $lang["copy"] = "Copy";
 $lang["zipall"] = "Download";
@@ -2484,6 +2485,7 @@ $lang["upgrade_script"] = "Upgrade script";
 $lang['upgrade_026_notification'] = "The upgrade has deprecated some configuration options which your %entity% is overriding.\r\n\r\nTo continue having the download filename formatted as close as possible to the old way please update its configuration override with:\r\n\$download_filename_format = '%format%';";
 $lang['upgrade_026_error_unable_to_set_config_system_wide'] = "Unable to set system wide config option 'download_filename_format' to '%format%'. Please retry manually.";
 $lang['upgrade_026_error_unable_to_process_deprecated_config_options'] = "Unable to process deprecated config options for %entity%. Please retry manually. Reason:-\r\n\r\n%error%";
+$lang['upgrade_028_notify_config_not_set'] = "Unable to set the (system wide) config option %name% to %value%";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2851,7 +2853,17 @@ $lang["set_metadata_then_upload"] = "Set metadata first, then upload";
 $lang['annotate_text_link_label'] = 'Annotate mode toggle';
 $lang['annotate_annotation_label'] = 'Annotation';
 $lang['annotate_annotations_label'] = 'Annotations';
-$lang['annotate_select'] = 'Select field...';
+$lang['annotate_tagging_fields'] = 'Tagging fields';
+$lang['annotate_text_adds_comment'] = 'Add comment for resource text annotations. (N/A for fixed list field annotations)';
+$lang['annotate_public_view'] = 'Are annotations publicly visible (e.g. external shares)?';
+$lang['annotate_show_author'] = 'Display annotation author?';
+$lang['annotate_exclude_restypes'] = 'Resource Types to exclude (tick to exclude and not be annotated)';
+$lang['annotate_pseudo_rtf_comment_title'] = 'Comments (mode)';
+$lang['annotorious_add_a_comment'] = 'Add a Comment...';
+$lang['annotorious_type_to_search_field'] = 'Type to search field...';
+$lang['annotate_pdf_sheet_tool'] = 'Annotations PDF';
+$lang['annotate_pdf_intro_text'] = 'Select the page size for your Annotations PDF.';
+$lang['annotate_pdf_no_annotations'] = 'There are no annotations.';
 
 $lang["byte_prefix_mode_decimal"] = "Use decimal for file sizes (1000 multiples, KB/MB/GB/TB) as opposed to binary (1024 multiples , KiB/MiB/GiB/TiB)";
 
@@ -3221,6 +3233,7 @@ $lang["language-hu"] = "Hungarian";
 $lang["language-it"] = "Italian";
 $lang["language-jp"] = "Japanese";
 $lang["language-ko"] = "Korean";
+$lang["language-ms"] = "Malay";
 $lang["language-nl"] = "Dutch";
 $lang["language-no"] = "Norwegian";
 $lang["language-pa"] = "Punjabi";
@@ -3232,6 +3245,7 @@ $lang["language-ru"] = "Russian";
 $lang["language-sk"] = "Slovak";
 $lang["language-sv"] = "Swedish";
 $lang["language-sw"] = "Swahili";
+$lang["language-tl"] = "Filipino";
 $lang["language-th"] = "Thai";
 $lang["language-tr"] = "Turkish";
 $lang["language-uk"] = "Ukranian";
@@ -3298,3 +3312,6 @@ $lang["user_pref_appearance_light"] = "Light";
 $lang["user_pref_appearance_dark"] = "Dark";
 $lang["user_pref_appearance_device"] = "Device default";
 $lang["team_resource_non_ingested_search"] = "View non-ingested resources";
+$lang['action_update_now'] = "Update now";
+$lang['errors'] = "Errors";
+$lang['error_savefirst'] = "Please save your changes";

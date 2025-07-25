@@ -75,3 +75,4 @@ $lang["tms_link_write_to_debug_log"]='Vključi napredek skripta v sistemski dnev
 $lang["plugin-tms_link-title"]='Povezava TMS';
 $lang["plugin-tms_link-desc"]='[Pokročilo] Omogoča pridobivanje metapodatkov virov iz baze podatkov TMS.';
 $lang["tms_link_uid_field_int"]='TMS celoštevilski UIDs. Nastavite na false, da omogočite ne-celoštevilske UIDs.';
+$lang["tms_link_selected_module_missing"] = 'Názov modulu TMS je momentálne nastavený na "%%MODULE%%", ale toto nie je dostupná možnosť. Skontrolujte možnosti v rozbaľovacom zozname a aktualizujte nižšie.';

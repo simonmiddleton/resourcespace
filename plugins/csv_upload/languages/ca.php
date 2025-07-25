@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Pujada de CSV';
 $lang["csv_upload_intro"] = 'Aquest connector et permet crear o actualitzar recursos pujant un fitxer CSV. El format del CSV és important';
-$lang["csv_upload_condition1"] = '<li>Assegureu-vos que el fitxer CSV estigui codificat amb <b>UTF-8 sense BOM</b>.</li>';
 $lang["csv_upload_condition2"] = '<li>El fitxer CSV ha de tenir una fila d\'encapçalament</li>';
 $lang["csv_upload_condition3"] = 'Per poder pujar fitxers de recursos més tard utilitzant la funcionalitat de substitució per lots, ha d\'haver-hi una columna anomenada \'Nom original\' i cada fitxer ha de tenir un nom únic';
 $lang["csv_upload_condition4"] = 'Tots els camps obligatoris per a qualsevol recurs creat recentment han d\'estar presents al CSV';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Creat per l\'extensió de càrrega d
 $lang["plugin-csv_upload-title"] = 'Pujada CSV';
 $lang["plugin-csv_upload-desc"] = '[Avançat] Carrega les metadades utilitzant un fitxer CSV.';
 
-$lang["csv_upload_check_invalidbom"] = 'El fitxer CSV té BOM així que no es pot carregar';
 $lang["csv_upload_check_file_error"] = 'No es pot obrir o llegir el fitxer CSV';
 $lang["csv_upload_check_utf_error"] = 'El fitxer CSV no és un UTF-8 vàlid. Caràcter invàlid a la línia';
+$lang["csv_upload_condition1"] = 'Assegureu-vos que el fitxer CSV estigui codificat amb <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'El fitxer CSV té BOM que no s\'ha pogut eliminar';

@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Prijenos CSV datoteke';
 $lang["csv_upload_intro"] = 'Ovaj dodatak omogućuje vam stvaranje ili ažuriranje resursa putem prijenosa CSV datoteke. Format CSV-a je važan';
-$lang["csv_upload_condition1"] = 'Provjerite je li CSV datoteka kodirana pomoću <b>UTF-8 bez BOM znaka</b>.';
 $lang["csv_upload_condition2"] = 'CSV datoteka mora imati zaglavljeni redak';
 $lang["csv_upload_condition3"] = 'Da biste kasnije mogli prenositi datoteke resursa koristeći funkcionalnost zamjene u grupi, potrebno je da postoji stupac nazvan "Izvorni naziv datoteke" i da svaka datoteka ima jedinstven naziv';
 $lang["csv_upload_condition4"] = 'Svi obvezni polja za sve novo kreirane resurse moraju biti prisutni u CSV-u';
@@ -68,6 +67,7 @@ $lang["csv_upload_createdfromcsvupload"] = 'Stvoreno pomoću dodatka za učitava
 $lang["plugin-csv_upload-title"] = 'CSV prijenos';
 $lang["plugin-csv_upload-desc"] = 'Učitajte meta podatke koristeći CSV datoteku.';
 
-$lang["csv_upload_check_invalidbom"] = 'CSV datoteka ima BOM pa se ne može učitati';
 $lang["csv_upload_check_file_error"] = 'CSV datoteka se ne može otvoriti ili pročitati';
 $lang["csv_upload_check_utf_error"] = 'CSV datoteka nije valjani UTF-8. Nevaljani znak na retku';
+$lang["csv_upload_condition1"] = 'Provjerite je li CSV datoteka kodirana koristeći <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'CSV datoteka ima BOM koji nije mogao biti uklonjen';

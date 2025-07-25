@@ -32,6 +32,7 @@ include_once __DIR__ . '/job_functions.php';
 include_once __DIR__ . '/tab_functions.php';
 include_once __DIR__ . '/mime_types.php';
 include_once __DIR__ . '/CommandPlaceholderArg.php';
+include_once __DIR__ . '/annotation_functions.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 # Switch on output buffering.
@@ -77,6 +78,10 @@ ini_set("zend.exception_ignore_args", "Off");
 
 error_reporting($config_error_reporting);
 
+// Check this is a real browser. This is intentionally before DB connection (and before remote config which will connect to the DB) as with a DDOS
+// scenario we want to be exiting as early as possible if the cookie is not present.
+if ($browser_check) {browser_check();}
+
 # -------------------------------------------------------------------------------------------
 # Remote config support - possibility to load the configuration from a remote system.
 #
@@ -121,6 +126,11 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
+        curl_setopt(
+            $ch,
+            CURLOPT_USERAGENT,
+            sprintf('ResourceSpace/%s Remote config for %s', mb_strcut($productversion, 4), $host)
+        );
         $r = curl_exec($ch);
 
         if (!curl_errno($ch)) {

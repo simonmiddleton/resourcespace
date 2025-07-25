@@ -698,6 +698,8 @@ if (($ffmpeg_fullpath != false) && in_array($extension, $ffmpeg_audio_extensions
         echo debug("Failed to process resource " . $ref . " - MP3 creation failed.");
     } else {
         $preview_preprocessing_success = true;
+        # Preview creation successful for mp3 alternative. No image is expected in this scenario.
+        $has_image = 0;
     }
 }
 
@@ -1039,6 +1041,10 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
             } else {
                 ps_query("UPDATE resource_dimensions SET page_count = ?, file_size = ? WHERE resource = ?", array("i", $pagecount, "i", $filesize, "i", $ref));
             }
+        } elseif (!isset($pagecount) && $pdf_pages === 0) {
+            // ResourceSpace may be configured to not preview PDF pages but during minimal preview creation it will
+            // create a job for other previews (see start_previews()) so this operation is simply seen as successful.
+            $preview_preprocessing_success = true;
         }
     } else {
         # Not a PDF file, so single extraction only.

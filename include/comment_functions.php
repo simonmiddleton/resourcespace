@@ -1,5 +1,7 @@
 <?php
 
+include_once __DIR__ . '/annotation_functions.php';
+
 /**
  * Write comments to the database, also deals with hiding and flagging comments
  *
@@ -21,9 +23,22 @@ function comments_submit()
 
     if (($comment_to_hide != 0) && (checkPerm("o"))) {
         $root = find_root_comment($comment_to_hide);
+        $linked_annotation = getAnnotation(ps_value(
+            'SELECT annotation AS `value` FROM `comment` WHERE ref = ?',
+            ['i', $comment_to_hide],
+            0
+        ));
+
+        // $request_ctx originates from pages/ajax/annotations.php
+        if ($linked_annotation !== [] && deleteAnnotation($linked_annotation, $GLOBALS['request_ctx'] ?? [])) {
+            $comment_update_extra_cols = ', annotation = null';
+        } else {
+            $comment_update_extra_cols = '';
+        }
+
         // Does this comment have any child comments?
         if (ps_value("SELECT ref AS value FROM comment WHERE ref_parent = ?", array("i",$comment_to_hide), '') != '') {
-            ps_query("UPDATE comment SET hide = 1 WHERE ref = ?", array("i",$comment_to_hide));
+            ps_query("UPDATE `comment` SET hide = 1{$comment_update_extra_cols} WHERE ref = ?", ['i', $comment_to_hide]);
         } else {
             ps_query("DELETE FROM comment WHERE ref = ?", array("i",$comment_to_hide));
         }
@@ -91,7 +106,7 @@ function comments_submit()
         (getval("body", "") == "")
         || (
             (getval("collection_ref", "") == "")
-            && (getval("resource_ref", "") == "")
+            && (getval("resource_ref", "", false, is_positive_int_loose(...)) == "")
             && (getval("ref_parent", "") == "")
         )
     ) {
@@ -108,6 +123,17 @@ function comments_submit()
     } else {
         $sql_fields = "user_ref";
         $sql_values = array("i", (int)$userref);
+    }
+
+    if(
+        $GLOBALS['annotate_enabled']
+        && $GLOBALS['annotate_text_adds_comment']
+        && ($annotation_ref = getval('annotation_ref', 0, false, is_positive_int_loose(...)))
+        && $annotation_ref > 0
+    ) {
+        $sql_fields .= ', annotation';
+        $sql_values[] = 'i';
+        $sql_values[] = $annotation_ref;
     }
 
     $body = getval("body", "");
@@ -232,7 +258,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 
     // set 'name' to either user.fullname, comment.fullname or default 'Anonymous'
 
-    $sql =  "select c.ref thisref, c.ref_parent, c.hide, c.created, c.body, c.website_url, c.email, u.username, u.ref, u.profile_image, parent.created 'responseToDateTime', " .
+    $sql =  "select c.ref thisref, c.ref_parent, c.annotation, c.hide, c.created, c.body, c.website_url, c.email, u.username, u.ref, u.profile_image, parent.created 'responseToDateTime', " .
             "IFNULL(IFNULL(c.fullname, u.fullname), ?) 'name' ," .
             "IFNULL(IFNULL(parent.fullname, uparent.fullname), ?) 'responseToName' " .
             "from comment c left join (user u) on (c.user_ref = u.ref) left join (comment parent) on (c.ref_parent = parent.ref) left join (user uparent) on (parent.user_ref = uparent.ref) ";
@@ -373,9 +399,18 @@ EOT;
 
             echo "</div>";
 
+            ?>
+            <div class='CommentEntryInfoDetails'><?php
+                echo date("D", strtotime($comment["created"])) . ' ' . nicedate($comment["created"], true, true, true);
 
-            echo "<div class='CommentEntryInfoDetails'>" . date("D", strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true) . " ";
-            echo "</div>";  // end of CommentEntryInfoDetails
+                if ($comment['annotation'] > 0) {
+                    echo ' | ';
+                    ?>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" title="<?php echo escape($lang['annotate_annotation_label']); ?>"></i>
+                    <?php
+                }
+            ?></div>
+            <?php
             echo "</div>";  // end of CommentEntryInfoLine
             echo "</div>";  // end CommentEntryInfoContainer
 

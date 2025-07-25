@@ -107,7 +107,7 @@ $sizes = ps_query($sql, $params);
                             <a href="<?php echo escape($edit_url); ?>" onClick="return CentralSpaceLoad(this,true);">
                         <?php }
 
-                        echo str_highlight($size["id"], $find, STR_HIGHLIGHT_SIMPLE);
+                        echo escape($size["id"]);
                         
                         if ($edit_url != "") { ?>
                             </a>
@@ -119,7 +119,7 @@ $sizes = ps_query($sql, $params);
                             <a href="<?php echo escape($edit_url); ?>" onClick="return CentralSpaceLoad(this,true);">
                         <?php }
                         
-                        echo str_highlight($size["name"], $find, STR_HIGHLIGHT_SIMPLE);
+                        echo escape($size["name"]);
                         
                         if ($edit_url != "") { ?>
                             </a>
@@ -132,7 +132,7 @@ $sizes = ps_query($sql, $params);
                             <?php
                         }
                         
-                        echo str_highlight($size["width"], $find, STR_HIGHLIGHT_SIMPLE);
+                        echo escape($size["width"]);
                         if ($edit_url != "") { ?>
                             </a>
                             <?php
@@ -144,7 +144,7 @@ $sizes = ps_query($sql, $params);
                             <?php
                         }
                         
-                        echo str_highlight($size["height"], $find, STR_HIGHLIGHT_SIMPLE);
+                        echo escape($size["height"]);
                         
                         if ($edit_url != "") { ?>
                             </a>

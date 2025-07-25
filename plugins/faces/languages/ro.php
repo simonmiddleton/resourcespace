@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Fețe detectate';
 $lang["faces-detected-face"] = 'Față detectată';
 $lang["faces-confidence"] = 'Încredere';
@@ -16,3 +15,8 @@ $lang["faces-tag-on-upload"] = 'Etichetează fețele recunoscute la încărcare?
 $lang["faces-detecting"] = 'Scanare pentru fețe în resursă:';
 $lang["faces-tagging"] = 'Etichetarea fețelor detectate în resursă:';
 $lang["faces-confidence-threshold"] = 'Prag de încredere pentru fețe: Cât de încrezător ar trebui să fie modelul că a găsit o față umană? Sugerat 70% (valorile sub aceasta vor corespunde fețelor obscure și non-fețe)';
+$lang["faces-oneface"] = 'Vă rugăm să selectați doar o singură opțiune pentru fiecare față.';
+$lang["faces-show-view"] = 'Afișați funcționalitatea AI Faces pe pagina de vizualizare.';
+$lang["faces_count_faces"] = 'Total fețe detectate';
+$lang["faces_count_missing"] = 'Imagini de procesat';
+$lang["faces-tag-field-not-set"] = 'Câmpul de etichetare nu este configurat.';

@@ -2,7 +2,6 @@
 
 $lang["csv_upload_nav_link"] = 'Upload de CSV';
 $lang["csv_upload_intro"] = 'Este plugin permite que você crie ou atualize recursos fazendo upload de um arquivo CSV. O formato do CSV é importante';
-$lang["csv_upload_condition1"] = 'Verifique se o arquivo CSV está codificado usando <b>UTF-8 sem BOM</b>.';
 $lang["csv_upload_condition2"] = 'O CSV deve ter uma linha de cabeçalho';
 $lang["csv_upload_condition3"] = 'Para poder fazer upload de arquivos de recursos posteriormente usando a funcionalidade de substituição em lote, deve haver uma coluna chamada \'Nome do arquivo original\' e cada arquivo deve ter um nome exclusivo';
 $lang["csv_upload_condition4"] = 'Todos os campos obrigatórios para quaisquer recursos recém-criados devem estar presentes no CSV';
@@ -68,6 +67,7 @@ $lang["csv_upload_create_new_title"] = 'Criar novos recursos';
 $lang["plugin-csv_upload-title"] = 'Upload de CSV';
 $lang["plugin-csv_upload-desc"] = '[Avançado] Enviar metadados usando um arquivo CSV.';
 
-$lang["csv_upload_check_invalidbom"] = 'O arquivo CSV tem BOM, portanto não pode ser carregado';
 $lang["csv_upload_check_file_error"] = 'O arquivo CSV não pode ser aberto ou lido';
 $lang["csv_upload_check_utf_error"] = 'O arquivo CSV não é um UTF-8 válido. Caractere inválido na linha';
+$lang["csv_upload_condition1"] = 'Certifique-se de que o arquivo CSV esteja codificado usando <b>UTF-8</b>.';
+$lang["csv_upload_check_removebom"] = 'O arquivo CSV tem BOM que não pôde ser removido';

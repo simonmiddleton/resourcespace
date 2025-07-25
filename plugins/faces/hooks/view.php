@@ -30,6 +30,10 @@ function HookFacesViewCustompanels()
     $edit_access = get_edit_access($ref);
     $nodes = get_resource_nodes($ref, $faces_tag_field, true);
 
+    if (checkperm("faces-v")) {
+        return false;
+    }
+
     $faces = ps_query("select ref,det_score,bbox,node from resource_face where resource=? order by ref", ["i",$ref]);
     if (count($faces) == 0) {
         return false;
@@ -122,15 +126,19 @@ function HookFacesViewCustompanels()
                                 }
                             }
                             echo escape($value);
-                        } else { 
+                        } else {
                         // Render dynamic keywords field
-                        $field=get_resource_type_field($faces_tag_field);
-                        $field['node_options'] = get_nodes($field['ref'], null, false);
-                        $name="face_" . $face["ref"];
-                        $selected_nodes=array($face["node"]);
-                        $multiple=false;
-                        include dirname(__FILE__, 4) . '/pages/edit_fields/9.php';
-                    } ?>
+                            $field = get_resource_type_field($faces_tag_field);
+                            if (!$field || $field['type'] != FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                                echo escape($lang["faces-tag-field-not-set"]);
+                            } else {
+                                $field['node_options'] = get_nodes($field['ref'], null, false);
+                                $name = "face_" . $face["ref"];
+                                $selected_nodes = array($face["node"]);
+                                $multiple = false;
+                                include dirname(__FILE__, 4) . '/pages/edit_fields/9.php';
+                            }
+                        } ?>
                     </td>
                     <td>
                     <?php $search_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!face" . $face["ref"])); ?>
@@ -140,7 +148,7 @@ function HookFacesViewCustompanels()
                     </td>
 
                 </tr>
-<?php endforeach; ?>
+            <?php endforeach; ?>
         </table>
         </div>
     </div>
@@ -205,4 +213,4 @@ function HookFacesViewCustompanels()
     </script>
     <?php
     return false; # Allow further custom panels
-    }
+}
