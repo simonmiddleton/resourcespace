@@ -202,12 +202,21 @@ function clip_tag(int $resource)
                 'top_k' => $clip_keyword_count,
         ]);
         $response = curl_exec($ch);
-        logScript("CLIP service response: " . $response);
+        $response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        logScript ("CLIP service response: " . $response);
         curl_close($ch);
 
-        if (strlen($response) == 0) {
-            return false;
-        } // CLIP server unresponsive
+        if (strlen($response) == 0) { 
+            return false; // CLIP server unresponsive
+        }
+
+        if ($response_status !== 200) {
+            clip_generate_vector($resource);
+            $response = curl_exec($ch);
+            if (strlen($response) == 0) { 
+                return false;
+            }
+        }
 
         foreach (json_decode($response) as $result) {
             # Create new or fetch existing node
