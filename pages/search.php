@@ -2042,6 +2042,7 @@ function blurhashToDataURL(blurhash, width, height, punch = 1) {
     return canvas.toDataURL();
 }
 
+/*
 document.querySelectorAll('div.ImageColourWrapper').forEach(div => {
     const blurhash = div.dataset.blurhash;
     if (!blurhash) return;
@@ -2051,6 +2052,8 @@ document.querySelectorAll('div.ImageColourWrapper').forEach(div => {
 
 
 });
+*/
+
 
 </script>
 

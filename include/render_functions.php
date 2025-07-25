@@ -2947,7 +2947,7 @@ function render_resource_image($resource, $img_url, $display="thumbs")
         $preview_red=$preview_green=$preview_blue=255;
         }
     ?>
-    <div class="ImageColourWrapper" 
+    <div id="ImageColourWrapper_<?php echo escape($resource["ref"]) ?>" class="ImageColourWrapper" 
     <?php if ($blurhash!="") { ?>class="blurhash" data-blurhash="<?php echo escape($blurhash) ?>"<?php } ?>
     style="
     <?php if ($blurhash=="") { ?>background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
@@ -2963,7 +2963,14 @@ function render_resource_image($resource, $img_url, $display="thumbs")
     src="<?php echo $img_url ?>" 
     alt="<?php echo str_replace(array("\"","'"),"",escape(i18n_get_translated(strip_tags(strip_tags_and_attributes($resource["field".$view_title_field] ?? ""))))); ?>"
     /></div>
-    <?php
+
+    <?php if ($blurhash!="") { ?>
+<script>
+blurhashProcessImage(document.getElementById('ImageColourWrapper_<?php echo escape($resource["ref"]) ?>'));
+</script>
+<?php
+    }
+
     }
 
 
