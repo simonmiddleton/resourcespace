@@ -7,6 +7,7 @@
  */
 
 use Montala\ResourceSpace\CommandPlaceholderArg;
+use kornrunner\Blurhash\Blurhash;
 
 include_once 'metadata_functions.php';
 
@@ -1262,7 +1263,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
                     imagejpeg($target, $path, 90);
 
                     if ($ps[$n]["id"] == "thm") {
-                        extract_mean_colour($target, $ref);
+                        extract_mean_colour_and_blurhash($target, $ref);
                     }
                     imagedestroy($target);
                 } elseif (($id == "pre") || ($id == "thm") || ($id == "col")) {
@@ -1323,18 +1324,18 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
 }
 
 /**
- * Calculate and update the mean color values for a resource image.
- * Calculate and update the mean color values for a resource image.
- *
+ * Calculate and update the mean color values and generate a BlurHash for a resource image.
+ *  *
  * This function calculates the mean red, green, and blue color values for a given image by sampling
  * pixels in a grid pattern. It adjusts for brightness and excludes grayscale pixels to determine the dominant colors.
  * Additionally, it updates the thumbnail dimensions and color key in the resource record.
+ * A BlurHash is generated and stored which is used for result display prior to thumbnail load.
  *
  * @param GdImage $image The image resource to analyze for mean color.
  * @param int $ref The resource ID for which the color data is updated.
  * @return void
  */
-function extract_mean_colour($image, $ref)
+function extract_mean_colour_and_blurhash($image, $ref)
 {
     # for image $image, calculate the mean colour and update this to the image_red, image_green, image_blue tables
     # in the resources table.
@@ -1385,8 +1386,25 @@ function extract_mean_colour($image, $ref)
 
     update_portrait_landscape_field($ref, $image);
 
+    /* Blurhash */
+    $pixels = [];
+    for ($y = 0; $y < $height; ++$y) {
+        $row = [];
+        for ($x = 0; $x < $width; ++$x) {
+            $index = imagecolorat($image, $x, $y);
+            $colors = imagecolorsforindex($image, $index);
+
+            $row[] = [$colors['red'], $colors['green'], $colors['blue']];
+        }
+        $pixels[] = $row;
+    }
+    $components_x = 4;
+    $components_y = 4;
+    
+    $blurhash = Blurhash::encode($pixels, $components_x, $components_y);
+
     ps_query(
-        "update resource set image_red= ?, image_green= ?, image_blue= ?,colour_key= ?,thumb_width= ?, thumb_height= ? where ref= ?",
+        "update resource set image_red= ?, image_green= ?, image_blue= ?,colour_key= ?,thumb_width= ?, thumb_height= ?, blurhash=? where ref= ?",
         [
         'i', $totalred,
         'i', $totalgreen,
@@ -1394,6 +1412,7 @@ function extract_mean_colour($image, $ref)
         's', $colkey,
         'i', $width,
         'i', $height,
+        's', $blurhash,
         'i', $ref
         ]
     );
@@ -4192,7 +4211,7 @@ function create_previews_using_im(
             run_command($mpr_command);
         }
 
-         # For the thumbnail image, call extract_mean_colour() to save the colour/size information
+         # For the thumbnail image, call extract_mean_colour_and_blurhash() to save the colour/size information
          $thumbpath = get_resource_path($ref, true, "thm", false, "jpg", -1, 1, false, "", $alternative);
         if (file_exists($thumbpath)) {
             $GLOBALS["use_error_exception"] = true;
@@ -4200,7 +4219,7 @@ function create_previews_using_im(
                 $target = imagecreatefromjpeg($thumbpath);
             } catch (Throwable $e) {
                 $target = false;
-                debug('Error when opening thm size for calling extract_mean_colour(): ' . $e->getMessage());
+                debug('Error when opening thm size for calling extract_mean_colour_and_blurhash(): ' . $e->getMessage());
             }
             unset($GLOBALS["use_error_exception"]);
         } else {
@@ -4210,7 +4229,7 @@ function create_previews_using_im(
         $resource_data = get_resource_data($ref);
         if ($target && $alternative == -1) {
             // Do not run for alternative uploads
-            extract_mean_colour($target, $ref);
+            extract_mean_colour_and_blurhash($target, $ref);
             // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
             $has_image = (($resource_data["file_extension"] ?? "") === $extension && $generateall) ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
 

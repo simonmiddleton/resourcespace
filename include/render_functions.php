@@ -2931,7 +2931,7 @@ function render_resource_image($resource, $img_url, $display="thumbs")
     global $view_title_field;
     
     list($width, $height, $margin) = calculate_image_display($resource, $img_url, $display);
-
+    $blurhash=$resource["blurhash"];
     $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
 
     // Produce a 'softer' colour for the loading preview (extracted colours tend to have a very high saturation)
@@ -2947,18 +2947,30 @@ function render_resource_image($resource, $img_url, $display="thumbs")
         $preview_red=$preview_green=$preview_blue=255;
         }
     ?>
-    <div class="ImageColourWrapper" 
-    style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
+    <div id="ImageColourWrapper_<?php echo escape($resource["ref"]) ?>" class="ImageColourWrapper" 
+    <?php if ($blurhash!="") { ?>class="blurhash" data-blurhash="<?php echo escape($blurhash) ?>"<?php } ?>
+    style="
+    <?php if ($blurhash=="") { ?>background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
+    <?php } ?>
     width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin:<?php echo $margin ?> auto 0 auto; 
     <?php 
     $blurbleedstopper = hook("stopblurbleed"); 
     if ($blurbleedstopper) { echo $blurbleedstopper; }
-    ?>">
-    <img border="0" width="<?php echo $width ?>" height="<?php echo $height ?>"
+    ?>
+    ">
+
+    <img border="0" width="<?php echo $width ?>" height="<?php echo $height ?>" 
     src="<?php echo $img_url ?>" 
     alt="<?php echo str_replace(array("\"","'"),"",escape(i18n_get_translated(strip_tags(strip_tags_and_attributes($resource["field".$view_title_field] ?? ""))))); ?>"
     /></div>
-    <?php
+
+    <?php if ($blurhash!="") { ?>
+<script>
+blurhashProcessImage(document.getElementById('ImageColourWrapper_<?php echo escape($resource["ref"]) ?>'));
+</script>
+<?php
+    }
+
     }
 
 

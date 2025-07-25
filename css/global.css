@@ -430,7 +430,8 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ImageWrapper {height:200px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
-.ImageColourWrapper {display: inline-block;}
+.ImageColourWrapper {display: inline-block;background-size: 100% 100%;}
+.ImageColourWrapper img {transition: opacity 0.5s ease;}
 .ResourcePanel .nopreview {font-size:120px;margin-top:0.4em;}
 .ResourcePanelLarge .nopreview {font-size:200px;margin-top:0.35em;}
 .ImageStripLink .nopreview {font-size:150px;position: relative; left:-100px;left: -1em;top: -0.2em;}
