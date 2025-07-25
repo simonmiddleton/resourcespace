@@ -18,6 +18,7 @@ parameters:
         - lib/stemming
     bootstrapFiles:
         - include/definitions.php
+        - vendor/autoload.php
 
     scanDirectories:
       - lib/html2pdf/
@@ -36,3 +37,4 @@ parameters:
 
     ignoreErrors:
         - '#^Variable \$[a-zA-Z0-9_]+ might not be defined\.$#'
+
