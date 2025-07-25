@@ -32,7 +32,7 @@ function blurhashToDataURL(blurhash, width, height, punch = 1) {
  */
 function blurhashProcessImage(div) {
     var blurhash = div.dataset.blurhash;
-    var placeholder = blurhashToDataURL(blurhash, 32, 32);console.log(placeholder.length);
+    var placeholder = blurhashToDataURL(blurhash, 32, 32);
     div.style.backgroundImage = `url("${placeholder}")`;
 }
 window.blurhashProcessImage = blurhashProcessImage;
