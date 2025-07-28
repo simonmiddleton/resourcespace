@@ -205,7 +205,14 @@ Note: it is considered safe to show the collection bar because even if we enable
       later on, when the user might have resources in it, they would not be able to do anything with them
       unless they accept terms
 */
-if ($terms_login && 0 == $useracceptedterms && in_array($pagename, array("reload_links","browsebar_js","css_override","category_tree_lazy_load","message","terms","collections","login","user_change_password", "user_home")) === false) {
+$non_redirect_pages = [
+    "reload_links","browsebar_js","css_override","category_tree_lazy_load","message","terms","collections","login","user_change_password", "user_home"
+];
+$extra_non_redirect_pages = hook('beforetermsredirect');
+if (is_array($extra_non_redirect_pages) && count($extra_non_redirect_pages) > 0) {
+    $non_redirect_pages = array_merge($non_redirect_pages, $extra_non_redirect_pages);
+}
+if ($terms_login && 0 == $useracceptedterms && in_array($pagename, $non_redirect_pages) === false) {
     redirect('pages/terms.php?noredir=true&url=' . urlencode("pages/home.php"));
 }
 
