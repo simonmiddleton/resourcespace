@@ -100,3 +100,30 @@ function HookConsentmanagerAllCron()
         logScript("Consent Manager: notifications disabled globally");
     }
 }
+
+function HookConsentmanagerAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
+{
+    if (substr($search, 0, 8) == '!consent') {
+        $consent_ref = substr($search, 8);
+    } else {
+        return null;
+    }
+
+    $consent = consentmanager_get_consent($consent_ref);
+
+    $ids = isset($consent['resources']) ? $consent['resources'] : [];
+
+    // No results - we must still run a query but one that returns no results.
+    if (count($ids) == 0) {
+        $ids = [-1];
+    }
+
+    $in_sql = ps_param_insert(count($ids));
+    $params = ps_param_fill($ids, "i");
+    $sql = new PreparedStatementQuery();
+    $sql->sql = "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.ref in ($in_sql) AND " . $sql_filter->sql . " ORDER BY FIELD(r.ref, $in_sql)";
+    $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $params, $sql_filter->parameters, $params);
+    
+    return $sql;
+
+}

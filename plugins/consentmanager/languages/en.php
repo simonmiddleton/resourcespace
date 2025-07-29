@@ -8,6 +8,7 @@ $lang["consent_id"] = "Consent ID";
 $lang["consentmanager_new"] = "New consent";
 $lang["manageconsents"] = "Consents";
 $lang["manageconsent"] = "Consent";
+$lang["consent_status"] = "Consent status";
 
 $lang["no_expiry_date"] = "No expiry date";
 $lang["no_consent_date"] = "No consent date";
@@ -39,4 +40,12 @@ $lang["manageconsent-tooltip"] = "Create and manage consent records for resource
 
 $lang['consent_expiry_notification'] = "consent_expiry_notification";
 $lang['consent_expiry_notification_days'] = "consent_expiry_notification_days";
+$lang['consent_attach_upload'] = "consent_attach_upload";
+
 $lang['user_pref_consent_notifications'] = "user_pref_consent_notifications";
+
+$lang['consent_status_all'] = "All consents";
+$lang['consent_status_active'] = "Active consents";
+$lang['consent_status_expiring'] = "Expiring consents";
+$lang['consent_status_expired'] = "Expired consents";
+$lang["view_linked_resources"] = "View linked resources";

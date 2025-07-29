@@ -6,3 +6,5 @@ $consent_usage_mediums = array("Print", "Websites", "Merchandise", "TV", "Social
 
 $consent_expiry_notification = false;
 $consent_expiry_notification_days = 14;
+
+$consent_attach_upload = true;

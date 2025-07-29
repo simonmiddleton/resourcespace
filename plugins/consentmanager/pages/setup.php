@@ -22,6 +22,8 @@ $page_def[] = config_add_text_list_input(
 $page_def[] = config_add_boolean_select("consent_expiry_notification", $lang["consent_expiry_notification"], array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']));
 $page_def[] = config_add_text_input("consent_expiry_notification_days", $lang["consent_expiry_notification_days"], false);
 
+$page_def[] = config_add_boolean_select("consent_attach_upload", $lang["consent_attach_upload"], array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']));
+
 // Do the page generation ritual -- don't change this section.
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

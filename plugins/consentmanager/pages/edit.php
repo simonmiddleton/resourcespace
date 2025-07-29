@@ -322,6 +322,16 @@ include "../../../include/header.php";
             <label for="resources"><?php echo escape($lang["linkedresources"]); ?></label>
             <textarea class="stdwidth" rows="3" name="resources" id="resources"><?php echo join(", ", $resources)?></textarea>
             <div class="clearerleft"></div>
+            <?php
+                if ($ref != "new") {
+                ?>
+                <div style="margin-top: 0.3em; float: left; width: 310px;"></div>
+                <div>
+                    <a href='<?php echo generateURL($baseurl_short . "pages/search.php", ['search' => '!consent' . $ref]); ?>'><?php echo escape($lang['view_linked_resources']); ?></a>
+                </div>
+                <?php
+                }
+                ?>            
         </div>
 
         <div class="Question">

@@ -18,7 +18,7 @@ if (array_key_exists("findtext", $_POST)) {
 
 $findtext = getval("findtext", "");
 $delete = getval("delete", "");
-$consent_status = getval("status", "all");
+$consent_status = getval("consent_status", "all");
 
 if ($delete != "" && enforcePostRequest(false)) {
     # Delete consent
@@ -136,6 +136,29 @@ $url_params = array(
         </div>
 
         <div class="BottomInpageNav"><?php pager(true); ?></div>
+        
+        <div class="Question">  
+                <label for="consent_status"><?php echo escape($lang["consent_status"]); ?></label>
+                <div class="tickset">
+                    <div class="Inline">
+                        <select name="consent_status" id="consent_status" onChange="this.form.submit();">
+                            <option value="all" <?php echo ($consent_status == 'all') ? " selected" : ''; ?>>
+                                <?php echo escape($lang["consent_status_all"]); ?>
+                            </option>
+                            <option value="active" <?php echo ($consent_status == 'active') ? " selected" : ''; ?>>
+                                <?php echo escape($lang["consent_status_active"]); ?>
+                            </option>
+                            <option value="expiring" <?php echo ($consent_status == 'expiring') ? " selected" : ''; ?>>
+                                <?php echo escape($lang["consent_status_expiring"]); ?>
+                            </option>
+                            <option value="expired" <?php echo ($consent_status == 'expired') ? " selected" : ''; ?>>
+                                <?php echo escape($lang["consent_status_expired"]); ?>
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearerleft"></div>
+            </div>
 
         <div class="Question">
             <label for="find"><?php echo escape($lang["consentsearch"]); ?><br/></label>
