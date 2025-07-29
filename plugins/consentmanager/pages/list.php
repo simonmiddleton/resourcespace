@@ -120,6 +120,9 @@ $url_params = array(
                         </td>
                         <td>
                             <div class="ListTools">
+                                <a href="<?php echo generateURL($baseurl_short . "pages/search.php", ['search' => '!consent' . $consent['ref']]); ?>" onClick="return CentralSpaceLoad(this,true);">
+                                    <i class="fas fa-search"></i>&nbsp;<?php echo escape($lang['view_linked_resources_short']); ?>
+                                </a>
                                 <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php", $url_params); ?>" onClick="return CentralSpaceLoad(this,true);">
                                     <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                                 </a>
