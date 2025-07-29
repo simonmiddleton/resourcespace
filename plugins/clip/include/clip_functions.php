@@ -258,7 +258,7 @@ function clip_generate_missing_vectors($limit)
     global $clip_resource_types;
 
     // Ensure only one instance of this.
-    if (is_process_lock(__FUNCTION__)) {
+    if (is_process_lock(__FUNCTION__) || count($clip_resource_types) === 0) {
         return false;
     }
     set_process_lock(__FUNCTION__);
@@ -306,6 +306,11 @@ function clip_count_vectors()
 function clip_missing_vectors()
 {
     global $clip_resource_types;
+
+    if (count($clip_resource_types) === 0) {
+        return 0;
+    }
+
     $sql = "
     SELECT count(*) value
     FROM resource r
@@ -330,5 +335,9 @@ function clip_missing_vectors()
 function clip_vector_cleanup()
 {
     global $clip_resource_types;
-    ps_query("delete from resource_clip_vector where resource not in (select ref from resource where resource_type in (" . ps_param_insert(count($clip_resource_types)) . "))", ps_param_fill($clip_resource_types, "i"));
+    $sql = "DELETE FROM resource_clip_vector";
+    if (count($clip_resource_types) > 0) {
+        $sql .= " WHERE resource not in (select ref from resource where resource_type in (" . ps_param_insert(count($clip_resource_types)) . "))";
+    }
+    ps_query($sql, ps_param_fill($clip_resource_types, "i"));
 }
