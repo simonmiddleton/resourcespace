@@ -39,6 +39,20 @@ if (getval("submitted", "") != "") {
     # Construct expiry date
     $expires = getval("expires_year", "") . "-" . getval("expires_month", "") . "-" . getval("expires_day", "");
 
+    # Construct date of birth
+    $date_of_birth = getval("date_of_birth", null);
+
+    if ($date_of_birth == "") {
+        $date_of_birth = null;
+    }
+
+    # Construct date of consent
+    $date_of_consent = getval("date_of_consent", null);
+
+    if ($date_of_consent == "") {
+        $date_of_consent = null;
+    }
+
     # Construct usage
     $consent_usage = "";
     if (isset($_POST["consent_usage"])) {
@@ -52,7 +66,18 @@ if (getval("submitted", "") != "") {
 
     if ($ref == "new") {
         # New record
-        $ref = consentmanager_create_consent(getval('name', ''), getval('email', ''), getval('telephone', ''), $consent_usage, getval('notes', ''), $expires);
+        $ref = consentmanager_create_consent(getval('name', ''), 
+                                             $date_of_birth,
+                                             getval('address', ''),
+                                             getval('parent_guardian_name', ''),
+                                             getval('email', ''), 
+                                             getval('telephone', ''), 
+                                             $consent_usage, 
+                                             getval('notes', ''),
+                                             $date_of_consent,
+                                             $expires, 
+                                             $userref);
+
         $file_path = get_consent_file_path($ref); // get updated path
 
         # Add to all the selected resources
@@ -67,7 +92,7 @@ if (getval("submitted", "") != "") {
         }
     } else {
         # Update existing record
-        consentmanager_update_consent($ref, getval('name', ''), getval('email', ''), getval('telephone', ''), $consent_usage, getval('notes', ''), $expires);
+        consentmanager_update_consent($ref, getval('name', ''), $date_of_birth, getval('address', ''), getval('parent_guardian_name', ''),getval('email', ''), getval('telephone', ''), $consent_usage, getval('notes', ''), $date_of_consent, $expires);
 
         # Add all the selected resources
         ps_query("delete from resource_consent where consent= ?", ['i', $ref]);
@@ -122,10 +147,14 @@ if ($ref == "new") {
     # Set default values for the creation of a new record.
     $consent = array(
         "name" => "",
+        "date_of_birth" => "",
+        "address" => "",
+        "parent_guardian_name" => "",
         "email" => "",
         "telephone" => "",
         "consent_usage" => "",
         "notes" => "",
+        "date_of_consent" => "",
         "expires" => "",
         "file" => ""
         );
@@ -140,6 +169,8 @@ if ($ref == "new") {
         exit("Consent not found.");
     }
     $resources = $consent["resources"];
+
+    $created_by_user = get_user($consent['created_by']);
 }
 
 include "../../../include/header.php";
@@ -164,10 +195,35 @@ include "../../../include/header.php";
             <div class="Fixed"><?php echo escape($ref == "new" ? $lang["consentmanager_new"] : $ref)?></div>
             <div class="clearerleft"></div>
         </div>
+        <?php if ($ref != "new"): ?>
+        <div class="Question">
+            <label>Created by:</label>
+            <div class="Fixed"><?php echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]); ?></div>
+            <div class="clearerleft"></div>
+        </div>
+        <?php endif; ?>
 
         <div class="Question">
             <label><?php echo escape($lang["name"]); ?></label>
             <input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($consent["name"])?>" />
+            <div class="clearerleft"></div>
+        </div>
+
+        <div class="Question">
+            <label for="date_of_birth"><?php echo escape($lang["date_of_birth"]); ?></label>
+            <input type=date name="date_of_birth" id="date_of_birth" value="<?php echo escape((string) $consent["date_of_birth"])?>" />
+            <div class="clearerleft"></div>
+        </div>
+
+        <div class="Question">
+            <label for="address"><?php echo escape($lang["address"]); ?></label>
+            <textarea class="stdwidth" rows="5" name="address" id="address"><?php echo escape($consent["address"]) ?></textarea>
+            <div class="clearerleft"></div>
+        </div>
+
+        <div class="Question">
+            <label for="parent_guardian_name"><?php echo escape($lang["parent_guardian"]); ?></label>
+            <input type=text class="stdwidth" name="parent_guardian_name" id="parent_guardian_name" value="<?php echo escape($consent["parent_guardian_name"])?>" />
             <div class="clearerleft"></div>
         </div>
 
@@ -224,6 +280,12 @@ include "../../../include/header.php";
                 </tr>
             </table>
 
+            <div class="clearerleft"></div>
+        </div>
+
+        <div class="Question">
+            <label for="date_of_consent"><?php echo escape($lang["date_of_consent"]); ?></label>
+            <input type=date name="date_of_consent" id="date_of_consent" value="<?php echo $consent['date_of_consent'] ? $consent['date_of_consent'] : date('Y-m-d'); ?>" />
             <div class="clearerleft"></div>
         </div>
 

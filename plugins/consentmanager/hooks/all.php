@@ -87,3 +87,16 @@ function HookConsentmanagerAllTopnavlinksafterhome()
         <?php
     }
 }
+
+function HookConsentmanagerAllCron()
+{
+    global $consent_expiry_notification;
+
+    // Check if expiry notifications are enabled globally
+    if ($consent_expiry_notification) {
+        // Trigger the notification process here
+        consentmanager_process_expiry_notifications();
+    } else {
+        logScript("Consent Manager: notifications disabled globally");
+    }
+}

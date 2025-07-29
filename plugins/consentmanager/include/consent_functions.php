@@ -1,5 +1,7 @@
 <?php
 
+use ImageBanks\ResourceSpace;
+
 /**
  * Check if the user should have read access to a consent record
  *
@@ -64,7 +66,7 @@ function consentmanager_get_consents($resource)
         return false;
     }
 
-    return ps_query("select consent.ref,consent.name,consent.expires,consent.consent_usage from consent join resource_consent on consent.ref=resource_consent.consent where resource_consent.resource= ? order by ref", ['i', $resource]);
+    return ps_query("select " . columns_in('consent', 'consent', 'consentmanager') . " from consent join resource_consent on consent.ref=resource_consent.consent where resource_consent.resource= ? order by ref", ['i', $resource]);
 }
 
 /**
@@ -102,10 +104,11 @@ function consentmanager_delete_consent($resource)
  * @param string $consent_usage  Description of the intended usage for which consent is given.
  * @param string $notes          Any additional notes related to the consent record.
  * @param string $expires        The expiry date of the consent, formatted as a string.
+ * TODO FIX THIS
  * @return int|bool              Returns the ID of the new consent record on success,
  *                               or false if the user does not have write access.
  */
-function consentmanager_create_consent($name, $email, $telephone, $consent_usage, $notes, $expires)
+function consentmanager_create_consent($name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires, $created_by)
 {
     if (!consentmanager_check_write()) {
         return false;
@@ -113,14 +116,29 @@ function consentmanager_create_consent($name, $email, $telephone, $consent_usage
 
     # New record
     ps_query(
-        "insert into consent (name,email,telephone,consent_usage,notes,expires) values ( ?, ?, ?, ?, ?, ?)",
+        "insert into consent (name,
+                              date_of_birth,
+                              address,
+                              parent_guardian_name,
+                              email,
+                              telephone,
+                              consent_usage,
+                              notes,
+                              date_of_consent,
+                              expires,
+                              created_by) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
-            's',$name,
-            's',$email,
+            's', $name,
+            's', $date_of_birth,
+            's', $address,  
+            's', $parent_guardian, 
+            's', $email,
             's', $telephone,
             's', $consent_usage,
             's', $notes,
-            's', $expires
+            's', $date_of_consent,
+            's', $expires,
+            'i', $created_by
         ]
     );
 
@@ -237,7 +255,7 @@ function consentmanager_get_consent($consent)
         return false;
     }
 
-    $consent = ps_query("select ref,name,email,telephone,consent_usage,notes,expires,file from consent where ref= ?", ['i', $consent]);
+    $consent = ps_query("select " . columns_in('consent', null, 'consentmanager') . " from consent where ref= ?", ['i', $consent]);
 
     if (empty($consent)) {
         return false;
@@ -267,20 +285,24 @@ function consentmanager_get_consent($consent)
  * @return bool                  Returns true if the consent record was successfully updated,
  *                               or false if the user does not have write access.
  */
-function consentmanager_update_consent($consent, $name, $email, $telephone, $consent_usage, $notes, $expires)
+function consentmanager_update_consent($consent, $name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires)
 {
     if (!consentmanager_check_write()) {
         return false;
     }
 
     ps_query(
-        "update consent set name= ?,email= ?, telephone= ?,consent_usage= ?,notes= ?,expires= ? where ref= ?",
+        "update consent set name= ?, date_of_birth= ?, address= ?, parent_guardian_name= ?, email= ?, telephone= ?,consent_usage= ?,notes= ?, date_of_consent= ?, expires= ? where ref= ?",
         [
             's', $name,
+            's', $date_of_birth,
+            's', $address,
+            's', $parent_guardian,
             's', $email,
             's', $telephone,
             's', $consent_usage,
             's', $notes,
+            's', $date_of_consent,
             's', $expires,
             'i', $consent
         ]
@@ -323,21 +345,63 @@ function consentmanager_get_all_consents_by_collection(int $collection)
  * @return array|bool       Returns an array of consent records if the user has
  *                          read access; otherwise, returns false.
  */
-function consentmanager_get_all_consents(string $findtext = "")
+function consentmanager_get_all_consents(string $findtext = "", string $consent_status = "all"): array|bool
 {
+    global $consent_expiry_notification_days;
+
     if (!consentmanager_check_read()) {
         return false;
     }
 
-    $sql = "";
+    $sql = "select " . columns_in('consent', null, 'consentmanager') . " from consent";
+    
+    $where_sql = "";
     $params = [];
 
+    $orderby_sql = "";
+
     if ($findtext != "") {
-        $sql = "where name like ?";
+        $where_sql = " where name like ?";
         $params = ['s', "%$findtext%"];
     }
 
-    return ps_query("select " . columns_in('consent', null, 'consentmanager') . " from consent $sql order by ref", $params);
+    // All - no filter on consents
+    // Active - any that haven't expired yet or have no date set
+    // Expiring - any that have an expiry date within $consent_expiry_notification_days days
+    // Expired - any that the expiry date has been passed
+    if ($consent_status == 'expired') {
+        
+        if ($where_sql == "") {
+            $where_sql = " where";
+        }
+        
+        $where_sql .= " expires < CURDATE()";
+        $orderby_sql = " order by expires desc, ref";        
+
+    } elseif ($consent_status == 'expiring') {
+
+        if ($where_sql == "") {
+            $where_sql = " where";
+        }
+        
+        $where_sql .= " expires >= CURDATE() AND expires <= CURDATE() + INTERVAL ? DAY";
+        array_push($params, 'i', $consent_expiry_notification_days);
+        $orderby_sql = " order by expires asc, ref";
+
+    } elseif ($consent_status == 'active') {
+        
+        if ($where_sql == "") {
+            $where_sql = " where";
+        }
+
+        $where_sql .= " expires >= CURDATE() OR expires is NULL";
+        $orderby_sql = " order by ref";
+
+    } else {
+        $orderby_sql = " order by ref";
+    }
+
+    return ps_query($sql . $where_sql . $orderby_sql, $params);
 }
 
 /**
@@ -366,4 +430,71 @@ function consentmanager_save_file(int $consent, string $filename, string $fileda
     }
     ps_query("UPDATE consent set file= ? where ref= ?", ['s', $filename, 'i', $consent]);
     return true;
+}
+
+function consentmanager_get_expiring_consents(int $expires_within, bool $unsent_only = true): array|bool
+{
+    if ($expires_within <= 0) {
+        return false;
+    }
+
+    $sql = "select ref,name,email,telephone,consent_usage,notes,expires,file 
+            from consent 
+            where expires >= CURDATE() AND expires <= CURDATE() + INTERVAL ? DAY";
+
+    if ($unsent_only) {
+        $sql .= " and expiration_notice_sent = 0";
+    }
+
+    $sql .= " order by ref;";
+    
+    $expiring_consents = ps_query($sql, ['i', $expires_within]);
+
+    return $expiring_consents;
+
+}
+
+function consentmanager_process_expiry_notifications(): bool {
+
+    global $applicationname, $baseurl_short, $consent_expiry_notification_days;
+
+    logScript("Consent Manager: expiry notifications job starting:");
+
+
+    // Determine if there are any consents that are expiring but notifications have not been sent yet
+
+    $expiring_consents = consentmanager_get_expiring_consents($consent_expiry_notification_days);
+
+    if (empty($expiring_consents)) {
+        logScript("Consent Manager: no consent expiring within " . $consent_expiry_notification_days . " days. Exiting.");
+        return false;
+    }
+
+    // Pull a list of users with cm permission
+    $users_to_notify = get_users_with_permission('cm');
+
+    foreach ($users_to_notify as $user) {
+
+        get_config_option(['user' => $user['ref'], 'usergroup' => $user['usergroup']], 'user_pref_consent_notifications', $send_message);
+        
+        // Default to enabled, so if null still send message
+        if ($send_message == 1 || is_null($send_message)) {
+            logScript("Send message for " . $user['username']);
+            $expiry_notification = new ResourceSpaceUserNotification;
+
+            $expiry_notification->set_subject("Consents Expiring Soon");
+
+            $expiry_notification->set_text("There are some consents that are expiring soon.");
+
+            $expiry_notification->url = generateURL($baseurl_short . "/plugins/consentmanager/pages/list.php", ["status" => "expiring"]);
+
+            send_user_notification([$user['ref']], $expiry_notification);
+ 
+
+        }
+
+    }
+
+    return true;
+
 }
