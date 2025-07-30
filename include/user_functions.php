@@ -866,7 +866,7 @@ function email_user_welcome(string $email, string $username, int $usergroup): vo
 
     load_site_text_for_usergroup($usergroup);
     # Fetch any welcome message for this user group
-    $welcome = ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?", ["i",$usergroup], "");
+    $welcome = (string) ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?", ["i",$usergroup], "");
     if (trim($welcome) === "") {
         $welcome = str_replace("%applicationname", $applicationname, $lang["welcome_generic"]);
     }
