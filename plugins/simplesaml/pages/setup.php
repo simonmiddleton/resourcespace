@@ -6,7 +6,7 @@
 include '../../../include/boot.php';
 include '../../../include/authenticate.php';
 if (!checkperm('a')) {
-    exit($lang['error-permissiondenied']);
+    exit(escape($lang['error-permissiondenied']));
 }
 include_once __DIR__ . '/../include/simplesaml_functions.php';
 include '../../../include/ajax_functions.php';
@@ -20,7 +20,6 @@ if (getval('updatemetadata', '') !== '' && enforcePostRequest(true)) {
     $result = simplesaml_update_metadata();
     if ($result !== true) {
         $errormessage = trim((string) get_sysvar("saml_idp_metadata_error"));
-        // is_string($result) ? $result : $lang['error'];
         ajax_send_response(200, ajax_response_fail(ajax_build_message($errormessage)));
     } else {
         $returntext = date("l F jS Y @ H:i:s", time());
@@ -145,11 +144,11 @@ if ($simplesaml_use_www) {
 if (!$simplesaml_rsconfig
     && !(file_exists(simplesaml_get_lib_path() . '/config/config.php'))
 ) {
-    echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . "</div>";
+    echo "<div class='PageInfoMessage'>" . escape($lang['simplesaml_sp_configuration']) . "</div>";
 } else {
     require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
     if (!simplesaml_config_check()) {
-        echo "<div class='PageInfoMessage'>" . $lang['simplesaml_authorisation_version_error'] . "</div>";
+        echo "<div class='PageInfoMessage'>" . escape($lang['simplesaml_authorisation_version_error']) . "</div>";
     }
 
     if ($simplesaml_rsconfig !== 0) {
@@ -320,11 +319,11 @@ config_text_input('set_simplesaml_admin_password', $lang['simplesaml_admin_passw
             : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/public/admin");
 
         if (isset($simplesaml_lib_path) && file_exists($simplesaml_lib_path . "/config/authsources.php")) {
-            echo "<a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate' target='_blank'>" . LINK_CARET . $lang["simplesaml_existing_config"] . "</a>";
+            echo "<a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate' target='_blank'>" . LINK_CARET . escape($lang["simplesaml_existing_config"]) . "</a>";
         } 
-        echo "<a id='generate_sp_config_link' href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a><br>";
+        echo "<a id='generate_sp_config_link' href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . escape($lang["simplesaml_sp_generate_config"]) . "</a><br>";
         // Show link to SimpleSAMLphp test site
-        echo "<a href='" . $samlphplink . "' target='_blank'>" . LINK_CARET . $lang["simplesaml_sp_samlphp_link"] . "</a></li>";
+        echo "<a href='" . $samlphplink . "' target='_blank'>" . LINK_CARET . escape($lang["simplesaml_sp_samlphp_link"]) . "</a></li>";
         ?>
     </div>
     <div class='clearerleft'></div>
