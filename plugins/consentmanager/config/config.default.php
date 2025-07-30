@@ -8,3 +8,5 @@ $consent_expiry_notification = false;
 $consent_expiry_notification_days = 14;
 
 $consent_attach_upload = true;
+
+$consent_expired_workflow_state = "";

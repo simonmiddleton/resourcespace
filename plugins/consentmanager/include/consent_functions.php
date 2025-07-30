@@ -438,7 +438,7 @@ function consentmanager_get_expiring_consents(int $expires_within, bool $unsent_
         return false;
     }
 
-    $sql = "select ref,name,email,telephone,consent_usage,notes,expires,file 
+    $sql = "select ref, name, email, telephone, consent_usage, notes, expires,file 
             from consent 
             where expires >= CURDATE() AND expires <= CURDATE() + INTERVAL ? DAY";
 
@@ -452,6 +452,22 @@ function consentmanager_get_expiring_consents(int $expires_within, bool $unsent_
 
     return $expiring_consents;
 
+}
+
+function consentmanager_get_expired_consent_resources(int $archive_status): array|bool
+{
+    $sql = "select distinct r.ref value
+            from consent c
+            inner join resource_consent rc on c.ref = rc.consent
+            inner join resource r on rc.resource = r.ref
+            where c.expires < CURDATE()
+            and r.archive <> ?
+            and r.archive <> 3
+            order by r.ref;";
+    
+    $expired_consent_resources = ps_array($sql, ['i', $archive_status]);
+
+    return $expired_consent_resources;
 }
 
 function consentmanager_process_expiry_notifications(): bool {
@@ -497,4 +513,19 @@ function consentmanager_process_expiry_notifications(): bool {
 
     return true;
 
+}
+
+function consentmanager_process_expired_archiving(): bool {
+
+    global $consent_expired_workflow_state;
+
+    logScript("Consent Manager: automatic archiving job starting:");
+
+    $expired_consent_resources = consentmanager_get_expired_consent_resources($consent_expired_workflow_state);
+
+    foreach ($expired_consent_resources as $resource) {
+        update_archive_status($resource, $consent_expired_workflow_state, [], 0, "- due to expired consent record");
+    }
+
+    return true;
 }
