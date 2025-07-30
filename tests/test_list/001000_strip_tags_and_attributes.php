@@ -161,6 +161,20 @@ $use_cases = [
         'expected' => '<div>Test</div>',
     ],
     [
+        'name' => 'Dangerous URI scheme amongst multiple "style" attribute values drops the style',
+        'input' => [
+            'html' => '<div style="color: red; background-image: url(javascript:alert(\'XSS\'));">Test</div>',
+        ],
+        'expected' => '<div>Test</div>',
+    ],
+    [
+        'name' => 'Allowed URI scheme in the "style" attribute value will be left alone',
+        'input' => [
+            'html' => '<div style="color: red;background-image: url(http://test.localhost/pages);">Test</div>',
+        ],
+        'expected' => '<div style="color: red;background-image: url(http://test.localhost/pages);">Test</div>',
+    ],
+    [
         'name' => 'Allowed URI scheme, i.e http(s), should be left alone',
         'input' => [
             'html' => sprintf('<a href="%s">Test</a>', generateURL($baseurl, ['foo' => 'bar']) . '#fragment'),
