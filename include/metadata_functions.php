@@ -363,3 +363,101 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
         }
     }
 }
+
+/**
+ * Return array containing data for all required fields that apply to the given resource type.
+ *
+ * @param  int  $resource_type   Resource type reference.
+ */
+function get_required_fields(int $resource_type): array
+{
+    if (isset($GLOBALS['get_required_fields'][$resource_type])) {
+        return $GLOBALS['get_required_fields'][$resource_type];
+    }
+
+    $allfields = get_resource_type_fields([$resource_type]);
+
+    $result = array_values(array_filter($allfields, function($field) {
+        return $field['required'] == 1;
+        }));
+    $GLOBALS['get_required_fields'][$resource_type] = $result;
+
+    return $result;
+}
+
+/**
+ * For a given resource, return an array of data for required metadata field references which have not been completed.
+ *
+ * @param  int|array  $resource   Integer representing the resource reference or array of resource data from get_resource_data().
+ */
+function missing_fields_check(int|array $resource): array
+{
+    if (!is_array($resource)) {
+        $resource = get_resource_data($resource);
+    }
+
+    $required_fields = get_required_fields($resource['resource_type']);
+
+    # Provide translated titles for later displaying in error messages.
+    $required_fields = array_map(function($v) { $v['title'] = i18n_get_translated($v["title"]); return $v; }, $required_fields);
+
+    if (count($required_fields) === 0) {
+        return array();
+    }
+
+    $all_resource_nodes = get_resource_nodes($resource['ref'], null, true);
+    $all_resource_nodes = array_unique(array_column($all_resource_nodes, 'resource_type_field'));
+
+    $missing = array_diff(array_column($required_fields, 'ref'), $all_resource_nodes);
+
+    if (count($missing) > 0) {
+        return array_values(array_filter($required_fields, function($field) use ($missing) {return in_array($field['ref'], $missing);}));
+    }
+
+    return array();
+}
+
+/**
+ * Considers if checking of missed required fields is required when a resource changes archive state. We'll always allow moving
+ * to the $resource_deletion_state and Pending Submission state (-2). Exceptions made to archive states in rse_workflow will be applied.
+ * Return will consist of an empty array where no checking is needed or an array of metadata field data where the field is required
+ * but was not completed.
+ * 
+ * @param  int|array  $resource        Resource ref or array of resource data, likely from get_resource_data().
+ * @param  int        $archive_state   Destination archive state.
+ */
+function update_archive_required_fields_check(int|array $resource, int $archive_state): array
+{
+    global $resource_deletion_state;
+
+    if (is_array($resource)) {
+        $resource_ref = $resource['ref'];
+    } else {
+        $resource_ref = $resource;
+    }
+
+    if (isset($GLOBALS['update_archive_required_fields_check'][$resource_ref])) {
+        return $GLOBALS['update_archive_required_fields_check'][$resource_ref];
+    }
+
+    if (in_array($archive_state, array(-2, $resource_deletion_state))) {
+        # No check required moving to these archive states.
+        return array();
+    }
+
+    if (!isset($GLOBALS['update_archive_required_fields_check_hook'][$archive_state])) {
+        $check_not_required = hook(('archive_skip_required_fields'), '', array($archive_state));
+        $GLOBALS['update_archive_required_fields_check_hook'][$archive_state] = $check_not_required;
+    } else {
+        $check_not_required = $GLOBALS['update_archive_required_fields_check_hook'][$archive_state];
+    }
+
+    if ($check_not_required) {
+        # Workflow states destination archive allows for required fields checking to be skipped.
+        return array();
+    }
+
+    $result = missing_fields_check($resource);
+    $GLOBALS['update_archive_required_fields_check'][$resource_ref] = $result;
+    return $result;
+}

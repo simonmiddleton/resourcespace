@@ -18,6 +18,7 @@ $rse_workflow_email_from = getval('rse_workflow_email_from', '');
 $rse_workflow_bcc_admin = getval('rse_workflow_bcc_admin', 0, true);
 $simple_search = getval('simple_search', 0, true);
 $icon = getval('icon', '');
+$skip_required_fields = getval('skip_required_fields', 0, true);
 
 // Check valid icon
 if(!in_array($icon,$font_awesome_icons))
@@ -43,10 +44,11 @@ if($code=="new")
     $workflowstate["rse_workflow_bcc_admin"] = 0;
     $workflowstate["simple_search_flag"] = 0;
     $workflowstate["icon"] = WORKFLOW_DEFAULT_ICON;
+    $workflowstate["skip_required_fields"] = 0;
     }
 else
     {   
-    $workflowstates = rse_workflow_get_archive_states();    
+    $workflowstates = rse_workflow_get_archive_states();
     // Check that this is a valid state to edit
     if($code=="" || in_array($code,$additional_archive_states) || ($code>-3 && $code <4) || !isset($workflowstates[$code]))
         {
@@ -75,6 +77,7 @@ if (getval("submitted","")!="" && enforcePostRequest(getval("ajax", false)))
                 'bcc_admin' => $rse_workflow_bcc_admin,
                 'simple_search_flag' => $simple_search,
                 'icon' => $icon,
+                'skip_required_fields' => $skip_required_fields
             ]);
             }
         else
@@ -88,17 +91,19 @@ if (getval("submitted","")!="" && enforcePostRequest(getval("ajax", false)))
                        email_from = '',
                        bcc_admin = ?,
                        simple_search_flag = ?,
-                       icon = ?
+                       icon = ?,
+                       skip_required_fields = ?
                  WHERE code = ?",
                     [
-                    "s",$name,
-                    "i",$notify_group,
-                    "i",$more_notes,
-                    "i",$notify_user,
-                    "i",$rse_workflow_bcc_admin,
-                    "i",$simple_search,
-                    "s",$icon,
-                    "i",$code,
+                    "s", $name,
+                    "i", $notify_group,
+                    "i", $more_notes,
+                    "i", $notify_user,
+                    "i", $rse_workflow_bcc_admin,
+                    "i", $simple_search,
+                    "s", $icon,
+                    "i", $skip_required_fields,
+                    "i", $code,
                     ]
                 );
             }
@@ -115,6 +120,7 @@ if (getval("submitted","")!="" && enforcePostRequest(getval("ajax", false)))
     $workflowstate["rse_workflow_bcc_admin"]=$rse_workflow_bcc_admin;
     $workflowstate["simple_search_flag"] = $simple_search;
     $workflowstate["icon"] = $icon;
+    $workflowstate["skip_required_fields"] = $skip_required_fields;
     }   
     
     
@@ -266,9 +272,25 @@ $workflowstate_url = generateURL($baseurl_short."plugins/rse_workflow/pages/edit
             <?php
             }
 
-    render_fa_icon_selector($lang["property-icon"],"icon",$workflowstate["icon"]);
-    ?>
+        render_fa_icon_selector($lang["property-icon"],"icon",$workflowstate["icon"]);
 
+        if (!in_array((int) $code, array(-2, $resource_deletion_state))) {
+            ?>
+            <div class="Question" id="skip_required_fields_question">
+                <label for="skip_required_fields"><?php echo escape($lang['rse_workflow_skip_required_fields']); ?></label>
+                <?php
+                    $skip_required_fields = '';
+                    if($workflowstate['skip_required_fields'] == 1) {
+                        $skip_required_fields = 'checked';
+                    }
+                ?>
+                <input id="skip_required_fields" type="checkbox" name="skip_required_fields" value="1" <?php echo $skip_required_fields; ?>>
+                <div class="clearerleft"></div>
+            </div>
+            <?php
+        }
+
+    ?>
     <div class="Question" id="QuestionSubmit">
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
     </div>

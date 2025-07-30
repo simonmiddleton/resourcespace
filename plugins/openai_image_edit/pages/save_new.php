@@ -31,7 +31,7 @@ $imageType = getval('imageType','');
 $extension = explode("/",$imageType)[1];
 
 // Create resource
-$resource=create_resource(1,0,-1,"OpenAI",$extension);
+$resource = create_resource(1, get_default_archive_state(), -1, "OpenAI", $extension);
 
 // Save file
 $path=get_resource_path($resource,true,'',true,$extension);

@@ -1120,6 +1120,7 @@ $lang["requiredfield"] = "This is a required field";
 $lang["requiredfield_resource_type"] = "Resource type: This is a required field";
 $lang["requiredfields"] = "Please review the form and try again. The following fields were not completed:";
 $lang["requiredfields-general"] = "Please complete all required fields";
+$lang["requiredfields-status-required_fields"] = "Required fields must be completed to change status to %%STATUS%%. Please set the following fields and try again: %%FIELDS%%";
 $lang["requiredantispam"] = "The anti-spam code has not been entered correctly, please try again";
 $lang["expiredantispam"] = "The anti-spam code has expired, please try again";
 $lang["viewduplicates"] = "View duplicate resources";
@@ -3050,6 +3051,7 @@ $lang["error_locked_other_user"]            = "Resource is locked by another use
 $lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
 $lang["error-edit_noaccess_related_resources"] = "Unable to relate resources. No access to: ";
 $lang["error-edit_locked_resources"]        = "The following resources are locked: ";
+$lang["error-edit_status_change_missing_required_fields"] = "It is not possible to change the archive status of all resources. The following resources were skipped as they have data missing in required fields:";
 $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
 $lang["posted-file-not-found"]              = "The file posted has not been found";
@@ -3312,6 +3314,10 @@ $lang["user_pref_appearance_light"] = "Light";
 $lang["user_pref_appearance_dark"] = "Dark";
 $lang["user_pref_appearance_device"] = "Device default";
 $lang["team_resource_non_ingested_search"] = "View non-ingested resources";
+
+$lang["missing_required_fields"] = 'Resources with incomplete required fields';
+$lang["missing_required_fields_intro"] = 'Resources in the collection appear below sorted by incomplete require fields.';
+
 $lang['action_update_now'] = "Update now";
 $lang['errors'] = "Errors";
 $lang['error_savefirst'] = "Please save your changes";

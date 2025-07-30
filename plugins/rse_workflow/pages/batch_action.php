@@ -109,10 +109,23 @@ if(is_array($result) && count($result) > 0)
     $resources = $result;
     }
 
-$affected_resources = array_filter($resources, function($resource) use ($action)
-    {
-    return rse_workflow_validate_action($action, $resource);
-    });
+
+$affected_resources = array();
+$missing_required_fields = array();
+foreach ($resources as $resource) {
+    if (rse_workflow_validate_action($action, $resource)) {
+        $required_fields_check = update_archive_required_fields_check($resource, $action['statusto']);
+        if (count($required_fields_check) === 0) {
+            $affected_resources[] = $resource;
+        } else {
+            $missing_required_fields[$resource["ref"]] = $required_fields_check;
+        }
+    }
+}
+
+if (count($missing_required_fields) > 0) {
+    $lang["error-edit_status_change_missing_required_fields"] . '<br> ' . implode(', ', array_keys($missing_required_fields));
+}
 $affected_resources_count = count($affected_resources);
 
 if($ajax && $process_action)
@@ -181,6 +194,13 @@ include_once '../../../include/header.php';
 
     <p><?php echo str_replace("%wf_name", $to_wf_state["name"], $lang["rse_workflow_confirm_to_state"]); ?></p>
     <p><?php echo str_replace("%count", $affected_resources_count, $lang["rse_workflow_affected_resources"]); ?></p>
+    <?php
+    if (count($missing_required_fields) > 0) {
+        $missing_required_fields_refs = array_keys($missing_required_fields);
+        sort($missing_required_fields_refs, SORT_NUMERIC);
+        echo (escape($lang["error-edit_status_change_missing_required_fields"]) . '<br> ' . escape(implode(', ', $missing_required_fields_refs)));
+    }
+    ?>
     <div class="QuestionSubmit">
         <button type="button" onclick="ModalClose();"><?php echo escape($lang["cancel"]); ?></button>
         <button type="button" onclick="process_wf_action(this);" <?php echo $action_csrf_data; ?>><?php echo escape($lang["ok"]); ?></button>

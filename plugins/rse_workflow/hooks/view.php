@@ -52,7 +52,16 @@ function HookRse_workflowViewPageevaluation()
                     {
                     // Check whether More notes are present
                     $more_notes_text = getval("more_workflow_action_" . $workflowaction["ref"],"");
+
+                    // Prevent workflow state change if required metadata fields are empty.
+                    $result = update_archive_required_fields_check($ref, $workflowaction["statusto"]);
+                    if (is_array($result) && count($result) > 0) {
+                        echo "<div class=\"PageInformal\">" . escape(str_replace(array('%%ARCHIVE%%', '%%FIELDS%%'), array($lang["status" . $workflowaction["statusto"]], implode(', ', array_column($result, 'title'))), $lang['rse_workflow_state_change_failed_required_fields'])) . "</div>";
+                        return;
+                    }
+
                     update_archive_status($ref, $workflowaction["statusto"], $resource["archive"], 0, $more_notes_text);
+
                     hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
                                                 
                     if (checkperm("z" . $workflowaction["statusto"]))
