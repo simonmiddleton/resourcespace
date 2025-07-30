@@ -273,20 +273,24 @@ $workflowstate_url = generateURL($baseurl_short."plugins/rse_workflow/pages/edit
             }
 
         render_fa_icon_selector($lang["property-icon"],"icon",$workflowstate["icon"]);
-        ?>
 
-        <div class="Question" id="skip_required_fields_question">
-            <label for="skip_required_fields"><?php echo escape($lang['rse_workflow_skip_required_fields']); ?></label>
-            <?php
-                $skip_required_fields = '';
-                if($workflowstate['skip_required_fields'] == 1) {
-                    $skip_required_fields = 'checked';
-                }
+        if (!in_array((int) $code, array(-2, $resource_deletion_state))) {
             ?>
-            <input id="skip_required_fields" type="checkbox" name="skip_required_fields" value="1" <?php echo $skip_required_fields; ?>>
-            <div class="clearerleft"></div>
-        </div>
+            <div class="Question" id="skip_required_fields_question">
+                <label for="skip_required_fields"><?php echo escape($lang['rse_workflow_skip_required_fields']); ?></label>
+                <?php
+                    $skip_required_fields = '';
+                    if($workflowstate['skip_required_fields'] == 1) {
+                        $skip_required_fields = 'checked';
+                    }
+                ?>
+                <input id="skip_required_fields" type="checkbox" name="skip_required_fields" value="1" <?php echo $skip_required_fields; ?>>
+                <div class="clearerleft"></div>
+            </div>
+            <?php
+        }
 
+    ?>
     <div class="Question" id="QuestionSubmit">
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
     </div>
