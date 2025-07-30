@@ -2116,7 +2116,7 @@ function generate_collection_access_key($collection, $feedback = 0, $email = "",
 {
     global $userref, $usergroup, $scramble_key, $username, $anonymous_login;
 
-    if (isset($anonymous_login) && $username === $anonymous_login) {
+    if (is_anonymous_user()) {
         // Block anon users from generating keys as they're unneeded.
         return false;
     }

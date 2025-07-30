@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["clip-natural-language-search"] = 'Maghanap ayon sa paglalarawan';
 $lang["clip-natural-language-search-help"] = 'Ilagay ang isang paglalarawan ng larawan hal. \'Isang pulang sports car\'';
 $lang["clip-configuration"] = 'KONFIGURASYON NG CLIP';

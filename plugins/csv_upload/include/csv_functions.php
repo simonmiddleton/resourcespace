@@ -346,14 +346,15 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                         if (isset($archivestates[strtolower($setstatus)])) {
                             $setstatus = $archivestates[strtolower($setstatus)];
                         }
-
-                        if (!in_array($setstatus, $archivestates)) {
-                            $setstatus = $csv_set_options['status_default'];
-                            csv_upload_log($logfile, "Invalid resource workflow state, using default value");
-                            $messages[] = "Invalid resource workflow state, using default value";
-                        }
                     }
-
+                    if (!in_array($setstatus, $archivestates)) {
+                        $setstatus = $csv_set_options['status_default'];
+                        csv_upload_log(
+                            $logfile,
+                            "Invalid resource workflow state, using default value"
+                        );
+                        $messages[] = "Invalid resource workflow state, using default value";
+                    }
                     // Run the check again as there might not be a default set
                     if (!checkperm('z' . $setstatus) && is_numeric($setstatus) && in_array($setstatus, $archivestates)) {
                         update_archive_status($resourcerefs, $setstatus);
@@ -369,12 +370,15 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                         if (isset($accessstates[strtolower($setaccess)])) {
                             $setaccess = $accessstates[strtolower($setaccess)];
                         }
+                    }
 
-                        if (!in_array($setaccess, $accessstates)) {
-                            $setaccess = $csv_set_options['access_default'];
-                            csv_upload_log($logfile, "Invalid resource access level, using default value");
-                            $messages[] = "Invalid resource access level, using default value";
-                        }
+                    if (!in_array($setaccess, $accessstates)) {
+                        $setaccess = $csv_set_options['access_default'];
+                        csv_upload_log(
+                            $logfile,
+                            "Invalid resource access level, using default value"
+                        );
+                        $messages[] = "Invalid resource access level, using default value";
                     }
 
                     // Run the check again as there might not be a default set
@@ -404,17 +408,15 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
             // Get status to set
             if ($csv_set_options["status_column"] != "" && in_array($csv_set_options["status_column"], array_keys($line))) {
                 $setstatus = $line[$csv_set_options["status_column"]];
-                if (!in_array($setstatus, $archivestates)) {
-                    if (isset($archivestates[strtolower($setstatus)])) {
-                        $setstatus = $archivestates[strtolower($setstatus)];
-                    }
+                if (!in_array($setstatus, $archivestates) && isset($archivestates[strtolower($setstatus)])) {
+                    $setstatus = $archivestates[strtolower($setstatus)];
+                }
 
-                    if (!in_array($setstatus, $archivestates)) {
-                        $setstatus = (int)$csv_set_options["status_default"];
-                        $logtext = "Invalid resource workflow state, using default value.";
-                        csv_upload_log($logfile, $logtext);
-                        array_push($messages, $logtext);
-                    }
+                if (!in_array($setstatus, $archivestates)) {
+                    $setstatus = (int)$csv_set_options["status_default"];
+                    $logtext = "Invalid resource workflow state, using default value";
+                    csv_upload_log($logfile, $logtext);
+                    array_push($messages, $logtext);
                 }
                 $processed_columns[] = (int)$csv_set_options["status_column"];
             } else {
@@ -424,18 +426,17 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
             // Get access to set
             if ($csv_set_options["access_column"] != "" && in_array($csv_set_options["access_column"], array_keys($line))) {
                 $setaccess = $line[$csv_set_options["access_column"]];
-                if (!is_numeric($setaccess)) {
-                    if (isset($accessstates[strtolower($setaccess)])) {
-                        $setaccess = $accessstates[strtolower($setaccess)];
-                    }
-
-                    if (!in_array($setaccess, $accessstates)) {
-                        $setaccess = (int)$csv_set_options["access_default"];
-                        $logtext = "Invalid resource access level, using default value.";
-                        csv_upload_log($logfile, $logtext);
-                        array_push($messages, $logtext);
-                    }
+                if (!is_numeric($setaccess) && isset($accessstates[strtolower($setaccess)])) {
+                    $setaccess = $accessstates[strtolower($setaccess)];
                 }
+
+                if (!in_array($setaccess, $accessstates)) {
+                    $setaccess = (int)$csv_set_options["access_default"];
+                    $logtext = "Invalid resource access level, using default value";
+                    csv_upload_log($logfile, $logtext);
+                    array_push($messages, $logtext);
+                }
+
                 $processed_columns[] = $csv_set_options["access_column"];
             } else {
                 $setaccess = (int)$csv_set_options["access_default"];

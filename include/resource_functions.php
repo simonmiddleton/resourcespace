@@ -3703,11 +3703,13 @@ function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $t
     } else {
         switch ($type) {
             case LOG_CODE_STATUS_CHANGED:
+                $from = $lang["status" . $fromvalue] ?? $lang["statusinvalid"];
                 $diff = $lang["status" . $fromvalue] . " -> " . $lang["status" . $tovalue];
                 break;
 
             case LOG_CODE_ACCESS_CHANGED:
-                $diff = $lang["access" . $fromvalue] . " -> " . $lang["access" . $tovalue];
+                $from = $lang["access" . $fromvalue] ?? $lang["accessinvalid"];
+                $diff = $from . " -> " . $lang["access" . $tovalue];
                 break;
 
             // do not do a diff, just dump out whole new value (this is so we can cleanly append transform output)
@@ -3747,7 +3749,7 @@ function resource_log($resource, $type, $field, $notes = "", $fromvalue = "", $t
             [
             'i', (($userref != "" && $type !== LOG_CODE_SYSTEM) ? $userref : null),
             'i', $resource,
-            'i', $alt_ref > 0 ?: null,
+            'i', $alt_ref > 0 ? $alt_ref : null,
             's', $type,
             'i', (($field == "" || !is_numeric($field)) ? null : $field),
             's', $notes,
@@ -6077,7 +6079,7 @@ function generate_resource_access_key($resource, $userref, $access, $expires, $e
 {
     global $username, $anonymous_login;
 
-    if (checkperm("noex") || (isset($anonymous_login) && $username == $anonymous_login)) {
+    if (checkperm("noex") || is_anonymous_user()) {
         // "noex" users shouldn't ever get here, but catch in case not already checked
         // also block anon users from generating keys as they're unneeded.
         return false;

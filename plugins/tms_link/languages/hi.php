@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='सिस्टम डिबग लॉग 
 $lang["plugin-tms_link-title"]='टीएमएस लिंक';
 $lang["plugin-tms_link-desc"]='[उन्नत] संसाधन मेटाडेटा को TMS डेटाबेस से निकालने की अनुमति देता है।';
 $lang["tms_link_uid_field_int"]='TMS पूर्णांक UID. गैर-पूर्णांक UID की अनुमति देने के लिए false पर सेट करें।';
+$lang["tms_link_selected_module_missing"] = 'TMS मॉड्यूल का नाम वर्तमान में "%%MODULE%%" पर सेट है लेकिन यह एक उपलब्ध विकल्प नहीं है। ड्रॉप डाउन विकल्पों की समीक्षा करें और नीचे अपडेट करें।';

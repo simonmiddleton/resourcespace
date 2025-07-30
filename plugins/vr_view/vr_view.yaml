@@ -6,5 +6,5 @@ desc: 360 degree image and video previews.
 icon: fa fa-vr-cardboard
 icon-colour: peru
 config_url: /plugins/vr_view/pages/setup.php
-category: User interface
+category: User Interface
 info_url: https://www.resourcespace.com/knowledge-base/plugins/googlevrview

@@ -71,3 +71,4 @@ $lang["tms_link_tms_uid_field"]='TMS UID maes';
 $lang["tms_link_tms_module_name"]='Enw modiwl TMS';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
 $lang["tms_link_media_path"]='Llwybr gwraidd i\'r storfa ffeiliau a fydd yn cael ei storio yn TMS e.e. \\RS_SERVERilestore\\. Gwnewch yn siŵr bod y slaes terfynol wedi\'i gynnwys. Bydd yr enw ffeil a gedwir yn TMS yn cynnwys y llwybr cymharol o wraidd y storfa ffeiliau.';
+$lang["tms_link_selected_module_missing"] = 'Mae enw modiwl TMS ar hyn o bryd wedi\'i osod i "%%MODULE%%" ond nid yw hwn yn opsiwn ar gael. Adolygwch yr opsiynau yn y rhestr ddisgynnol a diweddarwch isod.';

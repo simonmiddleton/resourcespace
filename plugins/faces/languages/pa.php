@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'ਪਛਾਣੀ ਗਈ ਚਿਹਰੇ';
 $lang["faces-detected-face"] = 'ਸਨাক্ত ਕੀਤੀ ਗਈ ਚਿਹਰਾ';
 $lang["faces-confidence"] = 'ਆਤਮਵਿਸ਼ਵਾਸ';

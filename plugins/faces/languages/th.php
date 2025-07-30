@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'ตรวจพบใบหน้า';
 $lang["faces-detected-face"] = 'ตรวจพบใบหน้า';
 $lang["faces-confidence"] = 'ความมั่นใจ';

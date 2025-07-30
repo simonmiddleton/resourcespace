@@ -75,3 +75,4 @@ $lang["tms_link_write_to_debug_log"]='Skriptfortschritt in System-Debug-Log aufn
 $lang["plugin-tms_link-title"]='TMS-Verbindung';
 $lang["plugin-tms_link-desc"]='Ermöglicht das Extrahieren von Ressourcen-Metadaten aus der TMS-Datenbank.';
 $lang["tms_link_uid_field_int"]='TMS Integer-UIDs. Auf false setzen, um nicht-integer UIDs zuzulassen.';
+$lang["tms_link_selected_module_missing"] = 'Der TMS-Modulname ist derzeit auf "%%MODULE%%" eingestellt, dies ist jedoch keine verfügbare Option. Überprüfen Sie die Dropdown-Optionen und aktualisieren Sie unten.';

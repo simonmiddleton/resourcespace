@@ -4,6 +4,7 @@ command_line_only();
 
 // Save state
 $related_pushed_order_by_saved = $related_pushed_order_by ?? null;
+$sort_fields_saved = $sort_fields ?? [];
 
 // Set up related resources
 
@@ -30,7 +31,7 @@ if (count($results) !== 3 || !match_values($arr_result, $arr_expected)) {
 
 // Create new field to order by and add data to the resources
 $relatedorderfield = create_resource_type_field("Page943", 0, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST, "page943");
-$GLOBALS["related_pushed_order_by"] = $relatedorderfield;
+$GLOBALS["related_pushed_order_by"] = $GLOBALS["sort_fields"][] = $relatedorderfield;
 
 $resource_setvals = [
     2 => "1",
@@ -58,5 +59,6 @@ if (count($results) !== 3 || $arr_result !== $arr_expected) {
 if (!is_null($related_pushed_order_by_saved)) {
     $GLOBALS["related_pushed_order_by_saved"] = $related_pushed_order_by_saved;
 }
+$GLOBALS["sort_fields"] = $sort_fields_saved;
 
 return true;

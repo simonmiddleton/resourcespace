@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='Zahrnout průběh skriptu do systémového
 $lang["plugin-tms_link-title"]='Odkaz TMS';
 $lang["plugin-tms_link-desc"]='[Pokročilé] Umožňuje extrahovat metadata zdrojů z databáze TMS.';
 $lang["tms_link_uid_field_int"]='TMS Celá čísla UID. Nastavte na false pro povolení necelých čísel UID.';
+$lang["tms_link_selected_module_missing"] = 'Název modulu TMS je aktuálně nastaven na "%%MODULE%%", ale tato možnost není k dispozici. Zkontrolujte možnosti v rozbalovacím seznamu a aktualizujte níže.';

@@ -696,6 +696,7 @@ $lang["status0"] = "Active";
 $lang["status1"] = "Waiting to be archived";
 $lang["status2"] = "Archived";
 $lang["status3"] = "Deleted";
+$lang["statusinvalid"] = "Invalid";
 
 # Charts
 $lang["activity"] = "Activity";
@@ -975,6 +976,7 @@ $lang["access0"] = "Open";
 $lang["access1"] = "Restricted";
 $lang["access2"] = "Confidential";
 $lang["access3"] = "Custom";
+$lang["accessinvalid"] = "Invalid";
 $lang["statusandrelationships"] = "Status and relationships";
 
 # Lists
@@ -3315,3 +3317,7 @@ $lang["team_resource_non_ingested_search"] = "View non-ingested resources";
 
 $lang["missing_required_fields"] = 'Resources with incomplete required fields';
 $lang["missing_required_fields_intro"] = 'Resources in the collection appear below sorted by incomplete require fields.';
+
+$lang['action_update_now'] = "Update now";
+$lang['errors'] = "Errors";
+$lang['error_savefirst'] = "Please save your changes";

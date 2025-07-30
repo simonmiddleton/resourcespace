@@ -12,6 +12,27 @@ function HookSimplesamlAllInitialise()
         set_plugin_config('simplesaml', $simplesaml_config);
     }
     check_removed_ui_config("simplesaml_lib_path");
+
+    if ($GLOBALS['simplesaml_rsconfig'] === 2 && isset($GLOBALS["simplesaml_metadata_url"]) && trim($GLOBALS["simplesaml_metadata_url"]) !== '') {
+        global $simplesamlconfig;
+        // Get IdP data
+        $latestdata = get_saml_metadata();
+        if(!$latestdata) {
+            return false;
+        }
+        $simplesamlconfig['metadata'] = $latestdata;
+        $simplesamlconfig['authsources']['admin'] = ['core:AdminPassword'];
+        $simplesamlconfig['authsources']['resourcespace-sp'] = [
+            'saml:SP',
+            'entityID' => sprintf(
+                '%s/plugins/simplesaml/lib/%s/module.php/saml/sp/metadata.php/resourcespace-sp',
+                $GLOBALS['baseurl'],
+                $GLOBALS['simplesaml_use_www'] ? 'www' : 'public',
+            ),
+            'idp' =>  array_key_first($simplesamlconfig['metadata']),
+            'discoURL' => null,
+        ];
+    }
 }
 
 function HookSimplesamlAllPreheaderoutput()
@@ -762,10 +783,69 @@ function HookSimplesamlAllExtra_checks()
         }
     }
 
+    if ($GLOBALS['simplesaml_rsconfig'] === 2) { 
+        // Check automatic metadata updates
+        $lastupdate = get_sysvar("saml_idp_metadata_last_updated");
+        $errormessage = (string) get_sysvar("saml_idp_metadata_error");
+        $lastupdatetext = $lastupdate != "" ? date("l F jS Y @ H:i:s", $lastupdate) : $GLOBALS['lang']["status-never"];
+        if ($errormessage !== ''
+            || $lastupdate == ''
+            || time() - $lastupdate > 60*60*24*7
+        ) {
+            $return[$GLOBALS["lang"]['simplesaml_metadata_updates']] = [
+                'status' => 'WARN',
+                'info' => str_replace("%date%", $lastupdatetext, $GLOBALS['lang']['simplesaml_metadata_warning']) . ". " . $GLOBALS['lang']['errors'] . ": " . $errormessage,
+                'severity' => SEVERITY_WARNING,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+            ];
+        } elseif (!isset($GLOBALS["simplesamlconfig"]['metadata']) || count($GLOBALS["simplesamlconfig"]['metadata']) < 1) {
+            // Metadata was not parsed successfully
+            $return[$GLOBALS["lang"]['simplesaml_metadata_updates']] = [
+                'status' => 'FAIL',
+                'info' => $GLOBALS['lang']['simplesaml_metadata_invalid'],
+                'severity' => SEVERITY_WARNING,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
+            ];
+        } else {
+            $return[$GLOBALS["lang"]['simplesaml_metadata_updates']] = [
+                'status' => 'OK',
+                'info' => $lastupdatetext,
+            ];
+        }
+    }
+
     return count($return) > 0 ? $return : false;
 }
 
 function HookSimplesamlAllSsologindefault()
 {
     return !$GLOBALS["simplesaml_prefer_standard_login"];
+}
+
+function HookSimplesamlAllCron()
+{
+    $storedsamlconfig = get_saml_metadata();
+    if (!$storedsamlconfig) {
+        return false;
+    }
+    $simplesamlconfig['metadata'] = $storedsamlconfig;
+    $errormessage = get_sysvar("saml_idp_metadata_error", '');
+
+    // Check when last updated
+    $lastupdate = get_sysvar("saml_idp_metadata_last_updated");
+
+    if (trim($errormessage) !== ""
+        || time() - $lastupdate > 60*60*12 // Don't update if valid and updated in last 12 hours
+    ) {
+        // Invalid metadata
+        debug("simplesaml - invalid metadata");
+        echo " - Updating SAML metadata" . PHP_EOL;
+        $result = simplesaml_update_metadata();
+        if($result !== true) {
+            $message = " - Failed to update SAML metadata: " .$result;
+            echo $message . PHP_EOL;
+            return;
+        }
+        echo " - Successfully updated SAML metadata" . PHP_EOL;
+    }
 }

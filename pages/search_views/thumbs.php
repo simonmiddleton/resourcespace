@@ -5,14 +5,14 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
 # Establish various metrics for use in thumbnail rendering
 $resolved_title_trim = 0;
 $field_height = 24;
-$workflow_state_height = 31;
+$workflow_state_height = 24;
 
 if ($display == "xlthumbs") {
     $resolved_title_trim = $xl_search_results_title_trim;
-    $resource_panel_height = 351;
+    $resource_panel_height = 352;
 } else {
     $resolved_title_trim = $search_results_title_trim;
-    $resource_panel_height = 231;
+    $resource_panel_height = 232;
 }
 
 $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * (count($thumbs_display_fields))) + 2;
@@ -33,6 +33,11 @@ if (isset($search_result_title_height)) {
             $thumbs_displayed_fields_height += ($search_result_title_height - 19);
         }
     }
+}
+
+# Increase height if resource ID is displayed
+if ($display_resource_id_in_thumbnail) {
+    $thumbs_displayed_fields_height += 25;
 }
 
 hook('thumbs_resourceshell_height');
@@ -234,7 +239,12 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
             <?php
         }
     }
-
+    if ($display_resource_id_in_thumbnail && $ref > 0) {
+        echo "<label for='check" . escape($ref) . "'" . "class='ResourcePanelResourceID'>" . escape($ref) . "</label>";
+    }
+    ?>
+    <div class="clearer"></div>
+    <?php
     $df = $df_normal;
     ?>
     <!-- Checkboxes -->
@@ -275,11 +285,6 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
             <?php
             }
         }
-
-        if ($display_resource_id_in_thumbnail && $ref > 0) {
-            echo "<label for='check" . escape($ref) . "'" . "class='ResourcePanelResourceID'>" . escape($ref) . "</label>";
-        }
-
         include "resource_tools.php";
         ?>
     </div>

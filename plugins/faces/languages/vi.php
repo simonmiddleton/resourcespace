@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Phát hiện khuôn mặt';
 $lang["faces-detected-face"] = 'Phát hiện khuôn mặt';
 $lang["faces-confidence"] = 'Sự tự tin';

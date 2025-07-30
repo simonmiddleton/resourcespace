@@ -28,19 +28,26 @@ include "../../../include/header.php";
 ?>
 <h2><?php echo escape($lang["tms_link_tms_data"]); ?></h2>
 <div class='Listview'>
-    <table style="border=1;">
 <?php
-foreach($tmsdata as $key=>$value)
-    {
+foreach($tmsdata as $modulename => $tmsmodule) {
     ?>
-    <tr> 
-    <td><strong><?php echo escape($key); ?></strong></td>
-    <td><?php echo escape($value); ?></td>
-    </tr>
+    <table style="border:1;">
+        <th><?php echo escape($modulename); ?></th>
     <?php
+    foreach($tmsmodule as $tmsobject) {
+        foreach($tmsobject as $key=>$value) {
+            ?>
+            <tr> 
+            <td><strong><?php echo escape($key); ?></strong></td>
+            <td><?php echo escape($value); ?></td>
+            </tr>
+            <?php
+        }
+        ?><tr><td></td></tr><?php
     }
     ?>
     </table>
+    <?php }?>
 </div>
 <?php	
 include "../../../include/footer.php";

@@ -5,6 +5,6 @@ version : 1.0
 desc    : Enables administrators to grant users temporary full edit access to resources.
 icon    : fa fa-user-edit
 config_url: /plugins/grant_edit/pages/setup.php
-category: Workflow and access
+category: Workflow And Access
 disable_group_select: 1
 info_url: https://www.resourcespace.com/knowledge-base/plugins/grant_edit

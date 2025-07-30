@@ -417,16 +417,16 @@ if ($show_resource_title_in_titlebar){
     }
 }
 
-if(count(canSeeAnnotationsFields()) > 0 && isset($image_height) && isset($image_width))
+if(count(canSeeAnnotationsFields()) > 0 && isset($imagepre['height']) && isset($imagepre['width']))
     {
     ?>
     <!-- Annotorious -->
-    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css", ['v' => $css_reload_key]); ?>" />
-    <script src="<?php echo generateURL("{$baseurl}lib/annotorious_0.6.4/annotorious.min.js", ['v' => $css_reload_key]); ?>"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css", ['v' => $css_reload_key]); ?>" />
+    <script src="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/annotorious.min.js", ['v' => $css_reload_key]); ?>"></script>
 
     <!-- Annotorious plugin(s) -->
-    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css", ['v' => $css_reload_key]); ?>" />
-    <script src="<?php echo generateURL("{$baseurl}lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js", ['v' => $css_reload_key]); ?>"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css", ['v' => $css_reload_key]); ?>" />
+    <script src="<?php echo generateURL("{$baseurl}/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js", ['v' => $css_reload_key]); ?>"></script>
     <?php
     if ($facial_recognition_active) {
         ?>
@@ -516,8 +516,8 @@ if(count(canSeeAnnotationsFields()) > 0 && isset($image_height) && isset($image_
         // Set the width and height of the image otherwise if the source of the file
         // is fetched from download.php, Annotorious will not be able to determine its
         // size
-        preview_image_copy.width(<?php echo (int) $image_width ?? 0; ?>);
-        preview_image_copy.height(<?php echo (int) $image_height ?? 0; ?>);
+        preview_image_copy.width(<?php echo (int) $imagepre['width'] ?? 0; ?>);
+        preview_image_copy.height(<?php echo (int) $imagepre['height'] ?? 0; ?>);
 
         preview_image_copy.prependTo(preview_image_link.parent());
         preview_image_link.hide();

@@ -370,7 +370,7 @@ input:checked + .customFieldLabel, .keywordselected {
     color:black;
 }
 
-.ReportSheet {background-color:#fff;       box-shadow: 0 1px 3px rgba(0,0,0,0.1);;color:black;}
+.ReportSheet {background-color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: black;}
 .ReportSheet  h2 {color:black;}
 .ReportSheet  p {color:black;}
 .ReportSummary {background-color:white;color:black;border-collapse:collapse;}
@@ -681,6 +681,12 @@ a.Enabled, a:visited.Enabled {
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
     border: 1px solid transparent;
     color: #fff;
+}
+
+input[type="submit"]:disabled {
+    color: #666666;
+    background: white;
+    box-shadow: unset;
 }
 
 .ToolsOptionLink:link, .ToolsOptionLink:visited {

@@ -2,6 +2,8 @@
 
 command_line_only();
 
+$anonymous_login_placeholder = $anonymous_login;
+$anonymous_login = ""; 
 
 $resource_ref = create_resource(1, 0);
 $valid_k      = generate_resource_access_key($resource_ref, $userref, 0, date('Y-m-d H:i:s', strtotime('+3 days')), 'testEmail@testDomain.com');
@@ -23,5 +25,7 @@ if (check_access_key($resource_ref, $invalid_k)) {
 }
 
 delete_resource_access_key($resource_ref, $valid_k);
+
+$anonymous_login = $anonymous_login_placeholder;
 
 return true;

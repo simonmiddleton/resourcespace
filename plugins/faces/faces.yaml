@@ -5,7 +5,7 @@ version: 1.0
 desc: State-of-the-art automatic face detection and tagging. Search by face.
 icon: fa fa-user-tag
 icon-colour: seagreen
-category: search
+category: AI
 config_url: /plugins/faces/pages/setup.php
 info_url: https://www.resourcespace.com/knowledge-base/plugins/faces
 disable_group_select: 1

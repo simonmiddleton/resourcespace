@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Registrerede ansigtstræk';
 $lang["faces-detected-face"] = 'Registreret ansigt';
 $lang["faces-confidence"] = 'Tillid';

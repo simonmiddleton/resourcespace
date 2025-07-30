@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'সনাক্ত করা মুখগুলি';
 $lang["faces-detected-face"] = 'সনাক্ত করা মুখ';
 $lang["faces-confidence"] = 'আত্মবিশ্বাস';

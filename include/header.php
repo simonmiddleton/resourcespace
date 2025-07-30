@@ -171,8 +171,10 @@ if ($ajax == "") {
                 echo "browse_clicked = false;";
             }
             ?>
+
         </script>
 
+        <script src="<?php echo $baseurl_short ?>js/blurhash.js" type="module"></script>
         <script src="<?php echo $baseurl_short?>js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
         <script src="<?php echo $baseurl_short?>lib/js/polyfills.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 

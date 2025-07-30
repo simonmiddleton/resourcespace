@@ -2,7 +2,7 @@
 
 command_line_only();
 
-$anonymous_login_palceholder = $anonymous_login;
+$anonymous_login_placeholder = $anonymous_login;
 $anonymous_login = ""; 
 
 $resource_1     = create_resource(1, 0);
@@ -50,6 +50,6 @@ if (check_access_key_collection($collection_ref_empty, $invalid_k)) {
 }
 
 delete_collection_access_key($collection_ref_empty, $valid_k_empty);
-$anonymous_login = $anonymous_login_palceholder;
+$anonymous_login = $anonymous_login_placeholder;
 
 return true;

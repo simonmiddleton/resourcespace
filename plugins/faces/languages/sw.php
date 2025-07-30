@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Uso wa uso ulio gundulika';
 $lang["faces-detected-face"] = 'Uso ulio gundulika';
 $lang["faces-confidence"] = 'Kujiamini';

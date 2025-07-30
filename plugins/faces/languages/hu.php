@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Felfedezett arcok';
 $lang["faces-detected-face"] = 'Arcfelismerés';
 $lang["faces-confidence"] = 'Bizalom';

@@ -5,5 +5,5 @@ icon: fa fa-users
 author: Montala Limited
 version: 1.0
 default_priority: 100
-category: system
+category: System
 info_url: https://www.resourcespace.com/knowledge-base/plugins/csv-user-import

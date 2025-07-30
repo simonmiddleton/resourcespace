@@ -8,5 +8,5 @@ info_url: https://www.resourcespace.com/knowledge-base/plugins/emu
 icon-colour: #B64B00
 config_url: /plugins/emu/pages/setup.php
 default_priority: 100
-category: integrations
+category: Integrations
 disable_group_select: 1

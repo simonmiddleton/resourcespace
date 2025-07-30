@@ -322,7 +322,7 @@ if (!checkperm("c")) {
 
                     <div class="Question" id="resource_type_question">
                         <label for="resource_type_column"><?php echo escape($lang["csv_upload_resource_type_column"]); ?></label>
-                        <select id="resource_type_column" name="resource_type_column"  class="stdwidth columnselect">                    
+                        <select id="resource_type_column" name="resource_type_column"  class="stdwidth columnselect">
                             <option value=""><?php echo escape($lang["select"]); ?></option>
                             <?php
                             foreach ($csv_info as $csv_column => $csv_field_data) {
@@ -334,7 +334,7 @@ if (!checkperm("c")) {
 
                     <div class="Question" id="resource_type_default_question">
                         <label for="resource_type_default"><?php echo escape($lang["csv_upload_resource_type_default"]); ?></label>
-                        <select id="resource_type_default" name="resource_type_default" class="stdwidth" onchange="hide_override(this)">
+                        <select id="resource_type_default" name="resource_type_default" class="stdwidth" onchange="hide_override(this)" required>
                                 <option value="0"><?php echo escape($lang["select"]); ?></option>
                                 <?php foreach ($resource_types as $resource_type) { ?>
                                     <option value="<?php echo $resource_type["ref"]; ?>" <?php echo ($csv_set_options["resource_type_default"] == $resource_type["ref"]) ? " selected " : ''; ?>>
@@ -360,8 +360,8 @@ if (!checkperm("c")) {
 
                     <div class="Question" id="status_default_question">
                         <label for="status_default"><?php echo escape($lang["csv_upload_workflow_default"]); ?></label>
-                        <select id="status_default" name="status_default" class="stdwidth" onchange="hide_override(this)">
-                                <option value="0"><?php echo escape($lang["select"]); ?></option>
+                        <select id="status_default" name="status_default" class="stdwidth" onchange="hide_override(this)" required>
+                                <option value=""><?php echo escape($lang["select"]); ?></option>
                                 <?php
                                 $workflow_states = get_editable_states($userref);
                                 foreach ($workflow_states as $workflow_state) {
@@ -404,8 +404,8 @@ if (!checkperm("c")) {
 
                     <div class="Question" id="access_default_question">
                         <label for="access_default"><?php echo escape($lang["csv_upload_access_default"]); ?></label>
-                        <select id="access_default" name="access_default" class="stdwidth" onchange="hide_override(this)">
-                            <option value="0"><?php echo escape($lang["select"]); ?></option>
+                        <select id="access_default" name="access_default" class="stdwidth" onchange="hide_override(this)" required>
+                            <option value=""><?php echo escape($lang["select"]); ?></option>
                             <?php
                             // Get applicable access options - custom access omitted as can be added by batch editing later
                             for ($n = 0; $n < 3; $n++) {
@@ -482,7 +482,7 @@ if (!checkperm("c")) {
 
                     <div class="Question" id="id_column_question">
                         <label for="id_column"><?php echo escape($lang["csv_upload_resource_match_column"]); ?></label>
-                            <select id="id_column" name="id_column" class="stdwidth columnselect">                    
+                            <select id="id_column" name="id_column" class="stdwidth columnselect">
                                 <option value=""><?php echo escape($lang["select"]); ?></option>
                                 <?php
                                 foreach ($csv_info as $csv_column => $csv_field_data) {

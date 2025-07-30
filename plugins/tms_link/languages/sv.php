@@ -73,3 +73,4 @@ $lang["tms_link_write_to_debug_log"]='Inkludera skriptframsteg i systemets fels�
 $lang["plugin-tms_link-title"]='TMS-länk';
 $lang["plugin-tms_link-desc"]='Tillåter att resursmetadata extraheras från TMS-databasen.';
 $lang["tms_link_uid_field_int"]='TMS Heltals-UID:er. Ställ in på falskt för att tillåta icke-heltals-UID:er.';
+$lang["tms_link_selected_module_missing"] = 'TMS-modulnamnet är för närvarande inställt på "%%MODULE%%" men detta är inte ett tillgängligt alternativ. Granska rullgardinsalternativen och uppdatera nedan.';

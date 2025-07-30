@@ -587,6 +587,12 @@ final class IIIFRequest
         $canvas["height"] = intval($image_size[2]);
         $canvas["width"] = intval($image_size[1]);
 
+        // Get the (optional) Canvas resource thumbnail - https://iiif.io/api/presentation/3.0/#a-summary-of-property-requirements 
+        $iiif_thumb = $this->getThumbnail($resource['ref']);
+        if ($iiif_thumb) {
+            $canvas['thumbnail'][] = $iiif_thumb;
+        }
+
         // Add image (only 1 per canvas currently supported)
         $this->getResourceFromPosition($position);
         $canvas["items"][] = $this->generateAnnotationPage($position);

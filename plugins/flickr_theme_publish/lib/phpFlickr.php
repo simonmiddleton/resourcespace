@@ -25,6 +25,7 @@ if ( !class_exists('phpFlickr') ) {
     class phpFlickr {
         var $api_key;
         var $secret;
+        var $service;
 
         var $rest_endpoint = 'https://api.flickr.com/services/rest/';
         var $upload_endpoint = 'https://up.flickr.com/services/upload/';
