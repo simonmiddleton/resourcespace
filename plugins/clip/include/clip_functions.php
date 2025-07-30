@@ -91,10 +91,9 @@ function vector_visualise(array $vector): string
  *
  * @param int $ref The resource ID for which to generate the vector.
  *
- * @return array|false Returns the ID of the stored vector row on success,
- *                     or false on failure (e.g., file missing or vector generation error).
+ * @return bool        Returns the true on success, or false on failure (e.g., file missing or vector generation error).
  */
-function clip_generate_vector($ref)
+function clip_generate_vector($ref) : bool
 {
     $resource = get_resource_data($ref);
     $ext = "jpg";
@@ -206,16 +205,8 @@ function clip_tag(int $resource)
         logScript ("CLIP service response: " . $response);
         curl_close($ch);
 
-        if (strlen($response) == 0) { 
+        if (strlen($response) == 0 || $response_status !== 200) { 
             return false; // CLIP server unresponsive
-        }
-
-        if ($response_status !== 200) {
-            clip_generate_vector($resource);
-            $response = curl_exec($ch);
-            if (strlen($response) == 0) { 
-                return false;
-            }
         }
 
         foreach (json_decode($response) as $result) {
