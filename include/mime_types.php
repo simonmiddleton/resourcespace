@@ -1,7 +1,7 @@
 <?php
 
 // When the extension can match multiple types, if applicable, we'll always pick the first type as that should be the
-// recommended option by IANA or a relevant IETF's RFC.
+// recommended option by IANA or a relevant IETF's RFC. https://www.iana.org/assignments/media-types/media-types.xhtml
 $mime_types_by_extension = array(
    '123' => 'application/vnd.lotus-1-2-3',
    '3dml' => 'text/vnd.in3d.3dml',
@@ -472,7 +472,11 @@ $mime_types_by_extension = array(
    'mp21' => 'application/mp21',
    'mp2a' => 'audio/mpeg',
    'mp3' => 'audio/mpeg',
-   'mp4' => ['video/mp4', 'audio/mp4'],
+   'mp4' => [
+        'video/mp4',
+        'audio/mp4', 
+        'video/x-m4v', # Non-standard type which we'll consider valid for now. References: https://www.iana.org/assignments/media-types/media-types.xhtml and https://stackoverflow.com/a/15279480
+        ],
    'mp4a' => 'audio/mp4',
    'mp4s' => 'application/mp4',
    'mp4v' => 'video/mp4',

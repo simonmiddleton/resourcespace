@@ -52,7 +52,7 @@ $use_cases = [
     [
         'name' => 'Support file matching multiple types',
         'input' => ['/tmp/test.mp4', 'mp4'],
-        'expected' => ['video/mp4', 'audio/mp4'],
+        'expected' => ['video/mp4', 'audio/mp4', 'video/x-m4v'],
     ],
 ];
 foreach ($use_cases as $uc) {
