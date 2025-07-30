@@ -27,7 +27,7 @@ function whisper_process_unprocessed()
 
     $extensions = explode(",", $whisper_extensions);
 
-    $resources = ps_array("SELECT ref value FROM resource WHERE file_extension in (" .     ps_param_insert(count($extensions)) . ") and (whisper_processed is null or whisper_processed=0) ORDER BY ref desc LIMIT 1", ps_param_fill($extensions, "s"));
+    $resources = ps_array("SELECT ref value FROM resource WHERE file_extension in (" .     ps_param_insert(count($extensions)) . ") and (whisper_processed is null or whisper_processed=0) ORDER BY ref desc", ps_param_fill($extensions, "s"));
 
     logScript("Whisper: " . count($resources) . " resources to process.");
     foreach ($resources as $resource) {
