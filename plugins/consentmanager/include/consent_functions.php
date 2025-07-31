@@ -165,6 +165,13 @@ function consentmanager_link_consent($consent, $resource)
         return false;
     }
 
+    // Check if consent exists
+    $consent_check = ps_query("select " . columns_in('consent', null, 'consentmanager') . " from consent where ref= ?", ['i', $consent]);
+
+    if (empty($consent_check)) {
+        return false;
+    }
+
     ps_query("insert into resource_consent(resource,consent) values (?, ?)", ['i', $resource, 'i', $consent]);
     resource_log($resource, "", "", $lang["new_consent"] . " " . $consent);
 
