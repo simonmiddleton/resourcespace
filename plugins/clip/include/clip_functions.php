@@ -34,19 +34,18 @@ function get_vector(bool $is_text, string $input, int $ref): array|false
     curl_close($ch);
 
     if ($http_code !== 200 || empty($response)) {
-        logScript("❌ Resource $ref: error from CLIP service (HTTP $http_code)");
+        logScript("Resource $ref: error from CLIP service (HTTP $http_code)");
         return false;
     }
 
     $vector = json_decode($response, true);
     if (!is_array($vector) || count($vector) !== 512) {
-        logScript("❌ Resource $ref: invalid CLIP vector returned");
+        logScript("Resource $ref: invalid CLIP vector returned");
         return false;
     }
 
     return $vector;
 }
-
 
 
 /**
@@ -104,17 +103,18 @@ function clip_generate_vector($ref) : bool
     // Remove existing vectors
     ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
 
-
     // Store image vector
     $image_path = get_resource_path($ref, true, $size, false, $ext);
     if (!file_exists($image_path)) {
         logScript("⚠ Resource $ref: file not found at $image_path");
         return false;
     }
+
     $vector = get_vector(false, $image_path, $ref);
     if ($vector === false) {
+        // Stop processing if issue with FastAPI server
         return false;
-    } // Stop processing if issue with FastAPI server
+    } 
 
     // Store vector in DB
     $vector = array_map('floatval', $vector); // ensure float values
@@ -136,8 +136,10 @@ function clip_generate_vector($ref) : bool
 
         $vector = get_vector(false, $snapshot, $ref);
         if ($vector === false) {
+            // Stop processing if issue with FastAPI server
             return false;
-        } // Stop processing if issue with FastAPI server
+        }
+
         // Store vector in DB
         $vector = array_map('floatval', $vector); // ensure float values
         $blob = pack('f*', ...$vector);
@@ -206,7 +208,8 @@ function clip_tag(int $resource)
         curl_close($ch);
 
         if (strlen($response) == 0 || $response_status !== 200) { 
-            return false; // CLIP server unresponsive
+            // CLIP server unresponsive
+            return false; 
         }
 
         foreach (json_decode($response) as $result) {
@@ -218,7 +221,7 @@ function clip_tag(int $resource)
     }
 
     if (is_numeric($clip_title_field) && $clip_title_field > 0) {
-        $ch = curl_init(); // ✅ new handle for the title request
+        $ch = curl_init(); // new handle for the title request
         curl_setopt($ch, CURLOPT_URL, $clip_service_call);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
