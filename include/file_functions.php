@@ -668,6 +668,10 @@ function delete_temp_files(): void
     if (DOWNLOAD_FILE_LIFETIME > $GLOBALS["purge_temp_folder_age"]) {
         $excludepaths[] = get_temp_dir(false, "user_downloads");
     }
+    $excludeplugindirs = hook('temp_block_deletion');
+    if (is_array($excludeplugindirs)) {
+        $excludepaths[] = array_merge($excludepaths, $excludeplugindirs);
+    }
 
     // Set up arrays to hold items to delete
     $folderstodelete = [];
