@@ -98,17 +98,21 @@ function consentmanager_delete_consent($resource)
  * into the `consent` table. It returns the ID of the newly created consent
  * record if successful.
  *
- * @param string $name           The name of the individual giving consent.
- * @param string $email          The email address of the individual.
- * @param string $telephone      The telephone number of the individual.
- * @param string $consent_usage  Description of the intended usage for which consent is given.
- * @param string $notes          Any additional notes related to the consent record.
- * @param string $expires        The expiry date of the consent, formatted as a string.
- * TODO FIX THIS
+ * @param string $name              The name of the individual giving consent.
+ * @param string $date_of_birth     The DOB of the individual, formatted as a string.
+ * @param string $address           The address of the individual.
+ * @param string $parent_guardian   The parent or guardian of the individual.
+ * @param string $email             The email address of the individual.
+ * @param string $telephone         The telephone number of the individual.
+ * @param string $consent_usage     Description of the intended usage for which consent is given.
+ * @param string $notes             Any additional notes related to the consent record.
+ * @param string $date_of_consent   The date the consent applies from.
+ * @param string $expires           The expiry date of the consent, formatted as a string.
+ * 
  * @return int|bool              Returns the ID of the new consent record on success,
  *                               or false if the user does not have write access.
  */
-function consentmanager_create_consent($name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires, $created_by)
+function consentmanager_create_consent($name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires, $created_by): int|bool
 {
     if (!consentmanager_check_write()) {
         return false;
@@ -256,7 +260,7 @@ function consentmanager_batch_link_unlink($consent, $collection, $unlink)
  *                     associated resources if the user has read access; returns false
  *                     if access is denied or the consent record does not exist.
  */
-function consentmanager_get_consent($consent)
+function consentmanager_get_consent($consent): array|bool
 {
     if (!consentmanager_check_read()) {
         return false;
@@ -279,27 +283,48 @@ function consentmanager_get_consent($consent)
  * Update a consent record
  *
  * This function updates the details of an existing consent record with the provided
- * information. It allows modification of the subject's name, email, telephone number,
- * consent usage types, notes, and expiry date.
+ * information. It allows modification of the subject's name, DOB, address, parent/guardian name,
+ * email, telephone number, consent usage types, date of consent, notes, and expiry date.
+ * It also resets the expiration_notice_sent flag if the expiry date is modified.
  *
- * @param int    $consent        The ID of the consent record to update.
- * @param string $name           The name of the individual giving consent.
- * @param string $email          The email address of the individual.
- * @param string $telephone      The telephone number of the individual.
- * @param string $consent_usage  A description of the permitted usage types for the consent.
- * @param string $notes          Additional notes related to the consent record.
- * @param string $expires        The expiry date of the consent record, formatted as a string.
- * @return bool                  Returns true if the consent record was successfully updated,
- *                               or false if the user does not have write access.
+ * @param int    $consent           The ID of the consent record to update.
+ * @param string $name              The name of the individual giving consent.
+ * @param string $date_of_birth     The DOB of the individual, formatted as a string.
+ * @param string $address           The address of the individual.
+ * @param string $parent_guardian   The parent or guardian of the individual.
+ * @param string $email             The email address of the individual.
+ * @param string $telephone         The telephone number of the individual.
+ * @param string $consent_usage     A description of the permitted usage types for the consent.
+ * @param string $notes             Additional notes related to the consent record.
+ * @param string $date_of_consent   The date the consent applies from.
+ * @param string $expires           The expiry date of the consent record, formatted as a string.
+ * @return bool                     Returns true if the consent record was successfully updated,
+ *                                  or false if the user does not have write access.
  */
-function consentmanager_update_consent($consent, $name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires)
+function consentmanager_update_consent($consent, $name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires): bool
 {
     if (!consentmanager_check_write()) {
         return false;
     }
 
+    // Determine the previous expiry date and expiration_notice_sent flag
+    $previous_data = ps_query("select expires, expiration_notice_sent from consent where ref = ?", ['i', $consent]);
+
+    if (!empty($previous_data) && count($previous_data) === 1) {
+
+        //If expiry date has changed
+        if ($previous_data[0]['expires'] !== $expires) {
+            $expiration_notice_sent = 0;
+        } else {
+            $expiration_notice_sent = (int) $previous_data[0]['expiration_notice_sent'];
+        }
+
+    } else {
+        return false;
+    }
+
     ps_query(
-        "update consent set name= ?, date_of_birth= ?, address= ?, parent_guardian_name= ?, email= ?, telephone= ?,consent_usage= ?,notes= ?, date_of_consent= ?, expires= ? where ref= ?",
+        "update consent set name= ?, date_of_birth= ?, address= ?, parent_guardian_name= ?, email= ?, telephone= ?,consent_usage= ?,notes= ?, date_of_consent= ?, expires= ?, expiration_notice_sent = ? where ref= ?",
         [
             's', $name,
             's', $date_of_birth,
@@ -311,6 +336,7 @@ function consentmanager_update_consent($consent, $name, $date_of_birth, $address
             's', $notes,
             's', $date_of_consent,
             's', $expires,
+            'i', $expiration_notice_sent,
             'i', $consent
         ]
     );
@@ -330,7 +356,7 @@ function consentmanager_update_consent($consent, $name, $date_of_birth, $address
  * @return array|bool     Returns an array of consent records if the user has read access;
  *                        otherwise, returns false.
  */
-function consentmanager_get_all_consents_by_collection(int $collection)
+function consentmanager_get_all_consents_by_collection(int $collection): array|bool
 {
     if (!consentmanager_check_read()) {
         return false;
@@ -344,13 +370,16 @@ function consentmanager_get_all_consents_by_collection(int $collection)
  *
  * This function retrieves all consent records from the database. If a search
  * string is provided, it filters the results based on the name of the person
- * associated with each consent record.
+ * associated with each consent record. It can also filted based on consent 
+ * status e.g all, active (non-expired), expiring (expiring within a configured amount of days), 
+ * expired. Defaults to returning all. * 
  *
- * @param string $findtext Optional. A search string to filter the results by the
- *                          name of the person giving consent. If empty, returns
- *                          all records.
- * @return array|bool       Returns an array of consent records if the user has
- *                          read access; otherwise, returns false.
+ * @param string $findtext          Optional. A search string to filter the results by the
+ *                                  name of the person giving consent. If empty, returns
+ *                                  all records.
+ * @param string $consent_status    Status of consent records to return
+ * @return array|bool               Returns an array of consent records if the user has
+ *                                  read access; otherwise, returns false.
  */
 function consentmanager_get_all_consents(string $findtext = "", string $consent_status = "all"): array|bool
 {
