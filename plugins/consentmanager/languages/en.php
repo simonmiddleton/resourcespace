@@ -38,12 +38,12 @@ $lang["consent_manager_access"] = "Manage consent data (where not already enable
 // Admin menu tool tip
 $lang["manageconsent-tooltip"] = "Create and manage consent records for resources";
 
-$lang['consent_expiry_notification'] = "consent_expiry_notification";
-$lang['consent_expiry_notification_days'] = "consent_expiry_notification_days";
-$lang['consent_attach_upload'] = "consent_attach_upload";
+$lang['consent_expiry_notification'] = "Consent expiring notifications";
+$lang['consent_expiry_notification_days'] = "Number of days before consent expiry is approaching when users with the 'Consent management' permission will be notified, either via system notification or email depending on user preference";
+$lang['consent_attach_upload'] = "Allow a consent record to be attached on Refine Metadata page after upload";
 $lang['consent_expired_workflow_state'] = "consent_expired_workflow_state";
 
-$lang['user_pref_consent_notifications'] = "user_pref_consent_notifications";
+$lang['user_pref_consent_notifications'] = "Receive expiring consent notifications?";
 
 $lang['consent_status_all'] = "All consents";
 $lang['consent_status_active'] = "Active consents";
