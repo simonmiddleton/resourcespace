@@ -441,6 +441,28 @@ function consentmanager_get_all_consents(string $findtext = "", string $consent_
 }
 
 /**
+ * 
+ */
+function consentmanager_get_all_consents_grouped(): array|bool
+{
+    if (!consentmanager_check_read()) {
+        return false;
+    }
+
+    $sql = "select *
+            from (
+                select c.*, 
+                case when c.expires < CURDATE() 
+                then 'Expired' 
+                else 'Active' end as consent_status
+                from consent c
+            ) cs
+            order by consent_status, ref";
+
+    return ps_query($sql);
+}
+
+/**
  * Save a file associated with a consent record
  *
  * This function saves a file (typically a consent form or related document) to the file system

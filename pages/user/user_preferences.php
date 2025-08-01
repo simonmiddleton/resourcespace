@@ -209,7 +209,7 @@ include "../../include/header.php";
         if (checkperm("R")) {
             $page_def[] = config_add_boolean_select('user_pref_resource_access_notifications', $lang['userpreference_resource_access_notifications'], $enable_disable_options, 300, '', true);
         }
-
+        $page_def[] = "AFTER_MESSAGES_MARKER"; // Added so that hook add_user_preference_page_def can locate this position in array
         $page_def[] = config_add_html('</div>');
 
         // Actions section - used to configure the alerts that appear in 'My actions'

@@ -90,6 +90,39 @@ function licensemanager_delete_license($ref): bool
 }
 
 /**
+ * Link a license record with a resource
+ *
+ * This function links a license record to a specified resource by inserting
+ * an entry in the `resource_license` table. It also logs this action in the
+ * resource's log.
+ *
+ * @param int $license  The ID of the license record to be linked to the resource.
+ * @param int $resource The ID of the resource to which the license is being linked.
+ * @return bool         Returns true if the license was successfully linked,
+ *                      false if the user does not have write access to the resource.
+ */
+function licensemanager_link_license($license, $resource)
+{
+    global $lang;
+
+    if (!licensemanager_check_write($resource)) {
+        return false;
+    }
+
+    // Check if license exists
+    $license_check = ps_query("select " . columns_in('license', null, 'licensemanager') . " from license where ref= ?", ['i', $license]);
+
+    if (empty($license_check)) {
+        return false;
+    }
+
+    ps_query("insert into resource_license(resource, license) values (?, ?)", ['i', $resource, 'i', $license]);
+    resource_log($resource, "", "", $lang["new_license"] . " " . $license);
+
+    return true;
+}
+
+/**
  * Retrieve a license record
  *
  * This function retrieves the details of a specified license record
@@ -192,6 +225,28 @@ function licensemanager_get_all_licenses(string $findtext = "", string $license_
     }
 
     return ps_query($sql . $where_sql . $orderby_sql, $params);
+}
+
+/**
+ * 
+ */
+function licensemanager_get_all_licenses_grouped(): array|bool
+{
+    if (!licensemanager_check_read()) {
+        return false;
+    }
+
+    $sql = "select *
+            from (
+                select l.*, 
+                case when l.expires < CURDATE() 
+                then 'Expired' 
+                else 'Active' end as license_status
+                from license l
+            ) ls
+            order by license_status, ref";
+
+    return ps_query($sql);
 }
 
 function licensemanager_get_expired_license_resources(int $archive_status): array|bool
