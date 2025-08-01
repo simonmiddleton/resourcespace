@@ -1,7 +1,5 @@
 <?php
 
-use ImageBanks\ResourceSpace;
-
 /**
  * Check if the user should have read access to a consent record
  *
