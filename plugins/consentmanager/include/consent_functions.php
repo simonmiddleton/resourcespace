@@ -496,7 +496,7 @@ function consentmanager_get_expiring_consents(int $expires_within, bool $unsent_
         return false;
     }
 
-    $sql = "select ref, name, email, telephone, consent_usage, notes, expires,file 
+    $sql = "select ref value 
             from consent 
             where expires >= CURDATE() AND expires <= CURDATE() + INTERVAL ? DAY";
 
@@ -506,9 +506,24 @@ function consentmanager_get_expiring_consents(int $expires_within, bool $unsent_
 
     $sql .= " order by ref;";
     
-    $expiring_consents = ps_query($sql, ['i', $expires_within]);
+    $expiring_consents = ps_array($sql, ['i', $expires_within]);
 
     return $expiring_consents;
+
+}
+
+function consentmanager_set_consent_expiration_notice(array $consents): bool
+{
+    if (empty($consents)) {
+        return false;
+    }
+
+    $in_sql = ps_param_insert(count($consents));
+    $params = ps_param_fill($consents, "i");
+
+    ps_query("UPDATE consent set expiration_notice_sent = 1 where ref in (" . $in_sql . ")", $params);
+
+    return true;
 
 }
 
@@ -532,14 +547,13 @@ function consentmanager_process_expiry_notifications(): bool {
 
     global $applicationname, $baseurl_short, $consent_expiry_notification_days;
 
-    logScript("Consent Manager: expiry notifications job starting:");
+    logScript("Consent Manager: Expiry notifications job starting:");
 
     // Determine if there are any consents that are expiring but notifications have not been sent yet
-
-    $expiring_consents = consentmanager_get_expiring_consents($consent_expiry_notification_days);
+    $expiring_consents = consentmanager_get_expiring_consents($consent_expiry_notification_days, true);
 
     if (empty($expiring_consents)) {
-        logScript("Consent Manager: no consent expiring within " . $consent_expiry_notification_days . " days. Exiting.");
+        logScript("Consent Manager: No consents expiring within " . $consent_expiry_notification_days . " days. Exiting.");
         return false;
     }
 
@@ -552,7 +566,7 @@ function consentmanager_process_expiry_notifications(): bool {
         
         // Default to enabled, so if null still send message
         if ($send_message == 1 || is_null($send_message)) {
-            logScript("Send message for " . $user['username']);
+            logScript("Consent Manager: Send message for " . $user['username']);
             $expiry_notification = new ResourceSpaceUserNotification;
 
             $expiry_notification->set_subject("Consents Expiring Soon");
@@ -561,11 +575,19 @@ function consentmanager_process_expiry_notifications(): bool {
 
             $expiry_notification->url = generateURL($baseurl_short . "/plugins/consentmanager/pages/list.php", ["status" => "expiring"]);
 
-            send_user_notification([$user['ref']], $expiry_notification);
- 
+            send_user_notification([$user['ref']], $expiry_notification); 
 
         }
 
+    }
+
+    // Mark consents as notified
+    $marked_as_notified = consentmanager_set_consent_expiration_notice($expiring_consents);
+
+    if ($marked_as_notified) {
+        logScript("Consent Manager: Consents marked as notification sent");
+    } else {
+        logScript("Consent Manager: Error when marking consents as notification sent");
     }
 
     return true;
@@ -576,16 +598,16 @@ function consentmanager_process_expired_archiving(): bool {
 
     global $consent_expired_workflow_state;
 
-    logScript("Consent Manager: automatic archiving job starting:");
+    logScript("Consent Manager: Automatic archiving job starting:");
 
     $expired_consent_resources = consentmanager_get_expired_consent_resources($consent_expired_workflow_state);
 
     foreach ($expired_consent_resources as $resource) {
-        logScript("Consent Manager: changing status of resource #" . $resource);
+        logScript("Consent Manager: Changing status of resource #" . $resource);
         update_archive_status($resource, $consent_expired_workflow_state, [], 0, "- due to expired consent record");
     }
 
-    logScript("Consent Manager: automatic archiving job complete");
+    logScript("Consent Manager: Automatic archiving job complete");
 
     return true;
 }
