@@ -269,7 +269,7 @@ include "../../include/header.php";
 
         // Let plugins hook onto page definition and add their own configs if needed
         // or manipulate the list
-        $plugin_specific_definition = hook('add_user_preference_page_def', '', array($page_def));
+        $plugin_specific_definition = hook('add_user_preference_page_def', '', array($page_def), true);
         if (is_array($plugin_specific_definition) && !empty($plugin_specific_definition)) {
             $page_def = $plugin_specific_definition;
         }
