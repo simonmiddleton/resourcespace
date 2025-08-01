@@ -2889,6 +2889,7 @@ $lang["error_fail_save"] = "Unable to save";
 $lang['error_file_upload_cond-InvalidUploadPath'] = 'Invalid upload path detected';
 $lang['error_file_upload_cond-SpecialFile'] = '"Special" file detected which is not allowed';
 $lang['error_file_upload_cond-InvalidExtension'] = 'Invalid extension';
+$lang['error_file_upload_cond-InvalidMimeType'] = 'Invalid MIME type';
 $lang['error_file_upload_cond-MimeTypeMismatch'] = 'MIME type mismatch';
 $lang['error_file_upload_cond-FileMoveFailure'] = 'Unable to move the (uploaded) file';
 $lang['error_file_upload_cond-MissingSourceFile'] = 'The source file is missing. Please contact your system administrator';

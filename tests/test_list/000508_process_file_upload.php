@@ -91,20 +91,48 @@ $use_cases = [
         'expected' => ['success' => true],
     ],
     [
-        'name' => 'MIME type check',
+        'name' => 'MIME type mismatch and unable to determine a file type will fail',
+        'setup' => fn() => file_put_contents(
+            sys_get_temp_dir() . "/test_508_mime_mismatch_binary_{$run_id}.jpg",
+            // Precompiled code (64 bytes) for testing - Linux ELF binary that exits with code 42
+            hex2bin(
+                "7f454c4602010100000000000000000002003e00010000007800000000000000" .
+                "4000000000000000400000000000000000000000000000000000000000000000" .
+                "b83c0000000f05"
+            )
+        ),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_mime_mismatch_binary_{$run_id}.jpg"),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::InvalidMimeType),
+    ],
+    [
+        'name' => 'MIME type mismatch associated w/ a banned extension will fail',
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_mime_mismatch_unsafe_{$run_id}.jpg", "#!/usr/bin/env bash\r\necho 'test {$run_id}'"),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_mime_mismatch_unsafe_{$run_id}.jpg"),
+            'destination' => $dest,
+            'processor' => [],
+        ],
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::MimeTypeMismatch),
+    ],
+    [
+        'name' => 'MIME type mismatch not associated w/ a banned extension will pass',
         'setup' => function () use ($run_id) {
             $img = create_random_image(['text' => "Run ID {$run_id}"]);
             if (!isset($img['path'])) {
                 return false;
             }
-            return rename($img['path'], sys_get_temp_dir() . "/test_508_mime_check_{$run_id}.txt");
+            return rename($img['path'], sys_get_temp_dir() . "/test_508_mime_mismatch_safe_{$run_id}.txt");
         },
         'input' => [
-            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_mime_check_{$run_id}.txt"),
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_mime_mismatch_safe_{$run_id}.txt"),
             'destination' => $dest,
             'processor' => [],
         ],
-        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::MimeTypeMismatch),
+        'expected' => ['success' => true],
     ],
     [
         'name' => 'File can match against multiple MIME types',

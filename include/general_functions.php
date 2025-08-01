@@ -791,6 +791,16 @@ function get_mime_types_by_extension(string $extension): array
 }
 
 /**
+ * Get the global MIME types associated with the configured banned extensions.
+ */
+function get_unsafe_mime_types(): array
+{
+    $mime_types = $GLOBALS['mime_types_by_extension'] ?? [];
+    $banned_extensions_mimes = array_intersect_key($mime_types, array_flip($GLOBALS['banned_extensions']));
+    return array_unique(array_merge(...array_values(array_map(static fn($v) => (array) $v, $banned_extensions_mimes))));
+}
+
+/**
  * Convert the permitted resource type extension to MIME type. Used by upload_batch.php
  *
  * @param  string $extension    File extension
