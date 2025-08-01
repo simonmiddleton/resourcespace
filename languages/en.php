@@ -3210,6 +3210,8 @@ $lang["processing_creating_previews"] = "Resource [resource]: Creating previews"
 $lang["processing_creating_preview"] = "Resource [resource]: Creating preview '[name]'";
 $lang["processing_updating_resources"] = "Updating metadata ([done]/[total])";
 $lang["processing_calculating_updates_required"] = "Calculating updates required ([count]/[total])";
+$lang["processing_batch_edit_save"] = "Applying changes to [field_count] fields for [resource_count] resources";
+$lang["processing_resource_in_group"] = "Processing resources [count]/[total]";
 
 
 
