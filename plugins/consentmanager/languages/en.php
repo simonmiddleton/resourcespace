@@ -49,6 +49,5 @@ $lang['consent_status_all'] = "All consents";
 $lang['consent_status_active'] = "Active consents";
 $lang['consent_status_expiring'] = "Expiring consents";
 $lang['consent_status_expired'] = "Expired consents";
-$lang["view_linked_resources"] = "View linked resources";
-$lang["view_linked_resources_short"] = "View";
+$lang["consent_view_linked_resources_short"] = "View";
 $lang['consent_no_archiving'] = "No Change";

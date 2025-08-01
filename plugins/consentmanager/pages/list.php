@@ -121,7 +121,7 @@ $url_params = array(
                         <td>
                             <div class="ListTools">
                                 <a href="<?php echo generateURL($baseurl_short . "pages/search.php", ['search' => '!consent' . $consent['ref']]); ?>" onClick="return CentralSpaceLoad(this,true);">
-                                    <i class="fas fa-search"></i>&nbsp;<?php echo escape($lang['view_linked_resources_short']); ?>
+                                    <i class="fas fa-search"></i>&nbsp;<?php echo escape($lang['consent_view_linked_resources_short']); ?>
                                 </a>
                                 <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php", $url_params); ?>" onClick="return CentralSpaceLoad(this,true);">
                                     <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
@@ -141,27 +141,27 @@ $url_params = array(
         <div class="BottomInpageNav"><?php pager(true); ?></div>
         
         <div class="Question">  
-                <label for="consent_status"><?php echo escape($lang["consent_status"]); ?></label>
-                <div class="tickset">
-                    <div class="Inline">
-                        <select name="consent_status" id="consent_status" onChange="this.form.submit();">
-                            <option value="all" <?php echo ($consent_status == 'all') ? " selected" : ''; ?>>
-                                <?php echo escape($lang["consent_status_all"]); ?>
-                            </option>
-                            <option value="active" <?php echo ($consent_status == 'active') ? " selected" : ''; ?>>
-                                <?php echo escape($lang["consent_status_active"]); ?>
-                            </option>
-                            <option value="expiring" <?php echo ($consent_status == 'expiring') ? " selected" : ''; ?>>
-                                <?php echo escape($lang["consent_status_expiring"]); ?>
-                            </option>
-                            <option value="expired" <?php echo ($consent_status == 'expired') ? " selected" : ''; ?>>
-                                <?php echo escape($lang["consent_status_expired"]); ?>
-                            </option>
-                        </select>
-                    </div>
+            <label for="consent_status"><?php echo escape($lang["consent_status"]); ?></label>
+            <div class="tickset">
+                <div class="Inline">
+                    <select name="consent_status" id="consent_status" onChange="this.form.submit();">
+                        <option value="all" <?php echo ($consent_status == 'all') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["consent_status_all"]); ?>
+                        </option>
+                        <option value="active" <?php echo ($consent_status == 'active') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["consent_status_active"]); ?>
+                        </option>
+                        <option value="expiring" <?php echo ($consent_status == 'expiring') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["consent_status_expiring"]); ?>
+                        </option>
+                        <option value="expired" <?php echo ($consent_status == 'expired') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["consent_status_expired"]); ?>
+                        </option>
+                    </select>
                 </div>
-                <div class="clearerleft"></div>
             </div>
+            <div class="clearerleft"></div>
+        </div>
 
         <div class="Question">
             <label for="find"><?php echo escape($lang["consentsearch"]); ?><br/></label>

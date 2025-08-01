@@ -372,7 +372,7 @@ function consentmanager_get_all_consents_by_collection(int $collection): array|b
  * string is provided, it filters the results based on the name of the person
  * associated with each consent record. It can also filted based on consent 
  * status e.g all, active (non-expired), expiring (expiring within a configured amount of days), 
- * expired. Defaults to returning all. * 
+ * expired. Defaults to returning all.
  *
  * @param string $findtext          Optional. A search string to filter the results by the
  *                                  name of the person giving consent. If empty, returns
@@ -512,7 +512,6 @@ function consentmanager_process_expiry_notifications(): bool {
 
     logScript("Consent Manager: expiry notifications job starting:");
 
-
     // Determine if there are any consents that are expiring but notifications have not been sent yet
 
     $expiring_consents = consentmanager_get_expiring_consents($consent_expiry_notification_days);
@@ -560,8 +559,11 @@ function consentmanager_process_expired_archiving(): bool {
     $expired_consent_resources = consentmanager_get_expired_consent_resources($consent_expired_workflow_state);
 
     foreach ($expired_consent_resources as $resource) {
+        logScript("Consent Manager: changing status of resource #" . $resource);
         update_archive_status($resource, $consent_expired_workflow_state, [], 0, "- due to expired consent record");
     }
+
+    logScript("Consent Manager: automatic archiving job complete");
 
     return true;
 }

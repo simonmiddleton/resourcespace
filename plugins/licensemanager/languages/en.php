@@ -13,6 +13,7 @@ $lang["delete_license"]="Delete license";
 $lang["license_id"]="License ID";
 $lang["licensemanager_new"]="New license";
 $lang["managelicenses"]="Licenses";
+$lang["license_status"] = "License status";
 
 $lang["outbound"]="Outbound";
 $lang["outbound_license_description"]="(we are the copyright holders)";
@@ -36,3 +37,17 @@ $lang["license_manager_access"]="Manage license data (where not already enabled 
 
 // Admin menu tool tip
 $lang["managelicenses-tooltip"] = "Create and manage licenses for resources";
+
+$lang['license_expiry_notification'] = "License expiring notifications";
+$lang['license_expiry_notification_days'] = "Number of days before license expiry is approaching when users with the 'License management' permission will be notified, either via system notification or email depending on user preference";
+$lang['license_attach_upload'] = "Allow a license record to be attached on Refine Metadata page after upload";
+$lang['license_expired_workflow_state'] = "license_expired_workflow_state";
+
+$lang['user_pref_license_notifications'] = "Receive expiring license notifications?";
+
+$lang['license_status_all'] = "All licenses";
+$lang['license_status_active'] = "Active licenses";
+$lang['license_status_expiring'] = "Expiring licenses";
+$lang['license_status_expired'] = "Expired licenses";
+$lang["license_view_linked_resources_short"] = "View";
+$lang['license_no_archiving'] = "No Change";
