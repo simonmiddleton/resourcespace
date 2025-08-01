@@ -50,7 +50,7 @@ function HookConsentmanagerEditEndofmetadataaddcustomfield()
 
                             // Start new optgroup
                             $current_group = $consent['consent_status'];
-                            echo '<optgroup label="' . $current_group . '">';
+                            echo '<optgroup label="' . $lang["consent_status_" . $current_group] . '">';
                         }
 
                         // Output the option

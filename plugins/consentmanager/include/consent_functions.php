@@ -453,8 +453,8 @@ function consentmanager_get_all_consents_grouped(): array|bool
             from (
                 select c.*, 
                 case when c.expires < CURDATE() 
-                then 'Expired' 
-                else 'Active' end as consent_status
+                then 'expired' 
+                else 'active' end as consent_status
                 from consent c
             ) cs
             order by consent_status, ref";

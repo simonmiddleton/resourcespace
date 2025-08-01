@@ -240,8 +240,8 @@ function licensemanager_get_all_licenses_grouped(): array|bool
             from (
                 select l.*, 
                 case when l.expires < CURDATE() 
-                then 'Expired' 
-                else 'Active' end as license_status
+                then 'expired' 
+                else 'active' end as license_status
                 from license l
             ) ls
             order by license_status, ref";

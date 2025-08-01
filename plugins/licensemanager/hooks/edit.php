@@ -50,7 +50,7 @@ function HookLicensemanagerEditEndofmetadataaddcustomfield()
 
                             // Start new optgroup
                             $current_group = $license['license_status'];
-                            echo '<optgroup label="' . $current_group . '">';
+                            echo '<optgroup label="' . $lang["license_status_" . $current_group] . '">';
                         }
 
                         // Output the option
