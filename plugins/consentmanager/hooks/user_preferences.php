@@ -9,9 +9,9 @@ function HookConsentmanagerUser_preferencesAdd_user_preference_page_def($page_de
         $page_def = $GLOBALS["hook_return_value"];
     }
     
-    $lastactionkey = array_search('AFTER_MESSAGES_MARKER',$page_def);
+    $lastmessageskey = array_search('AFTER_MESSAGES_MARKER',$page_def);
     $addoption = config_add_boolean_select('user_pref_consent_notifications', $lang['user_pref_consent_notifications'], $enable_disable_options, 300, '', true);
-    array_splice($page_def, $lastactionkey, 0, array($addoption));
+    array_splice($page_def, $lastmessageskey, 0, array($addoption));
 
     return $page_def;
 }
