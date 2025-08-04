@@ -267,7 +267,7 @@ function update_fieldx(int $metadata_field_ref): void
     if ($metadata_field_ref > 0 && in_array($metadata_field_ref, get_resource_table_joins())) {
         $fieldinfo = get_resource_type_field($metadata_field_ref);
         $allresources = ps_array("SELECT ref value FROM resource WHERE ref>0 ORDER BY ref ASC", []);
-        if (in_array($fieldinfo['type'], $NODE_FIELDS)) {
+        if (in_array($fieldinfo['type'] ?? [], $NODE_FIELDS)) {
             if ($fieldinfo['type'] === FIELD_TYPE_CATEGORY_TREE) {
                 $all_tree_nodes_ordered = get_cattree_nodes_ordered($fieldinfo['ref'], null, true);
                 // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
