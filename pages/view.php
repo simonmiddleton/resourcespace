@@ -30,7 +30,9 @@ if(
 
 $offset=getval("offset",0,true);
 $restypes=getval("restypes","");
-if (strpos($search,"!")!==false) {$restypes="";}
+if (strpos($search, "!") !== false && substr($search, 0, 11) != "!properties" && !$special_search_honors_restypes) {
+    $restypes = "";
+}
 $archive=getval("archive","");
 $per_page=getval("per_page",$default_perpage,true);
 $default_sort_direction="DESC";
