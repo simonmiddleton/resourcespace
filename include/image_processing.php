@@ -2110,7 +2110,7 @@ function extract_text($ref, $extension, $path = "")
             debug("ERROR: pdftotext executable not found at '$pdftotext_path'");
             return false;
         }
-        $cmd = "{$command} -enc UTF-8 %%PATH%% -";
+        $cmd = "{$command} -enc UTF-8 -nopgbrk %%PATH%% -";
         $text = run_command($cmd, false, ['%%PATH%%' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
     }
 
