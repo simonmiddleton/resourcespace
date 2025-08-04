@@ -118,19 +118,19 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
             continue;
             }
 
-        // Split on white space and commas for multiple tms object IDs
-        $tms_object_id = preg_split('/[,\s]+/', $tms_object_id);
-
-        if(is_array($tms_object_id)) {
-            if ($module['tms_uid_field_int'] ?? true) {
-                $tms_object_id = array_filter($tms_object_id,'is_positive_int_loose');
-            }
-            if (empty($tms_object_id)) {
-                debug('tms_link: Invalid tms object id(s): ' . json_encode($tms_object_id) . ' for resource: ' . $resource);
-                continue;
-            }
-            $conditionsql = " WHERE {$module['tms_uid_field']} IN ('" . implode("','", $tms_object_id) . "')";
+        if (!is_array($tms_object_id)) {
+            // Split on white space and commas for multiple tms object IDs
+            $tms_object_id = preg_split('/[,\s]+/', $tms_object_id);
         }
+
+        if ($module['tms_uid_field_int'] ?? true) {
+            $tms_object_id = array_filter($tms_object_id,'is_positive_int_loose');
+        }
+        if (empty($tms_object_id)) {
+            debug('tms_link: Invalid tms object id(s): ' . json_encode($tms_object_id) . ' for resource: ' . $resource);
+            continue;
+        }
+        $conditionsql = " WHERE {$module['tms_uid_field']} IN ('" . implode("','", $tms_object_id) . "')";
 
         $tmscountsql = "SELECT Count(*) FROM {$module['module_name']} {$conditionsql};";
         debug('tms_link: tms count query to odbc: ' . $tmscountsql);
