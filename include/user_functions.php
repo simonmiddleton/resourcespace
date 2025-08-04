@@ -634,12 +634,16 @@ function get_user($ref)
 * Note: data is taken from the submitted form
 *
 * @param string $ref ID of the user
+* @param array  $data Data to save (optional, will use posted data otherwise)
 *
 * @return boolean|string True if successful or a descriptive string if there's an issue
 */
-function save_user($ref)
+function save_user($ref, array $data=[])
 {
     global $lang, $home_dash;
+
+    // Permissions check
+    if (!checkperm_user_edit($ref)) {return false;}
 
     $current_user_data = get_user($ref);
 
@@ -661,20 +665,22 @@ function save_user($ref)
 
         return true;
     } else {
-        // Get submitted values
-        $username               = trim(getval('username', ''));
-        $password               = trim(getval('password', ''));
-        $fullname               = str_replace("\t", ' ', trim(getval('fullname', '')));
-        $email                  = trim(getval('email', ''));
-        $usergroup              = trim(getval('usergroup', '', false, 'is_int_loose'));
-        $ip_restrict            = trim(getval('ip_restrict', ''));
-        $search_filter_override = trim(getval('search_filter_override', ''));
-        $search_filter_o_id     = trim(getval('search_filter_o_id', 0, true));
-        $comments               = trim(getval('comments', ''));
-        $suggest                = getval('suggest', '');
-        $emailresetlink         = getval('emailresetlink', '');
-        $approved               = getval('approved', 0, true);
-        $expires                = getval('account_expires', '');
+        // Get submitted values from either $data (if passed) or the POSTed form.
+        $use_post_data = empty($data);
+
+        $username               = $use_post_data ? trim(getval('username', '')) : trim($data['username'] ?? $current_user_data['username'] ?? '');
+        $password               = $use_post_data ? trim(getval('password', '')) : trim($data['password'] ?? $lang['hidden']);
+        $fullname               = $use_post_data ? str_replace("\t", ' ', trim(getval('fullname', ''))) : str_replace("\t", ' ', trim($data['fullname'] ?? $current_user_data['fullname'] ?? ''));
+        $email                  = $use_post_data ? trim(getval('email', '')) : trim($data['email'] ?? $current_user_data['email'] ?? '');
+        $usergroup              = $use_post_data ? trim(getval('usergroup', '', false, 'is_int_loose')) : trim($data['usergroup'] ?? $current_user_data['usergroup'] ?? '');
+        $ip_restrict            = $use_post_data ? trim(getval('ip_restrict', '')) : trim($data['ip_restrict'] ?? $current_user_data['ip_restrict'] ?? '');
+        $search_filter_override = $use_post_data ? trim(getval('search_filter_override', '')) : trim($data['search_filter_override'] ?? $current_user_data['search_filter_override'] ?? '');
+        $search_filter_o_id     = $use_post_data ? trim(getval('search_filter_o_id', 0, true)) : trim($data['search_filter_o_id'] ?? $current_user_data['search_filter_o_id'] ?? '');
+        $comments               = $use_post_data ? trim(getval('comments', '')) : trim($data['comments'] ?? $current_user_data['comments'] ?? '');
+        $suggest                = $use_post_data ? getval('suggest', '') : ($data['suggest'] ?? '');
+        $emailresetlink         = $use_post_data ? getval('emailresetlink', '') : ($data['emailresetlink'] ?? '');
+        $approved               = $use_post_data ? getval('approved', 0, true) : ($data['approved'] ?? $current_user_data['approved'] ?? 0);
+        $expires                = $use_post_data ? getval('account_expires', '') : ($data['account_expires'] ?? $current_user_data['account_expires'] ?? '');
 
         // Create SQL to check for username or e-mail address conflict
         $conditions = "username = ? OR email = ?";
@@ -1268,11 +1274,14 @@ function user_limit_reached()
 * @param string $newuser  - username to create
 * @param integer $usergroup  - optional usergroup to assign
 *
-* @return boolean|integer  - id of new user or false if user already exists, or -2 if user limit reached
+* @return boolean|integer  - id of new user or false if user already exists / permission denied, or -2 if user limit reached
 */
 function new_user($newuser, $usergroup = 0)
 {
     global $lang,$home_dash,$user_limit;
+
+    // Permissions check
+    if (!checkPermission_manage_users()) { return false;}
 
     # Username already exists?
     $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$newuser], 0);
