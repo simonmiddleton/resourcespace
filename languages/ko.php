@@ -1271,7 +1271,6 @@ $lang["publishstatus"] = '게시 상태로 저장:';
 $lang["addnewcontent"] = '새 콘텐츠 (페이지, 이름)';
 $lang["hitcount"] = '조회수';
 $lang["downloads"] = '다운로드';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = '확장자';
 $lang["all_users"] = '모든 사용자';
 $lang["new_resource"] = '새 리소스';

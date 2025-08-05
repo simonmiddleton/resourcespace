@@ -731,7 +731,7 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 
             <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
                 <div style="padding:0;margin:0;">
-                    <?php echo escape($lang["currentcollection"])?>: 
+                     <label for="collection"><?php echo escape($lang["currentcollection"])?>:</label>
                     <br />
                     <select
                         name="collection"

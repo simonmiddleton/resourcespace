@@ -2656,7 +2656,6 @@ $lang["unrelateallresources_confirmation"] = 'Cap dels recursos d\'aquesta col·
 $lang["setup-download_filename_format"] = 'Format del nom del fitxer de descàrrega';
 $lang["editrequestorder"] = 'Edita la sol·licitud';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["openstreetmap"] = 'OpenStreetMap';
 $lang["map_osm_group"] = 'OpenStreetMap (OSM)';
 $lang["map_tf_group"] = 'Thunderforest';

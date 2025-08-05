@@ -2848,7 +2848,6 @@ $lang["unrelateallresources"] = 'Avrelatera alla resurser i denna samling';
 $lang["unrelateallresources_confirmation"] = 'Inga av resurserna i denna samling är nu relaterade';
 $lang["alternatetype"] = 'Alternativ typ';
 $lang["setup-download_filename_format"] = 'Format för filnamn vid nedladdning';
-$lang["addremove"] = '+/-';
 $lang["map_osmbzh"] = 'OSM Luxemburg';
 $lang["map_tf_group"] = 'Thunderforest';
 $lang["map_esri_group"] = 'ESRI';

@@ -2931,7 +2931,7 @@ function render_resource_image($resource, $img_url, $display="thumbs")
     global $view_title_field;
     
     list($width, $height, $margin) = calculate_image_display($resource, $img_url, $display);
-    $blurhash=$resource["blurhash"];
+    $blurhash=$resource["blurhash"]??"";
     $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
 
     // Produce a 'softer' colour for the loading preview (extracted colours tend to have a very high saturation)
@@ -2947,7 +2947,7 @@ function render_resource_image($resource, $img_url, $display="thumbs")
         $preview_red=$preview_green=$preview_blue=255;
         }
     ?>
-    <div id="ImageColourWrapper_<?php echo escape($resource["ref"]) ?>" class="ImageColourWrapper" 
+    <div id="ImageColourWrapper_<?php echo escape($resource["ref"]??"") ?>" class="ImageColourWrapper" 
     <?php if ($blurhash!="") { ?>class="blurhash" data-blurhash="<?php echo escape($blurhash) ?>"<?php } ?>
     style="
     <?php if ($blurhash=="") { ?>background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
@@ -3464,11 +3464,12 @@ function render_browse_bar()
 */    
 function generate_browse_bar_item($id, $text)
     {
+    global $lang;
     $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
     $html .= '<div class="BrowseRowInner" >';
     
     $html .= '<div class="BrowseBarStructure">
-            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" ></a>
+            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" alt="' . escape($lang["expand"]) . '"></a>
             </div><!-- End of BrowseBarStructure -->';  
     $html .= '<div onclick="toggleBrowseElements(\'' . $id . '\',false,true);" class="BrowseBarLink" >' . $text . '</div>';
     
@@ -7057,7 +7058,11 @@ function render_resource_view_image(array $resource, array $context)
     {
     global $lang;
     $imageurl="";   
-    
+
+    $preview_title = get_data_by_field($resource,$GLOBALS["view_title_field"]);
+    if ($preview_title == "") {
+        $preview_title = $lang["fullscreenpreview"];
+        }
     $use_watermark = check_use_watermark();
     $access = $context["access"] ?? 1; // Default to restricted
     $edit_access = $context["edit_access"] ?? 0;
@@ -7097,7 +7102,7 @@ function render_resource_view_image(array $resource, array $context)
             <a id="previewimagelink"
                 class="enterLink"
                 href="<?php echo $previewimagelink; ?>"
-                title="<?php echo escape($lang["fullscreenpreview"]); ?>"
+                title="<?php echo escape($preview_title); ?>"
                 style="position:relative;"
                 onclick="<?php echo $previewimagelink_onclick; ?>">
         <?php
@@ -7106,7 +7111,7 @@ function render_resource_view_image(array $resource, array $context)
     <img id="previewimage"
         class="Picture"
         src="<?php echo $imageurl; ?>" 
-        alt="<?php echo escape($lang['fullscreenpreview']); ?>" 
+        alt="<?php echo escape($preview_title); ?>" 
         onload="jQuery('.DownloadDBlend').css('pointer-events','auto')"
         GALLERYIMG="no"
     <?php

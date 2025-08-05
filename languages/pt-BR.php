@@ -2715,7 +2715,6 @@ $lang["unrelateallresources_confirmation"] = 'Nenhum dos recursos nesta coleçã
 $lang["setup-download_filename_format"] = 'Formato do nome do arquivo para download';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' ou \'ssl\'. Para Gmail, \'tls\' ou \'ssl\' é necessário.';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["map_tf_group"] = 'Thunderforest';
 $lang["map_esri_group"] = 'ESRI';
 $lang["map_esridelorme"] = 'DeLorme';

@@ -1270,7 +1270,6 @@ $lang["publishstatus"] = 'Hifadhi na hali ya kuchapisha:';
 $lang["addnewcontent"] = 'Maudhui mapya (ukurasa, jina)';
 $lang["hitcount"] = 'Idadi ya vibofyo';
 $lang["downloads"] = 'Upakuaji';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'Kiendelezi';
 $lang["all_users"] = 'watumiaji wote';
 $lang["new_resource"] = 'rasilimali mpya';

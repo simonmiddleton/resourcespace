@@ -1285,7 +1285,6 @@ $lang["publishstatus"] = 'I-save na may katayuan ng pag-publish:';
 $lang["addnewcontent"] = 'Bagong nilalaman (pahina, pangalan)';
 $lang["hitcount"] = 'Bilang ng pagbisita';
 $lang["downloads"] = 'Mga Pag-download';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'Pahaba';
 $lang["all_users"] = 'lahat ng mga gumagamit';
 $lang["new_resource"] = 'bagong yaman';

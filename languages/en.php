@@ -851,6 +851,7 @@ $lang["action-expand"] = "Expand";
 $lang["action-more"] = "More";
 $lang["action-less"] = "Less";
 $lang["action-select"] = "Select";
+$lang["action-selectresource"] = "Select resource";
 $lang["action-selectrequesteditems"] = "Show all requested items in my collection bar";
 $lang["action-download"] = "Download";
 $lang["action-email"] = "E-mail";
@@ -1409,7 +1410,7 @@ $lang["addnewcontent"] = "New content (page, name)";
 $lang["hitcount"] = "Hit count";
 $lang["downloads"] = "Downloads";
 
-$lang["addremove"] = "+/-";
+$lang["addremove"] = "Select";
 $lang["list_file_extension"] = "Extension";
 
 ##  Translations for standard log entries
@@ -1738,6 +1739,7 @@ $lang["youhaveunsubscribedreport"] = "You have been unsubscribed from the period
 $lang["sendingreportto"] = "Sending report to";
 $lang["reportempty"] = "No matching data was found for the selected report and period.";
 $lang["viauser"] = "via user";
+$lang["expand"] = "Expand";
 $lang["close"] = "Close";
 
 # Installation Check

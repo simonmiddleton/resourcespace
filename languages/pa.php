@@ -1269,7 +1269,6 @@ $lang["publishstatus"] = 'ਪ੍ਰਕਾਸ਼ਿਤ ਸਥਿਤੀ ਨਾਲ 
 $lang["addnewcontent"] = 'ਨਵਾਂ ਸਮੱਗਰੀ (ਪੰਨਾ, ਨਾਮ)';
 $lang["hitcount"] = 'ਹਿੱਟ ਗਿਣਤੀ';
 $lang["downloads"] = 'ਡਾਊਨਲੋਡਸ';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'ਵਿਸਤਾਰ';
 $lang["all_users"] = 'ਸਾਰੇ ਯੂਜ਼ਰਜ਼';
 $lang["new_resource"] = 'ਨਵਾਂ ਸਰੋਤ';

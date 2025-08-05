@@ -1385,7 +1385,6 @@ $lang["plugin_field_fmt"] = '%A (%B)';
 $lang["hidden"] = '(ẩn)';
 $lang["php-config-file"] = 'Cấu hình PHP: \'%phpinifile\'';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' hoặc \'ssl\'. Đối với Gmail, \'tls\' hoặc \'ssl\' là bắt buộc.';
-$lang["addremove"] = '+/-';
 $lang["plugins-configvar"] = 'Đặt biến cấu hình: $%cvn';
 $lang["map_tfneighbourhood"] = 'Khu vực lân cận';
 $lang["map_hyddabase"] = 'Cơ sở';
