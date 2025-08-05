@@ -43,7 +43,7 @@ $lang['license_expiry_notification_days'] = "Number of days before license expir
 $lang['license_attach_upload'] = "Allow a license record to be attached on Refine Metadata page after upload";
 $lang['license_expired_workflow_state'] = "Automatically archive resources linked to expired licenses to this workflow state";
 
-$lang['user_pref_license_notifications'] = "Receive expiring license notifications?";
+$lang['user_pref_license_notifications'] = "Send me expiring license notifications?";
 
 $lang['license_status_all'] = "All licenses";
 $lang['license_status_active'] = "Active licenses";

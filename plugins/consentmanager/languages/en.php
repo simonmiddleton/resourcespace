@@ -43,7 +43,7 @@ $lang['consent_expiry_notification_days'] = "Number of days before consent expir
 $lang['consent_attach_upload'] = "Allow a consent record to be attached on Refine Metadata page after upload";
 $lang['consent_expired_workflow_state'] = "Automatically archive resources linked to expired consents to this workflow state";
 
-$lang['user_pref_consent_notifications'] = "Receive expiring consent notifications?";
+$lang['user_pref_consent_notifications'] = "Send me expiring consent notifications?";
 
 $lang['consent_status_all'] = "All consents";
 $lang['consent_status_active'] = "Active consents";
