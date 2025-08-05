@@ -439,7 +439,10 @@ function consentmanager_get_all_consents(string $findtext = "", string $consent_
 }
 
 /**
- * 
+ * Fetch all consent records grouped by if they are expiring or not
+ *
+ * @return array|bool     Returns an array of consent records if the user has read access;
+ *                        otherwise, returns false.
  */
 function consentmanager_get_all_consents_grouped(): array|bool
 {
@@ -488,6 +491,19 @@ function consentmanager_save_file(int $consent, string $filename, string $fileda
     return true;
 }
 
+/**
+ * Fetch all expiring consent records
+ * 
+ * This function returns an array of consent records that are expiring within so many days.
+ * It can optionally be filtered to include records that have not been flagged as having
+ * an expiration notification already sent
+ * 
+ * @param int    $expires_within    Number of days that the records are expiring within
+ * @param bool   $unsent_only       Include only records where an expiration notification hasn't been sent
+ * 
+ * @return array|bool               Returns an array of expiring consent records if the user has read access;
+ *                                  otherwise, returns false.
+ */
 function consentmanager_get_expiring_consents(int $expires_within, bool $unsent_only = true): array|bool
 {
     if ($expires_within <= 0) {
@@ -510,6 +526,16 @@ function consentmanager_get_expiring_consents(int $expires_within, bool $unsent_
 
 }
 
+/**
+ * Sets expiration notice sent flag on consent records
+ * 
+ * This function takes an array of consent record references and sets the
+ * expiration_notice_sent flag on each one.
+ * 
+ * @param array $consents       An array of consent references
+ * 
+ * @return bool                 Returns true if the flags were set; otherwise, returns false
+ */
 function consentmanager_set_consent_expiration_notice(array $consents): bool
 {
     if (empty($consents)) {
@@ -525,6 +551,16 @@ function consentmanager_set_consent_expiration_notice(array $consents): bool
 
 }
 
+/**
+ * Fetch expired consent records
+ * 
+ * This function returns expired consent records that are not deleted and are not in the passed archive_state
+ * 
+ * @param int $archive_state    An integer of the archive state, to be excluded from the results
+ * 
+ * @return array|bool           Returns an array of expired consent records;
+ *                              otherwise, returns false. 
+ */
 function consentmanager_get_expired_consent_resources(int $archive_status): array|bool
 {
     $sql = "select distinct r.ref value
@@ -541,9 +577,14 @@ function consentmanager_get_expired_consent_resources(int $archive_status): arra
     return $expired_consent_resources;
 }
 
+/**
+ * Process expiring consent records and send a notification/email
+ * 
+ * @return bool     Returns true if the notification process completes
+ */
 function consentmanager_process_expiry_notifications(): bool {
 
-    global $applicationname, $baseurl_short, $consent_expiry_notification_days;
+    global $applicationname, $baseurl, $consent_expiry_notification_days;
 
     logScript("Consent Manager: Expiry notifications job starting:");
 
@@ -553,6 +594,8 @@ function consentmanager_process_expiry_notifications(): bool {
     if (empty($expiring_consents)) {
         logScript("Consent Manager: No consents expiring within " . $consent_expiry_notification_days . " days. Exiting.");
         return false;
+    } else {
+        logScript("Consent Manager: There are " . count($expiring_consents) . " expiring within " . $consent_expiry_notification_days . " days.");
     }
 
     // Pull a list of users with cm permission
@@ -567,11 +610,13 @@ function consentmanager_process_expiry_notifications(): bool {
             logScript("Consent Manager: Send message for " . $user['username']);
             $expiry_notification = new ResourceSpaceUserNotification;
 
-            $expiry_notification->set_subject("Consents Expiring Soon");
+            $expiry_notification->set_subject($applicationname . ": " . "Consents Expiring Soon");
 
-            $expiry_notification->set_text("There are some consents that are expiring soon.");
+            $expiry_notification->set_text("There are some consents that are expiring soon." . "<br /><br />");
+            $expiry_notification->append_text("Change whether you recieve these notifications <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>here</a>" . "<br />");
+            $expiry_notification->append_text("Disable these notifications for everyone <a href='" . generateURL($baseurl . "/plugins/consentmanager/pages/setup.php") . "'>here</a>");
 
-            $expiry_notification->url = generateURL($baseurl_short . "/plugins/consentmanager/pages/list.php", ["status" => "expiring"]);
+            $expiry_notification->url = generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"]);
 
             send_user_notification([$user['ref']], $expiry_notification); 
 
@@ -592,13 +637,23 @@ function consentmanager_process_expiry_notifications(): bool {
 
 }
 
-function consentmanager_process_expired_archiving(): bool {
+/**
+ * Process expired consent records and archive them
+ * 
+ * @return bool     Returns true if the auto archiving process completes
+ */
+function consentmanager_process_expired_auto_archive(): bool {
 
     global $consent_expired_workflow_state;
 
     logScript("Consent Manager: Automatic archiving job starting:");
 
     $expired_consent_resources = consentmanager_get_expired_consent_resources($consent_expired_workflow_state);
+
+    if (empty($expired_consent_resources)) {
+        logScript("Consent Manager: No expired consent records to archive. Exiting.");
+        return false;
+    }
 
     foreach ($expired_consent_resources as $resource) {
         logScript("Consent Manager: Changing status of resource #" . $resource);

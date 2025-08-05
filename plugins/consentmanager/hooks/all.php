@@ -101,7 +101,7 @@ function HookConsentmanagerAllCron()
 
     // Check if expired workflow state has been set
     if ($consent_expired_workflow_state !== '') {
-        consentmanager_process_expired_archiving();
+        consentmanager_process_expired_auto_archive();
     } else {
         logScript("Consent Manager: automatic archiving disabled");
     }
