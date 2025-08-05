@@ -94,15 +94,31 @@ if (getval("submitted","")!="")
         }
     else
         {
+
+        // Determine the previous expiry date and expiration_notice_sent flag
+        $previous_data = ps_query("select expires, expiration_notice_sent from license where ref = ?", ['i', $ref]);
+
+        if (!empty($previous_data) && count($previous_data) === 1) {
+
+            //If expiry date has changed
+            if ($previous_data[0]['expires'] !== $expires) {
+                $expiration_notice_sent = 0;
+            } else {
+                $expiration_notice_sent = (int) $previous_data[0]['expiration_notice_sent'];
+            }
+
+        }
+
         # Existing record   
         ps_query(
-            "update license set outbound= ?,holder= ?, license_usage= ?,description= ?,expires= ? where ref= ?",
+            "update license set outbound= ?,holder= ?, license_usage= ?,description= ?,expires= ?, expiration_notice_sent= ? where ref= ?",
             [
                 's', getval('outbound', ''),
                 's', getval('holder', ''),
                 's', $license_usage,
                 's', getval('description',''),
                 's', $expires,
+                'i', $expiration_notice_sent,
                 'i', $ref
             ]
         );

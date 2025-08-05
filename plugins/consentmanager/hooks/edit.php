@@ -129,18 +129,3 @@ function HookConsentmanagerEditCopy_locked_data_extra($resource, $locked_fields,
         return $resource;
     }
 }
-
-
-
-/*
-
-Single Edit - false, false
-Multi Edit - true, false
-Single upload (upload first) - false, true
-Multi upload (upload first) - false, true
-
-Single upload (edit first) - false, false
-
-editing resources from New Uploads collection - true, true
-
-*/
