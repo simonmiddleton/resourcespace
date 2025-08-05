@@ -53,6 +53,9 @@ input[type="text"], input[type="password"], input[type="url"],input[type="email"
     min-height: 32px;
     margin: 3px 0;
 }
+input[type="date"] {
+    width: 140px;
+}
 
 input[type="submit"], input[type="button"], button {
     padding: 6px 14px;
