@@ -33,6 +33,7 @@ include_once __DIR__ . '/tab_functions.php';
 include_once __DIR__ . '/mime_types.php';
 include_once __DIR__ . '/CommandPlaceholderArg.php';
 include_once __DIR__ . '/annotation_functions.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 # Switch on output buffering.
 ob_start(null, 4096);
@@ -65,7 +66,7 @@ if (file_exists(__DIR__ . "/config.deprecated.php")) {
 }
 
 # Load the real config
-if (!file_exists(__DIR__ . "/config.php")) {
+if (!(file_exists(__DIR__ . "/config.php") && filesize(__DIR__ . "/config.php") > 0)) {
     header("Location: pages/setup.php");
     die(0);
 }

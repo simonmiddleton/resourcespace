@@ -54,7 +54,7 @@ function HooksimplesamlCheckAddinstallationcheck()
                 </td>
                 <td>
                     <b><?php
-                    echo ($validurl 
+                    echo escape($validurl 
                     ? $GLOBALS['lang']['status-ok']
                     : $GLOBALS['lang']['status-fail']); ?>
                     </b>

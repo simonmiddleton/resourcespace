@@ -11,3 +11,15 @@ function HookWhisperAllCron()
 {
     whisper_process_unprocessed();
 }
+
+/**
+ * Prevent downloaded Whisper models from being deleted 
+ * 
+ * @return string
+ */
+function HookWhisperAllTemp_block_deletion()
+{
+    return $GLOBALS['whisper_model_dir'] ?? get_temp_dir() . "whisper";
+}
+
+

@@ -791,6 +791,16 @@ function get_mime_types_by_extension(string $extension): array
 }
 
 /**
+ * Get the global MIME types associated with the configured banned extensions.
+ */
+function get_unsafe_mime_types(): array
+{
+    $mime_types = $GLOBALS['mime_types_by_extension'] ?? [];
+    $banned_extensions_mimes = array_intersect_key($mime_types, array_flip($GLOBALS['banned_extensions']));
+    return array_unique(array_merge(...array_values(array_map(static fn($v) => (array) $v, $banned_extensions_mimes))));
+}
+
+/**
  * Convert the permitted resource type extension to MIME type. Used by upload_batch.php
  *
  * @param  string $extension    File extension
@@ -3772,21 +3782,17 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
                 if (!in_array($attribute->nodeName, $allowed_attributes)) {
                     $tag->removeAttribute($attribute->nodeName);
                 } elseif (
-                    in_array($attribute->nodeName, ['src', 'href', 'action', 'onmouseover', 'style'])
-                    && preg_match_all(
-                        // Check for dangerous URI (lookalikes)
-                        '/[a-zA-Z][a-zA-Z\d+\-.]*:(\/\/)?[^\s]+/im',
-                        $attribute->value,
-                        $matches,
-                        PREG_SET_ORDER
-                    )
+                    in_array($attribute->nodeName, ['src', 'href', 'action', 'onmouseover'])
+                    && sanitise_url($attribute->value) === '#'
                 ) {
-                    foreach ($matches as $uri_match) {
-                        if (!preg_match('/^(https?):/i', $uri_match[0])) {
-                            $tag->removeAttribute($attribute->nodeName);
-                            break;
-                        }
-                    }
+                    $tag->removeAttribute($attribute->nodeName);
+                } elseif (
+                    $attribute->nodeName === 'style'
+                    // Find url('...'), url("...") or url(...) rules that would have to be already safe
+                    && preg_match_all('/url\(\s*(?:\'|")?(.*?)(?:\'|")?\s*\);?/i', $attribute->value, $matches) >= 1
+                    && array_map(sanitise_url(...), $matches[1]) !== $matches[1]
+                ) {
+                    $tag->removeAttribute($attribute->nodeName);
                 }
             }
         }
@@ -5543,6 +5549,30 @@ function is_safe_url($url): bool
     }
 
     return true;
+}
+
+/**
+ * Sanitise URL for HTML rendering purposes.
+ * ResourceSpace only works with absolute (via $baseurl) and relative root (via $baseurl_short) URLs.
+ *
+ * @uses is_safe_url()
+ *
+ * @param string $val Untrusted URL
+ * @return string Returns the URL if considered safe, "#" otherwise.
+ */
+function sanitise_url(string $val): string
+{
+    // Convert relative root (URL) paths to absolute ones
+    $url = mb_strpos($val, $GLOBALS['baseurl_short']) === 0
+        ? str_replace($GLOBALS['baseurl_short'], "{$GLOBALS['baseurl']}/", $val)
+        : $val;
+
+    if (is_safe_url($url)) {
+        return $val;
+    }
+
+    debug("[WARN] Sanitising unsafe URL ({$val})");
+    return '#';
 }
 
 /**

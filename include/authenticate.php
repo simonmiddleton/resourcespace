@@ -205,7 +205,14 @@ Note: it is considered safe to show the collection bar because even if we enable
       later on, when the user might have resources in it, they would not be able to do anything with them
       unless they accept terms
 */
-if ($terms_login && 0 == $useracceptedterms && in_array($pagename, array("reload_links","browsebar_js","css_override","category_tree_lazy_load","message","terms","collections","login","user_change_password", "user_home")) === false) {
+$non_redirect_pages = [
+    "reload_links","browsebar_js","css_override","category_tree_lazy_load","message","terms","collections","login","user_change_password", "user_home"
+];
+$extra_non_redirect_pages = hook('beforetermsredirect');
+if (is_array($extra_non_redirect_pages) && count($extra_non_redirect_pages) > 0) {
+    $non_redirect_pages = array_merge($non_redirect_pages, $extra_non_redirect_pages);
+}
+if ($terms_login && 0 == $useracceptedterms && in_array($pagename, $non_redirect_pages) === false) {
     redirect('pages/terms.php?noredir=true&url=' . urlencode("pages/home.php"));
 }
 
@@ -226,37 +233,7 @@ if (hook("replacesitetextloader")) {
     $site_text = hook("replacesitetextloader");
 } else {
     if (isset($usergroup)) {
-        // Fetch user group specific content.
-        $site_text_query = "
-				SELECT `name`,
-				       `text`,
-				       `page` 
-				  FROM site_text 
-				 WHERE language = ?
-				   AND specific_to_group = ?
-			";
-        $parameters = array
-            (
-            "s",$language,
-            "i",$usergroup
-            );
-
-        if ($pagename != "admin_content") { // Load all content on the admin_content page to allow management.
-            $site_text_query .= "AND (page = ? OR page = 'all' OR page = '' " .  (($pagename == "dash_tile") ? " OR page = 'home'" : "") . ")";
-            $parameters[] = "s";
-            $parameters[] = $pagename;
-        }
-
-        $results = ps_query($site_text_query, $parameters, "sitetext", -1, true, 0);
-
-        for ($n = 0; $n < count($results); $n++) {
-            if ($results[$n]['page'] == '') {
-                $lang[$results[$n]['name']] = $results[$n]['text'];
-                $customsitetext[$results[$n]['name']] = $results[$n]['text'];
-            } else {
-                $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
-            }
-        }
+        load_site_text_for_usergroup($usergroup);
     }
 }   /* end replacesitetextloader */
 

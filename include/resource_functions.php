@@ -1205,10 +1205,21 @@ function save_resource_data($ref, $multi, $autosave_field = "")
             } else {
                 // update archive status if different (doesn't matter whether it is a user template or a genuine resource)
                 if ($setarchivestate != $oldarchive) {
+                    $missed_required_fields = update_archive_required_fields_check($ref, $setarchivestate);
+                    if (count($missed_required_fields) > 0) {
+                        global $additional_archive_states;
+                        if (in_array($setarchivestate, $additional_archive_states)) {
+                            $newarchivename = $lang['status' . $setarchivestate];
+                        } else {
+                            $newarchivename = $lang["status" . $setarchivestate];
+                        }
+                        // Array key used to reset drop down to old archive so user can try autosave again.
+                        $errors['status' . (int) $oldarchive] = str_replace(array('%%STATUS%%', '%%FIELDS%%'), array($newarchivename,  implode(', ', array_column($missed_required_fields, 'title'))), $lang["requiredfields-status-required_fields"]);
+                    } else {
                     update_archive_status($ref, $setarchivestate, array($oldarchive));
+                    $new_checksums["status"] = $setarchivestate;
+                    }
                 }
-
-                $new_checksums["status"] = $setarchivestate;
             }
         }
 
@@ -2097,6 +2108,7 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
 
     # Also update archive status
     if (($postvals["editthis_status"] ?? "") != "") {
+        $missed_required_fields = array();
         for ($m = 0; $m < count($list); $m++) {
             $ref = $list[$m];
 
@@ -2115,9 +2127,19 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
                 }
 
                 if ($setarchivestate != $oldarchive) { // Only if changed
-                    update_archive_status($ref, $setarchivestate, array($oldarchive));
+                    $field_check = update_archive_required_fields_check($ref, $setarchivestate);
+                    if (count($field_check) > 0) {
+                        $missed_required_fields[$ref] = $field_check;
+                    } else {
+                        update_archive_status($ref, $setarchivestate, array($oldarchive));
+                    }
                 }
             }
+        }
+        if (count($missed_required_fields) > 0) {
+            $missed_required_fields = array_keys($missed_required_fields);
+            sort($missed_required_fields, SORT_NUMERIC);
+            $errors[] = $lang["error-edit_status_change_missing_required_fields"] . '<br> ' . implode(', ', $missed_required_fields);
         }
     }
 

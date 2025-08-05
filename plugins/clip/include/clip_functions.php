@@ -34,19 +34,18 @@ function get_vector(bool $is_text, string $input, int $ref): array|false
     curl_close($ch);
 
     if ($http_code !== 200 || empty($response)) {
-        logScript("❌ Resource $ref: error from CLIP service (HTTP $http_code)");
+        logScript("Resource $ref: error from CLIP service (HTTP $http_code)");
         return false;
     }
 
     $vector = json_decode($response, true);
     if (!is_array($vector) || count($vector) !== 512) {
-        logScript("❌ Resource $ref: invalid CLIP vector returned");
+        logScript("Resource $ref: invalid CLIP vector returned");
         return false;
     }
 
     return $vector;
 }
-
 
 
 /**
@@ -91,10 +90,9 @@ function vector_visualise(array $vector): string
  *
  * @param int $ref The resource ID for which to generate the vector.
  *
- * @return array|false Returns the ID of the stored vector row on success,
- *                     or false on failure (e.g., file missing or vector generation error).
+ * @return bool        Returns the true on success, or false on failure (e.g., file missing or vector generation error).
  */
-function clip_generate_vector($ref)
+function clip_generate_vector($ref) : bool
 {
     $resource = get_resource_data($ref);
     $ext = "jpg";
@@ -105,17 +103,18 @@ function clip_generate_vector($ref)
     // Remove existing vectors
     ps_query("DELETE FROM resource_clip_vector WHERE resource = ?", ['i', $ref]);
 
-
     // Store image vector
     $image_path = get_resource_path($ref, true, $size, false, $ext);
     if (!file_exists($image_path)) {
         logScript("⚠ Resource $ref: file not found at $image_path");
         return false;
     }
+
     $vector = get_vector(false, $image_path, $ref);
     if ($vector === false) {
+        // Stop processing if issue with FastAPI server
         return false;
-    } // Stop processing if issue with FastAPI server
+    } 
 
     // Store vector in DB
     $vector = array_map('floatval', $vector); // ensure float values
@@ -137,8 +136,10 @@ function clip_generate_vector($ref)
 
         $vector = get_vector(false, $snapshot, $ref);
         if ($vector === false) {
+            // Stop processing if issue with FastAPI server
             return false;
-        } // Stop processing if issue with FastAPI server
+        }
+
         // Store vector in DB
         $vector = array_map('floatval', $vector); // ensure float values
         $blob = pack('f*', ...$vector);
@@ -202,12 +203,14 @@ function clip_tag(int $resource)
                 'top_k' => $clip_keyword_count,
         ]);
         $response = curl_exec($ch);
-        logScript("CLIP service response: " . $response);
+        $response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        logScript ("CLIP service response: " . $response);
         curl_close($ch);
 
-        if (strlen($response) == 0) {
-            return false;
-        } // CLIP server unresponsive
+        if (strlen($response) == 0 || $response_status !== 200) { 
+            // CLIP server unresponsive
+            return false; 
+        }
 
         foreach (json_decode($response) as $result) {
             # Create new or fetch existing node
@@ -218,7 +221,7 @@ function clip_tag(int $resource)
     }
 
     if (is_numeric($clip_title_field) && $clip_title_field > 0) {
-        $ch = curl_init(); // ✅ new handle for the title request
+        $ch = curl_init(); // new handle for the title request
         curl_setopt($ch, CURLOPT_URL, $clip_service_call);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -249,7 +252,7 @@ function clip_generate_missing_vectors($limit)
     global $clip_resource_types;
 
     // Ensure only one instance of this.
-    if (is_process_lock(__FUNCTION__)) {
+    if (is_process_lock(__FUNCTION__) || count($clip_resource_types) === 0) {
         return false;
     }
     set_process_lock(__FUNCTION__);
@@ -297,6 +300,11 @@ function clip_count_vectors()
 function clip_missing_vectors()
 {
     global $clip_resource_types;
+
+    if (count($clip_resource_types) === 0) {
+        return 0;
+    }
+
     $sql = "
     SELECT count(*) value
     FROM resource r
@@ -321,5 +329,9 @@ function clip_missing_vectors()
 function clip_vector_cleanup()
 {
     global $clip_resource_types;
-    ps_query("delete from resource_clip_vector where resource not in (select ref from resource where resource_type in (" . ps_param_insert(count($clip_resource_types)) . "))", ps_param_fill($clip_resource_types, "i"));
+    $sql = "DELETE FROM resource_clip_vector";
+    if (count($clip_resource_types) > 0) {
+        $sql .= " WHERE resource not in (select ref from resource where resource_type in (" . ps_param_insert(count($clip_resource_types)) . "))";
+    }
+    ps_query($sql, ps_param_fill($clip_resource_types, "i"));
 }

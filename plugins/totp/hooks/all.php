@@ -64,3 +64,8 @@ function HookTotpTeam_user_editAdditionaluserfieldssave()
         return new PreparedStatementQuery(',totp=0,totp_tries=0');
     }
 }
+
+function HookTotpAllBeforetermsredirect() 
+{
+    return ['totp'];
+}

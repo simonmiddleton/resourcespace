@@ -80,11 +80,13 @@ function whisper_process(int $resource): bool
         }
         logScript("Whisper: Audio proxy created at " . $audio_file);
 
-    // Audio file created. Proceed to prcess using Whisper.
+        // Audio file created. Proceed to process using Whisper.
         $whisper_prompt = preg_replace('/[^a-zA-Z0-9 \.\,\?\!\:\-\(\)]/', '', $whisper_prompt); // Sanitise prompt.
-        $shell_exec_cmd = "whisper %%FILE%% --output_dir %%DIR%% --initial_prompt %%PROMPT%%";
+        $shell_exec_cmd = "whisper %%FILE%% --model_dir %%MODEL_DIR%% --output_dir %%DIR%% --initial_prompt %%PROMPT%%";
+        $modeldir = $GLOBALS['whisper_model_dir'] ?? get_temp_dir();
         $shell_exec_params = [
             "%%FILE%%" => new CommandPlaceholderArg($audio_file, 'is_safe_basename'),
+            "%%MODEL_DIR%%" => new CommandPlaceholderArg($modeldir, [CommandPlaceholderArg::class, 'alwaysValid']), // Either set in config, or by get_temp_dir()
             "%%DIR%%" => new CommandPlaceholderArg($folder, [CommandPlaceholderArg::class, 'alwaysValid']), // Dir is always safe
             "%%PROMPT%%" => new CommandPlaceholderArg($whisper_prompt, [CommandPlaceholderArg::class, 'alwaysValid']) // Sanitised above
         ];

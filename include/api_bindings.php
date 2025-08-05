@@ -1559,3 +1559,30 @@ function api_delete_resources_in_collection($collection): bool
 
     return delete_resources_in_collection($collection);
 }
+
+
+/**
+ * Exposing {@see new_user} to the API
+ *
+ * @param string $newuser  - username to create
+ * @param integer $usergroup  - optional usergroup to assign
+ *
+ * @return boolean|integer  - id of new user or false if user already exists / permission denied, or -2 if user limit reached
+ */
+function api_new_user($username, $usergroup = 0)
+{
+    return new_user($username, $usergroup);
+}
+
+/*
+ * Exposing {@see save_user} to the API
+ * 
+ * @param string $ref ID of the user
+ * @param string  $data Data to save in JSON format (optional, will use posted data otherwise)
+ *
+ * @return boolean|string True if successful or a descriptive string if there's an issue
+ */
+function api_save_user(int $ref, string $data)
+{
+    return save_user($ref,json_decode($data, true));
+}

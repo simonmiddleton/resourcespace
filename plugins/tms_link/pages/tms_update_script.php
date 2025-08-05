@@ -145,23 +145,27 @@ foreach(tms_link_get_modules_mappings() as $module)
         {
         $tms_query_ids = array();
 
-        for($t = $tmspointer; $t < ($tmspointer + $tms_link_query_chunk_size) && (($tmspointer + $t) < $tms_link_test_count) && $t < $current_tms_count; $t++)
-            {
-            if(is_positive_int_loose($tms_resources[$t]["identifier"]))
-                {
-                $tms_query_ids[] = $tms_resources[$t]["identifier"];
-                }
-            else
-                {
-                $logmessage = "Invalid TMS data stored in ResourceSpace: '" . $tms_resources[$t]["identifier"] . "'";
-                $tmserrors[$tms_resources[$t]["resource"]] = $logmessage;
-                if($tms_log)
-                    {
-                    fwrite($logfile, $logmessage . PHP_EOL);
+        for(
+            $t = $tmspointer;
+            $t < ($tmspointer + $tms_link_query_chunk_size)
+                && (($tmspointer + $t) < $tms_link_test_count)
+                && $t < $current_tms_count;
+            $t++
+        ) {
+            foreach(preg_split('/[,\s]+/', $tms_resources[$t]["identifier"]) ?: [] as $identifier) {
+                if(!$module['tms_uid_field_int'] || is_positive_int_loose($identifier)) {
+                    $tms_query_ids[] = $identifier;
+                } else {
+                    $logmessage = "Invalid TMS data stored in ResourceSpace: '" . $identifier . "'" . PHP_EOL;
+                    $tmserrors[$tms_resources[$t]["resource"]] = $logmessage;
+                    if($tms_log) {
+                        fwrite($logfile, $logmessage . PHP_EOL);
                     }
                 }
             }
+        }
 
+        $tms_query_ids = array_unique($tms_query_ids);
         $logmessage = "Retrieving data from TMS system" . PHP_EOL;
         echo $logmessage;
         if($tms_log)
@@ -187,15 +191,18 @@ foreach(tms_link_get_modules_mappings() as $module)
 
             foreach($tmsresults as $tmsresult)
                 {
-                if($tms_resources[$ri]["identifier"] != $tmsresult[$module['tms_uid_field']])
-                    {
+                if(
+                    !in_array(
+                    $tmsresult[$module['tms_uid_field']],
+                    preg_split('/[,\s]+/',$tms_resources[$ri]["identifier"]))
+                ) {
                     continue;
-                    }
+                }
 
                 $tms_data_found = true;
 
                 debug("TMS_LINK - Checking resource: "  . $tms_resources[$ri]["resource"]  . ". TMS identifier: " . $tms_resources[$ri]["identifier"]);
-                $logmessage= "Checking resource: "  . $tms_resources[$ri]["resource"]  . ".TMS identifier: " . $tms_resources[$ri]["identifier"] . PHP_EOL;
+                $logmessage= "Checking resource: "  . $tms_resources[$ri]["resource"]  . ". TMS identifier: " . $tms_resources[$ri]["identifier"] . PHP_EOL;
                 echo $logmessage;
                 if($tms_log)
                     {
@@ -231,6 +238,11 @@ foreach(tms_link_get_modules_mappings() as $module)
                     {
                     $tms_link_column_name = $tms_rs_mapping['tms_column'];
                     $tms_link_field_id = $tms_rs_mapping['rs_field'];
+
+                    if ($tms_link_field_id == $module['rs_uid_field']) {
+                        // Don't update the identifier field as it may contain other IDs
+                        continue;
+                    }
 
                     if($tms_link_field_id!="" && $tms_link_field_id!=0 && isset($tmsresult[$tms_link_column_name]))
                         {   
@@ -275,7 +287,7 @@ foreach(tms_link_get_modules_mappings() as $module)
                     }
                 else
                     {
-                    $logmessage="Checksum differs but no changes were found when comparing ResourceSpace data with TMS data.";
+                    $logmessage="Checksum differs but no changes were found when comparing ResourceSpace data with TMS data." . PHP_EOL;
                     $tmserrors[$tms_resources[$ri]["resource"]]=$logmessage;
                     echo $logmessage;
                     if($tms_log)
@@ -284,6 +296,8 @@ foreach(tms_link_get_modules_mappings() as $module)
                         }
                     }
 
+                // A tms object has been processed for this resource, move on to the next resource
+                break;
                 } # end of $tmsresults loop
 
             if(!$tms_data_found && !isset($tmserrors[$tms_resources[$ri]["resource"]]))

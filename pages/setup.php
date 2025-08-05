@@ -397,7 +397,7 @@ h2#dbaseconfig{  min-height: 32px;}
 </div>
 <?php
     //Check if config file already exists and die with an error if it does.
-    if (file_exists($outputfile))
+    if (file_exists($outputfile) && filesize($outputfile) > 0)
     {
     ?>
     <div id="errorheader"><?php echo strip_tags_and_attributes($lang["setup-alreadyconfigured"]);?></div> 

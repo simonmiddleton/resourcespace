@@ -185,9 +185,11 @@ function HookClipAllAfterpreviewcreation(int $resource, int $alternative, bool $
         // Nothing to do for alternatives; face processing is for the main file only.
         // Detect images on upload if configured
         set_processing_message($lang["clip-generating"] . " " . $resource);
-        clip_generate_vector($resource);
-        set_processing_message($lang["clip-tagging"] . " " . $resource);
-        clip_tag($resource);
+        $success = clip_generate_vector($resource);
+        if ($success) {
+            set_processing_message($lang["clip-tagging"] . " " . $resource);
+            clip_tag($resource);
+        }
     }
 }
 

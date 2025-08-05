@@ -67,7 +67,7 @@ if($original_file_url !== "")
         {
         $new_resource_ref = create_resource(
             $resource_type_from_extension,
-            999,
+            get_default_archive_state(),
             $userref,
             $GLOBALS['lang']["image_banks_createdfromimagebanks"]
         );

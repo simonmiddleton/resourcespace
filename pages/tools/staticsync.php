@@ -257,9 +257,9 @@ function ProcessFolder($folder)
 
         # -------FILES---------------
         if (($filetype == "file") && (substr($file, 0, 1) != ".") && (strtolower($file) != "thumbs.db")) {
-            if (isset($staticsync_file_minimum_age) && (time() -  filectime($folder . "/" . $file) < $staticsync_file_minimum_age)) {
+            if (isset($staticsync_file_minimum_age) && (time() -  filemtime($folder . "/" . $file) < $staticsync_file_minimum_age)) {
                 // Don't process this file yet as it is too new
-                echo " - " . $file . " is too new (" . (time() -  filectime($folder . "/" . $file)) . " seconds), skipping\n";
+                echo " - " . $file . " is too new (" . (time() -  filemtime($folder . "/" . $file)) . " seconds), skipping\n";
                 continue;
             }
 

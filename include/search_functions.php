@@ -1798,6 +1798,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
             "r.image_red",
             "r.image_green",
             "r.image_blue",
+            "r.blurhash",
             "r.thumb_width",
             "r.thumb_height",
             "r.colour_key",
