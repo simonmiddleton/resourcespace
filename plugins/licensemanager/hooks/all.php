@@ -91,14 +91,14 @@ function HookLicensemanagerAllCron()
 
     // Check if expiry notifications are enabled globally
     if ($license_expiry_notification) {
-        //consentmanager_process_expiry_notifications();
+        licensemanager_process_expiry_notifications();
     } else {
         logScript("License Manager: notifications disabled globally");
     }
 
     // Check if expired workflow state has been set
     if ($license_expired_workflow_state !== '') {
-        licensemanager_process_expired_archiving();
+        licensemanager_process_expired_auto_archive();
     } else {
         logScript("License Manager: automatic archiving disabled");
     }

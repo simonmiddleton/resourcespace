@@ -228,7 +228,10 @@ function licensemanager_get_all_licenses(string $findtext = "", string $license_
 }
 
 /**
- * 
+ * Fetch all license records grouped by if they are expiring or not
+ *
+ * @return array|bool     Returns an array of license records if the user has read access;
+ *                        otherwise, returns false.
  */
 function licensemanager_get_all_licenses_grouped(): array|bool
 {
@@ -249,6 +252,76 @@ function licensemanager_get_all_licenses_grouped(): array|bool
     return ps_query($sql);
 }
 
+/**
+ * Fetch all expiring license records
+ * 
+ * This function returns an array of license records that are expiring within so many days.
+ * It can optionally be filtered to include records that have not been flagged as having
+ * an expiration notification already sent
+ * 
+ * @param int    $expires_within    Number of days that the records are expiring within
+ * @param bool   $unsent_only       Include only records where an expiration notification hasn't been sent
+ * 
+ * @return array|bool               Returns an array of expiring license records if the user has read access;
+ *                                  otherwise, returns false.
+ */
+function licensemanager_get_expiring_licenses(int $expires_within, bool $unsent_only = true): array|bool
+{
+    if ($expires_within <= 0) {
+        return false;
+    }
+
+    $sql = "select ref value 
+            from license 
+            where expires >= CURDATE() AND expires <= CURDATE() + INTERVAL ? DAY";
+
+    if ($unsent_only) {
+        $sql .= " and expiration_notice_sent = 0";
+    }
+
+    $sql .= " order by ref;";
+    
+    $expiring_licenses= ps_array($sql, ['i', $expires_within]);
+
+    return $expiring_licenses;
+
+}
+
+/**
+ * Sets expiration notice sent flag on license records
+ * 
+ * This function takes an array of license record references and sets the
+ * expiration_notice_sent flag on each one.
+ * 
+ * @param array $licenses       An array of license references
+ * 
+ * @return bool                 Returns true if the flags were set; otherwise, returns false
+ */
+function licensemanager_set_license_expiration_notice(array $licenses): bool
+{
+    if (empty($licenses)) {
+        return false;
+    }
+
+    $in_sql = ps_param_insert(count($licenses));
+    $params = ps_param_fill($licenses, "i");
+
+    ps_query("UPDATE license set expiration_notice_sent = 1 where ref in (" . $in_sql . ")", $params);
+
+    return true;
+
+}
+
+/**
+ * Fetch expired license records
+ * 
+ * This function returns expired license records that are not deleted and are not in the passed archive_state
+ * 
+ * @param int $archive_state    An integer of the archive state, to be excluded from the results
+ * 
+ * @return array|bool           Returns an array of expired license records;
+ *                              otherwise, returns false. 
+ */
 function licensemanager_get_expired_license_resources(int $archive_status): array|bool
 {
     $sql = "select distinct r.ref value
@@ -265,13 +338,81 @@ function licensemanager_get_expired_license_resources(int $archive_status): arra
     return $expired_license_resources;
 }
 
-function licensemanager_process_expired_archiving(): bool {
+/**
+ * Process expiring license records and send a notification/email
+ * 
+ * @return bool     Returns true if the notification process completes
+ */
+function licensemanager_process_expiry_notifications(): bool {
+
+    global $applicationname, $baseurl, $license_expiry_notification_days, $lang;
+
+    logScript("License Manager: Expiry notifications job starting:");
+
+    // Determine if there are any licenses that are expiring but notifications have not been sent yet
+    $expiring_licenses = licensemanager_get_expiring_licenses($license_expiry_notification_days, true);
+
+    if (empty($expiring_licenses)) {
+        logScript("License Manager: No licenses expiring within " . $license_expiry_notification_days . " days. Exiting.");
+        return false;
+    } else {
+        logScript("License Manager: There are " . count($expiring_licenses) . " expiring within " . $license_expiry_notification_days . " days.");
+    }
+
+    // Pull a list of users with lm permission
+    $users_to_notify = get_users_with_permission('lm');
+
+    foreach ($users_to_notify as $user) {
+
+        get_config_option(['user' => $user['ref'], 'usergroup' => $user['usergroup']], 'user_pref_license_notifications', $send_message);
+        
+        // Default to enabled, so if null still send message
+        if ($send_message == 1 || is_null($send_message)) {
+            logScript("License Manager: Send message for " . $user['username']);
+            $expiry_notification = new ResourceSpaceUserNotification;
+
+            $expiry_notification->set_subject($applicationname . ": " . $lang['license_notification_expiring_soon']);
+
+            $expiry_notification->set_text($lang['license_notification_message'] . "<br /><br />", ['%URL'], [generateURL($baseurl . "/plugins/licensemanager/pages/list.php", ["license_status" => "expiring"])]);
+            $expiry_notification->append_text($lang['license_notification_user_pref'] . " <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>" . $lang['action-here'] . "</a><br />");
+            $expiry_notification->append_text($lang['license_notification_global_pref'] . " <a href='" . generateURL($baseurl . "/plugins/licensemanager/pages/setup.php") . "'>" . $lang['action-here'] . "</a>");
+
+            send_user_notification([$user['ref']], $expiry_notification); 
+
+        }
+
+    }
+
+    // Mark licenses as notified
+    $marked_as_notified = licensemanager_set_license_expiration_notice($expiring_licenses);
+
+    if ($marked_as_notified) {
+        logScript("License Manager: Licenses marked as notification sent");
+    } else {
+        logScript("License Manager: Error when marking licenses as notification sent");
+    }
+
+    return true;
+
+}
+
+/**
+ * Process expired license records and archive them
+ * 
+ * @return bool     Returns true if the auto archiving process completes
+ */
+function licensemanager_process_expired_auto_archive(): bool {
 
     global $license_expired_workflow_state;
 
     logScript("License Manager: automatic archiving job starting:");
 
     $expired_license_resources = licensemanager_get_expired_license_resources($license_expired_workflow_state);
+
+    if (empty($expired_license_resources)) {
+        logScript("License Manager: No expired license records to archive. Exiting.");
+        return false;
+    }
 
     foreach ($expired_license_resources as $resource) {
         logScript("License Manager: changing status of resource #" . $resource);

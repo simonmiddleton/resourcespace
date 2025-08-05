@@ -51,3 +51,8 @@ $lang['license_status_expiring'] = "Expiring licenses";
 $lang['license_status_expired'] = "Expired licenses";
 $lang["license_view_linked_resources_short"] = "View";
 $lang['license_no_archiving'] = "No Change";
+
+$lang['license_notification_expiring_soon'] = "Licenses Expiring Soon";
+$lang['license_notification_message'] = "There are some licenses that are expiring soon. View them <a href='%URL'>here</a>";
+$lang['license_notification_user_pref'] = "Change whether you recieve these notifications";
+$lang['license_notification_global_pref'] = "Disable these notifications for everyone";
