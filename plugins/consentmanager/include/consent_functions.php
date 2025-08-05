@@ -584,7 +584,7 @@ function consentmanager_get_expired_consent_resources(int $archive_status): arra
  */
 function consentmanager_process_expiry_notifications(): bool {
 
-    global $applicationname, $baseurl, $consent_expiry_notification_days;
+    global $applicationname, $baseurl, $consent_expiry_notification_days, $lang;
 
     logScript("Consent Manager: Expiry notifications job starting:");
 
@@ -610,13 +610,13 @@ function consentmanager_process_expiry_notifications(): bool {
             logScript("Consent Manager: Send message for " . $user['username']);
             $expiry_notification = new ResourceSpaceUserNotification;
 
-            $expiry_notification->set_subject($applicationname . ": " . "Consents Expiring Soon");
+            $expiry_notification->set_subject($applicationname . ": " . $lang['consent_notification_expiring_soon']);
 
-            $expiry_notification->set_text("There are some consents that are expiring soon." . "<br /><br />");
-            $expiry_notification->append_text("Change whether you recieve these notifications <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>here</a>" . "<br />");
-            $expiry_notification->append_text("Disable these notifications for everyone <a href='" . generateURL($baseurl . "/plugins/consentmanager/pages/setup.php") . "'>here</a>");
+            $expiry_notification->set_text($lang['consent_notification_message'] . "<br /><br />", ['%URL'], [generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"])]);
+            $expiry_notification->append_text($lang['consent_notification_user_pref'] . " <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>" . $lang['action-here'] . "</a><br />");
+            $expiry_notification->append_text($lang['consent_notification_global_pref'] . " <a href='" . generateURL($baseurl . "/plugins/consentmanager/pages/setup.php") . "'>" . $lang['action-here'] . "</a>");
 
-            $expiry_notification->url = generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"]);
+            //$expiry_notification->url = generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"]);
 
             send_user_notification([$user['ref']], $expiry_notification); 
 

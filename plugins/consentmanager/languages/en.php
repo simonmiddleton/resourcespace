@@ -51,3 +51,8 @@ $lang['consent_status_expiring'] = "Expiring consents";
 $lang['consent_status_expired'] = "Expired consents";
 $lang["consent_view_linked_resources_short"] = "View";
 $lang['consent_no_archiving'] = "No Change";
+
+$lang['consent_notification_expiring_soon'] = "Consents Expiring Soon";
+$lang['consent_notification_message'] = "There are some consents that are expiring soon. View them <a href='%URL'>here</a>";
+$lang['consent_notification_user_pref'] = "Change whether you recieve these notifications";
+$lang['consent_notification_global_pref'] = "Disable these notifications for everyone";
