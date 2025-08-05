@@ -1640,7 +1640,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         }
         hook("addlistviewtitlecolumn"); ?>
-        <th><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></th>
+        <th><div class="ListTools ListSearchTools"><?php echo escape($lang["tools"]); ?></div></th>
         </tr>
         <?php } ?> <!--end hook replace listviewtitlerow-->
         <?php

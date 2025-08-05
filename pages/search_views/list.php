@@ -95,7 +95,7 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
             || !isset($metadata_template_title_field)
         ) {
             ?>
-                <td nowrap>
+                <td class="ListSearch">
                     <div
                         <?php 
                         echo ($x == 0) ? "class=\"ListTitle\"" : "";
