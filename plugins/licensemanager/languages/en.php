@@ -39,7 +39,7 @@ $lang["license_manager_access"]="Manage license data (where not already enabled 
 $lang["managelicenses-tooltip"] = "Create and manage licenses for resources";
 
 $lang['license_expiry_notification'] = "License expiring notifications";
-$lang['license_expiry_notification_days'] = "Number of days before license expiry is approaching when users with the 'License management' permission will be notified, either via system notification or email depending on user preference";
+$lang['license_expiry_notification_days'] = "Number of days before license expiry is approaching when users with the 'License management' permission will be notified";
 $lang['license_attach_upload'] = "Allow a license record to be attached on Refine Metadata page after upload";
 $lang['license_expired_workflow_state'] = "Automatically archive resources linked to expired licenses to this workflow state";
 
@@ -54,5 +54,5 @@ $lang['license_no_archiving'] = "No Change";
 
 $lang['license_notification_expiring_soon'] = "Licenses Expiring Soon";
 $lang['license_notification_message'] = "There are some licenses that are expiring soon. View them <a href='%URL'>here</a>";
-$lang['license_notification_user_pref'] = "Change whether you recieve these notifications";
+$lang['license_notification_user_pref'] = "Change whether you receive these notifications";
 $lang['license_notification_global_pref'] = "Disable these notifications for everyone";

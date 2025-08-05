@@ -1404,6 +1404,11 @@ div.video-js {margin:auto;}
     list-style-type: none;
     }
 
+#modal_dialog .MessageText a{
+    font-weight: bold;
+    color: #222222;
+    }
+
 #modal .TopInpageNav {
     margin: 0;
     padding: 0 20px 10px 5px;
