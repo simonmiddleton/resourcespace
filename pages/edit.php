@@ -374,7 +374,7 @@ if ($upload_review_mode && $lastedited > 0) {
     // Update resource data with locked resource data from last edited resource
     $resource = copy_locked_data($resource, $locked_fields, $lastedited);
 
-    $hookresource = hook('copy_locked_data_extra', '', [$resource, $locked_fields, $lastedited]);
+    $hookresource = hook('copy_locked_data_extra', '', [$resource, $locked_fields, $lastedited], true);
 
     if ($hookresource !== false) {
         $resource = $hookresource;

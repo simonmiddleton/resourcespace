@@ -84,7 +84,7 @@ function HookConsentmanagerEditAftersaveresourcedata($ref)
         }
 
         $val = getval("resource_consent", 0, false, is_positive_int_loose(...));
-        if ($val !== "") {
+        if ($val !== 0) {
             // Attempt to add consent record
             $result = consentmanager_link_consent($val, $ref);
 
@@ -100,6 +100,12 @@ function HookConsentmanagerEditAftersaveresourcedata($ref)
 function HookConsentmanagerEditCopy_locked_data_extra($resource, $locked_fields, $last_edited)
 {
     global $consent_attach_upload;
+
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"])) {
+        // @see hook() for an explanation about the hook_return_value global
+        $resource = $GLOBALS["hook_return_value"];
+    }
 
     if ($consent_attach_upload && in_array('resource_consent', $locked_fields)) {
 
@@ -119,8 +125,8 @@ function HookConsentmanagerEditCopy_locked_data_extra($resource, $locked_fields,
             return false;
         }
     } else {
-        // No changes to $resource so return false
-        return false;
+        // Return original resource due to way hook is implemented ($last_hook_value_wins = true)
+        return $resource;
     }
 }
 
