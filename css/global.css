@@ -2675,3 +2675,7 @@ button.tox-button {
 label {
     user-select: none; /* Prevents accidental text selection when clicking  labels*/
 }
+
+/* Search List View */
+.ListSearch {word-break: break-word;}
+.ListSearchTools {min-width: 100px;}
