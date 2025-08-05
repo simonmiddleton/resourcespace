@@ -41,7 +41,7 @@ $lang["manageconsent-tooltip"] = "Create and manage consent records for resource
 $lang['consent_expiry_notification'] = "Consent expiring notifications";
 $lang['consent_expiry_notification_days'] = "Number of days before consent expiry is approaching when users with the 'Consent management' permission will be notified, either via system notification or email depending on user preference";
 $lang['consent_attach_upload'] = "Allow a consent record to be attached on Refine Metadata page after upload";
-$lang['consent_expired_workflow_state'] = "consent_expired_workflow_state";
+$lang['consent_expired_workflow_state'] = "Automatically archive resources linked to expired consents to this workflow state";
 
 $lang['user_pref_consent_notifications'] = "Receive expiring consent notifications?";
 

@@ -41,7 +41,7 @@ $lang["managelicenses-tooltip"] = "Create and manage licenses for resources";
 $lang['license_expiry_notification'] = "License expiring notifications";
 $lang['license_expiry_notification_days'] = "Number of days before license expiry is approaching when users with the 'License management' permission will be notified, either via system notification or email depending on user preference";
 $lang['license_attach_upload'] = "Allow a license record to be attached on Refine Metadata page after upload";
-$lang['license_expired_workflow_state'] = "license_expired_workflow_state";
+$lang['license_expired_workflow_state'] = "Automatically archive resources linked to expired licenses to this workflow state";
 
 $lang['user_pref_license_notifications'] = "Receive expiring license notifications?";
 
