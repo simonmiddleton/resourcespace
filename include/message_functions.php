@@ -200,14 +200,15 @@ class ResourceSpaceUserNotification
  * Gets messages for a given user (returns true if there are messages, false if not)
  * Note that messages are passed by reference.
  *
- * @param  array $messages  Array that will be populated by messages. Passed by reference
- * @param  int $user        User ID
- * @param  bool $get_all    Retrieve all messages? Setting to TRUE will include all seen and expired messages
- * @param  bool $sort       Sort by message ID in ascending or descending order
- * @param  string $order_by Order of messages returned
+ * @param  array    $messages   Array that will be populated by messages. Passed by reference
+ * @param  int      $user       User ID
+ * @param  bool     $get_all    Retrieve all messages? Setting to TRUE will include all seen and expired messages
+ * @param  bool     $sort       Sort by message ID in ascending or descending order
+ * @param  string   $order_by   Order of messages returned
+ * @param  int      $limit      Limit the number of messages returned, defaults to 0 which is no limit
  * @return bool             Flag to indicate if any messages exist
  */
-function message_get(&$messages, $user, $get_all = false, $sort = "ASC", $order_by = "ref")
+function message_get(&$messages, $user, $get_all = false, $sort = "ASC", $order_by = "ref", int $limit = 0): bool
 {
     switch ($order_by) {
         case "ref":
@@ -244,7 +245,9 @@ function message_get(&$messages, $user, $get_all = false, $sort = "ASC", $order_
         "WHERE user_message.user = ?" .
         ($get_all ? " " : " AND message.expires > NOW()") .
         ($get_all ? " " : " AND user_message.seen='0'") .
-        " ORDER BY " . $sql_order_by . " " . $sort, array("i",$user));
+        ($get_all ? " " : " AND user_message.seen='0'") .
+        " ORDER BY " . $sql_order_by . " " . $sort . 
+        ($limit > 0 ? " LIMIT " . $limit : ""), array("i",$user));
     return count($messages) > 0;
 }
 

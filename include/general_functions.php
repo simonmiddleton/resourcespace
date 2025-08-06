@@ -180,6 +180,41 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     }
 }
 
+function date_to_age($datetime) {
+    
+    $now = new DateTime();
+    $then = new DateTime($datetime);
+    $diff = $now->getTimestamp() - $then->getTimestamp();
+
+    if ($diff < 60) {
+        return 'Just now';
+    } elseif ($diff < 3600) {
+        $minutes = floor($diff / 60);
+        $unit = $minutes == 1 ? 'min' : 'mins';
+        return "$minutes $unit ago";
+    } elseif ($diff < 86400) {
+        $hours = floor($diff / 3600);
+        $unit = $hours == 1 ? 'hour' : 'hours';
+        return "$hours $unit ago";
+    } elseif ($diff < 604800) {
+        $days = floor($diff / 86400);
+        $unit = $days == 1 ? 'day' : 'days';
+        return "$days $unit ago";
+    } elseif ($diff < 2592000) {
+        $weeks = floor($diff / 604800);
+        $unit = $weeks == 1 ? 'week' : 'weeks';
+        return "$weeks $unit ago";
+    } elseif ($diff < 31536000) {
+        $months = floor($diff / 2592000);
+        $unit = $months == 1 ? 'month' : 'months';
+        return "$months $unit ago";
+    } else {
+        // For anything over a year, you might want to just show the date
+        return nicedate($datetime, false, true, true);
+    }
+
+}
+
 /**
  * Redirect to the provided URL using a HTTP header Location directive. Exits after redirect
  *

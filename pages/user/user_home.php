@@ -76,14 +76,6 @@ $introtext = text("introtext");
                 ?>
 
                 <script>message_poll();</script>
-                <li id="MyMessagesUserMenuItem" title="<?php echo escape($lang["mymessages-tooltip"]); ?>">
-                    <a id="messages_link" href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);">
-                        <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>
-                        <br /><?php echo escape($lang['mymessages']); ?>
-                        <span style="display: none;" class="MessageCountPill Pill"></span>
-                    </a>
-                </li>
-
                 <?php
                 if ($offline_job_queue) {
                     $failedjobs = job_queue_get_jobs("", STATUS_ERROR, (checkperm('a') ? 0 : $userref));

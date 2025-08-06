@@ -432,6 +432,13 @@ if ($ajax == "") {
                                 }
                                 ?>
 
+                                <li title="<?php echo escape($lang["mymessages-tooltip"]); ?>">
+                                    <a href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');">
+                                        <i aria-hidden="true" class="fa fa-envelope fa-lg fa-fw"></i>
+                                        <span class="MessageCountPill Pill" style="display: none;"></span>
+                                    </a>
+                                </li>
+
                                 <li>
                                     <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onclick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape($lang['myaccount']); ?>" title="<?php echo escape($lang['myaccount']); ?>">
                                         <?php
@@ -439,28 +446,25 @@ if ($ajax == "") {
                                             if ($user_profile_image != "") {
                                                 ?>
                                                 <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> &nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname) ?>
-                                                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                                                 <?php
                                             } else {
                                                 ?>
                                                 <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname) ?>
-                                                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                                                 <?php
                                             }
                                         } else {
                                             if ($user_profile_image != "") {
                                                 ?>
                                                 <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'>
-                                                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                                                 <?php
                                             } else {
                                                 ?>
-                                                <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i>
-                                                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                                                <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i>                                                
                                                 <?php
                                             }
                                         }
                                         ?> 
+                                        <span class="UserMenuCountPill Pill" style="display: none;"></span>
                                     </a>
                                     <div id="MessageContainer" style="position:absolute; "></div>
                                 </li>
@@ -469,7 +473,7 @@ if ($ajax == "") {
                                 <?php if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
                                     <li>
                                         <a href="<?php echo $baseurl?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
-                                            <i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
+                                            <i aria-hidden="true" class="fa fa-lg fa-sliders fa-fw"></i>
                                             <?php
                                             if (!$actions_on && (checkperm("R") || checkperm("r"))) {
                                                 # Show pill count if there are any pending requests

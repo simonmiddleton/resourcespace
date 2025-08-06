@@ -334,7 +334,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .InpageNavLeftBlock span.Selected {font-weight: bold;}
 
 
-.HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; overflow: hidden;font-size: 0;}
+.HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; font-size: 0;}
 .HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0; font-size: 18px; line-height: 36px; zoom: 1;}
 .HorizontalNav a:link, .HorizontalNav a:visited {text-decoration:none;}
 .HorizontalNav a:hover, .HorizontalNav a:active {text-decoration:underline;}
@@ -1450,6 +1450,22 @@ span.Pill {
     padding: 2px 5px 2px 5px;
     cursor: pointer;
 }
+
+.HorizontalNav .Pill {
+    position: absolute;
+    top: -2px;
+    right: -15px;
+    border-radius: 20px;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 500;
+}
+
+.HorizontalNav a {
+    position: relative;
+}
+
+
 div#MessageContainer {
     width: 200px;
     z-index: 90;
