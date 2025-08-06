@@ -456,7 +456,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ResourcePanelIcons a {padding: 3px;}
 .ResourcePanelResourceID {font-size: 14px; float: left;padding:5px 8px 0 8px; height: 20px;}
 .CollectionPanelTools .fa, .CollectionPanelTools .fas {font-size: 13px;}
-.ListTools a {float: right;margin-left: 10px;text-decoration:none;}
+.ListTools a {margin-left: 10px;margin-right: 2px;text-decoration:none;}
 .ResourcePanelIcons a:hover {text-decoration:none;}
 .ListTools a:hover  {text-decoration:none;}
 a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a FontAwesome icon */
@@ -1049,6 +1049,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 
 .icondisplay .fa-map {
     font-size:22px;
+    margin-left: 2px;
     margin-right: 2px;
 }
 
