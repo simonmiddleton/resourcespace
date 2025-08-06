@@ -2454,13 +2454,11 @@ input[type="text"]#iconpicker-input {
     left: -9999px;
     z-index: 999;
     padding: 1em;
-    opacity: 0;
 }
 
 .skip-to-main-content:focus {
     left: 0;
     top: 50px;
-    opacity: 1;
 }
 
 .config-image-preview {

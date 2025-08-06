@@ -222,22 +222,34 @@ include "include/login_background.php";
         <div class="clearerleft"></div>
     </div>
 
-    <?php if (!$disable_languages) { ?>
-        <div class="Question HalfWidth">
-            <label for="language"><?php echo escape($lang["language"]); ?></label>
-            <select id="language" class="stdwidth" name="language" onblur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
-                <?php
-                reset($languages);
-                foreach ($languages as $key => $value) { ?>
-                    <option value="<?php echo escape($key); ?>" <?php echo ($language == $key) ? " selected" : ''; ?>>
-                        <?php echo escape(get_display_language($key, $value)); ?>
-                    </option>
-                <?php } ?>
-            </select>
-            <div class="clearerleft"></div>
-        </div> 
+
+    <?php if ($allow_keep_logged_in) { ?>
+        <div class="Question KeepLoggedIn">
+            <label for="remember"><?php echo escape($lang["keepmeloggedin"]); ?></label>
+            <input name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
+            <div class="clearer"> </div>
+        </div>
     <?php } ?>
 
+    <div class="QuestionSubmit">       
+        <input name="Submit" type="submit" value="<?php echo escape($lang["login"]); ?>" />
+    </div>
+
+    <p class="LoginLinks">
+        <?php if ($allow_account_request) { ?>
+            <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php">
+                <i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo escape($lang["nopassword"]); ?>
+            </a>
+        <?php }
+
+        if ($allow_password_reset) { ?>
+            <br/>
+            <a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php">
+                <i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo escape($lang["forgottenpassword"]); ?>
+            </a>
+            <?php
+        } ?>
+    </p>
     <div class="Question HalfWidth">
         <label for="user_local_tz"><?php echo escape($lang["local_tz"]); ?></label>
         <select id="user_local_tz" class="stdwidth" name="user_local_timezone">
@@ -268,33 +280,21 @@ include "include/login_background.php";
         <div class="clearerleft"></div>
     </div>
 
-    <?php if ($allow_keep_logged_in) { ?>
-        <div class="Question KeepLoggedIn">
-            <label for="remember"><?php echo escape($lang["keepmeloggedin"]); ?></label>
-            <input name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
-            <div class="clearer"> </div>
-        </div>
+    <?php if (!$disable_languages) { ?>
+        <div class="Question HalfWidth">
+            <label for="language"><?php echo escape($lang["language"]); ?></label>
+            <select id="language" class="stdwidth" name="language" onblur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
+                <?php
+                reset($languages);
+                foreach ($languages as $key => $value) { ?>
+                    <option value="<?php echo escape($key); ?>" <?php echo ($language == $key) ? " selected" : ''; ?>>
+                        <?php echo escape(get_display_language($key, $value)); ?>
+                    </option>
+                <?php } ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div> 
     <?php } ?>
-
-    <div class="QuestionSubmit">       
-        <input name="Submit" type="submit" value="<?php echo escape($lang["login"]); ?>" />
-    </div>
-
-    <p class="LoginLinks">
-        <?php if ($allow_account_request) { ?>
-            <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php">
-                <i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo escape($lang["nopassword"]); ?>
-            </a>
-        <?php }
-
-        if ($allow_password_reset) { ?>
-            <br/>
-            <a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php">
-                <i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo escape($lang["forgottenpassword"]); ?>
-            </a>
-            <?php
-        } ?>
-    </p>
 </form>
 
 <script type="text/javascript">
