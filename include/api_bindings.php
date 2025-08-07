@@ -1569,12 +1569,12 @@ function api_delete_resources_in_collection($collection): bool
  *
  * @return boolean|integer  - id of new user or false if user already exists / permission denied, or -2 if user limit reached
  */
-function api_new_user($username, $usergroup = 0)
+function api_new_user($username, $usergroup = 0): bool|int
 {
     return new_user($username, $usergroup);
 }
 
-/*
+/**
  * Exposing {@see save_user} to the API
  * 
  * @param string $ref ID of the user
@@ -1582,7 +1582,7 @@ function api_new_user($username, $usergroup = 0)
  *
  * @return boolean|string True if successful or a descriptive string if there's an issue
  */
-function api_save_user(int $ref, string $data)
+function api_save_user(int $ref, string $data): bool|string
 {
     return save_user($ref,json_decode($data, true));
 }
