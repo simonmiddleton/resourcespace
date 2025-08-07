@@ -1488,6 +1488,103 @@ div.MessageBox a {
     text-decoration: underline !important;
 }
 
+/* Quick message modal */
+.messages-modal {
+    border-radius: 6px;
+    width: 440px;
+    height: 500px;
+}
+
+.messages-modal h1 {
+    padding: 12px 20px;
+}
+
+.messages-modal h2 {
+    padding: 15px 20px;
+    font-size: 16px;
+}
+
+.message-list {
+    overflow-y: scroll;
+    width: 440px;
+    overflow-x: hidden;
+    padding: 0;
+    height: 436px;
+}
+
+.message-icon {
+    display: inline-block;
+    font-size: 28px;
+    margin-right: 10px;
+    vertical-align: top;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.message-icon img {
+    border-radius: 30px;
+    width: 36px;
+}
+
+.unread {
+    font-weight: bold;
+}
+
+.message {
+    margin: 5px 10px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.message-container {
+    display:inline-block;
+    width: 333px;
+    margin: 8px 5px 0 5px;
+}
+
+.message-username {
+    display: inline-block;
+}
+
+.message-text {
+    display: inline-block;
+    vertical-align: super;
+    width: 300px;
+}
+
+.message-divider {
+    height: 1px;
+    width: 388px;
+    margin-left: 20px;
+}
+
+.message-age {
+    float: right;
+}
+
+.message-body {
+    overflow-y: scroll;
+    width: 440px;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+.message-full-text {
+    margin: 10px 20px 20px 20px;
+}
+
+.message-full-text a {
+    font-weight: bold;
+}
+
+.message-reply {
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+    font-size: 20px;
+}
+
 .FeaturedSimpleLinks {
     display: table;
     width:100%;
