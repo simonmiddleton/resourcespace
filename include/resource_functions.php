@@ -6222,7 +6222,10 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
         return;
     }
 
-    ps_query("UPDATE resource SET archive = ? WHERE ref IN (" . ps_param_insert(count($resource)) . ")", array_merge(["i",$archive], ps_param_fill($resource, "i")));
+    $resource_chunks = array_chunk($resource, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    foreach ($resource_chunks as $chunk) {
+        ps_query("UPDATE resource SET archive = ? WHERE ref IN (" . ps_param_insert(count($chunk)) . ")", array_merge(["i", $archive], ps_param_fill($chunk, "i")));
+    }
 
     # Resources should be removed from collections when being moved into the deletion state as specified in config.default.php
     if ($remove_deleted_resources_from_collections && $resource_deletion_state == $archive) {
