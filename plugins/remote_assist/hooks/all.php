@@ -13,6 +13,11 @@ function HookRemote_assistAllHomeafterwelcometext()
             jQuery('#remote_assist').load('https://www.resourcespace.com/remote_assist_plugin.php?baseurl=<?php echo base64_encode($baseurl) ?>');
             }
         });
+    jQuery(document).on('keydown', function(e) {
+        if (e.key === "Escape") {
+            jQuery('#promptbox').hide();
+        }
+    });
     </script>
     <div id="remote_assist"></div>
     <?php
