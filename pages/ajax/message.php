@@ -141,33 +141,6 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
 
     function message_poll()
     {
-        // jQuery('span.MessageCountPill').html("99").fadeIn();
-        // jQuery('span.MessageTotalCountPill').html("99").fadeIn();
-        // jQuery('#TeamMessages').html("99").fadeIn();
-
-        // if (counter % 5 == 0) {
-        //     jQuery('span.MessageCountPill').hide();
-        //     jQuery('span.MessageTotalCountPill').hide();
-        //     jQuery('#TeamMessages').hide();
-        // } else if (counter % 5 == 1) {
-        //     jQuery('span.MessageCountPill').html("9").fadeIn();
-        //     jQuery('span.MessageTotalCountPill').html("9").fadeIn();
-        //     jQuery('#TeamMessages').html("9").fadeIn();
-        // } else if (counter % 5 == 2) {
-        //     jQuery('span.MessageCountPill').html("99").fadeIn();
-        //     jQuery('span.MessageTotalCountPill').html("99").fadeIn();
-        //     jQuery('#TeamMessages').html("99").fadeIn();
-        // } else if (counter % 5 == 3) {
-        //     jQuery('span.MessageCountPill').html("999").fadeIn();
-        //     jQuery('span.MessageTotalCountPill').html("999").fadeIn();
-        //     jQuery('#TeamMessages').html("999").fadeIn();
-        // } else if (counter % 5 == 4) {
-        //     jQuery('span.MessageCountPill').html("999+").fadeIn();
-        //     jQuery('span.MessageTotalCountPill').html("999+").fadeIn();
-        //     jQuery('#TeamMessages').html("999+").fadeIn();
-        // }
-
-        // counter++;
 
         if (message_timer != null)
         {

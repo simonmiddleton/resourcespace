@@ -41,7 +41,7 @@ message_get($messages, $userref, true, "DESC", "created", 10);
 
             $reply = (bool)($message["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE);
         ?>
-        <div id="message<?php echo (int)$message['message_id']; ?>" class="message<?php echo $unread_css; ?>"  onclick="show_quick_message(<?php echo (int)$message['message_id'] . ', ' . (int)$reply; ?>)">
+        <div id="message<?php echo (int)$message['message_id']; ?>" class="message<?php echo $unread_css; ?>"  onclick="show_quick_message(<?php echo (int)$message['message_id'] . ', ' . (int)$message['ref'] . ', '. (int)$reply; ?>)">
             <div class="message-icon">
                 <?php if ($user_profile_image != "") { ?>
                     <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'>
@@ -64,19 +64,19 @@ message_get($messages, $userref, true, "DESC", "created", 10);
 <div id="message-detail" class="messages-modal" style="display: none;">
     <h2><a href="#" onclick="show_list();"><i class="fa-solid fa-caret-left"></i>&nbsp;Back to Messages</a></h2>
     <div class="message-body">
-        <div class="message-full-text">Test message</div>
-    </div>
-    <div class="message-reply">
-        <a  id="reply-link" href="">
-            <i class="fa-solid fa-reply"></i>
-        </a>
+        <div class="message-full-text"></div>
+        <div class="message-reply">
+            <a id="reply-link" href="">
+                <i class="fa-solid fa-reply"></i> Reply
+            </a>
+        </div>
     </div>
 </div>
 <script>
-    function show_quick_message(ref, reply) {
+    function show_quick_message(message_ref, ref, reply) {
 
         // Show full message in modal
-        api("get_user_message",{'ref': ref}, function(response)
+        api("get_user_message",{'ref': message_ref}, function(response)
             {
             console.debug(response);
             if(response.length != false) {
@@ -107,7 +107,7 @@ message_get($messages, $userref, true, "DESC", "created", 10);
                 jQuery('#messages-list').fadeOut(200, function() {
                     jQuery('#message-detail').fadeIn(200, function() {
                         jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
-                        jQuery('#message' + ref).removeClass("unread");                        
+                        jQuery('#message' + message_ref).removeClass("unread");                        
                     });
                 });
 
