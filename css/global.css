@@ -1505,7 +1505,7 @@ div.MessageBox a {
 
 .message-list {
     overflow-y: scroll;
-    width: 440px;
+    /* width: 440px; */
     overflow-x: hidden;
     padding: 0;
     height: 436px;
@@ -1523,11 +1523,11 @@ div.MessageBox a {
 
 .message-icon {
     display: inline-block;
+    width: 40px;
     font-size: 28px;
-    margin-right: 10px;
+    margin: 20px 10px 10px 10px;
     vertical-align: top;
-    margin-top: 20px;
-    margin-left: 10px;
+    text-align: center;
 }
 
 .message-icon img {
@@ -1543,12 +1543,13 @@ div.MessageBox a {
     margin: 5px 10px;
     cursor: pointer;
     border-radius: 6px;
+    min-height: 80px;
 }
 
 .message-container {
-    display:inline-block;
+    display: inline-block;
     width: 333px;
-    margin: 8px 5px 0 5px;
+    margin: 8px 5px 0 0;
 }
 
 .message-username {
@@ -1558,7 +1559,7 @@ div.MessageBox a {
 .message-text {
     display: inline-block;
     vertical-align: super;
-    width: 300px;
+    width: 100%;
 }
 
 .message-divider {
@@ -1575,6 +1576,7 @@ div.MessageBox a {
     overflow-y: scroll;
     overflow-x: hidden;
     padding: 0;
+    height: 448px;
 }
 
 .message-full-text {

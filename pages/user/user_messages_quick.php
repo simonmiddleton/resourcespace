@@ -25,43 +25,48 @@ message_get($messages, $userref, true, "DESC", "created", 10);
 
             $userbyname = get_user_by_username($message["owner"]);
             $user = get_user($userbyname);
+
             if (!$user) {
-                $user = array('fullname' => $applicationname,'groupname' => '');
+                $user_details = array('fullname' => $applicationname,'groupname' => '');
                 $user_profile_image = "";
             } else {
+                $user_details = $user;
                 $user_profile_image = get_profile_image($user['ref'], false);
             }            
 
             $message_text = $message["message"];
-                // Full message is retrieved via api to avoid long messages killing the page
-                if (mb_strlen($message_text) > 100) {
-                    $message_text = mb_strcut($message["message"], 0, 70) . "...";
-                }
-            $message_text = strip_tags_and_attributes($message_text);
-            $message_text = nl2br($message_text);
+
+            $message_text_preview = preview_from_text($message_text, 45, 2, true);
+
+            $message_text_preview = strip_tags_and_attributes($message_text_preview);
+            $message_text_preview = nl2br($message_text_preview);
 
             $reply = (bool)($message["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE);
         ?>
         <div id="message<?php echo (int)$message['message_id']; ?>" class="message<?php echo $unread_css; ?>"  onclick="show_quick_message(<?php echo (int)$message['message_id'] . ', ' . (int)$message['ref'] . ', '. (int)$reply; ?>)">
             <div class="message-icon">
-                <?php if ($user_profile_image != "") { ?>
-                    <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'>
-                <?php } else { ?>
+                <?php if ($user) { 
+                        if ($user_profile_image != "") {?>
+                            <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'>
+                            <?php } else { ?>
+                                <span class="fa fa-solid fa-user"></span>
+                            <?php }
+                        } else { ?>
                     <span class="fa fa-solid fa-gears"></span>
                 <?php } ?>
             </div>
             <div class="message-container">
                 <div class="message-username">
-                    <?php echo escape((isset($user['fullname']) && trim($user['fullname']) != "") ? $user['fullname'] : $user['username']); ?>
+                    <?php echo escape((isset($user_details['fullname']) && trim($user_details['fullname']) != "") ? $user_details['fullname'] : $user_details['username']); ?>
                 </div>
                 <div class="message-age"><?php echo escape(date_to_age($message["created"])); ?></div>
-                <div class="message-text"><?php echo($message_text); ?></div>
+                <div class="message-text"><?php echo($message_text_preview); ?></div>
             </div>
         </div>
         <div class="message-divider"></div>
         <?php endforeach; ?>
         <div class="message-viewall">
-            <a id="viewall-link" href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);">
+            <a id="viewall-link" href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php', ['per_page_list' => 99999]); ?>" onClick="return CentralSpaceLoad(this, true);">
                 <i class="fa-solid fa-envelope"></i> <?php echo escape($lang["viewallmessages"])?>
             </a>
         </div>
