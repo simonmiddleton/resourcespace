@@ -356,6 +356,9 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .messages-modal {
             background: rgb(38, 38, 38)
         }
+        .message-body {
+            background-color: rgb(38, 38, 38);
+        }
         .message-username {
             color: white;
         }

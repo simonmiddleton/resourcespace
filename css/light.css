@@ -23,7 +23,7 @@ input[readonly] {
 
 /* Header styling */
 #Header {background: #fff;transform: translate3d(0, 0, 0);border: none;}
-#Header li a:not(:has(img)) {color:#000; opacity:0.7;}
+#Header li a:not(:has(img)) img {color:#000; opacity:0.7;}
 #Header .SearchResultsDisabled,
 #Header .SearchResultsDisabled:hover,
 .DisabledLink,
@@ -794,6 +794,10 @@ a.HomePanel:hover {
 /* Quick message modal */
 .messages-modal {
     background: white;
+}
+
+.message-body {
+    background-color: white;
 }
 
 .messages-modal h1 {
