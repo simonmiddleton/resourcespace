@@ -15,7 +15,7 @@ message_get($messages, $userref, true, "DESC", "created", 10);
 
 ?>
 <div id="messages-list" class="messages-modal">
-    <h1><a href="<?php echo $baseurl; ?>/pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);">Messages</a></h1>
+    <h1><a href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);">Messages</a></h1>
     <div class="message-list">
         <?php foreach ($messages as $message): ?>
         <?php
@@ -59,6 +59,11 @@ message_get($messages, $userref, true, "DESC", "created", 10);
         </div>
         <div class="message-divider"></div>
         <?php endforeach; ?>
+        <div class="message-viewall">
+            <a id="viewall-link" href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);">
+                <i class="fa-solid fa-envelope"></i> View all Messages
+            </a>
+        </div>
     </div>
 </div>
 <div id="message-detail" class="messages-modal" style="display: none;">

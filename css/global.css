@@ -1511,6 +1511,12 @@ div.MessageBox a {
     height: 436px;
 }
 
+.message-viewall {
+    margin: 5px 10px;
+    text-align: center;
+    font-size: 16px;
+}
+
 .message-icon {
     display: inline-block;
     font-size: 28px;
