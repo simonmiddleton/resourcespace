@@ -78,6 +78,8 @@ $test_cases = [
     ["search" => "1998.327.370.*", "node_value" => "1998", "include_resource" => false],
     ["search" => "2010.69*", "node_value" => "2010.701", "include_resource" => false],
     ["search" => "2010.69*", "node_value" => "2010.690.3.450"],
+    ["search" => "*98.327.370.*", "node_value" => "1998.327.370.456"],
+    ["search" => "bing.*.boom", "node_value" => "bing.bong.BOOM"],
     ];
 
 foreach ($test_cases as $case) {
