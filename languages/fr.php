@@ -423,7 +423,7 @@ $lang["access3"] = "Spécifique";
 $lang["statusandrelationships"] = "Statut et parenté";
 
 # Lists
-$lang["months"] = array("janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre");
+$lang["months_list"] = array("janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Ajouter les résultats de la recherche à la collection courante";

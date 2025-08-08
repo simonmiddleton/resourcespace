@@ -423,7 +423,7 @@ $lang["access3"] = "カスタム";
 $lang["statusandrelationships"] = "ステータスと関連";
 
 # Lists
-$lang["months"] = array("1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月");
+$lang["months_list"] = array("1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "コレクションへ検索アイテムを保存";

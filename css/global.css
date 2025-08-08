@@ -1517,6 +1517,10 @@ div.MessageBox a {
     font-size: 16px;
 }
 
+.message-nomessages {
+    margin: 5px 20px;
+}
+
 .message-icon {
     display: inline-block;
     font-size: 28px;

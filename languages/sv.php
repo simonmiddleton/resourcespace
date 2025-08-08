@@ -723,7 +723,7 @@ $lang["access3"] = "Anpassad";
 $lang["statusandrelationships"] = "Status och relationer";
 
 # Lists
-$lang["months"] = array("januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december");
+$lang["months_list"] = array("januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december");
 $lang["false-true"] = array("Falskt","Sant");
 
 # Formatting

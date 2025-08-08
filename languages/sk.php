@@ -871,7 +871,7 @@ $lang["access3"] = "Vlastný";
 $lang["statusandrelationships"] = "Stav a závislosti";
 
 # Lists
-$lang["months"] = array("január","február","marec","apríl","máj","jún","júl","august","september","október","november","december");
+$lang["months_list"] = array("január","február","marec","apríl","máj","jún","júl","august","september","október","november","december");
 $lang["false-true"] = array("nepravdivý","pravdivý");
 
 # Formatting

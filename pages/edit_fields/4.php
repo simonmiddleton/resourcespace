@@ -82,7 +82,7 @@ if ($date_d_m_y) {
         <option value=""><?php echo escape($lang["month"]); ?></option>
         <?php for ($m = 1; $m <= 12; $m++) { ?>
             <option <?php echo ($m == $dm) ? " selected" : ''; ?> value="<?php echo sprintf("%02d", $m)?>">
-                <?php echo escape($lang["months"][$m - 1]); ?>
+                <?php echo escape($lang["months_list"][$m - 1]); ?>
             </option>
         <?php } ?>
     </select>
@@ -93,7 +93,7 @@ if ($date_d_m_y) {
         <option value=""><?php echo escape($lang["month"]); ?></option>
         <?php for ($m = 1; $m <= 12; $m++) { ?>
             <option <?php echo ($m == $dm) ? " selected" : ''; ?> value="<?php echo sprintf("%02d", $m)?>">
-                <?php echo escape($lang["months"][$m - 1]); ?>
+                <?php echo escape($lang["months_list"][$m - 1]); ?>
             </option>
         <?php } ?>
     </select>

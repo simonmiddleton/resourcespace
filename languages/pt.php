@@ -418,7 +418,7 @@ $lang["statusandrelationships"] = "Status e Relacionamentos";
 
 
 # Lists
-$lang["months"] = array("Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro");
+$lang["months_list"] = array("Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro");
 
 
 

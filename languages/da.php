@@ -382,7 +382,7 @@ $lang["access1"] = "Begrænset";
 $lang["access2"] = "Fortrolige";
 $lang["access3"] = "Tilpasset";
 $lang["statusandrelationships"] = "Status og relationer";
-$lang["months"] = array('Januar','Februar','Marts','April','Maj','Juni','Juli','August','September','Oktober','November','December');
+$lang["months_list"] = array('Januar','Februar','Marts','April','Maj','Juni','Juli','August','September','Oktober','November','December');
 
 $lang["savesearchitemstocollection"] = "Gem søgningeresultater i samling";
 $lang["removeallresourcesfromcollection"] = "Fjern alle ressourcer fra denne samling";

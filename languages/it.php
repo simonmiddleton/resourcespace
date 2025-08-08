@@ -415,7 +415,7 @@ $lang["access3"] = "Accesso custom";
 $lang["statusandrelationships"] = "Stato e relazioni";
 
 # Lists
-$lang["months"] = array("Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre");
+$lang["months_list"] = array("Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Salva i risultati nella collezione";

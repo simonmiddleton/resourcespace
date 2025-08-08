@@ -161,7 +161,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     if (!is_numeric($month_part)) {
         return $y;
     }
-    $m = $wordy ? ($lang["months"][$month_part - 1] ?? "") : $month_part;
+    $m = $wordy ? ($lang["months_list"][$month_part - 1] ?? "") : $month_part;
     if ($m == "") {
         return $y;
     }
@@ -181,33 +181,35 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
 }
 
 function date_to_age($datetime) {
+
+    global $lang;
     
     $now = new DateTime();
     $then = new DateTime($datetime);
     $diff = $now->getTimestamp() - $then->getTimestamp();
 
     if ($diff < 60) {
-        return 'Just now';
+        return $lang['just_now'];
     } elseif ($diff < 3600) {
         $minutes = floor($diff / 60);
-        $unit = $minutes == 1 ? 'min' : 'mins';
-        return "$minutes $unit ago";
+        $unit = $minutes == 1 ? $lang['minute'] : $lang['minutes'];
+        return mb_strtolower("$minutes $unit ago", 'UTF-8');
     } elseif ($diff < 86400) {
         $hours = floor($diff / 3600);
-        $unit = $hours == 1 ? 'hour' : 'hours';
-        return "$hours $unit ago";
+        $unit = $hours == 1 ? $lang['hour'] : $lang['hours'];
+        return mb_strtolower("$hours $unit ago", 'UTF-8');
     } elseif ($diff < 604800) {
         $days = floor($diff / 86400);
-        $unit = $days == 1 ? 'day' : 'days';
-        return "$days $unit ago";
+        $unit = $days == 1 ? $lang['day'] : $lang['days'];
+        return mb_strtolower("$days $unit ago", 'UTF-8');
     } elseif ($diff < 2592000) {
         $weeks = floor($diff / 604800);
-        $unit = $weeks == 1 ? 'week' : 'weeks';
-        return "$weeks $unit ago";
+        $unit = $weeks == 1 ? $lang['week'] : $lang['weeks'];
+        return mb_strtolower("$weeks $unit ago", 'UTF-8');
     } elseif ($diff < 31536000) {
         $months = floor($diff / 2592000);
-        $unit = $months == 1 ? 'month' : 'months';
-        return "$months $unit ago";
+        $unit = $months == 1 ? $lang['month'] : $lang['months'];
+        return mb_strtolower("$months $unit ago", 'UTF-8');
     } else {
         // For anything over a year, you might want to just show the date
         return nicedate($datetime, false, true, true);

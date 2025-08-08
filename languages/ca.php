@@ -368,7 +368,7 @@ $lang["of"] = "de"; # e.g. page 1 of 2";
 $lang["format"] = "Format";
 
 # Lists
-$lang["months"] = array("Gener","Febrer","Març","Abril","Maig","Juny","Juliol","Agost","Setembre","Octubre","Novembre","Desembre");
+$lang["months_list"] = array("Gener","Febrer","Març","Abril","Maig","Juny","Juliol","Agost","Setembre","Octubre","Novembre","Desembre");
 
 # Statistics
 $lang["stat-addpubliccollection"] = "Afegir col·lecció pública";

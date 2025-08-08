@@ -15,8 +15,9 @@ message_get($messages, $userref, true, "DESC", "created", 10);
 
 ?>
 <div id="messages-list" class="messages-modal">
-    <h1><a href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);">Messages</a></h1>
+    <h1><a href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo escape($lang["mymessages"])?></a></h1>
     <div class="message-list">
+    <?php if (count($messages) > 0): ?>
         <?php foreach ($messages as $message): ?>
         <?php
 
@@ -53,7 +54,7 @@ message_get($messages, $userref, true, "DESC", "created", 10);
                 <div class="message-username">
                     <?php echo escape((isset($user['fullname']) && trim($user['fullname']) != "") ? $user['fullname'] : $user['username']); ?>
                 </div>
-                <div class="message-age"><?php echo date_to_age($message["created"]); ?></div>
+                <div class="message-age"><?php echo escape(date_to_age($message["created"])); ?></div>
                 <div class="message-text"><?php echo($message_text); ?></div>
             </div>
         </div>
@@ -61,18 +62,23 @@ message_get($messages, $userref, true, "DESC", "created", 10);
         <?php endforeach; ?>
         <div class="message-viewall">
             <a id="viewall-link" href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);">
-                <i class="fa-solid fa-envelope"></i> View all Messages
+                <i class="fa-solid fa-envelope"></i> <?php echo escape($lang["viewallmessages"])?>
             </a>
         </div>
+        <?php else: ?>
+        <div class="message-nomessages">
+            <?php echo escape($lang['mymessages_youhavenomessages']); ?>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 <div id="message-detail" class="messages-modal" style="display: none;">
-    <h2><a href="#" onclick="show_list();"><i class="fa-solid fa-caret-left"></i>&nbsp;Back to Messages</a></h2>
+    <h2><a href="#" onclick="show_list();"><i class="fa-solid fa-caret-left"></i>&nbsp;<?php echo escape($lang["backtomessages"])?></a></h2>
     <div class="message-body">
         <div class="message-full-text"></div>
         <div class="message-reply">
             <a id="reply-link" href="">
-                <i class="fa-solid fa-reply"></i> Reply
+                <i class="fa-solid fa-reply"></i> <?php echo escape($lang["reply"]); ?>
             </a>
         </div>
     </div>
