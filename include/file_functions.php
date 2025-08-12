@@ -451,6 +451,7 @@ enum ProcessFileUploadErrorCondition
     case InvalidUploadPath;
     case SpecialFile;
     case InvalidExtension;
+    case InvalidMimeType;
     case MimeTypeMismatch;
     case FileMoveFailure;
 
@@ -563,10 +564,23 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
 
     if (
         $mime_file_based_detection
-        && array_intersect($mime_type_by_ext, get_mime_type($source_file_path, $source_file_ext, true)) === []
+        && ($mime_type_from_file = get_mime_type($source_file_path, $source_file_ext, true))
+        && array_intersect($mime_type_by_ext, $mime_type_from_file) === []
     ) {
         debug("MIME type mismatch for file '{$source_file_name}'");
-        return $fail_due_to(ProcessFileUploadErrorCondition::MimeTypeMismatch);
+
+        if (in_array('application/octet-stream', $mime_type_from_file)) {
+            return $fail_due_to(ProcessFileUploadErrorCondition::InvalidMimeType);
+        } elseif (array_intersect($mime_type_from_file, get_unsafe_mime_types()) !== []) {
+            return $fail_due_to(ProcessFileUploadErrorCondition::MimeTypeMismatch);
+        } else {
+            log_activity(
+                "MIME type mismatch for file '{$source_file_name}' "
+                . '(by ext: ' . implode(', ', $mime_type_by_ext)
+                . '; by content: ' . implode(', ', $mime_type_from_file) . ')',
+                LOG_CODE_SYSTEM
+            );
+        }        
     }
 
     // Destination processing
