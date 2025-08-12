@@ -341,6 +341,9 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
 
             CentralSpace.trigger('CentralSpaceLoaded', [{url: url}]);
 
+            // Update title in browser for accessibility
+            updatePageTitle(pagename);
+
             // Change the browser URL and save the CentralSpace HTML state in the browser's history record.
             if(typeof(top.history.pushState)=='function' && !modal)
                 {
@@ -515,10 +518,13 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
             }
             }
 
+        // Update title in browser for accessibility
+        updatePageTitle(pagename);
+
         // Change the browser URL and save the CentralSpace HTML state in the browser's history record.
         if(update_history && typeof(top.history.pushState)=='function' && !modal)
             {
-            top.history.pushState(document.title+'&&&'+data, applicationname, form.action);
+            top.history.pushState(document.title+'&&&'+data, pagetitle, form.action);
             }
 
         /* Scroll to top if parameter set - used when changing pages */
@@ -1016,6 +1022,7 @@ function ModalClose()
         jQuery('#CentralSpace').trigger('ModalClosed', [{url: modalurl}]);
         delete modalurl;
     }
+    updatePageTitle();
 }
 
 // For modals, set what context the modal was called from and insert if missing
@@ -2243,4 +2250,17 @@ function updateHeaderImage() {
             jQuery('#HeaderImg').attr("src", DOMPurify.sanitize(data, { SAFE_FOR_URL: true }));
         }
     });
+}
+
+// Dynamically update page title using Ajax
+function updatePageTitle(pagename) {
+    const ajax_url = baseurl_short + 'pages/ajax/update_page_title.php?page=' + pagename;
+
+    jQuery.ajax({
+        type: "GET",
+        url: ajax_url,
+        success: function(data) {
+            document.title = data;
+        }
+    })
 }

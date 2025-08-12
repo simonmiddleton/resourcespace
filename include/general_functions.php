@@ -5787,3 +5787,9 @@ function get_favicon_url(): string
 
     return $favicon;
 }
+
+function get_page_title($page): string
+{
+    global $lang, $applicationname;
+    return $applicationname . (isset($lang["page-title_$page"]) ? " - " . $lang["page-title_$page"] : "");
+}
