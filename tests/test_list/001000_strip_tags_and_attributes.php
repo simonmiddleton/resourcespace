@@ -168,11 +168,25 @@ $use_cases = [
         'expected' => '<div>Test</div>',
     ],
     [
-        'name' => 'Allowed URI scheme in the "style" attribute value will be left alone',
+        'name' => 'Allowed URI scheme in the "style" attribute value will be left alone (1)',
         'input' => [
             'html' => '<div style="color: red;background-image: url(http://test.localhost/pages);">Test</div>',
         ],
         'expected' => '<div style="color: red;background-image: url(http://test.localhost/pages);">Test</div>',
+    ],
+    [
+        'name' => 'Allowed URI scheme in the "style" attribute value will be left alone (2)',
+        'input' => [
+            'html' => '<div style="color: red;background-image: url(\'http://test.localhost/pages\');">Test</div>',
+        ],
+        'expected' => '<div style="color: red;background-image: url(\'http://test.localhost/pages\');">Test</div>',
+    ],
+    [
+        'name' => 'Allowed URI scheme in the "style" attribute value will be left alone (3)',
+        'input' => [
+            'html' => '<div style=\'color: red;background-image: url("http://test.localhost/pages");\'>Test</div>',
+        ],
+        'expected' => '<div style=\'color: red;background-image: url("http://test.localhost/pages");\'>Test</div>',
     ],
     [
         'name' => 'Allowed URI scheme, i.e http(s), should be left alone',
