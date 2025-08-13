@@ -1759,10 +1759,11 @@ function updateDownloadLink(ns, selected_size, picker)
             preview_size_info[selected_size]['html']['download_column'],
             {
                 ALLOWED_TAGS: ['a'],
-                ALLOWED_ATTR: ['href', 'onclick','data-api-native-csrf'],
+                ALLOWED_ATTR: ['href', 'onclick','data-api-native-csrf', 'id'],
             }
         )
-    );
+    ).filter('a[id="downloadlink"]');
+
     download_btn.prop('href', link.attr('href'));
     download_btn.attr('onclick', link.attr('onclick'));
     download_btn.attr('data-api-native-csrf', link.attr('data-api-native-csrf'));
