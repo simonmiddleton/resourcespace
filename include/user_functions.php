@@ -3561,7 +3561,7 @@ function update_user_access(int $user = 0, array $set_values = []): bool
  */
 function checkPermission_manage_users(): bool
 {
-    return ((checkperm('t') && checkperm('u')) || ('cli' == PHP_SAPI));
+    return ((checkperm('t') && checkperm('u')));
 }
 
 /**
