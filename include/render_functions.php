@@ -6031,18 +6031,21 @@ function render_antispam_question()
         <input type="hidden" name="antispamcode" value="<?php echo $rndcode; ?>">
         <input type="hidden" name="antispamtime" value="<?php echo $timestamp; ?>">
         <label for="antispam"><?php echo escape($lang["enterantispamcode"]); ?> <sup>*</sup><br>
-            <div id="AntiSpamImage" style="
-            margin: 5px 0;
-            background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
-            height: <?php echo $height; ?>px;
-            width: <?php echo $width; ?>px;
-            border-radius: 6px;
-            display: inline-block;
-            ">    
+            <div 
+                id="AntiSpamImage"
+                title="Anti-spam image"
+                style="
+                    margin: 5px 0;
+                    background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
+                    height: <?php echo $height; ?>px;
+                    width: <?php echo $width; ?>px;
+                    border-radius: 6px;
+                    display: inline-block;
+            ">
             </div>
         </label> 
         <input type="text" name="antispam_user_code" class="stdwidth" value="">
-        <input type=text name="antispam" id="antispam" class="stdwidth" value="">
+        <input type=text name="antispam" id="antispam" class="stdwidth" value="" required>
         <div class="clearerleft"></div>        
     </div>
     <?php

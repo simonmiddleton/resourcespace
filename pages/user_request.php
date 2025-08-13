@@ -128,7 +128,8 @@ include "../include/login_background.php";
     <?php
     if ($error) {
         ?>
-        <div class="FormError"><?php echo $error . ' ' . $error_extra?></div>
+        <div class="FormError" tabindex="-1"><?php echo $error . ' ' . $error_extra?></div>
+        <script>window.onload = function() { document.getElementById("FormError").focus(); }</script>
         <?php
     }
 
@@ -141,13 +142,13 @@ include "../include/login_background.php";
 
     <div class="Question">
         <label for="name"><?php echo escape($lang["yourname"]); ?> <sup>*</sup></label>
-        <input type=text name="name" id="name" class="stdwidth" value="<?php echo $name ?>">
+        <input type=text name="name" id="name" class="stdwidth" value="<?php echo $name ?>" required>
         <div class="clearerleft"></div>
     </div>
 
     <div class="Question">
         <label for="email"><?php echo escape($lang["youremailaddress"]); ?> <sup>*</sup></label>
-        <input type=text name="email" id="email" class="stdwidth" value="<?php echo $email ?>">
+        <input type=text name="email" id="email" class="stdwidth" value="<?php echo $email ?>" required>
         <div class="clearerleft"></div>
     </div>
 
