@@ -27,7 +27,11 @@ $add_header = isset($bind_placeholders['contactsheet_header']) && ($bind_placeho
 <page
     <?php
     if ($add_header) {
-        echo ' backtop="25mm"';
+        if($bind_placeholders['contact_sheet_include_applicationname'] && strlen($applicationname) > 23 ) {
+            echo ' backtop="30mm"';
+        } else {
+            echo ' backtop="25mm"';
+        }
     }
     if (isset($bind_placeholders['contact_sheet_footer'])) {
         echo ' backbottom="25mm"';
