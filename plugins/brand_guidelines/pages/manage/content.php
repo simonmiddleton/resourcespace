@@ -303,6 +303,7 @@ tinymce.init({
     promotion: false,
     branding: false,
     plugins: 'lists, link',
+    relative_urls: false,
     toolbar: 'h2 h3 bold italic underline strikethrough removeformat | bullist numlist link | outdent indent',
     menubar: '',
     contextmenu: false, // Required to enable native copy and pasting
