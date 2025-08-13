@@ -211,13 +211,13 @@ include "include/login_background.php";
 
     <div class="Question">
         <label for="username"><?php echo escape($lang["email"] . " / " . $lang["username"]); ?></label>
-        <input type="text" name="username" id="username" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?> value="<?php echo escape(getval("username", "")); ?>"/>
+        <input type="text" name="username" id="username" class="stdwidth"<?php echo $autocomplete_attr; ?> value="<?php echo escape(getval("username", "")); ?>"/>
         <div class="clearerleft"></div>
     </div>
 
     <div class="Question">
         <label for="password"><?php echo escape($lang["password"]); ?> </label>
-        <input type="password" name="password" id="password" autocomplete="current-password" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?>/>
+        <input type="password" name="password" id="password" autocomplete="current-password" class="stdwidth"<?php echo $autocomplete_attr; ?>/>
         <div id="capswarning"><?php echo escape($lang["caps-lock-on"]); ?></div>
         <div class="clearerleft"></div>
     </div>
