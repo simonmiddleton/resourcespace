@@ -4891,14 +4891,30 @@ function render_featured_collections(array $ctx, array $items)
                     )
                 )
             ),
+            "icon" => 'fa-solid fa-fw fa-pen-to-square',
             "text" => $lang['action-edit'],
             "modal_load" => true,
             "redirect" => true
         );
         $tool_select = array(
+            "icon" => 'fa-solid fa-circle-check',
             "text" => $lang['action-select'],
             "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');"
         );
+        $tool_upload_to_collection = [
+            'href' => $GLOBALS['upload_then_edit']
+                ? generateURL("{$baseurl_short}pages/upload_batch.php", ['collection_add' => $fc['ref']])
+                : generateURL(
+                    "{$baseurl_short}pages/edit.php",
+                    [
+                        'uploader' => $GLOBALS['upload_then_edit'],
+                        'ref' => -$GLOBALS['userref'],
+                        'collection_add' => $fc['ref']
+                    ]
+                ),
+            'icon' => 'fa fa-fw fa-upload',
+            'text' => $lang["action-upload-to-collection"],
+        ];
 
         // Prepare FC images
         $thumbnail_selection_method = $fc["thumbnail_selection_method"];
@@ -4922,8 +4938,7 @@ function render_featured_collections(array $ctx, array $items)
             }
 
         // Featured collection default tools
-        if($is_featured_collection && checkPermission_dashmanage())
-            {
+        if ($is_featured_collection && checkPermission_dashmanage()) {
             $render_ctx["tools"][] = array(
                 "href" => generateURL(
                     "{$baseurl_short}pages/dash_tile.php",
@@ -4938,12 +4953,15 @@ function render_featured_collections(array $ctx, array $items)
                         'link'              => "{$baseurl_short}pages/search.php?search=!collection{$fc['ref']}",
                     )
                 ),
-                "text" => $lang['add_to_dash']);
-            }
+                "icon" => 'fa fa-fw fa-grip',
+                "text" => $lang['add_to_dash'],
+            );
+        }
         if($is_featured_collection && allow_featured_collection_share($fc))
             {
             $render_ctx["tools"][] = array(
                 "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                "icon" => 'fa-solid fa-share-nodes',
                 "text" => $lang["share"]);
             }
         if($is_featured_collection && collection_readable($fc['ref']))
@@ -4958,10 +4976,17 @@ function render_featured_collections(array $ctx, array $items)
             {
             $render_ctx['show_resources_count'] = true;
             }
+        if (
+            $is_featured_collection
+            && !$is_smart_featured_collection
+            && ($collection_data = get_collection($fc['ref']))
+            && allow_upload_to_collection(is_array($collection_data) ? $collection_data : [])
+        ) {
+            $render_ctx['tools'][] = $tool_upload_to_collection;
+        }
 
 
-        if($is_featured_collection_category && !$is_smart_featured_collection)
-            {
+        if ($is_featured_collection_category && !$is_smart_featured_collection) {
             global $enable_theme_category_edit;
 
             $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $fc["ref"]));
@@ -4987,12 +5012,15 @@ function render_featured_collections(array $ctx, array $items)
                             'link'              => $fc_category_url
                         )
                     ),
+                    "icon" => 'fa fa-fw fa-grip',
                     "text" => $lang["add_to_dash"]);
                 }
 
             $render_ctx["tools"][] = array(
                 "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                "text" => $lang["share"]);
+                "icon" => 'fa-solid fa-share-nodes',
+                "text" => $lang["share"],
+            );
 
 
             if(!$fc_category_has_children && collection_readable($fc['ref']))
@@ -5004,7 +5032,15 @@ function render_featured_collections(array $ctx, array $items)
                 {
                 $render_ctx["tools"][] = $tool_edit;
                 }
+
+            if (
+                !$fc_category_has_children
+                && ($collection_data = get_collection($fc['ref']))
+                && allow_upload_to_collection(is_array($collection_data) ? $collection_data : [])
+            ) {
+                $render_ctx['tools'][] = $tool_upload_to_collection;
             }
+        }
 
         if($is_smart_featured_collection)
             {
@@ -5137,9 +5173,9 @@ function render_featured_collection(array $ctx, array $fc)
         }
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
-    $html_actions_style = ['display: none;'];
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
+    render_featured_collection_context_menu(md5($fc['ref']), $tools); # todo: reconsider placement, ideally put it inside the FeaturedSimpleTile_ container
     ?>
     <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" 
          class="<?php echo implode(" ", $html_container_class); ?>" 
@@ -5159,40 +5195,7 @@ function render_featured_collection(array $ctx, array $fc)
             </div>
         </a>
     <?php
-    if(!empty($tools))
-        {
-        ?>
-        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions" style="<?php echo implode(" ", $html_actions_style); ?>">
-        <?php
-        foreach($tools as $tool)
-            {
-            if(empty($tool))
-                {
-                continue;
-                }
-
-            $href = (isset($tool["href"]) && trim($tool["href"]) != "" ? $tool["href"] : "#");
-            $text = $tool["text"]; // if this is missing, code is wrong somewhere else
-
-            $tool_onclick = (isset($tool["modal_load"]) && $tool["modal_load"] ? 'return ModalLoad(this, true);' : 'return CentralSpaceLoad(this, true);');
-            if(isset($tool["custom_onclick"]) && trim($tool["custom_onclick"]) != "")
-                {
-                $tool_onclick = $tool["custom_onclick"];
-                }
-            ?>
-            <div class="tool">
-                <a href="<?php echo $href; ?>" onclick="<?php echo $tool_onclick; ?>">
-                    <span><?php echo LINK_CARET; ?><?php echo escape($text); ?></span>
-                </a>
-            </div>
-            <?php
-            }
-            ?>
-        </div><!-- End of FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?> -->
-        <?php
-        }
-    elseif($full_width && !$is_smart_featured_collection)
-        {
+    if ($full_width && !$is_smart_featured_collection) {
         ?>
         <div class="ListTools">
             <div class="ActionsContainer">
@@ -5202,11 +5205,49 @@ function render_featured_collection(array $ctx, array $fc)
             </div>            
         </div><!-- End of ListTools -->
         <?php
-        }
-        ?>
+    }
+    ?>
     </div><!-- End of FeaturedSimpleTile_<?php echo $fc["ref"]; ?>-->
 <?php
     }
+
+/**
+ * Render a featured collection (category) contextual menu
+ *
+ * @param string $id The HTML identifier for the menu container.
+ * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onlclick: string}> $options The available menu options
+ */
+function render_featured_collection_context_menu(string $id, array $options): void
+{
+    if ($options === []) {
+        return;
+    }
+
+    ?>
+    <!-- todo: swap these two once implemented the ellipsis menu button -->
+    <!-- <div id="<?php echo escape($id); ?>" class="featured-collection context-menu-container" style="display:none;"> -->
+    <div id="<?php echo escape($id); ?>" class="featured-collection context-menu-container">
+        <?php
+        foreach ($options as $option) {
+            if(isset($option['custom_onclick']) && trim($option['custom_onclick']) != '') {
+                $onclick = $option['custom_onclick'];
+            } else {
+                $href = sanitise_url(isset($option['href']) && trim($option['href']) != '' ? $option['href'] : '#');
+                $onclick = (isset($option['modal_load']) && $option['modal_load'])
+                    ? "return ModalLoad('{$href}', true);"
+                    : "return CentralSpaceLoad('{$href}', true);";
+            }
+            ?>
+            <button class="context-menu-row" onclick="<?php echo $onclick; ?>">
+                <i class="<?php echo escape($option['icon']); ?>"></i>
+                <span><?php echo escape($option['text']); ?></span>
+            </button>
+            <?php
+        }
+        ?>
+    </div>
+    <?php
+}
 
 
 /**

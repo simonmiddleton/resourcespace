@@ -1566,6 +1566,21 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 .FeaturedSimpleTile.FullWidth .ListTools .ActionsContainer select { margin: 5px 5px; }
 .FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents h2 span { font-size: larger; }
 
+/* .FeaturedSimplePanel.FeaturedSimpleTile .context-menu-container { */
+.featured-collection.context-menu-container {
+    background: white;
+    color: #474747;
+    border-radius: 8px;
+    padding: 6px;
+    margin: 20px;
+    box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.1);
+    /* position: absolute; */
+    /* right: 0; */
+    /* top: -9px; */
+    width: 230px;
+    /* z-index: 1000; */
+}
+
 .MessageUnread {
     font-weight: bold;
 }
