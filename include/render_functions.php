@@ -5197,7 +5197,7 @@ function render_featured_collection(array $ctx, array $fc)
                     ?>
                 </div>
             </a>
-            <div class="top-right-menu" onclick="return toggleContextMenu(event);">
+            <div class="top-right-menu" onclick="return showContextMenu(this);">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
             </div>
         </div>
@@ -5245,17 +5245,15 @@ function render_featured_collection_context_menu(string $id, array $options): vo
     }
 
     ?>
-    <!-- todo: swap these two once implemented the ellipsis menu button -->
-    <!-- <div id="<?php echo escape($id); ?>" class="featured-collection context-menu-container" style="display:none;"> -->
-    <div id="<?php echo escape($id); ?>" class="featured-collection context-menu-container">
+    <div id="<?php echo escape($id); ?>" class="featured-collection context-menu-container" style="display:none;">
         <?php
         foreach ($options as $option) {
             if(isset($option['custom_onclick']) && trim($option['custom_onclick']) != '') {
-                $onclick = $option['custom_onclick'];
+                $onclick = "hideContextMenu(); {$option['custom_onclick']}";
             } else {
                 $href = sanitise_url(isset($option['href']) && trim($option['href']) != '' ? $option['href'] : '#');
                 $onclick = (isset($option['modal_load']) && $option['modal_load'])
-                    ? "return ModalLoad('{$href}', true);"
+                    ? "hideContextMenu(); return ModalLoad('{$href}', true);"
                     : "return CentralSpaceLoad('{$href}', true);";
             }
             ?>

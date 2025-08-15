@@ -1573,7 +1573,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 .FeaturedSimpleTile .top-right-menu {
     grid-area: box;
     place-self: start end;
-    /* display: block; */
     display: none;
     margin: 4px;
     width: 28px;

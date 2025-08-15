@@ -173,6 +173,40 @@ include "../include/header.php";
 </div><!-- End of BasicsBox FeaturedSimpleLinks -->
 
 <script>
+    /** Show the Featured Collection (category) context menu */
+    function showContextMenu(el)
+    {
+        const top_right_menu = jQuery(el);
+        const context_menu = top_right_menu.parents('.FeaturedSimpleTile').children('.context-menu-container');
+        console.log(context_menu);
+        hideContextMenu(context_menu);
+        context_menu.slideDown(150);
+
+        return false;
+    }
+
+    /** Hide the Featured Collection (category) context menu */
+    function hideContextMenu()
+    {
+        let menu_content = jQuery('.FeaturedSimpleTile .context-menu-container');
+        if (menu_content.is(':visible')) {
+            menu_content.slideUp(150);
+        }
+    }
+
+    onkeydown = (e) => {
+        // On esc, close down contextual menus 
+        if (e.keyCode === 27) {
+            hideContextMenu();
+        }
+    };
+    onmousedown = (e) => {
+        // Close menus when clicking away
+        if (!e.target.closest('.context-menu-container')) {
+            hideContextMenu();
+        }
+    };
+
     jQuery(document).ready(function () {
         // Get and update display for total resource count for each of the rendered featured collections (@see render_featured_collection() for more info)
         var fcs_waiting_total = jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"]');
