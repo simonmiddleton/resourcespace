@@ -9,72 +9,12 @@ if (isset($anonymous_login) && $anonymous_login == $username) {
 }
 
 $messages = array();
-
 message_get($messages, $userref, true, "DESC", "created", 10);
-
 
 ?>
 <div id="messages-list" class="messages-modal">
     <h1><a href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo escape($lang["mymessages"])?></a></h1>
-    <div class="message-list">
-    <?php if (count($messages) > 0): ?>
-        <?php foreach ($messages as $message): ?>
-        <?php
-
-            $unread_css = ($message["seen"] == 0 ? " unread" : "");            
-
-            $userbyname = get_user_by_username($message["owner"]);
-            $user = get_user($userbyname);
-
-            if (!$user) {
-                $user_details = array('fullname' => $applicationname,'groupname' => '');
-                $user_profile_image = "";
-            } else {
-                $user_details = $user;
-                $user_profile_image = get_profile_image($user['ref'], false);
-            }            
-
-            $message_text = $message["message"];
-
-            $message_text_preview = preview_from_text($message_text, 45, 2, true);
-
-            $message_text_preview = strip_tags_and_attributes($message_text_preview);
-            $message_text_preview = nl2br($message_text_preview);
-
-            $reply = (bool)($message["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE);
-        ?>
-        <div id="message<?php echo (int)$message['message_id']; ?>" class="message<?php echo $unread_css; ?>"  onclick="show_quick_message(<?php echo (int)$message['message_id'] . ', ' . (int)$message['ref'] . ', '. (int)$reply; ?>)">
-            <div class="message-icon">
-                <?php if ($user) { 
-                        if ($user_profile_image != "") {?>
-                            <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'>
-                            <?php } else { ?>
-                                <span class="fa fa-solid fa-user"></span>
-                            <?php }
-                        } else { ?>
-                    <span class="fa fa-solid fa-gears"></span>
-                <?php } ?>
-            </div>
-            <div class="message-container">
-                <div class="message-username">
-                    <?php echo escape((isset($user_details['fullname']) && trim($user_details['fullname']) != "") ? $user_details['fullname'] : $user_details['username']); ?>
-                </div>
-                <div class="message-age"><?php echo escape(date_to_age($message["created"])); ?></div>
-                <div class="message-text"><?php echo($message_text_preview); ?></div>
-            </div>
-        </div>
-        <div class="message-divider"></div>
-        <?php endforeach; ?>
-        <div class="message-viewall">
-            <a id="viewall-link" href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php', ['per_page_list' => 99999]); ?>" onClick="return CentralSpaceLoad(this, true);">
-                <i class="fa-solid fa-envelope"></i> <?php echo escape($lang["viewallmessages"])?>
-            </a>
-        </div>
-        <?php else: ?>
-        <div class="message-nomessages">
-            <?php echo escape($lang['mymessages_youhavenomessages']); ?>
-        </div>
-        <?php endif; ?>
+    <div id="message-list" class="message-list">
     </div>
 </div>
 <div id="message-detail" class="messages-modal" style="display: none;">
@@ -89,6 +29,168 @@ message_get($messages, $userref, true, "DESC", "created", 10);
     </div>
 </div>
 <script>
+
+    var interval_id = null;
+
+    function quick_message_poll(force_refresh = false) {
+
+        if (jQuery('#messages-list').is(':visible')) {
+            if (interval_id === null) {
+                interval_id = setInterval(quick_message_poll, 3000);
+            }
+        } else {
+            clearInterval(interval_id);
+            interval_id = null;
+        }
+
+        jQuery.ajax({
+            url: '<?php echo $baseurl; ?>/pages/ajax/messages_quick.php?ajax=true',
+            type: 'GET',
+            cache: !force_refresh,
+            ifModified: !force_refresh,
+            success: function(data, textStatus, xhr) {
+                if (!force_refresh && textStatus === "notmodified") {
+                    return;
+                }
+                update_message_list(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error fetching messages:', errorThrown);
+            }
+        });
+    }
+
+    function parseLocalDateTime(s) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/.exec(s);
+        if (!m) return NaN;
+        const [, y, mo, d, h, mi, se = '0'] = m;
+        return new Date(+y, +mo - 1, +d, +h, +mi, +se).getTime();
+    }
+
+
+    function normalize_messages(obj) {
+        return Object.entries(obj).map(([id, m]) => ({
+            id: Number(id),
+            message_ref: Number(m.message_ref),
+            text_preview: m.message_text_preview || '',
+            displayname: m.user_details?.fullname || m.user_details?.user_name || '',
+            user: m.user_details?.user || false,
+            user_profile_image: m.user_profile_image || '',
+            unread: m.unread,
+            reply: Number(m.reply),
+            created: m.created,
+            age: m.age,
+            ts: m.created?.includes('Z') ||
+                m.created?.match(/[+-]\d{2}:\d{2}$/)
+                    ? Date.parse(m.created)
+                    : parseLocalDateTime(m.created)
+        }))
+        .sort((a, b) => (a.ts - b.ts) || (a.id - b.id)); // tie-break with id
+    }
+
+    function setMessageContents($el, m) {
+
+        $el.toggleClass('unread', m.unread);
+
+        $el.find('.message-username').html(m.displayname);
+        $el.find('.message-age').html(m.age);
+        $el.find('.message-text').html(m.text_preview);
+
+    }
+
+    function contentKeyOf(m) {
+        return [
+            m.age, m.unread ? 1 : 0
+        ].join('|');
+    }
+
+
+    function update_message_list(message_list) {
+
+        const list = jQuery('#message-list');
+        const messages = normalize_messages(message_list);
+
+        const new_ids = new Set(messages.map(m => 'message' + m.id));
+
+        // Remove old/deleted messages
+        list.children('.message').each(function () {
+            if (!new_ids.has(this.id)) {
+                jQuery(this).fadeOut(250, function () { jQuery(this).remove(); });
+            }
+        });
+
+        if ( messages.length > 0 ) {
+
+            jQuery('.message-nomessages').remove();
+            messages.forEach((m, idx) => {
+                const domId = 'message' + m.id;
+                let $el = jQuery('#' + domId);
+
+                if ($el.length === 0) {
+                    // New message
+                    $el = jQuery('<div/>')
+                            .attr('id', domId)
+                            .attr('onclick', 'show_quick_message(' + m.id + ',' + m.message_ref + ',' + m.reply + ')')
+                            .addClass('message')
+                            .hide();
+                    $el.append(jQuery('<div class="message-icon">'));
+
+                    if (m.user) {
+                        if (m.user_profile_image != '') {
+                            $el.find('.message-icon').append(jQuery('<img />', {id: 'UserProfileImage', src: m.user_profile_image, alt: 'Profile icon', class: 'ProfileImage'}));
+                        } else {
+                            $el.find('.message-icon').append('<span class="fa fa-solid fa-user">')
+                        }
+                    } else {
+                        $el.find('.message-icon').append('<span class="fa fa-solid fa-gears">');
+                    }
+
+                    $el.append(
+                        jQuery('<div class="message-container">')
+                            .append(jQuery('<div class="message-username">'))
+                            .append(jQuery('<div class="message-age">'))
+                            .append(jQuery('<div class="message-text">'))
+                    );
+                    
+                    setMessageContents($el, m);
+                    $el.data('ckey', contentKeyOf(m));
+
+                    list.prepend($el);
+
+                    $el.fadeIn(250);
+
+                } else {
+                    // Existing message
+                    var newKey = contentKeyOf(m);
+                    var oldKey = $el.data('ckey');
+
+                    if (newKey !== oldKey) {
+                        setMessageContents($el, m);
+                        $el.data('ckey', newKey);
+                    }
+
+                }
+
+            });
+
+            jQuery('.message').after(jQuery('<div class="message-divider">'));
+
+            let viewall = jQuery('.message-viewall');
+
+            if (viewall.length === 0) {
+                // Append view all button to message list
+                list.append(jQuery('<div class="message-viewall">' + 
+                                '<a id="viewall-link" href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php', ['per_page_list' => 99999]); ?>" onClick="return CentralSpaceLoad(this, true);">' + 
+                                '<i class="fa-solid fa-envelope"></i> <?php echo escape($lang["viewallmessages"]); ?>' + 
+                                '</a></div>'));
+            }
+
+        } else {
+            list.html('<div class="message-nomessages"><?php echo escape($lang['mymessages_youhavenomessages']); ?></div>');
+        }        
+
+    }
+
     function show_quick_message(message_ref, ref, reply) {
 
         // Show full message in modal
@@ -122,8 +224,7 @@ message_get($messages, $userref, true, "DESC", "created", 10);
 
                 jQuery('#messages-list').fadeOut(200, function() {
                     jQuery('#message-detail').fadeIn(200, function() {
-                        jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
-                        jQuery('#message' + message_ref).removeClass("unread");                        
+                        jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);                      
                     });
                 });
 
@@ -136,12 +237,17 @@ message_get($messages, $userref, true, "DESC", "created", 10);
     function show_list() {
         jQuery('#message-detail').fadeOut(200, function() {
             jQuery('#messages-list').fadeIn(200, function() {
+                quick_message_poll(false);
                 jQuery(".message-full-text").html("");
             });
         });
         
     }
- 
+
+    jQuery(document).ready(function () {
+        quick_message_poll(true);
+    });
+
 </script>
 
 <?php
