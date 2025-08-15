@@ -174,13 +174,22 @@ include "../include/header.php";
 
 <script>
     /** Show the Featured Collection (category) context menu */
-    function showContextMenu(el)
+    function showContextMenu(el, e)
     {
+        console.log(e);
         const top_right_menu = jQuery(el);
         const context_menu = top_right_menu.parents('.FeaturedSimpleTile').children('.context-menu-container');
         console.log(context_menu);
+
         hideContextMenu(context_menu);
-        context_menu.slideDown(150);
+        context_menu
+            .css({
+                display: 'none',
+                '--menu-icon-x': `${event.clientX}px`,
+                // 66px is the current header height but this will need to be computed and used in the calculations (see example in brand guidelines)
+                '--menu-icon-y': `${(event.clientY - 66)}px`,
+            })
+            .slideDown(150);
 
         return false;
     }

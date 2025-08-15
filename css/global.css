@@ -1596,10 +1596,17 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     margin: 20px;
     box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.1);
     position: fixed;
-    right: 0;
-    top: -9px;
+    top: 0;
+    left: 0;
     width: 230px;
     /* z-index: 1000; */
+
+    /* experimental positioning - JS will determine the actual co-ordinates (offset based on computed position) */
+    --menu-icon-x: 0;
+    --menu-icon-y: 0;
+    transform:
+        translateX(min(var(--menu-icon-x), calc(100vw - 100%)))
+        translateY(min(var(--menu-icon-y), calc(100vh - 100%)));
 }
 
 .MessageUnread {
