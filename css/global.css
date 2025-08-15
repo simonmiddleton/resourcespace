@@ -1573,8 +1573,8 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 .FeaturedSimpleTile .top-right-menu {
     grid-area: box;
     place-self: start end;
-    display: block;
-    /* display: none; */
+    /* display: block; */
+    display: none;
     margin: 4px;
     width: 28px;
     height: 28px;
@@ -1584,23 +1584,21 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     cursor: pointer;
     z-index: 1;
 }
-.FeaturedSimpleTile:hover .top-right-menu {
-    display: block;
+.FeaturedSimpleTile:hover .top-right-menu { display: block; }
+.FeaturedSimpleTile .top-right-menu:hover  {
     background: #dfdfdf;
-    color: unset; /* todo: find a way to set this against what featuresimpletile does */
+    color: #474747;
 }
-
-/* .FeaturedSimplePanel.FeaturedSimpleTile .context-menu-container { */
-.featured-collection.context-menu-container {
+.FeaturedSimpleTile .context-menu-container {
     background: white;
     color: #474747;
     border-radius: 8px;
     padding: 6px;
     margin: 20px;
     box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.1);
-    /* position: absolute; */
-    /* right: 0; */
-    /* top: -9px; */
+    position: fixed;
+    right: 0;
+    top: -9px;
     width: 230px;
     /* z-index: 1000; */
 }
