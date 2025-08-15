@@ -316,6 +316,8 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
         .append("<div class='MessageBox' style='display: none;' id='" + id + "'>" + nl2br(DOMPurify.sanitize(message)) + "<br />" + url + "</div>")
         .after(function()
         {
+            ModalClose();
+
             var t = window.setTimeout(function()
             {
                 jQuery("div#" + id).fadeOut("fast",function()
