@@ -1565,6 +1565,30 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"] { padding: 3px 5px; border-radius: 4px; font-size: 0.85em;}
 .FeaturedSimpleTile.FullWidth .ListTools .ActionsContainer select { margin: 5px 5px; }
 .FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents h2 span { font-size: larger; }
+.FeaturedSimpleTile > div:has(> .top-right-menu) {
+    display: grid;
+    grid-template-areas: "box";
+}
+.FeaturedSimpleTile .FeaturedSimpleLink:has(+ .top-right-menu) { grid-area: box; }
+.FeaturedSimpleTile .top-right-menu {
+    grid-area: box;
+    place-self: start end;
+    display: block;
+    /* display: none; */
+    margin: 4px;
+    width: 28px;
+    height: 28px;
+    border-radius: 30px;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1;
+}
+.FeaturedSimpleTile:hover .top-right-menu {
+    display: block;
+    background: #dfdfdf;
+    color: unset; /* todo: find a way to set this against what featuresimpletile does */
+}
 
 /* .FeaturedSimplePanel.FeaturedSimpleTile .context-menu-container { */
 .featured-collection.context-menu-container {

@@ -5175,15 +5175,39 @@ function render_featured_collection(array $ctx, array $fc)
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
-    render_featured_collection_context_menu(md5($fc['ref']), $tools); # todo: reconsider placement, ideally put it inside the FeaturedSimpleTile_ container
     ?>
     <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" 
          class="<?php echo implode(" ", $html_container_class); ?>" 
          alt="<?php echo escape($alt_string ?? '') ?>"
          style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?> >
+    <?php
+    if (!$full_width) {
+        ?>
+        <div>
+            <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
+                <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+                    <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
+                <?php
+                foreach($theme_images as $i => $theme_image)
+                    {
+                    ?>
+                    <div class="FeaturedImageTile" style="background-image: url('<?php echo $theme_image['path']; ?>')"></div>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </a>
+            <div class="top-right-menu" onclick="return toggleContextMenu(event);">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </div>
+        </div>
+        <?php
+        render_featured_collection_context_menu(md5($fc['ref']), $tools);
+    } else if ($full_width && !$is_smart_featured_collection) {
+        ?>
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
             <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
-            <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
+                <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
             <?php
             foreach($theme_images as $i => $theme_image)
                 {
@@ -5194,9 +5218,6 @@ function render_featured_collection(array $ctx, array $fc)
                 ?>
             </div>
         </a>
-    <?php
-    if ($full_width && !$is_smart_featured_collection) {
-        ?>
         <div class="ListTools">
             <div class="ActionsContainer">
                 <select class="fcollectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo $fc["ref"];?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
