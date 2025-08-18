@@ -4178,7 +4178,6 @@ function create_previews_using_im(
                                     $mpr_parts[] = escape_command_args($command, $cmdparams);
                                 }
                             } else {
-                                $command .=  " %%TARGET%% ";
                                 $command = str_replace("[WATERMARK_INSERT]", $watermarkcode, $command);
                                 run_command($command, false, $cmdparams);
                             }
