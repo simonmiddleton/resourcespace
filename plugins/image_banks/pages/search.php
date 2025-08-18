@@ -154,12 +154,12 @@ if($results_error !== "")
     <?php
     }
 
-$n = 0;
+
 foreach($results as $result)
     {
     $title = $result->getTitle();
     $image_data = array(
-        "ref"          => $n,
+        "ref"          => $result->getId(),
         "thumb_width"  => $result->getPreviewWidth(),
         "thumb_height" => $result->getPreviewHeight(),
         "blurhash"     => "",
@@ -211,7 +211,6 @@ foreach($results as $result)
         <?php } ?>
     </div>
     <?php
-    $n++;
     }
     ?>
 </div>
