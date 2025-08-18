@@ -1,6 +1,6 @@
 <?php
 
-# This script can be used to update all extracted test for supported file types
+# This script can be used to update all extracted text for supported file types
 # Passing -u/--update-all will run the extraction even if there is existing data, and overwrite the old value
 
 include_once __DIR__ . "/../../include/boot.php";
@@ -20,11 +20,11 @@ if(!isset($extracted_text_field)) {
     exit();
 }
 
-$resources = ps_query("select ref, file_extension 
-                        from resource 
-                        where ref > 0
-                        and lower(file_extension) in ('doc','docx','xlsx','odt','ods','odp','pdf','ai','html','htm','txt','zip')
-                        order by ref ASC;");
+$resources = ps_query("SELECT ref, file_extension 
+                        FROM resource 
+                        WHERE ref > 0
+                        AND LOWER(file_extension) IN ('doc','docx','xlsx','odt','ods','odp','pdf','ai','html','htm','txt','zip')
+                        ORDER BY ref ASC;");
 
 
 $edit_count = 0;
