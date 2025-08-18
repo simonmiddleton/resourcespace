@@ -114,8 +114,10 @@ $url_params = array(
                         <td><?php echo escape($consent["date_of_consent"] == "" ? $lang["no_consent_date"] : nicedate($consent["date_of_consent"])); ?></td>
                         <td>
                             <?php                             
-                                $created_by_user = get_user($consent['created_by']);                            
-                                echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]);
+                                $created_by_user = get_user($consent['created_by']);
+                                if (is_array($created_by_user)) {
+                                    echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]);
+                                }                                                            
                             ?>
                         </td>
                         <td>

@@ -202,7 +202,13 @@ include "../../../include/header.php";
         <?php if ($ref != "new"): ?>
         <div class="Question">
             <label>Created by:</label>
-            <div class="Fixed"><?php echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]); ?></div>
+            <div class="Fixed">
+                <?php 
+                if (is_array($created_by_user)) {
+                    echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]); 
+                }                
+                ?>                
+            </div>
             <div class="clearerleft"></div>
         </div>
         <?php endif; ?>
