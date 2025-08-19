@@ -1588,7 +1588,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     background: #dfdfdf;
     color: #474747;
 }
-.FeaturedSimpleTile .context-menu-container {
+.FeaturedSimpleLinks .context-menu-container {
     background: white;
     color: #474747;
     border-radius: 8px;
@@ -1600,13 +1600,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     left: 0;
     width: 230px;
     /* z-index: 1000; */
-
-    /* experimental positioning - JS will determine the actual co-ordinates (offset based on computed position) */
-    --menu-icon-x: 0;
-    --menu-icon-y: 0;
-    transform:
-        translateX(min(var(--menu-icon-x), calc(100vw - 100%)))
-        translateY(min(var(--menu-icon-y), calc(100vh - 100%)));
 }
 
 .MessageUnread {

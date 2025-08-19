@@ -5197,7 +5197,7 @@ function render_featured_collection(array $ctx, array $fc)
                     ?>
                 </div>
             </a>
-            <div class="top-right-menu" onclick="return showContextMenu(this, event);">
+            <div class="top-right-menu" onclick="return showContextMenu(this);">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
             </div>
         </div>
