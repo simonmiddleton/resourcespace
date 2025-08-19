@@ -106,6 +106,7 @@ function consentmanager_delete_consent($resource)
  * @param string $notes             Any additional notes related to the consent record.
  * @param string $date_of_consent   The date the consent applies from.
  * @param string $expires           The expiry date of the consent, formatted as a string.
+ * @param string $created_by        The ref of the user who created the consent record.
  * 
  * @return int|bool              Returns the ID of the new consent record on success,
  *                               or false if the user does not have write access.
@@ -613,8 +614,8 @@ function consentmanager_process_expiry_notifications(): bool {
             $expiry_notification->set_subject($applicationname . ": " . $lang['consent_notification_expiring_soon']);
 
             $expiry_notification->set_text($lang['consent_notification_message'] . "<br /><br />", ['%URL'], [generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"])]);
-            $expiry_notification->append_text($lang['consent_notification_user_pref'] . " <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>" . $lang['action-here'] . "</a><br />");
-            $expiry_notification->append_text($lang['consent_notification_global_pref'] . " <a href='" . generateURL($baseurl . "/plugins/consentmanager/pages/setup.php") . "'>" . $lang['action-here'] . "</a>");
+            $expiry_notification->append_text(" <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>" . $lang['consent_notification_user_pref'] . "</a><br />");
+            $expiry_notification->append_text(" <a href='" . generateURL($baseurl . "/plugins/consentmanager/pages/setup.php") . "'>" . $lang['consent_notification_global_pref'] . "</a>");
 
             //$expiry_notification->url = generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"]);
 

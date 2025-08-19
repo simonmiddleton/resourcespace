@@ -863,7 +863,6 @@ $lang["action-revertmetadata"] = "Revert metadata";
 $lang["confirm-revertmetadata"] = "Are you sure you want to re-extract the original metadata from this file? This action will simulate a re-upload of the file, and you will lose any altered metadata.";
 $lang["action-remove"] = "Remove";
 $lang['action-replace'] = 'Replace';
-$lang['action-here'] = 'here';
 $lang["complete"] = "Complete";
 $lang["backtohome"] = "Back to the home page";
 $lang["continuetohome"] = "Continue to the home page";
