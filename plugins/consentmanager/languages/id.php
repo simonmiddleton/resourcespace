@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Manajer Persetujuan';
 $lang["plugin-consentmanager-desc"] = 'Menambahkan kemampuan untuk mengelola persetujuan yang diberikan oleh subjek yang ditampilkan dalam file media Anda';
 
 $lang["manageconsent-tooltip"] = 'Buat dan kelola catatan persetujuan untuk sumber daya';
+
+$lang["consent_status"] = 'Status persetujuan';
+$lang["no_consent_date"] = 'Tidak ada tanggal persetujuan';
+$lang["date_of_birth"] = 'Tanggal lahir';
+$lang["address"] = 'Alamat';
+$lang["parent_guardian"] = 'Nama Orang Tua/Wali';
+$lang["date_of_consent"] = 'Tanggal persetujuan';
+$lang["consent_expiry_notification"] = 'Notifikasi kedaluwarsa persetujuan';
+$lang["consent_expiry_notification_days"] = 'Jumlah hari sebelum masa berlaku persetujuan mendekati ketika pengguna dengan izin \'Manajemen persetujuan\' akan diberi tahu';
+$lang["consent_attach_upload"] = 'Izinkan catatan persetujuan untuk dilampirkan di halaman Perbaiki Metadata setelah unggahan';
+$lang["consent_expired_workflow_state"] = 'Secara otomatis arsipkan sumber daya yang terhubung dengan persetujuan yang telah kedaluwarsa ke status alur kerja ini';
+$lang["user_pref_consent_notifications"] = 'Kirimkan saya pemberitahuan persetujuan yang akan kedaluwarsa?';
+$lang["consent_status_all"] = 'Semua persetujuan';
+$lang["consent_status_active"] = 'Persetujuan aktif';
+$lang["consent_status_expiring"] = 'Persetujuan yang akan kedaluwarsa';
+$lang["consent_status_expired"] = 'Persetujuan yang telah kedaluwarsa';
+$lang["consent_view_linked_resources_short"] = 'Lihat';
+$lang["consent_no_archiving"] = 'Tidak Ada Perubahan';
+$lang["consent_notification_expiring_soon"] = 'Persetujuan Segera Berakhir';
+$lang["consent_notification_message"] = 'Ada beberapa persetujuan yang akan segera kedaluwarsa. Lihat mereka <a href=\'%URL\'>di sini</a>';
+$lang["consent_notification_user_pref"] = 'Ubah apakah Anda menerima notifikasi ini';
+$lang["consent_notification_global_pref"] = 'Nonaktifkan notifikasi ini untuk semua orang';

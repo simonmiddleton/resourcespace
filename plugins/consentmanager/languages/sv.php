@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Samtyckesansvarig';
 $lang["plugin-consentmanager-desc"] = 'Lägger till möjligheten att hantera samtycke som ges av personer som förekommer i dina mediefiler';
 
 $lang["manageconsent-tooltip"] = 'Skapa och hantera samtyckesregister för resurser';
+
+$lang["consent_status"] = 'Samtyckesstatus';
+$lang["no_consent_date"] = 'Ingen samtyckesdatum';
+$lang["date_of_birth"] = 'Födelsedatum';
+$lang["address"] = 'Adress';
+$lang["parent_guardian"] = 'Förälder/Vårdnadshavare Namn';
+$lang["date_of_consent"] = 'Datum för samtycke';
+$lang["consent_expiry_notification"] = 'Samtyckesutgångsmeddelanden';
+$lang["consent_expiry_notification_days"] = 'Antal dagar innan samtyckets utgång när användare med \'Samtyckeshantering\' behörighet kommer att meddelas';
+$lang["consent_attach_upload"] = 'Tillåt en samtyckespost att bifogas på sidan Förfina metadata efter uppladdning';
+$lang["consent_expired_workflow_state"] = 'Automatiskt arkivera resurser kopplade till utgångna samtycken till detta arbetsflödes tillstånd';
+$lang["user_pref_consent_notifications"] = 'Skicka mig meddelanden om utgående samtycke?';
+$lang["consent_status_all"] = 'Alla samtycken';
+$lang["consent_status_active"] = 'Aktiva samtycken';
+$lang["consent_status_expiring"] = 'Utgående samtycken';
+$lang["consent_status_expired"] = 'Utgångna samtycken';
+$lang["consent_view_linked_resources_short"] = 'Visa';
+$lang["consent_no_archiving"] = 'Ingen förändring';
+$lang["consent_notification_expiring_soon"] = 'Samtycken som snart går ut';
+$lang["consent_notification_message"] = 'Det finns några samtycken som snart går ut. Visa dem <a href=\'%URL\'>här</a>';
+$lang["consent_notification_user_pref"] = 'Ändra om du vill ta emot dessa meddelanden';
+$lang["consent_notification_global_pref"] = 'Inaktivera dessa meddelanden för alla';

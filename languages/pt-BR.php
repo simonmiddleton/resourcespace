@@ -3089,3 +3089,8 @@ $lang["action_update_now"] = 'Atualizar agora';
 $lang["errors"] = 'Erros';
 $lang["error_savefirst"] = 'Por favor, salve suas alterações';
 $lang["language-be"] = 'Bielorrusso';
+$lang["action-here"] = 'aqui';
+$lang["false-true"] = array (
+  0 => 'Falso',
+  1 => 'Verdadeiro',
+);

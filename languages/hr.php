@@ -3001,3 +3001,22 @@ $lang["action_update_now"] = 'Ažuriraj sada';
 $lang["errors"] = 'Pogreške';
 $lang["error_savefirst"] = 'Molimo vas da spremite svoje promjene';
 $lang["language-be"] = 'Bjeloruski';
+$lang["action-here"] = 'ovdje';
+$lang["months"] = array (
+  0 => 'Siječanj',
+  1 => 'Veljača',
+  2 => 'Ožujak',
+  3 => 'Travanj',
+  4 => 'Svibanj',
+  5 => 'Lipanj',
+  6 => 'Srpanj',
+  7 => 'Kolovoz',
+  8 => 'Rujan',
+  9 => 'Listopad',
+  10 => 'Studeni',
+  11 => 'Prosinac',
+);
+$lang["false-true"] = array (
+  0 => 'Lažno',
+  1 => 'Točno',
+);

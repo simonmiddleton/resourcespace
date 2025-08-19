@@ -18,3 +18,12 @@ $lang["image_text_font"]='Шрифт, который необходимо исп
 $lang["image_text_noim"]='Этот плагин требует установленного Imagemagick.';
 $lang["plugin-image_text-title"]='Текст изображения';
 $lang["plugin-image_text-desc"]='Позволяет добавлять данные поля к изображению при загрузке';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'запад',
+   'center' => 'центр',
+   'east' => 'восток',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'верх',
+   'bottom' => 'низ',
+);

@@ -24,3 +24,25 @@ $lang["confirmdeleteconsentfile"] = 'Biztos benne, hogy törölni szeretné ezt 
 $lang["consent_manager_mediums"] = 'Hozzájárulás felhasználási médiumok';
 $lang["consent_manager_access"] = 'Hozzájárulási adatok kezelése (ahol még nem engedélyezett a "Hozzáférhet a Rendszerbeállítások területhez" engedély révén)';
 $lang["manageconsent-tooltip"] = 'Hozzon létre és kezeljen hozzájárulási nyilvántartásokat az erőforrásokhoz';
+
+$lang["consent_status"] = 'Hozzájárulási állapot';
+$lang["no_consent_date"] = 'Nincs hozzájárulási dátum';
+$lang["date_of_birth"] = 'Születési dátum';
+$lang["address"] = 'Cím';
+$lang["parent_guardian"] = 'Szülő/Gondviselő Neve';
+$lang["date_of_consent"] = 'Hozzájárulás dátuma';
+$lang["consent_expiry_notification"] = 'Hozzájárulás lejárati értesítések';
+$lang["consent_expiry_notification_days"] = 'A napok száma a hozzájárulás lejárta előtt, amikor a \'Hozzájárulás kezelése\' jogosultsággal rendelkező felhasználók értesítést kapnak';
+$lang["consent_attach_upload"] = 'Engedélyezze, hogy egy hozzájárulási nyilvántartás csatolható legyen a Metaadatok finomítása oldalon a feltöltés után';
+$lang["consent_expired_workflow_state"] = 'Automatikusan archiválja azokat az erőforrásokat, amelyek lejárt hozzájárulásokhoz kapcsolódnak ehhez a munkafolyamat állapothoz';
+$lang["user_pref_consent_notifications"] = 'Küldj nekem lejáró hozzájárulási értesítéseket?';
+$lang["consent_status_all"] = 'Minden hozzájárulás';
+$lang["consent_status_active"] = 'Aktív hozzájárulások';
+$lang["consent_status_expiring"] = 'Lejáró hozzájárulások';
+$lang["consent_status_expired"] = 'Lejárt hozzájárulások';
+$lang["consent_view_linked_resources_short"] = 'Nézet';
+$lang["consent_no_archiving"] = 'Nincs változás';
+$lang["consent_notification_expiring_soon"] = 'Hamarosan lejáró hozzájárulások';
+$lang["consent_notification_message"] = 'Hamarosan lejár néhány hozzájárulás. Tekintse meg őket <a href=\'%URL\'>itt</a>';
+$lang["consent_notification_user_pref"] = 'Változtassa meg, hogy kap-e értesítéseket';
+$lang["consent_notification_global_pref"] = 'Ezeket a értesítéseket mindenki számára tiltsa le';

@@ -2929,3 +2929,22 @@ $lang["action_update_now"] = 'Frissítés most';
 $lang["errors"] = 'Hibák';
 $lang["error_savefirst"] = 'Kérjük, mentse el a módosításait';
 $lang["language-be"] = 'Belorusz';
+$lang["action-here"] = 'itt';
+$lang["months"] = array (
+  0 => 'Január',
+  1 => 'Február',
+  2 => 'Március',
+  3 => 'Április',
+  4 => 'Május',
+  5 => 'Június',
+  6 => 'Július',
+  7 => 'Augusztus',
+  8 => 'Szeptember',
+  9 => 'Október',
+  10 => 'November',
+  11 => 'December',
+);
+$lang["false-true"] = array (
+  0 => 'Hamis',
+  1 => 'Igaz',
+);

@@ -2922,3 +2922,22 @@ $lang["action_update_now"] = 'Kemaskini sekarang';
 $lang["errors"] = 'Ralat';
 $lang["error_savefirst"] = 'Sila simpan perubahan anda';
 $lang["language-be"] = 'Belarusian';
+$lang["action-here"] = 'di sini';
+$lang["months"] = array (
+  0 => 'Januari',
+  1 => 'Februari',
+  2 => 'Mac',
+  3 => 'April',
+  4 => 'Mei',
+  5 => 'Jun',
+  6 => 'Julai',
+  7 => 'Ogos',
+  8 => 'September',
+  9 => 'Oktober',
+  10 => 'November',
+  11 => 'Disember',
+);
+$lang["false-true"] = array (
+  0 => 'Salah',
+  1 => 'Benar',
+);

@@ -2932,3 +2932,22 @@ $lang["action_update_now"] = 'Sasisha sasa';
 $lang["errors"] = 'Makosa';
 $lang["error_savefirst"] = 'Tafadhali hifadhi mabadiliko yako';
 $lang["language-be"] = 'Belarusian';
+$lang["action-here"] = 'hapa';
+$lang["months"] = array (
+  0 => 'Januari',
+  1 => 'Februari',
+  2 => 'Machi',
+  3 => 'Aprili',
+  4 => 'Mei',
+  5 => 'Juni',
+  6 => 'Julai',
+  7 => 'Agosti',
+  8 => 'Septemba',
+  9 => 'Oktoba',
+  10 => 'Novemba',
+  11 => 'Desemba',
+);
+$lang["false-true"] = array (
+  0 => 'Uongo',
+  1 => 'Kweli',
+);

@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Gerenciador de Consentimento';
 $lang["plugin-consentmanager-desc"] = 'Adiciona a capacidade de gerenciar o consentimento dado por sujeitos apresentados em seus arquivos de mídia';
 
 $lang["manageconsent-tooltip"] = 'Criar e gerenciar registros de consentimento para recursos';
+
+$lang["consent_status"] = 'Status de consentimento';
+$lang["no_consent_date"] = 'Sem data de consentimento';
+$lang["date_of_birth"] = 'Data de nascimento';
+$lang["address"] = 'Endereço';
+$lang["parent_guardian"] = 'Nome do Pai/Mãe ou Responsável';
+$lang["date_of_consent"] = 'Data de consentimento';
+$lang["consent_expiry_notification"] = 'Notificações de expiração de consentimento';
+$lang["consent_expiry_notification_days"] = 'Número de dias antes da expiração do consentimento, quando usuários com a permissão \'Gerenciamento de consentimento\' serão notificados';
+$lang["consent_attach_upload"] = 'Permitir que um registro de consentimento seja anexado na página Refinar Metadados após o upload';
+$lang["consent_expired_workflow_state"] = 'Arquivar automaticamente recursos vinculados a consentimentos expirados para este estado de fluxo de trabalho';
+$lang["user_pref_consent_notifications"] = 'Envie-me notificações de consentimento expirando?';
+$lang["consent_status_all"] = 'Todos os consentimentos';
+$lang["consent_status_active"] = 'Consentimentos ativos';
+$lang["consent_status_expiring"] = 'Consentimentos expirando';
+$lang["consent_status_expired"] = 'Consentimentos expirados';
+$lang["consent_view_linked_resources_short"] = 'Ver';
+$lang["consent_no_archiving"] = 'Sem Mudança';
+$lang["consent_notification_expiring_soon"] = 'Consentimentos Expirando em Breve';
+$lang["consent_notification_message"] = 'Há alguns consentimentos que estão prestes a expirar. Veja-os <a href=\'%URL\'>aqui</a>';
+$lang["consent_notification_user_pref"] = 'Altere se você deseja receber essas notificações';
+$lang["consent_notification_global_pref"] = 'Desativar essas notificações para todos';

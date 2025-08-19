@@ -2927,3 +2927,22 @@ $lang["action_update_now"] = 'Aktualizovat nyní';
 $lang["errors"] = 'Chyby';
 $lang["error_savefirst"] = 'Prosím, uložte své změny';
 $lang["language-be"] = 'Belarusian';
+$lang["action-here"] = 'zde';
+$lang["months"] = array (
+  0 => 'Leden',
+  1 => 'Únor',
+  2 => 'Březen',
+  3 => 'Duben',
+  4 => 'Květen',
+  5 => 'Červen',
+  6 => 'Červenec',
+  7 => 'Srpen',
+  8 => 'Září',
+  9 => 'Říjen',
+  10 => 'Listopad',
+  11 => 'Prosinec',
+);
+$lang["false-true"] = array (
+  0 => 'Nepravda',
+  1 => 'Pravda',
+);

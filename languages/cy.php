@@ -2921,3 +2921,22 @@ $lang["action_update_now"] = 'Diweddarwch nawr';
 $lang["errors"] = 'Gwallau';
 $lang["error_savefirst"] = 'Os gwelwch yn dda, arbedwch eich newidiadau';
 $lang["language-be"] = 'Belarusian';
+$lang["action-here"] = 'yma';
+$lang["months"] = array (
+  0 => 'Ionawr',
+  1 => 'Chwefror',
+  2 => 'Mawrth',
+  3 => 'Ebrill',
+  4 => 'Mai',
+  5 => 'Mehefin',
+  6 => 'Gorffennaf',
+  7 => 'Awst',
+  8 => 'Medi',
+  9 => 'Hydref',
+  10 => 'Tachwedd',
+  11 => 'Rhagfyr',
+);
+$lang["false-true"] = array (
+  0 => 'Ffug',
+  1 => 'Iawn',
+);

@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = '同意管理器';
 $lang["plugin-consentmanager-desc"] = '增加了管理媒体文件中出现的主体所提供的同意的功能';
 
 $lang["manageconsent-tooltip"] = '创建和管理资源的同意记录';
+
+$lang["consent_status"] = '同意状态';
+$lang["no_consent_date"] = '无同意日期';
+$lang["date_of_birth"] = '出生日期';
+$lang["address"] = '地址';
+$lang["parent_guardian"] = '监护人姓名';
+$lang["date_of_consent"] = '同意日期';
+$lang["consent_expiry_notification"] = '同意到期通知';
+$lang["consent_expiry_notification_days"] = '在拥有“同意管理”权限的用户将收到通知之前，距离同意到期的天数';
+$lang["consent_attach_upload"] = '允许在上传后在精炼元数据页面上附加同意记录';
+$lang["consent_expired_workflow_state"] = '自动归档与过期同意相关联的资源到此工作流状态';
+$lang["user_pref_consent_notifications"] = '请给我发送即将到期的同意通知吗？';
+$lang["consent_status_all"] = '所有同意';
+$lang["consent_status_active"] = '有效同意';
+$lang["consent_status_expiring"] = '即将到期的同意';
+$lang["consent_status_expired"] = '过期的同意';
+$lang["consent_view_linked_resources_short"] = '查看';
+$lang["consent_no_archiving"] = '没有变化';
+$lang["consent_notification_expiring_soon"] = '即将到期的同意';
+$lang["consent_notification_message"] = '有一些即将到期的同意。您可以在<a href=\'%URL\'>这里</a>查看它们';
+$lang["consent_notification_user_pref"] = '更改您是否接收这些通知';
+$lang["consent_notification_global_pref"] = '为所有人禁用这些通知';

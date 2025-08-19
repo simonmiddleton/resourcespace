@@ -18,3 +18,12 @@ $lang["image_text_font"]='Skrifttypen som skal brukes, må støttes av den insta
 $lang["image_text_noim"]='Denne utvidelsen krever at Imagemagick er installert.';
 $lang["plugin-image_text-title"]='Bildetekst';
 $lang["plugin-image_text-desc"]='Aktiverer feltdata til å legges til bildet ved nedlasting';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'vest',
+   'center' => 'senter',
+   'east' => 'øst',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'topp',
+   'bottom' => 'bunn',
+);

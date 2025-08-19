@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Upravitelj pristanka';
 $lang["plugin-consentmanager-desc"] = 'Dodaje mogućnost upravljanja pristankom danim od strane subjekata prikazanih u vašim medijskim datotekama';
 
 $lang["manageconsent-tooltip"] = 'Stvorite i upravljajte zapisima o pristanku za resurse';
+
+$lang["consent_status"] = 'Status pristanka';
+$lang["no_consent_date"] = 'Nema datuma pristanka';
+$lang["date_of_birth"] = 'Datum rođenja';
+$lang["address"] = 'Adresa';
+$lang["parent_guardian"] = 'Ime roditelja/čuvara';
+$lang["date_of_consent"] = 'Datum pristanka';
+$lang["consent_expiry_notification"] = 'Obavijesti o isteku pristanka';
+$lang["consent_expiry_notification_days"] = 'Broj dana prije nego što istekne suglasnost kada će korisnici s dozvolom \'Upravljanje suglasnostima\' biti obaviješteni';
+$lang["consent_attach_upload"] = 'Dopusti da se zapis o suglasnosti priloži na stranici za usavršavanje metapodataka nakon učitavanja';
+$lang["consent_expired_workflow_state"] = 'Automatski arhiviraj resurse povezane s isteklim suglasnostima u ovo stanje radnog toka';
+$lang["user_pref_consent_notifications"] = 'Pošaljite mi obavijesti o isteku pristanka?';
+$lang["consent_status_all"] = 'Svi pristanak';
+$lang["consent_status_active"] = 'Aktivni pristanak';
+$lang["consent_status_expiring"] = 'Istekli pristanak';
+$lang["consent_status_expired"] = 'Istekli pristanak';
+$lang["consent_view_linked_resources_short"] = 'Pogledaj';
+$lang["consent_no_archiving"] = 'Bez promjene';
+$lang["consent_notification_expiring_soon"] = 'Pristanci uskoro istječu';
+$lang["consent_notification_message"] = 'Postoje neki pristanak koji uskoro istječu. Pogledajte ih <a href=\'%URL\'>ovdje</a>';
+$lang["consent_notification_user_pref"] = 'Promijenite hoćete li primati ove obavijesti';
+$lang["consent_notification_global_pref"] = 'Onemogući ove obavijesti za sve';

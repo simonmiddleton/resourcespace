@@ -3177,3 +3177,4 @@ $lang["action_update_now"] = 'Päivitä nyt';
 $lang["errors"] = 'Virheet';
 $lang["error_savefirst"] = 'Ole hyvä ja tallenna muutoksesi';
 $lang["language-be"] = 'Belarusian';
+$lang["action-here"] = 'tässä';

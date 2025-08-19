@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Onay Yöneticisi';
 $lang["plugin-consentmanager-desc"] = 'Medya dosyalarınızda yer alan konular tarafından verilen onayı yönetme yeteneği ekler';
 
 $lang["manageconsent-tooltip"] = 'Kaynaklar için onay kayıtları oluşturun ve yönetin';
+
+$lang["consent_status"] = 'Onay durumu';
+$lang["no_consent_date"] = 'Onay tarihi yok';
+$lang["date_of_birth"] = 'Doğum tarihi';
+$lang["address"] = 'Adres';
+$lang["parent_guardian"] = 'Ebeveyn/Vasi Adı';
+$lang["date_of_consent"] = 'Onay tarihi';
+$lang["consent_expiry_notification"] = 'Onay süresi dolan bildirimleri';
+$lang["consent_expiry_notification_days"] = 'Kullanıcıların \'Onay yönetimi\' iznine sahip olduğu durumlarda onay süresinin sona ermesine yaklaşırken bildirim alacakları gün sayısı';
+$lang["consent_attach_upload"] = 'Yüklemeden sonra Metadata\'ı İyileştir sayfasında bir onay kaydının eklenmesine izin ver';
+$lang["consent_expired_workflow_state"] = 'Bu iş akış durumu ile bağlantılı süresi dolmuş onaylara sahip kaynakları otomatik olarak arşivle';
+$lang["user_pref_consent_notifications"] = 'Bana sona eren onay bildirimleri gönder?';
+$lang["consent_status_all"] = 'Tüm onaylar';
+$lang["consent_status_active"] = 'Aktif onaylar';
+$lang["consent_status_expiring"] = 'Sona eren onaylar';
+$lang["consent_status_expired"] = 'Süresi dolmuş onaylar';
+$lang["consent_view_linked_resources_short"] = 'Görüntüle';
+$lang["consent_no_archiving"] = 'Değişiklik Yok';
+$lang["consent_notification_expiring_soon"] = 'Yakında Süresi Dolacak Onaylar';
+$lang["consent_notification_message"] = 'Yakında süresi dolacak bazı onaylar var. Onları <a href=\'%URL\'>buradan</a> görüntüleyin';
+$lang["consent_notification_user_pref"] = 'Bu bildirimleri alıp almayacağınızı değiştirin';
+$lang["consent_notification_global_pref"] = 'Bu bildirimleri herkes için devre dışı bırakın';

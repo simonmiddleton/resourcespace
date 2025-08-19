@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Toestemmingsbeheerder';
 $lang["plugin-consentmanager-desc"] = 'Voegt de mogelijkheid toe om toestemming te beheren die is gegeven door onderwerpen die in uw mediabestanden voorkomen';
 
 $lang["manageconsent-tooltip"] = 'Maak en beheer toestemmingsregistraties voor middelen';
+
+$lang["consent_status"] = 'Toestemmingstatus';
+$lang["no_consent_date"] = 'Geen toestemmingsdatum';
+$lang["date_of_birth"] = 'Geboortedatum';
+$lang["address"] = 'Adres';
+$lang["parent_guardian"] = 'Ouder/Voogd Naam';
+$lang["date_of_consent"] = 'Datum van toestemming';
+$lang["consent_expiry_notification"] = 'Meldingen over het verstrijken van toestemming';
+$lang["consent_expiry_notification_days"] = 'Aantal dagen voordat de toestemming verloopt, wanneer gebruikers met de \'Toestemmingsbeheer\' toestemming worden gewaarschuwd';
+$lang["consent_attach_upload"] = 'Sta toe dat een toestemmingsrecord kan worden toegevoegd op de Metadata verfijnen pagina na upload';
+$lang["consent_expired_workflow_state"] = 'Archiveer automatisch middelen die zijn gekoppeld aan verlopen toestemmingen naar deze workflowstatus';
+$lang["user_pref_consent_notifications"] = 'Stuur me meldingen van vervallende toestemmingen?';
+$lang["consent_status_all"] = 'Alle toestemmingen';
+$lang["consent_status_active"] = 'Actieve toestemmingen';
+$lang["consent_status_expiring"] = 'Verloop van toestemmingen';
+$lang["consent_status_expired"] = 'Verlopen toestemmingen';
+$lang["consent_view_linked_resources_short"] = 'Bekijk';
+$lang["consent_no_archiving"] = 'Geen wijziging';
+$lang["consent_notification_expiring_soon"] = 'Toestemmingen die binnenkort verlopen';
+$lang["consent_notification_message"] = 'Er zijn enkele toestemmingen die binnenkort verlopen. Bekijk ze <a href=\'%URL\'>hier</a>';
+$lang["consent_notification_user_pref"] = 'Wijzig of u deze meldingen wilt ontvangen';
+$lang["consent_notification_global_pref"] = 'Schakel deze meldingen voor iedereen uit';

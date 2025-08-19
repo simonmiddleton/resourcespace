@@ -2997,3 +2997,8 @@ $lang["action_update_now"] = 'Opdater nu';
 $lang["errors"] = 'Fejl';
 $lang["error_savefirst"] = 'Gem venligst dine ændringer';
 $lang["language-be"] = 'Hviderussisk';
+$lang["action-here"] = 'her';
+$lang["false-true"] = array (
+  0 => 'Falsk',
+  1 => 'Sand',
+);

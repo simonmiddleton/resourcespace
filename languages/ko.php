@@ -2936,3 +2936,22 @@ $lang["action_update_now"] = '지금 업데이트';
 $lang["errors"] = '오류';
 $lang["error_savefirst"] = '변경 사항을 저장해 주세요';
 $lang["language-be"] = '벨라루스어';
+$lang["action-here"] = '여기';
+$lang["months"] = array (
+  0 => '1월',
+  1 => '2월',
+  2 => '3월',
+  3 => '4월',
+  4 => '5월',
+  5 => '6월',
+  6 => '7월',
+  7 => '8월',
+  8 => '9월',
+  9 => '10월',
+  10 => '11월',
+  11 => '12월',
+);
+$lang["false-true"] = array (
+  0 => '거짓',
+  1 => '참',
+);

@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Διαχειριστής Συγκατά�
 $lang["plugin-consentmanager-desc"] = 'Προσθέτει τη δυνατότητα διαχείρισης της συγκατάθεσης που δίνεται από τα υποκείμενα που εμφανίζονται στα αρχεία πολυμέσων σας';
 
 $lang["manageconsent-tooltip"] = 'Δημιουργήστε και διαχειριστείτε αρχεία συγκατάθεσης για πόρους';
+
+$lang["consent_status"] = 'Κατάσταση συγκατάθεσης';
+$lang["no_consent_date"] = 'Καμία ημερομηνία συγκατάθεσης';
+$lang["date_of_birth"] = 'Ημερομηνία γέννησης';
+$lang["address"] = 'Διεύθυνση';
+$lang["parent_guardian"] = 'Όνομα Γονέα/Κηδεμόνα';
+$lang["date_of_consent"] = 'Ημερομηνία συγκατάθεσης';
+$lang["consent_expiry_notification"] = 'Ειδοποιήσεις λήξης συγκατάθεσης';
+$lang["consent_expiry_notification_days"] = 'Αριθμός ημερών πριν την λήξη της συγκατάθεσης όταν οι χρήστες με την άδεια \'Διαχείριση συγκατάθεσης\' θα ειδοποιηθούν';
+$lang["consent_attach_upload"] = 'Επιτρέψτε να προσαρτηθεί ένα αρχείο συγκατάθεσης στη σελίδα Εξευγενισμού Μεταδεδομένων μετά την ανέβασμα';
+$lang["consent_expired_workflow_state"] = 'Αυτόματη αρχειοθέτηση πόρων που συνδέονται με ληγμένες συγκαταθέσεις σε αυτή την κατάσταση ροής εργασίας';
+$lang["user_pref_consent_notifications"] = 'Στείλτε μου ειδοποιήσεις λήξης συγκατάθεσης;';
+$lang["consent_status_all"] = 'Όλες οι συγκαταθέσεις';
+$lang["consent_status_active"] = 'Ενεργές συγκαταθέσεις';
+$lang["consent_status_expiring"] = 'Λήγουσες συγκαταθέσεις';
+$lang["consent_status_expired"] = 'Ληγμένες συγκαταθέσεις';
+$lang["consent_view_linked_resources_short"] = 'Προβολή';
+$lang["consent_no_archiving"] = 'Καμία Αλλαγή';
+$lang["consent_notification_expiring_soon"] = 'Συγκαταθέσεις που λήγουν σύντομα';
+$lang["consent_notification_message"] = 'Υπάρχουν ορισμένες συγκαταθέσεις που λήγουν σύντομα. Δείτε τις <a href=\'%URL\'>εδώ</a>';
+$lang["consent_notification_user_pref"] = 'Αλλάξτε αν θα λαμβάνετε αυτές τις ειδοποιήσεις';
+$lang["consent_notification_global_pref"] = 'Απενεργοποιήστε αυτές τις ειδοποιήσεις για όλους';

@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Gestionnaire de consentement';
 $lang["plugin-consentmanager-desc"] = 'Ajoute la capacité de gérer le consentement donné par les sujets figurant dans vos fichiers multimédias';
 
 $lang["manageconsent-tooltip"] = 'Créer et gérer des enregistrements de consentement pour les ressources';
+
+$lang["consent_status"] = 'Statut de consentement';
+$lang["no_consent_date"] = 'Aucune date de consentement';
+$lang["date_of_birth"] = 'Date de naissance';
+$lang["address"] = 'Adresse';
+$lang["parent_guardian"] = 'Nom du parent/tuteur';
+$lang["date_of_consent"] = 'Date de consentement';
+$lang["consent_expiry_notification"] = 'Notifications d\'expiration de consentement';
+$lang["consent_expiry_notification_days"] = 'Nombre de jours avant l\'expiration du consentement lorsque les utilisateurs ayant la permission \'Gestion du consentement\' seront notifiés';
+$lang["consent_attach_upload"] = 'Autoriser un enregistrement de consentement à être attaché sur la page Affiner les métadonnées après le téléchargement';
+$lang["consent_expired_workflow_state"] = 'Archiver automatiquement les ressources liées aux consentements expirés dans cet état de flux de travail';
+$lang["user_pref_consent_notifications"] = 'Envoyez-moi des notifications de consentement expirant ?';
+$lang["consent_status_all"] = 'Tous les consentements';
+$lang["consent_status_active"] = 'Consentements actifs';
+$lang["consent_status_expiring"] = 'Consentements expirants';
+$lang["consent_status_expired"] = 'Consentements expirés';
+$lang["consent_view_linked_resources_short"] = 'Voir';
+$lang["consent_no_archiving"] = 'Aucun changement';
+$lang["consent_notification_expiring_soon"] = 'Consentements expirant bientôt';
+$lang["consent_notification_message"] = 'Il y a des consentements qui expirent bientôt. Consultez-les <a href=\'%URL\'>ici</a>';
+$lang["consent_notification_user_pref"] = 'Changez si vous recevez ces notifications';
+$lang["consent_notification_global_pref"] = 'Désactiver ces notifications pour tout le monde';

@@ -16,3 +16,12 @@ $lang["image_text_position"] = 'Kedudukan teks dalam sepanduk.';
 $lang["image_text_banner_position"] = 'Kedudukan banner berbanding dengan imej.';
 $lang["image_text_font"] = 'Fon yang digunakan, mesti disokong oleh versi imagemagick yang dipasang';
 $lang["image_text_noim"] = 'Plugin ini memerlukan Imagemagick untuk dipasang.';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'barat',
+   'center' => 'tengah',
+   'east' => 'timur',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'atas',
+   'bottom' => 'bawah',
+);

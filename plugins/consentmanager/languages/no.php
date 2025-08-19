@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Samtykkebehandler';
 $lang["plugin-consentmanager-desc"] = 'Legger til muligheten til å administrere samtykke gitt av personer som er omtalt i dine mediefiler';
 
 $lang["manageconsent-tooltip"] = 'Opprett og administrer samtykkeposter for ressurser';
+
+$lang["consent_status"] = 'Samtykkestatus';
+$lang["no_consent_date"] = 'Ingen samtykkedato';
+$lang["date_of_birth"] = 'Fødselsdato';
+$lang["address"] = 'Adresse';
+$lang["parent_guardian"] = 'Forelder/Vernens navn';
+$lang["date_of_consent"] = 'Dato for samtykke';
+$lang["consent_expiry_notification"] = 'Varsler om utløp av samtykke';
+$lang["consent_expiry_notification_days"] = 'Antall dager før samtykkeutløp nærmer seg når brukere med \'Samtykkebehandling\' tillatelse vil bli varslet';
+$lang["consent_attach_upload"] = 'Tillat at en samtykkepost kan knyttes til Refine Metadata-siden etter opplasting';
+$lang["consent_expired_workflow_state"] = 'Automatisk arkivere ressurser knyttet til utløpte samtykker til denne arbeidsflyttilstanden';
+$lang["user_pref_consent_notifications"] = 'Send meg varsler om utløpende samtykke?';
+$lang["consent_status_all"] = 'Alle samtykker';
+$lang["consent_status_active"] = 'Aktive samtykker';
+$lang["consent_status_expiring"] = 'Utløpende samtykker';
+$lang["consent_status_expired"] = 'Utløpte samtykker';
+$lang["consent_view_linked_resources_short"] = 'Vis';
+$lang["consent_no_archiving"] = 'Ingen endring';
+$lang["consent_notification_expiring_soon"] = 'Samtykker som snart utløper';
+$lang["consent_notification_message"] = 'Det er noen samtykker som snart utløper. Se dem <a href=\'%URL\'>her</a>';
+$lang["consent_notification_user_pref"] = 'Endre om du vil motta disse varslingene';
+$lang["consent_notification_global_pref"] = 'Deaktiver disse varslingene for alle';

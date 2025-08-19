@@ -3012,3 +3012,8 @@ $lang["action_update_now"] = 'Aggiorna ora';
 $lang["errors"] = 'Errori';
 $lang["error_savefirst"] = 'Si prega di salvare le modifiche';
 $lang["language-be"] = 'Bielorusso';
+$lang["action-here"] = 'qui';
+$lang["false-true"] = array (
+  0 => 'Falso',
+  1 => 'Vero',
+);

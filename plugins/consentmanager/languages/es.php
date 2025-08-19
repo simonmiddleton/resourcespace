@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Gestor de Consentimiento';
 $lang["plugin-consentmanager-desc"] = 'Añade la capacidad de gestionar el consentimiento dado por los sujetos que aparecen en tus archivos multimedia';
 
 $lang["manageconsent-tooltip"] = 'Crear y gestionar registros de consentimiento para recursos';
+
+$lang["consent_status"] = 'Estado de consentimiento';
+$lang["no_consent_date"] = 'Fecha de consentimiento no disponible';
+$lang["date_of_birth"] = 'Fecha de nacimiento';
+$lang["address"] = 'Dirección';
+$lang["parent_guardian"] = 'Nombre del padre/tutor';
+$lang["date_of_consent"] = 'Fecha de consentimiento';
+$lang["consent_expiry_notification"] = 'Notificaciones de expiración de consentimiento';
+$lang["consent_expiry_notification_days"] = 'Número de días antes de que se acerque la expiración del consentimiento cuando los usuarios con el permiso de \'Gestión de consentimientos\' serán notificados';
+$lang["consent_attach_upload"] = 'Permitir que se adjunte un registro de consentimiento en la página Refinar Metadatos después de la carga';
+$lang["consent_expired_workflow_state"] = 'Archivar automáticamente los recursos vinculados a consentimientos expirados a este estado de flujo de trabajo';
+$lang["user_pref_consent_notifications"] = '¿Me envías notificaciones de consentimiento que están por expirar?';
+$lang["consent_status_all"] = 'Todos los consentimientos';
+$lang["consent_status_active"] = 'Consentimientos activos';
+$lang["consent_status_expiring"] = 'Consentimientos que expiran';
+$lang["consent_status_expired"] = 'Consentimientos expirados';
+$lang["consent_view_linked_resources_short"] = 'Ver';
+$lang["consent_no_archiving"] = 'Sin cambio';
+$lang["consent_notification_expiring_soon"] = 'Consentimientos que expiran pronto';
+$lang["consent_notification_message"] = 'Hay algunos consentimientos que están a punto de expirar. Véalos <a href=\'%URL\'>aquí</a>';
+$lang["consent_notification_user_pref"] = 'Cambia si deseas recibir estas notificaciones';
+$lang["consent_notification_global_pref"] = 'Desactivar estas notificaciones para todos';

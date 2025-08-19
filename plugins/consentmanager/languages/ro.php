@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Manager de consimțământ';
 $lang["plugin-consentmanager-desc"] = 'Adaugă capacitatea de a gestiona consimțământul acordat de subiecții prezentați în fișierele tale media';
 
 $lang["manageconsent-tooltip"] = 'Creează și gestionează înregistrările de consimțământ pentru resurse';
+
+$lang["consent_status"] = 'Starea consimțământului';
+$lang["no_consent_date"] = 'Fără dată de consimțământ';
+$lang["date_of_birth"] = 'Data nașterii';
+$lang["address"] = 'Adresă';
+$lang["parent_guardian"] = 'Numele părintelui/tutorelui';
+$lang["date_of_consent"] = 'Data consimțământului';
+$lang["consent_expiry_notification"] = 'Notificări de expirare a consimțământului';
+$lang["consent_expiry_notification_days"] = 'Numărul de zile înainte ca expirarea consimțământului să se apropie când utilizatorii cu permisiunea \'Gestionarea consimțământului\' vor fi notificati';
+$lang["consent_attach_upload"] = 'Permite atașarea unui record de consimțământ pe pagina Refinare Metadate după încărcare';
+$lang["consent_expired_workflow_state"] = 'Arhivați automat resursele legate de consimțăminte expirate în acest stadiu al fluxului de lucru';
+$lang["user_pref_consent_notifications"] = 'Trimite-mi notificări despre consimțământuri care expiră?';
+$lang["consent_status_all"] = 'Toate consimțămintele';
+$lang["consent_status_active"] = 'Consimțământuri active';
+$lang["consent_status_expiring"] = 'Consimțământuri în expirare';
+$lang["consent_status_expired"] = 'Consimțământuri expirate';
+$lang["consent_view_linked_resources_short"] = 'Vizualizare';
+$lang["consent_no_archiving"] = 'Nicio modificare';
+$lang["consent_notification_expiring_soon"] = 'Consimțăminte care expiră în curând';
+$lang["consent_notification_message"] = 'Există câteva consimțăminte care expiră în curând. Vizualizați-le <a href=\'%URL\'>aici</a>';
+$lang["consent_notification_user_pref"] = 'Schimbă dacă dorești să primești aceste notificări';
+$lang["consent_notification_global_pref"] = 'Dezactivează aceste notificări pentru toată lumea';

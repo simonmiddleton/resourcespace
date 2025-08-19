@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = '同意マネージャー';
 $lang["plugin-consentmanager-desc"] = 'メディアファイルに登場する被写体からの同意を管理する機能を追加します';
 
 $lang["manageconsent-tooltip"] = 'リソースの同意記録を作成および管理する';
+
+$lang["consent_status"] = '同意状況';
+$lang["no_consent_date"] = '同意日なし';
+$lang["date_of_birth"] = '生年月日';
+$lang["address"] = '住所';
+$lang["parent_guardian"] = '保護者名';
+$lang["date_of_consent"] = '同意日';
+$lang["consent_expiry_notification"] = '同意期限通知';
+$lang["consent_expiry_notification_days"] = '同意の有効期限が近づいているときに、\'同意管理\'の権限を持つユーザーに通知される日数';
+$lang["consent_attach_upload"] = 'アップロード後にメタデータを修正するページに同意記録を添付できるようにする';
+$lang["consent_expired_workflow_state"] = 'このワークフロー状態に期限切れの同意にリンクされたリソースを自動的にアーカイブします';
+$lang["user_pref_consent_notifications"] = '期限切れの同意通知を送信しますか？';
+$lang["consent_status_all"] = 'すべての同意';
+$lang["consent_status_active"] = 'アクティブな同意';
+$lang["consent_status_expiring"] = '期限切れの同意';
+$lang["consent_status_expired"] = '期限切れの同意';
+$lang["consent_view_linked_resources_short"] = '表示';
+$lang["consent_no_archiving"] = '変更なし';
+$lang["consent_notification_expiring_soon"] = '同意が間もなく期限切れになります';
+$lang["consent_notification_message"] = 'いくつかの同意が間もなく期限切れになります。ここで確認してください <a href=\'%URL\'>こちら</a>';
+$lang["consent_notification_user_pref"] = 'これらの通知を受け取るかどうかを変更する';
+$lang["consent_notification_global_pref"] = '全員のためにこれらの通知を無効にする';

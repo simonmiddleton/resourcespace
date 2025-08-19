@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Einwilligungsmanager';
 $lang["plugin-consentmanager-desc"] = 'Fügt die Möglichkeit hinzu, die Zustimmung von Personen zu verwalten, die in Ihren Mediendateien dargestellt sind';
 
 $lang["manageconsent-tooltip"] = 'Erstellen und verwalten Sie Einwilligungsunterlagen für Ressourcen';
+
+$lang["consent_status"] = 'Zustimmungsstatus';
+$lang["no_consent_date"] = 'Kein Einwilligungsdatum';
+$lang["date_of_birth"] = 'Geburtsdatum';
+$lang["address"] = 'Adresse';
+$lang["parent_guardian"] = 'Eltern-/Erziehungsberechtigter Name';
+$lang["date_of_consent"] = 'Datum der Zustimmung';
+$lang["consent_expiry_notification"] = 'Benachrichtigungen über ablaufende Einwilligungen';
+$lang["consent_expiry_notification_days"] = 'Anzahl der Tage, bevor das Ablaufdatum der Zustimmung naht, an dem Benutzer mit der Berechtigung \'Zustimmungsverwaltung\' benachrichtigt werden';
+$lang["consent_attach_upload"] = 'Erlaube, dass ein Zustimmungsprotokoll auf der Seite Metadaten verfeinern nach dem Hochladen angehängt wird';
+$lang["consent_expired_workflow_state"] = 'Ressourcen, die mit abgelaufenen Einwilligungen verknüpft sind, automatisch in diesen Workflow-Zustand archivieren';
+$lang["user_pref_consent_notifications"] = 'Senden Sie mir Benachrichtigungen über ablaufende Zustimmungen?';
+$lang["consent_status_all"] = 'Alle Zustimmungen';
+$lang["consent_status_active"] = 'Aktive Zustimmungen';
+$lang["consent_status_expiring"] = 'Ablaufende Zustimmungen';
+$lang["consent_status_expired"] = 'Abgelaufene Einwilligungen';
+$lang["consent_view_linked_resources_short"] = 'Ansehen';
+$lang["consent_no_archiving"] = 'Keine Änderung';
+$lang["consent_notification_expiring_soon"] = 'Zustimmungen, die bald ablaufen';
+$lang["consent_notification_message"] = 'Es gibt einige Zustimmungen, die bald ablaufen. Sie können sie <a href=\'%URL\'>hier</a> einsehen.';
+$lang["consent_notification_user_pref"] = 'Ändern Sie, ob Sie diese Benachrichtigungen erhalten';
+$lang["consent_notification_global_pref"] = 'Deaktiviere diese Benachrichtigungen für alle';

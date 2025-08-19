@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Gestor de Consentiments';
 $lang["plugin-consentmanager-desc"] = 'Afegeix la capacitat de gestionar el consentiment donat pels subjectes que apareixen als teus fitxers multimèdia';
 
 $lang["manageconsent-tooltip"] = 'Crea i gestiona registres de consentiment per a recursos';
+
+$lang["consent_status"] = 'Estat de consentiment';
+$lang["no_consent_date"] = 'Sense data de consentiment';
+$lang["date_of_birth"] = 'Data de naixement';
+$lang["address"] = 'Adreça';
+$lang["parent_guardian"] = 'Nom del Pare/Guardia';
+$lang["date_of_consent"] = 'Data de consentiment';
+$lang["consent_expiry_notification"] = 'Notificacions d\'expiració del consentiment';
+$lang["consent_expiry_notification_days"] = 'Nombre de dies abans que s\'acosti l\'expiració del consentiment quan els usuaris amb el permís de \'Gestió de consentiment\' seran notificats';
+$lang["consent_attach_upload"] = 'Permetre que un registre de consentiment s\'adjunti a la pàgina Refinar Metadades després de la càrrega';
+$lang["consent_expired_workflow_state"] = 'Arxivar automàticament els recursos vinculats a consentiments caducats a aquest estat del flux de treball';
+$lang["user_pref_consent_notifications"] = 'Envieu\'m notificacions de consentiment que expiren?';
+$lang["consent_status_all"] = 'Tots els consents';
+$lang["consent_status_active"] = 'Consentiments actius';
+$lang["consent_status_expiring"] = 'Consentiments que expiren';
+$lang["consent_status_expired"] = 'Consentiments caducats';
+$lang["consent_view_linked_resources_short"] = 'Veure';
+$lang["consent_no_archiving"] = 'Sense canvi';
+$lang["consent_notification_expiring_soon"] = 'Consentiments que expiren aviat';
+$lang["consent_notification_message"] = 'Hi ha alguns consents que estan a punt d\'expirar. Veure\'ls <a href=\'%URL\'>aquí</a>';
+$lang["consent_notification_user_pref"] = 'Canvia si reps aquestes notificacions';
+$lang["consent_notification_global_pref"] = 'Desactivar aquestes notificacions per a tothom';

@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = '동의 관리자';
 $lang["plugin-consentmanager-desc"] = '미디어 파일에 등장하는 주제의 동의 관리를 할 수 있는 기능을 추가합니다';
 
 $lang["manageconsent-tooltip"] = '리소스에 대한 동의 기록 생성 및 관리';
+
+$lang["consent_status"] = '동의 상태';
+$lang["no_consent_date"] = '동의 날짜 없음';
+$lang["date_of_birth"] = '생년월일';
+$lang["address"] = '주소';
+$lang["parent_guardian"] = '부모/보호자 이름';
+$lang["date_of_consent"] = '동의 날짜';
+$lang["consent_expiry_notification"] = '동의 만료 알림';
+$lang["consent_expiry_notification_days"] = '사용자에게 \'동의 관리\' 권한이 있을 때 동의 만료가 다가오고 있는 날 수를 알림';
+$lang["consent_attach_upload"] = '업로드 후 메타데이터 수정 페이지에 동의 기록을 첨부할 수 있도록 허용합니다';
+$lang["consent_expired_workflow_state"] = '만료된 동의와 연결된 리소스를 이 워크플로우 상태로 자동 아카이브합니다';
+$lang["user_pref_consent_notifications"] = '만료되는 동의 알림을 보내주시겠습니까?';
+$lang["consent_status_all"] = '모든 동의';
+$lang["consent_status_active"] = '활성 동의';
+$lang["consent_status_expiring"] = '만료되는 동의';
+$lang["consent_status_expired"] = '만료된 동의';
+$lang["consent_view_linked_resources_short"] = '보기';
+$lang["consent_no_archiving"] = '변경 없음';
+$lang["consent_notification_expiring_soon"] = '곧 만료되는 동의';
+$lang["consent_notification_message"] = '곧 만료될 몇 가지 동의가 있습니다. <a href=\'%URL\'>여기</a>에서 확인하세요.';
+$lang["consent_notification_user_pref"] = '이 알림을 받을지 여부를 변경하세요';
+$lang["consent_notification_global_pref"] = '모든 사용자에 대해 이러한 알림을 비활성화합니다';

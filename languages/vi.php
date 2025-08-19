@@ -2924,3 +2924,22 @@ $lang["action_update_now"] = 'Cập nhật ngay bây giờ';
 $lang["errors"] = 'Lỗi';
 $lang["error_savefirst"] = 'Vui lòng lưu thay đổi của bạn';
 $lang["language-be"] = 'Belarusian';
+$lang["action-here"] = 'ở đây';
+$lang["months"] = array (
+  0 => 'Tháng Một',
+  1 => 'Tháng Hai',
+  2 => 'Tháng Ba',
+  3 => 'Tháng Tư',
+  4 => 'Tháng Năm',
+  5 => 'Tháng Sáu',
+  6 => 'Tháng Bảy',
+  7 => 'Tháng Tám',
+  8 => 'Tháng Chín',
+  9 => 'Tháng Mười',
+  10 => 'Tháng Mười Một',
+  11 => 'Tháng Mười Hai',
+);
+$lang["false-true"] = array (
+  0 => 'Sai',
+  1 => 'Đúng',
+);

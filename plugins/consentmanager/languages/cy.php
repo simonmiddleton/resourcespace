@@ -25,3 +25,25 @@ $lang["consent_manager_mediums"] = 'Cydsyniad ar gyfryngau defnydd';
 $lang["consent_manager_access"] = 'Rheoli data cydsyniad (lle nad yw eisoes wedi\'i galluogi trwy\'r caniatâd "Gall gael mynediad i\'r ardal Gosod System")';
 
 $lang["manageconsent-tooltip"] = 'Creu a rheoli cofrestriadau cydsyniad ar gyfer adnoddau';
+
+$lang["consent_status"] = 'Statws cydsyniad';
+$lang["no_consent_date"] = 'Dim dyddiad cydsyniad';
+$lang["date_of_birth"] = 'Dyddiad geni';
+$lang["address"] = 'Cyfeiriad';
+$lang["parent_guardian"] = 'Enw Rhieni/Gwarcheidwad';
+$lang["date_of_consent"] = 'Dyddiad cydsyniad';
+$lang["consent_expiry_notification"] = 'Hysbysiadau dod i ben cydsyniad';
+$lang["consent_expiry_notification_days"] = 'Nifer y dyddiau cyn i\'r caniatâd ddod i ben pan fydd defnyddwyr gyda\'r awdurdod \'Rheoli caniatâd\' yn cael eu hysbysu';
+$lang["consent_attach_upload"] = 'Caniatáu cofre consent i gael ei gysylltu ar y dudalen Diddymu Metadata ar ôl llwytho i fyny';
+$lang["consent_expired_workflow_state"] = 'Archifwch yn awtomatig adnoddau sy\'n gysylltiedig â chydsyniadau wedi dod i ben i\'r cyflwr llif gwaith hwn';
+$lang["user_pref_consent_notifications"] = 'Anfonwch hysbysiadau cydsynio sy\'n dod i ben?';
+$lang["consent_status_all"] = 'Pob caniatad';
+$lang["consent_status_active"] = 'Cydsyniadau gweithredol';
+$lang["consent_status_expiring"] = 'Cydsyniadau sy\'n dod i ben';
+$lang["consent_status_expired"] = 'Cydsyniadau wedi dod i ben';
+$lang["consent_view_linked_resources_short"] = 'Gweld';
+$lang["consent_no_archiving"] = 'Dim Newid';
+$lang["consent_notification_expiring_soon"] = 'Cydsyniadau\'n Dod i Ben yn Fuan';
+$lang["consent_notification_message"] = 'Mae rhai caniatâd sy\'n dod i ben yn fuan. Edrychwch arnynt <a href=\'%URL\'>yma</a>';
+$lang["consent_notification_user_pref"] = 'Newid a ydych yn derbyn y rhybuddion hyn';
+$lang["consent_notification_global_pref"] = 'Anallu\'r hysbysiadau hyn ar gyfer pawb';

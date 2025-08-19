@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Menedżer Zgód';
 $lang["plugin-consentmanager-desc"] = 'Dodaje możliwość zarządzania zgodami udzielonymi przez osoby przedstawione w Twoich plikach multimedialnych';
 
 $lang["manageconsent-tooltip"] = 'Utwórz i zarządzaj rekordami zgody dla zasobów';
+
+$lang["consent_status"] = 'Status zgody';
+$lang["no_consent_date"] = 'Brak daty zgody';
+$lang["date_of_birth"] = 'Data urodzenia';
+$lang["address"] = 'Adres';
+$lang["parent_guardian"] = 'Imię i nazwisko rodzica/opiekuna';
+$lang["date_of_consent"] = 'Data zgody';
+$lang["consent_expiry_notification"] = 'Powiadomienia o wygasaniu zgody';
+$lang["consent_expiry_notification_days"] = 'Liczba dni przed wygaśnięciem zgody, kiedy użytkownicy z uprawnieniem \'Zarządzanie zgodami\' zostaną powiadomieni';
+$lang["consent_attach_upload"] = 'Zezwól na dołączenie rekordu zgody na stronie Udoskonalanie metadanych po przesłaniu';
+$lang["consent_expired_workflow_state"] = 'Automatycznie archiwizuj zasoby powiązane z wygasłymi zgodami do tego stanu przepływu pracy';
+$lang["user_pref_consent_notifications"] = 'Wyślij mi powiadomienia o wygasających zgodach?';
+$lang["consent_status_all"] = 'Wszystkie zgody';
+$lang["consent_status_active"] = 'Aktywne zgody';
+$lang["consent_status_expiring"] = 'Wygasające zgody';
+$lang["consent_status_expired"] = 'Wygasłe zgody';
+$lang["consent_view_linked_resources_short"] = 'Widok';
+$lang["consent_no_archiving"] = 'Brak zmian';
+$lang["consent_notification_expiring_soon"] = 'Zgody wygasają wkrótce';
+$lang["consent_notification_message"] = 'Są pewne zgody, które wkrótce wygasną. Zobacz je <a href=\'%URL\'>tutaj</a>';
+$lang["consent_notification_user_pref"] = 'Zmień, czy chcesz otrzymywać te powiadomienia';
+$lang["consent_notification_global_pref"] = 'Wyłącz te powiadomienia dla wszystkich';

@@ -3074,3 +3074,8 @@ $lang["action_update_now"] = '今すぐ更新';
 $lang["errors"] = 'エラー';
 $lang["error_savefirst"] = '変更を保存してください';
 $lang["language-be"] = 'ベラルーシ語';
+$lang["action-here"] = 'ここ';
+$lang["false-true"] = array (
+  0 => '偽',
+  1 => '真',
+);

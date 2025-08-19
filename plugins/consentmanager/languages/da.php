@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Samtykke Manager';
 $lang["plugin-consentmanager-desc"] = 'Tilføjer muligheden for at administrere samtykke givet af personer, der er med i dine mediefiler';
 
 $lang["manageconsent-tooltip"] = 'Opret og administrer samtykkeposter for ressourcer';
+
+$lang["consent_status"] = 'Samtykkestatus';
+$lang["no_consent_date"] = 'Ingen samtykkedato';
+$lang["date_of_birth"] = 'Fødselsdato';
+$lang["address"] = 'Adresse';
+$lang["parent_guardian"] = 'Forælder/Værge Navn';
+$lang["date_of_consent"] = 'Dato for samtykke';
+$lang["consent_expiry_notification"] = 'Notifikationer om udløb af samtykke';
+$lang["consent_expiry_notification_days"] = 'Antal dage før samtykkeudløb nærmer sig, når brugere med \'Samtykkehåndtering\' tilladelse vil blive underrettet';
+$lang["consent_attach_upload"] = 'Tillad en samtykkeoptegnelse at blive vedhæftet på siden Forfin metadata efter upload';
+$lang["consent_expired_workflow_state"] = 'Automatisk arkiver ressourcer knyttet til udløbne samtykker til denne arbejdsflow-tilstand';
+$lang["user_pref_consent_notifications"] = 'Send mig meddelelser om udløbende samtykke?';
+$lang["consent_status_all"] = 'Alle samtykker';
+$lang["consent_status_active"] = 'Aktive samtykker';
+$lang["consent_status_expiring"] = 'Udløbsdato for samtykker';
+$lang["consent_status_expired"] = 'Udløbet samtykker';
+$lang["consent_view_linked_resources_short"] = 'Vis';
+$lang["consent_no_archiving"] = 'Ingen ændring';
+$lang["consent_notification_expiring_soon"] = 'Samtykker, der udløber snart';
+$lang["consent_notification_message"] = 'Der er nogle samtykker, der snart udløber. Se dem <a href=\'%URL\'>her</a>';
+$lang["consent_notification_user_pref"] = 'Skift om du vil modtage disse meddelelser';
+$lang["consent_notification_global_pref"] = 'Deaktiver disse meddelelser for alle';

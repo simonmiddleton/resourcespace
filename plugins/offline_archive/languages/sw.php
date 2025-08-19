@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"]='Imeghairiwa kurejesha kut
 $lang["offline_archive_resource_log_restore_request"]='Imeombwa kurejesha kutoka kwenye jalada';
 $lang["offline_archive_resource_restore"]='Rejesha rasilimali';
 $lang["offline_archive_administer_archive-tooltip"] = 'Hamisha faili zilizohifadhiwa kwenda mahali pasipo mtandao';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Inasubiri',
+  1 => 'Inaendelea',
+  2 => 'Imekamilika',
+);

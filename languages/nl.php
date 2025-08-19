@@ -3040,3 +3040,8 @@ $lang["action_update_now"] = 'Nu bijwerken';
 $lang["errors"] = 'Fouten';
 $lang["error_savefirst"] = 'Sla uw wijzigingen op';
 $lang["language-be"] = 'Belarussisch';
+$lang["action-here"] = 'hier';
+$lang["false-true"] = array (
+  0 => 'Onwaar',
+  1 => 'Waar',
+);

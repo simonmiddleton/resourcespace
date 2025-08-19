@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'مدير الموافقات';
 $lang["plugin-consentmanager-desc"] = 'يضيف القدرة على إدارة الموافقة المقدمة من قبل الأشخاص الظاهرين في ملفات الوسائط الخاصة بك';
 
 $lang["manageconsent-tooltip"] = 'إنشاء وإدارة سجلات الموافقة للموارد';
+
+$lang["consent_status"] = 'حالة الموافقة';
+$lang["no_consent_date"] = 'لا تاريخ موافقة';
+$lang["date_of_birth"] = 'تاريخ الميلاد';
+$lang["address"] = 'عنوان';
+$lang["parent_guardian"] = 'اسم الوالد/الوصي';
+$lang["date_of_consent"] = 'تاريخ الموافقة';
+$lang["consent_expiry_notification"] = 'إشعارات انتهاء صلاحية الموافقة';
+$lang["consent_expiry_notification_days"] = 'عدد الأيام قبل اقتراب انتهاء صلاحية الموافقة عندما سيتم إخطار المستخدمين الذين لديهم إذن "إدارة الموافقات"';
+$lang["consent_attach_upload"] = 'السماح بإرفاق سجل الموافقة في صفحة تنقيح البيانات الوصفية بعد التحميل';
+$lang["consent_expired_workflow_state"] = 'أرشفة الموارد المرتبطة بالموافقات المنتهية تلقائيًا إلى حالة سير العمل هذه';
+$lang["user_pref_consent_notifications"] = 'هل يمكنك إرسال إشعارات الموافقة التي ستنتهي صلاحيتها؟';
+$lang["consent_status_all"] = 'جميع الموافقات';
+$lang["consent_status_active"] = 'الموافقات النشطة';
+$lang["consent_status_expiring"] = 'الموافقات المنتهية صلاحيتها';
+$lang["consent_status_expired"] = 'الموافقات المنتهية';
+$lang["consent_view_linked_resources_short"] = 'عرض';
+$lang["consent_no_archiving"] = 'لا تغيير';
+$lang["consent_notification_expiring_soon"] = 'الموافقات ستنتهي قريباً';
+$lang["consent_notification_message"] = 'هناك بعض الموافقات التي ستنتهي قريبًا. يمكنك مشاهدتها <a href=\'%URL\'>هنا</a>';
+$lang["consent_notification_user_pref"] = 'غيّر ما إذا كنت ستتلقى هذه الإشعارات';
+$lang["consent_notification_global_pref"] = 'تعطيل هذه الإشعارات للجميع';

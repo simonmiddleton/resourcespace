@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Upravitelj soglasij';
 $lang["plugin-consentmanager-desc"] = 'Dodaja možnost upravljanja soglasij, ki jih dajejo subjekti, predstavljeni v vaših medijskih datotekah';
 
 $lang["manageconsent-tooltip"] = 'Vytvorte a spravujte záznamy o súhlase pre zdroje';
+
+$lang["consent_status"] = 'Stav súhlasu';
+$lang["no_consent_date"] = 'Žiadny dátum súhlasu';
+$lang["date_of_birth"] = 'Dátum narodenia';
+$lang["address"] = 'Adresa';
+$lang["parent_guardian"] = 'Meno rodiča/opatrovníka';
+$lang["date_of_consent"] = 'Dátum súhlasu';
+$lang["consent_expiry_notification"] = 'Oznámenia o vypršaní súhlasu';
+$lang["consent_expiry_notification_days"] = 'Počet dní pred vypršaním súhlasu, keď budú používatelia s povolením \'Správa súhlasu\' upozornení';
+$lang["consent_attach_upload"] = 'Povoliť pripojenie záznamu súhlasu na stránke Úprava metadát po nahratí';
+$lang["consent_expired_workflow_state"] = 'Automaticky archivovať zdroje prepojené na vypršané súhlasy do tohto pracovného toku';
+$lang["user_pref_consent_notifications"] = 'Pošlite mi upozornenia o vypršaní súhlasu?';
+$lang["consent_status_all"] = 'Všetky súhlasy';
+$lang["consent_status_active"] = 'Aktívne súhlasy';
+$lang["consent_status_expiring"] = 'Vypršajúce súhlasy';
+$lang["consent_status_expired"] = 'Vypršané súhlasy';
+$lang["consent_view_linked_resources_short"] = 'Zobraziť';
+$lang["consent_no_archiving"] = 'Žiadna zmena';
+$lang["consent_notification_expiring_soon"] = 'Súhlasy, ktoré čoskoro vypršia';
+$lang["consent_notification_message"] = 'Existujú niektoré súhlasy, ktoré čoskoro vypršia. Pozrite si ich <a href=\'%URL\'>tu</a>';
+$lang["consent_notification_user_pref"] = 'Zmeňte, či chcete dostávať tieto oznámenia';
+$lang["consent_notification_global_pref"] = 'Deaktivujte tieto oznámenia pre všetkých';

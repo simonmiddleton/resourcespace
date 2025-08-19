@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"] = 'Скасавана ад
 $lang["offline_archive_resource_log_restore_request"] = 'Запытана аднаўленне з архіва';
 $lang["offline_archive_resource_restore"] = 'Восстановіць рэсурсы';
 $lang["offline_archive_administer_archive-tooltip"] = 'Перамясціць архіваваныя файлы ў афлайн-месцазнаходжанне';
+$lang["offline_archive_statustype"] = array (
+  0 => 'У чаканні',
+  1 => 'У працэсе',
+  2 => 'Завершана',
+);

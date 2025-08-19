@@ -3142,3 +3142,8 @@ $lang["action_update_now"] = '立即更新';
 $lang["errors"] = '错误';
 $lang["error_savefirst"] = '请保存您的更改';
 $lang["language-be"] = '白俄罗斯语';
+$lang["action-here"] = '这里';
+$lang["false-true"] = array (
+  0 => '假',
+  1 => '真',
+);

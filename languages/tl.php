@@ -2921,3 +2921,22 @@ $lang["action_update_now"] = 'I-update na';
 $lang["errors"] = 'Mga Error';
 $lang["error_savefirst"] = 'Mangyaring i-save ang iyong mga pagbabago';
 $lang["language-be"] = 'Belarusian';
+$lang["action-here"] = 'dito';
+$lang["months"] = array (
+  0 => 'Enero',
+  1 => 'Pebrero',
+  2 => 'Marso',
+  3 => 'Abril',
+  4 => 'Mayo',
+  5 => 'Hunyo',
+  6 => 'Hulyo',
+  7 => 'Agosto',
+  8 => 'Setyembre',
+  9 => 'Oktubre',
+  10 => 'Nobyembre',
+  11 => 'Disyembre',
+);
+$lang["false-true"] = array (
+  0 => 'Mali',
+  1 => 'Tama',
+);

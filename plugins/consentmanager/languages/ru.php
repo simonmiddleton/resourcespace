@@ -27,3 +27,25 @@ $lang["plugin-consentmanager-title"] = 'Менеджер согласий';
 $lang["plugin-consentmanager-desc"] = 'Добавляет возможность управлять согласием, предоставленным субъектами, представленными в ваших медиафайлах';
 
 $lang["manageconsent-tooltip"] = 'Создавайте и управляйте записями согласия для ресурсов';
+
+$lang["consent_status"] = 'Статус согласия';
+$lang["no_consent_date"] = 'Нет даты согласия';
+$lang["date_of_birth"] = 'Дата рождения';
+$lang["address"] = 'Адрес';
+$lang["parent_guardian"] = 'Имя родителя/опекуна';
+$lang["date_of_consent"] = 'Дата согласия';
+$lang["consent_expiry_notification"] = 'Уведомления об истечении согласия';
+$lang["consent_expiry_notification_days"] = 'Количество дней до истечения согласия, когда пользователи с разрешением \'Управление согласиями\' будут уведомлены';
+$lang["consent_attach_upload"] = 'Разрешить прикрепление записи согласия на странице уточнения метаданных после загрузки';
+$lang["consent_expired_workflow_state"] = 'Автоматически архивировать ресурсы, связанные с истекшими согласиями, в это состояние рабочего процесса';
+$lang["user_pref_consent_notifications"] = 'Отправить мне уведомления о истекающих согласиях?';
+$lang["consent_status_all"] = 'Все согласия';
+$lang["consent_status_active"] = 'Активные согласия';
+$lang["consent_status_expiring"] = 'Истекающие согласия';
+$lang["consent_status_expired"] = 'Истекшие согласия';
+$lang["consent_view_linked_resources_short"] = 'Просмотр';
+$lang["consent_no_archiving"] = 'Нет изменений';
+$lang["consent_notification_expiring_soon"] = 'Согласия, срок действия которых истекает скоро';
+$lang["consent_notification_message"] = 'Скоро истекает срок действия некоторых согласий. Посмотреть их <a href=\'%URL\'>здесь</a>';
+$lang["consent_notification_user_pref"] = 'Измените, получаете ли вы эти уведомления';
+$lang["consent_notification_global_pref"] = 'Отключить эти уведомления для всех';

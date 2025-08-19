@@ -3171,3 +3171,8 @@ $lang["action_update_now"] = 'Oppdater nå';
 $lang["errors"] = 'Feil';
 $lang["error_savefirst"] = 'Vennligst lagre endringene dine';
 $lang["language-be"] = 'Hviterussisk';
+$lang["action-here"] = 'her';
+$lang["false-true"] = array (
+  0 => 'Falsk',
+  1 => 'Sann',
+);

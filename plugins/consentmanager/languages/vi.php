@@ -24,3 +24,25 @@ $lang["confirmdeleteconsentfile"] = 'Bạn có chắc chắn muốn XÓA tệp n
 $lang["consent_manager_mediums"] = 'Phương tiện sử dụng đồng ý';
 $lang["consent_manager_access"] = 'Quản lý dữ liệu đồng ý (nơi chưa được kích hoạt thông qua quyền "Có thể truy cập khu vực Cài đặt Hệ thống")';
 $lang["manageconsent-tooltip"] = 'Tạo và quản lý hồ sơ đồng ý cho tài nguyên';
+
+$lang["consent_status"] = 'Trạng thái đồng ý';
+$lang["no_consent_date"] = 'Không có ngày đồng ý';
+$lang["date_of_birth"] = 'Ngày sinh';
+$lang["address"] = 'Địa chỉ';
+$lang["parent_guardian"] = 'Tên phụ huynh/người giám hộ';
+$lang["date_of_consent"] = 'Ngày đồng ý';
+$lang["consent_expiry_notification"] = 'Thông báo hết hạn đồng ý';
+$lang["consent_expiry_notification_days"] = 'Số ngày trước khi hết hạn đồng ý mà người dùng có quyền \'Quản lý đồng ý\' sẽ được thông báo';
+$lang["consent_attach_upload"] = 'Cho phép một bản ghi đồng ý được đính kèm trên trang Chỉnh sửa Siêu dữ liệu sau khi tải lên';
+$lang["consent_expired_workflow_state"] = 'Tự động lưu trữ các tài nguyên liên kết với các sự đồng ý đã hết hạn đến trạng thái quy trình công việc này';
+$lang["user_pref_consent_notifications"] = 'Gửi cho tôi thông báo về sự đồng ý sắp hết hạn?';
+$lang["consent_status_all"] = 'Tất cả các sự đồng ý';
+$lang["consent_status_active"] = 'Sự đồng ý đang hoạt động';
+$lang["consent_status_expiring"] = 'Sự đồng ý sắp hết hạn';
+$lang["consent_status_expired"] = 'Sự đồng ý đã hết hạn';
+$lang["consent_view_linked_resources_short"] = 'Xem';
+$lang["consent_no_archiving"] = 'Không thay đổi';
+$lang["consent_notification_expiring_soon"] = 'Các sự đồng ý sắp hết hạn';
+$lang["consent_notification_message"] = 'Có một số sự đồng ý sắp hết hạn. Xem chúng <a href=\'%URL\'>tại đây</a>';
+$lang["consent_notification_user_pref"] = 'Thay đổi việc bạn có nhận được những thông báo này hay không';
+$lang["consent_notification_global_pref"] = 'Vô hiệu hóa những thông báo này cho tất cả mọi người';

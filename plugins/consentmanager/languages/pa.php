@@ -25,3 +25,25 @@ $lang["consent_manager_mediums"] = 'ਸਹਿਮਤੀ ਉਪਯੋਗ ਮਾਧ
 $lang["consent_manager_access"] = 'ਸਹਿਮਤੀ ਡਾਟਾ ਪ੍ਰਬੰਧਿਤ ਕਰੋ (ਜਿੱਥੇ "ਸਿਸਟਮ ਸੈਟਅੱਪ ਖੇਤਰ ਤੱਕ ਪਹੁੰਚ ਸਕਦੇ ਹਨ" ਅਧਿਕਾਰ ਰਾਹੀਂ ਪਹਿਲਾਂ ਹੀ ਯੋਗ ਨਹੀਂ ਕੀਤਾ ਗਿਆ)';
 
 $lang["manageconsent-tooltip"] = 'ਸੰਸਾਧਨਾਂ ਲਈ ਸਹਿਮਤੀ ਰਿਕਾਰਡ ਬਣਾਓ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰੋ';
+
+$lang["consent_status"] = 'ਸਹਿਮਤੀ ਦੀ ਸਥਿਤੀ';
+$lang["no_consent_date"] = 'ਕੋਈ ਸਹਿਮਤੀ ਦੀ ਤਾਰੀਖ ਨਹੀਂ';
+$lang["date_of_birth"] = 'ਜਨਮ ਦੀ ਤਾਰੀਖ';
+$lang["address"] = 'ਪਤਾ';
+$lang["parent_guardian"] = 'ਮਾਪੇ/ਸੁਰੱਖਿਆਕਰਤਾ ਦਾ ਨਾਮ';
+$lang["date_of_consent"] = 'ਸਹਿਮਤੀ ਦੀ ਤਾਰੀਖ';
+$lang["consent_expiry_notification"] = 'ਸਹਿਮਤੀ ਸਮਾਪਤ ਹੋਣ ਦੀ ਸੂਚਨਾ';
+$lang["consent_expiry_notification_days"] = 'ਉਹ ਦਿਨਾਂ ਦੀ ਗਿਣਤੀ ਜਦੋਂ \'ਸਹਿਮਤੀ ਪ੍ਰਬੰਧਨ\' ਅਧਿਕਾਰ ਵਾਲੇ ਉਪਭੋਗਤਾਵਾਂ ਨੂੰ ਸੂਚਿਤ ਕੀਤਾ ਜਾਵੇਗਾ ਕਿ ਸਹਿਮਤੀ ਦੀ ਮਿਆਦ ਖਤਮ ਹੋਣੀ ਹੈ';
+$lang["consent_attach_upload"] = 'ਅਪਲੋਡ ਕਰਨ ਤੋਂ ਬਾਅਦ ਰਿਫਾਈਨ ਮੈਟਾਡਾਟਾ ਪੰਨੇ \'ਤੇ ਇੱਕ ਸਹਿਮਤੀ ਰਿਕਾਰਡ ਜੁੜਨ ਦੀ ਆਗਿਆ ਦਿਓ';
+$lang["consent_expired_workflow_state"] = 'ਸਵੈਚਲਿਤ ਤੌਰ \'ਤੇ expired consents ਨਾਲ ਜੁੜੇ ਸਰੋਤਾਂ ਨੂੰ ਇਸ ਵਰਕਫਲੋ ਸਥਿਤੀ ਵਿੱਚ ਆਰਕਾਈਵ ਕਰੋ';
+$lang["user_pref_consent_notifications"] = 'ਕੀ ਤੁਸੀਂ ਮੈਨੂੰ ਸਮਾਪਤੀ ਵਾਲੀਆਂ ਸਹਿਮਤੀ ਸੂਚਨਾਵਾਂ ਭੇਜ ਸਕਦੇ ਹੋ?';
+$lang["consent_status_all"] = 'ਸਾਰੇ ਸਹਿਮਤੀਆਂ';
+$lang["consent_status_active"] = 'ਸਰਗਰਮ ਸਹਿਮਤੀਆਂ';
+$lang["consent_status_expiring"] = 'ਮਿਆਦ ਖਤਮ ਹੋ ਰਹੇ ਸਹਿਮਤੀਆਂ';
+$lang["consent_status_expired"] = 'ਮਿਆਦ ਪੂਰੀ ਹੋ ਚੁੱਕੀਆਂ ਸਹਿਮਤੀਆਂ';
+$lang["consent_view_linked_resources_short"] = 'ਦੇਖੋ';
+$lang["consent_no_archiving"] = 'ਕੋਈ ਬਦਲਾਅ ਨਹੀਂ';
+$lang["consent_notification_expiring_soon"] = 'ਸਹਿਮਤੀਆਂ ਜਲਦੀ ਖਤਮ ਹੋ ਰਹੀਆਂ ਹਨ';
+$lang["consent_notification_message"] = 'ਕੁਝ ਸਹਿਮਤੀਆਂ ਹਨ ਜੋ ਜਲਦੀ ਹੀ ਸਮਾਪਤ ਹੋ ਰਹੀਆਂ ਹਨ। ਉਨ੍ਹਾਂ ਨੂੰ <a href=\'%URL\'>ਇੱਥੇ</a> ਦੇਖੋ';
+$lang["consent_notification_user_pref"] = 'ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਸਥਿਤੀ ਬਦਲੋ';
+$lang["consent_notification_global_pref"] = 'ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ ਨੂੰ ਸਭ ਲਈ ਅਯੋਗ ਕਰੋ';

@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Επαναφορά πόρων';
 $lang["plugin-offline_archive-title"]='Αποσυνδεδεμένο Αρχείο';
 $lang["plugin-offline_archive-desc"]='Επιτρέπει τη μετακίνηση των αρχειοθετημένων αρχείων σε μια εκτός σύνδεσης τοποθεσία';
 $lang["offline_archive_administer_archive-tooltip"] = 'Μεταφορά αρχείων που έχουν αρχειοθετηθεί σε εκτός σύνδεσης τοποθεσία';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Σε εκκρεμότητα',
+  1 => 'Σε εξέλιξη',
+  2 => 'Ολοκληρώθηκε',
+);

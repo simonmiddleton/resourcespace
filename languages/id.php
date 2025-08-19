@@ -3092,3 +3092,8 @@ $lang["action_update_now"] = 'Perbarui sekarang';
 $lang["errors"] = 'Kesalahan';
 $lang["error_savefirst"] = 'Silakan simpan perubahan Anda';
 $lang["language-be"] = 'Belarusian';
+$lang["action-here"] = 'di sini';
+$lang["false-true"] = array (
+  0 => 'Salah',
+  1 => 'Benar',
+);

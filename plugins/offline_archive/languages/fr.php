@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Restaurer les ressources';
 $lang["plugin-offline_archive-title"]='Archive Hors Ligne';
 $lang["plugin-offline_archive-desc"]='Permet le déplacement des fichiers archivés vers un emplacement hors ligne';
 $lang["offline_archive_administer_archive-tooltip"] = 'Déplacer les fichiers archivés vers un emplacement hors ligne';
+$lang["offline_archive_statustype"] = array (
+  0 => 'En attente',
+  1 => 'En cours',
+  2 => 'Terminé',
+);

@@ -2933,3 +2933,22 @@ $lang["action_update_now"] = 'Şimdi güncelle';
 $lang["errors"] = 'Hatalar';
 $lang["error_savefirst"] = 'Lütfen değişikliklerinizi kaydedin';
 $lang["language-be"] = 'Belarusça';
+$lang["action-here"] = 'burada';
+$lang["months"] = array (
+  0 => 'Ocak',
+  1 => 'Şubat',
+  2 => 'Mart',
+  3 => 'Nisan',
+  4 => 'Mayıs',
+  5 => 'Haziran',
+  6 => 'Temmuz',
+  7 => 'Ağustos',
+  8 => 'Eylül',
+  9 => 'Ekim',
+  10 => 'Kasım',
+  11 => 'Aralık',
+);
+$lang["false-true"] = array (
+  0 => 'Yanlış',
+  1 => 'Doğru',
+);
