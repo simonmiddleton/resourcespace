@@ -338,6 +338,17 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .ui-menu .ui-menu-item {
             color: white;
         }
+        .FeaturedSimpleTile .top-right-menu:hover  {
+            background: #404040;
+            color: white;
+        }
+        .FeaturedSimpleLinks .context-menu-container {
+            background: #404040;
+            color: white;
+        }
+        .context-menu-row:hover {
+            background: #5a5a5a;
+        }
         /* Responsive mode */
         @media (max-width: 1200px) {
             #Header .HorizontalNav ul li a {
