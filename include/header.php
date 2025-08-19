@@ -46,8 +46,8 @@ if ($ajax == "") {
             rs_setcookie("thumbs", $thumbs, 1000, "", "", false, false);
         }
     }
-    
-$page_title = $applicationname . (isset($lang["page-title_$pagename"]) ? " - " . $lang["page-title_$pagename"] : "BANG");
+
+$page_title = get_page_title($pagename, pluginname());
     ?>
     <!DOCTYPE html>
     <html lang="<?php echo $language ?>">   
@@ -65,6 +65,8 @@ $page_title = $applicationname . (isset($lang["page-title_$pagename"]) ? " - " .
             <meta name="robots" content="noindex,nofollow">
         <?php } ?>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="pagename" content="<?php echo $pagename; ?>" />
+        <meta name="pluginname" content="<?php echo escape(pluginname()); ?>" />
         <?php hook('extra_meta'); ?>
 
         <title id="page-title"><?php echo escape($page_title); ?></title>
@@ -157,6 +159,7 @@ $page_title = $applicationname . (isset($lang["page-title_$pagename"]) ? " - " .
             var errortext = "<?php echo escape($lang["error"]) ?>";
             var applicationname = "<?php echo $applicationname?>";
             var pagetitle = "<?php echo escape($page_title) ?>";
+            var plugintitle = "<?php echo escape(pluginname()) ?>";
             var branch_limit=false;
             var branch_limit_field = new Array();
             var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
