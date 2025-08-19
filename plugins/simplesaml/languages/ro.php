@@ -93,3 +93,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Verificați expirarea certificatulu
 
 $lang["simplesaml_use_www_label"] = 'Permiteți cererile de metadate SP pentru ruta "www"? (schimbarea în fals va necesita ca IdP să re-exchangeze metadatele SP)';
 $lang["simplesaml_use_www_error"] = '[Atenție] Pluginul folosește rutele vechi "www". Dacă aceasta este o instalare nouă, schimbă-o acum! În caz contrar, coordonează-te cu administratorul IdP pentru a putea actualiza metadatele SP în consecință.';
+$lang["simplesaml_config_source_label"] = 'Selectați sursa de configurare IdP';
+$lang["simplesaml_config_source_url"] = 'URL Metadate (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Fișier de configurare ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Fișiere de configurare SAML locale (moștenire)';
+$lang["simplesaml_update_metadata_now"] = 'Actualizează acum';
+$lang["simplesaml_update_metadata_error"] = 'Imposibil de a analiza metadatele \'%error%\' - verificați URL-ul metadatelor';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Răspuns invalid de la URL: \'%error%\' - verifică URL-ul metadatelor';
+$lang["simplesaml_update_metadata_parse_error"] = 'Imposibil de a recupera metadatele: \'%error%\' - verificați URL-ul metadatelor';
+$lang["simplesaml_metadata_updates"] = 'Actualizări de metadate SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'Metadata nu a fost actualizată din %date%';
+$lang["simplesaml_metadata_invalid"] = 'Metadatele IdP sunt invalide sau indisponibile';
+$lang["simplesaml_admin_password_reset"] = 'Resetează parola de administrator a site-ului de test SimpleSAML (opțional)';

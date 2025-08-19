@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"] = 'Megjegyzések:';
 $lang["rse_workflow_email_from"] = 'Értesítések küldéséhez használt e-mail cím (ha üres, a %EMAILFROM% értéket használja):';
 $lang["rse_workflow_bcc_admin"] = 'Értesítse a rendszeradminisztrátorokat, amikor a hozzájárulót értesítik';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Hozzon létre és kezelje a munkafolyamat állapotokat';
+$lang["rse_workflow_skip_required_fields"] = 'Amikor az erőforrásokat erre a munkafolyamat állapotra mozgatja, kizárja a kötelező mezők ellenőrzését?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Nem lehet megváltoztatni az archív állapotot %%ARCHIVE%%-ra. Hiányzó metaadatok a kötelező mezőkben: %%FIELDS%%.';

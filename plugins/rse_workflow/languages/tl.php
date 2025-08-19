@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"] = 'Mga Tala:';
 $lang["rse_workflow_email_from"] = 'Email address na padalhan ng notification (gagamitin ang %EMAILFROM% kung walang laman):';
 $lang["rse_workflow_bcc_admin"] = 'Ipaalam sa mga tagapangasiwa ng sistema kapag ang nag-ambag ay naabisuhan';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Lumikha at pamahalaan ang mga estado ng daloy ng trabaho';
+$lang["rse_workflow_skip_required_fields"] = 'Kapag inilipat ang mga mapagkukunan sa estado ng workflow na ito, isama ba ang mga pagsusuri sa mga kinakailangang field?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Hindi maaring baguhin ang estado ng archive sa %%ARCHIVE%%. Nawawalang metadata sa mga kinakailangang field: %%FIELDS%%.';

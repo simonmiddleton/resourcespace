@@ -79,3 +79,4 @@ $lang["px"]='px';
 $lang["plugin-transform-title"]='Outils d\'image (transformation)';
 $lang["plugin-transform-desc"]='Permet la création d\'images alternatives recadrées et redimensionnées (jCrop avec support mobile)';
 $lang["use_system_icc_profile_config"]='Utiliser la configuration système pour le traitement des profils ICC. Cela remplacera les options sRGB ci-dessus.';
+$lang["cropper_preset_sizes"] = 'Tailles prédéfinies';

@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='For at ændre arbejdsgangstilstande og handl
 $lang["plugin-rse_workflow-title"]='Avanceret Arbejdsgang';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbejdsgang';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Opret og administrer arbejdsflow-tilstande';
+$lang["rse_workflow_skip_required_fields"] = 'Når ressourcer flyttes til denne arbejdsprocesstatus, udelukke fra kontroller af påkrævede felter?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Kan ikke ændre arkivstatus til %%ARCHIVE%%. Manglende metadata i påkrævede felter: %%FIELDS%%.';

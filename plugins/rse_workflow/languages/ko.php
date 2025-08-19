@@ -57,3 +57,5 @@ $lang["rse_workflow_bcc_admin"]='기여자가 알림을 받을 때 시스템 관
 $lang["plugin-rse_workflow-title"]='고급 워크플로우';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace 엔터프라이즈 - 워크플로우';
 $lang["rse_workflow_manage_workflow-tooltip"] = '워크플로우 상태 생성 및 관리';
+$lang["rse_workflow_skip_required_fields"] = '이 워크플로우 상태로 리소스를 이동할 때 필수 필드 확인에서 제외하시겠습니까?';
+$lang["rse_workflow_state_change_failed_required_fields"] = '아카이브 상태를 %%ARCHIVE%%로 변경할 수 없습니다. 필수 필드에 메타데이터가 누락되었습니다: %%FIELDS%%.';

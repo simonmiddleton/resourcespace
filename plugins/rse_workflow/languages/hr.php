@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Za izmjenu stanja i radnji tijeka rada, kori
 $lang["plugin-rse_workflow-title"]='Napredni tijek rada';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Radni tijek';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Stvaranje i upravljanje stanjima radnog toka';
+$lang["rse_workflow_skip_required_fields"] = 'Pri premještanju resursa u ovo stanje radnog toka, isključiti provjere obaveznih polja?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Nije moguće promijeniti stanje arhive na %%ARCHIVE%%. Nedostaje metapodatak u obaveznim poljima: %%FIELDS%%.';

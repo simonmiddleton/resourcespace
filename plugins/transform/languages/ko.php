@@ -79,3 +79,4 @@ $lang["plugin-transform-title"]='이미지 도구 (변환)';
 $lang["plugin-transform-desc"]='크롭 및 스케일된 대체 이미지를 생성할 수 있습니다 (모바일 지원 jCrop)';
 $lang["use_system_icc_profile_config"]='ICC 프로파일 처리를 위해 시스템 구성을 사용합니다. 위의 sRGB 옵션을 무시합니다.';
 $lang["transform-recrop"]='이미지 다시 자르기';
+$lang["cropper_preset_sizes"] = '미리 정의된 크기';

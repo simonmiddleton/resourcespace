@@ -87,3 +87,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'IdP ਸਰਟੀਫਿਕੇਟ ਦ
 
 $lang["simplesaml_use_www_label"] = '"www" ਰੂਟ ਲਈ SP ਮੈਟਾਡਾਟਾ ਬੇਨਤੀਆਂ ਦੀ ਆਗਿਆ ਦਿਓ? (ਝੂਠੇ \'ਤੇ ਬਦਲਣ ਨਾਲ IdP ਨੂੰ SP ਮੈਟਾਡਾਟਾ ਦੁਬਾਰਾ ਬਦਲਣ ਦੀ ਲੋੜ ਪਵੇਗੀ)';
 $lang["simplesaml_use_www_error"] = '[Warning] ਪਲੱਗਇਨ ਪੁਰਾਣੇ "www" ਰੂਟਾਂ ਦੀ ਵਰਤੋਂ ਕਰ ਰਿਹਾ ਹੈ। ਜੇ ਇਹ ਨਵਾਂ ਸੈਟਅਪ ਹੈ, ਤਾਂ ਹੁਣ ਇਸਨੂੰ ਬਦਲੋ! ਨਹੀਂ ਤਾਂ IdP ਪ੍ਰਬੰਧਕ ਨਾਲ ਸਹਿਯੋਗ ਕਰੋ ਤਾਂ ਜੋ ਉਹ SP ਮੈਟਾਡੇਟ ਨੂੰ ਅਨੁਸਾਰ ਅੱਪਡੇਟ ਕਰ ਸਕਣ।';
+$lang["simplesaml_config_source_label"] = 'IdP ਸੰਰਚਨਾ ਸਰੋਤ ਚੁਣੋ';
+$lang["simplesaml_config_source_url"] = 'ਮੈਟਾਡਾਟਾ URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace ਸੰਰਚਨਾ ਫਾਈਲ (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'ਸਥਾਨਕ SAML ਸੰਰਚਨਾ ਫਾਈਲਾਂ (ਪੁਰਾਣੀਆਂ)';
+$lang["simplesaml_update_metadata_now"] = 'ਹੁਣ ਅੱਪਡੇਟ ਕਰੋ';
+$lang["simplesaml_update_metadata_error"] = 'ਮੈਟਾਡੇਟਾ \'%error%\' ਨੂੰ ਪਾਰਸ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ - ਮੈਟਾਡੇਟਾ URL ਦੀ ਜਾਂਚ ਕਰੋ';
+$lang["simplesaml_update_metadata_invalid_response"] = 'ਗਲਤ ਜਵਾਬ URL ਤੋਂ: \'%error%\' - ਮੈਟਾਡਾਟਾ URL ਦੀ ਜਾਂਚ ਕਰੋ';
+$lang["simplesaml_update_metadata_parse_error"] = 'ਮੈਟਾਡੇਟਾ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਮਰਥ: \'%error%\' - ਮੈਟਾਡੇਟਾ URL ਦੀ ਜਾਂਚ ਕਰੋ';
+$lang["simplesaml_metadata_updates"] = 'ਸਧਾਰਨSAML ਮੈਟਾਡੇਟਾ ਅੱਪਡੇਟ';
+$lang["simplesaml_metadata_warning"] = 'ਮੈਟਾਡੇਟ %date% ਤੋਂ ਬਾਅਦ ਅਪਡੇਟ ਨਹੀਂ ਕੀਤਾ ਗਿਆ';
+$lang["simplesaml_metadata_invalid"] = 'IdP ਮੈਟਾਡੇਟ ਅਵੈਲਬਲ ਨਹੀਂ ਹੈ ਜਾਂ ਗਲਤ ਹੈ';
+$lang["simplesaml_admin_password_reset"] = 'ਸਧਾਰਨ SAML ਟੈਸਟ ਸਾਈਟ ਦੇ ਪ੍ਰਬੰਧਕ ਪਾਸਵਰਡ ਨੂੰ ਦੁਬਾਰਾ ਸੈਟ ਕਰੋ (ਵਿਕਲਪਿਕ)';

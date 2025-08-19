@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'IdP証明書の有効期限を確�
 
 $lang["simplesaml_use_www_label"] = '"www"ルートのSPメタデータリクエストを許可しますか？（falseに変更すると、IdPはSPメタデータを再交換する必要があります）';
 $lang["simplesaml_use_www_error"] = '[警告] プラグインは古い「www」ルートを使用しています。これが新しいセットアップである場合は、今すぐ変更してください！そうでない場合は、IdP管理者と調整して、SPメタデータを適切に更新できるようにしてください。';
+$lang["simplesaml_config_source_label"] = 'IdP構成ソースを選択してください';
+$lang["simplesaml_config_source_url"] = 'メタデータ URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace 設定ファイル (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'ローカルSAML設定ファイル（レガシー）';
+$lang["simplesaml_update_metadata_now"] = '今すぐ更新';
+$lang["simplesaml_update_metadata_error"] = 'メタデータ \'%error%\' を解析できません - メタデータのURLを確認してください';
+$lang["simplesaml_update_metadata_invalid_response"] = '無効な応答がURLから返されました: \'%error%\' - メタデータURLを確認してください';
+$lang["simplesaml_update_metadata_parse_error"] = 'メタデータを取得できません: \'%error%\' - メタデータのURLを確認してください';
+$lang["simplesaml_metadata_updates"] = 'SimpleSAML メタデータの更新';
+$lang["simplesaml_metadata_warning"] = 'メタデータは %date% 以来更新されていません';
+$lang["simplesaml_metadata_invalid"] = 'IdPメタデータが無効または利用できません';
+$lang["simplesaml_admin_password_reset"] = 'シンプルSAMLテストサイト管理者パスワードをリセットする（オプション）';

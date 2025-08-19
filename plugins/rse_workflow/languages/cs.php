@@ -57,3 +57,5 @@ $lang["rse_workflow_bcc_admin"]='Upozornit správce systému, když je přispěv
 $lang["plugin-rse_workflow-title"]='Pokročilý pracovní postup';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Pracovní postup';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Vytvořit a spravovat stavy pracovního postupu';
+$lang["rse_workflow_skip_required_fields"] = 'Při přesunu zdrojů do tohoto stavu pracovního postupu vyloučit kontroly povinných polí?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Nelze změnit stav archivu na %%ARCHIVE%%. Chybějící metadata v povinných polích: %%FIELDS%%.';
