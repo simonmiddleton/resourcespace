@@ -6,6 +6,9 @@ include "../../include/boot.php";
 
 command_line_only();
 
+// Requires D permission in addition to the defaults.
+setup_command_line_user(array('c,a,t,v,e,D' . implode(',e', get_workflow_states())));
+
 if (!isset($argv[1])) {
     exit("Usage: php delete_collection_resources.php [collection ID]\n");
 }

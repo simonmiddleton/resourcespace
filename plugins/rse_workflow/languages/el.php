@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Για να τροποποιήσετε τι�
 $lang["plugin-rse_workflow-title"]='Προηγμένη Ροή Εργασιών';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Ροή Εργασιών';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Δημιουργία και διαχείριση καταστάσεων ροής εργασίας';
+$lang["rse_workflow_skip_required_fields"] = 'Όταν μεταφέρετε πόρους σε αυτήν την κατάσταση ροής εργασίας, να εξαιρούνται οι έλεγχοι υποχρεωτικών πεδίων;';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Αδύνατη η αλλαγή της κατάστασης αρχείου σε %%ARCHIVE%%. Λείπουν μεταδεδομένα στα απαιτούμενα πεδία: %%FIELDS%%.';

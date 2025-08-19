@@ -4414,6 +4414,7 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
 
         # Store extension/data in the database
         ps_query("UPDATE resource SET archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=NOW(),no_file=0 WHERE ref=?", array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
+        unset($GLOBALS['get_resource_data_cache'][$r]);
 
         # Store original filename in field, if set
         if (!$ingest) {
@@ -4574,6 +4575,7 @@ function import_resource($path, $type, $title, $ingest = false, $extension = '')
     if ($r === false) {
         return false;
     }
+    debug("Created resource #{$r}");
 
     // Log this in case the original location is not stored anywhere else
     resource_log(
@@ -6222,7 +6224,10 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
         return;
     }
 
-    ps_query("UPDATE resource SET archive = ? WHERE ref IN (" . ps_param_insert(count($resource)) . ")", array_merge(["i",$archive], ps_param_fill($resource, "i")));
+    $resource_chunks = array_chunk($resource, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    foreach ($resource_chunks as $chunk) {
+        ps_query("UPDATE resource SET archive = ? WHERE ref IN (" . ps_param_insert(count($chunk)) . ")", array_merge(["i", $archive], ps_param_fill($chunk, "i")));
+    }
 
     # Resources should be removed from collections when being moved into the deletion state as specified in config.default.php
     if ($remove_deleted_resources_from_collections && $resource_deletion_state == $archive) {

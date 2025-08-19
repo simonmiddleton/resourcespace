@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Untuk mengubah status dan tindakan alur kerj
 $lang["plugin-rse_workflow-title"]='Alur Kerja Lanjutan';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Alur Kerja';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Buat dan kelola status alur kerja';
+$lang["rse_workflow_skip_required_fields"] = 'Saat memindahkan sumber daya ke status alur kerja ini, kecualikan dari pemeriksaan bidang yang diperlukan?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Tidak dapat mengubah status arsip menjadi %%ARCHIVE%%. Metadata yang diperlukan di kolom yang wajib hilang: %%FIELDS%%.';

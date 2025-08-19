@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Zkontrolovat vypršení platnosti c
 
 $lang["simplesaml_use_www_label"] = 'Povolit požadavky na metadata SP pro cestu "www"? (změna na false bude vyžadovat, aby IdP znovu vyměnil metadata SP)';
 $lang["simplesaml_use_www_error"] = '[Warning] Plugin používá zastaralé "www" trasy. Pokud se jedná o novou instalaci, změňte to nyní! Jinak se domluvte s administrátorem IdP, aby mohl aktualizovat metadata SP odpovídajícím způsobem.';
+$lang["simplesaml_config_source_label"] = 'Vyberte zdroj konfigurace IdP';
+$lang["simplesaml_config_source_url"] = 'URL metadat (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Konfigurační soubor ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Místní konfigurační soubory SAML (starší verze)';
+$lang["simplesaml_update_metadata_now"] = 'Aktualizovat nyní';
+$lang["simplesaml_update_metadata_error"] = 'Nelze analyzovat metadata \'%error%\' - zkontrolujte URL metadata';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Neplatná odpověď z URL: \'%error%\' - zkontrolujte URL metadat';
+$lang["simplesaml_update_metadata_parse_error"] = 'Nelze načíst metadata: \'%error%\' - zkontrolujte URL metadata';
+$lang["simplesaml_metadata_updates"] = 'Aktualizace metadat SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'Metadata nebyla aktualizována od %date%';
+$lang["simplesaml_metadata_invalid"] = 'Neplatná nebo nedostupná metadata IdP';
+$lang["simplesaml_admin_password_reset"] = 'Obnovit heslo správce testovacího webu SimpleSAML (volitelné)';

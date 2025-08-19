@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Muokataksesi työnkulun tiloja ja toimintoja
 $lang["plugin-rse_workflow-title"]='Edistynyt työnkulku';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Työnkulku';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Luo ja hallinnoi työnkulun tiloja';
+$lang["rse_workflow_skip_required_fields"] = 'Kun siirrät resursseja tähän työnkulkuvaiheeseen, sulje pois pakollisten kenttien tarkistukset?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Ei voida muuttaa arkistotilaa %%ARCHIVE%%. Puuttuva metadata vaadituissa kentissä: %%FIELDS%%.';

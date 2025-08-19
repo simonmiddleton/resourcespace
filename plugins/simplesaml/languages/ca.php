@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Comprovar la caducitat del certific
 
 $lang["simplesaml_use_www_label"] = 'Permetre sol·licituds de metadades SP per a la ruta "www"? (canviar a fals requerirà que l\'IdP torni a intercanviar les metadades SP)';
 $lang["simplesaml_use_www_error"] = '[Advertència] El complement està utilitzant les rutes "www" llegades. Si aquesta és una configuració nova, canvia-ho ara! Si no, coordina\'t amb l\'administrador de l\'IdP perquè pugui actualitzar els metadades de l\'SP en conseqüència.';
+$lang["simplesaml_config_source_label"] = 'Seleccioneu la font de configuració de l\'IdP';
+$lang["simplesaml_config_source_url"] = 'URL de metadades (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Fitxer de configuració de ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Fitxers de configuració SAML locals (herència)';
+$lang["simplesaml_update_metadata_now"] = 'Actualitza ara';
+$lang["simplesaml_update_metadata_error"] = 'No es pot analitzar la metadada \'%error%\' - comprova l\'URL de la metadada';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Resposta no vàlida de l\'URL: \'%error%\' - comprova l\'URL de metadades';
+$lang["simplesaml_update_metadata_parse_error"] = 'No es pot recuperar la metadada: \'%error%\' - comprova l\'URL de la metadada';
+$lang["simplesaml_metadata_updates"] = 'Actualitzacions de metadades de SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'La metadata no s\'ha actualitzat des de %date%';
+$lang["simplesaml_metadata_invalid"] = 'Metadades d\'IdP no vàlides o no disponibles';
+$lang["simplesaml_admin_password_reset"] = 'Restableix la contrasenya d\'administrador del lloc de prova SimpleSAML (opcional)';

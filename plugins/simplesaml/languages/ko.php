@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'IdP 인증서 만료 확인?';
 
 $lang["simplesaml_use_www_label"] = '"www" 경로에 대한 SP 메타데이터 요청을 허용하시겠습니까? (false로 변경하면 IdP가 SP 메타데이터를 다시 교환해야 합니다)';
 $lang["simplesaml_use_www_error"] = '[경고] 플러그인이 구식 "www" 경로를 사용하고 있습니다. 만약 이것이 새로 설정한 것이라면 지금 변경하세요! 그렇지 않으면 IdP 관리자와 조정하여 SP 메타데이터를 적절히 업데이트할 수 있도록 하세요.';
+$lang["simplesaml_config_source_label"] = 'IdP 구성 소스 선택';
+$lang["simplesaml_config_source_url"] = '메타데이터 URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace 구성 파일 (config.php)';
+$lang["simplesaml_config_source_legacy"] = '로컬 SAML 구성 파일 (구형)';
+$lang["simplesaml_update_metadata_now"] = '지금 업데이트';
+$lang["simplesaml_update_metadata_error"] = '메타데이터 \'%error%\'를 구문 분석할 수 없습니다 - 메타데이터 URL을 확인하세요';
+$lang["simplesaml_update_metadata_invalid_response"] = '잘못된 응답이 URL에서 발생했습니다: \'%error%\' - 메타데이터 URL을 확인하세요';
+$lang["simplesaml_update_metadata_parse_error"] = '메타데이터를 가져올 수 없습니다: \'%error%\' - 메타데이터 URL을 확인하세요';
+$lang["simplesaml_metadata_updates"] = 'SimpleSAML 메타데이터 업데이트';
+$lang["simplesaml_metadata_warning"] = '메타데이터가 %date% 이후로 업데이트되지 않았습니다';
+$lang["simplesaml_metadata_invalid"] = 'IdP 메타데이터가 유효하지 않거나 사용할 수 없습니다';
+$lang["simplesaml_admin_password_reset"] = '간단한 SAML 테스트 사이트 관리자 비밀번호 재설정 (선택 사항)';

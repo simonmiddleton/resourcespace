@@ -7573,6 +7573,8 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     <tr class="DownloadDBlend">
         <td class="DownloadFileName Picker"><?php $render($use_selector); ?></td>
         <td class="DownloadButton">
+            <?php
+            if(!hook("downloadbuttonreplace"))  {?> 
             <a id="<?php echo escape($ns); ?>downloadlink" onclick="return CentralSpaceLoad(this, true);"><?php
                 echo escape($GLOBALS['lang']['action-download']);
             ?></a>
@@ -7583,6 +7585,8 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
                 data-viewsize=""
                 data-viewsizeurl=""
             ><?php echo escape($GLOBALS['lang']["action-view"]); ?></a>
+            <?php
+        }?>
         </td>
     </tr>
     <script>

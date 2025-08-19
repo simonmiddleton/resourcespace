@@ -166,6 +166,7 @@ foreach(tms_link_get_modules_mappings() as $module)
         }
 
         $tms_query_ids = array_unique($tms_query_ids);
+        sort($tms_query_ids);
         $logmessage = "Retrieving data from TMS system" . PHP_EOL;
         echo $logmessage;
         if($tms_log)
