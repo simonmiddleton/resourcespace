@@ -46,13 +46,16 @@ if (getval("submitted","")!="")
     # Save license data
     
     # Construct expiry date
-    $expires=getval("expires_year","") . "-" . getval("expires_month","") . "-" . getval("expires_day","");
+    $expires = getval("expires","");
+
+    if ($expires == "") {
+        $expires = null;
+    }
     
     # No expiry date ticked? Insert null
-    if (getval("no_expiry_date","")=="yes")
-        {
-        $expires=null;
-        }
+    if (getval("no_expiry_date", "") == "yes") {
+        $expires = null;
+    }
 
     # Construct usage
     $license_usage="";
@@ -91,15 +94,31 @@ if (getval("submitted","")!="")
         }
     else
         {
+
+        // Determine the previous expiry date and expiration_notice_sent flag
+        $previous_data = ps_query("select expires, expiration_notice_sent from license where ref = ?", ['i', $ref]);
+
+        if (!empty($previous_data) && count($previous_data) === 1) {
+
+            //If expiry date has changed
+            if ($previous_data[0]['expires'] !== $expires) {
+                $expiration_notice_sent = 0;
+            } else {
+                $expiration_notice_sent = (int) $previous_data[0]['expiration_notice_sent'];
+            }
+
+        }
+
         # Existing record   
         ps_query(
-            "update license set outbound= ?,holder= ?, license_usage= ?,description= ?,expires= ? where ref= ?",
+            "update license set outbound= ?,holder= ?, license_usage= ?,description= ?,expires= ?, expiration_notice_sent= ? where ref= ?",
             [
                 's', getval('outbound', ''),
                 's', getval('holder', ''),
                 's', $license_usage,
                 's', getval('description',''),
                 's', $expires,
+                'i', $expiration_notice_sent,
                 'i', $ref
             ]
         );
@@ -253,45 +272,30 @@ foreach ($license_usage_mediums as $medium)
     <div class="clearerleft"></div>
 </div>
 
-<div class="Question"><label><?php echo escape($lang["fieldtitle-expiry_date"]); ?></label>
-
-    <select id="expires_day" name="expires_day" class="SearchWidth" style="width:98px;">
-      <?php
-      for ($n=1;$n<=31;$n++)
-        {
-        $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==substr((string) $license["expires"],8,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
-        }
-      ?>
-    </select>
-
-    <select id="expires_month" name="expires_month" class="SearchWidth" style="width:98px;">
-      <?php
-      for ($n=1;$n<=12;$n++)
-        {
-        $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==substr((string) $license["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$n-1]); ?></option><?php
-        }
-      ?>
-    </select>
-    
-    <select id="expires_year" name="expires_year" class="SearchWidth" style="width:98px;">
-      <?php
-      $y=date("Y")+30;
-      for ($n=$minyear;$n<=$y;$n++)
-        {
-        ?><option <?php if ($n==substr((string) $license["expires"],0,4)) { ?>selected<?php } ?>><?php echo $n?></option><?php
-        }
-      ?>
-    </select>
+<div class="Question">
+    <label for="expires"><?php echo escape($lang["fieldtitle-expiry_date"]); ?></label>
+    <input type=date name="expires" id="expires" min="<?php echo $minyear . "-01-01"; ?>" max="<?php echo date("Y") + 30 . "-12-31"; ?>" value="<?php echo escape((string) $license["expires"]); ?>" />
 
     <!-- Option for no expiry date -->
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_expiry_date" value="yes" id="no_expiry" <?php if ($license["expires"]=="") { ?>checked<?php } ?>
-    onChange="jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',this.checked);"
-    /><?php echo escape($lang["no_expiry_date"]); ?>
-    <?php if ($license["expires"]=="") { ?><script>jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',true);</script><?php } ?>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input
+        type="checkbox"
+        name="no_expiry_date"
+        value="yes"
+        id="no_expiry"
+        <?php echo ($license["expires"] == "") ? " checked" : ''; ?>
+        onChange="jQuery('#expires').attr('disabled',this.checked);"
+    />
+    <?php
+    echo escape($lang["no_expiry_date"]);
+    if ($license["expires"] == "") {
+        ?>
+        <script>jQuery('#expires').attr('disabled',true);</script>
+        <?php
+    } ?>
 
-<div class="clearerleft"> </div></div>
+    <div class="clearerleft"></div>
+</div>
 
 
 <div class="Question">

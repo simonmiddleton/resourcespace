@@ -18,6 +18,7 @@ if (array_key_exists("findtext", $_POST)) {
 
 $findtext = getval("findtext", "");
 $delete = getval("delete", "");
+$consent_status = getval("consent_status", "all");
 
 if ($delete != "" && enforcePostRequest(false)) {
     # Delete consent
@@ -59,7 +60,7 @@ $url_params = array(
         <input type=hidden name="delete" id="consentdelete" value="">
  
         <?php
-        $consents = consentmanager_get_all_consents($findtext);
+        $consents = consentmanager_get_all_consents($findtext, $consent_status);
 
         # pager
         $per_page = $default_perpage_list;
@@ -83,6 +84,8 @@ $url_params = array(
                     <th><?php echo escape($lang["name"]); ?></th>
                     <th><?php echo escape($lang["usage"]); ?></th>
                     <th><?php echo escape($lang["fieldtitle-expiry_date"]); ?></th>
+                    <th><?php echo escape($lang["date_of_consent"]); ?></th>
+                    <th><?php echo escape($lang["user_created_by"]); ?></th>
                     <th>
                         <div class="ListTools"><?php echo escape($lang["tools"]); ?></div>
                     </th>
@@ -108,8 +111,20 @@ $url_params = array(
                             ?>
                         </td>
                         <td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>
+                        <td><?php echo escape($consent["date_of_consent"] == "" ? $lang["no_consent_date"] : nicedate($consent["date_of_consent"])); ?></td>
+                        <td>
+                            <?php                             
+                                $created_by_user = get_user($consent['created_by']);
+                                if (is_array($created_by_user)) {
+                                    echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]);
+                                }                                                            
+                            ?>
+                        </td>
                         <td>
                             <div class="ListTools">
+                                <a href="<?php echo generateURL($baseurl_short . "pages/search.php", ['search' => '!consent' . $consent['ref']]); ?>" onClick="return CentralSpaceLoad(this,true);">
+                                    <i class="fas fa-search"></i>&nbsp;<?php echo escape($lang['consent_view_linked_resources_short']); ?>
+                                </a>
                                 <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php", $url_params); ?>" onClick="return CentralSpaceLoad(this,true);">
                                     <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                                 </a>
@@ -126,6 +141,29 @@ $url_params = array(
         </div>
 
         <div class="BottomInpageNav"><?php pager(true); ?></div>
+        
+        <div class="Question">  
+            <label for="consent_status"><?php echo escape($lang["consent_status"]); ?></label>
+            <div class="tickset">
+                <div class="Inline">
+                    <select name="consent_status" id="consent_status" onChange="this.form.submit();">
+                        <option value="all" <?php echo ($consent_status == 'all') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["consent_status_all"]); ?>
+                        </option>
+                        <option value="active" <?php echo ($consent_status == 'active') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["consent_status_active"]); ?>
+                        </option>
+                        <option value="expiring" <?php echo ($consent_status == 'expiring') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["consent_status_expiring"]); ?>
+                        </option>
+                        <option value="expired" <?php echo ($consent_status == 'expired') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["consent_status_expired"]); ?>
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearerleft"></div>
+        </div>
 
         <div class="Question">
             <label for="find"><?php echo escape($lang["consentsearch"]); ?><br/></label>

@@ -8136,6 +8136,23 @@ function get_workflow_states()
     return array_merge($default_workflow_states, $additional_archive_states);
 }
 
+function get_workflow_state_names(): array
+{
+    global $lang, $additional_archive_states;
+
+    $workflow_states = [];
+
+    for ($n=-2; $n<=3; $n++) {
+        $workflow_states["$n"] = $lang["status" . $n];
+    }
+       
+    foreach ($additional_archive_states as $additional_archive_state) {
+        $workflow_states["$additional_archive_state"] = $lang["status{$additional_archive_state}"] ?? $additional_archive_state;
+    }
+
+    return $workflow_states;
+}
+
 /**
 * Delete the specified metadata field. Also delets any node or resource_data rows associated with that field
 *

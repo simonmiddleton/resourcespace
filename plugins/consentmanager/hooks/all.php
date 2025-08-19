@@ -76,7 +76,7 @@ function HookConsentmanagerAllRender_actions_add_collection_option($top_actions,
 
 function HookConsentmanagerAllTopnavlinksafterhome()
 {
-    global $baseurl,$lang;
+    global $baseurl, $lang;
     if (!checkperm("t") && checkperm("cm")) {
         ?>
         <li class="HeaderLink">
@@ -86,4 +86,49 @@ function HookConsentmanagerAllTopnavlinksafterhome()
         </li>
         <?php
     }
+}
+
+function HookConsentmanagerAllCron()
+{
+    global $consent_expiry_notification, $consent_expired_workflow_state;
+
+    // Check if expiry notifications are enabled globally
+    if ($consent_expiry_notification) {
+        consentmanager_process_expiry_notifications();
+    } else {
+        logScript("Consent Manager: notifications disabled globally");
+    }
+
+    // Check if expired workflow state has been set
+    if ($consent_expired_workflow_state !== '') {
+        consentmanager_process_expired_auto_archive();
+    } else {
+        logScript("Consent Manager: automatic archiving disabled");
+    }
+}
+
+function HookConsentmanagerAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
+{
+    if (substr($search, 0, 8) == '!consent') {
+        $consent_ref = substr($search, 8);
+    } else {
+        return null;
+    }
+
+    $consent = consentmanager_get_consent($consent_ref);
+
+    $ids = isset($consent['resources']) ? $consent['resources'] : [];
+
+    // No results - we must still run a query but one that returns no results.
+    if (count($ids) == 0) {
+        $ids = [-1];
+    }
+
+    $in_sql = ps_param_insert(count($ids));
+    $params = ps_param_fill($ids, "i");
+    $sql = new PreparedStatementQuery();
+    $sql->sql = "SELECT DISTINCT r.hit_count score, $select->sql FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.ref in ($in_sql) ORDER BY FIELD(r.ref, $in_sql)";
+    $sql->parameters = array_merge($select->parameters, $sql_join->parameters, $params, $params);
+    
+    return $sql;
 }
