@@ -373,7 +373,8 @@ function licensemanager_process_expiry_notifications(): bool {
 
             $expiry_notification->set_subject($applicationname . ": " . $lang['license_notification_expiring_soon']);
 
-            $expiry_notification->set_text($lang['license_notification_message'] . "<br /><br />", ['%URL'], [generateURL($baseurl . "/plugins/licensemanager/pages/list.php", ["license_status" => "expiring"])]);
+            $expiry_notification->set_text($lang['license_notification_message'] . "<br />");
+            $expiry_notification->append_text("<a href='" . generateURL($baseurl . "/plugins/licensemanager/pages/list.php", ["license_status" => "expiring"]) . "'>" . $lang['license_notification_link'] . "</a><br /><br />");
             $expiry_notification->append_text(" <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>" . $lang['license_notification_user_pref'] . "</a><br />");
             $expiry_notification->append_text(" <a href='" . generateURL($baseurl . "/plugins/licensemanager/pages/setup.php") . "'>" . $lang['license_notification_global_pref'] . "</a>");
 

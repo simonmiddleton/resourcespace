@@ -53,6 +53,7 @@ $lang["license_view_linked_resources_short"] = "View";
 $lang['license_no_archiving'] = "No Change";
 
 $lang['license_notification_expiring_soon'] = "Licenses Expiring Soon";
-$lang['license_notification_message'] = "There are some licenses that are expiring soon. View them <a href='%URL'>here</a>";
+$lang['license_notification_message'] = "There are some licenses expiring soon.";
+$lang['license_notification_link'] = "View them here";
 $lang['license_notification_user_pref'] = "Change whether you receive these notifications";
 $lang['license_notification_global_pref'] = "Disable these notifications for everyone";

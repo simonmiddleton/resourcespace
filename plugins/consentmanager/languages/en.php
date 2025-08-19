@@ -53,6 +53,7 @@ $lang["consent_view_linked_resources_short"] = "View";
 $lang['consent_no_archiving'] = "No Change";
 
 $lang['consent_notification_expiring_soon'] = "Consents Expiring Soon";
-$lang['consent_notification_message'] = "There are some consents that are expiring soon. View them <a href='%URL'>here</a>";
+$lang['consent_notification_message'] = "There are some consents expiring soon.";
+$lang['consent_notification_link'] = "View them here";
 $lang['consent_notification_user_pref'] = "Change whether you receive these notifications";
 $lang['consent_notification_global_pref'] = "Disable these notifications for everyone";
