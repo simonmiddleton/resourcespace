@@ -142,6 +142,13 @@ foreach ($plugins as $plugin) {
 
         $count = 0;
         foreach ($missing as $mkey) {
+            $array=false;
+            if (is_array($lang_en_extended[$mkey])) {
+                // Process arrays as strings and reassemble at the end.
+                $lang_en_extended[$mkey]=json_encode($lang_en_extended[$mkey]);
+                $array=true;
+            }
+            
             if (!is_string($lang_en_extended[$mkey])) {
                 continue;
             }
@@ -183,9 +190,13 @@ In the event that you cannot provide a translation (with the exception of the ca
                     continue;
                 }
 
-                // Append it to the appropriate file.
                 if (is_string($result) && strlen($result) > 0 && strpos(strtolower($result), "calamity") === false && strpos(strtolower($result), "[error]") === false) {
+                       
                     $f = fopen($langfile, "a");
+
+                    // Convert an array back to array after being parsed as a string.
+                    if ($array) {$result=json_decode($result);if (is_null($result)) {continue;}}
+
                     fwrite($f, "\n\$lang[\"" . $mkey . "\"] = " . var_export($result, true) . ";");
                     fclose($f);
                     continue 2; // Jump out of the models loop
