@@ -180,36 +180,26 @@ include "../include/header.php";
 
         const top_right_menu_btn = jQuery(el);
         const context_menu = top_right_menu_btn.parents('.FeaturedSimpleTile').children('.context-menu-container');
-        console.debug('top_right_menu_btn = %o', top_right_menu_btn);
-        console.debug('context_menu = %o', context_menu);
-
-        // temporary? while working out the correct offsets
         let menu_el_tmp = context_menu.clone().appendTo('.FeaturedSimpleLinks');
         menu_el_tmp.css({
             'display': 'block',
             'visibility': 'hidden',
         });
-
-        // todo: determine responsive media rule
-        const is_responsive = window.matchMedia("(max-width: 600px)").matches;
-        console.debug('is_responsive = %o', is_responsive);
+        const is_responsive = window.matchMedia("(max-width: 900px)").matches;
         const uicenter_el = document.getElementById('UICenter');
-        console.debug('uicenter_el: scrollTop = %o; scrollLeft = %o', uicenter_el.scrollTop, uicenter_el.scrollLeft);
+        console.debug('top_right_menu_btn = %o', top_right_menu_btn);
+        console.debug('context_menu = %o', context_menu);
+        console.debug('is_responsive = %o', is_responsive);
 
         let off_top = 0;
         let off_left = 0;
         let off_top_rev = 0;
         let off_left_rev = 0;
-
-        // Bounding Boxes
         const header_bb = document.getElementById('Header').getBoundingClientRect();
         const container_bb = document.querySelector('.FeaturedSimpleLinks').getBoundingClientRect();
         const menu_btn_bb = el.getBoundingClientRect();
         const menu_btn_computed_style = getComputedStyle(el);
         const menu_bb = menu_el_tmp[0].getBoundingClientRect();
-        console.debug('menu_el_tmp = %o', menu_el_tmp);
-        console.debug('menu_bb = %o', menu_bb);
-        console.debug('container_bb = %o', container_bb);
 
         /*
         Determine the position offset for the menu so it's within the proximity of the calling top right menu icon. 
@@ -217,28 +207,30 @@ include "../include/header.php";
         - the bounding box (BB) ignores margins so we have to account for those too;
         - in responsive mode, instead of the UICenter, the body is overflowing vertically (Y axis);
         */
-        off_left_rev -= menu_bb.width + menu_btn_bb.width - (2 * parseInt(menu_btn_computed_style.margin));
         if (is_responsive) {
             off_top += document.body.scrollTop
                 - header_bb.height
                 - document.getElementById('SearchBarContainer').getBoundingClientRect().height;
+            off_top_rev = menu_bb.height - menu_btn_bb.height + 50;
+            off_left_rev -= menu_bb.width + menu_btn_bb.width + parseInt(menu_btn_computed_style.margin);
         } else {
+            const menu_btn_margin = 2 * parseInt(menu_btn_computed_style.margin);
             off_top += uicenter_el.scrollTop - header_bb.height;
-            off_left += /* uicenter_el.scrollLeft +  */(2 * parseInt(menu_btn_computed_style.margin));
-            // off_left_rev += uicenter_el.scrollLeft;
+            off_left += menu_btn_margin;
+            off_left_rev -= menu_bb.width + menu_btn_bb.width - menu_btn_margin;
         }
 
-        // end of position calculations
-        console.debug("off_top = %o -- off_left = %o", off_top, off_left);
-        menu_el_tmp.remove();
-
-        // For a better UX, check if the menu will go outside the container boundaries to ensure users always have the
-        // menu in sight
+        // For a better UX, check if the menu will go outside the container/view boundaries to ensure users always have
+        // the menu in sight
         if ((menu_btn_bb.left + off_left + menu_bb.width) > container_bb.right) {
             off_left = off_left_rev;
-        } else if (is_responsive && (menu_btn_bb.top + off_top + menu_bb.height) > window.innerHeight) {
-            off_top -= menu_bb.height - btn_bb.height - parseInt(menu_btn_computed_style.marginBottom);
         }
+        if (is_responsive && (menu_btn_bb.top + menu_bb.height) > window.innerHeight) {
+            off_top -= off_top_rev;
+        }
+
+        console.debug("off_top = %o -- off_left = %o", off_top, off_left);
+        menu_el_tmp.remove();
 
         context_menu
             .css({

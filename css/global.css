@@ -1599,7 +1599,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     top: 0;
     left: 0;
     width: 230px;
-    /* z-index: 1000; */
 }
 
 .MessageUnread {
