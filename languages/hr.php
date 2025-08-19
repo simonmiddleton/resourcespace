@@ -3000,3 +3000,4 @@ $lang["missing_required_fields_intro"] = 'Resursi u kolekciji pojavljuju se ispo
 $lang["action_update_now"] = 'Ažuriraj sada';
 $lang["errors"] = 'Pogreške';
 $lang["error_savefirst"] = 'Molimo vas da spremite svoje promjene';
+$lang["language-be"] = 'Bjeloruski';

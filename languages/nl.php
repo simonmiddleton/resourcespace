@@ -3039,3 +3039,4 @@ $lang["missing_required_fields_intro"] = 'Hulpbronnen in de collectie verschijne
 $lang["action_update_now"] = 'Nu bijwerken';
 $lang["errors"] = 'Fouten';
 $lang["error_savefirst"] = 'Sla uw wijzigingen op';
+$lang["language-be"] = 'Belarussisch';

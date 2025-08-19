@@ -3073,3 +3073,4 @@ $lang["missing_required_fields_intro"] = 'コレクション内のリソース�
 $lang["action_update_now"] = '今すぐ更新';
 $lang["errors"] = 'エラー';
 $lang["error_savefirst"] = '変更を保存してください';
+$lang["language-be"] = 'ベラルーシ語';

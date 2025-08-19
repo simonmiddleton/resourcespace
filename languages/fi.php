@@ -3176,3 +3176,4 @@ $lang["missing_required_fields_intro"] = 'Kokoelman resurssit n채kyv채t alla, j�
 $lang["action_update_now"] = 'P채ivit채 nyt';
 $lang["errors"] = 'Virheet';
 $lang["error_savefirst"] = 'Ole hyv채 ja tallenna muutoksesi';
+$lang["language-be"] = 'Belarusian';

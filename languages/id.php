@@ -3091,3 +3091,4 @@ $lang["missing_required_fields_intro"] = 'Sumber daya dalam koleksi muncul di ba
 $lang["action_update_now"] = 'Perbarui sekarang';
 $lang["errors"] = 'Kesalahan';
 $lang["error_savefirst"] = 'Silakan simpan perubahan Anda';
+$lang["language-be"] = 'Belarusian';

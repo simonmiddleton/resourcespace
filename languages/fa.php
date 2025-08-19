@@ -2934,3 +2934,4 @@ $lang["missing_required_fields_intro"] = 'منابع در مجموعه در زی
 $lang["action_update_now"] = 'به‌روزرسانی اکنون';
 $lang["errors"] = 'خطاها';
 $lang["error_savefirst"] = 'لطفاً تغییرات خود را ذخیره کنید';
+$lang["language-be"] = 'بلاروسی';

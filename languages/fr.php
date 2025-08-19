@@ -3065,3 +3065,4 @@ $lang["missing_required_fields_intro"] = 'Les ressources dans la collection appa
 $lang["action_update_now"] = 'Mettre à jour maintenant';
 $lang["errors"] = 'Erreurs';
 $lang["error_savefirst"] = 'Veuillez enregistrer vos modifications';
+$lang["language-be"] = 'Biélorusse';

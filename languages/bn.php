@@ -2925,3 +2925,4 @@ $lang["missing_required_fields_intro"] = 'সংগ্রহে সম্পদ�
 $lang["action_update_now"] = 'এখন আপডেট করুন';
 $lang["errors"] = 'ত্রুটি';
 $lang["error_savefirst"] = 'আপনার পরিবর্তনগুলি সংরক্ষণ করুন';
+$lang["language-be"] = 'বেলারুশিয়ান';

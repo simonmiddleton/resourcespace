@@ -2940,3 +2940,4 @@ $lang["missing_required_fields_intro"] = 'संग्रह में संस
 $lang["action_update_now"] = 'अब अपडेट करें';
 $lang["errors"] = 'त्रुटियाँ';
 $lang["error_savefirst"] = 'कृपया अपने परिवर्तनों को सहेजें';
+$lang["language-be"] = 'बेलारूसी';

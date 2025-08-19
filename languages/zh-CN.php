@@ -3141,3 +3141,4 @@ $lang["missing_required_fields_intro"] = '集合中的资源按不完整的必�
 $lang["action_update_now"] = '立即更新';
 $lang["errors"] = '错误';
 $lang["error_savefirst"] = '请保存您的更改';
+$lang["language-be"] = '白俄罗斯语';

@@ -2920,3 +2920,4 @@ $lang["missing_required_fields_intro"] = 'Mae\'r adnoddau yn y casgliad yn ymdda
 $lang["action_update_now"] = 'Diweddarwch nawr';
 $lang["errors"] = 'Gwallau';
 $lang["error_savefirst"] = 'Os gwelwch yn dda, arbedwch eich newidiadau';
+$lang["language-be"] = 'Belarusian';

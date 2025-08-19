@@ -3170,3 +3170,4 @@ $lang["missing_required_fields_intro"] = 'Ressurser i samlingen vises nedenfor s
 $lang["action_update_now"] = 'Oppdater nå';
 $lang["errors"] = 'Feil';
 $lang["error_savefirst"] = 'Vennligst lagre endringene dine';
+$lang["language-be"] = 'Hviterussisk';

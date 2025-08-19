@@ -3218,6 +3218,7 @@ $lang["language-en"] = "International English";
 $lang["language-en-US"] = "American English";
 $lang["language-ar"] = "Arabic";
 $lang["language-id"] = "Indonesian";
+$lang["language-be"] = "Belarusian";
 $lang["language-bn"] = "Bengali";
 $lang["language-ca"] = "Catalan";
 $lang["language-cs"] = "Czech";

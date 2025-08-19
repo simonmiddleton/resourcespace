@@ -3011,3 +3011,4 @@ $lang["missing_required_fields_intro"] = 'Le risorse nella collezione appaiono d
 $lang["action_update_now"] = 'Aggiorna ora';
 $lang["errors"] = 'Errori';
 $lang["error_savefirst"] = 'Si prega di salvare le modifiche';
+$lang["language-be"] = 'Bielorusso';

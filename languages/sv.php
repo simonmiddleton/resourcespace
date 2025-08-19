@@ -3216,3 +3216,4 @@ $lang["missing_required_fields_intro"] = 'Resurser i samlingen visas nedan sorte
 $lang["action_update_now"] = 'Uppdatera nu';
 $lang["errors"] = 'Fel';
 $lang["error_savefirst"] = 'Vänligen spara dina ändringar';
+$lang["language-be"] = 'Belarusian';

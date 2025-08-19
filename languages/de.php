@@ -3235,3 +3235,4 @@ $lang["missing_required_fields_intro"] = 'Ressourcen in der Sammlung erscheinen 
 $lang["action_update_now"] = 'Jetzt aktualisieren';
 $lang["errors"] = 'Fehler';
 $lang["error_savefirst"] = 'Bitte speichern Sie Ihre Änderungen';
+$lang["language-be"] = 'Belarussisch';

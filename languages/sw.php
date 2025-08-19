@@ -2931,3 +2931,4 @@ $lang["missing_required_fields_intro"] = 'Rasilimali katika mkusanyiko zinaoneka
 $lang["action_update_now"] = 'Sasisha sasa';
 $lang["errors"] = 'Makosa';
 $lang["error_savefirst"] = 'Tafadhali hifadhi mabadiliko yako';
+$lang["language-be"] = 'Belarusian';

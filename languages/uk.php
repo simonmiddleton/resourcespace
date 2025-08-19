@@ -2926,3 +2926,4 @@ $lang["missing_required_fields_intro"] = 'Ресурси в колекції з\
 $lang["action_update_now"] = 'Оновити зараз';
 $lang["errors"] = 'Помилки';
 $lang["error_savefirst"] = 'Будь ласка, збережіть свої зміни';
+$lang["language-be"] = 'білоруська';

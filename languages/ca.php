@@ -3033,3 +3033,4 @@ $lang["missing_required_fields_intro"] = 'Els recursos de la col·lecció aparei
 $lang["action_update_now"] = 'Actualitza ara';
 $lang["errors"] = 'Errors';
 $lang["error_savefirst"] = 'Si us plau, desa els teus canvis';
+$lang["language-be"] = 'Belarús';

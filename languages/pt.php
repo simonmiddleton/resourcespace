@@ -3048,3 +3048,4 @@ $lang["missing_required_fields_intro"] = 'Os recursos na coleção aparecem abai
 $lang["action_update_now"] = 'Atualizar agora';
 $lang["errors"] = 'Erros';
 $lang["error_savefirst"] = 'Por favor, salve suas alterações';
+$lang["language-be"] = 'Bielorrusso';

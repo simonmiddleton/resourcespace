@@ -3011,3 +3011,4 @@ $lang["missing_required_fields_intro"] = 'Resursele din colecție apar mai jos, 
 $lang["action_update_now"] = 'Actualizează acum';
 $lang["errors"] = 'Erori';
 $lang["error_savefirst"] = 'Vă rugăm să salvați modificările dumneavoastră';
+$lang["language-be"] = 'Belarusian';

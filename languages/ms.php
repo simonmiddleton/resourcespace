@@ -2921,3 +2921,4 @@ $lang["missing_required_fields_intro"] = 'Sumber dalam koleksi muncul di bawah d
 $lang["action_update_now"] = 'Kemaskini sekarang';
 $lang["errors"] = 'Ralat';
 $lang["error_savefirst"] = 'Sila simpan perubahan anda';
+$lang["language-be"] = 'Belarusian';

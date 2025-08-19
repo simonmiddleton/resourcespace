@@ -2932,3 +2932,4 @@ $lang["missing_required_fields_intro"] = 'Koleksiyondaki kaynaklar, eksik gereks
 $lang["action_update_now"] = 'Şimdi güncelle';
 $lang["errors"] = 'Hatalar';
 $lang["error_savefirst"] = 'Lütfen değişikliklerinizi kaydedin';
+$lang["language-be"] = 'Belarusça';

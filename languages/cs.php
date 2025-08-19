@@ -2926,3 +2926,4 @@ $lang["missing_required_fields_intro"] = 'Zdroje v kolekci se zobrazují níže 
 $lang["action_update_now"] = 'Aktualizovat nyní';
 $lang["errors"] = 'Chyby';
 $lang["error_savefirst"] = 'Prosím, uložte své změny';
+$lang["language-be"] = 'Belarusian';

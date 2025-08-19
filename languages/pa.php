@@ -2934,3 +2934,4 @@ $lang["missing_required_fields_intro"] = 'ਸੰਗ੍ਰਹਿ ਵਿੱਚ ਸ
 $lang["action_update_now"] = 'ਹੁਣ ਅੱਪਡੇਟ ਕਰੋ';
 $lang["errors"] = 'ਗਲਤੀਆਂ';
 $lang["error_savefirst"] = 'ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਬਦਲਾਅ ਸੁਰੱਖਿਅਤ ਕਰੋ';
+$lang["language-be"] = 'ਬੇਲਾਰੂਸੀ';

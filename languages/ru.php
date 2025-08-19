@@ -3015,3 +3015,4 @@ $lang["missing_required_fields_intro"] = 'Ресурсы в коллекции �
 $lang["action_update_now"] = 'Обновить сейчас';
 $lang["errors"] = 'Ошибки';
 $lang["error_savefirst"] = 'Пожалуйста, сохраните ваши изменения';
+$lang["language-be"] = 'Белорусский';

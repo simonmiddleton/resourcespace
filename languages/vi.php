@@ -2923,3 +2923,4 @@ $lang["missing_required_fields_intro"] = 'Tài nguyên trong bộ sưu tập xu�
 $lang["action_update_now"] = 'Cập nhật ngay bây giờ';
 $lang["errors"] = 'Lỗi';
 $lang["error_savefirst"] = 'Vui lòng lưu thay đổi của bạn';
+$lang["language-be"] = 'Belarusian';

@@ -2933,3 +2933,4 @@ $lang["missing_required_fields_intro"] = 'اجتماع میں وسائل نیچ�
 $lang["action_update_now"] = 'ابھی اپ ڈیٹ کریں';
 $lang["errors"] = 'غلطیاں';
 $lang["error_savefirst"] = 'براہ کرم اپنی تبدیلیاں محفوظ کریں';
+$lang["language-be"] = 'Belarusian';

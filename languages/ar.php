@@ -3145,3 +3145,4 @@ $lang["missing_required_fields_intro"] = 'تظهر الموارد في المج�
 $lang["action_update_now"] = 'تحديث الآن';
 $lang["errors"] = 'أخطاء';
 $lang["error_savefirst"] = 'يرجى حفظ التغييرات الخاصة بك';
+$lang["language-be"] = 'بيلاروسية';

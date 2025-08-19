@@ -3058,3 +3058,4 @@ $lang["missing_required_fields_intro"] = 'Zasoby w kolekcji pojawiają się poni
 $lang["action_update_now"] = 'Zaktualizuj teraz';
 $lang["errors"] = 'Błędy';
 $lang["error_savefirst"] = 'Proszę zapisać swoje zmiany';
+$lang["language-be"] = 'Białoruski';

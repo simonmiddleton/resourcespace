@@ -2920,3 +2920,4 @@ $lang["missing_required_fields_intro"] = 'Ang mga mapagkukunan sa koleksyon ay l
 $lang["action_update_now"] = 'I-update na';
 $lang["errors"] = 'Mga Error';
 $lang["error_savefirst"] = 'Mangyaring i-save ang iyong mga pagbabago';
+$lang["language-be"] = 'Belarusian';

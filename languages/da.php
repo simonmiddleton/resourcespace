@@ -2996,3 +2996,4 @@ $lang["missing_required_fields_intro"] = 'Ressourcer i samlingen vises nedenfor 
 $lang["action_update_now"] = 'Opdater nu';
 $lang["errors"] = 'Fejl';
 $lang["error_savefirst"] = 'Gem venligst dine ændringer';
+$lang["language-be"] = 'Hviderussisk';

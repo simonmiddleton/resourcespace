@@ -2935,3 +2935,4 @@ $lang["missing_required_fields_intro"] = '컬렉션의 리소스는 불완전한
 $lang["action_update_now"] = '지금 업데이트';
 $lang["errors"] = '오류';
 $lang["error_savefirst"] = '변경 사항을 저장해 주세요';
+$lang["language-be"] = '벨라루스어';

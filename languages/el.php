@@ -3000,3 +3000,4 @@ $lang["missing_required_fields_intro"] = 'Οι πόροι στη συλλογή 
 $lang["action_update_now"] = 'Ενημέρωση τώρα';
 $lang["errors"] = 'Σφάλματα';
 $lang["error_savefirst"] = 'Παρακαλώ αποθηκεύστε τις αλλαγές σας';
+$lang["language-be"] = 'Λευκορωσικά';

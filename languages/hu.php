@@ -2928,3 +2928,4 @@ $lang["missing_required_fields_intro"] = 'A gyűjteményben található erőforr
 $lang["action_update_now"] = 'Frissítés most';
 $lang["errors"] = 'Hibák';
 $lang["error_savefirst"] = 'Kérjük, mentse el a módosításait';
+$lang["language-be"] = 'Belorusz';

@@ -2918,3 +2918,4 @@ $lang["missing_required_fields_intro"] = 'ทรัพยากรในคอ�
 $lang["action_update_now"] = 'อัปเดตตอนนี้';
 $lang["errors"] = 'ข้อผิดพลาด';
 $lang["error_savefirst"] = 'กรุณาบันทึกการเปลี่ยนแปลงของคุณ';
+$lang["language-be"] = 'เบลารุส';
