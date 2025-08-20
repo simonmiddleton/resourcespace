@@ -2679,3 +2679,32 @@ label {
 /* Search List View */
 .ListSearch {word-break: break-word;}
 .ListSearchTools {min-width: 100px;}
+
+
+/* Toast notifications - toastify-js */
+.toastify-success {
+    background: white;
+    color: black;
+    font-weight: 500;
+    border-radius: 7px;
+    border-left: 10px solid #47d764;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, .12), 0 10px 36px -4px rgba(156, 156, 156, 0.3);
+}
+
+.toastify-error {
+    background: white;
+    color: black;
+    font-weight: 500;
+    border-radius: 7px;
+    border-left: 10px solid #ff3324;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, .12), 0 10px 36px -4px rgba(156, 156, 156, 0.3);
+}
+
+.toast-close {
+    min-width: unset;
+    vertical-align: unset;
+    min-height: unset;
+    margin: 0 0 0 10px;
+    color: black;
+    box-shadow: none;
+}

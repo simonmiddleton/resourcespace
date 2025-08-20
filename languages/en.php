@@ -1117,6 +1117,7 @@ $lang["contactsheetintrotext"] = "Please select the configuration options you'd 
 $lang["size"] = "Size";
 $lang["orientation"] = "Orientation";
 $lang["requiredfield"] = "This is a required field";
+$lang["requiredfieldcount"] = "%%COUNT%% required field(s) have not been completed.";
 $lang["requiredfield_resource_type"] = "Resource type: This is a required field";
 $lang["requiredfields"] = "Please review the form and try again. The following fields were not completed:";
 $lang["requiredfields-general"] = "Please complete all required fields";

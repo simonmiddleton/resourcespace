@@ -2611,7 +2611,15 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
         {
         error_fields[0].scrollIntoView();
         }
-    styledalert('<?php echo escape($lang["error"])?>','<?php echo implode("<br />",$save_errors); ?>',450);
+        
+        <?php
+        foreach ($save_errors as $save_error) {
+            ?>
+            toastNotification('error', '<?php echo escape($save_error); ?>');
+            <?php
+        }
+        ?>
+
     </script>
     <?php
     }

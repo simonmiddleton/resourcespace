@@ -1010,6 +1010,7 @@ function ModalClose()
     jQuery('#modal_overlay').fadeOut('fast');
     jQuery('#modal').hide();
     jQuery('#modal').html('');
+    jQuery('.toastify').hide();
 
     // Trigger an event so we can detect when a modal is closed
     if (typeof modalurl != 'undefined') {
@@ -1092,6 +1093,23 @@ function isJson(str) {
         return false;
     }
     return true;
+}
+
+function toastNotification(type, text) {
+    if (type == "success") {
+        displayTime = 3000;
+    } else {
+        displayTime = 10000;
+    }
+    Toastify({
+    text: text,
+    className: "toastify-" + type,
+    close: true,
+    gravity: "bottom",
+    position: "right",
+    duration: displayTime,
+    escapeMarkup: false
+}).showToast();
 }
 
 function styledalert(title,text,minwidth){
