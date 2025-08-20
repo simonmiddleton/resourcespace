@@ -152,7 +152,8 @@ foreach(tms_link_get_modules_mappings() as $module)
                 && $t < $current_tms_count;
             $t++
         ) {
-            foreach(preg_split('/[,\s]+/', $tms_resources[$t]["identifier"]) ?: [] as $identifier) {
+            $identifiers = tms_link_split_identifiers($tms_resources[$t]["identifier"]);
+            foreach($identifiers as $identifier) {
                 if(!$module['tms_uid_field_int'] || is_positive_int_loose($identifier)) {
                     $tms_query_ids[] = $identifier;
                 } else {
@@ -192,10 +193,11 @@ foreach(tms_link_get_modules_mappings() as $module)
 
             foreach($tmsresults as $tmsresult)
                 {
-                if(
+                if (
                     !in_array(
-                    $tmsresult[$module['tms_uid_field']],
-                    preg_split('/[,\s]+/',$tms_resources[$ri]["identifier"]))
+                        $tmsresult[$module['tms_uid_field']],
+                        tms_link_split_identifiers($tms_resources[$ri]["identifier"])
+                    )
                 ) {
                     continue;
                 }
