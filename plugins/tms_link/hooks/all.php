@@ -89,7 +89,7 @@ function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
         // if call to tms_link_get_tms_data() does not return an array, error has occurred
         if (!is_array($tmsdata))
             {
-            return $tmsdata;  // return error message
+            return $tmsdata;
             }
 
         if(!array_key_exists($module_name, $tmsdata))
@@ -97,13 +97,19 @@ function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
             continue;
             }
 
+        /* When a module is configured to support multiple IDs (RS UID field is a dynamic keyword list or CSV of IDs)
+        the resource will only sync the last record to its metadata fields since there's no logic to flatten or
+        transform it. If that's needed, the TMS database admins should provide a module (table/view) with that data
+        already flatten. */
+        $tms_module_data = end($tmsdata[$module_name]);
+
         foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
             {
-            if($tms_rs_mapping['rs_field'] > 0 && $module['rs_uid_field'] != $tms_rs_mapping['rs_field'] && isset($tmsdata[$module_name][$tms_rs_mapping['tms_column']]))
+            if($tms_rs_mapping['rs_field'] > 0 && $module['rs_uid_field'] != $tms_rs_mapping['rs_field'] && isset($tms_module_data[$tms_rs_mapping['tms_column']]))
                 {
                 debug("tms_link: updating field '{$field}' with data from column '{$tms_rs_mapping['tms_column']}' for resource id #{$resource}");
 
-                update_field($resource, $tms_rs_mapping['rs_field'], $tmsdata[$module_name][$tms_rs_mapping['tms_column']]);
+                update_field($resource, $tms_rs_mapping['rs_field'], $tms_module_data[$tms_rs_mapping['tms_column']]);
                 }
             }
         }
