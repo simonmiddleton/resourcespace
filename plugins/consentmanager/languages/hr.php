@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Pristanci uskoro istječu';
 $lang["consent_notification_message"] = 'Postoje neki pristanak koji uskoro istječu. Pogledajte ih <a href=\'%URL\'>ovdje</a>';
 $lang["consent_notification_user_pref"] = 'Promijenite hoćete li primati ove obavijesti';
 $lang["consent_notification_global_pref"] = 'Onemogući ove obavijesti za sve';
+$lang["consent_notification_link"] = 'Pogledajte ih ovdje';

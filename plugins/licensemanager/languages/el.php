@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = 'Άδειες που λήγουν 
 $lang["license_notification_message"] = 'Υπάρχουν άδειες που λήγουν σύντομα. Δείτε τις <a href=\'%URL\'>εδώ</a>';
 $lang["license_notification_user_pref"] = 'Αλλάξτε αν θα λαμβάνετε αυτές τις ειδοποιήσεις';
 $lang["license_notification_global_pref"] = 'Απενεργοποιήστε αυτές τις ειδοποιήσεις για όλους';
+$lang["license_notification_link"] = 'Δείτε τα εδώ';

@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Toestemmingen die binnenkort verl
 $lang["consent_notification_message"] = 'Er zijn enkele toestemmingen die binnenkort verlopen. Bekijk ze <a href=\'%URL\'>hier</a>';
 $lang["consent_notification_user_pref"] = 'Wijzig of u deze meldingen wilt ontvangen';
 $lang["consent_notification_global_pref"] = 'Schakel deze meldingen voor iedereen uit';
+$lang["consent_notification_link"] = 'Bekijk ze hier';

@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Samtykker, der udløber snart';
 $lang["consent_notification_message"] = 'Der er nogle samtykker, der snart udløber. Se dem <a href=\'%URL\'>her</a>';
 $lang["consent_notification_user_pref"] = 'Skift om du vil modtage disse meddelelser';
 $lang["consent_notification_global_pref"] = 'Deaktiver disse meddelelser for alle';
+$lang["consent_notification_link"] = 'Se dem her';

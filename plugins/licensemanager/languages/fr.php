@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = 'Licences expiring bientôt';
 $lang["license_notification_message"] = 'Il y a des licences qui expirent bientôt. Consultez-les <a href=\'%URL\'>ici</a>';
 $lang["license_notification_user_pref"] = 'Changez si vous souhaitez recevoir ces notifications';
 $lang["license_notification_global_pref"] = 'Désactiver ces notifications pour tout le monde';
+$lang["license_notification_link"] = 'Voir ici';

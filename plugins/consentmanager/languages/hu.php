@@ -46,3 +46,4 @@ $lang["consent_notification_expiring_soon"] = 'Hamarosan lejáró hozzájárulá
 $lang["consent_notification_message"] = 'Hamarosan lejár néhány hozzájárulás. Tekintse meg őket <a href=\'%URL\'>itt</a>';
 $lang["consent_notification_user_pref"] = 'Változtassa meg, hogy kap-e értesítéseket';
 $lang["consent_notification_global_pref"] = 'Ezeket a értesítéseket mindenki számára tiltsa le';
+$lang["consent_notification_link"] = 'Nézd meg őket itt';

@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Consentimentos Expirando em Breve
 $lang["consent_notification_message"] = 'Há alguns consentimentos que estão prestes a expirar. Veja-os <a href=\'%URL\'>aqui</a>';
 $lang["consent_notification_user_pref"] = 'Altere se deseja receber estas notificações';
 $lang["consent_notification_global_pref"] = 'Desativar essas notificações para todos';
+$lang["consent_notification_link"] = 'Veja-os aqui';

@@ -47,3 +47,4 @@ $lang["consent_notification_expiring_soon"] = 'Idhini Zinazokaribia Kuisha';
 $lang["consent_notification_message"] = 'Kuna baadhi ya idhini ambazo zinakaribia kuisha. Tazama hapa <a href=\'%URL\'>hapa</a>';
 $lang["consent_notification_user_pref"] = 'Badilisha ikiwa unapata arifa hizi';
 $lang["consent_notification_global_pref"] = 'Zima hizi arifa kwa kila mtu';
+$lang["consent_notification_link"] = 'Tazama hapa';

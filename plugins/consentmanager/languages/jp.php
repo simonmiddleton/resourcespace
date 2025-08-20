@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = '同意が間もなく期限切れ
 $lang["consent_notification_message"] = 'いくつかの同意が間もなく期限切れになります。ここで確認してください <a href=\'%URL\'>こちら</a>';
 $lang["consent_notification_user_pref"] = 'これらの通知を受け取るかどうかを変更する';
 $lang["consent_notification_global_pref"] = '全員のためにこれらの通知を無効にする';
+$lang["consent_notification_link"] = 'ここで表示します';

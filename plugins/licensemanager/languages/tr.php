@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = 'Lisanslar Yakında Süresi Dolaca
 $lang["license_notification_message"] = 'Yakında sona erecek bazı lisanslar var. Onları <a href=\'%URL\'>buradan</a> görüntüleyin';
 $lang["license_notification_user_pref"] = 'Bu bildirimleri alıp almayacağınızı değiştirin';
 $lang["license_notification_global_pref"] = 'Bu bildirimleri herkes için devre dışı bırakın';
+$lang["license_notification_link"] = 'Onları burada görüntüle';

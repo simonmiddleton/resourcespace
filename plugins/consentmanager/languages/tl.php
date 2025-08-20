@@ -46,3 +46,4 @@ $lang["consent_notification_expiring_soon"] = 'Malapit nang mag-expire ang mga P
 $lang["consent_notification_message"] = 'May ilang pahintulot na malapit nang mag-expire. Tingnan ang mga ito <a href=\'%URL\'>dito</a>';
 $lang["consent_notification_user_pref"] = 'Baguhin kung tumatanggap ka ng mga abisong ito';
 $lang["consent_notification_global_pref"] = 'I-disable ang mga notification na ito para sa lahat';
+$lang["consent_notification_link"] = 'Tingnan ang mga ito dito';

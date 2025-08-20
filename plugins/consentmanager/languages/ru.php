@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Согласия, срок дей
 $lang["consent_notification_message"] = 'Скоро истекает срок действия некоторых согласий. Посмотреть их <a href=\'%URL\'>здесь</a>';
 $lang["consent_notification_user_pref"] = 'Измените, получаете ли вы эти уведомления';
 $lang["consent_notification_global_pref"] = 'Отключить эти уведомления для всех';
+$lang["consent_notification_link"] = 'Посмотреть их здесь';

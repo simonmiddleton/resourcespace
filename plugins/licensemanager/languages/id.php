@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = 'Lisensi Segera Berakhir';
 $lang["license_notification_message"] = 'Ada beberapa lisensi yang akan segera kedaluwarsa. Lihat mereka <a href=\'%URL\'>di sini</a>';
 $lang["license_notification_user_pref"] = 'Ubah apakah Anda menerima notifikasi ini';
 $lang["license_notification_global_pref"] = 'Nonaktifkan notifikasi ini untuk semua orang';
+$lang["license_notification_link"] = 'Lihat di sini';

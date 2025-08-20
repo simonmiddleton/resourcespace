@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = 'Licencie, ktoré čoskoro vyprši
 $lang["license_notification_message"] = 'Niektoré licencie čoskoro vypršia. Pozrite si ich <a href=\'%URL\'>tu</a>';
 $lang["license_notification_user_pref"] = 'Zmeňte, či chcete dostávať tieto oznámenia';
 $lang["license_notification_global_pref"] = 'Deaktivujte tieto oznámenia pre všetkých';
+$lang["license_notification_link"] = 'Zobraziť ich tu';

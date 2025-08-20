@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Samtycken som snart går ut';
 $lang["consent_notification_message"] = 'Det finns några samtycken som snart går ut. Visa dem <a href=\'%URL\'>här</a>';
 $lang["consent_notification_user_pref"] = 'Ändra om du vill ta emot dessa meddelanden';
 $lang["consent_notification_global_pref"] = 'Inaktivera dessa meddelanden för alla';
+$lang["consent_notification_link"] = 'Visa dem här';

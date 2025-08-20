@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Suostumukset vanhenevat pian';
 $lang["consent_notification_message"] = 'On joitakin suostumuksia, jotka vanhenevat pian. Katso ne <a href=\'%URL\'>täältä</a>';
 $lang["consent_notification_user_pref"] = 'Muuta, saatko näitä ilmoituksia';
 $lang["consent_notification_global_pref"] = 'Poista nämä ilmoitukset käytöstä kaikilta';
+$lang["consent_notification_link"] = 'Näytä ne täällä';

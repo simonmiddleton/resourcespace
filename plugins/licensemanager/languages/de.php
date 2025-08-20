@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = 'Lizenzen, die bald ablaufen';
 $lang["license_notification_message"] = 'Es gibt einige Lizenzen, die bald ablaufen. Sie können sie <a href=\'%URL\'>hier</a> ansehen.';
 $lang["license_notification_user_pref"] = 'Ändern Sie, ob Sie diese Benachrichtigungen erhalten';
 $lang["license_notification_global_pref"] = 'Deaktiviere diese Benachrichtigungen für alle';
+$lang["license_notification_link"] = 'Hier ansehen';

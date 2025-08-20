@@ -45,3 +45,4 @@ $lang["license_notification_expiring_soon"] = 'لائسنس جلد ختم ہون
 $lang["license_notification_message"] = 'کچھ لائسنس ہیں جو جلد ختم ہونے والے ہیں۔ انہیں <a href=\'%URL\'>یہاں</a> دیکھیں';
 $lang["license_notification_user_pref"] = 'ان اطلاعات کی وصولی کے بارے میں تبدیلی کریں';
 $lang["license_notification_global_pref"] = 'یہ اطلاعات سب کے لیے غیر فعال کریں';
+$lang["license_notification_link"] = 'انہیں یہاں دیکھیں';

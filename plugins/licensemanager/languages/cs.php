@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = 'Licencí, které brzy vyprší';
 $lang["license_notification_message"] = 'Některé licence brzy vyprší. Zobrazit je <a href=\'%URL\'>zde</a>';
 $lang["license_notification_user_pref"] = 'Změňte, zda chcete tyto oznámení přijímat';
 $lang["license_notification_global_pref"] = 'Deaktivovat tyto oznámení pro všechny';
+$lang["license_notification_link"] = 'Zobrazit je zde';

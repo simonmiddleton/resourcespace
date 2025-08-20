@@ -47,3 +47,4 @@ $lang["consent_notification_expiring_soon"] = 'Cydsyniadau\'n Dod i Ben yn Fuan'
 $lang["consent_notification_message"] = 'Mae rhai caniatâd sy\'n dod i ben yn fuan. Edrychwch arnynt <a href=\'%URL\'>yma</a>';
 $lang["consent_notification_user_pref"] = 'Newid a ydych yn derbyn y rhybuddion hyn';
 $lang["consent_notification_global_pref"] = 'Anallu\'r hysbysiadau hyn ar gyfer pawb';
+$lang["consent_notification_link"] = 'Gweld nhw yma';

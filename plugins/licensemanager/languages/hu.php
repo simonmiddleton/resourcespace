@@ -45,3 +45,4 @@ $lang["license_notification_expiring_soon"] = 'Licenciek hamarosan lejárnak';
 $lang["license_notification_message"] = 'Néhány licenc hamarosan lejár. Tekintse meg őket <a href=\'%URL\'>itt</a>';
 $lang["license_notification_user_pref"] = 'Változtassa meg, hogy kap-e értesítéseket';
 $lang["license_notification_global_pref"] = 'Ezeket a értesítéseket mindenki számára tiltsa le';
+$lang["license_notification_link"] = 'Nézd meg őket itt';

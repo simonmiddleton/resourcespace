@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = '곧 만료되는 동의';
 $lang["consent_notification_message"] = '곧 만료될 몇 가지 동의가 있습니다. <a href=\'%URL\'>여기</a>에서 확인하세요.';
 $lang["consent_notification_user_pref"] = '이 알림을 받을지 여부를 변경하세요';
 $lang["consent_notification_global_pref"] = '모든 사용자에 대해 이러한 알림을 비활성화합니다';
+$lang["consent_notification_link"] = '여기에서 확인하세요';

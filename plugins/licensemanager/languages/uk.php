@@ -45,3 +45,4 @@ $lang["license_notification_expiring_soon"] = 'Ліцензії, що скоро
 $lang["license_notification_message"] = 'Є кілька ліцензій, термін дії яких скоро закінчується. Перегляньте їх <a href=\'%URL\'>тут</a>';
 $lang["license_notification_user_pref"] = 'Змініть, чи отримувати ці сповіщення';
 $lang["license_notification_global_pref"] = 'Вимкнути ці сповіщення для всіх';
+$lang["license_notification_link"] = 'Перегляньте їх тут';

@@ -45,3 +45,4 @@ $lang["license_notification_expiring_soon"] = 'Lesen Akan Tamat Tidak Lama Lagi'
 $lang["license_notification_message"] = 'Terdapat beberapa lesen yang akan tamat tidak lama lagi. Lihat mereka <a href=\'%URL\'>di sini</a>';
 $lang["license_notification_user_pref"] = 'Tukar sama ada anda menerima pemberitahuan ini';
 $lang["license_notification_global_pref"] = 'Matikan pemberitahuan ini untuk semua orang';
+$lang["license_notification_link"] = 'Lihat mereka di sini';

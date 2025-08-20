@@ -45,3 +45,4 @@ $lang["license_notification_expiring_soon"] = 'Leseni Zinazokaribia Kuisha';
 $lang["license_notification_message"] = 'Kuna leseni ambazo zinakaribia kuisha. Tazama hapa <a href=\'%URL\'>hapa</a>';
 $lang["license_notification_user_pref"] = 'Badilisha ikiwa unapata arifa hizi';
 $lang["license_notification_global_pref"] = 'Zima hizi arifa kwa kila mtu';
+$lang["license_notification_link"] = 'Tazama hapa';

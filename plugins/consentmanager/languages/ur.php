@@ -47,3 +47,4 @@ $lang["consent_notification_expiring_soon"] = 'اجازتیں جلد ختم ہو
 $lang["consent_notification_message"] = 'کچھ رضامندیاں ہیں جو جلد ختم ہونے والی ہیں۔ انہیں <a href=\'%URL\'>یہاں</a> دیکھیں';
 $lang["consent_notification_user_pref"] = 'ان اطلاعات کی وصولی کے بارے میں تبدیلی کریں';
 $lang["consent_notification_global_pref"] = 'یہ اطلاعات سب کے لیے غیر فعال کریں';
+$lang["consent_notification_link"] = 'انہیں یہاں دیکھیں';

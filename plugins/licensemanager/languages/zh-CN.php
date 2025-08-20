@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = '许可证即将到期';
 $lang["license_notification_message"] = '有一些许可证即将到期。请在<a href=\'%URL\'>这里</a>查看它们';
 $lang["license_notification_user_pref"] = '更改您是否接收这些通知';
 $lang["license_notification_global_pref"] = '为所有人禁用这些通知';
+$lang["license_notification_link"] = '在这里查看它们';
