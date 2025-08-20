@@ -4388,6 +4388,7 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
 
         # Store extension/data in the database
         ps_query("UPDATE resource SET archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=NOW(),no_file=0 WHERE ref=?", array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
+        unset($GLOBALS['get_resource_data_cache'][$r]);
 
         # Store original filename in field, if set
         if (!$ingest) {
@@ -4548,6 +4549,7 @@ function import_resource($path, $type, $title, $ingest = false, $extension = '')
     if ($r === false) {
         return false;
     }
+    debug("Created resource #{$r}");
 
     // Log this in case the original location is not stored anywhere else
     resource_log(

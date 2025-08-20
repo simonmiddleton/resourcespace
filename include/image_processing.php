@@ -3856,7 +3856,6 @@ function create_previews_using_im(
                 $th = $o_height;
             }
 
-            # Debug
             debug("Contemplating " . $ps[$n]["id"] . " (sw=$sw, tw=$tw, sh=$sh, th=$th, extension=$extension)");
 
             # Find the target path
