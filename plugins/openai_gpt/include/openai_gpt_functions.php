@@ -37,8 +37,40 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
     $output_language=$openai_gpt_language;
     if ($output_language=="") {$output_language=$language;} // Empty string = use the language of the current user.
     $language_instruction=" The response should be in language: " . $languages[$output_language];
-    
+
     $resources = array_filter($resources,"is_int_loose");
+
+    $results = [];
+    // Only get data for resources in resource types which have access to the target field.
+    // No need to get openai_gpt data for resources that update_field() can't update.
+    if ($target_field['global'] === 0 && isset($target_field['resource_types']))
+        {
+        $valid_resource_types = explode(',', $target_field['resource_types']);
+
+        if (count($valid_resource_types) > 0)
+            {
+            $filtered_resources = array();
+            foreach ($resources as $resource_ref)
+                {
+                $resource_ref_resource_type = get_resource_data($resource_ref)['resource_type'];
+                if (in_array($resource_ref_resource_type, $valid_resource_types))
+                    {
+                    $filtered_resources[] = $resource_ref;
+                    }
+                else
+                    {
+                    $results[$resource_ref] = false;
+                    }
+                }
+            $resources = $filtered_resources;
+            if (count($resources) === 0)
+                {
+                // All resources filtered out, nothing to process.
+                return $results;
+                }
+            }
+        }
+
     $valid_response = false;
     if(trim($file) != "")
         {
@@ -185,7 +217,6 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
         debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
         }
 
-    $results = [];
     foreach ($resources as $resource) {
         $valuepresent = false;
         if (!$GLOBALS["openai_gpt_overwrite_data"]) {
