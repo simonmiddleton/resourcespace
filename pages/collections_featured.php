@@ -200,7 +200,7 @@ include "../include/header.php";
         hideContextMenu();
 
         const top_right_menu_btn = jQuery(el);
-        const context_menu = top_right_menu_btn.parents('.FeaturedSimpleTile').children('.context-menu-container');
+        const context_menu = top_right_menu_btn.closest('.FeaturedSimpleTile, .BreadcrumbsBox').find('.context-menu-container');
         let menu_el_tmp = context_menu.clone().appendTo('.FeaturedSimpleLinks');
         menu_el_tmp.css({
             'display': 'block',
@@ -267,7 +267,7 @@ include "../include/header.php";
     /** Hide the Featured Collection (category) context menu */
     function hideContextMenu()
     {
-        let menu_content = jQuery('.FeaturedSimpleTile .context-menu-container');
+        let menu_content = jQuery('.FeaturedSimpleTile .context-menu-container, .BreadcrumbsBox .context-menu-container');
         if (menu_content.is(':visible')) {
             menu_content.slideUp(150);
         }
