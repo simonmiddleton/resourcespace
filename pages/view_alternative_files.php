@@ -70,7 +70,6 @@ if ($alt_access) {
         }
 
         $enable_alt_file_preview_mouseover = $alt_pre != '' && $alternative_file_previews_mouseover;
-        $css_PointerEventsNone = $enable_alt_file_preview_mouseover ? ' PointerEventsNone' : '';
         $rowspan = 1;
 
         if (
@@ -121,7 +120,7 @@ if ($alt_access) {
                         ]
                     ) . '&' . hook("previewextraurl");
                     ?>
-                    <div class="AlternativeFileImage <?php echo $css_PointerEventsNone; ?>">
+                    <div class="AlternativeFileImage">
                         <a href="<?php echo $url; ?>">
                             <img
                                 alt="<?php echo escape(i18n_get_translated($altfiles[$n]['name'] ?? "")); ?>"
