@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Συγκαταθέσεις που
 $lang["consent_notification_user_pref"] = 'Αλλάξτε αν θα λαμβάνετε αυτές τις ειδοποιήσεις';
 $lang["consent_notification_global_pref"] = 'Απενεργοποιήστε αυτές τις ειδοποιήσεις για όλους';
 $lang["consent_notification_link"] = 'Δείτε τα εδώ';
+$lang["consent_notification_message"] = 'Υπάρχουν κάποιες συγκαταθέσεις που λήγουν σύντομα.';

@@ -47,3 +47,4 @@ $lang["consent_notification_expiring_soon"] = 'การอนุญาตจะ
 $lang["consent_notification_user_pref"] = 'เปลี่ยนว่าคุณจะได้รับการแจ้งเตือนเหล่านี้หรือไม่';
 $lang["consent_notification_global_pref"] = 'ปิดการแจ้งเตือนเหล่านี้สำหรับทุกคน';
 $lang["consent_notification_link"] = 'ดูที่นี่';
+$lang["consent_notification_message"] = 'มีการอนุญาตบางอย่างที่จะหมดอายุในเร็วๆ นี้';

@@ -47,3 +47,4 @@ $lang["consent_notification_expiring_soon"] = 'সম্মতি শীঘ্�
 $lang["consent_notification_user_pref"] = 'এই বিজ্ঞপ্তিগুলি আপনি পাবেন কিনা তা পরিবর্তন করুন';
 $lang["consent_notification_global_pref"] = 'সবাইয়ের জন্য এই বিজ্ঞপ্তিগুলি অক্ষম করুন';
 $lang["consent_notification_link"] = 'এখানে সেগুলি দেখুন';
+$lang["consent_notification_message"] = 'কিছু সম্মতি শীঘ্রই মেয়াদ শেষ হচ্ছে।';

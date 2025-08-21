@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Súhlasy, ktoré čoskoro vyprši
 $lang["consent_notification_user_pref"] = 'Zmeňte, či chcete dostávať tieto oznámenia';
 $lang["consent_notification_global_pref"] = 'Deaktivujte tieto oznámenia pre všetkých';
 $lang["consent_notification_link"] = 'Zobraziť ich tu';
+$lang["consent_notification_message"] = 'Niektoré súhlasy čoskoro vypršia.';

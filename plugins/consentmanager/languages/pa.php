@@ -47,3 +47,4 @@ $lang["consent_notification_expiring_soon"] = 'ਸਹਿਮਤੀਆਂ ਜਲ�
 $lang["consent_notification_user_pref"] = 'ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਸਥਿਤੀ ਬਦਲੋ';
 $lang["consent_notification_global_pref"] = 'ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ ਨੂੰ ਸਭ ਲਈ ਅਯੋਗ ਕਰੋ';
 $lang["consent_notification_link"] = 'ਇਹਾਂ ਉਨ੍ਹਾਂ ਨੂੰ ਵੇਖੋ';
+$lang["consent_notification_message"] = 'ਕੁਝ ਸਹਿਮਤੀਆਂ ਜਲਦੀ ਖਤਮ ਹੋ ਰਹੀਆਂ ਹਨ।';

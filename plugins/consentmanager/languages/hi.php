@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'जल्द समाप्त �
 $lang["consent_notification_user_pref"] = 'इन सूचनाओं को प्राप्त करने के लिए परिवर्तन करें';
 $lang["consent_notification_global_pref"] = 'इन सूचनाओं को सभी के लिए अक्षम करें';
 $lang["consent_notification_link"] = 'यहाँ उन्हें देखें';
+$lang["consent_notification_message"] = 'कुछ सहमति जल्द ही समाप्त हो रही हैं।';

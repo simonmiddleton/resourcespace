@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = '即将到期的同意';
 $lang["consent_notification_user_pref"] = '更改您是否接收这些通知';
 $lang["consent_notification_global_pref"] = '为所有人禁用这些通知';
 $lang["consent_notification_link"] = '在这里查看它们';
+$lang["consent_notification_message"] = '有一些同意即将到期。';

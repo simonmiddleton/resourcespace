@@ -47,3 +47,4 @@ $lang["consent_notification_expiring_soon"] = 'Згоди, термін дії �
 $lang["consent_notification_user_pref"] = 'Змініть, чи отримуватимете ці сповіщення';
 $lang["consent_notification_global_pref"] = 'Вимкнути ці сповіщення для всіх';
 $lang["consent_notification_link"] = 'Перегляньте їх тут';
+$lang["consent_notification_message"] = 'Невдовзі закінчується термін дії деяких згод.';

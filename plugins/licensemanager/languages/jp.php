@@ -47,3 +47,4 @@ $lang["license_notification_expiring_soon"] = 'ライセンスの期限が近づ
 $lang["license_notification_user_pref"] = 'これらの通知を受け取るかどうかを変更する';
 $lang["license_notification_global_pref"] = '全員のためにこれらの通知を無効にする';
 $lang["license_notification_link"] = 'ここで表示します';
+$lang["license_notification_message"] = 'いくつかのライセンスが間もなく期限切れになります。';

@@ -49,3 +49,4 @@ $lang["consent_notification_expiring_soon"] = 'Consensi in scadenza presto';
 $lang["consent_notification_user_pref"] = 'Cambia se desideri ricevere queste notifiche';
 $lang["consent_notification_global_pref"] = 'Disabilita queste notifiche per tutti';
 $lang["consent_notification_link"] = 'Visualizzali qui';
+$lang["consent_notification_message"] = 'Ci sono alcuni consensi in scadenza a breve.';

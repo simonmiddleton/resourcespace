@@ -45,3 +45,4 @@ $lang["license_notification_expiring_soon"] = 'ਲਾਇਸੰਸ ਜਲਦੀ �
 $lang["license_notification_user_pref"] = 'ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਸਥਿਤੀ ਬਦਲੋ';
 $lang["license_notification_global_pref"] = 'ਸਭ ਲਈ ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨ ਅਯੋਗ ਕਰੋ';
 $lang["license_notification_link"] = 'ਇਹਾਂ ਉਨ੍ਹਾਂ ਨੂੰ ਵੇਖੋ';
+$lang["license_notification_message"] = 'ਕੁਝ ਲਾਇਸੰਸ ਜਲਦੀ ਖਤਮ ਹੋ ਰਹੇ ਹਨ।';

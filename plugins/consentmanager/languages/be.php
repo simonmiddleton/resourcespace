@@ -46,3 +46,4 @@ $lang["consent_notification_expiring_soon"] = 'Згоды, якія хутка �
 $lang["consent_notification_user_pref"] = 'Змяніце, ці хочаце вы атрымліваць гэтыя апавяшчэнні';
 $lang["consent_notification_global_pref"] = 'Адключыць гэтыя апавяшчэнні для ўсіх';
 $lang["consent_notification_link"] = 'Глядзіце іх тут';
+$lang["consent_notification_message"] = 'Некаторыя згоды хутка скончацца.';
