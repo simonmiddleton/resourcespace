@@ -2819,12 +2819,12 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 render_help_link($links[$i]['help']);
                 }
 
-            if (isset($links[$i]['menu'])) {
+            if (isset($links[$i]['context_menu'])) {
                 ?>
                 <div>
                 <?php
                 render_top_right_menu_btn();
-                render_featured_collection_context_menu("BreadCrumb{$i}", $links[$i]['menu']);
+                render_featured_collection_context_menu("BreadCrumb{$i}", $links[$i]['context_menu']);
                 ?>
                 </div>
                 <?php

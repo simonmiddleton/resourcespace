@@ -88,7 +88,7 @@ include "../include/header.php";
             }
 
             if (($is_featured_collection || !$fc_category_has_children) && collection_readable($current_fc_node['ref'])) {
-                $fc_branch_path[$current_fc_node_key]['menu'][] = [
+                $fc_branch_path[$current_fc_node_key]['context_menu'][] = [
                     'icon' => 'fa-solid fa-fw fa-circle-check',
                     'text' => $lang['action-select'],
                     'custom_onclick' => sprintf("return ChangeCollection(%s, '');", escape($current_fc_node['ref'])),
@@ -102,7 +102,7 @@ include "../include/header.php";
                 )
                 && allow_upload_to_collection($collection_data)
             ) {
-                $fc_branch_path[$current_fc_node_key]['menu'][] = [
+                $fc_branch_path[$current_fc_node_key]['context_menu'][] = [
                     'href' => $GLOBALS['upload_then_edit']
                         ? generateURL("{$baseurl_short}pages/upload_batch.php", ['collection_add' => $current_fc_node['ref']])
                         : generateURL(
@@ -119,7 +119,7 @@ include "../include/header.php";
             }
 
             if (($is_featured_collection || can_edit_featured_collection_category()) && collection_writeable($current_fc_node['ref'])) {
-                $fc_branch_path[$current_fc_node_key]['menu'][] = [
+                $fc_branch_path[$current_fc_node_key]['context_menu'][] = [
                     'href' => generateURL(
                         "{$baseurl_short}pages/collection_edit.php",
                         [
@@ -143,7 +143,7 @@ include "../include/header.php";
                 can_delete_collection($collection_data, $userref, $k)
                 && can_delete_featured_collection($current_fc_node['ref'])
             ) {
-                $fc_branch_path[$current_fc_node_key]['menu'][] = [
+                $fc_branch_path[$current_fc_node_key]['context_menu'][] = [
                     'icon' => 'fa-solid fa-fw fa-trash-can',
                     'text' => $lang['action-deletecollection'],
                     'custom_onclick' => sprintf(
@@ -157,7 +157,7 @@ include "../include/header.php";
         }
 
         $branch_trail = array_map(function ($branch) use ($baseurl_short, $general_url_params) {
-            $current_fc_node_menu = isset($branch['menu']) ? ['menu' => $branch['menu']] : [];
+            $current_fc_node_menu = isset($branch['context_menu']) ? ['context_menu' => $branch['context_menu']] : [];
 
             return [
                 "title" => strip_prefix_chars(i18n_get_translated($branch["name"]), "*"),
