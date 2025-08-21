@@ -63,18 +63,87 @@ include "../include/header.php";
             $links_trail = [];
         }
 
+        // Add menu options for the current FC (category) node
         $current_fc_node = end($fc_branch_path);
         $current_fc_node_key = key($fc_branch_path);
         reset($fc_branch_path);
         if ($current_fc_node_key !== null) {
-            // todo: get available options
-            $fc_branch_path[$current_fc_node_key]['menu'] = [
-                [
-                    "icon" => 'fa-solid fa-circle-check',
-                    "text" => $GLOBALS['lang']['action-select'],
-                    "custom_onclick" => "return ChangeCollection({$current_fc_node['ref']}, '');",
-                ],
-            ];
+            if ($smart_rtf == 0 && get_smart_theme_headers() !== []) {
+                $is_smart_featured_collection = true;
+            } else if ($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)) {
+                $is_smart_featured_collection = true;
+            } else {
+                $is_smart_featured_collection = false;
+            }
+            $is_featured_collection_category = is_featured_collection_category($current_fc_node);
+            $is_featured_collection = (!$is_featured_collection_category && !$is_smart_featured_collection);
+            $fc_category_has_children = $is_featured_collection_category && (isset($fc['has_children']) ? (bool) $fc['has_children'] : false);
+
+            $collection_data = get_collection($current_fc_node['ref']);
+            if (!is_array($collection_data)) {
+                $collection_data = [];
+            }
+
+            if (($is_featured_collection || !$fc_category_has_children) && collection_readable($current_fc_node['ref'])) {
+                $fc_branch_path[$current_fc_node_key]['menu'][] = [
+                    'icon' => 'fa-solid fa-fw fa-circle-check',
+                    'text' => $lang['action-select'],
+                    'custom_onclick' => "return ChangeCollection({$current_fc_node['ref']}, '');",
+                ];
+            }
+
+            if (
+                (
+                    ($is_featured_collection && !$is_smart_featured_collection)
+                    || !$fc_category_has_children
+                )
+                && allow_upload_to_collection($collection_data)
+            ) {
+                $fc_branch_path[$current_fc_node_key]['menu'][] = [
+                    'href' => $GLOBALS['upload_then_edit']
+                        ? generateURL("{$baseurl_short}pages/upload_batch.php", ['collection_add' => $current_fc_node['ref']])
+                        : generateURL(
+                            "{$baseurl_short}pages/edit.php",
+                            [
+                                'uploader' => $GLOBALS['upload_then_edit'],
+                                'ref' => -$GLOBALS['userref'],
+                                'collection_add' => $current_fc_node['ref']
+                            ]
+                        ),
+                    'icon' => 'fa fa-fw fa-upload',
+                    'text' => $lang['action-upload-to-collection'],
+                ];
+            }
+
+            if (($is_featured_collection || can_edit_featured_collection_category()) && collection_writeable($current_fc_node['ref'])) {
+                $fc_branch_path[$current_fc_node_key]['menu'][] = [
+                    'href' => generateURL(
+                        "{$baseurl_short}pages/collection_edit.php",
+                        [
+                            'ref' => $current_fc_node['ref'],
+                            'redirection_endpoint' => urlencode(
+                                generateURL(
+                                    "{$baseurl_short}pages/collections_featured.php",
+                                    $general_url_params,
+                                    ['parent' => $current_fc_node['parent']]
+                                )
+                            )
+                        ]
+                    ),
+                    'icon' => 'fa-solid fa-fw fa-pen-to-square',
+                    'text' => $lang['action-edit'],
+                    'modal_load' => true,
+                    'redirect' => true,
+                ];
+            }
+
+            if (can_delete_collection($collection_data, $userref, $k)) {
+                $fc_branch_path[$current_fc_node_key]['menu'][] = [
+                    'icon' => 'fa-solid fa-fw fa-trash-can',
+                    'text' => $lang['action-deletecollection'],
+                    'custom_onclick' => "return delete_collection({$current_fc_node['ref']});",
+                ];
+            }
         }
 
         $branch_trail = array_map(function ($branch) use ($baseurl_short, $general_url_params) {
