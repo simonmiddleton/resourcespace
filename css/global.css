@@ -182,7 +182,6 @@ select:before {
 .pageline{border-bottom: 1px solid #d7d7d7;  margin-right:10px;margin-left:5px;}
 .DisplayNone { display: none !important; }
 .AbsoluteTopLeft { position: absolute; top: 0; left: 0; }
-.PointerEventsNone { pointer-events: none; }
 .MarginLeft1rem { margin-left: 1rem; }
 .BorderBottom { border-bottom: 2px solid; }
 
