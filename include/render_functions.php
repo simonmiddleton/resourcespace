@@ -4909,7 +4909,7 @@ function render_featured_collections(array $ctx, array $items)
         $tool_select = array(
             "icon" => 'fa-solid fa-fw fa-circle-check',
             "text" => $lang['action-select'],
-            "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');"
+            'custom_onclick' => sprintf("return ChangeCollection(%s, '');", escape($fc['ref'])),
         );
         $tool_upload_to_collection = [
             'href' => $GLOBALS['upload_then_edit']
