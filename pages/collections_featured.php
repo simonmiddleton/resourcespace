@@ -1,4 +1,7 @@
 <?php
+
+use function Symfony\Component\VarDumper\Dumper\esc;
+
 include_once "../include/boot.php";
 
 $k = trim(getval("k", ""));
@@ -88,7 +91,7 @@ include "../include/header.php";
                 $fc_branch_path[$current_fc_node_key]['menu'][] = [
                     'icon' => 'fa-solid fa-fw fa-circle-check',
                     'text' => $lang['action-select'],
-                    'custom_onclick' => "return ChangeCollection({$current_fc_node['ref']}, '');",
+                    'custom_onclick' => sprintf("return ChangeCollection(%s, '');", escape($current_fc_node['ref'])),
                 ];
             }
 
@@ -133,15 +136,22 @@ include "../include/header.php";
                     'icon' => 'fa-solid fa-fw fa-pen-to-square',
                     'text' => $lang['action-edit'],
                     'modal_load' => true,
-                    'redirect' => true,
                 ];
             }
 
-            if (can_delete_collection($collection_data, $userref, $k)) {
+            if (
+                can_delete_collection($collection_data, $userref, $k)
+                && can_delete_featured_collection($current_fc_node['ref'])
+            ) {
                 $fc_branch_path[$current_fc_node_key]['menu'][] = [
                     'icon' => 'fa-solid fa-fw fa-trash-can',
                     'text' => $lang['action-deletecollection'],
-                    'custom_onclick' => "return delete_collection({$current_fc_node['ref']});",
+                    'custom_onclick' => sprintf(
+                        'return delete_collection(%s, \'%s\', \'%s\');',
+                        escape($current_fc_node['ref']),
+                        escape($lang['collectiondeleteconfirm']),
+                        escape(generate_csrf_js_object('delete_collection'))
+                    ),
                 ];
             }
         }
