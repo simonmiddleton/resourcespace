@@ -43,7 +43,6 @@ $lang["consent_status_expired"] = 'Lejárt hozzájárulások';
 $lang["consent_view_linked_resources_short"] = 'Nézet';
 $lang["consent_no_archiving"] = 'Nincs változás';
 $lang["consent_notification_expiring_soon"] = 'Hamarosan lejáró hozzájárulások';
-$lang["consent_notification_message"] = 'Hamarosan lejár néhány hozzájárulás. Tekintse meg őket <a href=\'%URL\'>itt</a>';
 $lang["consent_notification_user_pref"] = 'Változtassa meg, hogy kap-e értesítéseket';
 $lang["consent_notification_global_pref"] = 'Ezeket a értesítéseket mindenki számára tiltsa le';
 $lang["consent_notification_link"] = 'Nézd meg őket itt';

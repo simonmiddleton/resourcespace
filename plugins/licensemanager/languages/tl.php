@@ -42,7 +42,6 @@ $lang["license_status_expired"] = 'Nawalang bisa na mga lisensya';
 $lang["license_view_linked_resources_short"] = 'Tingnan';
 $lang["license_no_archiving"] = 'Walang Pagbabago';
 $lang["license_notification_expiring_soon"] = 'Malapit nang mag-expire ang mga Lisensya';
-$lang["license_notification_message"] = 'May ilang lisensya na malapit nang mag-expire. Tingnan ang mga ito <a href=\'%URL\'>dito</a>';
 $lang["license_notification_user_pref"] = 'Baguhin kung tatanggap ka ng mga abiso na ito';
 $lang["license_notification_global_pref"] = 'I-disable ang mga notification na ito para sa lahat';
 $lang["license_notification_link"] = 'Tingnan ang mga ito dito';

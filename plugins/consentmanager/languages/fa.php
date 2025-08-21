@@ -44,7 +44,6 @@ $lang["consent_status_expired"] = 'مجوزهای منقضی شده';
 $lang["consent_view_linked_resources_short"] = 'مشاهده';
 $lang["consent_no_archiving"] = 'هیچ تغییری نیست';
 $lang["consent_notification_expiring_soon"] = 'مجوزها به زودی منقضی می‌شوند';
-$lang["consent_notification_message"] = 'چندین مجوز وجود دارد که به زودی منقضی می‌شوند. آنها را <a href=\'%URL\'>اینجا</a> مشاهده کنید';
 $lang["consent_notification_user_pref"] = 'تغییر دهید که آیا این اعلان‌ها را دریافت کنید';
 $lang["consent_notification_global_pref"] = 'این اعلان‌ها را برای همه غیرفعال کنید';
 $lang["consent_notification_link"] = 'اینجا آنها را مشاهده کنید';

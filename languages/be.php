@@ -2920,7 +2920,6 @@ $lang["missing_required_fields_intro"] = 'Рэсурсы ў калекцыі а�
 $lang["action_update_now"] = 'Абнавіць зараз';
 $lang["errors"] = 'Памылкі';
 $lang["error_savefirst"] = 'Калі ласка, захавайце вашы змены';
-$lang["action-here"] = 'тут';
 $lang["months"] = array (
   0 => 'Сакавіка',
   1 => 'Люты',

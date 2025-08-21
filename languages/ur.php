@@ -2488,7 +2488,6 @@ $lang["set_metadata_then_upload"] = 'پہلے میٹا ڈیٹا سیٹ کریں�
 $lang["annotate_text_link_label"] = 'تشریح موڈ ٹوگل';
 $lang["annotate_annotation_label"] = 'تشریح';
 $lang["annotate_annotations_label"] = 'تشریحات';
-$lang["annotate_select"] = 'فیلڈ منتخب کریں...';
 $lang["byte_prefix_mode_decimal"] = 'فائل سائز کے لئے اعشاریہ استعمال کریں (1000 کے ضرب، KB/MB/GB/TB) کے بجائے بائنری (1024 کے ضرب، KiB/MiB/GiB/TiB)';
 $lang["error_upload_resource_alternatives_batch"] = 'جب اس خصوصیت کا استعمال کریں (دیکھیں $upload_alternatives_suffix) تو آپ کی اصل فائل کو قطار میں سب سے پہلے ہونا چاہیے!';
 $lang["error_upload_resource_not_found"] = 'وسیلہ ID نہیں مل سکا!';
@@ -2934,7 +2933,6 @@ $lang["action_update_now"] = 'ابھی اپ ڈیٹ کریں';
 $lang["errors"] = 'غلطیاں';
 $lang["error_savefirst"] = 'براہ کرم اپنی تبدیلیاں محفوظ کریں';
 $lang["language-be"] = 'Belarusian';
-$lang["action-here"] = 'یہاں';
 $lang["months"] = array (
   0 => 'جنوری',
   1 => 'فروری',

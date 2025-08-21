@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'Abgelaufene Einwilligungen';
 $lang["consent_view_linked_resources_short"] = 'Ansehen';
 $lang["consent_no_archiving"] = 'Keine Änderung';
 $lang["consent_notification_expiring_soon"] = 'Zustimmungen, die bald ablaufen';
-$lang["consent_notification_message"] = 'Es gibt einige Zustimmungen, die bald ablaufen. Sie können sie <a href=\'%URL\'>hier</a> einsehen.';
 $lang["consent_notification_user_pref"] = 'Ändern Sie, ob Sie diese Benachrichtigungen erhalten';
 $lang["consent_notification_global_pref"] = 'Deaktiviere diese Benachrichtigungen für alle';
 $lang["consent_notification_link"] = 'Hier ansehen';

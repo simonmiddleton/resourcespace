@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'الموافقات المنتهية';
 $lang["consent_view_linked_resources_short"] = 'عرض';
 $lang["consent_no_archiving"] = 'لا تغيير';
 $lang["consent_notification_expiring_soon"] = 'الموافقات ستنتهي قريباً';
-$lang["consent_notification_message"] = 'هناك بعض الموافقات التي ستنتهي قريبًا. يمكنك مشاهدتها <a href=\'%URL\'>هنا</a>';
 $lang["consent_notification_user_pref"] = 'غيّر ما إذا كنت ستتلقى هذه الإشعارات';
 $lang["consent_notification_global_pref"] = 'تعطيل هذه الإشعارات للجميع';
 $lang["consent_notification_link"] = 'عرضها هنا';

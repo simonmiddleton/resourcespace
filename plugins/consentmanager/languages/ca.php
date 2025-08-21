@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'Consentiments caducats';
 $lang["consent_view_linked_resources_short"] = 'Veure';
 $lang["consent_no_archiving"] = 'Sense canvi';
 $lang["consent_notification_expiring_soon"] = 'Consentiments que expiren aviat';
-$lang["consent_notification_message"] = 'Hi ha alguns consents que estan a punt d\'expirar. Veure\'ls <a href=\'%URL\'>aquí</a>';
 $lang["consent_notification_user_pref"] = 'Canvia si reps aquestes notificacions';
 $lang["consent_notification_global_pref"] = 'Desactivar aquestes notificacions per a tothom';
 $lang["consent_notification_link"] = 'Veure\'ls aquí';

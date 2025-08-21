@@ -42,7 +42,6 @@ $lang["license_status_expired"] = 'ਮਿਆਦ ਖਤਮ ਹੋਈ ਲਾਇਸ
 $lang["license_view_linked_resources_short"] = 'ਦੇਖੋ';
 $lang["license_no_archiving"] = 'ਕੋਈ ਬਦਲਾਅ ਨਹੀਂ';
 $lang["license_notification_expiring_soon"] = 'ਲਾਇਸੰਸ ਜਲਦੀ ਖਤਮ ਹੋ ਰਹੇ ਹਨ';
-$lang["license_notification_message"] = 'ਕੁਝ ਲਾਇਸੈਂਸ ਹਨ ਜੋ ਜਲਦੀ ਖਤਮ ਹੋ ਰਹੇ ਹਨ। ਉਨ੍ਹਾਂ ਨੂੰ <a href=\'%URL\'>ਇੱਥੇ</a> ਦੇਖੋ';
 $lang["license_notification_user_pref"] = 'ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਸਥਿਤੀ ਬਦਲੋ';
 $lang["license_notification_global_pref"] = 'ਸਭ ਲਈ ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨ ਅਯੋਗ ਕਰੋ';
 $lang["license_notification_link"] = 'ਇਹਾਂ ਉਨ੍ਹਾਂ ਨੂੰ ਵੇਖੋ';

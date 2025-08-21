@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'Utløpte lisenser';
 $lang["license_view_linked_resources_short"] = 'Vis';
 $lang["license_no_archiving"] = 'Ingen endring';
 $lang["license_notification_expiring_soon"] = 'Lisenser som snart utløper';
-$lang["license_notification_message"] = 'Det er noen lisenser som snart utløper. Se dem <a href=\'%URL\'>her</a>';
 $lang["license_notification_user_pref"] = 'Endre om du vil motta disse varslingene';
 $lang["license_notification_global_pref"] = 'Deaktiver disse varslingene for alle';
 $lang["license_notification_link"] = 'Se dem her';

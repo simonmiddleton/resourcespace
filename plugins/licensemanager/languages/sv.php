@@ -52,7 +52,6 @@ $lang["license_status_expired"] = 'Utgångna licenser';
 $lang["license_view_linked_resources_short"] = 'Visa';
 $lang["license_no_archiving"] = 'Ingen förändring';
 $lang["license_notification_expiring_soon"] = 'Licenser som snart går ut';
-$lang["license_notification_message"] = 'Det finns några licenser som snart går ut. Visa dem <a href=\'%URL\'>här</a>';
 $lang["license_notification_user_pref"] = 'Ändra om du vill ta emot dessa meddelanden';
 $lang["license_notification_global_pref"] = 'Inaktivera dessa meddelanden för alla';
 $lang["license_notification_link"] = 'Visa dem här';

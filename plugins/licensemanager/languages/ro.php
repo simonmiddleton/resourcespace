@@ -46,7 +46,6 @@ $lang["license_status_expired"] = 'Licențe expirate';
 $lang["license_view_linked_resources_short"] = 'Vizualizare';
 $lang["license_no_archiving"] = 'Nicio modificare';
 $lang["license_notification_expiring_soon"] = 'Licențe care expiră în curând';
-$lang["license_notification_message"] = 'Există câteva licențe care expiră în curând. Vizualizați-le <a href=\'%URL\'>aici</a>';
 $lang["license_notification_user_pref"] = 'Schimbă dacă dorești să primești aceste notificări';
 $lang["license_notification_global_pref"] = 'Dezactivează aceste notificări pentru toată lumea';
 $lang["license_notification_link"] = 'Vizualizați-le aici';

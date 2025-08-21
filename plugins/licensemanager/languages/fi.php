@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'Vanhentuneet lisenssit';
 $lang["license_view_linked_resources_short"] = 'Näytä';
 $lang["license_no_archiving"] = 'Ei muutosta';
 $lang["license_notification_expiring_soon"] = 'Luvat vanhenevat pian';
-$lang["license_notification_message"] = 'Joitakin lisenssejä on pian vanhenemassa. Katso ne <a href=\'%URL\'>täältä</a>';
 $lang["license_notification_user_pref"] = 'Muuta, saatko näitä ilmoituksia';
 $lang["license_notification_global_pref"] = 'Poista nämä ilmoitukset käytöstä kaikilta';
 $lang["license_notification_link"] = 'Näytä ne täällä';

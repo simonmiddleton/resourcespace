@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'Consimțământuri expirate';
 $lang["consent_view_linked_resources_short"] = 'Vizualizare';
 $lang["consent_no_archiving"] = 'Nicio modificare';
 $lang["consent_notification_expiring_soon"] = 'Consimțăminte care expiră în curând';
-$lang["consent_notification_message"] = 'Există câteva consimțăminte care expiră în curând. Vizualizați-le <a href=\'%URL\'>aici</a>';
 $lang["consent_notification_user_pref"] = 'Schimbă dacă dorești să primești aceste notificări';
 $lang["consent_notification_global_pref"] = 'Dezactivează aceste notificări pentru toată lumea';
 $lang["consent_notification_link"] = 'Vizualizați-le aici';

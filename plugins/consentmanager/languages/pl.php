@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'Wygasłe zgody';
 $lang["consent_view_linked_resources_short"] = 'Widok';
 $lang["consent_no_archiving"] = 'Brak zmian';
 $lang["consent_notification_expiring_soon"] = 'Zgody wygasają wkrótce';
-$lang["consent_notification_message"] = 'Są pewne zgody, które wkrótce wygasną. Zobacz je <a href=\'%URL\'>tutaj</a>';
 $lang["consent_notification_user_pref"] = 'Zmień, czy chcesz otrzymywać te powiadomienia';
 $lang["consent_notification_global_pref"] = 'Wyłącz te powiadomienia dla wszystkich';
 $lang["consent_notification_link"] = 'Zobacz je tutaj';

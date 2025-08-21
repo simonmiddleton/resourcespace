@@ -44,7 +44,6 @@ $lang["consent_status_expired"] = 'ਮਿਆਦ ਪੂਰੀ ਹੋ ਚੁੱਕ
 $lang["consent_view_linked_resources_short"] = 'ਦੇਖੋ';
 $lang["consent_no_archiving"] = 'ਕੋਈ ਬਦਲਾਅ ਨਹੀਂ';
 $lang["consent_notification_expiring_soon"] = 'ਸਹਿਮਤੀਆਂ ਜਲਦੀ ਖਤਮ ਹੋ ਰਹੀਆਂ ਹਨ';
-$lang["consent_notification_message"] = 'ਕੁਝ ਸਹਿਮਤੀਆਂ ਹਨ ਜੋ ਜਲਦੀ ਹੀ ਸਮਾਪਤ ਹੋ ਰਹੀਆਂ ਹਨ। ਉਨ੍ਹਾਂ ਨੂੰ <a href=\'%URL\'>ਇੱਥੇ</a> ਦੇਖੋ';
 $lang["consent_notification_user_pref"] = 'ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਸਥਿਤੀ ਬਦਲੋ';
 $lang["consent_notification_global_pref"] = 'ਇਹ ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ ਨੂੰ ਸਭ ਲਈ ਅਯੋਗ ਕਰੋ';
 $lang["consent_notification_link"] = 'ਇਹਾਂ ਉਨ੍ਹਾਂ ਨੂੰ ਵੇਖੋ';

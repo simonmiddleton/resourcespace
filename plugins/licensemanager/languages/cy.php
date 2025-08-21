@@ -42,7 +42,6 @@ $lang["license_status_expired"] = 'Trwyddedau wedi dod i ben';
 $lang["license_view_linked_resources_short"] = 'Gweld';
 $lang["license_no_archiving"] = 'Dim Newid';
 $lang["license_notification_expiring_soon"] = 'Trwyddedau sy\'n dod i ben yn fuan';
-$lang["license_notification_message"] = 'Mae rhai trwyddedau sy\'n dod i ben yn fuan. Edrychwch arnynt <a href=\'%URL\'>fan hyn</a>';
 $lang["license_notification_user_pref"] = 'Newid a ydych yn derbyn y rhybuddion hyn';
 $lang["license_notification_global_pref"] = 'Anallu\'r hysbysiadau hyn ar gyfer pawb';
 $lang["license_notification_link"] = 'Gweld nhw yma';

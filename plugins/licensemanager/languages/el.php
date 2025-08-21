@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'Ληγμένες άδειες';
 $lang["license_view_linked_resources_short"] = 'Προβολή';
 $lang["license_no_archiving"] = 'Καμία Αλλαγή';
 $lang["license_notification_expiring_soon"] = 'Άδειες που λήγουν σύντομα';
-$lang["license_notification_message"] = 'Υπάρχουν άδειες που λήγουν σύντομα. Δείτε τις <a href=\'%URL\'>εδώ</a>';
 $lang["license_notification_user_pref"] = 'Αλλάξτε αν θα λαμβάνετε αυτές τις ειδοποιήσεις';
 $lang["license_notification_global_pref"] = 'Απενεργοποιήστε αυτές τις ειδοποιήσεις για όλους';
 $lang["license_notification_link"] = 'Δείτε τα εδώ';

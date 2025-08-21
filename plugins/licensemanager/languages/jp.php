@@ -44,7 +44,6 @@ $lang["license_status_expired"] = '期限切れのライセンス';
 $lang["license_view_linked_resources_short"] = '表示';
 $lang["license_no_archiving"] = '変更なし';
 $lang["license_notification_expiring_soon"] = 'ライセンスの期限が近づいています';
-$lang["license_notification_message"] = 'まもなく期限が切れるライセンスがあります。<a href=\'%URL\'>こちら</a>でご覧ください';
 $lang["license_notification_user_pref"] = 'これらの通知を受け取るかどうかを変更する';
 $lang["license_notification_global_pref"] = '全員のためにこれらの通知を無効にする';
 $lang["license_notification_link"] = 'ここで表示します';

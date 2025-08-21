@@ -42,7 +42,6 @@ $lang["license_status_expired"] = 'Giấy phép đã hết hạn';
 $lang["license_view_linked_resources_short"] = 'Xem';
 $lang["license_no_archiving"] = 'Không thay đổi';
 $lang["license_notification_expiring_soon"] = 'Giấy phép sắp hết hạn';
-$lang["license_notification_message"] = 'Có một số giấy phép sắp hết hạn. Xem chúng <a href=\'%URL\'>tại đây</a>';
 $lang["license_notification_user_pref"] = 'Thay đổi việc bạn có nhận được những thông báo này hay không';
 $lang["license_notification_global_pref"] = 'Vô hiệu hóa thông báo này cho tất cả mọi người';
 $lang["license_notification_link"] = 'Xem chúng ở đây';

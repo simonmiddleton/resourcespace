@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'Verlopen toestemmingen';
 $lang["consent_view_linked_resources_short"] = 'Bekijk';
 $lang["consent_no_archiving"] = 'Geen wijziging';
 $lang["consent_notification_expiring_soon"] = 'Toestemmingen die binnenkort verlopen';
-$lang["consent_notification_message"] = 'Er zijn enkele toestemmingen die binnenkort verlopen. Bekijk ze <a href=\'%URL\'>hier</a>';
 $lang["consent_notification_user_pref"] = 'Wijzig of u deze meldingen wilt ontvangen';
 $lang["consent_notification_global_pref"] = 'Schakel deze meldingen voor iedereen uit';
 $lang["consent_notification_link"] = 'Bekijk ze hier';

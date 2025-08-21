@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'Istekle licence';
 $lang["license_view_linked_resources_short"] = 'Pogledaj';
 $lang["license_no_archiving"] = 'Bez promjene';
 $lang["license_notification_expiring_soon"] = 'Licencije uskoro ističu';
-$lang["license_notification_message"] = 'Postoje neke licence koje uskoro ističu. Pogledajte ih <a href=\'%URL\'>ovdje</a>';
 $lang["license_notification_user_pref"] = 'Promijenite hoćete li primati ove obavijesti';
 $lang["license_notification_global_pref"] = 'Onemogući ove obavijesti za sve';
 $lang["license_notification_link"] = 'Pogledajte ih ovdje';

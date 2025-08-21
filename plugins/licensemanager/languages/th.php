@@ -42,7 +42,6 @@ $lang["license_status_expired"] = 'ใบอนุญาตที่หมดอ
 $lang["license_view_linked_resources_short"] = 'ดู';
 $lang["license_no_archiving"] = 'ไม่มีการเปลี่ยนแปลง';
 $lang["license_notification_expiring_soon"] = 'ใบอนุญาตจะหมดอายุในเร็วๆ นี้';
-$lang["license_notification_message"] = 'มีใบอนุญาตบางฉบับที่กำลังจะหมดอายุในเร็วๆ นี้ ดูได้ที่ <a href=\'%URL\'>นี่</a>';
 $lang["license_notification_user_pref"] = 'เปลี่ยนว่าคุณจะได้รับการแจ้งเตือนเหล่านี้หรือไม่';
 $lang["license_notification_global_pref"] = 'ปิดการแจ้งเตือนเหล่านี้สำหรับทุกคน';
 $lang["license_notification_link"] = 'ดูที่นี่';

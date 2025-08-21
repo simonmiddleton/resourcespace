@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'Consensi scaduti';
 $lang["consent_view_linked_resources_short"] = 'Visualizza';
 $lang["consent_no_archiving"] = 'Nessuna modifica';
 $lang["consent_notification_expiring_soon"] = 'Consensi in scadenza presto';
-$lang["consent_notification_message"] = 'Ci sono alcuni consensi che stanno per scadere. Visualizzali <a href=\'%URL\'>qui</a>';
 $lang["consent_notification_user_pref"] = 'Cambia se desideri ricevere queste notifiche';
 $lang["consent_notification_global_pref"] = 'Disabilita queste notifiche per tutti';
 $lang["consent_notification_link"] = 'Visualizzali qui';

@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'Vypršané licencie';
 $lang["license_view_linked_resources_short"] = 'Zobraziť';
 $lang["license_no_archiving"] = 'Žiadna zmena';
 $lang["license_notification_expiring_soon"] = 'Licencie, ktoré čoskoro vypršia';
-$lang["license_notification_message"] = 'Niektoré licencie čoskoro vypršia. Pozrite si ich <a href=\'%URL\'>tu</a>';
 $lang["license_notification_user_pref"] = 'Zmeňte, či chcete dostávať tieto oznámenia';
 $lang["license_notification_global_pref"] = 'Deaktivujte tieto oznámenia pre všetkých';
 $lang["license_notification_link"] = 'Zobraziť ich tu';

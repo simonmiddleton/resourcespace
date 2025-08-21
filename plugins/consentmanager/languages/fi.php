@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'Vanhentuneet suostumukset';
 $lang["consent_view_linked_resources_short"] = 'Näytä';
 $lang["consent_no_archiving"] = 'Ei muutosta';
 $lang["consent_notification_expiring_soon"] = 'Suostumukset vanhenevat pian';
-$lang["consent_notification_message"] = 'On joitakin suostumuksia, jotka vanhenevat pian. Katso ne <a href=\'%URL\'>täältä</a>';
 $lang["consent_notification_user_pref"] = 'Muuta, saatko näitä ilmoituksia';
 $lang["consent_notification_global_pref"] = 'Poista nämä ilmoitukset käytöstä kaikilta';
 $lang["consent_notification_link"] = 'Näytä ne täällä';

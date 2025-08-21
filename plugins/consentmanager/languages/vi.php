@@ -43,7 +43,6 @@ $lang["consent_status_expired"] = 'Sự đồng ý đã hết hạn';
 $lang["consent_view_linked_resources_short"] = 'Xem';
 $lang["consent_no_archiving"] = 'Không thay đổi';
 $lang["consent_notification_expiring_soon"] = 'Các sự đồng ý sắp hết hạn';
-$lang["consent_notification_message"] = 'Có một số sự đồng ý sắp hết hạn. Xem chúng <a href=\'%URL\'>tại đây</a>';
 $lang["consent_notification_user_pref"] = 'Thay đổi việc bạn có nhận được những thông báo này hay không';
 $lang["consent_notification_global_pref"] = 'Vô hiệu hóa những thông báo này cho tất cả mọi người';
 $lang["consent_notification_link"] = 'Xem chúng ở đây';

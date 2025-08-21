@@ -46,7 +46,6 @@ $lang["consent_status_expired"] = 'Vypršané súhlasy';
 $lang["consent_view_linked_resources_short"] = 'Zobraziť';
 $lang["consent_no_archiving"] = 'Žiadna zmena';
 $lang["consent_notification_expiring_soon"] = 'Súhlasy, ktoré čoskoro vypršia';
-$lang["consent_notification_message"] = 'Existujú niektoré súhlasy, ktoré čoskoro vypršia. Pozrite si ich <a href=\'%URL\'>tu</a>';
 $lang["consent_notification_user_pref"] = 'Zmeňte, či chcete dostávať tieto oznámenia';
 $lang["consent_notification_global_pref"] = 'Deaktivujte tieto oznámenia pre všetkých';
 $lang["consent_notification_link"] = 'Zobraziť ich tu';

@@ -44,7 +44,6 @@ $lang["consent_status_expired"] = 'Термін дії згоди закінчи
 $lang["consent_view_linked_resources_short"] = 'Перегляд';
 $lang["consent_no_archiving"] = 'Без змін';
 $lang["consent_notification_expiring_soon"] = 'Згоди, термін дії яких скоро закінчується';
-$lang["consent_notification_message"] = 'Є деякі згоди, термін дії яких скоро закінчується. Перегляньте їх <a href=\'%URL\'>тут</a>';
 $lang["consent_notification_user_pref"] = 'Змініть, чи отримуватимете ці сповіщення';
 $lang["consent_notification_global_pref"] = 'Вимкнути ці сповіщення для всіх';
 $lang["consent_notification_link"] = 'Перегляньте їх тут';

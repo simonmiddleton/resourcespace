@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'Verlopen licenties';
 $lang["license_view_linked_resources_short"] = 'Bekijk';
 $lang["license_no_archiving"] = 'Geen wijziging';
 $lang["license_notification_expiring_soon"] = 'Licenties die binnenkort verlopen';
-$lang["license_notification_message"] = 'Er zijn enkele licenties die binnenkort verlopen. Bekijk ze <a href=\'%URL\'>hier</a>';
 $lang["license_notification_user_pref"] = 'Wijzig of u deze meldingen wilt ontvangen';
 $lang["license_notification_global_pref"] = 'Schakel deze meldingen voor iedereen uit';
 $lang["license_notification_link"] = 'Bekijk ze hier';

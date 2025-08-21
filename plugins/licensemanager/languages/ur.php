@@ -42,7 +42,6 @@ $lang["license_status_expired"] = 'ختم شدہ لائسنس';
 $lang["license_view_linked_resources_short"] = 'دیکھیں';
 $lang["license_no_archiving"] = 'کوئی تبدیلی نہیں';
 $lang["license_notification_expiring_soon"] = 'لائسنس جلد ختم ہونے والے ہیں';
-$lang["license_notification_message"] = 'کچھ لائسنس ہیں جو جلد ختم ہونے والے ہیں۔ انہیں <a href=\'%URL\'>یہاں</a> دیکھیں';
 $lang["license_notification_user_pref"] = 'ان اطلاعات کی وصولی کے بارے میں تبدیلی کریں';
 $lang["license_notification_global_pref"] = 'یہ اطلاعات سب کے لیے غیر فعال کریں';
 $lang["license_notification_link"] = 'انہیں یہاں دیکھیں';

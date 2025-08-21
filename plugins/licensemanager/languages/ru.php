@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'Истекшие лицензии';
 $lang["license_view_linked_resources_short"] = 'Просмотр';
 $lang["license_no_archiving"] = 'Нет изменений';
 $lang["license_notification_expiring_soon"] = 'Лицензии, срок действия которых истекает скоро';
-$lang["license_notification_message"] = 'Скоро истекает срок действия некоторых лицензий. Посмотреть их <a href=\'%URL\'>здесь</a>';
 $lang["license_notification_user_pref"] = 'Измените, получаете ли вы эти уведомления';
 $lang["license_notification_global_pref"] = 'Отключить эти уведомления для всех';
 $lang["license_notification_link"] = 'Посмотреть их здесь';

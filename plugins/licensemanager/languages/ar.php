@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'التراخيص المنتهية';
 $lang["license_view_linked_resources_short"] = 'عرض';
 $lang["license_no_archiving"] = 'لا تغيير';
 $lang["license_notification_expiring_soon"] = 'التراخيص التي ستنتهي قريباً';
-$lang["license_notification_message"] = 'هناك بعض التراخيص التي ستنتهي قريبًا. يمكنك مشاهدتها <a href=\'%URL\'>هنا</a>';
 $lang["license_notification_user_pref"] = 'غير ما إذا كنت ستتلقى هذه الإشعارات';
 $lang["license_notification_global_pref"] = 'تعطيل هذه الإشعارات للجميع';
 $lang["license_notification_link"] = 'عرضها هنا';

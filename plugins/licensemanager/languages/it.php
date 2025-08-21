@@ -44,7 +44,6 @@ $lang["license_status_expired"] = 'Licenze scadute';
 $lang["license_view_linked_resources_short"] = 'Visualizza';
 $lang["license_no_archiving"] = 'Nessuna modifica';
 $lang["license_notification_expiring_soon"] = 'Licenze in scadenza presto';
-$lang["license_notification_message"] = 'Ci sono alcune licenze in scadenza a breve. Visualizzale <a href=\'%URL\'>qui</a>';
 $lang["license_notification_user_pref"] = 'Cambia se desideri ricevere queste notifiche';
 $lang["license_notification_global_pref"] = 'Disabilita queste notifiche per tutti';
 $lang["license_notification_link"] = 'Visualizzali qui';

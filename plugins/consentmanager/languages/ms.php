@@ -43,7 +43,6 @@ $lang["consent_status_expired"] = 'Persetujuan yang telah tamat';
 $lang["consent_view_linked_resources_short"] = 'Lihat';
 $lang["consent_no_archiving"] = 'Tiada Perubahan';
 $lang["consent_notification_expiring_soon"] = 'Persetujuan Akan Tamat Tidak Lama Lagi';
-$lang["consent_notification_message"] = 'Terdapat beberapa persetujuan yang akan tamat tidak lama lagi. Lihat mereka <a href=\'%URL\'>di sini</a>';
 $lang["consent_notification_user_pref"] = 'Tukar sama ada anda menerima pemberitahuan ini';
 $lang["consent_notification_global_pref"] = 'Matikan pemberitahuan ini untuk semua orang';
 $lang["consent_notification_link"] = 'Lihat mereka di sini';

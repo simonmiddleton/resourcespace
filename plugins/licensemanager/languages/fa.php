@@ -42,7 +42,6 @@ $lang["license_status_expired"] = 'مجوزهای منقضی شده';
 $lang["license_view_linked_resources_short"] = 'مشاهده';
 $lang["license_no_archiving"] = 'هیچ تغییری نیست';
 $lang["license_notification_expiring_soon"] = 'مجوزها به زودی منقضی می‌شوند';
-$lang["license_notification_message"] = 'مجوزهایی وجود دارند که به زودی منقضی می‌شوند. آنها را <a href=\'%URL\'>اینجا</a> مشاهده کنید';
 $lang["license_notification_user_pref"] = 'تغییر دهید که آیا این اعلان‌ها را دریافت کنید';
 $lang["license_notification_global_pref"] = 'این اعلان‌ها را برای همه غیرفعال کنید';
 $lang["license_notification_link"] = 'اینجا آنها را مشاهده کنید';
