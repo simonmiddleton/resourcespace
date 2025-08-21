@@ -63,11 +63,32 @@ include "../include/header.php";
             $links_trail = [];
         }
 
+        $current_fc_node = end($fc_branch_path);
+        $current_fc_node_key = key($fc_branch_path);
+        reset($fc_branch_path);
+        if ($current_fc_node_key !== null) {
+            // todo: get available options
+            $fc_branch_path[$current_fc_node_key]['menu'] = [
+                [
+                    "icon" => 'fa-solid fa-circle-check',
+                    "text" => $GLOBALS['lang']['action-select'],
+                    "custom_onclick" => "return ChangeCollection({$current_fc_node['ref']}, '');",
+                ],
+            ];
+        }
+
         $branch_trail = array_map(function ($branch) use ($baseurl_short, $general_url_params) {
-            return array(
+            $current_fc_node_menu = isset($branch['menu']) ? ['menu' => $branch['menu']] : [];
+
+            return [
                 "title" => strip_prefix_chars(i18n_get_translated($branch["name"]), "*"),
-                "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
-            );
+                "href"  => generateURL(
+                    "{$baseurl_short}pages/collections_featured.php",
+                    $general_url_params,
+                    array("parent" => $branch["ref"])
+                ),
+                ...$current_fc_node_menu,
+            ];
         }, $fc_branch_path);
 
         renderBreadcrumbs(array_merge($links_trail, $branch_trail), "", "BreadcrumbsBoxTheme");

@@ -338,7 +338,8 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .ui-menu .ui-menu-item {
             color: white;
         }
-        .FeaturedSimpleTile .top-right-menu:hover  {
+        .FeaturedSimpleTile .top-right-menu:hover,
+        .SearchBreadcrumbs .top-right-menu:hover  {
             background: #404040;
             color: white;
         }

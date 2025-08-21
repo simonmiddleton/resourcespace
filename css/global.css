@@ -1594,6 +1594,16 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     width: 230px;
     z-index: 1000;
 }
+.SearchBreadcrumbs > div:has(> .top-right-menu) {
+    display: inline-block;
+}
+.SearchBreadcrumbs .top-right-menu {
+    width: 19px;
+    height: 19px;
+    border-radius: 30px;
+    text-align: center;
+    font-size: 14px;
+}
 
 .context-menu-row {
     padding: 5px;

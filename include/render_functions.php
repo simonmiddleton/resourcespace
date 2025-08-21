@@ -2785,8 +2785,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
             echo $pre_links . '&nbsp;' . LINK_CHEVRON_RIGHT;
             }
 
-        for($i = 0; $i < count($links); $i++)
-            {
+        for ($i = 0; $i < count($links); $i++) {
             $anchor = isset($links[$i]['href']);
             $anchor_attrs = (isset($links[$i]["attrs"]) && is_array($links[$i]["attrs"]) && !empty($links[$i]["attrs"]) ? $links[$i]["attrs"] : array());
             $anchor_attrs = join(" ", $anchor_attrs);
@@ -2819,8 +2818,19 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 {
                 render_help_link($links[$i]['help']);
                 }
+
+            if (isset($links[$i]['menu'])) {
+                ?>
+                <div>
+                <?php
+                render_top_right_menu_btn();
+                render_featured_collection_context_menu("BreadCrumb{$i}", $links[$i]['menu']);
+                ?>
+                </div>
+                <?php
             }
-            ?>
+        }
+        ?>
         </div>
     </div>
     <?php
@@ -5197,9 +5207,7 @@ function render_featured_collection(array $ctx, array $fc)
                     ?>
                 </div>
             </a>
-            <div class="top-right-menu" onclick="return showContextMenu(this);">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
-            </div>
+            <?php render_top_right_menu_btn(); ?>
         </div>
         <?php
         render_featured_collection_context_menu(md5($fc['ref']), $tools);
@@ -5231,6 +5239,18 @@ function render_featured_collection(array $ctx, array $fc)
     </div><!-- End of FeaturedSimpleTile_<?php echo $fc["ref"]; ?>-->
 <?php
     }
+
+/**
+ * Render the top right menu button ellipsis icon.
+ */
+function render_top_right_menu_btn()
+{
+    ?>
+    <div class="top-right-menu" onclick="return showContextMenu(this);">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </div>
+    <?php
+}
 
 /**
  * Render a featured collection (category) contextual menu
