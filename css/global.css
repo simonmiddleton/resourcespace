@@ -1623,7 +1623,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     -webkit-filter: none;
 }
 
-.context-menu-row i {
+.context-menu-row i, .BreadcrumbsBox .context-menu-row .fa {
     font-size: 18px;
     padding: 0 10px 0 2px;
 }

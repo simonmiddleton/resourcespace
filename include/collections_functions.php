@@ -5858,6 +5858,14 @@ function can_reorder_featured_collections()
 }
 
 /**
+ * Check if user is authorised to edit a featured collection category
+ */
+function can_edit_featured_collection_category(): bool
+{
+    return $GLOBALS['enable_theme_category_edit'] && checkperm('h') || checkperm('t');
+}
+
+/**
  * Remove all old anonymous collections
  *
  * @param  int $limit   Maximum number of collections to delete - if run from browser this is kept low to avoid delays

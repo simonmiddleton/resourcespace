@@ -4907,7 +4907,7 @@ function render_featured_collections(array $ctx, array $items)
             "redirect" => true
         );
         $tool_select = array(
-            "icon" => 'fa-solid fa-circle-check',
+            "icon" => 'fa-solid fa-fw fa-circle-check',
             "text" => $lang['action-select'],
             "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');"
         );
@@ -4971,7 +4971,7 @@ function render_featured_collections(array $ctx, array $items)
             {
             $render_ctx["tools"][] = array(
                 "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                "icon" => 'fa-solid fa-share-nodes',
+                "icon" => 'fa-solid fa-fw fa-share-nodes',
                 "text" => $lang["share"]);
             }
         if($is_featured_collection && collection_readable($fc['ref']))
@@ -5028,7 +5028,7 @@ function render_featured_collections(array $ctx, array $items)
 
             $render_ctx["tools"][] = array(
                 "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                "icon" => 'fa-solid fa-share-nodes',
+                "icon" => 'fa-solid fa-fw fa-share-nodes',
                 "text" => $lang["share"],
             );
 
@@ -5038,7 +5038,7 @@ function render_featured_collections(array $ctx, array $items)
                 $render_ctx["tools"][] = $tool_select;
                 }
 
-            if($enable_theme_category_edit && checkperm("h") || checkperm("t"))
+            if(can_edit_featured_collection_category())
                 {
                 $render_ctx["tools"][] = $tool_edit;
                 }
