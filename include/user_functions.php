@@ -956,7 +956,7 @@ function email_reset_link(string $email, bool $newuser = false)
         // Fetch any welcome message for this user group
         $welcome = ps_value('SELECT welcome_message AS value FROM usergroup WHERE ref = ?', ["i",$details['usergroup']], '');
 
-        if (trim($welcome) === "") {
+        if (trim((string) $welcome) === "") {
             $welcome = str_replace("%applicationname", $applicationname, $lang["welcome_generic"]);
         }
 
