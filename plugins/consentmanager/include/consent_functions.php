@@ -520,11 +520,8 @@ function consentmanager_get_expiring_consents(int $expires_within, bool $unsent_
     }
 
     $sql .= " order by ref;";
-    
-    $expiring_consents = ps_array($sql, ['i', $expires_within]);
 
-    return $expiring_consents;
-
+    return ps_array($sql, ['i', $expires_within]);
 }
 
 /**
@@ -572,10 +569,8 @@ function consentmanager_get_expired_consent_resources(int $archive_status): arra
             and r.archive <> ?
             and r.archive <> 3
             order by r.ref;";
-    
-    $expired_consent_resources = ps_array($sql, ['i', $archive_status]);
 
-    return $expired_consent_resources;
+    return ps_array($sql, ['i', $archive_status]);
 }
 
 /**

@@ -280,11 +280,8 @@ function licensemanager_get_expiring_licenses(int $expires_within, bool $unsent_
     }
 
     $sql .= " order by ref;";
-    
-    $expiring_licenses= ps_array($sql, ['i', $expires_within]);
 
-    return $expiring_licenses;
-
+    return ps_array($sql, ['i', $expires_within]);
 }
 
 /**
@@ -332,10 +329,8 @@ function licensemanager_get_expired_license_resources(int $archive_status): arra
             and r.archive <> ?
             and r.archive <> 3
             order by r.ref;";
-    
-    $expired_license_resources = ps_array($sql, ['i', $archive_status]);
 
-    return $expired_license_resources;
+    return ps_array($sql, ['i', $archive_status]);
 }
 
 /**
