@@ -62,6 +62,5 @@ if (count($result) != 0) {
 }
 
 ps_query('DELETE FROM archive_states WHERE ref = ?;', array('i', $row));
-//ps_query('UPDATE archive_states SET skip_required_fields = ? WHERE code = -1;', array('i', $stored_skip_required_fields));
 clear_query_cache("workflow");
 delete_resource_type_field($field_ref);

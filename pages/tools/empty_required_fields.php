@@ -39,7 +39,7 @@ if (getval("save", "") != "" && enforcePostRequest(false) && $collection_ref > 0
 
     $resources = get_collection_resources($collection_ref);
 
-    # Get resources with missing require field data.
+    # Get resources with missing required field data.
     $missing_fields = array();
     foreach ($resources as $resource) {
         $fields = missing_fields_check($resource);
