@@ -386,7 +386,6 @@ if (getval('loginas', '') != '') {
                     <span style="display:none;"><?php echo get_api_key($user["ref"]); ?></span>
                 </div>
                 <div class="clearerleft"></div>
-                </div>
             </div>
         <?php }
 
