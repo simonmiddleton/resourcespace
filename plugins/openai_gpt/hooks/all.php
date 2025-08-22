@@ -116,6 +116,7 @@ function HookOpenai_gptAllUpdate_field($resource, $field, $value, $existing, $fi
     $targetfields = openai_gpt_get_dependent_fields($field);
     foreach ($targetfields as $targetfield) {
         // Create array of new string values that will be passed to the API
+        $targetfield = get_resource_type_field($targetfield);
         $source_values = [];
         if (count($newvalues) > 0) {
             $source_values = $newvalues;
@@ -164,6 +165,7 @@ function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_node
         $targetfields = openai_gpt_get_dependent_fields($field["ref"]);
         foreach($targetfields as $targetfield)
             {
+            $targetfield = get_resource_type_field($targetfield);
             debug("openai_gpt aftersaveresourcedata - processing field #" . $targetfield["ref"] . " (" . $targetfield["title"] . ")");
             foreach($refs as $ref)
                 {
@@ -210,9 +212,11 @@ function HookOpenai_gptAllAfterpreviewcreation(int $ref, int $alternative, bool 
     $fields_with_values = array_column($fields_with_values, 'ref');
 
     // Do any fields use image as input?
-    $ai_gpt_image_fields = ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE openai_gpt_input_field = -1");
+    $ai_gpt_image_fields = openai_gpt_get_dependent_fields(-1);
+                                    
     foreach($ai_gpt_image_fields as $ai_gpt_image_field)
         {
+        $ai_gpt_image_field = get_resource_type_field($ai_gpt_image_field);
         // Don't update if not a valid field type
         if(!in_array($ai_gpt_image_field["type"],$GLOBALS["valid_ai_field_types"]))
             {

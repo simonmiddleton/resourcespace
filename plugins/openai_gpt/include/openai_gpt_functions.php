@@ -59,6 +59,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
                     }
                 else
                     {
+                    debug("openai_gpt - skipping resource $resource_ref - target field unavailable for resource type $resource_ref_resource_type");
                     $results[$resource_ref] = false;
                     }
                 }
@@ -342,8 +343,13 @@ function openai_gpt_generate_completions($apiKey, $model, $messages, $temperatur
     return false;
     }
 
-function openai_gpt_get_dependent_fields($field)
+/**
+ * Return array of resource type field refs for a given openai_gpt_input_field value.
+ * 
+ * @param  int   $field   ID of GPT input field.
+ */
+function openai_gpt_get_dependent_fields(int $field): array
     {
-    return ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE openai_gpt_input_field = ?",["i", $field]);
+    return ps_array("SELECT ref AS `value` FROM resource_type_field WHERE openai_gpt_input_field = ?", ["i", $field]);
     }
 
