@@ -2413,7 +2413,7 @@ function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
 */
 function get_utility_path($utilityname, &$checked_path = null)
 {
-    global $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $antiword_path, $pdftotext_path,
+    global $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $pdftotext_path,
            $blender_path, $archiver_path, $archiver_executable, $python_path, $fits_path;
 
     $checked_path = null;
@@ -2558,20 +2558,6 @@ function get_utility_path($utilityname, &$checked_path = null)
                 return false;
             }
             return $path . " {$exiftool_global_options} ";
-
-        case 'antiword':
-            if (!isset($antiword_path) || $antiword_path === '') {
-                return false;
-            }
-
-            return get_executable_path(
-                $antiword_path,
-                [
-                    'unix' => 'antiword',
-                    'win'  => 'antiword.exe'
-                ],
-                $checked_path
-            );
 
         case 'pdftotext':
             if (!isset($pdftotext_path) || $pdftotext_path === '') {

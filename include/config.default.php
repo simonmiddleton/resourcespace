@@ -115,9 +115,6 @@ $ghostscript_executable = 'gs';
 // Install Exiftool and set this path to enable metadata-writing when resources are downloaded
 // $exiftool_path='/usr/bin';
 
-// Path to Antiword - for text extraction / indexing of Microsoft Word Document (.doc) files
-// $antiword_path='/usr/bin';
-
 // Path to pdftotext - part of the XPDF project, see http://www.foolabs.com/xpdf/
 // Enables extraction of text from PDF files
 // $pdftotext_path='/usr/bin';
