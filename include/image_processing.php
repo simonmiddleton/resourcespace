@@ -3149,7 +3149,13 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 
     $cmd_args['%outputpath'] = new CommandPlaceholderArg($outputpath, 'is_valid_rs_path');
     $command .= $profile . ' %outputpath';
+
     run_command($command, false, $cmd_args);
+
+    file_put_contents(get_temp_dir() . "/temp.txt", $command, FILE_APPEND);
+    file_put_contents(get_temp_dir() . "/temp.txt", PHP_EOL, FILE_APPEND);
+    file_put_contents(get_temp_dir() . "/temp.txt", $cmd_args, FILE_APPEND);
+        file_put_contents(get_temp_dir() . "/temp.txt", PHP_EOL, FILE_APPEND);
 
     if (file_exists($outputpath)) {
         // See if we have got exiftool
@@ -3548,7 +3554,13 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
         return array();
     }
 
-    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile;
+    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles;
+
+    if ($imagemagick_preserve_profiles) {
+        // Don't touch the ICC profile
+        return array();
+    }
+
     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
 
     $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");
