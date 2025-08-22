@@ -35,7 +35,6 @@ foreach ($resources as $resource) {
 
     if (!empty($current_extracted_text) && !$updateall) {
         echo "Ref: " . $resource['ref'] . " - already has extracted text - skipping" . PHP_EOL;
-        continue;
     } else {
 
         $result = extract_text($resource['ref'], $resource['file_extension']);
