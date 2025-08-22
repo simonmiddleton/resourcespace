@@ -342,10 +342,8 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                 if (trim($csv_set_options["status_column"]) != "" && in_array($csv_set_options["status_column"], array_keys($line))) {
                     $setstatus = $line[$csv_set_options["status_column"]];
 
-                    if (!is_numeric($setstatus)) {
-                        if (isset($archivestates[strtolower($setstatus)])) {
-                            $setstatus = $archivestates[strtolower($setstatus)];
-                        }
+                    if (!is_numeric($setstatus) && isset($archivestates[strtolower($setstatus)])) {
+                        $setstatus = $archivestates[strtolower($setstatus)];
                     }
                     if (!in_array($setstatus, $archivestates)) {
                         $setstatus = $csv_set_options['status_default'];
@@ -366,10 +364,8 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                 if (trim($csv_set_options["access_column"]) != "" && in_array($csv_set_options["access_column"], array_keys($line))) {
                     $setaccess = $line[$csv_set_options["access_column"]];
 
-                    if (!is_numeric($setaccess)) {
-                        if (isset($accessstates[strtolower($setaccess)])) {
-                            $setaccess = $accessstates[strtolower($setaccess)];
-                        }
+                    if (!is_numeric($setaccess) && isset($accessstates[strtolower($setaccess)])) {
+                        $setaccess = $accessstates[strtolower($setaccess)];
                     }
 
                     if (!in_array($setaccess, $accessstates)) {

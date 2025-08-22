@@ -298,29 +298,27 @@ function message_add($users, $text, $url = "", $owner = null, $notification_type
         // send an email if the user has notifications and emails setting and the message hasn't already been sent via email
         if (~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL) {
             get_config_option(['user' => $user_info['ref'], 'usergroup' => $user_info['usergroup']], 'email_and_user_notifications', $notifications_always_email, $GLOBALS['system_wide_config_options']['email_and_user_notifications']);
-            if ($notifications_always_email) {
-                if ($user_info['email'] !== '') {
-                    if (substr($url, 0, 1) == "/") {
-                        // If a relative link is provided make sure we add the full URL when emailing
-                        $parsed_url = parse_url($baseurl);
-                        $url = $baseurl . (isset($parsed_url["path"]) ? str_replace($parsed_url["path"], "", $url) : $url);
-                    }
-
-                    $message_text = nl2br($orig_text);
-
-                    // Add system header image to email
-                    $headerimghtml = "";
-                    $img_url = get_header_image(true);
-                    $img_div_style = "max-height:50px;padding: 5px;";
-                    $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
-                    $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
-
-                    if ($url !== '' && strpos($message_text, $url) === false) {
-                        // Add the URL to the message if not already present
-                        $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
-                    }
-                    send_mail($user_info['email'], $applicationname . ": " . $lang['notification_email_subject'], $headerimghtml . $message_text);
+            if ($notifications_always_email && $user_info['email'] !== '') {
+                if (substr($url, 0, 1) == "/") {
+                    // If a relative link is provided make sure we add the full URL when emailing
+                    $parsed_url = parse_url($baseurl);
+                    $url = $baseurl . (isset($parsed_url["path"]) ? str_replace($parsed_url["path"], "", $url) : $url);
                 }
+
+                $message_text = nl2br($orig_text);
+
+                // Add system header image to email
+                $headerimghtml = "";
+                $img_url = get_header_image(true);
+                $img_div_style = "max-height:50px;padding: 5px;";
+                $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
+                $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
+
+                if ($url !== '' && strpos($message_text, $url) === false) {
+                    // Add the URL to the message if not already present
+                    $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
+                }
+                send_mail($user_info['email'], $applicationname . ": " . $lang['notification_email_subject'], $headerimghtml . $message_text);
             }
         }
     }
