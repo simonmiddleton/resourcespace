@@ -3235,3 +3235,4 @@ $lang["action_update_now"] = 'Jetzt aktualisieren';
 $lang["errors"] = 'Fehler';
 $lang["error_savefirst"] = 'Bitte speichern Sie Ihre Änderungen';
 $lang["language-be"] = 'Belarussisch';
+$lang["show_hidden_property"] = 'Versteckte Eigenschaft anzeigen';

@@ -2938,3 +2938,4 @@ $lang["false-true"] = array (
   0 => 'Ffug',
   1 => 'Iawn',
 );
+$lang["show_hidden_property"] = 'Dangos eiddo cudd';

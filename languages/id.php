@@ -3095,3 +3095,4 @@ $lang["false-true"] = array (
   0 => 'Salah',
   1 => 'Benar',
 );
+$lang["show_hidden_property"] = 'Tampilkan properti tersembunyi';

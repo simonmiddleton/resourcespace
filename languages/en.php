@@ -3323,3 +3323,4 @@ $lang["missing_required_fields_intro"] = 'Resources in the collection appear bel
 $lang['action_update_now'] = "Update now";
 $lang['errors'] = "Errors";
 $lang['error_savefirst'] = "Please save your changes";
+$lang['show_hidden_property']="Show hidden property";

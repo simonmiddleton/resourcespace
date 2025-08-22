@@ -2949,3 +2949,4 @@ $lang["false-true"] = array (
   0 => 'Uongo',
   1 => 'Kweli',
 );
+$lang["show_hidden_property"] = 'Onyesha mali iliyofichwa';

@@ -3043,3 +3043,4 @@ $lang["false-true"] = array (
   0 => 'Onwaar',
   1 => 'Waar',
 );
+$lang["show_hidden_property"] = 'Toon verborgen eigenschap';

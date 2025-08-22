@@ -3174,3 +3174,4 @@ $lang["false-true"] = array (
   0 => 'Falsk',
   1 => 'Sann',
 );
+$lang["show_hidden_property"] = 'Vis skjult egenskap';

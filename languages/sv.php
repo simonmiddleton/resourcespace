@@ -3216,3 +3216,4 @@ $lang["action_update_now"] = 'Uppdatera nu';
 $lang["errors"] = 'Fel';
 $lang["error_savefirst"] = 'Vänligen spara dina ändringar';
 $lang["language-be"] = 'Belarusian';
+$lang["show_hidden_property"] = 'Visa dolda egenskaper';

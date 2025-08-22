@@ -2952,3 +2952,4 @@ $lang["false-true"] = array (
   0 => 'غلط',
   1 => 'درست',
 );
+$lang["show_hidden_property"] = 'نمایش ویژگی پنهان';

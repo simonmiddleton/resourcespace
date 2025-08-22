@@ -2938,3 +2938,4 @@ $lang["false-true"] = array (
   0 => 'Няпраўда',
   1 => 'Праўда',
 );
+$lang["show_hidden_property"] = 'Паказаць схаваную ўласнасць';

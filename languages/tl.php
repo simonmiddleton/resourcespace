@@ -2938,3 +2938,4 @@ $lang["false-true"] = array (
   0 => 'Mali',
   1 => 'Tama',
 );
+$lang["show_hidden_property"] = 'Ipakita ang nakatagong ari-arian';

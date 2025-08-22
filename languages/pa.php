@@ -2952,3 +2952,4 @@ $lang["false-true"] = array (
   0 => 'ਝੂਠਾ',
   1 => 'ਸੱਚਾ',
 );
+$lang["show_hidden_property"] = 'ਛੁਪੇ ਹੋਏ ਗੁਣ ਦਿਖਾਓ';

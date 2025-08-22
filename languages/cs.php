@@ -2944,3 +2944,4 @@ $lang["false-true"] = array (
   0 => 'Nepravda',
   1 => 'Pravda',
 );
+$lang["show_hidden_property"] = 'Zobrazit skrytou vlastnost';

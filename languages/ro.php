@@ -3029,3 +3029,4 @@ $lang["false-true"] = array (
   0 => 'Fals',
   1 => 'Adevărat',
 );
+$lang["show_hidden_property"] = 'Afișează proprietatea ascunsă';

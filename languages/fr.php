@@ -3069,3 +3069,4 @@ $lang["false-true"] = array (
   0 => 'Faux',
   1 => 'Vrai',
 );
+$lang["show_hidden_property"] = 'Afficher la propriété cachée';

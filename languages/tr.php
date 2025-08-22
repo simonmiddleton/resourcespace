@@ -2950,3 +2950,5 @@ $lang["false-true"] = array (
   0 => 'Yanlış',
   1 => 'Doğru',
 );
+
+$lang["show_hidden_property"] = 'Gizli özelliği göster';

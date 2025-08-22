@@ -3000,3 +3000,4 @@ $lang["false-true"] = array (
   0 => 'Falsk',
   1 => 'Sand',
 );
+$lang["show_hidden_property"] = 'Vis skjult egenskab';

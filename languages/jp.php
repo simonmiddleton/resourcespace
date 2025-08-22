@@ -3077,3 +3077,4 @@ $lang["false-true"] = array (
   0 => '偽',
   1 => '真',
 );
+$lang["show_hidden_property"] = '隠しプロパティを表示';

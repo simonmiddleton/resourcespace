@@ -3018,3 +3018,4 @@ $lang["false-true"] = array (
   0 => 'Lažno',
   1 => 'Točno',
 );
+$lang["show_hidden_property"] = 'Prikaži skrivenu svojstvo';

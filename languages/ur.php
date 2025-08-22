@@ -2951,3 +2951,4 @@ $lang["false-true"] = array (
   0 => 'غلط',
   1 => 'صحیح',
 );
+$lang["show_hidden_property"] = 'چھپی ہوئی خصوصیت دکھائیں';

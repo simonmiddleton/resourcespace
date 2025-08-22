@@ -3145,3 +3145,4 @@ $lang["false-true"] = array (
   0 => '假',
   1 => '真',
 );
+$lang["show_hidden_property"] = '显示隐藏属性';

@@ -3033,3 +3033,4 @@ $lang["false-true"] = array (
   0 => 'Ложь',
   1 => 'Истина',
 );
+$lang["show_hidden_property"] = 'Показать скрытое свойство';

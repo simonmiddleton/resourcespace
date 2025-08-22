@@ -3163,3 +3163,4 @@ $lang["false-true"] = array (
   0 => 'خطأ',
   1 => 'صحيح',
 );
+$lang["show_hidden_property"] = 'عرض الخاصية المخفية';

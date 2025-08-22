@@ -2991,3 +2991,4 @@ $lang["action_update_now"] = 'Actualizar ahora';
 $lang["errors"] = 'Errores';
 $lang["error_savefirst"] = 'Por favor, guarda tus cambios';
 $lang["language-be"] = 'Bielorruso';
+$lang["show_hidden_property"] = 'Mostrar propiedad oculta';

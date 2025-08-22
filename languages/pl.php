@@ -3062,3 +3062,4 @@ $lang["false-true"] = array (
   0 => 'Fałsz',
   1 => 'Prawda',
 );
+$lang["show_hidden_property"] = 'Pokaż ukrytą właściwość';

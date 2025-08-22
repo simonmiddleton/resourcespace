@@ -2941,3 +2941,4 @@ $lang["false-true"] = array (
   0 => 'Sai',
   1 => 'Đúng',
 );
+$lang["show_hidden_property"] = 'Hiển thị thuộc tính ẩn';

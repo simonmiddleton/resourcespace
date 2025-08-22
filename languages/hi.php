@@ -2958,3 +2958,4 @@ $lang["false-true"] = array (
   0 => 'गलत',
   1 => 'सही',
 );
+$lang["show_hidden_property"] = 'छिपी हुई संपत्ति दिखाएँ';

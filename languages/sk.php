@@ -3341,3 +3341,4 @@ $lang["action_update_now"] = 'Aktualizovať teraz';
 $lang["errors"] = 'Chyby';
 $lang["error_savefirst"] = 'Prosím, uložte svoje zmeny';
 $lang["language-be"] = 'Belaruský';
+$lang["show_hidden_property"] = 'Zobraziť skrytú vlastnosť';

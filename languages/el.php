@@ -3018,3 +3018,4 @@ $lang["false-true"] = array (
   0 => 'Ψευδές',
   1 => 'Αληθές',
 );
+$lang["show_hidden_property"] = 'Εμφάνιση κρυφής ιδιότητας';

@@ -3037,3 +3037,4 @@ $lang["false-true"] = array (
   0 => 'Fals',
   1 => 'Cert',
 );
+$lang["show_hidden_property"] = 'Mostra la propietat oculta';

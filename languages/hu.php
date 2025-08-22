@@ -2946,3 +2946,4 @@ $lang["false-true"] = array (
   0 => 'Hamis',
   1 => 'Igaz',
 );
+$lang["show_hidden_property"] = 'Rejtett tulajdonság megjelenítése';

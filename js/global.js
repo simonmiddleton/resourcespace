@@ -2244,3 +2244,16 @@ function updateHeaderImage() {
         }
     });
 }
+
+
+
+// Hide/show function for hidden fields.
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('show-hidden-btn')) {
+        const hiddenItem = e.target.nextElementSibling;
+        if (hiddenItem) {
+            hiddenItem.style.display = 'inline';
+            e.target.style.display = 'none';
+        }
+    }
+});

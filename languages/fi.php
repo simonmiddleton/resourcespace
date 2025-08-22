@@ -3176,3 +3176,4 @@ $lang["action_update_now"] = 'Päivitä nyt';
 $lang["errors"] = 'Virheet';
 $lang["error_savefirst"] = 'Ole hyvä ja tallenna muutoksesi';
 $lang["language-be"] = 'Belarusian';
+$lang["show_hidden_property"] = 'Näytä piilotettu ominaisuus';

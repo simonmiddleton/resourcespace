@@ -2943,3 +2943,4 @@ $lang["false-true"] = array (
   0 => 'মিথ্যা',
   1 => 'সত্য',
 );
+$lang["show_hidden_property"] = 'লুকানো সম্পত্তি দেখান';
