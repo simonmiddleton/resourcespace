@@ -3786,20 +3786,32 @@ function xor_base64_encode($str) {
 }
 
 /**
- * load_site_text_for_usergroup
+ * Load site text for a user group. To preserve the original state of global language values, this function will always revert previous changes first.
  *
  * @param  int  $group   $usergroup value. Normally int however maybe null for activity before login e.g. load user group site text for an activity by
- *                       supplying a user group id and then return to the defaults by supplying null. Supplying the $usergroup global value would be
- *                       more common to return to the site text of the logged in user.
+ *                       supplying a user group id and then return to the defaults by supplying null.
  */
 function load_site_text_for_usergroup(int|null $group): void
 {
     global $language, $pagename, $lang;
 
-    if (is_null($group) && is_array($GLOBALS['load_site_text_for_usergroup'])) {
+    // Restore original values each time this function loads so it starts from the default values.
+    if (isset($GLOBALS['load_site_text_for_usergroup'])) {
         $results = $GLOBALS['load_site_text_for_usergroup'];
-    } elseif (is_int($group)) {
-        // Fetch user group specific content.
+        for ($n = 0; $n < count($results); $n++) {
+            if (isset($results[$n]['unset'])) {
+                unset($lang[$results[$n]['unset']]);
+            } elseif ($results[$n]['page'] == '') {
+                $lang[$results[$n]['name']] = $results[$n]['text'];
+                $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+            } else {
+                $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+            }
+        }
+    }
+
+    // Apply new values and store previous for reset the next time this function loads (above).
+    if (is_int($group)) {
         $site_text_query = "SELECT `name`, `text`, `page` FROM site_text WHERE language = ? AND specific_to_group = ?";
         $parameters = array("s", $language, "i", $group);
 
@@ -3810,26 +3822,34 @@ function load_site_text_for_usergroup(int|null $group): void
         }
 
         $results = ps_query($site_text_query, $parameters, "sitetext", -1, true, 0);
-    } elseif (is_null($group)) {
-        return;
-    }
 
-    $original_values = array();
+        $original_values = array();
+        for ($n = 0; $n < count($results); $n++) {
+            if ($results[$n]['page'] == '') {
+                if (isset($lang[$results[$n]['name']])) {
+                    $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['name']], 'page' => $results[$n]['page']);
+                    $lang[$results[$n]['name']] = $results[$n]['text'];
+                    $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+                } else {
+                    $lang[$results[$n]['name']] = $results[$n]['text'];
+                    $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+                    $original_values[] = array('unset' => $results[$n]['name']);
+                }
+            } else {
+                if (isset($lang[$results[$n]['page'] . '__' . $results[$n]['name']])) {
+                    $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['page'] . '__' . $results[$n]['name']], 'page' => $results[$n]['page']);
+                    $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+                } else {
+                    $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+                    $original_values[] = array('unset' => $results[$n]['page'] . '__' . $results[$n]['name']);
+                }
+            }
+        }
 
-    for ($n = 0; $n < count($results); $n++) {
-        if ($results[$n]['page'] == '') {
-            $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['name']], 'page' => $results[$n]['page']);
-            $lang[$results[$n]['name']] = $results[$n]['text'];
-            $customsitetext[$results[$n]['name']] = $results[$n]['text'];
-        } else {
-            $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['page'] . '__' . $results[$n]['name']], 'page' => $results[$n]['page']);
-            $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+        if (count($original_values) > 0) {
+            // Store the original values to restore the next time this function is called.
+            $GLOBALS['load_site_text_for_usergroup'] = $original_values;
         }
     }
-
-    if (!isset($GLOBALS['load_site_text_for_usergroup'])) {
-        // Store the original values the first time this function is called. This provides a way to restore the earlier value where we don't have another user group ref
-        // such as activity before login. Providing null as $group will then pickup this cached value.
-        $GLOBALS['load_site_text_for_usergroup'] = $original_values;
-    }
 }
+
