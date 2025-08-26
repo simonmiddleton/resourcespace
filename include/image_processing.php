@@ -3152,11 +3152,6 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 
     run_command($command, false, $cmd_args);
 
-    file_put_contents(get_temp_dir() . "/temp.txt", $command, FILE_APPEND);
-    file_put_contents(get_temp_dir() . "/temp.txt", PHP_EOL, FILE_APPEND);
-    file_put_contents(get_temp_dir() . "/temp.txt", $cmd_args, FILE_APPEND);
-        file_put_contents(get_temp_dir() . "/temp.txt", PHP_EOL, FILE_APPEND);
-
     if (file_exists($outputpath)) {
         // See if we have got exiftool
         $exiftool_fullpath = get_utility_path("exiftool");
