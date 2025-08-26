@@ -399,14 +399,19 @@ if ($ajax == "") {
                                     <li>
                                         <a href="<?php echo $baseurl?>/login.php"><?php echo escape($lang["login"]); ?></a>
                                     </li>
-
-                                    <?php if ($contact_link) { ?>
+                                    <?php
+                                    hook("addtoplinksanon");
+                                    
+                                    if ($contact_link) {
+                                        ?>
                                         <li>
                                             <a href="<?php echo $baseurl?>/pages/contact.php" onclick="return CentralSpaceLoad(this,true);">
                                                 <?php echo escape($lang["contactus"]); ?>
                                             </a>
                                         </li>
-                                    <?php } ?>
+                                        <?php
+                                    }
+                                    ?>
                                 </ul>
                                 <?php
                             } /* end replaceheadernav1anon */
