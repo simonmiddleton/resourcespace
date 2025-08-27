@@ -41,7 +41,19 @@ if ($resource > 0) {
     delete_previews($resource);
 }
 
-if ($resource > 0 && create_previews($resource, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ignoremaxsize, $ingested, $checksum_required)) {
+$success = create_previews(
+    $resource, 
+    $thumbonly, 
+    in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
+    $previewonly, 
+    in_array($extension, NON_PREVIEW_EXTENSIONS) || $previewbased, 
+    $alternative, 
+    $ignoremaxsize, 
+    $ingested, 
+    $checksum_required
+);
+
+if ($resource > 0 && $success) {
     // Success - no message required
     update_disk_usage($resource);
     if ($offline_job_delete_completed) {

@@ -2578,18 +2578,28 @@ function delete_previews($resource, $alternative = -1)
     $dirinfo = pathinfo($fullsizejpgpath);
     $resourcefolder = $dirinfo["dirname"];
 
-    $presizes = ps_array("SELECT id value FROM preview_size");
-    $pagecount = get_page_count($resource_data, $alternative);
-    foreach ($presizes as $presize) {
-        for ($page = 1; $page <= $pagecount; $page++) {
-            $previewpath = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, false, "", $alternative);
-            if (file_exists($previewpath)) {
-                unlink($previewpath);
-            }
-            if ($watermark !== '') {
-                $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "", $alternative);
-                if (file_exists($wm_path)) {
-                    unlink($wm_path);
+    if (!in_array($extension, NON_PREVIEW_EXTENSIONS)) {
+        $is_original_preview = is_original_preview($resource);
+        $presizes = ps_array("SELECT id value FROM preview_size ORDER BY (height * width) DESC");
+        $pagecount = get_page_count($resource_data, $alternative);
+        foreach ($presizes as $presize) {
+            for ($page = 1; $page <= $pagecount; $page++) {
+                $previewpath = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, false, "", $alternative);
+                if (file_exists($previewpath)) {
+                    // Preserve manually uploaded previews as alt files
+                    if (!$is_original_preview && $page == 1 && in_array($presize, ['thm','col','pre','scr'])) {
+                        $alt_file = add_alternative_file($resource, '', '', '', 'jpg', filesize_unlimited($previewpath));
+                        $new_path = get_resource_path($resource, true, '', true, 'jpg', -1, 1, false, "", $alt_file);
+                        copy($previewpath, $new_path);
+                        $is_original_preview = true;
+                    }
+                    unlink($previewpath);
+                }
+                if ($watermark !== '') {
+                    $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "", $alternative);
+                    if (file_exists($wm_path)) {
+                        unlink($wm_path);
+                    }
                 }
             }
         }
@@ -3248,14 +3258,33 @@ function start_previews(int $ref, string $extension = ""): int
     if ($minimal_previews) {
         if (!in_array($extension, $GLOBALS["minimal_preview_creation_exclude_extensions"])) {
             // Extension hasn't been excluded from immediate preview creation
-            $success = create_previews($ref, false, $extension, false, false, -1, true, $ingested, false, $minimal_previews_sizes);
+            $success = create_previews(
+                $ref, 
+                false, 
+                in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
+                false, 
+                in_array($extension, NON_PREVIEW_EXTENSIONS), 
+                -1, 
+                true, 
+                $ingested, 
+                false, 
+                $minimal_previews_sizes
+            );
             return $success ? 2 : 0;
         }
         return 2;
     }
     // No offline preview creation - create the full set of previews immediately
     ps_query("UPDATE `resource` SET has_image = 0, preview_attempts = 0 WHERE ref = ?;", ['i', $ref]);
-    $success = create_previews($ref, false, $resource_data["file_extension"], false, false, -1, false, $ingested);
+    $success = create_previews(
+        $ref, 
+        false, 
+        in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS) ? 'jpg' : $resource_data["file_extension"],  
+        false, 
+        in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
+        -1, 
+        false, 
+        $ingested);
     return $success ? 1 : 0;
 }
 
