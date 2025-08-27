@@ -190,9 +190,14 @@ $links_trail = array(
 
                 addColumnHeader('ref', 'property-reference');
                 addColumnHeader('title', 'property-title');
-                addColumnHeader('name', 'property-shorthand_name');
+
+                if ($metadata_admin_show_shorthand)
+                {
+                    addColumnHeader('name', 'property-shorthand_name');
+                }
                 addColumnHeader('type', 'property-field_type');
                 addColumnHeader('resource_type', 'resourcetypes');
+                addColumnHeader('exiftool_field', 'property-exiftool_field');
 
                 if (!hook('replacetabnamecolumnheader')) {
                     addColumnHeader('tab_name', 'property-tab_name');
@@ -220,9 +225,11 @@ $links_trail = array(
                                 </a>
                             </div>
                         </td>
+                        <?php if ($metadata_admin_show_shorthand) { ?>
                         <td>
                             <?php echo escape($fields[$n]["name"]); ?>
                         </td>
+                        <?php } ?>
                         <td>
                             <?php
                             // If no field value is set it is treated as type 0 (single line text)
@@ -243,11 +250,17 @@ $links_trail = array(
                             <?php echo escape(tidy_trim($restypestring, 30)); ?>
                         </td>
 
+                        <td>
+                            <?php echo str_replace(",","<br />",escape($fields[$n]['exiftool_field'] ?? '')); ?>
+                        </td>
+
                         <?php if (!hook('replacetabnamecolumn')) { ?>
                             <td>
                                 <?php echo escape($system_tabs[(int) $fields[$n]['tab']] ?? ''); ?>
                             </td>
                         <?php } ?>
+
+
 
                         <td>
                             <div class="ListTools">
