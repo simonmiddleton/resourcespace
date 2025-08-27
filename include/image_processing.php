@@ -1998,7 +1998,7 @@ function upload_preview($ref)
 */
 function extract_text($ref, $extension, $path = "")
 {
-    global $extracted_text_field,$antiword_path,$pdftotext_path,$lang;
+    global $extracted_text_field,$pdftotext_path,$lang;
 
     resource_log($ref, LOG_CODE_TRANSFORMED, '', '', '', $lang['embedded_metadata_extract_option']);
 
@@ -2010,20 +2010,6 @@ function extract_text($ref, $extension, $path = "")
     if (!file_exists($path)) {
         debug("ERROR: Unable to extract text for resource $ref. The source file does not exist at: $path");
         return false;
-    }
-
-    # Microsoft Word extraction using AntiWord.
-    if ($extension == "doc" && isset($antiword_path)) {
-        $command = get_utility_path('antiword');
-        if (!$command) {
-            debug("ERROR: Antiword executable not found at '$antiword_path'");
-            return false;
-        }
-        $text = run_command(
-            "{$command} -m UTF-8 %%PATH%%",
-            false,
-            ["%%PATH%%" => new CommandPlaceholderArg($path, "is_valid_rs_path")],
-        );
     }
 
     # Microsoft OfficeOpen (docx,xlsx) extraction

@@ -9,7 +9,7 @@
 use Montala\ResourceSpace\CommandPlaceholderArg;
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace,
-$ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip,
+$ghostscript_path, $pdf_pages, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip,
 $ffmpeg_audio_extensions, $ffmpeg_audio_params,$ffmpeg_supported_extensions, $ffmpeg_global_options,
 $ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif, $debug_log, $debug_log_override;
 
@@ -360,7 +360,7 @@ if (in_array($extension, $unoconv_extensions) && $extension != 'pdf' && isset($u
         }
     } else {
         debug("Preview preprocessing: Attempt to create previews with Unoconv for ref $ref failed.");
-        $using_unoconv = false; // Try and use e.g. Antiword
+        $using_unoconv = false;
     }
 }
 
@@ -465,42 +465,6 @@ if ($extension == "blend" && isset($blender_path) && !isset($newfile)) {
         copy($target . "0001.jpg", "$target");
         unlink($target . "0001.jpg");
         $newfile = $target;
-    }
-}
-
-/* ----------------------------------------
-    Microsoft Word previews using Antiword
-    (note: this is very basic)
-   ----------------------------------------
-*/
-if (!$using_unoconv && $extension == "doc" && isset($antiword_path) && isset($ghostscript_path) && !isset($newfile)) {
-    $command = get_utility_path('antiword');
-    if (!$command) {
-        debug("Antiword executable not found at '$antiword_path'");
-        $preview_preprocessing_success = false;
-        return;
-    }
-    $output = run_command(
-        "{$command} -p a4 %file > %target",
-        false,
-        [
-            '%file' => $file,
-            '%target' => "{$target}.ps",
-        ]
-    );
-
-    if (file_exists($target . ".ps") && filesize($target . ".ps") > 0) {
-        # Postscript file exists
-        $gscommand = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=jpeg -r150 -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=1 -dLastPage=1 -dEPSCrop " . escapeshellarg($target . ".ps");
-        $output = run_command($gscommand);
-
-        if (file_exists($target)) {
-            # A JPEG was created. Set as the file to process.
-            $newfile = $target;
-        }
-    } else {
-        $preview_preprocessing_success = false;
-        return;
     }
 }
 
