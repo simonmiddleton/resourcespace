@@ -1,5 +1,8 @@
 <?php
 
+use Spipu\Html2Pdf\Exception\LocaleException;
+use Spipu\Html2Pdf\Locale;
+
 /**
 * Returns the path to a pdf template
 *
@@ -64,12 +67,6 @@ function get_pdf_template_path($resource_type, $template_name = '')
 function generate_pdf($html_template_path, $filename, array $bind_placeholders = array(), $save_on_server = false, array $pdf_properties = array())
 {
     global $applicationname, $baseurl, $baseurl_short, $storagedir, $linkedheaderimgsrc, $language, $contact_sheet_date_include_time, $contact_sheet_date_wordy;
-
-    $html2pdf_path = __DIR__ . '/../lib/html2pdf/vendor/autoload.php';
-    if (!file_exists($html2pdf_path)) {
-        trigger_error('html2pdf class file is missing. Please make sure you have it under lib folder!');
-    }
-    require_once $html2pdf_path;
 
     // Do we have a physical HTML template
     if (!file_exists($html_template_path)) {
@@ -327,32 +324,19 @@ function resolve_pdf_language()
 {
     global $language;
 
-    $asdefaultlanguage = 'en';
-
-    $supported_lang_files = scandir(__DIR__ . '/../lib/html2pdf/src/locale');
-    $supported_langs      = array();
-
-    foreach ($supported_lang_files as $file) {
-        $sl = pathinfo($file, PATHINFO_FILENAME);
-        if (!in_array($sl, array("",".",".."))) {
-            $supported_langs[] = $sl;
-        }
+    try {
+        Locale::load($language);
+        $supported_locale = $language;
+    } catch (LocaleException $e) {
+        debug("Resolving PDF language failed. Reason: {$e->getMessage()}");
+        $supported_locale = match ($language) {
+            'es-AR' => 'es',
+            'pt-BR' => 'pt',
+            default => 'en',
+        };
     }
-    if (in_array($language, $supported_langs)) {
-        return $language;
-    } else {
-        switch ($language) {
-            case "es-AR":
-                return "es";
-                break;
-            case "pt-BR":
-                return "pt";
-                break;
-            default:
-                // this includes en-US
-                return $asdefaultlanguage;
-        }
-    }
+
+    return $supported_locale;
 }
 
 /**
