@@ -1567,7 +1567,7 @@ function get_colour_key($image)
 function tweak_preview_images($ref, $rotateangle, $gamma, $extension = "jpg", $alternative = -1, $resource_ext = "")
 {
     # Use the screen resolution version for processing
-    global $ffmpeg_supported_extensions;
+    global $ffmpeg_supported_extensions, $lang;
 
     $file = get_resource_path($ref, true, "scr", false, $extension, -1, 1, false, '', $alternative);
     $top = "scr";
@@ -1580,6 +1580,9 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension = "jpg", $a
     if (!file_exists($file)) {
         return false;
     }
+
+    set_processing_message(str_replace("[resource]", $ref, $lang["processing_updating_previews"]));
+
     $source = imagecreatefromjpeg($file);
     # Apply tweaks
     if ($rotateangle != 0) {
