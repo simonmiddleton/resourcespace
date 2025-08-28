@@ -34,12 +34,11 @@
     },
     "scripts": {
         "build:applyDownstreamChanges": [
-            "echo Applying downstream changes to vendor/. todo: this is a POC, unsure if this will remain the final approach!",
+            "echo Applying downstream changes to vendor/.",
             "#IF you've already applied downstream changes patch will warn you with 'Reversed (or previously applied) patch detected!  Assume -R?'. Select 'y' to continue.",
-            "#svn diff -c 18940 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Cache/FileStore.php | patch filestore/tmp/testDownstreamChanges/FileStore.php",
-            "svn diff -c 23197 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/File.php | patch filestore/tmp/testDownstreamChanges/File.php",
-            "svn diff -c 23596 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Cache/ApcuStore.php | patch filestore/tmp/testDownstreamChanges/ApcuStore.php",
-            "svn diff -c 24289 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Tus/Server.php | patch filestore/tmp/testDownstreamChanges/Server.php",
+            "svn diff -c 23197 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/File.php | patch vendor/ankitpokhrel/tus-php/src/File.php",
+            "svn diff -c 23596 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Cache/ApcuStore.php | patch vendor/ankitpokhrel/tus-php/src/Cache/ApcuStore.php",
+            "svn diff -c 24289 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Tus/Server.php | patch vendor/ankitpokhrel/tus-php/src/Tus/Server.php",
             "svn merge -c 24458 ^/trunk # simplesamlphp is under VCS so we can simply merge those changes",
             "svn merge -c 27077 ^/trunk # flickr_theme_publish is under VCS so we can simply merge those changes"
         ],
