@@ -5773,3 +5773,20 @@ function get_favicon_url(): string
 
     return $favicon;
 }
+
+/**
+ *  Determine what is a manually uploaded preview based off of data in the resource log
+ * 
+ *  @param int $ref resource ID
+ * 
+ *  @return bool returns true if a resource is using its original preview otherwise false.  
+ */
+function is_original_preview ($ref) : bool {
+
+    return ps_value("SELECT resource `value` FROM resource_log rl1
+                WHERE resource = ? AND type = 'up'
+                AND NOT EXISTS (SELECT * FROM resource_log rl2 
+                                    WHERE rl1.resource = rl2.resource AND rl1.date < rl2.date
+                                    AND rl2.type IN ('t', 'f', 'u'))
+            ", ['i', $ref], '') === '';
+}

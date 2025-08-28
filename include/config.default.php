@@ -3232,4 +3232,5 @@ $browser_check=false;
 $browser_check_key="c899a58b100c94fb907fac1f29e2d0fd"; // Randomise this.
 $browser_check_message="Performing browser checks..."; // Message to display when checking browser. This cannot be translated as is displayed before languages are loaded, so is provided as a configuration so it can be localised if desired.
 
-
+// Show the shorthand name column in the metadata admin area for easier identification of fields
+$metadata_admin_show_shorthand = false;

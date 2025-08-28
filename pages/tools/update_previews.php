@@ -37,7 +37,16 @@ function update_previews($ref)
         } else {
             $ingested = true;
         }
-        create_previews($ref, false, ($previewbased ? "jpg" : $resourceinfo[0]["file_extension"]), false, $previewbased, -1, false, $ingested);
+        create_previews(
+            $ref, 
+            false, 
+            ($previewbased || in_array($resourceinfo[0]["file_extension"], NON_PREVIEW_EXTENSIONS) ? "jpg" : $resourceinfo[0]["file_extension"]), 
+            false, 
+            $previewbased || in_array($resourceinfo[0]["file_extension"], NON_PREVIEW_EXTENSIONS), 
+            -1, 
+            false, 
+            $ingested
+        );
         hook("afterupdatepreview", "", array($ref));
         return true;
     }

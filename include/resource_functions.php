@@ -7699,7 +7699,7 @@ function get_resource_type_fields($restypes = "", $field_order_by = "ref", $fiel
                 // Now multiple mapping and resource_type no longer used. Need to reverse order and show global fields first
                 $valid_order_by_cols[] = "global " . $field_sort . ", resource_types";
             } elseif (in_array(trim($col), $fields)) {
-                $valid_order_by_cols[] = trim($col);
+                $valid_order_by_cols[] = "length(rtf." . trim($col) . ")=0 desc," . trim($col);
             }
         }
         if (count($valid_order_by_cols) == 0) {

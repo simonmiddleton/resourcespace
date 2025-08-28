@@ -1086,3 +1086,5 @@ const FIELD_SORT_METHODS = [
 // How many times should the system attempt to generate previews? 
 // The preview attempts for a resource are reset if preview generation is manually initiated
 const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
+
+const NON_PREVIEW_EXTENSIONS = ['zip'];
