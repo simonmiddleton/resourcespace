@@ -52,7 +52,7 @@ function get_resource_path(
 
     $size = safe_file_name((string) $size);
     $extension = safe_file_name((string) $extension);
-    if (is_banned_extension($extension)) {
+    if(!preg_match('/^[a-zA-Z0-9_-]{1,10}$/', $extension)) {
         $extension = 'jpg';
     }
 
