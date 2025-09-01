@@ -613,8 +613,6 @@ function consentmanager_process_expiry_notifications(): bool {
             $expiry_notification->append_text(" <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>" . $lang['consent_notification_user_pref'] . "</a><br />");
             $expiry_notification->append_text(" <a href='" . generateURL($baseurl . "/plugins/consentmanager/pages/setup.php") . "'>" . $lang['consent_notification_global_pref'] . "</a>");
 
-            //$expiry_notification->url = generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"]);
-
             send_user_notification([$user['ref']], $expiry_notification); 
 
         }
