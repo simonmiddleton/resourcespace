@@ -50,14 +50,14 @@ function HookConsentmanagerEditEndofmetadataaddcustomfield()
 
                             // Start new optgroup
                             $current_group = $consent['consent_status'];
-                            echo '<optgroup label="' . $lang["consent_status_" . $current_group] . '">';
+                            echo '<optgroup label="' . escape($lang["consent_status_" . $current_group]) . '">';
                         }
 
                         // Output the option
-                        echo '<option value="' . $consent['ref'] . '"';
+                        echo '<option value="' . (int) $consent['ref'] . '"';
                         echo (isset($resource['resource_consent']) && $resource['resource_consent'] == $consent['ref']) ? ' selected': '';
                         echo '>';
-                        echo $consent['name'] . ' (ID: ' . $consent['ref'] . ')';
+                        echo $consent['name'] . ' (ID: ' . (int) $consent['ref'] . ')';
                         echo '</option>';
                     }
 
@@ -117,10 +117,8 @@ function HookConsentmanagerEditCopy_locked_data_extra($resource, $locked_fields,
         $last_edited_consent = consentmanager_get_consents($last_edited);
 
         if (!empty($last_edited_consent)) {
-
             $resource['resource_consent'] = $last_edited_consent[0]['ref'];
             return $resource;
-
         } else {
             return false;
         }
