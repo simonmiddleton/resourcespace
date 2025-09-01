@@ -154,7 +154,7 @@ function api_create_resource($resource_type, $archive = 999, $url = "", $no_exif
     }
 
     # Create a new resource
-    $ref = create_resource($resource_type, $archive, -1, $lang["createdfromapi"]);
+    $ref = create_resource($resource_type, $archive, -1, $lang["createdfromapi"], '', false);
     if (!is_int($ref)) {
         return false;
     }
@@ -194,6 +194,9 @@ function api_create_resource($resource_type, $archive = 999, $url = "", $no_exif
             }
         }
     }
+
+    # Run autocomplete macros as we tell create_record not to run them earlier
+    autocomplete_blank_fields($ref, false);
 
     return $ref;
 }

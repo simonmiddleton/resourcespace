@@ -440,7 +440,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
 
             if ($processcsv) {
                 // Create the new resource
-                $newref = create_resource($resource_type_set, $setstatus, -1, $lang["csv_upload_createdfromcsvupload"]);
+                $newref = create_resource($resource_type_set, $setstatus, -1, $lang["csv_upload_createdfromcsvupload"], '', false);
                 ps_query("UPDATE resource SET access = ? WHERE ref = ?", ['i', $setaccess, 'i', $newref]);
                 $logtext = "Created new resource: #" . $newref . " (" . $resource_types[$resource_type_set]["name"] . ")";
                 csv_upload_log($logfile, $logtext);
@@ -744,10 +744,11 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
             ob_flush();
         }   // end of loop through column fields
 
-        if ($processcsv && $csv_set_options["update_existing"] && isset($resource_id)) {
-            // Only when updating resources - create_resource() does this already.
+        // Run autocomplete macros if possible
+        if ($processcsv && isset($resource_id)) {
             autocomplete_blank_fields($resource_id, false);
         }
+        
     }  // end of loop through lines
 
     fclose($file);
