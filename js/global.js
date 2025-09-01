@@ -1095,21 +1095,32 @@ function isJson(str) {
     return true;
 }
 
+// Display toast notification on screen
 function toastNotification(type, text) {
-    if (type == "success") {
-        displayTime = 3000;
-    } else {
+    let displayTime = 3000;
+    let closeButton = false;
+    let icon = "check";
+
+    if (type == "download") {
+        icon = "download";
+    } else if (type == "error") {
         displayTime = 10000;
+        closeButton = true;
+        icon = "triangle-exclamation";
     }
+
     Toastify({
-    text: text,
-    className: "toastify-" + type,
-    close: true,
-    gravity: "bottom",
-    position: "right",
-    duration: displayTime,
-    escapeMarkup: false
-}).showToast();
+        text: '<i class="fa-solid fa-' + icon + '"></i>&nbsp;&nbsp;' + text,
+        className: "toastify-" + type,
+        close: closeButton,
+        gravity: "bottom",
+        position: "center",
+        duration: displayTime,
+        escapeMarkup: false,
+        offset: {
+            y: 10
+        },
+    }).showToast();
 }
 
 function styledalert(title,text,minwidth){
