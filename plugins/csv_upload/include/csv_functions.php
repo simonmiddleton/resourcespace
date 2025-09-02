@@ -166,6 +166,11 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
         }
     }
 
+    $last_update_line = 0;
+    $spl_obj_file = new SplFileObject($filename, 'r');
+    $spl_obj_file->seek(PHP_INT_MAX);
+    $estimate_csv_row_count = $spl_obj_file->key() -1;
+
     while ((($line = fgetcsv($file)) !== false) && ($error_count < $max_error_count || $max_error_count == 0)) {
         $line_count++;
         if (count($line) != count($headers)) {    // check that the current row has the correct number of columns
@@ -177,6 +182,18 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
         }
 
         $processed_columns = array();
+
+        if ($line_count > ($last_update_line + 99)) {
+            // Update message after each 100 rows
+            if ($processcsv) {
+                $set_processing_message = $lang["csv_upload_processing"];
+            } else {
+                $set_processing_message = $lang["csv_upload_validating"];
+            }
+            $set_processing_message .= ' ' . str_replace(["[row_number]","[rows_count]"], [$line_count, $estimate_csv_row_count], $lang["processing_batch_edit_save"]);
+            set_processing_message($set_processing_message);
+            $last_update_line = $line_count;
+        }
 
         // Get the required resource type - needed before processing data so resources can be created
         if ($csv_set_options["resource_type_column"] != "") {
@@ -751,6 +768,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
         
     }  // end of loop through lines
 
+    set_processing_message('');
     fclose($file);
 
     // Add an error if there are no lines of data to process (i.e. just the header)

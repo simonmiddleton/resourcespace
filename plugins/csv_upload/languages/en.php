@@ -77,3 +77,7 @@ $lang["csv_upload_createdfromcsvupload"]        = "Created from CSV Upload plugi
 $lang["csv_upload_check_file_error"]            = "CSV file can't be opened or read";
 $lang["csv_upload_check_utf_error"]             = "CSV file is not valid UTF-8. Invalid character on line ";
 $lang["csv_upload_check_removebom"]             = "CSV file has BOM which was not able to be removed";
+
+$lang['csv_upload_validating'] = 'Validating';
+$lang['csv_upload_processing'] = 'Processing';
+$lang['processing_batch_edit_save'] = 'row [row_number] of [rows_count]';

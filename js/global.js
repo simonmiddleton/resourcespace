@@ -1882,7 +1882,7 @@ function CentralSpaceShowProcessing(delay = 2000, defaultmessage = '')
         ProcessingMessages=[];
         ProcessingDisplayTimer = setInterval(CentralSpace_ProcessingDisplayTimer, 350);
         ProcessingFirstTimer=setTimeout(CentralSpace_ProcessingAPITimer, 1000);
-        ProcessingAPITimer = setInterval(CentralSpace_ProcessingAPITimer, 3000);
+        ProcessingAPITimer = setInterval(CentralSpace_ProcessingAPITimer, 2000);
         jQuery('#ProcessingStatus').html(DOMPurify.sanitize(defaultmessage));
     }
 

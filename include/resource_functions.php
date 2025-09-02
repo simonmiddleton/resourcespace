@@ -2007,6 +2007,7 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
     } // End of foreach field loop
 
     // Perform the actual updates
+    set_processing_message(str_replace(["[field_count]", "[resource_count]"], [count($fields), count($list)], $lang["processing_batch_edit_save"]));
     db_begin_transaction("save_resource_data_multi");
     // Add/remove nodes for all resources
     if (count($all_nodes_to_add) > 0) {

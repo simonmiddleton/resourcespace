@@ -3596,7 +3596,17 @@ function set_processing_message(string $message)
         // Messages don't work unless using browser
         return;
     }
-    $userprocessing_messages = ps_value("SELECT processing_messages value FROM user WHERE ref=?", ["i",$userref], ''); // Fetch fresh from the DB as it may have been cleared by get_processing_message() since we started processing.
+
+    if (isset($GLOBALS['processing_message_override'])) {
+        # Allow messages supplied at a lower level to be replaced at a higher level.
+        # For example, when recreating previews for a collection, show message indicating progress
+        # within the collection rather than messages showing which preview size is being created.
+        $message = $GLOBALS['processing_message_override'];
+        $set_processing_message_first_call = true;
+    }
+
+    // Fetch fresh from the DB as it may have been cleared by get_processing_message() since we started processing.
+    $userprocessing_messages = ps_value("SELECT processing_messages value FROM user WHERE ref=?", ["i",$userref], '');
     if ($set_processing_message_first_call || trim($message) === "") {
         // Blank existing messages if present for first command this page load
         // Passing an empty string should always clear out any messages
