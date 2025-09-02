@@ -7628,7 +7628,7 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
 /**
  * Adds script to display toast notification. Note: Must be included after header.php.
  *
- * @param  string  $type      Options are: 'success' or 'failure'. Determines toast notification colour.
+ * @param  string  $type      Options are: 'success' or 'failure'. Determines toast notification icon.
  * @param  string  $message   Notification text to display.
  */
 function toast_notification(string $type, string $message): void
