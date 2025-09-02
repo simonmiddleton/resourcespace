@@ -17,7 +17,8 @@
         "kornrunner/blurhash": "^1.2",
         "spipu/html2pdf": "^5.3",
         "phpmailer/phpmailer": "^6.10",
-        "ankitpokhrel/tus-php": "^2.4"
+        "ankitpokhrel/tus-php": "^2.4",
+        "axiell/imu-api-php": "^2.0.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8",
@@ -32,6 +33,20 @@
     "suggest": {
         "ext-apcu": "Needed to improve upload performance."
     },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "axiell/imu-api-php",
+                "version": "2.0.0",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/axiell/imu-api-php",
+                    "reference": "tags/v2.0.0"
+                }
+            }
+        }
+    ],
     "scripts": {
         "build:applyDownstreamChanges": [
             "echo Applying downstream changes to vendor/.",

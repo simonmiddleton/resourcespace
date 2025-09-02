@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a06a4f227a077d209622ff4385ab64d9",
+    "content-hash": "28b936a6933c5004ca6161cdb56a2359",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -74,6 +74,16 @@
                 }
             ],
             "time": "2024-02-17T19:37:26+00:00"
+        },
+        {
+            "name": "axiell/imu-api-php",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/axiell/imu-api-php",
+                "reference": "tags/v2.0.0"
+            },
+            "type": "library"
         },
         {
             "name": "brick/math",
