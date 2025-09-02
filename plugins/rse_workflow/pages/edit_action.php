@@ -110,22 +110,15 @@ function SaveWorkflowAction(){
 
 <?php
 
-if (isset($saveerror))
-    {
-    if($saveerror)
-        {
-        ?>
-        <script type="text/javascript">
-        alert('<?php echo escape($lang['rse_workflow_action_check_fields']); ?>');
-        </script><?php
-        }
-    
-    else
-        {
-        echo "<div class=\"PageInformal\">" . $lang['saved'] . "</div>";
-        }
+if (isset($saveerror)) {
+    if($saveerror) {
+        toast_notification('error', $lang['rse_workflow_action_check_fields']);
     }
-    
+    else {
+        toast_notification('success', $lang['saved']);
+    }
+}
+
 ?>
         
 <div class="BasicsBox">

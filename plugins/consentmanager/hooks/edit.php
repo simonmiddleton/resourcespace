@@ -50,14 +50,14 @@ function HookConsentmanagerEditEndofmetadataaddcustomfield()
 
                             // Start new optgroup
                             $current_group = $consent['consent_status'];
-                            echo '<optgroup label="' . $lang["consent_status_" . $current_group] . '">';
+                            echo '<optgroup label="' . escape($lang["consent_status_" . $current_group]) . '">';
                         }
 
                         // Output the option
-                        echo '<option value="' . $consent['ref'] . '"';
+                        echo '<option value="' . (int) $consent['ref'] . '"';
                         echo (isset($resource['resource_consent']) && $resource['resource_consent'] == $consent['ref']) ? ' selected': '';
                         echo '>';
-                        echo $consent['name'] . ' (ID: ' . $consent['ref'] . ')';
+                        echo escape($consent['name'] . ' (ID: ' . (int) $consent['ref'] . ')');
                         echo '</option>';
                     }
 
@@ -73,7 +73,7 @@ function HookConsentmanagerEditEndofmetadataaddcustomfield()
     }    
 }
 
-function HookConsentmanagerEditAftersaveresourcedata($ref) 
+function HookConsentmanagerEditAftersaveresourcedata(int $ref): bool|array 
 {
     global $consent_attach_upload, $multiple, $upload_review_mode;
 
@@ -97,7 +97,7 @@ function HookConsentmanagerEditAftersaveresourcedata($ref)
     return true;
 }
 
-function HookConsentmanagerEditCopy_locked_data_extra($resource, $locked_fields, $last_edited)
+function HookConsentmanagerEditCopy_locked_data_extra(array $resource, array $locked_fields, int $last_edited): bool|array
 {
     global $consent_attach_upload;
 
@@ -117,10 +117,8 @@ function HookConsentmanagerEditCopy_locked_data_extra($resource, $locked_fields,
         $last_edited_consent = consentmanager_get_consents($last_edited);
 
         if (!empty($last_edited_consent)) {
-
             $resource['resource_consent'] = $last_edited_consent[0]['ref'];
             return $resource;
-
         } else {
             return false;
         }

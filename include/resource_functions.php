@@ -52,7 +52,7 @@ function get_resource_path(
 
     $size = safe_file_name((string) $size);
     $extension = safe_file_name((string) $extension);
-    if (is_banned_extension($extension)) {
+    if(!preg_match('/^[a-zA-Z0-9_-]{1,10}$/', $extension)) {
         $extension = 'jpg';
     }
 
@@ -539,15 +539,16 @@ function put_resource_data($resource, $data)
 /**
  * create_resource
  *
- * @param  integer  $resource_type  ID of target resource type
- * @param  integer  $archive        ID of target archive state, 999 if archived
- * @param  integer  $user           User ID, -1 for current user
- * @param  string   $origin         Source of resource, should not be blank
- * @param  string   $file_extension         If specified
+ * @param  integer  $resource_type      ID of target resource type
+ * @param  integer  $archive            ID of target archive state, 999 if archived
+ * @param  integer  $user               User ID, -1 for current user
+ * @param  string   $origin             Source of resource, should not be blank
+ * @param  string   $file_extension     If specified
+ * @param  bool     $run_macro          Run autocomplete macros, can be disabled if they are run later in process
  *
  * @return mixed    false if invalid inputs given, integer of resource reference if resource is created
  */
-function create_resource($resource_type, $archive = 999, $user = -1, $origin = '', $file_extension = '')
+function create_resource($resource_type, $archive = 999, $user = -1, $origin = '', $file_extension = '', $run_macro = true)
 {
     # Create a new resource.
     global $k,$terms_upload;
@@ -585,8 +586,10 @@ function create_resource($resource_type, $archive = 999, $user = -1, $origin = '
 
     hook('resourcecreate', '', array($insert, $resource_type));
 
-    # Autocomplete any blank fields.
-    autocomplete_blank_fields($insert, true);
+    # Autocomplete any blank fields
+    if ($run_macro) {
+        autocomplete_blank_fields($insert, true);
+    }
 
     # Log this
     daily_stat("Create resource", $insert);
@@ -2004,6 +2007,7 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
     } // End of foreach field loop
 
     // Perform the actual updates
+    set_processing_message(str_replace(["[field_count]", "[resource_count]"], [count($fields), count($list)], $lang["processing_batch_edit_save"]));
     db_begin_transaction("save_resource_data_multi");
     // Add/remove nodes for all resources
     if (count($all_nodes_to_add) > 0) {

@@ -47,11 +47,6 @@ if (getval("restype_save", "") != "" && enforcePostRequest(false)) {
         $savedata["config_options"] = $config_options;
     }
     $saved = save_resource_type($ref, $savedata);
-    if ($saved) {
-        $saved_text = $lang['saved'];
-    } else {
-        $error_text = $lang['error_generic'];
-    }
 }
 
 $confirm_delete = false;
@@ -112,6 +107,12 @@ if (count($restypedata) == 0) {
 $restypedata = $restypedata[0];
 
 include "../../include/header.php";
+
+if (isset($saved) && $saved) {
+    toast_notification('success', $lang['saved']);
+} elseif (isset($saved) && !$saved) {
+    toast_notification('error', $lang['error_generic']);
+}
 ?>
 
 <script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
@@ -142,11 +143,7 @@ include "../../include/header.php";
         <div class="FormError"><?php echo $error_text?></div>
         <?php
     }
-
-    if (isset($saved_text)) { ?>
-        <div class="PageInfoMessage"><?php echo $saved_text?></div>
-        <?php
-    } ?>
+    ?>
 
     <form method=post action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo (int)$ref ?>&backurl=<?php echo urlencode($backurl) ?>" onSubmit="return CentralSpacePost(this,true);">
         <input type="hidden" name="ref" value="<?php echo urlencode($ref) ?>">

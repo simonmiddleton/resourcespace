@@ -103,6 +103,13 @@ function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
         already flatten. */
         $tms_module_data = end($tmsdata[$module_name]);
 
+        foreach ($tms_module_data as $tmsdata_key => $tmsdata_value) {
+            if (is_null($tmsdata_value)) {
+                // Consider null as blank to allow removal of old TMS data from RS if TMS no longer returns a value for the field.
+                $tms_module_data[$tmsdata_key] = '';
+            }
+        }
+
         foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
             {
             if($tms_rs_mapping['rs_field'] > 0 && $module['rs_uid_field'] != $tms_rs_mapping['rs_field'] && isset($tms_module_data[$tms_rs_mapping['tms_column']]))

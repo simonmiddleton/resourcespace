@@ -227,25 +227,25 @@ include "../../../include/header.php";
 
         <div class="Question">
             <label for="address"><?php echo escape($lang["address"]); ?></label>
-            <textarea class="stdwidth" rows="5" name="address" id="address"><?php echo escape($consent["address"]); ?></textarea>
+            <textarea class="stdwidth" rows="5" name="address" id="address"><?php echo escape((string) $consent["address"]); ?></textarea>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
             <label for="parent_guardian_name"><?php echo escape($lang["parent_guardian"]); ?></label>
-            <input type=text class="stdwidth" name="parent_guardian_name" id="parent_guardian_name" value="<?php echo escape($consent["parent_guardian_name"]); ?>" />
+            <input type=text class="stdwidth" name="parent_guardian_name" id="parent_guardian_name" value="<?php echo escape((string) $consent["parent_guardian_name"]); ?>" />
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
             <label><?php echo escape($lang["email"]); ?></label>
-            <input type=text class="stdwidth" name="email" id="email" value="<?php echo escape($consent["email"]); ?>" />
+            <input type=text class="stdwidth" name="email" id="email" value="<?php echo escape((string) $consent["email"]); ?>" />
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
             <label><?php echo escape($lang["telephone"]); ?></label>
-            <input type=text class="stdwidth" name="telephone" id="telephone" value="<?php echo escape($consent["telephone"]); ?>" />
+            <input type=text class="stdwidth" name="telephone" id="telephone" value="<?php echo escape((string) $consent["telephone"]); ?>" />
             <div class="clearerleft"></div>
         </div>
 
@@ -295,7 +295,7 @@ include "../../../include/header.php";
 
         <div class="Question">
             <label for="date_of_consent"><?php echo escape($lang["date_of_consent"]); ?></label>
-            <input type=date name="date_of_consent" id="date_of_consent" value="<?php echo $consent['date_of_consent'] ? $consent['date_of_consent'] : date('Y-m-d'); ?>" />
+            <input type=date name="date_of_consent" id="date_of_consent" value="<?php echo escape($consent['date_of_consent'] ? $consent['date_of_consent'] : date('Y-m-d')); ?>" />
             <div class="clearerleft"></div>
         </div>
 

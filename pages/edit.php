@@ -659,10 +659,18 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             }
 
                         $review_collection_contents_count = count($review_collection_contents);
+                        $message_interval = 10;
+                        set_processing_message('');
                         for($n=1;$n<$review_collection_contents_count;$n++)
                             {
                             $auto_next_errors = array();
                             $ref = $review_collection_contents[$n]["ref"];
+                            
+                            if ($n === $message_interval) {
+                                set_processing_message(str_replace(["[done]", "[total]"], [$n , $review_collection_contents_count], $lang["processing_updating_resources"])); 
+                                $message_interval = $message_interval + 10;
+                            }
+
                             # Fetch resource data.
                             $resource=get_resource_data($ref);
 
@@ -759,6 +767,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 $auto_next_errors_found = true;                   
                                 }
                             }
+                        set_processing_message('');
+
                         if($auto_next_errors_found)
                             {
                             // Errors are still outstanding which require further editing corrections
@@ -2626,7 +2636,15 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
         {
         error_fields[0].scrollIntoView();
         }
-    styledalert('<?php echo escape($lang["error"])?>','<?php echo implode("<br />",$save_errors); ?>',450);
+        
+        <?php
+        foreach ($save_errors as $save_error) {
+            ?>
+            toastNotification('error', '<?php echo escape($save_error); ?>');
+            <?php
+        }
+        ?>
+
     </script>
     <?php
     }

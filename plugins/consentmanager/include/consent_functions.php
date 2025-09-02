@@ -8,7 +8,7 @@
  * @param int|null $resource The ID of the resource to check read access for. If null, checks for general read permissions.
  * @return bool              Returns true if the user has the required permissions; false otherwise.
  */
-function consentmanager_check_read($resource = null)
+function consentmanager_check_read(?int $resource = null): bool
 {
     // Default to no access
     $has_access = false;
@@ -32,7 +32,7 @@ function consentmanager_check_read($resource = null)
  * @param int|null $resource The ID of the resource to check write access for. If null, checks for general write permissions.
  * @return bool              Returns true if the user has the required permissions; false otherwise.
  */
-function consentmanager_check_write($resource = null)
+function consentmanager_check_write(?int $resource = null): bool
 {
     // Default to no access
     $has_access = false;
@@ -58,7 +58,7 @@ function consentmanager_check_write($resource = null)
  * @return array|bool   Returns an array of consents associated with the resource if the user has read access;
  *                      otherwise, returns false.
  */
-function consentmanager_get_consents($resource)
+function consentmanager_get_consents(int $resource): array|bool
 {
     if (!consentmanager_check_read($resource)) {
         return false;
@@ -77,7 +77,7 @@ function consentmanager_get_consents($resource)
  * @return bool         Returns true if the consent record was successfully deleted,
  *                      or false if the user does not have write access to the resource.
  */
-function consentmanager_delete_consent($resource)
+function consentmanager_delete_consent(int $resource): bool
 {
     if (!consentmanager_check_write($resource)) {
         return false;
@@ -111,7 +111,17 @@ function consentmanager_delete_consent($resource)
  * @return int|bool              Returns the ID of the new consent record on success,
  *                               or false if the user does not have write access.
  */
-function consentmanager_create_consent($name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires, $created_by): int|bool
+function consentmanager_create_consent(string $name, 
+                                       string $date_of_birth, 
+                                       string $address, 
+                                       string $parent_guardian, 
+                                       string $email, 
+                                       string $telephone, 
+                                       string $consent_usage, 
+                                       string $notes, 
+                                       string $date_of_consent, 
+                                       string $expires, 
+                                       string $created_by): int|bool
 {
     if (!consentmanager_check_write()) {
         return false;
@@ -160,7 +170,7 @@ function consentmanager_create_consent($name, $date_of_birth, $address, $parent_
  * @return bool         Returns true if the consent was successfully linked,
  *                      false if the user does not have write access to the resource.
  */
-function consentmanager_link_consent($consent, $resource)
+function consentmanager_link_consent(int $consent, int $resource): bool
 {
     global $lang;
 
@@ -192,7 +202,7 @@ function consentmanager_link_consent($consent, $resource)
  * @return bool         Returns true if the consent record is successfully unlinked;
  *                      returns false if the user does not have write access to the resource.
  */
-function consentmanager_unlink_consent($consent, $resource)
+function consentmanager_unlink_consent(int $consent, int $resource): bool
 {
     global $lang;
 
@@ -221,7 +231,7 @@ function consentmanager_unlink_consent($consent, $resource)
  * @return bool             Returns true if the process completes successfully;
  *                          returns false if an invalid consent ID is provided.
  */
-function consentmanager_batch_link_unlink($consent, $collection, $unlink)
+function consentmanager_batch_link_unlink(int $consent, int $collection, bool $unlink): bool
 {
     $resources = get_collection_resources($collection);
 
@@ -259,7 +269,7 @@ function consentmanager_batch_link_unlink($consent, $collection, $unlink)
  *                     associated resources if the user has read access; returns false
  *                     if access is denied or the consent record does not exist.
  */
-function consentmanager_get_consent($consent): array|bool
+function consentmanager_get_consent(int $consent): array|bool
 {
     if (!consentmanager_check_read()) {
         return false;
@@ -300,7 +310,17 @@ function consentmanager_get_consent($consent): array|bool
  * @return bool                     Returns true if the consent record was successfully updated,
  *                                  or false if the user does not have write access.
  */
-function consentmanager_update_consent($consent, $name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires): bool
+function consentmanager_update_consent(int $consent, 
+                                       string $name, 
+                                       string $date_of_birth, 
+                                       string $address, 
+                                       string $parent_guardian, 
+                                       string $email, 
+                                       string $telephone, 
+                                       string $consent_usage, 
+                                       string $notes, 
+                                       string $date_of_consent, 
+                                       string $expires): bool
 {
     if (!consentmanager_check_write()) {
         return false;
@@ -369,7 +389,7 @@ function consentmanager_get_all_consents_by_collection(int $collection): array|b
  *
  * This function retrieves all consent records from the database. If a search
  * string is provided, it filters the results based on the name of the person
- * associated with each consent record. It can also filted based on consent 
+ * associated with each consent record. It can also filter based on consent 
  * status e.g all, active (non-expired), expiring (expiring within a configured amount of days), 
  * expired. Defaults to returning all.
  *
@@ -561,16 +581,18 @@ function consentmanager_set_consent_expiration_notice(array $consents): bool
  */
 function consentmanager_get_expired_consent_resources(int $archive_status): array|bool
 {
+    global $resource_deletion_state;
+
     $sql = "select distinct r.ref value
             from consent c
             inner join resource_consent rc on c.ref = rc.consent
             inner join resource r on rc.resource = r.ref
             where c.expires < CURDATE()
             and r.archive <> ?
-            and r.archive <> 3
+            and r.archive <> ?
             order by r.ref;";
 
-    return ps_array($sql, ['i', $archive_status]);
+    return ps_array($sql, ['i', $archive_status, 'i', $resource_deletion_state]);
 }
 
 /**
@@ -612,8 +634,6 @@ function consentmanager_process_expiry_notifications(): bool {
             $expiry_notification->append_text("<a href='" . generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"]) . "'>" . $lang['consent_notification_link'] . "</a><br /><br />");
             $expiry_notification->append_text(" <a href='" . generateURL($baseurl . "/pages/user/user_preferences.php") . "'>" . $lang['consent_notification_user_pref'] . "</a><br />");
             $expiry_notification->append_text(" <a href='" . generateURL($baseurl . "/plugins/consentmanager/pages/setup.php") . "'>" . $lang['consent_notification_global_pref'] . "</a>");
-
-            //$expiry_notification->url = generateURL($baseurl . "/plugins/consentmanager/pages/list.php", ["consent_status" => "expiring"]);
 
             send_user_notification([$user['ref']], $expiry_notification); 
 

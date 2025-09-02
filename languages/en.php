@@ -3208,9 +3208,12 @@ $lang["processing_alternative_video"] = "Resource [resource]: Generating alterna
 $lang["processing_alternative_image"] = "Resource [resource]: Generating alternative image '[name]'";
 $lang["processing_extracting_metadata"] = "Resource [resource]: Extracting metadata";
 $lang["processing_creating_previews"] = "Resource [resource]: Creating previews";
+$lang["processing_updating_previews"] = "Resource [resource]: Updating previews";
 $lang["processing_creating_preview"] = "Resource [resource]: Creating preview '[name]'";
 $lang["processing_updating_resources"] = "Updating metadata ([done]/[total])";
 $lang["processing_calculating_updates_required"] = "Calculating updates required ([count]/[total])";
+$lang["processing_batch_edit_save"] = "Applying changes to [field_count] fields for [resource_count] resources";
+$lang["processing_resource_in_group"] = "Processing resources [count]/[total]";
 
 
 

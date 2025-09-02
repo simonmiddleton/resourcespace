@@ -508,6 +508,11 @@ function config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_
         if ($plugin_page_frontm != '') {
             echo $plugin_page_frontm;
         }
+
+        # For reload of page after save, add toast notification after header.php loaded.
+        if (getval('save', '') != '' && getval('submit', '') == '') {
+            toast_notification('success', $lang['saved']);
+        }
         ?>
         
         <form id="form1" name="form1" method="post" action="<?php echo escape($_SERVER["PHP_SELF"]); ?>">

@@ -50,14 +50,14 @@ function HookLicensemanagerEditEndofmetadataaddcustomfield()
 
                             // Start new optgroup
                             $current_group = $license['license_status'];
-                            echo '<optgroup label="' . $lang["license_status_" . $current_group] . '">';
+                            echo '<optgroup label="' . escape($lang["license_status_" . $current_group]) . '">';
                         }
 
                         // Output the option
-                        echo '<option value="' . $license['ref'] . '"';
+                        echo '<option value="' . (int) $license['ref'] . '"';
                         echo (isset($resource['resource_license']) && $resource['resource_license'] == $license['ref']) ? ' selected': '';
                         echo '>';
-                        echo $license['holder'] . ' (ID: ' . $license['ref'] . ')';
+                        echo escape($license['holder'] . ' (ID: ' . (int) $license['ref'] . ')');
                         echo '</option>';
                     }
 
@@ -74,7 +74,7 @@ function HookLicensemanagerEditEndofmetadataaddcustomfield()
     }    
 }
 
-function HookLicensemanagerEditAftersaveresourcedata($ref) 
+function HookLicensemanagerEditAftersaveresourcedata(int $ref): bool|array
 {
     global $license_attach_upload, $multiple, $upload_review_mode;
 
@@ -98,7 +98,7 @@ function HookLicensemanagerEditAftersaveresourcedata($ref)
     return true;
 }
 
-function HookLicensemanagerEditCopy_locked_data_extra($resource, $locked_fields, $last_edited)
+function HookLicensemanagerEditCopy_locked_data_extra(array $resource, array $locked_fields, int $last_edited): bool|array
 {
     global $license_attach_upload;
 
@@ -118,10 +118,8 @@ function HookLicensemanagerEditCopy_locked_data_extra($resource, $locked_fields,
         $last_edited_consent = licensemanager_get_licenses($last_edited);
 
         if (!empty($last_edited_consent)) {
-
             $resource['resource_license'] = $last_edited_consent[0]['ref'];
             return $resource;
-
         } else {
             return false;
         }

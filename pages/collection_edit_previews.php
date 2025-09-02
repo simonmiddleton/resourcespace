@@ -22,30 +22,39 @@ if ($collection !== false) {
 
     $resources = do_search("!collection" . $ref);
     $colcount = count($resources);
+    $count_resources_processed = 0;
 
     if (getval("tweak", "") != "" && enforcePostRequest(false)) {
         $tweak = getval("tweak", "");
         switch ($tweak) {
             case "rotateclock":
                 foreach ($resources as $resource) {
+                    ++ $count_resources_processed;
+                    $GLOBALS['processing_message_override'] = str_replace(["[count]", "[total]"], [$count_resources_processed, $colcount], $lang["processing_resource_in_group"]);
                     tweak_preview_images($resource['ref'], 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
                 }
                 $message = $lang["complete"];
                 break;
             case "rotateanti":
                 foreach ($resources as $resource) {
+                    ++ $count_resources_processed;
+                    $GLOBALS['processing_message_override'] = str_replace(["[count]", "[total]"], [$count_resources_processed, $colcount], $lang["processing_resource_in_group"]);
                     tweak_preview_images($resource['ref'], 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
                 }
                 $message = $lang["complete"];
                 break;
             case "gammaplus":
                 foreach ($resources as $resource) {
+                    ++ $count_resources_processed;
+                    $GLOBALS['processing_message_override'] = str_replace(["[count]", "[total]"], [$count_resources_processed, $colcount], $lang["processing_resource_in_group"]);
                     tweak_preview_images($resource['ref'], 0, 1.3, $resource["preview_extension"]);
                 }
                 $message = $lang["complete"];
                 break;
             case "gammaminus":
                 foreach ($resources as $resource) {
+                    ++ $count_resources_processed;
+                    $GLOBALS['processing_message_override'] = str_replace(["[count]", "[total]"], [$count_resources_processed, $colcount], $lang["processing_resource_in_group"]);
                     tweak_preview_images($resource['ref'], 0, 0.7, $resource["preview_extension"]);
                 }
                 $message = $lang["complete"];
@@ -74,6 +83,8 @@ if ($collection !== false) {
                 } else {
                     // No offline preview functionality enabled - to be created synchronously
                     foreach ($resources as $resource) {
+                        ++ $count_resources_processed;
+                        $GLOBALS['processing_message_override'] = str_replace(["[count]", "[total]"], [$count_resources_processed, $colcount], $lang["processing_resource_in_group"]);
                         $ingested = empty($resource['file_path']);
                         delete_previews($resource);
                         create_previews(
@@ -92,6 +103,7 @@ if ($collection !== false) {
                 $ref = $collection_ref; // restore collection id because tweaking resets $ref to resource ids
                 break;
         }
+        unset($GLOBALS['processing_message_override']);
         set_processing_message(""); // Clear once complete or unread messages will hang around
         refresh_collection_frame($collection_ref);
     }

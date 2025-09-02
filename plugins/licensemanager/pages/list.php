@@ -99,7 +99,7 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
     <td>
             <?php echo $license["ref"]; ?></td>
             <td><?php echo escape($license["outbound"] ? $lang["outbound"] : $lang["inbound"]); ?></td>
-            <td><?php echo $license["holder"]; ?></td>
+            <td><?php echo escape($license["holder"]); ?></td>
             <td><?php
                 foreach ($license_usage_mediums as $medium)
                     {
@@ -109,7 +109,7 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
                 echo $translated_mediums;
                 ?>
             </td>
-            <td><?php echo $license["description"]; ?></td>
+            <td><?php echo escape($license["description"]); ?></td>
             <td><?php echo escape($license["expires"] == "" ? $lang["no_expiry_date"] : nicedate($license["expires"])); ?></td>
         
             <td>

@@ -268,7 +268,7 @@ foreach ($license_usage_mediums as $medium)
 
 <div class="Question">
     <label for="description"><?php echo escape($lang["description"]); ?></label>
-    <textarea rows="4" class="stdwidth" name="description" id="description"><?php echo escape($license["description"]) ?></textarea>
+    <textarea rows="4" class="stdwidth" name="description" id="description"><?php echo escape((string) $license["description"]) ?></textarea>
     <div class="clearerleft"></div>
 </div>
 
