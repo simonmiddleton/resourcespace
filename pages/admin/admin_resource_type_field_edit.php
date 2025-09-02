@@ -69,9 +69,9 @@ $type_change = false;
 if (getval("save", "") != "" && getval("delete", "") == "" && enforcePostRequest(false)) {
     $saved = save_resource_type_field($ref, $fieldcolumns, $_POST);
     if ($saved) {
-        $saved_text = $lang['saved'];
+        toast_notification('success', $lang['saved']);
     } else {
-        $error_text = $lang['error_generic'];
+        toast_notification('error', $lang['error_generic']);
     }
 }
 
@@ -104,7 +104,7 @@ if (getval("delete", "") != "" && enforcePostRequest($ajax)) {
                 );
                 exit();
             } else {
-                $error_text = $result;
+                $delete_resource_type_field_error = true;
             }
         }
     } else {
@@ -116,12 +116,16 @@ if (getval("delete", "") != "" && enforcePostRequest($ajax)) {
     }
 }
 
+include "../../include/header.php";
+
+if (isset($delete_resource_type_field_error)) {
+    toast_notification('error', $result);
+}
+
 # Fetch  data
 $allfields = get_resource_type_fields();
 $fielddata = get_resource_type_field($ref);
 $existingrestypes = $fielddata["resource_types"] ? explode(",", (string)$fielddata["resource_types"]) : [];
-
-include "../../include/header.php";
 ?>
 
 <script>
@@ -178,13 +182,6 @@ include "../../include/header.php";
         <?php
         if (isset($error_text)) { ?>
             <div class="PageInformal"><?php echo $error_text?></div>
-            <?php
-        }
-
-        if (isset($saved_text)) { ?>
-            <div class="PageInformal">
-                <span class="fa fa-fw fa-check"></span>&nbsp;<?php echo $saved_text?>
-            </div>
             <?php
         }
 

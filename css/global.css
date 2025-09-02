@@ -2686,3 +2686,27 @@ label {
 /* Search List View */
 .ListSearch {word-break: break-word;}
 .ListSearchTools {min-width: 100px;}
+
+/* Toast notifications - toastify-js */
+.toastify {
+    background: white;
+    color: black;
+    font-weight: 500;
+    border-radius: 7px;
+    padding: 15px 30px;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, .12), 0 10px 36px -4px rgba(156, 156, 156, 0.3);
+    font-size: 16px;
+}
+
+.toastify-error {
+    padding: 15px 20px;
+}
+
+.toast-close {
+    min-width: unset;
+    vertical-align: unset;
+    min-height: unset;
+    margin: 0 0 0 10px;
+    color: black;
+    box-shadow: none;
+}

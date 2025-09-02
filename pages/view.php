@@ -1067,7 +1067,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         }
                                                     else
                                                         { ?>
-                                                        <a href="#" onclick="directDownload('<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref); ?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>', this)">
+                                                        <a href="#" onclick="directDownload('<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref); ?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>', this); toastNotification('download', '<?php echo escape($lang['downloadinprogress']); ?>');">
                                                             <?php echo escape($lang["action-download"]); ?>
                                                         </a>
                                                         <?php
