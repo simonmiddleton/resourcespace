@@ -2555,7 +2555,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         else
             {?>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end-y"><?php echo escape($lang["year"]); ?></label>
-            <input size="5" name="<?php echo escape($name) ?>_start-y" id="<?php echo escape($name) ?>_start-y" type="text" value="<?php echo $found_start_year ?>"
+            <input size="5" name="<?php echo escape($name) ?>_start-y" id="<?php echo escape($name) ?>_start-y" type="text" value="<?php echo escape($found_start_year) ?>"
                 <?php 
                 if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }

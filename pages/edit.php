@@ -2181,9 +2181,9 @@ else
         || ($ea3 && $resource["access"]==3)
         ) {
         if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums) {
-            echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
+            echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . escape($access_stored_value) . "'>";
         }?>
-        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"]; ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
+        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo escape($resource["access"]) ; ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
             if($ea0)    //0 - open
             {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
