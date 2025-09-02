@@ -8,7 +8,7 @@
  * @param int|null $resource The ID of the resource to check read access for. If null, checks for general read permissions.
  * @return bool              Returns true if the user has the required permissions; false otherwise.
  */
-function licensemanager_check_read($resource = null): bool
+function licensemanager_check_read(?int $resource = null): bool
 {
     // Default to no access
     $has_access = false;
@@ -32,7 +32,7 @@ function licensemanager_check_read($resource = null): bool
  * @param int|null $resource The ID of the resource to check write access for. If null, checks for general write permissions.
  * @return bool              Returns true if the user has the required permissions; false otherwise.
  */
-function licensemanager_check_write($resource = null): bool
+function licensemanager_check_write(?int $resource = null): bool
 {
     // Default to no access
     $has_access = false;
@@ -58,7 +58,7 @@ function licensemanager_check_write($resource = null): bool
  * @return array|bool   Returns an array of licenses associated with the resource if the user has read access;
  *                      otherwise, returns false.
  */
-function licensemanager_get_licenses($resource): array|bool
+function licensemanager_get_licenses(int $resource): array|bool
 {
     if (!licensemanager_check_read($resource)) {
         return false;
@@ -77,7 +77,7 @@ function licensemanager_get_licenses($resource): array|bool
  * @return bool         Returns true if the license record was successfully deleted,
  *                      or false if the user does not have write access to the resource.
  */
-function licensemanager_delete_license($ref): bool
+function licensemanager_delete_license(int $ref): bool
 {
     if (!licensemanager_check_write($ref)) {
         return false;
@@ -101,7 +101,7 @@ function licensemanager_delete_license($ref): bool
  * @return bool         Returns true if the license was successfully linked,
  *                      false if the user does not have write access to the resource.
  */
-function licensemanager_link_license($license, $resource): bool
+function licensemanager_link_license(int $license, int $resource): bool
 {
     global $lang;
 
@@ -133,7 +133,7 @@ function licensemanager_link_license($license, $resource): bool
  *                     associated resources if the user has read access; returns false
  *                     if access is denied or the license record does not exist.
  */
-function licensemanager_get_license($license): array|bool
+function licensemanager_get_license(int $license): array|bool
 {
     if (!licensemanager_check_read()) {
         return false;

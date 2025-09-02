@@ -57,7 +57,7 @@ function HookConsentmanagerEditEndofmetadataaddcustomfield()
                         echo '<option value="' . (int) $consent['ref'] . '"';
                         echo (isset($resource['resource_consent']) && $resource['resource_consent'] == $consent['ref']) ? ' selected': '';
                         echo '>';
-                        echo $consent['name'] . ' (ID: ' . (int) $consent['ref'] . ')';
+                        echo escape($consent['name'] . ' (ID: ' . (int) $consent['ref'] . ')');
                         echo '</option>';
                     }
 
@@ -73,7 +73,7 @@ function HookConsentmanagerEditEndofmetadataaddcustomfield()
     }    
 }
 
-function HookConsentmanagerEditAftersaveresourcedata($ref) 
+function HookConsentmanagerEditAftersaveresourcedata(int $ref): bool|array 
 {
     global $consent_attach_upload, $multiple, $upload_review_mode;
 
@@ -97,7 +97,7 @@ function HookConsentmanagerEditAftersaveresourcedata($ref)
     return true;
 }
 
-function HookConsentmanagerEditCopy_locked_data_extra($resource, $locked_fields, $last_edited)
+function HookConsentmanagerEditCopy_locked_data_extra(array $resource, array $locked_fields, int $last_edited): bool|array
 {
     global $consent_attach_upload;
 

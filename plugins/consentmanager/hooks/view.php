@@ -58,8 +58,8 @@ function HookConsentmanagerViewCustompanels()
 
                         <?php foreach ($consents as $consent) { ?>
                             <tr>
-                                <td><?php echo $consent["ref"]; ?></td>
-                                <td><?php echo $consent["name"]; ?></td>
+                                <td><?php echo escape($consent["ref"]); ?></td>
+                                <td><?php echo escape($consent["name"]); ?></td>
                                 <td>
                                     <?php
                                     $consent_usage_mediums = trim_array(explode(", ", $consent["consent_usage"]));
@@ -70,7 +70,7 @@ function HookConsentmanagerViewCustompanels()
                                     }
 
                                     $translated_mediums = substr($translated_mediums, 0, -2); # Remove the last ", "
-                                    echo $translated_mediums;
+                                    echo escape($translated_mediums);
                                     ?>
                                 </td>
                                 <td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>

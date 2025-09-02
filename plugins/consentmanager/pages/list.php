@@ -99,15 +99,15 @@ $url_params = array(
                     $url_params['ref'] = $consent["ref"];
                     ?>
                     <tr>
-                        <td><?php echo $consent["ref"]; ?></td>
-                        <td><?php echo $consent["name"]; ?></td>
+                        <td><?php echo escape($consent["ref"]); ?></td>
+                        <td><?php echo escape($consent["name"]); ?></td>
                         <td>
                             <?php
                             foreach ($consent_usage_mediums as $medium) {
                                 $translated_mediums = $translated_mediums . lang_or_i18n_get_translated($medium, "consent_usage-") . ", ";
                             }
                             $translated_mediums = substr($translated_mediums, 0, -2); # Remove the last ", "
-                            echo $translated_mediums;
+                            echo escape($translated_mediums);
                             ?>
                         </td>
                         <td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>

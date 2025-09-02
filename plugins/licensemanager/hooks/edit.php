@@ -57,7 +57,7 @@ function HookLicensemanagerEditEndofmetadataaddcustomfield()
                         echo '<option value="' . (int) $license['ref'] . '"';
                         echo (isset($resource['resource_license']) && $resource['resource_license'] == $license['ref']) ? ' selected': '';
                         echo '>';
-                        echo $license['holder'] . ' (ID: ' . (int) $license['ref'] . ')';
+                        echo escape($license['holder'] . ' (ID: ' . (int) $license['ref'] . ')');
                         echo '</option>';
                     }
 
@@ -74,7 +74,7 @@ function HookLicensemanagerEditEndofmetadataaddcustomfield()
     }    
 }
 
-function HookLicensemanagerEditAftersaveresourcedata($ref) 
+function HookLicensemanagerEditAftersaveresourcedata(int $ref): bool|array
 {
     global $license_attach_upload, $multiple, $upload_review_mode;
 
@@ -98,7 +98,7 @@ function HookLicensemanagerEditAftersaveresourcedata($ref)
     return true;
 }
 
-function HookLicensemanagerEditCopy_locked_data_extra($resource, $locked_fields, $last_edited)
+function HookLicensemanagerEditCopy_locked_data_extra(array $resource, array $locked_fields, int $last_edited): bool|array
 {
     global $license_attach_upload;
 
