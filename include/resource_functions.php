@@ -544,7 +544,7 @@ function put_resource_data($resource, $data)
  * @param  integer  $user               User ID, -1 for current user
  * @param  string   $origin             Source of resource, should not be blank
  * @param  string   $file_extension     If specified
- * @param  bool     $run_macro          Run autocomplate macros, can be disabled if they are ran later in process
+ * @param  bool     $run_macro          Run autocomplete macros, can be disabled if they are run later in process
  *
  * @return mixed    false if invalid inputs given, integer of resource reference if resource is created
  */

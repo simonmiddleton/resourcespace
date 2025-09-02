@@ -195,7 +195,7 @@ function api_create_resource($resource_type, $archive = 999, $url = "", $no_exif
         }
     }
 
-    # Run autocomplete macros as we tell create_record not to run them earlier
+    # Run autocomplete macros as we tell create_resource not to run them earlier
     autocomplete_blank_fields($ref, false);
 
     return $ref;
