@@ -79,3 +79,4 @@ $lang["px"]='px';
 $lang["plugin-transform-title"]='Bildeverktøy (transformere)';
 $lang["plugin-transform-desc"]='Aktiverer opprettelse av beskårne og skalerte alternative bilder (jCrop med mobilstøtte)';
 $lang["use_system_icc_profile_config"]='Bruk systemkonfigurasjon for ICC-profilbehandling. Vil overstyre sRGB-alternativene ovenfor.';
+$lang["cropper_preset_sizes"] = 'Forhåndsdefinerte størrelser';

@@ -96,8 +96,7 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
     $modules_mappings = tms_link_get_modules_mappings();
     $convertedtmsdata = array();
 
-    foreach($modules_mappings as $module)
-        {
+    foreach ($modules_mappings as $module) {
         if(trim($onlymodule) != "" && $onlymodule != $module['module_name'])
             {
             continue;
@@ -118,10 +117,7 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
             continue;
             }
 
-        if (!is_array($tms_object_id)) {
-            // Split on white space and commas for multiple tms object IDs
-            $tms_object_id = preg_split('/[,\s]+/', $tms_object_id);
-        }
+        $tms_object_id = tms_link_split_identifiers($tms_object_id);
 
         if ($module['tms_uid_field_int'] ?? true) {
             $tms_object_id = array_filter($tms_object_id,'is_positive_int_loose');
@@ -164,8 +160,7 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
         debug('tms_link: tms column query to odbc: ' . $tmssql);
         $tmsresultset = odbc_exec($conn, $tmssql);
 
-        for($r = 1; $r <= $resultcount; $r++)
-            {
+        for($r = 1; $r <= $resultcount; $r++) {
             $tmsdata = odbc_fetch_array($tmsresultset, $r);
 
             if (!$tmsdata)
@@ -175,22 +170,11 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
                 continue;
                 }
 
-            if(is_array($tms_object_id))
-                {
-                foreach($tmsdata as $key => $value)
-                    {
-                    $convertedtmsdata[$module['module_name']][$r][$key] = tms_convert_value($value, $key, $module);
-                    }
-                }
-            else
-                {
-                foreach($tmsdata as $key => $value)
-                    {
-                    $convertedtmsdata[$module['module_name']][$key] = tms_convert_value($value, $key, $module);
-                    }
-                }
+            foreach ($tmsdata as $key => $value) {
+                $convertedtmsdata[$module['module_name']][$r][$key] = tms_convert_value($value, $key, $module);
             }
         }
+    }
 
     odbc_close($conn);
     return $convertedtmsdata;
@@ -891,3 +875,18 @@ function tms_link_is_rs_uid_field($field_ref)
     
     return true;
     }
+
+/**
+ * Split string identifier values on commas with optional whitespace for multiple tms object IDs
+ * 
+ * @param  string|array $tms_object_id
+ * @return array
+ */
+function tms_link_split_identifiers(string|array $tms_object_id): array
+{
+    if (!is_array($tms_object_id)) {
+        $tms_object_id = preg_split('/,\s*/', $tms_object_id) ?: [];
+    }
+
+    return $tms_object_id;
+}

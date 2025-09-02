@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Para modificar los estados y acciones del fl
 $lang["plugin-rse_workflow-title"]='Flujo de Trabajo Avanzado';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Flujo de trabajo';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Crear y gestionar estados de flujo de trabajo';
+$lang["rse_workflow_skip_required_fields"] = 'Al mover recursos a este estado del flujo de trabajo, ¿excluir de las verificaciones de campos obligatorios?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'No se puede cambiar el estado de archivo a %%ARCHIVE%%. Falta metadata en los campos requeridos: %%FIELDS%%.';

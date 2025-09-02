@@ -682,19 +682,6 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
-    'antiword' => [
-        'required' => false,
-        'path_var_name' => 'antiword_path',
-        'display_name' => 'Antiword',
-        'show_on_check_page' => true,
-        'version_check' => [
-            'argument' => '-help', # it doesn't seem to have a version flag, help is the closest we can get
-            'callback' => [
-                'fct_name' => 'check_utility_cli_version_found_by_name',
-                'args' => [['antiword']],
-            ],
-        ],
-    ],
     'pdftotext' => [
         'required' => false,
         'path_var_name' => 'pdftotext_path',
@@ -923,6 +910,7 @@ $languages["en"] = "International English";
 $languages["en-US"] = "American English";
 $languages["ar"] = "العربية";
 $languages["id"] = "Bahasa Indonesia"; # Indonesian
+$languages["be"] = "беларуская мова"; # Belarusian
 $languages["bn"] = "বাংলা"; # Bengali
 $languages["ca"] = "Català"; # Catalan
 $languages["cs"] = "čeština"; # Czech
@@ -1098,3 +1086,5 @@ const FIELD_SORT_METHODS = [
 // How many times should the system attempt to generate previews? 
 // The preview attempts for a resource are reset if preview generation is manually initiated
 const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
+
+const NON_PREVIEW_EXTENSIONS = ['zip'];

@@ -115,9 +115,6 @@ $ghostscript_executable = 'gs';
 // Install Exiftool and set this path to enable metadata-writing when resources are downloaded
 // $exiftool_path='/usr/bin';
 
-// Path to Antiword - for text extraction / indexing of Microsoft Word Document (.doc) files
-// $antiword_path='/usr/bin';
-
 // Path to pdftotext - part of the XPDF project, see http://www.foolabs.com/xpdf/
 // Enables extraction of text from PDF files
 // $pdftotext_path='/usr/bin';
@@ -3235,4 +3232,5 @@ $browser_check=false;
 $browser_check_key="c899a58b100c94fb907fac1f29e2d0fd"; // Randomise this.
 $browser_check_message="Performing browser checks..."; // Message to display when checking browser. This cannot be translated as is displayed before languages are loaded, so is provided as a configuration so it can be localised if desired.
 
-
+// Show the shorthand name column in the metadata admin area for easier identification of fields
+$metadata_admin_show_shorthand = false;

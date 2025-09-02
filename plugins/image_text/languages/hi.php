@@ -18,3 +18,12 @@ $lang["image_text_font"]='इस्तेमाल करने के लिए
 $lang["image_text_noim"]='इस प्लगइन के लिए Imagemagick का इंस्टॉल होना आवश्यक है।';
 $lang["plugin-image_text-title"]='छवि पाठ';
 $lang["plugin-image_text-desc"]='डाउनलोड के समय छवि में फ़ील्ड डेटा जोड़ने की अनुमति देता है';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'पश्चिम',
+   'center' => 'केंद्र',
+   'east' => 'पूर्व',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'ऊपर',
+   'bottom' => 'नीचे',
+);

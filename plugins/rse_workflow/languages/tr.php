@@ -57,3 +57,5 @@ $lang["rse_workflow_bcc_admin"]='Katkıda bulunan kişi bilgilendirildiğinde si
 $lang["plugin-rse_workflow-title"]='Gelişmiş İş Akışı';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Kurumsal - İş Akışı';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'İş akışı durumlarını oluşturun ve yönetin';
+$lang["rse_workflow_skip_required_fields"] = 'Bu iş akışı durumuna kaynakları taşırken, gerekli alan kontrollerinden hariç tutulsun mu?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Arşiv durumunu %%ARCHIVE%% olarak değiştiremiyor. Gerekli alanlarda eksik meta veriler: %%FIELDS%%.';

@@ -777,7 +777,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
                                             # List all sizes and allow the user to download them
                                             $onlyifexists = true;
-                                            if (hook('modifycheckifexists')) {
+                                            if (hook('modifycheckifexists', '', array($resource))) {
                                                 $onlyifexists = false;
                                             }
                                             $sizes = get_image_sizes($ref, false, $resource["file_extension"], $onlyifexists);

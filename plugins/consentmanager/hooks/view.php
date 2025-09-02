@@ -46,6 +46,8 @@ function HookConsentmanagerViewCustompanels()
                             <th><?php echo escape($lang["name"]); ?></th>
                             <th><?php echo escape($lang["usage"]); ?></th>
                             <th><?php echo escape($lang["fieldtitle-expiry_date"]); ?></th>
+                            <th><?php echo escape($lang["date_of_consent"]); ?></th>
+                            <th><?php echo escape($lang["user_created_by"]); ?></th>
 
                             <?php if ($edit_access || checkperm("cm")) { ?>
                                 <th>
@@ -72,7 +74,13 @@ function HookConsentmanagerViewCustompanels()
                                     ?>
                                 </td>
                                 <td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>
-
+                                <td><?php echo escape($consent["date_of_consent"] == "" ? $lang["no_consent_date"] : nicedate($consent["date_of_consent"])); ?></td>
+                                <td>
+                                    <?php                             
+                                        $created_by_user = get_user($consent['created_by']);                            
+                                        echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]);
+                                    ?>
+                                </td>
                                 <?php if ($edit_access || checkperm("cm")) { ?>
                                     <td>
                                         <div class="ListTools">

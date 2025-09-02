@@ -76,7 +76,16 @@ if ($collection !== false) {
                     foreach ($resources as $resource) {
                         $ingested = empty($resource['file_path']);
                         delete_previews($resource);
-                        create_previews($resource['ref'], false, $resource["file_extension"], false, false, -1, true, $ingested);
+                        create_previews(
+                            $resource['ref'], 
+                            false, 
+                            in_array($resource["file_extension"], NON_PREVIEW_EXTENSIONS) ? 'jpg' : $resource["file_extension"], 
+                            in_array($resource["file_extension"], NON_PREVIEW_EXTENSIONS), 
+                            false, 
+                            -1, 
+                            true, 
+                            $ingested
+                        );
                         $message = $lang["complete"];
                     }
                 }

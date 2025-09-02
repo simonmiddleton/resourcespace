@@ -178,6 +178,8 @@ function check_date_format($date)
 
     if (is_null($date)) {
         $date = "";
+    } else {
+        $date = trim($date);
     }
 
     // Check the format of the date to "yyyy-mm-dd hh:mm:ss"
@@ -188,6 +190,11 @@ function check_date_format($date)
         // Check the format of the date to "yyyy-mm-dd"
         || (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date, $parts))
     ) {
+        // If dates come in the form of YYYY-MM-00 or YYYY-00-00 Pad out the date to allow for validation 
+        if (($parts[2] === '00' && $parts[3] === '00') || ($parts[3] === '00' && $parts[2] !== '00')) {
+            $parts[2] === '00' ? $parts[2] = '01' : '';
+            $parts[3] === '00' ? $parts[3] = '01' : '';
+        }
         if (!checkdate($parts[2], $parts[3], $parts[1])) {
             return str_replace("%date%", $date, $lang["invalid_date_error"]);
         }

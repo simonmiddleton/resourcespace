@@ -18,3 +18,12 @@ $lang["image_text_font"]='要使用的字体必须由已安装的ImageMagick版�
 $lang["image_text_noim"]='此插件需要安装Imagemagick。';
 $lang["plugin-image_text-title"]='图像文本';
 $lang["plugin-image_text-desc"]='允许在下载时将字段数据添加到图像';
+$lang["image_text_position_list"] = (object) array(
+   'west' => '西',
+   'center' => '中',
+   'east' => '东',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => '顶部',
+   'bottom' => '底部',
+);

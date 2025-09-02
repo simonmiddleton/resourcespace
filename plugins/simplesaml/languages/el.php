@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Έλεγχος λήξης πιστ�
 
 $lang["simplesaml_use_www_label"] = 'Επιτρέπεται η αίτηση μεταδεδομένων SP για τη διαδρομή "www"; (η αλλαγή σε ψευδές θα απαιτήσει από τον IdP να επαναλάβει την ανταλλαγή των μεταδεδομένων SP)';
 $lang["simplesaml_use_www_error"] = '[Warning] Το πρόσθετο χρησιμοποιεί τις παλιές διαδρομές "www". Αν αυτή είναι μια νέα εγκατάσταση, αλλάξτε το τώρα! Διαφορετικά, συντονιστείτε με τον διαχειριστή του IdP ώστε να μπορέσει να ενημερώσει τα μεταδεδομένα του SP αναλόγως.';
+$lang["simplesaml_config_source_label"] = 'Επιλέξτε την πηγή διαμόρφωσης IdP';
+$lang["simplesaml_config_source_url"] = 'URL Μεταδεδομένων (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Αρχείο ρύθμισης παραμέτρων ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Τοπικά αρχεία ρύθμισης SAML (παλαιά)';
+$lang["simplesaml_update_metadata_now"] = 'Ενημέρωση τώρα';
+$lang["simplesaml_update_metadata_error"] = 'Αδύνατη η ανάλυση των μεταδεδομένων \'%error%\' - ελέγξτε τη διεύθυνση URL των μεταδεδομένων';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Μη έγκυρη απάντηση από το URL: \'%error%\' - ελέγξτε το URL μεταδεδομένων';
+$lang["simplesaml_update_metadata_parse_error"] = 'Αδύνατη η ανάκτηση μεταδεδομένων: \'%error%\' - ελέγξτε τη διεύθυνση URL μεταδεδομένων';
+$lang["simplesaml_metadata_updates"] = 'Ενημερώσεις μεταδεδομένων SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'Τα μεταδεδομένα δεν έχουν ενημερωθεί από %date%';
+$lang["simplesaml_metadata_invalid"] = 'Μη έγκυρα ή μη διαθέσιμα μεταδεδομένα IdP';
+$lang["simplesaml_admin_password_reset"] = 'Επαναφορά κωδικού πρόσβασης διαχειριστή απλού ιστότοπου δοκιμών SimpleSAML (προαιρετικό)';

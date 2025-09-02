@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Obnovit zdroje';
 $lang["plugin-offline_archive-title"]='Offline archivace';
 $lang["plugin-offline_archive-desc"]='Umožňuje přesun archivovaných souborů na offline místo';
 $lang["offline_archive_administer_archive-tooltip"] = 'Přesunout archivované soubory na offline místo';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Čekající',
+  1 => 'Probíhá',
+  2 => 'Dokončeno',
+);

@@ -189,11 +189,14 @@ function HookTms_linkEditAftersaveresourcedata()
                 continue;
                 }
 
+            // Multiple IDs? For details, see HookTms_linkAllUpdate_field comment (same variable name)
+            $tms_module_data = end($tmsdata[$module['module_name']]);
+
             foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
                 {
-                if($tms_rs_mapping['rs_field'] > 0 && $module['rs_uid_field'] != $tms_rs_mapping['rs_field'] && isset($tmsdata[$module['module_name']][$tms_rs_mapping['tms_column']]))
+                if($tms_rs_mapping['rs_field'] > 0 && $module['rs_uid_field'] != $tms_rs_mapping['rs_field'] && isset($tms_module_data[$tms_rs_mapping['tms_column']]))
                     {
-                    update_field($resourceref, $tms_rs_mapping['rs_field'], $tmsdata[$module['module_name']][$tms_rs_mapping['tms_column']]);
+                    update_field($resourceref, $tms_rs_mapping['rs_field'], $tms_module_data[$tms_rs_mapping['tms_column']]);
                     }
                 elseif($resourceref > 0 && getval("field_{$module['rs_uid_field']}", '') == '')
                     {

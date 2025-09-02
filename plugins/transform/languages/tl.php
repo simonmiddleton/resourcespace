@@ -77,3 +77,4 @@ $lang["use_system_icc_profile_config"] = 'Gamitin ang setting ng configuration n
 $lang["transform_update_preview"] = 'I-update ang preview';
 $lang["transform_preset_sizes"] = 'Pumili mula sa mga nakatakdang sukat ng target';
 $lang["error_crop_invalid"] = 'Paki pili ang isang rehiyon ng imahe';
+$lang["cropper_preset_sizes"] = 'Mga nakatakdang sukat';

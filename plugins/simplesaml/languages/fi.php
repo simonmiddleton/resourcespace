@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Tarkista IdP-sertifikaatin vanhentu
 
 $lang["simplesaml_use_www_label"] = 'Salli SP-metadata-pyynnöt "www"-reitille? (vaihtaminen epätodeksi vaatii IdP:ltä SP-metadata:n uudelleenvaihtoa)';
 $lang["simplesaml_use_www_error"] = '[Warning] Liitännäinen käyttää vanhoja "www" reittejä. Jos tämä on uusi asennus, muuta se nyt! Muussa tapauksessa koordinoi IdP-järjestelmänvalvojan kanssa, jotta he voivat päivittää SP-metadataa vastaavasti.';
+$lang["simplesaml_config_source_label"] = 'Valitse IdP-konfiguraation lähde';
+$lang["simplesaml_config_source_url"] = 'Metatieto URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpacein konfigurointitiedosto (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Paikalliset SAML-konfiguraatiotiedostot (perinteinen)';
+$lang["simplesaml_update_metadata_now"] = 'Päivitä nyt';
+$lang["simplesaml_update_metadata_error"] = 'Ei voida jäsentää metatietoja \'%error%\' - tarkista metatietojen URL';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Virheellinen vastaus URL-osoitteesta: \'%error%\' - tarkista metatiedon URL';
+$lang["simplesaml_update_metadata_parse_error"] = 'Ei voida noutaa metatietoja: \'%error%\' - tarkista metatietojen URL';
+$lang["simplesaml_metadata_updates"] = 'Yksinkertaiset SAML-metadata päivitykset';
+$lang["simplesaml_metadata_warning"] = 'Metatietoja ei ole päivitetty sitten %date%';
+$lang["simplesaml_metadata_invalid"] = 'IdP metadata virheellinen tai ei saatavilla';
+$lang["simplesaml_admin_password_reset"] = 'Nollaa SimpleSAML-testisivuston ylläpitäjän salasana (valinnainen)';

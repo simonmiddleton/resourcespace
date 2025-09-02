@@ -77,3 +77,4 @@ $lang["use_system_icc_profile_config"] = 'Használja a rendszer konfigurációs 
 $lang["transform_update_preview"] = 'Előnézet frissítése';
 $lang["transform_preset_sizes"] = 'Válasszon az előre definiált célméretek közül';
 $lang["error_crop_invalid"] = 'Kérjük, válasszon ki egy területet a képen';
+$lang["cropper_preset_sizes"] = 'Előre definiált méretek';

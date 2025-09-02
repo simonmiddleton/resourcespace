@@ -53,6 +53,9 @@ input[type="text"], input[type="password"], input[type="url"],input[type="email"
     min-height: 32px;
     margin: 3px 0;
 }
+input[type="date"] {
+    width: 140px;
+}
 
 input[type="submit"], input[type="button"], button {
     padding: 6px 14px;
@@ -179,7 +182,6 @@ select:before {
 .pageline{border-bottom: 1px solid #d7d7d7;  margin-right:10px;margin-left:5px;}
 .DisplayNone { display: none !important; }
 .AbsoluteTopLeft { position: absolute; top: 0; left: 0; }
-.PointerEventsNone { pointer-events: none; }
 .MarginLeft1rem { margin-left: 1rem; }
 .BorderBottom { border-bottom: 2px solid; }
 
@@ -1399,6 +1401,11 @@ div.video-js {margin:auto;}
     padding-top: 1em;
     padding-bottom: 0px;
     list-style-type: none;
+    }
+
+#modal_dialog .MessageText a{
+    font-weight: bold;
+    color: #222222;
     }
 
 #modal .TopInpageNav {

@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Provjeriti isteka li IdP certifikat
 
 $lang["simplesaml_use_www_label"] = 'Dopusti SP zahtjeve za metapodatke za "www" put? (promjena na false će zahtijevati da IdP ponovo razmijeni SP metapodatke)';
 $lang["simplesaml_use_www_error"] = 'Upozorenje! Plugin koristi zastarjele "www" rute. Ako je ovo nova instalacija, promijenite to odmah! Inače, koordinirajte s administratorom IdP-a kako bi mogli ažurirati SP metapodatke u skladu s tim.';
+$lang["simplesaml_config_source_label"] = 'Odaberite izvor konfiguracije IdP';
+$lang["simplesaml_config_source_url"] = 'URL metapodataka (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Datoteka konfiguracije ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Lokalne SAML konfiguracijske datoteke (naslijeđene)';
+$lang["simplesaml_update_metadata_now"] = 'Ažuriraj sada';
+$lang["simplesaml_update_metadata_error"] = 'Nije moguće obraditi metapodatke \'%error%\' - provjerite URL metapodataka';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Nevažeći odgovor s URL-a: \'%error%\' - provjerite URL metapodataka';
+$lang["simplesaml_update_metadata_parse_error"] = 'Nije moguće preuzeti metapodatke: \'%error%\' - provjerite URL metapodataka';
+$lang["simplesaml_metadata_updates"] = 'Ažuriranja SimpleSAML metapodataka';
+$lang["simplesaml_metadata_warning"] = 'Metapodaci nisu ažurirani od %date%';
+$lang["simplesaml_metadata_invalid"] = 'Neispravni ili nedostupni IdP metapodaci';
+$lang["simplesaml_admin_password_reset"] = 'Ponovno postavite administratorsku lozinku SimpleSAML testne stranice (opcionalno)';

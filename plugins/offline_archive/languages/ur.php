@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"]='آرکائیو سے بح�
 $lang["offline_archive_resource_log_restore_request"]='آرکائیو سے بحالی کی درخواست کی گئی';
 $lang["offline_archive_resource_restore"]='وسائل کو بحال کریں';
 $lang["offline_archive_administer_archive-tooltip"] = 'محفوظ شدہ فائلوں کو آف لائن مقام پر منتقل کریں';
+$lang["offline_archive_statustype"] = array (
+  0 => 'زیر التواء',
+  1 => 'جاری',
+  2 => 'مکمل',
+);

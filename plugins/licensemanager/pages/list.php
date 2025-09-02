@@ -1,12 +1,14 @@
 <?php
 include __DIR__."/../../../include/boot.php";
-
 include __DIR__."/../../../include/authenticate.php";
 
 $is_admin = checkperm("a");
-if (!$is_admin && !checkperm("lm")) {exit ("Permission denied.");}
-global $baseurl;
 
+if (!$is_admin && !checkperm("lm")) {
+    exit ("Permission denied.");
+}
+
+global $baseurl;
 
 # Check if it's necessary to upgrade the database structure
 include __DIR__ . "/../upgrade/upgrade.php";
@@ -16,12 +18,13 @@ $offset=getval("offset",0,true);
 if (array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when posting
 $findtext=getval("findtext","");
 
-$delete=getval("delete","");
-if ($delete!="" && enforcePostRequest(false))
-    {
-    # Delete license
-    ps_query("delete from license where ref= ?", ['i', $delete]);
-    }
+$delete = getval("delete","");
+$license_status = getval("license_status", "all");
+
+if ($delete!="" && enforcePostRequest(false)) {
+    # Delete consent
+    licensemanager_delete_license($delete);
+}
 
 
 
@@ -57,15 +60,8 @@ $url_params = array(
 <input type=hidden name="delete" id="licensedelete" value="">
  
 <?php 
-$sql = '';
-$params = [];
-if ($findtext!="")
-    {
-    $sql    = "where description like CONCAT('%', ?, '%') or holder like CONCAT('%', ?, '%') or license_usage like CONCAT('%', ?, '%')";
-    $params = ['s', $findtext, 's', $findtext, 's', $findtext];
-    }
 
-$licenses=ps_query("select " . columns_in("license",null,"licensemanager") . " from license $sql order by ref", $params);
+$licenses = licensemanager_get_all_licenses($findtext, $license_status);
 
 # pager
 $per_page = $default_perpage_list;
@@ -116,10 +112,15 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
             <td><?php echo $license["description"]; ?></td>
             <td><?php echo escape($license["expires"] == "" ? $lang["no_expiry_date"] : nicedate($license["expires"])); ?></td>
         
-            <td><div class="ListTools">
-            <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
-            <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?></a>
-            </div></td>
+            <td>
+                <div class="ListTools">
+                    <a href="<?php echo generateURL($baseurl_short . "pages/search.php", ['search' => '!license' . $license['ref']]); ?>" onClick="return CentralSpaceLoad(this,true);">
+                        <i class="fas fa-search"></i>&nbsp;<?php echo escape($lang['license_view_linked_resources_short']); ?>
+                    </a>
+                    <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
+                    <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?></a>
+                </div>
+            </td>
     </tr>
     <?php
     }
@@ -129,7 +130,28 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 </div>
 <div class="BottomInpageNav"><?php pager(true); ?></div>
 
-
+        <div class="Question">  
+            <label for="license_status"><?php echo escape($lang["license_status"]); ?></label>
+            <div class="tickset">
+                <div class="Inline">
+                    <select name="license_status" id="license_status" onChange="this.form.submit();">
+                        <option value="all" <?php echo ($license_status == 'all') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["license_status_all"]); ?>
+                        </option>
+                        <option value="active" <?php echo ($license_status == 'active') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["license_status_active"]); ?>
+                        </option>
+                        <option value="expiring" <?php echo ($license_status == 'expiring') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["license_status_expiring"]); ?>
+                        </option>
+                        <option value="expired" <?php echo ($license_status == 'expired') ? " selected" : ''; ?>>
+                            <?php echo escape($lang["license_status_expired"]); ?>
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearerleft"></div>
+        </div>
 
         <div class="Question">
             <label for="find"><?php echo escape($lang["licensesearch"]); ?><br/></label>

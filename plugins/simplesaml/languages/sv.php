@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Kontrollera IdP-certifikatets utgå
 
 $lang["simplesaml_use_www_label"] = 'Tillåt SP metadataförfrågningar för "www" rutt? (att ändra till falskt kommer att kräva att IdP återutbyter SP metadata)';
 $lang["simplesaml_use_www_error"] = '[Warning] Pluginet använder de gamla "www" rutterna. Om detta är en ny installation, ändra det nu! Annars samordna med IdP-administratören så att de kan uppdatera SP-metadata i enlighet därmed.';
+$lang["simplesaml_config_source_label"] = 'Välj IdP-konfigurationskälla';
+$lang["simplesaml_config_source_url"] = 'Metadata URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace konfigurationsfil (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Lokala SAML-konfigurationsfiler (legacy)';
+$lang["simplesaml_update_metadata_now"] = 'Uppdatera nu';
+$lang["simplesaml_update_metadata_error"] = 'Kunde inte tolka metadata \'%error%\' - kontrollera metadata-URL';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Ogiltigt svar från URL: \'%error%\' - kontrollera metadata-URL';
+$lang["simplesaml_update_metadata_parse_error"] = 'Kunde inte hämta metadata: \'%error%\' - kontrollera metadata-URL';
+$lang["simplesaml_metadata_updates"] = 'EnkelSAML metadatauppdateringar';
+$lang["simplesaml_metadata_warning"] = 'Metadata har inte uppdaterats sedan %date%';
+$lang["simplesaml_metadata_invalid"] = 'IdP metadata ogiltig eller otillgänglig';
+$lang["simplesaml_admin_password_reset"] = 'Återställ SimpleSAML testplatsens administratörslösenord (valfritt)';

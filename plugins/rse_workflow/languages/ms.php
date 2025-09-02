@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"] = 'Nota:';
 $lang["rse_workflow_email_from"] = 'Alamat emel untuk menghantar pemberitahuan dari (akan menggunakan %EMAILFROM% jika kosong):';
 $lang["rse_workflow_bcc_admin"] = 'Maklumkan pentadbir sistem apabila penyumbang dimaklumkan';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Cipta dan urus keadaan aliran kerja';
+$lang["rse_workflow_skip_required_fields"] = 'Apabila memindahkan sumber ke keadaan aliran kerja ini, adakah ingin mengecualikan daripada pemeriksaan medan yang diperlukan?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Tidak dapat mengubah status arkib kepada %%ARCHIVE%%. Metadata yang diperlukan dalam medan yang diperlukan hilang: %%FIELDS%%.';

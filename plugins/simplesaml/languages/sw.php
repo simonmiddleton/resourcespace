@@ -87,3 +87,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Angalia muda wa kuisha wa cheti cha
 
 $lang["simplesaml_use_www_label"] = 'Ruhusu maombi ya metadata ya SP kwa njia ya "www"? (kubadilisha kuwa uongo kutahitaji IdP kubadilishana tena metadata ya SP)';
 $lang["simplesaml_use_www_error"] = '[Warning] Plugin inatumia njia za zamani "www". Ikiwa hii ni mipangilio mpya, ibadilishe sasa! Vinginevyo, shirikiana na msimamizi wa IdP ili waweze kuboresha metadata ya SP ipasavyo.';
+$lang["simplesaml_config_source_label"] = 'Chagua chanzo cha usanidi wa IdP';
+$lang["simplesaml_config_source_url"] = 'URL ya Metadata (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Faili la usanidi la ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Faili za usanidi za SAML za ndani (za zamani)';
+$lang["simplesaml_update_metadata_now"] = 'Sasisha sasa';
+$lang["simplesaml_update_metadata_error"] = 'Haiwezi kuchambua metadata \'%error%\' - angalia URL ya metadata';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Jibu lisilo sahihi kutoka URL: \'%error%\' - angalia URL ya metadata';
+$lang["simplesaml_update_metadata_parse_error"] = 'Haiwezekani kupata metadata: \'%error%\' - angalia URL ya metadata';
+$lang["simplesaml_metadata_updates"] = 'Mabadiliko ya metadata ya SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'Metadata haijasasishwa tangu %date%';
+$lang["simplesaml_metadata_invalid"] = 'Metadata ya IdP si sahihi au haipatikani';
+$lang["simplesaml_admin_password_reset"] = 'Rekebisha nenosiri la msimamizi wa tovuti ya SimpleSAML (hiari)';

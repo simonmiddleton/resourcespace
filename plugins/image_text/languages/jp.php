@@ -18,3 +18,12 @@ $lang["image_text_font"]='使用するフォントは、インストールされ
 $lang["image_text_noim"]='このプラグインを使用するには、Imagemagickがインストールされている必要があります。';
 $lang["plugin-image_text-title"]='画像テキスト';
 $lang["plugin-image_text-desc"]='ダウンロード時にフィールドデータを画像に追加できるようにします';
+$lang["image_text_position_list"] = (object) array(
+   'west' => '西',
+   'center' => '中央',
+   'east' => '東',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => '上',
+   'bottom' => '下',
+);

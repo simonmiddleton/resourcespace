@@ -87,3 +87,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Kiểm tra thời hạn chứng ch�
 
 $lang["simplesaml_use_www_label"] = 'Cho phép yêu cầu metadata SP cho đường dẫn "www"? (thay đổi thành false sẽ yêu cầu IdP trao đổi lại metadata SP)';
 $lang["simplesaml_use_www_error"] = '[Cảnh báo] Plugin đang sử dụng các đường dẫn "www" cũ. Nếu đây là một thiết lập mới, hãy thay đổi ngay bây giờ! Nếu không, hãy phối hợp với quản trị viên IdP để họ có thể cập nhật metadata SP cho phù hợp.';
+$lang["simplesaml_config_source_label"] = 'Chọn nguồn cấu hình IdP';
+$lang["simplesaml_config_source_url"] = 'URL Metadata (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Tập tin cấu hình ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Tập tin cấu hình SAML cục bộ (di sản)';
+$lang["simplesaml_update_metadata_now"] = 'Cập nhật ngay';
+$lang["simplesaml_update_metadata_error"] = 'Không thể phân tích metadata \'%error%\' - kiểm tra URL metadata';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Phản hồi không hợp lệ từ URL: \'%error%\' - kiểm tra URL metadata';
+$lang["simplesaml_update_metadata_parse_error"] = 'Không thể lấy dữ liệu siêu dữ liệu: \'%error%\' - kiểm tra URL siêu dữ liệu';
+$lang["simplesaml_metadata_updates"] = 'Cập nhật metadata SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'Metadata chưa được cập nhật kể từ %date%';
+$lang["simplesaml_metadata_invalid"] = 'Dữ liệu IdP không hợp lệ hoặc không khả dụng';
+$lang["simplesaml_admin_password_reset"] = 'Đặt lại mật khẩu quản trị trang thử nghiệm SimpleSAML (tùy chọn)';

@@ -1084,10 +1084,12 @@ function add_node_keyword_mappings(array $node, $partial_index = false, bool $is
     }
 
     // Client code does not know whether field is partially indexed or not
-    if (is_null($partial_index)) {
-        if (isset($field_data['partial_index']) && '' != trim($field_data['partial_index'])) {
-            $partial_index = $field_data['partial_index'];
-        }
+    if (
+        is_null($partial_index)
+        && isset($field_data['partial_index'])
+        && '' != trim($field_data['partial_index'])
+    ) {
+        $partial_index = $field_data['partial_index'];
     }
 
     // Check for translations and split as necessary

@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Controllare la scadenza del certifi
 
 $lang["simplesaml_use_www_label"] = 'Consentire richieste di metadata SP per il percorso "www"? (cambiare in falso richiederà all\'IdP di rieseguire lo scambio dei metadata SP)';
 $lang["simplesaml_use_www_error"] = 'Attenzione! Il plugin sta utilizzando i percorsi "www" legacy. Se si tratta di una nuova configurazione, cambialo ora! Altrimenti, coordina con l\'amministratore dell\'IdP affinché possa aggiornare i metadati SP di conseguenza.';
+$lang["simplesaml_config_source_label"] = 'Seleziona la fonte di configurazione IdP';
+$lang["simplesaml_config_source_url"] = 'URL dei metadati (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'File di configurazione di ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'File di configurazione SAML locali (legacy)';
+$lang["simplesaml_update_metadata_now"] = 'Aggiorna ora';
+$lang["simplesaml_update_metadata_error"] = 'Impossibile analizzare i metadati \'%error%\' - controlla l\'URL dei metadati';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Risposta non valida dall\'URL: \'%error%\' - controlla l\'URL dei metadati';
+$lang["simplesaml_update_metadata_parse_error"] = 'Impossibile recuperare i metadati: \'%error%\' - controlla l\'URL dei metadati';
+$lang["simplesaml_metadata_updates"] = 'Aggiornamenti dei metadati SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'I metadati non sono stati aggiornati dal %date%';
+$lang["simplesaml_metadata_invalid"] = 'Metadata IdP non valida o non disponibile';
+$lang["simplesaml_admin_password_reset"] = 'Reimposta la password dell\'amministratore del sito di test SimpleSAML (opzionale)';

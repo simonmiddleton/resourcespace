@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"]='نوٹس:';
 $lang["rse_workflow_email_from"]='اطلاع بھیجنے کے لیے ای میل پتہ (اگر خالی ہو تو %EMAILFROM% استعمال ہوگا):';
 $lang["rse_workflow_bcc_admin"]='جب شراکت دار کو مطلع کیا جائے تو نظام کے منتظمین کو مطلع کریں۔';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'ورک فلو کی حالتیں بنائیں اور ان کا انتظام کریں';
+$lang["rse_workflow_skip_required_fields"] = 'جب وسائل کو اس ورک فلو حالت میں منتقل کرتے ہیں تو ضروری فیلڈ چیک سے خارج کریں؟';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'آرکائیو کی حالت کو %%ARCHIVE%% میں تبدیل کرنے میں ناکامی۔ درکار فیلڈز میں میٹاڈیٹا غائب ہے: %%FIELDS%%۔';

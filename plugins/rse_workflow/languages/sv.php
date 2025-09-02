@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='För att ändra arbetsflödesstatusar och å
 $lang["plugin-rse_workflow-title"]='Avancerat arbetsflöde';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbetsflöde';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Skapa och hantera arbetsflödesstatusar';
+$lang["rse_workflow_skip_required_fields"] = 'När du flyttar resurser till detta arbetsflödesläge, uteslut från kontroller av obligatoriska fält?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Kan inte ändra arkivstatus till %%ARCHIVE%%. Saknar metadata i obligatoriska fält: %%FIELDS%%.';

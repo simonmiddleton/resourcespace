@@ -79,3 +79,4 @@ $lang["px"]='بكسل';
 $lang["plugin-transform-title"]='أدوات الصور (تحويل)';
 $lang["plugin-transform-desc"]='يتيح إنشاء صور بديلة مقصوصة ومقاسة (دعم jCrop مع الأجهزة المحمولة)';
 $lang["use_system_icc_profile_config"]='استخدام إعدادات النظام لمعالجة ملف تعريف ICC. سيتجاوز خيارات sRGB أعلاه.';
+$lang["cropper_preset_sizes"] = 'الأحجام المحددة مسبقًا';

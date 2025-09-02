@@ -763,8 +763,8 @@ if ($keysearch) {
                         $sql_filter->sql .= " AND ";
                     }
 
-                    $sql_filter->sql .= str_replace("[bit_or_condition]", "", " r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
-
+                    $fixedunion->sql = str_replace("[bit_or_condition]", "", " r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+                    $sql_filter->sql .= str_replace("[union_index]", $n+1, $fixedunion->sql);
 
                     $sql_filter->parameters = array_merge($sql_filter->parameters, $fixedunion->parameters, $fixedunioncondition->parameters);
                 } elseif (is_a($fixedunion, "PreparedStatementQuery")) {
