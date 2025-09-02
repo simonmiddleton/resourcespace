@@ -1494,6 +1494,16 @@ div.MessageBox a {
     height: 500px;
 }
 
+.message-list-header {
+    display: inline-block;
+}
+
+.message-list-newmessage {
+    float: right;
+    margin-top: 18px;
+    margin-right: 20px;
+}
+
 .messages-modal h1 {
     padding: 12px 20px;
 }
