@@ -83,3 +83,4 @@ $lang['transform_update_preview']   = "Update preview";
 $lang['transform_preset_sizes']     = "Select from predefined target size";
 $lang['error_crop_invalid'] = "Please select a region of the image";
 
+$lang['cropper_preset_sizes'] = "Predefined sizes";

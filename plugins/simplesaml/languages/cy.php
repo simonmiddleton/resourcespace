@@ -87,3 +87,15 @@ $lang["simplesaml_acs_url"] = 'ACS URL / Reply URL';
 
 $lang["simplesaml_use_www_label"] = 'Caniatáu ceisiadau metadata SP ar gyfer llwybr "www"? (newid i ffug fydd yn gofyn i\'r IdP ail-fyw\'r metadata SP)';
 $lang["simplesaml_use_www_error"] = 'Rhybudd! Mae\'r plugin yn defnyddio\'r llwybrau "www" hen. Os yw hwn yn gosodiad newydd, newidwch ef nawr! Fel arall, cydweithiwch gyda\'r gweinyddwr IdP fel y gallant ddiweddaru\'r metadata SP yn unol â hynny.';
+$lang["simplesaml_config_source_label"] = 'Dewiswch ffynhonnell gosodiad IdP';
+$lang["simplesaml_config_source_url"] = 'URL Metdata (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Ffeil gosod ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Ffeiliau cyfrestru SAML lleol (hen)';
+$lang["simplesaml_update_metadata_now"] = 'Diweddarwch nawr';
+$lang["simplesaml_update_metadata_error"] = 'Methu dadansoddi metadata \'%error%\' - gwirio URL metadata';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Ateb annilynnol gan URL: \'%error%\' - gwirio URL metadata';
+$lang["simplesaml_update_metadata_parse_error"] = 'Methu adfer metadata: \'%error%\' - gwirio URL metadata';
+$lang["simplesaml_metadata_updates"] = 'Diweddariadau metadata SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'Nid yw\'r metadata wedi\'i ddiweddaru ers %date%';
+$lang["simplesaml_metadata_invalid"] = 'Anfoniad metadata IdP yn annilys neu ar goll';
+$lang["simplesaml_admin_password_reset"] = 'Ail-osod cyfrinair gweinyddwr safle prawf SimpleSAML (dewisol)';

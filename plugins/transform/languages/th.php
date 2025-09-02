@@ -77,3 +77,4 @@ $lang["transform_update_preview"]='อัปเดตตัวอย่าง';
 $lang["transform_preset_sizes"]='เลือกจากขนาดเป้าหมายที่กำหนดไว้ล่วงหน้า';
 $lang["error_crop_invalid"]='กรุณาเลือกพื้นที่ของภาพ';
 $lang["px"]='px';
+$lang["cropper_preset_sizes"] = 'ขนาดที่กำหนดไว้ล่วงหน้า';

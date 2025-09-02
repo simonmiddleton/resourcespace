@@ -25,9 +25,10 @@ function api_consentmanager_unlink_consent($consent, $resource)
     return consentmanager_unlink_consent($consent, $resource);
 }
 
-function api_consentmanager_create_consent($name, $email, $telephone, $consent_usage, $notes = "", $expires = null)
+function api_consentmanager_create_consent($name, $email, $telephone, $consent_usage, $notes = "", $expires = null, $date_of_birth = null, $address = null, $parent_guardian = null, $date_of_consent = null)
 {
-    return consentmanager_create_consent($name, $email, $telephone, $consent_usage, $notes, $expires);
+    global $userref;
+    return consentmanager_create_consent($name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires, $userref);
 }
 
 function api_consentmanager_get_consent($consent)
@@ -35,9 +36,9 @@ function api_consentmanager_get_consent($consent)
     return consentmanager_get_consent($consent);
 }
 
-function api_consentmanager_update_consent($consent, $name, $email, $telephone, $consent_usage, $notes = "", $expires = null)
+function api_consentmanager_update_consent($consent, $name, $email, $telephone, $consent_usage, $notes = "", $expires = null, $date_of_birth = null, $address = null, $parent_guardian = null, $date_of_consent = null)
 {
-    return consentmanager_update_consent($consent, $name, $email, $telephone, $consent_usage, $notes, $expires);
+    return consentmanager_update_consent($consent, $name, $date_of_birth, $address, $parent_guardian, $email, $telephone, $consent_usage, $notes, $date_of_consent, $expires);
 }
 
 function api_consentmanager_get_all_consents($findtext = "")

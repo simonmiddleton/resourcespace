@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Herstellen van bronnen';
 $lang["plugin-offline_archive-title"]='Offline Archief';
 $lang["plugin-offline_archive-desc"]='Maakt het mogelijk om gearchiveerde bestanden naar een offline locatie te verplaatsen';
 $lang["offline_archive_administer_archive-tooltip"] = 'Verplaats gearchiveerde bestanden naar een offline locatie';
+$lang["offline_archive_statustype"] = array (
+  0 => 'In afwachting',
+  1 => 'In uitvoering',
+  2 => 'Voltooid',
+);

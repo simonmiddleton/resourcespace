@@ -18,3 +18,12 @@ $lang["image_text_font"]='Fontul de utilizat trebuie să fie suportat de versiun
 $lang["image_text_noim"]='Acest plugin necesită instalarea Imagemagick.';
 $lang["plugin-image_text-title"]='Text imagine';
 $lang["plugin-image_text-desc"]='Permite adăugarea datelor câmpului la imagine la descărcare';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'vest',
+   'center' => 'centru',
+   'east' => 'est',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'sus',
+   'bottom' => 'jos',
+);

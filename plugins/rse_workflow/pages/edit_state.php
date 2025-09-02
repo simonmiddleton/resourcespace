@@ -156,20 +156,13 @@ renderBreadcrumbs($links_trail);
 </div>
 
 <?php
+if($errortext!="") {
+    toast_notification('error', $lang['rse_workflow_state_check_fields']);
+}
+elseif ($saved) {
+    toast_notification('success', $lang['saved']);
+}
 
-if($errortext!="")
-    {
-    ?>
-    <script type="text/javascript">
-    alert('<?php echo escape($lang['rse_workflow_state_check_fields']); ?>');
-    </script><?php
-    }
-    
-elseif ($saved)
-    {
-    echo "<div class=\"PageInformal\">" . $lang['saved'] . "</div>";
-    }
-    
 $workflowstate_url = generateURL($baseurl_short."plugins/rse_workflow/pages/edit_state.php",["code"=>$code]);
 ?>
 <div class="BasicsBox">

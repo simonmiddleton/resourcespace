@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"]='Ail-adfer wedi\'i ganslo 
 $lang["offline_archive_resource_log_restore_request"]='Cais adfer o archif';
 $lang["offline_archive_resource_restore"]='Adfer adnoddau';
 $lang["offline_archive_administer_archive-tooltip"] = 'Dymchwel ffeiliau archifedig i leoliad all-lein';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Ar y gweill',
+  1 => 'Yn y broses',
+  2 => 'Wedi\'i gwblhau',
+);

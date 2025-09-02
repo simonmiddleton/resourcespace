@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Чтобы изменить состояни
 $lang["plugin-rse_workflow-title"]='Расширенный рабочий процесс';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Рабочий процесс';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Создавать и управлять состояниями рабочего процесса';
+$lang["rse_workflow_skip_required_fields"] = 'При перемещении ресурсов в это состояние рабочего процесса исключить проверки обязательных полей?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Не удалось изменить состояние архива на %%ARCHIVE%%. Отсутствуют метаданные в обязательных полях: %%FIELDS%%.';

@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Pentru a modifica stările și acțiunile fl
 $lang["plugin-rse_workflow-title"]='Flux de lucru avansat';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Flux de lucru';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Creează și gestionează stările fluxului de lucru';
+$lang["rse_workflow_skip_required_fields"] = 'Când mutați resursele în acest stadiu al fluxului de lucru, excludeți verificările câmpurilor obligatorii?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Imposibil de a schimba starea arhivei în %%ARCHIVE%%. Lipsesc metadatele în câmpurile necesare: %%FIELDS%%.';

@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Przywróć zasoby';
 $lang["plugin-offline_archive-title"]='Archiwum Offline';
 $lang["plugin-offline_archive-desc"]='Umożliwia przeniesienie zarchiwizowanych plików do lokalizacji offline';
 $lang["offline_archive_administer_archive-tooltip"] = 'Przenieś archiwalne pliki do lokalizacji offline';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Oczekujące',
+  1 => 'W trakcie',
+  2 => 'Zakończone',
+);

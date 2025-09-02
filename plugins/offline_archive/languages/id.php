@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Memulihkan sumber daya';
 $lang["plugin-offline_archive-title"]='Arsip Offline';
 $lang["plugin-offline_archive-desc"]='Memungkinkan relokasi file yang diarsipkan ke lokasi offline';
 $lang["offline_archive_administer_archive-tooltip"] = 'Pindahkan file arsip ke lokasi offline';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Menunggu',
+  1 => 'Dalam proses',
+  2 => 'Selesai',
+);

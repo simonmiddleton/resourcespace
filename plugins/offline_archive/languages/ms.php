@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"] = 'Pemulihan dari arkib di
 $lang["offline_archive_resource_log_restore_request"] = 'Permintaan pemulihan dari arkib';
 $lang["offline_archive_resource_restore"] = 'Pulihkan sumber';
 $lang["offline_archive_administer_archive-tooltip"] = 'Pindahkan fail yang diarkib ke lokasi luar talian';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Menunggu',
+  1 => 'Dalam proses',
+  2 => 'Selesai',
+);

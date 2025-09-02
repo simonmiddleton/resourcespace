@@ -634,12 +634,16 @@ function get_user($ref)
 * Note: data is taken from the submitted form
 *
 * @param string $ref ID of the user
+* @param array  $data Data to save (optional, will use posted data otherwise)
 *
 * @return boolean|string True if successful or a descriptive string if there's an issue
 */
-function save_user($ref)
+function save_user($ref, array $data=[])
 {
     global $lang, $home_dash;
+
+    // Permissions check
+    if (!checkperm_user_edit($ref)) {return false;}
 
     $current_user_data = get_user($ref);
 
@@ -661,20 +665,22 @@ function save_user($ref)
 
         return true;
     } else {
-        // Get submitted values
-        $username               = trim(getval('username', ''));
-        $password               = trim(getval('password', ''));
-        $fullname               = str_replace("\t", ' ', trim(getval('fullname', '')));
-        $email                  = trim(getval('email', ''));
-        $usergroup              = trim(getval('usergroup', '', false, 'is_int_loose'));
-        $ip_restrict            = trim(getval('ip_restrict', ''));
-        $search_filter_override = trim(getval('search_filter_override', ''));
-        $search_filter_o_id     = trim(getval('search_filter_o_id', 0, true));
-        $comments               = trim(getval('comments', ''));
-        $suggest                = getval('suggest', '');
-        $emailresetlink         = getval('emailresetlink', '');
-        $approved               = getval('approved', 0, true);
-        $expires                = getval('account_expires', '');
+        // Get submitted values from either $data (if passed) or the POSTed form.
+        $use_post_data = empty($data);
+
+        $username               = $use_post_data ? trim(getval('username', '')) : trim($data['username'] ?? $current_user_data['username'] ?? '');
+        $password               = $use_post_data ? trim(getval('password', '')) : trim($data['password'] ?? $lang['hidden']);
+        $fullname               = $use_post_data ? str_replace("\t", ' ', trim(getval('fullname', ''))) : str_replace("\t", ' ', trim($data['fullname'] ?? $current_user_data['fullname'] ?? ''));
+        $email                  = $use_post_data ? trim(getval('email', '')) : trim($data['email'] ?? $current_user_data['email'] ?? '');
+        $usergroup              = $use_post_data ? trim(getval('usergroup', '', false, 'is_int_loose')) : trim($data['usergroup'] ?? $current_user_data['usergroup'] ?? '');
+        $ip_restrict            = $use_post_data ? trim(getval('ip_restrict', '')) : trim($data['ip_restrict'] ?? $current_user_data['ip_restrict'] ?? '');
+        $search_filter_override = $use_post_data ? trim(getval('search_filter_override', '')) : trim($data['search_filter_override'] ?? $current_user_data['search_filter_override'] ?? '');
+        $search_filter_o_id     = $use_post_data ? trim(getval('search_filter_o_id', 0, true)) : trim($data['search_filter_o_id'] ?? $current_user_data['search_filter_o_id'] ?? '');
+        $comments               = $use_post_data ? trim(getval('comments', '')) : trim($data['comments'] ?? $current_user_data['comments'] ?? '');
+        $suggest                = $use_post_data ? getval('suggest', '') : ($data['suggest'] ?? '');
+        $emailresetlink         = $use_post_data ? getval('emailresetlink', '') : ($data['emailresetlink'] ?? '');
+        $approved               = $use_post_data ? getval('approved', 0, true) : ($data['approved'] ?? $current_user_data['approved'] ?? 0);
+        $expires                = $use_post_data ? getval('account_expires', '') : ($data['account_expires'] ?? $current_user_data['account_expires'] ?? '');
 
         // Create SQL to check for username or e-mail address conflict
         $conditions = "username = ? OR email = ?";
@@ -950,7 +956,7 @@ function email_reset_link(string $email, bool $newuser = false)
         // Fetch any welcome message for this user group
         $welcome = ps_value('SELECT welcome_message AS value FROM usergroup WHERE ref = ?', ["i",$details['usergroup']], '');
 
-        if (trim($welcome) === "") {
+        if (trim((string) $welcome) === "") {
             $welcome = str_replace("%applicationname", $applicationname, $lang["welcome_generic"]);
         }
 
@@ -1268,11 +1274,14 @@ function user_limit_reached()
 * @param string $newuser  - username to create
 * @param integer $usergroup  - optional usergroup to assign
 *
-* @return boolean|integer  - id of new user or false if user already exists, or -2 if user limit reached
+* @return boolean|integer  - id of new user or false if user already exists / permission denied, or -2 if user limit reached
 */
 function new_user($newuser, $usergroup = 0)
 {
     global $lang,$home_dash,$user_limit;
+
+    // Permissions check
+    if (!checkPermission_manage_users()) { return false;}
 
     # Username already exists?
     $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$newuser], 0);
@@ -3552,7 +3561,7 @@ function update_user_access(int $user = 0, array $set_values = []): bool
  */
 function checkPermission_manage_users(): bool
 {
-    return checkperm('t') && checkperm('u');
+    return ((checkperm('t') && checkperm('u')));
 }
 
 /**
@@ -3787,20 +3796,32 @@ function xor_base64_encode($str) {
 }
 
 /**
- * load_site_text_for_usergroup
+ * Load site text for a user group. To preserve the original state of global language values, this function will always revert previous changes first.
  *
  * @param  int  $group   $usergroup value. Normally int however maybe null for activity before login e.g. load user group site text for an activity by
- *                       supplying a user group id and then return to the defaults by supplying null. Supplying the $usergroup global value would be
- *                       more common to return to the site text of the logged in user.
+ *                       supplying a user group id and then return to the defaults by supplying null.
  */
 function load_site_text_for_usergroup(int|null $group): void
 {
     global $language, $pagename, $lang;
 
-    if (is_null($group) && is_array($GLOBALS['load_site_text_for_usergroup'])) {
+    // Restore original values each time this function loads so it starts from the default values.
+    if (isset($GLOBALS['load_site_text_for_usergroup'])) {
         $results = $GLOBALS['load_site_text_for_usergroup'];
-    } elseif (is_int($group)) {
-        // Fetch user group specific content.
+        for ($n = 0; $n < count($results); $n++) {
+            if (isset($results[$n]['unset'])) {
+                unset($lang[$results[$n]['unset']]);
+            } elseif ($results[$n]['page'] == '') {
+                $lang[$results[$n]['name']] = $results[$n]['text'];
+                $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+            } else {
+                $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+            }
+        }
+    }
+
+    // Apply new values and store previous for reset the next time this function loads (above).
+    if (is_int($group)) {
         $site_text_query = "SELECT `name`, `text`, `page` FROM site_text WHERE language = ? AND specific_to_group = ?";
         $parameters = array("s", $language, "i", $group);
 
@@ -3811,26 +3832,34 @@ function load_site_text_for_usergroup(int|null $group): void
         }
 
         $results = ps_query($site_text_query, $parameters, "sitetext", -1, true, 0);
-    } elseif (is_null($group)) {
-        return;
-    }
 
-    $original_values = array();
+        $original_values = array();
+        for ($n = 0; $n < count($results); $n++) {
+            if ($results[$n]['page'] == '') {
+                if (isset($lang[$results[$n]['name']])) {
+                    $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['name']], 'page' => $results[$n]['page']);
+                    $lang[$results[$n]['name']] = $results[$n]['text'];
+                    $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+                } else {
+                    $lang[$results[$n]['name']] = $results[$n]['text'];
+                    $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+                    $original_values[] = array('unset' => $results[$n]['name']);
+                }
+            } else {
+                if (isset($lang[$results[$n]['page'] . '__' . $results[$n]['name']])) {
+                    $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['page'] . '__' . $results[$n]['name']], 'page' => $results[$n]['page']);
+                    $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+                } else {
+                    $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+                    $original_values[] = array('unset' => $results[$n]['page'] . '__' . $results[$n]['name']);
+                }
+            }
+        }
 
-    for ($n = 0; $n < count($results); $n++) {
-        if ($results[$n]['page'] == '') {
-            $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['name']], 'page' => $results[$n]['page']);
-            $lang[$results[$n]['name']] = $results[$n]['text'];
-            $customsitetext[$results[$n]['name']] = $results[$n]['text'];
-        } else {
-            $original_values[] = array('name' => $results[$n]['name'], 'text' => $lang[$results[$n]['page'] . '__' . $results[$n]['name']], 'page' => $results[$n]['page']);
-            $lang[$results[$n]['page'] . '__' . $results[$n]['name']] = $results[$n]['text'];
+        if (count($original_values) > 0) {
+            // Store the original values to restore the next time this function is called.
+            $GLOBALS['load_site_text_for_usergroup'] = $original_values;
         }
     }
-
-    if (!isset($GLOBALS['load_site_text_for_usergroup'])) {
-        // Store the original values the first time this function is called. This provides a way to restore the earlier value where we don't have another user group ref
-        // such as activity before login. Providing null as $group will then pickup this cached value.
-        $GLOBALS['load_site_text_for_usergroup'] = $original_values;
-    }
 }
+

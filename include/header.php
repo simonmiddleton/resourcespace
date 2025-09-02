@@ -130,6 +130,10 @@ if ($ajax == "") {
         <!-- DOMPurify -->
         <script src="<?php echo $baseurl; ?>/lib/js/purify.min.js?reload_key=<?php echo (int) $css_reload_key; ?>"></script>
 
+        <!-- toastify-js -->
+        <script src="<?php echo $baseurl; ?>/lib/toastify-js/src/toastify.js"></script>
+        <link type="text/css" href="<?php echo $baseurl?>/lib/toastify-js/src/toastify.css" rel="stylesheet" />
+
         <?php
         global $not_authenticated_pages;
         $not_authenticated_pages = array('login', 'user_change_password','user_password','user_request');
@@ -399,14 +403,19 @@ if ($ajax == "") {
                                     <li>
                                         <a href="<?php echo $baseurl?>/login.php"><?php echo escape($lang["login"]); ?></a>
                                     </li>
-
-                                    <?php if ($contact_link) { ?>
+                                    <?php
+                                    hook("addtoplinksanon");
+                                    
+                                    if ($contact_link) {
+                                        ?>
                                         <li>
                                             <a href="<?php echo $baseurl?>/pages/contact.php" onclick="return CentralSpaceLoad(this,true);">
                                                 <?php echo escape($lang["contactus"]); ?>
                                             </a>
                                         </li>
-                                    <?php } ?>
+                                        <?php
+                                    }
+                                    ?>
                                 </ul>
                                 <?php
                             } /* end replaceheadernav1anon */

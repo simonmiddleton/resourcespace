@@ -57,3 +57,5 @@ $lang["rse_workflow_bcc_admin"]='योगदानकर्ता को सू
 $lang["plugin-rse_workflow-title"]='उन्नत कार्यप्रवाह';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace एंटरप्राइज - कार्यप्रवाह';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'कार्यप्रवाह स्थितियों को बनाएं और प्रबंधित करें';
+$lang["rse_workflow_skip_required_fields"] = 'क्या संसाधनों को इस कार्यप्रवाह स्थिति में स्थानांतरित करते समय आवश्यक फ़ील्ड जांच से बाहर रखा जाए?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'अर्काइव स्थिति को %%ARCHIVE%% में बदलने में असमर्थ। आवश्यक फ़ील्ड में मेटाडेटा गायब है: %%FIELDS%%।';

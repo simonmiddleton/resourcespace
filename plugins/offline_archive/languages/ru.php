@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Восстановить ресурс
 $lang["plugin-offline_archive-title"]='Офлайн Архив';
 $lang["plugin-offline_archive-desc"]='Позволяет перемещать архивированные файлы в оффлайн-место хранения';
 $lang["offline_archive_administer_archive-tooltip"] = 'Переместить архивированные файлы в оффлайн-местоположение';
+$lang["offline_archive_statustype"] = array (
+  0 => 'В ожидании',
+  1 => 'В процессе',
+  2 => 'Завершено',
+);

@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='要修改工作流状态和操作，请使�
 $lang["plugin-rse_workflow-title"]='高级工作流程';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace 企业版 - 工作流程';
 $lang["rse_workflow_manage_workflow-tooltip"] = '创建和管理工作流状态';
+$lang["rse_workflow_skip_required_fields"] = '在将资源移动到此工作流状态时，是否排除必填字段检查？';
+$lang["rse_workflow_state_change_failed_required_fields"] = '无法将档案状态更改为 %%ARCHIVE%%。缺少所需字段中的元数据：%%FIELDS%%。';

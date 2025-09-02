@@ -369,12 +369,18 @@ if ($resource === false)
 debug(sprintf('Fetched resource data for #%s', $resource['ref']));
 
 $metadatatemplate = getval('metadatatemplate',0,true);
-    
-if ($upload_review_mode && $lastedited > 0)
-    {
+   
+if ($upload_review_mode && $lastedited > 0) {
     // Update resource data with locked resource data from last edited resource
     $resource = copy_locked_data($resource, $locked_fields, $lastedited);
+
+    $hookresource = hook('copy_locked_data_extra', '', [$resource, $locked_fields, $lastedited], true);
+
+    if ($hookresource !== false) {
+        $resource = $hookresource;
     }
+
+}
 
 // Create metadata resource record without uploading a file e.g. template, text only resource.
 $create_record_only = getval("recordonly", "") != "";
@@ -1732,7 +1738,14 @@ if ($ref < 0 && !$upload_review_mode)
     }
 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
-$resource = get_resource_data($ref, false); # By this point the resource type might've been changed
+
+$updated_resource = get_resource_data($ref, false); # By this point the resource type might've been changed
+
+foreach ($resource as $key => $value) {
+    if (array_key_exists($key, $updated_resource) && $updated_resource[$key] !== $value) {
+        $resource[$key] = $updated_resource[$key]; // Update if value has changed
+    }
+}
 
 # Only include fields whose resource type is global or is present in the resource(s) being edited
 if ($multiple) {
@@ -2016,7 +2029,9 @@ foreach($fields as $n => $field)
 
 
 # Add required_fields_exempt so it is submitted with POST
-echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . implode(",",$required_fields_exempt) . "\">";   
+echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . implode(",",$required_fields_exempt) . "\">";
+
+hook("endofmetadataaddcustomfield");   
 
 # Work out the correct archive status.
 if ($ref < 0 && !$show_status_and_access_on_upload) 
@@ -2621,7 +2636,15 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
         {
         error_fields[0].scrollIntoView();
         }
-    styledalert('<?php echo escape($lang["error"])?>','<?php echo implode("<br />",$save_errors); ?>',450);
+        
+        <?php
+        foreach ($save_errors as $save_error) {
+            ?>
+            toastNotification('error', '<?php echo escape($save_error); ?>');
+            <?php
+        }
+        ?>
+
     </script>
     <?php
     }

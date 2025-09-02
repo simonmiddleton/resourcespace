@@ -362,7 +362,7 @@ function is_plugin_activated($name)
  */
 function get_active_plugins()
 {
-    return ps_query('SELECT name, enabled_groups, config, config_json FROM plugins WHERE inst_version >= 0 ORDER BY priority', array(), 'plugins');
+    return ps_query('SELECT name, enabled_groups, config, config_json FROM plugins WHERE inst_version >= 0 ORDER BY priority, name', array(), 'plugins');
 }
 
 /**
@@ -507,6 +507,11 @@ function config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_
 
         if ($plugin_page_frontm != '') {
             echo $plugin_page_frontm;
+        }
+
+        # For reload of page after save, add toast notification after header.php loaded.
+        if (getval('save', '') != '' && getval('submit', '') == '') {
+            toast_notification('success', $lang['saved']);
         }
         ?>
         

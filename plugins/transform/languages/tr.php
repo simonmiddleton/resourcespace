@@ -79,3 +79,4 @@ $lang["plugin-transform-title"]='Görüntü Araçları (dönüştür)';
 $lang["plugin-transform-desc"]='Kırpılmış ve ölçeklendirilmiş alternatif görüntülerin oluşturulmasını sağlar (jCrop Mobil destekli)';
 $lang["use_system_icc_profile_config"]='ICC profil işleme için sistem yapılandırmasını kullan. Yukarıdaki sRGB seçeneklerini geçersiz kılacaktır.';
 $lang["transform-recrop"]='Yeniden kırp resmi';
+$lang["cropper_preset_sizes"] = 'Önceden tanımlanmış boyutlar';

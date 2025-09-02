@@ -30,23 +30,33 @@ if (
     return false;
 }
 
+// TEST C: Omit keyword search:
+$results = do_search("title:launch, -ship");
+if (
+    count($results) != 1 
+    || !isset($results[0]['ref']) 
+    || $results[0]['ref'] != $resourcea
+) {
+    echo "TEST C ";
+    return false;
+}
 
 // Create and add a node with same name to resource b
 $launchnode = set_node(null, 74, "launch", '', 1000);
 add_resource_nodes($resourceb, array($launchnode));
 
-// TEST C: This shouldn't be return resource b
+// TEST D: This shouldn't return resource b
 $results = do_search('"title:launch"');
 if (
     count($results) != 2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
     ($results[0]['ref'] != $resourcea && $results[1]['ref'] != $resourcea) ||
     ($results[0]['ref'] != $resourcec && $results[1]['ref'] != $resourcec)
 ) {
-    echo "TEST C ";
+    echo "TEST D ";
     return false;
 }
 
-// TEST D: Alternative keywords search:
+// TEST E: Alternative keywords search:
 $multi_keywords_results = do_search("title:Book;Ship");
 if (
     !is_array($multi_keywords_results)
@@ -54,7 +64,7 @@ if (
     || $multi_keywords_results[1]["ref"] != $resourceb
     || $multi_keywords_results[0]["ref"] != $resourcec
 ) {
-    echo "TEST D ";
+    echo "TEST E ";
     return false;
 }
 

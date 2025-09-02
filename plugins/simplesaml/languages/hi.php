@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'IdP प्रमाणपत्र 
 
 $lang["simplesaml_use_www_label"] = '"क्या \'www\' मार्ग के लिए SP मेटाडेटा अनुरोधों की अनुमति दें? (झूठा में बदलने से IdP को SP मेटाडेटा को फिर से आदान-प्रदान करने की आवश्यकता होगी)"';
 $lang["simplesaml_use_www_error"] = '[Warning] प्लगइन पुराने "www" मार्गों का उपयोग कर रहा है। यदि यह एक नया सेटअप है, तो इसे अभी बदलें! अन्यथा, IdP प्रशासक के साथ समन्वय करें ताकि वे SP मेटाडेटा को तदनुसार अपडेट कर सकें।';
+$lang["simplesaml_config_source_label"] = 'IdP कॉन्फ़िगरेशन स्रोत चुनें';
+$lang["simplesaml_config_source_url"] = 'मेटाडेटा यूआरएल (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace कॉन्फ़िगरेशन फ़ाइल (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'स्थानीय SAML कॉन्फ़िगरेशन फ़ाइलें (विरासत)';
+$lang["simplesaml_update_metadata_now"] = 'अब अपडेट करें';
+$lang["simplesaml_update_metadata_error"] = 'मेटाडेटा \'%error%\' को पार्स करने में असमर्थ - मेटाडेटा URL की जांच करें';
+$lang["simplesaml_update_metadata_invalid_response"] = 'अमान्य प्रतिक्रिया URL से: \'%error%\' - मेटाडेटा URL की जांच करें';
+$lang["simplesaml_update_metadata_parse_error"] = 'मेटाडेटा प्राप्त करने में असमर्थ: \'%error%\' - मेटाडेटा URL की जांच करें';
+$lang["simplesaml_metadata_updates"] = 'सादाSAML मेटाडेटा अपडेट्स';
+$lang["simplesaml_metadata_warning"] = 'मेटाडेटा %date% के बाद से अपडेट नहीं किया गया है';
+$lang["simplesaml_metadata_invalid"] = 'IdP मेटाडेटा अमान्य या अनुपलब्ध है';
+$lang["simplesaml_admin_password_reset"] = 'साधारण SAML परीक्षण साइट व्यवस्थापक पासवर्ड रीसेट करें (वैकल्पिक)';

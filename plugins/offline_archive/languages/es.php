@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Restaurar recursos';
 $lang["plugin-offline_archive-title"]='Archivo sin conexión';
 $lang["plugin-offline_archive-desc"]='Permite la reubicación de archivos archivados a una ubicación fuera de línea';
 $lang["offline_archive_administer_archive-tooltip"] = 'Reubicar archivos archivados a una ubicación fuera de línea';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Pendiente',
+  1 => 'En progreso',
+  2 => 'Completado',
+);

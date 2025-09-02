@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = '检查 IdP 证书到期？';
 
 $lang["simplesaml_use_www_label"] = '允许“www”路由的SP元数据请求吗？（更改为false将要求IdP重新交换SP元数据）';
 $lang["simplesaml_use_www_error"] = '[警告] 插件正在使用旧版 "www" 路由。如果这是一个全新的设置，请立即更改！否则，请与 IdP 管理员协调，以便他们可以相应地更新 SP 元数据。';
+$lang["simplesaml_config_source_label"] = '选择 IdP 配置源';
+$lang["simplesaml_config_source_url"] = '元数据 URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace 配置文件 (config.php)';
+$lang["simplesaml_config_source_legacy"] = '本地 SAML 配置文件（遗留）';
+$lang["simplesaml_update_metadata_now"] = '立即更新';
+$lang["simplesaml_update_metadata_error"] = '无法解析元数据 \'%error%\' - 请检查元数据 URL';
+$lang["simplesaml_update_metadata_invalid_response"] = '无效的响应来自 URL: \'%error%\' - 检查元数据 URL';
+$lang["simplesaml_update_metadata_parse_error"] = '无法检索元数据：\'%error%\' - 检查元数据 URL';
+$lang["simplesaml_metadata_updates"] = 'SimpleSAML 元数据更新';
+$lang["simplesaml_metadata_warning"] = '元数据自 %date% 以来未更新';
+$lang["simplesaml_metadata_invalid"] = 'IdP 元数据无效或不可用';
+$lang["simplesaml_admin_password_reset"] = '重置 SimpleSAML 测试站点管理员密码（可选）';

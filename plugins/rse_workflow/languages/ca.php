@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Per modificar els estats i les accions del f
 $lang["plugin-rse_workflow-title"]='Flux de treball avançat';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Flux de treball';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Crear i gestionar estats de flux de treball';
+$lang["rse_workflow_skip_required_fields"] = 'En moure recursos a aquest estat del flux de treball, excloure les comprovacions de camps requerits?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'No es pot canviar l\'estat d\'archivament a %%ARCHIVE%%. Falta metadades en els camps requerits: %%FIELDS%%.';

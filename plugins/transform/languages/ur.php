@@ -77,3 +77,4 @@ $lang["transform_update_preview"]='پیش نظارہ اپ ڈیٹ کریں';
 $lang["transform_preset_sizes"]='پہلے سے طے شدہ ہدف سائز میں سے انتخاب کریں';
 $lang["error_crop_invalid"]='براہ کرم تصویر کے ایک حصے کا انتخاب کریں';
 $lang["transform-recrop"]='تصویر کو دوبارہ تراشیں';
+$lang["cropper_preset_sizes"] = 'پہلے سے طے شدہ سائز';

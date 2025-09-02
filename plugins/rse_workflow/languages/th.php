@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"]='หมายเหตุ:';
 $lang["rse_workflow_email_from"]='ที่อยู่อีเมลสำหรับส่งการแจ้งเตือน (จะใช้ %EMAILFROM% หากว่างเปล่า):';
 $lang["rse_workflow_bcc_admin"]='แจ้งผู้ดูแลระบบเมื่อผู้มีส่วนร่วมได้รับการแจ้งเตือน';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'สร้างและจัดการสถานะการทำงาน';
+$lang["rse_workflow_skip_required_fields"] = 'เมื่อย้ายทรัพยากรไปยังสถานะการทำงานนี้ ให้ยกเว้นการตรวจสอบฟิลด์ที่จำเป็นหรือไม่?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'ไม่สามารถเปลี่ยนสถานะการเก็บถาวรเป็น %%ARCHIVE%% ได้ ขาดข้อมูลเมตาดาต้าในฟิลด์ที่จำเป็น: %%FIELDS%%';

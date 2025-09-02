@@ -604,6 +604,25 @@ if ($keysearch) {
                                             GROUP BY resource ";
                                 } else {
                                     // Use RLIKE to search between word boundaries in the node names
+                                    $union->sql = 
+                                            "SELECT resource, [bit_or_condition] hit_count AS score
+                                                FROM resource_node rn[union_index]
+                                                WHERE rn[union_index].node IN
+                                                    (SELECT ref 
+                                                        FROM `node` 
+                                                        WHERE ";
+
+                                    if (preg_match('/[-+@<>()]/', $keyword) !== 1) {
+                                        // Full text matching is used to reduce the rows checked by regex where possible
+                                        $union->parameters = array_merge(['s',$keyword], $union->parameters);
+                                        $union->sql .= "MATCH(name) AGAINST (? IN BOOLEAN MODE) AND ";
+                                    }
+
+                                    $union->sql .= "name RLIKE ? "
+                                                . $union_restriction_clause->sql . ")
+                                                GROUP BY resource " .
+                                                ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
+                                    
                                     $keyword = preg_quote($keyword);
                                     $keyword = str_replace('\*', '.*?', $keyword);
                                     if (preg_match('/\w/', $keyword) === 0) {
@@ -613,17 +632,14 @@ if ($keysearch) {
                                     } else {
                                         $keyword = "\\b" . $keyword . "\\b";
                                     }
-
-                                    $union->sql = "
-                                            SELECT resource, [bit_or_condition] hit_count AS score
-                                                FROM resource_node rn[union_index]
-                                                WHERE rn[union_index].node IN
-                                                    (SELECT ref FROM `node` WHERE name RLIKE ? "
-                                                . $union_restriction_clause->sql . ")
-                                                GROUP BY resource " .
-                                                ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
                                 }
-                                $union->parameters = array_merge(["s",$keyword], $union_restriction_clause->parameters);
+                                
+                                $union->parameters = array_merge(
+                                    $union->parameters,
+                                    ["s",$keyword],
+                                    $union_restriction_clause->parameters
+                                );
+
                                 if ($non_field_keyword_sql->sql != "") {
                                     $union->parameters = array_merge($union->parameters, $non_field_keyword_sql->parameters);
                                 }
@@ -747,8 +763,8 @@ if ($keysearch) {
                         $sql_filter->sql .= " AND ";
                     }
 
-                    $sql_filter->sql .= str_replace("[bit_or_condition]", "", " r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
-
+                    $fixedunion->sql = str_replace("[bit_or_condition]", "", " r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+                    $sql_filter->sql .= str_replace("[union_index]", $n+1, $fixedunion->sql);
 
                     $sql_filter->parameters = array_merge($sql_filter->parameters, $fixedunion->parameters, $fixedunioncondition->parameters);
                 } elseif (is_a($fixedunion, "PreparedStatementQuery")) {

@@ -1,4 +1,7 @@
 <?php
+
+hook('add_to_resource_tools', '', array($ref));
+
 // Edit icon
 // The permissions check here is intentionally more basic. It doesn't check edit_filter as this would be computationally intensive
 // when displaying many resources. As such this is a convenience feature for users that have system-wide edit access to the given

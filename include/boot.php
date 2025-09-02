@@ -66,7 +66,7 @@ if (file_exists(__DIR__ . "/config.deprecated.php")) {
 }
 
 # Load the real config
-if (!file_exists(__DIR__ . "/config.php")) {
+if (!(file_exists(__DIR__ . "/config.php") && filesize(__DIR__ . "/config.php") > 0)) {
     header("Location: pages/setup.php");
     die(0);
 }

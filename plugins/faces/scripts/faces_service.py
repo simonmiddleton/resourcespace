@@ -8,16 +8,43 @@ import cv2
 import uvicorn
 import faiss
 import argparse
+import getpass
+import os
 import mysql.connector
 from datetime import datetime, timedelta
 
 # Command-line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("--db-host", default="localhost")
-parser.add_argument("--db-user", default="root")
-parser.add_argument("--db-pass", default="")
-parser.add_argument("--port", default=8001, type=int)
+parser.add_argument("--db-host", default=None, help="MySQL host")
+parser.add_argument("--db-user", default=None, help="MySQL username")
+parser.add_argument("--db-pass", default=None, help="MySQL password")
+parser.add_argument("--port", default=None, type=int, help="Service port")
 args, unknown = parser.parse_known_args()
+
+# Environment variable fallbacks (FACES_ prefix)
+db_host = os.getenv("FACES_DB_HOST", args.db_host or "localhost")
+db_user = os.getenv("FACES_DB_USER", args.db_user or None)
+db_pass = os.getenv("FACES_DB_PASS", args.db_pass or None)
+
+# Fall back to interactive entry if still not set
+if not db_host:
+    db_host = input("Enter MySQL host (or set FACES_DB_HOST / use --db-host): ") or "localhost"
+
+if not db_user:
+    db_user = input("Enter MySQL username (or set FACES_DB_USER / use --db-user): ")
+
+if not db_pass:
+    db_pass = getpass.getpass("Enter MySQL password (or set FACES_DB_PASS / use --db-pass): ")
+
+# DB connection helper
+def get_mysql_connection(db_name):
+    return mysql.connector.connect(
+        host=db_host,
+        database=db_name,
+        user=db_user,
+        password=db_pass
+    )
+
 
 # Initialise FastAPI app
 app = FastAPI()
@@ -38,14 +65,6 @@ face_app.prepare(ctx_id=-1)  # Use CPU
 # Dictionary to hold FAISS index and metadata per database
 db_indexes = {}
 
-# DB connection helper
-def get_mysql_connection(db_name):
-    return mysql.connector.connect(
-        host=args.db_host,
-        database=db_name,
-        user=args.db_user,
-        password=args.db_pass
-    )
 
 # Load vectors from MySQL for a given database
 def load_vectors(db_name):

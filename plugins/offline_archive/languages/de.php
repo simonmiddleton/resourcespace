@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Wiederherstellen von Ressourcen';
 $lang["plugin-offline_archive-title"]='Offline-Archiv';
 $lang["plugin-offline_archive-desc"]='Ermöglicht die Verlagerung archivierter Dateien an einen Offline-Standort';
 $lang["offline_archive_administer_archive-tooltip"] = 'Archivierte Dateien an einen Offline-Speicherort verschieben';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Ausstehend',
+  1 => 'In Bearbeitung',
+  2 => 'Abgeschlossen',
+);

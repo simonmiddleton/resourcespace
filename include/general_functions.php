@@ -791,6 +791,16 @@ function get_mime_types_by_extension(string $extension): array
 }
 
 /**
+ * Get the global MIME types associated with the configured banned extensions.
+ */
+function get_unsafe_mime_types(): array
+{
+    $mime_types = $GLOBALS['mime_types_by_extension'] ?? [];
+    $banned_extensions_mimes = array_intersect_key($mime_types, array_flip($GLOBALS['banned_extensions']));
+    return array_unique(array_merge(...array_values(array_map(static fn($v) => (array) $v, $banned_extensions_mimes))));
+}
+
+/**
  * Convert the permitted resource type extension to MIME type. Used by upload_batch.php
  *
  * @param  string $extension    File extension
@@ -2403,7 +2413,7 @@ function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
 */
 function get_utility_path($utilityname, &$checked_path = null)
 {
-    global $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $antiword_path, $pdftotext_path,
+    global $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $pdftotext_path,
            $blender_path, $archiver_path, $archiver_executable, $python_path, $fits_path;
 
     $checked_path = null;
@@ -2548,20 +2558,6 @@ function get_utility_path($utilityname, &$checked_path = null)
                 return false;
             }
             return $path . " {$exiftool_global_options} ";
-
-        case 'antiword':
-            if (!isset($antiword_path) || $antiword_path === '') {
-                return false;
-            }
-
-            return get_executable_path(
-                $antiword_path,
-                [
-                    'unix' => 'antiword',
-                    'win'  => 'antiword.exe'
-                ],
-                $checked_path
-            );
 
         case 'pdftotext':
             if (!isset($pdftotext_path) || $pdftotext_path === '') {
@@ -5776,4 +5772,21 @@ function get_favicon_url(): string
     }
 
     return $favicon;
+}
+
+/**
+ *  Determine what is a manually uploaded preview based off of data in the resource log
+ * 
+ *  @param int $ref resource ID
+ * 
+ *  @return bool returns true if a resource is using its original preview otherwise false.  
+ */
+function is_original_preview ($ref) : bool {
+
+    return ps_value("SELECT resource `value` FROM resource_log rl1
+                WHERE resource = ? AND type = 'up'
+                AND NOT EXISTS (SELECT * FROM resource_log rl2 
+                                    WHERE rl1.resource = rl2.resource AND rl1.date < rl2.date
+                                    AND rl2.type IN ('t', 'f', 'u'))
+            ", ['i', $ref], '') === '';
 }

@@ -325,17 +325,22 @@ if (isset($show_error)) { ?>
                 }
 
                 if (!$internal_share_only && ($editing || $generateurl)) {
-                    if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl) && $collection["public"] == 1 || $ignore_collection_access) {
-                        # Only render "generateinternalurl" text and associated input field if it hasn't already been rendered
-                        if (!$generateinternalurl_rendered) {
-                            ?>
-                            <p><?php echo escape($lang["generateurlinternal"])?></p>
-                            <p>
-                                <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
-                                <?php $generateinternalurl_rendered = true; ?>
-                            </p>
-                            <?php
-                        }
+                    if (
+                        (
+                            !($hide_internal_sharing_url) 
+                            && (!$editing || $editexternalurl) 
+                            && $collection["public"] == 1 
+                            || $ignore_collection_access
+                        )
+                        && !$generateinternalurl_rendered # Only render "generateinternalurl" text and associated input field if it hasn't already been rendered
+                    ) {
+                        ?>
+                        <p><?php echo escape($lang["generateurlinternal"])?></p>
+                        <p>
+                            <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
+                            <?php $generateinternalurl_rendered = true; ?>
+                        </p>
+                        <?php
                     }
 
                     if (

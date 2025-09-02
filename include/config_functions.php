@@ -1611,7 +1611,14 @@ function override_rs_variables_by_eval(array $variables, string $code, string $o
     }
 
     extract($temp_variables, EXTR_REFS | EXTR_SKIP);
+    $pre_eval_variables = array_keys(get_defined_vars());
     eval(eval_check_signed($code));
+    $post_eval_variables = array_diff(array_keys(get_defined_vars()), $pre_eval_variables, ['pre_eval_variables']);
+    foreach($post_eval_variables as $var) {
+        if (!array_key_exists($var, $temp_variables)) {
+            $temp_variables[$var] = $$var;
+        }
+    }
 
     $temp_array = [];
     foreach ($temp_variables as $temp_variable_name => $temp_variable_val) {

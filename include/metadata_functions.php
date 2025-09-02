@@ -178,6 +178,8 @@ function check_date_format($date)
 
     if (is_null($date)) {
         $date = "";
+    } else {
+        $date = trim($date);
     }
 
     // Check the format of the date to "yyyy-mm-dd hh:mm:ss"
@@ -188,6 +190,11 @@ function check_date_format($date)
         // Check the format of the date to "yyyy-mm-dd"
         || (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date, $parts))
     ) {
+        // If dates come in the form of YYYY-MM-00 or YYYY-00-00 Pad out the date to allow for validation 
+        if (($parts[2] === '00' && $parts[3] === '00') || ($parts[3] === '00' && $parts[2] !== '00')) {
+            $parts[2] === '00' ? $parts[2] = '01' : '';
+            $parts[3] === '00' ? $parts[3] = '01' : '';
+        }
         if (!checkdate($parts[2], $parts[3], $parts[1])) {
             return str_replace("%date%", $date, $lang["invalid_date_error"]);
         }
@@ -267,7 +274,7 @@ function update_fieldx(int $metadata_field_ref): void
     if ($metadata_field_ref > 0 && in_array($metadata_field_ref, get_resource_table_joins())) {
         $fieldinfo = get_resource_type_field($metadata_field_ref);
         $allresources = ps_array("SELECT ref value FROM resource WHERE ref>0 ORDER BY ref ASC", []);
-        if (in_array($fieldinfo['type'], $NODE_FIELDS)) {
+        if (in_array($fieldinfo['type'] ?? [], $NODE_FIELDS)) {
             if ($fieldinfo['type'] === FIELD_TYPE_CATEGORY_TREE) {
                 $all_tree_nodes_ordered = get_cattree_nodes_ordered($fieldinfo['ref'], null, true);
                 // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()

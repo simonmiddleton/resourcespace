@@ -79,3 +79,4 @@ $lang["cropper_use_srgb"]='使用sRGB';
 $lang["plugin-transform-title"]='图像工具（转换）';
 $lang["plugin-transform-desc"]='启用创建裁剪和缩放的替代图像（支持移动设备的jCrop）';
 $lang["use_system_icc_profile_config"]='使用系统配置进行ICC配置文件处理。将覆盖上述sRGB选项。';
+$lang["cropper_preset_sizes"] = '预定义大小';

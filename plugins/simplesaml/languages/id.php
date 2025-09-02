@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Periksa kedaluwarsa sertifikat IdP?
 
 $lang["simplesaml_use_www_label"] = 'Izinkan permintaan metadata SP untuk rute "www"? (mengubah menjadi false akan mengharuskan IdP untuk menukar kembali metadata SP)';
 $lang["simplesaml_use_www_error"] = '[Warning] Plugin ini menggunakan rute "www" yang lama. Jika ini adalah pengaturan baru, ubah sekarang! Jika tidak, koordinasikan dengan admin IdP agar mereka dapat memperbarui metadata SP sesuai.';
+$lang["simplesaml_config_source_label"] = 'Pilih sumber konfigurasi IdP';
+$lang["simplesaml_config_source_url"] = 'URL Metadata (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'File konfigurasi ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'File konfigurasi SAML lokal (legacy)';
+$lang["simplesaml_update_metadata_now"] = 'Perbarui sekarang';
+$lang["simplesaml_update_metadata_error"] = 'Tidak dapat mengurai metadata \'%error%\' - periksa URL metadata';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Respon tidak valid dari URL: \'%error%\' - periksa URL metadata';
+$lang["simplesaml_update_metadata_parse_error"] = 'Tidak dapat mengambil metadata: \'%error%\' - periksa URL metadata';
+$lang["simplesaml_metadata_updates"] = 'Pembaruan metadata SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'Metadata belum diperbarui sejak %date%';
+$lang["simplesaml_metadata_invalid"] = 'Metadata IdP tidak valid atau tidak tersedia';
+$lang["simplesaml_admin_password_reset"] = 'Reset kata sandi admin situs uji SimpleSAML (opsional)';
