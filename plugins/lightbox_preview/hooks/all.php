@@ -68,7 +68,7 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
                     'archive' => $archive,
                     'k' => $k
                 ]) ?>"
-            title="<?php echo escape($lang["fullscreenpreview"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
+            title="<?php echo escape((($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
         </a>
     </span>
 

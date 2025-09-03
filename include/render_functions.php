@@ -7062,7 +7062,7 @@ function render_resource_view_image(array $resource, array $context)
     global $lang;
     $imageurl="";   
 
-    $preview_title = get_data_by_field($resource,$GLOBALS["view_title_field"]);
+    $preview_title = get_data_by_field($resource["ref"],$GLOBALS["view_title_field"]);
     if ($preview_title == "") {
         $preview_title = $lang["fullscreenpreview"];
         }
@@ -7098,7 +7098,7 @@ function render_resource_view_image(array $resource, array $context)
     $previewimagelink = generateURL("{$GLOBALS["baseurl"]}/pages/preview.php", $GLOBALS["urlparams"], array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
     $previewimagelink_onclick = 'return CentralSpaceLoad(this);';
 
-    if (!hook("replacepreviewlink"))
+    if (!hook("replacepreviewlink","",[$preview_title]))
         {
         ?>
         <div id="previewimagewrapper">
