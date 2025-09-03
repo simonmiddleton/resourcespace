@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["falcon_link_title"] = 'Falcon Link';
 $lang["falcon_link_manage"] = 'Falcon xuất bản/lưu trữ';
 $lang["falcon_link_publish"] = 'Xuất bản lên Falcon';

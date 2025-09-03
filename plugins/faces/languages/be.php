@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["faces-detected-faces"] = 'Выяўленыя твары';
 $lang["faces-detected-face"] = 'Выяўленае твар';
 $lang["faces-find-matching"] = 'Знайдзіце супадальныя твары';

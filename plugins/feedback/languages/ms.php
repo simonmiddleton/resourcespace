@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["feedback_user_survey"] = 'Tinjauan Pengguna';
 $lang["feedback_thank_you"] = 'Terima kasih atas maklum balas anda.';
 $lang["feedback_your_full_name"] = 'Nama Penuh Anda';

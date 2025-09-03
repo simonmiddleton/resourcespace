@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["feedback_user_survey"] = 'Felhasználói felmérés';
 $lang["feedback_thank_you"] = 'Köszönjük a visszajelzését.';
 $lang["feedback_your_full_name"] = 'A teljes neved';

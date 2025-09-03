@@ -1,4 +1,5 @@
 <?php
+
 # English
 # Language File for the Feedback Plugin
 # -------
@@ -27,4 +28,3 @@ $lang["feedback_options-comma_separated"] = "Options: (comma separated)";
 
 $lang["feedback_add_new_field"] = "Add New Field";
 $lang["feedback_back_to_plugin_manager"] = "Back to Plugin Manager";
-

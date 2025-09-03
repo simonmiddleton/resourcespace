@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["emu_configuration"] = 'Cấu hình EMu';
 $lang["emu_api_settings"] = 'Cài đặt máy chủ API';
 $lang["emu_api_server"] = 'Địa chỉ máy chủ (ví dụ: http://[server.address])';
