@@ -426,12 +426,12 @@ if ($keysearch) {
                         $relatedsql = new PreparedStatementQuery();
 
                         # Add related keywords
-                        $related = get_related_keywords($keyref);
+                        $related = get_related_keywords($keyref, $keyword, true);
                         if ($stemming) {
                             # Need to ensure we include related keywords for original string
                             $original_keyref = resolve_keyword(str_replace('*', '', $keyword), false, true, false);
                             if ($original_keyref && $original_keyref !== $keyref) {
-                                $original_related = get_related_keywords($original_keyref);
+                                $original_related = get_related_keywords($original_keyref, $keyword, false);
                                 if (count($original_related) > 0) {
                                     $original_related_kws = ps_array("SELECT keyword AS `value` FROM keyword WHERE ref IN (" . ps_param_insert(count($original_related)) . ")", ps_param_fill($original_related, "i"));
 
