@@ -99,9 +99,9 @@ if ($offline_job_queue) {
     # Extra check for current running instances
     $instances = 0;
     foreach (glob(get_temp_dir() . '/process_locks/offlinejobs_*') as $lock_file) {
-        $lock_file_name = substr($lock_file, strrpos($lock_file, '/') +1);
+        $lock_file_name = substr($lock_file, strrpos($lock_file, '/') + 1);
         if (is_process_lock($lock_file_name)) {
-            $instances ++;
+            $instances++;
         }
     }
 

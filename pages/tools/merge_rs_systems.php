@@ -630,7 +630,7 @@ if ($export && isset($folder_path)) {
         $where = isset($table["sql"]["where"]) && trim($table["sql"]["where"]) != "" ? "WHERE {$table["sql"]["where"]}" : "";
         $additional_process = isset($table["additional_process"]) && is_callable($table["additional_process"]) ? $table["additional_process"] : null;
 
-        // Keyset (cursor-based) pagination. Please note it requires a data set with deterministic order (the order_by 
+        // Keyset (cursor-based) pagination. Please note it requires a data set with deterministic order (the order_by
         // is tightly coupled with the cursor logic).
         $order_by = isset($table['sql']['order_by']) && trim($table['sql']['order_by']) != '' ? "{$table["sql"]["order_by"]}" : 'ref ASC';
         $cursor_sql = isset($table['pagination'], $table['pagination']['cursor_sql'])
@@ -655,7 +655,8 @@ if ($export && isset($folder_path)) {
             // Check if no records were found for the first page. Note: cursor key(s) will be zero.
             $cursor_key_values = array_filter(
                 $last_page_cursor->parameters,
-                static fn($_, $key) => $key % 2 === 1, ARRAY_FILTER_USE_BOTH
+                static fn($_, $key) => $key % 2 === 1,
+                ARRAY_FILTER_USE_BOTH
             );
             if (empty($records) && array_filter($cursor_key_values, is_positive_int_loose(...)) === []) {
                 logScript("WARNING: no data found!");
@@ -690,7 +691,6 @@ if ($export && isset($folder_path)) {
 
                 fwrite($export_fh, json_encode($record, JSON_NUMERIC_CHECK) . PHP_EOL);
             }
-
         } while (count($records) === $chunk_size);
 
         fclose($export_fh);

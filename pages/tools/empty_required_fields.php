@@ -36,14 +36,13 @@ $collection_ref = getval("col", '', true, 'is_int_loose');
 <?php
 
 if (getval("save", "") != "" && enforcePostRequest(false) && $collection_ref > 0 && collection_writeable($collection_ref)) {
-
     $resources = get_collection_resources($collection_ref);
 
     # Get resources with missing required field data.
     $missing_fields = array();
     foreach ($resources as $resource) {
         $fields = missing_fields_check($resource);
-        if (count($fields) > 0 ) {
+        if (count($fields) > 0) {
             $missing_fields[$resource] = $fields;
         }
     }
@@ -79,16 +78,16 @@ if (getval("save", "") != "" && enforcePostRequest(false) && $collection_ref > 0
                 <h2><?php echo escape($field_name); ?></h2>
                 <div class="Fixed"><?php echo escape($field_resources); ?></div>
             </div>
-        <?php
+            <?php
         }
         ?>
         </div>
         <?php
     }
 } elseif (getval("save", "") != "") {
-        ?>
-        <p><?php echo escape($lang["no_results_found"]); ?></p>
-        <?php
+    ?>
+    <p><?php echo escape($lang["no_results_found"]); ?></p>
+    <?php
 }
 
 include "../../include/footer.php";
