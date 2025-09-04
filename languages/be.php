@@ -2939,3 +2939,6 @@ $lang["false-true"] = array (
   1 => 'Праўда',
 );
 $lang["show_hidden_property"] = 'Паказаць схаваную ўласнасць';
+$lang["processing_updating_previews"] = 'Рэсурс [resource]: Абнаўленне прэглядаў';
+$lang["processing_batch_edit_save"] = 'Ужыванне змяненняў да [field_count] палёў для [resource_count] рэсурсаў';
+$lang["processing_resource_in_group"] = 'Апрацоўка рэсурсаў [count]/[total]';

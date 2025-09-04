@@ -3016,3 +3016,6 @@ $lang["false-true"] = array (
   1 => 'Vero',
 );
 $lang["show_hidden_property"] = 'Mostra proprietà nascoste';
+$lang["processing_updating_previews"] = 'Risorsa [resource]: Aggiornamento delle anteprime';
+$lang["processing_batch_edit_save"] = 'Applicando modifiche a [field_count] campi per [resource_count] risorse';
+$lang["processing_resource_in_group"] = 'Elaborazione risorse [count]/[total]';

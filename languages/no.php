@@ -3175,3 +3175,6 @@ $lang["false-true"] = array (
   1 => 'Sann',
 );
 $lang["show_hidden_property"] = 'Vis skjult egenskap';
+$lang["processing_updating_previews"] = 'Ressurs [resource]: Oppdaterer forhåndsvisninger';
+$lang["processing_batch_edit_save"] = 'Bruker endringer på [field_count] felt for [resource_count] ressurser';
+$lang["processing_resource_in_group"] = 'Behandler ressurser [count]/[total]';

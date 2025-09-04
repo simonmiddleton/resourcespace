@@ -3096,3 +3096,6 @@ $lang["false-true"] = array (
   1 => 'Benar',
 );
 $lang["show_hidden_property"] = 'Tampilkan properti tersembunyi';
+$lang["processing_updating_previews"] = 'Sumber [resource]: Memperbarui pratayang';
+$lang["processing_batch_edit_save"] = 'Menerapkan perubahan pada [field_count] bidang untuk [resource_count] sumber daya';
+$lang["processing_resource_in_group"] = 'Memproses sumber daya [count]/[total]';

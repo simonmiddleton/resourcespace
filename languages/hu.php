@@ -2947,3 +2947,6 @@ $lang["false-true"] = array (
   1 => 'Igaz',
 );
 $lang["show_hidden_property"] = 'Rejtett tulajdonság megjelenítése';
+$lang["processing_updating_previews"] = 'Erőforrás [resource]: Előnézetek frissítése';
+$lang["processing_batch_edit_save"] = 'Változások alkalmazása [field_count] mezőre [resource_count] erőforrás esetén';
+$lang["processing_resource_in_group"] = 'Erőforrások feldolgozása [count]/[total]';

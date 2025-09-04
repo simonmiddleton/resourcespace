@@ -2953,3 +2953,6 @@ $lang["false-true"] = array (
   1 => 'ਸੱਚਾ',
 );
 $lang["show_hidden_property"] = 'ਛੁਪੇ ਹੋਏ ਗੁਣ ਦਿਖਾਓ';
+$lang["processing_updating_previews"] = 'ਸਾਧਨ [resource]: ਪੂਰਵਦ੍ਰਿਸ਼ਟੀ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨਾ';
+$lang["processing_batch_edit_save"] = '[field_count] ਫੀਲਡਾਂ ਲਈ [resource_count] ਸਰੋਤਾਂ \'ਤੇ ਬਦਲਾਅ ਲਾਗੂ ਕਰਨਾ';
+$lang["processing_resource_in_group"] = 'ਸੰਸਾਧਨਾਂ ਦੀ ਪ੍ਰਕਿਰਿਆ ਕਰਨਾ [count]/[total]';

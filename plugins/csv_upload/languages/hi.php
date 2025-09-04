@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'CSV फ़ाइल को खोला 
 $lang["csv_upload_check_utf_error"] = 'CSV फ़ाइल मान्य UTF-8 नहीं है। पंक्ति पर अमान्य वर्ण';
 $lang["csv_upload_condition1"] = 'सुनिश्चित करें कि CSV फ़ाइल <b>UTF-8</b> का उपयोग करके एन्कोड की गई है।';
 $lang["csv_upload_check_removebom"] = 'CSV फ़ाइल में BOM है जिसे हटाया नहीं जा सका';
+$lang["csv_upload_validating"] = 'मान्यकरण';
+$lang["csv_upload_processing"] = 'प्रसंस्करण';
+$lang["processing_batch_edit_save"] = 'पंक्ति [row_number] कुल [rows_count]';

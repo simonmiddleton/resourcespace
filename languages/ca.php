@@ -3038,3 +3038,6 @@ $lang["false-true"] = array (
   1 => 'Cert',
 );
 $lang["show_hidden_property"] = 'Mostra la propietat oculta';
+$lang["processing_updating_previews"] = 'Recurso [resource]: Actualitzant les previsualitzacions';
+$lang["processing_batch_edit_save"] = 'Aplicant canvis a [field_count] camps per a [resource_count] recursos';
+$lang["processing_resource_in_group"] = 'Processant recursos [count]/[total]';

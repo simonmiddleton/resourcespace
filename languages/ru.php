@@ -3034,3 +3034,6 @@ $lang["false-true"] = array (
   1 => 'Истина',
 );
 $lang["show_hidden_property"] = 'Показать скрытое свойство';
+$lang["processing_updating_previews"] = 'Ресурс [resource]: Обновление превью';
+$lang["processing_batch_edit_save"] = 'Применение изменений к [field_count] полям для [resource_count] ресурсов';
+$lang["processing_resource_in_group"] = 'Обработка ресурсов [count]/[total]';

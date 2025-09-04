@@ -2954,3 +2954,6 @@ $lang["false-true"] = array (
   1 => '참',
 );
 $lang["show_hidden_property"] = '숨겨진 속성 표시';
+$lang["processing_updating_previews"] = '리소스 [resource]: 미리보기 업데이트 중';
+$lang["processing_batch_edit_save"] = '[field_count] 필드에 대해 [resource_count] 리소스에 변경 사항 적용 중';
+$lang["processing_resource_in_group"] = '리소스 처리 중 [count]/[total]';

@@ -3001,3 +3001,6 @@ $lang["false-true"] = array (
   1 => 'Sand',
 );
 $lang["show_hidden_property"] = 'Vis skjult egenskab';
+$lang["processing_updating_previews"] = 'Ressource [resource]: Opdaterer forhåndsvisninger';
+$lang["processing_batch_edit_save"] = 'Anvender ændringer til [field_count] felter for [resource_count] ressourcer';
+$lang["processing_resource_in_group"] = 'Behandler ressourcer [count]/[total]';

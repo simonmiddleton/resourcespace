@@ -3217,3 +3217,6 @@ $lang["errors"] = 'Fel';
 $lang["error_savefirst"] = 'Vänligen spara dina ändringar';
 $lang["language-be"] = 'Belarusian';
 $lang["show_hidden_property"] = 'Visa dolda egenskaper';
+$lang["processing_updating_previews"] = 'Resurs [resource]: Uppdaterar förhandsgranskningar';
+$lang["processing_batch_edit_save"] = 'Tillämpa ändringar på [field_count] fält för [resource_count] resurser';
+$lang["processing_resource_in_group"] = 'Behandlar resurser [count]/[total]';

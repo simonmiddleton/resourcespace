@@ -3164,3 +3164,6 @@ $lang["false-true"] = array (
   1 => 'صحيح',
 );
 $lang["show_hidden_property"] = 'عرض الخاصية المخفية';
+$lang["processing_updating_previews"] = 'المورد [resource]: تحديث المعاينات';
+$lang["processing_batch_edit_save"] = 'تطبيق التغييرات على [field_count] حقل لـ [resource_count] موارد';
+$lang["processing_resource_in_group"] = 'معالجة الموارد [count]/[total]';

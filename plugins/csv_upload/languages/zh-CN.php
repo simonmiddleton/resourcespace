@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = '无法打开或读取CSV文件';
 $lang["csv_upload_check_utf_error"] = 'CSV文件不是有效的UTF-8。行上有无效字符';
 $lang["csv_upload_condition1"] = '确保CSV文件使用<b>UTF-8</b>编码。';
 $lang["csv_upload_check_removebom"] = 'CSV 文件包含无法删除的 BOM';
+$lang["csv_upload_validating"] = '验证中';
+$lang["csv_upload_processing"] = '处理中';
+$lang["processing_batch_edit_save"] = '第 [row_number] 行，共 [rows_count] 行';

@@ -3070,3 +3070,6 @@ $lang["false-true"] = array (
   1 => 'Vrai',
 );
 $lang["show_hidden_property"] = 'Afficher la propriété cachée';
+$lang["processing_updating_previews"] = 'Ressource [resource] : Mise à jour des aperçus';
+$lang["processing_batch_edit_save"] = 'Application des modifications à [field_count] champs pour [resource_count] ressources';
+$lang["processing_resource_in_group"] = 'Traitement des ressources [count]/[total]';

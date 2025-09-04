@@ -2944,3 +2944,6 @@ $lang["false-true"] = array (
   1 => 'সত্য',
 );
 $lang["show_hidden_property"] = 'লুকানো সম্পত্তি দেখান';
+$lang["processing_updating_previews"] = 'সম্পদ [resource]: প্রিভিউ আপডেট করা হচ্ছে';
+$lang["processing_batch_edit_save"] = '[field_count] ক্ষেত্রের জন্য [resource_count] সম্পদে পরিবর্তন প্রয়োগ করা হচ্ছে';
+$lang["processing_resource_in_group"] = 'সম্পদ প্রক্রিয়াকরণ [count]/[total]';

@@ -2952,3 +2952,6 @@ $lang["false-true"] = array (
 );
 
 $lang["show_hidden_property"] = 'Gizli özelliği göster';
+$lang["processing_updating_previews"] = 'Kaynak [resource]: Önizlemeleri güncelleyerek';
+$lang["processing_batch_edit_save"] = '[field_count] alan için [resource_count] kaynak üzerinde değişiklikler uygulanıyor';
+$lang["processing_resource_in_group"] = 'İşleniyor kaynaklar [count]/[total]';

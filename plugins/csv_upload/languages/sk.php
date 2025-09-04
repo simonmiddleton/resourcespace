@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'CSV súbor sa nedá otvoriť ani prečí
 $lang["csv_upload_check_utf_error"] = 'CSV súbor nie je platný UTF-8. Neplatný znak na riadku';
 $lang["csv_upload_condition1"] = 'Uistite sa, že súbor CSV je kódovaný pomocou <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'CSV súbor má BOM, ktorý sa nepodarilo odstrániť';
+$lang["csv_upload_validating"] = 'Overovanie';
+$lang["csv_upload_processing"] = 'Spracovanie';
+$lang["processing_batch_edit_save"] = 'riadok [row_number] z [rows_count]';

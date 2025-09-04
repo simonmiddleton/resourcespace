@@ -3019,3 +3019,6 @@ $lang["false-true"] = array (
   1 => 'Αληθές',
 );
 $lang["show_hidden_property"] = 'Εμφάνιση κρυφής ιδιότητας';
+$lang["processing_updating_previews"] = 'Πόρος [resource]: Ενημέρωση προεπισκοπήσεων';
+$lang["processing_batch_edit_save"] = 'Εφαρμογή αλλαγών σε [field_count] πεδία για [resource_count] πόρους';
+$lang["processing_resource_in_group"] = 'Επεξεργασία πόρων [count]/[total]';

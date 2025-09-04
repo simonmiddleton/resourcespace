@@ -2992,3 +2992,6 @@ $lang["errors"] = 'Errores';
 $lang["error_savefirst"] = 'Por favor, guarda tus cambios';
 $lang["language-be"] = 'Bielorruso';
 $lang["show_hidden_property"] = 'Mostrar propiedad oculta';
+$lang["processing_updating_previews"] = 'Recurso [resource]: Actualizando vistas previas';
+$lang["processing_batch_edit_save"] = 'Aplicando cambios a [field_count] campos para [resource_count] recursos';
+$lang["processing_resource_in_group"] = 'Procesando recursos [count]/[total]';

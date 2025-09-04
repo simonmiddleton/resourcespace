@@ -3078,3 +3078,6 @@ $lang["false-true"] = array (
   1 => '真',
 );
 $lang["show_hidden_property"] = '隠しプロパティを表示';
+$lang["processing_updating_previews"] = 'リソース [resource]: プレビューを更新中';
+$lang["processing_batch_edit_save"] = '[field_count] フィールドに [resource_count] リソースへの変更を適用しています';
+$lang["processing_resource_in_group"] = 'リソースを処理中 [count]/[total]';

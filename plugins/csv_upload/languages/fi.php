@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'CSV-tiedostoa ei voi avata tai lukea';
 $lang["csv_upload_check_utf_error"] = 'CSV-tiedosto ei ole voimassa olevaa UTF-8:aa. Virheellinen merkki rivillä';
 $lang["csv_upload_condition1"] = 'Varmista, että CSV-tiedosto on koodattu käyttäen <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'CSV-tiedostossa on BOM, jota ei voitu poistaa';
+$lang["csv_upload_validating"] = 'Vahvistaminen';
+$lang["csv_upload_processing"] = 'Käsittely';
+$lang["processing_batch_edit_save"] = 'rivi [row_number] / [rows_count]';

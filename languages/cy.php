@@ -2939,3 +2939,6 @@ $lang["false-true"] = array (
   1 => 'Iawn',
 );
 $lang["show_hidden_property"] = 'Dangos eiddo cudd';
+$lang["processing_updating_previews"] = 'Adnodd [resource]: Diweddaru rhagolwg';
+$lang["processing_batch_edit_save"] = 'Yn cymhwyso newidiadau i [field_count] meysydd ar gyfer [resource_count] adnoddau';
+$lang["processing_resource_in_group"] = 'Prosesu adnoddau [count]/[total]';

@@ -72,3 +72,6 @@ $lang["csv_upload_check_file_error"] = 'لا يمكن فتح أو قراءة م�
 $lang["csv_upload_check_utf_error"] = 'ملف CSV ليس UTF-8 صالحًا. حرف غير صالح في السطر';
 $lang["csv_upload_condition1"] = 'تأكد من أن ملف CSV مشفر باستخدام <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'ملف CSV يحتوي على BOM ولم يكن من الممكن إزالته';
+$lang["csv_upload_validating"] = 'التحقق';
+$lang["csv_upload_processing"] = 'معالجة';
+$lang["processing_batch_edit_save"] = 'الصف [row_number] من [rows_count]';

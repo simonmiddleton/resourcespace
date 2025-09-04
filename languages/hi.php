@@ -2959,3 +2959,6 @@ $lang["false-true"] = array (
   1 => 'सही',
 );
 $lang["show_hidden_property"] = 'छिपी हुई संपत्ति दिखाएँ';
+$lang["processing_updating_previews"] = 'संसाधन [resource]: पूर्वावलोकन अपडेट कर रहा है';
+$lang["processing_batch_edit_save"] = '[field_count] फ़ील्ड के लिए [resource_count] संसाधनों पर परिवर्तन लागू कर रहे हैं';
+$lang["processing_resource_in_group"] = 'संसाधनों की प्रक्रिया [count]/[total]';

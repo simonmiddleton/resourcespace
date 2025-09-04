@@ -2953,3 +2953,6 @@ $lang["false-true"] = array (
   1 => 'درست',
 );
 $lang["show_hidden_property"] = 'نمایش ویژگی پنهان';
+$lang["processing_updating_previews"] = 'منبع [resource]: به‌روزرسانی پیش‌نمایش‌ها';
+$lang["processing_batch_edit_save"] = 'اعمال تغییرات بر روی [field_count] فیلد برای [resource_count] منبع';
+$lang["processing_resource_in_group"] = 'در حال پردازش منابع [count]/[total]';

@@ -2940,3 +2940,6 @@ $lang["false-true"] = array (
   1 => 'Benar',
 );
 $lang["show_hidden_property"] = 'Tunjukkan harta tersembunyi';
+$lang["processing_updating_previews"] = 'Sumber [resource]: Mengemas kini pratonton';
+$lang["processing_batch_edit_save"] = 'Menerapkan perubahan kepada [field_count] medan untuk [resource_count] sumber';
+$lang["processing_resource_in_group"] = 'Memproses sumber [count]/[total]';

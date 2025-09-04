@@ -69,3 +69,6 @@ $lang["csv_upload_check_file_error"] = 'CSV فائل کو کھولا یا پڑھ
 $lang["csv_upload_check_utf_error"] = 'CSV فائل درست UTF-8 نہیں ہے۔ لائن پر غلط کردار';
 $lang["csv_upload_condition1"] = 'یقینی بنائیں کہ CSV فائل <b>UTF-8</b> کوڈنگ کا استعمال کرتی ہے۔';
 $lang["csv_upload_check_removebom"] = 'CSV فائل میں BOM ہے جسے ہٹایا نہیں جا سکا';
+$lang["csv_upload_validating"] = 'تصدیق کرنا';
+$lang["csv_upload_processing"] = 'پروسیسنگ';
+$lang["processing_batch_edit_save"] = 'قطار [row_number] کا [rows_count]';

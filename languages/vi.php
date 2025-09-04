@@ -2942,3 +2942,6 @@ $lang["false-true"] = array (
   1 => 'Đúng',
 );
 $lang["show_hidden_property"] = 'Hiển thị thuộc tính ẩn';
+$lang["processing_updating_previews"] = 'Cập nhật bản xem trước tài nguyên [resource]';
+$lang["processing_batch_edit_save"] = 'Áp dụng thay đổi cho [field_count] trường cho [resource_count] tài nguyên';
+$lang["processing_resource_in_group"] = 'Đang xử lý tài nguyên [count]/[total]';

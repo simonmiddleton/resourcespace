@@ -2937,3 +2937,6 @@ $lang["false-true"] = array (
   1 => 'จริง',
 );
 $lang["show_hidden_property"] = 'แสดงคุณสมบัติที่ซ่อนอยู่';
+$lang["processing_updating_previews"] = 'ทรัพยากร [resource]: กำลังอัปเดตตัวอย่าง';
+$lang["processing_batch_edit_save"] = 'กำลังนำการเปลี่ยนแปลงไปใช้กับ [field_count] ฟิลด์สำหรับ [resource_count] แหล่งข้อมูล';
+$lang["processing_resource_in_group"] = 'กำลังประมวลผลทรัพยากร [count]/[total]';

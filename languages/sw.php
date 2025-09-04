@@ -2950,3 +2950,6 @@ $lang["false-true"] = array (
   1 => 'Kweli',
 );
 $lang["show_hidden_property"] = 'Onyesha mali iliyofichwa';
+$lang["processing_updating_previews"] = 'Rasilimali [resource]: Kusasisha mapitio';
+$lang["processing_batch_edit_save"] = 'Kuweka mabadiliko kwenye [field_count] maeneo kwa [resource_count] rasilimali';
+$lang["processing_resource_in_group"] = 'Kuchakata rasilimali [count]/[total]';
