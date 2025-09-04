@@ -129,61 +129,87 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
 
     return false;
     }
-    
-function HookTms_linkEditSaveextraresourcedata($list)
-    {
-    // Multi edit - set flag to update TMS data if necessary
-    foreach(tms_link_get_modules_mappings() as $module)
-        {
-        $tms_object_id = getval("field_{$module['rs_uid_field']}", 0, true);
 
-        if($tms_object_id == 0)
-            {
-            continue;
+/**
+* TMS plugin implementing the 'aftersaveresourcedata' hook
+* IMPORTANT: 'aftersaveresourcedata' hook is called from both save_resource_data() and save_resource_data_multi()!
+* 
+* @param int|array $R Generic type for resource ID(s). It will be a resource ref when hook is called from 
+*                     save_resource_data() -OR- a list of resource IDs when called from save_resource_data_multi().
+* @param array $fields List of fields that was submitted with the request (contains stale data)
+* @param array $updated_resources Map of field changes for each resource (if applicable)
+* 
+* @return array|bool Returns bool to show whether the hook ran or not -or- list of errors.
+* See hook 'aftersaveresourcedata' in resource_functions.php for more info
+*/
+function HookTms_linkEditAftersaveresourcedata($R, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields, $updated_resources): array|bool
+{
+    if (!(is_numeric($R) || is_array($R))) {
+        return false;
+    }
+
+    $refs = is_array($R) ? $R : [$R];
+    $can_use_updated_resources = $updated_resources !== [];
+
+    foreach ($refs as $resourceref) {
+        $resdata = get_resource_data($resourceref);
+        // Use the most up to date metadata field values ($fields is stale at this point)
+        $resource_rtfs = !$can_use_updated_resources ? get_resource_field_data($resourceref) : [];
+
+        foreach (tms_link_get_modules_mappings() as $module) {
+            if (
+                !in_array($resdata['resource_type'], $module['applicable_resource_types'])
+                // Batch editing a DKL field follows a path where we don't get access to the usual data
+                || (
+                    !$can_use_updated_resources
+                    && (
+                        $resource_rs_uid_field = array_values(array_filter(
+                            $resource_rtfs,
+                            static fn($V) => $V['resource_type_field'] == $module['rs_uid_field']
+                        ))
+                    )
+                    && ($resource_rs_uid_field === [] || $resource_rs_uid_field[0]['nodes_values'] === [])
+                )
+                || (
+                    $can_use_updated_resources
+                    && !isset($updated_resources[$resourceref], $updated_resources[$resourceref][$module['rs_uid_field']])
+                )
+            ) {
+                continue;
             }
 
-        global $tmsdata;
-        $tmsdata = tms_link_get_tms_data('', $tms_object_id, '', $module['module_name']);
-        
-        if(!is_array($tmsdata))
-            {
-            continue;
+            $module_rs_uid_field_data = array_values(
+                array_filter($fields, static fn($V) => $V['ref'] == $module['rs_uid_field'])
+            );
+            if ($module_rs_uid_field_data === []) {
+                debug("Metadata field (ref={$module['rs_uid_field']}) not found");
+                continue;
             }
 
-        global $tms_link_import, $tmsupdatelist;
-        $tms_link_import = true;
-        $tmsupdatelist = $list;
-        }
-    }   
-    
-function HookTms_linkEditAftersaveresourcedata()
-    {
-    global $tms_link_import;
+            if ($module_rs_uid_field_data[0]['type'] === FIELD_TYPE_TEXT_BOX_SINGLE_LINE) {
+                $tms_object_id = $updated_resources[$resourceref][$module['rs_uid_field']][0];
+            } else if (
+                !$can_use_updated_resources
+                && $module_rs_uid_field_data[0]['type'] === FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
+            ) {
+                $tms_object_id = $resource_rs_uid_field[0]['nodes_values'];
+            } else if (
+                $can_use_updated_resources
+                && $module_rs_uid_field_data[0]['type'] === FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
+            ) {
+                $tms_object_id = $updated_resources[$resourceref][$module['rs_uid_field']];
+            } else {
+                debug("Misconfiguration - unsupported metadata field type for the 'rs_uid_field' in '{$module['module_name']}' module");
+                continue;
+            }
 
-    if(isset($tms_link_import) && !$tms_link_import)
-        {
-        return;
-        }
+            debug("tms_link: updating resource id #{$resourceref}");
 
-    global $ref, $tmsdata, $tmsupdatelist;
+            $tmsdata = tms_link_get_tms_data($resourceref, $tms_object_id, '', $module['module_name']);
+            if (!is_array($tmsdata)) {
+                return $tmsdata;
+            }
 
-    if(is_null($tmsdata) || !is_array($tmsdata))
-        {
-        return;
-        }
-    
-    if(!is_array($tmsupdatelist))
-        {
-        $tmsupdatelist = array();
-        $tmsupdatelist[] = $ref;
-        }
-
-    foreach($tmsupdatelist as $resourceref)
-        {
-        debug("tms_link: updating resource id #{$resourceref}");
-
-        foreach(tms_link_get_modules_mappings() as $module)
-            {
             if(!array_key_exists($module['module_name'], $tmsdata))
                 {
                 continue;
@@ -203,6 +229,8 @@ function HookTms_linkEditAftersaveresourcedata()
                     update_field($resourceref, $tms_rs_mapping['rs_field'], '');
                     }
                 }
-            }
         }
     }
+
+    return true;
+}
