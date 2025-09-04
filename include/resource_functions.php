@@ -52,9 +52,6 @@ function get_resource_path(
 
     $size = safe_file_name((string) $size);
     $extension = safe_file_name((string) $extension);
-    if(!preg_match('/^[a-zA-Z0-9_-]{1,10}$/', $extension)) {
-        $extension = 'jpg';
-    }
 
     if (!is_int_loose($file_modified)) {
         $file_modified = '';
