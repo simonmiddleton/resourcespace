@@ -140,6 +140,23 @@ foreach ($plugins as $plugin) {
         // Work out what we're missing.
         $missing = array_diff(array_keys($lang_en_extended), array_keys($lang));
 
+	// Filter out things we won't process
+	$missing = array_filter($missing, function($mkey) use ($lang_en_extended, $ignore) {
+    	if (is_array($lang_en_extended[$mkey])) {
+        	return true; // keep, will be json_encoded later
+    	}
+   	if (!is_string($lang_en_extended[$mkey])) {
+        	return false;
+    	}
+    	if (strlen(trim($lang_en_extended[$mkey])) <= 1) {
+        	return false;
+    	}
+    	if (in_array($mkey, $ignore)) {
+        	return false;
+    	}
+    	return true;
+	});
+
         $count = 0;
         foreach ($missing as $mkey) {
             $array=false;
@@ -149,16 +166,6 @@ foreach ($plugins as $plugin) {
                 $array=true;
             }
             
-            if (!is_string($lang_en_extended[$mkey])) {
-                continue;
-            }
-            if (strlen(trim($lang_en_extended[$mkey])) <= 1) {
-                continue;
-            }
-            if (in_array($mkey, $ignore)) {
-                continue;
-            }
-
             $count++;
             $messages = array();
             $messages[] = array("role" => "system","content" => "Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads.
