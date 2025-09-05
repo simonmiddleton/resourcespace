@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f73f0b29acd3b25437a33bfb9c34057f",
+    "content-hash": "f8996fd4757b7c363cef62f731157eea",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -3617,6 +3617,59 @@
                 }
             ],
             "time": "2025-05-27T18:02:28+00:00"
+        },
+        {
+            "name": "vimeo/vimeo-api",
+            "version": "3.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vimeo/vimeo.php.git",
+                "reference": "55dfb9752ec0a5b5cbc4757a3fc52a8a51da69e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vimeo/vimeo.php/zipball/55dfb9752ec0a5b5cbc4757a3fc52a8a51da69e5",
+                "reference": "55dfb9752ec0a5b5cbc4757a3fc52a8a51da69e5",
+                "shasum": ""
+            },
+            "require": {
+                "ankitpokhrel/tus-php": "^v1.0.0 || ^v2.0.0",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^1.0",
+                "phpunit/phpunit": "^7.4",
+                "vimeo/psalm": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vimeo\\": "src/Vimeo"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Vimeo",
+                    "homepage": "http://vimeo.com"
+                }
+            ],
+            "description": "Official PHP library for the Vimeo API.",
+            "homepage": "https://github.com/vimeo/vimeo.php",
+            "keywords": [
+                "video",
+                "vimeo"
+            ],
+            "support": {
+                "issues": "https://github.com/vimeo/vimeo.php/issues",
+                "source": "https://github.com/vimeo/vimeo.php/tree/3.0.12"
+            },
+            "time": "2025-06-04T18:14:29+00:00"
         }
     ],
     "packages-dev": [
