@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../lib/Google/vendor/autoload.php';
-
 function youtube_publish_initialize()
 {
     global $ref, $userref, $baseurl, $youtube_publish_client_id, $youtube_publish_client_secret,$language, $client,$youtube;
