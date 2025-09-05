@@ -69,9 +69,20 @@
         "dev:beforeCommit": [
             "@dev:phpstan"
         ],
-        "dev:phpstan": "phpstan analyse"
+        "dev:phpstan": "phpstan analyse",
+        "release:build": [
+            "# Building ResourceSpace release",
+            "composer check-platform-reqs --no-interaction --no-cache",
+            "composer install --no-interaction --no-dev --optimize-autoloader --classmap-authoritative",
+            "composer audit",
+            "@build:applyDownstreamChanges",
+            "svn add --no-ignore --force vendor/",
+            "svn rm --keep-local .svnignore tests/",
+            "echo Release build completed!"
+        ]
     },
     "scripts-descriptions": {
+        "release:build": "ResourceSpace build release version. End users can then update with a simple `svn switch` call.",
         "build:applyDownstreamChanges": "Apply downstream changes to ResourceSpace dependencies. Any changes that the upstream has fixed should be removed from the list as we want minimum (to no) divergence from upstreams."
     },
     "support": {
