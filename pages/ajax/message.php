@@ -188,7 +188,11 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
                         usertotalcountlabel = usertotalcount.toString();
                     }
 
-                    jQuery('span.UserMenuCountPill').html(usertotalcountlabel).fadeIn();
+                    if (usertotalcountlabel == "0") {
+                        jQuery('span.UserMenuCountPill').html(usertotalcountlabel).hide();
+                    } else {
+                        jQuery('span.UserMenuCountPill').html(usertotalcountlabel).fadeIn();
+                    }                    
 
                     if (activeSeconds > 0 || message_poll_first_run) {
                         for(var i = 0; i < messagecount; i++) {
