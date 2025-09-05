@@ -69,3 +69,6 @@ $lang["csv_upload_createdfromcsvupload"] = 'Gawa mula sa CSV Upload plugin';
 $lang["csv_upload_check_file_error"] = 'Hindi mabuksan o mabasa ang CSV file';
 $lang["csv_upload_check_utf_error"] = 'Ang CSV file ay hindi wastong UTF-8. Hindi wastong karakter sa linya';
 $lang["csv_upload_check_removebom"] = 'Ang CSV file ay may BOM na hindi natanggal.';
+$lang["csv_upload_validating"] = 'Pagpapatunay';
+$lang["csv_upload_processing"] = 'Pagpoproseso';
+$lang["processing_batch_edit_save"] = 'row [row_number] ng [rows_count]';

@@ -18,3 +18,12 @@ $lang["image_text_font"]='Czcionka do użycia musi być obsługiwana przez zains
 $lang["image_text_noim"]='Ten plugin wymaga zainstalowania Imagemagick.';
 $lang["plugin-image_text-title"]='Tekst obrazu';
 $lang["plugin-image_text-desc"]='Umożliwia dodanie danych pola do obrazu podczas pobierania';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'zachód',
+   'center' => 'centrum',
+   'east' => 'wschód',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'góra',
+   'bottom' => 'dół',
+);

@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'Το αρχείο CSV δεν μπορε�
 $lang["csv_upload_check_utf_error"] = 'Το αρχείο CSV δεν είναι έγκυρο UTF-8. Μη έγκυρος χαρακτήρας στη γραμμή';
 $lang["csv_upload_condition1"] = 'Βεβαιωθείτε ότι το αρχείο CSV είναι κωδικοποιημένο χρησιμοποιώντας <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'Το αρχείο CSV έχει BOM το οποίο δεν μπόρεσε να αφαιρεθεί';
+$lang["csv_upload_validating"] = 'Επικύρωση';
+$lang["csv_upload_processing"] = 'Επεξεργασία';
+$lang["processing_batch_edit_save"] = 'γραμμή [row_number] από [rows_count]';

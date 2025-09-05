@@ -46,7 +46,6 @@ function HookFacesAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
         'Expect:' // Prevents "100-continue" delay
     ]);
 
-
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
         'db' => $mysql_db,
         'ref' => (int)$face,
@@ -58,7 +57,6 @@ function HookFacesAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
         'Connection: keep-alive',
         'Expect:'
     ]);
-
 
     $start_time = microtime(true);
     $response = curl_exec($ch);
@@ -117,6 +115,7 @@ function HookFacesAllAfterpreviewcreation(int $resource, int $alternative, bool 
         set_processing_message($lang["faces-detecting"] . " " . $resource);
         faces_detect($resource);
     }
+    
     if ($alternative === -1 && $faces_tag_on_upload) {
         // Nothing to do for alternatives; face processing is for the main file only.
         // Tag images on upload if configured

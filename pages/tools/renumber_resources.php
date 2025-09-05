@@ -102,5 +102,4 @@ for ($n = 0; $n < $totalresources; $n++) {
     ps_query("UPDATE resource_node SET resource=? WHERE resource=?", $parameters);
     ps_query("UPDATE resource_related SET resource=? WHERE resource=?", $parameters);
     ps_query("UPDATE resource_related SET related=? WHERE related=?", $parameters);
-
 }

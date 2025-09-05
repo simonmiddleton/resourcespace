@@ -426,12 +426,12 @@ if ($keysearch) {
                         $relatedsql = new PreparedStatementQuery();
 
                         # Add related keywords
-                        $related = get_related_keywords($keyref);
+                        $related = get_related_keywords($keyref, $keyword, true);
                         if ($stemming) {
                             # Need to ensure we include related keywords for original string
                             $original_keyref = resolve_keyword(str_replace('*', '', $keyword), false, true, false);
                             if ($original_keyref && $original_keyref !== $keyref) {
-                                $original_related = get_related_keywords($original_keyref);
+                                $original_related = get_related_keywords($original_keyref, $keyword, false);
                                 if (count($original_related) > 0) {
                                     $original_related_kws = ps_array("SELECT keyword AS `value` FROM keyword WHERE ref IN (" . ps_param_insert(count($original_related)) . ")", ps_param_fill($original_related, "i"));
 
@@ -525,6 +525,10 @@ if ($keysearch) {
                                 $restypesql = new PreparedStatementQuery();
 
                                 $nodatafieldinfo = get_resource_type_field($nodatafield);
+                                if (!$nodatafieldinfo) {
+                                    error_alert($lang['error_fieldidnotfound'],true);
+                                    exit;
+                                }
                                 $nodatarestypes = trim((string)$nodatafieldinfo["resource_types"]);
                                 if ($nodatarestypes != "") {
                                     $nodatarestypes = explode(",", $nodatarestypes);
@@ -763,8 +767,8 @@ if ($keysearch) {
                         $sql_filter->sql .= " AND ";
                     }
 
-                    $sql_filter->sql .= str_replace("[bit_or_condition]", "", " r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
-
+                    $fixedunion->sql = str_replace("[bit_or_condition]", "", " r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+                    $sql_filter->sql .= str_replace("[union_index]", $n+1, $fixedunion->sql);
 
                     $sql_filter->parameters = array_merge($sql_filter->parameters, $fixedunion->parameters, $fixedunioncondition->parameters);
                 } elseif (is_a($fixedunion, "PreparedStatementQuery")) {

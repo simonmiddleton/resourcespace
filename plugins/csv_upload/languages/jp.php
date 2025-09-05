@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'CSVファイルを開くことも読み�
 $lang["csv_upload_check_utf_error"] = 'CSVファイルは有効なUTF-8ではありません。行に無効な文字があります';
 $lang["csv_upload_condition1"] = 'CSVファイルが<b>UTF-8</b>でエンコードされていることを確認してください。';
 $lang["csv_upload_check_removebom"] = 'CSVファイルにBOMが含まれており、削除できませんでした';
+$lang["csv_upload_validating"] = '検証中';
+$lang["csv_upload_processing"] = '処理中';
+$lang["processing_batch_edit_save"] = '[row_number] の [rows_count] 行';

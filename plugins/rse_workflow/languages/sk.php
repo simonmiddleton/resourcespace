@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Če želite spremeniti stanja in dejanja del
 $lang["plugin-rse_workflow-title"]='Napredni potek dela';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Pracovni tok';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Vytvorte a spravujte stavy pracovného postupu';
+$lang["rse_workflow_skip_required_fields"] = 'Pri presúvaní zdrojov do tohto pracovného postupu, vylúčiť z kontrol povinných polí?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Nie je možné zmeniť stav archívu na %%ARCHIVE%%. Chýbajúce metadata v povinných poliach: %%FIELDS%%.';

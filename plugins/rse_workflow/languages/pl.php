@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Aby zmienić stany i działania przepływu p
 $lang["plugin-rse_workflow-title"]='Zaawansowany Workflow';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Przepływ pracy';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Utwórz i zarządzaj stanami przepływu pracy';
+$lang["rse_workflow_skip_required_fields"] = 'Czy przy przenoszeniu zasobów do tego stanu workflow, wykluczyć z kontroli wymaganych pól?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Nie można zmienić stanu archiwum na %%ARCHIVE%%. Brak metadanych w wymaganych polach: %%FIELDS%%.';

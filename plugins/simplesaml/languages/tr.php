@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'IdP sertifika süresinin dolup dolm
 
 $lang["simplesaml_use_www_label"] = '"www" rotası için SP meta verisi isteklerine izin verilsin mi? (false olarak değiştirmek, IdP\'nin SP meta verisini yeniden değiştirmesini gerektirecektir)';
 $lang["simplesaml_use_www_error"] = '[Uyarı] Eklenti, eski "www" yollarını kullanıyor. Eğer bu yeni bir kurulumsa, hemen değiştirin! Aksi takdirde, SP meta verilerini güncelleyebilmeleri için IdP yöneticisi ile koordine olun.';
+$lang["simplesaml_config_source_label"] = 'IdP yapılandırma kaynağını seçin';
+$lang["simplesaml_config_source_url"] = 'Metadata URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace yapılandırma dosyası (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Yerel SAML yapılandırma dosyaları (eski)';
+$lang["simplesaml_update_metadata_now"] = 'Şimdi güncelle';
+$lang["simplesaml_update_metadata_error"] = 'Metadata \'%error%\' ayrıştırılamadı - metadata URL\'sini kontrol edin';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Geçersiz yanıt URL\'den: \'%error%\' - metadata URL\'sini kontrol edin';
+$lang["simplesaml_update_metadata_parse_error"] = 'Metadata alınamıyor: \'%error%\' - metadata URL\'sini kontrol edin';
+$lang["simplesaml_metadata_updates"] = 'BasitSAML meta verisi güncellemeleri';
+$lang["simplesaml_metadata_warning"] = 'Metadata %date% tarihinden beri güncellenmedi';
+$lang["simplesaml_metadata_invalid"] = 'IdP meta verisi geçersiz veya mevcut değil';
+$lang["simplesaml_admin_password_reset"] = 'BasitSAML test sitesi yönetici şifresini sıfırla (isteğe bağlı)';

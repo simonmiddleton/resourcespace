@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='For å endre arbeidsflyttilstander og handli
 $lang["plugin-rse_workflow-title"]='Avansert arbeidsflyt';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbeidsflyt';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Opprett og administrer arbeidsflytstatus';
+$lang["rse_workflow_skip_required_fields"] = 'Når du flytter ressurser til denne arbeidsflyttilstanden, ekskluder fra kontroller av påkrevde felt?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Kan ikke endre arkivstatus til %%ARCHIVE%%. Manglende metadata i påkrevde felt: %%FIELDS%%.';

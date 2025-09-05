@@ -184,7 +184,11 @@ function HookFormat_chooserViewModifyAllowed_Sizes ($resource, $sizes) : array|f
     return $sizes;
     }
 
-function HookFormat_chooserViewModifycheckifexists() : bool
+function HookFormat_chooserViewModifycheckifexists(array $resource): bool
 {
+    if (failed_format_chooser_checks($resource)) {
+        return false;
+    }
+    
     return true;
 }

@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"]='Vidokezo:';
 $lang["rse_workflow_email_from"]='Anwani ya barua pepe ya kutuma arifa kutoka (itatumia %EMAILFROM% ikiwa tupu):';
 $lang["rse_workflow_bcc_admin"]='Arifu wasimamizi wa mfumo wakati mchangiaji anapofahamishwa';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Unda na simamia hali za mtiririko wa kazi';
+$lang["rse_workflow_skip_required_fields"] = 'Unapohamisha rasilimali kwenda hali hii ya mtiririko wa kazi, je, uondoe kutoka kwa ukaguzi wa masharti ya lazima?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Haiwezekani kubadilisha hali ya archive kuwa %%ARCHIVE%%. Metadata inakosekana katika maeneo yanayohitajika: %%FIELDS%%.';

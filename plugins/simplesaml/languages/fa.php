@@ -87,3 +87,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'بررسی انقضای گواهی 
 
 $lang["simplesaml_use_www_label"] = 'آیا درخواست‌های متادیتای SP برای مسیر "www" مجاز است؟ (تغییر به نادرست نیاز به تبادل مجدد متادیتای SP با IdP خواهد داشت)';
 $lang["simplesaml_use_www_error"] = '[Warning] این افزونه از مسیرهای قدیمی "www" استفاده می‌کند. اگر این یک راه‌اندازی جدید است، اکنون آن را تغییر دهید! در غیر این صورت با مدیر IdP هماهنگ شوید تا بتوانند متاداده SP را به‌روزرسانی کنند.';
+$lang["simplesaml_config_source_label"] = 'منبع پیکربندی IdP را انتخاب کنید';
+$lang["simplesaml_config_source_url"] = 'آدرس متادیتا (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'فایل پیکربندی ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'فایل‌های پیکربندی SAML محلی (قدیمی)';
+$lang["simplesaml_update_metadata_now"] = 'به‌روزرسانی اکنون';
+$lang["simplesaml_update_metadata_error"] = 'نمی‌توان متادیتا \'%error%\' را تجزیه کرد - URL متادیتا را بررسی کنید';
+$lang["simplesaml_update_metadata_invalid_response"] = 'پاسخ نامعتبر از URL: \'%error%\' - URL متاداده را بررسی کنید';
+$lang["simplesaml_update_metadata_parse_error"] = 'نمی‌توان متادیتا را بازیابی کرد: \'%error%\' - URL متادیتا را بررسی کنید';
+$lang["simplesaml_metadata_updates"] = 'به‌روزرسانی‌های متاداده SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'متادیتا از تاریخ %date% به‌روزرسانی نشده است';
+$lang["simplesaml_metadata_invalid"] = 'متاداده IdP نامعتبر یا در دسترس نیست';
+$lang["simplesaml_admin_password_reset"] = 'بازنشانی رمز عبور مدیر سایت آزمایشی SimpleSAML (اختیاری)';

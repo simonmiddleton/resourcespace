@@ -16,3 +16,12 @@ $lang["image_text_position"]='ব্যানারে টেক্সটের 
 $lang["image_text_banner_position"]='ছবির সাথে ব্যানারের আপেক্ষিক অবস্থান।';
 $lang["image_text_font"]='ব্যবহার করার ফন্ট, ইনস্টল করা ইমেজম্যাজিক সংস্করণ দ্বারা সমর্থিত হতে হবে';
 $lang["image_text_noim"]='এই প্লাগইনটির জন্য ইমেজম্যাজিক ইনস্টল করা প্রয়োজন।';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'পশ্চিম',
+   'center' => 'মধ্য',
+   'east' => 'পূর্ব',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'শীর্ষ',
+   'bottom' => 'নিচে',
+);

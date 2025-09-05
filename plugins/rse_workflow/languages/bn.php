@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"]='নোট:';
 $lang["rse_workflow_email_from"]='বিজ্ঞপ্তি পাঠানোর জন্য ইমেইল ঠিকানা (ফাঁকা থাকলে %EMAILFROM% ব্যবহার করা হবে):';
 $lang["rse_workflow_bcc_admin"]='অবদানকারীকে অবহিত করা হলে সিস্টেম প্রশাসকদের অবহিত করুন';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'কর্মপ্রবাহের অবস্থাসমূহ তৈরি এবং পরিচালনা করুন';
+$lang["rse_workflow_skip_required_fields"] = 'এই কর্মপ্রবাহ অবস্থায় সম্পদ স্থানান্তর করার সময়, প্রয়োজনীয় ক্ষেত্রের পরীক্ষা থেকে বাদ দিন?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'আর্কাইভ অবস্থান %%ARCHIVE%% এ পরিবর্তন করতে অক্ষম। প্রয়োজনীয় ক্ষেত্রগুলিতে মেটাডেটা অনুপস্থিত: %%FIELDS%%।';

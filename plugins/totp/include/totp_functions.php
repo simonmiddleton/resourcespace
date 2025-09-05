@@ -71,7 +71,7 @@ function TOTP_get_secret(int $user_ref): string
 function TOTP_get_url(int $user_ref): string
 {
     global $applicationname;
-    return "otpauth://totp/" . $applicationname . "?secret=" . TOTP_get_secret($user_ref) . "&issuer=ResourceSpace";
+    return "otpauth://totp/" . urlencode($applicationname) . "?secret=" . TOTP_get_secret($user_ref) . "&issuer=ResourceSpace";
 }
 
 /**

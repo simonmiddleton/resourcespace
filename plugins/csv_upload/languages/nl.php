@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'CSV-bestand kan niet worden geopend of g
 $lang["csv_upload_check_utf_error"] = 'CSV-bestand is geen geldige UTF-8. Ongeldig teken op regel';
 $lang["csv_upload_condition1"] = 'Zorg ervoor dat het CSV-bestand is gecodeerd met <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'CSV-bestand heeft BOM dat niet kon worden verwijderd';
+$lang["csv_upload_validating"] = 'Valideren';
+$lang["csv_upload_processing"] = 'Verwerken';
+$lang["processing_batch_edit_save"] = 'rij [row_number] van [rows_count]';

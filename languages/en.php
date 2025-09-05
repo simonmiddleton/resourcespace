@@ -1919,6 +1919,7 @@ $lang["error-editpermissiondenied"] = "You do not have edit permissions for some
 $lang["error-permissions-login"] = "Please log in to access this page";
 $lang["error-oldphp"] = "Requires PHP version %version or higher."; # %version will be replaced with, e.g., "5.2"
 $lang["error-collectionnotfound"] = "Collection not found.";
+$lang['error_fieldidnotfound'] = 'Field id not found.';
 $lang["error-csrf-verification"] = "CSRF verification";
 $lang["error-csrf-verification-failed"] = "CSRF verification failed! Try reloading page.";
 $lang["error-method-not_allowed"] = "Method Not Allowed.";
@@ -3208,9 +3209,12 @@ $lang["processing_alternative_video"] = "Resource [resource]: Generating alterna
 $lang["processing_alternative_image"] = "Resource [resource]: Generating alternative image '[name]'";
 $lang["processing_extracting_metadata"] = "Resource [resource]: Extracting metadata";
 $lang["processing_creating_previews"] = "Resource [resource]: Creating previews";
+$lang["processing_updating_previews"] = "Resource [resource]: Updating previews";
 $lang["processing_creating_preview"] = "Resource [resource]: Creating preview '[name]'";
 $lang["processing_updating_resources"] = "Updating metadata ([done]/[total])";
 $lang["processing_calculating_updates_required"] = "Calculating updates required ([count]/[total])";
+$lang["processing_batch_edit_save"] = "Applying changes to [field_count] fields for [resource_count] resources";
+$lang["processing_resource_in_group"] = "Processing resources [count]/[total]";
 
 
 
@@ -3218,6 +3222,7 @@ $lang["language-en"] = "International English";
 $lang["language-en-US"] = "American English";
 $lang["language-ar"] = "Arabic";
 $lang["language-id"] = "Indonesian";
+$lang["language-be"] = "Belarusian";
 $lang["language-bn"] = "Bengali";
 $lang["language-ca"] = "Catalan";
 $lang["language-cs"] = "Czech";
@@ -3322,3 +3327,4 @@ $lang["missing_required_fields_intro"] = 'Resources in the collection appear bel
 $lang['action_update_now'] = "Update now";
 $lang['errors'] = "Errors";
 $lang['error_savefirst'] = "Please save your changes";
+$lang['show_hidden_property']="Show hidden property";

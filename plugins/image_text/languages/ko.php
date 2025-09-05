@@ -18,3 +18,12 @@ $lang["image_text_font"]='사용할 글꼴, 설치된 imagemagick 버전에서 �
 $lang["image_text_noim"]='이 플러그인은 Imagemagick가 설치되어 있어야 합니다.';
 $lang["plugin-image_text-title"]='이미지 텍스트';
 $lang["plugin-image_text-desc"]='다운로드 시 이미지에 필드 데이터를 추가할 수 있게 합니다';
+$lang["image_text_position_list"] = (object) array(
+   'west' => '서쪽',
+   'center' => '중앙',
+   'east' => '동쪽',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => '상단',
+   'bottom' => '하단',
+);

@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"]='আর্কাইভ থ
 $lang["offline_archive_resource_log_restore_request"]='আর্কাইভ থেকে পুনরুদ্ধার অনুরোধ করা হয়েছে';
 $lang["offline_archive_resource_restore"]='রিসোর্স পুনরুদ্ধার করুন';
 $lang["offline_archive_administer_archive-tooltip"] = 'আর্কাইভ করা ফাইলগুলো একটি অফলাইন স্থানে স্থানান্তর করুন';
+$lang["offline_archive_statustype"] = array (
+  0 => 'অপেক্ষমাণ',
+  1 => 'চলমান',
+  2 => 'সম্পন্ন',
+);

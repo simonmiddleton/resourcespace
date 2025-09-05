@@ -76,7 +76,18 @@ function update_preview($ref, $previewbased, $sizes, $delete_existing)
         if ($delete_existing) {
             delete_previews($ref);
         }
-        create_previews($ref, false, ($previewbased ? "jpg" : $resourceinfo[0]["file_extension"]), false, $previewbased, -1, true, $ingested, true, $sizes);
+        create_previews(
+            $ref, 
+            false, 
+            ($previewbased || in_array($resourceinfo[0]["file_extension"], NON_PREVIEW_EXTENSIONS) ? "jpg" : $resourceinfo[0]["file_extension"]), 
+            false, 
+            $previewbased || in_array($resourceinfo[0]["file_extension"], NON_PREVIEW_EXTENSIONS), 
+            -1, 
+            true, 
+            $ingested, 
+            true, 
+            $sizes
+        );
         hook("afterupdatepreview", "", array($ref));
         update_disk_usage($ref);
         return true;

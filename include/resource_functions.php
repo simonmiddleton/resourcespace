@@ -52,9 +52,6 @@ function get_resource_path(
 
     $size = safe_file_name((string) $size);
     $extension = safe_file_name((string) $extension);
-    if (is_banned_extension($extension)) {
-        $extension = 'jpg';
-    }
 
     if (!is_int_loose($file_modified)) {
         $file_modified = '';
@@ -539,15 +536,16 @@ function put_resource_data($resource, $data)
 /**
  * create_resource
  *
- * @param  integer  $resource_type  ID of target resource type
- * @param  integer  $archive        ID of target archive state, 999 if archived
- * @param  integer  $user           User ID, -1 for current user
- * @param  string   $origin         Source of resource, should not be blank
- * @param  string   $file_extension         If specified
+ * @param  integer  $resource_type      ID of target resource type
+ * @param  integer  $archive            ID of target archive state, 999 if archived
+ * @param  integer  $user               User ID, -1 for current user
+ * @param  string   $origin             Source of resource, should not be blank
+ * @param  string   $file_extension     If specified
+ * @param  bool     $run_macro          Run autocomplete macros, can be disabled if they are run later in process
  *
  * @return mixed    false if invalid inputs given, integer of resource reference if resource is created
  */
-function create_resource($resource_type, $archive = 999, $user = -1, $origin = '', $file_extension = '')
+function create_resource($resource_type, $archive = 999, $user = -1, $origin = '', $file_extension = '', $run_macro = true)
 {
     # Create a new resource.
     global $k,$terms_upload;
@@ -585,8 +583,10 @@ function create_resource($resource_type, $archive = 999, $user = -1, $origin = '
 
     hook('resourcecreate', '', array($insert, $resource_type));
 
-    # Autocomplete any blank fields.
-    autocomplete_blank_fields($insert, true);
+    # Autocomplete any blank fields
+    if ($run_macro) {
+        autocomplete_blank_fields($insert, true);
+    }
 
     # Log this
     daily_stat("Create resource", $insert);
@@ -2004,6 +2004,7 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
     } // End of foreach field loop
 
     // Perform the actual updates
+    set_processing_message(str_replace(["[field_count]", "[resource_count]"], [count($fields), count($list)], $lang["processing_batch_edit_save"]));
     db_begin_transaction("save_resource_data_multi");
     // Add/remove nodes for all resources
     if (count($all_nodes_to_add) > 0) {
@@ -7699,7 +7700,7 @@ function get_resource_type_fields($restypes = "", $field_order_by = "ref", $fiel
                 // Now multiple mapping and resource_type no longer used. Need to reverse order and show global fields first
                 $valid_order_by_cols[] = "global " . $field_sort . ", resource_types";
             } elseif (in_array(trim($col), $fields)) {
-                $valid_order_by_cols[] = trim($col);
+                $valid_order_by_cols[] = "length(rtf." . trim($col) . ")=0 desc," . trim($col);
             }
         }
         if (count($valid_order_by_cols) == 0) {
@@ -8134,6 +8135,23 @@ function get_workflow_states()
 
     $default_workflow_states = range(-2, 3);
     return array_merge($default_workflow_states, $additional_archive_states);
+}
+
+function get_workflow_state_names(): array
+{
+    global $lang, $additional_archive_states;
+
+    $workflow_states = [];
+
+    for ($n=-2; $n<=3; $n++) {
+        $workflow_states["$n"] = $lang["status" . $n];
+    }
+       
+    foreach ($additional_archive_states as $additional_archive_state) {
+        $workflow_states["$additional_archive_state"] = $lang["status{$additional_archive_state}"] ?? $additional_archive_state;
+    }
+
+    return $workflow_states;
 }
 
 /**

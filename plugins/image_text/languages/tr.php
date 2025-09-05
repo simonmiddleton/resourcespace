@@ -18,3 +18,12 @@ $lang["image_text_font"]='Kullanılacak yazı tipi, yüklü olan imagemagick sü
 $lang["image_text_noim"]='Bu eklenti için Imagemagick\'in yüklü olması gerekmektedir.';
 $lang["plugin-image_text-title"]='Görüntü Metni';
 $lang["plugin-image_text-desc"]='İndirme sırasında alan verilerinin görüntüye eklenmesini sağlar';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'batı',
+   'center' => 'merkez',
+   'east' => 'doğu',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'üst',
+   'bottom' => 'alt',
+);

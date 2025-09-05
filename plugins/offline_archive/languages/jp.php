@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='リソースを復元する';
 $lang["plugin-offline_archive-title"]='オフラインアーカイブ';
 $lang["plugin-offline_archive-desc"]='アーカイブされたファイルをオフラインの場所に移動できるようにします';
 $lang["offline_archive_administer_archive-tooltip"] = 'アーカイブされたファイルをオフラインの場所に移動する';
+$lang["offline_archive_statustype"] = array (
+  0 => '保留中',
+  1 => '進行中',
+  2 => '完了',
+);

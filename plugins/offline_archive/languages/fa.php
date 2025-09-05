@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"]='لغو بازیابی ا�
 $lang["offline_archive_resource_log_restore_request"]='درخواست بازیابی از آرشیو';
 $lang["offline_archive_resource_restore"]='بازیابی منابع';
 $lang["offline_archive_administer_archive-tooltip"] = 'فایل‌های آرشیو شده را به یک مکان آفلاین منتقل کنید';
+$lang["offline_archive_statustype"] = array (
+  0 => 'در حال انتظار',
+  1 => 'در حال انجام',
+  2 => 'تکمیل شده',
+);

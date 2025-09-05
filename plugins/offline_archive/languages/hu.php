@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"] = 'Törölt helyreállít�
 $lang["offline_archive_resource_log_restore_request"] = 'Kért helyreállítás az archívumból';
 $lang["offline_archive_resource_restore"] = 'Erőforrások visszaállítása';
 $lang["offline_archive_administer_archive-tooltip"] = 'Archív fájlok áthelyezése offline helyre';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Függőben',
+  1 => 'Folyamatban',
+  2 => 'Befejezve',
+);

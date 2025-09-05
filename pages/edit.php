@@ -369,12 +369,18 @@ if ($resource === false)
 debug(sprintf('Fetched resource data for #%s', $resource['ref']));
 
 $metadatatemplate = getval('metadatatemplate',0,true);
-    
-if ($upload_review_mode && $lastedited > 0)
-    {
+   
+if ($upload_review_mode && $lastedited > 0) {
     // Update resource data with locked resource data from last edited resource
     $resource = copy_locked_data($resource, $locked_fields, $lastedited);
+
+    $hookresource = hook('copy_locked_data_extra', '', [$resource, $locked_fields, $lastedited], true);
+
+    if ($hookresource !== false) {
+        $resource = $hookresource;
     }
+
+}
 
 // Create metadata resource record without uploading a file e.g. template, text only resource.
 $create_record_only = getval("recordonly", "") != "";
@@ -653,10 +659,18 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             }
 
                         $review_collection_contents_count = count($review_collection_contents);
+                        $message_interval = 10;
+                        set_processing_message('');
                         for($n=1;$n<$review_collection_contents_count;$n++)
                             {
                             $auto_next_errors = array();
                             $ref = $review_collection_contents[$n]["ref"];
+                            
+                            if ($n === $message_interval) {
+                                set_processing_message(str_replace(["[done]", "[total]"], [$n , $review_collection_contents_count], $lang["processing_updating_resources"])); 
+                                $message_interval = $message_interval + 10;
+                            }
+
                             # Fetch resource data.
                             $resource=get_resource_data($ref);
 
@@ -753,6 +767,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 $auto_next_errors_found = true;                   
                                 }
                             }
+                        set_processing_message('');
+
                         if($auto_next_errors_found)
                             {
                             // Errors are still outstanding which require further editing corrections
@@ -1722,7 +1738,14 @@ if ($ref < 0 && !$upload_review_mode)
     }
 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
-$resource = get_resource_data($ref, false); # By this point the resource type might've been changed
+
+$updated_resource = get_resource_data($ref, false); # By this point the resource type might've been changed
+
+foreach ($resource as $key => $value) {
+    if (array_key_exists($key, $updated_resource) && $updated_resource[$key] !== $value) {
+        $resource[$key] = $updated_resource[$key]; // Update if value has changed
+    }
+}
 
 # Only include fields whose resource type is global or is present in the resource(s) being edited
 if ($multiple) {
@@ -2006,7 +2029,9 @@ foreach($fields as $n => $field)
 
 
 # Add required_fields_exempt so it is submitted with POST
-echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . implode(",",$required_fields_exempt) . "\">";   
+echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . implode(",",$required_fields_exempt) . "\">";
+
+hook("endofmetadataaddcustomfield");   
 
 # Work out the correct archive status.
 if ($ref < 0 && !$show_status_and_access_on_upload) 
@@ -2156,9 +2181,9 @@ else
         || ($ea3 && $resource["access"]==3)
         ) {
         if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums) {
-            echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
+            echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . escape($access_stored_value) . "'>";
         }?>
-        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"]; ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
+        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo escape($resource["access"]) ; ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
             if($ea0)    //0 - open
             {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
@@ -2611,7 +2636,15 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
         {
         error_fields[0].scrollIntoView();
         }
-    styledalert('<?php echo escape($lang["error"])?>','<?php echo implode("<br />",$save_errors); ?>',450);
+        
+        <?php
+        foreach ($save_errors as $save_error) {
+            ?>
+            toastNotification('error', '<?php echo escape($save_error); ?>');
+            <?php
+        }
+        ?>
+
     </script>
     <?php
     }

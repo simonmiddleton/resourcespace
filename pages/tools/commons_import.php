@@ -1,4 +1,5 @@
 <?php
+
 /*
 
 Populate ResourceSpace with random images from Wikimedia Commmons to aid testing at scale.
@@ -53,7 +54,7 @@ $count  = false;
 
 if (!$options) {
     echo $help_text;
-    exit(0);  
+    exit(0);
 }
 
 foreach ($options as $option_name => $option_value) {
@@ -206,7 +207,7 @@ while ($imported_count < $number_to_import) {
         file_put_contents($tmp_file, $image_data);
 
         // Create new resource
-        $ref = create_resource($resource_type, 0, $user); 
+        $ref = create_resource($resource_type, 0, $user);
         if ($ref <= 0) {
             echo "  Failed to create resource.\n";
             unlink($tmp_file);
@@ -231,7 +232,9 @@ while ($imported_count < $number_to_import) {
             delete_resource($ref);
         }
 
-        if (file_exists($tmp_file)) {unlink($tmp_file);}
+        if (file_exists($tmp_file)) {
+            unlink($tmp_file);
+        }
 
         if ($imported_count >= $number_to_import) {
             break; // Exit early if we hit the target mid-batch

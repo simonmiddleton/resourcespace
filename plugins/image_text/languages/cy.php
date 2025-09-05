@@ -16,3 +16,12 @@ $lang["image_text_banner_position"]='Safle\'r faner yn ymwneud â\'r delwedd.';
 $lang["image_text_font"]='Ffont i\'w ddefnyddio, rhaid iddo gael ei gefnogi gan fersiwn imagemagick a osodwyd';
 $lang["image_text_noim"]='Mae\'r plwg hwn yn gofyn am Imagemagick i fod wedi\'i osod.';
 $lang["image_text_summary"]='<div>Bydd y plwgyn hwn yn defnyddio\'r data o\'r maes penodedig ac yn ei osod ar waelod y ddelwedd. Bydd y grwpiau a ddewiswyd yn gweld opsiwn i lawrlwytho\'r ffeil wreiddiol heb y testun ychwanegol<br><br></div>';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'gorllewin',
+   'center' => 'canol',
+   'east' => 'dwyrain',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'top',
+   'bottom' => 'bottom',
+);

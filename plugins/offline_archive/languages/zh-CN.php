@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='恢复资源';
 $lang["plugin-offline_archive-title"]='离线存档';
 $lang["plugin-offline_archive-desc"]='启用将归档文件重新定位到离线位置';
 $lang["offline_archive_administer_archive-tooltip"] = '将归档文件移动到离线位置';
+$lang["offline_archive_statustype"] = array (
+  0 => '待处理',
+  1 => '进行中',
+  2 => '已完成',
+);

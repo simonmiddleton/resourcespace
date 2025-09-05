@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["falcon_link_title"] = 'Falcon Link';
 $lang["falcon_link_manage"] = 'Falcon terbit/arkib';
 $lang["falcon_link_publish"] = 'Terbitkan ke Falcon';

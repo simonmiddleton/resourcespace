@@ -14,7 +14,7 @@ function HookTotpAllPreheaderoutput()
     global $userref,$pagename, $anonymous_login, $username;
     $cookie = getval("totp", "");
 
-    if ($pagename != "totp" && is_numeric($userref) && $userref > 0 && (!(isset($anonymous_login) && $username == $anonymous_login)) && $cookie != TOTP_cookie($userref)) {
+    if (!in_array($pagename, array('totp', 'user_change_password')) && is_numeric($userref) && $userref > 0 && (!(isset($anonymous_login) && $username == $anonymous_login)) && $cookie != TOTP_cookie($userref)) {
         redirect("plugins/totp/pages/totp.php");
     }
 }

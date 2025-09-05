@@ -18,3 +18,12 @@ $lang["image_text_font"]='Písmo k použití, musí být podporováno nainstalov
 $lang["image_text_noim"]='Tento plugin vyžaduje nainstalovaný Imagemagick.';
 $lang["plugin-image_text-title"]='Text obrázku';
 $lang["plugin-image_text-desc"]='Umožňuje přidání dat pole do obrázku při stahování';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'západ',
+   'center' => 'střed',
+   'east' => 'východ',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'horní',
+   'bottom' => 'spodní',
+);

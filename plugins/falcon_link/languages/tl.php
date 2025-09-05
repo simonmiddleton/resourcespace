@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["falcon_link_title"] = 'Falcon Link';
 $lang["falcon_link_manage"] = 'Falcon ilathala/arkibo';
 $lang["falcon_link_publish"] = 'I-publish sa Falcon';

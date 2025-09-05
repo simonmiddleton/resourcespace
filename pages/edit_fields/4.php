@@ -219,7 +219,7 @@ if ($date_d_m_y) {
 </script>
 
 <label class="accessibility-hidden" for="<?php echo $name; ?>-y"><?php echo escape($lang["year"]); ?></label>
-<input id="<?php echo $name; ?>-y" type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>">
+<input id="<?php echo $name; ?>-y" type=text size=5 name="<?php echo $name?>-y" value="<?php echo escape($dy); ?>">
 
 <?php if ($field["type"] != 10) { ?>
 <!-- Time (optional) -->

@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"] = 'Đã hủy khôi phục
 $lang["offline_archive_resource_log_restore_request"] = 'Yêu cầu khôi phục từ kho lưu trữ';
 $lang["offline_archive_resource_restore"] = 'Khôi phục tài nguyên';
 $lang["offline_archive_administer_archive-tooltip"] = 'Di chuyển các tệp đã lưu trữ đến một vị trí ngoại tuyến';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Đang chờ',
+  1 => 'Đang tiến hành',
+  2 => 'Đã hoàn thành',
+);

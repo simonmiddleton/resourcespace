@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Obnovi zdroje';
 $lang["plugin-offline_archive-title"]='Offline arhiv';
 $lang["plugin-offline_archive-desc"]='Omogoča premestitev arhiviranih datotek na brez povezave lokacijo';
 $lang["offline_archive_administer_archive-tooltip"] = 'Presuňte archívne súbory na offline miesto';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Čaká',
+  1 => 'Prebieha',
+  2 => 'Dokončené',
+);

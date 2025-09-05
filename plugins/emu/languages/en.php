@@ -1,4 +1,5 @@
 <?php
+
 $lang['emu_configuration'] = 'EMu Configuration';
 
 $lang['emu_api_settings'] = 'API server settings';

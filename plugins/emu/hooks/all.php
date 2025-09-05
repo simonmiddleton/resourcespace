@@ -1,4 +1,5 @@
 <?php
+
 include_once __DIR__ . '/../include/emu_api.php';
 
 function HookEmuAllInitialise()
@@ -14,17 +15,14 @@ function HookEmuAllInitialise()
 }
 
 function HookEmuAllExtra_checks()
-    {
+{
     $default_socket_timeout_cache = ini_get('default_socket_timeout');
     ini_set('default_socket_timeout', 5);
 
     $GLOBALS['use_error_exception'] = true;
-    try
-        {
+    try {
         new EMuAPI($GLOBALS['emu_api_server'], $GLOBALS['emu_api_server_port']);
-        }
-    catch(Throwable $t)
-        {
+    } catch (Throwable $t) {
         $message['emu'] = [
             'status' => 'FAIL',
             'info' => "{$GLOBALS['lang']['emu_configuration']}: {$t->getMessage()}",
@@ -32,8 +30,8 @@ function HookEmuAllExtra_checks()
             'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
             ];
         return $message;
-        }
+    }
     unset($GLOBALS['use_error_exception']);
 
     ini_set('default_socket_timeout', $default_socket_timeout_cache);
-    }
+}

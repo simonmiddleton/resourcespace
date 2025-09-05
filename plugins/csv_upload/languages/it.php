@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'Il file CSV non può essere aperto o let
 $lang["csv_upload_check_utf_error"] = 'Il file CSV non è un UTF-8 valido. Carattere non valido alla riga';
 $lang["csv_upload_condition1"] = 'Assicurati che il file CSV sia codificato utilizzando <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'Il file CSV ha un BOM che non è stato possibile rimuovere';
+$lang["csv_upload_validating"] = 'Validazione';
+$lang["csv_upload_processing"] = 'Elaborazione';
+$lang["processing_batch_edit_save"] = 'riga [row_number] di [rows_count]';
