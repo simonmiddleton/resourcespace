@@ -4218,6 +4218,23 @@ function pagename()
     return $urlparts[count($urlparts) - 1];
 }
 
+function pluginname(): string
+{
+    $pluginname = safe_file_name(getval('pluginname', ''));
+    if (!empty($pluginname)) {
+        return $pluginname;
+    }
+
+    $url = str_replace("\\", "/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
+    $urlparts = explode("/", $url);
+
+    if (array_search('plugins', $urlparts) !== false && isset($urlparts[array_search('plugins', $urlparts) + 1])) {
+        return $urlparts[array_search('plugins', $urlparts) + 1];
+    }
+
+    return "";
+}
+
 /**
  *  Returns the site content from the language strings. These will already be overridden with site_text content if present.
  *
@@ -5875,4 +5892,26 @@ function is_original_preview ($ref) : bool {
                                     WHERE rl1.resource = rl2.resource AND rl1.date < rl2.date
                                     AND rl2.type IN ('t', 'f', 'u'))
             ", ['i', $ref], '') === '';
+}
+
+/**
+ * Return the page title to use for the given page and optionally plugin.
+ *
+ * @param string $page   Page name without any leading filepath or trailing file extension.
+ * @param string $plugin Optional. Used to denote which plugin the page is part of.
+ *
+ * @return string If a language string is found, returns "%%APPLICATION_NAME%% - %%PAGENAME%%";
+ *                otherwise, returns "%%APPLICATION_NAME%%".
+ */
+function get_page_title(string $page, string $plugin = ""): string
+{
+    global $lang, $applicationname;
+    if ($plugin != "" && isset($lang["page-title_{$plugin}_{$page}"])) {
+        $page_title = " - " . $lang["page-title_{$plugin}_{$page}"];
+    } elseif ($plugin == "" && isset($lang["page-title_$page"])) {
+        $page_title =  " - " . $lang["page-title_$page"];
+    } else {
+        $page_title = "";
+    }
+    return $applicationname . $page_title;
 }

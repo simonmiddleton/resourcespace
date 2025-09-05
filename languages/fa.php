@@ -1274,7 +1274,6 @@ $lang["publishstatus"] = 'ذخیره با وضعیت انتشار:';
 $lang["addnewcontent"] = 'محتوای جدید (صفحه، نام)';
 $lang["hitcount"] = 'تعداد بازدید';
 $lang["downloads"] = 'دانلودها';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'پسوند';
 $lang["all_users"] = 'همه کاربران';
 $lang["new_resource"] = 'منبع جدید';

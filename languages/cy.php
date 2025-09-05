@@ -2762,7 +2762,6 @@ $lang["setup-err_phar_injection"] = 'Canfuwyd Mewnosodiad Gwrthrych PHP Phar pos
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' neu \'ssl\'. Ar gyfer Gmail, mae angen \'tls\' neu \'ssl\'.';
 $lang["setup-if-smtphost"] = 'Enw\'r gwesteiwr, e.e. \'smtp.gmail.com\'.';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["plugins-configvar"] = 'Gosod newidyn ffurfweddu: $%cvn';
 $lang["map_osmhot"] = 'Humanitaraidd';
 $lang["map_stamentoner"] = 'Toner';

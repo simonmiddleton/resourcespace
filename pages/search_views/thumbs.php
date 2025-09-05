@@ -268,9 +268,9 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
                     type="checkbox" 
                     id="check<?php echo escape($ref)?>" 
                     class="checkselect checkselectmedium"
-                    title="<?php echo escape($lang['action-select'] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>"
+                    title="<?php echo escape($lang['action-selectresource'] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>"
                     data-resource="<?php echo escape($result[$n]["ref"]); ?>"
-                    aria-label="<?php echo escape($lang["action-select"])?>"
+                    aria-label="<?php echo escape($lang["action-selectresource"])?>"
                     <?php
                     echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}");
 

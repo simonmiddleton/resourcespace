@@ -40,7 +40,10 @@ $provider_name = $providers_select_list[$image_bank_provider_id] ?? $provider->g
 $record = $provider->findById($id);
 $resource_download_options_table = $provider->getResourceDownloadOptionsTable($id);
 
-
+$preview_title = $record->getTitle();
+if ($preview_title == "") {
+    $preview_title = $lang["fullscreenpreview"];
+}
 include_once "{$rs_root}/include/header.php";
 ?>
 <div class="RecordBox">
@@ -58,14 +61,14 @@ include_once "{$rs_root}/include/header.php";
                 <?php
                 render_provider_search_result_link(
                     $record,
-                    function() use ($record, $lang)
+                    function() use ($record, $preview_title)
                         {
                         ?>
                         <img
                             id="previewimage"
                             class="Picture"
                             src="<?php echo $record->getPreviewUrl(); ?>"
-                            alt="<?php echo escape($lang['fullscreenpreview']); ?>"
+                            alt="<?php echo escape($preview_title); ?>"
                             galleryimg="no">
                         <?php
                         },

@@ -281,7 +281,7 @@ function HookAdobe_linkViewOrigdownloadlink()
     return true;
 }
 
-function HookAdobe_linkViewReplacepreviewlink()
+function HookAdobe_linkViewReplacepreviewlink($preview_title)
 {
     global $previewimagelink;
     $previewimagelink .= "?reload=" . uniqid();

@@ -213,7 +213,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             color: white;
         }
         .skip-to-main-content {
-            background-color: #545454;
+            background-color:rgb(0, 0, 0);
         }
         .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {
             font-weight: 600;

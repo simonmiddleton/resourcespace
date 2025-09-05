@@ -2950,7 +2950,6 @@ $lang["action_unset_no_file"] = 'وسم كملف مفقود';
 $lang["completed_set_no_file"] = 'المورد معلم كأنه ليس لديه ملف';
 $lang["completed_unset_no_file"] = 'المورد معلم كملف مفقود';
 $lang["sortorder-asc"] = 'تصاعدي';
-$lang["addremove"] = '+/-';
 $lang["map_hydda_group"] = 'هيدا';
 $lang["megapixel-short"] = 'MP';
 $lang["at-resolution"] = '@';

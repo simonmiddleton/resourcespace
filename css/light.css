@@ -435,8 +435,8 @@ input:checked + .customFieldLabel, .keywordselected {
 }
 
 .SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited, .MessageBox { color: #474747; }
-.ClearSelectedButton { background-color: #ff2b2b; }
-.ClearSelectedButton:hover { background-color: #b71c1c; }
+.ClearSelectedButton { background-color: #a11515; }
+.ClearSelectedButton:hover { background-color: #860d0d; }
 
 .codecomment
     {

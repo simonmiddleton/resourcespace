@@ -2706,7 +2706,6 @@ $lang["unrelateallresources_confirmation"] = '此集合中的资源现在都没�
 $lang["ratingremovehover"] = '删除您的评分';
 $lang["setup-download_filename_format"] = '下载文件名格式';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' 或 \'ssl\'。对于 Gmail，需要 \'tls\' 或 \'ssl\'。';
-$lang["addremove"] = '+/-';
 $lang["map_nasagibs_group"] = 'NASA GIBS';
 $lang["map_mapbox_group"] = 'Mapbox';
 $lang["map_mapboxid"] = 'ID';

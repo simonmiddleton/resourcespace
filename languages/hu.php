@@ -2788,7 +2788,6 @@ $lang["of"] = '/';
 $lang["plugin_field_fmt"] = '%A (%B)';
 $lang["collection_download_tar_applink"] = 'Nem tudja megnyitni a TAR fájlokat? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Szerezze be az open source 7-zipet itt</a>';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' vagy \'ssl\'. A Gmail esetében \'tls\' vagy \'ssl\' szükséges.';
-$lang["addremove"] = '+/-';
 $lang["plugins-configvar"] = 'Beállítja a konfigurációs változót: $%cvn';
 $lang["map_esriocean"] = 'Ocean';
 $lang["report_periodic_email_option_me"] = 'én';

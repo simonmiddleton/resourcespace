@@ -1270,7 +1270,6 @@ $lang["resourcenotinresults"] = 'Mevcut kaynak artık aktif arama sonuçlarını
 $lang["publishstatus"] = 'Yayın durumu ile kaydet:';
 $lang["addnewcontent"] = 'Yeni içerik (sayfa, ad)';
 $lang["downloads"] = 'İndirmeler';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'Uzantı';
 $lang["all_users"] = 'tüm kullanıcılar';
 $lang["new_resource"] = 'yeni kaynak';
