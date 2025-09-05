@@ -1598,6 +1598,8 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     display: inline-block;
 }
 .SearchBreadcrumbs .top-right-menu {
+    display: block;
+    margin: unset;
     width: 19px;
     height: 19px;
     border-radius: 30px;
