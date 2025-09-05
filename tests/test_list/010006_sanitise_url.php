@@ -25,7 +25,7 @@ $use_cases = [
     ],
     [
         'name' => 'Relative (root) URL not matching $baseurl_short is sanitised',
-        'input' => '/unknwon/path/?p1=v1&p2=v2#fragment',
+        'input' => '/unknown/path/?p1=v1&p2=v2#fragment',
         'expected' => '#',
     ],
     [

@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'No se puede abrir o leer el archivo CSV'
 $lang["csv_upload_check_utf_error"] = 'El archivo CSV no es un UTF-8 válido. Carácter inválido en la línea';
 $lang["csv_upload_condition1"] = 'Asegúrate de que el archivo CSV esté codificado usando <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'El archivo CSV tiene BOM que no se pudo eliminar';
+$lang["csv_upload_validating"] = 'Validando';
+$lang["csv_upload_processing"] = 'Procesando';
+$lang["processing_batch_edit_save"] = 'fila [row_number] de [rows_count]';

@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'التحقق من انتهاء صل
 
 $lang["simplesaml_use_www_label"] = 'هل تسمح بطلبات بيانات التعريف الخاصة بـ SP لمسار "www"؟ (التغيير إلى "خطأ" سيتطلب من IdP إعادة تبادل بيانات تعريف SP)';
 $lang["simplesaml_use_www_error"] = '[تحذير] الإضافة تستخدم مسارات "www" القديمة. إذا كانت هذه إعدادًا جديدًا، قم بتغييرها الآن! خلاف ذلك، تنسيق مع مسؤول IdP حتى يتمكنوا من تحديث بيانات SP الوصفية وفقًا لذلك.';
+$lang["simplesaml_config_source_label"] = 'اختر مصدر تكوين IdP';
+$lang["simplesaml_config_source_url"] = 'رابط البيانات الوصفية (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ملف تكوين ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'ملفات تكوين SAML المحلية (القديمة)';
+$lang["simplesaml_update_metadata_now"] = 'تحديث الآن';
+$lang["simplesaml_update_metadata_error"] = 'غير قادر على تحليل البيانات الوصفية \'%error%\' - تحقق من عنوان URL للبيانات الوصفية';
+$lang["simplesaml_update_metadata_invalid_response"] = 'استجابة غير صالحة من عنوان URL: \'%error%\' - تحقق من عنوان URL للبيانات الوصفية';
+$lang["simplesaml_update_metadata_parse_error"] = 'غير قادر على استرجاع البيانات الوصفية: \'%error%\' - تحقق من عنوان URL للبيانات الوصفية';
+$lang["simplesaml_metadata_updates"] = 'تحديثات بيانات التعريف SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'لم يتم تحديث البيانات الوصفية منذ %date%';
+$lang["simplesaml_metadata_invalid"] = 'بيانات التعريف الخاصة بمزود الهوية غير صالحة أو غير متاحة';
+$lang["simplesaml_admin_password_reset"] = 'إعادة تعيين كلمة مرور مسؤول موقع اختبار SimpleSAML (اختياري)';

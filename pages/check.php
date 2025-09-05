@@ -506,7 +506,7 @@ function get_utility_version(string $utilityname)
 
     # Check execution and find out version.
     $version_command = $utility_fullpath . " " . $version_argument;
-    $utilities_with_version_on_STDERR = ['python', 'antiword', 'pdftotext', 'fits'];
+    $utilities_with_version_on_STDERR = ['python', 'pdftotext', 'fits'];
     $version = run_command($version_command, in_array($utilityname, $utilities_with_version_on_STDERR));
     $version_check = call_user_func_array(
         $utility['version_check']['callback']['fct_name'],
@@ -530,7 +530,7 @@ function get_utility_version(string $utilityname)
     } else {
         # There was a working path and the output was the expected - the version is returned.
         $s = explode("\n", $version);
-        $version_line = $utilityname === 'antiword' ? $s[3] : $s[0];
+        $version_line = $s[0];
         return array("name" => $name, "version" => $version_line, "success" => true, "error" => "");
     }
 }

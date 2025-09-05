@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Palauta resurssit';
 $lang["plugin-offline_archive-title"]='Offline-arkisto';
 $lang["plugin-offline_archive-desc"]='Mahdollistaa arkistoitujen tiedostojen siirtämisen offline-sijaintiin';
 $lang["offline_archive_administer_archive-tooltip"] = 'Siirrä arkistoituja tiedostoja offline-sijaintiin';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Odottaa',
+  1 => 'Käynnissä',
+  2 => 'Valmis',
+);

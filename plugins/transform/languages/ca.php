@@ -83,3 +83,4 @@ $lang["px"]='px';
 $lang["plugin-transform-title"]='Eines d\'imatge (transformar)';
 $lang["plugin-transform-desc"]='Permet la creació d\'imatges alternatives retallades i escalades (jCrop amb suport per a mòbils)';
 $lang["use_system_icc_profile_config"]='Utilitza la configuració del sistema per al processament del perfil ICC. Sobreescriurà les opcions sRGB anteriors.';
+$lang["cropper_preset_sizes"] = 'Mides predefinides';

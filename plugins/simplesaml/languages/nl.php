@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Controleer de vervaldatum van het I
 
 $lang["simplesaml_use_www_label"] = 'Sta SP-metadata-aanvragen voor de "www"-route toe? (veranderen naar onwaar vereist dat de IdP de SP-metadata opnieuw uitwisselt)';
 $lang["simplesaml_use_www_error"] = '[Warning] De plugin maakt gebruik van de verouderde "www" routes. Als dit een nieuwe installatie is, verander het dan nu! Anders afstemmen met de IdP-beheerder zodat zij de SP-metadata dienovereenkomstig kunnen bijwerken.';
+$lang["simplesaml_config_source_label"] = 'Selecteer de IdP-configuratiebron';
+$lang["simplesaml_config_source_url"] = 'Metadata URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace configuratiebestand (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Lokale SAML-configuratiebestanden (legacy)';
+$lang["simplesaml_update_metadata_now"] = 'Nu bijwerken';
+$lang["simplesaml_update_metadata_error"] = 'Kan metadata \'%error%\' niet parseren - controleer de metadata-URL';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Ongeldige reactie van URL: \'%error%\' - controleer metadata-URL';
+$lang["simplesaml_update_metadata_parse_error"] = 'Kan metadata niet ophalen: \'%error%\' - controleer de metadata-URL';
+$lang["simplesaml_metadata_updates"] = 'EenvoudigeSAML metadata-updates';
+$lang["simplesaml_metadata_warning"] = 'Metadata is niet bijgewerkt sinds %date%';
+$lang["simplesaml_metadata_invalid"] = 'IdP metadata ongeldig of niet beschikbaar';
+$lang["simplesaml_admin_password_reset"] = 'Reset SimpleSAML test site admin wachtwoord (optioneel)';

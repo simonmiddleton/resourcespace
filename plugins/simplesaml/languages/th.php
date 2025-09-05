@@ -87,3 +87,15 @@ $lang["simplesaml_acs_url"] = 'ACS URL / Reply URL';
 
 $lang["simplesaml_use_www_label"] = 'อนุญาตคำขอเมตาดาต้าของ SP สำหรับเส้นทาง "www" หรือไม่? (การเปลี่ยนเป็น false จะทำให้ต้องมีการแลกเปลี่ยนเมตาดาต้าของ SP ใหม่กับ IdP)';
 $lang["simplesaml_use_www_error"] = '[Warning] ปลั๊กอินกำลังใช้เส้นทาง "www" แบบเก่า หากนี่เป็นการติดตั้งใหม่ ให้เปลี่ยนเดี๋ยวนี้! มิฉะนั้นให้ประสานงานกับผู้ดูแล IdP เพื่อให้พวกเขาสามารถอัปเดตข้อมูลเมตาของ SP ตามนั้น';
+$lang["simplesaml_config_source_label"] = 'เลือกแหล่งข้อมูลการกำหนดค่าของ IdP';
+$lang["simplesaml_config_source_url"] = 'URL เมตาดาต้า (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ไฟล์การกำหนดค่าของ ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'ไฟล์การกำหนดค่า SAML ท้องถิ่น (รุ่นเก่า)';
+$lang["simplesaml_update_metadata_now"] = 'อัปเดตตอนนี้';
+$lang["simplesaml_update_metadata_error"] = 'ไม่สามารถแยกวิเคราะห์ข้อมูลเมตา \'%error%\' - กรุณาตรวจสอบ URL ของข้อมูลเมตา';
+$lang["simplesaml_update_metadata_invalid_response"] = 'การตอบสนองที่ไม่ถูกต้องจาก URL: \'%error%\' - ตรวจสอบ URL เมตาดาต้า';
+$lang["simplesaml_update_metadata_parse_error"] = 'ไม่สามารถดึงข้อมูลเมตาดาต้า: \'%error%\' - ตรวจสอบ URL ของเมตาดาต้า';
+$lang["simplesaml_metadata_updates"] = 'การอัปเดตข้อมูลเมตาของ SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'ข้อมูลเมตาไม่ได้รับการอัปเดตตั้งแต่ %date%';
+$lang["simplesaml_metadata_invalid"] = 'ข้อมูลเมตาดาต้า IdP ไม่ถูกต้องหรือไม่สามารถใช้งานได้';
+$lang["simplesaml_admin_password_reset"] = 'รีเซ็ตพาสเวิร์ดผู้ดูแลระบบเว็บไซต์ทดสอบ SimpleSAML (ไม่บังคับ)';

@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='استعادة الموارد';
 $lang["plugin-offline_archive-title"]='أرشيف غير متصل بالإنترنت';
 $lang["plugin-offline_archive-desc"]='يتيح نقل الملفات المؤرشفة إلى موقع غير متصل بالإنترنت';
 $lang["offline_archive_administer_archive-tooltip"] = 'نقل الملفات المؤرشفة إلى موقع غير متصل';
+$lang["offline_archive_statustype"] = array (
+  0 => 'قيد الانتظار',
+  1 => 'قيد التنفيذ',
+  2 => 'مكتمل',
+);

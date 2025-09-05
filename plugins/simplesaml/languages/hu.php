@@ -87,3 +87,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Ellenőrizze az IdP tanúsítvány 
 
 $lang["simplesaml_use_www_label"] = 'Engedélyezi az SP metaadatok kéréseit a "www" útvonalon? (ha hamisra változtatja, az IdP-t arra kényszeríti, hogy újra cserélje az SP metaadatokat)';
 $lang["simplesaml_use_www_error"] = '[Figyelmeztetés] A bővítmény a régi "www" útvonalakat használja. Ha ez egy új telepítés, változtassa meg most! Ellenkező esetben koordináljon az IdP adminisztrátorával, hogy frissíthesse az SP metaadatokat ennek megfelelően.';
+$lang["simplesaml_config_source_label"] = 'Válaszd ki az IdP konfigurációs forrást';
+$lang["simplesaml_config_source_url"] = 'Metaadat URL (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace konfigurációs fájl (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Helyi SAML konfigurációs fájlok (örökölt)';
+$lang["simplesaml_update_metadata_now"] = 'Frissítés most';
+$lang["simplesaml_update_metadata_error"] = 'Nem sikerült elemezni a metaadatokat \'%error%\' - ellenőrizze a metaadat URL-t';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Érvénytelen válasz a következő URL-től: \'%error%\' - ellenőrizze a metaadat URL-t';
+$lang["simplesaml_update_metadata_parse_error"] = 'Nem sikerült lekérni a metaadatokat: \'%error%\' - ellenőrizze a metaadat URL-t';
+$lang["simplesaml_metadata_updates"] = 'EgyszerűSAML metaadat frissítések';
+$lang["simplesaml_metadata_warning"] = 'A metaadatok nem lettek frissítve %date% óta';
+$lang["simplesaml_metadata_invalid"] = 'IdP metaadat érvénytelen vagy nem elérhető';
+$lang["simplesaml_admin_password_reset"] = 'Állítsa vissza a SimpleSAML tesztoldal admin jelszavát (opcionális)';

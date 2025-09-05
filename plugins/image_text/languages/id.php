@@ -18,3 +18,12 @@ $lang["image_text_font"]='Font yang digunakan harus didukung oleh versi imagemag
 $lang["image_text_noim"]='Plugin ini memerlukan Imagemagick untuk diinstal.';
 $lang["plugin-image_text-title"]='Teks Gambar';
 $lang["plugin-image_text-desc"]='Memungkinkan data bidang ditambahkan ke gambar saat diunduh';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'barat',
+   'center' => 'tengah',
+   'east' => 'timur',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'atas',
+   'bottom' => 'bawah',
+);

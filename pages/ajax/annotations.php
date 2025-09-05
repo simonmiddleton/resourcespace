@@ -113,7 +113,6 @@ if ('delete' == $action && 0 < $annotation_id && 0 !== count($annotation)) {
         $_POST['comment_to_hide'] = $linked_comment[0]['ref'];
         comments_submit();
         $delete_linked_comment = true;
-        return;
     });
 
     $return['data'] = $delete_linked_comment ?: deleteAnnotation($annotation, $request_ctx);

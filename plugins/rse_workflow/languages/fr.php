@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Pour modifier les états et actions du flux 
 $lang["plugin-rse_workflow-title"]='Flux de travail avancé';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Entreprise - Flux de travail';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Créer et gérer les états de flux de travail';
+$lang["rse_workflow_skip_required_fields"] = 'Lors du déplacement des ressources vers cet état de flux de travail, exclure les vérifications des champs obligatoires ?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Impossible de changer l\'état d\'archive en %%ARCHIVE%%. Métadonnées manquantes dans les champs requis : %%FIELDS%%.';

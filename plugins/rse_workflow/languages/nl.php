@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Om workflow-statussen en acties te wijzigen,
 $lang["plugin-rse_workflow-title"]='Geavanceerde Workflow';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Workflow';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Creëer en beheer workflowstatussen';
+$lang["rse_workflow_skip_required_fields"] = 'Bij het verplaatsen van middelen naar deze workflowstatus, uitsluiten van controles op vereiste velden?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Niet mogelijk om de archiefstatus te wijzigen naar %%ARCHIVE%%. Ontbrekende metadata in vereiste velden: %%FIELDS%%.';

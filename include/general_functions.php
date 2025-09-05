@@ -2499,7 +2499,7 @@ function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
 */
 function get_utility_path($utilityname, &$checked_path = null)
 {
-    global $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $antiword_path, $pdftotext_path,
+    global $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $pdftotext_path,
            $blender_path, $archiver_path, $archiver_executable, $python_path, $fits_path;
 
     $checked_path = null;
@@ -2644,20 +2644,6 @@ function get_utility_path($utilityname, &$checked_path = null)
                 return false;
             }
             return $path . " {$exiftool_global_options} ";
-
-        case 'antiword':
-            if (!isset($antiword_path) || $antiword_path === '') {
-                return false;
-            }
-
-            return get_executable_path(
-                $antiword_path,
-                [
-                    'unix' => 'antiword',
-                    'win'  => 'antiword.exe'
-                ],
-                $checked_path
-            );
 
         case 'pdftotext':
             if (!isset($pdftotext_path) || $pdftotext_path === '') {
@@ -5872,4 +5858,21 @@ function get_favicon_url(): string
     }
 
     return $favicon;
+}
+
+/**
+ *  Determine what is a manually uploaded preview based off of data in the resource log
+ * 
+ *  @param int $ref resource ID
+ * 
+ *  @return bool returns true if a resource is using its original preview otherwise false.  
+ */
+function is_original_preview ($ref) : bool {
+
+    return ps_value("SELECT resource `value` FROM resource_log rl1
+                WHERE resource = ? AND type = 'up'
+                AND NOT EXISTS (SELECT * FROM resource_log rl2 
+                                    WHERE rl1.resource = rl2.resource AND rl1.date < rl2.date
+                                    AND rl2.type IN ('t', 'f', 'u'))
+            ", ['i', $ref], '') === '';
 }

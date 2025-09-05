@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'CSV dosyası açılamıyor veya okunamı
 $lang["csv_upload_check_utf_error"] = 'CSV dosyası geçerli bir UTF-8 değil. Satırda geçersiz karakter';
 $lang["csv_upload_condition1"] = 'CSV dosyasının <b>UTF-8</b> kullanılarak kodlandığından emin olun.';
 $lang["csv_upload_check_removebom"] = 'CSV dosyası, kaldırılamayan BOM içeriyor';
+$lang["csv_upload_validating"] = 'Geçerliliği kontrol ediliyor';
+$lang["csv_upload_processing"] = 'İşleniyor';
+$lang["processing_batch_edit_save"] = '[row_number] / [rows_count] satırı';

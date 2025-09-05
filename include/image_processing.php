@@ -1567,7 +1567,7 @@ function get_colour_key($image)
 function tweak_preview_images($ref, $rotateangle, $gamma, $extension = "jpg", $alternative = -1, $resource_ext = "")
 {
     # Use the screen resolution version for processing
-    global $ffmpeg_supported_extensions;
+    global $ffmpeg_supported_extensions, $lang;
 
     $file = get_resource_path($ref, true, "scr", false, $extension, -1, 1, false, '', $alternative);
     $top = "scr";
@@ -1580,6 +1580,9 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension = "jpg", $a
     if (!file_exists($file)) {
         return false;
     }
+
+    set_processing_message(str_replace("[resource]", $ref, $lang["processing_updating_previews"]));
+
     $source = imagecreatefromjpeg($file);
     # Apply tweaks
     if ($rotateangle != 0) {
@@ -2022,7 +2025,7 @@ function upload_preview($ref)
 */
 function extract_text($ref, $extension, $path = "")
 {
-    global $extracted_text_field,$antiword_path,$pdftotext_path,$lang;
+    global $extracted_text_field,$pdftotext_path,$lang;
 
     resource_log($ref, LOG_CODE_TRANSFORMED, '', '', '', $lang['embedded_metadata_extract_option']);
 
@@ -2034,20 +2037,6 @@ function extract_text($ref, $extension, $path = "")
     if (!file_exists($path)) {
         debug("ERROR: Unable to extract text for resource $ref. The source file does not exist at: $path");
         return false;
-    }
-
-    # Microsoft Word extraction using AntiWord.
-    if ($extension == "doc" && isset($antiword_path)) {
-        $command = get_utility_path('antiword');
-        if (!$command) {
-            debug("ERROR: Antiword executable not found at '$antiword_path'");
-            return false;
-        }
-        $text = run_command(
-            "{$command} -m UTF-8 %%PATH%%",
-            false,
-            ["%%PATH%%" => new CommandPlaceholderArg($path, "is_valid_rs_path")],
-        );
     }
 
     # Microsoft OfficeOpen (docx,xlsx) extraction
@@ -2585,25 +2574,35 @@ function delete_previews($resource, $alternative = -1)
 
     $fullsizejpgpath = get_resource_path($resource, true, "", false, "jpg", -1, 1, false, "", $alternative);
     // Delete the full size original if not a JPG resource
-    if ($extension !== "" && strtolower($extension) != "jpg" && file_exists($fullsizejpgpath) && $alternative == -1) {
+    if ($extension !== "" && strtolower((string) $extension) != "jpg" && file_exists($fullsizejpgpath) && $alternative == -1) {
         unlink($fullsizejpgpath);
     }
 
     $dirinfo = pathinfo($fullsizejpgpath);
     $resourcefolder = $dirinfo["dirname"];
 
-    $presizes = ps_array("SELECT id value FROM preview_size");
-    $pagecount = get_page_count($resource_data, $alternative);
-    foreach ($presizes as $presize) {
-        for ($page = 1; $page <= $pagecount; $page++) {
-            $previewpath = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, false, "", $alternative);
-            if (file_exists($previewpath)) {
-                unlink($previewpath);
-            }
-            if ($watermark !== '') {
-                $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "", $alternative);
-                if (file_exists($wm_path)) {
-                    unlink($wm_path);
+    if (!in_array($extension, NON_PREVIEW_EXTENSIONS)) {
+        $is_original_preview = is_original_preview($resource);
+        $presizes = ps_array("SELECT id value FROM preview_size ORDER BY (height * width) DESC");
+        $pagecount = get_page_count($resource_data, $alternative);
+        foreach ($presizes as $presize) {
+            for ($page = 1; $page <= $pagecount; $page++) {
+                $previewpath = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, false, "", $alternative);
+                if (file_exists($previewpath)) {
+                    // Preserve manually uploaded previews as alt files
+                    if (!$is_original_preview && $page == 1 && in_array($presize, ['thm','col','pre','scr'])) {
+                        $alt_file = add_alternative_file($resource, '', '', '', 'jpg', filesize_unlimited($previewpath));
+                        $new_path = get_resource_path($resource, true, '', true, 'jpg', -1, 1, false, "", $alt_file);
+                        copy($previewpath, $new_path);
+                        $is_original_preview = true;
+                    }
+                    unlink($previewpath);
+                }
+                if ($watermark !== '') {
+                    $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "", $alternative);
+                    if (file_exists($wm_path)) {
+                        unlink($wm_path);
+                    }
                 }
             }
         }
@@ -3163,6 +3162,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 
     $cmd_args['%outputpath'] = new CommandPlaceholderArg($outputpath, 'is_valid_rs_path');
     $command .= $profile . ' %outputpath';
+
     run_command($command, false, $cmd_args);
 
     if (file_exists($outputpath)) {
@@ -3261,14 +3261,33 @@ function start_previews(int $ref, string $extension = ""): int
     if ($minimal_previews) {
         if (!in_array($extension, $GLOBALS["minimal_preview_creation_exclude_extensions"])) {
             // Extension hasn't been excluded from immediate preview creation
-            $success = create_previews($ref, false, $extension, false, false, -1, true, $ingested, false, $minimal_previews_sizes);
+            $success = create_previews(
+                $ref, 
+                false, 
+                in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
+                false, 
+                in_array($extension, NON_PREVIEW_EXTENSIONS), 
+                -1, 
+                true, 
+                $ingested, 
+                false, 
+                $minimal_previews_sizes
+            );
             return $success ? 2 : 0;
         }
         return 2;
     }
     // No offline preview creation - create the full set of previews immediately
     ps_query("UPDATE `resource` SET has_image = 0, preview_attempts = 0 WHERE ref = ?;", ['i', $ref]);
-    $success = create_previews($ref, false, $resource_data["file_extension"], false, false, -1, false, $ingested);
+    $success = create_previews(
+        $ref, 
+        false, 
+        in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS) ? 'jpg' : $resource_data["file_extension"],  
+        false, 
+        in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
+        -1, 
+        false, 
+        $ingested);
     return $success ? 1 : 0;
 }
 
@@ -3562,7 +3581,13 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
         return array();
     }
 
-    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile;
+    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles;
+
+    if ($imagemagick_preserve_profiles) {
+        // Don't touch the ICC profile
+        return array();
+    }
+
     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
 
     $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");
@@ -3898,7 +3923,6 @@ function create_previews_using_im(
                 $th = $o_height;
             }
 
-            # Debug
             debug("Contemplating " . $ps[$n]["id"] . " (sw=$sw, tw=$tw, sh=$sh, th=$th, extension=$extension)");
 
             # Find the target path
@@ -4179,7 +4203,6 @@ function create_previews_using_im(
                                     $mpr_parts[] = escape_command_args($command, $cmdparams);
                                 }
                             } else {
-                                $command .=  " %%TARGET%% ";
                                 $command = str_replace("[WATERMARK_INSERT]", $watermarkcode, $command);
                                 run_command($command, false, $cmdparams);
                             }

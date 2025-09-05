@@ -182,6 +182,10 @@ if ($input_is_file)
             }
 
         $updated = openai_gpt_update_field($resource, $targetfield_data, array(), $path_to_file);
+        if (isset($updated[$resource]))
+            {
+            $updated = $updated[$resource];
+            }
         if($updated)
             {
             $arr_success[] = $resource;
@@ -218,10 +222,21 @@ else
         flush();ob_flush();
         $strings = ($nodehash != "BLANK" && count($nodegroup["nodes"]) > 0) ? get_node_strings($nodegroup["nodes"]) : [];
         $updated = openai_gpt_update_field($nodegroup["resources"],$targetfield_data,$strings);
-        if($updated)
+        if (is_array($updated))
             {
-            $arr_success = array_merge($arr_success,$nodegroup["resources"]);
-            echo " - SUCCESS\n";
+            foreach ($updated as $update_ref => $update_result)
+                {
+                if ($update_result)
+                    {
+                    $arr_success = array_merge($arr_success, array($update_ref));
+                    echo "$update_ref - SUCCESS\n";
+                    }
+                else
+                    {
+                    $arr_failure = array_merge($arr_failure, array($update_ref));
+                    echo "$update_ref - ERROR\n";
+                    }
+                }
             }
         else
             {

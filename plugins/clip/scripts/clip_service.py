@@ -26,17 +26,22 @@ parser.add_argument("--host", default="0.0.0.0", help="Host to run on")
 parser.add_argument("--port", type=int, default=8000, help="Port to run on")
 args = parser.parse_args()
 
-if not args.dbuser:
-    args.dbuser = input("Enter MySQL username (or use --dbuser): ")
+# Prefer environment variables if set
+db_user = os.getenv("CLIP_DB_USER", args.dbuser)
+db_pass = os.getenv("CLIP_DB_PASS", args.dbpass)
 
-if not args.dbpass:
-    args.dbpass = getpass.getpass("Enter MySQL password (or use --dbpass): ")
+# Fall back to prompts if still not set
+if not db_user:
+    db_user = input("Enter MySQL username (or set CLIP_DB_USER / use --dbuser): ")
+
+if not db_pass:
+    db_pass = getpass.getpass("Enter MySQL password (or set CLIP_DB_PASS / use --dbpass): ")
 
 # Global DB credentials (used later)
 DB_CONFIG = {
     "host": "localhost",
-    "user": args.dbuser,
-    "password": args.dbpass
+    "user": db_user,
+    "password": db_pass
 }
 
 # Set up FastAPI app and in-memory cache

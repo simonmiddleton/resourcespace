@@ -154,12 +154,15 @@ if($results_error !== "")
     <?php
     }
 
+
 foreach($results as $result)
     {
     $title = $result->getTitle();
     $image_data = array(
+        "ref"          => $result->getId(),
         "thumb_width"  => $result->getPreviewWidth(),
         "thumb_height" => $result->getPreviewHeight(),
+        "blurhash"     => "",
         "field{$view_title_field}" => $title,
     );
 

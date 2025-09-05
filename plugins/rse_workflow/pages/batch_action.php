@@ -123,9 +123,6 @@ foreach ($resources as $resource) {
     }
 }
 
-if (count($missing_required_fields) > 0) {
-    $lang["error-edit_status_change_missing_required_fields"] . '<br> ' . implode(', ', array_keys($missing_required_fields));
-}
 $affected_resources_count = count($affected_resources);
 
 if($ajax && $process_action)

@@ -1,4 +1,5 @@
 <?php
+
 // EMu Constants:
 define('EMU_SCRIPT_MODE_IMPORT', 100);
 define('EMU_SCRIPT_MODE_SYNC', 1000);
@@ -52,6 +53,6 @@ $emu_rs_saved_mappings['emultimedia']['ChaAspectRatio'] = 32;
 */
 $emu_rs_saved_mappings = plugin_encode_complex_configs([]);
 
-// Modifying plugin configs requires bypassing the check for "modifiedTimeStamp" and forces 
+// Modifying plugin configs requires bypassing the check for "modifiedTimeStamp" and forces
 // ResourceSpace to get all records again so that newly added columns will be updated
 $emu_config_modified_timestamp = null;

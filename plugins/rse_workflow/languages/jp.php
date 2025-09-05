@@ -57,3 +57,5 @@ $lang["rse_workflow_state_notify_help"]='ユーザーは、この状態のリソ
 $lang["plugin-rse_workflow-title"]='高度なワークフロー';
 $lang["plugin-rse_workflow-desc"]='ResourceSpaceエンタープライズ - ワークフロー';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'ワークフローステートを作成および管理する';
+$lang["rse_workflow_skip_required_fields"] = 'このワークフローステートにリソースを移動する際、必須フィールドチェックを除外しますか？';
+$lang["rse_workflow_state_change_failed_required_fields"] = '%%ARCHIVE%%にアーカイブ状態を変更できません。必要なフィールドにメタデータが不足しています: %%FIELDS%%。';

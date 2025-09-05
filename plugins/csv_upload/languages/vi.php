@@ -70,3 +70,6 @@ $lang["csv_upload_check_file_error"] = 'Tệp CSV không thể được mở ho�
 $lang["csv_upload_check_utf_error"] = 'Tệp CSV không phải là UTF-8 hợp lệ. Ký tự không hợp lệ ở dòng';
 $lang["csv_upload_condition1"] = 'Hãy chắc chắn rằng tệp CSV được mã hóa bằng <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'Tệp CSV có BOM mà không thể xóa được';
+$lang["csv_upload_validating"] = 'Xác thực';
+$lang["csv_upload_processing"] = 'Đang xử lý';
+$lang["processing_batch_edit_save"] = 'hàng [row_number] của [rows_count]';

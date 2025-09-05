@@ -28,7 +28,13 @@ $add_header = isset($bind_placeholders['contactsheet_header']) && ($bind_placeho
 <page
     <?php
     if ($add_header) {
-        echo ' backtop="25mm"';
+        if($bind_placeholders['contact_sheet_include_applicationname']
+                && isset($bind_placeholders['add_contactsheet_logo']) 
+                && strlen($applicationname) > 23 ) {
+            echo ' backtop="30mm"';
+        } else {
+            echo ' backtop="25mm"';
+        }
     }
     if (isset($bind_placeholders['contact_sheet_footer'])) {
         echo ' backbottom="25mm"';
@@ -43,20 +49,22 @@ if($add_header)
         <table cellspacing="0" style="width: 100%;">
             <tr>
                 <?php
-            	if($bind_placeholders['contact_sheet_include_applicationname'])
-                	{
-                	?>
-                	<td style="width: 60%;">
+            	if($bind_placeholders['contact_sheet_include_applicationname']) {  
+                    if (isset($bind_placeholders['add_contactsheet_logo'])) {
+                        echo '<td style="width: 60%;">';
+                    } else {
+                        echo '<td style="width: 100%;">';
+                    }
+                    ?>                	
                 		<h1><?php echo escape($applicationname); ?></h1>
                 	</td>
-                	<?php
-                	}
-            if(isset($bind_placeholders['add_contactsheet_logo']))
-                {
+                <?php
+                }
+                if(isset($bind_placeholders['add_contactsheet_logo'])) {
                 ?>
-                <td style="width: 40%;" align=right>
-                    <img id="logo" src="<?php echo $bind_placeholders['contact_sheet_logo']; ?>" alt="Logo" <?php if(isset($bind_placeholders['column_width_resize']) && $bind_placeholders['column_width_resize']){ ?> style="width:100%;height:auto;"<?php } ?>>
-                </td>
+                    <td style="width: 40%;" align=right>
+                        <img id="logo" src="<?php echo $bind_placeholders['contact_sheet_logo']; ?>" alt="Logo" <?php if(isset($bind_placeholders['column_width_resize']) && $bind_placeholders['column_width_resize']){ ?> style="width:100%;height:auto;"<?php } ?>>
+                    </td>
                 <?php
                 }
                 ?>

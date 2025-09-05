@@ -4,6 +4,10 @@ if (is_null($value)) {
 }
 
 $valid_date = validateDatetime($value, 'Y-m-d') || trim($value) === '';
+if (!$valid_date && trim($value) !== '') {
+    $value = substr($value, 0, 10);
+    $valid_date = validateDatetime($value, 'Y-m-d');
+}
 
 if ($GLOBALS['use_native_input_for_date_field'] && $valid_date) {
     $onchange_attr = $edit_autosave ? sprintf('onchange="AutoSave(%s);"', (int) $field['ref']) : '';

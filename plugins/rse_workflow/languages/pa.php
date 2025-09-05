@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"]='ਨੋਟਸ:';
 $lang["rse_workflow_email_from"]='ਸੂਚਨਾ ਭੇਜਣ ਲਈ ਈਮੇਲ ਪਤਾ (ਜੇ ਖਾਲੀ ਹੋਵੇ ਤਾਂ %EMAILFROM% ਵਰਤਿਆ ਜਾਵੇਗਾ):';
 $lang["rse_workflow_bcc_admin"]='ਯਦੋਂ ਯੋਗਦਾਨਕਰਤਾ ਨੂੰ ਸੂਚਿਤ ਕੀਤਾ ਜਾਂਦਾ ਹੈ ਤਾਂ ਪ੍ਰਣਾਲੀ ਪ੍ਰਸ਼ਾਸਕਾਂ ਨੂੰ ਸੂਚਿਤ ਕਰੋ।';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'ਵਰਕਫਲੋ ਸਟੇਟ ਬਣਾਓ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰੋ';
+$lang["rse_workflow_skip_required_fields"] = 'ਜਦੋਂ ਸਰੋਤਾਂ ਨੂੰ ਇਸ ਵਰਕਫਲੋ ਸਟੇਟ ਵਿੱਚ ਹਿਲਾਇਆ ਜਾ ਰਿਹਾ ਹੈ, ਕੀ ਲੋੜੀਂਦੇ ਖੇਤਰ ਦੀ ਜਾਂਚਾਂ ਤੋਂ ਬਾਹਰ ਰੱਖਣਾ ਹੈ?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'ਆਰਕਾਈਵ ਦੀ ਸਥਿਤੀ ਨੂੰ %%ARCHIVE%% ਵਿੱਚ ਬਦਲਣ ਵਿੱਚ ਅਸਮਰੱਥ। ਲੋੜੀਂਦੇ ਖੇਤਰਾਂ ਵਿੱਚ ਮੈਟਾਡੇਟਾ ਗੁੰਮ ਹੈ: %%FIELDS%%.';

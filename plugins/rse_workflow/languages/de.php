@@ -57,3 +57,5 @@ $lang["rse_workflow_introduction"]='Um Workflow-Zustände und -Aktionen zu ände
 $lang["plugin-rse_workflow-title"]='Erweiterter Workflow';
 $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Arbeitsablauf';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Workflow-Zustände erstellen und verwalten';
+$lang["rse_workflow_skip_required_fields"] = 'Beim Verschieben von Ressourcen in diesen Workflow-Zustand, von Überprüfungen der erforderlichen Felder ausschließen?';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'Kann den Archivstatus nicht auf %%ARCHIVE%% ändern. Fehlende Metadaten in den erforderlichen Feldern: %%FIELDS%%.';

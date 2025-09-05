@@ -90,7 +90,7 @@ function vector_visualise(array $vector): string
  *
  * @param int $ref The resource ID for which to generate the vector.
  *
- * @return bool        Returns the true on success, or false on failure (e.g., file missing or vector generation error).
+ * @return bool        Returns true on success, or false on failure (e.g., file missing or vector generation error).
  */
 function clip_generate_vector($ref) : bool
 {

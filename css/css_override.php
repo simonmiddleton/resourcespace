@@ -83,6 +83,13 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .icondisplay {
             background-color: #545454;
         }
+        .toastify {
+            background: #383838 !important;
+            color: white;
+        }
+        .toast-close {
+            color: white; 
+        }
         .update_result_order_button {
             background-color: #545454;
         }

@@ -12,7 +12,7 @@ function HookImage_textViewDownloadbuttonreplace()
             {   
             ?>          
             
-            <a id="downloadlink" style="margin-bottom:5px" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
+            <a id="downloadlink-no-caption" style="margin-bottom:5px" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
                                     echo urlencode($search) ?>&k=<?php echo urlencode($k)?>&url=<?php
                                     echo urlencode("pages/download_progress.php?ref=" . $ref . "&ext=" . $altfiles[$n]["file_extension"] . "&k=" . $k . "&search=" . urlencode($search)
                                     . "&offset=" . $offset . "&alternative=" . $altfiles[$n]["ref"] . "&archive=" . $archive . "&sort=".$sort."&order_by="
@@ -23,7 +23,7 @@ function HookImage_textViewDownloadbuttonreplace()
             {
             if(isset($size_info["extension"])){$dlext=$size_info["extension"];}else{$dlext=$resource["file_extension"];}
                 
-            ?><a id="downloadlink" style="margin-bottom:5px" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
+            ?><a id="downloadlink-no-caption" style="margin-bottom:5px" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
             echo urlencode($search) ?>&k=<?php echo urlencode($k)?>&url=<?php
                         echo urlencode("pages/download_progress.php?ref=" . $ref . "&size=" . $size_info["id"]
             . "&ext=" . $dlext . "&k=" . $k . "&search=" . urlencode($search)

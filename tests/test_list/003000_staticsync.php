@@ -16,6 +16,12 @@ if (isset($unoconv_path)) {
 $saved_alternative_file_previews = $alternative_file_previews;
 $saved_enable_thumbnail_creation_on_upload = $enable_thumbnail_creation_on_upload;
 
+// Ensure the environment configuration isn't preventing other use cases from passing (e.g. test A)
+if (isset($staticsync_file_minimum_age)) {
+    $saved_staticsync_file_minimum_age = $staticsync_file_minimum_age;
+    unset($staticsync_file_minimum_age);
+}
+
 // Command line args are used by staticsync so need to save them
 $savedargv = $argv;
 $savedargc = $argc;
@@ -256,5 +262,10 @@ if (isset($unoconv_path)) {
 }
 $alternative_file_previews = $saved_alternative_file_previews;
 $enable_thumbnail_creation_on_upload = $saved_enable_thumbnail_creation_on_upload;
+
+if (isset($saved_staticsync_file_minimum_age)) {
+    $staticsync_file_minimum_age = $saved_staticsync_file_minimum_age;
+    unset($saved_staticsync_file_minimum_age);
+}
 
 return true;

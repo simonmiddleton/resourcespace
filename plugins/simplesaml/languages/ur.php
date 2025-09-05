@@ -87,3 +87,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'IdP سرٹیفکیٹ کی میعا�
 
 $lang["simplesaml_use_www_label"] = 'کیا "www" راستے کے لیے SP میٹاڈیٹا کی درخواستوں کی اجازت دیں؟ (جھوٹا کرنے سے IdP کو SP میٹاڈیٹا کا دوبارہ تبادلہ کرنے کی ضرورت ہوگی)';
 $lang["simplesaml_use_www_error"] = '[Warning] پلگ ان پرانے "www" راستوں کا استعمال کر رہا ہے۔ اگر یہ ایک نیا سیٹ اپ ہے تو اسے ابھی تبدیل کریں! بصورت دیگر، IdP ایڈمن کے ساتھ ہم آہنگی کریں تاکہ وہ SP میٹا ڈیٹا کو مناسب طریقے سے اپ ڈیٹ کر سکیں۔';
+$lang["simplesaml_config_source_label"] = 'IdP کنفیگریشن ماخذ منتخب کریں';
+$lang["simplesaml_config_source_url"] = 'میٹاڈیٹا یو آر ایل (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'ResourceSpace کی تشکیل کی فائل (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'مقامی SAML کنفیگریشن فائلیں (ورثے)';
+$lang["simplesaml_update_metadata_now"] = 'ابھی اپ ڈیٹ کریں';
+$lang["simplesaml_update_metadata_error"] = 'میٹا ڈیٹا \'%error%\' کو تجزیہ کرنے میں ناکام - میٹا ڈیٹا URL چیک کریں';
+$lang["simplesaml_update_metadata_invalid_response"] = 'غلط جواب URL سے: \'%error%\' - میٹا ڈیٹا URL چیک کریں';
+$lang["simplesaml_update_metadata_parse_error"] = 'میٹا ڈیٹا حاصل کرنے میں ناکامی: \'%error%\' - میٹا ڈیٹا URL چیک کریں';
+$lang["simplesaml_metadata_updates"] = 'سادہSAML میٹاڈیٹا کی تازہ کاری';
+$lang["simplesaml_metadata_warning"] = 'میٹاڈیٹا کو %date% کے بعد اپ ڈیٹ نہیں کیا گیا';
+$lang["simplesaml_metadata_invalid"] = 'IdP میٹاڈیٹا غلط یا دستیاب نہیں ہے';
+$lang["simplesaml_admin_password_reset"] = 'سادہ SAML ٹیسٹ سائٹ کے ایڈمن پاس ورڈ کو دوبارہ ترتیب دیں (اختیاری)';

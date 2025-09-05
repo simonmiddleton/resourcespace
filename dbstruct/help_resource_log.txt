@@ -10,3 +10,4 @@ diff,mediumtext,Diff between old value and new one
 usageoption,int(11),The resource download usage option
 access_key,char(50),External access key (added/deleted)
 previous_value,longtext,The original value - before the change being logged.
+alt_ref,int(11),Reference of alternative file, if present. 

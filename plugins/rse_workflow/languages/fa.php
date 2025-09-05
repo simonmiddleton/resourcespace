@@ -55,3 +55,5 @@ $lang["rse_workflow_more_notes_title"]='یادداشت‌ها:';
 $lang["rse_workflow_email_from"]='آدرس ایمیلی که اعلان از آن ارسال می‌شود (در صورت خالی بودن از %EMAILFROM% استفاده خواهد شد):';
 $lang["rse_workflow_bcc_admin"]='هنگامی که به مشارکت‌کننده اطلاع داده می‌شود، به مدیران سیستم اطلاع دهید';
 $lang["rse_workflow_manage_workflow-tooltip"] = 'ایجاد و مدیریت وضعیت‌های گردش کار';
+$lang["rse_workflow_skip_required_fields"] = 'هنگام انتقال منابع به این وضعیت گردش کار، آیا از بررسی فیلدهای الزامی مستثنی شود؟';
+$lang["rse_workflow_state_change_failed_required_fields"] = 'نمی‌توان وضعیت آرشیو را به %%ARCHIVE%% تغییر داد. متادیتا در فیلدهای مورد نیاز وجود ندارد: %%FIELDS%%.';

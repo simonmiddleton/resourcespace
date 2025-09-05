@@ -44,3 +44,8 @@ $lang["offline_archive_resource_restore"]='Ripristina risorse';
 $lang["plugin-offline_archive-title"]='Archivio Offline';
 $lang["plugin-offline_archive-desc"]='Consente il trasferimento dei file archiviati in una posizione offline';
 $lang["offline_archive_administer_archive-tooltip"] = 'Spostare i file archiviati in una posizione offline';
+$lang["offline_archive_statustype"] = array (
+  0 => 'In attesa',
+  1 => 'In corso',
+  2 => 'Completato',
+);

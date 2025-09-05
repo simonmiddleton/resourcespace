@@ -3,6 +3,7 @@
 // Do the include and authorization checking ritual
 include '../../../include/boot.php';
 include '../../../include/authenticate.php';
+
 if (!checkperm('a')) {
     exit($lang['error-permissiondenied']);
 }
@@ -20,7 +21,6 @@ $page_def[] = config_add_percent_range("faces_match_threshold", $lang["faces-mat
 $page_def[] = config_add_percent_range("faces_tag_threshold", $lang["faces-tag-threshold"]);
 
 $page_def[] = config_add_single_ftype_select("faces_tag_field", $lang["faces-tag-field"], 300, false, [FIELD_TYPE_DYNAMIC_KEYWORDS_LIST]);
-
 
 $page_def[] = config_add_boolean_select("faces_detect_on_upload", $lang["faces-detect-on-upload"]);
 $page_def[] = config_add_boolean_select("faces_tag_on_upload", $lang["faces-tag-on-upload"]);

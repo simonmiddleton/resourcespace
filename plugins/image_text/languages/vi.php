@@ -16,3 +16,12 @@ $lang["image_text_position"] = 'Vị trí của văn bản trong biểu ngữ.';
 $lang["image_text_banner_position"] = 'Vị trí của banner so với hình ảnh.';
 $lang["image_text_font"] = 'Phông chữ để sử dụng, phải được hỗ trợ bởi phiên bản imagemagick đã cài đặt';
 $lang["image_text_noim"] = 'Plugin này yêu cầu phải cài đặt Imagemagick.';
+$lang["image_text_position_list"] = (object) array(
+   'west' => 'tây',
+   'center' => 'trung tâm',
+   'east' => 'đông',
+);
+$lang["image_text_banner_position_list"] = (object) array(
+   'top' => 'trên',
+   'bottom' => 'dưới',
+);

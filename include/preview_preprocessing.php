@@ -9,7 +9,7 @@
 use Montala\ResourceSpace\CommandPlaceholderArg;
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace,
-$ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip,
+$ghostscript_path, $pdf_pages, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip,
 $ffmpeg_audio_extensions, $ffmpeg_audio_params,$ffmpeg_supported_extensions, $ffmpeg_global_options,
 $ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif, $debug_log, $debug_log_override;
 
@@ -360,7 +360,7 @@ if (in_array($extension, $unoconv_extensions) && $extension != 'pdf' && isset($u
         }
     } else {
         debug("Preview preprocessing: Attempt to create previews with Unoconv for ref $ref failed.");
-        $using_unoconv = false; // Try and use e.g. Antiword
+        $using_unoconv = false;
     }
 }
 
@@ -465,42 +465,6 @@ if ($extension == "blend" && isset($blender_path) && !isset($newfile)) {
         copy($target . "0001.jpg", "$target");
         unlink($target . "0001.jpg");
         $newfile = $target;
-    }
-}
-
-/* ----------------------------------------
-    Microsoft Word previews using Antiword
-    (note: this is very basic)
-   ----------------------------------------
-*/
-if (!$using_unoconv && $extension == "doc" && isset($antiword_path) && isset($ghostscript_path) && !isset($newfile)) {
-    $command = get_utility_path('antiword');
-    if (!$command) {
-        debug("Antiword executable not found at '$antiword_path'");
-        $preview_preprocessing_success = false;
-        return;
-    }
-    $output = run_command(
-        "{$command} -p a4 %file > %target",
-        false,
-        [
-            '%file' => $file,
-            '%target' => "{$target}.ps",
-        ]
-    );
-
-    if (file_exists($target . ".ps") && filesize($target . ".ps") > 0) {
-        # Postscript file exists
-        $gscommand = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=jpeg -r150 -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=1 -dLastPage=1 -dEPSCrop " . escapeshellarg($target . ".ps");
-        $output = run_command($gscommand);
-
-        if (file_exists($target)) {
-            # A JPEG was created. Set as the file to process.
-            $newfile = $target;
-        }
-    } else {
-        $preview_preprocessing_success = false;
-        return;
     }
 }
 
@@ -932,51 +896,53 @@ if ((!isset($newfile)) && (!in_array($extension, array_merge($ffmpeg_audio_exten
 
                 # Add a watermarked image too?
                 global $watermark, $watermark_single_image;
-                if (!hook("replacewatermarkcreation", "", array($ref,$size,$n,$alternative))) {
-                    if ($watermark !== '' && $alternative == -1) {
-                        $wmpath = get_resource_path($ref, true, $size, false, "", -1, $n, true, "", $alternative);
-                        if (file_exists($wmpath)) {
-                            unlink($wmpath);
-                        }
+                if (
+                    !hook("replacewatermarkcreation", "", array($ref,$size,$n,$alternative))
+                    && $watermark !== '' 
+                    && $alternative == -1
+                ) {
+                    $wmpath = get_resource_path($ref, true, $size, false, "", -1, $n, true, "", $alternative);
+                    if (file_exists($wmpath)) {
+                        unlink($wmpath);
+                    }
 
-                        if (!isset($watermark_single_image)) {
-                            // Watermark is tiled
-                            $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $imagemagick_quality -resize "
-                            . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermark)
-                            . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($wmpath);
-                            $output = run_command($command2);
+                    if (!isset($watermark_single_image)) {
+                        // Watermark is tiled
+                        $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $imagemagick_quality -resize "
+                        . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermark)
+                        . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($wmpath);
+                        $output = run_command($command2);
+                    } else {
+                        // Watermark is a single image
+                        // The watermark geometry will be based on the shortest scr dimension scaled to the configured percentage
+                        $wm_scale = $watermark_single_image['scale'] / 100;
+
+                        if ($scr_width < $scr_height) {
+                            // Portrait; scaled length is based on width
+                            $wm_scaled_length = $scr_width * $wm_scale;
+                            $wm_geometry = "x{$wm_scaled_length}+0+0";
+                        } elseif ($scr_width > $scr_height) {
+                            // Landscape; scaled length is based on height
+                            $wm_scaled_length = $scr_height * $wm_scale;
+                            $wm_geometry = "{$wm_scaled_length}x+0+0";
                         } else {
-                            // Watermark is a single image
-                            // The watermark geometry will be based on the shortest scr dimension scaled to the configured percentage
-                            $wm_scale = $watermark_single_image['scale'] / 100;
-
-                            if ($scr_width < $scr_height) {
-                                // Portrait; scaled length is based on width
-                                $wm_scaled_length = $scr_width * $wm_scale;
-                                $wm_geometry = "x{$wm_scaled_length}+0+0";
-                            } elseif ($scr_width > $scr_height) {
-                                // Landscape; scaled length is based on height
-                                $wm_scaled_length = $scr_height * $wm_scale;
-                                $wm_geometry = "{$wm_scaled_length}x+0+0";
-                            } else {
-                                // Square; scaled length can be based on width or height; using width is purely arbitrary
-                                $wm_scaled_length = $scr_width * $wm_scale;
-                                $wm_geometry = "x{$wm_scaled_length}+0+0";
-                            }
-
-                            $command2_wm = sprintf(
-                                '%s %s[0] -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
-                                $convert_fullpath,
-                                escapeshellarg($target),
-                                escapeshellarg($watermark),
-                                escapeshellarg($watermark_single_image['position']),
-                                escapeshellarg("{$wm_geometry}"),
-                                escapeshellarg("{$scr_width}x{$scr_height}"),
-                                escapeshellarg($wmpath)
-                            );
-
-                            $output = run_command($command2_wm);
+                            // Square; scaled length can be based on width or height; using width is purely arbitrary
+                            $wm_scaled_length = $scr_width * $wm_scale;
+                            $wm_geometry = "x{$wm_scaled_length}+0+0";
                         }
+
+                        $command2_wm = sprintf(
+                            '%s %s[0] -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
+                            $convert_fullpath,
+                            escapeshellarg($target),
+                            escapeshellarg($watermark),
+                            escapeshellarg($watermark_single_image['position']),
+                            escapeshellarg("{$wm_geometry}"),
+                            escapeshellarg("{$scr_width}x{$scr_height}"),
+                            escapeshellarg($wmpath)
+                        );
+
+                        $output = run_command($command2_wm);
                     }
                 }
 

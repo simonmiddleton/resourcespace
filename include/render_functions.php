@@ -2555,7 +2555,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         else
             {?>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end-y"><?php echo escape($lang["year"]); ?></label>
-            <input size="5" name="<?php echo escape($name) ?>_start-y" id="<?php echo escape($name) ?>_start-y" type="text" value="<?php echo $found_start_year ?>"
+            <input size="5" name="<?php echo escape($name) ?>_start-y" id="<?php echo escape($name) ?>_start-y" type="text" value="<?php echo escape($found_start_year) ?>"
                 <?php 
                 if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -6992,7 +6992,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                                 }
                             else
                                 {
-                                echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ', this)"';
+                                echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ', this); toastNotification(\'download\', \'' . escape($lang["downloadinprogress"]) . '\');"';
                                 }
                             }
                         ?>>
@@ -7573,6 +7573,8 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     <tr class="DownloadDBlend">
         <td class="DownloadFileName Picker"><?php $render($use_selector); ?></td>
         <td class="DownloadButton">
+            <?php
+            if(!hook("downloadbuttonreplace"))  {?> 
             <a id="<?php echo escape($ns); ?>downloadlink" onclick="return CentralSpaceLoad(this, true);"><?php
                 echo escape($GLOBALS['lang']['action-download']);
             ?></a>
@@ -7583,6 +7585,8 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
                 data-viewsize=""
                 data-viewsizeurl=""
             ><?php echo escape($GLOBALS['lang']["action-view"]); ?></a>
+            <?php
+        }?>
         </td>
     </tr>
     <script>
@@ -7618,4 +7622,22 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     <?php hook('append_to_resource_tools_size_download_options_script', '', [$ns, $allowed_sizes, $resource]); ?>
     </script>
 <?php
+}
+
+
+/**
+ * Adds script to display toast notification. Note: Must be included after header.php.
+ *
+ * @param  string  $type      Options are: 'success' or 'failure'. Determines toast notification icon.
+ * @param  string  $message   Notification text to display.
+ */
+function toast_notification(string $type, string $message): void
+{
+    $type_escaped = escape($type);
+    $message_escaped = escape($message);
+    ?>
+    <script>
+    toastNotification(<?php echo "'{$type_escaped}', '{$message_escaped}'"; ?>);
+    </script>
+    <?php
 }

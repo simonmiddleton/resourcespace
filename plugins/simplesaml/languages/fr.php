@@ -89,3 +89,15 @@ $lang["simplesaml_check_idp_cert_expiry"] = 'Vérifier l\'expiration du certific
 
 $lang["simplesaml_use_www_label"] = 'Autoriser les demandes de métadonnées SP pour le chemin "www" ? (changer en faux nécessitera que l\'IdP rééchange les métadonnées SP)';
 $lang["simplesaml_use_www_error"] = 'Avertissement ! Le plugin utilise les anciennes routes "www". Si c\'est une nouvelle installation, changez-le maintenant ! Sinon, coordonnez-vous avec l\'administrateur de l\'IdP afin qu\'il puisse mettre à jour les métadonnées du SP en conséquence.';
+$lang["simplesaml_config_source_label"] = 'Sélectionnez la source de configuration de l\'IdP';
+$lang["simplesaml_config_source_url"] = 'URL des métadonnées (XML)';
+$lang["simplesaml_config_source_rs_config"] = 'Fichier de configuration ResourceSpace (config.php)';
+$lang["simplesaml_config_source_legacy"] = 'Fichiers de configuration SAML locaux (hérités)';
+$lang["simplesaml_update_metadata_now"] = 'Mettre à jour maintenant';
+$lang["simplesaml_update_metadata_error"] = 'Impossible d\'analyser les métadonnées \'%error%\' - vérifiez l\'URL des métadonnées';
+$lang["simplesaml_update_metadata_invalid_response"] = 'Réponse invalide de l\'URL : \'%error%\' - vérifiez l\'URL des métadonnées';
+$lang["simplesaml_update_metadata_parse_error"] = 'Impossible de récupérer les métadonnées : \'%error%\' - vérifiez l\'URL des métadonnées';
+$lang["simplesaml_metadata_updates"] = 'Mises à jour des métadonnées SimpleSAML';
+$lang["simplesaml_metadata_warning"] = 'Les métadonnées n\'ont pas été mises à jour depuis %date%';
+$lang["simplesaml_metadata_invalid"] = 'Métadonnées IdP invalides ou indisponibles';
+$lang["simplesaml_admin_password_reset"] = 'Réinitialiser le mot de passe de l\'administrateur du site de test SimpleSAML (optionnel)';

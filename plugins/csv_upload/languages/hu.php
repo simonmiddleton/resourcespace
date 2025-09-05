@@ -70,3 +70,6 @@ $lang["csv_upload_check_file_error"] = 'A CSV fájl nem nyitható meg vagy olvas
 $lang["csv_upload_check_utf_error"] = 'A CSV fájl nem érvényes UTF-8. Érvénytelen karakter a soron';
 $lang["csv_upload_condition1"] = 'Győződjön meg arról, hogy a CSV fájl <b>UTF-8</b> kódolással készült.';
 $lang["csv_upload_check_removebom"] = 'A CSV fájl BOM-ot tartalmaz, amelyet nem sikerült eltávolítani';
+$lang["csv_upload_validating"] = 'Érvényesítés';
+$lang["csv_upload_processing"] = 'Feldolgozás';
+$lang["processing_batch_edit_save"] = 'sor [row_number] a [rows_count]-ból';

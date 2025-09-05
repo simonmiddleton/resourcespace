@@ -75,6 +75,10 @@ $lang = $langsaved;
 $language = $languagesaved;
 
 include "../../include/header.php";
+
+if ($save != '') {
+    toast_notification('success', $lang['saved']);
+}
 ?>
 
 <div class="BasicsBox">

@@ -42,3 +42,8 @@ $lang["offline_archive_resource_log_restore_removed"] = 'Nakanselang ibalik mula
 $lang["offline_archive_resource_log_restore_request"] = 'Hiniling na ibalik mula sa archive';
 $lang["offline_archive_resource_restore"] = 'Ibalik ang mga yaman';
 $lang["offline_archive_administer_archive-tooltip"] = 'Ilipat ang mga na-archive na file sa isang offline na lokasyon';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Naka-pending',
+  1 => 'Nasa proseso',
+  2 => 'Kumpleto',
+);
