@@ -32,7 +32,7 @@ $simplesaml_multiple_email_notify = "";
 $simplesaml_authorisation_claim_name = '';
 $simplesaml_authorisation_claim_value = '';
 
-$simplesaml_rsconfig = 2;
+$simplesaml_rsconfig = 1;
 $simplesaml_check_idp_cert_expiry = true;
 
 /*
