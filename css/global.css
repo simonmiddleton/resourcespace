@@ -1611,6 +1611,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 .context-menu-row {
     padding: 5px;
     width: -webkit-fill-available;
+    width: -moz-available;
     border-radius: 4px;
     text-align: left;
     background-color: unset;
