@@ -418,7 +418,7 @@ $lang["statusandrelationships"] = "Status e Relacionamentos";
 
 
 # Lists
-$lang["months"] = array("Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro");
+$lang["months_list"] = array("Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro");
 
 
 
@@ -2663,7 +2663,6 @@ $lang["ratingthankyou"] = 'Obrigado pela sua avaliação.';
 $lang["setup-download_filename_format"] = 'Formato do nome do arquivo para download';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' ou \'ssl\'. Para o Gmail, \'tls\' ou \'ssl\' é necessário.';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'O mapa abaixo mostra recursos do resultado da pesquisa que têm uma geolocalização associada. A cor do marcador é definida pelo tipo de recurso ou por um campo de metadados personalizado (chave abaixo do mapa). Quando os marcadores se sobrepõem a outros marcadores, é usado um agrupamento de cor verde com um número indicando a quantidade de marcadores agrupados, aproxime o zoom ou clique duas vezes em um grupo. Clique em um marcador individual para carregar um popup para esse recurso mostrando uma imagem de pré-visualização. Clique na imagem de pré-visualização para carregar uma janela para esse recurso. Passe o cursor sobre um marcador individual para ver as geocoordenadas. Mude o mapa base usando o botão no canto superior direito do mapa. Salve o mapa em um arquivo PNG usando o botão no canto inferior esquerdo do mapa.';
 $lang["geolocate_collection_map_text"] = 'O mapa abaixo mostra recursos desta coleção que têm uma geolocalização associada a eles. A cor do marcador é definida pelo tipo de recurso ou por um campo de metadados personalizado (chave abaixo do mapa). Quando os marcadores se sobrepõem a outros marcadores, é usado um agrupamento de cor verde com um número indicando a quantidade de marcadores agrupados; amplie ou clique duas vezes em um grupo. Clique em um marcador individual para carregar um popup para esse recurso mostrando uma imagem de pré-visualização. Clique na imagem de pré-visualização para carregar uma janela para esse recurso. Passe o mouse sobre um marcador individual para ver as coordenadas geográficas. Altere o mapa base usando o botão no canto superior direito do mapa. Salve o mapa em um arquivo PNG usando o botão no canto inferior esquerdo do mapa.';
 $lang["map_osmfrance"] = 'OSM França';

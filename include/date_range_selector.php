@@ -70,7 +70,7 @@
         <select name="<?php echo $name?>-m">
             <?php for ($m = 1; $m <= 12; $m++) { ?>
                 <option <?php echo ($m == $dm) ? "selected" : ''; ?> value="<?php echo sprintf("%02d", $m)?>">
-                    <?php echo escape($lang["months"][$m - 1]); ?>
+                    <?php echo escape($lang["months_list"][$m - 1]); ?>
                 </option>
             <?php } ?>
         </select>
@@ -100,7 +100,7 @@
         <select name="<?php echo $name?>-m">
             <?php for ($m = 1; $m <= 12; $m++) { ?>
                 <option <?php echo ($m == $dm) ? "selected" : ''; ?> value="<?php echo sprintf("%02d", $m)?>">
-                    <?php echo escape($lang["months"][$m - 1]); ?>
+                    <?php echo escape($lang["months_list"][$m - 1]); ?>
                 </option>
             <?php } ?>
         </select>

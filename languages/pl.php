@@ -397,7 +397,7 @@ $lang["access3"] = "Własne";
 $lang["statusandrelationships"] = "Status i relacje";
 
 # Lists
-$lang["months"] = array("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień");
+$lang["months_list"] = array("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Zapisz wyszukane elementy do kolekcji";
@@ -2345,7 +2345,6 @@ $lang["email_error_user_list_some_skipped"] = 'Pominięto powiadomienia dla nast
 $lang["unrelateallresources"] = 'Usuń powiązania wszystkich zasobów w tej kolekcji';
 $lang["unrelateallresources_confirmation"] = 'Żaden z zasobów w tej kolekcji nie jest teraz powiązany';
 $lang["setup-download_filename_format"] = 'Format nazwy pliku do pobrania';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'Poniższa mapa pokazuje zasoby z wyników wyszukiwania, które mają przypisaną geolokalizację. Kolor znacznika jest ustawiony na typ zasobu lub niestandardowe pole metadanych (klucz poniżej mapy). Gdy znaczniki nakładają się na inne znaczniki, używane jest zielone grupowanie z liczbą wskazującą liczbę zgrupowanych znaczników, powiększ lub dwukrotnie kliknij klaster. Kliknij pojedynczy znacznik, aby załadować okno podręczne dla tego zasobu z podglądem obrazu. Kliknij obraz podglądu, aby załadować okno dla tego zasobu. Najedź kursorem na pojedynczy znacznik, aby zobaczyć współrzędne geograficzne. Zmień mapę bazową za pomocą przycisku mapy w prawym górnym rogu. Zapisz mapę do pliku PNG za pomocą przycisku mapy w lewym dolnym rogu.';
 $lang["edit_map_introtext"] = 'Przesuń i powiększ widok mapy do interesującego Cię obszaru, a następnie kliknij na mapę, aby umieścić znacznik lokalizacji zasobu. Zapisz najnowszą geolokalizację za pomocą przycisku Zapisz, a następnie kliknij \'Powrót do edycji zasobu lub geolokalizacji kolekcji\', aby wrócić. Aby wyszukać konkretną lokalizację lub nazwę cechy geograficznej, użyj przycisku wyszukiwania w prawym górnym rogu. Zmień mapę bazową za pomocą przycisku warstw mapy w prawym górnym rogu. Zapisz mapę do pliku PNG za pomocą przycisku mapy w lewym dolnym rogu.';
 $lang["geolocate_collection_map_text"] = 'Poniższa mapa pokazuje zasoby z tej kolekcji, które mają przypisaną geolokalizację. Kolor znacznika jest ustawiony na typ zasobu lub niestandardowe pole metadanych (klucz poniżej mapy). Gdy znaczniki nakładają się na inne znaczniki, używane jest zielone grupowanie z liczbą wskazującą liczbę zgrupowanych znaczników, powiększ lub kliknij dwukrotnie klaster. Kliknij pojedynczy znacznik, aby załadować okienko dla tego zasobu z podglądem obrazu. Kliknij obraz podglądu, aby załadować okno dla tego zasobu. Najedź kursorem na pojedynczy znacznik, aby zobaczyć współrzędne geograficzne. Zmień mapę bazową za pomocą przycisku mapy w prawym górnym rogu. Zapisz mapę do pliku PNG za pomocą przycisku mapy w lewym dolnym rogu.';

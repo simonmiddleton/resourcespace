@@ -1269,7 +1269,6 @@ $lang["publishstatus"] = 'Uložit se stavem publikování:';
 $lang["addnewcontent"] = 'Nový obsah (stránka, název)';
 $lang["hitcount"] = 'Počet zásahů';
 $lang["downloads"] = 'Stažení';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'Přípona';
 $lang["all_users"] = 'všichni uživatelé';
 $lang["new_resource"] = 'nový zdroj';

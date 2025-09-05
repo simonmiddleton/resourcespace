@@ -1,6 +1,6 @@
 <?php
 
-function HookSensitive_imagesViewReplacepreviewlink()
+function HookSensitive_imagesViewReplacepreviewlink($previewtitle)
     {
     global $ref,$sensitive_images_field, $sensitive_images_blur_level, $resource, $image_preview_zoom;
     if ($sensitive_images_field==0) {return false;} // not configured yet

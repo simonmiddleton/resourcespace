@@ -423,7 +423,7 @@ $lang["access3"] = "Spécifique";
 $lang["statusandrelationships"] = "Statut et parenté";
 
 # Lists
-$lang["months"] = array("janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre");
+$lang["months_list"] = array("janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Ajouter les résultats de la recherche à la collection courante";
@@ -2676,7 +2676,6 @@ $lang["setup-download_filename_format"] = 'Format du nom de fichier de télécha
 $lang["collectionlog-U"] = 'Permettre aux utilisateurs de modifier';
 $lang["editrequestorder"] = 'Modifier la demande';
 $lang["ppi"] = 'PPP';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'Extension';
 $lang["google_terrain"] = 'Google terrain';
 $lang["map_introtext1"] = 'La carte ci-dessous montre les ressources du résultat de recherche qui ont une géolocalisation associée. La couleur du marqueur est définie par le type de ressource ou un champ de métadonnées personnalisé (clé sous la carte). Lorsque les marqueurs se superposent, un regroupement de couleur verte est utilisé avec un nombre indiquant le nombre de marqueurs regroupés, zoomez ou double-cliquez sur un groupe. Cliquez sur un marqueur individuel pour charger une fenêtre contextuelle pour cette ressource montrant une image d\'aperçu. Cliquez sur l\'image d\'aperçu pour charger une fenêtre pour cette ressource. Survolez un marqueur individuel pour voir les coordonnées géographiques. Changez la carte de base en utilisant le bouton en haut à droite de la carte. Enregistrez la carte en tant que fichier PNG en utilisant le bouton en bas à gauche de la carte.';

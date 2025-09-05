@@ -809,11 +809,22 @@ $lang["columnheader-resource_id"] = $lang["resourceid"] = "Resource ID";
 $lang["id"] = "ID";
 $lang["todate"] = "To date";
 $lang["fromdate"] = "From date";
+$lang["just_now"] = "Just now";
+$lang["minute"] = "Min";
+$lang["minutes"] = "Mins";
+$lang["hour"] = "Hour";
+$lang["hours"] = "Hours";
 $lang["day"] = "Day";
+$lang["days"] = "Days";
+$lang["week"] = "Week";
+$lang["weeks"] = "Weeks";
 $lang["month"] = "Month";
+$lang["months"] = "Months";
 $lang["year"] = "Year";
+$lang["years"] = "Years";
 $lang["hour-abbreviated"] = "HH";
 $lang["minute-abbreviated"] = "MM";
+$lang["ago"] = "ago";
 $lang["itemstitle"] = "Items";
 $lang["tools"] = "Tools";
 $lang["created"] = "Created";
@@ -851,6 +862,7 @@ $lang["action-expand"] = "Expand";
 $lang["action-more"] = "More";
 $lang["action-less"] = "Less";
 $lang["action-select"] = "Select";
+$lang["action-selectresource"] = "Select resource";
 $lang["action-selectrequesteditems"] = "Show all requested items in my collection bar";
 $lang["action-download"] = "Download";
 $lang["action-email"] = "E-mail";
@@ -980,7 +992,7 @@ $lang["accessinvalid"] = "Invalid";
 $lang["statusandrelationships"] = "Status and relationships";
 
 # Lists
-$lang["months"] = array("January","February","March","April","May","June","July","August","September","October","November","December");
+$lang["months_list"] = array("January","February","March","April","May","June","July","August","September","October","November","December");
 $lang["false-true"] = array("False","True");
 
 # Formatting
@@ -1409,7 +1421,7 @@ $lang["addnewcontent"] = "New content (page, name)";
 $lang["hitcount"] = "Hit count";
 $lang["downloads"] = "Downloads";
 
-$lang["addremove"] = "+/-";
+$lang["addremove"] = "Select";
 $lang["list_file_extension"] = "Extension";
 
 ##  Translations for standard log entries
@@ -1738,6 +1750,7 @@ $lang["youhaveunsubscribedreport"] = "You have been unsubscribed from the period
 $lang["sendingreportto"] = "Sending report to";
 $lang["reportempty"] = "No matching data was found for the selected report and period.";
 $lang["viauser"] = "via user";
+$lang["expand"] = "Expand";
 $lang["close"] = "Close";
 
 # Installation Check
@@ -2261,6 +2274,355 @@ $lang["resource_types_manage"]      = "Resource types";
 $lang["resource_type_new"]          = "New resource type";
 $lang["resource_type_field_new"]    = "New metadata field";
 
+# Page Titles
+$lang["page-title_login"]                       = "Login";
+$lang["page-title_about"]                       = "About Us";
+$lang["page-title_alternative_file"]            = "Alternative File";
+$lang["page-title_alternative_files"]           = "Alternative Files";
+$lang["page-title_annotate_pdf_config"]         = "Annotate PDF";
+$lang["page-title_annotate_pdf_gen"]            = "Annotate PDF";
+$lang["page-title_api_test"]                    = "API Test";
+$lang["page-title_change_language"]             = "Change Language";
+$lang["page-title_check"]                       = "Installation Check";
+$lang["page-title_collection_comment"]          = "Collection Comments";
+$lang["page-title_collection_copy_resources"]   = "Copy Collection Resources";
+$lang["page-title_collection_download"]         = "Collection Download";
+$lang["page-title_collection_edit"]             = "Edit Collection";
+$lang["page-title_collection_edit_previews"]    = "Edit Collection Previews";
+$lang["page-title_collection_email"]            = "Email Collection";
+$lang["page-title_collection_feedback"]         = "Collection Feedback";
+$lang["page-title_collection_log"]              = "Collection Log";
+$lang["page-title_collection_manage"]           = "Manage Collections";
+$lang["page-title_collection_public"]           = "Public Collections";
+$lang["page-title_collection_request"]          = "Request Collection";
+$lang["page-title_collection_set_category"]     = "Set Collection Category";
+$lang["page-title_collections_featured"]        = "Featured Collections";
+$lang["page-title_collection_share"]            = "Share Collection";
+$lang["page-title_collections"]                 = "Collections";
+$lang["page-title_contact"]                     = "Contact Us";
+$lang["page-title_contactsheet_settings"]       = "Contact Sheet Configuration";
+$lang["page-title_content"]                     = "Preview Site Content";
+$lang["page-title_contribute"]                  = "Contributions";
+$lang["page-title_csv_export_results_metadata"] = "CSV Export";
+$lang["page-title_dash_tile"]                   = "Edit Dash tile";
+$lang["page-title_done"]                        = "Done";
+$lang["page-title_download"]                    = "Download";
+$lang["page-title_download_progress"]           = "Download Progress";
+$lang["page-title_download_usage"]              = "Download Usage";
+$lang["page-title_edit_fields"]                 = "Edit Metadata Field";
+$lang["page-title_edit"]                        = "Edit Resource";
+$lang["page-title_geo_edit"]                    = "Edit Location";
+$lang["page-title_geo_search"]                  = "Location Search";
+$lang["page-title_graph"]                       = "Graph";
+$lang["page-title_help"]                        = "Help";
+$lang["page-title_home"]                        = "Dash";
+$lang["page-title_job_details"]                 = "Offline Job Details";
+$lang["page-title_log_entry"]                   = "Resource Log";
+$lang["page-title_log"]                         = "Resource Log";
+$lang["page-title_manage_external_shares"]      = "Manage Shares";
+$lang["page-title_manage_jobs"]                 = "Manage Offline Jobs";
+$lang["page-title_metadata_download"]           = "Download Metadata";
+$lang["page-title_mp3_play"]                    = "Play Audio File";
+$lang["page-title_no_uploads"]                  = "Uploading Unavailable";
+$lang["page-title_preview"]                     = "Preview";
+$lang["page-title_request_log"]                 = "Request Log";
+$lang["page-title_requests"]                    = "Requests";
+$lang["page-title_research_request"]            = "Research Request";
+$lang["page-title_resource_collection_list"]    = "Collection List";
+$lang["page-title_resource_email"]              = "Email Resource";
+$lang["page-title_resource_request"]            = "Request Resource";
+$lang["page-title_resource_share"]              = "Share Resource";
+$lang["page-title_search_advanced"]             = "Advanced Search";
+$lang["page-title_search_disk_usage"]           = "Disk Usage";
+$lang["page-title_search"]                      = "Search";
+$lang["page-title_setup"]                       = "Setup";
+$lang["page-title_share_access"]                = "Share Access";
+$lang["page-title_share_upload"]                = "Upload Share";
+$lang["page-title_simple_search"]               = "Search";
+$lang["page-title_system_down"]                 = "System Down";
+$lang["page-title_terms"]                       = "Usage Terms";
+$lang["page-title_themes"]                      = "Featured Collections";
+$lang["page-title_upload_batch"]                = "Upload Resources";
+$lang["page-title_upload_preview"]              = "Upload Preview";
+$lang["page-title_upload_replace_batch"]        = "Batch Replace Resources";
+$lang["page-title_user_password"]               = "Change Password";
+$lang["page-title_user_ratings"]                = "User Rating Stats For Resource";
+$lang["page-title_user_request"]                = "Request User";
+$lang["page-title_video_player"]                = "Video Player";
+$lang["page-title_view_alternative_files"]      = "View Alternative File";
+$lang["page-title_view_metadata"]               = "View Resource Metadata";
+$lang["page-title_view"]                        = "View Resource";
+$lang["page-title_view_shares"]                 = "View Share";
+
+$lang["page-title_admin_content_edit"] = "Edit Site Content";
+$lang["page-title_admin_content"] = "Site Content";
+$lang["page-title_admin_copy_field"] = "Copy Resource Type Field";
+$lang["page-title_admin_download_config"] = "Download System Configuration";
+$lang["page-title_admin_filter_edit"] = "Edit Filter";
+$lang["page-title_admin_filter_manage"] = "Manage Filter";
+$lang["page-title_admin_group_config_edit"] = "Edit User Group Config Overrides";
+$lang["page-title_admin_group_management_edit"] = "Edit User Group";
+$lang["page-title_admin_group_management"] = "User Groups";
+$lang["page-title_admin_group_permissions"] = "Edit User Group Permissions";
+$lang["page-title_admin_home"] = "System Menu";
+$lang["page-title_admin_manage_field_options"] = "Manage Field Options";
+$lang["page-title_admin_manage_slideshow"] = "Manage Slideshow";
+$lang["page-title_admin_report_management_edit"] = "Edit Report";
+$lang["page-title_admin_report_management"] = "Manage Reports";
+$lang["page-title_admin_resource_type_edit"] = "Edit Resource Type";
+$lang["page-title_admin_resource_type_field_edit"] = "Edit Resource Type Field";
+$lang["page-title_admin_resource_type_fields"] = "Resource Type Fields";
+$lang["page-title_admin_resource_types"] = "Resource Types";
+$lang["page-title_admin_size_management_edit"] = "Edit Image Size";
+$lang["page-title_admin_size_management"] = "Image Sizes";
+$lang["page-title_admin_system_config"] = "System Configuration";
+$lang["page-title_admin_system_log"] = "System Log";
+$lang["page-title_admin_system_performance"] = "System Performance";
+$lang["page-title_tabs"] = "Manage Tabs";
+
+$lang["page-title_team_analytics_edit"] = "Edit Analytics Report";
+$lang["page-title_team_analytics"] = "Analytics Report";
+$lang["page-title_team_archive"] = "Archive Resources";
+$lang["page-title_team_copy"] = "Copy Resource";
+$lang["page-title_team_dash_admin"] = "Manage Dash";
+$lang["page-title_team_dash_tile"] = "Dash Tiles";
+$lang["page-title_team_dash_tile_special"] = "Create Special Dash Tile";
+$lang["page-title_team_export"] = "Export System Data";
+$lang["page-title_team_external_shares"] = "Manage External Shares";
+$lang["page-title_team_home"] = "Admin Menu";
+$lang["page-title_team_mail"] = "Send Bulk Mail";
+$lang["page-title_team_plugins_groups"] = "Manage User Group Plugin Access";
+$lang["page-title_team_plugins"] = "Manage Plugins";
+$lang["page-title_team_related_keywords_edit"] = "Edit Related Keywords";
+$lang["page-title_team_related_keywords"] = "Related Keywords";
+$lang["page-title_team_report"] = "View Report";
+$lang["page-title_team_request_edit"] = "Edit Request";
+$lang["page-title_team_request"] = "Requests";
+$lang["page-title_team_research_edit"] = "Edit Research Request";
+$lang["page-title_team_research"] = "Research Request";
+$lang["page-title_team_resource"] = "Resources Menu";
+$lang["page-title_team_user_edit"] = "Edit User";
+$lang["page-title_team_user"] = "Manage Users";
+$lang["page-title_team_user_purge"] = "Purge Users";
+
+$lang["page-title_user_actions"] = "User Actions";
+$lang["page-title_user_api_session"] = "Remote System API Access";
+$lang["page-title_user_change_password"] = "Change Password";
+$lang["page-title_user_dash_admin"] = "Manage User Dash";
+$lang["page-title_user_home"] = "User Menu";
+$lang["page-title_user_message"] = "User Message";
+$lang["page-title_user_messages"] = "User Messages";
+$lang["page-title_user_preferences"] = "User Preferences";
+$lang["page-title_user_profile_edit"] = "My Profile";
+$lang["page-title_user_profile"] = "User Profile";
+
+// Plugin Pages
+$lang["page-title_action_dates_setup"] = "Setup Action Dates Plugin";
+
+$lang["page-title_adobe_link_setup"] = "Setup Adobe Link Plugin";
+
+$lang["page-title_antivirus_setup"] = "Setup Antivirus Plugin";
+
+$lang["page-title_autoassign_mrequests_setup"] = "Setup Autoassign Requests Plugin";
+
+$lang["page-title_brand_guidelines_content"]    = "Manage Brand Guidelines Content";
+$lang["page-title_brand_guidelines_guidelines"] = "Brand Guidelines";
+$lang["page-title_brand_guidelines_setup"]      = "Setup  Plugin";
+$lang["page-title_brand_guidelines_toc"]        = "Edit content";
+
+$lang["page-title_clip_search"] = "AI Smart Search";
+$lang["page-title_clip_setup"]  = "Setup CLIP Plugin";
+$lang["page-title_clip_webcam"] = "Webcam Tag Generator";
+
+$lang["page-title_conditional_terms_setup"] = "Setup Conditional Terms Plugin";
+
+$lang["page-title_consentmanager_batch"]    = "Collection Consents";
+$lang["page-title_consentmanager_delete"]   = "Delete Consent";
+$lang["page-title_consentmanager_download"] = "Download Consent";
+$lang["page-title_consentmanager_edit"]     = "Edit Consent";
+$lang["page-title_consentmanager_list"]     = "Manage Consents";
+$lang["page-title_consentmanager_setup"]    = "Setup Consent Plugin";
+$lang["page-title_consentmanager_unlink"]   = "Unlink Consent";
+
+$lang["page-title_cookies_notification_cookies_user_feedback"]  = "Cookie Selection";
+$lang["page-title_cookies_notification_setup"]                  = "Setup Cookie Notification Plugin";
+
+$lang["page-title_csv_upload_csv_upload"] = "Upload CSV";
+
+$lang["page-title_csv_user_import_csv_user_import"] = "CSV User Import";
+
+$lang["page-title_custom_filename_setup"] = "Setup Custom Filename Plugin";
+
+$lang["page-title_embeddocument_setup"]     = "Setup Embed Document Plugin";
+$lang["page-title_embeddocument_viewer"]    = "Embed Document Viewer";
+
+$lang["page-title_embedslideshow_setup"]    = "Setup Embed Slideshow Plugin";
+$lang["page-title_embedslideshow_viewer"]   = "Embed Slideshow";
+
+$lang["page-title_embedvideo_setup"] = "Setup Embed Video Plugin";
+
+$lang["page-title_emu_emu_object_details"]  = "EMu Object Details";
+$lang["page-title_emu_setup"]               = "Setup  Plugin";
+
+$lang["page-title_faces_setup"] = "Setup Faces Plugin";
+$lang["page-title_falcon_link_falcon_link"] = "Falcon Link";
+$lang["page-title_falcon_link_setup"]       = "Setup Falcon Link Plugin";
+
+$lang["page-title_feedback_feedback"]   = "Submit Feedback";
+$lang["page-title_feedback_setup"]      = "Setup  Plugin";
+
+$lang["page-title_flickr_theme_publish_flickr_preview"]             = "Flickr Preview";
+$lang["page-title_flickr_theme_publish_flickr_publish_progress"]    = "Flickr Publish - Progress";
+$lang["page-title_flickr_theme_publish_flickr_publish"]             = "Flickr Publish";
+$lang["page-title_flickr_theme_publish_setup"]                      = "Setup Flikr Plugin";
+$lang["page-title_flickr_theme_publish_sync_progress"]              = "Flickr Sync - Progress";
+$lang["page-title_flickr_theme_publish_sync"]                       = "Flcikr Sync";
+
+$lang["page-title_format_chooser_convert"]  = "Format Chooser";
+$lang["page-title_format_chooser_setup"]    = "Setup Format Chooser Plugin";
+
+$lang["page-title_google_analytics_setup"] = "Setup Google Analytics Plugin";
+
+$lang["page-title_google_vision_process_existing"]  = "Google Vision Process Existing";
+$lang["page-title_google_vision_setup"]             = "Setup Google Vision Plugin";
+$lang["page-title_google_vision_test_jpg"]          = "Google Vision Test";
+$lang["page-title_google_vision_test"]              = "Google Vision Test";
+
+$lang["page-title_grant_edit_setup"] = "Setup Grant Edit Plugin";
+
+$lang["page-title_image_banks_download"]                = "Download Resource";
+$lang["page-title_image_banks_search"]                  = "Search";
+$lang["page-title_image_banks_setup"]                   = "Setup Image Banks Plugin";
+$lang["page-title_image_banks_shutterstock_license"]    = "View Shutterstock Image";
+$lang["page-title_image_banks_view"]                    = "View Resource";
+
+$lang["page-title_image_text_setup"] = "Setup Image Text Plugin";
+
+$lang["page-title_licensemanager_batch"]    = "Edit Linceses";
+$lang["page-title_licensemanager_delete"]   = "Delete License";
+$lang["page-title_licensemanager_download"] = "Download License";
+$lang["page-title_licensemanager_edit"]     = "Edit License";
+$lang["page-title_licensemanager_list"]     = "List Lincenses";
+$lang["page-title_licensemanager_setup"]    = "Setup  Plugin";
+$lang["page-title_licensemanager_unlink"]   = "Unlink License";
+
+$lang["page-title_meta_append_setup"] = "Setup Meta Append Plugin";
+
+$lang["page-title_museumplus_museumplus_object_details"]    = "MuseumPlus Object Details";
+$lang["page-title_museumplus_setup_module"]                 = "Setup MuseumPlus Module";
+$lang["page-title_museumplus_setup"]                        = "Setup MuseumPlus Plugin";
+
+$lang["page-title_news_news_content_edit"]  = "Edit News Content";
+$lang["page-title_news_news_edit"]          = "Edit News";
+$lang["page-title_news_news"]               = "News";
+
+$lang["page-title_offline_archive_administer_archive"]      = "Administer Archives";
+$lang["page-title_offline_archive_offline_archive_action"]  = "Offline Archive";
+$lang["page-title_offline_archive_pending_restore"]         = "Pending Resoruce Restore";
+$lang["page-title_offline_archive_restore_request"]         = "Request Resource Restore";
+$lang["page-title_offline_archive_restore"]                 = "Restore Archive";
+$lang["page-title_offline_archive_setup"]                   = "Setup  Plugin";
+$lang["page-title_offline_archive_view_archives"]           = "View Resoruce Archives";
+$lang["page-title_offline_archive_view_pending"]            = "View Pending Archives";
+
+$lang["page-title_openai_gpt_setup"]            = "Setup OpenAI GPT Plugin";
+
+$lang["page-title_openai_image_edit_edit"]              = "OpenAI Edit";
+$lang["page-title_openai_image_edit_get_png"]           = "OpenAI Get PNG";
+$lang["page-title_openai_image_edit_save_alternative"]  = "OpenAI Save Alternative";
+$lang["page-title_openai_image_edit_save_new"]          = "OpenAI Save New";
+
+$lang["page-title_pdf_split_pdf_split"] = "PDF Split";
+
+$lang["page-title_propose_changes_propose_changes"] = "Propose Changes";
+$lang["page-title_propose_changes_setup"]           = "Setup Propose Changes Plugin";
+
+$lang["page-title_resource_usage_delete"]   = "Delete Resource Usage";
+$lang["page-title_resource_usage_edit"]     = "Edit Resource Usage";
+$lang["page-title_resource_usage_setup"]    = "Setup Resource Usage Plugin";
+
+$lang["page-title_rse_search_notifications_setup"]              = "Setup Search Notifications Plugin";
+$lang["page-title_rse_search_notifications_watched_searches"]   = "Watched Searches";
+
+$lang["page-title_rse_version_revert"]  = "Revert Resource Version";
+$lang["page-title_rse_version_setup"]   = "Setup Version Plugin";
+
+$lang["page-title_rse_workflow_batch_action"]           = "Batch Workflow Action";
+$lang["page-title_rse_workflow_edit_action"]            = "Edit Workflow Action";
+$lang["page-title_rse_workflow_edit_state"]             = "Edit Workflow State";
+$lang["page-title_rse_workflow_edit_workflow_actions"]  = "Edit Workflow Actions";
+$lang["page-title_rse_workflow_edit_workflow_states"]   = "Edit Workflow States";
+$lang["page-title_rse_workflow_edit_workflow"]          = "Ediw Workflow";
+$lang["page-title_rse_workflow_setup"]                  = "Setup Workflow Plugin";
+
+$lang["page-title_rss2_rssfeed"]    = "RSS Feed";
+$lang["page-title_rss2_rssfilter"]  = "RSS Filter";
+$lang["page-title_rss2_setup"]      = "Setup RSS Plugin";
+
+$lang["page-title_sensitive_images_setup"] = "Setup Senistive Images Plugin";
+
+$lang["page-title_simpleldap_ajax_test_auth"]   = "Test LDAP Authentication";
+$lang["page-title_simpleldap_setup"]            = "Setup Simple LDAP Plugin";
+
+$lang["page-title_simplesaml_about"]                = "SAML About";
+$lang["page-title_simplesaml_generate_sp_config"]   = "Generate SP Config";
+$lang["page-title_simplesaml_setup"]                = "Setup Simple SAML Plugin";
+
+$lang["page-title_stencilvg_download_svg"]  = "Download SVG";
+$lang["page-title_stencilvg_input"]         = "SVG Input";
+$lang["page-title_stencilvg_setup"]         = "Setup StencilVG Plugin";
+
+$lang["page-title_system_reset_reset"] = "System Reset";
+
+$lang["page-title_tms_link_ajax_test"]          = "Test TMS Link";
+$lang["page-title_tms_link_setup"]              = "Setup TMS Link Plugin";
+$lang["page-title_tms_link_show_all"]           = "Show TMS Data";
+$lang["page-title_tms_link_show_raw"]           = "Show Raw TMS Data";
+$lang["page-title_tms_link_test"]               = "Test TMS Data";
+$lang["page-title_tms_link_tms_details"]        = "Show TMS Data";
+$lang["page-title_tms_link_tms_module_config"]  = "Edit TMS Module Configuration";
+
+$lang["page-title_totp_setup"]  = "Setup TOTP Plugin";
+$lang["page-title_totp_totp"]   = "TOTP";
+
+$lang["page-title_track_field_history_field_history_log"]   = "Field History";
+$lang["page-title_track_field_history_setup"]               = "Setup Track Field History Plugin";
+
+$lang["page-title_transform_collection_transform"]  = "Transform Resource";
+$lang["page-title_transform_crop"]                  = "Crop Resource";
+$lang["page-title_transform_setup"]                 = "Setup Transform Plugin";
+
+$lang["page-title_user_preferences_setup"] = "Setup User Preferences Plugin";
+
+$lang["page-title_video_bookend_bookend"] = "Video Bookend";
+
+$lang["page-title_video_splice_setup"]  = "Setup Video Splice Plugin";
+$lang["page-title_video_splice_splice"] = "Splice Video";
+$lang["page-title_video_splice_trim"]   = "Trim Video";
+
+$lang["page-title_video_tracks_create_video"]   = "Create Video";
+$lang["page-title_video_tracks_setup"]          = "Setup Video Tracks Plugin";
+
+$lang["page-title_vimeo_publish_setup"]     = "Setup Vimeo Publish Plugin";
+$lang["page-title_vimeo_publish_vimeo_api"] = "Publish to Vimeo";
+
+$lang["page-title_vm2rs_setup"] = "Setup Vimeo to ResourceSpace Plugin";
+
+$lang["page-title_vr_view_download"]    = "VR View";
+$lang["page-title_vr_view_setup"]       = "Setup VR View Plugin";
+
+$lang["page-title_whisper_setup"] = "Setup Whisper Plugin";
+
+$lang["page-title_wordpress_sso_logout"]    = "SSO Logout";
+$lang["page-title_wordpress_sso_nouser"]    = "SSO No User";
+$lang["page-title_wordpress_sso_readme_txt"]    = "SSO Readme";
+$lang["page-title_wordpress_sso_setup"]     = "Setup Wordpress SSO Plugin";
+
+$lang["page-title_youtube_publish_setup"]           = "Setup Plugin";
+$lang["page-title_youtube_publish_youtube_upload"]  = "Publish Resource to Youtube";
+
+$lang["page-title_yt2rs_setup"] = "Setup Youtube to ResourceSpace Plugin";
+
 ##########################################################################################
 # Non page-specific items that need to be merged above when system admin project completed
 ##########################################################################################
@@ -2673,6 +3035,8 @@ $lang['error_upload_failed'] = "An error occurred while uploading the file.";
 /* Messaging */
 $lang["seen"] = "Seen";
 $lang["mymessages"] = "Messages";
+$lang["backtomessages"] = "Back to Messages";
+$lang["viewallmessages"] = "View all Messages";
 $lang["mymessages_markread"] = "Mark read";
 $lang["mymessages_markunread"] = "Mark unread";
 $lang["mymessages_markallread"] = "Mark all read";

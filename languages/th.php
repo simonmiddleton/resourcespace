@@ -2776,7 +2776,6 @@ $lang["db-default-encoding"] = '(database-encoding: %encoding)';
 $lang["of"] = 'ของ';
 $lang["plugin_field_fmt"] = '%A (%B)';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' หรือ \'ssl\' สำหรับ Gmail จำเป็นต้องใช้ \'tls\' หรือ \'ssl\'';
-$lang["addremove"] = '+/-';
 $lang["plugins-configvar"] = 'ตั้งค่าตัวแปรการกำหนดค่า: $%cvn';
 $lang["map_tfpioneer"] = 'Pioneer';
 $lang["report_periodic_email_option_me"] = 'ฉัน';

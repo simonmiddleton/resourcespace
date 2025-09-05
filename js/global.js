@@ -240,6 +240,7 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
     var url = anchor.href;
     pagename=basename(url);
     pagename=pagename.substr(0, pagename.lastIndexOf('.'));
+    pluginname=getPluginName(url);
 
     var end_url = url.substr(url.indexOf('#'));
     // Drop # at end of url if present
@@ -340,6 +341,9 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
                 }
 
             CentralSpace.trigger('CentralSpaceLoaded', [{url: url}]);
+
+            // Update title in browser for accessibility
+            updatePageTitle(pagename, pluginname);
 
             // Change the browser URL and save the CentralSpace HTML state in the browser's history record.
             if(typeof(top.history.pushState)=='function' && !modal)
@@ -480,6 +484,7 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
 
     pagename=basename(url);
     pagename=pagename.substr(0, pagename.lastIndexOf('.'));
+    pluginname=getPluginName(url);
     jQuery.post(url,formdata,function(data)
         {
         // Check for a redirect (use instead of HTTP redirect to avoid URL not updating)
@@ -515,10 +520,13 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
             }
             }
 
+        // Update title in browser for accessibility
+        updatePageTitle(pagename, pluginname);
+
         // Change the browser URL and save the CentralSpace HTML state in the browser's history record.
         if(update_history && typeof(top.history.pushState)=='function' && !modal)
             {
-            top.history.pushState(document.title+'&&&'+data, applicationname, form.action);
+            top.history.pushState(document.title+'&&&'+data, pagetitle, form.action);
             }
 
         /* Scroll to top if parameter set - used when changing pages */
@@ -968,6 +976,9 @@ function ModalCentre()
             // Smaller menu if tile navigation disabled.
             modalwidth = 250;
         }
+    } else if (modalalign == 'rightnarrow') {
+        modalmaxheight = Math.max(jQuery(window).height() - 100);
+        modalwidth = 440;
     } else if ((typeof modalfit != 'undefined') && modalfit) {
         modalmaxheight = 'auto';
         modalwidth = 'auto';
@@ -983,7 +994,7 @@ function ModalCentre()
 
     // Support alignment of modal (e.g. for 'My Account')
     topmargin = 30;
-    if (modalalign == 'right') {
+    if (modalalign == 'right' || modalalign == 'rightnarrow') {
         left = Math.max(jQuery(window).width() - jQuery('#modal').outerWidth(), 0) - 20;
         topmargin = 50;
     } else {
@@ -1017,6 +1028,10 @@ function ModalClose()
         jQuery('#CentralSpace').trigger('ModalClosed', [{url: modalurl}]);
         delete modalurl;
     }
+
+    let pagename = document.querySelector('meta[name="pagename"]').getAttribute('content');
+    let pluginname = document.querySelector('meta[name="pluginname"]').getAttribute('content');
+    updatePageTitle(pagename, pluginname);
 }
 
 // For modals, set what context the modal was called from and insert if missing
@@ -2286,3 +2301,40 @@ document.addEventListener('click', function(e) {
         }
     }
 });
+
+/**
+ * Dynamically update the page title using Ajax.
+ *
+ * @param {string} pagename - The name of the page.
+ * @param {string} [pluginname=''] - The name of the plugin (optional).
+ */
+function updatePageTitle(pagename, pluginname = '') {
+    const ajax_url = baseurl_short + 'pages/ajax/update_page_title.php?page=' + pagename + (typeof pluginname !== 'undefined' ? '&plugin=' + pluginname : '');
+    jQuery.ajax({
+        type: "GET",
+        url: ajax_url,
+        success: function(data) {
+            document.title = data;
+        }
+    })
+}
+
+/**
+ * Extracts the plugin name from a given URL.
+ * @param {string} url - The URL to extract the plugin name from.
+ * @returns {string} The extracted plugin name or an empty string if not found.
+ */
+function getPluginName(url) {
+    const pluginsIndex = url.indexOf('/plugins/');
+    
+    if (pluginsIndex !== -1) {
+        const startIndex = pluginsIndex + 9; // Length of '/plugins/'
+        const endIndex = url.indexOf('/', startIndex);
+        
+        if (endIndex !== -1) {
+            return url.substring(startIndex, endIndex);
+        }
+    }
+    
+    return '';
+}

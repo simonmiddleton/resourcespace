@@ -161,7 +161,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     if (!is_numeric($month_part)) {
         return $y;
     }
-    $m = $wordy ? ($lang["months"][$month_part - 1] ?? "") : $month_part;
+    $m = $wordy ? ($lang["months_list"][$month_part - 1] ?? "") : $month_part;
     if ($m == "") {
         return $y;
     }
@@ -178,6 +178,92 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     } else {
         return $m . " " . $d . " " . $y . $t;
     }
+}
+
+/**
+* Generates a text representation of the age from a given date
+*
+* This can be used to give a more user friendly indication of how old something is.
+*
+* @var  string   $datetime   ISO format date which can be a BCE date (ie. with negative year -yyyy)
+*
+* @return string Returns a string representing the age calculated from $datetime, otherwise an empty string if date is invalid
+*/
+function date_to_age(string $datetime): string 
+{
+
+    global $lang;
+    
+    $now = new DateTime();
+    $then = new DateTime($datetime);
+    $diff = $now->getTimestamp() - $then->getTimestamp();
+
+    if ($diff < 60) {
+        return $lang['just_now'];
+    } elseif ($diff < 3600) {
+        $minutes = floor($diff / 60);
+        $unit = $minutes == 1 ? $lang['minute'] : $lang['minutes'];
+        return mb_strtolower("$minutes $unit ago", 'UTF-8');
+    } elseif ($diff < 86400) {
+        $hours = floor($diff / 3600);
+        $unit = $hours == 1 ? $lang['hour'] : $lang['hours'];
+        return mb_strtolower("$hours $unit ago", 'UTF-8');
+    } elseif ($diff < 604800) {
+        $days = floor($diff / 86400);
+        $unit = $days == 1 ? $lang['day'] : $lang['days'];
+        return mb_strtolower("$days $unit ago", 'UTF-8');
+    } elseif ($diff < 2592000) {
+        $weeks = floor($diff / 604800);
+        $unit = $weeks == 1 ? $lang['week'] : $lang['weeks'];
+        return mb_strtolower("$weeks $unit ago", 'UTF-8');
+    } elseif ($diff < 31536000) {
+        $months = floor($diff / 2592000);
+        $unit = $months == 1 ? $lang['month'] : $lang['months'];
+        return mb_strtolower("$months $unit ago", 'UTF-8');
+    } else {
+        // For anything over a year, you might want to just show the date
+        return nicedate($datetime, false, true, true);
+    }
+
+}
+
+/**
+* Generates preview text of a certain line length and count
+*
+* Can be used for generating previews of text output, such as messages.
+*
+* @var  string   $text          The text to generate the preview of, can contain HTML
+* @var  int      $line_length   The number of characters that the preview can have on each line
+* @var  int      $line_count    The number of lines to be generated in the preview
+* @var  bool     $add_ellipsis  Should ellipsis (...) be added if the original $text exceeds $line_count
+*
+* @return string Returns a string of the preview text, or an empty string if the preview is unable to be generated
+*/
+function preview_from_text(string $text, int $line_length, int $line_count, bool $add_ellipsis = true): string
+{
+    if ($line_count <= 0 || $line_length <= 0) {
+        return "";
+    }
+
+    // Normalize the text and strip out any HTML
+    // this is to ensure the wrapping works and should NOT be relied on for output encoding safety
+    $normalized_text = preg_replace('/<br\s*\/?>/i', "\n", $text);
+    $normalized_text = html_entity_decode(strip_tags($normalized_text));
+    $normalized_text = str_replace(["\r\n", "\r"], "\n", $normalized_text);
+
+    // Wrap long lines at $line_length but don't break words
+    $wrapped_text = wordwrap($normalized_text, $line_length, "\n", true);
+
+    $lines = explode("\n", $wrapped_text);    
+    $preview_lines = array_slice($lines, 0, $line_count);
+    $text_preview = implode("\n", $preview_lines);
+
+    if (count($lines) > $line_count && $add_ellipsis) {
+        $text_preview .= '...';
+    }
+
+    return $text_preview;
+
 }
 
 /**
@@ -268,7 +354,7 @@ function trim_array($array, $trimchars = '')
 
 /**
  * Takes a value as returned from a check-list field type and reformats to be more display-friendly.
- *  Check-list fields have a leading comma.
+ * Check-list fields have a leading comma.
  *
  * @param  string $list
  * @return string
@@ -4132,6 +4218,23 @@ function pagename()
     return $urlparts[count($urlparts) - 1];
 }
 
+function pluginname(): string
+{
+    $pluginname = safe_file_name(getval('pluginname', ''));
+    if (!empty($pluginname)) {
+        return $pluginname;
+    }
+
+    $url = str_replace("\\", "/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
+    $urlparts = explode("/", $url);
+
+    if (array_search('plugins', $urlparts) !== false && isset($urlparts[array_search('plugins', $urlparts) + 1])) {
+        return $urlparts[array_search('plugins', $urlparts) + 1];
+    }
+
+    return "";
+}
+
 /**
  *  Returns the site content from the language strings. These will already be overridden with site_text content if present.
  *
@@ -5789,4 +5892,26 @@ function is_original_preview ($ref) : bool {
                                     WHERE rl1.resource = rl2.resource AND rl1.date < rl2.date
                                     AND rl2.type IN ('t', 'f', 'u'))
             ", ['i', $ref], '') === '';
+}
+
+/**
+ * Return the page title to use for the given page and optionally plugin.
+ *
+ * @param string $page   Page name without any leading filepath or trailing file extension.
+ * @param string $plugin Optional. Used to denote which plugin the page is part of.
+ *
+ * @return string If a language string is found, returns "%%APPLICATION_NAME%% - %%PAGENAME%%";
+ *                otherwise, returns "%%APPLICATION_NAME%%".
+ */
+function get_page_title(string $page, string $plugin = ""): string
+{
+    global $lang, $applicationname;
+    if ($plugin != "" && isset($lang["page-title_{$plugin}_{$page}"])) {
+        $page_title = " - " . $lang["page-title_{$plugin}_{$page}"];
+    } elseif ($plugin == "" && isset($lang["page-title_$page"])) {
+        $page_title =  " - " . $lang["page-title_$page"];
+    } else {
+        $page_title = "";
+    }
+    return $applicationname . $page_title;
 }

@@ -1274,7 +1274,6 @@ $lang["publishstatus"] = 'شائع کرنے کی حیثیت کے ساتھ محف
 $lang["addnewcontent"] = 'نیا مواد (صفحہ، نام)';
 $lang["hitcount"] = 'ہٹ شمار';
 $lang["downloads"] = 'ڈاؤن لوڈز';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'توسیع';
 $lang["all_users"] = 'تمام صارفین';
 $lang["new_resource"] = 'نیا وسیلہ';

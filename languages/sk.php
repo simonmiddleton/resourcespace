@@ -871,7 +871,7 @@ $lang["access3"] = "Vlastný";
 $lang["statusandrelationships"] = "Stav a závislosti";
 
 # Lists
-$lang["months"] = array("január","február","marec","apríl","máj","jún","júl","august","september","október","november","december");
+$lang["months_list"] = array("január","február","marec","apríl","máj","jún","júl","august","september","október","november","december");
 $lang["false-true"] = array("nepravdivý","pravdivý");
 
 # Formatting
@@ -3013,7 +3013,6 @@ $lang["email_error_user_list_some_skipped"] = 'Preskočena obvestila za naslednj
 $lang["unrelateallresources"] = 'Odstrani povezavo vseh virov v tej zbirki';
 $lang["unrelateallresources_confirmation"] = 'Noben vir v tej zbirki ni več povezan';
 $lang["setup-download_filename_format"] = 'Formát názvu súboru na stiahnutie';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'Zemljevid spodaj prikazuje vire iz rezultatov iskanja, ki imajo povezano geolokacijo. Barva označevalca je nastavljena glede na vrsto vira ali polje z metapodatki po meri (ključ pod zemljevidom). Ko bi se označevalci prekrivali, se uporablja zeleno barvno združevanje s številom, ki označuje število združenih označevalcev; povečajte ali dvokliknite na skupino. Kliknite na posamezen označevalec, da naložite pojavno okno za ta vir, ki prikazuje predogledno sliko. Kliknite predogledno sliko, da naložite okno za ta vir. Premaknite kazalec nad posamezen označevalec za geokoordinate. Spremenite osnovni zemljevid z gumbom zgoraj desno na zemljevidu. Shranite zemljevid v datoteko PNG z gumbom spodaj levo na zemljevidu.';
 $lang["geolocate_collection_map_text"] = 'Zemljevid spodaj prikazuje vire iz te zbirke, ki imajo povezano geolokacijo. Barva označevalca je nastavljena glede na vrsto vira ali polje po meri (ključ pod zemljevidom). Ko bi se označevalci prekrivali, se uporablja zeleno združevanje z številom, ki označuje število združenih označevalcev; povečajte ali dvokliknite združitev. Kliknite na posamezen označevalec, da naložite pojavno okno za ta vir, ki prikazuje predogledno sliko. Kliknite predogledno sliko, da naložite okno za ta vir. Premaknite kazalec nad posamezen označevalec za geokoordinate. Spremenite osnovni zemljevid z gumbom zgoraj desno na zemljevidu. Shranite zemljevid v datoteko PNG z gumbom spodaj levo na zemljevidu.';
 $lang["map_osmbzh"] = 'OSM Luksemburg';

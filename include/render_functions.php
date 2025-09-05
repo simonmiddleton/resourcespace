@@ -755,7 +755,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
               for ($d=1;$d<=12;$d++)
                 {
                 $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                ?><option <?php if ($d==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$d-1])?></option><?php
+                ?><option <?php if ($d==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1])?></option><?php
                 }
               ?>
             </select>
@@ -2488,7 +2488,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$d-1])?></option><?php
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1])?></option><?php
                     }?>
             </select>
             <?php
@@ -2509,7 +2509,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php  echo escape($lang["months"][$d-1])  ?></option><?php
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php  echo escape($lang["months_list"][$d-1])  ?></option><?php
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start-d"><?php echo escape($lang["day"]); ?></label>
@@ -2607,7 +2607,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$d-1])?></option><?php
+                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1])?></option><?php
                     }?>
             </select>
             <?php
@@ -2627,7 +2627,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$d-1]) ?></option><?php
+                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1]) ?></option><?php
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end-d"><?php echo escape($lang["day"]); ?></label>
@@ -2941,7 +2941,7 @@ function render_resource_image($resource, $img_url, $display="thumbs")
     global $view_title_field;
     
     list($width, $height, $margin) = calculate_image_display($resource, $img_url, $display);
-    $blurhash=$resource["blurhash"];
+    $blurhash=$resource["blurhash"]??"";
     $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
 
     // Produce a 'softer' colour for the loading preview (extracted colours tend to have a very high saturation)
@@ -2957,7 +2957,7 @@ function render_resource_image($resource, $img_url, $display="thumbs")
         $preview_red=$preview_green=$preview_blue=255;
         }
     ?>
-    <div id="ImageColourWrapper_<?php echo escape($resource["ref"]) ?>" class="ImageColourWrapper" 
+    <div id="ImageColourWrapper_<?php echo escape($resource["ref"]??"") ?>" class="ImageColourWrapper" 
     <?php if ($blurhash!="") { ?>class="blurhash" data-blurhash="<?php echo escape($blurhash) ?>"<?php } ?>
     style="
     <?php if ($blurhash=="") { ?>background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
@@ -3474,11 +3474,12 @@ function render_browse_bar()
 */    
 function generate_browse_bar_item($id, $text)
     {
+    global $lang;
     $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
     $html .= '<div class="BrowseRowInner" >';
     
     $html .= '<div class="BrowseBarStructure">
-            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" ></a>
+            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" alt="' . escape($lang["expand"]) . '"></a>
             </div><!-- End of BrowseBarStructure -->';  
     $html .= '<div onclick="toggleBrowseElements(\'' . $id . '\',false,true);" class="BrowseBarLink" >' . $text . '</div>';
     
@@ -6110,18 +6111,21 @@ function render_antispam_question()
         <input type="hidden" name="antispamcode" value="<?php echo $rndcode; ?>">
         <input type="hidden" name="antispamtime" value="<?php echo $timestamp; ?>">
         <label for="antispam"><?php echo escape($lang["enterantispamcode"]); ?> <sup>*</sup><br>
-            <div id="AntiSpamImage" style="
-            margin: 5px 0;
-            background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
-            height: <?php echo $height; ?>px;
-            width: <?php echo $width; ?>px;
-            border-radius: 6px;
-            display: inline-block;
-            ">    
+            <div 
+                id="AntiSpamImage"
+                title="Anti-spam image"
+                style="
+                    margin: 5px 0;
+                    background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
+                    height: <?php echo $height; ?>px;
+                    width: <?php echo $width; ?>px;
+                    border-radius: 6px;
+                    display: inline-block;
+            ">
             </div>
         </label> 
         <input type="text" name="antispam_user_code" class="stdwidth" value="">
-        <input type=text name="antispam" id="antispam" class="stdwidth" value="">
+        <input type=text name="antispam" id="antispam" class="stdwidth" value="" required>
         <div class="clearerleft"></div>        
     </div>
     <?php
@@ -7137,7 +7141,11 @@ function render_resource_view_image(array $resource, array $context)
     {
     global $lang;
     $imageurl="";   
-    
+
+    $preview_title = get_data_by_field($resource["ref"],$GLOBALS["view_title_field"]);
+    if ($preview_title == "") {
+        $preview_title = $lang["fullscreenpreview"];
+        }
     $use_watermark = check_use_watermark();
     $access = $context["access"] ?? 1; // Default to restricted
     $edit_access = $context["edit_access"] ?? 0;
@@ -7170,14 +7178,14 @@ function render_resource_view_image(array $resource, array $context)
     $previewimagelink = generateURL("{$GLOBALS["baseurl"]}/pages/preview.php", $GLOBALS["urlparams"], array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
     $previewimagelink_onclick = 'return CentralSpaceLoad(this);';
 
-    if (!hook("replacepreviewlink"))
+    if (!hook("replacepreviewlink","",[$preview_title]))
         {
         ?>
         <div id="previewimagewrapper">
             <a id="previewimagelink"
                 class="enterLink"
                 href="<?php echo $previewimagelink; ?>"
-                title="<?php echo escape($lang["fullscreenpreview"]); ?>"
+                title="<?php echo escape($preview_title); ?>"
                 style="position:relative;"
                 onclick="<?php echo $previewimagelink_onclick; ?>">
         <?php
@@ -7186,7 +7194,7 @@ function render_resource_view_image(array $resource, array $context)
     <img id="previewimage"
         class="Picture"
         src="<?php echo $imageurl; ?>" 
-        alt="<?php echo escape($lang['fullscreenpreview']); ?>" 
+        alt="<?php echo escape($preview_title); ?>" 
         onload="jQuery('.DownloadDBlend').css('pointer-events','auto')"
         GALLERYIMG="no"
     <?php

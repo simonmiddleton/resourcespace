@@ -213,7 +213,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             color: white;
         }
         .skip-to-main-content {
-            background-color: #545454;
+            background-color:rgb(0, 0, 0);
         }
         .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {
             font-weight: 600;
@@ -370,6 +370,28 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         }
         .ResponsiveButton {
             box-shadow: none !important;
+        }
+        /* Quick message modal */
+        .messages-modal {
+            background: rgb(38, 38, 38)
+        }
+        .message-body {
+            background-color: rgb(38, 38, 38);
+        }
+        .message-username {
+            color: white;
+        }
+        .message:hover {
+            background: #333;
+        }
+        .message-text {
+            color: #bbb;
+        }
+        .message-divider {
+            background: rgb(84, 84, 84);
+        }
+        .message-age {
+            color: rgba(117, 117, 117, 1);
         }
         <?php
     }

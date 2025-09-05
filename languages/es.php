@@ -370,7 +370,7 @@ $lang["of"] = "de"; # e.g. page 1 of 2";
 $lang["format"] = "Formato";
 
 # Lists
-$lang["months"] = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+$lang["months_list"] = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
 # Statistics
 $lang["stat-addpubliccollection"] = "Añadir colección pública";
@@ -2660,7 +2660,6 @@ $lang["alternatetype"] = 'Tipo alternativo';
 $lang["setup-download_filename_format"] = 'Formato del nombre del archivo de descarga';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' o \'ssl\'. Para Gmail, se requiere \'tls\' o \'ssl\'.';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'El mapa a continuación muestra recursos del resultado de la búsqueda que tienen una geolocalización asociada. El color del marcador se establece según el tipo de recurso o un campo de metadatos personalizado (clave debajo del mapa). Cuando los marcadores se superponen a otros marcadores, se utiliza una agrupación de color verde con un número que indica la cantidad de marcadores agrupados, haz zoom o haz doble clic en un grupo. Haz clic en un marcador individual para cargar una ventana emergente para ese recurso que muestra una imagen de vista previa. Haz clic en la imagen de vista previa para cargar una ventana para ese recurso. Pasa el cursor sobre un marcador individual para ver las coordenadas geográficas. Cambia el mapa base usando el botón del mapa en la parte superior derecha. Guarda el mapa en un archivo PNG usando el botón del mapa en la parte inferior izquierda.';
 $lang["geolocate_collection_map_text"] = 'El mapa a continuación muestra recursos de esta colección que tienen una geolocalización asociada. El color del marcador se establece según el tipo de recurso o un campo de metadatos personalizado (clave debajo del mapa). Cuando los marcadores se superponen a otros marcadores, se utiliza una agrupación de color verde con un número que indica la cantidad de marcadores agrupados, haz zoom o haz doble clic en un grupo. Haz clic en un marcador individual para cargar una ventana emergente para ese recurso que muestra una imagen de vista previa. Haz clic en la imagen de vista previa para cargar una ventana para ese recurso. Pasa el cursor sobre un marcador individual para ver las coordenadas geográficas. Cambia el mapa base usando el botón del mapa en la parte superior derecha. Guarda el mapa en un archivo PNG usando el botón del mapa en la parte inferior izquierda.';
 $lang["map_tfoutdoors"] = 'Al aire libre';

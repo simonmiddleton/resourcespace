@@ -452,7 +452,7 @@ $lang["access3"] = "可自定";
 $lang["statusandrelationships"] = "身份与关系";
 
 # Lists
-$lang["months"] = array("一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月");
+$lang["months_list"] = array("一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "在此收藏夹中储存搜索到的资源";
@@ -2706,7 +2706,6 @@ $lang["unrelateallresources_confirmation"] = '此集合中的资源现在都没�
 $lang["ratingremovehover"] = '删除您的评分';
 $lang["setup-download_filename_format"] = '下载文件名格式';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' 或 \'ssl\'。对于 Gmail，需要 \'tls\' 或 \'ssl\'。';
-$lang["addremove"] = '+/-';
 $lang["map_nasagibs_group"] = 'NASA GIBS';
 $lang["map_mapbox_group"] = 'Mapbox';
 $lang["map_mapboxid"] = 'ID';

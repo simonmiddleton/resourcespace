@@ -734,7 +734,7 @@ $lang["access3"] = "benutzerdefiniert";
 $lang["statusandrelationships"] = "Status und Beziehungen";
 
 # Lists
-$lang["months"] = array("Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember");
+$lang["months_list"] = array("Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember");
 $lang["false-true"] = array("Falsch","Wahr");
 
 # Formatting
@@ -2879,7 +2879,6 @@ $lang["unrelateallresources_confirmation"] = 'Keine der Ressourcen in dieser Sam
 $lang["exportdata-instructions"] = 'Dies wird Systemkonfigurationsdaten aus Ihrem System für Fehlerbehebungszwecke exportieren. Alle Daten (Feldoptionen, Benutzernamen, E-Mails und Metadaten usw.) werden verschleiert, es sei denn, Ihr Serveradministrator erlaubt es.</br>Wählen Sie die Informationen aus, die Sie exportieren möchten, und klicken Sie auf \'Exportieren\'. Ein Offline-Job wird erstellt und Sie erhalten eine Benachrichtigung, wenn Ihr Download bereit ist.';
 $lang["setup-download_filename_format"] = 'Format des Dateinamens für den Download';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' oder \'ssl\'. Für Gmail ist \'tls\' oder \'ssl\' erforderlich.';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'Die untenstehende Karte zeigt Ressourcen aus dem Suchergebnis, die mit einer Geolokation verknüpft sind. Die Markierungsfarbe ist auf den Ressourcentyp oder ein benutzerdefiniertes Metadatenfeld eingestellt (Schlüssel unter der Karte). Wenn Markierungen andere Markierungen überdrucken würden, wird eine grünfarbene Clusterung mit einer Zahl verwendet, die die Anzahl der geclusterten Markierungen angibt. Zoomen Sie hinein oder doppelklicken Sie auf ein Cluster. Klicken Sie auf eine einzelne Markierung, um ein Popup für diese Ressource mit einer Vorschau anzuzeigen. Klicken Sie auf das Vorschaubild, um ein Fenster für diese Ressource zu laden. Fahren Sie mit der Maus über eine einzelne Markierung, um die Geokoordinaten anzuzeigen. Ändern Sie die Grundkarte mit der Schaltfläche oben rechts auf der Karte. Speichern Sie die Karte als PNG-Datei mit der Schaltfläche unten links auf der Karte.';
 $lang["geolocate_collection_map_text"] = 'Die untenstehende Karte zeigt Ressourcen aus dieser Sammlung, die eine Geolokation zugeordnet haben. Die Markierungsfarbe ist auf den Ressourcentyp oder ein benutzerdefiniertes Metadatenfeld eingestellt (Schlüssel unter der Karte). Wenn Markierungen andere Markierungen überdrucken würden, wird eine grünfarbene Clusterung verwendet, wobei eine Zahl die Anzahl der gruppierten Markierungen angibt. Zoomen Sie hinein oder doppelklicken Sie auf ein Cluster. Klicken Sie auf eine einzelne Markierung, um ein Popup für diese Ressource mit einer Vorschau anzuzeigen. Klicken Sie auf das Vorschaubild, um ein Fenster für diese Ressource zu laden. Fahren Sie mit der Maus über eine einzelne Markierung, um die Geokoordinaten anzuzeigen. Ändern Sie die Grundkarte mit der Schaltfläche oben rechts auf der Karte. Speichern Sie die Karte als PNG-Datei mit der Schaltfläche unten links auf der Karte.';
 $lang["map_osmfrance"] = 'OSM Frankreich';

@@ -692,7 +692,7 @@ $lang["access3"] = "Mukautettu";
 $lang["statusandrelationships"] = "Tila ja suhteet";
 
 # Lists
-$lang["months"] = array("Tammikuu","Helmikuu","Maaliskuu","Huhtikuu","Toukokuu","Kesäkuu","Heinäkuu","Elokuu","Syyskuu","Lokakuu","Marraskuu","Joulukuu");
+$lang["months_list"] = array("Tammikuu","Helmikuu","Maaliskuu","Huhtikuu","Toukokuu","Kesäkuu","Heinäkuu","Elokuu","Syyskuu","Lokakuu","Marraskuu","Joulukuu");
 $lang["false-true"] = array("Epätosi","Tosi");
 
 # Formatting
@@ -2822,7 +2822,6 @@ $lang["unrelateallresources"] = 'Poista kaikkien tämän kokoelman resurssien yh
 $lang["unrelateallresources_confirmation"] = 'Mitkään tämän kokoelman resurssit eivät ole nyt liittyviä';
 $lang["alternatetype"] = 'Vaihtoehtoinen tyyppi';
 $lang["setup-download_filename_format"] = 'Lataa tiedoston nimen muoto';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'Alla oleva kartta näyttää hakutuloksista resurssit, joilla on geosijainti. Merkkien väri on asetettu resurssityypin tai mukautetun metatietokentän mukaan (avain kartan alla). Kun merkit menevät päällekkäin, käytetään vihreää klusterointia, jossa numero ilmaisee klusteroitujen merkkien määrän; zoomaa sisään tai kaksoisnapsauta klusteria. Napsauta yksittäistä merkkiä avataksesi resurssin ponnahdusikkunan, joka näyttää esikatselukuvan. Napsauta esikatselukuvaa avataksesi resurssin ikkunan. Vie hiiri yksittäisen merkin päälle nähdäksesi geokoordinaatit. Vaihda taustakarttaa oikean yläkulman karttapainikkeella. Tallenna kartta PNG-tiedostona vasemman alakulman karttapainikkeella.';
 $lang["geolocate_collection_map_text"] = 'Alla oleva kartta näyttää tämän kokoelman resurssit, joilla on geosijainti. Merkkien väri on asetettu resurssityypin tai mukautetun metatietokentän mukaan (avain kartan alla). Kun merkit menevät päällekkäin, käytetään vihreää klusterointia, jossa numero ilmaisee klusteroitujen merkkien määrän; zoomaa sisään tai kaksoisnapsauta klusteria. Napsauta yksittäistä merkkiä avataksesi resurssin ponnahdusikkunan, jossa näkyy esikatselukuva. Napsauta esikatselukuvaa avataksesi resurssin ikkunan. Vie hiiri yksittäisen merkin päälle nähdäksesi geokoordinaatit. Vaihda taustakarttaa oikean yläkulman karttapainikkeella. Tallenna kartta PNG-tiedostona vasemman alakulman karttapainikkeella.';
 $lang["map_stamentonerback"] = 'Taustaväri';

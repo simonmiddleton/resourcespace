@@ -416,7 +416,7 @@ $lang["access3"] = "Anders";
 $lang["statusandrelationships"] = "Status en relaties";
 
 # Lists
-$lang["months"] = array("Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December");
+$lang["months_list"] = array("Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Voeg gevonden materialen toe aan collectie";
@@ -2677,7 +2677,6 @@ $lang["unrelateallresources"] = 'Maak alle bronnen in deze collectie niet-gerela
 $lang["unrelateallresources_confirmation"] = 'Geen van de bronnen in deze collectie zijn nu gerelateerd';
 $lang["setup-download_filename_format"] = 'Bestandsnaamformaat downloaden';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'De onderstaande kaart toont bronnen uit het zoekresultaat die een geolocatie hebben. De markerkleur is ingesteld op het brontype of een aangepast metadata-veld (sleutel onder de kaart). Wanneer markeringen andere markeringen zouden overlappen, wordt groene clustering gebruikt met een nummer dat het aantal gegroepeerde markeringen aangeeft, zoom in of dubbelklik op een cluster. Klik op een individuele markering om een popup voor die bron te laden met een voorbeeldafbeelding. Klik op de voorbeeldafbeelding om een venster voor die bron te laden. Beweeg de muis over een individuele markering voor de geocoördinaten. Verander de basiskaart met de knop rechtsboven op de kaart. Sla de kaart op als een PNG-bestand met de knop linksonder op de kaart.';
 $lang["geolocate_collection_map_text"] = 'De onderstaande kaart toont bronnen uit deze collectie die een geolocatie hebben. De markerkleur is ingesteld op het brontype of een aangepast metadata-veld (sleutel onder de kaart). Wanneer markeringen andere markeringen zouden overlappen, wordt groene clustering gebruikt met een nummer dat het aantal gegroepeerde markeringen aangeeft, zoom in of dubbelklik op een cluster. Klik op een individuele markering om een popup voor die bron te laden met een voorbeeldafbeelding. Klik op de voorbeeldafbeelding om een venster voor die bron te laden. Beweeg de muis over een individuele markering voor de geocoördinaten. Verander de basiskaart met de knop rechtsboven op de kaart. Sla de kaart op als een PNG-bestand met de knop linksonder op de kaart.';
 $lang["map_tfocm"] = 'OpenCycleMap (OCM)';

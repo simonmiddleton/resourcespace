@@ -1285,7 +1285,6 @@ $lang["publishstatus"] = 'Simpan dengan status penerbitan:';
 $lang["addnewcontent"] = 'Kandungan baru (halaman, nama)';
 $lang["hitcount"] = 'Kiraan hit';
 $lang["downloads"] = 'Muat Turun';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'Sambungan';
 $lang["all_users"] = 'semua pengguna';
 $lang["new_resource"] = 'sumber baru';

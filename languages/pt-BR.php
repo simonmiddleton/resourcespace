@@ -427,7 +427,7 @@ $lang["access3"] = "Pesonalizado";
 $lang["statusandrelationships"] = "Estado e Relacionamento";
 
 # Lists
-$lang["months"] = array("Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro");
+$lang["months_list"] = array("Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Salvar conteúdo da pesquisa na coleção atual";
@@ -2715,7 +2715,6 @@ $lang["unrelateallresources_confirmation"] = 'Nenhum dos recursos nesta coleçã
 $lang["setup-download_filename_format"] = 'Formato do nome do arquivo para download';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' ou \'ssl\'. Para Gmail, \'tls\' ou \'ssl\' é necessário.';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["map_tf_group"] = 'Thunderforest';
 $lang["map_esri_group"] = 'ESRI';
 $lang["map_esridelorme"] = 'DeLorme';

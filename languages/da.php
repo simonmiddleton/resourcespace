@@ -382,7 +382,7 @@ $lang["access1"] = "Begrænset";
 $lang["access2"] = "Fortrolige";
 $lang["access3"] = "Tilpasset";
 $lang["statusandrelationships"] = "Status og relationer";
-$lang["months"] = array('Januar','Februar','Marts','April','Maj','Juni','Juli','August','September','Oktober','November','December');
+$lang["months_list"] = array('Januar','Februar','Marts','April','Maj','Juni','Juli','August','September','Oktober','November','December');
 
 $lang["savesearchitemstocollection"] = "Gem søgningeresultater i samling";
 $lang["removeallresourcesfromcollection"] = "Fjern alle ressourcer fra denne samling";
@@ -2615,7 +2615,6 @@ $lang["exportobfuscate"] = 'Sløre eksporterede data?';
 $lang["export_separate_sql"] = 'Opret separate SQL-eksportfiler for hver databasetabel?';
 $lang["setup-download_filename_format"] = 'Download filnavn format';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'Kortet nedenfor viser ressourcer fra søgeresultatet, der har en geolokation tilknyttet. Markørfarven er indstillet til ressourcetypen eller et brugerdefineret metadatafelt (nøgle under kortet). Når markører ville overlappe andre markører, bruges grønfarvet klyngedannelse med et tal, der angiver antallet af klyngemarkører, zoom ind eller dobbeltklik på en klynge. Klik på en individuel markør for at indlæse en popup for den ressource, der viser et forhåndsvisningsbillede. Klik på forhåndsvisningsbilledet for at indlæse et vindue for den ressource. Hold musen over en individuel markør for geokoordinaterne. Skift baggrundskortet ved hjælp af knappen øverst til højre på kortet. Gem kortet som en PNG-fil ved hjælp af knappen nederst til venstre på kortet.';
 $lang["geolocate_collection_map_text"] = 'Kortet nedenfor viser ressourcer fra denne samling, der har en geolokation tilknyttet. Markørfarven er indstillet til ressourcetypen eller et brugerdefineret metadatafelt (nøgle under kortet). Når markører ville overlappe andre markører, bruges grøn farve til klyngedannelse med et tal, der angiver antallet af klyngede markører, zoom ind eller dobbeltklik på en klynge. Klik på en individuel markør for at indlæse en popup for den ressource, der viser et forhåndsvisningsbillede. Klik på forhåndsvisningsbilledet for at indlæse et vindue for den ressource. Hold musen over en individuel markør for at se geokoordinaterne. Skift baggrundskort ved hjælp af knappen øverst til højre på kortet. Gem kortet som en PNG-fil ved hjælp af knappen nederst til venstre på kortet.';
 $lang["map_osmfrance"] = 'OSM Frankrig';

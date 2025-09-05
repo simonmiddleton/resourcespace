@@ -1275,7 +1275,6 @@ $lang["publishstatus"] = 'প্রকাশের স্থিতি সহ স
 $lang["addnewcontent"] = 'নতুন কন্টেন্ট (পৃষ্ঠা, নাম)';
 $lang["hitcount"] = 'হিট গণনা';
 $lang["downloads"] = 'ডাউনলোডসমূহ';
-$lang["addremove"] = '+/-';
 $lang["list_file_extension"] = 'এক্সটেনশন';
 $lang["all_users"] = 'সকল ব্যবহারকারী';
 $lang["new_resource"] = 'নতুন রিসোর্স';

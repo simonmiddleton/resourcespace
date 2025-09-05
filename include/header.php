@@ -46,6 +46,8 @@ if ($ajax == "") {
             rs_setcookie("thumbs", $thumbs, 1000, "", "", false, false);
         }
     }
+
+$page_title = get_page_title($pagename, pluginname());
     ?>
     <!DOCTYPE html>
     <html lang="<?php echo $language ?>">   
@@ -63,9 +65,11 @@ if ($ajax == "") {
             <meta name="robots" content="noindex,nofollow">
         <?php } ?>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="pagename" content="<?php echo $pagename; ?>" />
+        <meta name="pluginname" content="<?php echo escape(pluginname()); ?>" />
         <?php hook('extra_meta'); ?>
 
-        <title><?php echo escape($applicationname); ?></title>
+        <title id="page-title"><?php echo escape($page_title); ?></title>
 
         <link rel="icon" type="image/png" href="<?php echo get_favicon_url(); ?>" />
 
@@ -158,6 +162,8 @@ if ($ajax == "") {
             var errorpageload = "<h1><?php echo escape($lang["error"]) ?></h1><p><?php echo escape(str_replace(array("\r","\n"), '', nl2br($lang["error-pageload"]))) ?></p>";
             var errortext = "<?php echo escape($lang["error"]) ?>";
             var applicationname = "<?php echo $applicationname?>";
+            var pagetitle = "<?php echo escape($page_title) ?>";
+            var plugintitle = "<?php echo escape(pluginname()) ?>";
             var branch_limit=false;
             var branch_limit_field = new Array();
             var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
@@ -441,6 +447,13 @@ if ($ajax == "") {
                                 }
                                 ?>
 
+                                <li title="<?php echo escape($lang["mymessages-tooltip"]); ?>">
+                                    <a href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');">
+                                        <i aria-hidden="true" class="fa fa-envelope fa-lg fa-fw"></i>
+                                        <span class="MessageCountPill Pill" style="display: none;"></span>
+                                    </a>
+                                </li>
+
                                 <li>
                                     <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onclick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape($lang['myaccount']); ?>" title="<?php echo escape($lang['myaccount']); ?>">
                                         <?php
@@ -448,28 +461,25 @@ if ($ajax == "") {
                                             if ($user_profile_image != "") {
                                                 ?>
                                                 <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> &nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname) ?>
-                                                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                                                 <?php
                                             } else {
                                                 ?>
                                                 <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname) ?>
-                                                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                                                 <?php
                                             }
                                         } else {
                                             if ($user_profile_image != "") {
                                                 ?>
                                                 <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'>
-                                                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                                                 <?php
                                             } else {
                                                 ?>
-                                                <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i>
-                                                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                                                <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i>                                                
                                                 <?php
                                             }
                                         }
                                         ?> 
+                                        <span class="UserMenuCountPill Pill" style="display: none;"></span>
                                     </a>
                                     <div id="MessageContainer" style="position:absolute; "></div>
                                 </li>
@@ -478,7 +488,7 @@ if ($ajax == "") {
                                 <?php if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
                                     <li>
                                         <a href="<?php echo $baseurl?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
-                                            <i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
+                                            <i aria-hidden="true" class="fa fa-lg fa-sliders fa-fw"></i>
                                             <?php
                                             if (!$actions_on && (checkperm("R") || checkperm("r"))) {
                                                 # Show pill count if there are any pending requests

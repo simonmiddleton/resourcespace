@@ -554,7 +554,7 @@ $lang["access3"] = "Tilpasset";
 $lang["statusandrelationships"] = "Status og relasjoner";
 
 # Lists
-$lang["months"] = array("Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember");
+$lang["months_list"] = array("Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Lagre søkte filer til lysbordet";
@@ -2785,7 +2785,6 @@ $lang["unrelateallresources"] = 'Fjern relasjonen til alle ressurser i denne sam
 $lang["unrelateallresources_confirmation"] = 'Ingen av ressursene i denne samlingen er nå relatert';
 $lang["setup-download_filename_format"] = 'Last ned filnavnformat';
 $lang["setup-if-smtpsecure"] = '\'\', \'tls\' eller \'ssl\'. For Gmail, er \'tls\' eller \'ssl\' påkrevd.';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'Kartet nedenfor viser ressurser fra søkeresultatet som har en geolokasjon tilknyttet. Markørfargen er satt til ressursens type eller et tilpasset metadatafelt (nøkkel under kartet). Når markører ville overtrykke andre markører, brukes grønnfarget klynging med et tall som indikerer antall klyngede markører, zoom inn eller dobbeltklikk en klynge. Klikk på en individuell markør for å laste inn en popup for den ressursen som viser et forhåndsvisningsbilde. Klikk på forhåndsvisningsbildet for å laste inn et vindu for den ressursen. Hold markøren over en individuell markør for geokoordinatene. Endre bakgrunnskartet ved å bruke knappen øverst til høyre på kartet. Lagre kartet som en PNG-fil ved å bruke knappen nederst til venstre på kartet.';
 $lang["mapview"] = 'Kart';
 $lang["geolocate_collection_map_text"] = 'Kartet nedenfor viser ressurser fra denne samlingen som har en geolokasjon tilknyttet dem. Markørfargen er satt til ressursens type eller et tilpasset metadatafelt (nøkkel under kartet). Når markører ville overtrykke andre markører, brukes grønnfarget klynging med et tall som indikerer antall klyngede markører, zoom inn eller dobbeltklikk en klynge. Klikk på en individuell markør for å laste en popup for den ressursen som viser et forhåndsvisningsbilde. Klikk på forhåndsvisningsbildet for å laste et vindu for den ressursen. Hold markøren over en individuell markør for geokoordinatene. Endre bakgrunnskartet ved å bruke knappen øverst til høyre på kartet. Lagre kartet som en PNG-fil ved å bruke knappen nederst til venstre på kartet.';

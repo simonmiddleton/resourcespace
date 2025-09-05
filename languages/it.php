@@ -415,7 +415,7 @@ $lang["access3"] = "Accesso custom";
 $lang["statusandrelationships"] = "Stato e relazioni";
 
 # Lists
-$lang["months"] = array("Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre");
+$lang["months_list"] = array("Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Salva i risultati nella collezione";
@@ -2657,7 +2657,6 @@ $lang["unrelateallresources_confirmation"] = 'Nessuna delle risorse in questa co
 $lang["setup-download_filename_format"] = 'Formato del nome del file di download';
 $lang["editrequestorder"] = 'Modifica richiesta';
 $lang["ppi"] = 'PPI';
-$lang["addremove"] = '+/-';
 $lang["map_introtext1"] = 'La mappa sottostante mostra le risorse dai risultati di ricerca che hanno una geolocalizzazione associata. Il colore del marcatore è impostato sul tipo di risorsa o su un campo di metadati personalizzato (chiave sotto la mappa). Quando i marcatori si sovrappongono ad altri marcatori, viene utilizzato un raggruppamento colorato di verde con un numero che indica il numero di marcatori raggruppati, ingrandisci o fai doppio clic su un gruppo. Clicca su un singolo marcatore per caricare un popup per quella risorsa che mostra un\'immagine di anteprima. Clicca sull\'immagine di anteprima per caricare una finestra per quella risorsa. Passa il mouse su un singolo marcatore per vedere le geocoordinate. Cambia la mappa di base utilizzando il pulsante in alto a destra della mappa. Salva la mappa in un file PNG utilizzando il pulsante in basso a sinistra della mappa.';
 $lang["edit_map_introtext"] = 'Panoramica e zoom sulla vista della mappa di interesse, quindi fai clic sulla mappa per individuare il marcatore della posizione della risorsa. Salva la geolocalizzazione più recente utilizzando il pulsante Salva e poi clicca su \'Torna alla modifica della risorsa o geolocalizza la collezione\' per tornare indietro. Per cercare una posizione specifica o il nome di una caratteristica geografica, utilizza il pulsante di ricerca in alto a destra. Cambia la mappa di base utilizzando il pulsante dei livelli della mappa in alto a destra. Salva la mappa in un file PNG utilizzando il pulsante della mappa in basso a sinistra.';
 $lang["geolocate_collection_map_text"] = 'La mappa sottostante mostra le risorse di questa collezione che hanno una geolocalizzazione associata. Il colore del marcatore è impostato sul tipo di risorsa o su un campo di metadati personalizzato (chiave sotto la mappa). Quando i marcatori si sovrappongono ad altri marcatori, viene utilizzato un raggruppamento di colore verde con un numero che indica il numero di marcatori raggruppati, ingrandisci o fai doppio clic su un gruppo. Clicca su un singolo marcatore per caricare un popup per quella risorsa che mostra un\'immagine di anteprima. Clicca sull\'immagine di anteprima per caricare una finestra per quella risorsa. Passa il mouse su un singolo marcatore per vedere le coordinate geografiche. Cambia la mappa di base utilizzando il pulsante in alto a destra della mappa. Salva la mappa in un file PNG utilizzando il pulsante in basso a sinistra della mappa.';

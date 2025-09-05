@@ -17,7 +17,7 @@ function HookVr_viewViewaftergetresourcedataview($ref,$resource)
     return false;
     }
     
-function HookVr_viewViewReplacepreviewlink()
+function HookVr_viewViewReplacepreviewlink($preview_title)
     {
     global $resource, $baseurl_short, $urlparams, $modal, $lang, $plugins;
     $use_vr_view = VrViewUseVR($resource);
@@ -35,7 +35,7 @@ function HookVr_viewViewReplacepreviewlink()
         <a id="previewimagelink"
            class="enterLink"
            href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>"
-           title="<?php echo escape($lang["fullscreenpreview"]); ?>"
+           title="<?php echo escape($preview_title); ?>"
            style="position:relative;"
            onclick="return ModalLoad(this,false,true,top);">
     <?php
