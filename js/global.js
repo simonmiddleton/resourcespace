@@ -968,6 +968,9 @@ function ModalCentre()
             // Smaller menu if tile navigation disabled.
             modalwidth = 250;
         }
+    } else if (modalalign == 'rightnarrow') {
+        modalmaxheight = Math.max(jQuery(window).height() - 100);
+        modalwidth = 440;
     } else if ((typeof modalfit != 'undefined') && modalfit) {
         modalmaxheight = 'auto';
         modalwidth = 'auto';
@@ -983,7 +986,7 @@ function ModalCentre()
 
     // Support alignment of modal (e.g. for 'My Account')
     topmargin = 30;
-    if (modalalign == 'right') {
+    if (modalalign == 'right' || modalalign == 'rightnarrow') {
         left = Math.max(jQuery(window).width() - jQuery('#modal').outerWidth(), 0) - 20;
         topmargin = 50;
     } else {

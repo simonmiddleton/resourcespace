@@ -155,7 +155,7 @@ if ($year == $thisyear && ($month == "" || $month == $thismonth)) {
 
 # Add text
 $col = imagecolorallocate($graph, 0, 0, 0);
-$text = $lang["stat-" . strtolower(str_replace(" ", "", $activity_type))] . " " . $lang["summary"] . ", " . ($month == "" ? "" : $lang["months"][$month - 1] . " ") . $year . "\n\n";
+$text = $lang["stat-" . strtolower(str_replace(" ", "", $activity_type))] . " " . $lang["summary"] . ", " . ($month == "" ? "" : $lang["months_list"][$month - 1] . " ") . $year . "\n\n";
 if ($max != -1) {
     $text .= $lang["mostinaday"] . " = " . number_format($max) . "\n" . ($month == "" ? $lang["totalfortheyear"] : $lang["totalforthemonth"]) . " = " . number_format($total) . "\n" . $lang["dailyaverage"] . " = " . number_format(round($total / count($results), 1));
 } else {
@@ -168,7 +168,7 @@ if ($month == "") {
     # Annual graph, draw months
     for ($n = 1; $n <= 12; $n++) {
         $x = (int) floor($xoffset + (($n - 1) / 12 * ($width - $xoffset)) + 14);
-        $text = substr($lang["months"][$n - 1], 0, 3);
+        $text = substr($lang["months_list"][$n - 1], 0, 3);
         imagettftext($graph, 9, 0, $x, $height - $margin + 14, $col, $font, $text);
     }
 } else {

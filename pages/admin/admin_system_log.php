@@ -232,7 +232,7 @@ include "../../include/header.php";
                     // Not filtered by default when searching, add option to filter by month
                     echo "<option " .  ($logmonth == "" ? " selected" : "") . " value='0'>" . escape($lang["anymonth"]) . "</option>\n";
                     for ($m = 1; $m <= 12; $m++) {
-                        echo "<option " .  ($m == $logmonth ? " selected" : "") . " value=\"" .  sprintf("%02d", $m) . "\">" . escape($lang["months"][$m - 1]) . "</option>\n";
+                        echo "<option " .  ($m == $logmonth ? " selected" : "") . " value=\"" .  sprintf("%02d", $m) . "\">" . escape($lang["months_list"][$m - 1]) . "</option>\n";
                     }
                     ?>
                 </select>    

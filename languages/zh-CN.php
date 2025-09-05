@@ -452,7 +452,7 @@ $lang["access3"] = "可自定";
 $lang["statusandrelationships"] = "身份与关系";
 
 # Lists
-$lang["months"] = array("一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月");
+$lang["months_list"] = array("一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "在此收藏夹中储存搜索到的资源";

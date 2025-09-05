@@ -554,7 +554,7 @@ $lang["access3"] = "Tilpasset";
 $lang["statusandrelationships"] = "Status og relasjoner";
 
 # Lists
-$lang["months"] = array("Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember");
+$lang["months_list"] = array("Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Lagre søkte filer til lysbordet";

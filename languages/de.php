@@ -734,7 +734,7 @@ $lang["access3"] = "benutzerdefiniert";
 $lang["statusandrelationships"] = "Status und Beziehungen";
 
 # Lists
-$lang["months"] = array("Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember");
+$lang["months_list"] = array("Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember");
 $lang["false-true"] = array("Falsch","Wahr");
 
 # Formatting

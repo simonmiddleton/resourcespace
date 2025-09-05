@@ -809,11 +809,22 @@ $lang["columnheader-resource_id"] = $lang["resourceid"] = "Resource ID";
 $lang["id"] = "ID";
 $lang["todate"] = "To date";
 $lang["fromdate"] = "From date";
+$lang["just_now"] = "Just now";
+$lang["minute"] = "Min";
+$lang["minutes"] = "Mins";
+$lang["hour"] = "Hour";
+$lang["hours"] = "Hours";
 $lang["day"] = "Day";
+$lang["days"] = "Days";
+$lang["week"] = "Week";
+$lang["weeks"] = "Weeks";
 $lang["month"] = "Month";
+$lang["months"] = "Months";
 $lang["year"] = "Year";
+$lang["years"] = "Years";
 $lang["hour-abbreviated"] = "HH";
 $lang["minute-abbreviated"] = "MM";
+$lang["ago"] = "ago";
 $lang["itemstitle"] = "Items";
 $lang["tools"] = "Tools";
 $lang["created"] = "Created";
@@ -980,7 +991,7 @@ $lang["accessinvalid"] = "Invalid";
 $lang["statusandrelationships"] = "Status and relationships";
 
 # Lists
-$lang["months"] = array("January","February","March","April","May","June","July","August","September","October","November","December");
+$lang["months_list"] = array("January","February","March","April","May","June","July","August","September","October","November","December");
 $lang["false-true"] = array("False","True");
 
 # Formatting
@@ -2673,6 +2684,8 @@ $lang['error_upload_failed'] = "An error occurred while uploading the file.";
 /* Messaging */
 $lang["seen"] = "Seen";
 $lang["mymessages"] = "Messages";
+$lang["backtomessages"] = "Back to Messages";
+$lang["viewallmessages"] = "View all Messages";
 $lang["mymessages_markread"] = "Mark read";
 $lang["mymessages_markunread"] = "Mark unread";
 $lang["mymessages_markallread"] = "Mark all read";

@@ -416,7 +416,7 @@ $lang["access3"] = "Anders";
 $lang["statusandrelationships"] = "Status en relaties";
 
 # Lists
-$lang["months"] = array("Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December");
+$lang["months_list"] = array("Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December");
 
 # New for 1.3
 $lang["savesearchitemstocollection"] = "Voeg gevonden materialen toe aan collectie";

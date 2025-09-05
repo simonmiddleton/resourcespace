@@ -901,7 +901,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                         $m = str_pad($n, 2, "0", STR_PAD_LEFT);
                                         ?>
                                         <option <?php echo ($n == $found_month) ? 'selected' : ''; ?> value="<?php echo $m; ?>">
-                                            <?php echo escape($lang["months"][$n - 1]); ?>
+                                            <?php echo escape($lang["months_list"][$n - 1]); ?>
                                         </option>
                                         <?php
                                     }

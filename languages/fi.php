@@ -692,7 +692,7 @@ $lang["access3"] = "Mukautettu";
 $lang["statusandrelationships"] = "Tila ja suhteet";
 
 # Lists
-$lang["months"] = array("Tammikuu","Helmikuu","Maaliskuu","Huhtikuu","Toukokuu","Kesäkuu","Heinäkuu","Elokuu","Syyskuu","Lokakuu","Marraskuu","Joulukuu");
+$lang["months_list"] = array("Tammikuu","Helmikuu","Maaliskuu","Huhtikuu","Toukokuu","Kesäkuu","Heinäkuu","Elokuu","Syyskuu","Lokakuu","Marraskuu","Joulukuu");
 $lang["false-true"] = array("Epätosi","Tosi");
 
 # Formatting
