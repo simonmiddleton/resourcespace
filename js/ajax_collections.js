@@ -690,3 +690,29 @@ function featured_collection_category_select_onchange(el, form)
     document.getElementsByName('update_parent')[0].value = 'true';
     document.getElementById('redirect').value = '';
     }
+
+function delete_collection(ref, confirm_msg, csrf)
+{
+    console.debug(`Delete collection #${ref}`);
+    if(confirm(confirm_msg)) {
+        const post_data = {
+            ajax: true,
+            dropdown_actions: true,
+            delete: ref,
+            ...JSON.parse(csrf)
+        };
+
+        jQuery.post(`${baseurl}/pages/collection_manage.php`, post_data, function(response) {
+            if (response.success === 'Yes') {
+                let collections_params = new URLSearchParams({
+                    collection: response.redirect_to_collection,
+                    k: response.k,
+                    nc: response.nc,
+                });
+
+                CollectionDivLoad(`${baseurl}/pages/collections.php?${collections_params.toString()}`);
+                CentralSpaceLoad(`${baseurl}/pages/collections_featured.php`);
+            }
+        }, 'json');
+    }
+}

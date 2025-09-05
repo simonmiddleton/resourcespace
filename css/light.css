@@ -357,6 +357,19 @@ div.MessageBox a {
 .FeaturedSimpleTile:hover {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
 }
+.FeaturedSimpleTile .top-right-menu:hover,
+.SearchBreadcrumbs .top-right-menu:hover  {
+    background: #dfdfdf;
+    color: #474747;
+}
+.FeaturedSimpleLinks .context-menu-container {
+    background: white;
+    color: #474747;
+    box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.1);
+}
+.context-menu-row:hover {
+    background: #e7e7e7;
+}
 
 
 /* Highlight selected keywords */
