@@ -46,3 +46,5 @@ $lang["weekday-3"] = "Wednesday";
 $lang["weekday-4"] = "Thursday";
 $lang["weekday-5"] = "Friday";
 $lang["weekday-6"] = "Saturday";
+
+$lang["page-title_action_dates_setup"] = "Setup Action Dates Plugin";

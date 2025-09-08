@@ -51,3 +51,6 @@ $lang["simpleldap_usercomment"] = "Created by SimpleLDAP plugin.";
 $lang["simpleldap_usermatchcomment"] = "Updated to LDAP user by SimpleLDAP.";
 $lang["origin_simpleldap"] = "SimpleLDAP plugin";
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"] = "Do not check the FQDN of the server against the CN of the certificate";
+
+$lang["page-title_simpleldap_ajax_test_auth"]   = "Test LDAP Authentication";
+$lang["page-title_simpleldap_setup"]            = "Setup Simple LDAP Plugin";

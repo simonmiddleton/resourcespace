@@ -84,3 +84,7 @@ $lang['transform_preset_sizes']     = "Select from predefined target size";
 $lang['error_crop_invalid'] = "Please select a region of the image";
 
 $lang['cropper_preset_sizes'] = "Predefined sizes";
+
+$lang["page-title_transform_collection_transform"]  = "Transform Resource";
+$lang["page-title_transform_crop"]                  = "Crop Resource";
+$lang["page-title_transform_setup"]                 = "Setup Transform Plugin";

@@ -37,3 +37,9 @@ $lang["image_banks_local_download_attempt"] = "User tried to download '%FILE' us
 $lang["image_banks_bad_file_create_attempt"] = "User tried to create a resource with '%FILE' file using the ImageBank plugin by pointing to a system which is not part of allowed providers";
 
 $lang["image_banks_createdfromimagebanks"] = "Created from Image Banks plugin";
+
+$lang["page-title_image_banks_download"]                = "Download Resource";
+$lang["page-title_image_banks_search"]                  = "Search";
+$lang["page-title_image_banks_setup"]                   = "Setup Image Banks Plugin";
+$lang["page-title_image_banks_shutterstock_license"]    = "View Shutterstock Image";
+$lang["page-title_image_banks_view"]                    = "View Resource";

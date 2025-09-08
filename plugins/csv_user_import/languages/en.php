@@ -15,3 +15,5 @@ $lang['csv_user_import_condition2'] = 'The CSV file must have a header row';
 $lang['csv_user_import_condition3'] = 'Column(s) that will have values containing commas( , ), make sure you format it as type text so you don\'t have to add quotes (""). When saving as a .csv file, make sure to check the option of quoting text type cells';
 $lang['csv_user_import_condition4'] = 'Allowed columns: *username, *email, password, fullname, account_expires, comments, ip_restrict, lang. Note: mandatory fields are marked with *';
 $lang['csv_user_import_condition5'] = 'The language of the user will default back to the one set using "$defaultlanguage" config option if lang column is not found or doesn\'t have a value';
+
+$lang["page-title_csv_user_import_csv_user_import"] = "CSV User Import";

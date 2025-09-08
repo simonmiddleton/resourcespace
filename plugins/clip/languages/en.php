@@ -33,3 +33,7 @@ $lang["clip_missing_vectors"] = "Vectors missing";
 $lang["clip-vector-generation"] = "Vector generation";
 $lang["clip-vector-cleanup"] = "Delete orphaned vectors";
 $lang["clip-vector-cleanup-description"] = "Remove vectors that belong to resources that no longer exist or are not one of the above selected resource types";
+
+$lang["page-title_clip_search"] = "AI Smart Search";
+$lang["page-title_clip_setup"]  = "Setup CLIP Plugin";
+$lang["page-title_clip_webcam"] = "Webcam Tag Generator";

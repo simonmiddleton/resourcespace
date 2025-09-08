@@ -18,3 +18,6 @@ $lang["embeddocument_maximise"] = "maximise";
 $lang["embeddocument_heading"] = "Remote Document Viewer Configuration";
 $lang["embeddocument_specify_resourcetype"] = "Please specify which resource type the 'embed' functionality should appear for.";
 $lang["embeddocument_document_resourcetype"] = "Remote Document Viewer Resource Type:";
+
+$lang["page-title_embeddocument_setup"]     = "Setup Embed Document Plugin";
+$lang["page-title_embeddocument_viewer"]    = "Embed Document Viewer";

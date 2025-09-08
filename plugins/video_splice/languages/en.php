@@ -50,3 +50,7 @@ $lang["video_splice_no_export_folder"] = "Unable to perform export as no filepat
 $lang["video_splice_incorrect_quantity"] = "A valid resource has either been removed or added to the collection since this page has been loaded. Please try again.";
 $lang["video_splice_createdfromvideosplice"] = "Created from Video Splice plugin";
 $lang["video_splice_error_invalid_action"] = "Error : Invalid action";
+
+$lang["page-title_video_splice_setup"]  = "Setup Video Splice Plugin";
+$lang["page-title_video_splice_splice"] = "Splice Video";
+$lang["page-title_video_splice_trim"]   = "Trim Video";

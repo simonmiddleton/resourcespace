@@ -36,3 +36,8 @@ $lang['brand_guidelines_configuration'] = 'Brand Guidelines configuration';
 $lang['brand_guidelines_fallback_size_thm'] = 'Thumbnail layout fallback image size';
 $lang['brand_guidelines_fallback_size_half_width'] = 'Half-width layout fallback image size';
 $lang['brand_guidelines_fallback_size_full_width'] = 'Full-width layout fallback image size';
+
+$lang["page-title_brand_guidelines_content"]    = "Manage Brand Guidelines Content";
+$lang["page-title_brand_guidelines_guidelines"] = "Brand Guidelines";
+$lang["page-title_brand_guidelines_setup"]      = "Setup Brand Guidelines Plugin";
+$lang["page-title_brand_guidelines_toc"]        = "Edit content";

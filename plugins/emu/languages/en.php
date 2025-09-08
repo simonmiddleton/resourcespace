@@ -43,3 +43,6 @@ $lang['emu_upload_nodata'] = 'No EMu data found for this IRN: ';
 $lang['emu_nodata_returned'] = 'No EMu data found for the specified IRN.';
 
 $lang["emu_createdfromemu"] = "Created from EMU plugin";
+
+$lang["page-title_emu_emu_object_details"]  = "EMu Object Details";
+$lang["page-title_emu_setup"]               = "Setup  Plugin";

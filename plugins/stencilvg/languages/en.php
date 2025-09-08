@@ -8,3 +8,7 @@ $lang["stencilvg-print"] = "Print";
 $lang["stencilvg-download"] = "Download";
 $lang["stencilvg-save_as_new_resource"] = "Save as new resource";
 $lang["stencilvg-no_parameters_found"] = "No template parameters found";
+
+$lang["page-title_stencilvg_download_svg"]  = "Download SVG";
+$lang["page-title_stencilvg_input"]         = "SVG Input";
+$lang["page-title_stencilvg_setup"]         = "Setup StencilVG Plugin";

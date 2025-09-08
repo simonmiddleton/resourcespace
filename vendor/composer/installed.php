@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'montala/resourcespace',
-        'pretty_version' => 'dev-20250609_dhuby_blurhash',
-        'version' => 'dev-20250609_dhuby_blurhash',
+        'pretty_version' => 'trunk',
+        'version' => 'dev-trunk',
         'reference' => null,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
@@ -20,8 +20,8 @@
             'dev_requirement' => false,
         ),
         'montala/resourcespace' => array(
-            'pretty_version' => 'dev-20250609_dhuby_blurhash',
-            'version' => 'dev-20250609_dhuby_blurhash',
+            'pretty_version' => 'trunk',
+            'version' => 'dev-trunk',
             'reference' => null,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',

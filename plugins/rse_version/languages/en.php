@@ -16,3 +16,6 @@ $lang["rse_version_log_not_found"]  = "Log entry not found";
 $lang["rse_version_revert_state"]   = "Revert state";
 $lang["rse_version_rstate_changes"] = "Reverting state for collection #%COLLECTION by replaying events up to, but not including selected record.";
 $lang["rse_version_invalid_time"]   = "Reverting to a time prior to [date] is not supported";
+
+$lang["page-title_rse_version_revert"]  = "Revert Resource Version";
+$lang["page-title_rse_version_setup"]   = "Setup Version Plugin";

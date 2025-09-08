@@ -57,3 +57,11 @@ $lang['consent_notification_message'] = "There are some consents expiring soon."
 $lang['consent_notification_link'] = "View them here";
 $lang['consent_notification_user_pref'] = "Change whether you receive these notifications";
 $lang['consent_notification_global_pref'] = "Disable these notifications for everyone";
+
+$lang["page-title_consentmanager_batch"]    = "Collection Consents";
+$lang["page-title_consentmanager_delete"]   = "Delete Consent";
+$lang["page-title_consentmanager_download"] = "Download Consent";
+$lang["page-title_consentmanager_edit"]     = "Edit Consent";
+$lang["page-title_consentmanager_list"]     = "Manage Consents";
+$lang["page-title_consentmanager_setup"]    = "Setup Consent Plugin";
+$lang["page-title_consentmanager_unlink"]   = "Unlink Consent";

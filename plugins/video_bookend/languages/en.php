@@ -13,3 +13,5 @@ $lang["bookend-intro"]="Select images from the alternative files list to use for
 // Errors
 $lang["bookend-failed"] = "Failed!";
 $lang["bookend-could-not-open-file"] = "Error - could not open file!";
+
+$lang["page-title_video_bookend_bookend"] = "Video Bookend";

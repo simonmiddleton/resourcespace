@@ -69,3 +69,10 @@ $lang["flickr_api_key"] = "Flickr API key";
 $lang["flickr_api_secret"] = "Flickr API secret";
 
 $lang['flickr_warn_no_title_access'] = "Publishing not allowed without access to the title field (ID #%id). Please contact an administrator!";
+
+$lang["page-title_flickr_theme_publish_flickr_preview"]             = "Flickr Preview";
+$lang["page-title_flickr_theme_publish_flickr_publish_progress"]    = "Flickr Publish - Progress";
+$lang["page-title_flickr_theme_publish_flickr_publish"]             = "Flickr Publish";
+$lang["page-title_flickr_theme_publish_setup"]                      = "Setup Flikr Plugin";
+$lang["page-title_flickr_theme_publish_sync_progress"]              = "Flickr Sync - Progress";
+$lang["page-title_flickr_theme_publish_sync"]                       = "Flcikr Sync";

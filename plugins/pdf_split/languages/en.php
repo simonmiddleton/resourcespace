@@ -16,3 +16,5 @@ $lang["invalidrange"]="Invalid range";
 
 $lang["splitpdf_createnewresource"]="Create a new resource for each range";
 $lang["splitpdf_createnewalternativefile"]="Create a new alternative file on this resource for each range";
+
+$lang["page-title_pdf_split_pdf_split"] = "PDF Split";

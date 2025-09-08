@@ -67,3 +67,11 @@ $lang['rse_workflow_bcc_admin'] = 'Notify system administrators when the contrib
 
 // System menu tool tip
 $lang["rse_workflow_manage_workflow-tooltip"] = "Create and manage workflow states";
+
+$lang["page-title_rse_workflow_batch_action"]           = "Batch Workflow Action";
+$lang["page-title_rse_workflow_edit_action"]            = "Edit Workflow Action";
+$lang["page-title_rse_workflow_edit_state"]             = "Edit Workflow State";
+$lang["page-title_rse_workflow_edit_workflow_actions"]  = "Edit Workflow Actions";
+$lang["page-title_rse_workflow_edit_workflow_states"]   = "Edit Workflow States";
+$lang["page-title_rse_workflow_edit_workflow"]          = "Ediw Workflow";
+$lang["page-title_rse_workflow_setup"]                  = "Setup Workflow Plugin";

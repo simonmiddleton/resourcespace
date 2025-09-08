@@ -14,3 +14,6 @@ $lang['downloadformat'] = 'Download format';
 
 # Overwrite existing strings (we always download all files)
 $lang['are_available-0'] = $lang['are_available-1'] = $lang['are_available-2'] = 'will be converted';
+
+$lang["page-title_format_chooser_convert"]  = "Format Chooser";
+$lang["page-title_format_chooser_setup"]    = "Setup Format Chooser Plugin";

@@ -10,3 +10,5 @@ $lang["system_reset_delete_all"]="Delete all data and files";
 
 // System menu tool tip
 $lang["system_reset-tooltip"] = "Perform a system reset to delete all files and data";
+
+$lang["page-title_system_reset_reset"] = "System Reset";

@@ -53,3 +53,6 @@ $lang["youtube_publish_category"]="Category";
 $lang["youtube_publish_category_error"]="Error retrieving YouTube categories: - ";
 $lang["youtube_chunk_size"]="Chunk size to use when uploading to YouTube (MB)";
 $lang["youtube_publish_add_anchor"]="Add anchor tags to URl when saving to YouTube URL metadata field?";
+
+$lang["page-title_youtube_publish_setup"]           = "Setup Plugin";
+$lang["page-title_youtube_publish_youtube_upload"]  = "Publish Resource to Youtube";
