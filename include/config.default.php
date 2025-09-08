@@ -1162,8 +1162,12 @@ $password_brute_force_delay = 4;
 
 // Password hash information - algorithm and options. @see https://www.php.net/manual/en/function.password-hash.php
 $password_hash_info = [
-    'algo' => PASSWORD_BCRYPT,
-    'options' => ['cost' => 12]
+    'algo' =>  PASSWORD_ARGON2ID,
+    'options' => [
+        'memory_cost' => 1<<17, // 128 MB
+        'time_cost'   => 4,
+        'threads'     => 2
+    ]
 ];
 
 // Use imperial instead of metric for the download size guidelines
