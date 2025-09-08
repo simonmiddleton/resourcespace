@@ -350,7 +350,11 @@ function rs_password_verify(string $password, string $hash, array $data)
     } elseif ($hash_v1 === $hash) {
         return true;
     }
-    elseif (
+    // Legacy: Plain text password - when passwords were not hashed at all (very old code - should really not be the
+    // case anymore) -or- when someone resets it manually in the database
+    elseif ($password === $hash) {
+        return true;
+    } elseif (
         isset($GLOBALS["scramble_key_old"]) && $GLOBALS["migrating_scrambled"]
         && password_verify(hash_hmac('sha256', $RS_madeup_pass, $GLOBALS['scramble_key_old']), $hash)
     ) {
