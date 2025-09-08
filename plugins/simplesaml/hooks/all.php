@@ -450,6 +450,10 @@ function HookSimplesamlAllProvideusercredentials()
                         debug("simplesaml - unable to create user: " . $userid);
                         return false;
                     }
+                    if ($userid <= 0) {
+                        debug("simplesaml - Error - User could not be created, user limit exceeded");
+                        return false;
+                    }
                     if (filter_var($simplesaml_multiple_email_notify, FILTER_VALIDATE_EMAIL) && getval("usesso", "") != "") {
                         // Already account(s) with this email address, notify the administrator (provided it is an actual attempt to pevent unnecessary duplicates)
                         simplesaml_duplicate_notify($username, $group, $email, $email_matches, $userid);
@@ -462,6 +466,10 @@ function HookSimplesamlAllProvideusercredentials()
         } else {
             // Create the user
             $userid = new_user($username, $group);
+            if ($userid <= 0) {
+                debug("simplesaml - Error - User could not be created, user limit exceeded");
+                return false;
+            }
             include_once __DIR__ . '/../../../include/dash_functions.php';
             build_usergroup_dash($group, $userid);
             $update_hash = true;
