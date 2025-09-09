@@ -57,6 +57,10 @@
     },
     "scripts": {
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup",
+        "dev:beforeCommit": [
+            "@dev:phpstan"
+        ],
+        "dev:phpstan": "phpstan analyse",
         "build:applyDownstreamChanges": [
             "echo Applying downstream changes to vendor/.",
             "#IF you've already applied downstream changes patch will warn you with 'Reversed (or previously applied) patch detected!  Assume -R?'. Select 'y' to continue.",
@@ -66,11 +70,7 @@
             "svn merge -c 24458 ^/trunk # simplesamlphp is under VCS so we can simply merge those changes",
             "svn merge -c 27077 ^/trunk # flickr_theme_publish is under VCS so we can simply merge those changes"
         ],
-        "dev:beforeCommit": [
-            "@dev:phpstan"
-        ],
-        "dev:phpstan": "phpstan analyse",
-        "release:build": [
+        "build:release": [
             "# Building ResourceSpace release",
             "composer check-platform-reqs --no-interaction --no-cache",
             "composer install --no-interaction --no-dev --optimize-autoloader --classmap-authoritative",
@@ -82,7 +82,7 @@
         ]
     },
     "scripts-descriptions": {
-        "release:build": "ResourceSpace build release version. End users can then update with a simple `svn switch` call.",
+        "build:release": "ResourceSpace build release version. This will allow end users to continue to upgrade with a simple `svn switch` call.",
         "build:applyDownstreamChanges": "Apply downstream changes to ResourceSpace dependencies. Any changes that the upstream has fixed should be removed from the list as we want minimum (to no) divergence from upstreams."
     },
     "support": {
