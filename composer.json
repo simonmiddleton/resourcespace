@@ -74,7 +74,7 @@
             "# Building ResourceSpace release",
             "sh -c '[ -z \"$(svn diff)\" ] || (echo \"Working copy has changes! Please address those first!\" && exit 1)'",
             "svn update",
-            "composer check-platform-reqs --no-interaction --no-cache",
+            "composer check-platform-reqs --no-interaction --no-cache --no-dev",
             "composer install --no-interaction --no-dev --optimize-autoloader --classmap-authoritative",
             "composer audit",
             "@build:applyDownstreamChanges",
