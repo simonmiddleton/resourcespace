@@ -77,7 +77,7 @@
             "composer audit",
             "@build:applyDownstreamChanges",
             "svn add --no-ignore --force vendor/",
-            "svn rm --keep-local .svnignore tests/",
+            "svn rm .svnignore tests/",
             "echo Release build completed!"
         ]
     },
