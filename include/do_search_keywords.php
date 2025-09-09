@@ -271,11 +271,11 @@ if ($keysearch) {
                 $field_short_name_specified
                 && !$quoted_string
                 && preg_match(
-                    '/^(?=[^ \\t\\n]*[!@#$%^&()_+\\-=\\[\\]{}\'\"\\\\,.<>\\/?])[^ \\t\\n]*$/',
+                    '/^(?!.*\\*)(?=[^ \\t\\n]*[!@#$%^&()_+\\-=\\[\\]{}\'\"\\\\,.<>\\/?])[^ \\t\\n]*$/',
                     $keyword
                 ) === 1
             ) {
-                // Quote field specific keywords that contain special characters and no spaces
+                // Quote field specific keywords that contain special characters and no spaces unless a wildcard is present
                 $keyword = "\"$keyword\"";
                 $quoted_string = true;
             }
