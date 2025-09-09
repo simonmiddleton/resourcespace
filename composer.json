@@ -79,7 +79,7 @@
             "composer audit",
             "@build:applyDownstreamChanges",
             "svn add --no-ignore --force vendor/",
-            "svn rm .svnignore tests/",
+            "svn rm .svnignore phpcs.xml.dist phpstan-baseline.neon phpstan.neon.dist rector.php tests/",
             "# Release build completed!"
         ]
     },
