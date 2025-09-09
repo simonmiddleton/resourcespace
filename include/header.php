@@ -488,7 +488,7 @@ $page_title = get_page_title($pagename, pluginname());
                                 <?php if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
                                     <li>
                                         <a href="<?php echo $baseurl?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
-                                            <i aria-hidden="true" class="fa fa-lg fa-sliders fa-fw"></i>
+                                            <i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
                                             <?php
                                             if (!$actions_on && (checkperm("R") || checkperm("r"))) {
                                                 # Show pill count if there are any pending requests
