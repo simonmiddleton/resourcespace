@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => '上',
    'bottom' => '下',
 );
+$lang["page-title_image_text_setup"] = '画像テキストプラグインの設定';

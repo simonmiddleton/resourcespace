@@ -6,3 +6,4 @@ $lang["system_reset_warning"] = 'Папярэджанне! Гэта выдалі
 $lang["system_reset_confirm"] = 'Вы ўпэўнены? Гэта нельга будзе адменіць.';
 $lang["system_reset_delete_all"] = 'Выдаліць усе дадзеныя і файлы';
 $lang["system_reset-tooltip"] = 'Выканаць скід сістэмы, каб выдаліць усе файлы і дадзеныя';
+$lang["page-title_system_reset_reset"] = 'Скід сістэмы';

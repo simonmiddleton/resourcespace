@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'แสดงฟังก์ชัน AI Faces บน
 $lang["faces_count_faces"] = 'จำนวนใบหน้าทั้งหมดที่ตรวจพบ';
 $lang["faces_count_missing"] = 'ภาพที่จะประมวลผล';
 $lang["faces-tag-field-not-set"] = 'ฟิลด์แท็กไม่ได้ถูกกำหนดค่า';
+
+$lang["page-title_faces_setup"] = 'ตั้งค่า Plugin Faces';

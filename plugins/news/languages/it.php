@@ -15,3 +15,6 @@ $lang["title-too-long"]='Il campo del titolo è più lungo dei 50 caratteri cons
 $lang["plugin-news-title"]='Notizie';
 $lang["plugin-news-desc"]='Aggiunge elementi di notizie alla pagina principale';
 $lang["news_manage-tooltip"] = 'Aggiungi, modifica o elimina articoli di notizie';
+$lang["page-title_news_news_content_edit"] = 'Modifica Contenuto Notizie';
+$lang["page-title_news_news_edit"] = 'Modifica Notizie';
+$lang["page-title_news_news"] = 'Notizie';

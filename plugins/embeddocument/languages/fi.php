@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Etäasiakirjan katselu resurssit
 $lang["embeddocument_embed_share"] = 'Upota asiakirja';
 $lang["plugin-embeddocument-title"] = 'Upota asiakirja';
 $lang["plugin-embeddocument-desc"] = 'Tarjoaa toiminnon HTML:n luomiseen upotettavia asiakirjaesikatseluja varten etäsivustoilla.';
+
+$lang["page-title_embeddocument_setup"] = 'Aseta upotustiedostoliitännäinen';
+$lang["page-title_embeddocument_viewer"] = 'Upota asiakirjan katseluohjelma';

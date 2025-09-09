@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'vrh',
    'bottom' => 'dno',
 );
+$lang["page-title_image_text_setup"] = 'Postavljanje dodatka za tekst slika';

@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'उपशीर्षक उत्पन्न क
 $lang["whisper_subtitles_name"] = 'स्वचालित रूप से उत्पन्न उपशीर्षक';
 $lang["whisper_transcript"] = 'एक ट्रांसक्रिप्ट फ़ाइल उत्पन्न करें और वैकल्पिक फ़ाइल डाउनलोड के रूप में जोड़ें';
 $lang["whisper_transcript_name"] = 'स्वचालित रूप से उत्पन्न प्रतिलेख';
+
+$lang["page-title_whisper_setup"] = 'Whisper प्लगइन सेटअप करें';

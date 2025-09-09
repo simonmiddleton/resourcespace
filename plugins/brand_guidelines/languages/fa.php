@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'پیکربندی راهنمای بر�
 $lang["brand_guidelines_fallback_size_thm"] = 'اندازه تصویر جایگزین طرح بندانگشتی';
 $lang["brand_guidelines_fallback_size_half_width"] = 'اندازه تصویر جایگزین طرح نیم‌عرض';
 $lang["brand_guidelines_fallback_size_full_width"] = 'اندازه تصویر جایگزین طرح تمام عرض';
+
+$lang["page-title_brand_guidelines_content"] = 'مدیریت محتوای راهنماهای برند';
+$lang["page-title_brand_guidelines_guidelines"] = 'راهنماهای برند';
+$lang["page-title_brand_guidelines_setup"] = 'نصب افزونه راهنمای برند';
+$lang["page-title_brand_guidelines_toc"] = 'ویرایش محتوا';

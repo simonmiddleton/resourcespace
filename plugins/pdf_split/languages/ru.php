@@ -14,3 +14,4 @@ $lang["splitpdf_createnewresource"]='Создать новый ресурс дл
 $lang["splitpdf_createnewalternativefile"]='Создать новый альтернативный файл для каждого диапазона на этом ресурсе';
 $lang["plugin-pdf_split-title"]='Разделение PDF';
 $lang["plugin-pdf_split-desc"]='Позволяет разделять PDF файлы на несколько страниц';
+$lang["page-title_pdf_split_pdf_split"] = 'Разделение PDF';

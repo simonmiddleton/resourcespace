@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='ユーザーが自分のVimeoアカ�
 $lang["vimeo_publish_set_account"]='Vimeoアカウントを設定する';
 $lang["plugin-vimeo_publish-title"]='Vimeo公開';
 $lang["plugin-vimeo_publish-desc"]='OAuth 2.0を使用してVimeoにリソースを公開';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo公開プラグインの設定';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Vimeoに公開';

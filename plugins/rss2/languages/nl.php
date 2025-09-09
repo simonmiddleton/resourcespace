@@ -13,3 +13,6 @@ $lang["rss_feed_for_search_filter"]='Maak een RSS-feed voor deze zoekopdracht';
 $lang["filtered_resource_update_for"]='Geüpdatete gefilterde bron voor zoekopdracht [%search%]';
 $lang["plugin-rss2-title"]='RSS-feed';
 $lang["plugin-rss2-desc"]='Maakt de geauthenticeerde generatie van RSS-feeds van nieuwe inhoud mogelijk, inclusief configureerbare velden.';
+$lang["page-title_rss2_rssfeed"] = 'RSS Feed';
+$lang["page-title_rss2_rssfilter"] = 'RSS-filter';
+$lang["page-title_rss2_setup"] = 'Instellen RSS Plugin';

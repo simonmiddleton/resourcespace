@@ -13,3 +13,5 @@ $lang["csv_user_import_condition2"] = 'Faili ya CSV lazima iwe na safu ya kichwa
 $lang["csv_user_import_condition3"] = 'Safu ambazo zitakuwa na thamani zenye vigae( , ), hakikisha umeunda kama aina ya maandishi ili usilazimike kuongeza nukuu (""). Unapohifadhi kama faili ya .csv, hakikisha umechagua chaguo la kunukuu seli za aina ya maandishi.';
 $lang["csv_user_import_condition4"] = 'Safu zinazoruhusiwa: *jina_la_mtumiaji, *barua_pepe, nenosiri, jina_kamili, akaunti_inaisha, maoni, kizuizi_cha_ip, lugha. Kumbuka: sehemu za lazima zimewekwa alama na *';
 $lang["csv_user_import_condition5"] = 'Lugha ya mtumiaji itarudi kwa ile iliyowekwa kwa kutumia chaguo la usanidi "$defaultlanguage" ikiwa safu ya lugha haipatikani au haina thamani.';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Uagizaji wa Mtumiaji wa CSV';

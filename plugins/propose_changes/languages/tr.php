@@ -33,3 +33,7 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Önerilen değişi
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Önerilen değişiklikler gönderildi.<br/>[changesummary]<br/>Değişiklikleri gözden geçirmek için aşağıya tıklayın<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Değişiklik Öner';
 $lang["plugin-propose_changes-desc"]='Kullanıcıların düzenleme erişimi olmadan meta veri değişiklikleri önermesine izin verme seçeneği ekler';
+$lang["page-title_propose_changes_propose_changes"] = 'Değişiklik Öner
+
+';
+$lang["page-title_propose_changes_setup"] = 'Değişiklik Öneri Eklentisini Kur';

@@ -15,3 +15,6 @@ $lang["title-too-long"]='Başlık alanı izin verilen 50 karakterden daha uzun';
 $lang["plugin-news-title"]='Haberler';
 $lang["plugin-news-desc"]='Ana sayfa haber öğeleri ekler';
 $lang["news_manage-tooltip"] = 'Haber maddeleri ekle, düzenle veya sil';
+$lang["page-title_news_news_content_edit"] = 'Haber İçeriğini Düzenle';
+$lang["page-title_news_news_edit"] = 'Haberleri Düzenle';
+$lang["page-title_news_news"] = 'Haberler';

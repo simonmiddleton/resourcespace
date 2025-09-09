@@ -7,3 +7,4 @@ $lang["meta_append_configuration_date_format"]='日付形式を選択してく�
 $lang["meta_append_configuration_prompt"]='メタデータのチェックボックスを追加しますか？';
 $lang["plugin-meta_append-title"]='メタ追加';
 $lang["plugin-meta_append-desc"]='ユーザー定義のタイムスタンプと日別アップロード番号（ユーザーごと）をフィールドに追加';
+$lang["page-title_meta_append_setup"] = 'メタ追加プラグインの設定';

@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Generiranje vektora';
 $lang["clip_vector-statistics"] = 'Statistika vektora';
 $lang["clip-vector-cleanup"] = 'Izbriši napuštene vektore';
 $lang["clip-vector-cleanup-description"] = 'Uklonite vektore koji pripadaju resursima koji više ne postoje ili nisu jedan od gore odabranih tipova resursa';
+
+$lang["page-title_clip_search"] = 'AI Pametno Pretraživanje';
+$lang["page-title_clip_setup"] = 'Postavljanje CLIP dodatka';
+$lang["page-title_clip_webcam"] = 'Generator oznaka za web kameru';

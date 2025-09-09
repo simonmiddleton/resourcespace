@@ -14,3 +14,6 @@ $lang["resource_usage_configuration"]='Resurssien käyttökonfiguraatio';
 $lang["resource_usage_mediums"]='Saatavilla olevien käyttövaihtoehtojen luettelo (pilkulla eroteltuna)';
 $lang["plugin-resource_usage-title"]='Resurssin käyttö';
 $lang["plugin-resource_usage-desc"]='Lisää mahdollisuuden kirjata resurssien käyttöä resurssin katselusivun kautta';
+$lang["page-title_resource_usage_delete"] = 'Poista resurssin käyttö';
+$lang["page-title_resource_usage_edit"] = 'Muokkaa resurssin käyttöä';
+$lang["page-title_resource_usage_setup"] = 'Aseta resurssin käyttöliitännäinen';

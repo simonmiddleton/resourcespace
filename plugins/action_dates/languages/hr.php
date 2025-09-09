@@ -38,3 +38,5 @@ $lang["weekday-5"] = 'Petak';
 $lang["weekday-6"] = 'Subota';
 $lang["plugin-action_dates-title"] = 'Datumi radnji';
 $lang["plugin-action_dates-desc"] = 'Omogućuje zakazano brisanje ili ograničenje resursa na temelju polja s datumima';
+
+$lang["page-title_action_dates_setup"] = 'Postavljanje dodatka za akcijske datume';

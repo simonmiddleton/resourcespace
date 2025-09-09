@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='Zdroj GPT';
 $lang["openai_gpt_language"] = 'Jazyk výstupu';
 $lang["openai_gpt_language_user"] = 'Jazyk aktuálního uživatele';
 $lang["openai_gpt_overwrite_data"] = 'Přepsat existující data v nakonfigurovaných polích?';
+$lang["page-title_openai_gpt_setup"] = 'Nastavit plugin OpenAI GPT';

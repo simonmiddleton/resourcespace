@@ -14,3 +14,4 @@ $lang["splitpdf_createnewresource"]='Opret en ny ressource for hver række';
 $lang["splitpdf_createnewalternativefile"]='Opret en ny alternativ fil på denne ressource for hver række';
 $lang["plugin-pdf_split-title"]='PDF Opdeling';
 $lang["plugin-pdf_split-desc"]='Tillader PDF-filer at blive opdelt i flere sider';
+$lang["page-title_pdf_split_pdf_split"] = 'PDF Opdeling';

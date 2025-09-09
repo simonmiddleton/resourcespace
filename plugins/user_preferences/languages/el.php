@@ -8,3 +8,4 @@ $lang["user_preferences_change_name"]='Να επιτρέπεται η αλλαγ
 $lang["changeyourpassword"]='Αλλαγή του κωδικού πρόσβασης και των στοιχείων χρήστη μου';
 $lang["plugin-user_preferences-title"]='Προτιμήσεις Χρήστη';
 $lang["plugin-user_preferences-desc"]='Προσφέρει επιπλέον προτιμήσεις χρήστη';
+$lang["page-title_user_preferences_setup"] = 'Ρύθμιση Προτιμήσεων Χρήστη Plugin';

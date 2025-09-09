@@ -14,3 +14,5 @@ $lang["downloadformat"] = 'Format muat turun';
 $lang["are_available-2"] = 'akan ditukarkan';
 $lang["are_available-1"] = 'akan ditukarkan';
 $lang["are_available-0"] = 'akan ditukarkan';
+$lang["page-title_format_chooser_convert"] = 'Pemilih Format';
+$lang["page-title_format_chooser_setup"] = 'Tetapkan Pemilih Format Plugin';

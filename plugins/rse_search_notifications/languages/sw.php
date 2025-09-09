@@ -24,3 +24,5 @@ $lang["checknow"]='Angalia sasa';
 $lang["columnheader-enabled"]='Imewezeshwa';
 $lang["columnheader-last-found"]='Iliyopatikana mwisho';
 $lang["search_notifications_watched_searches-tooltip"] = 'Dhibiti utafutaji wako uliohifadhiwa';
+$lang["page-title_rse_search_notifications_setup"] = 'Weka Kichujio cha Arifa za Utafutaji';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Utafutaji ulioangaliwa';

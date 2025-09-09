@@ -47,3 +47,6 @@ $lang["action-splice"]='Sambung';
 $lang["video_splice_error_invalid_action"]='Kesalahan: Tindakan tidak valid';
 $lang["plugin-video_splice-title"]='Potongan Video';
 $lang["plugin-video_splice-desc"]='Menambahkan kemampuan pemangkasan dan penyambungan video';
+$lang["page-title_video_splice_setup"] = 'Atur Plugin Video Splice';
+$lang["page-title_video_splice_splice"] = 'Potong Video';
+$lang["page-title_video_splice_trim"] = 'Potong Video';

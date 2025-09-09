@@ -14,3 +14,5 @@ $lang["downloadformat"]='Umbizo wa kupakua';
 $lang["are_available-2"]='itabadilishwa';
 $lang["are_available-1"]='itabadilishwa';
 $lang["are_available-0"]='itabadilishwa';
+$lang["page-title_format_chooser_convert"] = 'Mchaguzi wa Muundo';
+$lang["page-title_format_chooser_setup"] = 'Panga Kichaguo cha Muundo wa Plugin';

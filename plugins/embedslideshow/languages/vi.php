@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"] = 'Không có chuyển tiếp tự động'
 $lang["embedslideshow_directlink"] = 'URL trực tiếp không nhúng';
 $lang["embedslideshow_directlinkopen"] = 'Mở liên kết trực tiếp (trang mới)';
 $lang["embedslideshow_dynamic_size"] = 'Thay đổi kích thước động của bản xem trước dựa trên kích thước của trình phát?';
+$lang["page-title_embedslideshow_setup"] = 'Cài đặt Plugin Trình chiếu Nhúng';
+$lang["page-title_embedslideshow_viewer"] = 'Nhúng trình chiếu';

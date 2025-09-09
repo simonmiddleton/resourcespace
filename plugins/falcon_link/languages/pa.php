@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'ਫਾਲਕਨ ਵਰਤੋਂ ਲਈ ਬਣ
 $lang["falcon_link_log_publish"] = 'ਫਾਲਕਨ ਰਾਹੀਂ ਸਾਂਝਾ ਕੀਤਾ ਸਰੋਤ';
 $lang["falcon_link_log_archive"] = 'ਫਾਲਕਨ ਰਾਹੀਂ ਆਰਕਾਈਵ ਕੀਤਾ ਸਰੋਤ';
 $lang["falcon_link_error_falcon_check_tags"] = 'ਕਿਰਪਾ ਕਰਕੇ ਜਾਂਚ ਕਰੋ ਕਿ ਵੇਰਵਾ ਅਤੇ ਟੈਗ ਖਾਲੀ ਨਹੀਂ ਹਨ';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'ਫਾਲਕਨ ਲਿੰਕ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

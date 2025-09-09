@@ -8,3 +8,4 @@ $lang["system_reset_delete_all"]='Radera all data och filer';
 $lang["plugin-system_reset-title"]='Systemåterställning';
 $lang["plugin-system_reset-desc"]='Lägger till ett alternativ för admin/system att radera all data';
 $lang["system_reset-tooltip"] = 'Utför en systemåterställning för att radera alla filer och data';
+$lang["page-title_system_reset_reset"] = 'Systemåterställning';

@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"]='Haiwezi kufanya usafirishaji kwa sababu 
 $lang["video_splice_incorrect_quantity"]='Rasilimali halali imeondolewa au imeongezwa kwenye mkusanyiko tangu ukurasa huu ulipopakiwa. Tafadhali jaribu tena.';
 $lang["video_splice_createdfromvideosplice"]='Imeundwa kutoka kwa programu-jalizi ya Video Splice';
 $lang["video_splice_error_invalid_action"]='Hitilafu: Hatua batili';
+$lang["page-title_video_splice_setup"] = 'Weka Plugin ya Video Splice';
+$lang["page-title_video_splice_splice"] = 'Punguza Video';
+$lang["page-title_video_splice_trim"] = 'Punguza Video';

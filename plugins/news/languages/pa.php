@@ -13,3 +13,6 @@ $lang["news_nonewmessages"]='ਕੋਈ ਨਵੇਂ ਸੁਨੇਹੇ ਨਹੀ
 $lang["title"]='ਤਾਜ਼ਾ ਖ਼ਬਰਾਂ...';
 $lang["title-too-long"]='ਸਿਰਲੇਖ ਖੇਤਰ 50 ਅੱਖਰਾਂ ਦੀ ਇਜਾਜ਼ਤ ਤੋਂ ਵੱਧ ਲੰਮਾ ਹੈ';
 $lang["news_manage-tooltip"] = 'ਨਵੀਂਆਂ ਆਈਟਮਾਂ ਸ਼ਾਮਲ ਕਰੋ, ਸੰਪਾਦਿਤ ਕਰੋ ਜਾਂ ਹਟਾਓ';
+$lang["page-title_news_news_content_edit"] = 'ਖਬਰਾਂ ਦੀ ਸਮੱਗਰੀ ਸੰਪਾਦਿਤ ਕਰੋ';
+$lang["page-title_news_news_edit"] = 'ਖਬਰਾਂ ਨੂੰ ਸੰਪਾਦਿਤ ਕਰੋ';
+$lang["page-title_news_news"] = 'ਖਬਰਾਂ';

@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Configuratie van merk richtlijnen';
 $lang["brand_guidelines_fallback_size_thm"] = 'Miniatuurindeling fallback afbeeldingsgrootte';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Afbeeldingsgrootte voor halfbreedte lay-out fallback';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Volledige breedte lay-out fallback afbeeldingsgrootte';
+
+$lang["page-title_brand_guidelines_content"] = 'Beheer Inhoud Merkrichtlijnen';
+$lang["page-title_brand_guidelines_guidelines"] = 'Merkrichtlijnen';
+$lang["page-title_brand_guidelines_setup"] = 'Instellen van het Brand Guidelines Plugin';
+$lang["page-title_brand_guidelines_toc"] = 'Bewerk inhoud';

@@ -14,3 +14,5 @@ $lang["downloadformat"] = 'Фармат загрузкі';
 $lang["are_available-2"] = 'будзе пераўтворана';
 $lang["are_available-1"] = 'будзе пераўтворана';
 $lang["are_available-0"] = 'будзе пераўтворана';
+$lang["page-title_format_chooser_convert"] = 'Выбар фармату';
+$lang["page-title_format_chooser_setup"] = 'Наладзіць плагін выбару фармату';

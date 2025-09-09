@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'SimpleSAML メタデータの更新';
 $lang["simplesaml_metadata_warning"] = 'メタデータは %date% 以来更新されていません';
 $lang["simplesaml_metadata_invalid"] = 'IdPメタデータが無効または利用できません';
 $lang["simplesaml_admin_password_reset"] = 'シンプルSAMLテストサイト管理者パスワードをリセットする（オプション）';
+$lang["page-title_simplesaml_about"] = 'SAMLについて';
+$lang["page-title_simplesaml_generate_sp_config"] = 'SP設定を生成する';
+$lang["page-title_simplesaml_setup"] = 'シンプルSAMLプラグインの設定';

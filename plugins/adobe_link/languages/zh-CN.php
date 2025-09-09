@@ -13,3 +13,5 @@ $lang["adobe_link_saving"] = '保存中...';
 $lang["adobe_link_saving_wait"] = '文件正在保存，请等待确认消息。您可能需要刷新页面以更新预览图像。';
 $lang["plugin-adobe_link-title"] = 'Adobe链接';
 $lang["plugin-adobe_link-desc"] = '[高级] 允许将 Adobe 文件从 ResourceSpace 导入 Adobe CC';
+
+$lang["page-title_adobe_link_setup"] = '设置 Adobe Link 插件';

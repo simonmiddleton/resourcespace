@@ -47,3 +47,6 @@ $lang["video-trim_output"]='Wynik';
 $lang["video_splice_error_invalid_action"]='Błąd: Nieprawidłowa akcja';
 $lang["plugin-video_splice-title"]='Łączenie wideo';
 $lang["plugin-video_splice-desc"]='Dodaje możliwość przycinania i łączenia wideo';
+$lang["page-title_video_splice_setup"] = 'Ustawienia wtyczki Video Splice';
+$lang["page-title_video_splice_splice"] = 'Złącz wideo';
+$lang["page-title_video_splice_trim"] = 'Przytnij wideo';

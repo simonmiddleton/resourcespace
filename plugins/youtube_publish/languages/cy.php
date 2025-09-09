@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Categori';
 $lang["youtube_publish_category_error"]='Gwall wrth adalw categori YouTube: -';
 $lang["youtube_chunk_size"]='Maint maint i\'w ddefnyddio wrth lwytho i YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Ychwanegu tagiau angor i URl wrth gadw i faes metadata URl YouTube?';
+$lang["page-title_youtube_publish_setup"] = 'Gosod Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Cyhoeddi Adnodd i Youtube';

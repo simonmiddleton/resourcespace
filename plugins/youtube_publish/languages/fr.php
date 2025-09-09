@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Taille des morceaux à utiliser lors du télécharg
 $lang["youtube_publish_add_anchor"]='Ajouter des balises d\'ancre à l\'URL lors de l\'enregistrement dans le champ de métadonnées d\'URL de YouTube ?';
 $lang["plugin-youtube_publish-title"]='Publier sur YouTube';
 $lang["plugin-youtube_publish-desc"]='Publie la ressource vidéo sur le compte YouTube configuré.';
+$lang["page-title_youtube_publish_setup"] = 'Configurer le plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Publier la ressource sur Youtube';

@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Revenirea stării pentru colecția #%COLLEC
 $lang["rse_version_invalid_time"]='Revenirea la o dată anterioară de [date] nu este suportată';
 $lang["plugin-rse_version-title"]='Controlul versiunilor';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Controlul versiunilor';
+$lang["page-title_rse_version_revert"] = 'Restabilire versiunea resursei';
+$lang["page-title_rse_version_setup"] = 'Configurare Plugin Versiune';

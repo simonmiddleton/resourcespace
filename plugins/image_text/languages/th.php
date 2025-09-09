@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'บน',
    'bottom' => 'ล่าง',
 );
+$lang["page-title_image_text_setup"] = 'ตั้งค่าปลั๊กอินข้อความภาพ';

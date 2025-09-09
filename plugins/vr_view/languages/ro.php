@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Folosiți fișierul original al resursei ca sursă 
 $lang["vr_view_orig_video"]='Folosiți fișierul original al resursei ca sursă pentru previzualizarea video?';
 $lang["plugin-vr_view-title"]='Vizualizare VR';
 $lang["plugin-vr_view-desc"]='Google VR View - previzualizări de imagini și videoclipuri la 360 de grade (format equirectangular)';
+$lang["page-title_vr_view_download"] = 'Vizualizare VR';
+$lang["page-title_vr_view_setup"] = 'Configurare pluginul VR View';

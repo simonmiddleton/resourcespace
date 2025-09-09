@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Imprimeix';
 $lang["stencilvg-download"]='Descarregar';
 $lang["stencilvg-save_as_new_resource"]='Desa com a nou recurs';
 $lang["stencilvg-no_parameters_found"]='No s\'han trobat paràmetres de plantilla';
+$lang["page-title_stencilvg_download_svg"] = 'Descarregar SVG';
+$lang["page-title_stencilvg_input"] = 'Entrada SVG';
+$lang["page-title_stencilvg_setup"] = 'Configura el complement StencilVG';

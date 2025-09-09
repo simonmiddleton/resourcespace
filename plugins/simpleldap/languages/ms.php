@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"] = 'Dicipta oleh plugin SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"] = 'Dikemas kini kepada pengguna LDAP oleh SimpleLDAP.';
 $lang["origin_simpleldap"] = 'SimpleLDAP plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"] = 'Jangan semak FQDN pelayan terhadap CN sijil';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Uji Pengesahan LDAP';
+$lang["page-title_simpleldap_setup"] = 'Tetapkan Plugin LDAP Ringkas';

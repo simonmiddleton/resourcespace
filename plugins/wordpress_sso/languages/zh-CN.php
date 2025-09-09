@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='点击此处尝试重新登录。';
 $lang["origin_wordpress_sso"]='WordPress SSO插件';
 $lang["plugin-wordpress_sso-title"]='Wordpress 单点登录';
 $lang["plugin-wordpress_sso-desc"]='[高级] 允许与Wordpress安装进行单点登录';
+$lang["page-title_wordpress_sso_logout"] = 'SSO注销';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO 没有用户';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO 说明文档';
+$lang["page-title_wordpress_sso_setup"] = '设置Wordpress SSO插件';

@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'Тэкст / HTML:';
 $lang["feedback_options-comma_separated"] = 'Варыянты: (раздзелены коскамі)';
 $lang["feedback_add_new_field"] = 'Дадаць новае поле';
 $lang["feedback_back_to_plugin_manager"] = 'Назад да Кіравання Плагінамі';
+
+$lang["page-title_feedback_feedback"] = 'Даслаць водгук';
+$lang["page-title_feedback_setup"] = 'Наладка плагіна';

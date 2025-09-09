@@ -52,3 +52,5 @@ $lang["origin_simpleldap"]='SimpleLDAP eklentisi';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Sunucunun FQDN\'sini sertifikanın CN\'si ile karşılaştırmayın';
 $lang["plugin-simpleldap-title"]='Basit LDAP';
 $lang["plugin-simpleldap-desc"]='Active Directory\'ye yönelik basitleştirilmiş ldap kimlik doğrulama uygulaması, ancak Oracle dizinini de destekler';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP Kimlik Doğrulamasını Test Et';
+$lang["page-title_simpleldap_setup"] = 'Basit LDAP Eklentisini Kurun';

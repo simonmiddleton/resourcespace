@@ -48,3 +48,6 @@ $lang["museumplus_error_invalid_association"]='การเชื่อมโย
 $lang["museumplus_id_returns_multiple_records"]='พบหลายระเบียน - กรุณาใส่รหัสเทคนิคแทน';
 $lang["museumplus_error_module_no_field_maps"]='ไม่สามารถซิงค์ข้อมูลจาก MuseumPlus ได้ สาเหตุ: โมดูล \'%name\' ไม่มีการกำหนดการแมพฟิลด์';
 $lang["museumplus_error_script_failed"]='สคริปต์ MuseumPlus ล้มเหลวในการทำงานเนื่องจากมีการล็อคกระบวนการอยู่ ซึ่งบ่งชี้ว่าการทำงานครั้งก่อนหน้ายังไม่เสร็จสิ้น หากคุณต้องการล้างการล็อคหลังจากการทำงานล้มเหลว ให้รันสคริปต์ดังนี้: php museumplus_script.php --clear-lock';
+$lang["page-title_museumplus_museumplus_object_details"] = 'รายละเอียดวัตถุ MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'ตั้งค่าโมดูล MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'ตั้งค่า MuseumPlus Plugin';

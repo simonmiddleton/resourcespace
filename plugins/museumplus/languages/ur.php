@@ -51,3 +51,6 @@ $lang["museumplus_error_unknown_type_saved_config"]='\'museumplus_modules_saved_
 $lang["museumplus_error_invalid_association"]='غلط ماڈیول(ز) کا تعلق۔ براہ کرم یقینی بنائیں کہ درست ماڈیول اور/یا ریکارڈ آئی ڈی داخل کی گئی ہے!';
 $lang["museumplus_id_returns_multiple_records"]='متعدد ریکارڈز ملے - براہ کرم تکنیکی ID درج کریں';
 $lang["museumplus_error_module_no_field_maps"]='میوزیم پلس سے ڈیٹا ہم آہنگ کرنے میں ناکام۔ وجہ: ماڈیول \'%name\' کے لئے کوئی فیلڈ میپنگز ترتیب نہیں دی گئی ہیں۔';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus آبجیکٹ کی تفصیلات';
+$lang["page-title_museumplus_setup_module"] = 'میوزیم پلس ماڈیول سیٹ اپ کریں';
+$lang["page-title_museumplus_setup"] = 'میوزیم پلس پلگ ان سیٹ اپ کریں';

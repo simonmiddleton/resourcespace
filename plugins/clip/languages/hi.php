@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'वेक्टर उत्पादन';
 $lang["clip_vector-statistics"] = 'वेक्टर सांख्यिकी';
 $lang["clip-vector-cleanup"] = 'अवशिष्ट वेक्टर हटाएँ';
 $lang["clip-vector-cleanup-description"] = 'उन वेक्टरों को हटाएँ जो उन संसाधनों से संबंधित हैं जो अब मौजूद नहीं हैं या ऊपर चयनित संसाधन प्रकारों में से नहीं हैं';
+
+$lang["page-title_clip_search"] = 'एआई स्मार्ट सर्च';
+$lang["page-title_clip_setup"] = 'CLIP प्लगइन सेटअप करें';
+$lang["page-title_clip_webcam"] = 'वेबकैम टैग जनरेटर';

@@ -52,3 +52,5 @@ $lang["simpleldap_update_group"]='Actualitza el grup d\'usuari en cada inici de 
 $lang["simpleldap_testing"]='Provant la configuració LDAP';
 $lang["plugin-simpleldap-title"]='LDAP simple';
 $lang["plugin-simpleldap-desc"]='[Avançat] Implementació més senzilla de l\'autenticació ldap, dirigida a Active Directory però també compatible amb el directori Oracle';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Prova d\'autenticació LDAP';
+$lang["page-title_simpleldap_setup"] = 'Configuració del complement LDAP senzill';

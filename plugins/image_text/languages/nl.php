@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'boven',
    'bottom' => 'onder',
 );
+$lang["page-title_image_text_setup"] = 'Instellen van de Afbeelding Tekst Plugin';

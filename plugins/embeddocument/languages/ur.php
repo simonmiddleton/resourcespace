@@ -11,3 +11,6 @@ $lang["embeddocument_maximise"] = 'زیادہ سے زیادہ کریں';
 $lang["embeddocument_heading"] = 'ریموٹ ڈاکیومنٹ ویوئر کنفیگریشن';
 $lang["embeddocument_specify_resourcetype"] = 'براہ کرم وضاحت کریں کہ \'ایمبیڈ\' فنکشنلٹی کس وسائل کی قسم کے لیے ظاہر ہونی چاہیے۔';
 $lang["embeddocument_document_resourcetype"] = 'ریموٹ ڈاکیومنٹ ویوئر ریسورس کی قسم:';
+
+$lang["page-title_embeddocument_setup"] = 'دستاویز پلگ ان ترتیب دیں';
+$lang["page-title_embeddocument_viewer"] = 'دستاویز ویوئر شامل کریں';

@@ -10,3 +10,6 @@ $lang["stencilvg-print"] = 'In ấn';
 $lang["stencilvg-download"] = 'Tải xuống';
 $lang["stencilvg-save_as_new_resource"] = 'Lưu dưới dạng tài nguyên mới';
 $lang["stencilvg-no_parameters_found"] = 'Không tìm thấy tham số mẫu';
+$lang["page-title_stencilvg_download_svg"] = 'Tải xuống SVG';
+$lang["page-title_stencilvg_input"] = 'Đầu vào SVG';
+$lang["page-title_stencilvg_setup"] = 'Cài đặt Plugin StencilVG';

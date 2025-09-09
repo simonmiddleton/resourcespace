@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Откат состояния для кол
 $lang["rse_version_invalid_time"]='Откат к времени до [date] не поддерживается';
 $lang["plugin-rse_version-title"]='Контроль версий';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Контроль версий';
+$lang["page-title_rse_version_revert"] = 'Вернуть версию ресурса';
+$lang["page-title_rse_version_setup"] = 'Настройка плагина версии';

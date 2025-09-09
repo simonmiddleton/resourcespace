@@ -23,3 +23,7 @@ $lang["google_vision_translation_languages"]='قائمة مفصولة بفواص
 $lang["google_vision_translation_keep_english"]='الرجاء ترجمة: الاحتفاظ بالكلمات الرئيسية الإنجليزية الأصلية؟';
 $lang["plugin-google_vision-title"]='واجهة برمجة تطبيقات رؤية جوجل';
 $lang["plugin-google_vision-desc"]='قدرة التعرف على الصور. يمرر الصور المحملة إلى واجهة برمجة تطبيقات Google Cloud Vision ويحدد البيانات الوصفية المقترحة.';
+$lang["page-title_google_vision_process_existing"] = 'عملية رؤية جوجل الحالية';
+$lang["page-title_google_vision_setup"] = 'إعداد ملحق Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'اختبار رؤية جوجل';
+$lang["page-title_google_vision_test"] = 'اختبار رؤية جوجل';

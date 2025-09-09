@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='السماح للمستخدمين ب
 $lang["vimeo_publish_set_account"]='تعيين حساب Vimeo';
 $lang["plugin-vimeo_publish-title"]='نشر Vimeo';
 $lang["plugin-vimeo_publish-desc"]='نشر الموارد على Vimeo باستخدام OAuth 2.0';
+$lang["page-title_vimeo_publish_setup"] = 'إعداد مكون نشر Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'نشر على فيميو';

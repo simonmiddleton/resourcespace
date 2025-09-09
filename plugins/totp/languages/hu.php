@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'A mai nap';
 $lang["totp_date_binding_w"] = 'A jelenlegi hét (hétfőn kezdődően)';
 $lang["totp_date_binding_m"] = 'A jelenlegi hónap';
 $lang["totp_date_binding_y"] = 'A jelenlegi év';
+$lang["page-title_totp_setup"] = 'TOTP bővítmény beállítása';
+$lang["page-title_totp_totp"] = 'TOTP';

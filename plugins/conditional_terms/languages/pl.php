@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Wartość';
 $lang["conditional_terms_plugin_misconfigured"] = 'Wtyczka warunkowych warunków jest źle skonfigurowana';
 $lang["plugin-conditional_terms-title"] = 'Warunki warunkowe';
 $lang["plugin-conditional_terms-desc"] = 'Umożliwia warunkowe wyświetlanie strony z warunkami przy pobieraniu na podstawie metadanych zasobu';
+
+$lang["page-title_conditional_terms_setup"] = 'Ustawienia wtyczki warunkowych warunków';

@@ -23,3 +23,7 @@ $lang["google_vision_translation_languages"]='쉼표로 구분된 언어 코드 
 $lang["google_vision_translation_keep_english"]='원래 영어 키워드를 유지하시겠습니까?';
 $lang["plugin-google_vision-title"]='구글 비전 API';
 $lang["plugin-google_vision-desc"]='이미지 인식 기능. 업로드된 이미지를 Google Cloud Vision API에 전달하고 제안된 메타데이터를 설정합니다.';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision 프로세스 기존';
+$lang["page-title_google_vision_setup"] = 'Google Vision 플러그인 설정';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

@@ -9,3 +9,5 @@ $lang["antivirus_action_quarantine"] = 'انتقال به قرنطینه';
 $lang["antivirus_deleting_file"] = 'در حال حذف منبع [%resource_id%] و هر فایل مرتبط!';
 $lang["antivirus_moving_file"] = 'انتقال منبع [%resource_id%] به حالت بایگانی [%archive_state%]';
 $lang["antivirus_av_not_setup_error"] = 'مسیر آنتی‌ویروس تنظیم نشده است!';
+
+$lang["page-title_antivirus_setup"] = 'نصب افزونه آنتی ویروس';

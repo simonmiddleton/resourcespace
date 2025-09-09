@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"]='เข้าสู่ระบบโ�
 $lang["wordpress_sso_use_wp_login"]='เข้าสู่ระบบโดยใช้บัญชี WordPress';
 $lang["wordpress_sso_retry"]='คลิกที่นี่เพื่อพยายามเข้าสู่ระบบอีกครั้ง';
 $lang["origin_wordpress_sso"]='Wordpress SSO plugin';
+$lang["page-title_wordpress_sso_logout"] = 'ออกจากระบบ SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO ไม่มีผู้ใช้';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'ตั้งค่าปลั๊กอิน SSO ของ Wordpress';

@@ -36,3 +36,6 @@ $lang["emu_createdfromemu"] = 'Vytvorené z EMU pluginu';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-title"] = 'EMu';
 $lang["plugin-emu-desc"] = 'Omogoča pridobivanje metapodatkov virov iz baze podatkov EMu.';
+
+$lang["page-title_emu_emu_object_details"] = 'Podrobnosti o objekte EMu';
+$lang["page-title_emu_setup"] = 'Nastavenie pluginu';

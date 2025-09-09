@@ -47,3 +47,6 @@ $lang["video_splice_createdfromvideosplice"]='Vytvořeno z pluginu Video Splice'
 $lang["video_splice_error_invalid_action"]='Chyba: Neplatná akce';
 $lang["plugin-video_splice-title"]='Video Splice';
 $lang["plugin-video_splice-desc"]='Přidává možnost ořezávání a spojování videa';
+$lang["page-title_video_splice_setup"] = 'Nastavení pluginu Video Splice';
+$lang["page-title_video_splice_splice"] = 'Sestřih videa';
+$lang["page-title_video_splice_trim"] = 'Oříznout video';

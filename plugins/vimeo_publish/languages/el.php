@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='Να επιτραπεί στους �
 $lang["vimeo_publish_set_account"]='Ορίστε λογαριασμός Vimeo';
 $lang["plugin-vimeo_publish-title"]='Δημοσίευση στο Vimeo';
 $lang["plugin-vimeo_publish-desc"]='Δημοσιεύστε πόρους στο Vimeo χρησιμοποιώντας OAuth 2.0';
+$lang["page-title_vimeo_publish_setup"] = 'Ρύθμιση Πρόσθετου Δημοσίευσης Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Δημοσίευση στο Vimeo';

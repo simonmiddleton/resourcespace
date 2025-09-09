@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Zobrazit funkci AI Faces na stránce zobrazení.';
 $lang["faces_count_faces"] = 'Celkový počet detekovaných obličejů';
 $lang["faces_count_missing"] = 'Obrázky k zpracování';
 $lang["faces-tag-field-not-set"] = 'Pole pro označování není nakonfigurováno.';
+
+$lang["page-title_faces_setup"] = 'Nastavení pluginu Faces';

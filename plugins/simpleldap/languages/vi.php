@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"] = 'Được tạo bởi plugin SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"] = 'Cập nhật thành người dùng LDAP bởi SimpleLDAP.';
 $lang["origin_simpleldap"] = 'SimpleLDAP plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"] = 'Không kiểm tra FQDN của máy chủ với CN của chứng chỉ';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Kiểm tra xác thực LDAP';
+$lang["page-title_simpleldap_setup"] = 'Cài đặt Plugin LDAP Đơn Giản';

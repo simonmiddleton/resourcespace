@@ -28,3 +28,5 @@ $lang["video_tracks_save_alt_not_perm"]='Speichern der Alternative ohne Berechti
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='WICHTIG! Das Video-Tracks-Plugin hat die Einstellungen für Ausgabeformate veraltet. Sie können nur in der config.php festgelegt werden. Das Plugin wird nicht wie beabsichtigt funktionieren, bis die Konfigurationsoption übertragen wurde. Bitte kopieren Sie das Folgende:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Videospuren';
 $lang["plugin-video_tracks-desc"]='Unterstützung für verschiedene Audio- und Untertiteloptionen für Videoressourcen hinzufügen';
+$lang["page-title_video_tracks_create_video"] = 'Video erstellen';
+$lang["page-title_video_tracks_setup"] = 'Video Tracks Plugin einrichten';

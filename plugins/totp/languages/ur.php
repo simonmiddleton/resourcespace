@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'موجودہ دن';
 $lang["totp_date_binding_w"] = 'موجودہ ہفتہ (پیر سے شروع ہوتا ہے)';
 $lang["totp_date_binding_m"] = 'موجودہ مہینہ';
 $lang["totp_date_binding_y"] = 'موجودہ سال';
+$lang["page-title_totp_setup"] = 'TOTP پلگ ان سیٹ اپ کریں';
+$lang["page-title_totp_totp"] = 'TOTP';

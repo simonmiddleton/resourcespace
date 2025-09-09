@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Værdi';
 $lang["conditional_terms_plugin_misconfigured"] = 'Betingelsesmæssige vilkår plugin er konfigureret forkert';
 $lang["plugin-conditional_terms-title"] = 'Betingede vilkår';
 $lang["plugin-conditional_terms-desc"] = 'Muliggør betinget visning af vilkårsside ved download baseret på ressource metadata';
+
+$lang["page-title_conditional_terms_setup"] = 'Opsætning af betingede vilkår plugin';

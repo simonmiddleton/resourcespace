@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"] = 'Medan yang digunakan untuk menentukan sama ad
 $lang["vr_view_yaw_only_value"] = 'Nilai untuk diperiksa. Jika dijumpai, pilihan is_yaw_only akan ditetapkan kepada benar';
 $lang["vr_view_orig_image"] = 'Gunakan fail sumber asal sebagai sumber untuk pratonton imej?';
 $lang["vr_view_orig_video"] = 'Gunakan fail sumber asal sebagai sumber untuk pratonton video?';
+$lang["page-title_vr_view_download"] = 'VR View';
+$lang["page-title_vr_view_setup"] = 'Pasang Plugin Paparan VR';

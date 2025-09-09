@@ -15,3 +15,5 @@ $lang["video_resourcetype"] = "Videomaterialtyp";
 $lang["embedvideo_share"] = 'Bädda in video';
 $lang["plugin-embedvideo-title"] = 'Bädda in video';
 $lang["plugin-embedvideo-desc"] = 'Ger en funktion för att generera HTML för inbäddningsbar video på externa webbplatser.';
+
+$lang["page-title_embedvideo_setup"] = 'Installera inbäddningsvideoplugin';

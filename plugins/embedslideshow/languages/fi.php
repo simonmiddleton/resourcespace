@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = 'Avaa suora linkki (uusi sivu)';
 $lang["embedslideshow_dynamic_size"] = 'Dynaaminen esikatselun koon muuttaminen pelaajan koon perusteella?';
 $lang["plugin-embedslideshow-title"] = 'Upota diaesitys';
 $lang["plugin-embedslideshow-desc"] = 'Tarjoaa toiminnon HTML:n luomiseen upotettavia kokoelmadiaesityksiä varten etäsivustoilla';
+
+$lang["page-title_embedslideshow_setup"] = 'Aseta upotusslaidi-plugin';
+$lang["page-title_embedslideshow_viewer"] = 'Upota esitysgalleria';

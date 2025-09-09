@@ -19,3 +19,5 @@ $lang["vr_view_orig_image"]='Defnyddio ffeil adnodd gwreiddiol fel ffynhonnell a
 $lang["vr_view_orig_video"]='Defnyddio ffeil adnodd gwreiddiol fel ffynhonnell ar gyfer rhagolwg fideo?';
 $lang["vr_view_js_url"]='URL i\'r llyfrgell javascript VR View (dim ond yn ofynnol os yw\'r uchod yn ffug). Os yw\'n lleol i\'r gweinydd defnyddiwch lwybr cymharol e.e. /vrview/build/vrview.js';
 $lang["vr_view_projection_field"]='VR View ProjectionType field';
+$lang["page-title_vr_view_download"] = 'VR Golygfa';
+$lang["page-title_vr_view_setup"] = 'Gosod Plugin Golygfa VR';

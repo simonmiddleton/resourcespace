@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'اليوم الحالي';
 $lang["totp_date_binding_w"] = 'الأسبوع الحالي (يبدأ يوم الاثنين)';
 $lang["totp_date_binding_m"] = 'الشهر الحالي';
 $lang["totp_date_binding_y"] = 'السنة الحالية';
+$lang["page-title_totp_setup"] = 'إعداد ملحق TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

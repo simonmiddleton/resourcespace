@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV файл содержит BOM, кот
 $lang["csv_upload_validating"] = 'Проверка';
 $lang["csv_upload_processing"] = 'Обработка';
 $lang["processing_batch_edit_save"] = 'строка [row_number] из [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Загрузить CSV';

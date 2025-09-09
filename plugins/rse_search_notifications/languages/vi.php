@@ -24,3 +24,5 @@ $lang["checknow"] = 'Kiểm tra ngay';
 $lang["columnheader-enabled"] = 'Đã kích hoạt';
 $lang["columnheader-last-found"] = 'Cuối cùng tìm thấy';
 $lang["search_notifications_watched_searches-tooltip"] = 'Kiểm soát các tìm kiếm đã lưu của bạn';
+$lang["page-title_rse_search_notifications_setup"] = 'Cài đặt Plugin Thông báo Tìm kiếm';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Tìm kiếm đã theo dõi';

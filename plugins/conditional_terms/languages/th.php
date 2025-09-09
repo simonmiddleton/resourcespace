@@ -5,3 +5,5 @@ $lang["conditional_terms_description"] = 'ปลั๊กอินนี้ช�
 $lang["conditional_terms_field"] = 'ฟิลด์เมตาดาต้า';
 $lang["conditional_terms_value"] = 'ค่า';
 $lang["conditional_terms_plugin_misconfigured"] = 'ปลั๊กอินเงื่อนไขถูกกำหนดค่าผิดพลาด';
+
+$lang["page-title_conditional_terms_setup"] = 'ตั้งค่าปลั๊กอินเงื่อนไข';

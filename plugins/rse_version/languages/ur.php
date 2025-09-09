@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='لاگ اندراج نہیں ملا';
 $lang["rse_version_revert_state"]='ریورٹ اسٹیٹ';
 $lang["rse_version_rstate_changes"]='منتخب ریکارڈ کو شامل کیے بغیر، واقعات کو دوبارہ چلا کر مجموعہ #%COLLECTION کی حالت کو واپس کر رہا ہے۔';
 $lang["rse_version_invalid_time"]='[date] سے پہلے کے وقت پر واپس جانا معاونت یافتہ نہیں ہے۔';
+$lang["page-title_rse_version_revert"] = 'وسائل کی ورژن کو واپس کریں';
+$lang["page-title_rse_version_setup"] = 'ورژن پلگ ان سیٹ اپ کریں';

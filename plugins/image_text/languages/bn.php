@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'শীর্ষ',
    'bottom' => 'নিচে',
 );
+$lang["page-title_image_text_setup"] = 'ছবি টেক্সট প্লাগইন সেটআপ করুন';

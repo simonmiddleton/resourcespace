@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Konfiguracija smjernica brenda';
 $lang["brand_guidelines_fallback_size_thm"] = 'Veličina slike za zamjenski prikaz sličica';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Veličina slike za rezervni prikaz polu-širine';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Veličina slike za zamjenski prikaz pune širine';
+
+$lang["page-title_brand_guidelines_content"] = 'Upravljanje sadržajem smjernica branda';
+$lang["page-title_brand_guidelines_guidelines"] = 'Smjernice za brend';
+$lang["page-title_brand_guidelines_setup"] = 'Postavite dodatak za smjernice branda';
+$lang["page-title_brand_guidelines_toc"] = 'Uredi sadržaj';

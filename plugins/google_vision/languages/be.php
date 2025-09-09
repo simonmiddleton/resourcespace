@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"] = 'Google Vision вяртае толь�
 $lang["google_vision_translation_api_key"] = 'Уключыць пераклад ключавых слоў Vision праз API перакладу, увёўшы сапраўдны ключ API Google';
 $lang["google_vision_translation_languages"] = 'Спіс кодаў моў, аддзеленыя коскамі, напрыклад, "no,es"';
 $lang["google_vision_translation_keep_english"] = 'Захаваць арыгінальныя англійскія ключавыя словы?';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision Процэс Існуючы';
+$lang["page-title_google_vision_setup"] = 'Наладзіць плагін Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

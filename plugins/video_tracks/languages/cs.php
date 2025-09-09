@@ -28,3 +28,5 @@ $lang["video_tracks_transcode_now_or_notify_me_label"]='Zaškrtněte pro zaháje
 $lang["video_tracks_transcode_now_label"]='Převést nyní';
 $lang["plugin-video_tracks-title"]='Video stopy';
 $lang["plugin-video_tracks-desc"]='[Pokročilé] Přidat podporu pro různé možnosti zvuku a titulků pro video zdroje';
+$lang["page-title_video_tracks_create_video"] = 'Vytvořit video';
+$lang["page-title_video_tracks_setup"] = 'Nastavení pluginu pro video stopy';

@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Valor';
 $lang["conditional_terms_plugin_misconfigured"] = 'El plugin de términos condicionales está mal configurado';
 $lang["plugin-conditional_terms-title"] = 'Términos Condicionales';
 $lang["plugin-conditional_terms-desc"] = 'Habilita la visualización condicional de la página de términos en la descarga basada en los metadatos del recurso';
+
+$lang["page-title_conditional_terms_setup"] = 'Configurar el Plugin de Términos Condicionales';

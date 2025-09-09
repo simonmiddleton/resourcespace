@@ -51,3 +51,6 @@ $lang["museumplus_id_returns_multiple_records"]='Pronađeno je više zapisa - um
 $lang["museumplus_error_module_no_field_maps"]='Nije moguće sinkronizirati podatke iz MuseumPlus-a. Razlog: modul \'%name\' nema konfigurirane mapiranja polja.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Omogućuje izdvajanje metapodataka resursa iz MuseumPlus koristeći njegov REST API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Detalji objekta';
+$lang["page-title_museumplus_setup_module"] = 'Postavljanje MuseumPlus modula';
+$lang["page-title_museumplus_setup"] = 'Postavite MuseumPlus dodatak';

@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"] = 'Không thể thực hiện xuất vì 
 $lang["video_splice_incorrect_quantity"] = 'Một tài nguyên hợp lệ đã bị xóa hoặc được thêm vào bộ sưu tập kể từ khi trang này được tải. Vui lòng thử lại.';
 $lang["video_splice_createdfromvideosplice"] = 'Được tạo từ plugin Video Splice';
 $lang["video_splice_error_invalid_action"] = 'Lỗi : Hành động không hợp lệ';
+$lang["page-title_video_splice_setup"] = 'Cài đặt Plugin Video Splice';
+$lang["page-title_video_splice_splice"] = 'Ghép Video';
+$lang["page-title_video_splice_trim"] = 'Cắt video';

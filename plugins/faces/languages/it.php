@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Mostra la funzionalità AI Faces nella pagina di vis
 $lang["faces_count_faces"] = 'Volti totali rilevati';
 $lang["faces_count_missing"] = 'Immagini da elaborare';
 $lang["faces-tag-field-not-set"] = 'Il campo di tagging non è configurato.';
+
+$lang["page-title_faces_setup"] = 'Imposta il plugin Faces';

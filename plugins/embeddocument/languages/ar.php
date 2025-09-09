@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'نوع مورد المصدر ل�
 $lang["embeddocument_embed_share"] = 'تضمين المستند';
 $lang["plugin-embeddocument-title"] = 'تضمين المستند';
 $lang["plugin-embeddocument-desc"] = 'يوفر وظيفة لإنشاء HTML لمعاينات المستندات القابلة للتضمين على المواقع البعيدة.';
+
+$lang["page-title_embeddocument_setup"] = 'إعداد مكون إضافي لتضمين الوثائق';
+$lang["page-title_embeddocument_viewer"] = 'تضمين عارض المستندات';

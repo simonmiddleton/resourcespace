@@ -25,3 +25,7 @@ $lang["google_vision_translation_keep_english"]='Behoud de originele Engelse zoe
 $lang["google_vision_face_dependent_field"]='Selecteer een metadata-veld dat verborgen zal worden wanneer het veld voor gezichtsherkenning leeg is (optioneel)';
 $lang["plugin-google_vision-title"]='Google Vision API';
 $lang["plugin-google_vision-desc"]='Beeldherkenningsmogelijkheid. Stuurt geüploade afbeeldingen naar de Google Cloud Vision API en stelt voorgestelde metadata in.';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision Proces Bestaande';
+$lang["page-title_google_vision_setup"] = 'Instellen van de Google Vision Plugin';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

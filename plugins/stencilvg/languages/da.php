@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Udskriv';
 $lang["stencilvg-download"]='Download';
 $lang["stencilvg-save_as_new_resource"]='Gem som ny ressource';
 $lang["stencilvg-no_parameters_found"]='Ingen skabelonparametre fundet';
+$lang["page-title_stencilvg_download_svg"] = 'Download SVG';
+$lang["page-title_stencilvg_input"] = 'SVG Input';
+$lang["page-title_stencilvg_setup"] = 'Opsæt StencilVG-plugin';

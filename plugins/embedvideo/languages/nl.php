@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'Videobron Type';
 $lang["embedvideo_share"] = 'Video insluiten';
 $lang["plugin-embedvideo-title"] = 'Video Insluiten';
 $lang["plugin-embedvideo-desc"] = 'Biedt een functie om HTML te genereren voor insluitbare video op externe sites.';
+
+$lang["page-title_embedvideo_setup"] = 'Instellen van de Embed Video Plugin';

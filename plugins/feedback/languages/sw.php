@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'Maandishi / HTML:';
 $lang["feedback_options-comma_separated"] = 'Chaguo: (imetenganishwa kwa koma)';
 $lang["feedback_add_new_field"] = 'Ongeza Uwanja Mpya';
 $lang["feedback_back_to_plugin_manager"] = 'Rudi kwa Meneja wa Programu-jalizi';
+
+$lang["page-title_feedback_feedback"] = 'Tuma Maoni';
+$lang["page-title_feedback_setup"] = 'Panga Plugin';

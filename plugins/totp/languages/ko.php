@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = '현재 날짜';
 $lang["totp_date_binding_w"] = '현재 주(월요일부터 시작)';
 $lang["totp_date_binding_m"] = '현재 월';
 $lang["totp_date_binding_y"] = '현재 연도';
+$lang["page-title_totp_setup"] = 'TOTP 플러그인 설정';
+$lang["page-title_totp_totp"] = 'TOTP';

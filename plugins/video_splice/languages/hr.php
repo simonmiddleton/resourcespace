@@ -47,3 +47,6 @@ $lang["video-trim_output"]='Izlaz';
 $lang["video_splice_error_invalid_action"]='Pogreška: Nevažeća radnja';
 $lang["plugin-video_splice-title"]='Video Spajanje';
 $lang["plugin-video_splice-desc"]='Dodaje mogućnost obrezivanja i spajanja videozapisa';
+$lang["page-title_video_splice_setup"] = 'Postavljanje Video Splice Plugina';
+$lang["page-title_video_splice_splice"] = 'Spajanje videa';
+$lang["page-title_video_splice_trim"] = 'Izreži video';

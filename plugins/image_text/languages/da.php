@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'top',
    'bottom' => 'bund',
 );
+$lang["page-title_image_text_setup"] = 'Opsæt billede tekst plugin';

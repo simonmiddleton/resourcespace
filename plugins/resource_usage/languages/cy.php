@@ -12,3 +12,6 @@ $lang["edit_usage"]='Golygu defnydd';
 $lang["delete_usage"]='Dileu defnydd';
 $lang["resource_usage_configuration"]='Cynllunio defnydd adnoddau';
 $lang["resource_usage_mediums"]='Rhestr o opsiynau defnydd ar gael (separeiddiedig gan gomau)';
+$lang["page-title_resource_usage_delete"] = 'Dileu Defnydd Adnodd';
+$lang["page-title_resource_usage_edit"] = 'Golygu Defnydd Adnodd';
+$lang["page-title_resource_usage_setup"] = 'Gosod Plugin Defnydd Adnoddau';

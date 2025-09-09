@@ -59,3 +59,5 @@ $lang["youtube_publish_add_anchor"]='Lägg till ankaretiketter till URL:en när 
 $lang["plugin-youtube_publish-title"]='YouTube Publicera';
 $lang["plugin-youtube_publish-desc"]='Publicerar videorresurs till konfigurerat YouTube-konto.';
 $lang["youtube_publish_category"]='Kategori';
+$lang["page-title_youtube_publish_setup"] = 'Installera plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Publicera resurs till Youtube';

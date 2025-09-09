@@ -13,3 +13,5 @@ $lang["adobe_link_saving"] = 'सहेजा जा रहा है..';
 $lang["adobe_link_saving_wait"] = 'फ़ाइल को सहेजा जा रहा है, कृपया पुष्टि संदेश की प्रतीक्षा करें। पूर्वावलोकन छवि को अपडेट करने के लिए आपको पृष्ठ को रीफ्रेश करने की आवश्यकता हो सकती है।';
 $lang["plugin-adobe_link-title"] = 'एडोब लिंक';
 $lang["plugin-adobe_link-desc"] = '[उन्नत] ResourceSpace से Adobe CC में Adobe फ़ाइलों का इनजेस्ट करने की अनुमति दें';
+
+$lang["page-title_adobe_link_setup"] = 'एडोब लिंक प्लगइन सेटअप करें';

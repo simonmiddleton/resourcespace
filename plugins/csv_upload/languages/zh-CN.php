@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV 文件包含无法删除的 BOM';
 $lang["csv_upload_validating"] = '验证中';
 $lang["csv_upload_processing"] = '处理中';
 $lang["processing_batch_edit_save"] = '第 [row_number] 行，共 [rows_count] 行';
+$lang["page-title_csv_upload_csv_upload"] = '上传 CSV';

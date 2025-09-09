@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />提案された変
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />提案された変更が提出されました。<br/>[changesummary]<br/>変更内容を確認するには以下をクリックしてください。<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='変更を提案';
 $lang["plugin-propose_changes-desc"]='ユーザーが編集アクセス権なしでメタデータの変更を提案できるオプションを追加';
+$lang["page-title_propose_changes_propose_changes"] = '変更を提案する';
+$lang["page-title_propose_changes_setup"] = '変更提案プラグインの設定';

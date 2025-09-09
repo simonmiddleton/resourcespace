@@ -36,3 +36,6 @@ $lang["emu_add_mapping"] = 'Aggiungi mappatura';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-desc"] = 'Consente di estrarre i metadati delle risorse dal database EMu.';
 $lang["plugin-emu-title"] = 'EMu';
+
+$lang["page-title_emu_emu_object_details"] = 'Dettagli dell\'oggetto EMu';
+$lang["page-title_emu_setup"] = 'Imposta Plugin';

@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'Тип ресурса: Видео';
 $lang["embedvideo_share"] = 'Встроить видео';
 $lang["plugin-embedvideo-title"] = 'Встроить видео';
 $lang["plugin-embedvideo-desc"] = 'Предоставляет функцию для генерации HTML для встраиваемого видео на удаленных сайтах.';
+
+$lang["page-title_embedvideo_setup"] = 'Настройка плагина встраивания видео';

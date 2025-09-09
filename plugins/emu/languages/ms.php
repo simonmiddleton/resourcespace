@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'Tiada ID sumber yang ditentukan!';
 $lang["emu_upload_nodata"] = 'Tiada data EMu ditemui untuk IRN ini:';
 $lang["emu_nodata_returned"] = 'Tiada data EMu ditemui untuk IRN yang ditentukan.';
 $lang["emu_createdfromemu"] = 'Dicipta dari plugin EMU';
+
+$lang["page-title_emu_emu_object_details"] = 'Butiran Objek EMu';
+$lang["page-title_emu_setup"] = 'Tetapan Plugin';

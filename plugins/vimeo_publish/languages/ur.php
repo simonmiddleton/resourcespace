@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='وسیلہ Vimeo پر شائع کر �
 $lang["vimeo_publish_account_options"]='ویمیو اکاؤنٹ کے اختیارات';
 $lang["vimeo_publish_allow_user_accounts"]='صارفین کو اپنے Vimeo اکاؤنٹس پر شائع کرنے کی اجازت دیں۔ اگر غلط ہے تو نیچے ایک واحد Vimeo اکاؤنٹ تک رسائی کو ترتیب دینا ضروری ہے۔';
 $lang["vimeo_publish_set_account"]='ویمیو اکاؤنٹ سیٹ کریں';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo پبلش پلگ ان سیٹ اپ کریں';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Vimeo پر شائع کریں';

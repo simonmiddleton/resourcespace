@@ -14,3 +14,5 @@ $lang["downloadformat"]='فرمت دانلود';
 $lang["are_available-2"]='تبدیل خواهد شد';
 $lang["are_available-1"]='تبدیل خواهد شد';
 $lang["are_available-0"]='تبدیل خواهد شد';
+$lang["page-title_format_chooser_convert"] = 'انتخاب فرمت';
+$lang["page-title_format_chooser_setup"] = 'تنظیم افزونه انتخاب فرمت';

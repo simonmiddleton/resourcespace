@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"]='فرمت‌های سفارشی
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='اجازه دهید گزینه‌های خروجی فایل موجود برای ایجاد فرمت‌های ویدیویی سفارشی برای فایل اصلی استفاده شوند؟';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='برای شروع تبدیل اکنون علامت بزنید. اگر علامت نزنید، زمانی که فایل آماده شد، یک اعلان دریافت خواهید کرد';
 $lang["video_tracks_transcode_now_label"]='اکنون تبدیل کن';
+$lang["page-title_video_tracks_create_video"] = 'ایجاد ویدیو';
+$lang["page-title_video_tracks_setup"] = 'نصب افزونه ویدئو ترک‌ها';

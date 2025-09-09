@@ -14,3 +14,6 @@ $lang["resource_usage_configuration"]='资源使用配置';
 $lang["resource_usage_mediums"]='可用使用选项列表（逗号分隔）';
 $lang["plugin-resource_usage-title"]='资源使用';
 $lang["plugin-resource_usage-desc"]='[高级] 增加通过资源查看页面记录资源使用情况的功能';
+$lang["page-title_resource_usage_delete"] = '删除资源使用';
+$lang["page-title_resource_usage_edit"] = '编辑资源使用情况';
+$lang["page-title_resource_usage_setup"] = '设置资源使用插件';

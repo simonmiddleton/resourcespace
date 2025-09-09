@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Kolom yang diizinkan: *nama pengguna, *su
 $lang["csv_user_import_condition5"] = 'Bahasa Indonesian: Bahasa pengguna akan kembali ke bahasa default yang diatur menggunakan opsi konfigurasi "$defaultlanguage" jika kolom bahasa tidak ditemukan atau tidak memiliki nilai';
 $lang["plugin-csv_user_import-title"] = 'Impor Pengguna CSV';
 $lang["plugin-csv_user_import-desc"] = 'Menyediakan kemampuan untuk mengimpor sekelompok pengguna berdasarkan file CSV yang telah diformat sebelumnya';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Impor Pengguna CSV';

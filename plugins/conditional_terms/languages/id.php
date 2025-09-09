@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Nilai';
 $lang["conditional_terms_plugin_misconfigured"] = 'Plugin syarat bersyarat salah dikonfigurasi';
 $lang["plugin-conditional_terms-title"] = 'Syarat Bersyarat';
 $lang["plugin-conditional_terms-desc"] = 'Memungkinkan tampilan bersyarat halaman syarat saat unduhan berdasarkan metadata sumber daya';
+
+$lang["page-title_conditional_terms_setup"] = 'Atur Plugin Syarat Bersyarat';

@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Tipus de recurs Visualitzador de
 $lang["embeddocument_embed_share"] = 'Incrusta document';
 $lang["plugin-embeddocument-title"] = 'Incrusta Document';
 $lang["plugin-embeddocument-desc"] = 'Proporciona una funció per generar HTML per a previsualitzacions de documents incrustables en llocs remots.';
+
+$lang["page-title_embeddocument_setup"] = 'Configura el complement d\'embed de documents';
+$lang["page-title_embeddocument_viewer"] = 'Integrar el visualitzador de documents';

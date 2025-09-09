@@ -25,3 +25,6 @@ $lang["embedslideshow_dynamic_size"] = 'Δυναμική αλλαγή μεγέθ
 $lang["embedslideshow_minimise"] = '&minus; ελαχιστοποίηση παρουσίασης διαφανειών';
 $lang["plugin-embedslideshow-title"] = 'Ενσωμάτωση Παρουσίασης Διαφανειών';
 $lang["plugin-embedslideshow-desc"] = 'Παρέχει μια λειτουργία για τη δημιουργία HTML για ενσωματώσιμες προβολές διαφανειών συλλογών σε απομακρυσμένους ιστότοπους';
+
+$lang["page-title_embedslideshow_setup"] = 'Ρύθμιση Πρόσθετου Ενσωμάτωσης Παρουσίασης';
+$lang["page-title_embedslideshow_viewer"] = 'Ενσωμάτωση Παρουσίασης';

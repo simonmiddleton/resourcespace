@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = 'Otevřít přímý odkaz (nová strán
 $lang["embedslideshow_dynamic_size"] = 'Dynamická změna velikosti náhledu podle velikosti přehrávače?';
 $lang["plugin-embedslideshow-title"] = 'Vložit prezentaci';
 $lang["plugin-embedslideshow-desc"] = 'Poskytuje funkci pro generování HTML pro vkládání prezentací kolekcí na vzdálené stránky';
+
+$lang["page-title_embedslideshow_setup"] = 'Nastavení pluginu pro vložení prezentace';
+$lang["page-title_embedslideshow_viewer"] = 'Vložit prezentaci';

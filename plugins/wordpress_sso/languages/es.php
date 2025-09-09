@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Haga clic aquí para intentar iniciar sesión de n
 $lang["origin_wordpress_sso"]='Plugin SSO de Wordpress';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Permite el inicio de sesión único con la instalación de Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Cierre de sesión SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Sin Usuario';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Configurar el plugin SSO de Wordpress';

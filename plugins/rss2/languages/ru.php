@@ -13,3 +13,6 @@ $lang["rss_feed_for_search_filter"]='Создать RSS-канал для это
 $lang["filtered_resource_update_for"]='Обновление отфильтрованных ресурсов для поиска [%search%]';
 $lang["plugin-rss2-title"]='RSS Лента';
 $lang["plugin-rss2-desc"]='Позволяет аутентифицированную генерацию RSS-лент нового контента, включая настраиваемые поля.';
+$lang["page-title_rss2_rssfeed"] = 'RSS лента';
+$lang["page-title_rss2_rssfilter"] = 'RSS Фильтр';
+$lang["page-title_rss2_setup"] = 'Настройка плагина RSS';

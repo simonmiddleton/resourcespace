@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Den aktuella dagen';
 $lang["totp_date_binding_w"] = 'Den aktuella veckan (som börjar på en måndag)';
 $lang["totp_date_binding_m"] = 'Den nuvarande månaden';
 $lang["totp_date_binding_y"] = 'Det aktuella året';
+$lang["page-title_totp_setup"] = 'Installera TOTP-plugin';
+$lang["page-title_totp_totp"] = 'TOTP';

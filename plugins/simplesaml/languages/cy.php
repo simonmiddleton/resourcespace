@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'Diweddariadau metadata SimpleSAML';
 $lang["simplesaml_metadata_warning"] = 'Nid yw\'r metadata wedi\'i ddiweddaru ers %date%';
 $lang["simplesaml_metadata_invalid"] = 'Anfoniad metadata IdP yn annilys neu ar goll';
 $lang["simplesaml_admin_password_reset"] = 'Ail-osod cyfrinair gweinyddwr safle prawf SimpleSAML (dewisol)';
+$lang["page-title_simplesaml_about"] = 'SAML Ynglŷn â';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Generwch Gynllun SP';
+$lang["page-title_simplesaml_setup"] = 'Gosod Plugin SAML Syml.';

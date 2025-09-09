@@ -11,3 +11,6 @@ $lang["embeddocument_maximise"] = 'সর্বাধিক করুন';
 $lang["embeddocument_heading"] = 'রিমোট ডকুমেন্ট ভিউয়ার কনফিগারেশন';
 $lang["embeddocument_specify_resourcetype"] = 'অনুগ্রহ করে নির্দিষ্ট করুন কোন রিসোর্স টাইপের জন্য \'এম্বেড\' ফাংশনালিটি প্রদর্শিত হবে।';
 $lang["embeddocument_document_resourcetype"] = 'দূরবর্তী ডকুমেন্ট ভিউয়ার রিসোর্স প্রকার:';
+
+$lang["page-title_embeddocument_setup"] = 'এম্বেড ডকুমেন্ট প্লাগইন সেটআপ করুন';
+$lang["page-title_embeddocument_viewer"] = 'ডকুমেন্ট ভিউয়ার এম্বেড করুন';

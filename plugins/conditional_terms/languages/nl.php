@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Waarde';
 $lang["conditional_terms_plugin_misconfigured"] = 'De plug-in voor voorwaardelijke voorwaarden is verkeerd geconfigureerd';
 $lang["plugin-conditional_terms-title"] = 'Voorwaardelijke Voorwaarden';
 $lang["plugin-conditional_terms-desc"] = 'Stelt voorwaardelijke weergave van de voorwaardenpagina bij download in op basis van resource-metadata';
+
+$lang["page-title_conditional_terms_setup"] = 'Instellen van de Voorwaardelijke Voorwaarden Plugin';

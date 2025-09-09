@@ -23,3 +23,6 @@ $lang["embedslideshow_notransition"] = 'بدون انتقال خودکار';
 $lang["embedslideshow_directlink"] = 'آدرس مستقیم غیر جاسازی شده';
 $lang["embedslideshow_directlinkopen"] = 'باز کردن لینک مستقیم (صفحه جدید)';
 $lang["embedslideshow_dynamic_size"] = 'تغییر اندازه پویا پیش‌نمایش بر اساس اندازه پخش‌کننده؟';
+
+$lang["page-title_embedslideshow_setup"] = 'نصب افزونه اسلایدشو جاسازی';
+$lang["page-title_embedslideshow_viewer"] = 'گنجاندن اسلایدشو';

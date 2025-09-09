@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'верх',
    'bottom' => 'низ',
 );
+$lang["page-title_image_text_setup"] = 'Налаштування плагіна тексту зображення';

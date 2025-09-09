@@ -38,3 +38,5 @@ $lang["action_dates_email_text_state"] = 'Sumber daya berikut akan berubah statu
 $lang["action_dates_email_text"] = 'Sumber daya berikut akan dibatasi dan/atau mengubah status dalam [days] hari.';
 $lang["plugin-action_dates-title"] = 'Tanggal Tindakan';
 $lang["plugin-action_dates-desc"] = 'Memungkinkan penghapusan atau pembatasan sumber daya yang dijadwalkan berdasarkan bidang tanggal';
+
+$lang["page-title_action_dates_setup"] = 'Plugin Tanggal Tindakan Pengaturan';

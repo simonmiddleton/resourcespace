@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='Rasilimali imechapishwa kwenye Vimeo.
 $lang["vimeo_publish_account_options"]='Chaguo za akaunti ya Vimeo';
 $lang["vimeo_publish_allow_user_accounts"]='Ruhusu watumiaji kuchapisha kwenye akaunti zao za Vimeo. Ikiwa ni uongo basi ufikiaji wa akaunti moja ya Vimeo lazima usanidiwe hapa chini';
 $lang["vimeo_publish_set_account"]='Weka akaunti ya Vimeo';
+$lang["page-title_vimeo_publish_setup"] = 'Weka Plugin ya Kuchapisha Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Chapisha kwenye Vimeo';

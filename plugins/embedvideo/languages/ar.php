@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'نوع المصدر: فيديو';
 $lang["embedvideo_share"] = 'تضمين الفيديو';
 $lang["plugin-embedvideo-title"] = 'تضمين الفيديو';
 $lang["plugin-embedvideo-desc"] = 'يوفر وظيفة لإنشاء HTML للفيديو القابل للتضمين على المواقع البعيدة.';
+
+$lang["page-title_embedvideo_setup"] = 'إعداد مكون فيديو مضمّن';

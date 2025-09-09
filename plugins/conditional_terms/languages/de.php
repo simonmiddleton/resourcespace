@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Wert';
 $lang["conditional_terms_plugin_misconfigured"] = 'Das Plugin für bedingte Bedingungen ist falsch konfiguriert';
 $lang["plugin-conditional_terms-title"] = 'Bedingte Bedingungen';
 $lang["plugin-conditional_terms-desc"] = 'Ermöglicht die bedingte Anzeige der Nutzungsbedingungen-Seite beim Herunterladen basierend auf den Metadaten der Ressource';
+
+$lang["page-title_conditional_terms_setup"] = 'Einrichten des Conditional Terms Plugins';

@@ -12,3 +12,4 @@ $lang["adobe_link_import_successful"] = 'A fájl importálása folyamatban van';
 $lang["adobe_link_upload_document"] = 'Mentés';
 $lang["adobe_link_saving"] = 'Mentés..';
 $lang["adobe_link_saving_wait"] = 'A fájl mentése folyamatban van, kérjük, várja meg a megerősítő üzenetet. Lehet, hogy frissítenie kell az oldalt a előnézeti kép frissítéséhez.';
+$lang["page-title_adobe_link_setup"] = 'Adobe Link Plugin beállítása';

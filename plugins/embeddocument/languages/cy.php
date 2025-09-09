@@ -11,3 +11,6 @@ $lang["embeddocument_maximise"] = 'mwyafswm';
 $lang["embeddocument_heading"] = 'Gosodiad Gweld Dogfennau Bell';
 $lang["embeddocument_specify_resourcetype"] = 'Os gwelwch yn dda, nodwch pa fath o adnodd y dylai\'r swyddogaeth \'embed\' ymddangos ar ei gyfer.';
 $lang["embeddocument_document_resourcetype"] = 'Math Adnabod Dogfen Bell:';
+
+$lang["page-title_embeddocument_setup"] = 'Gosod Plugin Dogfen Mewnosod';
+$lang["page-title_embeddocument_viewer"] = 'Mewnos Gwyliwr Dogfen';

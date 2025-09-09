@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Vytvořit titulky a přidat jako alternativní sou
 $lang["whisper_subtitles_name"] = 'Automaticky generované titulky';
 $lang["whisper_transcript"] = 'Vytvořte soubor s přepisem a přidejte ho jako alternativní soubor ke stažení';
 $lang["whisper_transcript_name"] = 'Automaticky generovaný přepis';
+
+$lang["page-title_whisper_setup"] = 'Nastavení pluginu Whisper';

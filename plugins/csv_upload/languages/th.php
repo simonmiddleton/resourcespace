@@ -72,3 +72,4 @@ $lang["csv_upload_check_removebom"] = 'ไฟล์ CSV มี BOM ซึ่ง�
 $lang["csv_upload_validating"] = 'การตรวจสอบความถูกต้อง';
 $lang["csv_upload_processing"] = 'การประมวลผล';
 $lang["processing_batch_edit_save"] = 'แถว [row_number] จาก [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'อัปโหลด CSV';

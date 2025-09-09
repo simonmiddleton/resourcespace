@@ -35,3 +35,6 @@ $lang["emu_nodata_returned"] = 'Aucune donnée EMu trouvée pour l\'IRN spécifi
 $lang["emu_createdfromemu"] = 'Créé à partir du plugin EMU';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-desc"] = '[Avancé] Permet d\'extraire les métadonnées des ressources depuis la base de données EMu.';
+
+$lang["page-title_emu_emu_object_details"] = 'Détails de l\'objet EMu';
+$lang["page-title_emu_setup"] = 'Configurer le plugin';

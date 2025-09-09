@@ -8,3 +8,4 @@ $lang["user_preferences_change_name"]='Kullanıcının adını değiştirmeye iz
 $lang["changeyourpassword"]='Şifremi ve kullanıcı bilgilerimi değiştir';
 $lang["plugin-user_preferences-title"]='Kullanıcı Tercihleri';
 $lang["plugin-user_preferences-desc"]='Ek kullanıcı tercihleri sunar';
+$lang["page-title_user_preferences_setup"] = 'Kullanıcı Tercihleri Eklentisini Ayarla';

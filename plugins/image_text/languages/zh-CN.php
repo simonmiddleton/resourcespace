@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => '顶部',
    'bottom' => '底部',
 );
+$lang["page-title_image_text_setup"] = '设置图像文本插件';

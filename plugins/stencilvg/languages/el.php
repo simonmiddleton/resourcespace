@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Εκτύπωση';
 $lang["stencilvg-download"]='Λήψη';
 $lang["stencilvg-save_as_new_resource"]='Αποθήκευση ως νέο πόρο';
 $lang["stencilvg-no_parameters_found"]='Δεν βρέθηκαν παράμετροι προτύπου';
+$lang["page-title_stencilvg_download_svg"] = 'Κατέβασμα SVG';
+$lang["page-title_stencilvg_input"] = 'SVG Είσοδος';
+$lang["page-title_stencilvg_setup"] = 'Ρύθμιση Πρόσθετου StencilVG';

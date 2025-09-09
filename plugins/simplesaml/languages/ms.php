@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'Kemaskini metadata SimpleSAML';
 $lang["simplesaml_metadata_warning"] = 'Metadata tidak telah dikemas kini sejak %date%';
 $lang["simplesaml_metadata_invalid"] = 'Metadata IdP tidak sah atau tidak tersedia';
 $lang["simplesaml_admin_password_reset"] = 'Tetapkan semula kata laluan pentadbir laman ujian SimpleSAML (pilihan)';
+$lang["page-title_simplesaml_about"] = 'SAML Mengenai';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Hasilkan Konfigurasi SP';
+$lang["page-title_simplesaml_setup"] = 'Pasang Plugin SAML Ringkas';

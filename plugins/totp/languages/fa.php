@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'روز جاری';
 $lang["totp_date_binding_w"] = 'هفته جاری (از روز دوشنبه شروع می‌شود)';
 $lang["totp_date_binding_m"] = 'ماه جاری';
 $lang["totp_date_binding_y"] = 'سال جاری';
+$lang["page-title_totp_setup"] = 'نصب افزونه TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

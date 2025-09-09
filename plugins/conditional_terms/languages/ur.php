@@ -5,3 +5,5 @@ $lang["conditional_terms_description"] = 'یہ پلگ ان آپ کو ڈاؤن ل
 $lang["conditional_terms_field"] = 'میٹا ڈیٹا فیلڈ';
 $lang["conditional_terms_value"] = 'قدر';
 $lang["conditional_terms_plugin_misconfigured"] = 'مشروط شرائط پلگ ان غلط ترتیب دیا گیا ہے';
+
+$lang["page-title_conditional_terms_setup"] = 'شرطی شرائط پلگ ان ترتیب دیں';

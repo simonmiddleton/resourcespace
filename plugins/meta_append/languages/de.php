@@ -7,3 +7,4 @@ $lang["meta_append_configuration_date_format"]='Wählen Sie das Datumsformat aus
 $lang["meta_append_configuration_prompt"]='Metadaten-Checkbox zur Ergänzung hinzufügen';
 $lang["plugin-meta_append-title"]='Meta Anhängen';
 $lang["plugin-meta_append-desc"]='Fügen Sie einen benutzerdefinierbaren Zeitstempel und eine tägliche Upload-Nummer (pro Benutzer) zu einem Feld hinzu';
+$lang["page-title_meta_append_setup"] = 'Meta Append Plugin einrichten';

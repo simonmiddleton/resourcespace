@@ -42,3 +42,6 @@ $lang["falcon_link_error_falcon_check_tags"] = '説明とタグが空でない�
 $lang["falcon_link_title"] = 'ファルコンリンク';
 $lang["plugin-falcon_link-title"] = 'ファルコンリンク';
 $lang["plugin-falcon_link-desc"] = 'リソースをFalcon.ioに公開する';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Falcon Linkプラグインの設定';

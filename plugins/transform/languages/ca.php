@@ -84,3 +84,6 @@ $lang["plugin-transform-title"]='Eines d\'imatge (transformar)';
 $lang["plugin-transform-desc"]='Permet la creació d\'imatges alternatives retallades i escalades (jCrop amb suport per a mòbils)';
 $lang["use_system_icc_profile_config"]='Utilitza la configuració del sistema per al processament del perfil ICC. Sobreescriurà les opcions sRGB anteriors.';
 $lang["cropper_preset_sizes"] = 'Mides predefinides';
+$lang["page-title_transform_collection_transform"] = 'Transformar Recurso';
+$lang["page-title_transform_crop"] = 'Retallar Recurso';
+$lang["page-title_transform_setup"] = 'Configuració del plugin de transformació';

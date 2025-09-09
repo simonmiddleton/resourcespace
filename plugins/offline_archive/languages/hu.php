@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Folyamatban',
   2 => 'Befejezve',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Archívum kezelése';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Offline Archív';
+$lang["page-title_offline_archive_pending_restore"] = 'Függőben lévő erőforrás-visszaállítás';
+$lang["page-title_offline_archive_restore_request"] = 'Kérjük az erőforrás visszaállítását';
+$lang["page-title_offline_archive_restore"] = 'Archívum visszaállítása';
+$lang["page-title_offline_archive_setup"] = 'Beállítás Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Nézd meg az Erőforrás Archívumokat';
+$lang["page-title_offline_archive_view_pending"] = 'Nézd meg a függőben lévő archívumokat';

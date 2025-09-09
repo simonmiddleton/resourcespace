@@ -12,3 +12,5 @@ $lang["embeddocument_maximise"] = 'максімізаваць';
 $lang["embeddocument_heading"] = 'Канфігурацыя аддаленага праглядача дакументаў';
 $lang["embeddocument_specify_resourcetype"] = 'Калі ласка, укажыце, для якога тыпу рэсурсу павінна з\'явіцца функцыя \'embed\'.';
 $lang["embeddocument_document_resourcetype"] = 'Віддалены праглядальнік дакументаў Тып рэсурсу:';
+$lang["page-title_embeddocument_setup"] = 'Наладзіць убудову дакумента';
+$lang["page-title_embeddocument_viewer"] = 'Убудаваць праглядальнік дакументаў';

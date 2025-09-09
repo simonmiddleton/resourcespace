@@ -16,3 +16,5 @@ $lang["are_available-1"]='будет преобразовано';
 $lang["are_available-0"]='будет преобразовано';
 $lang["plugin-format_chooser-title"]='Выбор формата';
 $lang["plugin-format_chooser-desc"]='Позволяет выбрать различные форматы при загрузке файлов, которые генерируются на лету.';
+$lang["page-title_format_chooser_convert"] = 'Выбор формата';
+$lang["page-title_format_chooser_setup"] = 'Настройка плагина выбора формата';

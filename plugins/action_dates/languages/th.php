@@ -36,3 +36,5 @@ $lang["weekday-3"] = 'วันพุธ';
 $lang["weekday-4"] = 'วันพฤหัสบดี';
 $lang["weekday-5"] = 'วันศุกร์';
 $lang["weekday-6"] = 'วันเสาร์';
+
+$lang["page-title_action_dates_setup"] = 'ตั้งค่าปลั๊กอินวันที่การดำเนินการ';

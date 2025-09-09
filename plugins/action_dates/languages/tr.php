@@ -38,3 +38,5 @@ $lang["weekday-5"] = 'Cuma';
 $lang["weekday-6"] = 'Cumartesi';
 $lang["plugin-action_dates-title"] = 'Eylem Tarihleri';
 $lang["plugin-action_dates-desc"] = 'Tarih alanlarına göre kaynakların planlı silinmesini veya kısıtlanmasını sağlar';
+
+$lang["page-title_action_dates_setup"] = 'Eylem Tarihleri Eklentisini Ayarla';

@@ -80,3 +80,6 @@ $lang["plugin-transform-desc"]='크롭 및 스케일된 대체 이미지를 생�
 $lang["use_system_icc_profile_config"]='ICC 프로파일 처리를 위해 시스템 구성을 사용합니다. 위의 sRGB 옵션을 무시합니다.';
 $lang["transform-recrop"]='이미지 다시 자르기';
 $lang["cropper_preset_sizes"] = '미리 정의된 크기';
+$lang["page-title_transform_collection_transform"] = '리소스 변환';
+$lang["page-title_transform_crop"] = '자원 자르기';
+$lang["page-title_transform_setup"] = '변환 플러그인 설정';

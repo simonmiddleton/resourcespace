@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='زمرہ';
 $lang["youtube_publish_category_error"]='یوٹیوب کیٹیگریز حاصل کرنے میں خرابی: -';
 $lang["youtube_chunk_size"]='یوٹیوب پر اپ لوڈ کرتے وقت استعمال کرنے کے لیے چنک سائز (MB)';
 $lang["youtube_publish_add_anchor"]='کیا یوٹیوب یو آر ایل میٹا ڈیٹا فیلڈ میں محفوظ کرتے وقت اینکر ٹیگز شامل کریں؟';
+$lang["page-title_youtube_publish_setup"] = 'پلاگ ان سیٹ اپ کریں';
+$lang["page-title_youtube_publish_youtube_upload"] = 'یوٹیوب پر وسائل شائع کریں';

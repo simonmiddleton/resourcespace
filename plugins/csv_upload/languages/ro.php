@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'Fișierul CSV are BOM care nu a putut fi 
 $lang["csv_upload_validating"] = 'Validare';
 $lang["csv_upload_processing"] = 'Prelucrare';
 $lang["processing_batch_edit_save"] = 'rândul [row_number] din [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Încărcați CSV';

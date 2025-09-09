@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"] = 'Sửa đổi đề xuất';
 $lang["actions_propose_changes"] = 'Hiển thị cho tôi các thay đổi do người dùng đề xuất trong danh sách hành động của tôi';
 $lang["propose_changes_emailreviewed"] = '[img_headerlogo]<br />Các thay đổi bạn đề xuất đã được xem xét.<br/>[changesummary]<br/>Nhấp vào bên dưới để xem lại các thay đổi<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"] = '[img_headerlogo]<br />Các thay đổi được đề xuất đã được gửi.<br/>[changesummary]<br/>Nhấp vào bên dưới để xem xét các thay đổi<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'Đề xuất thay đổi';
+$lang["page-title_propose_changes_setup"] = 'Cài đặt Plugin Đề xuất Thay đổi';

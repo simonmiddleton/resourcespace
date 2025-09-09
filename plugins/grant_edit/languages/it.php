@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Conferma la rimozione dell\'accesso potenziato 
 $lang["grant_edit_group_list"]='Gruppi attuali con accesso di modifica aggiuntivo';
 $lang["plugin-grant_edit-title"]='Concedi Modifica';
 $lang["plugin-grant_edit-desc"]='Consente agli amministratori di concedere agli utenti l\'accesso temporaneo completo alla modifica delle risorse';
+$lang["page-title_grant_edit_setup"] = 'Imposta il plugin di modifica dei permessi';

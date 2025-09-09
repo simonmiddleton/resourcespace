@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"] = 'Puwang na ginamit upang matukoy kung dapat ba
 $lang["vr_view_yaw_only_value"] = 'Halaga na susuriin. Kung matagpuan, ang is_yaw_only na opsyon ay itatakda sa totoo';
 $lang["vr_view_orig_image"] = 'Gamitin ang orihinal na file ng resource bilang pinagmulan para sa preview ng imahe?';
 $lang["vr_view_orig_video"] = 'Gamitin ang orihinal na file ng resource bilang pinagmulan para sa preview ng video?';
+$lang["page-title_vr_view_download"] = 'VR View';
+$lang["page-title_vr_view_setup"] = 'I-set up ang VR View Plugin';

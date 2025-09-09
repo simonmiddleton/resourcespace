@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'การสร้างเวกเตอร
 $lang["clip_vector-statistics"] = 'สถิติเวกเตอร์';
 $lang["clip-vector-cleanup"] = 'ลบเวกเตอร์ที่ไม่มีเจ้าของ';
 $lang["clip-vector-cleanup-description"] = 'ลบเวกเตอร์ที่เป็นของทรัพยากรที่ไม่มีอยู่แล้วหรือไม่ใช่ประเภททรัพยากรที่เลือกข้างต้น';
+
+$lang["page-title_clip_search"] = 'การค้นหาที่ชาญฉลาดด้วย AI';
+$lang["page-title_clip_setup"] = 'ตั้งค่าปลั๊กอิน CLIP';
+$lang["page-title_clip_webcam"] = 'เครื่องสร้างแท็กเว็บแคม';

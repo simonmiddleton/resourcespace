@@ -14,3 +14,5 @@ $lang["downloadformat"]='ডাউনলোড ফরম্যাট';
 $lang["are_available-2"]='রূপান্তরিত হবে';
 $lang["are_available-1"]='রূপান্তরিত হবে';
 $lang["are_available-0"]='রূপান্তরিত হবে';
+$lang["page-title_format_chooser_convert"] = 'ফরম্যাট নির্বাচনকারী';
+$lang["page-title_format_chooser_setup"] = 'ফরম্যাট চয়নকারী প্লাগইন সেটআপ করুন';

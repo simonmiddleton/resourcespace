@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV dosyası, kaldırılamayan BOM içeri
 $lang["csv_upload_validating"] = 'Geçerliliği kontrol ediliyor';
 $lang["csv_upload_processing"] = 'İşleniyor';
 $lang["processing_batch_edit_save"] = '[row_number] / [rows_count] satırı';
+$lang["page-title_csv_upload_csv_upload"] = 'CSV Yükle';

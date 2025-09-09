@@ -37,3 +37,6 @@ $lang["embedslideshow_resourcedatatextfield"] = 'Metadatafält för att lagra bi
 $lang["embedslideshow_dynamic_size"] = 'Dynamisk storleksändring av förhandsvisning baserat på spelarstorlek?';
 $lang["plugin-embedslideshow-title"] = 'Bädda in bildspel';
 $lang["plugin-embedslideshow-desc"] = 'Ger en funktion för att generera HTML för inbäddningsbara samlingsbildspel på externa webbplatser';
+
+$lang["page-title_embedslideshow_setup"] = 'Installera inbäddningsbildspel-plugin';
+$lang["page-title_embedslideshow_viewer"] = 'Bädda in bildspel';

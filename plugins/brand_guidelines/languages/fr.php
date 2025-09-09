@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Configuration des directives de marqu
 $lang["brand_guidelines_fallback_size_thm"] = 'Taille d\'image de secours pour la disposition des vignettes';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Taille de l\'image de secours pour la mise en page demi-largeur';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Taille de l\'image de secours pour la mise en page pleine largeur';
+
+$lang["page-title_brand_guidelines_content"] = 'Gérer le contenu des directives de marque';
+$lang["page-title_brand_guidelines_guidelines"] = 'Directives de marque';
+$lang["page-title_brand_guidelines_setup"] = 'Configurer le plugin des directives de marque';
+$lang["page-title_brand_guidelines_toc"] = 'Modifier le contenu';

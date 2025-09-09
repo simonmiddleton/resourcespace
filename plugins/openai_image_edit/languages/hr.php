@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Ispuni bijelom';
 $lang["openai_image_edit__mode_black"]='Ispuni crnom';
 $lang["openai_image_edit__creating_new_resource"]='Kreiranje novog resursa';
 $lang["openai_image_edit__mode_clone"]='Kloniraj ispunu';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Preuzmi PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Spremi Alternativu';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Spremi Novo';

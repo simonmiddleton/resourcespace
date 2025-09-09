@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"] = 'A SimpleLDAP bővítmény által létrehozva.
 $lang["simpleldap_usermatchcomment"] = 'Frissítve LDAP felhasználóra a SimpleLDAP által.';
 $lang["origin_simpleldap"] = 'SimpleLDAP plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"] = 'Ne ellenőrizze a szerver FQDN-jét a tanúsítvány CN-jével szemben';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP hitelesítés tesztelése';
+$lang["page-title_simpleldap_setup"] = 'Egyszerű LDAP bővítmény beállítása';

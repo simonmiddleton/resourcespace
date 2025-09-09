@@ -37,3 +37,7 @@ $lang["brand_guidelines_configuration"] = 'Pagsasaayos ng Mga Patnubay sa Brand'
 $lang["brand_guidelines_fallback_size_thm"] = 'Sukat ng fallback na imahe ng layout ng thumbnail';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Sukat ng fallback na imahe para sa half-width na layout';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Laki ng fallback na imahe sa layout na buong lapad';
+$lang["page-title_brand_guidelines_content"] = 'Pamahalaan ang Nilalaman ng Mga Patnubay sa Brand';
+$lang["page-title_brand_guidelines_guidelines"] = 'Mga Patnubay sa Brand';
+$lang["page-title_brand_guidelines_setup"] = 'I-set up ang Plugin ng Mga Patnubay sa Brand';
+$lang["page-title_brand_guidelines_toc"] = 'I-edit ang nilalaman';

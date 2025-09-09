@@ -69,3 +69,5 @@ $lang["youtube_chunk_size"]='Dimensione del blocco da utilizzare durante il cari
 $lang["youtube_publish_add_anchor"]='Aggiungere tag di ancoraggio all\'URL quando si salva nel campo metadati URL di YouTube?';
 $lang["plugin-youtube_publish-title"]='Pubblica su YouTube';
 $lang["plugin-youtube_publish-desc"]='Pubblica la risorsa video sull\'account YouTube configurato.';
+$lang["page-title_youtube_publish_setup"] = 'Imposta Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Pubblica Risorsa su Youtube';

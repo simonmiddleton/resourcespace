@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Zalisha manukuu na ongeza kama faili mbadala za ku
 $lang["whisper_subtitles_name"] = 'Maneno ya chini yanayotengenezwa kiotomatiki';
 $lang["whisper_transcript"] = 'Tengeneza faili la nakala na uongeze kama chaguo mbadala la upakuaji';
 $lang["whisper_transcript_name"] = 'Transkripti iliyoundwa kiotomatiki';
+
+$lang["page-title_whisper_setup"] = 'Weka Plugin ya Whisper';

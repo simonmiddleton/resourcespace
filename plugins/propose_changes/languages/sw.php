@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Pendekezo la kuhariri';
 $lang["actions_propose_changes"]='Nionyeshe mabadiliko yaliyopendekezwa na mtumiaji katika orodha ya vitendo vyangu';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Mabadiliko yako yaliyopendekezwa yamekaguliwa.<br/>[changesummary]<br/>Bonyeza hapa chini ili kukagua mabadiliko<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Mabadiliko yaliyopendekezwa yamewasilishwa.<br/>[changesummary]<br/>Bonyeza hapa chini ili kukagua mabadiliko<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'Pendekeza Mabadiliko';
+$lang["page-title_propose_changes_setup"] = 'Panga Pendekeza Mabadiliko Plugin';

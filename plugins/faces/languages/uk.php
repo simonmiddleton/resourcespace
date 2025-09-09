@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Показати функціональність AI
 $lang["faces_count_faces"] = 'Всього виявлено облич';
 $lang["faces_count_missing"] = 'Зображення для обробки';
 $lang["faces-tag-field-not-set"] = 'Поле тегування не налаштоване.';
+
+$lang["page-title_faces_setup"] = 'Налаштування плагіна обличчя';

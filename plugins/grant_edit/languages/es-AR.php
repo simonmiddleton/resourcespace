@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Confirmar la eliminación del acceso mejorado p
 $lang["grant_edit_group_list"]='Grupos actuales con acceso adicional de edición';
 $lang["plugin-grant_edit-title"]='Conceder Edición';
 $lang["plugin-grant_edit-desc"]='Permite a los administradores otorgar a los usuarios acceso temporal de edición completa a los recursos';
+$lang["page-title_grant_edit_setup"] = 'Configurar el Plugin de Edición de Concesiones';

@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'กำลังดำเนินการ',
   2 => 'เสร็จสิ้น',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'จัดการคลังข้อมูล';
+$lang["page-title_offline_archive_offline_archive_action"] = 'อาร์คิฟออฟไลน์';
+$lang["page-title_offline_archive_pending_restore"] = 'การกู้คืนทรัพยากรที่รอดำเนินการ';
+$lang["page-title_offline_archive_restore_request"] = 'ขอคืนทรัพยากร';
+$lang["page-title_offline_archive_restore"] = 'กู้คืนคลังข้อมูล';
+$lang["page-title_offline_archive_setup"] = 'ตั้งค่า Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'ดูคลังทรัพยากร';
+$lang["page-title_offline_archive_view_pending"] = 'ดูเอกสารที่รอดำเนินการ';

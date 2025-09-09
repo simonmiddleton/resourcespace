@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Klik di sini untuk mencoba masuk kembali';
 $lang["origin_wordpress_sso"]='Plugin SSO Wordpress';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Memungkinkan Single Sign On dengan instalasi Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Keluar SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Tidak Ada Pengguna';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Setup Plugin SSO Wordpress';

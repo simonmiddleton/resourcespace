@@ -50,3 +50,5 @@ $lang["simpleldap_usermatchcomment"]='Diweddarwyd i ddefnyddiwr LDAP gan SimpleL
 $lang["origin_simpleldap"]='SimpleLDAP plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Peidiwch â gwirio FQDN y gweinydd yn erbyn CN y tystysgrif';
 $lang["ldapserver"]='LDAP Server/URL e.e.ldaps://hostname:port';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Prawf Dilysu LDAP';
+$lang["page-title_simpleldap_setup"] = 'Gosod Plugin LDAP Symlig';

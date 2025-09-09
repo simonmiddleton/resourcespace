@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"] = 'Egyedi formátumok';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"] = 'Engedélyezze a rendelkezésre álló fájl kimeneti lehetőségek használatát az eredeti fájlhoz egyedi videóformátumok létrehozásához?';
 $lang["video_tracks_transcode_now_or_notify_me_label"] = 'Jelöld be a transzkódálás azonnali megkezdéséhez. Ha nem jelölöd be, értesítést kapsz, amikor a fájl készen áll.';
 $lang["video_tracks_transcode_now_label"] = 'Transzkódolás most';
+$lang["page-title_video_tracks_create_video"] = 'Videó létrehozása';
+$lang["page-title_video_tracks_setup"] = 'Videósávok bővítmény beállítása';

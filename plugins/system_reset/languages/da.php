@@ -8,3 +8,4 @@ $lang["system_reset_delete_all"]='Slet alle data og filer';
 $lang["plugin-system_reset-title"]='Systemnulstilling';
 $lang["plugin-system_reset-desc"]='Tilføjer en mulighed til admin/system for at slette alle data';
 $lang["system_reset-tooltip"] = 'Udfør en systemnulstilling for at slette alle filer og data';
+$lang["page-title_system_reset_reset"] = 'System nulstilling';

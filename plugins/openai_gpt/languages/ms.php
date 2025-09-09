@@ -19,3 +19,4 @@ $lang["property-gpt_source"] = 'GPT Source';
 $lang["openai_gpt_language"] = 'Bahasa keluaran';
 $lang["openai_gpt_language_user"] = 'Bahasa pengguna semasa';
 $lang["openai_gpt_overwrite_data"] = 'Tulis semula data sedia ada dalam medan yang telah dikonfigurasikan?';
+$lang["page-title_openai_gpt_setup"] = 'Tetapkan Plugin OpenAI GPT';

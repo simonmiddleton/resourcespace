@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Přesouvání zdroje [%resource_id%] do archiv
 $lang["antivirus_av_not_setup_error"] = 'Cesta k antiviru není nastavena!';
 $lang["plugin-antivirus-title"] = 'Antivirus';
 $lang["plugin-antivirus-desc"] = '[Pokročilé] Antivirové schopnosti integrací s většinou známých antivirových motorů, které mohou běžet z příkazového řádku';
+
+$lang["page-title_antivirus_setup"] = 'Nastavit plugin pro antivirus';

@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Vaše navrhované 
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Navrhované změny byly odeslány.<br/>[changesummary]<br/>Klikněte níže pro zobrazení změn<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Navrhnout změny';
 $lang["plugin-propose_changes-desc"]='Přidává možnost umožnit uživatelům navrhovat změny metadat bez přístupu k úpravám';
+$lang["page-title_propose_changes_propose_changes"] = 'Navrhnout změny';
+$lang["page-title_propose_changes_setup"] = 'Nastavit plugin pro navrhování změn';

@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"] = 'Định dạng tùy chỉnh'
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"] = 'Cho phép các tùy chọn đầu ra tệp có sẵn được sử dụng để tạo định dạng video tùy chỉnh cho tệp gốc?';
 $lang["video_tracks_transcode_now_or_notify_me_label"] = 'Kiểm tra để bắt đầu quá trình chuyển đổi ngay bây giờ. Nếu không được kiểm tra, bạn sẽ nhận được thông báo khi tệp đã sẵn sàng';
 $lang["video_tracks_transcode_now_label"] = 'Chuyển mã ngay bây giờ';
+$lang["page-title_video_tracks_create_video"] = 'Tạo Video';
+$lang["page-title_video_tracks_setup"] = 'Cài đặt Plugin Video Tracks';

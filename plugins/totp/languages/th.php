@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'วันปัจจุบัน';
 $lang["totp_date_binding_w"] = 'สัปดาห์ปัจจุบัน (เริ่มต้นในวันจันทร์)';
 $lang["totp_date_binding_m"] = 'เดือนปัจจุบัน';
 $lang["totp_date_binding_y"] = 'ปีปัจจุบัน';
+$lang["page-title_totp_setup"] = 'ตั้งค่า TOTP Plugin';
+$lang["page-title_totp_totp"] = 'TOTP';

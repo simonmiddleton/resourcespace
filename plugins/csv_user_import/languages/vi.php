@@ -14,3 +14,4 @@ $lang["csv_user_import_condition2"] = 'Tệp CSV phải có một hàng tiêu đ
 $lang["csv_user_import_condition3"] = 'Cột (các cột) sẽ có giá trị chứa dấu phẩy ( , ), hãy đảm bảo bạn định dạng nó dưới dạng văn bản để không phải thêm dấu ngoặc kép (""). Khi lưu dưới dạng tệp .csv, hãy đảm bảo kiểm tra tùy chọn trích dẫn các ô kiểu văn bản';
 $lang["csv_user_import_condition4"] = 'Các cột được phép: *tên người dùng, *email, mật khẩu, họ tên, ngày hết hạn tài khoản, nhận xét, giới hạn ip, ngôn ngữ. Lưu ý: các trường bắt buộc được đánh dấu bằng *';
 $lang["csv_user_import_condition5"] = 'Ngôn ngữ của người dùng sẽ trở về ngôn ngữ được thiết lập bằng tùy chọn cấu hình "$defaultlanguage" nếu không tìm thấy cột lang hoặc cột đó không có giá trị.';
+$lang["page-title_csv_user_import_csv_user_import"] = 'Nhập người dùng từ CSV';

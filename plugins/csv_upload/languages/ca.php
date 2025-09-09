@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'El fitxer CSV té BOM que no s\'ha pogut 
 $lang["csv_upload_validating"] = 'Validant';
 $lang["csv_upload_processing"] = 'Processant';
 $lang["processing_batch_edit_save"] = 'fila [row_number] de [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Pujar CSV';

@@ -34,3 +34,6 @@ $lang["clip_missing_vectors"] = 'Вектары адсутнічаюць';
 $lang["clip-vector-generation"] = 'Генерацыя вектараў';
 $lang["clip-vector-cleanup"] = 'Выдаліць сіратныя вектары';
 $lang["clip-vector-cleanup-description"] = 'Выдаліце вектары, якія належаць рэсурсам, якія больш не існуюць або не з\'яўляюцца адным з вышэйзгаданых тыпаў рэсурсаў';
+$lang["page-title_clip_search"] = 'AI Смарт Пошук';
+$lang["page-title_clip_setup"] = 'Наладка плагіна CLIP';
+$lang["page-title_clip_webcam"] = 'Генератар тэга для вэб-камеры';

@@ -7,3 +7,4 @@ $lang["sensitive_images_field"]='Поле метаданных, содержащ
 $lang["sensitive_images_blur_level"]='Уровень размытия чувствительных изображений<br>(1=наименьший, 6=наибольший)';
 $lang["plugin-sensitive_images-title"]='Размытие чувствительного изображения';
 $lang["plugin-sensitive_images-desc"]='Размывает изображения, помеченные как чувствительные, с возможностью пользователя нажать для снятия размытия.';
+$lang["page-title_sensitive_images_setup"] = 'Настройка плагина для чувствительных изображений';

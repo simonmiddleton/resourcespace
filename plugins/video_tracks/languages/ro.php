@@ -30,3 +30,5 @@ $lang["video_tracks_save_alt_not_perm"]='Nu se poate salva alternativa fără pe
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='IMPORTANT! Pluginul Video Tracks a depreciat setările formatelor de ieșire. Acestea pot fi setate doar în config.php. Pluginul nu va funcționa corect până când opțiunea de configurare nu a fost copiată. Vă rugăm să copiați următoarele:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Piste video';
 $lang["plugin-video_tracks-desc"]='Adăugați suport pentru opțiuni diferite de audio și subtitrări pentru resurse video';
+$lang["page-title_video_tracks_create_video"] = 'Creează videoclip';
+$lang["page-title_video_tracks_setup"] = 'Configurare pluginul pentru piste video';

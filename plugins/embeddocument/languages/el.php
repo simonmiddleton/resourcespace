@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Τύπος Πόρου Απομα
 $lang["embeddocument_embed_share"] = 'Ενσωμάτωση εγγράφου';
 $lang["plugin-embeddocument-title"] = 'Ενσωμάτωση Εγγράφου';
 $lang["plugin-embeddocument-desc"] = 'Παρέχει μια λειτουργία για τη δημιουργία HTML για ενσωματώσιμες προεπισκοπήσεις εγγράφων σε απομακρυσμένους ιστότοπους.';
+
+$lang["page-title_embeddocument_setup"] = 'Ρύθμιση Πρόσθετου Ενσωμάτωσης Εγγράφου';
+$lang["page-title_embeddocument_viewer"] = 'Ενσωμάτωση Εγγράφου Προβολέα';

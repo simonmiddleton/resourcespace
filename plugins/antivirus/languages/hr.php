@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Premještanje resursa [%resource_id%] u arhivs
 $lang["antivirus_av_not_setup_error"] = 'Putanja antivirusa nije postavljena!';
 $lang["plugin-antivirus-title"] = 'Antivirus';
 $lang["plugin-antivirus-desc"] = ' antivirusne mogućnosti integracijom s većinom poznatih antivirusnih motora koji mogu raditi putem naredbenog retka';
+
+$lang["page-title_antivirus_setup"] = 'Postavite Antivirus Plugin';

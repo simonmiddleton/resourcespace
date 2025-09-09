@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='SimpleLDAP ਪਲੱਗਇਨ ਦੁਆਰਾ �
 $lang["simpleldap_usermatchcomment"]='ਸਧਾਰਨLDAP ਦੁਆਰਾ LDAP ਯੂਜ਼ਰ ਨੂੰ ਅਪਡੇਟ ਕੀਤਾ ਗਿਆ।';
 $lang["origin_simpleldap"]='SimpleLDAP ਪਲੱਗਇਨ';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='ਸਰਵਰ ਦੇ FQDN ਨੂੰ ਸਰਟੀਫਿਕੇਟ ਦੇ CN ਦੇ ਵਿਰੁੱਧ ਜਾਂਚ ਨਾ ਕਰੋ';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP ਪ੍ਰਮਾਣਿਕਤਾ ਦੀ ਜਾਂਚ ਕਰੋ';
+$lang["page-title_simpleldap_setup"] = 'ਸਧਾਰਨ LDAP ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

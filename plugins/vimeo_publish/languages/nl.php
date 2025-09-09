@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='Sta gebruikers toe om naar hun eigen
 $lang["vimeo_publish_set_account"]='Stel Vimeo-account in';
 $lang["plugin-vimeo_publish-title"]='Vimeo Publiceren';
 $lang["plugin-vimeo_publish-desc"]='Publiceer bronnen op Vimeo met OAuth 2.0';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo Publiceren Plugin Instellen';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Publiceren op Vimeo';

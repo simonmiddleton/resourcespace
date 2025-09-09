@@ -11,3 +11,4 @@ $lang["outofrange"]='حد سے باہر';
 $lang["invalidrange"]='غلط حد';
 $lang["splitpdf_createnewresource"]='ہر رینج کے لیے ایک نیا وسیلہ بنائیں';
 $lang["splitpdf_createnewalternativefile"]='اس وسائل پر ہر رینج کے لیے ایک نیا متبادل فائل بنائیں';
+$lang["page-title_pdf_split_pdf_split"] = 'پی ڈی ایف تقسیم';

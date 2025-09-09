@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'جاری',
   2 => 'مکمل',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'آرکائیوز کا انتظام کریں';
+$lang["page-title_offline_archive_offline_archive_action"] = 'آف لائن آرکائیو';
+$lang["page-title_offline_archive_pending_restore"] = 'زیر التواء وسائل کی بحالی';
+$lang["page-title_offline_archive_restore_request"] = 'وسائل کی بحالی کی درخواست';
+$lang["page-title_offline_archive_restore"] = 'آرکائیو بحال کریں';
+$lang["page-title_offline_archive_setup"] = 'سیٹ اپ پلگ ان';
+$lang["page-title_offline_archive_view_archives"] = 'وسائل کے ریکارڈ دیکھیں';
+$lang["page-title_offline_archive_view_pending"] = 'زیر غور آرکائیوز دیکھیں';

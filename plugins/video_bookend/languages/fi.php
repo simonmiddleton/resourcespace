@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Epäonnistui!';
 $lang["bookend-could-not-open-file"]='Virhe - tiedostoa ei voitu avata!';
 $lang["plugin-video_bookend-title"]='Videon alku- ja loppukohta';
 $lang["plugin-video_bookend-desc"]='Lisää mahdollisuuden ladata video, jossa on otsikko ja lopputeksti';
+$lang["page-title_video_bookend_bookend"] = 'Videopääte';

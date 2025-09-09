@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Genereer ondertitels en voeg toe als alternatieve 
 $lang["whisper_subtitles_name"] = 'Automatisch gegenereerde ondertitels';
 $lang["whisper_transcript"] = 'Genereer een transcriptiebestand en voeg toe als alternatieve bestandsdownloads';
 $lang["whisper_transcript_name"] = 'Automatisch gegenereerd transcript';
+
+$lang["page-title_whisper_setup"] = 'Installeer Whisper Plugin';

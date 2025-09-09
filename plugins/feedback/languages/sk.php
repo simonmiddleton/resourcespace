@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Pridať nové pole';
 $lang["feedback_back_to_plugin_manager"] = 'Späť do Správcu pluginov';
 $lang["plugin-feedback-title"] = 'Povratne informacije';
 $lang["plugin-feedback-desc"] = 'Dodaja splošno funkcijo povratnih informacij uporabnikov s konfigurabilnimi vprašanji.';
+
+$lang["page-title_feedback_feedback"] = 'Odoslať spätnú väzbu';
+$lang["page-title_feedback_setup"] = 'Nastavenie pluginu';

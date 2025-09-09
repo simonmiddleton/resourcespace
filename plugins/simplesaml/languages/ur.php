@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'سادہSAML میٹاڈیٹا کی تا�
 $lang["simplesaml_metadata_warning"] = 'میٹاڈیٹا کو %date% کے بعد اپ ڈیٹ نہیں کیا گیا';
 $lang["simplesaml_metadata_invalid"] = 'IdP میٹاڈیٹا غلط یا دستیاب نہیں ہے';
 $lang["simplesaml_admin_password_reset"] = 'سادہ SAML ٹیسٹ سائٹ کے ایڈمن پاس ورڈ کو دوبارہ ترتیب دیں (اختیاری)';
+$lang["page-title_simplesaml_about"] = 'SAML کے بارے میں';
+$lang["page-title_simplesaml_generate_sp_config"] = 'SP کنفیگریشن تیار کریں';
+$lang["page-title_simplesaml_setup"] = 'سادہ SAML پلگ ان سیٹ اپ کریں';

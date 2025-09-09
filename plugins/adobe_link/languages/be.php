@@ -12,3 +12,4 @@ $lang["adobe_link_import_successful"] = 'Файл імпартуецца';
 $lang["adobe_link_upload_document"] = 'Захаваць';
 $lang["adobe_link_saving"] = 'Захаванне..';
 $lang["adobe_link_saving_wait"] = 'Файл захоўваецца, калі ласка, пачакайце паведамленне пацверджання. Вам можа спатрэбіцца абнавіць старонку, каб абнавіць малюнак папярэдняга прагляду.';
+$lang["page-title_adobe_link_setup"] = 'Наладзіць плагін Adobe Link';

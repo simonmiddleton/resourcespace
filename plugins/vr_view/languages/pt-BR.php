@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Usar o arquivo de recurso original como fonte para 
 $lang["vr_view_orig_video"]='Usar o arquivo de recurso original como fonte para a pré-visualização do vídeo?';
 $lang["plugin-vr_view-title"]='Visualização VR';
 $lang["plugin-vr_view-desc"]='Google VR View - Visualizações de imagens e vídeos em 360 graus (formato equiretangular)';
+$lang["page-title_vr_view_download"] = 'Visão VR';
+$lang["page-title_vr_view_setup"] = 'Configurar o Plugin de Visualização VR';

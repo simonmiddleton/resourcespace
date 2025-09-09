@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='图像工具（转换）';
 $lang["plugin-transform-desc"]='启用创建裁剪和缩放的替代图像（支持移动设备的jCrop）';
 $lang["use_system_icc_profile_config"]='使用系统配置进行ICC配置文件处理。将覆盖上述sRGB选项。';
 $lang["cropper_preset_sizes"] = '预定义大小';
+$lang["page-title_transform_collection_transform"] = '转换资源';
+$lang["page-title_transform_crop"] = '裁剪资源';
+$lang["page-title_transform_setup"] = '设置转换插件';

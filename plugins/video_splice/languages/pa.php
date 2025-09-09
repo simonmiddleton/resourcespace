@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"]='ਕੰਫਿਗਰੇਸ਼ਨ ਫਾਈ
 $lang["video_splice_incorrect_quantity"]='ਇੱਕ ਵੈਧ ਸਰੋਤ ਨੂੰ ਇਸ ਪੰਨੇ ਦੇ ਲੋਡ ਹੋਣ ਤੋਂ ਬਾਅਦ ਕਲੈਕਸ਼ਨ ਵਿੱਚੋਂ ਹਟਾਇਆ ਜਾਂ ਸ਼ਾਮਲ ਕੀਤਾ ਗਿਆ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
 $lang["video_splice_createdfromvideosplice"]='ਵੀਡੀਓ ਸਪਲਾਈਸ ਪਲੱਗਇਨ ਤੋਂ ਬਣਾਇਆ ਗਿਆ';
 $lang["video_splice_error_invalid_action"]='ਗਲਤੀ : ਅਵੈਧ ਕਾਰਵਾਈ';
+$lang["page-title_video_splice_setup"] = 'ਵੀਡੀਓ ਸਪਲਾਈਸ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["page-title_video_splice_splice"] = 'ਵੀਡੀਓ ਸਪਲਾਈਸ ਕਰੋ';
+$lang["page-title_video_splice_trim"] = 'ਵੀਡੀਓ ਕੱਟੋ';

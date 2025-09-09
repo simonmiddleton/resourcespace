@@ -15,3 +15,6 @@ $lang["title-too-long"]='标题字段超过了允许的50个字符。';
 $lang["plugin-news-title"]='新闻';
 $lang["plugin-news-desc"]='添加主页新闻项目';
 $lang["news_manage-tooltip"] = '添加、编辑或删除新闻项目';
+$lang["page-title_news_news_content_edit"] = '编辑新闻内容';
+$lang["page-title_news_news_edit"] = '编辑新闻';
+$lang["page-title_news_news"] = '新闻';

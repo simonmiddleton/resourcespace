@@ -47,3 +47,6 @@ $lang["video-trim_output"]='输出';
 $lang["video_splice_error_invalid_action"]='错误：无效操作';
 $lang["plugin-video_splice-title"]='视频拼接';
 $lang["plugin-video_splice-desc"]='添加视频剪辑和拼接功能';
+$lang["page-title_video_splice_setup"] = '设置视频拼接插件';
+$lang["page-title_video_splice_splice"] = '拼接视频';
+$lang["page-title_video_splice_trim"] = '修剪视频';

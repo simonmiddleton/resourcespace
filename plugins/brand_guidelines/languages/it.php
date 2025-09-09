@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Configurazione delle linee guida del 
 $lang["brand_guidelines_fallback_size_thm"] = 'Dimensione immagine di fallback del layout delle miniature';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Dimensione immagine di fallback layout a metà larghezza';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Dimensione immagine di fallback layout a larghezza intera';
+
+$lang["page-title_brand_guidelines_content"] = 'Gestire il contenuto delle linee guida del marchio';
+$lang["page-title_brand_guidelines_guidelines"] = 'Linee guida del marchio';
+$lang["page-title_brand_guidelines_setup"] = 'Imposta il plugin delle linee guida del marchio';
+$lang["page-title_brand_guidelines_toc"] = 'Modifica contenuto';

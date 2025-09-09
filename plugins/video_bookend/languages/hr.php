@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Nije uspjelo!';
 $lang["bookend-could-not-open-file"]='Greška - nije moguće otvoriti datoteku!';
 $lang["plugin-video_bookend-title"]='Video Bookend';
 $lang["plugin-video_bookend-desc"]='Dodaje mogućnost preuzimanja videa s naslovom i završnom grafikom';
+$lang["page-title_video_bookend_bookend"] = 'Video Kraj knjige';

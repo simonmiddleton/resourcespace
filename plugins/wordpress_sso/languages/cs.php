@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Klikněte zde pro opětovné přihlášení';
 $lang["origin_wordpress_sso"]='Wordpress SSO plugin';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='[Pokročilé] Umožňuje jednotné přihlášení s instalací Wordpressu';
+$lang["page-title_wordpress_sso_logout"] = 'Odhlášení SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Žádný uživatel';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Nastavení pluginu SSO pro WordPress';

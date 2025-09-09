@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'W trakcie',
   2 => 'Zakończone',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Zarządzaj archiwami';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Archiwum offline';
+$lang["page-title_offline_archive_pending_restore"] = 'Oczekujące przywracanie zasobu';
+$lang["page-title_offline_archive_restore_request"] = 'Prośba o przywrócenie zasobu';
+$lang["page-title_offline_archive_restore"] = 'Przywróć archiwum';
+$lang["page-title_offline_archive_setup"] = 'Konfiguracja wtyczki';
+$lang["page-title_offline_archive_view_archives"] = 'Zobacz archiwa zasobów';
+$lang["page-title_offline_archive_view_pending"] = 'Zobacz oczekujące archiwa';

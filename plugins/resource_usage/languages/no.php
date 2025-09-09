@@ -14,3 +14,6 @@ $lang["resource_usage_configuration"]='Konfigurasjon av ressursbruk';
 $lang["resource_usage_mediums"]='Liste over tilgjengelige bruksalternativer (kommaseparert)';
 $lang["plugin-resource_usage-title"]='Ressursbruk';
 $lang["plugin-resource_usage-desc"]='Legger til muligheten til å logge ressursbruk via ressursvisningssiden';
+$lang["page-title_resource_usage_delete"] = 'Slett ressursbruk';
+$lang["page-title_resource_usage_edit"] = 'Rediger ressursbruk';
+$lang["page-title_resource_usage_setup"] = 'Sett opp Ressursbruk Plugin';

@@ -6,3 +6,4 @@ $lang["system_reset_warning"] = 'Babala! Ito ay magbubura ng lahat ng mga file a
 $lang["system_reset_confirm"] = 'Sigurado ka ba? Hindi ito maibabalik.';
 $lang["system_reset_delete_all"] = 'Tanggalin ang lahat ng data at mga file';
 $lang["system_reset-tooltip"] = 'Isagawa ang isang reset ng sistema upang tanggalin ang lahat ng mga file at data';
+$lang["page-title_system_reset_reset"] = 'Pag-reset ng Sistema';

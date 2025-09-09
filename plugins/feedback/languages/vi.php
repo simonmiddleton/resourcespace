@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'Văn bản / HTML';
 $lang["feedback_options-comma_separated"] = 'Tùy chọn: (phân cách bằng dấu phẩy)';
 $lang["feedback_add_new_field"] = 'Thêm Trường Mới';
 $lang["feedback_back_to_plugin_manager"] = 'Quay lại Trình quản lý Plugin';
+
+$lang["page-title_feedback_feedback"] = 'Gửi phản hồi';
+$lang["page-title_feedback_setup"] = 'Cài đặt Plugin';

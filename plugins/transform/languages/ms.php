@@ -78,3 +78,6 @@ $lang["transform_update_preview"] = 'Kemaskini pratonton';
 $lang["transform_preset_sizes"] = 'Pilih dari saiz sasaran yang telah ditetapkan';
 $lang["error_crop_invalid"] = 'Sila pilih kawasan imej';
 $lang["cropper_preset_sizes"] = 'Saiz yang telah ditetapkan';
+$lang["page-title_transform_collection_transform"] = 'Transform Sumber';
+$lang["page-title_transform_crop"] = 'Potong Sumber';
+$lang["page-title_transform_setup"] = 'Tetapkan Plugin Transform';

@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Generiraj titlove i dodaj kao alternativne datotek
 $lang["whisper_subtitles_name"] = 'Automatski generirani titlovi';
 $lang["whisper_transcript"] = 'Generirajte datoteku transkripta i dodajte je kao alternativne datoteke za preuzimanje';
 $lang["whisper_transcript_name"] = 'Automatski generirani transkript';
+
+$lang["page-title_whisper_setup"] = 'Postavite Whisper Plugin';

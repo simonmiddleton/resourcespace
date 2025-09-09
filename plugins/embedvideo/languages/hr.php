@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'Vrsta resursa - Video';
 $lang["embedvideo_share"] = 'Ugradi videozapis';
 $lang["plugin-embedvideo-title"] = 'Ugradi videozapis';
 $lang["plugin-embedvideo-desc"] = 'Pruža funkciju za generiranje HTML-a za ugrađeni video na udaljenim stranicama.';
+
+$lang["page-title_embedvideo_setup"] = 'Postavljanje dodatka za umetanje videa';

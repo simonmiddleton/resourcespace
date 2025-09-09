@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'Dim ID adnodd wedi\'i benodi!';
 $lang["emu_upload_nodata"] = 'Dim data EMu a ddarganfuwyd ar gyfer yr IRN hwn:';
 $lang["emu_nodata_returned"] = 'Ni chafwyd data EMu ar gyfer y IRN penodol.';
 $lang["emu_createdfromemu"] = 'Creuwyd o\'r plwg EMU';
+
+$lang["page-title_emu_emu_object_details"] = 'Manylion Eitem EMu';
+$lang["page-title_emu_setup"] = 'Gosod Plugin';

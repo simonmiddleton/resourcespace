@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Configuração das Diretrizes de Marc
 $lang["brand_guidelines_fallback_size_thm"] = 'Tamanho da imagem de fallback do layout de miniaturas';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Tamanho da imagem de fallback para layout de meia largura';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Tamanho da imagem de fallback para layout de largura total';
+
+$lang["page-title_brand_guidelines_content"] = 'Gerenciar Conteúdo das Diretrizes da Marca';
+$lang["page-title_brand_guidelines_guidelines"] = 'Diretrizes de Marca';
+$lang["page-title_brand_guidelines_setup"] = 'Configurar Plugin de Diretrizes de Marca';
+$lang["page-title_brand_guidelines_toc"] = 'Editar conteúdo';

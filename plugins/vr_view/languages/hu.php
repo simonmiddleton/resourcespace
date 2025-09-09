@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"] = 'Mező, amelyet arra használnak, hogy meghat�
 $lang["vr_view_yaw_only_value"] = 'Érték, amelyet ellenőrizni kell. Ha megtalálható, az is_yaw_only opció igazra lesz állítva';
 $lang["vr_view_orig_image"] = 'Eredeti erőforrás fájl használata képkivonat forrásaként?';
 $lang["vr_view_orig_video"] = 'Használja az eredeti erőforrás fájlt a videó előnézet forrásaként?';
+$lang["page-title_vr_view_download"] = 'VR Nézet';
+$lang["page-title_vr_view_setup"] = 'VR Nézet Plugin Beállítása';

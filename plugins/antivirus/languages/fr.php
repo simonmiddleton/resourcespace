@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Déplacement de la ressource [%resource_id%] v
 $lang["antivirus_av_not_setup_error"] = 'Chemin de l\'antivirus non configuré !';
 $lang["plugin-antivirus-title"] = 'Antivirus';
 $lang["plugin-antivirus-desc"] = '[Avancé] Capacités antivirus en intégrant la plupart des moteurs antivirus connus pouvant être exécutés en ligne de commande';
+
+$lang["page-title_antivirus_setup"] = 'Configurer le plugin antivirus';

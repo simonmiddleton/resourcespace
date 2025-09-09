@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Đang tiến hành',
   2 => 'Đã hoàn thành',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Quản lý Kho lưu trữ';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Lưu trữ Ngoại tuyến';
+$lang["page-title_offline_archive_pending_restore"] = 'Đang chờ khôi phục tài nguyên';
+$lang["page-title_offline_archive_restore_request"] = 'Yêu cầu khôi phục tài nguyên';
+$lang["page-title_offline_archive_restore"] = 'Khôi phục Lưu trữ';
+$lang["page-title_offline_archive_setup"] = 'Cài đặt Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Xem Kho Tư Liệu';
+$lang["page-title_offline_archive_view_pending"] = 'Xem Lưu trữ Đang Chờ';

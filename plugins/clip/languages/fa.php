@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'تولید وکتور';
 $lang["clip_vector-statistics"] = 'آمار وکتور';
 $lang["clip-vector-cleanup"] = 'حذف وکتورهای یتیم';
 $lang["clip-vector-cleanup-description"] = 'برداشتن وکتورها که به منابعی تعلق دارند که دیگر وجود ندارند یا یکی از نوع منابع انتخاب شده بالا نیستند';
+
+$lang["page-title_clip_search"] = 'جستجوی هوشمند هوش مصنوعی';
+$lang["page-title_clip_setup"] = 'نصب افزونه CLIP';
+$lang["page-title_clip_webcam"] = 'تولیدکننده برچسب وب‌کم';

@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Генерація векторів';
 $lang["clip_vector-statistics"] = 'Векторна статистика';
 $lang["clip-vector-cleanup"] = 'Видалити сирітські вектори';
 $lang["clip-vector-cleanup-description"] = 'Видалити вектори, які належать ресурсам, що більше не існують або не є одним із вищезазначених типів ресурсів';
+
+$lang["page-title_clip_search"] = 'Штучний інтелект Розумний Пошук';
+$lang["page-title_clip_setup"] = 'Налаштування плагіна CLIP';
+$lang["page-title_clip_webcam"] = 'Генератор тегів вебкамери';

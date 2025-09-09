@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'ResourceSpace에서 쿠�
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = '시스템에 접근하기 전에 쿠키 사용에 동의해야 합니다.';
 $lang["plugin-cookies_notification-title"] = '쿠키 알림';
 $lang["plugin-cookies_notification-desc"] = 'ResourceSpace가 사용자 활동을 추적하기 위해 쿠키를 사용할 수 있음을 사용자에게 알리는 메시지를 헤더에 표시하는 기능을 추가합니다';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = '쿠키 선택';
+$lang["page-title_cookies_notification_setup"] = '쿠키 알림 플러그인 설정';

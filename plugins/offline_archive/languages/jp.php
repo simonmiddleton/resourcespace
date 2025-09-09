@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => '進行中',
   2 => '完了',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'アーカイブを管理する';
+$lang["page-title_offline_archive_offline_archive_action"] = 'オフラインアーカイブ';
+$lang["page-title_offline_archive_pending_restore"] = '保留中のリソース復元';
+$lang["page-title_offline_archive_restore_request"] = 'リソースの復元をリクエストする';
+$lang["page-title_offline_archive_restore"] = 'アーカイブを復元';
+$lang["page-title_offline_archive_setup"] = 'プラグインの設定';
+$lang["page-title_offline_archive_view_archives"] = 'リソースアーカイブを表示';
+$lang["page-title_offline_archive_view_pending"] = '保留中のアーカイブを表示';

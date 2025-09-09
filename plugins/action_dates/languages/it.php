@@ -38,3 +38,5 @@ $lang["weekday-5"] = 'Venerdì';
 $lang["weekday-6"] = 'Sabato';
 $lang["plugin-action_dates-title"] = 'Date di Azione';
 $lang["plugin-action_dates-desc"] = 'Abilita l\'eliminazione o la restrizione programmata delle risorse in base ai campi data';
+
+$lang["page-title_action_dates_setup"] = 'Imposta il plugin delle date di azione';

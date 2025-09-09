@@ -38,3 +38,5 @@ $lang["action_dates_email_text_state"] = 'Os seguintes recursos estão programad
 $lang["action_dates_email_text"] = 'Os seguintes recursos estão programados para serem restritos e/ou mudar de estado em [days] dias.';
 $lang["plugin-action_dates-title"] = 'Datas de Ação';
 $lang["plugin-action_dates-desc"] = 'Permite a exclusão ou restrição programada de recursos com base em campos de data';
+
+$lang["page-title_action_dates_setup"] = 'Configurar Plugin de Datas de Ação';

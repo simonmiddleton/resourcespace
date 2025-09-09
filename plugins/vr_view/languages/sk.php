@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Použiť pôvodný súbor zdroja ako zdroj pre náh
 $lang["vr_view_orig_video"]='Použiť pôvodný súbor zdroja ako zdroj pre náhľad videa?';
 $lang["plugin-vr_view-title"]='VR Pogled';
 $lang["plugin-vr_view-desc"]='Google VR View - 360-stopinjski predogled slik in videoposnetkov (equirektangularni format)';
+$lang["page-title_vr_view_download"] = 'VR pohľad';
+$lang["page-title_vr_view_setup"] = 'Nastavenie pluginu VR View';

@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Mevcut gün';
 $lang["totp_date_binding_w"] = 'Mevcut hafta (Pazartesi günü başlayan)';
 $lang["totp_date_binding_m"] = 'Mevcut ay';
 $lang["totp_date_binding_y"] = 'Mevcut yıl';
+$lang["page-title_totp_setup"] = 'TOTP Eklentisini Kurun';
+$lang["page-title_totp_totp"] = 'TOTP';

@@ -23,3 +23,6 @@ $lang["embedslideshow_notransition"] = 'کوئی خودکار منتقلی نہ�
 $lang["embedslideshow_directlink"] = 'غیر سرایت شدہ براہ راست یو آر ایل';
 $lang["embedslideshow_directlinkopen"] = 'براہ راست لنک کھولیں (نیا صفحہ)';
 $lang["embedslideshow_dynamic_size"] = 'پلیئر کے سائز کی بنیاد پر پیش نظارہ کا متحرک سائز تبدیل کریں؟';
+
+$lang["page-title_embedslideshow_setup"] = 'ایمبیڈ سلائیڈ شو پلگ ان سیٹ اپ کریں';
+$lang["page-title_embedslideshow_viewer"] = 'سلائیڈ شو شامل کریں';

@@ -16,3 +16,5 @@ $lang["are_available-1"]='muutetaan';
 $lang["are_available-0"]='muutetaan';
 $lang["plugin-format_chooser-title"]='Muodon valitsin';
 $lang["plugin-format_chooser-desc"]='Mahdollistaa erilaisten tiedostomuotojen valitsemisen ladattaessa tiedostoja, jotka luodaan lennossa.';
+$lang["page-title_format_chooser_convert"] = 'Muoto Valitsin';
+$lang["page-title_format_chooser_setup"] = 'Aseta Muoto Valitsija Laajennus';

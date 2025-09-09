@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Udfyld med hvid';
 $lang["openai_image_edit__mode_black"]='Udfyld med sort';
 $lang["openai_image_edit__creating_new_resource"]='Oprettelse af ny ressource';
 $lang["openai_image_edit__mode_clone"]='Klon udfyld';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Hent PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Gem Alternativ';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Gem Ny';

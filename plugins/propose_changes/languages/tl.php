@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"] = 'Inirekomendang pag-edit';
 $lang["actions_propose_changes"] = 'Ipakita sa akin ang mga mungkahing pagbabago ng gumagamit sa aking listahan ng mga aksyon';
 $lang["propose_changes_emailreviewed"] = '[img_headerlogo]<br />Ang iyong iminungkahing mga pagbabago ay nasuri na.<br/>[changesummary]<br/>I-click sa ibaba upang suriin ang mga pagbabago<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"] = '[img_headerlogo]<br />Inilagay na ang mga iminungkahing pagbabago.<br/>[changesummary]<br/>I-click ang ibaba upang suriin ang mga pagbabago<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'Magmungkahi ng mga Pagbabago';
+$lang["page-title_propose_changes_setup"] = 'I-set up ang Plugin para sa Pagmungkahi ng mga Pagbabago';

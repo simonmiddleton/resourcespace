@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='YouTube에 업로드할 때 사용할 청크 크기
 $lang["youtube_publish_add_anchor"]='YouTube URL 메타데이터 필드에 저장할 때 URL에 앵커 태그를 추가하시겠습니까?';
 $lang["plugin-youtube_publish-title"]='유튜브 게시';
 $lang["plugin-youtube_publish-desc"]='구성된 YouTube 계정에 비디오 리소스를 게시합니다.';
+$lang["page-title_youtube_publish_setup"] = '플러그인 설정';
+$lang["page-title_youtube_publish_youtube_upload"] = 'YouTube에 리소스 게시';

@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Skriv ut';
 $lang["stencilvg-download"]='Ladda ner';
 $lang["stencilvg-save_as_new_resource"]='Spara som ny resurs';
 $lang["stencilvg-no_parameters_found"]='Inga mallparametrar hittades';
+$lang["page-title_stencilvg_download_svg"] = 'Ladda ner SVG';
+$lang["page-title_stencilvg_input"] = 'SVG Inmatning';
+$lang["page-title_stencilvg_setup"] = 'Installera StencilVG-pluginet';

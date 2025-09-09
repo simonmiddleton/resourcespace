@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Rozmiar fragmentu do użycia podczas przesyłania n
 $lang["youtube_publish_add_anchor"]='Dodaj tagi kotwicy do adresu URL podczas zapisywania w polu metadanych adresu URL na YouTube?';
 $lang["plugin-youtube_publish-title"]='Publikacja na YouTube';
 $lang["plugin-youtube_publish-desc"]='Publikuje zasób wideo na skonfigurowane konto YouTube.';
+$lang["page-title_youtube_publish_setup"] = 'Konfiguracja wtyczki';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Opublikuj zasób na YouTube';

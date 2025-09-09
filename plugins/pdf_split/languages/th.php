@@ -11,3 +11,4 @@ $lang["outofrange"]='นอกขอบเขต';
 $lang["invalidrange"]='ช่วงที่ไม่ถูกต้อง';
 $lang["splitpdf_createnewresource"]='สร้างทรัพยากรใหม่สำหรับแต่ละช่วง';
 $lang["splitpdf_createnewalternativefile"]='สร้างไฟล์ทางเลือกใหม่บนทรัพยากรนี้สำหรับแต่ละช่วง';
+$lang["page-title_pdf_split_pdf_split"] = 'การแยก PDF';

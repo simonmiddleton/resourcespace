@@ -13,3 +13,5 @@ $lang["adobe_link_saving"] = 'Guardando...';
 $lang["adobe_link_saving_wait"] = 'El archivo se está guardando, por favor espere el mensaje de confirmación. Es posible que necesite actualizar la página para actualizar la imagen previa.';
 $lang["plugin-adobe_link-title"] = 'Enlace de Adobe';
 $lang["plugin-adobe_link-desc"] = ' Permitir la ingesta de archivos de Adobe desde ResourceSpace en Adobe CC';
+
+$lang["page-title_adobe_link_setup"] = 'Configurar el complemento de Adobe Link';

@@ -11,3 +11,4 @@ $lang["outofrange"]='خارج از محدوده';
 $lang["invalidrange"]='محدوده نامعتبر';
 $lang["splitpdf_createnewresource"]='ایجاد یک منبع جدید برای هر محدوده';
 $lang["splitpdf_createnewalternativefile"]='ایجاد یک فایل جایگزین جدید در این منبع برای هر محدوده';
+$lang["page-title_pdf_split_pdf_split"] = 'تقسیم PDF';

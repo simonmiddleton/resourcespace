@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'trên',
    'bottom' => 'dưới',
 );
+$lang["page-title_image_text_setup"] = 'Cài đặt Plugin Văn bản Hình ảnh';

@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Generați subtitrări și adăugați ca fișiere a
 $lang["whisper_subtitles_name"] = 'Subtitrări generate automat';
 $lang["whisper_transcript"] = 'Generați un fișier de transcriere și adăugați-l ca descărcare alternativă a fișierelor';
 $lang["whisper_transcript_name"] = 'Transcriere generată automat';
+
+$lang["page-title_whisper_setup"] = 'Configurare Plugin-ul Whisper';

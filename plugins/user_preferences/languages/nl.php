@@ -8,3 +8,4 @@ $lang["user_preferences_change_name"]='Toestaan ​​om de naam van de gebruike
 $lang["changeyourpassword"]='Wijzig mijn wachtwoord en gebruikersgegevens';
 $lang["plugin-user_preferences-title"]='Gebruikersvoorkeuren';
 $lang["plugin-user_preferences-desc"]='Biedt extra gebruikersvoorkeuren';
+$lang["page-title_user_preferences_setup"] = 'Instellingen Gebruikersvoorkeuren Plugin';

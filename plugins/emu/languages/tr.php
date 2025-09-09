@@ -35,3 +35,6 @@ $lang["emu_nodata_returned"] = 'Belirtilen IRN için EMu verisi bulunamadı.';
 $lang["emu_createdfromemu"] = 'EMU eklentisinden oluşturuldu';
 $lang["plugin-emu-desc"] = '[Gelişmiş] Kaynak meta verilerinin EMu veritabanından çıkarılmasına izin verir.';
 $lang["plugin-emu-title"] = 'EMu';
+
+$lang["page-title_emu_emu_object_details"] = 'EMu Nesne Ayrıntıları';
+$lang["page-title_emu_setup"] = 'Eklenti Ayarları';

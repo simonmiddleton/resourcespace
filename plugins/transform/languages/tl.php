@@ -78,3 +78,6 @@ $lang["transform_update_preview"] = 'I-update ang preview';
 $lang["transform_preset_sizes"] = 'Pumili mula sa mga nakatakdang sukat ng target';
 $lang["error_crop_invalid"] = 'Paki pili ang isang rehiyon ng imahe';
 $lang["cropper_preset_sizes"] = 'Mga nakatakdang sukat';
+$lang["page-title_transform_collection_transform"] = 'I-convert ang Yaman';
+$lang["page-title_transform_crop"] = 'Gupitin ang Yaman';
+$lang["page-title_transform_setup"] = 'I-set up ang Transform Plugin';

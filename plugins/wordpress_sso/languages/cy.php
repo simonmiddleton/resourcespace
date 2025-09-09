@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"]='Mewngofnodi gan ddefnyddio cyfrif nad
 $lang["wordpress_sso_use_wp_login"]='Mewngofnodi gan ddefnyddio cyfrif WordPress';
 $lang["wordpress_sso_retry"]='Cliciw yma i geisio mewngofnodi eto';
 $lang["origin_wordpress_sso"]='Wordpress SSO plugin';
+$lang["page-title_wordpress_sso_logout"] = 'Allgofnodi SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Dim Defnyddiwr';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Gosod Plugin SSO Wordpress';

@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='Найдено нескольк
 $lang["museumplus_error_module_no_field_maps"]='Невозможно синхронизировать данные из MuseumPlus. Причина: модуль \'%name\' не имеет настроенных сопоставлений полей.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Позволяет извлекать метаданные ресурса из MuseumPlus с использованием его REST API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Детали объекта';
+$lang["page-title_museumplus_setup_module"] = 'Настройка модуля MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Настройка плагина MuseumPlus';

@@ -12,3 +12,5 @@ $lang["embeddocument_maximise"] = 'tối đa hóa';
 $lang["embeddocument_heading"] = 'Cấu hình Trình xem Tài liệu từ xa';
 $lang["embeddocument_specify_resourcetype"] = 'Vui lòng chỉ định loại tài nguyên nào mà chức năng \'nhúng\' nên xuất hiện.';
 $lang["embeddocument_document_resourcetype"] = 'Loại Tài liệu Xem Từ Xa';
+$lang["page-title_embeddocument_setup"] = 'Cài đặt Plugin Nhúng Tài liệu';
+$lang["page-title_embeddocument_viewer"] = 'Nhúng Trình xem Tài liệu';

@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Η τρέχουσα ημέρα';
 $lang["totp_date_binding_w"] = 'Η τρέχουσα εβδομάδα (ξεκινώντας από Δευτέρα)';
 $lang["totp_date_binding_m"] = 'Ο τρέχων μήνας';
 $lang["totp_date_binding_y"] = 'Το τρέχον έτος';
+$lang["page-title_totp_setup"] = 'Ρύθμιση Πρόσθετου TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

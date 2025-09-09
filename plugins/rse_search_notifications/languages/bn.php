@@ -24,3 +24,5 @@ $lang["checknow"]='এখনই পরীক্ষা করুন';
 $lang["columnheader-enabled"]='সক্রিয়';
 $lang["columnheader-last-found"]='সর্বশেষ পাওয়া গেছে';
 $lang["search_notifications_watched_searches-tooltip"] = 'আপনার সংরক্ষিত অনুসন্ধানগুলি নিয়ন্ত্রণ করুন';
+$lang["page-title_rse_search_notifications_setup"] = 'সার্চ নোটিফিকেশন প্লাগইন সেটআপ করুন';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'দেখা অনুসন্ধানসমূহ';

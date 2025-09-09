@@ -13,3 +13,6 @@ $lang["embeddocument_specify_resourcetype"] = 'Prosím, uveďte, pro který typ 
 $lang["embeddocument_document_resourcetype"] = 'Typ zdroje pro vzdálené prohlížení dokumentů:';
 $lang["plugin-embeddocument-title"] = 'Vložit dokument';
 $lang["plugin-embeddocument-desc"] = 'Poskytuje funkci pro generování HTML pro vkládání náhledů dokumentů na vzdálené stránky.';
+
+$lang["page-title_embeddocument_setup"] = 'Nastavit plugin pro vložení dokumentu';
+$lang["page-title_embeddocument_viewer"] = 'Vložit prohlížeč dokumentů';

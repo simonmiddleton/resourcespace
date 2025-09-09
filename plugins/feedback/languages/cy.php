@@ -19,3 +19,6 @@ $lang["feedback_options-comma_separated"] = 'Dewisiadau: (separwyd gan gomau)';
 $lang["feedback_add_new_field"] = 'Ychwanegu Maes Newydd';
 $lang["feedback_back_to_plugin_manager"] = 'Yn ôl i\'r Rheolwr Plug-in';
 $lang["feedback_pop-up_prompt_box_text"] = 'Testun blwch rhybudd naid:';
+
+$lang["page-title_feedback_feedback"] = 'Cyflwyno Adborth';
+$lang["page-title_feedback_setup"] = 'Gosod Plugin';

@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'ResourceSpaceでCookieの
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'システムにアクセスする前に、クッキーの使用を承諾する必要があります。';
 $lang["plugin-cookies_notification-title"] = 'クッキー通知';
 $lang["plugin-cookies_notification-desc"] = 'ResourceSpaceがユーザーの活動を追跡するためにクッキーをどのように使用するかを通知する機能を追加し、ヘッダーにメッセージを表示します';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'クッキーの選択';
+$lang["page-title_cookies_notification_setup"] = 'クッキー通知プラグインの設定';

@@ -16,3 +16,5 @@ $lang["are_available-1"]='sarà convertito';
 $lang["are_available-0"]='sarà convertito';
 $lang["plugin-format_chooser-title"]='Selezionatore di Formato';
 $lang["plugin-format_chooser-desc"]='Ti consente di scegliere diversi formati durante il download dei file che vengono generati al volo.';
+$lang["page-title_format_chooser_convert"] = 'Selettore di formato';
+$lang["page-title_format_chooser_setup"] = 'Imposta il plugin di scelta del formato';

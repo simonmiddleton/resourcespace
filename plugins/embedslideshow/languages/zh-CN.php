@@ -25,3 +25,6 @@ $lang["embedslideshow_minimise"] = '&minus; 最小化幻灯片';
 $lang["sizename_pixels"] = '%name (%pixels 像素)';
 $lang["plugin-embedslideshow-title"] = '嵌入幻灯片';
 $lang["plugin-embedslideshow-desc"] = '提供在远程站点上生成可嵌入集合幻灯片的HTML功能';
+
+$lang["page-title_embedslideshow_setup"] = '设置嵌入幻灯片插件';
+$lang["page-title_embedslideshow_viewer"] = '嵌入幻灯片';

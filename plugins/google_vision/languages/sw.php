@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"]='Google Vision inarudisha maneno muhimu
 $lang["google_vision_translation_api_key"]='Wezesha tafsiri ya maneno muhimu ya Vision kupitia API ya tafsiri kwa kuingiza ufunguo halali wa Google API';
 $lang["google_vision_translation_languages"]='Orodha ya nambari za lugha zilizotenganishwa kwa koma, mfano "no,es"';
 $lang["google_vision_translation_keep_english"]='Weka maneno muhimu ya Kiingereza ya asili?';
+$lang["page-title_google_vision_process_existing"] = 'Mchakato wa Google Vision Upo';
+$lang["page-title_google_vision_setup"] = 'Weka Plugin ya Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

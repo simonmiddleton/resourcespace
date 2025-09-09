@@ -52,3 +52,5 @@ $lang["origin_simpleldap"]='Jednostavan dodatak za LDAP (SimpleLDAP)';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Nemojte provjeravati FQDN poslužitelja prema CN certifikatu';
 $lang["plugin-simpleldap-title"]='Jednostavni LDAP';
 $lang["plugin-simpleldap-desc"]='Jednostavnija implementacija LDAP autentifikacije, usmjerena na Active Directory, ali također podržava Oracle directory';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Testiraj LDAP autentifikaciju';
+$lang["page-title_simpleldap_setup"] = 'Postavite jednostavni LDAP dodatak';

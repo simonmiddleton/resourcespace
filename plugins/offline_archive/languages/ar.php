@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'قيد التنفيذ',
   2 => 'مكتمل',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'إدارة الأرشيفات';
+$lang["page-title_offline_archive_offline_archive_action"] = 'أرشيف غير متصل';
+$lang["page-title_offline_archive_pending_restore"] = 'استعادة المورد المعلقة';
+$lang["page-title_offline_archive_restore_request"] = 'طلب استعادة المورد';
+$lang["page-title_offline_archive_restore"] = 'استعادة الأرشيف';
+$lang["page-title_offline_archive_setup"] = 'إعداد المكون الإضافي';
+$lang["page-title_offline_archive_view_archives"] = 'عرض أرشيف الموارد';
+$lang["page-title_offline_archive_view_pending"] = 'عرض الأرشيفات المعلقة';

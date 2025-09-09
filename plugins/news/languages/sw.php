@@ -13,3 +13,6 @@ $lang["news_nonewmessages"]='Hakuna ujumbe mpya';
 $lang["title"]='Habari za Hivi Punde...';
 $lang["title-too-long"]='Sehemu ya kichwa ni ndefu kuliko herufi 50 zinazoruhusiwa';
 $lang["news_manage-tooltip"] = 'Ongeza, hariri au futa vitu vya habari';
+$lang["page-title_news_news_content_edit"] = 'Hariri Maudhui ya Habari';
+$lang["page-title_news_news_edit"] = 'Hariri Habari';
+$lang["page-title_news_news"] = 'Habari';

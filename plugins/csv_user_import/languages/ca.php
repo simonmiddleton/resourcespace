@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Columnes permeses: *nom d\'usuari, *corre
 $lang["csv_user_import_condition5"] = 'El llenguatge de l\'usuari es tornarà per defecte al que s\'ha establert utilitzant l\'opció de configuració "$defaultlanguage" si no es troba la columna de llengua o no té cap valor';
 $lang["plugin-csv_user_import-title"] = 'Importació d\'usuaris CSV';
 $lang["plugin-csv_user_import-desc"] = '[Avançat] Proporciona la capacitat d\'importar un lot d\'usuaris basat en un fitxer CSV preformatat';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Importació d\'Usuaris CSV';

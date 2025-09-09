@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Χρησιμοποιήστε το αρχικό αρ
 $lang["vr_view_orig_video"]='Να χρησιμοποιηθεί το αρχικό αρχείο πόρου ως πηγή για προεπισκόπηση βίντεο;';
 $lang["plugin-vr_view-title"]='Προβολή VR';
 $lang["plugin-vr_view-desc"]='Προβολή Google VR - Προεπισκοπήσεις εικόνων και βίντεο 360 μοιρών (μορφή equirectangular)';
+$lang["page-title_vr_view_download"] = 'VR Προβολή';
+$lang["page-title_vr_view_setup"] = 'Ρύθμιση Πρόσθετου VR View';

@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'به‌روزرسانی‌های متا�
 $lang["simplesaml_metadata_warning"] = 'متادیتا از تاریخ %date% به‌روزرسانی نشده است';
 $lang["simplesaml_metadata_invalid"] = 'متاداده IdP نامعتبر یا در دسترس نیست';
 $lang["simplesaml_admin_password_reset"] = 'بازنشانی رمز عبور مدیر سایت آزمایشی SimpleSAML (اختیاری)';
+$lang["page-title_simplesaml_about"] = 'SAML درباره';
+$lang["page-title_simplesaml_generate_sp_config"] = 'تولید پیکربندی SP';
+$lang["page-title_simplesaml_setup"] = 'نصب افزونه SAML ساده';

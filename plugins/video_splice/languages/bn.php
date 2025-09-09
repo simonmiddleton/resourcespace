@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"]='কনফিগারেশন ফাই
 $lang["video_splice_incorrect_quantity"]='একটি বৈধ রিসোর্স হয় সরানো হয়েছে বা এই পৃষ্ঠা লোড হওয়ার পর থেকে সংগ্রহে যোগ করা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
 $lang["video_splice_createdfromvideosplice"]='ভিডিও স্প্লাইস প্লাগইন থেকে তৈরি করা হয়েছে';
 $lang["video_splice_error_invalid_action"]='ত্রুটি: অবৈধ ক্রিয়া';
+$lang["page-title_video_splice_setup"] = 'ভিডিও স্প্লাইস প্লাগইন সেটআপ করুন';
+$lang["page-title_video_splice_splice"] = 'ভিডিও সংযুক্ত করুন';
+$lang["page-title_video_splice_trim"] = 'ভিডিও কেটে ফেলুন';

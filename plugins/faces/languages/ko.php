@@ -20,3 +20,5 @@ $lang["faces-show-view"] = '보기 페이지에서 AI Faces 기능을 표시합�
 $lang["faces_count_faces"] = '감지된 총 얼굴 수';
 $lang["faces_count_missing"] = '처리할 이미지';
 $lang["faces-tag-field-not-set"] = '태그 필드가 구성되어 있지 않습니다.';
+
+$lang["page-title_faces_setup"] = '얼굴 플러그인 설정';

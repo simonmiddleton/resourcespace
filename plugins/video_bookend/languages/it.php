@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Fallito!';
 $lang["bookend-could-not-open-file"]='Errore - impossibile aprire il file!';
 $lang["plugin-video_bookend-title"]='Video Bookend';
 $lang["plugin-video_bookend-desc"]='Aggiunge la possibilità di scaricare un video con un titolo e una grafica finale';
+$lang["page-title_video_bookend_bookend"] = 'Video Bookend';

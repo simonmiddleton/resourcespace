@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"]='ওয়ার্ডপ্রেস 
 $lang["wordpress_sso_use_wp_login"]='ওয়ার্ডপ্রেস অ্যাকাউন্ট ব্যবহার করে লগইন করুন';
 $lang["wordpress_sso_retry"]='আবার লগ ইন করার চেষ্টা করতে এখানে ক্লিক করুন';
 $lang["origin_wordpress_sso"]='ওয়ার্ডপ্রেস এসএসও প্লাগইন';
+$lang["page-title_wordpress_sso_logout"] = 'SSO লগআউট';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO কোন ব্যবহারকারী';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'ওয়ার্ডপ্রেস এসএসও প্লাগইন সেটআপ করুন';

@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Konfiguracja wytycznych dotyczących 
 $lang["brand_guidelines_fallback_size_thm"] = 'Rozmiar obrazu zastępczego układu miniatur';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Rozmiar obrazu zastępczego układu o połowie szerokości';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Pełnowymiarowy obraz zastępczy układu';
+
+$lang["page-title_brand_guidelines_content"] = 'Zarządzaj treścią wytycznych dotyczących marki';
+$lang["page-title_brand_guidelines_guidelines"] = 'Wytyczne dotyczące marki';
+$lang["page-title_brand_guidelines_setup"] = 'Ustawienia wtyczki wytycznych dotyczących marki';
+$lang["page-title_brand_guidelines_toc"] = 'Edytuj zawartość';

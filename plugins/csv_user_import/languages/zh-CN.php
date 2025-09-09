@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = '允许的列：*用户名，*电子邮件
 $lang["csv_user_import_condition5"] = '如果未找到语言列或其值为空，则用户的语言将默认回到使用“$defaultlanguage”配置选项设置的语言。';
 $lang["plugin-csv_user_import-title"] = 'CSV用户导入';
 $lang["plugin-csv_user_import-desc"] = '[高级] 提供基于预格式化的CSV文件批量导入用户的功能';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSV 用户导入';

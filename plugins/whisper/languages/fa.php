@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'زیرنویس‌ها را تولید کرده و 
 $lang["whisper_subtitles_name"] = 'زیرنویس‌های تولید شده به‌طور خودکار';
 $lang["whisper_transcript"] = 'فایل رونویس را تولید کنید و به عنوان دانلودهای فایل جایگزین اضافه کنید';
 $lang["whisper_transcript_name"] = 'ترجمه خودکار تولید شده';
+
+$lang["page-title_whisper_setup"] = 'نصب افزونه Whisper';

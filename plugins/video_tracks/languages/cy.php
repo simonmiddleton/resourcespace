@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"]='Fformatau wedi\'u haddasu';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Caniatáu i\'r opsiynau allbwn ffeil sydd ar gael gael eu defnyddio i greu fformatiau fideo arferol ar gyfer y ffeil wreiddiol?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Gwirio i ddechrau\'r trawsgrifiad nawr. Os na fyddwch yn gwirio, byddwch yn derbyn hysbysiad pan fydd y ffeil yn barod';
 $lang["video_tracks_transcode_now_label"]='Trawsgrifiwch nawr';
+$lang["page-title_video_tracks_create_video"] = 'Creu Fideo';
+$lang["page-title_video_tracks_setup"] = 'Gosod Plugin Traciau Fideo';

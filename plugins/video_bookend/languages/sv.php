@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Misslyckades!';
 $lang["bookend-could-not-open-file"]='Fel - kunde inte öppna filen!';
 $lang["plugin-video_bookend-title"]='Videobokmärke';
 $lang["plugin-video_bookend-desc"]='Lägger till möjligheten att ladda ner en video med en titel och slutgrafik';
+$lang["page-title_video_bookend_bookend"] = 'Video Bokände';

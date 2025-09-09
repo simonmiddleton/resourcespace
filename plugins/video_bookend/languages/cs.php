@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Neúspěch!';
 $lang["bookend-could-not-open-file"]='Chyba - nelze otevřít soubor!';
 $lang["plugin-video_bookend-title"]='Video Bookend';
 $lang["plugin-video_bookend-desc"]='Přidává možnost stáhnout video s titulkem a závěrečnou grafikou';
+$lang["page-title_video_bookend_bookend"] = 'Video Kniha';

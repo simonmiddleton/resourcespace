@@ -72,3 +72,4 @@ $lang["csv_upload_check_removebom"] = 'Faili la CSV lina BOM ambalo haliwezi kuo
 $lang["csv_upload_validating"] = 'Kuthibitisha';
 $lang["csv_upload_processing"] = 'Kuchakata';
 $lang["processing_batch_edit_save"] = 'safu [row_number] ya [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Pakia CSV';

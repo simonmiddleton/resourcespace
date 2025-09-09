@@ -5,3 +5,5 @@ $lang["conditional_terms_description"] = 'ਇਹ ਪਲੱਗਇਨ ਤੁਹਾ
 $lang["conditional_terms_field"] = 'ਮੈਟਾਡੇਟਾ ਫੀਲਡ';
 $lang["conditional_terms_value"] = 'ਮੁੱਲ';
 $lang["conditional_terms_plugin_misconfigured"] = 'ਸ਼ਰਤੀ ਸ਼ਰਤਾਂ ਪਲੱਗਇਨ ਗਲਤ ਕਨਫਿਗਰ ਕੀਤਾ ਗਿਆ ਹੈ';
+
+$lang["page-title_conditional_terms_setup"] = 'ਸ਼ਰਤਾਂ ਵਾਲਾ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

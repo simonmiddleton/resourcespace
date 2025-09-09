@@ -72,3 +72,4 @@ $lang["csv_upload_check_removebom"] = 'Mae gan y ffeil CSV BOM nad oedd yn bosib
 $lang["csv_upload_validating"] = 'Dilysu';
 $lang["csv_upload_processing"] = 'Prosesu';
 $lang["processing_batch_edit_save"] = 'rhow [row_number] o [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Llwytho CSV';

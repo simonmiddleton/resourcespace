@@ -52,3 +52,5 @@ $lang["port"]='Port';
 $lang["simpleldap_domain"]='Domain';
 $lang["plugin-simpleldap-title"]='LDAP Sederhana';
 $lang["plugin-simpleldap-desc"]='Implementasi lebih sederhana dari autentikasi ldap, ditargetkan pada Active Directory tetapi juga mendukung direktori Oracle';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Uji Autentikasi LDAP';
+$lang["page-title_simpleldap_setup"] = 'Pengaturan Plugin LDAP Sederhana';

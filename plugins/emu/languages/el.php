@@ -36,3 +36,6 @@ $lang["emu_createdfromemu"] = 'Δημιουργήθηκε από το πρόσθ
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-title"] = 'EMu';
 $lang["plugin-emu-desc"] = '[Προχωρημένο] Επιτρέπει την εξαγωγή μεταδεδομένων πόρων από τη βάση δεδομένων EMu.';
+
+$lang["page-title_emu_emu_object_details"] = 'Λεπτομέρειες Αντικειμένου EMu';
+$lang["page-title_emu_setup"] = 'Ρύθμιση Πρόσθετου';

@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Sallitut sarakkeet: *käyttäjänimi, *s�
 $lang["csv_user_import_condition5"] = 'Käyttäjän kieli palautuu oletusarvoisesti "$defaultlanguage" asetuksen mukaiseksi, jos kieltä ei löydy tai sen arvoa ei ole määritetty sarakkeessa "lang"';
 $lang["plugin-csv_user_import-title"] = 'CSV-käyttäjätuonti';
 $lang["plugin-csv_user_import-desc"] = 'Mahdollistaa käyttäjäerän tuomisen ennalta muotoillun CSV-tiedoston perusteella';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSV Käyttäjän Tuonti';

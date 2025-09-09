@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'itaas',
    'bottom' => 'ibaba',
 );
+$lang["page-title_image_text_setup"] = 'I-set up ang Plugin ng Teksto ng Imahe';

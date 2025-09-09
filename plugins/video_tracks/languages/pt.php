@@ -28,3 +28,5 @@ $lang["video_tracks_save_alt_not_perm"]='Incapaz de salvar alternativa sem permi
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='IMPORTANTE! O plugin Video Tracks descontinuou as configurações de formatos de saída. Elas só podem ser definidas no config.php. O plugin não funcionará como esperado até que a opção de configuração tenha sido copiada. Por favor, copie o seguinte:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Faixas de Vídeo';
 $lang["plugin-video_tracks-desc"]='[Avançado] Adicionar suporte para diferentes opções de áudio e legendas para recursos de vídeo';
+$lang["page-title_video_tracks_create_video"] = 'Criar Vídeo';
+$lang["page-title_video_tracks_setup"] = 'Configurar Plugin de Faixas de Vídeo';

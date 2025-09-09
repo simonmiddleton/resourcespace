@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = '직접 링크 열기 (새 페이지)';
 $lang["embedslideshow_dynamic_size"] = '플레이어 크기에 따라 미리보기 동적 크기 조정?';
 $lang["plugin-embedslideshow-title"] = '슬라이드쇼 삽입';
 $lang["plugin-embedslideshow-desc"] = '원격 사이트에 삽입 가능한 컬렉션 슬라이드쇼를 위한 HTML을 생성하는 기능을 제공합니다';
+
+$lang["page-title_embedslideshow_setup"] = '슬라이드쇼 플러그인 설정';
+$lang["page-title_embedslideshow_viewer"] = '슬라이드쇼 삽입';

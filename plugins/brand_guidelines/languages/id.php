@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Konfigurasi Pedoman Merek';
 $lang["brand_guidelines_fallback_size_thm"] = 'Ukuran gambar pengganti tata letak thumbnail';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Ukuran gambar pengganti tata letak setengah lebar';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Ukuran gambar pengganti tata letak lebar penuh';
+
+$lang["page-title_brand_guidelines_content"] = 'Kelola Konten Pedoman Merek';
+$lang["page-title_brand_guidelines_guidelines"] = 'Pedoman Merek';
+$lang["page-title_brand_guidelines_setup"] = 'Atur Plugin Pedoman Merek';
+$lang["page-title_brand_guidelines_toc"] = 'Edit konten';

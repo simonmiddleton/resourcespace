@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"]='Ingia kwa kutumia akaunti isiyo ya Wo
 $lang["wordpress_sso_use_wp_login"]='Ingia kwa kutumia akaunti ya WordPress';
 $lang["wordpress_sso_retry"]='Bonyeza hapa kujaribu kuingia tena';
 $lang["origin_wordpress_sso"]='Kipachiko cha SSO cha Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'SSO Logout';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Hakuna Mtumiaji';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Sakinisha Plugin ya SSO ya Wordpress';

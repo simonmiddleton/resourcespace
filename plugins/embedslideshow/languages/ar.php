@@ -25,3 +25,6 @@ $lang["embedslideshow_minimise"] = '&minus; تصغير عرض الشرائح';
 $lang["sizename_pixels"] = '%name (%pixels بكسل)';
 $lang["plugin-embedslideshow-title"] = 'تضمين عرض الشرائح';
 $lang["plugin-embedslideshow-desc"] = 'يوفر وظيفة لإنشاء HTML لعروض الشرائح القابلة للتضمين للمجموعات على المواقع البعيدة';
+
+$lang["page-title_embedslideshow_setup"] = 'إعداد مكون عرض الشرائح المضمن';
+$lang["page-title_embedslideshow_viewer"] = 'تضمين عرض الشرائح';

@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Önizleme görüntüsü için orijinal kaynak dosya
 $lang["vr_view_orig_video"]='Video önizlemesi için orijinal kaynak dosyasını kaynak olarak kullan?';
 $lang["plugin-vr_view-title"]='VR Görünümü';
 $lang["plugin-vr_view-desc"]='Google VR Görünümü - 360 derece görüntü ve video önizlemeleri (equirectangular format)';
+$lang["page-title_vr_view_download"] = 'VR Görünümü';
+$lang["page-title_vr_view_setup"] = 'VR Görünüm Eklentisini Kurun';

@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"] = 'Рэсурс быў апублік�
 $lang["vimeo_publish_account_options"] = 'Опцыі ўліковага запісу Vimeo';
 $lang["vimeo_publish_allow_user_accounts"] = 'Дазволіць карыстальнікам публікаваць у іх уласныя акаўнты Vimeo. Калі не, то доступ да аднаго акаўнта Vimeo павінен быць наладжаны ніжэй';
 $lang["vimeo_publish_set_account"] = 'Усталяваць уліковы запіс Vimeo';
+$lang["page-title_vimeo_publish_setup"] = 'Наладзіць плагін публікацыі Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Апублікаваць у Vimeo';

@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Kliknite ovdje kako biste pokušali ponovno se pri
 $lang["origin_wordpress_sso"]='Wordpress SSO dodatak';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Omogućuje jedinstvenu prijavu s Wordpress instalacijom';
+$lang["page-title_wordpress_sso_logout"] = 'Odjava SSO-a';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Nema korisnika';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Postavljanje Wordpress SSO dodatka';

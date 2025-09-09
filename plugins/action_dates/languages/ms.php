@@ -37,3 +37,4 @@ $lang["weekday-3"] = 'Rabu';
 $lang["weekday-4"] = 'Khamis';
 $lang["weekday-5"] = 'Jumaat';
 $lang["weekday-6"] = 'Sabtu';
+$lang["page-title_action_dates_setup"] = 'Tetapkan Plugin Tarikh Tindakan';

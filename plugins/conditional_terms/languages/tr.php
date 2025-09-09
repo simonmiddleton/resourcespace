@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Değer';
 $lang["conditional_terms_plugin_misconfigured"] = 'Koşullu terimler eklentisi yanlış yapılandırılmış';
 $lang["plugin-conditional_terms-title"] = 'Koşullu Şartlar';
 $lang["plugin-conditional_terms-desc"] = 'Kaynak meta verilerine dayalı olarak indirme sırasında şartlı terim sayfasının görüntülenmesini etkinleştirir';
+
+$lang["page-title_conditional_terms_setup"] = 'Koşullu Terimler Eklentisini Kur';

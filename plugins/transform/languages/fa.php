@@ -78,3 +78,6 @@ $lang["transform_preset_sizes"]='انتخاب از اندازه هدف از پی
 $lang["error_crop_invalid"]='لطفاً یک ناحیه از تصویر را انتخاب کنید';
 $lang["transform-recrop"]='برش مجدد تصویر';
 $lang["cropper_preset_sizes"] = 'اندازه‌های از پیش تعریف شده';
+$lang["page-title_transform_collection_transform"] = 'تبدیل منبع';
+$lang["page-title_transform_crop"] = 'برش منبع';
+$lang["page-title_transform_setup"] = 'تنظیم پلاگین تبدیل';

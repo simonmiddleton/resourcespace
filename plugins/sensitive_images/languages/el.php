@@ -7,3 +7,4 @@ $lang["sensitive_images_field"]='Πεδίο μεταδεδομένων που π
 $lang["sensitive_images_blur_level"]='Επίπεδο ασάφειας ευαίσθητης εικόνας<br>(1=λιγότερο, 6=περισσότερο)';
 $lang["plugin-sensitive_images-title"]='Θόλωση ευαίσθητης εικόνας';
 $lang["plugin-sensitive_images-desc"]='Θολώνει τις εικόνες που έχουν επισημανθεί ως ευαίσθητες, με τον χρήστη να μπορεί να κάνει κλικ για να τις αποθολώσει.';
+$lang["page-title_sensitive_images_setup"] = 'Ρύθμιση Πρόσθετου Ευαίσθητων Εικόνων';

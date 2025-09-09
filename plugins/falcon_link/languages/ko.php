@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'Falcon을 통해 보관된 리소스';
 $lang["falcon_link_error_falcon_check_tags"] = '설명과 태그가 비어 있지 않은지 확인하세요';
 $lang["plugin-falcon_link-title"] = '팔콘 링크';
 $lang["plugin-falcon_link-desc"] = '[고급] Falcon.io에 리소스 게시';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Falcon Link 플러그인 설정';

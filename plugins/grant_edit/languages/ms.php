@@ -9,3 +9,4 @@ $lang["grant_edit_date"] = 'Tarikh luput untuk akses edit';
 $lang["grant_edit_list"] = 'Pengguna semasa dengan akses penyuntingan tambahan';
 $lang["grant_edit_group_list"] = 'Kumpulan semasa dengan akses penyuntingan tambahan';
 $lang["grant_edit_delete_user"] = 'Sahkan penghapusan akses yang dipertingkatkan untuk';
+$lang["page-title_grant_edit_setup"] = 'Tetapan Plugin Edit Grant';

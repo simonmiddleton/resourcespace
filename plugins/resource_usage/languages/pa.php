@@ -12,3 +12,6 @@ $lang["edit_usage"]='ਵਰਤੋਂ ਸੰਪਾਦਿਤ ਕਰੋ';
 $lang["delete_usage"]='ਵਰਤੋਂ ਮਿਟਾਓ';
 $lang["resource_usage_configuration"]='ਸਰੋਤ ਵਰਤੋਂ ਸੰਰਚਨਾ';
 $lang["resource_usage_mediums"]='ਉਪਲਬਧ ਵਰਤੋਂ ਦੇ ਵਿਕਲਪਾਂ ਦੀ ਸੂਚੀ (ਕੋਮਾ ਨਾਲ ਵੱਖਰੇ ਕੀਤੇ)';
+$lang["page-title_resource_usage_delete"] = 'ਸਾਧਨ ਦੀ ਵਰਤੋਂ ਹਟਾਓ';
+$lang["page-title_resource_usage_edit"] = 'ਸੰਸਾਧਨ ਦੀ ਵਰਤੋਂ ਸੰਪਾਦਿਤ ਕਰੋ';
+$lang["page-title_resource_usage_setup"] = 'ਸਾਧਨ ਵਰਤੋਂ ਪਲੱਗਇਨ ਸੈਟਅਪ';

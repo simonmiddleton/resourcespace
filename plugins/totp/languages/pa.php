@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'ਮੌਜੂਦਾ ਦਿਨ';
 $lang["totp_date_binding_w"] = 'ਮੌਜੂਦਾ ਹਫਤਾ (ਸੋਮਵਾਰ ਤੋਂ ਸ਼ੁਰੂ)';
 $lang["totp_date_binding_m"] = 'ਮੌਜੂਦਾ ਮਹੀਨਾ';
 $lang["totp_date_binding_y"] = 'ਮੌਜੂਦਾ ਸਾਲ';
+$lang["page-title_totp_setup"] = 'TOTP ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["page-title_totp_totp"] = 'TOTP';

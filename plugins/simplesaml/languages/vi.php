@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'Cập nhật metadata SimpleSAML';
 $lang["simplesaml_metadata_warning"] = 'Metadata chưa được cập nhật kể từ %date%';
 $lang["simplesaml_metadata_invalid"] = 'Dữ liệu IdP không hợp lệ hoặc không khả dụng';
 $lang["simplesaml_admin_password_reset"] = 'Đặt lại mật khẩu quản trị trang thử nghiệm SimpleSAML (tùy chọn)';
+$lang["page-title_simplesaml_about"] = 'SAML Giới thiệu';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Tạo cấu hình SP';
+$lang["page-title_simplesaml_setup"] = 'Cài đặt Plugin SAML Đơn Giản';

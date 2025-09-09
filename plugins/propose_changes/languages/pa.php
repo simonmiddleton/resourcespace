@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='ਪ੍ਰਸਤਾਵਿਤ ਸੋਧ';
 $lang["actions_propose_changes"]='ਮੇਰੇ ਕਾਰਵਾਈਆਂ ਸੂਚੀ ਵਿੱਚ ਉਪਭੋਗਤਾ ਦੁਆਰਾ ਸੁਝਾਏ ਗਏ ਬਦਲਾਅ ਦਿਖਾਓ';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />ਤੁਹਾਡੇ ਸੁਝਾਏ ਗਏ ਬਦਲਾਅ ਦੀ ਸਮੀਖਿਆ ਕੀਤੀ ਗਈ ਹੈ।<br/>[changesummary]<br/>ਬਦਲਾਅ ਦੀ ਸਮੀਖਿਆ ਕਰਨ ਲਈ ਹੇਠਾਂ ਕਲਿੱਕ ਕਰੋ<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />ਪ੍ਰਸਤਾਵਿਤ ਬਦਲਾਅ ਜਮ੍ਹਾਂ ਕਰ ਦਿੱਤੇ ਗਏ ਹਨ।<br/>[changesummary]<br/>ਬਦਲਾਅ ਦੀ ਸਮੀਖਿਆ ਕਰਨ ਲਈ ਹੇਠਾਂ ਕਲਿੱਕ ਕਰੋ<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'ਬਦਲਾਅ ਦੀ ਸੁਝਾਅ ਦਿਓ';
+$lang["page-title_propose_changes_setup"] = 'ਸੈਟਅਪ ਪ੍ਰਸਤਾਵ ਬਦਲਾਅ ਪਲੱਗਇਨ';

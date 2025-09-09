@@ -14,3 +14,5 @@ $lang["downloadformat"] = 'Letöltési formátum';
 $lang["are_available-2"] = 'át lesz alakítva';
 $lang["are_available-1"] = 'át lesz alakítva';
 $lang["are_available-0"] = 'át lesz alakítva';
+$lang["page-title_format_chooser_convert"] = 'Formátum választó';
+$lang["page-title_format_chooser_setup"] = 'Formátumválasztó bővítmény beállítása';

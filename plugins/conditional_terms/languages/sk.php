@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Hodnota';
 $lang["conditional_terms_plugin_misconfigured"] = 'Zásuvný modul podmienených podmienok je nesprávne nakonfigurovaný';
 $lang["plugin-conditional_terms-title"] = 'Pogojni pogoji';
 $lang["plugin-conditional_terms-desc"] = 'Omogoča pogojni prikaz strani s pogoji pri prenosu na podlagi metapodatkov vira';
+
+$lang["page-title_conditional_terms_setup"] = 'Nastavenie pluginu podmienených podmienok';

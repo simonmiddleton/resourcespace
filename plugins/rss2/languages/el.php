@@ -11,3 +11,6 @@ $lang["rss_feed_for_search_filter"]='Δημιουργία RSS τροφοδοσί
 $lang["filtered_resource_update_for"]='Ενημέρωση φιλτραρισμένου αντικειμένου για αναζήτηση [%search%]';
 $lang["plugin-rss2-title"]='Ροή RSS';
 $lang["plugin-rss2-desc"]='Επιτρέπει την αυθεντικοποιημένη δημιουργία RSS feeds νέου περιεχομένου, συμπεριλαμβανομένων διαμορφώσιμων πεδίων.';
+$lang["page-title_rss2_rssfeed"] = 'RSS Feed';
+$lang["page-title_rss2_rssfilter"] = 'Φίλτρο RSS';
+$lang["page-title_rss2_setup"] = 'Ρύθμιση Πρόσθετου RSS';

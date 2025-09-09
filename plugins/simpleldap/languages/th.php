@@ -50,3 +50,5 @@ $lang["simpleldap_usermatchcomment"]='อัปเดตเป็นผู้ใ
 $lang["origin_simpleldap"]='SimpleLDAP plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='อย่าตรวจสอบ FQDN ของเซิร์ฟเวอร์กับ CN ของใบรับรอง';
 $lang["ldapserver"]='LDAP Server/URL เช่น ldaps://hostname:port';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'ทดสอบการตรวจสอบสิทธิ์ LDAP';
+$lang["page-title_simpleldap_setup"] = 'ตั้งค่า Simple LDAP Plugin';

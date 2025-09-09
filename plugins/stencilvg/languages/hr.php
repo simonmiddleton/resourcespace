@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Ispis';
 $lang["stencilvg-download"]='Preuzimanje';
 $lang["stencilvg-save_as_new_resource"]='Spremi kao novi resurs';
 $lang["stencilvg-no_parameters_found"]='Nema pronađenih parametara predloška';
+$lang["page-title_stencilvg_download_svg"] = 'Preuzmi SVG';
+$lang["page-title_stencilvg_input"] = 'SVG Ulaz';
+$lang["page-title_stencilvg_setup"] = 'Postavite StencilVG dodatak';

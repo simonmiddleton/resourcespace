@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Konfigurasjon av merkevare-retningsli
 $lang["brand_guidelines_fallback_size_thm"] = 'Miniatyrbildeoppsett reservebildestørrelse';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Halvbreddeoppsett fallback-bildestørrelse';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Fullbreddeoppsett reservebildestørrelse';
+
+$lang["page-title_brand_guidelines_content"] = 'Administrere innhold for merke retningslinjer';
+$lang["page-title_brand_guidelines_guidelines"] = 'Merke retningslinjer';
+$lang["page-title_brand_guidelines_setup"] = 'Sett opp merkevare retningslinjer-plugin';
+$lang["page-title_brand_guidelines_toc"] = 'Rediger innhold';

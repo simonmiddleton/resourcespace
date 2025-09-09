@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Ang kasalukuyang araw';
 $lang["totp_date_binding_w"] = 'Ang kasalukuyang linggo (nagsisimula sa Lunes)';
 $lang["totp_date_binding_m"] = 'Ang kasalukuyang buwan';
 $lang["totp_date_binding_y"] = 'Ang kasalukuyang taon';
+$lang["page-title_totp_setup"] = 'I-set up ang TOTP Plugin';
+$lang["page-title_totp_totp"] = 'TOTP';

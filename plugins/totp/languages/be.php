@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Сённяшні дзень';
 $lang["totp_date_binding_w"] = 'Бягучы тыдзень (пачынаючы з панядзелка)';
 $lang["totp_date_binding_m"] = 'Цяперашні месяц';
 $lang["totp_date_binding_y"] = 'Сёлетні год';
+$lang["page-title_totp_setup"] = 'Наладка плагіна TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

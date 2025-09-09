@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => '상단',
    'bottom' => '하단',
 );
+$lang["page-title_image_text_setup"] = '이미지 텍스트 플러그인 설정';

@@ -28,3 +28,5 @@ $lang["video_tracks_save_alt_not_perm"]='Невозможно сохранить
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='ВАЖНО! Плагин Video Tracks устарел настройки форматов вывода. Их можно установить только в config.php. Плагин не будет работать должным образом, пока параметр конфигурации не будет скопирован. Пожалуйста, скопируйте следующее:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Видеодорожки';
 $lang["plugin-video_tracks-desc"]='[Расширенные] Добавить поддержку различных аудио и субтитровых опций для видео ресурсов';
+$lang["page-title_video_tracks_create_video"] = 'Создать видео';
+$lang["page-title_video_tracks_setup"] = 'Настройка плагина видеотреков';

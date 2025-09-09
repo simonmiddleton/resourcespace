@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Cliqueu aquí per intentar iniciar sessió de nou'
 $lang["origin_wordpress_sso"]='Connector SSO de Wordpress';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='[Avançat] Permet l\'inici de sessió únic amb la instal·lació de Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Tancament SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Sense Usuari';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Configura el plugin SSO de Wordpress';

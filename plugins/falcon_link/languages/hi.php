@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'फाल्कन के माध्यम
 $lang["falcon_link_error_falcon_check_tags"] = 'कृपया जांचें कि विवरण और टैग खाली नहीं हैं';
 $lang["plugin-falcon_link-title"] = 'फाल्कन लिंक';
 $lang["plugin-falcon_link-desc"] = '[उन्नत] संसाधनों को Falcon.io पर प्रकाशित करें';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'फाल्कन लिंक प्लगइन सेटअप करें';

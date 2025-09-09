@@ -38,3 +38,5 @@ $lang["vimeo_publish_set_account"]='Nastavit účet Vimeo';
 $lang["vimeo_publish_callback_url"]='URL zpětného volání';
 $lang["plugin-vimeo_publish-title"]='Publikovat na Vimeo';
 $lang["plugin-vimeo_publish-desc"]='Publikovat zdroje na Vimeo pomocí OAuth 2.0';
+$lang["page-title_vimeo_publish_setup"] = 'Nastavení pluginu pro publikaci Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Publikovat na Vimeo';

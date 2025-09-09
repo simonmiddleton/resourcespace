@@ -23,3 +23,6 @@ $lang["embedslideshow_directlink"] = 'URL union heb ei fewnoli';
 $lang["embedslideshow_directlinkopen"] = 'Agor ddolen uniongyrchol (tudalen newydd)';
 $lang["embedslideshow_dynamic_size"] = 'A yw\'r adlewyrchiad yn newid yn ddynamig yn seiliedig ar faint y chwaraewr?';
 $lang["embedslideshow_seconds"] = '? eiliadau';
+
+$lang["page-title_embedslideshow_setup"] = 'Gosod Plugin Slideshow Embed';
+$lang["page-title_embedslideshow_viewer"] = 'Mewnoslido Slideshow';

@@ -23,3 +23,7 @@ $lang["google_vision_translation_keep_english"]='Skal de originale engelske nøg
 $lang["google_vision_api"]='Google Vision API';
 $lang["plugin-google_vision-title"]='Google Vision API';
 $lang["plugin-google_vision-desc"]='Billedgenkendelsesfunktion. Sender uploadede billeder til Google Cloud Vision API og indstiller foreslået metadata.';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision Behandl Eksisterende';
+$lang["page-title_google_vision_setup"] = 'Opsæt Google Vision Plugin';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

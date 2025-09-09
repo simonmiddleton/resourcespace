@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Yn y broses',
   2 => 'Wedi\'i gwblhau',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Rheoli Archifau';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Archif All-lein';
+$lang["page-title_offline_archive_pending_restore"] = 'Adfer Adnoddau yn aros';
+$lang["page-title_offline_archive_restore_request"] = 'Gofyn am Ail-adfer Adnodd';
+$lang["page-title_offline_archive_restore"] = 'Adfer Archif';
+$lang["page-title_offline_archive_setup"] = 'Gosod Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'View Archifau Adnoddau';
+$lang["page-title_offline_archive_view_pending"] = 'Gweld Archifau ar Goll';

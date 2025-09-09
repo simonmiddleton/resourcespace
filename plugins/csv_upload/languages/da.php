@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV-filen har BOM, som ikke kunne fjernes
 $lang["csv_upload_validating"] = 'Validerer';
 $lang["csv_upload_processing"] = 'Behandling';
 $lang["processing_batch_edit_save"] = 'række [row_number] af [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Upload CSV';

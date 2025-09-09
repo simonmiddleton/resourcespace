@@ -14,3 +14,5 @@ $lang["downloadformat"] = 'Định dạng tải xuống';
 $lang["are_available-2"] = 'sẽ được chuyển đổi';
 $lang["are_available-1"] = 'sẽ được chuyển đổi';
 $lang["are_available-0"] = 'sẽ được chuyển đổi';
+$lang["page-title_format_chooser_convert"] = 'Trình chọn định dạng';
+$lang["page-title_format_chooser_setup"] = 'Cài đặt Plugin Chọn Định Dạng';

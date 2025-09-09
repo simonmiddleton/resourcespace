@@ -48,3 +48,6 @@ $lang["museumplus_mplus_field_name"]='MuseumPlus enw maes';
 $lang["museumplus_module_name"]='MuseumPlus module name';
 $lang["museumplus_mplus_id_field"]='Enw maes ID MuseumPlus';
 $lang["museumplus_error_script_failed"]='Method MuseumPlus methu rhedeg oherwydd bod clo proses ar waith. Mae hyn yn dangos nad yw\'r rhediad blaenorol wedi cwblhau. Os oes angen i chi glirio\'r clo ar ôl rhediad a fethodd, rhedwch y sgript fel a ganlyn: php museumplus_script.php --clear-lock';
+$lang["page-title_museumplus_museumplus_object_details"] = 'Manylion Eitem MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'Sefydlu Modiwl MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Gosod Plugin MuseumPlus';

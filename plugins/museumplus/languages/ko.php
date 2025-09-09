@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='여러 개의 레코드가 발�
 $lang["museumplus_error_module_no_field_maps"]='MuseumPlus에서 데이터를 동기화할 수 없습니다. 이유: 모듈 \'%name\'에 필드 매핑이 구성되어 있지 않습니다.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='[고급] MuseumPlus의 REST API (MpRIA)를 사용하여 리소스 메타데이터를 추출할 수 있습니다.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus 객체 세부정보';
+$lang["page-title_museumplus_setup_module"] = 'MuseumPlus 모듈 설정';
+$lang["page-title_museumplus_setup"] = 'MuseumPlus 플러그인 설정';

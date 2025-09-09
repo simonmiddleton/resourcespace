@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'کوئی وسائل کی شناختی نمبر مخ�
 $lang["emu_upload_nodata"] = 'اس IRN کے لیے کوئی EMu ڈیٹا نہیں ملا:';
 $lang["emu_nodata_returned"] = 'مخصوص IRN کے لئے کوئی EMu ڈیٹا نہیں ملا۔';
 $lang["emu_createdfromemu"] = 'ای ایم یو پلگ ان سے تخلیق کیا گیا';
+
+$lang["page-title_emu_emu_object_details"] = 'EMu آبجیکٹ کی تفصیلات';
+$lang["page-title_emu_setup"] = 'سیٹ اپ پلگ ان';

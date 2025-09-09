@@ -33,3 +33,5 @@ $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />已提交�
 $lang["propose_changes_accept_change"]='接受';
 $lang["plugin-propose_changes-title"]='提出更改';
 $lang["plugin-propose_changes-desc"]='添加选项以允许用户在没有编辑权限的情况下提出元数据更改建议';
+$lang["page-title_propose_changes_propose_changes"] = '建议更改';
+$lang["page-title_propose_changes_setup"] = '设置提议更改插件';

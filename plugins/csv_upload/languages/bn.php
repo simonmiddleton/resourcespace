@@ -72,3 +72,4 @@ $lang["csv_upload_check_removebom"] = 'CSV ফাইলের BOM রয়ে�
 $lang["csv_upload_validating"] = 'যাচাই করা';
 $lang["csv_upload_processing"] = 'প্রক্রিয়াকরণ';
 $lang["processing_batch_edit_save"] = 'সারি [row_number] এর [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'CSV আপলোড করুন';

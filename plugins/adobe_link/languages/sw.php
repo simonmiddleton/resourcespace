@@ -11,3 +11,5 @@ $lang["adobe_link_import_successful"] = 'Faili linaingizwa';
 $lang["adobe_link_upload_document"] = 'Hifadhi';
 $lang["adobe_link_saving"] = 'Inahifadhi..';
 $lang["adobe_link_saving_wait"] = 'Faili linaokolewa, tafadhali subiri ujumbe wa uthibitisho. Unaweza kuhitaji kusasisha ukurasa ili kusasisha picha ya hakikisho.';
+
+$lang["page-title_adobe_link_setup"] = 'Weka Plugin ya Adobe Link';

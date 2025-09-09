@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV datoteka ima BOM koji nije mogao biti
 $lang["csv_upload_validating"] = 'Validacija';
 $lang["csv_upload_processing"] = 'Obrada';
 $lang["processing_batch_edit_save"] = 'redak [row_number] od [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Učitaj CSV';

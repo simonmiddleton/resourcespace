@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'Nincs megadva erőforrás-azonosító!';
 $lang["emu_upload_nodata"] = 'Nem található EMu adat ehhez az IRN-hez:';
 $lang["emu_nodata_returned"] = 'Nem található EMu adat a megadott IRN-hez.';
 $lang["emu_createdfromemu"] = 'EMU bővítményből készült';
+
+$lang["page-title_emu_emu_object_details"] = 'EMu Objekt Részletek';
+$lang["page-title_emu_setup"] = 'Beállítás Plugin';

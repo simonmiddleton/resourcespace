@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Entfernter Dokumentenbetrachter 
 $lang["embeddocument_embed_share"] = 'Dokument einbetten';
 $lang["plugin-embeddocument-title"] = 'Dokument einbetten';
 $lang["plugin-embeddocument-desc"] = 'Bietet eine Funktion zur Generierung von HTML für einbettbare Dokumentvorschauen auf entfernten Websites.';
+
+$lang["page-title_embeddocument_setup"] = 'Einrichtungs-Embed-Dokument-Plugin';
+$lang["page-title_embeddocument_viewer"] = 'Dokumentenbetrachter einbetten';

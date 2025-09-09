@@ -86,3 +86,6 @@ $lang["plugin-transform-title"]='Bildwerkzeuge (transformieren)';
 $lang["plugin-transform-desc"]='Ermöglicht die Erstellung von zugeschnittenen und skalierten alternativen Bildern (jCrop mit Mobilunterstützung)';
 $lang["use_system_icc_profile_config"]='Systemkonfiguration für die ICC-Profilverarbeitung verwenden. Überschreibt die oben genannten sRGB-Optionen.';
 $lang["cropper_preset_sizes"] = 'Vordefinierte Größen';
+$lang["page-title_transform_collection_transform"] = 'Ressource transformieren';
+$lang["page-title_transform_crop"] = 'Zuschneiden Ressource';
+$lang["page-title_transform_setup"] = 'Transform-Plugin einrichten';

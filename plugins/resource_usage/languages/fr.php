@@ -14,3 +14,6 @@ $lang["resource_usage_configuration"]='Configuration d\'utilisation des ressourc
 $lang["resource_usage_mediums"]='Liste des options d\'utilisation disponibles (séparées par des virgules)';
 $lang["plugin-resource_usage-title"]='Utilisation des ressources';
 $lang["plugin-resource_usage-desc"]='[Avancé] Ajoute la capacité de journaliser l\'utilisation des ressources via la page de visualisation des ressources';
+$lang["page-title_resource_usage_delete"] = 'Supprimer l\'utilisation des ressources';
+$lang["page-title_resource_usage_edit"] = 'Modifier l\'utilisation des ressources';
+$lang["page-title_resource_usage_setup"] = 'Configurer le plugin d\'utilisation des ressources';

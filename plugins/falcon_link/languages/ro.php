@@ -42,3 +42,6 @@ $lang["falcon_link_error_falcon_check_tags"] = 'Vă rugăm să verificați că d
 $lang["falcon_link_default_tag"] = 'Textul implicit al etichetei care va fi adăugat automat la toate conținuturile publicate Falcon. Dacă includeți textul \'[ID]\', acesta va fi înlocuit cu ID-ul resursei în etichetă';
 $lang["plugin-falcon_link-title"] = 'Link Falcon';
 $lang["plugin-falcon_link-desc"] = 'Publică resursele pe Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Configurare pluginul Falcon Link';

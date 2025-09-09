@@ -78,3 +78,6 @@ $lang["error_crop_invalid"]='Tafadhali chagua eneo la picha';
 $lang["px"]='px';
 $lang["transform-recrop"]='Punguza upya picha';
 $lang["cropper_preset_sizes"] = 'Mikubwa iliyowekwa kabla';
+$lang["page-title_transform_collection_transform"] = 'Badilisha Rasilimali';
+$lang["page-title_transform_crop"] = 'Rasilimali ya Kukata';
+$lang["page-title_transform_setup"] = 'Panga Plugin ya Kubadilisha';

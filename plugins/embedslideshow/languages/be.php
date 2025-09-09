@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"] = 'Няма аўтаматычнага пе
 $lang["embedslideshow_directlink"] = 'Непрыкметны прамы URL';
 $lang["embedslideshow_directlinkopen"] = 'Адкрыць прамы спасылку (новая старонка)';
 $lang["embedslideshow_dynamic_size"] = 'Дынамічнае змяненне памеру папярэдняга прагляду ў залежнасці ад памеру праймера?';
+$lang["page-title_embedslideshow_setup"] = 'Наладзіць убудову слайдшоўта';
+$lang["page-title_embedslideshow_viewer"] = 'Уставіць слайд-шоў';

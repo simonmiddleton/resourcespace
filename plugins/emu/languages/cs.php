@@ -35,3 +35,6 @@ $lang["emu_nodata_returned"] = 'Nebyla nalezena žádná data EMu pro zadané IR
 $lang["emu_createdfromemu"] = 'Vytvořeno z pluginu EMU';
 $lang["plugin-emu-title"] = 'EMu';
 $lang["plugin-emu-desc"] = '[Pokročilé] Umožňuje extrahovat metadata zdrojů z databáze EMu.';
+
+$lang["page-title_emu_emu_object_details"] = 'Podrobnosti objektu EMu';
+$lang["page-title_emu_setup"] = 'Nastavení pluginu';

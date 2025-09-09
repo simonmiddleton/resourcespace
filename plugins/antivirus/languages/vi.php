@@ -10,3 +10,4 @@ $lang["antivirus_action_quarantine"] = 'Di chuyển vào khu cách ly';
 $lang["antivirus_deleting_file"] = 'Đang xóa tài nguyên [%resource_id%] và bất kỳ tệp nào liên quan!';
 $lang["antivirus_moving_file"] = 'Chuyển tài nguyên [%resource_id%] sang trạng thái lưu trữ [%archive_state%]';
 $lang["antivirus_av_not_setup_error"] = 'Đường dẫn Antivirus chưa được thiết lập!';
+$lang["page-title_antivirus_setup"] = 'Cài đặt Plugin Antivirus';

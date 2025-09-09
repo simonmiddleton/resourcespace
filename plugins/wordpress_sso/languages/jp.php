@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='再度ログインを試みるにはここをク�
 $lang["origin_wordpress_sso"]='WordPress SSO プラグイン';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='[高度] WordPressインストールでシングルサインオンを許可';
+$lang["page-title_wordpress_sso_logout"] = 'SSOログアウト';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO ユーザーなし';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Wordpress SSOプラグインの設定';

@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Agregar Nuevo Campo';
 $lang["feedback_back_to_plugin_manager"] = 'Volver al Administrador de Plugins';
 $lang["plugin-feedback-title"] = 'Retroalimentación';
 $lang["plugin-feedback-desc"] = 'Agrega una función de retroalimentación general del usuario con preguntas configurables.';
+
+$lang["page-title_feedback_feedback"] = 'Enviar Comentarios';
+$lang["page-title_feedback_setup"] = 'Configuración del Plugin';

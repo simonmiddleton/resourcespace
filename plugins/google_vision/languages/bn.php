@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"]='গুগল ভিশন শুধু
 $lang["google_vision_translation_api_key"]='গুগল এপিআই কী প্রবেশ করিয়ে অনুবাদ এপিআই এর মাধ্যমে ভিশন কীওয়ার্ডগুলির অনুবাদ সক্রিয় করুন';
 $lang["google_vision_translation_languages"]='কমা দ্বারা পৃথক করা ভাষা কোডের তালিকা, যেমন "no,es"';
 $lang["google_vision_translation_keep_english"]='মূল ইংরেজি কীওয়ার্ডগুলি রাখবেন?';
+$lang["page-title_google_vision_process_existing"] = 'গুগল ভিশন প্রক্রিয়া বিদ্যমান';
+$lang["page-title_google_vision_setup"] = 'গুগল ভিশন প্লাগইন সেটআপ করুন';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

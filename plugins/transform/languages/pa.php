@@ -78,3 +78,6 @@ $lang["transform_preset_sizes"]='ਪੂਰਵ-ਨਿਰਧਾਰਿਤ ਟਾਰ
 $lang["error_crop_invalid"]='ਕਿਰਪਾ ਕਰਕੇ ਚਿੱਤਰ ਦੇ ਖੇਤਰ ਦੀ ਚੋਣ ਕਰੋ';
 $lang["transform-recrop"]='ਚਿੱਤਰ ਨੂੰ ਮੁੜ ਕ੍ਰਾਪ ਕਰੋ';
 $lang["cropper_preset_sizes"] = 'ਪੂਰਵ ਨਿਰਧਾਰਿਤ ਆਕਾਰ';
+$lang["page-title_transform_collection_transform"] = 'ਸੰਸਾਧਨ ਨੂੰ ਬਦਲੋ';
+$lang["page-title_transform_crop"] = 'ਕ੍ਰਾਪ ਰਿਸੋਰਸ';
+$lang["page-title_transform_setup"] = 'ਟ੍ਰਾਂਸਫਾਰਮ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

@@ -37,3 +37,7 @@ $lang["brand_guidelines_configuration"] = 'Cấu hình Hướng dẫn Thương h
 $lang["brand_guidelines_fallback_size_thm"] = 'Kích thước hình ảnh dự phòng bố cục hình thu nhỏ';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Kích thước hình ảnh dự phòng bố cục nửa chiều rộng';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Kích thước hình ảnh dự phòng bố cục toàn chiều rộng';
+$lang["page-title_brand_guidelines_content"] = 'Quản lý nội dung hướng dẫn thương hiệu';
+$lang["page-title_brand_guidelines_guidelines"] = 'Hướng dẫn thương hiệu';
+$lang["page-title_brand_guidelines_setup"] = 'Cài đặt Plugin Hướng dẫn Thương hiệu';
+$lang["page-title_brand_guidelines_toc"] = 'Chỉnh sửa nội dung';

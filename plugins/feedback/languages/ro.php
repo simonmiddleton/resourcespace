@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Adăugați un câmp nou';
 $lang["feedback_back_to_plugin_manager"] = 'Înapoi la Managerul de module suplimentare';
 $lang["plugin-feedback-title"] = 'Feedback';
 $lang["plugin-feedback-desc"] = 'Adaugă o funcție generală de feedback pentru utilizatori cu întrebări configurabile.';
+
+$lang["page-title_feedback_feedback"] = 'Trimite feedback';
+$lang["page-title_feedback_setup"] = 'Configurare Plugin';

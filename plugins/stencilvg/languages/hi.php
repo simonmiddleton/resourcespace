@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='प्रिंट';
 $lang["stencilvg-download"]='डाउनलोड';
 $lang["stencilvg-save_as_new_resource"]='नए संसाधन के रूप में सहेजें';
 $lang["stencilvg-no_parameters_found"]='कोई टेम्पलेट पैरामीटर नहीं मिले';
+$lang["page-title_stencilvg_download_svg"] = 'SVG डाउनलोड करें';
+$lang["page-title_stencilvg_input"] = 'SVG इनपुट';
+$lang["page-title_stencilvg_setup"] = 'StencilVG प्लगइन सेटअप करें';

@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'Archivovaný zdroj přes Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Zkontrolujte, zda popis a štítky nejsou prázdné';
 $lang["plugin-falcon_link-title"] = 'Odkaz Falcon';
 $lang["plugin-falcon_link-desc"] = '[Pokročilé] Publikovat zdroje na Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Nastavení pluginu Falcon Link';

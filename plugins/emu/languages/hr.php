@@ -36,3 +36,6 @@ $lang["emu_createdfromemu"] = 'Stvoreno pomoću EMU dodatka';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-title"] = 'EMu';
 $lang["plugin-emu-desc"] = 'Omogućuje izdvajanje metapodataka resursa iz EMu baze podataka.';
+
+$lang["page-title_emu_emu_object_details"] = 'EMu detalji objekta';
+$lang["page-title_emu_setup"] = 'Postavke dodatka';

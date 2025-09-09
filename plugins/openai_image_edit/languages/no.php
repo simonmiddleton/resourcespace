@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Fyll med hvit';
 $lang["openai_image_edit__mode_black"]='Fyll med svart';
 $lang["openai_image_edit__creating_new_resource"]='Oppretter ny ressurs';
 $lang["openai_image_edit__mode_clone"]='Klon fyll';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Hent PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Lagre alternativ';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Lagre Ny';

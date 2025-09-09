@@ -51,3 +51,6 @@ $lang["museumplus_id_returns_multiple_records"]='Βρέθηκαν πολλαπλ
 $lang["museumplus_error_module_no_field_maps"]='Αδυναμία συγχρονισμού δεδομένων από το MuseumPlus. Αιτία: το αντικείμενο \'%name\' δεν έχει διαμορφωθεί μεταφορά πεδίων.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='[Προχωρημένο] Επιτρέπει την εξαγωγή μεταδεδομένων πόρων από το MuseumPlus χρησιμοποιώντας το REST API του (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'Λεπτομέρειες Αντικειμένου MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'Ρύθμιση Μονάδας MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Ρύθμιση Πρόσθετου MuseumPlus';

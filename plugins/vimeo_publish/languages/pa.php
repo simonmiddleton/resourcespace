@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='ਸਰੋਤ ਨੂੰ Vimeo \'ਤੇ
 $lang["vimeo_publish_account_options"]='Vimeo ਖਾਤਾ ਵਿਕਲਪ';
 $lang["vimeo_publish_allow_user_accounts"]='ਉਪਭੋਗਤਾਵਾਂ ਨੂੰ ਆਪਣੇ Vimeo ਖਾਤਿਆਂ \'ਤੇ ਪ੍ਰਕਾਸ਼ਿਤ ਕਰਨ ਦੀ ਆਗਿਆ ਦਿਓ। ਜੇ ਝੂਠ ਹੈ ਤਾਂ ਹੇਠਾਂ ਇੱਕ ਹੀ Vimeo ਖਾਤੇ ਤੱਕ ਪਹੁੰਚ ਸੰਰਚਿਤ ਕੀਤੀ ਜਾਣੀ ਚਾਹੀਦੀ ਹੈ।';
 $lang["vimeo_publish_set_account"]='ਵਿਮੀਓ ਖਾਤਾ ਸੈੱਟ ਕਰੋ';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo ਪ੍ਰਕਾਸ਼ਨ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Vimeo \'ਤੇ ਪ੍ਰਕਾਸ਼ਿਤ ਕਰੋ';

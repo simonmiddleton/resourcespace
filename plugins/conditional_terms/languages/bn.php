@@ -5,3 +5,5 @@ $lang["conditional_terms_description"] = 'এই প্লাগইনটি আ
 $lang["conditional_terms_field"] = 'মেটাডেটা ক্ষেত্র';
 $lang["conditional_terms_value"] = 'মান';
 $lang["conditional_terms_plugin_misconfigured"] = 'শর্তাধীন শর্তাবলী প্লাগইনটি ভুলভাবে কনফিগার করা হয়েছে';
+
+$lang["page-title_conditional_terms_setup"] = 'শর্তাধীন শর্ত প্লাগইন সেটআপ করুন';

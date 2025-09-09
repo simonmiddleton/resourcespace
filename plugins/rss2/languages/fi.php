@@ -11,3 +11,6 @@ $lang["rss_feed_for_search_filter"]='Luo RSS-syöte tälle kyselylle';
 $lang["filtered_resource_update_for"]='Suodatettu resurssipäivitys haulle [%search%]';
 $lang["plugin-rss2-title"]='RSS-syöte';
 $lang["plugin-rss2-desc"]='Mahdollistaa todennetun RSS-syötteiden luomisen uudesta sisällöstä, mukaan lukien konfiguroitavat kentät.';
+$lang["page-title_rss2_rssfeed"] = 'RSS-syöte';
+$lang["page-title_rss2_rssfilter"] = 'RSS-suodatin';
+$lang["page-title_rss2_setup"] = 'Aseta RSS-laajennus';

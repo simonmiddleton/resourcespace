@@ -8,3 +8,6 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"] = 'อนุ
 $lang["cookies_notification_cookies_use_title"] = 'การใช้คุกกี้';
 $lang["cookies_notification_cookies_use_error_msg"] = 'คุณได้ตัดสินใจไม่อนุญาตให้ใช้ Cookies โดย ResourceSpace เราจึงต้องออกจากระบบคุณเนื่องจาก ResourceSpace ต้องการ Cookies เพื่อทำงานอย่างถูกต้อง';
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'คุณต้องยอมรับการใช้คุกกี้ก่อนเข้าถึงระบบ';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'การเลือกคุกกี้';
+$lang["page-title_cookies_notification_setup"] = 'ตั้งค่าปลั๊กอินการแจ้งเตือนคุกกี้';

@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'Recurs arxivat a través de Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Si us plau, comprova que la descripció i les etiquetes no estiguin buides';
 $lang["plugin-falcon_link-title"] = 'Enllaç Falcon';
 $lang["plugin-falcon_link-desc"] = '[Avançat] Publica recursos a Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Configura el complement Falcon Link';

@@ -11,3 +11,4 @@ $lang["bookend-failed"]='فشل!';
 $lang["bookend-could-not-open-file"]='خطأ - لا يمكن فتح الملف!';
 $lang["plugin-video_bookend-title"]='فيديو بوكديند';
 $lang["plugin-video_bookend-desc"]='يضيف القدرة على تنزيل فيديو مع عنوان ورسوم نهاية';
+$lang["page-title_video_bookend_bookend"] = 'كتاب فيديو';

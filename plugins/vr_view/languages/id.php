@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Gunakan file sumber sumber daya asli sebagai sumber
 $lang["vr_view_orig_video"]='Gunakan file sumber sumber daya asli sebagai sumber untuk pratinjau video?';
 $lang["plugin-vr_view-title"]='Tampilan VR';
 $lang["plugin-vr_view-desc"]='Google VR View - pratinjau gambar dan video 360 derajat (format equirectangular)';
+$lang["page-title_vr_view_download"] = 'VR View';
+$lang["page-title_vr_view_setup"] = 'Siapkan Plugin Tampilan VR';

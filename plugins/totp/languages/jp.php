@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = '現在の日';
 $lang["totp_date_binding_w"] = '今週（月曜日から始まる）';
 $lang["totp_date_binding_m"] = '今月';
 $lang["totp_date_binding_y"] = '現在の年';
+$lang["page-title_totp_setup"] = 'TOTPプラグインの設定';
+$lang["page-title_totp_totp"] = 'TOTP';

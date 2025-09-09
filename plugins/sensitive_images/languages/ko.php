@@ -7,3 +7,4 @@ $lang["sensitive_images_field"]='이미지가 민감한 이유를 포함하는 �
 $lang["sensitive_images_blur_level"]='민감한 이미지 흐림 수준<br>(1=최소, 6=최대)';
 $lang["plugin-sensitive_images-title"]='민감한 이미지 흐리기';
 $lang["plugin-sensitive_images-desc"]='사용자가 클릭하여 흐림을 해제할 수 있는 민감한 이미지에 흐림 효과를 적용합니다.';
+$lang["page-title_sensitive_images_setup"] = '민감한 이미지 플러그인 설정';

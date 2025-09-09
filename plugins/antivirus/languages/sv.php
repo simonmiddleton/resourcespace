@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Flyttar resursen [%resource_id%] till arkiveri
 $lang["antivirus_av_not_setup_error"] = 'Antivirus-sökväg inte inställd!';
 $lang["plugin-antivirus-title"] = 'Antivirus';
 $lang["plugin-antivirus-desc"] = ' Antivirusfunktioner genom att integrera med de flesta kända antivirusmotorer som kan köras via kommandorad';
+
+$lang["page-title_antivirus_setup"] = 'Installera Antivirus Plugin';

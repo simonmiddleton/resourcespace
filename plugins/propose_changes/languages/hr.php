@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Vaše predložene 
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Predložene promjene su poslane.<br/>[changesummary]<br/>Kliknite ispod da pregledate promjene<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Predloži promjene';
 $lang["plugin-propose_changes-desc"]='Dodaje opciju koja omogućuje korisnicima predlaganje promjena metapodataka bez pristupa za uređivanje';
+$lang["page-title_propose_changes_propose_changes"] = 'Predloži promjene';
+$lang["page-title_propose_changes_setup"] = 'Postavi predložene promjene dodatka';

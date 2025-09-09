@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Configuración de las Directrices de 
 $lang["brand_guidelines_fallback_size_thm"] = 'Tamaño de imagen de respaldo para miniaturas';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Tamaño de imagen de respaldo para diseño de media anchura';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Tamaño de imagen de respaldo para diseño de ancho completo';
+
+$lang["page-title_brand_guidelines_content"] = 'Gestionar el contenido de las directrices de marca';
+$lang["page-title_brand_guidelines_guidelines"] = 'Directrices de Marca';
+$lang["page-title_brand_guidelines_setup"] = 'Configurar el complemento de directrices de marca';
+$lang["page-title_brand_guidelines_toc"] = 'Editar contenido';

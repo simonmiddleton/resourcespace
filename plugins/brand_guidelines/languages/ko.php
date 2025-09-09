@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = '브랜드 가이드라인 구성';
 $lang["brand_guidelines_fallback_size_thm"] = '썸네일 레이아웃 대체 이미지 크기';
 $lang["brand_guidelines_fallback_size_half_width"] = '반폭 레이아웃 대체 이미지 크기';
 $lang["brand_guidelines_fallback_size_full_width"] = '전체 너비 레이아웃 대체 이미지 크기';
+
+$lang["page-title_brand_guidelines_content"] = '브랜드 가이드라인 콘텐츠 관리';
+$lang["page-title_brand_guidelines_guidelines"] = '브랜드 가이드라인';
+$lang["page-title_brand_guidelines_setup"] = '브랜드 가이드라인 플러그인 설정';
+$lang["page-title_brand_guidelines_toc"] = '내용 편집';

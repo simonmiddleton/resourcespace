@@ -78,3 +78,6 @@ $lang["transform_preset_sizes"]='Dewiswch o faint targed a gynhelir ymlaen llaw'
 $lang["error_crop_invalid"]='Dewiswch ardal o\'r delwedd';
 $lang["px"]='px';
 $lang["cropper_preset_sizes"] = 'Maintiau wedi\'u diffinio ymlaen llaw';
+$lang["page-title_transform_collection_transform"] = 'Trawsnewid Adnodd';
+$lang["page-title_transform_crop"] = 'Torri Adnodd';
+$lang["page-title_transform_setup"] = 'Sefydlu Plugin Trawsnewid';

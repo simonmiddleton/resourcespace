@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='使用原始资源文件作为图像预览的源文
 $lang["vr_view_orig_video"]='使用原始资源文件作为视频预览的源文件？';
 $lang["plugin-vr_view-title"]='VR 视图';
 $lang["plugin-vr_view-desc"]='Google VR View - 360度图像和视频预览（等距圆柱投影格式）';
+$lang["page-title_vr_view_download"] = 'VR视图';
+$lang["page-title_vr_view_setup"] = '设置 VR 视图插件';

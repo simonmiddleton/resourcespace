@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"]='ਗੈਰ-ਵਰਡਪ੍ਰੈਸ �
 $lang["wordpress_sso_use_wp_login"]='ਵਰਡਪ੍ਰੈਸ ਖਾਤੇ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਲੌਗਇਨ ਕਰੋ';
 $lang["wordpress_sso_retry"]='ਇੱਥੇ ਕਲਿੱਕ ਕਰੋ ਅਤੇ ਮੁੜ ਲੌਗਿਨ ਕਰਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ';
 $lang["origin_wordpress_sso"]='ਵਰਡਪ੍ਰੈਸ SSO ਪਲੱਗਇਨ';
+$lang["page-title_wordpress_sso_logout"] = 'SSO ਲੌਗਆਉਟ';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO ਕੋਈ ਉਪਭੋਗਤਾ ਨਹੀਂ';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Wordpress SSO ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

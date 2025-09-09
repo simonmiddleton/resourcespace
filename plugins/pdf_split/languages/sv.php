@@ -20,3 +20,4 @@ $lang["splitpdf_createnewalternativefile"]="Skapa en ny alternativ fil tillhöra
 
 $lang["plugin-pdf_split-title"]='PDF Dela';
 $lang["plugin-pdf_split-desc"]='Tillåter PDF-filer att delas upp i flera sidor';
+$lang["page-title_pdf_split_pdf_split"] = 'PDF Dela';

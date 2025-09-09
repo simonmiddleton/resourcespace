@@ -36,3 +36,8 @@ $lang["brand_guidelines_configuration"] = 'ব্র্যান্ড নির
 $lang["brand_guidelines_fallback_size_thm"] = 'থাম্বনেইল বিন্যাসের জন্য ব্যাকআপ চিত্রের আকার';
 $lang["brand_guidelines_fallback_size_half_width"] = 'হাফ-উইডথ লেআউট ফলব্যাক ইমেজ সাইজ';
 $lang["brand_guidelines_fallback_size_full_width"] = 'পূর্ণ-প্রস্থ বিন্যাসের জন্য ফোলব্যাক চিত্রের আকার';
+
+$lang["page-title_brand_guidelines_content"] = 'ব্র্যান্ড গাইডলাইন সামগ্রী পরিচালনা করুন';
+$lang["page-title_brand_guidelines_guidelines"] = 'ব্র্যান্ড গাইডলাইনস';
+$lang["page-title_brand_guidelines_setup"] = 'ব্র্যান্ড গাইডলাইন প্লাগইন সেটআপ করুন';
+$lang["page-title_brand_guidelines_toc"] = 'বিষয়বস্তু সম্পাদনা করুন';

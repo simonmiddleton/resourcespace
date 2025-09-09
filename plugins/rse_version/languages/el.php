@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Επαναφορά κατάστασης γ�
 $lang["rse_version_invalid_time"]='Η επαναφορά σε μια προηγούμενη ημερομηνία πριν από την [date] δεν υποστηρίζεται';
 $lang["plugin-rse_version-title"]='Έλεγχος Εκδόσεων';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Έλεγχος Έκδοσης';
+$lang["page-title_rse_version_revert"] = 'Αναίρεση Έκδοσης Πόρου';
+$lang["page-title_rse_version_setup"] = 'Ρύθμιση Έκδοσης Πρόσθετου';

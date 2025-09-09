@@ -11,3 +11,6 @@ $lang["embeddocument_maximise"] = 'максимізувати';
 $lang["embeddocument_heading"] = 'Конфігурація віддаленого переглядача документів';
 $lang["embeddocument_specify_resourcetype"] = 'Будь ласка, вкажіть, для якого типу ресурсу має з\'являтися функціональність \'вбудувати\'.';
 $lang["embeddocument_document_resourcetype"] = 'Тип ресурсу для віддаленого перегляду документів:';
+
+$lang["page-title_embeddocument_setup"] = 'Налаштування плагіна вбудовування документів';
+$lang["page-title_embeddocument_viewer"] = 'Вставити переглядач документів';

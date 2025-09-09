@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Den nuværende dag';
 $lang["totp_date_binding_w"] = 'Den nuværende uge (startende på en mandag)';
 $lang["totp_date_binding_m"] = 'Den nuværende måned';
 $lang["totp_date_binding_y"] = 'Det nuværende år';
+$lang["page-title_totp_setup"] = 'Opsæt TOTP-plugin';
+$lang["page-title_totp_totp"] = 'TOTP';

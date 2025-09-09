@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"] = 'Đăng nhập bằng tài khoản k
 $lang["wordpress_sso_use_wp_login"] = 'Đăng nhập bằng tài khoản WordPress';
 $lang["wordpress_sso_retry"] = 'Nhấn vào đây để thử đăng nhập lại';
 $lang["origin_wordpress_sso"] = 'Wordpress SSO plugin';
+$lang["page-title_wordpress_sso_logout"] = 'Đăng xuất SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Không có người dùng';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Cài đặt Plugin SSO Wordpress';

@@ -47,3 +47,6 @@ $lang["video-trim_output"]='Saída';
 $lang["video_splice_error_invalid_action"]='Erro: Ação inválida';
 $lang["plugin-video_splice-title"]='Emenda de Vídeo';
 $lang["plugin-video_splice-desc"]='Adiciona capacidade de corte e emenda de vídeo';
+$lang["page-title_video_splice_setup"] = 'Configurar Plugin de Corte de Vídeo';
+$lang["page-title_video_splice_splice"] = 'Juntar Vídeo';
+$lang["page-title_video_splice_trim"] = 'Cortar Vídeo';

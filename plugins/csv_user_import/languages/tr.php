@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'İzin verilen sütunlar: *kullanıcı ad�
 $lang["csv_user_import_condition5"] = 'Kullanıcının dili, lang sütunu bulunamazsa veya bir değeri yoksa "$defaultlanguage" yapılandırma seçeneği kullanılarak ayarlanan dile geri dönecektir';
 $lang["plugin-csv_user_import-title"] = 'CSV Kullanıcı İçe Aktarma';
 $lang["plugin-csv_user_import-desc"] = '[İleri] Önceden biçimlendirilmiş bir CSV dosyasına dayalı olarak toplu kullanıcıları içe aktarma yeteneği sağlar';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSV Kullanıcı İçe Aktarma';

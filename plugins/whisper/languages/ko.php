@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = '자막 생성 및 대체 파일 다운로드로 �
 $lang["whisper_subtitles_name"] = '자동 생성된 자막';
 $lang["whisper_transcript"] = '전사 파일을 생성하고 대체 파일 다운로드로 추가하십시오';
 $lang["whisper_transcript_name"] = '자동 생성된 전사';
+
+$lang["page-title_whisper_setup"] = 'Whisper 플러그인 설정';

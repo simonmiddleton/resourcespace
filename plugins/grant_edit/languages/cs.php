@@ -11,3 +11,4 @@ $lang["grant_edit_group_list"]='Aktuální skupiny s dodatečným přístupem k 
 $lang["grant_edit_delete_user"]='Potvrdit odebrání rozšířeného přístupu pro';
 $lang["plugin-grant_edit-title"]='Udělit úpravy';
 $lang["plugin-grant_edit-desc"]='Umožňuje administrátorům udělit uživatelům dočasný plný přístup k úpravám zdrojů';
+$lang["page-title_grant_edit_setup"] = 'Nastavení pluginu pro úpravu oprávnění';

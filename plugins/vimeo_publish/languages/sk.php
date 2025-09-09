@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='Povolit užívateľom publikovať na
 $lang["vimeo_publish_set_account"]='Nastavite račun Vimeo';
 $lang["plugin-vimeo_publish-title"]='Objavi na Vimeo';
 $lang["plugin-vimeo_publish-desc"]='Objavite vire na Vimeo z uporabo OAuth 2.0';
+$lang["page-title_vimeo_publish_setup"] = 'Nastavenie pluginu na publikovanie Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Zverejniť na Vimeo';

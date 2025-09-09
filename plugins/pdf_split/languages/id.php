@@ -14,3 +14,4 @@ $lang["splitpdf_createnewresource"]='Buat sumber daya baru untuk setiap rentang'
 $lang["splitpdf_createnewalternativefile"]='Buatlah file alternatif baru pada sumber daya ini untuk setiap rentang';
 $lang["plugin-pdf_split-title"]='Pisahkan PDF';
 $lang["plugin-pdf_split-desc"]='Memungkinkan file PDF untuk dibagi menjadi beberapa halaman';
+$lang["page-title_pdf_split_pdf_split"] = 'Pemisahan PDF';

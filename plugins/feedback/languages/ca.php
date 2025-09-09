@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Afegir un camp nou';
 $lang["feedback_back_to_plugin_manager"] = 'Tornar al gestor de connectors';
 $lang["plugin-feedback-title"] = 'Comentaris';
 $lang["plugin-feedback-desc"] = 'Afegeix una funció general de retroalimentació d\'usuari amb preguntes configurables.';
+
+$lang["page-title_feedback_feedback"] = 'Enviar comentaris';
+$lang["page-title_feedback_setup"] = 'Configuració del complement';

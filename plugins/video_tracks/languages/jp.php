@@ -28,3 +28,5 @@ $lang["video_tracks_save_alt_not_perm"]='権限がないため、代替を保存
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='重要！ビデオトラックプラグインは出力フォーマット設定を廃止しました。これらはconfig.phpでのみ設定できます。設定オプションがコピーされるまで、プラグインは意図した通りに動作しません。次の内容をコピーしてください：- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='ビデオトラック';
 $lang["plugin-video_tracks-desc"]='[高度] ビデオリソースの異なるオーディオおよび字幕オプションのサポートを追加';
+$lang["page-title_video_tracks_create_video"] = 'ビデオを作成する';
+$lang["page-title_video_tracks_setup"] = 'ビデオトラックプラグインの設定';

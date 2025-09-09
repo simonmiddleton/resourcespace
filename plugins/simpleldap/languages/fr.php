@@ -52,3 +52,5 @@ $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Ne pas vérifier le FQDN du ser
 $lang["port"]='Port';
 $lang["plugin-simpleldap-title"]='LDAP simple';
 $lang["plugin-simpleldap-desc"]='[Avancé] Implémentation simplifiée de l\'authentification LDAP, ciblée sur Active Directory mais prenant également en charge le répertoire Oracle';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Tester l\'authentification LDAP';
+$lang["page-title_simpleldap_setup"] = 'Configurer le plugin LDAP simple';

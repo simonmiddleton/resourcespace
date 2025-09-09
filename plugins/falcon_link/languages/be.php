@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'Тэкст карыстальніка для 
 $lang["falcon_link_log_publish"] = 'Сумесны рэсурс праз Falcon';
 $lang["falcon_link_log_archive"] = 'Архіваваны рэсурс праз Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Калі ласка, праверце, што апісанне і тэгаў не пустыя';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Наладзіць плагін Falcon Link';

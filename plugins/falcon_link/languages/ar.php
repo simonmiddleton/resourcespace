@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'المورد المؤرشف عبر فالك�
 $lang["falcon_link_error_falcon_check_tags"] = 'يرجى التحقق من عدم ترك الوصف والعلامات فارغة';
 $lang["plugin-falcon_link-title"] = 'رابط فالكون';
 $lang["plugin-falcon_link-desc"] = '[متقدم] نشر الموارد إلى Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'إعداد ملحق فالكون لينك';

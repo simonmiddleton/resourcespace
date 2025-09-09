@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='Εργαλεία Εικόνας (μετασχη
 $lang["plugin-transform-desc"]='Επιτρέπει τη δημιουργία περικομμένων και κλιμακωμένων εναλλακτικών εικόνων (jCrop με υποστήριξη για κινητά)';
 $lang["use_system_icc_profile_config"]='Χρησιμοποιήστε τη διαμόρφωση συστήματος για την επεξεργασία προφίλ ICC. Θα παρακάμψει τις παραπάνω επιλογές sRGB.';
 $lang["cropper_preset_sizes"] = 'Προκαθορισμένα μεγέθη';
+$lang["page-title_transform_collection_transform"] = 'Μετασχηματισμός Πόρου';
+$lang["page-title_transform_crop"] = 'Επεξεργασία Πόρου';
+$lang["page-title_transform_setup"] = 'Ρύθμιση Πρόσθετου Μετασχηματισμού';

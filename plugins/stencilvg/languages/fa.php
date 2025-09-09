@@ -10,3 +10,6 @@ $lang["stencilvg-print"]='چاپ';
 $lang["stencilvg-download"]='دانلود';
 $lang["stencilvg-save_as_new_resource"]='ذخیره به عنوان منبع جدید';
 $lang["stencilvg-no_parameters_found"]='هیچ پارامتر قالبی یافت نشد';
+$lang["page-title_stencilvg_download_svg"] = 'دانلود SVG';
+$lang["page-title_stencilvg_input"] = 'ورودی SVG';
+$lang["page-title_stencilvg_setup"] = 'نصب افزونه StencilVG';

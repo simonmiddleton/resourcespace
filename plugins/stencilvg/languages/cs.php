@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Tisk';
 $lang["stencilvg-download"]='Stáhnout';
 $lang["stencilvg-save_as_new_resource"]='Uložit jako nový zdroj';
 $lang["stencilvg-no_parameters_found"]='Nebyly nalezeny žádné parametry šablony';
+$lang["page-title_stencilvg_download_svg"] = 'Stáhnout SVG';
+$lang["page-title_stencilvg_input"] = 'SVG Vstup';
+$lang["page-title_stencilvg_setup"] = 'Nastavení pluginu StencilVG';

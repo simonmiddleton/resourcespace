@@ -23,3 +23,7 @@ $lang["google_vision_translation_languages"]='अल्पविराम से
 $lang["google_vision_translation_keep_english"]='मूल अंग्रेजी कीवर्ड्स रखें?';
 $lang["plugin-google_vision-title"]='गूगल विज़न एपीआई';
 $lang["plugin-google_vision-desc"]='छवि पहचान क्षमता। अपलोड की गई छवियों को Google Cloud Vision API पर भेजता है और सुझाए गए मेटाडेटा को सेट करता है।';
+$lang["page-title_google_vision_process_existing"] = 'गूगल विज़न प्रक्रिया मौजूदा';
+$lang["page-title_google_vision_setup"] = 'गूगल विज़न प्लगइन सेटअप करें';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

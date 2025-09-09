@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Veľkosť bloku na použitie pri nahrávaní na You
 $lang["youtube_publish_add_anchor"]='Pridať kotvy (anchor tags) k URL pri ukladaní do metadátového poľa YouTube URL?';
 $lang["plugin-youtube_publish-title"]='YouTube Publikacija';
 $lang["plugin-youtube_publish-desc"]='Objavi video vir na konfiguriran račun YouTube.';
+$lang["page-title_youtube_publish_setup"] = 'Nastaviť plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Zverejniť zdroj na YouTube';

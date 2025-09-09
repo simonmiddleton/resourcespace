@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Generálj feliratokat és add hozzá alternatív f
 $lang["whisper_subtitles_name"] = 'Automatikusan generált feliratok';
 $lang["whisper_transcript"] = 'Generálj egy átirat fájlt, és add hozzá alternatív fájl letöltéseként';
 $lang["whisper_transcript_name"] = 'Automatikusan generált átirat';
+
+$lang["page-title_whisper_setup"] = 'Whisper Plugin beállítása';

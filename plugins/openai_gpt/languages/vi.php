@@ -19,3 +19,4 @@ $lang["property-gpt_source"] = 'GPT Source';
 $lang["openai_gpt_language"] = 'Ngôn ngữ đầu ra';
 $lang["openai_gpt_language_user"] = 'Ngôn ngữ của người dùng hiện tại';
 $lang["openai_gpt_overwrite_data"] = 'Ghi đè dữ liệu hiện có trong các trường đã cấu hình?';
+$lang["page-title_openai_gpt_setup"] = 'Cài đặt Plugin OpenAI GPT';

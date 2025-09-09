@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'সাবটাইটেল তৈরি করু
 $lang["whisper_subtitles_name"] = 'স্বয়ংক্রিয়ভাবে তৈরি করা সাবটাইটেল';
 $lang["whisper_transcript"] = 'একটি ট্রান্সক্রিপ্ট ফাইল তৈরি করুন এবং বিকল্প ফাইল ডাউনলোড হিসাবে যোগ করুন';
 $lang["whisper_transcript_name"] = 'স্বয়ংক্রিয়ভাবে তৈরি করা ট্রান্সক্রিপ্ট';
+
+$lang["page-title_whisper_setup"] = 'Whisper প্লাগইন সেটআপ করুন';

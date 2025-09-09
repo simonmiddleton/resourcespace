@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Gerar legendas e adicionar como downloads de arqui
 $lang["whisper_subtitles_name"] = 'Legendas geradas automaticamente';
 $lang["whisper_transcript"] = 'Gerar um arquivo de transcrição e adicionar como downloads de arquivo alternativo';
 $lang["whisper_transcript_name"] = 'Transcrição gerada automaticamente';
+
+$lang["page-title_whisper_setup"] = 'Configurar o Plugin Whisper';

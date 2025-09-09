@@ -16,3 +16,5 @@ $lang["are_available-1"]='bude konvertované';
 $lang["are_available-0"]='bude konvertované';
 $lang["plugin-format_chooser-title"]='Izbirnik formata';
 $lang["plugin-format_chooser-desc"]='Omogoča izbiro različnih formatov pri prenosu datotek, ki se ustvarijo sproti.';
+$lang["page-title_format_chooser_convert"] = 'Výber formátu';
+$lang["page-title_format_chooser_setup"] = 'Nastaviť plugin na výber formátu';

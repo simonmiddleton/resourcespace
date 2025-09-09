@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"] = 'Nincs automatikus átmenet';
 $lang["embedslideshow_directlink"] = 'Nem beágyazott közvetlen URL';
 $lang["embedslideshow_directlinkopen"] = 'Nyílt közvetlen hivatkozás (új oldal)';
 $lang["embedslideshow_dynamic_size"] = 'A nézet dinamikus átméretezése a lejátszó mérete alapján?';
+$lang["page-title_embedslideshow_setup"] = 'Beállítás Beágyazás Diavetítés Bővítmény';
+$lang["page-title_embedslideshow_viewer"] = 'Beágyazás Diavetítés';

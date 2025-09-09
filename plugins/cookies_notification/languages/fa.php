@@ -8,3 +8,6 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"] = 'اجاز�
 $lang["cookies_notification_cookies_use_title"] = 'استفاده از کوکی‌ها';
 $lang["cookies_notification_cookies_use_error_msg"] = 'شما تصمیم گرفته‌اید که اجازه ندهید کوکی‌ها توسط ResourceSpace استفاده شوند. ما مجبور شدیم شما را خارج کنیم زیرا ResourceSpace برای عملکرد صحیح به کوکی‌ها نیاز دارد.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'شما باید استفاده از کوکی‌ها را قبل از دسترسی به سیستم بپذیرید.';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'انتخاب کوکی';
+$lang["page-title_cookies_notification_setup"] = 'نصب افزونه اعلان کوکی';

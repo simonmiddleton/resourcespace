@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='تجویز کردہ ترمیم';
 $lang["actions_propose_changes"]='میرے اعمال کی فہرست میں صارف کی تجویز کردہ تبدیلیاں دکھائیں۔';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />آپ کی تجویز کردہ تبدیلیوں کا جائزہ لیا گیا ہے۔<br/>[changesummary]<br/>تبدیلیوں کا جائزہ لینے کے لیے نیچے کلک کریں<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />تجویز کردہ تبدیلیاں جمع کر دی گئی ہیں۔<br/>[changesummary]<br/>تبدیلیوں کا جائزہ لینے کے لیے نیچے کلک کریں<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'تبدیلیاں تجویز کریں';
+$lang["page-title_propose_changes_setup"] = 'تبدیلیوں کی تجویز کرنے والا پلگ ان ترتیب دیں';

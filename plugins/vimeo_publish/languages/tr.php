@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='Kullanıcıların kendi Vimeo hesapl
 $lang["vimeo_publish_set_account"]='Vimeo hesabını ayarla';
 $lang["plugin-vimeo_publish-title"]='Vimeo Yayınla';
 $lang["plugin-vimeo_publish-desc"]='OAuth 2.0 kullanarak kaynakları Vimeo\'ya yayınla';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo Yayın Eklentisini Kurun';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Vimeo\'ya Yayınla';

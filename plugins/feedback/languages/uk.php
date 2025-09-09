@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'Текст / HTML:';
 $lang["feedback_options-comma_separated"] = 'Параметри: (через кому)';
 $lang["feedback_add_new_field"] = 'Додати нове поле';
 $lang["feedback_back_to_plugin_manager"] = 'Повернутися до Менеджера Плагінів';
+
+$lang["page-title_feedback_feedback"] = 'Надіслати відгук';
+$lang["page-title_feedback_setup"] = 'Налаштування плагіна';

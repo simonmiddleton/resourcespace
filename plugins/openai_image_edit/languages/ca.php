@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Omplir amb blanc';
 $lang["openai_image_edit__mode_black"]='Omplir amb negre';
 $lang["openai_image_edit__creating_new_resource"]='Creant un nou recurs';
 $lang["openai_image_edit__mode_clone"]='Clonar omplir';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Desa Alternativa';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Desa Nou';

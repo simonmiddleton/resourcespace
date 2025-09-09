@@ -7,3 +7,4 @@ $lang["sensitive_images_field"]='Metadataveld met de reden waarom de afbeelding 
 $lang["sensitive_images_blur_level"]='Gevoeligheidsniveau van beeldvervaging<br>(1=minst, 6=meest)';
 $lang["plugin-sensitive_images-title"]='Gevoelige afbeelding vervagen';
 $lang["plugin-sensitive_images-desc"]='Vervaagt afbeeldingen die als gevoelig zijn gemarkeerd, waarbij de gebruiker kan klikken om te ontvervagen.';
+$lang["page-title_sensitive_images_setup"] = 'Instellen van de Gevoelige Afbeeldingen Plugin';

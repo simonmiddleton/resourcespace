@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Imprimare';
 $lang["stencilvg-download"]='Descărcare';
 $lang["stencilvg-save_as_new_resource"]='Salvează ca resursă nouă';
 $lang["stencilvg-no_parameters_found"]='Nu au fost găsiți parametri de șablon';
+$lang["page-title_stencilvg_download_svg"] = 'Descarcă SVG';
+$lang["page-title_stencilvg_input"] = 'Intrare SVG';
+$lang["page-title_stencilvg_setup"] = 'Configurare Pluginul StencilVG';

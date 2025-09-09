@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'File CSV memiliki BOM yang tidak dapat di
 $lang["csv_upload_validating"] = 'Memvalidasi';
 $lang["csv_upload_processing"] = 'Memproses';
 $lang["processing_batch_edit_save"] = 'baris [row_number] dari [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Unggah CSV';

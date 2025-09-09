@@ -8,3 +8,5 @@ $lang["specify_resourcetype"] = '\'임베드\' 기능이 나타날 리소스 유
 $lang["video_resourcetype"] = '비디오 리소스 유형';
 $lang["plugin-embedvideo-title"] = '비디오 삽입';
 $lang["plugin-embedvideo-desc"] = '원격 사이트에 삽입할 수 있는 비디오의 HTML을 생성하는 기능을 제공합니다.';
+
+$lang["page-title_embedvideo_setup"] = '비디오 플러그인 설정';

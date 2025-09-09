@@ -35,3 +35,6 @@ $lang["emu_nodata_returned"] = 'لم يتم العثور على بيانات EMu
 $lang["emu_createdfromemu"] = 'تم إنشاؤه باستخدام مكوّن إضافي EMU';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-desc"] = '[متقدم] يسمح باستخراج بيانات التعريف للموارد من قاعدة بيانات EMu.';
+
+$lang["page-title_emu_emu_object_details"] = 'تفاصيل كائن EMu';
+$lang["page-title_emu_setup"] = 'إعداد المكون الإضافي';

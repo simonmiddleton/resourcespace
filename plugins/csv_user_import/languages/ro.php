@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Coloane permise: *nume de utilizator, *ad
 $lang["csv_user_import_condition5"] = 'Limba utilizatorului va reveni implicit la cea setată folosind opțiunea de configurare "$defaultlanguage" dacă coloana de limbă nu este găsită sau nu are o valoare';
 $lang["plugin-csv_user_import-title"] = 'Import utilizatori CSV';
 $lang["plugin-csv_user_import-desc"] = 'Oferă posibilitatea de a importa un lot de utilizatori pe baza unui fișier CSV preformatat';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Import de utilizatori CSV';

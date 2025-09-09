@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'Actualitzacions de metadades de SimpleSA
 $lang["simplesaml_metadata_warning"] = 'La metadata no s\'ha actualitzat des de %date%';
 $lang["simplesaml_metadata_invalid"] = 'Metadades d\'IdP no vàlides o no disponibles';
 $lang["simplesaml_admin_password_reset"] = 'Restableix la contrasenya d\'administrador del lloc de prova SimpleSAML (opcional)';
+$lang["page-title_simplesaml_about"] = 'SAML Sobre';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Generar configuració SP';
+$lang["page-title_simplesaml_setup"] = 'Configura el complement Simple SAML';

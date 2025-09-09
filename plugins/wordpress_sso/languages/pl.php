@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Kliknij tutaj, aby spróbować zalogować się pon
 $lang["origin_wordpress_sso"]='Plugin Wordpress SSO (jednolity login)';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Umożliwia jednokrotne logowanie z instalacją Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Wylogowanie SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Brak Użytkownika';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Konfiguracja wtyczki SSO WordPress';

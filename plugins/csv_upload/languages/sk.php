@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV súbor má BOM, ktorý sa nepodarilo 
 $lang["csv_upload_validating"] = 'Overovanie';
 $lang["csv_upload_processing"] = 'Spracovanie';
 $lang["processing_batch_edit_save"] = 'riadok [row_number] z [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Nahrať CSV';

@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Mostra la funcionalitat AI Faces a la pàgina de vis
 $lang["faces_count_faces"] = 'Total de cares detectades';
 $lang["faces_count_missing"] = 'Imatges a processar';
 $lang["faces-tag-field-not-set"] = 'El camp de etiquetatge no està configurat.';
+
+$lang["page-title_faces_setup"] = 'Configura el complement de cares';

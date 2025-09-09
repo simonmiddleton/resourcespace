@@ -52,3 +52,5 @@ $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Kontroller ikke FQDN af servere
 $lang["port"]='Port';
 $lang["plugin-simpleldap-title"]='Enkel LDAP';
 $lang["plugin-simpleldap-desc"]='Simpel implementering af ldap-autentificering, målrettet mod Active Directory men understøtter også Oracle directory';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Test LDAP-godkendelse';
+$lang["page-title_simpleldap_setup"] = 'Opsætning af Simple LDAP-plugin';

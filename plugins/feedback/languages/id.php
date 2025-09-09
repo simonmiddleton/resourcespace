@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Tambahkan Bidang Baru';
 $lang["feedback_back_to_plugin_manager"] = 'Kembali ke Pengelola Plugin';
 $lang["plugin-feedback-title"] = 'Umpan Balik';
 $lang["plugin-feedback-desc"] = 'Menambahkan fungsi umpan balik pengguna umum dengan pertanyaan yang dapat dikonfigurasi.';
+
+$lang["page-title_feedback_feedback"] = 'Kirim Umpan Balik';
+$lang["page-title_feedback_setup"] = 'Pengaturan Plugin';

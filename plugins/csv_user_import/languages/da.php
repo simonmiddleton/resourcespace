@@ -15,3 +15,5 @@ $lang["csv_user_import_condition5"] = 'Brugersprog vil automatisk skifte tilbage
 $lang["csv_user_import_error_found"] = 'Fejl fundet - afbryder';
 $lang["plugin-csv_user_import-title"] = 'CSV-brugerimport';
 $lang["plugin-csv_user_import-desc"] = 'Giver mulighed for at importere en batch af brugere baseret på en forudformateret CSV-fil';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSV Brugerimport';

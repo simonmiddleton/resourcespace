@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Klik hier om opnieuw in te loggen';
 $lang["origin_wordpress_sso"]='Wordpress SSO plugin: Wordpress SSO-plugin';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Staat Single Sign On toe met Wordpress-installatie';
+$lang["page-title_wordpress_sso_logout"] = 'SSO Afmelden';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Geen Gebruiker';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Installeer Wordpress SSO Plugin';

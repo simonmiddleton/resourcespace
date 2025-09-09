@@ -24,3 +24,5 @@ $lang["checknow"]='ตรวจสอบตอนนี้';
 $lang["columnheader-enabled"]='เปิดใช้งาน';
 $lang["columnheader-last-found"]='พบล่าสุด';
 $lang["search_notifications_watched_searches-tooltip"] = 'ควบคุมการค้นหาที่บันทึกไว้ของคุณ';
+$lang["page-title_rse_search_notifications_setup"] = 'ตั้งค่าปลั๊กอินการแจ้งเตือนการค้นหา';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'การค้นหาที่ติดตาม';

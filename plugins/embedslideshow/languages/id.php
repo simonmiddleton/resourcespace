@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = 'Buka tautan langsung (halaman baru)';
 $lang["embedslideshow_dynamic_size"] = 'Pengubahan ukuran dinamis pratinjau berdasarkan ukuran pemutar?';
 $lang["plugin-embedslideshow-title"] = 'Sematkan Tayangan Slide';
 $lang["plugin-embedslideshow-desc"] = 'Menyediakan fungsi untuk menghasilkan HTML untuk tayangan slide koleksi yang dapat disematkan di situs jarak jauh';
+
+$lang["page-title_embedslideshow_setup"] = 'Atur Plugin Slideshow Embed';
+$lang["page-title_embedslideshow_viewer"] = 'Sisipkan Tayangan Slideshow';

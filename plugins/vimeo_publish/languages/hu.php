@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"] = 'Az erőforrás közzétéve lett a 
 $lang["vimeo_publish_account_options"] = 'Vimeo fiók beállításai';
 $lang["vimeo_publish_allow_user_accounts"] = 'Engedélyezze a felhasználóknak, hogy saját Vimeo fiókjukra publikáljanak. Ha hamis, akkor egyetlen Vimeo fiókhoz való hozzáférést kell alább konfigurálni.';
 $lang["vimeo_publish_set_account"] = 'Vimeo fiók beállítása';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo Közzétételi Bővítmény Beállítása';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Közzététel a Vimeo-n';

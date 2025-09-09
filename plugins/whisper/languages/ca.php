@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Genera subtítols i afegeix-los com a descàrregue
 $lang["whisper_subtitles_name"] = 'Subtítols generats automàticament';
 $lang["whisper_transcript"] = 'Genera un fitxer de transcripció i afegeix-lo com a descàrregues de fitxers alternatius';
 $lang["whisper_transcript_name"] = 'Transcripció generada automàticament';
+
+$lang["page-title_whisper_setup"] = 'Configura el complement Whisper';

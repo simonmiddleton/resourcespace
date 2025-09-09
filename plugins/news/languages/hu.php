@@ -13,3 +13,6 @@ $lang["news_nonewmessages"] = 'Nincsenek új üzenetek';
 $lang["title"] = 'Legfrissebb hírek...';
 $lang["title-too-long"] = 'A címmező hosszabb, mint az engedélyezett 50 karakter.';
 $lang["news_manage-tooltip"] = 'Hírek hozzáadása, szerkesztése vagy törlése';
+$lang["page-title_news_news_content_edit"] = 'Hírek tartalmának szerkesztése';
+$lang["page-title_news_news_edit"] = 'Hírek szerkesztése';
+$lang["page-title_news_news"] = 'Hírek';

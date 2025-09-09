@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'EgyszerűSAML metaadat frissítések';
 $lang["simplesaml_metadata_warning"] = 'A metaadatok nem lettek frissítve %date% óta';
 $lang["simplesaml_metadata_invalid"] = 'IdP metaadat érvénytelen vagy nem elérhető';
 $lang["simplesaml_admin_password_reset"] = 'Állítsa vissza a SimpleSAML tesztoldal admin jelszavát (opcionális)';
+$lang["page-title_simplesaml_about"] = 'SAML Rólunk';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Generálj SP konfigurációt';
+$lang["page-title_simplesaml_setup"] = 'Egyszerű SAML bővítmény beállítása';

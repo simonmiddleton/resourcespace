@@ -11,3 +11,6 @@ $lang["stencilvg-print"]='Afdrukken';
 $lang["stencilvg-download"]='Downloaden';
 $lang["stencilvg-save_as_new_resource"]='Opslaan als nieuwe bron';
 $lang["stencilvg-no_parameters_found"]='Geen sjabloonparameters gevonden';
+$lang["page-title_stencilvg_download_svg"] = 'Download SVG';
+$lang["page-title_stencilvg_input"] = 'SVG Invoer';
+$lang["page-title_stencilvg_setup"] = 'Stel StencilVG Plugin in';

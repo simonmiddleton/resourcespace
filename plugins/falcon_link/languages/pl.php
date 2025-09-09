@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'Zarchiwizowany zasób za pośrednictwem Falc
 $lang["falcon_link_error_falcon_check_tags"] = 'Proszę sprawdzić, czy opis i tagi nie są puste';
 $lang["plugin-falcon_link-title"] = 'Link do Sokoła';
 $lang["plugin-falcon_link-desc"] = 'Publikuj zasoby na Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Konfiguracja wtyczki Falcon Link';

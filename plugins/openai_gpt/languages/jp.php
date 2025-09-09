@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='GPTソース';
 $lang["openai_gpt_language"] = '出力言語';
 $lang["openai_gpt_language_user"] = '現在のユーザーの言語';
 $lang["openai_gpt_overwrite_data"] = '設定されたフィールドの既存データを上書きしますか？';
+$lang["page-title_openai_gpt_setup"] = 'OpenAI GPTプラグインの設定';

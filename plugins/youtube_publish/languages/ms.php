@@ -50,3 +50,5 @@ $lang["youtube_publish_category"] = 'Kategori';
 $lang["youtube_publish_category_error"] = 'Ralat mengambil kategori YouTube: -';
 $lang["youtube_chunk_size"] = 'Saiz chunk yang digunakan semasa memuat naik ke YouTube (MB)';
 $lang["youtube_publish_add_anchor"] = 'Tambah tag anchor ke URL semasa menyimpan ke medan metadata URL YouTube?';
+$lang["page-title_youtube_publish_setup"] = 'Tetapkan Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Terbitkan Sumber ke Youtube';

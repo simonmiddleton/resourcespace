@@ -36,3 +36,8 @@ $lang["brand_guidelines_configuration"] = 'Configuració de les directrius de ma
 $lang["brand_guidelines_fallback_size_thm"] = 'Mida de la imatge de recurs de disseny de miniatures de reserva';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Mida de la imatge de recanvi per al disseny de mitja amplada';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Mida de la imatge de recanvi per al disseny de pantalla completa';
+
+$lang["page-title_brand_guidelines_content"] = 'Gestionar el contingut de les directrius de marca';
+$lang["page-title_brand_guidelines_guidelines"] = 'Directrius de Marca';
+$lang["page-title_brand_guidelines_setup"] = 'Configura el complement de directrius de marca';
+$lang["page-title_brand_guidelines_toc"] = 'Editar contingut';

@@ -8,3 +8,4 @@ $lang["system_reset_delete_all"]='Eliminar totes les dades i fitxers';
 $lang["plugin-system_reset-title"]='Restabliment del sistema';
 $lang["plugin-system_reset-desc"]='Afegeix una opció a l\'administrador/sistema per esborrar totes les dades';
 $lang["system_reset-tooltip"] = 'Realitzeu un reinici del sistema per eliminar tots els fitxers i dades';
+$lang["page-title_system_reset_reset"] = 'Restabliment del sistema';

@@ -25,3 +25,6 @@ $lang["embedslideshow_dynamic_size"] = 'Dynamische Größenanpassung der Vorscha
 $lang["sizename_pixels"] = '%name (%pixels Pixel)';
 $lang["plugin-embedslideshow-title"] = 'Diashow einbetten';
 $lang["plugin-embedslideshow-desc"] = 'Bietet eine Funktion zur Generierung von HTML für einbettbare Sammlung-Diashows auf entfernten Seiten';
+
+$lang["page-title_embedslideshow_setup"] = 'Einrichten des Embed Slideshow Plugins';
+$lang["page-title_embedslideshow_viewer"] = 'Diashow einbetten';

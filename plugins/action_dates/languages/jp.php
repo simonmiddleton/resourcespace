@@ -38,3 +38,5 @@ $lang["weekday-5"] = '金曜日';
 $lang["weekday-6"] = '土曜日';
 $lang["plugin-action_dates-title"] = 'アクション日付';
 $lang["plugin-action_dates-desc"] = '日付フィールドに基づいてリソースのスケジュール削除または制限を有効にします';
+
+$lang["page-title_action_dates_setup"] = 'アクション日付プラグインの設定';

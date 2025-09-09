@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Afișați funcționalitatea AI Faces pe pagina de vi
 $lang["faces_count_faces"] = 'Total fețe detectate';
 $lang["faces_count_missing"] = 'Imagini de procesat';
 $lang["faces-tag-field-not-set"] = 'Câmpul de etichetare nu este configurat.';
+
+$lang["page-title_faces_setup"] = 'Configurare plugin Faces';

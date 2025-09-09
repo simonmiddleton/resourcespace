@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='Salli käyttäjien julkaista omiin V
 $lang["vimeo_publish_set_account"]='Aseta Vimeo-tili';
 $lang["plugin-vimeo_publish-title"]='Vimeo Julkaisu';
 $lang["plugin-vimeo_publish-desc"]='Julkaise resurssit Vimeoon käyttämällä OAuth 2.0:aa';
+$lang["page-title_vimeo_publish_setup"] = 'Aseta Vimeo Julkaisuliitännäinen';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Julkaise Vimeoon';

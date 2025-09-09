@@ -5,3 +5,5 @@ $lang["conditional_terms_description"] = 'Mae\'r ategyn hwn yn caniatáu i chi o
 $lang["conditional_terms_field"] = 'Maes metadata';
 $lang["conditional_terms_value"] = 'Gwerth';
 $lang["conditional_terms_plugin_misconfigured"] = 'Mae\'r plwgyn telerau amodol wedi\'i gamgyfeirio';
+
+$lang["page-title_conditional_terms_setup"] = 'Gosod Plugin Telerau Amodol';

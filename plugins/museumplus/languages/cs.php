@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='Nalezeno více záznamů - pros
 $lang["museumplus_error_module_no_field_maps"]='Nelze synchronizovat data z MuseumPlus. Důvod: modul \'%name\' nemá nakonfigurované mapování polí.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='[Pokročilé] Umožňuje extrahovat metadata zdrojů z MuseumPlus pomocí jeho REST API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Podrobnosti objektu';
+$lang["page-title_museumplus_setup_module"] = 'Nastavení modulu MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Nastavení pluginu MuseumPlus';

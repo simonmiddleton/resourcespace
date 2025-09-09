@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='ویرایش پیشنهادی';
 $lang["actions_propose_changes"]='نمایش تغییرات پیشنهادی کاربر در لیست اقدامات من';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />تغییرات پیشنهادی شما بررسی شده‌اند.<br/>[changesummary]<br/>برای بررسی تغییرات، روی لینک زیر کلیک کنید<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />تغییرات پیشنهادی ارسال شده‌اند.<br/>[changesummary]<br/>برای بررسی تغییرات، روی لینک زیر کلیک کنید<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'تغییرات را پیشنهاد دهید';
+$lang["page-title_propose_changes_setup"] = 'تنظیم افزونه پیشنهاد تغییرات';

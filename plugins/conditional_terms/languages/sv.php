@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Värde';
 $lang["conditional_terms_plugin_misconfigured"] = 'Pluginet för villkorliga termer är felkonfigurerat';
 $lang["plugin-conditional_terms-title"] = 'Villkorliga villkor';
 $lang["plugin-conditional_terms-desc"] = 'Aktiverar villkorlig visning av villkorssida vid nedladdning baserat på resursmetadata';
+
+$lang["page-title_conditional_terms_setup"] = 'Installera plugin för villkorliga villkor';

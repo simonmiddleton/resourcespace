@@ -38,3 +38,5 @@ $lang["vimeo_publish_set_account"]='Mengatur akun Vimeo';
 $lang["vimeo_publish_video_details"]='Rincian Video Vimeo';
 $lang["plugin-vimeo_publish-title"]='Publikasi Vimeo';
 $lang["plugin-vimeo_publish-desc"]='Publikasikan sumber daya ke Vimeo menggunakan OAuth 2.0';
+$lang["page-title_vimeo_publish_setup"] = 'Atur Plugin Publikasi Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Terbitkan ke Vimeo';

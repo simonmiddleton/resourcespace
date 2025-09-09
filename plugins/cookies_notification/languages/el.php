@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Αποφασίσατε ν
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Απαιτείται να αποδεχθείτε τη χρήση cookies πριν από την πρόσβαση στο σύστημα.';
 $lang["plugin-cookies_notification-title"] = 'Ειδοποίηση για Cookies';
 $lang["plugin-cookies_notification-desc"] = 'Προσθέτει τη δυνατότητα να ειδοποιεί τους χρήστες για το πώς το ResourceSpace μπορεί να χρησιμοποιεί cookies για την παρακολούθηση της δραστηριότητας των χρηστών, εμφανίζοντας ένα μήνυμα στην κεφαλίδα';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Επιλογή Cookies';
+$lang["page-title_cookies_notification_setup"] = 'Ρύθμιση Πρόσθετου Ειδοποίησης Cookie';

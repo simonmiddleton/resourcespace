@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'atas',
    'bottom' => 'bawah',
 );
+$lang["page-title_image_text_setup"] = 'Tetapkan Plugin Teks Imej';

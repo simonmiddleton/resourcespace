@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Verschiebe Ressource [%resource_id%] in den Ar
 $lang["antivirus_av_not_setup_error"] = 'Antivirus-Pfad nicht eingerichtet!';
 $lang["plugin-antivirus-title"] = 'Antivirus';
 $lang["plugin-antivirus-desc"] = ' Antivirus-Funktionen durch Integration mit den meisten bekannten Antivirus-Engines, die über die Befehlszeile ausgeführt werden können';
+
+$lang["page-title_antivirus_setup"] = 'Antivirus-Plugin einrichten';

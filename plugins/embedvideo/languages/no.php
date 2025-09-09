@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'Videotype ressurs';
 $lang["embedvideo_share"] = 'Bygg inn video';
 $lang["plugin-embedvideo-title"] = 'Bygg inn video';
 $lang["plugin-embedvideo-desc"] = 'Gir en funksjon for å generere HTML for innebygd video på eksterne nettsteder.';
+
+$lang["page-title_embedvideo_setup"] = 'Sett opp Embed Video-plugin';

@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='ورود به سیستم یافت نشد';
 $lang["rse_version_revert_state"]='بازگرداندن وضعیت';
 $lang["rse_version_rstate_changes"]='بازگرداندن وضعیت برای مجموعه #%COLLECTION با بازپخش رویدادها تا، اما نه شامل رکورد انتخاب شده.';
 $lang["rse_version_invalid_time"]='بازگشت به زمانی قبل از [date] پشتیبانی نمی‌شود';
+$lang["page-title_rse_version_revert"] = 'بازگرداندن نسخه منبع';
+$lang["page-title_rse_version_setup"] = 'نصب افزونه نسخه';

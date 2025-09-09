@@ -45,3 +45,6 @@ $lang["video_splice_incorrect_quantity"]='ทรัพยากรที่ถ�
 $lang["video_splice_createdfromvideosplice"]='สร้างจากปลั๊กอิน Video Splice';
 $lang["video_splice_error_invalid_action"]='ข้อผิดพลาด : การกระทำไม่ถูกต้อง';
 $lang["action-splice"]='ต่อ';
+$lang["page-title_video_splice_setup"] = 'ตั้งค่าปลั๊กอิน Video Splice';
+$lang["page-title_video_splice_splice"] = 'ตัดต่อวิดีโอ';
+$lang["page-title_video_splice_trim"] = 'ตัดวิดีโอ';

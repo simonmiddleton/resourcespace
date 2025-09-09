@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'En cours',
   2 => 'Terminé',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Administrer les archives';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Archive hors ligne';
+$lang["page-title_offline_archive_pending_restore"] = 'Restauration de ressource en attente';
+$lang["page-title_offline_archive_restore_request"] = 'Demander la restauration de la ressource';
+$lang["page-title_offline_archive_restore"] = 'Restaurer l\'archive';
+$lang["page-title_offline_archive_setup"] = 'Configuration du plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Voir les archives des ressources';
+$lang["page-title_offline_archive_view_pending"] = 'Voir les archives en attente';

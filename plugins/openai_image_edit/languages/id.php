@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Isi dengan putih';
 $lang["openai_image_edit__mode_black"]='Isi dengan hitam';
 $lang["openai_image_edit__creating_new_resource"]='Membuat sumber daya baru';
 $lang["openai_image_edit__mode_clone"]='Duplikasi isi';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Dapatkan PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Simpan Alternatif';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Simpan Baru';

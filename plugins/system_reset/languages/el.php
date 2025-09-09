@@ -8,3 +8,4 @@ $lang["system_reset_delete_all"]='Διαγραφή όλων των δεδομέ�
 $lang["plugin-system_reset-title"]='Επαναφορά Συστήματος';
 $lang["plugin-system_reset-desc"]='Προσθέτει μια επιλογή στον διαχειριστή/σύστημα για να διαγράψει όλα τα δεδομένα';
 $lang["system_reset-tooltip"] = 'Εκτελέστε μια επαναφορά συστήματος για να διαγράψετε όλα τα αρχεία και τα δεδομένα';
+$lang["page-title_system_reset_reset"] = 'Επαναφορά Συστήματος';

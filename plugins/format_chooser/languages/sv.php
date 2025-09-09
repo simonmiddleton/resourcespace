@@ -21,3 +21,5 @@ $lang["are_available-1"]='kommer att konverteras';
 $lang["are_available-0"]='kommer att konverteras';
 $lang["plugin-format_chooser-title"]='Formatväljare';
 $lang["plugin-format_chooser-desc"]='Gör att du kan välja olika format när du laddar ner filer som genereras direkt.';
+$lang["page-title_format_chooser_convert"] = 'Formatväljare';
+$lang["page-title_format_chooser_setup"] = 'Inställning av formatval-plugin';

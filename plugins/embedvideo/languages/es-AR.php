@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'Tipo de recurso de video';
 $lang["embedvideo_share"] = 'Incrustar video';
 $lang["plugin-embedvideo-title"] = 'Incrustar Video';
 $lang["plugin-embedvideo-desc"] = 'Proporciona una función para generar HTML para videos incrustables en sitios remotos.';
+
+$lang["page-title_embedvideo_setup"] = 'Configurar el plugin de video incrustado';

@@ -14,3 +14,6 @@ $lang["resource_usage_configuration"]='संसाधन उपयोग वि
 $lang["resource_usage_mediums"]='उपलब्ध उपयोग विकल्पों की सूची (अल्पविराम से अलग)';
 $lang["plugin-resource_usage-title"]='संसाधन उपयोग';
 $lang["plugin-resource_usage-desc"]='[उन्नत] संसाधन दृश्य पृष्ठ के माध्यम से संसाधन उपयोग को लॉग करने की क्षमता जोड़ता है';
+$lang["page-title_resource_usage_delete"] = 'संसाधन उपयोग हटाएँ';
+$lang["page-title_resource_usage_edit"] = 'संसाधन उपयोग संपादित करें';
+$lang["page-title_resource_usage_setup"] = 'संसाधन उपयोग प्लगइन सेटअप करें';

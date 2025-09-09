@@ -26,3 +26,5 @@ $lang["columnheader-last-found"]='Son bulunan';
 $lang["plugin-rse_search_notifications-title"]='Arama Bildirimleri';
 $lang["plugin-rse_search_notifications-desc"]='Kaydedilmiş bir aramada değişiklikler olduğunda kullanıcıyı bilgilendir';
 $lang["search_notifications_watched_searches-tooltip"] = 'Kaydedilmiş aramalarınızı kontrol edin';
+$lang["page-title_rse_search_notifications_setup"] = 'Arama Bildirimleri Eklentisini Kur';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'İzlenen Aramalar';

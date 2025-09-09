@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='انقر هنا للمحاولة مرة أخرى �
 $lang["origin_wordpress_sso"]='ملحق ووردبريس لتسجيل الدخول الموحد (SSO)';
 $lang["plugin-wordpress_sso-title"]='ووردبريس تسجيل الدخول الأحادي';
 $lang["plugin-wordpress_sso-desc"]='[متقدم] يسمح بتسجيل الدخول الموحد مع تثبيت ووردبريس';
+$lang["page-title_wordpress_sso_logout"] = 'تسجيل الخروج من SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO لا يوجد مستخدم';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'إعداد مكون إضافي لتسجيل الدخول الأحادي ووردبريس';

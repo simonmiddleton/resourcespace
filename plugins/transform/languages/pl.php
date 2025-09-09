@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='Narzędzia obrazów (transformacja)';
 $lang["plugin-transform-desc"]='Umożliwia tworzenie przyciętych i skalowanych alternatywnych obrazów (jCrop z obsługą mobilną)';
 $lang["use_system_icc_profile_config"]='Użyj konfiguracji systemu do przetwarzania profili ICC. Zastąpi powyższe opcje sRGB.';
 $lang["cropper_preset_sizes"] = 'Rozmiary zdefiniowane z góry';
+$lang["page-title_transform_collection_transform"] = 'Przekształć zasób';
+$lang["page-title_transform_crop"] = 'Przytnij zasób';
+$lang["page-title_transform_setup"] = 'Ustawienia wtyczki transformacji';

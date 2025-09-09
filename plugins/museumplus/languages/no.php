@@ -51,3 +51,6 @@ $lang["museumplus_id_returns_multiple_records"]='Flere poster funnet - vennligst
 $lang["museumplus_error_module_no_field_maps"]='Kan ikke synkronisere data fra MuseumPlus. Årsak: modulen \'%name\' har ingen feltavbildninger konfigurert.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Tillater at ressursmetadata kan hentes fra MuseumPlus ved bruk av dens REST API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Objekt Detaljer';
+$lang["page-title_museumplus_setup_module"] = 'Sett opp MuseumPlus-modul';
+$lang["page-title_museumplus_setup"] = 'Sett opp MuseumPlus-plugin';

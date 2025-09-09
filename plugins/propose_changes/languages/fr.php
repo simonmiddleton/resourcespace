@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Vos modifications 
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Les modifications proposées ont été soumises.<br/>[changesummary]<br/>Cliquez ci-dessous pour examiner les modifications<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Proposer des modifications';
 $lang["plugin-propose_changes-desc"]='Ajoute une option permettant aux utilisateurs de proposer des modifications de métadonnées sans accès en modification';
+$lang["page-title_propose_changes_propose_changes"] = 'Proposer des modifications';
+$lang["page-title_propose_changes_setup"] = 'Configurer le plugin Proposer des modifications';

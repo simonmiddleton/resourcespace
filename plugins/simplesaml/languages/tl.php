@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'Mga pag-update ng metadata ng SimpleSAML
 $lang["simplesaml_metadata_warning"] = 'Ang metadata ay hindi na-update mula noong %date%';
 $lang["simplesaml_metadata_invalid"] = 'Hindi wasto o hindi magagamit ang IdP metadata';
 $lang["simplesaml_admin_password_reset"] = 'I-reset ang admin password ng SimpleSAML test site (opsyonal)';
+$lang["page-title_simplesaml_about"] = 'SAML Tungkol sa';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Bumuo ng SP Config';
+$lang["page-title_simplesaml_setup"] = 'I-set up ang Simple SAML Plugin';

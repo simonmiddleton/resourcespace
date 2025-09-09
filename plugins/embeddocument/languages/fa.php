@@ -11,3 +11,6 @@ $lang["embeddocument_maximise"] = 'بیشینه کردن';
 $lang["embeddocument_heading"] = 'پیکربندی نمایشگر سند از راه دور';
 $lang["embeddocument_specify_resourcetype"] = 'لطفاً مشخص کنید که قابلیت \'جاسازی\' باید برای کدام نوع منبع ظاهر شود.';
 $lang["embeddocument_document_resourcetype"] = 'نوع منبع نمایشگر سند از راه دور:';
+
+$lang["page-title_embeddocument_setup"] = 'تنظیم افزونه سند جاسازی';
+$lang["page-title_embeddocument_viewer"] = 'نمایشگر سند را جاسازی کنید';

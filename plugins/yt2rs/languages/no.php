@@ -8,3 +8,4 @@ $lang["yt2rs_online_preview"]='Forhåndsvisning på nett';
 $lang["yt2rs_youtube_video"]='Youtube-video';
 $lang["plugin-yt2rs-title"]='YouTube til ResourceSpace';
 $lang["plugin-yt2rs-desc"]='Gjør det mulig å publisere videoer fra YouTube.';
+$lang["page-title_yt2rs_setup"] = 'Sett opp Youtube til ResourceSpace-plugin';

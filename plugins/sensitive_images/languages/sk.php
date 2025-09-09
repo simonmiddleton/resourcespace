@@ -7,3 +7,4 @@ $lang["sensitive_images_field"]='Metadátové pole obsahujúce dôvod, prečo je
 $lang["sensitive_images_blur_level"]='Úroveň rozmazania citlivého obrázka<br>(1=najmenej, 6=najviac)';
 $lang["plugin-sensitive_images-title"]='Zameglitev občutljive slike';
 $lang["plugin-sensitive_images-desc"]='Zamegli slike označene kot občutljive, uporabnik pa lahko klikne za odstranitev zameglitve.';
+$lang["page-title_sensitive_images_setup"] = 'Nastavenie pluginu pre citlivé obrázky';

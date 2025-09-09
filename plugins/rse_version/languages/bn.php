@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='লগ এন্ট্রি পাওয়
 $lang["rse_version_revert_state"]='অবস্থা পূর্বাবস্থায় ফিরিয়ে আনুন';
 $lang["rse_version_rstate_changes"]='নির্বাচিত রেকর্ড পর্যন্ত, কিন্তু তা অন্তর্ভুক্ত না করে, ইভেন্টগুলি পুনরায় চালিয়ে সংগ্রহ #%COLLECTION এর অবস্থা পুনরুদ্ধার করা হচ্ছে।';
 $lang["rse_version_invalid_time"]='[date] এর পূর্ববর্তী সময়ে ফিরে যাওয়া সমর্থিত নয়';
+$lang["page-title_rse_version_revert"] = 'সম্পদ সংস্করণ ফিরিয়ে আনুন';
+$lang["page-title_rse_version_setup"] = 'সংস্করণ প্লাগইন সেটআপ';

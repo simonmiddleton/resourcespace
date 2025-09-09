@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Przywracanie stanu dla kolekcji #%COLLECTIO
 $lang["rse_version_invalid_time"]='Powrót do czasu przed [date] nie jest obsługiwany';
 $lang["plugin-rse_version-title"]='Kontrola wersji';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Kontrola wersji';
+$lang["page-title_rse_version_revert"] = 'Przywróć wersję zasobu';
+$lang["page-title_rse_version_setup"] = 'Ustawienia wtyczki wersji';

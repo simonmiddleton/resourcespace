@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Aktuální den';
 $lang["totp_date_binding_w"] = 'Aktuální týden (začínající v pondělí)';
 $lang["totp_date_binding_m"] = 'Aktuální měsíc';
 $lang["totp_date_binding_y"] = 'Aktuální rok';
+$lang["page-title_totp_setup"] = 'Nastavení pluginu TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

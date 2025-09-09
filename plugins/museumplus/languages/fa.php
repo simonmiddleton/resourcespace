@@ -50,3 +50,6 @@ $lang["museumplus_error_unknown_type_saved_config"]='\'پیکربندی ذخیر
 $lang["museumplus_error_invalid_association"]='ارتباط ماژول(های) نامعتبر. لطفاً مطمئن شوید که ماژول و/یا شناسه رکورد صحیح وارد شده‌اند!';
 $lang["museumplus_id_returns_multiple_records"]='چندین رکورد یافت شد - لطفاً شناسه فنی را وارد کنید';
 $lang["museumplus_error_module_no_field_maps"]='قادر به همگام‌سازی داده‌ها از MuseumPlus نیست. دلیل: ماژول \'%name\' هیچ نگاشت فیلدی پیکربندی نشده دارد.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'جزئیات شیء MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'تنظیم ماژول MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'نصب افزونه MuseumPlus';

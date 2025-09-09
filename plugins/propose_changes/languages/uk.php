@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Запропоноване редагув
 $lang["actions_propose_changes"]='Показати мені запропоновані користувачем зміни в моєму списку дій';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Ваші запропоновані зміни були переглянуті.<br/>[changesummary]<br/>Натисніть нижче, щоб переглянути зміни<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Запропоновані зміни були подані.<br/>[changesummary]<br/>Натисніть нижче, щоб переглянути зміни<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'Запропонувати зміни';
+$lang["page-title_propose_changes_setup"] = 'Налаштувати плагін пропозицій змін';

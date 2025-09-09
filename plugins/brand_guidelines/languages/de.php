@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Markenrichtlinien-Konfiguration';
 $lang["brand_guidelines_fallback_size_thm"] = 'Thumbnail-Layout-Ersatzbildgröße';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Halbbreit-Layout-Ersatzbildgröße';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Vollbild-Layout-Ersatzbildgröße';
+
+$lang["page-title_brand_guidelines_content"] = 'Markenrichtlinien-Inhalte verwalten';
+$lang["page-title_brand_guidelines_guidelines"] = 'Markenrichtlinien';
+$lang["page-title_brand_guidelines_setup"] = 'Brandrichtlinien-Plugin einrichten';
+$lang["page-title_brand_guidelines_toc"] = 'Inhalt bearbeiten';

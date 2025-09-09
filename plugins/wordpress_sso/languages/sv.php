@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Klicka här för att försöka logga in igen';
 $lang["origin_wordpress_sso"]='Wordpress SSO-plugin';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Tillåter Single Sign On med Wordpress-installation';
+$lang["page-title_wordpress_sso_logout"] = 'SSO Utloggning';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Ingen användare';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Installera Wordpress SSO-plugin';

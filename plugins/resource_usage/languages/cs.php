@@ -14,3 +14,6 @@ $lang["resource_usage_configuration"]='Konfigurace využití zdrojů';
 $lang["resource_usage_mediums"]='Seznam dostupných možností použití (oddělené čárkami)';
 $lang["plugin-resource_usage-title"]='Použití zdroje';
 $lang["plugin-resource_usage-desc"]='[Pokročilé] Přidává možnost zaznamenávat využití zdrojů prostřednictvím stránky zobrazení zdroje';
+$lang["page-title_resource_usage_delete"] = 'Smazat využití zdroje';
+$lang["page-title_resource_usage_edit"] = 'Upravit využití zdrojů';
+$lang["page-title_resource_usage_setup"] = 'Nastavit plugin pro využití zdrojů';

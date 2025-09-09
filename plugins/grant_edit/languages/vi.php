@@ -9,3 +9,4 @@ $lang["grant_edit_date"] = 'Ngày hết hạn cho quyền chỉnh sửa';
 $lang["grant_edit_list"] = 'Người dùng hiện tại có quyền chỉnh sửa bổ sung';
 $lang["grant_edit_group_list"] = 'Các nhóm hiện tại có quyền chỉnh sửa bổ sung';
 $lang["grant_edit_delete_user"] = 'Xác nhận xóa quyền truy cập nâng cao cho';
+$lang["page-title_grant_edit_setup"] = 'Cài đặt Plugin Chỉnh sửa Quyền';

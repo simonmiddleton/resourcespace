@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'ਬ੍ਰਾਂਡ ਦਿਸ਼ਾ-�
 $lang["brand_guidelines_fallback_size_thm"] = 'ਥੰਬਨੇਲ ਲੇਆਉਟ ਫਾਲਬੈਕ ਚਿੱਤਰ ਆਕਾਰ';
 $lang["brand_guidelines_fallback_size_half_width"] = 'ਅੱਧੇ-ਚੌੜਾਈ ਖਾਕਾ ਲੇਆਉਟ ਚਿੱਤਰ ਆਕਾਰ';
 $lang["brand_guidelines_fallback_size_full_width"] = 'ਪੂਰੀ-ਚੌੜਾਈ ਖਾਕਾ ਚਿੱਤਰ ਆਕਾਰ';
+
+$lang["page-title_brand_guidelines_content"] = 'ਬ੍ਰਾਂਡ ਗਾਈਡਲਾਈਨ ਸਮੱਗਰੀ ਦਾ ਪ੍ਰਬੰਧ ਕਰੋ';
+$lang["page-title_brand_guidelines_guidelines"] = 'ਬ੍ਰਾਂਡ ਗਾਈਡਲਾਈਨਜ਼';
+$lang["page-title_brand_guidelines_setup"] = 'ਬ੍ਰਾਂਡ ਗਾਈਡਲਾਈਨ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["page-title_brand_guidelines_toc"] = 'ਸਮੱਗਰੀ ਸੰਪਾਦਿਤ ਕਰੋ';

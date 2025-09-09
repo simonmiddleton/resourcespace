@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='Beberapa catatan ditemukan - si
 $lang["museumplus_error_module_no_field_maps"]='Tidak dapat menyinkronkan data dari MuseumPlus. Alasan: modul \'%name\' tidak memiliki pemetaan bidang yang dikonfigurasi.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Memungkinkan metadata sumber daya diekstraksi dari MuseumPlus menggunakan REST API-nya (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Detail Objek';
+$lang["page-title_museumplus_setup_module"] = 'Setup MuseumPlus Module';
+$lang["page-title_museumplus_setup"] = 'Setup Plugin MuseumPlus';

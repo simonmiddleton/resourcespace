@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'मूल्य';
 $lang["conditional_terms_plugin_misconfigured"] = 'सशर्त शर्तें प्लगइन गलत तरीके से कॉन्फ़िगर किया गया है';
 $lang["plugin-conditional_terms-title"] = 'सशर्त शर्तें';
 $lang["plugin-conditional_terms-desc"] = 'संसाधन मेटाडेटा के आधार पर डाउनलोड के समय शर्तीय शर्तों पृष्ठ को सक्षम करता है';
+
+$lang["page-title_conditional_terms_setup"] = 'कंडीशनल टर्म्स प्लगइन सेटअप करें';

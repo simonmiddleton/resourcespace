@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"]='Неможливо виконати ек
 $lang["video_splice_incorrect_quantity"]='Дійсний ресурс було видалено або додано до колекції з моменту завантаження цієї сторінки. Будь ласка, спробуйте ще раз.';
 $lang["video_splice_createdfromvideosplice"]='Створено за допомогою плагіна Video Splice';
 $lang["video_splice_error_invalid_action"]='Помилка: Неправильна дія';
+$lang["page-title_video_splice_setup"] = 'Налаштування плагіна Video Splice';
+$lang["page-title_video_splice_splice"] = 'З\'єднати відео';
+$lang["page-title_video_splice_trim"] = 'Обрізати відео';

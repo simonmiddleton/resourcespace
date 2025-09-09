@@ -15,3 +15,6 @@ $lang["title-too-long"]='Câmpul titlu este mai lung decât cele 50 de caractere
 $lang["plugin-news-title"]='Știri';
 $lang["plugin-news-desc"]='Adaugă articole de știri pe pagina principală';
 $lang["news_manage-tooltip"] = 'Adăugați, editați sau ștergeți articole de știri';
+$lang["page-title_news_news_content_edit"] = 'Editează conținutul știrilor';
+$lang["page-title_news_news_edit"] = 'Editează Știri';
+$lang["page-title_news_news"] = 'Știri';

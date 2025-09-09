@@ -24,3 +24,5 @@ $lang["checknow"]='Gwirio nawr';
 $lang["columnheader-enabled"]='Wedi\'i actifadu';
 $lang["columnheader-last-found"]='Dewis diwethaf';
 $lang["search_notifications_watched_searches-tooltip"] = 'Rheoli eich chwiliadau arbededig';
+$lang["page-title_rse_search_notifications_setup"] = 'Sefydlu Plugin Hysbysiadau Chwilio';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Chwilio wedi\'i wylio';

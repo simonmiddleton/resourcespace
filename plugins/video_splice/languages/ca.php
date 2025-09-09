@@ -47,3 +47,6 @@ $lang["action-splice"]='Empalmar';
 $lang["video_splice_error_invalid_action"]='Error: Acció no vàlida';
 $lang["plugin-video_splice-title"]='Unió de Vídeo';
 $lang["plugin-video_splice-desc"]='Afegeix la capacitat de retallar i unir vídeos';
+$lang["page-title_video_splice_setup"] = 'Configura el complement de Video Splice';
+$lang["page-title_video_splice_splice"] = 'Cortar vídeo';
+$lang["page-title_video_splice_trim"] = 'Retallar vídeo';

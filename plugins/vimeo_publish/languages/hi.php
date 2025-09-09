@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='उपयोगकर्ताओं
 $lang["vimeo_publish_set_account"]='Vimeo खाता सेट करें';
 $lang["plugin-vimeo_publish-title"]='विमियो प्रकाशित करें';
 $lang["plugin-vimeo_publish-desc"]='OAuth 2.0 का उपयोग करके Vimeo पर संसाधन प्रकाशित करें';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo प्रकाशन प्लगइन सेटअप करें';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Vimeo पर प्रकाशित करें';

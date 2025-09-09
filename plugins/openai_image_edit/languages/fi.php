@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Täytä valkoisella';
 $lang["openai_image_edit__mode_black"]='Täytä mustalla';
 $lang["openai_image_edit__creating_new_resource"]='Uuden resurssin luominen';
 $lang["openai_image_edit__mode_clone"]='Kloona täyttö';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Hae PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Tallenna vaihtoehto';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Tallenna Uusi';

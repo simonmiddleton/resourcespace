@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"]='گوگل وژن صرف انگریزی 
 $lang["google_vision_translation_api_key"]='گوگل API کلید درج کر کے ترجمہ API کے ذریعے وژن کلیدی الفاظ کے ترجمے کو فعال کریں۔';
 $lang["google_vision_translation_languages"]='زبان کوڈز کی کاما سے جدا فہرست، مثلاً "no,es"';
 $lang["google_vision_translation_keep_english"]='کیا اصل انگریزی کلیدی الفاظ کو برقرار رکھنا ہے؟';
+$lang["page-title_google_vision_process_existing"] = 'گوگل وژن پروسیس موجودہ';
+$lang["page-title_google_vision_setup"] = 'گوگل وژن پلگ ان سیٹ اپ کریں';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

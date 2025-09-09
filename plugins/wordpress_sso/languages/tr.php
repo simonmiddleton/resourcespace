@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Tekrar giriş yapmak için buraya tıklayın';
 $lang["origin_wordpress_sso"]='Wordpress SSO eklentisi';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='[Gelişmiş] Wordpress kurulumu ile Tek Oturum Açmayı sağlar';
+$lang["page-title_wordpress_sso_logout"] = 'SSO Çıkış';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Kullanıcı Yok';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Wordpress SSO Eklentisini Kurun';

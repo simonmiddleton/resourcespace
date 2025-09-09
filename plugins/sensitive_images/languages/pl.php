@@ -7,3 +7,4 @@ $lang["sensitive_images_field"]='Pole metadanych zawierające informację o powo
 $lang["sensitive_images_blur_level"]='Poziom rozmycia wrażliwego obrazu<br>(1=najmniejszy, 6=największy)';
 $lang["plugin-sensitive_images-title"]='Rozmycie wrażliwego obrazu';
 $lang["plugin-sensitive_images-desc"]='Rozmywa obrazy oznaczone jako wrażliwe, umożliwiając użytkownikowi kliknięcie w celu usunięcia rozmycia.';
+$lang["page-title_sensitive_images_setup"] = 'Konfiguracja wtyczki do obrazów wrażliwych';

@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'ویکٹر کی تخلیق';
 $lang["clip_vector-statistics"] = 'ویکٹر کے اعداد و شمار';
 $lang["clip-vector-cleanup"] = 'یتیم ویکٹرز کو حذف کریں';
 $lang["clip-vector-cleanup-description"] = 'ان ویکٹروں کو ہٹا دیں جو ان وسائل سے تعلق رکھتے ہیں جو اب موجود نہیں ہیں یا اوپر منتخب کردہ وسائل کی اقسام میں سے نہیں ہیں';
+
+$lang["page-title_clip_search"] = 'AI سمارٹ تلاش';
+$lang["page-title_clip_setup"] = 'CLIP پلگ ان سیٹ اپ کریں';
+$lang["page-title_clip_webcam"] = 'ویب کیم ٹیگ جنریٹر';

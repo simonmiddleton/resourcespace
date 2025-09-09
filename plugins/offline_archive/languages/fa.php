@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'در حال انجام',
   2 => 'تکمیل شده',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'مدیریت آرشیوها';
+$lang["page-title_offline_archive_offline_archive_action"] = 'آرشیو آفلاین';
+$lang["page-title_offline_archive_pending_restore"] = 'بازگردانی منبع در حال انتظار';
+$lang["page-title_offline_archive_restore_request"] = 'درخواست بازیابی منبع';
+$lang["page-title_offline_archive_restore"] = 'بازیابی آرشیو';
+$lang["page-title_offline_archive_setup"] = 'تنظیم افزونه';
+$lang["page-title_offline_archive_view_archives"] = 'مشاهده آرشیو منابع';
+$lang["page-title_offline_archive_view_pending"] = 'مشاهده آرشیوهای معلق';

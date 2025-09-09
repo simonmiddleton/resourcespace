@@ -78,3 +78,6 @@ $lang["transform_preset_sizes"]='پہلے سے طے شدہ ہدف سائز می�
 $lang["error_crop_invalid"]='براہ کرم تصویر کے ایک حصے کا انتخاب کریں';
 $lang["transform-recrop"]='تصویر کو دوبارہ تراشیں';
 $lang["cropper_preset_sizes"] = 'پہلے سے طے شدہ سائز';
+$lang["page-title_transform_collection_transform"] = 'وسائل کو تبدیل کریں';
+$lang["page-title_transform_crop"] = 'کٹائی کا وسیلہ';
+$lang["page-title_transform_setup"] = 'ٹرانسفارم پلگ ان سیٹ اپ کریں';

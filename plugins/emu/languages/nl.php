@@ -35,3 +35,6 @@ $lang["emu_createdfromemu"] = 'Gemaakt met EMU-plugin';
 $lang["emu_module"] = 'EMu-module';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-desc"] = 'Stelt in staat om resource metadata uit de EMu-database te extraheren.';
+
+$lang["page-title_emu_emu_object_details"] = 'EMu Object Gegevens';
+$lang["page-title_emu_setup"] = 'Instellen Plugin';

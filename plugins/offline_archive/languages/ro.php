@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'În desfășurare',
   2 => 'Finalizat',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Administrați Arhivele';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Arhivă Offline';
+$lang["page-title_offline_archive_pending_restore"] = 'Restaurare Resursă în Așteptare';
+$lang["page-title_offline_archive_restore_request"] = 'Solicita restaurarea resursei';
+$lang["page-title_offline_archive_restore"] = 'Restaurare Arhiva';
+$lang["page-title_offline_archive_setup"] = 'Configurare Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Vizualizați Arhivele Resurselor';
+$lang["page-title_offline_archive_view_pending"] = 'Vizualizați Arhivele în Așteptare';

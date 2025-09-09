@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Typ zdroja vzdialeného prehliad
 $lang["embeddocument_embed_share"] = 'Vdelaj dokument';
 $lang["plugin-embeddocument-title"] = 'Vstavi dokument';
 $lang["plugin-embeddocument-desc"] = 'Poskrbi za funkcijo za ustvarjanje HTML za vdelane predoglede dokumentov na oddaljenih mestih.';
+
+$lang["page-title_embeddocument_setup"] = 'Nastaviť plugin na vloženie dokumentu';
+$lang["page-title_embeddocument_viewer"] = 'Vložiť prehliadač dokumentov';

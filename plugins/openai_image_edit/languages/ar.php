@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='املأ بالأبيض';
 $lang["openai_image_edit__mode_black"]='املأ بالأسود';
 $lang["openai_image_edit__creating_new_resource"]='إنشاء مورد جديد';
 $lang["openai_image_edit__mode_clone"]='استنساخ التعبئة';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI احصل على PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI حفظ بديل';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI حفظ جديد';

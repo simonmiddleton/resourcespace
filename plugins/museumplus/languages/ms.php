@@ -49,3 +49,6 @@ $lang["museumplus_error_unknown_type_saved_config"] = '\'museumplus_modules_save
 $lang["museumplus_error_invalid_association"] = 'Persatuan modul yang tidak sah. Sila pastikan bahawa Modul dan/atau ID Rekod yang betul telah dimasukkan!';
 $lang["museumplus_id_returns_multiple_records"] = 'Multiple rekod ditemui - sila masukkan ID teknikal sebagai ganti';
 $lang["museumplus_error_module_no_field_maps"] = 'Tidak dapat menyegerakkan data dari MuseumPlus. Sebab: modul \'%name\' tiada pemetaan medan yang dikonfigurasikan.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'Butiran Objek MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'Tetapkan Modul MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Pasang Plugin MuseumPlus';

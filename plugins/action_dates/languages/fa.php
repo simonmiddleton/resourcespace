@@ -36,3 +36,5 @@ $lang["weekday-3"] = 'چهارشنبه';
 $lang["weekday-4"] = 'پنج‌شنبه';
 $lang["weekday-5"] = 'جمعه';
 $lang["weekday-6"] = 'شنبه';
+
+$lang["page-title_action_dates_setup"] = 'نصب افزونه تاریخ‌های اقدام';

@@ -8,3 +8,4 @@ $lang["vm2rs_online_preview"]='Previsualització en línia';
 $lang["vm2rs_youtube_video"]='Vídeo de Youtube';
 $lang["plugin-vm2rs-title"]='Vimeo a ResourceSpace';
 $lang["plugin-vm2rs-desc"]='Permet incrustar vídeos de Vimeo.';
+$lang["page-title_vm2rs_setup"] = 'Configura el complement de Vimeo a ResourceSpace';

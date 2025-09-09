@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV 파일에 제거할 수 없는 BOM이
 $lang["csv_upload_validating"] = '유효성 검사 중';
 $lang["csv_upload_processing"] = '처리 중';
 $lang["processing_batch_edit_save"] = '행 [row_number] / [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'CSV 업로드';

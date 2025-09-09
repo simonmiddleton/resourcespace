@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'شناسه منبع مشخص نشده است!';
 $lang["emu_upload_nodata"] = 'هیچ داده EMu برای این IRN یافت نشد:';
 $lang["emu_nodata_returned"] = 'هیچ داده EMu برای IRN مشخص شده یافت نشد.';
 $lang["emu_createdfromemu"] = 'ایجاد شده از افزونه EMU';
+
+$lang["page-title_emu_emu_object_details"] = 'جزئیات شی EMu';
+$lang["page-title_emu_setup"] = 'تنظیمات افزونه';

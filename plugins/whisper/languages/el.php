@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Δημιουργήστε υπότιτλους κα
 $lang["whisper_subtitles_name"] = 'Αυτόματα παραγόμενοι υπότιτλοι';
 $lang["whisper_transcript"] = 'Δημιουργήστε ένα αρχείο απομαγνητοφώνησης και προσθέστε το ως εναλλακτικό αρχείο λήψης';
 $lang["whisper_transcript_name"] = 'Αυτόματα παραγόμενη μεταγραφή';
+
+$lang["page-title_whisper_setup"] = 'Ρύθμιση Πρόσθετου Whisper';

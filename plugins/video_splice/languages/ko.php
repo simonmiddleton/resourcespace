@@ -47,3 +47,6 @@ $lang["video_splice_createdfromvideosplice"]='비디오 스플라이스 플러�
 $lang["video_splice_error_invalid_action"]='오류 : 잘못된 작업';
 $lang["plugin-video_splice-title"]='비디오 스플라이스';
 $lang["plugin-video_splice-desc"]='비디오 자르기 및 연결 기능 추가';
+$lang["page-title_video_splice_setup"] = '비디오 스플라이스 플러그인 설정';
+$lang["page-title_video_splice_splice"] = '비디오 자르기';
+$lang["page-title_video_splice_trim"] = '비디오 자르기';

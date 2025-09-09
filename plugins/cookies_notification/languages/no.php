@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Du har bestemt deg for å
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Du må godta bruken av informasjonskapsler før du får tilgang til systemet.';
 $lang["plugin-cookies_notification-title"] = 'Informasjonskapselvarsel';
 $lang["plugin-cookies_notification-desc"] = 'Legger til muligheten til å varsle brukere om hvordan ResourceSpace kan bruke informasjonskapsler til å spore brukeraktivitet ved å vise en melding i toppteksten';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Valg av informasjonskapsler';
+$lang["page-title_cookies_notification_setup"] = 'Sett opp informasjonskapselvarsling-plugin';

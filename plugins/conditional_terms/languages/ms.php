@@ -6,3 +6,4 @@ $lang["conditional_terms_description"] = 'Plugin ini membolehkan anda menetapkan
 $lang["conditional_terms_field"] = 'Medan metadata';
 $lang["conditional_terms_value"] = 'Nilai';
 $lang["conditional_terms_plugin_misconfigured"] = 'Plugin syarat bersyarat tidak dikonfigurasi dengan betul';
+$lang["page-title_conditional_terms_setup"] = 'Tetapkan Plugin Terma Bersyarat';

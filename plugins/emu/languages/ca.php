@@ -36,3 +36,6 @@ $lang["emu_createdfromemu"] = 'Creat per al connector EMU';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-title"] = 'EMu';
 $lang["plugin-emu-desc"] = '[Avançat] Permet extreure les metadades dels recursos de la base de dades EMu.';
+
+$lang["page-title_emu_emu_object_details"] = 'Detalls de l\'objecte EMu';
+$lang["page-title_emu_setup"] = 'Configuració del complement';

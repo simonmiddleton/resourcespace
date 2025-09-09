@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Het terugdraaien van de status voor collect
 $lang["rse_version_invalid_time"]='Teruggaan naar een tijdstip voor [date] wordt niet ondersteund';
 $lang["plugin-rse_version-title"]='Versiebeheer';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Versiebeheer';
+$lang["page-title_rse_version_revert"] = 'Herstel Hulpbronversie';
+$lang["page-title_rse_version_setup"] = 'Instellen Versie Plugin';

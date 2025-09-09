@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = '허용된 열: *username, *email, passwor
 $lang["csv_user_import_condition5"] = '사용자의 언어는 lang 열이 없거나 값이 없는 경우 "$defaultlanguage" 구성 옵션을 사용하여 설정된 언어로 기본 설정됩니다';
 $lang["plugin-csv_user_import-title"] = 'CSV 사용자 가져오기';
 $lang["plugin-csv_user_import-desc"] = '[고급] 사전 형식화된 CSV 파일을 기반으로 사용자 일괄 가져오기 기능 제공';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSV 사용자 가져오기';

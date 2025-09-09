@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'góra',
    'bottom' => 'dół',
 );
+$lang["page-title_image_text_setup"] = 'Ustawienia wtyczki tekstu obrazu';

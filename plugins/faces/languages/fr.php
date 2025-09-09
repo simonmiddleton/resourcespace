@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Afficher la fonctionnalité AI Faces sur la page de 
 $lang["faces_count_faces"] = 'Total des visages détectés';
 $lang["faces_count_missing"] = 'Images à traiter';
 $lang["faces-tag-field-not-set"] = 'Le champ de balisage n\'est pas configuré.';
+
+$lang["page-title_faces_setup"] = 'Configurer le plugin Faces';

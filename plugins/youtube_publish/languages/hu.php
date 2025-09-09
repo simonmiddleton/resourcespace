@@ -50,3 +50,5 @@ $lang["youtube_publish_category"] = 'Kategória';
 $lang["youtube_publish_category_error"] = 'Hiba a YouTube kategóriák lekérésekor: -';
 $lang["youtube_chunk_size"] = 'A feltöltéshez használandó darabméret a YouTube-ra (MB)';
 $lang["youtube_publish_add_anchor"] = 'Hozzáadja az anchor tageket az URL-hez, amikor menti a YouTube URL metaadat mezőbe?';
+$lang["page-title_youtube_publish_setup"] = 'Plugin beállítása';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Erőforrás közzététele a Youtube-on';

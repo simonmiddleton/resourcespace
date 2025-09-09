@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Gebruik het originele bronbestand als bron voor de 
 $lang["vr_view_orig_video"]='Gebruik het originele bronbestand van de resource als bron voor de videovoorvertoning?';
 $lang["plugin-vr_view-title"]='VR-weergave';
 $lang["plugin-vr_view-desc"]='Google VR View - 360 graden beeld- en videovoorbeelden (equirectangulaire formaat)';
+$lang["page-title_vr_view_download"] = 'VR Weergave';
+$lang["page-title_vr_view_setup"] = 'Instellen VR View Plugin';

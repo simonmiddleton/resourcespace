@@ -28,3 +28,5 @@ $lang["video_tracks_save_alt_not_perm"]='Nije moguće spremiti alternativu bez d
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='VAŽNO! Postavke izlaznih formata za dodatak Video Tracks su zastarjele. Mogu se postaviti samo u config.php. Dodatak neće raditi kako je predviđeno dok se opcija konfiguracije ne kopira. Molimo kopirajte sljedeće:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Video zapisi';
 $lang["plugin-video_tracks-desc"]='Dodajte podršku za različite audio i titlove opcije za video resurse';
+$lang["page-title_video_tracks_create_video"] = 'Stvori video';
+$lang["page-title_video_tracks_setup"] = 'Postavljanje Video Traka Plugina';

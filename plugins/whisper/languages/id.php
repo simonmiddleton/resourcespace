@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Hasilkan subtitle dan tambahkan sebagai unduhan fi
 $lang["whisper_subtitles_name"] = 'Teks terjemahan yang dihasilkan secara otomatis';
 $lang["whisper_transcript"] = 'Buat file transkrip dan tambahkan sebagai unduhan file alternatif';
 $lang["whisper_transcript_name"] = 'Transkrip yang dihasilkan secara otomatis';
+
+$lang["page-title_whisper_setup"] = 'Pengaturan Plugin Whisper';

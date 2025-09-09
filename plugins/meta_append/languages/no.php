@@ -7,3 +7,4 @@ $lang["meta_append_configuration_date_format"]='Velg datoformat - se <a href=\'h
 $lang["meta_append_configuration_prompt"]='Legg til merkelapp av metadata avkrysningsboks prompt';
 $lang["plugin-meta_append-title"]='Meta Legg til';
 $lang["plugin-meta_append-desc"]='Legg til brukerdefinert tidsstempel og daglig opplastingsnummer (per bruker) til et felt';
+$lang["page-title_meta_append_setup"] = 'Installer Meta Append Plugin';

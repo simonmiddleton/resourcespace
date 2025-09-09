@@ -36,3 +36,8 @@ $lang["brand_guidelines_configuration"] = 'Brand Guidelines konfiguration';
 $lang["brand_guidelines_fallback_size_thm"] = 'Miniaturelayout fallback-billedstørrelse';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Halv-bredde layout fallback billedstørrelse';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Fuld-bredde layout fallback billedstørrelse';
+
+$lang["page-title_brand_guidelines_content"] = 'Administrer indhold om brandretningslinjer';
+$lang["page-title_brand_guidelines_guidelines"] = 'Brand retningslinjer';
+$lang["page-title_brand_guidelines_setup"] = 'Opsæt Brand Guidelines Plugin';
+$lang["page-title_brand_guidelines_toc"] = 'Rediger indhold';

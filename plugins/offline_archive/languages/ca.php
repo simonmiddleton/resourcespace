@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'En curs',
   2 => 'Completat',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Administrar Arxius';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Arxiu Offline';
+$lang["page-title_offline_archive_pending_restore"] = 'Restauració de Recurso Pendent';
+$lang["page-title_offline_archive_restore_request"] = 'Sol·licitar la restauració del recurs';
+$lang["page-title_offline_archive_restore"] = 'Restaurar Arxiu';
+$lang["page-title_offline_archive_setup"] = 'Configuració del complement';
+$lang["page-title_offline_archive_view_archives"] = 'Veure Arxius de Recursos';
+$lang["page-title_offline_archive_view_pending"] = 'Veure Arxius Pendents';

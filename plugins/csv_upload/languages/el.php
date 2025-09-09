@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'Το αρχείο CSV έχει BOM το �
 $lang["csv_upload_validating"] = 'Επικύρωση';
 $lang["csv_upload_processing"] = 'Επεξεργασία';
 $lang["processing_batch_edit_save"] = 'γραμμή [row_number] από [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Ανέβασμα CSV';

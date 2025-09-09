@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'Testun defnyddiwr i\'w ddangos ar gyfer rhann
 $lang["falcon_link_log_publish"] = 'Adnodd a rennir trwy Falcon';
 $lang["falcon_link_log_archive"] = 'Adnodd wedi\'i archifo trwy Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Gwnewch yn siŵr nad yw\'r disgrifiad a\'r tagiau yn wag';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Gosod Plugin Cyswllt Falcon';

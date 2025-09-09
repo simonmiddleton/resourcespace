@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Usare il file originale della risorsa come sorgente
 $lang["vr_view_orig_video"]='Usare il file originale della risorsa come fonte per l\'anteprima del video?';
 $lang["plugin-vr_view-title"]='Vista VR';
 $lang["plugin-vr_view-desc"]='Google VR View - Anteprime di immagini e video a 360 gradi (formato equirettangolare)';
+$lang["page-title_vr_view_download"] = 'VR View';
+$lang["page-title_vr_view_setup"] = 'Imposta il plugin VR View';

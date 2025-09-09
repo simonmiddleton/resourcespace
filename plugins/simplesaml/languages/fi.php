@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'Yksinkertaiset SAML-metadata päivitykse
 $lang["simplesaml_metadata_warning"] = 'Metatietoja ei ole päivitetty sitten %date%';
 $lang["simplesaml_metadata_invalid"] = 'IdP metadata virheellinen tai ei saatavilla';
 $lang["simplesaml_admin_password_reset"] = 'Nollaa SimpleSAML-testisivuston ylläpitäjän salasana (valinnainen)';
+$lang["page-title_simplesaml_about"] = 'SAML Tietoa';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Luo SP-konfiguraatio';
+$lang["page-title_simplesaml_setup"] = 'Aseta Yksinkertainen SAML-laajennus';

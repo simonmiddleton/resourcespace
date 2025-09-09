@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Tamaño de fragmento a utilizar al cargar en YouTub
 $lang["youtube_publish_add_anchor"]='¿Agregar etiquetas de anclaje a la URL al guardar en el campo de metadatos de URL de YouTube?';
 $lang["plugin-youtube_publish-title"]='Publicar en YouTube';
 $lang["plugin-youtube_publish-desc"]='Publica el recurso de video en la cuenta de YouTube configurada.';
+$lang["page-title_youtube_publish_setup"] = 'Configurar Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Publicar recurso en Youtube';

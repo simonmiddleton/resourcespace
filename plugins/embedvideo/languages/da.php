@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'Videomateriale ressourcetype';
 $lang["embedvideo_share"] = 'Indlejr video';
 $lang["plugin-embedvideo-title"] = 'Indlejr video';
 $lang["plugin-embedvideo-desc"] = 'Giver en funktion til at generere HTML til indlejret video på eksterne sider.';
+
+$lang["page-title_embedvideo_setup"] = 'Opsæt Embed Video Plugin';

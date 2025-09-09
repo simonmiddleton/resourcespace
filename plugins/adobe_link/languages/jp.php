@@ -13,3 +13,5 @@ $lang["adobe_link_saving"] = '保存中...';
 $lang["adobe_link_saving_wait"] = 'ファイルを保存しています。確認メッセージが表示されるまでお待ちください。プレビュー画像を更新するには、ページをリフレッシュする必要がある場合があります。';
 $lang["plugin-adobe_link-title"] = 'Adobeリンク';
 $lang["plugin-adobe_link-desc"] = '[高度] ResourceSpaceからAdobe CCへのAdobeファイルの取り込みを許可';
+
+$lang["page-title_adobe_link_setup"] = 'Adobe Link プラグインの設定';

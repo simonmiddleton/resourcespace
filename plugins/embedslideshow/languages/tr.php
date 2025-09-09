@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = 'Doğrudan bağlantıyı aç (yeni sayf
 $lang["embedslideshow_dynamic_size"] = 'Oynatıcı boyutuna göre önizlemenin dinamik olarak yeniden boyutlandırılması?';
 $lang["plugin-embedslideshow-title"] = 'Slayt Gösterisini Göm';
 $lang["plugin-embedslideshow-desc"] = 'Uzaktaki sitelerde gömülebilir koleksiyon slayt gösterileri için HTML oluşturma işlevi sağlar';
+
+$lang["page-title_embedslideshow_setup"] = 'Gömülü Slayt Gösterisi Eklentisini Kurun';
+$lang["page-title_embedslideshow_viewer"] = 'Slayt Gösterisini Göm';

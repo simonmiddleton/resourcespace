@@ -13,3 +13,5 @@ $lang["adobe_link_saving_wait"] = 'Súbor sa ukladá, prosím čakajte na potvrd
 $lang["adobe_link_document_extensions"] = 'Adobe formáty súborových prípony';
 $lang["plugin-adobe_link-title"] = 'Povezava Adobe';
 $lang["plugin-adobe_link-desc"] = '[Dovoli napredno] Uvoz Adobe datotek iz ResourceSpace v Adobe CC';
+
+$lang["page-title_adobe_link_setup"] = 'Nastavenie pluginu Adobe Link';

@@ -78,3 +78,6 @@ $lang["transform_update_preview"] = 'Előnézet frissítése';
 $lang["transform_preset_sizes"] = 'Válasszon az előre definiált célméretek közül';
 $lang["error_crop_invalid"] = 'Kérjük, válasszon ki egy területet a képen';
 $lang["cropper_preset_sizes"] = 'Előre definiált méretek';
+$lang["page-title_transform_collection_transform"] = 'Erőforrás átalakítása';
+$lang["page-title_transform_crop"] = 'Képvágás Erőforrás';
+$lang["page-title_transform_setup"] = 'Állítsa be a Transform Plugint';

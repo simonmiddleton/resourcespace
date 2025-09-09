@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='जीपीटी स्रोत';
 $lang["openai_gpt_language"] = 'आउटपुट भाषा';
 $lang["openai_gpt_language_user"] = 'वर्तमान उपयोगकर्ता की भाषा';
 $lang["openai_gpt_overwrite_data"] = 'क्या आप कॉन्फ़िगर की गई फ़ील्ड में मौजूदा डेटा को ओवरराइट करना चाहते हैं?';
+$lang["page-title_openai_gpt_setup"] = 'OpenAI GPT प्लगइन सेटअप करें';

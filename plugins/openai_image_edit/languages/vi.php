@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"] = 'Điền bằng màu trắng';
 $lang["openai_image_edit__mode_black"] = 'Điền bằng màu đen';
 $lang["openai_image_edit__mode_clone"] = 'Sao chép đầy đủ';
 $lang["openai_image_edit__creating_new_resource"] = 'Tạo tài nguyên mới';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Lấy PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'Lưu thay thế OpenAI';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Lưu Mới';

@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='Flera poster hittades - ange te
 $lang["museumplus_error_module_no_field_maps"]='Kan inte synkronisera data från MuseumPlus. Anledning: modulen \'%name\' har inga fältmappningar konfigurerade.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Tillåter att resursmetadata extraheras från MuseumPlus med hjälp av dess REST API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Objekt Detaljer';
+$lang["page-title_museumplus_setup_module"] = 'Installera MuseumPlus-modul';
+$lang["page-title_museumplus_setup"] = 'Installera MuseumPlus-pluginet';

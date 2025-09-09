@@ -15,3 +15,6 @@ $lang["title-too-long"]='Otsikkokenttä on pidempi kuin sallittu 50 merkkiä';
 $lang["plugin-news-title"]='Uutiset';
 $lang["plugin-news-desc"]='Lisää etusivun uutiskohteita';
 $lang["news_manage-tooltip"] = 'Lisää, muokkaa tai poista uutisartikkeleita';
+$lang["page-title_news_news_content_edit"] = 'Muokkaa uutissisältöä';
+$lang["page-title_news_news_edit"] = 'Muokkaa uutisia';
+$lang["page-title_news_news"] = 'Uutiset';

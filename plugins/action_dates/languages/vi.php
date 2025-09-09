@@ -37,3 +37,4 @@ $lang["weekday-3"] = 'Thứ Tư';
 $lang["weekday-4"] = 'Thứ Năm';
 $lang["weekday-5"] = 'Thứ Sáu';
 $lang["weekday-6"] = 'Thứ Bảy';
+$lang["page-title_action_dates_setup"] = 'Cài đặt Plugin Ngày Hành Động';

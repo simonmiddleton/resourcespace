@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'ข้อความผู้ใช้ที
 $lang["falcon_link_log_publish"] = 'ทรัพยากรที่แชร์ผ่าน Falcon';
 $lang["falcon_link_log_archive"] = 'ทรัพยากรที่เก็บถาวรผ่าน Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'กรุณาตรวจสอบว่าคำอธิบายและแท็กไม่ว่างเปล่า';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'ตั้งค่า Falcon Link Plugin';

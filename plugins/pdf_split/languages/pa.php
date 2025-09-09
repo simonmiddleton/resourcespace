@@ -11,3 +11,4 @@ $lang["outofrange"]='ਸੀਮਾ ਤੋਂ ਬਾਹਰ';
 $lang["invalidrange"]='ਅਵੈਧ ਰੇਂਜ';
 $lang["splitpdf_createnewresource"]='ਹਰ ਰੇਂਜ ਲਈ ਇੱਕ ਨਵਾਂ ਸਰੋਤ ਬਣਾਓ';
 $lang["splitpdf_createnewalternativefile"]='ਹਰ ਰੇਂਜ ਲਈ ਇਸ ਸਰੋਤ \'ਤੇ ਇੱਕ ਨਵਾਂ ਵਿਕਲਪਿਕ ਫਾਈਲ ਬਣਾਓ';
+$lang["page-title_pdf_split_pdf_split"] = 'ਪੀਡੀਐਫ਼ ਵੰਡ';

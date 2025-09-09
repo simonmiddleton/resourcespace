@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='Tillad brugere at publicere til dere
 $lang["vimeo_publish_set_account"]='Angiv Vimeo-konto';
 $lang["plugin-vimeo_publish-title"]='Vimeo Udgiv';
 $lang["plugin-vimeo_publish-desc"]='Udgiv ressourcer til Vimeo ved hjælp af OAuth 2.0';
+$lang["page-title_vimeo_publish_setup"] = 'Opsæt Vimeo Publicer Plugin';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Udgiv til Vimeo';

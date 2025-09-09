@@ -51,3 +51,6 @@ $lang["museumplus_id_returns_multiple_records"]='Meerdere records gevonden - voe
 $lang["museumplus_error_module_no_field_maps"]='Kan geen gegevens synchroniseren vanuit MuseumPlus. Reden: module \'%name\' heeft geen veldtoewijzingen geconfigureerd.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Stelt in staat om resource metadata te extraheren uit MuseumPlus met behulp van de REST API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Object Gegevens';
+$lang["page-title_museumplus_setup_module"] = 'Instellen MuseumPlus Module';
+$lang["page-title_museumplus_setup"] = 'Instellen MuseumPlus Plugin';

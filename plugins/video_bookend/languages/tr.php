@@ -11,3 +11,4 @@ $lang["bookend-could-not-open-file"]='Hata - dosya açılamadı!';
 $lang["bookend"]='Kitap Desteği';
 $lang["plugin-video_bookend-title"]='Video Kitap Sonu';
 $lang["plugin-video_bookend-desc"]='Bir videoyu başlık ve bitiş grafiği ile indirme yeteneği ekler';
+$lang["page-title_video_bookend_bookend"] = 'Video Kitabı Sonu';

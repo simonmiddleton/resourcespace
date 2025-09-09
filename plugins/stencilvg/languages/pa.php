@@ -10,3 +10,6 @@ $lang["stencilvg-print"]='ਪ੍ਰਿੰਟ';
 $lang["stencilvg-download"]='ਡਾਊਨਲੋਡ';
 $lang["stencilvg-save_as_new_resource"]='ਨਵੀਂ ਸੰਸਾਧਨ ਵਜੋਂ ਸੁਰੱਖਿਅਤ ਕਰੋ';
 $lang["stencilvg-no_parameters_found"]='ਕੋਈ ਟੈਂਪਲੇਟ ਪੈਰਾਮੀਟਰ ਨਹੀਂ ਮਿਲੇ';
+$lang["page-title_stencilvg_download_svg"] = 'SVG ਡਾਊਨਲੋਡ ਕਰੋ';
+$lang["page-title_stencilvg_input"] = 'SVG ਇਨਪੁਟ';
+$lang["page-title_stencilvg_setup"] = 'StencilVG ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

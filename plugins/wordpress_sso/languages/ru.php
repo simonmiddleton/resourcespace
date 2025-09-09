@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Нажмите здесь, чтобы попроб
 $lang["origin_wordpress_sso"]='Плагин единого входа Wordpress (Wordpress SSO)';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='[Расширенный] Позволяет единый вход с установкой Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Выход из SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Нет пользователя';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Настройка плагина SSO для Wordpress';

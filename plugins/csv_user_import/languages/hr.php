@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Dopušteni stupci: *korisničko ime, *e-p
 $lang["csv_user_import_condition5"] = 'Jezik korisnika će se automatski vratiti na onaj koji je postavljen korištenjem opcije konfiguracije "$defaultlanguage" ako stupac "lang" nije pronađen ili nema vrijednost';
 $lang["plugin-csv_user_import-title"] = 'CSV uvoz korisnika';
 $lang["plugin-csv_user_import-desc"] = 'Omogućuje uvoz serije korisnika na temelju unaprijed formatirane CSV datoteke';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSV Uvoz Korisnika';

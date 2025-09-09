@@ -23,3 +23,7 @@ $lang["google_vision_translation_keep_english"]='Сохранить оригин
 $lang["google_vision_api"]='Google Vision API';
 $lang["plugin-google_vision-title"]='Google Vision API';
 $lang["plugin-google_vision-desc"]='Возможность распознавания изображений. Передает загруженные изображения в Google Cloud Vision API и устанавливает предложенные метаданные.';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision Процесс Существующий';
+$lang["page-title_google_vision_setup"] = 'Настроить плагин Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

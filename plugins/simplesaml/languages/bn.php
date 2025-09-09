@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'সিম্পলএসএএমএল 
 $lang["simplesaml_metadata_warning"] = 'মেটাডেটা %date% থেকে আপডেট করা হয়নি';
 $lang["simplesaml_metadata_invalid"] = 'IdP মেটাডেটা অবৈধ বা অপ্রাপ্য';
 $lang["simplesaml_admin_password_reset"] = 'সিম্পলএসএএমএল টেস্ট সাইট প্রশাসক পাসওয়ার্ড রিসেট করুন (ঐচ্ছিক)';
+$lang["page-title_simplesaml_about"] = 'SAML সম্পর্কে';
+$lang["page-title_simplesaml_generate_sp_config"] = 'SP কনফিগারেশন তৈরি করুন';
+$lang["page-title_simplesaml_setup"] = 'সিম্পল SAML প্লাগইন সেটআপ করুন';

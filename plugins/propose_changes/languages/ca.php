@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Les seves proposte
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />S\'han enviat els canvis proposats.<br/>[changesummary]<br/>Feu clic a continuació per revisar els canvis<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Proposar canvis';
 $lang["plugin-propose_changes-desc"]='Afegeix l\'opció per permetre als usuaris proposar canvis de metadades sense accés d\'edició';
+$lang["page-title_propose_changes_propose_changes"] = 'Proposar canvis';
+$lang["page-title_propose_changes_setup"] = 'Configurar el complement Proposar canvis';

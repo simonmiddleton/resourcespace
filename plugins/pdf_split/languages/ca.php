@@ -14,3 +14,4 @@ $lang["splitpdf_createnewalternativefile"]='Crear un nou fitxer alternatiu per a
 $lang["range"]='Rang';
 $lang["plugin-pdf_split-title"]='Divisió de PDF';
 $lang["plugin-pdf_split-desc"]='Permet dividir els fitxers PDF en diverses pàgines';
+$lang["page-title_pdf_split_pdf_split"] = 'Dividir PDF';

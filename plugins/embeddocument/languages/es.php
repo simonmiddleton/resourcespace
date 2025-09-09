@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Tipo de recurso de visor de docu
 $lang["embeddocument_embed_share"] = 'Incrustar documento';
 $lang["plugin-embeddocument-title"] = 'Incrustar Documento';
 $lang["plugin-embeddocument-desc"] = 'Proporciona una función para generar HTML para vistas previas de documentos incrustables en sitios remotos.';
+
+$lang["page-title_embeddocument_setup"] = 'Configurar el complemento de documento incrustado';
+$lang["page-title_embeddocument_viewer"] = 'Incrustar Visor de Documentos';

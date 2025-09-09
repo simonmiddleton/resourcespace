@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Текущий день';
 $lang["totp_date_binding_w"] = 'Текущая неделя (начиная с понедельника)';
 $lang["totp_date_binding_m"] = 'Текущий месяц';
 $lang["totp_date_binding_y"] = 'Текущий год';
+$lang["page-title_totp_setup"] = 'Настройка плагина TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

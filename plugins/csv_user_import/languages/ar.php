@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'الأعمدة المسموح بها: *ا
 $lang["csv_user_import_condition5"] = 'سيتم إعادة لغة المستخدم إلى اللغة الافتراضية التي تم تعيينها باستخدام خيار التكوين "$defaultlanguage" إذا لم يتم العثور على عمود اللغة أو لا يحتوي على قيمة';
 $lang["plugin-csv_user_import-title"] = 'استيراد المستخدمين بصيغة CSV';
 $lang["plugin-csv_user_import-desc"] = '[متقدم] يوفر القدرة على استيراد دفعة من المستخدمين بناءً على ملف CSV مُنسق مسبقًا';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'استيراد مستخدم CSV';

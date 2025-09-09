@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Ziua curentă';
 $lang["totp_date_binding_w"] = 'Săptămâna curentă (începând de luni)';
 $lang["totp_date_binding_m"] = 'Luna curentă';
 $lang["totp_date_binding_y"] = 'Anul curent';
+$lang["page-title_totp_setup"] = 'Configurare plugin TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

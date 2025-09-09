@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => '进行中',
   2 => '已完成',
 );
+$lang["page-title_offline_archive_administer_archive"] = '管理档案';
+$lang["page-title_offline_archive_offline_archive_action"] = '离线档案';
+$lang["page-title_offline_archive_pending_restore"] = '待处理资源恢复';
+$lang["page-title_offline_archive_restore_request"] = '请求资源恢复';
+$lang["page-title_offline_archive_restore"] = '恢复档案';
+$lang["page-title_offline_archive_setup"] = '设置 插件';
+$lang["page-title_offline_archive_view_archives"] = '查看资源档案';
+$lang["page-title_offline_archive_view_pending"] = '查看待处理档案';

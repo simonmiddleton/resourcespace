@@ -73,3 +73,4 @@ $lang["csv_upload_check_removebom"] = 'A CSV fájl BOM-ot tartalmaz, amelyet nem
 $lang["csv_upload_validating"] = 'Érvényesítés';
 $lang["csv_upload_processing"] = 'Feldolgozás';
 $lang["processing_batch_edit_save"] = 'sor [row_number] a [rows_count]-ból';
+$lang["page-title_csv_upload_csv_upload"] = 'CSV feltöltése';

@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"]='ਗੂਗਲ ਵਿਜ਼ਨ ਸਿਰ
 $lang["google_vision_translation_api_key"]='ਗੂਗਲ API ਕੁੰਜੀ ਦਰਜ ਕਰਕੇ ਅਨੁਵਾਦ API ਰਾਹੀਂ ਵਿਜ਼ਨ ਕੁੰਜੀਸ਼ਬਦਾਂ ਦੇ ਅਨੁਵਾਦ ਨੂੰ ਯੋਗ ਬਣਾਓ';
 $lang["google_vision_translation_languages"]='ਕੋਮਾ ਨਾਲ ਵੱਖ ਕੀਤੇ ਗਏ ਭਾਸ਼ਾ ਕੋਡਾਂ ਦੀ ਸੂਚੀ, ਉਦਾਹਰਨ ਲਈ "no,es"';
 $lang["google_vision_translation_keep_english"]='ਅਸਲ ਅੰਗਰੇਜ਼ੀ ਕੁੰਜੀਆਂ ਰੱਖਣੀਆਂ ਹਨ?';
+$lang["page-title_google_vision_process_existing"] = 'ਗੂਗਲ ਵਿਜ਼ਨ ਪ੍ਰਕਿਰਿਆ ਮੌਜੂਦ';
+$lang["page-title_google_vision_setup"] = 'ਗੂਗਲ ਵਿਜ਼ਨ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

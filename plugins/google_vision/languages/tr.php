@@ -23,3 +23,7 @@ $lang["google_vision_translation_languages"]='Virgülle ayrılmış dil kodları
 $lang["google_vision_translation_keep_english"]='Orijinal İngilizce anahtar kelimeleri sakla?';
 $lang["plugin-google_vision-title"]='Google Vision API';
 $lang["plugin-google_vision-desc"]='Görüntü tanıma yeteneği. Yüklenen görüntüleri Google Cloud Vision API\'ye iletir ve önerilen meta verileri ayarlar.';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision İşlem Mevcut';
+$lang["page-title_google_vision_setup"] = 'Google Vision Eklentisini Kurun';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

@@ -38,3 +38,5 @@ $lang["weekday-5"] = 'Fredag';
 $lang["weekday-6"] = 'Lørdag';
 $lang["plugin-action_dates-title"] = 'Handlingsdatoer';
 $lang["plugin-action_dates-desc"] = 'Aktiverer planlagt sletting eller begrensning av ressurser basert på datofelt';
+
+$lang["page-title_action_dates_setup"] = 'Konfigurer Handlingsdatoer Plugin';

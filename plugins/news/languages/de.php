@@ -15,3 +15,6 @@ $lang["title-too-long"]='Das Titelfeld ist länger als die erlaubten 50 Zeichen'
 $lang["plugin-news-title"]='Nachrichten';
 $lang["plugin-news-desc"]='Fügt Startseiten-Nachrichten hinzu';
 $lang["news_manage-tooltip"] = 'Nachrichtenartikel hinzufügen, bearbeiten oder löschen';
+$lang["page-title_news_news_content_edit"] = 'Nachricht Inhalt bearbeiten';
+$lang["page-title_news_news_edit"] = 'Nachrichten bearbeiten';
+$lang["page-title_news_news"] = 'Nachrichten';

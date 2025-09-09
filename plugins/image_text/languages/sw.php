@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'juu',
    'bottom' => 'chini',
 );
+$lang["page-title_image_text_setup"] = 'Weka Plugin ya Maandishi ya Picha';

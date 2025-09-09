@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Vector generatie';
 $lang["clip_vector-statistics"] = 'Vectorstatistieken';
 $lang["clip-vector-cleanup"] = 'Verwijder weesvectoren';
 $lang["clip-vector-cleanup-description"] = 'Verwijder vectoren die behoren tot bronnen die niet meer bestaan of niet een van de hierboven geselecteerde brontypen zijn';
+
+$lang["page-title_clip_search"] = 'AI Slimme Zoekfunctie';
+$lang["page-title_clip_setup"] = 'Instellen CLIP Plugin';
+$lang["page-title_clip_webcam"] = 'Webcam Tag Generator';

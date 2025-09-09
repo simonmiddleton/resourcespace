@@ -9,3 +9,4 @@ $lang["bookend-intro"]='Chagua picha kutoka kwenye orodha ya faili mbadala ili k
 $lang["bookend-failed"]='Imeshindwa!';
 $lang["bookend-could-not-open-file"]='Hitilafu - faili haikuweza kufunguliwa!';
 $lang["bookend"]='Kitabu cha mwisho';
+$lang["page-title_video_bookend_bookend"] = 'Video Bookend';

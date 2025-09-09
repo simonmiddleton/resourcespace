@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"] = 'Trường được sử dụng để xác đ�
 $lang["vr_view_yaw_only_value"] = 'Giá trị để kiểm tra. Nếu tìm thấy, tùy chọn is_yaw_only sẽ được đặt thành true';
 $lang["vr_view_orig_image"] = 'Sử dụng tệp tài nguyên gốc làm nguồn cho bản xem trước hình ảnh?';
 $lang["vr_view_orig_video"] = 'Sử dụng tệp tài nguyên gốc làm nguồn cho bản xem trước video?';
+$lang["page-title_vr_view_download"] = 'VR View';
+$lang["page-title_vr_view_setup"] = 'Cài đặt Plugin Xem VR';

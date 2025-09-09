@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'টেক্সট / এইচটিএমএল:
 $lang["feedback_options-comma_separated"] = 'বিকল্পগুলি: (কমা দ্বারা পৃথক)';
 $lang["feedback_add_new_field"] = 'নতুন ক্ষেত্র যোগ করুন';
 $lang["feedback_back_to_plugin_manager"] = 'প্লাগইন ম্যানেজারে ফিরে যান';
+
+$lang["page-title_feedback_feedback"] = 'মতামত জমা দিন';
+$lang["page-title_feedback_setup"] = 'সেটআপ প্লাগইন';

@@ -28,3 +28,5 @@ $lang["video_tracks_transcode_now_or_notify_me_label"]='Şimdi dönüştürmeyi 
 $lang["video_tracks_transcode_now_label"]='Şimdi dönüştür';
 $lang["plugin-video_tracks-title"]='Video Parçaları';
 $lang["plugin-video_tracks-desc"]='[İleri] Video kaynakları için farklı ses ve altyazı seçenekleri desteği ekle';
+$lang["page-title_video_tracks_create_video"] = 'Video Oluştur';
+$lang["page-title_video_tracks_setup"] = 'Video İzleme Eklentisini Kurun';

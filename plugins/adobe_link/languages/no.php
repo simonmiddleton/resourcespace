@@ -13,3 +13,5 @@ $lang["adobe_link_saving_wait"] = 'Filen blir lagret, vennligst vent på bekreft
 $lang["adobe_link_title"] = 'Adobe Link';
 $lang["plugin-adobe_link-title"] = 'Adobe Link';
 $lang["plugin-adobe_link-desc"] = ' Tillat import av Adobe-filer fra ResourceSpace til Adobe CC';
+
+$lang["page-title_adobe_link_setup"] = 'Sett opp Adobe Link-plugin';

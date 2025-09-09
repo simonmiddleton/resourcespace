@@ -53,3 +53,6 @@ $lang["museumplus_error_module_no_field_maps"]='Não é possível sincronizar da
 $lang["museumplus_module_setup"]='Configuração do módulo';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='[Avançado] Permite que os metadados dos recursos sejam extraídos do MuseumPlus usando sua API REST (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Detalhes do Objeto';
+$lang["page-title_museumplus_setup_module"] = 'Configurar Módulo MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Configurar Plugin MuseumPlus';

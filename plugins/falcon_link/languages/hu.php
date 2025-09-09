@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'Felhasználói szöveg megjelenítése a Falc
 $lang["falcon_link_log_publish"] = 'Megosztott erőforrás a Falconon keresztül';
 $lang["falcon_link_log_archive"] = 'Archívált erőforrás a Falconon keresztül';
 $lang["falcon_link_error_falcon_check_tags"] = 'Kérjük, ellenőrizze, hogy a leírás és a címkék nem üresek';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Falcon Link Plugin beállítása';

@@ -22,3 +22,6 @@ $lang["embeddocument_document_resourcetype"] = "Dokumentmaterialtyp:";
 $lang["embeddocument_embed_share"] = 'Bädda in dokument';
 $lang["plugin-embeddocument-title"] = 'Bädda in dokument';
 $lang["plugin-embeddocument-desc"] = 'Ger en funktion för att generera HTML för inbäddningsbara dokumentförhandsvisningar på externa webbplatser.';
+
+$lang["page-title_embeddocument_setup"] = 'Konfigurera inbäddningsdokumentplugin';
+$lang["page-title_embeddocument_viewer"] = 'Bädda in dokumentvisare';

@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Apasă aici pentru a încerca să te autentifici d
 $lang["origin_wordpress_sso"]='Plugin-ul SSO pentru Wordpress';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Permite autentificarea unică cu instalarea Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Deconectare SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Fără utilizator';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Configurare plugin SSO Wordpress';

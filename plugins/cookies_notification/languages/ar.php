@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'لقد قررت عدم ا
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'من الضروري قبول استخدام ملفات تعريف الارتباط (الكوكيز) قبل الوصول إلى النظام.';
 $lang["plugin-cookies_notification-title"] = 'إشعار الكوكيز';
 $lang["plugin-cookies_notification-desc"] = 'يضيف القدرة على إخطار المستخدمين بكيفية استخدام ResourceSpace لملفات تعريف الارتباط لتتبع نشاط المستخدم عن طريق عرض رسالة في الرأس';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'اختيار الكوكيز';
+$lang["page-title_cookies_notification_setup"] = 'إعداد مكون إشعار الكوكيز';

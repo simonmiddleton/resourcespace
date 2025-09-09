@@ -24,3 +24,5 @@ $lang["checknow"] = 'Праверце зараз';
 $lang["columnheader-enabled"] = 'Уключана';
 $lang["columnheader-last-found"] = 'Апошні знойдзены';
 $lang["search_notifications_watched_searches-tooltip"] = 'Кіруйце вашымі захаванымі пошукамі';
+$lang["page-title_rse_search_notifications_setup"] = 'Наладзіць плагін апавяшчэнняў аб пошуку';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Назіранне за пошукамі';

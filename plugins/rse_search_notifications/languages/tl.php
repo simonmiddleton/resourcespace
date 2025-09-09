@@ -24,3 +24,5 @@ $lang["checknow"] = 'Suriin ngayon';
 $lang["columnheader-enabled"] = 'Naka-enable';
 $lang["columnheader-last-found"] = 'Huling natagpuan';
 $lang["search_notifications_watched_searches-tooltip"] = 'Kontrolin ang iyong mga na-save na paghahanap';
+$lang["page-title_rse_search_notifications_setup"] = 'I-set up ang Plugin para sa Mga Abiso sa Paghahanap';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Napanood na Paghahanap';

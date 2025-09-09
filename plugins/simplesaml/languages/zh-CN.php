@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'SimpleSAML 元数据更新';
 $lang["simplesaml_metadata_warning"] = '元数据自 %date% 以来未更新';
 $lang["simplesaml_metadata_invalid"] = 'IdP 元数据无效或不可用';
 $lang["simplesaml_admin_password_reset"] = '重置 SimpleSAML 测试站点管理员密码（可选）';
+$lang["page-title_simplesaml_about"] = 'SAML 关于';
+$lang["page-title_simplesaml_generate_sp_config"] = '生成 SP 配置';
+$lang["page-title_simplesaml_setup"] = '设置简单 SAML 插件';

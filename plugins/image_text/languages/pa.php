@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'ਉੱਪਰ',
    'bottom' => 'ਹੇਠਾਂ',
 );
+$lang["page-title_image_text_setup"] = 'ਚਿੱਤਰ ਪਾਠ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

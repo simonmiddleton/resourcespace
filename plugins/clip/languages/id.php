@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Generasi vektor';
 $lang["clip_vector-statistics"] = 'Statistik vektor';
 $lang["clip-vector-cleanup"] = 'Hapus vektor yatim';
 $lang["clip-vector-cleanup-description"] = 'Hapus vektor yang termasuk dalam sumber daya yang tidak lagi ada atau bukan salah satu dari jenis sumber daya yang dipilih di atas';
+
+$lang["page-title_clip_search"] = 'AI Pencarian Cerdas';
+$lang["page-title_clip_setup"] = 'Pengaturan Plugin CLIP';
+$lang["page-title_clip_webcam"] = 'Generator Tag Webcam';

@@ -24,3 +24,5 @@ $lang["checknow"]='اکنون بررسی کنید';
 $lang["columnheader-enabled"]='فعال شد';
 $lang["columnheader-last-found"]='آخرین یافت شده';
 $lang["search_notifications_watched_searches-tooltip"] = 'جستجوهای ذخیره شده خود را کنترل کنید';
+$lang["page-title_rse_search_notifications_setup"] = 'نصب افزونه اعلان‌های جستجو';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'جستجوهای مشاهده شده';
