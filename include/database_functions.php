@@ -586,6 +586,7 @@ function ps_query($sql, array $parameters = array(), $cache = "", $fetchrows = -
         } else {
             $querylog[$sql]['dupe'] = 1;
             $querylog[$sql]['time'] = $time_total;
+            $querylog[$sql]['params'] = $parameters;
         }
         $querytime += $time_total;
     }

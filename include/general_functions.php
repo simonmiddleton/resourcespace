@@ -2437,7 +2437,7 @@ function draw_performance_footer()
         <table class="InfoTable" style="float: right;margin-right: 10px;display:none;" id="querylog<?php echo $performance_footer_id?>">
             <?php foreach ($querylog as $query => $details) { ?>
                 <tr>
-                    <td><?php echo escape($query); ?></td>
+                    <td><?php echo escape(format_query($query,$details['params'])); ?></td>
                 </tr>
             <?php } ?>
         </table>
@@ -2445,6 +2445,31 @@ function draw_performance_footer()
     </div>
         <?php
     }
+}
+
+/**
+ * Format SQL queries for display purposes
+ * Note: these queries are no longer known to be safe from sql injection
+ *
+ * @param  string $query
+ * @param  array $params
+ * @return string
+ */
+function format_query(string $query, array $params): string
+{
+    $values = array_map(function ($index, $value) use ($params) {
+        return $index % 2 === 1 ? ($params[$index - 1] === 's' ? "'" . addslashes($value) . "'" : $value) : null;
+    }, array_keys($params), $params);
+
+    $values = array_filter($values, function ($value) {
+        return $value !== null;
+    });
+
+    // Replace '?' with '%s' for sprintf
+    $formatted_query = str_replace('?', '%s', $query);
+
+    // Use sprintf with array unpacking
+    return sprintf($formatted_query, ...$values);
 }
 
 /**
