@@ -72,13 +72,15 @@
         ],
         "build:release": [
             "# Building ResourceSpace release",
+            "sh -c '[ -z \"$(svn diff)\" ] || (echo \"Working copy has changes! Please address those first!\" && exit 1)'",
+            "svn update",
             "composer check-platform-reqs --no-interaction --no-cache",
             "composer install --no-interaction --no-dev --optimize-autoloader --classmap-authoritative",
             "composer audit",
             "@build:applyDownstreamChanges",
             "svn add --no-ignore --force vendor/",
             "svn rm .svnignore tests/",
-            "echo Release build completed!"
+            "# Release build completed!"
         ]
     },
     "scripts-descriptions": {
