@@ -62,8 +62,8 @@
         ],
         "dev:phpstan": "phpstan analyse",
         "build:applyDownstreamChanges": [
-            "echo Applying downstream changes to vendor/.",
-            "#IF you've already applied downstream changes patch will warn you with 'Reversed (or previously applied) patch detected!  Assume -R?'. Select 'y' to continue.",
+            "echo # Applying downstream changes to vendor/.",
+            "echo # IF you've already applied downstream changes patch will warn you with 'Reversed (or previously applied) patch detected!  Assume -R?'. Select 'y' to continue.",
             "svn diff -c 23197 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/File.php | patch vendor/ankitpokhrel/tus-php/src/File.php",
             "svn diff -c 23596 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Cache/ApcuStore.php | patch vendor/ankitpokhrel/tus-php/src/Cache/ApcuStore.php",
             "svn diff -c 24289 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Tus/Server.php | patch vendor/ankitpokhrel/tus-php/src/Tus/Server.php",
@@ -71,7 +71,7 @@
             "svn merge -c 27077 ^/trunk # flickr_theme_publish is under VCS so we can simply merge those changes"
         ],
         "build:release": [
-            "# Building ResourceSpace release",
+            "echo # Building ResourceSpace release",
             "sh -c '[ -z \"$(svn diff)\" ] || (echo \"Working copy has changes! Please address those first!\" && exit 1)'",
             "svn update",
             "composer check-platform-reqs --no-interaction --no-cache --no-dev",
@@ -80,7 +80,7 @@
             "@build:applyDownstreamChanges",
             "svn add --no-ignore --force vendor/",
             "svn rm .svnignore phpcs.xml.dist phpstan-baseline.neon phpstan.neon.dist rector.php tests/",
-            "# Release build completed!",
+            "echo # Release build completed!",
             "svn status --depth=immediates"
         ]
     },
