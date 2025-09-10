@@ -74,6 +74,7 @@ $test_cases = [
     ["search" => "originalfilename:dog_photo-1.jpg", "node_value" => "dog_photo-1.jpg", "field" => 51],
     ["search" => "title:pumpkin.patch", "node_value" => "pumpkin.patch", "field" => 8],
     ["search" => "title:up-at-em", "node_value" => "up-at-em", "field" => 8],
+    ["search" => "title:2025.04*", "node_value" => "2025.04.13", "field" => 8],
     ["search" => "123.1*", "node_value" => "123.124.125"],
     ["search" => "1998.327.370.*", "node_value" => "1998", "include_resource" => false],
     ["search" => "2010.69*", "node_value" => "2010.701", "include_resource" => false],
