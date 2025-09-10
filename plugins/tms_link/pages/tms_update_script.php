@@ -243,7 +243,7 @@ foreach(tms_link_get_modules_mappings() as $module)
                     $tms_link_field_id = $tms_rs_mapping['rs_field'];
 
                     if ($tms_link_field_id == $module['rs_uid_field']) {
-                        // Don't update the identifier field as it may contain other IDs
+                        // Don't update the identifier field (since that data was already used to get these TMS rows - likely a misconfiguration)
                         continue;
                     }
 
@@ -299,15 +299,12 @@ foreach(tms_link_get_modules_mappings() as $module)
                         }
                     }
 
-                // A tms object has been processed for this resource, move on to the next resource
-                break;
                 } # end of $tmsresults loop
 
             if(!$tms_data_found && !isset($tmserrors[$tms_resources[$ri]["resource"]]))
                 {
                 $tmserrors[$tms_resources[$ri]["resource"]] = "No TMS data found for resource - TMS identifier : " . $tms_resources[$ri]["identifier"];
                 }
-
             }
 
         // Update pointer and go onto next set of resources
