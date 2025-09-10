@@ -142,7 +142,7 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
 * @return array|bool Returns bool to show whether the hook ran or not -or- list of errors.
 * See hook 'aftersaveresourcedata' in resource_functions.php for more info
 */
-function HookTms_linkEditAftersaveresourcedata($R, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields, $updated_resources): array|bool
+function HookTms_linkEditAftersaveresourcedata(int|array $R, $nodes_to_add, $nodes_to_remove, $autosave_field, array $fields, array $updated_resources): array|bool
 {
     if (!(is_numeric($R) || is_array($R))) {
         return false;
