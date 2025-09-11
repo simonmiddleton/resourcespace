@@ -81,6 +81,7 @@ $test_cases = [
     ["search" => "2010.69*", "node_value" => "2010.690.3.450"],
     ["search" => "*98.327.370.*", "node_value" => "1998.327.370.456"],
     ["search" => "bing.*.boom", "node_value" => "bing.bong.BOOM"],
+    ["search" => "will.*", "node_value" => "will.i.am"], // Stop word compatibility
     ];
 
 foreach ($test_cases as $case) {

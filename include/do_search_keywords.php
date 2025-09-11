@@ -572,15 +572,22 @@ if ($keysearch) {
                                 $sql_keyword_union_or[] = false;
                             } elseif ($wildcards) {
                                 $union = new PreparedStatementQuery();
+                                $stop_words = ps_array(
+                                    "SELECT value FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD WHERE value LIKE ?",
+                                    ["s", str_replace('*', '%', $keyword)]
+                                );
+
                                 if (
                                     substr($keyword, 0, 1) != "*"
                                     && strlen(trim($keyword, '*')) >= 3
                                     && preg_match('/[-+@<>().]/', $keyword) !== 1
+                                    && empty($stop_words)
                                 ) {
                                     // Use fulltext search as a preference, but not if
                                     // there is a leading wildcard
                                     // or the search is too short
                                     // or the search contains any of +,-,@,<,>,(,),.
+                                    // or contains any words InnoDB considers a stop word
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
                                                 FROM resource_node rn[union_index]
@@ -616,7 +623,7 @@ if ($keysearch) {
                                                         FROM `node` 
                                                         WHERE ";
 
-                                    if (preg_match('/[-+@<>()]/', $keyword) !== 1) {
+                                    if (preg_match('/[-+@<>()]/', $keyword) !== 1 && !empty($stop_words)) {
                                         // Full text matching is used to reduce the rows checked by regex where possible
                                         $union->parameters = array_merge(['s',$keyword], $union->parameters);
                                         $union->sql .= "MATCH(name) AGAINST (? IN BOOLEAN MODE) AND ";
