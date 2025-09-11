@@ -78,7 +78,9 @@ function HookConsentmanagerViewCustompanels()
                                 <td>
                                     <?php                             
                                         $created_by_user = get_user($consent['created_by']);                            
-                                        echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]);
+                                        if (is_array($created_by_user)) {
+                                            echo escape($created_by_user["fullname"] == "" ? $created_by_user["username"] : $created_by_user["fullname"]);
+                                        }
                                     ?>
                                 </td>
                                 <?php if ($edit_access || checkperm("cm")) { ?>

@@ -96,31 +96,31 @@ function consentmanager_delete_consent(int $resource): bool
  * into the `consent` table. It returns the ID of the newly created consent
  * record if successful.
  *
- * @param string $name              The name of the individual giving consent.
- * @param string $date_of_birth     The DOB of the individual, formatted as a string.
- * @param string $address           The address of the individual.
- * @param string $parent_guardian   The parent or guardian of the individual.
- * @param string $email             The email address of the individual.
- * @param string $telephone         The telephone number of the individual.
- * @param string $consent_usage     Description of the intended usage for which consent is given.
- * @param string $notes             Any additional notes related to the consent record.
- * @param string $date_of_consent   The date the consent applies from.
- * @param string $expires           The expiry date of the consent, formatted as a string.
- * @param string $created_by        The ref of the user who created the consent record.
+ * @param string      $name              The name of the individual giving consent.
+ * @param string|null $date_of_birth     The DOB of the individual, formatted as a string.
+ * @param string      $address           The address of the individual.
+ * @param string      $parent_guardian   The parent or guardian of the individual.
+ * @param string      $email             The email address of the individual.
+ * @param string      $telephone         The telephone number of the individual.
+ * @param string      $consent_usage     Description of the intended usage for which consent is given.
+ * @param string      $notes             Any additional notes related to the consent record.
+ * @param string|null $date_of_consent   The date the consent applies from.
+ * @param string|null $expires           The expiry date of the consent, formatted as a string.
+ * @param string      $created_by        The ref of the user who created the consent record.
  * 
  * @return int|bool              Returns the ID of the new consent record on success,
  *                               or false if the user does not have write access.
  */
 function consentmanager_create_consent(string $name, 
-                                       string $date_of_birth, 
+                                       ?string $date_of_birth, 
                                        string $address, 
                                        string $parent_guardian, 
                                        string $email, 
                                        string $telephone, 
                                        string $consent_usage, 
                                        string $notes, 
-                                       string $date_of_consent, 
-                                       string $expires, 
+                                       ?string $date_of_consent, 
+                                       ?string $expires, 
                                        string $created_by): int|bool
 {
     if (!consentmanager_check_write()) {
@@ -296,31 +296,31 @@ function consentmanager_get_consent(int $consent): array|bool
  * email, telephone number, consent usage types, date of consent, notes, and expiry date.
  * It also resets the expiration_notice_sent flag if the expiry date is modified.
  *
- * @param int    $consent           The ID of the consent record to update.
- * @param string $name              The name of the individual giving consent.
- * @param string $date_of_birth     The DOB of the individual, formatted as a string.
- * @param string $address           The address of the individual.
- * @param string $parent_guardian   The parent or guardian of the individual.
- * @param string $email             The email address of the individual.
- * @param string $telephone         The telephone number of the individual.
- * @param string $consent_usage     A description of the permitted usage types for the consent.
- * @param string $notes             Additional notes related to the consent record.
- * @param string $date_of_consent   The date the consent applies from.
- * @param string $expires           The expiry date of the consent record, formatted as a string.
+ * @param int         $consent           The ID of the consent record to update.
+ * @param string      $name              The name of the individual giving consent.
+ * @param string|null $date_of_birth     The DOB of the individual, formatted as a string.
+ * @param string      $address           The address of the individual.
+ * @param string      $parent_guardian   The parent or guardian of the individual.
+ * @param string      $email             The email address of the individual.
+ * @param string      $telephone         The telephone number of the individual.
+ * @param string      $consent_usage     A description of the permitted usage types for the consent.
+ * @param string      $notes             Additional notes related to the consent record.
+ * @param string|null $date_of_consent   The date the consent applies from.
+ * @param string|null $expires           The expiry date of the consent record, formatted as a string.
  * @return bool                     Returns true if the consent record was successfully updated,
  *                                  or false if the user does not have write access.
  */
 function consentmanager_update_consent(int $consent, 
                                        string $name, 
-                                       string $date_of_birth, 
+                                       ?string $date_of_birth, 
                                        string $address, 
                                        string $parent_guardian, 
                                        string $email, 
                                        string $telephone, 
                                        string $consent_usage, 
                                        string $notes, 
-                                       string $date_of_consent, 
-                                       string $expires): bool
+                                       ?string $date_of_consent, 
+                                       ?string $expires): bool
 {
     if (!consentmanager_check_write()) {
         return false;
