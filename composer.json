@@ -58,8 +58,10 @@
     "scripts": {
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup",
         "dev:beforeCommit": [
+            "@dev:tests",
             "@dev:phpstan"
         ],
+        "dev:tests": "@php tests/test.php -noteardown",
         "dev:phpstan": "phpstan analyse",
         "build:applyDownstreamChanges": [
             "echo Applying downstream changes to vendor/.",
@@ -74,9 +76,9 @@
             "echo Building ResourceSpace release",
             "sh -c '[ -z \"$(svn diff)\" ] || (echo \"[WARN] Working copy has changes! Please address those first!\" && exit 1)'",
             "svn update",
-            "composer check-platform-reqs --no-interaction --no-cache --no-dev",
-            "composer install --no-interaction --no-dev --optimize-autoloader --classmap-authoritative",
-            "composer audit",
+            "@composer check-platform-reqs --no-interaction --no-cache --no-dev",
+            "@composer install --no-interaction --no-dev --optimize-autoloader --classmap-authoritative",
+            "@composer audit",
             "@build:applyDownstreamChanges",
             "svn add --no-ignore --force vendor/",
             "svn rm .svnignore phpcs.xml.dist phpstan-baseline.neon phpstan.neon.dist rector.php tests/",
@@ -85,6 +87,7 @@
         ]
     },
     "scripts-descriptions": {
+        "dev:tests": "Run the automated tests for ResourceSpace.",
         "build:release": "ResourceSpace build release version. This will allow end users to continue to upgrade with a simple `svn switch` call.",
         "build:applyDownstreamChanges": "Apply downstream changes to ResourceSpace dependencies. Any changes that the upstream has fixed should be removed from the list as we want minimum (to no) divergence from upstreams."
     },
