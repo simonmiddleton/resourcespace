@@ -57,6 +57,7 @@
     },
     "scripts": {
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup",
+        "svn:ignoreProp": "svn propset svn:ignore -F .svnignore .",
         "dev:beforeCommit": [
             "@dev:tests",
             "@dev:phpstan"
@@ -88,6 +89,7 @@
         ]
     },
     "scripts-descriptions": {
+        "svn:ignoreProp": "Make SVN ignore certain files/directories by adding the pattern to the .svnignore file.",
         "dev:tests": "Run the automated tests for ResourceSpace.",
         "build:release": "ResourceSpace build release version. This will allow end users to continue to upgrade with a simple `svn switch` call.",
         "build:applyDownstreamChanges": "Apply downstream changes to ResourceSpace dependencies. Any changes that the upstream has fixed should be removed from the list as we want minimum (to no) divergence from upstreams."
