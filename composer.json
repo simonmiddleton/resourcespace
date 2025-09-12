@@ -78,6 +78,7 @@
             "svn update",
             "@composer check-platform-reqs --no-interaction --no-cache --no-dev",
             "@composer install --no-interaction --no-dev --optimize-autoloader --classmap-authoritative",
+            "@composer update --dry-run roave/security-advisories",
             "@composer audit",
             "@build:applyDownstreamChanges",
             "svn add --no-ignore --force vendor/",
