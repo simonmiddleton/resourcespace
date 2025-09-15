@@ -603,7 +603,12 @@ if ($collectionsearch)
     if ($k!="" && !$internal_share_access) {$usercollection=$collection;} # External access - set current collection.
     if (!$collectiondata)
         {
-        error_alert($lang["error-collectionnotfound"],true);
+        if (isset($_GET['search'])) 
+            {
+                error_alert($lang["error-collectionnotfound"],true);
+                exit;
+            }
+        error_alert($lang["error-collectionnotfound"],false);
         exit;
         } 
     # Check to see if this user can edit (and therefore reorder) this resource

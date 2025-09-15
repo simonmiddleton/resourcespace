@@ -277,8 +277,12 @@ if ($search_titles) {
         } elseif (substr($search, 0, 8) == "!hasdata") {
             $fieldref = intval(trim(substr($search, 8)));
             $fieldinfo = get_resource_type_field($fieldref);
-            if (!$fieldinfo) {
-                error_alert($lang['error_fieldidnotfound'],true);
+            if (!$fieldinfo) { 
+                if (isset($_GET['search'])) {
+                    error_alert($lang['error_fieldidnotfound'],true);
+                    exit;
+                }
+                error_alert($lang['error_fieldidnotfound'],false);
                 exit;
             }
             $fdisplayname = trim((string)$fieldinfo["title"]) != "" ? $fieldinfo["title"] : $fieldref;
@@ -286,8 +290,12 @@ if ($search_titles) {
         } elseif (substr($search, 0, 6) == "!empty") {
             $fieldref = intval(trim(substr($search, 6)));
             $fieldinfo = get_resource_type_field($fieldref);
-            if (!$fieldinfo) {
-                error_alert($lang['error_fieldidnotfound'],true);
+            if (!$fieldinfo) { 
+                if (isset($_GET['search'])) {
+                    error_alert($lang['error_fieldidnotfound'],true);
+                    exit;
+                }
+                error_alert($lang['error_fieldidnotfound'],false);
                 exit;
             }
             $displayname = i18n_get_translated($fieldinfo["title"]);

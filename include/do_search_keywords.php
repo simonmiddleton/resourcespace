@@ -525,8 +525,12 @@ if ($keysearch) {
                                 $restypesql = new PreparedStatementQuery();
 
                                 $nodatafieldinfo = get_resource_type_field($nodatafield);
-                                if (!$nodatafieldinfo) {
-                                    error_alert($lang['error_fieldidnotfound'],true);
+                                if (!$nodatafieldinfo) {   
+                                    if (isset($_GET['search'])) {
+                                        error_alert($lang['error_fieldidnotfound'],true);
+                                        exit;
+                                    }
+                                    error_alert($lang['error_fieldidnotfound'],false);
                                     exit;
                                 }
                                 $nodatarestypes = trim((string)$nodatafieldinfo["resource_types"]);
