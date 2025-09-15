@@ -185,13 +185,12 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
 *
 * This can be used to give a more user friendly indication of how old something is.
 *
-* @var  string   $datetime   ISO format date which can be a BCE date (ie. with negative year -yyyy)
+* @param  string   $datetime   ISO format date which can be a BCE date (ie. with negative year -yyyy)
 *
 * @return string Returns a string representing the age calculated from $datetime, otherwise an empty string if date is invalid
 */
 function date_to_age(string $datetime): string 
 {
-
     global $lang;
     
     $now = new DateTime();
@@ -224,7 +223,6 @@ function date_to_age(string $datetime): string
         // For anything over a year, you might want to just show the date
         return nicedate($datetime, false, true, true);
     }
-
 }
 
 /**
@@ -232,10 +230,10 @@ function date_to_age(string $datetime): string
 *
 * Can be used for generating previews of text output, such as messages.
 *
-* @var  string   $text          The text to generate the preview of, can contain HTML
-* @var  int      $line_length   The number of characters that the preview can have on each line
-* @var  int      $line_count    The number of lines to be generated in the preview
-* @var  bool     $add_ellipsis  Should ellipsis (...) be added if the original $text exceeds $line_count
+* @param  string   $text          The text to generate the preview of, can contain HTML
+* @param  int      $line_length   The number of characters that the preview can have on each line
+* @param  int      $line_count    The number of lines to be generated in the preview
+* @param  bool     $add_ellipsis  Should ellipsis (...) be added if the original $text exceeds $line_count
 *
 * @return string Returns a string of the preview text, or an empty string if the preview is unable to be generated
 */

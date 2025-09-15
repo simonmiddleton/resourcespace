@@ -1523,7 +1523,6 @@ div.MessageBox a {
 
 .message-list {
     overflow-y: scroll;
-    /* width: 440px; */
     overflow-x: hidden;
     padding: 0;
     height: 436px;
