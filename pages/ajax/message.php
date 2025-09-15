@@ -92,7 +92,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
 
     // Check if there are messages
     $messages = array();
-    message_get($messages, $user);   // note: messages are passed by reference
+    message_get($messages, $user, true, false);   // note: messages are passed by reference - include expired but not seen in count
 
     $extramessage = array('ref' => 0);
     $extramessages = false;
@@ -189,9 +189,9 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
                     }
 
                     if (usertotalcountlabel == "0") {
-                        jQuery('span.UserMenuCountPill').html(usertotalcountlabel).hide();
+                        jQuery('span.UserMenuCountPill').html(DOMPurify.sanitize(usertotalcountlabel)).hide();
                     } else {
-                        jQuery('span.UserMenuCountPill').html(usertotalcountlabel).fadeIn();
+                        jQuery('span.UserMenuCountPill').html(DOMPurify.sanitize(usertotalcountlabel)).fadeIn();
                     }                    
 
                     if (activeSeconds > 0 || message_poll_first_run) {
@@ -238,7 +238,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
                             actioncountlabel = actioncount.toString();
                         }
                         console.log(actioncount);
-                        jQuery('span.ActionCountPill').html(actioncountlabel).fadeIn();
+                        jQuery('span.ActionCountPill').html(DOMPurify.sanitize(actioncountlabel)).fadeIn();
                     } else {
                         jQuery('span.ActionCountPill').hide();
                     }
@@ -249,7 +249,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
                         } else {
                             messagecountlabel = messagecount.toString();
                         }
-                        jQuery('span.MessageCountPill').html(messagecountlabel).fadeIn();
+                        jQuery('span.MessageCountPill').html(DOMPurify.sanitize(messagecountlabel)).fadeIn();
                     } else {
                         jQuery('span.MessageCountPill').hide(); 
                     }
@@ -262,7 +262,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
                             {
                             failedjobcount = failedjobcount + teampill.attr('data-value');
                             }
-                        teampill.html(failedjobcount).fadeIn();
+                        teampill.html(DOMPurify.sanitize(failedjobcount)).fadeIn();
                         }
                     else
                         {

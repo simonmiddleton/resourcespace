@@ -47,7 +47,7 @@ include "../../include/header.php";
 
             $messages = array();
             // If no messages get out of here with a message
-            if (!message_get($messages, $userref, true, $sort, $msg_order_by)) {
+            if (!message_get($messages, $userref, true, true, $sort, $msg_order_by)) {
                 ?>
                 </ul>
                 </div> <!-- End of VerticalNav -->

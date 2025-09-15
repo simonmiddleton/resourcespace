@@ -9,17 +9,25 @@ if (isset($anonymous_login) && $anonymous_login == $username) {
 }
 
 $messages = array();
-message_get($messages, $userref, true, "DESC", "created", 10);
+message_get($messages, $userref, true, true, "DESC", "created", 10);
 
 ?>
 <div id="messages-list" class="messages-modal">
-    <div class="message-list-header"><h1><a href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo escape($lang["mymessages"]); ?></a></h1></div>
-    <div class="message-list-newmessage"><a href="<?php echo generateURL($baseurl . '/pages/user/user_message.php'); ?>" onClick="return CentralSpaceLoad(this, true);"><i class="fa-solid fa-pen-to-square"></i> <?php echo escape($lang["new_message"]); ?></a></div>
+    <div class="message-list-header">
+        <h1>
+            <a href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php'); ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo escape($lang["mymessages"]); ?></a>
+        </h1>
+    </div>
+    <div class="message-list-newmessage">
+        <a href="<?php echo generateURL($baseurl . '/pages/user/user_message.php'); ?>" onClick="return CentralSpaceLoad(this, true);"><i class="fa-solid fa-pen-to-square"></i> <?php echo escape($lang["new_message"]); ?></a>
+    </div>
     <div id="message-list" class="message-list">
     </div>
 </div>
 <div id="message-detail" class="messages-modal" style="display: none;">
-    <h2><a href="#" onclick="show_list();"><i class="fa-solid fa-caret-left"></i>&nbsp;<?php echo escape($lang["backtomessages"])?></a></h2>
+    <h2>
+        <a href="#" onclick="show_list();"><i class="fa-solid fa-caret-left"></i>&nbsp;<?php echo escape($lang["backtomessages"])?></a>
+    </h2>
     <div class="message-body">
         <div class="message-full-text"></div>
         <div class="message-reply">
@@ -34,7 +42,6 @@ message_get($messages, $userref, true, "DESC", "created", 10);
     var interval_id = null;
 
     function quick_message_poll(force_refresh = false) {
-
         if (jQuery('#messages-list').is(':visible')) {
             if (interval_id === null) {
                 interval_id = setInterval(quick_message_poll, 3000);
@@ -90,13 +97,10 @@ message_get($messages, $userref, true, "DESC", "created", 10);
     }
 
     function setMessageContents($el, m) {
-
         $el.toggleClass('unread', m.unread);
-
         $el.find('.message-username').html(m.displayname);
         $el.find('.message-age').html(m.age);
         $el.find('.message-text').html(m.text_preview);
-
     }
 
     function contentKeyOf(m) {
@@ -107,7 +111,6 @@ message_get($messages, $userref, true, "DESC", "created", 10);
 
 
     function update_message_list(message_list) {
-
         const list = jQuery('#message-list');
         const messages = normalize_messages(message_list);
 
@@ -188,12 +191,10 @@ message_get($messages, $userref, true, "DESC", "created", 10);
 
         } else {
             list.html('<div class="message-nomessages"><?php echo escape($lang['mymessages_youhavenomessages']); ?></div>');
-        }        
-
+        }
     }
 
     function show_quick_message(message_ref, ref, reply) {
-
         // Show full message in modal
         api("get_user_message",{'ref': message_ref}, function(response)
             {

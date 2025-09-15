@@ -6,12 +6,12 @@ include __DIR__ . "/../../include/authenticate.php";
 $previous_hash  = getval('prevhash', "");
 
 $messages = array();
-message_get($messages, $userref, true, "DESC", "created", 10);
+message_get($messages, $userref, true, true, "DESC", "created", 10);
 
 $etag = md5(json_encode($messages));
 
 if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
-    header('HTTP/1.1 304 Not Modified');
+    http_response_code(304);
     exit;
 }
 

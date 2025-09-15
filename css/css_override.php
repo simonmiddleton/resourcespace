@@ -373,7 +373,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         }
         /* Quick message modal */
         .messages-modal {
-            background: rgb(38, 38, 38)
+            background: rgb(38, 38, 38);
         }
         .message-body {
             background-color: rgb(38, 38, 38);
