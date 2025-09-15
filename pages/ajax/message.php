@@ -92,7 +92,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
 
     // Check if there are messages
     $messages = array();
-    message_get($messages, $user);   // note: messages are passed by reference
+    message_get($messages, $user, true, false);   // note: messages are passed by reference - include expired but not seen in count
 
     $extramessage = array('ref' => 0);
     $extramessages = false;

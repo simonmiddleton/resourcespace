@@ -9,7 +9,7 @@ if (isset($anonymous_login) && $anonymous_login == $username) {
 }
 
 $messages = array();
-message_get($messages, $userref, true, "DESC", "created", 10);
+message_get($messages, $userref, true, true, "DESC", "created", 10);
 
 ?>
 <div id="messages-list" class="messages-modal">

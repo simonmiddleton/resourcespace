@@ -6,7 +6,7 @@ include __DIR__ . "/../../include/authenticate.php";
 $previous_hash  = getval('prevhash', "");
 
 $messages = array();
-message_get($messages, $userref, true, "DESC", "created", 10);
+message_get($messages, $userref, true, true, "DESC", "created", 10);
 
 $etag = md5(json_encode($messages));
 

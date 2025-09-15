@@ -202,13 +202,14 @@ class ResourceSpaceUserNotification
  *
  * @param  array    $messages   Array that will be populated by messages. Passed by reference
  * @param  int      $user       User ID
- * @param  bool     $get_all    Retrieve all messages? Setting to TRUE will include all seen and expired messages
- * @param  bool     $sort       Sort by message ID in ascending or descending order
+ * @param  bool     $expired    Include expired messages?
+ * @param  bool     $seen       Include seen messages?
+ * @param  string   $sort       Sort by message ID in ascending (ASC) or descending (DESC) order
  * @param  string   $order_by   Order of messages returned
  * @param  int      $limit      Limit the number of messages returned, defaults to 0 which is no limit
  * @return bool             Flag to indicate if any messages exist
  */
-function message_get(&$messages, $user, $get_all = false, $sort = "ASC", $order_by = "ref", int $limit = 0): bool
+function message_get(array &$messages, int $user, bool $expired = false, bool $seen = false, string $sort = "ASC", $order_by = "ref", int $limit = 0): bool
 {
     switch ($order_by) {
         case "ref":
@@ -243,9 +244,8 @@ function message_get(&$messages, $user, $get_all = false, $sort = "ASC", $order_
 		INNER JOIN `message` ON user_message.message=message.ref " .
         "LEFT OUTER JOIN `user` ON message.owner=user.ref " .
         "WHERE user_message.user = ?" .
-        ($get_all ? " " : " AND message.expires > NOW()") .
-        ($get_all ? " " : " AND user_message.seen='0'") .
-        ($get_all ? " " : " AND user_message.seen='0'") .
+        ($expired ? " " : " AND message.expires > NOW()") .
+        ($seen ? " " : " AND user_message.seen='0'") .
         " ORDER BY " . $sql_order_by . " " . $sort . 
         ($limit > 0 ? " LIMIT " . $limit : ""), array("i",$user));
     return count($messages) > 0;
@@ -372,7 +372,7 @@ function message_unseen($message)
 function message_seen_all($user, $seen_type = MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)
 {
     $messages = array();
-    if (message_get($messages, $user, true)) {
+    if (message_get($messages, $user, true, true)) {
         foreach ($messages as $message) {
             message_seen($message['ref']);
         }
