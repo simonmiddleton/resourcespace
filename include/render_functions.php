@@ -7463,10 +7463,10 @@ function render_resource_view_image(array $resource, array $context)
                     if($GLOBALS["image_preview_zoom"])
                         {
                         # Process rotation from preview tweaks and use it to display the openseadragon preview in the correct orientation.
+                        $osd_preview_rotation = 0;
                         if (isset($resource['preview_tweaks']))
                             {
                             $preview_tweak_parts = explode('|', $resource['preview_tweaks']);
-                            $osd_preview_rotation = 0;
                             if ($preview_tweak_parts[0] > 0 && is_numeric($preview_tweak_parts[0]))
                                 {
                                 $osd_preview_rotation = 360 - $preview_tweak_parts[0];
