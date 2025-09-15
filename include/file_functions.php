@@ -509,6 +509,7 @@ function process_file_upload(SplFileInfo|array $source, SplFileInfo $destination
     } elseif ($source_file_size === 0) {
         return $fail_due_to(ProcessFileUploadErrorCondition::EmptySourceFile);
     } elseif (
+        $source instanceof SplFileInfo &&
         !is_valid_upload_path(
             $source_file_path,
             [...$GLOBALS['valid_upload_paths'], ini_get('upload_tmp_dir'), sys_get_temp_dir()]
