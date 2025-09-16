@@ -393,6 +393,10 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .message-age {
             color: rgba(117, 117, 117, 1);
         }
+        /* Leaflet maps */
+        .leaflet-control-geocoder-form input {
+            color: black;
+        }
         <?php
     }
 
