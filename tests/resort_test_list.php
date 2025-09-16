@@ -1,6 +1,10 @@
 <?php
+include "../include/boot.php";
+command_line_only();
+
 $dir = __DIR__ . "/test_list"; 
 $files = glob($dir . "/*.php");
+
 
 // Renumber the test list
 
