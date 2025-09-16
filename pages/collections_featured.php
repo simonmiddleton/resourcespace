@@ -1,7 +1,5 @@
 <?php
 
-use function Symfony\Component\VarDumper\Dumper\esc;
-
 include_once "../include/boot.php";
 
 $k = trim(getval("k", ""));

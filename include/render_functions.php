@@ -5195,8 +5195,8 @@ function render_featured_collection(array $ctx, array $fc)
     if (!$full_width) {
         ?>
         <div>
-            <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
-                <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+            <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
+                <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
                     <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
                 <?php
                 foreach($theme_images as $i => $theme_image)
@@ -5214,8 +5214,8 @@ function render_featured_collection(array $ctx, array $fc)
         render_featured_collection_context_menu(md5($fc['ref']), $tools);
     } else if ($full_width && !$is_smart_featured_collection) {
         ?>
-        <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
-            <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+        <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
+            <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
                 <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
             <?php
             foreach($theme_images as $i => $theme_image)
@@ -5229,7 +5229,7 @@ function render_featured_collection(array $ctx, array $fc)
         </a>
         <div class="ListTools">
             <div class="ActionsContainer">
-                <select class="fcollectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo $fc["ref"];?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+                <select class="fcollectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo escape($fc["ref"]);?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
                     <option><?php echo escape($lang["actions-select"]); ?></option>
                 </select>
             </div>            
@@ -5237,7 +5237,7 @@ function render_featured_collection(array $ctx, array $fc)
         <?php
     }
     ?>
-    </div><!-- End of FeaturedSimpleTile_<?php echo $fc["ref"]; ?>-->
+    </div><!-- End of FeaturedSimpleTile_<?php echo escape($fc["ref"]); ?>-->
 <?php
     }
 
