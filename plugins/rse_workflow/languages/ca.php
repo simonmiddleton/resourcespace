@@ -64,5 +64,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'Editar Acció del Flux de Trebal
 $lang["page-title_rse_workflow_edit_state"] = 'Editar l\'estat del flux de treball';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Editar Accions del Flux de Treball';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Editar estats del flux de treball';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'Configurar el complement de flux de treball';

@@ -64,5 +64,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'Redigera arbetsflödesåtgärd';
 $lang["page-title_rse_workflow_edit_state"] = 'Redigera arbetsflödesstatus';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Redigera arbetsflödesåtgärder';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Redigera arbetsflödesstatusar';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'Konfigurera arbetsflödesplugin';

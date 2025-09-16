@@ -54,7 +54,7 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
     ?>
     <span class="IconPreview">
         <a class="fa fa-expand"
-            id="previewlink<?php echo escape($order_by) . $ref?>"
+            id="previewlink<?php echo escape($order_by) . $ref;?>"
             href="<?php generateURL(
                 $baseurl_short . 'pages/preview.php',
                 [
@@ -68,7 +68,7 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
                     'archive' => $archive,
                     'k' => $k
                 ]) ?>"
-            title="<?php echo escape((($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
+            title="<?php echo escape((($resource_view_title != "") ? " - " . $resource_view_title : "")); ?>">
         </a>
     </span>
 

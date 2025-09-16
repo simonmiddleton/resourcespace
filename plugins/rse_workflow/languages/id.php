@@ -64,5 +64,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'Edit Aksi Alur Kerja';
 $lang["page-title_rse_workflow_edit_state"] = 'Edit Status Alur';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Edit Aksi Alur Kerja';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Edit Status Alur Kerja';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'Atur Plugin Alur Kerja';

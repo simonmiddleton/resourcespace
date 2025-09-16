@@ -56,17 +56,17 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
 
 <!--Resource Panel -->    
 <div
-    class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo $display == 'xlthumbs' ? 'ResourcePanelLarge' : ''; ?> ArchiveState<?php echo $result[$n]['archive'];?> ResourceType<?php echo $result[$n]['resource_type']; ?>"
-    id="ResourceShell<?php echo escape($ref)?>"
+    class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo $display == 'xlthumbs' ? 'ResourcePanelLarge' : ''; ?> ArchiveState<?php echo $result[$n]['archive']; ?> ResourceType<?php echo $result[$n]['resource_type']; ?>"
+    id="ResourceShell<?php echo escape($ref); ?>"
     style="height: <?php echo (int)$thumbs_displayed_fields_height; ?>px;">
 
     <?php hook("resourcethumbtop"); ?>
 
     <a
         class="<?php echo $display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper'; ?>"
-        href="<?php echo $url?>"  
+        href="<?php echo $url; ?>"  
         onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" 
-        title="<?php echo str_replace(array("\"","'"), "", escape($resource_view_title))?>"
+        title="<?php echo str_replace(array("\"","'"), "", escape($resource_view_title)); ?>"
     >
         <?php
         // Render preview image
@@ -191,14 +191,14 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
         ) {
             ?>
             <div
-                class="ResourcePanelInfo ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' ResourcePanelTitle' : ''?>"
-                title="<?php echo str_replace(array("\"","'"), "", escape(i18n_get_translated($value)))?>"
+                class="ResourcePanelInfo ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' ResourcePanelTitle' : ''; ?>"
+                title="<?php echo str_replace(array("\"","'"), "", escape(i18n_get_translated($value))); ?>"
             >
                 <div class="extended">
                     <?php
                     if ($x == 0) { // add link if necessary ?>
                         <a 
-                            href="<?php echo $url?>"  
+                            href="<?php echo $url; ?>"  
                             onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" 
                         >
                         <?php
@@ -217,13 +217,13 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
         } elseif ((isset($metadata_template_title_field) && $df[$x]['ref'] != $metadata_template_title_field) || !isset($metadata_template_title_field)) {
             ?>
             <div
-                class="ResourcePanelInfo  ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' ResourcePanelTitle' : ''?>"
+                class="ResourcePanelInfo  ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' ResourcePanelTitle' : ''; ?>"
                 title="<?php echo str_replace(array("\"","'"), "", escape(i18n_get_translated($value))); ?>"
             >
                 <?php
                 if ($x == 0) { // add link if necessary ?>
                     <a 
-                        href="<?php echo $url?>"  
+                        href="<?php echo $url; ?>"  
                         onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" 
                     >
                     <?php
@@ -257,7 +257,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
                 }
             }
         if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
-            <?php echo strtoupper(escape($result[$n]['file_extension'])) ?>
+            <?php echo strtoupper(escape($result[$n]['file_extension'])); ?>
             <?php
         }
         echo '</div>';
@@ -266,11 +266,11 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
             if (!in_array($result[$n]['resource_type'], $collection_block_restypes)) { ?>
                 <input 
                     type="checkbox" 
-                    id="check<?php echo escape($ref)?>" 
+                    id="check<?php echo escape($ref); ?>" 
                     class="checkselect checkselectmedium"
                     title="<?php echo escape($lang['action-selectresource'] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>"
                     data-resource="<?php echo escape($result[$n]["ref"]); ?>"
-                    aria-label="<?php echo escape($lang["action-selectresource"])?>"
+                    aria-label="<?php echo escape($lang["action-selectresource"]); ?>"
                     <?php
                     echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}");
 

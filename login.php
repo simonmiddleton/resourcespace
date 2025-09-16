@@ -14,7 +14,7 @@ $modal = getval("modal", "");
 if ($modal || getval("ajax", "") != "") {
     # add the capslock lib because there's no header
     ?>
-    <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
+    <script type="text/javascript" src="<?php echo $baseurl; ?>/lib/js/jquery.capslockstate.js"></script>
     <?php
 }
 
@@ -104,7 +104,7 @@ if ($lockouts > 0 || $ulockouts > 0) {
         } else {
             ?>
             <script type="text/javascript">
-                CentralSpaceLoad('<?php echo $baseurl . "/" . escape($redirect_url)?>',true);
+                CentralSpaceLoad('<?php echo $baseurl . "/" . escape($redirect_url); ?>',true);
             </script>
             <?php
         }
@@ -181,7 +181,7 @@ include "include/login_background.php";
 <form
     id="loginform"
     method="post"
-    action="<?php echo $baseurl_short?>login.php"<?php
+    action="<?php echo $baseurl_short; ?>login.php"<?php
         echo $autocomplete_attr;
     if ($modal) {
         ?>
@@ -190,22 +190,22 @@ include "include/login_background.php";
     } ?>
 >
     <input type="hidden" name="langupdate" id="langupdate" value="">  
-    <input type="hidden" name="url" value="<?php echo escape($url)?>">
+    <input type="hidden" name="url" value="<?php echo escape($url); ?>">
     <input type="hidden" name="modal" value="<?php echo $modal == "true" ? "true" : ""; ?>">
 
     <?php $header_img_src = get_header_image(for_login: true); ?>
     <div id="LoginHeader">
-        <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname ?>">
+        <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname; ?>">
     </div>
 
-    <h1><?php echo text("welcomelogin")?></h1>
+    <h1><?php echo text("welcomelogin"); ?></h1>
 
     <p class="ExternalLoginLinks">
-        <?php hook("loginformlink") ?> 
+        <?php hook("loginformlink"); ?> 
     </p>
 
     <?php if ($error != "") { ?>
-        <div class="FormIncorrect" id="LoginError" tabindex="-1"><?php echo strip_tags_and_attributes($error) ?></div>
+        <div class="FormIncorrect" id="LoginError" tabindex="-1"><?php echo strip_tags_and_attributes($error); ?></div>
         <script>window.onload = function() { document.getElementById("LoginError").focus(); }</script>
     <?php }?>
 
@@ -226,7 +226,7 @@ include "include/login_background.php";
     <?php if ($allow_keep_logged_in) { ?>
         <div class="Question KeepLoggedIn">
             <label for="remember"><?php echo escape($lang["keepmeloggedin"]); ?></label>
-            <input name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
+            <input name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : ""; ?>>
             <div class="clearer"> </div>
         </div>
     <?php } ?>
@@ -237,14 +237,14 @@ include "include/login_background.php";
 
     <p class="LoginLinks">
         <?php if ($allow_account_request) { ?>
-            <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php">
+            <a id="account_apply" href="<?php echo $baseurl_short; ?>pages/user_request.php">
                 <i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo escape($lang["nopassword"]); ?>
             </a>
         <?php }
 
         if ($allow_password_reset) { ?>
             <br/>
-            <a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php">
+            <a id="account_pw_reset" href="<?php echo $baseurl_short; ?>pages/user_password.php">
                 <i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo escape($lang["forgottenpassword"]); ?>
             </a>
             <?php
@@ -334,9 +334,9 @@ include "include/login_background.php";
 
     /* Responsive Stylesheet inclusion based upon viewing device */
     if (document.createStyleSheet) {
-        document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
+        document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
     } else {
-        jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+        jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
     }
 
     if (!is_touch_device() && jQuery(window).width() <= 1280) {

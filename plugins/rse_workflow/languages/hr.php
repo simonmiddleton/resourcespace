@@ -64,5 +64,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'Uredi akciju radnog toka';
 $lang["page-title_rse_workflow_edit_state"] = 'Uredi stanje radnog toka';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Uredi akcije radnog toka';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Uredi stanje radnog toka';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'Postavljanje dodatka za radni tijek';

@@ -22,7 +22,7 @@ function renderBrowseItem(node, parent)
    
     if(node.expandable != "false")
         {
-        var expand = "<div class='BrowseBarStructure BrowseBarExpand'><a href='#' class='browse_expand browse_closed' onclick='toggleBrowseElements(\"%BROWSE_ID%\", false, true);return false;' alt='<?php echo escape($lang["expand"]) ?>'></a></div>";
+        var expand = "<div class='BrowseBarStructure BrowseBarExpand'><a href='#' class='browse_expand browse_closed' onclick='toggleBrowseElements(\"%BROWSE_ID%\", false, true);return false;' alt='<?php echo escape($lang["expand"]); ?>'></a></div>";
         expand = expand.replace("%BROWSE_ID%",node.id);        
         }
     else
@@ -173,7 +173,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
             .find("a.browse_expand")
             .removeClass("browse_expanded")
             .addClass("browse_closed")
-            .attr("alt", "<?php echo escape($lang["expand"]) ?>");
+            .attr("alt", "<?php echo escape($lang["expand"]); ?>");
         
         jQuery(".BrowseBarItem[data-browse-parent|='" + browse_id + "']").removeClass("BrowseOpen").attr("data-browse-status","closed").slideUp("fast",function() {
             browse_clicked = false;
@@ -182,7 +182,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
         
         openclose.removeClass("browse_expanded");
         openclose.addClass("browse_closed");
-        openclose.attr('alt',"<?php echo escape($lang["expand"]) ?>");
+        openclose.attr('alt',"<?php echo escape($lang["expand"]); ?>");
         curel.attr("data-browse-status","closed");
         curel.removeClass("BrowseOpen");
 
@@ -204,7 +204,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
             });
         openclose.removeClass("browse_closed");
         openclose.addClass("browse_expanded");
-        openclose.attr('alt',"<?php echo escape($lang["close"]) ?>");
+        openclose.attr('alt',"<?php echo escape($lang["close"]); ?>");
         curel.attr("data-browse-status","open");
         curel.addClass("BrowseOpen");
         browseopen.push(browse_id);
@@ -265,7 +265,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
 
             openclose.removeClass("browse_closed");
             openclose.addClass("browse_expanded");
-            openclose.attr('alt',"<?php echo escape($lang["close"]) ?>");
+            openclose.attr('alt',"<?php echo escape($lang["close"]); ?>");
             curel.addClass("BrowseOpen");
             refreshicon.removeClass("fa-spin");
 
@@ -386,7 +386,7 @@ function BrowseBarInit()
                         {
                         styledalert('<?php echo escape($lang['error']); ?>','<?php echo escape($lang['error-invalid_resource_type']); ?>');
                         browse_err = document.createElement( "div" ),
-                        jQuery(browse_err).html('<?php echo escape($lang["save-error"]) ?>');
+                        jQuery(browse_err).html('<?php echo escape($lang["save-error"]); ?>');
                         jQuery(browsetarget).append(browse_err);
                         jQuery(browse_err).fadeOut('slow');
                         }

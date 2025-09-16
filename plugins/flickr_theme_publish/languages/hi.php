@@ -60,4 +60,4 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'फ्लि
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr प्रकाशित करें';
 $lang["page-title_flickr_theme_publish_setup"] = 'फ्लिकर प्लगइन सेटअप करें';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'फ्लिकर सिंक - प्रगति';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flcikr Sync';
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

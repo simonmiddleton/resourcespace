@@ -62,5 +62,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'แก้ไขการดำ�
 $lang["page-title_rse_workflow_edit_state"] = 'แก้ไขสถานะการทำงาน';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'แก้ไขการดำเนินการของเวิร์กโฟลว์';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'แก้ไขสถานะการทำงาน';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'ตั้งค่าปลั๊กอินเวิร์กโฟลว์';

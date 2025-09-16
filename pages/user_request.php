@@ -122,13 +122,13 @@ include "../include/login_background.php";
 ?>
 
 <h1><?php echo escape($lang["requestuserlogin"]); ?></h1>
-<p><?php echo text("introtext")?></p>
+<p><?php echo text("introtext"); ?></p>
 
 <form method="post" id='mainform' action="<?php echo $baseurl_short?>pages/user_request.php">  
     <?php
     if ($error) {
         ?>
-        <div class="FormError" tabindex="-1"><?php echo $error . ' ' . $error_extra?></div>
+        <div class="FormError" tabindex="-1"><?php echo escape($error . ' ' . $error_extra); ?></div>
         <script>window.onload = function() { document.getElementById("FormError").focus(); }</script>
         <?php
     }
@@ -142,13 +142,13 @@ include "../include/login_background.php";
 
     <div class="Question">
         <label for="name"><?php echo escape($lang["yourname"]); ?> <sup>*</sup></label>
-        <input type=text name="name" id="name" class="stdwidth" value="<?php echo $name ?>" required>
+        <input type=text name="name" id="name" class="stdwidth" value="<?php echo escape($name); ?>" required>
         <div class="clearerleft"></div>
     </div>
 
     <div class="Question">
         <label for="email"><?php echo escape($lang["youremailaddress"]); ?> <sup>*</sup></label>
-        <input type=text name="email" id="email" class="stdwidth" value="<?php echo $email ?>" required>
+        <input type=text name="email" id="email" class="stdwidth" value="<?php echo escape($email); ?>" required>
         <div class="clearerleft"></div>
     </div>
 
@@ -181,25 +181,25 @@ include "../include/login_background.php";
                 }
             } else {
                 ?>
-                <div class="Question" id="Question<?php echo $n?>">
-                    <label for="custom<?php echo $n?>"><?php echo escape(i18n_get_translated($custom[$n])); ?>
+                <div class="Question" id="Question<?php echo $n; ?>">
+                    <label for="custom<?php echo $n; ?>"><?php echo escape(i18n_get_translated($custom[$n])); ?>
                         <?php if (isset($required) && in_array($custom[$n], $required)) { ?>
                             <sup>*</sup>
                         <?php } ?>
                     </label>
 
                     <?php if ($type == 1) {  # Normal text box ?>
-                        <input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo escape(getval("custom" . $n, ""))?>">
+                        <input type=text name="custom<?php echo $n; ?>" id="custom<?php echo $n; ?>" class="stdwidth" value="<?php echo escape(getval("custom" . $n, "")); ?>">
                     <?php }
 
                     if ($type == 2) { # Large text box ?>
-                        <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo escape(getval("custom" . $n, ""))?></textarea>
+                        <textarea name="custom<?php echo $n; ?>" id="custom<?php echo $n; ?>" class="stdwidth" rows="5"><?php echo escape(getval("custom" . $n, "")); ?></textarea>
                     <?php }
 
                     if ($type == 3) { # Drop down box ?>
-                        <select name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth">
+                        <select name="custom<?php echo $n; ?>" id="custom<?php echo $n; ?>" class="stdwidth">
                             <?php foreach ($custom_registration_options[$custom[$n]] as $option) { ?>
-                                <option><?php echo escape(i18n_get_translated($option));?></option>
+                                <option><?php echo escape(i18n_get_translated($option)); ?></option>
                             <?php } ?>
                         </select>
                     <?php }
@@ -229,10 +229,10 @@ include "../include/login_background.php";
                                         ?>
                                         <tr>
                                             <td>
-                                                <input name="<?php echo $option_field_name; ?>" id="<?php echo $option_field_name; ?>" type="checkbox" <?php echo $option_checked ? ' checked="checked"' : ''; ?> value="<?php echo $option_label; ?>"></input>
+                                                <input name="<?php echo escape($option_field_name); ?>" id="<?php echo escape($option_field_name); ?>" type="checkbox" <?php echo $option_checked ? ' checked="checked"' : ''; ?> value="<?php echo escape($option_label); ?>"></input>
                                             </td>
                                             <td>
-                                                <label for="<?php echo $option_field_name; ?>" class="InnerLabel"><?php echo $option_label;?></label>                                               
+                                                <label for="<?php echo escape($option_field_name); ?>" class="InnerLabel"><?php echo escape($option_label); ?></label>
                                             </td>
                                         </tr>
                                         <?php
@@ -261,7 +261,7 @@ include "../include/login_background.php";
                 <option value></option>
                 <?php for ($n = 0; $n < count($groups); $n++) { ?>
                     <option
-                        value="<?php echo $groups[$n]["ref"]; ?>"
+                        value="<?php echo (int) $groups[$n]["ref"]; ?>"
                         <?php if ($groups[$n]["ref"] == getval("usergroup", 0, true)) { ?>
                             selected
                         <?php } ?>
@@ -281,7 +281,7 @@ include "../include/login_background.php";
 
     <div class="Question">
         <label for="userrequestcomment"><?php echo escape($lang["userrequestcomment"]); ?></label>
-        <textarea name="userrequestcomment" id="userrequestcomment" class="stdwidth"><?php echo $userrequestcomment ?></textarea>
+        <textarea name="userrequestcomment" id="userrequestcomment" class="stdwidth"><?php echo escape($userrequestcomment); ?></textarea>
         <div class="clearerleft"></div>
     </div>
 

@@ -64,5 +64,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'Редактировать де�
 $lang["page-title_rse_workflow_edit_state"] = 'Редактировать состояние рабочего процесса';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Редактировать действия рабочего процесса';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Редактировать состояния рабочего процесса';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'Настройка плагина рабочего процесса';

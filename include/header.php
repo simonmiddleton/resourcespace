@@ -50,9 +50,9 @@ if ($ajax == "") {
 $page_title = get_page_title($pagename, pluginname());
     ?>
     <!DOCTYPE html>
-    <html lang="<?php echo $language ?>">   
+    <html lang="<?php echo $language; ?>">   
     <!--
-    ResourceSpace version <?php echo $productversion?>
+    ResourceSpace version <?php echo $productversion; ?>
     For copyright and license information see /documentation/licenses/resourcespace.txt
     https://www.resourcespace.com
     -->
@@ -65,7 +65,7 @@ $page_title = get_page_title($pagename, pluginname());
             <meta name="robots" content="noindex,nofollow">
         <?php } ?>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="pagename" content="<?php echo $pagename; ?>" />
+        <meta name="pagename" content="<?php echo escape($pagename); ?>" />
         <meta name="pluginname" content="<?php echo escape(pluginname()); ?>" />
         <?php hook('extra_meta'); ?>
 
@@ -75,41 +75,41 @@ $page_title = get_page_title($pagename, pluginname());
 
         <!-- Load jQuery and jQueryUI -->
         <script src="<?php echo $baseurl . $jquery_path; ?>?css_reload_key=<?php echo $css_reload_key; ?>"></script>
-        <script src="<?php echo $baseurl . $jquery_ui_path?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
-        <script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js?css_reload_key=<?php echo $css_reload_key?>"></script>
-        <link type="text/css" href="<?php echo $baseurl?>/css/smoothness/jquery-ui.min.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
-        <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
+        <script src="<?php echo $baseurl . $jquery_ui_path; ?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
+        <script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+        <link type="text/css" href="<?php echo $baseurl; ?>/css/smoothness/jquery-ui.min.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" />
+        <script src="<?php echo $baseurl; ?>/lib/js/jquery.ui.touch-punch.min.js"></script>
 
         <?php if ($pagename == "login") { ?>
-            <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
+            <script type="text/javascript" src="<?php echo $baseurl; ?>/lib/js/jquery.capslockstate.js"></script>
         <?php } ?>
 
-        <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.tshift.min.js"></script>
-        <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery-periodical-updater.js"></script>
+        <script type="text/javascript" src="<?php echo $baseurl; ?>/lib/js/jquery.tshift.min.js"></script>
+        <script type="text/javascript" src="<?php echo $baseurl; ?>/lib/js/jquery-periodical-updater.js"></script>
 
-        <script type="text/javascript">StaticSlideshowImage=<?php echo $static_slideshow_image ? "true" : "false";?>;</script>
-        <script type="text/javascript" src="<?php echo $baseurl?>/js/slideshow_big.js?css_reload_key=<?php echo $css_reload_key?>"></script>
+        <script type="text/javascript">StaticSlideshowImage=<?php echo $static_slideshow_image ? "true" : "false"; ?>;</script>
+        <script type="text/javascript" src="<?php echo $baseurl; ?>/js/slideshow_big.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
         <?php if ($contact_sheet) { ?>
-            <script type="text/javascript" src="<?php echo $baseurl?>/js/contactsheet.js"></script>
-            <script>contactsheet_previewimage_prefix = '<?php echo escape($storageurl)?>';</script>
+            <script type="text/javascript" src="<?php echo $baseurl; ?>/js/contactsheet.js"></script>
+            <script>contactsheet_previewimage_prefix = '<?php echo escape($storageurl); ?>';</script>
             <script type="text/javascript">jQuery.noConflict();</script>
         <?php } ?>
 
         <script type="text/javascript">
             var ProcessingCSRF=<?php echo generate_csrf_js_object('processing'); ?>;
-            var ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
+            var ajaxLoadingTimer=<?php echo $ajax_loading_timer; ?>;
         </script>
 
-        <script src="<?php echo $baseurl;?>/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
+        <script src="<?php echo $baseurl; ?>/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
         <script src="<?php echo $baseurl; ?>/lib/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
 
         <!--  UPPY -->
-        <script type="text/javascript" src="<?php echo $baseurl_short;?>lib/js/uppy.js?<?php echo $css_reload_key;?>"></script>
-        <link rel="stylesheet" href="<?php echo $baseurl?>/css/uppy.min.css?css_reload_key=<?php echo $css_reload_key?>">
+        <script type="text/javascript" src="<?php echo $baseurl_short;?>lib/js/uppy.js?<?php echo $css_reload_key; ?>"></script>
+        <link rel="stylesheet" href="<?php echo $baseurl; ?>/css/uppy.min.css?css_reload_key=<?php echo $css_reload_key; ?>">
 
         <?php if ($keyboard_navigation_video_search || $keyboard_navigation_video_view || $keyboard_navigation_video_preview) { ?>
-            <script type="text/javascript" src="<?php echo $baseurl_short?>js/videojs-extras.js?<?php echo $css_reload_key?>"></script>
+            <script type="text/javascript" src="<?php echo $baseurl_short?>js/videojs-extras.js?<?php echo $css_reload_key; ?>"></script>
             <?php
         }
 
@@ -136,7 +136,7 @@ $page_title = get_page_title($pagename, pluginname());
 
         <!-- toastify-js -->
         <script src="<?php echo $baseurl; ?>/lib/toastify-js/src/toastify.js"></script>
-        <link type="text/css" href="<?php echo $baseurl?>/lib/toastify-js/src/toastify.css" rel="stylesheet" />
+        <link type="text/css" href="<?php echo $baseurl; ?>/lib/toastify-js/src/toastify.css" rel="stylesheet" />
 
         <?php
         global $not_authenticated_pages;
@@ -149,27 +149,27 @@ $page_title = get_page_title($pagename, pluginname());
         $browse_on = has_browsebar();
         if ($browse_on) {
             ?>
-            <script src="<?php echo $baseurl_short ?>js/browsebar_js.php" type="text/javascript"></script>
+            <script src="<?php echo $baseurl_short; ?>js/browsebar_js.php" type="text/javascript"></script>
             <?php
         }
         $selected_search_tab = getval("selected_search_tab", "");
         ?>
 
         <script type="text/javascript">
-            var baseurl_short="<?php echo $baseurl_short?>";
-            var baseurl="<?php echo $baseurl?>";
-            var pagename="<?php echo $pagename?>";
-            var errorpageload = "<h1><?php echo escape($lang["error"]) ?></h1><p><?php echo escape(str_replace(array("\r","\n"), '', nl2br($lang["error-pageload"]))) ?></p>";
-            var errortext = "<?php echo escape($lang["error"]) ?>";
-            var applicationname = "<?php echo $applicationname?>";
-            var pagetitle = "<?php echo escape($page_title) ?>";
-            var plugintitle = "<?php echo escape(pluginname()) ?>";
+            var baseurl_short="<?php echo $baseurl_short; ?>";
+            var baseurl="<?php echo $baseurl; ?>";
+            var pagename="<?php echo $pagename; ?>";
+            var errorpageload = "<h1><?php echo escape($lang["error"]); ?></h1><p><?php echo escape(str_replace(array("\r","\n"), '', nl2br($lang["error-pageload"]))); ?></p>";
+            var errortext = "<?php echo escape($lang["error"]); ?>";
+            var applicationname = "<?php echo $applicationname; ?>";
+            var pagetitle = "<?php echo escape($page_title); ?>";
+            var plugintitle = "<?php echo escape(pluginname()); ?>";
             var branch_limit=false;
             var branch_limit_field = new Array();
             var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
-            var TileNav = <?php echo $tilenav ? "true" : "false" ?>;
-            var errornotloggedin = '<?php echo escape($lang["error_not_logged_in"]) ?>';
-            var login = '<?php echo escape($lang["login"]) ?>';
+            var TileNav = <?php echo $tilenav ? "true" : "false"; ?>;
+            var errornotloggedin = '<?php echo escape($lang["error_not_logged_in"]); ?>';
+            var login = '<?php echo escape($lang["login"]); ?>';
             <?php echo "global_trash_html += '" . render_trash("trash", "", true) . "';\n"; ?>
             oktext="<?php echo escape($lang["ok"]) ?>";
             var scrolltopElementCentral='.ui-layout-center';
@@ -184,9 +184,9 @@ $page_title = get_page_title($pagename, pluginname());
 
         </script>
 
-        <script src="<?php echo $baseurl_short ?>js/blurhash.js" type="module"></script>
-        <script src="<?php echo $baseurl_short?>js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
-        <script src="<?php echo $baseurl_short?>lib/js/polyfills.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+        <script src="<?php echo $baseurl_short; ?>js/blurhash.js" type="module"></script>
+        <script src="<?php echo $baseurl_short; ?>js/global.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
+        <script src="<?php echo $baseurl_short; ?>lib/js/polyfills.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
         <?php
         if ($keyboard_navigation) {
@@ -200,20 +200,20 @@ $page_title = get_page_title($pagename, pluginname());
         ?>
 
         <!-- Structure Stylesheet -->
-        <link href="<?php echo $baseurl?>/css/global.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+        <link href="<?php echo $baseurl; ?>/css/global.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
         <!-- Colour stylesheet -->
-        <link href="<?php echo $baseurl?>/css/light.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+        <link href="<?php echo $baseurl; ?>/css/light.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
         <!-- Override stylesheet -->
-        <link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo escape($k); ?>&css_reload_key=<?php echo $css_reload_key?>&noauth=<?php echo $noauth_page; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+        <link href="<?php echo $baseurl; ?>/css/css_override.php?k=<?php echo escape($k); ?>&css_reload_key=<?php echo $css_reload_key; ?>&noauth=<?php echo $noauth_page; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
         <!--- FontAwesome for icons-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
+        <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key; ?>">
+        <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key; ?>">
         <!-- Load specified font CSS -->
         <?php if (!isset($custom_font) || $custom_font == '') { ?>
-            <link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
+            <link id="global_font_link" href="<?php echo $baseurl; ?>/css/fonts/<?php echo $global_font; ?>.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" />
         <?php } ?>
         <!-- Web app manifest -->
-        <link rel="manifest" href="<?php echo $baseurl . escape($web_app_manifest_location) ?>">
+        <link rel="manifest" href="<?php echo $baseurl . escape($web_app_manifest_location); ?>">
 
         <?php
         if (!$disable_geocoding) {
@@ -227,7 +227,7 @@ $page_title = get_page_title($pagename, pluginname());
             <?php
             if ($geo_leaflet_maps_sources) { ?>
                 <!--Leaflet Providers v1.10.2 plugin files-->
-                <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js"></script>
+                <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js"></script>
                 <?php
             } else {
                 header_add_map_providers();
@@ -236,40 +236,40 @@ $page_title = get_page_title($pagename, pluginname());
 
             <!--Leaflet PouchDBCached v1.0.0 plugin file with PouchDB v7.1.1 file-->
             <?php if ($map_default_cache || $map_layer_cache) { ?>
-                <script src="<?php echo $baseurl?>/lib/leaflet_plugins/pouchdb-7.1.1/pouchdb-7.1.1.min.js"></script>
-                <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-PouchDBCached-1.0.0/L.TileLayer.PouchDBCached.min.js"></script>
+                <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/pouchdb-7.1.1/pouchdb-7.1.1.min.js"></script>
+                <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-PouchDBCached-1.0.0/L.TileLayer.PouchDBCached.min.js"></script>
             <?php } ?>
 
             <!--Leaflet MarkerCluster v1.4.1 plugin files-->
-            <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.css"/>
-            <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.Default.css"/>
+            <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.css"/>
+            <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.Default.css"/>
 
             <!--Leaflet ColorMarkers v1.0.0 plugin file-->
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-colormarkers-1.0.0/js/leaflet-color-markers.js"></script>
+            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-colormarkers-1.0.0/js/leaflet-color-markers.js"></script>
 
             <!--Leaflet NavBar v1.0.1 plugin files-->
-            <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script>
+            <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
+            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script>
 
             <!--Leaflet Omnivore v0.3.1 plugin file-->
             <?php if ($map_kml) { ?>
-                <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script>
+                <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script>
             <?php } ?>
 
             <!--Leaflet EasyPrint v2.1.9 plugin file-->
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
+            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
 
             <!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
-            <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
+            <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
+            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
 
             <!--Leaflet Zoomslider v0.7.1 plugin files-->
-            <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.css"/>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.min.js"></script>
+            <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.css"/>
+            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.min.js"></script>
 
             <!--Leaflet Shades v1.0.2 plugin files-->
-            <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css"/>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js"></script>
+            <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css"/>
+            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js"></script>
 
             <?php
         }
@@ -338,13 +338,13 @@ $page_title = get_page_title($pagename, pluginname());
 
                     if ($header_link && ($k == "" || $internal_share_access)) { ?>
                         <a href="<?php echo $linkUrl; ?>" onclick="return CentralSpaceLoad(this,true);" class="HeaderImgLink">
-                            <img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>">
+                            <img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname; ?>">
                         </a>
                         <?php
                     } else {
                         ?>
                         <div class="HeaderImgLink">
-                            <img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>">
+                            <img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname; ?>">
                         </div>
                         <?php
                     }
@@ -407,7 +407,7 @@ $page_title = get_page_title($pagename, pluginname());
                                 ?>
                                 <ul>
                                     <li>
-                                        <a href="<?php echo $baseurl?>/login.php"><?php echo escape($lang["login"]); ?></a>
+                                        <a href="<?php echo $baseurl; ?>/login.php"><?php echo escape($lang["login"]); ?></a>
                                     </li>
                                     <?php
                                     hook("addtoplinksanon");
@@ -415,7 +415,7 @@ $page_title = get_page_title($pagename, pluginname());
                                     if ($contact_link) {
                                         ?>
                                         <li>
-                                            <a href="<?php echo $baseurl?>/pages/contact.php" onclick="return CentralSpaceLoad(this,true);">
+                                            <a href="<?php echo $baseurl; ?>/pages/contact.php" onclick="return CentralSpaceLoad(this,true);">
                                                 <?php echo escape($lang["contactus"]); ?>
                                             </a>
                                         </li>
@@ -439,7 +439,7 @@ $page_title = get_page_title($pagename, pluginname());
                                     $topuploadurl = get_upload_url("", $k);
                                     ?>
                                     <li class="HeaderLink UploadButton">
-                                        <a href="<?php echo $topuploadurl ?>" onclick="return CentralSpaceLoad(this,true);">
+                                        <a href="<?php echo $topuploadurl; ?>" onclick="return CentralSpaceLoad(this,true);">
                                             <?php echo UPLOAD_ICON . escape($lang["upload"]); ?>
                                         </a>
                                     </li>
@@ -460,7 +460,7 @@ $page_title = get_page_title($pagename, pluginname());
                                         if (isset($header_include_username) && $header_include_username) {
                                             if ($user_profile_image != "") {
                                                 ?>
-                                                <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> &nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname) ?>
+                                                <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> &nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname); ?>
                                                 <?php
                                             } else {
                                                 ?>
@@ -487,7 +487,7 @@ $page_title = get_page_title($pagename, pluginname());
                                 <!-- Admin menu link -->
                                 <?php if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
                                     <li>
-                                        <a href="<?php echo $baseurl?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
+                                        <a href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
                                             <i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
                                             <?php
                                             if (!$actions_on && (checkperm("R") || checkperm("r"))) {
@@ -495,7 +495,7 @@ $page_title = get_page_title($pagename, pluginname());
                                                 $pending = ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion", array(), 0);
                                                 ?>
                                                 <span id="TeamMessages" class="Pill" <?php echo $pending > 0 ? 'data-value="' . $pending . '"' : 'style="display:none"'?>>
-                                                    <?php echo $pending > 0 ? $pending : '' ?>
+                                                    <?php echo $pending > 0 ? $pending : ''; ?>
                                                 </span>
                                                 <?php
                                             } else {
@@ -621,8 +621,8 @@ if (!$disable_geocoding) {
 
 <script>
     // Set some vars for this page to enable/disable functionality
-    linkreload = <?php echo ($k != "" || $internal_share_access) ? "false" : "true" ?>;
-    b_progressmsgs = <?php echo $noauth_page ? "false" : "true" ?>;
+    linkreload = <?php echo ($k != "" || $internal_share_access) ? "false" : "true"; ?>;
+    b_progressmsgs = <?php echo $noauth_page ? "false" : "true"; ?>;
 
     jQuery(document).ready(function() {
         ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
