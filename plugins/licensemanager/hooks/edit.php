@@ -74,7 +74,7 @@ function HookLicensemanagerEditEndofmetadataaddcustomfield()
     }    
 }
 
-function HookLicensemanagerEditAftersaveresourcedata(int $ref): bool|array
+function HookLicensemanagerEditAftersaveresourcedata(int|array $ref): bool|array
 {
     global $license_attach_upload, $multiple, $upload_review_mode;
 

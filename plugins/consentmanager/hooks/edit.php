@@ -73,7 +73,7 @@ function HookConsentmanagerEditEndofmetadataaddcustomfield()
     }    
 }
 
-function HookConsentmanagerEditAftersaveresourcedata(int $ref): bool|array 
+function HookConsentmanagerEditAftersaveresourcedata(int|array $ref): bool|array 
 {
     global $consent_attach_upload, $multiple, $upload_review_mode;
 
