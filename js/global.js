@@ -1116,9 +1116,9 @@ function toastNotification(type, text) {
     let closeButton = false;
     let icon = "check";
 
-    if (type == "download") {
+    if (type == "Download") {
         icon = "download";
-    } else if (type == "error") {
+    } else if (type == "Error") {
         displayTime = 10000;
         closeButton = true;
         icon = "triangle-exclamation";

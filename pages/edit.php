@@ -2640,7 +2640,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
         <?php
         foreach ($save_errors as $save_error) {
             ?>
-            toastNotification('error', '<?php echo escape($save_error); ?>');
+            toastNotification('Error', '<?php echo escape($save_error); ?>');
             <?php
         }
         ?>
