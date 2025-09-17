@@ -1,62 +1,78 @@
 <?php
 
-# Simple syntax check of pages
 command_line_only();
 
+$php_path = "/usr/bin/php"; // or detect dynamically
 
-$TestPage = function ($page) {
-    global $php_path;
-    if (!isset($php_path)) {
-        $php_path = "/usr/bin";
-    } # fair assumption, if not specifically set; means it will work on many systems
-
-    # Run PHP in lint mode against the file.
-    $result = exec("cd " . escapeshellarg(dirname($page)) . ";" . $php_path . "/php -l " . escapeshellarg(basename($page)));
-    return strpos($result, "No syntax errors") !== false;
-};
-
-$exclude_paths = array(
-    "/lib/",
-    "/filestore/",
-    "/vendor/",
-    "rector.php"
-);
+// Collect files
+$exclude_paths = ["/lib/", "/filestore/", "/vendor/", "rector.php"];
 $Directory = new RecursiveDirectoryIterator(__DIR__ . "/../../");
-$Iterator = new RecursiveIteratorIterator($Directory);
+$Iterator  = new RecursiveIteratorIterator($Directory);
+
+$pages = [];
 foreach ($Iterator as $i) {
     if ($i->getExtension() !== "php") {
         continue;
     }
-
-    $path = $i->getPathName();
-
+    $path = $i->getPathname();
     foreach ($exclude_paths as $ex_path) {
         if (strpos($path, $ex_path) !== false) {
             continue 2;
         }
     }
-
     $pages[] = $path;
 }
 
+$total   = count($pages);
 $counter = 0;
-# Test each page.
-$shown_percent = -1;
-foreach ($pages as $page) {
-    $new_percent = round($counter * 100 / count($pages));
-    if ($new_percent != $shown_percent) {
-        echo "\e[4D" . str_pad($new_percent, "3", " ", STR_PAD_LEFT) . "%";
-        ob_flush();
-        $shown_percent = $new_percent;
-    }
-    if (!$TestPage($page)) {
-        echo $page;
-        return false;
-    }
-    $counter++;
+$shown   = -1;
+
+// Number of parallel workers
+$parallel = 8; // tweak to CPU cores
+
+// Split into chunks
+$chunks = array_chunk($pages, ceil($total / $parallel));
+
+$pipes = [];
+$procs = [];
+foreach ($chunks as $chunk) {
+    $cmd = $php_path . ' -l ' . implode(' ', array_map('escapeshellarg', $chunk));
+    $procs[] = proc_open($cmd, [["pipe", "r"], ["pipe", "w"], ["pipe", "w"]], $pipes[]);
 }
-    echo "\e[4D    ";
-// Teardown
-unset($TestPage);
+
+$errors = [];
+foreach ($procs as $idx => $proc) {
+    if (is_resource($proc)) {
+        $stdout = stream_get_contents($pipes[$idx][1]);
+        $stderr = stream_get_contents($pipes[$idx][2]);
+        fclose($pipes[$idx][1]);
+        fclose($pipes[$idx][2]);
+
+        proc_close($proc);
+
+        // Progress update (fake-percentage from chunks)
+        $counter += count($chunks[$idx]);
+        $percent = round($counter * 100 / $total);
+        if ($percent !== $shown) {
+            echo "\e[4D" . str_pad($percent, 3, " ", STR_PAD_LEFT) . "%";
+            ob_flush();
+            $shown = $percent;
+        }
+
+        // Capture errors
+        foreach (explode("\n", $stdout . $stderr) as $line) {
+            if ($line && strpos($line, "No syntax errors") === false) {
+                $errors[] = $line;
+            }
+        }
+    }
+}
+
+echo "\e[4D    \n";
+
+if ($errors) {
+    echo "Syntax errors found:\n" . implode("\n", $errors) . "\n";
+    return false;
+}
 
 return true;
