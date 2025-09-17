@@ -7219,6 +7219,10 @@ function render_resource_view_image(array $resource, array $context)
     hook('previewextras'); ?>
         
     <?php
+    if (is_null($resource['preview_tweaks'])) {
+        $GLOBALS["image_preview_zoom"] = false;
+    }
+
     if($validimage)
         {
         if ($GLOBALS["image_preview_zoom"])
