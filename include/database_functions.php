@@ -868,6 +868,8 @@ function CheckDBStruct($path, $verbose = false)
         }
     }
 
+    ps_query("START TRANSACTION", [], '', -1, false);
+
     # Tables first.
     # Load existing tables list
     $ts = ps_query("show tables", [], '', -1, false);
@@ -1114,6 +1116,7 @@ function CheckDBStruct($path, $verbose = false)
             }
         }
     }
+    ps_query("COMMIT", [], '', -1, false);
 }
 
 /**
