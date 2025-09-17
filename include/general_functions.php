@@ -5907,8 +5907,8 @@ function get_favicon_url(): string
  * 
  *  @return bool returns true if a resource is using its original preview otherwise false.  
  */
-function is_original_preview ($ref) : bool {
-
+function is_original_preview(int $ref): bool
+{
     return ps_value("SELECT resource `value` FROM resource_log rl1
                 WHERE resource = ? AND type = 'up'
                 AND NOT EXISTS (SELECT * FROM resource_log rl2 
