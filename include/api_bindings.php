@@ -1567,14 +1567,29 @@ function api_delete_resources_in_collection($collection): bool
 /**
  * Exposing {@see new_user} to the API
  *
- * @param string $newuser  - username to create
+ * @param string $username  - username to create
  * @param integer $usergroup  - optional usergroup to assign
  *
- * @return boolean|integer  - id of new user or false if user already exists / permission denied, or -2 if user limit reached
+ * @return array Returns JSend data back {@see ajax_functions.php} with the ref value (id of new user or false if user
+ * already exists / permission denied, or -2 if user limit reached) and 200 HTTP status or 409 HTTP status if an issue
+ * is detected. 
  */
-function api_new_user($username, $usergroup = 0): bool|int
+function api_new_user($username, $usergroup = 0): array
 {
-    return new_user($username, $usergroup);
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
+    if ($assert_post !== []) {
+        return $assert_post;
+    }
+
+    $ref = new_user($username, $usergroup);
+    $payload = ['ref' => $ref];
+
+    if ($ref > 0) {
+        return ajax_response_ok($payload);
+    }
+
+    http_response_code(409);
+    return ajax_response_fail($payload);
 }
 
 /**
@@ -1583,9 +1598,22 @@ function api_new_user($username, $usergroup = 0): bool|int
  * @param string $ref ID of the user
  * @param string  $data Data to save in JSON format (optional, will use posted data otherwise)
  *
- * @return boolean|string True if successful or a descriptive string if there's an issue
+ * @return array Returns JSend data back {@see ajax_functions.php} and 200 HTTP status or 409 HTTP status with reason in
+ * the response
  */
-function api_save_user(int $ref, string $data): bool|string
+function api_save_user(int $ref, string $data): array
 {
-    return save_user($ref,json_decode($data, true));
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
+    if ($assert_post !== []) {
+        return $assert_post;
+    }
+
+    $save_status = save_user($ref, json_decode($data, true));
+
+    if ($save_status === true) {
+        return ajax_response_ok_no_data();
+    }
+
+    http_response_code(409);
+    return ajax_response_fail(ajax_build_message($save_status));
 }

@@ -642,8 +642,9 @@ function save_user($ref, array $data=[])
 {
     global $lang, $home_dash;
 
-    // Permissions check
-    if (!checkperm_user_edit($ref)) {return false;}
+    if (!checkperm_user_edit($ref)) {
+        return $lang['error-permissiondenied'];
+    }
 
     $current_user_data = get_user($ref);
 
@@ -1280,8 +1281,9 @@ function new_user($newuser, $usergroup = 0)
 {
     global $lang,$home_dash,$user_limit;
 
-    // Permissions check
-    if (!checkPermission_manage_users()) { return false;}
+    if (!checkPermission_manage_users() || !can_set_admin_usergroup($usergroup)) {
+        return false;
+    }
 
     # Username already exists?
     $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$newuser], 0);
@@ -3631,7 +3633,7 @@ function set_processing_message(string $message)
  */
 function can_set_admin_usergroup(?int $new_usergroup): bool
 {
-    if (is_null($new_usergroup)) {
+    if ($new_usergroup == 0) {
         # No usergroup supplied e.g. when creating new user account.
         return true;
     }
