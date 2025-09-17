@@ -35,10 +35,23 @@ $chunks = array_chunk($pages, ceil($total / $parallel));
 
 $pipes = [];
 $procs = [];
+
 foreach ($chunks as $chunk) {
     $cmd = $php_path . ' -l ' . implode(' ', array_map('escapeshellarg', $chunk));
-    $procs[] = proc_open($cmd, [["pipe", "r"], ["pipe", "w"], ["pipe", "w"]], $pipes[]);
+
+    $procPipes = [];
+    $proc = proc_open(
+        $cmd,
+        [["pipe", "r"], ["pipe", "w"], ["pipe", "w"]],
+        $procPipes
+    );
+
+    if (is_resource($proc)) {
+        $procs[] = $proc;
+        $pipes[] = $procPipes;
+    }
 }
+
 
 $errors = [];
 foreach ($procs as $idx => $proc) {
@@ -68,7 +81,7 @@ foreach ($procs as $idx => $proc) {
     }
 }
 
-echo "\e[4D    \n";
+echo "\e[4D    ";
 
 if ($errors) {
     echo "Syntax errors found:\n" . implode("\n", $errors) . "\n";
