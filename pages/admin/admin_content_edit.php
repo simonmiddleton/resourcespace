@@ -77,7 +77,7 @@ $language = $languagesaved;
 include "../../include/header.php";
 
 if ($save != '') {
-    toast_notification('success', $lang['saved']);
+    toast_notification(ToastNotificationType::Success, $lang['saved']);
 }
 ?>
 

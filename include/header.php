@@ -135,7 +135,7 @@ $page_title = get_page_title($pagename, pluginname());
         <script src="<?php echo $baseurl; ?>/lib/js/purify.min.js?reload_key=<?php echo (int) $css_reload_key; ?>"></script>
 
         <!-- toastify-js -->
-        <script src="<?php echo $baseurl; ?>/lib/toastify-js/src/toastify.js"></script>
+        <script src="<?php echo $baseurl; ?>/lib/toastify-js/src/toastify.js" defer></script>
         <link type="text/css" href="<?php echo $baseurl; ?>/lib/toastify-js/src/toastify.css" rel="stylesheet" />
 
         <?php

@@ -109,9 +109,9 @@ $restypedata = $restypedata[0];
 include "../../include/header.php";
 
 if (isset($saved) && $saved) {
-    toast_notification('success', $lang['saved']);
+    toast_notification(ToastNotificationType::Success, $lang['saved']);
 } elseif (isset($saved) && !$saved) {
-    toast_notification('error', $lang['error_generic']);
+    toast_notification(ToastNotificationType::Error, $lang['error_generic']);
 }
 ?>
 

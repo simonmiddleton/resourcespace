@@ -157,10 +157,10 @@ renderBreadcrumbs($links_trail);
 
 <?php
 if($errortext!="") {
-    toast_notification('error', $lang['rse_workflow_state_check_fields']);
+    toast_notification(ToastNotificationType::Error, $lang['rse_workflow_state_check_fields']);
 }
 elseif ($saved) {
-    toast_notification('success', $lang['saved']);
+    toast_notification(ToastNotificationType::Success, $lang['saved']);
 }
 
 $workflowstate_url = generateURL($baseurl_short."plugins/rse_workflow/pages/edit_state.php",["code"=>$code]);

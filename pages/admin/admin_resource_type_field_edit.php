@@ -69,9 +69,9 @@ $type_change = false;
 if (getval("save", "") != "" && getval("delete", "") == "" && enforcePostRequest(false)) {
     $saved = save_resource_type_field($ref, $fieldcolumns, $_POST);
     if ($saved) {
-        toast_notification('success', $lang['saved']);
+        toast_notification(ToastNotificationType::Success, $lang['saved']);
     } else {
-        toast_notification('error', $lang['error_generic']);
+        toast_notification(ToastNotificationType::Error, $lang['error_generic']);
     }
 }
 
@@ -119,7 +119,7 @@ if (getval("delete", "") != "" && enforcePostRequest($ajax)) {
 include "../../include/header.php";
 
 if (isset($delete_resource_type_field_error)) {
-    toast_notification('error', $result);
+    toast_notification(ToastNotificationType::Error, $result);
 }
 
 # Fetch  data

@@ -7072,11 +7072,11 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                             {
                             if ($view_in_browser)
                                 {
-                                echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . "&k=" . urlencode($k) . '" target="_blank"';
+                                echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . escape($size_info['extension']) . "&k=" . urlencode($k) . '" target="_blank"';
                                 }
                             else
                                 {
-                                echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ', this); toastNotification(\'download\', \'' . escape($lang["downloadinprogress"]) . '\');"';
+                                echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . escape($size_info['extension']) . '&k=' . urlencode($k) . '\'' . ', this); toastNotification(\'Download\', \'' . escape($lang["downloadinprogress"]) . '\');"';
                                 }
                             }
                         ?>>
@@ -7720,16 +7720,26 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
 /**
  * Adds script to display toast notification. Note: Must be included after header.php.
  *
- * @param  string  $type      Options are: 'success' or 'failure'. Determines toast notification icon.
- * @param  string  $message   Notification text to display.
+ * @param  ToastNotificationType  $type      Options are: 'success', 'error' or 'download'. Determines toast notification icon.
+ * @param  string                 $message   Notification text to display.
  */
-function toast_notification(string $type, string $message): void
+
+function toast_notification(ToastNotificationType $type, string $message): void
 {
-    $type_escaped = escape($type);
     $message_escaped = escape($message);
     ?>
     <script>
-    toastNotification(<?php echo "'{$type_escaped}', '{$message_escaped}'"; ?>);
+    toastNotification(<?php echo "'{$type->name}', '{$message_escaped}'"; ?>);
     </script>
     <?php
 }
+
+// phpcs:disable
+enum ToastNotificationType
+{
+    case Success;
+    case Failure;
+    case Download;
+    case Error;
+}
+// phpcs:enable
