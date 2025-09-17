@@ -7738,7 +7738,6 @@ function toast_notification(ToastNotificationType $type, string $message): void
 enum ToastNotificationType
 {
     case Success;
-    case Failure;
     case Download;
     case Error;
 }
