@@ -2,7 +2,7 @@
 
 command_line_only();
 
-$php_path = "/usr/bin/php"; // or detect dynamically
+$php_path = PHP_BINARY;
 
 // Collect files
 $exclude_paths = ["/lib/", "/filestore/", "/vendor/", "rector.php"];
