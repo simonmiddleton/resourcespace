@@ -64,5 +64,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'Rediger arbejdsflowhandling';
 $lang["page-title_rse_workflow_edit_state"] = 'Rediger arbejdsflowstatus';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Rediger arbejdsflowhandlinger';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Rediger arbejdsflow-tilstande';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'Opsæt Workflow Plugin';

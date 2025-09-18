@@ -63,9 +63,9 @@ $lang["offline_archive_administer_archive-tooltip"] = "Relocate archived files t
 
 $lang["page-title_offline_archive_administer_archive"]      = "Administer Archives";
 $lang["page-title_offline_archive_offline_archive_action"]  = "Offline Archive";
-$lang["page-title_offline_archive_pending_restore"]         = "Pending Resoruce Restore";
+$lang["page-title_offline_archive_pending_restore"]         = "Pending Resource Restore";
 $lang["page-title_offline_archive_restore_request"]         = "Request Resource Restore";
 $lang["page-title_offline_archive_restore"]                 = "Restore Archive";
-$lang["page-title_offline_archive_setup"]                   = "Setup  Plugin";
-$lang["page-title_offline_archive_view_archives"]           = "View Resoruce Archives";
+$lang["page-title_offline_archive_setup"]                   = "Setup Offline Archive Plugin";
+$lang["page-title_offline_archive_view_archives"]           = "View Resource Archives";
 $lang["page-title_offline_archive_view_pending"]            = "View Pending Archives";

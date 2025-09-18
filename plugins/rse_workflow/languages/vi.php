@@ -62,5 +62,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'Chỉnh sửa Hành động Quy 
 $lang["page-title_rse_workflow_edit_state"] = 'Chỉnh sửa Trạng thái Quy trình làm việc';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Chỉnh sửa Hành động Quy trình làm việc';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Chỉnh sửa Trạng thái Quy trình làm việc';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'Cài đặt Plugin Quy trình làm việc';

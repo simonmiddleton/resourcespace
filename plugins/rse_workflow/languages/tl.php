@@ -62,5 +62,5 @@ $lang["page-title_rse_workflow_edit_action"] = 'I-edit ang Aksyon ng Workflow';
 $lang["page-title_rse_workflow_edit_state"] = 'I-edit ang Estado ng Workflow';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'I-edit ang mga Aksyon ng Workflow';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'I-edit ang mga Estado ng Workflow';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Ediw Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
 $lang["page-title_rse_workflow_setup"] = 'I-set up ang Plugin ng Workflow';

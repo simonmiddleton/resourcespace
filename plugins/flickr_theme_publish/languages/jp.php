@@ -60,4 +60,4 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr公開
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickrに公開';
 $lang["page-title_flickr_theme_publish_setup"] = 'Flikrプラグインの設定';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Flickr同期 - 進行状況';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flcikr Sync';
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

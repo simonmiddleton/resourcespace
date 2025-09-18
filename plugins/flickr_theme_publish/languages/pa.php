@@ -58,4 +58,4 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr ਪ�
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr ਪ੍ਰਕਾਸ਼ਿਤ ਕਰੋ';
 $lang["page-title_flickr_theme_publish_setup"] = 'Flikr ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'ਫਲਿਕਰ ਸਿੰਕ - ਪ੍ਰਗਤੀ';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flcikr Sync';
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

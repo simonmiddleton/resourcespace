@@ -60,4 +60,4 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'نشر Flick
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'نشر في فليكر';
 $lang["page-title_flickr_theme_publish_setup"] = 'إعداد مكون إضافي لفليكر';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'مزامنة Flickr - التقدم';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flcikr Sync';
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

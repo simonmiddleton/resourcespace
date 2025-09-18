@@ -18,11 +18,11 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
             <td width="30px">
                 <input 
                     type="checkbox" 
-                    id="check<?php echo escape($ref)?>" 
+                    id="check<?php echo escape($ref); ?>" 
                     class="checkselect checkselectmedium"
-                    title="<?php echo escape($lang['action-selectresource'] . " - " . $resource_view_title) ?>"
+                    title="<?php echo escape($lang['action-selectresource'] . " - " . $resource_view_title); ?>"
                     data-resource="<?php echo escape($result[$n]["ref"]); ?>"
-                    aria-label="<?php echo escape($lang["action-selectresource"])?>"
+                    aria-label="<?php echo escape($lang["action-selectresource"]); ?>"
                     <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>
                     <?php echo (in_array($ref, $selection_collection_resources)) ? "checked" : ''; ?>
                 >
@@ -39,7 +39,7 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
     $watermark = check_use_watermark($ref);
     ?>
     <td width="40px">
-        <a href="<?php echo $url?>" onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);">
+        <a href="<?php echo $url; ?>" onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);">
             <?php
             $thumbnail = get_resource_preview($result[$n], ["col"], $access, $watermark);
 
@@ -105,7 +105,7 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
                         <?php
                         if ($x == 0) { // add link to first item only ?>
                             <a
-                                href="<?php echo $url?>" 
+                                href="<?php echo $url; ?>" 
                                 onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"
                             >
                         <?php } 

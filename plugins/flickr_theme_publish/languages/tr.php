@@ -60,4 +60,4 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr Yayı
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr Yayınla';
 $lang["page-title_flickr_theme_publish_setup"] = 'Flikr Eklentisini Kur';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Flickr Senkronizasyonu - İlerleme';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flcikr Sync';
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

@@ -60,4 +60,4 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Publicar a F
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Publicar a Flickr';
 $lang["page-title_flickr_theme_publish_setup"] = 'Configuració del plugin Flikr';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Sincronització de Flickr - Progrés';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flcikr Sync';
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

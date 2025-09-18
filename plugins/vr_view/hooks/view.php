@@ -17,7 +17,7 @@ function HookVr_viewViewaftergetresourcedataview($ref,$resource)
     return false;
     }
     
-function HookVr_viewViewReplacepreviewlink($preview_title)
+function HookVr_viewViewReplacepreviewlink(string $preview_title)
     {
     global $resource, $baseurl_short, $urlparams, $modal, $lang, $plugins;
     $use_vr_view = VrViewUseVR($resource);

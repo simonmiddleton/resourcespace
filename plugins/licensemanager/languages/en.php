@@ -58,10 +58,10 @@ $lang['license_notification_link'] = "View them here";
 $lang['license_notification_user_pref'] = "Change whether you receive these notifications";
 $lang['license_notification_global_pref'] = "Disable these notifications for everyone";
 
-$lang["page-title_licensemanager_batch"]    = "Edit Linceses";
+$lang["page-title_licensemanager_batch"]    = "Edit Licenses";
 $lang["page-title_licensemanager_delete"]   = "Delete License";
 $lang["page-title_licensemanager_download"] = "Download License";
 $lang["page-title_licensemanager_edit"]     = "Edit License";
-$lang["page-title_licensemanager_list"]     = "List Lincenses";
+$lang["page-title_licensemanager_list"]     = "List Licenses";
 $lang["page-title_licensemanager_setup"]    = "Setup License Manager Plugin";
 $lang["page-title_licensemanager_unlink"]   = "Unlink License";

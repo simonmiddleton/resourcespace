@@ -2309,7 +2309,15 @@ document.addEventListener('click', function(e) {
  * @param {string} [pluginname=''] - The name of the plugin (optional).
  */
 function updatePageTitle(pagename, pluginname = '') {
-    const ajax_url = baseurl_short + 'pages/ajax/update_page_title.php?page=' + pagename + (typeof pluginname !== 'undefined' ? '&plugin=' + pluginname : '');
+    const params = new URLSearchParams({
+        page: pagename
+    });
+
+    if (typeof pluginname !== 'undefined') {
+        params.append('plugin', pluginname);
+    }
+    const ajax_url = baseurl_short + 'pages/ajax/update_page_title.php?' + params.toString();
+
     jQuery.ajax({
         type: "GET",
         url: ajax_url,

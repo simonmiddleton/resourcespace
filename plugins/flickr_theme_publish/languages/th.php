@@ -58,4 +58,4 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'เผยแ
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'เผยแพร่ Flickr';
 $lang["page-title_flickr_theme_publish_setup"] = 'ตั้งค่า Flikr Plugin';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'การซิงค์ Flickr - ความก้าวหน้า';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flcikr Sync';
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

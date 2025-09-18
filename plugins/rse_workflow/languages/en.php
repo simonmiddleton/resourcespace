@@ -73,5 +73,5 @@ $lang["page-title_rse_workflow_edit_action"]            = "Edit Workflow Action"
 $lang["page-title_rse_workflow_edit_state"]             = "Edit Workflow State";
 $lang["page-title_rse_workflow_edit_workflow_actions"]  = "Edit Workflow Actions";
 $lang["page-title_rse_workflow_edit_workflow_states"]   = "Edit Workflow States";
-$lang["page-title_rse_workflow_edit_workflow"]          = "Ediw Workflow";
+$lang["page-title_rse_workflow_edit_workflow"]          = "Edit Workflow";
 $lang["page-title_rse_workflow_setup"]                  = "Setup Workflow Plugin";

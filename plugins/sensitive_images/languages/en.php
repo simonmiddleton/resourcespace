@@ -5,4 +5,4 @@ $lang["sensitive_images_help"]="Specify a metadata field that stores the reason 
 $lang["sensitive_images_field"]="Metadata field containing the reason the image is sensitive";
 $lang["sensitive_images_blur_level"]="Sensitive image blurring level<br>(1=least, 6=most)";
 
-$lang["page-title_sensitive_images_setup"] = "Setup Senistive Images Plugin";
+$lang["page-title_sensitive_images_setup"] = "Setup Sensitive Images Plugin";
