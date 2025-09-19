@@ -16,7 +16,13 @@ use Montala\ResourceSpace\CommandPlaceholderArg;
 function tesseract_process_unprocessed()
 {
     // Process all resources that haven't had text extracted yet.
-    global $tesseract_extensions;
+    global $tesseract_extensions, $tesseract_field;
+    
+    // Ensure tesseract field is set before continuing
+    if (!$tesseract_field) {
+        logScript("tesseract: Extracted text field unset");
+        return false;
+    }
 
     // Ensure only one instance of this.
     if (is_process_lock(__FUNCTION__)) {
@@ -48,6 +54,12 @@ function tesseract_process_unprocessed()
 function tesseract_process(int $resource): bool
 {
     global $lang, $tesseract_field;
+
+    // Ensure tesseract field is set before continuing
+    if (!$tesseract_field) {
+        logScript("tesseract: Extracted text field unset");
+        return false;
+    }
 
     logScript("tesseract: processing resource " . $resource);
     $data = get_resource_data($resource);
