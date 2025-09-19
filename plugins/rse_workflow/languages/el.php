@@ -64,5 +64,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'Επεξεργασία Δράσ�
 $lang["page-title_rse_workflow_edit_state"] = 'Επεξεργασία Κατάστασης Ροής Εργασίας';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Επεξεργασία Ενεργειών Ροής Εργασίας';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Επεξεργασία Καταστάσεων Ροής Εργασίας';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'Ρύθμιση Πρόσθετου Ροής Εργασίας';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Επεξεργασία Ροής Εργασίας';

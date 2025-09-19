@@ -64,5 +64,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'Editează Acțiunea Fluxului de 
 $lang["page-title_rse_workflow_edit_state"] = 'Editare stare flux de lucru';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Editează Acțiunile Fluxului de Lucru';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Editează Stările Fluxului de Lucru';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'Configurare Plugin Workflow';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Editare flux de lucru';

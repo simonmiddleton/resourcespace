@@ -58,4 +58,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'فلیکر �
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'فلیکر شائع کریں';
 $lang["page-title_flickr_theme_publish_setup"] = 'فلکر پلگ ان سیٹ اپ کریں';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'فلیکر ہم آہنگی - پیش رفت';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr ہم آہنگی';

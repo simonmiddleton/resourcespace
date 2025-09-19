@@ -62,5 +62,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'Hariri Kitendo cha Mchakato';
 $lang["page-title_rse_workflow_edit_state"] = 'Hariri Hali ya Mchakato';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Hariri Vitendo vya Mchakato';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Hariri Hali za Mchakato';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'Weka Plugin ya Mchakato';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Hariri Mchakato';

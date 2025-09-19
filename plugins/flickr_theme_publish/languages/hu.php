@@ -58,4 +58,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr közz
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr közzététel';
 $lang["page-title_flickr_theme_publish_setup"] = 'Flickr bővítmény beállítása';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Flickr szinkronizálás - Haladás';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr szinkronizálás';

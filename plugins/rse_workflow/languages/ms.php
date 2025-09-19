@@ -62,5 +62,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'Edit Tindakan Aliran Kerja';
 $lang["page-title_rse_workflow_edit_state"] = 'Edit Keadaan Aliran Kerja';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Edit Tindakan Aliran Kerja';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Edit Keadaan Aliran Kerja';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'Tetapkan Plugin Aliran Kerja';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Aliran Kerja';

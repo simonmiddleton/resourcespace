@@ -64,5 +64,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'Workflow-Aktion bearbeiten';
 $lang["page-title_rse_workflow_edit_state"] = 'Workflow-Zustand bearbeiten';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Workflow-Aktionen bearbeiten';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Workflow-Zustände bearbeiten';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'Workflow-Plugin einrichten';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Workflow bearbeiten';

@@ -3245,3 +3245,5 @@ $lang["page-title_user_profile_edit"] = 'Profil Saya';
 $lang["page-title_user_profile"] = 'Profil Pengguna';
 $lang["backtomessages"] = 'Kembali ke Pesan';
 $lang["viewallmessages"] = 'Lihat semua Pesan';
+$lang["megapixel-short"] = 'MP';
+$lang["upload_sequence"] = 'Urutan unggahan';

@@ -62,5 +62,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'ਵਰਕਫਲੋ ਐਕਸ਼�
 $lang["page-title_rse_workflow_edit_state"] = 'ਵਰਕਫਲੋ ਸਟੇਟ ਸੰਪਾਦਿਤ ਕਰੋ';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'ਵਰਕਫਲੋ ਕਾਰਵਾਈਆਂ ਸੰਪਾਦਿਤ ਕਰੋ';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'ਵਰਕਫਲੋ ਸਟੇਟਸ ਸੰਪਾਦਿਤ ਕਰੋ';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'ਵਰਕਫਲੋ ਪਲੱਗਇਨ ਸੈਟਅਪ';
+$lang["page-title_rse_workflow_edit_workflow"] = 'ਵਰਕਫਲੋ ਸੰਪਾਦਿਤ ਕਰੋ';

@@ -58,4 +58,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Xuất bản
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Xuất bản Flickr';
 $lang["page-title_flickr_theme_publish_setup"] = 'Cài đặt Plugin Flikr';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Đồng bộ Flickr - Tiến trình';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Đồng bộ';
