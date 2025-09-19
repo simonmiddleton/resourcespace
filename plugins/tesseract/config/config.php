@@ -1,5 +1,5 @@
 <?php
 
-$tesseract_field = 72; // Extracted text field, which is a default field.
+$tesseract_field = 0;
 $tesseract_extensions = "pdf,jpg,jpeg,png,tiff,tif";
 
