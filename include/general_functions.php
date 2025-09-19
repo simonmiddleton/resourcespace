@@ -187,7 +187,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
 *
 * @param  string   $datetime   ISO format date which can be a BCE date (ie. with negative year -yyyy)
 *
-* @return string Returns a string representing the age calculated from $datetime, otherwise an empty string if date is invalid
+* @return string   Returns a string representing the age calculated from $datetime, otherwise an empty string if date is invalid
 */
 function date_to_age(string $datetime): string 
 {
@@ -202,25 +202,25 @@ function date_to_age(string $datetime): string
     } elseif ($diff < 3600) {
         $minutes = floor($diff / 60);
         $unit = $minutes == 1 ? $lang['minute'] : $lang['minutes'];
-        return mb_strtolower("$minutes $unit ago", 'UTF-8');
+        return mb_strtolower("$minutes $unit " . $lang['ago'], 'UTF-8');
     } elseif ($diff < 86400) {
         $hours = floor($diff / 3600);
         $unit = $hours == 1 ? $lang['hour'] : $lang['hours'];
-        return mb_strtolower("$hours $unit ago", 'UTF-8');
+        return mb_strtolower("$hours $unit " . $lang['ago'], 'UTF-8');
     } elseif ($diff < 604800) {
         $days = floor($diff / 86400);
         $unit = $days == 1 ? $lang['day'] : $lang['days'];
-        return mb_strtolower("$days $unit ago", 'UTF-8');
+        return mb_strtolower("$days $unit " . $lang['ago'], 'UTF-8');
     } elseif ($diff < 2592000) {
         $weeks = floor($diff / 604800);
         $unit = $weeks == 1 ? $lang['week'] : $lang['weeks'];
-        return mb_strtolower("$weeks $unit ago", 'UTF-8');
+        return mb_strtolower("$weeks $unit " . $lang['ago'], 'UTF-8');
     } elseif ($diff < 31536000) {
         $months = floor($diff / 2592000);
         $unit = $months == 1 ? $lang['month'] : $lang['months'];
-        return mb_strtolower("$months $unit ago", 'UTF-8');
+        return mb_strtolower("$months $unit " . $lang['ago'], 'UTF-8');
     } else {
-        // For anything over a year, you might want to just show the date
+        // For anything over a year, just show the 'wordy' date
         return nicedate($datetime, false, true, true);
     }
 }
