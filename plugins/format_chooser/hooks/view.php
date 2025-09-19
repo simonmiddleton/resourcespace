@@ -68,7 +68,7 @@ function HookFormat_chooserViewAppend_to_resource_tools_size_download_options_sc
 
 function HookFormat_chooserViewAppend_to_updateDownloadLink_js(array $resource)
 {
-    global $baseurl;
+    global $baseurl, $lang;
 
     if (failed_format_chooser_checks($resource)) {
         return false;
@@ -94,7 +94,7 @@ function HookFormat_chooserViewAppend_to_updateDownloadLink_js(array $resource)
     console.debug('HookFormat_chooserViewAppend_to_updateDownloadLink_js: profile = %o', profile);
 
     // Example (final) regex (simplified): /^directDownload\('(https\:\/\/localhost\S*)', this\)$/m
-    const direct_dld_regex = new RegExp("^directDownload\\('(<?php echo preg_quote(parse_url($baseurl, PHP_URL_SCHEME)); ?>\\:\\\/\\\/<?php echo preg_quote(parse_url($baseurl, PHP_URL_HOST)); ?>\\S*)', this\\); toastNotification\\('Download', 'Download in progress'\\);$", 'm');
+    const direct_dld_regex = new RegExp("^directDownload\\('(<?php echo preg_quote(parse_url($baseurl, PHP_URL_SCHEME)); ?>\\:\\\/\\\/<?php echo preg_quote(parse_url($baseurl, PHP_URL_HOST)); ?>\\S*)', this\\); toastNotification\\('Download', '<?php echo escape($lang["downloadinprogress"]); ?>'\\);$", 'm');
     const dld_btn_onclick = download_btn.attr('onclick');
     const dld_btn_href = download_btn.attr('href');
 
