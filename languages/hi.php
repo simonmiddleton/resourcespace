@@ -524,7 +524,6 @@ $lang["fullscreenpreview"] = 'पूर्ण स्क्रीन पूर्
 $lang["originalfileoftype"] = 'मूल %EXTENSION फ़ाइल';
 $lang["fileoftype"] = '? फ़ाइल';
 $lang["cell-fileoftype"] = '%EXTENSION फ़ाइल';
-$lang["field-fileextension"] = '%एक्सटेंशन';
 $lang["fileextension-inside-brackets"] = '[%EXTENSION]';
 $lang["fileextension"] = '%एक्सटेंशन';
 $lang["mp3_preview_file"] = 'एमपी3 पूर्वावलोकन फ़ाइल';

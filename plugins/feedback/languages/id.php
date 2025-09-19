@@ -6,7 +6,6 @@ $lang["feedback_your_full_name"] = 'Nama lengkap Anda';
 $lang["feedback_remind_me_later"] = 'Ingatkan saya nanti';
 $lang["feedback_user feedback_configuration"] = 'Konfigurasi Umpan Balik Pengguna';
 $lang["feedback_pop-up_prompt_box_text"] = 'Kotak dialog pop-up teks:';
-$lang["feedback_questions"] = 'Silakan terjemahkan: Pertanyaan';
 $lang["feedback_type"] = 'Jenis:';
 $lang["feedback_small_text_field"] = 'Kolom Teks Kecil';
 $lang["feedback_large_text_field"] = 'Kolom Teks Besar';

@@ -524,7 +524,6 @@ $lang["fullscreenpreview"] = '전체 화면 미리보기';
 $lang["originalfileoftype"] = '원본 %EXTENSION 파일';
 $lang["fileoftype"] = '? 파일';
 $lang["cell-fileoftype"] = '%EXTENSION 파일';
-$lang["field-fileextension"] = '%확장자';
 $lang["fileextension-inside-brackets"] = '[%EXTENSION]';
 $lang["fileextension"] = '%확장자';
 $lang["mp3_preview_file"] = 'MP3 미리보기 파일';

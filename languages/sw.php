@@ -523,7 +523,6 @@ $lang["fullscreenpreview"] = 'Mwonekano wa skrini nzima';
 $lang["originalfileoftype"] = 'Faili Asilia %EXTENSION';
 $lang["fileoftype"] = '? Faili';
 $lang["cell-fileoftype"] = '%EXTENSION Faili';
-$lang["field-fileextension"] = '%KIONGEZEZI';
 $lang["fileextension-inside-brackets"] = '[%EXTENSION]';
 $lang["fileextension"] = '%EXTENSION';
 $lang["mp3_preview_file"] = 'Faili ya Onyesho la Awali la MP3';

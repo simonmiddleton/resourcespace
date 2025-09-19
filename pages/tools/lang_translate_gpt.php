@@ -79,8 +79,8 @@ $calamity = 0;
 $calamities = [];
 $bad_params_list = [];
 
-// Things that do not translate
-$ignore = ["map_hydda_group", "_dupe", "minute-abbreviated", "hour-abbreviated", "map_tf_group", "map_esridelorme", "posixldapauth_rdn", "to-page", "emu_upload_emu_field_label", "all__emailcollectionexternal", "upload_share_email_template", "all__emaillogindetails", "all__emailnotifyresourcessubmitted", "all__emailresourcerequest", "all__emailbulk", "all__emailresource", "system_notification_email", "all__emailcollection", "all__emailnotifyresourcesunsubmitted", "all__emailresearchrequestassigned", "all__emailnotifyuploadsharenew", "email_link_expires_date", "map_esri_group", "geodragmodepan", "map_stamen_group"];
+// Strings that do not translate
+$ignore = ["map_hydda_group", "_dupe", "minute-abbreviated", "hour-abbreviated", "map_tf_group", "map_esridelorme", "posixldapauth_rdn", "to-page", "emu_upload_emu_field_label", "all__emailcollectionexternal", "upload_share_email_template", "all__emaillogindetails", "all__emailnotifyresourcessubmitted", "all__emailresourcerequest", "all__emailbulk", "all__emailresource", "system_notification_email", "all__emailcollection", "all__emailnotifyresourcesunsubmitted", "all__emailresearchrequestassigned", "all__emailnotifyuploadsharenew", "email_link_expires_date", "map_esri_group", "geodragmodepan", "map_stamen_group", "field-fileextension", "fileextension-inside-brackets", "fileextension", "plugin_field_fmt", "field_ref_and_name", "ref-title", "all__file_integrity_fail_email"];
 
 foreach ($plugins as $plugin) {
     $plugin_path = "";
