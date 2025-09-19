@@ -913,7 +913,6 @@ $lang["access1"] = 'Terhad';
 $lang["access2"] = 'Rahsia';
 $lang["access3"] = 'Kustom';
 $lang["statusandrelationships"] = 'Status dan hubungan';
-$lang["plugin_field_fmt"] = 'Sila terjemahkan: %A (%B)';
 $lang["share"] = 'Kongsi';
 $lang["share_selected"] = 'Kongsi yang dipilih';
 $lang["sharecollection"] = 'Kongsi koleksi';
