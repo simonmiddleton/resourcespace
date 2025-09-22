@@ -69,3 +69,12 @@ function HookTotpAllBeforetermsredirect()
 {
     return ['totp'];
 }
+
+/**
+ * Set a TOTP cookie for an admin user when logging in as another user 
+ * so that they are not prompted to enter the impersonated users authentication code. 
+ */
+function HookTotpAllImpersonateuser($userref)
+{
+    setcookie("totp", TOTP_cookie($userref), strtotime("+1 year"), "/");
+}
