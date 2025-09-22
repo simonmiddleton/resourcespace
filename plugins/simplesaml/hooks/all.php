@@ -450,7 +450,7 @@ function HookSimplesamlAllProvideusercredentials()
                         debug("simplesaml - unable to create user: " . $userid);
                         return false;
                     }
-                    if ($userid <= 0) {
+                    if ($userid === -2) {
                         debug("simplesaml - Error - User could not be created, user limit exceeded");
                         return false;
                     }
@@ -466,7 +466,7 @@ function HookSimplesamlAllProvideusercredentials()
         } else {
             // Create the user
             $userid = new_user($username, $group);
-            if ($userid <= 0) {
+            if ($userid === -2) {
                 debug("simplesaml - Error - User could not be created, user limit exceeded");
                 return false;
             }
