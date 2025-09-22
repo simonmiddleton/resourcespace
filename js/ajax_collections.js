@@ -211,10 +211,13 @@ function UpdateHiddenCollections(checkbox, collection, post_data) {
         success: function(data) {
             if (data.trim() == "HIDDEN") {
                 jQuery(checkbox).prop('checked',false);
+                mycol = jQuery('#CollectionDiv .ActionsContainer option[value="hide_collection"]').data('mycol');
             }
             else if (data.trim() == "UNHIDDEN") {
                 jQuery(checkbox).prop('checked',true);
+                mycol = usercollection;
             }
+            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection='+mycol);
         },
         error: function (err) {
             console.log("AJAX error : " + JSON.stringify(err, null, 2));
