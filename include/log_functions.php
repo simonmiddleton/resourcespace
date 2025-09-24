@@ -122,7 +122,7 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $
         $parameters[] = "i";
         $parameters[] = (int)$minref;
     } else {
-        $sql .= " AND datediff(now(),date) < ?";
+        $sql .= " AND date > (NOW() - INTERVAL ? DAY)";
         $parameters[] = "i";
         $parameters[] = (int)$days;
     }
