@@ -53,7 +53,7 @@ log_activity($lang['csvExportResultsMetadata'], LOG_CODE_DOWNLOADED);
 debug("Job handler 'csv_metadata_export' created zip download file {$csv_filename}");
 
 $jobsuccess = true;
-
+job_queue_update($jobref, $job_data, STATUS_COMPLETE);
 message_add($job["user"], $job_success_text, $csvurl);
 
 $delete_job_data = array();
