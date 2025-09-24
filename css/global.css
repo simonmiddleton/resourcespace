@@ -2905,3 +2905,17 @@ label {
     color: black;
     box-shadow: none;
 }
+
+.slide {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+}
+
+.slide-active {
+    opacity: 1;
+}

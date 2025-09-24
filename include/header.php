@@ -282,6 +282,8 @@ $page_title = get_page_title($pagename, pluginname());
     </head>
 
     <body lang="<?php echo escape($language); ?>">
+        <div class="slide slide-active"></div>
+        <div class="slide"></div>
         <a href="#UICenter" class="skip-to-main-content"><?php echo escape($lang["skip-to-main-content"]); ?></a>
 
         <!-- Processing graphic -->
