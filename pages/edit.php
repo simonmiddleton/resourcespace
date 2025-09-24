@@ -2625,7 +2625,7 @@ hook('aftereditcollapsiblesection');
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
     {
-    array_walk($save_errors,fn (&$v)=>escape($v ?? ""),[]);
+    array_walk($save_errors,fn (&$v)=>strip_tags_and_attributes($v ?? ""),[]);
     ?>
     <script>
     preventautoscroll = true;
@@ -2640,7 +2640,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
         <?php
         foreach ($save_errors as $save_error) {
             ?>
-            toastNotification('Error', '<?php echo escape($save_error); ?>');
+            toastNotification('Error', '<?php echo $save_error; ?>');
             <?php
         }
         ?>
