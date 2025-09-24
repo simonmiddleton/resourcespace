@@ -1754,7 +1754,7 @@ function updateDownloadLink(ns, selected_size, picker)
 
     let download_btn = picker.parent().siblings('.DownloadButton').children('a#' + ns + 'downloadlink');
     const preview_size_info = window[ns + '_get_preview_size_info']();
-    const link = jQuery(
+    const safe_link = jQuery(
         DOMPurify.sanitize(
             preview_size_info[selected_size]['html']['download_column'],
             {
@@ -1762,7 +1762,12 @@ function updateDownloadLink(ns, selected_size, picker)
                 ALLOWED_ATTR: ['href', 'onclick','data-api-native-csrf', 'id'],
             }
         )
-    ).filter('a[id="downloadlink"]');
+    );
+
+    let link = safe_link.filter('a[id="downloadlink"]');
+    if (link.length === 0) {
+        link = safe_link.filter('a[onclick*="CentralSpaceLoad"]');
+    }
 
     download_btn.prop('href', link.attr('href'));
     download_btn.attr('onclick', link.attr('onclick'));
