@@ -50,7 +50,7 @@ include "../include/header.php";
     <h1><?php echo escape($lang["findpubliccollection"])?></h1>
     <p class="tight">
         <?php
-        echo text("introtext");
+        echo escape(text("introtext"));
         render_help_link("collections-public-and-themes");
         ?>
     </p>

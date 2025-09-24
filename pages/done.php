@@ -37,7 +37,7 @@ include "../include/header.php";
 
 <div class="BasicsBox">
     <h1><?php echo escape($lang["complete"]); ?></h1>
-    <p><?php echo text(escape($text)) ?></p>
+    <p><?php echo escape(text($text)); ?></p>
    
     <?php
     if ((getval("user", "") != "" || $k != "" || isset($anonymous_login) || hook('checkuserloggedin')) && getval("notloggedin", "") == "" && $text != "user_request") {

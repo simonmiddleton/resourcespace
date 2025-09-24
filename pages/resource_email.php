@@ -96,7 +96,7 @@ include "../include/header.php";
 
     <p>
         <?php
-        echo text("introtext");
+        echo escape(text("introtext"));
         render_help_link("user/sharing-resources");
         ?>
     </p>
