@@ -96,7 +96,7 @@ include "../include/header.php";
 
 <div class="BasicsBox"> 
     <h1><?php echo escape($lang["termsandconditions"]); ?></h1>
-    <p><?php echo text("introtext")?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
   
     <div class="Question">
         <label><?php echo escape($lang["termsandconditions"]); ?></label>
@@ -110,9 +110,9 @@ include "../include/header.php";
             }
 
             if (is_html($termstext)) {
-                echo $termstext;
+                echo strip_tags_and_attributes($termstext);
             } else {
-                echo strip_tags($termstext);
+                echo escape($termstext);
             }
             ?>
         </div>

@@ -38,7 +38,7 @@ include "../include/header.php";
 
 <div class="BasicsBox">
     <h1><?php echo escape($lang["collection_copy_resources"]); ?></h1>
-    <p><?php echo text("introtext"); ?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
     <form method=post id="collection_copy_form" action="<?php echo $baseurl_short?>pages/collection_copy_resources.php">
         <?php generateFormToken("collection_copy_form"); ?>
         <input type=hidden name=ref value="<?php echo escape($ref); ?>">

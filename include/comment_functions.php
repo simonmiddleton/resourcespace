@@ -417,7 +417,7 @@ EOT;
             echo "<div class='CommentBody'>";
         if ($comment['hide']) {
             if (text("comments_removal_message") != "") {
-                    echo text("comments_removal_message");
+                    echo escape(text("comments_removal_message"));
             } else {
                     echo "[" . escape($lang["deleted"]) . "]";
             }

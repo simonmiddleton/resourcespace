@@ -42,7 +42,7 @@ if (getval("ajax", "") == "" && !hook("replace_footer")) {
         <?php
         if (!hook("replace_footernavrightbottom")) {
             ?>
-            <div id="FooterNavRightBottom"><?php echo text("footer")?></div>
+            <div id="FooterNavRightBottom"><?php echo strip_tags_and_attributes(text("footer"), ['a'], ['href']); ?></div>
             <?php
         }
         ?>

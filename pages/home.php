@@ -21,10 +21,10 @@ function loadWelcomeText()
             <div id="HomeSiteTextInner">
                 <h1>
                     <?php # Include version number
-                    echo str_replace("[ver]", str_replace("SVN", "", $productversion), text("welcometitle"));
+                    echo escape(str_replace("[ver]", str_replace("SVN", "", $productversion), text("welcometitle")));
                     ?>
                 </h1>
-                <p><?php echo text("welcometext"); ?></p>
+                <p><?php echo escape(text("welcometext")); ?></p>
             </div>
             <?php hook('homeafterwelcometext') ?>
         </div>
