@@ -18,7 +18,7 @@ include "../include/header.php";
     <h1><?php echo escape($lang["languageselection"]); ?></h1>
     <p>
         <?php
-        echo text("introtext");
+        echo escape(text("introtext"));
         render_help_link('user/language-options');
         ?>
     </p>

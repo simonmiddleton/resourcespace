@@ -482,7 +482,7 @@ include "../include/header.php";
     <h1><?php echo escape($archiveonly ? $lang["archiveonlysearch"] : $lang["advancedsearch"]); ?></h1>
     <p class="tight">
         <?php
-        echo text("introtext");
+        echo strip_paragraph_tags(strip_tags_and_attributes(text("introtext")));
         render_help_link("user/advanced-search");
         ?>
     </p>

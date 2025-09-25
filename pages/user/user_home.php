@@ -10,7 +10,7 @@ $introtext = text("introtext");
     <h1><?php echo escape(($userfullname == "" ? $username : $userfullname)) ?></h1>
 
     <?php if (trim($introtext) != "") { ?>
-        <p><?php echo $introtext ?></p>
+        <p><?php echo escape($introtext); ?></p>
     <?php } ?>
   
     <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">

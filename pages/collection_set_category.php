@@ -73,7 +73,7 @@ include "../include/header.php";
         render_help_link("user/themes-public-collections");
         ?>
     </h1>
-    <p><?php echo text("introtext"); ?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
     <form method=post id="collectionform" action="<?php echo $action_url; ?>">
         <?php generateFormToken("collectionform"); ?>
         <input type=hidden name=ref value="<?php echo escape($ref); ?>">

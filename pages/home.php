@@ -24,7 +24,7 @@ function loadWelcomeText()
                     echo escape(str_replace("[ver]", str_replace("SVN", "", $productversion), text("welcometitle")));
                     ?>
                 </h1>
-                <p><?php echo escape(text("welcometext")); ?></p>
+                <p><?php echo strip_tags_and_attributes(text("welcometext")); ?></p>
             </div>
             <?php hook('homeafterwelcometext') ?>
         </div>

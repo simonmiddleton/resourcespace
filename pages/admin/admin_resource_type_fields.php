@@ -100,7 +100,7 @@ $links_trail = array(
 
     $introtext = text("introtext");
     if ($introtext != "") {
-        echo "<p>" . text("introtext") . "</p>";
+        echo "<p>" . escape($introtext) . "</p>";
     }
 
     $fields = get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(), true);

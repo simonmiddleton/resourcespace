@@ -12,7 +12,7 @@ include "../../include/header.php";
 <div class="BasicsBox"> 
     <h1><?php echo escape($lang["systemsetup"]); ?></h1>
     <?php if (getval("modal", "") == "") { ?>
-        <p><?php echo text("introtext")?></p>
+        <p><?php echo escape(text("introtext")); ?></p>
     <?php } ?>
     <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
         <ul>

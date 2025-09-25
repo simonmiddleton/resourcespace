@@ -128,7 +128,7 @@ include "../../include/header.php";
 
     <p class="PageIntrotext">
         <?php
-        echo text("introtext");
+        echo escape(text("introtext"));
         render_help_link('systemadmin/creating-users');
         ?>
     </p>

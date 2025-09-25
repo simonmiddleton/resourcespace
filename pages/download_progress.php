@@ -61,7 +61,7 @@ if (!$save_as) {
         # Any other browser - standard 'your download will start shortly' text.
         ?>
         <h1><?php echo escape($lang["downloadinprogress"]); ?></h1>
-        <p><?php echo text("introtext")?></p>
+        <p><?php echo escape(text("introtext")); ?></p>
     <?php }
 
     $offset = getval("saved_offset", getval("offset", 0, true));

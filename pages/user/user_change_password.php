@@ -116,9 +116,9 @@ if (!hook("replaceuserpreferencesheader")) { ?>
 
 if ($password_reset_mode && empty($last_active)) {
     // The user is a new account setting a password for the first time
-    echo text("introtext_new");
+    echo escape(text("introtext_new"));
 } else {
-    echo text("introtext");
+    echo escape(text("introtext"));
 } ?>
 </p>
 

@@ -264,7 +264,7 @@ include "../include/header.php";
     <h1><?php echo escape($lang["managemycollections"])?></h1>
     <p class="tight">
         <?php
-        echo text("introtext");
+        echo escape(text("introtext"));
         render_help_link("collections-public-and-themes");
         ?>
     </p>
@@ -751,7 +751,7 @@ include "../include/header.php";
 <!--Create a collection-->
 <div class="BasicsBox">
     <h1><?php echo escape($lang["createnewcollection"])?></h1>
-    <p class="tight"><?php echo text("newcollection")?></p>
+    <p class="tight"><?php echo escape(text("newcollection")); ?></p>
     <form method="post" action="<?php echo $baseurl_short?>pages/collection_manage.php">
         <?php generateFormToken("newcollection"); ?>
         <div class="Question">
@@ -773,7 +773,7 @@ include "../include/header.php";
 <?php if ($enable_public_collections) { ?>
     <div class="BasicsBox">
         <h1><?php echo escape($lang["findpubliccollection"])?></h1>
-        <p class="tight"><?php echo text("findpublic")?></p>
+        <p class="tight"><?php echo escape(text("findpublic")); ?></p>
         <p>
             <?php echo LINK_CARET ?>
             <a href="<?php echo $baseurl_short?>pages/collection_public.php" onclick="return CentralSpaceLoad(this,true);">
