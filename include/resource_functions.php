@@ -4420,6 +4420,7 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
         $extension = trim(strtolower($extension));
     }
 
+    $original_file_path = get_resource_path($r, true, "", true, $extension);
     if (!$upload_then_process || !$after_upload_processing) {
         update_resource_type($r, $type);
 
@@ -4455,10 +4456,9 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
             # Move the file
             if (!hook('update_resource_replace_ingest', '', array($r, $path, $extension))) {
                 $source_file = $syncdir . "/" . $path;
-                $destination = get_resource_path($r, true, "", true, $extension);
                 $process_file_upload = process_file_upload(
                     new SplFileInfo($source_file),
-                    new SplFileInfo($destination),
+                    new SplFileInfo($original_file_path),
                     // Copy instead of rename so that permissions of filestore will be used
                     ['file_move' => 'copy']
                 );
@@ -4475,10 +4475,10 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
                 try {
                     unlink($source_file);
                     try {
-                        chmod($destination, 0777);
+                        chmod($original_file_path, 0777);
                     } catch (Exception $e) {
                         // Not fatal, just log
-                        debug(" - ERROR: Staticsync failed to set permissions on ingested file: " .  $destination . PHP_EOL . " - Error message: " . $e->getMessage() . PHP_EOL);
+                        debug(" - ERROR: Staticsync failed to set permissions on ingested file: " .  $original_file_path . PHP_EOL . " - Error message: " . $e->getMessage() . PHP_EOL);
                     }
                 } catch (Exception $e) {
                     echo " - ERROR: failed to delete file from source. Please check correct permissions on: " .  $source_file . PHP_EOL . " - Error message: "  . $e->getMessage() . PHP_EOL;
@@ -4525,7 +4525,7 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
         if ($createPreviews) {
             # Attempt autorotation
             if ($ingest && $autorotate_ingest) {
-                AutoRotateImage($destination);
+                AutoRotateImage($original_file_path);
             }
 
             # Generate previews/thumbnails (if configured i.e if not completed by offline process 'create_previews.php')
