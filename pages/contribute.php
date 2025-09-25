@@ -13,7 +13,7 @@ include "../include/header.php";
     <h1><?php echo escape($lang["mycontributions"]); ?></h1>
     <p>
         <?php
-        echo text("introtext");
+        echo escape(text("introtext"));
         render_help_link("user/uploading");
         ?>
     </p>

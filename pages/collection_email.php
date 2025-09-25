@@ -206,9 +206,9 @@ include "../include/header.php";
     <p>
         <?php
         if ($themeshare && text("introtextthemeshare") != "") {
-            echo text("introtextthemeshare");
+            echo escape(text("introtextthemeshare"));
         } else {
-            echo text("introtext");
+            echo strip_paragraph_tags(strip_tags_and_attributes(text("introtext")));
         }
         render_help_link("user/sharing-resources");
         ?>

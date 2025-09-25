@@ -29,7 +29,7 @@ include "../../include/header.php";
 <div class="BasicsBox">
     <h1><?php echo escape($lang["copyresource"]); ?></h1>
 
-    <p><?php echo text("introtext")?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
 
     <form method=post action="<?php echo $baseurl_short?>pages/team/team_copy.php" onSubmit="return CentralSpacePost(this,true);">
         <?php generateFormToken("team_copy"); ?>

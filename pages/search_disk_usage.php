@@ -32,7 +32,7 @@ include "../include/header.php";
     $intro = text("introtext");
     if ($intro != "") {
         ?>
-        <p><?php echo $intro ?></p>
+        <p><?php echo escape($intro); ?></p>
         <?php
     }
     ?>

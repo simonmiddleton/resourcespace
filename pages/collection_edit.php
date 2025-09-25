@@ -164,7 +164,7 @@ include "../include/header.php";
     } else { ?>
         <h1><?php echo escape($lang["editcollection"]);
         render_help_link("user/edit-collection"); ?></h1>
-        <p><?php echo text("introtext"); ?></p>
+        <p><?php echo strip_paragraph_tags(strip_tags_and_attributes(text("introtext"))); ?></p>
         <form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Post(this, false);">
             <?php generateFormToken("collectionform"); ?>
             <input type="hidden" name="modal" value="<?php echo $modal ? "true" : "false"; ?>">

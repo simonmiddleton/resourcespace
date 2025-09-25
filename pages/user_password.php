@@ -15,7 +15,7 @@ include "../include/login_background.php";
 ?>
 
 <h1><?php echo escape($lang["requestnewpassword"]); ?></h1>
-<p><?php echo text("introtextreset")?></p>
+<p><?php echo escape(text("introtextreset")); ?></p>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/user_password.php">  
     <?php generateFormToken("user_password"); ?>

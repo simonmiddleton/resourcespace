@@ -1325,7 +1325,7 @@ else
         <p style="padding-bottom:20px;"><?php $qty = count($items);
         echo escape($qty==1 ? $lang["resources_selected-1"] : str_replace("%number", $qty, $lang["resources_selected-2"])) . ". ";
         # The script doesn't allow editing of empty collections, no need to handle that case here.
-        echo text("multiple");
+        echo escape(text("multiple"));
         ?> </p> <?php
         } 
    elseif ($ref>0)

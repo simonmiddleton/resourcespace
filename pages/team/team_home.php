@@ -39,7 +39,7 @@ include "../../include/header.php";
     <?php if (getval("modal", "") == "") { ?>
         <p>
             <?php
-            echo text("introtext");
+            echo escape(text("introtext"));
             render_help_link('resourceadmin/quick-start-guide');
             ?>
         </p>

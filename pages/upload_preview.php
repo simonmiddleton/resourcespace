@@ -101,7 +101,7 @@ include "../include/header.php";
         ?>
     </h1>
 
-    <p><?php echo text("introtext")?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
 
     <script language="JavaScript">
         // Check allowed extensions:

@@ -116,7 +116,7 @@ include "../include/header.php";
 
 <div class="BasicsBox">
     <h1><?php echo escape($lang["editresourcepreviews"]) ?></h1>
-    <p><?php echo text("introtext")?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
     <?php if (isset($message)) { ?>
         <div class="PageInformal"><?php echo escape($message); ?></div>
         <?php

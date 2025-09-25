@@ -31,7 +31,7 @@ include "../../include/header.php";
         ?>
     </h1>
     
-    <p><?php echo text("introtext")?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
     
     <?php
     $keywords = get_grouped_related_keywords($find);

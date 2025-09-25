@@ -238,7 +238,7 @@ include '../include/header.php';
     <?php
     $introtext = text("introtext");
     if ($introtext != "") {
-        echo "<p>" . text("introtext") . "</p>";
+        echo "<p>" . escape($introtext) . "</p>";
     }
 
     renderBreadcrumbs($breadcrumbs);
