@@ -5676,7 +5676,7 @@ function sanitise_url(string $val): string
 {
     // Convert root-relative URL paths to absolute ones
     $url = mb_strpos($val, $GLOBALS['baseurl_short']) === 0
-        ? str_replace($GLOBALS['baseurl_short'], "{$GLOBALS['baseurl']}/", $val)
+        ? $GLOBALS['baseurl'] . '/' . mb_substr($val, mb_strlen($GLOBALS['baseurl_short']))
         : $val;
 
     // Support document-relative URL by prepending our base URL
