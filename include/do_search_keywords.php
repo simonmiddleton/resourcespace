@@ -270,31 +270,14 @@ if ($keysearch) {
             } elseif (
                 $field_short_name_specified
                 && !$quoted_string
+                && preg_match(
+                    '/^(?!.*\\*)(?=[^ \\t\\n]*[!@#$%^&()_+\\-=\\[\\]{}\'\"\\\\,.<>\\/?])[^ \\t\\n]*$/',
+                    $keyword
+                ) === 1
             ) {
-                $keystring_expanded = explode(';', $keystring);
-                $words = [];
-                foreach($keystring_expanded as $word) {
-                    // Quote field specific keywords that contain special characters and no spaces unless a wildcard is present
-                    if (preg_match(
-                        '/^                   # Start of the string
-                        (?!.*\\*)             # Negative lookahead: Ensure no asterisk (*) exists in the string
-                        (?=                   # Positive lookahead: Ensure at least one special character exists
-                            [^ \t\n]*         # Any number of characters that are not space, tab, or newline
-                            [!@#$%^&()_+\-=\[\]{}\'"\\,.<>\/?] # One special character from this set
-                        )
-                        [^ \t\n]*             # Match any number of characters that are not space, tab, newline, or semicolon
-                        $                     # End of the string
-                        /x',
-                        $word
-                    ) === 1) {
-                        $words[] = "\"$word\"";
-                        $quoted_string = true;
-                    } else {
-                        $words[] = $word;
-                    }
-                }
-                $keystring = implode(";", $words);
-                
+                // Quote field specific keywords that contain special characters and no spaces unless a wildcard is present
+                $keyword = "\"$keyword\"";
+                $quoted_string = true;
             }
 
             if ($field_short_name_specified) { // Need this also for string matching in a named text field
@@ -315,7 +298,7 @@ if ($keysearch) {
                     $omit = true;
                     $keyword = substr($keyword, 1);
                 }
-                echo print_r($keywords_expanded);
+
                 # Search for resources with an empty field, ex: !empty18  or  !emptycaption
                 $empty = false;
                 if (substr($keyword, 0, 6) == "!empty") {
