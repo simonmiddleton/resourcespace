@@ -64,5 +64,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'Modifica Azione del Flusso di La
 $lang["page-title_rse_workflow_edit_state"] = 'Modifica Stato del Workflow';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Modifica le Azioni del Flusso di Lavoro';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Modifica gli stati del flusso di lavoro';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'Imposta il plugin del flusso di lavoro';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Modifica Flusso di Lavoro';

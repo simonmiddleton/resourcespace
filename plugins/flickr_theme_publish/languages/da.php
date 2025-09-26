@@ -60,4 +60,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr Udgiv
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr Udgiv';
 $lang["page-title_flickr_theme_publish_setup"] = 'Opsæt Flikr-plugin';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Flickr Synk - Fremskridt';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Synk';

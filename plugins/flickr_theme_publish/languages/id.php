@@ -60,4 +60,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr Publi
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Publikasi Flickr';
 $lang["page-title_flickr_theme_publish_setup"] = 'Setup Plugin Flikr';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Sinkronisasi Flickr - Progres';
+
 $lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

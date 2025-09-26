@@ -58,4 +58,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Cyhoeddi Fli
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Cyhoeddi Flickr';
 $lang["page-title_flickr_theme_publish_setup"] = 'Setup Plugin Flikr';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Flickr Sync - Cynnydd';
+
 $lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

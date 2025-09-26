@@ -62,5 +62,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'ویرایش اقدام گردش
 $lang["page-title_rse_workflow_edit_state"] = 'ویرایش وضعیت گردش کار';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'ویرایش اقدامات گردش کار';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'ویرایش وضعیت‌های گردش کار';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'تنظیم افزونه گردش کار';
+$lang["page-title_rse_workflow_edit_workflow"] = 'ویرایش جریان کار';

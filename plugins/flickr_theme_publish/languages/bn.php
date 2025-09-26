@@ -58,4 +58,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr প�
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr প্রকাশ করুন';
 $lang["page-title_flickr_theme_publish_setup"] = 'ফ্লিকার প্লাগইন সেটআপ করুন';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'ফ্লিকার সিঙ্ক - অগ্রগতি';
+
 $lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

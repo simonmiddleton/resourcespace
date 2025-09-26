@@ -58,4 +58,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'انتشار
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'انتشار در فلیکر';
 $lang["page-title_flickr_theme_publish_setup"] = 'نصب افزونه فلیکر';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'همگام‌سازی Flickr - پیشرفت';
+
 $lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

@@ -23,3 +23,4 @@ $lang["plugin-feedback-desc"] = 'Menambahkan fungsi umpan balik pengguna umum de
 
 $lang["page-title_feedback_feedback"] = 'Kirim Umpan Balik';
 $lang["page-title_feedback_setup"] = 'Pengaturan Plugin';
+$lang["feedback_questions"] = 'Pertanyaan';

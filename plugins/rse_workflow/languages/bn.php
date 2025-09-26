@@ -62,5 +62,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'কর্মপ্রবাহ�
 $lang["page-title_rse_workflow_edit_state"] = 'কর্মপ্রবাহ অবস্থার সম্পাদনা';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'কর্মপ্রবাহের ক্রিয়াকলাপ সম্পাদনা করুন';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'কর্মপ্রবাহের অবস্থাসমূহ সম্পাদনা করুন';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'ওয়ার্কফ্লো প্লাগইন সেটআপ করুন';
+$lang["page-title_rse_workflow_edit_workflow"] = 'কর্মপ্রবাহ সম্পাদনা';

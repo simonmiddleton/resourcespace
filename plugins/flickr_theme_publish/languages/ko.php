@@ -60,4 +60,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr 게�
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr 게시';
 $lang["page-title_flickr_theme_publish_setup"] = 'Flikr 플러그인 설정';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Flickr 동기화 - 진행 상황';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr 동기화';

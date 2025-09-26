@@ -64,5 +64,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'Upraviť akciu pracovného postu
 $lang["page-title_rse_workflow_edit_state"] = 'Upraviť stav pracovného postupu';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Upraviť akcie pracovného postupu';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Upraviť stavy pracovného postupu';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'Nastaviť plugin pracovného postupu';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Upraviť pracovný tok';

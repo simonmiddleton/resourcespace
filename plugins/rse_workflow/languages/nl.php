@@ -64,5 +64,6 @@ $lang["page-title_rse_workflow_edit_action"] = 'Bewerk Workflow Actie';
 $lang["page-title_rse_workflow_edit_state"] = 'Bewerk Workflow Status';
 $lang["page-title_rse_workflow_edit_workflow_actions"] = 'Bewerk Workflow Acties';
 $lang["page-title_rse_workflow_edit_workflow_states"] = 'Bewerk Workflow Statussen';
-$lang["page-title_rse_workflow_edit_workflow"] = 'Edit Workflow';
+
 $lang["page-title_rse_workflow_setup"] = 'Instellen Workflow Plugin';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Bewerk Workflow';

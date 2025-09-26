@@ -58,4 +58,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr Terbi
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr Terbitkan';
 $lang["page-title_flickr_theme_publish_setup"] = 'Pasang Plugin Flikr';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Penyelarasan Flickr - Kemajuan';
+
 $lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

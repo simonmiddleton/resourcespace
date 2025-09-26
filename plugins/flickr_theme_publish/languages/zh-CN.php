@@ -60,4 +60,5 @@ $lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr 发�
 $lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr 发布';
 $lang["page-title_flickr_theme_publish_setup"] = '设置 Flikr 插件';
 $lang["page-title_flickr_theme_publish_sync_progress"] = 'Flickr 同步 - 进度';
-$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr 同步';
