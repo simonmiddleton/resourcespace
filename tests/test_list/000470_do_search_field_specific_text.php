@@ -68,4 +68,24 @@ if (
     return false;
 }
 
+// TEST F: Alternative keywords with special characters:
+$resource_field_verbatim_keyword_regex[8]="/^(?:[0-9]+(?:.[0-9]+)+)$/";
+
+$resourced = create_resource(1, 0);
+$resourcee = create_resource(1, 0);
+update_field($resourced, 8, "123.456");
+update_field($resourcee, 8, "234.567");
+
+$results = do_search("title:123.456;234.567");
+if (
+    !is_array($results)
+    || count($results) < 2
+    || !empty(array_diff(array_column($results, "ref"), [$resourced, $resourcee]))
+) {
+    echo "TEST F\n";
+    return false;
+}
+
+unset($resource_field_verbatim_keyword_regex);
+
 return true;
