@@ -24,18 +24,48 @@ $use_cases = [
         'expected' => "{$baseurl_short}path/?p1=v1&p2=v2#fragment",
     ],
     [
+        'name' => 'Allow relative URL path (1)',
+        'input' => './pages/relative_from.php',
+        'expected' => './pages/relative_from.php',
+    ],
+    [
+        'name' => 'Allow relative URL path (2)',
+        'input' => '../pages/relative_from.php',
+        'expected' => '../pages/relative_from.php',
+    ],
+    [
+        'name' => 'Allow relative URL path (3)',
+        'input' => '../../pages/relative_from.php',
+        'expected' => '../../pages/relative_from.php',
+    ],
+    [
+        'name' => 'Allow relative URL path (4)',
+        'input' => 'page.php',
+        'expected' => 'page.php',
+    ],
+    [
+        'name' => 'Allow relative URL path (5)',
+        'input' => 'generic_page.html?p1=v1&p2=v2#fragment',
+        'expected' => 'generic_page.html?p1=v1&p2=v2#fragment',
+    ],
+    [
+        'name' => 'Unsafe relative URL path will be sanitised (1)',
+        'input' => '../pages/relative_from.php?p1=v1&p2="><p>test</p>',
+        'expected' => '#',
+    ],
+    [
+        'name' => 'Unsafe relative URL path will be sanitised (2)',
+        'input' => '."/pages/relative_from.php?p1=v1&p2="><p>test</p>',
+        'expected' => '#',
+    ],
+    [
+        'name' => 'Unsafe relative URL path will be sanitised (3)',
+        'input' => 'page.php?p1"=v1&p2="><p>test</p>',
+        'expected' => '#',
+    ],
+    [
         'name' => 'Relative (root) URL not matching $baseurl_short is sanitised',
         'input' => '/unknown/path/?p1=v1&p2=v2#fragment',
-        'expected' => '#',
-    ],
-    [
-        'name' => 'Relative URL will be sanitised (1)',
-        'input' => 'pages/relative_from.php',
-        'expected' => '#',
-    ],
-    [
-        'name' => 'Relative URL will be sanitised (2)',
-        'input' => '../../pages/relative_from.php',
         'expected' => '#',
     ],
     [

@@ -5670,14 +5670,32 @@ function is_safe_url($url): bool
  * @uses is_safe_url()
  *
  * @param string $val Untrusted URL
- * @return string Returns the URL if considered safe, "#" otherwise.
+ * @return string Returns the provided value (URL) if considered safe, "#" otherwise.
  */
 function sanitise_url(string $val): string
 {
-    // Convert relative root (URL) paths to absolute ones
+    // Convert root-relative URL paths to absolute ones
     $url = mb_strpos($val, $GLOBALS['baseurl_short']) === 0
         ? str_replace($GLOBALS['baseurl_short'], "{$GLOBALS['baseurl']}/", $val)
         : $val;
+
+    // Support document-relative URL by prepending our base URL
+    if (
+        preg_match(
+            '~^
+            (?!(?: /| \#| //| [A-Za-z][A-Za-z0-9+.-]*:)) # exclude: root-relative, fragment only, protocol-relative, or scheme based
+            (?:(?:\.\./ | \./)*)                 # optional leading relative prefixes (./ or ../)
+            (?:[A-Za-z0-9._-]+/)*                # zero or more directory segments
+            [A-Za-z0-9._-]+\.[a-zA-Z0-9_-]{1,10} # filename
+            (?:\?[^\s#]*)?                       # optional query string
+            (?:\#.*)?                            # optional fragment
+            $~xm',
+            $url,
+            $matches
+        ) === 1
+    ) {
+        $url = "{$GLOBALS['baseurl']}/{$url}";
+    }
 
     if (is_safe_url($url)) {
         return $val;
