@@ -2909,7 +2909,7 @@ function is_html($string)
  * @param  boolean $httponly
  * @return void
  */
-function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true, $samesite = "Strict")
+function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true)
 {
 
     if (!is_string_loose($value)) {
@@ -2936,22 +2936,8 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
     }
 
     // Set new cookie, first remove any old previously set pages cookies to avoid clashes;
-    setcookie($name, "", [
-        'expires'   => time() - 3600,
-        'path'      => $path . "pages",
-        'domain'    => $domain,
-        'secure'    => $secure,
-        'httponly'  => $httponly,
-        'samesite'  => $samesite,
-    ]);
-    setcookie($name, (string) $value, [
-        'expires'   => (int) $expire,
-        'path'      => $path,
-        'domain'    => $domain,
-        'secure'    => $secure,
-        'httponly'  => $httponly,
-        'samesite'  => $samesite,
-    ]);
+    setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
+    setcookie($name, (string) $value, (int) $expire, $path, $domain, $secure, $httponly);
 }
 
 /**
