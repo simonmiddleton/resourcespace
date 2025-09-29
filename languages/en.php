@@ -3486,3 +3486,15 @@ $lang['action_update_now'] = "Update now";
 $lang['errors'] = "Errors";
 $lang['error_savefirst'] = "Please save your changes";
 $lang['show_hidden_property']="Show hidden property";
+
+$lang['min_ago'] = "%TIME% minute ago";
+$lang['mins_ago'] = "%TIME% minutes ago";
+$lang['hour_ago'] = "%TIME% hour ago";
+$lang['hours_ago'] = "%TIME% hours ago";
+$lang['day_ago'] = "%TIME% day ago";
+$lang['days_ago'] = "%TIME% days ago";
+$lang['week_ago'] = "%TIME% week ago";
+$lang['weeks_ago'] = "%TIME% weeks ago";
+$lang['month_ago'] = "%TIME% month ago";
+$lang['months_ago'] = "%TIME% months ago";
+

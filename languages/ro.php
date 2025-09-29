@@ -1002,9 +1002,7 @@ $lang["searchfilteroverride"] = 'Suprascriere filtru de căutare';
 $lang["wildcardpermittedeg"] = 'Permisiunea caracterului generic este permisă, de exemplu:';
 $lang["collection_download_original"] = 'Fișier original';
 $lang["newflag"] = 'NOU!';
-$lang["link"] = 'Vă rugăm să traduceți: Link
-
-Legătură.';
+$lang["link"] = 'Link';
 $lang["uploadpreview"] = 'Încărcați imaginea de previzualizare';
 $lang["starttypingusername"] = '(vă rugăm să începeți să tastați numele de utilizator / numele complet / numele grupului)';
 $lang["requestfeedback"] = 'Solicitare de feedback<br />(veți primi răspunsul prin e-mail)';
@@ -3186,3 +3184,13 @@ $lang["page-title_user_profile"] = 'Profil utilizator';
 $lang["backtomessages"] = 'Înapoi la Mesaje';
 $lang["viewallmessages"] = 'Vizualizați toate mesajele';
 $lang["months"] = 'Luni';
+$lang["min_ago"] = 'cu %TIME% minute în urmă';
+$lang["mins_ago"] = 'cu %TIME% minute în urmă';
+$lang["hour_ago"] = 'cu %TIME% ore în urmă';
+$lang["hours_ago"] = 'cu %TIME% ore în urmă';
+$lang["day_ago"] = 'cu %TIME% zi în urmă';
+$lang["days_ago"] = 'cu %TIME% zile în urmă';
+$lang["week_ago"] = '%TIME% săptămână în urmă';
+$lang["weeks_ago"] = 'cu %TIME% săptămâni în urmă';
+$lang["month_ago"] = 'cu %TIME% lună în urmă';
+$lang["months_ago"] = 'cu %TIME% luni în urmă';
