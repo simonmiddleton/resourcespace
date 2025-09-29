@@ -201,24 +201,24 @@ function date_to_age(string $datetime): string
         return $lang['just_now'];
     } elseif ($diff < 3600) {
         $minutes = floor($diff / 60);
-        $unit = $minutes == 1 ? $lang['minute'] : $lang['minutes'];
-        return mb_strtolower("$minutes $unit " . $lang['ago'], 'UTF-8');
+        $template = $minutes == 1 ? $lang['min_ago'] : $lang['mins_ago'];
+        return mb_strtolower(str_replace('%TIME%', $minutes, $template), 'UTF-8');
     } elseif ($diff < 86400) {
         $hours = floor($diff / 3600);
-        $unit = $hours == 1 ? $lang['hour'] : $lang['hours'];
-        return mb_strtolower("$hours $unit " . $lang['ago'], 'UTF-8');
+        $template = $hours == 1 ? $lang['hour_ago'] : $lang['hours_ago'];
+        return mb_strtolower(str_replace('%TIME%', $hours, $template), 'UTF-8');
     } elseif ($diff < 604800) {
         $days = floor($diff / 86400);
-        $unit = $days == 1 ? $lang['day'] : $lang['days'];
-        return mb_strtolower("$days $unit " . $lang['ago'], 'UTF-8');
+        $template = $days == 1 ? $lang['day_ago'] : $lang['days_ago'];
+        return mb_strtolower(str_replace('%TIME%', $days, $template), 'UTF-8');
     } elseif ($diff < 2592000) {
         $weeks = floor($diff / 604800);
-        $unit = $weeks == 1 ? $lang['week'] : $lang['weeks'];
-        return mb_strtolower("$weeks $unit " . $lang['ago'], 'UTF-8');
+        $template = $weeks == 1 ? $lang['week_ago'] : $lang['weeks_ago'];
+        return mb_strtolower(str_replace('%TIME%', $weeks, $template), 'UTF-8');
     } elseif ($diff < 31536000) {
         $months = floor($diff / 2592000);
-        $unit = $months == 1 ? $lang['month'] : $lang['months'];
-        return mb_strtolower("$months $unit " . $lang['ago'], 'UTF-8');
+        $template = $months == 1 ? $lang['month_ago'] : $lang['months_ago'];
+        return mb_strtolower(str_replace('%TIME%', $months, $template), 'UTF-8');
     } else {
         // For anything over a year, just show the 'wordy' date
         return nicedate($datetime, false, true, true);
