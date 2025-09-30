@@ -1599,6 +1599,11 @@ function api_new_user($username, $usergroup = 0): array
         return $assert_post;
     }
 
+    if (!checkPermission_manage_users() || !can_set_admin_usergroup($usergroup)) {
+        http_response_code(403);
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-permissiondenied']));
+    }
+
     $ref = new_user($username, $usergroup);
     $payload = ['ref' => $ref];
 

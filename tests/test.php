@@ -125,7 +125,7 @@ if (array_search('nosetup', $argv) === false) {
     check_db_structs(true);
     echo "...done\n";
     # Insert a new user and run as them.
-    $u = bypass_permissions(["u", "t"], "new_user", [$test_user_name]); // Run with necessary permissions
+    $u = new_user($test_user_name);
     ps_query("UPDATE `user` SET `password`=?", array("s",$test_user_password));
 } else {
     # Try to retrieve the ref of the existing user
