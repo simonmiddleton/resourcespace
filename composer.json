@@ -13,8 +13,7 @@
         "ext-zip": "*",
         "ext-gd": "*",
         "ext-mysqli": "*",
-        "ext-json": "*",
-        "kornrunner/blurhash": "^1.2"
+        "ext-json": "*"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8",
