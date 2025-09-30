@@ -285,8 +285,26 @@ function api_update_resource_type($resource, $type)
     return update_resource_type($resource, $type);
 }
 
-function api_get_resource_path($ref, $not_used = null, $size = "", $generate = true, $extension = "jpg", $page = 1, $watermarked = false, $alternative = -1)
-{
+/**
+ * {@see get_resource_path()}
+ *
+ * @param bool $write_metadata Specify if embedded metadata should be written to the requested file (if applicable).
+ */
+function api_get_resource_path(
+    $ref,
+    $not_used = null,
+    $size = "",
+    $generate = true,
+    $extension = "jpg",
+    $page = 1,
+    $watermarked = false,
+    $alternative = -1,
+    bool $write_metadata = false
+) {
+    if ($write_metadata) {
+        $GLOBALS['get_resource_path_extra_download_query_string_params'] = ['noattach' => ''];
+    }
+
     # Set defaults
     if ($alternative == "") {
         $alternative = -1;
