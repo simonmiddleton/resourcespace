@@ -50,10 +50,10 @@ function get_resource_path(
     $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
     $baseurl, $k, $get_resource_path_extra_download_query_string_params;
 
-    $int_vars = ['ref', 'page', 'alternative'];
+    $int_vars = [&$ref, &$page, &$alternative];
     foreach ($int_vars as $var) {
-        if (!is_int_loose($$var)) {
-            $$var = (int) $$var;
+        if (!is_int_loose($var)) {
+            $var = (int) $var;
         }
     }
 
