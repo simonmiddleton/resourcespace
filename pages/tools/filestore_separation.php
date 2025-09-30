@@ -20,7 +20,7 @@ SYNOPSIS
 
 DESCRIPTION
     A tool to help with the separation or merging of a filestore. A separated filestore will result in resources being stored 
-    separately from any previews genereated. A separated filestore can also be merged using this script, the operation is determined by
+    separately from any previews generated. A separated filestore can also be merged using this script, the operation is determined by
     the value of the $originals_separate_storage config with a value of true meaning that the filestore will be split. 
 
 OPTIONS SUMMARY
