@@ -2030,38 +2030,5 @@ if($use_selection_collection)
     }
     ?>
 </script>
-
-
-<script type="module">
-import { decodeBlurHash } from '<?php echo $baseurl_short ?>node_modules/fast-blurhash/index.js';
-
-function blurhashToDataURL(blurhash, width, height, punch = 1) {
-    const pixels = decodeBlurHash(blurhash, width, height, punch);
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    const imageData = ctx.createImageData(width, height);
-    imageData.data.set(pixels);
-    ctx.putImageData(imageData, 0, 0);
-    return canvas.toDataURL();
-}
-
-/*
-document.querySelectorAll('div.ImageColourWrapper').forEach(div => {
-    const blurhash = div.dataset.blurhash;
-    if (!blurhash) return;
-
-    const placeholder = blurhashToDataURL(blurhash, 32, 32);
-    div.style.backgroundImage = `url("${placeholder}")`;
-
-
-});
-*/
-
-
-</script>
-
-
 <?php
 include '../include/footer.php';

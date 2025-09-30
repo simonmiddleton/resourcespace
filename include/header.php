@@ -181,12 +181,10 @@ $page_title = get_page_title($pagename, pluginname());
                 echo "browse_clicked = false;";
             }
             ?>
-
         </script>
 
-        <script src="<?php echo $baseurl_short; ?>js/blurhash.js" type="module"></script>
-        <script src="<?php echo $baseurl_short; ?>js/global.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
-        <script src="<?php echo $baseurl_short; ?>lib/js/polyfills.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+        <script src="<?php echo $baseurl_short?>js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
+        <script src="<?php echo $baseurl_short?>lib/js/polyfills.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
         <?php
         if ($keyboard_navigation) {
