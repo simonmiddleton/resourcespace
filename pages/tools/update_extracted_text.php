@@ -1,6 +1,7 @@
 <?php
 
 # This script can be used to update all extracted text for supported file types
+# Passing -c/--col <collection_id> will only process resources in that collection
 # Passing -u/--update-all will run the extraction even if there is existing data, and overwrite the old value
 
 include_once __DIR__ . "/../../include/boot.php";
@@ -8,23 +9,38 @@ command_line_only();
 
 set_time_limit(0);
 
-$shortopts = "u";
-$longopts = array("update-all");
+$shortopts = "c:u";
+$longopts = array("col:","update-all");
 $clargs = getopt($shortopts, $longopts);
 
+$collectionid = (isset($clargs["col"]) && is_numeric($clargs["col"])) ? $clargs["col"] : ((isset($clargs["c"]) && is_numeric($clargs["c"])) ? $clargs["c"] : 0);
 $updateall = isset($clargs["update-all"]) || isset($clargs["u"]);
-
 
 if (!isset($extracted_text_field)) {
     echo 'No $extracted_text_field set - exiting' . PHP_EOL;
     exit();
 }
 
-$resources = ps_query("SELECT ref, file_extension 
-                        FROM resource 
-                        WHERE ref > 0
-                        AND LOWER(file_extension) IN ('doc','docx','xlsx','odt','ods','odp','pdf','ai','html','htm','txt','zip')
-                        ORDER BY ref ASC;");
+$join = "";
+$condition = "";
+$params = [];
+
+if ($collectionid != 0) {
+
+    echo "Filtering to collection ref: $collectionid" . PHP_EOL;
+
+    $join = " INNER JOIN collection_resource cr ON cr.resource=r.ref ";
+    $condition = " AND cr.collection = ?";
+    $params = ['i', $collectionid];
+}
+
+$resources = ps_query("SELECT r.ref, r.file_extension 
+                        FROM resource r
+                        $join
+                        WHERE r.ref > 0
+                        AND LOWER(r.file_extension) IN ('doc','docx','xlsx','odt','ods','odp','pdf','ai','html','htm','txt','zip')
+                        $condition
+                        ORDER BY r.ref ASC;", $params);
 
 
 $edit_count = 0;
