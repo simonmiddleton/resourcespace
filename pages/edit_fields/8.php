@@ -1,6 +1,6 @@
 <?php /* -------- Text Box (formatted / TinyMCE) ---------------- */ 
 
-global $tinymce_plugins, $tinymce_toolbar;
+global $tinymce_plugins, $tinymce_toolbar, $user_pref_appearance;
 
 ?>
 
@@ -33,6 +33,21 @@ global $tinymce_plugins, $tinymce_toolbar;
         promotion: false,
         branding: false,
         contextmenu: false, // Required to enable native copy and pasting
+        <?php
+        if (isset($user_pref_appearance)) {
+            if ($user_pref_appearance == "dark") {
+                ?>
+                skin: "oxide-dark",
+                content_css: "dark",
+                <?php
+            } elseif ($user_pref_appearance == "device") {
+                ?>
+                skin: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oxide-dark" : "oxide"),
+                content_css: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default"),
+                <?php
+            }
+        }
+        ?>
         setup: (editor) => {
             editor.on('blur', function(e) {
                 <?php
