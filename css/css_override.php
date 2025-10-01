@@ -93,6 +93,9 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .update_result_order_button {
             background-color: #545454;
         }
+        .ImageWrapper {
+            background-color: #5e5e5e;
+        }
         .ResourcePanel {
             background-color: #545454;
         }
