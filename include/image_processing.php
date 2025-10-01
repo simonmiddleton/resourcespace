@@ -1185,7 +1185,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
 
     $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
 
-    if (($extension == "jpg") || ($extension == "jpeg") || ($extension == "png") || ($extension == "gif" && !$ffmpeg_preview_gif)) {
+    if (in_array(strtolower($extension), ["jpg","jpeg","png"]) || (strtolower($extension) == "gif" && !$ffmpeg_preview_gif)) {
         if (isset($imagemagick_path)) {
             return create_previews_using_im($ref, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ingested, $onlysizes);
         } else {
