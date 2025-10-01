@@ -588,8 +588,6 @@ if ($ajax && getval('action', '') === 'create_debug_log_override' && enforcePost
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
 
-config_remove_user_preferences($page_def);
-
 # $lang is not a config option!
 unset($system_wide_config_options['lang']);
 foreach ($system_wide_config_options as $key => $value) {
@@ -627,7 +625,12 @@ include '../../include/header.php';
 
     <p><?php echo escape($lang['systemconfig_description']); ?></p>
     <div class="CollapsibleSections">
-        <?php config_generate_html($page_def); ?>
+        <?php        
+            // Remove user preferences from being applied, then render page before reapplying preferences back
+            $changed_vals = config_remove_user_preferences($page_def);        
+            config_generate_html($page_def); 
+            config_reapply_user_preferences($changed_vals);
+        ?>
     </div>
     <template id="autosave_tpl">
         <div class="AutoSaveStatus">

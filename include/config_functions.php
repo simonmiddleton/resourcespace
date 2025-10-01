@@ -2224,11 +2224,15 @@ function config_filter_by_search(array $page_def, array $config_type, string $fi
  * Remove user preferences by resetting to system preferences. Used to display system config or user group config
  * without the current user's preferences changing the values.
  *
- * @param  array  $page_def   Array containing page definition, from functions config_add_ ...
+ * @param  array   $page_def   Array containing page definition, from functions config_add_ ...
+ * 
+ * @return array   Array of changed keys and values (empty if none were changed)
  */
-function config_remove_user_preferences(array $page_def): void
+function config_remove_user_preferences(array $page_def): array
 {
     global $system_wide_config_options;
+
+    $changed_vals = [];
 
     // loop through every field about to be created
     foreach ($page_def as $page_item) {
@@ -2237,8 +2241,28 @@ function config_remove_user_preferences(array $page_def): void
             && isset($system_wide_config_options[$page_item[1]])
             && $GLOBALS[$page_item[1]] !== $system_wide_config_options[$page_item[1]]
         ) {
+
+            $changed_vals[$page_item[1]] = $GLOBALS[$page_item[1]];
+
             // Set the global variable back to the system value if it is different
             $GLOBALS[$page_item[1]] = $system_wide_config_options[$page_item[1]];
+        }
+    }
+
+    return $changed_vals;
+
+}
+
+/**
+ * Reapply user preferences temporarily removed by config_remove_user_preferences
+ *
+ * @param  array   $values   Array containing keys and values that need reapplying
+ */
+function config_reapply_user_preferences(array $values = []): void
+{
+    if (!empty($values)) {
+        foreach ($values as $key => $value) {
+            $GLOBALS[$key] = $value;
         }
     }
 }
