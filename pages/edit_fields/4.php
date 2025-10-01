@@ -138,6 +138,42 @@ if ($date_d_m_y) {
             let day   = jQuery('#'+field_ref+'-d').val();
             let month = jQuery('#'+field_ref+'-m').val();
             let year  = jQuery('#'+field_ref+'-y').val(); 
+            <?php
+            // If using Date and optional time, validate hour and minute
+            if ($field["type"] != 10) {
+                ?>
+                let hour = jQuery('#'+field_ref+'-h').val();
+                let minute = jQuery('#'+field_ref+'-i').val();
+                hour_is_valid = false;
+                minute_is_valid = false;
+
+                if ((hour >= 0 && hour <= 23) || (!hour)) {
+                    hour_is_valid=true;
+                }
+                if ((minute >= 0 && minute <= 59) || (!minute)) {
+                    minute_is_valid=true;
+                }
+                if (!hour_is_valid || !minute_is_valid) {
+                    styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);
+                    return false;
+                }
+
+            <?php
+            } ?>
+            // Day and month viability check
+            let day_is_valid=false;
+            let month_is_valid=false;
+            if (day >= 1 && day <= 31) {
+                day_is_valid=true;
+            }
+            if (month >= 1 && month <= 12) {
+                month_is_valid=true;
+            }
+            if (!day_is_valid || !month_is_valid) {
+                styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);
+                return false;
+            }
+
             // The minimum viable non-blank date must have a valid year which can be CE or BCE
             let year_formatted="";
                 if (year != "" && year!=undefined) {
