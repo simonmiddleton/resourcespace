@@ -14,7 +14,7 @@
  */
 function csv_user_import_process($csv_file, $user_group_id, &$messages, $processcsv = false)
 {
-    global $defaultlanguage;
+    global $defaultlanguage, $languages;
 
     $mandatory_columns = array('username', 'email');
     $possible_columns = ps_query("describe user", array());
@@ -117,6 +117,48 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
                     $error_count++;
 
                     continue;
+                }
+            }
+
+            if ('account_expires' === $header && '' != $cell_value) {
+                $expires = $cell_value;
+                if ($expires != "" && (preg_match("/^\d{4}-\d{2}-\d{2}$/", $expires) === 0 || strtotime($expires) === false)) {
+                    array_push($messages, ucfirst($header) .  ' "' .$expires . '" is not a valid date');
+                    $error_count++;
+                }
+            }
+
+            if('ip_restrict' === $header && '' != $cell_value) {
+                $ip_restrict = $cell_value;
+                $ip_valid = false;
+
+                if (strpos($ip_restrict, '.') !== false) {
+                    if (!preg_match('/[0-9\*]\*|\*[0-9\*]/', $ip_restrict)) {
+                        $ip_check = str_replace('*', '0', $ip_restrict);
+                        if (filter_var($ip_check, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+                            $ip_valid = true;
+                        }
+                    }
+                }
+                if (strpos($ip_restrict, ':') !== false) {
+                    if (!preg_match('/[0-9a-fA-F\*]\*|\*[0-9a-fA-F\*]/', $ip_restrict)) {
+                        $ip_check = str_replace('*', '0', $ip_restrict);
+                        if (filter_var($ip_check, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+                            $ip_valid = true;
+                        }
+                    }
+                }
+                if (!$ip_valid) {
+                    array_push($messages, ucfirst($header) . ' "' .$ip_restrict . '" is not a valid IP');
+                    $error_count++;
+                }
+            }
+
+            if ('lang' === $header && '' != $cell_value) {
+                $lang = $cell_value;
+                if (!array_key_exists($lang, $languages)) {
+                    array_push($messages, ucfirst($header) . ' "' .$lang . '" is not a valid language ID');
+                    $error_count++;
                 }
             }
             $user_creation_data[$header] = $cell_value;
