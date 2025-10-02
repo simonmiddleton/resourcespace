@@ -133,16 +133,28 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
                 $ip_valid = false;
 
                 if (strpos($ip_restrict, '.') !== false) {
-                    if (!preg_match('/[0-9\*]\*|\*[0-9\*]/', $ip_restrict)) {
-                        $ip_check = str_replace('*', '0', $ip_restrict);
+                    if (!preg_match('/[0-9\*]\*|\*[0-9\*.]/', $ip_restrict)) {
+                        if (substr_count($ip_restrict, '.') === 1) {
+                            $ip_append = '0.0.0';
+                        } elseif (substr_count($ip_restrict, '.') === 2) {
+                            $ip_append = '0.0';
+                        } else {
+                            $ip_append = '0';
+                        }
+                        $ip_check = str_replace('*', $ip_append, $ip_restrict);
                         if (filter_var($ip_check, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
                             $ip_valid = true;
                         }
                     }
                 }
                 if (strpos($ip_restrict, ':') !== false) {
-                    if (!preg_match('/[0-9a-fA-F\*]\*|\*[0-9a-fA-F\*]/', $ip_restrict)) {
-                        $ip_check = str_replace('*', '0', $ip_restrict);
+                    if (!preg_match('/[0-9a-fA-F\*]\*|\*[0-9a-fA-F\*:]/', $ip_restrict)) {
+                        if ((substr_count($ip_restrict, '::') === 1) || (substr_count($ip_restrict, ':') === 7)) {
+                            $ip_append = '0';
+                        } else {
+                            $ip_append = ':0';
+                        }
+                        $ip_check = str_replace('*', $ip_append, $ip_restrict);
                         if (filter_var($ip_check, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
                             $ip_valid = true;
                         }
