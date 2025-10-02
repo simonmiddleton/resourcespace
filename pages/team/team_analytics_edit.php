@@ -230,7 +230,7 @@ if ($print) {
                 ?>
                 <option value="" disabled="disabled" style="background-color:#ccc;">--- <?php echo escape($lang["themes"]); ?> ---</option>
                 <?php
-                $list = search_public_collections("", "name", "ASC", false, true, false);
+                $list = search_public_collections("", "name", "ASC", false, false);
                 for ($n = 0; $n < count($list); $n++) {
                     ?>
                     <option value="<?php echo escape($list[$n]["ref"]) ?>"
