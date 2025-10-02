@@ -912,12 +912,13 @@ function refresh_collection_frame($collection = "")
  * @param  string $order_by
  * @param  string $sort
  * @param  boolean $exclude_themes
+ * @param  boolean $exclude_public
  * @param  boolean $include_resources
  * @param  boolean $override_group_restrict
  * @param  integer $fetchrows
  * @return array
  */
-function search_public_collections($search = "", $order_by = "name", $sort = "ASC", $exclude_themes = true, $include_resources = false, $override_group_restrict = false, $fetchrows = -1)
+function search_public_collections($search = "", $order_by = "name", $sort = "ASC", $exclude_themes = true, $exclude_public = false, $include_resources = false, $override_group_restrict = false, $fetchrows = -1)
 {
     global $userref,$public_collections_confine_group,$userref,$usergroup;
 
@@ -1085,6 +1086,10 @@ function search_public_collections($search = "", $order_by = "name", $sort = "AS
             $featured_type_filter_sql = "(c.`type` = ? " . $fcf_sql[0] . ")";
             $featured_type_filter_sql_params = array_merge(["i",COLLECTION_TYPE_FEATURED], $fcf_sql[1]);
         }
+        if ($exclude_public) {
+            $public_type_filter_sql = "";
+            $public_type_filter_sql_params = [];
+        }
     }
 
     if ($public_type_filter_sql != "" && $featured_type_filter_sql != "") {
@@ -1163,7 +1168,7 @@ function do_collections_search($search, $restypes, $archive = 0, $order_by = '',
 
     if ($search_includes_themes_now) {
         # Same search as when searching within public collections.
-        $result = search_public_collections($search, "name", "ASC", !$search_includes_themes_now, true, false, $fetchrows);
+        $result = search_public_collections($search, "name", "ASC", !$search_includes_themes_now, false, true, false, $fetchrows);
     }
     return $result;
 }
