@@ -66,15 +66,6 @@ $fieldcolumns = get_resource_type_field_columns();
 
 $type_change = false;
 
-if (getval("save", "") != "" && getval("delete", "") == "" && enforcePostRequest(false)) {
-    $saved = save_resource_type_field($ref, $fieldcolumns, $_POST);
-    if ($saved) {
-        toast_notification(ToastNotificationType::Success, $lang['saved']);
-    } else {
-        toast_notification(ToastNotificationType::Error, $lang['error_generic']);
-    }
-}
-
 $confirm_delete = false;
 if (getval("delete", "") != "" && enforcePostRequest($ajax)) {
     $confirmdelete = getval("confirmdelete", "");
@@ -117,6 +108,15 @@ if (getval("delete", "") != "" && enforcePostRequest($ajax)) {
 }
 
 include "../../include/header.php";
+
+if (getval("save", "") != "" && getval("delete", "") == "" && enforcePostRequest(false)) {
+    $saved = save_resource_type_field($ref, $fieldcolumns, $_POST);
+    if ($saved) {
+        toast_notification(ToastNotificationType::Success, $lang['saved']);
+    } else {
+        toast_notification(ToastNotificationType::Error, $lang['error_generic']);
+    }
+}
 
 if (isset($delete_resource_type_field_error)) {
     toast_notification(ToastNotificationType::Error, $result);
