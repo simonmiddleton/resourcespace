@@ -76,7 +76,7 @@ include "../include/header.php";
     </div>
 
     <?php
-    $collections = search_public_collections($find, $col_order_by, $sort, $public_collections_exclude_themes, true, $override_group_restrict == "true");
+    $collections = search_public_collections($find, $col_order_by, $sort, $public_collections_exclude_themes, false, true, $override_group_restrict == "true");
     $results = count($collections);
     $totalpages = ceil($results / $per_page);
     $curpage = floor($offset / $per_page) + 1;

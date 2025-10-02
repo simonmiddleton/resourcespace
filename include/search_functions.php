@@ -1292,7 +1292,7 @@ function search_special($search, $sql_join, $fetchrows, $sql_prefix, $sql_suffix
                 $validcollections = get_session_collections(get_rs_session_id(), $userref);
             } else {
                 $user_collections = array_column(get_user_collections($userref, "", "name", "ASC", -1, false), "ref");
-                $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
+                $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false, false), 'ref');
                 # include collections of requested resources
                 $request_collections = array();
                 if (checkperm("R")) {
