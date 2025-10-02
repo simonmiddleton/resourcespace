@@ -112,7 +112,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
             $requestparams[] = "i";
             $requestparams[] = $userref;
         }
-        $requestcount = ps_value("select count(*) value from request where status = 0 $requestcondition", $requestparams, 0);
+        $requestcount = ps_value("SELECT COUNT(*) value FROM request WHERE status = 0 $requestcondition", $requestparams, 0);
         if ($requestcount > 0) {
             $extramessage['requestcount'] = $requestcount;
             $extramessages = true;
@@ -120,7 +120,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
     }
 
     if (checkperm("r") && $research_request) {
-        $researchcount = ps_value("select count(*) value from research_request where status = 0", array(), 0);
+        $researchcount = ps_value("SELECT COUNT(*) value FROM research_request WHERE status = 0", array(), 0);
         if ($researchcount > 0) {
             $extramessage['researchcount'] = $researchcount;
             $extramessages = true;
