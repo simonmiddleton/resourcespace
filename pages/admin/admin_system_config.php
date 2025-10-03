@@ -626,10 +626,14 @@ include '../../include/header.php';
     <p><?php echo escape($lang['systemconfig_description']); ?></p>
     <div class="CollapsibleSections">
         <?php        
-            // Remove user preferences from being applied, then render page before reapplying preferences back
-            $changed_vals = config_remove_user_preferences($page_def);        
+            // Remove user preferences from being applied, then render page
+            config_remove_user_preferences($page_def);        
             config_generate_html($page_def); 
-            config_reapply_user_preferences($changed_vals);
+            
+            // Put back system / user preferences
+            process_config_options(array());
+            process_config_options(array('usergroup' => $usergroup));
+            process_config_options(array('user' => $userref));
         ?>
     </div>
     <template id="autosave_tpl">
