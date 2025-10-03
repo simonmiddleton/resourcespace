@@ -109,6 +109,7 @@ switch ($returntype) {
             $tgtparams["restypes"]  = "new";
             $tgtparams["type"]  = "resource_type_field";
             $tgtparams["noreload"] = "true";
+            $tgtparams["fieldrestype"] = $returnid;
             $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = true;
