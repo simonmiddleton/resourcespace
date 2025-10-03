@@ -25,6 +25,7 @@ switch ($newtype) {
         $newparam = "newfield";
         $newtext = $lang["admin_resource_type_field_create"];
         $extraparams["fieldtype"] = FIELD_TYPE_CHECK_BOX_LIST;
+        $extraparams["newfieldrestype"] = getval("fieldrestype", "");
         $csrf_code = "admin_resource_type_fields";
         break;
 
