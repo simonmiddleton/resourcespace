@@ -135,9 +135,10 @@ if ($offline_job_queue) {
             sleep(2);
         }
     }
+
+    clear_process_lock($lock_name);
+
     echo $lang["complete"] . ' ' . date('Y-m-d H:i:s') . PHP_EOL;
 } else {
     echo $lang["offline_processing_disabled"] . PHP_EOL;
 }
-
-clear_process_lock($lock_name);
