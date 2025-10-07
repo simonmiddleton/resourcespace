@@ -7020,6 +7020,7 @@ function replace_resource_file($ref, $file_location, $no_exif = false, $autorota
     global $replace_resource_preserve_option, $notify_on_resource_change_days, $lang, $userref;
     debug("replace_resource_file(ref=" . $ref . ", file_location=" . $file_location . ", no_exif=" . ($no_exif ? "TRUE" : "FALSE") . " , keep_original=" . ($keep_original ? "TRUE" : "FALSE"));
 
+    $ref = (int) $ref;
     # FStemplate support - do not allow samples from the template to be replaced
     if (resource_file_readonly($ref)) {
         return false;
