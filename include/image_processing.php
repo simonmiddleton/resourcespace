@@ -3855,14 +3855,14 @@ function create_previews_using_im(
                 }
                 $addcheckbdpre = "-size " . ceil($cb_width) . "x" . ceil($cb_height);
                 if ($extension == "svg") {
-                    $addcheckbdpre = $addcheckbdpre  . " -scale " . $cb_scale . "% -background none tile:pattern:checkerboard -modulate 150,100 ";
+                    $addcheckbdpre .= " tile:pattern:checkerboard -background none -modulate 150,100 -scale " . $cb_scale . "% -crop %%CB_CROP%% +repage ";
                 } else {
                     $addcheckbdpre .= " tile:pattern:checkerboard -modulate 150,100 -scale " . $cb_scale . "% -crop %%CB_CROP%% +repage ";
-                    $cmdparams["%%CB_CROP%%"] = new CommandPlaceholderArg(
-                        (int)$sw . "x" . (int)$sh . "+0+0",
-                        [CommandPlaceholderArg::class, 'alwaysValid']
-                    );
                 }
+                $cmdparams["%%CB_CROP%%"] = new CommandPlaceholderArg(
+                    (int)$sw . "x" . (int)$sh . "+0+0",
+                    [CommandPlaceholderArg::class, 'alwaysValid']
+                );
                 $addcheckbdafter = "-compose over -composite ";
             }
 
