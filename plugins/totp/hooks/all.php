@@ -76,5 +76,5 @@ function HookTotpAllBeforetermsredirect()
  */
 function HookTotpAllImpersonateuser($userref)
 {
-    setcookie("totp", TOTP_cookie($userref), strtotime("+1 year"), "/");
+    rs_setcookie("totp", TOTP_cookie($userref), 1, "/", "", false, true);
 }
