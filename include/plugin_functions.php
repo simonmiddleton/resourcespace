@@ -1000,6 +1000,10 @@ function config_multi_ftype_select($name, $label, $current, $width = 300, $size 
                     $fieldrestypenames = [];
 
                     if ($field["global"] != 1) {
+                        if ($fieldrestypes === [""]) {
+                            // No types are assigned to this field
+                            continue;
+                        }
                         foreach ($fieldrestypes as $fieldrestype) {
                             $fieldrestypenames[] = i18n_get_translated($resource_types[$fieldrestype]);
                         }
