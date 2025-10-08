@@ -289,11 +289,23 @@ function ProcessFolder($folder)
                 $extension = $modified_extension;
             }
 
-            global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
-            # Check to see if extension is banned, do not add if it is banned
-            if (array_search(strtolower($extension), array_map('strtolower', $banned_extensions)) !== false) {
+            // Verify if the file would actually pass the upload checks to prevent any unnecessary processing (e.g. collections)
+            $dry_run_process_file_upload = process_file_upload(
+                new SplFileInfo($fullpath),
+                new SplFileInfo(get_temp_dir(false) . '/staticsync/' . generateSecureKey(16) . '.bin'),
+                ['file_move' => 'dry_run']
+            );
+            if (!$dry_run_process_file_upload['success']) {
+                printf(
+                    ' * Skipping file - %s: %s%s',
+                    $fullpath,
+                    $dry_run_process_file_upload['error']->i18n($lang),
+                    PHP_EOL
+                );
                 continue;
             }
+
+            global $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
 
             if ($count > $staticsync_max_files) {
                 return true;
