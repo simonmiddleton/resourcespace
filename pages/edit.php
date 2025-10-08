@@ -1721,7 +1721,7 @@ if (getval("copyfrom","")!="")
     }
   }
 
-if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)  && !$multiple && $metadatatemplate != 0)
+if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type) && !$multiple && $metadatatemplate != 0 && !isset($show_error))
     {
     $use             = $metadatatemplate;
     $original_fields = get_resource_field_data($ref, $multiple, true, null, '', $tabs_on_edit);
