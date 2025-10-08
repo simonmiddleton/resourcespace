@@ -3119,6 +3119,10 @@ function get_slideshow_files_data()
             )
         );
 
+        if ((int) $slideshow['resource_ref'] > 0) {
+            $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
+        }
+
         $slideshow_files[] = $slideshow_file;
     }
 

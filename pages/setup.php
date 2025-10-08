@@ -951,7 +951,7 @@ if (get_post_bool('ajax')) {
 
                     $filename = pathinfo($file, PATHINFO_FILENAME);
 
-                    $new_slideshow_image = set_slideshow($filename, 1, 0, $login_show);
+                    $new_slideshow_image = set_slideshow($filename, null, 1, 0, $login_show);
 
                     $from_file = "{$homeanim_folder_path}/{$file}";
                     $to_file   = "{$to_folder}/{$file}";
