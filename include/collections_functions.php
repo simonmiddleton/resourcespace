@@ -997,9 +997,9 @@ function search_public_collections($search = "", $order_by = "name", $sort = "AS
                 $keywords[$n] = substr($keywords[$n], 16);
                 $keyref = $keywords[$n];
                 $sql .= " AND (u.username RLIKE ? OR u.fullname RLIKE ?)";
-                $sql_params[] = "i";
+                $sql_params[] = "s";
                 $sql_params[] = $keyref;
-                $sql_params[] = "i";
+                $sql_params[] = "s";
                 $sql_params[] = $keyref;
             } elseif (substr($keywords[$n], 0, 19) == "collectionownerref:") {
                 $keywords[$n] = substr($keywords[$n], 19);
