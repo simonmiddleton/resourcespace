@@ -2823,7 +2823,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 ?>
                 <div>
                 <?php
-                render_top_right_menu_btn();
+                render_top_right_menu_btn($links[$i]['context_menu']);
                 render_featured_collection_context_menu("BreadCrumb{$i}", $links[$i]['context_menu']);
                 ?>
                 </div>
@@ -5197,9 +5197,7 @@ function render_featured_collection(array $ctx, array $fc)
                 </div>
             </a>
             <?php
-            if (!$is_smart_featured_collection) {
-                render_top_right_menu_btn();
-            }
+            render_top_right_menu_btn($tools);
             ?>
         </div>
         <?php
@@ -5246,9 +5244,15 @@ function render_featured_collection(array $ctx, array $fc)
 
 /**
  * Render the top right menu button ellipsis icon.
+ * 
+ * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onlclick: string}> $options The available menu options
  */
-function render_top_right_menu_btn()
+function render_top_right_menu_btn(array $options): void
 {
+    if ($options === []) {
+        return;
+    }
+
     ?>
     <div class="top-right-menu" onclick="return showContextMenu(this);">
         <i class="fa-solid fa-ellipsis-vertical"></i>
