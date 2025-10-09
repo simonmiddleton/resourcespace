@@ -5245,7 +5245,7 @@ function render_featured_collection(array $ctx, array $fc)
 /**
  * Render the top right menu button ellipsis icon.
  * 
- * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onlclick: string}> $options The available menu options
+ * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onclick: string}> $options The available menu options
  */
 function render_top_right_menu_btn(array $options): void
 {
@@ -5264,7 +5264,7 @@ function render_top_right_menu_btn(array $options): void
  * Render a featured collection (category) contextual menu
  *
  * @param string $id The HTML identifier for the menu container.
- * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onlclick: string}> $options The available menu options
+ * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onclick: string}> $options The available menu options
  */
 function render_featured_collection_context_menu(string $id, array $options): void
 {
