@@ -432,9 +432,29 @@ function ProcessFolder($folder)
                             $params[] = $collection_parent;
                         }
 
-                        $collection_sql = 'SELECT DISTINCT ref as `value` FROM collection c LEFT JOIN collection_resource cr on c.ref = cr.collection 
-                                           WHERE parent ' . $parent_sql . ' AND type = ? AND name = ? GROUP BY c.ref HAVING count(DISTINCT cr.resource) > 0';
-                        $collection = ps_value($collection_sql, array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', ucwords($name)]), 0);
+                        /*
+                        When trying to determine if we already have a featured collection, the viable options are:-
+                        - an actual featured collection (i.e. has resources), or;
+                        - an ambiguous state record (i.e. it doesn't have resources nor any children - so not a true
+                        category either; note they get displayed as a category by default).
+                        */
+                        $collection = ps_value(
+                              "SELECT DISTINCT c.ref as `value`,
+                                      count(DISTINCT cr.resource) > 0 AS has_resources
+                                 FROM collection AS c
+                            LEFT JOIN collection_resource AS cr on c.ref = cr.collection
+                            LEFT JOIN collection AS cc ON c.ref = cc.parent
+                                WHERE c.parent {$parent_sql}
+                                  AND c.`type` = ?
+                                  AND c.`name` = ?
+                             GROUP BY c.ref
+                               HAVING count(DISTINCT cr.resource) > 0
+                                   OR (count(DISTINCT cr.resource) = 0 AND count(DISTINCT cc.ref) = 0)
+                             ORDER BY has_resources DESC
+                                LIMIT 1",
+                            array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', ucwords($name)]),
+                            0
+                        );
 
                         if ($collection == 0) {
                             $collection = create_collection($userref, ucwords($name));
