@@ -349,9 +349,9 @@ div.MessageBox a {
 #CollectionDiv .ActionsContainer .chosen-single:hover {color:#999;}
 
 .FeaturedSimpleTile {
-    background: white;
-    color:#eee;
-       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background: rgba(30, 30, 30, 0.70);
+    color: #FFF;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 
 }
 .FeaturedSimpleTile:hover {

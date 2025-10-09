@@ -2823,7 +2823,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 ?>
                 <div>
                 <?php
-                render_top_right_menu_btn();
+                render_top_right_menu_btn($links[$i]['context_menu']);
                 render_featured_collection_context_menu("BreadCrumb{$i}", $links[$i]['context_menu']);
                 ?>
                 </div>
@@ -5196,7 +5196,9 @@ function render_featured_collection(array $ctx, array $fc)
                     ?>
                 </div>
             </a>
-            <?php render_top_right_menu_btn(); ?>
+            <?php
+            render_top_right_menu_btn($tools);
+            ?>
         </div>
         <?php
         render_featured_collection_context_menu(md5($fc['ref']), $tools);
@@ -5223,6 +5225,17 @@ function render_featured_collection(array $ctx, array $fc)
             </div>            
         </div><!-- End of ListTools -->
         <?php
+    } else {
+        ?>
+        <div>
+            <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
+                <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+                    <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
+                </div>
+            </a>
+        </div>
+
+        <?php
     }
     ?>
     </div><!-- End of FeaturedSimpleTile_<?php echo escape($fc["ref"]); ?>-->
@@ -5231,9 +5244,15 @@ function render_featured_collection(array $ctx, array $fc)
 
 /**
  * Render the top right menu button ellipsis icon.
+ * 
+ * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onclick: string}> $options The available menu options
  */
-function render_top_right_menu_btn()
+function render_top_right_menu_btn(array $options): void
 {
+    if ($options === []) {
+        return;
+    }
+
     ?>
     <div class="top-right-menu" onclick="return showContextMenu(this);">
         <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -5245,7 +5264,7 @@ function render_top_right_menu_btn()
  * Render a featured collection (category) contextual menu
  *
  * @param string $id The HTML identifier for the menu container.
- * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onlclick: string}> $options The available menu options
+ * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onclick: string}> $options The available menu options
  */
 function render_featured_collection_context_menu(string $id, array $options): void
 {
