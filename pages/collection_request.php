@@ -9,7 +9,7 @@ if ($k == "" || !check_access_key_collection($ref, $k)) {
 }
 
 if (!checkperm('q')) {
-    exit("<br /><br /><strong>" . $lang["error-permissiondenied"] . "</strong>");
+    exit("<br /><br /><strong>" . escape($lang["error-permissiondenied"]) . "</strong>");
 }
 
 include "../include/request_functions.php";
@@ -55,7 +55,7 @@ foreach ($resource_types as $type) {
 
 # Prevent "request all" resources in a collection if the user has access to all of its resources
 if ($collection_request_min_access == 0) {
-    exit("<br /><br /><strong>" . $lang["error-cant-request-all-are-open"] . "</strong>");
+    exit("<br /><br /><strong>" . escape($lang["error-cant-request-all-are-open"]) . "</strong>");
 }
 
 if (getval("save", "") != "" && enforcePostRequest(false)) {
@@ -89,7 +89,7 @@ if (getval("save", "") != "" && enforcePostRequest(false)) {
     } else {
         ?>
         <script>
-            CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&k=<?php echo escape($k); ?>",true);
+            CentralSpaceLoad("<?php echo generateURL("{$baseurl_short}pages/done.php", ['text' => 'resource_request', 'k' => $k]); ?>", true);
         </script>
         <?php
     }
@@ -242,7 +242,9 @@ include "../include/header.php";
                 <div class="FormError">!! <?php echo $error ?> !!</div>
                 <?php
             } ?>         
-            <input name="cancel" type="button" value="<?php echo escape($lang["cancel"]); ?>" onclick="document.location='<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo urlencode($ref) ?>';"/>&nbsp;
+            <input name="cancel" type="button" value="<?php echo escape($lang["cancel"]); ?>" onclick="document.location='<?php
+                echo generateURL("{$baseurl_short}pages/search.php", ['search' => "!collection{$ref}"]);
+            ?>';"/>&nbsp;
             <input name="save" value="true" type="hidden" />
             <input type="submit" value="<?php echo escape($lang["requestcollection"]); ?>" />
         </div>
