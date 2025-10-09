@@ -627,7 +627,7 @@ final class IIIFRequest
     {
         $annotation["id"] = $this->rooturl . $this->request["id"] . "/annotation/" . $position;
         $annotation["type"] = "Annotation";
-        $annotation["motivation"] = "Painting";
+        $annotation["motivation"] = "painting";
         $annotation["body"] = $this->get_media($this->processing["resource"], $this->processing["size_info"]);
         $annotation["target"] = $this->rooturl . $this->request["id"] . "/canvas/" . $position;
         return $annotation;
