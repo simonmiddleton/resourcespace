@@ -108,7 +108,6 @@ Set slideshow flags
 ===================
 Available options:
  - homepage_show
- - featured_collections_show
  - login_show
 */
 if ($ajax === 'true' && $action == 'set_flag' && enforcePostRequest($ajax)) {
@@ -128,7 +127,6 @@ if ($ajax === 'true' && $action == 'set_flag' && enforcePostRequest($ajax)) {
             $slideshow_id,
             $slideshow['resource_ref'],
             $slideshow['homepage_show'],
-            $slideshow['featured_collections_show'],
             $slideshow['login_show']
         );
     }
@@ -193,7 +191,6 @@ include '../../include/header.php';
                 <tr class="ListviewTitleStyle">
                     <th><?php echo escape($lang["preview"]); ?></th>
                     <th><?php echo escape($lang["home_page"]); ?></th>
-                    <th><?php echo escape($lang["theme"]); ?></th>
                     <th><?php echo escape($lang["login_word"]); ?></th>
                     <th><?php echo escape($lang["tools"]); ?></th>
                 </tr>
@@ -217,7 +214,6 @@ include '../../include/header.php';
                     }
 
                     $homepage_show = ($slideshow_file_info['homepage_show'] == 1 ? 'checked' : '');
-                    $featured_collections_show = ($slideshow_file_info['featured_collections_show'] == 1 ? 'checked' : '');
                     $login_show = ($slideshow_file_info['login_show'] == 1 ? 'checked' : '');
                     $slideshow_ref = $slideshow_file_info['ref'];
                     ?>
@@ -252,16 +248,6 @@ include '../../include/header.php';
                                 value="1"
                                 onclick="SetSlideshowFlag(this);"
                                 <?php echo $homepage_show; ?>
-                            >
-                        </td>
-
-                        <td>
-                            <input
-                                type="checkbox"
-                                name="featured_collections_show"
-                                value="1"
-                                onclick="SetSlideshowFlag(this);"
-                                <?php echo $featured_collections_show; ?>
                             >
                         </td>
 
