@@ -5196,7 +5196,11 @@ function render_featured_collection(array $ctx, array $fc)
                     ?>
                 </div>
             </a>
-            <?php render_top_right_menu_btn(); ?>
+            <?php
+            if (!$is_smart_featured_collection) {
+                render_top_right_menu_btn();
+            }
+            ?>
         </div>
         <?php
         render_featured_collection_context_menu(md5($fc['ref']), $tools);
@@ -5222,6 +5226,17 @@ function render_featured_collection(array $ctx, array $fc)
                 </select>
             </div>            
         </div><!-- End of ListTools -->
+        <?php
+    } else {
+        ?>
+        <div>
+            <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
+                <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+                    <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
+                </div>
+            </a>
+        </div>
+
         <?php
     }
     ?>
