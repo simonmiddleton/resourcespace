@@ -239,7 +239,7 @@ include "../include/header.php";
 
         <div class="QuestionSubmit">
             <?php if ($error) { ?>
-                <div class="FormError">!! <?php echo $error ?> !!</div>
+                <div class="FormError">!! <?php echo escape($error); ?> !!</div>
                 <?php
             } ?>         
             <input name="cancel" type="button" value="<?php echo escape($lang["cancel"]); ?>" onclick="document.location='<?php
