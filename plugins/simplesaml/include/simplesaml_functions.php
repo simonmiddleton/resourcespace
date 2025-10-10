@@ -357,6 +357,7 @@ function get_saml_sp_name()
         $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
         $GLOBALS["use_error_exception"] = true;
         try {
+            require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
             $as = new SimpleSAML\Auth\Simple($simplesaml_sp);
             $as->getAuthSource();
         } catch (exception $e) {
