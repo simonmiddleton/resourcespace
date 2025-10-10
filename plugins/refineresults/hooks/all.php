@@ -132,8 +132,8 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
        <?php generateFormToken("refineresults_before_search_results"); ?>
     <div class="Question Inline" id="question_refine" style="border-top:none;">
     <label id="label_refine" for="refine_keywords"><?php echo escape($lang["additionalkeywords"]); ?></label>
-    <input class="medwidth Inline" type=text id="refine_keywords" name="refine_keywords" value="<?php echo $value ?>">
-    <input type=hidden name="archive" value="<?php echo $archive?>">
+    <input class="medwidth Inline" type=text id="refine_keywords" name="refine_keywords" value="<?php echo escape($value); ?>">
+    <input type=hidden name="archive" value="<?php echo escape($archive); ?>">
     <input class="vshrtwidth Inline" name="save" type="submit" id="refine_submit" value="&nbsp;&nbsp;<?php echo escape($lang["refine"]); ?>&nbsp;&nbsp;" />
     <div class="clearerleft"> </div>
     </div>

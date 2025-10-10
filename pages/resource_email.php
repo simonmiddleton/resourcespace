@@ -82,12 +82,22 @@ if (getval("save", "") != "" && enforcePostRequest(getval("ajax", false))) {
     }
 }
 
+$default_url_qs = [
+    'search' => $search,
+    'offset' => $offset,
+    'order_by' => $order_by,
+    'sort' => $sort,
+    'archive' => $archive,
+];
+
 include "../include/header.php";
 ?>
 
 <div class="BasicsBox">
     <p>
-        <a onclick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>">
+        <a onclick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this,true);" href="<?php
+            echo generateURL("{$baseurl_short}pages/resource_share.php", $default_url_qs, ['ref' => $ref]);
+        ?>">
             <?php echo LINK_CARET_BACK . escape($lang["backtoshareresource"]); ?>
         </a>
     </p>
@@ -101,7 +111,7 @@ include "../include/header.php";
         ?>
     </p>
 
-    <form method=post id="resourceform" action="<?php echo $baseurl_short?>pages/resource_email.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>">
+    <form method=post id="resourceform" action="<?php echo generateURL("{$baseurl_short}pages/resource_email.php", $default_url_qs); ?>">
         <input type=hidden name=ref value="<?php echo escape($ref)?>">
         <?php generateFormToken("resourceform"); ?>
 
@@ -113,7 +123,7 @@ include "../include/header.php";
 
         <div class="Question">
             <label><?php echo escape($lang["resourceid"])?></label>
-            <div class="Fixed"><?php echo $resource["ref"]; ?></div>
+            <div class="Fixed"><?php echo escape($resource["ref"]); ?></div>
             <div class="clearerleft"></div>
         </div>
 
@@ -201,4 +211,3 @@ include "../include/header.php";
 
 <?php
 include "../include/footer.php";
-?>
