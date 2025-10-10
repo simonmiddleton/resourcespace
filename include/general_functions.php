@@ -5643,7 +5643,7 @@ function is_safe_url($url): bool
     $url_parts = parse_url($url);
     if ($url_parts === false) {
         return false;
-    } elseif (!in_array($url_parts['scheme'], ['http', 'https'])) {
+    } elseif (!in_array($url_parts['scheme'], ['http', 'https', 'mailto'])) {
         return false;
     }
 

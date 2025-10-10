@@ -18,6 +18,21 @@ $use_cases = [
         'expected' => 'https://test.localhost/path/?p1=v1&p2=v2#fragment',
     ],
     [
+        'name' => 'Allow "mailto" schema URI',
+        'input' => 'mailto:test@montala.com',
+        'expected' => 'mailto:test@montala.com',
+    ],
+    [
+        'name' => 'Sanitise unsafe "mailto" schema URI (1)',
+        'input' => 'mailto"><p>test</p>:test@montala.com',
+        'expected' => '#',
+    ],
+    [
+        'name' => 'Sanitise unsafe "mailto" schema URI (2)',
+        'input' => 'mailto:test@montala.com"><p>test</p>',
+        'expected' => '#',
+    ],
+    [
         'name' => 'Allow root-relative URL (web root)',
         'setup' => fn() => $GLOBALS['baseurl_short'] = '/',
         'input' => '/path/?p1=v1&p2=v2#fragment',

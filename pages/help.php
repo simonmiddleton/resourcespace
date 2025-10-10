@@ -33,7 +33,7 @@ include "../include/header.php";
                 // Build link for the specified KnowlegeBase page
                 echo '<iframe src="https://www.resourcespace.com/knowledge-base/' . escape($page) . '?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
             } else {
-                echo strip_tags_and_attributes(text("introtext"), ['iframe'], ['src']);
+                echo strip_tags_and_attributes(text("introtext"), ['iframe', 'a'], ['src', 'href']);
             }
             ?>
         </p>
