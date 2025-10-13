@@ -30,7 +30,7 @@ function HookApi_webhooksEditExtra_edit_buttons()
 function HookApi_webhooksEditRedirectaftersave()
 {
     // Process the saved form and access the remote script.
-    global $api_webhooks_urls,$ref;
+    global $api_webhooks_urls, $ref;
     if (!isset($api_webhooks_urls)) {
         return false;
     }
@@ -44,17 +44,18 @@ function HookApi_webhooksEditRedirectaftersave()
 
     // Perform API call.
     $url = $button["url"] . $ref;
-    $options = array
-            (
-            'http' => array(
-            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method'  => 'POST',
-            'ignore_errors' => true
-            )
-            );
+    $options = array(
+                'http' => array(
+                        'header'  => "Content-type: application/x-www-form-urlencoded\r\n"
+                                   . "Content-Length: " . strlen($ref) . "\r\n",
+                        'content' => $ref,
+                        'method'  => 'POST',
+                        'ignore_errors' => true
+                ),
+    );
+
     $context  = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
-    global $api_webhooks_urls;
 
     // Handle any errors.
     if (strpos($http_response_header[0], "200 OK") === false) {
