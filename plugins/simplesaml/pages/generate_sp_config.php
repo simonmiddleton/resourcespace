@@ -9,6 +9,7 @@ if (!checkperm('a')) {
     exit($lang['error-permissiondenied']);
 }
 include_once __DIR__ . '/../include/simplesaml_functions.php';
+require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
 
 $plugin_name = 'simplesaml';
 if (!in_array($plugin_name, $plugins)) {
@@ -78,7 +79,6 @@ foreach ($saml_settings as $saml_setting => $configvalue) {
     $configval = $samlvalue;
     if ($saml_setting == "auth.adminpassword") {
         // Hash value for use in config
-        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
         $hasher = new Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher(
             4, // time cost
             65536, // memory cost
@@ -118,7 +118,6 @@ if (getval('sp_submit', '') !== '' && enforcePostRequest(false)) {
     $metadata_xml = trim(getval("metadata_xml", ""));
 
     if ($metadata_xml != "") {
-        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
         (new \SimpleSAML\Utils\XML())->checkSAMLMessage($metadata_xml, 'saml-meta');
         $entities = \SimpleSAML\Metadata\SAMLParser::parseDescriptorsString($metadata_xml);
         foreach ($entities as &$entity) {
