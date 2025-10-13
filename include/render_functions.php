@@ -4466,10 +4466,11 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 }
 
             # Use a display template to render this field
-            $template = strip_tags_and_attributes($field['display_template'], array("a"), ['href', 'target', 'rel', 'title']);
+            $template = $field['display_template'];
+            $template = str_replace(['[url]', '%5Burl%5D'], $value_for_url, $template); # prevent sanitising the placeholder (within strip_tags_and_attributes)
+            $template = strip_tags_and_attributes($template, array("a"), ['href', 'target', 'rel', 'title']);
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', $value, $template);
-            $template = str_replace(['[url]', '%5Burl%5D'], escape($value_for_url), $template);
             $template = str_replace('[warning]', escape($warningtext), $template);
             $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', strip_tags_and_attributes($dismisslink, array("a"), array("href", "onclick")), $template);
