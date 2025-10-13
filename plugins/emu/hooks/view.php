@@ -7,7 +7,7 @@ function HookEmuViewRenderfield($field, $resource)
 
     global $baseurl, $search, $ref, $emu_irn_field, $emu_resource_types, $emu_created_by_script_field;
 
-    if ($field['ref'] == $emu_irn_field && in_array($resource['resource_type'], $emu_resource_types)) {
+    if ($field['ref'] == $emu_irn_field && in_array($resource['resource_type'], $emu_resource_types) && $field['value'] != "") {
         $emu_irn = $field['value'];
         $value   = $emu_irn;
         ?>
