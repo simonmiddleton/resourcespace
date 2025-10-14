@@ -6,18 +6,16 @@
 * @param integer $ref                       ID of the slideshow image. Use NULL to create a new record
 * @param integer $resource_ref              ID of the resource this slideshow is related to. Use NULL if no link is required
 * @param integer $homepage_show             Set to 1 if slideshow image should appear on the home page
-* @param integer $featured_collections_show Set to 1 if slideshow image should appear on the featured collections page
 * @param integer $login_show                Set to 1 if slideshow image should appear on the login page
 *
 * @return boolean|integer  Returns ID of the slideshow image(new/ updated), FALSE otherwise
 */
-function set_slideshow($ref, $resource_ref = null, $homepage_show = 1, $featured_collections_show = 1, $login_show = 0)
+function set_slideshow($ref, $resource_ref = null, $homepage_show = 1, $login_show = 0)
 {
     if (
         (!is_null($ref) && !is_numeric($ref))
         || (!(is_null($resource_ref) || trim($resource_ref) == '') && !is_numeric($resource_ref))
         || !is_numeric($homepage_show)
-        || !is_numeric($featured_collections_show)
         || !is_numeric($login_show)
     ) {
         return false;
@@ -27,22 +25,19 @@ function set_slideshow($ref, $resource_ref = null, $homepage_show = 1, $featured
     $resource_ref   = ((int) $resource_ref > 0 ? $resource_ref : null);
 
     $query = "
-        INSERT INTO slideshow (ref, resource_ref, homepage_show, featured_collections_show, login_show)
-             VALUES (?, ?, ?, ?, ?)
+        INSERT INTO slideshow (ref, resource_ref, homepage_show, login_show)
+             VALUES (?, ?, ?, ?)
                  ON DUPLICATE KEY
              UPDATE resource_ref = ?,
                     homepage_show = ?,
-                    featured_collections_show = ?,
                     login_show = ?";
     $query_params = array(
         "i",$ref,
         "i",$resource_ref,
         "i",$homepage_show,
-        "i",$featured_collections_show,
         "i",$login_show,
         "i",$resource_ref,
         "i",$homepage_show,
-        "i",$featured_collections_show,
         "i",$login_show,
     );
 
@@ -124,7 +119,6 @@ function reorder_slideshow_images(array $from, array $to)
             $from['ref'],
             $to['resource_ref'],
             $to['homepage_show'],
-            $to['featured_collections_show'],
             $to['login_show']
         );
 
@@ -132,7 +126,6 @@ function reorder_slideshow_images(array $from, array $to)
             $to['ref'],
             $from['resource_ref'],
             $from['homepage_show'],
-            $from['featured_collections_show'],
             $from['login_show']
         );
 

@@ -3069,7 +3069,6 @@ function emptyiszero($value)
 *             [ref] => 1
 *             [resource_ref] =>
 *             [homepage_show] => 1
-*             [featured_collections_show] => 0
 *             [login_show] => 1
 *             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/1.jpg
 *             [checksum] => 1539875502
@@ -3080,7 +3079,6 @@ function emptyiszero($value)
 *             [ref] => 4
 *             [resource_ref] => 19
 *             [homepage_show] => 1
-*             [featured_collections_show] => 0
 *             [login_show] => 0
 *             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/4.jpg
 *             [checksum] => 1542818794
@@ -3097,7 +3095,7 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
+    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, login_show FROM slideshow", array(), "slideshow");
 
     $slideshow_files = array();
 
