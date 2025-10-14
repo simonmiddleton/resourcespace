@@ -90,7 +90,7 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
             for ($p = 0; $p < count($paths); ++$p) {
                 $path = $paths[$p];
                 $newpath = $newpaths[$p];
-                echo " - Size: " . $sizes[$m]["id"] . ", extension: " . $sizes[$m]["extension"] . " Snew path: " . $newpath . PHP_EOL;
+                echo " - Size: " . $sizes[$m]["id"] . ", extension: " . $sizes[$m]["extension"] . " new path: " . $newpath . PHP_EOL;
                 echo " - Checking old path: " . $path . PHP_EOL;
                 if (file_exists($path) && !($sizes[$m]["id"] == "" && $syncdir != "" && strpos($path, $syncdir) !== false)) {
                     echo " - Found file at old path : " . $path . PHP_EOL;
@@ -178,7 +178,9 @@ for ($n = 0; $n < $totalresources; $n++) {
     // Everything expected has been moved. Do a final check for any remaining files and list them for manual action.
     if (!$dry_run && $old_path_checked !== '') {
         foreach (glob($old_path_checked . "/*") as $fileremaining) {
+            if (!is_dir($fileremaining)) {
             echo "File $fileremaining NOT MOVED for resource $ref - consider manual action." . PHP_EOL;
+            }
         }
     }
 }
