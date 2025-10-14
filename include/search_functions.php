@@ -2845,7 +2845,7 @@ function update_search_from_request($search)
 
         if ($value != "") {
             if (substr($key, 0, 6) == "field_") {
-                if ((string_ends_with($key, "-y") !== false) || (string_ends_with($key, "-m") !== false) || (string_ends_with($key, "_day") !== false)) {
+                if ((string_ends_with($key, "-y") !== false) || (string_ends_with($key, "-m") !== false) || (string_ends_with($key, "-d") !== false)) {
                     # Date field
 
                     # Construct the date from the supplied dropdown values
