@@ -1,7 +1,7 @@
 <?php
 
 $simplesaml_version = "2.3.6";
-$simplesaml_check_phpversion = "8.0";
+$simplesaml_check_phpversion = "8.1";
 $simplesaml_site_block = false;
 $simplesaml_login = true;
 $simplesaml_allow_public_shares = true;
@@ -32,6 +32,12 @@ $simplesaml_multiple_email_notify = "";
 $simplesaml_authorisation_claim_name = '';
 $simplesaml_authorisation_claim_value = '';
 
+/*
+Options are:-
+ - 0 for Local SAML configuration files (legacy)
+ - 1 for ResourceSpace configuration file (config.php)
+ - 2 for Metadata URL (XML)
+*/
 $simplesaml_rsconfig = 1;
 $simplesaml_check_idp_cert_expiry = true;
 

@@ -227,19 +227,41 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
 /**
  * Check that the SimpleSAMLphp configuration is valid
  *
- * @return boolean
+ * @return array{success: bool, error?: string}
  */
-function simplesaml_config_check()
+function simplesaml_config_check(): array
 {
     global $simplesaml_version, $lang;
 
+    $fail_due_to = static fn(string $err): array => ['success' => false, 'error' => $err];
+
     if (!simplesaml_is_configured()) {
         debug("simplesaml: plugin not configured.");
-        return false;
+        return $fail_due_to(text('simplesaml_error_not_configured'));
     }
     require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
-    $config = \SimpleSAML\Configuration::getInstance();
-    $version = $config->getVersion();
+
+    try {
+        $config = \SimpleSAML\Configuration::getInstance();
+        $version = $config->getVersion();
+
+        // Try loading the authsource and the IdP metadata
+        $auth = new \SimpleSAML\Auth\Simple(trim($GLOBALS['simplesaml_sp'] ?? '') ?: 'resourcespace-sp');
+        $metadata_handler = \SimpleSAML\Metadata\MetaDataStorageHandler::getMetadataHandler();
+        $metadata_handler->getMetaDataConfig(
+            $auth->getAuthSource()->getMetadata()->getValue('idp'),
+            'saml20-idp-remote'
+        );
+    } catch (\SimpleSAML\Error\MetadataNotFound $e) {
+        debug("[ERR] simplesaml: Simplesaml plugin is not fully configured (missing IdP metadata). Error details - {$e}");
+        return $fail_due_to(text('simplesaml_error_no_idp_metadata'));
+    } catch (\SimpleSAML\Error\Exception $e) {
+        debug("[ERR] simplesaml: Simplesaml plugin is not fully configured (missing authsource). Error details - {$e}");
+        return $fail_due_to(text('simplesaml_error_no_authsource'));
+    } catch (Throwable $t) {
+        debug("[ERR] simplesaml: {$t}");
+        return $fail_due_to(text('error_generic'));
+    }
 
     if ($version != $simplesaml_version) {
         if (get_sysvar("SAML_UPGRADE_REQUIRED", 0) != 1) {
@@ -250,25 +272,31 @@ function simplesaml_config_check()
             // Set flag so this is not sent multiple times
             set_sysvar("SAML_UPGRADE_REQUIRED", 1);
         }
-        return false;
+        return $fail_due_to(text('simplesaml_authorisation_version_error'));
     }
 
-    return true;
+    return ['success' => true];
 }
 
-function simplesaml_php_check()
+/** Check whether PHP version will cause an error with current SAML config
+ *
+ * @param bool with_config Include config checks too? Set to false when you only want to check the PHP version
+ */
+function simplesaml_php_check(bool $with_config = true): bool
 {
     global $simplesaml_check_phpversion,$simplesaml_php_check;
 
-    // Check whether PHP version will cause an error with current SAML config
-    if (!isset($simplesaml_php_check)) {
-        // Check if not already checked previously
-        $simplesaml_php_check = (
-            simplesaml_config_check()
-            || version_compare(phpversion(), $simplesaml_check_phpversion, '<')
-        );
+    $cache_key = 'with_config-' . json_encode($with_config);
+
+    if (!isset($simplesaml_php_check[$cache_key])) {
+        $check_php_vers = version_compare(phpversion(), $simplesaml_check_phpversion, '>=');
+
+        $simplesaml_php_check[$cache_key] = $with_config
+            ? (simplesaml_config_check()['success'] && $check_php_vers)
+            : $check_php_vers;
     }
-    return $simplesaml_php_check;
+
+    return $simplesaml_php_check[$cache_key];
 }
 
 
@@ -487,4 +515,11 @@ function get_saml_metadata($retry = true)
         return get_saml_metadata(false);
     }
     return $metadata;
+}
+
+function simplesaml_use_idp_metadata_url_mode(): bool
+{
+    return $GLOBALS['simplesaml_rsconfig'] === 2
+        && isset($GLOBALS['simplesaml_metadata_url'])
+        && trim($GLOBALS['simplesaml_metadata_url']) !== '';
 }
