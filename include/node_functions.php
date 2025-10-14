@@ -698,7 +698,7 @@ function get_node_order_by($resource_type_field, $is_tree = false, $parent = nul
         }
     }
 
-    $query         = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ? ORDER BY order_by ASC;";
+    $query         = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ?;";
     $parameters     = array("i",$resource_type_field);
     $nodes_counter = ps_value($query, $parameters, 0);
 
@@ -707,12 +707,11 @@ function get_node_order_by($resource_type_field, $is_tree = false, $parent = nul
         $parameters = array("i",$resource_type_field);
 
         if (is_null($parent)) {
-            $query .= " AND parent IS NULL ";
+            $query .= " AND parent IS NULL;";
         } else {
-            $query .= " AND parent = ? ";
+            $query .= " AND parent = ?;";
             $parameters = array_merge($parameters, array("i",$parent));
         }
-        $query .= "ORDER BY order_by ASC;";
 
         $nodes_counter = ps_value($query, $parameters, 0);
     }
