@@ -5956,3 +5956,35 @@ function get_page_title(string $page, string $plugin = ""): string
     }
     return $applicationname . $page_title;
 }
+
+/**
+ * Log the bandwidth used by download.php
+ * 
+ * @param int $usage The total bandwidth used measured in KB
+ */
+function log_bandwidth(int $bandwidth_usage): void
+{
+    global $usergroup, $k;
+
+    $date  = getdate();
+    $update_params = [
+        'i', $bandwidth_usage,
+        'i', (trim($k) == '' ? 0 : 1),
+        'i', $date["year"],
+        'i', $date["mon"],
+        'i', $date["mday"],
+        'i', $usergroup ?? 0
+    ];
+    ps_query("UPDATE daily_stat SET count = count + ? WHERE activity_type = 'Downloaded KB' AND external = ? AND year = ? and month = ? and day = ? and usergroup = ? AND object_ref = 0", $update_params);
+
+    $select_params = [
+        'i', $date["year"],
+        'i', $date["mon"],
+        'i', $date["mday"],
+        'i', $usergroup ?? 0
+    ];
+    $current_usage = ps_value("SELECT count AS `value` FROM daily_stat WHERE activity_type = 'Downloaded KB' AND year = ? and month = ? and day = ? and usergroup = ? AND object_ref = 0", $select_params, 0);
+    if ($current_usage == 0) {
+        ps_query("INSERT INTO daily_stat (count, external, year, month, day, usergroup, activity_type, object_ref) VALUES (?, ?, ?, ?, ?, ?, 'Downloaded KB', 0)", $update_params);
+    }
+}
