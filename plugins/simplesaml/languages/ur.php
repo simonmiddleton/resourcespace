@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'سادہ SAML ٹیسٹ سائٹ کے
 $lang["page-title_simplesaml_about"] = 'SAML کے بارے میں';
 $lang["page-title_simplesaml_generate_sp_config"] = 'SP کنفیگریشن تیار کریں';
 $lang["page-title_simplesaml_setup"] = 'سادہ SAML پلگ ان سیٹ اپ کریں';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML پلگ ان ترتیب نہیں دیا گیا';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML پلگ ان مکمل طور پر ترتیب نہیں دیا گیا ہے (IdP میٹا ڈیٹا غائب ہے)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML پلگ ان مکمل طور پر ترتیب نہیں دیا گیا ہے (authsource غائب ہے)';

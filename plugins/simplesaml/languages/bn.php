@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'সিম্পলএসএএমএ
 $lang["page-title_simplesaml_about"] = 'SAML সম্পর্কে';
 $lang["page-title_simplesaml_generate_sp_config"] = 'SP কনফিগারেশন তৈরি করুন';
 $lang["page-title_simplesaml_setup"] = 'সিম্পল SAML প্লাগইন সেটআপ করুন';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML প্লাগইন কনফিগার করা হয়নি';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML প্লাগইন সম্পূর্ণরূপে কনফিগার করা হয়নি (IdP মেটাডেটা অনুপস্থিত)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML প্লাগইন সম্পূর্ণরূপে কনফিগার করা হয়নি (অথরসোর্স অনুপস্থিত)';

@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'Ponovno postavite administratorsku l
 $lang["page-title_simplesaml_about"] = 'SAML O programu';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generiraj SP konfiguraciju';
 $lang["page-title_simplesaml_setup"] = 'Postavljanje Simple SAML dodatka';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML dodatak nije konfiguriran';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML dodatak nije potpuno konfiguriran (nedostaje IdP metapodatak)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML dodatak nije potpuno konfiguriran (nedostaje authsource)';

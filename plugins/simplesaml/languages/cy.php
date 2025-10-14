@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'Ail-osod cyfrinair gweinyddwr safle 
 $lang["page-title_simplesaml_about"] = 'SAML Ynglŷn â';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generwch Gynllun SP';
 $lang["page-title_simplesaml_setup"] = 'Gosod Plugin SAML Syml.';
+$lang["simplesaml_error_not_configured"] = 'Nid yw\'r plwg SimpleSAML wedi\'i ffurfweddu';
+$lang["simplesaml_error_no_idp_metadata"] = 'Nid yw\'r plwg SimpleSAML wedi\'i ffurfweddu\'n llwyr (mae metadata IdP yn brin)';
+$lang["simplesaml_error_no_authsource"] = 'Nid yw\'r plwg SimpleSAML wedi\'i ffurfweddu\'n llwyr (yn brin o authsource)';

@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'Nollaa SimpleSAML-testisivuston yll�
 $lang["page-title_simplesaml_about"] = 'SAML Tietoa';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Luo SP-konfiguraatio';
 $lang["page-title_simplesaml_setup"] = 'Aseta Yksinkertainen SAML-laajennus';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML-laajennusta ei ole konfiguroitu';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML-laajennusta ei ole täysin konfiguroitu (puuttuu IdP-metadata)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML-laajennusta ei ole täysin konfiguroitu (puuttuu authsource)';

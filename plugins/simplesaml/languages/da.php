@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'Nulstil SimpleSAML testsite administ
 $lang["page-title_simplesaml_about"] = 'SAML Om';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generer SP-konfiguration';
 $lang["page-title_simplesaml_setup"] = 'Opsætning af Simple SAML-plugin';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML-plugin er ikke konfigureret';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML-plugin er ikke fuldt konfigureret (mangler IdP metadata)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML-plugin er ikke fuldt konfigureret (mangler authsource)';
