@@ -392,8 +392,10 @@ function get_required_fields(int $resource_type): array
     return $result;
 }
 
+
 /**
  * For a given resource, return an array of data for required metadata field references which have not been completed.
+ * Required fields shown by a display condition will only be considered required if the display condition is met.
  *
  * @param  int|array  $resource   Integer representing the resource reference or array of resource data from get_resource_data().
  */
@@ -404,6 +406,39 @@ function missing_fields_check(int|array $resource): array
     }
 
     $required_fields = get_required_fields($resource['resource_type']);
+
+    $required_fields_displayed = array();
+    $display_condition_required_fields = array();
+    foreach ($required_fields as $required_field) {
+        if (isset($required_field['display_condition']) && strpos($required_field['display_condition'], '=') !== false) {
+            # These required fields will only be checked if they are displayed based upon display conditions.
+            $display_condition_required_fields[] = $required_field;
+        } else {
+            # No display condition so required field is always shown.
+            $required_fields_displayed[] = $required_field;
+        }
+    }
+
+    if (count($display_condition_required_fields) > 0) {
+        foreach (get_resource_field_data($resource['ref'], false, false) as $field_data) {
+            $all_fields_data[$field_data['name']] = array('value' => $field_data['value'], 'nodes' => $field_data['nodes']);
+        }
+
+        # Evaluate display conditions
+        foreach ($display_condition_required_fields as $display_condition_field) {
+            foreach(explode(';', $display_condition_field['display_condition']) as $condition) {
+                $parts = explode('=', $condition);
+                $field_condition = $parts[0];
+                $validvalues = array_map("i18n_get_translated", explode("|", $parts[1]));
+                if (in_array($all_fields_data[$field_condition]['value'], $validvalues)) {
+                    $required_fields_displayed[] = $display_condition_field;
+                    break;
+                }
+            }
+        }
+    }
+
+    $required_fields = $required_fields_displayed;
 
     # Provide translated titles for later displaying in error messages.
     $required_fields = array_map(function($v) { $v['title'] = i18n_get_translated($v["title"]); return $v; }, $required_fields);
