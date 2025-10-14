@@ -26,7 +26,7 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
 {
     debug_function_call('upload_file', func_get_args());
 
-    global $lang, $userref, $filename_field, $extracted_text_field, $amended_filename;
+    global $lang, $userref, $filename_field, $extracted_text_field, $extracted_text_extensions, $amended_filename;
     global $upload_then_process, $upload_then_process_holding_state,$offline_job_queue, $offline_job_in_progress;
     global $icc_extraction, $camera_autorotation, $camera_autorotation_ext;
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $pdf_pages;
@@ -389,7 +389,11 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
             autocomplete_blank_fields($ref, false);
         }
         # Extract text from documents (e.g. PDF, DOC)
-        if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension, $unoconv_extensions))) {
+        if (
+            isset($extracted_text_field)
+            && in_array($extension, $extracted_text_extensions)
+            && !(isset($unoconv_path) && in_array($extension, $unoconv_extensions))
+        ) {
             // We need to make sure we don't spin off a new offline job for this when upload_file() is being used in
             // upload_processing job handler
             if ($offline_job_queue && !$offline_job_in_progress) {

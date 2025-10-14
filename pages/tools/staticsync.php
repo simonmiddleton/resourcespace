@@ -858,8 +858,11 @@ function ProcessFolder($folder)
                         extract_exif_comment($rref, $rd["file_extension"]);
 
                         # extract text from documents (e.g. PDF, DOC).
-                        global $extracted_text_field;
-                        if (isset($extracted_text_field)) {
+                        global $extracted_text_field, $extracted_text_extensions;
+                        if (
+                            isset($extracted_text_field)
+                            && in_array($extension, $extracted_text_extensions)
+                            ) {
                             if (isset($unoconv_path) && in_array($extension, $unoconv_extensions)) {
                                 // omit, since the unoconv process will do it during preview creation below
                             } else {
