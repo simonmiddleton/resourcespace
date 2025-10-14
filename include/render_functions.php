@@ -27,6 +27,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
     $multiple=false;
+    $field['ref'] = escape($field['ref']);
 ?>
 <!-- RENDERING FIELD=<?php echo $field['ref'] . " " . escape($field['name']);?> -->
 <?php
