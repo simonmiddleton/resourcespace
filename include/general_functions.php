@@ -5962,7 +5962,7 @@ function get_page_title(string $page, string $plugin = ""): string
 }
 
 /**
- * Log the banwidth used by download.php
+ * Log the bandwidth used by download.php
  * 
  * @param int $usage The total bandwidth used measured in KB
  */
