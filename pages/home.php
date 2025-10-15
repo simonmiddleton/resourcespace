@@ -21,7 +21,7 @@ function loadWelcomeText()
             <div id="HomeSiteTextInner">
                 <h1>
                     <?php # Include version number
-                    echo escape(str_replace("[ver]", str_replace("SVN", "", $productversion), text("welcometitle")));
+                    echo strip_tags_and_attributes(str_replace("[ver]", str_replace("SVN", "", $productversion), text("welcometitle")));
                     ?>
                 </h1>
                 <p><?php echo strip_tags_and_attributes(text("welcometext"), ['a'], ['href']); ?></p>
