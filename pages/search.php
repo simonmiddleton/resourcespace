@@ -512,7 +512,7 @@ foreach($checkparams as $checkparam)
         }
     }
 
-check_order_by_in_table_joins($order_by);
+$order_by = check_order_by_in_table_joins($order_by);
 
 if (preg_match("/@{2}!/", $search) || false === strpos($search, '!') || '!properties' == substr($search, 0, 11) )
     {

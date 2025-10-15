@@ -588,7 +588,7 @@ $urlparams= array(
     'search_access'     => (!is_null($search_access) ? $search_access : null),
 );
 
-check_order_by_in_table_joins($order_by);
+$order_by = check_order_by_in_table_joins($order_by);
 
 hook("editbeforeheader");
 

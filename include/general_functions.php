@@ -5717,19 +5717,6 @@ function validate_sort_value($val): bool
 }
 
 /**
- * Input validation helper function to check that the field requested exists and is available for search ordering
- * @param  mixed $val Field ref to be validated
- */
-function validate_sort_field($val): bool
-{
-    if (substr($val, 0, 5) == "field") {
-            $val = substr($val, 5);
-    }
-
-    return is_positive_int_loose($val) && get_field($val) && in_array($val, $GLOBALS["sort_fields"]);
-}
-
-/**
  * Input validation helper function for a CSV of integers (mostly used for IDs).
  * @param mixed $val User input value to be validated
  */

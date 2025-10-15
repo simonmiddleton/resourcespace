@@ -3050,17 +3050,20 @@ function render_advanced_search_buttons()
 }
 
 /**
-* If a "fieldX" order_by is used, check it's a valid value
+* If a "fieldX" order_by is used, check it's a valid value.
+* Where the value is invalid, the default 'resourceid' will be used instead.
 *
 * @param string         string of order by
 */
-function check_order_by_in_table_joins($order_by)
+function check_order_by_in_table_joins($order_by): string
 {
-    global $lang;
-
     if (substr($order_by, 0, 5) == "field" && !in_array(substr($order_by, 5), get_resource_table_joins())) {
-        exit($lang['error_invalid_input'] . ":- <pre>order_by : " . escape($order_by) . "</pre>");
+        global $userref;
+        debug("Userref $userref requested invalid order_by $order_by - using default: resourceid - check config and user preferences.");
+        return 'resourceid';
     }
+
+    return $order_by;
 }
 
 /**
@@ -3262,9 +3265,7 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
 
     # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
     if (!in_array($order_by, $order) && (substr($order_by, 0, 5) == "field")) {
-        if (!validate_sort_field(substr($order_by, 5))) {
-            exit($lang['error_invalid_input'] . ":- <pre>order_by : " . escape($order_by) . "</pre>");
-        }
+        $order_by = check_order_by_in_table_joins($order_by);
         # If fieldx is being used this will be needed in the inner select to be used in ordering
         $GLOBALS["include_fieldx"] = true;
         # Check for field type
