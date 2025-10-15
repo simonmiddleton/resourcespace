@@ -13,9 +13,9 @@ function HookSimplesamlAllInitialise()
     }
     check_removed_ui_config("simplesaml_lib_path");
 
-    if (simplesaml_use_idp_metadata_url_mode()) {
+    if ($GLOBALS['simplesaml_rsconfig'] === 2 && isset($GLOBALS["simplesaml_metadata_url"]) && trim($GLOBALS["simplesaml_metadata_url"]) !== '') {
         global $simplesamlconfig;
-
+        // Get IdP data
         $latestdata = get_saml_metadata();
         if(!$latestdata) {
             return false;
@@ -722,7 +722,7 @@ function HookSimplesamlAllExtra_checks()
 
     $GLOBALS['use_error_exception'] = true;
     try {
-        if (!simplesaml_php_check(with_config: false)) {
+        if (!simplesaml_php_check()) {
             $return['simplesaml_php'] = $simplesaml_php_check;
         }
     } catch (Exception $e) {
@@ -739,13 +739,8 @@ function HookSimplesamlAllExtra_checks()
 
     $GLOBALS['use_error_exception'] = true;
     try {
-        $check_simplesamlphp_config = simplesaml_config_check();
-
-        if (!$check_simplesamlphp_config['success']) {
-            $return['saml_config_check'] = array_merge(
-                $simplesaml_config_check,
-                ['info' => $check_simplesamlphp_config['error']]
-            );
+        if (!simplesaml_config_check()) {
+            $return['saml_config_check'] = $simplesaml_config_check;
         }
     } catch (Exception $e) {
         $return['saml_config_exception'] = $simplesaml_config_check;
