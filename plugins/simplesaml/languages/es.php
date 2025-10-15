@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'Restablecer la contraseña de admini
 $lang["page-title_simplesaml_about"] = 'SAML Acerca de';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generar configuración SP';
 $lang["page-title_simplesaml_setup"] = 'Configurar el complemento Simple SAML';
+$lang["simplesaml_error_not_configured"] = 'El complemento SimpleSAML no está configurado';
+$lang["simplesaml_error_no_idp_metadata"] = 'El complemento SimpleSAML no está completamente configurado (falta metadata de IdP)';
+$lang["simplesaml_error_no_authsource"] = 'El complemento SimpleSAML no está completamente configurado (falta authsource)';

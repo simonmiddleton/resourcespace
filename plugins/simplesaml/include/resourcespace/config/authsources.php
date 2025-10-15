@@ -29,6 +29,4 @@ if (isset($simplesamlconfig['authsources'])) {
     unset($authsource);
 
     $config = $simplesamlconfig['authsources'];
-} else {
-    exit('No authsources configured ($simplesamlconfig["authsources"])');
 }

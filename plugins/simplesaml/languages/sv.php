@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'Återställ SimpleSAML testplatsens 
 $lang["page-title_simplesaml_about"] = 'SAML Om';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generera SP-konfiguration';
 $lang["page-title_simplesaml_setup"] = 'Installera Simple SAML-plugin';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML-plugin är inte konfigurerad';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML-plugin är inte fullt konfigurerad (saknar IdP-metadata)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML-plugin är inte fullt konfigurerad (saknar authsource)';

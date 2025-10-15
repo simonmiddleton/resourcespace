@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'Obnoviť administrátorské heslo te
 $lang["page-title_simplesaml_about"] = 'SAML O aplikácii';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generovať SP konfiguráciu';
 $lang["page-title_simplesaml_setup"] = 'Nastavenie jednoduchého SAML pluginu';
+$lang["simplesaml_error_not_configured"] = 'Plugin SimpleSAML nie je nakonfigurovaný';
+$lang["simplesaml_error_no_idp_metadata"] = 'Plugin SimpleSAML nie je úplne nakonfigurovaný (chýbajúce IdP metadata)';
+$lang["simplesaml_error_no_authsource"] = 'Plugin SimpleSAML nie je úplne nakonfigurovaný (chýba authsource)';

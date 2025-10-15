@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'ਸਧਾਰਨ SAML ਟੈਸਟ �
 $lang["page-title_simplesaml_about"] = 'SAML ਬਾਰੇ';
 $lang["page-title_simplesaml_generate_sp_config"] = 'SP ਸੰਰਚਨਾ ਬਣਾਓ';
 $lang["page-title_simplesaml_setup"] = 'ਸਧਾਰਨ SAML ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML ਪਲੱਗਇਨ ਸੰਰਚਿਤ ਨਹੀਂ ਹੈ';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML ਪਲੱਗਇਨ ਪੂਰੀ ਤਰ੍ਹਾਂ ਸੰਰਚਿਤ ਨਹੀਂ ਹੈ (IdP ਮੈਟਾਡੇਟਾ ਗੁੰਮ ਹੈ)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML ਪਲੱਗਇਨ ਪੂਰੀ ਤਰ੍ਹਾਂ ਸੰਰਚਿਤ ਨਹੀਂ ਹੈ (authsource ਗੁੰਮ ਹੈ)';

@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'بازنشانی رمز عبور م�
 $lang["page-title_simplesaml_about"] = 'SAML درباره';
 $lang["page-title_simplesaml_generate_sp_config"] = 'تولید پیکربندی SP';
 $lang["page-title_simplesaml_setup"] = 'نصب افزونه SAML ساده';
+$lang["simplesaml_error_not_configured"] = 'پلاگین SimpleSAML پیکربندی نشده است';
+$lang["simplesaml_error_no_idp_metadata"] = 'پلاگین SimpleSAML به طور کامل پیکربندی نشده است (متاداده IdP گم شده است)';
+$lang["simplesaml_error_no_authsource"] = 'پلاگین SimpleSAML به طور کامل پیکربندی نشده است (authsource گم شده است)';

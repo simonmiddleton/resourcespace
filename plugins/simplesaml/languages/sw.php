@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'Rekebisha nenosiri la msimamizi wa t
 $lang["page-title_simplesaml_about"] = 'SAML Kuhusu';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Tengeneza Mipangilio ya SP';
 $lang["page-title_simplesaml_setup"] = 'Weka Plugin ya Simple SAML';
+$lang["simplesaml_error_not_configured"] = 'Plugin ya SimpleSAML haijasanidiwa';
+$lang["simplesaml_error_no_idp_metadata"] = 'Plugin ya SimpleSAML haijakamilika kikamilifu (metadata ya IdP inakosekana)';
+$lang["simplesaml_error_no_authsource"] = 'Plugin ya SimpleSAML haijakamilika (inasababisha authsource)';

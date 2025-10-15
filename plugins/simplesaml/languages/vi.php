@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'Đặt lại mật khẩu quản tr�
 $lang["page-title_simplesaml_about"] = 'SAML Giới thiệu';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Tạo cấu hình SP';
 $lang["page-title_simplesaml_setup"] = 'Cài đặt Plugin SAML Đơn Giản';
+$lang["simplesaml_error_not_configured"] = 'Plugin SimpleSAML chưa được cấu hình';
+$lang["simplesaml_error_no_idp_metadata"] = 'Plugin SimpleSAML chưa được cấu hình đầy đủ (thiếu metadata IdP)';
+$lang["simplesaml_error_no_authsource"] = 'Plugin SimpleSAML chưa được cấu hình đầy đủ (thiếu authsource)';

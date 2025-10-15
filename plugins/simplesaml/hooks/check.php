@@ -41,14 +41,14 @@ function HooksimplesamlCheckAddinstallationcheck()
             <td><?php echo escape($lastupdatetext); ?></td>
             <td><b><?php echo escape($updatestatus); ?></b></td>
         </tr>
-        <?php if ($GLOBALS["simplesaml_metadata_url"] ?? "" !== "") {
+        <?php if (simplesaml_use_idp_metadata_url_mode()) {
             $validurl = filter_var($GLOBALS["simplesaml_metadata_url"], FILTER_VALIDATE_URL);
             ?>
             <tr>
                 <td><?php echo escape($GLOBALS['lang']['simplesaml_config_source_url']); ?></td>
                 <td>
-                    <a href='<?php echo escape($GLOBALS["simplesaml_metadata_url"]); ?>' 
-                       target='_blank'>
+                    <a href='<?php echo sanitise_url($GLOBALS["simplesaml_metadata_url"]); ?>' 
+                       target='_blank' rel="noopener">
                        <?php echo escape($GLOBALS["simplesaml_metadata_url"]); ?>
                     </a>
                 </td>
