@@ -421,7 +421,7 @@ function missing_fields_check(int|array $resource): array
 
     if (count($display_condition_required_fields) > 0) {
         foreach (get_resource_field_data($resource['ref'], false, false) as $field_data) {
-            $all_fields_data[$field_data['name']] = array('value' => $field_data['value'], 'nodes' => $field_data['nodes']);
+            $all_fields_data[$field_data['name']] = $field_data['value'];
         }
 
         # Evaluate display conditions
@@ -430,7 +430,7 @@ function missing_fields_check(int|array $resource): array
                 $parts = explode('=', $condition);
                 $field_condition = $parts[0];
                 $validvalues = array_map("i18n_get_translated", explode("|", $parts[1]));
-                if (isset($all_fields_data[$field_condition]) && in_array($all_fields_data[$field_condition]['value'], $validvalues)) {
+                if (isset($all_fields_data[$field_condition]) && in_array($all_fields_data[$field_condition], $validvalues)) {
                     $required_fields_displayed[] = $display_condition_field;
                     break;
                 }
