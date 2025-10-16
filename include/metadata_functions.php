@@ -430,7 +430,7 @@ function missing_fields_check(int|array $resource): array
                 $parts = explode('=', $condition);
                 $field_condition = $parts[0];
                 $validvalues = array_map("i18n_get_translated", explode("|", $parts[1]));
-                if (in_array($all_fields_data[$field_condition]['value'], $validvalues)) {
+                if (isset($all_fields_data[$field_condition]) && in_array($all_fields_data[$field_condition]['value'], $validvalues)) {
                     $required_fields_displayed[] = $display_condition_field;
                     break;
                 }
