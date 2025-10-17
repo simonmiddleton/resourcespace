@@ -3333,7 +3333,7 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                     # Clear node list and ref list for new resource
                     $field_node_list = array();
                     $field_ref_list = array();
-                    $field_node_values[] = array();
+                    $field_node_values = [];
                     $last_field = null;
                     if ($this_resource === null) {
                         break;
