@@ -5646,7 +5646,7 @@ function is_safe_url($url): bool
     // Check URL components don't contain XSS payloads except the port (an int) and query strings (see dedicated logic)
     foreach (array_diff_key($url_parts, ['port' => 1, 'query' => 1]) as $part_name => $value) {
         if ($part_name === 'fragment') {
-            if (!preg_match('/^[\w.~!$&()*+,;=:@\/?-]*$/', $value)) {
+            if (!preg_match('/^[\w.~!$&%()*+,;=:@\/?-]*$/', $value)) {
                 // Non-RFC 3986 compliant fragment detected
                 return false;
             }

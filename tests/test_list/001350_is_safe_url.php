@@ -66,6 +66,11 @@ $use_cases = [
         'expected' => true,
     ],
     [
+        'name' => 'URL w/ complex percent encoded fragment (used by other applications; safe)',
+        'input' => 'http://test.localhost/some_page.php#!/unit/test?pn=1&foo=t&l=en&q=unit%20test',
+        'expected' => true,
+    ],
+    [
         'name' => 'URL w/ complex fragment (used by other applications; unsafe v1)',
         'input' => 'http://test.localhost/some_page.php#!/unit/test?pn=1&foo=t&check\'other.thing=f&l=en',
         'expected' => false,
