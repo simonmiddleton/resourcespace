@@ -35,8 +35,9 @@ if(count($pdfpagesvaluepair) > 0) {
 # Split action
 if (getval("method","")!="" && enforcePostRequest(false))
     {
-    $ranges=getval("ranges","");
-    $rs=explode(",",$ranges);
+    // The ranges format is a CSV of page ranges like X:Y, for example: 1:1,2:2,4:6 or just 1:3
+    $ranges=getval("ranges","", false, static fn($V) => preg_match('/(\d:\d)+(, )?/', $V) === 1);
+    $rs=array_filter(explode(",",$ranges));
 
     # Original file path
     $file=get_resource_path($ref,true,"",true,"pdf");
@@ -114,7 +115,7 @@ function DrawRanges()
         var range=rs[n].split(":");
         
         // draw some HTML for this range
-        ranges_html += '<?php echo escape($lang["range"]); ?> ' + (n+1) + ': <?php echo escape($lang["pages"]); ?> <input onChange="UpdateRanges();return false;" type="text" size="8" id="range' + n + '_from" value="' + range[0] + '"> <?php echo escape($lang["to-page"]); ?> <input onChange="UpdateRanges();return false;" type="text" size="8" id="range' + n + '_to" value="' + range[1] + '">';
+        ranges_html += '<?php echo escape($lang["range"]); ?> ' + (n+1) + ': <?php echo escape($lang["pages"]); ?> <input onChange="UpdateRanges();return false;" type="text" size="8" id="range' + n + '_from" value="' + parseInt(range[0]) + '"> <?php echo escape($lang["to-page"]); ?> <input onChange="UpdateRanges();return false;" type="text" size="8" id="range' + n + '_to" value="' + parseInt(range[1]) + '">';
         // Remove page option for ranges > 1
         if (n>0) {ranges_html+='&nbsp;&nbsp;<a href="#" onClick="RemoveRange('+n+');return false;">&gt;&nbsp;<?php echo escape($lang["removerange"]); ?></a>';}
         ranges_html+='<br/>';
@@ -125,7 +126,7 @@ function DrawRanges()
 
 function AddRange()
     {
-    document.getElementById("ranges").value+=",1:<?php echo $page ?>";
+    document.getElementById("ranges").value+=",1:<?php echo escape($page); ?>";
     DrawRanges();
     }
 
@@ -158,8 +159,8 @@ function UpdateRanges()
         var rfrom=parseInt(document.getElementById('range' + n + '_from').value);
         var rto=parseInt(document.getElementById('range' + n + '_to').value);       
         
-        if (rfrom<1 || rfrom ><?php echo $page ?>) {alert('<?php echo escape($lang["outofrange"]); ?>');DrawRanges();return false;}
-        if (rto  <1 || rto   ><?php echo $page ?>) {alert('<?php echo escape($lang["outofrange"]); ?>');DrawRanges();return false;}
+        if (rfrom<1 || rfrom ><?php echo escape($page); ?>) {alert('<?php echo escape($lang["outofrange"]); ?>');DrawRanges();return false;}
+        if (rto  <1 || rto   ><?php echo escape($page); ?>) {alert('<?php echo escape($lang["outofrange"]); ?>');DrawRanges();return false;}
         if (rto < rfrom) {alert('<?php echo escape($lang["invalidrange"]); ?>');DrawRanges();return false;}
         
         new_ranges+=rfrom + ':' + rto;
