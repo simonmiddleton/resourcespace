@@ -632,18 +632,6 @@ function setLanguage()
 {
     global $browser_language,$disable_languages,$defaultlanguage,$languages,$baseurl_short;
     $language = "";
-    if (isset($_GET["language_set"])) {
-        $language = $_GET["language_set"];
-        if (array_key_exists($language, $languages)) {
-            # Cannot use the general.php: rs_setcookie() here since general may not have been included.
-            # Set new cookie
-            setcookie("language", $language, time() + (3600 * 24 * 1000));
-            setcookie("language", $language, time() + (3600 * 24 * 1000), $baseurl_short . "pages/", '', false, true);
-            return $language;
-        } else {
-            $language = "";
-        }
-    }
     if (isset($_GET["language"]) && array_key_exists((string)$_GET["language"], $languages)) {
         return $_GET["language"];
     }
