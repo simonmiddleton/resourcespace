@@ -63,7 +63,6 @@ function ActivateSlideshow(show_footer)
         jQuery( document ).ready(function() 
             {
             jQuery('body').css('transition', 'background-image 1s linear');
-            jQuery('body').css('position','static');
             jQuery('.slide').css('z-index', '0');
             });
     }
@@ -71,7 +70,6 @@ function ActivateSlideshow(show_footer)
 function DeactivateSlideshow()
     {
     jQuery('body').css('background-image','none');
-    jQuery('body').css('position','absolute');
     jQuery('.slide').css('z-index', '-1');
     SlideshowActive=false;
     window.clearTimeout(SlideshowTimer);
