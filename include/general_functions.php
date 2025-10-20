@@ -3828,10 +3828,8 @@ function html_find_and_replace(string $findstring, string $replacestring, string
 * @param string $html       HTML string
 * @param array  $tags       Extra tags to be allowed
 * @param array  $attributes Extra attributes to be allowed
-*
-* @return string
 */
-function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
+function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array()): string
 {
     global $permitted_html_tags, $permitted_html_attributes;
 
@@ -5643,9 +5641,14 @@ function is_safe_url($url): bool
         return false;
     }
 
-    // Check URL components (except the port and query strings) don't contain XSS payloads
-    foreach (array_diff_key($url_parts, ['port' => 1, 'query' => 1]) as $value) {
-        if ($value !== escape($value)) {
+    // Check URL components don't contain XSS payloads except the port (an int) and query strings (see dedicated logic)
+    foreach (array_diff_key($url_parts, ['port' => 1, 'query' => 1]) as $part_name => $value) {
+        if ($part_name === 'fragment') {
+            if (!preg_match('/^[\w.~!$&%()*+,;=:@\/?-]*$/', $value)) {
+                // Non-RFC 3986 compliant fragment detected
+                return false;
+            }
+        } elseif ($value !== escape($value)) {
             return false;
         }
     }
