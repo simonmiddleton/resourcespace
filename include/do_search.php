@@ -488,7 +488,7 @@ function resolve_given_nodes(&$search, &$node_bucket, &$node_bucket_not)
 
     // spin through each of the words and process tokens
     foreach ($words[0] as $word) {
-        $search = str_replace($word, '', $search);        // remove the entire word from the search string
+        $search = preg_replace('/(, )?' . preg_quote($word, '/') . '\b/', '', $search); // remove the entire word and comma seperator if found from the search string
         $search = trim(trim($search), ',');
 
         preg_match_all('/' . NODE_TOKEN_PREFIX . '(' . NODE_TOKEN_NOT . '*)(\d+)/', $word, $tokens);
