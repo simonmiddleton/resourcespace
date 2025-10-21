@@ -11,11 +11,18 @@ $exiftool_fullpath = get_utility_path("exiftool");
 if (!$exiftool_fullpath) {
     echo escape($lang["exiftoolnotfound"]);
 } else {
-    $ref = getval("ref", "");
+    $ref = getval("ref", 0, false, is_int_loose(...));
     $resource = get_resource_data($ref);
+
+    // Respond simply with nometadatareport to avoid leaking any extra information to an outsider (e.g resource exists)
     if ($resource === false) {
-        exit("Could not fetch resource data.");
-    } // Should not occur - invalid ref?
+        debug('Could not fetch resource data.');
+        exit(escape(text('nometadatareport')));
+    } else if (get_resource_access($resource) !== RESOURCE_ACCESS_FULL) {
+        debug("[WARN] User #{$userref} requested the metadata report for a non-full access resource #{$ref}");
+        exit(escape(text('nometadatareport')));
+    }
+
     $ext = $resource['file_extension'];
     if ($ext == "") {
         die($lang['nometadatareport']);
