@@ -163,10 +163,10 @@ if ($date_d_m_y) {
             // Day and month viability check
             let day_is_valid=false;
             let month_is_valid=false;
-            if (day >= 1 && day <= 31) {
+            if ((day >= 1 && day <= 31) || !day) {
                 day_is_valid=true;
             }
-            if (month >= 1 && month <= 12) {
+            if ((month >= 1 && month <= 12) || !month) {
                 month_is_valid=true;
             }
             if (!day_is_valid || !month_is_valid) {
