@@ -69,3 +69,6 @@ $lang["csv_upload_createdfromcsvupload"] = 'Dicipta dari plugin Muat Naik CSV';
 $lang["csv_upload_check_file_error"] = 'Fail CSV tidak dapat dibuka atau dibaca';
 $lang["csv_upload_check_utf_error"] = 'Fail CSV tidak sah UTF-8. Watak tidak sah pada baris';
 $lang["csv_upload_check_removebom"] = 'Fail CSV mempunyai BOM yang tidak dapat dibuang';
+$lang["csv_upload_validating"] = 'Mengesahkan';
+$lang["csv_upload_processing"] = 'Pemprosesan';
+$lang["processing_batch_edit_save"] = 'baris [row_number] daripada [rows_count]';

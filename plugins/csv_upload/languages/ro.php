@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'Fișierul CSV nu poate fi deschis sau ci
 $lang["csv_upload_check_utf_error"] = 'Fișierul CSV nu este un UTF-8 valid. Caracter invalid pe linia';
 $lang["csv_upload_condition1"] = 'Asigurați-vă că fișierul CSV este codificat folosind <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'Fișierul CSV are BOM care nu a putut fi eliminat';
+$lang["csv_upload_validating"] = 'Validare';
+$lang["csv_upload_processing"] = 'Prelucrare';
+$lang["processing_batch_edit_save"] = 'rândul [row_number] din [rows_count]';

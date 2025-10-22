@@ -2945,3 +2945,6 @@ $lang["false-true"] = array (
   1 => 'Правда',
 );
 $lang["show_hidden_property"] = 'Показати приховану властивість';
+$lang["processing_updating_previews"] = 'Ресурс [resource]: Оновлення прев\'ю';
+$lang["processing_batch_edit_save"] = 'Застосування змін до [field_count] полів для [resource_count] ресурсів';
+$lang["processing_resource_in_group"] = 'Обробка ресурсів [count]/[total]';

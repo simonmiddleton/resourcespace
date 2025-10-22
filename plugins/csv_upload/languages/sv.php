@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'CSV-filen kan inte öppnas eller läsas'
 $lang["csv_upload_check_utf_error"] = 'CSV-filen är inte giltig UTF-8. Ogiltig tecken på rad';
 $lang["csv_upload_condition1"] = 'Se till att CSV-filen är kodad med <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'CSV-filen har BOM som inte kunde tas bort';
+$lang["csv_upload_validating"] = 'Validerar';
+$lang["csv_upload_processing"] = 'Bearbetning';
+$lang["processing_batch_edit_save"] = 'rad [row_number] av [rows_count]';

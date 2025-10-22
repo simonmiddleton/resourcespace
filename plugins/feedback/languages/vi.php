@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["feedback_user_survey"] = 'Khảo sát người dùng';
 $lang["feedback_thank_you"] = 'Cảm ơn bạn đã phản hồi.';
 $lang["feedback_your_full_name"] = 'Tên đầy đủ của bạn';

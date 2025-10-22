@@ -1,4 +1,5 @@
 <?php
+
 # English
 # Language File for the ResourceSpace Falcon Link Plugin
 # -------
@@ -19,7 +20,7 @@ $lang["falcon_link_template_url"]                   = "Falcon template URL. This
 $lang["falcon_link_tag_fields"]                     = "ResourceSpace - Falcon tag fields. These will be concatenated and added to the Falcon template tags";
 $lang["falcon_link_id_field"]                       = "Metadata field to store the Falcon identifier";
 $lang["falcon_link_log_share"]                      = "Published on Falcon";
-$lang["falcon_link_archived"]                       = "Archived"; 
+$lang["falcon_link_archived"]                       = "Archived";
 $lang["falcon_link_access_denied"]                  = "You do not have permission to publish the selected resource(s)";
 $lang["falcon_link_already_published"]              = "This resource has been published to Falcon";
 $lang["falcon_link_resources_already_published"]    = "Some resources have already been published to Falcon and cannot be republished";

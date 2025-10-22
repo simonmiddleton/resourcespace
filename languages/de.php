@@ -3236,3 +3236,6 @@ $lang["errors"] = 'Fehler';
 $lang["error_savefirst"] = 'Bitte speichern Sie Ihre Änderungen';
 $lang["language-be"] = 'Belarussisch';
 $lang["show_hidden_property"] = 'Versteckte Eigenschaft anzeigen';
+$lang["processing_updating_previews"] = 'Ressource [resource]: Vorschauen aktualisieren';
+$lang["processing_batch_edit_save"] = 'Änderungen an [field_count] Feldern für [resource_count] Ressourcen anwenden';
+$lang["processing_resource_in_group"] = 'Verarbeite Ressourcen [count]/[total]';

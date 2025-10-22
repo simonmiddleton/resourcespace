@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["emu_configuration"] = 'EMu Configuration';
 $lang["emu_api_settings"] = 'Mga setting ng server ng API';
 $lang["emu_api_server"] = 'Tirahan ng server (hal. http://[server.address])';

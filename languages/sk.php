@@ -3342,3 +3342,6 @@ $lang["errors"] = 'Chyby';
 $lang["error_savefirst"] = 'Prosím, uložte svoje zmeny';
 $lang["language-be"] = 'Belaruský';
 $lang["show_hidden_property"] = 'Zobraziť skrytú vlastnosť';
+$lang["processing_updating_previews"] = 'Aktualizácia náhľadov [resource]';
+$lang["processing_batch_edit_save"] = 'Aplikovanie zmien na [field_count] poliach pre [resource_count] zdrojov';
+$lang["processing_resource_in_group"] = 'Spracovanie zdrojov [count]/[total]';

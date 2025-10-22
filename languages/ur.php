@@ -2952,3 +2952,6 @@ $lang["false-true"] = array (
   1 => 'صحیح',
 );
 $lang["show_hidden_property"] = 'چھپی ہوئی خصوصیت دکھائیں';
+$lang["processing_updating_previews"] = 'وسائل [resource]: پیش نظروں کو اپ ڈیٹ کرنا';
+$lang["processing_batch_edit_save"] = '[field_count] فیلڈز میں [resource_count] وسائل کے لیے تبدیلیاں لاگو کرنا';
+$lang["processing_resource_in_group"] = 'وسائل کی پروسیسنگ [count]/[total]';

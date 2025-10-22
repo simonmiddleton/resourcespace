@@ -5,7 +5,7 @@ command_line_only();
 
 $restrict = $argv[1] ?? false;
 // Models to use in the order to try them in. The same model can be attempted twice as results often differ between requests.
-$models=["gpt-4o-mini","gpt-4o-mini","gpt-4o","gpt-3.5-turbo"];
+$models = ["gpt-4o-mini","gpt-4o-mini","gpt-4o","gpt-3.5-turbo"];
 
 // Try the below to clear any that couldn't be translated by the default model
 //$model="gpt-3.5-turbo";
@@ -136,27 +136,33 @@ foreach ($plugins as $plugin) {
             }
         }
 
-
         // Work out what we're missing.
         $missing = array_diff(array_keys($lang_en_extended), array_keys($lang));
 
-        $count = 0;
-        foreach ($missing as $mkey) {
-            $array=false;
+        // Filter out things we won't process
+        $missing = array_filter($missing, function ($mkey) use ($lang_en_extended, $ignore) {
             if (is_array($lang_en_extended[$mkey])) {
-                // Process arrays as strings and reassemble at the end.
-                $lang_en_extended[$mkey]=json_encode($lang_en_extended[$mkey]);
-                $array=true;
+                return true; // keep, will be json_encoded later
             }
-            
             if (!is_string($lang_en_extended[$mkey])) {
-                continue;
+                return false;
             }
             if (strlen(trim($lang_en_extended[$mkey])) <= 1) {
-                continue;
+                return false;
             }
             if (in_array($mkey, $ignore)) {
-                continue;
+                return false;
+            }
+            return true;
+        });
+
+        $count = 0;
+        foreach ($missing as $mkey) {
+            $array = false;
+            if (is_array($lang_en_extended[$mkey])) {
+                // Process arrays as strings and reassemble at the end.
+                $lang_en_extended[$mkey] = json_encode($lang_en_extended[$mkey]);
+                $array = true;
             }
 
             $count++;
@@ -167,14 +173,14 @@ Text within square brackets indicates a system parameter that MUST NOT itself be
 In the event that you cannot provide a translation (with the exception of the cases listed above) return the word CALAMITY followed by the reason the translation could not be provided. Do not output anything that is not either a valid translation or the word CALAMITY with the reason.");
             $messages[] = array("role" => "user","content" => "Please translate: " . $lang_en_extended[$mkey]);
 
-            foreach ($models as $model)
-                {
+            foreach ($models as $model) {
                 echo $model . ": " . $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey for language $language\n\n";
                 flush();
                 ob_flush();
-        
-		echo "English       : " . $lang_en_extended[$mkey] . "\n";
-		echo str_pad(substr($lang_name,0,13),13) . " : ";
+
+                echo "English       : " . $lang_en_extended[$mkey] . "\n";
+                echo str_pad(substr($lang_name, 0, 13), 13) . " : ";
+
                 $result = generateChatCompletions($openai_key, $model, 0, 2048, $messages);
                 print_r($result);
                 echo "\n\n";
@@ -191,21 +197,24 @@ In the event that you cannot provide a translation (with the exception of the ca
                 }
 
                 if (is_string($result) && strlen($result) > 0 && strpos(strtolower($result), "calamity") === false && strpos(strtolower($result), "[error]") === false) {
-                       
                     $f = fopen($langfile, "a");
 
                     // Convert an array back to array after being parsed as a string.
-                    if ($array) {$result=json_decode($result);if (is_null($result)) {continue;}}
+                    if ($array) {
+                        $result = json_decode($result);
+                        if (is_null($result)) {
+                            continue;
+                        }
+                    }
 
                     fwrite($f, "\n\$lang[\"" . $mkey . "\"] = " . var_export($result, true) . ";");
                     fclose($f);
                     continue 2; // Jump out of the models loop
                 } else {
-                    if ($model==end($models))
-                        {
+                    if ($model == end($models)) {
                         $calamity++;
                         $calamities[] = $mkey;
-                        }
+                    }
                 }
             }
         }

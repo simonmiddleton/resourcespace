@@ -69,3 +69,6 @@ $lang["csv_upload_createdfromcsvupload"] = 'Створана з плагіна �
 $lang["csv_upload_check_file_error"] = 'Файл CSV не можа быць адкрыты або прачытаны';
 $lang["csv_upload_check_utf_error"] = 'CSV файл не з\'яўляецца сапраўдным UTF-8. Няправільны сімвал на радку';
 $lang["csv_upload_check_removebom"] = 'CSV файл мае BOM, які не ўдалося выдаліць';
+$lang["csv_upload_validating"] = 'Праверка';
+$lang["csv_upload_processing"] = 'Апрацоўка';
+$lang["processing_batch_edit_save"] = 'радок [row_number] з [rows_count]';

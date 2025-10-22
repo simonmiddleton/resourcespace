@@ -3177,3 +3177,6 @@ $lang["errors"] = 'Virheet';
 $lang["error_savefirst"] = 'Ole hyvä ja tallenna muutoksesi';
 $lang["language-be"] = 'Belarusian';
 $lang["show_hidden_property"] = 'Näytä piilotettu ominaisuus';
+$lang["processing_updating_previews"] = 'Resurssi [resource]: Esikatseluiden päivittäminen';
+$lang["processing_batch_edit_save"] = 'Muutosten soveltaminen [field_count] kenttään [resource_count] resurssille';
+$lang["processing_resource_in_group"] = 'Käsitellään resursseja [count]/[total]';

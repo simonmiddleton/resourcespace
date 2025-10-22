@@ -55,10 +55,10 @@ if (!$facial_recognition_active) {
     exit(1);
 }
 
-if (!is_positive_int_loose($facial_recognition_mark_for_training_field) && !$force_processing) { 
+if (!is_positive_int_loose($facial_recognition_mark_for_training_field) && !$force_processing) {
     echo 'Error: Please set the $facial_recognition_mark_for_training_field config option before trying to run this tool. Alternatively use the force-processing option' . PHP_EOL;
     exit(1);
-} 
+}
 
 // Init
 $convert_fullpath             = get_utility_path('im-convert');

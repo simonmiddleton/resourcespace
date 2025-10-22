@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["emu_configuration"] = 'Konfigurasi EMu';
 $lang["emu_api_settings"] = 'Tetapan pelayan API';
 $lang["emu_api_server"] = 'Alamat pelayan (contoh: http://[server.address])';

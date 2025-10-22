@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["emu_configuration"] = 'EMu konfiguráció';
 $lang["emu_api_settings"] = 'API szerver beállítások';
 $lang["emu_api_server"] = 'Szerver cím (pl. http://[server.address])';

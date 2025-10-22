@@ -2939,3 +2939,6 @@ $lang["false-true"] = array (
   1 => 'Tama',
 );
 $lang["show_hidden_property"] = 'Ipakita ang nakatagong ari-arian';
+$lang["processing_updating_previews"] = 'Resource [resource]: Nag-aupdate ng mga preview';
+$lang["processing_batch_edit_save"] = 'Nag-aaplay ng mga pagbabago sa [field_count] na mga patlang para sa [resource_count] na mga yaman';
+$lang["processing_resource_in_group"] = 'Pinoproseso ang mga mapagkukunan [count]/[total]';

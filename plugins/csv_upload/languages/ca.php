@@ -71,3 +71,6 @@ $lang["csv_upload_check_file_error"] = 'No es pot obrir o llegir el fitxer CSV';
 $lang["csv_upload_check_utf_error"] = 'El fitxer CSV no és un UTF-8 vàlid. Caràcter invàlid a la línia';
 $lang["csv_upload_condition1"] = 'Assegureu-vos que el fitxer CSV estigui codificat amb <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'El fitxer CSV té BOM que no s\'ha pogut eliminar';
+$lang["csv_upload_validating"] = 'Validant';
+$lang["csv_upload_processing"] = 'Processant';
+$lang["processing_batch_edit_save"] = 'fila [row_number] de [rows_count]';

@@ -3063,3 +3063,6 @@ $lang["false-true"] = array (
   1 => 'Prawda',
 );
 $lang["show_hidden_property"] = 'Pokaż ukrytą właściwość';
+$lang["processing_updating_previews"] = 'Aktualizacja podglądów zasobu [resource]';
+$lang["processing_batch_edit_save"] = 'Zastosowanie zmian do [field_count] pól dla [resource_count] zasobów';
+$lang["processing_resource_in_group"] = 'Przetwarzanie zasobów [count]/[total]';

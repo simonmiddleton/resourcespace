@@ -15,7 +15,7 @@ $clargs = getopt($shortopts, $longopts);
 $updateall = isset($clargs["update-all"]) || isset($clargs["u"]);
 
 
-if(!isset($extracted_text_field)) {
+if (!isset($extracted_text_field)) {
     echo 'No $extracted_text_field set - exiting' . PHP_EOL;
     exit();
 }
@@ -30,13 +30,11 @@ $resources = ps_query("SELECT ref, file_extension
 $edit_count = 0;
 
 foreach ($resources as $resource) {
-
     $current_extracted_text = get_data_by_field($resource['ref'], $extracted_text_field);
 
     if (!empty($current_extracted_text) && !$updateall) {
         echo "Ref: " . $resource['ref'] . " - already has extracted text - skipping" . PHP_EOL;
     } else {
-
         $result = extract_text($resource['ref'], $resource['file_extension']);
 
         if ($result) {
@@ -45,7 +43,6 @@ foreach ($resources as $resource) {
         } else {
             echo "Ref: " . $resource['ref'] . " - error extracting text" . PHP_EOL;
         }
-
     }
 }
 

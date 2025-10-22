@@ -3044,3 +3044,6 @@ $lang["false-true"] = array (
   1 => 'Waar',
 );
 $lang["show_hidden_property"] = 'Toon verborgen eigenschap';
+$lang["processing_updating_previews"] = 'Hulpbron [resource]: Voorvertoningen bijwerken';
+$lang["processing_batch_edit_save"] = 'Wijzigingen toepassen op [field_count] velden voor [resource_count] middelen';
+$lang["processing_resource_in_group"] = 'Hulpbronnen verwerken [count]/[total]';

@@ -3019,3 +3019,6 @@ $lang["false-true"] = array (
   1 => 'Točno',
 );
 $lang["show_hidden_property"] = 'Prikaži skrivenu svojstvo';
+$lang["processing_updating_previews"] = 'Resurs [resource]: Ažuriranje pregleda';
+$lang["processing_batch_edit_save"] = 'Primjena promjena na [field_count] polja za [resource_count] resursa';
+$lang["processing_resource_in_group"] = 'Obrada resursa [count]/[total]';

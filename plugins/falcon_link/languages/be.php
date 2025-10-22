@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["falcon_link_title"] = 'Falcon Link';
 $lang["falcon_link_manage"] = 'Сокалка публікаваць/архіваваць';
 $lang["falcon_link_publish"] = 'Апублікаваць у Falcon';

@@ -3030,3 +3030,6 @@ $lang["false-true"] = array (
   1 => 'Adevărat',
 );
 $lang["show_hidden_property"] = 'Afișează proprietatea ascunsă';
+$lang["processing_updating_previews"] = 'Resurs [resource]: Actualizare previzualizări';
+$lang["processing_batch_edit_save"] = 'Aplicarea modificărilor la [field_count] câmpuri pentru [resource_count] resurse';
+$lang["processing_resource_in_group"] = 'Prelucrarea resurselor [count]/[total]';

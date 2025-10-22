@@ -1,15 +1,13 @@
 <?php
 function HookEmuViewRenderfield($field, $resource)
-    {
-    if(!checkperm('a'))
-        {
+{
+    if (!checkperm('a')) {
         return false;
-        }
+    }
 
     global $baseurl, $search, $ref, $emu_irn_field, $emu_resource_types, $emu_created_by_script_field;
 
-    if($field['ref'] == $emu_irn_field && in_array($resource['resource_type'], $emu_resource_types))
-        {
+    if ($field['ref'] == $emu_irn_field && in_array($resource['resource_type'], $emu_resource_types)) {
         $emu_irn = $field['value'];
         $value   = $emu_irn;
         ?>
@@ -22,7 +20,7 @@ function HookEmuViewRenderfield($field, $resource)
         <?php
 
         return true;
-        }
+    }
 
     return false;
-    }
+}

@@ -38,13 +38,13 @@ function update_previews($ref)
             $ingested = true;
         }
         create_previews(
-            $ref, 
-            false, 
-            ($previewbased || in_array($resourceinfo[0]["file_extension"], NON_PREVIEW_EXTENSIONS) ? "jpg" : $resourceinfo[0]["file_extension"]), 
-            false, 
-            $previewbased || in_array($resourceinfo[0]["file_extension"], NON_PREVIEW_EXTENSIONS), 
-            -1, 
-            false, 
+            $ref,
+            false,
+            ($previewbased || in_array($resourceinfo[0]["file_extension"], NON_PREVIEW_EXTENSIONS) ? "jpg" : $resourceinfo[0]["file_extension"]),
+            false,
+            $previewbased || in_array($resourceinfo[0]["file_extension"], NON_PREVIEW_EXTENSIONS),
+            -1,
+            false,
             $ingested
         );
         hook("afterupdatepreview", "", array($ref));

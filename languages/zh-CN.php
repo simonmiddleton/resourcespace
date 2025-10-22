@@ -3146,3 +3146,6 @@ $lang["false-true"] = array (
   1 => '真',
 );
 $lang["show_hidden_property"] = '显示隐藏属性';
+$lang["processing_updating_previews"] = '资源 [resource]: 更新预览';
+$lang["processing_batch_edit_save"] = '正在对 [resource_count] 个资源的 [field_count] 个字段应用更改';
+$lang["processing_resource_in_group"] = '处理资源 [count]/[total]';

@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["feedback_user_survey"] = 'Апытанне карыстальнікаў';
 $lang["feedback_thank_you"] = 'Дзякуй за ваш водгук.';
 $lang["feedback_your_full_name"] = 'Вашае поўнае імя';

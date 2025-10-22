@@ -28,10 +28,7 @@ if ('cli' != PHP_SAPI) {
     if ($backurl == "") {
         $backurl = $baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $migrate_field;
     }
-
-
 } else {
-
     $help_text = <<<'HELP'
     NAME
         migrate_data_to_fixed.php - # Manually migrate resource type field data from text field to fixed list fields that can allow multiple values.

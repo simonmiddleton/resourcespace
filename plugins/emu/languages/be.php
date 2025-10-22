@@ -1,6 +1,5 @@
 <?php
 
-
 $lang["emu_configuration"] = 'Канфігурацыя EMu';
 $lang["emu_api_settings"] = 'Налады сервера API';
 $lang["emu_api_server"] = 'Адрас сервера (напрыклад, http://[server.address])';

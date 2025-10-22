@@ -2400,7 +2400,7 @@ function get_suggested_keywords($search, $ref = "")
  * @param int $keyref The reference ID of the keyword for which to find related keywords.
  * @return array An array of related keyword references.
  */
-function get_related_keywords($keyref)
+function get_related_keywords($keyref, $keyword, bool $similar_keywords = false)
 {
     debug_function_call("get_related_keywords", func_get_args());
 
@@ -2414,12 +2414,14 @@ function get_related_keywords($keyref)
     } else {
         if ($keyword_relationships_one_way) {
             $related_keywords_cache[$keyref] = ps_array("SELECT related value FROM keyword_related WHERE keyword = ?", array("i", $keyref), "keywords_related");
-            return $related_keywords_cache[$keyref];
         } else {
             $related_keywords_cache[$keyref] = ps_array("SELECT keyword value FROM keyword_related WHERE related = ? UNION SELECT related value FROM keyword_related WHERE (keyword = ? OR keyword IN (SELECT keyword value FROM keyword_related WHERE related = ?)) AND related <> ?", array("i", $keyref, "i", $keyref, "i", $keyref, "i", $keyref), "keywords_related");
-            return $related_keywords_cache[$keyref];
         }
     }
+    if ($similar_keywords) {
+        $related_keywords_cache[$keyref] = array_unique(array_merge($related_keywords_cache[$keyref], ps_array("SELECT ref value FROM keyword WHERE REGEXP_REPLACE(keyword, '[^a-zA-Z]', '') LIKE ?", array("s", $keyword))));
+    }
+    return $related_keywords_cache[$keyref];
 }
 
 /**

@@ -2945,3 +2945,6 @@ $lang["false-true"] = array (
   1 => 'Pravda',
 );
 $lang["show_hidden_property"] = 'Zobrazit skrytou vlastnost';
+$lang["processing_updating_previews"] = 'Aktualizace náhledů [resource]';
+$lang["processing_batch_edit_save"] = 'Použití změn na [field_count] polích pro [resource_count] zdroje';
+$lang["processing_resource_in_group"] = 'Zpracovávám zdroje [count]/[total]';

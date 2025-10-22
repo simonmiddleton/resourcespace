@@ -69,3 +69,6 @@ $lang["csv_upload_check_file_error"] = 'Ni ellir agor nac darllen ffeil CSV';
 $lang["csv_upload_check_utf_error"] = 'Nid yw\'r ffeil CSV yn UTF-8 dilys. Cymeriad annilys ar linell';
 $lang["csv_upload_condition1"] = 'Gwnewch yn siŵr bod y ffeil CSV wedi\'i chynnwys gan ddefnyddio <b>UTF-8</b>.';
 $lang["csv_upload_check_removebom"] = 'Mae gan y ffeil CSV BOM nad oedd yn bosibl ei ddileu';
+$lang["csv_upload_validating"] = 'Dilysu';
+$lang["csv_upload_processing"] = 'Prosesu';
+$lang["processing_batch_edit_save"] = 'rhow [row_number] o [rows_count]';
