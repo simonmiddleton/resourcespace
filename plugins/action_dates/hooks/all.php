@@ -29,7 +29,7 @@ function HookAction_datesCronCron()
     $last_action_dates_cron  = get_sysvar('last_action_dates_cron', '1970-01-01');
 
     # No need to run if already run in last 24 hours.
-    if (strtotime($last_action_dates_cron) < strtotime("today")) {
+    if (strtotime($last_action_dates_cron) > strtotime("today")) {
         if ('cli' == PHP_SAPI) {
             echo " - Skipping action date cron - last run: " . $last_action_dates_cron . PHP_EOL;
         }

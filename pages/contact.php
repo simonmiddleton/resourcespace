@@ -10,7 +10,7 @@ include "../include/header.php";
 
 <div class="BasicsBox">
     <h1><?php echo escape($lang["contactus"]); ?></h1>
-    <p><?php echo text("contact")?></p>
+    <p><?php echo escape(text("contact")); ?></p>
 </div>
 
 <?php

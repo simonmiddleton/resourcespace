@@ -81,7 +81,7 @@ function addColumnHeader($orderName, $labelKey)
 
     $introtext = text("introtext");
     if ($introtext != "") {
-        echo "<p>" . escape(text("introtext")) . "</p>";
+        echo "<p>" . escape($introtext) . "</p>";
     }
 
     $allow_reorder = false;

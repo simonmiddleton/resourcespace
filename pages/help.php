@@ -33,7 +33,7 @@ include "../include/header.php";
                 // Build link for the specified KnowlegeBase page
                 echo '<iframe src="https://www.resourcespace.com/knowledge-base/' . escape($page) . '?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
             } else {
-                echo text("introtext");
+                echo strip_tags_and_attributes(text("introtext"), ['iframe'], ['src']);
             }
             ?>
         </p>
@@ -62,7 +62,7 @@ include "../include/header.php";
     } else {
         ?>
         <h1><?php echo escape($section); ?></h1>
-        <p><?php echo text($section); ?></p>
+        <p><?php echo escape(text($section)); ?></p>
         <p>
             <a onclick="<?php echo $onClick; ?>" href="<?php echo $baseurl_short?>pages/help.php">
                 <?php echo LINK_CARET_BACK . escape($lang["backtohelphome"]); ?>

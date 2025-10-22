@@ -21,7 +21,7 @@ include "../include/header.php";
         render_help_link("resourceadmin/user-resource-requests");
         ?>
     </h1>
-    <p><?php echo text("introtext")?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
  
     <?php
     $requests = get_user_requests();

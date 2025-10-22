@@ -65,7 +65,7 @@ if (
 ) {
     return false;
 }
-
+$resource_field_verbatim_keyword_regex[8]="/^(?:[0-9]+(?:.[0-9]+)+)$/";
 $test_cases = [
     ["search" => "plant", "node_value" => "plant"],
     ["search" => "a3ewd44a43-a80eha-a464t0-aba24r*", "node_value" => "a3ewd44a43-a80eha-a464t0-aba24r-acf2b011a0763w"],
@@ -82,6 +82,7 @@ $test_cases = [
     ["search" => "*98.327.370.*", "node_value" => "1998.327.370.456"],
     ["search" => "bing.*.boom", "node_value" => "bing.bong.BOOM"],
     ["search" => "will.*", "node_value" => "will.i.am"], // Stop word compatibility
+    //["search" => "title:123.45*;345.12*", "node_value" => "123.456", "field" => 8],
     ];
 
 foreach ($test_cases as $case) {
@@ -107,8 +108,21 @@ function test_wildcard_search(string $search, string $node_value, int $field, bo
     for ($n = 0; $n <= 1; $n++) {
         $wildcard_always_applied = !$wildcard_always_applied;
         $results = is_array($search_result = do_search($search)) ? $search_result : [];
+    
+
 
         if (in_array($resource,array_column($results,'ref')) ^ $include_resource) {
+            $sql = do_search(
+                $search,
+                '',
+                'relevance',
+                '0',
+                -1,
+                'desc',
+                false,
+                DEPRECATED_STARSEARCH, false, false, '', false, true, false, false, true
+            );
+            //echo format_query($sql->sql, $sql->parameters) . PHP_EOL;
             return false;
         } else {
             $success++;

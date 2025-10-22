@@ -27,7 +27,7 @@ include "../../include/header.php";
     renderBreadcrumbs($links_trail);
     ?>
   
-    <p><?php echo text("introtext");?></p>
+    <p><?php echo escape(text("introtext")); ?></p>
 
     <div class="VerticalNav">
         <ul>

@@ -103,6 +103,30 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
             $extramessages = true;
         }
     }
+
+    if (checkperm("R")) {
+        $requestcondition = "";
+        $requestparams = array();
+        if (checkperm("Rb")) {
+            $requestcondition = "and assigned_to=?";
+            $requestparams[] = "i";
+            $requestparams[] = $userref;
+        }
+        $requestcount = ps_value("select count(*) value from request where status = 0 $requestcondition", $requestparams, 0);
+        if ($requestcount > 0) {
+            $extramessage['requestcount'] = $requestcount;
+            $extramessages = true;
+        }
+    }
+
+    if (checkperm("r") && $research_request) {
+        $researchcount = ps_value("select count(*) value from research_request where status = 0", array(), 0);
+        if ($researchcount > 0) {
+            $extramessage['researchcount'] = $researchcount;
+            $extramessages = true;
+        }
+    }
+
     if ($offline_job_queue) {
         $userfailedjobs = count(job_queue_get_jobs("", STATUS_ERROR, (checkperm('a') ? 0 : $userref)));
         $allfailedjobs  = count(job_queue_get_jobs("", STATUS_ERROR));
@@ -171,16 +195,28 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
                     usertotalcount = 0;
                     actioncount = 0;
                     failedjobcount = 0;
+                    admintotalcount = 0;
                     
                     if (typeof(messages[messages.length - 1]['actioncount']) !== 'undefined') {
                         // There are actions as well as messages
                         actioncount = parseInt(messages[messagecount]['actioncount']);
                         usertotalcount = usertotalcount + actioncount;
                     }
+                    if (typeof(messages[messages.length - 1]['requestcount']) !== 'undefined') {
+                        // There are actions as well as messages
+                        requestcount = parseInt(messages[messagecount]['requestcount']);
+                        admintotalcount = admintotalcount + requestcount;
+                    }
+                    if (typeof(messages[messages.length - 1]['researchcount']) !== 'undefined') {
+                        // There are actions as well as messages
+                        researchcount = parseInt(messages[messagecount]['researchcount']);
+                        admintotalcount = admintotalcount + researchcount;
+                    }
                     if (typeof(messages[messages.length - 1]['failedjobcount']) !== 'undefined') {
                         userfailedjobcount = parseInt(messages[messagecount]['failedjobcount']['user']);
                         usertotalcount     = usertotalcount + userfailedjobcount;
                         failedjobcount     = parseInt(messages[messagecount]['failedjobcount']['all']);
+                        admintotalcount = admintotalcount + failedjobcount;
                     }
                     if (usertotalcount > 999 ) {
                         usertotalcountlabel = "999+";
@@ -268,10 +304,23 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
                         {
                         jQuery('span.FailedJobCountPill').hide();   
                         }
+
+                    if (admintotalcount > 0) {
+                        if (admintotalcount > 999 ) {
+                            admintotalcountlabel = "999+";
+                        } else {
+                            admintotalcountlabel = admintotalcount.toString();
+                        }
+                        jQuery('span.AdminMenuCountPill').html(DOMPurify.sanitize(admintotalcountlabel)).fadeIn();
+                    } else {
+                        jQuery('span.AdminMenuCountPill').hide();
+                    }
+
                 } else {
                     jQuery('span.UserMenuCountPill').hide();
                     jQuery('span.MessageCountPill').hide();
                     jQuery('span.ActionCountPill').hide();
+                    jQuery('span.AdminCountPill').hide();
                 }
             }
         }).done(function() {

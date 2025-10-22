@@ -502,7 +502,7 @@ $page_title = get_page_title($pagename, pluginname());
                                                 <?php
                                             } else {
                                                 ?>
-                                                <span id="TeamMessages" class="Pill" style="display:none"></span>
+                                                <span class="AdminMenuCountPill Pill" style="display:none"></span>
                                                 <?php
                                             }
                                             ?>

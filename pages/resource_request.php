@@ -157,7 +157,7 @@ $back_url = generateURL(
 
     <p>
         <?php
-        echo text("introtext");
+        echo escape(text("introtext"));
         render_help_link("resourceadmin/user-resource-requests");
         ?>
     </p>
