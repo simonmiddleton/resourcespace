@@ -5995,3 +5995,11 @@ function log_bandwidth(int $bandwidth_usage): void
         ps_query("INSERT INTO daily_stat (count, external, year, month, day, usergroup, activity_type, object_ref) VALUES (?, ?, ?, ?, ?, ?, 'Downloaded KB', 0)", $update_params);
     }
 }
+
+/**
+ * Access control: check user is allowed to view confidential resources (associated with Super Admin capability).
+ */
+function acl_can_view_confidential_resources(): bool
+{
+    return checkperm('a') && checkperm('v');
+}
