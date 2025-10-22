@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = '当前日期';
 $lang["totp_date_binding_w"] = '当前周（从星期一开始）';
 $lang["totp_date_binding_m"] = '当前月份';
 $lang["totp_date_binding_y"] = '当前年份';
+$lang["page-title_totp_setup"] = '设置 TOTP 插件';
+$lang["page-title_totp_totp"] = 'TOTP';

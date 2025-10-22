@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='فیلڈ جو یہ طے کرنے کے لیے ا
 $lang["vr_view_yaw_only_value"]='چیک کرنے کے لیے قدر۔ اگر پایا گیا تو is_yaw_only آپشن کو درست پر سیٹ کر دیا جائے گا۔';
 $lang["vr_view_orig_image"]='کیا تصویر کے پیش نظارہ کے لیے اصل وسائل فائل کو ماخذ کے طور پر استعمال کریں؟';
 $lang["vr_view_orig_video"]='کیا ویڈیو پیش نظارہ کے لیے اصل وسائل فائل کو ماخذ کے طور پر استعمال کریں؟';
+$lang["page-title_vr_view_download"] = 'VR View';
+$lang["page-title_vr_view_setup"] = 'VR ویو پلگ ان سیٹ اپ کریں';

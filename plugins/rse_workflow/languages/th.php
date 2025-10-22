@@ -57,3 +57,11 @@ $lang["rse_workflow_bcc_admin"]='แจ้งผู้ดูแลระบบ�
 $lang["rse_workflow_manage_workflow-tooltip"] = 'สร้างและจัดการสถานะการทำงาน';
 $lang["rse_workflow_skip_required_fields"] = 'เมื่อย้ายทรัพยากรไปยังสถานะการทำงานนี้ ให้ยกเว้นการตรวจสอบฟิลด์ที่จำเป็นหรือไม่?';
 $lang["rse_workflow_state_change_failed_required_fields"] = 'ไม่สามารถเปลี่ยนสถานะการเก็บถาวรเป็น %%ARCHIVE%% ได้ ขาดข้อมูลเมตาดาต้าในฟิลด์ที่จำเป็น: %%FIELDS%%';
+$lang["page-title_rse_workflow_batch_action"] = 'การดำเนินการเวิร์กโฟลว์แบบกลุ่ม';
+$lang["page-title_rse_workflow_edit_action"] = 'แก้ไขการดำเนินการของเวิร์กโฟลว์';
+$lang["page-title_rse_workflow_edit_state"] = 'แก้ไขสถานะการทำงาน';
+$lang["page-title_rse_workflow_edit_workflow_actions"] = 'แก้ไขการดำเนินการของเวิร์กโฟลว์';
+$lang["page-title_rse_workflow_edit_workflow_states"] = 'แก้ไขสถานะการทำงาน';
+
+$lang["page-title_rse_workflow_setup"] = 'ตั้งค่าปลั๊กอินเวิร์กโฟลว์';
+$lang["page-title_rse_workflow_edit_workflow"] = 'แก้ไขเวิร์กโฟลว์';

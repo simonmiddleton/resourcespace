@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='هل ترغب في استخدام ملف المصد
 $lang["vr_view_orig_video"]='هل ترغب في استخدام ملف المصدر الأصلي للمورد كمصدر لمعاينة الفيديو؟';
 $lang["plugin-vr_view-title"]='عرض الواقع الافتراضي';
 $lang["plugin-vr_view-desc"]='عرض Google VR - معاينات الصور والفيديو بزاوية 360 درجة (تنسيق مستطيل متساوي الأبعاد)';
+$lang["page-title_vr_view_download"] = 'عرض الواقع الافتراضي';
+$lang["page-title_vr_view_setup"] = 'إعداد مكون عرض الواقع الافتراضي';

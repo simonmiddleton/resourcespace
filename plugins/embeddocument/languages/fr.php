@@ -13,3 +13,6 @@ $lang["embeddocument_embed_share"] = 'Intégrer le document';
 $lang["embeddocument_maximise"] = 'maximiser';
 $lang["plugin-embeddocument-title"] = 'Intégrer le document';
 $lang["plugin-embeddocument-desc"] = 'Fournit une fonction pour générer du HTML pour des aperçus de documents intégrables sur des sites distants.';
+
+$lang["page-title_embeddocument_setup"] = 'Configurer le plugin d\'intégration de documents';
+$lang["page-title_embeddocument_viewer"] = 'Intégrer le visualiseur de documents';

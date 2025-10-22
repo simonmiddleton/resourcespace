@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Generer undertekster og tilføj som alternative fi
 $lang["whisper_subtitles_name"] = 'Automatisk genererede undertekster';
 $lang["whisper_transcript"] = 'Generer en transkriptionsfil og tilføj som alternative fil-downloads';
 $lang["whisper_transcript_name"] = 'Automatisk genereret transkript';
+
+$lang["page-title_whisper_setup"] = 'Opsæt Whisper Plugin';

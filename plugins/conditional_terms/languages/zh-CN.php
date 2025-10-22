@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = '价值';
 $lang["conditional_terms_plugin_misconfigured"] = '条件项插件配置错误。';
 $lang["plugin-conditional_terms-title"] = '条件条款';
 $lang["plugin-conditional_terms-desc"] = '根据资源元数据启用下载时的条款页面条件显示';
+
+$lang["page-title_conditional_terms_setup"] = '设置条件条款插件';

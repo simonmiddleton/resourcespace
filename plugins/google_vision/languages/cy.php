@@ -21,3 +21,7 @@ $lang["google_vision_translation_api_key"]='Galluogi cyfieithiad geiriau allwedd
 $lang["google_vision_translation_languages"]='Rhestr o godau iaith wedi\'u separu gan gomau, e.e. "no,es"';
 $lang["google_vision_translation_keep_english"]='Cadwch y geiriau allweddol Saesneg gwreiddiol?';
 $lang["google_vision_translation_intro"]='Mae Google Vision ond yn dychwelyd allweddeiriau Saesneg. Gellir defnyddio\'r API cyfieithu ar wahân i gyfieithu\'r rhain i ieithoedd eraill. Sicrhewch fod yr API Cyfieithu wedi\'i alluogi yn y consol Google.';
+$lang["page-title_google_vision_process_existing"] = 'Proses Gweledigaeth Google Presennol';
+$lang["page-title_google_vision_setup"] = 'Gosodwch Plug-in Gweledigaeth Google';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

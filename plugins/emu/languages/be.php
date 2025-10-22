@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'Не ўказаны ідэнтыфікатар рэ�
 $lang["emu_upload_nodata"] = 'Не знойдзена дадзеных EMu для гэтага IRN:';
 $lang["emu_nodata_returned"] = 'Не знойдзена дадзеных EMu для ўказанага IRN.';
 $lang["emu_createdfromemu"] = 'Створана з плагіна EMU';
+
+$lang["page-title_emu_emu_object_details"] = 'Дэталі аб\'екта EMu';
+$lang["page-title_emu_setup"] = 'Наладка плагіна';

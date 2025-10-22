@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='Birden fazla kayıt bulundu - l
 $lang["museumplus_error_module_no_field_maps"]='MuseumPlus\'tan veri senkronize edilemiyor. Sebep: \'%name\' modülünde alan eşlemeleri yapılandırılmamış.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='[Gelişmiş] Kaynak meta verilerinin MuseumPlus\'tan REST API\'si (MpRIA) kullanılarak çıkarılmasına izin verir.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Nesne Ayrıntıları';
+$lang["page-title_museumplus_setup_module"] = 'MüzePlus Modülünü Kurun';
+$lang["page-title_museumplus_setup"] = 'MuseumPlus Eklentisini Kurun';

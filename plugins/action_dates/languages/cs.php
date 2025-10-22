@@ -38,3 +38,5 @@ $lang["weekday-6"] = 'Sobota';
 $lang["action_dates_delete_logtext"] = '- Automaticky prováděno pluginem action_dates';
 $lang["plugin-action_dates-title"] = 'Data akcí';
 $lang["plugin-action_dates-desc"] = 'Umožňuje naplánované smazání nebo omezení zdrojů na základě datových polí';
+
+$lang["page-title_action_dates_setup"] = 'Nastavení pluginu pro akční data';

@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'الأعلى',
    'bottom' => 'الأسفل',
 );
+$lang["page-title_image_text_setup"] = 'إعداد مكون نص الصورة';

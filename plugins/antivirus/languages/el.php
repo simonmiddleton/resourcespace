@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Μετακίνηση του αντικειμέ
 $lang["antivirus_av_not_setup_error"] = 'Η διαδρομή του αντιιικού δεν έχει οριστεί!';
 $lang["plugin-antivirus-title"] = 'Αντιιός';
 $lang["plugin-antivirus-desc"] = '[Προηγμένες] δυνατότητες Antivirus με ενσωμάτωση με τους περισσότερους γνωστούς μηχανισμούς antivirus που μπορούν να εκτελούν γραμμή εντολών';
+
+$lang["page-title_antivirus_setup"] = 'Ρύθμιση Πρόσθετου Antivirus';

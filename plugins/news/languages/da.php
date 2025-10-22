@@ -15,3 +15,6 @@ $lang["title-too-long"]='Titelfeltet er længere end de tilladte 50 tegn';
 $lang["plugin-news-title"]='Nyheder';
 $lang["plugin-news-desc"]='Tilføjer nyhedselementer på startsiden';
 $lang["news_manage-tooltip"] = 'Tilføj, rediger eller slet nyhedsartikler';
+$lang["page-title_news_news_content_edit"] = 'Rediger nyhedsindhold';
+$lang["page-title_news_news_edit"] = 'Rediger nyheder';
+$lang["page-title_news_news"] = 'Nyheder';

@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"] = 'Дазв�
 $lang["cookies_notification_cookies_use_title"] = 'Выкарыстанне печыва';
 $lang["cookies_notification_cookies_use_error_msg"] = 'Вы вырашылі не дазваляць выкарыстанне Cookies у ResourceSpace. Нам прыйшлося вас выдаліць, бо ResourceSpace патрабуе Cookies для належнай працы.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Вы павінны прыняць выкарыстанне печыва перад доступам да сістэмы.';
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Выбар печыва';
+$lang["page-title_cookies_notification_setup"] = 'Наладзіць плагін апавяшчэння аб печывечках';

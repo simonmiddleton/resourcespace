@@ -16,3 +16,5 @@ $lang["are_available-1"]='serà convertit';
 $lang["are_available-0"]='serà convertit';
 $lang["plugin-format_chooser-title"]='Selector de format';
 $lang["plugin-format_chooser-desc"]='Et permet triar diferents formats quan descarregues fitxers que es generen al moment.';
+$lang["page-title_format_chooser_convert"] = 'Selector de format';
+$lang["page-title_format_chooser_setup"] = 'Configuració del complement de selecció de format';

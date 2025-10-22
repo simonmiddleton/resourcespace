@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Γεμίστε με λευκό';
 $lang["openai_image_edit__mode_black"]='Γεμίστε με μαύρο';
 $lang["openai_image_edit__creating_new_resource"]='Δημιουργία νέου πόρου';
 $lang["openai_image_edit__mode_clone"]='Αντιγραφή συμπλήρωσης';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Αποθήκευση Εναλλακτικής';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Αποθήκευση Νέου';

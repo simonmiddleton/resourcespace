@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='सफेद से भरें';
 $lang["openai_image_edit__mode_black"]='काले से भरें';
 $lang["openai_image_edit__creating_new_resource"]='नया संसाधन बनाना';
 $lang["openai_image_edit__mode_clone"]='क्लोन भरें';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNG प्राप्त करें';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI सहेजें विकल्प';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI नया सहेजें';

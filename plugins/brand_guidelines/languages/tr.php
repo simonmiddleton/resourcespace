@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Marka Yönergeleri yapılandırması'
 $lang["brand_guidelines_fallback_size_thm"] = 'Küçük resim düzeni yedek görüntü boyutu';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Yarım genişlik düzeni yedek görüntü boyutu';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Tam genişlik düzeni yedekleme görüntü boyutu';
+
+$lang["page-title_brand_guidelines_content"] = 'Marka Kılavuzları İçeriğini Yönet';
+$lang["page-title_brand_guidelines_guidelines"] = 'Marka Kılavuzları';
+$lang["page-title_brand_guidelines_setup"] = 'Marka Kılavuzları Eklentisini Kur';
+$lang["page-title_brand_guidelines_toc"] = 'İçeriği düzenle';

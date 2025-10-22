@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Utilitzar el fitxer original del recurs com a font 
 $lang["vr_view_orig_video"]='Utilitzar el fitxer original de recurs com a font per a la vista prèvia del vídeo?';
 $lang["plugin-vr_view-title"]='Vista VR';
 $lang["plugin-vr_view-desc"]='Google VR View - Previsualitzacions d\'imatges i vídeos de 360 graus (format equirectangular)';
+$lang["page-title_vr_view_download"] = 'Visió VR';
+$lang["page-title_vr_view_setup"] = 'Configura el complement de vista VR';

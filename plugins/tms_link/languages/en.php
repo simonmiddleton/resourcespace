@@ -74,3 +74,11 @@ $lang["tms_link_uid_field"] = "TMS %module_name %tms_uid_field";
 $lang["tms_link_confirm_delete_module_config"] = "Are you sure you would like to delete this module configuration? This action cannot be undone!";
 $lang['tms_link_write_to_debug_log'] = "Include script progress in system debug log (requires debug logging configured separately). Caution: Will cause rapid growth of debug log file.";
 $lang['tms_link_selected_module_missing'] = 'TMS module name is currently set to "%%MODULE%%" but this is not an available option. Review the drop down options and update below.';
+
+$lang["page-title_tms_link_ajax_test"]          = "Test TMS Link";
+$lang["page-title_tms_link_setup"]              = "Setup TMS Link Plugin";
+$lang["page-title_tms_link_show_all"]           = "Show TMS Data";
+$lang["page-title_tms_link_show_raw"]           = "Show Raw TMS Data";
+$lang["page-title_tms_link_test"]               = "Test TMS Data";
+$lang["page-title_tms_link_tms_details"]        = "Show TMS Data";
+$lang["page-title_tms_link_tms_module_config"]  = "Edit TMS Module Configuration";

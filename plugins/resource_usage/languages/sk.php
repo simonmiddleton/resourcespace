@@ -14,3 +14,6 @@ $lang["resource_usage_configuration"]='Konfigurácia využitia zdrojov';
 $lang["resource_usage_mediums"]='Zoznam dostupných možností použitia (oddelených čiarkou)';
 $lang["plugin-resource_usage-title"]='Uporaba virov';
 $lang["plugin-resource_usage-desc"]='Dodaja možnost beleženja uporabe virov preko strani za ogled virov';
+$lang["page-title_resource_usage_delete"] = 'Vymazať použitie zdroja';
+$lang["page-title_resource_usage_edit"] = 'Upraviť využitie zdroja';
+$lang["page-title_resource_usage_setup"] = 'Nastavenie pluginu pre využitie zdrojov';

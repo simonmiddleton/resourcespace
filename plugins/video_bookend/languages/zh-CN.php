@@ -11,3 +11,4 @@ $lang["bookend-failed"]='失败！';
 $lang["bookend-could-not-open-file"]='错误 - 无法打开文件！';
 $lang["plugin-video_bookend-title"]='视频书签';
 $lang["plugin-video_bookend-desc"]='添加下载带有标题和结束图形的视频的功能';
+$lang["page-title_video_bookend_bookend"] = '视频书挡';

@@ -82,3 +82,6 @@ $lang["plugin-transform-title"]='Инструменты изображения (
 $lang["plugin-transform-desc"]='Позволяет создавать обрезанные и масштабированные альтернативные изображения (jCrop с поддержкой мобильных устройств)';
 $lang["use_system_icc_profile_config"]='Использовать системную конфигурацию для обработки ICC профилей. Переопределит вышеуказанные параметры sRGB.';
 $lang["cropper_preset_sizes"] = 'Предустановленные размеры';
+$lang["page-title_transform_collection_transform"] = 'Преобразовать ресурс';
+$lang["page-title_transform_crop"] = 'Обрезать ресурс';
+$lang["page-title_transform_setup"] = 'Настройка плагина преобразования';

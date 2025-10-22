@@ -13,3 +13,4 @@ $lang["splitpdf_createnewresource"]='प्रत्येक श्रेणी
 $lang["splitpdf_createnewalternativefile"]='इस संसाधन पर प्रत्येक श्रेणी के लिए एक नया वैकल्पिक फ़ाइल बनाएँ';
 $lang["plugin-pdf_split-title"]='पीडीएफ विभाजन';
 $lang["plugin-pdf_split-desc"]='पीडीएफ फाइलों को कई पृष्ठों में विभाजित करने की अनुमति देता है';
+$lang["page-title_pdf_split_pdf_split"] = 'पीडीएफ विभाजन';

@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = 'Otvori izravnu poveznicu (nova stranic
 $lang["embedslideshow_dynamic_size"] = 'Dinamičko prilagođavanje veličine pregleda na temelju veličine playera?';
 $lang["plugin-embedslideshow-title"] = 'Ugradi prezentaciju';
 $lang["plugin-embedslideshow-desc"] = 'Pruža funkciju za generiranje HTML-a za ugrađene prezentacije kolekcija na udaljenim stranicama';
+
+$lang["page-title_embedslideshow_setup"] = 'Postavljanje dodatka za umetanje prezentacije';
+$lang["page-title_embedslideshow_viewer"] = 'Ugradi prezentaciju';

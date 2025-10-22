@@ -21,3 +21,6 @@ $lang["feedback_back_to_plugin_manager"] = '返回插件管理器';
 $lang["feedback_questions"] = '问题';
 $lang["plugin-feedback-title"] = '反馈';
 $lang["plugin-feedback-desc"] = '添加一个带有可配置问题的通用用户反馈功能。';
+
+$lang["page-title_feedback_feedback"] = '提交反馈';
+$lang["page-title_feedback_setup"] = '设置 插件';

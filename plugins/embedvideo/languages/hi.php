@@ -8,3 +8,5 @@ $lang["specify_resourcetype"] = 'कृपया निर्दिष्ट क
 $lang["video_resourcetype"] = 'वीडियो संसाधन प्रकार';
 $lang["plugin-embedvideo-title"] = 'वीडियो एम्बेड करें';
 $lang["plugin-embedvideo-desc"] = 'दूरस्थ साइटों पर एम्बेड करने योग्य वीडियो के लिए HTML उत्पन्न करने का एक कार्य प्रदान करता है।';
+
+$lang["page-title_embedvideo_setup"] = 'वीडियो प्लगइन सेटअप करें';

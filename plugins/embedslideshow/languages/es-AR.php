@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = 'Abrir enlace directo (nueva página)';
 $lang["embedslideshow_dynamic_size"] = '¿Redimensionamiento dinámico de la vista previa en función del tamaño del reproductor?';
 $lang["plugin-embedslideshow-title"] = 'Incrustar Presentación Diapositivas';
 $lang["plugin-embedslideshow-desc"] = 'Proporciona una función para generar HTML para presentaciones de diapositivas de colecciones insertables en sitios remotos';
+
+$lang["page-title_embedslideshow_setup"] = 'Configurar el plugin de presentación incrustada';
+$lang["page-title_embedslideshow_viewer"] = 'Incrustar presentación de diapositivas';

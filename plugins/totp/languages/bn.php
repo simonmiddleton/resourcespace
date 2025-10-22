@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'বর্তমান দিন';
 $lang["totp_date_binding_w"] = 'বর্তমান সপ্তাহ (সোমবার থেকে শুরু)';
 $lang["totp_date_binding_m"] = 'বর্তমান মাস';
 $lang["totp_date_binding_y"] = 'বর্তমান বছর';
+$lang["page-title_totp_setup"] = 'TOTP প্লাগইন সেটআপ করুন';
+$lang["page-title_totp_totp"] = 'TOTP';

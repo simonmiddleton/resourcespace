@@ -55,3 +55,6 @@ $lang["museumplus_error_invalid_association"] = "Invalid module(s) association. 
 $lang['museumplus_id_returns_multiple_records'] = 'Multiple records found - please enter the technical ID instead';
 $lang['museumplus_error_module_no_field_maps'] = 'Unable to sync data from MuseumPlus. Reason: module \'%name\' has no field mappings configured.';
 
+$lang["page-title_museumplus_museumplus_object_details"]    = "MuseumPlus Object Details";
+$lang["page-title_museumplus_setup_module"]                 = "Setup MuseumPlus Module";
+$lang["page-title_museumplus_setup"]                        = "Setup MuseumPlus Plugin";

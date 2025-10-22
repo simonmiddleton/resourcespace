@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Tạo phụ đề và thêm vào như là tệp t�
 $lang["whisper_subtitles_name"] = 'Phụ đề được tạo tự động';
 $lang["whisper_transcript"] = 'Tạo một tệp bản sao và thêm vào như là tệp tải xuống thay thế';
 $lang["whisper_transcript_name"] = 'Biên bản tự động được tạo ra';
+
+$lang["page-title_whisper_setup"] = 'Cài đặt Plugin Whisper';

@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"] = 'Tiada peralihan automatik';
 $lang["embedslideshow_directlink"] = 'URL langsung tidak terbenam';
 $lang["embedslideshow_directlinkopen"] = 'Buka pautan terus (halaman baru)';
 $lang["embedslideshow_dynamic_size"] = 'Saiz pratonton yang dinamik berdasarkan saiz pemain?';
+$lang["page-title_embedslideshow_setup"] = 'Tetapkan Plugin Tayangan Slideshow';
+$lang["page-title_embedslideshow_viewer"] = 'Sisipkan Tayangan Slideshow';

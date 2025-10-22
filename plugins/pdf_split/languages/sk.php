@@ -14,3 +14,4 @@ $lang["splitpdf_createnewalternativefile"]='Vytvoriť nový alternatívny súbor
 $lang["to-page"]='do';
 $lang["plugin-pdf_split-title"]='PDF Rozdelitev';
 $lang["plugin-pdf_split-desc"]='Omogoča razdelitev datotek PDF na več strani';
+$lang["page-title_pdf_split_pdf_split"] = 'PDF Rozdelenie';

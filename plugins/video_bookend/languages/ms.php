@@ -9,3 +9,4 @@ $lang["bookend-noimage-2"] = '(tiada imej penutup)';
 $lang["bookend-intro"] = 'Pilih imej dari senarai fail alternatif untuk digunakan sebagai imej pembukaan dan penutupan.';
 $lang["bookend-failed"] = 'Gagal!';
 $lang["bookend-could-not-open-file"] = 'Ralat - tidak dapat membuka fail!';
+$lang["page-title_video_bookend_bookend"] = 'Video Bookend';

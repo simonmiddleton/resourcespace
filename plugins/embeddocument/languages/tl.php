@@ -12,3 +12,5 @@ $lang["embeddocument_maximise"] = 'palakihin';
 $lang["embeddocument_heading"] = 'Pagsasaayos ng Remote Document Viewer';
 $lang["embeddocument_specify_resourcetype"] = 'Mangyaring tukuyin kung aling uri ng mapagkukunan dapat lumitaw ang \'embed\' na kakayahan.';
 $lang["embeddocument_document_resourcetype"] = 'Malalayong Tagakita ng Dokumento Uri ng Yaman:';
+$lang["page-title_embeddocument_setup"] = 'I-set up ang Embed Document Plugin';
+$lang["page-title_embeddocument_viewer"] = 'I-embed ang Tagapanood ng Dokumento';

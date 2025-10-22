@@ -9,3 +9,5 @@ $lang["whisper_subtitles_name"] = "Automatically generated subtitles";
 
 $lang["whisper_transcript"] = "Generate a transcript file and add as alternative file downloads";
 $lang["whisper_transcript_name"] = "Automatically generated transcript";
+
+$lang["page-title_whisper_setup"] = "Setup Whisper Plugin";

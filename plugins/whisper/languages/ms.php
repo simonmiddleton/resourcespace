@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Hasilkan sari kata dan tambah sebagai muat turun f
 $lang["whisper_subtitles_name"] = 'Teks sarikata yang dijana secara automatik';
 $lang["whisper_transcript"] = 'Hasilkan fail transkrip dan tambah sebagai muat turun fail alternatif';
 $lang["whisper_transcript_name"] = 'Transkrip secara automatik';
+
+$lang["page-title_whisper_setup"] = 'Pasang Plugin Whisper';

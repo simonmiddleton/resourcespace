@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'ブランドガイドライン設定'
 $lang["brand_guidelines_fallback_size_thm"] = 'サムネイルレイアウトのフォールバック画像サイズ';
 $lang["brand_guidelines_fallback_size_half_width"] = '半幅レイアウトフォールバック画像サイズ';
 $lang["brand_guidelines_fallback_size_full_width"] = '全幅レイアウトフォールバック画像サイズ';
+
+$lang["page-title_brand_guidelines_content"] = 'ブランドガイドラインコンテンツを管理する';
+$lang["page-title_brand_guidelines_guidelines"] = 'ブランドガイドライン';
+$lang["page-title_brand_guidelines_setup"] = 'ブランドガイドラインプラグインの設定';
+$lang["page-title_brand_guidelines_toc"] = 'コンテンツを編集';

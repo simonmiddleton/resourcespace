@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'Tip resursă video';
 $lang["embedvideo_share"] = 'Incorporează video';
 $lang["plugin-embedvideo-title"] = 'Incorporează Video';
 $lang["plugin-embedvideo-desc"] = 'Oferă o funcție pentru a genera HTML pentru video încorporabil pe site-uri externe.';
+
+$lang["page-title_embedvideo_setup"] = 'Configurare plugin pentru încorporarea videoclipurilor';

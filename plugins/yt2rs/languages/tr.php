@@ -8,3 +8,4 @@ $lang["yt2rs_online_preview"]='Çevrimiçi Önizleme';
 $lang["yt2rs_youtube_video"]='Youtube Videosu';
 $lang["plugin-yt2rs-title"]='YouTube\'dan ResourceSpace\'e';
 $lang["plugin-yt2rs-desc"]='YouTube\'dan videolar yayınlamayı sağlar.';
+$lang["page-title_yt2rs_setup"] = 'Youtube\'u ResourceSpace Eklentisi ile Ayarlayın';

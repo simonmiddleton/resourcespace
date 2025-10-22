@@ -21,3 +21,5 @@ $lang["vr_view_orig_video"]='Käytetäänkö alkuperäistä resurssitiedostoa l�
 $lang["vr_view_projection_field"]='VR-näkymän projektion tyyppi -kenttä';
 $lang["plugin-vr_view-title"]='VR-näkymä';
 $lang["plugin-vr_view-desc"]='Google VR View - 360 asteen kuva- ja videon esikatselut (equirectangular-muoto)';
+$lang["page-title_vr_view_download"] = 'VR-näkymä';
+$lang["page-title_vr_view_setup"] = 'Aseta VR-näkymäliitännäinen';

@@ -7,3 +7,4 @@ $lang["sensitive_images_field"]='Campo de metadados contendo o motivo pelo qual 
 $lang["sensitive_images_blur_level"]='Nível de desfoque de imagem sensível<br>(1=menor, 6=maior)';
 $lang["plugin-sensitive_images-title"]='Desfoque de imagem sensível';
 $lang["plugin-sensitive_images-desc"]='Desfoca imagens marcadas como sensíveis, permitindo que o usuário clique para desfocar.';
+$lang["page-title_sensitive_images_setup"] = 'Configurar Plugin de Imagens Sensíveis';

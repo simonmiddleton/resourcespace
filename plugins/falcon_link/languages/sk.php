@@ -42,3 +42,6 @@ $lang["falcon_link_error_falcon_check_tags"] = 'Prosím, skontrolujte, či popis
 $lang["falcon_link_access_denied"] = 'Nemáte oprávnenie publikovať vybrané zdroje';
 $lang["plugin-falcon_link-title"] = 'Falcon Link';
 $lang["plugin-falcon_link-desc"] = 'Publikuj vire na Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Nastavenie pluginu Falcon Link';

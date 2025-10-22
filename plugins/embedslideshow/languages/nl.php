@@ -25,3 +25,6 @@ $lang["embedslideshow_dynamic_size"] = 'Dynamische aanpassing van de voorvertoni
 $lang["sizename_pixels"] = '%name (%pixels pixels)';
 $lang["plugin-embedslideshow-title"] = 'Insluiten Diavoorstelling';
 $lang["plugin-embedslideshow-desc"] = 'Biedt een functie om HTML te genereren voor insluitbare collectie-diavoorstellingen op externe sites';
+
+$lang["page-title_embedslideshow_setup"] = 'Instellen van de Embed Slideshow Plugin';
+$lang["page-title_embedslideshow_viewer"] = 'Invoegen Diavoorstelling';

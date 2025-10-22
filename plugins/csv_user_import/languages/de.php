@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Erlaubte Spalten: *Benutzername, *E-Mail,
 $lang["csv_user_import_condition5"] = 'Die Sprache des Benutzers wird standardmäßig auf diejenige zurückgesetzt, die mit der "$defaultlanguage" Konfigurationsoption festgelegt wurde, wenn die Sprachspalte nicht gefunden wird oder keinen Wert hat';
 $lang["plugin-csv_user_import-title"] = 'CSV-Benutzerimport';
 $lang["plugin-csv_user_import-desc"] = 'Ermöglicht das Importieren einer Benutzergruppe basierend auf einer vorformatierten CSV-Datei';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSV Benutzerimport';

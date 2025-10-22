@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'In uitvoering',
   2 => 'Voltooid',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Beheer Archieven';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Offline Archief';
+$lang["page-title_offline_archive_pending_restore"] = 'In afwachting van herstel van bron';
+$lang["page-title_offline_archive_restore_request"] = 'Vraag om herstel van bron';
+$lang["page-title_offline_archive_restore"] = 'Herstel Archief';
+$lang["page-title_offline_archive_setup"] = 'Instellen Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Bekijk Resource Archieven';
+$lang["page-title_offline_archive_view_pending"] = 'Bekijk In afwachting zijnde Archieven';

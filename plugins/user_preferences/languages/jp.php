@@ -8,3 +8,4 @@ $lang["user_preferences_change_name"]='ユーザー名の変更を許可する�
 $lang["changeyourpassword"]='パスワードとユーザー詳細を変更する。';
 $lang["plugin-user_preferences-title"]='ユーザー設定';
 $lang["plugin-user_preferences-desc"]='追加のユーザー設定を提供';
+$lang["page-title_user_preferences_setup"] = 'ユーザープリファレンスプラグインの設定';

@@ -35,3 +35,6 @@ $lang["emu_nodata_returned"] = '지정된 IRN에 대한 EMu 데이터를 찾을 
 $lang["emu_createdfromemu"] = 'EMU 플러그인에서 생성됨';
 $lang["plugin-emu-desc"] = '[고급] 리소스 메타데이터를 EMu 데이터베이스에서 추출할 수 있습니다.';
 $lang["plugin-emu-title"] = 'EMu';
+
+$lang["page-title_emu_emu_object_details"] = 'EMu 객체 세부정보';
+$lang["page-title_emu_setup"] = '설정 플러그인';

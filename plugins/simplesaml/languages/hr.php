@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'Ažuriranja SimpleSAML metapodataka';
 $lang["simplesaml_metadata_warning"] = 'Metapodaci nisu ažurirani od %date%';
 $lang["simplesaml_metadata_invalid"] = 'Neispravni ili nedostupni IdP metapodaci';
 $lang["simplesaml_admin_password_reset"] = 'Ponovno postavite administratorsku lozinku SimpleSAML testne stranice (opcionalno)';
+$lang["page-title_simplesaml_about"] = 'SAML O programu';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Generiraj SP konfiguraciju';
+$lang["page-title_simplesaml_setup"] = 'Postavljanje Simple SAML dodatka';

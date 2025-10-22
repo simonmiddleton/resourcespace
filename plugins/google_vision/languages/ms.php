@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"] = 'Google Vision hanya mengembalikan ka
 $lang["google_vision_translation_api_key"] = 'Aktifkan terjemahan kata kunci Vision melalui API terjemahan dengan memasukkan kunci API Google yang sah';
 $lang["google_vision_translation_languages"] = 'Senarai kod bahasa yang dipisahkan dengan koma, contohnya "no,es"';
 $lang["google_vision_translation_keep_english"] = 'Simpan kata kunci asal dalam Bahasa Inggeris?';
+$lang["page-title_google_vision_process_existing"] = 'Proses Google Vision Sedia Ada';
+$lang["page-title_google_vision_setup"] = 'Pasang Plugin Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

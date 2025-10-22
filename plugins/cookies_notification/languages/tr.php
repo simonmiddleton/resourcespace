@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Çerezlerin ResourceSpace
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Sisteme erişmeden önce çerez kullanımını kabul etmeniz gerekmektedir.';
 $lang["plugin-cookies_notification-title"] = 'Çerez Bildirimi';
 $lang["plugin-cookies_notification-desc"] = 'Kullanıcıları, ResourceSpace\'in çerezleri kullanarak kullanıcı etkinliğini nasıl izleyebileceği konusunda bilgilendirme yeteneği ekler ve başlıkta bir mesaj gösterir';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Çerez Seçimi';
+$lang["page-title_cookies_notification_setup"] = 'Çerez Bildirimi Eklentisini Kurun';

@@ -47,3 +47,6 @@ $lang["video_splice_createdfromvideosplice"]='Video Splice eklentisinden oluştu
 $lang["video_splice_error_invalid_action"]='Hata : Geçersiz işlem';
 $lang["plugin-video_splice-title"]='Video Birleştirme';
 $lang["plugin-video_splice-desc"]='Video kırpma ve birleştirme yeteneği ekler';
+$lang["page-title_video_splice_setup"] = 'Video Splice Eklentisini Kurun';
+$lang["page-title_video_splice_splice"] = 'Video Birleştir';
+$lang["page-title_video_splice_trim"] = 'Videoyu Kırp';

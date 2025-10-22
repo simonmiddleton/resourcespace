@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"]='Nid yw\'r cofrestr log i\'w chael';
 $lang["rse_version_revert_state"]='Adferwch gyflwr';
 $lang["rse_version_rstate_changes"]='Adferiad cyflwr ar gyfer casgliad #%COLLECTION trwy ail-gynnal digwyddiadau hyd at, ond heb gynnwys, y cofrestr ddewiswyd.';
 $lang["rse_version_invalid_time"]='Nid yw dychwelyd i amser cyn [date] yn cael ei gefnogi';
+$lang["page-title_rse_version_revert"] = 'Adfer Fersiwn Adnodd';
+$lang["page-title_rse_version_setup"] = 'Gosod Fersiwn Plugin';

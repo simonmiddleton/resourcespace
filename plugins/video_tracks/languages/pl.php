@@ -28,3 +28,5 @@ $lang["video_tracks_save_alt_not_perm"]='Nie można zapisać alternatywy bez upr
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='WAŻNE! Wtyczka Video Tracks wycofała ustawienia formatów wyjściowych. Mogą być one ustawione tylko w config.php. Wtyczka nie będzie działać zgodnie z przeznaczeniem, dopóki opcja konfiguracji nie zostanie skopiowana. Proszę skopiować następujące:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Ścieżki wideo';
 $lang["plugin-video_tracks-desc"]='Dodaj wsparcie dla różnych opcji audio i napisów dla zasobów wideo';
+$lang["page-title_video_tracks_create_video"] = 'Utwórz wideo';
+$lang["page-title_video_tracks_setup"] = 'Konfiguracja wtyczki ścieżek wideo';

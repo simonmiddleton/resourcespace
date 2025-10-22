@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='GPT 소스';
 $lang["openai_gpt_language"] = '출력 언어';
 $lang["openai_gpt_language_user"] = '현재 사용자의 언어';
 $lang["openai_gpt_overwrite_data"] = '구성된 필드의 기존 데이터를 덮어쓸까요?';
+$lang["page-title_openai_gpt_setup"] = 'OpenAI GPT 플러그인 설정';

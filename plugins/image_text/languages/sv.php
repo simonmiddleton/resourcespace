@@ -24,3 +24,4 @@ $lang['image_text_noim']="Det här tillägget kräver att ImageMagick är instal
 
 $lang["plugin-image_text-title"]='Bildtext';
 $lang["plugin-image_text-desc"]='Möjliggör att fältdata läggs till i bilden vid nedladdning';
+$lang["page-title_image_text_setup"] = 'Installera bildtextplugin';

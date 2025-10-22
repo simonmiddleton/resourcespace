@@ -9,3 +9,5 @@ $lang["antivirus_action_quarantine"] = 'Hamisha kwenye karantini';
 $lang["antivirus_deleting_file"] = 'Kufuta rasilimali [%resource_id%] na faili zozote zinazohusiana!';
 $lang["antivirus_moving_file"] = 'Kuhamisha rasilimali [%resource_id%] hadi hali ya kumbukumbu [%archive_state%]';
 $lang["antivirus_av_not_setup_error"] = 'Njia ya antivirus haijawekwa!';
+
+$lang["page-title_antivirus_setup"] = 'Weka Plugin ya Antivirus';

@@ -10,3 +10,6 @@ $lang["stencilvg-print"]='พิมพ์';
 $lang["stencilvg-download"]='ดาวน์โหลด';
 $lang["stencilvg-save_as_new_resource"]='บันทึกเป็นทรัพยากรใหม่';
 $lang["stencilvg-no_parameters_found"]='ไม่พบพารามิเตอร์เทมเพลต';
+$lang["page-title_stencilvg_download_svg"] = 'ดาวน์โหลด SVG';
+$lang["page-title_stencilvg_input"] = 'การนำเข้า SVG';
+$lang["page-title_stencilvg_setup"] = 'ตั้งค่า Plugin StencilVG';

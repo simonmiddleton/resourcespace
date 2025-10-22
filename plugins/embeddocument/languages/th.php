@@ -11,3 +11,6 @@ $lang["embeddocument_maximise"] = 'ขยายให้เต็มที่';
 $lang["embeddocument_heading"] = 'การกำหนดค่าผู้ดูเอกสารระยะไกล';
 $lang["embeddocument_specify_resourcetype"] = 'กรุณาระบุประเภททรัพยากรที่ฟังก์ชัน \'embed\' ควรปรากฏสำหรับ';
 $lang["embeddocument_document_resourcetype"] = 'ประเภททรัพยากรผู้ดูเอกสารระยะไกล';
+
+$lang["page-title_embeddocument_setup"] = 'ตั้งค่าเอกสารปลั๊กอินฝัง';
+$lang["page-title_embeddocument_viewer"] = 'ฝังตัวดูเอกสาร';

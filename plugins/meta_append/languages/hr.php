@@ -7,3 +7,4 @@ $lang["meta_append_configuration_date_format"]='Odaberite format datuma - pogled
 $lang["meta_append_configuration_prompt"]='Dodajte potvrdni okvir za metapodatke';
 $lang["plugin-meta_append-title"]='Meta Dodavanje';
 $lang["plugin-meta_append-desc"]='Dodaj vremensku oznaku koju definira korisnik i dnevni broj prijenosa (po korisniku) u polje';
+$lang["page-title_meta_append_setup"] = 'Postavljanje Meta Append Plugina';

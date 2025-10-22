@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"] = 'Tài nguyên đã được xuất b
 $lang["vimeo_publish_account_options"] = 'Tùy chọn tài khoản Vimeo';
 $lang["vimeo_publish_allow_user_accounts"] = 'Cho phép người dùng xuất bản lên tài khoản Vimeo của riêng họ. Nếu không, thì quyền truy cập vào một tài khoản Vimeo duy nhất phải được cấu hình bên dưới';
 $lang["vimeo_publish_set_account"] = 'Đặt tài khoản Vimeo';
+$lang["page-title_vimeo_publish_setup"] = 'Cài đặt Plugin Xuất Bản Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Xuất bản lên Vimeo';

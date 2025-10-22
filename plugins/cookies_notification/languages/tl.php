@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"] = 'Pahintulu
 $lang["cookies_notification_cookies_use_title"] = 'Paggamit ng Cookies';
 $lang["cookies_notification_cookies_use_error_msg"] = 'Nagpasya kang huwag payagan ang Cookies na magamit ng ResourceSpace. Kinailangan ka naming i-log out dahil ang ResourceSpace ay nangangailangan ng cookies upang gumana nang maayos.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Kailangan mong tanggapin ang paggamit ng cookies bago ma-access ang sistema';
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Pagpili ng Cookie';
+$lang["page-title_cookies_notification_setup"] = 'I-set up ang Plugin para sa Abiso ng Cookie';

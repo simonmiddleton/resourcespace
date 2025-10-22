@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='Font GPT';
 $lang["openai_gpt_language"] = 'Idioma d\'exportació';
 $lang["openai_gpt_language_user"] = 'La llengua de l\'usuari actual';
 $lang["openai_gpt_overwrite_data"] = 'Sobreescriure les dades existents als camps configurats?';
+$lang["page-title_openai_gpt_setup"] = 'Configura el complement OpenAI GPT';

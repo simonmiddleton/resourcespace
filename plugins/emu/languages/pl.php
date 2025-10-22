@@ -36,3 +36,6 @@ $lang["emu_createdfromemu"] = 'Utworzono z wtyczki EMU';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-title"] = 'EMu';
 $lang["plugin-emu-desc"] = 'Umożliwia wyodrębnienie metadanych zasobu z bazy danych EMu.';
+
+$lang["page-title_emu_emu_object_details"] = 'Szczegóły obiektu EMu';
+$lang["page-title_emu_setup"] = 'Konfiguracja wtyczki';

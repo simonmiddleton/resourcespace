@@ -38,3 +38,5 @@ $lang["weekday-5"] = 'Piątek';
 $lang["weekday-6"] = 'Sobota';
 $lang["plugin-action_dates-title"] = 'Daty działań';
 $lang["plugin-action_dates-desc"] = 'Umożliwia zaplanowane usuwanie lub ograniczanie zasobów na podstawie pól daty';
+
+$lang["page-title_action_dates_setup"] = 'Ustawienia dat akcji wtyczki';

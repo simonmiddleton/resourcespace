@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = 'Åpne direkte lenke (ny side)';
 $lang["embedslideshow_dynamic_size"] = 'Dynamisk endring av forhåndsvisning størrelse basert på spillerstørrelse?';
 $lang["plugin-embedslideshow-title"] = 'Bygg inn lysbildefremvisning';
 $lang["plugin-embedslideshow-desc"] = 'Gir en funksjon for å generere HTML for innebygde lysbildefremvisninger av samlinger på eksterne nettsteder';
+
+$lang["page-title_embedslideshow_setup"] = 'Sett opp Embed Slideshow-plugin';
+$lang["page-title_embedslideshow_viewer"] = 'Innføre lysbildefremvisning';

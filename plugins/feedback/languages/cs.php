@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Přidat nové pole';
 $lang["feedback_back_to_plugin_manager"] = 'Zpět na Správce pluginů';
 $lang["plugin-feedback-title"] = 'Zpětná vazba';
 $lang["plugin-feedback-desc"] = 'Přidává obecnou funkci zpětné vazby uživatele s konfigurovatelnými otázkami.';
+
+$lang["page-title_feedback_feedback"] = 'Odeslat zpětnou vazbu';
+$lang["page-title_feedback_setup"] = 'Nastavení pluginu';

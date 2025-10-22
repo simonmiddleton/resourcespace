@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='オリジナルのリソースファイルを画像
 $lang["vr_view_orig_video"]='オリジナルのリソースファイルをビデオプレビューのソースとして使用しますか？';
 $lang["plugin-vr_view-title"]='VRビュー';
 $lang["plugin-vr_view-desc"]='Google VR View - 360度画像およびビデオプレビュー（正距円筒図法形式）';
+$lang["page-title_vr_view_download"] = 'VRビュー';
+$lang["page-title_vr_view_setup"] = 'VRビュープラグインの設定';

@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='Kategoria';
 $lang["youtube_publish_category_error"]='Hitilafu katika kupata kategoria za YouTube: -';
 $lang["youtube_chunk_size"]='Ukubwa wa kipande cha kutumia unapopakia kwenye YouTube (MB)';
 $lang["youtube_publish_add_anchor"]='Ongeza vitambulisho vya nanga kwenye URL wakati wa kuhifadhi kwenye uwanja wa metadata wa URL ya YouTube?';
+$lang["page-title_youtube_publish_setup"] = 'Panga Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Chapisha Rasilimali kwenye Youtube';

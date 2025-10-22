@@ -52,3 +52,5 @@ $lang["youtube_publish_public"]='Public';
 $lang["youtube_publish_private"]='Privat';
 $lang["plugin-youtube_publish-title"]='Publicare pe YouTube';
 $lang["plugin-youtube_publish-desc"]='Publică resursa video pe contul YouTube configurat.';
+$lang["page-title_youtube_publish_setup"] = 'Configurare Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Publica resursa pe Youtube';

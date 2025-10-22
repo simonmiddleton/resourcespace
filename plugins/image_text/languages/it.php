@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'alto',
    'bottom' => 'basso',
 );
+$lang["page-title_image_text_setup"] = 'Imposta il plugin di testo per le immagini';

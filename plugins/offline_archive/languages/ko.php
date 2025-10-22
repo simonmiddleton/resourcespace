@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => '진행 중',
   2 => '완료됨',
 );
+$lang["page-title_offline_archive_administer_archive"] = '아카이브 관리';
+$lang["page-title_offline_archive_offline_archive_action"] = '오프라인 아카이브';
+$lang["page-title_offline_archive_pending_restore"] = '보류 중인 리소스 복원';
+$lang["page-title_offline_archive_restore_request"] = '리소스 복원 요청';
+$lang["page-title_offline_archive_restore"] = '아카이브 복원';
+$lang["page-title_offline_archive_setup"] = '설정 플러그인';
+$lang["page-title_offline_archive_view_archives"] = '리소스 아카이브 보기';
+$lang["page-title_offline_archive_view_pending"] = '보류 중인 아카이브 보기';

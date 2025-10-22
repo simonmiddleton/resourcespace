@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'Mabadiliko ya metadata ya SimpleSAML';
 $lang["simplesaml_metadata_warning"] = 'Metadata haijasasishwa tangu %date%';
 $lang["simplesaml_metadata_invalid"] = 'Metadata ya IdP si sahihi au haipatikani';
 $lang["simplesaml_admin_password_reset"] = 'Rekebisha nenosiri la msimamizi wa tovuti ya SimpleSAML (hiari)';
+$lang["page-title_simplesaml_about"] = 'SAML Kuhusu';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Tengeneza Mipangilio ya SP';
+$lang["page-title_simplesaml_setup"] = 'Weka Plugin ya Simple SAML';

@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"]='ترسیل انجام دینے سے قا
 $lang["video_splice_incorrect_quantity"]='جب سے یہ صفحہ لوڈ ہوا ہے، ایک درست وسیلہ یا تو مجموعہ سے ہٹا دیا گیا ہے یا شامل کیا گیا ہے۔ براہ کرم دوبارہ کوشش کریں۔';
 $lang["video_splice_createdfromvideosplice"]='ویڈیو سپلائس پلگ ان سے تخلیق کیا گیا';
 $lang["video_splice_error_invalid_action"]='غلطی: غیر درست عمل';
+$lang["page-title_video_splice_setup"] = 'ویڈیو اسپlice پلگ ان سیٹ اپ کریں';
+$lang["page-title_video_splice_splice"] = 'ویڈیو کو جوڑیں';
+$lang["page-title_video_splice_trim"] = 'ویڈیو کاٹیں';

@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'Chia sẻ với user@falcon.io';
 $lang["falcon_link_log_publish"] = 'Tài nguyên chia sẻ qua Falcon';
 $lang["falcon_link_log_archive"] = 'Tài nguyên đã lưu trữ qua Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Vui lòng kiểm tra rằng mô tả và thẻ không trống';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Cài đặt Plugin Falcon Link';

@@ -52,3 +52,5 @@ $lang["origin_simpleldap"]='सिंपलLDAP प्लगइन';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='सर्वर के FQDN को प्रमाणपत्र के CN के साथ मिलान न करें';
 $lang["plugin-simpleldap-title"]='सरल LDAP';
 $lang["plugin-simpleldap-desc"]='[उन्नत] Active Directory को लक्षित करते हुए ldap प्रमाणीकरण का सरल कार्यान्वयन, लेकिन Oracle निर्देशिका का भी समर्थन करता है';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP प्रमाणीकरण का परीक्षण करें';
+$lang["page-title_simpleldap_setup"] = 'सरल LDAP प्लगइन सेटअप करें';

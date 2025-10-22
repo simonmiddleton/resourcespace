@@ -28,3 +28,5 @@ $lang["video_tracks_transcode_now_or_notify_me_label"]='지금 트랜스코딩�
 $lang["video_tracks_transcode_now_label"]='지금 트랜스코딩';
 $lang["plugin-video_tracks-title"]='비디오 트랙';
 $lang["plugin-video_tracks-desc"]='[고급] 비디오 리소스에 대한 다양한 오디오 및 자막 옵션 지원 추가';
+$lang["page-title_video_tracks_create_video"] = '비디오 만들기';
+$lang["page-title_video_tracks_setup"] = '비디오 트랙 플러그인 설정';

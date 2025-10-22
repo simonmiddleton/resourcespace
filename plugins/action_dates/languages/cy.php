@@ -36,3 +36,5 @@ $lang["weekday-3"] = 'Mercher';
 $lang["weekday-4"] = 'Dydd Iau';
 $lang["weekday-5"] = 'Dydd Gwener';
 $lang["weekday-6"] = 'Dydd Sadwrn';
+
+$lang["page-title_action_dates_setup"] = 'Gosod Plugin Dyddiadau Gweithredu';

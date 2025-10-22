@@ -37,3 +37,4 @@ $lang["weekday-3"] = 'Miyerkules';
 $lang["weekday-4"] = 'Huwebes';
 $lang["weekday-5"] = 'Biyernes';
 $lang["weekday-6"] = 'Sabado';
+$lang["page-title_action_dates_setup"] = 'I-set up ang Plugin ng Petsa ng Aksyon';

@@ -9,3 +9,5 @@ $lang["antivirus_action_quarantine"] = 'قرنطینہ میں منتقل کری�
 $lang["antivirus_deleting_file"] = 'وسیلہ [%resource_id%] اور کسی بھی متعلقہ فائلوں کو حذف کیا جا رہا ہے!';
 $lang["antivirus_moving_file"] = 'وسیلہ [%resource_id%] کو آرکائیو حالت [%archive_state%] میں منتقل کرنا';
 $lang["antivirus_av_not_setup_error"] = 'اینٹی وائرس کا راستہ مقرر نہیں کیا گیا!';
+
+$lang["page-title_antivirus_setup"] = 'اینٹی وائرس پلگ ان سیٹ اپ کریں';

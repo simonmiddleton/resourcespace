@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'Teksto / HTML';
 $lang["feedback_options-comma_separated"] = 'Mga pagpipilian: (pinaghihiwalay ng kuwit)';
 $lang["feedback_add_new_field"] = 'Magdagdag ng Bagong Patlang';
 $lang["feedback_back_to_plugin_manager"] = 'Bumalik sa Plugin Manager';
+
+$lang["page-title_feedback_feedback"] = 'I-submit ang Feedback';
+$lang["page-title_feedback_setup"] = 'I-set up ang Plugin';

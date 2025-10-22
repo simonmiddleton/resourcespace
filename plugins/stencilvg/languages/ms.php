@@ -10,3 +10,6 @@ $lang["stencilvg-print"] = 'Cetak';
 $lang["stencilvg-download"] = 'Muat turun';
 $lang["stencilvg-save_as_new_resource"] = 'Simpan sebagai sumber baru';
 $lang["stencilvg-no_parameters_found"] = 'Tiada parameter templat yang ditemui';
+$lang["page-title_stencilvg_download_svg"] = 'Muat Turun SVG';
+$lang["page-title_stencilvg_input"] = 'Masukan SVG';
+$lang["page-title_stencilvg_setup"] = 'Pasang Plugin StencilVG';

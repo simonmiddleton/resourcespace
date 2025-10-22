@@ -80,3 +80,6 @@ $lang["plugin-transform-desc"]='Umožňuje vytváření oříznutých a změněn
 $lang["use_system_icc_profile_config"]='Použít systémovou konfiguraci pro zpracování ICC profilů. Přepíše výše uvedené možnosti sRGB.';
 $lang["transform-recrop"]='Znovu oříznout obrázek';
 $lang["cropper_preset_sizes"] = 'Předdefinované velikosti';
+$lang["page-title_transform_collection_transform"] = 'Transformovat zdroj';
+$lang["page-title_transform_crop"] = 'Oříznout zdroj';
+$lang["page-title_transform_setup"] = 'Nastavení transformace pluginu';

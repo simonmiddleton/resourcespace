@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Konfirmasi penghapusan akses ditingkatkan untuk
 $lang["grant_edit_group_list"]='Grup saat ini dengan akses edit tambahan';
 $lang["plugin-grant_edit-title"]='Beri Edit';
 $lang["plugin-grant_edit-desc"]='Memungkinkan administrator untuk memberikan akses edit penuh sementara kepada pengguna untuk sumber daya';
+$lang["page-title_grant_edit_setup"] = 'Atur Plugin Edit Grant';

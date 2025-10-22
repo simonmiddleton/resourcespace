@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Povolene stĺpce: *používateľské meno
 $lang["csv_user_import_condition5"] = 'Jazyk používateľa sa vráti na predvolený jazyk nastavený pomocou možnosti konfigurácie "$defaultlanguage", ak stĺpec jazyka nie je nájdený alebo nemá hodnotu';
 $lang["plugin-csv_user_import-title"] = 'CSV Uvoz Uporabnikov';
 $lang["plugin-csv_user_import-desc"] = 'Omogoča uvoz serije uporabnikov na podlagi vnaprej oblikovane CSV datoteke';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Import používateľov z CSV';

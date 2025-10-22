@@ -13,3 +13,5 @@ $lang["adobe_link_saving"] = 'Speichern..';
 $lang["adobe_link_saving_wait"] = 'Die Datei wird gespeichert, bitte warten Sie auf die Bestätigungsnachricht. Möglicherweise müssen Sie die Seite aktualisieren, um das Vorschaubild zu aktualisieren.';
 $lang["plugin-adobe_link-title"] = 'Adobe-Link';
 $lang["plugin-adobe_link-desc"] = 'Erlaube das Einfügen von Adobe-Dateien aus ResourceSpace in Adobe CC';
+
+$lang["page-title_adobe_link_setup"] = 'Adobe Link Plugin einrichten';

@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Memindahkan sumber daya [%resource_id%] ke sta
 $lang["antivirus_av_not_setup_error"] = 'Jalur Antivirus belum diatur!';
 $lang["plugin-antivirus-title"] = 'Antivirus';
 $lang["plugin-antivirus-desc"] = ' Kemampuan antivirus dengan mengintegrasikan sebagian besar mesin antivirus yang dikenal yang dapat dijalankan melalui baris perintah';
+
+$lang["page-title_antivirus_setup"] = 'Pengaturan Plugin Antivirus';

@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Mostrar a funcionalidade de Faces de IA na página d
 $lang["faces_count_faces"] = 'Total de rostos detectados';
 $lang["faces_count_missing"] = 'Imagens a processar';
 $lang["faces-tag-field-not-set"] = 'O campo de tags não está configurado.';
+
+$lang["page-title_faces_setup"] = 'Configurar o Plugin Faces';

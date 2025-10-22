@@ -57,3 +57,11 @@ $lang["rse_workflow_bcc_admin"]='هنگامی که به مشارکت‌کنند�
 $lang["rse_workflow_manage_workflow-tooltip"] = 'ایجاد و مدیریت وضعیت‌های گردش کار';
 $lang["rse_workflow_skip_required_fields"] = 'هنگام انتقال منابع به این وضعیت گردش کار، آیا از بررسی فیلدهای الزامی مستثنی شود؟';
 $lang["rse_workflow_state_change_failed_required_fields"] = 'نمی‌توان وضعیت آرشیو را به %%ARCHIVE%% تغییر داد. متادیتا در فیلدهای مورد نیاز وجود ندارد: %%FIELDS%%.';
+$lang["page-title_rse_workflow_batch_action"] = 'عملیات گردش کار دسته‌ای';
+$lang["page-title_rse_workflow_edit_action"] = 'ویرایش اقدام گردش کار';
+$lang["page-title_rse_workflow_edit_state"] = 'ویرایش وضعیت گردش کار';
+$lang["page-title_rse_workflow_edit_workflow_actions"] = 'ویرایش اقدامات گردش کار';
+$lang["page-title_rse_workflow_edit_workflow_states"] = 'ویرایش وضعیت‌های گردش کار';
+
+$lang["page-title_rse_workflow_setup"] = 'تنظیم افزونه گردش کار';
+$lang["page-title_rse_workflow_edit_workflow"] = 'ویرایش جریان کار';

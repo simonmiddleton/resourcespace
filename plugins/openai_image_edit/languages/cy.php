@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Llenwch gyda gwyn';
 $lang["openai_image_edit__mode_black"]='Llenwch gyda du';
 $lang["openai_image_edit__mode_clone"]='Clone llenwi';
 $lang["openai_image_edit__creating_new_resource"]='Creu adnodd newydd';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Cadw Amgen';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Cadw Newydd';

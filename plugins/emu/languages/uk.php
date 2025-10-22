@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'Не вказано ID ресурсу!';
 $lang["emu_upload_nodata"] = 'Не знайдено даних EMu для цього IRN:';
 $lang["emu_nodata_returned"] = 'Не знайдено даних EMu для вказаного IRN.';
 $lang["emu_createdfromemu"] = 'Створено за допомогою плагіна EMU';
+
+$lang["page-title_emu_emu_object_details"] = 'Деталі об\'єкта EMu';
+$lang["page-title_emu_setup"] = 'Налаштування плагіна';

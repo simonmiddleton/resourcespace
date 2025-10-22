@@ -37,3 +37,4 @@ $lang["weekday-3"] = 'Серада';
 $lang["weekday-4"] = 'Чацвер';
 $lang["weekday-5"] = 'Пятніца';
 $lang["weekday-6"] = 'Субота';
+$lang["page-title_action_dates_setup"] = 'Наладка плагіна дзеянняў па датах';

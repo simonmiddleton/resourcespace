@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'ऊपर',
    'bottom' => 'नीचे',
 );
+$lang["page-title_image_text_setup"] = 'इमेज टेक्स्ट प्लगइन सेटअप करें';

@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'Hakuna kitambulisho cha rasilimali kilichobainishwa!
 $lang["emu_upload_nodata"] = 'Hakuna data ya EMu iliyopatikana kwa IRN hii:';
 $lang["emu_nodata_returned"] = 'Hakuna data ya EMu iliyopatikana kwa IRN iliyotajwa.';
 $lang["emu_createdfromemu"] = 'Imeundwa kutoka kwa programu-jalizi ya EMU';
+
+$lang["page-title_emu_emu_object_details"] = 'Maelezo ya Kitu cha EMu';
+$lang["page-title_emu_setup"] = 'Panga Plugin';

@@ -10,3 +10,6 @@ $lang["stencilvg-print"] = 'Друкаваць';
 $lang["stencilvg-download"] = 'Спампаваць';
 $lang["stencilvg-save_as_new_resource"] = 'Захаваць як новы рэсурс';
 $lang["stencilvg-no_parameters_found"] = 'Не знойдзены параметры шаблона';
+$lang["page-title_stencilvg_download_svg"] = 'Спампаваць SVG';
+$lang["page-title_stencilvg_input"] = 'SVG Увод';
+$lang["page-title_stencilvg_setup"] = 'Наладзіць плагін StencilVG';

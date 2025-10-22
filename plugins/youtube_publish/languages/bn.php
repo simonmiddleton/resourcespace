@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='বিভাগ';
 $lang["youtube_publish_category_error"]='ইউটিউব বিভাগগুলি পুনরুদ্ধারে ত্রুটি: -';
 $lang["youtube_chunk_size"]='ইউটিউবে আপলোড করার সময় ব্যবহৃত চাঙ্ক সাইজ (এমবি)';
 $lang["youtube_publish_add_anchor"]='ইউটিউব URL মেটাডেটা ফিল্ডে সংরক্ষণ করার সময় URL-এ অ্যাঙ্কর ট্যাগ যোগ করবেন?';
+$lang["page-title_youtube_publish_setup"] = 'প্লাগইন সেটআপ';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Youtube-এ সম্পদ প্রকাশ করুন';

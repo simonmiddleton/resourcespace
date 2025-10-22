@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"] = 'Rekod log tidak ditemui';
 $lang["rse_version_revert_state"] = 'Kembalikan keadaan';
 $lang["rse_version_rstate_changes"] = 'Mengembalikan keadaan untuk koleksi #%COLLECTION dengan memainkan semula acara sehingga, tetapi tidak termasuk rekod yang dipilih.';
 $lang["rse_version_invalid_time"] = 'Kembali ke waktu sebelum [date] tidak disokong';
+$lang["page-title_rse_version_revert"] = 'Kembalikan Versi Sumber';
+$lang["page-title_rse_version_setup"] = 'Tetapkan Plugin Versi';

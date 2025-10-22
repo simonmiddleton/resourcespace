@@ -33,3 +33,7 @@ $lang["clip_missing_vectors"] = 'Vektor hilang';
 $lang["clip-vector-generation"] = 'Penjanaan vektor';
 $lang["clip-vector-cleanup"] = 'Padam vektor yang terasing';
 $lang["clip-vector-cleanup-description"] = 'Buang vektor yang tergolong dalam sumber yang tidak lagi wujud atau bukan salah satu jenis sumber yang dipilih di atas';
+
+$lang["page-title_clip_search"] = 'AI Smart Search';
+$lang["page-title_clip_setup"] = 'Tetapkan Plugin CLIP';
+$lang["page-title_clip_webcam"] = 'Penjana Tag Webcam';

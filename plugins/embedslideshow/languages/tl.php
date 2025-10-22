@@ -24,3 +24,5 @@ $lang["embedslideshow_notransition"] = 'Walang awtomatikong paglipat';
 $lang["embedslideshow_directlink"] = 'Hindi nakapaloob na direktang URL';
 $lang["embedslideshow_directlinkopen"] = 'Buksan ang direktang link (bagong pahina)';
 $lang["embedslideshow_dynamic_size"] = 'Dinamiko na pagbabago ng sukat ng preview batay sa laki ng manlalaro?';
+$lang["page-title_embedslideshow_setup"] = 'I-set up ang Embed Slideshow Plugin';
+$lang["page-title_embedslideshow_viewer"] = 'I-embed ang Slideshow';

@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = 'Otvoriť priamy odkaz (nová stránka)
 $lang["embedslideshow_dynamic_size"] = 'Dynamická zmena veľkosti náhľadu na základe veľkosti prehrávača?';
 $lang["plugin-embedslideshow-title"] = 'Vstavi diaprojekcijo';
 $lang["plugin-embedslideshow-desc"] = 'Poskrbi za funkcijo za generiranje HTML za vdelane diaprojekcije zbirk na oddaljenih mestih';
+
+$lang["page-title_embedslideshow_setup"] = 'Nastavenie pluginu na vloženie prezentácie';
+$lang["page-title_embedslideshow_viewer"] = 'Vložiť prezentáciu';

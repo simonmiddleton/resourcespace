@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Återställer tillståndet för samlingen #
 $lang["rse_version_invalid_time"]='Att återgå till en tid före [date] stöds inte';
 $lang["plugin-rse_version-title"]='Versionskontroll';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Versionskontroll';
+$lang["page-title_rse_version_revert"] = 'Återställ resursversion';
+$lang["page-title_rse_version_setup"] = 'Installationsversion Plugin';

@@ -21,3 +21,6 @@ $lang["feedback_back_to_plugin_manager"] = 'Powrót do menedżera wtyczek';
 $lang["feedback_list-multiple_selection"] = 'Lista: Wielokrotny wybór';
 $lang["plugin-feedback-title"] = 'Opinie';
 $lang["plugin-feedback-desc"] = 'Dodaje ogólną funkcję opinii użytkownika z konfigurowalnymi pytaniami.';
+
+$lang["page-title_feedback_feedback"] = 'Prześlij opinię';
+$lang["page-title_feedback_setup"] = 'Konfiguracja wtyczki';

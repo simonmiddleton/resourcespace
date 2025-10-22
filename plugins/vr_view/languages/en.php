@@ -23,3 +23,6 @@ $lang['vr_view_yaw_only_value'] = 'Value to check for. If found the is_yaw_only 
 
 $lang['vr_view_orig_image'] = 'Use original resource file as source for image preview?';
 $lang['vr_view_orig_video'] = 'Use original resource file as source for video preview?';
+
+$lang["page-title_vr_view_download"]    = "VR View";
+$lang["page-title_vr_view_setup"]       = "Setup VR View Plugin";

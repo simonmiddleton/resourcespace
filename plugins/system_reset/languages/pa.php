@@ -6,3 +6,4 @@ $lang["system_reset_warning"]='ਚੇਤਾਵਨੀ! ਇਹ ਸਾਰੇ ਫਾ
 $lang["system_reset_confirm"]='ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਹ ਵਾਪਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ।';
 $lang["system_reset_delete_all"]='ਸਾਰੇ ਡਾਟਾ ਅਤੇ ਫਾਈਲਾਂ ਮਿਟਾਓ';
 $lang["system_reset-tooltip"] = 'ਸਾਰੇ ਫਾਈਲਾਂ ਅਤੇ ਡਾਟਾ ਮਿਟਾਉਣ ਲਈ ਸਿਸਟਮ ਰੀਸੈਟ ਕਰੋ';
+$lang["page-title_system_reset_reset"] = 'ਸਿਸਟਮ ਰੀਸੈਟ';

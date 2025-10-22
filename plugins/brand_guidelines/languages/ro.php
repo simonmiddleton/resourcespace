@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Configurare Ghiduri de Brand';
 $lang["brand_guidelines_fallback_size_thm"] = 'Dimensiune imagine de rezervă pentru miniatură în layout';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Dimensiune imagine de rezervă pentru layout pe jumătate de lățime';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Dimensiune imagine de rezervă pentru layout pe lățime completă';
+
+$lang["page-title_brand_guidelines_content"] = 'Gestionați conținutul liniilor directoare ale mărcii';
+$lang["page-title_brand_guidelines_guidelines"] = 'Ghiduri de brand';
+$lang["page-title_brand_guidelines_setup"] = 'Configurare Plugin pentru Ghiduri de Brand';
+$lang["page-title_brand_guidelines_toc"] = 'Editează conținutul';

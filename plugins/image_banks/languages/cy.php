@@ -34,3 +34,8 @@ $lang["image_banks_bad_file_create_attempt"]='Ceisiodd y defnyddiwr greu adnodd 
 $lang["image_banks_createdfromimagebanks"]='Creuwyd o\'r plugin Banciau Delwedd';
 $lang["image_banks_shutterstock_token"]='Tocyn Shutterstock (<a href=\'https://www.shutterstock.com/account/developers/apps\' target=\'_blank\'>creu</a>)';
 $lang["image_banks_label_resourcespace_instances_cfg"]='Mynediad i achosion (fformat: enw i18n|baseURL|enw defnyddiwr|allwedd|config)';
+$lang["page-title_image_banks_download"] = 'Lawrlwytho Adnodd';
+$lang["page-title_image_banks_search"] = 'Chwilio';
+$lang["page-title_image_banks_setup"] = 'Gosod Plugin Banciau Delwedd';
+$lang["page-title_image_banks_shutterstock_license"] = 'Gweld Delwedd Shutterstock';
+$lang["page-title_image_banks_view"] = 'Gweld Adnodd';

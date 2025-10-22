@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Inaendelea',
   2 => 'Imekamilika',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Simamisha Maktaba';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Archive ya Kazi Isiyo na Mtandao';
+$lang["page-title_offline_archive_pending_restore"] = 'Inasubiri Kupona Rasilimali';
+$lang["page-title_offline_archive_restore_request"] = 'Omba urejele wa rasilimali';
+$lang["page-title_offline_archive_restore"] = 'Rejesha Archive';
+$lang["page-title_offline_archive_setup"] = 'Panga Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Tazama Maktaba ya Rasilimali';
+$lang["page-title_offline_archive_view_pending"] = 'Tazama Maktaba Zinazosubiri';

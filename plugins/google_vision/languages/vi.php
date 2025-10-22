@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"] = 'Google Vision chỉ trả về từ 
 $lang["google_vision_translation_api_key"] = 'Bật dịch các từ khóa Vision thông qua API dịch bằng cách nhập một khóa API Google hợp lệ';
 $lang["google_vision_translation_languages"] = 'Danh sách mã ngôn ngữ phân tách bằng dấu phẩy, ví dụ: "no,es"';
 $lang["google_vision_translation_keep_english"] = 'Giữ nguyên các từ khóa tiếng Anh gốc?';
+$lang["page-title_google_vision_process_existing"] = 'Quy trình Google Vision hiện có';
+$lang["page-title_google_vision_setup"] = 'Cài đặt Plugin Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

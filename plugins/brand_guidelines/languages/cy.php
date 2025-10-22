@@ -36,3 +36,8 @@ $lang["brand_guidelines_fallback_size_half_width"] = 'Maintiau llun wrth gefn ma
 $lang["brand_guidelines_fallback_size_full_width"] = 'Maintiad llun maint lluniau eang';
 $lang["brand_guidelines_hex"] = 'HEX';
 $lang["brand_guidelines_cmyk_help_txt"] = 'CMYK (0-100). Enghraifft: 36,0,73,29';
+
+$lang["page-title_brand_guidelines_content"] = 'Rheoli Cynnwys Canllawiau Brand';
+$lang["page-title_brand_guidelines_guidelines"] = 'Canllawiau Brand';
+$lang["page-title_brand_guidelines_setup"] = 'Gosod Plugin Canllawiau Brand';
+$lang["page-title_brand_guidelines_toc"] = 'Golygu cynnwys';

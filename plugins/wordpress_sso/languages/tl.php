@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"] = 'Mag-login gamit ang hindi WordPress
 $lang["wordpress_sso_use_wp_login"] = 'Mag-login gamit ang WordPress account';
 $lang["wordpress_sso_retry"] = 'I-click dito upang subukang mag-log in muli';
 $lang["origin_wordpress_sso"] = 'Wordpress SSO plugin';
+$lang["page-title_wordpress_sso_logout"] = 'SSO Logout';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Walang Gumagamit';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'I-set up ang Wordpress SSO Plugin';

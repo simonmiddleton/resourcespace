@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"] = 'Mga pasadyang format';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"] = 'Pahintulutan ang mga magagamit na pagpipilian sa output ng file na magamit upang lumikha ng mga pasadyang format ng video para sa orihinal na file?';
 $lang["video_tracks_transcode_now_or_notify_me_label"] = 'Suriin upang simulan ang transcode ngayon. Kung hindi ito naka-check, makakatanggap ka ng abiso kapag handa na ang file';
 $lang["video_tracks_transcode_now_label"] = 'I-transcode na ngayon';
+$lang["page-title_video_tracks_create_video"] = 'Lumikha ng Video';
+$lang["page-title_video_tracks_setup"] = 'I-set up ang Video Tracks Plugin';

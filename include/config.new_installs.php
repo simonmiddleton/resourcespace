@@ -42,7 +42,6 @@ $resource_view_use_pre = true;
 $sort_tabs = false;
 $maxyear_extends_current = 5;
 $thumbs_display_archive_state = true;
-$featured_collection_static_bg = true;
 $file_checksums = true;
 $hide_real_filepath = true;
 $annotate_enabled = true;

@@ -19,3 +19,4 @@ $lang["property-openai_gpt_input_field"]='GPT Input';
 $lang["openai_gpt_language"] = 'ਨਿਕਾਸ ਭਾਸ਼ਾ';
 $lang["openai_gpt_language_user"] = 'ਮੌਜੂਦਾ ਉਪਭੋਗਤਾ ਦੀ ਭਾਸ਼ਾ';
 $lang["openai_gpt_overwrite_data"] = 'ਕੀ ਤੁਸੀਂ ਸੰਰਚਿਤ ਖੇਤਰਾਂ ਵਿੱਚ ਮੌਜੂਦਾ ਡਾਟਾ ਨੂੰ ਦੁਬਾਰਾ ਲਿਖਣਾ ਚਾਹੁੰਦੇ ਹੋ?';
+$lang["page-title_openai_gpt_setup"] = 'OpenAI GPT ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

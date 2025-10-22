@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='Instrumente imagine (transformare)';
 $lang["plugin-transform-desc"]='Permite crearea de imagini alternative decupate și scalate (jCrop cu suport pentru mobil)';
 $lang["use_system_icc_profile_config"]='Utilizați configurația sistemului pentru procesarea profilului ICC. Va suprascrie opțiunile sRGB de mai sus.';
 $lang["cropper_preset_sizes"] = 'Dimensiuni predefinite';
+$lang["page-title_transform_collection_transform"] = 'Transformă resursa';
+$lang["page-title_transform_crop"] = 'Decupare resursă';
+$lang["page-title_transform_setup"] = 'Configurare plugin de transformare';

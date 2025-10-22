@@ -15,3 +15,6 @@ $lang["title-too-long"]='Поле заголовка длиннее, чем до
 $lang["plugin-news-title"]='Новости';
 $lang["plugin-news-desc"]='Добавляет новости на главную страницу';
 $lang["news_manage-tooltip"] = 'Добавить, редактировать или удалить новости';
+$lang["page-title_news_news_content_edit"] = 'Редактировать содержание новостей';
+$lang["page-title_news_news_edit"] = 'Редактировать новости';
+$lang["page-title_news_news"] = 'Новости';

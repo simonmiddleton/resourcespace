@@ -8,3 +8,4 @@ $lang["system_reset_delete_all"]='Excluir todos os dados e arquivos';
 $lang["plugin-system_reset-title"]='Reinicialização do Sistema';
 $lang["plugin-system_reset-desc"]='Adiciona uma opção para admin/sistema para apagar todos os dados';
 $lang["system_reset-tooltip"] = 'Realize um reset do sistema para excluir todos os arquivos e dados';
+$lang["page-title_system_reset_reset"] = 'Reinicialização do Sistema';

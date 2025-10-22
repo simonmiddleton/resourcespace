@@ -20,23 +20,21 @@ function RegisterSlideshowImage(image, resource, single_image_flag)
 function SlideshowChange()
     {
     if (SlideshowImages.length==0 || !SlideshowActive) {return false;}
-    
-    SlideshowCurrent++;  
-    SlideshowNext = SlideshowCurrent+1;      
 
+    if (SlideshowImages.length===1) {
+        jQuery(".slide").css("background-image", "url(" + SlideshowImages[0] + ")");
+        return true;
+    }
+
+    var SlideshowNext = jQuery(".slide").not(".slide-active");
     if (SlideshowCurrent>=SlideshowImages.length)
         {
         SlideshowCurrent=0;
-        SlideshowNext = SlideshowCurrent+1; 
         }
 
-    if (SlideshowNext>=SlideshowImages.length)
-        {
-        SlideshowNext=0;
-        }
-
-    // Using to images layered resolves flickering in transitions
-    jQuery('body').css('background-image','url(' + SlideshowImages[SlideshowCurrent] + '), url(' + SlideshowImages[SlideshowNext] + ')');
+    SlideshowNext.css("background-image", "url(" + SlideshowImages[SlideshowCurrent] + ")");
+    SlideshowNext.addClass("slide-active").siblings(".slide").removeClass("slide-active");
+    SlideshowCurrent++;
 
     var photo_delay = 1000 * big_slideshow_timer;
     window.clearTimeout(SlideshowTimer);    
@@ -49,9 +47,12 @@ function ActivateSlideshow(show_footer)
     {
     if (!SlideshowActive)
         {
-        SlideshowCurrent=-1;
+        SlideshowCurrent=0;
         SlideshowActive=true;
+        jQuery(".slide-active").css("background-image", "url(" + SlideshowImages[SlideshowCurrent] + ")");
+        jQuery(".slide").css("transition", "none");
         SlideshowChange();
+        setTimeout(function() {jQuery(".slide").css("transition", "opacity 1s ease-in-out");}, 50);
 
         if (typeof show_footer == 'undefined' || !show_footer)
             {
@@ -62,12 +63,16 @@ function ActivateSlideshow(show_footer)
         jQuery( document ).ready(function() 
             {
             jQuery('body').css('transition', 'background-image 1s linear');
+            jQuery('body').css('position','static');
+            jQuery('.slide').css('z-index', '0');
             });
     }
     
 function DeactivateSlideshow()
     {
     jQuery('body').css('background-image','none');
+    jQuery('body').css('position','absolute');
+    jQuery('.slide').css('z-index', '-1');
     SlideshowActive=false;
     window.clearTimeout(SlideshowTimer);
 

@@ -755,7 +755,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
               for ($d=1;$d<=12;$d++)
                 {
                 $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                ?><option <?php if ($d==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$d-1])?></option><?php
+                ?><option <?php if ($d==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1]); ?></option><?php
                 }
               ?>
             </select>
@@ -2488,7 +2488,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$d-1])?></option><?php
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1]); ?></option><?php
                     }?>
             </select>
             <?php
@@ -2509,7 +2509,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php  echo escape($lang["months"][$d-1])  ?></option><?php
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1]); ?></option><?php
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start-d"><?php echo escape($lang["day"]); ?></label>
@@ -2607,7 +2607,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$d-1])?></option><?php
+                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1]); ?></option><?php
                     }?>
             </select>
             <?php
@@ -2627,7 +2627,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$d-1]) ?></option><?php
+                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months_list"][$d-1]); ?></option><?php
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end-d"><?php echo escape($lang["day"]); ?></label>
@@ -2785,8 +2785,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
             echo $pre_links . '&nbsp;' . LINK_CHEVRON_RIGHT;
             }
 
-        for($i = 0; $i < count($links); $i++)
-            {
+        for ($i = 0; $i < count($links); $i++) {
             $anchor = isset($links[$i]['href']);
             $anchor_attrs = (isset($links[$i]["attrs"]) && is_array($links[$i]["attrs"]) && !empty($links[$i]["attrs"]) ? $links[$i]["attrs"] : array());
             $anchor_attrs = join(" ", $anchor_attrs);
@@ -2819,8 +2818,19 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 {
                 render_help_link($links[$i]['help']);
                 }
+
+            if (isset($links[$i]['context_menu'])) {
+                ?>
+                <div>
+                <?php
+                render_top_right_menu_btn();
+                render_featured_collection_context_menu("BreadCrumb{$i}", $links[$i]['context_menu']);
+                ?>
+                </div>
+                <?php
             }
-            ?>
+        }
+        ?>
         </div>
     </div>
     <?php
@@ -2931,7 +2941,7 @@ function render_resource_image($resource, $img_url, $display="thumbs")
     global $view_title_field;
     
     list($width, $height, $margin) = calculate_image_display($resource, $img_url, $display);
-    $blurhash=$resource["blurhash"];
+    $blurhash=$resource["blurhash"] ?? "";
     $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
 
     // Produce a 'softer' colour for the loading preview (extracted colours tend to have a very high saturation)
@@ -2947,12 +2957,12 @@ function render_resource_image($resource, $img_url, $display="thumbs")
         $preview_red=$preview_green=$preview_blue=255;
         }
     ?>
-    <div id="ImageColourWrapper_<?php echo escape($resource["ref"]) ?>" class="ImageColourWrapper" 
-    <?php if ($blurhash!="") { ?>class="blurhash" data-blurhash="<?php echo escape($blurhash) ?>"<?php } ?>
+    <div id="ImageColourWrapper_<?php echo escape($resource["ref"]??""); ?>" class="ImageColourWrapper" 
+    <?php if ($blurhash!="") { ?>class="blurhash" data-blurhash="<?php echo escape($blurhash); ?>"<?php } ?>
     style="
-    <?php if ($blurhash=="") { ?>background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
+    <?php if ($blurhash=="") { ?>background-color: rgb(<?php echo $preview_red; ?>,<?php echo $preview_green; ?>,<?php echo $preview_blue; ?>);
     <?php } ?>
-    width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin:<?php echo $margin ?> auto 0 auto; 
+    width:<?php echo $width; ?>px;height:<?php echo $height; ?>px;margin:<?php echo $margin; ?> auto 0 auto; 
     <?php 
     $blurbleedstopper = hook("stopblurbleed"); 
     if ($blurbleedstopper) { echo $blurbleedstopper; }
@@ -3464,11 +3474,12 @@ function render_browse_bar()
 */    
 function generate_browse_bar_item($id, $text)
     {
+    global $lang;
     $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
     $html .= '<div class="BrowseRowInner" >';
     
     $html .= '<div class="BrowseBarStructure">
-            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" ></a>
+            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" alt="' . escape($lang["expand"]) . '"></a>
             </div><!-- End of BrowseBarStructure -->';  
     $html .= '<div onclick="toggleBrowseElements(\'' . $id . '\',false,true);" class="BrowseBarLink" >' . $text . '</div>';
     
@@ -4891,14 +4902,30 @@ function render_featured_collections(array $ctx, array $items)
                     )
                 )
             ),
+            "icon" => 'fa-solid fa-fw fa-pen-to-square',
             "text" => $lang['action-edit'],
             "modal_load" => true,
             "redirect" => true
         );
         $tool_select = array(
+            "icon" => 'fa-solid fa-fw fa-circle-check',
             "text" => $lang['action-select'],
-            "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');"
+            'custom_onclick' => sprintf("return ChangeCollection(%s, '');", escape($fc['ref'])),
         );
+        $tool_upload_to_collection = [
+            'href' => $GLOBALS['upload_then_edit']
+                ? generateURL("{$baseurl_short}pages/upload_batch.php", ['collection_add' => $fc['ref']])
+                : generateURL(
+                    "{$baseurl_short}pages/edit.php",
+                    [
+                        'uploader' => $GLOBALS['upload_then_edit'],
+                        'ref' => -$GLOBALS['userref'],
+                        'collection_add' => $fc['ref']
+                    ]
+                ),
+            'icon' => 'fa fa-fw fa-upload',
+            'text' => $lang["action-upload-to-collection"],
+        ];
 
         // Prepare FC images
         $thumbnail_selection_method = $fc["thumbnail_selection_method"];
@@ -4922,8 +4949,7 @@ function render_featured_collections(array $ctx, array $items)
             }
 
         // Featured collection default tools
-        if($is_featured_collection && checkPermission_dashmanage())
-            {
+        if ($is_featured_collection && checkPermission_dashmanage()) {
             $render_ctx["tools"][] = array(
                 "href" => generateURL(
                     "{$baseurl_short}pages/dash_tile.php",
@@ -4938,12 +4964,15 @@ function render_featured_collections(array $ctx, array $items)
                         'link'              => "{$baseurl_short}pages/search.php?search=!collection{$fc['ref']}",
                     )
                 ),
-                "text" => $lang['add_to_dash']);
-            }
+                "icon" => 'fa fa-fw fa-grip',
+                "text" => $lang['add_to_dash'],
+            );
+        }
         if($is_featured_collection && allow_featured_collection_share($fc))
             {
             $render_ctx["tools"][] = array(
                 "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                "icon" => 'fa-solid fa-fw fa-share-nodes',
                 "text" => $lang["share"]);
             }
         if($is_featured_collection && collection_readable($fc['ref']))
@@ -4958,10 +4987,17 @@ function render_featured_collections(array $ctx, array $items)
             {
             $render_ctx['show_resources_count'] = true;
             }
+        if (
+            $is_featured_collection
+            && !$is_smart_featured_collection
+            && ($collection_data = get_collection($fc['ref']))
+            && allow_upload_to_collection(is_array($collection_data) ? $collection_data : [])
+        ) {
+            $render_ctx['tools'][] = $tool_upload_to_collection;
+        }
 
 
-        if($is_featured_collection_category && !$is_smart_featured_collection)
-            {
+        if ($is_featured_collection_category && !$is_smart_featured_collection) {
             global $enable_theme_category_edit;
 
             $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $fc["ref"]));
@@ -4987,12 +5023,15 @@ function render_featured_collections(array $ctx, array $items)
                             'link'              => $fc_category_url
                         )
                     ),
+                    "icon" => 'fa fa-fw fa-grip',
                     "text" => $lang["add_to_dash"]);
                 }
 
             $render_ctx["tools"][] = array(
                 "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                "text" => $lang["share"]);
+                "icon" => 'fa-solid fa-fw fa-share-nodes',
+                "text" => $lang["share"],
+            );
 
 
             if(!$fc_category_has_children && collection_readable($fc['ref']))
@@ -5000,11 +5039,19 @@ function render_featured_collections(array $ctx, array $items)
                 $render_ctx["tools"][] = $tool_select;
                 }
 
-            if($enable_theme_category_edit && checkperm("h") || checkperm("t"))
+            if(can_edit_featured_collection_category())
                 {
                 $render_ctx["tools"][] = $tool_edit;
                 }
+
+            if (
+                !$fc_category_has_children
+                && ($collection_data = get_collection($fc['ref']))
+                && allow_upload_to_collection(is_array($collection_data) ? $collection_data : [])
+            ) {
+                $render_ctx['tools'][] = $tool_upload_to_collection;
             }
+        }
 
         if($is_smart_featured_collection)
             {
@@ -5137,7 +5184,6 @@ function render_featured_collection(array $ctx, array $fc)
         }
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
-    $html_actions_style = ['display: none;'];
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>
@@ -5145,9 +5191,32 @@ function render_featured_collection(array $ctx, array $fc)
          class="<?php echo implode(" ", $html_container_class); ?>" 
          alt="<?php echo escape($alt_string ?? '') ?>"
          style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?> >
-        <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
-            <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
-            <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
+    <?php
+    if (!$full_width) {
+        ?>
+        <div>
+            <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
+                <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+                    <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
+                <?php
+                foreach($theme_images as $i => $theme_image)
+                    {
+                    ?>
+                    <div class="FeaturedImageTile" style="background-image: url('<?php echo $theme_image['path']; ?>')"></div>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </a>
+            <?php render_top_right_menu_btn(); ?>
+        </div>
+        <?php
+        render_featured_collection_context_menu(md5($fc['ref']), $tools);
+    } else if ($full_width && !$is_smart_featured_collection) {
+        ?>
+        <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
+            <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+                <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
             <?php
             foreach($theme_images as $i => $theme_image)
                 {
@@ -5158,55 +5227,67 @@ function render_featured_collection(array $ctx, array $fc)
                 ?>
             </div>
         </a>
-    <?php
-    if(!empty($tools))
-        {
-        ?>
-        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions" style="<?php echo implode(" ", $html_actions_style); ?>">
-        <?php
-        foreach($tools as $tool)
-            {
-            if(empty($tool))
-                {
-                continue;
-                }
-
-            $href = (isset($tool["href"]) && trim($tool["href"]) != "" ? $tool["href"] : "#");
-            $text = $tool["text"]; // if this is missing, code is wrong somewhere else
-
-            $tool_onclick = (isset($tool["modal_load"]) && $tool["modal_load"] ? 'return ModalLoad(this, true);' : 'return CentralSpaceLoad(this, true);');
-            if(isset($tool["custom_onclick"]) && trim($tool["custom_onclick"]) != "")
-                {
-                $tool_onclick = $tool["custom_onclick"];
-                }
-            ?>
-            <div class="tool">
-                <a href="<?php echo $href; ?>" onclick="<?php echo $tool_onclick; ?>">
-                    <span><?php echo LINK_CARET; ?><?php echo escape($text); ?></span>
-                </a>
-            </div>
-            <?php
-            }
-            ?>
-        </div><!-- End of FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?> -->
-        <?php
-        }
-    elseif($full_width && !$is_smart_featured_collection)
-        {
-        ?>
         <div class="ListTools">
             <div class="ActionsContainer">
-                <select class="fcollectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo $fc["ref"];?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+                <select class="fcollectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo escape($fc["ref"]);?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
                     <option><?php echo escape($lang["actions-select"]); ?></option>
                 </select>
             </div>            
         </div><!-- End of ListTools -->
         <?php
-        }
-        ?>
-    </div><!-- End of FeaturedSimpleTile_<?php echo $fc["ref"]; ?>-->
+    }
+    ?>
+    </div><!-- End of FeaturedSimpleTile_<?php echo escape($fc["ref"]); ?>-->
 <?php
     }
+
+/**
+ * Render the top right menu button ellipsis icon.
+ */
+function render_top_right_menu_btn()
+{
+    ?>
+    <div class="top-right-menu" onclick="return showContextMenu(this);">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </div>
+    <?php
+}
+
+/**
+ * Render a featured collection (category) contextual menu
+ *
+ * @param string $id The HTML identifier for the menu container.
+ * @param list<array{href: string, icon: string, text: string, ?modal_load: bool, ?custom_onlclick: string}> $options The available menu options
+ */
+function render_featured_collection_context_menu(string $id, array $options): void
+{
+    if ($options === []) {
+        return;
+    }
+
+    ?>
+    <div id="<?php echo escape($id); ?>" class="featured-collection context-menu-container" style="display:none;">
+        <?php
+        foreach ($options as $option) {
+            if(isset($option['custom_onclick']) && trim($option['custom_onclick']) != '') {
+                $onclick = "hideContextMenu(); {$option['custom_onclick']}";
+            } else {
+                $href = sanitise_url(isset($option['href']) && trim($option['href']) != '' ? $option['href'] : '#');
+                $onclick = (isset($option['modal_load']) && $option['modal_load'])
+                    ? "hideContextMenu(); return ModalLoad('{$href}', true);"
+                    : "return CentralSpaceLoad('{$href}', true);";
+            }
+            ?>
+            <button class="context-menu-row" onclick="<?php echo $onclick; ?>">
+                <i class="<?php echo escape($option['icon']); ?>"></i>
+                <span><?php echo escape($option['text']); ?></span>
+            </button>
+            <?php
+        }
+        ?>
+    </div>
+    <?php
+}
 
 
 /**
@@ -6030,18 +6111,21 @@ function render_antispam_question()
         <input type="hidden" name="antispamcode" value="<?php echo $rndcode; ?>">
         <input type="hidden" name="antispamtime" value="<?php echo $timestamp; ?>">
         <label for="antispam"><?php echo escape($lang["enterantispamcode"]); ?> <sup>*</sup><br>
-            <div id="AntiSpamImage" style="
-            margin: 5px 0;
-            background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
-            height: <?php echo $height; ?>px;
-            width: <?php echo $width; ?>px;
-            border-radius: 6px;
-            display: inline-block;
-            ">    
+            <div 
+                id="AntiSpamImage"
+                title="Anti-spam image"
+                style="
+                    margin: 5px 0;
+                    background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
+                    height: <?php echo $height; ?>px;
+                    width: <?php echo $width; ?>px;
+                    border-radius: 6px;
+                    display: inline-block;
+            ">
             </div>
         </label> 
         <input type="text" name="antispam_user_code" class="stdwidth" value="">
-        <input type=text name="antispam" id="antispam" class="stdwidth" value="">
+        <input type=text name="antispam" id="antispam" class="stdwidth" value="" required>
         <div class="clearerleft"></div>        
     </div>
     <?php
@@ -6988,11 +7072,11 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                             {
                             if ($view_in_browser)
                                 {
-                                echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . "&k=" . urlencode($k) . '" target="_blank"';
+                                echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . escape($size_info['extension']) . "&k=" . urlencode($k) . '" target="_blank"';
                                 }
                             else
                                 {
-                                echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ', this); toastNotification(\'download\', \'' . escape($lang["downloadinprogress"]) . '\');"';
+                                echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . escape($size_info['extension']) . '&k=' . urlencode($k) . '\'' . ', this); toastNotification(\'Download\', \'' . escape($lang["downloadinprogress"]) . '\');"';
                                 }
                             }
                         ?>>
@@ -7057,7 +7141,11 @@ function render_resource_view_image(array $resource, array $context)
     {
     global $lang;
     $imageurl="";   
-    
+
+    $preview_title = get_data_by_field($resource["ref"],$GLOBALS["view_title_field"]);
+    if ($preview_title == "") {
+        $preview_title = $lang["fullscreenpreview"];
+        }
     $use_watermark = check_use_watermark();
     $access = $context["access"] ?? 1; // Default to restricted
     $edit_access = $context["edit_access"] ?? 0;
@@ -7090,14 +7178,14 @@ function render_resource_view_image(array $resource, array $context)
     $previewimagelink = generateURL("{$GLOBALS["baseurl"]}/pages/preview.php", $GLOBALS["urlparams"], array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
     $previewimagelink_onclick = 'return CentralSpaceLoad(this);';
 
-    if (!hook("replacepreviewlink"))
+    if (!hook("replacepreviewlink","",[$preview_title]))
         {
         ?>
         <div id="previewimagewrapper">
             <a id="previewimagelink"
                 class="enterLink"
                 href="<?php echo $previewimagelink; ?>"
-                title="<?php echo escape($lang["fullscreenpreview"]); ?>"
+                title="<?php echo escape($preview_title); ?>"
                 style="position:relative;"
                 onclick="<?php echo $previewimagelink_onclick; ?>">
         <?php
@@ -7106,7 +7194,7 @@ function render_resource_view_image(array $resource, array $context)
     <img id="previewimage"
         class="Picture"
         src="<?php echo $imageurl; ?>" 
-        alt="<?php echo escape($lang['fullscreenpreview']); ?>" 
+        alt="<?php echo escape($preview_title); ?>" 
         onload="jQuery('.DownloadDBlend').css('pointer-events','auto')"
         GALLERYIMG="no"
     <?php
@@ -7131,6 +7219,10 @@ function render_resource_view_image(array $resource, array $context)
     hook('previewextras'); ?>
         
     <?php
+    if (is_null($resource['preview_tweaks'])) {
+        $GLOBALS["image_preview_zoom"] = false;
+    }
+
     if($validimage)
         {
         if ($GLOBALS["image_preview_zoom"])
@@ -7375,10 +7467,10 @@ function render_resource_view_image(array $resource, array $context)
                     if($GLOBALS["image_preview_zoom"])
                         {
                         # Process rotation from preview tweaks and use it to display the openseadragon preview in the correct orientation.
+                        $osd_preview_rotation = 0;
                         if (isset($resource['preview_tweaks']))
                             {
                             $preview_tweak_parts = explode('|', $resource['preview_tweaks']);
-                            $osd_preview_rotation = 0;
                             if ($preview_tweak_parts[0] > 0 && is_numeric($preview_tweak_parts[0]))
                                 {
                                 $osd_preview_rotation = 360 - $preview_tweak_parts[0];
@@ -7628,16 +7720,25 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
 /**
  * Adds script to display toast notification. Note: Must be included after header.php.
  *
- * @param  string  $type      Options are: 'success' or 'failure'. Determines toast notification icon.
- * @param  string  $message   Notification text to display.
+ * @param  ToastNotificationType  $type      Options are: 'success', 'error' or 'download'. Determines toast notification icon.
+ * @param  string                 $message   Notification text to display.
  */
-function toast_notification(string $type, string $message): void
+
+function toast_notification(ToastNotificationType $type, string $message): void
 {
-    $type_escaped = escape($type);
     $message_escaped = escape($message);
     ?>
     <script>
-    toastNotification(<?php echo "'{$type_escaped}', '{$message_escaped}'"; ?>);
+    toastNotification(<?php echo "'{$type->name}', '{$message_escaped}'"; ?>);
     </script>
     <?php
 }
+
+// phpcs:disable
+enum ToastNotificationType
+{
+    case Success;
+    case Download;
+    case Error;
+}
+// phpcs:enable

@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Altyazıları oluşturun ve alternatif dosya indir
 $lang["whisper_subtitles_name"] = 'Otomatik olarak oluşturulan altyazılar';
 $lang["whisper_transcript"] = 'Transkript dosyası oluşturun ve alternatif dosya indirmeleri olarak ekleyin';
 $lang["whisper_transcript_name"] = 'Otomatik olarak oluşturulan transkript';
+
+$lang["page-title_whisper_setup"] = 'Whisper Eklentisini Kurun';

@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSVファイルにBOMが含まれてお�
 $lang["csv_upload_validating"] = '検証中';
 $lang["csv_upload_processing"] = '処理中';
 $lang["processing_batch_edit_save"] = '[row_number] の [rows_count] 行';
+$lang["page-title_csv_upload_csv_upload"] = 'CSVをアップロード';

@@ -37,3 +37,7 @@ $lang["brand_guidelines_configuration"] = 'Канфігурацыя кіраўн
 $lang["brand_guidelines_fallback_size_thm"] = 'Памер малюнка запаснога макета мініятюры';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Памер малюнка рэзервовага копіі для паловы шырыні макета';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Памер малюнка для рэзервовага варыянту макета на поўную шырыню';
+$lang["page-title_brand_guidelines_content"] = 'Кіраванне змесцівам кіраўніцтва па брэндах';
+$lang["page-title_brand_guidelines_guidelines"] = 'Кіраўніцтва па брэндах';
+$lang["page-title_brand_guidelines_setup"] = 'Наладзіць плагін кіраўніцтва па брэндах';
+$lang["page-title_brand_guidelines_toc"] = 'Рэдагаваць змест';

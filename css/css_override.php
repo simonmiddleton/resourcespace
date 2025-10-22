@@ -213,7 +213,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             color: white;
         }
         .skip-to-main-content {
-            background-color: #545454;
+            background-color:rgb(0, 0, 0);
         }
         .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {
             font-weight: 600;
@@ -345,6 +345,18 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .ui-menu .ui-menu-item {
             color: white;
         }
+        .FeaturedSimpleTile .top-right-menu:hover,
+        .SearchBreadcrumbs .top-right-menu:hover  {
+            background: #404040;
+            color: white;
+        }
+        .FeaturedSimpleLinks .context-menu-container {
+            background: #404040;
+            color: white;
+        }
+        .context-menu-row:hover {
+            background: #5a5a5a;
+        }
         /* Responsive mode */
         @media (max-width: 1200px) {
             #Header .HorizontalNav ul li a {
@@ -358,6 +370,32 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         }
         .ResponsiveButton {
             box-shadow: none !important;
+        }
+        /* Quick message modal */
+        .messages-modal {
+            background: rgb(38, 38, 38);
+        }
+        .message-body {
+            background-color: rgb(38, 38, 38);
+        }
+        .message-username {
+            color: white;
+        }
+        .message:hover {
+            background: #333;
+        }
+        .message-text {
+            color: #bbb;
+        }
+        .message-divider {
+            background: rgb(84, 84, 84);
+        }
+        .message-age {
+            color: rgba(117, 117, 117, 1);
+        }
+        /* Leaflet maps */
+        .leaflet-control-geocoder-form input {
+            color: black;
         }
         <?php
     }

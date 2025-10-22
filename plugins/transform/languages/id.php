@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='Alat Gambar (transformasi)';
 $lang["plugin-transform-desc"]='Memungkinkan pembuatan gambar alternatif yang dipotong dan diskalakan (jCrop dengan dukungan Mobile)';
 $lang["use_system_icc_profile_config"]='Gunakan konfigurasi sistem untuk pemrosesan profil ICC. Akan menimpa opsi sRGB di atas.';
 $lang["cropper_preset_sizes"] = 'Ukuran yang telah ditentukan';
+$lang["page-title_transform_collection_transform"] = 'Transformasi Sumber Daya';
+$lang["page-title_transform_crop"] = 'Potong Sumber Daya';
+$lang["page-title_transform_setup"] = 'Pengaturan Plugin Transformasi';

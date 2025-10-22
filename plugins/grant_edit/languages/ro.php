@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Confirmați eliminarea accesului îmbunătăți
 $lang["grant_edit_group_list"]='Grupuri curente cu acces suplimentar de editare';
 $lang["plugin-grant_edit-title"]='Acordă Editare';
 $lang["plugin-grant_edit-desc"]='Permite administratorilor să acorde utilizatorilor acces temporar complet de editare a resurselor';
+$lang["page-title_grant_edit_setup"] = 'Configurare Plugin de Editare Grant';

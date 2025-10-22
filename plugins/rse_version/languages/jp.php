@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='選択されたレコードを含まない�
 $lang["rse_version_invalid_time"]='日付[date]より前の時点に戻すことはサポートされていません。';
 $lang["plugin-rse_version-title"]='バージョン管理';
 $lang["plugin-rse_version-desc"]='ResourceSpaceエンタープライズ - バージョン管理';
+$lang["page-title_rse_version_revert"] = 'リソースバージョンを元に戻す';
+$lang["page-title_rse_version_setup"] = 'バージョンプラグインの設定';

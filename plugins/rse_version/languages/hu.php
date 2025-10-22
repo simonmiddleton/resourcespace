@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"] = 'Nincs naplóbejegyzés találva';
 $lang["rse_version_revert_state"] = 'Állapot visszaállítása';
 $lang["rse_version_rstate_changes"] = 'A gyűjtemény #%COLLECTION állapotának visszaállítása az események újrajátszásával a kiválasztott rekordig, de azt nem beleértve.';
 $lang["rse_version_invalid_time"] = 'A [date] előtti időpontra való visszaállítás nem támogatott';
+$lang["page-title_rse_version_revert"] = 'Erőforrás verzió visszaállítása';
+$lang["page-title_rse_version_setup"] = 'Plugin beállítása';

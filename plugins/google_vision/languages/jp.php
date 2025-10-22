@@ -23,3 +23,7 @@ $lang["google_vision_translation"]='多言語翻訳 (たげんごほんやく)';
 $lang["google_vision_api"]='Google Vision API';
 $lang["plugin-google_vision-title"]='Google Vision API';
 $lang["plugin-google_vision-desc"]='画像認識機能。アップロードされた画像をGoogle Cloud Vision APIに渡し、提案されたメタデータを設定します。';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision プロセス既存';
+$lang["page-title_google_vision_setup"] = 'Google Visionプラグインの設定';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

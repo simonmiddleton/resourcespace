@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"] = 'Ang Google Vision ay nagbabalik lama
 $lang["google_vision_translation_api_key"] = 'Paganahin ang pagsasalin ng mga keyword ng Vision sa pamamagitan ng translation API sa pamamagitan ng pagpasok ng wastong Google API key';
 $lang["google_vision_translation_languages"] = 'Listahan ng mga code ng wika na pinaghihiwalay ng kuwit, hal. "no,es"';
 $lang["google_vision_translation_keep_english"] = 'Panatilihin ang orihinal na mga keyword sa Ingles?';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision Proseso Umiiral';
+$lang["page-title_google_vision_setup"] = 'I-set up ang Google Vision Plugin';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

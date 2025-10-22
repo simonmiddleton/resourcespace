@@ -36,3 +36,8 @@ $lang["brand_guidelines_configuration"] = 'تكوين إرشادات العلا�
 $lang["brand_guidelines_fallback_size_thm"] = 'حجم صورة النسخة الاحتياطية لتخطيط الصورة المصغرة';
 $lang["brand_guidelines_fallback_size_half_width"] = 'حجم صورة النسق الاحتياطي بعرض نصف';
 $lang["brand_guidelines_fallback_size_full_width"] = 'حجم صورة النسق الكامل الاحتياطي';
+
+$lang["page-title_brand_guidelines_content"] = 'إدارة محتوى إرشادات العلامة التجارية';
+$lang["page-title_brand_guidelines_guidelines"] = 'إرشادات العلامة التجارية';
+$lang["page-title_brand_guidelines_setup"] = 'إعداد مكون إرشادات العلامة التجارية';
+$lang["page-title_brand_guidelines_toc"] = 'تعديل المحتوى';

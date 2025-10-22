@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"] = 'Bejelentkezés nem WordPress fiókk
 $lang["wordpress_sso_use_wp_login"] = 'Jelentkezzen be WordPress fiókjával';
 $lang["wordpress_sso_retry"] = 'Kattintson ide, hogy próbáljon meg újra bejelentkezni';
 $lang["origin_wordpress_sso"] = 'Wordpress SSO bővítmény';
+$lang["page-title_wordpress_sso_logout"] = 'SSO Kijelentkezés';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Nincs Felhasználó';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Wordpress SSO bővítmény beállítása';

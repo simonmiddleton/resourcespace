@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Revirtiendo el estado de la colección #%CO
 $lang["rse_version_invalid_time"]='Revertir a un momento anterior a [date] no es compatible';
 $lang["plugin-rse_version-title"]='Control de versiones';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Control de Versiones';
+$lang["page-title_rse_version_revert"] = 'Revertir versión de recurso';
+$lang["page-title_rse_version_setup"] = 'Configurar el complemento de versión';

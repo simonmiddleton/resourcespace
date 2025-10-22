@@ -53,3 +53,10 @@ $lang["flickr_nice_progress_min_timeout"]='ਪ੍ਰਗਤੀ ਪਿੰਗਸ �
 $lang["flickr_api_key"]='Flickr API ਕੁੰਜੀ';
 $lang["flickr_api_secret"]='Flickr API ਗੁਪਤ-ਕੁੰਜੀ';
 $lang["flickr_warn_no_title_access"]='ਪ੍ਰਕਾਸ਼ਨ ਦੀ ਆਗਿਆ ਨਹੀਂ ਜਦੋਂ ਤੱਕ ਸਿਰਲੇਖ ਖੇਤਰ (ID #%id) ਤੱਕ ਪਹੁੰਚ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਪ੍ਰਬੰਧਕ ਨਾਲ ਸੰਪਰਕ ਕਰੋ!';
+$lang["page-title_flickr_theme_publish_flickr_preview"] = 'Flickr ਪੂਰਵਦ੍ਰਿਸ਼੍ਯ';
+$lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'Flickr ਪ੍ਰਕਾਸ਼ਿਤ - ਪ੍ਰਗਤੀ';
+$lang["page-title_flickr_theme_publish_flickr_publish"] = 'Flickr ਪ੍ਰਕਾਸ਼ਿਤ ਕਰੋ';
+$lang["page-title_flickr_theme_publish_setup"] = 'Flikr ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["page-title_flickr_theme_publish_sync_progress"] = 'ਫਲਿਕਰ ਸਿੰਕ - ਪ੍ਰਗਤੀ';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr ਸਿੰਕ';

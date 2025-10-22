@@ -24,3 +24,5 @@ $lang["checknow"]='Перевірити зараз';
 $lang["columnheader-enabled"]='Увімкнено';
 $lang["columnheader-last-found"]='Останнє знайдене';
 $lang["search_notifications_watched_searches-tooltip"] = 'Керуйте своїми збереженими пошуками';
+$lang["page-title_rse_search_notifications_setup"] = 'Налаштування плагіна сповіщень про пошук';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Переглянуті пошуки';

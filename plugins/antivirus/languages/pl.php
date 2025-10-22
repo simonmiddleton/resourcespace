@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Przenoszenie zasobu [%resource_id%] do stanu a
 $lang["antivirus_av_not_setup_error"] = 'Ścieżka antywirusa nie została skonfigurowana!';
 $lang["plugin-antivirus-title"] = 'Antywirus';
 $lang["plugin-antivirus-desc"] = ' możliwości antywirusowe poprzez integrację z większością znanych silników antywirusowych, które mogą działać z linii poleceń';
+
+$lang["page-title_antivirus_setup"] = 'Ustawienia wtyczki antywirusowej';

@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Dine foreslåede �
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Foreslåede ændringer er blevet indsendt.<br/>[changesummary]<br/>Klik nedenfor for at gennemgå ændringerne<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Foreslå ændringer';
 $lang["plugin-propose_changes-desc"]='Tilføjer mulighed for at tillade brugere at foreslå metadataændringer uden redigeringsadgang';
+$lang["page-title_propose_changes_propose_changes"] = 'Foreslå ændringer';
+$lang["page-title_propose_changes_setup"] = 'Opsætning af Forslå Ændringer Plugin';

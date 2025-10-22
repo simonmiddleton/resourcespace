@@ -57,3 +57,11 @@ $lang["rse_workflow_bcc_admin"]='অবদানকারীকে অবহি�
 $lang["rse_workflow_manage_workflow-tooltip"] = 'কর্মপ্রবাহের অবস্থাসমূহ তৈরি এবং পরিচালনা করুন';
 $lang["rse_workflow_skip_required_fields"] = 'এই কর্মপ্রবাহ অবস্থায় সম্পদ স্থানান্তর করার সময়, প্রয়োজনীয় ক্ষেত্রের পরীক্ষা থেকে বাদ দিন?';
 $lang["rse_workflow_state_change_failed_required_fields"] = 'আর্কাইভ অবস্থান %%ARCHIVE%% এ পরিবর্তন করতে অক্ষম। প্রয়োজনীয় ক্ষেত্রগুলিতে মেটাডেটা অনুপস্থিত: %%FIELDS%%।';
+$lang["page-title_rse_workflow_batch_action"] = 'ব্যাচ ওয়ার্কফ্লো অ্যাকশন';
+$lang["page-title_rse_workflow_edit_action"] = 'কর্মপ্রবাহের ক্রিয়া সম্পাদনা';
+$lang["page-title_rse_workflow_edit_state"] = 'কর্মপ্রবাহ অবস্থার সম্পাদনা';
+$lang["page-title_rse_workflow_edit_workflow_actions"] = 'কর্মপ্রবাহের ক্রিয়াকলাপ সম্পাদনা করুন';
+$lang["page-title_rse_workflow_edit_workflow_states"] = 'কর্মপ্রবাহের অবস্থাসমূহ সম্পাদনা করুন';
+
+$lang["page-title_rse_workflow_setup"] = 'ওয়ার্কফ্লো প্লাগইন সেটআপ করুন';
+$lang["page-title_rse_workflow_edit_workflow"] = 'কর্মপ্রবাহ সম্পাদনা';

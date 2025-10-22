@@ -1162,8 +1162,12 @@ $password_brute_force_delay = 4;
 
 // Password hash information - algorithm and options. @see https://www.php.net/manual/en/function.password-hash.php
 $password_hash_info = [
-    'algo' => PASSWORD_BCRYPT,
-    'options' => ['cost' => 12]
+    'algo' =>  PASSWORD_ARGON2ID,
+    'options' => [
+        'memory_cost' => 1<<17, // 128 MB
+        'time_cost'   => 4,
+        'threads'     => 2
+    ]
 ];
 
 // Use imperial instead of metric for the download size guidelines
@@ -1615,9 +1619,6 @@ $show_collection_name = false;
 $themes_simple_view = false;
 // Option to show images on featured collection and featured collection category tiles if $themes_simple_view is enabled
 $themes_simple_images = true;
-
-// Option to show single home slideshow image on featured collection page (collections_featured.php) if $themes_simple_view is enabled
-$featured_collection_static_bg = false;
 
 // Change featured collections root by pointing at a new featured collection category (using a collection has an undefined behaviour).
 // Used mainly in combination with "$use_theme_as_home = true;"

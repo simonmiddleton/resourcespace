@@ -8,3 +8,4 @@ $lang["yt2rs_online_preview"]='Previzualizare Online';
 $lang["yt2rs_youtube_video"]='Video Youtube';
 $lang["plugin-yt2rs-title"]='YouTube în ResourceSpace';
 $lang["plugin-yt2rs-desc"]='Permite publicarea videoclipurilor de pe YouTube.';
+$lang["page-title_yt2rs_setup"] = 'Configurare plugin-ul Youtube pentru ResourceSpace';

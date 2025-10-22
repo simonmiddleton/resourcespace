@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Vektör oluşturma';
 $lang["clip_vector-statistics"] = 'Vektör istatistikleri';
 $lang["clip-vector-cleanup"] = 'Yetim vektörleri sil';
 $lang["clip-vector-cleanup-description"] = 'Mevcut olmayan veya yukarıda seçilen kaynak türlerinden biri olmayan kaynaklara ait vektörleri kaldırın';
+
+$lang["page-title_clip_search"] = 'Yapay Zeka Akıllı Arama';
+$lang["page-title_clip_setup"] = 'CLIP Eklentisini Kurun';
+$lang["page-title_clip_webcam"] = 'Webcam Etiket Üretici';

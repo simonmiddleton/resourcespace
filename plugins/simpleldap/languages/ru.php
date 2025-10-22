@@ -52,3 +52,5 @@ $lang["origin_simpleldap"]='Простой плагин LDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Не проверять полное доменное имя сервера по отношению к CN сертификата';
 $lang["plugin-simpleldap-title"]='Простой LDAP';
 $lang["plugin-simpleldap-desc"]='[Расширенный] Упрощенная реализация аутентификации LDAP, ориентированная на Active Directory, но также поддерживающая Oracle directory';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Проверить аутентификацию LDAP';
+$lang["page-title_simpleldap_setup"] = 'Настройка простого плагина LDAP';

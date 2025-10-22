@@ -14,3 +14,4 @@ $lang["splitpdf_createnewresource"]='Δημιουργήστε ένα νέο αν
 $lang["splitpdf_createnewalternativefile"]='Δημιουργήστε ένα νέο εναλλακτικό αρχείο σε αυτό το αντικείμενο για κάθε εύρος';
 $lang["plugin-pdf_split-title"]='Διαχωρισμός PDF';
 $lang["plugin-pdf_split-desc"]='Επιτρέπει τη διαίρεση αρχείων PDF σε πολλαπλές σελίδες';
+$lang["page-title_pdf_split_pdf_split"] = 'Διαχωρισμός PDF';

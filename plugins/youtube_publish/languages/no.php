@@ -52,3 +52,5 @@ $lang["youtube_publish_renewing_token"]='Fornye tilgangstoken';
 $lang["youtube_publish_add_anchor"]='Legg til ankerkoblinger til URL når du lagrer til YouTube URL-metadatafeltet?';
 $lang["plugin-youtube_publish-title"]='YouTube Publiser';
 $lang["plugin-youtube_publish-desc"]='Publiserer videoressurs til konfigurert YouTube-konto.';
+$lang["page-title_youtube_publish_setup"] = 'Installer plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Publiser ressurs til Youtube';

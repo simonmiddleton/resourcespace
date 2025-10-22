@@ -21,3 +21,5 @@ $lang["vr_view_yaw_only_field"] = 'Поле, якое выкарыстоўвае
 $lang["vr_view_yaw_only_value"] = 'Значэнне для праверкі. Калі знойдзена, опцыя is_yaw_only будзе ўстаноўлена ў true';
 $lang["vr_view_orig_image"] = 'Выкарыстоўваць арыгінальны файл рэсурсу як крыніцу для папярэдняга прагляду выявы?';
 $lang["vr_view_orig_video"] = 'Выкарыстоўваць арыгінальны файл рэсурсу як крыніцу для папярэдняга прагляду відэа?';
+$lang["page-title_vr_view_download"] = 'VR View';
+$lang["page-title_vr_view_setup"] = 'Наладка плагіна VR View';

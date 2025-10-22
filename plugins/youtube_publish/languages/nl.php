@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Grootte van de blokken te gebruiken bij het uploade
 $lang["youtube_publish_add_anchor"]='Voeg anker tags toe aan de URL bij het opslaan in het metadata veld van de YouTube URL?';
 $lang["plugin-youtube_publish-title"]='YouTube Publiceren';
 $lang["plugin-youtube_publish-desc"]='Publiceert videobron naar geconfigureerd YouTube-account.';
+$lang["page-title_youtube_publish_setup"] = 'Instellen Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Publiceer Resource op Youtube';

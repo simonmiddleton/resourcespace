@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Cliquez ici pour essayer de vous connecter à nouv
 $lang["origin_wordpress_sso"]='Plugin SSO Wordpress';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='[Avancé] Permet l\'authentification unique avec l\'installation de Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Déconnexion SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Aucun utilisateur';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Configurer le plugin SSO Wordpress';

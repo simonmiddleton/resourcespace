@@ -15,3 +15,6 @@ $lang["title-too-long"]='タイトルフィールドは50文字以内に制限�
 $lang["plugin-news-title"]='ニュース';
 $lang["plugin-news-desc"]='ホームページのニュース項目を追加します';
 $lang["news_manage-tooltip"] = 'ニュース項目を追加、編集、または削除する';
+$lang["page-title_news_news_content_edit"] = 'ニュースコンテンツを編集';
+$lang["page-title_news_news_edit"] = 'ニュースを編集';
+$lang["page-title_news_news"] = 'ニュース';

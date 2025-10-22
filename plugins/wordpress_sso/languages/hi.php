@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='फिर से लॉग इन करने क
 $lang["origin_wordpress_sso"]='वर्डप्रेस एसएसओ प्लगइन';
 $lang["plugin-wordpress_sso-title"]='वर्डप्रेस एसएसओ';
 $lang["plugin-wordpress_sso-desc"]='वर्डप्रेस इंस्टॉलेशन के साथ सिंगल साइन ऑन की अनुमति देता है';
+$lang["page-title_wordpress_sso_logout"] = 'SSO लॉगआउट';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO कोई उपयोगकर्ता नहीं';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO पढ़ें';
+$lang["page-title_wordpress_sso_setup"] = 'Wordpress SSO प्लगइन सेटअप करें';

@@ -59,3 +59,11 @@ $lang["plugin-rse_workflow-desc"]='ResourceSpace Enterprise - Рабочий п�
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Создавать и управлять состояниями рабочего процесса';
 $lang["rse_workflow_skip_required_fields"] = 'При перемещении ресурсов в это состояние рабочего процесса исключить проверки обязательных полей?';
 $lang["rse_workflow_state_change_failed_required_fields"] = 'Не удалось изменить состояние архива на %%ARCHIVE%%. Отсутствуют метаданные в обязательных полях: %%FIELDS%%.';
+$lang["page-title_rse_workflow_batch_action"] = 'Пакетное действие рабочего процесса';
+$lang["page-title_rse_workflow_edit_action"] = 'Редактировать действие рабочего процесса';
+$lang["page-title_rse_workflow_edit_state"] = 'Редактировать состояние рабочего процесса';
+$lang["page-title_rse_workflow_edit_workflow_actions"] = 'Редактировать действия рабочего процесса';
+$lang["page-title_rse_workflow_edit_workflow_states"] = 'Редактировать состояния рабочего процесса';
+
+$lang["page-title_rse_workflow_setup"] = 'Настройка плагина рабочего процесса';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Редактировать рабочий процесс';

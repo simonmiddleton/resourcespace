@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'اوپر',
    'bottom' => 'نیچے',
 );
+$lang["page-title_image_text_setup"] = 'تصویر متن پلگ ان سیٹ اپ کریں';

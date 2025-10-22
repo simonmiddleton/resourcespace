@@ -53,3 +53,6 @@ $lang["museumplus_error_module_no_field_maps"]='Imposibil de sincronizat datele 
 $lang["museumplus_api_user"]='Utilizator';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Permite extragerea metadatelor resurselor din MuseumPlus folosind API-ul său REST (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'Detalii Obiect MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'Configurare modul MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Configurare Plugin MuseumPlus';

@@ -10,3 +10,4 @@ $lang["antivirus_action_quarantine"] = 'Pindah ke kuarantin';
 $lang["antivirus_deleting_file"] = 'Menghapus sumber [%resource_id%] dan sebarang fail yang berkaitan!';
 $lang["antivirus_moving_file"] = 'Memindahkan sumber [%resource_id%] ke keadaan arkib [%archive_state%]';
 $lang["antivirus_av_not_setup_error"] = 'Jalan Antivirus tidak ditetapkan!';
+$lang["page-title_antivirus_setup"] = 'Pasang Plugin Antivirus';

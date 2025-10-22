@@ -47,3 +47,6 @@ $lang["video_splice_createdfromvideosplice"]='वीडियो स्प्ल
 $lang["video_splice_error_invalid_action"]='त्रुटि : अमान्य क्रिया';
 $lang["plugin-video_splice-title"]='वीडियो स्प्लाइस';
 $lang["plugin-video_splice-desc"]='वीडियो ट्रिमिंग और स्प्लाइसिंग क्षमता जोड़ता है';
+$lang["page-title_video_splice_setup"] = 'वीडियो स्प्लाइस प्लगइन सेटअप करें';
+$lang["page-title_video_splice_splice"] = 'वीडियो जोड़ें';
+$lang["page-title_video_splice_trim"] = 'वीडियो काटें';

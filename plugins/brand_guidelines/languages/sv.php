@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Konfiguration av varumärkesriktlinje
 $lang["brand_guidelines_fallback_size_thm"] = 'Miniatyrbildslayout reservbildstorlek';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Halvbreddslayout reservbildstorlek';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Fullbredds-layout reservbildstorlek';
+
+$lang["page-title_brand_guidelines_content"] = 'Hantera innehåll för varumärkesriktlinjer';
+$lang["page-title_brand_guidelines_guidelines"] = 'Varumärkesriktlinjer';
+$lang["page-title_brand_guidelines_setup"] = 'Installera plugin för varumärkesriktlinjer';
+$lang["page-title_brand_guidelines_toc"] = 'Redigera innehåll';

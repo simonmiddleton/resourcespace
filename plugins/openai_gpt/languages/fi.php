@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='GPT-lähde';
 $lang["openai_gpt_language"] = 'Tulostuskieli';
 $lang["openai_gpt_language_user"] = 'Nykyisen käyttäjän kieli';
 $lang["openai_gpt_overwrite_data"] = 'Korvataanko olemassa olevat tiedot määritetyissä kentissä?';
+$lang["page-title_openai_gpt_setup"] = 'Aseta OpenAI GPT -laajennus';

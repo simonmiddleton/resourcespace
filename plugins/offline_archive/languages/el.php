@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Σε εξέλιξη',
   2 => 'Ολοκληρώθηκε',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Διαχείριση Αρχείων';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Αρχειοθέτηση εκτός σύνδεσης';
+$lang["page-title_offline_archive_pending_restore"] = 'Εκκρεμής Επαναφορά Πόρου';
+$lang["page-title_offline_archive_restore_request"] = 'Αίτηση Επαναφοράς Πόρου';
+$lang["page-title_offline_archive_restore"] = 'Ανάκτηση Αρχείου';
+$lang["page-title_offline_archive_setup"] = 'Ρύθμιση Πρόσθετου';
+$lang["page-title_offline_archive_view_archives"] = 'Δείτε τα Αρχεία Πόρων';
+$lang["page-title_offline_archive_view_pending"] = 'Δείτε τις Εκκρεμείς Αρχειοθετήσεις';

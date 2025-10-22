@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Usanidi wa Miongozo ya Chapa';
 $lang["brand_guidelines_fallback_size_thm"] = 'Ukubwa wa picha ya akiba ya mpangilio wa vijipicha';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Ukubwa wa picha ya akiba ya mpangilio wa nusu-upana';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Ukubwa wa picha ya akiba ya mpangilio wa upana kamili';
+
+$lang["page-title_brand_guidelines_content"] = 'Simamisha Maudhui ya Miongozo ya Brand';
+$lang["page-title_brand_guidelines_guidelines"] = 'Miongozo ya Brand';
+$lang["page-title_brand_guidelines_setup"] = 'Weka Miongozo ya Brand Plugin';
+$lang["page-title_brand_guidelines_toc"] = 'Hariri maudhui';

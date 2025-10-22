@@ -19,3 +19,5 @@ $lang["vr_view_yaw_only_field"]='Uwanja unaotumika kuamua kama roll/pitch inapas
 $lang["vr_view_yaw_only_value"]='Thamani ya kukagua. Ikiwa imepatikana, chaguo la is_yaw_only litawekwa kuwa kweli';
 $lang["vr_view_orig_image"]='Tumia faili asili ya rasilimali kama chanzo cha hakikisho la picha?';
 $lang["vr_view_orig_video"]='Tumia faili asili ya rasilimali kama chanzo cha hakikisho la video?';
+$lang["page-title_vr_view_download"] = 'VR View';
+$lang["page-title_vr_view_setup"] = 'Weka Plugin ya Mtazamo wa VR';

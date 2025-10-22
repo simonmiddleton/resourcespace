@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'superior',
    'bottom' => 'inferior',
 );
+$lang["page-title_image_text_setup"] = 'Configurar el complemento de texto de imagen';

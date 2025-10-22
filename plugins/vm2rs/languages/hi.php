@@ -8,3 +8,4 @@ $lang["vm2rs_online_preview"]='ऑनलाइन पूर्वावलोक
 $lang["vm2rs_youtube_video"]='यूट्यूब वीडियो';
 $lang["plugin-vm2rs-title"]='विमियो से ResourceSpace';
 $lang["plugin-vm2rs-desc"]='विमियो से वीडियो एम्बेड करने की अनुमति देता है';
+$lang["page-title_vm2rs_setup"] = 'Vimeo को ResourceSpace प्लगइन में सेटअप करें';

@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='인쇄';
 $lang["stencilvg-download"]='다운로드';
 $lang["stencilvg-save_as_new_resource"]='새 리소스로 저장';
 $lang["stencilvg-no_parameters_found"]='템플릿 매개변수가 없습니다';
+$lang["page-title_stencilvg_download_svg"] = 'SVG 다운로드';
+$lang["page-title_stencilvg_input"] = 'SVG 입력';
+$lang["page-title_stencilvg_setup"] = 'StencilVG 플러그인 설정';

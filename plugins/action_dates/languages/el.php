@@ -38,3 +38,5 @@ $lang["action_dates_email_text_state"] = 'Οι παρακάτω πόροι πρ�
 $lang["action_dates_email_text"] = 'Τα παρακάτω αρχεία πρόκειται να περιοριστούν και/ή να αλλάξουν κατάσταση σε [days] ημέρες.';
 $lang["plugin-action_dates-title"] = 'Ημερομηνίες Δράσεων';
 $lang["plugin-action_dates-desc"] = 'Ενεργοποιεί τον προγραμματισμένο διαγραφή ή περιορισμό των πόρων βάσει πεδίων ημερομηνίας';
+
+$lang["page-title_action_dates_setup"] = 'Ρύθμιση Plugin Ημερομηνιών Δράσης';

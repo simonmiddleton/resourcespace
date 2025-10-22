@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Cynhyrchu fector';
 $lang["clip_vector-statistics"] = 'Ystadegau fector';
 $lang["clip-vector-cleanup"] = 'Dileu fectorau digyswllt';
 $lang["clip-vector-cleanup-description"] = 'Tynnwch fectorau sy\'n perthyn i adnoddau nad ydynt yn bodoli mwyach neu nad ydynt yn un o\'r mathau adnoddau a ddewiswyd uchod';
+
+$lang["page-title_clip_search"] = 'AI Chwilio Clyfar';
+$lang["page-title_clip_setup"] = 'Sefydlu Plugin CLIP';
+$lang["page-title_clip_webcam"] = 'Generadur Tagiau Webcam';

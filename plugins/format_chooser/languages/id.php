@@ -16,3 +16,5 @@ $lang["are_available-1"]='akan diubah';
 $lang["are_available-0"]='akan diubah';
 $lang["plugin-format_chooser-title"]='Pemilih Format';
 $lang["plugin-format_chooser-desc"]='Memungkinkan Anda memilih format berbeda saat mengunduh file yang dihasilkan secara instan.';
+$lang["page-title_format_chooser_convert"] = 'Pemilih Format';
+$lang["page-title_format_chooser_setup"] = 'Pengaturan Plugin Pemilih Format';

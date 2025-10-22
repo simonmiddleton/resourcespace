@@ -49,3 +49,6 @@ $lang["museumplus_error_unknown_type_saved_config"] = 'Ang \'museumplus_modules_
 $lang["museumplus_error_invalid_association"] = 'Hindi wastong pagkakaugnay ng module(s). Mangyaring tiyakin na ang tamang Module at/o Record ID ay nailagay!';
 $lang["museumplus_id_returns_multiple_records"] = 'Maraming tala ang natagpuan - mangyaring ilagay ang teknikal na ID sa halip';
 $lang["museumplus_error_module_no_field_maps"] = 'Hindi ma-sync ang data mula sa MuseumPlus. Dahilan: ang module na \'%name\' ay walang naka-configure na field mappings.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Detalye ng Objeto';
+$lang["page-title_museumplus_setup_module"] = 'I-set up ang MuseumPlus Module';
+$lang["page-title_museumplus_setup"] = 'I-set up ang MuseumPlus Plugin';

@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Brug den originale ressourcefil som kilde til bille
 $lang["vr_view_orig_video"]='Brug den originale ressourcefil som kilde til video-preview?';
 $lang["plugin-vr_view-title"]='VR-visning';
 $lang["plugin-vr_view-desc"]='Google VR View - 360 graders billede- og videoforhåndsvisninger (equirektangulært format)';
+$lang["page-title_vr_view_download"] = 'VR Visning';
+$lang["page-title_vr_view_setup"] = 'Opsæt VR View Plugin';

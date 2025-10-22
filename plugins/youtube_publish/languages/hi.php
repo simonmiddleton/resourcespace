@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='यूट्यूब पर अपलोड कर
 $lang["youtube_publish_add_anchor"]='क्या YouTube URL मेटाडेटा फ़ील्ड में सहेजते समय URL में एंकर टैग जोड़ें?';
 $lang["plugin-youtube_publish-title"]='यूट्यूब प्रकाशित करें';
 $lang["plugin-youtube_publish-desc"]='कॉन्फ़िगर किए गए YouTube खाते पर वीडियो संसाधन प्रकाशित करता है।';
+$lang["page-title_youtube_publish_setup"] = 'प्लगइन सेटअप';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Youtube पर संसाधन प्रकाशित करें';

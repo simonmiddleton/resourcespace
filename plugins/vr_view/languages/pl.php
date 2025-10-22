@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Czy użyć oryginalnego pliku zasobu jako źródła
 $lang["vr_view_orig_video"]='Czy użyć oryginalnego pliku zasobu jako źródła podglądu wideo?';
 $lang["plugin-vr_view-title"]='Widok VR';
 $lang["plugin-vr_view-desc"]='Google VR View - podglądy obrazów i wideo 360 stopni (format equirectangular)';
+$lang["page-title_vr_view_download"] = 'Widok VR';
+$lang["page-title_vr_view_setup"] = 'Ustawienia wtyczki VR View';

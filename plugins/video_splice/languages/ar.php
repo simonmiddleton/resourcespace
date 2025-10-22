@@ -47,3 +47,6 @@ $lang["action-splice"]='دمج';
 $lang["video_splice_error_invalid_action"]='خطأ: إجراء غير صالح';
 $lang["plugin-video_splice-title"]='دمج الفيديو';
 $lang["plugin-video_splice-desc"]='يضيف إمكانية تقليم الفيديو ودمجه';
+$lang["page-title_video_splice_setup"] = 'إعداد مكون فيديو سبلايس';
+$lang["page-title_video_splice_splice"] = 'دمج الفيديو';
+$lang["page-title_video_splice_trim"] = 'قص الفيديو';

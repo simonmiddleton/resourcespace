@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Yeni Alan Ekle';
 $lang["feedback_back_to_plugin_manager"] = 'Eklenti Yöneticisine Geri Dön';
 $lang["plugin-feedback-title"] = 'Geri Bildirim';
 $lang["plugin-feedback-desc"] = 'Genel kullanıcı geri bildirim işlevi ekler ve yapılandırılabilir sorular içerir.';
+
+$lang["page-title_feedback_feedback"] = 'Geri Bildirim Gönder';
+$lang["page-title_feedback_setup"] = 'Eklenti Ayarları';

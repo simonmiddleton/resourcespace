@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'توليد المتجهات';
 $lang["clip_vector-statistics"] = 'إحصائيات المتجهات';
 $lang["clip-vector-cleanup"] = 'حذف المتجهات اليتيمة';
 $lang["clip-vector-cleanup-description"] = 'إزالة المتجهات التي تنتمي إلى الموارد التي لم تعد موجودة أو ليست من أنواع الموارد المحددة أعلاه';
+
+$lang["page-title_clip_search"] = 'البحث الذكي بالذكاء الاصطناعي';
+$lang["page-title_clip_setup"] = 'إعداد ملحق CLIP';
+$lang["page-title_clip_webcam"] = 'مولد علامات كاميرا الويب';

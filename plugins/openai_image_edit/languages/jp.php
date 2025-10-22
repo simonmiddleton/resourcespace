@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='白で塗りつぶす';
 $lang["openai_image_edit__mode_black"]='黒で塗りつぶす';
 $lang["openai_image_edit__creating_new_resource"]='新しいリソースを作成中';
 $lang["openai_image_edit__mode_clone"]='クローンフィル';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNGを取得';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI 保存の代替';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI 新規保存';

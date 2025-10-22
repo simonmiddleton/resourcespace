@@ -12,3 +12,6 @@ $lang["edit_usage"] = 'Használat szerkesztése';
 $lang["delete_usage"] = 'Használat törlése';
 $lang["resource_usage_configuration"] = 'Erőforrás-használati konfiguráció';
 $lang["resource_usage_mediums"] = 'Elérhető felhasználási lehetőségek listája (vesszővel elválasztva)';
+$lang["page-title_resource_usage_delete"] = 'Erőforrás-használat törlése';
+$lang["page-title_resource_usage_edit"] = 'Erőforrás-használat szerkesztése';
+$lang["page-title_resource_usage_setup"] = 'Erőforrás-használati bővítmény beállítása';

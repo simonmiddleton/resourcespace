@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='Se encontraron múltiples regis
 $lang["museumplus_error_module_no_field_maps"]='No se puede sincronizar los datos de MuseumPlus. Motivo: el módulo \'%name\' no tiene mapeos de campos configurados.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Permite extraer metadatos de recursos desde MuseumPlus utilizando su API REST (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'Detalles del Objeto MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'Configurar el Módulo MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Configurar el complemento MuseumPlus';

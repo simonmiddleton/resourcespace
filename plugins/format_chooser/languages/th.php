@@ -14,3 +14,5 @@ $lang["downloadformat"]='รูปแบบการดาวน์โหลด'
 $lang["are_available-2"]='จะถูกแปลง';
 $lang["are_available-1"]='จะถูกแปลง';
 $lang["are_available-0"]='จะถูกแปลง';
+$lang["page-title_format_chooser_convert"] = 'ตัวเลือกฟอร์แมต';
+$lang["page-title_format_chooser_setup"] = 'ตั้งค่า Plugin ตัวเลือกฟอร์แมต';

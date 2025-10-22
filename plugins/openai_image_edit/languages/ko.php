@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='흰색으로 채우기';
 $lang["openai_image_edit__mode_black"]='검은색으로 채우기';
 $lang["openai_image_edit__creating_new_resource"]='새 자원 만들기';
 $lang["openai_image_edit__mode_clone"]='클론 채우기';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNG 가져오기';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI 저장 대안';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI 새로 저장';

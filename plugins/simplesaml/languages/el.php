@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'Ενημερώσεις μεταδεδο�
 $lang["simplesaml_metadata_warning"] = 'Τα μεταδεδομένα δεν έχουν ενημερωθεί από %date%';
 $lang["simplesaml_metadata_invalid"] = 'Μη έγκυρα ή μη διαθέσιμα μεταδεδομένα IdP';
 $lang["simplesaml_admin_password_reset"] = 'Επαναφορά κωδικού πρόσβασης διαχειριστή απλού ιστότοπου δοκιμών SimpleSAML (προαιρετικό)';
+$lang["page-title_simplesaml_about"] = 'SAML Σχετικά';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Δημιουργία SP Config';
+$lang["page-title_simplesaml_setup"] = 'Ρύθμιση Πρόσθετου Απλού SAML';

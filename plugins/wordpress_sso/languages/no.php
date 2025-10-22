@@ -16,3 +16,7 @@ $lang["origin_wordpress_sso"]='Wordpress SSO-tillegg';
 $lang["wordpress_sso_configuration"]='WordPress SSO - Oppsett';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Tillater Single Sign On med Wordpress-installasjon';
+$lang["page-title_wordpress_sso_logout"] = 'SSO Logg ut';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Ingen bruker';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Sett opp Wordpress SSO-plugin';

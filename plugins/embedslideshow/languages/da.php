@@ -25,3 +25,6 @@ $lang["embedslideshow_dynamic_size"] = 'Dynamisk ændring af forhåndsvisningens
 $lang["sizename_pixels"] = '%name (%pixels pixels)';
 $lang["plugin-embedslideshow-title"] = 'Indsæt Diasshow';
 $lang["plugin-embedslideshow-desc"] = 'Giver en funktion til at generere HTML til indlejrede samlingsdias på eksterne sider';
+
+$lang["page-title_embedslideshow_setup"] = 'Opsæt Embed Slideshow Plugin';
+$lang["page-title_embedslideshow_viewer"] = 'Indsæt diasshow';

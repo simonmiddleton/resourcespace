@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'برانڈ گائیڈ لائنز کی
 $lang["brand_guidelines_fallback_size_thm"] = 'تھمب نیل لے آؤٹ کے لئے متبادل تصویر کا سائز';
 $lang["brand_guidelines_fallback_size_half_width"] = 'نیم چوڑائی لے آؤٹ کے لیے متبادل تصویر کا سائز';
 $lang["brand_guidelines_fallback_size_full_width"] = 'فل-وِڈت لے آؤٹ کے لیے متبادل تصویر کا سائز';
+
+$lang["page-title_brand_guidelines_content"] = 'برانڈ گائیڈ لائنز کے مواد کا انتظام کریں';
+$lang["page-title_brand_guidelines_guidelines"] = 'برانڈ گائیڈ لائنز';
+$lang["page-title_brand_guidelines_setup"] = 'برانڈ گائیڈ لائنز پلگ ان سیٹ اپ کریں';
+$lang["page-title_brand_guidelines_toc"] = 'مواد میں ترمیم کریں';

@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = '許可された列：*ユーザー名、*
 $lang["csv_user_import_condition5"] = 'ユーザーの言語がlang列が見つからない場合、または値がない場合、"$defaultlanguage"構成オプションを使用して設定された言語にデフォルトで戻ります。';
 $lang["plugin-csv_user_import-title"] = 'CSVユーザーインポート';
 $lang["plugin-csv_user_import-desc"] = '[高度] 事前にフォーマットされたCSVファイルに基づいてユーザーのバッチをインポートする機能を提供します';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSVユーザーインポート';

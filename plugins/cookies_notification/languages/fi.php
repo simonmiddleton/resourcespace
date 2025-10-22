@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Olet päättänyt olla sa
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Sinun on hyväksyttävä evästeiden käyttö ennen järjestelmään kirjautumista.';
 $lang["plugin-cookies_notification-title"] = 'Evästeiden ilmoitus';
 $lang["plugin-cookies_notification-desc"] = 'Lisää mahdollisuuden ilmoittaa käyttäjille, kuinka ResourceSpace voi käyttää evästeitä käyttäjätoiminnan seuraamiseen näyttämällä viestin yläosassa';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Evästeiden valinta';
+$lang["page-title_cookies_notification_setup"] = 'Aseta evästeilmoituslaajennus';

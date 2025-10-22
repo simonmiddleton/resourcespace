@@ -50,3 +50,5 @@ $lang["youtube_publish_category"] = 'Danh mục';
 $lang["youtube_publish_category_error"] = 'Lỗi khi lấy danh mục YouTube: -';
 $lang["youtube_chunk_size"] = 'Kích thước khối để sử dụng khi tải lên YouTube (MB)';
 $lang["youtube_publish_add_anchor"] = 'Thêm thẻ neo vào URL khi lưu vào trường metadata URL YouTube?';
+$lang["page-title_youtube_publish_setup"] = 'Cài đặt Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Xuất bản Tài nguyên lên Youtube';

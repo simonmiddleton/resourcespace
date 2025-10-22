@@ -23,3 +23,7 @@ $lang["google_vision_translation_keep_english"]='Zachovať pôvodné anglické k
 $lang["google_vision_api"]='Google Vision API';
 $lang["plugin-google_vision-title"]='Google Vision API';
 $lang["plugin-google_vision-desc"]='Zmožnost prepoznavanja slik. Naložene slike pošlje v Google Cloud Vision API in nastavi predlagane metapodatke.';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision Proces Existujúci';
+$lang["page-title_google_vision_setup"] = 'Nastavenie pluginu Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

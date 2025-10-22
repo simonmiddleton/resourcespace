@@ -8,3 +8,4 @@ $lang["user_preferences_change_name"]='Povolit změnu jména uživatele';
 $lang["changeyourpassword"]='Změnit moje heslo a uživatelské údaje';
 $lang["plugin-user_preferences-title"]='Uživatelské předvolby';
 $lang["plugin-user_preferences-desc"]='Nabízí další uživatelské preference';
+$lang["page-title_user_preferences_setup"] = 'Nastavení pluginu uživatelských preferencí';

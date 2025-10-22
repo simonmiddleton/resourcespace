@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Potwierdź usunięcie zwiększonego dostępu dl
 $lang["grant_edit_group_list"]='Obecne grupy z dodatkowym dostępem do edycji';
 $lang["plugin-grant_edit-title"]='Przyznaj Edycję';
 $lang["plugin-grant_edit-desc"]='Umożliwia administratorom przyznanie użytkownikom tymczasowego pełnego dostępu do edycji zasobów';
+$lang["page-title_grant_edit_setup"] = 'Ustawienia wtyczki edycji uprawnień';

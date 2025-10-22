@@ -8,3 +8,4 @@ $lang["vm2rs_online_preview"]='Previzualizare online';
 $lang["vm2rs_youtube_video"]='Video Youtube';
 $lang["plugin-vm2rs-title"]='Vimeo la ResourceSpace';
 $lang["plugin-vm2rs-desc"]='Permite încorporarea videoclipurilor de pe Vimeo.';
+$lang["page-title_vm2rs_setup"] = 'Configurare plugin-ul Vimeo pentru ResourceSpace';

@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'ਟੈਕਸਟ / HTML:';
 $lang["feedback_options-comma_separated"] = 'ਵਿਕਲਪ: (ਕੋਮਾ ਨਾਲ ਵੱਖਰੇ ਕੀਤੇ)';
 $lang["feedback_add_new_field"] = 'ਨਵਾਂ ਫੀਲਡ ਸ਼ਾਮਲ ਕਰੋ';
 $lang["feedback_back_to_plugin_manager"] = 'ਪਲੱਗਇਨ ਮੈਨੇਜਰ ਵਾਪਸ';
+
+$lang["page-title_feedback_feedback"] = 'ਫੀਡਬੈਕ ਭੇਜੋ';
+$lang["page-title_feedback_setup"] = 'ਸੈਟਅਪ ਪਲੱਗਇਨ';

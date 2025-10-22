@@ -50,6 +50,13 @@ function get_resource_path(
     $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
     $baseurl, $k, $get_resource_path_extra_download_query_string_params;
 
+    $int_vars = ['ref', 'page', 'alternative'];
+    foreach ($int_vars as $var) {
+        if (!is_int_loose($$var)) {
+            $$var = (int) $$var;
+        }
+    }
+
     $size = safe_file_name((string) $size);
     $extension = safe_file_name((string) $extension);
 
@@ -92,7 +99,7 @@ function get_resource_path(
         return generateURL(
             "{$baseurl}/pages/download.php",
             array(
-                'ref'         => (int) $ref,
+                'ref'         => $ref,
                 'size'        => $size,
                 'ext'         => $extension,
                 'page'        => (int) $page,
@@ -142,7 +149,17 @@ function get_resource_path(
                 }
             } else {
                 global $baseurl_short, $k;
-                return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
+                return generateURL($baseurl_short . "pages/download.php", 
+                    [
+                        'ref'           => $ref, 
+                        'size'          => $size, 
+                        'ext'           => $extension, 
+                        'k'             => $k, 
+                        'page'          => $page, 
+                        'alternative'   => $alternative,
+                        'noattach'      => true
+                    ]
+                );
             }
         }
     }

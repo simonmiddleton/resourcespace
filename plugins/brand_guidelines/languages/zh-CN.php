@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = '品牌指南配置';
 $lang["brand_guidelines_fallback_size_thm"] = '缩略图布局备用图像大小';
 $lang["brand_guidelines_fallback_size_half_width"] = '半宽布局备用图像大小';
 $lang["brand_guidelines_fallback_size_full_width"] = '全宽布局备用图像大小';
+
+$lang["page-title_brand_guidelines_content"] = '管理品牌指南内容';
+$lang["page-title_brand_guidelines_guidelines"] = '品牌指南';
+$lang["page-title_brand_guidelines_setup"] = '设置品牌指南插件';
+$lang["page-title_brand_guidelines_toc"] = '编辑内容';

@@ -80,3 +80,6 @@ $lang["plugin-transform-desc"]='क्रॉप और स्केल किए
 $lang["use_system_icc_profile_config"]='आईसीसी प्रोफाइल प्रोसेसिंग के लिए सिस्टम कॉन्फ़िग का उपयोग करें। ऊपर दिए गए sRGB विकल्पों को ओवरराइड करेगा।';
 $lang["transform-recrop"]='छवि को पुनः क्रॉप करें';
 $lang["cropper_preset_sizes"] = 'पूर्वनिर्धारित आकार';
+$lang["page-title_transform_collection_transform"] = 'संसाधन को रूपांतरित करें';
+$lang["page-title_transform_crop"] = 'फसल संसाधन';
+$lang["page-title_transform_setup"] = 'ट्रांसफॉर्म प्लगइन सेटअप करें';

@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='রিসোর্সটি ভিম
 $lang["vimeo_publish_account_options"]='Vimeo অ্যাকাউন্ট বিকল্পসমূহ';
 $lang["vimeo_publish_allow_user_accounts"]='ব্যবহারকারীদের তাদের নিজস্ব Vimeo অ্যাকাউন্টে প্রকাশ করার অনুমতি দিন। যদি মিথ্যা হয় তবে নিচে একটি একক Vimeo অ্যাকাউন্টে অ্যাক্সেস কনফিগার করতে হবে।';
 $lang["vimeo_publish_set_account"]='ভিমিও অ্যাকাউন্ট সেট করুন';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo প্রকাশ প্লাগইন সেটআপ করুন';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Vimeo তে প্রকাশ করুন';

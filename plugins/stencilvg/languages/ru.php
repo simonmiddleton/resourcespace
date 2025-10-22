@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Печать';
 $lang["stencilvg-download"]='Скачать';
 $lang["stencilvg-save_as_new_resource"]='Сохранить как новый ресурс';
 $lang["stencilvg-no_parameters_found"]='Шаблонные параметры не найдены';
+$lang["page-title_stencilvg_download_svg"] = 'Скачать SVG';
+$lang["page-title_stencilvg_input"] = 'SVG Ввод';
+$lang["page-title_stencilvg_setup"] = 'Настройка плагина StencilVG';

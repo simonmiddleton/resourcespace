@@ -26,3 +26,5 @@ $lang["columnheader-last-found"]='Τελευταία εύρεση';
 $lang["plugin-rse_search_notifications-title"]='Ειδοποιήσεις Αναζήτησης';
 $lang["plugin-rse_search_notifications-desc"]='Ειδοποίηση χρήστη όταν γίνονται αλλαγές σε αποθηκευμένη αναζήτηση';
 $lang["search_notifications_watched_searches-tooltip"] = 'Ελέγξτε τις αποθηκευμένες αναζητήσεις σας';
+$lang["page-title_rse_search_notifications_setup"] = 'Ρύθμιση Πρόσθετου Ειδοποιήσεων Αναζήτησης';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Παρακολουθούμενες Αναζητήσεις';

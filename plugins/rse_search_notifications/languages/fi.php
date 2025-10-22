@@ -26,3 +26,5 @@ $lang["columnheader-last-found"]='Viimeksi löydetty';
 $lang["plugin-rse_search_notifications-title"]='Hakuilmoitukset';
 $lang["plugin-rse_search_notifications-desc"]='Ilmoita käyttäjälle, kun tallennettuun hakuun tulee muutoksia';
 $lang["search_notifications_watched_searches-tooltip"] = 'Hallitse tallennettuja hakuja';
+$lang["page-title_rse_search_notifications_setup"] = 'Aseta Hakuilmoitukset Laajennus';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Seuratut haut';

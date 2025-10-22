@@ -112,10 +112,10 @@ function SaveWorkflowAction(){
 
 if (isset($saveerror)) {
     if($saveerror) {
-        toast_notification('error', $lang['rse_workflow_action_check_fields']);
+        toast_notification(ToastNotificationType::Error, $lang['rse_workflow_action_check_fields']);
     }
     else {
-        toast_notification('success', $lang['saved']);
+        toast_notification(ToastNotificationType::Success, $lang['saved']);
     }
 }
 

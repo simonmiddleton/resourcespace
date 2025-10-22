@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'Teks / HTML';
 $lang["feedback_options-comma_separated"] = 'Pilihan: (dipisahkan dengan koma)';
 $lang["feedback_add_new_field"] = 'Tambah Medan Baru';
 $lang["feedback_back_to_plugin_manager"] = 'Kembali ke Pengurus Plugin';
+
+$lang["page-title_feedback_feedback"] = 'Hantar Maklum Balas';
+$lang["page-title_feedback_setup"] = 'Tetapan Plugin';

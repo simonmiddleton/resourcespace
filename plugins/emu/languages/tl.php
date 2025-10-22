@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'Walang tinukoy na resource ID!';
 $lang["emu_upload_nodata"] = 'Walang EMu na data na natagpuan para sa IRN na ito:';
 $lang["emu_nodata_returned"] = 'Walang nahanap na EMu na data para sa tinukoy na IRN.';
 $lang["emu_createdfromemu"] = 'Gawa mula sa EMU plugin';
+
+$lang["page-title_emu_emu_object_details"] = 'Detalye ng EMu Objeto';
+$lang["page-title_emu_setup"] = 'I-set up ang Plugin';

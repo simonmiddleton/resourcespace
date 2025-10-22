@@ -25,3 +25,6 @@ $lang["embedslideshow_directlinkopen"] = '直接リンクを開く（新しい�
 $lang["embedslideshow_dynamic_size"] = 'プレイヤーサイズに基づくプレビューのダイナミックリサイズ？';
 $lang["plugin-embedslideshow-title"] = 'スライドショーを埋め込む';
 $lang["plugin-embedslideshow-desc"] = 'リモートサイトで埋め込み可能なコレクションスライドショーのHTMLを生成する機能を提供します';
+
+$lang["page-title_embedslideshow_setup"] = 'スライドショー埋め込みプラグインの設定';
+$lang["page-title_embedslideshow_viewer"] = 'スライドショーを埋め込む';

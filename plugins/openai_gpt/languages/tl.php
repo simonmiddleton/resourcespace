@@ -19,3 +19,4 @@ $lang["property-gpt_source"] = 'GPT Source';
 $lang["openai_gpt_language"] = 'Wika ng output';
 $lang["openai_gpt_language_user"] = 'Wika ng kasalukuyang gumagamit';
 $lang["openai_gpt_overwrite_data"] = 'Isusulat muli ang umiiral na data sa mga nakatakdang larangan?';
+$lang["page-title_openai_gpt_setup"] = 'I-set up ang OpenAI GPT Plugin';

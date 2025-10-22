@@ -38,3 +38,5 @@ $lang["action_dates_email_range_state"] = 'Die folgenden Ressourcen werden ihren
 $lang["action_dates_email_range"] = 'Die folgenden Ressourcen werden innerhalb von [days_min] bis [days_max] Tagen eingeschränkt und/oder den Status ändern.';
 $lang["plugin-action_dates-title"] = 'Aktionsdaten';
 $lang["plugin-action_dates-desc"] = 'Ermöglicht die geplante Löschung oder Einschränkung von Ressourcen basierend auf Datumsfeldern';
+
+$lang["page-title_action_dates_setup"] = 'Aktionstermine-Plugin einrichten';

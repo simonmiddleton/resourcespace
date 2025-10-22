@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"] = 'Punan ng puti';
 $lang["openai_image_edit__mode_black"] = 'Punan ng itim';
 $lang["openai_image_edit__mode_clone"] = 'Kopyahin ang punan';
 $lang["openai_image_edit__creating_new_resource"] = 'Paglikha ng bagong yaman';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Kumuha ng PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI I-save ang Alternatibo';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI I-save ang Bago';

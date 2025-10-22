@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = '已通过Falcon存档的资源';
 $lang["falcon_link_error_falcon_check_tags"] = '请检查描述和标签是否为空。';
 $lang["plugin-falcon_link-title"] = '猎鹰链接';
 $lang["plugin-falcon_link-desc"] = '[高级] 发布资源到Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = '设置 Falcon Link 插件';

@@ -16,3 +16,5 @@ $lang["are_available-1"]='سيتم تحويلها';
 $lang["are_available-0"]='سيتم تحويلها';
 $lang["plugin-format_chooser-title"]='محدد التنسيق';
 $lang["plugin-format_chooser-desc"]='يسمح لك باختيار تنسيقات مختلفة عند تنزيل الملفات التي يتم إنشاؤها في الحال.';
+$lang["page-title_format_chooser_convert"] = 'محدد التنسيق';
+$lang["page-title_format_chooser_setup"] = 'إعداد مكون اختيار التنسيق';

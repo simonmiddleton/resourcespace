@@ -14,3 +14,5 @@ $lang["downloadformat"]='ਡਾਊਨਲੋਡ ਫਾਰਮੈਟ';
 $lang["are_available-2"]='ਤਬਦੀਲ ਕੀਤਾ ਜਾਵੇਗਾ';
 $lang["are_available-1"]='ਤਬਦੀਲ ਕੀਤਾ ਜਾਵੇਗਾ';
 $lang["are_available-0"]='ਤਬਦੀਲ ਕੀਤਾ ਜਾਵੇਗਾ';
+$lang["page-title_format_chooser_convert"] = 'ਫਾਰਮੈਟ ਚੋਣਨ ਵਾਲਾ';
+$lang["page-title_format_chooser_setup"] = 'ਫਾਰਮੈਟ ਚੁਣਨ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

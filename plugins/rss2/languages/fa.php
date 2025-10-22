@@ -9,3 +9,6 @@ $lang["new_content_rss_feed"]='فید RSS محتوای جدید';
 $lang["subject"]='موضوع';
 $lang["rss_feed_for_search_filter"]='ایجاد فید RSS برای این جستجو';
 $lang["filtered_resource_update_for"]='به‌روزرسانی منبع فیلتر شده برای جستجو [%search%]';
+$lang["page-title_rss2_rssfeed"] = 'خوراک RSS';
+$lang["page-title_rss2_rssfilter"] = 'فیلتر RSS';
+$lang["page-title_rss2_setup"] = 'تنظیم افزونه RSS';

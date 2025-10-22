@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Generwch is-deitlau a chynnwys fel lawrlwythiadau 
 $lang["whisper_subtitles_name"] = 'Isdeitlau a gynhelir yn awtomatig';
 $lang["whisper_transcript"] = 'Generwch ffeil drwydded a chynnwys fel lawrlwythiadau ffeiliau amgen';
 $lang["whisper_transcript_name"] = 'Trawsgrifiad a gynhelir yn awtomatig';
+
+$lang["page-title_whisper_setup"] = 'Sefydlu Plugin Whisper';

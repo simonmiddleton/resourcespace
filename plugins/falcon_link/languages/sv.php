@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'Arkiverad resurs via Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Vänligen kontrollera att beskrivningen och taggarna inte är tomma';
 $lang["plugin-falcon_link-title"] = 'Falconlänk';
 $lang["plugin-falcon_link-desc"] = 'Publicera resurser till Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Installera Falcon Link-plugin';

@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Dalam proses',
   2 => 'Selesai',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Mengelola Arsip';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Arsip Offline';
+$lang["page-title_offline_archive_pending_restore"] = 'Pemulihan Sumber Daya Tertunda';
+$lang["page-title_offline_archive_restore_request"] = 'Permintaan Pemulihan Sumber Daya';
+$lang["page-title_offline_archive_restore"] = 'Pulihkan Arsip';
+$lang["page-title_offline_archive_setup"] = 'Pengaturan Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Lihat Arsip Sumber';
+$lang["page-title_offline_archive_view_pending"] = 'Lihat Arsip yang Menunggu';

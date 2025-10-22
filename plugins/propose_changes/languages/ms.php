@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"] = 'Cadangan suntingan';
 $lang["actions_propose_changes"] = 'Tunjukkan kepada saya perubahan yang dicadangkan oleh pengguna dalam senarai tindakan saya';
 $lang["propose_changes_emailreviewed"] = '[img_headerlogo]<br />Perubahan yang dicadangkan telah disemak.<br/>[changesummary]<br/>Klik di bawah untuk menyemak perubahan<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"] = '[img_headerlogo]<br />Perubahan yang dicadangkan telah dihantar.<br/>[changesummary]<br/>Klik di bawah untuk menyemak perubahan<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'Cadangkan Perubahan';
+$lang["page-title_propose_changes_setup"] = 'Tetapkan Plugin Cadangan Perubahan';

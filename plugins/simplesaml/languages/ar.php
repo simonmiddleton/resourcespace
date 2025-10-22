@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'تحديثات بيانات التعري
 $lang["simplesaml_metadata_warning"] = 'لم يتم تحديث البيانات الوصفية منذ %date%';
 $lang["simplesaml_metadata_invalid"] = 'بيانات التعريف الخاصة بمزود الهوية غير صالحة أو غير متاحة';
 $lang["simplesaml_admin_password_reset"] = 'إعادة تعيين كلمة مرور مسؤول موقع اختبار SimpleSAML (اختياري)';
+$lang["page-title_simplesaml_about"] = 'SAML حول';
+$lang["page-title_simplesaml_generate_sp_config"] = 'إنشاء تكوين SP';
+$lang["page-title_simplesaml_setup"] = 'إعداد مكون Simple SAML';

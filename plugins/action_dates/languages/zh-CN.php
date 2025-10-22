@@ -38,3 +38,5 @@ $lang["weekday-5"] = '星期五';
 $lang["weekday-6"] = '星期六';
 $lang["plugin-action_dates-title"] = '操作日期';
 $lang["plugin-action_dates-desc"] = '启用基于日期字段的资源定期删除或限制';
+
+$lang["page-title_action_dates_setup"] = '设置操作日期插件';

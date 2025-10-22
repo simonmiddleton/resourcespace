@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"] = 'Sumber telah diterbitkan ke Vimeo. 
 $lang["vimeo_publish_account_options"] = 'Pilihan akaun Vimeo';
 $lang["vimeo_publish_allow_user_accounts"] = 'Benarkan pengguna untuk menerbitkan ke akaun Vimeo mereka sendiri. Jika tidak, akses ke satu akaun Vimeo mesti dikonfigurasikan di bawah';
 $lang["vimeo_publish_set_account"] = 'Tetapkan akaun Vimeo';
+$lang["page-title_vimeo_publish_setup"] = 'Tetapkan Plugin Penerbitan Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Terbitkan ke Vimeo';

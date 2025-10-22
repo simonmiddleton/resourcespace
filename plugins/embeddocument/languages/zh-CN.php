@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = '远程文档查看器资源类�
 $lang["embeddocument_embed_share"] = '嵌入文档';
 $lang["plugin-embeddocument-title"] = '嵌入文档';
 $lang["plugin-embeddocument-desc"] = '提供生成嵌入远程站点的文档预览HTML的功能。';
+
+$lang["page-title_embeddocument_setup"] = '设置嵌入文档插件';
+$lang["page-title_embeddocument_viewer"] = '嵌入文档查看器';

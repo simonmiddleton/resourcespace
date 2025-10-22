@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'ਚੱਲ ਰਹਿਆ',
   2 => 'ਪੂਰਾ ਹੋ ਗਿਆ',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'ਆਰਕਾਈਵਾਂ ਦਾ ਪ੍ਰਬੰਧਨ';
+$lang["page-title_offline_archive_offline_archive_action"] = 'ਆਫਲਾਈਨ ਆਰਕਾਈਵ';
+$lang["page-title_offline_archive_pending_restore"] = 'ਲੰਬਿਤ ਸਰੋਤ ਪੁਨਰਸਥਾਪਨਾ';
+$lang["page-title_offline_archive_restore_request"] = 'ਸਾਧਨ ਮੁੜ ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਬੇਨਤੀ';
+$lang["page-title_offline_archive_restore"] = 'ਆਰਕਾਈਵ ਨੂੰ ਮੁੜ ਪ੍ਰਾਪਤ ਕਰੋ';
+$lang["page-title_offline_archive_setup"] = 'ਸੈਟਅਪ ਪਲੱਗਇਨ';
+$lang["page-title_offline_archive_view_archives"] = 'ਸੰਸਾਧਨ ਆਰਕਾਈਵ ਦੇਖੋ';
+$lang["page-title_offline_archive_view_pending"] = 'ਲੰਬਿਤ ਆਰਕਾਈਵ ਵੇਖੋ';

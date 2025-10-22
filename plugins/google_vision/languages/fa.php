@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"]='Google Vision فقط کلمات کلی
 $lang["google_vision_translation_api_key"]='فعال‌سازی ترجمه کلمات کلیدی Vision از طریق API ترجمه با وارد کردن یک کلید API معتبر گوگل';
 $lang["google_vision_translation_languages"]='لیست کدهای زبان جدا شده با کاما، به عنوان مثال "no,es"';
 $lang["google_vision_translation_keep_english"]='آیا کلمات کلیدی انگلیسی اصلی را نگه دارید؟';
+$lang["page-title_google_vision_process_existing"] = 'پردازش موجود Google Vision';
+$lang["page-title_google_vision_setup"] = 'نصب افزونه Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'آزمون بینایی گوگل';
+$lang["page-title_google_vision_test"] = 'آزمون بینایی گوگل';

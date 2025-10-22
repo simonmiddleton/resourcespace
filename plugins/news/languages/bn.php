@@ -13,3 +13,6 @@ $lang["news_nonewmessages"]='কোনো নতুন বার্তা নে
 $lang["title"]='সর্বশেষ সংবাদ...';
 $lang["title-too-long"]='শিরোনাম ক্ষেত্রটি অনুমোদিত ৫০ অক্ষরের চেয়ে দীর্ঘ।';
 $lang["news_manage-tooltip"] = 'নিউজ আইটেম যোগ করুন, সম্পাদনা করুন বা মুছে ফেলুন';
+$lang["page-title_news_news_content_edit"] = 'সংবাদ সামগ্রী সম্পাদনা করুন';
+$lang["page-title_news_news_edit"] = 'সংবাদ সম্পাদনা';
+$lang["page-title_news_news"] = 'সংবাদ';

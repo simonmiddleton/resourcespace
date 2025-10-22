@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='GPT Kilde';
 $lang["openai_gpt_language"] = 'Udgivelsessprog';
 $lang["openai_gpt_language_user"] = 'Sproget for den nuværende bruger';
 $lang["openai_gpt_overwrite_data"] = 'Overskriv eksisterende data i konfigurerede felter?';
+$lang["page-title_openai_gpt_setup"] = 'Opsæt OpenAI GPT-plugin';

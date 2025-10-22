@@ -19,3 +19,6 @@ $lang["feedback_options-comma_separated"] = 'ตัวเลือก: (คั�
 $lang["feedback_add_new_field"] = 'เพิ่มฟิลด์ใหม่';
 $lang["feedback_back_to_plugin_manager"] = 'กลับไปที่ผู้จัดการปลั๊กอิน';
 $lang["feedback_pop-up_prompt_box_text"] = 'ข้อความกล่องพร้อมท์ป๊อปอัพ';
+
+$lang["page-title_feedback_feedback"] = 'ส่งข้อเสนอแนะ';
+$lang["page-title_feedback_setup"] = 'ตั้งค่า Plugin';

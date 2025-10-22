@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Brändiohjeiden konfigurointi';
 $lang["brand_guidelines_fallback_size_thm"] = 'Pikkukuvan asettelun varakuvan koko';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Puolileveyden asettelun varakuvan koko';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Täysleveän asettelun varakuva koko';
+
+$lang["page-title_brand_guidelines_content"] = 'Hallitse brändiohjeiden sisältöä';
+$lang["page-title_brand_guidelines_guidelines"] = 'Brändiohjeet';
+$lang["page-title_brand_guidelines_setup"] = 'Aseta brändiohjeet laajennus';
+$lang["page-title_brand_guidelines_toc"] = 'Muokkaa sisältöä';

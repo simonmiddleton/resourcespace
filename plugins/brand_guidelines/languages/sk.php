@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Konfigurácia smerníc značky';
 $lang["brand_guidelines_fallback_size_thm"] = 'Veľkosť obrázka pre zobrazenie miniatúr ako záložný variant';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Polovična širina postavitve nadomestna velikost slike';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Veľkosť náhradného obrázka pre rozloženie na celú šírku';
+
+$lang["page-title_brand_guidelines_content"] = 'Spravovať obsah pokynov značky';
+$lang["page-title_brand_guidelines_guidelines"] = 'Smernice pre značku';
+$lang["page-title_brand_guidelines_setup"] = 'Nastavte plugin pre smernice značky';
+$lang["page-title_brand_guidelines_toc"] = 'Upraviť obsah';

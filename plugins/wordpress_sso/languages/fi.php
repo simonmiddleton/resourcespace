@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Klikkaa tästä yrittääksesi kirjautua uudelleen
 $lang["origin_wordpress_sso"]='Wordpress SSO -liitännäinen';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Mahdollistaa kertakirjautumisen Wordpress-asennuksen kanssa';
+$lang["page-title_wordpress_sso_logout"] = 'SSO-uloskirjautuminen';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Ei käyttäjää';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Aseta Wordpress SSO -laajennus';

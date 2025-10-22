@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'リモート文書ビューア�
 $lang["embeddocument_embed_share"] = 'ドキュメントを埋め込む';
 $lang["plugin-embeddocument-title"] = 'ドキュメントを埋め込む';
 $lang["plugin-embeddocument-desc"] = 'リモートサイトで埋め込み可能なドキュメントプレビューのHTMLを生成する機能を提供します。';
+
+$lang["page-title_embeddocument_setup"] = 'ドキュメント埋め込みプラグインの設定';
+$lang["page-title_embeddocument_viewer"] = 'ドキュメントビューワーを埋め込む';

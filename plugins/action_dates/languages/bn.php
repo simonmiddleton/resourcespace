@@ -36,3 +36,5 @@ $lang["weekday-3"] = 'বুধবার';
 $lang["weekday-4"] = 'বৃহস্পতিবার';
 $lang["weekday-5"] = 'শুক্রবার';
 $lang["weekday-6"] = 'শনিবার';
+
+$lang["page-title_action_dates_setup"] = 'অ্যাকশন তারিখ প্লাগইন সেটআপ করুন';

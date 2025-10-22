@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Bieżący dzień';
 $lang["totp_date_binding_w"] = 'Bieżący tydzień (zaczynający się w poniedziałek)';
 $lang["totp_date_binding_m"] = 'Bieżący miesiąc';
 $lang["totp_date_binding_y"] = 'Bieżący rok';
+$lang["page-title_totp_setup"] = 'Konfiguracja wtyczki TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

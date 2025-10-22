@@ -14,3 +14,5 @@ $lang['antivirus_moving_file'] = 'Moving resource [%resource_id%] to archive sta
 
 // Errors:
 $lang['antivirus_av_not_setup_error'] = 'Antivirus path not set up!';
+
+$lang["page-title_antivirus_setup"] = "Setup Antivirus Plugin";

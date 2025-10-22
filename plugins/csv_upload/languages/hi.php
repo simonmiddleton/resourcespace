@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV फ़ाइल में BOM है 
 $lang["csv_upload_validating"] = 'मान्यकरण';
 $lang["csv_upload_processing"] = 'प्रसंस्करण';
 $lang["processing_batch_edit_save"] = 'पंक्ति [row_number] कुल [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'CSV अपलोड करें';

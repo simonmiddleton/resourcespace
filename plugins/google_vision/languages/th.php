@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"]='Google Vision จะส่งคืน
 $lang["google_vision_translation_api_key"]='เปิดใช้งานการแปลคำหลัก Vision ผ่าน API การแปลโดยการป้อนคีย์ API ของ Google ที่ถูกต้อง';
 $lang["google_vision_translation_languages"]='รายการรหัสภาษาแยกด้วยเครื่องหมายจุลภาค เช่น "no,es"';
 $lang["google_vision_translation_keep_english"]='เก็บคำหลักภาษาอังกฤษต้นฉบับไว้ไหม?';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision Process Existing';
+$lang["page-title_google_vision_setup"] = 'ตั้งค่า Google Vision Plugin';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

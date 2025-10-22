@@ -16,3 +16,4 @@ $lang['grant_edit_delete_user']="Bekräfta borttagning av utökad åtkomst för"
 $lang["grant_edit_group_list"]='Nuvarande grupper med ytterligare redigeringsåtkomst';
 $lang["plugin-grant_edit-title"]='Bevilja Redigering';
 $lang["plugin-grant_edit-desc"]='Gör det möjligt för administratörer att ge användare tillfällig full redigeringsåtkomst till resurser';
+$lang["page-title_grant_edit_setup"] = 'Ställ in Grant Edit Plugin';

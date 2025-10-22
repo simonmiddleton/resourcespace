@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Mislukt!';
 $lang["bookend-could-not-open-file"]='Fout - bestand kon niet worden geopend!';
 $lang["plugin-video_bookend-title"]='Video Boeksteun';
 $lang["plugin-video_bookend-desc"]='Voegt de mogelijkheid toe om een video te downloaden met een titel en eindgrafiek';
+$lang["page-title_video_bookend_bookend"] = 'Video Boeksteun';

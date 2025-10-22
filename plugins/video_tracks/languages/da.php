@@ -28,3 +28,5 @@ $lang["video_tracks_save_alt_not_perm"]='Kan ikke gemme alternativ uden tilladel
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='VIGTIGT! Video Tracks plugin har udfaset indstillingerne for outputformater. De kan kun indstilles i config.php. Plugin vil ikke fungere som forventet, før konfigurationsindstillingen er kopieret over. Venligst kopier følgende:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Videospor';
 $lang["plugin-video_tracks-desc"]='[Tilføjet] Tilføj understøttelse af forskellige lyd- og undertekstmuligheder for videoressourcer';
+$lang["page-title_video_tracks_create_video"] = 'Opret video';
+$lang["page-title_video_tracks_setup"] = 'Opsæt Video Tracks Plugin';

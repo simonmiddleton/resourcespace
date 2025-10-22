@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Probíhá',
   2 => 'Dokončeno',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Spravovat archivy';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Offline archiv';
+$lang["page-title_offline_archive_pending_restore"] = 'Čekající obnova zdroje';
+$lang["page-title_offline_archive_restore_request"] = 'Žádost o obnovení zdroje';
+$lang["page-title_offline_archive_restore"] = 'Obnovit archiv';
+$lang["page-title_offline_archive_setup"] = 'Nastavení pluginu';
+$lang["page-title_offline_archive_view_archives"] = 'Zobrazit archivy zdrojů';
+$lang["page-title_offline_archive_view_pending"] = 'Zobrazit čekající archivy';

@@ -13,3 +13,5 @@ $lang["csv_user_import_condition2"] = 'Mae\'n rhaid i\'r ffeil CSV gael rhestr b
 $lang["csv_user_import_condition3"] = 'Colofn(au) a fydd yn cynnwys gwerthoedd sy\'n cynnwys comas( , ), gwnewch yn siŵr eich bod yn eu fformatio fel math testun fel nad oes angen i chi ychwanegu dyfynodau (""). Pan fyddwch yn arbed fel ffeil .csv, gwnewch yn siŵr i wirio\'r opsiwn o ddyfynnu celloedd math testun';
 $lang["csv_user_import_condition4"] = 'Colofnau a ganiateir: *enw defnyddiwr, *ebost, cyfrinair, enw llawn, dyddiad dod i ben y cyfrif, sylwadau, cyfyngiad ip, iaith. Nodiad: mae meysydd gorfodol wedi\'u nodi gyda *';
 $lang["csv_user_import_condition5"] = 'Bydd iaith y defnyddiwr yn dychwelyd i\'r un a osodwyd gan ddefnyddio\'r opsiwn config "$defaultlanguage" os na chaiff y golofn lang ei chanfod nac os nad oes ganddi werth.';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Mewnos Defnyddiwr CSV';

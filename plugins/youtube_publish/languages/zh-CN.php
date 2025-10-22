@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='上传到YouTube时要使用的块大小（MB）';
 $lang["youtube_publish_add_anchor"]='将锚点标签添加到YouTube URL元数据字段中保存？';
 $lang["plugin-youtube_publish-title"]='YouTube 发布';
 $lang["plugin-youtube_publish-desc"]='将视频资源发布到配置的YouTube账户。';
+$lang["page-title_youtube_publish_setup"] = '设置插件';
+$lang["page-title_youtube_publish_youtube_upload"] = '将资源发布到YouTube';

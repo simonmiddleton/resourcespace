@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Pokaż funkcjonalność AI Faces na stronie widoku.'
 $lang["faces_count_faces"] = 'Całkowita liczba wykrytych twarzy';
 $lang["faces_count_missing"] = 'Obrazy do przetworzenia';
 $lang["faces-tag-field-not-set"] = 'Pole tagowania nie jest skonfigurowane.';
+
+$lang["page-title_faces_setup"] = 'Konfiguracja wtyczki Faces';

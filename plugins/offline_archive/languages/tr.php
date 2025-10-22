@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Devam ediyor',
   2 => 'Tamamlandı',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Arşivleri Yönetmek';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Çevrimdışı Arşiv';
+$lang["page-title_offline_archive_pending_restore"] = 'Bekleyen Kaynak Geri Yükleme';
+$lang["page-title_offline_archive_restore_request"] = 'Kaynak Geri Yükleme Talebi';
+$lang["page-title_offline_archive_restore"] = 'Arşivi Geri Yükle';
+$lang["page-title_offline_archive_setup"] = 'Eklenti Ayarları';
+$lang["page-title_offline_archive_view_archives"] = 'Kaynak Arşivlerini Görüntüle';
+$lang["page-title_offline_archive_view_pending"] = 'Bekleyen Arşivleri Görüntüle';

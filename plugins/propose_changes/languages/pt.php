@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />As suas alteraçõ
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Foram submetidas alterações propostas.<br/>[changesummary]<br/>Clique abaixo para revisar as alterações<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Propor Alterações';
 $lang["plugin-propose_changes-desc"]='Adiciona a opção para permitir que os usuários proponham alterações de metadados sem acesso de edição';
+$lang["page-title_propose_changes_propose_changes"] = 'Propor Alterações';
+$lang["page-title_propose_changes_setup"] = 'Configurar Plugin de Proposta de Alterações';

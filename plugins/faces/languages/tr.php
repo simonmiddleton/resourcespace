@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Görüntü sayfasında AI Faces işlevselliğini gö
 $lang["faces_count_faces"] = 'Toplam tespit edilen yüzler';
 $lang["faces_count_missing"] = 'İşlenecek görüntüler';
 $lang["faces-tag-field-not-set"] = 'Etiketleme alanı yapılandırılmamış.';
+
+$lang["page-title_faces_setup"] = 'Yüzler Eklentisini Ayarla';

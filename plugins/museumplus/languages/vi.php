@@ -48,3 +48,6 @@ $lang["museumplus_error_unknown_type_saved_config"] = '\'museumplus_modules_save
 $lang["museumplus_error_invalid_association"] = 'Liên kết module không hợp lệ. Vui lòng đảm bảo rằng Module và/hoặc ID bản ghi chính xác đã được nhập!';
 $lang["museumplus_id_returns_multiple_records"] = 'Đã tìm thấy nhiều bản ghi - vui lòng nhập ID kỹ thuật thay thế';
 $lang["museumplus_error_module_no_field_maps"] = 'Không thể đồng bộ dữ liệu từ MuseumPlus. Lý do: mô-đun \'%name\' không có cấu hình ánh xạ trường.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'Chi tiết đối tượng MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'Cài đặt mô-đun MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Cài đặt Plugin MuseumPlus';

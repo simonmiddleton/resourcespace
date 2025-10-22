@@ -43,3 +43,5 @@ $lang['vimeo_publish_account_options']      = "Vimeo account options";
 $lang["vimeo_publish_allow_user_accounts"]  = "Allow users to publish to their own Vimeo accounts. If false then access to a single Vimeo account must be configured below";
 $lang['vimeo_publish_set_account']          = 'Set Vimeo account';
 
+$lang["page-title_vimeo_publish_setup"]     = "Setup Vimeo Publish Plugin";
+$lang["page-title_vimeo_publish_vimeo_api"] = "Publish to Vimeo";

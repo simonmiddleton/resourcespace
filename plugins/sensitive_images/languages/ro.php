@@ -7,3 +7,4 @@ $lang["sensitive_images_field"]='Câmpul de metadate care conține motivul pentr
 $lang["sensitive_images_blur_level"]='Nivel de estompare a imaginii sensibile<br>(1=cel mai mic, 6=cel mai mare)';
 $lang["plugin-sensitive_images-title"]='Estomparea imaginilor sensibile';
 $lang["plugin-sensitive_images-desc"]='Estompează imaginile marcate ca sensibile, utilizatorul putând face clic pentru a le clarifica.';
+$lang["page-title_sensitive_images_setup"] = 'Configurare Plugin pentru Imagini Sensibile';

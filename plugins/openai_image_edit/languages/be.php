@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"] = 'Запоўніць белым';
 $lang["openai_image_edit__mode_black"] = 'Запоўніць чорным';
 $lang["openai_image_edit__mode_clone"] = 'Клануй запаўненне';
 $lang["openai_image_edit__creating_new_resource"] = 'Стварэнне новага рэсурсу';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Захаваць Альтэрнатыва';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Захаваць Новы';

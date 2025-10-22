@@ -19,3 +19,4 @@ $lang["property-gpt_source"]='جی پی ٹی ماخذ';
 $lang["openai_gpt_language"] = 'آؤٹ پٹ زبان';
 $lang["openai_gpt_language_user"] = 'موجودہ صارف کی زبان';
 $lang["openai_gpt_overwrite_data"] = 'کیا ترتیب دیے گئے فیلڈز میں موجودہ ڈیٹا کو اوور رائٹ کریں؟';
+$lang["page-title_openai_gpt_setup"] = 'OpenAI GPT پلگ ان سیٹ اپ کریں';

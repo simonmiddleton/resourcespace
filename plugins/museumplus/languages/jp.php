@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='複数のレコードが見つ�
 $lang["museumplus_error_module_no_field_maps"]='MuseumPlusからデータを同期できません。理由：モジュール「%name」にフィールドマッピングが設定されていません。';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='[高度] MuseumPlusのREST API (MpRIA)を使用してリソースメタデータを抽出することを許可します。';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus オブジェクト詳細';
+$lang["page-title_museumplus_setup_module"] = 'MuseumPlusモジュールの設定';
+$lang["page-title_museumplus_setup"] = 'MuseumPlusプラグインの設定';

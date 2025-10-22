@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'متن / ایچ ٹی ایم ایل:';
 $lang["feedback_options-comma_separated"] = 'اختیارات: (کاما سے جدا)';
 $lang["feedback_add_new_field"] = 'نیا فیلڈ شامل کریں';
 $lang["feedback_back_to_plugin_manager"] = 'پلگ ان مینیجر پر واپس جائیں';
+
+$lang["page-title_feedback_feedback"] = 'رائے جمع کریں';
+$lang["page-title_feedback_setup"] = 'سیٹ اپ پلگ ان';

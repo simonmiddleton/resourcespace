@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='مصدر GPT';
 $lang["openai_gpt_language"] = 'لغة الإخراج';
 $lang["openai_gpt_language_user"] = 'لغة المستخدم الحالي';
 $lang["openai_gpt_overwrite_data"] = 'هل ترغب في الكتابة فوق البيانات الموجودة في الحقول المكونة؟';
+$lang["page-title_openai_gpt_setup"] = 'إعداد مكون OpenAI GPT';

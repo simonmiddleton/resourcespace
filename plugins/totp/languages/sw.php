@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Siku ya leo';
 $lang["totp_date_binding_w"] = 'Wiki hii ya sasa (ikianza Jumatatu)';
 $lang["totp_date_binding_m"] = 'Mwezi wa sasa';
 $lang["totp_date_binding_y"] = 'Mwaka wa sasa';
+$lang["page-title_totp_setup"] = 'Weka Plugin ya TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

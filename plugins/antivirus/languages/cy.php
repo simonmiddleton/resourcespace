@@ -9,3 +9,5 @@ $lang["antivirus_action_quarantine"] = 'Symud i\'r cyfyngiad';
 $lang["antivirus_deleting_file"] = 'Dileu adnodd [%resource_id%] a unrhyw ffeiliau cysylltiedig!';
 $lang["antivirus_moving_file"] = 'Yn symud adnodd [%resource_id%] i gyflwr archif [%archive_state%]';
 $lang["antivirus_av_not_setup_error"] = 'Nid yw\'r llwybr Antifirus wedi\'i sefydlu!';
+
+$lang["page-title_antivirus_setup"] = 'Sefydlu Plugin Antifirus';

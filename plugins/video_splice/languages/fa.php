@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"]='قادر به انجام صادرات ن
 $lang["video_splice_incorrect_quantity"]='یک منبع معتبر از زمان بارگذاری این صفحه یا حذف شده یا به مجموعه اضافه شده است. لطفاً دوباره تلاش کنید.';
 $lang["video_splice_createdfromvideosplice"]='ایجاد شده از افزونه برش ویدئو';
 $lang["video_splice_error_invalid_action"]='خطا: اقدام نامعتبر';
+$lang["page-title_video_splice_setup"] = 'نصب افزونه ویدیو اسپلیت';
+$lang["page-title_video_splice_splice"] = 'ادغام ویدیو';
+$lang["page-title_video_splice_trim"] = 'برش ویدیو';

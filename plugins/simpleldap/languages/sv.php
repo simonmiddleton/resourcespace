@@ -52,3 +52,5 @@ $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Kontrollera inte FQDN för serv
 $lang["simpleldap_username"]='Användarnamn/Användar-DN';
 $lang["plugin-simpleldap-title"]='Enkel LDAP';
 $lang["plugin-simpleldap-desc"]='Enklare implementering av ldap-autentisering, riktad mot Active Directory men stöder även Oracle-katalog';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Testa LDAP-autentisering';
+$lang["page-title_simpleldap_setup"] = 'Konfigurera enkel LDAP-plugin';

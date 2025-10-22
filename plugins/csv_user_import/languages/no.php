@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Tillatte kolonner: *brukernavn, *epost, p
 $lang["csv_user_import_condition5"] = 'Språket til brukeren vil automatisk gå tilbake til det som er satt ved bruk av "$defaultlanguage" konfigurasjonsalternativet hvis språkkolonnen ikke finnes eller ikke har en verdi';
 $lang["plugin-csv_user_import-title"] = 'CSV-brukerimport';
 $lang["plugin-csv_user_import-desc"] = 'Gir mulighet til å importere en gruppe brukere basert på en forhåndsformatert CSV-fil';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'CSV Brukerimport';

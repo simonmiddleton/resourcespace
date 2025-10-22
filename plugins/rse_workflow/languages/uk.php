@@ -57,3 +57,11 @@ $lang["rse_workflow_bcc_admin"]='Повідомити системних адм�
 $lang["rse_workflow_manage_workflow-tooltip"] = 'Створити та керувати станами робочого процесу';
 $lang["rse_workflow_skip_required_fields"] = 'При переміщенні ресурсів до цього стану робочого процесу виключити перевірку обов\'язкових полів?';
 $lang["rse_workflow_state_change_failed_required_fields"] = 'Не вдалося змінити стан архіву на %%ARCHIVE%%. Відсутні метадані в обов\'язкових полях: %%FIELDS%%.';
+$lang["page-title_rse_workflow_batch_action"] = 'Дія пакетного робочого процесу';
+$lang["page-title_rse_workflow_edit_action"] = 'Редагувати дію робочого процесу';
+$lang["page-title_rse_workflow_edit_state"] = 'Редагувати стан робочого процесу';
+$lang["page-title_rse_workflow_edit_workflow_actions"] = 'Редагувати дії робочого процесу';
+$lang["page-title_rse_workflow_edit_workflow_states"] = 'Редагувати стани робочого процесу';
+
+$lang["page-title_rse_workflow_setup"] = 'Налаштування плагіна робочого процесу';
+$lang["page-title_rse_workflow_edit_workflow"] = 'Редагувати робочий процес';

@@ -19,3 +19,5 @@ $lang["vr_view_orig_image"]='ใช้ไฟล์ทรัพยากรต้
 $lang["vr_view_orig_video"]='ใช้ไฟล์ทรัพยากรต้นฉบับเป็นแหล่งสำหรับตัวอย่างวิดีโอหรือไม่?';
 $lang["vr_view_js_url"]='URL ไปยังไลบรารี javascript ของ VR View (จำเป็นเฉพาะเมื่อข้างต้นเป็นเท็จ) หากอยู่ในเซิร์ฟเวอร์เดียวกันให้ใช้เส้นทางสัมพัทธ์ เช่น /vrview/build/vrview.js';
 $lang["vr_view_projection_field"]='ฟิลด์ประเภทการฉายภาพ VR View';
+$lang["page-title_vr_view_download"] = 'การดู VR';
+$lang["page-title_vr_view_setup"] = 'ตั้งค่า VR View Plugin';

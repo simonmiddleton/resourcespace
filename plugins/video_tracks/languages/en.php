@@ -31,3 +31,6 @@ $lang['video_tracks_custom_video_formats_label'] = 'Custom formats';
 $lang['video_tracks_use_for_custom_video_formats_of_original_label'] = 'Allow the available file output options to be used to create custom video formats for the original file?';
 $lang['video_tracks_transcode_now_or_notify_me_label'] = 'Check to start the transcode now. If unchecked you will receive a notification when the file is ready';
 $lang['video_tracks_transcode_now_label'] = 'Transcode now';
+
+$lang["page-title_video_tracks_create_video"]   = "Create Video";
+$lang["page-title_video_tracks_setup"]          = "Setup Video Tracks Plugin";

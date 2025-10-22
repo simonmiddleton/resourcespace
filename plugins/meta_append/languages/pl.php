@@ -7,3 +7,4 @@ $lang["meta_append_configuration_date_format"]='Wybierz format daty - patrz <a h
 $lang["meta_append_configuration_prompt"]='Dołącz pole wyboru metadanych do pytania';
 $lang["plugin-meta_append-title"]='Meta Dodaj';
 $lang["plugin-meta_append-desc"]='Dodaj definiowalny przez użytkownika znacznik czasu i dzienny numer przesyłania (na użytkownika) do pola';
+$lang["page-title_meta_append_setup"] = 'Konfiguracja wtyczki Meta Append';

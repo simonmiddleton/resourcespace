@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Δημιουργία διανύσματος';
 $lang["clip_vector-statistics"] = 'Στατιστικά διανυσμάτων';
 $lang["clip-vector-cleanup"] = 'Διαγραφή ορφανών διανυσμάτων';
 $lang["clip-vector-cleanup-description"] = 'Αφαιρέστε τα διανύσματα που ανήκουν σε πόρους που δεν υπάρχουν πια ή δεν είναι ένας από τους παραπάνω επιλεγμένους τύπους πόρων';
+
+$lang["page-title_clip_search"] = 'AI Έξυπνη Αναζήτηση';
+$lang["page-title_clip_setup"] = 'Ρύθμιση Πρόσθετου CLIP';
+$lang["page-title_clip_webcam"] = 'Γεννήτρια Ετικετών Webcam';

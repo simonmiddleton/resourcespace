@@ -47,3 +47,6 @@ $lang["action-splice"]='Îmbinare';
 $lang["video_splice_error_invalid_action"]='Eroare: Acțiune invalidă';
 $lang["plugin-video_splice-title"]='Îmbinare video';
 $lang["plugin-video_splice-desc"]='Adaugă capacitatea de tăiere și îmbinare a videoclipurilor';
+$lang["page-title_video_splice_setup"] = 'Configurare Plugin Video Splice';
+$lang["page-title_video_splice_splice"] = 'Îmbină Video';
+$lang["page-title_video_splice_trim"] = 'Tăiați videoclipul';

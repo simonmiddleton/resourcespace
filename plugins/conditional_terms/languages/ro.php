@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Valoare';
 $lang["conditional_terms_plugin_misconfigured"] = 'Plugin-ul de termeni condiționali este configurat greșit';
 $lang["plugin-conditional_terms-title"] = 'Termeni condiționali';
 $lang["plugin-conditional_terms-desc"] = 'Permite afișarea condiționată a paginii de termeni la descărcare pe baza metadatelor resursei';
+
+$lang["page-title_conditional_terms_setup"] = 'Configurare plugin-ul Termeni condiționali';

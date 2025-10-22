@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Onyesha kazi ya AI Faces kwenye ukurasa wa maoni.';
 $lang["faces_count_faces"] = 'Jumla ya nyuso zilizogunduliwa';
 $lang["faces_count_missing"] = 'Picha za kushughulikia';
 $lang["faces-tag-field-not-set"] = 'Sehemu ya kuweka lebo haijawekwa sawa.';
+
+$lang["page-title_faces_setup"] = 'Weka Plugin za Uso';

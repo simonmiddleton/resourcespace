@@ -15,3 +15,6 @@ $lang["title-too-long"]='제목 필드는 허용된 50자보다 깁니다';
 $lang["plugin-news-title"]='뉴스';
 $lang["plugin-news-desc"]='홈페이지 뉴스 항목 추가';
 $lang["news_manage-tooltip"] = '뉴스 항목 추가, 편집 또는 삭제';
+$lang["page-title_news_news_content_edit"] = '뉴스 콘텐츠 편집';
+$lang["page-title_news_news_edit"] = '뉴스 편집';
+$lang["page-title_news_news"] = '뉴스';

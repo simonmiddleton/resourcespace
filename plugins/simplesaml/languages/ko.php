@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'SimpleSAML 메타데이터 업데이트'
 $lang["simplesaml_metadata_warning"] = '메타데이터가 %date% 이후로 업데이트되지 않았습니다';
 $lang["simplesaml_metadata_invalid"] = 'IdP 메타데이터가 유효하지 않거나 사용할 수 없습니다';
 $lang["simplesaml_admin_password_reset"] = '간단한 SAML 테스트 사이트 관리자 비밀번호 재설정 (선택 사항)';
+$lang["page-title_simplesaml_about"] = 'SAML 정보';
+$lang["page-title_simplesaml_generate_sp_config"] = 'SP 구성 생성';
+$lang["page-title_simplesaml_setup"] = '간단한 SAML 플러그인 설정';

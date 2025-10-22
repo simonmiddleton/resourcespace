@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='GPT Bron';
 $lang["openai_gpt_language"] = 'Uitvoertaal';
 $lang["openai_gpt_language_user"] = 'De taal van de huidige gebruiker';
 $lang["openai_gpt_overwrite_data"] = 'Overschrijven van bestaande gegevens in geconfigureerde velden?';
+$lang["page-title_openai_gpt_setup"] = 'Instellen OpenAI GPT Plugin';

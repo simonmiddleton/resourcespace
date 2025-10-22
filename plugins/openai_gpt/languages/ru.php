@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='Источник GPT';
 $lang["openai_gpt_language"] = 'Язык вывода';
 $lang["openai_gpt_language_user"] = 'Язык текущего пользователя';
 $lang["openai_gpt_overwrite_data"] = 'Перезаписать существующие данные в настроенных полях?';
+$lang["page-title_openai_gpt_setup"] = 'Настройка плагина OpenAI GPT';

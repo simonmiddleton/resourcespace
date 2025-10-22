@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Вы решили не р
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Вам необходимо принять использование файлов cookie перед доступом к системе.';
 $lang["plugin-cookies_notification-title"] = 'Уведомление о файлах cookie';
 $lang["plugin-cookies_notification-desc"] = 'Добавляет возможность уведомлять пользователей о том, как ResourceSpace может использовать файлы cookie для отслеживания активности пользователей, показывая сообщение в заголовке';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Выбор файлов cookie';
+$lang["page-title_cookies_notification_setup"] = 'Настройка плагина уведомления о куки';

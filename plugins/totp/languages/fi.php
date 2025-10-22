@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Nykyinen päivä';
 $lang["totp_date_binding_w"] = 'Nykyinen viikko (alkaen maanantaista)';
 $lang["totp_date_binding_m"] = 'Nykyinen kuukausi';
 $lang["totp_date_binding_y"] = 'Nykyinen vuosi';
+$lang["page-title_totp_setup"] = 'Aseta TOTP-laajennus';
+$lang["page-title_totp_totp"] = 'TOTP';

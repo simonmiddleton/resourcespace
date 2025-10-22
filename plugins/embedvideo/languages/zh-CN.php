@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = '视频资源类型';
 $lang["embedvideo_share"] = '嵌入视频';
 $lang["plugin-embedvideo-title"] = '嵌入视频';
 $lang["plugin-embedvideo-desc"] = '提供生成嵌入远程网站视频的HTML功能。';
+
+$lang["page-title_embedvideo_setup"] = '设置嵌入视频插件';

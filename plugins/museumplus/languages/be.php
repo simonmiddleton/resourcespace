@@ -51,3 +51,6 @@ $lang["museumplus_error_unknown_type_saved_config"] = '\'museumplus_modules_save
 $lang["museumplus_error_invalid_association"] = 'Неправільная асацыяцыя модуля(яў). Калі ласка, пераканайцеся, што правільны модуль і/або ID запісу былі ўведзены!';
 $lang["museumplus_id_returns_multiple_records"] = 'Знойдзена некалькі запісаў - калі ласка, увядзіце тэхнічны ID замест гэтага';
 $lang["museumplus_error_module_no_field_maps"] = 'Немагчыма сінхранізаваць дадзеныя з MuseumPlus. Прычына: модуль \'%name\' не мае наладжаных адпаведнасцяў палёў.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Дэталі аб\'екта';
+$lang["page-title_museumplus_setup_module"] = 'Наладка модуля MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Наладка плагіна MuseumPlus';

@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Rozhodli jste se nepovoli
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Musíte přijmout používání cookies před přístupem do systému.';
 $lang["plugin-cookies_notification-title"] = 'Oznámení o cookies';
 $lang["plugin-cookies_notification-desc"] = 'Přidává možnost upozornit uživatele na to, jak může ResourceSpace používat cookies ke sledování aktivity uživatelů, zobrazením zprávy v záhlaví';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Výběr cookies';
+$lang["page-title_cookies_notification_setup"] = 'Nastavit plugin pro oznámení o cookies';

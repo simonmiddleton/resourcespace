@@ -16,3 +16,6 @@ $lang["filtered_resource_update_for"]="Filtrerad uppdatering av material för s�
 
 $lang["plugin-rss2-title"]='RSS-flöde';
 $lang["plugin-rss2-desc"]='Möjliggör autentiserad generering av RSS-flöden av nytt innehåll, inklusive konfigurerbara fält.';
+$lang["page-title_rss2_rssfeed"] = 'RSS-flöde';
+$lang["page-title_rss2_rssfilter"] = 'RSS-filter';
+$lang["page-title_rss2_setup"] = 'Installera RSS-plugin';

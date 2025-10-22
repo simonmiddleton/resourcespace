@@ -47,3 +47,6 @@ $lang["action-splice"]='Spleißen';
 $lang["video_splice_error_invalid_action"]='Fehler: Ungültige Aktion';
 $lang["plugin-video_splice-title"]='Video-Schnitt';
 $lang["plugin-video_splice-desc"]='Fügt die Möglichkeit zum Zuschneiden und Zusammenfügen von Videos hinzu';
+$lang["page-title_video_splice_setup"] = 'Video Splice Plugin einrichten';
+$lang["page-title_video_splice_splice"] = 'Video schneiden';
+$lang["page-title_video_splice_trim"] = 'Video zuschneiden';

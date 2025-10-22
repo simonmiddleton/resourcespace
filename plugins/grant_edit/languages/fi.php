@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Vahvista parannetun käyttöoikeuden poistamine
 $lang["grant_edit_group_list"]='Nykyiset ryhmät, joilla on lisämuokkausoikeudet';
 $lang["plugin-grant_edit-title"]='Myönnä Muokkausoikeus';
 $lang["plugin-grant_edit-desc"]='Mahdollistaa ylläpitäjien myöntää käyttäjille tilapäisen täydellisen muokkausoikeuden resursseihin';
+$lang["page-title_grant_edit_setup"] = 'Aseta myöntömuokkausliitännäinen';

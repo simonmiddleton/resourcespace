@@ -8,3 +8,5 @@ $lang["video_resourcetype"] = 'ビデオリソースタイプ';
 $lang["embedvideo_share"] = 'ビデオを埋め込む';
 $lang["plugin-embedvideo-title"] = 'ビデオを埋め込む';
 $lang["plugin-embedvideo-desc"] = 'リモートサイトに埋め込むためのビデオのHTMLを生成する機能を提供します。';
+
+$lang["page-title_embedvideo_setup"] = 'ビデオプラグインを設定する';

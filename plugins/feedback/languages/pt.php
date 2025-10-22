@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Adicionar Novo Campo';
 $lang["feedback_back_to_plugin_manager"] = 'Voltar para o Gerenciador de Plugins';
 $lang["plugin-feedback-title"] = 'Feedback';
 $lang["plugin-feedback-desc"] = 'Adiciona uma função geral de feedback do usuário com perguntas configuráveis.';
+
+$lang["page-title_feedback_feedback"] = 'Enviar Feedback';
+$lang["page-title_feedback_setup"] = 'Configurar Plugin';

@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"] = 'Створана плагінам SimpleLDAP.
 $lang["simpleldap_usermatchcomment"] = 'Абноўлена да карыстальніка LDAP праз SimpleLDAP.';
 $lang["origin_simpleldap"] = 'SimpleLDAP плагін';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"] = 'Не правяце праверку FQDN сервера супраць CN сертыфіката';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Тэст LDAP аўтэнтыфікацыі';
+$lang["page-title_simpleldap_setup"] = 'Наладзіць просты плагін LDAP';

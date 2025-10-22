@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Størrelse på blokken til brug ved upload til YouT
 $lang["youtube_publish_add_anchor"]='Tilføj anker-tags til URL\'en, når du gemmer den i YouTube URL-metadatafeltet?';
 $lang["plugin-youtube_publish-title"]='YouTube Udgiv';
 $lang["plugin-youtube_publish-desc"]='Udgiver videoressource til konfigureret YouTube-konto.';
+$lang["page-title_youtube_publish_setup"] = 'Opsætning af plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Udgiv ressource til Youtube';

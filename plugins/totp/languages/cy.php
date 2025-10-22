@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Y dydd presennol';
 $lang["totp_date_binding_w"] = 'Yr wythnos bresennol (sy\'n dechrau ar ddydd Llun)';
 $lang["totp_date_binding_m"] = 'Y mis presennol';
 $lang["totp_date_binding_y"] = 'Y flwyddyn bresennol';
+$lang["page-title_totp_setup"] = 'Gosodwch y Plugin TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

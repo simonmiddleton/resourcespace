@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'Teks pengguna untuk dipaparkan bagi perkongsi
 $lang["falcon_link_log_publish"] = 'Sumber yang dikongsi melalui Falcon';
 $lang["falcon_link_log_archive"] = 'Sumber yang diarkibkan melalui Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Sila semak bahawa penerangan dan tag tidak kosong';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Pasang Plugin Falcon Link';

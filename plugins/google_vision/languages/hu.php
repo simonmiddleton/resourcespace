@@ -21,3 +21,7 @@ $lang["google_vision_translation_intro"] = 'A Google Vision csak angol kulcsszav
 $lang["google_vision_translation_api_key"] = 'Engedélyezze a Vision kulcsszavak fordítását a fordító API-n keresztül egy érvényes Google API kulcs megadásával';
 $lang["google_vision_translation_languages"] = 'Vesszővel elválasztott nyelvkódok listája, pl. "no,es"';
 $lang["google_vision_translation_keep_english"] = 'Megőrizzük az eredeti angol kulcsszavakat?';
+$lang["page-title_google_vision_process_existing"] = 'Google Vision Folyamat Meglévő';
+$lang["page-title_google_vision_setup"] = 'Google Vision Plugin beállítása';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Teszt';

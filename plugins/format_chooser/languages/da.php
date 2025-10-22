@@ -16,3 +16,5 @@ $lang["are_available-1"]='vil blive konverteret';
 $lang["are_available-0"]='vil blive konverteret';
 $lang["plugin-format_chooser-title"]='Formatvælger';
 $lang["plugin-format_chooser-desc"]='Giver dig mulighed for at vælge forskellige formater, når du downloader filer, som genereres med det samme.';
+$lang["page-title_format_chooser_convert"] = 'Formatvælger';
+$lang["page-title_format_chooser_setup"] = 'Opsæt Formatvælger-plugin';

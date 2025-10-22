@@ -99,3 +99,6 @@ $lang["simplesaml_metadata_updates"] = 'Оновлення метаданих Si
 $lang["simplesaml_metadata_warning"] = 'Метадані не були оновлені з %date%';
 $lang["simplesaml_metadata_invalid"] = 'Недійсні або недоступні метадані IdP';
 $lang["simplesaml_admin_password_reset"] = 'Скинути пароль адміністратора тестового сайту SimpleSAML (необов\'язково)';
+$lang["page-title_simplesaml_about"] = 'SAML Про систему';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Згенерувати конфігурацію SP';
+$lang["page-title_simplesaml_setup"] = 'Налаштування плагіна Simple SAML';

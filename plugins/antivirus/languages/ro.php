@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Mutarea resursei [%resource_id%] în starea de
 $lang["antivirus_av_not_setup_error"] = 'Calea de acces pentru antivirus nu este setată!';
 $lang["plugin-antivirus-title"] = 'Antivirus';
 $lang["plugin-antivirus-desc"] = ' Capabilități antivirus prin integrarea cu majoritatea motoarelor antivirus cunoscute care pot rula linia de comandă';
+
+$lang["page-title_antivirus_setup"] = 'Configurare plugin antivirus';

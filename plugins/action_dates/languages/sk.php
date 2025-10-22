@@ -38,3 +38,5 @@ $lang["weekday-5"] = 'Piatok';
 $lang["weekday-6"] = 'Sobota';
 $lang["plugin-action_dates-title"] = 'Datumi dejanj';
 $lang["plugin-action_dates-desc"] = 'Omogoča načrtovano brisanje ali omejitev virov na podlagi datumskih polj';
+
+$lang["page-title_action_dates_setup"] = 'Nastavenie pluginu pre akčné dátumy';

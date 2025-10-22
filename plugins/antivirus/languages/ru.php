@@ -11,3 +11,5 @@ $lang["antivirus_av_not_setup_error"] = 'Путь для антивируса н
 $lang["antivirus_action_delete"] = 'Удалить навсегда';
 $lang["plugin-antivirus-title"] = 'Антивирус';
 $lang["plugin-antivirus-desc"] = '[Расширенные] возможности антивируса за счет интеграции с большинством известных антивирусных движков, которые могут работать через командную строку';
+
+$lang["page-title_antivirus_setup"] = 'Настроить плагин антивируса';

@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Tamanho do bloco a ser usado ao fazer upload para o
 $lang["youtube_publish_add_anchor"]='Adicionar tags de âncora à URL ao salvar no campo de metadados de URL do YouTube?';
 $lang["plugin-youtube_publish-title"]='Publicar no YouTube';
 $lang["plugin-youtube_publish-desc"]='Publica recurso de vídeo na conta do YouTube configurada.';
+$lang["page-title_youtube_publish_setup"] = 'Configurar Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Publicar Recurso no Youtube';

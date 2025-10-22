@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='원본 리소스 파일을 이미지 미리보기�
 $lang["vr_view_orig_video"]='비디오 미리보기의 소스로 원본 리소스 파일을 사용하시겠습니까?';
 $lang["plugin-vr_view-title"]='VR 보기';
 $lang["plugin-vr_view-desc"]='Google VR View - 360도 이미지 및 비디오 미리보기 (등각형 형식)';
+$lang["page-title_vr_view_download"] = 'VR 보기';
+$lang["page-title_vr_view_setup"] = 'VR 뷰 플러그인 설정';

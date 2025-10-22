@@ -14,3 +14,5 @@ $lang["downloadformat"] = 'Format ng pag-download';
 $lang["are_available-2"] = 'ay iko-convert';
 $lang["are_available-1"] = 'ay iko-convert';
 $lang["are_available-0"] = 'ika-convert';
+$lang["page-title_format_chooser_convert"] = 'Pumili ng Format';
+$lang["page-title_format_chooser_setup"] = 'I-set up ang Plugin ng Pagpili ng Format';

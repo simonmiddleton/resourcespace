@@ -25,3 +25,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'بالا',
    'bottom' => 'پایین',
 );
+$lang["page-title_image_text_setup"] = 'نصب افزونه متن تصویر';

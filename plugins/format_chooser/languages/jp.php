@@ -16,3 +16,5 @@ $lang["are_available-1"]='変換されます。';
 $lang["are_available-0"]='変換されます。';
 $lang["plugin-format_chooser-title"]='フォーマット選択ツール';
 $lang["plugin-format_chooser-desc"]='ファイルをダウンロードする際に、オンザフライで生成される異なる形式を選択できます。';
+$lang["page-title_format_chooser_convert"] = 'フォーマット選択ツール';
+$lang["page-title_format_chooser_setup"] = 'フォーマット選択プラグインの設定';

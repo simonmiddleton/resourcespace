@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='¿Usar el archivo de recurso original como fuente p
 $lang["vr_view_orig_video"]='¿Usar el archivo de recurso original como fuente para la vista previa del video?';
 $lang["plugin-vr_view-title"]='Vista VR';
 $lang["plugin-vr_view-desc"]='Vista VR de Google - vistas previas de imágenes y videos de 360 grados (formato equirectangular)';
+$lang["page-title_vr_view_download"] = 'Vista VR';
+$lang["page-title_vr_view_setup"] = 'Configurar el complemento de vista VR';

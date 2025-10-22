@@ -25,8 +25,8 @@ $initial_tags = explode(',', $quicksearch);
 include_once '../../include/searchbar.php';
 ?>
 <script type="text/javascript">
-    jQuery(document).ready(function() {   
-        if (typeof AdditionalJs == 'function') {   
+    jQuery(window).on("load", function() {
+        if (typeof AdditionalJs == 'function') {
             AdditionalJs();  
         }
     });

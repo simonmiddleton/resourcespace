@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Ați decis să nu permite
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Trebuie să acceptați utilizarea cookie-urilor înainte de a accesa sistemul.';
 $lang["plugin-cookies_notification-title"] = 'Notificare privind cookie-urile';
 $lang["plugin-cookies_notification-desc"] = 'Adaugă capacitatea de a notifica utilizatorii despre modul în care ResourceSpace poate folosi cookie-uri pentru a urmări activitatea utilizatorilor prin afișarea unui mesaj în antet';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Selecția cookie-urilor';
+$lang["page-title_cookies_notification_setup"] = 'Configurare pluginul de notificare a cookie-urilor';

@@ -37,3 +37,4 @@ $lang["weekday-3"] = 'Szerda';
 $lang["weekday-4"] = 'Csütörtök';
 $lang["weekday-5"] = 'Péntek';
 $lang["weekday-6"] = 'Szombat';
+$lang["page-title_action_dates_setup"] = 'Akciódátumok plugin beállítása';

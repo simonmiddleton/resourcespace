@@ -14,3 +14,4 @@ $lang["splitpdf_createnewresource"]='各範囲ごとに新しいリソースを�
 $lang["splitpdf_createnewalternativefile"]='このリソースの各範囲に対して、新しい代替ファイルを作成してください。';
 $lang["plugin-pdf_split-title"]='PDF分割';
 $lang["plugin-pdf_split-desc"]='PDFファイルを複数のページに分割することを許可します';
+$lang["page-title_pdf_split_pdf_split"] = 'PDF分割';

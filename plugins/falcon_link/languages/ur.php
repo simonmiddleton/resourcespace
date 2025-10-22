@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'فالکن استعمال کے لیے بنا�
 $lang["falcon_link_log_publish"] = 'فالکن کے ذریعے مشترکہ وسیلہ';
 $lang["falcon_link_log_archive"] = 'فالکن کے ذریعے محفوظ شدہ وسیلہ';
 $lang["falcon_link_error_falcon_check_tags"] = 'براہ کرم چیک کریں کہ تفصیل اور ٹیگز خالی نہ ہوں۔';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'فالکن لنک پلگ ان سیٹ اپ کریں';

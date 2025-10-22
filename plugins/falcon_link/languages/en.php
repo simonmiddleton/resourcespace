@@ -45,3 +45,6 @@ $lang['falcon_link_share_user']                     = "User text to display for 
 $lang['falcon_link_log_publish']                    = "Shared resource via Falcon";
 $lang['falcon_link_log_archive']                    = "Archived resource via Falcon";
 $lang["falcon_link_error_falcon_check_tags"]        = "Please check that description and tags are not empty";
+
+$lang["page-title_falcon_link_falcon_link"] = "Falcon Link";
+$lang["page-title_falcon_link_setup"]       = "Setup Falcon Link Plugin";

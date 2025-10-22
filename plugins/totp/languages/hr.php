@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Trenutni dan';
 $lang["totp_date_binding_w"] = 'Tekući tjedan (počinjajući od ponedjeljka)';
 $lang["totp_date_binding_m"] = 'Tekući mjesec';
 $lang["totp_date_binding_y"] = 'Tekuća godina';
+$lang["page-title_totp_setup"] = 'Postavljanje TOTP dodatka';
+$lang["page-title_totp_totp"] = 'TOTP';

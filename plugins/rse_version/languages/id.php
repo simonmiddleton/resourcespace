@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Mengembalikan status untuk koleksi #%COLLEC
 $lang["rse_version_invalid_time"]='Mengembalikan ke waktu sebelum [date] tidak didukung';
 $lang["plugin-rse_version-title"]='Kontrol Versi';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Kontrol Versi';
+$lang["page-title_rse_version_revert"] = 'Kembalikan Versi Sumber';
+$lang["page-title_rse_version_setup"] = 'Pengaturan Versi Plugin';

@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Luo tekstitykset ja lisää ne vaihtoehtoisiksi ti
 $lang["whisper_subtitles_name"] = 'Automaattisesti luodut tekstitykset';
 $lang["whisper_transcript"] = 'Luo transkripti-tiedosto ja lisää se vaihtoehtoiseksi tiedostoksi ladattavaksi';
 $lang["whisper_transcript_name"] = 'Automaattisesti luotu transkripti';
+
+$lang["page-title_whisper_setup"] = 'Aseta Whisper-laajennus';

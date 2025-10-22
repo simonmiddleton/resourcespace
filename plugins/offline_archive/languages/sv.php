@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Pågår',
   2 => 'Avslutad',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Administrera arkiv';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Offline Arkiv';
+$lang["page-title_offline_archive_pending_restore"] = 'Väntande återställning av resurs';
+$lang["page-title_offline_archive_restore_request"] = 'Begär återställning av resurs';
+$lang["page-title_offline_archive_restore"] = 'Återställ arkiv';
+$lang["page-title_offline_archive_setup"] = 'Inställningar Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Visa resursarkiv';
+$lang["page-title_offline_archive_view_pending"] = 'Visa väntande arkiv';

@@ -34,3 +34,8 @@ $lang["image_banks_local_download_attempt"]='ผู้ใช้พยายา�
 $lang["image_banks_bad_file_create_attempt"]='ผู้ใช้พยายามสร้างทรัพยากรด้วยไฟล์ \'%FILE\' โดยใช้ปลั๊กอิน ImageBank โดยชี้ไปที่ระบบที่ไม่ใช่ผู้ให้บริการที่อนุญาต';
 $lang["image_banks_createdfromimagebanks"]='สร้างจากปลั๊กอิน Image Banks';
 $lang["image_banks_shutterstock_token"]='Shutterstock token (<a href=\'https://www.shutterstock.com/account/developers/apps\' target=\'_blank\'>สร้าง</a>)';
+$lang["page-title_image_banks_download"] = 'ดาวน์โหลดทรัพยากร';
+$lang["page-title_image_banks_search"] = 'ค้นหา';
+$lang["page-title_image_banks_setup"] = 'ตั้งค่าปลั๊กอินธนาคารภาพ';
+$lang["page-title_image_banks_shutterstock_license"] = 'ดูภาพ Shutterstock';
+$lang["page-title_image_banks_view"] = 'ดูทรัพยากร';

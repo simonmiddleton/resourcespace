@@ -44,3 +44,5 @@ $lang["weekday-5"] = 'Fredag';
 $lang["weekday-6"] = 'Lördag';
 $lang["plugin-action_dates-title"] = 'Åtgärdsdatum';
 $lang["plugin-action_dates-desc"] = 'Möjliggör schemalagd radering eller begränsning av resurser baserat på datumfält';
+
+$lang["page-title_action_dates_setup"] = 'Konfigurera åtgärdsdatum-plugin';

@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Vraćanje stanja za kolekciju #%COLLECTION 
 $lang["rse_version_invalid_time"]='Povratak na vrijeme prije [date] nije podržan';
 $lang["plugin-rse_version-title"]='Kontrola verzija';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Kontrola verzija';
+$lang["page-title_rse_version_revert"] = 'Vrati verziju resursa';
+$lang["page-title_rse_version_setup"] = 'Postavljanje verzije dodatka';

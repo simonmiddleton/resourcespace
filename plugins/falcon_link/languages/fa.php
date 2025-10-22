@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'متن کاربر برای نمایش اشت�
 $lang["falcon_link_log_publish"] = 'منبع به اشتراک گذاشته شده از طریق Falcon';
 $lang["falcon_link_log_archive"] = 'منبع بایگانی شده از طریق Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'لطفاً بررسی کنید که توضیحات و برچسب‌ها خالی نباشند';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'نصب افزونه لینک فالکن';

@@ -511,7 +511,7 @@ function config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_
 
         # For reload of page after save, add toast notification after header.php loaded.
         if (getval('save', '') != '' && getval('submit', '') == '') {
-            toast_notification('success', $lang['saved']);
+            toast_notification(ToastNotificationType::Success, $lang['saved']);
         }
         ?>
         

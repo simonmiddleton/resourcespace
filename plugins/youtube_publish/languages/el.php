@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Μέγεθος κομματιού για χρήση
 $lang["youtube_publish_add_anchor"]='Προσθέστε αγκύρωση στα tags του URL κατά την αποθήκευση στο πεδίο μεταδεδομένων του URL του YouTube;';
 $lang["plugin-youtube_publish-title"]='Δημοσίευση στο YouTube';
 $lang["plugin-youtube_publish-desc"]='Δημοσιεύει το βίντεο πόρο στον διαμορφωμένο λογαριασμό YouTube.';
+$lang["page-title_youtube_publish_setup"] = 'Ρύθμιση Πρόσθετου';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Δημοσίευση Πόρου στο Youtube';

@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Επιτρεπόμενες στήλες: 
 $lang["csv_user_import_condition5"] = 'Η γλώσσα του χρήστη θα επιστρέψει στην προεπιλεγμένη γλώσσα που έχει οριστεί με τη χρήση της επιλογής "$defaultlanguage" στις ρυθμίσεις, εάν η στήλη γλώσσας δε βρεθεί ή δεν έχει τιμή';
 $lang["plugin-csv_user_import-title"] = 'Εισαγωγή Χρηστών CSV';
 $lang["plugin-csv_user_import-desc"] = '[Προχωρημένο] Παρέχει τη δυνατότητα εισαγωγής μιας παρτίδας χρηστών βάσει ενός προδιαμορφωμένου αρχείου CSV';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Εισαγωγή Χρηστών από CSV';

@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'प्रगति में',
   2 => 'पूर्ण',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'अर्काइव्स का प्रबंधन करें';
+$lang["page-title_offline_archive_offline_archive_action"] = 'ऑफलाइन संग्रह';
+$lang["page-title_offline_archive_pending_restore"] = 'लंबित संसाधन पुनर्स्थापना';
+$lang["page-title_offline_archive_restore_request"] = 'संसाधन पुनर्स्थापना के लिए अनुरोध करें';
+$lang["page-title_offline_archive_restore"] = 'आर्काइव पुनर्स्थापित करें';
+$lang["page-title_offline_archive_setup"] = 'सेटअप प्लगइन';
+$lang["page-title_offline_archive_view_archives"] = 'संसाधन अभिलेख देखें';
+$lang["page-title_offline_archive_view_pending"] = 'लंबित अभिलेख देखें';

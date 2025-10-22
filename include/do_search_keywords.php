@@ -271,11 +271,11 @@ if ($keysearch) {
                 $field_short_name_specified
                 && !$quoted_string
                 && preg_match(
-                    '/^(?=[^ \\t\\n]*[!@#$%^&()_+\\-=\\[\\]{}\'\"\\\\,.<>\\/?])[^ \\t\\n]*$/',
+                    '/^(?!.*\\*)(?=[^ \\t\\n]*[!@#$%^&()_+\\-=\\[\\]{}\'\"\\\\,.<>\\/?])[^ \\t\\n]*$/',
                     $keyword
                 ) === 1
             ) {
-                // Quote field specific keywords that contain special characters and no spaces
+                // Quote field specific keywords that contain special characters and no spaces unless a wildcard is present
                 $keyword = "\"$keyword\"";
                 $quoted_string = true;
             }
@@ -426,12 +426,12 @@ if ($keysearch) {
                         $relatedsql = new PreparedStatementQuery();
 
                         # Add related keywords
-                        $related = get_related_keywords($keyref, $keyword, true);
+                        $related = get_related_keywords($keyref);
                         if ($stemming) {
                             # Need to ensure we include related keywords for original string
                             $original_keyref = resolve_keyword(str_replace('*', '', $keyword), false, true, false);
                             if ($original_keyref && $original_keyref !== $keyref) {
-                                $original_related = get_related_keywords($original_keyref, $keyword, false);
+                                $original_related = get_related_keywords($original_keyref);
                                 if (count($original_related) > 0) {
                                     $original_related_kws = ps_array("SELECT keyword AS `value` FROM keyword WHERE ref IN (" . ps_param_insert(count($original_related)) . ")", ps_param_fill($original_related, "i"));
 
@@ -525,8 +525,12 @@ if ($keysearch) {
                                 $restypesql = new PreparedStatementQuery();
 
                                 $nodatafieldinfo = get_resource_type_field($nodatafield);
-                                if (!$nodatafieldinfo) {
-                                    error_alert($lang['error_fieldidnotfound'],true);
+                                if (!$nodatafieldinfo) {   
+                                    if (isset($_GET['search'])) {
+                                        error_alert($lang['error_fieldidnotfound'],true);
+                                        exit;
+                                    }
+                                    error_alert($lang['error_fieldidnotfound'],false);
                                     exit;
                                 }
                                 $nodatarestypes = trim((string)$nodatafieldinfo["resource_types"]);
@@ -572,15 +576,22 @@ if ($keysearch) {
                                 $sql_keyword_union_or[] = false;
                             } elseif ($wildcards) {
                                 $union = new PreparedStatementQuery();
+                                $stop_words = ps_array(
+                                    "SELECT value FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD WHERE value LIKE ?",
+                                    ["s", str_replace('*', '%', $keyword)]
+                                );
+
                                 if (
                                     substr($keyword, 0, 1) != "*"
                                     && strlen(trim($keyword, '*')) >= 3
                                     && preg_match('/[-+@<>().]/', $keyword) !== 1
+                                    && empty($stop_words)
                                 ) {
                                     // Use fulltext search as a preference, but not if
                                     // there is a leading wildcard
                                     // or the search is too short
                                     // or the search contains any of +,-,@,<,>,(,),.
+                                    // or contains any words InnoDB considers a stop word
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
                                                 FROM resource_node rn[union_index]
@@ -616,7 +627,7 @@ if ($keysearch) {
                                                         FROM `node` 
                                                         WHERE ";
 
-                                    if (preg_match('/[-+@<>()]/', $keyword) !== 1) {
+                                    if (preg_match('/[-+@<>()]/', $keyword) !== 1 && !empty($stop_words)) {
                                         // Full text matching is used to reduce the rows checked by regex where possible
                                         $union->parameters = array_merge(['s',$keyword], $union->parameters);
                                         $union->sql .= "MATCH(name) AGAINST (? IN BOOLEAN MODE) AND ";

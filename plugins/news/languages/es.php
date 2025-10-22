@@ -15,3 +15,6 @@ $lang["title-too-long"]='El campo de título es más largo de lo permitido, que 
 $lang["plugin-news-title"]='Noticias';
 $lang["plugin-news-desc"]='Añade elementos de noticias en la página de inicio';
 $lang["news_manage-tooltip"] = 'Agregar, editar o eliminar elementos de noticias';
+$lang["page-title_news_news_content_edit"] = 'Editar Contenido de Noticias';
+$lang["page-title_news_news_edit"] = 'Editar Noticias';
+$lang["page-title_news_news"] = 'Noticias';

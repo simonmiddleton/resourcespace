@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Povolené sloupce: *uživatelské jméno,
 $lang["csv_user_import_condition5"] = 'Jazyk uživatele se vrátí zpět na ten, který je nastaven pomocí konfigurační volby "$defaultlanguage", pokud sloupec lang není nalezen nebo nemá hodnotu';
 $lang["plugin-csv_user_import-title"] = 'Import uživatelů CSV';
 $lang["plugin-csv_user_import-desc"] = '[Pokročilé] Poskytuje možnost importovat dávku uživatelů na základě předem naformátovaného souboru CSV';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Import uživatelů CSV';

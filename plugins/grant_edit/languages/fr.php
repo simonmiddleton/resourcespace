@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Confirmer la suppression de l\'accès amélior�
 $lang["grant_edit_group_list"]='Groupes actuels avec accès supplémentaire à l\'édition';
 $lang["plugin-grant_edit-title"]='Accorder la modification';
 $lang["plugin-grant_edit-desc"]='Permet aux administrateurs d\'accorder aux utilisateurs un accès temporaire complet à l\'édition des ressources';
+$lang["page-title_grant_edit_setup"] = 'Configurer le plugin d\'édition de subvention';

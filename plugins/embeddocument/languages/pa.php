@@ -11,3 +11,6 @@ $lang["embeddocument_maximise"] = 'ਵੱਧ ਤੋਂ ਵੱਧ ਕਰੋ';
 $lang["embeddocument_heading"] = 'ਰਿਮੋਟ ਦਸਤਾਵੇਜ਼ ਦਰਸ਼ਕ ਸੰਰਚਨਾ';
 $lang["embeddocument_specify_resourcetype"] = 'ਕਿਰਪਾ ਕਰਕੇ ਦਰਸਾਓ ਕਿ ਕਿਹੜੇ ਸਰੋਤ ਕਿਸਮ ਲਈ \'embed\' ਫੰਕਸ਼ਨਲਿਟੀ ਦਿਖਾਈ ਦੇਣੀ ਚਾਹੀਦੀ ਹੈ।';
 $lang["embeddocument_document_resourcetype"] = 'ਦੂਰਦਰਾਜ ਦਸਤਾਵੇਜ਼ ਦਰਸ਼ਕ ਸਰੋਤ ਕਿਸਮ:';
+
+$lang["page-title_embeddocument_setup"] = 'ਦਸਤਾਵੇਜ਼ ਐਮਬੈਡ ਪਲੱਗਇਨ ਸੈਟਅਪ';
+$lang["page-title_embeddocument_viewer"] = 'ਦਸਤਾਵੇਜ਼ ਦਰਸ਼ਕ ਨੂੰ ਐਂਬੈਡ ਕਰੋ';

@@ -78,3 +78,6 @@ $lang["transform_preset_sizes"]='Виберіть із заздалегідь в
 $lang["error_crop_invalid"]='Будь ласка, виберіть область зображення';
 $lang["transform-recrop"]='Обрізати зображення заново';
 $lang["cropper_preset_sizes"] = 'Заздалегідь визначені розміри';
+$lang["page-title_transform_collection_transform"] = 'Перетворити ресурс';
+$lang["page-title_transform_crop"] = 'Обрізати ресурс';
+$lang["page-title_transform_setup"] = 'Налаштування плагіна трансформації';

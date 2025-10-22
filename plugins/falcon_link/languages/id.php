@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'Sumber daya terarsip melalui Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Silakan periksa bahwa deskripsi dan tag tidak kosong';
 $lang["plugin-falcon_link-title"] = 'Tautan Falcon';
 $lang["plugin-falcon_link-desc"] = 'Publikasikan sumber daya ke Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Atur Plugin Falcon Link';

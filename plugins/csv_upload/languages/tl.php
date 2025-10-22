@@ -72,3 +72,4 @@ $lang["csv_upload_check_removebom"] = 'Ang CSV file ay may BOM na hindi natangga
 $lang["csv_upload_validating"] = 'Pagpapatunay';
 $lang["csv_upload_processing"] = 'Pagpoproseso';
 $lang["processing_batch_edit_save"] = 'row [row_number] ng [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'I-upload ang CSV';

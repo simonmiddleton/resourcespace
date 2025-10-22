@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"] = 'Tidak dapat melakukan eksport kerana t
 $lang["video_splice_incorrect_quantity"] = 'Sumber yang sah telah sama ada dikeluarkan atau ditambah ke dalam koleksi sejak halaman ini dimuat. Sila cuba lagi.';
 $lang["video_splice_createdfromvideosplice"] = 'Dicipta dari plugin Video Splice';
 $lang["video_splice_error_invalid_action"] = 'Ralat : Tindakan tidak sah';
+$lang["page-title_video_splice_setup"] = 'Tetapkan Plugin Video Splice';
+$lang["page-title_video_splice_splice"] = 'Potong Video';
+$lang["page-title_video_splice_trim"] = 'Potong Video';

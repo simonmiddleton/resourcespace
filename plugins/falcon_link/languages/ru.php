@@ -42,3 +42,6 @@ $lang["falcon_link_error_falcon_check_tags"] = 'Пожалуйста, прове
 $lang["falcon_link_api_key"] = 'Ключ API Falcon';
 $lang["plugin-falcon_link-title"] = 'Ссылка Falcon';
 $lang["plugin-falcon_link-desc"] = 'Опубликовать ресурсы на Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Настройка плагина Falcon Link';

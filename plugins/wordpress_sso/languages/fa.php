@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"]='ورود با استفاده از ح�
 $lang["wordpress_sso_use_wp_login"]='ورود با استفاده از حساب WordPress';
 $lang["wordpress_sso_retry"]='برای تلاش مجدد و ورود اینجا کلیک کنید';
 $lang["origin_wordpress_sso"]='افزونه ورود یکپارچه وردپرس';
+$lang["page-title_wordpress_sso_logout"] = 'خروج از SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO بدون کاربر';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'نصب افزونه SSO وردپرس';

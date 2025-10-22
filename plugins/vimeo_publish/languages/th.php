@@ -36,3 +36,5 @@ $lang["vimeo_publish_account_options"]='ตัวเลือกบัญชี 
 $lang["vimeo_publish_allow_user_accounts"]='อนุญาตให้ผู้ใช้เผยแพร่ไปยังบัญชี Vimeo ของตนเอง หากเป็นเท็จจะต้องกำหนดการเข้าถึงบัญชี Vimeo เดียวด้านล่าง';
 $lang["vimeo_publish_set_account"]='ตั้งค่าบัญชี Vimeo';
 $lang["vimeo_api_instructions_condition_2"]='เข้าสู่ระบบ Vimeo ด้วยบัญชี Vimeo ที่ถูกต้องใด ๆ (ไม่จำเป็นต้องเกี่ยวข้องกับบัญชี Vimeo ของคุณ) จากนั้นไปที่ <a href="https://developer.vimeo.com/" target="_blank">https://developer.vimeo.com/</a>';
+$lang["page-title_vimeo_publish_setup"] = 'ตั้งค่าปลั๊กอินเผยแพร่ Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'เผยแพร่ไปยัง Vimeo';

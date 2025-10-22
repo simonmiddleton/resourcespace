@@ -14,3 +14,4 @@ $lang["splitpdf_createnewresource"]='Creare una nuova risorsa per ogni intervall
 $lang["splitpdf_createnewalternativefile"]='Creare un nuovo file alternativo su questa risorsa per ogni intervallo';
 $lang["plugin-pdf_split-title"]='Divisione PDF';
 $lang["plugin-pdf_split-desc"]='Consente di dividere i file PDF in più pagine';
+$lang["page-title_pdf_split_pdf_split"] = 'PDF Dividi';

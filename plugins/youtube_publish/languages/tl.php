@@ -50,3 +50,5 @@ $lang["youtube_publish_category"] = 'Kategorya';
 $lang["youtube_publish_category_error"] = 'Error retrieving YouTube categories: -';
 $lang["youtube_chunk_size"] = 'Sukat ng piraso na gagamitin kapag nag-upload sa YouTube (MB)';
 $lang["youtube_publish_add_anchor"] = 'Magdagdag ng anchor tags sa URL kapag nagse-save sa YouTube URL metadata field?';
+$lang["page-title_youtube_publish_setup"] = 'I-set up ang Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'I-publish ang Yaman sa Youtube';

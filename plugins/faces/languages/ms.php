@@ -20,3 +20,5 @@ $lang["faces-oneface"] = 'Sila pilih hanya satu pilihan untuk setiap muka.';
 $lang["faces-show-view"] = 'Tunjukkan fungsi AI Faces pada halaman pandangan.';
 $lang["faces_count_faces"] = 'Jumlah wajah yang dikesan';
 $lang["faces_count_missing"] = 'Imej untuk diproses';
+
+$lang["page-title_faces_setup"] = 'Tetapkan Plugin Wajah';

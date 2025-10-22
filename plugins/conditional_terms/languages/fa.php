@@ -5,3 +5,5 @@ $lang["conditional_terms_description"] = 'این افزونه به شما اجا
 $lang["conditional_terms_field"] = 'فیلد فراداده';
 $lang["conditional_terms_value"] = 'مقدار';
 $lang["conditional_terms_plugin_misconfigured"] = 'پلاگین شرایط مشروط به اشتباه پیکربندی شده است';
+
+$lang["page-title_conditional_terms_setup"] = 'نصب افزونه شرایط شرطی';

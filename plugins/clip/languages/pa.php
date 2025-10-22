@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'ਵੇਕਟਰ ਪੈਦਾ ਕਰਨਾਂ'
 $lang["clip_vector-statistics"] = 'ਵੇਕਟਰ ਅੰਕੜੇ';
 $lang["clip-vector-cleanup"] = 'ਅਨਾਥ ਵੈਕਟਰ ਹਟਾਓ';
 $lang["clip-vector-cleanup-description"] = 'ਉਹ ਵੈਕਟਰ ਹਟਾਓ ਜੋ ਉਹਨਾਂ ਸਰੋਤਾਂ ਨਾਲ ਸੰਬੰਧਿਤ ਹਨ ਜੋ ਹੁਣ ਮੌਜੂਦ ਨਹੀਂ ਹਨ ਜਾਂ ਉਪਰੋਕਤ ਚੁਣੇ ਗਏ ਸਰੋਤ ਕਿਸਮਾਂ ਵਿੱਚੋਂ ਨਹੀਂ ਹਨ';
+
+$lang["page-title_clip_search"] = 'ਏਆਈ ਸਮਾਰਟ ਖੋਜ';
+$lang["page-title_clip_setup"] = 'CLIP ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["page-title_clip_webcam"] = 'ਵੈਬਕੈਮ ਟੈਗ ਜਨਰੇਟਰ';

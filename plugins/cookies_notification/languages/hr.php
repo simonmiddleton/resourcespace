@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Odlučili ste ne dopustit
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Potrebno je prihvatiti korištenje kolačića prije pristupa sustavu.';
 $lang["plugin-cookies_notification-title"] = 'Obavijest o kolačićima';
 $lang["plugin-cookies_notification-desc"] = 'Dodaje mogućnost obavještavanja korisnika o tome kako ResourceSpace može koristiti kolačiće za praćenje aktivnosti korisnika prikazivanjem poruke u zaglavlju';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Odabir kolačića';
+$lang["page-title_cookies_notification_setup"] = 'Postavite dodatak za obavijest o kolačićima';

@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Générer des sous-titres et ajouter comme fichier
 $lang["whisper_subtitles_name"] = 'Sous-titres générés automatiquement';
 $lang["whisper_transcript"] = 'Générez un fichier de transcription et ajoutez-le en tant que téléchargement de fichier alternatif';
 $lang["whisper_transcript_name"] = 'Transcription générée automatiquement';
+
+$lang["page-title_whisper_setup"] = 'Configurer le plugin Whisper';

@@ -84,3 +84,6 @@ $lang["plugin-transform-title"]='Strumenti Immagine (trasforma)';
 $lang["plugin-transform-desc"]='Abilita la creazione di immagini alternative ritagliate e scalate (jCrop con supporto mobile)';
 $lang["use_system_icc_profile_config"]='Usa la configurazione di sistema per l\'elaborazione del profilo ICC. Sovrascriverà le opzioni sRGB sopra.';
 $lang["cropper_preset_sizes"] = 'Dimensioni predefinite';
+$lang["page-title_transform_collection_transform"] = 'Trasforma Risorsa';
+$lang["page-title_transform_crop"] = 'Ritaglia Risorsa';
+$lang["page-title_transform_setup"] = 'Imposta il plugin di trasformazione';

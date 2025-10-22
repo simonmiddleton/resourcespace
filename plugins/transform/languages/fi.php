@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='Kuvatyökalut (muunna)';
 $lang["plugin-transform-desc"]='Mahdollistaa rajattujen ja skaalattujen vaihtoehtoisten kuvien luomisen (jCrop mobiilituki)';
 $lang["use_system_icc_profile_config"]='Käytä järjestelmän asetuksia ICC-profiilin käsittelyyn. Ohittaa yllä olevat sRGB-asetukset.';
 $lang["cropper_preset_sizes"] = 'Ennalt määritellyt koot';
+$lang["page-title_transform_collection_transform"] = 'Muunna resurssi';
+$lang["page-title_transform_crop"] = 'Rajaa resurssia';
+$lang["page-title_transform_setup"] = 'Aseta muunnosliitännäinen';

@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Kaynağı [%resource_id%] arşiv durumuna [%ar
 $lang["antivirus_av_not_setup_error"] = 'Antivirüs yolu ayarlanmadı!';
 $lang["plugin-antivirus-title"] = 'Antivirüs';
 $lang["plugin-antivirus-desc"] = ' Çoğu bilinen antivirüs motorlarıyla entegre olarak komut satırında çalışabilen antivirüs yetenekleri';
+
+$lang["page-title_antivirus_setup"] = 'Antivirüs Eklentisini Kurun';

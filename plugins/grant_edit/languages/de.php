@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Bestätigen Sie die Entfernung des erweiterten 
 $lang["grant_edit_group_list"]='Aktuelle Gruppen mit zusätzlichem Bearbeitungszugriff';
 $lang["plugin-grant_edit-title"]='Bearbeiten gewähren';
 $lang["plugin-grant_edit-desc"]='Ermöglicht Administratoren, Benutzern vorübergehend vollen Bearbeitungszugriff auf Ressourcen zu gewähren';
+$lang["page-title_grant_edit_setup"] = 'Einrichtungsberechtigungs-Edit-Plugin';

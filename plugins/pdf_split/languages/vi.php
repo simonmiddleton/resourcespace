@@ -11,3 +11,4 @@ $lang["outofrange"] = 'Ngoài phạm vi';
 $lang["invalidrange"] = 'Phạm vi không hợp lệ';
 $lang["splitpdf_createnewresource"] = 'Tạo một tài nguyên mới cho mỗi khoảng cách';
 $lang["splitpdf_createnewalternativefile"] = 'Tạo một tệp thay thế mới trên tài nguyên này cho mỗi phạm vi';
+$lang["page-title_pdf_split_pdf_split"] = 'Chia PDF';

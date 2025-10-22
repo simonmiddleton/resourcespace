@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'Maandishi ya mtumiaji ya kuonyesha kwa hisa z
 $lang["falcon_link_log_publish"] = 'Rasilimali iliyoshirikiwa kupitia Falcon';
 $lang["falcon_link_log_archive"] = 'Rasilimali iliyohifadhiwa kupitia Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Tafadhali hakikisha kuwa maelezo na vitambulisho haviko tupu';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Weka Plugin ya Falcon Link';

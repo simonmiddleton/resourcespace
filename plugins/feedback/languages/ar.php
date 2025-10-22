@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'إضافة حقل جديد';
 $lang["feedback_back_to_plugin_manager"] = 'العودة إلى مدير المكوّنات الإضافية';
 $lang["plugin-feedback-title"] = 'ملاحظات';
 $lang["plugin-feedback-desc"] = 'يضيف وظيفة ملاحظات المستخدم العامة مع أسئلة قابلة للتكوين.';
+
+$lang["page-title_feedback_feedback"] = 'إرسال ملاحظات';
+$lang["page-title_feedback_setup"] = 'إعداد المكون الإضافي';

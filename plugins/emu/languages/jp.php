@@ -35,3 +35,6 @@ $lang["emu_createdfromemu"] = 'EMUプラグインから作成されました。'
 $lang["emu_rs_mappings_header"] = 'EMu - ResourceSpaceのマッピングルール';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-desc"] = '[高度] EMuデータベースからリソースメタデータを抽出することを許可します。';
+
+$lang["page-title_emu_emu_object_details"] = 'EMuオブジェクトの詳細';
+$lang["page-title_emu_setup"] = 'プラグインの設定';

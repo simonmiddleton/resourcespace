@@ -36,3 +36,8 @@ $lang["brand_guidelines_fallback_size_thm"] = 'ขนาดภาพสำรอ
 $lang["brand_guidelines_fallback_size_half_width"] = 'ขนาดภาพสำรองเลย์เอาต์ครึ่งกว้าง';
 $lang["brand_guidelines_fallback_size_full_width"] = 'ขนาดภาพสำรองเลย์เอาต์แบบเต็มความกว้าง';
 $lang["brand_guidelines_cmyk_help_txt"] = 'CMYK (0-100). ตัวอย่าง: 36,0,73,29';
+
+$lang["page-title_brand_guidelines_content"] = 'จัดการเนื้อหาคู่มือแบรนด์';
+$lang["page-title_brand_guidelines_guidelines"] = 'แนวทางแบรนด์';
+$lang["page-title_brand_guidelines_setup"] = 'ตั้งค่าปลั๊กอินแนวทางแบรนด์';
+$lang["page-title_brand_guidelines_toc"] = 'แก้ไขเนื้อหา';

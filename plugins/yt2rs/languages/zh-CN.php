@@ -8,3 +8,4 @@ $lang["yt2rs_online_preview"]='在线预览';
 $lang["yt2rs_youtube_video"]='YouTube视频';
 $lang["plugin-yt2rs-title"]='YouTube 到 ResourceSpace';
 $lang["plugin-yt2rs-desc"]='启用从YouTube发布视频。';
+$lang["page-title_yt2rs_setup"] = '将YouTube设置为ResourceSpace插件';

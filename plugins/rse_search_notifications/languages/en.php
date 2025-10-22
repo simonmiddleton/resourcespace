@@ -37,3 +37,5 @@ $lang["columnheader-last-found"]="Last found";
 // User menu tool tip
 $lang["search_notifications_watched_searches-tooltip"] = "Control your saved searches";
 
+$lang["page-title_rse_search_notifications_setup"]              = "Setup Search Notifications Plugin";
+$lang["page-title_rse_search_notifications_watched_searches"]   = "Watched Searches";

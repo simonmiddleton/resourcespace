@@ -10,3 +10,6 @@ $lang["stencilvg-print"] = 'Nyomtatás';
 $lang["stencilvg-download"] = 'Letöltés';
 $lang["stencilvg-save_as_new_resource"] = 'Mentés új erőforrásként';
 $lang["stencilvg-no_parameters_found"] = 'Nincs sablonparaméter található';
+$lang["page-title_stencilvg_download_svg"] = 'SVG letöltése';
+$lang["page-title_stencilvg_input"] = 'SVG Bemenet';
+$lang["page-title_stencilvg_setup"] = 'StencilVG Plugin beállítása';

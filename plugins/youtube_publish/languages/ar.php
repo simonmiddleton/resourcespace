@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='حجم القطعة المستخدمة عند ال�
 $lang["youtube_publish_add_anchor"]='هل تريد إضافة علامات الربط للرابط عند حفظه في حقل بيانات الرابط الخاص بـ يوتيوب؟';
 $lang["plugin-youtube_publish-title"]='نشر YouTube';
 $lang["plugin-youtube_publish-desc"]='ينشر المورد الفيديو إلى حساب YouTube المُعد.';
+$lang["page-title_youtube_publish_setup"] = 'إعداد المكون الإضافي';
+$lang["page-title_youtube_publish_youtube_upload"] = 'نشر المورد على يوتيوب';

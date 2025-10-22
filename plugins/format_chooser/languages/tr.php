@@ -16,3 +16,5 @@ $lang["are_available-1"]='dönüştürülecek';
 $lang["are_available-0"]='dönüştürülecek';
 $lang["plugin-format_chooser-title"]='Format Seçici';
 $lang["plugin-format_chooser-desc"]='Dosyaları indirirken anında oluşturulan farklı formatları seçmenize olanak tanır.';
+$lang["page-title_format_chooser_convert"] = 'Format Seçici';
+$lang["page-title_format_chooser_setup"] = 'Ayarlar Format Seçici Eklentisi';

@@ -16,3 +16,7 @@ $lang["origin_wordpress_sso"]='Πρόσθετο ενιαίας σύνδεσης 
 $lang["wordpress_sso_auto_created"]='Δημιουργήθηκε αυτόματα από το πρόσθετο wordpress_sso';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='[Προηγμένο] Επιτρέπει την Ενιαία Σύνδεση με εγκατάσταση Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Αποσύνδεση SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Χωρίς Χρήστη';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Ρύθμιση Πρόσθετου SSO για Wordpress';

@@ -38,3 +38,5 @@ $lang["action_dates_email_range_state"] = 'Følgende ressourcer vil ændre statu
 $lang["action_dates_email_range"] = 'Følgende ressourcer vil blive begrænset og/eller ændre tilstand inden for [days_min] til [days_max] dage.';
 $lang["plugin-action_dates-title"] = 'Handlingsdatoer';
 $lang["plugin-action_dates-desc"] = 'Muliggør planlagt sletning eller begrænsning af ressourcer baseret på datofelter';
+
+$lang["page-title_action_dates_setup"] = 'Opsætning af handlingsdatoer-plugin';

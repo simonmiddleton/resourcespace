@@ -40,3 +40,6 @@ $lang["falcon_link_share_user"] = 'Ibinahagi sa user@falcon.io';
 $lang["falcon_link_log_publish"] = 'Ibinahaging yaman sa pamamagitan ng Falcon';
 $lang["falcon_link_log_archive"] = 'Naka-archive na yaman sa pamamagitan ng Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Pakisuri na ang paglalarawan at mga tag ay hindi walang laman';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'I-set up ang Falcon Link Plugin';

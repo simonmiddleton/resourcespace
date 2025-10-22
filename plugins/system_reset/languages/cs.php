@@ -8,3 +8,4 @@ $lang["system_reset_delete_all"]='Smazat všechna data a soubory';
 $lang["plugin-system_reset-title"]='Resetování systému';
 $lang["plugin-system_reset-desc"]='Přidá možnost do admin/systému vymazat všechna data';
 $lang["system_reset-tooltip"] = 'Proveďte reset systému pro smazání všech souborů a dat';
+$lang["page-title_system_reset_reset"] = 'Obnovení systému';

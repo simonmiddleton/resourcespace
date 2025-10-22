@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'متن / HTML:';
 $lang["feedback_options-comma_separated"] = 'گزینه‌ها: (با کاما جدا شده)';
 $lang["feedback_add_new_field"] = 'افزودن فیلد جدید';
 $lang["feedback_back_to_plugin_manager"] = 'بازگشت به مدیریت افزونه‌ها';
+
+$lang["page-title_feedback_feedback"] = 'ارسال بازخورد';
+$lang["page-title_feedback_setup"] = 'تنظیم افزونه';

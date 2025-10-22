@@ -18,4 +18,7 @@ $lang['wordpress_sso_use_wp_login']="Login using WordPress account";
 $lang['wordpress_sso_retry']="Click here to try and log in again";
 $lang["origin_wordpress_sso"] = "Wordpress SSO plugin";
 
-
+$lang["page-title_wordpress_sso_logout"]    = "SSO Logout";
+$lang["page-title_wordpress_sso_nouser"]    = "SSO No User";
+$lang["page-title_wordpress_sso_readme_txt"]    = "SSO Readme";
+$lang["page-title_wordpress_sso_setup"]     = "Setup Wordpress SSO Plugin";

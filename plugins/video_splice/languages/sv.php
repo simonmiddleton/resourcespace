@@ -47,3 +47,6 @@ $lang["video-trim_output"]='Utdata';
 $lang["video_splice_error_invalid_action"]='Fel: Ogiltig åtgärd';
 $lang["plugin-video_splice-title"]='Videoklippning';
 $lang["plugin-video_splice-desc"]='Lägger till kapacitet för videoklippning och sammanfogning';
+$lang["page-title_video_splice_setup"] = 'Installera Video Splice-plugin';
+$lang["page-title_video_splice_splice"] = 'Klipp Video';
+$lang["page-title_video_splice_trim"] = 'Klipp video';

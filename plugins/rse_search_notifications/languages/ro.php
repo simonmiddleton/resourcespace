@@ -26,3 +26,5 @@ $lang["columnheader-last-found"]='Ultima găsită';
 $lang["plugin-rse_search_notifications-title"]='Notificări de căutare';
 $lang["plugin-rse_search_notifications-desc"]='Notifică utilizatorul când apar modificări la o căutare salvată';
 $lang["search_notifications_watched_searches-tooltip"] = 'Controlează căutările tale salvate';
+$lang["page-title_rse_search_notifications_setup"] = 'Configurare plugin pentru notificări de căutare';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Căutări urmărite';

@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='إعادة الحالة السابقة لل
 $lang["rse_version_invalid_time"]='لا يتم دعم العودة إلى وقت سابق لـ [date]';
 $lang["plugin-rse_version-title"]='التحكم في الإصدارات';
 $lang["plugin-rse_version-desc"]='ريزورس سبيس إنتربرايز - التحكم في الإصدارات';
+$lang["page-title_rse_version_revert"] = 'إرجاع إصدار المورد';
+$lang["page-title_rse_version_setup"] = 'إعداد نسخة المكون الإضافي';

@@ -38,3 +38,5 @@ $lang["weekday-6"] = 'Lauantai';
 $lang["action_dates_email_text"] = 'Seuraavat resurssit on määrä rajoittaa ja/tai muuttaa tilaa [päivien] päivän kuluttua.';
 $lang["plugin-action_dates-title"] = 'Toimintapäivät';
 $lang["plugin-action_dates-desc"] = 'Mahdollistaa resurssien aikataulutetun poistamisen tai rajoittamisen päivämääräkenttien perusteella';
+
+$lang["page-title_action_dates_setup"] = 'Aseta toimintopäivämäärät laajennus';

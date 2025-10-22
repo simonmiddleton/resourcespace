@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'EinfacheSAML-Metadatenaktualisierungen';
 $lang["simplesaml_metadata_warning"] = 'Metadaten wurden seit %date% nicht aktualisiert';
 $lang["simplesaml_metadata_invalid"] = 'IdP-Metadaten ungültig oder nicht verfügbar';
 $lang["simplesaml_admin_password_reset"] = 'Zurücksetzen des Admin-Passworts der SimpleSAML-Testseite (optional)';
+$lang["page-title_simplesaml_about"] = 'SAML Informationen';
+$lang["page-title_simplesaml_generate_sp_config"] = 'SP-Konfiguration generieren';
+$lang["page-title_simplesaml_setup"] = 'Einfaches SAML-Plugin einrichten';

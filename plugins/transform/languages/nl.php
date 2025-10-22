@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='Beeldhulpmiddelen (transformeren)';
 $lang["plugin-transform-desc"]='Maakt het mogelijk om bijgesneden en geschaalde alternatieve afbeeldingen te maken (jCrop met mobiele ondersteuning)';
 $lang["use_system_icc_profile_config"]='Gebruik systeemconfiguratie voor ICC-profielverwerking. Zal de bovenstaande sRGB-opties overschrijven.';
 $lang["cropper_preset_sizes"] = 'Vooraf gedefinieerde maten';
+$lang["page-title_transform_collection_transform"] = 'Transformeer Resource';
+$lang["page-title_transform_crop"] = 'Bijsnijden Hulpbron';
+$lang["page-title_transform_setup"] = 'Instellen Transform Plugin';

@@ -23,3 +23,6 @@ $lang["embedslideshow_notransition"] = 'স্বয়ংক্রিয় স
 $lang["embedslideshow_directlink"] = 'অসংযুক্ত সরাসরি URL';
 $lang["embedslideshow_directlinkopen"] = 'সরাসরি লিঙ্ক খুলুন (নতুন পৃষ্ঠা)';
 $lang["embedslideshow_dynamic_size"] = 'প্লেয়ারের আকারের উপর ভিত্তি করে প্রিভিউর গতিশীল পুনরায় আকার পরিবর্তন?';
+
+$lang["page-title_embedslideshow_setup"] = 'এম্বেড স্লাইডশো প্লাগইন সেটআপ করুন';
+$lang["page-title_embedslideshow_viewer"] = 'স্লাইডশো এম্বেড করুন';

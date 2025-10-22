@@ -6,3 +6,4 @@ $lang["user_preferences_change_username"]='Дозволити змінювати
 $lang["user_preferences_change_email"]='Дозволити змінювати адресу електронної пошти';
 $lang["user_preferences_change_name"]='Дозволити змінювати ім\'я користувача';
 $lang["changeyourpassword"]='Змінити мій пароль та дані користувача';
+$lang["page-title_user_preferences_setup"] = 'Налаштування плагіна уподобань користувача';

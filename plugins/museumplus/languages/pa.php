@@ -48,3 +48,6 @@ $lang["museumplus_error_unknown_type_saved_config"]='\'museumplus_modules_saved_
 $lang["museumplus_error_invalid_association"]='ਅਵੈਧ ਮੋਡੀਊਲ(ਜ਼) ਸੰਬੰਧ। ਕਿਰਪਾ ਕਰਕੇ ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਸਹੀ ਮੋਡੀਊਲ ਅਤੇ/ਜਾਂ ਰਿਕਾਰਡ ID ਦਰਜ ਕੀਤੀ ਗਈ ਹੈ!';
 $lang["museumplus_id_returns_multiple_records"]='ਕਈ ਰਿਕਾਰਡ ਮਿਲੇ - ਕਿਰਪਾ ਕਰਕੇ ਤਕਨੀਕੀ ID ਦਰਜ ਕਰੋ';
 $lang["museumplus_error_module_no_field_maps"]='ਮਿਊਜ਼ੀਅਮਪਲੱਸ ਤੋਂ ਡਾਟਾ ਸਿੰਕ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ। ਕਾਰਨ: ਮੋਡੀਊਲ \'%name\' ਲਈ ਕੋਈ ਫੀਲਡ ਮੈਪਿੰਗ ਕਨਫਿਗਰ ਨਹੀਂ ਕੀਤੀ ਗਈ।';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus ਵਸਤੂ ਵੇਰਵੇ';
+$lang["page-title_museumplus_setup_module"] = 'MuseumPlus ਮੋਡੀਊਲ ਸੈਟਅਪ';
+$lang["page-title_museumplus_setup"] = 'MuseumPlus ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';

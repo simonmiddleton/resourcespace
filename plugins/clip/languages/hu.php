@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Vektor generálás';
 $lang["clip_vector-statistics"] = 'Vektor statisztikák';
 $lang["clip-vector-cleanup"] = 'Törölje az árván maradt vektorokat';
 $lang["clip-vector-cleanup-description"] = 'Távolítsa el azokat a vektorokat, amelyek olyan erőforrásokhoz tartoznak, amelyek már nem léteznek, vagy nem az előzőleg kiválasztott erőforrás típusok egyike.';
+
+$lang["page-title_clip_search"] = 'AI Okos Keresés';
+$lang["page-title_clip_setup"] = 'CLIP Plugin beállítása';
+$lang["page-title_clip_webcam"] = 'Webkamera Címke Generátor';

@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='填充为白色';
 $lang["openai_image_edit__mode_black"]='填充黑色';
 $lang["openai_image_edit__creating_new_resource"]='创建新资源';
 $lang["openai_image_edit__mode_clone"]='克隆填充';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI 获取 PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI 保存替代方案';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI 保存新建';

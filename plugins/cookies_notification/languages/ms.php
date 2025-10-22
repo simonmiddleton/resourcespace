@@ -9,3 +9,5 @@ $lang["cookies_notification_allow_using_site_on_no_feedback_label"] = 'Benarkan 
 $lang["cookies_notification_cookies_use_title"] = 'Penggunaan Cookies';
 $lang["cookies_notification_cookies_use_error_msg"] = 'Anda telah memutuskan untuk tidak membenarkan Cookies digunakan oleh ResourceSpace. Kami terpaksa log keluar anda kerana ResourceSpace memerlukan cookies untuk berfungsi dengan baik.';
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Anda dikehendaki menerima penggunaan kuki sebelum mengakses sistem.';
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Pemilihan Kuki';
+$lang["page-title_cookies_notification_setup"] = 'Tetapkan Plugin Pemberitahuan Kuki';

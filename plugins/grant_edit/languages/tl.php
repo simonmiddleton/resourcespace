@@ -9,3 +9,4 @@ $lang["grant_edit_date"] = 'Petsa ng pag-expire para sa pag-access ng pag-edit';
 $lang["grant_edit_list"] = 'Mga kasalukuyang gumagamit na may karagdagang access sa pag-edit';
 $lang["grant_edit_group_list"] = 'Mga kasalukuyang grupo na may karagdagang access sa pag-edit';
 $lang["grant_edit_delete_user"] = 'Kumpirmahin ang pagtanggal ng pinahusay na pag-access para sa';
+$lang["page-title_grant_edit_setup"] = 'I-set up ang Grant Edit Plugin';

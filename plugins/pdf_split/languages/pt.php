@@ -14,3 +14,4 @@ $lang["splitpdf_createnewalternativefile"]='Criar um novo arquivo alternativo pa
 $lang["range"]='Intervalo';
 $lang["plugin-pdf_split-title"]='Dividir PDF';
 $lang["plugin-pdf_split-desc"]='Permite que arquivos PDF sejam divididos em várias páginas';
+$lang["page-title_pdf_split_pdf_split"] = 'Dividir PDF';

@@ -19,3 +19,6 @@ $lang["feedback_text-html"] = 'Szöveg / HTML';
 $lang["feedback_options-comma_separated"] = 'Opciók: (vesszővel elválasztva)';
 $lang["feedback_add_new_field"] = 'Új mező hozzáadása';
 $lang["feedback_back_to_plugin_manager"] = 'Vissza a Bővítménykezelőhöz';
+
+$lang["page-title_feedback_feedback"] = 'Visszajelzés küldése';
+$lang["page-title_feedback_setup"] = 'Beállítás Plugin';

@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Tạo vector';
 $lang["clip_vector-statistics"] = 'Thống kê vector';
 $lang["clip-vector-cleanup"] = 'Xóa các vector mồ côi';
 $lang["clip-vector-cleanup-description"] = 'Xóa các vector thuộc về các tài nguyên không còn tồn tại hoặc không phải là một trong các loại tài nguyên đã chọn ở trên';
+
+$lang["page-title_clip_search"] = 'Tìm kiếm thông minh AI';
+$lang["page-title_clip_setup"] = 'Cài đặt Plugin CLIP';
+$lang["page-title_clip_webcam"] = 'Máy phát thẻ Webcam';

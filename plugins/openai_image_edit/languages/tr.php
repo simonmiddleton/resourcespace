@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Beyaz ile doldur';
 $lang["openai_image_edit__mode_black"]='Siyah ile doldur';
 $lang["openai_image_edit__creating_new_resource"]='Yeni kaynak oluşturma';
 $lang["openai_image_edit__mode_clone"]='Klon doldur';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNG Al';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Alternatifini Kaydet';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Yeni Kaydet';

@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Type van Externe Document Viewer
 $lang["embeddocument_embed_share"] = 'Document insluiten';
 $lang["plugin-embeddocument-title"] = 'Document Insluiten';
 $lang["plugin-embeddocument-desc"] = 'Biedt een functie om HTML te genereren voor insluitbare documentvoorbeelden op externe sites.';
+
+$lang["page-title_embeddocument_setup"] = 'Instellen van de Embed Document Plugin';
+$lang["page-title_embeddocument_viewer"] = 'Documentviewer insluiten';

@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='YouTubeへのアップロード時に使用する�
 $lang["youtube_publish_add_anchor"]='YouTubeのURLメタデータフィールドに保存する際に、アンカータグを追加しますか？';
 $lang["plugin-youtube_publish-title"]='YouTube公開';
 $lang["plugin-youtube_publish-desc"]='設定されたYouTubeアカウントにビデオリソースを公開します。';
+$lang["page-title_youtube_publish_setup"] = 'プラグインの設定';
+$lang["page-title_youtube_publish_youtube_upload"] = 'YouTubeにリソースを公開する';

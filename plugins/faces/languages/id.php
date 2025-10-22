@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Tampilkan fungsionalitas AI Faces di halaman tampila
 $lang["faces_count_faces"] = 'Total wajah terdeteksi';
 $lang["faces_count_missing"] = 'Gambar untuk diproses';
 $lang["faces-tag-field-not-set"] = 'Bidang penandaan tidak dikonfigurasi';
+
+$lang["page-title_faces_setup"] = 'Pengaturan Plugin Wajah';

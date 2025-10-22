@@ -16,3 +16,5 @@ $lang["are_available-1"]='θα μετατραπεί';
 $lang["are_available-0"]='θα μετατραπεί';
 $lang["plugin-format_chooser-title"]='Επιλογέας Μορφής';
 $lang["plugin-format_chooser-desc"]='Σας επιτρέπει να επιλέξετε διαφορετικές μορφές κατά τη λήψη αρχείων που δημιουργούνται άμεσα.';
+$lang["page-title_format_chooser_convert"] = 'Επιλογέας Μορφής';
+$lang["page-title_format_chooser_setup"] = 'Ρύθμιση Πρόσθετου Επιλογής Μορφής';

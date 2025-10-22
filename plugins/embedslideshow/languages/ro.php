@@ -25,3 +25,6 @@ $lang["embedslideshow_dynamic_size"] = 'Redimensionare dinamică a previzualiză
 $lang["embedslideshow_seconds"] = '? secunde';
 $lang["plugin-embedslideshow-title"] = 'Incorporează prezentare de diapozitive';
 $lang["plugin-embedslideshow-desc"] = 'Oferă o funcție pentru generarea de HTML pentru slideshow-uri de colecții încorporabile pe site-uri externe';
+
+$lang["page-title_embedslideshow_setup"] = 'Configurare plugin pentru slideshow încorporat';
+$lang["page-title_embedslideshow_viewer"] = 'Incorporează prezentarea';

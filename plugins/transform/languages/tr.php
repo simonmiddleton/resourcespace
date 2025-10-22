@@ -80,3 +80,6 @@ $lang["plugin-transform-desc"]='Kırpılmış ve ölçeklendirilmiş alternatif 
 $lang["use_system_icc_profile_config"]='ICC profil işleme için sistem yapılandırmasını kullan. Yukarıdaki sRGB seçeneklerini geçersiz kılacaktır.';
 $lang["transform-recrop"]='Yeniden kırp resmi';
 $lang["cropper_preset_sizes"] = 'Önceden tanımlanmış boyutlar';
+$lang["page-title_transform_collection_transform"] = 'Kaynağı Dönüştür';
+$lang["page-title_transform_crop"] = 'Kırpma Kaynağı';
+$lang["page-title_transform_setup"] = 'Dönüşüm Eklentisini Ayarla';

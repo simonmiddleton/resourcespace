@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Fjernbetjent dokumentvisning res
 $lang["embeddocument_embed_share"] = 'Indlejr dokument';
 $lang["plugin-embeddocument-title"] = 'Indlejr dokument';
 $lang["plugin-embeddocument-desc"] = 'Giver en funktion til at generere HTML til indlejrede dokumentforhåndsvisninger på eksterne sider.';
+
+$lang["page-title_embeddocument_setup"] = 'Opsæt Embed Document Plugin';
+$lang["page-title_embeddocument_viewer"] = 'Indsæt dokumentvisning';

@@ -36,3 +36,8 @@ $lang["brand_guidelines_configuration"] = 'Konfigurace pokynů pro značku';
 $lang["brand_guidelines_fallback_size_thm"] = 'Velikost náhradního obrázku pro rozvržení miniatur';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Velikost obrázku pro záložní rozvržení na poloviční šířku';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Velikost náhradního obrázku pro rozvržení na celou šířku';
+
+$lang["page-title_brand_guidelines_content"] = 'Spravovat obsah pokynů pro značku';
+$lang["page-title_brand_guidelines_guidelines"] = 'Pokyny pro značku';
+$lang["page-title_brand_guidelines_setup"] = 'Nastavit plugin pro směrnice značky';
+$lang["page-title_brand_guidelines_toc"] = 'Upravit obsah';

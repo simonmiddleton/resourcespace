@@ -35,3 +35,6 @@ $lang["emu_createdfromemu"] = '从EMU插件创建';
 $lang["emu_interval_run"] = '在以下间隔运行脚本（例如 +1 天，+2 周，双周）。留空则每次 cron_copy_hitcount.php 运行时都会运行';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-desc"] = '[高级] 允许从EMu数据库提取资源元数据。';
+
+$lang["page-title_emu_emu_object_details"] = 'EMu 对象详情';
+$lang["page-title_emu_setup"] = '设置 插件';

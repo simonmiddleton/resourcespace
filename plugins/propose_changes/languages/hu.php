@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"] = 'Javasolt szerkesztés';
 $lang["actions_propose_changes"] = 'Mutasd meg a felhasználó által javasolt változtatásokat az akcióim listájában';
 $lang["propose_changes_emailreviewed"] = '[img_headerlogo]<br />A javasolt változtatásokat átnéztük.<br/>[changesummary]<br/>Kattintson az alábbiakra a változtatások áttekintéséhez<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"] = '[img_headerlogo]<br />Javasolt változtatások benyújtásra kerültek.<br/>[changesummary]<br/>Kattintson az alábbiakra a változtatások áttekintéséhez<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'Javasolj módosításokat';
+$lang["page-title_propose_changes_setup"] = 'Állítsa be a Javasolt Változtatások Bővítményt';

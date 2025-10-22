@@ -7,3 +7,4 @@ $lang["meta_append_configuration_date_format"]='Tarih formatını seçin - <a hr
 $lang["meta_append_configuration_prompt"]='Meta onay kutusu istemini ekle';
 $lang["plugin-meta_append-title"]='Meta Ekle';
 $lang["plugin-meta_append-desc"]='Kullanıcı tanımlı zaman damgası ve günlük yükleme numarasını (kullanıcı başına) bir alana ekle';
+$lang["page-title_meta_append_setup"] = 'Meta Ekleme Eklentisini Ayarla';

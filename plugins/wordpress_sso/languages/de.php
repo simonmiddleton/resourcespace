@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Hier klicken, um erneut anzumelden zu versuchen';
 $lang["origin_wordpress_sso"]='Wordpress SSO-Plugin';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Ermöglicht Single Sign-On mit Wordpress-Installation';
+$lang["page-title_wordpress_sso_logout"] = 'SSO Abmeldung';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Kein Benutzer';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Wordpress SSO Plugin einrichten';

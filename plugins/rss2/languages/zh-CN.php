@@ -13,3 +13,6 @@ $lang["rss_feed_for_search_filter"]='创建此查询的 RSS 订阅。';
 $lang["filtered_resource_update_for"]='搜索 [%search%] 的筛选资源更新';
 $lang["plugin-rss2-title"]='RSS订阅';
 $lang["plugin-rss2-desc"]='启用经过身份验证的新内容RSS源生成，包括可配置字段。';
+$lang["page-title_rss2_rssfeed"] = 'RSS 订阅源';
+$lang["page-title_rss2_rssfilter"] = 'RSS过滤器';
+$lang["page-title_rss2_setup"] = '设置RSS插件';

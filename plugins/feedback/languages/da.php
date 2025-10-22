@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Tilføj nyt felt';
 $lang["feedback_back_to_plugin_manager"] = 'Tilbage til Plugin Manager';
 $lang["plugin-feedback-title"] = 'Feedback';
 $lang["plugin-feedback-desc"] = 'Tilføjer en generel brugerfeedbackfunktion med konfigurerbare spørgsmål.';
+
+$lang["page-title_feedback_feedback"] = 'Indsend feedback';
+$lang["page-title_feedback_setup"] = 'Opsætning Plugin';

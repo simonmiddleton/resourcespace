@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='Fonte GPT';
 $lang["openai_gpt_language"] = 'Lingua di output';
 $lang["openai_gpt_language_user"] = 'La lingua dell\'utente attuale';
 $lang["openai_gpt_overwrite_data"] = 'Sovrascrivere i dati esistenti nei campi configurati?';
+$lang["page-title_openai_gpt_setup"] = 'Imposta il plugin OpenAI GPT';

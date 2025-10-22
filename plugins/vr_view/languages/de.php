@@ -21,3 +21,5 @@ $lang["vr_view_orig_image"]='Verwenden Sie die Originalressourcendatei als Quell
 $lang["vr_view_orig_video"]='Verwenden Sie die Originalressourcendatei als Quelle für die Video-Vorschau?';
 $lang["plugin-vr_view-title"]='VR-Ansicht';
 $lang["plugin-vr_view-desc"]='Google VR View - 360-Grad-Bild- und Video-Vorschauen (equirectangulares Format)';
+$lang["page-title_vr_view_download"] = 'VR Ansicht';
+$lang["page-title_vr_view_setup"] = 'VR-Ansicht Plugin einrichten';

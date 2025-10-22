@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'ब्रांड दिशानि
 $lang["brand_guidelines_fallback_size_thm"] = 'थंबनेल लेआउट फॉलबैक छवि आकार';
 $lang["brand_guidelines_fallback_size_half_width"] = 'हाफ-विथ लेआउट फॉलबैक इमेज आकार';
 $lang["brand_guidelines_fallback_size_full_width"] = 'पूर्ण-चौड़ाई लेआउट फॉलबैक छवि आकार';
+
+$lang["page-title_brand_guidelines_content"] = 'ब्रांड दिशानिर्देश सामग्री प्रबंधित करें';
+$lang["page-title_brand_guidelines_guidelines"] = 'ब्रांड दिशानिर्देश';
+$lang["page-title_brand_guidelines_setup"] = 'ब्रांड दिशानिर्देश प्लगइन सेटअप करें';
+$lang["page-title_brand_guidelines_toc"] = 'सामग्री संपादित करें';

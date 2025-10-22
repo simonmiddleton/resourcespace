@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'Αρχειοθετημένος πόρος μ
 $lang["falcon_link_error_falcon_check_tags"] = 'Παρακαλώ ελέγξτε ότι η περιγραφή και οι ετικέτες δεν είναι κενές';
 $lang["plugin-falcon_link-title"] = 'Σύνδεσμος Falcon';
 $lang["plugin-falcon_link-desc"] = '[Προηγμένο] Δημοσίευση πόρων στο Falcon.io';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Ρύθμιση Πρόσθετου Falcon Link';

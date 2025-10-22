@@ -5,3 +5,5 @@ $lang['conditional_terms_description'] = "This plugin allows you to set a condit
 $lang['conditional_terms_field'] = "Metadata field";
 $lang['conditional_terms_value'] = "Value";
 $lang['conditional_terms_plugin_misconfigured'] = "Conditional terms plugin is misconfigured";
+
+$lang["page-title_conditional_terms_setup"] = "Setup Conditional Terms Plugin";

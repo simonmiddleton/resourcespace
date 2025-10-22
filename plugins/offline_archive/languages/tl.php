@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Nasa proseso',
   2 => 'Kumpleto',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Pamahalaan ang mga Archive';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Offline Archive';
+$lang["page-title_offline_archive_pending_restore"] = 'Naghihintay na Pagbawi ng Yaman';
+$lang["page-title_offline_archive_restore_request"] = 'Humiling ng Pagbawi ng Yaman';
+$lang["page-title_offline_archive_restore"] = 'Ibalik ang Archive';
+$lang["page-title_offline_archive_setup"] = 'I-set up ang Plugin';
+$lang["page-title_offline_archive_view_archives"] = 'Tingnan ang mga Archive ng Resource';
+$lang["page-title_offline_archive_view_pending"] = 'Tingnan ang Mga Nakatagong Archive';

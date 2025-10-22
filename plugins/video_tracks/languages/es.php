@@ -28,3 +28,5 @@ $lang["video_tracks_save_alt_not_perm"]='No se puede guardar la alternativa sin 
 $lang["video_tracks_upgrade_msg_deprecated_output_format"]='¡IMPORTANTE! El plugin de Pistas de Video ha desaprobado la configuración de formatos de salida. Solo se pueden configurar en config.php. El plugin no funcionará como se espera hasta que la opción de configuración haya sido copiada. Por favor, copie lo siguiente:- %nl%####%nl%[output_formats_config]####%nl%';
 $lang["plugin-video_tracks-title"]='Pistas de Video';
 $lang["plugin-video_tracks-desc"]='Añadir soporte para diferentes opciones de audio y subtítulos para recursos de video';
+$lang["page-title_video_tracks_create_video"] = 'Crear Video';
+$lang["page-title_video_tracks_setup"] = 'Configurar el complemento de pistas de video';

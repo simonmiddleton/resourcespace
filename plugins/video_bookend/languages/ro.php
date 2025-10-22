@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Eșec!';
 $lang["bookend-could-not-open-file"]='Eroare - nu s-a putut deschide fișierul!';
 $lang["plugin-video_bookend-title"]='Carcasă video';
 $lang["plugin-video_bookend-desc"]='Adaugă posibilitatea de a descărca un videoclip cu un titlu și un grafic de final';
+$lang["page-title_video_bookend_bookend"] = 'Culoar video';

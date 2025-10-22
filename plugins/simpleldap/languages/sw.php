@@ -50,3 +50,5 @@ $lang["simpleldap_usercomment"]='Imeundwa na programu-jalizi ya SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"]='Imesasishwa kwa mtumiaji wa LDAP na SimpleLDAP.';
 $lang["origin_simpleldap"]='Programu-jalizi ya SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Usikague FQDN ya seva dhidi ya CN ya cheti';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Jaribu Uthibitishaji wa LDAP';
+$lang["page-title_simpleldap_setup"] = 'Weka Plugin ya LDAP Rahisi';

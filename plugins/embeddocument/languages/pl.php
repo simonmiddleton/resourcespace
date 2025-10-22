@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Zdalny przeglądarka dokumentów
 $lang["embeddocument_embed_share"] = 'Osadź dokument';
 $lang["plugin-embeddocument-title"] = 'Osadź dokument';
 $lang["plugin-embeddocument-desc"] = 'Zapewnia funkcję generowania HTML dla osadzalnych podglądów dokumentów na zdalnych stronach.';
+
+$lang["page-title_embeddocument_setup"] = 'Ustawienia wtyczki osadzania dokumentów';
+$lang["page-title_embeddocument_viewer"] = 'Osadź przeglądarkę dokumentów';

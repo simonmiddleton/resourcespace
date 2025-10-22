@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"] = 'Nem lehet exportálni, mivel a konfigu
 $lang["video_splice_incorrect_quantity"] = 'Érvényes erőforrást eltávolítottak vagy hozzáadtak a gyűjteményhez, mióta ez az oldal betöltődött. Kérjük, próbálja újra.';
 $lang["video_splice_createdfromvideosplice"] = 'Videó Splice bővítményből készült';
 $lang["video_splice_error_invalid_action"] = 'Hiba: Érvénytelen művelet';
+$lang["page-title_video_splice_setup"] = 'Videó Splice Plugin beállítása';
+$lang["page-title_video_splice_splice"] = 'Videó összefűzése';
+$lang["page-title_video_splice_trim"] = 'Videó vágása';

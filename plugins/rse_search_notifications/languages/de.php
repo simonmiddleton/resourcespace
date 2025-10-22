@@ -26,3 +26,5 @@ $lang["columnheader-last-found"]='Zuletzt gefunden';
 $lang["plugin-rse_search_notifications-title"]='Suchbenachrichtigungen';
 $lang["plugin-rse_search_notifications-desc"]='Benachrichtige den Benutzer, wenn Änderungen an einer gespeicherten Suche auftreten';
 $lang["search_notifications_watched_searches-tooltip"] = 'Steuern Sie Ihre gespeicherten Suchen';
+$lang["page-title_rse_search_notifications_setup"] = 'Suchfunktion-Benachrichtigungs-Plugin einrichten';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Beobachtete Suchen';

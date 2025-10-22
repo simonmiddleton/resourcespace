@@ -52,3 +52,5 @@ $lang["youtube_chunk_size"]='Größe der Datenblöcke, die beim Hochladen auf Yo
 $lang["youtube_publish_add_anchor"]='Sollen Anker-Tags zur URL hinzugefügt werden, wenn sie im Feld "YouTube-URL-Metadaten" gespeichert wird?';
 $lang["plugin-youtube_publish-title"]='YouTube Veröffentlichen';
 $lang["plugin-youtube_publish-desc"]='Veröffentlicht Videoressource auf dem konfigurierten YouTube-Konto.';
+$lang["page-title_youtube_publish_setup"] = 'Plugin einrichten';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Ressource auf YouTube veröffentlichen';

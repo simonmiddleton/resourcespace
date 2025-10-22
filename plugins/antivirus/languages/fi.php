@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Siirtämässä resurssia [%resource_id%] arkis
 $lang["antivirus_av_not_setup_error"] = 'Antiviruksen polkua ei ole määritetty!';
 $lang["plugin-antivirus-title"] = 'Virustorjunta';
 $lang["plugin-antivirus-desc"] = ' Virustorjuntatoiminnot integroimalla useimpiin tunnettuihin virustorjuntaohjelmiin, jotka voivat suorittaa komentorivin';
+
+$lang["page-title_antivirus_setup"] = 'Aseta virustorjunta-laajennus';

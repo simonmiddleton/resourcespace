@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='GPT来源';
 $lang["openai_gpt_language"] = '输出语言';
 $lang["openai_gpt_language_user"] = '当前用户的语言';
 $lang["openai_gpt_overwrite_data"] = '是否覆盖已配置字段中的现有数据？';
+$lang["page-title_openai_gpt_setup"] = '设置 OpenAI GPT 插件';

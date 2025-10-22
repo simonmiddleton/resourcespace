@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'Il file CSV ha un BOM che non è stato po
 $lang["csv_upload_validating"] = 'Validazione';
 $lang["csv_upload_processing"] = 'Elaborazione';
 $lang["processing_batch_edit_save"] = 'riga [row_number] di [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Carica CSV';

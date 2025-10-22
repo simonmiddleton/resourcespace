@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'U tijeku',
   2 => 'Završeno',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Upravljanje arhivima';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Offline arhiva';
+$lang["page-title_offline_archive_pending_restore"] = 'Na čekanju obnova resursa';
+$lang["page-title_offline_archive_restore_request"] = 'Zatraži obnavljanje resursa';
+$lang["page-title_offline_archive_restore"] = 'Vrati arhivu';
+$lang["page-title_offline_archive_setup"] = 'Postavke dodatka';
+$lang["page-title_offline_archive_view_archives"] = 'Pogledaj arhive resursa';
+$lang["page-title_offline_archive_view_pending"] = 'Pogledaj čekajuće arhive';

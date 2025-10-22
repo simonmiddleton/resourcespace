@@ -15,3 +15,6 @@ $lang["title-too-long"]='Pole názvu je delší než povolených 50 znaků';
 $lang["plugin-news-title"]='Novinky';
 $lang["plugin-news-desc"]='Přidává novinky na domovskou stránku';
 $lang["news_manage-tooltip"] = 'Přidat, upravit nebo smazat novinky';
+$lang["page-title_news_news_content_edit"] = 'Upravit obsah novinek';
+$lang["page-title_news_news_edit"] = 'Upravit zprávy';
+$lang["page-title_news_news"] = 'Novinky';

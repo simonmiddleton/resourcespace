@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"] = 'Töltsd ki fehérrel';
 $lang["openai_image_edit__mode_black"] = 'Töltsd ki feketére';
 $lang["openai_image_edit__mode_clone"] = 'Klónozás kitöltése';
 $lang["openai_image_edit__creating_new_resource"] = 'Új erőforrás létrehozása';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Mentés Alternatíva';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Mentés Új';

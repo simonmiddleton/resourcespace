@@ -14,3 +14,5 @@ $lang["downloadformat"]='ڈاؤن لوڈ فارمیٹ';
 $lang["are_available-2"]='تبدیل کیا جائے گا';
 $lang["are_available-1"]='تبدیل کیا جائے گا';
 $lang["are_available-0"]='تبدیل کیا جائے گا';
+$lang["page-title_format_chooser_convert"] = 'فارمیٹ منتخب کرنے والا';
+$lang["page-title_format_chooser_setup"] = 'فارمیٹ چننے والا پلگ ان ترتیب دیں';

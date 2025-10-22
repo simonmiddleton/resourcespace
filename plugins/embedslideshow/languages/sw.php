@@ -23,3 +23,6 @@ $lang["embedslideshow_notransition"] = 'Hakuna mpito wa moja kwa moja';
 $lang["embedslideshow_directlink"] = 'URL ya moja kwa moja isiyopachikwa';
 $lang["embedslideshow_directlinkopen"] = 'Fungua kiungo cha moja kwa moja (ukurasa mpya)';
 $lang["embedslideshow_dynamic_size"] = 'Kubadilisha ukubwa wa hakikisho kwa nguvu kulingana na ukubwa wa kichezaji?';
+
+$lang["page-title_embedslideshow_setup"] = 'Weka Plugin ya Kuonyesha Slideshow';
+$lang["page-title_embedslideshow_viewer"] = 'Weka Slideshow';

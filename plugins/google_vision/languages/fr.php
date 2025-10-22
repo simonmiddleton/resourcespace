@@ -23,3 +23,7 @@ $lang["google_vision_translation_languages"]='Liste de codes de langues séparé
 $lang["google_vision_translation_keep_english"]='Conserver les mots-clés anglais d\'origine ?';
 $lang["plugin-google_vision-title"]='API Google Vision';
 $lang["plugin-google_vision-desc"]='Capacité de reconnaissance d\'image. Transmet les images téléchargées à l\'API Google Cloud Vision et définit les métadonnées suggérées.';
+$lang["page-title_google_vision_process_existing"] = 'Processus Google Vision existant';
+$lang["page-title_google_vision_setup"] = 'Configurer le plugin Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

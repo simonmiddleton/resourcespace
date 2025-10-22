@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='Flere poster fundet - indtast v
 $lang["museumplus_error_module_no_field_maps"]='Kan ikke synkronisere data fra MuseumPlus. Årsag: modulet \'%name\' har ingen konfigurerede feltmappings.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Tillader udtrækning af ressource-metadata fra MuseumPlus ved hjælp af dets REST API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Objekt Detaljer';
+$lang["page-title_museumplus_setup_module"] = 'Opsæt MuseumPlus Modul';
+$lang["page-title_museumplus_setup"] = 'Opsæt MuseumPlus-plugin';

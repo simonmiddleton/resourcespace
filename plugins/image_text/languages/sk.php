@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'vrch',
    'bottom' => 'spodok',
 );
+$lang["page-title_image_text_setup"] = 'Nastaviť plugin pre text obrázkov';

@@ -7,3 +7,4 @@ $lang["meta_append_configuration_date_format"]='Выберите формат д
 $lang["meta_append_configuration_prompt"]='Добавить метаданные: подтверждение флажка';
 $lang["plugin-meta_append-title"]='Добавить метаданные';
 $lang["plugin-meta_append-desc"]='Добавить определяемую пользователем временную метку и ежедневный номер загрузки (на пользователя) в поле';
+$lang["page-title_meta_append_setup"] = 'Настройка плагина Meta Append';

@@ -42,3 +42,6 @@ $lang["falcon_link_error_falcon_check_tags"] = 'Lütfen açıklamanın ve etiket
 $lang["falcon_link_text_field"] = 'Şahin şablon metin alanı';
 $lang["plugin-falcon_link-title"] = 'Şahin Bağlantısı';
 $lang["plugin-falcon_link-desc"] = '[İleri] Kaynakları Falcon.io\'ya yayınla';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Falcon Link Eklentisini Kurun';

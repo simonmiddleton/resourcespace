@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='Ferramentas de Imagem (transformar)';
 $lang["plugin-transform-desc"]='Permite a criação de imagens alternativas recortadas e redimensionadas (jCrop com suporte móvel)';
 $lang["use_system_icc_profile_config"]='Usar configuração do sistema para processamento de perfil ICC. Irá substituir as opções sRGB acima.';
 $lang["cropper_preset_sizes"] = 'Tamanhos predefinidos';
+$lang["page-title_transform_collection_transform"] = 'Transformar Recurso';
+$lang["page-title_transform_crop"] = 'Recortar Recurso';
+$lang["page-title_transform_setup"] = 'Configurar Plugin de Transformação';

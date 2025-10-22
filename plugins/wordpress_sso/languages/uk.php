@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"]='Увійти за допомогою 
 $lang["wordpress_sso_use_wp_login"]='Увійти за допомогою облікового запису WordPress';
 $lang["wordpress_sso_retry"]='Натисніть тут, щоб спробувати увійти знову';
 $lang["origin_wordpress_sso"]='Плагін SSO для Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Вихід з SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Немає користувача';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Налаштування плагіна SSO для Wordpress';

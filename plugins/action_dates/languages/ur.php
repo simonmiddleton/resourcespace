@@ -36,3 +36,5 @@ $lang["weekday-3"] = 'بدھ';
 $lang["weekday-4"] = 'جمعرات';
 $lang["weekday-5"] = 'جمعہ';
 $lang["weekday-6"] = 'ہفتہ';
+
+$lang["page-title_action_dates_setup"] = 'ایکشن تاریخوں کا پلگ ان ترتیب دیں';

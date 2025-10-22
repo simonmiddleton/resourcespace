@@ -6,3 +6,4 @@ $lang["system_reset_warning"]='সতর্কতা! এটি সমস্ত 
 $lang["system_reset_confirm"]='আপনি কি নিশ্চিত? এটি পূর্বাবস্থায় ফিরিয়ে আনা যাবে না।';
 $lang["system_reset_delete_all"]='সমস্ত ডেটা এবং ফাইল মুছে ফেলুন';
 $lang["system_reset-tooltip"] = 'সিস্টেম রিসেট সম্পন্ন করুন সমস্ত ফাইল এবং ডেটা মুছে ফেলার জন্য';
+$lang["page-title_system_reset_reset"] = 'সিস্টেম রিসেট';

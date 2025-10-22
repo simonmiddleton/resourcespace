@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='선택한 기록을 제외하고 이벤트�
 $lang["rse_version_invalid_time"]='[date] 이전으로 되돌리는 것은 지원되지 않습니다';
 $lang["plugin-rse_version-title"]='버전 관리';
 $lang["plugin-rse_version-desc"]='ResourceSpace 엔터프라이즈 - 버전 관리';
+$lang["page-title_rse_version_revert"] = '리소스 버전 되돌리기';
+$lang["page-title_rse_version_setup"] = '버전 플러그인 설정';

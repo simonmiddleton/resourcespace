@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV-tiedostossa on BOM, jota ei voitu poi
 $lang["csv_upload_validating"] = 'Vahvistaminen';
 $lang["csv_upload_processing"] = 'Käsittely';
 $lang["processing_batch_edit_save"] = 'rivi [row_number] / [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Lataa CSV';

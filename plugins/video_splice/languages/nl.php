@@ -47,3 +47,6 @@ $lang["video-trim_output"]='Uitvoer';
 $lang["video_splice_error_invalid_action"]='Fout: Ongeldige actie';
 $lang["plugin-video_splice-title"]='Video Samenvoegen';
 $lang["plugin-video_splice-desc"]='Voegt videobijsnijden en -samenvoegen functionaliteit toe';
+$lang["page-title_video_splice_setup"] = 'Instellen Video Splice Plugin';
+$lang["page-title_video_splice_splice"] = 'Video samenvoegen';
+$lang["page-title_video_splice_trim"] = 'Video bijsnijden';

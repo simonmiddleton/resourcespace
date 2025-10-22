@@ -235,7 +235,7 @@ config_boolean_field("simplesaml_check_idp_cert_expiry", $lang['simplesaml_check
 function showhidesamlconfigs(option) {
      if (option == "0") {
         jQuery("#question_simplesaml_lib_path").slideDown(0);
-        jQuery("#generate_sp_config_link").slideDown(0);
+        jQuery("#generate_sp_config_link").slideUp(0);
         jQuery("#question_simplesaml_use_www").slideUp(0);
         jQuery("#question_simplesaml_sp").slideDown(0);
         jQuery("#question_simplesaml_check_idp_cert_expiry").slideDown(0);

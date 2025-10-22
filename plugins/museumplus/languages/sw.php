@@ -48,3 +48,6 @@ $lang["museumplus_error_unknown_type_saved_config"]='Aina ya \'museumplus_module
 $lang["museumplus_error_invalid_association"]='Muunganiko wa moduli si sahihi. Tafadhali hakikisha kwamba Moduli sahihi na/au Kitambulisho cha Rekodi kimeingizwa!';
 $lang["museumplus_id_returns_multiple_records"]='Rekodi nyingi zimepatikana - tafadhali ingiza kitambulisho cha kiufundi badala yake';
 $lang["museumplus_error_module_no_field_maps"]='Haiwezi kulandanisha data kutoka MuseumPlus. Sababu: moduli \'%name\' haina ramani za uwanja zilizosanidiwa.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'Maelezo ya Kitu cha MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'Weka Moduli ya MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Weka Plugin ya MuseumPlus';

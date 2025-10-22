@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Bumuo ng mga subtitle at idagdag bilang mga altern
 $lang["whisper_subtitles_name"] = 'Awtomatikong nabuo na mga subtitle';
 $lang["whisper_transcript"] = 'Gumawa ng transcript file at idagdag bilang alternatibong file downloads';
 $lang["whisper_transcript_name"] = 'Awtomatikong nabuo na transcript';
+
+$lang["page-title_whisper_setup"] = 'I-set up ang Whisper Plugin';

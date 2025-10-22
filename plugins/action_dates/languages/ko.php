@@ -38,3 +38,5 @@ $lang["weekday-5"] = '금요일';
 $lang["weekday-6"] = '토요일';
 $lang["plugin-action_dates-title"] = '작업 날짜';
 $lang["plugin-action_dates-desc"] = '날짜 필드를 기반으로 리소스의 예약 삭제 또는 제한을 가능하게 합니다';
+
+$lang["page-title_action_dates_setup"] = '액션 날짜 플러그인 설정';

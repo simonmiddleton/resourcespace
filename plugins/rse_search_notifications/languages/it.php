@@ -26,3 +26,5 @@ $lang["columnheader-last-found"]='Ultimo trovato';
 $lang["plugin-rse_search_notifications-title"]='Notifiche di Ricerca';
 $lang["plugin-rse_search_notifications-desc"]='Notifica l\'utente quando si verificano modifiche a una ricerca salvata';
 $lang["search_notifications_watched_searches-tooltip"] = 'Controlla le tue ricerche salvate';
+$lang["page-title_rse_search_notifications_setup"] = 'Imposta il plugin di notifiche di ricerca';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Ricerche seguite';

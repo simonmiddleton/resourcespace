@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='Jaza na nyeupe';
 $lang["openai_image_edit__mode_black"]='Jaza na nyeusi';
 $lang["openai_image_edit__creating_new_resource"]='Kuunda rasilimali mpya';
 $lang["openai_image_edit__mode_clone"]='Clone jaza';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Pata PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Hifadhi Mbadala';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI Hifadhi Mpya';

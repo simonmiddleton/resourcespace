@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Οι προτει�
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Οι προτεινόμενες αλλαγές έχουν υποβληθεί.<br/>[changesummary]<br/>Κάντε κλικ παρακάτω για να εξετάσετε τις αλλαγές<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Προτείνετε Αλλαγές';
 $lang["plugin-propose_changes-desc"]='Προσθέτει επιλογή για να επιτρέπεται στους χρήστες να προτείνουν αλλαγές μεταδεδομένων χωρίς δικαίωμα επεξεργασίας';
+$lang["page-title_propose_changes_propose_changes"] = 'Προτείνετε Αλλαγές';
+$lang["page-title_propose_changes_setup"] = 'Ρύθμιση Πρόταση Αλλαγών Πρόσθετου';

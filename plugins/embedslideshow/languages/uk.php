@@ -23,3 +23,6 @@ $lang["embedslideshow_notransition"] = 'Немає автоматичного п
 $lang["embedslideshow_directlink"] = 'Не вбудоване пряме посилання';
 $lang["embedslideshow_directlinkopen"] = 'Відкрити пряме посилання (нова сторінка)';
 $lang["embedslideshow_dynamic_size"] = 'Динамічне змінення розміру попереднього перегляду залежно від розміру плеєра?';
+
+$lang["page-title_embedslideshow_setup"] = 'Налаштування плагіна вбудованого слайд-шоу';
+$lang["page-title_embedslideshow_viewer"] = 'Вставити слайд-шоу';

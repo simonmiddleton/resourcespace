@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Mislykkedes!';
 $lang["bookend-could-not-open-file"]='Fejl - kunne ikke åbne filen!';
 $lang["plugin-video_bookend-title"]='Video Bogmærke';
 $lang["plugin-video_bookend-desc"]='Tilføjer muligheden for at downloade en video med en titel og slutgrafik';
+$lang["page-title_video_bookend_bookend"] = 'Video bogstøtte';

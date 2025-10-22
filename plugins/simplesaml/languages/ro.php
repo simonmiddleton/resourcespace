@@ -105,3 +105,6 @@ $lang["simplesaml_metadata_updates"] = 'Actualizări de metadate SimpleSAML';
 $lang["simplesaml_metadata_warning"] = 'Metadata nu a fost actualizată din %date%';
 $lang["simplesaml_metadata_invalid"] = 'Metadatele IdP sunt invalide sau indisponibile';
 $lang["simplesaml_admin_password_reset"] = 'Resetează parola de administrator a site-ului de test SimpleSAML (opțional)';
+$lang["page-title_simplesaml_about"] = 'SAML Despre';
+$lang["page-title_simplesaml_generate_sp_config"] = 'Generați configurația SP';
+$lang["page-title_simplesaml_setup"] = 'Configurare Plugin Simple SAML';

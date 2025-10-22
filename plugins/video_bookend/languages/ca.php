@@ -11,3 +11,4 @@ $lang["bookend-failed"]='Fallat!';
 $lang["bookend-could-not-open-file"]='Error - no s\'ha pogut obrir el fitxer!';
 $lang["plugin-video_bookend-title"]='Vídeo Bookend';
 $lang["plugin-video_bookend-desc"]='Afegeix la capacitat de descarregar un vídeo amb un títol i un gràfic final';
+$lang["page-title_video_bookend_bookend"] = 'Marcador de vídeo';

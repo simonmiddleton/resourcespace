@@ -45,3 +45,6 @@ $lang["video_splice_incorrect_quantity"]='Mae adnodd dilys wedi\'i ddileu neu\'i
 $lang["video_splice_createdfromvideosplice"]='Creuodd o\'r plugin Video Splice';
 $lang["video_splice_error_invalid_action"]='Gwall : Gweithred annilys';
 $lang["action-splice"]='Torri a gosod';
+$lang["page-title_video_splice_setup"] = 'Gosod Plugin Torri Fideo';
+$lang["page-title_video_splice_splice"] = 'Cymysgu Fideo';
+$lang["page-title_video_splice_trim"] = 'Torri Fideo';

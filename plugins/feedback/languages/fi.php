@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Lisää uusi kenttä';
 $lang["feedback_back_to_plugin_manager"] = 'Takaisin lisäosien hallintaan';
 $lang["plugin-feedback-title"] = 'Palaute';
 $lang["plugin-feedback-desc"] = 'Lisää yleisen käyttäjäpalautetoiminnon, jossa on muokattavia kysymyksiä.';
+
+$lang["page-title_feedback_feedback"] = 'Lähetä palautetta';
+$lang["page-title_feedback_setup"] = 'Aseta liitännäinen';

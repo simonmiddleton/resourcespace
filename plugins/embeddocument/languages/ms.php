@@ -12,3 +12,5 @@ $lang["embeddocument_maximise"] = 'maksimumkan';
 $lang["embeddocument_heading"] = 'Konfigurasi Pemandu Dokumen Jauh';
 $lang["embeddocument_specify_resourcetype"] = 'Sila nyatakan jenis sumber yang mana fungsi \'embed\' harus muncul.';
 $lang["embeddocument_document_resourcetype"] = 'Jenis Sumber Pemandu Dokumen Jauh';
+$lang["page-title_embeddocument_setup"] = 'Tetapkan Plugin Dokumen Terbenam';
+$lang["page-title_embeddocument_viewer"] = 'Sisipkan Penampil Dokumen';

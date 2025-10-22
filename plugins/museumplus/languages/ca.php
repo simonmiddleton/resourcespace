@@ -53,3 +53,6 @@ $lang["museumplus_error_module_no_field_maps"]='No es possible sincronitzar les 
 $lang["museumplus_field_mappings"]='MuseumPlus - Assignacions de camps de ResourceSpace';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='[Avançat] Permet extreure les metadades dels recursos de MuseumPlus utilitzant la seva API REST (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'Detalls de l\'objecte MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'Configuració del mòdul MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Configura el complement MuseumPlus';

@@ -11,3 +11,5 @@ $lang["antivirus_moving_file"] = 'Verplaatsen van bronbestand [%resource_id%] na
 $lang["antivirus_av_not_setup_error"] = 'Antivirus pad niet ingesteld!';
 $lang["plugin-antivirus-title"] = 'Antivirus';
 $lang["plugin-antivirus-desc"] = ' Antivirusmogelijkheden door integratie met de meeste bekende antivirus-engines die via de opdrachtregel kunnen worden uitgevoerd';
+
+$lang["page-title_antivirus_setup"] = 'Installeer Antivirus Plugin';

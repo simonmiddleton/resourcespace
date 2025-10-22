@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"] = 'Log masuk menggunakan akaun bukan W
 $lang["wordpress_sso_use_wp_login"] = 'Log masuk menggunakan akaun WordPress';
 $lang["wordpress_sso_retry"] = 'Klik di sini untuk mencuba dan log masuk semula';
 $lang["origin_wordpress_sso"] = 'Wordpress SSO plugin';
+$lang["page-title_wordpress_sso_logout"] = 'Keluar SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Tiada Pengguna';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Pasang Plugin SSO Wordpress';

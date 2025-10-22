@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Generación de vectores';
 $lang["clip_vector-statistics"] = 'Estadísticas de vectores';
 $lang["clip-vector-cleanup"] = 'Eliminar vectores huérfanos';
 $lang["clip-vector-cleanup-description"] = 'Eliminar vectores que pertenecen a recursos que ya no existen o que no son uno de los tipos de recursos seleccionados anteriormente';
+
+$lang["page-title_clip_search"] = 'Búsqueda Inteligente AI';
+$lang["page-title_clip_setup"] = 'Configurar el Plugin CLIP';
+$lang["page-title_clip_webcam"] = 'Generador de Etiquetas de Webcam';

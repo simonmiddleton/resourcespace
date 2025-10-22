@@ -52,3 +52,5 @@ $lang["origin_simpleldap"]='SimpleLDAPプラグイン';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='サーバーのFQDNを証明書のCNと照合しないでください。';
 $lang["plugin-simpleldap-title"]='シンプルLDAP';
 $lang["plugin-simpleldap-desc"]='[高度] Active Directoryを対象とした、Oracleディレクトリもサポートするシンプルなldap認証の実装';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP認証のテスト';
+$lang["page-title_simpleldap_setup"] = 'シンプルLDAPプラグインの設定';

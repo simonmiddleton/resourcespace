@@ -82,3 +82,6 @@ $lang["plugin-transform-title"]='Billedværktøjer (transformer)';
 $lang["plugin-transform-desc"]='Muliggør oprettelse af beskårne og skalerede alternative billeder (jCrop med mobilunderstøttelse)';
 $lang["use_system_icc_profile_config"]='Brug systemkonfiguration til ICC-profilbehandling. Vil tilsidesætte sRGB-indstillingerne ovenfor.';
 $lang["cropper_preset_sizes"] = 'Foruddefinerede størrelser';
+$lang["page-title_transform_collection_transform"] = 'Transformér ressource';
+$lang["page-title_transform_crop"] = 'Beskær Ressource';
+$lang["page-title_transform_setup"] = 'Opsæt Transform Plugin';

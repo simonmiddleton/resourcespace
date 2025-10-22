@@ -13,3 +13,6 @@ $lang["news_nonewmessages"]='Немає нових повідомлень';
 $lang["title"]='Останні новини...';
 $lang["title-too-long"]='Поле заголовка перевищує дозволені 50 символів';
 $lang["news_manage-tooltip"] = 'Додати, редагувати або видалити новини';
+$lang["page-title_news_news_content_edit"] = 'Редагувати вміст новин';
+$lang["page-title_news_news_edit"] = 'Редагувати новини';
+$lang["page-title_news_news"] = 'Новини';

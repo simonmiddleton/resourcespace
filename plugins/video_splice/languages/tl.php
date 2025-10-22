@@ -45,3 +45,6 @@ $lang["video_splice_no_export_folder"] = 'Hindi maaring isagawa ang pag-export d
 $lang["video_splice_incorrect_quantity"] = 'Ang isang wastong yaman ay tinanggal o idinagdag sa koleksyon mula nang ma-load ang pahinang ito. Pakisubukan muli.';
 $lang["video_splice_createdfromvideosplice"] = 'Ginawa mula sa Video Splice plugin';
 $lang["video_splice_error_invalid_action"] = 'Error : Di wastong aksyon';
+$lang["page-title_video_splice_setup"] = 'I-set up ang Video Splice Plugin';
+$lang["page-title_video_splice_splice"] = 'Pagsamahin ang Video';
+$lang["page-title_video_splice_trim"] = 'I-trim ang Video';

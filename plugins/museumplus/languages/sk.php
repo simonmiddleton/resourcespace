@@ -51,3 +51,6 @@ $lang["museumplus_error_module_no_field_maps"]='Nemožné synchronizovať dáta 
 $lang["museumplus_rs_uid_field"]='ResourceSpace pole UID';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Omogoča pridobivanje metapodatkov virov iz MuseumPlus z uporabo njegovega REST API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Podrobnosti objektu';
+$lang["page-title_museumplus_setup_module"] = 'Nastavenie modulu MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'Nastavenie pluginu MuseumPlus';

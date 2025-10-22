@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"]='Miundo maalum';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Ruhusu chaguo za faili zinazopatikana zitumike kuunda miundo ya video maalum kwa faili asili?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Angalia kuanza kubadilisha sasa. Ikiwa haijachaguliwa utapokea taarifa wakati faili iko tayari';
 $lang["video_tracks_transcode_now_label"]='Badilisha sasa';
+$lang["page-title_video_tracks_create_video"] = 'Unda Video';
+$lang["page-title_video_tracks_setup"] = 'Panga Plugin za Video Tracks';

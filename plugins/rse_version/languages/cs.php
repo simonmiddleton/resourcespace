@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Vrácení stavu pro kolekci #%COLLECTION p�
 $lang["rse_version_invalid_time"]='Vrácení do doby před [date] není podporováno';
 $lang["plugin-rse_version-title"]='Správa verzí';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Řízení verzí';
+$lang["page-title_rse_version_revert"] = 'Vrátit verzi zdroje';
+$lang["page-title_rse_version_setup"] = 'Nastavení verze pluginu';

@@ -14,3 +14,6 @@ $lang["resource_usage_configuration"]='Konfiguracija korištenja resursa';
 $lang["resource_usage_mediums"]='Popis dostupnih opcija korištenja (odvojeno zarezom)';
 $lang["plugin-resource_usage-title"]='Korištenje resursa';
 $lang["plugin-resource_usage-desc"]='Dodaje mogućnost bilježenja korištenja resursa putem stranice za pregled resursa';
+$lang["page-title_resource_usage_delete"] = 'Izbriši korištenje resursa';
+$lang["page-title_resource_usage_edit"] = 'Uredi korištenje resursa';
+$lang["page-title_resource_usage_setup"] = 'Postavljanje dodatka za korištenje resursa';

@@ -48,3 +48,6 @@ $lang["museumplus_error_unknown_type_saved_config"]='\'museumplus_modules_saved_
 $lang["museumplus_error_invalid_association"]='অবৈধ মডিউল(গুলি) সংযোগ। দয়া করে নিশ্চিত করুন যে সঠিক মডিউল এবং/অথবা রেকর্ড আইডি প্রবেশ করা হয়েছে!';
 $lang["museumplus_id_returns_multiple_records"]='একাধিক রেকর্ড পাওয়া গেছে - অনুগ্রহ করে প্রযুক্তিগত আইডি প্রবেশ করুন';
 $lang["museumplus_error_module_no_field_maps"]='MuseumPlus থেকে ডেটা সিঙ্ক করতে অক্ষম। কারণ: মডিউল \'%name\' এর জন্য কোনো ফিল্ড ম্যাপিং কনফিগার করা হয়নি।';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus অবজেক্ট বিস্তারিত';
+$lang["page-title_museumplus_setup_module"] = 'মিউজিয়ামপ্লাস মডিউল সেটআপ করুন';
+$lang["page-title_museumplus_setup"] = 'MuseumPlus প্লাগইন সেটআপ করুন';

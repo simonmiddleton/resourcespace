@@ -9,3 +9,4 @@ $lang["grant_edit_date"] = 'Szerkesztési hozzáférés lejárati dátuma';
 $lang["grant_edit_list"] = 'Jelenlegi felhasználók további szerkesztési hozzáféréssel';
 $lang["grant_edit_group_list"] = 'Jelenlegi csoportok további szerkesztési hozzáféréssel';
 $lang["grant_edit_delete_user"] = 'Erősített hozzáférés eltávolításának megerősítése a következőhöz';
+$lang["page-title_grant_edit_setup"] = 'Beállítási Engedély Szerkesztő Plugin';

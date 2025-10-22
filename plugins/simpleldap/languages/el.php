@@ -52,3 +52,5 @@ $lang["origin_simpleldap"]='Πρόσθετο SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Μην ελέγχετε το FQDN του διακομιστή έναντι του CN του πιστοποιητικού';
 $lang["plugin-simpleldap-title"]='Απλό LDAP';
 $lang["plugin-simpleldap-desc"]='[Προηγμένο] Απλούστερη υλοποίηση πιστοποίησης ldap, στοχευμένη στον Active Directory αλλά υποστηρίζει επίσης τον κατάλογο Oracle';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Δοκιμή Αυθεντικοποίησης LDAP';
+$lang["page-title_simpleldap_setup"] = 'Ρύθμιση Απλού Πρόσθετου LDAP';

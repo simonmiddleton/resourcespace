@@ -101,3 +101,6 @@ $lang["simplesaml_metadata_updates"] = 'BasitSAML meta verisi güncellemeleri';
 $lang["simplesaml_metadata_warning"] = 'Metadata %date% tarihinden beri güncellenmedi';
 $lang["simplesaml_metadata_invalid"] = 'IdP meta verisi geçersiz veya mevcut değil';
 $lang["simplesaml_admin_password_reset"] = 'BasitSAML test sitesi yönetici şifresini sıfırla (isteğe bağlı)';
+$lang["page-title_simplesaml_about"] = 'SAML Hakkında';
+$lang["page-title_simplesaml_generate_sp_config"] = 'SP Konfigürasyonu Oluştur';
+$lang["page-title_simplesaml_setup"] = 'Basit SAML Eklentisini Kurun';

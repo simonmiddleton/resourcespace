@@ -49,3 +49,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'Käynnissä',
   2 => 'Valmis',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Hallitse arkistoja';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Offline-arkisto';
+$lang["page-title_offline_archive_pending_restore"] = 'Odottaa resurssin palautusta';
+$lang["page-title_offline_archive_restore_request"] = 'Pyydä resurssin palautusta';
+$lang["page-title_offline_archive_restore"] = 'Palauta arkisto';
+$lang["page-title_offline_archive_setup"] = 'Aseta liitännäinen';
+$lang["page-title_offline_archive_view_archives"] = 'Näytä resurssien arkistot';
+$lang["page-title_offline_archive_view_pending"] = 'Näytä odottavat arkistot';

@@ -32,3 +32,6 @@ $lang["feedback_back_to_plugin_manager"] = "Tillbaka: Tilläggshanteraren";
 
 $lang["plugin-feedback-title"] = 'Återkoppling';
 $lang["plugin-feedback-desc"] = 'Lägger till en allmän användarfeedbackfunktion med konfigurerbara frågor.';
+
+$lang["page-title_feedback_feedback"] = 'Skicka feedback';
+$lang["page-title_feedback_setup"] = 'Inställning Plugin';

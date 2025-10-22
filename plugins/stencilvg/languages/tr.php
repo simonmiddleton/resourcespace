@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Yazdır';
 $lang["stencilvg-download"]='İndir';
 $lang["stencilvg-save_as_new_resource"]='Yeni kaynak olarak kaydet';
 $lang["stencilvg-no_parameters_found"]='Şablon parametreleri bulunamadı';
+$lang["page-title_stencilvg_download_svg"] = 'SVG İndir';
+$lang["page-title_stencilvg_input"] = 'SVG Girişi';
+$lang["page-title_stencilvg_setup"] = 'StencilVG Eklentisini Kurun';

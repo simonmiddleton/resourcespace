@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'চলমান',
   2 => 'সম্পন্ন',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'আর্কাইভ পরিচালনা করুন';
+$lang["page-title_offline_archive_offline_archive_action"] = 'অফলাইন আর্কাইভ';
+$lang["page-title_offline_archive_pending_restore"] = 'অপেক্ষমাণ রিসোর্স পুনরুদ্ধার';
+$lang["page-title_offline_archive_restore_request"] = 'সম্পদ পুনরুদ্ধারের জন্য অনুরোধ';
+$lang["page-title_offline_archive_restore"] = 'আর্কাইভ পুনরুদ্ধার';
+$lang["page-title_offline_archive_setup"] = 'সেটআপ প্লাগইন';
+$lang["page-title_offline_archive_view_archives"] = 'সম্পদ আর্কাইভ দেখুন';
+$lang["page-title_offline_archive_view_pending"] = 'অপেক্ষমাণ আর্কাইভ দেখুন';

@@ -13,3 +13,5 @@ $lang["adobe_link_saving"] = '저장 중..';
 $lang["adobe_link_saving_wait"] = '파일이 저장되고 있습니다. 확인 메시지를 기다려 주십시오. 미리보기 이미지를 업데이트하려면 페이지를 새로 고침해야 할 수도 있습니다.';
 $lang["plugin-adobe_link-title"] = '어도비 링크';
 $lang["plugin-adobe_link-desc"] = '[고급] ResourceSpace에서 Adobe CC로 Adobe 파일 가져오기 허용';
+
+$lang["page-title_adobe_link_setup"] = 'Adobe Link 플러그인 설정';

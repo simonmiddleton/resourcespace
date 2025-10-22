@@ -7,3 +7,5 @@ $lang["conditional_terms_value"] = 'Αξία';
 $lang["conditional_terms_plugin_misconfigured"] = 'Το πρόσθετο όρων υπό συνθήκη είναι κακοδιαμορφωμένο';
 $lang["plugin-conditional_terms-title"] = 'Όροι υπό όρους';
 $lang["plugin-conditional_terms-desc"] = 'Ενεργοποιεί την υπό όρους εμφάνιση της σελίδας όρων κατά τη λήψη με βάση τα μεταδεδομένα του πόρου';
+
+$lang["page-title_conditional_terms_setup"] = 'Ρύθμιση Πρόσθετου Όρων με Όρους';

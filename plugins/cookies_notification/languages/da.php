@@ -10,3 +10,6 @@ $lang["cookies_notification_cookies_use_error_msg"] = 'Du har besluttet ikke at 
 $lang["cookies_notification_cookies_use_require_option_error_msg"] = 'Du skal acceptere brugen af cookies, før du kan få adgang til systemet.';
 $lang["plugin-cookies_notification-title"] = 'Cookies-meddelelse';
 $lang["plugin-cookies_notification-desc"] = 'Tilføjer muligheden for at informere brugere om, hvordan ResourceSpace kan bruge cookies til at spore brugeraktivitet ved at vise en besked i headeren';
+
+$lang["page-title_cookies_notification_cookies_user_feedback"] = 'Cookievalg';
+$lang["page-title_cookies_notification_setup"] = 'Opsæt Cookie Notifikations Plugin';

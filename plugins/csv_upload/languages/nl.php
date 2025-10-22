@@ -74,3 +74,4 @@ $lang["csv_upload_check_removebom"] = 'CSV-bestand heeft BOM dat niet kon worden
 $lang["csv_upload_validating"] = 'Valideren';
 $lang["csv_upload_processing"] = 'Verwerken';
 $lang["processing_batch_edit_save"] = 'rij [row_number] van [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Upload CSV';

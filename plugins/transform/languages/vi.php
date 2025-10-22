@@ -78,3 +78,6 @@ $lang["transform_update_preview"] = 'Cập nhật bản xem trước';
 $lang["transform_preset_sizes"] = 'Chọn từ kích thước mục tiêu đã định nghĩa sẵn';
 $lang["error_crop_invalid"] = 'Vui lòng chọn một vùng của hình ảnh';
 $lang["cropper_preset_sizes"] = 'Kích thước đã định sẵn';
+$lang["page-title_transform_collection_transform"] = 'Chuyển đổi Tài nguyên';
+$lang["page-title_transform_crop"] = 'Cắt tài nguyên';
+$lang["page-title_transform_setup"] = 'Cài đặt Plugin Chuyển đổi';

@@ -47,3 +47,11 @@ $lang["offline_archive_statustype"] = array (
   1 => 'В процесі',
   2 => 'Завершено',
 );
+$lang["page-title_offline_archive_administer_archive"] = 'Адмініструвати архіви';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Офлайн архів';
+$lang["page-title_offline_archive_pending_restore"] = 'Очікує відновлення ресурсу';
+$lang["page-title_offline_archive_restore_request"] = 'Запит на відновлення ресурсу';
+$lang["page-title_offline_archive_restore"] = 'Відновити архів';
+$lang["page-title_offline_archive_setup"] = 'Налаштування плагіна';
+$lang["page-title_offline_archive_view_archives"] = 'Переглянути архіви ресурсів';
+$lang["page-title_offline_archive_view_pending"] = 'Переглянути очікуючі архіви';

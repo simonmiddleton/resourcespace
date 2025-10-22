@@ -24,3 +24,8 @@ $lang["google_vision_translation_intro"]="Google Vision only returns English key
 $lang["google_vision_translation_api_key"]="Enable translation of Vision keywords via translation API by entering a valid Google API key";
 $lang["google_vision_translation_languages"]='Comma separated list of language codes, e.g. "no,es"';
 $lang["google_vision_translation_keep_english"]="Keep the original English keywords?";
+
+$lang["page-title_google_vision_process_existing"]  = "Google Vision Process Existing";
+$lang["page-title_google_vision_setup"]             = "Setup Google Vision Plugin";
+$lang["page-title_google_vision_test_jpg"]          = "Google Vision Test";
+$lang["page-title_google_vision_test"]              = "Google Vision Test";

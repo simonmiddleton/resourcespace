@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Prikaži funkcionalnost AI Faces na stranici pregled
 $lang["faces_count_faces"] = 'Ukupno otkrivenih lica';
 $lang["faces_count_missing"] = 'Slike za obradu';
 $lang["faces-tag-field-not-set"] = 'Polje za označavanje nije konfigurirano.';
+
+$lang["page-title_faces_setup"] = 'Postavljanje Faces dodatka';

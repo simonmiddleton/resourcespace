@@ -52,3 +52,5 @@ $lang["origin_simpleldap"]='Plugin SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Nekontrolujte FQDN serveru proti CN certifikátu';
 $lang["plugin-simpleldap-title"]='Jednoduché LDAP';
 $lang["plugin-simpleldap-desc"]='[Pokročilé] Jednodušší implementace ověřování ldap, zaměřená na Active Directory, ale podporuje také Oracle directory';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'Test LDAP autentizaci';
+$lang["page-title_simpleldap_setup"] = 'Nastavení jednoduchého LDAP pluginu';

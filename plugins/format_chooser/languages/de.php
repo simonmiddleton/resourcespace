@@ -18,3 +18,5 @@ $lang['are_available-1'] = 'wird konvertiert';
 
 $lang["plugin-format_chooser-title"]='Format-Auswahl';
 $lang["plugin-format_chooser-desc"]='Ermöglicht es Ihnen, beim Herunterladen von Dateien verschiedene Formate auszuwählen, die dynamisch erstellt werden.';
+$lang["page-title_format_chooser_convert"] = 'Formatauswahl';
+$lang["page-title_format_chooser_setup"] = 'Format-Wähler-Plugin einrichten';

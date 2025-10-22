@@ -13,3 +13,5 @@ $lang['grant_edit_date']="Expiry date for edit access";
 $lang['grant_edit_list']="Current users with additional edit access";
 $lang['grant_edit_group_list']="Current groups with additional edit access";
 $lang['grant_edit_delete_user']="Confirm removal of enhanced access for";
+
+$lang["page-title_grant_edit_setup"] = "Setup Grant Edit Plugin";

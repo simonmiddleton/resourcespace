@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Тип ресурса удале
 $lang["embeddocument_embed_share"] = 'Встроить документ';
 $lang["plugin-embeddocument-title"] = 'Встроить документ';
 $lang["plugin-embeddocument-desc"] = 'Предоставляет функцию для создания HTML для встраиваемых предварительных просмотров документов на удаленных сайтах.';
+
+$lang["page-title_embeddocument_setup"] = 'Настройка плагина встраивания документа';
+$lang["page-title_embeddocument_viewer"] = 'Встроить просмотрщик документов';

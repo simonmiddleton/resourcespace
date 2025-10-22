@@ -69,3 +69,5 @@ $lang["youtube_chunk_size"]='Ukuran potongan yang digunakan saat mengunggah ke Y
 $lang["youtube_publish_add_anchor"]='Tambahkan tag anchor ke URL saat menyimpan ke bidang metadata URL YouTube?';
 $lang["plugin-youtube_publish-title"]='Publikasikan YouTube';
 $lang["plugin-youtube_publish-desc"]='Mempublikasikan sumber daya video ke akun YouTube yang dikonfigurasi.';
+$lang["page-title_youtube_publish_setup"] = 'Pengaturan Plugin';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Terbitkan Sumber ke Youtube';

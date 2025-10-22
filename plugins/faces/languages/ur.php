@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'دیکھنے کے صفحے پر AI Faces کی فعا
 $lang["faces_count_faces"] = 'کل چہرے شناخت کیے گئے';
 $lang["faces_count_missing"] = 'پروسیس کرنے کے لیے تصاویر';
 $lang["faces-tag-field-not-set"] = 'ٹیگنگ کا میدان ترتیب نہیں دیا گیا۔';
+
+$lang["page-title_faces_setup"] = 'چہرے کے پلگ ان کی ترتیب کریں';

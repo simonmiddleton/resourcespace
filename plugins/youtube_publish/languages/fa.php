@@ -50,3 +50,5 @@ $lang["youtube_publish_category"]='دسته‌بندی';
 $lang["youtube_publish_category_error"]='خطا در بازیابی دسته‌بندی‌های YouTube: -';
 $lang["youtube_chunk_size"]='اندازه تکه برای استفاده هنگام بارگذاری در یوتیوب (مگابایت)';
 $lang["youtube_publish_add_anchor"]='آیا هنگام ذخیره به فیلد متادیتای URL یوتیوب، تگ‌های لنگر به URL اضافه شود؟';
+$lang["page-title_youtube_publish_setup"] = 'تنظیم افزونه';
+$lang["page-title_youtube_publish_youtube_upload"] = 'منبع را به یوتیوب منتشر کنید';

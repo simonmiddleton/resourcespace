@@ -25,3 +25,6 @@ $lang["embedslideshow_dynamic_size"] = 'Redimensionamento dinâmico da pré-visu
 $lang["sizename_pixels"] = '%name (%pixels pixels)';
 $lang["plugin-embedslideshow-title"] = 'Incorporar Apresentação de Slides';
 $lang["plugin-embedslideshow-desc"] = 'Fornece uma função para gerar HTML para slideshows de coleções incorporáveis em sites remotos';
+
+$lang["page-title_embedslideshow_setup"] = 'Configurar o Plugin de Slideshow Incorporado';
+$lang["page-title_embedslideshow_viewer"] = 'Incorporar Apresentação de Slides';

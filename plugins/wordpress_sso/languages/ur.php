@@ -14,3 +14,7 @@ $lang["wordpress_sso_use_standard_login"]='غیر-ورڈپریس اکاؤنٹ ک
 $lang["wordpress_sso_use_wp_login"]='ورڈپریس اکاؤنٹ کا استعمال کرتے ہوئے لاگ ان کریں';
 $lang["wordpress_sso_retry"]='یہاں کلک کریں اور دوبارہ لاگ ان کرنے کی کوشش کریں';
 $lang["origin_wordpress_sso"]='ورڈپریس ایس ایس او پلگ ان';
+$lang["page-title_wordpress_sso_logout"] = 'SSO لاگ آؤٹ';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO کوئی صارف نہیں';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'ورڈپریس SSO پلگ ان سیٹ اپ کریں';

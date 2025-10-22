@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Vis AI Faces-funktionen på visningssiden.';
 $lang["faces_count_faces"] = 'Samlede ansigtet opdaget';
 $lang["faces_count_missing"] = 'Billeder til behandling';
 $lang["faces-tag-field-not-set"] = 'Taggingfeltet er ikke konfigureret.';
+
+$lang["page-title_faces_setup"] = 'Opsæt Faces Plugin';

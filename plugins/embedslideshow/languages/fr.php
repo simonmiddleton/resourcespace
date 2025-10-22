@@ -25,3 +25,6 @@ $lang["embedslideshow_dynamic_size"] = 'Redimensionnement dynamique de l\'aperç
 $lang["sizename_pixels"] = '%name (%pixels pixels)';
 $lang["plugin-embedslideshow-title"] = 'Intégrer le diaporama';
 $lang["plugin-embedslideshow-desc"] = 'Fournit une fonction pour générer du HTML pour des diaporamas de collections intégrables sur des sites distants';
+
+$lang["page-title_embedslideshow_setup"] = 'Configurer le plugin de diaporama intégré';
+$lang["page-title_embedslideshow_viewer"] = 'Intégrer le diaporama';

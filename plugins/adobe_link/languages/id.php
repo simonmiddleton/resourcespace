@@ -13,3 +13,5 @@ $lang["adobe_link_saving"] = 'Menyimpan..';
 $lang["adobe_link_saving_wait"] = 'Berkas sedang disimpan, mohon tunggu pesan konfirmasi. Anda mungkin perlu me-refresh halaman untuk memperbarui gambar pratinjau.';
 $lang["plugin-adobe_link-title"] = 'Tautan Adobe';
 $lang["plugin-adobe_link-desc"] = ' Izinkan pemasukan file Adobe dari ResourceSpace ke Adobe CC';
+
+$lang["page-title_adobe_link_setup"] = 'Atur Plugin Tautan Adobe';

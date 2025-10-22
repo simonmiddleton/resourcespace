@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Ehdotuksesi muutok
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Ehdotetut muutokset on lähetetty.<br/>[changesummary]<br/>Klikkaa alla olevaa linkkiä tarkastaaksesi muutokset<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Ehdota muutoksia';
 $lang["plugin-propose_changes-desc"]='Lisää vaihtoehdon, joka sallii käyttäjien ehdottaa metatietojen muutoksia ilman muokkausoikeuksia';
+$lang["page-title_propose_changes_propose_changes"] = 'Ehdota muutoksia';
+$lang["page-title_propose_changes_setup"] = 'Aseta Ehdota Muutoksia Liitännäinen';

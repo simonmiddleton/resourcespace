@@ -586,6 +586,7 @@ function ps_query($sql, array $parameters = array(), $cache = "", $fetchrows = -
         } else {
             $querylog[$sql]['dupe'] = 1;
             $querylog[$sql]['time'] = $time_total;
+            $querylog[$sql]['params'] = $parameters;
         }
         $querytime += $time_total;
     }
@@ -867,6 +868,8 @@ function CheckDBStruct($path, $verbose = false)
         }
     }
 
+    db_begin_transaction("CheckDBStruct");
+
     # Tables first.
     # Load existing tables list
     $ts = ps_query("show tables", [], '', -1, false);
@@ -1113,6 +1116,7 @@ function CheckDBStruct($path, $verbose = false)
             }
         }
     }
+    db_end_transaction("CheckDBStruct");
 }
 
 /**

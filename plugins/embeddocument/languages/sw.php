@@ -11,3 +11,6 @@ $lang["embeddocument_maximise"] = 'kuongeza zaidi';
 $lang["embeddocument_heading"] = 'Usanidi wa Kionyeshi cha Nyaraka za Mbali';
 $lang["embeddocument_specify_resourcetype"] = 'Tafadhali bainisha aina ya rasilimali ambayo kipengele cha \'embed\' kinapaswa kuonekana.';
 $lang["embeddocument_document_resourcetype"] = 'Aina ya Rasilimali ya Mtazamaji wa Nyaraka za Mbali:';
+
+$lang["page-title_embeddocument_setup"] = 'Weka Plugin ya Kuweka Hati';
+$lang["page-title_embeddocument_viewer"] = 'Embed Mwangalizi wa Hati';

@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='여기를 클릭하여 다시 로그인 시도';
 $lang["origin_wordpress_sso"]='Wordpress SSO 플러그인';
 $lang["plugin-wordpress_sso-title"]='워드프레스 SSO';
 $lang["plugin-wordpress_sso-desc"]='[고급] Wordpress 설치와 단일 로그인 허용';
+$lang["page-title_wordpress_sso_logout"] = 'SSO 로그아웃';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO 사용자 없음';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = '워드프레스 SSO 플러그인 설정';

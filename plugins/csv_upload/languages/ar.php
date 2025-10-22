@@ -75,3 +75,4 @@ $lang["csv_upload_check_removebom"] = 'ملف CSV يحتوي على BOM ولم �
 $lang["csv_upload_validating"] = 'التحقق';
 $lang["csv_upload_processing"] = 'معالجة';
 $lang["processing_batch_edit_save"] = 'الصف [row_number] من [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'رفع CSV';

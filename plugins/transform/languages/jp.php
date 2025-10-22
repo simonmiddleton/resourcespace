@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='画像ツール（変換）';
 $lang["plugin-transform-desc"]='トリミングおよびスケーリングされた代替画像の作成を可能にします（モバイル対応のjCrop）';
 $lang["use_system_icc_profile_config"]='ICCプロファイル処理にシステム設定を使用します。上記のsRGBオプションを上書きします。';
 $lang["cropper_preset_sizes"] = '事前定義されたサイズ';
+$lang["page-title_transform_collection_transform"] = 'リソースを変換する';
+$lang["page-title_transform_crop"] = 'リソースをトリミングする';
+$lang["page-title_transform_setup"] = '変換プラグインの設定';

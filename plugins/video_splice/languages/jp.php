@@ -47,3 +47,6 @@ $lang["video-trim_output"]='出力';
 $lang["video_splice_error_invalid_action"]='エラー：無効な操作';
 $lang["plugin-video_splice-title"]='ビデオスプライス';
 $lang["plugin-video_splice-desc"]='ビデオのトリミングおよびスプライシング機能を追加';
+$lang["page-title_video_splice_setup"] = 'ビデオスプライスプラグインの設定';
+$lang["page-title_video_splice_splice"] = 'ビデオをスプライスする';
+$lang["page-title_video_splice_trim"] = 'ビデオをトリミング';

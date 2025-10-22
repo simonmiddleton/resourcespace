@@ -10,3 +10,4 @@ $lang["antivirus_action_quarantine"] = 'Перанесці ў каранцін';
 $lang["antivirus_deleting_file"] = 'Выдаленне рэсурсу [%resource_id%] і любых звязаных файлаў!';
 $lang["antivirus_moving_file"] = 'Перамяшчэнне рэсурсу [%resource_id%] у архіўны стан [%archive_state%]';
 $lang["antivirus_av_not_setup_error"] = 'Шлях да антывіруса не наладжаны!';
+$lang["page-title_antivirus_setup"] = 'Наладзіць плагін антывіруса';

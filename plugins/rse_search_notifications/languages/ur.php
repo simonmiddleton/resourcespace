@@ -24,3 +24,5 @@ $lang["checknow"]='ابھی چیک کریں';
 $lang["columnheader-enabled"]='فعال شدہ';
 $lang["columnheader-last-found"]='آخری بار ملا';
 $lang["search_notifications_watched_searches-tooltip"] = 'اپنی محفوظ کردہ تلاشوں کو کنٹرول کریں';
+$lang["page-title_rse_search_notifications_setup"] = 'سرچ نوٹیفیکیشن پلگ ان سیٹ اپ کریں';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'دیکھے گئے تلاشات';

@@ -36,3 +36,5 @@ $lang["weekday-3"] = 'Jumatano';
 $lang["weekday-4"] = 'Alhamisi';
 $lang["weekday-5"] = 'Ijumaa';
 $lang["weekday-6"] = 'Jumamosi';
+
+$lang["page-title_action_dates_setup"] = 'Panga Plugin ya Tarehe za Kitendo';

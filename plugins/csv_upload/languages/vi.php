@@ -73,3 +73,4 @@ $lang["csv_upload_check_removebom"] = 'Tệp CSV có BOM mà không thể xóa �
 $lang["csv_upload_validating"] = 'Xác thực';
 $lang["csv_upload_processing"] = 'Đang xử lý';
 $lang["processing_batch_edit_save"] = 'hàng [row_number] của [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'Tải lên CSV';

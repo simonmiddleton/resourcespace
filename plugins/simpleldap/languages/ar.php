@@ -52,3 +52,5 @@ $lang["origin_simpleldap"]='ملحق SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='لا تقم بالتحقق من FQDN للخادم مقابل CN للشهادة';
 $lang["plugin-simpleldap-title"]='LDAP بسيط';
 $lang["plugin-simpleldap-desc"]='[متقدم] تنفيذ أبسط لمصادقة ldap، يستهدف Active Directory ولكنه يدعم أيضًا دليل Oracle';
+$lang["page-title_simpleldap_ajax_test_auth"] = 'اختبار مصادقة LDAP';
+$lang["page-title_simpleldap_setup"] = 'إعداد مكون LDAP بسيط';

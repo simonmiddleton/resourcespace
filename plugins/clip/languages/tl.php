@@ -33,3 +33,7 @@ $lang["clip_missing_vectors"] = 'Nawawalang mga vector';
 $lang["clip-vector-generation"] = 'Paggawa ng vector';
 $lang["clip-vector-cleanup"] = 'Tanggalin ang mga ulilang vector';
 $lang["clip-vector-cleanup-description"] = 'Alisin ang mga vector na kabilang sa mga resource na hindi na umiiral o hindi isa sa mga nabanggit na uri ng resource sa itaas';
+
+$lang["page-title_clip_search"] = 'AI Smart Search';
+$lang["page-title_clip_setup"] = 'I-set up ang CLIP Plugin';
+$lang["page-title_clip_webcam"] = 'Tag ng Generator ng Webcam';

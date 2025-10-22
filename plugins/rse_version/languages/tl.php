@@ -17,3 +17,5 @@ $lang["rse_version_log_not_found"] = 'Hindi matagpuan ang tala ng pag-log';
 $lang["rse_version_revert_state"] = 'Ibalik ang estado';
 $lang["rse_version_rstate_changes"] = 'Pagbabalik ng estado para sa koleksyon #%COLLECTION sa pamamagitan ng pag-uulit ng mga kaganapan hanggang, ngunit hindi kasama ang napiling tala.';
 $lang["rse_version_invalid_time"] = 'Ang pagbabalik sa isang oras bago ang [date] ay hindi sinusuportahan';
+$lang["page-title_rse_version_revert"] = 'Ibalik ang Bersyon ng Yaman';
+$lang["page-title_rse_version_setup"] = 'I-set up ang Bersyon ng Plugin';

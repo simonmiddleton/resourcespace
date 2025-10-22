@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='Bevestig verwijdering van verbeterde toegang vo
 $lang["grant_edit_group_list"]='Huidige groepen met extra bewerkingsrechten';
 $lang["plugin-grant_edit-title"]='Toestemming Bewerken';
 $lang["plugin-grant_edit-desc"]='Stelt beheerders in staat om gebruikers tijdelijke volledige bewerkingsrechten voor bronnen te geven';
+$lang["page-title_grant_edit_setup"] = 'Instellen Grant Edit Plugin';

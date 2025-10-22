@@ -34,9 +34,6 @@ if (isset($user_pref_appearance)) {
         .context-menu-container {
             background: #404040;
         }
-        .context-menu-row:hover {
-            background: #5a5a5a;
-        }
         div[id^='page-content-item-']:hover .top-right-menu, .group:hover > .top-right-menu, div[id^='page-content-item-']:hover > a.grid-item.video-js-resource {
             background: #404040;
         }

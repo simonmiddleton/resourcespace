@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='Πηγή GPT';
 $lang["openai_gpt_language"] = 'Γλώσσα εξόδου';
 $lang["openai_gpt_language_user"] = 'Η γλώσσα του τρέχοντος χρήστη';
 $lang["openai_gpt_overwrite_data"] = 'Θα αντικατασταθούν τα υπάρχοντα δεδομένα στα ρυθμισμένα πεδία;';
+$lang["page-title_openai_gpt_setup"] = 'Ρύθμιση Πρόσθετου OpenAI GPT';

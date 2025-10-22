@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = '벡터 생성';
 $lang["clip_vector-statistics"] = '벡터 통계';
 $lang["clip-vector-cleanup"] = '고아 벡터 삭제';
 $lang["clip-vector-cleanup-description"] = '존재하지 않거나 위에서 선택한 리소스 유형 중 하나가 아닌 리소스에 속하는 벡터를 제거하십시오.';
+
+$lang["page-title_clip_search"] = 'AI 스마트 검색';
+$lang["page-title_clip_setup"] = 'CLIP 플러그인 설정';
+$lang["page-title_clip_webcam"] = '웹캠 태그 생성기';

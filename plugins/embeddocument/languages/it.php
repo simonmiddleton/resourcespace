@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Tipo di risorsa Visualizzatore d
 $lang["embeddocument_embed_share"] = 'Incorpora documento';
 $lang["plugin-embeddocument-title"] = 'Incorpora Documento';
 $lang["plugin-embeddocument-desc"] = 'Fornisce una funzione per generare HTML per anteprime di documenti incorporabili su siti remoti.';
+
+$lang["page-title_embeddocument_setup"] = 'Imposta il plugin per l\'incorporamento dei documenti';
+$lang["page-title_embeddocument_viewer"] = 'Incorpora Visualizzatore Documenti';

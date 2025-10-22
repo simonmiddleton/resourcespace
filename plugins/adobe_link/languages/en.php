@@ -16,3 +16,5 @@ $lang["adobe_link_import_successful"]       = "The file is being imported";
 $lang["adobe_link_upload_document"]         = "Save";
 $lang["adobe_link_saving"]                  = "Saving.." ;
 $lang["adobe_link_saving_wait"]             = "The file is being saved, please wait for the confirmation message. You may need to refresh the page to update the preview image.";
+
+$lang["page-title_adobe_link_setup"] = "Setup Adobe Link Plugin";

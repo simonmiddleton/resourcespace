@@ -26,3 +26,7 @@ $lang["openai_image_edit__mode_white"]='เติมด้วยสีขาว'
 $lang["openai_image_edit__mode_black"]='เติมด้วยสีดำ';
 $lang["openai_image_edit__mode_clone"]='คัดลอกเติม';
 $lang["openai_image_edit__creating_new_resource"]='การสร้างทรัพยากรใหม่';
+$lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
+$lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
+$lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI บันทึกทางเลือก';
+$lang["page-title_openai_image_edit_save_new"] = 'OpenAI บันทึกใหม่';

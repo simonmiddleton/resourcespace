@@ -24,4 +24,4 @@ $lang['image_text_banner_position_list']=array("top"=>"top", "bottom"=>"bottom")
 $lang['image_text_font']="Font to use, must be supported by imagemagick version installed";
 $lang['image_text_noim']="This plugin requires Imagemagick to be installed.";
 
-
+$lang["page-title_image_text_setup"] = "Setup Image Text Plugin";

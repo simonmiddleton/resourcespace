@@ -33,3 +33,6 @@ $lang["emu_no_resource"] = 'Không có ID tài nguyên nào được chỉ đị
 $lang["emu_upload_nodata"] = 'Không tìm thấy dữ liệu EMu cho IRN này:';
 $lang["emu_nodata_returned"] = 'Không tìm thấy dữ liệu EMu cho IRN đã chỉ định.';
 $lang["emu_createdfromemu"] = 'Được tạo từ plugin EMU';
+
+$lang["page-title_emu_emu_object_details"] = 'Chi tiết đối tượng EMu';
+$lang["page-title_emu_setup"] = 'Cài đặt Plugin';

@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Εμφάνιση της λειτουργίας AI Fa
 $lang["faces_count_faces"] = 'Συνολικοί ανιχνευθέντες πρόσωποι';
 $lang["faces_count_missing"] = 'Εικόνες προς επεξεργασία';
 $lang["faces-tag-field-not-set"] = 'Το πεδίο ετικετών δεν είναι ρυθμισμένο.';
+
+$lang["page-title_faces_setup"] = 'Ρύθμιση Πρόσθετου Faces';

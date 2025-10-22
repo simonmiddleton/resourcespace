@@ -31,3 +31,5 @@ $lang["actions_type_proposed_change"]='Gwelliant a gynhelir';
 $lang["actions_propose_changes"]='Dangoswch imi newidiadau a gynhelir gan ddefnyddiwr yn fy nghasgliad gweithredoedd';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Mae eich newidiadau a gynhelir wedi\'u hadolygu.<br/>[changesummary]<br/>Cliciwch isod i adolygu\'r newidiadau<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Mae newidiadau a gynhelir wedi\'u cyflwyno.<br/>[changesummary]<br/>Cliciwch isod i adolygu\'r newidiadau<br/><a href=\'[url]\'>[url]</a>';
+$lang["page-title_propose_changes_propose_changes"] = 'Cynigia Newidiadau';
+$lang["page-title_propose_changes_setup"] = 'Sefydlu Plugin Newidiau Cynigion';

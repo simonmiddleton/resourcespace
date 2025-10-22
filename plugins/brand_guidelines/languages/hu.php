@@ -37,3 +37,7 @@ $lang["brand_guidelines_configuration"] = 'Márkairányelvek konfigurációja';
 $lang["brand_guidelines_fallback_size_thm"] = 'Képminiatűr elrendezés visszaállító kép mérete';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Fél szélességű elrendezés visszaesési kép mérete';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Teljes szélességű elrendezés visszaesési kép mérete';
+$lang["page-title_brand_guidelines_content"] = 'Márkirányelvek tartalmának kezelése';
+$lang["page-title_brand_guidelines_guidelines"] = 'Márkairányelvek';
+$lang["page-title_brand_guidelines_setup"] = 'Állítsa be a Márkairányelvek Bővítményt';
+$lang["page-title_brand_guidelines_toc"] = 'Tartalom szerkesztése';

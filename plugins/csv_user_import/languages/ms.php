@@ -14,3 +14,4 @@ $lang["csv_user_import_condition2"] = 'Fail CSV mesti mempunyai baris tajuk';
 $lang["csv_user_import_condition3"] = 'Kolum yang akan mempunyai nilai yang mengandungi koma( , ), pastikan anda memformatnya sebagai jenis teks supaya anda tidak perlu menambah petikan (""). Apabila menyimpan sebagai fail .csv, pastikan untuk menyemak pilihan untuk memetik sel jenis teks';
 $lang["csv_user_import_condition4"] = 'Kolum yang dibenarkan: *username, *email, kata laluan, nama penuh, akaun_tamat, komen, ip_sekat, bahasa. Nota: medan yang wajib ditandakan dengan *';
 $lang["csv_user_import_condition5"] = 'Bahasa pengguna akan kembali kepada yang ditetapkan menggunakan pilihan konfigurasi "$defaultlanguage" jika lajur lang tidak dijumpai atau tidak mempunyai nilai.';
+$lang["page-title_csv_user_import_csv_user_import"] = 'Import Pengguna CSV';

@@ -15,3 +15,6 @@ $lang["title-too-long"]='Polje naslova je duže od dopuštenih 50 znakova';
 $lang["plugin-news-title"]='Vijesti';
 $lang["plugin-news-desc"]='Dodaje vijesti na početnoj stranici';
 $lang["news_manage-tooltip"] = 'Dodaj, uređuj ili izbriši stavke vijesti';
+$lang["page-title_news_news_content_edit"] = 'Uredi sadržaj vijesti';
+$lang["page-title_news_news_edit"] = 'Uredi vijesti';
+$lang["page-title_news_news"] = 'Vijesti';

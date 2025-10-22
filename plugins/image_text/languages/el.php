@@ -27,3 +27,4 @@ $lang["image_text_banner_position_list"] = (object) array(
    'top' => 'επάνω',
    'bottom' => 'κάτω',
 );
+$lang["page-title_image_text_setup"] = 'Ρύθμιση Πρόσθετου Κειμένου Εικόνας';

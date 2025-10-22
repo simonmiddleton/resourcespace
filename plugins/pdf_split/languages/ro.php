@@ -14,3 +14,4 @@ $lang["splitpdf_createnewalternativefile"]='Creați un fișier alternativ nou pe
 $lang["to-page"]='la';
 $lang["plugin-pdf_split-title"]='Împărțire PDF';
 $lang["plugin-pdf_split-desc"]='Permite împărțirea fișierelor PDF în mai multe pagini';
+$lang["page-title_pdf_split_pdf_split"] = 'Împărțire PDF';

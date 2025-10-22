@@ -19,3 +19,5 @@ $lang["rse_version_rstate_changes"]='Palautetaan kokoelman #%COLLECTION tila toi
 $lang["rse_version_invalid_time"]='Paluu aikaan ennen [date] ei ole tuettu';
 $lang["plugin-rse_version-title"]='Versiohallinta';
 $lang["plugin-rse_version-desc"]='ResourceSpace Enterprise - Versiohallinta';
+$lang["page-title_rse_version_revert"] = 'Palauta resurssiversio';
+$lang["page-title_rse_version_setup"] = 'Aseta versio liitännäinen';

@@ -24,3 +24,5 @@ $lang["checknow"] = 'Ellenőrizze most';
 $lang["columnheader-enabled"] = 'Engedélyezve';
 $lang["columnheader-last-found"] = 'Utolsó megtalálva';
 $lang["search_notifications_watched_searches-tooltip"] = 'Irányítsd a mentett kereséseidet';
+$lang["page-title_rse_search_notifications_setup"] = 'Keresési Értesítések Bővítmény Beállítása';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Figyelt keresések';

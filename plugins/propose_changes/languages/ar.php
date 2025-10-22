@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />تمت مراجع�
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />تم تقديم تغييرات مقترحة.<br/>[changesummary]<br/>انقر أدناه لمراجعة التغييرات<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='اقتراح التغييرات';
 $lang["plugin-propose_changes-desc"]='يضيف خيارًا للسماح للمستخدمين باقتراح تغييرات في البيانات الوصفية دون الوصول إلى التحرير';
+$lang["page-title_propose_changes_propose_changes"] = 'اقترح تغييرات';
+$lang["page-title_propose_changes_setup"] = 'إعداد ملحق اقتراح التغييرات';

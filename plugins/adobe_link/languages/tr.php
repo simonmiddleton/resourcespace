@@ -13,3 +13,5 @@ $lang["adobe_link_saving"] = 'Kaydediliyor..';
 $lang["adobe_link_saving_wait"] = 'Dosya kaydediliyor, lütfen onay mesajını bekleyin. Önizleme görüntüsünü güncellemek için sayfayı yenilemeniz gerekebilir.';
 $lang["plugin-adobe_link-title"] = 'Adobe Bağlantısı';
 $lang["plugin-adobe_link-desc"] = '[Gelişmiş] Adobe dosyalarının ResourceSpace\'ten Adobe CC\'ye alınmasına izin ver';
+
+$lang["page-title_adobe_link_setup"] = 'Adobe Link Eklentisini Kurun';

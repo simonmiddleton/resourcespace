@@ -11,3 +11,4 @@ $lang["bookend-failed"]='失敗しました！';
 $lang["bookend-could-not-open-file"]='エラー - ファイルを開けませんでした！';
 $lang["plugin-video_bookend-title"]='ビデオブックエンド';
 $lang["plugin-video_bookend-desc"]='タイトルとエンドグラフィック付きのビデオをダウンロードする機能を追加します';
+$lang["page-title_video_bookend_bookend"] = 'ビデオブックエンド';

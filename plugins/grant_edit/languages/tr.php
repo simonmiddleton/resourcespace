@@ -11,3 +11,4 @@ $lang["grant_edit_group_list"]='Mevcut gruplar ek düzenleme erişimi ile';
 $lang["grant_edit_delete_user"]='Gelişmiş erişimin kaldırılmasını onayla';
 $lang["plugin-grant_edit-title"]='Düzenleme İzni Ver';
 $lang["plugin-grant_edit-desc"]='Yöneticilerin kullanıcılara kaynaklara geçici tam düzenleme erişimi vermesini sağlar';
+$lang["page-title_grant_edit_setup"] = 'Ayarları Düzenleme Ekleme Eklentisi';

@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Perubahan yang And
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Perubahan yang diusulkan telah diajukan.<br/>[changesummary]<br/>Klik di bawah ini untuk meninjau perubahan tersebut<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Usulkan Perubahan';
 $lang["plugin-propose_changes-desc"]='Menambahkan opsi untuk memungkinkan pengguna mengusulkan perubahan metadata tanpa akses edit';
+$lang["page-title_propose_changes_propose_changes"] = 'Usulkan Perubahan';
+$lang["page-title_propose_changes_setup"] = 'Atur Plugin Usulan Perubahan';

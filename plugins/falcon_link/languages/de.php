@@ -42,3 +42,6 @@ $lang["falcon_link_log_archive"] = 'Archivierte Ressource über Falcon';
 $lang["falcon_link_error_falcon_check_tags"] = 'Bitte überprüfen Sie, dass die Beschreibung und Tags nicht leer sind';
 $lang["plugin-falcon_link-title"] = 'Falcon Link';
 $lang["plugin-falcon_link-desc"] = 'Ressourcen auf Falcon.io veröffentlichen';
+
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Falcon Link Plugin einrichten';

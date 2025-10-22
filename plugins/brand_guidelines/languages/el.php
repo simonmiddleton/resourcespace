@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Διαμόρφωση Οδηγιών �
 $lang["brand_guidelines_fallback_size_thm"] = 'Μέγεθος εικόνας εφεδρικής διάταξης μικρογραφιών';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Μέγεθος εικόνας εφεδρικής διάταξης μισού πλάτους';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Μέγεθος εικόνας εφεδρικής διάταξης πλήρους πλάτους';
+
+$lang["page-title_brand_guidelines_content"] = 'Διαχείριση Περιεχομένου Οδηγιών Μάρκας';
+$lang["page-title_brand_guidelines_guidelines"] = 'Οδηγίες Μάρκας';
+$lang["page-title_brand_guidelines_setup"] = 'Ρύθμιση Πρόσθετου Οδηγιών Μάρκας';
+$lang["page-title_brand_guidelines_toc"] = 'Επεξεργασία περιεχομένου';

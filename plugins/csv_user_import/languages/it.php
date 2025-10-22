@@ -15,3 +15,5 @@ $lang["csv_user_import_condition4"] = 'Colonne consentite: *nome utente, *email,
 $lang["csv_user_import_condition5"] = 'La lingua dell\'utente tornerà automaticamente a quella impostata utilizzando l\'opzione di configurazione "$defaultlanguage" se la colonna "lang" non viene trovata o non ha un valore';
 $lang["plugin-csv_user_import-title"] = 'Importazione Utenti CSV';
 $lang["plugin-csv_user_import-desc"] = 'Fornisce la possibilità di importare un batch di utenti basato su un file CSV preformattato';
+
+$lang["page-title_csv_user_import_csv_user_import"] = 'Importazione Utenti CSV';

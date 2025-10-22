@@ -55,3 +55,6 @@ $lang["museumplus_api_pass"]='Passwort';
 $lang["museumplus_modules_configuration_header"]='Konfiguration der Module';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Ermöglicht das Extrahieren von Ressourcen-Metadaten aus MuseumPlus mithilfe seiner REST-API (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Objekt Details';
+$lang["page-title_museumplus_setup_module"] = 'MuseumPlus-Modul einrichten';
+$lang["page-title_museumplus_setup"] = 'MuseumPlus-Plugin einrichten';

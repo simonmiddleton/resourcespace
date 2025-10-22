@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'Generuj napisy i dodaj jako alternatywne pliki do 
 $lang["whisper_subtitles_name"] = 'Automatycznie generowane napisy';
 $lang["whisper_transcript"] = 'Wygeneruj plik transkrypcji i dodaj jako alternatywne pliki do pobrania';
 $lang["whisper_transcript_name"] = 'Automatycznie wygenerowany transkrypt';
+
+$lang["page-title_whisper_setup"] = 'Ustawienia wtyczki Whisper';

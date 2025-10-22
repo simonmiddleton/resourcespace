@@ -11,3 +11,4 @@ $lang["grant_edit_delete_user"]='تأكيد إزالة الوصول المحسّ
 $lang["grant_edit_group_list"]='المجموعات الحالية التي لديها وصول إضافي للتحرير';
 $lang["plugin-grant_edit-title"]='منح التحرير';
 $lang["plugin-grant_edit-desc"]='يمكن للمسؤولين منح المستخدمين وصولاً كاملاً مؤقتاً لتحرير الموارد';
+$lang["page-title_grant_edit_setup"] = 'إعداد مكون تحرير المنح';

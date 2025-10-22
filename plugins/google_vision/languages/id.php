@@ -23,3 +23,7 @@ $lang["google_vision_translation_keep_english"]='Tetapkan kata kunci bahasa Ingg
 $lang["google_vision_autotitle"]='Secara otomatis mengatur judul ke kata kunci dengan peringkat tertinggi';
 $lang["plugin-google_vision-title"]='Google Vision API';
 $lang["plugin-google_vision-desc"]='Kemampuan pengenalan gambar. Mengirimkan gambar yang diunggah ke Google Cloud Vision API dan menetapkan metadata yang disarankan.';
+$lang["page-title_google_vision_process_existing"] = 'Proses Google Vision yang Ada';
+$lang["page-title_google_vision_setup"] = 'Siapkan Plugin Google Vision';
+$lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
+$lang["page-title_google_vision_test"] = 'Google Vision Test';

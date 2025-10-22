@@ -11,3 +11,5 @@ $lang["adobe_link_import_successful"] = 'Файл імпортується';
 $lang["adobe_link_upload_document"] = 'Зберегти';
 $lang["adobe_link_saving"] = 'Збереження..';
 $lang["adobe_link_saving_wait"] = 'Файл зберігається, будь ласка, зачекайте на повідомлення про підтвердження. Можливо, вам доведеться оновити сторінку, щоб оновити зображення попереднього перегляду.';
+
+$lang["page-title_adobe_link_setup"] = 'Налаштування плагіна Adobe Link';

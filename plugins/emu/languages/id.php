@@ -35,3 +35,6 @@ $lang["emu_createdfromemu"] = 'Dibuat dari plugin EMU';
 $lang["emu_test_mode"] = 'Mode uji - Tetapkan ke benar dan skrip akan berjalan tetapi tidak memperbarui sumber daya';
 $lang["emu_upload_emu_field_label"] = 'EMu IRN';
 $lang["plugin-emu-desc"] = 'Memungkinkan metadata sumber daya diekstraksi dari database EMu.';
+
+$lang["page-title_emu_emu_object_details"] = 'Detail Objek EMu';
+$lang["page-title_emu_setup"] = 'Pengaturan Plugin';

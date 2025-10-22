@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"] = 'Na-publish na ang resource sa Vimeo
 $lang["vimeo_publish_account_options"] = 'Mga pagpipilian sa account ng Vimeo';
 $lang["vimeo_publish_allow_user_accounts"] = 'Payagan ang mga gumagamit na mag-publish sa kanilang sariling mga account sa Vimeo. Kung hindi totoo, ang pag-access sa isang solong account sa Vimeo ay dapat i-configure sa ibaba';
 $lang["vimeo_publish_set_account"] = 'I-set ang Vimeo account';
+$lang["page-title_vimeo_publish_setup"] = 'I-set up ang Vimeo Publish Plugin';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'I-publish sa Vimeo';

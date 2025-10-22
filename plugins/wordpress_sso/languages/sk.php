@@ -16,3 +16,7 @@ $lang["wordpress_sso_retry"]='Kliknite sem, če želite poskusiti ponovno prijav
 $lang["origin_wordpress_sso"]='Wordpress SSO plugin - Plugin pre jednotné prihlásenie (SSO) do Wordpress';
 $lang["plugin-wordpress_sso-title"]='Wordpress SSO';
 $lang["plugin-wordpress_sso-desc"]='Omogoča enotno prijavo z namestitvijo Wordpress';
+$lang["page-title_wordpress_sso_logout"] = 'Odhlásenie SSO';
+$lang["page-title_wordpress_sso_nouser"] = 'SSO Žiadny používateľ';
+$lang["page-title_wordpress_sso_readme_txt"] = 'SSO Readme';
+$lang["page-title_wordpress_sso_setup"] = 'Nastavenie pluginu SSO pre Wordpress';

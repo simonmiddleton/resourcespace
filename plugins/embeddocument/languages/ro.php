@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Tip resursă: Vizualizator de do
 $lang["embeddocument_embed_share"] = 'Incorporează documentul';
 $lang["plugin-embeddocument-title"] = 'Incorporează Documentul';
 $lang["plugin-embeddocument-desc"] = 'Oferă o funcție pentru a genera HTML pentru previzualizări de documente încorporabile pe site-uri externe.';
+
+$lang["page-title_embeddocument_setup"] = 'Configurare plugin pentru încorporarea documentelor';
+$lang["page-title_embeddocument_viewer"] = 'Incorporați vizualizatorul de documente';

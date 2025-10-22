@@ -6,3 +6,4 @@ $lang["system_reset_warning"]='Увага! Це видалить усі файл
 $lang["system_reset_confirm"]='Ви впевнені? Це не можна скасувати.';
 $lang["system_reset_delete_all"]='Видалити всі дані та файли';
 $lang["system_reset-tooltip"] = 'Виконайте скидання системи, щоб видалити всі файли та дані';
+$lang["page-title_system_reset_reset"] = 'Скидання системи';

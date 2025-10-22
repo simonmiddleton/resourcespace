@@ -38,3 +38,5 @@ $lang["vimeo_publish_allow_user_accounts"]='사용자가 자신의 Vimeo 계정�
 $lang["vimeo_publish_set_account"]='Vimeo 계정 설정';
 $lang["plugin-vimeo_publish-title"]='비메오 게시';
 $lang["plugin-vimeo_publish-desc"]='OAuth 2.0을 사용하여 Vimeo에 리소스 게시';
+$lang["page-title_vimeo_publish_setup"] = 'Vimeo 게시 플러그인 설정';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Vimeo에 게시하기';

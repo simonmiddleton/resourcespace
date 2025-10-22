@@ -50,3 +50,5 @@ $lang["youtube_publish_category"] = 'Катэгорыя';
 $lang["youtube_publish_category_error"] = 'Памылка атрымання катэгорый YouTube: -';
 $lang["youtube_chunk_size"] = 'Памер блока для загрузкі на YouTube (МБ)';
 $lang["youtube_publish_add_anchor"] = 'Дадаць якорныя тэгі да URL пры захаванні ў поле метададзеных URL YouTube?';
+$lang["page-title_youtube_publish_setup"] = 'Наладка плагіна';
+$lang["page-title_youtube_publish_youtube_upload"] = 'Апублікаваць рэсурс на YouTube';

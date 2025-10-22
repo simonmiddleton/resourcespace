@@ -6,3 +6,4 @@ $lang["system_reset_warning"] = 'Figyelem! Ez törli az összes fájlt és adato
 $lang["system_reset_confirm"] = 'Biztos benne? Ezt nem lehet visszavonni.';
 $lang["system_reset_delete_all"] = 'Törölje az összes adatot és fájlt';
 $lang["system_reset-tooltip"] = 'Rendszer visszaállítása az összes fájl és adat törléséhez';
+$lang["page-title_system_reset_reset"] = 'Rendszer visszaállítása';

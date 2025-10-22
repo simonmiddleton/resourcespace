@@ -50,3 +50,6 @@ $lang["museumplus_error_unknown_type_saved_config"] = 'A \'museumplus_modules_sa
 $lang["museumplus_error_invalid_association"] = 'Érvénytelen modul(ok) társítása. Kérjük, győződjön meg arról, hogy a megfelelő modul és/vagy rekordazonosító került beírásra!';
 $lang["museumplus_id_returns_multiple_records"] = 'Több rekord található - kérjük, adja meg a technikai azonosítót helyette';
 $lang["museumplus_error_module_no_field_maps"] = 'Nem sikerült szinkronizálni az adatokat a MuseumPlus-ból. Ok: a \'%name\' modulhoz nincs konfigurálva mezőleképezés.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus Objekt Részletek';
+$lang["page-title_museumplus_setup_module"] = 'MúzeumPlus Modul Beállítása';
+$lang["page-title_museumplus_setup"] = 'Állítsa be a MuseumPlus bővítményt';

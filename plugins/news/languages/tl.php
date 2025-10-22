@@ -13,3 +13,6 @@ $lang["news_nonewmessages"] = 'Walang bagong mensahe';
 $lang["title"] = 'Pinakabagong Balita';
 $lang["title-too-long"] = 'Ang field ng pamagat ay mas mahaba kaysa sa 50 karakter na pinapayagan';
 $lang["news_manage-tooltip"] = 'Magdagdag, mag-edit o magtanggal ng mga balita';
+$lang["page-title_news_news_content_edit"] = 'I-edit ang Nilalaman ng Balita';
+$lang["page-title_news_news_edit"] = 'I-edit ang Balita';
+$lang["page-title_news_news"] = 'Balita';

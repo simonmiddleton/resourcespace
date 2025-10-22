@@ -14,3 +14,5 @@ $lang["downloadformat"]='Fformat lawrlwytho';
 $lang["are_available-2"]='bydd yn cael ei drosi';
 $lang["are_available-1"]='bydd yn cael ei drosi';
 $lang["are_available-0"]='bydd yn cael ei drosi';
+$lang["page-title_format_chooser_convert"] = 'Dewisydd Fformat';
+$lang["page-title_format_chooser_setup"] = 'Gosodwch y Plugin Dewis Fformat';

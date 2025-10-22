@@ -7,3 +7,4 @@ $lang["meta_append_configuration_date_format"]='Seleccione el format de data - c
 $lang["meta_append_configuration_prompt"]='Afegir casella de selecció de metadades prompt';
 $lang["plugin-meta_append-title"]='Afegeix Meta';
 $lang["plugin-meta_append-desc"]='Afegir una marca de temps definible per l\'usuari i el número de càrrega diària (per usuari) a un camp';
+$lang["page-title_meta_append_setup"] = 'Configuració del complement d\'append de metadades';

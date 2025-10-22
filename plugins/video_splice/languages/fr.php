@@ -47,3 +47,6 @@ $lang["video-trim_output"]='Sortie';
 $lang["video_splice_error_invalid_action"]='Erreur : Action invalide';
 $lang["plugin-video_splice-title"]='Montage Vidéo';
 $lang["plugin-video_splice-desc"]='Ajoute la capacité de découpage et de montage vidéo';
+$lang["page-title_video_splice_setup"] = 'Configurer le plugin Video Splice';
+$lang["page-title_video_splice_splice"] = 'Monter la vidéo';
+$lang["page-title_video_splice_trim"] = 'Couper la vidéo';

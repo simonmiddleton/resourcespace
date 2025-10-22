@@ -53,3 +53,10 @@ $lang["flickr_nice_progress_min_timeout"]='เวลาระหว่างก�
 $lang["flickr_api_key"]='Flickr API key';
 $lang["flickr_api_secret"]='Flickr API ลับ';
 $lang["flickr_warn_no_title_access"]='การเผยแพร่ไม่อนุญาตหากไม่มีการเข้าถึงฟิลด์ชื่อ (ID #%id) กรุณาติดต่อผู้ดูแลระบบ!';
+$lang["page-title_flickr_theme_publish_flickr_preview"] = 'Flickr ตัวอย่าง';
+$lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'เผยแพร่ Flickr - ความก้าวหน้า';
+$lang["page-title_flickr_theme_publish_flickr_publish"] = 'เผยแพร่ Flickr';
+$lang["page-title_flickr_theme_publish_setup"] = 'ตั้งค่า Flikr Plugin';
+$lang["page-title_flickr_theme_publish_sync_progress"] = 'การซิงค์ Flickr - ความก้าวหน้า';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

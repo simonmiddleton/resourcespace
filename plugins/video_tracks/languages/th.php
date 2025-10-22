@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"]='รูปแบบที่ก
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='อนุญาตให้ใช้ตัวเลือกการส่งออกไฟล์ที่มีอยู่เพื่อสร้างรูปแบบวิดีโอที่กำหนดเองสำหรับไฟล์ต้นฉบับหรือไม่?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='ตรวจสอบเพื่อเริ่มการแปลงโค้ดตอนนี้ หากไม่เลือกคุณจะได้รับการแจ้งเตือนเมื่อไฟล์พร้อม';
 $lang["video_tracks_transcode_now_label"]='แปลงรหัสตอนนี้';
+$lang["page-title_video_tracks_create_video"] = 'สร้างวิดีโอ';
+$lang["page-title_video_tracks_setup"] = 'ตั้งค่าปลั๊กอินวิดีโอแทร็ก';

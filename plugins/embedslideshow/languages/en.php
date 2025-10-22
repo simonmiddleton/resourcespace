@@ -35,3 +35,6 @@ $lang["embedslideshow_directlink"] = "Non-embedded direct URL";
 $lang["embedslideshow_directlinkopen"] = "Open direct link (new page)";
 
 $lang['embedslideshow_dynamic_size'] = 'Dynamic resize of preview based on player size?';
+
+$lang["page-title_embedslideshow_setup"]    = "Setup Embed Slideshow Plugin";
+$lang["page-title_embedslideshow_viewer"]   = "Embed Slideshow";

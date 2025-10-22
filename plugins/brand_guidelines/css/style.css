@@ -151,29 +151,6 @@
     z-index: 1000;
 }
 
-.context-menu-row {
-    padding: 5px;
-    width: -webkit-fill-available;
-    border-radius: 4px;
-    text-align: left;
-    background-color: unset;
-    color: inherit;
-    box-shadow: none;
-    font-size: unset;
-    font-weight: unset;
-}
-
-.context-menu-row:hover {
-    background: #e7e7e7;
-    filter: none;
-    -webkit-filter: none;
-}
-
-.context-menu-row i {
-    font-size: 18px;
-    padding: 0 10px 0 2px;
-}
-
 .add-new-content-container {
     padding: 10px;
     border: 2px dashed lightgray;

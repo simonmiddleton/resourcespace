@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = '生成字幕并作为备用文件下载添加';
 $lang["whisper_subtitles_name"] = '自动生成的字幕';
 $lang["whisper_transcript"] = '生成转录文件并添加为备用文件下载';
 $lang["whisper_transcript_name"] = '自动生成的转录文本';
+
+$lang["page-title_whisper_setup"] = '设置 Whisper 插件';

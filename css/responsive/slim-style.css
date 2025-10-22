@@ -95,6 +95,16 @@ body {
     div#SearchBox.SlimHeaderFixedPosition { margin-top: 46px; }
 
     .ui-layout-west { display:none; }
+
+    .HorizontalNav .Pill { 
+        top: 3px;
+        right: 25px;
+    }
+
+    .HorizontalNav #UserProfileImage + .Pill {
+        top: -4px; 
+        right: 20px; 
+    }
 }
 /* General Forms */
 @media(max-width:1100px) {   
@@ -186,6 +196,14 @@ body {
     .RecordPanel .RecordDownloadSpace.RecordTools,
     #RecordDownloadTabContainer {
         width: 100%;
+    }
+
+    .FeaturedSimpleTile .top-right-menu {
+        display: block;
+    }
+
+    .FeaturedSimpleLinks .context-menu-container {
+        z-index: 1000;
     }
 }
 @media(max-width:700px) {
@@ -421,6 +439,18 @@ body {
 
     #HeaderNav1 li.HeaderLink.UploadButton {
         padding-top: 10px;
+    }
+
+    .HorizontalNav .Pill { 
+        position: relative; 
+        top: -12px;
+        right: 12px;
+    }
+
+    .HorizontalNav #UserProfileImage + .Pill {
+        position: relative;
+        top: -20px; 
+        right: 10px;
     }
 }
 @media(max-width:384px) {

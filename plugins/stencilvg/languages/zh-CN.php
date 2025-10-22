@@ -11,3 +11,6 @@ $lang["stencilvg-print"]='打印';
 $lang["stencilvg-download"]='下载';
 $lang["stencilvg-save_as_new_resource"]='另存为新资源';
 $lang["stencilvg-no_parameters_found"]='未找到模板参数';
+$lang["page-title_stencilvg_download_svg"] = '下载 SVG';
+$lang["page-title_stencilvg_input"] = 'SVG 输入';
+$lang["page-title_stencilvg_setup"] = '设置 StencilVG 插件';

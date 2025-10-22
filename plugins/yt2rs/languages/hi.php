@@ -8,3 +8,4 @@ $lang["yt2rs_online_preview"]='ऑनलाइन पूर्वावलोक
 $lang["yt2rs_youtube_video"]='यूट्यूब वीडियो';
 $lang["plugin-yt2rs-title"]='यूट्यूब से ResourceSpace';
 $lang["plugin-yt2rs-desc"]='यूट्यूब से वीडियो प्रकाशित करने की अनुमति देता है।';
+$lang["page-title_yt2rs_setup"] = 'Youtube को ResourceSpace प्लगइन में सेटअप करें';

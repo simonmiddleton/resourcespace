@@ -26,3 +26,5 @@ $lang["columnheader-last-found"]='अंतिम बार मिला';
 $lang["plugin-rse_search_notifications-title"]='खोज सूचनाएँ';
 $lang["plugin-rse_search_notifications-desc"]='सहेजे गए खोज में परिवर्तन होने पर उपयोगकर्ता को सूचित करें';
 $lang["search_notifications_watched_searches-tooltip"] = 'अपने सहेजे गए खोजों को नियंत्रित करें';
+$lang["page-title_rse_search_notifications_setup"] = 'खोज सूचनाएँ प्लगइन सेटअप करें';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'देखी गई खोजें';

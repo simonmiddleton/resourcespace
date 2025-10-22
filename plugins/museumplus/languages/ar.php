@@ -53,3 +53,6 @@ $lang["museumplus_id_returns_multiple_records"]='تم العثور على سجل
 $lang["museumplus_error_module_no_field_maps"]='غير قادر على مزامنة البيانات من MuseumPlus. السبب: الوحدة \'%name\' ليس لديها تعيينات حقول مُكوَّنة.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='[متقدم] يسمح باستخراج بيانات الموارد الوصفية من MuseumPlus باستخدام واجهة برمجة التطبيقات REST الخاصة به (MpRIA).';
+$lang["page-title_museumplus_museumplus_object_details"] = 'تفاصيل كائن MuseumPlus';
+$lang["page-title_museumplus_setup_module"] = 'إعداد وحدة MuseumPlus';
+$lang["page-title_museumplus_setup"] = 'إعداد مكون MuseumPlus';

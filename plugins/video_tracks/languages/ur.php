@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"]='حسب ضرورت فارمیٹ
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='کیا دستیاب فائل آؤٹ پٹ اختیارات کو اصل فائل کے لیے حسب ضرورت ویڈیو فارمیٹس بنانے کے لیے استعمال کرنے کی اجازت دی جائے؟';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='ابھی ٹرانسکوڈ شروع کرنے کے لیے چیک کریں۔ اگر غیر چیک شدہ ہے تو آپ کو فائل تیار ہونے پر ایک اطلاع موصول ہوگی۔';
 $lang["video_tracks_transcode_now_label"]='ابھی ٹرانسکوڈ کریں';
+$lang["page-title_video_tracks_create_video"] = 'ویڈیو بنائیں';
+$lang["page-title_video_tracks_setup"] = 'ویڈیو ٹریکس پلگ ان سیٹ اپ کریں';

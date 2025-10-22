@@ -37,3 +37,7 @@ $lang["brand_guidelines_configuration"] = 'Konfigurasi Garis Panduan Jenama';
 $lang["brand_guidelines_fallback_size_thm"] = 'Saiz imej sandaran susun atur thumbnail';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Saiz imej sandaran susun atur separuh lebar';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Saiz imej sandaran susun atur lebar penuh';
+$lang["page-title_brand_guidelines_content"] = 'Urus Kandungan Garis Panduan Jenama';
+$lang["page-title_brand_guidelines_guidelines"] = 'Garis Panduan Jenama';
+$lang["page-title_brand_guidelines_setup"] = 'Tetapkan Plugin Garis Panduan Jenama';
+$lang["page-title_brand_guidelines_toc"] = 'Edit kandungan';

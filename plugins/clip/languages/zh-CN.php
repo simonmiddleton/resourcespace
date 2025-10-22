@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = '矢量生成';
 $lang["clip_vector-statistics"] = '矢量统计';
 $lang["clip-vector-cleanup"] = '删除孤立的矢量';
 $lang["clip-vector-cleanup-description"] = '删除属于不再存在或不是上述所选资源类型的资源的矢量';
+
+$lang["page-title_clip_search"] = 'AI智能搜索';
+$lang["page-title_clip_setup"] = '设置 CLIP 插件';
+$lang["page-title_clip_webcam"] = '网络摄像头标签生成器';

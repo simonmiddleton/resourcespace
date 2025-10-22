@@ -21,3 +21,6 @@ $lang["feedback_add_new_field"] = 'Dodaj novi polje';
 $lang["feedback_back_to_plugin_manager"] = 'Natrag na Upravitelja dodataka';
 $lang["plugin-feedback-title"] = 'Povratne informacije';
 $lang["plugin-feedback-desc"] = 'Dodaje opću funkciju povratnih informacija korisnika s konfigurabilnim pitanjima.';
+
+$lang["page-title_feedback_feedback"] = 'Pošaljite povratne informacije';
+$lang["page-title_feedback_setup"] = 'Postavke dodatka';

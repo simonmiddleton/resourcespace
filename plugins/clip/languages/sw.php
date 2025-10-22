@@ -34,3 +34,7 @@ $lang["clip-vector-generation"] = 'Uundaji wa vector';
 $lang["clip_vector-statistics"] = 'Takwimu za vector';
 $lang["clip-vector-cleanup"] = 'Futa vektori zisizo na mzazi';
 $lang["clip-vector-cleanup-description"] = 'Ondoa vektors ambazo ni za rasilimali ambazo hazipo tena au si mojawapo ya aina za rasilimali zilizochaguliwa hapo juu';
+
+$lang["page-title_clip_search"] = 'Utafutaji Mwerevu wa AI';
+$lang["page-title_clip_setup"] = 'Weka Plugin ya CLIP';
+$lang["page-title_clip_webcam"] = 'Generator ya Lebo ya Webcam';

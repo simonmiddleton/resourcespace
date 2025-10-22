@@ -13,3 +13,6 @@ $lang["embeddocument_allow_original_download"] = 'Tillat nedlasting av PDF-varia
 $lang["embeddocument_embed_share"] = 'Bygg inn dokument';
 $lang["plugin-embeddocument-title"] = 'Bygg inn dokument';
 $lang["plugin-embeddocument-desc"] = 'Gir en funksjon for å generere HTML for innebygde dokumentforhåndsvisninger på eksterne nettsteder.';
+
+$lang["page-title_embeddocument_setup"] = 'Sett opp Embed Document Plugin';
+$lang["page-title_embeddocument_viewer"] = 'Innebygg dokumentvisning';

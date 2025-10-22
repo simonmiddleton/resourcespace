@@ -36,3 +36,5 @@ $lang["vimeo_publish_resource_published"]='منبع در Vimeo منتشر شده
 $lang["vimeo_publish_account_options"]='گزینه‌های حساب Vimeo';
 $lang["vimeo_publish_allow_user_accounts"]='اجازه به کاربران برای انتشار در حساب‌های Vimeo خودشان. اگر نادرست باشد، دسترسی به یک حساب Vimeo واحد باید در زیر پیکربندی شود.';
 $lang["vimeo_publish_set_account"]='تنظیم حساب Vimeo';
+$lang["page-title_vimeo_publish_setup"] = 'نصب افزونه انتشار ویمئو';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'به Vimeo منتشر کنید';

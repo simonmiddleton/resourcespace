@@ -53,3 +53,10 @@ $lang["flickr_nice_progress_min_timeout"]='زمان بین پینگ‌های پ�
 $lang["flickr_api_key"]='کلید API فلیکر';
 $lang["flickr_api_secret"]='راز API فلیکر';
 $lang["flickr_warn_no_title_access"]='انتشار بدون دسترسی به فیلد عنوان (شناسه #%id) مجاز نیست. لطفاً با یک مدیر تماس بگیرید!';
+$lang["page-title_flickr_theme_publish_flickr_preview"] = 'پیش‌نمایش فلیکر';
+$lang["page-title_flickr_theme_publish_flickr_publish_progress"] = 'انتشار Flickr - پیشرفت';
+$lang["page-title_flickr_theme_publish_flickr_publish"] = 'انتشار در فلیکر';
+$lang["page-title_flickr_theme_publish_setup"] = 'نصب افزونه فلیکر';
+$lang["page-title_flickr_theme_publish_sync_progress"] = 'همگام‌سازی Flickr - پیشرفت';
+
+$lang["page-title_flickr_theme_publish_sync"] = 'Flickr Sync';

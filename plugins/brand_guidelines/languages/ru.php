@@ -37,3 +37,8 @@ $lang["brand_guidelines_configuration"] = 'Конфигурация руково
 $lang["brand_guidelines_fallback_size_thm"] = 'Размер изображения по умолчанию для эскизов в макете';
 $lang["brand_guidelines_fallback_size_half_width"] = 'Размер изображения запасного варианта макета с половинной шириной';
 $lang["brand_guidelines_fallback_size_full_width"] = 'Размер изображения запасного варианта полноширинной компоновки';
+
+$lang["page-title_brand_guidelines_content"] = 'Управление содержимым руководства по бренду';
+$lang["page-title_brand_guidelines_guidelines"] = 'Руководство по бренду';
+$lang["page-title_brand_guidelines_setup"] = 'Настройка плагина руководства по бренду';
+$lang["page-title_brand_guidelines_toc"] = 'Редактировать содержимое';

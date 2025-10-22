@@ -16,3 +16,5 @@ $lang["are_available-1"]='zal worden geconverteerd';
 $lang["are_available-0"]='zal worden geconverteerd';
 $lang["plugin-format_chooser-title"]='Formaat Kiezer';
 $lang["plugin-format_chooser-desc"]='Hiermee kunt u verschillende formaten kiezen bij het downloaden van bestanden die direct worden gegenereerd.';
+$lang["page-title_format_chooser_convert"] = 'Formaatkiezer';
+$lang["page-title_format_chooser_setup"] = 'Instellen van het Formaat Kiezer Plugin';

@@ -26,3 +26,5 @@ $lang["columnheader-last-found"]='Laatst gevonden';
 $lang["plugin-rse_search_notifications-title"]='Zoekmeldingen';
 $lang["plugin-rse_search_notifications-desc"]='Gebruiker op de hoogte stellen wanneer er wijzigingen plaatsvinden in een opgeslagen zoekopdracht';
 $lang["search_notifications_watched_searches-tooltip"] = 'Beheer uw opgeslagen zoekopdrachten';
+$lang["page-title_rse_search_notifications_setup"] = 'Instellen van de Zoekmeldingen Plugin';
+$lang["page-title_rse_search_notifications_watched_searches"] = 'Gekeken Zoekopdrachten';

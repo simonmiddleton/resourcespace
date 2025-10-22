@@ -26,3 +26,5 @@ $lang["video_tracks_custom_video_formats_label"] = 'Format tersuai';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"] = 'Benarkan pilihan output fail yang tersedia digunakan untuk mencipta format video khusus untuk fail asal?';
 $lang["video_tracks_transcode_now_or_notify_me_label"] = 'Semak untuk memulakan transkod sekarang. Jika tidak disemak, anda akan menerima pemberitahuan apabila fail sudah siap';
 $lang["video_tracks_transcode_now_label"] = 'Transkod sekarang';
+$lang["page-title_video_tracks_create_video"] = 'Cipta Video';
+$lang["page-title_video_tracks_setup"] = 'Tetapkan Plugin Trek Video';

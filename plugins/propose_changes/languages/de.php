@@ -33,3 +33,5 @@ $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />Ihre vorgeschlagen
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />Vorgeschlagene Änderungen wurden eingereicht.<br/>[changesummary]<br/>Klicken Sie unten, um die Änderungen zu überprüfen.<br/><a href=\'[url]\'>[url]</a>';
 $lang["plugin-propose_changes-title"]='Änderungen vorschlagen';
 $lang["plugin-propose_changes-desc"]='Fügt die Option hinzu, Benutzern vorzuschlagen, Metadatenänderungen ohne Bearbeitungszugriff vorzunehmen';
+$lang["page-title_propose_changes_propose_changes"] = 'Änderungen vorschlagen';
+$lang["page-title_propose_changes_setup"] = 'Ändern Plugin einrichten';

@@ -8,3 +8,5 @@ $lang["whisper_subtitles"] = 'إنشاء ترجمات وإضافتها كملف�
 $lang["whisper_subtitles_name"] = 'ترجمات تم إنشاؤها تلقائيًا';
 $lang["whisper_transcript"] = 'إنشاء ملف نصي وإضافته كملف بديل للتنزيلات';
 $lang["whisper_transcript_name"] = 'نص تلقائي التوليد';
+
+$lang["page-title_whisper_setup"] = 'إعداد مكون Whisper';

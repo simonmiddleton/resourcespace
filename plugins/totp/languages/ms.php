@@ -15,3 +15,5 @@ $lang["totp_date_binding_d"] = 'Hari ini';
 $lang["totp_date_binding_w"] = 'Minggu semasa (bermula pada hari Isnin)';
 $lang["totp_date_binding_m"] = 'Bulan semasa';
 $lang["totp_date_binding_y"] = 'Tahun semasa';
+$lang["page-title_totp_setup"] = 'Pasang Plugin TOTP';
+$lang["page-title_totp_totp"] = 'TOTP';

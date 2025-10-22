@@ -13,3 +13,6 @@ $lang["embeddocument_document_resourcetype"] = 'Jenis Sumber Daya Pemirsa Dokume
 $lang["embeddocument_embed_share"] = 'Sematkan dokumen';
 $lang["plugin-embeddocument-title"] = 'Sematkan Dokumen';
 $lang["plugin-embeddocument-desc"] = 'Menyediakan fungsi untuk menghasilkan HTML untuk pratinjau dokumen yang dapat disematkan di situs jarak jauh.';
+
+$lang["page-title_embeddocument_setup"] = 'Atur Plugin Dokumen Embed';
+$lang["page-title_embeddocument_viewer"] = 'Sisipkan Penampil Dokumen';

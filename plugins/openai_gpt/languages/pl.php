@@ -21,3 +21,4 @@ $lang["property-gpt_source"]='Źródło GPT';
 $lang["openai_gpt_language"] = 'Język wyjściowy';
 $lang["openai_gpt_language_user"] = 'Język bieżącego użytkownika';
 $lang["openai_gpt_overwrite_data"] = 'Czy nadpisać istniejące dane w skonfigurowanych polach?';
+$lang["page-title_openai_gpt_setup"] = 'Skonfiguruj wtyczkę OpenAI GPT';

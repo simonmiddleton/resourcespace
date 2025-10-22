@@ -52,3 +52,6 @@ $lang["museumplus_id_returns_multiple_records"]='Useita tietueita löydetty - sy
 $lang["museumplus_error_module_no_field_maps"]='Ei voida synkronoida tietoja MuseumPlus:sta. Syy: moduulilla \'%name\' ei ole määritetty kenttäkartoituksia.';
 $lang["plugin-museumplus-title"]='MuseumPlus';
 $lang["plugin-museumplus-desc"]='Mahdollistaa resurssin metatietojen poimimisen MuseumPlusista sen REST API:n (MpRIA) avulla.';
+$lang["page-title_museumplus_museumplus_object_details"] = 'MuseumPlus-objektitiedot';
+$lang["page-title_museumplus_setup_module"] = 'Aseta MuseumPlus-moduuli';
+$lang["page-title_museumplus_setup"] = 'Aseta MuseumPlus-laajennus';

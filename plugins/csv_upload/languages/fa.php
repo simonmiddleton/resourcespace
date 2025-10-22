@@ -72,3 +72,4 @@ $lang["csv_upload_check_removebom"] = 'فایل CSV دارای BOM است که �
 $lang["csv_upload_validating"] = 'اعتبارسنجی';
 $lang["csv_upload_processing"] = 'در حال پردازش';
 $lang["processing_batch_edit_save"] = 'ردیف [row_number] از [rows_count]';
+$lang["page-title_csv_upload_csv_upload"] = 'بارگذاری CSV';

@@ -47,3 +47,6 @@ $lang["video-trim_output"]='Output';
 $lang["video_splice_error_invalid_action"]='Errore: Azione non valida';
 $lang["plugin-video_splice-title"]='Montaggio Video';
 $lang["plugin-video_splice-desc"]='Aggiunge la capacità di tagliare e unire video';
+$lang["page-title_video_splice_setup"] = 'Imposta il plugin Video Splice';
+$lang["page-title_video_splice_splice"] = 'Unisci Video';
+$lang["page-title_video_splice_trim"] = 'Taglia Video';

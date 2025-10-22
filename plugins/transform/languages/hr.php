@@ -80,3 +80,6 @@ $lang["plugin-transform-title"]='Alati za slike (transformacija)';
 $lang["plugin-transform-desc"]='Omogućuje stvaranje izrezanih i skaliranih alternativnih slika (jCrop s podrškom za mobilne uređaje)';
 $lang["use_system_icc_profile_config"]='Koristi sistemsku konfiguraciju za obradu ICC profila. Prepisat će gore navedene sRGB opcije.';
 $lang["cropper_preset_sizes"] = 'Predefinirane veličine';
+$lang["page-title_transform_collection_transform"] = 'Transformiraj resurs';
+$lang["page-title_transform_crop"] = 'Izreži resurs';
+$lang["page-title_transform_setup"] = 'Postavljanje Transform Plugin-a';

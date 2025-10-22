@@ -20,3 +20,5 @@ $lang["faces-show-view"] = 'Mostrar la funcionalidad de AI Faces en la página d
 $lang["faces_count_faces"] = 'Total de caras detectadas';
 $lang["faces_count_missing"] = 'Imágenes para procesar';
 $lang["faces-tag-field-not-set"] = 'El campo de etiquetado no está configurado.';
+
+$lang["page-title_faces_setup"] = 'Configurar el complemento Faces';

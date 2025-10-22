@@ -36,3 +36,5 @@ $lang["vimeo_publish_account_options"]='Opsiynau cyfrif Vimeo';
 $lang["vimeo_publish_allow_user_accounts"]='Caniatáu defnyddwyr i gyhoeddi i\'w cyfrifon Vimeo eu hunain. Os yw\'n anghywir, yna rhaid i fynediad i gyfrif Vimeo sengl gael ei fwrw ymlaen isod';
 $lang["vimeo_publish_set_account"]='Set cyfrif Vimeo';
 $lang["vimeo_api_instructions_condition_2"]='Mewngofnodwch i Vimeo gydag unrhyw gyfrif Vimeo dilys (nid oes angen iddo fod yn gysylltiedig â\'ch cyfrif Vimeo), yna ewch i <a href="https://developer.vimeo.com/" target="_blank">https://developer.vimeo.com/</a>';
+$lang["page-title_vimeo_publish_setup"] = 'Gosod Plugin Cyhoeddi Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Cyhoeddi i Vimeo';

@@ -38,3 +38,5 @@ $lang["weekday-6"] = 'Sábado';
 $lang["action_dates_eligible_states"] = 'Estados elegibles para la acción automática primaria. Si no se selecciona ningún estado, entonces todos los estados son elegibles.';
 $lang["plugin-action_dates-title"] = 'Fechas de Acción';
 $lang["plugin-action_dates-desc"] = 'Permite la eliminación o restricción programada de recursos basada en campos de fecha';
+
+$lang["page-title_action_dates_setup"] = 'Configurar el complemento de fechas de acción';

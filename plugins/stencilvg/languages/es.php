@@ -12,3 +12,6 @@ $lang["stencilvg-print"]='Imprimir';
 $lang["stencilvg-download"]='Descargar';
 $lang["stencilvg-save_as_new_resource"]='Guardar como nuevo recurso';
 $lang["stencilvg-no_parameters_found"]='No se encontraron parámetros de plantilla';
+$lang["page-title_stencilvg_download_svg"] = 'Descargar SVG';
+$lang["page-title_stencilvg_input"] = 'Entrada SVG';
+$lang["page-title_stencilvg_setup"] = 'Configurar el complemento StencilVG';

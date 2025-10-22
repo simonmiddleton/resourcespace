@@ -23,7 +23,7 @@ input[readonly] {
 
 /* Header styling */
 #Header {background: #fff;transform: translate3d(0, 0, 0);border: none;}
-#Header li a:not(:has(img)) {color:#000; opacity:0.7;}
+#Header li a:not(:has(img)) img {color:#000; opacity:0.7;}
 #Header .SearchResultsDisabled,
 #Header .SearchResultsDisabled:hover,
 .DisabledLink,
@@ -357,6 +357,19 @@ div.MessageBox a {
 .FeaturedSimpleTile:hover {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
 }
+.FeaturedSimpleTile .top-right-menu:hover,
+.SearchBreadcrumbs .top-right-menu:hover  {
+    background: #dfdfdf;
+    color: #474747;
+}
+.FeaturedSimpleLinks .context-menu-container {
+    background: white;
+    color: #474747;
+    box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.1);
+}
+.context-menu-row:hover {
+    background: #e7e7e7;
+}
 
 
 /* Highlight selected keywords */
@@ -435,8 +448,8 @@ input:checked + .customFieldLabel, .keywordselected {
 }
 
 .SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited, .MessageBox { color: #474747; }
-.ClearSelectedButton { background-color: #ff2b2b; }
-.ClearSelectedButton:hover { background-color: #b71c1c; }
+.ClearSelectedButton { background-color: #a11515; }
+.ClearSelectedButton:hover { background-color: #860d0d; }
 
 .codecomment
     {
@@ -777,18 +790,49 @@ a.HomePanel:hover {
     border: 1px solid #c5c5c5;
 }
 
-.PluginDisplay
-    {
+.PluginDisplay {
     background-color: white;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
     border: 3px solid rgba(255, 255, 255, 0);
-    }
+}
 
-.PluginDisplay .Pill
-    {
+.PluginDisplay .Pill {
     background-color: #1679c0;
-    }
+}
 
 .tickbox:not(:checked) + label {
     opacity: 0.5; /* Makes it look disabled */
+}
+
+/* Quick message modal */
+.messages-modal {
+    background: white;
+}
+
+.message-body {
+    background-color: white;
+}
+
+.messages-modal h1 {
+    color: #333;
+}
+
+.message:hover {
+    background: #f3f3f3;
+}
+
+.message-username {
+    color: black;
+}
+
+.message-text {
+    color: gray;
+}
+
+.message-divider {
+    background: #e7e7e7;
+}
+
+.message-full-text a {
+    color: #222222;
 }

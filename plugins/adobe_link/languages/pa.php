@@ -11,3 +11,5 @@ $lang["adobe_link_import_successful"] = 'ਫਾਈਲ ਆਯਾਤ ਕੀਤੀ 
 $lang["adobe_link_upload_document"] = 'ਸੰਭਾਲੋ';
 $lang["adobe_link_saving"] = 'ਸੰਭਾਲਿਆ ਜਾ ਰਿਹਾ ਹੈ..';
 $lang["adobe_link_saving_wait"] = 'ਫਾਈਲ ਸੁਰੱਖਿਅਤ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਪੁਸ਼ਟੀਕਰਨ ਸੁਨੇਹੇ ਦੀ ਉਡੀਕ ਕਰੋ। ਪ੍ਰੀਵਿਊ ਚਿੱਤਰ ਨੂੰ ਅਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਪੰਨਾ ਤਾਜ਼ਾ ਕਰਨ ਦੀ ਲੋੜ ਹੋ ਸਕਦੀ ਹੈ।';
+
+$lang["page-title_adobe_link_setup"] = 'ਐਡੋਬੀ ਲਿੰਕ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
