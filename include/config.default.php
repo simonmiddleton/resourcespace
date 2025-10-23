@@ -291,8 +291,8 @@ $exif_comment = 18;
 $exif_model = 52;
 $exif_date = 12;
 
-// If exiftool is installed, you can optionally enable the metadata report available on the View page.
-// You may want to enable it on the usergroup level by overriding this config option in System Setup.
+// Use Exiftool to see all the embedded metadata of an applicable resource file. Restricted to Super Admins (those who 
+// can manage the system and view confidential resources).
 $metadata_report = false;
 
 // Option to turn on metadata download in view.php.
