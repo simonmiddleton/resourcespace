@@ -761,14 +761,17 @@ function save_site_text($page, $name, $language, $group)
 /**
  * Return a human-readable string representing $bytes in either KB or MB.
  *
- * @param  integer $bytes
+ * @param  integer $bytes file size to format in bytes
+ * @param  bool    $html if set to true output will include &nbsp; instead of a space
  * @return string
  */
-function formatfilesize($bytes)
+function formatfilesize(int $bytes, bool $html = true): string
 {
     # Binary mode
     $multiple = 1024;
     $lang_suffix = "-binary";
+
+    $space = $html ? "&nbsp;" : " ";
 
     # Decimal mode, if configured
     global $byte_prefix_mode_decimal;
@@ -779,15 +782,15 @@ function formatfilesize($bytes)
 
     global $lang;
     if ($bytes < $multiple) {
-        return number_format((double)$bytes) . "&nbsp;" . escape($lang["byte-symbol"]);
+        return number_format((double)$bytes) . $space . escape($lang["byte-symbol"]);
     } elseif ($bytes < pow($multiple, 2)) {
-        return number_format((double)ceil($bytes / $multiple)) . "&nbsp;" . escape($lang["kilobyte-symbol" . $lang_suffix]);
+        return number_format((double)ceil($bytes / $multiple)) . $space . escape($lang["kilobyte-symbol" . $lang_suffix]);
     } elseif ($bytes < pow($multiple, 3)) {
-        return number_format((double)$bytes / pow($multiple, 2), 1) . "&nbsp;" . escape($lang["megabyte-symbol" . $lang_suffix]);
+        return number_format((double)$bytes / pow($multiple, 2), 1) . $space . escape($lang["megabyte-symbol" . $lang_suffix]);
     } elseif ($bytes < pow($multiple, 4)) {
-        return number_format((double)$bytes / pow($multiple, 3), 1) . "&nbsp;" . escape($lang["gigabyte-symbol" . $lang_suffix]);
+        return number_format((double)$bytes / pow($multiple, 3), 1) . $space . escape($lang["gigabyte-symbol" . $lang_suffix]);
     } else {
-        return number_format((double)$bytes / pow($multiple, 4), 1) . "&nbsp;" . escape($lang["terabyte-symbol" . $lang_suffix]);
+        return number_format((double)$bytes / pow($multiple, 4), 1) . $space . escape($lang["terabyte-symbol" . $lang_suffix]);
     }
 }
 

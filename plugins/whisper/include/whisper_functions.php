@@ -52,13 +52,20 @@ function whisper_process_unprocessed(int $size_limit = 0)
             if ($processed_size > $size_limit_bytes) {
                 break;
             }
-            whisper_process($resource['ref']);
-            $processed_size += $resource['file_size'];
-            $processed_count++;
+
+            $process_result = whisper_process($resource['ref']);
+
+            if ($process_result) {
+                $processed_size += $resource['file_size'];
+                $processed_count++;
+            }
         }
 
-        logScript("Whisper: Processed " . $processed_count . " resources");
+        logScript("Whisper: Processed " . $processed_count . " resources. Total size: " . formatfilesize($processed_size, false));
 
+        if ($processed_count !== count($resources)) {
+            logScript("Whisper: " . (count($resources) - $processed_count) . " resources were not processed");
+        }
     }
 
     clear_process_lock(__FUNCTION__);
