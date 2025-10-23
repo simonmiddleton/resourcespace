@@ -31,7 +31,7 @@ function whisper_process_unprocessed(int $size_limit = 0)
         logScript("Whisper: Processing all unprocessed files");
         $extensions = explode(",", $whisper_extensions);
 
-        $resources = ps_array("SELECT ref value FROM resource WHERE file_extension in (" .     ps_param_insert(count($extensions)) . ") and (whisper_processed is null or whisper_processed=0) and archive <> 3 ORDER BY ref desc", ps_param_fill($extensions, "s"));
+        $resources = ps_array("SELECT ref value FROM resource WHERE file_extension IN (" .     ps_param_insert(count($extensions)) . ") AND (whisper_processed IS NULL OR whisper_processed=0) AND archive <> 3 ORDER BY ref DESC", ps_param_fill($extensions, "s"));
 
         logScript("Whisper: " . count($resources) . " resources to process");
         foreach ($resources as $resource) {
@@ -46,7 +46,7 @@ function whisper_process_unprocessed(int $size_limit = 0)
 
         logScript("Whisper: Processing " . $size_limit . "GB of files");
         $extensions = explode(",", $whisper_extensions);
-        $resources = ps_query("SELECT ref, file_size FROM resource WHERE file_extension in (" .     ps_param_insert(count($extensions)) . ") and (whisper_processed is null or whisper_processed=0) and archive <> 3 ORDER BY ref desc", ps_param_fill($extensions, "s"));
+        $resources = ps_query("SELECT ref, file_size FROM resource WHERE file_extension IN (" .     ps_param_insert(count($extensions)) . ") AND (whisper_processed IS NULL OR whisper_processed=0) AND archive <> 3 ORDER BY ref DESC", ps_param_fill($extensions, "s"));
         
         foreach ($resources as $resource) {
             if ($processed_size > $size_limit_bytes) {
