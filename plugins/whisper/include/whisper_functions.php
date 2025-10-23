@@ -10,10 +10,11 @@ use Montala\ResourceSpace\CommandPlaceholderArg;
  * - Prevents concurrent execution via process locking.
  * - Selects resources with supported file extensions that have not yet been transcribed.
  * - Invokes whisper_process() for each selected resource.
- *
+ * 
+ * @param   int      $size_limit The total size of files in GB to be processed in a batch, 0 = no limit
  * @return int|false Returns the number of resources processed, or false if a process lock is active.
  */
-function whisper_process_unprocessed()
+function whisper_process_unprocessed(int $size_limit = 0)
 {
     // Process all resources that haven't had text extracted yet.
     global $whisper_extensions;
@@ -25,13 +26,46 @@ function whisper_process_unprocessed()
     }
     set_process_lock(__FUNCTION__);
 
-    $extensions = explode(",", $whisper_extensions);
+    if ($size_limit <= 0) {
+        // Process all unprocessed resources
+        logScript("Whisper: Processing all unprocessed files");
+        $extensions = explode(",", $whisper_extensions);
 
-    $resources = ps_array("SELECT ref value FROM resource WHERE file_extension in (" .     ps_param_insert(count($extensions)) . ") and (whisper_processed is null or whisper_processed=0) ORDER BY ref desc", ps_param_fill($extensions, "s"));
+        $resources = ps_array("SELECT ref value FROM resource WHERE file_extension IN (" .     ps_param_insert(count($extensions)) . ") AND (whisper_processed IS NULL OR whisper_processed=0) AND archive <> 3 ORDER BY ref DESC", ps_param_fill($extensions, "s"));
 
-    logScript("Whisper: " . count($resources) . " resources to process.");
-    foreach ($resources as $resource) {
-        whisper_process($resource);
+        logScript("Whisper: " . count($resources) . " resources to process");
+        foreach ($resources as $resource) {
+            whisper_process($resource);
+        }
+    } else {
+
+        // Process resources up to $size_limit, at least process one if a single file exceeds this limit
+        $size_limit_bytes = $size_limit * 1024 * 1024 * 1024;
+        $processed_size = 0;
+        $processed_count = 0;
+
+        logScript("Whisper: Processing " . $size_limit . "GB of files");
+        $extensions = explode(",", $whisper_extensions);
+        $resources = ps_query("SELECT ref, file_size FROM resource WHERE file_extension IN (" .     ps_param_insert(count($extensions)) . ") AND (whisper_processed IS NULL OR whisper_processed=0) AND archive <> 3 ORDER BY ref DESC", ps_param_fill($extensions, "s"));
+        
+        foreach ($resources as $resource) {
+            if ($processed_size > $size_limit_bytes) {
+                break;
+            }
+
+            $process_result = whisper_process($resource['ref']);
+
+            if ($process_result) {
+                $processed_size += $resource['file_size'];
+                $processed_count++;
+            }
+        }
+
+        logScript("Whisper: Processed " . $processed_count . " resources. Total size: " . formatfilesize($processed_size, false));
+
+        if ($processed_count !== count($resources)) {
+            logScript("Whisper: " . (count($resources) - $processed_count) . " resources were not processed");
+        }
     }
 
     clear_process_lock(__FUNCTION__);
