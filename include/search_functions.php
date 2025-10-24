@@ -3053,7 +3053,9 @@ function render_advanced_search_buttons()
 * If a "fieldX" order_by is used, check it's a valid value.
 * Where the value is invalid, the default 'resourceid' will be used instead.
 *
-* @param string         string of order by
+* @param   string   Order by string e.g. field8
+*
+* @return  string   Order by string if valid else default 'resourceid'
 */
 function check_order_by_in_table_joins($order_by): string
 {
