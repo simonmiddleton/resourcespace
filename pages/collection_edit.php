@@ -62,6 +62,8 @@ if (getval("submitted", "") != "" && enforcePostRequest(false)) {
     $coldata["result_limit"] = getval("result_limit", 0, true);
     $coldata["users"] = getval("users", "");
 
+    $dash_all_users = ps_value("SELECT all_users value FROM dash_tile WHERE link LIKE ?", ['s', '%!collection' . $ref . '%'], "0");
+
     if ($collection["public"] == 1 && getval("update_parent", "") == "true") {
         // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
         $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
@@ -115,6 +117,13 @@ if (getval("submitted", "") != "" && enforcePostRequest(false)) {
         && is_featured_collection_category_by_children($collection["ref"])
     ) {
         $error = $lang["error_save_not_allowed_fc_has_children"];
+    }
+    
+    if (
+        $coldata["public"] == 0 
+        && $dash_all_users == 1
+    ) {
+        $error = $lang["error_save_not_allowed_dash_tile_set_public"];
     }
 
     if (!isset($error)) {

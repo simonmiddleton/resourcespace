@@ -3035,6 +3035,7 @@ $lang['error_user_registration_opt_in'] = 'Please check the box to indicate your
 $lang['error_resource_id_non_numeric'] = 'ERROR - Resource IDs should be numeric please check your submission';
 $lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not an image type file extension';
 $lang["error_save_not_allowed_fc_has_children"] = "Unable to save the change. Please make sure there are no other featured collections or featured collection categories under this collection";
+$lang["error_save_not_allowed_dash_tile_set_public"] = "Unable to save the change. Please make sure there are no dash tiles set for all or multiple users that are linked to this collection";
 $lang["error_multiple_preview_tools"] = "Please disable the current preview tool and then try again.";
 $lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
 $lang["error_upload_replace_file_fail"] = "Failed to replace resource file";

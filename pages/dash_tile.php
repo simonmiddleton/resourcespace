@@ -62,7 +62,13 @@ if ($submitdashtile && enforcePostRequest(false)) {
     $tile_audience        = getval('tile_audience', '');
     $specific_user_groups = getval('specific_user_groups', [], false, 'is_array');
 
-    if (checkPermission_dashadmin()) {
+    $ref = preg_match('/!collection(\d+)/', getval("link", ""), $id) ? $id[1] : null;
+    $public_tile = true;
+    if ($ref && ((get_collection($ref))["public"] !== 1)) {
+        $public_tile = false;
+    }
+
+    if (checkPermission_dashadmin() && $public_tile) {
         switch ($tile_audience) {
             case 'true':
             case 'specific_user_groups':
@@ -620,7 +626,13 @@ if (!$validpage) {
             }
         }
 
-        if (checkPermission_dashadmin()) {
+        $ref = preg_match('/!collection(\d+)/', $link, $id) ? $id[1] : null;
+        $public_tile = true;
+        if ($ref && ((get_collection($ref))["public"] !== 1)) {
+            $public_tile = false;
+        }
+
+        if (checkPermission_dashadmin() && $public_tile) {
             ?>
             <div class="Question">
                 <label for="tile_audience"><?php echo escape($lang['who_should_see_dash_tile']); ?></label> 
