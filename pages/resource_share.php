@@ -185,7 +185,7 @@ if ($editing && !$editexternalurl) {
 
         <div class="VerticalNav">
             <ul>
-                <?php if ((!$editing || $editexternalurl) && $email_sharing) { ?>
+                <?php if ((!$editing || $editexternalurl) && $email_sharing && $anonymous_login !== $username) { ?>
                     <li>
                         <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;
                         <a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onclick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this, true);">

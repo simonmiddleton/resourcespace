@@ -38,7 +38,7 @@ if (!collection_readable($ref)) {
     error_alert($lang["error-permissiondenied"], true, 403);
     exit();
 }
-if (!$allow_share || checkperm("b")) {
+if (!$allow_share || checkperm("b") || $anonymous_login == $username) {
     error_alert($lang["error-permissiondenied"], true, 403);
     exit();
 }

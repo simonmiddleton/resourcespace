@@ -2294,7 +2294,7 @@ else
     }
     
     // Edit the 'contributed by' value of the resource table
-    if($ref > 0 && $edit_contributed_by)
+    if($ref > 0 && $edit_contributed_by && $anonymous_login !== $username)
       {
       $sharing_userlists = false;
       $single_user_select_field_id = "created_by";

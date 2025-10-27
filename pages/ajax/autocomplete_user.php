@@ -8,6 +8,10 @@ $find = getval("term", "");
 $getrefs = (getval("getrefs", "") != "") ? true : false;
 $getuserref = (getval("getuserref", ""));
 
+if ($anonymous_login == $username) {
+    exit($lang['error-permissiondenied']);
+}
+
 if (!empty($getuserref)) {
     ob_clean();
     echo ps_value("select max(ref) as value from user where username=?", array("s",$getuserref), '');
