@@ -151,7 +151,11 @@ function HookAdobe_linkViewDownloadbuttonreplace()
     global $adobe_link_document_extensions, $edit_access, $CSRF_token_identifier, $usersession;
 
     # Adds a special link to the download button.
-    $adb_ext = $size_info_array["id"] == "" ? $resource['file_extension'] : $size_info_array["extension"];
+    $adb_ext = "";
+    
+    if (is_array($size_info_array)) {
+        $adb_ext = $size_info_array["id"] == "" ? $resource['file_extension'] : $size_info_array["extension"];
+    }
 
     if (
         !isset($_SERVER['HTTP_USER_AGENT'])
