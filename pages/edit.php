@@ -2498,6 +2498,15 @@ if ($ref>0 && !$multiple)
     { ?>
 <div class="BasicsBoxRight">
     <?php
+    $original_resource = $resource;
+    $original_ref = $ref;
+    if ((int)$resource['has_image'] === RESOURCE_PREVIEWS_NONE) {
+        $pullresource = related_resource_pull($resource);
+        if ($pullresource !== false && ((int)$pullresource['has_image'] !== RESOURCE_PREVIEWS_NONE)) {
+            $resource = $pullresource;
+            $ref = (int) $resource["ref"];
+        }
+    }
     global $custompermshowfile;
         hook('custompermshowfile');
         if(!$is_template && !hook('replaceeditpreview'))
@@ -2574,6 +2583,8 @@ if ($ref>0 && !$multiple)
             <div class="clearerleft"> </div>
         </div>
     <?php }
+    $resource = $original_resource;
+    $ref = $original_ref;
     ?>
 </div><!-- end of BasicsBoxRight-->
 <?php }
