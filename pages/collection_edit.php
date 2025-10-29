@@ -270,7 +270,7 @@ include "../include/header.php";
                     || ($collection['type'] == COLLECTION_TYPE_PUBLIC && !$themes_in_my_collections)
                     || ($collection['type'] == COLLECTION_TYPE_FEATURED && $themes_in_my_collections)
                 ) 
-                && $anonymous_login !== $username
+                && !is_anonymous_user()
             ) {
                 ?>
                 <div class="Question">

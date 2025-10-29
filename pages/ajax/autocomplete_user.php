@@ -8,7 +8,7 @@ $find = getval("term", "");
 $getrefs = (getval("getrefs", "") != "") ? true : false;
 $getuserref = (getval("getuserref", ""));
 
-if ($anonymous_login == $username) {
+if (is_anonymous_user()) {
     exit($lang['error-permissiondenied']);
 }
 

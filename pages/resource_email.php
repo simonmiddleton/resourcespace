@@ -32,7 +32,7 @@ $sort = getval("sort", $default_sort_direction);
 $minaccess = get_resource_access($ref);
 
 // Check if sharing permitted
-if (!can_share_resource($ref, $minaccess) || $anonymous_login == $username) {
+if (!can_share_resource($ref, $minaccess) || is_anonymous_user()) {
     exit($lang["error-permissiondenied"]);
 }
 
