@@ -21,6 +21,10 @@ if ($collection !== false) {
     }
 
     $resources = do_search("!collection" . $ref);
+
+    # Remove $fstemplate_alt_threshold resources - these should only be updated in the template system.
+    $resources = array_filter($resources, function ($resource) { return !resource_file_readonly($resource['ref']); });
+
     $colcount = count($resources);
     $count_resources_processed = 0;
 
