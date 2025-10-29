@@ -319,7 +319,7 @@ final class IIIFRequest
         if (in_array($resdata["file_extension"], array_merge($this->media_extensions))) {
             $media_path = get_resource_path($resource, true, $size, false, $resdata["file_extension"]);
         } else {
-            $useextension = strtolower($resdata["file_extension"]) == "jpeg" ? $resdata["file_extension"] : "jpg";
+            $useextension = $resdata["file_extension"] == "jpeg" ? "jpeg" : "jpg";
             $media_path = get_resource_path($resource, true, $size, false, $useextension);
         }
 
