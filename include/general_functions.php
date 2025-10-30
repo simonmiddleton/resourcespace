@@ -704,7 +704,7 @@ function save_site_text($page, $name, $language, $group)
     if (!is_int_loose($group)) {
         $group = null;
     }
-    $text = getval("text", "");
+    $text = strip_unicode_points(getval("text", ""));
     if ($newcustom) {
         $params = ["s",$page,"s",$name];
         $test = ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text WHERE page=? AND name=?", $params);
@@ -6005,4 +6005,25 @@ function log_bandwidth(int $bandwidth_usage): void
 function acl_can_view_confidential_resources(): bool
 {
     return checkperm('a') && checkperm('v');
+}
+
+/**
+ * Strip Unicode points from a text value.
+ * 
+ * @param string $value Text value subject
+ * @param list<string> $blocklist List of unicode points (e.g. \x{FEFF}), ranges allowed too (e.g. \x{200B}-\x{200D}) 
+ */
+function strip_unicode_points(string $value, array $blocklist = []): string
+{
+    if ($blocklist === []) {
+        $blocklist = [
+            // U+200B - zero-width space
+            // U+200C - zero-width non-joiner
+            // U+200D - zero-width joiner
+            '\x{200B}-\x{200D}',
+            '\x{FEFF}', # Byte Order Mark (BOM) or the zero-width no-break space (deprecated use)
+        ];
+    }
+
+    return preg_replace('/[' . implode('', $blocklist) . ']/u', '', $value);
 }
