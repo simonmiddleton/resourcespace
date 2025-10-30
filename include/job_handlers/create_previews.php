@@ -41,6 +41,8 @@ if ($resource > 0) {
     delete_previews($resource);
 }
 
+logScript("[create_previews] Creating previews", $log_file);
+
 $success = create_previews(
     $resource, 
     $thumbonly, 

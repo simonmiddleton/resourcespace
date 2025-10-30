@@ -11,6 +11,18 @@ $job = getval("job", 0, true);
 $job_details = job_queue_get_job($job);
 $hide_data = array("failure_text","success_text");
 
+$log_file_path      = get_job_queue_log_path($job_details["type"], $job_details["job_code"], $job_details["ref"]);
+$log_file_streaming = false;
+$log_file_download  = false;
+
+if (file_exists($log_file_path)) {
+    if ($job_details["status"] == STATUS_INPROGRESS) {
+        $log_file_streaming = true;
+    } else {
+        $log_file_download = true;
+    }
+}
+
 if (!is_array($job_details) || count($job_details) == 0) {
     exit("Invalid job reference");
 }
@@ -23,6 +35,14 @@ if (!is_array($job_details) || count($job_details) == 0) {
                 <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>
             <h1><?php echo escape($lang["job_text"] . " #" . $job_details["ref"]); ?></h1>
+
+            <?php
+
+            if ($log_file_download) {
+                echo $log_file_path;
+            }
+
+            ?>
         </div>
     </div>
 
@@ -40,7 +60,7 @@ if (!is_array($job_details) || count($job_details) == 0) {
                     }
 
                     echo "<tr><td width='50%'>";
-                    echo escape($name);
+                    echo escape(ucwords(str_replace("_", " ", $name)));
                     echo "</td><td width='50%'>";
                     
                     if ($name == "job_data") {

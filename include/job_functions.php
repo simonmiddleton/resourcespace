@@ -265,23 +265,37 @@ function job_queue_purge($status = 0)
 function job_queue_run_job($job, $clear_process_lock): string
 {
     // Runs offline job using defined job handler
-    $jobref = $job["ref"];
+    $job_type = $job['type'];
+    $job_code = $job["job_code"];
+    $jobref  = $job["ref"];
     $job_data = json_decode($job["job_data"], true);
+    
 
-    $jobuser = $job["user"];
-    if (!isset($jobuser) || $jobuser == 0 || $jobuser == "") {
-        $logmessage = " - Job could not be run as no user was supplied #{$jobref}" . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+    $log_file = null;
+    $log_file_path = get_job_queue_log_path($job_type, $job_code, $jobref);
+
+    if($log_file_path === false) {
+        logScript("[job_handler] Error generating path to log offline job");
+    } else {
+        $log_file = fopen($log_file_path, 'w');
+        
+        if ($log_file === false) {
+            $log_file = null;
+        }
+    }
+   
+    $job_user = $job["user"];
+    if (!isset($job_user) || $job_user == 0 || $job_user == "") {
+        $logmessage = " - Job could not be run as no user was supplied #{$jobref}";
+        logScript("[job_handler] " . $logmessage, $log_file);
         job_queue_update($jobref, $job_data, STATUS_ERROR);
         return 'Error';
     }
 
-    $jobuserdata = get_user($jobuser);
+    $jobuserdata = get_user($job_user);
     if (!$jobuserdata) {
-        $logmessage = " - Job #{$jobref} could not be run as invalid user ref #{$jobuser} was supplied." . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+        $logmessage = " - Job #{$jobref} could not be run as invalid user ref #{$job_user} was supplied.";
+        logScript("[job_handler] " . $logmessage, $log_file);
         job_queue_update($jobref, $job_data, STATUS_ERROR);
         return 'Error';
     }
@@ -295,34 +309,29 @@ function job_queue_run_job($job, $clear_process_lock): string
     $offline_job_in_progress = false;
 
     if (is_process_lock('job_' . $jobref) && !$clear_process_lock) {
-        $logmessage =  " - Process lock for job #{$jobref}" . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+        $logmessage =  " - Process lock for job #{$jobref}";
+        logScript("[job_handler] " . $logmessage, $log_file);
         return 'Process lock';
     } elseif ($clear_process_lock) {
-        $logmessage =  " - Clearing process lock for job #{$jobref}" . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+        $logmessage =  " - Clearing process lock for job #{$jobref}";
+        logScript("[job_handler] " . $logmessage, $log_file);
         clear_process_lock("job_{$jobref}");
     }
 
     set_process_lock('job_' . $jobref);
 
-    $logmessage =  "Running job #" . $jobref . ' at ' . date('Y-m-d H:i:s') . PHP_EOL;
-    echo $logmessage;
-    debug($logmessage);
+    $logmessage =  "Running job #" . $jobref;
+    logScript("[job_handler] " . $logmessage, $log_file);
 
-    $logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job["type"] . ".php" . PHP_EOL;
-    echo $logmessage;
-    debug($logmessage);
+    $logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job_type . ".php";
+    logScript("[job_handler] " . $logmessage, $log_file);
 
-    if (file_exists(__DIR__ . "/job_handlers/" . $job["type"] . ".php")) {
-        $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job["type"] . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+    if (file_exists(__DIR__ . "/job_handlers/" . $job_type . ".php")) {
+        $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job_type;
+        logScript("[job_handler] " . $logmessage, $log_file);
         job_queue_update($jobref, $job_data, STATUS_INPROGRESS);
         $offline_job_in_progress = true;
-        include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
+        include __DIR__ . "/job_handlers/" . $job_type . ".php";
     } else {
         // Check for handler in plugin
         $offline_plugins = $plugins;
@@ -337,28 +346,25 @@ function job_queue_run_job($job, $clear_process_lock): string
         }
 
         foreach ($offline_plugins as $plugin) {
-            if (file_exists(__DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php")) {
-                $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job["type"] . PHP_EOL;
-                echo $logmessage;
-                debug($logmessage);
-                job_queue_update($jobref, $job_data, STATUS_INPROGRESS);
+            if (file_exists(__DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job_type . ".php")) {
+                $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job_type;
+                logScript("[job_handler] " . $logmessage, $log_file);
+                job_queue_update($job_ref, $job_data, STATUS_INPROGRESS);
                 $offline_job_in_progress = true;
-                include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php";
+                include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job_type . ".php";
                 break;
             }
         }
     }
 
     if (!$offline_job_in_progress) {
-        $logmessage = "Unable to find handlerfile: " . $job["type"] . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+        $logmessage = "Unable to find handlerfile: " . $job_type;
+        logScript("[job_handler] " . $logmessage, $log_file);
         job_queue_update($jobref, $job_data, STATUS_ERROR, date('Y-m-d H:i:s'));
     }
 
-    $logmessage =  " - Finished job #" . $jobref . ' at ' . date('Y-m-d H:i:s') . PHP_EOL;
-    echo $logmessage;
-    debug($logmessage);
+    $logmessage =  " - Finished job #" . $jobref;
+    logScript("[job_handler] " . $logmessage, $log_file);
 
     clear_process_lock('job_' . $jobref);
     return 'Complete';
@@ -398,4 +404,22 @@ function get_job_type_priority($type = "")
         }
     }
     return JOB_PRIORITY_SYSTEM;
+}
+
+function get_job_queue_log_path(string $type = "", string $job_code = "", $job_ref = ""): string|false
+{
+    if ($type === "" || $job_code === "" || $job_ref === "") {
+        return false;
+    }
+
+    // Build path for logging
+    $log_path = get_temp_dir() . "/offline_job_logs/" . $type . "/"; // . $job_ref . "_" . $job_code . ".log";
+    if (!is_dir($log_path)) {
+        $log_path_created = mkdir($log_path, 0777, true);
+        if (!$log_path_created) {
+            return false;
+        }
+    }
+
+    return $log_path . $job_ref . "_" . $job_code . ".log";
 }
