@@ -8941,6 +8941,36 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
 
     $return_failed = [];
     foreach (array_chunk($resources, 1000) as $checkresources) {
+        db_begin_transaction("checkresources");
+
+        // Resources with no file_size have no file so can't be checked.
+        $resources_with_no_file = array();
+        $resource_with_file = array();
+        foreach($checkresources as $check_ref) {
+            if (!is_null($check_ref["file_size"]) && $check_ref["file_size"] > 0) {
+                $resource_with_file[] = $check_ref;
+            } elseif ((int)$check_ref["no_file"] === 0) {
+                $resources_with_no_file[] = $check_ref;
+            }
+        }
+        $checkresources = $resource_with_file;
+        $resources_with_no_file = array_column($resources_with_no_file, 'ref');
+
+        if (count($resources_with_no_file) > 0) {
+            // No evidence of a file ever being uploaded. Mark these as having no_file
+            ps_query("
+                UPDATE resource 
+                SET no_file = 1
+                WHERE ref IN (" . ps_param_insert(count($resources_with_no_file)) . ")",
+                ps_param_fill($resources_with_no_file, "i")
+            );
+        }
+
+        if (count($checkresources) === 0) {
+            db_end_transaction("checkresources");
+            return array();
+        }
+
         $checks = [];
         $checks["is_readable"] = true; // Always check for file presence as checksums may not have been generated yet
         if (!$presenceonly && $GLOBALS["file_checksums"]) {
@@ -8958,30 +8988,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
             }
         }
 
-        db_begin_transaction("checkresources");
         if (count($failed) > 0) {
-            if ($presenceonly) {
-                // Check if resources have ever actually had a file uploaded
-                $arr_uploads = ps_array("
-                     SELECT DISTINCT resource value 
-                       FROM resource_log
-                      WHERE resource IN (" . ps_param_insert(count($failed)) . ")
-                        AND type = ?",
-                    array_merge(ps_param_fill($failed, 'i'), ['s', LOG_CODE_UPLOADED])
-                );
-                $arr_nouploads = array_diff($failed, $arr_uploads);
-
-                if (count($arr_nouploads) > 0) {
-                    // No evidence of a file ever being uploaded. Mark these as having no_file
-                    ps_query("
-                        UPDATE resource 
-                        SET no_file = 1
-                        WHERE ref IN (" . ps_param_insert(count($arr_nouploads)) . ")",
-                        ps_param_fill($arr_nouploads, "i")
-                    );
-                }
-                $failed = array_diff($failed, $arr_nouploads);
-            }
             if (count($failed) > 0) {
                 $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($failed)) . ")";
                 $failed_params = ps_param_fill($failed, "i");
@@ -9054,7 +9061,9 @@ function get_resources_to_validate(int $days = 0): array
                 resource_type,
                 file_checksum,
                 last_verified,
-                integrity_fail
+                integrity_fail,
+                file_size,
+                no_file
         FROM resource
         WHERE ref > 0 AND no_file = 0 AND file_size > 0 {$filtersql}
         ORDER BY integrity_fail DESC, last_verified ASC",
