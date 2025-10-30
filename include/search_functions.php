@@ -3303,3 +3303,21 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
 
     return $order_by;
 }
+
+function prepare_regex_search_string(string $keyword): string
+{
+    $keyword = preg_quote($keyword);
+    $keyword = str_replace('\*', '.*?', $keyword);
+    $keywords = explode(";", $keyword);
+    if (count($keywords) > 1) {
+        $keyword = '(' . implode("|", $keywords) . ')';
+    }
+    if (preg_match('/\w/', $keyword) === 0) {
+        // Use lookaheads/lookbehinds for boundary-like behavior when the keyword consists of non-word characters (e.g. ,, &, -)
+        // because \b only works for transitions between word characters (letters, digits, _) and non-word characters.
+        $keyword = "(?<!\w)" . $keyword . "(?!\w)";
+    } else {
+        $keyword = "\\b" . $keyword . "\\b";
+    }
+    return $keyword;
+}
