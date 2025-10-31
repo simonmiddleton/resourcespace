@@ -397,5 +397,6 @@ switch ($returntype) {
         break;
 }
 
+header('Content-Type: application/json');
 echo json_encode($return_data);
 exit();

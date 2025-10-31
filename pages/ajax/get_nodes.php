@@ -3,6 +3,7 @@
 include __DIR__ . '/../../include/boot.php';
 include __DIR__ . '/../../include/authenticate.php';
 include_once __DIR__ . '/../../include/node_functions.php';
+header('Content-Type: application/json');
 
 /*
 This allows Asynchronous searches for nodes, either by: node ID or simply by searching for a name (fuzzy search)

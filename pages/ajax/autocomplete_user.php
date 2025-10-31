@@ -21,6 +21,7 @@ $ignoregroups = (getval("nogroups", "") != "") ? true : false;
 $ignoresmartgroups = (getval("nosmartgroups", "") != "") ? true : false;
 
 $first = true;
+header('Content-Type: application/json');
 ?> [ <?php
 
 if (!$ignoregroups) {

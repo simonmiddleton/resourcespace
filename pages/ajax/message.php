@@ -149,6 +149,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
     }
 
     ob_clean(); // just in case we have any stray whitespace at the start of this file
+    header('Content-Type: application/json');
     echo json_encode($messages);
     return;
 }
