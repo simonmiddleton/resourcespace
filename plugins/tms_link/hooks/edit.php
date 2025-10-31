@@ -168,7 +168,14 @@ function HookTms_linkEditAftersaveresourcedata(int|array $R, $nodes_to_add, $nod
                             static fn($V) => $V['resource_type_field'] == $module['rs_uid_field']
                         ))
                     )
-                    && ($resource_rs_uid_field === [] || $resource_rs_uid_field[0]['nodes_values'] === [])
+                    && (
+                        $resource_rs_uid_field === []
+                        || (
+                            $resource_rs_uid_field[0]['type'] === FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
+                            && isset($resource_rs_uid_field[0]['nodes_values'])
+                            && $resource_rs_uid_field[0]['nodes_values'] === []
+                            )
+                        )
                 )
                 || (
                     $can_use_updated_resources
