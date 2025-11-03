@@ -187,7 +187,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
             url: '<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true',
             type: 'GET',
             success: function(messages, textStatus, xhr) {
-                if(xhr.status == 200 && isJson(messages) && (messages = jQuery.parseJSON(messages)) && jQuery(messages).length > 0) {
+                if(xhr.status == 200 && messages && messages.length > 0) {
                     messagecount = messages.length;
                     if(messages[messages.length - 1]['ref'] == 0) {
                         // The last message is a dummy entry with a count of actions and failed jobs
