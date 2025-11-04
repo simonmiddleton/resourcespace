@@ -122,7 +122,7 @@ include "../include/login_background.php";
 ?>
 
 <h1><?php echo escape($lang["requestuserlogin"]); ?></h1>
-<p><?php echo escape(text("introtext")); ?></p>
+<p><?php echo strip_tags_and_attributes(text("introtext")); ?></p>
 
 <form method="post" id='mainform' action="<?php echo $baseurl_short?>pages/user_request.php">  
     <?php
