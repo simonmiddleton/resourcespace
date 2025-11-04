@@ -591,7 +591,7 @@ function create_resource($resource_type, $archive = 999, $user = -1, $origin = '
         $user = $userref;
     }
 
-    // Set no_file=1 because at this stage a new resource technically has no file until a follow-up procesing is done.
+    // Set no_file=1 because at this stage a new resource technically has no file until a follow-up processing is done.
     ps_query(
         "INSERT INTO resource(resource_type,creation_date,archive,created_by,file_extension, no_file) VALUES (?,NOW(),?,?,?, 1)",
         ["i",$resource_type,"i",$archive,"i",$user,"s",$file_extension]
