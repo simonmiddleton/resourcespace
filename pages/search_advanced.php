@@ -841,7 +841,7 @@ include "../include/header.php";
                 });
             }
 
-            if ($advanced_search_contributed_by) {
+            if ($advanced_search_contributed_by && !is_anonymous_user()) {
                 ?>
                 <div class="Question">
                     <label><?php echo escape($lang["contributedby"]) ; ?></label>

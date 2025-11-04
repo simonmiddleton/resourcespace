@@ -7,7 +7,7 @@
 include "../../include/boot.php";
 include "../../include/authenticate.php";
 
-if (!checkperm("m")) {
+if (!checkperm("m") || is_anonymous_user()) {
     exit("Permission denied.");
 }
 

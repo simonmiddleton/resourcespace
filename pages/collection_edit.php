@@ -256,9 +256,12 @@ include "../include/header.php";
 
             <?php
             if (
-                $collection["public"] == 0
-                || ($collection['type'] == COLLECTION_TYPE_PUBLIC && !$themes_in_my_collections)
-                || ($collection['type'] == COLLECTION_TYPE_FEATURED && $themes_in_my_collections)
+                (
+                    $collection["public"] == 0
+                    || ($collection['type'] == COLLECTION_TYPE_PUBLIC && !$themes_in_my_collections)
+                    || ($collection['type'] == COLLECTION_TYPE_FEATURED && $themes_in_my_collections)
+                ) 
+                && !is_anonymous_user()
             ) {
                 ?>
                 <div class="Question">
