@@ -6,3 +6,5 @@ $lang["sensitive_images_field"]="Metadata field containing the reason the image 
 $lang["sensitive_images_blur_level"]="Sensitive image blurring level<br>(1=least, 6=most)";
 
 $lang["page-title_sensitive_images_setup"] = "Setup Sensitive Images Plugin";
+
+$lang["sensitive_images_show"]="Click image to show.";
