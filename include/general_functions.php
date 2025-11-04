@@ -290,7 +290,8 @@ function redirect(string $url)
         # redirect to an absolute URL
         header("Location: " . $baseurl . str_replace($baseurl_short, "/", $url));
     } else {
-        if (url_starts_with($baseurl, $url)) {
+        $extra_slash = substr($baseurl, -1, 1) == '/' ? '' : '/';
+        if (url_starts_with($baseurl . $extra_slash, $url)) {
             // Base url has already been added
             header("Location: " . $url);
             exit();
