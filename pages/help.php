@@ -62,7 +62,7 @@ include "../include/header.php";
     } else {
         ?>
         <h1><?php echo escape($section); ?></h1>
-        <p><?php echo escape(text($section)); ?></p>
+        <p><?php echo strip_tags_and_attributes(text($section), ['iframe', 'a'], ['src', 'href']); ?></p>
         <p>
             <a onclick="<?php echo $onClick; ?>" href="<?php echo $baseurl_short?>pages/help.php">
                 <?php echo LINK_CARET_BACK . escape($lang["backtohelphome"]); ?>
