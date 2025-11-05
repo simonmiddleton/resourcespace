@@ -10,9 +10,6 @@ if (!$metadata_report) {
 $exiftool_fullpath = get_utility_path("exiftool");
 if (!$exiftool_fullpath) {
     echo escape($lang["exiftoolnotfound"]);
-} elseif (!acl_can_view_confidential_resources()) {
-    debug("[WARN] Non-super admin user #{$userref} requested the metadata report");
-    exit(escape(text('nometadatareport')));
 } else {
     $ref = getval("ref", 0, false, is_int_loose(...));
     $resource = get_resource_data($ref);
@@ -21,7 +18,7 @@ if (!$exiftool_fullpath) {
     if ($resource === false) {
         debug('Could not fetch resource data.');
         exit(escape(text('nometadatareport')));
-    } elseif (get_resource_access($resource) !== RESOURCE_ACCESS_FULL) {
+    } else if (get_resource_access($resource) !== RESOURCE_ACCESS_FULL) {
         debug("[WARN] User #{$userref} requested the metadata report for a non-full access resource #{$ref}");
         exit(escape(text('nometadatareport')));
     }
