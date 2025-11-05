@@ -1581,6 +1581,7 @@ $ffmpeg_audio_extensions = array(
     'rm',
     'gsm',
     'weba',
+    'opus',
 );
 
 // The audio settings for mp3 previews
