@@ -6001,14 +6001,6 @@ function log_bandwidth(int $bandwidth_usage): void
 }
 
 /**
- * Access control: check user is allowed to view confidential resources (associated with Super Admin capability).
- */
-function acl_can_view_confidential_resources(): bool
-{
-    return checkperm('a') && checkperm('v');
-}
-
-/**
  * Strip Unicode points from a text value.
  * 
  * @param string $value Text value subject
