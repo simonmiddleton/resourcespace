@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'BasitSAML test sitesi yönetici şif
 $lang["page-title_simplesaml_about"] = 'SAML Hakkında';
 $lang["page-title_simplesaml_generate_sp_config"] = 'SP Konfigürasyonu Oluştur';
 $lang["page-title_simplesaml_setup"] = 'Basit SAML Eklentisini Kurun';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML eklentisi yapılandırılmamış';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML eklentisi tam olarak yapılandırılmamış (IdP meta verisi eksik)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML eklentisi tam olarak yapılandırılmamış (authsource eksik)';

@@ -81,6 +81,16 @@ $use_cases = [
         'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::InvalidExtension),
     ],
     [
+        'name' => 'Banned extension (dry run mode)',
+        'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_{$run_id}.php", '<?php echo 508;'),
+        'input' => [
+            'source' => new SplFileInfo(sys_get_temp_dir() . "/test_508_{$run_id}.php"),
+            'destination' => $dest,
+            'processor' => ['file_move' => 'dry_run'],
+        ],
+        'expected' => $expect_fail_cond(ProcessFileUploadErrorCondition::InvalidExtension),
+    ],
+    [
         'name' => 'Allow specific extension',
         'setup' => fn() => file_put_contents(sys_get_temp_dir() . "/test_508_{$run_id}.csv", 'x,y'),
         'input' => [
@@ -326,6 +336,27 @@ if (!(is_array($result) && isset($result['success']) && $result['success'])) {
     echo "Use case: CSV file HTTP POST - ";
     $result['error'] = unserialize($result['error']);
     test_log('$result = ' . print_r($result, true));
+    return false;
+}
+
+// Integration case: Dry run mode only emulates a "file move" processor (i.e. no actual file move/copy)
+$empty_file = sys_get_temp_dir() . "/test_508_{$run_id}_empty_dryrun.txt";
+$empty_fh = fopen($empty_file, 'w');
+if (is_resource($empty_fh) && fclose($empty_fh) && try_unlink($dest) === true) {
+    $result = $curl_post_file_response($empty_file, ['file_move' => 'dry_run']);
+
+    if (is_array($result) && isset($result['error'])) {
+        $result['error'] = unserialize($result['error']);
+    }
+
+    if (!($expect_fail_cond(ProcessFileUploadErrorCondition::EmptySourceFile)($result) && !file_exists($dest))) {
+        test_log('$result = ' . print_r($result, true));
+        test_log("Destination file ({$dest}) exists - " . json_encode(file_exists($dest)) . PHP_EOL);
+        echo 'Use case: Dry run mode only emulates a "file move" processor - ';
+        return false;
+    }
+} else {
+    echo '[ENV] Set up \'Dry run mode only emulates a "file move" processor\' use case - ';
     return false;
 }
 

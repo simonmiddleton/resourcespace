@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'Állítsa vissza a SimpleSAML teszto
 $lang["page-title_simplesaml_about"] = 'SAML Rólunk';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generálj SP konfigurációt';
 $lang["page-title_simplesaml_setup"] = 'Egyszerű SAML bővítmény beállítása';
+$lang["simplesaml_error_not_configured"] = 'A SimpleSAML bővítmény nincs konfigurálva';
+$lang["simplesaml_error_no_idp_metadata"] = 'A SimpleSAML bővítmény nincs teljesen konfigurálva (hiányzik az IdP metaadat)';
+$lang["simplesaml_error_no_authsource"] = 'A SimpleSAML bővítmény nincs teljesen konfigurálva (hiányzik az authsource)';

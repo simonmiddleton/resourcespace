@@ -1,6 +1,6 @@
 <?php
 
-include "../../include/boot.php";
+include dirname(__DIR__, 2) . '/include/boot.php';
 command_line_only();
 
 $restrict = $argv[1] ?? false;
@@ -68,7 +68,7 @@ function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens 
     return print_r($response_data, true);
 }
 
-$plugins = scandir("../../plugins");
+$plugins = scandir(RESOURCESPACE_BASE_PATH . "/plugins");
 array_shift($plugins);
 array_shift($plugins); // Discard first two which are "." and ".."
 $plugins[] = ""; // Add an extra row to signify the base languages (not in a plugin)
@@ -90,7 +90,7 @@ foreach ($plugins as $plugin) {
 
     // Get a baseline
     $lang = array();
-    $basefile = "../../" . $plugin_path . "languages/en.php";
+    $basefile = sprintf('%s/%slanguages/en.php', RESOURCESPACE_BASE_PATH, $plugin_path);
     if (!file_exists($basefile)) {
         continue;
     } // This plugin does not have any translations.
@@ -112,6 +112,7 @@ foreach ($plugins as $plugin) {
         // Process a language
         $lang = array();
         $langfile = "../../" . $plugin_path . "languages/" . $language . ".php";
+        $langfile = sprintf('%s/%slanguages/%s.php', RESOURCESPACE_BASE_PATH, $plugin_path, $language);
 
         // Create file if it doesn't exist.
         if (!file_exists($langfile)) {
@@ -124,7 +125,7 @@ foreach ($plugins as $plugin) {
         // Add plugin title and description from plugin YAML so it gets a translation too
         $lang_en_extended = $lang_en;
         if ($plugin != "") {
-            $yaml_path = "../../" . $plugin_path . $plugin . ".yaml";
+            $yaml_path = sprintf('%s/%s.yaml', RESOURCESPACE_BASE_PATH, $plugin_path . $plugin);
             if (file_exists($yaml_path)) {
                 $yaml = get_plugin_yaml($yaml_path);
                 if (isset($yaml["title"])) {

@@ -588,7 +588,7 @@ $urlparams= array(
     'search_access'     => (!is_null($search_access) ? $search_access : null),
 );
 
-check_order_by_in_table_joins($order_by);
+$order_by = check_order_by_in_table_joins($order_by);
 
 hook("editbeforeheader");
 
@@ -1721,7 +1721,7 @@ if (getval("copyfrom","")!="")
     }
   }
 
-if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)  && !$multiple && $metadatatemplate != 0)
+if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type) && !$multiple && $metadatatemplate != 0 && !isset($show_error))
     {
     $use             = $metadatatemplate;
     $original_fields = get_resource_field_data($ref, $multiple, true, null, '', $tabs_on_edit);

@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'Tetapkan semula kata laluan pentadbi
 $lang["page-title_simplesaml_about"] = 'SAML Mengenai';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Hasilkan Konfigurasi SP';
 $lang["page-title_simplesaml_setup"] = 'Pasang Plugin SAML Ringkas';
+$lang["simplesaml_error_not_configured"] = 'Plugin SimpleSAML tidak dikonfigurasi';
+$lang["simplesaml_error_no_idp_metadata"] = 'Plugin SimpleSAML tidak dikonfigurasi sepenuhnya (metadata IdP hilang)';
+$lang["simplesaml_error_no_authsource"] = 'Plugin SimpleSAML tidak dikonfigurasi sepenuhnya (authsource hilang)';

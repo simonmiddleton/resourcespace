@@ -46,13 +46,43 @@ $use_cases = [
         'expected' => true,
     ],
     [
-        'name' => 'URL w/ fragment',
+        'name' => 'URL w/ simple fragment (safe)',
         'input' => 'http://test.localhost/some_page.php#myFragment',
         'expected' => true,
     ],
     [
-        'name' => 'URL w/ malicious fragment',
+        'name' => 'URL w/ simple fragment (unsafe)',
         'input' => 'http://test.localhost/some_page.php#my<b>Fragment',
+        'expected' => false,
+    ],
+    [
+        'name' => 'URL w/ complex fragment (used by other applications; safe)',
+        'input' => 'http://test.localhost/some_page.php#!/unit/test?pn=1&foo=t&check.other.thing=f&l=en',
+        'expected' => true,
+    ],
+    [
+        'name' => 'URL w/ complex HTML encoded fragment (used by other applications; safe)',
+        'input' => 'http://test.localhost/some_page.php#!/unit/test?pn=1&amp;foo=t&amp;check.other.thing=f&amp;l=en',
+        'expected' => true,
+    ],
+    [
+        'name' => 'URL w/ complex percent encoded fragment (used by other applications; safe)',
+        'input' => 'http://test.localhost/some_page.php#!/unit/test?pn=1&foo=t&l=en&q=unit%20test',
+        'expected' => true,
+    ],
+    [
+        'name' => 'URL w/ complex fragment (used by other applications; unsafe v1)',
+        'input' => 'http://test.localhost/some_page.php#!/unit/test?pn=1&foo=t&check\'other.thing=f&l=en',
+        'expected' => false,
+    ],
+    [
+        'name' => 'URL w/ complex fragment (used by other applications; unsafe v2)',
+        'input' => 'http://test.localhost/some_page.php#!/unit/test?pn=1&foo=t&check"other.thing=f&l=en',
+        'expected' => false,
+    ],
+    [
+        'name' => 'URL w/ complex fragment (used by other applications; unsafe v3)',
+        'input' => 'http://test.localhost/some_page.php#!/unit/test?pn=1&foo=t&<img>check.other.thing=f&l=en',
         'expected' => false,
     ],
     [

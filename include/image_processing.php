@@ -27,12 +27,14 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
 {
     debug_function_call('upload_file', func_get_args());
 
-    global $lang, $userref, $filename_field, $extracted_text_field, $amended_filename;
+    global $lang, $userref, $filename_field, $extracted_text_field, $extracted_text_extensions, $amended_filename;
     global $upload_then_process, $upload_then_process_holding_state,$offline_job_queue, $offline_job_in_progress;
     global $icc_extraction, $camera_autorotation, $camera_autorotation_ext;
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing, $valid_upload_paths;
+
+    $ref = (int) $ref;
 
     # FStemplate support - do not allow samples from the template to be replaced
     if (resource_file_readonly($ref)) {
@@ -388,7 +390,11 @@ function upload_file($ref, $no_exif = false, $revert = false, $autorotate = fals
             autocomplete_blank_fields($ref, false);
         }
         # Extract text from documents (e.g. PDF, DOC)
-        if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension, $unoconv_extensions))) {
+        if (
+            isset($extracted_text_field)
+            && in_array($extension, $extracted_text_extensions)
+            && !(isset($unoconv_path) && in_array($extension, $unoconv_extensions))
+        ) {
             // We need to make sure we don't spin off a new offline job for this when upload_file() is being used in
             // upload_processing job handler
             if ($offline_job_queue && !$offline_job_in_progress) {
@@ -1186,7 +1192,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
 
     $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
 
-    if (($extension == "jpg") || ($extension == "jpeg") || ($extension == "png") || ($extension == "gif" && !$ffmpeg_preview_gif)) {
+    if (in_array(strtolower($extension), ["jpg","jpeg","png"]) || (strtolower($extension) == "gif" && !$ffmpeg_preview_gif)) {
         if (isset($imagemagick_path)) {
             return create_previews_using_im($ref, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ingested, $onlysizes);
         } else {
@@ -2204,6 +2210,7 @@ function AutoRotateImage($src_image, $ref = false)
     # from a non-ingested image to properly rotate a preview image
     global $imagemagick_path, $camera_autorotation_ext;
 
+    $src_image = safe_file_name($src_image);
     debug("AutoRotateImage(src_image = $src_image, ref = $ref)");
 
     if (!isset($imagemagick_path)) {
@@ -2288,7 +2295,7 @@ function AutoRotateImage($src_image, $ref = false)
 
         # we'll remove the exiftool created file copy (as a result of using -TagsFromFile)
         if (file_exists($new_image . '_original')) {
-            unlink($new_image . '_original');
+            unlink(safe_file_name($new_image) . '_original');
         }
     }
 
@@ -3872,12 +3879,16 @@ function create_previews_using_im(
                     $cb_height = $sh / 6;
                     $cb_scale = 600;
                 }
-                $addcheckbdpre = "-size " . round($cb_width, 0, PHP_ROUND_HALF_DOWN) . "x" . round($cb_height, 0, PHP_ROUND_HALF_DOWN);
+                $addcheckbdpre = "-size " . ceil($cb_width) . "x" . ceil($cb_height);
                 if ($extension == "svg") {
-                    $addcheckbdpre = $addcheckbdpre  . " -scale " . $cb_scale . "% -background none tile:pattern:checkerboard -modulate 150,100 ";
+                    $addcheckbdpre .= " tile:pattern:checkerboard -background none -modulate 150,100 -scale " . $cb_scale . "% -crop %%CB_CROP%% +repage ";
                 } else {
-                    $addcheckbdpre .= " tile:pattern:checkerboard -modulate 150,100 -scale " . $cb_scale . "% ";
+                    $addcheckbdpre .= " tile:pattern:checkerboard -modulate 150,100 -scale " . $cb_scale . "% -crop %%CB_CROP%% +repage ";
                 }
+                $cmdparams["%%CB_CROP%%"] = new CommandPlaceholderArg(
+                    (int)$sw . "x" . (int)$sh . "+0+0",
+                    [CommandPlaceholderArg::class, 'alwaysValid']
+                );
                 $addcheckbdafter = "-compose over -composite ";
             }
 

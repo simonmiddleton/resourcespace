@@ -1191,6 +1191,23 @@ $ip_forwarded_for = false;
 // Unset it to prevent extraction of text content
 $extracted_text_field = 72;
 
+// File types to attempt to extract text from
+$extracted_text_extensions = [
+    'html',
+    'doc',
+    'docx',
+    'txt',
+    'pdf',
+    'rtxt',
+    'odt',
+    'ods',
+    'odp',
+    'pdf',
+    'ai',
+    'htm',
+    'zip',
+];
+
 // Enable user rating of resources
 // Users can rate resources using a star ratings system on the resource view page.
 // Average ratings are automatically calculated and used for the 'popularity' search ordering.

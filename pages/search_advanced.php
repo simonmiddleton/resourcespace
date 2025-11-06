@@ -356,6 +356,21 @@ include "../include/header.php";
             selectedtypes.shift();
         }
 
+        if (jQuery('input[name$="FeaturedCollections"]').is(":checked")) {
+            console.debug("Showing fields for FeaturedCollections");
+            // Check Featured Collections
+            selectedtypes = ["Collections"];
+            jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',true);
+
+            advSearchShowHideSection('Global',false);
+            advSearchShowHideSection('FeaturedCollections',true);
+            advSearchShowHideSection('Resource',false);
+            advSearchShowHideSection('Media',false);
+
+            jQuery('#AdvancedSearchFeaturedCollectionsSectionHead').show();
+            jQuery('#AdvancedSearchFeaturedCollectionsSection').show();
+        }
+
         displayValidFields();
 
         jQuery('.SearchTypeCheckbox').change(function() {

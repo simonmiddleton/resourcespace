@@ -1281,10 +1281,6 @@ function new_user($newuser, $usergroup = 0)
 {
     global $lang,$home_dash,$user_limit;
 
-    if (!checkPermission_manage_users() || !can_set_admin_usergroup($usergroup)) {
-        return false;
-    }
-
     # Username already exists?
     $c = ps_value("SELECT COUNT(*) value FROM user WHERE username = ?", ["s",$newuser], 0);
     if ($c > 0) {

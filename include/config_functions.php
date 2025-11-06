@@ -2224,7 +2224,7 @@ function config_filter_by_search(array $page_def, array $config_type, string $fi
  * Remove user preferences by resetting to system preferences. Used to display system config or user group config
  * without the current user's preferences changing the values.
  *
- * @param  array  $page_def   Array containing page definition, from functions config_add_ ...
+ * @param  array   $page_def   Array containing page definition, from functions config_add_ ...
  */
 function config_remove_user_preferences(array $page_def): void
 {

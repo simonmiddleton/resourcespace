@@ -3066,7 +3066,6 @@ function emptyiszero($value)
 *             [ref] => 1
 *             [resource_ref] =>
 *             [homepage_show] => 1
-*             [featured_collections_show] => 0
 *             [login_show] => 1
 *             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/1.jpg
 *             [checksum] => 1539875502
@@ -3077,7 +3076,6 @@ function emptyiszero($value)
 *             [ref] => 4
 *             [resource_ref] => 19
 *             [homepage_show] => 1
-*             [featured_collections_show] => 0
 *             [login_show] => 0
 *             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/4.jpg
 *             [checksum] => 1542818794
@@ -3094,7 +3092,7 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
+    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, login_show FROM slideshow", array(), "slideshow");
 
     $slideshow_files = array();
 
@@ -3115,6 +3113,10 @@ function get_slideshow_files_data()
                 'nc' => $slideshow_file['checksum'],
             )
         );
+
+        if ((int) $slideshow['resource_ref'] > 0) {
+            $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
+        }
 
         $slideshow_files[] = $slideshow_file;
     }
@@ -3825,10 +3827,8 @@ function html_find_and_replace(string $findstring, string $replacestring, string
 * @param string $html       HTML string
 * @param array  $tags       Extra tags to be allowed
 * @param array  $attributes Extra attributes to be allowed
-*
-* @return string
 */
-function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
+function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array()): string
 {
     global $permitted_html_tags, $permitted_html_attributes;
 
@@ -5636,13 +5636,18 @@ function is_safe_url($url): bool
     $url_parts = parse_url($url);
     if ($url_parts === false) {
         return false;
-    } elseif (!in_array($url_parts['scheme'], ['http', 'https'])) {
+    } elseif (!in_array($url_parts['scheme'], ['http', 'https', 'mailto'])) {
         return false;
     }
 
-    // Check URL components (except the port and query strings) don't contain XSS payloads
-    foreach (array_diff_key($url_parts, ['port' => 1, 'query' => 1]) as $value) {
-        if ($value !== escape($value)) {
+    // Check URL components don't contain XSS payloads except the port (an int) and query strings (see dedicated logic)
+    foreach (array_diff_key($url_parts, ['port' => 1, 'query' => 1]) as $part_name => $value) {
+        if ($part_name === 'fragment') {
+            if (!preg_match('/^[\w.~!$&%()*+,;=:@\/?-]*$/', $value)) {
+                // Non-RFC 3986 compliant fragment detected
+                return false;
+            }
+        } elseif ($value !== escape($value)) {
             return false;
         }
     }
@@ -5709,19 +5714,6 @@ function sanitise_url(string $val): string
 function validate_sort_value($val): bool
 {
     return is_string($val) && in_array(mb_strtolower($val), ['asc', 'desc']);
-}
-
-/**
- * Input validation helper function to check that the field requested exists and is available for search ordering
- * @param  mixed $val Field ref to be validated
- */
-function validate_sort_field($val): bool
-{
-    if (substr($val, 0, 5) == "field") {
-            $val = substr($val, 5);
-    }
-
-    return is_positive_int_loose($val) && get_field($val) && in_array($val, $GLOBALS["sort_fields"]);
 }
 
 /**
@@ -5952,4 +5944,36 @@ function get_page_title(string $page, string $plugin = ""): string
         $page_title = "";
     }
     return $applicationname . $page_title;
+}
+
+/**
+ * Log the bandwidth used by download.php
+ * 
+ * @param int $usage The total bandwidth used measured in KB
+ */
+function log_bandwidth(int $bandwidth_usage): void
+{
+    global $usergroup, $k;
+
+    $date  = getdate();
+    $update_params = [
+        'i', $bandwidth_usage,
+        'i', (trim($k) == '' ? 0 : 1),
+        'i', $date["year"],
+        'i', $date["mon"],
+        'i', $date["mday"],
+        'i', $usergroup ?? 0
+    ];
+    ps_query("UPDATE daily_stat SET count = count + ? WHERE activity_type = 'Downloaded KB' AND external = ? AND year = ? and month = ? and day = ? and usergroup = ? AND object_ref = 0", $update_params);
+
+    $select_params = [
+        'i', $date["year"],
+        'i', $date["mon"],
+        'i', $date["mday"],
+        'i', $usergroup ?? 0
+    ];
+    $current_usage = ps_value("SELECT count AS `value` FROM daily_stat WHERE activity_type = 'Downloaded KB' AND year = ? and month = ? and day = ? and usergroup = ? AND object_ref = 0", $select_params, 0);
+    if ($current_usage == 0) {
+        ps_query("INSERT INTO daily_stat (count, external, year, month, day, usergroup, activity_type, object_ref) VALUES (?, ?, ?, ?, ?, ?, 'Downloaded KB', 0)", $update_params);
+    }
 }

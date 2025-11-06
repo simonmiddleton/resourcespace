@@ -28,7 +28,7 @@ $page=getval("page",1,true);
 $alternative=getval("alternative", -1, true);
 if (strpos($search,"!")!==false) {$restypes="";}
 
-check_order_by_in_table_joins($order_by);
+$order_by = check_order_by_in_table_joins($order_by);
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}

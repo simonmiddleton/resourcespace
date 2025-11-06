@@ -289,11 +289,23 @@ function ProcessFolder($folder)
                 $extension = $modified_extension;
             }
 
-            global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
-            # Check to see if extension is banned, do not add if it is banned
-            if (array_search(strtolower($extension), array_map('strtolower', $banned_extensions)) !== false) {
+            // Verify if the file would actually pass the upload checks to prevent any unnecessary processing (e.g. collections)
+            $dry_run_process_file_upload = process_file_upload(
+                new SplFileInfo($fullpath),
+                new SplFileInfo(get_temp_dir(false) . '/staticsync/' . generateSecureKey(16) . '.bin'),
+                ['file_move' => 'dry_run']
+            );
+            if (!$dry_run_process_file_upload['success']) {
+                printf(
+                    ' * Skipping file - %s: %s%s',
+                    $fullpath,
+                    $dry_run_process_file_upload['error']->i18n($lang),
+                    PHP_EOL
+                );
                 continue;
             }
+
+            global $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
 
             if ($count > $staticsync_max_files) {
                 return true;
@@ -420,9 +432,29 @@ function ProcessFolder($folder)
                             $params[] = $collection_parent;
                         }
 
-                        $collection_sql = 'SELECT DISTINCT ref as `value` FROM collection c LEFT JOIN collection_resource cr on c.ref = cr.collection 
-                                           WHERE parent ' . $parent_sql . ' AND type = ? AND name = ? GROUP BY c.ref HAVING count(DISTINCT cr.resource) > 0';
-                        $collection = ps_value($collection_sql, array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', ucwords($name)]), 0);
+                        /*
+                        When trying to determine if we already have a featured collection, the viable options are:-
+                        - an actual featured collection (i.e. has resources), or;
+                        - an ambiguous state record (i.e. it doesn't have resources nor any children - so not a true
+                        category either; note they get displayed as a category by default).
+                        */
+                        $collection = ps_value(
+                              "SELECT DISTINCT c.ref as `value`,
+                                      count(DISTINCT cr.resource) > 0 AS has_resources
+                                 FROM collection AS c
+                            LEFT JOIN collection_resource AS cr on c.ref = cr.collection
+                            LEFT JOIN collection AS cc ON c.ref = cc.parent
+                                WHERE c.parent {$parent_sql}
+                                  AND c.`type` = ?
+                                  AND c.`name` = ?
+                             GROUP BY c.ref
+                               HAVING count(DISTINCT cr.resource) > 0
+                                   OR (count(DISTINCT cr.resource) = 0 AND count(DISTINCT cc.ref) = 0)
+                             ORDER BY has_resources DESC
+                                LIMIT 1",
+                            array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', ucwords($name)]),
+                            0
+                        );
 
                         if ($collection == 0) {
                             $collection = create_collection($userref, ucwords($name));
@@ -826,8 +858,11 @@ function ProcessFolder($folder)
                         extract_exif_comment($rref, $rd["file_extension"]);
 
                         # extract text from documents (e.g. PDF, DOC).
-                        global $extracted_text_field;
-                        if (isset($extracted_text_field)) {
+                        global $extracted_text_field, $extracted_text_extensions;
+                        if (
+                            isset($extracted_text_field)
+                            && in_array($extension, $extracted_text_extensions)
+                            ) {
                             if (isset($unoconv_path) && in_array($extension, $unoconv_extensions)) {
                                 // omit, since the unoconv process will do it during preview creation below
                             } else {

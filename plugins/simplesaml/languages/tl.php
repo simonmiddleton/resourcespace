@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'I-reset ang admin password ng Simple
 $lang["page-title_simplesaml_about"] = 'SAML Tungkol sa';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Bumuo ng SP Config';
 $lang["page-title_simplesaml_setup"] = 'I-set up ang Simple SAML Plugin';
+$lang["simplesaml_error_not_configured"] = 'Hindi naka-configure ang SimpleSAML plugin';
+$lang["simplesaml_error_no_idp_metadata"] = 'Hindi ganap na naka-configure ang SimpleSAML plugin (kulang ang IdP metadata)';
+$lang["simplesaml_error_no_authsource"] = 'Hindi ganap na naka-configure ang SimpleSAML plugin (kulang ang authsource)';

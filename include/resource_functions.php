@@ -4506,7 +4506,10 @@ function update_resource($r, $path, $type, $title, $ingest = false, $createPrevi
         }
 
         # Extract text from documents (e.g. PDF, DOC)
-        if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension, $unoconv_extensions))) {
+        if (
+            isset($extracted_text_field)
+            && !(isset($unoconv_path) && in_array($extension, $unoconv_extensions))
+        ) {
             if ($offline_job_queue && !$offline_job_in_progress) {
                 $extract_text_job_data = array(
                     'ref'       => $r,
@@ -7020,6 +7023,7 @@ function replace_resource_file($ref, $file_location, $no_exif = false, $autorota
     global $replace_resource_preserve_option, $notify_on_resource_change_days, $lang, $userref;
     debug("replace_resource_file(ref=" . $ref . ", file_location=" . $file_location . ", no_exif=" . ($no_exif ? "TRUE" : "FALSE") . " , keep_original=" . ($keep_original ? "TRUE" : "FALSE"));
 
+    $ref = (int) $ref;
     # FStemplate support - do not allow samples from the template to be replaced
     if (resource_file_readonly($ref)) {
         return false;

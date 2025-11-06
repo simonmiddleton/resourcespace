@@ -117,7 +117,7 @@ if ("{$dirname_path}/1pre_cf33a61f47b5982.somefile" != get_resource_path(1, true
     return false;
 }
 
-// Check file path can be retuned for banned extension
+// Check file path can be returned for banned extension
 if ("{$dirname_path}/1pre_cf33a61f47b5982.php" != get_resource_path(1, true, 'pre', false, 'php', true)) {
     echo 'Case: Check getting banned extension path -- ';
     return false;

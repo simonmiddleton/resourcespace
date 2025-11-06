@@ -84,6 +84,14 @@ foreach ($annotations as $annotation) {
         "Processing annotation for resource #{$annotation['resource']} with node #{$annotation['node']}"
     );
 
+    if ($annotation['preview_width'] == 0 || $annotation['preview_height'] == 0) {
+        log_activity(
+            "Upgrade script #28: Invalid resource (#{$annotation['resource']}) annotation data (preview_width = {$annotation['preview_width']} and preview_height = {$annotation['preview_height']}",
+            LOG_CODE_SYSTEM,
+        );
+        continue;
+    }
+
     // Parse the old "username: note" syntax
     $parsed_annotation = explode(': ', (string) $annotation['name'], 2);
     if (count($parsed_annotation) !== 2) {

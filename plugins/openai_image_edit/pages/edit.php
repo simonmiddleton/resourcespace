@@ -181,32 +181,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Re-render the mask
-    ob_start();
-    imagepng($mask);
-    $maskDataSimplified = ob_get_contents();
-    ob_end_clean();
-
     // Prepare the data array using CURLFile for both image and mask
     $data = [
         'model' => $model,  // Specify model (if applicable)
         'n' => 1,
         'size' => '1024x1024'
     ];
+    $tmp_dir = get_temp_dir(false, 'openai_image_edit');
 
-    if ($mode=="edit" || $mode=="variation")
-        {
-        $data['image'] = new CURLStringFile($maskData, 'image/png');
-        }
+    $tmp_image = $tmp_dir . DIRECTORY_SEPARATOR . "{$userref}_{$ref}_{$mode}.png";
+    if (($mode=="edit" || $mode=="variation") && imagepng(imagecreatefromstring($maskData), $tmp_image)) {
+        $data['image'] = new CURLFile($tmp_image, 'image/png');
+    }
 
     if ($mode=="edit" || $mode=="generate")
         {
         $data['prompt'] = $prompt;
         }
 
-    if ($mode=="edit")
+    $maskDataSimplified = $tmp_dir . DIRECTORY_SEPARATOR . "{$userref}_{$ref}_{$mode}_maskDataSimplified.png";
+    if ($mode=="edit" && imagepng($mask, $maskDataSimplified))
         {
-        $data['mask'] = new CURLStringFile($maskDataSimplified, 'image/png');
+        $data['mask'] = new CURLFile($maskDataSimplified, 'image/png');
         }
 
     if ($mode=="generate")
@@ -235,6 +231,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             {
             echo $response;
             }
+
+        try_unlink($tmp_image);
+        try_unlink($maskDataSimplified);
     }
 
     curl_close($ch);

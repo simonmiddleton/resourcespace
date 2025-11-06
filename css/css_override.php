@@ -93,6 +93,9 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .update_result_order_button {
             background-color: #545454;
         }
+        .ImageWrapper {
+            background-color: #5e5e5e;
+        }
         .ResourcePanel {
             background-color: #545454;
         }
@@ -345,7 +348,14 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .ui-menu .ui-menu-item {
             color: white;
         }
-        .FeaturedSimpleTile .top-right-menu:hover,
+        .FeaturedSimpleTile {
+            background: white;
+            color: white;  
+        }
+        .FeaturedSimpleTile.FullWidth {
+            background: #666;
+        }
+        .top-right-menu:hover,
         .SearchBreadcrumbs .top-right-menu:hover  {
             background: #404040;
             color: white;

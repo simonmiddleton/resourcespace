@@ -147,8 +147,13 @@ if (!$simplesaml_rsconfig
     echo "<div class='PageInfoMessage'>" . escape($lang['simplesaml_sp_configuration']) . "</div>";
 } else {
     require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
-    if (!simplesaml_config_check()) {
-        echo "<div class='PageInfoMessage'>" . escape($lang['simplesaml_authorisation_version_error']) . "</div>";
+
+    $check_simplesamlphp_config = simplesaml_config_check();
+    if (!$check_simplesamlphp_config['success']) {
+        printf(
+            '<div class="PageInfoMessage">%s</div>',
+            strip_tags_and_attributes($check_simplesamlphp_config['error'], ['a'], ['href'])
+        );
     }
 
     if ($simplesaml_rsconfig !== 0) {

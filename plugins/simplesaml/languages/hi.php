@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'साधारण SAML परीक
 $lang["page-title_simplesaml_about"] = 'SAML के बारे में';
 $lang["page-title_simplesaml_generate_sp_config"] = 'SP कॉन्फ़िगरेशन उत्पन्न करें';
 $lang["page-title_simplesaml_setup"] = 'सरल SAML प्लगइन सेटअप करें';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML प्लगइन कॉन्फ़िगर नहीं किया गया है';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML प्लगइन पूरी तरह से कॉन्फ़िगर नहीं किया गया है (IdP मेटाडेटा गायब है)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML प्लगइन पूरी तरह से कॉन्फ़िगर नहीं किया गया है (authsource गायब है)';

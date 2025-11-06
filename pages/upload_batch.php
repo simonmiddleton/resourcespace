@@ -1366,7 +1366,7 @@ jQuery(document).ready(function () {
                 // Add to array of errored files
                 if(processerrors.indexOf(file.id) === -1)
                     {
-                    processerrors.push(file.id);
+                    processerrors[file.id] = file.id;
                     }
                 }
             <?php
@@ -1377,7 +1377,7 @@ jQuery(document).ready(function () {
             // Add to array of errored files
             if(processerrors.indexOf(file.id) === -1)
                 {
-                processerrors.push(file.id);
+                processerrors[file.id] = file.id;
                 }
             <?php
             }
@@ -1585,7 +1585,7 @@ function processFile(file, forcepost)
 
                 if(processerrors.indexOf(file.id) === -1)
                     {
-                    processerrors.push(file.id);
+                    processerrors[file.id] = file.id;
                     }
                 upRedirBlock = true;
                 }
@@ -1646,7 +1646,7 @@ function processFile(file, forcepost)
 
             if(processerrors.indexOf(file.id) === -1)
                 {
-                processerrors.push(file.id);
+                processerrors[file.id] = file.id;
                 }
             }
         }); // End of post upload AJAX
@@ -1816,7 +1816,7 @@ function postUploadActions()
         {
         completedlang = '<?php echo escape($lang["upload_finished_processing"]); ?>';
         completedlang = completedlang.replace('%COUNT%',count);
-        completedlang = completedlang.replace('%ERRORS%',processerrors.length);
+        completedlang = completedlang.replace('%ERRORS%',Reflect.ownKeys(processerrors).length - 1);
         uppy.setOptions({
             locale: {
                 strings: {

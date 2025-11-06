@@ -719,10 +719,11 @@ function api_delete_collection($ref)
     return delete_collection($ref);
 }
 
-function api_search_public_collections($search = "", $order_by = "name", $sort = "ASC", $exclude_themes = true)
+function api_search_public_collections($search = "", $order_by = "name", $sort = "ASC", $exclude_themes = true, $exclude_public = false)
 {
     $exclude_themes = filter_var($exclude_themes, FILTER_VALIDATE_BOOLEAN);
-    $results = search_public_collections($search, $order_by, $sort, $exclude_themes);
+    $exclude_public = filter_var($exclude_public, FILTER_VALIDATE_BOOLEAN);
+    $results = search_public_collections($search, $order_by, $sort, $exclude_themes, $exclude_public);
     $resultcount = count($results);
         {
     for ($n = 0; $n < $resultcount; $n++) {
@@ -1597,6 +1598,11 @@ function api_new_user($username, $usergroup = 0): array
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if ($assert_post !== []) {
         return $assert_post;
+    }
+
+    if (!checkPermission_manage_users() || !can_set_admin_usergroup($usergroup)) {
+        http_response_code(403);
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-permissiondenied']));
     }
 
     $ref = new_user($username, $usergroup);
