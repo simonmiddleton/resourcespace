@@ -14,6 +14,6 @@ return [
 
     /*
     Redis - by default will assume a local instance.
-    If you need to change the default connection parameters please see lib/tus/vendor/ankitpokhrel/tus-php/src/Config/server.php
+    If you need to change the default connection parameters please see vendor/ankitpokhrel/tus-php/src/Config/server.php
     */
 ];

@@ -13,7 +13,15 @@
         "ext-zip": "*",
         "ext-gd": "*",
         "ext-mysqli": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "kornrunner/blurhash": "^1.2",
+        "spipu/html2pdf": "^5.3",
+        "phpmailer/phpmailer": "^6.10",
+        "ankitpokhrel/tus-php": "^2.4",
+        "axiell/imu-api-php": "^2.0.0",
+        "captioning/captioning": "^3.0",
+        "google/apiclient": "^2.18.3",
+        "vimeo/vimeo-api": "^3.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8",
@@ -28,11 +36,63 @@
     "suggest": {
         "ext-apcu": "Needed to improve upload performance."
     },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "axiell/imu-api-php",
+                "version": "2.0.0",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/axiell/imu-api-php",
+                    "reference": "tags/v2.0.0"
+                }
+            }
+        }
+    ],
+    "extra": {
+        "google/apiclient-services": [
+            "YouTube"
+        ]
+    },
     "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup",
+        "svn:ignoreProp": "svn propset svn:ignore -F .svnignore .",
         "dev:beforeCommit": [
+            "@dev:tests",
             "@dev:phpstan"
         ],
-        "dev:phpstan": "phpstan analyse"
+        "dev:tests": "@php tests/test.php -noteardown",
+        "dev:phpstan": "phpstan analyse",
+        "build:applyDownstreamChanges": [
+            "echo Applying downstream changes to vendor/.",
+            "echo \"IF you've already applied downstream changes patch will warn you with 'Reversed (or previously applied) patch detected!  Assume -R?'. Select 'y' to continue.\"",
+            "svn diff -c 23197 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/File.php | patch vendor/ankitpokhrel/tus-php/src/File.php",
+            "svn diff -c 23596 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Cache/ApcuStore.php | patch vendor/ankitpokhrel/tus-php/src/Cache/ApcuStore.php",
+            "svn diff -c 24289 ^/trunk/lib/tus/vendor/ankitpokhrel/tus-php/src/Tus/Server.php | patch vendor/ankitpokhrel/tus-php/src/Tus/Server.php",
+            "svn merge -c 24458 ^/trunk # simplesamlphp is under VCS so we can simply merge those changes",
+            "svn merge -c 27077 ^/trunk # flickr_theme_publish is under VCS so we can simply merge those changes"
+        ],
+        "build:release": [
+            "echo Building ResourceSpace release",
+            "sh -c '[ -z \"$(svn diff)\" ] || (echo \"[WARN] Working copy has changes! Please address those first!\" && exit 1)'",
+            "svn update",
+            "@composer check-platform-reqs --no-interaction --no-cache --no-dev",
+            "@composer install --no-interaction --no-dev --optimize-autoloader --classmap-authoritative",
+            "@composer update --dry-run roave/security-advisories",
+            "@composer audit",
+            "@build:applyDownstreamChanges",
+            "svn add --no-ignore --force vendor/",
+            "svn rm .svnignore phpcs.xml.dist phpstan-baseline.neon phpstan.neon.dist rector.php tests/",
+            "echo Release build completed!",
+            "svn status --depth=immediates"
+        ]
+    },
+    "scripts-descriptions": {
+        "svn:ignoreProp": "Make SVN ignore certain files/directories by adding the pattern to the .svnignore file.",
+        "dev:tests": "Run the automated tests for ResourceSpace.",
+        "build:release": "ResourceSpace build release version. This will allow end users to continue to upgrade with a simple `svn switch` call.",
+        "build:applyDownstreamChanges": "Apply downstream changes to ResourceSpace dependencies. Any changes that the upstream has fixed should be removed from the list as we want minimum (to no) divergence from upstreams."
     },
     "support": {
         "source": "https://svn.resourcespace.com/svn/rs/trunk/",

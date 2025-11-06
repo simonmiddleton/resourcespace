@@ -108,7 +108,6 @@ if($tusupload && $tus_validated)
         exit($lang["overquota"]);
         }
 
-    require_once __DIR__ . '/../lib/tus/vendor/autoload.php';
     \TusPhp\Config::set(__DIR__ . '/../include/tusconfig.php');
     $server   = new \TusPhp\Tus\Server($cachestore);
     $server -> setUploadDir($targetDir);

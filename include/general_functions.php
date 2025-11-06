@@ -1189,9 +1189,6 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
 {
     # Include footer
     global $header_colour_style_override, $email_from;
-    include_once __DIR__ . '/../lib/PHPMailer/PHPMailer.php';
-    include_once __DIR__ . '/../lib/PHPMailer/Exception.php';
-    include_once __DIR__ . '/../lib/PHPMailer/SMTP.php';
 
     if (check_email_invalid($email)) {
         return false;
