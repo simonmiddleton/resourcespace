@@ -1924,6 +1924,7 @@ function CentralSpaceHideProcessing()
 
 function CentralSpace_ProcessingDisplayTimer()
     {
+    console.debug("Display timer tick, messages:", ProcessingMessages);
     var NewMessage=ProcessingMessages.shift();
     if (NewMessage!==undefined)
         {
@@ -1940,6 +1941,7 @@ function CentralSpace_ProcessingAPITimer()
     if(response!= false && Array.isArray(response))
         {
         ProcessingMessages=ProcessingMessages.concat(response);
+        console.debug('ProcessingMessages = %o', ProcessingMessages);
         }
     }, ProcessingCSRF);
     }

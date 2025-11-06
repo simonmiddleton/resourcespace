@@ -65,6 +65,12 @@ function simplesaml_getattributes()
         $as = new SimpleSAML\Auth\Simple($spname);
     }
     $as->requireAuth();
+
+    // Prevent queuing requests waiting on session (which simplesamlphp is using internally) lock to be released
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+
     return $as->getAttributes();
 }
 
