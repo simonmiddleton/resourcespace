@@ -36,7 +36,7 @@ function faces_detect(int $ref): bool
 
     if (!file_exists($file_path)) {
         $resource_data = get_resource_data($ref);
-        if (is_jpeg_extension($resource_data['file_extension'])) {
+        if (is_jpeg_extension((string) $resource_data['file_extension'])) {
             // Try full size JPEG as a fallback (for small images only where SCR wasn't generated)
             $file_path = get_resource_path($ref, true, '', false, $resource_data['file_extension']);
         }

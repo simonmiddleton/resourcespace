@@ -290,7 +290,8 @@ function redirect(string $url)
         # redirect to an absolute URL
         header("Location: " . $baseurl . str_replace($baseurl_short, "/", $url));
     } else {
-        if (url_starts_with($baseurl, $url)) {
+        $extra_slash = substr($baseurl, -1, 1) == '/' ? '' : '/';
+        if (url_starts_with($baseurl . $extra_slash, $url)) {
             // Base url has already been added
             header("Location: " . $url);
             exit();
@@ -704,7 +705,7 @@ function save_site_text($page, $name, $language, $group)
     if (!is_int_loose($group)) {
         $group = null;
     }
-    $text = getval("text", "");
+    $text = strip_unicode_points(getval("text", ""));
     if ($newcustom) {
         $params = ["s",$page,"s",$name];
         $test = ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text WHERE page=? AND name=?", $params);
@@ -761,14 +762,17 @@ function save_site_text($page, $name, $language, $group)
 /**
  * Return a human-readable string representing $bytes in either KB or MB.
  *
- * @param  integer $bytes
+ * @param  integer $bytes file size to format in bytes
+ * @param  bool    $html if set to true output will include &nbsp; instead of a space
  * @return string
  */
-function formatfilesize($bytes)
+function formatfilesize(int $bytes, bool $html = true): string
 {
     # Binary mode
     $multiple = 1024;
     $lang_suffix = "-binary";
+
+    $space = $html ? "&nbsp;" : " ";
 
     # Decimal mode, if configured
     global $byte_prefix_mode_decimal;
@@ -779,15 +783,15 @@ function formatfilesize($bytes)
 
     global $lang;
     if ($bytes < $multiple) {
-        return number_format((double)$bytes) . "&nbsp;" . escape($lang["byte-symbol"]);
+        return number_format((double)$bytes) . $space . escape($lang["byte-symbol"]);
     } elseif ($bytes < pow($multiple, 2)) {
-        return number_format((double)ceil($bytes / $multiple)) . "&nbsp;" . escape($lang["kilobyte-symbol" . $lang_suffix]);
+        return number_format((double)ceil($bytes / $multiple)) . $space . escape($lang["kilobyte-symbol" . $lang_suffix]);
     } elseif ($bytes < pow($multiple, 3)) {
-        return number_format((double)$bytes / pow($multiple, 2), 1) . "&nbsp;" . escape($lang["megabyte-symbol" . $lang_suffix]);
+        return number_format((double)$bytes / pow($multiple, 2), 1) . $space . escape($lang["megabyte-symbol" . $lang_suffix]);
     } elseif ($bytes < pow($multiple, 4)) {
-        return number_format((double)$bytes / pow($multiple, 3), 1) . "&nbsp;" . escape($lang["gigabyte-symbol" . $lang_suffix]);
+        return number_format((double)$bytes / pow($multiple, 3), 1) . $space . escape($lang["gigabyte-symbol" . $lang_suffix]);
     } else {
-        return number_format((double)$bytes / pow($multiple, 4), 1) . "&nbsp;" . escape($lang["terabyte-symbol" . $lang_suffix]);
+        return number_format((double)$bytes / pow($multiple, 4), 1) . $space . escape($lang["terabyte-symbol" . $lang_suffix]);
     }
 }
 
@@ -2904,9 +2908,10 @@ function is_html($string)
  * @param  string $domain
  * @param  boolean $secure
  * @param  boolean $httponly
+ * @param  string $samesite
  * @return void
  */
-function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true)
+function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true, $samesite = "Strict")
 {
 
     if (!is_string_loose($value)) {
@@ -2933,8 +2938,22 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
     }
 
     // Set new cookie, first remove any old previously set pages cookies to avoid clashes;
-    setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
-    setcookie($name, (string) $value, (int) $expire, $path, $domain, $secure, $httponly);
+    setcookie($name, "", [
+        'expires'   => time() - 3600,
+        'path'      => $path . "pages",
+        'domain'    => $domain,
+        'secure'    => $secure,
+        'httponly'  => $httponly,
+        'samesite'  => $samesite,
+    ]);
+    setcookie($name, (string) $value, [
+        'expires'   => (int) $expire,
+        'path'      => $path,
+        'domain'    => $domain,
+        'secure'    => $secure,
+        'httponly'  => $httponly,
+        'samesite'  => $samesite,
+    ]);
 }
 
 /**
@@ -5976,4 +5995,25 @@ function log_bandwidth(int $bandwidth_usage): void
     if ($current_usage == 0) {
         ps_query("INSERT INTO daily_stat (count, external, year, month, day, usergroup, activity_type, object_ref) VALUES (?, ?, ?, ?, ?, ?, 'Downloaded KB', 0)", $update_params);
     }
+}
+
+/**
+ * Strip Unicode points from a text value.
+ * 
+ * @param string $value Text value subject
+ * @param list<string> $blocklist List of unicode points (e.g. \x{FEFF}), ranges allowed too (e.g. \x{200B}-\x{200D}) 
+ */
+function strip_unicode_points(string $value, array $blocklist = []): string
+{
+    if ($blocklist === []) {
+        $blocklist = [
+            // U+200B - zero-width space
+            // U+200C - zero-width non-joiner
+            // U+200D - zero-width joiner
+            '\x{200B}-\x{200D}',
+            '\x{FEFF}', # Byte Order Mark (BOM) or the zero-width no-break space (deprecated use)
+        ];
+    }
+
+    return preg_replace('/[' . implode('', $blocklist) . ']/u', '', $value);
 }

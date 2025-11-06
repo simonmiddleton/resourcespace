@@ -1052,7 +1052,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 <div class="PoweredByPanel">
                     <a href="https://www.resourcespace.com" target="_blank">
                         <span><?php echo escape($lang["powered_by"]); ?></span>
-                        <img src="<?php echo $baseurl; ?>/gfx/titles/title-white.svg" alt="<?php echo escape($lang['powered_by_resourcespace']); ?>">
+                        <img src="<?php echo $baseurl; ?>/gfx/titles/title.svg" alt="<?php echo escape($lang['powered_by_resourcespace']); ?>">
                     </a>
                 </div>
             <?php } ?>

@@ -8,6 +8,10 @@ $find = getval("term", "");
 $getrefs = (getval("getrefs", "") != "") ? true : false;
 $getuserref = (getval("getuserref", ""));
 
+if (is_anonymous_user()) {
+    exit($lang['error-permissiondenied']);
+}
+
 if (!empty($getuserref)) {
     ob_clean();
     echo ps_value("select max(ref) as value from user where username=?", array("s",$getuserref), '');
@@ -21,6 +25,7 @@ $ignoregroups = (getval("nogroups", "") != "") ? true : false;
 $ignoresmartgroups = (getval("nosmartgroups", "") != "") ? true : false;
 
 $first = true;
+header('Content-Type: application/json');
 ?> [ <?php
 
 if (!$ignoregroups) {

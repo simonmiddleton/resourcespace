@@ -271,7 +271,15 @@ if ($keysearch) {
                 $field_short_name_specified
                 && !$quoted_string
                 && preg_match(
-                    '/^(?!.*\\*)(?=[^ \\t\\n]*[!@#$%^&()_+\\-=\\[\\]{}\'\"\\\\,.<>\\/?])[^ \\t\\n]*$/',
+                    '/^                   # Start of the string
+                    (?!.*[\*;])              # Negative lookahead: Ensure no asterisk (*) or semi colon exists in the string
+                    (?=                   # Positive lookahead: Ensure at least one special character exists
+                        [^ \t\n]*         # Any number of characters that are not space, tab, or newline
+                        [!@#$%^&()_+\-=\[\]{}\'"\\,.<>\/?] # One special character from this set
+                    )
+                    [^ \t\n]*             # Match any number of characters that are not space, tab, or newline
+                    $                     # End of the string
+                    /x',
                     $keyword
                 ) === 1
             ) {
@@ -584,13 +592,13 @@ if ($keysearch) {
                                 if (
                                     substr($keyword, 0, 1) != "*"
                                     && strlen(trim($keyword, '*')) >= 3
-                                    && preg_match('/[-+@<>().]/', $keyword) !== 1
+                                    && preg_match('/[-+@<>().;]/', $keyword) !== 1
                                     && empty($stop_words)
                                 ) {
                                     // Use fulltext search as a preference, but not if
                                     // there is a leading wildcard
                                     // or the search is too short
-                                    // or the search contains any of +,-,@,<,>,(,),.
+                                    // or the search contains any of +,-,@,<,>,(,),.;
                                     // or contains any words InnoDB considers a stop word
                                     $union->sql = "
                                             SELECT resource, [bit_or_condition] hit_count AS score
@@ -637,16 +645,8 @@ if ($keysearch) {
                                                 . $union_restriction_clause->sql . ")
                                                 GROUP BY resource " .
                                                 ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "");
-                                    
-                                    $keyword = preg_quote($keyword);
-                                    $keyword = str_replace('\*', '.*?', $keyword);
-                                    if (preg_match('/\w/', $keyword) === 0) {
-                                        // Use lookaheads/lookbehinds for boundary-like behavior when the keyword consists of non-word characters (e.g. ,, &, -)
-                                        // because \b only works for transitions between word characters (letters, digits, _) and non-word characters.
-                                        $keyword = "(?<!\w)" . $keyword . "(?!\w)";
-                                    } else {
-                                        $keyword = "\\b" . $keyword . "\\b";
-                                    }
+
+                                    $keyword = prepare_regex_search_string($keyword);
                                 }
                                 
                                 $union->parameters = array_merge(

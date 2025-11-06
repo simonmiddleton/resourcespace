@@ -1,27 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="512" height="512" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-   <style type="text/css">
-      .st0{fill:#FFFFFF;}
-      .st1{fill:#599D20;}
-      .st2{fill:#4F8C1D;}
-      .st3{fill:#68AA30;}
-      .st4{fill:#79BC41;}
-      .st5{display:none;}
-      .st6{display:inline;fill:none;stroke:#00FFFF;stroke-miterlimit:10;}
-      .st7{display:inline;fill:none;stroke:#BE272D;stroke-miterlimit:10;}
-      .st8{display:inline;}
-      .st9{fill:none;stroke:#BE272D;stroke-miterlimit:10;}
-      .st10{fill:#BE272D;}
-   </style>
-
-   <g transform="matrix(5.2558 0 0 5.2558 -164.46 -164.46)">
-      <polygon class="st1" points="60.3 74.4 80 85.7 80 108.6 60.2 97.1 60.2 74.3"/>
-      <polygon class="st2" points="40.5 62.9 60.2 74.3 60.2 97.1 40.4 85.7 40.4 62.9"/>
-      <polygon class="st1" points="40.5 85.8 60.2 97.1 60.2 120 40.4 108.6 40.4 85.7"/>
-      <polygon class="st1" points="99.6 74.4 80 85.7 80 108.6 99.8 97.1 99.8 74.3"/>
-      <polygon class="st1" points="119.4 85.8 99.8 97.1 99.8 120 119.6 108.6 119.6 85.7"/>
-      <polygon class="st3" points="80 62.9 99.8 51.4 80 40 60.2 51.4"/>
-      <polygon class="st4" points="60.2 74.3 80 62.9 60.2 51.4 40.4 62.9"/>
-      <polygon class="st4" points="99.8 74.3 119.6 62.9 99.8 51.4 80 62.9"/>
-   </g>
-</svg>
+<svg width="512" height="512" fill="none" version="1.1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-3.2847 5.9892)"><g transform="matrix(2.1626 0 0 2.1626 -16.319 32.897)"><g transform="matrix(2.0952 0 0 2.0952 12.939 44.731)" fill="#000" stroke-width=".097208"><path d="m54.648-12.703 19.421 11.206-19.421 11.206-19.421-11.206z"/><path d="m35.227-1.4973 19.421 11.206-19.421 11.206-19.421-11.206z"/><path d="m74.069-1.4973 19.421 11.206-19.421 11.206-19.421-11.206z"/><path d="m74.069 43.374-19.421 11.206v-22.46l19.421-11.206z"/><path d="m93.49 54.58-19.421 11.206v-22.46l19.421-11.206z"/><path d="m35.227 43.374 19.421 11.206v-22.46l-19.421-11.206z"/><path d="m15.806 32.169 19.421 11.206v-22.46l-19.421-11.206z"/><path d="m15.806 54.629 19.421 11.206v-22.46l-19.421-11.206z"/></g></g></g></svg>

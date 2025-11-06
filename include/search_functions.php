@@ -3054,7 +3054,9 @@ function render_advanced_search_buttons()
 * If a "fieldX" order_by is used, check it's a valid value.
 * Where the value is invalid, the default 'resourceid' will be used instead.
 *
-* @param string         string of order by
+* @param   string   Order by string e.g. field8
+*
+* @return  string   Order by string if valid else default 'resourceid'
 */
 function check_order_by_in_table_joins($order_by): string
 {
@@ -3301,4 +3303,22 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
     $order_by = (isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
 
     return $order_by;
+}
+
+function prepare_regex_search_string(string $keyword): string
+{
+    $keyword = preg_quote($keyword);
+    $keyword = str_replace('\*', '.*?', $keyword);
+    $keywords = explode(";", $keyword);
+    if (count($keywords) > 1) {
+        $keyword = '(' . implode("|", $keywords) . ')';
+    }
+    if (preg_match('/\w/', $keyword) === 0) {
+        // Use lookaheads/lookbehinds for boundary-like behavior when the keyword consists of non-word characters (e.g. ,, &, -)
+        // because \b only works for transitions between word characters (letters, digits, _) and non-word characters.
+        $keyword = "(?<!\w)" . $keyword . "(?!\w)";
+    } else {
+        $keyword = "\\b" . $keyword . "\\b";
+    }
+    return $keyword;
 }

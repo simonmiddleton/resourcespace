@@ -11,3 +11,4 @@ $lang["whisper_transcript"] = "Generate a transcript file and add as alternative
 $lang["whisper_transcript_name"] = "Automatically generated transcript";
 
 $lang["page-title_whisper_setup"] = "Setup Whisper Plugin";
+$lang["whisper_cron_enable"] = "Enable processing of unprocessed resources via scheduled Cron job";

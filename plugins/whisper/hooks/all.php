@@ -9,7 +9,14 @@ include_once dirname(__FILE__, 2) . '/include/whisper_functions.php';
  */
 function HookWhisperAllCron()
 {
-    whisper_process_unprocessed();
+    global $whisper_cron_enable;
+
+    if ($whisper_cron_enable) {
+        //Process a 10GB batch of unprocessed resources
+        whisper_process_unprocessed(10);
+    } else {
+        logScript("Whisper: Processing disabled via plugin config.");
+    }
 }
 
 /**

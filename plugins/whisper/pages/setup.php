@@ -11,6 +11,7 @@ $plugin_name = "whisper";
 $page_heading = $lang['whisper_configuration'];
 $page_intro = "";
 
+$page_def[] = config_add_boolean_select("whisper_cron_enable", $lang["whisper_cron_enable"], '', 600);
 $page_def[] = config_add_single_ftype_select("whisper_field", $lang["whisper_field"], 600, false, $TEXT_FIELD_TYPES);
 $page_def[] = config_add_text_input("whisper_extensions", $lang["whisper_extensions"], false, 600);
 $page_def[] = config_add_text_input("whisper_prompt", $lang["whisper_prompt"], false, 600, true);

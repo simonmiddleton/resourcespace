@@ -104,8 +104,6 @@ if ($status === false) {
     job_queue_update($jobref, $job_data, STATUS_ERROR);
 } else {
     # success
-    message_add($job['user'], $job_success_text, $url, 0);
-
     # only delete the job if completed successfully;
     if ($offline_job_delete_completed) {
         job_queue_delete($jobref);

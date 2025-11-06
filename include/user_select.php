@@ -1,5 +1,9 @@
 <?php
 
+if (is_anonymous_user()) {
+    return;
+}
+
 # AJAX user selection.
 
 if (!isset($userstring)) {

@@ -73,6 +73,7 @@ $simplesaml_config_defaults = [
     'admin.protectmetadata' => false,
     'timezone' => null,
     'session.cookie.secure' => true,
+    'session.cookie.samesite' => 'Lax',
 ];
 
 $simplesaml_metadata_url = "";
