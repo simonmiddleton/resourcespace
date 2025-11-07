@@ -61,7 +61,6 @@ if (php_sapi_name() != "cli") {
                 foreach ($resources as $resource) {
                     $path = get_resource_path($resource, true);
                     $path = dirname($path);
-                    echo $path;
                     ShowFilesInFolderRecursive($path);
                     $resources_processed++;
                 }
@@ -153,7 +152,6 @@ foreach ($options as $option_name => $option_value) {
         $url = $option_value;
         if (!preg_match($pattern, $url)) {
             echo "Invalid url entered, must be in form: \na.user@https://acme.resourcespace.com\na.user:mypassword@https://acme.myresourcespace.com\n";
-            echo $url . PHP_EOL;
             exit();
         }
         $auth_part = strpos($url, "@");
@@ -210,7 +208,7 @@ curl_close($ch);
 if ($file_list == "Access denied") {
     exit("Access denied by source system\nCheck scramble key matches\n");
 }
-echo "Response: " . $file_list . PHP_EOL;
+
 // Process the file list
 $files = explode("\n", $file_list);
 array_pop($files); // Last one is blank as terminates with \n
@@ -260,8 +258,7 @@ foreach ($files as $file) {
         }
 
         // Write the file to disk
-        #file_put_contents($storagedir . $file, $contents);
-        #echo $storagedir . $file . PHP_EOL;
+        file_put_contents($storagedir . $file, $contents);
     } else {
         echo "In place and size matches: " . $file . "\n";
     }
