@@ -1441,22 +1441,6 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
         $mail->AddEmbeddedImage($templatevars['thumbnail'], $thumbcid, $thumbcid, 'base64', 'image/jpeg');
     }
 
-    if (isset($images)) {
-        foreach ($images as $image) {
-            /** {@see include/mime_types.php} */
-            $found_types = get_mime_types_by_extension(parse_filename_extension($image));
-            $mime_type = $found_types === [] ? '' : reset($found_types);
-
-            $mail->AddEmbeddedImage($image, basename($image), basename($image), 'base64', $mime_type);
-        }
-    }
-
-    if (isset($attachments)) {
-        foreach ($attachments as $attachment) {
-            $mail->AddAttachment($attachment, basename($attachment));
-        }
-    }
-
     if (count($files) > 0) {
         # Attach all the files
         foreach ($files as $filename => $file) {
