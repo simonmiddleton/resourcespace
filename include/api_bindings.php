@@ -769,11 +769,6 @@ function api_add_resource_nodes($resource, $nodestring)
         return $assert_post;
     }
 
-    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
-    if (!empty($assert_post)) {
-        return $assert_post;
-    }
-
     // This is only for super admins
     if (!checkperm('a')) {
         return false;
