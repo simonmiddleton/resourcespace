@@ -3304,6 +3304,15 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
     return $order_by;
 }
 
+/**
+ * Escape and process a string from ResourceSpace search syntax to regex syntax
+ * Wildcards are replaced with '.*?' - any character 0 or more times
+ * Multiple keyword matches are split into an OR group
+ * Word boundaries are added to avoid unintended wildcards.
+ *
+ * @param  string $keyword      Keyword string without any field names or special search strings
+ * @return string               Processed string ready for RLIKE searches
+ */
 function prepare_regex_search_string(string $keyword): string
 {
     $keyword = preg_quote($keyword);
