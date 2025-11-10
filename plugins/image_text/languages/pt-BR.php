@@ -18,12 +18,12 @@ $lang["image_text_font"]='Fonte a ser usada, deve ser suportada pela versão do 
 $lang["image_text_noim"]='Este plugin requer que o Imagemagick esteja instalado.';
 $lang["plugin-image_text-title"]='Texto da Imagem';
 $lang["plugin-image_text-desc"]='Permite que os dados do campo sejam adicionados à imagem no download';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'oeste',
    'center' => 'centro',
    'east' => 'leste',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'top',
    'bottom' => 'bottom',
 );

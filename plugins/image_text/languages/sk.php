@@ -18,12 +18,12 @@ $lang["image_text_font"]='Použitý font musí byť podporovaný nainštalovanou
 $lang["image_text_noim"]='Tento plugin vyžaduje nainštalovaný Imagemagick.';
 $lang["plugin-image_text-title"]='Besedilo slike';
 $lang["plugin-image_text-desc"]='Omogoča dodajanje podatkov polja k sliki ob prenosu';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'západ',
    'center' => 'stred',
    'east' => 'východ',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'vrch',
    'bottom' => 'spodok',
 );
