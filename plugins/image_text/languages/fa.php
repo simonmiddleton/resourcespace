@@ -16,12 +16,12 @@ $lang["image_text_position"]='موقعیت متن در بنر.';
 $lang["image_text_banner_position"]='موقعیت بنر نسبت به تصویر.';
 $lang["image_text_font"]='فونتی که باید استفاده شود، باید توسط نسخه نصب شده imagemagick پشتیبانی شود';
 $lang["image_text_noim"]='این افزونه نیاز به نصب Imagemagick دارد.';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'غرب',
    'center' => 'مرکز',
    'east' => 'شرق',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'بالا',
    'bottom' => 'پایین',
 );

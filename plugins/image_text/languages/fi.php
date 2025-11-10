@@ -18,12 +18,12 @@ $lang["image_text_font"]='Käytettävä fontti, on oltava tuettu asennetulla ima
 $lang["image_text_noim"]='Tämä liitännäinen vaatii Imagemagickin asennuksen.';
 $lang["plugin-image_text-title"]='Kuvan teksti';
 $lang["plugin-image_text-desc"]='Mahdollistaa kenttätietojen lisäämisen kuvaan latauksen yhteydessä';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'länsi',
    'center' => 'keskus',
    'east' => 'itä',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'ylä',
    'bottom' => 'ala',
 );

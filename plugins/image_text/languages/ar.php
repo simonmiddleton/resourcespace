@@ -18,12 +18,12 @@ $lang["image_text_font"]='الخط الذي يجب استخدامه، يجب أ�
 $lang["image_text_noim"]='يتطلب هذا الملحق تثبيت Imagemagick.';
 $lang["plugin-image_text-title"]='نص الصورة';
 $lang["plugin-image_text-desc"]='يمكن إضافة بيانات الحقل إلى الصورة عند التنزيل';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'الغرب',
    'center' => 'الوسط',
    'east' => 'الشرق',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'الأعلى',
    'bottom' => 'الأسفل',
 );

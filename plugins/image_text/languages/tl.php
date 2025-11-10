@@ -16,12 +16,12 @@ $lang["image_text_position"] = 'Posisyon ng teksto sa banner';
 $lang["image_text_banner_position"] = 'Posisyon ng banner kaugnay ng imahe.';
 $lang["image_text_font"] = 'Font na gagamitin, dapat ay suportado ng bersyon ng imagemagick na naka-install';
 $lang["image_text_noim"] = 'Ang plugin na ito ay nangangailangan ng Imagemagick na naka-install.';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'kanluran',
    'center' => 'gitna',
    'east' => 'silangan',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'itaas',
    'bottom' => 'ibaba',
 );

@@ -18,12 +18,12 @@ $lang["image_text_font"]='Γραμματοσειρά που πρέπει να χ
 $lang["image_text_noim"]='Αυτό το πρόσθετο απαιτεί την εγκατάσταση του Imagemagick.';
 $lang["plugin-image_text-title"]='Κείμενο Εικόνας';
 $lang["plugin-image_text-desc"]='Επιτρέπει την προσθήκη δεδομένων πεδίου στην εικόνα κατά τη λήψη';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'δυτικά',
    'center' => 'κέντρο',
    'east' => 'ανατολικά',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'επάνω',
    'bottom' => 'κάτω',
 );
