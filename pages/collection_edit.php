@@ -62,7 +62,16 @@ if (getval("submitted", "") != "" && enforcePostRequest(false)) {
     $coldata["result_limit"] = getval("result_limit", 0, true);
     $coldata["users"] = getval("users", "");
 
-    $dash_all_users = ps_value("SELECT all_users value FROM dash_tile WHERE link LIKE ?", ['s', '%!collection' . $ref . '%'], "0");
+    $dash_all_rows = ps_query("SELECT link, all_users FROM dash_tile WHERE link LIKE ?", ['s', '%!collection' . $ref . '%']);
+    $dash_all_users = 0;
+
+    foreach ($dash_all_rows as $dash_row) {
+        $dash_link = $dash_row['link'];
+        if (preg_match('/!collection' . $ref . '(?![0-9])/', $dash_row['link'])) {
+            $dash_all_users = $dash_row['all_users'];
+            break;
+        }
+    }
 
     if ($collection["public"] == 1 && getval("update_parent", "") == "true") {
         // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
