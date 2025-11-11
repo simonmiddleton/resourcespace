@@ -1409,19 +1409,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 ?>
                 <div id="Panel1" class="ViewPanel">
                     <div id="Titles1" class="ViewPanelTitles">
-                        <?php
-                        if (
-                            $show_resourceid 
-                            || $show_access_field 
-                            || $show_resource_type 
-                            || $show_hitcount 
-                            || $show_contributed_by
-                        ) {
-                        ?>
                         <div class="Title Selected" panel="Metadata"><?php if (!hook("customdetailstitle")) {echo escape($lang["resourcedetails"]);} ?></div>
-                        <?php
-                        }
-                        ?>
                     </div>
                 </div>
                 <?php include "view_metadata.php";

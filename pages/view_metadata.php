@@ -176,8 +176,18 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
     $tabcount = 0;
 
     if ((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0) {
+        if (
+            $show_resourceid 
+            || $show_access_field 
+            || $show_resource_type 
+            || $show_hitcount 
+            || $show_contributed_by
+        ) {
         ?>
         <div class="Title"><?php echo escape($lang['metadata']); ?></div>
+        <?php
+        }
+        ?>
         <div class="TabBar">
             <?php
             foreach ($fields_tab_names as $tab_name) {
