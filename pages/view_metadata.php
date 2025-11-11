@@ -97,6 +97,15 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
 ?>
 
 <div id="Metadata">
+    <?php
+    if (
+        $show_resourceid 
+        || $show_access_field 
+        || $show_resource_type 
+        || $show_hitcount 
+        || $show_contributed_by
+    ) {
+    ?>
     <div class="NonMetadataProperties">
         <?php if ($show_resourceid) { ?>
             <div class="itemNarrow">
@@ -156,8 +165,9 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
         ?>
         <div class="clearerleft"></div>
     </div><!-- End of NonMetadataProperties -->
-
     <?php
+    }
+
     global $extra;
     $extra = "";
 
