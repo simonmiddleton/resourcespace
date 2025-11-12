@@ -65,7 +65,7 @@ if (
 ) {
     return false;
 }
-$resource_field_verbatim_keyword_regex[8]="/^(?:[0-9]+(?:.[0-9]+)+)$/";
+
 $test_cases = [
     ["search" => "plant", "node_value" => "plant"],
     ["search" => "a3ewd44a43-a80eha-a464t0-aba24r*", "node_value" => "a3ewd44a43-a80eha-a464t0-aba24r-acf2b011a0763w"],
