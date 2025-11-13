@@ -6,8 +6,9 @@ command_line_only();
 $scramble_key_cache = $scramble_key;
 $scramble_key = 'test_scramble_key_evalSIG';
 $log_use_case = static function (string $code) {
-    test_log("Code to be signed\n---{$code}---");
-    test_log('Signature using sign_code = "' . sign_code($code) . '"');
+    test_log(PHP_EOL . '# Extra info:');
+    test_log("- code = ---{$code}---");
+    test_log('- sign_code = "' . sign_code($code) . '"');
 };
 // --- End of Set up
 
@@ -46,14 +47,17 @@ foreach ($use_cases as $uc) {
     $result = eval_check_signed($uc['code']);
     if ($uc['expected'] !== $result) {
         echo "Use case: {$uc['name']} - ";
-        $log_use_case($uc['code']);
+
         test_log("result = '{$result}'");
+        test_log("expected = '{$uc['expected']}'");
+        $log_use_case($uc['code']);
+
         return false;
     }
 }
 
 // Tear down
 $scramble_key = $scramble_key_cache;
-unset($run_id, $use_cases, $result, $scramble_key_cache);
+unset($use_cases, $result, $scramble_key_cache, $log_use_case);
 
 return true;
