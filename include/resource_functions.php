@@ -591,7 +591,11 @@ function create_resource($resource_type, $archive = 999, $user = -1, $origin = '
         $user = $userref;
     }
 
-    ps_query("INSERT INTO resource(resource_type,creation_date,archive,created_by,file_extension) VALUES (?,NOW(),?,?,?)", ["i",$resource_type,"i",$archive,"i",$user,"s",$file_extension]);
+    // Set no_file=1 because at this stage a new resource technically has no file until a follow-up procesing is done.
+    ps_query(
+        "INSERT INTO resource(resource_type,creation_date,archive,created_by,file_extension, no_file) VALUES (?,NOW(),?,?,?, 1)",
+        ["i",$resource_type,"i",$archive,"i",$user,"s",$file_extension]
+    );
 
     $insert = sql_insert_id();
 
@@ -3606,7 +3610,15 @@ function copy_resource($from, $resource_type = -1, $origin = '')
     }
 
     # First copy the resources row
-    ps_query("insert into resource(resource_type,creation_date,rating,archive,access,created_by $joins_sql) select {$sql},now(),rating, ?,access,created_by $joins_sql from resource where ref= ?", array_merge($params, ['i', $archive, 'i', $from]));
+    # Set no_file=1 because at this stage any resource copied technically has no file until there's some kind of a
+    # follow-up processing done (e.g. create a new record and later upload a file for it)
+    ps_query(
+        "INSERT INTO resource(resource_type,creation_date,rating,archive,access,created_by, no_file $joins_sql)
+         SELECT {$sql},now(),rating, ?,access,created_by, 1 $joins_sql
+           FROM resource
+          WHERE ref= ?",
+          array_merge($params, ['i', $archive, 'i', $from])
+    );
     $to = sql_insert_id();
 
     # Set that this resource was created by this user.
@@ -9007,9 +9019,6 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
  * Get an array of all resources that require files to be validated
  *
  * @param int $days     Return only resources not validated in the last X number of days
- *
- * @return array
- *
  */
 function get_resources_to_validate(int $days = 0): array
 {
