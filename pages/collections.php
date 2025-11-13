@@ -56,8 +56,9 @@ if (!isset($thumbs)) {
 
     # ------------ Change the collection, if a collection ID has been provided ----------------
 if ($collection != "" && $collection != "undefined") {
-    #change current collection
-
+    hook("prechangecollection");
+    
+    # Change current collection
     if (($k == "" || $internal_share_access) && $collection == "new") {
         # Create new collection
         if ($entername != "") {
@@ -79,6 +80,8 @@ if ($collection != "" && $collection != "undefined") {
         }
         $usercollection = $collection;
     }
+
+    hook("postchangecollection");
 }
 
 // Load collection info.
