@@ -488,12 +488,11 @@ function generate_trace_id(array $components): string
  */
 function daily_stat_past_month_by_activity(string $activity_type): int
 {
-    $daily_stat_activity = ps_value("select sum(`count`) value from daily_stat where
+    return (int) ps_value("select sum(`count`) value from daily_stat where
         activity_type = ?
         and (`year`=year(now()) or (month(now())=1 and `year`=year(now())-1))
         and (`month`=month(now()) or `month`=month(now())-1 or (month(now())=1 and `month`=12))
         and datediff(now(), concat(`year`,'-',lpad(`month`,2,'0'),'-',lpad(`day`,2,'0')))<=30",
         array('s', $activity_type), 0);
         // Note - limit to this month and last month before the concat to get the exact period; ensures not performing the concat on a large set of data.
-    return $daily_stat_activity ?? 0;
 }
