@@ -9098,8 +9098,6 @@ function get_resources_to_validate(int $days = 0): array
         $params = array_merge($params, ["i", $days]);
     }
 
-    // The "file_size > 0" filter is because we only care about resources that are supposed to have a file. Staticsync
-    // files should have a size recorded too. It'd be unusual if they don't and we're aware of the actual file.
     return ps_query(
         "SELECT ref,
                 archive,
@@ -9111,7 +9109,7 @@ function get_resources_to_validate(int $days = 0): array
                 file_size,
                 no_file
         FROM resource
-        WHERE ref > 0 AND no_file = 0 AND file_size > 0 {$filtersql}
+        WHERE ref > 0 AND no_file = 0 {$filtersql}
         ORDER BY integrity_fail DESC, last_verified ASC",
         $params
     );
