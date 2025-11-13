@@ -247,6 +247,21 @@ include '../include/header.php';
         echo "<p><a href='#' onclick='if(confirm(\"" . escape($lang["job_confirm_purge"]) . "\")){update_job(true,\"purge_jobs\");}'>" . LINK_CARET . escape($lang["jobs_action_purge_complete"]) . "</a></p>";
     }
     ?>
+    <form id="JobTriggerForm" method="POST" action="<?php echo $url; ?>">
+        <?php generateFormToken('JobFilterForm'); ?>
+        <div class="Question" id="QuestionJobTrigger">
+            <label for="job_trigger">Trigger a job</label>
+            <select class="stdwidth" id="job_name" name="job_name">
+                <?php
+                foreach ($offline_job_list as $offline_job) {
+                    echo "<option value=\"" .  escape($offline_job["script_name"]) . "\">" . escape($offline_job["name"]) . "</option>\n";
+                }
+                ?>
+            </select>
+            <input type="submit" id="job_trigger_button" value="Configure job">
+            <div class="clearerleft"></div> 
+        </div>
+    </form>
 
     <form id="JobFilterForm" method="POST" action="<?php echo $url; ?>">
         <?php generateFormToken('JobFilterForm');

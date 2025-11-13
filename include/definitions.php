@@ -1088,3 +1088,7 @@ const FIELD_SORT_METHODS = [
 const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
 
 const NON_PREVIEW_EXTENSIONS = ['zip'];
+
+$offline_job_list = [
+    0 => ["name" => "Recreate Previews", "script_name" => "recreate_previews"]
+];

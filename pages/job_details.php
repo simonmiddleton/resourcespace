@@ -21,6 +21,9 @@ if (file_exists($log_file_path)) {
     } else {
         $log_file_download = true;
     }
+
+    var_dump(get_job_progress_from_log_file($log_file_path));
+
 }
 
 if (!is_array($job_details) || count($job_details) == 0) {
@@ -38,7 +41,115 @@ if (!is_array($job_details) || count($job_details) == 0) {
 
             <?php
 
-            if ($log_file_download) {
+            if ($log_file_streaming) {
+            ?>
+            <h2 class="CollapsibleSectionHead collapsed" onclick="UICenterScrollBottom();" id="StreamLogSectionHead">Stream log file</h2>
+<div class="CollapsibleSection" id="StreamLogSection" style="">
+
+
+<style>
+  #log {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: pre-wrap;
+    background: #111;
+    color: #ddd;
+    padding: 1rem;
+    height: 25vh;
+    overflow-y: auto;
+  }
+  .line { display: block; }
+  .error { color: #f66; }
+  .info { color: #6f6; }
+</style>
+
+<div id="log"></div>
+
+<script>
+  const logEl  = document.getElementById('log');
+  let offset   = 0;
+  let polling  = false;
+  let errorCnt = 0;
+
+  function appendLine(text, cls) {
+    const div = document.createElement('div');
+    div.className = 'line' + (cls ? ' ' + cls : '');
+    div.textContent = text;
+    const atBottom = logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight < 80;
+    logEl.appendChild(div);
+    if (atBottom) logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  async function pollLog(initial = false) {
+    if (polling) return;
+    polling = true;
+
+    const params = new URLSearchParams({
+      job: 156,
+      type: "stream",
+      offset: String(offset),
+    });
+    if (initial) params.set('lines', '200'); // like tail -n 200
+
+    try {
+      const res = await fetch('job_log_file.php?' + params.toString(), {
+        cache: 'no-store'
+      });
+      if (!res.ok) {
+        appendLine(`HTTP ${res.status}`, 'error');
+        return;
+      }
+
+      const data = await res.json();
+
+      if (data.error) {
+        appendLine(`${data.error}`, 'error');
+        return;
+      }
+
+      if (data.rotated) {
+        appendLine('Log file rotated or truncated; restarting from beginning', 'info');
+      }
+
+      if (Array.isArray(data.lines)) {
+        for (const line of data.lines) {
+          appendLine(line);
+        }
+      }
+
+      if (typeof data.offset === 'number') {
+        offset = data.offset;
+      }
+
+      if (data.done === true) {
+        appendLine(`Job status: ${data.status}; stopping updates`, 'info');
+        if (timerId !== null) {
+          clearInterval(timerId);
+          timerId = null;
+        }
+      }
+
+      errorCnt = 0; // reset on success
+
+    } catch (e) {
+      errorCnt++;
+      appendLine(`Request failed (${errorCnt}): ${e}`, 'error');
+    } finally {
+      polling = false;
+    }
+  }
+
+  // Initial load with backlog
+  pollLog(true);
+
+  // Poll every second (adjust if needed)
+  timerId = setInterval(() => pollLog(false), 1000);
+</script>
+</div>
+
+
+            <?php
+
+            } elseif ($log_file_download) {
                 echo $log_file_path;
             }
 
@@ -54,6 +165,22 @@ if (!is_array($job_details) || count($job_details) == 0) {
                     <th><?php echo escape($lang["job_value"]); ?></th>
                 </tr>
                 <?php
+
+                $job_status = $job_details["status"];
+                $job_details["status"] = isset($lang["job_status_" . $job_status]) ? $lang["job_status_" . $job_status] : $job_status;
+
+                $job_user = $job_details["user"];
+                $job_username = $job_details["username"];
+                $job_fullname = $job_details["fullname"];
+
+                unset($job_details["user"], $job_details["username"], $job_details["fullname"]);
+
+                $job_details["user"] = "$job_user - $job_username";
+
+                if ($job_fullname != "") {
+                    $job_details["user"] .= " ($job_fullname)";
+                }
+
                 foreach ($job_details as $name => $value) {
                     if (in_array($name, $hide_data)) {
                         continue;
@@ -78,6 +205,32 @@ if (!is_array($job_details) || count($job_details) == 0) {
                             }
                         }
                         render_array_in_table_cells($job_data);
+                    } elseif ($name == "progress") {
+                        echo "REFRESH BUTTON HERE <span class='fa fa-fw fa-refresh'></span>";
+                    } elseif ($name == "priority") {
+                        switch ($value) {
+                            case JOB_PRIORITY_IMMEDIATE:
+                                $priorityicon = "fas fa-fw fa-bolt";
+                                $prioritytitle = $lang["job_priority_immediate"];
+                            break;
+
+                            case JOB_PRIORITY_USER:
+                                $priorityicon = "fa fa-fw fa-arrow-circle-up";
+                                $prioritytitle = $lang["job_priority_user"];
+                            break;
+
+                            case JOB_PRIORITY_SYSTEM:
+                                $priorityicon = "fa fa-fw fa-arrow-circle-right";
+                                $prioritytitle = $lang["job_priority_system"];
+                            break;
+
+                            case JOB_PRIORITY_COMPLETED:
+                            default:
+                                $priorityicon = "fa fa-fw fa-arrow-circle-down";
+                                $prioritytitle = $lang["job_priority_completed"];
+                            break;
+                        }
+                        echo "<span class='" . $priorityicon . "' title='" . escape($prioritytitle) . "'></span>"  . escape($prioritytitle);
                     } else {
                         echo escape($value);
                     }

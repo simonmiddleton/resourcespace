@@ -227,7 +227,7 @@ function job_queue_get_jobs($type = "", $status = -1, $user = "", $job_code = ""
  */
 function job_queue_get_job($ref)
 {
-    $sql = "SELECT j.ref, j.type, j.job_data, j.user, j.status, j.start_date, j.priority, j.success_text, j.failure_text, j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user WHERE j.ref = ?";
+    $sql = "SELECT j.ref, j.type, j.job_data, j.user, j.status, '' as progress, j.start_date, j.priority, j.success_text, j.failure_text, j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user WHERE j.ref = ?";
     $job_data = ps_query($sql, array("i",(int)$ref));
 
     return (is_array($job_data) && count($job_data) > 0) ? $job_data[0] : array();
@@ -422,4 +422,94 @@ function get_job_queue_log_path(string $type = "", string $job_code = "", $job_r
     }
 
     return $log_path . $job_ref . "_" . $job_code . ".log";
+}
+
+function get_job_queue_log_path_by_ref(int $job_ref = 0): string|false
+{
+    if ($job_ref <= 0) {
+        return false;
+    }
+
+    $job_data = job_queue_get_job($job_ref);
+
+    if (!is_array($job_data) || empty($job_data)) {
+        return false;
+    }
+
+    return get_job_queue_log_path($job_data["type"], $job_data["job_code"], $job_data["ref"]);
+
+}
+
+
+function get_job_progress_from_log_file(string $path = "", string $pattern = "/\[PROGRESS\]/i", int $block_size = 65536): array
+{
+    $fp = @fopen($path, 'rb');
+
+    if (!$fp) {
+        return ['found' => null, 'last_line' => null];
+    }
+
+    if (fseek($fp, 0, SEEK_END) === -1) {
+        fclose($fp);
+        return ['found' => null, 'last_line' => null];
+    }
+
+    $position  = ftell($fp);
+    $carry     = '';
+    $last_line  = null;
+    $first_pass = true;
+
+    while ($position > 0) {
+        $read_size = ($position >= $block_size) ? $block_size : $position;
+        $position -= $read_size;
+        
+        fseek($fp, $position);
+        
+        $chunk = fread($fp, $read_size);
+
+        // Combine with carried partial line
+        $buffer = $chunk . $carry;
+
+        // Split into lines
+        $lines = preg_split("/\r\n|\n|\r/", $buffer);
+
+        // The first element may be incomplete (its beginning lies in an earlier block)
+        $carry = array_shift($lines);
+
+        if ($first_pass) {
+            // Capture the last non-empty line (closest to EOF)
+            for ($i = count($lines) - 1; $i >= 0; $i--) {
+                if ($lines[$i] !== '') {
+                    $last_line = $lines[$i];
+                    break;
+                }
+            }
+            $first_pass = false;
+        }
+
+        // Scan lines backward (from newest to oldest)
+        for ($i = count($lines) - 1; $i >= 0; $i--) {
+            $line = $lines[$i];
+            if ($line === '') continue;
+            if (@preg_match($pattern, $line)) {
+                fclose($fp);
+                return ['found' => $line, 'last_line' => $last_line];
+            }
+        }
+    }
+
+    // Handle the very first (oldest) line if any partial remains
+    if ($carry !== '') {
+        if ($last_line === null && $carry !== '') {
+            $last_line = $carry;
+        }
+        if (@preg_match($pattern, $carry)) {
+            fclose($fp);
+            return ['found' => $carry, 'last_line' => $last_line];
+        }
+    }
+
+    fclose($fp);
+    return ['found' => null, 'last_line' => $last_line];
+
 }
