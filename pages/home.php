@@ -24,7 +24,7 @@ function loadWelcomeText()
                     echo strip_tags_and_attributes(str_replace("[ver]", str_replace("SVN", "", $productversion), text("welcometitle")));
                     ?>
                 </h1>
-                <p><?php echo strip_tags_and_attributes(text("welcometext"), ['a'], ['href']); ?></p>
+                <p><?php echo strip_tags_and_attributes((string) text("welcometext"), ['a'], ['href']); ?></p>
             </div>
             <?php hook('homeafterwelcometext') ?>
         </div>
