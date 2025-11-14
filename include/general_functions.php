@@ -290,7 +290,7 @@ function redirect(string $url)
         # redirect to an absolute URL
         header("Location: " . $baseurl . str_replace($baseurl_short, "/", $url));
     } else {
-        $extra_slash = substr($baseurl, -1, 1) == '/' || strlen($baseurl) == strlen($url) ? '' : '/';
+        $extra_slash = substr($baseurl, -1, 1) == '/' ? '' : '/';
         if (url_starts_with($baseurl . $extra_slash, $url)) {
             // Base url has already been added
             header("Location: " . $url);
@@ -5073,7 +5073,12 @@ function get_system_status(bool $basic = false)
     // Return bandwidth usage last 30 days
     $return['results']['download_bandwidth_last_30_days_gb'] = [
         'status' => 'OK',
-        'total' => round(daily_stat_past_month_by_activity('Downloaded KB') / (1024 * 1024), 3)
+        'total' => round(ps_value("select sum(`count`) value from daily_stat where
+            activity_type='Downloaded KB'
+        and (`year`=year(now()) or (month(now())=1 and `year`=year(now())-1))
+        and (`month`=month(now()) or `month`=month(now())-1 or (month(now())=1 and `month`=12))
+        and datediff(now(), concat(`year`,'-',lpad(`month`,2,'0'),'-',lpad(`day`,2,'0')))<=30
+            ", [], 0) / (1024 * 1024), 3) // Note - limit to this month and last month before the concat to get the exact period; ensures not performing the concat on a large set of data.
     ];
 
     // Return file extensions with counts
