@@ -9,7 +9,7 @@
 use Montala\ResourceSpace\CommandPlaceholderArg;
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace,
-$ghostscript_path, $pdf_pages, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip,
+$ghostscript_path, $pdf_pages, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip, $extracted_text_extensions,
 $ffmpeg_audio_extensions, $ffmpeg_audio_params,$ffmpeg_supported_extensions, $ffmpeg_global_options,
 $ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif, $debug_log, $debug_log_override;
 
