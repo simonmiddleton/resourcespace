@@ -30,7 +30,7 @@ if ($show_merge_options) {
     ?>
 
     <div id="merge_filename_title_container">
-        <div id="" class=""><?php echo escape($lang['merge_filename_title_question']); ?></div>
+        <div id="" class=""><?php echo strip_tags_and_attributes($lang['merge_filename_title_question']); ?></div>
         <table id="" class="radioOptionTable" cellpadding="3" cellspacing="3">
             <tbody>
                 <tr>
