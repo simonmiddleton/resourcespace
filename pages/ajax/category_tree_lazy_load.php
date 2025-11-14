@@ -8,6 +8,10 @@ if ($k == "" || (!check_access_key_collection($upload_collection, $k))) {
     include "../../include/authenticate.php";
 }
 
+if (is_anonymous_user() && !upload_share_active()) {
+    exit($lang['error-permissiondenied']);
+}
+
 // Initialise
 $ajax           = ('' != getval('ajax', '') ? true : false);
 $node_ref       = getval('node_ref', null, true);
