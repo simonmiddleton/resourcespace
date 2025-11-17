@@ -3826,11 +3826,13 @@ function html_find_and_replace(string $findstring, string $replacestring, string
 * Utility function to remove unwanted HTML tags and attributes.
 * Note: if $html is a full page, developers should allow html and body tags.
 *
-* @param string $html       HTML string
-* @param array  $tags       Extra tags to be allowed
-* @param array  $attributes Extra attributes to be allowed
+* @param   string  $html         HTML string
+* @param   array   $tags         Extra tags to be allowed
+* @param   array   $attributes   Extra attributes to be allowed
+*
+* @return  mixed   Normally a string however if anything but a string is supplied, return type will be as supplied.
 */
-function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array()): string
+function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
 {
     global $permitted_html_tags, $permitted_html_attributes;
 
