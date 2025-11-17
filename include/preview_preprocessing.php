@@ -1029,6 +1029,12 @@ if (isset($newfile) && file_exists($newfile)) {
         $file_used_for_previewonly = get_resource_path($ref, true, "tmp", false, "jpg");
         // Don't create tiles for these
         $GLOBALS['preview_tiles'] = false;
+        
+        // Remove targeted file if it already exists to prevent permissions errors
+        if (file_exists($file_used_for_previewonly)) {
+            unlink($file_used_for_previewonly);
+        }
+
         if (copy($newfile, $file_used_for_previewonly)) {
             $previewonly = true;
             debug("preview_preprocessing: changing previewonly = true for non-image file");
