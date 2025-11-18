@@ -198,6 +198,7 @@ function tms_link_get_tms_resources(array $module)
         INNER JOIN node AS n ON rn.node = n.ref AND n.resource_type_field IN ({$sql_rtf_in})
              WHERE rn.resource > 0
           GROUP BY rn.resource
+          HAVING identifier IS NOT NULL
           ORDER BY rn.resource",
         array_merge(
             [
