@@ -309,7 +309,6 @@ function api_get_resource_path(
     $generate = $generate !== 'false' && $generate !== '0';
     }
 
-
     # Set defaults
     if ($alternative == "") {
         $alternative = -1;
