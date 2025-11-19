@@ -4062,6 +4062,25 @@ function update_resource_type($ref, $type)
         ["i",$ref,"i",$type]
     );
 
+    $old_rt_fields = ps_array(
+        "SELECT column_name value 
+           FROM information_schema.columns
+          WHERE table_schema = DATABASE()
+            AND table_name = 'resource' 
+            AND column_name LIKE 'field%'
+            AND column_name NOT IN
+        (SELECT CONCAT('field', rf.ref)
+           FROM resource_type_field rf
+      LEFT JOIN resource_type_field_resource_type rtfrt ON rf.ref=rtfrt.resource_type_field
+          WHERE (rtfrt.resource_type = ? OR rf.global=1)
+                    )",
+        ["i",$type]
+    );
+
+    foreach($old_rt_fields as $field) {
+        ps_query("UPDATE resource SET $field = '' WHERE ref = ?",["i",$ref]);
+    }
+
     if ($type != $old_rt) {
         $rts = get_resource_types("$type,$old_rt");
         $rts = array_column($rts, 'name', 'ref');
