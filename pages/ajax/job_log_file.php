@@ -1,7 +1,7 @@
 <?php
 
-include '../include/boot.php';
-include '../include/authenticate.php';
+include '../../include/boot.php';
+include '../../include/authenticate.php';
 
 $job        = getval("job", 0, true);
 $type       = getval("type", "stream");

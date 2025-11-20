@@ -91,7 +91,7 @@ if (!is_array($job_details) || count($job_details) == 0) {
     if (initial) params.set('lines', '200'); // like tail -n 200
 
     try {
-      const res = await fetch('job_log_file.php?' + params.toString(), {
+      const res = await fetch('ajax/job_log_file.php?' + params.toString(), {
         cache: 'no-store'
       });
       if (!res.ok) {

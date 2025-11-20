@@ -31,6 +31,12 @@ if (!checkperm('a') || $job_user == $userref) {
 $deletejob = getval("delete_job", 0, true);
 $resetjob = getval("reset_job", 0, true);
 
+$triggerjob = getval("trigger_job", "");
+
+if ($triggerjob !== "" && in_array($triggerjob, array_column($offline_job_list, 'script_name')) && enforcePostRequest(true) && checkperm('a')) {
+    redirect(generateURL("pages/offline_jobs/{$triggerjob}.php", ["job_user" => $job_user]));
+}
+
 if ($deletejob > 0 && enforcePostRequest(true)) {
     $deletejobdetail = job_queue_get_job($deletejob);
     if (checkperm('a') || $deletejobdetail["user"] == $userref) {
@@ -246,23 +252,27 @@ include '../include/header.php';
     if (checkperm('a') && $endedjobs > 0) {
         echo "<p><a href='#' onclick='if(confirm(\"" . escape($lang["job_confirm_purge"]) . "\")){update_job(true,\"purge_jobs\");}'>" . LINK_CARET . escape($lang["jobs_action_purge_complete"]) . "</a></p>";
     }
+    
+    if (checkperm('a')) {
     ?>
     <form id="JobTriggerForm" method="POST" action="<?php echo $url; ?>">
         <?php generateFormToken('JobFilterForm'); ?>
         <div class="Question" id="QuestionJobTrigger">
-            <label for="job_trigger">Trigger a job</label>
-            <select class="stdwidth" id="job_name" name="job_name">
+            <label for="trigger_job">Trigger a job</label>
+            <select class="stdwidth" id="trigger_job" name="trigger_job">
                 <?php
                 foreach ($offline_job_list as $offline_job) {
                     echo "<option value=\"" .  escape($offline_job["script_name"]) . "\">" . escape($offline_job["name"]) . "</option>\n";
                 }
                 ?>
             </select>
-            <input type="submit" id="job_trigger_button" value="Configure job">
+            <input type="submit" id="trigger_job_button" value="Configure job">
             <div class="clearerleft"></div> 
         </div>
     </form>
-
+    <?php
+    }
+    ?>
     <form id="JobFilterForm" method="POST" action="<?php echo $url; ?>">
         <?php generateFormToken('JobFilterForm');
 

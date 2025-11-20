@@ -1090,5 +1090,6 @@ const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
 const NON_PREVIEW_EXTENSIONS = ['zip'];
 
 $offline_job_list = [
-    0 => ["name" => "Recreate Previews", "script_name" => "recreate_previews"]
+    0 => ["name" => "Recreate Previews", "script_name" => "recreate_previews"],
+    1 => ["name" => "Dummy Job", "script_name" => "dummy_job"]
 ];

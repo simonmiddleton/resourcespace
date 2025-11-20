@@ -6006,3 +6006,94 @@ function acl_can_view_confidential_resources(): bool
 {
     return checkperm('a') && checkperm('v');
 }
+
+function parse_int_ranges(string $input, int $max_val = 0): array
+{
+    $numbers  = [];
+    $errors = [];
+
+    $input = trim($input);
+
+    if ($input === '') {
+        return [
+            'ok'     => false,
+            'numbers'  => [],
+            'errors' => ['input is empty.'],
+        ];
+    }
+
+    // Split by commas
+    $parts = explode(',', $input);
+
+    foreach ($parts as $raw_part) {
+        $part = trim($raw_part);
+
+        if ($part === '') {
+            // Skip empty segments (e.g. "1,,2")
+            continue;
+        }
+
+        // Range: "start-end"
+        if (preg_match('/^(\d+)-(\d+)$/', $part, $m)) {
+            $start = (int) $m[1];
+            $end   = (int) $m[2];
+
+            if ($start < 1 || $end < 1) {
+                $errors[] = "numbers must be 1 or greater in range \"$part\".";
+                continue;
+            }
+
+            if ($start > $end) {
+                $errors[] = "start of range \"$part\" cannot be greater than end.";
+                continue;
+            }
+
+            if ($max_val !== 0 && ($start > $max_val || $end > $max_val)) {
+                $errors[] = "range \"$part\" exceeds maximum number of $max_val.";
+                continue;
+            }
+
+            $numbers = array_merge($numbers, range($start, $end));
+            continue;
+        }
+
+        // Single number
+        if (ctype_digit($part)) {
+            $num = (int) $part;
+
+            if ($num < 1) {
+                $errors[] = "numbers must be 1 or greater (\"$part\").";
+                continue;
+            }
+
+            if ($max_val !== 0 && $num > $max_val) {
+                $errors[] = "\"$num\" exceeds maximum number of $max_val.";
+                continue;
+            }
+
+            $numbers[] = $num;
+            continue;
+        }
+
+        // Anything else is invalid
+        $errors[] = "\"$part\" is not a valid number or range (use formats like 3 or 5-9).";
+    }
+
+    if (!empty($errors)) {
+        return [
+            'ok'     => false,
+            'numbers'  => [],
+            'errors' => $errors,
+        ];
+    }
+
+    // Remove duplicates
+    $numbers = array_values(array_unique($numbers));
+    sort($numbers);
+
+    return [
+        'ok'        => true,
+        'numbers'   => $numbers,
+        'errors'    => [],
+    ];
+}
