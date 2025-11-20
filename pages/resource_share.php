@@ -127,7 +127,7 @@ if ($editing && !$editexternalurl) {
                 ),
                 array(
                     'title' => $page_header,
-                    'help'  => "user/resource-sharing"
+                    'help'  => "user/sharing-resources"
                 )
             );
 
@@ -143,7 +143,7 @@ if ($editing && !$editexternalurl) {
             <h1>
                 <?php
                 echo escape($page_header);
-                render_help_link("user/resource-sharing");
+                render_help_link("user/sharing-resources");
                 ?>
             </h1>
 
