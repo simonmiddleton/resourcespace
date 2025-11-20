@@ -356,14 +356,16 @@ function get_resource_path(
         && !defined("GETRESOURCEPATHNORECURSE" . $ref)
     ) {
         $resdata = get_resource_data($ref);
-        $pullresource = related_resource_pull($resdata);
-        if ($pullresource !== false) {
-            define("GETRESOURCEPATHNORECURSE" . $ref, true);
-            if ($size == "hpr" && is_jpeg_extension($pullresource["file_extension"])) {
-                // If a JPG then no 'hpr' will be available
-                $size = "";
+        if ((int)$resdata["has_image"] === RESOURCE_PREVIEWS_NONE) {
+            $pullresource = related_resource_pull($resdata);
+            if ($pullresource !== false) {
+                define("GETRESOURCEPATHNORECURSE" . $ref, true);
+                if ($size == "hpr" && is_jpeg_extension($pullresource["file_extension"])) {
+                    // If a JPG then no 'hpr' will be available
+                    $size = "";
+                }
+                $file = get_resource_path($pullresource["ref"], $getfilepath, $size, false, $extension, $scramble, $page, $watermarked, $file_modified, -1, $includemodified);
             }
-            $file = get_resource_path($pullresource["ref"], $getfilepath, $size, false, $extension, $scramble, $page, $watermarked, $file_modified, -1, $includemodified);
         }
     }
 
