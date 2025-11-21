@@ -7425,6 +7425,10 @@ function get_image_sizes(int $ref, $internal = false, $extension = "jpg", $onlyi
                 $returnline["original"] = 0;
                 $returnline["allow_preview"] = $sizes[$n]["allow_preview"];
 
+            if (isset($resolution)) {
+                $returnline["resolution"] = $resolution;
+            }
+
                 # The ability to restrict download size by user group and resource type.
             if (checkperm("X" . $resource_type . "_" . $sizes[$n]["id"])) {
                 # Permission set. Always restrict this download if this resource is restricted.
