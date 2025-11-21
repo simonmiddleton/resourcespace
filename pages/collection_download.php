@@ -216,12 +216,11 @@ if ($submitted & !$totalsizeerror) {
         'k'                         => $k,
     ];
 
-    if ($offline_job_queue) {
+    // tar files are not an option with offline jobs
+    if ($offline_job_queue && !$collection_download_data['collection_download_tar']) {
         // Only need to store resource IDS, not full search data
         $collection_download_data["result"] = array_column($result, "ref", "ref");
 
-        // tar files are not an option with offline jobs
-        $collection_download_data['collection_download_tar'] = false;
         $modified_job_data = hook("collection_download_modify_job", "", [$collection_download_data]);
         if (is_array($modified_job_data)) {
             $collection_download_data = $modified_job_data;
