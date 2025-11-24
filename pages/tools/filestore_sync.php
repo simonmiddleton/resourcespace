@@ -199,7 +199,7 @@ foreach ($options as $option_name => $option_value) {
         if (is_int_loose($option_value)) {
             $download_time_limit = $option_value;
         } else {
-            echo "Invalid download time limit specified - must me integer";
+            echo "Invalid download time limit specified - must be integer";
             exit();
         }
     }
