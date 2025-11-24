@@ -305,6 +305,10 @@ function api_get_resource_path(
         $GLOBALS['get_resource_path_extra_download_query_string_params'] = ['noattach' => ''];
     }
 
+    if (!is_bool($generate)) {
+    $generate = $generate !== 'false' && $generate !== '0';
+    }
+
     # Set defaults
     if ($alternative == "") {
         $alternative = -1;
