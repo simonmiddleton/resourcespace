@@ -408,7 +408,7 @@ function HookAction_datesCronCron()
                 "i",$newstatus,
             );
 
-            if (!is_null($resource_deletion_state)) {
+            if (isset($resource_deletion_state)) {
                 $sql .= " AND r.archive <> ?";
                 $sql_params[] = "i";
                 $sql_params[] = $resource_deletion_state;
