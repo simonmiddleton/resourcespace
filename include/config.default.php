@@ -966,8 +966,9 @@ $file_checksums_offline = false;
 $file_integrity_checks = false;
 
 // $file_integrity_verify_window - set server time window that the file integrity check script can run in.
-// This can be resource intensive when checking checksums for a large number of resources.
-// Note that to fully verify file integrity requires setting $file_checksums=true AND $file_checksums_50k=false)
+// Note - This enables checking for file presence included within cron_copy_hitcount.php
+//        For more thorough checking based on file checksums consider running pages/tools/validate_resource_files.php
+//        - This can be resource intensive when checking checksums for a large number of resources
 //
 // Examples: -
 // $file_integrity_verify_window = [22,6]; // between 10PM and 6AM (first hour is later than second so time must be after first OR before second)

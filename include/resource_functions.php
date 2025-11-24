@@ -8942,6 +8942,82 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
 
     $return_failed = [];
     foreach (array_chunk($resources, 1000) as $checkresources) {
+        db_begin_transaction("checkresources");
+
+        // Resources with no file_size have no file so can't be checked.
+        $resources_with_no_file = array();
+        $resource_with_file = array();
+        foreach($checkresources as $check_ref) {
+            if (!is_null($check_ref["file_size"]) && $check_ref["file_size"] > 0) {
+                $resource_with_file[] = $check_ref;
+            } elseif ((int) $check_ref["no_file"] === 0 && (int) $check_ref["integrity_fail"] !== 1) {
+                $resources_with_no_file[] = $check_ref;
+            }
+        }
+        $checkresources = $resource_with_file;
+        $resources_with_no_file = array_column($resources_with_no_file, 'ref');
+
+        $had_uploads_file_found = array();
+        $had_uploads_no_file_found = array();
+        if (count($resources_with_no_file) > 0) {
+            // Extra check of resources with no file to make sure they never had one at any point.
+            $had_uploads = ps_array("
+                            SELECT DISTINCT resource value 
+                            FROM resource_log
+                            WHERE resource IN (" . ps_param_insert(count($resources_with_no_file)) . ")
+                            AND type = ?",
+                            array_merge(ps_param_fill($resources_with_no_file, 'i'), ['s', LOG_CODE_UPLOADED])
+                        );
+
+            if (count($had_uploads) > 0) {
+                // At this point a resource may have no file_size set but still have had an uploaded file
+                $check_no_upload_resources = validate_resource_files($had_uploads, array("is_readable" => true));
+                foreach ($check_no_upload_resources as $ref => $result) {
+                    if ($result) {
+                        $had_uploads_file_found[] = $ref;
+                    } else {
+                        $had_uploads_no_file_found[] = $ref;
+                    }
+                }
+
+                if (count($had_uploads_file_found) > 0) {
+                    // There is actually a file. file_size was 0 or null and shouldn't have been.
+                    // Update file_size but don't mark this resource as invalid so it'll be checked on the next pass.
+                    foreach ($had_uploads_file_found as $update_ref_file_size) {
+                        $update_ref_file_size = get_resource_data($update_ref_file_size);
+                        $resource_path = get_resource_path($update_ref_file_size['ref'], true, "", false, $update_ref_file_size['file_extension']);
+                        $filesize = filesize_unlimited($resource_path);
+                        $filesize_sql = "UPDATE resource SET file_size = ? WHERE ref = ?;";
+                        ps_query($filesize_sql, array('i', $filesize, 'i', $update_ref_file_size['ref']));
+                    }
+                }
+
+                if (count($had_uploads_no_file_found) > 0) {
+                    // Checking for the file confirmed it wasn't there so mark as integrity failed.
+                    $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($had_uploads_no_file_found)) . ")";
+                    $failed_params = ps_param_fill($had_uploads_no_file_found, "i");
+                    ps_query($failed_sql, $failed_params);
+                }
+            }
+
+            $no_uploads = array_diff($resources_with_no_file, $had_uploads);
+
+            if (count($no_uploads) > 0) {
+                // No evidence of a file ever being uploaded. Mark these as having no_file
+                ps_query("
+                    UPDATE resource 
+                    SET no_file = 1
+                    WHERE ref IN (" . ps_param_insert(count($no_uploads)) . ")",
+                    ps_param_fill($no_uploads, "i")
+                );
+            }
+        }
+
+        if (count($checkresources) === 0) {
+            db_end_transaction("checkresources");
+            return array();
+        }
+
         $checks = [];
         $checks["is_readable"] = true; // Always check for file presence as checksums may not have been generated yet
         if (!$presenceonly && $GLOBALS["file_checksums"]) {
@@ -8959,30 +9035,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
             }
         }
 
-        db_begin_transaction("checkresources");
         if (count($failed) > 0) {
-            if ($presenceonly) {
-                // Check if resources have ever actually had a file uploaded
-                $arr_uploads = ps_array("
-                     SELECT DISTINCT resource value 
-                       FROM resource_log
-                      WHERE resource IN (" . ps_param_insert(count($failed)) . ")
-                        AND type = ?",
-                    array_merge(ps_param_fill($failed, 'i'), ['s', LOG_CODE_UPLOADED])
-                );
-                $arr_nouploads = array_diff($failed, $arr_uploads);
-
-                if (count($arr_nouploads) > 0) {
-                    // No evidence of a file ever being uploaded. Mark these as having no_file
-                    ps_query("
-                        UPDATE resource 
-                        SET no_file = 1
-                        WHERE ref IN (" . ps_param_insert(count($arr_nouploads)) . ")",
-                        ps_param_fill($arr_nouploads, "i")
-                    );
-                }
-                $failed = array_diff($failed, $arr_nouploads);
-            }
             if (count($failed) > 0) {
                 $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($failed)) . ")";
                 $failed_params = ps_param_fill($failed, "i");
@@ -8995,7 +9048,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
             ps_query($success_sql, $success_params);
         }
         // Add any failures to the array to return
-        $return_failed = array_merge($return_failed, $failed);
+        $return_failed = array_merge($return_failed, $failed, $had_uploads_no_file_found);
         db_end_transaction("checkresources");
 
         // Log any newly failed resources
@@ -9053,7 +9106,9 @@ function get_resources_to_validate(int $days = 0): array
                 resource_type,
                 file_checksum,
                 last_verified,
-                integrity_fail
+                integrity_fail,
+                file_size,
+                no_file
         FROM resource
         WHERE ref > 0 AND no_file = 0 {$filtersql}
         ORDER BY integrity_fail DESC, last_verified ASC",
