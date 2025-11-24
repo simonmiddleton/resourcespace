@@ -11,6 +11,12 @@ $ffmpeg_fullpath = get_utility_path("ffmpeg");
 if ($generateall) {
     # Create a preview video
     $targetfile = get_resource_path($ref, true, "pre", false, $ffmpeg_preview_extension, -1, 1, false, "", $alternative);
+
+    # If target for preview file already exists, remove it
+    if (file_exists($targetfile)) {
+        unlink($targetfile);
+    }
+
     if (PHP_SAPI !== "cli") {
         set_processing_message(str_replace("[resource]", $ref, $lang["processing_preview_video"]));
     }
