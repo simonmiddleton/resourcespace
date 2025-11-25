@@ -91,7 +91,8 @@ DESCRIPTION
     Connect to the remote system, retrieve a list of filestore files and start the download.
     Username and password for basic auth can be provided if required.
     Collections can also be specified to enable partial migrations.
-    Before running this the \$scramble_key must be the same on both systems, so copy over all relevant config.php entries first.
+    Before running this the \$scramble_key must be the same on both systems.
+    Copy over all relevant config.php entries first.
 
 REQUIRED SUMMARY
     -u, --url               username and url for the remote system
@@ -100,6 +101,7 @@ REQUIRED SUMMARY
                             username:password@https://acme.resourcespace.com
 OPTIONS SUMMARY
     -c, --collections       Collection IDs of resources to sync, comma separated
+    -t, --timelimit         Time limit in seconds for each download, default to 10s
 
 EXAMPLES
     php filestore_sync.php --url=a.user:mypassword@https://acme.myresourcespace.com
@@ -117,9 +119,13 @@ EXAMPLES
     php filestore_sync.php --url=a.user@https://acme.myresourcespace.com --collections 123,456
                                                                             ^ collection IDs to sync
 
+    php filestore_sync.php -ua.user@https://acme.myresourcespace.com -t300
+                                                                        ^ limit downloads to 5 minutes
+
 HELP;
 
-// CLI access, connect to the remote system, retrieve the list and start the download. username and password for basic auth can be provided if required
+// CLI access, connect to the remote system, retrieve the list and start the download.
+// username and password for basic auth can be provided if required
 if (!isset($argv[1]) || in_array($argv[1], ['-h','--help','-help'])) {
     echo $help_text . PHP_EOL;
     exit();
@@ -145,13 +151,15 @@ $pattern = '
     $                       # End of the string
 /x';
 
-$options = getopt('u:c:', ['url:','collections:']);
+$options = getopt('u:c:t:', ['url:','collections:', 'timelimit:']);
 
 foreach ($options as $option_name => $option_value) {
     if (in_array($option_name, ["u", "url"])) {
         $url = $option_value;
         if (!preg_match($pattern, $url)) {
-            echo "Invalid url entered, must be in form: \na.user@https://acme.resourcespace.com\na.user:mypassword@https://acme.myresourcespace.com\n";
+            echo "Invalid url entered, must be in form:\n";
+            echo "a.user@https://acme.resourcespace.com\n";
+            echo "a.user:mypassword@https://acme.myresourcespace.com\n";
             exit();
         }
         $auth_part = strpos($url, "@");
@@ -184,6 +192,14 @@ foreach ($options as $option_name => $option_value) {
             $params['collections'] = $option_value;
         } else {
             echo "Invalid collections specified - must be comma separated integers\n";
+            exit();
+        }
+    }
+    if (in_array($option_name, ["t", "timelimit"])) {
+        if (is_int_loose($option_value)) {
+            $download_time_limit = $option_value;
+        } else {
+            echo "Invalid download time limit specified - must me integer";
             exit();
         }
     }
@@ -236,7 +252,7 @@ foreach ($files as $file) {
             curl_setopt($ch, CURLOPT_USERPWD, $remote_user . ":" . $remote_password);
         }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $download_time_limit ?? 10);
         $result = curl_exec($ch);
 
         if ($result !== false) {
