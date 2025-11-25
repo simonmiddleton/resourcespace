@@ -242,7 +242,7 @@ foreach ($files as $file) {
     $filesize = $s[1];
     $file = str_replace("\\", "/", $file); // Windows path support
     if (!file_exists($storagedir . $file) || filesize($storagedir . $file) != $filesize) {
-        echo "(" . $counter . "/" . count($files) . ") Copying " . $file . " - " . formatfilesize($filesize) . " bytes\n";
+        echo "(" . $counter . "/" . count($files) . ") Copying " . $file . " - " . formatfilesize($filesize) . "\n";
         flush();
 
         // Download the file
