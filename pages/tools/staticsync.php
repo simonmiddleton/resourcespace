@@ -965,7 +965,7 @@ function staticsync_process_alt($alternativefile, $ref = "", $alternative = "")
                 FROM resource_node rn
                     LEFT JOIN node n ON n.ref=rn.node
                 WHERE n.resource_type_field = ?
-                    AND rn.resource LIKE ?",
+                    AND n.name LIKE ?",
                 ["i",$filename_field,"s",$altbasename . "%"]
             );
 
