@@ -21,6 +21,7 @@ $page_def[] = config_add_single_select ("totp_date_binding",$lang["totp_date_bin
     "Y"   => $lang["totp_date_binding_y"],
 ]);
 
+$page_def[] = config_add_boolean_select("totp_saml", $lang['totp_saml']);
 
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);
