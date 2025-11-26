@@ -138,7 +138,7 @@ foreach($keywords as $keyword)
                     null,
                     null,
                     $keyword_expanded
-                )[0];
+                )[0] ?? [];
             }
             if(0 < count($node_found))
                 {
