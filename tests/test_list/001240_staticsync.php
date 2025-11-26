@@ -7,7 +7,8 @@ command_line_only();
 $saved_user_data    = $userdata;
 $saved_userref      = $userref;
 $saved_perms        = $userpermissions;
-$userpermissions    = array("s","g","j*");
+$staticsync_test_perms = array("s","g","j*");
+$userpermissions    = $staticsync_test_perms;
 if (isset($unoconv_path)) {
     $saved_unoconv_path = $unoconv_path;
     // Disable unoconv previews as this is not being tested here and failures can interrupt test
@@ -114,6 +115,14 @@ if (!file_exists($aftpath)) {
 file_put_contents($aftpath . "aft_primary.txt", "TEST_AFT_PRIMARY");
 file_put_contents($aftpath . "aft_primary_alt_testj.txt", "TEST_AFT_ALT");
 
+$userpermissions = $saved_perms; # Restore permissions temporarily for creation of / upload to resource.
+$existing_resource_for_alt = create_resource(1, 0);
+file_put_contents($aftpath . "existing.txt", "EXISTING - file for a resource to be created");
+upload_file($existing_resource_for_alt, true, false, false, $aftpath . "existing.txt", false, false);
+unlink($aftpath . "existing.txt");
+$userpermissions = $staticsync_test_perms; # Reapply custom permissions set earlier.
+file_put_contents($aftpath . "existing_alt_testj.txt", "ALT_EXISTING - alternative file to add to existing resource with staticsync");
+
 // Required for Test K
 $staticsync_alt_suffixes = true;
 $staticsync_alt_suffix_array = array (
@@ -216,6 +225,10 @@ $aft_resource = $results[0]["ref"];
 $alts_j = get_alternative_files($aft_resource);
 if (!is_array($alts_j) || count($alts_j) != 1 || $alts_j[0]["description"] != "testj") {
     echo "Test J failed: \$staticsync_alternative_file_text failed - ";
+    return false;
+}
+if (file_exists($aftpath . "existing_alt_testj.txt")) {
+    echo "Test J failed: \$staticsync_alternative_file_text failed to find existing resource for alternative -";
     return false;
 }
 
