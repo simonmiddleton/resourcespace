@@ -109,3 +109,19 @@ function TOTP_increase_tries(int $user_ref): void
 {
     ps_query("update user set totp_tries=totp_tries+1 where ref=?", ["i",$user_ref]);
 }
+ 
+/**
+ * Checks to see if SAML is authenticated for the given user if TOTP can be skipped for SAML users.
+ *
+ * @return bool True if SAML is enabled and authenticates, false otherwise
+ */
+function TOTP_saml_authenticate(): bool
+{
+    global $totp_saml;
+    $inst_version = ps_value("SELECT inst_version AS value FROM plugins WHERE name = ?", ["s", "simplesaml"], '');
+
+    if ($totp_saml && is_numeric($inst_version)) {
+        return simplesaml_is_authenticated();
+    }
+    return false;
+}

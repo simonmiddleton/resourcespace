@@ -8,6 +8,8 @@ $return   = array();
 $action   = getval('action', '');
 $resource = getval('resource', 0, true);
 
+header('Content-Type: application/json');
+
 if (
     !$facial_recognition_active ||
     !get_edit_access($resource) ||

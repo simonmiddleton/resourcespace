@@ -42,6 +42,7 @@ function ajax_permission_denied()
 function ajax_send_response($code, array $response)
 {
     http_response_code($code);
+    header('Content-Type: application/json');
     echo json_encode($response);
     exit();
 }

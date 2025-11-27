@@ -16,12 +16,12 @@ $lang["image_text_position"]='ตำแหน่งของข้อควา�
 $lang["image_text_banner_position"]='ตำแหน่งของแบนเนอร์สัมพันธ์กับภาพ';
 $lang["image_text_font"]='ฟอนต์ที่ใช้ ต้องได้รับการสนับสนุนโดยเวอร์ชัน imagemagick ที่ติดตั้ง';
 $lang["image_text_noim"]='ปลั๊กอินนี้ต้องการให้ติดตั้ง Imagemagick';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'ตะวันตก',
    'center' => 'กลาง',
    'east' => 'ตะวันออก',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'บน',
    'bottom' => 'ล่าง',
 );

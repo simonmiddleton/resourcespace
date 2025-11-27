@@ -452,7 +452,12 @@ function HookSimplesamlAllProvideusercredentials()
                     }
                     if ($userid === -2) {
                         debug("simplesaml - Error - User could not be created, user limit exceeded");
-                        return false;
+                        ?>
+                        <script>
+                        top.location.href="<?php echo $baseurl; ?>/login.php?error=simplesaml_userlimit_error";
+                        </script>
+                        <?php
+                        exit();
                     }
                     if (filter_var($simplesaml_multiple_email_notify, FILTER_VALIDATE_EMAIL) && getval("usesso", "") != "") {
                         // Already account(s) with this email address, notify the administrator (provided it is an actual attempt to pevent unnecessary duplicates)
@@ -468,7 +473,12 @@ function HookSimplesamlAllProvideusercredentials()
             $userid = new_user($username, $group);
             if ($userid === -2) {
                 debug("simplesaml - Error - User could not be created, user limit exceeded");
-                return false;
+                ?>
+                <script>
+                top.location.href="<?php echo $baseurl; ?>/login.php?error=simplesaml_userlimit_error";
+                </script>
+                <?php
+                exit();
             }
             include_once __DIR__ . '/../../../include/dash_functions.php';
             build_usergroup_dash($group, $userid);

@@ -3,6 +3,7 @@
 include __DIR__ . '/../../include/boot.php';
 include __DIR__ . '/../../include/authenticate.php';
 include_once __DIR__ . '/../../include/node_functions.php';
+header('Content-Type: application/json');
 
 /*
 This allows Asynchronous searches for nodes, either by: node ID or simply by searching for a name (fuzzy search)
@@ -17,7 +18,13 @@ $name                = trim(getval('name', ''));
 $rows                = getval('rows', 10, true);
 
 // Prevent access to fields to which user does not have access to
-if (!metadata_field_view_access($resource_type_field)) {
+// Prevent anon users from accessing this page altogether
+// Prevent users from using fields other than ones configured for annotations
+if (
+    !metadata_field_view_access($resource_type_field) 
+    || is_anonymous_user() 
+    || !in_array($resource_type_field, get_annotate_fields())
+) {
     header('HTTP/1.1 401 Unauthorized');
     $return['error'] = array(
         'status' => 401,

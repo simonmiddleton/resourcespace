@@ -439,6 +439,8 @@ function add_resource_to_collection(
             }
         }
 
+        hook("Addtocollectionsuccess", "", array("resourceId" => $resource, "collectionId" => $collection));
+
         ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
         ps_query(
             'INSERT INTO collection_resource(collection, resource, sortorder) VALUES (?, ?, ?)',
@@ -481,6 +483,7 @@ function remove_resource_from_collection($resource, $collection, $smartadd = fal
     }
 
     if ($smartadd || collection_writeable($collection)) {
+        hook("Removefromcollectionsuccess", "", array("resourceId" => $resource, "collectionId" => $collection));
         $delparams = ["i",$resource,"i",$collection];
         ps_query("DELETE FROM collection_resource WHERE resource = ? AND collection = ?", $delparams);
         ps_query("DELETE FROM external_access_keys WHERE resource = ? AND collection = ?", $delparams);

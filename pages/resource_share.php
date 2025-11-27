@@ -127,7 +127,7 @@ if ($editing && !$editexternalurl) {
                 ),
                 array(
                     'title' => $page_header,
-                    'help'  => "user/resource-sharing"
+                    'help'  => "user/sharing-resources"
                 )
             );
 
@@ -143,7 +143,7 @@ if ($editing && !$editexternalurl) {
             <h1>
                 <?php
                 echo escape($page_header);
-                render_help_link("user/resource-sharing");
+                render_help_link("user/sharing-resources");
                 ?>
             </h1>
 
@@ -185,7 +185,7 @@ if ($editing && !$editexternalurl) {
 
         <div class="VerticalNav">
             <ul>
-                <?php if ((!$editing || $editexternalurl) && $email_sharing && $anonymous_login !== $username) { ?>
+                <?php if ((!$editing || $editexternalurl) && $email_sharing && !is_anonymous_user()) { ?>
                     <li>
                         <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;
                         <a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onclick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this, true);">

@@ -224,6 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $url=$json["data"][0]["url"] ?? "";
         if ($url!="")
             {
+            daily_stat("OpenAI Image Edit", $userref, 1);
             header('Content-Type: application/json');
             echo json_encode(["image_base64"=>base64_encode(file_get_contents($url))]);
             }

@@ -9,7 +9,7 @@
 use Montala\ResourceSpace\CommandPlaceholderArg;
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace,
-$ghostscript_path, $pdf_pages, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip,
+$ghostscript_path, $pdf_pages, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip, $extracted_text_extensions,
 $ffmpeg_audio_extensions, $ffmpeg_audio_params,$ffmpeg_supported_extensions, $ffmpeg_global_options,
 $ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif, $debug_log, $debug_log_override;
 
@@ -1029,6 +1029,12 @@ if (isset($newfile) && file_exists($newfile)) {
         $file_used_for_previewonly = get_resource_path($ref, true, "tmp", false, "jpg");
         // Don't create tiles for these
         $GLOBALS['preview_tiles'] = false;
+        
+        // Remove targeted file if it already exists to prevent permissions errors
+        if (file_exists($file_used_for_previewonly)) {
+            unlink($file_used_for_previewonly);
+        }
+
         if (copy($newfile, $file_used_for_previewonly)) {
             $previewonly = true;
             debug("preview_preprocessing: changing previewonly = true for non-image file");

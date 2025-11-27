@@ -16,12 +16,12 @@ $lang["image_text_position"]='Позиція тексту в банері';
 $lang["image_text_banner_position"]='Позиція банера відносно зображення.';
 $lang["image_text_font"]='Шрифт для використання, має підтримуватися встановленою версією imagemagick';
 $lang["image_text_noim"]='Цей плагін вимагає встановлення Imagemagick.';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'захід',
    'center' => 'центр',
    'east' => 'схід',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'верх',
    'bottom' => 'низ',
 );

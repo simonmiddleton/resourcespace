@@ -240,3 +240,18 @@ function HookOpenai_gptAllAfterpreviewcreation(int $ref, int $alternative, bool 
         }
     return $success[$ref] ?? false;
     }
+
+
+/**
+ * Return total token usage for the past 30 days.
+ *
+ * @return  array   Array of data for processing in get_system_status().
+ */
+function HookOpenai_gptAllExtra_checks() : array
+    {
+    $message['openai_gpt'] = [
+        'status' => 'OK',
+        'info' => daily_stat_past_month_by_activity('OpenAI Token Usage')
+        ];
+    return $message;
+    }

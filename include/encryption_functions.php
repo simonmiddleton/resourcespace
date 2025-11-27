@@ -113,6 +113,7 @@ function eval_check_signed($code)
     // Code not signed correctly? Exit early.
     if ($signature != sign_code($code)) {
         set_sysvar("code_sign_required", "YES");
+        debug("Invalid (eval) code signature ({$signature})");
         return "";
     }
 
@@ -130,6 +131,7 @@ function eval_check_signed($code)
 function sign_code($code)
 {
     global $scramble_key;
+    debug(sprintf('sign_code will use the following $scramble_key (***%s)', mb_substr($scramble_key, -4)));
     return hash_hmac("sha256", trim($code), $scramble_key);
 }
 
@@ -144,6 +146,7 @@ function sign_code($code)
 */
 function resign_all_code($confirm = true, $output = true, $output_changes_only = false)
 {
+    debug_function_call(__FUNCTION__, func_get_args());
     if ($confirm) {
         $output = true;
     }
@@ -195,13 +198,25 @@ function resign_all_code($confirm = true, $output = true, $output_changes_only =
                 }
 
                 $code = trim($code);
-                $code = "//SIG" . sign_code($code) . "\n" . $code;
+                $sig = sign_code($code);
+                $code = "//SIG" . $sig . "\n" . $code;
                 if (!$output_changes_only) {
                     ps_query("update `$table` set `$column`=? where ref=?", array("s",$code,"i",$ref));
+                    log_activity(
+                        note: 'resign_all_code',
+                        log_code: LOG_CODE_EDITED,
+                        value_new: $code,
+                        value_old: $row[$column],
+                        remote_table: $table,
+                        remote_column: $column,
+                        remote_ref: $ref
+                    );
+                    debug("[WARN] resign_all_code for {$table} -> {$column} -> {$ref} FAIL (new SIG = {$sig})");
                 }
             } else {
                 if ($output && !$output_changes_only) {
                     echo " is OK\n";
+                    debug("resign_all_code for {$table} -> {$column} -> {$ref} is OK");
                 }
             }
         }

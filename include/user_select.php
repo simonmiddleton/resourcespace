@@ -1,6 +1,6 @@
 <?php
 
-if ($anonymous_login == $username) {
+if (is_anonymous_user()) {
     return;
 }
 

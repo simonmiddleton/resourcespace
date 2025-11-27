@@ -356,14 +356,16 @@ function get_resource_path(
         && !defined("GETRESOURCEPATHNORECURSE" . $ref)
     ) {
         $resdata = get_resource_data($ref);
-        $pullresource = related_resource_pull($resdata);
-        if ($pullresource !== false) {
-            define("GETRESOURCEPATHNORECURSE" . $ref, true);
-            if ($size == "hpr" && is_jpeg_extension($pullresource["file_extension"])) {
-                // If a JPG then no 'hpr' will be available
-                $size = "";
+        if ((int)$resdata["has_image"] === RESOURCE_PREVIEWS_NONE) {
+            $pullresource = related_resource_pull($resdata);
+            if ($pullresource !== false) {
+                define("GETRESOURCEPATHNORECURSE" . $ref, true);
+                if ($size == "hpr" && is_jpeg_extension($pullresource["file_extension"])) {
+                    // If a JPG then no 'hpr' will be available
+                    $size = "";
+                }
+                $file = get_resource_path($pullresource["ref"], $getfilepath, $size, false, $extension, $scramble, $page, $watermarked, $file_modified, -1, $includemodified);
             }
-            $file = get_resource_path($pullresource["ref"], $getfilepath, $size, false, $extension, $scramble, $page, $watermarked, $file_modified, -1, $includemodified);
         }
     }
 
@@ -591,7 +593,11 @@ function create_resource($resource_type, $archive = 999, $user = -1, $origin = '
         $user = $userref;
     }
 
-    ps_query("INSERT INTO resource(resource_type,creation_date,archive,created_by,file_extension) VALUES (?,NOW(),?,?,?)", ["i",$resource_type,"i",$archive,"i",$user,"s",$file_extension]);
+    // Set no_file=1 because at this stage a new resource technically has no file until a follow-up processing is done.
+    ps_query(
+        "INSERT INTO resource(resource_type,creation_date,archive,created_by,file_extension, no_file) VALUES (?,NOW(),?,?,?, 1)",
+        ["i",$resource_type,"i",$archive,"i",$user,"s",$file_extension]
+    );
 
     $insert = sql_insert_id();
 
@@ -3606,7 +3612,15 @@ function copy_resource($from, $resource_type = -1, $origin = '')
     }
 
     # First copy the resources row
-    ps_query("insert into resource(resource_type,creation_date,rating,archive,access,created_by $joins_sql) select {$sql},now(),rating, ?,access,created_by $joins_sql from resource where ref= ?", array_merge($params, ['i', $archive, 'i', $from]));
+    # Set no_file=1 because at this stage any resource copied technically has no file until there's some kind of a
+    # follow-up processing done (e.g. create a new record and later upload a file for it)
+    ps_query(
+        "INSERT INTO resource(resource_type,creation_date,rating,archive,access,created_by, no_file $joins_sql)
+         SELECT {$sql},now(),rating, ?,access,created_by, 1 $joins_sql
+           FROM resource
+          WHERE ref= ?",
+          array_merge($params, ['i', $archive, 'i', $from])
+    );
     $to = sql_insert_id();
 
     # Set that this resource was created by this user.
@@ -4047,6 +4061,25 @@ function update_resource_type($ref, $type)
                                 )",
         ["i",$ref,"i",$type]
     );
+
+    $old_rt_fields = ps_array(
+        "SELECT column_name value 
+           FROM information_schema.columns
+          WHERE table_schema = DATABASE()
+            AND table_name = 'resource' 
+            AND column_name LIKE 'field%'
+            AND column_name NOT IN
+        (SELECT CONCAT('field', rf.ref)
+           FROM resource_type_field rf
+      LEFT JOIN resource_type_field_resource_type rtfrt ON rf.ref=rtfrt.resource_type_field
+          WHERE (rtfrt.resource_type = ? OR rf.global=1)
+                    )",
+        ["i",$type]
+    );
+
+    foreach($old_rt_fields as $field) {
+        ps_query("UPDATE resource SET $field = '' WHERE ref = ?",["i",$ref]);
+    }
 
     if ($type != $old_rt) {
         $rts = get_resource_types("$type,$old_rt");
@@ -7392,6 +7425,10 @@ function get_image_sizes(int $ref, $internal = false, $extension = "jpg", $onlyi
                 $returnline["original"] = 0;
                 $returnline["allow_preview"] = $sizes[$n]["allow_preview"];
 
+            if (isset($resolution)) {
+                $returnline["resolution"] = $resolution;
+            }
+
                 # The ability to restrict download size by user group and resource type.
             if (checkperm("X" . $resource_type . "_" . $sizes[$n]["id"])) {
                 # Permission set. Always restrict this download if this resource is restricted.
@@ -8929,6 +8966,82 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
 
     $return_failed = [];
     foreach (array_chunk($resources, 1000) as $checkresources) {
+        db_begin_transaction("checkresources");
+
+        // Resources with no file_size have no file so can't be checked.
+        $resources_with_no_file = array();
+        $resource_with_file = array();
+        foreach($checkresources as $check_ref) {
+            if (!is_null($check_ref["file_size"]) && $check_ref["file_size"] > 0) {
+                $resource_with_file[] = $check_ref;
+            } elseif ((int) $check_ref["no_file"] === 0 && (int) $check_ref["integrity_fail"] !== 1) {
+                $resources_with_no_file[] = $check_ref;
+            }
+        }
+        $checkresources = $resource_with_file;
+        $resources_with_no_file = array_column($resources_with_no_file, 'ref');
+
+        $had_uploads_file_found = array();
+        $had_uploads_no_file_found = array();
+        if (count($resources_with_no_file) > 0) {
+            // Extra check of resources with no file to make sure they never had one at any point.
+            $had_uploads = ps_array("
+                            SELECT DISTINCT resource value 
+                            FROM resource_log
+                            WHERE resource IN (" . ps_param_insert(count($resources_with_no_file)) . ")
+                            AND type = ?",
+                            array_merge(ps_param_fill($resources_with_no_file, 'i'), ['s', LOG_CODE_UPLOADED])
+                        );
+
+            if (count($had_uploads) > 0) {
+                // At this point a resource may have no file_size set but still have had an uploaded file
+                $check_no_upload_resources = validate_resource_files($had_uploads, array("is_readable" => true));
+                foreach ($check_no_upload_resources as $ref => $result) {
+                    if ($result) {
+                        $had_uploads_file_found[] = $ref;
+                    } else {
+                        $had_uploads_no_file_found[] = $ref;
+                    }
+                }
+
+                if (count($had_uploads_file_found) > 0) {
+                    // There is actually a file. file_size was 0 or null and shouldn't have been.
+                    // Update file_size but don't mark this resource as invalid so it'll be checked on the next pass.
+                    foreach ($had_uploads_file_found as $update_ref_file_size) {
+                        $update_ref_file_size = get_resource_data($update_ref_file_size);
+                        $resource_path = get_resource_path($update_ref_file_size['ref'], true, "", false, $update_ref_file_size['file_extension']);
+                        $filesize = filesize_unlimited($resource_path);
+                        $filesize_sql = "UPDATE resource SET file_size = ? WHERE ref = ?;";
+                        ps_query($filesize_sql, array('i', $filesize, 'i', $update_ref_file_size['ref']));
+                    }
+                }
+
+                if (count($had_uploads_no_file_found) > 0) {
+                    // Checking for the file confirmed it wasn't there so mark as integrity failed.
+                    $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($had_uploads_no_file_found)) . ")";
+                    $failed_params = ps_param_fill($had_uploads_no_file_found, "i");
+                    ps_query($failed_sql, $failed_params);
+                }
+            }
+
+            $no_uploads = array_diff($resources_with_no_file, $had_uploads);
+
+            if (count($no_uploads) > 0) {
+                // No evidence of a file ever being uploaded. Mark these as having no_file
+                ps_query("
+                    UPDATE resource 
+                    SET no_file = 1
+                    WHERE ref IN (" . ps_param_insert(count($no_uploads)) . ")",
+                    ps_param_fill($no_uploads, "i")
+                );
+            }
+        }
+
+        if (count($checkresources) === 0) {
+            db_end_transaction("checkresources");
+            return array();
+        }
+
         $checks = [];
         $checks["is_readable"] = true; // Always check for file presence as checksums may not have been generated yet
         if (!$presenceonly && $GLOBALS["file_checksums"]) {
@@ -8946,30 +9059,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
             }
         }
 
-        db_begin_transaction("checkresources");
         if (count($failed) > 0) {
-            if ($presenceonly) {
-                // Check if resources have ever actually had a file uploaded
-                $arr_uploads = ps_array("
-                     SELECT DISTINCT resource value 
-                       FROM resource_log
-                      WHERE resource IN (" . ps_param_insert(count($failed)) . ")
-                        AND type = ?",
-                    array_merge(ps_param_fill($failed, 'i'), ['s', LOG_CODE_UPLOADED])
-                );
-                $arr_nouploads = array_diff($failed, $arr_uploads);
-
-                if (count($arr_nouploads) > 0) {
-                    // No evidence of a file ever being uploaded. Mark these as having no_file
-                    ps_query("
-                        UPDATE resource 
-                        SET no_file = 1
-                        WHERE ref IN (" . ps_param_insert(count($arr_nouploads)) . ")",
-                        ps_param_fill($arr_nouploads, "i")
-                    );
-                }
-                $failed = array_diff($failed, $arr_nouploads);
-            }
             if (count($failed) > 0) {
                 $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($failed)) . ")";
                 $failed_params = ps_param_fill($failed, "i");
@@ -8982,7 +9072,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
             ps_query($success_sql, $success_params);
         }
         // Add any failures to the array to return
-        $return_failed = array_merge($return_failed, $failed);
+        $return_failed = array_merge($return_failed, $failed, $had_uploads_no_file_found);
         db_end_transaction("checkresources");
 
         // Log any newly failed resources
@@ -9008,9 +9098,6 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
  * Get an array of all resources that require files to be validated
  *
  * @param int $days     Return only resources not validated in the last X number of days
- *
- * @return array
- *
  */
 function get_resources_to_validate(int $days = 0): array
 {
@@ -9043,7 +9130,9 @@ function get_resources_to_validate(int $days = 0): array
                 resource_type,
                 file_checksum,
                 last_verified,
-                integrity_fail
+                integrity_fail,
+                file_size,
+                no_file
         FROM resource
         WHERE ref > 0 AND no_file = 0 {$filtersql}
         ORDER BY integrity_fail DESC, last_verified ASC",

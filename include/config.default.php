@@ -291,8 +291,8 @@ $exif_comment = 18;
 $exif_model = 52;
 $exif_date = 12;
 
-// Use Exiftool to see all the embedded metadata of an applicable resource file. Restricted to Super Admins (those who 
-// can manage the system and view confidential resources).
+// If exiftool is installed, you can optionally enable the metadata report available on the View page.
+// You may want to enable it on the usergroup level by overriding this config option in System Setup.
 $metadata_report = false;
 
 // Option to turn on metadata download in view.php.
@@ -966,8 +966,9 @@ $file_checksums_offline = false;
 $file_integrity_checks = false;
 
 // $file_integrity_verify_window - set server time window that the file integrity check script can run in.
-// This can be resource intensive when checking checksums for a large number of resources.
-// Note that to fully verify file integrity requires setting $file_checksums=true AND $file_checksums_50k=false)
+// Note - This enables checking for file presence included within cron_copy_hitcount.php
+//        For more thorough checking based on file checksums consider running pages/tools/validate_resource_files.php
+//        - This can be resource intensive when checking checksums for a large number of resources
 //
 // Examples: -
 // $file_integrity_verify_window = [22,6]; // between 10PM and 6AM (first hour is later than second so time must be after first OR before second)
@@ -1580,6 +1581,7 @@ $ffmpeg_audio_extensions = array(
     'rm',
     'gsm',
     'weba',
+    'opus',
 );
 
 // The audio settings for mp3 previews

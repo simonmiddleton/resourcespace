@@ -290,7 +290,8 @@ function redirect(string $url)
         # redirect to an absolute URL
         header("Location: " . $baseurl . str_replace($baseurl_short, "/", $url));
     } else {
-        if (url_starts_with($baseurl, $url)) {
+        $extra_slash = substr($baseurl, -1, 1) === '/' || $baseurl === $url ? '' : '/';
+        if (url_starts_with($baseurl . $extra_slash, $url)) {
             // Base url has already been added
             header("Location: " . $url);
             exit();
@@ -704,7 +705,7 @@ function save_site_text($page, $name, $language, $group)
     if (!is_int_loose($group)) {
         $group = null;
     }
-    $text = getval("text", "");
+    $text = strip_unicode_points(getval("text", ""));
     if ($newcustom) {
         $params = ["s",$page,"s",$name];
         $test = ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text WHERE page=? AND name=?", $params);
@@ -1188,9 +1189,6 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
 {
     # Include footer
     global $header_colour_style_override, $email_from;
-    include_once __DIR__ . '/../lib/PHPMailer/PHPMailer.php';
-    include_once __DIR__ . '/../lib/PHPMailer/Exception.php';
-    include_once __DIR__ . '/../lib/PHPMailer/SMTP.php';
 
     if (check_email_invalid($email)) {
         return false;
@@ -1423,7 +1421,8 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
         $mail->IsHTML(true);
 
         // Standardise line breaks
-        $body = str_replace(["\r\n","\r","\n","<br/>","<br>"], "<br />", $body);
+        $body = str_replace(["\r\n","\r","\n"], "", $body); // HTML supplied - not considering these.
+        $body = str_replace(["<br/>","<br>"], "<br />", $body);
 
         // Remove any sequences of three or more line breaks with doubles
         while (strpos($body, "<br /><br /><br />") !== false) {
@@ -1441,22 +1440,6 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
 
     if (isset($embed_thumbnail) && isset($templatevars['thumbnail'])) {
         $mail->AddEmbeddedImage($templatevars['thumbnail'], $thumbcid, $thumbcid, 'base64', 'image/jpeg');
-    }
-
-    if (isset($images)) {
-        foreach ($images as $image) {
-            /** {@see include/mime_types.php} */
-            $found_types = get_mime_types_by_extension(parse_filename_extension($image));
-            $mime_type = $found_types === [] ? '' : reset($found_types);
-
-            $mail->AddEmbeddedImage($image, basename($image), basename($image), 'base64', $mime_type);
-        }
-    }
-
-    if (isset($attachments)) {
-        foreach ($attachments as $attachment) {
-            $mail->AddAttachment($attachment, basename($attachment));
-        }
     }
 
     if (count($files) > 0) {
@@ -2499,16 +2482,25 @@ function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
         # ImageMagick convert path not configured.
         return false;
     }
-    $path = get_executable_path($imagemagick_path, $exeNames, $checked_path);
-    if ($path === false) {
-        # Support 'magick' also, ie. ImageMagick 7+
-        return get_executable_path(
+
+    // Check if magick exists first for IM 7+
+    $im7_check = get_executable_path(
             $imagemagick_path,
             array("unix" => "magick", "win" => "magick.exe"),
-            $checked_path
-        ) . ' ' . $utilityname;
+            $checked_path);
+
+    if ($im7_check === false) {
+        //IM 7+ is not present, fall back to looking for IM 6 utilities
+        return get_executable_path($imagemagick_path, $exeNames, $checked_path);
+    } else {
+        // convert uses just magick
+        // composite, identify and mogrify use the syntax magick <command_type>
+        if (in_array($utilityname, ['composite','identify','mogrify'])) {
+            $im7_check .= ' ' . $utilityname;
+        }
+
+        return $im7_check;
     }
-    return $path;
 }
 
 /**
@@ -3845,11 +3837,13 @@ function html_find_and_replace(string $findstring, string $replacestring, string
 * Utility function to remove unwanted HTML tags and attributes.
 * Note: if $html is a full page, developers should allow html and body tags.
 *
-* @param string $html       HTML string
-* @param array  $tags       Extra tags to be allowed
-* @param array  $attributes Extra attributes to be allowed
+* @param   string  $html         HTML string
+* @param   array   $tags         Extra tags to be allowed
+* @param   array   $attributes   Extra attributes to be allowed
+*
+* @return  mixed   Normally a string however if anything but a string is supplied, return type will be as supplied.
 */
-function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array()): string
+function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
 {
     global $permitted_html_tags, $permitted_html_attributes;
 
@@ -5091,12 +5085,7 @@ function get_system_status(bool $basic = false)
     // Return bandwidth usage last 30 days
     $return['results']['download_bandwidth_last_30_days_gb'] = [
         'status' => 'OK',
-        'total' => round(ps_value("select sum(`count`) value from daily_stat where
-            activity_type='Downloaded KB'
-        and (`year`=year(now()) or (month(now())=1 and `year`=year(now())-1))
-        and (`month`=month(now()) or `month`=month(now())-1 or (month(now())=1 and `month`=12))
-        and datediff(now(), concat(`year`,'-',lpad(`month`,2,'0'),'-',lpad(`day`,2,'0')))<=30
-            ", [], 0) / (1024 * 1024), 3) // Note - limit to this month and last month before the concat to get the exact period; ensures not performing the concat on a large set of data.
+        'total' => round(daily_stat_past_month_by_activity('Downloaded KB') / (1024 * 1024), 3)
     ];
 
     // Return file extensions with counts
@@ -6000,11 +5989,24 @@ function log_bandwidth(int $bandwidth_usage): void
 }
 
 /**
- * Access control: check user is allowed to view confidential resources (associated with Super Admin capability).
+ * Strip Unicode points from a text value.
+ * 
+ * @param string $value Text value subject
+ * @param list<string> $blocklist List of unicode points (e.g. \x{FEFF}), ranges allowed too (e.g. \x{200B}-\x{200D}) 
  */
-function acl_can_view_confidential_resources(): bool
+function strip_unicode_points(string $value, array $blocklist = []): string
 {
-    return checkperm('a') && checkperm('v');
+    if ($blocklist === []) {
+        $blocklist = [
+            // U+200B - zero-width space
+            // U+200C - zero-width non-joiner
+            // U+200D - zero-width joiner
+            '\x{200B}-\x{200D}',
+            '\x{FEFF}', # Byte Order Mark (BOM) or the zero-width no-break space (deprecated use)
+        ];
+    }
+
+    return preg_replace('/[' . implode('', $blocklist) . ']/u', '', $value);
 }
 
 function parse_int_ranges(string $input, int $max_val = 0): array

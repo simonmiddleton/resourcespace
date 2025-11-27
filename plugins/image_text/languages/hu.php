@@ -16,12 +16,12 @@ $lang["image_text_position"] = 'A szöveg elhelyezkedése a banneren.';
 $lang["image_text_banner_position"] = 'A banner helyzete a képpel szemben.';
 $lang["image_text_font"] = 'Használni kívánt betűtípus, amelynek támogatnia kell az telepített imagemagick verziót';
 $lang["image_text_noim"] = 'Ez a bővítmény az Imagemagick telepítését igényli.';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'nyugat',
    'center' => 'középen',
    'east' => 'kelet',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'felső',
    'bottom' => 'alsó',
 );

@@ -5,6 +5,7 @@
 # Passing -u/--update-all will run the extraction even if there is existing data, and overwrite the old value
 
 include_once __DIR__ . "/../../include/boot.php";
+include_once __DIR__ . "/../../include/image_processing.php";
 command_line_only();
 
 set_time_limit(0);

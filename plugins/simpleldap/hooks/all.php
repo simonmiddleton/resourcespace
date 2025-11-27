@@ -181,7 +181,8 @@ function HookSimpleldapAllExternalauth($uname, $pword){
                 if (!$ref) { echo "returning false!"; exit; return false;} // this shouldn't ever happen
                 if ($ref === -2) {
                     debug("LDAP - Error - User could not be created, User limit exceeded");
-                    return false;
+                    $authreturn["error"]=$lang['simpleldap_userlimit_error'];
+                    return $authreturn;
                 }
                 
                 if($groupmatch=="" && isset($simpleldap['notification_email']) && $simpleldap['notification_email']!="")

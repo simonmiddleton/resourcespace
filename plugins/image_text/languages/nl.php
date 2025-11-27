@@ -18,12 +18,12 @@ $lang["image_text_font"]='Lettertype om te gebruiken, moet worden ondersteund do
 $lang["image_text_noim"]='Deze plugin vereist dat Imagemagick geïnstalleerd is.';
 $lang["plugin-image_text-title"]='Afbeeldingstekst';
 $lang["plugin-image_text-desc"]='Maakt het mogelijk om veldgegevens toe te voegen aan afbeelding bij download';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'west',
    'center' => 'centrum',
    'east' => 'oost',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'boven',
    'bottom' => 'onder',
 );

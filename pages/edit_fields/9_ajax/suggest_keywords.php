@@ -6,6 +6,11 @@ $upload_collection = getval('upload_share_active', '');
 if ($k == "" || (!check_access_key_collection($upload_collection, $k))) {
     include dirname(__DIR__, 3) . '/include/authenticate.php';
 }
+
+if (is_anonymous_user() && !upload_share_active()) {
+    exit($lang['error-permissiondenied']);
+}
+
 $field    = getval('field', '');
 $keyword  = getval('term', '');
 $readonly = ('' != getval('readonly', '') ? true : false);

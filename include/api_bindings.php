@@ -305,6 +305,10 @@ function api_get_resource_path(
         $GLOBALS['get_resource_path_extra_download_query_string_params'] = ['noattach' => ''];
     }
 
+    if (!is_bool($generate)) {
+    $generate = $generate !== 'false' && $generate !== '0';
+    }
+
     # Set defaults
     if ($alternative == "") {
         $alternative = -1;
@@ -764,11 +768,6 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
 
 function api_add_resource_nodes($resource, $nodestring)
 {
-    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
-    if (!empty($assert_post)) {
-        return $assert_post;
-    }
-
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post)) {
         return $assert_post;

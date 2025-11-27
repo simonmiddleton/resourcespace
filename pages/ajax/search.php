@@ -51,6 +51,7 @@ if (filter_var(getval('generate_tags', false), FILTER_VALIDATE_BOOLEAN)) {
         $return = array_merge($return, split_keywords($search_string));
     }
 
+    header('Content-Type: application/json');
     echo json_encode($return);
     exit();
 }

@@ -100,6 +100,7 @@ $lang['simplesaml_metadata_updates'] = "SimpleSAML metadata updates";
 $lang['simplesaml_metadata_warning'] = "Metadata has not been updated since %date%";
 $lang['simplesaml_metadata_invalid'] = "IdP metadata invalid or unavailable";
 $lang['simplesaml_admin_password_reset'] = "Reset SimpleSAML test site admin password (optional)";
+$lang['simplesaml_userlimit_error'] = "User could not be created as user limit has been reached. Please contact your administrator.";
 $lang['simplesaml_error_not_configured'] = "SimpleSAML plugin is not configured";
 $lang['simplesaml_error_no_idp_metadata'] = "SimpleSAML plugin is not fully configured (missing IdP metadata)";
 $lang['simplesaml_error_no_authsource'] = "SimpleSAML plugin is not fully configured (missing authsource)";

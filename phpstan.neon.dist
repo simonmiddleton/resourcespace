@@ -21,10 +21,8 @@ parameters:
         - vendor/autoload.php
 
     scanDirectories:
-      - lib/html2pdf/
       - lib/Diff/
-      - lib/PHPMailer/
-      - lib/tus/
+      - vendor/axiell/imu-api-php/src/
 
     excludePaths:
         analyse:

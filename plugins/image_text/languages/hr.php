@@ -18,12 +18,12 @@ $lang["image_text_font"]='Fonta za upotrebu, moraju biti podržane od strane ins
 $lang["image_text_noim"]='Ovaj dodatak zahtijeva instaliran Imagemagick.';
 $lang["plugin-image_text-title"]='Tekst slike';
 $lang["plugin-image_text-desc"]='Omogućuje dodavanje podataka polja slici prilikom preuzimanja';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'zapad',
    'center' => 'sredina',
    'east' => 'istok',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'vrh',
    'bottom' => 'dno',
 );

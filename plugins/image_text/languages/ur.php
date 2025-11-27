@@ -16,12 +16,12 @@ $lang["image_text_position"]='بینر میں متن کی پوزیشن۔';
 $lang["image_text_banner_position"]='تصویر کے مقابلے میں بینر کی پوزیشن۔';
 $lang["image_text_font"]='استعمال کرنے کے لیے فونٹ، جو نصب شدہ امیج میجک ورژن کے ذریعے سپورٹ کیا جانا چاہیے۔';
 $lang["image_text_noim"]='اس پلگ ان کے لیے ضروری ہے کہ Imagemagick انسٹال ہو۔';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'مغرب',
    'center' => 'وسط',
    'east' => 'شرق',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'اوپر',
    'bottom' => 'نیچے',
 );

@@ -16,12 +16,12 @@ $lang["image_text_position"]='Nafasi ya maandishi kwenye bango.';
 $lang["image_text_banner_position"]='Nafasi ya bango kulingana na picha.';
 $lang["image_text_font"]='Aina ya herufi ya kutumia, lazima iungwe mkono na toleo la imagemagick lililowekwa';
 $lang["image_text_noim"]='Programu-jalizi hii inahitaji Imagemagick iwe imewekwa.';
-$lang["image_text_position_list"] = (object) array(
+$lang["image_text_position_list"] = array(
    'west' => 'magharibi',
    'center' => 'katikati',
    'east' => 'mashariki',
 );
-$lang["image_text_banner_position_list"] = (object) array(
+$lang["image_text_banner_position_list"] = array(
    'top' => 'juu',
    'bottom' => 'chini',
 );

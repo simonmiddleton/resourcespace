@@ -61,7 +61,7 @@ if ($collection["type"] == COLLECTION_TYPE_FEATURED) {
     $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
 }
 
-if ($bypass_share_screen && $collection["type"] != COLLECTION_TYPE_SELECTION && $anonymous_login !== $username) {
+if ($bypass_share_screen && $collection["type"] != COLLECTION_TYPE_SELECTION && !is_anonymous_user()) {
     redirect('pages/collection_email.php?ref=' . $ref) ;
 }
 
@@ -269,7 +269,7 @@ if (isset($show_error)) { ?>
                 ];
 
                 if (!$editing || $editexternalurl) {
-                    if ($email_sharing && !$anonymous_login) {
+                    if ($email_sharing && !is_anonymous_user()) {
                         ?>
                         <li>
                             <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;

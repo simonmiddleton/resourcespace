@@ -129,6 +129,17 @@ foreach($keywords as $keyword)
             {
             $node_found = get_node_by_name($nodes, $keyword_expanded);
 
+            if (0 == count($node_found) && count($nodes) == 10000) {
+                // get_nodes only returns 10k nodes at most check if this node is outside of these
+                $node_found = get_nodes(
+                    $resource_type_field["ref"],
+                    null,
+                    $resource_type_field["type"]==FIELD_TYPE_CATEGORY_TREE,
+                    null,
+                    null,
+                    $keyword_expanded
+                )[0] ?? [];
+            }
             if(0 < count($node_found))
                 {
                 $subnodestring .= NODE_TOKEN_PREFIX . $node_found['ref'];

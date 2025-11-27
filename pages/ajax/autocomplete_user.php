@@ -8,7 +8,7 @@ $find = getval("term", "");
 $getrefs = (getval("getrefs", "") != "") ? true : false;
 $getuserref = (getval("getuserref", ""));
 
-if ($anonymous_login == $username) {
+if (is_anonymous_user()) {
     exit($lang['error-permissiondenied']);
 }
 
@@ -25,6 +25,7 @@ $ignoregroups = (getval("nogroups", "") != "") ? true : false;
 $ignoresmartgroups = (getval("nosmartgroups", "") != "") ? true : false;
 
 $first = true;
+header('Content-Type: application/json');
 ?> [ <?php
 
 if (!$ignoregroups) {

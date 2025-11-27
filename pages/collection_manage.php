@@ -667,7 +667,7 @@ include "../include/header.php";
                                     </a>
                                 </div>
                             </td>
-                            <td class="fullname"><?php echo strip_tags_and_attributes($colusername); ?></td>
+                            <td class="fullname"><?php echo strip_tags_and_attributes($colusername ?? ""); ?></td>
                             <td class="ref"><?php echo strip_tags_and_attributes($collections[$n]["ref"]); ?></td>
                             <td class="created"><?php echo nicedate($collections[$n]["created"], true); ?></td>
                             <td class="count"><?php echo $collections[$n]["count"]; ?></td>

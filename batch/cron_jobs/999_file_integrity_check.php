@@ -1,4 +1,5 @@
 <?php
+# Checking is for file presence only. For validation of file checksums, use pages/tools/validate_resource_files.php
 
 include_once __DIR__ . "/../../include/boot.php";
 

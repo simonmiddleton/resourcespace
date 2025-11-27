@@ -55,6 +55,18 @@ $print = (bool) getval("print", false);
 $tile = getval("tile", "");
 $user_tile = getval("user_tile", 0, true);
 
+$available_tiles = get_user_available_tiles($userref);
+if (
+    !checkperm('t') 
+    && (
+        (count($available_tiles) > 0 
+        && !in_array($tile, array_column($available_tiles, 'ref'))) 
+        || count($available_tiles) == 0
+    )
+) {
+    exit($lang['error-permissiondenied']);
+}
+
 if ($tile != "") {
     $n = $tile;
 }

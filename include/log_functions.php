@@ -478,3 +478,20 @@ function generate_trace_id(array $components): string
 {
     return md5(implode('--', $components));
 }
+
+/**
+ * Return sum of activity from the daily_stat table for the past month for a given activity_type.
+ *
+ * @param   string   activity_type value recorded in the daily_stat table.
+ * 
+ * @return  int      Sum of activity for the requested type.
+ */
+function daily_stat_past_month_by_activity(string $activity_type): int
+{
+    return (int) ps_value("SELECT SUM(`count`) 'value' FROM daily_stat WHERE activity_type = ?
+        AND (`year` = YEAR(NOW()) OR (MONTH(NOW()) = 1 AND `year` = YEAR(NOW()) - 1))
+        AND (`month` = MONTH(NOW()) OR `month` = MONTH(NOW()) - 1 OR (MONTH(NOW()) = 1 AND `month` = 12))
+        AND DATEDIFF(NOW(), CONCAT(`year`, '-', LPAD(`month`, 2, '0'), '-', LPAD(`day`, 2, '0'))) <= 30;"
+        , array('s', $activity_type), 0);
+        // Note - limit to this month and last month before the concat to get the exact period; ensures not performing the concat on a large set of data.
+}

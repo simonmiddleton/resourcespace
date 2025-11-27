@@ -247,7 +247,7 @@ if (isset($_SERVER['HTTP_USER_AGENT']))
 # Show the header/sidebar
 include "../include/header.php";
 
-if ($metadata_report && isset($exiftool_path) && acl_can_view_confidential_resources())
+if ($metadata_report && isset($exiftool_path))
     {
     ?>
     <script src="<?php echo $baseurl ?>/js/metadata_report.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
@@ -1567,7 +1567,7 @@ if ($view_resource_collections && !checkperm('b')){ ?>
     </script>
     <?php }
 
-if ($metadata_report && isset($exiftool_path) && acl_can_view_confidential_resources())
+if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_access))
     {
     ?>
     <div class="RecordBox">

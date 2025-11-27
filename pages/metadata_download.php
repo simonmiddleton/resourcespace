@@ -10,7 +10,6 @@ if ('' == $k || !check_access_key($ref, $k)) {
 }
 
 include_once '../include/pdf_functions.php';
-require_once '../lib/html2pdf/vendor/autoload.php';
 
 use Spipu\Html2Pdf\Html2Pdf;
 use Spipu\Html2Pdf\Exception\Html2PdfException;

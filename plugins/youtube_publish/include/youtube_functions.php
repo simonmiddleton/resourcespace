@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../lib/Google/vendor/autoload.php';
+use Google\Service\YouTube;
+use Google\Service\YouTube\Video;
+use Google\Service\YouTube\VideoSnippet;
+use Google\Service\YouTube\VideoStatus;
 
 function youtube_publish_initialize()
 {
@@ -32,7 +35,7 @@ function youtube_publish_initialize()
         } else {
             global $youtube_publish_client_id, $youtube_publish_client_secret;
 
-            $authresponse = $client->authenticate(getval("code", ""));
+            $authresponse = $client->fetchAccessTokenWithAuthCode(getval("code", ""));
 
             $access_token = $authresponse['access_token'];
             if (isset($authresponse['refresh_token'])) {
@@ -79,7 +82,7 @@ function youtube_publish_initialize()
 
     // Define an object that will be used to make all API requests.
     try {
-        $youtube = new Google_Service_YouTube($client);
+        $youtube = new YouTube($client);
         # Get user account details and store these so we can tell which account they will be uploading to
 
         // Call the API's channels.list method with mine parameter to fetch authorized user's channel.
@@ -153,7 +156,7 @@ function upload_video()
         // Create an asset resource and set its snippet metadata and type.
         // This example sets the video's title, description, keyword tags, and
         // video category.
-        $snippet = new Google_Service_YouTube_VideoSnippet();
+        $snippet = new VideoSnippet();
         $snippet->setTitle($video_title);
         $snippet->setDescription($video_description);
         $snippet->setTags(array($video_keywords));
@@ -164,11 +167,11 @@ function upload_video()
 
         // Set the video's status to "public". Valid statuses are "public",
         // "private" and "unlisted".
-        $status = new Google_Service_YouTube_VideoStatus();
+        $status = new VideoStatus();
         $status->privacyStatus = $video_status;
 
         // Associate the snippet and status objects with a new video resource.
-        $video = new Google_Service_YouTube_Video();
+        $video = new Video();
         $video->setSnippet($snippet);
         $video->setStatus($status);
 

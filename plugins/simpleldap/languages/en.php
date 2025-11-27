@@ -30,6 +30,7 @@ $lang['simpleldap_multiple_email_match_subject'] ="ResourceSpace - conflicting e
 $lang['simpleldap_multiple_email_match_text'] ="A new LDAP user has logged in but there is already more than one account with the same email address: ";
 $lang['simpleldap_notification_email']="Notification address e.g. if duplicate email addresses are registered. If blank none will be sent.";
 $lang['simpleldap_duplicate_email_error']="There is an existing account with the same email address. Please contact your administrator.";
+$lang['simpleldap_userlimit_error']="User could not be created as user limit has been reached. Please contact your administrator.";
 $lang['simpleldap_no_group_match_subject']="ResourceSpace - new user with no group mapping";
 $lang['simpleldap_no_group_match']="A new user has logged on but there is no ResourceSpace group mapped to any directory group to which they belong.";
 $lang['simpleldap_usermemberof'] = "The user is a member of the following directory groups: -";

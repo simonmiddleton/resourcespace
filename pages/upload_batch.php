@@ -108,7 +108,6 @@ if($tusupload && $tus_validated)
         exit($lang["overquota"]);
         }
 
-    require_once __DIR__ . '/../lib/tus/vendor/autoload.php';
     \TusPhp\Config::set(__DIR__ . '/../include/tusconfig.php');
     $server   = new \TusPhp\Tus\Server($cachestore);
     $server -> setUploadDir($targetDir);
@@ -1451,7 +1450,7 @@ function processFile(file, forcepost)
         console.debug("filename = " + filename);
         console.log("forceprocess: " +  forceprocess);
         // Check if original file, in which case stop here
-        if(filename.lastIndexOf(alternative_suffix) !== -1 && is_alternative_file_upload == false)
+        if(filename.endsWith(alternative_suffix) && is_alternative_file_upload == false)
             {
             console.debug(file.name + " - matches the alternative file format");
             if (!forceprocess)
@@ -1621,7 +1620,7 @@ function processFile(file, forcepost)
                         }
 
                     // Add resource ID - filename map only for original resources
-                    if(filename.lastIndexOf(alternative_suffix) === -1)
+                    if(!filename.endsWith(alternative_suffix))
                         {
                         console.debug("Added '"+ filename + "' (ID " + uploaded_resource_id + ") to resource_ids_for_alternatives array")
                         resource_ids_for_alternatives[uploaded_resource_id] = filename;

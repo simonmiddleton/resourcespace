@@ -97,9 +97,9 @@ function consentmanager_delete_consent(int $resource): bool
  * record if successful.
  *
  * @param string      $name              The name of the individual giving consent.
- * @param string|null $date_of_birth     The DOB of the individual, formatted as a string.
- * @param string      $address           The address of the individual.
- * @param string      $parent_guardian   The parent or guardian of the individual.
+ * @param string|null $date_of_birth     The DOB of the individual, formatted as a string. Optional.
+ * @param string|null $address           The address of the individual. Optional.
+ * @param string|null $parent_guardian   The parent or guardian of the individual. Optional.
  * @param string      $email             The email address of the individual.
  * @param string      $telephone         The telephone number of the individual.
  * @param string      $consent_usage     Description of the intended usage for which consent is given.
@@ -113,8 +113,8 @@ function consentmanager_delete_consent(int $resource): bool
  */
 function consentmanager_create_consent(string $name, 
                                        ?string $date_of_birth, 
-                                       string $address, 
-                                       string $parent_guardian, 
+                                       ?string $address, 
+                                       ?string $parent_guardian, 
                                        string $email, 
                                        string $telephone, 
                                        string $consent_usage, 
@@ -298,9 +298,9 @@ function consentmanager_get_consent(int $consent): array|bool
  *
  * @param int         $consent           The ID of the consent record to update.
  * @param string      $name              The name of the individual giving consent.
- * @param string|null $date_of_birth     The DOB of the individual, formatted as a string.
- * @param string      $address           The address of the individual.
- * @param string      $parent_guardian   The parent or guardian of the individual.
+ * @param string|null $date_of_birth     The DOB of the individual, formatted as a string. Optional.
+ * @param string|null $address           The address of the individual. Optional.
+ * @param string|null $parent_guardian   The parent or guardian of the individual. Optional.
  * @param string      $email             The email address of the individual.
  * @param string      $telephone         The telephone number of the individual.
  * @param string      $consent_usage     A description of the permitted usage types for the consent.
@@ -313,8 +313,8 @@ function consentmanager_get_consent(int $consent): array|bool
 function consentmanager_update_consent(int $consent, 
                                        string $name, 
                                        ?string $date_of_birth, 
-                                       string $address, 
-                                       string $parent_guardian, 
+                                       ?string $address, 
+                                       ?string $parent_guardian, 
                                        string $email, 
                                        string $telephone, 
                                        string $consent_usage, 

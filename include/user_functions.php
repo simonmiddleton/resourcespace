@@ -880,7 +880,7 @@ function email_user_welcome(string $email, string $username, int $usergroup): vo
 
     $templatevars['welcome']  = i18n_get_translated($welcome) . "\n\n";
     $templatevars['username'] = $username;
-    $templatevars['url'] = $baseurl;
+    $templatevars['url'] = $baseurl . "/login.php";
     $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" . $templatevars['url'];
     send_mail($email, $applicationname . ": " . $lang["youraccountdetails"], $message, "", "", "emaillogindetails", $templatevars);
     load_site_text_for_usergroup(null);
