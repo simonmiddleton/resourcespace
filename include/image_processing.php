@@ -3480,6 +3480,7 @@ function create_image_alternatives(int $ref, array $params, $force = false)
             $command .= ($extension == 'psd') ? '[0] ' .
                 (!in_array(strtolower($extension), $GLOBALS["preview_keep_alpha_extensions"]) ? $alphaoff : "")
                  : '';
+            $command = ($extension == 'pdf') ? rtrim($command) . '[0] ' : $command;
             $command .= $source_profile . ' ' . $alternate_config['params'] . " %%APATH%%";
         } else {
             // Use the old imagemagick command syntax (parameters then file)
