@@ -855,6 +855,11 @@ function ProcessFolder($folder)
                         $rref = $rd["ref"];
 
                         echo " - Resource $rref has changed, regenerating previews: $fullpath" . PHP_EOL;
+
+                        if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"])) {
+                            resource_log($rref, LOG_CODE_STATICSYNC_FILE_MODIFIED, '', '',  date("Y-m-d H:i:s", strtotime($done[$shortpath]["modified"])),  date("Y-m-d H:i:s", $filemod));
+                        }
+
                         extract_exif_comment($rref, $rd["file_extension"]);
 
                         # extract text from documents (e.g. PDF, DOC).

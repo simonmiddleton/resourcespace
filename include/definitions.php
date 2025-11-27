@@ -92,6 +92,7 @@ define('LOG_CODE_CREATED', 'c');
 define('LOG_CODE_COPIED', 'C');
 define('LOG_CODE_DOWNLOADED', 'd');
 define('LOG_CODE_EDITED', 'e');
+define('LOG_CODE_STATICSYNC_FILE_MODIFIED', 'sf');
 define('LOG_CODE_EMAILED', 'E');
 define('LOG_CODE_LOGGED_IN', 'l');
 define('LOG_CODE_MULTI_EDITED', 'm');
