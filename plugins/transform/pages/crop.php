@@ -375,7 +375,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             if(trim((string)$filename) == "")
                 {
                 // Compute a file name using file naming configuration
-                $filename = get_download_filename($ref, "", "", $new_ext);
+                $filename = get_download_filename($ref, "", 0, $new_ext);
                 }
             else
                 {
