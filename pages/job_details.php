@@ -84,7 +84,7 @@ if (!is_array($job_details) || count($job_details) == 0) {
     polling = true;
 
     const params = new URLSearchParams({
-      job: 156,
+      job: <?php echo $job_details["ref"]; ?>,
       type: "stream",
       offset: String(offset),
     });

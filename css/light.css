@@ -836,3 +836,8 @@ a.HomePanel:hover {
 .message-full-text a {
     color: #222222;
 }
+
+div.SaveError > input {
+    border-color: red;
+    background-color: #edceca;;
+}

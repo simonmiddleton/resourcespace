@@ -2,39 +2,18 @@
 
 include_once __DIR__ . '/../image_processing.php';
 
-# $job_data["process_type"] -> Either "resource" or "collection"
-# $job_data["refs"] -> Comma-separated list of references (can be either Resource or Collection refs)
-# $job_data["sizes"] -> List of image sizes to generate, by preview_size.id
-# $job_data["types"] -> List of resource types to process, by resource_type.ref
-# $job_data["use_existing"] -> Optional. Boolean, will default to false if not specified
-# $job_data["video_update"] -> Optional. Boolean, will default to false if not specified
-
-
-
-
-
-
-
-
-if (in_array("sizes", $argv)) {
-    $sizes  = explode(",", $argv[array_search("sizes", $argv) + 1]);
-} else {
-    $sizes = array();
-}
-
-if (in_array("types", $argv)) {
-    $resource_types = explode(",", $argv[array_search("types", $argv) + 1]);
-} else {
-    $resource_types = array();
-}
-
-$previewbased = in_array("-previewbased", $argv);
-$videoupdate = in_array("-videoupdate", $argv);
-$delete_existing = in_array("-delete", $argv) && !$previewbased && !$videoupdate && count($sizes) == 0;
+# $job_data['process_type'] -> Either "resource" or "collection"
+# $job_data['refs'] -> Comma-separated list of references (can be either Resource or Collection refs)
+# $job_data['sizes'] -> List of image sizes to generate, by preview_size.id
+# $job_data['types'] -> List of resource types to process, by resource_type.ref
+# $job_data['use_existing'] -> Optional. Boolean, will default to false if not specified
+# $job_data['video_update'] -> Optional. Boolean, will default to false if not specified
+# $job_data['delete_existing'] -> Optional. Boolean, will default to false if not specified
+#                                 Delete option cannot be used with sizes, types, use_existing or video_update options
 
 function update_preview($ref, $previewbased, $sizes, $delete_existing)
 {
-    $resourceinfo = ps_query("select file_path, file_extension from resource where ref = ?", array("i", (int)$ref));
+    $resourceinfo = ps_query("select file_path, file_extension from resource where ref = ?", array("i", (int) $ref));
     if (count($resourceinfo) > 0 && !hook("replaceupdatepreview", '', array($ref, $resourceinfo[0]))) {
         if (!empty($resourceinfo[0]['file_path'])) {
             $ingested = false;
@@ -63,33 +42,84 @@ function update_preview($ref, $previewbased, $sizes, $delete_existing)
     return false;
 }
 
-if (!isset($collectionid)) {
-    $conditions = array();
-    $conditions_params = array("i", (int)$ref);
-    if (isset($max)) {
-        $conditions[] = "ref <= ?";
-        $conditions_params = array_merge($conditions_params, array("i", $max));
-    }
-    if ($videoupdate) {
-        $conditions[] = "file_extension in (" . ps_param_insert(count($ffmpeg_supported_extensions)) . ")";
-        $conditions_params = array_merge($conditions_params, ps_param_fill($ffmpeg_supported_extensions, "s"));
-    }
-    if (isset($resource_deletion_state)) {
-        $conditions[] = "archive <> ?";
-        $conditions_params = array_merge($conditions_params, array("i", $resource_deletion_state));
-    }
-    if (!empty($resource_types)) {
-        $conditions[] = "resource_type in (" . ps_param_insert(count($resource_types)) . ")";
-        $conditions_params = array_merge($conditions_params, ps_param_fill($resource_types, "i"));
-    }
-    $resources = ps_array("SELECT ref value FROM resource WHERE ref >= ?" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions) : "") . " ORDER BY ref asc", $conditions_params, 0);
+logScript("[recreate_previews] Starting recreate_previews job", $log_file);
+
+// Process $job_data
+if (is_array($job_data['sizes']) && !in_array('all', $job_data['sizes'])) {
+    $sizes = $job_data['sizes'];
 } else {
-    $resources = get_collection_resources($collectionid);
+    $sizes = array();
 }
 
-if (is_array($resources) && count($resources) > 0) {
+if (is_array($job_data['types']) && !in_array('all', $job_data['types'])) {
+    $types = $job_data['types'];
+} else {
+    $types = array();
+}
+
+$previewbased = (bool) $job_data['use_existing'];
+$videoupdate = (bool) $job_data['video_update'];
+$delete_existing = (bool) $job_data['delete_existing'];
+
+if ($delete_existing && (count($sizes) > 0 || count($types) > 0 || $previewbased || $videoupdate)) {
+    logScript("[recreate_previews] Error: invalid parameters provided for job, cannot use delete_existing with other options", $log_file);
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
+    return;
+}
+
+// Build the list of resources to process
+$joins = "";
+$conditions = array();
+$conditions_params = array();
+
+if ($job_data['process_type'] == "collections") {
+    $range_condition = build_range_where_condition($job_data['refs'], "cr.collection");
+    $joins .= "INNER JOIN collection_resource cr ON r.ref = cr.resource";
+} else {
+    $range_condition = build_range_where_condition($job_data['refs'], "r.ref");
+}
+
+if($range_condition["ok"]) {
+    $conditions[] = $range_condition['where'];
+    $conditions_params = array_merge($conditions_params, $range_condition['params']);
+} else {
+    logScript("[recreate_previews] Error: unable to process where condition", $log_file);
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
+    return;
+}
+
+if ($videoupdate) {
+    $conditions[] = "file_extension in (" . ps_param_insert(count($ffmpeg_supported_extensions)) . ")";
+    $conditions_params = array_merge($conditions_params, ps_param_fill($ffmpeg_supported_extensions, "s"));
+}
+if (isset($resource_deletion_state)) {
+    $conditions[] = "archive <> ?";
+    $conditions_params = array_merge($conditions_params, array("i", $resource_deletion_state));
+}
+if (!empty($resource_types)) {
+    $conditions[] = "resource_type in (" . ps_param_insert(count($resource_types)) . ")";
+    $conditions_params = array_merge($conditions_params, ps_param_fill($resource_types, "i"));
+}
+
+$resources = ps_array("SELECT DISTINCT ref value
+                        FROM (
+                            SELECT r.ref 
+                            FROM resource r
+                            $joins
+                            WHERE r.ref > 0" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions) : "") . "
+                            ) resources
+                        ORDER BY ref;", $conditions_params, 0);
+
+$total_resources = count($resources);
+
+// Attempt to process the resources
+if (is_array($resources) && $total_resources > 0) {
+    
     hook('beforescriptaction');
-    foreach ($resources as $resource) {
+    $resource_count = 1;
+
+    foreach ($resources as $resource) {        
+
         if ($videoupdate) {
             $checkflvpreview = get_resource_path($resource, true, 'pre', false, 'flv', true, 1, false, '');
             $correctvideo_preview = get_resource_path($resource, true, 'pre', false, $ffmpeg_preview_extension, true, 1, false);
@@ -100,16 +130,24 @@ if (is_array($resources) && count($resources) > 0) {
             }
         }
 
-        echo "Recreating previews for resource #" . $resource . "...";
+        logScript("[recreate_previews] Recreating previews for resource #" . $resource . "...", $log_file);
         ob_flush();
+
         if (update_preview($resource, $previewbased, $sizes, $delete_existing)) {
-            echo "....completed\n";
+            logScript("[recreate_previews] ....completed", $log_file);
         } else {
-            echo "FAILED - skipping\n";
+            logScript("[recreate_previews] FAILED - skipping", $log_file);
         }
+
+        $progress = round(($resource_count / $total_resources) * 100, 0);
+        logScript("[recreate_previews] [PROGRESS] $progress%", $log_file);
+        $resource_count++;
         ob_flush();
     }
 } else {
-    echo "No resources found\n";
+    logScript("[recreate_previews] No resources found", $log_file);
 }
-echo "\nFinished\n";
+
+logScript("[recreate_previews] Ending recreate_previews job", $log_file);
+
+job_queue_update($jobref, $job_data, STATUS_COMPLETE);

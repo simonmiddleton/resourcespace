@@ -6039,17 +6039,17 @@ function parse_int_ranges(string $input, int $max_val = 0): array
             $end   = (int) $m[2];
 
             if ($start < 1 || $end < 1) {
-                $errors[] = "numbers must be 1 or greater in range \"$part\".";
+                $errors[] = "Numbers must be 1 or greater in range \"$part\".";
                 continue;
             }
 
             if ($start > $end) {
-                $errors[] = "start of range \"$part\" cannot be greater than end.";
+                $errors[] = "Start of range \"$part\" cannot be greater than end.";
                 continue;
             }
 
             if ($max_val !== 0 && ($start > $max_val || $end > $max_val)) {
-                $errors[] = "range \"$part\" exceeds maximum number of $max_val.";
+                $errors[] = "Range \"$part\" exceeds maximum number of $max_val.";
                 continue;
             }
 
@@ -6062,7 +6062,7 @@ function parse_int_ranges(string $input, int $max_val = 0): array
             $num = (int) $part;
 
             if ($num < 1) {
-                $errors[] = "numbers must be 1 or greater (\"$part\").";
+                $errors[] = "Numbers must be 1 or greater (\"$part\").";
                 continue;
             }
 
@@ -6096,4 +6096,112 @@ function parse_int_ranges(string $input, int $max_val = 0): array
         'numbers'   => $numbers,
         'errors'    => [],
     ];
+}
+
+function build_range_where_condition(string $input, string $field, int $max_val = 0): array
+{
+    $conditions = [];
+    $params     = [];
+    $errors     = [];
+
+    $input = trim($input);
+
+    if ($input === '') {
+        return [
+            'ok'     => false,
+            'where'  => null,
+            'params' => [],
+            'errors' => ['Input is empty.'],
+        ];
+    }
+
+    // Split by commas
+    $parts = explode(',', $input);
+
+    foreach ($parts as $raw_part) {
+        $part = trim($raw_part);
+
+        if ($part === '') {
+            continue;
+        }
+
+        // Range: "start-end"
+        if (preg_match('/^(\d+)-(\d+)$/', $part, $m)) {
+            $start = (int) $m[1];
+            $end   = (int) $m[2];
+
+            if ($start < 1 || $end < 1) {
+                $errors[] = "Values must be 1 or greater in range \"$part\".";
+                continue;
+            }
+
+            if ($start > $end) {
+                $errors[] = "Start of range \"$part\" cannot be greater than end.";
+                continue;
+            }
+
+            if ($max_val !== 0 && ($start > $max_val || $end > $max_val)) {
+                $errors[] = "Range \"$part\" exceeds maximum value of $max_val.";
+                continue;
+            }
+
+            $conditions[] = "$field BETWEEN ? AND ?";
+            $params[]     = "i";
+            $params[]     = $start;
+            $params[]     = "i";
+            $params[]     = $end;
+            continue;
+        }
+
+        // Single number
+        if (ctype_digit($part)) {
+            $num = (int)$part;
+
+            if ($num < 1) {
+                $errors[] = "Values must be 1 or greater (\"$part\").";
+                continue;
+            }
+
+            if ($max_val !== 0 && $num > $max_val) {
+                $errors[] = "Value \"$num\" exceeds maximum of $max_val.";
+                continue;
+            }
+
+            $conditions[] = "$field = ?";
+            $params[]     = "i";
+            $params[]     = $num;
+            continue;
+        }
+
+        $errors[] = "\"$part\" is not a valid number or range (use formats like 3 or 5-9).";
+    }
+
+    if (!empty($errors)) {
+        return [
+            'ok'     => false,
+            'where'  => null,
+            'params' => [],
+            'errors' => $errors,
+        ];
+    }
+
+    if (empty($conditions)) {
+        return [
+            'ok'     => false,
+            'where'  => null,
+            'params' => [],
+            'errors' => ['No valid values found.'],
+        ];
+    }
+
+    // Join all conditions with OR, wrap in parentheses
+    $where = '(' . implode(' OR ', $conditions) . ')';
+
+    return [
+        'ok'     => true,
+        'where'  => $where,
+        'params' => $params,
+        'errors' => [],
+    ];
+
 }
