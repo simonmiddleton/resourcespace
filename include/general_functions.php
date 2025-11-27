@@ -2482,16 +2482,25 @@ function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
         # ImageMagick convert path not configured.
         return false;
     }
-    $path = get_executable_path($imagemagick_path, $exeNames, $checked_path);
-    if ($path === false) {
-        # Support 'magick' also, ie. ImageMagick 7+
-        return get_executable_path(
+
+    // Check if magick exists first for IM 7+
+    $im7_check = get_executable_path(
             $imagemagick_path,
             array("unix" => "magick", "win" => "magick.exe"),
-            $checked_path
-        ) . ' ' . $utilityname;
+            $checked_path);
+
+    if ($im7_check === false) {
+        //IM 7+ is not present, fall back to looking for IM 6 utilities
+        return get_executable_path($imagemagick_path, $exeNames, $checked_path);
+    } else {
+        // convert uses just magick
+        // composite, identify and mogrify use the syntax magick <command_type>
+        if (in_array($utilityname, ['composite','identify','mogrify'])) {
+            $im7_check .= ' ' . $utilityname;
+        }
+
+        return $im7_check;
     }
-    return $path;
 }
 
 /**
