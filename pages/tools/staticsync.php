@@ -8,12 +8,13 @@ $send_notification  = false;
 $suppress_output    = (isset($staticsync_suppress_output) && $staticsync_suppress_output) ? true : false;
 
 // CLI options check
-$cli_short_options = 'hc';
+$cli_short_options = 'hcd:';
 $cli_long_options  = array(
     'help',
     'send-notifications',
     'suppress-output',
-    'clearlock'
+    'clearlock',
+    'delete-resources:'
 );
 
 foreach (getopt($cli_short_options, $cli_long_options) as $option_name => $option_value) {
@@ -21,6 +22,10 @@ foreach (getopt($cli_short_options, $cli_long_options) as $option_name => $optio
         echo "To clear the lock after a failed run, ";
         echo "pass in '--clearlock'" . PHP_EOL;
         echo 'If you have the configs [$file_checksums=true; $file_upload_block_duplicates=true;] set and would like to have duplicate resource information sent as a notification please run php staticsync.php --send-notifications' . PHP_EOL;
+        echo "To force or disable resource deletion if the file has been removed from the syncdir, ";
+        echo "pass in -d1, -d0, --delete_resources=true, or --delete_resources=false\n";
+        echo "If not passed in the default value will be used: ";
+        echo ($staticsync_delete_resources ? "true": "false") . PHP_EOL;
         exit(1);
     }
     if (
@@ -35,6 +40,22 @@ foreach (getopt($cli_short_options, $cli_long_options) as $option_name => $optio
     }
     if ('suppress-output' == $option_name) {
         $suppress_output = true;
+    }
+    if (in_array($option_name, array('delete-resources', 'd'))) {
+        if (in_array($option_value, [1, 0, 'true', 'false'])) {
+            if ($option_value && !isset($staticsync_deleted_state)) {
+                echo "Unable to run with delete files as deleted state is not defined.\n";
+                echo "Set \$staticsync_deleted_state and run the script again\n";
+                exit(1);
+            }
+            $staticsync_delete_resources = (bool) $option_value;
+        } else {
+            echo "Delete resources must be set to 1, true, 0, or false.\n";
+            echo "pass in -d1, --delete_resources=true etc.\n";
+            echo "If not passed in the default value will be used: ";
+            echo ($staticsync_delete_resources ? "true": "false") . PHP_EOL;
+            exit(1);
+        }
     }
 }
 
@@ -1111,7 +1132,7 @@ foreach ($alternativefiles as $alternativefile) {
 
 echo " - Checking deleted files" . PHP_EOL;
 
-if (!$staticsync_ingest) {
+if (!$staticsync_ingest && isset($staticsync_deleted_state) && $staticsync_delete_resources) {
     # If not ingesting files, look for deleted files in the sync folder and archive the appropriate file from ResourceSpace.
     echo "Looking for deleted files..." . PHP_EOL;
     # For all resources with filepaths, check they still exist and archive if not.

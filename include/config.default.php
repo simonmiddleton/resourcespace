@@ -1814,6 +1814,8 @@ $autorotate_ingest = false;
 $staticsync_defaultstate = 0;
 // Archive state to set for resources where files have been deleted/moved from syncdir
 $staticsync_deleted_state = 2;
+// Enable or disable deleting resources where files have been deleted/moved from syncdir
+$staticsync_delete_resources = true;
 // Optional array of archive states for which missing files will be ignored and not marked as deleted, useful when using offline_archive plugin.
 $staticsync_ignore_deletion_states = array(2, 3);
 
