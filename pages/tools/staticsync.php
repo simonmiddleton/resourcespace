@@ -1132,7 +1132,7 @@ foreach ($alternativefiles as $alternativefile) {
 
 echo " - Checking deleted files" . PHP_EOL;
 
-if (!$staticsync_ingest && isset($staticsync_deleted_state) && $staticsync_delete_resources) {
+if (!$staticsync_ingest && $staticsync_delete_resources) {
     # If not ingesting files, look for deleted files in the sync folder and archive the appropriate file from ResourceSpace.
     echo "Looking for deleted files..." . PHP_EOL;
     # For all resources with filepaths, check they still exist and archive if not.
