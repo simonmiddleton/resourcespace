@@ -8,7 +8,7 @@ if ($k == "" || (!check_access_key_collection($upload_collection, $k))) {
 }
 
 if (is_anonymous_user() && !upload_share_active()) {
-    exit($lang['error-permissiondenied']);
+    exit(escape($lang['error-permissiondenied']));
 }
 
 $field    = getval('field', '');

@@ -64,7 +64,7 @@ if (
         || count($available_tiles) == 0
     )
 ) {
-    exit($lang['error-permissiondenied']);
+    exit(escape($lang['error-permissiondenied']));
 }
 
 if ($tile != "") {
