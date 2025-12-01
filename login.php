@@ -100,7 +100,11 @@ if ($lockouts > 0 || $ulockouts > 0) {
         debug("[login.php] Redirecting to $redirect_url");
 
         if (!$modal) {
-            redirect($redirect_url);
+            ?>
+            <script type="text/javascript">
+                window.location.href = '<?php echo $baseurl . "/" . escape($redirect_url); ?>';
+            </script>
+            <?php
         } else {
             ?>
             <script type="text/javascript">
