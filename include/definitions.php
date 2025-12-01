@@ -663,10 +663,10 @@ const RS_SYSTEM_UTILITIES = [
         'display_name' => 'Archiver',
         'show_on_check_page' => true,
         'version_check' => [
-            'argument' => '-h',
+            'argument' => '--help',
             'callback' => [
                 'fct_name' => 'check_utility_cli_version_found_by_name',
-                'args' => [['zip', '7z']],
+                'args' => [['zip', '7z', 'tar']],
             ],
         ],
     ],
