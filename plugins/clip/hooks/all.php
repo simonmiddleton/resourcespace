@@ -187,3 +187,8 @@ function HookClipAllCron()
     global $clip_cron_generate_batch;
     clip_generate_missing_vectors($clip_cron_generate_batch);
 }
+
+function HookClipAllBeforedeleteresourcefromdb($ref) 
+{
+    ps_query('DELETE FROM resource_clip_vector WHERE resource = ?', ['i', $ref]);
+}
