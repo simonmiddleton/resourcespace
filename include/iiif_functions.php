@@ -941,7 +941,8 @@ final class IIIFRequest
                     $imgpath = get_resource_path($this->request["id"], true, $this->request["getsize"], false, $this->request["getext"]);
                     if ($tile_request && !file_exists($imgpath)) {
                         // Support older tiles without scale factor in ID that may not have been recreated
-                        $imgpath = preg_replace("/(tile_\\d+_)/", "tile_", $imgpath);
+                        // Get resource path again as size is used in creating filename hash.
+                        $imgpath = get_resource_path($this->request["id"], true, preg_replace("/(tile_\\d+_)/", "tile_", $this->request["getsize"]), false, $this->request["getext"]);
                     }
                     $imgfound = false;
                     debug("IIIF: image path: " . $imgpath);
