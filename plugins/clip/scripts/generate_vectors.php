@@ -5,6 +5,11 @@ include_once dirname(__FILE__, 2) . '/include/clip_functions.php';
 
 command_line_only();
 
+if(!in_array("clip", $plugins))
+    {
+    exit("Clip plugin not enabled. Exiting.\n");
+    }
+
 // Disable output buffering
 while (ob_get_level() > 0) {
     ob_end_flush();
