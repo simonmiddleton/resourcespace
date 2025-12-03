@@ -73,18 +73,23 @@ function consentmanager_get_consents(int $resource): array|bool
  * This function deletes a consent record and its associations with resources
  * by removing entries from the `consent` and `resource_consent` tables.
  *
- * @param int $resource The ID of the consent record to be deleted.
+ * @param int $ref The ID of the consent record to be deleted.
  * @return bool         Returns true if the consent record was successfully deleted,
  *                      or false if the user does not have write access to the resource.
  */
-function consentmanager_delete_consent(int $resource): bool
+function consentmanager_delete_consent(int $ref): bool
 {
-    if (!consentmanager_check_write($resource)) {
-        return false;
+    $consent = consentmanager_get_consent($ref);
+    foreach ($consent['resources'] as $resource) {
+        if (get_resource_data($resource) !== false) {
+            if (!consentmanager_check_write($resource)) {
+                return false;
+            }
+        }
     }
 
-    ps_query("delete from consent where ref= ?", ['i', $resource]);
-    ps_query("delete from resource_consent where consent= ?", ['i', $resource]);
+    ps_query("delete from consent where ref= ?", ['i', $ref]);
+    ps_query("delete from resource_consent where consent= ?", ['i', $ref]);
 
     return true;
 }
