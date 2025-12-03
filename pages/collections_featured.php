@@ -102,7 +102,13 @@ include "../include/header.php";
             ) {
                 $fc_branch_path[$current_fc_node_key]['context_menu'][] = [
                     'href' => $GLOBALS['upload_then_edit']
-                        ? generateURL("{$baseurl_short}pages/upload_batch.php", ['collection_add' => $current_fc_node['ref']])
+                        ? generateURL(
+                            "{$baseurl_short}pages/upload_batch.php", 
+                            [
+                                'collection_add' => $current_fc_node['ref'], 
+                                'entercolname' => $current_fc_node['name']
+                            ]
+                        )
                         : generateURL(
                             "{$baseurl_short}pages/edit.php",
                             [
@@ -250,15 +256,22 @@ include "../include/header.php";
         if (allow_upload_to_collection($parent_collection_data)) {
             $upload_url = generateURL(
                 "{$baseurl_short}pages/edit.php",
-                array(
-                    "uploader" => $top_nav_upload_type,
-                    "ref" => -$userref,
-                    "collection_add" => $parent
-                )
+                [
+                    "uploader"       => $top_nav_upload_type,
+                    "ref"            => -$userref,
+                    "collection_add" => $parent,
+                    "entercolname"   => $parent_collection_data['name']
+                ]
             );
 
             if ($upload_then_edit) {
-                $upload_url = generateURL("{$baseurl_short}pages/upload_batch.php", array("collection_add" => $parent));
+                $upload_url = generateURL(
+                    "{$baseurl_short}pages/upload_batch.php", 
+                    [
+                        "collection_add" => $parent,
+                        "entercolname"   => $parent_collection_data['name']
+                    ]
+                );
             }
 
             $rendering_options["html_h2_span_class"] = "fa fa-fw fa-upload";

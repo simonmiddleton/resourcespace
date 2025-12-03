@@ -3301,6 +3301,8 @@ function render_upload_here_button(array $search_params, $return_params_only = f
             $upload_here_params['search'] = $search_params['search'];
         } else {
             $upload_here_params['collection_add'] = $collection;
+            $col_data = get_collection($collection);
+            $upload_here_params['entercolname'] = $col_data['name'];
         }
     }
 
@@ -4903,7 +4905,13 @@ function render_featured_collections(array $ctx, array $items)
         );
         $tool_upload_to_collection = [
             'href' => $GLOBALS['upload_then_edit']
-                ? generateURL("{$baseurl_short}pages/upload_batch.php", ['collection_add' => $fc['ref']])
+                ? generateURL(
+                    "{$baseurl_short}pages/upload_batch.php", 
+                    [
+                        'collection_add' => $fc['ref'], 
+                        'entercolname' => $fc['name']
+                    ]
+                )
                 : generateURL(
                     "{$baseurl_short}pages/edit.php",
                     [
