@@ -102,7 +102,7 @@ if ($lockouts > 0 || $ulockouts > 0) {
         if (!$modal) {
             ?>
             <script type="text/javascript">
-                window.location.href = '<?php echo $baseurl . "/" . escape($redirect_url); ?>';
+                window.location.href = '<?php echo escape($redirect_url); ?>';
             </script>
             <?php
         } else {
