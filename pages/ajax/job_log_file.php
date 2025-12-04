@@ -3,51 +3,61 @@
 include '../../include/boot.php';
 include '../../include/authenticate.php';
 
-$job        = getval("job", 0, true);
+$job        = getval("job", 0, false, "is_int_loose");
 $type       = getval("type", "stream");
-//$log_lines  = getval("lines", 50, true);
 
-$log_path = get_job_queue_log_path_by_ref($job);
+$log_path    = get_job_queue_log_path_by_ref($job);
+$job_details = job_queue_get_job($job);
 
-// TODO PERMISSIONS CHECKS!
+if (!checkperm("a") && !($type === "progress" && $job_details['user'] == $userref)) {
+    header('HTTP/1.1 401 Unauthorized');
+    $return['error'] = array(
+        'status' => 401,
+        'title'  => 'Unauthorized',
+        'detail' => $lang['error-permissiondenied']);
+
+    echo json_encode($return);
+    exit();
+}
 
 if (!is_file($log_path) || !is_readable($log_path)) {
-    http_response_code(400);
-    header('Content-Type: text/plain');
-    echo "Invalid log file.";
-    exit;
+    header('HTTP/1.1 400 Bad Request');
+    $return['error'] = array(
+        'status' => 400,
+        'title'  => 'Bad Request',
+        'detail' => 'Invalid log file.');
+
+    echo json_encode($return);
+    exit();
 }
 
 if ($type == "progress") {
     $progress = get_job_progress_from_log_file($log_path, "/\[PROGRESS\]/i");
+    $progress['percentage'] = null;
+    $progress['time'] = null;
 
-    if ($progress["found"] !== null) {
-        $output = $progress["found"];
-    } elseif ($progress["last_line"] !== null) {
-        $output = $progress["last_line"];
-    } else {
-        $output = "";
+    if (preg_match('/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/', $progress['found'] ?? $progress['last_line'] ?? null, $matches)) {
+        $progress['time'] = $matches[1];
     }
 
-    header('Content-Type: text/plain');
-    echo $output;
+    if ($progress['found'] !== null && preg_match('/(\d+)%/', $progress['found'], $matches)) {
+        $progress['percentage'] = (int) $matches[1];
+    }
+    
+    header('Content-Type: application/json');
+    echo json_encode($progress);
     exit;
 
 }
 
-$job_details = job_queue_get_job($job);
-
 $job_status = isset($lang["job_status_" . $job_details['status']]) ? $lang["job_status_" . $job_details['status']] : $job_details['status'];
 $job_done = ($job_details['status'] !== 3);
 
-
-
-// -------- config -------------------------------------------------------------
 $logPath    = $log_path;
 $offset     = isset($_GET['offset']) ? max(0, (int)$_GET['offset']) : 0;
 $backlog    = isset($_GET['lines'])  ? max(0, (int)$_GET['lines'])  : 0;
 
-// -------- helpers ------------------------------------------------------------
+
 function tail_last_lines(string $path, int $lines = 50, int $chunk = 4096): array 
 {
     if ($lines <= 0) return [];
@@ -70,7 +80,28 @@ function tail_last_lines(string $path, int $lines = 50, int $chunk = 4096): arra
     fclose($f);
 
     $all = explode("\n", rtrim($buffer, "\n"));
-    return array_slice($all, -$lines);
+    $sliced_lines = array_slice($all, -$lines);
+
+    $processed_lines = [];
+
+    foreach ($sliced_lines as $line) {
+        $processed_lines[] = ["text" => $line, "type" => process_line($line)];
+    }
+
+    return $processed_lines;
+
+}
+
+function process_line(string $line): string
+{
+    $type = "";
+
+    // Process line for tags
+    if (preg_match('/\[([A-Z_]+)\]/', $line, $matches)) {
+        $type = strtolower($matches[1]);
+    }
+
+    return $type;
 }
 
 
@@ -121,7 +152,7 @@ if ($offset === 0 && $backlog > 0) {
             // send it anyway; it will get completed next poll.
             foreach ($parts as $line) {
                 if ($line === '') continue;
-                $lines[] = $line;
+                $lines[] = ["text" => $line, "type" => process_line($line)];
             }
         }
     }

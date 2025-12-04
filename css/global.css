@@ -2918,3 +2918,21 @@ label {
 .slide-active {
     opacity: 1;
 }
+
+/* job details log viewer */
+
+#job-details-log {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: pre-wrap;
+    padding: 1rem;
+    height: 25vh;
+    overflow-y: scroll;
+    margin-bottom: 20px;  
+    scrollbar-width: thin;
+}
+
+#job-details-log::-webkit-scrollbar {
+  width: 12px;
+}
+
+#job-details-log > .line { display: block; }

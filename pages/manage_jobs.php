@@ -33,9 +33,44 @@ $resetjob = getval("reset_job", 0, true);
 
 $triggerjob = getval("trigger_job", "");
 
-if ($triggerjob !== "" && in_array($triggerjob, array_column($offline_job_list, 'script_name')) && enforcePostRequest(true) && checkperm('a')) {
-    redirect(generateURL("pages/offline_jobs/{$triggerjob}.php", ["job_user" => $job_user]));
+// Build list of offline jobs - including from plugins
+
+$offline_job_list_hook = hook('addjobtriggerpage', '', [], true);
+
+if (!empty($offline_job_list_hook)) {
+    $offline_job_list_full = array_merge($offline_job_list, $offline_job_list_hook);
 }
+
+if ($triggerjob !== "" && enforcePostRequest(true) && checkperm('a')) {
+
+    $script_names = array_column($offline_job_list_full, "script_name");
+
+    $index = array_search($triggerjob, $script_names);
+
+    if ($index !== null) {
+        $triggerjobdata = $offline_job_list_full[$index];
+
+        if ($triggerjobdata['plugin'] === null) {
+            redirect(generateURL("pages/offline_jobs/{$triggerjob}.php", ['job_user' => $job_user]));
+        } else {
+            redirect(generateURL("plugins/" . $triggerjobdata['plugin'] . "/pages/offline_jobs/{$triggerjob}.php", ['job_user' => $job_user]));        
+        }
+    }
+}
+
+
+
+
+// if ($triggerjob !== "" && in_array($triggerjob, array_column($offline_job_list_full, 'script_name')) && enforcePostRequest(true) && checkperm('a')) {
+
+//     $triggerjobdata = array_filter($offline_job_list_full, function($row) use ($triggerjob) {
+//         return $row["script_name"] == $triggerjob;
+//     });
+
+//     var_dump($triggerjobdata); exit;
+
+//     //
+// }
 
 if ($deletejob > 0 && enforcePostRequest(true)) {
     $deletejobdetail = job_queue_get_job($deletejob);
@@ -261,7 +296,7 @@ include '../include/header.php';
             <label for="trigger_job">Trigger a job</label>
             <select class="stdwidth" id="trigger_job" name="trigger_job">
                 <?php
-                foreach ($offline_job_list as $offline_job) {
+                foreach ($offline_job_list_full as $offline_job) {
                     echo "<option value=\"" .  escape($offline_job["script_name"]) . "\">" . escape($offline_job["name"]) . "</option>\n";
                 }
                 ?>

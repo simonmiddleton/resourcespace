@@ -1,0 +1,18 @@
+<?php
+function HookClipManage_jobsAddjobtriggerpage()
+{
+
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"])) {
+        // @see hook() for an explanation about the hook_return_value global
+        $existing_scripts = $GLOBALS["hook_return_value"];
+    } else {
+        $existing_scripts = [];
+    }
+
+    $scripts = [
+        0 => ['name' => 'Generate CLIP vectors (CLIP AI Smart Search plugin)', 'script_name' => 'generate_vectors', 'plugin' => 'clip'],
+    ];
+
+    return array_merge($existing_scripts, $scripts);
+}

@@ -21,9 +21,6 @@ if (file_exists($log_file_path)) {
     } else {
         $log_file_download = true;
     }
-
-    var_dump(get_job_progress_from_log_file($log_file_path));
-
 }
 
 if (!is_array($job_details) || count($job_details) == 0) {
@@ -38,126 +35,194 @@ if (!is_array($job_details) || count($job_details) == 0) {
                 <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>
             <h1><?php echo escape($lang["job_text"] . " #" . $job_details["ref"]); ?></h1>
-
-            <?php
-
-            if ($log_file_streaming) {
-            ?>
-            <h2 class="CollapsibleSectionHead collapsed" onclick="UICenterScrollBottom();" id="StreamLogSectionHead">Stream log file</h2>
-<div class="CollapsibleSection" id="StreamLogSection" style="">
-
-
-<style>
-  #log {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    white-space: pre-wrap;
-    background: #111;
-    color: #ddd;
-    padding: 1rem;
-    height: 25vh;
-    overflow-y: auto;
-  }
-  .line { display: block; }
-  .error { color: #f66; }
-  .info { color: #6f6; }
-</style>
-
-<div id="log"></div>
-
-<script>
-  const logEl  = document.getElementById('log');
-  let offset   = 0;
-  let polling  = false;
-  let errorCnt = 0;
-
-  function appendLine(text, cls) {
-    const div = document.createElement('div');
-    div.className = 'line' + (cls ? ' ' + cls : '');
-    div.textContent = text;
-    const atBottom = logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight < 80;
-    logEl.appendChild(div);
-    if (atBottom) logEl.scrollTop = logEl.scrollHeight;
-  }
-
-  async function pollLog(initial = false) {
-    if (polling) return;
-    polling = true;
-
-    const params = new URLSearchParams({
-      job: <?php echo $job_details["ref"]; ?>,
-      type: "stream",
-      offset: String(offset),
-    });
-    if (initial) params.set('lines', '200'); // like tail -n 200
-
-    try {
-      const res = await fetch('ajax/job_log_file.php?' + params.toString(), {
-        cache: 'no-store'
-      });
-      if (!res.ok) {
-        appendLine(`HTTP ${res.status}`, 'error');
-        return;
-      }
-
-      const data = await res.json();
-
-      if (data.error) {
-        appendLine(`${data.error}`, 'error');
-        return;
-      }
-
-      if (data.rotated) {
-        appendLine('Log file rotated or truncated; restarting from beginning', 'info');
-      }
-
-      if (Array.isArray(data.lines)) {
-        for (const line of data.lines) {
-          appendLine(line);
-        }
-      }
-
-      if (typeof data.offset === 'number') {
-        offset = data.offset;
-      }
-
-      if (data.done === true) {
-        appendLine(`Job status: ${data.status}; stopping updates`, 'info');
-        if (timerId !== null) {
-          clearInterval(timerId);
-          timerId = null;
-        }
-      }
-
-      errorCnt = 0; // reset on success
-
-    } catch (e) {
-      errorCnt++;
-      appendLine(`Request failed (${errorCnt}): ${e}`, 'error');
-    } finally {
-      polling = false;
-    }
-  }
-
-  // Initial load with backlog
-  pollLog(true);
-
-  // Poll every second (adjust if needed)
-  timerId = setInterval(() => pollLog(false), 1000);
-</script>
-</div>
-
-
-            <?php
-
-            } elseif ($log_file_download) {
-                echo $log_file_path;
-            }
-
-            ?>
-        </div>
+          </div>
     </div>
 
-    <div class="BasicsBox">
+    <?php
+
+    if ($log_file_streaming) {
+    ?>
+        <div class="BasicsBox">
+            <h2 class="CollapsibleSectionHead collapsed" id="StreamLogSectionHead">Stream log file</h2>
+            <div class="CollapsibleSection" id="StreamLogSection" style="display: none;">
+            <div id="job-details-log"></div>
+
+            <script>
+                jQuery(document).ready(function () {
+                    registerCollapsibleSections(false, function(element) {
+                        const id = element.id;
+                        if (id === "StreamLogSection") toggleLogStreaming();
+                    });
+
+                    // Initial load with backlog
+                    pollLog(true);
+
+                    // Clear the timer if the job details modal is closed
+                    jQuery('#CentralSpace').on('ModalClosed', function() {
+                        window.job_details.clearTimer();
+                    });
+                });
+
+                window.job_details = window.job_details || {};
+
+                window.job_details.initTimer = function (callback, ms = 1000) {    
+                    // Only start the timer if it hasn’t been created yet
+                    if (window.job_details.timerId) return window.job_details.timerId;
+                    window.job_details.timerId = setInterval(callback, ms);
+                    return window.job_details.timerId;
+                };
+
+                window.job_details.clearTimer = function () {
+                    clearInterval(window.job_details.timerId);
+                    window.job_details.timerId = null;
+                };
+
+                function toggleLogStreaming() {
+
+                    console.debug("Toggle clicked");
+                    if (jQuery("#StreamLogSection").is(":visible")) {
+
+                        // Scroll to bottom of div
+                        jQuery("#job-details-log").scrollTop(jQuery("#job-details-log")[0].scrollHeight);
+
+                        // Poll every second (adjust if needed)
+                        console.debug("Start polling:");
+
+                        window.job_details.initTimer(() => {
+                                                pollLog(false);
+                                                }, 1000);
+
+                    } else {
+                        console.debug("Stop polling:");
+                        window.job_details.clearTimer();
+                    }
+                }
+
+                var offset   = 0;
+                var polling  = false;
+                var errorCnt = 0;
+
+                function appendLine(text, cls) {
+
+                    const log = jQuery('#job-details-log');
+
+                    jQuery('<div>')
+                        .addClass('line' + (cls ? ' ' + cls : ''))
+                        .text(text)
+                        .appendTo(log);
+
+                    if (log.is(":visible")) {
+                        const atBottom = log[0].scrollHeight - log.scrollTop() - log.innerHeight() < 80;
+                        if (atBottom) log.scrollTop(log[0].scrollHeight);
+                    }
+                }
+
+                async function pollLog(initial = false) {
+                    if (polling) return;
+                    polling = true;
+
+                    const params = new URLSearchParams({
+                        job: <?php echo (int) $job_details["ref"]; ?>,
+                        type: "stream",
+                        offset: String(offset),
+                    });
+
+                    if (initial) params.set('lines', '200'); // like tail -n 200
+
+                    try {
+                        const res = await fetch('ajax/job_log_file.php?' + params.toString(), {
+                            cache: 'no-store'
+                        });
+                        if (!res.ok) {
+                            appendLine(`HTTP ${res.status}`, 'error');
+                            return;
+                        }
+
+                        const data = await res.json();
+
+                        if (data.error) {
+                            appendLine(`${data.error}`, 'error');
+                            return;
+                        }
+
+                        if (data.rotated) {
+                            appendLine('Log file rotated or truncated; restarting from beginning', 'info');
+                        }
+
+                        if (Array.isArray(data.lines)) {
+                            for (const line of data.lines) {
+                                appendLine(line.text, line.type);
+                            }
+                        }
+
+                        if (typeof data.offset === 'number') {
+                            offset = data.offset;
+                        }
+
+                        if (data.done === true) {
+                            appendLine(`Job status: ${data.status}; stopping updates`, 'info');
+                            window.job_details.clearTimer();
+                        }
+
+                        errorCnt = 0; // reset on success
+
+                    } catch (e) {
+                        errorCnt++;
+                        appendLine(`Request failed (${errorCnt}): ${e}`, 'error');
+                    } finally {
+                        polling = false;
+                    }
+                }
+            </script>
+        </div>
+        <?php
+
+        } elseif ($log_file_download) {
+            echo '<div class="BasicsBox">';  
+            echo $log_file_path;
+        } else {
+            echo '<div class="BasicsBox">';
+        }
+
+
+        ?>
+        <script>
+            jQuery(document).ready(function () {
+
+                jQuery("#job_progress_refresh_btn").on("click", function () {
+
+                    jQuery(this).addClass("fa-spin");
+
+                    var params = new URLSearchParams({
+                        job: <?php echo $job_details["ref"]; ?>,
+                        type: "progress"
+                    });
+
+                    jQuery.ajax({
+                        url: 'ajax/job_log_file.php?' + params.toString(),   // replace with your URL
+                        method: "GET",
+                        success: function (response) {
+                            if (response.percentage != null) {
+                                // Show timestamp + percentage
+                                output = `${response.time} ${response.percentage}%`;
+                            } else {
+                                // No percentage so show last_line
+                                output = response.last_line;
+                            }
+                            jQuery("#job_progress").text(output);
+                        },
+                        error: function () {
+                            jQuery("#job_progress").text("Error loading data.");
+                        }
+                    });
+
+                    jQuery(this).removeClass("fa-spin");
+                });
+
+                jQuery("#job_progress_refresh_btn").trigger("click");
+
+            });
+        </script>
         <div class="Listview">
             <table class="ListviewStyle">
                 <tr class="ListviewTitleStyle">
@@ -206,7 +271,7 @@ if (!is_array($job_details) || count($job_details) == 0) {
                         }
                         render_array_in_table_cells($job_data);
                     } elseif ($name == "progress") {
-                        echo "REFRESH BUTTON HERE <span class='fa fa-fw fa-refresh'></span>";
+                        echo "<span id='job_progress'></span> <span id='job_progress_refresh_btn' class='fa fa-fw fa-refresh'></span>";
                     } elseif ($name == "priority") {
                         switch ($value) {
                             case JOB_PRIORITY_IMMEDIATE:

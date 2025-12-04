@@ -2,9 +2,6 @@
 include '../../include/boot.php';
 include '../../include/authenticate.php';
 
-include '../../include/header.php';
-
-
 $job_user = getval("job_user", 0, true);
 
 
@@ -40,6 +37,8 @@ $use_existing    = (bool) getval('use_existing', false);
 $video_update    = (bool) getval('video_update', false);
 $delete_existing = (bool) getval('delete_existing', false);
 
+$job_add_error = false;
+
 if ($save != '' && enforcePostRequest(false)) {
 
     $valid_data = true;
@@ -48,20 +47,20 @@ if ($save != '' && enforcePostRequest(false)) {
     $processed_refs = parse_int_ranges($refs, 0);
 
     if ($refs == '') {
-        $field_errors['refs'] = ["field required"];
-        toast_notification(ToastNotificationType::Error, "Refs: field required");
-
+        $field_errors['refs'] = ['field required'];
         $valid_data = false;
     } elseif (!empty($processed_refs['errors'])) {
         $field_errors['refs'] = $processed_refs['errors'];
-
-        foreach ($processed_refs['errors'] as $ref_error) {
-            toast_notification(ToastNotificationType::Error, "Refs: $ref_error");
-        }
-
         $valid_data = false;
     }
 
+    if ($delete_existing) {
+        // Delete existing means various parameters should be ignored - set them to default
+        $image_sizes = array_keys($image_size_options);
+        $resource_types = array_keys($resource_type_options);
+        $use_existing = false;
+        $video_update = false;
+    }
 
     if ($valid_data) {
         $job_data = [
@@ -74,18 +73,22 @@ if ($save != '' && enforcePostRequest(false)) {
             "delete_existing" => $delete_existing,
         ];
 
-        var_dump($job_data);
-        // Create Job here
-
+        // Create the job
         $job_added = job_queue_add("recreate_previews", $job_data);
-        if ((string)(int) $job_added !== (string) $job_added) {
-            toast_notification(ToastNotificationType::Error, "Error adding job to queue");
+        
+        if (!is_int_loose($job_added)) {
+            $job_add_error = true;
         } else {
             redirect($parent_page);
         }
     }
 }
 
+include '../../include/header.php';
+
+if ($job_add_error) {
+    toast_notification(ToastNotificationType::Error, $job_added);
+}
 
 ?>
 
@@ -208,7 +211,7 @@ if ($save != '' && enforcePostRequest(false)) {
             <div class="clearerleft"></div>
         </div>
             <div class="Question">
-            <label for="video_update">Update previews for all video reosurces that do not have the required '$ffmpeg_preview_extension' extension?</label>
+            <label for="video_update">Update previews for all video resources that do not have the required '$ffmpeg_preview_extension' extension?</label>
             <input name="video_update" id="video_update" type="checkbox" value="1"<?php echo ($video_update ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>

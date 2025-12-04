@@ -118,6 +118,8 @@ if (is_array($resources) && $total_resources > 0) {
     hook('beforescriptaction');
     $resource_count = 1;
 
+    logScript("[recreate_previews] Recreating previews for $total_resources resource(s)", $log_file);
+
     foreach ($resources as $resource) {        
 
         if ($videoupdate) {
@@ -136,7 +138,7 @@ if (is_array($resources) && $total_resources > 0) {
         if (update_preview($resource, $previewbased, $sizes, $delete_existing)) {
             logScript("[recreate_previews] ....completed", $log_file);
         } else {
-            logScript("[recreate_previews] FAILED - skipping", $log_file);
+            logScript("[recreate_previews] [ERROR] Failed - skipping", $log_file);
         }
 
         $progress = round(($resource_count / $total_resources) * 100, 0);
