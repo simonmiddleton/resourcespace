@@ -249,7 +249,10 @@ foreach ($files as $file) {
     $filesize = $s[1];
     $file = str_replace("\\", "/", $file); // Windows path support
 
-    if (is_banned_extension(pathinfo($file, PATHINFO_EXTENSION))) {
+    echo $file . PHP_EOL;
+    echo parse_filename_extension($file) . PHP_EOL;
+    continue;
+    if (is_banned_extension(parse_filename_extension($file))) {
         echo "Warning: File $file has banned extension, skipping...\n";
         continue;
     }
