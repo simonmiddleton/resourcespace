@@ -18,8 +18,11 @@ function ShowFilesInFolderRecursive($path)
 
         if ($object->isDir() && $objectname !== "tmp") {
             ShowFilesInFolderRecursive($path . DIRECTORY_SEPARATOR . $objectname);
-        } elseif (substr($objectname, -4) != ".php") {
-            // Don't attempt to get PHP as will just execute on the remote server
+        } elseif (
+            !is_banned_extension(parse_filename_extension($objectname))
+            && parse_filename_extension($objectname) != 'php'
+        ) {
+            // Don't attempt to get banned extensions, or PHP as·‌will·‌just·‌execute·‌on·‌the·‌remote·‌server
             echo (substr($path, strlen($storagedir)) . DIRECTORY_SEPARATOR . $objectname) . "\t" . $object->getSize() . "\n";
         }
     }
@@ -102,6 +105,7 @@ REQUIRED SUMMARY
 OPTIONS SUMMARY
     -c, --collections       Collection IDs of resources to sync, comma separated
     -t, --timelimit         Time limit in seconds for each download, default to 10s
+    -w, --writetodisk       Write files directly to disk instead of loading to memory
 
 EXAMPLES
     php filestore_sync.php --url=a.user:mypassword@https://acme.myresourcespace.com
@@ -151,7 +155,8 @@ $pattern = '
     $                       # End of the string
 /x';
 
-$options = getopt('u:c:t:', ['url:','collections:', 'timelimit:']);
+$options = getopt('u:c:t:w', ['url:','collections:', 'timelimit:', 'writetodisk']);
+$writetodisk = false;
 
 foreach ($options as $option_name => $option_value) {
     if (in_array($option_name, ["u", "url"])) {
@@ -203,6 +208,9 @@ foreach ($options as $option_name => $option_value) {
             exit();
         }
     }
+    if (in_array($option_name, ['w', 'writetodisk'])) {
+        $writetodisk = true;
+    }
 }
 
 $curl_request = generateURL(
@@ -219,7 +227,6 @@ if (trim($remote_user ?? "") !== "" && trim($remote_password ?? "") !== "") {
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_TIMEOUT, 3600); // 1 hour
 $file_list = curl_exec($ch);
-curl_close($ch);
 
 if ($file_list == "Access denied") {
     exit("Access denied by source system\nCheck scramble key matches\n");
@@ -241,8 +248,17 @@ foreach ($files as $file) {
     $file = $s[0];
     $filesize = $s[1];
     $file = str_replace("\\", "/", $file); // Windows path support
+
+    echo $file . PHP_EOL;
+    echo parse_filename_extension($file) . PHP_EOL;
+    continue;
+    if (is_banned_extension(parse_filename_extension($file))) {
+        echo "Warning: File $file has banned extension, skipping...\n";
+        continue;
+    }
+
     if (!file_exists($storagedir . $file) || filesize($storagedir . $file) != $filesize) {
-        echo "(" . $counter . "/" . count($files) . ") Copying " . $file . " - " . $filesize . " bytes\n";
+        echo "(" . $counter . "/" . count($files) . ") Copying " . $file . " - " . formatfilesize($filesize, false) . "\n";
         flush();
 
         // Download the file
@@ -251,7 +267,23 @@ foreach ($files as $file) {
             echo "Using basic authentication for " . $remote_user . PHP_EOL;
             curl_setopt($ch, CURLOPT_USERPWD, $remote_user . ":" . $remote_password);
         }
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        if ($writetodisk) {
+            // Check folder exists
+            $s = explode("/", dirname($file));
+            $checkdir = $storagedir;
+            foreach ($s as $dirpart) {
+                $checkdir .= $dirpart . "/";
+                if (!file_exists($checkdir)) {
+                    mkdir($checkdir, 0777);
+                }
+            }
+            try_unlink($storagedir . $file);
+            $fp = fopen($storagedir . $file, "w");
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+        } else {
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        }
         curl_setopt($ch, CURLOPT_TIMEOUT, $download_time_limit ?? 10);
         $result = curl_exec($ch);
 
@@ -259,22 +291,26 @@ foreach ($files as $file) {
             $contents = $result;
         } else {
             echo "Error: " . curl_errno($ch) . PHP_EOL;
+            if ($writetodisk) {
+                unlink($storagedir . $file);
+            }
             continue;
         }
-        curl_close($ch);
 
-        // Check folder exists
-        $s = explode("/", dirname($file));
-        $checkdir = $storagedir;
-        foreach ($s as $dirpart) {
-            $checkdir .= $dirpart . "/";
-            if (!file_exists($checkdir)) {
-                mkdir($checkdir, 0777);
+        if (!$writetodisk) {
+            // Check folder exists
+            $s = explode("/", dirname($file));
+            $checkdir = $storagedir;
+            foreach ($s as $dirpart) {
+                $checkdir .= $dirpart . "/";
+                if (!file_exists($checkdir)) {
+                    mkdir($checkdir, 0777);
+                }
             }
-        }
 
-        // Write the file to disk
-        file_put_contents($storagedir . $file, $contents);
+            // Write the file to disk
+            file_put_contents($storagedir . $file, $contents);
+        }
     } else {
         echo "In place and size matches: " . $file . "\n";
     }
