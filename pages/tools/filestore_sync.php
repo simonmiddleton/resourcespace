@@ -18,8 +18,11 @@ function ShowFilesInFolderRecursive($path)
 
         if ($object->isDir() && $objectname !== "tmp") {
             ShowFilesInFolderRecursive($path . DIRECTORY_SEPARATOR . $objectname);
-        } elseif (substr($objectname, -4) != ".php") {
-            // Don't attempt to get PHP as will just execute on the remote server
+        } elseif (
+            !is_banned_extension(parse_filename_extension($objectname))
+            && parse_filename_extension($objectname) != 'php'
+        ) {
+            // Don't attempt to get banned extensions, or PHP as·‌will·‌just·‌execute·‌on·‌the·‌remote·‌server
             echo (substr($path, strlen($storagedir)) . DIRECTORY_SEPARATOR . $objectname) . "\t" . $object->getSize() . "\n";
         }
     }
@@ -224,7 +227,6 @@ if (trim($remote_user ?? "") !== "" && trim($remote_password ?? "") !== "") {
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_TIMEOUT, 3600); // 1 hour
 $file_list = curl_exec($ch);
-curl_close($ch);
 
 if ($file_list == "Access denied") {
     exit("Access denied by source system\nCheck scramble key matches\n");
@@ -246,6 +248,12 @@ foreach ($files as $file) {
     $file = $s[0];
     $filesize = $s[1];
     $file = str_replace("\\", "/", $file); // Windows path support
+
+    if (is_banned_extension(pathinfo($file, PATHINFO_EXTENSION))) {
+        echo "Warning: File $file has banned extension, skipping...\n";
+        continue;
+    }
+
     if (!file_exists($storagedir . $file) || filesize($storagedir . $file) != $filesize) {
         echo "(" . $counter . "/" . count($files) . ") Copying " . $file . " - " . formatfilesize($filesize, false) . "\n";
         flush();
