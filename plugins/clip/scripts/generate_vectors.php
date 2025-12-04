@@ -5,8 +5,7 @@ include_once dirname(__FILE__, 2) . '/include/clip_functions.php';
 
 command_line_only();
 
-if(!in_array("clip", $plugins))
-    {
+if (!in_array("clip", $plugins)) {
     exit("Clip plugin not enabled. Exiting.\n");
     }
 
