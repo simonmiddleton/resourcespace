@@ -30,9 +30,10 @@ function basename(path) {
 
 function is_touch_device()
     {
-    return 'ontouchstart' in window // works on most browsers
+    return ('ontouchstart' in window // works on most browsers
         || (navigator.maxTouchPoints > 0)
-        || (navigator.msMaxTouchPoints > 0);
+        || (navigator.msMaxTouchPoints > 0))
+        && !(matchMedia('(pointer:fine)').matches);
     }
 
 
