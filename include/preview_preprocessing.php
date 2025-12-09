@@ -310,7 +310,6 @@ if (in_array($extension, $unoconv_extensions) && $extension != 'pdf' && isset($u
 
         // We need to avoid a job spinning off another job because create_previews() can run as an offline job and it
         // includes preview_preprocessing.php.
-        global $extracted_text_extensions;
         if (
             $extract_pdf_text
             && in_array($extension, $extracted_text_extensions)
