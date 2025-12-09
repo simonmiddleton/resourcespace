@@ -153,16 +153,47 @@ if (!$from_dash) {
         <?php
         echo escape($title);
         # Add to dash tile function
-        $graph_params = "activity_type=" . urlencode($activity_type) . "&groups=" . urlencode($groups) . "&from-y=" . $from_y . "&from-m=" . $from_m . "&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m . "&to-d=" . $to_d . "&period=" . getval("period", "") . "&period_days=" . getval("period_days", "") . "&collection=" . $collection . "&external=" . $external . "&type=" . urlencode($type) . "&resource_type=" . $resource_type . "&from_dash=true";
+        if ($report !== "") {
+            $graph_params = [
+                'activity_type' => $activity_type,
+                'groups'        => $groups,
+                'period'        => getval('period', ''),
+                'period_days'   => getval('period_days', ''),
+                'collection'    => $collection,
+                'external'      => $external,
+                'type'          => $type,
+                'resource_type' => $resource_type,
+                'from_dash'     => true,
+                'from-y'        => $from_y,
+                'from-m'        => $from_m,
+                'from-d'        => $from_d,
+                'to_y'          => $to_y,
+                'to_m'          => $to_m,
+                'to_d'          => $to_d,
+            ];
+            $graph_url       = generateURL('pages/team/ajax/graph.php', ['tltype' => 'conf', 'tlstyle' => 'analytics'], $graph_params);
+            $add_to_dash_url = generateURL(
+                    $baseurl_short . 'pages/dash_tile.php',
+                    [
+                        'create'         => true,
+                        'title'          => $title,
+                        'nostyleoptions' => true,
+                        'link'           => $report !== '' ? generateURL('pages/team/team_analytics_edit.php', ['ref' => $report]) : '',
+                        'url'            => $graph_url
+                    ]
+                ); 
+            ?>
+            &nbsp;&nbsp;
+            <a
+                style="white-space:nowrap;"
+                class="ReportAddToDash"
+                href="<?php echo $add_to_dash_url; ?>"
+                onClick="return CentralSpaceLoad(this,true);">
+                <i aria-hidden="true" class="fa fa-plus-square"></i>&nbsp;<?php echo  escape($lang["report_add_to_dash"]) ?>
+            </a>
+        <?php 
+        }
         ?>
-        &nbsp;&nbsp;
-        <a
-            style="white-space:nowrap;"
-            class="ReportAddToDash"
-            href="<?php echo $baseurl_short ?>pages/dash_tile.php?create=true&title=<?php echo urlencode($title) ?>&nostyleoptions=true&link=<?php echo urlencode("pages/team/team_analytics_edit.php?ref=" . $report)?>&url=<?php echo urlencode("pages/team/ajax/graph.php?tltype=conf&tlstyle=analytics&" . $graph_params) ?>"
-            onClick="return CentralSpaceLoad(this,true);">
-            <i aria-hidden="true" class="fa fa-plus-square"></i>&nbsp;<?php echo  escape($lang["report_add_to_dash"]) ?>
-        </a>
     </h2>
     <?php
 } else {
