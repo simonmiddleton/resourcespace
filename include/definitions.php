@@ -92,6 +92,7 @@ define('LOG_CODE_CREATED', 'c');
 define('LOG_CODE_COPIED', 'C');
 define('LOG_CODE_DOWNLOADED', 'd');
 define('LOG_CODE_EDITED', 'e');
+define('LOG_CODE_STATICSYNC_FILE_MODIFIED', 'sf');
 define('LOG_CODE_EMAILED', 'E');
 define('LOG_CODE_LOGGED_IN', 'l');
 define('LOG_CODE_MULTI_EDITED', 'm');
@@ -662,10 +663,10 @@ const RS_SYSTEM_UTILITIES = [
         'display_name' => 'Archiver',
         'show_on_check_page' => true,
         'version_check' => [
-            'argument' => '-h',
+            'argument' => '--help',
             'callback' => [
                 'fct_name' => 'check_utility_cli_version_found_by_name',
-                'args' => [['zip', '7z']],
+                'args' => [['zip', '7z', 'tar']],
             ],
         ],
     ],

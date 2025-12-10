@@ -162,7 +162,6 @@ foreach($results as $result)
         "ref"          => $result->getId(),
         "thumb_width"  => $result->getPreviewWidth(),
         "thumb_height" => $result->getPreviewHeight(),
-        "blurhash"     => "",
         "field{$view_title_field}" => $title,
     );
 

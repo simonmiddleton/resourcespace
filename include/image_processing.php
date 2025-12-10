@@ -1282,7 +1282,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
             # flag database so a thumbnail appears on the site
             if ($alternative == -1) {
                 // Not for alternatives
-                $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+                $has_image = $generateall || $previewonly ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
                 ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
             }
         }
@@ -1319,7 +1319,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
         if (!isset($has_image)) {
             # preview_preprocessing.php may provide a value e.g. 0 for file type where no image is expected but preview creation successful.
             # For example, a .wma file is expected to produce an .mp3 preview and this has no image.
-            $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+            $has_image = $generateall || $previewonly ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
         }
         ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
     }
@@ -3480,6 +3480,7 @@ function create_image_alternatives(int $ref, array $params, $force = false)
             $command .= ($extension == 'psd') ? '[0] ' .
                 (!in_array(strtolower($extension), $GLOBALS["preview_keep_alpha_extensions"]) ? $alphaoff : "")
                  : '';
+            $command = ($extension == 'pdf') ? rtrim($command) . '[0] ' : $command;
             $command .= $source_profile . ' ' . $alternate_config['params'] . " %%APATH%%";
         } else {
             // Use the old imagemagick command syntax (parameters then file)
@@ -4246,7 +4247,7 @@ function create_previews_using_im(
             // Do not run for alternative uploads
             extract_mean_colour($target, $ref);
             // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
-            $has_image = (($resource_data["file_extension"] ?? "") === $extension && $generateall) ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+            $has_image = (($resource_data["file_extension"] ?? "") === $extension && ($generateall || $previewonly)) ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
 
             ps_query("UPDATE resource SET has_image=?, preview_extension='jpg', preview_attempts=0, file_modified=NOW() WHERE ref = ?", ["i",$has_image, "i", $ref]);
         } else {

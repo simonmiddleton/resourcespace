@@ -174,8 +174,8 @@ function resign_all_code($confirm = true, $output = true, $output_changes_only =
 
             // Extract signature if already one present
             $purecode = $code;
-            if (substr($code, 0, 5) == "//SIG") {
-                $purecode = trim(substr($code, strpos($code, "\n") + 1));
+            while (substr($purecode, 0, 5) == "//SIG") {
+                $purecode = trim(substr($purecode, strpos($purecode, "\n") + 1));
             }
 
             if (trim(eval_check_signed($code)) !== trim($purecode)) {
@@ -199,7 +199,7 @@ function resign_all_code($confirm = true, $output = true, $output_changes_only =
 
                 $code = trim($code);
                 $sig = sign_code($code);
-                $code = "//SIG" . $sig . "\n" . $code;
+                $code = "//SIG" . $sig . "\n" . $purecode;
                 if (!$output_changes_only) {
                     ps_query("update `$table` set `$column`=? where ref=?", array("s",$code,"i",$ref));
                     log_activity(

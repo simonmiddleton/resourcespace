@@ -367,7 +367,6 @@ function send_periodic_report_emails($echo_out = true, $toemail = true)
 
     // Keep record of temporary CSV/ZIP files to delete after emails have been sent
     $deletefiles = array();
-    $users = [];
 
     # Query to return all 'pending' report e-mails, i.e. where we haven't sent one before OR one is now overdue.
     $query = "
@@ -391,6 +390,7 @@ function send_periodic_report_emails($echo_out = true, $toemail = true)
     $reports = ps_query($query);
 
     foreach ($reports as $report) {
+        $users = [];
         $start = time() - (60 * 60 * 24 * $report["period"]);
 
         $from_y = date("Y", $start);

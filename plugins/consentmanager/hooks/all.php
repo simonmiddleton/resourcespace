@@ -38,7 +38,7 @@ function HookConsentmanagerAllRender_actions_add_collection_option($top_actions,
     );
 
     $option = array(
-        'value'     => 'consent_batch',
+        'value'     => 'unlink_consent_batch',
         'label'     => $lang['unlinkconsent'],
         'data_attr' => array(
             'url' => $data_attr_url,
@@ -61,7 +61,7 @@ function HookConsentmanagerAllRender_actions_add_collection_option($top_actions,
     );
 
     $option = array(
-        'value'     => 'consent_batch',
+        'value'     => 'link_consent_batch',
         'label'     => $lang['linkconsent'],
         'data_attr' => array(
             'url' => $data_attr_url,

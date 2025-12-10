@@ -3890,9 +3890,23 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Upload to collection
     if (allow_upload_to_collection($collection_data)) {
         if ($upload_then_edit) {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/upload_batch.php", array(), array("collection_add" => $collection_data['ref']));
+            $data_attribute['url'] = generateURL(
+                $baseurl_short . "pages/upload_batch.php", 
+                [
+                    "collection_add" => $collection_data['ref'], 
+                    "entercolname"   => $collection_data['name']
+                ]
+            );
         } else {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php", array(), array("uploader" => $top_nav_upload_type,"ref" => -$userref, "collection_add" => $collection_data['ref']));
+            $data_attribute['url'] = generateURL(
+                $baseurl_short . "pages/edit.php", 
+                [
+                    "uploader"       => $top_nav_upload_type,
+                    "ref"            => -$userref,
+                    "collection_add" => $collection_data['ref'],
+                    "entercolname"   => $collection_data['name']
+                ]
+            );
         }
 
         $options[$o]['value'] = 'upload_collection';

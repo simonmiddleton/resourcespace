@@ -9,7 +9,7 @@ $getrefs = (getval("getrefs", "") != "") ? true : false;
 $getuserref = (getval("getuserref", ""));
 
 if (is_anonymous_user()) {
-    exit($lang['error-permissiondenied']);
+    exit(escape($lang['error-permissiondenied']));
 }
 
 if (!empty($getuserref)) {

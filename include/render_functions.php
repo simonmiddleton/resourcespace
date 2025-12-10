@@ -2700,7 +2700,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let year  = jQuery('[name=<?php echo escape($name); ?>_start-y]').val().trim(); 
                 if (year != "" && !jQuery.isNumeric(year))
                     {
-                    styledalert(<?php echo "'" . escape($lang["error"] . "','" . $lang["invalid_date_generic"]) . "'" ?>);
+                    styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);
                     jQuery(this).val(jQuery.data(this, 'current'));
                     }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -2710,7 +2710,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date        = new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert(<?php echo "'" . escape($lang["error"] . "','" . $lang["invalid_date_generic"]) . "'" ?>);
+                        styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -2722,7 +2722,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let year  = jQuery('[name=<?php echo escape($name); ?>_end-y]').val().trim();
                 if (year != "" && !jQuery.isNumeric(year))
                     {
-                    styledalert(<?php echo "'" . escape($lang["error"] . "','" . $lang["invalid_date_generic"]) . "'" ?>);
+                    styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);
                     jQuery(this).val(jQuery.data(this, 'current'));
                     }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -2732,7 +2732,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date        = new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert(<?php echo "'" . escape($lang["error"] . "','" . $lang["invalid_date_generic"]) . "'" ?>);
+                        styledalert(<?php echo "'" . escape($lang["error"]) . "','" . escape($lang["invalid_date_generic"]) . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -3301,6 +3301,8 @@ function render_upload_here_button(array $search_params, $return_params_only = f
             $upload_here_params['search'] = $search_params['search'];
         } else {
             $upload_here_params['collection_add'] = $collection;
+            $col_data = get_collection($collection);
+            $upload_here_params['entercolname'] = $col_data['name'];
         }
     }
 
@@ -4903,7 +4905,13 @@ function render_featured_collections(array $ctx, array $items)
         );
         $tool_upload_to_collection = [
             'href' => $GLOBALS['upload_then_edit']
-                ? generateURL("{$baseurl_short}pages/upload_batch.php", ['collection_add' => $fc['ref']])
+                ? generateURL(
+                    "{$baseurl_short}pages/upload_batch.php", 
+                    [
+                        'collection_add' => $fc['ref'], 
+                        'entercolname' => $fc['name']
+                    ]
+                )
                 : generateURL(
                     "{$baseurl_short}pages/edit.php",
                     [

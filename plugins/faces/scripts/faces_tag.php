@@ -22,11 +22,10 @@ if ($cli_options !== false) {
 
             $collectionset = true;
 
-            if(is_array($option_value)) {
+            if (is_array($option_value)) {
                 $collections = $option_value;
                 continue;
-            }
-            elseif ((string) (int) $option_value == (string) $option_value) {
+            } elseif (is_int_loose($option_value)) {
                 $collections[] = $option_value;
             }
             
