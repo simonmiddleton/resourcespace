@@ -1953,10 +1953,12 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
     ##  loop through recipients
     for ($nx1 = 0; $nx1 < count($emails); $nx1++) {
         ## loop through collections
+        debug('email_collection : Processing email for ' . $emails[$nx1]);
         $list = "";
         $list2 = "";
         $origviewlinktext = $viewlinktext; // Save this text as we may change it for internal theme shares for this user
         if ($themeshare && !$key_required[$nx1]) { # don't send a whole list of collections if internal, just send the theme category URL
+            debug('email_collection : no key required to view theme internally');
             $notifymessage->set_subject($applicationname . ": " . $themename);
             $url = $baseurl . "/pages/collections_featured.php" . $themeurlsuffix;
             $viewlinktext = "lang_clicklinkviewthemes";
@@ -1978,6 +1980,7 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
         } else {
             $fc_key = "";
             // E-mail external share, generate the access key based on the FC category. Each sub-collection will have the same key.
+            debug('email_collection : is a key needed for this theme share? $key_required : ' . $key_required[$nx1] ? 'true' : 'false');
             if ($key_required[$nx1] && $themeshare && !is_null($fc_category_ref)) {
                 $k = generate_collection_access_key($fc_category_ref, $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd, $reflist);
                 if ($k !== false) {
@@ -1986,12 +1989,14 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
             }
 
             for ($nx2 = 0; $nx2 < count($reflist); $nx2++) {
+                debug('email_collection : generating access keys for collection ref : ' . $reflist[$nx2] . ' if needed');
                 $key = "";
                 $fc_key = "";
                 $emailcollectionmessageexternal = false;
 
                 # Do we need to add an external access key for this user (e-mail specified rather than username)?
                 if ($key_required[$nx1] && !$themeshare) {
+                    debug('email_collection : key required for ' . $emails[$nx1]);
                     $k = generate_collection_access_key($reflist[$nx2], $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd);
                     if ($k !== false) {
                         $fc_key = "&k={$k}";
