@@ -108,8 +108,8 @@ if ($job_add_error) {
     renderBreadcrumbs($breadcrumbs);
     ?>
 
-    <form method="post" id="dummy_form" action="<?php echo generateURL("{$baseurl_short}pages/offline_jobs/recreate_previews.php", ["job_user" => $job_user]); ?>">
-        <?php generateFormToken("dummy_form"); ?>
+    <form method="post" id="recreate_previews_form" action="<?php echo generateURL("{$baseurl_short}pages/offline_jobs/recreate_previews.php", ["job_user" => $job_user]); ?>">
+        <?php generateFormToken("recreate_previews_form"); ?>
         <div class="Question">
             <label for="process_type">Target *</label>
             <select class="stdwidth" name="process_type">

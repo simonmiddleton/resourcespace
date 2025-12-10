@@ -1091,5 +1091,10 @@ const NON_PREVIEW_EXTENSIONS = ['zip'];
 
 $offline_job_list = [
     0 => ['name' => 'Recreate Previews', 'script_name' => 'recreate_previews', 'plugin' => null],
-    1 => ['name' => 'Dummy Job', 'script_name' => 'dummy_job', 'plugin' => null]
+    1 => ['name' => 'Regenerate EXIF data', 'script_name' => 'update_exiftool_field', 'plugin' => null],
+    2 => ['name' => 'Purge duplicate resources', 'script_name' => 'purge_duplicates', 'plugin' => null],
+    3 => ['name' => 'Re-indexing data', 'script_name' => 'reindex', 'plugin' => null],
+    4 => ['name' => 'Updating checksums', 'script_name' => 'update_checksums', 'plugin' => null],
+    5 => ['name' => 'Extracting text', 'script_name' => 'update_extracted_text', 'plugin' => null],
+    //x => ['name' => 'Dummy Job', 'script_name' => 'dummy_job', 'plugin' => null]
 ];

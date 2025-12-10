@@ -43,12 +43,13 @@ if (!empty($offline_job_list_hook)) {
 
 if ($triggerjob !== "" && enforcePostRequest(true) && checkperm('a')) {
 
-    $script_names = array_column($offline_job_list_full, "script_name");
+    $filtereddata = array_filter($offline_job_list_full, function ($row) use ($triggerjob) {
+        return isset($row['script_name']) && $row['script_name'] === $triggerjob;
+    });
 
-    $index = array_search($triggerjob, $script_names);
+    $triggerjobdata = reset($filtereddata);
 
-    if ($index !== null) {
-        $triggerjobdata = $offline_job_list_full[$index];
+    if (!empty($triggerjobdata)) {
 
         if ($triggerjobdata['plugin'] === null) {
             redirect(generateURL("pages/offline_jobs/{$triggerjob}.php", ['job_user' => $job_user]));
@@ -57,20 +58,6 @@ if ($triggerjob !== "" && enforcePostRequest(true) && checkperm('a')) {
         }
     }
 }
-
-
-
-
-// if ($triggerjob !== "" && in_array($triggerjob, array_column($offline_job_list_full, 'script_name')) && enforcePostRequest(true) && checkperm('a')) {
-
-//     $triggerjobdata = array_filter($offline_job_list_full, function($row) use ($triggerjob) {
-//         return $row["script_name"] == $triggerjob;
-//     });
-
-//     var_dump($triggerjobdata); exit;
-
-//     //
-// }
 
 if ($deletejob > 0 && enforcePostRequest(true)) {
     $deletejobdetail = job_queue_get_job($deletejob);
@@ -297,7 +284,16 @@ include '../include/header.php';
             <select class="stdwidth" id="trigger_job" name="trigger_job">
                 <?php
                 foreach ($offline_job_list_full as $offline_job) {
-                    echo "<option value=\"" .  escape($offline_job["script_name"]) . "\">" . escape($offline_job["name"]) . "</option>\n";
+                    
+                    if (isset($offline_job['type'])) {
+                        if ($offline_job['type'] == 'group_start') {
+                            echo "<optgroup label=\"" . escape($offline_job['name']) . "\">";
+                        } else {
+                            echo "</optgroup>";
+                        }                        
+                    } else {
+                        echo "<option value=\"" .  escape($offline_job["script_name"]) . "\">" . escape($offline_job["name"]) . "</option>\n";
+                    }                    
                 }
                 ?>
             </select>

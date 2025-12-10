@@ -82,18 +82,14 @@ if (!is_array($job_details) || count($job_details) == 0) {
                     console.debug("Toggle clicked");
                     if (jQuery("#StreamLogSection").is(":visible")) {
 
-                        // Scroll to bottom of div
+                        // Scroll to bottom of log div
                         jQuery("#job-details-log").scrollTop(jQuery("#job-details-log")[0].scrollHeight);
-
-                        // Poll every second (adjust if needed)
-                        console.debug("Start polling:");
 
                         window.job_details.initTimer(() => {
                                                 pollLog(false);
                                                 }, 1000);
 
                     } else {
-                        console.debug("Stop polling:");
                         window.job_details.clearTimer();
                     }
                 }
@@ -179,7 +175,8 @@ if (!is_array($job_details) || count($job_details) == 0) {
 
         } elseif ($log_file_download) {
             echo '<div class="BasicsBox">';  
-            echo $log_file_path;
+            $download_url = GenerateURL($baseurl . "/pages/job_log_download.php", ['job' => (int) $job_details["ref"]]);
+            echo "<a href=\"$download_url\">Download log file</a><br /><br />";
         } else {
             echo '<div class="BasicsBox">';
         }
@@ -212,7 +209,7 @@ if (!is_array($job_details) || count($job_details) == 0) {
                             jQuery("#job_progress").text(output);
                         },
                         error: function () {
-                            jQuery("#job_progress").text("Error loading data.");
+                            jQuery("#job_progress").text("Error loading data");
                         }
                     });
 

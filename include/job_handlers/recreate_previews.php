@@ -3,7 +3,7 @@
 include_once __DIR__ . '/../image_processing.php';
 
 # $job_data['process_type'] -> Either "resource" or "collection"
-# $job_data['refs'] -> Comma-separated list of references (can be either Resource or Collection refs)
+# $job_data['refs'] -> Comma-separated list of references (can be either Resource or Collection refs), can be ranges
 # $job_data['sizes'] -> List of image sizes to generate, by preview_size.id
 # $job_data['types'] -> List of resource types to process, by resource_type.ref
 # $job_data['use_existing'] -> Optional. Boolean, will default to false if not specified
@@ -62,7 +62,7 @@ $videoupdate = (bool) $job_data['video_update'];
 $delete_existing = (bool) $job_data['delete_existing'];
 
 if ($delete_existing && (count($sizes) > 0 || count($types) > 0 || $previewbased || $videoupdate)) {
-    logScript("[recreate_previews] Error: invalid parameters provided for job, cannot use delete_existing with other options", $log_file);
+    logScript("[recreate_previews] [ERROR] invalid parameters provided for job, cannot use delete_existing with other options", $log_file);
     job_queue_update($jobref, $job_data, STATUS_ERROR);
     return;
 }
@@ -83,7 +83,7 @@ if($range_condition["ok"]) {
     $conditions[] = $range_condition['where'];
     $conditions_params = array_merge($conditions_params, $range_condition['params']);
 } else {
-    logScript("[recreate_previews] Error: unable to process where condition", $log_file);
+    logScript("[recreate_previews] [ERROR] unable to process where condition", $log_file);
     job_queue_update($jobref, $job_data, STATUS_ERROR);
     return;
 }

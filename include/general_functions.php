@@ -6009,14 +6009,14 @@ function strip_unicode_points(string $value, array $blocklist = []): string
     return preg_replace('/[' . implode('', $blocklist) . ']/u', '', $value);
 }
 
-function parse_int_ranges(string $input, int $max_val = 0): array
+function parse_int_ranges(string $input, int $max_val = 0, bool $optional = false): array
 {
     $numbers  = [];
     $errors = [];
 
     $input = trim($input);
 
-    if ($input === '') {
+    if ($input === '' && !$optional) {
         return [
             'ok'     => false,
             'numbers'  => [],
