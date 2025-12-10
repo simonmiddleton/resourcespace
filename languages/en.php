@@ -132,7 +132,7 @@ $lang['property-automatic_nodes_ordering_label'] = 'Automatic ordering';
 $lang["property-required"] = "Required";
 $lang["property-order_by"] = "Order by";
 $lang["property-indexing"] = "<b>Indexing</b>";
-$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"] = "If you enable indexing below and the field already contains data, you will need to <a target=_blank href=../tools/reindex_field.php?field=%ref>reindex this field</a>."; # %ref will be replaced with the field id
+$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"] = "If you enable or disable indexing and the field already contains data, you will need to <a target=_blank href=../tools/reindex_field.php?field=%ref>reindex this field</a>."; # %ref will be replaced with the field id
 $lang["property-index_this_field"] = "Index this field";
 $lang["information_index_warning"] = "Please refer to the <a href='https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata' target='_blank'>Knowledge Base</a> for detailed information on field indexing.";
 $lang["information-enable_partial_indexing"] = "Partial keyword indexing (prefix+infix indexing) should be used sparingly as it will significantly increase the index size. See the Knowledge Base for details. This option is incompatible with complete indexing.";
