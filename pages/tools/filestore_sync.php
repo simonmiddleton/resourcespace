@@ -22,7 +22,7 @@ function ShowFilesInFolderRecursive($path)
             !is_banned_extension(parse_filename_extension($objectname))
             && parse_filename_extension($objectname) != 'php'
         ) {
-            // Don't attempt to get banned extensions, or PHP as·‌will·‌just·‌execute·‌on·‌the·‌remote·‌server
+            // Don't attempt to get banned extensions, or PHP as will just execute ‌on ‌the ‌remote ‌server
             echo (substr($path, strlen($storagedir)) . DIRECTORY_SEPARATOR . $objectname) . "\t" . $object->getSize() . "\n";
         }
     }
