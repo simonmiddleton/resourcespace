@@ -324,7 +324,7 @@ function job_queue_run_job($job, $clear_process_lock): string
     logScript("[job_handler] " . $logmessage, $log_file);
 
     $logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job_type . ".php";
-    logScript("[job_handler] " . $logmessage, $log_file);
+    logScript("[job_handler] " . $logmessage);
 
     if (file_exists(__DIR__ . "/job_handlers/" . $job_type . ".php")) {
         $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job_type;
@@ -349,7 +349,7 @@ function job_queue_run_job($job, $clear_process_lock): string
             if (file_exists(__DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job_type . ".php")) {
                 $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job_type;
                 logScript("[job_handler] " . $logmessage, $log_file);
-                job_queue_update($job_ref, $job_data, STATUS_INPROGRESS);
+                job_queue_update($jobref, $job_data, STATUS_INPROGRESS);
                 $offline_job_in_progress = true;
                 include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job_type . ".php";
                 break;
