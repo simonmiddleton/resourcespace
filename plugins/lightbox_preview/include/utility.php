@@ -4,6 +4,10 @@ function getPreviewURLForType($resource, $type, $alternative = -1, $page = 1)
     {
     global $baseurl, $use_watermark, $ffmpeg_preview_extension, $ffmpeg_supported_extensions;
 
+    if (!isset($use_watermark)) {
+        $use_watermark = check_use_watermark();
+    }
+
     if ($alternative !== -1)
         {
         // Don't use lightbox_preview for video alternative files. Link should use preview.php to play video.
