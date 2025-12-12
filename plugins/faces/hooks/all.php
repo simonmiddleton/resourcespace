@@ -113,7 +113,7 @@ function HookFacesAllAfterpreviewcreation(int $resource, int $alternative, bool 
         // Nothing to do for alternatives; face processing is for the main file only.
         // Detect images on upload if configured
         set_processing_message($lang["faces-detecting"] . " " . $resource);
-        faces_detect($resource);
+        faces_detect($resource, true);
     }
     
     if ($alternative === -1 && $faces_tag_on_upload) {
