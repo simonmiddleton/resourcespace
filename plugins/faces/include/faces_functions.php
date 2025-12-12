@@ -23,6 +23,8 @@ function faces_detect(int $ref, bool $force = false): bool
         # Setting faces_processed = 0 restores default, allowing the script to pickup the resource if
         # this attempt fails e.g. if extract_faces service is unavailable.
         ps_query("UPDATE resource SET faces_processed = 0 WHERE ref = ?", ["i", $ref]);
+        # Clear existing detected faces before processing the file.
+        ps_query("DELETE FROM resource_face WHERE resource = ?", ["i", $ref]);
         $faces_processed = 0;
     } else {
         $faces_processed = (int) ps_value("SELECT faces_processed value FROM resource WHERE ref = ?", ["i", $ref], 1);
