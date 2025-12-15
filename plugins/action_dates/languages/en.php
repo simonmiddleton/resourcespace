@@ -38,7 +38,7 @@ $lang['action_dates_email_for_state'] = "Send notification for resources changin
 $lang['action_dates_email_for_restrict'] = "Send notification for resources to be restricted. Requires restrict resource fields above to be configured.";
 $lang['action_dates_workflow_actions'] = "If the Advanced Workflow plugin is enabled, should its notifications be applied to state changes initiated by this plugin?";
 
-$lang['action_dates_weekdays'] = "Select the weekdays when actions be processed.";
+$lang['action_dates_weekdays'] = "Select the weekdays when actions will be processed.";
 $lang["weekday-0"] = "Sunday";
 $lang["weekday-1"] = "Monday";
 $lang["weekday-2"] = "Tuesday";
