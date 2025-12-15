@@ -268,11 +268,11 @@ if ($keysearch) {
                     }
                 }
             } elseif (
-                $field_short_name_specified
-                && !$quoted_string
+                !$quoted_string
                 && preg_match(
                     '/^                   # Start of the string
-                    (?!.*[\*;])              # Negative lookahead: Ensure no asterisk (*) or semi colon exists in the string
+                    [^-]                  # Not a negative keyword search
+                    (?!.*[\*;])           # Negative lookahead: Ensure no asterisk (*) or semi colon exists in the string
                     (?=                   # Positive lookahead: Ensure at least one special character exists
                         [^ \t\n]*         # Any number of characters that are not space, tab, or newline
                         [!@#$%^&()_+\-=\[\]{}\'"\\,.<>\/?] # One special character from this set

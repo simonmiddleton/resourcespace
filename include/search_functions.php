@@ -531,8 +531,8 @@ function refine_searchstring($search)
 
     $keywords = split_keywords($search, false, false, false, false, true);
 
-    if (preg_match('/^[^\\s]+\\*/', $search)) {
-        // No spaces and a wildcard search - don't separate
+    if (preg_match('/^[^\\s]+$/', $search)) {
+        // No spaces, keep intact
         $keywords = [$search];
     } else {
         $keywords = split_keywords($search, false, false, false, false, true);

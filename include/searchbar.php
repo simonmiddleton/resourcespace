@@ -69,7 +69,7 @@ for ($n = 0; $n < count($fields); $n++) {
 # Also build a quicksearch string.
 $quicksearch    = refine_searchstring($quicksearch);
 
-if (preg_match('/^[^\\s]+$/', $quicksearch) && ($wildcard_always_applied || strpos($quicksearch, "*") !== false)) {
+if (preg_match('/^[^-][^\\s]+$/', $quicksearch)) {
     $keywords   = [$quicksearch];
 } else {
     $keywords   = split_keywords($quicksearch, false, false, false, false, true);
