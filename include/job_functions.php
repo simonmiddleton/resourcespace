@@ -415,9 +415,11 @@ function get_job_queue_log_path(string $type = "", string $job_code = "", $job_r
     // Build path for logging
     $log_path = get_temp_dir() . "/offline_job_logs/" . $type . "/"; // . $job_ref . "_" . $job_code . ".log";
     if (!is_dir($log_path)) {
-        $log_path_created = mkdir($log_path, 0777, true);
+        $log_path_created = mkdir($log_path, 0770, true);
         if (!$log_path_created) {
             return false;
+        } else {
+            chmod($log_path, 0770);
         }
     }
 

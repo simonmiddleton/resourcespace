@@ -2,7 +2,6 @@
 
 # $job_data['collection_refs'] -> Optional. Comma-separated list of collection references, can be ranges
 
-
 logScript("[faces_tag] Starting faces_tag job", $log_file);
 
 $resources = [];

@@ -8,7 +8,7 @@
  * @param array     $values             Array of strings from the field currently being processed
  * @param string    $file               Path to image file. If provided will use this file instead of metadata values
  * 
-* @return bool|array                    Array indicating success/failure 
+ * @return bool|array                    Array indicating success/failure 
  *                                      True if update successful, false if invalid field or no data returned
  * 
  */
@@ -353,3 +353,30 @@ function openai_gpt_get_dependent_fields(int $field): array
     return ps_array("SELECT ref AS `value` FROM resource_type_field WHERE openai_gpt_input_field = ?", ["i", $field]);
     }
 
+/**
+ * Return an array of resource type field refs for all AI configured fields
+ * 
+ * @return array    Array field references for all AI configured fields 
+ */
+function openai_gpt_get_configured_fields(): array
+{
+    global $valid_ai_field_types;
+
+    $results = [];
+
+    $ai_fields = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE openai_gpt_input_field IS NOT NULL AND openai_gpt_prompt IS NOT NULL ORDER BY ref ASC");
+
+    foreach($ai_fields as $ai_field) {
+
+        $ai_field_data = get_resource_type_field($ai_field);
+
+        if(!in_array($ai_field_data["type"], $valid_ai_field_types)) {
+            continue;
+        } else {
+            $results[] = $ai_field_data;
+        }
+    }
+
+    return $results;
+
+}
