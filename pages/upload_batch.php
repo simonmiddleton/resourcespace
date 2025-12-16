@@ -1135,7 +1135,8 @@ jQuery(document).ready(function () {
             if ($upload_collection_name_required && $upload_then_edit && $replace_resource == "" && $replace == "" && $alternative == "")
                 { ?>
                 let upload_collection_name = document.getElementById("entercolname").value;
-                if (upload_collection_name == '')
+                let upload_collection_id   = document.getElementById("collection_add").value;
+                if (upload_collection_name == '' && upload_collection_id == 'new' && upload_collection_id !== 'false')
                     {
                     styledalert('<?php echo escape($lang['error-unable_to_upload']) ?>', '<?php echo escape($lang["collectionname"] . ":  " .$lang["requiredfield"]); ?>', 380);
                     return false;
