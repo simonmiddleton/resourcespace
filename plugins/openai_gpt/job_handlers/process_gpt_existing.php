@@ -9,15 +9,15 @@ logScript("[process_gpt_existing] Starting process_gpt_existing job", $log_file)
 $collections    = [];
 $collectionset  = false;
 
-if(isset($job_data['collection_refs']) && !empty($job_data['collection_refs'])) {
+if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs'])) {
 
     $collection_refs = parse_int_ranges($job_data['collection_refs'], 0);
 
-    if($collection_refs["ok"]) {
+    if ($collection_refs["ok"]) {
         $collections = $collection_refs['numbers'];
         $collectionset = true;
     } else {
-        logScript("[process_gpt_existing] [ERROR] Unable to process where condition", $log_file);
+        logScript("[process_gpt_existing] [ERROR] Unable to process ranges", $log_file);
         job_queue_update($jobref, $job_data, STATUS_ERROR);
         return;
     }
@@ -138,7 +138,7 @@ if (count($arr_toprocess) > 0) {
     } else {
         // Sort into an array indexed by nodes so resources with the same data can be processed together
         $nodegroups = [];
-        foreach($arr_toprocess as $resource) {
+        foreach ($arr_toprocess as $resource) {
             $resnodes = get_resource_nodes($resource, $input_field, true, SORT_ASC);
             $nodehash = empty($resnodes) ? "BLANK" : md5(implode(",", array_column($resnodes, "ref")));
             if (!isset($nodegroups[$nodehash])) {

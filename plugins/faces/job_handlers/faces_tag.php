@@ -6,11 +6,11 @@ logScript("[faces_tag] Starting faces_tag job", $log_file);
 
 $resources = [];
 
-if(isset($job_data['collection_refs']) && !empty($job_data['collection_refs'])) {    
+if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs'])) {    
     
     $range_condition = build_range_where_condition($job_data['collection_refs'], "cr.collection");
 
-    if($range_condition["ok"]) {
+    if ($range_condition["ok"]) {
         $conditions[] = $range_condition['where'];
         $conditions_params = array_merge($conditions_params, $range_condition['params']);
     } else {

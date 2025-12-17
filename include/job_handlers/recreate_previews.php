@@ -79,7 +79,7 @@ if ($job_data['process_type'] == "collections") {
     $range_condition = build_range_where_condition($job_data['refs'], "r.ref");
 }
 
-if($range_condition["ok"]) {
+if ($range_condition["ok"]) {
     $conditions[] = $range_condition['where'];
     $conditions_params = array_merge($conditions_params, $range_condition['params']);
 } else {

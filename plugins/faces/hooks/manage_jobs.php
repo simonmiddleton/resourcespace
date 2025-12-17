@@ -3,7 +3,7 @@ function HookFacesManage_jobsAddjobtriggerpage()
 {
 
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
-    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"])) {
+    if (isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"])) {
         // @see hook() for an explanation about the hook_return_value global
         $existing_scripts = $GLOBALS["hook_return_value"];
     } else {

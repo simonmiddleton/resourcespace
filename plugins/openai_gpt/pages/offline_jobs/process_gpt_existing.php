@@ -2,9 +2,6 @@
 include '../../../../include/boot.php';
 include '../../../../include/authenticate.php';
 
-//include '../../include/openai_gpt_functions.php';
-
-
 $job_user = getval("job_user", 0, true);
 
 if ($job_user == $userref) {
@@ -26,7 +23,6 @@ if ($job_user == $userref) {
 }
 
 // Build list of GPT enabled fields
-
 $gpt_fields = openai_gpt_get_configured_fields();
 
 // Process form input
