@@ -1,6 +1,6 @@
 <?php
 
-
+$lang["bookend"]='책꽂이';
 $lang["bookend-image-1"]='제목 이미지';
 $lang["bookend-image-2"]='이미지 닫기';
 $lang["bookend-noimage-1"]='(제목 이미지 없음)';

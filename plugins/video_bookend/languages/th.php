@@ -1,6 +1,6 @@
 <?php
 
-
+$lang["bookend"]='ที่คั่นหนังสือ';
 $lang["bookend-image-1"]='ภาพปก';
 $lang["bookend-image-2"]='ปิดภาพ';
 $lang["bookend-noimage-1"]='(ไม่มีภาพหัวเรื่อง)';

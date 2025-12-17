@@ -1,6 +1,6 @@
 <?php
 
-
+$lang["Mwisho wa Kuweka Nafasi"]='Mwisho wa Kuweka Nafasi';
 $lang["bookend-image-1"]='Picha ya kichwa';
 $lang["bookend-image-2"]='Kufunga picha';
 $lang["bookend-noimage-1"]='(hakuna picha ya kichwa)';

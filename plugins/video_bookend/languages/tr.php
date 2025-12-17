@@ -1,6 +1,6 @@
 <?php
 
-
+$lang["bookend"]='Kitap ayracı';
 $lang["bookend-image-1"]='Başlık resmi';
 $lang["bookend-image-2"]='Görüntüyü kapatıyor';
 $lang["bookend-noimage-1"]='(başlık resmi yok)';

@@ -1,6 +1,6 @@
 <?php
 
-
+$lang["bookend"]='محل رزرو';
 $lang["bookend-image-1"]='تصویر عنوان';
 $lang["bookend-image-2"]='بستن تصویر';
 $lang["bookend-noimage-1"]='(بدون تصویر عنوان)';
