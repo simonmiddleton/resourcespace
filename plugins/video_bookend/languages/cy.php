@@ -1,6 +1,6 @@
 <?php
 
-$lang["bookend"]='Pen llyfr';
+
 $lang["bookend-image-1"]='Delwedd teitl';
 $lang["bookend-image-2"]='Cau delwedd';
 $lang["bookend-noimage-1"]='(dim delwedd teitl)';
