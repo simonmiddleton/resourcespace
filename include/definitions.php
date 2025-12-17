@@ -1091,11 +1091,13 @@ const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
 const NON_PREVIEW_EXTENSIONS = ['zip'];
 
 $offline_job_list = [
-    0 => ['name' => 'Recreate Previews', 'script_name' => 'recreate_previews', 'plugin' => null],
-    1 => ['name' => 'Regenerate EXIF data', 'script_name' => 'update_exiftool_field', 'plugin' => null],
-    2 => ['name' => 'Purge duplicate resources', 'script_name' => 'purge_duplicates', 'plugin' => null],
-    3 => ['name' => 'Re-indexing data', 'script_name' => 'reindex', 'plugin' => null],
-    4 => ['name' => 'Updating checksums', 'script_name' => 'update_checksums', 'plugin' => null],
-    5 => ['name' => 'Extracting text', 'script_name' => 'update_extracted_text', 'plugin' => null],
+    0 => ['name' => 'ResourceSpace', 'type' => 'group_start'],
+    1 => ['name' => 'Recreate Previews', 'script_name' => 'recreate_previews', 'plugin' => null],
+    2 => ['name' => 'Regenerate EXIF data', 'script_name' => 'update_exiftool_field', 'plugin' => null],
+    3 => ['name' => 'Purge duplicate resources', 'script_name' => 'purge_duplicates', 'plugin' => null],
+    4 => ['name' => 'Re-index data', 'script_name' => 'reindex', 'plugin' => null],
+    5 => ['name' => 'Update checksums', 'script_name' => 'update_checksums', 'plugin' => null],
+    6 => ['name' => 'Update extracted text', 'script_name' => 'update_extracted_text', 'plugin' => null],
+    7 => ['name' => 'ResourceSpace', 'type' => 'group_end'],
     //x => ['name' => 'Dummy Job', 'script_name' => 'dummy_job', 'plugin' => null]
 ];

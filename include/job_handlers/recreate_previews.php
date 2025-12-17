@@ -2,6 +2,8 @@
 
 include_once __DIR__ . '/../image_processing.php';
 
+global $ffmpeg_preview_extension, $ffmpeg_supported_extensions, $resource_deletion_state;
+
 # $job_data['process_type'] -> Either "resource" or "collection"
 # $job_data['refs'] -> Comma-separated list of references (can be either Resource or Collection refs), can be ranges
 # $job_data['sizes'] -> List of image sizes to generate, by preview_size.id
@@ -57,9 +59,9 @@ if (is_array($job_data['types']) && !in_array('all', $job_data['types'])) {
     $types = array();
 }
 
-$previewbased = (bool) $job_data['use_existing'];
-$videoupdate = (bool) $job_data['video_update'];
-$delete_existing = (bool) $job_data['delete_existing'];
+$previewbased = (bool) $job_data['use_existing'] ?? false;
+$videoupdate = (bool) $job_data['video_update'] ?? false;
+$delete_existing = (bool) $job_data['delete_existing'] ?? false;
 
 if ($delete_existing && (count($sizes) > 0 || count($types) > 0 || $previewbased || $videoupdate)) {
     logScript("[recreate_previews] [ERROR] invalid parameters provided for job, cannot use delete_existing with other options", $log_file);

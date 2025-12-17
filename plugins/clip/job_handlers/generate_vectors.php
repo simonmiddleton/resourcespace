@@ -19,10 +19,10 @@ if (is_process_lock("clip_generate_missing_vectors")) {
 
 set_process_lock("clip_generate_missing_vectors");
 
-if ((int) $job_data['limit'] <= 0 || (int) $job_data['limit'] > 100000) {
+$limit = (int) $job_data['limit'] ?? 10000;
+
+if ($limit  <= 0 || $limit > 100000) {
     $limit = 10000;
-} else {
-    $limit = (int) $job_data['limit'];
 }
 
 // Get resources needing vector generation or update - look at the modified date vs. the creation date on the text vector, and also the image checksum on the vector vs the one on the resource record. This catches both metadata and image updates.

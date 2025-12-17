@@ -10,9 +10,11 @@ if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs']))
     
     $range_condition = build_range_where_condition($job_data['collection_refs'], "cr.collection");
 
+    $params = [];
+
     if ($range_condition["ok"]) {
         $conditions[] = $range_condition['where'];
-        $conditions_params = array_merge($conditions_params, $range_condition['params']);
+        $params = $range_condition['params'];
     } else {
         logScript("[faces_tag] [ERROR] unable to process where condition", $log_file);
         job_queue_update($jobref, $job_data, STATUS_ERROR);
@@ -26,7 +28,7 @@ if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs']))
                                 FROM resource_face rf
                                 INNER JOIN collection_resource cr ON cr.resource = rf.resource
                                 WHERE (node IS NULL OR node = 0)" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions) : "") . 
-                                "ORDER BY rf.ref DESC) resources", $conditions_params);
+                                "ORDER BY rf.ref DESC) resources", $params);
 
 } else {
     // Find all faces that have not been identified.

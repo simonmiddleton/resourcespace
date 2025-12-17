@@ -2,15 +2,15 @@
 
 include_once dirname(__FILE__, 2) . '/include/google_vision_functions.php';
 
+global $google_vision_restypes;
+
 # $job_data['collection_refs'] -> Optional. Comma-separated list of collection references, can be ranges
 
 logScript("[process_gv_existing] Starting process_gv_existing job", $log_file);
 
-$collections = array();
-$ignore_resource_type_constraint = false;
-$restypes = $GLOBALS['google_vision_restypes'];
-
+$collections = [];
 $resources = [];
+$ignore_resource_type_constraint = false;
 
 if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs'])) {    
     
@@ -45,7 +45,7 @@ if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs']))
                         AND has_image <> ?
                         AND resource_type IN (" . ps_param_insert(count($restypes)) . ") ";
 
-    $parameters = array_merge(["i", RESOURCE_PREVIEWS_NONE],ps_param_fill($restypes,"i"));
+    $parameters = array_merge(["i", RESOURCE_PREVIEWS_NONE], ps_param_fill($restypes, "i"));
 
     $resources = ps_array($gv_query, $parameters);
 }
