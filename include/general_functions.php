@@ -1424,7 +1424,8 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
         $mail->IsHTML(true);
 
         // Standardise line breaks
-        $body = str_replace(["\r\n","\r","\n","<br/>","<br>"], "<br />", $body);
+        $body = str_replace(["\r\n","\r","\n"], "", $body); // HTML supplied - not considering these.
+        $body = str_replace(["<br/>","<br>"], "<br />", $body);
 
         // Remove any sequences of three or more line breaks with doubles
         while (strpos($body, "<br /><br /><br />") !== false) {
