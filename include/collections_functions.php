@@ -1999,7 +1999,7 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
                     debug('email_collection : key required for ' . $emails[$nx1]);
                     $k = generate_collection_access_key($reflist[$nx2], $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd);
                     if ($k !== false) {
-                        $fc_key = "&k={$k}";
+                        $key = "&k={$k}";
                     }
                     $emailcollectionmessageexternal = true;
                 }
