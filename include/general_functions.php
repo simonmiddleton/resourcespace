@@ -3589,13 +3589,14 @@ function bypass_permissions(array $perms, callable $f, array $p = array())
 }
 
 /**
- * Set a system variable (which is stored in the sysvars table) - set to null to remove
- *
- * @param  mixed $name      Variable name
- * @param  mixed $value     String to set a new value; null to remove any existing value.
- * @return bool
- */
-function set_sysvar($name, $value = null)
+* Set a system variable (which is stored in the sysvars table) - set to null to remove
+*
+* @param   mixed  $name          Variable name
+* @param   mixed  $value         String to set a new value; null to remove any existing value.
+* @param   bool   $clear_cache   Set to false to skip the clearing of any cached values (default true).
+* @return  bool
+*/
+function set_sysvar($name, $value = null, bool $clear_cache = true): bool
 {
     global $sysvars;
     db_begin_transaction("set_sysvar");
@@ -3609,7 +3610,9 @@ function set_sysvar($name, $value = null)
     $sysvars[$name] = $value;
 
     // Clear query cache so the change takes effect
-    clear_query_cache("sysvars");
+    if ($clear_cache) {
+        clear_query_cache("sysvars");
+    }
 
     return true;
 }
