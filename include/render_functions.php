@@ -3793,8 +3793,9 @@ function render_selected_collection_actions()
         "share_collection",
         "download_collection",
         "license_batch",
-        "consent_batch",
         'delete_all_in_collection',
+        'link_consent_batch',
+        'unlink_consent_batch'
     );
 
     if($refs_to_remove > 0)
