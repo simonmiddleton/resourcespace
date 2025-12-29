@@ -2200,12 +2200,19 @@ function split_keywords($search, $index = false, $partial_index = false, $is_dat
     }
 }
 
-function cleanse_string($string, $preserve_separators, $preserve_hyphen = false, $is_html = false)
+/**
+ * Removes characters from a string, for example full stops, prior to keyword splitting - {@see split_keywords()}.
+ * Also makes the string lower case ready for indexing.
+ *
+ * @param string $string Text value which needs to be pre-processed
+ * @param bool $preserve_separators Set to false to separate keywords when specifying multiple field/keyword pairs
+ * (comma and colon)
+ * @param bool $for_search Set to true if you need certain characters to be preserved during a search (e.g. the wildcard
+ * or minus for NOT searches).
+ */
+function cleanse_string($string, $preserve_separators, $for_search = false): string
 {
-    # Removes characters from a string prior to keyword splitting, for example full stops
-    # Also makes the string lower case ready for indexing.
     global $config_separators;
-    $separators = $config_separators;
 
     // Replace some HTML entities with empty space
     // Most of them should already be in $config_separators
@@ -2223,28 +2230,34 @@ function cleanse_string($string, $preserve_separators, $preserve_hyphen = false,
     // Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
     $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
 
-    if (
-        $preserve_hyphen
-        && (substr($string, 0, 1) == "-" || strpos($string, " -") !== false) /*support minus as first character for simple NOT searches */
-        && strpos($string, " - ") === false
-    ) {
-        # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
-        $separators = array_diff($separators, array("-")); # Remove hyphen from separator array.
-    }
-    if (substr($string, 0, 1) == "!" && strpos(substr($string, 1), "!") === false) {
-            // If we have the exclamation mark configured as a config separator but we are doing a special search we don't want to remove it
-            $separators = array_diff($separators, array("!"));
+    $unicode_allowlist = [];
+
+    if ($for_search) {
+        $unicode_allowlist[] = '*'; # wildcard
+
+        // Preserve hyphen so we know which keywords to omit from the search (for a NOT search)
+        if ((substr($string, 0, 1) == "-" || strpos($string, " -") !== false) && strpos($string, " - ") === false) {
+            $unicode_allowlist[] = '-';
+        }
+
+        // Preserve the exclamation mark when doing a special search
+        if (substr($string, 0, 1) == "!" && strpos(substr($string, 1), "!") === false) {
+            $unicode_allowlist[] = '!';
+        }
     }
 
-    if ($preserve_separators) {
-            return mb_strtolower(trim_spaces(str_replace($separators, " ", $string)), 'UTF-8');
-    } else {
-            # Also strip out the separators used when specifying multiple field/keyword pairs (comma and colon)
-            $s = $separators;
-            $s[] = ",";
-            $s[] = ":";
-            return mb_strtolower(trim_spaces(str_replace($s, " ", $string)), 'UTF-8');
+    $separators = array_diff($config_separators, $unicode_allowlist);
+
+    if (!$preserve_separators) {
+        # Also strip out the separators used when specifying multiple field/keyword pairs (comma and colon)
+        $separators[] = ",";
+        $separators[] = ":";
     }
+
+    return mb_strtolower(
+        allow_unicode_characters(str_replace($separators, ' ', $string), $unicode_allowlist),
+        'UTF-8'
+    );
 }
 
 /**

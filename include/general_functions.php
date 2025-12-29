@@ -6011,3 +6011,21 @@ function strip_unicode_points(string $value, array $blocklist = []): string
 
     return preg_replace('/[' . implode('', $blocklist) . ']/u', '', $value);
 }
+
+/**
+ * Strip any characters not present in the allow list. Mostly useful for search/indexing purposes where we care more
+ * about the words themselves and less about linking or any other type of characters.
+ *
+ * @param string $text Initial text value
+ * @param list<string> $allowlist List of allowed characters. IMPORTANT: it's used to create a regex pattern.
+ */
+function allow_unicode_characters(string $text, array $allowlist = []): string
+{
+    // Regex explanation - match a single character not present in the list below:
+    // \p{L} - any kind of letter from any language
+    // \p{N} - any kind of numeric character in any script
+    // \s - any kind of invisible character (equivalent to [\p{Z}\h\v])
+    return trim_spaces(
+        preg_replace('/[^\p{L}\p{N}\s' . implode('', array_map(preg_quote(...), $allowlist)) . ']+/u', '', $text)
+    );
+}
