@@ -8,9 +8,9 @@
  * face, it records the bounding box, detection score, and face vector into the
  * `resource_face` database table. The resource is then marked as processed.
  *
- * @param  int  $ref     The resource reference ID to process.
- * @param  int  $force   Force the processing of this resource, for example when replacing
- *                       the file or where it was previously not possible to find the file.
+ * @param  int   $ref     The resource reference ID to process.
+ * @param  bool  $force   Force the processing of this resource, for example when replacing
+ *                        the file or where it was previously not possible to find the file.
  *
  * @return bool Returns true if face detection and storage were successful,
  *              or false if the file was missing, the service failed, or invalid data was returned.
