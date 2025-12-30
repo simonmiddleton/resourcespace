@@ -2161,7 +2161,7 @@ function split_keywords($search, $index = false, $partial_index = false, $is_dat
         } elseif (strpos($ns, "startdate") !== false || strpos($ns, "enddate") !== false) {
             $return = explode(",", $ns);
         } else {
-            $ns = cleanse_string($ns, $preserve_separators, !$index, $is_html);
+            $ns = cleanse_string($ns, $preserve_separators, !$index);
             $return = explode(" ", $ns);
         }
         // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
@@ -2186,7 +2186,7 @@ function split_keywords($search, $index = false, $partial_index = false, $is_dat
             }
         } else {
             # split using spaces and similar chars (according to configured whitespace characters)
-            $ns = explode(" ", cleanse_string($ns, false, !$index, $is_html));
+            $ns = explode(" ", cleanse_string($ns, false, !$index));
         }
 
         if ($keepquotes) {
