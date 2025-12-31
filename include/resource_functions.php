@@ -2411,7 +2411,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log 
             foreach ($sent_nodes as $sent_node) {
                 $node_details = [];
                 $valid_node = get_node($sent_node, $node_details);
-                if (!$valid_node || $node_details["resource_type_field"] !== $field) {
+                if (!$valid_node || $node_details["resource_type_field"] !== (int) $field) {
                     return false;
                 }
                 $nodes_to_add[] = $sent_node;
