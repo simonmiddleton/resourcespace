@@ -348,6 +348,11 @@ function add_resource_to_collection(
         return $lang["cantmodifycollection"];
     }
 
+    $resource_data = ps_query('SELECT resource_type, archive FROM `resource` WHERE ref = ?;', array('i', $resource));
+    if (count($resource_data) !== 1) {
+        return $lang["cantmodifycollection"] . ' ' . $lang["resourcenotfound"];
+    }
+
     global $collection_allow_not_approved_share, $collection_block_restypes;
     $addpermitted = $col_access_control ?? (
         (collection_writeable($collection) && !is_featured_collection_category_by_children($collection))
@@ -356,7 +361,7 @@ function add_resource_to_collection(
 
     if ($addpermitted && !$smartadd && (count($collection_block_restypes) > 0)) { // Can't always block adding resource types since this may be a single resource managed request
         if ($addtype == "") {
-            $addtype = ps_value("SELECT resource_type value FROM resource WHERE ref = ?", ["i",$resource], 0);
+            $addtype = $resource_data[0]['resource_type'];
         }
         if (in_array($addtype, $collection_block_restypes)) {
             $addpermitted = false;
@@ -395,7 +400,7 @@ function add_resource_to_collection(
             $fc_branch_path_keys
         );
         if (count($keys) > 0) {
-            $archivestatus = ps_value("SELECT archive AS value FROM resource WHERE ref = ?", ["i",$resource], "");
+            $archivestatus = $resource_data[0]['archive'];
             if ($archivestatus < 0 && !$collection_allow_not_approved_share) {
                 global $lang;
                 $lang["cantmodifycollection"] = $lang["notapprovedresources"] . $resource;
