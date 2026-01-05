@@ -1136,7 +1136,7 @@ jQuery(document).ready(function () {
                 { ?>
                 let upload_collection_name = document.getElementById("entercolname").value;
                 let upload_collection_id   = document.getElementById("collection_add").value;
-                if (upload_collection_name == '' && upload_collection_id == 'new' && upload_collection_id !== 'false')
+                if (upload_collection_name == '' && upload_collection_id === 'new')
                     {
                     styledalert('<?php echo escape($lang['error-unable_to_upload']) ?>', '<?php echo escape($lang["collectionname"] . ":  " .$lang["requiredfield"]); ?>', 380);
                     return false;
