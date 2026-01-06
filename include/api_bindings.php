@@ -246,7 +246,7 @@ function api_update_field($resource, $field, $value, $nodevalues = false)
         return false;
     }
     $errors = [];
-    return update_field($resource, $field, $value, $errors, true, $nodevalues);
+    return update_field($resource, (int) $field, $value, $errors, true, $nodevalues);
 }
 
 function api_delete_resource($resource)
