@@ -1,146 +1,57 @@
 <?php
 
+global $resource_deletion_state;
+
 # $job_data['collection_refs'] -> Optional. Comma-separated list of collection references, can be ranges
 # $job_data['manage_method']   -> Determines how the script will deal with the duplicates removal, can be lifo or fifo, defaults to lifo
 # $job_data['dry_run']         -> Boolean, will default to false if not specified
 # $job_data['delete_perm']     -> Boolean, will default to false if not specified
 
+logScript("[purge_duplicates] Starting purge_duplicates job", $log_file);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-$webroot = dirname(__DIR__, 2);
-include_once "{$webroot}/include/boot.php";
-include_once "{$webroot}/include/log_functions.php";
-command_line_only();
-set_time_limit(0);
-logScript(sprintf('Started script - %s', __FILE__));
-
-$help_text = <<<'HELP'
-NAME
-    purge_duplicates - remove duplicate resources.
-
-SYNOPSIS
-    php /path/to/pages/tools/purge_duplicates.php [OPTIONS]
-
-DESCRIPTION
-    A tool to help administrators remove duplicate resources faster. If desired, duplicates can be fully deleted from 
-    the system.
-
-OPTIONS SUMMARY
-
-    -h, --help              Display this help text and exit.
-    --dry-run               Perform a trial run with no changes made.
-    --manage-method         Determines how the script will deal with the duplicates removal. Default: LIFO.
-                            Available options are:-
-                                * FIFO (First In, First Out) - will remove old resources and keep the last one found
-                                * LIFO (Last In, First Out) - will remove new duplicate resources and keep the first one found
-    --delete-permanently    Delete duplicate resources permanently. Default off - resources move to the configured resource_deletion_state
-    -c, --collection        Collection ID to limit the duplicates removal within a range (ie resources in the specified
-                            collection). You don't need to have all duplicates in the collection, just one of them will 
-                            be enough. Allowed multiple instances.
-
-EXAMPLES
-    # Testing script - always use dry-run to avoid silly mistakes (e.g typos)
-    php purge_duplicates.php --dry-run
-
-    # To remove all duplicates in the system (dropping the most recent duplicates)
-    php purge_duplicates.php
-    php purge_duplicates.php --manage-method=LIFO
-
-    # To remove all duplicates in the system (keeping the most recent duplicates)
-    php purge_duplicates.php --manage-method=FIFO
-
-    # To remove duplicates (keeping the most recent) in the system but only within a selected subset
-    php purge_duplicates.php --manage-method=FIFO --collection=50
-    php purge_duplicates.php --manage-method=FIFO -c=50 -c=100 -c=200
-
-HELP;
-
-// Script options @see https://www.php.net/manual/en/function.getopt.php
-$cli_short_options = 'hc:';
-$cli_long_options  = array(
-    'help',
-    'dry-run',
-    'manage-method:',
-    'delete-permanently',
-    'collection:'
-);
-
-// Defaults
-$dry_run = false;
-$dry_run_text = "";
-$manage_method = 'LIFO';
-$manage_method_text = 'Keep earliest resource found and remove later duplicates';
-$order_by = 'ASC'; # depends on the $manage_method value
-$delete_permanently = false;
-$collections = [];
-
-// Option logging
-$logScriptTexts = [];
-
-foreach (getopt($cli_short_options, $cli_long_options) as $option_name => $option_value) {
-    if (in_array($option_name, ['h', 'help'])) {
-        ob_clean();
-        echo $help_text;
-        exit(0);
-    } elseif ($option_name == 'dry-run') {
-        $dry_run = true;
-        $dry_run_text = strtoupper($option_name) . " ";
-        $logScriptTexts[] = "Script running";
-    } elseif ($option_name == 'delete-permanently') {
-        $delete_permanently = true;
-        $logScriptTexts[] = "Script running with '{$option_name}' option enabled";
-    } elseif ($option_name == 'manage-method' && is_string($option_value)) {
-        $manage_method = $option_value;
-        if ($manage_method == 'FIFO') {
-            $manage_method_text = 'Keep latest resource found and remove earlier duplicates';
-            $order_by = 'DESC';
-        }
-    } elseif (in_array($option_name, ['c', 'collection'])) {
-        $collections = array_values(array_filter(is_array($option_value) ? $option_value : [$option_value], 'is_int_loose'));
-        $logScriptTexts[] = "Script running for following collections: " . implode(', ', $collections);
-    }
-}
+$manage_method = (string) $job_data['manage_method'] ?? 'lifo';
+$dry_run = (bool) $job_data['dry_run'] ?? false;
+$delete_permanently = (bool) $job_data['delete_perm'] ?? false;
 
 // Reject invalid parameters and combinations
 if ($dry_run && $delete_permanently) {
-    logScript("ERROR: Script terminated; options --dry-run and --delete-permanently are mutually exclusive");
-    exit(0);
+    logScript("[purge_duplicates] [ERROR] dry-run and delete permanently are mutually exclusive", $log_file);
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
+    return;
 }
 
-if (!in_array($manage_method, array('FIFO', 'LIFO'))) {
-    logScript("ERROR: Script terminated; option --manage-method={$manage_method} is invalid");
-    exit(0);
-}
-
-$logScriptTexts[] = "Script running with the '{$manage_method}' method; " . $manage_method_text;
-
-// Log the options in effect for this run
-foreach ($logScriptTexts as $logScriptText) {
-    logScript($dry_run_text . $logScriptText);
-}
-
-// Identify the duplicates depending on the presence or otherwise of passed-in collections
-if (empty($collections)) {
-    // All duplicates
-    $duplicates_by_checksum =
-    ps_query("SELECT r1.file_checksum, r1.ref 
-        FROM resource r1
-        WHERE coalesce(r1.file_checksum, '') <> ''
-        AND ( SELECT count(*) r2count from resource r2 WHERE r2.file_checksum = r1.file_checksum ) > 1
-        ORDER BY r1.file_checksum ASC, r1.ref {$order_by}");
+if ($dry_run) {
+    $dry_run_text = "[DRY-RUN]";
 } else {
+    $dry_run_text = "";
+}
+
+if (!in_array($manage_method, array('fifo', 'lifo'))) {
+    logScript("[purge_duplicates] [ERROR] specified manage method is invalid", $log_file);
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
+}
+
+if ($manage_method == 'lifo') {
+    $order_by = 'ASC';
+} else {
+    $order_by = 'DESC';
+}
+
+if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs'])) {    
+    
+    $range_condition = build_range_where_condition($job_data['collection_refs'], "cr.collection");
+
+    $params = [];
+
+    if ($range_condition["ok"]) {
+        $conditions[] = $range_condition['where'];
+        $params = $range_condition['params'];
+    } else {
+        logScript("[purge_duplicates] [ERROR] unable to process where condition", $log_file);
+        job_queue_update($jobref, $job_data, STATUS_ERROR);
+        return;
+    }
+
     // Duplicates where the checksum is present in any of the passed-in collections
     $duplicates_by_checksum =
     ps_query("SELECT d1.file_checksum, d1.ref FROM (
@@ -151,8 +62,20 @@ if (empty($collections)) {
         WHERE d1.file_checksum IN
             (SELECT r3.file_checksum from collection_resource cr
             INNER JOIN resource r3 on r3.ref = cr.resource and coalesce(r3.file_checksum,'') <> ''
-            WHERE cr.collection IN (" . ps_param_insert(count($collections)) . ")) 
-            ORDER BY d1.file_checksum ASC, d1.ref {$order_by}", ps_param_fill($collections, 'i'));
+            WHERE r3.ref > 0"
+                       . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions) : "") .
+            ") ORDER BY d1.file_checksum ASC, d1.ref {$order_by}", $params);
+
+} else {
+
+    // All duplicates
+    $duplicates_by_checksum =
+    ps_query("SELECT r1.file_checksum, r1.ref 
+        FROM resource r1
+        WHERE coalesce(r1.file_checksum, '') <> ''
+        AND ( SELECT count(*) r2count from resource r2 WHERE r2.file_checksum = r1.file_checksum ) > 1
+        ORDER BY r1.file_checksum ASC, r1.ref {$order_by}");
+
 }
 
 $count_matching_checksums = count($duplicates_by_checksum);
@@ -160,14 +83,13 @@ $count_permanent_deletions = 0;
 $count_marked_deletions = 0;
 $count_unchanged = 0;
 
-logScript($dry_run_text . "STARTING SUMMARY");
-logscript($dry_run_text . "STARTING Count of candidate resources with matching checksums is {$count_matching_checksums}");
-logScript($dry_run_text . "RESOURCE DETAILS");
-
 $keep_resources = array();
 $delete_resources = array();
 $last_kept_resource = null;
 $last_checksum = null;
+
+$delete_total_count = 0;
+
 // Build an array of resources which will be kept, and another array of the resources to be deleted
 foreach ($duplicates_by_checksum as $duplicate) {
     if ($duplicate["file_checksum"] !== $last_checksum) {
@@ -178,16 +100,27 @@ foreach ($duplicates_by_checksum as $duplicate) {
     } else {
         // Subsequent resources for this checksum will be deleted
         $delete_resources[$last_kept_resource][] = $duplicate["ref"];
+        $delete_total_count++;
     }
 }
 // The kept resources array is currently in checksum sequence
 // We want to process the resources in ascending kept resource sequence for logging readability
 ksort($keep_resources);
 
-// Process and log each kept resource and checksum, deleting the other resources identified earlier (ie. with the same checksum))
+
+logScript("[purge_duplicates] " . $dry_run_text . " count of candidate resources with matching checksums is {$count_matching_checksums}", $log_file);
+
+if ($dry_run) {
+    logScript("[purge_duplicates] " . $dry_run_text . " dry run enabled so no actual resources will be deleted", $log_file);
+}
+
+$delete_progress_count = 1;
+
+// // Process and log each kept resource and checksum, deleting the other resources identified earlier (ie. with the same checksum))
 foreach ($keep_resources as $keep_ref => $keep_checksum) {
+    
     // Log resource which will be kept
-    logScript($dry_run_text . "Keep resource #{$keep_ref} with checksum '{$keep_checksum}'");
+    logScript("[purge_duplicates] $dry_run_text keep resource #{$keep_ref} with checksum '{$keep_checksum}'", $log_file);
     $count_unchanged += 1;
 
     // Resource deletion
@@ -195,39 +128,51 @@ foreach ($keep_resources as $keep_ref => $keep_checksum) {
         if ($delete_permanently) {
             // Option delete-permanently and dry-run are mutually exclusive
             // Option dry-run will never be true and the associated text is always blank at this point; this is just a belt and braces check
-            logScript($dry_run_text . ".. Deleting resource #{$delete_resource} with checksum '{$keep_checksum}' permanently");
+            logScript("[purge_duplicates] $dry_run_text ...deleting resource #{$delete_resource} with checksum '{$keep_checksum}' permanently", $log_file);
             $count_permanent_deletions += 1;
             if (!$dry_run) {
                 unset($resource_deletion_state);
                 delete_resource($delete_resource);
             }
         } else {
-            logScript($dry_run_text . ".. Deleting resource #{$delete_resource} with checksum '{$keep_checksum}' logically; marked as '{$resource_deletion_state}'");
+            logScript("[purge_duplicates] $dry_run_text ...deleting resource #{$delete_resource} with checksum '{$keep_checksum}' logically; marked as '{$resource_deletion_state}'", $log_file);
             $count_marked_deletions += 1;
             if (!$dry_run) {
                 update_archive_status($delete_resource, $resource_deletion_state);
             }
         }
+
+        $progress = round(($delete_progress_count / $delete_total_count) * 100, 0);
+        logScript("[purge_duplicates] [PROGRESS] $progress%", $log_file);
+        $delete_progress_count++;    
     }
 }
 
-// Report various processing counts
-logScript($dry_run_text . "ENDING SUMMARY");
+// // Report various processing counts
+
 $count_processed_resources = 0;
-logscript($dry_run_text . "ENDING Count of resources which are kept ............... {$count_unchanged}");
+
+logscript("[purge_duplicates] " . $dry_run_text . " {$count_unchanged} resources kept", $log_file);
 
 if ($delete_permanently) {
-    logscript($dry_run_text . "ENDING Count of resources permanently deleted .......... {$count_permanent_deletions}");
+    logscript("[purge_duplicates] " . $dry_run_text . " {$count_permanent_deletions} resources permanently deleted", $log_file);
     $count_processed_resources = $count_unchanged + $count_permanent_deletions;
 } else {
-    logscript($dry_run_text . "ENDING Count of resources marked as deleted ............ {$count_marked_deletions}");
+    logscript("[purge_duplicates] " . $dry_run_text . " {$count_marked_deletions} resources marked as deleted", $log_file);
     $count_processed_resources = $count_unchanged + $count_marked_deletions;
 }
 
 // Report whether or not ending counts are as expected
 if ($count_matching_checksums == $count_processed_resources) {
-    logScript($dry_run_text . "ENDING Count of processed resources with matching checksums is {$count_processed_resources} as expected");
+    logScript("[purge_duplicates] " . $dry_run_text . " count of processed resources with matching checksums is {$count_processed_resources} as expected", $log_file);
 } else {
-    logScript($dry_run_text . "WARNING Count of processed resources with matching checksums is {$count_processed_resources} which is unexpected");
+    logScript("[purge_duplicates] [ERROR] " . $dry_run_text . " count of processed resources with matching checksums is {$count_processed_resources} which is unexpected", $log_file);
 }
-logScript($dry_run_text . "Script completed!");
+
+if ($dry_run) {
+    logScript("[purge_duplicates] " . $dry_run_text . " dry run enabled so no actual resources have been deleted", $log_file);
+}
+
+logScript("[purge_duplicates] Ending purge_duplicates job", $log_file);
+
+job_queue_update($jobref, $job_data, STATUS_COMPLETE);

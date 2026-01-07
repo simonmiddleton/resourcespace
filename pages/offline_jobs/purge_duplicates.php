@@ -48,6 +48,11 @@ if ($save != '' && enforcePostRequest(false)) {
         $valid_data = false;
     }
 
+    if ($dry_run && $delete_perm) {
+        $field_errors['delete_perm'][] = "permanent deletion is not possible during a dry run";
+        $valid_data = false;
+    }
+
     if ($valid_data) {
         $job_data = [
             "collection_refs" => $collection_refs,
@@ -131,6 +136,13 @@ if ($job_add_error) {
         <div class="Question">
             <label for="delete_perm">Delete permanently</label>
             <input name="delete_perm" id="delete_perm" type="checkbox" value="1"<?php echo ($delete_perm ? 'checked="checked"' : ''); ?>>
+            <?php
+                if (isset($field_errors) && is_array($field_errors) && array_key_exists('delete_perm', $field_errors)) {
+                    foreach ($field_errors['delete_perm'] as $error_message) {
+                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                    }                    
+                } 
+            ?>   
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">
