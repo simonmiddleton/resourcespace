@@ -1091,7 +1091,7 @@ const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
 const NON_PREVIEW_EXTENSIONS = ['zip'];
 
 $offline_job_list = [
-    0 => ['name' => 'ResourceSpace', 'type' => 'group_start'],
+    0 => ['name' => 'Core', 'type' => 'group_start'],
     1 => ['name' => 'Recreate Previews', 'script_name' => 'recreate_previews', 'plugin' => null],
     2 => ['name' => 'Regenerate EXIF data', 'script_name' => 'update_exiftool_field', 'plugin' => null],
     3 => ['name' => 'Purge duplicate resources', 'script_name' => 'purge_duplicates', 'plugin' => null],

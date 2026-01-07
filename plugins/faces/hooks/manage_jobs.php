@@ -11,10 +11,10 @@ function HookFacesManage_jobsAddjobtriggerpage()
     }
 
     $scripts = [
-        0 => ['name' => 'Insight Faces plugin', 'type' => 'group_start'],
+        0 => ['name' => 'Insight Faces', 'type' => 'group_start'],
         1 => ['name' => 'Detect Faces', 'script_name' => 'faces_detect', 'plugin' => 'faces'],
         2 => ['name' => 'Tag Faces', 'script_name' => 'faces_tag', 'plugin' => 'faces'],
-        3 => ['name' => 'Insight Faces plugin', 'type' => 'group_end'],
+        3 => ['name' => 'Insight Faces', 'type' => 'group_end'],
     ];
 
     return array_merge($existing_scripts, $scripts);

@@ -11,9 +11,9 @@ function HookClipManage_jobsAddjobtriggerpage()
     }
 
     $scripts = [
-        0 => ['name' => 'CLIP AI Smart Search plugin', 'type' => 'group_start'],
+        0 => ['name' => 'CLIP AI Smart Search', 'type' => 'group_start'],
         1 => ['name' => 'Generate CLIP vectors', 'script_name' => 'generate_vectors', 'plugin' => 'clip'],
-        2 => ['name' => 'CLIP AI Smart Search plugin', 'type' => 'group_end'],
+        2 => ['name' => 'CLIP AI Smart Search', 'type' => 'group_end'],
     ];
 
     return array_merge($existing_scripts, $scripts);

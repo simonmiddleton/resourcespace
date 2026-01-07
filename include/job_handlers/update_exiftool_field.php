@@ -7,129 +7,131 @@ include_once __DIR__ . '/../image_processing.php';
 # $job_data['blanks']          -> Optional. Boolean, will default to true if not specified
 # $job_data['overwrite']       -> Optional. Boolean, will default to false if not specified
 
+logScript("[update_exiftool_field] Starting update_exiftool_field job", $log_file);
 
 
-if (substr($sapi_type, 0, 3) != 'cli') {
-    include "../../include/authenticate.php";
-    if (!checkperm("a")) {
-        exit("Permission denied");
-    }
-    header("Content-type: text/plain");
-    set_time_limit(0);
-    # ex. pages/tools/update_exiftool_field.php?fieldrefs=75,3&blanks=true
-    $fieldrefs = getval("fieldrefs", 0);
-
-    if ($fieldrefs == 0) {
-        echo "Please add a list of field IDs to the fieldrefs url parameter, which are the ref numbers of the fields that you would like exiftool to extract from." . PHP_EOL . PHP_EOL;
-        echo "Examples:-" . PHP_EOL . PHP_EOL;
-        echo "   pages/tools/update_exiftool_field.php?fieldrefs=18" . PHP_EOL;
-        echo "   - This will update field 18 (usually description/caption) for all resources." . PHP_EOL;
-        echo "     If metadata is already present for a resource it will be left unchanged." . PHP_EOL . PHP_EOL;
-        echo "   pages/tools/update_exiftool_field.php?fieldrefs=8&col=678&blanks=true&overwrite " . PHP_EOL;
-        echo "   - This will update field 8 (usually title) for resources in collection 678. Existing values will be overwritten." . PHP_EOL;
-        echo "     If no embedded metadata is present the field will be cleared." . PHP_EOL . PHP_EOL;
-        echo "   pages/tools/update_exiftool_field.php?fieldrefs=75,3&blanks=false&overwrite=true " . PHP_EOL;
-        echo "   - This will update fields 3 and 75 for all resources. Existing values will be overwritten only if there is embedded metadata present." . PHP_EOL;
-        exit();
-    }
-
-    $blanks = getval("blanks", "true") == "true"; // if new value is blank, it will replace the old value.
-    $fieldrefs = explode(",", $fieldrefs);
-    $collectionid = getval("col", 0, true);
-    $overwrite = getval("overwrite", "") != "";  // If true and field already has value it will overwrite the existing value
-} else {
-    $shortopts = "f:c:b:o";
-    $longopts = array("fieldrefs:", "blanks::", "col::", "overwrite");
-    $clargs = getopt($shortopts, $longopts);
-
-    if (!isset($clargs["fieldrefs"]) && !isset($clargs["f"])) {
-        echo "Usage: php update_exiftool_field.php [FIELD REFS] [OPTIONS]" . PHP_EOL . PHP_EOL;
-        echo "Required arguments" . PHP_EOL;
-        echo "-f, --fieldrefs         A list of field IDs as the fieldrefs arguments i.e. --fieldrefs <comma separated list of numbers>" . PHP_EOL;
-        echo "                        These are the ref numbers of the fields that you would like exiftool to extract from." . PHP_EOL;
-        echo "Optional arguments:-" . PHP_EOL;
-        echo "-c, --col               ID of collection. If specified Only resouces in this collection will be updated" . PHP_EOL;
-        echo "-b, --blanks            true|false. Should existing data be wiped for resources where the file has no metadata present for the associated tag?" . PHP_EOL;
-        echo "-o, --overwrite         Overwrite existing data by embedded metadata? Wil be false if not passed" . PHP_EOL . PHP_EOL;
-        echo "Examples:-" . PHP_EOL;
-        echo "   php update_exiftool_field.php --fieldrefs 18" . PHP_EOL;
-        echo "   - This will update field 18 (usually description/caption) for all resources." . PHP_EOL;
-        echo "     If metadata is already present for a resource it will be left unchanged." . PHP_EOL . PHP_EOL;
-        echo "   php update_exiftool_field.php --fieldrefs 8 --col=678 --blanks=true --overwrite " . PHP_EOL;
-        echo "   - This will update field 8 (usually title) for resources in collection 678. Existing values will be overwritten." . PHP_EOL;
-        echo "     If no embedded metadata is present the field will be cleared." . PHP_EOL . PHP_EOL;
-        echo "   php update_exiftool_field.php --fieldrefs 75,3 --blanks=false --overwrite " . PHP_EOL;
-        echo "   - This will update fields 3 and 75 for all resources. Existing values will be overwritten only if there is embedded metadata present." . PHP_EOL;
-        exit();
-    }
-
-    $fieldrefs = isset($clargs["fieldrefs"]) ? explode(",", $clargs["fieldrefs"]) : explode(",", $clargs["f"]);
-    $collectionid = (isset($clargs["col"]) && is_numeric($clargs["col"])) ? $clargs["col"] : ((isset($clargs["c"]) && is_numeric($clargs["c"])) ? $clargs["c"] : 0);
-    $blanks = ((isset($clargs["blanks"]) && strtolower($clargs["blanks"]) == "false") || isset($clargs["b"]) && strtolower($clargs["b"]) == "false") ? false : true;
-    $overwrite = isset($clargs["overwrite"]) || isset($clargs["o"]);
-}
-
+// Exiftool check before proceeding
 $exiftool_fullpath = get_utility_path("exiftool");
+
 if (!$exiftool_fullpath) {
-    die("Could not find Exiftool.");
+    logScript("[update_exiftool_field] [ERROR] could not find Exiftool", $log_file);
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
+    return;
 }
 
-foreach ($fieldrefs as $fieldref) {
+
+// Process $job_data
+$blanks = (bool) $job_data['blanks'] ?? true;
+$overwrite = (bool) $job_data['overwrite'] ?? false;
+
+$range_condition = build_range_where_condition($job_data['collection_refs'], "cr.collection");
+
+$join = "";
+$conditions = [];
+$params = [];
+
+if ($range_condition["ok"]) {
+    $join .= "INNER JOIN collection_resource cr ON r.ref = cr.resource";
+    $conditions[] = $range_condition['where'];
+    $params = $range_condition['params'];
+} else {
+    logScript("[update_exiftool_field] [ERROR] unable to process where condition", $log_file);
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
+    return;
+}
+
+$processed_field_refs = parse_csv_to_list_of_type($job_data['field_refs'], "is_positive_int_loose");
+
+if (empty($processed_field_refs)) {
+    logScript("[update_exiftool_field] [ERROR] unable to process field list", $log_file);
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
+    return;
+}
+
+$resource_list = [];
+$total_updates = 0;
+
+foreach ($processed_field_refs as $fieldref) {
+    
     $fieldref_info = get_resource_type_field($fieldref);
 
     if (!$fieldref_info) {
-        die("field " . (int) $fieldref . " doesn't exist");
+        logScript("[update_exiftool_field] [ERROR] field " . (int) $fieldref . " doesn't exist", $log_file);
+        job_queue_update($jobref, $job_data, STATUS_ERROR);
+        return;
     }
 
     $title = (string) $fieldref_info["title"];
-    $name = (string) $fieldref_info["name"];
-    $type = (int) $fieldref_info["type"];
-    $exiftool_filter = (string) $fieldref_info["exiftool_filter"];
     $exiftool_tag = (string) $fieldref_info["exiftool_field"];
     $restypes = !is_null($fieldref_info["resource_types"]) ? explode(",", (string) $fieldref_info["resource_types"]) : [];
 
     if ($exiftool_tag == "") {
-        die("Please add an exiftool mapping to your " . escape($title) . " Field");
+        logScript("[update_exiftool_field] [ERROR] no exiftool mapping for " . escape($title) . " field", $log_file);
+        continue;
     }
 
-    echo PHP_EOL . "Updating RS Field " . (int) $fieldref . " - " . escape($title) . ", with exiftool extraction of: " . escape($exiftool_tag) . PHP_EOL;
-
-    $join = "";
-    $condition = "";
-    $conditionand = "";
-    $params = [];
-
-    if ($collectionid != 0) {
-        $join = " INNER JOIN collection_resource ON collection_resource.resource=resource.ref ";
-        $condition = "WHERE collection_resource.collection = ?";
-        $conditionand = "AND collection_resource.collection = ?";
-        $params = ['i', $collectionid];
-    }
+    //logScript("[update_exiftool_field] Updating RS Field " . (int) $fieldref . " - " . escape($title) . " with exiftool extraction of: " . escape($exiftool_tag), $log_file);
 
     if ($fieldref_info["global"] === 1) {
-        $rd = ps_query("SELECT ref,file_extension FROM resource $join $condition ORDER BY ref", $params);
+        $rd = ps_query("SELECT r.ref, r.file_extension 
+                        FROM resource r
+                        $join 
+                        WHERE r.ref > 0" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions) : "") .
+                        " ORDER BY r.ref", $params);
     } elseif (empty($restypes)) {
-        echo "Field " . (int) $fieldref . " not assigned to any fields or global, skipping...\n";
+        logScript("[update_exiftool_field] [ERROR] field " . $field_ref . " not assigned to any fields or global, skipping...", $log_file);
         continue;
     } else {
-        $rd = ps_query("SELECT ref,file_extension FROM resource $join WHERE resource_type IN(" . ps_param_insert(count($restypes)) . ") $conditionand ORDER BY ref", array_merge(ps_param_fill($restypes, "i"), $params));
+        $rd = ps_query("SELECT r.ref, r.file_extension 
+                        FROM resource r
+                        $join 
+                        WHERE r.resource_type IN (" . ps_param_insert(count($restypes)) . ")"                        
+                         . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions) : "") .  " ORDER BY r.ref", 
+                         array_merge(ps_param_fill($restypes, "i"), $params));
     }
+
+    if (!empty($rd)) {
+        $resource_list[$fieldref]['field_info'] = $fieldref_info;
+        $resource_list[$fieldref]['resources'] = $rd;
+        $total_updates += count($rd);
+    }    
+}
+
+logScript("[update_exiftool_field] $total_updates updates to be processed", $log_file);
+
+$processed_count = 1;
+
+foreach ($resource_list as $field_ref => $field_data) {
+
+    $title = (string) $field_data["field_info"]["title"];
+    $name = (string) $field_data["field_info"]["name"];
+    $type = (int) $field_data["field_info"]["type"];
+    $exiftool_filter = (string) $field_data["field_info"]["exiftool_filter"];
+    $exiftool_tag = (string) $field_data["field_info"]["exiftool_field"];
+    $restypes = !is_null($field_data["field_info"]["resource_types"]) ? explode(",", (string) $field_data["field_info"]["resource_types"]) : [];
 
     $exiftool_tags = explode(",", $exiftool_tag);
 
-    for ($n = 0; $n < count($rd); $n++) {
-        $ref = $rd[$n]['ref'];
-        $extension = $rd[$n]['file_extension'];
+    foreach ($field_data["resources"] as $resource) {
+
+        $ref = $resource['ref'];
+        $extension = $resource['file_extension'];
 
         $image = get_resource_path($ref, true, "", false, $extension);
 
         if (file_exists($image)) {
-            echo "Checking Resource " . (int) $ref . PHP_EOL;
+
+            logScript("[update_exiftool_field] checking resource " . (int) $ref, $log_file);
 
             if (!$overwrite) {
-                $existing = get_data_by_field($ref, $fieldref);
+                $existing = get_data_by_field($ref, $field_ref);
                 if (trim($existing) != "") {
-                    echo "Resource " . (int) $ref . " already has data present in the field " . (int) $fieldref . ": " . escape($existing) . ", Skipping.." . PHP_EOL;
+                    logScript("[update_exiftool_field] resource " . (int) $ref . " already has data present in the field " . (int) $field_ref . ": " . escape($existing) . ", skipping...", $log_file);
+                    
+                    $progress = round(($processed_count / $total_updates) * 100, 0);
+                    logScript("[update_exiftool_field] [PROGRESS] $progress%", $log_file);
+                    $processed_count++;
+                    
                     continue;
                 }
             }
@@ -139,14 +141,11 @@ foreach ($fieldrefs as $fieldref) {
 
             foreach ($exiftool_tags as $current_exiftool_tag) {
                 if (strpos(trim($current_exiftool_tag), " ") !== false) {
-                    exit("ERROR: exiftool tags do not use spaces please check the tags used in the fields options for Field " . (int) $fieldref);
+                    logScript("[update_exiftool_field] [ERROR] exiftool tags do not use spaces please check the tags used in the fields options for Field " . (int) $fieldref, $log_file);
+                    break;
                 }
 
                 $command = $exiftool_fullpath . " -s -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -" . trim($current_exiftool_tag) . " " . escapeshellarg($image);
-
-                if (PHP_SAPI == "cli") {
-                    echo escape($command) . PHP_EOL;
-                }
 
                 $current_value = iptc_return_utf8(trim(run_command($command)));
 
@@ -174,17 +173,17 @@ foreach ($fieldrefs as $fieldref) {
                         if (!empty($invalid_date)) {
                             $invalid_date = str_replace("%field%", $name, $invalid_date);
                             $invalid_date = str_replace("%row% ", "", $invalid_date);
-
-                            echo "-Exiftool " . escape($invalid_date) . PHP_EOL . PHP_EOL;
+                            
+                            logScript("[update_exiftool_field] -Exiftool " . escape($invalid_date), $log_file);
                             continue;
                         }
                     }
 
-                    update_field($ref, $fieldref, $value);
-                    echo "-Exiftool found \"" . escape($value) . "\" embedded in the -" . escape($exiftool_tag) . " tag and applied it to Resource " . (int) $ref . " Field " . (int) $fieldref . PHP_EOL . PHP_EOL;
+                    update_field($ref, $field_ref, $value);
+                    logScript("[update_exiftool_field] -Exiftool found \"" . escape($value) . "\" embedded in the -" . escape($exiftool_tag) . " tag and applied it to Resource " . (int) $ref . " Field " . (int) $field_ref, $log_file);
                 } else {
-                    update_field($ref, $fieldref, $value);
-                    echo "-Exiftool found no value embedded in the " . escape(implode(", ", $exiftool_tags)) . " tag/s and applied \"\" to Resource " . (int) $ref . " Field " . (int) $fieldref . PHP_EOL;
+                    update_field($ref, $field_ref, $value);
+                    logScript("[update_exiftool_field] -Exiftool found no value embedded in the " . escape(implode(", ", $exiftool_tags)) . " tag/s and applied \"\" to Resource " . (int) $ref . " Field " . (int) $field_ref, $log_file);
                 }
             } else {
                 if (trim($value) != "") {
@@ -195,20 +194,27 @@ foreach ($fieldrefs as $fieldref) {
                             $invalid_date = str_replace("%field%", $name, $invalid_date);
                             $invalid_date = str_replace("%row% ", "", $invalid_date);
 
-                            echo "-Exiftool " . escape($invalid_date) . PHP_EOL . PHP_EOL;
+                            logScript("[update_exiftool_field] -Exiftool " . escape($invalid_date), $log_file);
                             continue;
                         }
                     }
 
-                    update_field($ref, $fieldref, $value);
-                    echo "-Exiftool found \"" . escape($value) . "\" embedded in the -" . escape($exiftool_tag) . " tag and applied it to Resource " . (int) $ref . " Field " . (int) $fieldref . PHP_EOL . PHP_EOL;
+                    update_field($ref, $field_ref, $value);
+                    logScript("[update_exiftool_field] -Exiftool found \"" . escape($value) . "\" embedded in the -" . escape($exiftool_tag) . " tag and applied it to Resource " . (int) $ref . " Field " . (int) $field_ref, $log_file);
                 } else {
-                    echo "-Exiftool found no value embedded in the " . escape(implode(", ", $exiftool_tags)) . " tag/s and has made no changes for Resource " . (int) $ref . PHP_EOL;
+                    logScript("[update_exiftool_field] -Exiftool found no value embedded in the " . escape(implode(", ", $exiftool_tags)) . " tag/s and has made no changes for Resource " . (int) $ref, $log_file);
                 }
             }
         }
-        echo PHP_EOL;
-    }
+        
+        $progress = round(($processed_count / $total_updates) * 100, 0);
+        logScript("[update_exiftool_field] [PROGRESS] $progress%", $log_file);
+        $processed_count++;
+
+    }       
+    
 }
 
-echo "...done." . PHP_EOL;
+logScript("[update_exiftool_field] Ending update_exiftool_field job", $log_file);
+
+job_queue_update($jobref, $job_data, STATUS_COMPLETE);
