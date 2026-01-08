@@ -19,8 +19,8 @@ $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2
 $backurl = getval("backlink", "");
 
 # Pager
-$per_page = getval("per_page_list", $default_perpage_list);
-rs_setcookie('per_page_list', $per_page);
+$per_page = getval("per_page_list", get_per_page_cookie(), true);
+set_per_page_cookie($per_page);
 
 
 if (array_key_exists("find", $_POST)) {

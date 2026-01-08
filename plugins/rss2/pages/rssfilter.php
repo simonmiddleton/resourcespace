@@ -74,8 +74,8 @@ if (strpos($search, "!") === false) {
 }
 $display = getval("display", "thumbs");
 setcookie("display", $display, 0, '', '', false, true);
-$per_page = getval("per_page", 12);
-setcookie("per_page", $per_page, 0, '', '', false, true);
+$per_page = getval("per_page", get_per_page_cookie());
+set_per_page_cookie($per_page);
 $archive = getval("archive", 0);
 if (strpos($search, "!") === false) {
     setcookie("saved_archive", $archive, 0, '', '', false, true);

@@ -294,10 +294,10 @@ if (substr($order_by,0,5)=="field")
         }
     }
 
-$per_page=getval("per_page",$default_perpage, true); 
+$per_page=getval("per_page",get_per_page_cookie(), true); 
 $per_page= (!in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
 
-rs_setcookie('per_page', $per_page,0,"","",false,false);
+set_per_page_cookie($per_page);
 
 // Clear special selection collection if user runs a new search. Paging is not a new search. Also we allow for users that
 // want to see what they've selected so far. Client side we can POST clear_selection_collection=no to prevent it from clearing

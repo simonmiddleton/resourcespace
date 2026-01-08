@@ -15,8 +15,8 @@ if ((!is_numeric($offset)) || ($offset < 0)) {
 }
 
 # pager
-$per_page = getval("per_page_list_log", 15);
-rs_setcookie('per_page_list_log', $per_page);
+$per_page = getval("per_page_list_log", get_per_page_cookie(), true);
+set_per_page_cookie($per_page);
 
 include "../include/header.php";
 $log     = get_collection_log($ref, $offset + $per_page);

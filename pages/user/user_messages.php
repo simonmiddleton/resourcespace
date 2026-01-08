@@ -13,8 +13,8 @@ rs_setcookie('saved_msg_order_by', $msg_order_by);
 $sort = getval("sort", getval("saved_msg_sort", "DESC"));
 rs_setcookie('saved_msg_sort', $sort);
 $revsort = ($sort == "ASC") ? "DESC" : "ASC";
-$per_page = getval("per_page_list", $default_perpage_list, true);
-rs_setcookie('per_page_list', $per_page);
+$per_page = getval("per_page_list", get_per_page_cookie(), true);
+set_per_page_cookie($per_page);
 
 global $user_preferences;
 

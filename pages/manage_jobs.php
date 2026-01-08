@@ -52,9 +52,9 @@ if ($deletejob > 0 && enforcePostRequest(true)) {
 
 $jobs = job_queue_get_jobs($job_type, $job_status, $job_user, '', $job_orderby, $job_sort, $job_find);
 $endedjobs = 0;
-$per_page = getval("per_page", $default_perpage_list, true);
+$per_page = getval("per_page", get_per_page_cookie(), true);
 $per_page = (!in_array($per_page, array_merge($list_display_array, [99999]))) ? $default_perpage_list : $per_page;
-rs_setcookie('per_page', $per_page);
+set_per_page_cookie($per_page);
 $jobcount   = count($jobs);
 $totalpages = ceil($jobcount / $per_page);
 $offset     = getval("offset", 0, true);

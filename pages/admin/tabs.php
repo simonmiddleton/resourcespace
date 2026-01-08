@@ -30,7 +30,7 @@ if ($new_tab_name !== '' && enforcePostRequest(false)) {
 }
 
 // [Paging functionality]
-$per_page = (int) getval('per_page', $default_perpage_list, true);
+$per_page = (int) getval('per_page', get_per_page_cookie(), true);
 $list_display_array[] = $default_perpage_list;
 $list_display_array[] = $default_perpage;
 if ($per_page === 99999) {
@@ -47,7 +47,7 @@ if ($per_page === 99999) {
 $list_display_array = array_unique($list_display_array);
 natsort($list_display_array);
 $per_page = in_array($per_page, $list_display_array) ? $per_page : $default_perpage;
-rs_setcookie('per_page', $per_page);
+set_per_page_cookie($per_page);
 $offset = (int) getval('offset', 0, true);
 $tab_records = get_tabs_with_usage_count([
     'order_by' => [$tab_orderby, $tab_sort],
