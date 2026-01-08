@@ -11,8 +11,8 @@ function HookGoogle_visionManage_jobsAddjobtriggerpage()
     }
 
     $scripts = [
-        0 => ['name' => 'Google Vision', 'type' => 'group_start'],
-        1 => ['name' => 'Process unprocessed resources with Google Vision', 'script_name' => 'process_gv_existing', 'plugin' => 'google_vision'],
+        0 => ['name' => 'Google Vision', 'lang_string' => 'google_vision', 'type' => 'group_start'],
+        1 => ['name' => 'Process unprocessed resources', 'lang_string' => 'google_vision_process_existing', 'script_name' => 'process_gv_existing', 'plugin' => 'google_vision'],
         2 => ['name' => 'Google Vision', 'type' => 'group_end'],
     ];
 

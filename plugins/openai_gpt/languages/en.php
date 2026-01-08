@@ -22,4 +22,9 @@ $lang["openai_gpt_language"]              = "Output language";
 $lang["openai_gpt_language_user"]         = "The language of the current user";
 $lang["openai_gpt_overwrite_data"]        = "Overwrite existing data in configured fields?";
 
-$lang["page-title_openai_gpt_setup"]            = "Setup OpenAI GPT Plugin";
+$lang["page-title_openai_gpt_setup"]      = "Setup OpenAI GPT Plugin";
+
+$lang["openai_gpt"] = "OpenAI GPT";
+$lang["openai_gpt_process_existing"] = "Process existing GPT fields";
+$lang["openai_gpt_process_existing_field_ref"] = "AI Field";
+$lang["openai_gpt_process_existing_overwrite"] = "Overwrite";

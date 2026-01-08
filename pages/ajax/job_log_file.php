@@ -53,10 +53,16 @@ if ($type == "progress") {
 $job_status = isset($lang["job_status_" . $job_details['status']]) ? $lang["job_status_" . $job_details['status']] : $job_details['status'];
 $job_done = ($job_details['status'] !== 3);
 
-$logPath    = $log_path;
-$offset     = isset($_GET['offset']) ? max(0, (int)$_GET['offset']) : 0;
-$backlog    = isset($_GET['lines'])  ? max(0, (int)$_GET['lines'])  : 0;
+$offset       = isset($_GET['offset']) ? max(0, (int) $_GET['offset']) : 0;
+$backlog      = isset($_GET['lines'])  ? max(0, (int) $_GET['lines'])  : 0;
+$client_inode = isset($_GET['inode'])  ? (int) $_GET['inode'] : 0;
+$carry        = isset($_GET['carry'])  ? (string) $_GET['carry'] : '';
 
+$backlog = min($backlog, 500);
+
+$lines    = [];
+$newCarry = '';
+$rotated  = false;
 
 function tail_last_lines(string $path, int $lines = 50, int $chunk = 4096): array 
 {
@@ -96,7 +102,7 @@ function process_line(string $line): string
 {
     $type = "";
 
-    // Process line for tags
+    // Process line for tags - type tags will always be first
     if (preg_match('/\[([A-Z_]+)\]/', $line, $matches)) {
         $type = strtolower($matches[1]);
     }
@@ -106,55 +112,77 @@ function process_line(string $line): string
 
 
 // -------- core logic ---------------------------------------------------------
-clearstatcache(true, $log_path);
-$size  = filesize($log_path);
-$inode = fileinode($log_path);
-$rotated = false;
-
-if ($size === false) {
+$fp = fopen($log_path, 'rb');
+if (!$fp) {
     http_response_code(500);
     header('Content-Type: application/json');
-    echo json_encode(['error' => 'Cannot stat log file']);
+    echo json_encode(['error' => 'Cannot open log file']);
     exit;
 }
 
-// handle truncate/rotation: our offset is past EOF
-if ($offset > $size) {
-    $offset = 0;
+$st = fstat($fp);
+$size  = (int) ($st['size'] ?? 0);
+$inode = (int) ($st['ino']  ?? 0);
+
+// Detect rename + newfile rotation by inode change
+if ($client_inode !== 0 && $client_inode !== $inode) {
+    $offset  = 0;
     $rotated = true;
 }
 
-$lines = [];
+// Detect truncation/copytruncate by offset past EOF
+if ($offset > $size) {
+    $offset  = 0;
+    $rotated = true;
+}
+
 $newOffset = $offset;
 
-// initial load with backlog (like tail)
+// Initial load with backlog (like tail)
 if ($offset === 0 && $backlog > 0) {
+    fclose($fp);
+
     $lines = tail_last_lines($log_path, $backlog);
-    $newOffset = $size;
+
+    // Re-stat after tail to set offset to current EOF
+    clearstatcache(true, $log_path);
+    $newOffset = (int) filesize($log_path);
+    $inode = (int) fileinode($log_path);
+    $newCarry = '';
 } else {
-    // read from offset to EOF
-    $fp = fopen($log_path, 'rb');
-    if ($fp) {
-        fseek($fp, $offset);
-        $chunk = '';
-        if ($size > $offset) {
-            $chunk = fread($fp, $size - $offset);
-        }
-        $newOffset = ftell($fp);
-        fclose($fp);
+    // Read from offset to EOF
+    fseek($fp, $offset);
+    $toRead = min(max(0, $size - $offset), 256 * 1024);
+    $chunk  = $toRead > 0 ? fread($fp, $toRead) : '';
+    $rawEnd = ftell($fp); // where we *would* be if we consumed all bytes
 
-        if ($chunk !== '') {
-            // normalize line endings, split into lines
-            $chunk = str_replace(["\r\n", "\r"], "\n", $chunk);
-            $parts = explode("\n", $chunk);
+    fclose($fp);
 
-            // if file did not end with newline, last element is partial;
-            // send it anyway; it will get completed next poll.
+    if ($chunk !== '') {
+        $chunk = str_replace(["\r\n", "\r"], "\n", $chunk);
+
+        // Only process complete lines. Keep partial tail by NOT advancing past it.
+        $lastNl = strrpos($chunk, "\n");
+
+        if ($lastNl === false) {
+            // No newline at all in this chunk => line is longer than MAX_READ_BYTES.
+            // Safety: don't emit it; also don't advance offset (or you can advance a little).
+            $newOffset = $offset;   // try again next poll
+            $lines = [];
+        } else {
+            $complete = substr($chunk, 0, $lastNl); // excludes the last \n
+            $parts = explode("\n", $complete);
+
             foreach ($parts as $line) {
                 if ($line === '') continue;
                 $lines[] = ["text" => $line, "type" => process_line($line)];
             }
+
+            // Advance offset only through the newline we processed
+            $newOffset = $offset + $lastNl + 1;
         }
+    } else {
+        $newOffset = $offset;
     }
 }
 

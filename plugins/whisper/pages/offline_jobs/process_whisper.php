@@ -14,7 +14,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Process unprocessed resources with Whisper"]
+        ['title' => $lang["job_configure"] . ": " . $lang["whisper_process_existing"] . " (" .$lang["whisper"] . ")"]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -22,7 +22,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Process unprocessed resources with Whisper"]
+        ['title' => $lang["job_configure"] . ": " . $lang["whisper_process_existing"] . " (" .$lang["whisper"] . ")"]
     ];
 }
 
@@ -60,24 +60,20 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Process unprocessed resources with Whisper");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["whisper_process_existing"] . " (" .$lang["whisper"] . ")");
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <p><?php echo escape( $lang["whisper_process_existing_intro"]); ?></p>
 
     <form method="post" id="process_whisper_form" action="<?php echo generateURL("{$baseurl_short}plugins/whisper/pages/offline_jobs/process_whisper.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("process_whisper_form"); ?>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

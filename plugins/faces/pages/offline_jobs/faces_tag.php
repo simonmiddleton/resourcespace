@@ -14,7 +14,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Tag Faces"]
+        ['title' => $lang["job_configure"] . ": " . $lang["faces_tag_faces"]]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -22,7 +22,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Tag Faces"]
+        ['title' => $lang["job_configure"] . ": " . $lang["faces_tag_faces"]]
     ];
 }
 
@@ -70,18 +70,12 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Tag Faces");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["faces_tag_faces"]);
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
-
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
     <form method="post" id="faces_tag_form" action="<?php echo generateURL("{$baseurl_short}plugins/faces/pages/offline_jobs/faces_tag.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("faces_tag_form"); ?>
@@ -89,12 +83,12 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="collection_refs">Collection Refs</label>
+            <label for="collection_refs"><?php echo escape($lang["oj_common_collection_refs"]); ?></label>
             <input type="text" name="collection_refs" class="stdwidth" value="<?php echo escape($collection_refs); ?>">
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     foreach ($field_errors['collection_refs'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>            
@@ -102,7 +96,7 @@ if ($job_add_error) {
         </div>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

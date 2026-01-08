@@ -11,8 +11,8 @@ function HookWhisperManage_jobsAddjobtriggerpage()
     }
 
     $scripts = [
-        0 => ['name' => 'Whisper', 'type' => 'group_start'],
-        1 => ['name' => 'Process unprocessed resources with Whisper', 'script_name' => 'process_whisper', 'plugin' => 'whisper'],
+        0 => ['name' => 'Whisper', 'lang_string' => 'whisper', 'type' => 'group_start'],
+        1 => ['name' => 'Process unprocessed resources', 'lang_string' => 'whisper_process_existing', 'script_name' => 'process_whisper', 'plugin' => 'whisper'],
         2 => ['name' => 'Whisper', 'type' => 'group_end'],
     ];
 

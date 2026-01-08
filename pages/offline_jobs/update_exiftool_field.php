@@ -10,7 +10,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Regenerate EXIF data"]
+        ['title' => $lang["job_configure"] . ": " . $lang["job_list_exif_data"]]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -18,7 +18,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Regenerate EXIF data"]
+        ['title' => $lang["job_configure"] . ": " . $lang["job_list_exif_data"]]
     ];
 }
 
@@ -38,7 +38,7 @@ if ($save != '' && enforcePostRequest(false)) {
     $processed_field_refs = parse_csv_to_list_of_type($field_refs, "is_positive_int_loose");
 
     if ($field_refs == '') {
-        $field_errors['field_refs'] = ['field required'];
+        $field_errors['field_refs'][] = escape($lang["oj_common_error_required"]);
         $valid_data = false;
     }
     
@@ -48,7 +48,7 @@ if ($save != '' && enforcePostRequest(false)) {
         $fieldref_info = get_resource_type_field($field_ref);
 
         if (!$fieldref_info) {
-            $field_errors['field_refs'][] = "$field_ref does not refer to a valid field";
+            $field_errors['field_refs'][] = escape(str_replace("%FIELD_REF%", $field_ref, $lang["oj_common_error_invalid_field_ref"]));
             $valid_data = false;
         }
     }
@@ -90,18 +90,12 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Regenerate EXIF data");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["job_list_exif_data"]);
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
-
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
     <form method="post" id="update_exiftool_field_form" action="<?php echo generateURL("{$baseurl_short}pages/offline_jobs/update_exiftool_field.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("update_exiftool_field_form"); ?>
@@ -109,12 +103,12 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('field_refs', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="field_refs">Field Refs *</label>
+            <label for="field_refs"><?php echo escape($lang["oj_common_field_refs"]); ?> *</label>
             <input type="text" name="field_refs" class="stdwidth" value="<?php echo escape($field_refs); ?>">
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('field_refs', $field_errors)) {
                     foreach ($field_errors['field_refs'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>            
@@ -124,30 +118,30 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="collection_refs">Collection Refs</label>
+            <label for="collection_refs"><?php echo escape($lang["oj_common_collection_refs"]); ?></label>
             <input type="text" name="collection_refs" class="stdwidth" value="<?php echo escape($collection_refs); ?>">
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     foreach ($field_errors['collection_refs'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>            
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="blanks">Blanks</label>
+            <label for="blanks"><?php echo escape($lang["oj_exif_data_blanks"]); ?></label>
             <input name="blanks" id="blanks" type="checkbox" value="1"<?php echo ($blanks ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>
             <div class="Question">
-            <label for="overwrite">Overwrite</label>
+            <label for="overwrite"><?php echo escape($lang["oj_exif_data_overwrite"]); ?></label>
             <input name="overwrite" id="overwrite" type="checkbox" value="1"<?php echo ($overwrite ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

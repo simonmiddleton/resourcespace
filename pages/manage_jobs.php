@@ -280,24 +280,24 @@ include '../include/header.php';
     <form id="JobTriggerForm" method="POST" action="<?php echo $url; ?>">
         <?php generateFormToken('JobFilterForm'); ?>
         <div class="Question" id="QuestionJobTrigger">
-            <label for="trigger_job">Trigger a job</label>
+            <label for="trigger_job"><?php echo escape($lang["job_trigger"]); ?></label>
             <select class="stdwidth" id="trigger_job" name="trigger_job">
                 <?php
                 foreach ($offline_job_list_full as $offline_job) {
                     
                     if (isset($offline_job['type'])) {
                         if ($offline_job['type'] == 'group_start') {
-                            echo "<optgroup label=\"" . escape($offline_job['name']) . "\">";
+                            echo "<optgroup label=\"" . (isset($offline_job["lang_string"]) ? escape($lang[$offline_job['lang_string']]) : escape($offline_job['name'])) . "\">";
                         } else {
                             echo "</optgroup>";
                         }                        
                     } else {
-                        echo "<option value=\"" .  escape($offline_job["script_name"]) . "\">" . escape($offline_job["name"]) . "</option>\n";
+                        echo "<option value=\"" .  escape($offline_job["script_name"]) . "\">" . (isset($offline_job["lang_string"]) ? escape($lang[$offline_job['lang_string']]) : escape($offline_job['name'])) . "</option>\n";
                     }                    
                 }
                 ?>
             </select>
-            <input type="submit" id="trigger_job_button" value="Configure job">
+            <input type="submit" id="trigger_job_button" value="<?php echo escape($lang["job_configure"]); ?>">
             <div class="clearerleft"></div> 
         </div>
     </form>

@@ -11,7 +11,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Recreate Previews"]
+        ['title' => $lang["job_configure"] . ": " . $lang["job_list_recreate_previews"]]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -19,7 +19,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Recreate Previews"]
+        ['title' => $lang["job_configure"] . ": " . $lang["job_list_recreate_previews"]]
     ];
 }
 
@@ -95,26 +95,20 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Recreate Previews");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["job_list_recreate_previews"]);
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
-
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
     <form method="post" id="recreate_previews_form" action="<?php echo generateURL("{$baseurl_short}pages/offline_jobs/recreate_previews.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("recreate_previews_form"); ?>
         <div class="Question">
-            <label for="process_type">Target *</label>
+            <label for="process_type"><?php echo escape($lang['oj_recreate_previews_target']); ?> *</label>
             <select class="stdwidth" name="process_type">
-                <option value="resources" <?php echo ($process_type == "resources") ? "selected" : ''; ?>>Resources</option>
-                <option value="collections" <?php echo ($process_type == "collections") ? "selected" : ''; ?>>Collections</option>
+                <option value="resources" <?php echo ($process_type == "resources") ? "selected" : ''; ?>><?php echo escape($lang["resources"]); ?></option>
+                <option value="collections" <?php echo ($process_type == "collections") ? "selected" : ''; ?>><?php echo escape($lang["collections"]); ?></option>
             </select>
             <div class="clearerleft"></div>
         </div>
@@ -122,19 +116,19 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('refs', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="refs">Refs *</label>
+            <label for="refs"><?php echo escape($lang['oj_recreate_previews_refs']); ?> *</label>
             <input type="text" name="refs" class="stdwidth" value="<?php echo escape($refs); ?>">
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('refs', $field_errors)) {
                     foreach ($field_errors['refs'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>            
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label>Image Sizes *</label>
+            <label><?php echo escape($lang['oj_recreate_previews_image_sizes']); ?> *</label>
             <div class="tickset">
                 <div class="Inline">
                     <?php
@@ -170,7 +164,7 @@ if ($job_add_error) {
             </script>
         </div>
         <div class="Question">
-            <label>Resource Types *</label>
+            <label><?php echo escape($lang['oj_recreate_previews_resource_types']); ?> *</label>
             <div class="tickset">
                 <div class="Inline">
                     <?php
@@ -206,24 +200,24 @@ if ($job_add_error) {
             </script>
         </div>
         <div class="Question">
-            <label for="use_existing">Use existing uploaded previews?</label>
+            <label for="use_existing"><?php echo escape($lang['oj_recreate_previews_use_existing']); ?></label>
             <input name="use_existing" id="use_existing" type="checkbox" value="1"<?php echo ($use_existing ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>
             <div class="Question">
-            <label for="video_update">Update previews for all video resources that do not have the required '$ffmpeg_preview_extension' extension?</label>
+            <label for="video_update"><?php echo escape($lang['oj_recreate_previews_video_update']); ?></label>
             <input name="video_update" id="video_update" type="checkbox" value="1"<?php echo ($video_update ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>
         </div>
             <div class="Question">
-            <label for="delete_existing">Delete all existing previews</label>
+            <label for="delete_existing"><?php echo escape($lang['oj_recreate_previews_delete_existing']); ?></label>
             <input name="delete_existing" id="delete_existing" type="checkbox" value="1"<?php echo ($delete_existing ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

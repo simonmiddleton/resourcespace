@@ -10,7 +10,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Process existing GPT fields"]
+        ['title' => $lang["job_configure"] . ": " . $lang["openai_gpt_process_existing"]]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -18,7 +18,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Process existing GPT fields"]
+        ['title' => $lang["job_configure"] . ": " . $lang["openai_gpt_process_existing"]]
     ];
 }
 
@@ -38,10 +38,10 @@ if ($save != '' && enforcePostRequest(false)) {
     $valid_data = true;
 
     if ($field_ref == 0) {
-        $field_errors['field_ref'] = ['field required'];
+        $field_errors['field_ref'][] = escape($lang["oj_common_error_required"]);
         $valid_data = false;
     } elseif (!in_array($field_ref, array_column($gpt_fields, "ref"))) {
-        $field_errors['field_ref'][] = "$field_ref does not refer to a valid field";
+        $field_errors['field_ref'][] = escape(str_replace("%FIELD_REF%", $field_ref, $lang["oj_common_error_invalid_field_ref"]));
         $valid_data = false;
     }
 
@@ -81,18 +81,12 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Process existing GPT fields");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["openai_gpt_process_existing"]);
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
-
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
     <form method="post" id="process_gpt_existing_form" action="<?php echo generateURL("{$baseurl_short}plugins/openai_gpt/pages/offline_jobs/process_gpt_existing.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("process_gpt_existing_form"); ?>
@@ -100,7 +94,7 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('field_ref', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="field_ref">AI Field *</label>
+            <label for="field_ref"><?php echo escape($lang["openai_gpt_process_existing_field_ref"]); ?> *</label>
             <select class="stdwidth" name="field_ref">
                 <option value="0" <?php echo ($field_ref == 0) ? "selected" : ''; ?>></option>
                 <?php
@@ -114,7 +108,7 @@ if ($job_add_error) {
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('field_ref', $field_errors)) {
                     foreach ($field_errors['field_ref'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>  
@@ -124,25 +118,25 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="collection_refs">Collection Refs</label>
+            <label for="collection_refs"><?php echo escape($lang["oj_common_collection_refs"]); ?></label>
             <input type="text" name="collection_refs" class="stdwidth" value="<?php echo escape($collection_refs); ?>">
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     foreach ($field_errors['collection_refs'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>            
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="overwrite">Overwrite</label>
+            <label for="overwrite"><?php echo escape($lang["openai_gpt_process_existing_overwrite"]); ?></label>
             <input name="overwrite" id="overwrite" type="checkbox" value="1"<?php echo ($overwrite ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

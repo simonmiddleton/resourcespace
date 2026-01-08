@@ -14,7 +14,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Generate CLIP vectors"]
+        ['title' => $lang["job_configure"] . ": " . $lang["clip-generate_vectors"]]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -22,13 +22,13 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Generate CLIP vectors"]
+        ['title' => $lang["job_configure"] . ": " . $lang["clip-generate_vectors"]]
     ];
 }
 
 // Process form input
 $save               = getval('save', '');
-$limit              = getval('limit', 10000, "is_positive_or_zero_int_loose");
+$limit              = getval('limit', 10000);
 
 $job_add_error = false;
 
@@ -36,8 +36,8 @@ if ($save != '' && enforcePostRequest(false)) {
     
     $valid_data = true;
     
-    if ((int) $limit > 100000 || (int) $limit <= 0 ) {
-        $field_errors['limit'][] = "value must be between 1 and 100000";
+    if ((int) $limit > 100000 || (int) $limit <= 0 || !is_positive_or_zero_int_loose($limit)) {
+        $field_errors['limit'][] = escape($lang["clip-job_limit_error"]);
         $valid_data = false;
     }
 
@@ -68,18 +68,12 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Generate CLIP vectors");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["clip-generate_vectors"]);
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
-
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
     <form method="post" id="generate_vectors_form" action="<?php echo generateURL("{$baseurl_short}plugins/clip/pages/offline_jobs/generate_vectors.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("generate_vectors_form"); ?>
@@ -87,12 +81,12 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('limit', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="limit">Limit</label>
+            <label for="limit"><?php echo escape($lang["clip-job_limit"]); ?></label>
             <input type="text" name="limit" class="stdwidth" value="<?php echo escape($limit); ?>">
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('limit', $field_errors)) {
                     foreach ($field_errors['limit'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>            
@@ -100,7 +94,7 @@ if ($job_add_error) {
         </div>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

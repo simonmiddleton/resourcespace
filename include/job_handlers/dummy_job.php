@@ -5,7 +5,7 @@ logScript("[dummy_job] Starting dummy job", $log_file);
 
 $message_count = 1;
 
-$total_messages = 20;
+$total_messages = 200;
 
 logScript("[dummy_job] $total_messages to process", $log_file);
 

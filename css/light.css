@@ -839,7 +839,7 @@ a.HomePanel:hover {
 
 div.SaveError > input {
     border-color: red;
-    background-color: #edceca;;
+    background-color: #edceca;
 }
 
 /* job details log viewer */
@@ -863,3 +863,5 @@ div.SaveError > input {
 #job-details-log > .error { color: #f66; }
 #job-details-log > .progress { color: rgba(98, 178, 243, 1); }
 #job-details-log > .info { color: #6f6; }
+
+.job-configure-error { color: red; }

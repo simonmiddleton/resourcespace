@@ -2936,3 +2936,10 @@ label {
 }
 
 #job-details-log > .line { display: block; }
+
+.job-configure-error {
+    clear: left; 
+    display: block; 
+    margin-left: 310px; 
+    margin-top: 5px;
+}

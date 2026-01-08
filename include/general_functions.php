@@ -6011,6 +6011,8 @@ function strip_unicode_points(string $value, array $blocklist = []): string
 
 function parse_int_ranges(string $input, int $max_val = 0, bool $optional = false): array
 {
+    global $lang;
+
     $numbers  = [];
     $errors = [];
 
@@ -6020,7 +6022,7 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
         return [
             'ok'     => false,
             'numbers'  => [],
-            'errors' => ['input is empty.'],
+            'errors' => [$lang['int_ranges_empty']],
         ];
     }
 
@@ -6041,17 +6043,17 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
             $end   = (int) $m[2];
 
             if ($start < 1 || $end < 1) {
-                $errors[] = "Numbers must be 1 or greater in range \"$part\".";
+                $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_range_below_1']);
                 continue;
             }
 
             if ($start > $end) {
-                $errors[] = "Start of range \"$part\" cannot be greater than end.";
+                $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_range_reversed']);
                 continue;
             }
 
             if ($max_val !== 0 && ($start > $max_val || $end > $max_val)) {
-                $errors[] = "Range \"$part\" exceeds maximum number of $max_val.";
+                $errors[] = str_replace(["%%PART%%","%%MAX_VAL%%"], [$part, $max_val], $lang['int_ranges_range_above_max']);
                 continue;
             }
 
@@ -6064,12 +6066,12 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
             $num = (int) $part;
 
             if ($num < 1) {
-                $errors[] = "Numbers must be 1 or greater (\"$part\").";
+                $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_single_below_1']);
                 continue;
             }
 
             if ($max_val !== 0 && $num > $max_val) {
-                $errors[] = "\"$num\" exceeds maximum number of $max_val.";
+                $errors[] = str_replace(["%%PART%%","%%MAX_VAL%%"], [$num, $max_val], $lang['int_ranges_single_above_max']);
                 continue;
             }
 
@@ -6078,7 +6080,7 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
         }
 
         // Anything else is invalid
-        $errors[] = "\"$part\" is not a valid number or range (use formats like 3 or 5-9).";
+        $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_not_valid']);
     }
 
     if (!empty($errors)) {

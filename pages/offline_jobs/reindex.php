@@ -10,7 +10,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Re-index data"]
+        ['title' => $lang["job_configure"] . ": " . $lang["job_list_reindex"]]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -18,7 +18,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Re-index data"]
+        ['title' => $lang["job_configure"] . ": " . $lang["job_list_reindex"]]
     ];
 }
 
@@ -41,7 +41,7 @@ if ($save != '' && enforcePostRequest(false)) {
             $fieldref_info = get_resource_type_field($field_ref);
 
             if (!$fieldref_info) {
-                $field_errors['field_refs'][] = "$field_ref does not refer to a valid field";
+                $field_errors['field_refs'][] = escape(str_replace("%FIELD_REF%", $field_ref, $lang["oj_common_error_invalid_field_ref"]));
                 $valid_data = false;
             }
         }
@@ -75,18 +75,12 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Re-index data");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["job_list_reindex"]);
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
-
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
     <form method="post" id="reindex_form" action="<?php echo generateURL("{$baseurl_short}pages/offline_jobs/reindex.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("reindex_form"); ?>
@@ -94,12 +88,12 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('field_refs', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="field_refs">Field Refs</label>
+            <label for="field_refs"><?php echo escape($lang["oj_common_field_refs"]); ?></label>
             <input type="text" name="field_refs" class="stdwidth" value="<?php echo escape($field_refs); ?>">
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('field_refs', $field_errors)) {
                     foreach ($field_errors['field_refs'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>            
@@ -107,7 +101,7 @@ if ($job_add_error) {
         </div>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

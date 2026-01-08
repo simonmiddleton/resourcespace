@@ -22,3 +22,9 @@ $lang["faces_count_faces"] = "Total faces detected";
 $lang["faces_count_missing"] = "Images to process";
 
 $lang["page-title_faces_setup"] = "Setup Faces Plugin";
+
+$lang["faces_insight_faces"] = "Insight Faces";
+$lang["faces_detect_faces"] = "Detect faces";
+$lang["faces_tag_faces"] = "Tag faces";
+
+$lang["faces_detect_faces_intro"] = "Create a job to start detection of faces here - this job does not require any parameters so can be started as long as there are no other outstanding jobs of this type.";

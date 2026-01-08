@@ -13,7 +13,7 @@ $log_path = get_job_queue_log_path_by_ref($job);
 
 if (!is_file($log_path) || !is_readable($log_path)) {
     http_response_code(404);
-    exit("File not found.");
+    exit($lang["downloadfile_nofile"]);
 }
 
 // Set headers

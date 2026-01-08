@@ -12,3 +12,7 @@ $lang["whisper_transcript_name"] = "Automatically generated transcript";
 
 $lang["page-title_whisper_setup"] = "Setup Whisper Plugin";
 $lang["whisper_cron_enable"] = "Enable processing of unprocessed resources via scheduled Cron job";
+
+$lang["whisper"] = "Whisper";
+$lang["whisper_process_existing"] = "Process unprocessed resources";
+$lang["whisper_process_existing_intro"] = "Create a job to start Whisper audio processing here - this job does not require any parameters so can be started as long as there are no other outstanding jobs of this type.";

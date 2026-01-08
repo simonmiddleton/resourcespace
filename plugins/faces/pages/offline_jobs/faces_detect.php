@@ -14,7 +14,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Detect Faces"]
+        ['title' => $lang["job_configure"] . ": " . $lang["faces_detect_faces"]]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -22,7 +22,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Detect Faces"]
+        ['title' => $lang["job_configure"] . ": " . $lang["faces_detect_faces"]]
     ];
 }
 
@@ -60,24 +60,20 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Detect Faces");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["faces_detect_faces"]);
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <p><?php echo escape( $lang["faces_detect_faces_intro"]); ?></p>
 
     <form method="post" id="faces_detect_form" action="<?php echo generateURL("{$baseurl_short}plugins/faces/pages/offline_jobs/faces_detect.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("faces_detect_form"); ?>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

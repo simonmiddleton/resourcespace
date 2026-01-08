@@ -10,7 +10,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Purge duplicate resources"]
+        ['title' => $lang["job_configure"] . ": " . $lang["job_list_purge_duplicates"]]
     ];
 } else {
     $pagetitle   = $lang["manage_jobs_title"];
@@ -18,7 +18,7 @@ if ($job_user == $userref) {
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
         ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => "Configure Job: Purge duplicate resources"]
+        ['title' => $lang["job_configure"] . ": " . $lang["job_list_purge_duplicates"]]
     ];
 }
 
@@ -44,12 +44,12 @@ if ($save != '' && enforcePostRequest(false)) {
     }
 
     if (!in_array($manage_method, ['lifo', 'fifo'])) {
-        $field_errors['manage_method'][] = "invalid value passed for field";
+        $field_errors['manage_method'][] = escape($lang["oj_common_error_invalid"]);
         $valid_data = false;
     }
 
     if ($dry_run && $delete_perm) {
-        $field_errors['delete_perm'][] = "permanent deletion is not possible during a dry run";
+        $field_errors['delete_perm'][] = escape($lang['oj_purge_duplicates_delete_error']);
         $valid_data = false;
     }
 
@@ -83,18 +83,12 @@ if ($job_add_error) {
 <div class='BasicsBox'>
     <h1>
         <?php
-        echo escape("Configure Job: Purge duplicate resources");
-        render_help_link('user/manage_jobs'); ?>
+        echo escape($lang["job_configure"] . ": " . $lang["job_list_purge_duplicates"]);
+        render_help_link('user/manage_jobs'); 
+        ?>
     </h1>
 
-    <?php
-    $introtext = text("introtext");
-    if ($introtext != "") {
-        echo "<p>" . escape($introtext) . "</p>";
-    }
-
-    renderBreadcrumbs($breadcrumbs);
-    ?>
+    <?php renderBreadcrumbs($breadcrumbs); ?>
 
     <form method="post" id="purge_duplicates_form" action="<?php echo generateURL("{$baseurl_short}pages/offline_jobs/purge_duplicates.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("purge_duplicates_form"); ?>
@@ -102,44 +96,44 @@ if ($job_add_error) {
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     echo " SaveError";
                 } ?>">
-            <label for="collection_refs">Collection Refs</label>
+            <label for="collection_refs"><?php echo escape($lang["oj_common_collection_refs"]); ?></label>
             <input type="text" name="collection_refs" class="stdwidth" value="<?php echo escape($collection_refs); ?>">
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     foreach ($field_errors['collection_refs'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>            
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="manage_method">Manage method</label>
+            <label for="manage_method"><?php echo escape($lang["oj_purge_duplicates_manage_method"]); ?></label>
             <select class="stdwidth" name="manage_method">
-                <option value="lifo" <?php echo ($manage_method == "lifo") ? "selected" : ''; ?>>Last in first out</option>
-                <option value="fifo" <?php echo ($manage_method == "fifo") ? "selected" : ''; ?>>First in first out</option>
+                <option value="lifo" <?php echo ($manage_method == "lifo") ? "selected" : ''; ?>><?php echo escape($lang["oj_purge_duplicates_lifo"]); ?></option>
+                <option value="fifo" <?php echo ($manage_method == "fifo") ? "selected" : ''; ?>><?php echo escape($lang["oj_purge_duplicates_fifo"]); ?></option>
             </select>
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('manage_method', $field_errors)) {
                     foreach ($field_errors['manage_method'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>   
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="dry_run">Dry run</label>
+            <label for="dry_run"><?php echo escape($lang["oj_purge_duplicates_dry_run"]); ?></label>
             <input name="dry_run" id="dry_run" type="checkbox" value="1"<?php echo ($dry_run ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="delete_perm">Delete permanently</label>
+            <label for="delete_perm"><?php echo escape($lang["oj_purge_duplicates_delete_perm"]); ?></label>
             <input name="delete_perm" id="delete_perm" type="checkbox" value="1"<?php echo ($delete_perm ? 'checked="checked"' : ''); ?>>
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('delete_perm', $field_errors)) {
                     foreach ($field_errors['delete_perm'] as $error_message) {
-                        echo '<span style="clear: left; display: block; margin-left: 310px; margin-top: 5px; color: red"><i class="fa-solid fa-triangle-exclamation"></i> ' . $error_message . '</span>';
+                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>   
@@ -147,7 +141,7 @@ if ($job_add_error) {
         </div>
         <div class="QuestionSubmit">
             <label for="save"></label>
-            <input type="submit" name="save" value="Create Job" />
+            <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
         </div>
     </form>
 </div>

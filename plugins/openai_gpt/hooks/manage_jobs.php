@@ -11,8 +11,8 @@ function HookOpenai_gptManage_jobsAddjobtriggerpage()
     }
 
     $scripts = [
-        0 => ['name' => 'OpenAI GPT', 'type' => 'group_start'],
-        1 => ['name' => 'Process existing GPT fields', 'script_name' => 'process_gpt_existing', 'plugin' => 'openai_gpt'],
+        0 => ['name' => 'OpenAI GPT', 'lang_string' => 'openai_gpt', 'type' => 'group_start'],
+        1 => ['name' => 'Process existing GPT fields', 'lang_string' => 'openai_gpt_process_existing', 'script_name' => 'process_gpt_existing', 'plugin' => 'openai_gpt'],
         2 => ['name' => 'OpenAI GPT', 'type' => 'group_end'],
     ];
 

@@ -3500,3 +3500,61 @@ $lang['weeks_ago'] = "%TIME% weeks ago";
 $lang['month_ago'] = "%TIME% month ago";
 $lang['months_ago'] = "%TIME% months ago";
 
+$lang['int_ranges_empty'] = "input is empty";
+$lang['int_ranges_range_below_1'] = "numbers must be 1 or greater in range %%PART%%";
+$lang['int_ranges_range_reversed'] = "start of range %%PART%% cannot be greater than end";
+$lang['int_ranges_range_above_max'] = "range %%PART%% exceeds maximum number of %%MAX_VAL%%";
+$lang['int_ranges_single_below_1'] = "numbers must be 1 or greater (%%PART%%)";
+$lang['int_ranges_single_above_max'] = "%%PART%% exceeds maximum number of %%MAX_VAL%%";
+$lang['int_ranges_not_valid'] = "%%PART%% is not a valid number or range (use formats like 3 or 5-9)";
+
+// Job runner and log streaming/download
+$lang["job_trigger"] = "Trigger a job";
+$lang["job_configure"] = "Configure Job";
+
+$lang["jobs_action_stream_log"] = "Stream log file";
+$lang["jobs_action_download_log"] = "Download log file";
+$lang["jobs_action_missing_job_progress"] = "Unable to load job progress";
+
+$lang["job_list_core"] = "Core";
+$lang["job_list_recreate_previews"] = "Recreate Previews";
+$lang["job_list_exif_data"] = "Regenerate EXIF data";
+$lang["job_list_purge_duplicates"] = "Purge duplicate resources";
+$lang["job_list_reindex"] = "Re-index data";
+$lang["job_list_checksums"] = "Update checksums";
+$lang["job_list_extracted_text"] = "Update extracted text";
+
+// Offline job config - common
+$lang["oj_common_create_job"] = "Create Job";
+$lang["oj_common_field_refs"] = "Field Refs (can be CSV list)";
+$lang["oj_common_collection_refs"] = "Collection Refs (can be a range)";
+$lang["oj_common_error_required"] = "field required";
+$lang["oj_common_error_invalid"] = "invalid value passed for field";
+$lang["oj_common_error_invalid_field_ref"] = "%FIELD_REF% does not refer to a valid field";
+
+// Offline job config - recreate previews
+$lang['oj_recreate_previews_target'] = "Target";
+$lang['oj_recreate_previews_refs'] = "Refs";
+$lang['oj_recreate_previews_image_sizes'] = "Image Sizes";
+$lang['oj_recreate_previews_resource_types'] = "Resource Types";
+$lang['oj_recreate_previews_use_existing'] = "Use existing uploaded previews?";
+$lang['oj_recreate_previews_video_update'] = 'Update previews for all video resources that do not have the required \'$ffmpeg_preview_extension\' extension?';
+$lang['oj_recreate_previews_delete_existing'] = "Delete all existing previews";
+
+// Offline job config - exif data
+$lang['oj_exif_data_blanks'] = "Blanks";
+$lang['oj_exif_data_overwrite'] = "Overwrite";
+
+// Offline job config - purge duplicates
+$lang['oj_purge_duplicates_manage_method'] = "Manage method";
+$lang['oj_purge_duplicates_lifo'] = "Last in first out";
+$lang['oj_purge_duplicates_fifo'] = "First in first out";
+$lang['oj_purge_duplicates_dry_run'] = "Dry run";
+$lang['oj_purge_duplicates_delete_perm'] = "Delete permanently";
+$lang['oj_purge_duplicates_delete_error'] = "permanent deletion is not possible during a dry run";
+
+// Offline job config - checksums
+$lang['oj_checksums_recreate_all'] = "Recreate all checksums";
+
+// Offline job config - extracted text
+$lang['oj_extracted_text_update_all'] = "Update even if there is existing data, and overwrite old values";
