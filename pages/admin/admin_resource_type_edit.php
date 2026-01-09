@@ -1,7 +1,7 @@
 <?php
 include "../../include/boot.php";
 include "../../include/authenticate.php";
-include "../../lib/fontawesome/resourcespace/icon_classes.php";
+include "../../lib/lucide/icon_classes.php";
 
 if (!checkperm("a")) {
     exit($lang["error-permissiondenied"]);
@@ -218,7 +218,7 @@ if (isset($saved) && $saved) {
                 <div class="clearerleft"></div>
             </div>
 
-            <?php render_fa_icon_selector($lang["property-icon"], "icon", ($restypedata['icon'] ?? "")); ?>
+            <?php render_lucide_icon_selector($lang["property-icon"], "icon", ($restypedata['icon'] ?? "")); ?>
 
             <div class="Question">
                 <label><?php echo escape($lang["property-allowed_extensions"]) ?></label>

@@ -1004,7 +1004,8 @@ function render_sort_order(array $order_fields,$default_sort_order)
     </select>
     &nbsp;
     <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);" aria-label="<?php echo escape($sort === "ASC" ? $lang['sortorder-asc'] : $lang['sortorder-desc']) ?>">
-        <i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo mb_strtolower($sort); ?>"></i>
+        <i id="sort_selection_toggle"
+            class="icon-<?php echo mb_strtolower($sort) == 'desc' ? 'arrow-down-wide-narrow' : 'arrow-up-narrow-wide'; ?> "></i>
     </a>
 
     <script>
@@ -2745,7 +2746,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
     <?php if($daterange_edtf_support)
         {?>
         <a href="#" onclick="if(jQuery('#<?php echo escape($name); ?>_edtf').prop('disabled')){jQuery('#<?php echo escape($name); ?>_edtf').prop('disabled',false);jQuery('#<?php echo escape($name); ?>_edtf').show();jQuery('.<?php echo escape($name); ?>_range').hide();}else{jQuery('#<?php echo escape($name); ?>_edtf').prop('disabled',true);jQuery('#<?php echo escape($name); ?>_edtf').hide();jQuery('.<?php echo escape($name); ?>_range').show();}return false;">
-            <i aria-hidden="true" class="fa fa-caret-right"></i>
+            <i aria-hidden="true" class="icon-chevron-right"></i>
             <?php echo "EDTF"; ?>
         </a>
         <?php
@@ -2854,7 +2855,7 @@ function render_new_featured_collection_cta(string $url, array $ctx)
 
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     $centralspaceload = (isset($ctx["centralspaceload"]) && $ctx["centralspaceload"]);
-    $html_h2_span_class = (isset($ctx["html_h2_span_class"]) && trim($ctx["html_h2_span_class"]) != "" ? trim($ctx["html_h2_span_class"]) : "fas fa-plus-circle");
+    $html_h2_span_class = (isset($ctx["html_h2_span_class"]) && trim($ctx["html_h2_span_class"]) != "" ? trim($ctx["html_h2_span_class"]) : "icon-circle-plus");
 
     $html_tile_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile", "FeaturedCallToActionTile");
     $html_contents_h2_class = array();
@@ -2892,19 +2893,19 @@ function renderSocialMediaShareLinksForUrl($url)
 
     if (in_array("facebook", $social_media_links)) { ?>
         <!-- Facebook -->
-        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($url); ?>"><i class="fa-brands fa-xl fa-square-facebook" aria-hidden="true"></i></a>
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($url); ?>"><i class="icon-facebook lucide-lg" aria-hidden="true"></i></a>
         <?php
     }
 
     if (in_array("twitter", $social_media_links)) { ?>
         <!-- Twitter -->
-        <a target="_blank" href="https://twitter.com/intent/tweet?url=<?php echo urlencode($url); ?>"><i class="fa-brands fa-xl fa-square-x-twitter" aria-hidden="true"></i></a>
+        <a target="_blank" href="https://twitter.com/intent/tweet?url=<?php echo urlencode($url); ?>"><span class="x-twitter-icon">𝕏</span></a>
         <?php
     }
 
     if (in_array("linkedin", $social_media_links)) { ?>
         <!-- LinkedIn -->
-        <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode($url); ?>"><i class="fa-brands fa-xl fa-linkedin" aria-hidden="true"></i></a>
+        <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode($url); ?>"><i class="icon-linkedin lucide-lg" aria-hidden="true"></i></a>
         <?php
     }
 }
@@ -2922,7 +2923,7 @@ function renderLockButton($name, $locked_fields=array())
     global $lang;
     ?>
     <button type="submit" class="lock_icon" id="lock_icon_<?php echo escape($name) ; ?>" onClick="toggleFieldLock('<?php echo escape($name) ; ?>');return false;" title="<?php echo escape($lang['lock-tooltip']); ?>">
-        <i aria-hidden="true" class="fa <?php if(in_array($name,$locked_fields)){echo "fa-lock";} else {echo "fa-unlock";} ?> fa-fw"></i>
+        <i aria-hidden="true" class="icon-<?php if (in_array($name, $locked_fields)) {echo "lock";} else {echo "lock-open";} ?>"></i>
     </button>
     <?php    
     }
@@ -3217,7 +3218,7 @@ function render_field_selector_question($label, $name, $ftypes, $class = "stdwid
 * 
 * @param string $text Button text
 * @param string $attr Button attributes
-* @param string $icon HTML for icon element (e.g "<i aria-hidden="true" class="fa fa-fw fa-upload"></i>")
+* @param string $icon HTML for icon element (e.g "<i aria-hidden="true" class="icon-upload"></i>")
 * 
 * @return void
 */
@@ -3383,7 +3384,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
 
 function render_trash($type, $deletetext,$forjs=false)
     {
-    $trash_html = '<div id="' . $type . '_bin" class="trash_bin ui-droppable ui-droppable-active ui-state-hover"><span class="trash_bin_text"><i class="fa fa-trash" aria-hidden="true"></i></span></div>
+    $trash_html = '<div id="' . $type . '_bin" class="trash_bin ui-droppable ui-droppable-active ui-state-hover"><span class="trash_bin_text"><i class="icon-trash-2" aria-hidden="true"></i></span></div>
     <div id="trash_bin_delete_dialog" style="display:none;"></div>
     <div id="delete_permanent_dialog" style="display:none;text-align:left;">'  . $deletetext . '</div>
 ';
@@ -3473,7 +3474,7 @@ function generate_browse_bar_item($id, $text)
             </div><!-- End of BrowseBarStructure -->';  
     $html .= '<div onclick="toggleBrowseElements(\'' . $id . '\',false,true);" class="BrowseBarLink" >' . $text . '</div>';
     
-    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true, true);" ><i class="fas fa-sync reloadicon"></i></a>';  
+    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true, true);" ><i class="icon-refresh-cw"></i></a>';  
     
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";
@@ -3502,7 +3503,7 @@ function render_help_link($page='',$return_string=false)
     else
         { $help_link_html .=    'target="_blank" ';}
     $help_link_html .=      '>';
-    $help_link_html .=      '<i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>';
+    $help_link_html .=      '<i aria-hidden="true" class="icon-circle-question-mark"></i>';
     $help_link_html .=      '</a>';
 
     if ($return_string===false) {echo $help_link_html;}
@@ -4624,7 +4625,7 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
         echo "<div  class='ResourceLocked' title='" .  escape($lock_details) . "' >" . $lang["status_locked"] . "</div>";
         }
 
-    echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . escape($lang["status_locked"]) . "\",lockmessage[" . escape($ref) . "]);}'>&nbsp;<i class='fas fa-info-circle'></i></a> </li>";
+    echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . escape($lang["status_locked"]) . "\",lockmessage[" . escape($ref) . "]);}'>&nbsp;<i class='icon-info'></i></a> </li>";
     }
 
 /**
@@ -4640,18 +4641,18 @@ function EditNav()
     <?php
     if(!$disablenavlinks && !$upload_review_mode)
         {?>
-        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape($lang["previous"]); ?>"></a>
+        <a class="prevLink icon-arrow-left" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape($lang["previous"]); ?>"></a>
    
         <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo escape($lang["viewallresults"])?></a>
    
-        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape($lang["next"]); ?>"></a>
+        <a class="nextLink icon-arrow-right" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape($lang["next"]); ?>"></a>
    
         <?php
         }
     if ($modal)
         { ?>
-        &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
-        &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
+        &nbsp;&nbsp;<a class="maxLink icon-maximize-2" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
+        &nbsp;<a href="#"  class="closeLink icon-x" onClick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
         <?php
         } ?>
     </div></div><?php
@@ -4894,13 +4895,13 @@ function render_featured_collections(array $ctx, array $items)
                     )
                 )
             ),
-            "icon" => 'fa-solid fa-fw fa-pen-to-square',
+            "icon" => 'icon-square-pen',
             "text" => $lang['action-edit'],
             "modal_load" => true,
             "redirect" => true
         );
         $tool_select = array(
-            "icon" => 'fa-solid fa-fw fa-circle-check',
+            "icon" => 'icon-circle-check',
             "text" => $lang['action-select'],
             'custom_onclick' => sprintf("return ChangeCollection(%s, '');", escape($fc['ref'])),
         );
@@ -4921,7 +4922,7 @@ function render_featured_collections(array $ctx, array $items)
                         'collection_add' => $fc['ref']
                     ]
                 ),
-            'icon' => 'fa fa-fw fa-upload',
+            'icon' => 'icon-upload',
             'text' => $lang["action-upload-to-collection"],
         ];
 
@@ -4962,7 +4963,7 @@ function render_featured_collections(array $ctx, array $items)
                         'link'              => "{$baseurl_short}pages/search.php?search=!collection{$fc['ref']}",
                     )
                 ),
-                "icon" => 'fa fa-fw fa-grip',
+                "icon" => 'icon-layout-dashboard',
                 "text" => $lang['add_to_dash'],
             );
         }
@@ -4970,7 +4971,7 @@ function render_featured_collections(array $ctx, array $items)
             {
             $render_ctx["tools"][] = array(
                 "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                "icon" => 'fa-solid fa-fw fa-share-nodes',
+                "icon" => 'icon-share-2',
                 "text" => $lang["share"]);
             }
         if($is_featured_collection && collection_readable($fc['ref']))
@@ -5021,13 +5022,13 @@ function render_featured_collections(array $ctx, array $items)
                             'link'              => $fc_category_url
                         )
                     ),
-                    "icon" => 'fa fa-fw fa-grip',
+                    "icon" => 'icon-layout-dashboard',
                     "text" => $lang["add_to_dash"]);
                 }
 
             $render_ctx["tools"][] = array(
                 "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                "icon" => 'fa-solid fa-fw fa-share-nodes',
+                "icon" => 'icon-share-2',
                 "text" => $lang["share"],
             );
 
@@ -5265,7 +5266,7 @@ function render_top_right_menu_btn(array $options): void
 
     ?>
     <div class="top-right-menu" onclick="return showContextMenu(this);">
-        <i class="fa-solid fa-ellipsis-vertical"></i>
+        <i class="icon-ellipsis-vertical"></i>
     </div>
     <?php
 }
@@ -5535,7 +5536,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *  - If "rowid" is specified this will be used as the id attribute for the <tr> element
  *  - The "alerticon" can be used to specify a CSS class to use for a row status icon
  *  - An additional 'tools' element can be included to add custom action icons
- *  - "icon" - FontAwesome class to use for icon
+ *  - "icon" - Lucide class to use for icon
  *  - "text" - title attribute
  *  - "url" - URl to link to
  *  - "url:class" - The styling classes for the URL. Type: string. This tool property is optional.
@@ -5545,7 +5546,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *   e.g.
  * 
  *   array(
- *       "icon"=>"fa fa-trash",
+ *       "icon"=>"icon-trash-2",
  *       "text"=>$lang["action-delete"],
  *       "url"=>"",
  *       "modal"=>false,
@@ -5553,7 +5554,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *       );
  *
  *   array(
- *       "icon"=>"fa fa-info",
+ *       "icon"=>"icon-info",
  *       "text"=>$lang["job_details"],
  *       "url"=>generateURL($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
  *       "modal"=>true,
@@ -5859,7 +5860,7 @@ function render_share_password_question($blank=true)
     <div class="Question">
     <label for="sharepassword"><?php echo strip_tags_and_attributes($lang["share-set-password"]); echo $share_password_required ? '<sup>*</sup>' : ''; ?></label>
     <input type="password" <?php echo $share_password_required ? 'required' : ''; ?> id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : escape($lang["password_unchanged"]); ?>">
-    <span class="fa fa-fw fa-eye-slash infield-icon" id="share-password-icon" onclick="togglePassword('sharepassword');"></span>
+    <span class="icon-eye-off infield-icon" id="share-password-icon" onclick="togglePassword('sharepassword');"></span>
     <script>
 
     function togglePassword(pwdelement)
@@ -5868,12 +5869,12 @@ function render_share_password_question($blank=true)
         if (input.attr("type") == "password")
             {
             input.attr("type", "text");
-            jQuery('#share-password-icon').removeClass('fa-eye-slash').addClass('fa-eye');
+            jQuery('#share-password-icon').removeClass('icon-eye-off').addClass('icon-eye');
             }
         else
             {
             input.attr("type", "password");
-            jQuery('#share-password-icon').removeClass('fa-eye').addClass('fa-eye-slash');
+            jQuery('#share-password-icon').removeClass('icon-eye').addClass('icon-eye-off');
             }
         }
     var passInput="";
@@ -6059,7 +6060,7 @@ function render_message($message="")
         $pimage = get_profile_image($message["owner"]);
         if($pimage == "")
             {
-            $msgdata[] = "<i title='" . escape($sendername) . "' aria-hidden='true' class='fa fa-user fa-fw fa-lg ProfileImage'></i>";  // %%PROFILEIMAGE%%
+            $msgdata[] = "<i title='" . escape($sendername) . "' aria-hidden='true' class='icon-user lucide-lg ProfileImage'></i>";  // %%PROFILEIMAGE%%
             }
         else
             {
@@ -6233,8 +6234,8 @@ function html_break_long_words(string $html, int $length): string {
 
 
 /**
- * Renders a fontawesome icon selector question
- * Requires lib/fontawesome/resourcespace/icon_classes.php to be included in the page using the function
+ * Renders a Lucide icon selector question
+ * Requires lib/lucide/icon_classes.php to be included in the page using the function
  *
  * @param  string $label
  * @param  string $name     Input name
@@ -6242,31 +6243,31 @@ function html_break_long_words(string $html, int $length): string {
  * 
  * @return void
  */
-function render_fa_icon_selector(string $label="",string $name="icon",string $current="")
-    {
-    global $lang, $font_awesome_icons;
+function render_lucide_icon_selector(string $label="",string $name="icon",string $current="")
+{
+    global $lang, $lucide_icons;
 
-    if(trim($label) == "")
-        {
+    if (trim($label) == "") {
         $label = $lang["property-icon"];
-        }
+    }
+
     ?>
     <div class="Question">
         <label><?php echo escape($label) ?></label>
-        <?php $blank_icon = ($current == "" || !in_array($current, $font_awesome_icons)); ?>
+        <?php $blank_icon = ($current == "" || !in_array($current, $lucide_icons)); ?>
         <div id="iconpicker-question">
-            <input name="<?php echo escape($name) ?>" type="text" id="iconpicker-input" value="<?php echo escape($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : escape($current)?>" id="iconpicker-button-fa"></i></span>
+            <input name="<?php echo escape($name) ?>" type="text" id="iconpicker-input" value="<?php echo escape($current)?>" /><span id="iconpicker-button"><i class="icon-<?php echo $blank_icon ? 'chevron-down' : escape($current)?>" id="iconpicker-button-lucide"></i></span>
         </div>
         <div id="iconpicker-container">
             <div class="iconpicker-title">
                 <input type="text" id="iconpicker-filter" placeholder="<?php echo escape($lang['icon_picker_placeholder']) ?>" onkeyup="filterIcons()">
             </div>
             <div class="iconpicker-content">
-                <?php foreach ($font_awesome_icons as $icon_name)
+                <?php foreach ($lucide_icons as $icon_name)
                     {
                     ?>
                     <div class="iconpicker-content-icon" data-icon="<?php echo escape(trim($icon_name)) ?>" title="<?php echo escape(trim($icon_name)) ?>">
-                        <i class="fa-fw <?php echo escape(trim($icon_name)) ?>"></i>
+                        <i class="icon-<?php echo escape(trim($icon_name)) ?>"></i>
                     </div>
                     <?php
                     } ?>
@@ -6277,56 +6278,46 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
 
     <script type="text/javascript">
 
-    jQuery("#iconpicker-button").click(function()
-        {
+    jQuery("#iconpicker-button").click(function() {
         jQuery("#iconpicker-container").toggle();
-        });
+    });
 
-    jQuery("#iconpicker-input").focus(function()
-        {
+    jQuery("#iconpicker-input").focus(function() {
         jQuery("#iconpicker-container").show();
-        });
+    });
 
-    jQuery(".iconpicker-content-icon").click(function()
-        {
+    jQuery(".iconpicker-content-icon").click(function() {
         var icon_name = jQuery(this).data("icon");
         jQuery("#iconpicker-input").val(icon_name);
-        jQuery("#iconpicker-button i").attr("class","fa-fw " + icon_name);
-        });
+        jQuery("#iconpicker-button i").attr("class","icon-" + icon_name);
+    });
 
-    jQuery(document).mouseup(function(e) 
-        {
+    jQuery(document).mouseup(function(e) {
         var container = jQuery("#iconpicker-container");
         var question = jQuery("#iconpicker-question");
 
         if (!container.is(e.target) && container.has(e.target).length === 0
-            && !question.is(e.target) && question.has(e.target).length === 0) 
-            {
+            && !question.is(e.target) && question.has(e.target).length === 0) {
             container.hide();
-            }
-        });
+        }
+    });
 
-    function filterIcons()
-        {
+    function filterIcons() {
         filter_text = document.getElementById("iconpicker-filter");
         var filter_upper = filter_text.value.toLowerCase();
 
         container = document.getElementById("iconpicker-container");
         icon_divs = container.getElementsByClassName("iconpicker-content-icon");
 
-        for (i = 0; i < icon_divs.length; i++)
-            {
+        for (i = 0; i < icon_divs.length; i++) {
             icon_short_name = icon_divs[i].getAttribute("data-icon");
-            if (icon_short_name.toLowerCase().indexOf(filter_upper) > -1)
-                {
+            if (icon_short_name.toLowerCase().indexOf(filter_upper) > -1) {
                 icon_divs[i].style.display = "inline-block";
-                }
-            else
-                {
+            } else {
                 icon_divs[i].style.display = "none";
-                }
             }
         }
+    }
 
     </script>
     <?php
@@ -7367,7 +7358,7 @@ function render_resource_view_image(array $resource, array $context)
                         {
                         ?>
                         <a class="ToolsOptionLink AnnotationsOption" href="#" onclick="toggleAnnotationsOption(this); return false;">
-                            <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
+                            <i class='icon-square-pen' aria-hidden="true"></i>
                         </a>
 
                         <script>
@@ -7495,7 +7486,7 @@ function render_resource_view_image(array $resource, array $context)
                             } ?>
 
                         <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
-                            <i class='fa fa-search-plus' aria-hidden="true"></i>
+                            <i class='icon-zoom-in' aria-hidden="true"></i>
                         </a>
 
                         <script>

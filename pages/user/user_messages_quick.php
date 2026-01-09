@@ -19,20 +19,20 @@ message_get($messages, $userref, true, true, "DESC", "created", 10);
         </h1>
     </div>
     <div class="message-list-newmessage">
-        <a href="<?php echo generateURL($baseurl . '/pages/user/user_message.php'); ?>" onClick="return CentralSpaceLoad(this, true);"><i class="fa-solid fa-pen-to-square"></i> <?php echo escape($lang["new_message"]); ?></a>
+        <a href="<?php echo generateURL($baseurl . '/pages/user/user_message.php'); ?>" onClick="return CentralSpaceLoad(this, true);"><i class="icon-square-pen"></i> <?php echo escape($lang["new_message"]); ?></a>
     </div>
     <div id="message-list" class="message-list">
     </div>
 </div>
 <div id="message-detail" class="messages-modal" style="display: none;">
     <h2>
-        <a href="#" onclick="show_list();"><i class="fa-solid fa-caret-left"></i>&nbsp;<?php echo escape($lang["backtomessages"])?></a>
+        <a href="#" onclick="show_list();"><?php echo LINK_CARET_BACK . escape($lang["backtomessages"])?></a>
     </h2>
     <div class="message-body">
         <div class="message-full-text"></div>
         <div class="message-reply">
             <a id="reply-link" href="">
-                <i class="fa-solid fa-reply"></i> <?php echo escape($lang["reply"]); ?>
+                <i class="icon-reply"></i> <?php echo escape($lang["reply"]); ?>
             </a>
         </div>
     </div>
@@ -143,10 +143,10 @@ message_get($messages, $userref, true, true, "DESC", "created", 10);
                         if (m.user_profile_image != '') {
                             $el.find('.message-icon').append(jQuery('<img />', {id: 'UserProfileImage', src: m.user_profile_image, alt: 'Profile icon', class: 'ProfileImage'}));
                         } else {
-                            $el.find('.message-icon').append('<span class="fa fa-solid fa-user">')
+                            $el.find('.message-icon').append('<span class="icon-user-round">')
                         }
                     } else {
-                        $el.find('.message-icon').append('<span class="fa fa-solid fa-gears">');
+                        $el.find('.message-icon').append('<span class="icon-settings">');
                     }
 
                     $el.append(
@@ -185,7 +185,7 @@ message_get($messages, $userref, true, true, "DESC", "created", 10);
                 // Append view all button to message list
                 list.append(jQuery('<div class="message-viewall">' + 
                                 '<a id="viewall-link" href="<?php echo generateURL($baseurl . '/pages/user/user_messages.php', ['per_page_list' => 99999]); ?>" onClick="return CentralSpaceLoad(this, true);">' + 
-                                '<i class="fa-solid fa-envelope"></i> <?php echo escape($lang["viewallmessages"]); ?>' + 
+                                '<i class="icon-mail"></i> <?php echo escape($lang["viewallmessages"]); ?>' + 
                                 '</a></div>'));
             }
 

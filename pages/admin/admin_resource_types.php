@@ -163,11 +163,11 @@ function addColumnHeader($orderName, $labelKey)
                                 }
                                 ?>
                                 <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]; ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
-                                    <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                    <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                                 </a>
 
                                 <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
-                                    <i class="fas fa-bars"></i>&nbsp;<?php echo escape($lang["metadatafields"]) ?>
+                                    <i class="icon-form"></i>&nbsp;<?php echo escape($lang["metadatafields"]) ?>
                                 </a>
                             </div>
                         </td>

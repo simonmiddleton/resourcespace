@@ -8,7 +8,7 @@ function HookAntivirusTeam_homeCustomteamfunctionadmin()
         <li>
             <a href="<?php echo $baseurl_short; ?>/pages/help.php?page=plugins/antivirus"
                 onClick="return <?php echo getval('modal', '') != '' ? 'Modal' : 'CentralSpace'; ?>Load(this, true);">
-                <i aria-hidden="true" class="fa fa-fw fa-exclamation-triangle"></i>
+                <i aria-hidden="true" class="icon-triangle-alert"></i>
                 <br />
                 <?php echo escape($lang['antivirus_av_not_setup_error']); ?>
             </a>

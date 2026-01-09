@@ -135,7 +135,7 @@ include "../../include/header.php";
                     <td>
                         <div class="ListTools">
                             <a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);">
-                                <i class="fa fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> 
+                                <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> 
                             </a>
                         </div>
                     </td>

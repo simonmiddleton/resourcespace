@@ -169,8 +169,8 @@ else
             <td>wf<?php echo $workflowaction["ref"]; ?>
             </td>
             <td class="ListTools">
-            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> </a>
-            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"]; ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]; ?>,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?> </a>
+            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> </a>
+            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"]; ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]; ?>,true);"><i class="icon-trash-2"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?> </a>
             </td>
         </tr>
         <?php	

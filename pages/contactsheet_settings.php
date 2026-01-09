@@ -414,7 +414,7 @@ include '../include/header.php';
                 ?>
                 <div class="updatePreviewButton">
                     <a href="#" onclick="jQuery().rsContactSheet('preview','<?php echo (int) $collection; ?>','<?php echo $filename_uid; ?>'); return false;">
-                        <i aria-hidden="true" class="fa fa-fw fa-arrows-rotate"></i>
+                        <i aria-hidden="true" class="icon-refresh-cw"></i>
                         <?php echo escape($lang["contact_sheet_update_preview"]); ?>
                     </a>
                 </div>

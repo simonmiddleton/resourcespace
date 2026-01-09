@@ -189,7 +189,7 @@ foreach($results as $result)
         <?php if ($result->getOriginalFileUrl()!="") { ?>
         <div class="ResourcePanelIcons">
             <a href="<?php echo escape($result->getOriginalFileUrl()); ?>"
-               class="fa fa-download"
+               class="icon-download"
                title="Download resource"
                data-id="<?php echo escape($result->getId()); ?>"
                onclick="downloadImageBankFile(this);"></a>
@@ -199,7 +199,7 @@ foreach($results as $result)
             {
             ?>
             <a href="<?php echo escape($result->getOriginalFileUrl()); ?>"
-               class="fa fa-files-o"
+               class="icon-copy"
                title="<?php echo escape($lang["image_banks_create_new_resource"]); ?>"
                onclick="createNewResource(event, this);"></a>
             <?php

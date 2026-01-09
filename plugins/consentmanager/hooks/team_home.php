@@ -9,7 +9,7 @@ function HookConsentmanagerTeam_homeCustomteamfunction()
     ?>
     <li title="<?php echo escape($lang["manageconsent-tooltip"]); ?>">
         <a href="<?php echo $baseurl_short?>plugins/consentmanager/pages/list.php" onClick="return CentralSpaceLoad(this,true);">
-            <i aria-hidden="true" class="fa fa-fw fa-user-check"></i>
+            <i aria-hidden="true" class="icon-user-check"></i>
             <br />
             <?php echo escape($lang["manageconsent"]); ?>
         </a>

@@ -24,7 +24,7 @@ include "../../../include/header.php";
     <div class="RecordPanel">
         <div class="RecordHeader">
             <div class="backtoresults">
-                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+                <a href="#" onClick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>
             <h1><?php echo escape($lang["tms_link_tms_data"]); ?></h1>
         </div>

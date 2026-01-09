@@ -48,7 +48,7 @@ render_content_menu();
 ?>
 <div class="guidelines-container">
     <button id="guidelines-toc" onclick="jQuery('nav.guidelines-sidebar').slideToggle(150);">
-        <i class="fa-solid fa-bars"></i>
+        <i class="icon-menu"></i>
         <span> <?php echo escape($lang['brand_guidelines_view_table_of_content']); ?></span>
     </button>
     <nav class="guidelines-sidebar">
@@ -127,7 +127,7 @@ render_content_menu();
                         aria-label="<?php echo $view_edit_btn_label; ?>"
                         onclick="return toggleViewEditMode(this);"
                     >
-                        <i class="fa fa-fw <?php echo $show_edit_mode_view ? 'fa-regular fa-eye' : 'fa-pencil'; ?>"></i>
+                        <i class="icon-<?php echo $show_edit_mode_view ? 'eye' : 'pencil'; ?>"></i>
                     </button>
                     <?php
                 }
@@ -240,7 +240,7 @@ render_content_menu();
         jQuery('.add-new-content-container, button.new, .guidelines-sidebar li a.new, .top-right-menu')
             .toggleClass('DisplayNone');
 
-        return jQuery('#toggle-view-edit-mode i.fa').toggleClass(['fa-eye', 'fa-regular', 'fa-pencil']);
+        return jQuery('#toggle-view-edit-mode i').toggleClass(['icon-eye', 'icon-pencil']);
     }
 
     function showOptionsMenu(e, target) {
@@ -321,11 +321,11 @@ render_content_menu();
             const group_container = btn_el.parents('.group');
             const group_members = group_container.find('div[id^="page-content-item-"]');
             const menu_options = {
-                edit: { element: 'button:has(> i.fa-pen-to-square)', show: true },
-                move_up: { element: 'button:has(> i.fa-chevron-up)', show: true },
-                move_down: { element: 'button:has(> i.fa-chevron-down)', show: true },
-                move_left: { element: 'button:has(> i.fa-chevron-left)', show: false },
-                move_right: { element: 'button:has(> i.fa-chevron-right)', show: false },
+                edit: { element: 'button:has(> i.icon-square-pen)', show: true },
+                move_up: { element: 'button:has(> i.icon-chevron-up)', show: true },
+                move_down: { element: 'button:has(> i.icon-chevron-down)', show: true },
+                move_left: { element: 'button:has(> i.icon-chevron-left)', show: false },
+                move_right: { element: 'button:has(> i.icon-chevron-right)', show: false },
             };
             const first_group_member = group_members.first().is(btn_el.parent());
             const last_group_member = group_members.last().is(btn_el.parent());

@@ -41,10 +41,10 @@ while ($s = strpos($svg_source, "[", $e)) {
     <div class="stencilvg-svgouter">
         <p>
             <a href="#" onClick="ZoomSVG(10); return false;">
-                <i class="fa fa-2x fa-search-plus"></i>
+                <i class="icon-zoom-in lucide-xl"></i>
             </a>
             <a href="#" onClick="ZoomSVG(-10); return false;">
-                <i class="fa fa-2x fa-search-minus"></i>
+                <i class="icon-zoom-out lucide-xl"></i>
             </a>
         </p>
         <div class="stencilvg-svg" id="svgpreview"></div>

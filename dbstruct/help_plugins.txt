@@ -12,4 +12,4 @@ enabled_groups,varchar(200),Comma separated list of group refs. Used if disable_
 priority,int(11),Defines the order that plugin hooks will be called. Plugins with higher priority numbers will be called later. Loaded from the .yaml file
 disable_group_select,int(11),Prevent plugin from being enabled only for certain groups. Loaded from the .yaml file
 title,varchar(100),A 'friendly' title to display as the plugin name instead of the folder name used in 'name'. Loaded from the .yaml file
-icon,varchar(100),A FontAwesome icon string to display in the UI. Loaded from the .yaml file
+icon,varchar(100),A Lucide icon string to display in the UI. Loaded from the .yaml file

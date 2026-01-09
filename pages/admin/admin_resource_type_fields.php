@@ -266,21 +266,21 @@ $links_trail = array(
                             <div class="ListTools">
                                 <?php if ($field_order_by == "order_by" && $allow_reorder) { ?>      
                                     <a href="javascript:void(0)" class="movelink movedownlink" <?php echo ($n == count($fields) - 1) ? " disabled" : ''; ?>>
-                                        <i class="fas fa-arrow-down"></i>&nbsp;<?php echo escape($lang['action-move-down']); ?>
+                                        <i class="icon-arrow-down"></i>&nbsp;<?php echo escape($lang['action-move-down']); ?>
                                     </a>
                                     <a href="javascript:void(0)" class="movelink moveuplink" <?php echo ($n == 0) ? " disabled" : ''; ?>>
-                                        <i class="fas fa-arrow-up"></i>&nbsp;<?php echo escape($lang['action-move-up']); ?>
+                                        <i class="icon-arrow-up"></i>&nbsp;<?php echo escape($lang['action-move-up']); ?>
                                     </a>
                                 <?php } ?>
                             
                                 <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_copy_field.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="CentralSpaceLoad(this,true)">
-                                    <i class="fas fa-copy"></i>&nbsp;<?php echo escape($lang["copy"]); ?>
+                                    <i class="icon-copy"></i>&nbsp;<?php echo escape($lang["copy"]); ?>
                                 </a>
                                 <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_resource_type_field_edit.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);">
-                                    <i class="fas fa-edit"></i>&nbsp;&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                    <i class="icon-square-pen"></i>&nbsp;&nbsp;<?php echo escape($lang["action-edit"]); ?>
                                 </a>
                                 <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_system_log.php", ['table' => 'resource_type_field', 'table_reference' => $fields[$n]['ref']], $common_rs_url_params); ?>" onclick="return CentralSpaceLoad(this, true);">
-                                    <i class="fas fa-history"></i>&nbsp;<?php echo escape($lang["log"]); ?>
+                                    <i class="icon-history"></i>&nbsp;<?php echo escape($lang["log"]); ?>
                                 </a>
                             </div>
                         </td>

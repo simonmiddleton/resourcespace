@@ -221,7 +221,7 @@ include "../../include/header.php";
                                     }
 
                                     $rule_edit_url = generateURL($baseurl . "/pages/admin/ajax/admin_filter_rule_edit.php", array("ref" => $ruleid,"filter" => $filterid));
-                                    echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . escape($ruleid) . "'> <a href={$rule_edit_url} onclick ='return ModalLoad(this,true);'>" . implode("&nbsp;" . escape($lang["filter_or"]) . "&nbsp;", $ruletext) . "</a><a href='#' onclick ='deleteFilterRule(" . escape($ruleid) . ");return false;'>[<i class='fa fa-remove'></i>]</a></input></td></tr>";
+                                    echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . escape($ruleid) . "'> <a href={$rule_edit_url} onclick ='return ModalLoad(this,true);'>" . implode("&nbsp;" . escape($lang["filter_or"]) . "&nbsp;", $ruletext) . "</a><a href='#' onclick ='deleteFilterRule(" . escape($ruleid) . ");return false;'>[<i class='icon-x'></i>]</a></input></td></tr>";
                                 }
                             }
                             ?>

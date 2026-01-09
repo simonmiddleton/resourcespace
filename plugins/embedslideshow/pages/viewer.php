@@ -33,8 +33,7 @@ ob_start();
 <html>
     <head>
         <link href="../css/embedslideshow.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" /> 
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
+        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/lucide/lucide.css?css_reload_key=<?php echo $css_reload_key?>">
         <link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
         <script src="../../..<?php echo $jquery_path ?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
     </head>
@@ -159,14 +158,14 @@ ob_start();
                     <li class="embedslideshow_begn"
                         style="cursor: pointer;"
                         onClick="embedslideshow_auto=false;embedslideshow_ShowPage(1,false,false);return false;">
-                        <i class="fas fa-step-backward"></i>
+                        <i class="icon-skip-back"></i>
                     </li>
                 <?php } ?>
 
                 <li class="embedslideshow_prev"
                     style="cursor: pointer;"
                     onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_page-1,false,false);return false;">
-                    <i class="fas fa-backward"></i>
+                    <i class="icon-step-back"></i>
                 </li>
 
                 <?php if ($width > 100) { ?>
@@ -174,7 +173,7 @@ ob_start();
                         id="embedslideshow_auto"
                         style="cursor: pointer;"
                         onClick="embedslideshow_auto=!embedslideshow_auto;if (embedslideshow_auto) {embedslideshow_ShowPage(embedslideshow_page+1,false,false);$('#embedslideshow_auto').fadeTo(100,1);} else {clearTimeout(timer);$('#embedslideshow_auto').fadeTo(100,0.4);}return false;">
-                        <i class="fas fa-pause"></i>
+                        <i class="icon-pause"></i>
                     </li>
 
                     <?php if ($transition == 0) { ?>
@@ -187,14 +186,14 @@ ob_start();
                 <li class="embedslideshow_next"
                     style="cursor: pointer;"
                     onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_page+1,false,false);return false;">
-                    <i class="fas fa-forward"></i>
+                    <i class="icon-step-forward"></i>
                 </li>
 
                 <?php if ($width > 100) { ?>
                     <li class="embedslideshow_end"
                         style="cursor: pointer;"
                         onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo (int) $maxpages ?>,false,false);return false;">
-                        <i class="fas fa-step-forward"></i>
+                        <i class="icon-skip-forward"></i>
                     </li>
                 <?php } ?>
 

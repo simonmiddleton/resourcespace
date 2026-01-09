@@ -144,7 +144,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                     {
                     $simple_search_flag = ($workflow_state == 0 ? 1 : 0);
 
-                    $icon = WORKFLOW_DEFAULT_ICONS[$workflow_state] ?? 'fas cogs';
+                    $icon = WORKFLOW_DEFAULT_ICONS[$workflow_state] ?? 'cog';
                     rse_workflow_create_state([
                         'code' => $workflow_state,
                         'name' => $workflow_state_name,
@@ -300,7 +300,7 @@ function rse_workflow_create_state(array $data)
         'email_from'         => '',
         'bcc_admin'          => 0,
         'simple_search_flag' => 0,
-        'icon'               => 'fas cogs',
+        'icon'               => 'cog',
     ];
     $new_state_data = array_map('trim', $data + $defaults);
 

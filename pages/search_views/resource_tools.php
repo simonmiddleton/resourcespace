@@ -18,7 +18,7 @@ if (
 ) {
     ?>
     <a
-        class="fa fa-pencil"
+        class="icon-pencil"
         href="<?php echo str_replace("view.php", "edit.php", $url) ?>"  
         onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" 
         title="<?php echo escape($lang["action-editmetadata"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
@@ -34,7 +34,7 @@ if (
 ) {
     ?>
     <a
-        class="fa fa-comment"
+        class="icon-message-circle"
         href="<?php echo generateURL($baseurl_short . 'pages/collection_comment.php', ['ref' => $ref, 'collection' => trim(substr($search, 11))]); ?>"
         onClick="return ModalLoad(this,true);" 
         title="<?php echo escape($lang["addorviewcomments"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
@@ -50,7 +50,7 @@ if (
 ) {
     ?>
     <a
-        class="fa fa-expand"
+        class="icon-maximize-2"
         onClick="return CentralSpaceLoad(this,true);"
         href="<?php echo generateURL($baseurl_short . 'pages/preview.php', ['from' => 'search','ref' => $ref,'ext' => $result[$n]['preview_extension'],'search' => $search,'offset' => $offset,'order_by' => $order_by,'sort' => $sort,'archive' => $archive,'k' => $k]); ?>"
         title="<?php echo escape($lang["fullscreenpreview"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
@@ -60,7 +60,7 @@ if (
 
 // Share icon
 if ($thumbs_share && $allow_share && ($k == "" || $internal_share_access)) { ?>
-    <a class="fa fa-share-alt"
+    <a class="icon-share-2"
         href="<?php echo generateURL($baseurl_short . 'pages/resource_share.php', ['ref' => $ref,'search' => $search,'offset' => $offset,'order_by' => $order_by,'sort' => $sort,'archive' => $archive,'k' => $k]); ?>"
         onClick="return CentralSpaceLoad(this,true);"  
         title="<?php echo escape($lang["share-resource"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
@@ -70,7 +70,7 @@ if ($thumbs_share && $allow_share && ($k == "" || $internal_share_access)) { ?>
 
 // Remove from collection icon
 if (!checkperm('b') && ($k == '' || $internal_share_access)) {
-    $col_link_class = ['fa-minus-circle'];
+    $col_link_class = ['icon-circle-minus'];
 
     if (
         isset($usercollection_resources)
@@ -81,7 +81,7 @@ if (!checkperm('b') && ($k == '' || $internal_share_access)) {
     }
 
     $onclick = 'toggle_addremove_to_collection_icon(this);';
-    echo remove_from_collection_link($ref, implode(' ', array_merge(['fa'], $col_link_class)), $onclick, 0, $resource_view_title) . '</a>';
+    echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
 }
 
 // Add to collection icon
@@ -91,7 +91,7 @@ if (
     && !in_array($result[$n]['resource_type'], $collection_block_restypes)
     && ('' == $k || $internal_share_access)
 ) {
-    $col_link_class = ['fa-plus-circle'];
+    $col_link_class = ['icon-circle-plus'];
 
     if (
         isset($usercollection_resources)
@@ -102,7 +102,7 @@ if (
     }
 
     $onclick = 'toggle_addremove_to_collection_icon(this);';
-    echo add_to_collection_link($ref, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class)), $resource_view_title) . '</a>';
+    echo add_to_collection_link($ref, $onclick, '', implode(' ', $col_link_class), $resource_view_title) . '</a>';
 } 
 ?>
 

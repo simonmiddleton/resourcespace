@@ -1645,7 +1645,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                     onclick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);"
                 >
             <?php } ?>
-            <i aria-hidden="true" class="fa fa-arrow-left"></i><?php echo ($curpage > 1) ? "</a>" : ''; ?>&nbsp;&nbsp;
+            <i aria-hidden="true" class="icon-arrow-left"></i><?php echo ($curpage > 1) ? "</a>" : ''; ?>&nbsp;&nbsp;
 
             <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;">
                 <?php echo escape($lang["jumptopage"]) ?>: 
@@ -1668,7 +1668,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                 &nbsp;
                 <a
                     aria-hidden="true"
-                    class="fa fa-times-circle"
+                    class="icon-circle-x"
                     href="#"
                     onclick="
                         document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';
@@ -1696,7 +1696,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                     onclick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);">
             <?php } ?>
             
-            <i aria-hidden="true" class="fa fa-arrow-right"></i>
+            <i aria-hidden="true" class="icon-arrow-right"></i>
 
             <?php if ($curpage < $totalpages) { ?>
                 </a>

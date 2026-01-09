@@ -115,10 +115,10 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
             <td>
                 <div class="ListTools">
                     <a href="<?php echo generateURL($baseurl_short . "pages/search.php", ['search' => '!license' . $license['ref']]); ?>" onClick="return CentralSpaceLoad(this,true);">
-                        <i class="fas fa-search"></i>&nbsp;<?php echo escape($lang['license_view_linked_resources_short']); ?>
+                        <i class="icon-search"></i>&nbsp;<?php echo escape($lang['license_view_linked_resources_short']); ?>
                     </a>
-                    <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
-                    <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?></a>
+                    <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
+                    <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="icon-trash-2"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?></a>
                 </div>
             </td>
     </tr>

@@ -77,7 +77,7 @@ include "../../include/header.php";
                                 onClick="return CentralSpaceLoad(this,true);" 
                                 href="<?php echo $edit_url?>"
                             >
-                                <?php echo '<i class="fas fa-edit"></i>&nbsp' . escape($lang["action-edit"])?>
+                                <?php echo '<i class="icon-square-pen"></i>&nbsp' . escape($lang["action-edit"])?>
                             </a>
                         </div>
                     </td>

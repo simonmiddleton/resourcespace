@@ -12,27 +12,27 @@ function render_individual_menu(): void
     ?>
     <div id="menu-individual" class="context-menu-container" style="display:none;">
         <button class="context-menu-row" onclick="return edit_item(this);">
-            <i class="fa-solid fa-fw fa-pen-to-square"></i>
+            <i class="icon-square-pen"></i>
             <span><?php echo escape($GLOBALS['lang']['action-edit']); ?></span>
         </button>
         <button class="context-menu-row" onclick="return delete_item(this);">
-            <i class="fa-solid fa-fw fa-trash-can"></i>
+            <i class="icon-trash-2"></i>
             <span><?php echo escape($GLOBALS['lang']['action-delete']); ?></span>
         </button>
         <button class="context-menu-row" onclick="return reorder_item(this, 'up');">
-            <i class="fa-solid fa-fw fa-chevron-up"></i>
+            <i class="icon-chevron-up"></i>
             <span><?php echo escape($GLOBALS['lang']['action-move-up']); ?></span>
         </button>
         <button class="context-menu-row DisplayNone" onclick="return reorder_item(this, 'up');">
-            <i class="fa-solid fa-fw fa-chevron-left"></i>
+            <i class="icon-chevron-left"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_move_left']); ?></span>
         </button>
         <button class="context-menu-row DisplayNone" onclick="return reorder_item(this, 'down');">
-            <i class="fa-solid fa-fw fa-chevron-right"></i>
+            <i class="icon-chevron-right"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_move_right']); ?></span>
         </button>
         <button class="context-menu-row" onclick="return reorder_item(this, 'down');">
-            <i class="fa-solid fa-fw fa-chevron-down"></i>
+            <i class="icon-chevron-down"></i>
             <span><?php echo escape($GLOBALS['lang']['action-move-down']); ?></span>
         </button>
     </div>
@@ -48,7 +48,7 @@ function render_content_menu(): void
             onclick="return new_content_item(this);"
             data-item-type="<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['text']); ?>"
         >
-            <i class="fa-solid fa-fw fa-align-left"></i>
+            <i class="icon-text-align-start"></i>
             <span><?php echo escape($GLOBALS['lang']['text']); ?></span>
         </button>
         <button
@@ -57,7 +57,7 @@ function render_content_menu(): void
             data-item-type="<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['resource']); ?>"
             data-item-upload-url="<?php echo get_upload_url() . '&forcesingle=true'; ?>"
         >
-            <i class="fa-solid fa-fw fa-upload"></i>
+            <i class="icon-upload"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_new_resource']); ?></span>
         </button>
         <button
@@ -65,7 +65,7 @@ function render_content_menu(): void
             onclick="return new_content_item(this);"
             data-item-type="<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['resource']); ?>"
         >
-            <i class="fa-solid fa-fw fa-photo-film"></i>
+            <i class="icon-image"></i>
             <span><?php echo escape($GLOBALS['lang']['brand_guidelines_existing_resource']); ?></span>
         </button>
         <button
@@ -73,7 +73,7 @@ function render_content_menu(): void
             onclick="return new_content_item(this);"
             data-item-type="<?php echo escape((string) BRAND_GUIDELINES_CONTENT_TYPES['colour']); ?>"
         >
-            <i class="fa-solid fa-fw fa-palette"></i>
+            <i class="icon-palette"></i>
             <span><?php echo escape($GLOBALS['lang']['colour']); ?></span>
         </button>
     </div>
@@ -98,7 +98,7 @@ function render_new_content_button(string $id, array $ctx): void
         class="add-new-content-container <?php echo escape(implode(' ', $extra_class)); ?>"
         onclick="showOptionsMenu(this, 'menu-content');"
     >
-        <i class="fa-solid fa-plus"></i>
+        <i class="icon-plus"></i>
         <span><?php echo escape($GLOBALS['lang']['brand_guidelines_new_content']); ?></span>
     </button>
     <?php
@@ -120,7 +120,7 @@ function render_new_block_element_button(string $class, int $type): void
         onclick="return new_content_item(this);"
         data-item-type="<?php echo escape((string) $type); ?>"
     >
-        <i class="fa-solid fa-plus"></i>
+        <i class="icon-plus"></i>
     </button>
     <?php
 }
@@ -254,7 +254,7 @@ function render_item_top_right_menu(int $ref, array $class = []): void
         onclick="showOptionsMenu(this, 'menu-individual');"
         data-item-ref="<?php echo $ref; ?>"
     >
-        <i class="fa-solid fa-ellipsis-vertical"></i>
+        <i class="icon-ellipsis-vertical"></i>
     </div>
     <?php
 }

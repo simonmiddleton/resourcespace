@@ -141,7 +141,7 @@ if ($print) {
     }
     ?>
     <p>
-        <a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo escape($lang["print_report"]); ?></a>
+        <a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="icon-printer"></i> <?php echo escape($lang["print_report"]); ?></a>
     </p>
 
     <h1 id="ReportHeader" class="CollapsibleSectionHead <?php echo ($ref == "") ? 'expanded' : 'collapsed'; ?>">

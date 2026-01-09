@@ -215,14 +215,14 @@ $selected_search_tab = getval("selected_search_tab", "search");
     <div id="SearchBarTabsContainer">
         <a href="#" onclick="selectSearchBarTab('search');">
             <div class="SearchBarTab SearchTab <?php echo ($selected_search_tab === "search") ? "SearchBarTabSelected" : ""; ?>">
-                <i class="fa-solid fa-fw fa-magnifying-glass"></i>
+                <i class="icon-search "></i>
                 <?php echo escape($lang["searchbutton"]); ?>
             </div>
         </a>
         <?php if ($browse_bar) { ?>
             <a href="#" onclick="selectSearchBarTab('browse');" >
                 <div class="SearchBarTab BrowseTab <?php echo ($selected_search_tab === "browse") ? "SearchBarTabSelected" : ""; ?>">
-                    <i class="fa-solid fa-fw fa-list"></i>
+                    <i class="icon-list "></i>
                     <?php echo escape($lang["browse_bar_text"]); ?>
                 </div>
             </a>
@@ -255,7 +255,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         value="<?php echo escape($ssearchhiddenfields); ?>"
                     >
                     <button
-                        class="fas fa-search search-icon"
+                        class="icon-search search-icon"
                         type="submit"
                         alt="<?php echo escape($lang['searchbutton']); ?>"
                         title="<?php echo escape($lang['searchbutton']); ?>"
@@ -449,7 +449,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                         onclick="SimpleSearchFieldsHideOrShow(true);<?php echo $resetTickAllCall; ?>"
                                     >
                                     <label for="TickBox<?php echo (int) $types[$n]["ref"]; ?>">
-                                        <i class="fa fa-fw <?php echo escape($types[$n]["icon"] != "" ? $types[$n]["icon"] : FONTAWESOME_EXTENSIONS["default"]); ?>"></i>    
+                                        <i class="icon-<?php echo escape($types[$n]["icon"] != "" ? $types[$n]["icon"] : LUCIDE_EXTENSIONS["default"]); ?>"></i>    
                                         <?php echo "&nbsp;" . escape($types[$n]["name"]); ?>
                                     </label>
                                 </div>
@@ -955,7 +955,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 if (!$disable_geocoding) {
                     ?>
                     <p>
-                        <i aria-hidden="true" class="fa fa-fw fa-globe"></i>
+                        <i aria-hidden="true" class="icon-globe "></i>
                         <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/geo_search.php">
                             <?php echo escape($lang["geographicsearch"]); ?>
                         </a>
@@ -966,7 +966,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 if (!$advancedsearch_disabled) {
                     ?>
                     <p>
-                        <i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>
+                        <i aria-hidden="true" class="icon-zoom-in "></i>
                         <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/search_advanced.php">
                             <?php echo escape($lang["gotoadvancedsearch"]); ?>
                         </a>
@@ -979,7 +979,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 if ($view_new_material) {
                     ?>
                     <p>
-                        <i aria-hidden="true" class="fa fa-fw  fa-clock-o"></i>
+                        <i aria-hidden="true" class="icon-clock"></i>
                         <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/search.php?search=<?php echo urlencode("!last" . $recent_search_quantity); ?>">
                             <?php echo escape($lang["viewnewmaterial"]); ?>
                         </a>

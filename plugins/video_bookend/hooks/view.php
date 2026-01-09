@@ -20,7 +20,7 @@ function HookVideo_bookendViewAfterresourceactions()
             {
             ?>
             <li><a onClick='return CentralSpaceLoad(this,true);' href='<?php echo $baseurl_short;?>plugins/video_bookend/pages/bookend.php?ref=<?php echo $ref?>'>
-            <?php echo "<i class='fa fa-arrows-h'></i>&nbsp;" . $lang['bookend'];?>
+            <?php echo "<i class='icon-move-horizontal'></i>&nbsp;" . $lang['bookend'];?>
             </a></li>
             <?php
             return true;

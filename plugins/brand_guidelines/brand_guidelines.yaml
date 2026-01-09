@@ -6,6 +6,6 @@ author: Montala Limited
 info_url: https://www.resourcespace.com/knowledge-base/plugins/brand-guidelines
 config_url: /plugins/brand_guidelines/pages/setup.php
 default_priority: 999
-icon: fa-solid fa-list-check
+icon: list
 category: Compliance
 disable_group_select: 1

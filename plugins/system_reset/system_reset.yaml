@@ -4,6 +4,5 @@ author: Montala Limited
 version: 1.0
 desc: Adds an option to admin/system to erase all data.
 category: System
-icon    : fa fa-soap
-icon-colour : pink
+icon : eraser
 info_url: https://www.resourcespace.com/knowledge-base/plugins/system-reset

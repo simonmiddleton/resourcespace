@@ -283,7 +283,7 @@ include "../../include/header.php";
                     if ($all_actions[$n]["type"] == "resourcereview") {
                         $actioneditlink = $baseurl_short . "pages/edit.php";
                         $actionviewlink = $baseurl_short . "pages/view.php";
-                        $actionaddlink = add_to_collection_link($all_actions[$n]["ref"], '', '', 'fa fa-plus-circle');
+                        $actionaddlink = add_to_collection_link($all_actions[$n]["ref"], '', '', 'icon-circle-plus');
                     } elseif ($all_actions[$n]["type"] == "resourcerequest") {
                         $actioneditlink = $baseurl_short . "pages/team/team_request_edit.php";
                     } elseif ($all_actions[$n]["type"] == "userrequest") {
@@ -323,7 +323,7 @@ include "../../include/header.php";
                                         href="<?php echo $editlink; ?>"
                                         onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
                                         title="<?php echo escape($lang["action-edit"]); ?>">
-                                        <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                        <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                                     </a>
                                     <?php
                                 }
@@ -333,7 +333,7 @@ include "../../include/header.php";
                                         href="<?php echo $viewlink; ?>"
                                         onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
                                         title="<?php echo escape($lang["view"]); ?>">
-                                        <i class="fas fa-expand"></i>&nbsp;<?php echo escape($lang["view"]); ?>
+                                        <i class="icon-maximize-2"></i>&nbsp;<?php echo escape($lang["view"]); ?>
                                     </a>
                                     <?php
                                 } ?>

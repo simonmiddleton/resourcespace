@@ -406,7 +406,7 @@ EOT;
                 if ($comment['annotation'] > 0) {
                     echo ' | ';
                     ?>
-                    <i class="fa fa-pencil-square-o" aria-hidden="true" title="<?php echo escape($lang['annotate_annotation_label']); ?>"></i>
+                    <i class="icon-square-pen" aria-hidden="true" title="<?php echo escape($lang['annotate_annotation_label']); ?>"></i>
                     <?php
                 }
             ?></div>
@@ -477,18 +477,18 @@ EOT;
                     jQuery(\"#comment_form\").clone().attr(\"id\",\"{$respond_div_id}\").css(\"margin-left\",\"" . ($level * 50) . 'px")' . ".insertAfter(\"#comment$thisRef\");
                     jQuery(\"<input>\").attr({type: \"hidden\", name: \"ref_parent\", value: \"$thisRef\"}).appendTo(\"#{$respond_div_id} .comment_form\");
                     jQuery(\"#{$respond_button_id} a\").removeAttr(\"onclick\");
-                '>" . '<i aria-hidden="true" class="fa fa-reply"></i>&nbsp;' . $lang['comments_respond-to-this-comment'] . "</a>";
+                '>" . '<i aria-hidden="true" class="icon-reply"></i>&nbsp;' . $lang['comments_respond-to-this-comment'] . "</a>";
             echo "</div>";      // end respond
 
             echo "<div class='CommentEntryInfoFlag'>";
             if (getval("comment{$thisRef}flagged", "")) {
-                echo '<div class="CommentFlagged"><i aria-hidden="true" class="fa fa-fw fa-flag">&nbsp;</i>'
+                echo '<div class="CommentFlagged"><i aria-hidden="true" class="icon-flag">&nbsp;</i>'
                     . escape($lang['comments_flag-has-been-flagged'])
                     . '</div>';
             } else {
                 echo<<<EOT
                     <div class="CommentFlag">
-                        <a href="javascript:void(0)" onclick="jQuery('#CommentFlagContainer{$thisRef}').toggle('fast');" ><i aria-hidden="true" class="fa fa-fw fa-flag">&nbsp;</i>{$lang['comments_flag-this-comment']}</a>
+                        <a href="javascript:void(0)" onclick="jQuery('#CommentFlagContainer{$thisRef}').toggle('fast');" ><i aria-hidden="true" class="icon-flag">&nbsp;</i>{$lang['comments_flag-this-comment']}</a>
                     </div>
 EOT;
             }
@@ -498,7 +498,7 @@ EOT;
                     <form class="comment_removal_form">
                     <?php generateFormToken("comment_removal_form"); ?>
                         <input type="hidden" name="comment_to_hide" value="<?php echo escape($thisRef); ?>"></input>
-                        <a href="javascript:void(0)" onclick="if (confirm ('<?php echo escape($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);"><?php echo '<i aria-hidden="true" class="fa fa-trash-alt"></i>&nbsp;' . $lang['comments_hide-comment-text-link']; ?></a>
+                        <a href="javascript:void(0)" onclick="if (confirm ('<?php echo escape($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);"><?php echo '<i aria-hidden="true" class="icon-trash-2"></i>&nbsp;' . $lang['comments_hide-comment-text-link']; ?></a>
                     </form>
                     <?php
             }

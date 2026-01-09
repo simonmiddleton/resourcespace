@@ -102,10 +102,6 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .ResourcePanel .nopreview {
             color: white;
         }
-        .thumbs-file-extension,
-        .ResourceTypeIcon.fa-fw {
-            background: #383838;
-        }
         #modal {
             background-color: #262626;
         }
@@ -252,10 +248,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .stripicon{background: url(../gfx/interface/stripicondark.svg) no-repeat 0; opacity: 0.65;}
         .stripiconactive{background: url(../gfx/interface/stripiconactivedark.svg) no-repeat 0;}
 
-        .icondisplay .fa-map {
-            color: #cccccc;
-        }
-        .icondisplay .fas.fa-map {
+        .icondisplay .icon-map {
             color: white;
         }
         .NoFind {
@@ -598,10 +591,6 @@ if (isset($high_contrast_mode) && $high_contrast_mode) { ?>
         background: black;
         border-radius: 3px;
         color: white;
-    }
-    .thumbs-file-extension,
-    .ResourceTypeIcon.fa-fw {
-        background: white;
     }
     .RecordDownloadSpace {
         border: 1px solid black;

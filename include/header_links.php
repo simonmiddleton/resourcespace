@@ -14,7 +14,7 @@
         <?php if ($advanced_search_nav) { ?>
             <li class="HeaderLink">
                 <a href="<?php echo $baseurl?>/pages/search_advanced.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>
+                    <i aria-hidden="true" class="icon-zoom-in"></i>
                     <?php echo escape($lang["advancedsearch"]); ?>
                 </a>
             </li>
@@ -24,12 +24,12 @@
             <li class="HeaderLink">
             <?php if ((checkperm("s")) &&  ((isset($_COOKIE["search_form_submit"]) )   || (isset($_COOKIE["search"]) && strlen($_COOKIE["search"]) > 0) || (isset($search) && (strlen($search) > 0) && (strpos($search, "!") === false)))) { # active search present ?>
                     <a href="<?php echo $baseurl?>/pages/search.php" onClick="return CentralSpaceLoad(this,true);">
-                        <i aria-hidden="true" class="fa fa-fw fa-search"></i>
+                        <i aria-hidden="true" class="icon-search"></i>
                         <?php echo escape($lang["searchresults"]); ?>
                     </a>
             <?php } else { ?>
                 <a class="SearchResultsDisabled">
-                    <i aria-hidden="true" class="fa fa-fw fa-search"></i>
+                    <i aria-hidden="true" class="icon-search"></i>
                     <?php echo escape($lang["searchresults"]); ?>
                 </a>
             <?php } ?>
@@ -47,7 +47,7 @@
         <?php if (checkperm("s") && ($public_collections_top_nav)) { ?>
             <li class="HeaderLink">
                 <a href="<?php echo $baseurl?>/pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i class="fas fa-shopping-bag"></i>
+                    <i class="icon-shopping-bag"></i>
                     <?php echo escape($lang["publiccollections"]); ?>
                 </a>
             </li>
@@ -56,7 +56,7 @@
         <?php if (checkperm("s") && $mycollections_link && !checkperm("b")) { ?>
             <li class="HeaderLink">
                 <a href="<?php echo $baseurl?>/pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i class="fas fa-shopping-bag"></i>
+                    <i class="icon-shopping-bag"></i>
                     <?php echo escape($lang["mycollections"]); ?>
                 </a>
             </li>
@@ -87,7 +87,7 @@
         <?php if (checkperm("s") && $myrequests_link && checkperm("q")) { ?>
             <li class="HeaderLink">
                 <a href="<?php echo $baseurl?>/pages/requests.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i>
+                    <i aria-hidden="true" class="icon-shopping-cart"></i>
                     <?php echo escape($lang["myrequests"]); ?>
                 </a>
             </li>
@@ -104,7 +104,7 @@
         <?php if (($research_request) && ($research_link) && (checkperm("s")) && (checkperm("q"))) { ?>
             <li class="HeaderLink">
                 <a href="<?php echo $baseurl?>/pages/research_request.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>
+                    <i aria-hidden="true" class="icon-circle-question-mark"></i>
                     <?php echo escape($lang["researchrequest"]); ?>
                 </a>
             </li>

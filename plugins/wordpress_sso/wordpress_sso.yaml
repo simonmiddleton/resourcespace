@@ -1,7 +1,7 @@
 name: wordpress_sso
 title: Wordpress SSO
 desc: SSO via Wordpress; logging in to Wordpress logs you in to ResourceSpace.
-icon: fab fa-wordpress-simple
+icon: key-round
 icon-colour: #00749C
 author: Montala Limited
 version: 1.0

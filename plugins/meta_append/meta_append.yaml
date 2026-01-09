@@ -3,7 +3,7 @@ title      : Meta Append
 author     : Montala Limited
 version    : 1.0
 desc       : Append user definable timestamp and daily upload number (per user) to a field.
-icon       : fa fa-user-clock
+icon       : list-plus
 config_url : /plugins/meta_append/pages/setup.php
 category: Workflow And Access
 info_url: https://www.resourcespace.com/knowledge-base/plugins/meta_append

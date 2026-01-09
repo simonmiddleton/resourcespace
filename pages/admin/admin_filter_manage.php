@@ -96,10 +96,10 @@ include "../../include/header.php";
                                 <td>
                                     <div class="ListTools">
                                         <a href="#" onClick="jQuery('#form_copy_from').val('<?php echo escape($filters[$n]["ref"]); ?>');return CentralSpacePost(document.getElementById('admin_filter_form'),true)" >
-                                            <?php echo '<i class="fas fa-copy"></i>&nbsp;' .  escape($lang["copy"]); ?>
+                                            <?php echo '<i class="icon-copy"></i>&nbsp;' .  escape($lang["copy"]); ?>
                                         </a>
                                         <a href="<?php echo generateURL($filter_edit_url, $params, array("filter" => $filters[$n]["ref"])); ?>" onClick="return CentralSpaceLoad(this,true);">
-                                            <?php echo '<i class="fas fa-edit"></i>&nbsp;' . escape($lang["action-edit"]); ?>
+                                            <?php echo '<i class="icon-square-pen"></i>&nbsp;' . escape($lang["action-edit"]); ?>
                                         </a>
                                         <a
                                             href="#"
@@ -136,7 +136,7 @@ include "../../include/header.php";
                                                     return false;
                                                 }
                                             '>
-                                            <?php echo '<i class="fa fa-trash"></i>&nbsp;' . escape($lang["action-delete"]); ?>
+                                            <?php echo '<i class="icon-trash-2"></i>&nbsp;' . escape($lang["action-delete"]); ?>
                                         </a>
                                     </div>
                                 </td>

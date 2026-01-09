@@ -18,7 +18,7 @@ function HookClipSearchSearch_header_after_actions()
     }
 
     $search_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!clipsearch {$search}"));
-    $icon = "<i class='fa fa-brain'></i> &nbsp;";
+    $icon = "<i class='icon-brain'></i> &nbsp;";
 
     render_filter_bar_button($lang["clip-natural-language-search"], 'onClick="return CentralSpaceLoad(\'' . $search_url . '\');"', $icon);
     return false; # Allow further custom panels
