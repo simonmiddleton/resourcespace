@@ -2943,3 +2943,7 @@ label {
     margin-left: 310px; 
     margin-top: 5px;
 }
+
+.Question.is-disabled {
+  opacity: 0.45;
+}

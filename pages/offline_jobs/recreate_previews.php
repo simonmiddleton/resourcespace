@@ -215,6 +215,38 @@ if ($job_add_error) {
             <input name="delete_existing" id="delete_existing" type="checkbox" value="1"<?php echo ($delete_existing ? 'checked="checked"' : ''); ?>>
             <div class="clearerleft"></div>
         </div>
+        <script>
+            jQuery(function ($) {
+                const $deleteExisting = $('#delete_existing');
+
+                // All controls that should be disabled when delete_existing is checked
+                const $targets = $(
+                    '#use_existing, ' +
+                    '#video_update, ' +
+                    '#image_sizes_all, ' +
+                    '#resource_types_all, ' +
+                    'input[name="image_sizes[]"], ' +
+                    'input[name="resource_types[]"]'
+                );
+
+                // Grey out Question containers
+                const $targetQuestions = $targets.closest('.Question');
+
+                function refreshDeleteMode() {
+                    const deleting = $deleteExisting.is(':checked');
+
+                    // Disable when checked, enable when unchecked
+                    $targets.prop('disabled', deleting);
+                    $targetQuestions.toggleClass('is-disabled', deleting);
+                }
+
+                // Run when checkbox changes
+                $deleteExisting.on('change', refreshDeleteMode);
+
+                // Run once on page load
+                refreshDeleteMode();
+            });
+        </script>
         <div class="QuestionSubmit">
             <label for="save"></label>
             <input type="submit" name="save" value="<?php echo escape($lang["oj_common_create_job"]); ?>" />
