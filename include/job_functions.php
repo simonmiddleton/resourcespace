@@ -548,3 +548,25 @@ function get_job_progress_from_log_file(string $path = "", string $pattern = "/\
     return ['found' => null, 'last_line' => $last_line];
 
 }
+
+/**
+ * Determine whether the current user is allowed to manually trigger background jobs.
+ *
+ * The user must have 'a', 'f*', 't' and 'v' permissions as well as edit access to all workflow states.
+ *
+ * @return bool true if the user satisfies all required permissions and workflow access, false otherwise
+ */
+function job_trigger_permission_check(): bool
+{
+    global $userref;
+
+    $all_wf_states = get_workflow_states();
+    $editable_wf_states = array_column(get_editable_states($userref), 'id');
+
+    sort($all_wf_states);
+    sort($editable_wf_states);
+
+    $access_to_all_wf_states = ($all_wf_states === $editable_wf_states);
+
+    return checkperm('a') && $access_to_all_wf_states && checkperm('t') && checkperm('v') && checkperm('f*');
+}

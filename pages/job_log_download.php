@@ -2,7 +2,7 @@
 include '../include/boot.php';
 include '../include/authenticate.php';
 
-if (!checkperm('a')) {
+if (!job_trigger_permission_check()) {
     error_alert($lang["error-permissiondenied"], false, 401);
     exit();
 }

@@ -9,7 +9,7 @@ $type       = getval("type", "stream");
 $log_path    = get_job_queue_log_path_by_ref($job);
 $job_details = job_queue_get_job($job);
 
-if (!checkperm("a") && !($type === "progress" && $job_details['user'] == $userref)) {
+if (!job_trigger_permission_check() && !($type === "progress" && $job_details['user'] == $userref)) {
     header('HTTP/1.1 401 Unauthorized');
     $return['error'] = array(
         'status' => 401,

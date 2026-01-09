@@ -275,7 +275,7 @@ include '../include/header.php';
         echo "<p><a href='#' onclick='if(confirm(\"" . escape($lang["job_confirm_purge"]) . "\")){update_job(true,\"purge_jobs\");}'>" . LINK_CARET . escape($lang["jobs_action_purge_complete"]) . "</a></p>";
     }
     
-    if (checkperm('a')) {
+    if (job_trigger_permission_check()) {
     ?>
     <form id="JobTriggerForm" method="POST" action="<?php echo $url; ?>">
         <?php generateFormToken('JobFilterForm'); ?>

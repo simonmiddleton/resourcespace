@@ -2,6 +2,10 @@
 include '../../include/boot.php';
 include '../../include/authenticate.php';
 
+if (!job_trigger_permission_check()) {
+    exit("Permission denied.");
+}
+
 $job_user = getval("job_user", 0, true);
 
 if ($job_user == $userref) {

@@ -23,7 +23,7 @@ $lang["faces_count_missing"] = "Images to process";
 
 $lang["page-title_faces_setup"] = "Setup Faces Plugin";
 
-$lang["faces_insight_faces"] = "Insight Faces";
+$lang["faces_insight_faces"] = "InsightFaces";
 $lang["faces_detect_faces"] = "Detect faces";
 $lang["faces_tag_faces"] = "Tag faces";
 
