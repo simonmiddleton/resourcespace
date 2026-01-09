@@ -321,7 +321,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #CentralSpaceLogin {margin: 100px auto;padding:0;width: 600px;text-align:left; position: relative;}
 #CentralSpace {text-align:left;position:relative;display: inline-block; width: 100%; min-height:500px;}
 
-.TopInpageNav {clear: left;margin-bottom:10px;margin-right: 0;position:relative;min-height: 30px;}
+.TopInpageNav {clear: left;margin-bottom:30px;margin-right: 0;position:relative;min-height: 30px;}
 .BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
 .TopInpageNavLeft{float:left; width: 90%;}
