@@ -6009,6 +6009,20 @@ function strip_unicode_points(string $value, array $blocklist = []): string
     return preg_replace('/[' . implode('', $blocklist) . ']/u', '', $value);
 }
 
+/**
+ * Parse a comma-separated list of integers and integer ranges into a sorted array.
+ * Accepts input such as:
+ *   - "1,2,5"
+ *   - "1-3,7,10-12"
+ * 
+ * @param string $input    Comma-separated list of integers and/or ranges (e.g. "1,3-5,10")
+ * @param int    $max_val  Optional upper bound for allowed values. Use 0 for no limit
+ * @param bool   $optional If true, an empty input string is allowed. If false, empty input is an error
+ *
+ * @return array ok: bool         True when parsing succeeds, false when any validation error occurs
+ *               numbers: int[]   Sorted list of unique integers when ok is true, otherwise empty
+ *               errors: string[] List of error messages when ok is false, otherwise empty
+ */
 function parse_int_ranges(string $input, int $max_val = 0, bool $optional = false): array
 {
     global $lang;
@@ -6020,9 +6034,9 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
 
     if ($input === '' && !$optional) {
         return [
-            'ok'     => false,
-            'numbers'  => [],
-            'errors' => [$lang['int_ranges_empty']],
+            'ok'      => false,
+            'numbers' => [],
+            'errors'  => [$lang['int_ranges_empty']],
         ];
     }
 
@@ -6037,7 +6051,7 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
             continue;
         }
 
-        // Range: "start-end"
+        // Range: start-end
         if (preg_match('/^(\d+)-(\d+)$/', $part, $m)) {
             $start = (int) $m[1];
             $end   = (int) $m[2];
@@ -6085,9 +6099,9 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
 
     if (!empty($errors)) {
         return [
-            'ok'     => false,
-            'numbers'  => [],
-            'errors' => $errors,
+            'ok'      => false,
+            'numbers' => [],
+            'errors'  => $errors,
         ];
     }
 
@@ -6096,12 +6110,32 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
     sort($numbers);
 
     return [
-        'ok'        => true,
-        'numbers'   => $numbers,
-        'errors'    => [],
+        'ok'      => true,
+        'numbers' => $numbers,
+        'errors'  => [],
     ];
 }
 
+/**
+ * Build a SQL WHERE fragment and bound parameters from a list of integers and ranges.
+ *
+ * Parses a comma-separated input string containing single integers and/or ranges
+ * (e.g. "1,3-5,10") and converts each item into a parameterized SQL condition:
+ *   - Single value:   "<field> = ?"
+ *   - Range:          "<field> BETWEEN ? AND ?"
+ *
+ * All generated conditions are joined using OR and wrapped in parentheses.
+ * Parameters are returned in the order they appear in the WHERE fragment.
+ *
+ * @param string $input    Comma-separated list of integers and/or ranges (e.g. "1,3-5,10")
+ * @param string $field    Database column name to use in the generated SQL expressions
+ * @param int    $max_val  Optional upper bound for allowed values. Use 0 for no limit
+ * 
+ * @return array ok: bool            True when the WHERE clause is successfully built, false on validation errors
+ *               where: string|null  Parenthesized SQL fragment joined with OR when ok is true, otherwise null
+ *               params: array       Ordered list of bind types and values
+ *               errors: string[]    List of error messages when ok is false, otherwise empty
+ */
 function build_range_where_condition(string $input, string $field, int $max_val = 0): array
 {
     $conditions = [];

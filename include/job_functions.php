@@ -406,14 +406,23 @@ function get_job_type_priority($type = "")
     return JOB_PRIORITY_SYSTEM;
 }
 
-function get_job_queue_log_path(string $type = "", string $job_code = "", $job_ref = ""): string|false
+/**
+ * Build and ensure a writable log file path for a queued job
+ *
+ * @param string $type     Job category or queue type used as a subdirectory name
+ * @param string $job_code Job identifier used in the log filename
+ * @param string $job_ref  Job reference value used in the log filename
+ *
+ * @return string|false Full path to the log file on success, or false on failure
+ */
+function get_job_queue_log_path(string $type = "", string $job_code = "", string $job_ref = ""): string|false
 {
     if ($type === "" || $job_code === "" || $job_ref === "") {
         return false;
     }
 
     // Build path for logging
-    $log_path = get_temp_dir() . "/offline_job_logs/" . $type . "/"; // . $job_ref . "_" . $job_code . ".log";
+    $log_path = get_temp_dir() . "/offline_job_logs/" . $type . "/";
     if (!is_dir($log_path)) {
         $log_path_created = mkdir($log_path, 0770, true);
         if (!$log_path_created) {
@@ -426,6 +435,13 @@ function get_job_queue_log_path(string $type = "", string $job_code = "", $job_r
     return $log_path . $job_ref . "_" . $job_code . ".log";
 }
 
+/**
+ * Resolve a queued job reference to its corresponding log file path
+ *
+ * @param int $job_ref Job reference
+ *
+ * @return string|false Full path to the job log file on success, or false on failure
+ */
 function get_job_queue_log_path_by_ref(int $job_ref = 0): string|false
 {
     if ($job_ref <= 0) {
@@ -442,7 +458,24 @@ function get_job_queue_log_path_by_ref(int $job_ref = 0): string|false
 
 }
 
-
+/**
+ * Scan a log file from the end and return the most recent line matching a pattern.
+ *
+ * The file is read in fixed-size blocks starting from EOF and scanned backwards
+ * line-by-line for the first line that matches the supplied regular expression
+ * (by default, lines containing "[PROGRESS]").
+ *
+ * On the first read pass, the function also captures the last non-empty line in
+ * the file (closest to EOF), regardless of whether it matches the pattern.
+ *
+ * @param string $path       Path to the log file to scan
+ * @param string $pattern    Regular expression used to match progress lines
+ * @param int    $block_size Number of bytes to read per backward scan iteration
+ *
+ * @return array found: string|null     The most recent line matching $pattern, or null if none found
+ *                                      or if the file could not be read
+ *               last_line: string|null The last non-empty line in the file, or null if unavailable
+ */
 function get_job_progress_from_log_file(string $path = "", string $pattern = "/\[PROGRESS\]/i", int $block_size = 65536): array
 {
     $fp = @fopen($path, 'rb');
