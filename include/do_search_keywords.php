@@ -584,11 +584,30 @@ if ($keysearch) {
                                 $sql_keyword_union_or[] = false;
                             } elseif ($wildcards) {
                                 $union = new PreparedStatementQuery();
-                                $stop_words = ps_array(
-                                    "SELECT value FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD WHERE value LIKE ?",
-                                    ["s", str_replace('*', '%', $keyword)]
-                                );
-
+                                preg_match_all('/
+                                (?=             # Positive lookahead
+                                    [a-zA-Z0-9] # Match a single character that is a letter or digit
+                                )
+                                [a-zA-Z0-9*]{3,}   # Match a group of 3 or more characters that are letters, digits, or asterisks
+                                /x', $keyword, $matches);
+                                if (count($matches) > 0) {
+                                    $stop_words_query = new PreparedStatementQuery();
+                                    foreach ($matches[0] as $match) {
+                                        if ($stop_words_query->sql == "") {
+                                            $stop_words_query->sql =
+                                            "SELECT value
+                                            FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD
+                                            WHERE value LIKE ?";
+                                        } else {
+                                            $stop_words_query->sql .= " OR value LIKE ?";
+                                        }
+                                        $stop_words_query->parameters = array_merge(
+                                            $stop_words_query->parameters,
+                                            ["s", str_replace("*","%" , $match)]
+                                        );
+                                    }
+                                    $stop_words = ps_array($stop_words_query->sql, $stop_words_query->parameters);
+                                }
                                 if (
                                     substr($keyword, 0, 1) != "*"
                                     && strlen(trim($keyword, '*')) >= 3
@@ -635,7 +654,7 @@ if ($keysearch) {
                                                         FROM `node` 
                                                         WHERE ";
 
-                                    if (preg_match('/[-+@<>()]/', $keyword) !== 1 && !empty($stop_words)) {
+                                    if (preg_match('/[-+@<>()]/', $keyword) !== 1 && empty($stop_words)) {
                                         // Full text matching is used to reduce the rows checked by regex where possible
                                         $union->parameters = array_merge(['s',$keyword], $union->parameters);
                                         $union->sql .= "MATCH(name) AGAINST (? IN BOOLEAN MODE) AND ";
