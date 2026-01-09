@@ -3,10 +3,10 @@ include_once "include/boot.php";
 include_once "include/login_functions.php";
 
 debug("[login.php] Reached login page...");
-$url = getval("url", "index.php");
+$url = getval("url", $baseurl . "/index.php");
 
 if (is_array($url)) {
-    $url = 'index.php';
+    $url = $baseurl . "/index.php";
 }
 
 $modal = getval("modal", "");
