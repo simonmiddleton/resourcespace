@@ -2773,6 +2773,7 @@ function email_resource($resource, $resourcename, $fromusername, $userlist, $mes
         $from_name = $applicationname;
     } // from_name is for the email headers, and needs to match the email address (app name or user name)
 
+    $message = strip_tags_and_attributes($message);
     $message = str_replace(array("\\n","\\r","\\"), array("\n","\r",""), $message);
 
     $resolve_open_access = false;

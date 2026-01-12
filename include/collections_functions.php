@@ -1923,6 +1923,7 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
         $from_name = $applicationname;
     } // from_name is for the email headers, and needs to match the email address (app name or user name)
 
+    $message = strip_tags_and_attributes($message);
     $templatevars['message'] = str_replace(array("\\n","\\r","\\"), array("\n","\r",""), $message);
     if (trim($templatevars['message']) == "") {
         $templatevars['message'] = $lang['nomessage'];
