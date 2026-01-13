@@ -3500,11 +3500,11 @@ $lang['weeks_ago'] = "%TIME% weeks ago";
 $lang['month_ago'] = "%TIME% month ago";
 $lang['months_ago'] = "%TIME% months ago";
 
-$lang['int_ranges_empty'] = "input is empty";
-$lang['int_ranges_range_below_1'] = "numbers must be 1 or greater in range %%PART%%";
-$lang['int_ranges_range_reversed'] = "start of range %%PART%% cannot be greater than end";
-$lang['int_ranges_range_above_max'] = "range %%PART%% exceeds maximum number of %%MAX_VAL%%";
-$lang['int_ranges_single_below_1'] = "numbers must be 1 or greater (%%PART%%)";
+$lang['int_ranges_empty'] = "Input is empty";
+$lang['int_ranges_range_below_1'] = "Numbers must be 1 or greater in range %%PART%%";
+$lang['int_ranges_range_reversed'] = "Start of range %%PART%% cannot be greater than end";
+$lang['int_ranges_range_above_max'] = "Range %%PART%% exceeds maximum number of %%MAX_VAL%%";
+$lang['int_ranges_single_below_1'] = "Numbers must be 1 or greater (%%PART%%)";
 $lang['int_ranges_single_above_max'] = "%%PART%% exceeds maximum number of %%MAX_VAL%%";
 $lang['int_ranges_not_valid'] = "%%PART%% is not a valid number or range (use formats like 3 or 5-9)";
 
@@ -3528,8 +3528,8 @@ $lang["job_list_extracted_text"] = "Update extracted text";
 $lang["oj_common_create_job"] = "Create Job";
 $lang["oj_common_field_refs"] = "Field Refs (can be CSV list)";
 $lang["oj_common_collection_refs"] = "Collection Refs (can be a range)";
-$lang["oj_common_error_required"] = "field required";
-$lang["oj_common_error_invalid"] = "invalid value passed for field";
+$lang["oj_common_error_required"] = "Field required";
+$lang["oj_common_error_invalid"] = "Invalid value passed for field";
 $lang["oj_common_error_invalid_field_ref"] = "%FIELD_REF% does not refer to a valid field";
 
 // Offline job config - recreate previews

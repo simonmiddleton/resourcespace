@@ -41,4 +41,4 @@ $lang["page-title_clip_webcam"] = "Webcam Tag Generator";
 $lang["clip-ai_smart_search"] = "CLIP AI Smart Search";
 $lang["clip-generate_vectors"] = "Generate CLIP vectors";
 $lang["clip-job_limit"] = "Limit";
-$lang["clip-job_limit_error"] = "value must be between 1 and 100000 or blank for no limit";
+$lang["clip-job_limit_error"] = "Value must be between 1 and 100000 or blank for no limit";
