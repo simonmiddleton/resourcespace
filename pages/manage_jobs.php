@@ -41,7 +41,7 @@ if (!empty($offline_job_list_hook)) {
     $offline_job_list_full = array_merge($offline_job_list, $offline_job_list_hook);
 }
 
-if ($triggerjob !== "" && enforcePostRequest(true) && checkperm('a')) {
+if ($triggerjob !== "" && enforcePostRequest(true) && job_trigger_permission_check()) {
 
     $filtereddata = array_filter($offline_job_list_full, function ($row) use ($triggerjob) {
         return isset($row['script_name']) && $row['script_name'] === $triggerjob;
