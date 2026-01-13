@@ -34,7 +34,7 @@ $resetjob = getval("reset_job", 0, true);
 $triggerjob = getval("trigger_job", "");
 
 // Build list of offline jobs - including from plugins
-
+$offline_job_list_full = $offline_job_list;
 $offline_job_list_hook = hook('addjobtriggerpage', '', [], true);
 
 if (!empty($offline_job_list_hook)) {
