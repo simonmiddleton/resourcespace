@@ -39,6 +39,11 @@ if ($save != '' && enforcePostRequest(false)) {
     if ($field_refs !== '') {
         $processed_field_refs = parse_csv_to_list_of_type($field_refs, "is_positive_int_loose");
 
+        if (empty($processed_field_refs)) {
+            $field_errors['field_refs'][] = escape($lang["oj_common_error_invalid"]);
+            $valid_data = false;
+        }      
+
         // Check if each value exists as a field
         foreach ($processed_field_refs as $field_ref) {
 
@@ -54,7 +59,7 @@ if ($save != '' && enforcePostRequest(false)) {
 
     if ($valid_data) {
         $job_data = [
-            "field_refs" => $field_refs,
+            "field_refs" => $field_refs !== '' ? implode(",", $processed_field_refs) : $field_refs,
         ];
 
         // Create the job

@@ -37,12 +37,17 @@ $job_add_error = false;
 
 if ($save != '' && enforcePostRequest(false)) {
     
-    $valid_data = true;
-
-    $processed_field_refs = parse_csv_to_list_of_type($field_refs, "is_positive_int_loose");
+    $valid_data = true;   
 
     if ($field_refs == '') {
         $field_errors['field_refs'][] = escape($lang["oj_common_error_required"]);
+        $valid_data = false;
+    }
+
+    $processed_field_refs = parse_csv_to_list_of_type($field_refs, "is_positive_int_loose");
+
+    if (empty($processed_field_refs)) {
+        $field_errors['field_refs'][] = escape($lang["oj_common_error_invalid"]);
         $valid_data = false;
     }
     
@@ -66,7 +71,7 @@ if ($save != '' && enforcePostRequest(false)) {
 
     if ($valid_data) {
         $job_data = [
-            "field_refs" => $field_refs,
+            "field_refs" => implode(",", $processed_field_refs),
             "collection_refs" => $collection_refs,
             "blanks" => $blanks,
             "overwrite" => $overwrite,

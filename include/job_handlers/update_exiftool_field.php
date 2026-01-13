@@ -70,8 +70,6 @@ foreach ($processed_field_refs as $fieldref) {
         continue;
     }
 
-    //logScript("[update_exiftool_field] Updating RS Field " . (int) $fieldref . " - " . escape($title) . " with exiftool extraction of: " . escape($exiftool_tag), $log_file);
-
     if ($fieldref_info["global"] === 1) {
         $rd = ps_query("SELECT r.ref, r.file_extension 
                         FROM resource r
