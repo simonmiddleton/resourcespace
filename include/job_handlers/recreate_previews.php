@@ -98,9 +98,9 @@ if (isset($resource_deletion_state)) {
     $conditions[] = "archive <> ?";
     $conditions_params = array_merge($conditions_params, array("i", $resource_deletion_state));
 }
-if (!empty($resource_types)) {
-    $conditions[] = "resource_type in (" . ps_param_insert(count($resource_types)) . ")";
-    $conditions_params = array_merge($conditions_params, ps_param_fill($resource_types, "i"));
+if (!empty($types)) {
+    $conditions[] = "resource_type in (" . ps_param_insert(count($types)) . ")";
+    $conditions_params = array_merge($conditions_params, ps_param_fill($types, "i"));
 }
 
 $resources = ps_array("SELECT DISTINCT ref value
