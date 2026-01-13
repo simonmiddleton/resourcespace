@@ -381,7 +381,11 @@ if (getval('loginas', '') != '') {
             <div class="clearerleft"></div>
         </div>
 
-        <?php if ($enable_remote_apis) { ?>
+        <?php if (
+            checkperm_login_as_user($user['ref'])
+            && (checkperm('a') || $userref == $ref)
+            && $enable_remote_apis
+            ) { ?>
             <div class="Question"><label><?php echo escape($lang["private-api-key"]); ?></label>
                 <div class="Fixed">
                     <button type="button" class="show-hidden-btn"><?php echo escape($lang["show_hidden_property"]); ?></button>
