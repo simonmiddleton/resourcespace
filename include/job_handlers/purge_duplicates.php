@@ -1,11 +1,9 @@
 <?php
 
-global $resource_deletion_state;
-
 # $job_data['collection_refs'] -> Optional. Comma-separated list of collection references, can be ranges
 # $job_data['manage_method']   -> Determines how the script will deal with the duplicates removal, can be lifo or fifo, defaults to lifo
-# $job_data['dry_run']         -> Boolean, will default to false if not specified
-# $job_data['delete_perm']     -> Boolean, will default to false if not specified
+# $job_data['dry_run']         -> Boolean, controls whether any resources will be deleted, will default to false if not specified
+# $job_data['delete_perm']     -> Boolean, any resources flagged for deletion will be permenantly deleted, will default to false if not specified
 
 logScript("[purge_duplicates] Starting purge_duplicates job", $log_file);
 
@@ -131,8 +129,11 @@ foreach ($keep_resources as $keep_ref => $keep_checksum) {
             logScript("[purge_duplicates] $dry_run_text ...deleting resource #{$delete_resource} with checksum '{$keep_checksum}' permanently", $log_file);
             $count_permanent_deletions += 1;
             if (!$dry_run) {
-                unset($resource_deletion_state);
+
+                $old_resource_deletion_state = $GLOBALS["resource_deletion_state"];
+                unset($GLOBALS["resource_deletion_state"]);
                 delete_resource($delete_resource);
+                $GLOBALS["resource_deletion_state"] = $old_resource_deletion_state;
             }
         } else {
             logScript("[purge_duplicates] $dry_run_text ...deleting resource #{$delete_resource} with checksum '{$keep_checksum}' logically; marked as '{$resource_deletion_state}'", $log_file);
