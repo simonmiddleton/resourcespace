@@ -28,12 +28,21 @@ function basename(path) {
      }
    }
 
+var isMouse=false;
+var mouseCheck=false;
 function is_touch_device()
     {
-    return ('ontouchstart' in window // works on most browsers
-        || (navigator.maxTouchPoints > 0)
-        || (navigator.msMaxTouchPoints > 0))
-        && !(matchMedia('(pointer:fine)').matches);
+        if (!mouseCheck) {
+            mouseCheck = true;
+            document.addEventListener("pointermove", (event) => {
+                isMouse = event.pointerType === "mouse";
+            }, {once: true});
+        }
+        return ('ontouchstart' in window // works on most browsers
+            || (navigator.maxTouchPoints > 0)
+            || (navigator.msMaxTouchPoints > 0))
+            && !(matchMedia('(pointer:fine)').matches) 
+            && !(isMouse);
     }
 
 
