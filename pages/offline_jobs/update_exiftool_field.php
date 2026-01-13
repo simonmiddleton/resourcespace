@@ -30,7 +30,7 @@ if ($job_user == $userref) {
 $save               = getval('save', '');
 $field_refs         = getval('field_refs', '');
 $collection_refs    = getval('collection_refs', '');
-$blanks             = (bool) getval('blanks', true);
+$blanks             = (bool) getval('blanks', false);
 $overwrite          = (bool) getval('overwrite', false);
 
 $job_add_error = false;

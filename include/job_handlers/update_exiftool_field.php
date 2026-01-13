@@ -21,7 +21,7 @@ if (!$exiftool_fullpath) {
 
 
 // Process $job_data
-$blanks = (bool) $job_data['blanks'] ?? true;
+$blanks = (bool) $job_data['blanks'] ?? false;
 $overwrite = (bool) $job_data['overwrite'] ?? false;
 
 $range_condition = build_range_where_condition($job_data['collection_refs'], "cr.collection");
