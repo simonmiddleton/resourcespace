@@ -50,7 +50,7 @@ if ($save != '' && enforcePostRequest(false)) {
     $processed_refs = parse_int_ranges($refs, 0, false, true);
 
     if ($refs == '') {
-        $field_errors['refs'] = ['field required'];
+        $field_errors['refs'][] = escape($lang["oj_common_error_required"]);
         $valid_data = false;
     } elseif (!empty($processed_refs['errors'])) {
         $field_errors['refs'] = $processed_refs['errors'];
