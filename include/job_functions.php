@@ -96,6 +96,14 @@ function job_queue_update($ref, $job_data = array(), $newstatus = "", $newtime =
 function job_queue_delete($ref)
 {
     global $userref;
+
+    // Delete log file if it exists
+    $log_path = get_job_queue_log_path_by_ref($ref);
+
+    if (file_exists($log_path)) {
+        unlink($log_path);
+    }
+
     $query = "DELETE FROM job_queue WHERE ref= ?";
     $parameters = array("i",$ref);
     if (!checkperm('a') && !php_sapi_name() == "cli") {
@@ -243,7 +251,17 @@ function job_queue_purge($status = 0)
 {
     $deletejobs = job_queue_get_jobs('', $status == 0 ? '' : $status);
     if (count($deletejobs) > 0) {
+
+        foreach ($deletejobs as $deletejob) {
+            $log_path = get_job_queue_log_path($deletejob['type'], $deletejob['job_code'], $deletejob["ref"]);
+            
+            if (file_exists($log_path)) {
+                unlink($log_path);
+            }
+        }
+
         $deletejobs_sql = job_queue_get_jobs('', $status == 0 ? '' : $status, "", "", "priority", "asc", "", true);
+
         ps_query(
             "DELETE FROM job_queue 
                 WHERE ref IN 
