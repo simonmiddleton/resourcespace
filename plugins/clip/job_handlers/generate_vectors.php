@@ -2,6 +2,8 @@
 
 include_once dirname(__FILE__, 2) . '/include/clip_functions.php';
 
+global $clip_resource_types;
+
 # $job_data['limit'] -> Optional. Defaults to 10000
 
 logScript("[generate_vectors] Starting generate_vectors job", $log_file);
