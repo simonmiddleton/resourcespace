@@ -136,10 +136,10 @@ foreach ($keep_resources as $keep_ref => $keep_checksum) {
                 $GLOBALS["resource_deletion_state"] = $old_resource_deletion_state;
             }
         } else {
-            logScript("[purge_duplicates] $dry_run_text ...deleting resource #{$delete_resource} with checksum '{$keep_checksum}' logically; marked as '{$resource_deletion_state}'", $log_file);
+            logScript("[purge_duplicates] $dry_run_text ...deleting resource #{$delete_resource} with checksum '{$keep_checksum}' logically; marked as '{$GLOBALS["resource_deletion_state"]}'", $log_file);
             $count_marked_deletions += 1;
             if (!$dry_run) {
-                update_archive_status($delete_resource, $resource_deletion_state);
+                update_archive_status($delete_resource, $GLOBALS["resource_deletion_state"]);
             }
         }
 
