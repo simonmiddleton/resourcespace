@@ -4910,7 +4910,7 @@ function render_featured_collections(array $ctx, array $items)
                     "{$baseurl_short}pages/upload_batch.php", 
                     [
                         'collection_add' => $fc['ref'], 
-                        'entercolname' => urlencode($fc['name'])
+                        'entercolname' => $fc['name']
                     ]
                 )
                 : generateURL(
@@ -4954,7 +4954,7 @@ function render_featured_collections(array $ctx, array $items)
                     array(
                         'create'            => 'true',
                         'tltype'            => 'srch',
-                        'title'             => urlencode($fc['name']),
+                        'title'             => "{$fc['name']}",
                         'freetext'          => 'true',
                         'tile_audience'     => 'false',
                         'all_users'         => 1,
@@ -5014,7 +5014,7 @@ function render_featured_collections(array $ctx, array $items)
                             'create'            => 'true',
                             'tltype'            => 'fcthm',
                             'tlstyle'           => 'thmbs',
-                            'title'             => urlencode($fc['name']),
+                            'title'             => "{$fc['name']}",
                             'freetext'          => 'true',
                             'tile_audience'     => 'false',
                             'promoted_resource' => (isset($render_ctx["images"]) ? 'true' : ""),

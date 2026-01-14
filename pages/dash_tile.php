@@ -302,7 +302,7 @@ if ($create) {
     $freetext                     = getval("freetext", false);
     $notitle                      = getval("notitle", false);
     $link                         = getval("link", "");
-    $title                        = urldecode(getval("title", ""));
+    $title                        = getval("title", "");
     $current_specific_user_groups = (isset($specific_user_groups) ? $specific_user_groups : array());
     $tlsize                       = ('double' === getval('tlsize', '') ? 'double' : '');
 

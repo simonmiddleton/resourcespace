@@ -3854,16 +3854,20 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         return $html;
     }
 
+    printf('%1$s [debug] original input: %2$s%1$s', PHP_EOL, $html);
     $html = htmlspecialchars_decode($html);
+    printf('%s [debug] htmlspecialchars_decode: %s', PHP_EOL, $html);
     // Return character codes for non-ASCII characters (UTF-8 characters more than a single byte - 0x80 / 128 decimal or greater).
     // This will prevent them being lost when loaded into libxml.
     // Second parameter represents convert mappings array - in UTF-8 convert characters of 2,3 and 4 bytes, 0x80 to 0x10FFFF, with no offset and add mask to return character code.
     $html = mb_encode_numericentity($html, array(0x80, 0x10FFFF, 0, 0xFFFFFF), 'UTF-8');
+    printf('%s [debug] mb_encode_numericentity: %s', PHP_EOL, $html);
 
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
     $is_html = ($html != strip_tags($html));
+    printf('%s [debug] $is_html: %s', PHP_EOL, json_encode($is_html));
 
     $allowed_tags = array_merge($permitted_html_tags, $tags);
     $allowed_attributes = array_merge($permitted_html_attributes, $attributes);
@@ -3908,6 +3912,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         }
 
         $html = $doc->saveHTML();
+        printf('%s [debug] $html (after saveHtml): %s', PHP_EOL, json_encode($html));
 
         if (false !== strpos($html, '<body>')) {
             $body_o_tag_pos = strpos($html, '<body>');
@@ -3938,6 +3943,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     }
 
     $html = html_entity_decode($html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
+    printf('%s [debug] $html (after last html_entity_decode): %s', PHP_EOL, json_encode($html));
     return $html;
 }
 
@@ -5631,7 +5637,8 @@ function url_starts_with(string $base, $val): bool
 }
 
 /**
- * Input validation helper function to check if a URL is safe (from XSS). Mostly intended for redirect URLs.
+ * Input validation helper function to check if a URL is safe (from XSS) in an HTML context.
+ *
  * @param mixed $val URL to check
  */
 function is_safe_url($url): bool
@@ -5659,10 +5666,12 @@ function is_safe_url($url): bool
         }
     }
 
-    // Check query strings, if applicable
-    $qs_params = [];
-    parse_str($url_parts['query'] ?? '', $qs_params);
-    foreach ($qs_params as $param => $value) {
+    // Check query strings (QS), if applicable. We're parsing the QS but without decoding its components otherwise we
+    // we could end up with false positives.
+    $qs_params = array_filter(explode('&', $url_parts['query'] ?? ''));
+    foreach ($qs_params as $pair) {
+        [$param, $value] = array_pad(array_filter(explode('=', $pair, 2)), 2, '');;
+
         if ($param !== escape($param) || $value !== escape($value)) {
             debug("[WARN] Suspicious query string parameter ({$param} with value: {$value}) found in URL - {$url}");
             return false;
