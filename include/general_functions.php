@@ -5664,7 +5664,7 @@ function is_safe_url($url): bool
     // we could end up with false positives.
     $qs_params = array_filter(explode('&', $url_parts['query'] ?? ''));
     foreach ($qs_params as $pair) {
-        [$param, $value] = array_pad(array_filter(explode('=', $pair, 2)), 2, '');;
+        [$param, $value] = array_pad(array_filter(explode('=', $pair, 2)), 2, '');
 
         if ($param !== escape($param) || $value !== escape($value)) {
             debug("[WARN] Suspicious query string parameter ({$param} with value: {$value}) found in URL - {$url}");
