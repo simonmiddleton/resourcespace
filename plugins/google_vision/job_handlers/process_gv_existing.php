@@ -43,9 +43,9 @@ if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs']))
                     WHERE (google_vision_processed IS NULL OR google_vision_processed = 0)
                         AND ref > 0
                         AND has_image <> ?
-                        AND resource_type IN (" . ps_param_insert(count($restypes)) . ") ";
+                        AND resource_type IN (" . ps_param_insert(count($google_vision_restypes)) . ") ";
 
-    $parameters = array_merge(["i", RESOURCE_PREVIEWS_NONE], ps_param_fill($restypes, "i"));
+    $parameters = array_merge(["i", RESOURCE_PREVIEWS_NONE], ps_param_fill($google_vision_restypes, "i"));
 
     $resources = ps_array($gv_query, $parameters);
 }
