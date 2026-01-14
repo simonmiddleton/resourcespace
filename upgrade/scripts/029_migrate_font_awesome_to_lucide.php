@@ -266,19 +266,20 @@ $font_awesome_lucide_mapping = [
     "fa-fan" => "fan",
     "fa-feather" => "feather",
     "fa-file" => "file",
-    "fa-file-arrow-down" => "circle-arrow-down",
-    "fa-file-arrow-up" => "circle-arrow-up",
+    "fa-file-alt" => "file-text",
+    "fa-file-arrow-down" => "file-down",
+    "fa-file-arrow-up" => "file-up",
     "fa-file-audio" => "file-music",
-    "fa-file-circle-check" => "file",
-    "fa-file-circle-exclamation" => "file",
-    "fa-file-circle-minus" => "file",
-    "fa-file-circle-plus" => "file",
-    "fa-file-circle-question" => "file",
-    "fa-file-circle-xmark" => "file",
+    "fa-file-circle-check" => "file-check-corner",
+    "fa-file-circle-exclamation" => "file-exclamation-point",
+    "fa-file-circle-minus" => "file-minus-corner",
+    "fa-file-circle-plus" => "file-plus-corner",
+    "fa-file-circle-question" => "file-question-mark",
+    "fa-file-circle-xmark" => "file-x-corner",
     "fa-file-code" => "file-code",
     "fa-file-export" => "file-up",
     "fa-file-image" => "file-image",
-    "fa-file-import" => "file-up",
+    "fa-file-import" => "import",
     "fa-file-pdf" => "file-text",
     "fa-file-pen" => "file-pen",
     "fa-file-signature" => "file-pen",
@@ -401,7 +402,7 @@ $font_awesome_lucide_mapping = [
     "fa-magnifying-glass-minus" => "zoom-out",
     "fa-magnifying-glass-plus" => "zoom-in",
     "fa-map" => "map",
-    "fa-map-location" => "map-pin",
+    "fa-map-location" => "map-pinned",
     "fa-map-location-dot" => "map-pinned",
     "fa-map-pin" => "map-pin",
     "fa-mars" => "mars",
@@ -652,6 +653,28 @@ $font_awesome_lucide_mapping = [
     "fa-wrench" => "wrench",
     "fa-x" => "x",
     "fa-xmark" => "x",
+    "fa-exchange-alt" => "arrow-right-left",
+    "fa-list-alt" => "id-card",
+    "fa-cube" => "box",
+    "fa-pencil-ruler" => "pencil-ruler",
+    "fa-volume-high" => "volume-2",
+    "fa-sheet-plastic" => "file",
+    "fa-gears" => "settings",
+    "fa-file-word" => "file-text",
+    "fa-fill-drip" => "paint-bucket",
+    "fa-photo-film" => "images",
+    "fa-cubes-stacked" => "boxes",
+    "fa-tower-cell" => "radio-tower",
+    "fa-cash-register" => "store",
+    "fa-person-running" => "person-standing",
+    "fa-font" => "type",
+    "fa-grin-alt" => "smile",
+    "fa-industry" => "factory",
+    "fa-hands-helping" => "hand-helping",
+    "fa-child" => "person-standing",
+    "fa-cloud-download-alt" => "cloud-download",
+    "fa-headphones-simple" => "headphones"
+
 ];
 
 // Convert resource types
@@ -679,3 +702,7 @@ foreach ($workflow_states as $workflow_state) {
         logScript("No suitable Lucide icon found for Font Awesome icon " . $workflow_state["icon"] . " for workflow state " . $workflow_state["ref"] . " - " . $workflow_state["name"]);
     }
 }
+
+clear_query_cache("schema");
+clear_query_cache("resourcetypeicon");
+clear_query_cache("workflow");
