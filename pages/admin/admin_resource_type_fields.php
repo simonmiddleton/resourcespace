@@ -200,7 +200,7 @@ $links_trail = array(
                 addColumnHeader('exiftool_field', 'property-exiftool_field');
 
                 if (!hook('replacetabnamecolumnheader')) {
-                    addColumnHeader('tab_name', 'property-tab_name');
+                    addColumnHeader('tab', 'property-tab_name');
                 }
                 ?>
                 <th>
