@@ -103,6 +103,8 @@ if (!empty($types)) {
     $conditions_params = array_merge($conditions_params, ps_param_fill($types, "i"));
 }
 
+clear_query_cache("recreate_previews");
+
 $resources = ps_array("SELECT DISTINCT ref value
                         FROM (
                             SELECT r.ref 
@@ -110,7 +112,7 @@ $resources = ps_array("SELECT DISTINCT ref value
                             $joins
                             WHERE r.ref > 0" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions) : "") . "
                             ) resources
-                        ORDER BY ref;", $conditions_params, 0);
+                        ORDER BY ref;", $conditions_params, "recreate_previews");
 
 $total_resources = count($resources);
 
