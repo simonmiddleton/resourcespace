@@ -75,10 +75,10 @@ $conditions = array();
 $conditions_params = array();
 
 if ($job_data['process_type'] == "collections") {
-    $range_condition = build_range_where_condition($job_data['refs'], "cr.collection");
+    $range_condition = build_range_where_condition($job_data['refs'], "cr.collection", 0, true);
     $joins .= "INNER JOIN collection_resource cr ON r.ref = cr.resource";
 } else {
-    $range_condition = build_range_where_condition($job_data['refs'], "r.ref");
+    $range_condition = build_range_where_condition($job_data['refs'], "r.ref", 0, true);
 }
 
 if ($range_condition["ok"]) {

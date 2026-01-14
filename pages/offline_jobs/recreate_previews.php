@@ -47,7 +47,7 @@ if ($save != '' && enforcePostRequest(false)) {
     $valid_data = true;
 
     // Validate here
-    $processed_refs = parse_int_ranges($refs, 0);
+    $processed_refs = parse_int_ranges($refs, 0, false, true);
 
     if ($refs == '') {
         $field_errors['refs'] = ['field required'];
@@ -113,6 +113,9 @@ if ($job_add_error) {
                 <option value="resources" <?php echo ($process_type == "resources") ? "selected" : ''; ?>><?php echo escape($lang["resources"]); ?></option>
                 <option value="collections" <?php echo ($process_type == "collections") ? "selected" : ''; ?>><?php echo escape($lang["collections"]); ?></option>
             </select>
+            <div class="FormHelp" style="padding:0;clear:left; margin-bottom: 0px;">
+	            <div class="FormHelpInner">Important: This is some help text to test the div</div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question<?php
@@ -127,7 +130,10 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>            
+            ?>
+            <div class="FormHelp" style="padding:0;clear:left; margin-bottom: 0px;">
+                <div class="FormHelpInner">Important: This is some help text to test the div</div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
