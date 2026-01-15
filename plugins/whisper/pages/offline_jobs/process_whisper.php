@@ -52,6 +52,11 @@ if ($save != '' && enforcePostRequest(false)) {
         if (!is_int_loose($job_added)) {
             $job_add_error = true;
         } else {
+            // Log that job has been added to user activity log, and then redirect
+            log_activity("Added process_whisper job $job_added", 
+                            LOG_CODE_JOB_ADDED,
+                            json_encode($job_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                            'job_queue', 'job_data', $job_added, null, "", null, true);
             redirect($parent_page);
         }
     }

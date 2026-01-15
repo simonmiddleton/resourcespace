@@ -89,3 +89,5 @@ if (count($resources) > 0) {
 logScript("[update_extracted_text] Ending update_extracted_text job", $log_file);
 
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+log_activity("Completed update_extracted_text job $jobref",
+                LOG_CODE_JOB_COMPLETED, null, 'job_queue', null, null, null, "", null, true);

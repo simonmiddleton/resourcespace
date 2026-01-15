@@ -57,3 +57,5 @@ clear_process_lock("whisper_process_unprocessed");
 logScript("[process_whisper] Ending process_whisper job", $log_file);
 
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+log_activity("Completed process_whisper job $jobref",
+                LOG_CODE_JOB_COMPLETED, null, 'job_queue', null, null, null, "", null, true);

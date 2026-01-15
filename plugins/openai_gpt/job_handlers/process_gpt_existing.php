@@ -199,3 +199,5 @@ if (count($arr_toprocess) > 0) {
 logScript("[process_gpt_existing] Ending process_gpt_existing job", $log_file);
 
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+log_activity("Completed process_gpt_existing job $jobref",
+                LOG_CODE_JOB_COMPLETED, null, 'job_queue', null, null, null, "", null, true);

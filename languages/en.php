@@ -681,6 +681,12 @@ $lang["log_code_+"] = "Enabled";
 $lang["log_code_-"] = "Disabled";
 $lang["log_code_Xl"] = "Failed Login Attempt";
 
+/* Offline jobs log codes */
+$lang["log_code_J"] = "Job added";
+$lang["log_code_JC"] = "Job completed";
+$lang["log_code_JD"] = "Job deleted";
+
+
 $lang['user_created_by'] = 'Created by';
 
 $lang["backtoresourceview"] = "Back to resource view";
@@ -3516,6 +3522,7 @@ $lang["jobs_action_stream_log"] = "Stream log file";
 $lang["jobs_action_download_log"] = "Download log file";
 $lang["jobs_action_not_started"] = "Job has not started yet";
 $lang["jobs_action_missing_job_progress"] = "Unable to load job progress";
+$lang["job_action_not_found"] = "Job not found.";
 
 $lang["job_list_core"] = "Core";
 $lang["job_list_recreate_previews"] = "Recreate Previews";

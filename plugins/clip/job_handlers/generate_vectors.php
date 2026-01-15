@@ -78,3 +78,5 @@ clear_process_lock("clip_generate_missing_vectors");
 logScript("[generate_vectors] Ending generate_vectors job", $log_file);
 
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+log_activity("Completed generate_vectors job $jobref",
+                LOG_CODE_JOB_COMPLETED, null, 'job_queue', null, null, null, "", null, true);

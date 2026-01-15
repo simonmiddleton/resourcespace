@@ -53,3 +53,5 @@ clear_process_lock("faces_detect_missing");
 logScript("[faces_detect] Ending faces_detect job", $log_file);
 
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+log_activity("Completed faces_detect job $jobref",
+                LOG_CODE_JOB_COMPLETED, null, 'job_queue', null, null, null, "", null, true);

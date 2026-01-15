@@ -97,13 +97,25 @@ function job_queue_delete($ref)
 {
     global $userref;
 
+    $job_data = job_queue_get_job($ref);
+
+    if (empty($job_data)) {
+        return;
+    }
+
     // Delete log file if it exists
-    $log_path = get_job_queue_log_path_by_ref($ref);
+    $log_path = get_job_queue_log_path($job_data["type"], $job_data["job_code"], $job_data["ref"]);
 
     if (file_exists($log_path)) {
         unlink($log_path);
     }
 
+    // If triggerable job, log as deleted by user
+    if (triggerable_job_check($job_data["type"])) {
+        log_activity("Deleted {$job_data['type']} job $ref",
+                        LOG_CODE_JOB_DELETED, null, 'job_queue', null, null, null, "", null, true);
+    }
+ 
     $query = "DELETE FROM job_queue WHERE ref= ?";
     $parameters = array("i",$ref);
     if (!checkperm('a') && !php_sapi_name() == "cli") {
@@ -258,6 +270,12 @@ function job_queue_purge($status = 0)
             if (file_exists($log_path)) {
                 unlink($log_path);
             }
+
+            // If triggerable job, log as deleted by user
+            if (triggerable_job_check($deletejob["type"])) {
+                log_activity("Deleted {$deletejob['type']} job {$deletejob['ref']}",
+                                LOG_CODE_JOB_DELETED, null, 'job_queue', null, null, null, "", null, true);
+            }
         }
 
         $deletejobs_sql = job_queue_get_jobs('', $status == 0 ? '' : $status, "", "", "priority", "asc", "", true);
@@ -292,7 +310,7 @@ function job_queue_run_job($job, $clear_process_lock): string
     
     $log_file = null;
 
-    if (!empty($job_data) && in_array($job_type, array_values(array_filter(array_column($offline_job_list, 'script_name'))))) {
+    if (!empty($job_data) && triggerable_job_check($job_type)) {
         $log_file_path = get_job_queue_log_path($job_type, $job_code, $jobref);
 
         if($log_file_path === false) {
@@ -442,7 +460,7 @@ function get_job_queue_log_path(string $type = "", string $job_code = "", string
     global $offline_job_list;
 
     if ($type === "" || $job_code === "" || $job_ref === "" 
-            || !in_array($type, array_values(array_filter(array_column($offline_job_list, 'script_name'))))) {
+            || !triggerable_job_check($type)) {
         return false;
     }
 
@@ -594,4 +612,16 @@ function job_trigger_permission_check(): bool
     $access_to_all_wf_states = ($all_wf_states === $editable_wf_states);
 
     return $offline_job_queue && checkperm('a') && $access_to_all_wf_states && checkperm('t') && checkperm('v') && checkperm('f*');
+}
+
+function triggerable_job_check(string $type = ""): bool
+{
+    global $offline_job_list;
+
+    if ($type === "") {
+        return false;
+    }
+    
+    // Check if type is user triggerable - this may be ammended in future to allow some system jobs to create log files etc.
+    return in_array($type, array_values(array_filter(array_column($offline_job_list, 'script_name'))));
 }

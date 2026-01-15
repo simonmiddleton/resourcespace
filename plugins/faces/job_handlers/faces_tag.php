@@ -67,3 +67,5 @@ if (count($resources) > 0) {
 logScript("[faces_tag] Ending faces_tag job", $log_file);
 
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+log_activity("Completed faces_tag job $jobref",
+                LOG_CODE_JOB_COMPLETED, null, 'job_queue', null, null, null, "", null, true);

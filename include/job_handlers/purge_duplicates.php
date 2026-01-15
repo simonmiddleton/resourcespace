@@ -177,3 +177,5 @@ if ($dry_run) {
 logScript("[purge_duplicates] Ending purge_duplicates job", $log_file);
 
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+log_activity("Completed purge_duplicates job $jobref",
+                LOG_CODE_JOB_COMPLETED, null, 'job_queue', null, null, null, "", null, true);

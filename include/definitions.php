@@ -141,6 +141,9 @@ define('LOG_CODE_COLLECTION_ACCESS_CHANGED', 'A');
 define('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED', 'Z');
 define('LOG_CODE_COLLECTION_SHARED_UPLOAD', 'SEU');
 define('LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE', 'EEU');
+define('LOG_CODE_JOB_ADDED', 'J');
+define('LOG_CODE_JOB_COMPLETED', 'JC');
+define('LOG_CODE_JOB_DELETED', 'JD');
 
 // validates LOG_CODE is legal
 function LOG_CODE_validate($log_code)

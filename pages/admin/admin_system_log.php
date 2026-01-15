@@ -387,7 +387,20 @@ include "../../include/header.php";
                                         <?php
                                     }
                                     break;
-
+                                case "job_data":
+                                    if ($record['table'] == "job_queue") {
+                                        ?>
+                                        <td>
+                                            <a
+                                                href="<?php echo "$baseurl/pages/job_details.php?job=$ref" ?>"
+                                                title="View job"
+                                                onclick="return ModalLoad(this,true);"
+                                                ><?php echo $ref ?>
+                                            </a>
+                                        </td>
+                                        <?php
+                                    }
+                                    break;
                                 default:
                                     echo "<td>$ref</td>";
                                     break;

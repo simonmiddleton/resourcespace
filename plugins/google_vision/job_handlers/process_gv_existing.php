@@ -81,3 +81,5 @@ if (count($resources) > 0) {
 logScript("[process_gv_existing] Ending process_gv_existing job", $log_file);
 
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+log_activity("Completed process_gv_existing job $jobref",
+                LOG_CODE_JOB_COMPLETED, null, 'job_queue', null, null, null, "", null, true);

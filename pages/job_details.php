@@ -9,7 +9,18 @@ if (!checkperm('a')) {
 
 $job = getval("job", 0, true);
 $job_details = job_queue_get_job($job);
+
+if (!is_array($job_details) || count($job_details) == 0) {
+    error_alert($lang['job_action_not_found'], false);
+    exit();
+}
+
 $hide_data = array("failure_text","success_text");
+
+if (!triggerable_job_check($job_details['type'])) {
+    // Hide progress that comes from log file for jobs which don't create a log file
+    $hide_data[] = "progress";
+}
 
 $log_file_path      = get_job_queue_log_path($job_details["type"], $job_details["job_code"], $job_details["ref"]);
 $log_file_streaming = false;
@@ -21,15 +32,6 @@ if (file_exists($log_file_path)) {
     } else {
         $log_file_download = true;
     }
-}
-
-if (!is_array($job_details) || count($job_details) == 0) {
-    exit("Invalid job reference");
-}
-
-if (!in_array($job_details['type'], array_values(array_filter(array_column($offline_job_list, 'script_name'))))) {
-    // Hide progress that comes from log file for jobs which don't create a log file
-    $hide_data[] = "progress";
 }
 
 ?>
