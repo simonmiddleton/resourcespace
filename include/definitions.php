@@ -1120,5 +1120,4 @@ $offline_job_list = [
           'plugin' => null],
     7 => ['name' => 'Core',
           'type' => 'group_end'],
-    //8 => ['name' => 'Dummy Job', 'script_name' => 'dummy_job', 'plugin' => null]
 ];

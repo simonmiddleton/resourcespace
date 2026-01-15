@@ -282,23 +282,27 @@ function job_queue_purge($status = 0)
 */
 function job_queue_run_job($job, $clear_process_lock): string
 {
+    global $offline_job_list;
+
     // Runs offline job using defined job handler
     $job_type = $job['type'];
     $job_code = $job["job_code"];
     $jobref  = $job["ref"];
     $job_data = json_decode($job["job_data"], true);
     
-
     $log_file = null;
-    $log_file_path = get_job_queue_log_path($job_type, $job_code, $jobref);
 
-    if($log_file_path === false) {
-        logScript("[job_handler] Error generating path to log offline job");
-    } else {
-        $log_file = fopen($log_file_path, 'w');
-        
-        if ($log_file === false) {
-            $log_file = null;
+    if (!empty($job_data) && in_array($job_type, array_values(array_filter(array_column($offline_job_list, 'script_name'))))) {
+        $log_file_path = get_job_queue_log_path($job_type, $job_code, $jobref);
+
+        if($log_file_path === false) {
+            logScript("[job_handler] Error generating path to log offline job");
+        } else {
+            $log_file = fopen($log_file_path, 'w');
+            
+            if ($log_file === false) {
+                $log_file = null;
+            }
         }
     }
    
@@ -435,7 +439,10 @@ function get_job_type_priority($type = "")
  */
 function get_job_queue_log_path(string $type = "", string $job_code = "", string $job_ref = ""): string|false
 {
-    if ($type === "" || $job_code === "" || $job_ref === "") {
+    global $offline_job_list;
+
+    if ($type === "" || $job_code === "" || $job_ref === "" 
+            || !in_array($type, array_values(array_filter(array_column($offline_job_list, 'script_name'))))) {
         return false;
     }
 

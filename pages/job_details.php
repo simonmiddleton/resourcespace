@@ -27,6 +27,11 @@ if (!is_array($job_details) || count($job_details) == 0) {
     exit("Invalid job reference");
 }
 
+if (!in_array($job_details['type'], array_values(array_filter(array_column($offline_job_list, 'script_name'))))) {
+    // Hide progress that comes from log file for jobs which don't create a log file
+    $hide_data[] = "progress";
+}
+
 ?>
 <div class="RecordBox">
     <div class="RecordPanel">
