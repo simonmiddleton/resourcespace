@@ -9,7 +9,6 @@ if (!job_trigger_permission_check()) {
 $job_user = getval("job_user", 0, true);
 
 if ($job_user == $userref) {
-    $pagetitle   = $lang["my_jobs"];
     $parent_page = generateURL("{$baseurl_short}pages/manage_jobs.php", ["job_user" => $job_user]);
     $breadcrumbs = [
         ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
@@ -17,7 +16,6 @@ if ($job_user == $userref) {
         ['title' => $lang["job_configure"] . ": " . $lang["job_list_checksums"]]
     ];
 } else {
-    $pagetitle   = $lang["manage_jobs_title"];
     $parent_page = "{$baseurl_short}pages/manage_jobs.php";
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],

@@ -7,23 +7,31 @@ if (!job_trigger_permission_check()) {
 }
 
 $job_user = getval("job_user", 0, true);
+$plugin = (bool) getval("plugin", 0, true);
 
-if ($job_user == $userref) {
-    $pagetitle   = $lang["my_jobs"];
-    $parent_page = generateURL("{$baseurl_short}pages/manage_jobs.php", ["job_user" => $job_user]);
+if ($plugin) {
+    // Accessed from plugin setup page, so adjust breadcrumbs accordingly
     $breadcrumbs = [
-        ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
-        ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
+        ['title' => $lang['systemsetup'],         'href' => "{$baseurl_short}pages/admin/admin_home.php",  'menu' => true],
+        ['title' => $lang['pluginmanager'],       'href' => "{$baseurl_short}pages/team/team_plugins.php", 'menu' => false],
+        ['title' => $lang['openai_gpt_title'], 'href' => "{$baseurl_short}plugins/openai_gpt/pages/setup.php", 'menu' => false],
         ['title' => $lang["job_configure"] . ": " . $lang["openai_gpt_process_existing"]]
     ];
 } else {
-    $pagetitle   = $lang["manage_jobs_title"];
-    $parent_page = "{$baseurl_short}pages/manage_jobs.php";
-    $breadcrumbs = [
-        ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
-        ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
-        ['title' => $lang["job_configure"] . ": " . $lang["openai_gpt_process_existing"]]
-    ];
+    if ($job_user == $userref) {
+        $parent_page = generateURL("{$baseurl_short}pages/manage_jobs.php", ["job_user" => $job_user]);
+        $breadcrumbs = [
+            ['title' => $userfullname == "" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
+            ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
+            ['title' => $lang["job_configure"] . ": " . $lang["openai_gpt_process_existing"]]
+        ];
+    } else {
+        $breadcrumbs = [
+            ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
+            ['title' => $lang["manage_jobs_title"], 'href' => "{$baseurl_short}pages/manage_jobs.php",      'menu' => false],
+            ['title' => $lang["job_configure"] . ": " . $lang["openai_gpt_process_existing"]]
+        ];
+    }
 }
 
 // Build list of GPT enabled fields
