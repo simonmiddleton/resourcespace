@@ -3514,6 +3514,7 @@ $lang["job_configure"] = "Configure Job";
 
 $lang["jobs_action_stream_log"] = "Stream log file";
 $lang["jobs_action_download_log"] = "Download log file";
+$lang["jobs_action_not_started"] = "Job has not started yet";
 $lang["jobs_action_missing_job_progress"] = "Unable to load job progress";
 
 $lang["job_list_core"] = "Core";
