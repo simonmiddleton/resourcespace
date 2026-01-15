@@ -203,7 +203,7 @@ if (!hook("fullpreviewresultnav")) {
         if (!checkperm("b") && !in_array($resource["resource_type"], $collection_block_restypes)) { ?>
             &nbsp;
             <?php echo add_to_collection_link(escape($ref)); ?>
-            <i aria-hidden="true" class="fa fa-plus-circle"></i>
+            <i aria-hidden="true" class="icon-circle-plus"></i>
             &nbsp;
             <?php echo escape($lang["action-addtocollection"]) ?>
             </a>
@@ -212,7 +212,7 @@ if (!hook("fullpreviewresultnav")) {
         if ($search == "!collection" . $usercollection) { ?>
             &nbsp;
             <?php echo remove_from_collection_link(escape($ref)); ?>
-            <i aria-hidden="true" class="fa fa-minus-circle"></i>
+            <i aria-hidden="true" class="icon-circle-minus"></i>
             &nbsp;
             <?php echo escape($lang["action-removefromcollection"]) ?>
             </a>
@@ -221,7 +221,7 @@ if (!hook("fullpreviewresultnav")) {
         if(count(canSeeAnnotationsFields()) > 0) { ?>
             &nbsp;
             <a href="#" onclick="toggleAnnotationsOption(this); return false;">
-                <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
+                <i class='icon-square-pen' aria-hidden="true"></i>
                 <span><?php echo escape($lang['annotate_text_link_label']); ?></span>
             </a>
         <?php }
@@ -248,11 +248,11 @@ if ($alternative != "-1")
 
          ?>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, isset($alt_previous)?array("alternative"=>$alt_previous):"");?>" title="<?php echo escape($lang["previousresult"]); ?>"></a>
+         <a class="prevLink icon-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, isset($alt_previous)?array("alternative"=>$alt_previous):"");?>" title="<?php echo escape($lang["previousresult"]); ?>"></a>
          &nbsp;
          <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/view.php", $defaultparams, array("from"=>""))."&".hook("viewextraurl");?>"><?php echo escape($lang["vieworiginalresource"]); ?></a>
          &nbsp;
-         <a class="prevLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, isset($alt_next)?array("alternative"=>$alt_next):"");?>" title="<?php echo escape($lang["nextresult"]); ?>"></a><?php
+         <a class="prevLink icon-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, isset($alt_next)?array("alternative"=>$alt_next):"");?>" title="<?php echo escape($lang["nextresult"]); ?>"></a><?php
     }
 else
     {
@@ -261,11 +261,11 @@ else
          {
          ?>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=previous&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo escape($lang["previousresult"]); ?>"></a>
+         <a class="prevLink icon-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=previous&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo escape($lang["previousresult"]); ?>"></a>
           &nbsp;
          <a  class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?<?php if (strpos($search,"!")!==false) {?>search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php } ?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&<?php echo hook("searchextraurl") ?>"><?php echo escape($lang["viewallresults"]); ?></a>
           &nbsp;
-         <a class="nextLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo escape($lang["nextresult"]); ?>"></a><?php
+         <a class="nextLink icon-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo escape($lang["nextresult"]); ?>"></a><?php
          }
     }
 ?>

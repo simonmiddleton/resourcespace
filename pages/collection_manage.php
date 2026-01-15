@@ -541,7 +541,7 @@ include "../include/header.php";
     </script>
 
     <a id="collection_delete" style="visibility:hidden; margin-left:10px" title="<?php echo escape($lang["delete_all_selected"]) ?>" onclick="delete_collections()">
-        <i aria-hidden="true" class="fa fa-fw fa-trash"></i>
+        <i aria-hidden="true" class="icon-trash-2"></i>
     </a>
 
     <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_manage.php">

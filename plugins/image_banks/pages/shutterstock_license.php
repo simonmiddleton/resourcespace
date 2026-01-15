@@ -22,7 +22,7 @@ if ($preview_title == "") {
 <div class="RecordHeader">
 
 <div class="backtoresults">
-        <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+        <a href="#" onclick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]); ?>"></a>
 </div>
 
 <h1><?php echo escape(getval("description","")); ?></h1>

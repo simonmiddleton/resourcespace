@@ -26,7 +26,7 @@ $disk_baseline = 20558;
 
     <p>
         <a href="admin_system_performance.php?reload=<?php echo time() ?>" onClick="return CentralSpaceLoad(this,false);">
-            <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . escape($lang["reload"]); ?>
+            <?php echo '<i aria-hidden="true" class="icon-refresh-cw"></i>&nbsp;' . escape($lang["reload"]); ?>
         </a>
     </p>
 

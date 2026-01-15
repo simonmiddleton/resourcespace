@@ -3,7 +3,7 @@ title: Tesseract OCR
 author: Montala Limited
 version: 1.0
 desc: Extracts text from images and scanned documents. Runs locally, no subscription needed.
-icon: fa fa-book-open-reader
+icon: scan-text
 icon-colour: seagreen
 category: AI
 config_url: /plugins/tesseract/pages/setup.php

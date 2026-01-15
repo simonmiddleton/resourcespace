@@ -190,7 +190,7 @@ for ($n = 0; $n < $sharecount; $n++) {
 
         if ($shares[$n]["expires"] != "" && $shares[$n]["expires"] < date("Y-m-d H:i:s", time())) {
             $expiredshares++;
-            $tableshare["alerticon"] = "fas fa-exclamation-triangle";
+            $tableshare["alerticon"] = "icon-triangle-alert";
             $tableshare["alerticontitle"] = $lang["share_expired_icon_title"];
             $alert_icon_offset = true;
         }
@@ -200,7 +200,7 @@ for ($n = 0; $n < $sharecount; $n++) {
 
         if (!$colshare || collection_writeable($shares[$n]["collection"])) {
             $tableshare["tools"][] = array(
-            "icon" => "fa fa-trash",
+            "icon" => "icon-trash-2",
             "text" => $lang["action-delete"],
             "url" => "#",
             "modal" => false,
@@ -246,7 +246,7 @@ for ($n = 0; $n < $sharecount; $n++) {
             }
 
             $tableshare["tools"][] = array(
-                "icon" => "fas fa-edit",
+                "icon" => "icon-square-pen",
                 "text" => $lang["action-edit"],
                 "url" => $editlink,
                 "modal" => false,
@@ -474,7 +474,7 @@ include '../include/header.php';
 
         <div class="ListViewBulkActions">
             <a id="accesskeys-delete-selected" onclick="delete_access_key_multiple();return false;" class="DisabledLink">
-                <i class="fas fa-trash-alt"></i><?php echo escape($lang["action-delete"] . " " . $lang["selected"]); ?>
+                <i class="icon-trash-2"></i><?php echo escape($lang["action-delete"] . " " . $lang["selected"]); ?>
             </a>
             <input type="hidden" id="accesskeys-selected" value="">
         </div>

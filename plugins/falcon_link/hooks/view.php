@@ -37,11 +37,11 @@ function HookFalcon_linkViewAfterresourceactions()
                 }
             }
 
-            echo "<li><a href='$baseurl/plugins/falcon_link/pages/falcon_link.php?resource=$ref&falcon_action=publish' onclick='CentralSpaceLoad(this,true);'><i class='fa fa-share-square'></i>&nbsp;" . $lang["falcon_link_publish"] . "</a></li>";
+            echo "<li><a href='$baseurl/plugins/falcon_link/pages/falcon_link.php?resource=$ref&falcon_action=publish' onclick='CentralSpaceLoad(this,true);'><i class='icon-share'></i>&nbsp;" . $lang["falcon_link_publish"] . "</a></li>";
         } else {
             $falconurl = str_replace("[id]", $falconid, $falcon_link_template_url);
-            echo "<li><a href='" . escape($falconurl) . "' target = '_blank' ><i class='fa fa-external-link-square'></i>&nbsp;" . escape($lang["falcon_link_view_in_falcon"]) . "</a></li>";
-            echo "<li><a href='$baseurl/plugins/falcon_link/pages/falcon_link.php?resource=" . escape($ref) . "&falcon_action=archive' title='" . escape($lang["falcon_link_view_in_falcon"]) . "' onclick='CentralSpaceLoad(this,true);'><i class='fa fa-archive'></i>&nbsp;" . $lang["falcon_link_archive"] . "</a></li>";
+            echo "<li><a href='" . escape($falconurl) . "' target = '_blank' ><i class='icon-external-link'></i>&nbsp;" . escape($lang["falcon_link_view_in_falcon"]) . "</a></li>";
+            echo "<li><a href='$baseurl/plugins/falcon_link/pages/falcon_link.php?resource=" . escape($ref) . "&falcon_action=archive' title='" . escape($lang["falcon_link_view_in_falcon"]) . "' onclick='CentralSpaceLoad(this,true);'><i class='icon-archive'></i>&nbsp;" . $lang["falcon_link_archive"] . "</a></li>";
         }
     }
 }

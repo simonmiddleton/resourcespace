@@ -132,7 +132,7 @@ include __DIR__ . "/../../../include/header.php";
         <div class="BasicsBoxCard">
             <h2><?php echo escape($lang["clip-duplicate-images"]); ?></h2>
             <a href="<?php echo $duplicate_url ?>" onclick="return CentralSpaceLoad(this,true);">
-                <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo escape($lang["clip-duplicate-images-all"]); ?>
+                <i class="icon-search"></i>&nbsp;<?php echo escape($lang["clip-duplicate-images-all"]); ?>
             </a>
         </div>
         <?php

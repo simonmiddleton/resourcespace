@@ -3,7 +3,7 @@ title: Embed Document
 author: Montala Limited
 version: 1.01
 desc: Provides a function to generate HTML for embeddable document previews on remote sites.
-icon: fa fa-file fa-regular
+icon: file-code-corner
 icon-colour: black
 config_url: /plugins/embeddocument/pages/setup.php
 category: Integrations

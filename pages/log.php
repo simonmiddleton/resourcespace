@@ -165,8 +165,8 @@ include "../include/header.php";
                     <?php echo escape($lang["nextresult"])?>&nbsp;<?php echo LINK_CARET ?>
                 </a>
                 <?php if ($modal) { ?>
-                    &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params)); ?>" onclick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
-                    &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
+                    &nbsp;&nbsp;<a class="maxLink icon-maximize-2" href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params)); ?>" onclick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
+                    &nbsp;<a href="#" class="closeLink icon-x" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
                 <?php } ?>
             </div>
         </div>

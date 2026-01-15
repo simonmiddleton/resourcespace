@@ -3,7 +3,7 @@ title   : Video Tracks
 author  : Montala Ltd.
 version : 1.0
 desc    : Add support for different audio and subtitle options for video resources.
-icon    : fa fa-film
+icon    : captions
 config_url: /plugins/video_tracks/pages/setup.php
 info_url: https://www.resourcespace.com/knowledge-base/plugins/video-tracks
 category: Asset Processing

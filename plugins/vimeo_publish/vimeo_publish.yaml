@@ -1,7 +1,7 @@
 name: vimeo_publish
 title: Vimeo Publish
 desc: Publish resources to Vimeo.
-icon: fab fa-vimeo
+icon: cloud-upload
 icon-colour: #19B7EA
 author: Montala Limited
 version: 1.0

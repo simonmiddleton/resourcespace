@@ -1,7 +1,7 @@
 name: google_analytics
 title: Google Analytics
 desc: Add Google Analytics tracking.
-icon: fa fa-google
+icon: chart-no-axes-combined
 icon-colour: #4285f4
 author: Montala Limited
 version: 1.0

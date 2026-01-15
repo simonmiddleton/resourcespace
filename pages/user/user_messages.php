@@ -121,13 +121,13 @@ include "../../include/header.php";
 
     <div class="ListViewBulkActions">
         <span id="messages-delete-selected" class="DisabledLink">
-            <i class="fas fa-trash-alt"></i><?php echo escape($lang["action-delete"]); ?>
+            <i class="icon-trash-2"></i><?php echo escape($lang["action-delete"]); ?>
                 </span>
         <span id="messages-mark-selected-read" class="DisabledLink">
-            <i class="fas fa-envelope-open"></i><?php echo escape($lang["mymessages_markread"]); ?>
+            <i class="icon-mail-open"></i><?php echo escape($lang["mymessages_markread"]); ?>
                 </span>
         <span id="messages-mark-selected-unread" class="DisabledLink">
-            <i class="fas fa-envelope"></i><?php echo escape($lang["mymessages_markunread"]); ?>
+            <i class="icon-mail"></i><?php echo escape($lang["mymessages_markunread"]); ?>
                 </span>
     </div>
 
@@ -223,19 +223,19 @@ include "../../include/header.php";
                         <a href="#Header" onclick="show_message(<?php echo (int)$messages[$n]['message_id']; ?>)"><?php echo $message; ?></a>
                     </td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["expires"]); ?></td>
-                    <td class="<?php echo $unread_css; ?>"><?php echo $messages[$n]["seen"] == 0 ? '<i class="fas fa-envelope"></i>' : '<i class="far fa-envelope-open"></i>'; ?></td>
+                    <td class="<?php echo $unread_css; ?>"><?php echo $messages[$n]["seen"] == 0 ? '<i class="icon-mail"></i>' : '<i class="icon-mail-open"></i>'; ?></td>
                     <td>
                         <div class="ListTools">
                             <?php
                             if ($messages[$n]["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE) {
                                 $replyurl = $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$messages[$n]["ownerid"];
                                 ?>
-                                <a href="<?php echo $replyurl; ?>"><?php echo '<i class="fas fa-reply"></i>&nbsp;' . escape($lang["reply"]); ?></a>
+                                <a href="<?php echo $replyurl; ?>"><?php echo '<i class="icon-reply"></i>&nbsp;' . escape($lang["reply"]); ?></a>
                                 <?php
                             }
 
                             if ($messages[$n]["url"] != "") { ?>
-                                <a href="<?php echo escape($messages[$n]["url"]); ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . escape($lang["link"]); ?></a>
+                                <a href="<?php echo escape($messages[$n]["url"]); ?>"><?php echo '<i class="icon-link"></i>&nbsp;' . escape($lang["link"]); ?></a>
                                 <?php
                             } ?> 
                         </div>

@@ -7,7 +7,7 @@ include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 unset($additional_archive_states);$additional_archive_states=array();
 include_once '../include/rse_workflow_functions.php';
-include __DIR__ . "/../../../lib/fontawesome/resourcespace/icon_classes.php";
+include __DIR__ . "/../../../lib/lucide/icon_classes.php";
 
 $code=getval("code","");
 $name=getval("name","");
@@ -21,10 +21,9 @@ $icon = getval('icon', '');
 $skip_required_fields = getval('skip_required_fields', 0, true);
 
 // Check valid icon
-if(!in_array($icon,$font_awesome_icons))
-    {
+if (!in_array($icon, $lucide_icons)) {
     $icon = WORKFLOW_DEFAULT_ICON;
-    }
+}
 
 $errortext="";
 $saved=false;
@@ -265,7 +264,7 @@ $workflowstate_url = generateURL($baseurl_short."plugins/rse_workflow/pages/edit
             <?php
             }
 
-        render_fa_icon_selector($lang["property-icon"],"icon",$workflowstate["icon"]);
+        render_lucide_icon_selector($lang["property-icon"],"icon",$workflowstate["icon"]);
 
         if (!in_array((int) $code, array(-2, $resource_deletion_state))) {
             ?>

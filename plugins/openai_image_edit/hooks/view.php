@@ -14,7 +14,7 @@ function HookOpenai_image_editViewAfterresourceactions () {
         $url = generateURL($baseurl_short . 'plugins/openai_image_edit/pages/edit.php',$urlparams);
         ?>
         <li><a href='<?php echo $url;?>'>
-        <?php echo "<i class='fa fa-fw fa-magic'></i>&nbsp;" . escape($lang['openai_image_edit__edit_with_ai']); ?>
+        <?php echo "<i class='icon-wand-sparkles'></i>&nbsp;" . escape($lang['openai_image_edit__edit_with_ai']); ?>
         </a></li>
         <?php
         return true;

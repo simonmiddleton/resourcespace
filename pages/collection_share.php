@@ -272,7 +272,7 @@ if (isset($show_error)) { ?>
                     if ($email_sharing && !is_anonymous_user()) {
                         ?>
                         <li>
-                            <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;
+                            <i aria-hidden="true" class="icon-mail"></i>&nbsp;
                             <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . 'pages/collection_email.php', $url_params); ?>">
                                 <?php echo escape($lang["emailcollectiontitle"]); ?>
                             </a>
@@ -286,7 +286,7 @@ if (isset($show_error)) { ?>
                     if ($home_dash && checkPermission_dashcreate() && !hook('replace_share_dash_create')) {
                         ?>
                         <li>
-                            <i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;
+                            <i aria-hidden="true" class="icon-layout-dashboard"></i>&nbsp;
                             <a href="<?php echo $baseurl_short;?>pages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection<?php echo $ref?>&order_by=relevance&sort=DESC" onclick="return CentralSpaceLoad(this,true);">
                                 <?php echo escape($lang["createnewdashtile"]); ?>
                             </a>
@@ -297,7 +297,7 @@ if (isset($show_error)) { ?>
                     if (!$internal_share_only) {
                         ?>
                         <li>
-                            <i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;
+                            <i aria-hidden="true" class="icon-link"></i>&nbsp;
                             <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . 'pages/collection_share.php', $url_params, ['generateurl' => true]); ?>">
                                 <?php echo escape($lang["generateurl"]); ?>
                             </a>

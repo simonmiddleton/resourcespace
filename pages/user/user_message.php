@@ -36,7 +36,7 @@ msgto = <?php echo $msgto; ?>;
 defaultimghtml =  jQuery("<i />", {
     title           : '<?php echo escape($userfullname); ?>',
     alt             : '<?php echo escape($userfullname); ?>',
-    'class'         : 'fa fa-user fa-lg fa-fw ProfileImage',
+    'class'         : 'icon-user lucide-lg ProfileImage',
     'aria-hidden'   : true
     });
 

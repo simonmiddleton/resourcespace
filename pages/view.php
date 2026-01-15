@@ -483,7 +483,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 if (!hook("replaceviewnav") && isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch)) && !($k != "" && strpos($search,"!collection") === false))
                     { ?>
                     <div class="backtoresults">
-                        <a class="prevLink fa fa-arrow-left"
+                        <a class="prevLink icon-arrow-left"
                             href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>"
                             onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this);"
                             title="<?php echo escape($lang["previousresult"]); ?>">
@@ -500,7 +500,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                             <?php 
                             } ?>
 
-                        <a class="nextLink fa fa-arrow-right"
+                        <a class="nextLink icon-arrow-right"
                             href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>"
                             onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this);"
                             title="<?php echo escape($lang["nextresult"]); ?>">
@@ -511,10 +511,10 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                             { ?>
                             <a href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams) ?>"
                                 onClick="return CentralSpaceLoad(this, true);"
-                                class="maxLink fa fa-expand"
+                                class="maxLink icon-maximize-2"
                                 title="<?php echo escape($lang["maximise"]); ?>">
                             </a>
-                            <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
+                            <a href="#" onClick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]) ?>"></a>
                             <?php
                             } ?>
                     </div>
@@ -530,12 +530,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                             <a href="<?php echo
                                 generateURL($baseurl . "/pages/view.php",$urlparams) ?>"
                                 onClick="return CentralSpaceLoad(this);"
-                                class="maxLink fa fa-expand"
+                                class="maxLink icon-maximize-2"
                                 title="<?php echo escape($lang["maximise"]); ?>">
                             </a>
                             <?php
                             } ?>
-                        <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
+                        <a href="#" onClick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]) ?>"></a>
                     </div>
                     <?php
                     } ?>
@@ -1147,7 +1147,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 ?>
                                                 <li>
                                                     <a href="<?php echo $contacturl; ?>" onClick="showContactBox();return false;" >
-                                                        <?php echo "<i class='fa fa-fw fa-user'></i>&nbsp;" . escape($lang["contactadmin"]); ?>
+                                                        <?php echo "<i class='icon-user'></i>&nbsp;" . escape($lang["contactadmin"]); ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1160,7 +1160,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 <li>
                                                     <?php 
                                                     echo add_to_collection_link($ref);
-                                                    echo "<i class='fa fa-fw fa-plus-circle'></i>&nbsp;" . escape($lang["action-addtocollection"]);
+                                                    echo "<i class='icon-circle-plus '></i>&nbsp;" . escape($lang["action-addtocollection"]);
                                                     ?>
                                                     </a>
                                                 </li>
@@ -1172,7 +1172,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     <li>
                                                         <?php 
                                                         echo remove_from_collection_link($ref,"","",0);
-                                                        echo "<i class='fa fa-fw fa-minus-circle'></i>&nbsp;" . escape($lang["action-removefromcollection"]); ?>
+                                                        echo "<i class='icon-circle-minus'></i>&nbsp;" . escape($lang["action-removefromcollection"]); ?>
                                                         </a>
                                                     </li>
                                                     <?php 
@@ -1184,7 +1184,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 ?>
                                                 <li>
                                                     <a href="<?php echo generateURL($baseurl . "/pages/resource_share.php",$urlparams); ?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-share-alt'></i>&nbsp;" . escape($lang["share"]); ?>
+                                                        <?php echo "<i class='icon-share-2 '></i>&nbsp;" . escape($lang["share"]); ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1196,11 +1196,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 echo "<li>";
                                                 if($resource_locked && $resource['lock_user'] != $userref)
                                                     {
-                                                    echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-pencil'></i>&nbsp;" . escape($lang["action-editmetadata"]) . "</div>";
+                                                    echo "<div class='DisabledLink LockedResourceAction'><i class='icon-square-pen '></i>&nbsp;" . escape($lang["action-editmetadata"]) . "</div>";
                                                     }
                                                 else
                                                     {
-                                                    echo "<a id='edit_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-pencil'></i>&nbsp;" . escape($lang["action-editmetadata"]) . "</a>";
+                                                    echo "<a id='edit_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='icon-square-pen '></i>&nbsp;" . escape($lang["action-editmetadata"]) . "</a>";
                                                     }
                                                 echo "</li>";
 
@@ -1210,7 +1210,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     echo "<li>";
                                                     if($resource_locked && $resource['lock_user'] != $userref)
                                                         {
-                                                        echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-trash'></i>&nbsp;" . escape($deletetext) . "</div>";
+                                                        echo "<div class='DisabledLink LockedResourceAction'><i class='icon-trash-2 '></i>&nbsp;" . escape($deletetext) . "</div>";
                                                         }
                                                     else
                                                         {
@@ -1229,7 +1229,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                                 <?php echo escape(generate_csrf_js_object('delete_resource')); ?>
                                                             );
                                                             }
-                                                        " ><i class='fa fa-fw fa-trash'></i>&nbsp;<?php echo $deletetext ?></a>
+                                                        " ><i class='icon-trash-2 '></i>&nbsp;<?php echo $deletetext ?></a>
                                                         <?php }
                                                     echo "</li>";
                                                     }
@@ -1239,11 +1239,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     echo "<li>";
                                                     if($resource_locked && $resource['lock_user'] != $userref)
                                                         {
-                                                        echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-files-o'></i>&nbsp;" . escape($lang["managealternativefiles"]) . "</div>";
+                                                        echo "<div class='DisabledLink LockedResourceAction'><i class='icon-files '></i>&nbsp;" . escape($lang["managealternativefiles"]) . "</div>";
                                                         }
                                                     else
                                                         {
-                                                        echo "<a id='alternative_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/alternative_files.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-files-o'></i>&nbsp;" . escape($lang["managealternativefiles"]) . "</a>";
+                                                        echo "<a id='alternative_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/alternative_files.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='icon-files '></i>&nbsp;" . escape($lang["managealternativefiles"]) . "</a>";
                                                         }
                                                     echo "</li>";
                                                     }
@@ -1272,11 +1272,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             onClick="if(jQuery('#uploader').length){return CentralSpaceLoad(this,true);} else {return ModalLoad(this,true);}">
                                                             <?php if ($resource["file_extension"] != "")
                                                                 { ?>
-                                                                <i class='fa fa-fw fa-file-import'></i>&nbsp;<?php echo escape($lang["replacefile"]);
+                                                                <i class='icon-replace '></i>&nbsp;<?php echo escape($lang["replacefile"]);
                                                                 }
                                                             else
                                                                 { ?>
-                                                                <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo escape($lang["uploadafile"]);
+                                                                <i class='icon-upload'></i>&nbsp;<?php echo escape($lang["uploadafile"]);
                                                                 }
                                                             ?>
                                                         </a>
@@ -1298,7 +1298,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     { ?>
                                                     <li>
                                                         <a id="view_upload_preview_link" href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
-                                                            <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo escape($lang["uploadpreview"]); ?>
+                                                            <i class='icon-image-up '></i>&nbsp;<?php echo escape($lang["uploadpreview"]); ?>
                                                         </a>
                                                     </li>
                                                     <?php
@@ -1319,7 +1319,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             if ($metadata_download && (checkperm('f*') || $can_see_fields_individually)) { ?>
                                                 <li>
                                                     <a href="<?php echo generateURL($baseurl . "/pages/metadata_download.php", $urlparams);?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" . escape($lang["downloadmetadata"]); ?>
+                                                        <?php echo "<i class='icon-history'></i>&nbsp;" . escape($lang["downloadmetadata"]); ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1335,7 +1335,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 { ?>
                                                 <li>
                                                     <a id="view_log_link" href="<?php echo generateURL($baseurl . "/pages/log.php",$urlparams,$overrideparams); ?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" . escape($lang["log"]); ?>
+                                                        <?php echo "<i class='icon-logs '></i>&nbsp;" . escape($lang["log"]); ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1345,7 +1345,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 { ?>
                                                 <li>
                                                     <a href="<?php echo generateURL($baseurl . "/pages/request_log.php",$urlparams,$overrideparams); ?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" . escape($lang["requestlog"]); ?>
+                                                        <?php echo "<i class='icon-history'></i>&nbsp;" . escape($lang["requestlog"]); ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1357,7 +1357,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             ) { ?>
                                                 <li>
                                                     <a href="<?php echo generateURL("{$baseurl}/pages/annotate_pdf_config.php", $urlparams); ?>" onclick="return CentralSpaceLoad(this);">
-                                                        <?php echo "<i class='fa-solid fa-file-pdf'></i>&nbsp;" . escape($lang['annotate_pdf_sheet_tool']); ?>
+                                                        <?php echo "<i class='icon-file-text '></i>&nbsp;" . escape($lang['annotate_pdf_sheet_tool']); ?>
                                                     </a>
                                                 </li>
                                             <?php }

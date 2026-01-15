@@ -1743,7 +1743,7 @@ function RenderPlugin($plugin, $active = true)
     $is_legacy = isset($plugin["legacy_inst"]);
     $label = $is_legacy ? $lang["plugins-legacyinst"] : ($active ? $lang["plugins-deactivate"] : $lang["plugins-activate"]);
     $class = $is_legacy ? "nowrap" : ($active ? "p-deactivate" : "p-activate");
-    $icon = $is_legacy ? "" : ($active ? "fa fa-circle-xmark" : "fas fa-circle-plus");
+    $icon = $is_legacy ? "" : ($active ? "icon-circle-x" : "icon-circle-plus");
     $href = $is_legacy ? "" : $plugin['name'];
 
     // Determine icon colour
@@ -1751,11 +1751,16 @@ function RenderPlugin($plugin, $active = true)
         ? $plugin["icon-colour"]
         : "";
 
+    // Handle no icon or old Font Awesome icon
+    if ($plugin['icon'] == "" || str_starts_with($plugin['icon'], "fa ") || str_starts_with($plugin['icon'], "fa-")) {
+        $plugin['icon'] = "plug-2";
+    }
+
     // Render the plugin display
     echo '<div class="PluginDisplay">';
     echo '<h2>';
     echo '<span class="plugin-header">';
-    echo '<i class="plugin-icon fa-xl ' . escape($plugin['icon']) . '"';
+    echo '<i class="plugin-icon lucide-lg icon-' . escape($plugin['icon']) . '"';
     echo $icon_colour != "" ? ' style="color:' . escape($icon_colour) . ';"' : '';
     echo '></i>';
     echo '<span class="plugin-title">' . escape($plugin['title'] ?: $plugin['name']) . '</span>';
@@ -1777,7 +1782,7 @@ function RenderPlugin($plugin, $active = true)
     // Render "more info" link if available
     if (!empty($plugin['info_url'])) {
         echo '<a class="nowrap" href="' . escape($plugin['info_url']) . '" target="_blank">';
-        echo '<i class="fas fa-book"></i>&nbsp;' . escape($lang['plugins-moreinfo']);
+        echo '<i class="icon-book-text"></i>&nbsp;' . escape($lang['plugins-moreinfo']);
         echo '</a> ';
     }
 
@@ -1785,7 +1790,7 @@ function RenderPlugin($plugin, $active = true)
     if ($active && empty($plugin['disable_group_select'])) {
         echo '<a onClick="return CentralSpaceLoad(this, true);" class="nowrap" href="';
         echo $baseurl_short . 'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']);
-        echo '"><i class="fas fa-users"></i>&nbsp;' . escape($lang['groupaccess']);
+        echo '"><i class="icon-users-round"></i>&nbsp;' . escape($lang['groupaccess']);
         if (!empty(trim((string) $plugin['enabled_groups']))) {
             $s = explode(",", $plugin['enabled_groups']);
             echo ' <span class="Pill">' . count($s) . '</span>';
@@ -1799,14 +1804,14 @@ function RenderPlugin($plugin, $active = true)
             ? str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'], true), $plugin['config_url'])
             : $baseurl_short . $plugin['config_url'];
         echo '<a onClick="return CentralSpaceLoad(this, true);" class="nowrap" href="' . escape($plugin_config_url) . '">';
-        echo '<i class="fas fa-cog"></i>&nbsp;' . escape($lang['options']);
+        echo '<i class="icon-settings"></i>&nbsp;' . escape($lang['options']);
         echo '</a> ';
     }
 
     // Render purge configuration link if applicable
     if (!empty($plugin['config'])) {
         echo '<a href="#' . escape($plugin['name']) . '" class="p-purge">';
-        echo '<i class="fa fa-trash"></i>&nbsp;' . escape($lang['purge']);
+        echo '<i class="icon-trash-2"></i>&nbsp;' . escape($lang['purge']);
         echo '</a> ';
     }
 

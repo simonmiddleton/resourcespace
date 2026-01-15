@@ -283,8 +283,8 @@ elseif($previous_page_modal)
             if($modal)
                 {
                 ?>
-                <a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl . "/plugins/video_splice/pages/trim.php", $urlparams, array("modal" => "")); ?>" onclick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
-                &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
+                <a class="maxLink icon-maximize-2" href="<?php echo generateURL($baseurl . "/plugins/video_splice/pages/trim.php", $urlparams, array("modal" => "")); ?>" onclick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
+                &nbsp;<a href="#" class="closeLink icon-x" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
                 <?php
                 }
                 ?>
@@ -298,7 +298,7 @@ if(!empty($trimmed_resources_new))
     foreach ($trimmed_resources_new as $trimmed_ref) {
         $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $trimmed_ref)) . '">' . escape($trimmed_ref) . '</a> ';
     }
-    echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%links", $links_holder, escape($lang["video-trim_new-response"])) . "</div>";
+    echo "<div class=\"PageInformal\"><i class='icon-square-check'></i>&nbsp;" . str_replace("%links", $links_holder, escape($lang["video-trim_new-response"])) . "</div>";
     }
 if(!empty($trimmed_resources_alt))
     {
@@ -307,7 +307,7 @@ if(!empty($trimmed_resources_alt))
     foreach ($trimmed_resources_alt as $trimmed_ref) {
         $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/preview.php', array('ref' => $ref, 'alternative' => $trimmed_ref)) . '">' . escape($trimmed_ref) . '</a> ';
     }
-    echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%ref", $parent_link, str_replace("%links", $links_holder, escape($lang["video-trim_alt-response"]))) . "</div>";
+    echo "<div class=\"PageInformal\"><i class='icon-square-check'></i>&nbsp;" . str_replace("%ref", $parent_link, str_replace("%links", $links_holder, escape($lang["video-trim_alt-response"]))) . "</div>";
     }
     ?>
 <h1><?php echo escape($lang["video-trim"]); render_help_link("plugins/video-splice");?></h1>

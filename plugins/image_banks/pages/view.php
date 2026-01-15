@@ -50,7 +50,7 @@ include_once "{$rs_root}/include/header.php";
     <div class="RecordPanel RecordPanelLarge">
         <div class="RecordHeader">
             <div class="backtoresults">
-                <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang['close']); ?>"></a>
+                <a href="#" onclick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang['close']); ?>"></a>
             </div>
             <h1><?php echo escape($record->getTitle()); ?></h1>
         </div>
@@ -138,7 +138,7 @@ include_once "{$rs_root}/include/header.php";
                             <li>
                                 <a href="<?php echo escape($record->getOriginalFileUrl()); ?>"
                                 onclick="createNewResource(event, this);">
-                                    <i class="fa fa-files-o"></i>&nbsp;<?php echo escape($lang["image_banks_create_new_resource"]); ?>
+                                    <i class="icon-copy"></i>&nbsp;<?php echo escape($lang["image_banks_create_new_resource"]); ?>
                                 </a>
                             </li>
 

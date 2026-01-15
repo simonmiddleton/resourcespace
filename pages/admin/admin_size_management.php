@@ -155,7 +155,7 @@ $sizes = ps_query($sql, $params);
                         <?php if ($edit_url != "") { ?>
                             <div class="ListTools">
                                 <a href="<?php echo escape($edit_url); ?>" onClick="return CentralSpaceLoad(this,true);">
-                                    <i class="fa fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                    <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                                 </a>
                             </div>
                             <?php

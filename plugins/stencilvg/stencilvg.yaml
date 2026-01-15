@@ -3,7 +3,7 @@ title   : StencilVG
 author  : Montala Limited
 version : 1.0
 desc    : Web to print (W2P) / Dynamic Publishing functionality using SVG template files.
-icon    : fa fa-hat-wizard
+icon    : wand-sparkles
 default_priority: 998
 category: Asset Processing
 config_url: /plugins/stencilvg/pages/setup.php

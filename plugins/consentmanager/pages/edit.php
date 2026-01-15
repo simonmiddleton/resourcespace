@@ -342,7 +342,7 @@ include "../../../include/header.php";
             if ($consent["file"] != "") {
                 ?>
                 <span>
-                    <i class="fa fa-file"></i>
+                    <i class="icon-file"></i>
                     <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $consent['file']; ?></a>
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;

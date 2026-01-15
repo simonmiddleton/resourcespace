@@ -183,8 +183,8 @@ if (get_post_bool('ajax')) {
         <link href="../css/global.css?csr=5" rel="stylesheet" type="text/css" /> 
         <link href="../css/light.css?csr=5" rel="stylesheet" type="text/css" /> 
         <script src="..<?php echo $jquery_path; ?>"></script>
-        <!--- FontAwesome for icons-->
-        <link rel="stylesheet" href="../lib/fontawesome/css/font-awesome.min.css">
+        <!--- Lucide for icons-->
+        <link rel="stylesheet" href="../lib/lucide/lucide.css">
         <script> 
             $(document).ready(function() {
                 $('p.iteminfo').hide();
@@ -1278,7 +1278,7 @@ if (get_post_bool('ajax')) {
 
                     <div class="settings">
                         <h2 id="dbaseconfig">
-                            <?php echo escape($lang["setup-dbaseconfig"]);?><i class="starthidden ajloadicon fa fa-spinner fa-spin" id="al-testconn"></i>
+                            <?php echo escape($lang["setup-dbaseconfig"]);?><i class="starthidden ajloadicon icon-loader lucide--spin" id="al-testconn"></i>
                         </h2>
                         <?php if (isset($errors['database'])) { ?>
                             <div class="erroritem">

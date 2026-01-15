@@ -87,7 +87,7 @@ include "../include/header.php";
 
             if (($is_featured_collection || !$fc_category_has_children) && collection_readable($current_fc_node['ref'])) {
                 $fc_branch_path[$current_fc_node_key]['context_menu'][] = [
-                    'icon' => 'fa-solid fa-fw fa-circle-check',
+                    'icon' => 'icon-circle-check',
                     'text' => $lang['action-select'],
                     'custom_onclick' => sprintf("return ChangeCollection(%s, '');", escape($current_fc_node['ref'])),
                 ];
@@ -117,7 +117,7 @@ include "../include/header.php";
                                 'collection_add' => $current_fc_node['ref']
                             ]
                         ),
-                    'icon' => 'fa fa-fw fa-upload',
+                    'icon' => 'icon-upload',
                     'text' => $lang['action-upload-to-collection'],
                 ];
             }
@@ -137,7 +137,7 @@ include "../include/header.php";
                             )
                         ]
                     ),
-                    'icon' => 'fa-solid fa-fw fa-pen-to-square',
+                    'icon' => 'icon-square-pen',
                     'text' => $lang['action-edit'],
                     'modal_load' => true,
                 ];
@@ -148,7 +148,7 @@ include "../include/header.php";
                 && can_delete_featured_collection($current_fc_node['ref'])
             ) {
                 $fc_branch_path[$current_fc_node_key]['context_menu'][] = [
-                    'icon' => 'fa-solid fa-fw fa-trash-can',
+                    'icon' => 'icon-trash-2',
                     'text' => $lang['action-deletecollection'],
                     'custom_onclick' => sprintf(
                         'return delete_collection(%s, \'%s\', \'%s\');',
@@ -274,7 +274,7 @@ include "../include/header.php";
                 );
             }
 
-            $rendering_options["html_h2_span_class"] = "fa fa-fw fa-upload";
+            $rendering_options["html_h2_span_class"] = "icon-upload";
             $rendering_options["centralspaceload"] = true;
 
             render_new_featured_collection_cta($upload_url, $rendering_options);

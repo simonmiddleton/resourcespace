@@ -312,7 +312,7 @@ foreach ($license_usage_mediums as $medium)
         {
         $download_url = generateURL("download.php",["resource"=>$resource,"ref"=>$ref]);
         ?>
-        <span><i class="fa fa-file"></i> <a href="<?php echo $download_url;?>"><?php echo escape($license['file']); ?></a></span>
+        <span><i class="icon-file"></i> <a href="<?php echo $download_url;?>"><?php echo escape($license['file']); ?></a></span>
         &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="return confirm('<?php echo escape($lang["confirmdeletelicensefile"]); ?>');">
         <?php
         }

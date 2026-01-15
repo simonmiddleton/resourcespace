@@ -242,14 +242,14 @@ include "include/login_background.php";
     <p class="LoginLinks">
         <?php if ($allow_account_request) { ?>
             <a id="account_apply" href="<?php echo $baseurl_short; ?>pages/user_request.php">
-                <i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo escape($lang["nopassword"]); ?>
+                <i class="icon-user-round-plus"></i>&nbsp;<?php echo escape($lang["nopassword"]); ?>
             </a>
         <?php }
 
         if ($allow_password_reset) { ?>
             <br/>
             <a id="account_pw_reset" href="<?php echo $baseurl_short; ?>pages/user_password.php">
-                <i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo escape($lang["forgottenpassword"]); ?>
+                <i class="icon-lock"></i>&nbsp;<?php echo escape($lang["forgottenpassword"]); ?>
             </a>
             <?php
         } ?>

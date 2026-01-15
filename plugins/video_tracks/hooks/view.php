@@ -42,7 +42,7 @@ function HookVideo_tracksViewAfterresourceactions()
         {
         ?>
         <li><a href="<?php echo $baseurl_short?>plugins/video_tracks/pages/create_video.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="if(typeof modalurl != 'undefined' && modalurl.href!=window.location.href){jQuery('#CentralSpace').html('');CentralSpaceLoad(modalurl);}return ModalLoad(this,true,true);">
-            <?php echo "<i class='fa fa-video-camera'></i>&nbsp;" . $lang["video_tracks_create_video_link"]; ?>
+            <?php echo "<i class='icon-video'></i>&nbsp;" . $lang["video_tracks_create_video_link"]; ?>
             </a></li>
         <?php
         }

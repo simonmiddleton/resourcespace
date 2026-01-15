@@ -197,15 +197,14 @@ $page_title = get_page_title($pagename, pluginname());
         $extrafooterhtml = "";
         ?>
 
+        <!--- Lucide for icons-->
+        <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/lucide/lucide.css?css_reload_key=<?php echo $css_reload_key; ?>">
         <!-- Structure Stylesheet -->
         <link href="<?php echo $baseurl; ?>/css/global.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
         <!-- Colour stylesheet -->
         <link href="<?php echo $baseurl; ?>/css/light.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
         <!-- Override stylesheet -->
         <link href="<?php echo $baseurl; ?>/css/css_override.php?k=<?php echo escape($k); ?>&css_reload_key=<?php echo $css_reload_key; ?>&noauth=<?php echo $noauth_page; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
-        <!--- FontAwesome for icons-->
-        <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key; ?>">
-        <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key; ?>">
         <!-- Load specified font CSS -->
         <?php if (!isset($custom_font) || $custom_font == '') { ?>
             <link id="global_font_link" href="<?php echo $baseurl; ?>/css/fonts/<?php echo $global_font; ?>.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" />
@@ -286,7 +285,7 @@ $page_title = get_page_title($pagename, pluginname());
 
         <!-- Processing graphic -->
         <div id='ProcessingBox' style='display: none'>
-            <i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+            <i aria-hidden="true" class="icon-settings lucide--spin"></i>
             <p id="ProcessingStatus"></p>
         </div>
 
@@ -358,7 +357,7 @@ $page_title = get_page_title($pagename, pluginname());
                             <div id="ButtonHolder">
                                 <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
                                     <span class="rbText"><?php echo escape($lang["responsive_main_menu"]); ?></span>
-                                    <span class="fa fa-fw fa-lg fa-bars"></span>
+                                    <span class="icon-menu lucide-lg"></span>
                                 </a>
 
                                 <a href="#" id="HeaderNav1Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
@@ -373,7 +372,7 @@ $page_title = get_page_title($pagename, pluginname());
                                     <?php if ($user_profile_image != "") { ?>
                                         <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'>
                                     <?php } else { ?>
-                                        <span class="fa fa-fw fa-lg fa-user"></span>
+                                        <span class="icon-user-round lucide-lg"></span>
                                     <?php } ?>
                                 </a>
                             </div>
@@ -449,7 +448,7 @@ $page_title = get_page_title($pagename, pluginname());
 
                                 <li title="<?php echo escape($lang["mymessages-tooltip"]); ?>">
                                     <a href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');">
-                                        <i aria-hidden="true" class="fa fa-envelope fa-lg fa-fw"></i>
+                                        <i aria-hidden="true" class="icon-mail lucide-lg"></i>
                                         <span class="MessageCountPill Pill" style="display: none;"></span>
                                     </a>
                                 </li>
@@ -464,7 +463,7 @@ $page_title = get_page_title($pagename, pluginname());
                                                 <?php
                                             } else {
                                                 ?>
-                                                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname) ?>
+                                                <i aria-hidden="true" class="icon-user-round lucide-lg"></i>&nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname) ?>
                                                 <?php
                                             }
                                         } else {
@@ -474,7 +473,7 @@ $page_title = get_page_title($pagename, pluginname());
                                                 <?php
                                             } else {
                                                 ?>
-                                                <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i>                                                
+                                                <i aria-hidden="true" class="icon-user-round lucide-lg"></i>                                                
                                                 <?php
                                             }
                                         }
@@ -488,7 +487,7 @@ $page_title = get_page_title($pagename, pluginname());
                                 <?php if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
                                     <li>
                                         <a href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
-                                            <i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
+                                            <i aria-hidden="true" class="icon-menu lucide-lg"></i>
                                             <?php
                                             if (!$actions_on && (checkperm("R") || checkperm("r"))) {
                                                 # Show pill count if there are any pending requests

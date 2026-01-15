@@ -123,23 +123,23 @@ for ($n = 0; $n < $jobcount; $n++) {
             // Add priority column
             switch ($jobs[$n]["priority"]) {
                 case JOB_PRIORITY_IMMEDIATE:
-                    $priorityicon = "fas fa-fw fa-bolt";
+                    $priorityicon = "icon-zap";
                     $prioritytitle = $lang["job_priority_immediate"];
                     break;
 
                 case JOB_PRIORITY_USER:
-                    $priorityicon = "fa fa-fw fa-arrow-circle-up";
+                    $priorityicon = "icon-circle-arrow-up";
                     $prioritytitle = $lang["job_priority_user"];
                     break;
 
                 case JOB_PRIORITY_SYSTEM:
-                    $priorityicon = "fa fa-fw fa-arrow-circle-right";
+                    $priorityicon = "icon-circle-arrow-right";
                     $prioritytitle = $lang["job_priority_system"];
                     break;
 
                 case JOB_PRIORITY_COMPLETED:
                 default:
-                    $priorityicon = "fa fa-fw fa-arrow-circle-down";
+                    $priorityicon = "icon-circle-arrow-down";
                     $prioritytitle = $lang["job_priority_completed"];
                     break;
             }
@@ -156,13 +156,13 @@ for ($n = 0; $n < $jobcount; $n++) {
                 && $jobs[$n]["start_date"] < date("Y-m-d H:i:s", time() - 24 * 60 * 60)
             )
         ) {
-            $tablejob["alerticon"] = "fas fa-exclamation-triangle";
+            $tablejob["alerticon"] = "icon-triangle-alert";
             $tablejob["alerticontitle"] = $lang["job_status_error"];
         }
 
         $tablejob["tools"] = array();
         $tablejob["tools"][] = array(
-            "icon" => "fa fa-fw fa-trash",
+            "icon" => "icon-trash-2",
             "text" => $lang["action-delete"],
             "url" => "#",
             "modal" => false,
@@ -171,13 +171,13 @@ for ($n = 0; $n < $jobcount; $n++) {
 
         if (checkperm('a')) {
             $tablejob["tools"][] = array(
-                "icon" => "fa fa-fw fa-info",
+                "icon" => "icon-info",
                 "text" => $lang["job_details"],
                 "url" => generateURL($baseurl . "/pages/job_details.php", array("job" => $jobs[$n]["ref"])),
                 "modal" => true,
             );
             $tablejob["tools"][] = array(
-                "icon" => "fa fa-fw fa-rocket",
+                "icon" => "icon-rocket",
                 "text" => $lang["job_boost"],
                 "url" => "#",
                 "onclick" => "update_job(\"" . $jobs[$n]["ref"] . "\",\"job_boost\");return false;",
@@ -187,7 +187,7 @@ for ($n = 0; $n < $jobcount; $n++) {
 
         if (checkperm('a') && $jobs[$n]["status"] != STATUS_ACTIVE) {
             $tablejob["tools"][] = array(
-                "icon" => "fas fa-fw fa-undo",
+                "icon" => "icon-undo",
                 "text" => $lang["job_reset"],
                 "url" => "#",
                 "modal" => false,

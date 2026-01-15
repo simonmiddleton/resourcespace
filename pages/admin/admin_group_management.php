@@ -215,11 +215,11 @@ function addColumnHeader($orderName, $labelKey)
                     <td>
                         <div class="ListTools">
                             <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
-                                <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                             </a>
                             &nbsp;
                             <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);">
-                                <i class="fas fa-users"></i>&nbsp;<?php echo escape($lang["users"]); ?>
+                                <i class="icon-users-round"></i>&nbsp;<?php echo escape($lang["users"]); ?>
                             </a>
                         </div>
                     </td>

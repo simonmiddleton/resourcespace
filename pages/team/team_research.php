@@ -96,8 +96,8 @@ include "../../include/header.php";
                     <td><?php echo (strlen((string) $requests[$n]["collection"]) == 0) ? "-" : escape($requests[$n]["collection"])?></td>
                     <td>
                         <div class="ListTools">
-                            <a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-file-signature"></i>&nbsp' . escape($lang["editresearch"])?></a>&nbsp;&nbsp;
-                            <a href="<?php echo $baseurl_short?>pages/collections.php?research=<?php echo $requests[$n]["ref"]; ?>" onClick="return CollectionDivLoad(this);"><?php echo '<i class="fas fa-shopping-bag"></i>&nbsp' . escape($lang["editcollection"])?></a>
+                            <a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="icon-notebook-pen"></i>&nbsp' . escape($lang["editresearch"])?></a>&nbsp;&nbsp;
+                            <a href="<?php echo $baseurl_short?>pages/collections.php?research=<?php echo $requests[$n]["ref"]; ?>" onClick="return CollectionDivLoad(this);"><?php echo '<i class="icon-shopping-bag"></i>&nbsp' . escape($lang["editcollection"])?></a>
                         </div>
                     </td>
                 </tr>

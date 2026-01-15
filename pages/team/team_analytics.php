@@ -93,10 +93,10 @@ include __DIR__ . "/../../include/header.php";
                     <td>
                         <div class="ListTools">
                             <a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]; ?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);">
-                                <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                             </a>
                         <a href="#" onclick="if (confirm('<?php echo escape($lang["confirm-deletion"]); ?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]; ?>';document.getElementById('reportsform').submit();} return false;">
-                            <i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?>
+                            <i class="icon-trash-2"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?>
                         </a>
                         </div>
                     </td>

@@ -138,17 +138,17 @@ $reports = ps_query("SELECT ref, `name`, support_non_correlated_sql FROM report 
                             <?php
                             if (!$support_non_correlated_sql) { ?>
                                 <a href="<?php echo $view_url; ?>" onclick="return CentralSpaceLoad(this, true);">
-                                    <i class="fas fa-table"></i>&nbsp;<?php echo escape($lang["action-view"]); ?>
+                                    <i class="icon-sheet"></i>&nbsp;<?php echo escape($lang["action-view"]); ?>
                                 </a>
                                 <?php
                             }
 
                             if (db_use_multiple_connection_modes() || !$execution_lockout) { ?>
                                 <a href="<?php echo $edit_url; ?>" onclick="return CentralSpaceLoad(this, true);">
-                                    <i class="fa fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                    <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                                 </a>
                                 <a href="javascript:copyReport('<?php echo $report["ref"]; ?>')">
-                                    <i class="fas fa-copy"></i>&nbsp;<?php echo escape($lang["copy"]); ?>
+                                    <i class="icon-copy"></i>&nbsp;<?php echo escape($lang["copy"]); ?>
                                 </a>
                                 <?php
                             }

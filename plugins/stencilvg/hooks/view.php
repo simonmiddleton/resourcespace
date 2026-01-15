@@ -23,7 +23,7 @@ function HookStencilvgViewAfterresourceactions (){
         $input_url = generateURL($baseurl_short . 'plugins/stencilvg/pages/input.php',$urlparams);
         ?>
         <li><a onClick='return CentralSpaceLoad(this,true);' href=<?php echo $input_url;?>>
-        <?php echo "<i class='fa fa-fw fa-hat-wizard'></i>&nbsp;" .$lang['stencilvg-go'];?>
+        <?php echo "<i class='icon-wand-sparkles'></i>&nbsp;" .$lang['stencilvg-go'];?>
         </a></li>
         <?php
         return true;

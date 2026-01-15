@@ -124,7 +124,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
         $workflow_html = "<div class='ResourcePanelInfo WorkflowState'>";
         // Add icon
         $icon = $workflowicons[$result[$n]['archive']] ?? (WORKFLOW_DEFAULT_ICONS[$result[$n]['archive']] ?? WORKFLOW_DEFAULT_ICON);
-        $workflow_html .= "<i class='" . escape($icon) . "'></i>&nbsp;";
+        $workflow_html .= "<i class='icon-" . escape($icon) . "'></i>&nbsp;";
         // Add text for workflow state
         $workflow_html .= isset($lang["status" . $result[$n]['archive']]) ? (escape($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']);
         $workflow_html .= "</div>";
@@ -143,7 +143,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
         ?>
         <div class="ResourcePanelInfo AnnotationInfo">
             <?php if (0 < $annotations_count) { ?>
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <i class="icon-square-pen" aria-hidden="true"></i>
                 <span><?php echo $message; ?></span>
             <?php } ?>
             &nbsp;
@@ -253,7 +253,7 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
         echo '<div class="ResourceTypeIcon ThumbIcon">';
         foreach ($types as $type) {
             if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
-                echo '<i title="' . escape($type["name"]) . '" class="fa-fw ' . escape($type["icon"]) . '"></i>';
+                echo '<i title="' . escape($type["name"]) . '" class="icon-' . escape($type["icon"]) . '"></i>';
                 }
             }
         if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>

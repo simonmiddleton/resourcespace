@@ -22,7 +22,7 @@ $content = strip_tags_and_attributes($content, $allowed_tags, $allowed_attribute
 <div class="BasicsBox">
     <?php if ($modal) { ?>
         <div class="backtoresults">
-            <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+            <a href="#" onclick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]); ?>"></a>
         </div>
         <?php
     }

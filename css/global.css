@@ -158,9 +158,9 @@ select, .sp-replacer {
 }
 
 select:before {
-    content: "\f078";
+    content: "\e06d";
     display: inline-block;
-    font: normal normal normal 14px/1 "Font Awesome 5 Free", sans-serif;
+    font-family: "Lucide";
     font-weight: 600;
     outline: 1px solid red;
     text-rendering: auto;   
@@ -271,11 +271,6 @@ h2#CollectionsPanelHeader {display:none;}
 }
 
 .ProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
-
-#HeaderNav1 .fa-user, #HeaderNav1 .fa-bars
-    {
-    font-size: 24px;
-    }
 
 /* Fix for .svg files */
 img[src$=".svg"]
@@ -433,8 +428,8 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
 .ImageColourWrapper {display: inline-block;}
-.ResourcePanel .nopreview {font-size:120px;margin-top:0.4em;}
-.ResourcePanelLarge .nopreview {font-size:200px;margin-top:0.35em;}
+.ResourcePanel .nopreview {font-size: 94px; margin-top: 0.4em;}
+.ResourcePanelLarge .nopreview {font-size: 160px; margin-top: 0.35em;}
 .ImageStripLink .nopreview {font-size:150px;position: relative; left:-100px;left: -1em;top: -0.2em;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
@@ -456,11 +451,9 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ResourcePanelIcons a, .CollectionPanelTools a  {text-decoration:none; font-size: 16px;}
 .ResourcePanelIcons a {padding: 3px;}
 .ResourcePanelResourceID {font-size: 14px; float: left;padding:5px 8px 0 8px; height: 20px;}
-.CollectionPanelTools .fa, .CollectionPanelTools .fas {font-size: 13px;}
 .ListTools a {margin-left: 10px;margin-right: 2px;text-decoration:none;}
 .ResourcePanelIcons a:hover {text-decoration:none;}
 .ListTools a:hover  {text-decoration:none;}
-a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a FontAwesome icon */
 
 .ResourceSelect {display:block;float:right;}
 .IconUserRatingStar {width:13px;height:15px;padding: 0;margin-bottom:6px;display: block;}
@@ -840,7 +833,7 @@ div.autocomplete ul li {
     position: absolute;
     top:300px;
     left: 30%;
-    font-size:150%;
+    font-size:200%;
     width:450px;
     padding:20px 30px;
     z-index:99999;
@@ -860,10 +853,10 @@ div.autocomplete ul li {
     text-align:left;
     font-size:60%;
     }
-#ProcessingBox i   
-    {
+#ProcessingBox i {
     padding: 10px;
-    }
+    font-size: 65px;
+}
 
 .ui-widget-content {
     border-radius: 15px;
@@ -989,7 +982,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .CommentFormBody {width: 600px; height: 60px; font-size: 1em; margin: 3px 0 0 0;}
 .CommentRespond {display: inline-block; width: auto; margin-right: 12px;}
 .TaggingHint {cursor: hand;display:block;width:588px;padding:5px;}
-.TaggingHint::before {content: "\f02b  ";   font: normal normal normal 14px "Font Awesome 5 Free", sans-serif;font-weight: 600;}
+.TaggingHint::before {content: "\e17f"; font-family: "Lucide"; font-weight: 600;}
 .comment_form_container{padding: 8px; border-radius: 4px; width: 600px; margin-top: 5px;}
 
 .collectionscompactstylespacer {height:25px;}
@@ -1048,10 +1041,10 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     border-radius: 5px;
     }
 
-.icondisplay .fa-map {
-    font-size:22px;
-    margin-left: 2px;
-    margin-right: 2px;
+.icondisplay .icon-map {
+    font-size: 24px;
+    line-height: 1;
+    width: 24px;
 }
 
 #searchSortOrderContainer, #resultsdisplay, .InpageNavLeftBlock {
@@ -1099,13 +1092,14 @@ input.contactadminbutton  {
     margin-left: 219px;
     font-size: 17px;
     box-shadow: none;
-    padding: 7px 6px 6px 6px;
+    padding: 6px 6px 5px 6px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     filter: unset;
     -moz-filter: unset;
     -webkit-filter: unset;
     min-width: unset;
+    width: 30px !important;
 }
 
 .CollectionsCompactToolsContainerDummy, .CollectionsCompactToolsContainer {display:inline-block;}
@@ -1210,8 +1204,6 @@ a.HomePanel:hover {
 }
 .HomePanelDynamicDash h2 span, .HomePanelThemes h2 span, .FeaturedSimpleTileContents h2 span {
     padding-right: 5px;
-    font-size: 1.2em;
-    vertical-align: text-bottom;
 }
 .HomePanelDynamicDash p, .HomePanelThemes p {
     float: none;
@@ -1763,7 +1755,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     -webkit-filter: none;
 }
 
-.context-menu-row i, .BreadcrumbsBox .context-menu-row .fa {
+.context-menu-row i, .BreadcrumbsBox .context-menu-row i {
     font-size: 18px;
     padding: 0 10px 0 2px;
 }
@@ -1913,9 +1905,23 @@ form.FormFilter button.ClearButton {
     width:35px;
     }
 
-/* Collapsible sections - using FontAwesome */
-.collapsed:before {content: "\f054";    font: normal normal normal 14px "Font Awesome 5 Free", sans-serif;font-weight: 600;padding-right:12px; display: inline-block; width:0.6em;}
-.expanded:before {content: "\f078";    font: normal normal normal 14px "Font Awesome 5 Free", sans-serif;font-weight: 600;padding-right:12px; display: inline-block; width:0.6em;/*! margin-right: 6px; */}
+/* Collapsible sections - using Lucide */
+.collapsed:before {
+    content: "\e06f";
+    font-family: "Lucide";
+    padding-right: 12px;
+    display: inline-block;
+    width: 0.6em;
+    vertical-align: top;
+}
+.expanded:before {
+    content: "\e06d";
+    font-family: "Lucide";
+    padding-right: 12px;
+    display: inline-block;
+    width: 0.6em;
+    vertical-align: top;
+}
 
 /* Subtext */
 .sub {font-size:0.8em;}
@@ -2091,10 +2097,6 @@ a.Enabled, a:visited.Enabled {
 .BreadcrumbsBox > .SearchBreadcrumbs{
     margin: 0;
 }
-.BreadcrumbsBox .fa {
-    padding-left: 10px;
-    padding-right: 3px;
-}
 
 .BreadcrumbsBox.BreadcrumbsBoxSlim {
     margin: 1em 1em 0 0;
@@ -2239,7 +2241,7 @@ select.MultiSelect:before {
 .BrowseBarStructure {
     display: table-cell;
     min-width: 6px;
-    font-family: "Font Awesome 5 Free", sans-serif;
+    font-family: "Lucide";
     font-weight: 600;
     padding-left: 8px;
     padding-top: 2px;
@@ -2270,7 +2272,7 @@ select.MultiSelect:before {
     opacity: 1;
 }
 .BrowseTypeRestype:after, .BrowseTypeField:after, .BrowseTypeFeatured:after{
-    content: "\f07b";
+    content: "\e0d7";
 }
 
 .BrowseBarRoot {
@@ -2296,13 +2298,13 @@ select.MultiSelect:before {
 }
 
 .BrowseOpen .BrowseTypeRestype:after, .BrowseOpen .BrowseTypeField:after, .BrowseOpen .BrowseTypeFeatured:after, .BrowseOpen.BrowseTypeState:after{
-    content: "\f07c";
+    content: "\e247";
 }
 .browse_closed:after {
-    content: "\f054";
+    content: "\e06f";
 }
 .browse_expanded:after {
-    content: "\f078";
+    content: "\e06d";
 }
 .BrowseBarRoot .browse_expand {
     padding: 0;
@@ -2315,13 +2317,13 @@ select.MultiSelect:before {
 }
 
 .BrowseTypeNode:after {
-    content: "\f02b";
+    content: "\e17f";
 } 
 .BrowseTypeCol:after {
-    content: "\f1b2";
+    content: "\e061";
 } 
 .BrowseTypeNew:after {
-    content: "\2b";
+    content: "\e13d";
 }  
 a.BrowseRefresh{
     display:none;
@@ -2350,6 +2352,7 @@ a.BrowseRefresh{
 .HelpLink {
     font-size: 1rem;
     vertical-align: text-top;
+    line-height: 1;
 }
 
 .FieldDisabled
@@ -2361,18 +2364,16 @@ a.BrowseRefresh{
 }
 
 .ResourceLocked:before{
-    content: "\f023";
-    font: normal normal normal 15px "Font Awesome 5 Free", sans-serif;
-    font-weight: 600;
+    content: "\e10b";
+    font-family: "Lucide";
     display: inline-block;
     width: 1.25em;
     text-align: center;
 }  
 
 .ResourceUnlocked:before{
-    content: "\f09c";
-    font: normal normal normal 15px "Font Awesome 5 Free", sans-serif;
-    font-weight: 600;
+    content: "\e10c";
+    font-family: "Lucide";
     display: inline-block;
     width: 1.25em;
     text-align: center;
@@ -2457,29 +2458,30 @@ a.BrowseRefresh{
 /* Tile navigation used on top menus */
 
 .TileNav ul {list-style:none;padding:0;margin:0;}
-.TileNav li {padding:10px 5px 10px 5px;margin:0;width:117px;float:left;height:100px;text-align:center;position:relative;word-break:break-word}
+.TileNav li {padding:10px 5px 10px 5px;margin:0;width:114px;float:left;height:100px;text-align:center;position:relative;word-break:break-word}
 .TileNav a:hover {text-decoration:none;}
-.TileNav .fa {font-size:48px;padding-bottom:10px;}
+.TileNav [class^="icon-"], .TileNav [class*=" icon-"] {font-size:48px;padding-bottom:10px;}
 .TileNav .Pill {position:absolute; top:0; right:25px;border-radius:12px; padding: 1px 8px;}
 .TileNav .overquota {width: 95% !important; height: auto !important;}
 /* Additional CSS to show list views correctly on top menus. */
 .TileReflow br {display:none;}
-.TileReflow .fa {display:inline-block; min-width:26px;}
+.TileReflow i {display:inline-block; min-width:26px;}
 .TileReflow a:hover {text-decoration:none;}
 .TileReflow .overquota {width: auto !important; height: auto !important;}
 
 .titlediv h1 {float :left;}
 .sharelink:before {
-    content: "\f0c1";
-    font: normal normal normal 14px "Font Awesome 5 Free", sans-serif;
+    content: "\e102";
+    font-family: "Lucide";
     font-weight: 600;
-    padding-right:12px;
-    display: inline-block; width:0.6em;
+    padding-right: 12px;
+    display: inline-block;
+    width:0.6em;
 }
 
 .infield-icon {
     margin-left: -26px;
-    margin-top: 12px;
+    margin-top: 9px;
     position: absolute;
     cursor: pointer;
 }
@@ -2528,7 +2530,7 @@ a.BrowseRefresh{
     
 
 .profileimage {margin-right: 10px; margin-left: 10px;}
-.user_message .profileimage i.fa {margin-top: 15px;}
+.user_message .profileimage i {margin-top: 10px;}
 .user_message, .message_content .profileimage, .message_content {float: left;}
 
 .own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}
@@ -2579,7 +2581,7 @@ input[type="text"]#iconpicker-input {
 #iconpicker-button {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    padding: 5px 10px 4px 10px;
+    padding: 3px 10px 6px 10px;
     display: inline-block;
     vertical-align: top;
     cursor: pointer;
@@ -2738,18 +2740,18 @@ input[type="text"]#iconpicker-input {
 #HomeSiteText p {padding-bottom:8px;}
 
 .no_file_link.no_file:before {
-    font-family: "Font Awesome 5 Free", sans-serif;
+    font-family: "Lucide";
     font-weight: 600;
-    content: "\f1ce";
+    content: "\e10a";
     font-size: 16px;
-    padding-right:5px;
+    padding-right: 5px;
 }
 .no_file_link.has_file:before {
-    font-family: "Font Awesome 5 Free", sans-serif;
+    font-family: "Lucide";
     font-weight: 600;
-    content: "\f5bf";
+    content: "\e3bb";
     font-size: 16px;
-    padding-right:5px;
+    padding-right: 5px;
 }
 
 .displayexisting_options {
@@ -2917,4 +2919,55 @@ label {
 
 .slide-active {
     opacity: 1;
+}
+
+#sort_selection_toggle {
+    line-height: 1;
+    font-size: 20px;
+}
+
+.x-twitter-icon {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* Lucide icons */
+[class^="icon-"], [class*=" icon-"] {
+    display: inline-block;
+    text-align: center;
+    width: 1.25em;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+[class^="icon-"].lucide-lg, [class*=" icon-"].lucide-lg {
+    font-size: 1.5em;
+}
+
+[class^="icon-"].lucide-xl, [class*=" icon-"].lucide-xl {
+    font-size: 2em;
+}
+
+@keyframes lucide-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.lucide--spin {
+    display: inline-block;
+    animation: lucide-spin 2s linear infinite;
+    transform-origin: 50% 50%;
+}
+
+.HeaderLink i {
+    transform: translateY(-0.08em);
+}
+
+.ListTools i {
+    line-height: 1.4; /* Default body value */
+}
+
+.top-right-menu i.icon-ellipsis-vertical {
+    line-height: 1.4;
+    vertical-align: baseline;
 }

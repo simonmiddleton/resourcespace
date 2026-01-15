@@ -849,7 +849,7 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                             <tr>
                                 <td>
                                     <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>">
-                                        <i class="fa fa-magnifying-glass fa-4x"></i>
+                                        <i class="icon-search"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -864,7 +864,7 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 
                         <div class="CollectionPanelTools">
                             <a
-                                class="removeFromCollection fa fa-minus-circle"
+                                class="removeFromCollection icon-circle-minus"
                                 onclick="return CollectionDivLoad(this);"
                                 href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>"
                             >
@@ -1004,7 +1004,7 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                                 <span>
                                     <a
                                         aria-hidden="true"
-                                        class="fa fa-comment"
+                                        class="icon-message-circle"
                                         onclick="return ModalLoad(this,true);"
                                         href="<?php echo $comment_url?>"
                                     >

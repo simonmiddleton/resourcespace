@@ -74,7 +74,7 @@ if (!TOTP_is_user_set_up($userref)) {
             <?php if (checkperm("a")) { ?>
                 <p class="LoginLinks">
                     <a id="account_apply" href="<?php echo $baseurl_short?>plugins/totp/pages/totp.php?skip=true">
-                        <i class="fas fa-fw fa-forward"></i>&nbsp;<?php echo escape($lang["totp_skip"]); ?>
+                        <i class="icon-fast-forward"></i>&nbsp;<?php echo escape($lang["totp_skip"]); ?>
                     </a>
                 </p>
             <?php } ?>

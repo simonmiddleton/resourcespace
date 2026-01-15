@@ -3,7 +3,7 @@
 define('RESOURCESPACE_BASE_PATH', dirname(__DIR__));
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 28);
+define('SYSTEM_UPGRADE_LEVEL', 29);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID')) {
@@ -192,23 +192,23 @@ define('JOB_PRIORITY_COMPLETED', 9);
 define('RESOURCE_LOG_APPEND_PREVIOUS', -1);    // used to specify that we want to append the previous resource_log entry
 
 // Global definition of link bullet carets - easy to change link caret style in the future.
-define('LINK_CARET', '<i aria-hidden="true" class="fa fa-caret-right"></i>&nbsp;');
-define('LINK_CARET_BACK', '<i aria-hidden="true" class="fa fa-caret-left"></i>&nbsp;');
-define('LINK_PLUS', '<i aria-hidden="true" class="fa fa-plus"></i>&nbsp;');
-define('LINK_PLUS_CIRCLE', '<i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;');
-define('LINK_CHEVRON_RIGHT', '<i aria-hidden="true" class="fa fa-chevron-right"></i>&nbsp;');
-define('UPLOAD_ICON', '<i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;');
-define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="fa fa-fw fa-user-plus"></i>&nbsp;');
-define('DASH_ICON', '<i aria-hidden="true" class="fa fa-fw fa-grip"></i>&nbsp;');
-define('FEATURED_COLLECTION_ICON', '<i aria-hidden="true" class="fa fa-fw fa-folder"></i>&nbsp;');
-define('RECENT_ICON', '<i aria-hidden="true" class="fa fa-fw fa-clock"></i>&nbsp;');
-define('HELP_ICON', '<i aria-hidden="true" class="fa fa-fw fa-book"></i>&nbsp;');
-define('HOME_ICON', '<i aria-hidden="true" class="fa fa-fw fa-home"></i>&nbsp;');
-define('SEARCH_ICON', '<i class="fa fa-search" aria-hidden="true"></i>&nbsp;');
-define('ICON_EDIT', '<i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;');
-define('ICON_REMOVE', '<i class="fa fa-minus-circle" aria-hidden="true"></i>&nbsp;');
-define('ICON_FOLDER', '<i class="fas fa-folder" aria-hidden="true"></i>&nbsp;');
-define('ICON_CUBE', '<i class="fas fa-cube" aria-hidden="true"></i>&nbsp;');
+define('LINK_CARET', '<i aria-hidden="true" class="icon-chevron-right"></i>&nbsp;');
+define('LINK_CARET_BACK', '<i aria-hidden="true" class="icon-chevron-left"></i>&nbsp;');
+define('LINK_PLUS', '<i aria-hidden="true" class="icon-plus"></i>&nbsp;');
+define('LINK_PLUS_CIRCLE', '<i aria-hidden="true" class="icon-circle-plus"></i>&nbsp;');
+define('LINK_CHEVRON_RIGHT', '<i aria-hidden="true" class="icon-chevron-right"></i>&nbsp;');
+define('UPLOAD_ICON', '<i aria-hidden="true" class="icon-upload"></i>&nbsp;');
+define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="icon-user-round-plus"></i>&nbsp;');
+define('DASH_ICON', '<i aria-hidden="true" class="icon-layout-dashboard"></i>&nbsp;');
+define('FEATURED_COLLECTION_ICON', '<i aria-hidden="true" class="icon-folder"></i>&nbsp;');
+define('RECENT_ICON', '<i aria-hidden="true" class="icon-clock"></i>&nbsp;');
+define('HELP_ICON', '<i aria-hidden="true" class="icon-book-marked"></i>&nbsp;');
+define('HOME_ICON', '<i aria-hidden="true" class="icon-house"></i>&nbsp;');
+define('SEARCH_ICON', '<i class="icon-search" aria-hidden="true"></i>&nbsp;');
+define('ICON_EDIT', '<i class="icon-pencil" aria-hidden="true"></i>&nbsp;');
+define('ICON_REMOVE', '<i class="icon-circle-minus" aria-hidden="true"></i>&nbsp;');
+define('ICON_FOLDER', '<i class="icon-folder" aria-hidden="true"></i>&nbsp;');
+define('ICON_CUBE', '<i class="icon-box" aria-hidden="true"></i>&nbsp;');
 
 define('NODE_TOKEN_PREFIX', '@@');
 define('NODE_TOKEN_OR', '|');
@@ -782,14 +782,14 @@ const SENSITIVE_VARIABLE_NAMES = [
     'emu_email_notify',
 ];
 
-const WORKFLOW_DEFAULT_ICON = "fa-solid fa-gears";
+const WORKFLOW_DEFAULT_ICON = "cog";
 const WORKFLOW_DEFAULT_ICONS = [
-    '-2'    => 'fa-solid fa-file-import',
-    '-1'    => 'fa-solid fa-eye',
-    '0'     => 'fa-solid fa-check',
-    '1'     => 'fa-solid fa-clock',
-    '2'     => 'fa-solid fa-box-archive',
-    '3'     => 'fa-solid fa-trash',
+    '-2'    => 'file-input',
+    '-1'    => 'eye',
+    '0'     => 'check',
+    '1'     => 'clock',
+    '2'     => 'archive',
+    '3'     => 'trash-2',
     ];
 
 // File extensions that can be natively viewed in the browser
@@ -953,108 +953,108 @@ $languages["zh-CN"] = "简体字"; # Simplified Chinese
 # English stop words
 $noadd = array("", "a","the","this","then","another","is","with","in","and","where","how","on","of","to", "from", "at", "for", "-", "by", "be");
 
-// FontAwesome classes for the icon to display when there's no preview image.
-const FONTAWESOME_EXTENSIONS = [
+// Lucide classes for the icon to display when there's no preview image.
+const LUCIDE_EXTENSIONS = [
     // Images
-    'png' => 'fa-file-image',
-    'jpg' => 'fa-file-image',
-    'jpeg' => 'fa-file-image',
-    'gif' => 'fa-file-image',
-    'svg' => 'fa-file-image',
-    'svgz' => 'fa-file-image',
-    'tif' => 'fa-file-image',
-    'tiff' => 'fa-file-image',
-    'bmp' => 'fa-file-image',
-    'ico' => 'fa-file-image',
-    'psd' => 'fa-file-image',
-    'raw' => 'fa-file-image',
-    'dng' => 'fa-file-image',
-    'cr2' => 'fa-file-image',
-    'nef' => 'fa-file-image',
-    'orf' => 'fa-file-image',
-    'rw2' => 'fa-file-image',
+    'png' => 'image',
+    'jpg' => 'image',
+    'jpeg' => 'image',
+    'gif' => 'image',
+    'svg' => 'image',
+    'svgz' => 'image',
+    'tif' => 'image',
+    'tiff' => 'image',
+    'bmp' => 'image',
+    'ico' => 'image',
+    'psd' => 'image',
+    'raw' => 'image',
+    'dng' => 'image',
+    'cr2' => 'image',
+    'nef' => 'image',
+    'orf' => 'image',
+    'rw2' => 'image',
 
     // Video
-    'mp4' => 'fa-file-video',
-    'mov' => 'fa-file-video',
-    'avi' => 'fa-file-video',
-    'mkv' => 'fa-file-video',
-    'flv' => 'fa-file-video',
-    'fla' => 'fa-file-video',
-    'wmv' => 'fa-file-video',
-    '3gp' => 'fa-file-video',
-    'webm' => 'fa-file-video',
-    'vob' => 'fa-file-video',
-    'm4v' => 'fa-file-video',
-    'mxf' => 'fa-file-video',
+    'mp4' => 'video',
+    'mov' => 'video',
+    'avi' => 'video',
+    'mkv' => 'video',
+    'flv' => 'video',
+    'fla' => 'video',
+    'wmv' => 'video',
+    '3gp' => 'video',
+    'webm' => 'video',
+    'vob' => 'video',
+    'm4v' => 'video',
+    'mxf' => 'video',
 
     // Audio
-    'mp3' => 'fa-file-audio',
-    'wav' => 'fa-file-audio',
-    'aac' => 'fa-file-audio',
-    'flac' => 'fa-file-audio',
-    'm4a' => 'fa-file-audio',
-    'wma' => 'fa-file-audio',
-    'ogg' => 'fa-file-audio',
-    'aif' => 'fa-file-audio',
-    'aiff' => 'fa-file-audio',
+    'mp3' => 'music',
+    'wav' => 'music',
+    'aac' => 'music',
+    'flac' => 'music',
+    'm4a' => 'music',
+    'wma' => 'music',
+    'ogg' => 'music',
+    'aif' => 'music',
+    'aiff' => 'music',
 
     // Documents
-    'pdf' => 'fa-file-pdf',
-    'doc' => 'fa-file-word',
-    'docx' => 'fa-file-word',
-    'odt' => 'fa-file-word',
-    'xls' => 'fa-file-excel',
-    'xlsx' => 'fa-file-excel',
-    'ods' => 'fa-file-excel',
-    'ppt' => 'fa-file-powerpoint',
-    'pptx' => 'fa-file-powerpoint',
-    'odp' => 'fa-file-powerpoint',
-    'rtf' => 'fa-file-alt',
-    'txt' => 'fa-file-alt',
-    'md' => 'fa-file-alt',
+    'pdf' => 'file-text',
+    'doc' => 'file-text',
+    'docx' => 'file-text',
+    'odt' => 'file-text',
+    'xls' => 'file-spreadsheet',
+    'xlsx' => 'file-spreadsheet',
+    'ods' => 'file-spreadsheet',
+    'ppt' => 'file-chart-pie',
+    'pptx' => 'file-chart-pie',
+    'odp' => 'file-chart-pie',
+    'rtf' => 'file-text',
+    'txt' => 'file-text',
+    'md' => 'file-text',
 
     // Code
-    'php' => 'fa-file-code',
-    'html' => 'fa-file-code',
-    'htm' => 'fa-file-code',
-    'css' => 'fa-file-code',
-    'js' => 'fa-file-code',
-    'json' => 'fa-file-code',
-    'xml' => 'fa-file-code',
-    'sql' => 'fa-file-code',
-    'sh' => 'fa-file-code',
-    'py' => 'fa-file-code',
-    'java' => 'fa-file-code',
-    'c' => 'fa-file-code',
-    'cpp' => 'fa-file-code',
-    'rb' => 'fa-file-code',
-    'go' => 'fa-file-code',
+    'php' => 'file-braces',
+    'html' => 'file-braces',
+    'htm' => 'file-braces',
+    'css' => 'file-braces',
+    'js' => 'file-braces',
+    'json' => 'file-braces',
+    'xml' => 'file-braces',
+    'sql' => 'file-braces',
+    'sh' => 'file-braces',
+    'py' => 'file-braces',
+    'java' => 'file-braces',
+    'c' => 'file-braces',
+    'cpp' => 'file-braces',
+    'rb' => 'file-braces',
+    'go' => 'file-braces',
 
     // Compressed
-    'zip' => 'fa-file-zipper',
-    'rar' => 'fa-file-zipper',
-    '7z' => 'fa-file-zipper',
-    'tar' => 'fa-file-zipper',
-    'gz' => 'fa-file-zipper',
-    'bz2' => 'fa-file-zipper',
-    'xz' => 'fa-file-zipper',
-    'iso' => 'fa-file-zipper',
+    'zip' => 'file-archive',
+    'rar' => 'file-archive',
+    '7z' => 'file-archive',
+    'tar' => 'file-archive',
+    'gz' => 'file-archive',
+    'bz2' => 'file-archive',
+    'xz' => 'file-archive',
+    'iso' => 'file-archive',
 
     // Miscellaneous
-    'log' => 'fa-file-alt',
-    'cfg' => 'fa-file-alt',
-    'ini' => 'fa-file-alt',
-    'csv' => 'fa-file-csv',
+    'log' => 'file-text',
+    'cfg' => 'file-text',
+    'ini' => 'file-text',
+    'csv' => 'file-spreadsheet',
 
     // Fonts
-    'ttf' => 'fa-file-font',
-    'otf' => 'fa-file-font',
-    'woff' => 'fa-file-font',
-    'woff2' => 'fa-file-font',
+    'ttf' => 'file-type',
+    'otf' => 'file-type',
+    'woff' => 'file-type',
+    'woff2' => 'file-type',
 
     // Default to 'file' for unrecognized extensions
-    'default' => 'fa-file',
+    'default' => 'file',
 ];
 
 const TINYMCE_VALID_PLUGINS = [

@@ -1,7 +1,7 @@
 name: simplesaml
 title: SAML
 desc: User authentication via SAML.
-icon: fa fa-key
+icon: key-round
 icon-colour : goldenrod
 author: Montala Limited
 version: 1.0

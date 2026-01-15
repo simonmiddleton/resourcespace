@@ -59,7 +59,7 @@ include "../../include/header.php";
                             onClick="return CentralSpaceLoad(this,true);"
                         <?php } ?>
                     >
-                        <i aria-hidden="true" class="fa fa-fw fa-files-o"></i>
+                        <i aria-hidden="true" class="icon-files"></i>
                         <br /><?php echo escape($lang["manageresources"]); ?>
                     </a>
                 </li>
@@ -69,7 +69,7 @@ include "../../include/header.php";
             if (checkperm("R")) { ?>
                 <li title="<?php echo escape($lang["managerequestsorders-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);">
-                        <i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i>
+                        <i aria-hidden="true" class="icon-shopping-cart"></i>
                         <br /><?php echo escape($lang["managerequestsorders"]); ?>
                         <?php
                         $condition = "";
@@ -96,7 +96,7 @@ include "../../include/header.php";
             <?php if (checkperm("r") && $research_request) { ?>
                 <li title="<?php echo escape($lang["manageresearchrequests-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);">
-                        <i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>
+                        <i aria-hidden="true" class="icon-circle-question-mark"></i>
                         <br /><?php echo escape($lang["manageresearchrequests"]); ?>
                         <br>
                         <?php
@@ -113,7 +113,7 @@ include "../../include/header.php";
                 ?>
                 <li title="<?php echo escape($lang["manageusers-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/team/team_user.php" onClick="return CentralSpaceLoad(this, true);">
-                        <i aria-hidden="true" class="fa fa-fw fa-users"></i>
+                        <i aria-hidden="true" class="icon-users-round"></i>
                         <br /><?php echo escape($lang['manageusers']); ?>
                     </a>
                 </li>
@@ -133,7 +133,7 @@ include "../../include/header.php";
                 ?>
                 <li title="<?php echo escape($lang["manage_dash_tiles-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);">
-                        <i aria-hidden="true" class="fa fa-fw fa-grip"></i>
+                        <i aria-hidden="true" class="icon-layout-dashboard"></i>
                         <br /><?php echo escape($lang['manage_dash_tiles']); ?>
                     </a>
                 </li>
@@ -145,7 +145,7 @@ include "../../include/header.php";
                 ?>
                 <li title="<?php echo escape($lang["manage_external_shares-tooltip"]); ?>">
                     <a href="<?php echo $baseurl_short; ?>pages/manage_external_shares.php" onClick="return CentralSpaceLoad(this, true);">
-                        <i aria-hidden="true" class="fa fa-fw fa-share-alt"></i>
+                        <i aria-hidden="true" class="icon-share-2"></i>
                         <br /><?php echo escape($lang['manage_external_shares']); ?>
                     </a>
                 </li>
@@ -155,14 +155,14 @@ include "../../include/header.php";
 
             <li title="<?php echo escape($lang["rse_analytics-tooltip"]); ?>">
                 <a href="<?php echo $baseurl_short?>pages/team/team_analytics.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i aria-hidden="true" class="fa fa-fw fa-pie-chart"></i>
+                    <i aria-hidden="true" class="icon-chart-pie"></i>
                     <br /><?php echo escape($lang["rse_analytics"]); ?>
                 </a>
             </li>
             
             <li title="<?php echo escape($lang["viewreports-tooltip"]); ?>">
                 <a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i aria-hidden="true" class="fa fa-fw fa-table"></i>
+                    <i aria-hidden="true" class="icon-table"></i>
                     <br /><?php echo escape($lang["viewreports"]); ?>
                 </a>
             </li>
@@ -184,7 +184,7 @@ include "../../include/header.php";
                             onClick="return CentralSpaceLoad(this,true);"
                         <?php } ?>
                     >
-                        <i aria-hidden="true" class="fa fa-fw fa-cog"></i>
+                        <i aria-hidden="true" class="icon-settings"></i>
                         <br /><?php echo escape($lang["systemsetup"]); ?>
                     </a>
                     <br>
@@ -197,7 +197,7 @@ include "../../include/header.php";
     </div>
 
     <p class="clearerleft">
-        <i aria-hidden="true" class="fa fa-fw fa-hdd-o"></i>&nbsp;<?php echo escape($lang["diskusage"]); ?>: <b><?php echo round(($avail ? $used / $avail : 0) * 100, 0)?>%</b>
+        <i aria-hidden="true" class="icon-hard-drive"></i>&nbsp;<?php echo escape($lang["diskusage"]); ?>: <b><?php echo round(($avail ? $used / $avail : 0) * 100, 0)?>%</b>
         &nbsp;&nbsp;&nbsp;<span class="sub"><?php echo formatfilesize($used)?> / <?php echo formatfilesize($avail)?></span>
     </p>
 </div>

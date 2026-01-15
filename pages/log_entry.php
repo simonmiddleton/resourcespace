@@ -35,7 +35,7 @@ if (!checkperm('v') && !$bypass_permission_check) {
                 </a>
             </p>
             <div class="backtoresults"> 
-                <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+                <a href="#" onclick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>
             <h1><?php echo escape($lang["log-reference"] . " " . $log_entry["ref"]); ?></h1>
         </div>       
