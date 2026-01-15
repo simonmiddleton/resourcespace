@@ -28,3 +28,4 @@ $lang["faces_detect_faces"] = "Detect faces";
 $lang["faces_tag_faces"] = "Tag faces";
 
 $lang["faces_detect_faces_intro"] = "Create a job to start detection of faces here - this job does not require any parameters so can be started as long as there are no other outstanding jobs of this type.";
+$lang["faces_tag_faces_collection_refs_help"] = "Setting this option will mean only resources in the listed collections will be updated. If no collections are specified then face tagging will be updated for ALL suitable resources. Collections can be specified using a comma-separated list as well as ranges e.g 100,105,110-115";

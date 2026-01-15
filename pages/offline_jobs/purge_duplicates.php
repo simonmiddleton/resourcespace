@@ -97,6 +97,8 @@ if ($job_add_error) {
 
     <?php renderBreadcrumbs($breadcrumbs); ?>
 
+    <p><?php echo strip_tags_and_attributes($lang["oj_purge_duplicates_intro"]); ?></p>
+
     <form method="post" id="purge_duplicates_form" action="<?php echo generateURL("{$baseurl_short}pages/offline_jobs/purge_duplicates.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("purge_duplicates_form"); ?>
         <div class="Question<?php
@@ -111,7 +113,10 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>            
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_purge_duplicates_collection_refs_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
@@ -126,12 +131,18 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>   
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_purge_duplicates_manage_method_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
             <label for="dry_run"><?php echo escape($lang["oj_purge_duplicates_dry_run"]); ?></label>
             <input name="dry_run" id="dry_run" type="checkbox" value="1"<?php echo ($dry_run ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_purge_duplicates_dry_run_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
@@ -143,7 +154,10 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>   
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_purge_duplicates_delete_perm_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">

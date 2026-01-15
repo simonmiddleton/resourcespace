@@ -129,6 +129,9 @@ if ($job_add_error) {
                     }                    
                 } 
             ?>  
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["openai_gpt_process_existing_field_ref_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question<?php
@@ -143,12 +146,18 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>            
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["openai_gpt_process_existing_collection_refs_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
             <label for="overwrite"><?php echo escape($lang["openai_gpt_process_existing_overwrite"]); ?></label>
             <input name="overwrite" id="overwrite" type="checkbox" value="1"<?php echo ($overwrite ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["openai_gpt_process_existing_overwrite_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">

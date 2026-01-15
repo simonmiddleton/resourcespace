@@ -104,7 +104,10 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>            
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["google_vision_process_existing_collection_refs_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">

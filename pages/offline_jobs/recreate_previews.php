@@ -116,9 +116,6 @@ if ($job_add_error) {
                 <option value="resources" <?php echo ($process_type == "resources") ? "selected" : ''; ?>><?php echo escape($lang["resources"]); ?></option>
                 <option value="collections" <?php echo ($process_type == "collections") ? "selected" : ''; ?>><?php echo escape($lang["collections"]); ?></option>
             </select>
-            <div class="FormHelp" style="padding:0;clear:left; margin-bottom: 0px;">
-	            <div class="FormHelpInner">Important: This is some help text to test the div</div>
-            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question<?php
@@ -134,8 +131,8 @@ if ($job_add_error) {
                     }                    
                 } 
             ?>
-            <div class="FormHelp" style="padding:0;clear:left; margin-bottom: 0px;">
-                <div class="FormHelpInner">Important: This is some help text to test the div</div>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_recreate_previews_refs_help"]); ?></div>
             </div>
             <div class="clearerleft"></div>
         </div>
@@ -214,17 +211,26 @@ if ($job_add_error) {
         <div class="Question">
             <label for="use_existing"><?php echo escape($lang['oj_recreate_previews_use_existing']); ?></label>
             <input name="use_existing" id="use_existing" type="checkbox" value="1"<?php echo ($use_existing ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_recreate_previews_use_existing_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
             <div class="Question">
             <label for="video_update"><?php echo escape($lang['oj_recreate_previews_video_update']); ?></label>
             <input name="video_update" id="video_update" type="checkbox" value="1"<?php echo ($video_update ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_recreate_previews_video_update_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         </div>
             <div class="Question">
             <label for="delete_existing"><?php echo escape($lang['oj_recreate_previews_delete_existing']); ?></label>
             <input name="delete_existing" id="delete_existing" type="checkbox" value="1"<?php echo ($delete_existing ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_recreate_previews_delete_existing_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <script>

@@ -2947,3 +2947,9 @@ label {
 .Question.is-disabled {
   opacity: 0.45;
 }
+
+.FormHelp.JobFormHelp {
+    padding:0;
+    margin-bottom: 0px;
+    clear:left; 
+}

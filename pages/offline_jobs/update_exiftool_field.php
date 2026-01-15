@@ -123,7 +123,10 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>            
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_exif_data_field_refs_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question<?php
@@ -138,17 +141,26 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>            
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_exif_data_collection_refs_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
             <label for="blanks"><?php echo escape($lang["oj_exif_data_blanks"]); ?></label>
             <input name="blanks" id="blanks" type="checkbox" value="1"<?php echo ($blanks ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_exif_data_blanks_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
             <div class="Question">
             <label for="overwrite"><?php echo escape($lang["oj_exif_data_overwrite"]); ?></label>
             <input name="overwrite" id="overwrite" type="checkbox" value="1"<?php echo ($overwrite ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_exif_data_overwrite_help"]); ?></div>
+            </div>
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">

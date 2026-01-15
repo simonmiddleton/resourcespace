@@ -108,7 +108,10 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>            
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_reindex_field_refs_help"]); ?></div>
+            </div>            
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">

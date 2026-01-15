@@ -76,8 +76,11 @@ if ($job_add_error) {
     <form method="post" id="update_checksums_form" action="<?php echo generateURL("{$baseurl_short}pages/offline_jobs/update_checksums.php", ["job_user" => $job_user]); ?>">
         <?php generateFormToken("update_checksums_form"); ?>
         <div class="Question">
-            <label for="recreate"><?php echo escape($lang["oj_checksums_recreate_all"]); ?></label>
+            <label for="recreate"><?php echo escape($lang["oj_checksums_recreate"]); ?></label>
             <input name="recreate" id="recreate" type="checkbox" value="1"<?php echo ($recreate ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_checksums_recreate_help"]); ?></div>
+            </div> 
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">

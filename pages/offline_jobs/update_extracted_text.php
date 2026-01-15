@@ -96,12 +96,18 @@ if ($job_add_error) {
                         echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
-            ?>            
-        <div class="clearerleft"></div>
+            ?>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_extracted_text_collection_refs_help"]); ?></div>
+            </div> 
+            <div class="clearerleft"></div>
         </div>
         <div class="Question">
             <label for="update_all"><?php echo escape($lang["oj_extracted_text_update_all"]); ?></label>
             <input name="update_all" id="update_all" type="checkbox" value="1"<?php echo ($update_all ? 'checked="checked"' : ''); ?>>
+            <div class="FormHelp JobFormHelp">
+                <div class="FormHelpInner"><?php echo escape($lang["oj_extracted_text_update_all_help"]); ?></div>
+            </div> 
             <div class="clearerleft">
         </div>
         <div class="QuestionSubmit">
