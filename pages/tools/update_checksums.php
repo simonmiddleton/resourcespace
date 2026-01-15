@@ -1,6 +1,7 @@
 <?php
 
-#
+# IMPORTANT NOTE: The functionality this script provides is now accessible via the front-end job runner, so 
+#                 this script may be deprecated in future versions
 #
 # Script to update the file checksum for existing files.
 # This should be executed once, when checksums do not exist on the resources in the database, e.g. when upgrading from

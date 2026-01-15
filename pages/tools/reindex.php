@@ -1,5 +1,7 @@
 <?php
 
+# IMPORTANT NOTE: The functionality this script provides is now accessible via the front-end job runner, so 
+#                 this script may be deprecated in future versions
 #
 # Reindex.php
 #

@@ -1,5 +1,8 @@
 <?php
 
+# IMPORTANT NOTE: The functionality this script provides is now accessible via the front-end job runner, so 
+#                 this script may be deprecated in future versions
+
 $webroot = dirname(__DIR__, 2);
 include_once "{$webroot}/include/boot.php";
 include_once "{$webroot}/include/log_functions.php";

@@ -1,5 +1,8 @@
 <?php
 
+# IMPORTANT NOTE: The functionality this script provides is now accessible via the front-end job runner, so 
+#                 this script may be deprecated in future versions
+
 # This script is useful if you've added an exiftool field mapping and would like to update RS fields with the original file information
 # for all your resources.
 
