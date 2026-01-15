@@ -5633,7 +5633,8 @@ function url_starts_with(string $base, $val): bool
 }
 
 /**
- * Input validation helper function to check if a URL is safe (from XSS). Mostly intended for redirect URLs.
+ * Input validation helper function to check if a URL is safe (from XSS) in an HTML context.
+ *
  * @param mixed $val URL to check
  */
 function is_safe_url($url): bool
@@ -5661,10 +5662,12 @@ function is_safe_url($url): bool
         }
     }
 
-    // Check query strings, if applicable
-    $qs_params = [];
-    parse_str($url_parts['query'] ?? '', $qs_params);
-    foreach ($qs_params as $param => $value) {
+    // Check query strings (QS), if applicable. We're parsing the QS but without decoding its components otherwise we
+    // we could end up with false positives.
+    $qs_params = array_filter(explode('&', $url_parts['query'] ?? ''));
+    foreach ($qs_params as $pair) {
+        [$param, $value] = array_pad(array_filter(explode('=', $pair, 2)), 2, '');
+
         if ($param !== escape($param) || $value !== escape($value)) {
             debug("[WARN] Suspicious query string parameter ({$param} with value: {$value}) found in URL - {$url}");
             return false;
