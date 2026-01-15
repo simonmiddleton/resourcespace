@@ -128,7 +128,7 @@ if (getval("submitting", "") != "" && $api_function != "") {
                         type="text"
                         name="<?php echo $param_name; ?>"
                         class="stdwidth"
-                        value="<?php echo escape(getval($param_name, "")); ?>"
+                        value="<?php echo escape($_POST[$param_name] ?? ''); ?>"
                         <?php echo "{$required_attr} {$disabled_attr}"; ?>
                     >
                 </div>
