@@ -2345,7 +2345,10 @@ function updatePageTitle(pagename, pluginname = '') {
 function updatePageBackground() {
     if(!valid_img_bg_pages.includes(pagename)) {
         jQuery('body').css('{background-image: none}');
-        jQuery('body').find('.slide').forEach(el => el.remove());
+        let slides = jQuery('body').find('.slide');
+        if (slides.length > 0) {
+            slides.each(function(){jQuery(this).remove();});
+        }
     }
 }
 /**
