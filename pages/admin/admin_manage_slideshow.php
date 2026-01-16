@@ -23,6 +23,7 @@ if (
     && !is_null($slideshow_id)
     && enforcePostRequest($ajax)
 ) {
+    header('Content-Type: application/json');
     $response['sibling']          = null;
     $response['is_first_sibling'] = false;
     $response['is_last_sibling']  = false;
@@ -99,6 +100,7 @@ if ('true' === $ajax && 'delete' === $action && !is_null($slideshow_id) && enfor
         $response['success'] = false;
     }
 
+    header('Content-Type: application/json');
     echo json_encode($response);
     exit();
 }
