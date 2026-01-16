@@ -72,14 +72,6 @@ global $tinymce_plugins, $tinymce_toolbar, $user_pref_appearance;
             editor.on('blur', function(e) {
                 HideHelp('<?php echo $field["ref"]; ?>');
             });
-            editor.on('BeforeExecCommand', (e) => {
-                if (e.command === 'mceInsertLink' && e.value.href) {
-                    e.value.href = e.value.href
-                        .replace(/\$/g, '%24')
-                        .replace(/\'/g, '')
-                        .replace(/\%27/g, '');
-                }
-            });
         },
     });
 
