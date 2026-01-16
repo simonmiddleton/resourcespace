@@ -19,25 +19,27 @@ if (!$exiftool_fullpath) {
     return;
 }
 
-
 // Process $job_data
 $blanks = (bool) $job_data['blanks'] ?? false;
 $overwrite = (bool) $job_data['overwrite'] ?? false;
-
-$range_condition = build_range_where_condition($job_data['collection_refs'], "cr.collection");
 
 $join = "";
 $conditions = [];
 $params = [];
 
-if ($range_condition["ok"]) {
-    $join .= "INNER JOIN collection_resource cr ON r.ref = cr.resource";
-    $conditions[] = $range_condition['where'];
-    $params = $range_condition['params'];
-} else {
-    logScript("[update_exiftool_field] [ERROR] unable to process where condition", $log_file);
-    job_queue_update($jobref, $job_data, STATUS_ERROR);
-    return;
+if (isset($job_data['collection_refs']) && !empty($job_data['collection_refs'])) {
+
+    $range_condition = build_range_where_condition($job_data['collection_refs'], "cr.collection");
+
+    if ($range_condition["ok"]) {
+        $join .= "INNER JOIN collection_resource cr ON r.ref = cr.resource";
+        $conditions[] = $range_condition['where'];
+        $params = $range_condition['params'];
+    } else {
+        logScript("[update_exiftool_field] [ERROR] unable to process where condition", $log_file);
+        job_queue_update($jobref, $job_data, STATUS_ERROR);
+        return;
+    }
 }
 
 $processed_field_refs = parse_csv_to_list_of_type($job_data['field_refs'], "is_positive_int_loose");
