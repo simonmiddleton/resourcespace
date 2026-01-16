@@ -2999,6 +2999,13 @@ label {
     margin-top: 5px;
 }
 
+.job-configure-error > [class^="icon-"] {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    transform: translateY(-0.125em);
+}
+
 .Question.is-disabled {
   opacity: 0.45;
 }

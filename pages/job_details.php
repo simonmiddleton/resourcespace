@@ -205,7 +205,7 @@ if (file_exists($log_file_path)) {
                 jQuery("#job_progress_refresh_btn").on("click", function () {
 
                     const $btn = jQuery(this);
-                    $btn.addClass("fa-spin");
+                    $btn.addClass("lucide--spin");
 
                     var params = new URLSearchParams({
                         job: <?php echo $job_details["ref"]; ?>,
@@ -230,7 +230,7 @@ if (file_exists($log_file_path)) {
                             jQuery("#job_progress").text("<?php echo escape($lang["jobs_action_missing_job_progress"]); ?>");
                         },
                         complete: function () {
-                            $btn.removeClass("fa-spin");
+                            $btn.removeClass("lucide--spin");
                         }
                     });
 
@@ -288,27 +288,27 @@ if (file_exists($log_file_path)) {
                         }
                         render_array_in_table_cells($job_data);
                     } elseif ($name == "progress") {
-                        echo "<span id='job_progress'></span> <span id='job_progress_refresh_btn' class='fa fa-fw fa-refresh'></span>";
+                        echo "<span id='job_progress'></span> <span id='job_progress_refresh_btn' class='icon-refresh-cw'></span>";
                     } elseif ($name == "priority") {
                         switch ($value) {
                             case JOB_PRIORITY_IMMEDIATE:
-                                $priorityicon = "fas fa-fw fa-bolt";
+                                $priorityicon = "icon-zap";
                                 $prioritytitle = $lang["job_priority_immediate"];
                             break;
 
                             case JOB_PRIORITY_USER:
-                                $priorityicon = "fa fa-fw fa-arrow-circle-up";
+                                $priorityicon = "icon-circle-arrow-up";
                                 $prioritytitle = $lang["job_priority_user"];
                             break;
 
                             case JOB_PRIORITY_SYSTEM:
-                                $priorityicon = "fa fa-fw fa-arrow-circle-right";
+                                $priorityicon = "icon-circle-arrow-right";
                                 $prioritytitle = $lang["job_priority_system"];
                             break;
 
                             case JOB_PRIORITY_COMPLETED:
                             default:
-                                $priorityicon = "fa fa-fw fa-arrow-circle-down";
+                                $priorityicon = "icon-circle-arrow-down";
                                 $prioritytitle = $lang["job_priority_completed"];
                             break;
                         }

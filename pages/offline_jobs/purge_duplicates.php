@@ -110,7 +110,7 @@ if ($job_add_error) {
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('collection_refs', $field_errors)) {
                     foreach ($field_errors['collection_refs'] as $error_message) {
-                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
+                        echo '<span class="job-configure-error"><i class="icon-triangle-alert"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>
@@ -128,7 +128,7 @@ if ($job_add_error) {
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('manage_method', $field_errors)) {
                     foreach ($field_errors['manage_method'] as $error_message) {
-                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
+                        echo '<span class="job-configure-error"><i class="icon-triangle-alert"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>
@@ -151,7 +151,7 @@ if ($job_add_error) {
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('delete_perm', $field_errors)) {
                     foreach ($field_errors['delete_perm'] as $error_message) {
-                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
+                        echo '<span class="job-configure-error"><i class="icon-triangle-alert"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>

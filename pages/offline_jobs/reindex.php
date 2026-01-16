@@ -105,7 +105,7 @@ if ($job_add_error) {
             <?php
                 if (isset($field_errors) && is_array($field_errors) && array_key_exists('field_refs', $field_errors)) {
                     foreach ($field_errors['field_refs'] as $error_message) {
-                        echo '<span class="job-configure-error"><i class="fa-solid fa-triangle-exclamation"></i> ' . escape($error_message) . '</span>';
+                        echo '<span class="job-configure-error"><i class="icon-triangle-alert"></i> ' . escape($error_message) . '</span>';
                     }                    
                 } 
             ?>
