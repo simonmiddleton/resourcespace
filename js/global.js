@@ -2342,6 +2342,9 @@ function updatePageTitle(pagename, pluginname = '') {
     updatePageBackground();
 }
 
+/** 
+ * Remove residual background images from the page if the user is not currently on a page that supports them.  
+*/
 function updatePageBackground() {
     if(!valid_img_bg_pages.includes(pagename)) {
         jQuery('body').css('{background-image: none}');
