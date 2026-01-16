@@ -275,6 +275,7 @@ if (getval("submit", "") != "" || $command_line) {
         if ($showprogress) {
             send_event_update($completemessage . PHP_EOL, "100", $logurl);
         } else {
+            header('Content-Type: application/json');
             echo json_encode(array("message" => $completemessage,"url" => $logurl));
         }
     }

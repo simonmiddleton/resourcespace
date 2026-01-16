@@ -2311,7 +2311,7 @@ $lang["all__passwordnewemailhtml"] = 'Bitte klicken Sie auf den unten stehenden 
 $lang["disk_size_no_upload_heading"] = 'Das Hochladen ist vorübergehend nicht verfügbar';
 $lang["disk_size_no_upload_explain"] = 'Aufgrund von Platzbeschränkungen ist das Hochladen vorübergehend deaktiviert. Wir entschuldigen uns für etwaige Unannehmlichkeiten.';
 $lang["savethissearchtodash"] = 'Speichern auf Dashboard-Kachel';
-$lang["createnewdashtile"] = 'Neues Dashboard-Kachel erstellen';
+$lang["createnewdashtile"] = 'Neue Dashboard-Kachel erstellen';
 $lang["specialdashtiles"] = 'Besondere Kacheln mit Bindestrich';
 $lang["editdashtile"] = 'Bearbeiten Sie das Kachel-Dashboard';
 $lang["existingdashtilefound-2"] = 'Der angegebene Kachel existiert bereits. Bitte besuchen Sie die folgende Seite, um sie zu überprüfen und zu aktualisieren: <a href="?edit=[existing_tile_ref]">Kachel bearbeiten</a>';

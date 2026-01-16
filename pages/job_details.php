@@ -39,7 +39,7 @@ if (file_exists($log_file_path)) {
     <div class="RecordPanel">
         <div class="RecordHeader">
             <div class="backtoresults"> 
-                <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+                <a href="#" onclick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>
             <h1><?php echo escape($lang["job_text"] . " #" . $job_details["ref"]); ?></h1>
           </div>

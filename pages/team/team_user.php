@@ -19,8 +19,8 @@ $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2
 $backurl = getval("backlink", "");
 
 # Pager
-$per_page = getval("per_page_list", $default_perpage_list);
-rs_setcookie('per_page_list', $per_page);
+$per_page = getval("per_page_list", get_per_page_cookie(), true);
+set_per_page_cookie($per_page);
 
 
 if (array_key_exists("find", $_POST)) {
@@ -342,11 +342,11 @@ include "../../include/header.php";
                     <td>
                         <div class="ListTools">
                             <a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);">
-                                <i class="fas fa-history"></i>&nbsp;<?php echo escape($lang["log"])?>
+                                <i class="icon-history"></i>&nbsp;<?php echo escape($lang["log"])?>
                             </a>
                             &nbsp;
                             <a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">
-                                <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"])?>
+                                <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"])?>
                             </a>
                             <?php
                             if ($userref != $users[$n]["ref"]) {
@@ -360,7 +360,7 @@ include "../../include/header.php";
                                     href=<?php echo $message_link_url ?>
                                     onClick="return CentralSpaceLoad(this,true);"
                                 >
-                                    <i class="fas fa-envelope"></i>&nbsp;<?php echo escape($lang["message"])?>
+                                    <i class="icon-mail"></i>&nbsp;<?php echo escape($lang["message"])?>
                                 </a>
                                 <?php
                             }

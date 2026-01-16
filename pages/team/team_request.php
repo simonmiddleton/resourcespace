@@ -85,7 +85,7 @@ $offset = getval("offset", 0, true);
                     <td>
                         <div class="ListTools">
                             <a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo escape($requests[$n]["ref"]); ?>" onClick="return <?php echo $modal_default ? "Modal" : "CentralSpace"; ?>Load(this,true);">
-                                <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                             </a>
                         </div>
                     </td>

@@ -3,7 +3,7 @@ title   : TMS Link
 author  : Montala Ltd.
 version : 1.0
 desc    : Allows resource metadata to be extracted from TMS database. 
-icon    : fa fa-university
+icon    : landmark
 icon-colour: #B64B00
 config_url: /plugins/tms_link/pages/setup.php
 category: Integrations

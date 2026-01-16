@@ -19,5 +19,6 @@ $results = suggest_dynamic_keyword_nodes($field, $keyword, $readonly);
 
 // We return an array of objects with label and value properties: [ { label: "Node ID 1 - option name", value: "101" }, ... ]
 // This will later be used by jQuery autocomplete
+header('Content-Type: application/json');
 echo json_encode($results);
 exit();

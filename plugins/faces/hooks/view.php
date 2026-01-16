@@ -142,7 +142,7 @@ function HookFacesViewCustompanels()
                             <td>
                                 <?php $search_url = generateURL("{$baseurl}/pages/search.php", array("search" => "!face" . $face["ref"])); ?>
                                 <a href="<?php echo $search_url ?>" onClick="return CentralSpaceLoad(this,true);">
-                                    <i class="fa fa-fw fa-search"></i>&nbsp;<?php echo escape($lang["faces-find-matching"]); ?>
+                                    <i class="icon-search"></i>&nbsp;<?php echo escape($lang["faces-find-matching"]); ?>
                                 </a>
                             </td>
                         </tr>

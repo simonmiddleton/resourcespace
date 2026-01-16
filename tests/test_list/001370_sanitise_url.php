@@ -104,6 +104,17 @@ $use_cases = [
         'input' => 'https://test.localhost/path/?p1=v1&p2="><p>test</p>',
         'expected' => '#',
     ],
+    [
+        'name' => 'Allow an absolute URL with unsafe but % encoded characters',
+        'input' => 'https://test.localhost/pages/test.php?p1=Foo%27s+Bar+baz',
+        'expected' => 'https://test.localhost/pages/test.php?p1=Foo%27s+Bar+baz',
+    ],
+    [
+        'name' => 'Allow a relative URL with unsafe but % encoded characters',
+        'setup' => fn() => $GLOBALS['baseurl_short'] = '/',
+        'input' => '/pages/test.php?p1=Foo%27s+Bar+baz',
+        'expected' => '/pages/test.php?p1=Foo%27s+Bar+baz',
+    ],
 ];
 foreach ($use_cases as $uc) {
     $baseurl_short = '/test'; # required for consistency between dev environments (under web root -vs- in a sub-directory)

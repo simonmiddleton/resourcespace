@@ -132,7 +132,7 @@ function do_search(
     }
 
     if ($search_params != "") {
-        if (preg_match('/^[^\\s]+$/',$search) && ($wildcard_always_applied || strpos($search,"*") !== false)) {
+        if (preg_match('/^[^\\s]+$/',$search)) {
             $keywords = [$search_params];
         } else {
             $keywords = split_keywords($search_params, false, false, false, false, true);

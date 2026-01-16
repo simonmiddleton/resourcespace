@@ -12,7 +12,7 @@ function HookVimeo_publishViewAfterresourceactions()
         // Can't use CentralSpaceLoad() here or API call will fail
         ?>
         <li>
-            <a href="<?php echo $baseurl?>/plugins/vimeo_publish/pages/vimeo_api.php?resource=<?php echo $ref; ?>" ><?php echo "<i class='fa fa-share-alt'></i>&nbsp;" . $lang['vimeo_publish_resource_tool_link']; ?></a>
+            <a href="<?php echo $baseurl?>/plugins/vimeo_publish/pages/vimeo_api.php?resource=<?php echo $ref; ?>" ><?php echo "<i class='icon-share-2'></i>&nbsp;" . $lang['vimeo_publish_resource_tool_link']; ?></a>
         </li>
 <?php
         }

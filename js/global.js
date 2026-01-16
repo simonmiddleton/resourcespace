@@ -7,6 +7,8 @@ var ajaxinprogress=false;
 const currentPageUrlParams = new URLSearchParams(window.location.search);
 const external_access_key = currentPageUrlParams.get('k');
 
+const valid_img_bg_pages = ['home', 'collections_featured'];
+
 // prevent all caching of ajax requests by stupid browsers like IE
 jQuery.ajaxSetup({ cache: false });
 
@@ -28,12 +30,21 @@ function basename(path) {
      }
    }
 
+var isMouse=false;
+var mouseCheck=false;
 function is_touch_device()
     {
-    return ('ontouchstart' in window // works on most browsers
-        || (navigator.maxTouchPoints > 0)
-        || (navigator.msMaxTouchPoints > 0))
-        && !(matchMedia('(pointer:fine)').matches);
+        if (!mouseCheck) {
+            mouseCheck = true;
+            document.addEventListener("pointermove", (event) => {
+                isMouse = event.pointerType === "mouse";
+            }, {once: true});
+        }
+        return ('ontouchstart' in window // works on most browsers
+            || (navigator.maxTouchPoints > 0)
+            || (navigator.msMaxTouchPoints > 0))
+            && !(matchMedia('(pointer:fine)').matches) 
+            && !(isMouse);
     }
 
 
@@ -660,7 +671,7 @@ function directDownload(url, element = undefined)
 
             let el = jQuery(element);
             let el_txt = el.text();
-            el.html('<i id="download_spinner" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw" style="font-size: 100%"></i>');
+            el.html('<i id="download_spinner" class="icon-loader-circle lucide--spin" style="font-size: 100%"></i>');
             jQuery(dlIFrma).one('load', () => el.text(el_txt));
         }
         }
@@ -1124,11 +1135,11 @@ function toastNotification(type, text) {
     } else if (type == "Error") {
         displayTime = 10000;
         closeButton = true;
-        icon = "triangle-exclamation";
+        icon = "triangle-alert";
     }
 
     Toastify({
-        text: '<i class="fa-solid fa-' + icon + '"></i>&nbsp;&nbsp;' + text,
+        text: '<i class="icon-' + icon + '"></i>&nbsp;&nbsp;' + text,
         className: "toastify-" + type,
         close: closeButton,
         gravity: "bottom",
@@ -1164,7 +1175,7 @@ function styledalert(title,text,minwidth){
             {
             if (title == '')
                 {
-                jQuery('.ui-dialog-title').html('<i class=\'fa fa-info-circle\' ></i>');
+                jQuery('.ui-dialog-title').html('<i class=\'icon-info\' ></i>');
                 }
             }
         });
@@ -1411,14 +1422,14 @@ function toggleFieldLock(field)
     }
 
     if (lockedfields.indexOf(field.toString())!=-1) {
-        jQuery('#lock_icon_' + field + '> i').removeClass('fa-lock');
-        jQuery('#lock_icon_' + field + '> i').addClass('fa-unlock');
+        jQuery('#lock_icon_' + field + '> i').removeClass('icon-lock');
+        jQuery('#lock_icon_' + field + '> i').addClass('icon-lock-open');
         jQuery('#lock_icon_' + field).parent().closest('div').removeClass('lockedQuestion');
         lockedfields = jQuery.grep(lockedfields, function(value) {return value != field.toString();});
         SetCookie('lockedfields',lockedfields.map(String));
     } else {
-        jQuery('#lock_icon_' + field + '> i').removeClass('fa-unlock');
-        jQuery('#lock_icon_' + field + '> i').addClass('fa-lock');
+        jQuery('#lock_icon_' + field + '> i').removeClass('icon-lock-open');
+        jQuery('#lock_icon_' + field + '> i').addClass('icon-lock');
         jQuery('#lock_icon_' + field).parent().closest('div').addClass('lockedQuestion');
         // Remove checksum as this will break things
         jQuery('#field_' + field + '_checksum').val("");
@@ -1480,7 +1491,7 @@ function headerLinksDropdown() {
             {
             if (!caretCreated)
                 {
-                jQuery(links[i- 1]).after('<li id="OverflowListElement"><a href="#" id="DropdownCaret" onclick="showHideLinks();"><span class="fa fa-caret-down"></span></a></li>');
+                jQuery(links[i- 1]).after('<li id="OverflowListElement"><a href="#" id="DropdownCaret" onclick="showHideLinks();"><span class="icon-chevron-down"></span></a></li>');
                 // append a div to the document.body element that will contain the drop-down menu items
                 jQuery(document.body).append('<div id="OverFlowLinks"><ul id="HiddenLinks"></ul></div>');
                 caretCreated = true;
@@ -2330,8 +2341,21 @@ function updatePageTitle(pagename, pluginname = '') {
             document.title = data;
         }
     })
+    updatePageBackground();
 }
 
+/** 
+ * Remove residual background images from the page if the user is not currently on a page that supports them.  
+*/
+function updatePageBackground() {
+    if(!valid_img_bg_pages.includes(pagename)) {
+        jQuery('body').css('{background-image: none}');
+        let slides = jQuery('body').find('.slide');
+        if (slides.length > 0) {
+            slides.each(function(){jQuery(this).css({"background-image": "none"});});
+        }
+    }
+}
 /**
  * Extracts the plugin name from a given URL.
  * @param {string} url - The URL to extract the plugin name from.

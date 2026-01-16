@@ -40,4 +40,5 @@ file_put_contents($path,$imageData);
 // Create previews
 create_previews($resource,false,$extension);
 
+header('Content-Type: application/json');
 echo json_encode(["status"=>"OK", "resource"=>$resource]);

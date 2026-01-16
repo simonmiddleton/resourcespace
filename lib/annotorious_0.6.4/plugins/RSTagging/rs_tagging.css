@@ -16,9 +16,9 @@
     color: #000;
 }
 
-.RSTagging-tag .fa-exclamation-triangle,
-.RSTagging-tag .fa-plus,
-.RSTagging-tag .fa-database {
+.RSTagging-tag .icon-triangle-alert,
+.RSTagging-tag .icon-plus,
+.RSTagging-tag .icon-database {
     margin-right: 3px;
 }
 

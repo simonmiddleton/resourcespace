@@ -8,6 +8,10 @@ $nocache = true;
 
 include_once "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
+if (!in_array("video_bookend", $plugins)) {
+    error_alert($lang["error-plugin-not-activated"]);
+    exit();
+}
 include_once "../../../include/image_processing.php";
 include_once "../../../include/video_functions.php";
 

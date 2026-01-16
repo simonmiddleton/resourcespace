@@ -25,7 +25,7 @@ function HookTransformViewAfterresourceactions (){
         $crop_url = generateURL($baseurl_short . 'plugins/transform/pages/crop.php',$urlparams);
         ?>
         <li><a onClick='return CentralSpaceLoad(this,true);' href='<?php echo $crop_url;?>'>
-        <?php echo "<i class='fa fa-fw fa-crop'></i>&nbsp;" . escape($lang['imagetools']); ?>
+        <?php echo "<i class='icon-crop'></i>&nbsp;" . escape($lang['imagetools']); ?>
         </a></li>
         <?php
         return true;

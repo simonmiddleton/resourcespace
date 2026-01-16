@@ -7,8 +7,8 @@ if (checkperm("b")) {
 }
 
 $offset = getval("offset", 0, true);
-$per_page = getval("per_page_list", $default_perpage_list, true);
-rs_setcookie('per_page_list', $per_page);
+$per_page = getval("per_page_list", get_per_page_cookie(), true);
+set_per_page_cookie($per_page);
 
 include "../include/header.php";
 ?>

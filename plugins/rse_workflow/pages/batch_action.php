@@ -180,7 +180,7 @@ include_once '../../../include/header.php';
             if($modal)
                 {
                 ?>
-                <a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
+                <a href="#" class="closeLink icon-x" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
                 <?php
                 }
                 ?>

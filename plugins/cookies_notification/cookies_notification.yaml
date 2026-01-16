@@ -3,7 +3,7 @@ title: Cookies Notification
 author: Montala Limited
 version: 1.1
 desc: Notify of cookie use by showing a message in the header.
-icon: fa fa-cookie
+icon: cookie
 icon-colour: #964B00
 config_url: /plugins/cookies_notification/pages/setup.php
 default_priority: 100

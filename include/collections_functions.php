@@ -348,6 +348,11 @@ function add_resource_to_collection(
         return $lang["cantmodifycollection"];
     }
 
+    $resource_data = ps_query('SELECT resource_type, archive FROM `resource` WHERE ref = ?;', array('i', $resource));
+    if (count($resource_data) !== 1) {
+        return $lang["cantmodifycollection"] . ' ' . $lang["resourcenotfound"];
+    }
+
     global $collection_allow_not_approved_share, $collection_block_restypes;
     $addpermitted = $col_access_control ?? (
         (collection_writeable($collection) && !is_featured_collection_category_by_children($collection))
@@ -356,7 +361,7 @@ function add_resource_to_collection(
 
     if ($addpermitted && !$smartadd && (count($collection_block_restypes) > 0)) { // Can't always block adding resource types since this may be a single resource managed request
         if ($addtype == "") {
-            $addtype = ps_value("SELECT resource_type value FROM resource WHERE ref = ?", ["i",$resource], 0);
+            $addtype = $resource_data[0]['resource_type'];
         }
         if (in_array($addtype, $collection_block_restypes)) {
             $addpermitted = false;
@@ -395,7 +400,7 @@ function add_resource_to_collection(
             $fc_branch_path_keys
         );
         if (count($keys) > 0) {
-            $archivestatus = ps_value("SELECT archive AS value FROM resource WHERE ref = ?", ["i",$resource], "");
+            $archivestatus = $resource_data[0]['archive'];
             if ($archivestatus < 0 && !$collection_allow_not_approved_share) {
                 global $lang;
                 $lang["cantmodifycollection"] = $lang["notapprovedresources"] . $resource;
@@ -1918,6 +1923,7 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
         $from_name = $applicationname;
     } // from_name is for the email headers, and needs to match the email address (app name or user name)
 
+    $message = strip_tags_and_attributes($message);
     $templatevars['message'] = str_replace(array("\\n","\\r","\\"), array("\n","\r",""), $message);
     if (trim($templatevars['message']) == "") {
         $templatevars['message'] = $lang['nomessage'];
@@ -1953,10 +1959,12 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
     ##  loop through recipients
     for ($nx1 = 0; $nx1 < count($emails); $nx1++) {
         ## loop through collections
+        debug('email_collection : Processing email for ' . $emails[$nx1]);
         $list = "";
         $list2 = "";
         $origviewlinktext = $viewlinktext; // Save this text as we may change it for internal theme shares for this user
         if ($themeshare && !$key_required[$nx1]) { # don't send a whole list of collections if internal, just send the theme category URL
+            debug('email_collection : no key required to view theme internally');
             $notifymessage->set_subject($applicationname . ": " . $themename);
             $url = $baseurl . "/pages/collections_featured.php" . $themeurlsuffix;
             $viewlinktext = "lang_clicklinkviewthemes";
@@ -1978,6 +1986,7 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
         } else {
             $fc_key = "";
             // E-mail external share, generate the access key based on the FC category. Each sub-collection will have the same key.
+            debug('email_collection : is a key needed for this theme share? $key_required : ' . $key_required[$nx1] ? 'true' : 'false');
             if ($key_required[$nx1] && $themeshare && !is_null($fc_category_ref)) {
                 $k = generate_collection_access_key($fc_category_ref, $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd, $reflist);
                 if ($k !== false) {
@@ -1986,15 +1995,17 @@ function email_collection($colrefs, $collectionname, $fromusername, $userlist, $
             }
 
             for ($nx2 = 0; $nx2 < count($reflist); $nx2++) {
+                debug('email_collection : generating access keys for collection ref : ' . $reflist[$nx2] . ' if needed');
                 $key = "";
                 $fc_key = "";
                 $emailcollectionmessageexternal = false;
 
                 # Do we need to add an external access key for this user (e-mail specified rather than username)?
                 if ($key_required[$nx1] && !$themeshare) {
+                    debug('email_collection : key required for ' . $emails[$nx1]);
                     $k = generate_collection_access_key($reflist[$nx2], $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd);
                     if ($k !== false) {
-                        $fc_key = "&k={$k}";
+                        $key = "&k={$k}";
                     }
                     $emailcollectionmessageexternal = true;
                 }

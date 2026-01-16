@@ -136,5 +136,6 @@ if ($ds !== false) {
 
 $response['complete'] = true;
 
+header('Content-Type: application/json');
 echo json_encode($response);
 exit();

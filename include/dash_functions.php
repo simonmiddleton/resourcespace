@@ -1660,7 +1660,7 @@ function build_dash_tile_list($dtiles_available)
                     )
                 ) { ?>
                     <a href="<?php echo $baseurl_short; ?>pages/dash_tile.php?edit=<?php echo $tile['ref'];?>">
-                        <i class="fas fa-edit"></i>
+                        <i class="icon-square-pen"></i>
                         &nbsp;
                         <?php echo escape($lang["action-edit"]);?>
                     </a>
@@ -2116,7 +2116,7 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
     <!-- Resource counter -->
     <p class="no_resources DisplayNone"><?php echo escape($GLOBALS['lang']['noresourcesfound']); ?></p>
     <p class="tile_corner_box DisplayNone">
-        <span aria-hidden="true" class="fa fa-clone"></span>
+        <span aria-hidden="true" class="icon-copy"></span>
     </p>
 
     <script>

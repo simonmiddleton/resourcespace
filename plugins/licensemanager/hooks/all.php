@@ -80,7 +80,7 @@ function HookLicensemanagerAllTopnavlinksafterhome()
 {
     global $baseurl, $lang;
     if (!checkperm("a") && checkperm("lm")) {
-        ?><li class="HeaderLink"><a href="<?php echo $baseurl ?>/plugins/licensemanager/pages/list.php" onClick="CentralSpaceLoad(this,true);return false;"><?php echo '<i aria-hidden="true" class="fa fa-fw fa-scroll"></i>&nbsp;' . escape($lang["managelicenses"]); ?></a></li>
+        ?><li class="HeaderLink"><a href="<?php echo $baseurl ?>/plugins/licensemanager/pages/list.php" onClick="CentralSpaceLoad(this,true);return false;"><?php echo '<i aria-hidden="true" class="icon-scroll"></i>&nbsp;' . escape($lang["managelicenses"]); ?></a></li>
         <?php
     }
 }

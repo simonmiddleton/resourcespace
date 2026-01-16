@@ -30,7 +30,7 @@ if ($new_tab_name !== '' && enforcePostRequest(false)) {
 }
 
 // [Paging functionality]
-$per_page = (int) getval('per_page', $default_perpage_list, true);
+$per_page = (int) getval('per_page', get_per_page_cookie(), true);
 $list_display_array[] = $default_perpage_list;
 $list_display_array[] = $default_perpage;
 if ($per_page === 99999) {
@@ -47,7 +47,7 @@ if ($per_page === 99999) {
 $list_display_array = array_unique($list_display_array);
 natsort($list_display_array);
 $per_page = in_array($per_page, $list_display_array) ? $per_page : $default_perpage;
-rs_setcookie('per_page', $per_page);
+set_per_page_cookie($per_page);
 $offset = (int) getval('offset', 0, true);
 $tab_records = get_tabs_with_usage_count([
     'order_by' => [$tab_orderby, $tab_sort],
@@ -94,7 +94,7 @@ $table_info = [
 ];
 
 foreach ($tab_records['data'] as $tab_record) {
-    $tab_record['reorder_handle'] = isset($allow_reorder) ? '<i class="fas fa-sort"></i>' : '';
+    $tab_record['reorder_handle'] = isset($allow_reorder) ? '<i class="icon-arrow-down-up"></i>' : '';
     $tab_record['name'] = sprintf(
         '<span>%s</span><input name="tab_name_inline_edit_%s" type="text" class="DisplayNone" value="%s">',
         escape(i18n_get_translated($tab_record['name'])),
@@ -113,7 +113,7 @@ foreach ($tab_records['data'] as $tab_record) {
     if ($tab_record['ref'] > 1) {
         $tab_record['tools'] = [
             [
-                'icon' => 'fa fa-fw fa-trash',
+                'icon' => 'icon-trash-2',
                 'text' => $lang['action-delete'],
                 'url' => '#',
                 'modal' => false,
@@ -123,7 +123,7 @@ foreach ($tab_records['data'] as $tab_record) {
     }
 
     $tab_record['tools'][] = [
-        'icon' => 'fa fa-fw fa-edit',
+        'icon' => 'icon-square-pen',
         'text' => $lang['action-edit'],
         'url' => '#',
         'modal' => false,
@@ -132,7 +132,7 @@ foreach ($tab_records['data'] as $tab_record) {
 
     // Save & Cancel buttons for when editing a tab record
     $tab_record['tools'][] = [
-        'icon' => 'fa fa-solid fa-xmark',
+        'icon' => 'icon-x',
         'text' => $lang['cancel'],
         'url' => '#',
         'url:class' => 'DisplayNone',
@@ -140,7 +140,7 @@ foreach ($tab_records['data'] as $tab_record) {
         'onclick' => "return update_tab(this, {$tab_record['ref']}, \"cancel\");"
     ];
     $tab_record['tools'][] = [
-        'icon' => 'fa fa-regular fa-floppy-disk',
+        'icon' => 'icon-save',
         'text' => $lang['save'],
         'url' => '#',
         'url:class' => 'DisplayNone',
@@ -206,7 +206,7 @@ include '../../include/header.php';
         // Make all table rows sortable (except the header)
         jQuery('.BasicsBox .Listview.SystemTabs > table').sortable({
             items: 'tr:not(:first-child)',
-            handle: 'td > i.fa-sort',
+            handle: 'td > i.arrow-down-up',
             containment: 'div.SystemTabs > table',
             distance: 20,
             update: function(event, ui) {
@@ -243,7 +243,7 @@ include '../../include/header.php';
         let el_obj = jQuery(el);
         let record = el_obj.parents('tr');
         let tools = el_obj.parents('div.ListTools');
-        let tools_edit_save_cancel = tools.find('a i.fa-edit, a i.fa-floppy-disk, a i.fa-xmark').parents('a');
+        let tools_edit_save_cancel = tools.find('a i.icon-square-pen, a i.icon-save, a i.icon-x').parents('a');
 
         let record_name_inline_edit = record.find('input[name="tab_name_inline_edit_' + ref + '"');
         let record_name_translated = record_name_inline_edit.siblings().first();

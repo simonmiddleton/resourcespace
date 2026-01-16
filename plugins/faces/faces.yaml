@@ -3,7 +3,7 @@ title: AI Faces - InsightFace
 author: Montala Limited
 version: 1.0
 desc: State-of-the-art automatic face detection and tagging. Search by face.
-icon: fa fa-user-tag
+icon: scan-face
 icon-colour: seagreen
 category: AI
 config_url: /plugins/faces/pages/setup.php

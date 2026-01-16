@@ -1108,36 +1108,36 @@ renderBreadcrumbs($links_trail);
         $imagetools[] = array(
             "name"      => "Crop",
             "action"    => "toggleCropper();jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_crop_actions').show();return false;",
-            "icon"      => "fa fa-fw fa-crop",
+            "icon"      => "icon-crop",
             );
         }
     $imagetools[] = array(
         "name"      => "Reset",
         "action"    => "cropReload('reset');return false;",
-        "icon"      => "fa fa-fw fa-history",
+        "icon"      => "icon-history",
         );
     if($cropper_rotation)
         {
         $imagetools[] = array(
             "name"      => "Rotate",
             "action"    => "cropReload('rotate');return false;",
-            "icon"      => "fa fa-fw fa-rotate-right",
+            "icon"      => "icon-rotate-cw",
             );
         }
     $imagetools[] = array(
         "name"      => "Flip horizontally",
         "action"    => "cropReload('flipx');return false;",
-        "icon"      => "fas fa-fw fa-arrows-alt-h",
+        "icon"      => "icon-flip-horizontal",
         );
     $imagetools[] = array(
         "name"      => "Flip vertically",
         "action"    => "cropReload('flipy');return false;",
-        "icon"      => "fas fa-fw fa-arrows-alt-v",
+        "icon"      => "icon-flip-vertical",
         );
     $imagetools[] = array(
         "name"      => "Adjustments",
         "action"    => "jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_corrections_actions').show();return false;",
-        "icon"      => "fa fa-fw fa-sliders-h",
+        "icon"      => "icon-sliders-horizontal",
         );
 
     hook("imagetools_extra");

@@ -8,14 +8,28 @@
  * face, it records the bounding box, detection score, and face vector into the
  * `resource_face` database table. The resource is then marked as processed.
  *
- * @param int $ref The resource reference ID to process.
+ * @param  int   $ref     The resource reference ID to process.
+ * @param  bool  $force   Force the processing of this resource, for example when replacing
+ *                        the file or where it was previously not possible to find the file.
  *
  * @return bool Returns true if face detection and storage were successful,
  *              or false if the file was missing, the service failed, or invalid data was returned.
  */
-function faces_detect(int $ref): bool
+function faces_detect(int $ref, bool $force = false): bool
 {
     global $faces_service_endpoint, $faces_confidence_threshold;
+
+    if ($force) {
+        # Setting faces_processed = 0 restores default, allowing the script to pickup the resource if
+        # this attempt fails e.g. if extract_faces service is unavailable.
+        ps_query("UPDATE resource SET faces_processed = 0 WHERE ref = ?", ["i", $ref]);
+        # Clear existing detected faces before processing the file.
+        ps_query("DELETE FROM resource_face WHERE resource = ?", ["i", $ref]);
+        $faces_processed = 0;
+    } else {
+        $faces_processed = (int) ps_value("SELECT faces_processed value FROM resource WHERE ref = ?", ["i", $ref], 1);
+    }
+
     $file_path = get_resource_path($ref, true, 'scr', false, "jpg");
 
     if ('cli' == PHP_SAPI) {
@@ -27,9 +41,7 @@ function faces_detect(int $ref): bool
         ob_flush();
     }
 
-    $faces_processed = ps_value("SELECT faces_processed value FROM resource WHERE ref = ?", ["i", $ref], 1);
-
-    if ($faces_processed == "1") {
+    if ($faces_processed === 1) {
         logScript("Faces already processed for resource $ref");
         return false;
     }
@@ -39,10 +51,17 @@ function faces_detect(int $ref): bool
         if (is_jpeg_extension((string) $resource_data['file_extension'])) {
             // Try full size JPEG as a fallback (for small images only where SCR wasn't generated)
             $file_path = get_resource_path($ref, true, '', false, $resource_data['file_extension']);
+        } else {
+            // Last try to find a file. Use the pre size. This should be present for files too small to have an scr size.
+            // For example, if the derived jpg from an mp4 used to create previews is smaller than the scr size.
+            $file_path = get_resource_path($ref, true, 'pre', false, "jpg");
         }
     }
 
     if (!file_exists($file_path)) {
+        # Set faces_processed = 2 to prevent future retrying with each run of the script.
+        # At this point there is no file to process so no need to keep trying.
+        ps_query("UPDATE resource SET faces_processed = 2 WHERE ref = ?", ["i", $ref]);
         logScript("File not found for resource $ref ($file_path)");
         return false;
     }
@@ -93,7 +112,7 @@ function faces_detect(int $ref): bool
         );
     }
 
-    // Mark resource as processed
+    // Mark resource as processed, faces_processed = 1 indicates success.
     ps_query("UPDATE resource SET faces_processed = 1 WHERE ref = ?", ["i", $ref]);
     logScript("Processed resource $ref and found " . count($faces) . " faces.");
     if ($ob_started ?? false) {

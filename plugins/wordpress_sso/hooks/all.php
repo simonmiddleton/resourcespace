@@ -151,7 +151,7 @@ function HookWordpress_ssoLoginLoginformlink()
         // Add a link to login.php, which is still used if $wordpress_sso_allow_standard_login is set to true
         global $wordpress_sso_url,$lang;
         ?>
-        <a href="<?php echo $wordpress_sso_url . "?rsauth=true&url=%2F\">" . '<i class="fab fa-fw fa-wordpress-simple"></i>&nbsp;'  . $lang["wordpress_sso_use_wp_login"];?></a><br/>
+        <a href="<?php echo $wordpress_sso_url . "?rsauth=true&url=%2F\">" . '<i class="icon-key-round"></i>&nbsp;'  . $lang["wordpress_sso_use_wp_login"];?></a><br/>
         <?php
         }
 

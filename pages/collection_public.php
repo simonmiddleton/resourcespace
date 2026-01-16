@@ -11,8 +11,8 @@ $sort = getval("sort", getval("saved_col_sort", "ASC"));
 rs_setcookie('saved_col_sort', $sort);
 $revsort = ($sort == "ASC") ? "DESC" : "ASC";
 # pager
-$per_page = getval("per_page_list", $default_perpage_list, true);
-rs_setcookie('per_page_list', $per_page);
+$per_page = getval("per_page_list", get_per_page_cookie(), true);
+set_per_page_cookie($per_page);
 
 $collection_valid_order_bys = array("fullname","name","ref","count","type","created");
 $modified_collection_valid_order_bys = hook("modifycollectionvalidorderbys");

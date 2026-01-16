@@ -44,9 +44,9 @@ include "../../include/header.php";
     <div class="RecordHeader">
         <div class="backtoresults"> 
             <?php if ($modal) { ?>
-                <a class="maxLink fa fa-expand" href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
+                <a class="maxLink icon-maximize-2" href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
                 &nbsp;
-                <a href="#" class="closeLink fa fa-times" onClick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
+                <a href="#" class="closeLink icon-x" onClick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
             <?php } ?>
         </div>
 

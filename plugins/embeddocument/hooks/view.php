@@ -98,7 +98,7 @@ function HookEmbeddocumentViewAfterresourceactions2()
                 document.getElementById('embeddocument2').style.display='block';
             }
             return false;">
-            <?php echo "<i class='fa fa-fw fa-share-alt'></i>&nbsp;" . escape($lang["embeddocument_embed"]) ?>
+            <?php echo "<i class='icon-share-2'></i>&nbsp;" . escape($lang["embeddocument_embed"]) ?>
         </a>
     </li>
 

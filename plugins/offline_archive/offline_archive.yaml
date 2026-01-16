@@ -2,7 +2,7 @@ name    : offline_archive
 title   : Offline Archive
 author  : Montala Ltd.
 version : 1.0
-icon    : fa fa-archive
+icon    : archive
 icon-colour: #999999
 desc    : Enables the relocation of achived files to an offline location.
 config_url: /plugins/offline_archive/pages/setup.php

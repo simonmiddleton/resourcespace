@@ -13,7 +13,7 @@ include_once "{$rs_root}/include/authenticate.php";
 
 $search = getval("search", "");
 $image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
-$per_page = (int) getval("per_page", $default_perpage, false, 'is_positive_int_loose');
+$per_page = (int) getval("per_page", get_per_page_cookie(), false, 'is_positive_int_loose');
 $order_by = getval('order_by', '', false);
 $search_params = array(
     "search"                 => $search,
@@ -26,7 +26,7 @@ $search_params = array(
 // Paging functionality
 $url = generateURL("{$baseurl_short}pages/search.php", $search_params);
 $offset = (int) getval("offset", 0, false, 'is_positive_int_loose');
-rs_setcookie("per_page", $per_page, 0, "", "", false, false);
+set_per_page_cookie($per_page);
 $curpage = floor($offset / $per_page) + 1;
 // End of Paging functionality
 
@@ -189,7 +189,7 @@ foreach($results as $result)
         <?php if ($result->getOriginalFileUrl()!="") { ?>
         <div class="ResourcePanelIcons">
             <a href="<?php echo escape($result->getOriginalFileUrl()); ?>"
-               class="fa fa-download"
+               class="icon-download"
                title="Download resource"
                data-id="<?php echo escape($result->getId()); ?>"
                onclick="downloadImageBankFile(this);"></a>
@@ -199,7 +199,7 @@ foreach($results as $result)
             {
             ?>
             <a href="<?php echo escape($result->getOriginalFileUrl()); ?>"
-               class="fa fa-files-o"
+               class="icon-copy"
                title="<?php echo escape($lang["image_banks_create_new_resource"]); ?>"
                onclick="createNewResource(event, this);"></a>
             <?php

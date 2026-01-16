@@ -3,5 +3,5 @@ title   : Lightbox Preview
 author  : Axel Dörfler / Montala Ltd.
 version : 2.0
 desc    : Use lightbox to preview the image in view.php rather than preview.php.
-icon    : fa fa-image
+icon    : image-upscale
 category: User Interface

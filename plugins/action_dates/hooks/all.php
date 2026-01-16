@@ -127,7 +127,15 @@ function HookAction_datesCronCron()
         $validrestypes = false;
         if ($fieldinfo["global"] == 0) {
             $validrestypes = ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field = ?", ["i",$action_dates_deletefield]);
+            if (count($validrestypes) === 0) {
+                if ('cli' == PHP_SAPI) {
+                    echo 'action_dates: Error - $action_dates_deletefield applies to no resource types.' . PHP_EOL;
+                }
+                set_sysvar("last_action_dates_cron", $this_run_start);
+                return false;
+            }
         }
+
         if ($action_dates_reallydelete) {
             # FULL DELETION - Build candidate list of resources which have the deletion date field populated
             $sql = "SELECT rn.resource, n.name AS value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN resource r ON r.ref=rn.resource ";
@@ -386,6 +394,13 @@ function HookAction_datesCronCron()
         $validrestypes = false;
         if ($datefield["global"] == 0) {
             $validrestypes = ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field = ?", ["i",$field]);
+            if (count($validrestypes) === 0) {
+                if ('cli' == PHP_SAPI) {
+                    echo 'action_dates: Error - Date field set in additional actions applies to no resource types.' . PHP_EOL;
+                }
+                set_sysvar("last_action_dates_cron", $this_run_start);
+                return false;
+            }
         }
 
         $newstatus = $action_dates_extra_config_setting["status"];

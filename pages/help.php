@@ -21,7 +21,7 @@ include "../include/header.php";
         <div class="HelpHeader">
             <?php if ($help_modal) { ?>
                 <div class="backtoresults">
-                    <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
+                    <a href="#" onclick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]); ?>"></a>
                 </div>
             <?php } ?>
             <h1><?php echo escape($lang['helpandadvice']); ?></h1>

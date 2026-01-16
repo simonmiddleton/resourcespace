@@ -189,7 +189,7 @@ if (!$from_dash) {
                 class="ReportAddToDash"
                 href="<?php echo $add_to_dash_url; ?>"
                 onClick="return CentralSpaceLoad(this,true);">
-                <i aria-hidden="true" class="fa fa-plus-square"></i>&nbsp;<?php echo  escape($lang["report_add_to_dash"]) ?>
+                <i aria-hidden="true" class="icon-square-plus"></i>&nbsp;<?php echo  escape($lang["report_add_to_dash"]) ?>
             </a>
         <?php 
         }

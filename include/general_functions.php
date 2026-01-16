@@ -1645,7 +1645,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                     onclick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);"
                 >
             <?php } ?>
-            <i aria-hidden="true" class="fa fa-arrow-left"></i><?php echo ($curpage > 1) ? "</a>" : ''; ?>&nbsp;&nbsp;
+            <i aria-hidden="true" class="icon-arrow-left"></i><?php echo ($curpage > 1) ? "</a>" : ''; ?>&nbsp;&nbsp;
 
             <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;">
                 <?php echo escape($lang["jumptopage"]) ?>: 
@@ -1668,7 +1668,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                 &nbsp;
                 <a
                     aria-hidden="true"
-                    class="fa fa-times-circle"
+                    class="icon-circle-x"
                     href="#"
                     onclick="
                         document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';
@@ -1696,7 +1696,7 @@ function pager($break = true, $scrolltotop = true, $options = array())
                     onclick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);">
             <?php } ?>
             
-            <i aria-hidden="true" class="fa fa-arrow-right"></i>
+            <i aria-hidden="true" class="icon-arrow-right"></i>
 
             <?php if ($curpage < $totalpages) { ?>
                 </a>
@@ -3589,13 +3589,14 @@ function bypass_permissions(array $perms, callable $f, array $p = array())
 }
 
 /**
- * Set a system variable (which is stored in the sysvars table) - set to null to remove
- *
- * @param  mixed $name      Variable name
- * @param  mixed $value     String to set a new value; null to remove any existing value.
- * @return bool
- */
-function set_sysvar($name, $value = null)
+* Set a system variable (which is stored in the sysvars table) - set to null to remove
+*
+* @param   mixed  $name          Variable name
+* @param   mixed  $value         String to set a new value; null to remove any existing value.
+* @param   bool   $clear_cache   Set to false to skip the clearing of any cached values (default true).
+* @return  bool
+*/
+function set_sysvar($name, $value = null, bool $clear_cache = true): bool
 {
     global $sysvars;
     db_begin_transaction("set_sysvar");
@@ -3609,7 +3610,9 @@ function set_sysvar($name, $value = null)
     $sysvars[$name] = $value;
 
     // Clear query cache so the change takes effect
-    clear_query_cache("sysvars");
+    if ($clear_cache) {
+        clear_query_cache("sysvars");
+    }
 
     return true;
 }
@@ -5076,12 +5079,6 @@ function get_system_status(bool $basic = false)
         'non_ingested' => get_non_ingested_resources(),        
     ];
 
-    // Return last API access
-    $return['results']['last_api_access'] = [
-        'status' => 'OK',
-        'info' => get_sysvar("last_api_access")
-    ];
-
     // Return bandwidth usage last 30 days
     $return['results']['download_bandwidth_last_30_days_gb'] = [
         'status' => 'OK',
@@ -5634,7 +5631,8 @@ function url_starts_with(string $base, $val): bool
 }
 
 /**
- * Input validation helper function to check if a URL is safe (from XSS). Mostly intended for redirect URLs.
+ * Input validation helper function to check if a URL is safe (from XSS) in an HTML context.
+ *
  * @param mixed $val URL to check
  */
 function is_safe_url($url): bool
@@ -5662,10 +5660,12 @@ function is_safe_url($url): bool
         }
     }
 
-    // Check query strings, if applicable
-    $qs_params = [];
-    parse_str($url_parts['query'] ?? '', $qs_params);
-    foreach ($qs_params as $param => $value) {
+    // Check query strings (QS), if applicable. We're parsing the QS but without decoding its components otherwise we
+    // we could end up with false positives.
+    $qs_params = array_filter(explode('&', $url_parts['query'] ?? ''));
+    foreach ($qs_params as $pair) {
+        [$param, $value] = array_pad(array_filter(explode('=', $pair, 2)), 2, '');
+
         if ($param !== escape($param) || $value !== escape($value)) {
             debug("[WARN] Suspicious query string parameter ({$param} with value: {$value}) found in URL - {$url}");
             return false;
@@ -6007,6 +6007,62 @@ function strip_unicode_points(string $value, array $blocklist = []): string
     }
 
     return preg_replace('/[' . implode('', $blocklist) . ']/u', '', $value);
+}
+
+/**
+ * Strip any characters not present in the allow list. Mostly useful for search/indexing purposes where we care more
+ * about the words themselves and less about linking or any other type of characters.
+ *
+ * @param string $text Initial text value
+ * @param list<string> $allowlist List of allowed characters. IMPORTANT: it's used to create a regex pattern.
+ */
+function allow_unicode_characters(string $text, array $allowlist = []): string
+{
+    // Regex explanation - match a single character not present in the list below:
+    // \p{L} - any kind of letter from any language
+    // \p{N} - any kind of numeric character in any script
+    // \s - any kind of invisible character (equivalent to [\p{Z}\h\v])
+    return trim_spaces(
+        preg_replace('/[^\p{L}\p{N}\s' . implode('', array_map(preg_quote(...), $allowlist)) . ']+/u', '', $text)
+    );
+}
+
+/**
+ *  Add or update the value used for paging for the current page to the list of stored pager cookies
+ * 
+ * @param int $per_page value to be stored
+ */
+
+function set_per_page_cookie(int $per_page): void
+{
+    global $pagename;
+
+    if (!is_positive_int_loose($per_page)) {
+        return;
+    }
+
+    $pager_cookie = $_COOKIE['pager'] ?? '{}';
+    $pager_cookie = json_decode($pager_cookie, true);
+
+    $pager_cookie[$pagename] = $per_page;
+    rs_setcookie('pager', json_encode($pager_cookie), 1);
+}
+
+/**
+ *  Retrieve the pager cookie for the current page. 
+ *  This function also clears the per_page and per_page_list cookies
+ */
+function get_per_page_cookie(): int
+{
+    global $pagename, $default_perpage_list;
+
+    $pager_cookie = $_COOKIE['pager'] ?? '{}';
+    $pager_cookie = json_decode($pager_cookie, true);
+
+    rs_setcookie('per_page_list', '', -1);
+    rs_setcookie('per_page', '', -1);
+
+    return $pager_cookie[$pagename] ?? $default_perpage_list;
 }
 
 /**

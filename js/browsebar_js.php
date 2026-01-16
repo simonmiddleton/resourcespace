@@ -17,7 +17,7 @@ function renderBrowseItem(node, parent)
     newlevel++;
    
     var indent = "<div class='BrowseBarStructure BrowseLine'>&nbsp;</div>";
-    var refreshel = "<a href='#' class='BrowseRefresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true, true);return false;' ><i class='fas fa-sync reloadicon'></i></a>";
+    var refreshel = "<a href='#' class='BrowseRefresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true, true);return false;' ><i class='icon-refresh-cw reloadicon'></i></a>";
     var refreshel = refreshel.replace("%BROWSE_ID%",node.id);
    
     if(node.expandable != "false")
@@ -212,7 +212,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
         }
     
 
-    refreshicon.addClass("fa-spin");
+    refreshicon.addClass("lucide-spin");
     b_loading.push(browse_id);
     console.debug("b_loading = %o", b_loading);
     
@@ -267,7 +267,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
             openclose.addClass("browse_expanded");
             openclose.attr('alt',"<?php echo escape($lang["close"]); ?>");
             curel.addClass("BrowseOpen");
-            refreshicon.removeClass("fa-spin");
+            refreshicon.removeClass("lucide-spin");
 
             var loadindex = b_loading.indexOf(browse_id);
             if (loadindex > -1)
@@ -321,7 +321,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
                     b_loading.splice(loadindex, 1);
                     }
                 browse_clicked = false;
-                styledalert('<?php echo escape($lang["error"]); ?> ' + xhr.status, '<?php echo escape($lang['error_generic']); ?> : ' + error);	 refreshicon.removeClass("fa-spin");
+                styledalert('<?php echo escape($lang["error"]); ?> ' + xhr.status, '<?php echo escape($lang['error_generic']); ?> : ' + error);	 refreshicon.removeClass("lucide-spin");
                 }
             });
 

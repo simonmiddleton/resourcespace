@@ -108,7 +108,7 @@ if ($editing && !$editexternalurl) {
         <div class="BackToResultsContainer">
             <div class="backtoresults">
                 <?php if ($modal) { ?>
-                    <a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
+                    <a href="#" class="closeLink icon-x" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
                 <?php } ?>
             </div>
         </div>
@@ -187,7 +187,7 @@ if ($editing && !$editexternalurl) {
             <ul>
                 <?php if ((!$editing || $editexternalurl) && $email_sharing && !is_anonymous_user()) { ?>
                     <li>
-                        <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;
+                        <i aria-hidden="true" class="icon-mail"></i>&nbsp;
                         <a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onclick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this, true);">
                             <?php echo escape($lang["emailresourcetitle"]); ?>
                         </a>

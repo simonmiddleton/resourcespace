@@ -54,11 +54,12 @@ class MyService(win32serviceutil.ServiceFramework):
         venv_python = config.get(svc_section, "venv_python")
         script_path = config.get(svc_section, "script_path")
         enable_logging = config.getboolean(svc_section, "enable_logging", fallback=False)
+        port = config.get(svc_section, "port")
     
         dbhost = config.get(db_section, "db-host")
         dbuser = config.get(db_section, "db-user")
         dbpass = config.get(db_section, "db-pass")
-        args = ["--db-host", dbhost, "--db-user", dbuser, "--db-pass", dbpass]
+        args = ["--db-host", dbhost, "--db-user", dbuser, "--db-pass", dbpass, "--port", port]
 
         creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
         log_file = os.path.join(script_dir, "faces_service.log") if enable_logging else os.devnull

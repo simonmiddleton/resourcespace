@@ -25,5 +25,6 @@ if (false !== $new_node_id && is_numeric($new_node_id)) {
     clear_query_cache("schema");
 }
 
+header('Content-Type: application/json');
 echo json_encode($result);
 exit();

@@ -123,13 +123,13 @@ $url_params = array(
                         <td>
                             <div class="ListTools">
                                 <a href="<?php echo generateURL($baseurl_short . "pages/search.php", ['search' => '!consent' . $consent['ref']]); ?>" onClick="return CentralSpaceLoad(this,true);">
-                                    <i class="fas fa-search"></i>&nbsp;<?php echo escape($lang['consent_view_linked_resources_short']); ?>
+                                    <i class="icon-search"></i>&nbsp;<?php echo escape($lang['consent_view_linked_resources_short']); ?>
                                 </a>
                                 <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php", $url_params); ?>" onClick="return CentralSpaceLoad(this,true);">
-                                    <i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
+                                    <i class="icon-square-pen"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?>
                                 </a>
                                 <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/delete.php", $url_params); ?>" onClick="return CentralSpaceLoad(this,true);">
-                                    <i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?>
+                                    <i class="icon-trash-2"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?>
                                 </a>
                             </div>
                         </td>

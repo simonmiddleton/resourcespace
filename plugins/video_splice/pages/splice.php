@@ -210,11 +210,11 @@ include "../../../include/header.php";
         {
         if($error)
             {
-            echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-times-circle'></i>&nbsp;" . $notification . "</div>";
+            echo "<div class=\"PageInformal\"><i class='icon-circle-x'></i>&nbsp;" . $notification . "</div>";
             }
         else
             {
-            echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . $notification . "</div>";
+            echo "<div class=\"PageInformal\"><i class='icon-square-check'></i>&nbsp;" . $notification . "</div>";
             }
         }
 ?>

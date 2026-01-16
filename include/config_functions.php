@@ -1943,6 +1943,10 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
                     }
                 }
 
+                if (count($setrestypes) === 0) {
+                    return false;
+                }
+
                 // Set to remove existing data from the resource types that had data stored
                 if ($existingfield["type"] == 1) {
                     $remove_data_restypes = array_column($resource_type_array, "ref");

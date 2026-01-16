@@ -43,9 +43,9 @@ if (substr($order_by, 0, 5) == "field") {
 
 $sort = getval("sort", $default_sort_direction);
 $offset = getval("offset", 0, true);
-$per_page = getval("per_page", $default_perpage_list, true);
+$per_page = getval("per_page", get_per_page_cookie(), true);
 $per_page = ($per_page == 0) ? $default_perpage_list : $per_page;
-rs_setcookie('per_page', $per_page);
+set_per_page_cookie($per_page);
 // When filtering by download records only the table output will be slightly different, showing only the following columns:
 // date, user, usage option and usage reason
 $filter_dld_records_only = ($filter_by_type == LOG_CODE_DOWNLOADED);
@@ -165,8 +165,8 @@ include "../include/header.php";
                     <?php echo escape($lang["nextresult"])?>&nbsp;<?php echo LINK_CARET ?>
                 </a>
                 <?php if ($modal) { ?>
-                    &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params)); ?>" onclick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
-                    &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
+                    &nbsp;&nbsp;<a class="maxLink icon-maximize-2" href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params)); ?>" onclick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
+                    &nbsp;<a href="#" class="closeLink icon-x" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
                 <?php } ?>
             </div>
         </div>

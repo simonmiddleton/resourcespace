@@ -21,7 +21,7 @@ include "../include/header.php";
     <div class="VerticalNav">
         <ul>
             <li>
-                <i class="fa fa-fw fa-upload"></i>
+                <i class="icon-upload"></i>
                 <a
                     onclick="return CentralSpaceLoad(this,true);"
                     <?php
@@ -56,7 +56,7 @@ include "../include/header.php";
 
                 <li>
                     <a href="<?php echo $ws_a_href; ?>" onclick="return CentralSpaceLoad(this, true);">
-                        <i class="fa-fw <?php echo escape($icon); ?>"></i>&nbsp;<?php echo escape($ws_a_text); ?>
+                        <i class="icon-<?php echo escape($icon); ?>"></i>&nbsp;<?php echo escape($ws_a_text); ?>
                     </a>
                 </li>
                 <?php

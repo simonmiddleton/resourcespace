@@ -42,4 +42,5 @@ file_put_contents($path,$imageData);
 set_processing_message($lang["openai_image_edit__generating_alternative_previews"]);
 create_previews($ref,false,$extension,false,false,$alt);
 
+header('Content-Type: application/json');
 echo json_encode(["status"=>"OK"]);

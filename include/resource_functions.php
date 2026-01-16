@@ -2411,7 +2411,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log 
             foreach ($sent_nodes as $sent_node) {
                 $node_details = [];
                 $valid_node = get_node($sent_node, $node_details);
-                if (!$valid_node || $node_details["resource_type_field"] !== $field) {
+                if (!$valid_node || $node_details["resource_type_field"] !== (int) $field) {
                     return false;
                 }
                 $nodes_to_add[] = $sent_node;
@@ -2773,6 +2773,7 @@ function email_resource($resource, $resourcename, $fromusername, $userlist, $mes
         $from_name = $applicationname;
     } // from_name is for the email headers, and needs to match the email address (app name or user name)
 
+    $message = strip_tags_and_attributes($message);
     $message = str_replace(array("\\n","\\r","\\"), array("\n","\r",""), $message);
 
     $resolve_open_access = false;
@@ -7718,18 +7719,18 @@ function get_nopreview_html(string $extension, $resource_type = null): string
 {
     $extension = strtolower(trim($extension));
 
-    if (isset(FONTAWESOME_EXTENSIONS[$extension])) {
+    if (isset(LUCIDE_EXTENSIONS[$extension])) {
         // Use the icon set for this file extension
-        $icon = FONTAWESOME_EXTENSIONS[$extension];
+        $icon = LUCIDE_EXTENSIONS[$extension];
     } else {
         // No icon for this specific extension Get default for this resource type and cache it.
         $icon = ps_value("select icon value from resource_type where ref=?", ["i",$resource_type], "", "resourcetypeicon");
         if ($icon == "") {
-            $default = FONTAWESOME_EXTENSIONS["default"];
+            $default = LUCIDE_EXTENSIONS["default"];
         }
     }
 
-    return "<i class='nopreview fa fa-solid " . $icon . "'></i>";
+    return "<i class='nopreview icon-" . $icon . "'></i>";
 }
 
 /**

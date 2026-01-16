@@ -17,8 +17,8 @@ rs_setcookie('saved_col_sort', $sort);
 $revsort = ($sort == "ASC") ? "DESC" : "ASC";
 
 # pager
-$per_page = getval("per_page_list", $default_perpage_list, true);
-rs_setcookie('per_page_list', $per_page);
+$per_page = getval("per_page_list", get_per_page_cookie(), true);
+set_per_page_cookie($per_page);
 
 $collection_valid_order_bys = array("fullname","name","ref","count","type");
 $modified_collection_valid_order_bys = hook("modifycollectionvalidorderbys");
@@ -116,6 +116,7 @@ foreach ($delete_collections as $delete) {
                 'nc'                     => time()
             );
 
+            header('Content-Type: application/json');
             echo json_encode($response);
             exit();
         }
@@ -541,7 +542,7 @@ include "../include/header.php";
     </script>
 
     <a id="collection_delete" style="visibility:hidden; margin-left:10px" title="<?php echo escape($lang["delete_all_selected"]) ?>" onclick="delete_collections()">
-        <i aria-hidden="true" class="fa fa-fw fa-trash"></i>
+        <i aria-hidden="true" class="icon-trash-2"></i>
     </a>
 
     <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_manage.php">

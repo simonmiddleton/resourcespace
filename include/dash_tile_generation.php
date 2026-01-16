@@ -206,7 +206,7 @@ function tile_config_pending($tile, $tile_id, $tile_width, $tile_height)
     ?>
 
     <p class="tile_corner_box">
-        <span aria-hidden="true" class="fa fa-clone"></span>
+        <span aria-hidden="true" class="icon-copy"></span>
         <?php echo $count; ?>
     </p>
     <?php
@@ -239,16 +239,16 @@ function tile_search_thumbs($tile, $tile_id, $tile_width, $tile_height, $promote
 
     $icon = "";
     if (substr($search, 0, 11) == "!collection") {
-        $icon = "cube";
+        $icon = "box";
     } elseif (substr($search, 0, 7) == "!recent" || substr($search, 0, 5) == "!last") {
-        $icon = "clock-o";
+        $icon = "clock";
     } else {
         $icon = "search";
     }
 
     if (!empty($tile["title"])) { ?>
         <h2>
-            <span class='fa fa-<?php echo $icon ?>'></span>
+            <span class='icon-<?php echo $icon ?>'></span>
             <?php echo escape(i18n_get_translated($tile["title"]));?>
         </h2>
         <?php
@@ -274,22 +274,22 @@ function tile_search_multi_or_blank($tile, $tile_id, $tile_width, $tile_height)
 
     $icon = "";
     if (substr($search, 0, 11) == "!collection") {
-        $icon = "cube";
+        $icon = "box";
     } elseif (substr($search, 0, 7) == "!recent" || substr($search, 0, 5) == "!last") {
-        $icon = "clock-o";
+        $icon = "clock";
     } else {
         $icon = "search";
     }
 
     if (!empty($tile["title"])) { ?>
         <h2>
-            <span class='fa fa-<?php echo $icon ?>'></span>
+            <span class='icon-<?php echo $icon ?>'></span>
             <?php echo escape(i18n_get_translated($tile["title"]));?>
         </h2>
         <?php
     } elseif (!empty($tile["txt"])) { ?>
         <h2>
-            <span class='fa fa-<?php echo $icon ?>'></span>
+            <span class='icon-<?php echo $icon ?>'></span>
             <?php echo escape(i18n_get_translated($tile["txt"]));?>
         </h2>
         <?php
@@ -373,7 +373,7 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
     ?>
 
     <h2>
-        <span class='fa fa-folder'></span>
+        <span class='icon-folder'></span>
         <?php
         if ('' != $tile['title']) {
             echo escape(i18n_get_translated($tile['title']));
@@ -443,7 +443,7 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width, $tile_heig
     }
     ?>
     <h2>
-        <span class='fa fa-folder'></span>
+        <span class='icon-folder'></span>
         <?php
         if ('' != $tile['title']) {
             echo escape(i18n_get_translated($tile['title']));
@@ -467,7 +467,7 @@ function tile_featured_collection_blank($tile, $tile_id)
     global $baseurl_short, $lang;
     ?>
     <h2>
-        <span class='fa fa-folder'></span>
+        <span class='icon-folder'></span>
         <?php
         if ('' != $tile['title']) {
             echo escape(i18n_get_translated($tile['title']));
