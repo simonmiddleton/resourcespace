@@ -6065,3 +6065,349 @@ function get_per_page_cookie(): int
     return $pager_cookie[$pagename] ?? $default_perpage_list;
 }
 
+/**
+ * Parse a comma-separated list of integers and integer ranges into a sorted array.
+ * Accepts input such as:
+ *   - "*"
+ *   - "1,2,5"
+ *   - "1-3,7,10-12"
+ *   - "1-3,10-*"
+ * 
+ * @param string $input          Comma-separated list of integers and/or ranges (e.g. "1,3-5,10")
+ * @param int    $max_val        Optional upper bound for allowed values. Use 0 for no limit
+ * @param bool   $optional       If true, an empty input string is allowed. If false, empty input is an error
+ * @param bool   $allow_wildcard If true, an asterisk can be used as a wildcard (e.g * for all, 10-* for 10 and above)
+ *
+ * @return array ok: bool         True when parsing succeeds, false when any validation error occurs
+ *               errors: string[] List of error messages when ok is false, otherwise empty
+ */
+function parse_int_ranges(string $input, int $max_val = 0, bool $optional = false, bool $allow_wildcard = false): array
+{
+    global $lang;
+
+    $errors = [];
+
+    $input = trim($input);
+
+    if ($input === '') {
+        if ($optional) {
+            return ['ok' => true, 'errors' => []];
+        }
+        return [
+            'ok'      => false,
+            'errors'  => [$lang['int_ranges_empty']],
+        ];
+    }
+
+    // Sole wildcard: "*" is only valid if it is the entire input
+    if ($input === '*') {
+        if ($allow_wildcard) {
+            return ['ok' => true, 'errors' => []];
+        }
+        return [
+            'ok'     => false,
+            'errors' => [str_replace('%%PART%%', '*', $lang['int_ranges_not_valid'])],
+        ];
+    }
+
+    // Split by commas
+    $parts = explode(',', $input);
+
+    foreach ($parts as $raw_part) {
+        $part = trim($raw_part);
+
+        if ($part === '') {
+            // Skip empty segments (e.g. "1,,2")
+            continue;
+        }
+
+        // Disallow "*" alone when passed as a token
+        if ($part === '*') {
+            $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_not_valid']);
+            continue;
+        }
+
+        // Range: start-end
+        if (preg_match('/^(\d+)\s*-\s*(\d+|\*)$/', $part, $m)) {
+            $start    = (int) $m[1];
+            $endRaw   = $m[2];
+
+            if ($start < 1) {
+                $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_range_below_1']);
+                continue;
+            }
+
+            // Wildcard range: start-*
+            if ($endRaw === '*') {
+                if (!$allow_wildcard) {
+                    $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_not_valid']);
+                    continue;
+                }
+
+                // If bounded, start must be within max
+                if ($max_val !== 0 && $start > $max_val) {
+                    $errors[] = str_replace(["%%PART%%", "%%MAX_VAL%%"], [$part, $max_val], $lang['int_ranges_range_above_max']);
+                    continue;
+                }
+
+                // Valid (bounded or unbounded)
+                continue;
+            }
+
+            // Normal numeric range: start-end
+            $end = (int) $endRaw;
+
+            if ($end < 1) {
+                $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_range_below_1']);
+                continue;
+            }
+
+            if ($start > $end) {
+                $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_range_reversed']);
+                continue;
+            }
+
+            if ($max_val !== 0 && ($start > $max_val || $end > $max_val)) {
+                $errors[] = str_replace(["%%PART%%","%%MAX_VAL%%"], [$part, $max_val], $lang['int_ranges_range_above_max']);
+                continue;
+            }
+
+            continue;
+        }
+
+        // Single number
+        if (ctype_digit($part)) {
+            $num = (int) $part;
+
+            if ($num < 1) {
+                $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_single_below_1']);
+                continue;
+            }
+
+            if ($max_val !== 0 && $num > $max_val) {
+                $errors[] = str_replace(["%%PART%%","%%MAX_VAL%%"], [$num, $max_val], $lang['int_ranges_single_above_max']);
+                continue;
+            }
+
+            continue;
+        }
+
+        // Anything else is invalid
+        $errors[] = str_replace("%%PART%%", $part, $lang['int_ranges_not_valid']);
+    }
+
+    if (!empty($errors)) {
+        return [
+            'ok'      => false,
+            'errors'  => $errors,
+        ];
+    }
+
+    return [
+        'ok'      => true,
+        'errors'  => [],
+    ];
+}
+
+/**
+ * Build a SQL WHERE fragment and bound parameters from a list of integers and ranges.
+ *
+ * Parses a comma-separated input string containing single integers and/or ranges
+ * and can take optional wildcards (e.g. "1,3-5,10,12-*") 
+ * Converts each item into a parameterized SQL condition:
+ *   - Single value:   "<field> = ?"
+ *   - Range:          "<field> BETWEEN ? AND ?"
+ *   - Sole wildcard:  No filter, so 1=1 is used
+ *   - Range wildcard: "<field> >= ?"
+ *
+ * All generated conditions are joined using OR and wrapped in parentheses.
+ * Parameters are returned in the order they appear in the WHERE fragment.
+ *
+ * @param string $input          Comma-separated list of integers and/or ranges (e.g. "1,3-5,10")
+ * @param string $field          Database column name to use in the generated SQL expressions
+ * @param int    $max_val        Optional upper bound for allowed values. Use 0 for no limit
+ * @param bool   $allow_wildcard If true, an asterisk can be used as a wildcard (e.g * for all, 10-* for 10 and above)
+ * 
+ * @return array ok: bool            True when the WHERE clause is successfully built, false on validation errors
+ *               where: string|null  Parenthesized SQL fragment joined with OR when ok is true, otherwise null
+ *               params: array       Ordered list of bind types and values
+ *               errors: string[]    List of error messages when ok is false, otherwise empty
+ */
+function build_range_where_condition(string $input, string $field, int $max_val = 0, bool $allow_wildcard = false): array
+{
+    $conditions = [];
+    $params     = [];
+    $errors     = [];
+
+    $input = trim($input);
+
+    if ($input === '') {
+        return [
+            'ok'     => false,
+            'where'  => null,
+            'params' => [],
+            'errors' => ['Input is empty.'],
+        ];
+    }
+
+    if (!preg_match('/^([A-Za-z_][A-Za-z0-9_]*|`[^`]+`)(\.([A-Za-z_][A-Za-z0-9_]*|`[^`]+`))*$/', $field)) {
+        return [
+            'ok'     => false,
+            'where'  => null,
+            'params' => [],
+            'errors' => ['Invalid field name.'],
+        ];
+    }
+
+    // Sole wildcard: "*" is only valid if it is the entire input
+    if ($input === '*') {
+        if (!$allow_wildcard) {
+            return [
+                'ok'     => false,
+                'where'  => null,
+                'params' => [],
+                'errors' => ['"*" is not a valid number or range (use formats like 3, 5-9, or 9-*).'],
+            ];
+        }
+
+        return [
+            'ok'     => true,
+            'where'  => '(1=1)',
+            'params' => [],
+            'errors' => [],
+        ];
+    }
+
+    // Split by commas
+    $parts = explode(',', $input);
+
+    foreach ($parts as $raw_part) {
+        $part = trim($raw_part);
+
+        if ($part === '') {
+            continue;
+        }
+
+        // Explicitly disallow "*" alone when a token
+        if ($part === '*') {
+            $errors[] = "\"$part\" is not a valid number or range (use formats like 3, 5-9, or 9-*).";
+            continue;
+        }
+
+        // Range: "start-end" or "start-*"
+        if (preg_match('/^(\d+)\s*-\s*(\d+|\*)$/', $part, $m)) {
+            $start  = (int) $m[1];
+            $endRaw = $m[2];
+
+            if ($start < 1) {
+                $errors[] = "Values must be 1 or greater in range \"$part\".";
+                continue;
+            }
+
+            // Wildcard range: start-*
+            if ($endRaw === '*') {
+                if (!$allow_wildcard) {
+                    $errors[] = "\"$part\" is not a valid number or range (use formats like 3 or 5-9).";
+                    continue;
+                }
+
+                // Bounded wildcard: start-* with max_val > 0 -> between start and max_val
+                if ($max_val > 0) {
+                    if ($start > $max_val) {
+                        $errors[] = "Range \"$part\" exceeds maximum value of $max_val.";
+                        continue;
+                    }
+
+                    $conditions[] = "$field BETWEEN ? AND ?";
+                    $params[]     = "i";
+                    $params[]     = $start;
+                    $params[]     = "i";
+                    $params[]     = $max_val;
+                    continue;
+                }
+
+                // Unbounded wildcard: max_val === 0 -> field >= start
+                $conditions[] = "$field >= ?";
+                $params[]     = "i";
+                $params[]     = $start;
+                continue;
+            }
+
+            // Normal numeric range: start-end
+            $end = (int) $endRaw;
+
+            if ($end < 1) {
+                $errors[] = "Values must be 1 or greater in range \"$part\".";
+                continue;
+            }
+
+            if ($start > $end) {
+                $errors[] = "Start of range \"$part\" cannot be greater than end.";
+                continue;
+            }
+
+            if ($max_val !== 0 && ($start > $max_val || $end > $max_val)) {
+                $errors[] = "Range \"$part\" exceeds maximum value of $max_val.";
+                continue;
+            }
+
+            $conditions[] = "$field BETWEEN ? AND ?";
+            $params[]     = "i";
+            $params[]     = $start;
+            $params[]     = "i";
+            $params[]     = $end;
+            continue;
+        }
+        
+        // Single number
+        if (ctype_digit($part)) {
+            $num = (int)$part;
+
+            if ($num < 1) {
+                $errors[] = "Values must be 1 or greater (\"$part\").";
+                continue;
+            }
+
+            if ($max_val !== 0 && $num > $max_val) {
+                $errors[] = "Value \"$num\" exceeds maximum of $max_val.";
+                continue;
+            }
+
+            $conditions[] = "$field = ?";
+            $params[]     = "i";
+            $params[]     = $num;
+            continue;
+        }
+
+        $errors[] = "\"$part\" is not a valid number or range (use formats like 3, 5-9, or 9-*).";
+    }
+
+    if (!empty($errors)) {
+        return [
+            'ok'     => false,
+            'where'  => null,
+            'params' => [],
+            'errors' => $errors,
+        ];
+    }
+
+    if (empty($conditions)) {
+        return [
+            'ok'     => false,
+            'where'  => null,
+            'params' => [],
+            'errors' => ['No valid values found.'],
+        ];
+    }
+
+    // Join all conditions with OR, wrap in parentheses
+    $where = '(' . implode(' OR ', $conditions) . ')';
+
+    return [
+        'ok'     => true,
+        'where'  => $where,
+        'params' => $params,
+        'errors' => [],
+    ];
+
+}

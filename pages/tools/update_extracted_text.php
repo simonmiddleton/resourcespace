@@ -1,5 +1,8 @@
 <?php
 
+# IMPORTANT NOTE: The functionality this script provides is now accessible via the front-end job runner, so 
+#                 this script may be deprecated in future versions
+
 # This script can be used to update all extracted text for supported file types
 # Passing -c/--col <collection_id> will only process resources in that collection
 # Passing -u/--update-all will run the extraction even if there is existing data, and overwrite the old value

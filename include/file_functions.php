@@ -677,6 +677,9 @@ function delete_temp_files(): void
 
     // Set up array of folders to exclude
     $excludepaths = [];
+
+    $excludepaths[] = get_temp_dir() . "offline_job_logs";
+
     if (isset($GLOBALS["geo_tile_cache_directory"])) {
         $excludepaths[] = $GLOBALS["geo_tile_cache_directory"];
     } else {

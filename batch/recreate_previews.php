@@ -1,5 +1,8 @@
 <?php
 
+# IMPORTANT NOTE: The functionality this script provides is now accessible via the front-end job runner, so 
+#                 this script may be deprecated in future versions
+
 # This is based on pages/tools/update_previews.php but for use on the server backend to avoid browser timeouts etc.
 # previewbased is an option that can help preserve alternative previews,
 # Recreating previews would normally use the original file and overwrite alternative previews that have been uploaded,

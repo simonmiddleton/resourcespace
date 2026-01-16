@@ -400,6 +400,9 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         .leaflet-control-geocoder-form input {
             color: black;
         }
+        div.SaveError > input {
+            color: red;
+        }
         <?php
     }
 

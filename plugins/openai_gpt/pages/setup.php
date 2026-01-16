@@ -42,6 +42,12 @@ $page_def[] = config_add_text_input("openai_gpt_max_tokens",$lang["openai_gpt_ma
 $page_def[] = config_add_single_select("openai_gpt_language",$lang["openai_gpt_language"],array_merge([""=>$lang["openai_gpt_language_user"]],$languages));
 $page_def[] = config_add_boolean_select("openai_gpt_overwrite_data", $lang['openai_gpt_overwrite_data']); 
 
+if (job_trigger_permission_check()) {
+    $page_def[] = config_add_section_header("Offline Jobs");
+    $page_def[] = config_add_html("<p>Configure job <input type=\"button\" value=\"Configure Job\" onclick=\"window.location.href='" . 
+                                    generateURL($baseurl_short . "plugins/openai_gpt/pages/offline_jobs/process_gpt_existing.php", ['job_user' => 0, 'plugin' => 1]) . "'\"></p>");
+}
+
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

@@ -141,6 +141,9 @@ define('LOG_CODE_COLLECTION_ACCESS_CHANGED', 'A');
 define('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED', 'Z');
 define('LOG_CODE_COLLECTION_SHARED_UPLOAD', 'SEU');
 define('LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE', 'EEU');
+define('LOG_CODE_JOB_ADDED', 'J');
+define('LOG_CODE_JOB_COMPLETED', 'JC');
+define('LOG_CODE_JOB_DELETED', 'JD');
 
 // validates LOG_CODE is legal
 function LOG_CODE_validate($log_code)
@@ -1089,3 +1092,35 @@ const FIELD_SORT_METHODS = [
 const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
 
 const NON_PREVIEW_EXTENSIONS = ['zip'];
+
+$offline_job_list = [
+    0 => ['name' => 'Core',
+          'lang_string' => 'job_list_core',
+          'type' => 'group_start'],
+    1 => ['name' => 'Recreate Previews',
+          'lang_string' => 'job_list_recreate_previews',
+          'script_name' => 'recreate_previews',
+          'plugin' => null],
+    2 => ['name' => 'Regenerate EXIF data',
+          'lang_string' => 'job_list_exif_data',
+          'script_name' => 'update_exiftool_field',
+          'plugin' => null],
+    3 => ['name' => 'Purge duplicate resources',
+          'lang_string' => 'job_list_purge_duplicates',
+          'script_name' => 'purge_duplicates',
+          'plugin' => null],
+    4 => ['name' => 'Re-index data',
+          'lang_string' => 'job_list_reindex',
+          'script_name' => 'reindex',
+          'plugin' => null],
+    5 => ['name' => 'Update checksums',
+          'lang_string' => 'job_list_checksums',
+          'script_name' => 'update_checksums',
+          'plugin' => null],
+    6 => ['name' => 'Update extracted text',
+          'lang_string' => 'job_list_extracted_text',
+          'script_name' => 'update_extracted_text',
+          'plugin' => null],
+    7 => ['name' => 'Core',
+          'type' => 'group_end'],
+];

@@ -681,6 +681,12 @@ $lang["log_code_+"] = "Enabled";
 $lang["log_code_-"] = "Disabled";
 $lang["log_code_Xl"] = "Failed Login Attempt";
 
+/* Offline jobs log codes */
+$lang["log_code_J"] = "Job added";
+$lang["log_code_JC"] = "Job completed";
+$lang["log_code_JD"] = "Job deleted";
+
+
 $lang['user_created_by'] = 'Created by';
 
 $lang["backtoresourceview"] = "Back to resource view";
@@ -3500,3 +3506,82 @@ $lang['weeks_ago'] = "%TIME% weeks ago";
 $lang['month_ago'] = "%TIME% month ago";
 $lang['months_ago'] = "%TIME% months ago";
 
+$lang['int_ranges_empty'] = "Input is empty";
+$lang['int_ranges_range_below_1'] = "Numbers must be 1 or greater in range %%PART%%";
+$lang['int_ranges_range_reversed'] = "Start of range %%PART%% cannot be greater than end";
+$lang['int_ranges_range_above_max'] = "Range %%PART%% exceeds maximum number of %%MAX_VAL%%";
+$lang['int_ranges_single_below_1'] = "Numbers must be 1 or greater (%%PART%%)";
+$lang['int_ranges_single_above_max'] = "%%PART%% exceeds maximum number of %%MAX_VAL%%";
+$lang['int_ranges_not_valid'] = "%%PART%% is not a valid number or range (use formats like 3 or 5-9)";
+
+// Job runner and log streaming/download
+$lang["job_trigger"] = "Trigger a job";
+$lang["job_configure"] = "Configure Job";
+
+$lang["jobs_action_stream_log"] = "Stream log file";
+$lang["jobs_action_download_log"] = "Download log file";
+$lang["jobs_action_not_started"] = "Job has not started yet";
+$lang["jobs_action_missing_job_progress"] = "Unable to load job progress";
+$lang["job_action_not_found"] = "Job not found.";
+
+$lang["job_list_core"] = "Core";
+$lang["job_list_recreate_previews"] = "Recreate Previews";
+$lang["job_list_exif_data"] = "Regenerate EXIF data";
+$lang["job_list_purge_duplicates"] = "Purge duplicate resources";
+$lang["job_list_reindex"] = "Re-index data";
+$lang["job_list_checksums"] = "Update checksums";
+$lang["job_list_extracted_text"] = "Update extracted text";
+
+// Offline job config - common
+$lang["oj_common_create_job"] = "Create Job";
+$lang["oj_common_field_refs"] = "Field Refs";
+$lang["oj_common_collection_refs"] = "Collection Refs";
+$lang["oj_common_error_required"] = "Field required";
+$lang["oj_common_error_invalid"] = "Invalid value passed for field";
+$lang["oj_common_error_invalid_field_ref"] = "%FIELD_REF% does not refer to a valid field";
+
+// Offline job config - recreate previews
+$lang['oj_recreate_previews_target'] = "What type of Refs are provided?";
+$lang['oj_recreate_previews_refs'] = "Refs";
+$lang['oj_recreate_previews_image_sizes'] = "Image Sizes to generate";
+$lang['oj_recreate_previews_resource_types'] = "Resource Types to target";
+$lang['oj_recreate_previews_use_existing'] = "Use existing uploaded previews?";
+$lang['oj_recreate_previews_video_update'] = 'Update previews for all video resources that do not have the required \'$ffmpeg_preview_extension\' extension?';
+$lang['oj_recreate_previews_delete_existing'] = "Delete all existing previews";
+$lang['oj_recreate_previews_refs_help'] = "Setting this option controls what references (either resource or collection references) will be used for processing. Valid inputs include comma-separated lists, ranges and wildcards e.g * would process all references, 1-100 would process the first 100 references, 101-* would process references 101 and onwards and 1,3,5 would process references 1, 3 and 5. These can be combined to target exactly the references required e,g 1,5-10,15-* would target 1, 5 to 10 and 15 onwards.";
+$lang['oj_recreate_previews_use_existing_help'] = "Setting this option will attempt to preserve any previews which have been manually replaced on resources. If not used, any manually uploaded previews will be replaced with previews derived from the original file.";
+$lang['oj_recreate_previews_video_update_help'] = 'Setting this option will update any videos that do not match the current configured \'$ffmpeg_preview_extension\' extension. This is useful when this setting has been changed, to target only those resources that need a new preview generating.';
+$lang['oj_recreate_previews_delete_existing_help'] = "Setting this option will remove all existing previews before recreating them.";
+
+// Offline job config - exif data
+$lang['oj_exif_data_blanks'] = "Blank field value where no EXIF data exists";
+$lang['oj_exif_data_overwrite'] = "Overwrite existing field values where EXIF data exists";
+$lang['oj_exif_data_field_refs_help'] = "These are the refs of the fields that you would like EXIF data to be extracted for. These fields must have \"Exiftool field\" configured. A comma-separated list can be used to specify the fields e.g 1,3,5.";
+$lang['oj_exif_data_collection_refs_help'] = "Setting this option will mean only resources in the listed collections will be updated. If no collections are specified then EXIF data will be updated for ALL suitable resources. Collections can be specified using a comma-separated list as well as ranges e.g 100,105,110-115";
+$lang['oj_exif_data_blanks_help'] = "Setting this option will cause the specified field to be cleared if the file has no embedded EXIF data for it.";
+$lang['oj_exif_data_overwrite_help'] = "Setting this option will cause the specified field to have any existing value overwritten by embedded EXIF data, if present in the file.";
+
+// Offline job config - purge duplicates
+$lang['oj_purge_duplicates_intro'] = "<strong>Warning: This script allows resources to be PERMANENTLY DELETED - please use the Dry run option to validate your settings if you are unsure.</strong>";
+$lang['oj_purge_duplicates_manage_method'] = "Manage method";
+$lang['oj_purge_duplicates_lifo'] = "Keep oldest and remove newer duplicates";
+$lang['oj_purge_duplicates_fifo'] = "Keep newest and remove older duplicates";
+$lang['oj_purge_duplicates_dry_run'] = "Dry run";
+$lang['oj_purge_duplicates_delete_perm'] = "Delete permanently";
+$lang['oj_purge_duplicates_delete_error'] = "Permanent deletion is not possible during a dry run";
+$lang['oj_purge_duplicates_collection_refs_help'] = "Sets the collections as the scope of the duplicate detection. You don't need to have all duplicates in the collections, just one of them will be enough. Duplicates will then be processed system-wide and purged via the manage method selected. Collections can be specified using a comma-separated list as well as ranges e.g 100,105,110-115";
+$lang['oj_purge_duplicates_manage_method_help'] = "Setting this option controls how the script will deal with the duplicates removal.";
+$lang['oj_purge_duplicates_dry_run_help'] = "Setting this option will perform a trial run with no changes made to any resources. The log file containing the results of the trial run can be downloaded to review.";
+$lang['oj_purge_duplicates_delete_perm_help'] = "Setting this option will cause duplicated resources to be deleted permanently, otherwise resources will be moved to the configured resource deletion state.";
+
+// Offline job config - reindex
+$lang['oj_reindex_field_refs_help'] = "Setting this option will limit which fields are reindexed, a comma-separated list can be used to specify the fields e.g 1,3,5. If no fields are entered, ALL fields will be reindexed.";
+
+// Offline job config - checksums
+$lang['oj_checksums_recreate'] = "Recreate all checksums";
+$lang['oj_checksums_recreate_help'] = "Setting this option will force ALL resource checksums to be recreated rather than just those that currently don't have an existing checksum.";
+
+// Offline job config - extracted text
+$lang['oj_extracted_text_update_all'] = "Update even if there is existing data, and overwrite old values";
+$lang['oj_extracted_text_collection_refs_help'] = "Setting this option will limit processed resources to those in the listed collections only. If no collections are specified then extracted text will be updated for ALL suitable resources. Collections can be specified using a comma-separated list as well as ranges e.g 100,105,110-115";
+$lang['oj_extracted_text_update_all_help'] = "Setting this option will run the extraction even if there is existing data, and overwrite the old value.";

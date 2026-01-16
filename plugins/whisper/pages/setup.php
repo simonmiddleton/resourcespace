@@ -18,6 +18,12 @@ $page_def[] = config_add_text_input("whisper_prompt", $lang["whisper_prompt"], f
 $page_def[] = config_add_boolean_select("whisper_subtitles", $lang["whisper_subtitles"], '', 600);
 $page_def[] = config_add_boolean_select("whisper_transcript", $lang["whisper_transcript"], '', 600);
 
+if (job_trigger_permission_check()) {
+    $page_def[] = config_add_section_header("Offline Jobs");
+    $page_def[] = config_add_html("<p>Configure job to process files with Whisper <input type=\"button\" value=\"Configure Job\" onclick=\"window.location.href='" . 
+                                    generateURL($baseurl_short . "/plugins/whisper/pages/offline_jobs/process_whisper.php", ['job_user' => 0, 'plugin' => 1]) . "'\"></p>");
+}
+
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

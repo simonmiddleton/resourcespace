@@ -28,6 +28,14 @@ $page_def[] = config_add_boolean_select("faces_tag_on_upload", $lang["faces-tag-
 $page_def[] = config_add_html("<p><br />" . $lang["faces_count_faces"] . ": " . faces_count_faces());
 $page_def[] = config_add_html("<br />" . $lang["faces_count_missing"] . ": " . faces_count_missing() . "</p>");
 
+if (job_trigger_permission_check()) {
+    $page_def[] = config_add_section_header("Offline Jobs");
+    $page_def[] = config_add_html("<p>Configure job to detect faces <input type=\"button\" value=\"Configure Job\" onclick=\"window.location.href='" . 
+                                    generateURL($baseurl_short . "/plugins/faces/pages/offline_jobs/faces_detect.php", ['job_user' => 0, 'plugin' => 1]) . "'\"></p>");
+    $page_def[] = config_add_html("<p>Configure job to tag faces <input type=\"button\" value=\"Configure Job\" onclick=\"window.location.href='" . 
+                                    generateURL($baseurl_short . "/plugins/faces/pages/offline_jobs/faces_tag.php", ['job_user' => 0, 'plugin' => 1]) . "'\"></p>");
+}
+
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

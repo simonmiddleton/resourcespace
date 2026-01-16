@@ -31,6 +31,34 @@ if (!checkperm('a') || $job_user == $userref) {
 $deletejob = getval("delete_job", 0, true);
 $resetjob = getval("reset_job", 0, true);
 
+$triggerjob = getval("trigger_job", "");
+
+// Build list of offline jobs - including from plugins
+$offline_job_list_full = $offline_job_list;
+$offline_job_list_hook = hook('addjobtriggerpage', '', [], true);
+
+if (!empty($offline_job_list_hook)) {
+    $offline_job_list_full = array_merge($offline_job_list, $offline_job_list_hook);
+}
+
+if ($triggerjob !== "" && enforcePostRequest(true) && job_trigger_permission_check()) {
+
+    $filtereddata = array_filter($offline_job_list_full, function ($row) use ($triggerjob) {
+        return isset($row['script_name']) && $row['script_name'] === $triggerjob;
+    });
+
+    $triggerjobdata = reset($filtereddata);
+
+    if (!empty($triggerjobdata)) {
+
+        if ($triggerjobdata['plugin'] === null) {
+            redirect(generateURL("pages/offline_jobs/{$triggerjob}.php", ['job_user' => $job_user]));
+        } else {
+            redirect(generateURL("plugins/" . $triggerjobdata['plugin'] . "/pages/offline_jobs/{$triggerjob}.php", ['job_user' => $job_user]));        
+        }
+    }
+}
+
 if ($deletejob > 0 && enforcePostRequest(true)) {
     $deletejobdetail = job_queue_get_job($deletejob);
     if (checkperm('a') || $deletejobdetail["user"] == $userref) {
@@ -246,8 +274,36 @@ include '../include/header.php';
     if (checkperm('a') && $endedjobs > 0) {
         echo "<p><a href='#' onclick='if(confirm(\"" . escape($lang["job_confirm_purge"]) . "\")){update_job(true,\"purge_jobs\");}'>" . LINK_CARET . escape($lang["jobs_action_purge_complete"]) . "</a></p>";
     }
+    
+    if (job_trigger_permission_check()) {
     ?>
-
+    <form id="JobTriggerForm" method="POST" action="<?php echo $url; ?>">
+        <?php generateFormToken('JobFilterForm'); ?>
+        <div class="Question" id="QuestionJobTrigger">
+            <label for="trigger_job"><?php echo escape($lang["job_trigger"]); ?></label>
+            <select class="stdwidth" id="trigger_job" name="trigger_job">
+                <?php
+                foreach ($offline_job_list_full as $offline_job) {
+                    
+                    if (isset($offline_job['type'])) {
+                        if ($offline_job['type'] == 'group_start') {
+                            echo "<optgroup label=\"" . (isset($offline_job["lang_string"]) ? escape($lang[$offline_job['lang_string']]) : escape($offline_job['name'])) . "\">";
+                        } else {
+                            echo "</optgroup>";
+                        }                        
+                    } else {
+                        echo "<option value=\"" .  escape($offline_job["script_name"]) . "\">" . (isset($offline_job["lang_string"]) ? escape($lang[$offline_job['lang_string']]) : escape($offline_job['name'])) . "</option>\n";
+                    }                    
+                }
+                ?>
+            </select>
+            <input type="submit" id="trigger_job_button" value="<?php echo escape($lang["job_configure"]); ?>">
+            <div class="clearerleft"></div> 
+        </div>
+    </form>
+    <?php
+    }
+    ?>
     <form id="JobFilterForm" method="POST" action="<?php echo $url; ?>">
         <?php generateFormToken('JobFilterForm');
 

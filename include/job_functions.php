@@ -96,6 +96,26 @@ function job_queue_update($ref, $job_data = array(), $newstatus = "", $newtime =
 function job_queue_delete($ref)
 {
     global $userref;
+
+    $job_data = job_queue_get_job($ref);
+
+    if (empty($job_data)) {
+        return;
+    }
+
+    // Delete log file if it exists
+    $log_path = get_job_queue_log_path($job_data["type"], $job_data["job_code"], $job_data["ref"]);
+
+    if (file_exists($log_path)) {
+        unlink($log_path);
+    }
+
+    // If triggerable job, log as deleted by user
+    if (triggerable_job_check($job_data["type"])) {
+        log_activity("Deleted {$job_data['type']} job $ref",
+                        LOG_CODE_JOB_DELETED, null, 'job_queue', null, null, null, "", null, true);
+    }
+ 
     $query = "DELETE FROM job_queue WHERE ref= ?";
     $parameters = array("i",$ref);
     if (!checkperm('a') && !php_sapi_name() == "cli") {
@@ -227,7 +247,7 @@ function job_queue_get_jobs($type = "", $status = -1, $user = "", $job_code = ""
  */
 function job_queue_get_job($ref)
 {
-    $sql = "SELECT j.ref, j.type, j.job_data, j.user, j.status, j.start_date, j.priority, j.success_text, j.failure_text, j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user WHERE j.ref = ?";
+    $sql = "SELECT j.ref, j.type, j.job_data, j.user, j.status, '' as progress, j.start_date, j.priority, j.success_text, j.failure_text, j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user WHERE j.ref = ?";
     $job_data = ps_query($sql, array("i",(int)$ref));
 
     return (is_array($job_data) && count($job_data) > 0) ? $job_data[0] : array();
@@ -243,7 +263,23 @@ function job_queue_purge($status = 0)
 {
     $deletejobs = job_queue_get_jobs('', $status == 0 ? '' : $status);
     if (count($deletejobs) > 0) {
+
+        foreach ($deletejobs as $deletejob) {
+            $log_path = get_job_queue_log_path($deletejob['type'], $deletejob['job_code'], $deletejob["ref"]);
+            
+            if (file_exists($log_path)) {
+                unlink($log_path);
+            }
+
+            // If triggerable job, log as deleted by user
+            if (triggerable_job_check($deletejob["type"])) {
+                log_activity("Deleted {$deletejob['type']} job {$deletejob['ref']}",
+                                LOG_CODE_JOB_DELETED, null, 'job_queue', null, null, null, "", null, true);
+            }
+        }
+
         $deletejobs_sql = job_queue_get_jobs('', $status == 0 ? '' : $status, "", "", "priority", "asc", "", true);
+
         ps_query(
             "DELETE FROM job_queue 
                 WHERE ref IN 
@@ -264,24 +300,42 @@ function job_queue_purge($status = 0)
 */
 function job_queue_run_job($job, $clear_process_lock): string
 {
-    // Runs offline job using defined job handler
-    $jobref = $job["ref"];
-    $job_data = json_decode($job["job_data"], true);
+    global $offline_job_list;
 
-    $jobuser = $job["user"];
-    if (!isset($jobuser) || $jobuser == 0 || $jobuser == "") {
-        $logmessage = " - Job could not be run as no user was supplied #{$jobref}" . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+    // Runs offline job using defined job handler
+    $job_type = $job['type'];
+    $job_code = $job["job_code"];
+    $jobref  = $job["ref"];
+    $job_data = json_decode($job["job_data"], true);
+    
+    $log_file = null;
+
+    if (!empty($job_data) && triggerable_job_check($job_type)) {
+        $log_file_path = get_job_queue_log_path($job_type, $job_code, $jobref);
+
+        if($log_file_path === false) {
+            logScript("[job_handler] Error generating path to log offline job");
+        } else {
+            $log_file = fopen($log_file_path, 'w');
+            
+            if ($log_file === false) {
+                $log_file = null;
+            }
+        }
+    }
+   
+    $job_user = $job["user"];
+    if (!isset($job_user) || $job_user == 0 || $job_user == "") {
+        $logmessage = " - Job could not be run as no user was supplied #{$jobref}";
+        logScript("[job_handler] " . $logmessage, $log_file);
         job_queue_update($jobref, $job_data, STATUS_ERROR);
         return 'Error';
     }
 
-    $jobuserdata = get_user($jobuser);
+    $jobuserdata = get_user($job_user);
     if (!$jobuserdata) {
-        $logmessage = " - Job #{$jobref} could not be run as invalid user ref #{$jobuser} was supplied." . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+        $logmessage = " - Job #{$jobref} could not be run as invalid user ref #{$job_user} was supplied.";
+        logScript("[job_handler] " . $logmessage, $log_file);
         job_queue_update($jobref, $job_data, STATUS_ERROR);
         return 'Error';
     }
@@ -295,34 +349,29 @@ function job_queue_run_job($job, $clear_process_lock): string
     $offline_job_in_progress = false;
 
     if (is_process_lock('job_' . $jobref) && !$clear_process_lock) {
-        $logmessage =  " - Process lock for job #{$jobref}" . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+        $logmessage =  " - Process lock for job #{$jobref}";
+        logScript("[job_handler] " . $logmessage, $log_file);
         return 'Process lock';
     } elseif ($clear_process_lock) {
-        $logmessage =  " - Clearing process lock for job #{$jobref}" . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+        $logmessage =  " - Clearing process lock for job #{$jobref}";
+        logScript("[job_handler] " . $logmessage, $log_file);
         clear_process_lock("job_{$jobref}");
     }
 
     set_process_lock('job_' . $jobref);
 
-    $logmessage =  "Running job #" . $jobref . ' at ' . date('Y-m-d H:i:s') . PHP_EOL;
-    echo $logmessage;
-    debug($logmessage);
+    $logmessage =  "Running job #" . $jobref;
+    logScript("[job_handler] " . $logmessage, $log_file);
 
-    $logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job["type"] . ".php" . PHP_EOL;
-    echo $logmessage;
-    debug($logmessage);
+    $logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job_type . ".php";
+    logScript("[job_handler] " . $logmessage);
 
-    if (file_exists(__DIR__ . "/job_handlers/" . $job["type"] . ".php")) {
-        $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job["type"] . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+    if (file_exists(__DIR__ . "/job_handlers/" . $job_type . ".php")) {
+        $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job_type;
+        logScript("[job_handler] " . $logmessage, $log_file);
         job_queue_update($jobref, $job_data, STATUS_INPROGRESS);
         $offline_job_in_progress = true;
-        include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
+        include __DIR__ . "/job_handlers/" . $job_type . ".php";
     } else {
         // Check for handler in plugin
         $offline_plugins = $plugins;
@@ -337,28 +386,25 @@ function job_queue_run_job($job, $clear_process_lock): string
         }
 
         foreach ($offline_plugins as $plugin) {
-            if (file_exists(__DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php")) {
-                $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job["type"] . PHP_EOL;
-                echo $logmessage;
-                debug($logmessage);
+            if (file_exists(__DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job_type . ".php")) {
+                $logmessage = " - Attempting to run job #" . $jobref . " using handler " . $job_type;
+                logScript("[job_handler] " . $logmessage, $log_file);
                 job_queue_update($jobref, $job_data, STATUS_INPROGRESS);
                 $offline_job_in_progress = true;
-                include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php";
+                include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job_type . ".php";
                 break;
             }
         }
     }
 
     if (!$offline_job_in_progress) {
-        $logmessage = "Unable to find handlerfile: " . $job["type"] . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
+        $logmessage = "Unable to find handlerfile: " . $job_type;
+        logScript("[job_handler] " . $logmessage, $log_file);
         job_queue_update($jobref, $job_data, STATUS_ERROR, date('Y-m-d H:i:s'));
     }
 
-    $logmessage =  " - Finished job #" . $jobref . ' at ' . date('Y-m-d H:i:s') . PHP_EOL;
-    echo $logmessage;
-    debug($logmessage);
+    $logmessage =  " - Finished job #" . $jobref;
+    logScript("[job_handler] " . $logmessage, $log_file);
 
     clear_process_lock('job_' . $jobref);
     return 'Complete';
@@ -398,4 +444,184 @@ function get_job_type_priority($type = "")
         }
     }
     return JOB_PRIORITY_SYSTEM;
+}
+
+/**
+ * Build and ensure a writable log file path for a queued job
+ *
+ * @param string $type     Job category or queue type used as a subdirectory name
+ * @param string $job_code Job identifier used in the log filename
+ * @param string $job_ref  Job reference value used in the log filename
+ *
+ * @return string|false Full path to the log file on success, or false on failure
+ */
+function get_job_queue_log_path(string $type = "", string $job_code = "", string $job_ref = ""): string|false
+{
+    global $offline_job_list;
+
+    if ($type === "" || $job_code === "" || $job_ref === "" 
+            || !triggerable_job_check($type)) {
+        return false;
+    }
+
+    // Build path for logging
+    $log_path = get_temp_dir() . "/offline_job_logs/" . $type . "/";
+    if (!is_dir($log_path)) {
+        $log_path_created = mkdir($log_path, 0770, true);
+        if (!$log_path_created) {
+            return false;
+        } else {
+            chmod($log_path, 0770);
+        }
+    }
+
+    return $log_path . $job_ref . "_" . $job_code . ".log";
+}
+
+/**
+ * Resolve a queued job reference to its corresponding log file path
+ *
+ * @param int $job_ref Job reference
+ *
+ * @return string|false Full path to the job log file on success, or false on failure
+ */
+function get_job_queue_log_path_by_ref(int $job_ref = 0): string|false
+{
+    if ($job_ref <= 0) {
+        return false;
+    }
+
+    $job_data = job_queue_get_job($job_ref);
+
+    if (!is_array($job_data) || empty($job_data)) {
+        return false;
+    }
+
+    return get_job_queue_log_path($job_data["type"], $job_data["job_code"], $job_data["ref"]);
+
+}
+
+/**
+ * Scan a log file from the end and return the most recent line matching a pattern.
+ *
+ * The file is read in fixed-size blocks starting from EOF and scanned backwards
+ * line-by-line for the first line that matches the supplied regular expression
+ * (by default, lines containing "[PROGRESS]").
+ *
+ * On the first read pass, the function also captures the last non-empty line in
+ * the file (closest to EOF), regardless of whether it matches the pattern.
+ *
+ * @param string $path       Path to the log file to scan
+ * @param string $pattern    Regular expression used to match progress lines
+ * @param int    $block_size Number of bytes to read per backward scan iteration
+ *
+ * @return array found: string|null     The most recent line matching $pattern, or null if none found
+ *                                      or if the file could not be read
+ *               last_line: string|null The last non-empty line in the file, or null if unavailable
+ */
+function get_job_progress_from_log_file(string $path = "", string $pattern = "/\[PROGRESS\]/i", int $block_size = 65536): array
+{
+    $fp = @fopen($path, 'rb');
+
+    if (!$fp) {
+        return ['found' => null, 'last_line' => null];
+    }
+
+    if (fseek($fp, 0, SEEK_END) === -1) {
+        fclose($fp);
+        return ['found' => null, 'last_line' => null];
+    }
+
+    $position  = ftell($fp);
+    $carry     = '';
+    $last_line  = null;
+    $first_pass = true;
+
+    while ($position > 0) {
+        $read_size = ($position >= $block_size) ? $block_size : $position;
+        $position -= $read_size;
+        
+        fseek($fp, $position);
+        
+        $chunk = fread($fp, $read_size);
+
+        // Combine with carried partial line
+        $buffer = $chunk . $carry;
+
+        // Split into lines
+        $lines = preg_split("/\r\n|\n|\r/", $buffer);
+
+        // The first element may be incomplete (its beginning lies in an earlier block)
+        $carry = array_shift($lines);
+
+        if ($first_pass) {
+            // Capture the last non-empty line (closest to EOF)
+            for ($i = count($lines) - 1; $i >= 0; $i--) {
+                if ($lines[$i] !== '') {
+                    $last_line = $lines[$i];
+                    break;
+                }
+            }
+            $first_pass = false;
+        }
+
+        // Scan lines backward (from newest to oldest)
+        for ($i = count($lines) - 1; $i >= 0; $i--) {
+            $line = $lines[$i];
+            if ($line === '') continue;
+            if (@preg_match($pattern, $line)) {
+                fclose($fp);
+                return ['found' => $line, 'last_line' => $last_line];
+            }
+        }
+    }
+
+    // Handle the very first (oldest) line if any partial remains
+    if ($carry !== '') {
+        if ($last_line === null && $carry !== '') {
+            $last_line = $carry;
+        }
+        if (@preg_match($pattern, $carry)) {
+            fclose($fp);
+            return ['found' => $carry, 'last_line' => $last_line];
+        }
+    }
+
+    fclose($fp);
+    return ['found' => null, 'last_line' => $last_line];
+
+}
+
+/**
+ * Determine whether the current user is allowed to manually trigger background jobs.
+ * The system must have config $offline_job_queue set to true and the user must 
+ * have 'a', 'f*', 't' and 'v' permissions as well as edit access to all workflow states.
+ *
+ * @return bool true if the user satisfies all required permissions and workflow access, false otherwise
+ */
+function job_trigger_permission_check(): bool
+{
+    global $offline_job_queue, $userref;
+
+    $all_wf_states = get_workflow_states();
+    $editable_wf_states = array_column(get_editable_states($userref), 'id');
+
+    sort($all_wf_states);
+    sort($editable_wf_states);
+
+    $access_to_all_wf_states = ($all_wf_states === $editable_wf_states);
+
+    return $offline_job_queue && checkperm('a') && $access_to_all_wf_states && checkperm('t') && checkperm('v') && checkperm('f*');
+}
+
+function triggerable_job_check(string $type = ""): bool
+{
+    global $offline_job_list;
+
+    if ($type === "") {
+        return false;
+    }
+    
+    // Check if type is user triggerable - this may be ammended in future to allow some system jobs to create log files etc.
+    return in_array($type, array_values(array_filter(array_column($offline_job_list, 'script_name'))));
 }

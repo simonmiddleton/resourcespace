@@ -38,6 +38,11 @@ $page_def[] = config_add_text_input("google_vision_translation_api_key",$lang["g
 $page_def[] = config_add_text_input("google_vision_translation_languages",$lang["google_vision_translation_languages"]);
 $page_def[] = config_add_boolean_select("google_vision_translation_keep_english", $lang["google_vision_translation_keep_english"],'',300);
 
+if (job_trigger_permission_check()) {
+    $page_def[] = config_add_section_header("Offline Jobs");
+    $page_def[] = config_add_html("<p>Configure job to process unprocessed resources <input type=\"button\" value=\"Configure Job\" onclick=\"window.location.href='" . 
+                                    generateURL($baseurl_short . "/plugins/google_vision/pages/offline_jobs/process_gv_existing.php", ['job_user' => 0, 'plugin' => 1]) . "'\"></p>");
+}
 
 // Do the page generation ritual
 config_gen_setup_post($page_def, $plugin_name);

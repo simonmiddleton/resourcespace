@@ -22,4 +22,12 @@ $lang["openai_gpt_language"]              = "Output language";
 $lang["openai_gpt_language_user"]         = "The language of the current user";
 $lang["openai_gpt_overwrite_data"]        = "Overwrite existing data in configured fields?";
 
-$lang["page-title_openai_gpt_setup"]            = "Setup OpenAI GPT Plugin";
+$lang["page-title_openai_gpt_setup"]      = "Setup OpenAI GPT Plugin";
+
+$lang["openai_gpt"] = "OpenAI GPT";
+$lang["openai_gpt_process_existing"] = "Process existing GPT fields";
+$lang["openai_gpt_process_existing_field_ref"] = "AI Field";
+$lang["openai_gpt_process_existing_overwrite"] = "Overwrite";
+$lang["openai_gpt_process_existing_field_ref_help"] = "This is the target field to be updated.";
+$lang["openai_gpt_process_existing_collection_refs_help"] = "Setting this option will mean only resources in the listed collections will be processed. If no collections are specified then ALL suitable resources will be processed. Collections can be specified using a comma-separated list as well as ranges e.g 100,105,110-115";
+$lang["openai_gpt_process_existing_overwrite_help"] = "Setting this option will mean any existing data in the target field will be overwritten. Please note that if overwrite is enabled and the input field contains no data then the target field will be cleared.";

@@ -836,3 +836,32 @@ a.HomePanel:hover {
 .message-full-text a {
     color: #222222;
 }
+
+div.SaveError > input {
+    border-color: red;
+    background-color: #edceca;
+}
+
+/* job details log viewer */
+
+#job-details-log {
+    background: #111;
+    color: #ddd;
+    scrollbar-color: white #000;
+}
+
+#job-details-log::-webkit-scrollbar-track {
+  background: #000;
+}
+
+#job-details-log::-webkit-scrollbar-thumb {
+  background-color: white;
+  border-radius: 6px;
+  border: 2px solid #000;
+}
+
+#job-details-log > .error { color: #f66; }
+#job-details-log > .progress { color: rgba(98, 178, 243, 1); }
+#job-details-log > .info { color: #6f6; }
+
+.job-configure-error { color: red; }
