@@ -329,6 +329,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .TopInpageNav a:link, .TopInpageNav a:visited, .BottomInpageNav a:link, .BottomInpageNav a:visited , #CentralSpaceLogin a:link, #CentralSpaceLogin a:visited {text-decoration:none;}
 .TopInpageNav a:hover, .TopInpageNav a:active, .BottomInpageNav a:hover, .BottomInpageNav a:active, #CentralSpaceLogin a:hover, #CentralSpaceLogin a:active {text-decoration:underline;}
 .InpageNavLeftBlock span.Selected {font-weight: bold;}
+.InpageNavLeftBlock .ActionsContainer {height: 1.8rem;}
 
 
 .HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; font-size: 0;}
