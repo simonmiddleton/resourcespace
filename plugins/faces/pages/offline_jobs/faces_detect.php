@@ -7,10 +7,11 @@ if (!job_trigger_permission_check()) {
 }
 
 $job_user = getval("job_user", 0, true);
-$plugin = (bool) getval("plugin", 0, true);
+$plugin = getval("plugin", 0, true);
 
 if ($plugin) {
     // Accessed from plugin setup page, so adjust breadcrumbs accordingly
+    $parent_page = generateURL("{$baseurl_short}pages/manage_jobs.php");
     $breadcrumbs = [
         ['title' => $lang['systemsetup'],         'href' => "{$baseurl_short}pages/admin/admin_home.php",  'menu' => true],
         ['title' => $lang['pluginmanager'],       'href' => "{$baseurl_short}pages/team/team_plugins.php", 'menu' => false],
@@ -26,9 +27,10 @@ if ($plugin) {
             ['title' => $lang["job_configure"] . ": " . $lang["faces_detect_faces"]]
         ];
     } else {
+        $parent_page = generateURL("{$baseurl_short}pages/manage_jobs.php");
         $breadcrumbs = [
             ['title' => $lang['systemsetup'],       'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
-            ['title' => $lang["manage_jobs_title"], 'href' => "{$baseurl_short}pages/manage_jobs.php",      'menu' => false],
+            ['title' => $lang["manage_jobs_title"], 'href' => $parent_page, 'menu' => false],
             ['title' => $lang["job_configure"] . ": " . $lang["faces_detect_faces"]]
         ];
     }
@@ -82,7 +84,7 @@ if ($job_add_error) {
 
     <p><?php echo escape( $lang["faces_detect_faces_intro"]); ?></p>
 
-    <form method="post" id="faces_detect_form" action="<?php echo generateURL("{$baseurl_short}plugins/faces/pages/offline_jobs/faces_detect.php", ["job_user" => $job_user]); ?>">
+    <form method="post" id="faces_detect_form" action="<?php echo generateURL("{$baseurl_short}plugins/faces/pages/offline_jobs/faces_detect.php", ["job_user" => $job_user, "plugin" => $plugin]); ?>">
         <?php generateFormToken("faces_detect_form"); ?>
         <div class="QuestionSubmit">
             <label for="save"></label>
