@@ -3569,9 +3569,9 @@ $lang['oj_purge_duplicates_fifo'] = "Keep newest and remove older duplicates";
 $lang['oj_purge_duplicates_dry_run'] = "Dry run";
 $lang['oj_purge_duplicates_delete_perm'] = "Delete permanently";
 $lang['oj_purge_duplicates_delete_error'] = "Permanent deletion is not possible during a dry run";
-$lang['oj_purge_duplicates_collection_refs_help'] = "";
-$lang['oj_purge_duplicates_manage_method_help'] = "Setting this option controls the script will deal with the duplicates removal.";
-$lang['oj_purge_duplicates_dry_run_help'] = "Setting this option will perform trial run with no changes made to any resources. The log file containing the results of the trial run can be downloaded to review.";
+$lang['oj_purge_duplicates_collection_refs_help'] = "Sets the collections as the scope of the duplicate detection. You don't need to have all duplicates in the collections, just one of them will be enough. Duplicates will then be processed system-wide and purged via the manage method selected. Collections can be specified using a comma-separated list as well as ranges e.g 100,105,110-115";
+$lang['oj_purge_duplicates_manage_method_help'] = "Setting this option controls how the script will deal with the duplicates removal.";
+$lang['oj_purge_duplicates_dry_run_help'] = "Setting this option will perform a trial run with no changes made to any resources. The log file containing the results of the trial run can be downloaded to review.";
 $lang['oj_purge_duplicates_delete_perm_help'] = "Setting this option will cause duplicated resources to be deleted permanently, otherwise resources will be moved to the configured resource deletion state.";
 
 // Offline job config - reindex
