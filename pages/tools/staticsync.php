@@ -314,7 +314,7 @@ function ProcessFolder($folder)
             $dry_run_process_file_upload = process_file_upload(
                 new SplFileInfo($fullpath),
                 new SplFileInfo(get_temp_dir(false) . '/staticsync/' . generateSecureKey(16) . '.bin'),
-                ['file_move' => 'dry_run']
+                ['file_move' => 'dry_run', 'mime_file_based_detection' => false]
             );
             if (!$dry_run_process_file_upload['success']) {
                 printf(
