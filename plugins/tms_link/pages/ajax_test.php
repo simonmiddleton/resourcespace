@@ -26,5 +26,7 @@ catch (Exception $e) {
     $return["message"]    = $lang["tms_link_tms_link_failure"] . ": " . $returned_error;
 }
 unset($GLOBALS["use_error_exception"]);
+
+header('Content-Type: application/json');
 echo json_encode($return);
 exit();

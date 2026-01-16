@@ -18,5 +18,6 @@ if (
         'detail' => "{$baseurl}/login.php?logout=true&cookies_use=true");
 }
 
+header('Content-Type: application/json');
 echo json_encode($return);
 exit();
