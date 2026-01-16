@@ -2350,7 +2350,7 @@ function updatePageBackground() {
         jQuery('body').css('{background-image: none}');
         let slides = jQuery('body').find('.slide');
         if (slides.length > 0) {
-            slides.each(function(){jQuery(this).remove();});
+            slides.each(function(){jQuery(this).css({"background-image": "none"});});
         }
     }
 }
