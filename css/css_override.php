@@ -229,6 +229,9 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             border-top: unset;
             box-shadow: 0 -12px 15px -12px black;
         }
+        .FormHelpInner {
+            color: #cbcbcb;
+        }
         select, .sp-replacer {
             box-shadow: 0 1px 3px 1px #00000026;
         }
