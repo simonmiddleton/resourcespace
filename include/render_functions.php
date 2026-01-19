@@ -1963,7 +1963,9 @@ function display_field($n, $field, $newtab=false,$modal=false)
                value="yes"
                <?php if($field_save_error){?> checked<?php } ?>
                onClick="batch_edit_toggle_edit_multi_checkbox_question(<?php echo (int) $n; ?>);" <?php if(getval("copyfrom","")!="" && $use_copyfrom && $value!=""){echo " checked" ;} ?>>&nbsp;
-            <label for="editthis<?php echo $n?>"><?php echo escape($field["title"]) ?></label>
+            <label for="editthis<?php echo $n?>"><?php echo escape($field["title"]) ?>
+                <?php if(!$is_template && $field["required"]==1){ echo "<sup>*</sup>"; } ?>
+            </label>
             <div class="clearerleft"></div>
         </div>
         <!-- End of edit_multi_checkbox -->
@@ -4712,7 +4714,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
         if(!$is_template && $requiredfields)
             {
             ?>
-            <div class="RequiredFieldLabel"><sup>*</sup> <?php echo escape($lang['requiredfield']); ?></div>
+            <div class="RequiredFieldLabel"><sup>*</sup> <?php if($multiple){echo escape($lang["requiredfield_multiple"]); } else {echo escape($lang['requiredfield']); } ?></div>
             <?php
             }
 
