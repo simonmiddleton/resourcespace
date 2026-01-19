@@ -2243,8 +2243,7 @@ function get_dash_search_data($link = '', $promimg = 0)
     }
 
     $results = do_search($search, $restypes, $order_by, $archive, [0, 50], $sort);
-    
-    //$results = do_search($search, $restypes, $order_by, $archive, -1, $sort);
+
     $imagecount = 0;
 
     if (is_array($results)) {
