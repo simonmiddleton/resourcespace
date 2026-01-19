@@ -917,6 +917,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $return["result"] = "ERROR";
                 $return["errors"] = $save_errors;
                 }
+
+            header('Content-Type: application/json');
             echo json_encode($return);
             exit();
             }

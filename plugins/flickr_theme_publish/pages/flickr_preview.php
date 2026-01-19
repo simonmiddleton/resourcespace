@@ -19,5 +19,6 @@ if($ref>0)
     $keywords       = get_data_by_field($ref,$flickr_keywords_field);
     $photoid        = ps_value("SELECT flickr_photo_id value FROM resource WHERE ref = ?", array("i",$ref), "");
     $results=array($path,$title,$description,$keywords,$photoid);
+    header('Content-Type: application/json');
     echo json_encode($results);
     }

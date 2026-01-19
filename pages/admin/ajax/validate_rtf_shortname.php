@@ -14,5 +14,7 @@ $rtf_data = get_resource_type_field($ref);
 $duplicate = (bool) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$new_shortname), 0, "schema");
 
 $return["data"]["valid"] = $rtf_data["name"] != $new_shortname && !$duplicate;
+
+header('Content-Type: application/json');
 echo json_encode($return);
 exit();

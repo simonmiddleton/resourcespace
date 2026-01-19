@@ -171,6 +171,7 @@ if (get_post_bool('ajax')) {
         $response['error'] = $password_validation_result;
     }
 
+    header('Content-Type: application/json');
     echo json_encode($response);
     exit();
 }

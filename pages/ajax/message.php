@@ -19,6 +19,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
             $data["upgrade_in_progress"] = true;
         }
 
+        header('Content-Type: application/json');
         echo json_encode(array(
             "status" => "success",
             "data" => $data));

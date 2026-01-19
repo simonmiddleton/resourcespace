@@ -116,6 +116,7 @@ foreach ($delete_collections as $delete) {
                 'nc'                     => time()
             );
 
+            header('Content-Type: application/json');
             echo json_encode($response);
             exit();
         }

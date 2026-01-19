@@ -65,6 +65,7 @@ if ($ajax && 'get_sheetstyle_fields' == getval('action', '')) {
         );
     }
 
+    header('Content-Type: application/json');
     echo json_encode($response);
     exit();
 }

@@ -87,6 +87,7 @@ if ($ajax === 'true' && trim($node_ref) != "" && 0 < $node_ref) {
         // update value of corresponding fieldx
         update_fieldx($field);
 
+        header('Content-Type: application/json');
         echo json_encode($response);
 
         clear_query_cache("schema");
@@ -182,6 +183,7 @@ if ($ajax === 'true' && trim($node_ref) != "" && 0 < $node_ref) {
             reorder_node($new_nodes_order);
         }
 
+        header('Content-Type: application/json');
         echo json_encode($response);
         exit();
     }
