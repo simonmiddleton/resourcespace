@@ -2777,7 +2777,9 @@ function email_resource($resource, $resourcename, $fromusername, $userlist, $mes
         $from_name = $applicationname;
     } // from_name is for the email headers, and needs to match the email address (app name or user name)
 
+    // Remove links from the sharing message entered by the user to prevent inclusion in the email or system message.
     $message = strip_tags_and_attributes($message);
+
     $message = str_replace(array("\\n","\\r","\\"), array("\n","\r",""), $message);
 
     $resolve_open_access = false;
