@@ -1781,7 +1781,7 @@ function add_hidden_modal_input(form, decision_factor)
     return true;
     }
 
-function api(name, params, callback, post_data_extra = {})
+function api(name, params, callback, post_data_extra = {}, options = {})
     {
     query = {};
     query["function"] = name;
@@ -1793,6 +1793,11 @@ function api(name, params, callback, post_data_extra = {})
     postobj = Object.assign({}, post_data_extra);
     postobj['query'] = jQuery.param(query);
     postobj['authmode'] = "native";
+
+    var onStart = (options && typeof options.onStart === "function") ? options.onStart : null;
+    var onEnd   = (options && typeof options.onEnd === "function")   ? options.onEnd   : null;
+
+    if (onStart) onStart();
 
     // Below is used to get access to responseURL
     var xhr = new XMLHttpRequest();
@@ -1827,7 +1832,10 @@ function api(name, params, callback, post_data_extra = {})
                 ? jqXHR.responseJSON.data.message
                 : textStatus;
             console.error("API Error: %s - %s", errorThrown, response);
-            });
+            })
+        .always(function() {
+            if (onEnd) onEnd();
+        });
     }
 
 /**

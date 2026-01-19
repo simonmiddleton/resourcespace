@@ -556,7 +556,9 @@ if (!$validpage) {
                 $order_by = isset($search_string["order_by"]) ? $search_string["order_by"] : "";
                 $archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
                 $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
-                $resources = do_search($search, $restypes, $order_by, $archive, -1, $sort);
+                $results = do_search($search, $restypes, $order_by, $archive, [0, 100], $sort);
+                $resources = $results["data"];
+                $full_resource_count = $results["total"];
             } elseif ('fcthm' == $tile_type) {
                 $link_parts = explode('?', $link);
                 parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
@@ -583,9 +585,12 @@ if (!$validpage) {
                     $promoted_resource = dash_tile_featured_collection_get_resources($parent_col_data, array("limit" => 1, "use_thumbnail_selection_method" => true));
                     $promoted_resource = (!empty($promoted_resource) ? $promoted_resource[0]["ref"] : 0);
                 }
+
+                $full_resource_count = count($resources);
             }
 
-            if (count($resources) > 0) {
+            if ($full_resource_count > 0 && $full_resource_count <= 100) {              
+
                 ?>
                 <div class="Question" id="promotedresource">
                     <label for="promoted_image"><?php echo escape($lang['dashtileimage']); ?></label>
@@ -622,6 +627,14 @@ if (!$validpage) {
                         }
                     });
                 </script>
+                <?php
+            } elseif ($full_resource_count > 100) {
+                ?>
+                <div class="Question" id="promotedresource">
+                    <label for="promoted_image"><?php echo escape($lang['dashtileimage']); ?></label>
+                    <input type="text" id="previewimage" name="promoted_image" value="<?php echo escape($promoted_resource); ?>"/>
+                    <div class="clearerleft"></div>
+                </div>
                 <?php
             }
         }
@@ -761,11 +774,13 @@ if (!$validpage) {
             jQuery("#previewdashtile").load("<?php echo escape($previewurl); ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
         }
 
-        updateDashTilePreview();
         jQuery("#previewtitle").change(updateDashTilePreview);
         jQuery("#previewtext").change(updateDashTilePreview);
         jQuery("#resource_count").change(updateDashTilePreview);
-        jQuery(".tlstyle").change(updateDashTilePreview);
+        jQuery('input[name="tlstyle"]').change(function (e) {
+            if (!this.checked) return;
+            updateDashTilePreview();
+        });
         jQuery("#promotedresource").change(updateDashTilePreview);
     </script>
 </div><!-- End of BasicsBox -->

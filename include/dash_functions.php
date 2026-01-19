@@ -2201,7 +2201,11 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
                     jQuery('div#' + TILE_ID + ' p.no_resources').removeClass('DisplayNone');
                 }
             },
-            <?php echo generate_csrf_js_object('get_dash_search_data'); ?>
+            <?php echo generate_csrf_js_object('get_dash_search_data'); ?>,
+            {
+                onStart: function() { jQuery('#<?php echo escape($tile_id); ?>').addClass('is-loading'); },
+                onEnd:   function() { jQuery('#<?php echo escape($tile_id); ?>').removeClass('is-loading'); }
+            }
             );
         });
     </script>
@@ -2238,40 +2242,79 @@ function get_dash_search_data($link = '', $promimg = 0)
         $search_all_workflow_states = false;
     }
 
-    $results = do_search($search, $restypes, $order_by, $archive, -1, $sort);
+    $results = do_search($search, $restypes, $order_by, $archive, [0, 50], $sort);
+    
+    //$results = do_search($search, $restypes, $order_by, $archive, -1, $sort);
     $imagecount = 0;
 
     if (is_array($results)) {
-        $resultcount = count($results);
-        $searchdata["count"] = $resultcount;
-        $n = 0;
 
-        // First see if we can get the promoted image by adding it to the front of the array
-        if ($promimg != 0) {
-            $add = get_resource_data($promimg);
-            if (is_array($add)) {
-                array_unshift($results, $add);
-            }
-        }
+        if (key_exists("total", $results)) {
 
-        while ($imagecount < 4 && $n < $resultcount && $n < 50) { // Don't keep trying to find images if none exist
-            global $access; // Needed by check_use_watermark()
-            $access = get_resource_access($results[$n]);
-            if (in_array($access, [RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL])) {
-                $use_watermark = check_use_watermark();
-                if (
-                    !resource_has_access_denied_by_RT_size($results[$n]['resource_type'], 'pre')
-                    && file_exists(get_resource_path($results[$n]['ref'], true, 'pre', false, 'jpg', -1, 1, $use_watermark))
-                ) {
-                    $searchdata["images"][$imagecount]["ref"] = $results[$n]["ref"];
-                    $searchdata["images"][$imagecount]["thumb_width"] = $results[$n]["thumb_width"];
-                    $searchdata["images"][$imagecount]["thumb_height"] = $results[$n]["thumb_height"];
-                    $searchdata["images"][$imagecount]["url"] = get_resource_path($results[$n]["ref"], false, "pre", false, "jpg", -1, 1, $use_watermark);
-                    $searchdata["images"][$imagecount]["title"] = escape($results[$n]["field" . $view_title_field] ?? $lang["resource-1"] . " " . $results[$n]["ref"]);
-                    $imagecount++;
+            $resultcount = $results["total"];
+            $searchdata["count"] = $resultcount;
+            $n = 0;
+
+            // First see if we can get the promoted image by adding it to the front of the array
+            if ($promimg != 0) {
+                $add = get_resource_data($promimg);
+                if (is_array($add)) {
+                    array_unshift($results["data"], $add);
                 }
             }
-            $n++;
+
+            while ($imagecount < 4 && $n < $resultcount && $n < 50) { // Don't keep trying to find images if none exist
+                global $access; // Needed by check_use_watermark()
+                $access = get_resource_access($results["data"][$n]);
+                if (in_array($access, [RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL])) {
+                    $use_watermark = check_use_watermark();
+                    if (
+                        !resource_has_access_denied_by_RT_size($results["data"][$n]['resource_type'], 'pre')
+                        && file_exists(get_resource_path($results["data"][$n]['ref'], true, 'pre', false, 'jpg', -1, 1, $use_watermark))
+                    ) {
+                        $searchdata["images"][$imagecount]["ref"] = $results["data"][$n]["ref"];
+                        $searchdata["images"][$imagecount]["thumb_width"] = $results["data"][$n]["thumb_width"];
+                        $searchdata["images"][$imagecount]["thumb_height"] = $results["data"][$n]["thumb_height"];
+                        $searchdata["images"][$imagecount]["url"] = get_resource_path($results["data"][$n]["ref"], false, "pre", false, "jpg", -1, 1, $use_watermark);
+                        $searchdata["images"][$imagecount]["title"] = escape($results["data"][$n]["field" . $view_title_field] ?? $lang["resource-1"] . " " . $results["data"][$n]["ref"]);
+                        $imagecount++;
+                    }
+                }
+                $n++;
+            }
+
+        } else {
+            $resultcount = count($results);
+            $searchdata["count"] = $resultcount;
+            $n = 0;
+
+            // First see if we can get the promoted image by adding it to the front of the array
+            if ($promimg != 0) {
+                $add = get_resource_data($promimg);
+                if (is_array($add)) {
+                    array_unshift($results, $add);
+                }
+            }
+
+            while ($imagecount < 4 && $n < $resultcount && $n < 50) { // Don't keep trying to find images if none exist
+                global $access; // Needed by check_use_watermark()
+                $access = get_resource_access($results[$n]);
+                if (in_array($access, [RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL])) {
+                    $use_watermark = check_use_watermark();
+                    if (
+                        !resource_has_access_denied_by_RT_size($results[$n]['resource_type'], 'pre')
+                        && file_exists(get_resource_path($results[$n]['ref'], true, 'pre', false, 'jpg', -1, 1, $use_watermark))
+                    ) {
+                        $searchdata["images"][$imagecount]["ref"] = $results[$n]["ref"];
+                        $searchdata["images"][$imagecount]["thumb_width"] = $results[$n]["thumb_width"];
+                        $searchdata["images"][$imagecount]["thumb_height"] = $results[$n]["thumb_height"];
+                        $searchdata["images"][$imagecount]["url"] = get_resource_path($results[$n]["ref"], false, "pre", false, "jpg", -1, 1, $use_watermark);
+                        $searchdata["images"][$imagecount]["title"] = escape($results[$n]["field" . $view_title_field] ?? $lang["resource-1"] . " " . $results[$n]["ref"]);
+                        $imagecount++;
+                    }
+                }
+                $n++;
+            }
         }
     }
     return $searchdata;
