@@ -12,14 +12,13 @@ function youtube_publish_initialize()
     $client = new Google_Client();
     $client->setClientId($youtube_publish_client_id);
     $client->setClientSecret($youtube_publish_client_secret);
-    /*
-    * This OAuth 2.0 access scope allows for full read/write access to the
-    * authenticated user's account and requires requests to use an SSL connection.
-    */
-    $client->setScopes('https://www.googleapis.com/auth/youtube.force-ssl');
-    $redirect = $baseurl . "/plugins/youtube_publish/pages/youtube_upload.php";
-    $client->setRedirectUri($redirect);
 
+    // Scope description: "See, edit, and permanently delete your YouTube videos, ratings, comments and captions"
+    $client->setScopes(Google_Service_YouTube::YOUTUBE_FORCE_SSL);
+    $client->setRedirectUri("{$baseurl}/plugins/youtube_publish/pages/youtube_upload.php");
+
+    // Offline access will give you both an access and refresh token so that your app can refresh the access token
+    // without user interaction.
     $client->setAccessType('offline');
     $client->setApprovalPrompt('force');
 

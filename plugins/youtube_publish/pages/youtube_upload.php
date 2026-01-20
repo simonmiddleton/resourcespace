@@ -207,7 +207,7 @@ if (isset($youtube_new_url) && $youtube_new_url) {
 
 <p> 
 <?php echo escape($lang["youtube_publish_existingurl"]) . "<p>";
-if ($youtube_url != "") {
+if (isset($youtube_url) && $youtube_url != "") {
     echo $youtube_url;
     if (!$youtube_publish_allow_multiple && !isset($youtube_new_url)) {
         echo "</p><div class=\"FormIncorrect\"><p><br>" . $lang["youtube_publish_alreadypublished"] . "</p></div>";
