@@ -7,8 +7,6 @@ var ajaxinprogress=false;
 const currentPageUrlParams = new URLSearchParams(window.location.search);
 const external_access_key = currentPageUrlParams.get('k');
 
-const valid_img_bg_pages = ['home', 'collections_featured'];
-
 // prevent all caching of ajax requests by stupid browsers like IE
 jQuery.ajaxSetup({ cache: false });
 
@@ -2349,21 +2347,8 @@ function updatePageTitle(pagename, pluginname = '') {
             document.title = data;
         }
     })
-    updatePageBackground();
 }
 
-/** 
- * Remove residual background images from the page if the user is not currently on a page that supports them.  
-*/
-function updatePageBackground() {
-    if(!valid_img_bg_pages.includes(pagename)) {
-        jQuery('body').css('{background-image: none}');
-        let slides = jQuery('body').find('.slide');
-        if (slides.length > 0) {
-            slides.each(function(){jQuery(this).css({"background-image": "none"});});
-        }
-    }
-}
 /**
  * Extracts the plugin name from a given URL.
  * @param {string} url - The URL to extract the plugin name from.
