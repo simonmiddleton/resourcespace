@@ -1224,9 +1224,8 @@ jQuery(document).ready(function()
         // Clear checksum to prevent edit conflicts for this field if they perform multiple subsequent edits
         jQuery("#field_" + field + "_checksum").val('');
         jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,formdata,
-            function(data)
+            function(saveresult)
                 {
-                saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
                     jQuery('#AutoSaveStatus' + field).html('<?php echo escape($lang["saved"]); ?>');
