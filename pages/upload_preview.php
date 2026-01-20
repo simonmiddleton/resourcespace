@@ -73,8 +73,11 @@ $urlparams = array(
     'refreshcollectionframe'    => 'true'
 );
 
-#handle posts
-if (array_key_exists("userfile", $_FILES) && enforcePostRequest(false)) {
+if (
+    array_key_exists("userfile", $_FILES)
+    && enforcePostRequest(false)
+    && $_FILES['userfile']['error'] === UPLOAD_ERR_OK
+) {
     $status = upload_preview($ref);
     if ($status !== false) {
         redirect(generateURL($baseurl . "/pages/view.php", $urlparams));
@@ -151,4 +154,3 @@ include "../include/header.php";
 
 <?php
 include "../include/footer.php";
-?>
