@@ -313,6 +313,7 @@ if (in_array($extension, $unoconv_extensions) && $extension != 'pdf' && isset($u
         if (
             $extract_pdf_text
             && in_array($extension, $extracted_text_extensions)
+            && $alternative == -1
         ) {
             global $offline_job_queue, $offline_job_in_progress;
             if ($offline_job_queue && !$offline_job_in_progress) {
@@ -347,7 +348,7 @@ if (in_array($extension, $unoconv_extensions) && $extension != 'pdf' && isset($u
 
         // We need to avoid a job spinning off another job because create_previews() can run as an offline job and it
         // includes preview_preprocessing.php.
-        if ($extract_pdf_text) {
+        if ($extract_pdf_text && $alternative == -1) {
             global $offline_job_queue, $offline_job_in_progress;
             if ($offline_job_queue && !$offline_job_in_progress) {
                 $extract_text_job_data = array(
