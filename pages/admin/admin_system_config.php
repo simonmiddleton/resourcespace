@@ -550,6 +550,7 @@ if (count($system_config_hide) > 0) {
 // Process autosaving requests
 // Note: $page_def must be defined by now in order to make sure we only save options that we've defined
 if ('true' === getval('ajax', '') && 'true' === getval('autosave', '')) {
+    header('Content-Type: application/json');
     $response['success'] = true;
     $response['message'] = '';
 

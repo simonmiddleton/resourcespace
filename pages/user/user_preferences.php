@@ -279,6 +279,7 @@ include "../../include/header.php";
         if ('true' === getval('ajax', '') && 'true' === getval('autosave', '')) {
             // Get rid of any output we have so far as we don't need to return it
             ob_end_clean();
+            header('Content-Type: application/json');
 
             $response['success'] = true;
             $response['message'] = '';

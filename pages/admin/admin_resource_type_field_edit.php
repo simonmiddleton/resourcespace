@@ -77,6 +77,7 @@ if (getval("delete", "") != "" && enforcePostRequest($ajax)) {
         $result = delete_resource_type_field($ref);
         if ($result === true) {
             if ($ajax) {
+                header('Content-Type: application/json');
                 echo json_encode(
                     array(
                         'deleted' => $ref
@@ -88,6 +89,7 @@ if (getval("delete", "") != "" && enforcePostRequest($ajax)) {
             }
         } elseif (is_string($result)) {
             if ($ajax) {
+                header('Content-Type: application/json');
                 echo json_encode(
                     array(
                         'message' => $result
