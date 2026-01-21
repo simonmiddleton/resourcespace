@@ -717,7 +717,11 @@ function extract_exif_comment($ref, $extension = "")
                         if (strpos($value, ':') == 4) {
                             $date_time_parts = explode(' ', $value);
                             $date_time_parts[0] = str_replace(':', '-', $date_time_parts[0]);
-                            $value = implode(' ', $date_time_parts);
+                            if ($read_from[$i]["type"] == FIELD_TYPE_DATE) {
+                                $value = $date_time_parts[0];
+                            } else {
+                                $value = implode(' ', $date_time_parts);
+                            }
                             debug("-- Converted- field: " . $read_from[$i]["ref"] . ' type: ' . $read_from[$i]["type"] . " value: $value");
                         }
 
