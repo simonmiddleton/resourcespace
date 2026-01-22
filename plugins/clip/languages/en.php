@@ -40,6 +40,7 @@ $lang["page-title_clip_webcam"] = "Webcam Tag Generator";
 
 $lang["clip-ai_smart_search"] = "CLIP AI Smart Search";
 $lang["clip-generate_vectors"] = "Generate CLIP vectors";
+$lang["clip-configure_job"] = "Configure job to generate CLIP vectors";
 $lang["clip-job_limit"] = "Batch size limit";
 $lang["clip-job_limit_help"] = "Setting this option will limit the number of resources processed in one run.";
 $lang["clip-job_limit_error"] = "Value must be between 1 and 100000 or blank for no limit";
