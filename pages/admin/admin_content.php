@@ -72,7 +72,8 @@ include "../../include/header.php";
     
     <div style="float:right;margin-top:-5px;">
         <div class="TopInpageNav">
-        <?php pager();?></div>
+            <?php pager();?>
+        </div>
     </div>
 
     <div class="Listview">
