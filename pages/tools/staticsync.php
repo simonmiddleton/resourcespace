@@ -4,8 +4,14 @@ include_once __DIR__ . "/../../include/boot.php";
 include_once __DIR__ . "/../../include/image_processing.php";
 command_line_only();
 
-$send_notification  = false;
-$suppress_output    = (isset($staticsync_suppress_output) && $staticsync_suppress_output) ? true : false;
+$send_notification = false;
+$suppress_output = $staticsync_suppress_output ?? false; # prevent poluting the test output
+$syncdir = rtrim($syncdir, '/');
+
+if ($syncdir === '') {
+    logScript('[WARN] StaticSync $syncdir is not configured!');
+    exit(1);
+}
 
 // CLI options check
 $cli_short_options = 'hcd:';
@@ -86,9 +92,6 @@ if (is_process_lock("staticsync")) {
     exit();
 }
 set_process_lock("staticsync");
-
-// Strip trailing slash if it has been left in
-$syncdir = rtrim($syncdir, "/");
 
 echo "Preloading data... ";
 
