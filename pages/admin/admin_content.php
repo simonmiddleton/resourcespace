@@ -70,7 +70,10 @@ include "../../include/header.php";
     $jumpcount = 1;
     ?>
     
-    <div style="float:right;margin-top:-5px;"><?php pager();?></div>
+    <div style="float:right;margin-top:-5px;">
+        <div class="TopInpageNav">
+        <?php pager();?></div>
+    </div>
 
     <div class="Listview">
         <table class="ListviewStyle">
