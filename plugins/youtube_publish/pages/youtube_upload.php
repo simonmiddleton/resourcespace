@@ -103,7 +103,7 @@ if (!$youtube_object) {
 $youtube_username = ps_value("SELECT youtube_username AS value FROM user WHERE ref = ?", array("i", $userref), "");
 
 if ($youtube_object && isset($_POST['video_title']) && isset($_POST['video_description'])) {
-    $video_title = substr(getval("video_title", ""), 0, $title_character_limit);
+    $video_title = mb_substr(getval("video_title", ""), 0, $title_character_limit);
     $video_description = getval("video_description", "");
     $video_keywords = getval("video_keywords", "");
     $filename = get_data_by_field($ref, $filename_field);
@@ -240,7 +240,7 @@ echo "</p>";
     <?php generateFormToken("youtube_upload"); ?>
     <div class="Question" >
         <label for="video_title"><?php echo escape($lang["youtube_publish_video_title"]); ?></label>
-        <input type="text" class="stdwidth" name="video_title" value="<?php echo substr($title, 0, $title_character_limit); ?>" maxlength="<?php echo $title_character_limit; ?>"/>
+        <input type="text" class="stdwidth" name="video_title" value="<?php echo mb_substr(escape($title), 0, $title_character_limit); ?>" maxlength="<?php echo escape($title_character_limit); ?>"/>
         <br>
         <label for="video_description"><?php echo escape($lang["youtube_publish_video_description"]); ?></label>
         <textarea class="stdwidth" rows="6" columns="50" id="video-description" name="video_description"><?php echo strip_tags($description); ?></textarea>
