@@ -455,7 +455,7 @@ function simplesaml_update_metadata()
         curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
         $response = curl_exec($ch);
         $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        unset($ch);
     } catch (Throwable $t) {
         $error = str_replace("%error%", $t->getMessage(), $GLOBALS['lang']['simplesaml_update_metadata_error']);
         debug("simplesaml - " . $error);

@@ -783,15 +783,15 @@ function formatfilesize(int $bytes, bool $html = true): string
 
     global $lang;
     if ($bytes < $multiple) {
-        return number_format((double)$bytes) . $space . escape($lang["byte-symbol"]);
+        return number_format((float)$bytes) . $space . escape($lang["byte-symbol"]);
     } elseif ($bytes < pow($multiple, 2)) {
-        return number_format((double)ceil($bytes / $multiple)) . $space . escape($lang["kilobyte-symbol" . $lang_suffix]);
+        return number_format((float)ceil($bytes / $multiple)) . $space . escape($lang["kilobyte-symbol" . $lang_suffix]);
     } elseif ($bytes < pow($multiple, 3)) {
-        return number_format((double)$bytes / pow($multiple, 2), 1) . $space . escape($lang["megabyte-symbol" . $lang_suffix]);
+        return number_format((float)$bytes / pow($multiple, 2), 1) . $space . escape($lang["megabyte-symbol" . $lang_suffix]);
     } elseif ($bytes < pow($multiple, 4)) {
-        return number_format((double)$bytes / pow($multiple, 3), 1) . $space . escape($lang["gigabyte-symbol" . $lang_suffix]);
+        return number_format((float)$bytes / pow($multiple, 3), 1) . $space . escape($lang["gigabyte-symbol" . $lang_suffix]);
     } else {
-        return number_format((double)$bytes / pow($multiple, 4), 1) . $space . escape($lang["terabyte-symbol" . $lang_suffix]);
+        return number_format((float)$bytes / pow($multiple, 4), 1) . $space . escape($lang["terabyte-symbol" . $lang_suffix]);
     }
 }
 
@@ -5248,7 +5248,7 @@ function check_filestore_browseability()
         curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
         curl_exec($ch);
         $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        unset($ch);
     } catch (Throwable $t) {
         $return['status'] = $GLOBALS['lang']['unknown'];
         $return['info'] = $GLOBALS['show_error_messages'] && $GLOBALS['show_detailed_errors'] ? $t->getMessage() : '';
