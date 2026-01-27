@@ -3578,5 +3578,5 @@ $lang['oj_extracted_text_update_all_help'] = "Setting this option will run the e
 
 $lang["requiredfield_multiple"] = "This is a required field when changing the archive state";
 
-$lang["reorder_invalid"] = "Collection can not be re-ordered unless the sort order is Collection order";
-$lang["reorder_permissions_fail"] = "Collection can not be re-ordered as you are missing permissions for all resources";
+$lang["reorder_invalid"] = "Collection can not be re-ordered unless the sort order is collection order";
+$lang["reorder_permissions_fail"] = "Collection can not be re-ordered as you do not have access to all resources in this collection";
