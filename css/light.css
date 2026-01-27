@@ -173,7 +173,7 @@ div.autocomplete ul li {color: #000;}
 #imageData{color: #666;}
 #imageData #caption{ font-weight: bold;	}
 #overlay{ background-color: #000;}
-.FormHelpInner{background-color:#ffffff;border:1px solid #2e99e6;border-radius:4px;}
+.FormHelpInner{color: #626262}
 .RecordDownloadSpace .HorizontalWhiteNav a:active, .RecordPanel .RecordDownloadSpace .HorizontalWhiteNav a:hover {color:#FFFFFF;} 
 .NoFind {border: none;background: #FFFFFF;}
 .NoFind .highlight {color:#000000;font-weight: bold;}
