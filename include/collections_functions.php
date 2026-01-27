@@ -629,7 +629,7 @@ function collection_remove_resources($collection, $resources = '', $removeall = 
  */
 function collection_writeable($collection)
 {
-    $collectiondata = get_collection($collection);
+    $collectiondata = get_collection($collection, true);
     if ($collectiondata === false) {
         return false;
     }
@@ -710,7 +710,7 @@ function collection_readable($collection)
     if (!is_numeric($collection)) {
         return false;
     }
-    $collectiondata = get_collection($collection);
+    $collectiondata = get_collection($collection, true);
     if ($collectiondata === false) {
         return false;
     }

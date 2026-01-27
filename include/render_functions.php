@@ -4991,7 +4991,7 @@ function render_featured_collections(array $ctx, array $items)
         if (
             $is_featured_collection
             && !$is_smart_featured_collection
-            && ($collection_data = get_collection($fc['ref']))
+            && ($collection_data = get_collection($fc['ref'], true))
             && allow_upload_to_collection(is_array($collection_data) ? $collection_data : [])
         ) {
             $render_ctx['tools'][] = $tool_upload_to_collection;
@@ -5047,7 +5047,7 @@ function render_featured_collections(array $ctx, array $items)
 
             if (
                 !$fc_category_has_children
-                && ($collection_data = get_collection($fc['ref']))
+                && ($collection_data = get_collection($fc['ref'], true))
                 && allow_upload_to_collection(is_array($collection_data) ? $collection_data : [])
             ) {
                 $render_ctx['tools'][] = $tool_upload_to_collection;

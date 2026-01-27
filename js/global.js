@@ -995,7 +995,7 @@ function ModalCentre()
         modalmaxheight = 'auto';
         modalwidth = 'auto';
     } else {
-        modalmaxheight = jQuery('.ui-layout-container').height() - 60;
+        modalmaxheight = "calc(100% - 100px)";
         modalwidth = 1235;
     }
 
@@ -1198,31 +1198,6 @@ jQuery(document).ready(function()
             }
         })
     });
-
-function HideCollectionBar() {
-    if (typeof collection_bar_hidden === "undefined" || collection_bar_hidden==false){
-        colbarresizeon=false;
-        myLayout.options.south.spacing_open = 0;
-        myLayout.options.south.spacing_closed = 0;
-        myLayout.options.south.minSize = 0;
-        myLayout.sizePane("south",1);
-        jQuery('#CollectionDiv').hide();
-        collection_bar_hidden=true;
-        }
-    }
-
-
-function ShowCollectionBar() {
-    if (typeof collection_bar_hidden === "undefined" || collection_bar_hidden==true){
-        colbarresizeon=true;
-        myLayout.options.south.spacing_open = 6;
-        myLayout.options.south.spacing_closed = 6;
-        myLayout.options.south.minSize = 40;
-        collection_bar_hidden=false;
-        jQuery('#CollectionDiv').show();
-        InitThumbs();
-    }
-}
 
 function ChosenDropdownInit(elem, selector)
     {
@@ -1792,8 +1767,8 @@ function api(name, params, callback, post_data_extra = {}, options = {})
     postobj['query'] = jQuery.param(query);
     postobj['authmode'] = "native";
 
-    var onStart = (options && typeof options.onStart === "function") ? options.onStart : null;
-    var onEnd   = (options && typeof options.onEnd === "function")   ? options.onEnd   : null;
+    const onStart = (options && typeof options.onStart === "function") ? options.onStart : null;
+    const onEnd   = (options && typeof options.onEnd === "function")   ? options.onEnd   : null;
 
     if (onStart) onStart();
 

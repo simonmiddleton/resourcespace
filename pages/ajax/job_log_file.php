@@ -113,7 +113,7 @@ if ($type == "progress") {
         $processed_lines = [];
 
         foreach ($sliced_lines as $line) {
-            $processed_lines[] = ["text" => $line, "type" => process_line($line)];
+            $processed_lines[] = ["text" => escape($line), "type" => escape(process_line($line))];
         }
 
         return $processed_lines;
@@ -197,7 +197,7 @@ if ($type == "progress") {
 
                 foreach ($parts as $line) {
                     if ($line === '') continue;
-                    $lines[] = ["text" => $line, "type" => process_line($line)];
+                    $lines[] = ["text" => escape($line), "type" => escape(process_line($line))];
                 }
 
                 // Advance offset only through the newline we processed
