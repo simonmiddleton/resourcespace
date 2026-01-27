@@ -862,23 +862,21 @@ if ($collectionsearch && $display!="list") {
             update: function(event, ui)
                 {
                 // Don't reorder when top and bottom collections are the same and you drag & reorder from top to bottom
-                // Text here will need updating ^^
-                if(ui.item[0].parentElement.id == 'CollectionSpace' || ui.item[0].parentElement.id == 'CollectionMaxDiv')
+                if(ui.item[0].parentElement.id == 'CollectionSpace')
                     {
-                    return false;
-                    }
-                if(!allow_reorder) 
-                    {
-                    toastNotification('Error', '<?php echo $lang["reorder_permissions_fail"]; ?>');
                     return false;
                     }
                 if (use_sortable_for_trash_only)
                     {
                     // We are only using sortable for the ability to use the trash bin when the collection order is not "collection" 
                     // and so we need to abandon the attempted reorder in this scenario
-                    // Text here will need updating ^^
                     toastNotification('Error', '<?php echo $lang["reorder_invalid"]; ?>');
                     return false;    
+                    }
+                if(!allow_reorder) 
+                    {
+                    toastNotification('Error', '<?php echo $lang["reorder_permissions_fail"]; ?>');
+                    return false;
                     }
 
                 InfoBoxEnabled=true;

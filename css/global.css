@@ -550,7 +550,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 /*Collection layout*/
 #CollectionMenu{padding: 10px; text-align:left; position: fixed; margin-left: 15px;}
 #CollectionMenuExp{width: 216px;position: absolute;left: 25px;top: 6px;text-align:left;}
-#CollectionSpace{font-size: 0.95em;text-align:left; margin-top: 3px; margin-left: 250px;}
+#CollectionSpace{font-size: 0.95em;text-align:left; margin-top: 3px; margin-left: 250px; min-height:160px;}
 .CollectionSpaceExp {position: absolute;left: 249px;top: 6px;font-size: 0.95em;text-align:left;}
 .CollectionStatsAnon {margin-bottom:15px;}
 .CollectBack h2 {font-size: 1.3em;}
