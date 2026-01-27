@@ -571,7 +571,7 @@ function get_job_progress_from_log_file(string $path = "", string $pattern = "/\
             if ($line === '') continue;
             if (@preg_match($pattern, $line)) {
                 fclose($fp);
-                return ['found' => $line, 'last_line' => $last_line];
+                return ['found' => escape($line), 'last_line' => escape($last_line)];
             }
         }
     }
@@ -583,12 +583,12 @@ function get_job_progress_from_log_file(string $path = "", string $pattern = "/\
         }
         if (@preg_match($pattern, $carry)) {
             fclose($fp);
-            return ['found' => $carry, 'last_line' => $last_line];
+            return ['found' => escape($carry), 'last_line' => escape($last_line)];
         }
     }
 
     fclose($fp);
-    return ['found' => null, 'last_line' => $last_line];
+    return ['found' => null, 'last_line' => escape($last_line)];
 
 }
 

@@ -51,7 +51,7 @@ $page_def[] = config_add_text_input("clip_keyword_count", $lang["clip-keyword-co
 
 if (job_trigger_permission_check()) {
     $page_def[] = config_add_section_header("Offline Jobs");
-    $page_def[] = config_add_html("<p>Configure job to generate CLIP vectors <input type=\"button\" value=\"Configure Job\" onclick=\"window.location.href='" . 
+    $page_def[] = config_add_html("<p>" . escape($lang["clip-configure_job"]) . " <input type=\"button\" value=\"" . escape($lang["job_configure"]) . "\" onclick=\"window.location.href='" . 
                                     generateURL($baseurl_short . "/plugins/clip/pages/offline_jobs/generate_vectors.php", ['job_user' => 0, 'plugin' => 1]) . "'\"></p>");
 }
 

@@ -5,11 +5,15 @@ include "../include/authenticate.php";
 $logref = getval("ref", "", true);
 $k = getval("k", "");
 $modal = (getval("modal", "") == "true");
-$log_entry = get_resource_log(null, 1, array("r.ref" => $logref))['data'];
-
-if (!is_array($log_entry) || count($log_entry) == 0) {
+$log_entry = get_resource_log(null, 1, array("r.ref" => $logref));
+if (
+    !array_key_exists('data', $log_entry) 
+    || !is_array($log_entry['data']) 
+    || count($log_entry['data']) == 0
+) {
     exit($lang['error_invalid_input']);
 }
+$log_entry = $log_entry['data'];
 
 $log_entry = $log_entry[0];
 $searchparams = get_search_params();

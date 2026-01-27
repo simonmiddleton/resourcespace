@@ -7,8 +7,6 @@ var ajaxinprogress=false;
 const currentPageUrlParams = new URLSearchParams(window.location.search);
 const external_access_key = currentPageUrlParams.get('k');
 
-const valid_img_bg_pages = ['home', 'collections_featured'];
-
 // prevent all caching of ajax requests by stupid browsers like IE
 jQuery.ajaxSetup({ cache: false });
 
@@ -997,7 +995,7 @@ function ModalCentre()
         modalmaxheight = 'auto';
         modalwidth = 'auto';
     } else {
-        modalmaxheight = jQuery('.ui-layout-container').height() - 60;
+        modalmaxheight = "calc(100% - 100px)";
         modalwidth = 1235;
     }
 
@@ -1200,31 +1198,6 @@ jQuery(document).ready(function()
             }
         })
     });
-
-function HideCollectionBar() {
-    if (typeof collection_bar_hidden === "undefined" || collection_bar_hidden==false){
-        colbarresizeon=false;
-        myLayout.options.south.spacing_open = 0;
-        myLayout.options.south.spacing_closed = 0;
-        myLayout.options.south.minSize = 0;
-        myLayout.sizePane("south",1);
-        jQuery('#CollectionDiv').hide();
-        collection_bar_hidden=true;
-        }
-    }
-
-
-function ShowCollectionBar() {
-    if (typeof collection_bar_hidden === "undefined" || collection_bar_hidden==true){
-        colbarresizeon=true;
-        myLayout.options.south.spacing_open = 6;
-        myLayout.options.south.spacing_closed = 6;
-        myLayout.options.south.minSize = 40;
-        collection_bar_hidden=false;
-        jQuery('#CollectionDiv').show();
-        InitThumbs();
-    }
-}
 
 function ChosenDropdownInit(elem, selector)
     {
@@ -1781,7 +1754,7 @@ function add_hidden_modal_input(form, decision_factor)
     return true;
     }
 
-function api(name, params, callback, post_data_extra = {})
+function api(name, params, callback, post_data_extra = {}, options = {})
     {
     query = {};
     query["function"] = name;
@@ -1793,6 +1766,11 @@ function api(name, params, callback, post_data_extra = {})
     postobj = Object.assign({}, post_data_extra);
     postobj['query'] = jQuery.param(query);
     postobj['authmode'] = "native";
+
+    const onStart = (options && typeof options.onStart === "function") ? options.onStart : null;
+    const onEnd   = (options && typeof options.onEnd === "function")   ? options.onEnd   : null;
+
+    if (onStart) onStart();
 
     // Below is used to get access to responseURL
     var xhr = new XMLHttpRequest();
@@ -1827,7 +1805,10 @@ function api(name, params, callback, post_data_extra = {})
                 ? jqXHR.responseJSON.data.message
                 : textStatus;
             console.error("API Error: %s - %s", errorThrown, response);
-            });
+            })
+        .always(function() {
+            if (onEnd) onEnd();
+        });
     }
 
 /**
@@ -2310,21 +2291,8 @@ function updatePageTitle(pagename, pluginname = '') {
             document.title = data;
         }
     })
-    updatePageBackground();
 }
 
-/** 
- * Remove residual background images from the page if the user is not currently on a page that supports them.  
-*/
-function updatePageBackground() {
-    if(!valid_img_bg_pages.includes(pagename)) {
-        jQuery('body').css('{background-image: none}');
-        let slides = jQuery('body').find('.slide');
-        if (slides.length > 0) {
-            slides.each(function(){jQuery(this).css({"background-image": "none"});});
-        }
-    }
-}
 /**
  * Extracts the plugin name from a given URL.
  * @param {string} url - The URL to extract the plugin name from.

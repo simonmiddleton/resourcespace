@@ -416,7 +416,6 @@ $lang["action-editall"] = "Edit all";
 $lang['edit_all_resources'] = 'Edit all resources';
 $lang["hidethumbnails"] = "Hide thumbs";
 $lang["showthumbnails"] = "Show thumbs";
-$lang["toggle"] = "Toggle";
 $lang["resize"] = "Resize";
 $lang["contactsheet"] = "Contact sheet";
 $lang["mycollection"] = "Default Collection";
@@ -2970,16 +2969,7 @@ $lang["api-url"] = "API URL";
 $lang["force_edit_resource_type"] = "Force edit access to resource type: ";
 
 // Responsive
-$lang["responsive_configtitle"] = "Responsive";
-$lang["responsive_main_menu"] = "Menu";
-$lang["responsive_settings_menu"] = "Account";
-$lang["responsive_more"] = "More...";
-$lang["responsive_less"] = "Less...";
-$lang['responsive_collectiontogglehide'] = "Hide";
 $lang['linkedheaderimgsrc'] = "Location of the logo image in the header (Defaults to ResourceSpace):";
-$lang['responsive_result_settings'] = 'Result Settings';
-$lang['responsive_view_full_site'] = 'View full site';
-// end of Responsive
 
 /* Actions */
 $lang["actions_myactions"] = "Actions";
@@ -3585,3 +3575,5 @@ $lang['oj_checksums_recreate_help'] = "Setting this option will force ALL resour
 $lang['oj_extracted_text_update_all'] = "Update even if there is existing data, and overwrite old values";
 $lang['oj_extracted_text_collection_refs_help'] = "Setting this option will limit processed resources to those in the listed collections only. If no collections are specified then extracted text will be updated for ALL suitable resources. Collections can be specified using a comma-separated list as well as ranges e.g 100,105,110-115";
 $lang['oj_extracted_text_update_all_help'] = "Setting this option will run the extraction even if there is existing data, and overwrite the old value.";
+
+$lang["requiredfield_multiple"] = "This is a required field when changing the archive state";
