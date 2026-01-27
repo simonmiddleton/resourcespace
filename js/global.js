@@ -1767,8 +1767,8 @@ function api(name, params, callback, post_data_extra = {}, options = {})
     postobj['query'] = jQuery.param(query);
     postobj['authmode'] = "native";
 
-    var onStart = (options && typeof options.onStart === "function") ? options.onStart : null;
-    var onEnd   = (options && typeof options.onEnd === "function")   ? options.onEnd   : null;
+    const onStart = (options && typeof options.onStart === "function") ? options.onStart : null;
+    const onEnd   = (options && typeof options.onEnd === "function")   ? options.onEnd   : null;
 
     if (onStart) onStart();
 
