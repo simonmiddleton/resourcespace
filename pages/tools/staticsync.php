@@ -5,7 +5,7 @@ include_once __DIR__ . "/../../include/image_processing.php";
 command_line_only();
 
 $send_notification = false;
-$suppress_output = $staticsync_suppress_output ?? false; # prevent poluting the test output
+$suppress_output = $staticsync_suppress_output ?? false; # prevent polluting the test output
 $syncdir = rtrim($syncdir, '/');
 
 if ($syncdir === '') {
@@ -313,22 +313,6 @@ function ProcessFolder($folder)
                 $extension = $modified_extension;
             }
 
-            // Verify if the file would actually pass the upload checks to prevent any unnecessary processing (e.g. collections)
-            $dry_run_process_file_upload = process_file_upload(
-                new SplFileInfo($fullpath),
-                new SplFileInfo(get_temp_dir(false) . '/staticsync/' . generateSecureKey(16) . '.bin'),
-                ['file_move' => 'dry_run', 'mime_file_based_detection' => false]
-            );
-            if (!$dry_run_process_file_upload['success']) {
-                printf(
-                    ' * Skipping file - %s: %s%s',
-                    $fullpath,
-                    $dry_run_process_file_upload['error']->i18n($lang),
-                    PHP_EOL
-                );
-                continue;
-            }
-
             global $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
 
             if ($count > $staticsync_max_files) {
@@ -361,6 +345,23 @@ function ProcessFolder($folder)
                         $errors[] = $message;
                         continue;
                     }
+                }
+
+                // Verify if the file would actually pass the upload checks to prevent any unnecessary processing
+                // (e.g. collections)
+                $dry_run_process_file_upload = process_file_upload(
+                    new SplFileInfo($fullpath),
+                    new SplFileInfo(get_temp_dir(false) . '/staticsync/' . generateSecureKey(16) . '.bin'),
+                    ['file_move' => 'dry_run']
+                );
+                if (!$dry_run_process_file_upload['success']) {
+                    printf(
+                        ' * Skipping file - %s: %s%s',
+                        $fullpath,
+                        $dry_run_process_file_upload['error']->i18n($lang),
+                        PHP_EOL
+                    );
+                    continue;
                 }
 
                 $count++;
@@ -830,11 +831,20 @@ function ProcessFolder($folder)
 
                 $get_resource_path_fpcache[$existing] = ""; // Forces get_resource_path to ignore the syncdir file_path
                 $destination = get_resource_path($existing, true, "", true, $extension, -1, 1, false, "", $alternative);
-                $result = copy($syncdir . "/" . $shortpath, $destination); // Copy instead of rename so that permissions of filestore will be used
 
-                if ($result === false) {
-                    # The copy failed.
-                    debug(" - ERROR: Staticsync failed to copy file from: " .  $syncdir . "/" . $shortpath);
+                $process_file = process_file_upload(
+                    new SplFileInfo($fullpath),
+                    new SplFileInfo($destination),
+                    // Copy instead of rename so that permissions of filestore will be used
+                    ['file_move' => 'copy']
+                );
+                if (!$process_file['success']) {
+                    printf(
+                        ' - [ERROR] Failed to force ingest file - %s: %s%s',
+                        $fullpath,
+                        $process_file['error']->i18n($lang),
+                        PHP_EOL
+                    );
                     return false;
                 }
 
@@ -871,6 +881,22 @@ function ProcessFolder($folder)
 
                 $filemod = filemtime($fullpath);
                 if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]) || (isset($staticsync_revive_state) && $done[$shortpath]["archive"] == $staticsync_deleted_state)) {
+                    // Verify if the file would actually pass the upload checks to prevent any unnecessary processing
+                    $dry_run_process_file_upload = process_file_upload(
+                        new SplFileInfo($fullpath),
+                        new SplFileInfo(get_temp_dir(false) . '/staticsync/' . generateSecureKey(16) . '.bin'),
+                        ['file_move' => 'dry_run']
+                    );
+                    if (!$dry_run_process_file_upload['success']) {
+                        printf(
+                            ' * Skipping (changed) file - %s: %s%s',
+                            $fullpath,
+                            $dry_run_process_file_upload['error']->i18n($lang),
+                            PHP_EOL
+                        );
+                        continue;
+                    }
+
                     $count++;
                     # File has been modified since we last created previews. Create again.
                     $rd = ps_query("SELECT ref, has_image, file_modified, file_extension, archive FROM resource WHERE file_path= ?", ['s', $shortpath]);
