@@ -940,7 +940,11 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                         && $reset_date_field == $fields[$n]['ref']
                         && $fields[$n]['hide_when_uploading']
                     ) {
-                        $val = date('Y-m-d H:i');
+                        if ($fields[$n]['type'] == FIELD_TYPE_DATE) {
+                            $val = date('Y-M-d');
+                        } elseif ($fields[$n]['type'] == FIELD_TYPE_DATE_AND_OPTIONAL_TIME) {
+                            $val = date('Y-m-d H:i');
+                        }
                     }
 
                     // Check if resource field data has been changed between form being loaded and submitted
