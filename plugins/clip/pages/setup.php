@@ -38,6 +38,7 @@ $page_def[] = config_add_text_input("clip_results_limit_similar", $lang["clip_re
 
 
 $page_def[] = config_add_section_header($lang["clip-duplicate-images"]);
+$page_def[] = config_add_boolean_select("clip_enable_full_duplicate_search", $lang["clip_enable_full_duplicate_search"]);
 $page_def[] = config_add_percent_range("clip_duplicate_cutoff", $lang["clip_duplicate_cutoff"]);
 
 $page_def[] = config_add_section_header($lang["clip-automatic-tagging"]);
