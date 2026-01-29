@@ -2323,7 +2323,7 @@ a.Enabled, a:visited.Enabled {
     display: none;
     position: absolute;
     right: 100px;
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 6px 6px;
     z-index: 500;
     text-align: left;
 }

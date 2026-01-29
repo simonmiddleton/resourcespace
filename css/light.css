@@ -30,8 +30,6 @@ input[readonly] {
 .DisabledLink:hover {opacity: 0.35; cursor: default;}
 #Header a:hover,
 #Header .current {opacity:1;text-decoration: none}
-/* links in Header overflow dropdown menu */
-#HiddenLinks li a {color:#fff; opacity:0.7;}
 #Header .UploadButton a {color: #fff;}
 
 /* Colours for $header_text_title */
@@ -634,7 +632,7 @@ a.Enabled, a:visited.Enabled {
 }
 
 #OverFlowLinks {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: #fff;
 }
 
 #Header #ssearchbox {

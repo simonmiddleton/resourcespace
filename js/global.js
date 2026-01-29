@@ -1486,7 +1486,7 @@ function showHideLinks()
     jQuery('div#OverFlowLinks').toggle();
     jQuery('div#OverFlowLinks').css('right', 290);
     jQuery('div#OverFlowLinks').css('z-index', 1000);
-    jQuery('div#OverFlowLinks').css('top', 64);
+    jQuery('div#OverFlowLinks').css('top', 60);
     }
 
 /*
