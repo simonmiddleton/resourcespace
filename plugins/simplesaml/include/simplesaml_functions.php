@@ -246,7 +246,7 @@ function simplesaml_config_check(): array
         $version = $config->getVersion();
 
         // Try loading the authsource and the IdP metadata
-        $auth = new \SimpleSAML\Auth\Simple(trim($GLOBALS['simplesaml_sp'] ?? '') ?: 'resourcespace-sp');
+        $auth = new \SimpleSAML\Auth\Simple(get_saml_sp_name());
         $metadata_handler = \SimpleSAML\Metadata\MetaDataStorageHandler::getMetadataHandler();
         $metadata_handler->getMetaDataConfig(
             $auth->getAuthSource()->getMetadata()->getValue('idp'),
@@ -363,40 +363,12 @@ function simplesaml_generate_keypair($dn)
         );
 }
 
-/**
- * Get the name of the saml sp to use
- *
- * @return string
- */
-function get_saml_sp_name()
+/** Get the name of the saml SP to use */
+function get_saml_sp_name(): string
 {
-    global $simplesaml_sp, $safe_sp, $simplesaml_rsconfig, $simplesamlconfig;
-    if ($safe_sp != "") {
-        return $safe_sp;
-    }
-
-    $default_sp_name = "resourcespace-sp";
-    $safe_sp = "";
-    if (
-        !$simplesaml_rsconfig
-        || (isset($simplesamlconfig["authsources"]) && is_array($simplesamlconfig["authsources"]))
-    ) {
-        // If SAML has been configured we need to ensure that defined SP is valid
-        $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
-        $GLOBALS["use_error_exception"] = true;
-        try {
-            require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
-            $as = new SimpleSAML\Auth\Simple($simplesaml_sp);
-            $as->getAuthSource();
-        } catch (exception $e) {
-            // Invalid SP name, use default
-            $simplesaml_sp = $default_sp_name;
-        }
-        $GLOBALS["use_error_exception"] = $use_error_exception_cache;
-    } else {
-        $simplesaml_sp = $default_sp_name;
-    }
-    return $simplesaml_sp;
+    $default_sp_name = 'resourcespace-sp';
+    $sp_name = trim($GLOBALS['simplesaml_sp'] ?? '');
+    return ($sp_name !== '' && $sp_name !== $default_sp_name) ? $sp_name : $default_sp_name;
 }
 
 
