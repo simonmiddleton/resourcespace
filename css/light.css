@@ -30,8 +30,6 @@ input[readonly] {
 .DisabledLink:hover {opacity: 0.35; cursor: default;}
 #Header a:hover,
 #Header .current {opacity:1;text-decoration: none}
-/* links in Header overflow dropdown menu */
-#HiddenLinks li a {color:#fff; opacity:0.7;}
 #Header .UploadButton a {color: #fff;}
 
 /* Colours for $header_text_title */
@@ -173,7 +171,7 @@ div.autocomplete ul li {color: #000;}
 #imageData{color: #666;}
 #imageData #caption{ font-weight: bold;	}
 #overlay{ background-color: #000;}
-.FormHelpInner{background-color:#ffffff;border:1px solid #2e99e6;border-radius:4px;}
+.FormHelpInner{color: #626262}
 .RecordDownloadSpace .HorizontalWhiteNav a:active, .RecordPanel .RecordDownloadSpace .HorizontalWhiteNav a:hover {color:#FFFFFF;} 
 .NoFind {border: none;background: #FFFFFF;}
 .NoFind .highlight {color:#000000;font-weight: bold;}
@@ -634,7 +632,7 @@ a.Enabled, a:visited.Enabled {
 }
 
 #OverFlowLinks {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: #fff;
 }
 
 #Header #ssearchbox {

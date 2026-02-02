@@ -629,7 +629,7 @@ function collection_remove_resources($collection, $resources = '', $removeall = 
  */
 function collection_writeable($collection)
 {
-    $collectiondata = get_collection($collection);
+    $collectiondata = get_collection($collection, true);
     if ($collectiondata === false) {
         return false;
     }
@@ -710,7 +710,7 @@ function collection_readable($collection)
     if (!is_numeric($collection)) {
         return false;
     }
-    $collectiondata = get_collection($collection);
+    $collectiondata = get_collection($collection, true);
     if ($collectiondata === false) {
         return false;
     }
@@ -1480,13 +1480,13 @@ function save_collection($ref, $coldata = array())
             // Log the changes
             foreach ($sqlset as $colopt => $colset) {
                 switch ($colopt) {
-                    case "public";
+                    case "public":
                         collection_log($ref, LOG_CODE_COLLECTION_ACCESS_CHANGED, 0, $colset ? 'public' : 'private');
                     break;
-                    case "allow_changes";
+                    case "allow_changes":
                         collection_log($ref, LOG_CODE_UNSPECIFIED, 0, $colset ? 'true' : 'false');
                     break;
-                    default;
+                    default:
                         collection_log($ref, LOG_CODE_EDITED, 0, $colopt  . " = " . $colset);
                     break;
                 }

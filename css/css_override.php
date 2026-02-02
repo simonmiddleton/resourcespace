@@ -230,7 +230,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             box-shadow: 0 -12px 15px -12px black;
         }
         .FormHelpInner {
-            background-color: #6c6c6c;
+            color: #cbcbcb;
         }
         select, .sp-replacer {
             box-shadow: 0 1px 3px 1px #00000026;
@@ -616,9 +616,6 @@ if (isset($high_contrast_mode) && $high_contrast_mode) { ?>
     textarea, select, .sp-replacer {
         border: 1px solid black;
         box-shadow: none;
-    }
-    .FormHelpInner {
-        border: 1px solid #146cab;
     }
     .uppy-Dashboard-inner {
         border: 1px solid black;
