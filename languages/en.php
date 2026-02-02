@@ -3577,3 +3577,6 @@ $lang['oj_extracted_text_collection_refs_help'] = "Setting this option will limi
 $lang['oj_extracted_text_update_all_help'] = "Setting this option will run the extraction even if there is existing data, and overwrite the old value.";
 
 $lang["requiredfield_multiple"] = "This is a required field when changing the archive state";
+
+$lang["reorder_invalid"] = "Collection can not be re-ordered unless the sort order is collection order";
+$lang["reorder_permissions_fail"] = "Collection can not be re-ordered as you do not have access to all resources in this collection";
