@@ -2292,7 +2292,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears
        ?>
-       <div class="FormHelp" style="padding:0; clear:left;" id="help_<?php echo $field["ref"]; ?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"])))?></div></div>
+       <div class="FormHelp" style="padding:0; clear:left;" id="help_<?php echo (int)$field["ref"]; ?>"><div class="FormHelpInner"><?php echo strip_tags_and_attributes(nl2br(trim(i18n_get_translated($field["help_text"]))))?></div></div>
 <?php
      }
     if(($embedded_data_user_select || (isset($embedded_data_user_select_fields) && in_array($field["ref"],$embedded_data_user_select_fields))) && ($ref<0 && !$multiple))
