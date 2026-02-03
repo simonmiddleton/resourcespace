@@ -3057,7 +3057,13 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 
         // Ensure that new ratio of crop matches that of the specified size or we may end up missing the target size
         // If landscape crop, set the width first, then base the height on that
-        $desiredratio = (int)$actions["width"] / (int)$actions["height"];
+        if ((isset($actions["new_width"]) && (int) $actions["new_width"] > 0) && (isset($actions["new_height"]) && (int) $actions["new_height"] > 0)) {
+            // Target dimensions passed, so use those to calculate the final width/height 
+            $desiredratio = (int) $actions["new_width"] / (int) $actions["new_height"];
+        } else {
+            $desiredratio = (int) $actions["width"] / (int) $actions["height"];
+        }
+
         if ($desiredratio > 1) {
             $finalwidth  = round($actions["width"] * $xfactor, 0);
             $finalheight = round($finalwidth / $desiredratio, 0);
