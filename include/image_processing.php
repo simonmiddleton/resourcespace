@@ -2231,10 +2231,10 @@ function AutoRotateImage($src_image, $ref = false)
         # get the orientation
         $orientation = get_image_orientation($file);
         if ($orientation != 0) {
-            $cmd = $convert_fullpath . ' -rotate %%ORIENTATION%% %%SOURCE%% %%DESTINATION%%';
+            $cmd = $convert_fullpath . '%%SOURCE%% -rotate %%ORIENTATION%% %%DESTINATION%%';
             $params = [
-                '%%ORIENTATION%%' => new CommandPlaceholderArg('+' . (int) $orientation, [CommandPlaceholderArg::class, 'alwaysValid']),
                 '%%SOURCE%%' => new CommandPlaceholderArg($src_image, 'is_valid_rs_path'),
+                '%%ORIENTATION%%' => new CommandPlaceholderArg('+' . (int) $orientation, [CommandPlaceholderArg::class, 'alwaysValid']),
                 '%%DESTINATION%%' => new CommandPlaceholderArg($new_image, 'is_valid_rs_path'),
             ];
             run_command($cmd, false, $params);
@@ -3890,8 +3890,7 @@ function create_previews_using_im(
                 || !$mpr_edited
             ) {
                 // Only add initial binary path source etc. if not using MPR or if this is the first part of the MPR command
-                $command = $convert_fullpath . ' ' . $addcheckbdpre;
-                $command .= "%%SOURCEFILE%%[0] ";
+                $command = $convert_fullpath . ' %%SOURCEFILE%%[0] ' . $addcheckbdpre;
                 if ($imagemagick_mpr) {
                     $command .= ' -quiet -depth ' . $GLOBALS['imagemagick_mpr_depth'];
                 }
