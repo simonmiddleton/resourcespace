@@ -780,13 +780,7 @@ if ($collectionsearch && $display!="list") {
     global $usersession;
 ?>
     <script type="text/javascript">
-    var allow_reorder = true;
-    <?php if ($allow_reorder == false) { ?>
-        allow_reorder = false;
-    <?php
-    }
-    ?>
-
+    var allow_reorder = <?php echo $allow_reorder ? 'true' : 'false'; ?>;
     var use_sortable_for_trash_only = false;
     <?php if ($order_by != "collection") { ?>
         var use_sortable_for_trash_only = true;
@@ -870,12 +864,12 @@ if ($collectionsearch && $display!="list") {
                     {
                     // We are only using sortable for the ability to use the trash bin when the collection order is not "collection" 
                     // and so we need to abandon the attempted reorder in this scenario
-                    toastNotification('Error', '<?php echo $lang["reorder_invalid"]; ?>');
+                    toastNotification('Error', '<?php echo escape($lang["reorder_invalid"]); ?>');
                     return false;    
                     }
                 if(!allow_reorder) 
                     {
-                    toastNotification('Error', '<?php echo $lang["reorder_permissions_fail"]; ?>');
+                    toastNotification('Error', '<?php echo escape($lang["reorder_permissions_fail"]); ?>');
                     return false;
                     }
 
