@@ -1,6 +1,6 @@
 <?php
 // OpenAI key from https://openai.com/api/
-global $openai_gpt_api_key,$openai_gpt_model;
+global $openai_gpt_api_key, $openai_gpt_model;
 $openai_gpt_api_key = $openai_gpt_api_key ?? "";
 $openai_gpt_model = $openai_gpt_model ?? "gpt-4o";
 $openai_gpt_fallback_model = "gpt-3.5-turbo";
@@ -47,4 +47,9 @@ $valid_ai_field_types = [
 
 // Allow plugin to overwrite existing data (e.g. exif data)
 $openai_gpt_overwrite_data = false;
+
+// The number of tokens that can be used in the specified time period
+$openai_gpt_token_limit = 5000;
+// The number of days the token limit applies to
+$openai_gpt_token_limit_days = 60;
 
