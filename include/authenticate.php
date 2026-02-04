@@ -238,6 +238,11 @@ if (hook("replacesitetextloader")) {
 }   /* end replacesitetextloader */
 
 $GLOBALS['plugins'] = register_group_access_plugins($usergroup, $plugins ?? []);
+if (preg_match('/\/plugins\/([\w-]+)\//', $_SERVER['REQUEST_URI'], $matches)) {
+    if (!in_array($matches[1], $plugins)) {
+        redirect($baseurl);
+    }
+}
 
 // Load user config options
 process_config_options(array('usergroup' => $usergroup));
