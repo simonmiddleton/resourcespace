@@ -1,7 +1,10 @@
 <?php
 
-// Get config from ResourceSpace
+// Get IdP metadata config from ResourceSpace config
 global $simplesamlconfig;
-foreach ($simplesamlconfig["metadata"] as $idp => $idpmetadata) {
-    $metadata[$idp] = $idpmetadata;
+
+if (isset($simplesamlconfig['metadata'])) {
+    foreach ($simplesamlconfig['metadata'] as $idp => $idpmetadata) {
+        $metadata[$idp] = $idpmetadata;
+    }
 }

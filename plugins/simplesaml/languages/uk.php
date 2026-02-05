@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'Скинути пароль адмі
 $lang["page-title_simplesaml_about"] = 'SAML Про систему';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Згенерувати конфігурацію SP';
 $lang["page-title_simplesaml_setup"] = 'Налаштування плагіна Simple SAML';
+$lang["simplesaml_error_not_configured"] = 'Плагін SimpleSAML не налаштовано';
+$lang["simplesaml_error_no_idp_metadata"] = 'Плагін SimpleSAML не повністю налаштований (бракує метаданих IdP)';
+$lang["simplesaml_error_no_authsource"] = 'Плагін SimpleSAML не повністю налаштований (відсутній authsource)';

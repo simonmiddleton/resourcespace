@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = '重置 SimpleSAML 测试站点管理
 $lang["page-title_simplesaml_about"] = 'SAML 关于';
 $lang["page-title_simplesaml_generate_sp_config"] = '生成 SP 配置';
 $lang["page-title_simplesaml_setup"] = '设置简单 SAML 插件';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML 插件未配置';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML 插件未完全配置（缺少 IdP 元数据）';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML 插件未完全配置（缺少 authsource）';

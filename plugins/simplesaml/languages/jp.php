@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'シンプルSAMLテストサイト�
 $lang["page-title_simplesaml_about"] = 'SAMLについて';
 $lang["page-title_simplesaml_generate_sp_config"] = 'SP設定を生成する';
 $lang["page-title_simplesaml_setup"] = 'シンプルSAMLプラグインの設定';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAMLプラグインが構成されていません';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAMLプラグインは完全に構成されていません（IdPメタデータが不足しています）';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAMLプラグインは完全に構成されていません（authsourceが不足しています）';

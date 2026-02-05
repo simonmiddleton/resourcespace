@@ -108,3 +108,6 @@ $lang["simplesaml_admin_password_reset"] = 'Resetează parola de administrator a
 $lang["page-title_simplesaml_about"] = 'SAML Despre';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generați configurația SP';
 $lang["page-title_simplesaml_setup"] = 'Configurare Plugin Simple SAML';
+$lang["simplesaml_error_not_configured"] = 'Pluginul SimpleSAML nu este configurat';
+$lang["simplesaml_error_no_idp_metadata"] = 'Pluginul SimpleSAML nu este complet configurat (lipsesc metadatele IdP)';
+$lang["simplesaml_error_no_authsource"] = 'Pluginul SimpleSAML nu este complet configurat (lipsă authsource)';

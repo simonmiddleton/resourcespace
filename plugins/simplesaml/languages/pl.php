@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'Zresetuj hasło administratora testo
 $lang["page-title_simplesaml_about"] = 'SAML Informacje';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Generuj konfigurację SP';
 $lang["page-title_simplesaml_setup"] = 'Skonfiguruj wtyczkę Simple SAML';
+$lang["simplesaml_error_not_configured"] = 'Plugin SimpleSAML nie jest skonfigurowany';
+$lang["simplesaml_error_no_idp_metadata"] = 'Plugin SimpleSAML nie jest w pełni skonfigurowany (brak metadanych IdP)';
+$lang["simplesaml_error_no_authsource"] = 'Plugin SimpleSAML nie jest w pełni skonfigurowany (brakuje authsource)';

@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = '간단한 SAML 테스트 사이트 �
 $lang["page-title_simplesaml_about"] = 'SAML 정보';
 $lang["page-title_simplesaml_generate_sp_config"] = 'SP 구성 생성';
 $lang["page-title_simplesaml_setup"] = '간단한 SAML 플러그인 설정';
+$lang["simplesaml_error_not_configured"] = 'SimpleSAML 플러그인이 구성되지 않았습니다';
+$lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML 플러그인이 완전히 구성되지 않았습니다 (IdP 메타데이터가 누락됨)';
+$lang["simplesaml_error_no_authsource"] = 'SimpleSAML 플러그인이 완전히 구성되지 않았습니다 (authsource 누락)';

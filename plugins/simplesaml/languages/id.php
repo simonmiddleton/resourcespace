@@ -104,3 +104,6 @@ $lang["simplesaml_admin_password_reset"] = 'Reset kata sandi admin situs uji Sim
 $lang["page-title_simplesaml_about"] = 'SAML Tentang';
 $lang["page-title_simplesaml_generate_sp_config"] = 'Hasilkan Konfigurasi SP';
 $lang["page-title_simplesaml_setup"] = 'Atur Plugin SAML Sederhana';
+$lang["simplesaml_error_not_configured"] = 'Plugin SimpleSAML tidak dikonfigurasi';
+$lang["simplesaml_error_no_idp_metadata"] = 'Plugin SimpleSAML tidak sepenuhnya dikonfigurasi (metadata IdP hilang)';
+$lang["simplesaml_error_no_authsource"] = 'Plugin SimpleSAML tidak sepenuhnya dikonfigurasi (authsource hilang)';

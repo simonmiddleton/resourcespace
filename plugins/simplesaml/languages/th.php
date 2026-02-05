@@ -102,3 +102,6 @@ $lang["simplesaml_admin_password_reset"] = 'รีเซ็ตพาสเวิ
 $lang["page-title_simplesaml_about"] = 'SAML เกี่ยวกับ';
 $lang["page-title_simplesaml_generate_sp_config"] = 'สร้างการกำหนดค่า SP';
 $lang["page-title_simplesaml_setup"] = 'ตั้งค่า Simple SAML Plugin';
+$lang["simplesaml_error_not_configured"] = 'ปลั๊กอิน SimpleSAML ยังไม่ได้รับการกำหนดค่า';
+$lang["simplesaml_error_no_idp_metadata"] = 'ปลั๊กอิน SimpleSAML ยังไม่ได้รับการกำหนดค่าอย่างสมบูรณ์ (ขาดข้อมูลเมตาของ IdP)';
+$lang["simplesaml_error_no_authsource"] = 'ปลั๊กอิน SimpleSAML ยังไม่ได้รับการกำหนดค่าอย่างสมบูรณ์ (ขาด authsource)';
