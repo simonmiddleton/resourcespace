@@ -238,7 +238,6 @@ if (hook("replacesitetextloader")) {
 }   /* end replacesitetextloader */
 
 $GLOBALS['plugins'] = register_group_access_plugins($usergroup, $plugins ?? []);
-die($_SERVER['REQUEST_URI']);
 if (preg_match('/^' . preg_quote($baseurl_short, '/') . 'plugins\/([\w-]+)\//', $_SERVER['REQUEST_URI'], $matches)) {
     if (!in_array($matches[1], $GLOBALS['plugins'])) {
         redirect($baseurl);
