@@ -3891,7 +3891,7 @@ function create_previews_using_im(
                 || !$mpr_edited
             ) {
                 // Only add initial binary path source etc. if not using MPR or if this is the first part of the MPR command
-                $command = $convert_fullpath . ' %%SOURCEFILE%%[0] ' . $addcheckbdpre;
+                $command = $convert_fullpath . " {$addcheckbdpre} %%SOURCEFILE%%[0] ";
                 if ($imagemagick_mpr) {
                     $command .= ' -quiet -depth ' . $GLOBALS['imagemagick_mpr_depth'];
                 }
