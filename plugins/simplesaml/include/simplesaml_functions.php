@@ -247,11 +247,18 @@ function simplesaml_config_check(): array
 
         // Try loading the authsource and the IdP metadata
         $auth = new \SimpleSAML\Auth\Simple(get_saml_sp_name());
+        $sp = $auth->getAuthSource();
+        $idp = $sp->getMetadata()->getOptionalValue('idp', null);
+
+        // SSP can be configured to have an SP not linked to an IdP => user gets to select the IdP instead (e.g. UK
+        // Federation, WAYFless convention). The IdP list should still be valid so checking the first one should be good
+        // enough
+        if ($idp === null) {
+            $idp = (string) array_key_first($GLOBALS['simplesamlconfig']['metadata'] ?? []);
+        }
+
         $metadata_handler = \SimpleSAML\Metadata\MetaDataStorageHandler::getMetadataHandler();
-        $metadata_handler->getMetaDataConfig(
-            $auth->getAuthSource()->getMetadata()->getValue('idp'),
-            'saml20-idp-remote'
-        );
+        $metadata_handler->getMetaDataConfig($idp, 'saml20-idp-remote');
     } catch (\SimpleSAML\Error\MetadataNotFound $e) {
         debug("[ERR] simplesaml: Simplesaml plugin is not fully configured (missing IdP metadata). Error details - {$e}");
         return $fail_due_to(text('simplesaml_error_no_idp_metadata'));
