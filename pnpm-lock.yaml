@@ -11,6 +11,9 @@ importers:
       capslockstate-jquery-plugin#1.2.1:
         specifier: github:nosilleg/capslockstate-jquery-plugin#1.2.1
         version: https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903
+      chosen-js:
+        specifier: ^1.8.7
+        version: 1.8.7
       jquery:
         specifier: ^3.6.0
         version: 3.7.1
@@ -36,6 +39,9 @@ packages:
     resolution: {tarball: https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903}
     version: 0.0.0
 
+  chosen-js@1.8.7:
+    resolution: {integrity: sha512-eVdrZJ2U5ISdObkgsi0od5vIJdLwq1P1Xa/Vj/mgxkMZf14DlgobfB6nrlFi3kW4kkvKLsKk4NDqZj1MU1DCpw==}
+
   jquery-tageditor@1.0.1:
     resolution: {integrity: sha512-PrTZ8PlHQvn5s4xRuUrEDMV5Z2whwXcsknNTdc9sNC3UEtqkJt+s1p4/xsu67iZwHwcS7pwDyY0RAlzBzPv6oA==}
 
@@ -59,6 +65,8 @@ packages:
 snapshots:
 
   capslockstate-jquery-plugin#1.2.1@https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903: {}
+
+  chosen-js@1.8.7: {}
 
   jquery-tageditor@1.0.1: {}
 
