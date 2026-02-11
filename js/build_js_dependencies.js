@@ -3,12 +3,25 @@ const path = require('path');
 const copy = (from, to) => {
     if (!fs.existsSync('node_modules/')) {
         console.error('Missing node_modules/. Run `pnpm install` first');
-    } else if (!fs.existsSync(from)) {
-        console.error('Missing file %o', from);
+        return;
     }
 
-    fs.mkdirSync(path.dirname(to), { recursive: true });
-    fs.copyFileSync(from, to);
+    if (!fs.existsSync(from)) {
+        console.error('Missing source file %o', from);
+        return;
+    }
+
+    if (fs.statSync(from).isDirectory()) {
+        fs.mkdirSync(to, { recursive: true });
+        fs.cpSync(from, to, {
+            recursive: true,
+            force: true, // overwrite if exists
+            errorOnExist: false
+        });
+    } else {
+        fs.mkdirSync(path.dirname(to), { recursive: true });
+        fs.copyFileSync(from, to);
+    }
 };
 
 // Map sources to /lib (our explicit dependency contract)
@@ -26,6 +39,9 @@ const files = [
   { src: 'node_modules/jquery-validation/dist/jquery.validate.min.js', dest: 'lib/js/jquery.validate.min.js' },
   { src: 'node_modules/jquery-validation/dist/additional-methods.min.js', dest: 'lib/js/jquery.validate.additional.js' },
   { src: 'node_modules/jquery-validation/LICENSE.md', dest: 'documentation/licenses/jquery-validation.txt' },
+  { src: 'node_modules/jstree/dist/jstree.min.js', dest: 'lib/jstree/jstree.min.js' },
+  { src: 'node_modules/jstree/dist/themes', dest: 'lib/jstree/themes' },
+  { src: 'node_modules/jstree/LICENSE-MIT', dest: 'documentation/licenses/jstree.txt' },
 ];
 
 for (const file of files) {

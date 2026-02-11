@@ -26,6 +26,9 @@ importers:
       jquery-validation:
         specifier: ^1.22.0
         version: 1.22.0(jquery@3.7.1)
+      jstree:
+        specifier: ^3.3.17
+        version: 3.3.17
 
 packages:
 
@@ -50,6 +53,9 @@ packages:
   jquery@3.7.1:
     resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
 
+  jstree@3.3.17:
+    resolution: {integrity: sha512-V0Pl1B6BIaxHUQMiWkol37QlhlBKoZA9RUeUmm95+UnV2QeZsj2QP1sOQl/m2EIOyZXOOxOHvR0SYZLSDC7EFw==}
+
 snapshots:
 
   capslockstate-jquery-plugin#1.2.1@https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903: {}
@@ -67,3 +73,7 @@ snapshots:
       jquery: 3.7.1
 
   jquery@3.7.1: {}
+
+  jstree@3.3.17:
+    dependencies:
+      jquery: 3.7.1
