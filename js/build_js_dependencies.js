@@ -1,10 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 const copy = (from, to) => {
+    if (!fs.existsSync('node_modules/')) {
+        console.error('Missing node_modules/. Run `pnpm install` first');
+    } else if (!fs.existsSync(from)) {
+        console.error('Missing file %o', from);
+    }
+
     fs.mkdirSync(path.dirname(to), { recursive: true });
     fs.copyFileSync(from, to);
 };
 
 // Map sources to /lib (our explicit dependency contract)
-// todo: make an object and simply process all of them (should be in a list)
-copy('node_modules/jquery/dist/jquery.min.js', 'lib/js/jquery-3.6.0.min.js');
+const files = [
+  { src: 'node_modules/jquery/dist/jquery.min.js', dest: 'lib/js/jquery-3.6.0.min.js' },
+//   { src: '', dest: '' }
+];
+
+for (const file of files) {
+    copy(file.src, file.dest);
+}
