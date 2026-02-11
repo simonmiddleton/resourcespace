@@ -21,6 +21,8 @@ const files = [
   { src: 'node_modules/jquery-ui/dist/jquery-ui.min.js', dest: 'lib/js/jquery-ui-1.13.2.min.js' },
   { src: 'node_modules/jquery-ui/LICENSE.txt', dest: 'documentation/licenses/jquery-ui.txt' },
   { src: 'node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js', dest: 'lib/js/jquery.ui.touch-punch.min.js' },
+  { src: 'node_modules/capslockstate-jquery-plugin#1.2.1/src/jquery.capslockstate.js', dest: 'lib/js/jquery.capslockstate.js' },
+  { src: 'node_modules/capslockstate-jquery-plugin#1.2.1/MIT-LICENSE.txt', dest: 'documentation/licenses/jquery.capslockstate.txt' },
 ];
 
 for (const file of files) {

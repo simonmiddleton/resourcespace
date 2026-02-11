@@ -13,6 +13,7 @@
   "license": "documentation/licenses/resourcespace.txt",
   "packageManager": "pnpm@10.25.0",
   "dependencies": {
+    "capslockstate-jquery-plugin#1.2.1": "github:nosilleg/capslockstate-jquery-plugin#1.2.1",
     "jquery": "^3.6.0",
     "jquery-tageditor": "^1.0.1",
     "jquery-ui": "1.13.2",
