@@ -20,6 +20,7 @@ const files = [
   { src: 'node_modules/jquery-tageditor/jquery.caret.min.js', dest: 'lib/jquery_tag_editor/jquery.caret.min.js' },
   { src: 'node_modules/jquery-ui/dist/jquery-ui.min.js', dest: 'lib/js/jquery-ui-1.13.2.min.js' },
   { src: 'node_modules/jquery-ui/LICENSE.txt', dest: 'documentation/licenses/jquery-ui.txt' },
+  { src: 'node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js', dest: 'lib/js/jquery.ui.touch-punch.min.js' },
 ];
 
 for (const file of files) {

@@ -17,11 +17,17 @@ importers:
       jquery-ui:
         specifier: 1.13.2
         version: 1.13.2
+      jquery-ui-touch-punch:
+        specifier: 0.2.3
+        version: 0.2.3
 
 packages:
 
   jquery-tageditor@1.0.1:
     resolution: {integrity: sha512-PrTZ8PlHQvn5s4xRuUrEDMV5Z2whwXcsknNTdc9sNC3UEtqkJt+s1p4/xsu67iZwHwcS7pwDyY0RAlzBzPv6oA==}
+
+  jquery-ui-touch-punch@0.2.3:
+    resolution: {integrity: sha512-Q/7aAd+SjbV0SspHO7Kuk96NJIbLwJAS0lD81U1PKcU2T5ZKayXMORH+Y5qvYLuy41xqVQbWimsRKDn1v3oI2Q==}
 
   jquery-ui@1.13.2:
     resolution: {integrity: sha512-wBZPnqWs5GaYJmo1Jj0k/mrSkzdQzKDwhXNtHKcBdAcKVxMM3KNYFq+iJ2i1rwiG53Z8M4mTn3Qxrm17uH1D4Q==}
@@ -32,6 +38,8 @@ packages:
 snapshots:
 
   jquery-tageditor@1.0.1: {}
+
+  jquery-ui-touch-punch@0.2.3: {}
 
   jquery-ui@1.13.2:
     dependencies:
