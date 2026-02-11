@@ -1,0 +1,18 @@
+{
+  "name": "resourcespace",
+  "version": "1.0.0",
+  "description": "ResourceSpace is the Digital Asset Management software offering a convenient, productive and easy to use solution for organising and sharing files.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:dependencies": "node js/build_js_dependencies.js",
+    "postinstall": "pnpm run build:dependencies"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "documentation/licenses/resourcespace.txt",
+  "packageManager": "pnpm@10.25.0",
+  "dependencies": {
+    "jquery": "^3.6.0"
+  }
+}
