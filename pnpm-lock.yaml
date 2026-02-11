@@ -14,11 +14,17 @@ importers:
       jquery-tageditor:
         specifier: ^1.0.1
         version: 1.0.1
+      jquery-ui:
+        specifier: ^1.13.2
+        version: 1.14.2
 
 packages:
 
   jquery-tageditor@1.0.1:
     resolution: {integrity: sha512-PrTZ8PlHQvn5s4xRuUrEDMV5Z2whwXcsknNTdc9sNC3UEtqkJt+s1p4/xsu67iZwHwcS7pwDyY0RAlzBzPv6oA==}
+
+  jquery-ui@1.14.2:
+    resolution: {integrity: sha512-1gSl7PUjyipa2adSr780Ujk16faicrV7PjPPzPtvWk7tTqBnsqp67NNV9jZK2+BIxUPXWSnIUU/LBCgwgGZE+Q==}
 
   jquery@3.7.1:
     resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
@@ -26,5 +32,9 @@ packages:
 snapshots:
 
   jquery-tageditor@1.0.1: {}
+
+  jquery-ui@1.14.2:
+    dependencies:
+      jquery: 3.7.1
 
   jquery@3.7.1: {}
