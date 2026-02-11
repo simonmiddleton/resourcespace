@@ -2450,9 +2450,15 @@ function config_check_valid_option(array $def, mixed $value): bool
             case 'integer_input':
                 $range_start = $def[3];
                 $range_end = $def[4];
-                if (is_int_loose($value) && (int) $value >= $range_start && (int) $value <= $range_end) {
-                    $result = true;
-                }
+                $result = (is_int_loose($value) && (int) $value >= $range_start && (int) $value <= $range_end);
+                break;
+            case 'single_select':
+                $valid_options = $def[3];
+                $result = in_array($value, $valid_options);
+                break;
+            case 'boolean_select':
+                $valid_options = array('0', '1');
+                $result = in_array($value, $valid_options);
                 break;
             default:
                 $result = true;

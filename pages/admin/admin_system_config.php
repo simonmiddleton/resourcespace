@@ -156,17 +156,22 @@ $page_def[] = config_add_boolean_select(
     false,
     $lang['systemconfig_native_date_input_no_partials_supported'],
 );
+$page_def[] = config_add_integer_input('slideshow_photo_delay', $lang['systemconfig_slideshow_photo_delay'], 2, 60, 55, null, true);
 $page_def[] = config_add_html('</div>');
 
 // General section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed"><i class="icon-notebook-text"></i>&nbsp;' . $lang['systemconfig_general'] . '</h3><div id="SystemConfigGeneralSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('date_yyyy', $lang['systemconfig_date_yyyy'], $yes_no_options, 420, null, true);
+$page_def[] = config_add_boolean_select('imperial_measurements', $lang['systemconfig_imperial_measurements'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('site_text_custom_create', $lang['systemconfig_site_text_custom_create'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('no_welcometext', $lang['systemconfig_no_welcometext'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('internal_preview_sizes_editable', $lang['systemconfig_internal_preview_sizes_editable'], $yes_no_options, 420, null, true);
+$page_def[] = config_add_boolean_select('edit_autosave', $lang['systemconfig_edit_autosave'], $yes_no_options, 420, null, true);
+$page_def[] = config_add_boolean_select('resource_request_reason_required', $lang['systemconfig_resource_request_reason_required'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('iiif_enabled', $lang['iiif_enable_option'], $enable_disable_options, 420, null, true);
 $page_def[] = config_add_boolean_select('research_request', $lang['systemconfig_research_request'], $enable_disable_options, 420, null, true);
-
+$page_def[] = config_add_boolean_select('custom_access', $lang['systemconfig_custom_access'], $enable_disable_options, 420, null, true);
+$page_def[] = config_add_boolean_select('enable_related_resources', $lang['systemconfig_enable_related_resources'], $enable_disable_options, 420, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Annotations section
@@ -202,6 +207,8 @@ $page_def[] = config_add_file_input(
     array('png'),
     true
 );
+$page_def[] = config_add_boolean_select('watermark_open', $lang['systemconfig_watermark_open'], $yes_no_options, 420, null, true);
+$page_def[] = config_add_boolean_select('watermark_open_search', $lang['systemconfig_watermark_open_search'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Multilingual section
@@ -297,6 +304,8 @@ $page_def[] = config_add_boolean_select('searchbyday', $lang['systemconfig_searc
 $page_def[] = config_add_single_select('default_collection_sort', $lang['systemconfig_default_collection_sort'], array('date', 'colour', 'collection', 'popularity', 'country', 'resourcetype'), false, 420, null, true);
 $page_def[] = config_add_boolean_select('thumbs_display_archive_state', $lang['systemconfig_systemconfig_searchbyday'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_integer_input('recent_search_quantity', $lang['systemconfig_recent_search_quantity'], 10, 5000, 55, null, true);
+$page_def[] = config_add_boolean_select('category_tree_search_use_and', $lang['systemconfig_category_tree_search_use_and'], $yes_no_options, 420, null, true);
+$page_def[] = config_add_boolean_select('category_tree_search_use_and_logic', $lang['systemconfig_category_tree_search_use_and_logic'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Navigation section
@@ -337,6 +346,7 @@ $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed"><i c
 $page_def[] = config_add_boolean_select('share_password_required', $lang['systemconfig_external_share_requires_password_label'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('external_share_groups_config_options', $lang['systemconfig_external_share_groups_config_options'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_integer_input('resource_share_expire_days_default', $lang['systemconfig_resource_share_expire_days_default'], 0, $resource_share_expire_days, 55, null, true);
+$page_def[] = config_add_boolean_select('restricted_share', $lang['systemconfig_restricted_share'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Metadata section
@@ -354,6 +364,7 @@ $page_def[] = config_add_boolean_select('show_resource_type', $lang['systemconfi
 $page_def[] = config_add_boolean_select('show_access_field', $lang['systemconfig_show_access_field'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('show_contributed_by', $lang['systemconfig_show_contributed_by'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('show_related_themes', $lang['systemconfig_show_related_themes'], $yes_no_options, 420, null, true);
+$page_def[] = config_add_boolean_select('metadata_download', $lang['systemconfig_metadata_download'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Uploading section
@@ -372,6 +383,7 @@ $page_def[] = config_add_boolean_select('terms_download', $lang['systemconfig_te
 $page_def[] = config_add_boolean_select('terms_login', $lang['systemconfig_terms_login_label'], $enable_disable_options, 420, null, true);
 $page_def[] = config_add_boolean_select('terms_upload', $lang['systemconfig_terms_upload_label'], $enable_disable_options, 420, null, true);
 $page_def[] = config_add_boolean_select('user_rating', $lang['systemconfig_user_rating_label'], $enable_disable_options, 420, null, true);
+$page_def[] = config_add_integer_input('inactive_user_disable_days', $lang['systemconfig_inactive_user_disable_days'], 30, 1825, 55, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Security section
