@@ -14,6 +14,7 @@ const copy = (from, to) => {
 // Map sources to /lib (our explicit dependency contract)
 const files = [
   { src: 'node_modules/jquery/dist/jquery.min.js', dest: 'lib/js/jquery-3.6.0.min.js' },
+  { src: 'node_modules/jquery/LICENSE.txt', dest: 'documentation/licenses/jquery.txt' }
 //   { src: '', dest: '' }
 ];
 
