@@ -47,6 +47,10 @@ const files = [
     { src: 'node_modules/chosen-js/chosen-sprite.png', dest: 'lib/chosen/chosen-sprite.png' },
     { src: 'node_modules/chosen-js/chosen-sprite@2x.png', dest: 'lib/chosen/chosen-sprite@2x.png' },
     { src: 'node_modules/chosen-js/LICENSE.md', dest: 'documentation/licenses/chosen.txt' },
+
+    { src: 'node_modules/dompurify/dist/purify.min.js', dest: 'lib/js/purify.min.js' },
+    { src: 'node_modules/dompurify/dist/purify.min.js.map', dest: 'lib/js/purify.min.js.map' }, // not versioned, only helps devs
+    { src: 'node_modules/dompurify/LICENSE', dest: 'documentation/licenses/DOMPurify.txt' },
 ];
 
 for (const file of files) {
