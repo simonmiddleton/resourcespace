@@ -11,12 +11,20 @@ importers:
       jquery:
         specifier: ^3.6.0
         version: 3.7.1
+      jquery-tageditor:
+        specifier: ^1.0.1
+        version: 1.0.1
 
 packages:
+
+  jquery-tageditor@1.0.1:
+    resolution: {integrity: sha512-PrTZ8PlHQvn5s4xRuUrEDMV5Z2whwXcsknNTdc9sNC3UEtqkJt+s1p4/xsu67iZwHwcS7pwDyY0RAlzBzPv6oA==}
 
   jquery@3.7.1:
     resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
 
 snapshots:
+
+  jquery-tageditor@1.0.1: {}
 
   jquery@3.7.1: {}

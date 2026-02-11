@@ -14,8 +14,11 @@ const copy = (from, to) => {
 // Map sources to /lib (our explicit dependency contract)
 const files = [
   { src: 'node_modules/jquery/dist/jquery.min.js', dest: 'lib/js/jquery-3.6.0.min.js' },
-  { src: 'node_modules/jquery/LICENSE.txt', dest: 'documentation/licenses/jquery.txt' }
-//   { src: '', dest: '' }
+  { src: 'node_modules/jquery/LICENSE.txt', dest: 'documentation/licenses/jquery.txt' },
+  { src: 'node_modules/jquery-tageditor/jquery.tag-editor.min.js', dest: 'lib/jquery_tag_editor/jquery.tag-editor.min.js' },
+  { src: 'node_modules/jquery-tageditor/jquery.tag-editor.css', dest: 'lib/jquery_tag_editor/jquery.tag-editor.css' },
+  { src: 'node_modules/jquery-tageditor/jquery.caret.min.js', dest: 'lib/jquery_tag_editor/jquery.caret.min.js' },
+//   { src: '', dest: '' },
 ];
 
 for (const file of files) {
