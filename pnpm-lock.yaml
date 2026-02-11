@@ -23,6 +23,9 @@ importers:
       jquery-ui-touch-punch:
         specifier: 0.2.3
         version: 0.2.3
+      jquery-validation:
+        specifier: ^1.22.0
+        version: 1.22.0(jquery@3.7.1)
 
 packages:
 
@@ -39,6 +42,11 @@ packages:
   jquery-ui@1.13.2:
     resolution: {integrity: sha512-wBZPnqWs5GaYJmo1Jj0k/mrSkzdQzKDwhXNtHKcBdAcKVxMM3KNYFq+iJ2i1rwiG53Z8M4mTn3Qxrm17uH1D4Q==}
 
+  jquery-validation@1.22.0:
+    resolution: {integrity: sha512-W/e+/suHHWHxdE9Byt9eMtYchy6a+RG9pqGTDiqz6DWcgwhrxVh2OVl8jCi3NSkmACeOW/wiPgLN3KM63+aSWg==}
+    peerDependencies:
+      jquery: ^1.7 || ^2.0 || ^3.1 || ^4.0
+
   jquery@3.7.1:
     resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
 
@@ -51,6 +59,10 @@ snapshots:
   jquery-ui-touch-punch@0.2.3: {}
 
   jquery-ui@1.13.2:
+    dependencies:
+      jquery: 3.7.1
+
+  jquery-validation@1.22.0(jquery@3.7.1):
     dependencies:
       jquery: 3.7.1
 

@@ -23,6 +23,9 @@ const files = [
   { src: 'node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js', dest: 'lib/js/jquery.ui.touch-punch.min.js' },
   { src: 'node_modules/capslockstate-jquery-plugin#1.2.1/src/jquery.capslockstate.js', dest: 'lib/js/jquery.capslockstate.js' },
   { src: 'node_modules/capslockstate-jquery-plugin#1.2.1/MIT-LICENSE.txt', dest: 'documentation/licenses/jquery.capslockstate.txt' },
+  { src: 'node_modules/jquery-validation/dist/jquery.validate.min.js', dest: 'lib/js/jquery.validate.min.js' },
+  { src: 'node_modules/jquery-validation/dist/additional-methods.min.js', dest: 'lib/js/jquery.validate.additional.js' },
+  { src: 'node_modules/jquery-validation/LICENSE.md', dest: 'documentation/licenses/jquery-validation.txt' },
 ];
 
 for (const file of files) {
