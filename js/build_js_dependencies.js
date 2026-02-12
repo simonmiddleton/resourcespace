@@ -195,6 +195,12 @@ const files = [
     { src: 'node_modules/tinymce/license.md', dest: 'documentation/licenses/tinymce.md' },
     { src: 'node_modules/toastify-js', dest: 'lib/toastify-js', filter: { patterns: ['src/**'] } },
     { src: 'node_modules/toastify-js/LICENSE', dest: 'documentation/licenses/toastify-js' },
+    {
+        src: 'node_modules/openseadragon/build/openseadragon',
+        dest: 'lib/openseadragon',
+        filter: { patterns: ['**/*.min.js*', 'images/**'] }
+    },
+    { src: 'node_modules/openseadragon/LICENSE.txt', dest: 'documentation/licenses/openseadragon.txt' },
 ];
 
 console.log('Copying distribution files to ResourceSpace');

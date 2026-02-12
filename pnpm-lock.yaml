@@ -38,6 +38,9 @@ importers:
       lightbox2:
         specifier: ^2.11.5
         version: 2.11.5
+      openseadragon:
+        specifier: ^2.4.2
+        version: 2.4.2
       tinymce:
         specifier: ^7.3.0
         version: 7.9.2
@@ -83,6 +86,9 @@ packages:
   lightbox2@2.11.5:
     resolution: {integrity: sha512-IsDqv/D9pjgh7GvwTNvmHF98+nrIcOD17fraXgtx8ivq469y95l5ycLi6SeZAZHdeyD3cGLjYwbDX8SRfWx5fA==}
 
+  openseadragon@2.4.2:
+    resolution: {integrity: sha512-398KbZwRtOYA6OmeWRY4Q0737NTacQ9Q6whmr9Lp1MNQO3p0eBz5LIASRne+4gwequcSM1vcHcjfy3dIndQziw==}
+
   tinymce@7.9.2:
     resolution: {integrity: sha512-zS2gn2CPQmZhUqLzkhwYH+WGsx/DIRY/mS18RVzsIcuQg2lN2uzaqoHSJU6DdMUpvXBtBFnLNpumC3QrDwLBzA==}
 
@@ -121,6 +127,8 @@ snapshots:
       jquery: 3.7.1
 
   lightbox2@2.11.5: {}
+
+  openseadragon@2.4.2: {}
 
   tinymce@7.9.2: {}
 
