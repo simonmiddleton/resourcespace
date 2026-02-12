@@ -179,6 +179,20 @@ const files = [
         }
     },
     { src: 'node_modules/lightbox2/LICENSE', dest: 'documentation/licenses/lightbox.txt' },
+    {
+        src: 'node_modules/tinymce',
+        dest: 'lib/tinymce',
+        filter: {
+            patterns: [
+                '**/*.min.js',
+                // Include skins (only the minified CSS)
+                'skins/**',
+                '!skins/**/*.css',
+                'skins/**/*.min.css',
+            ]
+        }
+    },
+    { src: 'node_modules/tinymce/license.md', dest: 'documentation/licenses/tinymce.md' },
 ];
 
 console.log('Copying distribution files to ResourceSpace');

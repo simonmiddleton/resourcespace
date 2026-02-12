@@ -38,6 +38,9 @@ importers:
       lightbox2:
         specifier: ^2.11.5
         version: 2.11.5
+      tinymce:
+        specifier: ^7.3.0
+        version: 7.9.2
 
 packages:
 
@@ -77,6 +80,9 @@ packages:
   lightbox2@2.11.5:
     resolution: {integrity: sha512-IsDqv/D9pjgh7GvwTNvmHF98+nrIcOD17fraXgtx8ivq469y95l5ycLi6SeZAZHdeyD3cGLjYwbDX8SRfWx5fA==}
 
+  tinymce@7.9.2:
+    resolution: {integrity: sha512-zS2gn2CPQmZhUqLzkhwYH+WGsx/DIRY/mS18RVzsIcuQg2lN2uzaqoHSJU6DdMUpvXBtBFnLNpumC3QrDwLBzA==}
+
 snapshots:
 
   '@types/trusted-types@2.0.7':
@@ -109,3 +115,5 @@ snapshots:
       jquery: 3.7.1
 
   lightbox2@2.11.5: {}
+
+  tinymce@7.9.2: {}
