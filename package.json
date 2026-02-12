@@ -23,6 +23,7 @@
     "jquery-validation": "^1.22.0",
     "jstree": "^3.3.17",
     "lightbox2": "^2.11.5",
-    "tinymce": "^7.3.0"
+    "tinymce": "^7.3.0",
+    "toastify-js": "^1.12.0"
   }
 }

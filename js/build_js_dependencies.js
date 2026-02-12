@@ -193,6 +193,8 @@ const files = [
         }
     },
     { src: 'node_modules/tinymce/license.md', dest: 'documentation/licenses/tinymce.md' },
+    { src: 'node_modules/toastify-js', dest: 'lib/toastify-js', filter: { patterns: ['src/**'] } },
+    { src: 'node_modules/toastify-js/LICENSE', dest: 'documentation/licenses/toastify-js' },
 ];
 
 console.log('Copying distribution files to ResourceSpace');
