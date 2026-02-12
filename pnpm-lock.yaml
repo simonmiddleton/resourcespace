@@ -35,6 +35,9 @@ importers:
       jstree:
         specifier: ^3.3.17
         version: 3.3.17
+      lightbox2:
+        specifier: ^2.11.5
+        version: 2.11.5
 
 packages:
 
@@ -71,6 +74,9 @@ packages:
   jstree@3.3.17:
     resolution: {integrity: sha512-V0Pl1B6BIaxHUQMiWkol37QlhlBKoZA9RUeUmm95+UnV2QeZsj2QP1sOQl/m2EIOyZXOOxOHvR0SYZLSDC7EFw==}
 
+  lightbox2@2.11.5:
+    resolution: {integrity: sha512-IsDqv/D9pjgh7GvwTNvmHF98+nrIcOD17fraXgtx8ivq469y95l5ycLi6SeZAZHdeyD3cGLjYwbDX8SRfWx5fA==}
+
 snapshots:
 
   '@types/trusted-types@2.0.7':
@@ -101,3 +107,5 @@ snapshots:
   jstree@3.3.17:
     dependencies:
       jquery: 3.7.1
+
+  lightbox2@2.11.5: {}
