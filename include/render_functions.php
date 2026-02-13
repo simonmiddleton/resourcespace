@@ -2989,8 +2989,8 @@ function calculate_image_display(array $imagedata, string $img_url, string $disp
             break;
 
         case "thumbs":
-            $defaultwidth = 200;
-            $defaultheight = 200;
+            $defaultwidth = 202;
+            $defaultheight = 202;
             break;
 
         case "list":
