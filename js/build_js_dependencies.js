@@ -201,6 +201,9 @@ const files = [
         filter: { patterns: ['**/*.min.js*', 'images/**'] }
     },
     { src: 'node_modules/openseadragon/LICENSE.txt', dest: 'documentation/licenses/openseadragon.txt' },
+    { src: 'node_modules/heatmap.js/build/heatmap.js', dest: 'lib/heatmap.js/heatmap.js' },
+    { src: 'node_modules/heatmap.js/plugins/leaflet-heatmap/leaflet-heatmap.js', dest: 'lib/heatmap.js/leaflet-heatmap.js' },
+    { src: 'node_modules/heatmap.js/LICENSE', dest: 'documentation/licenses/heatmap.js.txt' },
 ];
 
 console.log('Copying distribution files to ResourceSpace');
