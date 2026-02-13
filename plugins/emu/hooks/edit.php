@@ -167,7 +167,7 @@ function HookEmuEditAftersaveresourcedata()
  * @return bool|array   False if the EMu IRN field wasn't locked or has no value else array containing the updated list of
  *                      locked fields (those supplied plus any mapped in the EMu plugin).
  */
-function HookEmuEditcopylockedfieldsaddfields($locked_fields, $origin_resource): bool|array
+function HookEmuEditcopylockedfieldsaddfields(array $locked_fields, int $origin_resource): bool|array
 {
     global $emu_irn_field, $emu_rs_saved_mappings, $emu_data;
 
