@@ -140,7 +140,7 @@ function HookFacesAllCron()
  * @return array Array of existing job data with custom job added
  * 
  */
-function HookFacesAllAddtriggerablejob()
+function HookFacesAllAddtriggerablejob(): array
 {
 
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()

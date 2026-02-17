@@ -35,7 +35,7 @@ function HookWhisperAllTemp_block_deletion()
  * @return array Array of existing job data with custom job added
  * 
  */
-function HookWhisperAllAddtriggerablejob()
+function HookWhisperAllAddtriggerablejob(): array
 {
 
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()

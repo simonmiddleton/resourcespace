@@ -199,7 +199,7 @@ function HookClipAllBeforedeleteresourcefromdb($ref)
  * @return array Array of existing job data with custom job added
  * 
  */
-function HookClipAllAddtriggerablejob()
+function HookClipAllAddtriggerablejob(): array
 {
 
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()

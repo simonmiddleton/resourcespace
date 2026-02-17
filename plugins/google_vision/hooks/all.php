@@ -27,7 +27,7 @@ function HookGoogle_visionAllAfterpreviewcreation(int $resource, int $alternativ
  * @return array Array of existing job data with custom job added
  * 
  */
-function HookGoogle_visionAllAddtriggerablejob()
+function HookGoogle_visionAllAddtriggerablejob(): array
 {
 
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
