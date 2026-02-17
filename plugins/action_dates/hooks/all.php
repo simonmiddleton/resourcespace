@@ -242,6 +242,83 @@ function HookAction_datesCronCron()
         }
     }
 
+    # Perform additional actions if configured
+    foreach ($action_dates_extra_config as $action_dates_extra_config_setting) {
+        $datefield = get_resource_type_field($action_dates_extra_config_setting["field"]);
+        $field = $datefield["ref"];
+
+        $validrestypes = false;
+        if ($datefield["global"] == 0) {
+            $validrestypes = ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field = ?", ["i",$field]);
+            if (count($validrestypes) === 0) {
+                if ('cli' == PHP_SAPI) {
+                    echo 'action_dates: Error - Date field set in additional actions applies to no resource types.' . PHP_EOL;
+                }
+                set_sysvar("last_action_dates_cron", $this_run_start);
+                return false;
+            }
+        }
+
+        $newstatus = $action_dates_extra_config_setting["status"];
+        if (in_array($datefield['type'], $DATE_FIELD_TYPES)) {
+            if (PHP_SAPI == "cli") {
+                echo "action_dates: Checking extra action dates for field " . $datefield["ref"] . "." . PHP_EOL;
+            }
+            $sql = "SELECT 
+                rn.resource, 
+                n.name AS value 
+            FROM resource_node rn 
+                LEFT JOIN resource r ON r.ref=rn.resource 
+                LEFT JOIN node n ON n.ref=rn.node
+            WHERE r.ref > 0 
+                AND n.resource_type_field = ?
+                AND r.archive<> ?";
+
+            $sql_params = array(
+                "i",$field,
+                "i",$newstatus,
+            );
+
+            if (isset($resource_deletion_state)) {
+                $sql .= " AND r.archive <> ?";
+                $sql_params[] = "i";
+                $sql_params[] = $resource_deletion_state;
+            }
+
+            // Filter resource types that shouldn't have access to the field
+            if (is_array($validrestypes)) {
+                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes)) . ") ";
+                $sql_params = array_merge($sql_params, ps_param_fill($validrestypes, "i"));
+            }
+
+            $additional_resources = ps_query($sql, $sql_params);
+
+            foreach ($additional_resources as $resource) {
+                $ref = $resource["resource"];
+                if (time() >= strtotime($resource["value"])) {
+                    if (PHP_SAPI == "cli") {
+                        echo "action_dates: Moving resource {$ref} to archive state " . $lang["status" . $newstatus] . PHP_EOL;
+                    }
+                    update_archive_status($ref, $newstatus);
+                } elseif ($action_dates_extra_config_setting["email_admin_days"] > 0) {
+                    $restrict_date_target = date_create($resource["value"]);
+                    $restrict_interval = date_diff($action_date_current, $restrict_date_target);
+                    $days_before_action = (int) $restrict_interval->format('%R%a');
+                    if ($days_before_action <= $action_dates_extra_config_setting["email_admin_days"]) {
+                        if (PHP_SAPI == "cli") {
+                            echo "action_dates: Notifying admin {$ref} to be be moved to " . $lang["status" . $newstatus];
+                            echo " in " . $days_before_action . " days" . PHP_EOL;
+                        }
+                        $email_state_refs[] = $ref;
+                        $email_state_days[] = $days_before_action;
+                        $action_dates_email_for_state = 1;
+                    }
+                }
+            }
+        }
+    }
+
+
     // Only allow email for actions configured.
     if ($action_dates_restrictfield == "") {
         $action_dates_email_for_restrict = "0";
@@ -386,69 +463,6 @@ function HookAction_datesCronCron()
     # Restore the resource_deletion_state which may have been manipulated during primary action processing
     $resource_deletion_state = $saved_resource_deletion_state;
 
-    # Perform additional actions if configured
-    foreach ($action_dates_extra_config as $action_dates_extra_config_setting) {
-        $datefield = get_resource_type_field($action_dates_extra_config_setting["field"]);
-        $field = $datefield["ref"];
-
-        $validrestypes = false;
-        if ($datefield["global"] == 0) {
-            $validrestypes = ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field = ?", ["i",$field]);
-            if (count($validrestypes) === 0) {
-                if ('cli' == PHP_SAPI) {
-                    echo 'action_dates: Error - Date field set in additional actions applies to no resource types.' . PHP_EOL;
-                }
-                set_sysvar("last_action_dates_cron", $this_run_start);
-                return false;
-            }
-        }
-
-        $newstatus = $action_dates_extra_config_setting["status"];
-        if (in_array($datefield['type'], $DATE_FIELD_TYPES)) {
-            if (PHP_SAPI == "cli") {
-                echo "action_dates: Checking extra action dates for field " . $datefield["ref"] . "." . PHP_EOL;
-            }
-            $sql = "SELECT 
-                rn.resource, 
-                n.name AS value 
-            FROM resource_node rn 
-                LEFT JOIN resource r ON r.ref=rn.resource 
-                LEFT JOIN node n ON n.ref=rn.node
-            WHERE r.ref > 0 
-                AND n.resource_type_field = ?
-                AND r.archive<> ?";
-
-            $sql_params = array(
-                "i",$field,
-                "i",$newstatus,
-            );
-
-            if (isset($resource_deletion_state)) {
-                $sql .= " AND r.archive <> ?";
-                $sql_params[] = "i";
-                $sql_params[] = $resource_deletion_state;
-            }
-
-            // Filter resource types that shouldn't have access to the field
-            if (is_array($validrestypes)) {
-                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes)) . ") ";
-                $sql_params = array_merge($sql_params, ps_param_fill($validrestypes, "i"));
-            }
-
-            $additional_resources = ps_query($sql, $sql_params);
-
-            foreach ($additional_resources as $resource) {
-                $ref = $resource["resource"];
-
-                if (time() >= strtotime($resource["value"])) {
-                    if (PHP_SAPI == "cli") {
-                        echo "action_dates: Moving resource {$ref} to archive state " . $lang["status" . $newstatus] . PHP_EOL;
-                    }
-                    update_archive_status($ref, $newstatus);
-                }
-            }
-        }
-    }
 
     # Update last run date/time.
     set_sysvar("last_action_dates_cron", $this_run_start);
