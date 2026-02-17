@@ -28,6 +28,7 @@ if ($openai_gpt_token_limit == 0 || $openai_gpt_token_limit_days == 0) {
     }
 }
 
+$tokens_used_label = str_replace("%%DAYS%%", $token_limit_days, $lang["openai_gpt_usage_days"]);
 $tokens_used_text = str_replace("%%TOKEN_COUNT%%", number_format($tokens_used), $lang["openai_gpt_token_count"]);
 
 // Can't use old model since move to chat API
@@ -46,7 +47,7 @@ if (!(isset($openai_gpt_hide_api_key) && $openai_gpt_hide_api_key))
 $page_def[] = config_add_section_header($lang["openai_gpt_usage"]);
 
 $page_def[] = config_add_html("<div class='Question'><label>" . escape($lang["openai_gpt_token_limit"]) . "</label><div class='Fixed'>" . escape($token_limit) . "</div><div class='clearerleft'></div></div>");
-$page_def[] = config_add_html("<div class='Question'><label>" . escape($lang["openai_gpt_usage"]) . "</label><div class='Fixed'>" . escape($tokens_used_text) . "</div><div class='clearerleft'></div></div>");
+$page_def[] = config_add_html("<div class='Question'><label>" . escape($tokens_used_label) . "</label><div class='Fixed'>" . escape($tokens_used_text) . "</div><div class='clearerleft'></div></div>");
 
 $page_def[] = config_add_section_header($lang["plugin_category_advanced"]);
 $page_def[] = config_add_html("<div class='Question'><strong>" . escape($lang["openai_gpt_advanced"]) . "</strong><div class='clearerleft'></div></div>");

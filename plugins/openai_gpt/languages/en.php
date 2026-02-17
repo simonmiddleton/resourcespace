@@ -37,6 +37,7 @@ $lang["openai_gpt_process_existing_overwrite_help"] = "Setting this option will 
 $lang["openai_gpt_limit_warning"] = "WARNING - Token limit has been exceeded so further OpenAI API calls will not work. GPT fields will not be processed.";
 $lang["openai_gpt_limit_warning_short"] = "WARNING - Token limit has been exceeded so GPT fields will not be processed.";
 $lang["openai_gpt_usage"] = "Usage";
+$lang["openai_gpt_usage_days"] = "Token usage in past %%DAYS%% days";
 $lang["openai_gpt_token_limit"] = "Token limit";
 $lang["openai_gpt_no_token_limit"] = "No token limit configured";
 $lang["openai_gpt_configured_limit"] = "%%TOKEN_LIMIT%% per %%DAYS%% days";
