@@ -50,11 +50,34 @@ importers:
       toastify-js:
         specifier: ^1.12.0
         version: 1.12.0
+      video.js:
+        specifier: 7.14.3
+        version: 7.14.3
 
 packages:
 
+  '@babel/runtime@7.28.6':
+    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
+    engines: {node: '>=6.9.0'}
+
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+
+  '@videojs/http-streaming@2.9.2':
+    resolution: {integrity: sha512-2ZsxJn4/nZZ6k6jIhic2l9ynGmKwprtuI5b3+M6JgqOSLvQQ/ah+heVs/0g2Ze7qJxodqR+aSY948JwJIz1gCw==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      video.js: ^6 || ^7
+
+  '@videojs/vhs-utils@3.0.5':
+    resolution: {integrity: sha512-PKVgdo8/GReqdx512F+ombhS+Bzogiofy1LgAj4tN8PfdBx3HSS7V5WfJotKTqtOWGwVfSWsrYN/t09/DSryrw==}
+    engines: {node: '>=8', npm: '>=5'}
+
+  '@videojs/xhr@2.5.1':
+    resolution: {integrity: sha512-wV9nGESHseSK+S9ePEru2+OJZ1jq/ZbbzniGQ4weAmTIepuBMSYPx5zrxxQA0E786T5ykpO8ts+LayV+3/oI2w==}
+
+  aes-decrypter@3.1.2:
+    resolution: {integrity: sha512-42nRwfQuPRj9R1zqZBdoxnaAmnIFyDi0MNyTVhjdFOd8fifXKKRfwIHIZ6AMn1or4x5WONzjwRTbTWcsIQ0O4A==}
 
   capslockstate-jquery-plugin#1.2.1@https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903:
     resolution: {tarball: https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903}
@@ -63,11 +86,23 @@ packages:
   chosen-js@1.8.7:
     resolution: {integrity: sha512-eVdrZJ2U5ISdObkgsi0od5vIJdLwq1P1Xa/Vj/mgxkMZf14DlgobfB6nrlFi3kW4kkvKLsKk4NDqZj1MU1DCpw==}
 
+  dom-walk@0.1.2:
+    resolution: {integrity: sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==}
+
   dompurify@3.3.1:
     resolution: {integrity: sha512-qkdCKzLNtrgPFP1Vo+98FRzJnBRGe4ffyCea9IwHB1fyxPOeNTHpLKYGd4Uk9xvNoH0ZoOjwZxNptyMwqrId1Q==}
 
+  global@4.4.0:
+    resolution: {integrity: sha512-wv/LAoHdRE3BeTGz53FAamhGlPLhlssK45usmGFThIi4XqnBmjKQ16u+RNbP7WvigRZDxUsM0J3gcQ5yicaL0w==}
+
   heatmap.js@2.0.5:
     resolution: {integrity: sha512-CG2gYFP5Cv9IQCXEg3ZRxnJDyAilhWnQlAuHYGuWVzv6mFtQelS1bR9iN80IyDmFECbFPbg6I0LR5uAFHgCthw==}
+
+  individual@2.0.0:
+    resolution: {integrity: sha512-pWt8hBCqJsUWI/HtcfWod7+N9SgAqyPEaF7JQjwzjn5vGrpg6aQ5qeAFQ7dx//UH4J1O+7xqew+gCeeFt6xN/g==}
+
+  is-function@1.0.2:
+    resolution: {integrity: sha512-lw7DUp0aWXYg+CBCN+JKkcE0Q2RayZnSvnZBlwgxHBQhqt5pZNVy4Ri7H9GmmXkdu7LUthszM+Tor1u/2iBcpQ==}
 
   jquery-tageditor@1.0.1:
     resolution: {integrity: sha512-PrTZ8PlHQvn5s4xRuUrEDMV5Z2whwXcsknNTdc9sNC3UEtqkJt+s1p4/xsu67iZwHwcS7pwDyY0RAlzBzPv6oA==}
@@ -89,11 +124,43 @@ packages:
   jstree@3.3.17:
     resolution: {integrity: sha512-V0Pl1B6BIaxHUQMiWkol37QlhlBKoZA9RUeUmm95+UnV2QeZsj2QP1sOQl/m2EIOyZXOOxOHvR0SYZLSDC7EFw==}
 
+  keycode@2.2.1:
+    resolution: {integrity: sha512-Rdgz9Hl9Iv4QKi8b0OlCRQEzp4AgVxyCtz5S/+VIHezDmrDhkp2N2TqBWOLz0/gbeREXOOiI9/4b8BY9uw2vFg==}
+
   lightbox2@2.11.5:
     resolution: {integrity: sha512-IsDqv/D9pjgh7GvwTNvmHF98+nrIcOD17fraXgtx8ivq469y95l5ycLi6SeZAZHdeyD3cGLjYwbDX8SRfWx5fA==}
 
+  m3u8-parser@4.7.0:
+    resolution: {integrity: sha512-48l/OwRyjBm+QhNNigEEcRcgbRvnUjL7rxs597HmW9QSNbyNvt+RcZ9T/d9vxi9A9z7EZrB1POtZYhdRlwYQkQ==}
+
+  min-document@2.19.2:
+    resolution: {integrity: sha512-8S5I8db/uZN8r9HSLFVWPdJCvYOejMcEC82VIzNUc6Zkklf/d1gg2psfE79/vyhWOj4+J8MtwmoOz3TmvaGu5A==}
+
+  mpd-parser@0.17.0:
+    resolution: {integrity: sha512-oKS5G0jCcHHJ3sHYlcLeM9Xcbuixl08eAx7QW0Th7ChlZiI0YvLtGaHE/L0aKUBJFNvtkeksIr8XgJgSBBsS4g==}
+    hasBin: true
+
+  mux.js@5.12.2:
+    resolution: {integrity: sha512-9OY1lrFIo7FxMeIC6aLUftiNv97AztufDfi30N7qDll1Pcy7bCxlHztyHp1Ce0KQwy2XqchGeENPS4v1NJngHQ==}
+    engines: {node: '>=8', npm: '>=5'}
+    hasBin: true
+
   openseadragon@2.4.2:
     resolution: {integrity: sha512-398KbZwRtOYA6OmeWRY4Q0737NTacQ9Q6whmr9Lp1MNQO3p0eBz5LIASRne+4gwequcSM1vcHcjfy3dIndQziw==}
+
+  pkcs7@1.0.4:
+    resolution: {integrity: sha512-afRERtHn54AlwaF2/+LFszyAANTCggGilmcmILUzEjvs3XgFZT+xE6+QWQcAGmu4xajy+Xtj7acLOPdx5/eXWQ==}
+    hasBin: true
+
+  process@0.11.10:
+    resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
+    engines: {node: '>= 0.6.0'}
+
+  rust-result@1.0.0:
+    resolution: {integrity: sha512-6cJzSBU+J/RJCF063onnQf0cDUOHs9uZI1oroSGnHOph+CQTIJ5Pp2hK5kEQq1+7yE/EEWfulSNXAQ2jikPthA==}
+
+  safe-json-parse@4.0.0:
+    resolution: {integrity: sha512-RjZPPHugjK0TOzFrLZ8inw44s9bKox99/0AZW9o/BEQVrJfhI+fIHMErnPyRa89/yRXUUr93q+tiN6zhoVV4wQ==}
 
   tinymce@7.9.2:
     resolution: {integrity: sha512-zS2gn2CPQmZhUqLzkhwYH+WGsx/DIRY/mS18RVzsIcuQg2lN2uzaqoHSJU6DdMUpvXBtBFnLNpumC3QrDwLBzA==}
@@ -101,20 +168,79 @@ packages:
   toastify-js@1.12.0:
     resolution: {integrity: sha512-HeMHCO9yLPvP9k0apGSdPUWrUbLnxUKNFzgUoZp1PHCLploIX/4DSQ7V8H25ef+h4iO9n0he7ImfcndnN6nDrQ==}
 
+  url-toolkit@2.2.5:
+    resolution: {integrity: sha512-mtN6xk+Nac+oyJ/PrI7tzfmomRVNFIWKUbG8jdYFt52hxbiReFAXIjYskvu64/dvuW71IcB7lV8l0HvZMac6Jg==}
+
+  video.js@7.14.3:
+    resolution: {integrity: sha512-6avCdSIfn5ss5NOgoQfY/xEfPNcz9DXSw+ZN80NwPguCdRd4VL4y40b/d7osYJwyCdF+YkvhqAW7dw4s0vBigg==}
+
+  videojs-font@3.2.0:
+    resolution: {integrity: sha512-g8vHMKK2/JGorSfqAZQUmYYNnXmfec4MLhwtEFS+mMs2IDY398GLysy6BH6K+aS1KMNu/xWZ8Sue/X/mdQPliA==}
+
+  videojs-vtt.js@0.15.5:
+    resolution: {integrity: sha512-yZbBxvA7QMYn15Lr/ZfhhLPrNpI/RmCSCqgIff57GC2gIrV5YfyzLfLyZMj0NnZSAz8syB4N0nHXpZg9MyrMOQ==}
+
+  xmldom@0.5.0:
+    resolution: {integrity: sha512-Foaj5FXVzgn7xFzsKeNIde9g6aFBxTPi37iwsno8QvApmtg7KYrr+OPyRHcJF7dud2a5nGRBXK3n0dL62Gf7PA==}
+    engines: {node: '>=10.0.0'}
+
 snapshots:
+
+  '@babel/runtime@7.28.6': {}
 
   '@types/trusted-types@2.0.7':
     optional: true
+
+  '@videojs/http-streaming@2.9.2(video.js@7.14.3)':
+    dependencies:
+      '@babel/runtime': 7.28.6
+      '@videojs/vhs-utils': 3.0.5
+      aes-decrypter: 3.1.2
+      global: 4.4.0
+      m3u8-parser: 4.7.0
+      mpd-parser: 0.17.0
+      mux.js: 5.12.2
+      video.js: 7.14.3
+
+  '@videojs/vhs-utils@3.0.5':
+    dependencies:
+      '@babel/runtime': 7.28.6
+      global: 4.4.0
+      url-toolkit: 2.2.5
+
+  '@videojs/xhr@2.5.1':
+    dependencies:
+      '@babel/runtime': 7.28.6
+      global: 4.4.0
+      is-function: 1.0.2
+
+  aes-decrypter@3.1.2:
+    dependencies:
+      '@babel/runtime': 7.28.6
+      '@videojs/vhs-utils': 3.0.5
+      global: 4.4.0
+      pkcs7: 1.0.4
 
   capslockstate-jquery-plugin#1.2.1@https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903: {}
 
   chosen-js@1.8.7: {}
 
+  dom-walk@0.1.2: {}
+
   dompurify@3.3.1:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
+  global@4.4.0:
+    dependencies:
+      min-document: 2.19.2
+      process: 0.11.10
+
   heatmap.js@2.0.5: {}
+
+  individual@2.0.0: {}
+
+  is-function@1.0.2: {}
 
   jquery-tageditor@1.0.1: {}
 
@@ -134,10 +260,73 @@ snapshots:
     dependencies:
       jquery: 3.7.1
 
+  keycode@2.2.1: {}
+
   lightbox2@2.11.5: {}
 
+  m3u8-parser@4.7.0:
+    dependencies:
+      '@babel/runtime': 7.28.6
+      '@videojs/vhs-utils': 3.0.5
+      global: 4.4.0
+
+  min-document@2.19.2:
+    dependencies:
+      dom-walk: 0.1.2
+
+  mpd-parser@0.17.0:
+    dependencies:
+      '@babel/runtime': 7.28.6
+      '@videojs/vhs-utils': 3.0.5
+      global: 4.4.0
+      xmldom: 0.5.0
+
+  mux.js@5.12.2:
+    dependencies:
+      '@babel/runtime': 7.28.6
+
   openseadragon@2.4.2: {}
+
+  pkcs7@1.0.4:
+    dependencies:
+      '@babel/runtime': 7.28.6
+
+  process@0.11.10: {}
+
+  rust-result@1.0.0:
+    dependencies:
+      individual: 2.0.0
+
+  safe-json-parse@4.0.0:
+    dependencies:
+      rust-result: 1.0.0
 
   tinymce@7.9.2: {}
 
   toastify-js@1.12.0: {}
+
+  url-toolkit@2.2.5: {}
+
+  video.js@7.14.3:
+    dependencies:
+      '@babel/runtime': 7.28.6
+      '@videojs/http-streaming': 2.9.2(video.js@7.14.3)
+      '@videojs/vhs-utils': 3.0.5
+      '@videojs/xhr': 2.5.1
+      aes-decrypter: 3.1.2
+      global: 4.4.0
+      keycode: 2.2.1
+      m3u8-parser: 4.7.0
+      mpd-parser: 0.17.0
+      mux.js: 5.12.2
+      safe-json-parse: 4.0.0
+      videojs-font: 3.2.0
+      videojs-vtt.js: 0.15.5
+
+  videojs-font@3.2.0: {}
+
+  videojs-vtt.js@0.15.5:
+    dependencies:
+      global: 4.4.0
+
+  xmldom@0.5.0: {}

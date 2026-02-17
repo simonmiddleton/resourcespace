@@ -204,6 +204,20 @@ const files = [
     { src: 'node_modules/heatmap.js/build/heatmap.js', dest: 'lib/heatmap.js/heatmap.js' },
     { src: 'node_modules/heatmap.js/plugins/leaflet-heatmap/leaflet-heatmap.js', dest: 'lib/heatmap.js/leaflet-heatmap.js' },
     { src: 'node_modules/heatmap.js/LICENSE', dest: 'documentation/licenses/heatmap.js.txt' },
+    {
+        src: 'node_modules/video.js/dist',
+        dest: 'lib/videojs',
+        filter: {
+            patterns: [
+                '**/*.min.js',
+                '**/*.min.css',
+                'alt/**',
+                'font/**',
+                'lang/**',
+            ]
+        }
+    },
+    { src: 'node_modules/video.js/LICENSE', dest: 'documentation/licenses/video.js.txt' },
 ];
 
 console.log('Copying distribution files to ResourceSpace');
