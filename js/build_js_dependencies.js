@@ -218,6 +218,18 @@ const files = [
         }
     },
     { src: 'node_modules/video.js/LICENSE', dest: 'documentation/licenses/video.js.txt' },
+
+
+
+    //todo: video.js
+    // node js/build_js_dependencies.js && diff -r --brief lib/videojs/ /tmp/videojs/ && rm -rf /tmp/videojs
+
+    // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
+    // {
+    //     src: '',
+    //     dest: '',
+    //     filter: { patterns: ['**/*.min.js*'] }
+    // },
 ];
 
 console.log('Copying distribution files to ResourceSpace');
