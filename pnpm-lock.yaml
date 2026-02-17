@@ -53,6 +53,9 @@ importers:
       video.js:
         specifier: 7.14.3
         version: 7.14.3
+      videojs-resolution-switcher-for-videojs-version-7:
+        specifier: github:mzulkiakbari/videojs-resolution-switcher-for-videojs-version-7
+        version: https://codeload.github.com/mzulkiakbari/videojs-resolution-switcher-for-videojs-version-7/tar.gz/f5d3e77ee3e23ea9ae29c0838751fa8a30267a7f
 
 packages:
 
@@ -176,6 +179,10 @@ packages:
 
   videojs-font@3.2.0:
     resolution: {integrity: sha512-g8vHMKK2/JGorSfqAZQUmYYNnXmfec4MLhwtEFS+mMs2IDY398GLysy6BH6K+aS1KMNu/xWZ8Sue/X/mdQPliA==}
+
+  videojs-resolution-switcher-for-videojs-version-7@https://codeload.github.com/mzulkiakbari/videojs-resolution-switcher-for-videojs-version-7/tar.gz/f5d3e77ee3e23ea9ae29c0838751fa8a30267a7f:
+    resolution: {tarball: https://codeload.github.com/mzulkiakbari/videojs-resolution-switcher-for-videojs-version-7/tar.gz/f5d3e77ee3e23ea9ae29c0838751fa8a30267a7f}
+    version: 0.0.0
 
   videojs-vtt.js@0.15.5:
     resolution: {integrity: sha512-yZbBxvA7QMYn15Lr/ZfhhLPrNpI/RmCSCqgIff57GC2gIrV5YfyzLfLyZMj0NnZSAz8syB4N0nHXpZg9MyrMOQ==}
@@ -324,6 +331,8 @@ snapshots:
       videojs-vtt.js: 0.15.5
 
   videojs-font@3.2.0: {}
+
+  videojs-resolution-switcher-for-videojs-version-7@https://codeload.github.com/mzulkiakbari/videojs-resolution-switcher-for-videojs-version-7/tar.gz/f5d3e77ee3e23ea9ae29c0838751fa8a30267a7f: {}
 
   videojs-vtt.js@0.15.5:
     dependencies:

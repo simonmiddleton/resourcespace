@@ -218,11 +218,11 @@ const files = [
         }
     },
     { src: 'node_modules/video.js/LICENSE', dest: 'documentation/licenses/video.js.txt' },
-
-
-
-    //todo: video.js
-    // node js/build_js_dependencies.js && diff -r --brief lib/videojs/ /tmp/videojs/ && rm -rf /tmp/videojs
+    {
+        src: 'node_modules/videojs-resolution-switcher-for-videojs-version-7',
+        dest: 'lib/videojs-resolution-switcher',
+        filter: { patterns: ['**/*.js', '**/*.css'] }
+    },
 
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {
