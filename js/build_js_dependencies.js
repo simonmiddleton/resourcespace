@@ -230,8 +230,14 @@ const files = [
     { src: 'node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js', dest: 'lib/js/chartjs-adapter-date-fns.js' },
     { src: 'node_modules/chartjs-adapter-date-fns/LICENSE.md', dest: 'documentation/licenses/chartjs-adapter-date-fns.md' },
     { src: 'node_modules/date-fns/LICENSE.md', dest: 'documentation/licenses/date-fns.txt' }, 
+
     // Note for Annotorious - for the version we use there's https://github.com/annotorious/annotorious-v1/releases/tag/v0.6.4
     // IF updating the library to version >3.0.0, then use their official @annotorious/annotorious package.
+
+    { src: 'node_modules/uppy/dist/uppy.min.js', dest: 'lib/js/uppy.js' }, 
+    { src: 'node_modules/uppy/dist/uppy.min.js.map', dest: 'lib/js/uppy.min.js.map' }, 
+    { src: 'node_modules/uppy/dist/uppy.min.css', dest: 'css/uppy.min.css' }, 
+    { src: 'node_modules/uppy/LICENSE', dest: 'documentation/licenses/uppy.txt' }, 
 
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {

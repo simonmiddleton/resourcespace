@@ -30,6 +30,7 @@
     "openseadragon": "^2.4.2",
     "tinymce": "^7.3.0",
     "toastify-js": "^1.12.0",
+    "uppy": "3.17.0",
     "video.js": "7.14.3",
     "videojs-resolution-switcher-for-videojs-version-7": "github:mzulkiakbari/videojs-resolution-switcher-for-videojs-version-7"
   }
