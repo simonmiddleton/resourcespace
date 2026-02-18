@@ -223,6 +223,13 @@ const files = [
         dest: 'lib/videojs-resolution-switcher',
         filter: { patterns: ['**/*.js', '**/*.css'] }
     },
+    { src: 'node_modules/chart.js/dist/chart.umd.js', dest: 'lib/js/chartjs-4-4-0.js' },
+    { src: 'node_modules/chart.js/dist/chart.umd.js.map', dest: 'lib/js/chart.umd.js.map' }, // not versioned, only helps devs
+    { src: 'node_modules/chart.js/LICENSE.md', dest: 'documentation/licenses/chartjs.txt' },
+    // We don't use date-fns directly nor use modules so we have to use the adapters' bundle build instead
+    { src: 'node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js', dest: 'lib/js/chartjs-adapter-date-fns.js' },
+    { src: 'node_modules/chartjs-adapter-date-fns/LICENSE.md', dest: 'documentation/licenses/chartjs-adapter-date-fns.md' },
+    { src: 'node_modules/date-fns/LICENSE.md', dest: 'documentation/licenses/date-fns.txt' }, 
 
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {
