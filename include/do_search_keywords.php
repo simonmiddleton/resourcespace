@@ -654,10 +654,12 @@ if ($keysearch) {
                                                         FROM `node` 
                                                         WHERE ";
 
-                                    if (preg_match('/[-+@<>()]/', $keyword) !== 1 && empty($stop_words)) {
+                                    if (preg_match('/(a-zA-Z0-9]{3,})/', $keyword, $matches)) {
+                                        foreach( $matches as $match) {
                                         // Full text matching is used to reduce the rows checked by regex where possible
-                                        $union->parameters = array_merge(['s',$keyword], $union->parameters);
+                                        $union->parameters = array_merge(['s',$match], $union->parameters);
                                         $union->sql .= "MATCH(name) AGAINST (? IN BOOLEAN MODE) AND ";
+                                        }
                                     }
 
                                     $union->sql .= "name RLIKE ? "
