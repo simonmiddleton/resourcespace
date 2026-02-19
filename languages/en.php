@@ -718,12 +718,14 @@ $lang["printallforyear"] = "Print all statistics for this year";
 
 # Log in / user account
 $lang["nopassword"] = "Apply for an account";
-$lang["forgottenpassword"] = "Forgotten password?";
+$lang["forgottenpassword"] = "Forgot your password?";
 $lang["keepmeloggedin"] = "Keep me logged in on this device";
+$lang["email_username"] = "Email / username";
 $lang["columnheader-username"] = $lang["username"] = "Username";
 $lang["password"] = "Password";
 $lang["login"] = "Log in";
-$lang["loginincorrect"] = "Sorry, your login details were incorrect.<br /><br />If you have forgotten your password,<br />use the link below to request a new one.";
+$lang["loginincorrect"] = "Email / username or password are incorrect";
+$lang["request_new_password"] = "If you have forgotten your password, use the link below to request a new one.";
 $lang["accountexpired"] = "Your account has expired. Please contact the resources team.";
 $lang["accountnotfound-reset-not-emailed"] = "Password reset link was not sent because there is no account with that email";
 $lang["accountnoemail-reset-not-emailed"] = "Password reset link was not sent because the account has no email address";
@@ -737,7 +739,7 @@ $lang["ticktoemail"] = "E-mail this user their username and new password";
 $lang["ticktodelete"] = "Tick to delete this user";
 $lang["edituser"] = "Edit user";
 $lang["columnheader-full_name"] = $lang["fullname"] = "Full name";
-$lang["email"] = "E-mail";
+$lang["email"] = "Email";
 $lang["columnheader-e-mail_address"] = $lang["emailaddress"] = "E-mail address";
 $lang["suggest"] = "Suggest";
 $lang["accountexpiresoptional"] = "Account expires (optional)";
@@ -745,8 +747,8 @@ $lang["lastactive"] = "Last active";
 $lang["lastbrowser"] = "Last browser";
 $lang["searchusers"] = "Search users";
 $lang["createuserwithusername"] = "Create user with username...";
-$lang["yourname"] = "Your full name";
-$lang["youremailaddress"] = "Your e-mail address";
+$lang["yourname"] = "Full name";
+$lang["youremailaddress"] = "Email";
 $lang["sendreminder"] = "Send reminder";
 $lang["sendnewpassword"] = "Send email";
 $lang["requestuserlogin"] = "Request user login";
@@ -757,6 +759,14 @@ $lang['account_request_confirmation_email_to_requester'] = 'Your request for a n
 $lang["accountdoesnotexist"] = "This user account does not exist.<br /> If you arrived at this page because of a link in the user messages area, please note that another admin might have already handled an account request and removed this account.";
 $lang["accountdisabled"] = "Your account has been disabled. Please contact the resources team.";
 $lang["accountorpasswordexpired"] = "Account / password has expired.";
+$lang["enter_username_or_email"] = "Enter a username or email address";
+$lang["enter_a_password"] = "Enter a password";
+$lang["enter_a_full_name"] = "Enter a full name";
+$lang["enter_an_email_address"] = "Enter an email address";
+$lang["new_to_resourcespace"] = "New to [applicationname]?";
+$lang["show_password"] = "Show password";
+$lang["hide_password"] = "Hide password";
+$lang["select_a_user_group"] = "Select a user group";
 
 # Research request
 $lang["nameofproject"] = "Name of project";
@@ -811,6 +821,7 @@ $lang["groupsmart"] = "Group (Smart)";
 $lang["confirmaddgroup"] = "Are you sure you want to add all the current members in this group?";
 $lang["confirmaddgroupsmart"] = "Are you sure you want to dynamically include members in this group?";
 $lang["back_to"] = "Back to %area";
+$lang["back_to_login"] = "Back to login";
 $lang["columnheader-resource_id"] = $lang["resourceid"] = "Resource ID";
 $lang["id"] = "ID";
 $lang["todate"] = "To date";
@@ -951,6 +962,9 @@ $lang["function_not_enabled"] = "This function is not enabled.";
 $lang['remaining'] = 'remaining';
 $lang['web_server'] = 'Web Server';
 $lang['php'] = 'PHP';
+$lang["required"] = "required";
+$lang["select_a"] = "Select a";
+
 
 # Pager
 $lang["next"] = "Next";
@@ -1136,7 +1150,7 @@ $lang["size"] = "Size";
 $lang["orientation"] = "Orientation";
 $lang["requiredfield"] = "This is a required field";
 $lang["requiredfield_resource_type"] = "Resource type: This is a required field";
-$lang["requiredfields"] = "Please review the form and try again. The following fields were not completed:";
+$lang["requiredfields"] = "Some fields have errors";
 $lang["requiredfields-general"] = "Please complete all required fields";
 $lang["requiredfields-status-required_fields"] = "Required fields must be completed to change status to %%STATUS%%. Please set the following fields and try again: %%FIELDS%%";
 $lang["requiredantispam"] = "The anti-spam code has not been entered correctly, please try again";
@@ -1627,7 +1641,8 @@ $lang['reportbug-detail'] = "The following information has been compiled for inc
 $lang['reportbug-login'] = "NOTE: Click here to login to the bug tracker BEFORE clicking prepare.";
 $lang['reportbug-preparebutton'] = "Prepare bug report";
 
-$lang["enterantispamcode"] = "Anti-Spam, please enter the following code";
+$lang["antispam"] = "Anti-Spam";
+$lang["enterantispamcode"] = "Please enter the following code";
 
 $lang["groupaccess"] = "Access";
 $lang["plugin-groupsallaccess"] = "This plugin is available to all groups";
