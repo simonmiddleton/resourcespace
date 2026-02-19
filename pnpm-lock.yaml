@@ -47,6 +47,9 @@ importers:
       jstree:
         specifier: ^3.3.17
         version: 3.3.17
+      leaflet:
+        specifier: ^1.9.4
+        version: 1.9.4
       lightbox2:
         specifier: ^2.11.5
         version: 2.11.5
@@ -404,6 +407,9 @@ packages:
 
   keycode@2.2.1:
     resolution: {integrity: sha512-Rdgz9Hl9Iv4QKi8b0OlCRQEzp4AgVxyCtz5S/+VIHezDmrDhkp2N2TqBWOLz0/gbeREXOOiI9/4b8BY9uw2vFg==}
+
+  leaflet@1.9.4:
+    resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
 
   lightbox2@2.11.5:
     resolution: {integrity: sha512-IsDqv/D9pjgh7GvwTNvmHF98+nrIcOD17fraXgtx8ivq469y95l5ycLi6SeZAZHdeyD3cGLjYwbDX8SRfWx5fA==}
@@ -976,6 +982,8 @@ snapshots:
       jquery: 3.7.1
 
   keycode@2.2.1: {}
+
+  leaflet@1.9.4: {}
 
   lightbox2@2.11.5: {}
 

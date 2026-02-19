@@ -26,6 +26,7 @@
     "jquery-ui-touch-punch": "0.2.3",
     "jquery-validation": "^1.22.0",
     "jstree": "^3.3.17",
+    "leaflet": "^1.9.4",
     "lightbox2": "^2.11.5",
     "openseadragon": "^2.4.2",
     "tinymce": "^7.3.0",

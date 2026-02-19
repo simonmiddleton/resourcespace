@@ -238,6 +238,12 @@ const files = [
     { src: 'node_modules/uppy/dist/uppy.min.js.map', dest: 'lib/js/uppy.min.js.map' }, 
     { src: 'node_modules/uppy/dist/uppy.min.css', dest: 'css/uppy.min.css' }, 
     { src: 'node_modules/uppy/LICENSE', dest: 'documentation/licenses/uppy.txt' }, 
+    {
+        src: 'node_modules/leaflet/dist',
+        dest: 'lib/leaflet',
+        filter: { patterns: ['**/leaflet.*', 'images/**'] }
+    },
+    { src: 'node_modules/leaflet/LICENSE', dest: 'documentation/licenses/leaflet.txt' }, 
 
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {
