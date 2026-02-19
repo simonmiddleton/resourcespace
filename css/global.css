@@ -412,7 +412,7 @@ select:before {
 .radiotext {margin-right: 2px;width: 160px;display: inline-block;}
 .radio{margin-right: 3px;vertical-align: top;display: inline-block;}
 .radiooption {vertical-align: top;display: inline-block;width: 195px;margin: 2px;}
-#custom_access {padding-left: 300px;}
+#custom_access table {padding-left: 300px;}
 #custom_access .radiooptions{margin: 5px;}
 
 /* Hide arrow on selects in IE */
